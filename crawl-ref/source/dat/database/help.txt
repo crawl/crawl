@@ -143,41 +143,41 @@ For instance, to find rings (jewellery) but not ring mail you could use:
 level-map
 
 <h>Level Map ('<w>X</w>' in the main screen):</h>
-<w>Esc</w>    : Leave level map (also <w>Space</w> or any unused key).
-<w>Dir.</w>   : Move the cursor.
+<w>Esc</w>        : Leave level map (also <w>Space</w> or any unused key).
+<w>Dir.</w>       : Move the cursor.
 <w>Shift-Dir.</w> : Move the cursor in larger steps (7 by default).
-<w>-</w> or <w>+</w> : Scroll level map 20 grids up or down.
-<w>.</w>      : Start travel (also <w>Enter</w> and <w>,</w> and <w>;</w>).
-         (Moves cursor to the last travel destination if still on @.)
-<w>[</w> or <w>]</w> : Examine the next higher or lower level
-<w>G</w>      : Go to another level by branch and depth
+<w>-</w> or <w>+</w>     : Scroll level map 20 grids up or down.
+<w>.</w>          : Start travel (also <w>Enter</w> and <w>,</w> and <w>;</w>).
+             (Moves cursor to the last travel destination if still on @.)
+<w>[</w> or <w>]</w>     : Examine the next higher or lower level
+<w>G</w>          : Go to another level by branch and depth
 
 <h>Travel exclusions</h>
-<w>e</w>      : Create a travel exclusion, change its radius, or remove it.
-<w>E</w>      : Cycle through travel exclusions.
-<w>Ctrl-E</w> : Erase all travel exclusions on the level.
+<w>e</w>          : Create a travel exclusion, change its radius, or remove it.
+<w>E</w>          : Cycle through travel exclusions.
+<w>Ctrl-E</w>     : Erase all travel exclusions on the level.
 
 <h>Waypoints</h>
-<w>Ctrl-W</w> : Set waypoint to current position.
-<w>W</w>      : Cycle through all waypoints on the level.
+<w>Ctrl-W</w>     : Set waypoint to current position.
+<w>W</w>          : Cycle through all waypoints on the level.
 
 <h>Cycle through features</h>
-<w><<</w> or <w>></w> : Cycle through up or down stairs.
-<w>^</w>      : Cycle through traps.
-<w>Tab</w>    : Cycle through shops and portals.
-<w>I</w>      : Cycle forward through all items.
-<w>O</w>      : Cycle backward through all items.
-<w>_</w>      : Cycle through altars.
+<w><<</w> or <w>></w>     : Cycle through up or down stairs.
+<w>^</w>          : Cycle through traps.
+<w>\</w> or <w>Tab</w>   : Cycle through shops and portals.
+<w>I</w>          : Cycle forward through all items.
+<w>O</w>          : Cycle backward through all items.
+<w>_</w>          : Cycle through altars.
 
 <h>Other</h>
-<w>!</w>      : Annotate level.
-<w>Ctrl-C</w> : Clear item and monster memory.
-<w>Ctrl-F</w> : Forget level map.
-<w>Ctrl-U</w> : Restore forgotten level map.{{
+<w>!</w>          : Annotate level.
+<w>Ctrl-C</w>     : Clear item and monster memory.
+<w>Ctrl-F</w>     : Forget level map.
+<w>Ctrl-U</w>     : Restore forgotten level map.{{
 if you.wizard() then
     return "\n\n"
           .. "<h>Wizard commands</h>\n"
-          .. "<w>T</w>      : Teleport to cursor."
+          .. "<w>T</w>          : Teleport to cursor."
 end }}
 %%%%
 interlevel-travel.branch.prompt
