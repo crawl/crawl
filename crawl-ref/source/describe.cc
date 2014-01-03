@@ -3156,7 +3156,7 @@ static string _monster_spells_description(const monster_info& mi)
             return "";
     }
 
-    const bool caster  = mi.is_caster();
+    const bool caster  = mi.is_actual_spellcaster();
     const bool priest  = mi.is_priest();
     const bool natural = mi.is_natural_caster();
     string adj = priest ? "divine" : natural ? "special" : "magical";

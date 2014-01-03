@@ -292,9 +292,9 @@ struct monster_info : public monster_info_base
         return mons_class_flag(this->type, M_SPELLCASTER) || this->props.exists("custom_spells");
     }
 
-    bool is_caster() const
+    bool is_actual_spellcaster() const
     {
-        return mons_class_flag(this->type, M_ACTUAL_SPELLS) || this->props.exists("caster");
+        return mons_class_flag(this->type, M_ACTUAL_SPELLS) || this->props.exists("actual_spellcaster");
     }
 
     bool is_priest() const
