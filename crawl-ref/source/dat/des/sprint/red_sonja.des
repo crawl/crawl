@@ -1,13 +1,3 @@
-###############################################################################
-# sprint.des - vaults for the Dungeon Sprint variant
-#
-# These vaults should always have "TAGS: sprint".  No other dungeon levels will
-# be generated in Dungeon Sprint.
-#
-# Note that at the start of the game, the dungeon builder removes all monsters
-# in view of the player. Zero experience monsters like plants are exempt.
-###############################################################################
-
 NAME:   dungeon_sprint_1
 TAGS:   sprint no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 DESC:   Sprint I: "Red Sonja"
