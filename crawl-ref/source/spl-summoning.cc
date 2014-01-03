@@ -1048,7 +1048,14 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
             // cause anger, even if others do not, try rerolling
             int tries = 0;
             while (player_will_anger_monster(mons) && ++tries <= 20)
+            {
+                // Save the enchantments, particularly ENCH_SUMMONED etc.
+                mon_enchant_list ench = mons->enchantments;
+                FixedBitVector<NUM_ENCHANTMENTS> cache = mons->ench_cache;
                 define_monster(mons);
+                mons->enchantments = ench;
+                mons->ench_cache = cache;
+            }
 
             // If we didn't find a valid spell set yet, just give up
             if (tries > 20)
