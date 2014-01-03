@@ -99,7 +99,7 @@ bool feat_is_staircase(dungeon_feature_type feat)
     if (feat_is_stone_stair(feat))
         return true;
 
-    // All branch entries/exits are staircases, except for Zot.
+    // All branch entries/exits are staircases, except for Zot and Vaults entry.
     if (feat == DNGN_ENTER_VAULTS
         || feat == DNGN_ENTER_ZOT
         || feat == DNGN_RETURN_FROM_ZOT)
@@ -224,6 +224,7 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_ENTER_VAULTS:
     case DNGN_ENTER_ZOT:
     case DNGN_RETURN_FROM_ZOT:
     case DNGN_ENTER_HELL:
