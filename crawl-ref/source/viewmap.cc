@@ -157,10 +157,11 @@ bool is_feature(ucs_t feature, const coord_def& where)
     case 'I':
         return is_stash(where);
     case '_':
-        return feat_is_altar(grid);
+        return feat_is_altar(grid) || grid == DNGN_UNKNOWN_ALTAR;
     case '\t':
     case '\\':
-        return feat_is_gate(grid) || grid == DNGN_ENTER_SHOP;
+        return feat_is_gate(grid) || grid == DNGN_ENTER_SHOP
+               || grid == DNGN_UNKNOWN_PORTAL;
     case '<':
         switch (grid)
         {
