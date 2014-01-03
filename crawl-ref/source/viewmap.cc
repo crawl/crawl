@@ -279,7 +279,7 @@ static bool _is_feature_fudged(ucs_t feat, const coord_def& where)
 
     if (feat == '<')
     {
-        if (feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL)
+        if (grd(where) >= DNGN_EXIT_FIRST_PORTAL && grd(where) <= DNGN_EXIT_LAST_PORTAL)
             return true;
         switch (grd(where))
         {
@@ -298,7 +298,7 @@ static bool _is_feature_fudged(ucs_t feat, const coord_def& where)
     }
     else if (feat == '>')
     {
-        if (feat >= DNGN_ENTER_FIRST_PORTAL && feat <= DNGN_ENTER_LAST_PORTAL)
+        if (grd(where) >= DNGN_ENTER_FIRST_PORTAL && grd(where) <= DNGN_ENTER_LAST_PORTAL)
             return true;
         switch (grd(where))
         {
