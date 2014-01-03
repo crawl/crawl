@@ -160,35 +160,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         return feat_is_altar(grid);
     case '\t':
     case '\\':
-        switch (grid)
-        {
-        case DNGN_ENTER_HELL:
-        case DNGN_EXIT_HELL:
-        case DNGN_ENTER_LABYRINTH:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_ENTER_PORTAL_VAULT:
-        case DNGN_EXIT_PORTAL_VAULT:
-#endif
-        case DNGN_ENTER_SHOP:
-        case DNGN_ENTER_DIS:
-        case DNGN_ENTER_GEHENNA:
-        case DNGN_ENTER_COCYTUS:
-        case DNGN_ENTER_TARTARUS:
-        case DNGN_ENTER_ABYSS:
-        case DNGN_EXIT_THROUGH_ABYSS:
-        case DNGN_EXIT_ABYSS:
-        case DNGN_ABYSSAL_STAIR:
-        case DNGN_ENTER_PANDEMONIUM:
-        case DNGN_EXIT_PANDEMONIUM:
-        case DNGN_TRANSIT_PANDEMONIUM:
-        case DNGN_ENTER_DEPTHS:
-        case DNGN_RETURN_FROM_DEPTHS:
-        case DNGN_ENTER_ZOT:
-        case DNGN_RETURN_FROM_ZOT:
-            return true;
-        default:
-            return false;
-        }
+        return feat_is_gate(grid) || grid == DNGN_ENTER_SHOP;
     case '<':
         switch (grid)
         {
