@@ -52,6 +52,16 @@ static bool _is_random_name_vowel(char let);
 static char _random_vowel(int seed);
 static char _random_cons(int seed);
 
+static void _maybe_identify_pack_item()
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        item_def& item = you.inv[i];
+        if (item.defined() && get_ident_type(item) != ID_KNOWN_TYPE)
+            maybe_identify_base_type(item);
+    }
+}
+
 bool is_vowel(const ucs_t chr)
 {
     const char low = towlower(chr);
@@ -2073,7 +2083,10 @@ void set_ident_type(object_class_type basetype, int subtype,
         you.type_ids[basetype][subtype] = setting;
         request_autoinscribe();
         if (setting == ID_KNOWN_TYPE)
+        {
             shopping_list.item_type_identified(basetype, subtype);
+            _maybe_identify_pack_item();
+        }
     }
 }
 

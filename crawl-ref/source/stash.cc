@@ -333,6 +333,7 @@ void Stash::update()
         hints_first_item(*pitem);
 
         god_id_item(*pitem);
+        maybe_identify_base_type(*pitem);
         const item_def& item = *pitem;
 
         if (!_grid_has_perceived_multiple_items(p))
@@ -661,7 +662,10 @@ void Stash::_update_corpses(int rot_time)
 void Stash::_update_identification()
 {
     for (int i = items.size() - 1; i >= 0; i--)
+    {
         god_id_item(items[i]);
+        maybe_identify_base_type(items[i]);
+    }
 }
 
 void Stash::add_item(const item_def &item, bool add_to_front)
