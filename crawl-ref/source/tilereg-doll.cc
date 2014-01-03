@@ -52,7 +52,7 @@ static int _get_next_part(int cat, int part, int inc)
         max_part = tile_player_count(offset);
     }
 
-    ASSERT(inc > -max_part);
+    ASSERT(inc > -max_part || inc == -1);
 
     // Translate the "none" value into something we can do modulo math with.
     if (part == 0)
