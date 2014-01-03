@@ -95,7 +95,7 @@ xx+xx
 ENDMAP
 
 NAME:    abyss_entry_crystal
-TAGS:    nolayout_encompass
+TAGS:    nolayout_encompass mini_float
 : abyss_entry(_G, 'O')
 SHUFFLE: AB
 SUBST:   A : .:50 G:50 T U V Y t
@@ -110,7 +110,7 @@ xb.....bx
 ENDMAP
 
 NAME:    abyss_entry_glasseish
-TAGS:    nolayout_encompass
+TAGS:    nolayout_encompass mini_float transparent
 WEIGHT:  5
 : abyss_entry(_G, 'O')
 KPROP:   T = no_rtele_into
