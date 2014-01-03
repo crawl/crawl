@@ -269,15 +269,15 @@ bool is_feature(ucs_t feature, const coord_def& where)
     }
 }
 
-static bool _is_feature_fudged(ucs_t feat, const coord_def& where)
+static bool _is_feature_fudged(ucs_t glyph, const coord_def& where)
 {
     if (!env.map_knowledge(where).known())
         return false;
 
-    if (is_feature(feat, where))
+    if (is_feature(glyph, where))
         return true;
 
-    if (feat == '<')
+    if (glyph == '<')
     {
         if (grd(where) >= DNGN_EXIT_FIRST_PORTAL && grd(where) <= DNGN_EXIT_LAST_PORTAL)
             return true;
@@ -296,7 +296,7 @@ static bool _is_feature_fudged(ucs_t feat, const coord_def& where)
             return false;
         }
     }
-    else if (feat == '>')
+    else if (glyph == '>')
     {
         if (grd(where) >= DNGN_ENTER_FIRST_PORTAL && grd(where) <= DNGN_ENTER_LAST_PORTAL)
             return true;
@@ -318,7 +318,7 @@ static bool _is_feature_fudged(ucs_t feat, const coord_def& where)
     return false;
 }
 
-static int _find_feature(ucs_t feature, int curs_x, int curs_y,
+static int _find_feature(ucs_t glyph, int curs_x, int curs_y,
                          int start_x, int start_y, int anchor_x, int anchor_y,
                          int ignore_count, int *move_x, int *move_y)
 {
@@ -328,7 +328,7 @@ static int _find_feature(ucs_t feature, int curs_x, int curs_y,
     int firstx = -1, firsty = -1;
     int matchcount = 0;
 
-    // Find the first occurrence of feature 'feature', spiralling around (x,y)
+    // Find the first occurrence of given glyph, spiralling around (x,y)
     int maxradius = GXM > GYM ? GXM : GYM;
     for (int radius = 1; radius < maxradius; ++radius)
         for (int axis = -2; axis < 2; ++axis)
@@ -349,7 +349,7 @@ static int _find_feature(ucs_t feature, int curs_x, int curs_y,
                 int x = cx + dx, y = cy + dy;
                 if (!in_bounds(x, y))
                     continue;
-                if (_is_feature_fudged(feature, coord_def(x, y)))
+                if (_is_feature_fudged(glyph, coord_def(x, y)))
                 {
                     ++matchcount;
                     if (!ignore_count--)
