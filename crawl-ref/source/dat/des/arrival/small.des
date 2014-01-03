@@ -2151,7 +2151,7 @@ MAP
 xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx.x.......xxxxx...xx......xx
 xx.xXxxxxx.xxxxx.x.xxxxxxx.xx
-xx...x{..x...x...x...x(xxx..@
+xx...x{..x...x...x...x{xxx..@
 xxxx.xxx.x.x.x.xxxxx.x.xxx.xx
 @..x...x...x.....xxx...x...xx
 xx.xxx.xxxxxxxxx.xxxxxxx.xxxx
@@ -2160,7 +2160,7 @@ xxxx.xxxxxxx.x.xxx.x.xxxxx.xx
 xx...xxxxxxx...xxx...x...Z.xx
 xx.xxxxxxxxx.x.xxx.xxx.xxx.xx
 xx...xxxxx...x.....x...x...xx
-xxxx.x[xxx.xxxxxxxxx.xxx.xxxx
+xxxx.x{xxx.xxxxxxxxx.xxx.xxxx
 xxxx.....Y...........xxx...xx
 xxxxxxxxxxxxxxxxxxxxxxxxxx@xx
 ENDMAP
@@ -2239,7 +2239,7 @@ x...x.x...1dx...x
 xxxxx.xxxxxxxx.xx
 x...............x
 x.xxxxxX.Xxxxxx.x
-x.....[x(x{.....x
+x.....{x{x{.....x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
