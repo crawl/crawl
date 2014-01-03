@@ -689,8 +689,6 @@ monster_info::monster_info(const monster* m, int milev)
             this->props["priest"] = true;
         else if (m->is_actual_spellcaster())
             this->props["caster"] = true;
-        else
-            this->props[""] = true;
     }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
