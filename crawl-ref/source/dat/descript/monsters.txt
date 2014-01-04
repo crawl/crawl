@@ -2244,6 +2244,12 @@ Not the common harmless amphibian, but the far more dangerous mythological
 beast with which that amphibian shares its name. A red, flaming half-human
 half-snake creature, whose affinity for fire is legendary.
 %%%%
+sapper snake
+
+A peculiar parasite bred from the penchant of denizens of the Snake Pits
+to be both magically adept and immune to common venoms; sapper snakes instead
+feed on magical energy.
+%%%%
 satyr
 
 A more intelligent relative of the faun, often found in their company, and far
