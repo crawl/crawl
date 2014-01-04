@@ -2325,6 +2325,11 @@ shining eye
 A huge and strangely deformed floating eyeball, pulsating with flesh-twisting
 energy. Beauty is certainly nowhere to be found in this beholder.
 %%%%
+shock serpent
+
+A distant relative of electric eels, these snakes crackle with electricity
+ready to be set off at the merest touch of an adventurer's weapon.
+%%%%
 silent spectre
 
 The bane of wizards, these terrible spirits bring an unearthly silence to the

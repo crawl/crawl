@@ -5666,6 +5666,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         return;
     }
 
+    if (type == MONS_SHOCK_SERPENT)
+    {
+        simple_monster_message(this, " crackles with electricity!");
+        discharge_monsters(pos(), 50 + random2(100), 0, this);
+        return;
+    }
+
     // The royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY)
         (new trj_spawn_fineff(oppressor, this, pos(), damage))->schedule();
