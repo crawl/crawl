@@ -879,8 +879,8 @@ KFEAT:   z = teleport trap / Zot trap / . w:20
 MONS:    naga / nothing
 MONS:    greater naga / nothing
 MONS:    guardian serpent / nothing
-MONS:    naga warrior / nothing
-MONS:    naga mage / nothing
+MONS:    naga warrior / marksnaga w:5 / nothing w:15
+MONS:    naga mage w:40 / naga enchanter / marksnaga / nothing w:60
 MONS:    greater naga / guardian serpent
 SHUFFLE: 'X / "Y
 SHUFFLE: 'X / 'X / AB, "Y / CD
@@ -944,7 +944,9 @@ PLACE:  Snake:$
 WEIGHT: 20
 ORIENT: southwest
 TAGS:   no_rotate
-MONS:   greater naga, naga, naga mage, naga warrior
+MONS:   greater naga, naga
+MONS:   naga mage w:40 / naga enchanter / marksnaga
+MONS:   naga warrior / marksnaga w:5
 SUBST:  C = c .:1
 SUBST:  v = x .:1
 NSUBST: 1 = 3:1 / 2:. / * = 1., 3 = 16:3 / 8:. / * = 3..
@@ -994,7 +996,10 @@ NAME:    minmay_snake_end_coiled_edited
 PLACE:   Snake:$
 TAGS:    no_rotate
 ORIENT:  southwest
-MONS:    naga, naga warrior, naga mage, greater naga
+MONS:    naga
+MONS:    naga warrior / marksnaga w:5
+MONS:    naga mage w:40 / naga enchanter / marksnaga
+MONS:    greater naga
 SUBST:   c : c:20 v:5, 1 = 11.
 NSUBST:  2 = 6 = 23 / 6:. / * = 23..
 NSUBST:  4 = 3:4 / 4 = 12233 / 6:. / * = 44123....
@@ -1058,8 +1063,12 @@ TAGS:   no_monster_gen
 PLACE:  Snake:$
 ORIENT: north
 TAGS:   no_rotate
-MONS:   naga, naga mage, naga warrior, greater naga, guardian serpent
-MONS:   w:7 anaconda / black mamba / nothing
+MONS:   naga
+MONS:   naga mage w:40 / naga enchanter / marksnaga
+MONS:   naga warrior / marksnaga w:5
+MONS:   greater naga, guardian serpent
+MONS:   w:21 anaconda / black mamba / shock serpent / sapper snake / \
+        nothing w:30
 KITEM:  O = serpentine rune of Zot
 KMONS:  OS = guardian serpent
 KFEAT:  7 = lava
@@ -1114,9 +1123,12 @@ ENDMAP
 NAME:   grunt_snake_rune_spirals
 PLACE:  Snake:$
 ORIENT: centre
-MONS:   naga / nothing, naga warrior / naga, naga mage / naga
+MONS:   naga / nothing
+MONS:   naga warrior / marksnaga w:5 / naga w:15
+MONS:   naga mage w:20 / naga enchanter / marksnaga / naga w:40
 MONS:   greater naga / guardian serpent
-MONS:   greater naga / naga warrior w:5 / naga mage w:5
+MONS:   greater naga w:20 / naga warrior w:5 / naga mage w:5 / \
+        naga enchanter w:5 / marksnaga w:5
 NSUBST: O = 1:A / 1:B
 KITEM:  A = serpentine rune of Zot
 KITEM:  B = serpentine rune of Zot mimic / w:90 acquire any
@@ -1151,8 +1163,12 @@ NAME: grunt_snake_rune_pools
 PLACE: Snake:$
 TAGS: no_trap_gen no_monster_gen
 ORIENT: north
-MONS: greater naga, guardian serpent, naga warrior, naga mage, naga
-MONS: guardian serpent / w:20 anaconda / w:20 black mamba
+MONS: greater naga, guardian serpent
+MONS: naga warrior / marksnaga w:5
+MONS: naga mage w:40 / naga enchanter / marksnaga
+MONS: naga
+MONS: guardian serpent w:15 / anaconda w:30 / black mamba / \
+      sapper snake / shock serpent
 SUBST: 4 = 45, 3 = 35, 1 = 13, 2 = 21
 KMONS: 7 = sea snake
 KFEAT: 7 = deep_water
@@ -1198,8 +1214,10 @@ ORIENT: north
 KMONS:  L = Lamia
 KITEM:  O = serpentine rune of Zot
 KFEAT:  A = altar_okawaru / altar_makhleb / altar_trog
-MONS:   greater naga / naga warrior w:5 / naga mage w:5
-MONS:   naga warrior / naga, naga mage / naga, naga / nothing
+MONS:   greater naga w:20 / naga warrior w:5 / naga mage w:5 / \
+        naga enchanter w:5 / marksnaga w:5
+MONS:   naga mage w:20 / naga enchanter / marksnaga / naga w:40
+MONS:   naga / nothing
 MONS:   anaconda / guardian serpent
 veto {{ return you.uniques("Lamia") }}
 MAP
