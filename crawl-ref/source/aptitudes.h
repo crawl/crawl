@@ -1453,7 +1453,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FORMICID,        SK_EVOCATIONS,      2),
 
     // SP_VINE_STALKER
-    APT(SP_VINE_STALKER,    SK_FIGHTING,        0),
+    APT(SP_VINE_STALKER,    SK_FIGHTING,        -1),
     APT(SP_VINE_STALKER,    SK_SHORT_BLADES,    -1),
     APT(SP_VINE_STALKER,    SK_LONG_BLADES,     -1),
     APT(SP_VINE_STALKER,    SK_AXES,            -1),
