@@ -618,6 +618,15 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 1;
         break;
 
+    case TILEP_MONS_NAGA:
+    case TILEP_MONS_NAGA_MAGE:
+    case TILEP_MONS_MARKSNAGA:
+    case TILEP_MONS_NAGA_WARRIOR:
+    case TILEP_MONS_GREATER_NAGA:
+        *ofs_x = -3;
+        *ofs_y = 0;
+        break;
+
     case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_SPRIGGAN_DEFENDER:
     case TILEP_MONS_SPRIGGAN_BERSERKER:
