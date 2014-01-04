@@ -184,6 +184,7 @@ anaconda MONS_ANACONDA
 lava_snake MONS_LAVA_SNAKE
 sea_snake MONS_SEA_SNAKE
 shock_serpent MONS_SHOCK_SERPENT
+sapper_snake MONS_SAPPER_SNAKE
 
 ## Bears ('U')
 black_bear MONS_BLACK_BEAR

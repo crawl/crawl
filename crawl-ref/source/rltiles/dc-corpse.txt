@@ -147,6 +147,7 @@ water_moccasin CORPSE_WATER_MOCCASIN
 anaconda CORPSE_ANACONDA
 sea_snake CORPSE_SEA_SNAKE
 shock_serpent CORPSE_SHOCK_SERPENT
+sapper_snake CORPSE_SAPPER_SNAKE
 
 ## Bears ('U')
 black_bear CORPSE_BLACK_BEAR
