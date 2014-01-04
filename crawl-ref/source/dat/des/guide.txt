@@ -2,18 +2,19 @@ Guide to des files
 ==================
 
 des files are mostly used for creating parts of maps. Typical examples are
-entry vaults or most branch ends. They are organised in six subdirectories of
-dat/des, namely
+arrival vaults or most branch ends. They are organised into several
+subdirectories of dat/des, namely
 
 branches  = maps special to a branch, and branch ends
 portals   = maps needed for portal vaults like labyrinths or bazaars
-entry     = entry vaults
+arrival   = Dungeon arrival vaults
 variable  = floating vaults, minivaults
+altar     = overflow and other altars
 serial    = for serial vaults (a chain of small vaults to be used on one level)
-
 traps     = lua defined trap vaults
-builder   = various lua code and map snippets for technical purposes, also
-            contains uniques.des and dummy.des
+builder   = layouts and other vaults placed specially during level-building
+            (shops, uniques, etc.)
 sprint    = maps for the Dungeon Sprint minigame
 tutorial  = maps for the tutorial minigame
 zotdef    = maps for the Zot Defence minigame
+test      = vaults used for testing the game
