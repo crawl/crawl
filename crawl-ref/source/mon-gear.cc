@@ -626,8 +626,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (!melee_only)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = random_choose_weighted(3, WPN_BOW,
-                                                    2, WPN_CROSSBOW,
+            item.sub_type  = random_choose_weighted(3, WPN_SLING,
+                                                    3, WPN_CROSSBOW,
+                                                    2, WPN_BOW,
                                                     1, WPN_LONGBOW,
                                                     0);
             break;
@@ -1836,10 +1837,14 @@ static void _give_shield(monster* mon, int level)
             break;
         // deliberate fall-through
 
+    // Marksnagas will lose their shield if they're generated with a
+    // two-handed weapon - they will only get it with slings and if their
+    // backup weapon is one-handed.
+    case MONS_MARKSNAGA:
     case MONS_NAGA_WARRIOR:
     case MONS_VAULT_GUARD:
     case MONS_VAULT_WARDEN:
-        if (one_chance_in(3))
+        if (mon->type == MONS_MARKSNAGA || one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
                                   one_chance_in(3) ? ARM_LARGE_SHIELD
