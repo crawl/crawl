@@ -3314,6 +3314,19 @@ struct spell_desc
 },
 
 {
+    SPELL_INVISIBILITY_OTHER, "Invisibility Other",
+     SPTYP_CHARMS | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_HELPFUL,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     true
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
