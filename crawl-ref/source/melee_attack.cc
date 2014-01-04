@@ -1343,9 +1343,13 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
         {
-            //Change formula to fangs_level*2 + 2*XL/3
+            //Change formula to max(24, fangs_level*2 + 2*XL/3 + int/2 - 6)
             aux_damage -= str_bite_damage;
-            aux_damage += div_rand_round(2 * you.get_experience_level(), 3);
+            aux_damage += div_rand_round(2 * you.get_experience_level(),
+                                         3)
+                          + div_rand_round(you.intel(), 2)
+                          - 6;
+            aux_damage = min(24, aux_damage);
             damage_brand = SPWPN_ANTIMAGIC;
         }
 
