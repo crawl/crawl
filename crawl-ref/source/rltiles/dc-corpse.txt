@@ -146,6 +146,7 @@ black_mamba CORPSE_BLACK_MAMBA
 water_moccasin CORPSE_WATER_MOCCASIN
 anaconda CORPSE_ANACONDA
 sea_snake CORPSE_SEA_SNAKE
+shock_serpent CORPSE_SHOCK_SERPENT
 
 ## Bears ('U')
 black_bear CORPSE_BLACK_BEAR
