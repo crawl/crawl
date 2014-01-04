@@ -2827,6 +2827,8 @@ enum monster_type                      // menv[].type
     MONS_SNAKE,                 // genus
 #endif
 
+    MONS_SHOCK_SERPENT,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change

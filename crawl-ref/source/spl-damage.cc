@@ -1794,7 +1794,11 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
     else if (mons == NULL)
         return 0;
     else if (mons->res_elec() > 0)
-        return 0;
+    {
+        // Shock serpents conduct electricity just fine.
+        if (mons->type != MONS_SHOCK_SERPENT)
+            return 0;
+    }
     else
     {
         damage = 3 + random2(5 + pow / 10 + (random2(pow) / 10));

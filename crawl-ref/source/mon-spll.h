@@ -2322,4 +2322,15 @@
        SPELL_TELEPORT_OTHER
       }
     },
+
+    {  MST_SHOCK_SERPENT,
+      {
+       SPELL_SHOCK,
+       SPELL_DISCHARGE,
+       SPELL_NO_SPELL,
+       SPELL_SHOCK,
+       SPELL_DISCHARGE,
+       SPELL_NO_SPELL
+      }
+    },
 #endif

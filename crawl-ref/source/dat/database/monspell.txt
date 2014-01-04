@@ -488,6 +488,14 @@ shedu cast
 shedu cast targeted
 
 @The_monster@ beseeches @possessive_God@ to heal @possessive@ mate!
+%%%%
+Shock shock serpent cast
+
+@The_monster@ discharges a narrow tendril of electricity.
+%%%%
+Static Discharge shock serpent cast
+
+@The_monster@ crackles with electricity!
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.
