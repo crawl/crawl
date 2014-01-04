@@ -2851,6 +2851,7 @@ enum monster_type                      // menv[].type
     MONS_DROWNED_SOUL,
 
     MONS_SHOCK_SERPENT,
+    MONS_SAPPER_SNAKE,
 
     NUM_MONSTERS,               // used for polymorph
 

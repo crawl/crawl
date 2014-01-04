@@ -2520,13 +2520,14 @@ bool melee_attack::distortion_affects_defender()
 
 void melee_attack::antimagic_affects_defender(bool amplify_effect = false)
 {
+    int amount = 0;
     if (defender->is_player())
     {
-        int mp_loss = min(you.magic_points, random2(damage_done * 2));
-        if (!mp_loss)
+        amount = min(you.magic_points, random2(damage_done * 2));
+        if (!amount)
             return;
         mprf(MSGCH_WARN, "You feel your power leaking away.");
-        drain_mp(mp_loss);
+        drain_mp(amount);
         obvious_effect = true;
     }
     else if (defender->as_monster()->can_use_spells()
@@ -2534,7 +2535,8 @@ void melee_attack::antimagic_affects_defender(bool amplify_effect = false)
              && !mons_class_flag(defender->type, M_FAKE_SPELLS))
     {
         int dur = div_rand_round(damage_done * 8, defender->as_monster()->hit_dice);
-        dur = random2(dur + 1) * BASELINE_DELAY;
+        amount = random2(dur + 1);
+        dur = amount * BASELINE_DELAY;
         if (amplify_effect)
             dur *= 2;
         defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
@@ -2544,6 +2546,14 @@ void melee_attack::antimagic_affects_defender(bool amplify_effect = false)
                     apostrophise(defender->name(DESC_THE))
                     + " magic leaks into the air.";
         obvious_effect = true;
+    }
+    if (amount > 0
+        && attacker->is_monster()
+        && attacker->as_monster()->type == MONS_SAPPER_SNAKE)
+    {
+        amount = random2(amount) + 1;
+        simple_monster_message(attacker->as_monster(), " looks invigorated.");
+        attacker->heal(amount);
     }
 }
 
