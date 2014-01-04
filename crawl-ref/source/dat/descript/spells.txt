@@ -601,6 +601,10 @@ This spell hides a creature from the sight of others. While invisible you will
 gain magical contamination, which may eventually cause enough glow to make you
 visible again.
 %%%%
+Invisibility Other spell
+
+This spell hides a nearby ally of the caster from the sight of others.
+%%%%
 Iron Shot spell
 
 This spell hurls a large and heavy metal bolt at the caster's foe.

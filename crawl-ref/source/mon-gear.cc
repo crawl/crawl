@@ -622,8 +622,21 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        -1);
         break;
 
+    case MONS_MARKSNAGA:
+        if (!melee_only)
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = random_choose_weighted(3, WPN_BOW,
+                                                    2, WPN_CROSSBOW,
+                                                    1, WPN_LONGBOW,
+                                                    0);
+            break;
+        }
+        // deliberate fall-through
+
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
+    case MONS_NAGA_ENCHANTER:
         item_race = MAKE_ITEM_NO_RACE;
         // deliberate fall-through {dlb}
 
@@ -2253,12 +2266,14 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
+    case MONS_NAGA_ENCHANTER:
+    case MONS_MARKSNAGA:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
         if (one_chance_in(mon->type == MONS_NAGA         ?  800 :
                           mon->type == MONS_NAGA_WARRIOR ?  300 :
-                          mon->type == MONS_NAGA_MAGE    ?  200
-                                                         :  100))
+                          mon->type == MONS_GREATER_NAGA ?  100
+                                                         :  200))
         {
             item_race      = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_ARMOUR;

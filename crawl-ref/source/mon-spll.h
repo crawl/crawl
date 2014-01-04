@@ -2333,4 +2333,26 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_NAGA_ENCHANTER,
+      {
+       SPELL_NO_SPELL,
+       SPELL_CONFUSE,
+       SPELL_HASTE,
+       SPELL_INVISIBILITY_OTHER,
+       SPELL_HASTE_OTHER,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_MARKSNAGA,
+      {
+       SPELL_NO_SPELL,
+       SPELL_CORONA,
+       SPELL_LEDAS_LIQUEFACTION,
+       SPELL_SLOW,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
 #endif

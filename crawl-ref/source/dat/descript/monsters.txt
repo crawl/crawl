@@ -1812,6 +1812,11 @@ A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
 %%%%
+marksnaga
+
+A rare breed of naga adept in the use of ranged weaponry; it has learned
+a few spells to debiliatate its enemies and make them easier targets.
+%%%%
 master elementalist
 
 The primal forces of the universe dance at this demented wizard's fingertips.
@@ -1891,6 +1896,10 @@ naga
 
 A hybrid that is human from the waist up; below is a scaly, muscular snakelike
 tail. Its mouth drips with venomous saliva.
+%%%%
+naga enchanter
+
+A naga trained specially in enchantments to aid its allies.
 %%%%
 naga mage
 

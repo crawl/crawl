@@ -2829,6 +2829,8 @@ enum monster_type                      // menv[].type
 
     MONS_SHOCK_SERPENT,
     MONS_SAPPER_SNAKE,
+    MONS_NAGA_ENCHANTER,
+    MONS_MARKSNAGA,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -3706,6 +3708,7 @@ enum spell_type
     SPELL_SHAFT_SELF,
 #endif
     SPELL_BLINKBOLT,
+    SPELL_INVISIBILITY_OTHER,
     NUM_SPELLS
 };
 

@@ -513,6 +513,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_INVISIBILITY:
+    case SPELL_INVISIBILITY_OTHER:
         beam.flavour  = BEAM_INVISIBILITY;
         break;
 
@@ -2594,10 +2595,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 if (spell_cast != SPELL_MELEE)
                     setup_mons_cast(mons, beem, spell_cast);
 
-                // Try to find a nearby ally to haste, heal or might.
+                // Try to find a nearby ally to haste, heal, might,
+                // or make invisible.
                 if ((spell_cast == SPELL_HASTE_OTHER
                      || spell_cast == SPELL_HEAL_OTHER
-                     || spell_cast == SPELL_MIGHT_OTHER)
+                     || spell_cast == SPELL_MIGHT_OTHER
+                     || spell_cast == SPELL_INVISIBILITY_OTHER)
                         && !_set_allied_target(mons, beem,
                                mons->type == MONS_IRONBRAND_CONVOKER))
                 {
