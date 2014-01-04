@@ -1168,6 +1168,9 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     case OSEL_THROWABLE:
     {
+        if (you_worship(GOD_TROG) && item_is_spellbook(i))
+            return true;
+
         if (i.base_type != OBJ_WEAPONS && i.base_type != OBJ_MISSILES)
             return false;
 
