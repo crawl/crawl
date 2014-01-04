@@ -1628,13 +1628,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             if (!defender->as_monster()->is_summoned()
                 && !mons_is_firewood(defender->as_monster()))
             {
-                //1dDamage, halve that, cast to int.
-                inc_mp((int)((random2(damage_done) + 1)/2));
-
-                if (spell_user) // The mana drain is more effective on spellcasters
-                    inc_mp((int)((random2(damage_done) + 1)/2));
-
-                mprf("You feel%sinvigorated.", spell_user ? " very " : " ");
+                inc_mp(random2(damage_done) + 1);
+                mpr("You feel invigorated.");
             }
         }
 
