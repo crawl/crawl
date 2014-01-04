@@ -707,6 +707,8 @@ aizul MONS_AIZUL
 %sdir mon
 naga MONS_NAGA
 naga_mage MONS_NAGA_MAGE
+naga_enchanter MONS_NAGA_ENCHANTER
+marksnaga MONS_MARKSNAGA
 naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT

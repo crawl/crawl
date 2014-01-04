@@ -1655,6 +1655,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GUARDIAN_SERPENT;
     case MONS_NAGA_MAGE:
         return TILEP_MONS_NAGA_MAGE;
+    case MONS_NAGA_ENCHANTER:
+        return TILEP_MONS_NAGA_ENCHANTER;
+    case MONS_MARKSNAGA:
+        return TILEP_MONS_MARKSNAGA;
     case MONS_NAGA_WARRIOR:
         return TILEP_MONS_NAGA_WARRIOR;
     case MONS_GREATER_NAGA:
@@ -4088,6 +4092,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // nagas ('N')
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
+    case MONS_NAGA_ENCHANTER:
+    case MONS_MARKSNAGA:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
         return TILE_CORPSE_NAGA;
