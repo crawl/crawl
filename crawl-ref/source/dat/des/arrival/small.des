@@ -2764,7 +2764,6 @@ TILE:    t = DNGN_TREE_DEAD
 TILE:    G = DNGN_GRAVESTONE
 COLOUR:  ' = brown / darkgrey
 COLOUR:  t = darkgrey
-COLOUR:  G = white
 SUBST:   t = t.
 : set_feature_name("granite_statue", "adventurer's gravestone")
 MAP
