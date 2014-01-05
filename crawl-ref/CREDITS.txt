@@ -189,6 +189,7 @@
     Jared 'Twinge' Tinney
     Matt Titus
     Jason Van
+    wheals
     Steven Wheeler
     Thomas Willem
     Evan Williams
