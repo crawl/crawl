@@ -395,7 +395,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                              self._stale_lockfile, self._stale_pid)
         elif signal == subprocess.signal.SIGTERM:
             self.logger.warning("Terminating pid %s forcefully!",
-                                self._stale_lockfile, self._stale_pid)
+                                self._stale_pid)
         try:
             os.kill(self._stale_pid, signal)
         except OSError, e:
