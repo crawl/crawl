@@ -3577,11 +3577,14 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                                 "level gain");
                 }
 
-                if (you.experience_level == 8)
-                {
-                    perma_mutate(MUT_FANGS, 1, "vine stalker growth");
+                if (you.experience_level == 6)
                     perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
-                }
+
+                if (you.experience_level == 8)
+                    perma_mutate(MUT_FANGS, 1, "vine stalker growth");
+
+                if (you.experience_level == 12)
+                    perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
                 break;
 
             default:
