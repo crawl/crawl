@@ -3051,6 +3051,9 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         dprf("Lost %d of %d draining points", loss, you.attribute[ATTR_XP_DRAIN]);
 
         you.attribute[ATTR_XP_DRAIN] -= loss;
+        // Regaining skills may affect AC/EV.
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
         if (you.attribute[ATTR_XP_DRAIN] <= 0)
         {
             you.attribute[ATTR_XP_DRAIN] = 0;
