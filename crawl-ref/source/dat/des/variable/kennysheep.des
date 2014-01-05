@@ -67,7 +67,7 @@ end
 ###########################################################
 NAME:   kennysheep_small_circle
 TAGS:   extra allow_dup
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 :ks_random_setup(_G)
 :if crawl.coinflip() then
 SUBST:  *:%
@@ -93,7 +93,7 @@ ENDMAP
 ###########################################################
 NAME:   kennysheep_small_square
 TAGS:   extra allow_dup
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 :ks_random_setup(_G)
 :if crawl.coinflip() then
 SUBST:  *:%
@@ -145,7 +145,7 @@ ENDMAP
 #############################################################
 NAME:   kennysheep_little_box
 TAGS:   extra decor allow_dup
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 :ks_random_setup(_G)
 KFEAT:  O = any shop
 SUBST:  {={}OB....
@@ -162,7 +162,7 @@ ENDMAP
 #############################################################
 NAME:   kennysheep_mini
 TAGS:   extra decor allow_dup
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 :ks_random_setup(_G)
 KFEAT:  O = any shop
 SUBST:  {={}OCB
@@ -175,7 +175,7 @@ ENDMAP
 #############################################################
 NAME:   kennysheep_mini_moat
 TAGS:   extra decor allow_dup
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 :ks_random_setup(_G)
 SUBST:  .:@
 KFEAT:  O = any shop
@@ -215,7 +215,7 @@ ENDMAP
 #############################################################
 NAME:   kennysheep_diamond
 TAGS:   extra
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 :ks_random_setup(_G)
 :if crawl.coinflip() then
 SUBST:  *:%
@@ -251,7 +251,7 @@ ENDMAP
 #############################################################
 NAME:   kennysheep_windowed_goal
 TAGS:   extra decor
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 :if crawl.coinflip() then
 SUBST:  O:0
 :else
@@ -279,7 +279,7 @@ ENDMAP
 #############################################################
 NAME:   kennysheep_blocked_goal
 TAGS:   extra decor no_rtele_into
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 :if crawl.coinflip() then
 SUBST:  O:0
 NSUBST: } = 2:.
