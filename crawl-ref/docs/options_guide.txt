@@ -1258,8 +1258,8 @@ autofight_caught = false
         holding you, even if no enemies are in view.
 
 automagic_enable = false
-	If true, the autofight function will resort to casting an assigned
-	spell at a target. Initial spell slot is a.
+        If true, the autofight function will resort to casting an assigned
+        spell at a target. Initial spell slot is a.
 
 automagic_slot = a
         Setting this changes the initial spell slot for automagic. Can be
@@ -1267,15 +1267,15 @@ automagic_slot = a
         ===am_set_spell.
 
 automagic_fight = false
-	Setting this to true causes melee combat when trying to cast a spell
-	that you either do not have enough magic points for, or are below
-	the set threshold. If false, a message will appear and no further
-	action is taken.
+        Setting this to true causes melee combat when trying to cast a spell
+        that you either do not have enough magic points for, or are below
+        the set threshold. If false, a message will appear and no further
+        action is taken.
 
 automagic_stop = 0
-	Similar to autofight_stop, if magic points are below this number
-	(percentage of total), casting is prevented. What happens depends
-	on automagic_fight setting.
+        Similar to autofight_stop, if magic points are below this number
+        (percentage of total), casting is prevented. What happens depends
+        on automagic_fight setting.
 
 3-i     Messages and Display Enhancements.
 ------------------------------------------
