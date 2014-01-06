@@ -165,11 +165,6 @@ Spriggan's Knife
 Niepozorny mały nożyk, zrobiony przez spriggan, dla spriggan albo może nawet ze
 spriggan. W każdym razie, jest jakoś związany z tym ludkiem.
 %%%%
-plutonium sword
-
-Potrójny miecz z dziwnego świecącego metalu. Ciekawe czy poboczne ostrza
-wyrosły na skutek promieniowania, i czy tobie też wyrosną dwie dodatkowe głowy.
-%%%%
 whip "Snakebite"
 
 Podwójny bicz zrobiony ze skóry czarnej mamby.

@@ -1,19 +1,35 @@
 %%%%
+Spit Poison ability
+
+Uzspļaut indi izvēlētajam briesmonim.
+%%%%
 Breathe Frost ability
 
 Uzpūst izvēlētajam briesmonim ledus brāzmu.
+%%%%
+Breathe Poison Gas ability
+
+Uzpūst izvēlētajam briesmonim indīgas gāzes mākoni.
 %%%%
 Breathe Steam ability
 
 Uzpūst izvēlētajam briesmonim tvaika strūklu.
 %%%%
+Spit Acid ability
+
+Uzspļaut indi izvēlētajam briesmonim.
+%%%%
 Evoke Teleportation ability
 
 Aizteleportē sevi uz nejaušu līmeņu vietu.
 %%%%
-Banish ability
+Turn Visible ability
 
-=
+Atkal kļūt redzamam.
+%%%%
+End Transfer Knowledge ability
+
+Pārtraukt notiekošo pramju parnesi.
 %%%%
 Make arrow trap ability
 

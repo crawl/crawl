@@ -185,16 +185,6 @@ Puedes encontrar cinco runas en el Pandemonio:
  — La Runa Demoníaca existe en múltiples copias, en posesión de otros
    señores de menos renombre.
 %%%%
-Ziggurat
-
-Una serie de arenas, cada una contiene mayores fortunas e incluso mayores
-peligros que la anterior. Quien quiera que fuera la entidad que creó esta
-monstruosidad, pone un alto precio por entrar. Cuidado, porque un zigurat no es
-un lugar para los débiles de espíritu: incluso el aventurero más valiente y
-diestro ha encontrado su final aquí. Si bien un portal de seguridad se
-encuentra presente en cada nivel, a un zigurat no se puede volver a entrar una
-vez se abandona.
-%%%%
 Labyrinth
 
 El Laberinto es un complejo y vasto lugar diseñado por mentes sutiles y

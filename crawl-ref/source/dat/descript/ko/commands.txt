@@ -1,4 +1,8 @@
 %%%%
+CMD_REST
+
+휴식 및 회복
+%%%%
 CMD_REST verbose
 
 100턴을 소비하여 생명력과 마력을 회복하고, 주변을 살펴본다. 적대적인 대상이
@@ -40,20 +44,20 @@ CMD_PRAY verbose
 %%%%
 CMD_SEARCH_STASHES
 
-특정 물건 및 특이지점 검색
+아이템 및 지형지물 검색
 %%%%
 CMD_SEARCH_STASHES verbose
 
-다른 곳에서 발견했던 특정 물건 혹은 특이지점이 있는 곳을 검색하며, 그곳으로
-이동할 수 있다.
+다른 곳에서 발견했던 아이템 혹은 지형지물이 있는 곳을 검색하며, 그곳으로 이동할
+수 있다.
 %%%%
 CMD_REPLAY_MESSAGES
 
-지나간 메시지 다시 읽기
+최근 메시지 일람
 %%%%
 CMD_RESISTS_SCREEN
 
-캐릭터의 전체적인 정보 표시
+캐릭터 정보 표시
 %%%%
 CMD_RESISTS_SCREEN verbose
 
@@ -82,7 +86,7 @@ CMD_DISPLAY_MUTATIONS
 %%%%
 CMD_DISPLAY_SKILLS
 
-습득한 기술의 목록과 학습 방향 설정
+기술 관리
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS
 
@@ -98,7 +102,7 @@ CMD_DISPLAY_KNOWN_OBJECTS
 %%%%
 CMD_SAVE_GAME_NOW
 
-게임 저장 후 종료
+저장 후 종료
 %%%%
 CMD_SAVE_GAME_NOW verbose
 

@@ -261,14 +261,6 @@ tratar de volverlos neutrales. Elyvilon puede intervenir directamente para
 salvar la vida de un seguidor, especialmente cuando es requerido para ello; los
 seguidores altamente piadosos pueden estar seguros de dicha ayuda.
 %%%%
-Lugonu powers
-
-Los seguidores de Lugonu ganan poderes para salir del Abismo a voluntad, para
-desterrar a monstruos allí y al final para entrar ellos mismos en ese reino de
-caos- con el coste de parte de su alma. Aparte de eso, pueden causar daño
-distorsional a monstruos y ganar la habilidad de corromper el orden del mundo,
-permitiéndoles abrir una puerta para que criaturas del Abismo pasen a través.
-%%%%
 Fedhas powers
 
 Las plantas y los hongos no atacarán a los adoradores de Fedhas sin provocación

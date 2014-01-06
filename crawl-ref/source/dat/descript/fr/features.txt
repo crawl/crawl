@@ -156,11 +156,11 @@ dans les profondeurs des abysses.
 %%%%
 A gateway to a ziggurat
 
-Ce portail mène à un ancien ziggurat, un lieu de défis inavouables et de
+Ce portail mène à un ancien ziggurat, un lieu peuplés d'immenses défis et de
 richesses sans précédent.
 
-Le portail ne peut être utilisé qu'une seule fois et, il y a un taxe énorme à
-payer pour pouvoir le franchir.
+Le portail ne peut être utilisé qu'une seule fois et, il faut posséder trois
+runes de Zot pour le franchir.
 %%%%
 A gateway to the ashen valley of Gehenna
 

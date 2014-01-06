@@ -58,9 +58,7 @@ Boden halten würden.
 Bottle Blood ability
 
 Auf der Erfahrungsstufe 6 oder höher können Vampire Blut von Leichen, welche
-noch Blut enthalten und noch nicht verfault sind, in Flaschen abfüllen. Um
-dieses zu tun, müssen sie in der Lage sein einen Dolch zu benutzen und bei dem
-Körper stehen, so wie es beim Schlachten der Fall ist.
+noch Blut enthalten und noch nicht verfault sind, in Flaschen abfüllen.
 %%%%
 Spit Acid ability
 

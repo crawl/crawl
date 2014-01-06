@@ -1062,11 +1062,6 @@ potion of resistance
 En trylledrik, som gør dig midlertidigt modstandsdygtig mod elementerne og
 gift.
 %%%%
-potion of restore abilities
-
-En trylledrik, som restituerer evnerne hos den, der drikker den. Den giver også
-mulighed for at bruge et åndevåben igen ved at annullere forsinkelsen.
-%%%%
 potion of slowing
 
 En drik, som forsinker dine handlinger.

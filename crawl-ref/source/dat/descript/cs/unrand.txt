@@ -168,11 +168,6 @@ Roztomile malý nožík.
 Tento nůž byl vyroben sprigany, nebo pro sprigany, nebo možná také ze spriganů.
 V každém případě nějaký vztah mezi ním a těmi nepraktickými podivíny existuje.
 %%%%
-plutonium sword
-
-Trojmeč vyrobený z podivně zářícího kovu. Říkáš si, jestli jeho dvě čepele
-dorostly vlivem radiace, a jestli i tobě kvůli ní narostou další dvě hlavy.
-%%%%
 whip "Snakebite"
 
 Bič s rozeklaným koncem, vyrobený z vypreparovaných kůží černých mamb z Doupěte

@@ -95,6 +95,15 @@ bardiche
 
 Une longue perche avec une énorme lame tranchante au bout.
 %%%%
+bastard sword
+
+Une longue et large épée. Un humain adulte ou un elfe peut la manier à une
+main, tandis que quelqu'un d'une race plus faible aura besoin de ses deux mains
+pour la saisir. En fait, c'est l'arme la plus lourde et la plus meurtrière que
+quiconque, en dehors d'une certaine race d'insectes humanoïdes, puisse manier
+avec un bouclier. Tâter d'une lame aussi longue causera la perte de n'importe
+quel adversaire.
+%%%%
 battleaxe
 
 Une large hache de guerre à deux main munie d'un redoutable double tranchant,
@@ -103,6 +112,14 @@ destinée à être utilisée au combat par des guerriers entraînés.
 beef jerky
 
 Une tranche séchée de vache ou de bœuf mort.
+%%%%
+blessed bastard sword
+
+Une épée longue et large, améliorée par l'Étincelant.
+%%%%
+blessed claymore
+
+Une épée massive, améliorée par l'Étincelant.
 %%%%
 blessed falchion
 
@@ -389,6 +406,13 @@ chunk of flesh
 
 Un morceau de viande crue trouvé dans le donjon. Il ne va pas rester frais bien
 longtemps.
+%%%%
+claymore
+
+Une épée massive, qui nécessite l'utilisation des deux mains rien que pour la
+tenir, et beaucoup de force et d'entraînement pour l'utiliser efficacement. Il
+va sans dire qu'une fois qu'un combattant est suffisamment fort pour la manier
+confortablement, c'est une arme sans pareil.
 %%%%
 cloak
 
@@ -1002,8 +1026,9 @@ Une potion qui vous donne une résistance temporaire aux éléments et au poison
 %%%%
 potion of restore abilities
 
-Une potion qui restaure les caractéristiques de celui qui la boit. Elle permet
-aussi d'utiliser à nouveau un souffle en annulant son délai d'utilisation.
+Une potion qui restaure les caractéristiques et une partie des compétences
+drainées de celui qui la boit. Elle permet aussi d'utiliser à nouveau un
+souffle en annulant son délai d'utilisation.
 %%%%
 potion of slowing
 

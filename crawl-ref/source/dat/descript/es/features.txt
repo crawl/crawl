@@ -87,14 +87,6 @@ A gateway leading out of the Abyss
 Un portal para salir de este maldito sitio, que palpita y se desliza en un
 escenario siempre cambiante.
 %%%%
-A gateway to a ziggurat
-
-Este portal conduce a un antiguo zigurat, un lugar de retos y riquezas por
-contar.
-
-Este portal solamente se puede usar una vez, y se cobra una enorme factura para
-entrar.
-%%%%
 A gateway to the ashen valley of Gehenna
 
 Puedes notar el calor. Gehena parece que solamente esté hecho de llamas, lava y

@@ -127,11 +127,9 @@ A gateway leading out of the Abyss
 在四周不断变化的光景中，只有这扇传送门固定在那里不动，发出微弱的光芒。
 它会将你带离这个受诅咒的地方。
 %%%%
-A gateway to a ziggurat
+A gateway leading deeper into the Abyss
 
-这扇传送门通往一座远古的金字塔，其中既有无数的危险也有无数的财宝。
-
-这扇传送门只能使用一次，而且还要缴一大笔费用。
+这扇传送门在不断变化的深渊中显得出奇地稳定。它通往深渊的更深处。
 %%%%
 A gateway to the ashen valley of Gehenna
 
@@ -246,6 +244,10 @@ A runed door
 这扇门上面画满了符文记号。门的后面应该有什么特别的东西——可能是宝藏，
 也可能是危险。你可以破除上面的符文然后打开它，方法和打开其他门一样：
 直接向门的方向移动，或者按“O”键。
+%%%%
+A sealed door
+
+这扇门被奥术符文封得紧紧的。只有被这扇门上面的魔法承认的生物才能打开它。
 %%%%
 A shaft
 

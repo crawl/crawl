@@ -1,13 +1,82 @@
 %%%%
+tutorial intro
+
+Puedes volver a leer los mensaje en cualquier momento mediante
+<input>$cmd[CMD_REPLAY_MESSAGES]</input>. Pulsa la tecla <input>Espacio</input>
+para marcar como leídas las notificaciones <cyan>--more--</cyan> que recibas.
+%%%%
+tutorial1 start
+
+En esta lección vas a aprender a moverte en el juego y como explorar un nivel.
+Puedes moverte <localtiles>haciendo clic en algún lugar con tu
+<input>Ratón</input>, o </localtiles>pulsando las <input>teclas de
+dirección</input>.
+%%%%
 tutorial1 go_on
 
-¡Lo estás haciendo muy bien! Ahora, explora un poco hasta que alcances el
+¡Lo estás haciendo muy bien! Ahora, explora un poco hasta que llegues al
 siguiente cuadrado azul.
+%%%%
+tutorial1 downstairs
+
+Cuando estés sobre unas escaleras descendentes, puedes pasar al siguiente nivel
+mediante <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> o haciendo
+<input>Shift-clic</input> sobre tu personaje</localtiles>.
+%%%%
+tutorial1 autoexplore
+
+Explorar manualmente puede volverse tedioso después de un rato, así que también
+es posible hacerlo de una forma automática. Prueba a pulsar la tecla
+<input>$cmd[CMD_EXPLORE]</input>.
+%%%%
+tutorial1 exclusion
+
+Algunas zonas peligrosas están marcadas con <w>exclusiones</w>. La exploración
+automática <localtiles>(incluyendo la iniciada mediante un <input>clic del
+ratón</input>!) </localtiles>no se adentrará en una zona de exclusión, sino que
+se detendrá.
+
+Sin embargo, puedes reanudar la exploración automática mediante
+<input>$cmd[CMD_EXPLORE]</input>, y ésta rodeará de forma segura dichas
+exclusiones.
+%%%%
+tutorial1 autoexplore_announce
+
+La exploración automática se detendrá para anunciar objetos y estructuras del
+calabozo. Para viajar directamente hacia las escaleras, puedes <localtiles>
+<input>hacer clic</input> sobre ellas, o </localtiles>pulsar
+<input>$cmd[CMD_DISPLAY_MAP] << Enter</input>.
+%%%%
+tutorial1 tutorial_end
+
+¡Enhorabuena! ¡Has completado tu primera lección!
+
+Para salir del curso, simplemente baja por estas escaleras mediante
+<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles>, o haciendo
+<input>Shift-clic</input> sobre tu personaje</localtiles>. Responde a la
+pregunta de confirmación con una <input>Y</input> mayúscula.
+%%%%
+tutorial1 newlevel
+
+¡Un nuevo nivel! Para empezar, dirígete hacia esa puerta a la derecha.
+
+Además, recuerda: Puedes volver a leer los mensajes viejos mediante
+<input>$cmd[CMD_REPLAY_MESSAGES]</input>.
+%%%%
+tutorial1 door
+
+Para abrir una puerta cerrada, intenta moverte sobre ella.
 %%%%
 tutorial1 water
 
 Observa como eres capaz de atravesar las aguas superficiales pero no las
 profundas.
+%%%%
+tutorial1 upstairs
+
+Cuando estés sobre unas escaleras ascendentes, puedes volver al nivel previo
+mediante <input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> o haciendo
+<input>Shift-clic</input> sobre tu personaje</localtiles>.
 %%%%
 tutorial2 start
 
@@ -19,14 +88,87 @@ tutorial2 melee
 Para atacar a un monstruo con tus puños o con un arma que hayas empuñado
 previamente, simplemente intenta caminar sobre él.
 %%%%
+tutorial2 resting
+
+¡Muy bien! Puedes recuperar cualquier cantidad de puntos de vida que hayas
+perdido descansando con <input>$cmd[CMD_REST]</input>. Este descanso puede
+durar hasta 100 turnos por cada pulsación, pero algunos eventos importantes
+podrían interrumpirlo.
+%%%%
+tutorial2 chop_corpses
+
+Para descuartizar cadáveres y obtener de ellos trozos de carne comestible,
+pulsa <input>$cmd[CMD_BUTCHER]</input><localtiles>, o haz <input>Shift +
+clic</input></localtiles>. Una vez hecho esto, podrás comerte los trozos de
+carne que hayas conseguido mediante <input>$cmd[CMD_EAT]</input><localtiles>,
+o haciendo <input>clic</input> con el ratón</localtiles>.
+%%%%
+tutorial2 rest_and_chop_reminder
+
+¡No te olvides de descuartizar cadáveres para conseguir comida (con
+<input>$cmd[CMD_BUTCHER]</input>), o de descansar (con
+<input>$cmd[CMD_REST]</input>)!
+%%%%
+tutorial2 wait
+
+En lugar de entrar de lleno en la sala, donde podrías verte rodeado de
+monstruos por todas partes, da algunos pasos hacia atrás y espera (con
+<input>$cmd[CMD_MOVE_NOWHERE]</input>) a que ellos vengan a ti.
+%%%%
+tutorial2 resting_reminder
+
+Recuerda, puedes descansar pulsando <input>$cmd[CMD_REST]</input>.
+%%%%
+tutorial2 downstairs
+
+¡Bien hecho! Después de descansar hasta recuperar todos tus puntos de vida,
+avanza al siguiente nivel mediante
+%%%%
+tutorial2 newlevel
+
+Recuerda: Puedes volver a leer los mensajes viejos con
+%%%%
+tutorial2 darts
+
+¡Ahora, toca el combate a distancia! Toma esos dardos mediante
+<input>$cmd[CMD_PICKUP]</input><localtiles> o haciendo <input>clic con el
+ratón</input> sobre ellos,</localtiles> y continua.
+%%%%
+tutorial2 throwing
+
+Para lanzarle tus dardos a un monstruo, pulsa <input>$cmd[CMD_FIRE]</input>
+<localtiles> o haz <input>clic</input> sobre tus dardos en el panel de
+inventorio</localtiles>. Confirma el objetivo seleccionado que ha sido
+seleccionado automáticamente, pulsando <input>$cmd[CMD_TARGET_SELECT]</input> o
+%%%%
+tutorial2 wield_bow
+
+Toma este arco y empuñalo con <input>$cmd[CMD_WIELD_WEAPON]</input>
+<localtiles> o haciéndole <input>clic</input> con el ratón</localtiles>.
+%%%%
+tutorial2 travel_reminder
+
+Recuerda que es posible explorar de forma automatizada usando
+%%%%
+tutorial2 explore
+
+¡Encuentra la salida! Recuerda que puedes explorar automáticamente usando
+<input>$cmd[CMD_EXPLORE]</input>.
+%%%%
 tutorial2 tutorial_end
 
 ¡Enhorabuena! ¡Has logrado sobrevivir tu primera banda de monstruos! Para salir
-del curso, simplemente desciende esas escaleras.
+del curso, simplemente baja esas escaleras.
 %%%%
 tutorial3 start
 
 En esta lección vas a aprender acerca de los objetos y de como usarlos.
+%%%%
+tutorial3 armour
+
+Toma esas botas mediante <input>$cmd[CMD_PICKUP]</input> y póntelas mediante
+<input>$cmd[CMD_WEAR_ARMOUR]</input>.<localtiles> O simplemente haz <input>clic
+con el ratón</input> sobre ellas en el panel de inventario.</localtiles>
 %%%%
 tutorial3 autopickup
 
@@ -86,10 +228,39 @@ tutorial5 start
 
 En esta lección vas a aprender acerca de los dioses y de como usar sus poderes.
 %%%%
+tutorial5 religion
+
+Échale un vistazo a tu situación religiosa actual mediante
+<input>$cmd[CMD_DISPLAY_RELIGION]</input><localtiles> (o a través del <w>botón
+religión</w> en el panel de comandos, o haciendo <input>Shift-clic con el botón
+derecho</input> en el cuadrado de tu personaje)</localtiles>. Otra vez,
+pulsando <input>!</input><localtiles> o haciendo <input>clic con el botón
+derecho del ratón</input>,</localtiles> verás una descripción más detallada de
+tu dios.
+%%%%
 tutorial5 piety_on_kill
 
 Algunos dioses realmente aprecian que mates monstruos en su nombre. ¡Qué
 empiece la masacre!
+%%%%
+tutorial5 sacrificing
+
+Para ofrecerle cadáveres a Trog, reza mediante <input>$cmd[CMD_PRAY]</input>
+<localtiles> o usando el <w>panel de comandos</w></localtiles>. ¡Inténtalo!
+%%%%
+tutorial5 burn_book
+
+A Trog le encantará que quemes ese libro (con
+<input>$cmd[CMD_USE_ABILITY]</input><localtiles> o mediante el <w>panel de
+comandos</w></localtiles>). En algunas ocasiones, podría ser preferible
+esperar (con <input>$cmd[CMD_MOVE_NOWHERE]</input>) a que un monstruo pase por
+encima del libro antes de hacerlo arder.
+%%%%
+tutorial5 berserk
+
+Contra enemigos particularmente difíciles, te puede interesar usar el poder de
+Trog Furia mediante <input>$cmd[CMD_USE_ABILITY]</input><localtiles> o a
+través del <w>panel de comandos</w></localtiles>.
 %%%%
 tutorial5 hunger
 

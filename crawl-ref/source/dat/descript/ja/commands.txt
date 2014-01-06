@@ -57,7 +57,7 @@ CMD_RESISTS_SCREEN verbose
 %%%%
 CMD_DISPLAY_OVERMAP
 
-ダンジョンの概要の表示
+ダンジョンの概観の表示
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 
@@ -69,7 +69,7 @@ CMD_DISPLAY_RELIGION
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-あなたの進行する神の好き嫌い、行為、あなたの現在の信仰状況、
+あなたの進行する神の好き嫌い、振る舞い、あなたの現在の信仰状況、
 神の能力について表示する。
 %%%%
 CMD_DISPLAY_MUTATIONS
@@ -86,11 +86,11 @@ CMD_DISPLAY_CHARACTER_STATUS
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS verbose
 
-あなたに働いているエンチャントとその他の物を表示する。
+あなたに作用している魔術などを表示する。
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
-発見済みのアイテムのリスト
+発見済みのアイテムの表示
 %%%%
 CMD_SAVE_GAME_NOW
 
@@ -119,7 +119,7 @@ CMD_DISPLAY_COMMANDS verbose
 %%%%
 CMD_CHARACTER_DUMP
 
-ダンプの出力
+進行状態をダンプに出力
 %%%%
 CMD_CHARACTER_DUMP verbose
 
@@ -132,7 +132,7 @@ CMD_AUTOFIGHT
 %%%%
 CMD_AUTOFIGHT verbose
 
-最も近い敵に向かって移動し、装備した武器でそれを攻撃する
+最も近い敵に向かって移動し、装備した武器で攻撃する。
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 

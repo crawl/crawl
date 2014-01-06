@@ -39,8 +39,8 @@ A broken pillar
 %%%%
 A burning altar of Makhleb
 
-파괴와 학살의 신, 마크렙의 제단이다. 영원히 꺼지지 않는 불이 기이한 모습을 한
-채, 제단 위에서 타오르고 있다.
+파괴와 학살의 신, 마크레브의 영원히 불타오르는 제단이다. 불 속에서 기이하고
+뒤틀린 형상이 아른거린다.
 %%%%
 A closed door
 
@@ -58,7 +58,8 @@ A corrupted altar of Lugonu
 %%%%
 A crawl-hole back to the Lair
 
-거미줄이 별로 없는, 덜 답답한 곳으로 통하는 좁은 구멍이다.
+드문드문 거미줄들이 붙어 있는, 여기보단 좀 덜 답답한 곳으로 통하는 좁은
+구멍이다.
 %%%%
 A dart trap
 
@@ -119,11 +120,16 @@ A gate leading to another region of Pandemonium
 %%%%
 A one-way gate leading to the halls of Pandemonium
 
-판데모니움의 끝없는 광장과 연결된, 일방통행 관문이다. 이 지옥과도 같은 곳을
+판데모니엄의 끝없는 광장과 연결된, 일방통행 관문이다. 이 지옥과도 같은 곳을
 성공적으로 약탈했다는 기록은 이야기에서조차 찾아보기 어려우며, 가장 강력하고
 숙련된 모험가들도 이곳에서는 죽음을 맞이할 수 있다. 하지만 그 대신, 이곳에는
 여러 개의 룬과 값진 보물을 찾을 수 있다. 들어가는 것은 자유지만, 나가기는
 어려울 것 같다.
+%%%%
+A staircase to the Depths
+
+이 계단은 가장 깊은 던전의 나락으로 이어진다. 나락은 특히 조트의 렐름과, 렐름의
+생명체들의 영향으로 타락해버린 지역이다.
 %%%%
 A gate to the Realm of Zot
 
@@ -153,7 +159,8 @@ A gateway to a ziggurat
 말로는 다 설명할 수 없는 도전과 보물이 기다리는, 고대 신전 지구라트와 연결된
 차원 관문이다.
 
-이 차원 관문은 한번 사용하면 사라지며, 엄청난 금액의 입장료가 필요하다.
+이 차원 관문은 3개의 ‘조트의 룬’이 있어야 작동하며, 한 번 이 관문을 통과하면
+관문은 영원히 사라지게 된다.
 %%%%
 A gateway to the ashen valley of Gehenna
 
@@ -362,16 +369,16 @@ A staircase back to the Mines
 %%%%
 A staircase back to the Vaults
 
-위대한 보물창고로 돌아갈 수 있는 계단이다.
+보물창고로 돌아갈 수 있는 계단이다.
 %%%%
 A staircase leading out of the dungeon
 
 이 출구는 당신을 일상, 하늘, 지저귀는 새, 신선한 공기 같은 것들로 인도한다.
 또한, 세금과 당신이 원하는 모든 것들이 기다리는 곳으로...
 
-이 계단을 오르면 당신의 모든 임무가 끝이 납니다. 조트의 오브 없이 이 계단을
+이 계단을 오르면 당신의 모든 여정은 끝이 난다. 조트의 오브 없이 이 계단을
 올라가는 것은, 당신이 모든 임무와 책임을 포기하고 던전에서 도망친다는 것을
-의미합니다.
+의미한다.
 %%%%
 A staircase out of the Tomb
 
@@ -437,6 +444,11 @@ A staircase to the Tomb
 
 고대 무덤으로 갈 수 있는 계단이다. 가장 사악한 강령술에 의해 다시 일어난 자들이
 지배하는, 지옥과도 같은 곳이다.
+%%%%
+A gate to the Vaults
+
+보물창고로 갈 수 있는 계단이다. 굉장한 보물들이 잠들어있는 곳으로 알려졌지만,
+계단에 가득한 핏자국이 이곳의 위험성을 잘 말해준다.
 %%%%
 A stone staircase leading down
 
@@ -673,6 +685,12 @@ A timeless floor
 A crystal clear mirror
 
 모든 것을 반사하는 능력을 지닌, 반짝이는 거울이다.
+%%%%
+A strange generator
+
+기계의 표본이라 해도 좋을 정도로 기계처럼 생긴, 아주 반짝거리는 이 기계는,
+시끄럽게 쉬익거리고 쿵쿵거리며, 언제든지 ‘살아 움직이는’ 무기들을 배출해낼
+준비가 되어 있다.
 %%%%
 A glistening fountain
 

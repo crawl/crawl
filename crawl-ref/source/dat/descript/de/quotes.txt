@@ -663,12 +663,6 @@ potion
  Wo jenes Trankes Kraft erloesche.“
     -William Shakespeare, _Romeo und Julia_
 %%%%
-potion of poison
-
-„‚Gift‘ ist ein hartes Wort. Ich bevorzuge ‚Zaubertrank von Halt verdammt noch
-mal die Schnauze!‘“
-    -Oglaf, gesäubert
-%%%%
 quarterstaff
 
 „Dann schnallte Robin seinen Gürtel ab,

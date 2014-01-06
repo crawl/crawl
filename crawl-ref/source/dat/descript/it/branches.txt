@@ -225,16 +225,6 @@ sottoposti
  • le rune demoniche che esistono in multiple copie, possedute da alcuni
 signori meno famosi.
 %%%%
-Ziggurat
-
-Una ziggurat è una strana torre costituita da ventisette livelli di arene
-sempre più grandi, ciascuna contenente ricchezze e pericoli più grandi rispetto
-alla precedente. L'entità che ha creato questo abominio fa pagare una salata
-tassa all'ingresso. Ma bada, poiché una ziggurat non è un posto per deboli di
-cuore: anche gli eroi più coraggiosi e abili hanno qui trovato la loro fine.
-Anche se su ogni livello è presente un portale di fuga, una volta abbandonata,
-non è più possibile entrare in una ziggurat.
-%%%%
 Labyrinth
 
 Il Labirinto è un largo, complesso dedalo progettato da menti subdole e

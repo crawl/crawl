@@ -238,12 +238,12 @@ seigneurs de moindre envergure
 %%%%
 Ziggurat
 
-Une série d'arènes, chacune contenant des richesses plus grandes et d'encore
-plus grands dangers que les précédents. Quelque soit l'entité qui a créé cette
-monstruosité, son entrée à un prix. Méfiez-vous, car un ziggurat n'est pas un
-lieu pour les cœurs faibles : même les plus braves et talentueux ont rencontré
-leur limite ici. Alors qu'un portail permet de sortir à chaque niveau, une fois
-sorti, un ziggurat ne peut être à nouveau visité.
+Un ziggurat est une étrange tour de vingt sept étages d’arènes de plus en plus
+larges, chacune contenant plus de richesses et de dangers que la précédente.
+Méfiez-vous, car un ziggurat n'est pas un lieu pour les âmes sensibles : même
+les plus braves et talentueux y ont trouvé la mort, et rien qu'y pénétrer
+requiert déjà trois runes de Zot. Un portail de sortie sera présent à chaque
+niveau, mais une fois dehors, aucun retour n'est possible.
 %%%%
 Labyrinth
 

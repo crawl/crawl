@@ -91,10 +91,10 @@ A long pole with an enormous, cleaving blade on one end.
 bastard sword
 
 A long, large sword. A grown-up human or elf can manage to wield it in one
-hand, while anyone of a weaker race will need to grip it with two. In fact,
-it is the heaviest and most damaging weapon anyone other than certain
-humanoid insects can use with a shield. And meeting a sharp blade this long
-spells doom for any opponent.
+hand, while anyone of a weaker race will need to grip it with two. In fact, it
+is the heaviest and most damaging weapon anyone other than certain humanoid
+insects can use with a shield. And meeting a sharp blade this long spells doom
+for any opponent.
 %%%%
 battleaxe
 
@@ -471,9 +471,9 @@ A piece of raw meat found in the dungeon. It won't stay fresh for long.
 %%%%
 claymore
 
-A massive sword, that requires two hands to even hold, and great strength
-and skill to use effectively. Needless to say, once a swordsman grows mighty
-enough to comfortably wield it, it is a weapon second to none.
+A massive sword, that requires two hands to even hold, and great strength and
+skill to use effectively. Needless to say, once a swordsman grows mighty enough
+to comfortably wield it, it is a weapon second to none.
 %%%%
 cloak
 
@@ -1073,9 +1073,8 @@ A potion which grants you temporary resistance to the elements and poison.
 %%%%
 potion of restore abilities
 
-A potion which restores the abilities of and alleviates draining in one
-who drinks it. It also allows to use a breath weapon again, cancelling
-the delay.
+A potion which restores the abilities of and alleviates draining in one who
+drinks it. It also allows to use a breath weapon again, cancelling the delay.
 %%%%
 potion of slowing
 

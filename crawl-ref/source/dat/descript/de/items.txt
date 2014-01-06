@@ -1053,12 +1053,6 @@ potion of resistance
 
 Ein Trank, der Ihnen temporäre Widerstand zu den Elementen und Gift gewährt.
 %%%%
-potion of restore abilities
-
-Ein Trank, der die Fähigkeiten von eins wiederherstellt, die es trinkt. Es
-ermöglicht auch, eine Atemwaffe wieder zu benutzen und die Verzögerung
-abzubrechen.
-%%%%
 potion of slowing
 
 Ein Trank, der Ihre Taten verlangsamt.

@@ -895,11 +895,6 @@ potion of resistance
 
 Eliksir który zapewnia tymczasową odporność na ogień, zimno, prąd i truciznę.
 %%%%
-potion of restore abilities
-
-Eliksir który przywraca utraconą siłę, inteligencję i zręczność. Usuwa także
-skutki zmęczenia lub bezdechu.
-%%%%
 potion of slowing
 
 Eliksir który spowalnia szybkość ruchów.

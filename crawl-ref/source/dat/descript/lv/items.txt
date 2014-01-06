@@ -9,6 +9,10 @@ amulet of resist corrosion
 Šis amulets pasargā tā nēsātāju no skābes izraisītās korozijas ietekmes uz viņa
 apbruņojumu, lai arī tas nav vienmēr garantēts.
 %%%%
+apple
+
+Tvirts un gards, lai arī paskābs, sarkanas krāsas auglis.
+%%%%
 apricot
 
 Sulīgs dzeltenīgi oranžs auglis, prunus armeniaca.
@@ -65,6 +69,18 @@ decaying skeleton
 
 Trūdošs ģindenis.
 %%%%
+demon blade
+
+Šaušalīgs ierocis, kas kalts Elles liesmās.
+%%%%
+demon whip
+
+Šaušalīgs ierocis, kas veidots Pekles dzīlēs.
+%%%%
+giant spiked club
+
+Milzīgs koka baļķis ar asumiem vienā galā.
+%%%%
 glaive
 
 Nūja ar lielu un smagu asmeni vienā tās galā.
@@ -76,6 +92,10 @@ Kaudze ar mirdzošām zelta monētām.
 grape
 
 Mazs auglis.
+%%%%
+helmet
+
+Metāla galvassega.
 %%%%
 lemon
 
@@ -101,6 +121,14 @@ pear
 
 Gards sulīgs auglis.
 %%%%
+potion of experience
+
+Patiesi brīnišķīgs un ļoti rets dzēriens.
+%%%%
+potion of invisibility
+
+Dzira, kas tevi paslēpj no pārējo skatieniem.
+%%%%
 potion of poison
 
 Nejauki indīgs šķidrums.
@@ -109,17 +137,49 @@ potion of strong poison
 
 Trakoti indīga dzira.
 %%%%
+quarterstaff
+
+Izturīga koka nūja, kas paredzēta cīņai.
+%%%%
 ring of protection from cold
 
 Šis gredzens nodrošina aizsardzību pret aukstumu.
 %%%%
+ring of protection from fire
+
+Šis gredzens aizsargā pret karstumu un uguni.
+%%%%
+scroll of curse weapon
+
+Šis tīkstoklis uzliek lāstu nēsātajam ierocim.
+%%%%
+scroll of fog
+
+Šis tīstoklis ietin tā lasītāju biezā miglas mākonī.
+%%%%
 snozzcumber
 
-Riebīgs ģurķa formas dārzenis.
+Derdzīgs ģurķa formas dārzenis.
 %%%%
 strawberry
 
 Mazs, taču gards sarkans auglis.
+%%%%
+wand of cold
+
+Burvju ietaise, kas sviež lielus aukstuma šāviņus.
+%%%%
+wand of fire
+
+Burvju ietaise, kas sviež lielus uguns šāviņus.
+%%%%
+wand of heal wounds
+
+Burvju ietaise, kas var sadziedēt radījuma brūces.
+%%%%
+wand of lightning
+
+Burvju ietaise, kas sviež lielus zibens šāviņus.
 %%%%
 wizard hat
 

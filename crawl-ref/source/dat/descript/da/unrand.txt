@@ -180,12 +180,6 @@ Denne kniv er lavet af sprigger, eller til sprigger, eller måske ud af
 sprigger. Den er i hvert fald på en eller anden måde forbundet til dette
 huldrefolk.
 %%%%
-plutonium sword
-
-Et tredobbelt sværd, som er lavet af et sælsomt, glødende metal. Du undrer dig
-over, om det har udviklet de to sideklinger på grund af sin stråling, og om du
-også vil få to ekstra hoveder.
-%%%%
 whip "Snakebite"
 
 En kløvet pisk, som er lavet af garvede huder fra Bæsternes Hules dødbringende

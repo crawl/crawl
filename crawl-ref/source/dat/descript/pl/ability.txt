@@ -37,8 +37,7 @@ Uwalnia uderzenie trujących spalin na wybranym celu.
 Bottle Blood ability
 
 Na poziomie doświadczenia 6 bądź wyżej. Wampiry mogą zabutelkować krew z nie
-zepsutych i posiadających krew zwłok nad którymi stoją. By tego dokonać
-wymagana jest umiejętność noszenia noża by móc pociąć zwłoki.
+zepsutych i posiadających krew zwłok nad którymi stoją.
 %%%%
 Spit Acid ability
 
