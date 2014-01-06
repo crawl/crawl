@@ -358,6 +358,7 @@ abomination_large6
 tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
 
 ## Ugly things ('u')
+%sdir mon/aberr
 ugly_thing MONS_UGLY_THING
 ugly_thing1
 ugly_thing2
@@ -373,6 +374,7 @@ very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
+%sdir mon/demons
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
 

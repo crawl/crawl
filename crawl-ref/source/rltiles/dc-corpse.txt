@@ -212,7 +212,7 @@ deep_dwarf CORPSE_DEEP_DWARF
 gnome CORPSE_GNOME
 
 ## Ugly things ('u')
-%sdir mon/demons
+%sdir mon/aberr
 ugly_thing CORPSE_UGLY_THING
 ugly_thing1
 ugly_thing2
