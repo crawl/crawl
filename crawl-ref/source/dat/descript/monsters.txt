@@ -2893,8 +2893,8 @@ Oh wait, wrong game.
 %%%%
 sensed monster
 
-Thanks to your antennae, you know there is some creature there, and
-that it is not one of your allies.
+Thanks to your antennae, you know there is some creature there, and that it is
+not one of your allies.
 %%%%
 trivial sensed monster
 
@@ -2924,8 +2924,7 @@ friendly sensed monster
     else
         return "Thanks to your antennae,"
     end
-}}
-you know there is some creature there, and that it is one of your allies.
+}} you know there is some creature there, and that it is one of your allies.
 %%%%
 ##############################################################################
 ### Vault-defined monsters

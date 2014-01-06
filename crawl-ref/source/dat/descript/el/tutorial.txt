@@ -1,12 +1,79 @@
 %%%%
+tutorial intro
+
+Μπορείς να διαβάσεις ξανά όλα τα μηνύματα ανά πάσα στιγμή με το
+<input>$cmd[CMD_REPLAY_MESSAGES]</input>. Επίσης, πιέζοντας
+<input>Space</input> καθαρίζεις τις γραμμές <cyan>--more--</cyan>.
+%%%%
+tutorial1 start
+
+Σε αυτό το μάθημα θα μάθεις πως να κινείσαι και να εξερευνάς επίπεδα. Μπορείς
+να μετακινηθείς <localtiles> κλικάροντας με το <input>Mouse</input>, ή
+</localtiles> με τα <input>arrow keys</input>.
+%%%%
 tutorial1 go_on
 
 Τα πας φοβερά! Συνέχισε να εξερευνάς μέχρι να φτάσεις στο επόμενο μπλε
 τετράγωνο.
 %%%%
+tutorial1 downstairs
+
+Όταν στέκεσαι σε μια σκάλα που πάει κάτω μπορείς να κατέβεις στο επόμενο
+επίπεδο με το <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> ή κάνοντας
+<input>Shift-Click</input> πάνω στον χαρακτήρα σου </localtiles>.
+%%%%
+tutorial1 autoexplore
+
+Η εξερεύνηση μπορεί να γίνει κοπιαστική, οπότε ίσως να θες να την κάνεις
+αυτόματα. Δοκίμασε την πιέζοντας <input>$cmd[CMD_EXPLORE]</input>.
+%%%%
+tutorial1 exclusion
+
+Μερικά επικίνδυνα σημεία μαρκάρονται με <w>exclusions</w>. Η αυτόματη
+εξερεύνηση <localtiles> (συμπεριλαμβανόμενης και αυτής με
+<input>mouseclick</input>!) </localtiles> δεν σε οδηγεί μέσα σε αυτά, αντί
+αυτού σταματάς αυτόματα.
+
+Παρ' όλα αυτά η αυτόματη εξερεύνηση θα σε μετακινήσει με ασφάλεια γύρω από τα
+μαρκαρισμένα σημεία ώστε να μπορείς να συνεχίσεις πιέζοντας το
+<input>$cmd[CMD_EXPLORE]</input>.
+%%%%
+tutorial1 autoexplore_announce
+
+Η αυτόματη εξερεύνηση σταματά όταν συναντάς σημαντικά σημεία και αντικείμενα.
+Για να πας απευθείας σε κάποιες σκάλες που θες, μπορείς να κάνεις <localtiles>
+<input>click</input> σε αυτές ή </localtiles> να πιέσεις
+<input>$cmd[CMD_DISPLAY_MAP] << Enter</input>.
+%%%%
+tutorial1 tutorial_end
+
+Συγχαρητήρια! Πέρασες το πρώτο μάθημα επιτυχώς!
+
+Για να φύγεις από αυτό το μάθημα, ανέβα τα σκαλιά με το
+<input>$cmd[CMD_GO_UPSTAIRS]</input><localtiles> ή κάνοντας
+<input>Shift-clicking</input> στον χαρακτήρα σου</localtiles>. Επικύρωσε την
+απόφαση σου με κεφαλαίο <input>Y</input>.
+%%%%
+tutorial1 newlevel
+
+Ένα νέο επίπεδο! Για να αρχίσεις, προχώρα έως την πόρτα στα δεξιά.
+
+Θυμήσου πως μπορείς να διαβάσεις παλιά μηνύματα με το
+<input>$cmd[CMD_REPLAY_MESSAGES]</input>.
+%%%%
+tutorial1 door
+
+Μπορείς να ανοίξεις μια κλειστή πόρτα βαδίζοντας προς το μέρος της.
+%%%%
 tutorial1 water
 
 Πρόσεξε πως μπορείς να κινείσαι στο ρηχό αλλά όχι στο βαθύ νερό.
+%%%%
+tutorial1 upstairs
+
+Όταν στέκεσαι σε μια σκάλα που πάει επάνω μπορείς να ανέβεις στο προηγούμενο
+επίπεδο με το <input>$cmd[CMD_GO_DOWNSTAIRS]</input><localtiles> ή κάνοντας
+<input>Shift-Click</input> πάνω στον χαρακτήρα σου </localtiles>.
 %%%%
 tutorial2 start
 
@@ -17,6 +84,19 @@ tutorial2 melee
 
 Για να επιτεθείς σε ένα τέρας με τις γροθιές σου ή το όπλο σου, απλώς βάδισε
 προς το μέρος του.
+%%%%
+tutorial2 resting
+
+Μια χαρά! Μπορείς να αναπληρώσεις χαμένους πόντους ζωής ξεκουράζοντας τον
+χαρακτήρα σου με το <input>$cmd[CMD_REST]</input>. Ο χαρακτήρας θα ξεκουραστεί
+για 100 γύρους αλλά τυχόν σημαντικά γεγονότα θα τον διακόψουν.
+%%%%
+tutorial2 chop_corpses
+
+Μπορείς να τεμαχίσεις πτώματα για τροφή με το <input>$cmd[CMD_BUTCHER]</input>
+<localtiles>ή <input>Shift + mouseclick</input>, </localtiles>και μετά να φας
+τα κομμάτια με το <input>$cmd[CMD_EAT]</input><localtiles> η κάνοντας
+<input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 tutorial_end
 

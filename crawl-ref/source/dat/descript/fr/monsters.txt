@@ -686,6 +686,13 @@ big kobold
 Un kobold qui est plus gros et fort que la plupart des kobolds, et souvent
 armé.
 %%%%
+big kobold necromancer
+
+Un kobold qui n'est pas seulement plus grand et plus intelligent que la
+plupart, mais aussi bien plus maléfique. Heureusement, étant donné l'aspect des
+lieux, il est peu probable qu'il arrive à mettre ses sales pattes sur le
+cadavre de quelque chose de dangereux.
+%%%%
 black bear
 
 Un petit ours noir. Comme tous les ours, l'ours noir peut devenir enragé si
@@ -1099,10 +1106,6 @@ faire appel aux arbres pour se défendre contre les incursions.
 formicid
 
 Une fourmi intelligente qui marche debout et est capable de creuser.
-%%%%
-formicid drone
-
-Une fourmi soldat formé au combat et prêt à défendre son territoire.
 %%%%
 formicid venom mage
 
@@ -2728,8 +2731,8 @@ fétides.
 %%%%
 tarantella
 
-Une petite araignée mais très redoutée, au poison redoutable causant même aux
-victimes les plus resistantes dans une danse frénétique.
+Une araignée petite mais très redoutée dont les attaques induisent une danse
+frénétique chez ses victimes.
 %%%%
 tentacle
 
@@ -3041,34 +3044,39 @@ Oh attendez, je me suis trompé de jeu.
 %%%%
 sensed monster
 
-Grâce à vos antennes, vous savez qu'il y a une créature dans le coin,
-cependant, vous n'avez aucune idée de ce que ça peut être.
+Grâce à vos antennes, vous savez qu'il y a une créature dans les parages, et ce
+n'est pas un de vos alliés.
 %%%%
 trivial sensed monster
 
-Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature par ici, et
-qu'il ne devrait pas vous causer trop de soucis.
+Grâce aux pouvoirs d'Ashenzari, vous savez qu'il y a une créature dans les
+parages, et qu'elle ne devrait pas vous causer trop de soucis.
 %%%%
 easy sensed monster
 
-Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature dans les
-environs, et que vous devriez être capable de la vaincre sans trop vous
-risquer.
+Grâce aux pouvoirs d'Ashenzari, vous savez qu'il y a une créature dans les
+parages, et que vous devriez être capable de la vaincre sans trop de risque.
 %%%%
 tough sensed monster
 
-Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature aux alentours,
-et qu'elle est plutôt dangereuse.
+Grâce aux pouvoirs d'Ashenzari, vous savez qu'il y a une créature dans les
+parages, et qu'elle est plutôt dangereuse.
 %%%%
 nasty sensed monster
 
-Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature pas loin, et
-que vous devriez avoir peur. Très peur.
+Grâce aux pouvoirs d'Ashenzari, vous savez qu'il y a une créature dans les
+parages, et que vous devriez avoir peur. Très peur.
 %%%%
 friendly sensed monster
 
-Par les pouvoirs d'Ashenzari, vous savez qu'il y a une créature par là, et
-qu'elle fait partie de vos alliés.
+{{
+    if you.god() == "Ashenzari" then
+        return "Grâce aux pouvoir d'Ashenzari,"
+    else
+        return "Grâce a vos antennes,"
+    end
+}} vous savez qu'il y a une créature dans les parages, et qu'elle fait partie
+de vos alliés.
 %%%%
 Cloud Mage
 
@@ -3341,14 +3349,6 @@ que les petites créatures qui voudraient s'en nourrir naturellement préférero
 s'en écarter. Et on dirait que cette plante est morte il y a des {{ if
 you.branch() == "Crypt" or you.branch() == "Tomb" then return "siècles"; else
 return "années"; end }} .
-%%%%
-wizard statue
-
-Dans ces terres de magie, il serait insensé de croire qu'une statue d'un
-magicien serait un morceau de pierre inerte. Les mains de cette statue et son
-bâton n'ont que très peu de poussière comparé au reste du corps, ce qui laisse
-penser qu'elle est capable de faire des gestes magiques. Le piège est évident
-mais s'en occuper l'est beaucoup moins.
 %%%%
 zin angel
 

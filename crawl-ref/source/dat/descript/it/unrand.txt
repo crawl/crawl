@@ -177,12 +177,6 @@ Questo coltello è stato fatto da Spiriggan, o per gli Spiriggan, o
 possibilmente di Spiriggan. In ogni modo, è in qualche modo collegato a questa
 soprannaturale gente.
 %%%%
-plutonium sword
-
-Una spada tripla fatta di uno strano metallo brillante. Ti chiedi se abbia
-cresciuto le due lame laterali per la sua radiazioni, e se anche tu crescerai
-due teste aggiuntive.
-%%%%
 whip "Snakebite"
 
 Una frusta a due teste fatta dalle pelli delle mortali mamba nere dell'Antro

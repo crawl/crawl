@@ -234,17 +234,6 @@ seiner Lakaien bewacht wird
  • Dämonische Runen existieren in mehrfachen Ausführungen, im Besitzt von
 weniger bekannten Herrschern.
 %%%%
-Ziggurat
-
-Ein Zikkurat ist ein seltsam konstruierter Turm welcher aus sechsundzwanzig
-Ebenen, mit zunehmend größeren Kampfarenen, besteht welche jede immer größere
-Reichtümer und sogar noch größere Gefahren beinhaltet als die Letzte. Welches
-Wesen auch immer dieses Ungetüm erschuf verlangt einen hohen Preis als
-Eintritt. Aber Vorsicht, ein Zikkurat ist kein Ort für schwache Nerven: selbst
-die tapfersten und geschicktesten Abenteurer fanden hier ihr Ende. Obwohl sich
-auf jeder Ebene ein Portal zur Sicherheit befindet kann man, hat man es einmal
-verlassen, ein Zikkurat nicht wieder betreten.
-%%%%
 Labyrinth
 
 Das Labyrinth ist ein großer, komplexer Irrgarten, entworfen von subtilen und

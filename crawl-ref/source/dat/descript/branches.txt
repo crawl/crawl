@@ -232,9 +232,9 @@ A ziggurat is a strange tower constructed of twenty seven levels of
 incrementally larger combat arenas, each containing greater wealth and even
 greater danger than the last. Beware, for a ziggurat is not a place for the
 faint of heart: even the bravest and most skilled adventurers have met their
-ends in one, and even entering requires the power of three runes of Zot.
-While a portal to safety will be present on every level, once left, a
-ziggurat cannot be re-entered.
+ends in one, and even entering requires the power of three runes of Zot. While
+a portal to safety will be present on every level, once left, a ziggurat cannot
+be re-entered.
 %%%%
 Labyrinth
 

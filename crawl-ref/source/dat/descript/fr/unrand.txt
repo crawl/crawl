@@ -208,9 +208,8 @@ autre à ce peuple féérique.
 %%%%
 plutonium sword
 
-Une épée triple faite d'un métal luisant étrange. Vous vous demandez si cette
-radiance a fait pousser deux nouvelles lames et si, elle vous fera pousser deux
-têtes supplémentaires aussi.
+Une claymore faite d'un étrange métal luisant. Vous vous demandez si cette
+radiation va vous faire pousser une nouvelle tête.
 %%%%
 great mace "Undeadhunter"
 

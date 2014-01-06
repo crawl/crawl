@@ -42,8 +42,7 @@ muito baixa.
 Bottle Blood ability
 
 No nível 6 ou mais, Vampiros podem engarrafar o sangue de um corpo não podre, e
-que contenha sangue, estando sobre ele. Para fazer isso, é necessário ter a
-capacidade de empunhar sua faca, como fazem açougueiros.
+que contenha sangue, estando sobre ele.
 %%%%
 Cleansing Flame ability
 

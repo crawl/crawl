@@ -42,6 +42,19 @@ tutorial1 downstairs
 밑으로 이동할 수 있습니다. <localtiles>혹은 캐릭터를 <input>시프트+마우스
 클릭</input> 하여 내려갈 수도 있습니다</localtiles>.
 %%%%
+tutorial1 levelmap
+
+여기는 어디지? 캐릭터가 지금 어디에 있는지 모르겠다면, <tiles>화면 오른쪽에
+있는 <w>미니맵</w>을 보면 됩니다.</tiles><localtiles> <input>오른쪽
+마우스버튼</input>을 클릭한 채로 미니맵에서 보고 싶은 곳에 커서를 가져가 대보면
+그곳의 지형을 볼 수 있으며, <input>왼쪽 마우스버튼</input>을 클릭하면 지금 보고
+있는 곳, 혹은 미니맵을 클릭했을 경우 해당 지역으로 빠르게 이동할 수
+있습니다.</localtiles><webtiles> You can </webtiles><nomouse>enter the
+overmap view with <input>$cmd[CMD_DISPLAY_MAP]</input> and then move the cursor
+around to look around the level. You also can travel wherever your cursor is
+pointing by pressing <input>.</input> or <input>Enter</input>. Press
+<input>Escape</input> to return to the normal game mode.</nomouse>
+%%%%
 tutorial1 autoexplore
 
 게임 내내 이렇게 직접 이동하는 것은 따분한 일입니다.
@@ -104,6 +117,40 @@ tutorial1 upstairs
 올라가는 계단 위에서 <input>$cmd[CMD_GO_UPSTAIRS]</input> 키를 누르면 한 층
 위로 이동할 수 있습니다. <localtiles>혹은 캐릭터를 <input>시프트+클릭</input>
 하여 올라갈 수도 있습니다</localtiles>.
+%%%%
+tutorial1 exit
+
+:nowrap
+<yellow>이동 명령어</yellow>
+ 숫자 패드 :     <w>7 8 9</w>           hjkl 식 :   <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+                  \|/                         \|/
+                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+                  /|\                         /|\
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+
+<w>시프트 + 방향키</w> 해당 방향으로 여러 칸 움직입니다.
+<localtiles>시야 내의 아무 곳, 혹은 <w>미니맵</w>에 커서를 위치시킨 후  <w>왼쪽 마우스버튼</w>을 클릭하여 이동할 수도 있습니다.</localtiles>
+
+
+<yellow>계단</yellow>
+  <w>$cmd[CMD_GO_UPSTAIRS]</w> 이전 층계로 돌아갑니다.
+  <w>$cmd[CMD_GO_DOWNSTAIRS]</w> 다음 층계로 이동합니다.
+  <w>$cmd[CMD_DISPLAY_MAP] <<</w>/<w>></w> 현재 캐릭터와 가장 가까운 올라가는 / 내려가는 계단으로 이동합니다.
+
+
+<yellow>문</yellow>
+  문이 있는 곳으로 이동하면 자동으로 문을 열 수 있습니다.
+  <w>$cmd[CMD_CLOSE_DOOR]</w> 열린 문을 닫습니다.
+
+
+<yellow>자동이동</yellow>
+  <localtiles>  <w>미니맵</w>에서 가고 싶은 곳을 클릭합니다.
+  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다.  <w>엔터</w> 키를 눌러 이동할 수 있습니다.
+  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w> 레벨 맵 창을 연다. <w>엔터</w> 키를 눌러 이동할 수 있습니다.
+  </console><w>$cmd[CMD_EXPLORE]</w> 자동이동 기능을 사용합니다.
+
+
+                                 <cyan><w>아무 버튼</w>이나 누르세요...</cyan>
 %%%%
 tutorial2 start
 
@@ -282,6 +329,23 @@ tutorial3 scroll_noautopickup
 <input>clicking</input> 하거나 </localtiles> 몬스터와 싸워 무찌른 뒤에 주울 수
 있습니다.
 %%%%
+tutorial3 ego_weapon
+
+<lightblue>룬</lightblue>이나 <lightblue>빛나는</lightblue> 이라고 이름이
+붙어있는 아이템들은 인챈트되어 있거나, 특수한 성질을 가지고 있거나 혹은 둘 다일
+수도 있습니다. 이 아이템이 어떤 것인지 알기 위해서는 이 시미터를
+(<input>$cmd[CMD_WIELD_WEAPON]</input><localtiles>키를 누르거나 인벤토리
+패널의 시미터를 <input>클릭</input>함으로써) 휘둘러 봐야 합니다.
+%%%%
+tutorial3 inventory
+
+새로운 무기의 설명을 보려면 인벤토리에
+(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)를 찾아서 선택해야 합니다.
+<localtiles>또한 <input>마우스를 무기 아이콘 위에 올리</input>거나 인벤토리
+패널의 해당 무기를 <input>마우스 우클릭</input>하여 확인 할 수도
+있습니다</localtiles>. 아이템 설명 창에서도 아이템 명령어들을 사용할 수
+있습니다.
+%%%%
 tutorial3 battle
 
 만약 당신이 성공적으로 적을 독에 중독시켰다면, 독의 효과를 극대화 하기 위해
@@ -308,6 +372,14 @@ tutorial3 potion
 <input>$cmd[CMD_QUAFF]</input> 명령<localtiles>이나 <input>mouseclick</input>
 </localtiles>을 통해 이 포션들 중 하나를 마실 수 있습니다.
 %%%%
+tutorial3 artefact_armour
+
+<w>독특한 이름</w>이 붙어있는 아이템은 아티펙트입니다. 아티펙트는 여러가지
+특별한 능력을 가지고 있습니다. 어떤 아이템(예를 들어 이 망토같은 것)은 이미
+알고 있는 것일 수도 있고, 어떤건 무작위적이며 밝혀지지 않은 능력을 가지고
+있습니다.<input>$cmd[CMD_WEAR_ARMOUR]</input> <localtiles>나 인벤토리 패널의
+망토를 <input>마우스 왼쪽 클릭</input>하여 입어 보십시오 </localtiles>.
+%%%%
 tutorial3 wand_fire
 
 <input>$cmd[CMD_EVOKE]</input><localtiles> 키를 누르거나 인벤토리 패널을
@@ -326,6 +398,15 @@ tutorial3 amulet
 장신구 아이템을 <input>mouseclick</input> 함으로써 착용할 수
 있습니다</localtiles>. 어떤 종류의 장신구는 껴봐야 어떤 것인지 판별할 수
 있습니다. 아니면 다른 방법을 통해 판별해야 합니다.
+%%%%
+tutorial3 scroll_id
+
+무엇인지 정확하게 모르는 아이탬을 판별해 내는데 가장 좋은 방법중 하나는
+‘감정의 두루마리’를 사용하는 것 입니다. 이 두루마리를
+<input>$cmd[CMD_READ]</input><localtiles>나 인벤토리 패널의 두루마리를
+<input>마우스 클릭</input>한 후 </localtiles> 부적에 할당된 알파벳 키를
+입력하거나,<localtiles> <input>마우스 클릭</input>하여 부적이 어떠한 능력을
+가지고 있는 지 알아볼 수 있습니다.</localtiles>.
 %%%%
 tutorial3 drop
 
@@ -509,6 +590,17 @@ tutorial4 order_allies
 있습니다. 이 관문을 열기 전에, <input>$cmd[CMD_MOVE_NOWHERE]</input>키를 눌러
 대기한 후, 당신의 동료들이 다시 당신에게 오기를 기다리는 것이 좋을 것입니다.
 %%%%
+tutorial4 heavy_armour
+
+무겁고 거추장스러운 갑옷들은 플레이어의 마법 사용을 크게 방해합니다. 한 번,
+여기 있는 중갑옷과 무거운 방패를 착용해보세요.
+(<input>$cmd[CMD_WEAR_ARMOUR]</input>키로 착용<localtiles> 또는 해당 아이콘을
+<input>마우스 왼쪽 클릭</input>.) 그리고
+<input>$cmd[CMD_DISPLAY_SPELLS]</input>키<localtiles> 혹은 해당 마법 아이콘에
+<input>마우스 커서를 올려</input></localtiles> 마법 실패율의 변화를
+확인해보시길 바랍니다. 그리고 <input>$cmd[CMD_REMOVE_ARMOUR]</input>키를
+누르거나, 갑옷 아이콘을 클릭하셔서 갑옷과 방패를 다시 해제합시다.
+%%%%
 tutorial4 resting_reminder
 
 새로운 구역에 들어가기 전에는, 항상 체력(HP)과 마나(MP)를 완전히 회복한 후
@@ -541,6 +633,13 @@ tutorial4 exit
 tutorial5 start
 
 이번 시간에는 어떻게 신을 믿고 권능을 사용하는지에 대해 알아보겠습니다.
+%%%%
+tutorial5 dungeon_overview
+
+'트로그' 는 게임 내의 많은 신들 가운데 하나입니다. 실제 게임에서는
+<input>$cmd[CMD_DISPLAY_OVERMAP]</input> 키<localtiles> 또는 명령어 모음에서
+<input>던전 구조 보기</input> 버튼</localtiles>을 이용해서 모든 제단과 다른
+관심갈만한 요소들의 위치를 알 수 있습니다.
 %%%%
 tutorial5 altar
 

@@ -148,11 +148,6 @@ A gateway leading deeper into the Abyss
 Ein seltsam ruhiges Tor mitten in der aufgewühlten Landschaft. Es führt weiter
 in die Tiefen des Abgrunds.
 %%%%
-A gateway to a ziggurat
-
-Dieses Portal führt zu einem antiken Zikkurat, einem Ort unsäglicher
-Herausforderungen und unermesslichem Reichtums.
-%%%%
 A gateway to the ashen valley of Gehenna
 
 Du kannst die Hitze fühlen. Ghenna scheint aus nichts als Flammen, Lava und

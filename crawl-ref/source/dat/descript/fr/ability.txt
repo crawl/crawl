@@ -68,9 +68,8 @@ Ainsi, vous ne pourrez change de forme si votre Force est trop basse.
 %%%%
 Bottle Blood ability
 
-Au niveau 6 et plus, les Vampires peuvent mettre en bouteille le sang non
-contaminé et non décomposé des corps sur leur position. Faire cela requière la
-capacité de tenir un couteau, comme pour découper.
+À partir du niveau 6, les Vampires peuvent mettre en bouteille le sang des
+corps non décomposés qui en contiennent et sur lesquels ils se tiennent.
 %%%%
 Spit Acid ability
 

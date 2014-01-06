@@ -15,6 +15,20 @@ Breathe Dispelling Energy ability
 
 向目标怪物喷吐出一股能量波，有可能会移除它身上的状态魔法。
 %%%%
+Breathe Fire ability
+
+{{
+    local desc = "对目标怪物喷出一道火焰"
+
+    if you.race() == "Red Draconian" then
+        desc = desc .. "，并且在火焰飞行的终点留下一团火云"
+    end
+
+    desc = desc .. "。"
+
+    return desc
+}}
+%%%%
 Breathe Frost ability
 
 向目标怪物喷吐出冰霜。
@@ -51,8 +65,7 @@ Bat Form ability
 Bottle Blood ability
 
 经验等级是6级或更高的吸血鬼能提取出尸体内的鲜血并将其保存到瓶子里，
-但前提是该尸体内有血，而且没有腐烂。和屠宰时一样，
-吸血鬼在提取鲜血时手里也需要拿一把刀。
+但前提是该尸体内有血，而且没有腐烂。
 %%%%
 Spit Acid ability
 
@@ -89,6 +102,15 @@ Self-Restoration ability
 Device Recharging ability
 
 永久失去一点魔法值，以此来为一根魔杖或法杖充能。
+%%%%
+Dig ability
+
+在石墙上挖出一条直线形隧道。使用本异能会制造出噪音。
+%%%%
+Shaft Self ability
+
+使用该异能会使你掉落到1-3层下的一个随机位置，就像掉进坑洞陷阱一样。
+在地上挖洞要花时间，而且落地时会产生噪音。
 %%%%
 Evoke Teleportation ability
 
@@ -269,6 +291,13 @@ Channel Energy ability
 Forget Spell ability
 
 忘记一道你记忆中的法术，以便腾出记忆空间来学新法术。
+%%%%
+Burn Spellbooks ability
+
+点燃你视野内的所有法术书。
+塔洛格的怒火会使这些法术书燃烧放出的热量远远超过普通羊皮纸——所以，
+如果你先把书扔到某人的脚下然后再使用此异能，那它可有得受了。当然，
+使用此异能也会让你得到塔洛格的赏识。
 %%%%
 Berserk ability
 

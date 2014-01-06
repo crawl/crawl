@@ -875,11 +875,6 @@ potion of resistance
 
 饮用这瓶药水暂时赋予你对各种元素以及毒药的抗性。
 %%%%
-potion of restore abilities
-
-饮用这瓶药水会将你的属性恢复到正常水平。饮用它还会取消喷吐武器的延迟，
-允许你马上再次喷吐。
-%%%%
 potion of slowing
 
 饮用这瓶药水会使你的动作速度变慢。

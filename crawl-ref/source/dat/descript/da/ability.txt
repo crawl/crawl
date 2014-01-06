@@ -56,8 +56,7 @@ ned.
 Bottle Blood ability
 
 Når vampyrer når erfaringsniveau 6, får de evnen til at fylde blodet fra
-ikke-rådne og blodfyldte kadavere som de står på, på flaske. Det kræver at du
-har mulighed for at bruge din kniv, ligesom når du slagter.
+ikke-rådne og blodfyldte kadavere som de står på, på flaske.
 %%%%
 Spit Acid ability
 
@@ -100,6 +99,16 @@ behændighed eller intelligens og helbrede en stor mængde rådnede livspoint.
 Device Recharging ability
 
 Du kan genoplade en vånd eller stok på bekostning af et permanent magipoint.
+%%%%
+Dig ability
+
+Graver gennem stenvægge i en lige linje. Larmer.
+%%%%
+Shaft Self ability
+
+Sender dig til en tilfældig placering en til tre niveauer nede, ligesom hvis du
+var faldet gennem en skaktfælde. Det tager tid at grave skakten, og landingen
+larmer.
 %%%%
 Evoke Teleportation ability
 

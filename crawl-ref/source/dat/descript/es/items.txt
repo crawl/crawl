@@ -847,11 +847,6 @@ potion of resistance
 
 Una poción que te da temporalmente resistencia a los elementos y al veneno.
 %%%%
-potion of restore abilities
-
-Una poción que restaura las habilidades de quien la beba. También permite usar
-un arma de aliento, cancelando su retardo.
-%%%%
 potion of slowing
 
 Una poción que vuelve más lentas tus acciones.

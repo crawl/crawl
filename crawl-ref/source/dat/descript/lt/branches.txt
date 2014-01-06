@@ -163,15 +163,6 @@ sunkiau.
  • tamsioji guli miglotoje Gloorx Vloq buveinėje
  • mažiau žinomi valdovai turi ne vieną demoniškos runos kopiją
 %%%%
-Ziggurat
-
-Serija arenų su vis didesniais turtais ir dar didesniais pavojais kiekvienoje.
-Kad ir kokia būtybė sukūrė šį siaubingą pastatą, ji renka nemažą įėjimo
-mokestį. Saugokitės, nes zikurate bailiams ne vieta: netgi patys drąsiausi ir
-labiausiai patyrę nuotykių ieškotojai yra juose radę savo mirtį. Nors vartai į
-saugią vietą yra kiekviename lygyje, kartą jį palikus, į zikuratą sugrįžti
-negalima.
-%%%%
 Labyrinth
 
 Labirintas yra didelis ir sudėtingas raizginys, sumanytas rafinuotų ir

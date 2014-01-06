@@ -212,15 +212,6 @@ V Pandemoniu se nachází ne méně než pět run:
  • temná runa v stínovém příbytku Gloorxe Vloqa
  • démonické runy, které vlastní méně slavní pánové démonů
 %%%%
-Ziggurat
-
-Zigurat je zvláštní věž, sestávající ze sedmadvaceti pater neustále se
-zvětšujících bitevních arén, a každá z nich obsahuje více bohatství a nebezpečí
-než ta předchozí. Ať už tuto ohavnost vytvořil kdokoliv, za vstup si žádá
-vysokou cenu. Pozor však, protože zigurat není pro zbabělce — může se stát
-hrobem i pro ty nejstatečnější a nejschopnější. A ačkoliv se portál do bezpečí
-nachází na každém patře, po opuštění se již znovu nelze vrátit.
-%%%%
 Labyrinth
 
 Labyrint je obrovské, složité bludiště, navržené nějakou záludnou, zlovolnou
