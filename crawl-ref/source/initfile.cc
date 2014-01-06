@@ -3553,52 +3553,49 @@ bool game_options::set_lang(const char *lc)
     if (!lc)
         return false;
 
-    if (lc[0] && lc[1] && lc[2] == '_')
-        return set_lang(string(lc, 2).c_str());
-
     const string l = lowercase_string(lc); // Windows returns it capitalized.
-    if (l == "en" || l == "english")
+    if (l.compare(0, 2, "en") == 0 || l == "english")
         lang = LANG_EN, lang_name = 0; // disable the db
-    else if (l == "cs" || l == "czech" || l == "český" || l == "cesky")
-        lang = LANG_CS, lang_name = "cs";
-    else if (l == "da" || l == "danish" || l == "dansk")
-        lang = LANG_DA, lang_name = "da";
-    else if (l == "de" || l == "german" || l == "deutsch")
-        lang = LANG_DE, lang_name = "de";
-    else if (l == "el" || l == "greek" || l == "ελληνικά" || l == "ελληνικα")
-        lang = LANG_EL, lang_name = "el";
-    else if (l == "es" || l == "spanish" || l == "español" || l == "espanol")
-        lang = LANG_ES, lang_name = "es";
-    else if (l == "fi" || l == "finnish" || l == "suomi")
-        lang = LANG_FI, lang_name = "fi";
-    else if (l == "fr" || l == "french" || l == "français" || l == "francais")
-        lang = LANG_FR, lang_name = "fr";
-    else if (l == "hu" || l == "hungarian" || l == "magyar")
-        lang = LANG_HU, lang_name = "hu";
-    else if (l == "it" || l == "italian" || l == "italiano")
-        lang = LANG_IT, lang_name = "it";
-    else if (l == "ja" || l == "japanese" || l == "日本人")
-        lang = LANG_JA, lang_name = "ja";
-    else if (l == "ko" || l == "korean" || l == "한국의")
-        lang = LANG_KO, lang_name = "ko";
-    else if (l == "lt" || l == "lithuanian" || l == "lietuvos")
-        lang = LANG_LT, lang_name = "lt";
-    else if (l == "lv" || l == "latvian" || l == "lettish"
+    else if (l.compare(0, 2, "cs") == 0 || l == "czech" || l == "český" || l == "cesky")
+        lang = LANG_CS, lang_name = "cs_CZ";
+    else if (l.compare(0, 2, "da") == 0 || l == "danish" || l == "dansk")
+        lang = LANG_DA, lang_name = "da_DK";
+    else if (l.compare(0, 2, "de") == 0 || l == "german" || l == "deutsch")
+        lang = LANG_DE, lang_name = "de_DE";
+    else if (l.compare(0, 2, "el") == 0 || l == "greek" || l == "ελληνικά" || l == "ελληνικα")
+        lang = LANG_EL, lang_name = "el_GR";
+    else if (l.compare(0, 2, "es") == 0 || l == "spanish" || l == "español" || l == "espanol")
+        lang = LANG_ES, lang_name = "es_ES";
+    else if (l.compare(0, 2, "fi") == 0 || l == "finnish" || l == "suomi")
+        lang = LANG_FI, lang_name = "fi_FR";
+    else if (l.compare(0, 2, "fr") == 0 || l == "french" || l == "français" || l == "francais")
+        lang = LANG_FR, lang_name = "fr_FR";
+    else if (l.compare(0, 2, "hu") == 0 || l == "hungarian" || l == "magyar")
+        lang = LANG_HU, lang_name = "hu_HU";
+    else if (l.compare(0, 2, "it") == 0 || l == "italian" || l == "italiano")
+        lang = LANG_IT, lang_name = "it_IT";
+    else if (l.compare(0, 2, "ja") == 0 || l == "japanese" || l == "日本人")
+        lang = LANG_JA, lang_name = "ja_JP";
+    else if (l.compare(0, 2, "ko") == 0 || l == "korean" || l == "한국의")
+        lang = LANG_KO, lang_name = "ko_KR";
+    else if (l.compare(0, 2, "lt") == 0 || l == "lithuanian" || l == "lietuvos")
+        lang = LANG_LT, lang_name = "lt_LT";
+    else if (l.compare(0, 2, "lv") == 0 || l == "latvian" || l == "lettish"
              || l == "latvijas" || l == "latviešu"
              || l == "latvieshu" || l == "latviesu")
     {
-        lang = LANG_LV, lang_name = "lv";
+        lang = LANG_LV, lang_name = "lv_LV";
     }
-    else if (l == "nl" || l == "dutch" || l == "nederlands")
-        lang = LANG_NL, lang_name = "nl";
-    else if (l == "pl" || l == "polish" || l == "polski")
-        lang = LANG_PL, lang_name = "pl";
-    else if (l == "pt" || l == "portuguese" || l == "português" || l == "portugues")
-        lang = LANG_PT, lang_name = "pt";
-    else if (l == "ru" || l == "russian" || l == "русский" || l == "русскии")
-        lang = LANG_RU, lang_name = "ru";
-    else if (l == "zh" || l == "chinese" || l == "中国的" || l == "中國的")
-        lang = LANG_ZH, lang_name = "zh";
+    else if (l.compare(0, 2, "nl") == 0 || l == "dutch" || l == "nederlands")
+        lang = LANG_NL, lang_name = "nl_NL";
+    else if (l.compare(0, 2, "pl") == 0 || l == "polish" || l == "polski")
+        lang = LANG_PL, lang_name = "pl_PL";
+    else if (l.compare(0, 2, "pt") == 0 || l == "portuguese" || l == "português" || l == "portugues")
+        lang = LANG_PT, lang_name = "pt_PT";
+    else if (l.compare(0, 2, "ru") == 0 || l == "russian" || l == "русский" || l == "русскии")
+        lang = LANG_RU, lang_name = "ru_RU";
+    else if (l.compare(0, 2, "zh") == 0 || l == "chinese" || l == "中国的" || l == "中國的")
+        lang = LANG_ZH, lang_name = "zh_CN";
     // Fake languages do not reset lang_name, allowing a translated
     // database in an actual language.  This is probably pointless for
     // most fake langs, though.
