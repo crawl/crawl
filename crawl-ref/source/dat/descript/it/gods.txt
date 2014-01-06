@@ -1,7 +1,7 @@
 %%%%
 No God
 
-“Dio è morto.” — Nietzsche e Francesco Guccini (se vedete questo messaggio si
+«Dio è morto.» — Nietzsche e Francesco Guccini (se vedete questo messaggio si
 tratta di un bug).
 %%%%
 random
@@ -207,7 +207,7 @@ Xom powers
 
 Venerare Xom vuol dire vivere perennemente a rischio. Se di buon umore Xom può
 tempestarti di doni, ma a volte questa capricciosa divinità potrebbe voler
-rendere tutto un po' più “divertente” per poi mandarti incontro a morte certa.
+rendere tutto un po' più «divertente» per poi mandarti incontro a morte certa.
 Se dimostri di essere il più forte, buon per te; in caso contrario, beh, ci
 saranno sempre altri giocattolini...
 %%%%

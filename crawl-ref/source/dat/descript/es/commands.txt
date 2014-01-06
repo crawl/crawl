@@ -132,7 +132,7 @@ Crear un listado con información sobre el personaje en curso
 CMD_CHARACTER_DUMP verbose
 
 Guarda una amplia cantidad de información sobre tu personaje en un archivo
-llamado ‘nombredeljugador.txt’ en la carpeta morgue, para leerla con
+llamado “nombredeljugador.txt” en la carpeta morgue, para leerla con
 detenimiento cuando quieras. Esto incluye las principales estadísticas, equipo,
 hechizos, capacidades, notas, etc.
 %%%%

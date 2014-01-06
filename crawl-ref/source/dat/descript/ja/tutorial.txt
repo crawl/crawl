@@ -30,7 +30,7 @@ tutorial1 diagonal
 %%%%
 tutorial1 shiftmove
 
-通路を素早く‘走って’移動するには<input>Shift</input>を押しながら、
+通路を素早く『走って』移動するには<input>Shift</input>を押しながら、
 <input>テンキー</input>(Numlockキーで切り替え)、
 または<input>viキー</input>を押してください。
 %%%%
@@ -417,7 +417,7 @@ tutorial3 go_shopping
 
 あなたは今本格的な買い物に十分な金額を所持しています!店に戻る最も速い手段は検索することです。
 <input>$cmd[CMD_SEARCH_STASHES]</input>を押して、
-“<w>shop</w>”と入力してください。結果を選択すると自動で移動を開始します。
+「<w>shop</w>」と入力してください。結果を選択すると自動で移動を開始します。
 <localtiles>同様にコマンドパネルの検索ボタンを<input>クリック</input>するか、
 ミニマップを利用して店に戻ることも可能です。</localtiles>
 %%%%

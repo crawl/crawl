@@ -120,9 +120,9 @@ finished stashes
 
 Вы можете искать среди всех вещей в подземелье, используя команду
 <input>$cmd[CMD_SEARCH_STASHES]</input>. К примеру,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>“dagger”</w> откроет список всех
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>«dagger»</w> откроет список всех
 ножей. А затем вы сможете отправиться к любой из этих точек. Возможно даже
-использование таких слов, как <w>“shop”</w> или <w>“altar”</w>.
+использование таких слов, как <w>«shop»</w> или <w>«altar»</w>.
 %%%%
 finished random 0
 

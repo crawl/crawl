@@ -83,7 +83,7 @@ Gem karakterfremskridt
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-Gemmer en masse oplysninger om din karakter i en fil ved navn ‘spillernavn.txt’
+Gemmer en masse oplysninger om din karakter i en fil ved navn „spillernavn.txt“
 i morgue-mappen, så du kan læse den, når du lyster. Dette inkluderer den
 vigtigste statistik, udstyr, besværgelser, færdigheder, noter osv.
 %%%%

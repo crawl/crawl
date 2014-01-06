@@ -6,7 +6,7 @@ besværet med den i forbindelse med nærkamp og besværgelser.
 %%%%
 Air Magic
 
-Hvis man er trænet i en magisk “skole”, bliver det lettere at lære og at kaste
+Hvis man er trænet i en magisk »skole«, bliver det lettere at lære og at kaste
 besværgelser fra denne skole. Mange besværgelser tilhører en kombination af
 flere skoler, og så afhænger både succesraten og besværgelseskraften af din
 gennemsnitlige evne i de skoler.

@@ -207,8 +207,8 @@ Denne bue har samme farve som mørke regnvejrsskyer og lugter af våd ozon.
 %%%%
 large shield of Ignorance
 
-“Et åbent sind er som en fæstning, hvor portene står åbne og murene er
-ubevogtede.”
+»Et åbent sind er som en fæstning, hvor portene står åbne og murene er
+ubevogtede.«
 %%%%
 robe of Augmentation
 
@@ -417,10 +417,10 @@ mod alle former for elementarangreb, men er desværre ikke synderligt pålidelig
 %%%%
 ring of the Octopus King
 
-“En havfrue med sangen så kær
+»En havfrue med sangen så kær
  Vakte blækspruttekongens begær
  Hendes blævrende bejler
- Blev gejler og gejler Men med så mange ringe var opgaven svær.”
+ Blev gejler og gejler Men med så mange ringe var opgaven svær.«
 %%%%
 Axe of Woe
 

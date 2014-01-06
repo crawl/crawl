@@ -51,7 +51,7 @@ Polearms
 greičiau, taikliau ir stipriau. Paprastai rekomenduojama koncentruoti pastangas
 į vieną ar du ginklų tipus.
 
-Ilgakočius ginklus galima aktyvuoti su ‘v’ norint atakuoti priešininkus
+Ilgakočius ginklus galima aktyvuoti su „v” norint atakuoti priešininkus
 esančius dviejų laukelių atstumu.
 
 Įgūdžiai naudojant Ilgakočius ginklus palengvina Kardų arba Lazdų mokymasi, ir
@@ -146,14 +146,14 @@ laisva.
 Spellcasting
 
 Burtų treniravimas palengvina burtų mokymasi ir naudojimą, taip pat padidinant
-tavo magijos rezervus. Burtų lygio įgyjimas suteikia daugiau “burtažodžių
+tavo magijos rezervus. Burtų lygio įgyjimas suteikia daugiau „burtažodžių
 taškų”, kuriuos galima išleisti naujiems burtams. Burtų įgūdis ir tavo išmintis
 yra vieninteliai faktoriai priešiškai įtakojantys alkį, sukeliamą naudojant
 burtus.
 %%%%
 Conjurations
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -164,7 +164,7 @@ ir poveikio plotą.
 %%%%
 Hexes
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -176,7 +176,7 @@ pasipriešinimą priešiškiems sustiprinimams. Įgūdžiai Užkerėjimuose pade
 %%%%
 Charms
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -185,7 +185,7 @@ prailgins šių aurų veikimo laiką arba sustiprins jų efektus.
 %%%%
 Summonings
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -199,7 +199,7 @@ trumpalaikis kaip ir jos pačios.
 %%%%
 Necromancy
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -210,7 +210,7 @@ nemirėlius baigiant burtažodžiais suteikiančius įvairių formų velnišką 
 %%%%
 Translocations
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -220,7 +220,7 @@ atstumą arba išsiųsti tavo priešus toliau nuo tavęs.
 %%%%
 Transmutations
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -230,7 +230,7 @@ arba aplinkinių objektų transformavimui.
 %%%%
 Fire Magic
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -241,7 +241,7 @@ efektyvių Kerų.
 %%%%
 Ice Magic
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -252,7 +252,7 @@ gynybinių efektų, kaip burtažodžiai sukurti laikiną skydą ir šarvus iš l
 %%%%
 Air Magic
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -265,7 +265,7 @@ apginti nuo atakų iš toli.
 %%%%
 Earth Magic
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 
@@ -278,7 +278,7 @@ leidžia suskystinti žemę aplink arba paversi priešus į akmenis.
 %%%%
 Poison Magic
 
-Įgūdžiai magijos “mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
+Įgūdžiai magijos „mokykloje” palengvina tos mokyklos burtažodžių mokymasi ir
 naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
 burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
 

@@ -196,7 +196,7 @@ ozónu.
 %%%%
 large shield of Ignorance
 
-“Otevřená mysl je jako pevnost jejíž brány jsou neblokované a nehlídané.”
+„Otevřená mysl je jako pevnost jejíž brány jsou neblokované a nehlídané.“
 %%%%
 robe of Augmentation
 
@@ -399,11 +399,11 @@ elementálními útoky všeho druhu, ačkoliv ne zcela spolehlivě.
 %%%%
 ring of the Octopus King
 
-“Panna mořská, jenž zpívala ráda,
+„Panna mořská, jenž zpívala ráda,
  v králi chobotnic touhu vyvolala.
  Nápadník její mnoho chapadel měl,
  tuze se snažil a pannu chtěl,
- prsteny jeho všechny však navléct nedokázala.”
+ prsteny jeho všechny však navléct nedokázala.“
 %%%%
 Axe of Woe
 
