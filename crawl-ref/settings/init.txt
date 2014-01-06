@@ -414,8 +414,7 @@
 # char_set         = ascii
 # use_fake_player_cursor = false
 #
-# Translation to use (in 0.11, only badly incomplete descriptions; Polish
-# has god messages and a few misc, Greek has sheep).
+# Translation to use (descriptions only for now).
 # language = pl|fr|zh|ko|fi|ru|el|da|li|pt|de|lv|cs|hu
 #
 # Joke translations (complete!).
