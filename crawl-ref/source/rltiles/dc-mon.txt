@@ -124,11 +124,13 @@ fire_crab MONS_FIRE_CRAB
 %rim 1
 
 ## Worms ('w')
-worm MONS_WORM
+%sdir mon/aquatic
 %rim 0
 swamp_worm MONS_SWAMP_WORM
 lava_worm MONS_LAVA_WORM
 %rim 1
+%sdir mon/animals
+worm MONS_WORM
 spiny_worm MONS_SPINY_WORM
 brain_worm MONS_BRAIN_WORM
 giant_leech MONS_GIANT_LEECH
@@ -142,6 +144,7 @@ moth_of_wrath MONS_MOTH_OF_WRATH
 %rim 0
 
 ## Aquatics (';')
+%sdir mon/aquatic
 big_fish MONS_BIG_FISH
 giant_goldfish MONS_GIANT_GOLDFISH
 electric_eel MONS_ELECTRIC_EEL
@@ -181,7 +184,7 @@ adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
 water_moccasin MONS_WATER_MOCCASIN
 anaconda MONS_ANACONDA
-lava_snake MONS_LAVA_SNAKE
+../aquatic/lava_snake MONS_LAVA_SNAKE
 sea_snake MONS_SEA_SNAKE
 
 ## Bears ('U')
@@ -710,6 +713,7 @@ naga_mage MONS_NAGA_MAGE
 naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
+%sdir mon/aquatic
 salamander MONS_SALAMANDER
 %sdir mon/unique
 lamia MONS_LAMIA

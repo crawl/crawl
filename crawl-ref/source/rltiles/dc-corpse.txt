@@ -102,7 +102,7 @@ apocalypse_crab CORPSE_APOCALYPSE_CRAB
 ## Worms ('w')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 worm CORPSE_WORM
-swamp_worm CORPSE_SWAMP_WORM
+../aquatic/swamp_worm CORPSE_SWAMP_WORM
 spiny_worm CORPSE_SPINY_WORM
 brain_worm CORPSE_BRAIN_WORM
 giant_leech CORPSE_GIANT_LEECH
@@ -115,6 +115,7 @@ ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
 
 ## Aquatics (';')
+%sdir mon/aquatic
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 big_fish CORPSE_BIG_FISH
 giant_goldfish CORPSE_GIANT_GOLDFISH
@@ -126,6 +127,7 @@ kraken_head CORPSE_KRAKEN /*'x'*/
 jellyfish CORPSE_JELLYFISH /*'J'*/
 
 ## Beetles ('B')
+%sdir mon/animals
 goliath_beetle CORPSE_GOLIATH_BEETLE
 boring_beetle CORPSE_BORING_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
