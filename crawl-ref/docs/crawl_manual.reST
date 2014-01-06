@@ -724,9 +724,6 @@ or something else you need to wield only sometimes. Note that this is just a
 typing shortcut and is not functionally different to wielding these items
 normally.
 
-You can press '}' to show your primary (wielded) and secondary (slot b) weapons,
-as well as the preferred missiles (to be shot when using 'f' to fire).
-
 ( Missiles
 ========================================
 
