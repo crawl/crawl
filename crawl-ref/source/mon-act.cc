@@ -3140,12 +3140,14 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     if (env.level_state & LSTATE_SLIMY_WALL && _check_slime_walls(mons, targ))
         return false;
 
+    const bool digs = _mons_can_cast_dig(mons, false)
+                      || _mons_can_zap_dig(mons);
     if ((target_grid == DNGN_ROCK_WALL || target_grid == DNGN_CLEAR_ROCK_WALL)
-        && (mons_class_flag(mons->type, M_BURROWS)
-            || _mons_can_cast_dig(mons, false) || _mons_can_zap_dig(mons))
+           && (mons_class_flag(mons->type, M_BURROWS) || digs)
         || mons->type == MONS_SPATIAL_MAELSTROM
            && feat_is_solid(target_grid) && !feat_is_permarock(target_grid)
-        || feat_is_tree(target_grid) && mons_flattens_trees(mons))
+        || feat_is_tree(target_grid) && mons_flattens_trees(mons)
+        || target_grid == DNGN_GRATE && digs)
     {
     }
     else if (!mons_can_traverse(mons, targ, false)
@@ -3783,7 +3785,8 @@ static bool _monster_move(monster* mons)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
         if ((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
-            && !burrows && digs)
+                && !burrows && digs
+            || feat == DNGN_GRATE && digs)
         {
             bolt beem;
             if (_mons_can_cast_dig(mons, true))
