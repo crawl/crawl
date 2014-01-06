@@ -2024,7 +2024,9 @@ You can use the command ':' for manually adding notes.
 
 user_note_prefix = <string>
         Prefixes manually added notes with the given string, to make
-        them easier to find.
+        them easier to find. It is not currently possible to add a
+        space at the end of this or any option, but you can use the
+        Unicode non-breaking space character ' ' instead.
 
 note_items += <regex>, <regex>, ...
         (List option)
