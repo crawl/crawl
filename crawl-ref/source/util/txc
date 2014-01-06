@@ -257,10 +257,28 @@ def auto_fix(s, lang):
     if lang == 'fr':
         s = auto_fix.re_english_double_quotes.sub(u"« \\1 »", s)
         s = auto_fix.re_english_single_quotes.sub(u"“\\1”", s)
-    elif lang == 'de':
+    elif lang == 'de' or lang == 'cs':
         s = auto_fix.re_english_single_quotes.sub(u"‚\\1‘", s)
         s = auto_fix.re_english_double_quotes.sub(u"„\\1“", s)
-    elif lang == 'pl':
+    elif lang == 'da':
+        s = auto_fix.re_english_single_quotes.sub(u"„\\1“", s)
+        s = auto_fix.re_english_double_quotes.sub(u"»\\1«", s)
+    elif lang == 'el' or lang == 'es' or lang == 'it' or lang == 'pt':
+        s = auto_fix.re_english_double_quotes.sub(u"«\\1»", s)
+        s = auto_fix.re_english_single_quotes.sub(u"“\\1”", s)
+    elif lang == 'fi':
+        s = auto_fix.re_english_single_quotes.sub(u"’\\1’", s)
+        s = auto_fix.re_english_double_quotes.sub(u"”\\1”", s)
+    elif lang == 'ja':
+        s = auto_fix.re_english_single_quotes.sub(u"『\\1』", s)
+        s = auto_fix.re_english_double_quotes.sub(u"「\\1」", s)
+    elif lang == 'lt':
+        s = auto_fix.re_english_single_quotes.sub(u"„\\1”", s)
+        s = auto_fix.re_english_double_quotes.sub(u"„\\1”", s)
+    elif lang == 'lv' or lang == 'ru':
+        s = auto_fix.re_english_double_quotes.sub(u"«\\1»", s)
+        s = auto_fix.re_english_single_quotes.sub(u"„\\1”", s)
+    elif lang == 'pl' or lang == 'hu':
         s = auto_fix.re_english_single_quotes.sub(u"»\\1«", s)
         s = auto_fix.re_english_double_quotes.sub(u"„\\1”", s)
     return s

@@ -46,16 +46,16 @@ Una fuente reseca que ha visto días mejores.
 %%%%
 A fountain of clear blue water
 
-Pulsa ‘q’ para beber de esta fuente. Sin embargo, no esperes que vaya a tener
+Pulsa “q” para beber de esta fuente. Sin embargo, no esperes que vaya a tener
 efecto alguno...
 %%%%
 A fountain of blood
 
-Usa ‘q’ para beber de esta fuente, si deseas tal cosa realmente.
+Usa “q” para beber de esta fuente, si deseas tal cosa realmente.
 %%%%
 A fountain of sparkling water
 
-Usa ‘q’ para beber de esta fuente mágica. Espera efectos mágicos mientras
+Usa “q” para beber de esta fuente mágica. Espera efectos mágicos mientras
 todavía sea mágica.
 %%%%
 A gate leading back out of here

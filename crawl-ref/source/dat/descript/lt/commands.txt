@@ -127,7 +127,7 @@ CMD_CHARACTER_DUMP
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-Įrašyti didelį informacijos apie veikėją kiekį į bylą ‘žaidėjovardas.txt’ morgo
+Įrašyti didelį informacijos apie veikėją kiekį į bylą „žaidėjovardas.txt” morgo
 kataloge, vėlesnei peržiūrai. Įrašoma pagrindinė statistika, apranga, burtai,
 įgūdžiai, užrašai ir t.t.
 %%%%

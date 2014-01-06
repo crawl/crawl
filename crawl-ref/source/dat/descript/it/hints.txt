@@ -120,9 +120,9 @@ finished stashes
 
 Puoi cercare fra tutti gli oggetti esistenti nel dungeon con il comando
 <input>$cmd[CMD_SEARCH_STASHES]</input>. Per esempio,
-<input>$cmd[CMD_SEARCH_STASHES]</input> <w>“pugnale”</w> farà la lista di tutti
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>«pugnale»</w> farà la lista di tutti
 i pugnali. Puoi in seguito viaggiare fino ad uno dei posti indicati. È anche
-possibile scrivere parole come <w>“negozio”</w> o <w>“altare”</w>.
+possibile scrivere parole come <w>«negozio»</w> o <w>«altare»</w>.
 %%%%
 finished random 0
 

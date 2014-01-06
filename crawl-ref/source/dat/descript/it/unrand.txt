@@ -205,8 +205,8 @@ Quest'arco ha il colore delle nere nubi da pioggia, e l'odore di ozono bagnato.
 %%%%
 large shield of Ignorance
 
-“Una mente aperta è come una fortezza con i suoi cancello spalancati e
-sguarniti.”
+«Una mente aperta è come una fortezza con i suoi cancello spalancati e
+sguarniti.»
 %%%%
 robe of Augmentation
 
@@ -420,11 +420,11 @@ chi lo indossa da tutti gli elementi, anche se non infallibilmente.
 %%%%
 ring of the Octopus King
 
-“Una sirena amava cantare,
+«Una sirena amava cantare,
  E svegliò la lussuria nel re Polo.
  Il suo sinuoso pretendente,
  Provò tanto a corteggiarla,
- Ma lei non poteva indossare tutti i suoi anelli.”
+ Ma lei non poteva indossare tutti i suoi anelli.»
 %%%%
 Axe of Woe
 

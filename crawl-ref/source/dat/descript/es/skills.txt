@@ -57,7 +57,7 @@ rápidamente con todas las armas de dicho tipo, así como incrementar su
 precisión y daño con ellas. Generalmente se recomienda concentrar tus esfuerzos
 en uno o dos tipos para volverse más fuerte en ellos.
 
-Las Armas de Asta pueden ser evocadas con ‘v’ para atacar enemigos a dos
+Las Armas de Asta pueden ser evocadas con “v” para atacar enemigos a dos
 espacios de distancia.
 
 Entrenarse con Armas de Asta le hace a uno más capaz con Hachas o con Bastones,
