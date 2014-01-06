@@ -1249,7 +1249,7 @@ TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_delve
     --     2. Set the first delved path to floor.
     --     3. Set the rooms and the other delved paths to
     --        no_r_tele_into floor ('_').  These areas might be
-    --        inescapable if water convers the path out.
+    --        inescapable if water covers the path out.
     fill_disconnected{wanted = '@'}
     subst('@> = .')
     subst('< = _')
