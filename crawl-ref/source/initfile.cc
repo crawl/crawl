@@ -2655,7 +2655,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "user_note_prefix")
     {
         // field is already cleaned up from trim_string()
-        user_note_prefix = field;
+        user_note_prefix = orig_field;
     }
     else if (key == "skill_focus")
     {
