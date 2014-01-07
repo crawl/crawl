@@ -211,9 +211,13 @@ sub godspeak_keys()
 }
 __________________________________________________________________________();
 read_file("descript/unident");
-read_file("descript/gods");
 read_file("descript/skills");
 read_file("descript/commands");
+
+if (read_file("descript/gods"))
+{
+    check_desc_needed("god", map {($_, "$_ powers")} @gods);
+}
 
 if (read_file("descript/items"))
 {
