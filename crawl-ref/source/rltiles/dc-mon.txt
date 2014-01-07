@@ -715,7 +715,6 @@ naga_mage MONS_NAGA_MAGE
 naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
-%sdir mon/aquatic
 salamander MONS_SALAMANDER
 %sdir mon/unique
 lamia MONS_LAMIA
