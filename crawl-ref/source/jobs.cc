@@ -4,8 +4,11 @@
 
 #include "libutil.h"
 
-static const char * Job_Abbrev_List[ NUM_JOBS ] =
-    { "Fi", "Wz", "Pr",
+static const char * Job_Abbrev_List[] =
+    { "Fi", "Wz",
+#if TAG_MAJOR_VERSION == 34
+      "Pr",
+#endif
       "Gl", "Ne",
       "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Sk",
@@ -21,8 +24,11 @@ static const char * Job_Abbrev_List[ NUM_JOBS ] =
 #endif
 };
 
-static const char * Job_Name_List[ NUM_JOBS ] =
-    { "Fighter", "Wizard", "Priest",
+static const char * Job_Name_List[] =
+    { "Fighter", "Wizard",
+#if TAG_MAJOR_VERSION == 34
+      "Priest",
+#endif
       "Gladiator", "Necromancer",
       "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
