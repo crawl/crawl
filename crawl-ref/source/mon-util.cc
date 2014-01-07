@@ -124,6 +124,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
         return DNGN_LAVA;
     case HT_LAND:
     case HT_AMPHIBIOUS:
+    case HT_AMPHIBIOUS_LAVA:
     default:
         return DNGN_FLOOR;
     }
@@ -2741,7 +2742,7 @@ habitat_type mons_habitat(const monster* mon, bool real_amphibious)
 habitat_type mons_class_primary_habitat(monster_type mc)
 {
     habitat_type ht = _mons_class_habitat(mc);
-    if (ht == HT_AMPHIBIOUS)
+    if (ht == HT_AMPHIBIOUS || ht == HT_AMPHIBIOUS_LAVA)
         ht = HT_LAND;
     return ht;
 }
@@ -2756,6 +2757,8 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
     habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
+    if (ht == HT_AMPHIBIOUS_LAVA)
+        ht = HT_LAVA;
     return ht;
 }
 

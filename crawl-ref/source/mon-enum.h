@@ -149,6 +149,7 @@ enum habitat_type
     HT_AMPHIBIOUS,       // Amphibious creatures
     HT_WATER,            // Water critters
     HT_LAVA,             // Lava critters
+    HT_AMPHIBIOUS_LAVA,  // Amphibious w/ lava (salamanders)
 
     NUM_HABITATS
 };
