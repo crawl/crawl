@@ -4093,6 +4093,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_NAGA;
     case MONS_GUARDIAN_SERPENT:
         return TILE_CORPSE_GUARDIAN_SERPENT;
+    case MONS_SALAMANDER:
+        return TILE_CORPSE_SALAMANDER;
 
     // ogres ('O')
     case MONS_OGRE:
