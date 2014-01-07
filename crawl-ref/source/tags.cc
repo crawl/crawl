@@ -3327,6 +3327,11 @@ void unmarshallItem(reader &th, item_def &item)
         artefact_fixup_props(item);
 
 #if TAG_MAJOR_VERSION == 34
+    // Blowguns aren't supposed to have to-dam since 0.7, but they were
+    // generated with a plus2 anyway.
+    if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_BLOWGUN)
+        item.plus2 = 0;
+
     // Remove artefact autoinscriptions from the saved inscription.
     if ((th.getMinorVersion() < TAG_MINOR_AUTOINSCRIPTIONS
          || th.getMinorVersion() == TAG_MINOR_0_11) && is_artefact(item))
