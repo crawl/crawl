@@ -95,6 +95,8 @@ void initialise_branch_depths()
     };
     if (Version::ReleaseType != VER_ALPHA)
         disabled_branch[2] = BRANCH_FOREST;
+    else
+        disabled_branch[2] = BRANCH_CRYPT;
 
     for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
     {
