@@ -70,7 +70,7 @@ tutorial1 exclusion
 %%%%
 tutorial1 autoexplore_announce
 
-自動探索は施設やアイテムの存在を知らせるため停止することがあります。
+自動探索は特徴的なものやアイテムの存在を知らせるため停止することがあります。
 階段へ直接移動するには、<localtiles>階段を<input>クリック</input>するか、
 </localtiles><input>$cmd[CMD_DISPLAY_MAP] << Enter</input>を押してください。
 %%%%
@@ -611,7 +611,7 @@ tutorial5 dungeon_overview
 この先にあるのは怒れるトログの祭壇です。トログは数多くいる神々の一柱です。
 実際のゲームでは、<input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles>、
 またはコマンドパネル内の <input>ダンジョン全体図ボタンをクリック</input>
-</localtiles>からそれまでに発見した全ての祭壇や施設の一覧を見ることができます。
+</localtiles>からそれまでに発見した全ての祭壇や特徴的な場所の一覧を見ることができます。
 %%%%
 tutorial5 altar
 
