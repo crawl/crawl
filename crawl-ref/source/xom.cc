@@ -158,12 +158,13 @@ const string describe_xom_favour()
     return favour;
 }
 
+#define XOM_SPEECH(x) (x)
 static string _get_xom_speech(const string key)
 {
     string result = getSpeakString("Xom " + key);
 
     if (result.empty())
-        result = getSpeakString("Xom general effect");
+        result = getSpeakString("Xom " XOM_SPEECH("general effect"));
 
     if (result.empty())
         return "Xom makes something happen.";
@@ -1272,9 +1273,8 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
             if (debug)
                 return helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH;
 
-            const char* lookup = (helpful ? "good monster polymorph"
-                                          : "bad monster polymorph");
-            god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
+            god_speaks(GOD_XOM, helpful ? _get_xom_speech("good monster polymorph").c_str()
+                                        : _get_xom_speech("bad monster polymorph").c_str());
 
             bool see_old = you.can_see(mon);
             string old_name = mon->full_name(DESC_PLAIN);
@@ -1762,8 +1762,8 @@ static int _xom_give_mutations(bool good, bool debug = false)
         if (debug)
             return good ? XOM_GOOD_MUTATION : XOM_BAD_MUTATION;
 
-        const char* lookup = (good ? "good mutations" : "random mutations");
-        god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
+        god_speaks(GOD_XOM, good ? _get_xom_speech("good mutations").c_str()
+                                 : _get_xom_speech("random mutations").c_str());
 
         const int num_tries = random2(4) + 1;
 
@@ -2160,9 +2160,8 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
     if (debug)
         return helpful ? XOM_GOOD_ENCHANT_MONSTER : XOM_BAD_ENCHANT_MONSTER;
 
-    const char* lookup = (helpful ? "good enchant monster"
-                                  : "bad enchant monster");
-    god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
+    god_speaks(GOD_XOM, helpful ? _get_xom_speech("good enchant monster").c_str()
+                                : _get_xom_speech("bad enchant monster").c_str());
 
     beam_type ench;
 
@@ -2701,10 +2700,10 @@ static int _xom_miscast(const int max_level, const bool nasty,
 
     const char* speeches[4] =
     {
-        "zero miscast effect",
-        "minor miscast effect",
-        "medium miscast effect",
-        "major miscast effect"
+        XOM_SPEECH("zero miscast effect"),
+        XOM_SPEECH("minor miscast effect"),
+        XOM_SPEECH("medium miscast effect"),
+        XOM_SPEECH("major miscast effect"),
     };
 
     const char* causes[4] =
@@ -3332,9 +3331,9 @@ int xom_maybe_reverts_banishment(bool xom_banished, bool debug)
         if (!debug)
         {
             more();
-            const char* lookup = (xom_banished ? "revert own banishment"
-                                               : "revert other banishment");
-            god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
+            god_speaks(GOD_XOM, xom_banished
+                ? _get_xom_speech("revert own banishment").c_str()
+                : _get_xom_speech("revert other banishment").c_str());
             down_stairs(DNGN_EXIT_ABYSS);
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                            "revert banishment"), true);
@@ -3593,7 +3592,7 @@ static void _handle_accidental_death(const int orig_hp,
         return;
     }
 
-    string speech_type = "accidental homicide";
+    string speech_type = XOM_SPEECH("accidental homicide");
 
     const dungeon_feature_type feat = grd(you.pos());
 
@@ -3603,7 +3602,7 @@ static void _handle_accidental_death(const int orig_hp,
         case KILLED_BY_LEAVING:
         case KILLED_BY_WINNING:
         case KILLED_BY_QUITTING:
-            speech_type = "weird death";
+            speech_type = XOM_SPEECH("weird death");
             break;
 
         case KILLED_BY_LAVA:
@@ -3998,6 +3997,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
     more();
 
     const string key = _get_death_type_keyword(death_type);
+    // XOM_SPEECH("life saving actor") or XOM_SPEECH("life saving general")
     string speech = _get_xom_speech("life saving " + key);
     god_speaks(GOD_XOM, speech.c_str());
 
