@@ -52,45 +52,6 @@ Xom single summon
 
 Xom otwiera przejście.
 %%%%
-Xom single holy summon
-
-„Służ śmiertelnemu, moje zmylone dziecko!”
-
-„Służ mej zabawce, me wygnane dziecko!”
-
-Xom wzywa zaciekawionego sługę innego boga.
-
-Xom przynęca kogoś na ten świat.
-
-„Zabawka dla zabawki!”
-
-„Ciekawe która zabawka dłużej wytrzyma.”
-
-Xom otwiera przejście.
-%%%%
-# higher demonic being
-Xom single major demon summon
-
-Xom daje ci demonicznego asystenta.
-
-Xom daje ci demonicznego sługę.
-
-Xom otwiera przejście.
-%%%%
-Xom single major holy summon
-
-Xom daje ci asystenta wziętego innemu bogu.
-
-Xom przekabaca sługę innego boga, aby ci służył.
-
-„A skąd to przyszło? Dobrze, dobrze.”
-
-Ciekawe skąd Xom wziął tą istotę.
-
-Wygląda że Xomowi udało się znowu zmylić jakiegoś innego boga.
-
-Xom otwiera przejście.
-%%%%
 # several demons
 Xom multiple summons
 
@@ -99,33 +60,6 @@ Xom multiple summons
 Xom daje ci tymczasową pomoc.
 
 Xom na chwilę otwiera przejście.
-%%%%
-# holy beings and demons at the same time
-Xom multiple mixed summons
-
-Xom wzywa mieszane towarzystwo.
-
-„Służcie zabawce, moja zbieranino!”
-
-Xom przyzywa pomieszaną pomoc.
-
-„O, jaki fajny plac zabaw!”
-
-Xom sprowadza kilka różnych istot na ten świat.
-
-Xom na chwilę otwiera kilka przejść.
-%%%%
-Xom multiple holy summons
-
-Xom miesza wśród sług innych bogów.
-
-Xom wzywa marnotrawne sługi innych bogów.
-
-Xom mąci innym bogom, wzywając ich sługi.
-
-„Inny bóg, inna zabawka.”
-
-Xom otwiera przejście.
 %%%%
 # changing the scenery
 Xom scenery
