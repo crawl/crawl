@@ -293,7 +293,12 @@ if ($lang)
 }
 __________________________________________________________________________();
 # These go to GameStartDB rather than DescriptionDB.
-read_file("descript/$_") for qw(species backgrounds);
+if (read_file("descript/species"))
+{
+    check_desc_needed("species", `util/gather_species -d`);
+}
+
+read_file("descript/backgrounds");
 __________________________________________________________________________();
 read_file("database/$_") for qw(randname rand_wpn rand_arm rand_all randbook monname);
 check_db_locals();
