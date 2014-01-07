@@ -3690,7 +3690,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_NAGA_MAGE, 'N', RED, "naga mage",
+    MONS_NAGA_MAGE, 'N', MAGENTA, "naga mage",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_POISON,
     1000, 14, MONS_NAGA, MONS_NAGA, MH_NATURAL, -6,
