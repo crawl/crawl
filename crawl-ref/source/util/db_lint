@@ -272,7 +272,7 @@ check_db_locals();
     $xom{$_}=1 for (m{_get_xom_speech\("([^"]+)"\)}g, m{XOM_SPEECH\("([^"]+)"\)}g); #"
     $keys{"Xom $_"} or err "godspeak: no speech for 'Xom $_'\n" for (keys %xom);
     # game start messages use the same prefix of "Xom ", ignore them
-    $xom{$_}=1 for qw(bored newgame prayer generic);
+    $xom{$_}=1 for qw(bored newgame prayer welcome);
     for (grep /^Xom /, keys %keys)
     {
         s/^Xom //;

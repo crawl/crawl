@@ -578,30 +578,26 @@ static void _god_greeting_message(bool game_start)
     if (you_worship(GOD_NO_GOD))
         return;
 
-    string msg = god_name(you.religion);
+    string msg, result;
 
     if (brdepth[BRANCH_ABYSS] == -1 && you_worship(GOD_LUGONU))
-        msg += " welcome";
+        ;
     else if (game_start)
-        msg += " newgame";
+        msg = " newgame";
     else if (you_worship(GOD_XOM))
     {
         if (you.gift_timeout <= 1)
-            msg += " bored";
-        else
-            msg += " generic";
+            msg = " bored";
     }
     else
     {
         if (player_under_penance())
-            msg += " penance";
-        else
-            msg += " welcome";
+            msg = " penance";
     }
 
-    string result = getSpeakString(msg);
-
-    if (!result.empty())
+    if (!msg.empty() && !(result = getSpeakString(god_name(you.religion) + msg)).empty())
+        god_speaks(you.religion, result.c_str());
+    else if (!(result = getSpeakString(god_name(you.religion) + " welcome")).empty())
         god_speaks(you.religion, result.c_str());
 }
 

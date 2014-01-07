@@ -561,10 +561,6 @@ kapciem
 ######################################
 # Welcome messages on game restoration
 ######################################
-Ashenzari penance
-
-@Ashenzari welcome@
-%%%%
 Ashenzari welcome
 
 Ashenzari rzecze: Weź udział w mej wizji. Weź udział w mym przekleństwie.
@@ -576,10 +572,6 @@ Beogh rzecze: Ośmiel się okazać litość nie-orkom i każę cię zgładzić.
 Beogh welcome
 
 Beogh rzecze: Utop niewiernych w morzu krwi!
-%%%%
-Beogh newgame
-
-@Beogh welcome@
 %%%%
 Cheibriados penance
 
@@ -597,10 +589,6 @@ Elyvilon welcome
 
 Elyvilon mówi: Idź i pomóż cierpiącym!
 %%%%
-Elyvilon newgame
-
-@Elyvilon welcome@
-%%%%
 Fedhas penance
 
 Fedhas protestuje przeciw twemu psuciu środowiska.
@@ -609,25 +597,13 @@ Fedhas welcome
 
 Fedhas rzecze: Nieś życie i śmierć.
 %%%%
-Jiyva penance
-
-@Jiyva welcome@
-%%%%
 Jiyva welcome
 
 Śluz dla boga śluzu!
 %%%%
-Kikubaaqudgha penance
-
-@Kikubaaqudgha welcome@
-%%%%
 Kikubaaqudgha welcome
 
 Kikubaaqudgha rzecze: Szerz ciemność i męczarnie bez końca!
-%%%%
-Lugonu penance
-
-@Lugonu welcome@
 %%%%
 Lugonu welcome
 
@@ -637,17 +613,9 @@ Lugonu newgame
 
 Lugonu mówi: Przejdź przez tą bramę, lub wezmij mnie, by sprowadzić cię na świat!
 %%%%
-Makhleb penance
-
-@Makhleb welcome@
-%%%%
 Makhleb welcome
 
 Krew i dusze dla Makhleba!
-%%%%
-Nemelex Xobeh penance
-
-@Nemelex Xobeh welcome@
 %%%%
 Nemelex Xobeh welcome
 
@@ -685,14 +653,6 @@ Trog welcome
 
 Trog woła: Zabij ich wszystkich!
 %%%%
-Trog newgame
-
-@Trog welcome@
-%%%%
-Vehumet penance
-
-@Vehumet welcome@
-%%%%
 Vehumet welcome
 
 Vehumet woła: Niech wszystko spłonie!
@@ -703,13 +663,13 @@ Xom ziewa.
 
 „Ciekawe co dzieje się gdzie indziej...”
 
-@Xom generic@
+@Xom welcome@
 %%%%
 Xom newgame
 
 Xom woła: Nowa zabawka!
 %%%%
-Xom generic
+Xom welcome
 
 Xom chichocze.
 %%%%
@@ -721,10 +681,6 @@ Yredelemnul welcome
 
 Yredelemnul rzecze: Nieś czarną pochodnię! Podnieś bezczynnych zmarłych!
 %%%%
-Yredelemnul newgame
-
-@Yredelemnul welcome@
-%%%%
 Zin penance
 
 Zin potępia cię za nieposłuszeństwo prawu.
@@ -734,8 +690,4 @@ Zin stanowczo wyjaśnia powagę @_important_subject_@
 Zin welcome
 
 Zin rzecze: Nieś światło, me dziecię.
-%%%%
-Zin newgame
-
-@Zin welcome@
 %%%%
