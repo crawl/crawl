@@ -4901,7 +4901,7 @@ static monsterentry mondata[] =
 },
 
 { // dummy, for now.  Spawns in a single vault.
-    MONS_DEMONSPAWN, '@', DARKGREY, "demonspawn", // likely to become '6'
+    MONS_DEMONSPAWN, '@', BROWN, "demonspawn",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     550, 10, MONS_HUMAN, MONS_DEMONSPAWN, MH_NATURAL, -3,
