@@ -5,7 +5,7 @@ open IN, "util/cpp_version jobs.cc|" or die "Can't read jobs.cc\n";
 $_ = <IN>;
 close IN;
 
-s/.*Job_Name_List\[\s*NUM_JOBS\s*\] =\n\s*\{(.*?)\}.*/$1/s
+s/.*Job_Name_List\[\] =\n\s*\{(.*?)\}.*/$1/s
     or die "Can't find Job_Name_List in jobs.cc\n";
 
 print "$_\n" for (/"([^"]*)"/g);
