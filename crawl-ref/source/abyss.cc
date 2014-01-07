@@ -1373,7 +1373,7 @@ static guest_entry guests[] =
   { 3, 5,  20,   UP, BRANCH_COCYTUS },
   { 3, 5,  20,   UP, BRANCH_TARTARUS },
 //{ 1, 5, 100, FLAT, BRANCH_ZOT },
-  { 1, 5, 100, FLAT, BRANCH_FOREST },
+  { 1, 5, 100,   UP, BRANCH_FOREST },
 //{ 1, 5, 100, FLAT, BRANCH_ABYSS },
   { 1, 5, 100,   UP, BRANCH_PANDEMONIUM },
   { 1, 5,   5, FLAT, BRANCH_ICE_CAVE },
