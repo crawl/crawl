@@ -2185,8 +2185,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // guardian serpent ('N')
     case MONS_AIZUL:
         return TILEP_MONS_AIZUL;
-    case MONS_LAMIA:
-        return TILEP_MONS_LAMIA;
 
     // ogre ('O')
     case MONS_EROLCHA:

@@ -4714,22 +4714,6 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 @_fake_spell_effect_@
 ### END Kirke ###
 %%%%
-############ LAMIA ### Naga queen
-Lamia
-
-VISUAL:@The_monster@ spits on the ground.
-
-VISUAL:@The_monster@ motions for her kin.
-
-@The_monster@ hisses viciously.
-
-@The_monster@ yells, "Slay the intruder!"
-
-@The_monster@ says @to_foe@, "Come a little closer..."
-
-@The_monster@ says @to_foe@, "I shall devour you!"
-### END Lamia
-%%%%
 ############ LOUISE ### A mercenary guarding the dungeon
 Louise
 

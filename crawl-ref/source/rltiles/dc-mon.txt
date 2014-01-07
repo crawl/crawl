@@ -716,8 +716,6 @@ naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
 salamander MONS_SALAMANDER
-%sdir mon/unique
-lamia MONS_LAMIA
 
 ## Ogres ('O')
 %sdir mon/unique

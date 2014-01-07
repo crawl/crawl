@@ -2745,7 +2745,9 @@ enum monster_type                      // menv[].type
 #endif
 
     MONS_JORGRUN,
+#if TAG_MAJOR_VERSION == 34
     MONS_LAMIA,
+#endif
 
     MONS_FULMINANT_PRISM,
     MONS_BATTLESPHERE,
