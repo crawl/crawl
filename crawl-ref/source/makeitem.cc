@@ -913,11 +913,16 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
             item.plus  = 3 - random2(6);
             item.plus2 = 3 - random2(6);
         }
-        else if ((item.plus < 0 || item.plus2 < 0)
+        else if ((item.plus < 0
+                  || item.plus2 < 0 && item.sub_type != WPN_BLOWGUN)
                  && !one_chance_in(3))
         {
             do_curse_item(item);
         }
+
+        // No to-dam enchantment on blowguns.
+        if (item.sub_type == WPN_BLOWGUN)
+            item.plus2 = 0;
 
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
             item.flags &= (~ISFLAG_CURSED);
@@ -1748,6 +1753,10 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         if (brand != SPWPN_NORMAL && !forced_ego && coinflip())
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
     }
+
+    // No to-dam enchantment on blowguns.
+    if (item.sub_type == WPN_BLOWGUN)
+        item.plus2 = 0;
 }
 
 // Current list is based on dpeg's original post to the Wiki, found at the

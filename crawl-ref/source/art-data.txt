@@ -545,7 +545,7 @@ EV:      -2
 ENUM:    BLOWGUN_ASSASSIN
 NAME:    blowgun of the Assassin
 OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
-PLUS:    +6/+6
+PLUS:    +6/+0
 COLOUR:  WHITE
 TILE:    urand_blowgun
 TILE_EQ: blowgun
