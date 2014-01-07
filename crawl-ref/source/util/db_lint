@@ -262,6 +262,23 @@ __________________________________________________________________________();
 read_file("database/$_") for qw(monspeak monspell monflee wpnnoise insult godspeak);
 check_db_locals();
 #check_db_externs(@monspeak_at_at);
+
+{
+    undef local $/;
+    open F, "<xom.cc" or die "Can't read xom.cc\n";
+    $_ = <F>;
+    close F;
+    my %xom;
+    $xom{$_}=1 for (m{_get_xom_speech\("([^"]+)"\)}g, m{XOM_SPEECH\("([^"]+)"\)}g); #"
+    $keys{"Xom $_"} or err "godspeak: no speech for 'Xom $_'\n" for (keys %xom);
+    # game start messages use the same prefix of "Xom ", ignore them
+    $xom{$_}=1 for qw(bored newgame prayer generic);
+    for (grep /^Xom /, keys %keys)
+    {
+        s/^Xom //;
+        $xom{$_} or err "godspeak: unknown entry 'Xom $_'\n";
+    }
+}
 __________________________________________________________________________();
 read_file("database/$_") for qw(shout insult);
 check_db_locals();
