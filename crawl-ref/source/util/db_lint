@@ -157,6 +157,18 @@ sub check_db_externs(@)
     }
 }
 
+sub check_db_needed($@)
+{
+    my ($kind, @needed) = @_;
+    for (@needed)
+    {
+        chomp;
+        err "$file: No $kind entry for '$_'\n" unless $entries{$_};
+        delete $keys{$_};
+    }
+    err "$file: Unused entry for '$_'\n" for grep !/^_.*_$/, sort keys %keys;
+}
+
 sub at_at_replaces($$)
 {
     my ($file, $func) = @_;
@@ -170,6 +182,33 @@ sub at_at_replaces($$)
 }
 
 my @monspeak_at_at = at_at_replaces("mon-util.cc", "do_mon_str_replacements");
+
+my @gods = ("the Shining One", "Sif Muna","Nemelex Xobeh",
+            qw(Zin Kikubaaqudgha Yredelemnul Xom Vehumet
+               Okawaru Makhleb Trog Elyvilon Lugonu
+               Beogh Jiyva Fedhas Cheibriados Ashenzari));
+
+sub godspeak_keys()
+{
+    undef local $/;
+    open F, "<xom.cc" or die "Can't read xom.cc\n";
+    $_ = <F>;
+    close F;
+    my %keys;
+    $keys{"Xom $_"}=1 for m{_get_xom_speech\("([^"]+)"\)}g;
+    $keys{"Xom $_"}=1 for m{XOM_SPEECH\("([^"]+)"\)}g;
+    $keys{"Xom $_"}=1 for qw(bored prayer);
+    for (@gods)
+    {
+        $keys{"$_ newgame"}=1;
+        $keys{"$_ welcome"}=1;
+        $keys{"$_ penance"}=1;
+    }
+    $keys{"Beogh idol $_"}=1 for qw(follower orc other);
+    $keys{$_}=1 for ("the Shining One holy evil", "the Shining One holy other",
+                     "Elyvilon holy", "recite_closure");
+    return keys %keys;
+}
 __________________________________________________________________________();
 read_file("descript/unident");
 read_file("descript/gods");
@@ -259,25 +298,15 @@ __________________________________________________________________________();
 read_file("database/$_") for qw(randname rand_wpn rand_arm rand_all randbook monname);
 check_db_locals();
 __________________________________________________________________________();
-read_file("database/$_") for qw(monspeak monspell monflee wpnnoise insult godspeak);
+read_file("database/$_") for qw(monspeak monspell monflee wpnnoise insult);
 check_db_locals();
 #check_db_externs(@monspeak_at_at);
 
+if (read_file("database/godspeak"))
 {
-    undef local $/;
-    open F, "<xom.cc" or die "Can't read xom.cc\n";
-    $_ = <F>;
-    close F;
-    my %xom;
-    $xom{$_}=1 for (m{_get_xom_speech\("([^"]+)"\)}g, m{XOM_SPEECH\("([^"]+)"\)}g); #"
-    $keys{"Xom $_"} or err "godspeak: no speech for 'Xom $_'\n" for (keys %xom);
-    # game start messages use the same prefix of "Xom ", ignore them
-    $xom{$_}=1 for qw(bored newgame prayer welcome);
-    for (grep /^Xom /, keys %keys)
-    {
-        s/^Xom //;
-        $xom{$_} or err "godspeak: unknown entry 'Xom $_'\n";
-    }
+    $entries{"$_ newgame"}=1 for @gods; # not mandatory
+    $entries{"$_ penance"}=1 for @gods; # not mandatory
+    check_db_needed("godspeak", godspeak_keys());
 }
 __________________________________________________________________________();
 read_file("database/$_") for qw(shout insult);
