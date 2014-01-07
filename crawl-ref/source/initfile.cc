@@ -3553,7 +3553,7 @@ bool game_options::set_lang(const char *lc)
     if (!lc)
         return false;
 
-    if (lc[0] && lc[1] && lc[2] == '_')
+    if (lc[0] && lc[1] && (lc[2] == '_' || lc[2] == '-'))
         return set_lang(string(lc, 2).c_str());
 
     const string l = lowercase_string(lc); // Windows returns it capitalized.
