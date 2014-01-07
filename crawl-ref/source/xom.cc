@@ -158,7 +158,7 @@ const string describe_xom_favour()
     return favour;
 }
 
-#define XOM_SPEECH(x) (x)
+#define XOM_SPEECH(x) x
 static string _get_xom_speech(const string key)
 {
     string result = getSpeakString("Xom " + key);
