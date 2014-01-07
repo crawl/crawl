@@ -282,16 +282,6 @@ Kirke
 
 A beautiful enchantress.
 %%%%
-Lamia
-
-A powerful queen of the nagas, said to be willing to eat her own children. {{
-  if you.race == "Naga" then
-    return "She is stunningly beautiful."
-  else
-    return "Despite her deformed body, she is quite beautiful."
-  end
-}}
-%%%%
 the Lernaean hydra
 
 An ancient, outsized serpent-like water beast that possesses numerous heads.

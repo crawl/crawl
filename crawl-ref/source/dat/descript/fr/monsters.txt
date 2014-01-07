@@ -295,18 +295,6 @@ Kirke
 
 Une belle enchanteresse.
 %%%%
-Lamia
-
-Une puissante reine des nagas, on dit qu'elle serait capable de manger ses
-propres enfants.
-{{
-  if you.race == "Naga" then
-    return "Sa beauté est éblouissante."
-  else
-    return "En dehors de son corps déformé, elle est plutôt jolie."
-  end
-}}
-%%%%
 the Lernaean hydra
 
 Un ancien monstre, ressemblant a un serpent colossal et qui possède un certain

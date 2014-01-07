@@ -1195,13 +1195,12 @@ ENDMAP
 NAME:   grunt_snake_rune_serpentine_throne
 PLACE:  Snake:$
 ORIENT: north
-KMONS:  L = Lamia
+KMONS:  L = greater naga
 KITEM:  O = serpentine rune of Zot
 KFEAT:  A = altar_okawaru / altar_makhleb / altar_trog
 MONS:   greater naga / naga warrior w:5 / naga mage w:5
 MONS:   naga warrior / naga, naga mage / naga, naga / nothing
 MONS:   anaconda / guardian serpent
-veto {{ return you.uniques("Lamia") }}
 MAP
      xxxxxxx
      ccccccc

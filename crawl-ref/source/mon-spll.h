@@ -1817,17 +1817,6 @@
       }
     },
 
-    {  MST_LAMIA,
-      {
-       SPELL_IOOD,
-       SPELL_MESMERISE,
-       SPELL_HASTE,
-       SPELL_POISON_ARROW,
-       SPELL_NO_SPELL,
-       SPELL_TELEPORT_SELF
-      }
-    },
-
     {  MST_DEEP_TROLL_EARTH_MAGE,
       {
        SPELL_LRD,
