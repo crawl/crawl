@@ -114,11 +114,6 @@ Ogre
 Large and strong, they're mostly seen as brutes. Ogres are very comfortable
 with the basics of magic, however.
 %%%%
-Sludge Elf
-
-A depraved type of elf, who prefers cunning to fair fighting, and dark magic to
-other wizardry.
-%%%%
 Spriggan
 
 Very small, very frail and very fast. Spriggans make highly competent stabbers
