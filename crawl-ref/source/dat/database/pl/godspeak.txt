@@ -120,16 +120,6 @@ Xom dziko chichocze.
 w:1
 „Zróbmy trochę crash testów na tej zabawce.”
 %%%%
-Xom lose stats
-
-„Cierp!”
-
-Czujesz na sobie złośliwy wzrok Xoma.
-
-Moc Xoma cię dotyka.
-
-Słyszysz szalony śmiech Xoma.
-%%%%
 Xom rearrange the pieces
 
 Xom przestawia.
@@ -200,7 +190,7 @@ Xom rzuca cię w Otchłań!
 
 Świat wiruje, a w uszach dzwoni ci śmiechem Xoma.
 %%%%
-Xom revert banishment
+Xom revert own banishment
 
 w:30
 „Żartowałem!”
@@ -208,6 +198,14 @@ w:30
 „A w zasadzie, ...”
 
 „Nie, jednak nie.”
+
+Xom wciąga cię z powrotem.
+%%%%
+Xom revert other banishment
+
+„Hej, wracaj!”
+
+„A ty gdzie się wybierasz?”
 
 Xom wciąga cię z powrotem.
 %%%%
@@ -219,6 +217,23 @@ Moc Xoma dotyka pobliskiej broni.
 „Poczuj smak chaosu.”
 
 Xom rechocze.
+%%%%
+Xom noise
+
+Xom hałasuje! Słyszysz @weapon_noise@
+
+w:1
+Xom bębni sobie.
+%%%%
+Xom blink monsters
+
+„Ty tu, ty tam.”
+
+„A może ustawimy ich... tak.”
+
+„Zabawimy się w przestawiankę.”
+
+Xom przestawia publikę.
 %%%%
 #####################
 # other effects
@@ -352,6 +367,14 @@ Xom zmienia architekturę.
 Xom dotyka @staircase@.
 
 „Berek!”
+%%%%
+Xom good enchant monster
+
+@Xom good monster polymorph@
+%%%%
+Xom bad enchant monster
+
+@Xom good enchant monster@
 %%%%
 Xom life saving general
 
