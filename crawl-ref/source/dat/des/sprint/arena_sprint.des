@@ -1065,8 +1065,7 @@ KFEAT:  K = antique armour shop count:17 use_all type:Advanced suffix:Armour gre
             pair of gloves randart | pair of gloves randart | pair of boots randart |\
             pair of boots randart | helmet randart | hat randart | buckler randart |\
             shield randart | cloak randart | cloak randart | robe randart | animal skin randart |\
-            large shield randart | robe randart | buckler randart | hat randart |\
-            leather armour randart
+            large shield randart | robe randart | buckler randart | leather armour randart
 KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed storm dragon armour | mundane not_cursed fire dragon armour |\
             mundane not_cursed ice dragon armour | mundane not_cursed gold dragon armour |\

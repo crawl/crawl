@@ -2220,8 +2220,11 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_HAT:
         if (coinflip())
         {
-            rc = random_choose(SPARM_MAGIC_RESISTANCE, SPARM_INTELLIGENCE,
-                               SPARM_SPIRIT_SHIELD, -1);
+            rc = random_choose_weighted(3, SPARM_MAGIC_RESISTANCE,
+                                        2, SPARM_INTELLIGENCE,
+                                        2, SPARM_SEE_INVISIBLE,
+                                        1, SPARM_SPIRIT_SHIELD,
+                                        0);
         }
         break;
 
@@ -2370,7 +2373,11 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                || !strict;
 
     case SPARM_SPIRIT_SHIELD:
-        return type == ARM_HAT || slot == EQ_SHIELD || !strict;
+        return type == ARM_HAT ||
+#if TAG_MAJOR_VERSION == 34
+               type == ARM_CAP ||
+#endif
+               slot == EQ_SHIELD || !strict;
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");
