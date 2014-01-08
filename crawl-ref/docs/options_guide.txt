@@ -24,8 +24,8 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 autopickup_no_burden, pickup_thrown, chunks_autopickup,
-                assign_item_slot, drop_mode, pickup_menu, drop_filter,
-                default_friendly_pickup
+                assign_item_slot, drop_mode, pickup_menu, pickup_menu_limit,
+                drop_filter, default_friendly_pickup
 3-b     Targeting.
                 default_target, target_unshifted_dirs, darken_beyond_range
 3-c     Passive Sightings (detected and remembered entities).
@@ -509,8 +509,15 @@ pickup_menu = true
         When true (the default), makes a menu appear, where you can
         choose which items to pick up. Note that no matter how many
         items you choose, picking up will always take one turn.
-        Setting this to false invokes the classical behaviour: when
-        picking up items, you are prompted for them one by one.
+        Setting this to false invokes another behaviour: when picking up
+        items, if there are at least 4 items on your square, the menu will
+        appear, and you are prompted one by one otherwise.
+        This number can be adjusted with the pickup_menu_limit option.
+
+pickup_menu_limit = 4
+        The number of items on your square that will activate menu for pickup
+        when pickup_menu is set to false.
+        Negatives value will be considered as item_stack_summary_minimum.
 
 drop_filter += <regex>, <regex>, ...
         (List option)

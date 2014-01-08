@@ -1265,8 +1265,13 @@ void pickup(bool partial_quantity)
         // a killed item here.
         pickup_single_item(o, partial_quantity ? 0 : mitm[o].quantity);
     }
-    else if (Options.pickup_menu)
+    else if (Options.pickup_menu
+             || num_nonsquelched >= (Options.pickup_menu_limit < 0
+                                     ? Options.item_stack_summary_minimum
+                                     : Options.pickup_menu_limit))
+    {
         pickup_menu(o);
+    }
     else
     {
         int next;

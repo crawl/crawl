@@ -88,6 +88,7 @@
 #
 # drop_mode = (multi | single)
 # pickup_menu = false
+# pickup_menu_limit = 4
 # drop_filter += skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 

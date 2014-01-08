@@ -909,6 +909,7 @@ void game_options::reset_options()
 
     drop_mode              = DM_MULTI;
     pickup_menu            = true;
+    pickup_menu_limit      = 4;
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -3385,6 +3386,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             drop_mode = DM_SINGLE;
     }
     else BOOL_OPTION(pickup_menu);
+    else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
     {
         // TODO: this option could probably be improved.  For now, keep the
