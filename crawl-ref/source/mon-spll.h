@@ -1971,17 +1971,6 @@
       }
     },
 
-    {  MST_PAN,
-      {
-       SPELL_NO_SPELL,
-       SPELL_MASS_CONFUSION,
-       SPELL_NO_SPELL,
-       SPELL_ENGLACIATION,
-       SPELL_SLEEP,
-       SPELL_BLINK
-      }
-    },
-
     {  MST_TENGU_CONJURER_I,
       {
        SPELL_FORCE_LANCE,
