@@ -551,57 +551,6 @@ static beam_type _chaos_beam_flavour()
     return flavour;
 }
 
-static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
-                                ray_def &old_ray, ray_def &new_ray)
-{
-    if (new_bolt.real_flavour != BEAM_CHAOS)
-        return;
-
-    double old_deg = old_ray.get_degrees();
-    double new_deg = new_ray.get_degrees();
-    double angle   = fabs(old_deg - new_deg);
-
-    if (angle >= 180.0)
-        angle -= 180.0;
-
-    double max =  90.0 + (angle / 2.0);
-    double min = -90.0 + (angle / 2.0);
-
-    double shift;
-
-    ray_def temp_ray = new_ray;
-    for (int tries = 0; tries < 20; tries++)
-    {
-        shift = random_range(static_cast<int>(min * 10000),
-                             static_cast<int>(max * 10000)) / 10000.0;
-
-        if (new_deg < old_deg)
-            shift = -shift;
-        temp_ray.set_degrees(new_deg + shift);
-
-        // Don't bounce straight into another wall.  Can happen if the beam
-        // is shot into an inside corner.
-        ray_def test_ray = temp_ray;
-        test_ray.advance();
-        if (in_bounds(test_ray.pos()) && !cell_is_solid(test_ray.pos()))
-            break;
-
-        shift    = 0.0;
-        temp_ray = new_ray;
-    }
-
-    new_ray = temp_ray;
-    dprf(DIAG_BEAM, "chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
-         static_cast<float>(old_deg), static_cast<float>(new_deg),
-         static_cast<float>(shift));
-
-    // Don't use up range in bouncing off walls, so that chaos beams have
-    // as many chances as possible to bounce.  They're like demented
-    // ping-pong balls on caffeine.
-    int range_spent = new_bolt.range_used() - old_bolt.range_used();
-    new_bolt.range += range_spent;
-}
-
 bool bolt::visible() const
 {
     return glyph != 0 && !is_enchantment();
@@ -786,9 +735,6 @@ void bolt::bounce()
         }
     }
 
-    ray_def old_ray  = ray;
-    bolt    old_bolt = *this;
-
     do
         ray.regress();
     while (cell_is_solid(ray.pos()));
@@ -803,7 +749,6 @@ void bolt::bounce()
     extra_range_used += 2;
 
     ASSERT(!cell_is_solid(ray.pos()));
-    _munge_bounced_bolt(old_bolt, *this, old_ray, ray);
 }
 
 void bolt::fake_flavour()
