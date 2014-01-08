@@ -899,7 +899,6 @@ static bool _skill_useless_with_god(int skill)
     case GOD_ZIN:
     case GOD_SHINING_ONE:
     case GOD_ELYVILON:
-    case GOD_FEDHAS:
         return skill == SK_NECROMANCY;
     case GOD_XOM:
     case GOD_NEMELEX_XOBEH:
