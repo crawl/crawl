@@ -99,4 +99,12 @@ function teleporter_serial_action_fn
   end
 end
 
+function callback.xom_trap_step(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
+function callback.xom_item_pickup(data, triggerable, triggerer, marker, ev)
+  -- do nothing
+end
+
 }}
