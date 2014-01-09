@@ -5890,6 +5890,7 @@ void player::init()
     travel_ally_pace = false;
     received_weapon_warning = false;
     received_noskill_warning = false;
+    wizmode_teleported_into_rock = false;
     ash_init_bondage(this);
 
     delay_queue.clear();

@@ -4342,6 +4342,9 @@ static void _move_player(coord_def move)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
+    ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
+           || you.wizmode_teleported_into_rock);
+
     if (you.attribute[ATTR_HELD])
     {
         free_self_from_net();
