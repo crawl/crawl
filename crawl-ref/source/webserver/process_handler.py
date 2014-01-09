@@ -164,17 +164,41 @@ class CrawlProcessHandlerBase(object):
             self.end_callback()
 
     def update_watcher_description(self):
-        def wrap_name(watcher):
-            if watcher.watched_game:
-                return "<span class='watcher'>" + watcher.username + "</span>"
+        try:
+            player_url = config.player_url
+        except:
+            player_url = None
+        def wrap_name(watcher, is_player=False):
+            if is_player:
+                class_type = 'player'
             else:
-                return "<span class='player'>" + watcher.username + "</span>"
-        watcher_names = [wrap_name(w) for w in self._receivers
-                         if w.username]
+                class_type = 'watcher'
+            if player_url is None:
+                return "<span class='{0}'>{1}</span>".format(class_type,
+                                                             watcher)
+            username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(config.player_url, class_type, watcher)
+            username = username.replace('%s', watcher.lower())
+            return username
+
+        player_name = None
+        watchers = []
+        for w in self._receivers:
+            if not w.username:
+                continue
+            if not w.watched_game:
+                player_name = w.username
+            else:
+                watchers.append(w.username)
+        watchers.sort()
+        watcher_names = []
+        if player_name is not None:
+            watcher_names.append(wrap_name(player_name, True))
+        watcher_names += [wrap_name(w) for w in watchers]
+
         anon_count = len(self._receivers) - len(watcher_names)
         s = ", ".join(watcher_names)
         if len(watcher_names) > 0 and anon_count > 0:
-            s = s + ", and %i Anon" % anon_count
+            s = s + " and %i Anon" % anon_count
         elif anon_count > 0:
             s = "%i Anon" % anon_count
         self.send_to_all("update_spectators",
