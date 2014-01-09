@@ -1046,6 +1046,13 @@ void dec_penance(god_type god, int val)
                 redraw_screen();
                 notify_stat_change("mollifying Cheibriados");
             }
+            // Likewise Dsomething's umbra.
+            else if (god == GOD_DSOMETHING
+                     && you.piety >= piety_breakpoint(0))
+            {
+                mpr("Your aura of darkness returns!");
+                invalidate_agrid(true);
+            }
 
             // When you've worked through all your penance, you get
             // another chance to make hostile holy beings good neutral.
@@ -1150,6 +1157,12 @@ static void _inc_penance(god_type god, int val)
         {
             redraw_screen();
             notify_stat_change("falling into Cheibriados' penance");
+        }
+        else if (god == GOD_DSOMETHING)
+        {
+            if (you.umbraed())
+                mpr("Your aura of darkness fades away.");
+            invalidate_agrid();
         }
 
         if (you_worship(god))
@@ -2755,6 +2768,9 @@ static void _gain_piety_point()
                 auto_id_inventory();
             }
 
+            if (you_worship(GOD_DSOMETHING) && i == 0)
+                mpr("You are shrouded in an aura of darkness!");
+
             // When you gain a piety level, you get another chance to
             // make hostile holy beings good neutral.
             if (is_good_god(you.religion))
@@ -2777,9 +2793,9 @@ static void _gain_piety_point()
         notify_stat_change("Cheibriados piety gain");
     }
 
-    if (you_worship(GOD_SHINING_ONE))
+    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DSOMETHING))
     {
-        // Piety change affects halo radius.
+        // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
     }
 
@@ -2934,9 +2950,9 @@ void lose_piety(int pgn)
         notify_stat_change("Cheibriados piety loss");
     }
 
-    if (you_worship(GOD_SHINING_ONE))
+    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DSOMETHING))
     {
-        // Piety change affects halo radius.
+        // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
     }
 }
@@ -2994,8 +3010,9 @@ void excommunication(god_type new_god)
     ASSERT(old_god != new_god);
     ASSERT(old_god != GOD_NO_GOD);
 
-    const bool was_haloed = you.haloed();
-    const int  old_piety  = you.piety;
+    const bool was_haloed  = you.haloed();
+    const bool was_umbraed = you.umbraed();
+    const int  old_piety   = you.piety;
 
     god_acting gdact(old_god, true);
 
@@ -3203,6 +3220,12 @@ void excommunication(god_type new_god)
                        - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total = you.exp_docked;
         _set_penance(old_god, 50);
+        break;
+
+    case GOD_DSOMETHING:
+        if (was_umbraed)
+            mpr("Your aura of darkness fades away.");
+        _set_penance(old_god, 25);
         break;
 
     case GOD_CHEIBRIADOS:
