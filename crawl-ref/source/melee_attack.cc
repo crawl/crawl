@@ -5078,11 +5078,8 @@ void melee_attack::do_spines()
             if (hurt <= 0)
                 return;
 
-            if (defender_visible)
-            {
-                simple_monster_message(attacker->as_monster(),
-                                       " is struck by your spines.");
-            }
+            simple_monster_message(attacker->as_monster(),
+                                   " is struck by your spines.");
 
             attacker->hurt(&you, hurt);
         }
