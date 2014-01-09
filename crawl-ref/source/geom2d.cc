@@ -147,18 +147,4 @@ double form::operator()(const vector& v) const
     return a*v.x + b*v.y;
 }
 
-double degrees(const vector &v)
-{
-    if (v.x == 0)
-        return v.y > 0 ? 90.0 : -90.0;
-    double rad = v.x > 0 ? atan(v.y/v.x) : M_PI + atan(v.y/v.x);
-    return 180.0 / M_PI * rad;
-}
-
-vector degree_to_vector(double d)
-{
-    double rad = d / 180.0 * M_PI;
-    return vector(cos(rad), sin(rad));
-}
-
 }
