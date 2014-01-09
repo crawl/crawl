@@ -16,14 +16,13 @@ class attack
 public:
     // General attack properties, set on instantiation or through a normal
     // thread of execution
-    actor        *attacker, *defender;
+    actor   *attacker, *defender;
 
     bool    attack_occurred;
     bool    cancel_attack;
     bool    did_hit;
     bool    needs_message;
     bool    attacker_visible, defender_visible;
-    bool    attacker_invisible, defender_invisible;
 
     int     to_hit;
     int     damage_done;
@@ -90,9 +89,9 @@ public:
 
     // Exact copies of their melee_attack predecessors
     string actor_name(const actor *a, description_level_type desc,
-                      bool actor_visible, bool actor_invisible);
+                      bool actor_visible);
     string actor_pronoun(const actor *a, pronoun_type ptyp, bool actor_visible);
-    string anon_name(description_level_type desc, bool actor_invisible);
+    string anon_name(description_level_type desc);
     string anon_pronoun(pronoun_type ptyp);
 
 // Private Methods

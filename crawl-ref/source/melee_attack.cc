@@ -182,10 +182,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     }
 
     attacker_visible   = attacker->observable();
-    attacker_invisible = (!attacker_visible && you.see_cell(attack_position));
     defender_visible   = defender && defender->observable();
-    defender_invisible = (!defender_visible && defender
-                          && you.see_cell(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);
 
     attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(20);
@@ -439,7 +436,7 @@ bool melee_attack::handle_phase_dodged()
 
     if (ev_margin + (ev - ev_nophase) > 0)
     {
-        if (needs_message && !defender_invisible)
+        if (needs_message && defender_visible)
         {
             mprf("%s momentarily %s out as %s "
                  "attack passes through %s%s",
@@ -5081,7 +5078,7 @@ void melee_attack::do_spines()
             if (hurt <= 0)
                 return;
 
-            if (!defender_invisible)
+            if (defender_visible)
             {
                 simple_monster_message(attacker->as_monster(),
                                        " is struck by your spines.");

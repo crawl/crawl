@@ -28,8 +28,7 @@
 attack::attack(actor *attk, actor *defn)
     : attacker(attk), defender(defn), attack_occurred(false),
     cancel_attack(false), did_hit(false), needs_message(false),
-    attacker_visible(false), defender_visible(false),
-    attacker_invisible(false), defender_invisible(false), to_hit(0),
+    attacker_visible(false), defender_visible(false), to_hit(0),
     damage_done(0), special_damage(0), aux_damage(0), min_delay(0),
     final_attack_delay(0), apply_bleeding(false), noise_factor(0),
     ev_margin(0), weapon(NULL),
@@ -60,9 +59,9 @@ bool attack::handle_phase_attempted()
  * to be used (capitalization, possessiveness, etc.)
  */
 string attack::actor_name(const actor *a, description_level_type desc,
-                          bool actor_visible, bool actor_invisible)
+                          bool actor_visible)
 {
-    return actor_visible ? a->name(desc) : anon_name(desc, actor_invisible);
+    return actor_visible ? a->name(desc) : anon_name(desc);
 }
 
 /* Returns an actor's pronoun
@@ -80,7 +79,7 @@ string attack::actor_pronoun(const actor *a, pronoun_type pron,
  * Given the actor visible or invisible, returns the
  * appropriate possessive pronoun.
  */
-string attack::anon_name(description_level_type desc, bool actor_invisible)
+string attack::anon_name(description_level_type desc)
 {
     switch (desc)
     {
@@ -93,7 +92,7 @@ string attack::anon_name(description_level_type desc, bool actor_invisible)
     case DESC_A:
     case DESC_PLAIN:
     default:
-        return actor_invisible? "it" : "something";
+        return "it";
     }
 }
 
@@ -204,7 +203,7 @@ string attack::evasion_margin_adverb()
  */
 string attack::atk_name(description_level_type desc)
 {
-    return actor_name(attacker, desc, attacker_visible, attacker_invisible);
+    return actor_name(attacker, desc, attacker_visible);
 }
 
 /* Returns the defender's name
@@ -213,7 +212,7 @@ string attack::atk_name(description_level_type desc)
  */
 string attack::def_name(description_level_type desc)
 {
-    return actor_name(defender, desc, defender_visible, defender_invisible);
+    return actor_name(defender, desc, defender_visible);
 }
 
 /* Returns the attacking weapon's name
