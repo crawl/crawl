@@ -531,18 +531,3 @@ void ray_def::bounce(const reflect_grid &rg)
     ASSERT(_valid());
     ASSERT(!rg(pos() - old_pos));
 }
-
-double ray_def::get_degrees() const
-{
-    return geom::degrees(r.dir);
-}
-
-void ray_def::set_degrees(double d)
-{
-    // Changing the angle while on a diamond corner causes problems when the
-    // new direction points inside the diamond (#5892).  Avoid that case by
-    // first moving the ray's start slightly inside the diamond.
-    if (on_corner)
-        nudge_inside();
-    r.dir = geom::degree_to_vector(d);
-}

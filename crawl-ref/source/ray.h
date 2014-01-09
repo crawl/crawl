@@ -27,10 +27,6 @@ struct ray_def
     void nudge_inside();
     void regress();
 
-    // Get and set the direction.
-    double get_degrees() const;
-    void set_degrees(double d);
-
     bool _valid() const;
 };
 

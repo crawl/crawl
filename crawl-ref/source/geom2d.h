@@ -92,8 +92,6 @@ double nextintersect(const ray &r, const lineseq &ls);
 bool parallel(const vector& v, const form &f);
 vector reflect(const vector& v, const form &f);
 
-vector degree_to_vector(const double d);
-double degrees(const vector &v);
 }
 
 #endif
