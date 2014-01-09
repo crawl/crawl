@@ -210,6 +210,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " pulsate% black.",          // unused
         " strongly pulsate% black.", // unused
     },
+    // Dsomething
+    {
+        " slowly dissolves into the shadows.",
+        " dissolves into the shadows.",
+        " rapidly dissolves into the shadows.",
+    },
 };
 
 /**
@@ -326,6 +332,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
       "Ashenzari helps you to reconsider your skills."
+    },
+    // Dsomething
+    { "",
+      "",
+      "",
+      "",
+      ""
     },
 };
 
@@ -444,6 +457,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "scry through walls",
       "Ashenzari no longer helps you to reconsider your skills."
     },
+    // Dsomething
+    { "",
+      "",
+      "",
+      "",
+      "",
+    }
 };
 
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
@@ -460,7 +480,8 @@ bool is_evil_god(god_type god)
            || god == GOD_MAKHLEB
            || god == GOD_YREDELEMNUL
            || god == GOD_BEOGH
-           || god == GOD_LUGONU;
+           || god == GOD_LUGONU
+           || god == GOD_DSOMETHING;
 }
 
 bool is_good_god(god_type god)
@@ -657,6 +678,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
+    case GOD_DSOMETHING:
         likes.push_back("you kill living beings");
         break;
 
@@ -692,6 +714,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
+    case GOD_DSOMETHING:
         likes.push_back("you kill the undead");
         break;
 
@@ -721,6 +744,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
+    case GOD_DSOMETHING:
         likes.push_back("you kill demons");
         break;
 
@@ -763,6 +787,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
+    case GOD_DSOMETHING:
         likes.push_back("you kill holy beings");
         break;
 
@@ -2377,6 +2402,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_CHEIBRIADOS:   return "Cheibriados";
     case GOD_XOM:           return "Xom";
     case GOD_ASHENZARI:     return "Ashenzari";
+    case GOD_DSOMETHING:    return "Dsomething";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -3838,7 +3864,8 @@ bool god_likes_fresh_corpses(god_type god)
 
     return god == GOD_OKAWARU
            || god == GOD_MAKHLEB
-           || god == GOD_TROG;
+           || god == GOD_TROG
+           || god == GOD_DSOMETHING;
 }
 
 bool god_likes_spell(spell_type spell, god_type god)
@@ -4030,6 +4057,7 @@ void handle_god_time()
         case GOD_MAKHLEB:
         case GOD_BEOGH:
         case GOD_LUGONU:
+        case GOD_DSOMETHING:
             if (one_chance_in(16))
                 lose_piety(1);
             break;
@@ -4113,6 +4141,9 @@ int god_colour(god_type god) // mv - added
     case GOD_CHEIBRIADOS:
         return LIGHTCYAN;
 
+    case GOD_DSOMETHING:
+        return MAGENTA;
+
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
@@ -4186,6 +4217,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_JIYVA:
         return coinflip() ? GREEN : LIGHTGREEN;
+
+    case GOD_DSOMETHING:
+        return MAGENTA;
 
     default:
         return YELLOW;

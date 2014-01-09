@@ -1413,8 +1413,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_FEDHAS,
     DNGN_ALTAR_CHEIBRIADOS,
     DNGN_ALTAR_ASHENZARI,
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_ASHENZARI,
-    DNGN_UNUSED_ALTAR_1,
+    DNGN_ALTAR_DSOMETHING,
+        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DSOMETHING,
 
     DNGN_FOUNTAIN_BLUE,
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1841,6 +1841,7 @@ enum god_type
     GOD_FEDHAS,
     GOD_CHEIBRIADOS,
     GOD_ASHENZARI,
+    GOD_DSOMETHING,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
