@@ -4,6 +4,7 @@
   });
   require(['jquery', 'client'], function ($, client) {
     client.inhibit_messages();
+    window.game_loading = true;
     require(['game-{{ version }}/game'], function (game) {
       $(document).trigger("game_preinit");
       $(document).trigger("game_init");
