@@ -20,6 +20,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "makeitem.h"
 #include "message.h"
 #include "mon-place.h"
 #include "mgen_data.h"
@@ -158,8 +159,33 @@ static void _write_mon(FILE * o, monster &mon)
             mon.ev);
 }
 
-static bool _fsim_kit_equip(const string &kit)
+static bool _equip_weapon(const string &weapon, bool &abort)
 {
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (!you.inv[i].defined())
+            continue;
+
+        if (you.inv[i].name(DESC_PLAIN).find(weapon) != string::npos)
+        {
+            if (i != you.equip[EQ_WEAPON])
+            {
+                wield_weapon(true, i, false);
+                if (i != you.equip[EQ_WEAPON])
+                {
+                    abort = true;
+                    return true;
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool _fsim_kit_equip(const string &kit, string &error)
+{
+    bool abort = false;
     string::size_type ammo_div = kit.find("/");
     string weapon = kit;
     string missile;
@@ -173,21 +199,21 @@ static bool _fsim_kit_equip(const string &kit)
 
     if (!weapon.empty())
     {
-        for (int i = 0; i < ENDOFPACK; ++i)
+        if (!_equip_weapon(weapon, abort))
         {
-            if (!you.inv[i].defined())
-                continue;
+            int item = create_item_named("race:none mundane not_cursed ident:all " + weapon,
+                                         you.pos(), &error);
+            if (item == NON_ITEM)
+                return false;
+            if (move_item_to_player(item, 1, true, true) <= 0)
+                return false;
+            _equip_weapon(weapon, abort);
+        }
 
-            if (you.inv[i].name(DESC_PLAIN).find(weapon) != string::npos)
-            {
-                if (i != you.equip[EQ_WEAPON])
-                {
-                    wield_weapon(true, i, false);
-                    if (i != you.equip[EQ_WEAPON])
-                        return false;
-                }
-                break;
-            }
+        if (abort)
+        {
+            error = "Cannot weild weapon";
+            return false;
         }
     }
     else if (you.weapon())
@@ -643,7 +669,8 @@ void wizard_fight_sim(bool double_scale)
     else
         for (int i = 0, size = Options.fsim_kit.size(); i < size; ++i)
         {
-            if (_fsim_kit_equip(Options.fsim_kit[i]))
+            string error;
+            if (_fsim_kit_equip(Options.fsim_kit[i], error))
             {
                 _write_weapon(o);
                 fsim_proc(o, mon, defense);
@@ -652,6 +679,8 @@ void wizard_fight_sim(bool double_scale)
             else
             {
                 mprf("Aborting sim on %s", Options.fsim_kit[i].c_str());
+                if (error != "")
+                    mpr(error.c_str());
                 break;
             }
         }

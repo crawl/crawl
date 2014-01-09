@@ -99,7 +99,8 @@ given that there meaning is completely different, it is recommended to use
 
 fsim_kit: This option is useful to run a batch of simulations with different
 equipment. It takes a list of weapons separated by commas. Missiles can be
-specified after a /. The items won't be generated, they need to be in the
-character's inventory at the start of the simulation. Example:
+specified after a /. The items will be generated if they are not found in the
+character's inventory, but make sure there is enough room in the inventory.
+Also, beware that if you get burdened, this might distort the results. Example:
 
     fsim_kit = broad axe, crossbow / steel bolts, /javelins
