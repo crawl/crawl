@@ -190,6 +190,9 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
+    // Dsomething
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.

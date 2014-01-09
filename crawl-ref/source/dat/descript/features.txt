@@ -308,6 +308,11 @@ A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
 %%%%
+A shadowy altar of Dsomething
+
+This altar to Dsomething the Shadowed seems to absorb light from its
+surroundings.
+%%%%
 A shattered altar of Ashenzari
 
 This crystal altar shattered to pieces when Ashenzari was cursed. But still,
