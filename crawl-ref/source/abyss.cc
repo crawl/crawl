@@ -1097,6 +1097,8 @@ static dungeon_feature_type _veto_dangerous_terrain(dungeon_feature_type feat)
         return DNGN_SHALLOW_WATER;
     if (feat == DNGN_LAVA)
         return DNGN_FLOOR;
+    if (feat_is_solid(feat))
+        return DNGN_FLOOR;
 
     return feat;
 }
