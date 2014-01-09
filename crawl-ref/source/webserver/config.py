@@ -155,3 +155,9 @@ chroot = None
 
 pidfile = None
 daemon = False # If true, the server will detach from the session after startup
+
+# Set to a URL with %s where lowercased player name should go in order to
+# hyperlink WebTiles spectator names to their player pages.
+# For example: "http://crawl.akrasiac.org/scoring/players/%s.html"
+# Set to None to disable player page hyperlinks
+player_url = None
