@@ -2241,6 +2241,14 @@ static void tag_read_you(reader &th)
             else if (a >= 50)
                 a += 1000 - 50;
         }
+        if (th.getMinorVersion() < TAG_MINOR_ABIL_GOD_FIXUP)
+        {
+            if (a >= ABIL_ASHENZARI_END_TRANSFER + 1
+                && a <= ABIL_ASHENZARI_END_TRANSFER + 3)
+            {
+                a += ABIL_STOP_RECALL - ABIL_ASHENZARI_END_TRANSFER;
+            }
+        }
         if (a == ABIL_FLY
             || a == ABIL_WISP_BLINK // was ABIL_FLY_II
                && th.getMinorVersion() < TAG_MINOR_0_12)
