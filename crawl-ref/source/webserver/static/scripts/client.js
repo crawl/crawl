@@ -932,10 +932,30 @@ function (exports, $, key_conversion, chat, comm) {
 
         inhibit_messages();
         show_loading_screen();
+        delete window.game_loading;
         $("#game").html(data.content);
-        $(document).ready(function () {
+        if (data.content.indexOf("game_loading") === -1)
+        {
+            // old version, uninhibit can happen too early
             $("#game").waitForImages(uninhibit_messages);
-        });
+        }
+        else
+        {
+            $("#game").waitForImages(function ()
+            {
+                var load_interval = setInterval(check_loading, 50);
+
+                function check_loading()
+                {
+                    if (window.game_loading)
+                    {
+                        delete window.game_loading;
+                        uninhibit_messages();
+                        clearInterval(load_interval);
+                    }
+                }
+            });
+        }
     }
 
     function do_set_layer(data)
