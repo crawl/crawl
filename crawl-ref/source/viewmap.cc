@@ -1258,6 +1258,8 @@ bool show_map(level_pos &lpos,
             case CMD_MAP_WIZARD_TELEPORT:
                 if (!you.wizard || !on_level || !in_bounds(lpos.pos))
                     break;
+                if (cell_is_solid(lpos.pos))
+                    you.wizmode_teleported_into_rock = true;
                 you.moveto(lpos.pos);
                 map_alive = false;
                 break;

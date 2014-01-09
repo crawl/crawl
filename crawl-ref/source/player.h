@@ -307,6 +307,7 @@ public:
 
   bool received_weapon_warning;
   bool received_noskill_warning;
+  bool wizmode_teleported_into_rock;
 
   delay_queue_type delay_queue;       // pending actions
 
