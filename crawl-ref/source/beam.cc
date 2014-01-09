@@ -3861,10 +3861,10 @@ void bolt::affect_player()
 
     extra_range_used += range_used_on_hit();
 
-    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
-         || (origin_spell == SPELL_COLD_BREATH && you.airborne())
-         || (origin_spell == SPELL_FORCE_LANCE && hurted > 0)
-         || (name == "flood of elemental water"))
+    if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE
+         || origin_spell == SPELL_COLD_BREATH && you.airborne()
+         || origin_spell == SPELL_FORCE_LANCE && hurted > 0
+         || name == "flood of elemental water")
     {
         beam_hits_actor(&you);
     }
@@ -3899,7 +3899,7 @@ const actor* bolt::beam_source_as_target() const
             return &you;
         return invalid_monster_index(beam_source) ? 0 : &menv[beam_source];
     }
-    return (thrower == KILL_MISC) ? 0 : &you;
+    return thrower == KILL_MISC ? 0 : &you;
 }
 
 void bolt::update_hurt_or_helped(monster* mon)
@@ -4308,7 +4308,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
           (name == "freezing breath" && mon->flight_mode()) ||
           (name == "lance of force" && dmg > 0) ||
-          (name == "flood of elemental water"))
+          name == "flood of elemental water")
     {
         beam_hits_actor(mon);
     }
@@ -5740,7 +5740,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     // A bunch of tests for edge cases.
     if (delta.rdist() > centre.rdist()
         || (delta.abs() > r*(r+1))
-        || (count > 10*r)
+        || count > 10*r
         || !map_bounds(loc)
         || is_sanctuary(loc))
     {

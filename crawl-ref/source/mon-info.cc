@@ -1165,7 +1165,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return m1.number > m2.number;
 
     if (m1.type == MONS_BALLISTOMYCETE)
-        return (m1.number > 0) > (m2.number > 0);
+        return m1.number > 0 > (m2.number > 0);
 
     // Shifters after real monsters of the same type.
     if (m1.is(MB_SHAPESHIFTER) != m2.is(MB_SHAPESHIFTER))
@@ -1653,8 +1653,8 @@ int monster_info::res_magic() const
 
     item_def *jewellery = inv[MSLOT_JEWELLERY].get();
 
-    if (jewellery && (jewellery->base_type == OBJ_JEWELLERY)
-        && (jewellery->sub_type == RING_PROTECTION_FROM_MAGIC))
+    if (jewellery && jewellery->base_type == OBJ_JEWELLERY
+        && jewellery->sub_type == RING_PROTECTION_FROM_MAGIC)
     {
         mr += 40;
     }
@@ -1734,7 +1734,7 @@ bool monster_info::cannot_move() const
 
 bool monster_info::airborne() const
 {
-    return (fly == FL_LEVITATE) || (fly == FL_WINGED && !cannot_move());
+    return fly == FL_LEVITATE || (fly == FL_WINGED && !cannot_move());
 }
 
 bool monster_info::ground_level() const

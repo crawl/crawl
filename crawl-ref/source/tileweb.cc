@@ -542,7 +542,7 @@ static bool _update_string(bool force, string& current,
                            const string& name,
                            bool update = true)
 {
-    if (force || (current != next))
+    if (force || current != next)
     {
         tiles.json_write_string(name, next);
         if (update)
@@ -557,7 +557,7 @@ template<class T> static bool _update_int(bool force, T& current, T next,
                                           const string& name,
                                           bool update = true)
 {
-    if (force || (current != next))
+    if (force || current != next)
     {
         tiles.json_write_int(name, next);
         if (update)
@@ -747,7 +747,7 @@ void TilesFramework::_send_player(bool force_full)
     if (m_origin.equals(-1, -1))
         m_origin = you.position;
     coord_def pos = you.position - m_origin;
-    if (force_full || (c.position != pos))
+    if (force_full || c.position != pos)
     {
         json_open_object("pos");
         json_write_int("x", pos.x);
@@ -806,7 +806,7 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
 {
     bool changed = false;
 
-    if (force_full || (current.base_type != next.base_type))
+    if (force_full || current.base_type != next.base_type)
     {
         changed = true;
         json_write_int("base_type", next.base_type);
@@ -1375,7 +1375,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     {
         last = m_current_map_knowledge(gc).monsterinfo();
 
-        if (last && (last->client_id != m->client_id))
+        if (last && last->client_id != m->client_id)
             json_treat_as_nonempty(); // Force sending at least the id
     }
     else
@@ -1395,7 +1395,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     if (force_full || (last->pluralised_name() != m->pluralised_name()))
         json_write_string("plural", m->pluralised_name());
 
-    if (force_full || (last->type != m->type))
+    if (force_full || last->type != m->type)
     {
         json_write_int("type", m->type);
 
@@ -1407,13 +1407,13 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         json_close_object();
     }
 
-    if (force_full || (last->attitude != m->attitude))
+    if (force_full || last->attitude != m->attitude)
         json_write_int("att", m->attitude);
 
-    if (force_full || (last->base_type != m->base_type))
+    if (force_full || last->base_type != m->base_type)
         json_write_int("btype", m->base_type);
 
-    if (force_full || (last->threat != m->threat))
+    if (force_full || last->threat != m->threat)
         json_write_int("threat", m->threat);
 
     json_close_object(true);

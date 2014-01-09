@@ -2601,8 +2601,8 @@ typedef bool (*item_comparer)(const item_def& pickup_item,
 static bool _identical_types(const item_def& pickup_item,
                              const item_def& inv_item)
 {
-    return (pickup_item.base_type == inv_item.base_type)
-           && (pickup_item.sub_type == inv_item.sub_type);
+    return pickup_item.base_type == inv_item.base_type
+           && pickup_item.sub_type == inv_item.sub_type;
 }
 
 static bool _edible_food(const item_def& pickup_item,

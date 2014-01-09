@@ -2884,15 +2884,15 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
     switch (power)
     {
     case PPT_LESS:
-        return (tgt_pow > src_pow - 3 + relax * 3 / 2)
-                || (power == PPT_LESS && (tgt_pow < src_pow - relax / 2));
+        return tgt_pow > src_pow - 3 + relax * 3 / 2
+                || (power == PPT_LESS && tgt_pow < src_pow - relax / 2);
     case PPT_MORE:
-        return (tgt_pow < src_pow + 2 - relax)
-                || (power == PPT_MORE && (tgt_pow > src_pow + relax));
+        return tgt_pow < src_pow + 2 - relax
+                || (power == PPT_MORE && tgt_pow > src_pow + relax);
     default:
     case PPT_SAME:
-        return (tgt_pow < src_pow - relax)
-                || (tgt_pow > src_pow + relax * 3 / 2);
+        return tgt_pow < src_pow - relax
+                || tgt_pow > src_pow + relax * 3 / 2;
     }
 }
 

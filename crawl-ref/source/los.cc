@@ -130,7 +130,7 @@ void set_los_radius(int r)
 
 bool double_is_zero(const double x)
 {
-    return (x > -EPSILON_VALUE) && (x < EPSILON_VALUE);
+    return x > -EPSILON_VALUE && x < EPSILON_VALUE;
 }
 
 struct los_ray : public ray_def
@@ -295,8 +295,8 @@ static compare_type _compare_cellrays(const cellray& a, const cellray& b)
             curb++;
         }
     }
-    maybe_sub = maybe_sub && (cura == enda);
-    maybe_super = maybe_super && (curb == endb);
+    maybe_sub = maybe_sub && cura == enda;
+    maybe_super = maybe_super && curb == endb;
 
     if (maybe_sub)
         return C_SUBRAY;    // includes equality

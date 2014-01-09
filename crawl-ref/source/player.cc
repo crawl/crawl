@@ -3243,8 +3243,8 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "level up");
                 }
 
-                if ((you.experience_level == 9)
-                    || (you.experience_level == 18))
+                if (you.experience_level == 9
+                    || you.experience_level == 18)
                 {
                     perma_mutate(MUT_PASSIVE_MAPPING, 1, "level up");
                 }

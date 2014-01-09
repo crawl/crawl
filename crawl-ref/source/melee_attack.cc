@@ -4616,7 +4616,7 @@ void melee_attack::mons_apply_attack_flavour()
         if (defender->holiness() == MH_UNDEAD)
             break;
 
-        if (one_chance_in(20) || (damage_done > 0))
+        if (one_chance_in(20) || damage_done > 0)
             defender->make_hungry(you.hunger / 4, false);
         break;
 

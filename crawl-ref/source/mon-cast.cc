@@ -5443,7 +5443,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                            && (pbolt.target != mons->pos()
                                || pbolt.visible())
                            // ugh. --Grunt
-                           && (actual_spell != SPELL_LRD);
+                           && actual_spell != SPELL_LRD;
 
     vector<string> key_list;
     unsigned int num_spell_keys =

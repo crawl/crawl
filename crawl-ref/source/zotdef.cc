@@ -480,7 +480,7 @@ static void _pan_wave(int power)
         }
     }
     // Weak bosses only at lower power
-    _zotdef_choose_boss((power < 27 ? weakboss : boss), power);
+    _zotdef_choose_boss(power < 27 ? weakboss : boss, power);
     _zotdef_danger_msg("Hellish voices call for your blood. They are coming!");
 }
 

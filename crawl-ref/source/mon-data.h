@@ -177,7 +177,7 @@ static monsterentry mondata[] =
 },
 
 // Use this to replace removed monsters, to retain save compatibility.
-// Please put it in #if (TAG_MAJOR_VERSION <= X), so they will go away
+// Please put it in #if TAG_MAJOR_VERSION <= X, so they will go away
 // after save compat is broken.
 #define AXED_MON(id) \
 { \

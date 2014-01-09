@@ -483,7 +483,7 @@ store_val_type CrawlStoreValue::get_type() const
 void CrawlStoreValue::write(writer &th) const
 {
     ASSERT(type != SV_NONE || (flags & SFLAG_UNSET));
-    ASSERT(!(flags & SFLAG_UNSET) || (type == SV_NONE));
+    ASSERT(!(flags & SFLAG_UNSET) || type == SV_NONE);
 
     marshallByte(th,  (char) type);
     marshallByte(th, (char) flags);
@@ -591,7 +591,7 @@ void CrawlStoreValue::read(reader &th)
     flags = (store_flags) unmarshallByte(th);
 
     ASSERT(type != SV_NONE || (flags & SFLAG_UNSET));
-    ASSERT(!(flags & SFLAG_UNSET) || (type == SV_NONE));
+    ASSERT(!(flags & SFLAG_UNSET) || type == SV_NONE);
 
     switch (type)
     {
@@ -1845,7 +1845,7 @@ void CrawlVector::push_back(CrawlStoreValue val)
     ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
-           || (val.type == type));
+           || val.type == type);
     val.flags |= default_flags;
     if (type != SV_NONE)
     {
@@ -1862,7 +1862,7 @@ void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
     ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
-           || (val.type == type));
+           || val.type == type);
     val.flags |= default_flags;
     if (type != SV_NONE)
     {

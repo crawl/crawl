@@ -1500,7 +1500,7 @@ static bool _phial_of_floods()
         coord_def center = beam.path_taken.back();
         int num = 5 + you.skill_rdiv(SK_EVOCATIONS, 3, 5) + random2(7);
         int dur = 40 + you.skill_rdiv(SK_EVOCATIONS, 8, 3);
-        for (distance_iterator di(center, true, false, 2); di && (num > 0); ++di)
+        for (distance_iterator di(center, true, false, 2); di && num > 0; ++di)
         {
             if ((grd(*di) == DNGN_FLOOR || grd(*di) == DNGN_SHALLOW_WATER)
                 && cell_see_cell(center, *di, LOS_NO_TRANS))

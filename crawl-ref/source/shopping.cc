@@ -2289,7 +2289,7 @@ bool is_worthless_consumable(const item_def &item)
             return false;
         }
     case OBJ_FOOD:
-        return (item.sub_type == FOOD_CHUNK) && food_is_rotten(item);
+        return item.sub_type == FOOD_CHUNK && food_is_rotten(item);
     case OBJ_SCROLLS:
         switch (item.sub_type)
         {

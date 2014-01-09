@@ -367,7 +367,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             // being empty-handed but having a missile quivered
             if ((iweap && iweap->base_type == OBJ_WEAPONS &&
                         is_range_weapon(*iweap))
-                || (!iweap && (missile != -1)))
+                || (!iweap && missile != -1))
             {
                 bolt beam;
                 // throw_it() will decrease quantity by 1

@@ -345,7 +345,7 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
         {
             const coord_def dp = c - last_player_pos;
             const coord_def dc = vgrdc - oldc;
-            if ((dc.x == dp.x) != (dc.y == dp.y))
+            if (dc.x == dp.x != (dc.y == dp.y))
                 vgrdc = oldc + dp;
         }
     }

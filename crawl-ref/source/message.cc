@@ -1506,7 +1506,7 @@ static void readkey_more(bool user_forced)
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
            && !key_is_escape(keypress)
 #ifdef TOUCH_UI
-           && (keypress != CK_MOUSE_CLICK));
+           && keypress != CK_MOUSE_CLICK);
 #else
            && (user_forced || keypress != CK_MOUSE_CLICK));
 #endif

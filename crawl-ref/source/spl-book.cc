@@ -1347,7 +1347,7 @@ int rod_spell(int rod)
 
     const int idx = letter_to_index(keyin);
 
-    if ((idx >= SPELLBOOK_SIZE) || !_is_valid_spell_in_book(irod, idx))
+    if (idx >= SPELLBOOK_SIZE || !_is_valid_spell_in_book(irod, idx))
     {
         canned_msg(MSG_HUH);
         return -1;
