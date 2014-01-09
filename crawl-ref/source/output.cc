@@ -1741,6 +1741,10 @@ int equip_name_to_slot(const char *s)
 // Take maximum possible level into account.
 static const char* _determine_colour_string(int level, int max_level)
 {
+    // No colouring for larger bars.
+    if (max_level > 3)
+        return "<lightgrey>";
+
     switch (level)
     {
     case 3:
@@ -2239,6 +2243,9 @@ static vector<formatted_string> _get_overview_resistances(
                             show_gourm ? 1 : saplevel,
                             show_gourm ? 1 : 3) + "\n";
 
+    const int rmagi = player_res_magic(calc_unid) / 40;
+    out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
+
     cols.add_formatted(0, out, false);
 
     // Second column, resist name is 9 chars
@@ -2398,15 +2405,11 @@ string magic_res_adjective(int mr)
         return "immune";
 
     string prefix =
-            (mr <  10) ? "not" :
-            (mr <  30) ? "slightly" :
-            (mr <  60) ? "somewhat" :
-            (mr <  90) ? "quite" :
+            (mr <  40) ? "not" :
+            (mr <  80) ? "somewhat" :
             (mr < 120) ? "very" :
-            (mr < 150) ? "extremely" :
-            (mr < 190) ? "extraordinarily" :
-            (mr < 240) ? "incredibly" :
-            (mr < 300) ? "uncannily"
+            (mr < 160) ? "extremely" :
+            (mr < 200) ? "incredibly"
                        : "almost entirely";
     return prefix + " resistant";
 }
