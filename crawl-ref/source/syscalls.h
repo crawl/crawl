@@ -17,7 +17,6 @@ bool read_urandom(char *buf, int len);
 
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
-int fdatasync(int fd);
 void alarm(unsigned int seconds);
 int mkstemp(char *dummy);
 # endif
