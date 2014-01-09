@@ -707,10 +707,20 @@ bool actor::umbraed() const
     return ::umbraed(pos());
 }
 
-// Stub for player umbra.
 int player::umbra_radius2() const
 {
-    return -1;
+    int size = -1;
+
+    if (religion == GOD_DSOMETHING && piety >= piety_breakpoint(0)
+        && !penance[GOD_DSOMETHING])
+    {
+        // Preserve the middle of old radii.
+        const int r = piety - 10;
+        // The cap is 64, just less than the LOS of 65.
+        size = min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
+    }
+
+    return size;
 }
 
 int monster::umbra_radius2() const
