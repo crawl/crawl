@@ -4895,29 +4895,27 @@ bool enchant_monster_invisible(monster* mon, const string &how)
     // Store the monster name before it becomes an "it". - bwr
     const string monster_name = mon->name(DESC_THE);
 
-    if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
+    if (mon->has_ench(ENCH_INVIS) || !mon->add_ench(ENCH_INVIS))
+        return false;
+
+    if (mons_near(mon))
     {
-        if (mons_near(mon))
-        {
-            const bool is_visible = mon->visible_to(&you);
+        const bool is_visible = mon->visible_to(&you);
 
-            // Can't use simple_monster_message() here, since it checks
-            // for visibility of the monster (and it's now invisible).
-            // - bwr
-            mprf("%s %s%s",
-                 monster_name.c_str(),
-                 how.c_str(),
-                 is_visible ? " for a moment."
-                            : "!");
+        // Can't use simple_monster_message() here, since it checks
+        // for visibility of the monster (and it's now invisible).
+        // - bwr
+        mprf("%s %s%s",
+             monster_name.c_str(),
+             how.c_str(),
+             is_visible ? " for a moment."
+                        : "!");
 
-            if (!is_visible && !mons_is_safe(mon))
-                autotoggle_autopickup(true);
-        }
-
-        return true;
+        if (!is_visible && !mons_is_safe(mon))
+            autotoggle_autopickup(true);
     }
 
-    return false;
+    return true;
 }
 
 mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
