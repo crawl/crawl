@@ -687,7 +687,7 @@ static void _sdump_religion(dump_params &par)
             {
                 string verb = par.se ? "was" : "is";
 
-                text += god_name(you.religion);
+                text += uppercase_first(god_name(you.religion));
                 text += " " + verb + " demanding penance.\n";
             }
         }

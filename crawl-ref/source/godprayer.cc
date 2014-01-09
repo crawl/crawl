@@ -60,7 +60,7 @@ static bool _confirm_pray_sacrifice(god_type god)
 
 string god_prayer_reaction()
 {
-    string result = god_name(you.religion);
+    string result = uppercase_first(god_name(you.religion));
     if (crawl_state.player_is_dead())
         result += " was ";
     else
