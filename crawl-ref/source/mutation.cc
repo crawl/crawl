@@ -1782,7 +1782,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     if (you.innate_mutations[mutat] >= you.mutation[mutat])
         return false;
 
-    if (!transient && (you.temp_mutations[mutat] >= you.mutation[mutat]))
+    if (!transient && you.temp_mutations[mutat] >= you.mutation[mutat])
         return false;
 
     const mutation_def& mdef = get_mutation_def(mutat);

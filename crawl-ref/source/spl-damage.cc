@@ -2085,7 +2085,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         if (!caster->is_player())
             return false; // don't let monsters blow up orcish idols
 
-        if (what && (*what == NULL))
+        if (what && *what == NULL)
             *what = "stone idol";
         // fall-through
     case DNGN_ROCK_WALL:
@@ -2093,11 +2093,11 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     case DNGN_STONE_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
-        if (what && (*what == NULL))
+        if (what && *what == NULL)
             *what = "wall";
         // fall-through
     case DNGN_GRANITE_STATUE:   // normal rock -- big explosion
-        if (what && (*what == NULL))
+        if (what && *what == NULL)
             *what = "statue";
 
         beam.name       = "blast of rock fragments";
@@ -2130,7 +2130,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "metal wall";
         // fall through
     case DNGN_GRATE:
-        if (what && (*what == NULL))
+        if (what && *what == NULL)
             *what = "iron grate";
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
@@ -2173,7 +2173,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
-        if (what && (*what == NULL))
+        if (what && *what == NULL)
             *what = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";

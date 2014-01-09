@@ -99,7 +99,7 @@ static inline double pow(int x, double y) { return std::pow((double)x, y); }
     #endif
 #endif
 
-#if !defined(__cplusplus) || (__cplusplus < 201103)
+#if !defined(__cplusplus) || __cplusplus < 201103
 # define constexpr const
 #endif
 

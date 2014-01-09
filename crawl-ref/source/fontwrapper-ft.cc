@@ -592,7 +592,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
         if (++num_lines >= max_lines || !space_idx)
         {
             int ellipses;
-            if (space_idx && (space_idx - line_end > 2))
+            if (space_idx && space_idx - line_end > 2)
                 ellipses = space_idx;
             else
                 ellipses = line_end - 2;

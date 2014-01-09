@@ -81,7 +81,7 @@ void WebTextArea::put_character(ucs_t chr, int fg, int bg, int x, int y)
     ASSERT_RANGE(y, 0, my);
     uint8_t col = (fg & 0xf) + (bg << 4);
 
-    if ((m_cbuf[x + y * mx] != chr) || (m_abuf[x + y * mx] != col))
+    if (m_cbuf[x + y * mx] != chr || m_abuf[x + y * mx] != col)
         m_dirty = true;
 
     m_cbuf[x + y * mx] = chr;

@@ -655,7 +655,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
                              || (force_stair == DNGN_TRAP_SHAFT
                                  && force_known_shaft);
     // Latter case is falling down a shaft.
-    const bool shaft = known_shaft || (force_stair == DNGN_TRAP_SHAFT);
+    const bool shaft = known_shaft || force_stair == DNGN_TRAP_SHAFT;
     level_id shaft_dest;
 
     // Up and down both work for portals.
@@ -711,7 +711,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
         handle_items_on_shaft(you.pos(), false);
 
         string howfar;
-        if (force_stair && (shaft_depth > 1))
+        if (force_stair && shaft_depth > 1)
             howfar = make_stringf(" for %d floors", shaft_depth);
 
         if (!you.flight_mode() || force_stair)

@@ -131,12 +131,12 @@ struct coord_def
 
     bool operator <  (const coord_def &other) const
     {
-        return (x < other.x) || (x == other.x && y < other.y);
+        return x < other.x || (x == other.x && y < other.y);
     }
 
     bool operator >  (const coord_def &other) const
     {
-        return (x > other.x) || (x == other.x && y > other.y);
+        return x > other.x || (x == other.x && y > other.y);
     }
 
     const coord_def &operator += (const coord_def &other)
@@ -426,7 +426,7 @@ public:
 
     bool operator <(const level_id &id) const
     {
-        return (branch < id.branch) || (branch==id.branch && depth < id.depth);
+        return branch < id.branch || (branch==id.branch && depth < id.depth);
     }
 
     bool operator == (const branch_type _branch) const
@@ -480,7 +480,7 @@ struct level_pos
 
     bool operator <  (const level_pos &lp) const
     {
-        return (id < lp.id) || (id == lp.id && pos < lp.pos);
+        return id < lp.id || (id == lp.id && pos < lp.pos);
     }
 
     bool is_valid() const

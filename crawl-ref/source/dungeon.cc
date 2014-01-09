@@ -1396,7 +1396,7 @@ void fixup_misplaced_items()
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         item_def& item(mitm[i]);
-        if (!item.defined() || (item.pos.x == 0)
+        if (!item.defined() || item.pos.x == 0
             || item.held_by_monster())
         {
             continue;

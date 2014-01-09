@@ -775,7 +775,7 @@ static void _explore_find_target_square()
 
             // Try moving along the line that bisects the right angle.
             if ((abs(prev_travel_moves[0] - prev_travel_moves[1]) == 6)
-                && (prev_travel_moves[0] + prev_travel_moves[1] == 8))
+                && prev_travel_moves[0] + prev_travel_moves[1] == 8)
             {
                 anti_zigzag_dir = 0;
             }

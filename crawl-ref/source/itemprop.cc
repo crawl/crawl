@@ -2106,7 +2106,7 @@ bool is_fruit(const item_def & item)
 
 bool food_is_rotten(const item_def &item)
 {
-    return (item.special <= ROTTING_CORPSE)
+    return item.special <= ROTTING_CORPSE
                                     && (item.base_type == OBJ_CORPSES
                                        && item.sub_type == CORPSE_BODY
                                     || item.base_type == OBJ_FOOD

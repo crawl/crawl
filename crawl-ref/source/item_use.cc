@@ -1258,8 +1258,8 @@ static bool _two_targeted_scrolls_identified()
 static bool _one_targeted_scroll_tried()
 {
     return you.type_ids[OBJ_SCROLLS][SCR_RECHARGING] ==  ID_TRIED_ITEM_TYPE
-           || (you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_ARMOUR] == ID_TRIED_ITEM_TYPE)
-           || (you.type_ids[OBJ_SCROLLS][SCR_IDENTIFY] == ID_TRIED_ITEM_TYPE);
+           || you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_ARMOUR] == ID_TRIED_ITEM_TYPE
+           || you.type_ids[OBJ_SCROLLS][SCR_IDENTIFY] == ID_TRIED_ITEM_TYPE;
 }
 
 // Checks whether removing an item would cause flight to end and the

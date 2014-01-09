@@ -3499,8 +3499,8 @@ void world_reacts()
             if (you.num_turns<ZOTDEF_CYCLE_LENGTH && one_chance_in(3))
                 continue;
 
-            if ((you.num_turns % ZOTDEF_CYCLE_LENGTH > ZOTDEF_CYCLE_INTERVAL)
-                && x_chance_in_y((you.num_turns % ZOTDEF_CYCLE_LENGTH), ZOTDEF_CYCLE_LENGTH*3))
+            if (you.num_turns % ZOTDEF_CYCLE_LENGTH > ZOTDEF_CYCLE_INTERVAL
+                && x_chance_in_y(you.num_turns % ZOTDEF_CYCLE_LENGTH, ZOTDEF_CYCLE_LENGTH*3))
             {
                 zotdef_spawn(false);
             }

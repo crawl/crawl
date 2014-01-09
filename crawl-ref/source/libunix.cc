@@ -141,7 +141,7 @@ static void setup_colour_pairs(void)
     for (i = 0; i < 8; i++)
         for (j = 0; j < 8; j++)
         {
-            if ((i > 0) || (j > 0))
+            if (i > 0 || j > 0)
                 init_pair(i * 8 + j, j, i);
         }
 
@@ -877,7 +877,7 @@ bool kbhit()
 #else
     bool result = tiles.await_input(c, false);
 
-    if (result && (c != 0))
+    if (result && c != 0)
         pending = c;
 
     return result;

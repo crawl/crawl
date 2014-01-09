@@ -2482,7 +2482,7 @@ void end_battlesphere(monster* mons, bool killed)
         {
             if (you.can_see(mons))
             {
-                if ((mons->number == 0))
+                if (mons->number == 0)
                 {
                     mpr("Your battlesphere expends the last of its energy"
                         " and dissipates.");
@@ -3168,7 +3168,7 @@ void summoned_monster(const monster *mons, const actor *caster,
         }
     }
 
-    if (oldest_summon && (count > max_this_time))
+    if (oldest_summon && count > max_this_time)
     {
         // Timeout the oldest summon
         mon_enchant abj = oldest_summon->get_ench(ENCH_ABJ);
