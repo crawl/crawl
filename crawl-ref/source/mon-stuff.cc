@@ -1664,12 +1664,15 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player instead
-    if (killer == KILL_MON
+    // Ditto Dsomething shadow kills.
+    if ((killer == KILL_MON || killer == KILL_MON_MISSILE)
         && !invalid_monster_index(killer_index)
-        && menv[killer_index].type == MONS_SPECTRAL_WEAPON
-        && menv[killer_index].summoner == MID_PLAYER)
+        && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
+             && menv[killer_index].summoner == MID_PLAYER)
+            || (menv[killer_index].mid == MID_PLAYER)))
     {
-        killer = KILL_YOU;
+        killer = (killer == KILL_MON_MISSILE) ? KILL_YOU_MISSILE
+                                              : KILL_YOU;
         killer_index = you.mindex();
     }
 

@@ -1321,6 +1321,11 @@ spret_type your_spells(spell_type spell, int powc,
     case SPRET_SUCCESS:
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you, beam);
+        if (you_worship(GOD_DSOMETHING)
+            && (flags & SPFLAG_TARGETING_MASK))
+        {
+            dsomething_shadow_spell(beam.target, spell);
+        }
         _spellcasting_side_effects(spell, powc, god);
         return SPRET_SUCCESS;
 

@@ -337,7 +337,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "",
       "step into the shadows of nearby creatures",
       "sometimes bleed smoke when heavily injured by enemies",
-      "",
+      "Your shadow now sometimes tangibly mimics your actions.",
       ""
     },
 };
@@ -461,7 +461,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "",
       "step into the shadows of nearby creatures",
       "bleed smoke when heavily injured by enemies",
-      "",
+      "Your shadow no longer tangibly mimics your actions.",
       "",
     }
 };

@@ -76,4 +76,7 @@ bool can_convert_to_beogh();
 void spare_beogh_convert();
 
 bool dsomething_shadow_step();
+void dsomething_shadow_melee(actor* target);
+void dsomething_shadow_throw(coord_def target);
+void dsomething_shadow_spell(coord_def target, spell_type spell);
 #endif

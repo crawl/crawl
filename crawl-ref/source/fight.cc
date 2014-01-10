@@ -19,6 +19,7 @@
 #include "env.h"
 #include "fineff.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -32,6 +33,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "random-var.h"
+#include "religion.h"
 #include "shopping.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
@@ -116,6 +118,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // A spectral weapon attacks whenever the player does
         if (!simu && you.props.exists("spectral_weapon"))
             trigger_spectral_weapon(&you, defender);
+
+        if (!simu && you_worship(GOD_DSOMETHING))
+            dsomething_shadow_melee(defender);
 
         return true;
     }

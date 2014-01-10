@@ -20,6 +20,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
+#include "godabil.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "invent.h"
@@ -33,6 +34,7 @@
 #include "mon-behv.h"
 #include "mutation.h"
 #include "options.h"
+#include "religion.h"
 #include "shout.h"
 #include "skills2.h"
 #include "state.h"
@@ -438,6 +440,8 @@ void fire_thing(int item)
     {
         bolt beam;
         throw_it(beam, item, false, 0, &target);
+        if (you_worship(GOD_DSOMETHING))
+            dsomething_shadow_throw(beam.target);
     }
 }
 
