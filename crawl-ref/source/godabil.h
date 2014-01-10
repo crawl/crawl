@@ -74,4 +74,6 @@ bool ashenzari_end_transfer(bool finished = false, bool force = false);
 
 bool can_convert_to_beogh();
 void spare_beogh_convert();
+
+bool dsomething_shadow_step();
 #endif

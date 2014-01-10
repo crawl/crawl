@@ -191,8 +191,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
     // Dsomething
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY },
+    { ABIL_NON_ABILITY, ABIL_DSOMETHING_SHADOW_STEP, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -399,6 +399,10 @@ static const ability_def Ability_List[] =
       0, 0, 0, 20, 0, ABFLAG_NONE},
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
       0, 0, 0, 0, 0, ABFLAG_NONE},
+
+    // Dsomething
+    { ABIL_DSOMETHING_SHADOW_STEP, "Shadow Step",
+      4, 0, 0, 4, 0, ABFLAG_NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -1054,6 +1058,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
+    case ABIL_DSOMETHING_SHADOW_STEP:
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
@@ -2821,6 +2826,14 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_ASHENZARI_END_TRANSFER:
         ashenzari_end_transfer();
+        break;
+
+    case ABIL_DSOMETHING_SHADOW_STEP:
+        if (!dsomething_shadow_step())
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
         break;
 
     case ABIL_RENOUNCE_RELIGION:

@@ -57,6 +57,7 @@
 #include "stuff.h"
 #include "target.h"
 #include "terrain.h"
+#include "traps.h"
 #include "unwind.h"
 #include "view.h"
 #include "viewgeom.h"
@@ -3406,4 +3407,87 @@ void spare_beogh_convert()
         mpr("With a roar of approval, the orcs welcome you as one of their own,"
             " and spare your life.");
     }
+}
+
+bool dsomething_shadow_step()
+{
+    // Range 3 at 2* piety (saves you one step) up to LOS at 6* piety.
+    const int range = 3 + ((LOS_RADIUS - 3)
+                           * (you.piety - piety_breakpoint(1))
+                           / (piety_breakpoint(5) - piety_breakpoint(1)));
+    targetter_jump tgt(&you, range, false, true);
+    direction_chooser_args args;
+    args.hitfunc = &tgt;
+    args.restricts = DIR_JUMP;
+    args.mode = TARG_HOSTILE;
+    args.range = range;
+    args.just_looking = false;
+    args.needs_path = false;
+    args.top_prompt = "Aiming: <white>Shadow Step</white>";
+    dist sdirect;
+    direction(sdirect, args);
+    if (!sdirect.isValid || tgt.landing_site.origin())
+        return false;
+
+    // Check for hazards.
+    bool zot_trap_prompted = false,
+         trap_prompted = false,
+         exclusion_prompted = false,
+         cloud_prompted = false,
+         terrain_prompted = false;
+
+    for (set<coord_def>::const_iterator site = tgt.additional_sites.begin();
+         site != tgt.additional_sites.end(); site++)
+    {
+        if (!cloud_prompted
+            && !check_moveto_cloud(*site, "shadow step", &cloud_prompted))
+        {
+            return false;
+        }
+
+        if (!zot_trap_prompted)
+        {
+            trap_def* trap = find_trap(*site);
+            if (trap && env.grid(*site) != DNGN_UNDISCOVERED_TRAP
+                && trap->type == TRAP_ZOT)
+            {
+                if (!check_moveto_trap(*site, "shadow step",
+                                       &trap_prompted))
+                {
+                    you.turn_is_over = false;
+                    return false;
+                }
+                zot_trap_prompted = true;
+            }
+            else if (!trap_prompted
+                     && !check_moveto_trap(*site, "shadow step",
+                                           &trap_prompted))
+            {
+                you.turn_is_over = false;
+                return false;
+            }
+        }
+
+        if (!exclusion_prompted
+            && !check_moveto_exclusion(*site, "shadow step",
+                                       &exclusion_prompted))
+        {
+            return false;
+        }
+
+        if (!terrain_prompted
+            && !check_moveto_terrain(*site, "shadow step", "",
+                                     &terrain_prompted))
+        {
+            return false;
+        }
+    }
+
+    const actor *victim = actor_at(sdirect.target);
+    mprf("You step into %s shadow.",
+         apostrophise(victim->name(DESC_THE)).c_str());
+
+    you.move_to_pos(tgt.landing_site);
+
+    return true;
 }
