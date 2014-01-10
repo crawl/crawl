@@ -2171,7 +2171,7 @@ bool apply_grasping_roots(monster* mons)
             {
                 mprf("Roots rise up from beneath %s and drag %s %sto the ground.",
                      ai->name(DESC_THE).c_str(),
-                     ai->pronoun(PRONOUN_SUBJECTIVE).c_str(),
+                     ai->pronoun(PRONOUN_OBJECTIVE).c_str(),
                      ai->is_monster() ? "" : "back ");
             }
         }
