@@ -100,6 +100,24 @@ static bool _okawaru_random_servant()
     return create_monster(temp, false);
 }
 
+static bool _dsomething_random_shadow(const int count, const int tier)
+{
+    monster_type mon_type = MONS_SHADOW;
+    if (tier >= 2 && count == 0 && coinflip())
+        mon_type = MONS_SHADOW_FIEND;
+    else if (tier >= 1 && count < 3 && coinflip())
+        mon_type = MONS_SHADOW_DEMON;
+
+    mgen_data temp = mgen_data::hostile_at(mon_type,
+                                           "the darkness of Dsomething",
+                                           true, 0, 0, you.pos(), 0,
+                                           GOD_DSOMETHING);
+
+    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+    return create_monster(temp, false);
+}
+
 static bool _tso_retribution()
 {
     // holy warriors/cleansing theme
@@ -1159,6 +1177,59 @@ static bool _fedhas_retribution()
     return true;
 }
 
+static bool _dsomething_retribution()
+{
+    // shadow theme
+    const god_type god = GOD_DSOMETHING;
+
+    switch(random2(3))
+    {
+    case 0:
+    {
+        int count = 0;
+        int how_many = 3 + random2avg(div_rand_round(you.experience_level, 3),
+                                      2);
+        const int tier = div_rand_round(you.experience_level, 9);
+        while (how_many-- > 0)
+        {
+            if (_dsomething_random_shadow(count, tier))
+                count++;
+        }
+        simple_god_message(count ? " calls forth shadows to punish you."
+                                 : " fails to incite the shadows against you.",
+                           god);
+        break;
+    }
+    case 1:
+    {
+        int count = 0;
+        int how_many = 2 + random2avg(div_rand_round(you.experience_level, 4),
+                                      4);
+        for (int i = 0; i < how_many; ++i)
+        {
+            if (create_monster(
+                    mgen_data::hostile_at(
+                        RANDOM_MOBILE_MONSTER, "the darkness of Dsomething",
+                        true, 4, MON_SUMM_WRATH, you.pos(), 0, god)))
+            {
+                count++;
+            }
+        }
+        simple_god_message(count ? " weaves monsters from the shadows."
+                                 : " fails to weave monsters from the shadows.",
+                           god);
+        break;
+    }
+    case 2:
+    {
+        // This is possibly kind of underwhelming?
+        god_speaks(god, "You feel overwhelmed by the shadows around you.");
+        you.put_to_sleep(NULL, 30 + random2(20));
+    }
+    }
+    return true;
+}
+
 bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
@@ -1200,6 +1271,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
     case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
+    case GOD_DSOMETHING:    do_more = _dsomething_retribution(); break;
 
     case GOD_ASHENZARI:
         // No reduction with time.
