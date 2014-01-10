@@ -92,7 +92,7 @@ string attack::anon_name(description_level_type desc)
     case DESC_A:
     case DESC_PLAIN:
     default:
-        return "it";
+        return "something";
     }
 }
 
