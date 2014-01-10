@@ -248,6 +248,69 @@ MAP
 .........
 ENDMAP
 
+### Dithmengos overflow altars ################################################
+
+NAME:   grunt_dithmengos_smoke
+TAGS:   uniq_altar_dithmengos temple_overflow_1 temple_overflow_dithmengos decor
+DEPTH:  D:2-
+KFEAT:  C = altar_dithmengos
+MARKER: C = lua:fog_machine { cloud_type = "black smoke", \
+                              pow_min = 10, pow_max = 20, \
+                              delay = 100, size = 1, walk_dist = 1 }
+: interest_check(_G)
+MAP
+...
+.C.
+...
+ENDMAP
+
+# Reflect upon the darkness, mortal.
+NAME:   grunt_dithmengos_smoke_and_mirrors
+TAGS:   uniq_altar_dithmengos temple_overflow_1 temple_overflow_dithmengos decor
+DEPTH:  D:2-
+KFEAT:  C = altar_dithmengos
+KFEAT:  O = .
+MARKER: O = lua:fog_machine { cloud_type = "black smoke", \
+                              pow_min = 25, pow_max = 25, \
+                              delay = 30, size = 1, walk_dist = 0 }
+: interest_check(_G)
+MAP
+  b.b
+ b.O.b
+b.b.b.b
+.O.C.O.
+b.b.b.b
+ b.O.b
+  b.b
+ENDMAP
+
+NAME:  grunt_dithmengos_shadows
+TAGS:  uniq_altar_dithmengos temple_overflow_1 temple_overflow_dithmengos decor
+DEPTH: D:4-
+KFEAT: C = altar_dithmengos
+{{
+  if you.absdepth() >= 14 then
+     mons("shadow")
+  else
+     local imp_weight = 9 - you.absdepth()
+     if imp_weight > 0 then
+         local phantom_weight = 9 - imp_weight
+         mons("phantom w:" .. phantom_weight ..
+              " / shadow imp w:" .. imp_weight)
+     else
+         mons("shadow imp")
+     end
+  end
+}}
+: interest_check(_G)
+MAP
+ccccc
+c.C.c
+c.1.c
+c...c
+cc+cc
+ENDMAP
+
 ### Elyvilon overflow altars ##################################################
 
 NAME:   elyvilon_altar_1
