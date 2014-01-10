@@ -504,7 +504,7 @@ KMONS: A = lindwurm
 KMONS: h = redback
 KMONS: i = hydra
 KMONS: j = patrolling spriggan ; blowgun . q:5 needle ego:sleep | \
- q:5 needle ego:paralysis | q:5 needle ego:wrath
+ q:5 needle ego:paralysis | q:5 needle ego:frenzy
 KMONS: k = patrolling spriggan druid
 KMONS: q = electric eel
 KFEAT: q = deep_water

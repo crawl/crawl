@@ -4666,7 +4666,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
 #if TAG_MAJOR_VERSION == 34
         "sickness",
 #endif
-        "wrath",
+        "frenzy",
         NULL
     };
     COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_REAL_SPECIAL_MISSILES);
