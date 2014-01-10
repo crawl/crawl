@@ -1227,7 +1227,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_ELEPHANT_SLUG, 'j', LIGHTGREY, "elephant slug",
+    MONS_ELEPHANT_SLUG, 'j', WHITE, "elephant slug",
     M_NO_SKELETON,
     MR_VUL_POISON,
     1800, 2, MONS_GIANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, -3,
