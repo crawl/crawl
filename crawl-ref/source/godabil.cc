@@ -3660,6 +3660,9 @@ void dithmengos_shadow_spell(coord_def target, spell_type spell)
     if (!mon)
         return;
 
+    // Don't let shadow spells get too powerful.
+    mon->hit_dice = min(1, mon->hit_dice / 2);
+
     mon->target = target;
     if (actor_at(target))
         mon->foe = actor_at(target)->mindex();
