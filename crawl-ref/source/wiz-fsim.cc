@@ -86,7 +86,7 @@ static string _equipped_weapon_name()
 
     if (iweap)
     {
-        string item_buf = iweap->name(DESC_PLAIN, true);
+        string item_buf = iweap->name(DESC_PLAIN);
         // If it's a ranged weapon, add the description of the missile
         if (is_range_weapon(*iweap) && missile < ENDOFPACK && missile >= 0)
                 item_buf += " with " + you.inv[missile].name(DESC_PLAIN);
