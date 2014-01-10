@@ -60,6 +60,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
+#include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
@@ -1318,13 +1319,16 @@ spret_type your_spells(spell_type spell, int powc,
     if (you.props.exists("battlesphere") && allow_fail)
         aim_battlesphere(&you, spell, powc, beam);
 
+    const bool old_target = actor_at(beam.target);
+
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range, fail))
     {
     case SPRET_SUCCESS:
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you, beam);
         if (you_worship(GOD_DITHMENGOS)
-            && (flags & SPFLAG_TARGETING_MASK))
+            && (flags & SPFLAG_TARGETING_MASK)
+            && (!old_target || actor_at(beam.target)))
         {
             dithmengos_shadow_spell(beam.target, spell);
         }

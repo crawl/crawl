@@ -3661,6 +3661,8 @@ void dithmengos_shadow_spell(coord_def target, spell_type spell)
         return;
 
     mon->target = target;
+    if (actor_at(target))
+        mon->foe = actor_at(target)->mindex();
 
     bolt beem;
     beem.target = target;
