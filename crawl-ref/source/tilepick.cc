@@ -447,8 +447,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_CHEIBRIADOS;
     case DNGN_ALTAR_ASHENZARI:
         return TILE_DNGN_ALTAR_ASHENZARI;
-    case DNGN_ALTAR_DSOMETHING:
-        return TILE_DNGN_ALTAR_DSOMETHING;
+    case DNGN_ALTAR_DITHMENGOS:
+        return TILE_DNGN_ALTAR_DITHMENGOS;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:

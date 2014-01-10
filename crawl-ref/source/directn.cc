@@ -3241,8 +3241,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "snail-covered altar of Cheibriados";
     case DNGN_ALTAR_ASHENZARI:
         return "shattered altar of Ashenzari";
-    case DNGN_ALTAR_DSOMETHING:
-        return "shadowy altar of Dsomething";
+    case DNGN_ALTAR_DITHMENGOS:
+        return "shadowy altar of Dithmengos";
 
     case DNGN_FOUNTAIN_BLUE:
         return "fountain of clear blue water";

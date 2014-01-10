@@ -711,8 +711,8 @@ int player::umbra_radius2() const
 {
     int size = -1;
 
-    if (religion == GOD_DSOMETHING && piety >= piety_breakpoint(0)
-        && !penance[GOD_DSOMETHING])
+    if (religion == GOD_DITHMENGOS && piety >= piety_breakpoint(0)
+        && !penance[GOD_DITHMENGOS])
     {
         // Preserve the middle of old radii.
         const int r = piety - 10;

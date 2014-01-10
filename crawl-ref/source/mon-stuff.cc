@@ -1664,7 +1664,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player instead
-    // Ditto Dsomething shadow kills.
+    // Ditto Dithmengos shadow kills.
     if ((killer == KILL_MON || killer == KILL_MON_MISSILE)
         && !invalid_monster_index(killer_index)
         && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON

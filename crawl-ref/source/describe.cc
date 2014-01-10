@@ -4152,7 +4152,7 @@ static const char *divine_title[NUM_GODS][8] =
     {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
      "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
 
-    // Dsomething -- darkness theme
+    // Dithmengos -- darkness theme
     {"Illuminated",        "Gloomy",                "Aphotic",                  "Caliginous",
      "Darkened",           "Shadowed",              "Eclipsing",                "Eternal Night"},
 };

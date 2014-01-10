@@ -440,8 +440,8 @@ void fire_thing(int item)
     {
         bolt beam;
         throw_it(beam, item, false, 0, &target);
-        if (you_worship(GOD_DSOMETHING))
-            dsomething_shadow_throw(beam.target);
+        if (you_worship(GOD_DITHMENGOS))
+            dithmengos_shadow_throw(beam.target);
     }
 }
 
