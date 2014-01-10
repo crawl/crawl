@@ -1182,7 +1182,7 @@ static bool _dsomething_retribution()
     // shadow theme
     const god_type god = GOD_DSOMETHING;
 
-    switch(random2(3))
+    switch(random2(4))
     {
     case 0:
     {
@@ -1225,7 +1225,12 @@ static bool _dsomething_retribution()
         // This is possibly kind of underwhelming?
         god_speaks(god, "You feel overwhelmed by the shadows around you.");
         you.put_to_sleep(NULL, 30 + random2(20));
+        break;
     }
+    case 3:
+        simple_god_message(" tears the shadows away from you.", god);
+        you.sentinel_mark();
+        break;
     }
     return true;
 }
