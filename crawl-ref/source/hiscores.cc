@@ -1214,6 +1214,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         if (death || you.can_see(mons))
             death_source_name = mons->full_name(desc, true);
 
+        if (mons->mid == MID_PLAYER)
+            death_source_name = "their own shadow"; // heh
+
         if (death && mons->type == MONS_MARA_FAKE)
             death_source_name = "an illusion of Mara";
 
