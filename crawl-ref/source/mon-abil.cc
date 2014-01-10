@@ -1326,18 +1326,16 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
 
     if (you.can_see(mon))
     {
-        const string targ_name = (targ->visible_to(&you)) ? targ->name(DESC_THE)
-                                                          : "something";
         if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
         {
             mprf("%s calls on %s to defend %s!",
                 mon->name(DESC_THE).c_str(),
-                targ_name.c_str(),
+                targ->name(DESC_THE).c_str(),
                 mon->pronoun(PRONOUN_OBJECTIVE).c_str());
         }
         else
             mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
-                 targ_name.c_str());
+                 targ->name(DESC_THE).c_str());
     }
 
     targ->go_berserk(false);

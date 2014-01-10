@@ -3930,22 +3930,17 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     {
         string foe_name;
         const monster* m_foe = foe->as_monster();
-        if (you.can_see(foe) || crawl_state.game_is_arena())
+        if (m_foe->attitude == ATT_FRIENDLY
+            && !mons_is_unique(m_foe->type)
+            && !crawl_state.game_is_arena())
         {
-            if (m_foe->attitude == ATT_FRIENDLY
-                && !mons_is_unique(m_foe->type)
-                && !crawl_state.game_is_arena())
-            {
-                foe_name = foe->name(DESC_YOUR);
-                const string::size_type pos = foe_name.find("'");
-                if (pos != string::npos)
-                    foe_name = foe_name.substr(0, pos);
-            }
-            else
-                foe_name = foe->name(DESC_THE);
+            foe_name = foe->name(DESC_YOUR);
+            const string::size_type pos = foe_name.find("'");
+            if (pos != string::npos)
+                foe_name = foe_name.substr(0, pos);
         }
         else
-            foe_name = "something";
+            foe_name = foe->name(DESC_THE);
 
         string prep = "at";
         if (s_type == S_SILENT || s_type == S_SHOUT || s_type == S_NORMAL)
@@ -4023,28 +4018,15 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         msg = replace_all(msg, "@feature@", "buggy unseen feature");
     }
 
-    if (you.can_see(mons))
-    {
-        string something = mons->name(DESC_PLAIN);
-        msg = replace_all(msg, "@something@",   something);
-        msg = replace_all(msg, "@a_something@", mons->name(DESC_A));
-        msg = replace_all(msg, "@the_something@", mons->name(nocap));
+    string something = mons->name(DESC_PLAIN);
+    msg = replace_all(msg, "@something@",   something);
+    msg = replace_all(msg, "@a_something@", mons->name(DESC_A));
+    msg = replace_all(msg, "@the_something@", mons->name(nocap));
 
-        something[0] = toupper(something[0]);
-        msg = replace_all(msg, "@Something@",   something);
-        msg = replace_all(msg, "@A_something@", mons->name(DESC_A));
-        msg = replace_all(msg, "@The_something@", mons->name(cap));
-    }
-    else
-    {
-        msg = replace_all(msg, "@something@",     "something");
-        msg = replace_all(msg, "@a_something@",   "something");
-        msg = replace_all(msg, "@the_something@", "something");
-
-        msg = replace_all(msg, "@Something@",     "Something");
-        msg = replace_all(msg, "@A_something@",   "Something");
-        msg = replace_all(msg, "@The_something@", "Something");
-    }
+    something[0] = toupper(something[0]);
+    msg = replace_all(msg, "@Something@",   something);
+    msg = replace_all(msg, "@A_something@", mons->name(DESC_A));
+    msg = replace_all(msg, "@The_something@", mons->name(cap));
 
     // Player name.
     msg = replace_all(msg, "@player_name@", you.your_name);

@@ -2513,9 +2513,7 @@ void forest_damage(const actor *mon)
                 }
 
                 msg = replace_all(replace_all(msg,
-                    // "it" looks butt-ugly here...
-                    "@foe@", foe->visible_to(&you) ? foe->name(DESC_THE)
-                                                   : "something"),
+                    "@foe@", foe->name(DESC_THE)),
                     "@is@", foe->is_player() ? "are" : "is");
                 if (you.see_cell(foe->pos()))
                     mpr(msg.c_str());

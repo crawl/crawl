@@ -4510,8 +4510,7 @@ void bolt::affect_monster(monster* mon)
                 hit_verb = engulfs ? "engulfs" : "hits";
             if (mons_near(mon))
                 mprf("The %s %s %s.", name.c_str(), hit_verb.c_str(),
-                     mon->observable() ? mon->name(DESC_THE).c_str()
-                                       : "something");
+                     mon->name(DESC_THE).c_str());
             else if (heard && !noise_msg.empty())
                 mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
         }
@@ -4670,8 +4669,7 @@ void bolt::affect_monster(monster* mon)
         mprf("The %s %s %s.",
              name.c_str(),
              hit_verb.c_str(),
-             mon->observable() ?
-                 mon->name(DESC_THE).c_str() : "something");
+             mon->name(DESC_THE).c_str());
 
     }
     else if (heard && !noise_msg.empty())
