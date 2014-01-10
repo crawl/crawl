@@ -202,7 +202,9 @@ bool melee_attack::handle_phase_attempted()
     if (defender && (!adjacent(attack_position, defender->pos())
                      && !jumping_attack && !can_reach())
         || attk_type == AT_SHOOT
-        || attk_type == AT_CONSTRICT && !attacker->can_constrict(defender))
+        || attk_type == AT_CONSTRICT
+           && (!attacker->can_constrict(defender)
+               || attacker->is_monster() && attacker->mid == MID_PLAYER))
     {
         --effective_attack_number;
 
