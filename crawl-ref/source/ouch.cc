@@ -943,7 +943,7 @@ static void _maybe_fog(int dam)
                                 - upper_threshold
                                   * (you.piety - piety_breakpoint(2))
                                   / (MAX_PIETY - piety_breakpoint(2));
-    if (you_worship(GOD_DSOMETHING)
+    if (you_worship(GOD_DITHMENGOS)
         && you.piety >= piety_breakpoint(2)
         && (dam > 0 && you.form == TRAN_SHADOW
             || dam >= lower_threshold

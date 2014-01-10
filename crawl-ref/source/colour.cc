@@ -608,7 +608,7 @@ void init_element_colours()
                             ETC_RANDOM, "random", _etc_random
                        ));
     add_element_colour(_create_random_element_colour_calc(
-                            ETC_DSOMETHING, "dsomething",
+                            ETC_DITHMENGOS, "dithmengos",
                             40,  DARKGREY,
                             40,  MAGENTA,
                             40,  BLUE,

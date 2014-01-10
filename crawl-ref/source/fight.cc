@@ -119,8 +119,8 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         if (!simu && you.props.exists("spectral_weapon"))
             trigger_spectral_weapon(&you, defender);
 
-        if (!simu && you_worship(GOD_DSOMETHING))
-            dsomething_shadow_melee(defender);
+        if (!simu && you_worship(GOD_DITHMENGOS))
+            dithmengos_shadow_melee(defender);
 
         return true;
     }

@@ -55,7 +55,7 @@ enum element_type
     ETC_MANGROVE,       // colour of trees on water
     ETC_ORB_GLOW,       // halo coming from the Orb of Zot
     ETC_DISJUNCTION,    // halo from Disjunction
-    ETC_DSOMETHING,     // Dsomething altar colours
+    ETC_DITHMENGOS,     // Dithmengos altar colours
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 

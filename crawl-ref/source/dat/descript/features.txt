@@ -308,9 +308,9 @@ A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
 %%%%
-A shadowy altar of Dsomething
+A shadowy altar of Dithmengos
 
-This altar to Dsomething the Shadowed seems to absorb light from its
+This altar to Dithmengos the Shadowed seems to absorb light from its
 surroundings.
 %%%%
 A shattered altar of Ashenzari

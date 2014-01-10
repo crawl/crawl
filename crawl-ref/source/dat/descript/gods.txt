@@ -159,11 +159,11 @@ occasionally consume items left elsewhere in the Dungeon by followers.
 Especially favoured followers will become as shapeless as their god, as their
 attributes and mutations shift around under Jiyva's influence.
 %%%%
-Dsomething
+Dithmengos
 
-Dsomething the Shadowed desires all to be darkness. In exchange for their
+Dithmengos the Shadowed desires all to be darkness. In exchange for their
 life essence and that of the inhabitants of the dungeon, followers of
-Dsomething gain a strange and otherwordly affinity to the shadows of their
+Dithmengos gain a strange and otherwordly affinity to the shadows of their
 environment.
 %%%%
 Zin powers
@@ -322,14 +322,14 @@ Pious worshippers willing to part with a portion of their knowledge will
 receive a great portion of Ashenzari's in return.
 %%%%
 
-Dsomething powers
+Dithmengos powers
 
-Followers of Dsomething are constantly surrounded in an unholy aura, the
-extent of which is reflective of their level of devotion. Dsomething grants
+Followers of Dithmengos are constantly surrounded in an unholy aura, the
+extent of which is reflective of their level of devotion. Dithmengos grants
 followers the ability to instantly step into the shadow of nearby creatures,
-provided their shadow is still enough to do so. Dsomething protects followers
+provided their shadow is still enough to do so. Dithmengos protects followers
 by occasionally shrouding those struck by attacks in dark smoke. Sufficiently
-pious followers of Dsomething will find their own shadow will begin to attack
+pious followers of Dithmengos will find their own shadow will begin to attack
 on its own, and eventually gain the ability to assume the form of a shadow
 themself.
 %%%%

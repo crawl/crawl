@@ -75,8 +75,8 @@ bool ashenzari_end_transfer(bool finished = false, bool force = false);
 bool can_convert_to_beogh();
 void spare_beogh_convert();
 
-bool dsomething_shadow_step();
-void dsomething_shadow_melee(actor* target);
-void dsomething_shadow_throw(coord_def target);
-void dsomething_shadow_spell(coord_def target, spell_type spell);
+bool dithmengos_shadow_step();
+void dithmengos_shadow_melee(actor* target);
+void dithmengos_shadow_throw(coord_def target);
+void dithmengos_shadow_spell(coord_def target, spell_type spell);
 #endif

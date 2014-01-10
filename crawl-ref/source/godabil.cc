@@ -3412,7 +3412,7 @@ void spare_beogh_convert()
     }
 }
 
-bool dsomething_shadow_step()
+bool dithmengos_shadow_step()
 {
     // Range 3 at 2* piety (saves you one step) up to LOS at 6* piety.
     const int range = 3 + ((LOS_RADIUS - 3)
@@ -3495,7 +3495,7 @@ bool dsomething_shadow_step()
     return true;
 }
 
-static bool _dsomething_shadow_acts()
+static bool _dithmengos_shadow_acts()
 {
     // 10% chance at 4* piety; 50% chance at 200 piety.
     const int range = MAX_PIETY - piety_breakpoint(3);
@@ -3506,7 +3506,7 @@ static bool _dsomething_shadow_acts()
                          2 * range);
 }
 
-static monster* _dsomething_shadow_monster()
+static monster* _dithmengos_shadow_monster()
 {
     if (monster_at(you.pos()))
         return NULL;
@@ -3589,7 +3589,7 @@ static monster* _dsomething_shadow_monster()
     return mon;
 }
 
-static void _dsomething_shadow_monster_reset(monster *mon)
+static void _dithmengos_shadow_monster_reset(monster *mon)
 {
     if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
         destroy_item(mon->inv[MSLOT_WEAPON]);
@@ -3599,16 +3599,16 @@ static void _dsomething_shadow_monster_reset(monster *mon)
     mon->reset();
 }
 
-void dsomething_shadow_melee(actor* target)
+void dithmengos_shadow_melee(actor* target)
 {
     if (!target
         || !target->alive()
-        || !_dsomething_shadow_acts())
+        || !_dithmengos_shadow_acts())
     {
         return;
     }
 
-    monster* mon = _dsomething_shadow_monster();
+    monster* mon = _dithmengos_shadow_monster();
     if (!mon)
         return;
 
@@ -3618,18 +3618,18 @@ void dsomething_shadow_melee(actor* target)
     mprf("%s attacks!", mon->name(DESC_THE).c_str());
     fight_melee(mon, target);
 
-    _dsomething_shadow_monster_reset(mon);
+    _dithmengos_shadow_monster_reset(mon);
 }
 
-void dsomething_shadow_throw(coord_def target)
+void dithmengos_shadow_throw(coord_def target)
 {
     if (target.origin()
-        || !_dsomething_shadow_acts())
+        || !_dithmengos_shadow_acts())
     {
         return;
     }
 
-    monster* mon = _dsomething_shadow_monster();
+    monster* mon = _dithmengos_shadow_monster();
     if (!mon)
         return;
 
@@ -3644,19 +3644,19 @@ void dsomething_shadow_throw(coord_def target)
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
     }
 
-    _dsomething_shadow_monster_reset(mon);
+    _dithmengos_shadow_monster_reset(mon);
 }
 
-void dsomething_shadow_spell(coord_def target, spell_type spell)
+void dithmengos_shadow_spell(coord_def target, spell_type spell)
 {
     if (target.origin()
         || !is_valid_mon_spell(spell)
-        || !_dsomething_shadow_acts())
+        || !_dithmengos_shadow_acts())
     {
         return;
     }
 
-    monster* mon = _dsomething_shadow_monster();
+    monster* mon = _dithmengos_shadow_monster();
     if (!mon)
         return;
 
@@ -3668,5 +3668,5 @@ void dsomething_shadow_spell(coord_def target, spell_type spell)
          mon->name(DESC_THE).c_str());
     mons_cast(mon, beem, spell, false, false);
 
-    _dsomething_shadow_monster_reset(mon);
+    _dithmengos_shadow_monster_reset(mon);
 }
