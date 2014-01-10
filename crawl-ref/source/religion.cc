@@ -335,7 +335,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Dsomething
     { "",
-      "",
+      "step into the shadows of nearby creatures",
       "",
       "",
       ""
@@ -459,7 +459,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Dsomething
     { "",
-      "",
+      "step into the shadows of nearby creatures",
       "",
       "",
       "",

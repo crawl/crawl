@@ -179,6 +179,8 @@ enum ability_type
     ABIL_ASHENZARI_SCRYING = 1160,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
+    // Dsomething
+    ABIL_DSOMETHING_SHADOW_STEP = 1170,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

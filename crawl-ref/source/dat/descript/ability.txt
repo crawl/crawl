@@ -591,6 +591,13 @@ End Transfer Knowledge ability
 
 Abort an ongoing skill transfer.
 %%%%
+# Dsomething
+Shadow Step ability
+
+If a nearby creature is still enough for you to focus on its shadow, this
+ability allows you to step through that shadow to immediately be placed
+adjacent to that creature.
+%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually
