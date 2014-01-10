@@ -3576,6 +3576,20 @@ static coord_def _mons_fragment_target(monster *mons)
 {
     coord_def target(GXM+1, GYM+1);
     int pow = 6 * mons->hit_dice;
+
+    // Shadow casting should try to affect the same tile as the player.
+    if (mons->mid == MID_PLAYER)
+    {
+        bool temp;
+        bolt beam;
+        if (!setup_fragmentation_beam(beam, pow, mons, mons->target, false,
+                                      true, true, NULL, temp, temp))
+        {
+            return target;
+        }
+        return mons->target;
+    }
+
     int range = spell_range(SPELL_LRD, pow, false);
     int maxpower = 0;
     for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
@@ -4405,6 +4419,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const coord_def target = _mons_fragment_target(mons);
         if (in_bounds(target))
            cast_fragmentation(6 * mons->hit_dice, mons, target, false);
+        else if (you.can_see(mons))
+           canned_msg(MSG_NOTHING_HAPPENS);
 
         return;
     }
