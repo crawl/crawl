@@ -7005,6 +7005,7 @@ bool player::tengu_flight() const
 bool player::nightvision() const
 {
     return is_undead
+           || (religion == GOD_DITHMENGOS && piety >= piety_breakpoint(0))
            || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2));
 }
 
