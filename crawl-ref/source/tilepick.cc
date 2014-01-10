@@ -5582,6 +5582,11 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ASHENZARI_TRANSFER_KNOWLEDGE;
     case ABIL_ASHENZARI_END_TRANSFER:
         return TILEG_ABILITY_ASHENZARI_TRANSFER_KNOWLEDGE_END;
+    // Dithmengos
+    case ABIL_DITHMENGOS_SHADOW_STEP:
+        return TILEG_ABILITY_DITHMENGOS_SHADOW_STEP;
+    case ABIL_DITHMENGOS_SHADOW_FORM:
+        return TILEG_ABILITY_DITHMENGOS_SHADOW_FORM;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
