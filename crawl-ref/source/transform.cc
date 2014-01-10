@@ -59,6 +59,7 @@ static const char* form_names[] =
     "wisp",
     "jelly",
     "fungus",
+    "shadow",
 };
 
 const char* transform_name(transformation_type form)
@@ -71,7 +72,8 @@ const char* transform_name(transformation_type form)
 bool form_can_wield(transformation_type form)
 {
     return form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
-           || form == TRAN_APPENDAGE || form == TRAN_TREE;
+           || form == TRAN_APPENDAGE || form == TRAN_TREE
+           || form == TRAN_SHADOW;
 }
 
 bool form_can_wear(transformation_type form)
@@ -185,6 +187,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     // Some forms can wear everything.
     case TRAN_NONE:
     case TRAN_LICH:
+    case TRAN_SHADOW:
     case TRAN_APPENDAGE: // handled as mutations
         return true;
 
@@ -225,6 +228,7 @@ bool form_keeps_mutations(transformation_type form)
     case TRAN_BLADE_HANDS:
     case TRAN_STATUE:
     case TRAN_LICH:
+    case TRAN_SHADOW:
     case TRAN_APPENDAGE:
         return true;
     default:
@@ -490,6 +494,8 @@ monster_type transform_mons()
         return MONS_ANIMATED_TREE;
     case TRAN_WISP:
         return MONS_INSUBSTANTIAL_WISP;
+    case TRAN_SHADOW:
+        return MONS_SHADOW; // XXX: should get its own monster?
     case TRAN_BLADE_HANDS:
     case TRAN_APPENDAGE:
     case TRAN_NONE:
@@ -715,6 +721,7 @@ static int _transform_duration(transformation_type which_trans, int pow)
     case TRAN_STATUE:
     case TRAN_DRAGON:
     case TRAN_LICH:
+    case TRAN_SHADOW:
     case TRAN_BAT:
         return min(20 + random2(pow) + random2(pow), 100);
     case TRAN_ICE_BEAST:
@@ -807,6 +814,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         {
         case TRAN_STATUE:
         case TRAN_LICH:
+        case TRAN_SHADOW:
             break;
         default:
             skip_wielding = true;
@@ -988,6 +996,11 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         msg      += "an insubstantial wisp of gas.";
         break;
 
+    case TRAN_SHADOW:
+        tran_name = "shadow";
+        msg      += "a swirling mass of dark shadows.";
+        break;
+
     case TRAN_NONE:
         tran_name = "null";
         msg += "your old self.";
@@ -1158,6 +1171,10 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         set_redraw_status(REDRAW_HUNGER);
         break;
 
+    case TRAN_SHADOW:
+        drain_exp(true, 25, true);
+        break;
+
     default:
         break;
     }
@@ -1318,6 +1335,7 @@ void untransform(bool skip_wielding, bool skip_move)
     case TRAN_JELLY:
     case TRAN_PORCUPINE:
     case TRAN_WISP:
+    case TRAN_SHADOW:
         mprf(MSGCH_DURATION, "Your transformation has ended.");
         break;
 

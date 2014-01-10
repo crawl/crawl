@@ -181,6 +181,7 @@ enum ability_type
     ABIL_ASHENZARI_END_TRANSFER,
     // Dsomething
     ABIL_DSOMETHING_SHADOW_STEP = 1170,
+    ABIL_DSOMETHING_SHADOW_FORM,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -330,8 +331,9 @@ enum transformation_type
     TRAN_WISP,
     TRAN_JELLY,
     TRAN_FUNGUS,
+    TRAN_SHADOW,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_FUNGUS
+    LAST_FORM = TRAN_SHADOW,
 };
 
 enum beam_type                  // bolt::flavour

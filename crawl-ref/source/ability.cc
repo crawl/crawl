@@ -104,6 +104,7 @@ enum ability_flag_type
     ABFLAG_LEVEL_DRAIN    = 0x00010000, // drains 2 levels
     ABFLAG_STAT_DRAIN     = 0x00020000, // stat drain
     ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
+    ABFLAG_SKILL_DRAIN    = 0x00080000, // drains skill levels
 };
 
 static int  _find_ability_slot(const ability_def& abil);
@@ -192,7 +193,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
     // Dsomething
     { ABIL_NON_ABILITY, ABIL_DSOMETHING_SHADOW_STEP, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+      ABIL_NON_ABILITY, ABIL_DSOMETHING_SHADOW_FORM },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -403,6 +404,8 @@ static const ability_def Ability_List[] =
     // Dsomething
     { ABIL_DSOMETHING_SHADOW_STEP, "Shadow Step",
       4, 0, 0, 4, 0, ABFLAG_NONE },
+    { ABIL_DSOMETHING_SHADOW_FORM, "Shadow Form",
+      9, 0, 0, 10, 0, ABFLAG_SKILL_DRAIN },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -714,6 +717,9 @@ const string make_cost_description(ability_type ability)
     if (abil.flags & ABFLAG_STAT_DRAIN)
         ret += ", Stat drain";
 
+    if (abil.flags & ABFLAG_SKILL_DRAIN)
+        ret += ", Skill drain";
+
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
         return "None";
@@ -814,6 +820,9 @@ static const string _detailed_cost_description(ability_type ability)
     if (abil.flags & ABFLAG_STAT_DRAIN)
         ret << "\nIt will temporarily drain your strength, intelligence or dexterity when used.";
 
+    if (abil.flags & ABFLAG_SKILL_DRAIN)
+        ret << "\nIt will temporarily drain your skills when used.";
+
     return ret.str();
 }
 
@@ -840,6 +849,10 @@ static ability_type _fixup_ability(ability_type ability)
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
         if (you.species == SP_FORMICID)
+            return ABIL_NON_ABILITY;
+
+    case ABIL_DSOMETHING_SHADOW_FORM:
+        if (you.species == SP_MUMMY || you.species == SP_GHOUL)
             return ABIL_NON_ABILITY;
 
     default:
@@ -1059,6 +1072,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
     case ABIL_DSOMETHING_SHADOW_STEP:
+    case ABIL_DSOMETHING_SHADOW_FORM:
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
@@ -2832,6 +2846,14 @@ static bool _do_ability(const ability_def& abil)
         if (!dsomething_shadow_step())
         {
             canned_msg(MSG_OK);
+            return false;
+        }
+        break;
+
+    case ABIL_DSOMETHING_SHADOW_FORM:
+        if (!transform(100, TRAN_SHADOW))
+        {
+            crawl_state.zero_turns_taken();
             return false;
         }
         break;

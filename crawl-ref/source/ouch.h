@@ -76,7 +76,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
           const char *death_source_name = NULL, bool attacker_effects = true);
 
 void lose_level(int death_source, const char* aux);
-bool drain_exp(bool announce_full = true, int power = 25);
+bool drain_exp(bool announce_full = true, int power = 25,
+               bool ignore_protection = false);
 
 bool expose_player_to_element(beam_type flavour, int strength = 0,
                               bool damage_inventory = true,
