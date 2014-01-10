@@ -1,0 +1,9 @@
+# Changes for 0.14 include glyph colour changes.
+
+###########################
+# monsters
+###########################
+
+mon_glyph += felid : darkgrey
+mon_glyph += naga mage : red
+mon_glyph += elephant slug : lightgrey
