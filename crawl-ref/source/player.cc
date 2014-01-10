@@ -563,6 +563,8 @@ bool is_player_same_genus(const monster_type mon, bool transform)
             return mon == MONS_PORCUPINE;
         case TRAN_WISP:
             return mon == MONS_INSUBSTANTIAL_WISP;
+        case TRAN_SHADOW:
+            return mons_genus(mon) == MONS_SHADOW;
         // Compare with monster *species*.
         case TRAN_LICH:
             return mons_species(mon) == MONS_LICH;
@@ -1846,6 +1848,7 @@ int player_res_torment(bool, bool temp)
            || you.form == TRAN_FUNGUS
            || you.form == TRAN_TREE
            || you.form == TRAN_WISP
+           || you.form == TRAN_SHADOW
            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
            || you.petrified()
            || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
@@ -1867,6 +1870,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     if ((you.is_undead == US_SEMI_UNDEAD ? you.hunger_state == HS_STARVING
             : you.is_undead && (temp || you.form != TRAN_LICH))
         || you.is_artificial()
+        || (temp && you.form == TRAN_SHADOW)
         || player_equip_unrand(UNRAND_OLGREB)
         || you.duration[DUR_DIVINE_STAMINA])
     {
@@ -2182,6 +2186,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         case TRAN_TREE:
         case TRAN_WISP:
         case TRAN_LICH:
+        case TRAN_SHADOW:
             pl += 3;
             break;
         default:
@@ -2450,6 +2455,7 @@ bool player_is_shapechanged(void)
     if (you.form == TRAN_NONE
         || you.form == TRAN_BLADE_HANDS
         || you.form == TRAN_LICH
+        || you.form == TRAN_SHADOW
         || you.form == TRAN_APPENDAGE)
     {
         return false;
@@ -3793,6 +3799,7 @@ int check_stealth(void)
     switch (you.form)
     {
     case TRAN_FUNGUS:
+    case TRAN_SHADOW: // You slip into the shadows.
         race_mod = 30;
         break;
     case TRAN_TREE:
@@ -6512,6 +6519,7 @@ int player::armour_class() const
         case TRAN_BAT:
         case TRAN_PIG:
         case TRAN_PORCUPINE:
+        case TRAN_SHADOW:
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
@@ -6786,8 +6794,12 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
-    if (temp && (petrified() || form == TRAN_STATUE || form == TRAN_WISP))
+    if (temp
+        && (petrified() || form == TRAN_STATUE || form == TRAN_WISP
+            || form == TRAN_SHADOW))
+    {
         return 3;
+    }
 
     if (species == SP_GARGOYLE)
         return 3;
@@ -6879,6 +6891,9 @@ int player::res_magic() const
 int player_res_magic(bool calc_unid, bool temp)
 {
     int rm = 0;
+
+    if (temp && you.form == TRAN_SHADOW)
+        return MAG_IMMUNE;
 
     switch (you.species)
     {
@@ -7570,7 +7585,8 @@ bool player::can_bleed(bool allow_tran) const
         // These transformations don't bleed. Lichform is handled as undead.
         if (form == TRAN_STATUE || form == TRAN_ICE_BEAST
             || form == TRAN_SPIDER || form == TRAN_TREE
-            || form == TRAN_FUNGUS || form == TRAN_PORCUPINE)
+            || form == TRAN_FUNGUS || form == TRAN_PORCUPINE
+            || form == TRAN_SHADOW)
         {
             return false;
         }

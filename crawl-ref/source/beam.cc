@@ -3308,26 +3308,33 @@ void bolt::affect_player_enchantment()
             monster* mon = &menv[beam_source];
             if (!mon->observable())
             {
-                mpr("Something tries to affect you, but you resist.");
+                mprf("Something tries to affect you, but you %s.",
+                     you.res_magic() == MAG_IMMUNE ? "are unaffected"
+                                                   : "resist");
                 need_msg = false;
             }
         }
         if (need_msg)
         {
-            // the message reflects the level of difficulty resisting.
-            const int margin = you.res_magic() - ench_power;
-            if (margin >= 30)
-                mpr("You resist with almost no effort.");
-            else if (margin >= 15)
-                mpr("You easily resist.");
-            else if (margin >= 0)
-                mpr("You resist.");
-            else if (margin >= -14)
-                mpr("You resist with significant effort.");
-            else if (margin >= -30)
-                mpr("You struggle to resist.");
+            if (you.res_magic() == MAG_IMMUNE)
+                canned_msg(MSG_YOU_UNAFFECTED);
             else
-                mpr("You strain under the huge effort it takes to resist.");
+            {
+                // the message reflects the level of difficulty resisting.
+                const int margin = you.res_magic() - ench_power;
+                if (margin >= 30)
+                    mpr("You resist with almost no effort.");
+                else if (margin >= 15)
+                    mpr("You easily resist.");
+                else if (margin >= 0)
+                    mpr("You resist.");
+                else if (margin >= -14)
+                    mpr("You resist with significant effort.");
+                else if (margin >= -30)
+                    mpr("You struggle to resist.");
+                else
+                    mpr("You strain under the huge effort it takes to resist.");
+            }
         }
         // You *could* have gotten a free teleportation in the Abyss,
         // but no, you resisted.

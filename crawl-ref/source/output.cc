@@ -803,6 +803,7 @@ static void _print_stats_wp(int y)
             col = GREEN;
             break;
         case TRAN_LICH:
+        case TRAN_SHADOW:
             col = MAGENTA;
             break;
         case TRAN_BAT:

@@ -714,11 +714,11 @@ void lose_level(int death_source, const char *aux)
     ouch(0, death_source, KILLED_BY_DRAINING, aux);
 }
 
-bool drain_exp(bool announce_full, int power)
+bool drain_exp(bool announce_full, int power, bool ignore_protection)
 {
     const int protection = player_prot_life();
 
-    if (protection == 3)
+    if (protection == 3 && !ignore_protection)
     {
         if (announce_full)
             canned_msg(MSG_YOU_RESIST);
@@ -726,7 +726,7 @@ bool drain_exp(bool announce_full, int power)
         return false;
     }
 
-    if (protection > 0)
+    if (protection > 0 && !ignore_protection)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
         power /= (protection * 2);
@@ -945,12 +945,16 @@ static void _maybe_fog(int dam)
                                   / (MAX_PIETY - piety_breakpoint(2));
     if (you_worship(GOD_DSOMETHING)
         && you.piety >= piety_breakpoint(2)
-        && dam >= lower_threshold
-        && x_chance_in_y(dam - lower_threshold,
-                         upper_threshold - lower_threshold))
+        && (dam > 0 && you.form == TRAN_SHADOW
+            || dam >= lower_threshold
+               && x_chance_in_y(dam - lower_threshold,
+                                upper_threshold - lower_threshold)))
     {
-        mpr("You emit a cloud of dark smoke.");
-        big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
+        mprf("You emit a cloud of dark %s.",
+             you.form == TRAN_SHADOW ? "miasma" : "smoke");
+        big_cloud(you.form == TRAN_SHADOW ? CLOUD_MIASMA
+                                          : CLOUD_BLACK_SMOKE,
+                  &you, you.pos(), 50, 4 + random2(5));
     }
 }
 
@@ -1045,6 +1049,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
     {
+        if (you.form == TRAN_SHADOW)
+            dam /= 2;
         if (you.petrified())
             dam /= 2;
         else if (you.petrifying())

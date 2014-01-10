@@ -338,7 +338,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step into the shadows of nearby creatures",
       "sometimes bleed smoke when heavily injured by enemies",
       "Your shadow now sometimes tangibly mimics your actions.",
-      ""
+      "transform into a swirling mass of dark shadows"
     },
 };
 
@@ -462,7 +462,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "step into the shadows of nearby creatures",
       "bleed smoke when heavily injured by enemies",
       "Your shadow no longer tangibly mimics your actions.",
-      "",
+      "transform into a swirling mass of dark shadows"
     }
 };
 
@@ -3432,6 +3432,9 @@ static bool _transformed_player_can_join_god(god_type which_god)
     {
         return false;
     }
+
+    if (is_good_god(which_god) && you.form == TRAN_SHADOW)
+        return false;
 
     if (which_god == GOD_ZIN && you.form != TRAN_NONE)
         return false;

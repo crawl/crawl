@@ -493,6 +493,7 @@ tileidx_t tileidx_player()
         // no special tile
         case TRAN_BLADE_HANDS: break;
         case TRAN_APPENDAGE:
+        case TRAN_SHADOW:
         case TRAN_NONE:
         default:
             break;

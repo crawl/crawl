@@ -1014,6 +1014,11 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "wisp-form";
         inf->long_text  = "You are an insubstantial wisp.";
         break;
+    case TRAN_SHADOW:
+        inf->light_text = "Shadow",
+        inf->short_text = "shadow form";
+        inf->long_text  = "You are a swirling mass of dark shadows.";
+        break;
     case TRAN_NONE:
         break;
     }

@@ -520,6 +520,8 @@ static int _spell_enhancement(unsigned int typeflags)
 
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
+    if (you.form == TRAN_SHADOW)
+        enhanced -= 2;
 
     enhanced += you.archmagi();
 
