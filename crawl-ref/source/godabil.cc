@@ -19,6 +19,7 @@
 #include "dactions.h"
 #include "effects.h"
 #include "env.h"
+#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
@@ -34,6 +35,7 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"
@@ -57,6 +59,7 @@
 #include "stuff.h"
 #include "target.h"
 #include "terrain.h"
+#include "throw.h"
 #include "traps.h"
 #include "unwind.h"
 #include "view.h"
@@ -3490,4 +3493,180 @@ bool dsomething_shadow_step()
     you.move_to_pos(tgt.landing_site);
 
     return true;
+}
+
+static bool _dsomething_shadow_acts()
+{
+    // 10% chance at 4* piety; 50% chance at 200 piety.
+    const int range = MAX_PIETY - piety_breakpoint(3);
+    const int min   = range / 5;
+    return x_chance_in_y(min + ((range - min)
+                                * (you.piety - piety_breakpoint(3))
+                                / (MAX_PIETY - piety_breakpoint(3))),
+                         2 * range);
+}
+
+static monster* _dsomething_shadow_monster()
+{
+    if (monster_at(you.pos()))
+        return NULL;
+
+    int wpn_index  = NON_ITEM;
+    int ammo_index = NON_ITEM;
+
+    // Do a basic clone of the weapon.
+    item_def* wpn = you.weapon();
+    if (wpn
+        && (wpn->base_type == OBJ_WEAPONS
+            || wpn->base_type == OBJ_STAVES
+            || wpn->base_type == OBJ_RODS))
+    {
+        wpn_index = get_mitm_slot(10);
+        if (wpn_index == NON_ITEM)
+            return NULL;
+        item_def& new_item = mitm[wpn_index];
+        if (wpn->base_type == OBJ_STAVES)
+        {
+            new_item.base_type = OBJ_WEAPONS;
+            new_item.sub_type  = WPN_STAFF;
+        }
+        else if (wpn->base_type == OBJ_RODS)
+        {
+            new_item.base_type = OBJ_WEAPONS;
+            new_item.sub_type  = WPN_CLUB;
+        }
+        else
+        {
+            new_item.base_type = wpn->base_type;
+            new_item.sub_type  = wpn->sub_type;
+        }
+        new_item.quantity = 1;
+        new_item.flags   |= ISFLAG_SUMMONED;
+    }
+    const int missile = you.m_quiver->get_fire_item();
+    if (missile != -1)
+    {
+        ammo_index = get_mitm_slot(10);
+        if (ammo_index == NON_ITEM)
+        {
+            if (wpn_index != NON_ITEM)
+                destroy_item(wpn_index);
+            return NULL;
+        }
+        item_def& new_item = mitm[ammo_index];
+        item_def *ammo     = &you.inv[missile];
+        new_item.base_type = ammo->base_type;
+        new_item.sub_type  = ammo->sub_type;
+        new_item.quantity  = 1;
+        new_item.flags    |= ISFLAG_SUMMONED;
+    }
+
+    monster* mon = get_free_monster();
+    if (!mon)
+    {
+        if (wpn_index)
+            destroy_item(wpn_index);
+        return NULL;
+    }
+
+    mon->mname      = "shadow";
+    mon->type       = you.mons_species();
+    mon->behaviour  = BEH_SEEK;
+    mon->attitude   = ATT_FRIENDLY;
+    mon->flags      = (MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
+                       | MF_WAS_IN_VIEW | MF_HARD_RESET
+                       | MF_NAME_REPLACE | MF_NAME_DESCRIPTOR
+                       | MF_ACTUAL_SPELLS);
+    mon->hit_points = you.hp;
+    mon->hit_dice   = you.experience_level;
+    mon->set_position(you.pos());
+    mon->mid        = MID_PLAYER;
+    mon->inv[MSLOT_WEAPON]  = wpn_index;
+    mon->inv[MSLOT_MISSILE] = ammo_index;
+
+    mgrd(you.pos()) = mon->mindex();
+
+    return mon;
+}
+
+static void _dsomething_shadow_monster_reset(monster *mon)
+{
+    if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+        destroy_item(mon->inv[MSLOT_WEAPON]);
+    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
+        destroy_item(mon->inv[MSLOT_MISSILE]);
+
+    mon->reset();
+}
+
+void dsomething_shadow_melee(actor* target)
+{
+    if (!target
+        || !target->alive()
+        || !_dsomething_shadow_acts())
+    {
+        return;
+    }
+
+    monster* mon = _dsomething_shadow_monster();
+    if (!mon)
+        return;
+
+    mon->target     = target->pos();
+    mon->foe        = target->mindex();
+
+    mprf("%s attacks!", mon->name(DESC_THE).c_str());
+    fight_melee(mon, target);
+
+    _dsomething_shadow_monster_reset(mon);
+}
+
+void dsomething_shadow_throw(coord_def target)
+{
+    if (target.origin()
+        || !_dsomething_shadow_acts())
+    {
+        return;
+    }
+
+    monster* mon = _dsomething_shadow_monster();
+    if (!mon)
+        return;
+
+    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
+    {
+        mon->target = target;
+
+        bolt beem;
+        beem.target = target;
+        mprf("%s attacks!", mon->name(DESC_THE).c_str());
+        setup_monster_throw_beam(mon, beem);
+        mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
+    }
+
+    _dsomething_shadow_monster_reset(mon);
+}
+
+void dsomething_shadow_spell(coord_def target, spell_type spell)
+{
+    if (target.origin()
+        || !is_valid_mon_spell(spell)
+        || !_dsomething_shadow_acts())
+    {
+        return;
+    }
+
+    monster* mon = _dsomething_shadow_monster();
+    if (!mon)
+        return;
+
+    mon->target = target;
+
+    bolt beem;
+    beem.target = target;
+    mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
+         mon->name(DESC_THE).c_str());
+    mons_cast(mon, beem, spell, false, false);
+
+    _dsomething_shadow_monster_reset(mon);
 }
