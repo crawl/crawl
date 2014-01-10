@@ -60,6 +60,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
+#include "spl-clouds.h"
 #include "spl-selfench.h"
 #include "spl-other.h"
 #include "state.h"
@@ -935,6 +936,24 @@ static void _powered_by_pain(int dam)
     }
 }
 
+static void _maybe_fog(int dam)
+{
+    const int upper_threshold = you.hp_max / 2;
+    const int lower_threshold = upper_threshold
+                                - upper_threshold
+                                  * (you.piety - piety_breakpoint(2))
+                                  / (MAX_PIETY - piety_breakpoint(2));
+    if (you_worship(GOD_DSOMETHING)
+        && you.piety >= piety_breakpoint(2)
+        && dam >= lower_threshold
+        && x_chance_in_y(dam - lower_threshold,
+                         upper_threshold - lower_threshold))
+    {
+        mpr("You emit a cloud of dark smoke.");
+        big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1115,6 +1134,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
+            _maybe_fog(dam);
             _powered_by_pain(dam);
         }
         if (you.hp > 0)
