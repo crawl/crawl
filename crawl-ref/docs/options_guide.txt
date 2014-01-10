@@ -516,8 +516,8 @@ pickup_menu = true
 
 pickup_menu_limit = 4
         The number of items on your square that will activate menu for pickup
-        when pickup_menu is set to false.
-        Negatives value will be considered as item_stack_summary_minimum.
+        when pickup_menu is set to false.  If zero, never use the menu.
+        If negative, use the value of item_stack_summary_minimum instead.
 
 drop_filter += <regex>, <regex>, ...
         (List option)
