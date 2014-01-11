@@ -825,23 +825,26 @@ static ability_type _fixup_ability(ability_type ability)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         if (!you.recall_list.empty())
             return ABIL_STOP_RECALL;
+        return ability;
+
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-          switch (you.species)
-          {
-            case SP_DJINNI:
-            case SP_GHOUL:
-            case SP_MUMMY:
-            case SP_FORMICID:
-              return ABIL_NON_ABILITY;
-            default:
-              return ability;
-          }
+        switch (you.species)
+        {
+        case SP_DJINNI:
+        case SP_GHOUL:
+        case SP_MUMMY:
+        case SP_FORMICID:
+            return ABIL_NON_ABILITY;
+        default:
+            return ability;
+        }
+
     case ABIL_OKAWARU_FINESSE:
     case ABIL_BLINK:
     case ABIL_WISP_BLINK:
     case ABIL_EVOKE_BLINK:
-          if (you.species == SP_FORMICID)
+        if (you.species == SP_FORMICID)
             return ABIL_NON_ABILITY;
 
     default:
