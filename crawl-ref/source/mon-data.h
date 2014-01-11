@@ -1091,7 +1091,7 @@ static monsterentry mondata[] =
 },
 
 { // a dummy monster for recolouring
-    MONS_FELID, 'h', DARKGREY, "felid",
+    MONS_FELID, 'h', BLUE, "felid",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     200, 10, MONS_FELID, MONS_FELID, MH_NATURAL, -6,
