@@ -3096,6 +3096,17 @@ static monster_type _pick_random_wraith()
     return RANDOM_ELEMENT(wraiths);
 }
 
+static void _haunt_fixup(monster* summon, coord_def pos)
+{
+    actor* victim = actor_at(pos);
+    if (victim && victim != summon)
+    {
+        summon->add_ench(mon_enchant(ENCH_HAUNTING, 1, victim,
+                                     INFINITE_DURATION));
+        summon->foe = victim->mindex();
+    }
+}
+
 static monster_type _pick_horrible_thing()
 {
     return one_chance_in(4) ? MONS_TENTACLED_MONSTROSITY
@@ -3129,7 +3140,8 @@ static monster_type _pick_vermin()
 static void _do_high_level_summon(monster* mons, bool monsterNearby,
                                   spell_type spell_cast,
                                   monster_type (*mpicker)(), int nsummons,
-                                  god_type god, coord_def *target = NULL)
+                                  god_type god, coord_def *target = NULL,
+                                  void (*post_hook)(monster*, coord_def) = NULL)
 {
     if (_mons_abjured(mons, monsterNearby))
         return;
@@ -3143,10 +3155,12 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
         if (which_mons == MONS_NO_MONSTER)
             continue;
 
-        create_monster(
+        monster* summon = create_monster(
             mgen_data(which_mons, SAME_ATTITUDE(mons), mons,
                       duration, spell_cast, target ? *target : mons->pos(),
                       mons->foe, 0, god));
+        if (summon && post_hook)
+            post_hook(summon, target ? *target : mons->pos());
     }
 }
 
@@ -3175,7 +3189,7 @@ void mons_cast_haunt(monster* mons)
 
     _do_high_level_summon(mons, mons_near(mons), SPELL_HAUNT,
                           _pick_random_wraith, random_range(2, 4),
-                          GOD_NO_GOD, &fpos);
+                          GOD_NO_GOD, &fpos, _haunt_fixup);
 }
 
 static void _mons_cast_summon_illusion(monster* mons, spell_type spell)
