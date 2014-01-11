@@ -2489,8 +2489,13 @@ string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
     if (brdepth[BRANCH_ABYSS] == -1 && strstr(pmsg, "Abyss"))
         return "";
-    if (you.species == SP_FORMICID
-        && (strstr(pmsg, "berserk") || strstr(pmsg, "speed up your combat")))
+    if ((you.species == SP_FORMICID || you.species == SP_DJINNI
+         || you.species == SP_MUMMY || you.species == SP_GHOUL)
+        && strstr(pmsg, "berserk"))
+    {
+        return "";
+    }
+    if (you.species == SP_FORMICID && strstr(pmsg, "speed up your combat"))
     {
         return "";
     }
