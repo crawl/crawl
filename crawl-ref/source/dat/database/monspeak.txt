@@ -1409,6 +1409,14 @@ Cheibriados player ghost
 
 @The_monster@ says @to_foe@, "You can run, but you can't hide!"
 %%%%
+Dithmengos player ghost
+
+@The_monster@ says @to_foe@, "I shall send you to the shadows!"
+
+@The_monster@ says @to_foe@, "Just let the darkness consume you."
+
+@The_monster@ says @to_foe@, "I walk in shadow, and soon so shall you."
+%%%%
 Elyvilon player ghost
 
 @The_monster@ says @to_foe@, "In life, I might have healed you instead."
@@ -3433,6 +3441,25 @@ w:50
 @The_monster@ says, "I hate voyeurs."
 
 @The_monster@ says, "What does a god have to do to get cursed, anyway?"
+%%%%
+Dithmengos Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Sounds like you're dealing with a pretty shady god there."
+
+@The_monster@ says, "I'll bet you have a pretty dark future."
+
+@The_monster@ squints around. "I can't see a thing. I hate that."
+
+@The_monster@ says, "I hate shadows."
+
+@The_monster@ says, "Are you still afraid of the dark?"
+
+@The_monster@ says, "Careful; you might trip over your own shadow."
+
+@The_monster@ holds up a torch and says, "I bet you miss these."
 %%%%
 No God Donald
 
