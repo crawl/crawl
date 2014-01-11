@@ -4,6 +4,7 @@
 # monsters
 ###########################
 
+mon_glyph += demonspawn : darkgrey
 mon_glyph += felid : darkgrey
 mon_glyph += naga mage : red
 mon_glyph += elephant slug : lightgrey
