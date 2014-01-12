@@ -33,7 +33,7 @@ function ch_item_wieldable(it)
             and it.class(true) == "missile"
             and (string.find(it.name("a"), " stones?")
                  or string.find(it.name("a"), " large rocks?")
-                    and (you.race() == "Troll" or you.race() == "Ogre"))
+                    and (you.race() == "Troll" or you.race() == "Ogre" or you.race() == "Formicid"))
     then
         return true
     end
