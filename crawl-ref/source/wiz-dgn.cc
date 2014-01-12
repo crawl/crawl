@@ -283,6 +283,8 @@ bool wizard_create_feature(const coord_def& pos)
         if (map_bounds(right) && feat_is_door(grd(right)))
             tile_init_flavour(right);
     }
+    if (pos == you.pos() && cell_is_solid(pos))
+        you.wizmode_teleported_into_rock = true;
 
     return true;
 }
