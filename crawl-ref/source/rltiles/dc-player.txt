@@ -990,7 +990,7 @@ wizard WIZARD
 %sdir player/head
 
 ## Caps
-cone_blue CONE_BLUE CAP_FIRST_NORM
+cone_blue CONE_BLUE HAT_FIRST_NORM
 straw STRAW
 cap_blue CAP_BLUE
 feather_green FEATHER_GREEN
@@ -999,10 +999,8 @@ feather_blue FEATHER_BLUE
 feather_yellow FEATHER_YELLOW
 feather_white FEATHER_WHITE
 bandana_ybrown BANDANA_YBROWN
-hat_black HAT_BLACK CAP_LAST_NORM
-
-## Wizard hats
-gandalf WIZARD_GRAY WHAT_FIRST_NORM
+hat_black HAT_BLACK
+gandalf WIZARD_GRAY
 wizard_blue WIZARD_BLUE
 wizard_purple WIZARD_PURPLE
 wizard_bluegreen WIZARD_BLUEGREEN
@@ -1014,7 +1012,7 @@ wizard_red WIZARD_RED
 wizard_white WIZARD_WHITE
 turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
-turban_purple TURBAN_PURPLE WHAT_LAST_NORM
+turban_purple TURBAN_PURPLE HAT_LAST_NORM
 
 ## Mutations
 horns1 HORNS1
