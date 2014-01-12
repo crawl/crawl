@@ -101,6 +101,6 @@ fsim_kit: This option is useful to run a batch of simulations with different
 equipment. It takes a list of weapons separated by commas. Missiles can be
 specified after a /. The items will be generated if they are not found in the
 character's inventory, but make sure there is enough room in the inventory.
-Also, beware that if you get burdened, this might distort the results. Example:
+Example:
 
     fsim_kit = broad axe, crossbow / steel bolts, /javelins
