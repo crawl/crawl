@@ -989,7 +989,7 @@ wizard WIZARD
 %parts_ctg HELM
 %sdir player/head
 
-## Caps
+## Hats
 cone_blue CONE_BLUE HAT_FIRST_NORM
 straw STRAW
 cap_blue CAP_BLUE
