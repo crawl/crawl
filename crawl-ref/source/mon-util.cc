@@ -691,6 +691,22 @@ bool cheibriados_thinks_mons_is_fast(const monster* mon)
     return cheibriados_monster_player_speed_delta(mon) > 0;
 }
 
+// Dithmengos hates spells that cause illumination, halos, and
+// natural illumination.
+bool mons_is_illuminating(const monster* mon)
+{
+    if (mon->glows_naturally() || mon->halo_radius2() >= 0)
+        return true;
+
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    {
+        if (is_illuminating_spell(mon->spells[i]))
+            return true;
+    }
+
+    return false;
+}
+
 bool mons_is_projectile(monster_type mc)
 {
     return mc == MONS_ORB_OF_DESTRUCTION;
