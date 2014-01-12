@@ -3478,6 +3478,14 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_SIF_MUNA && !you.spell_no)
         return false;
 
+    // Dithmengos hates fiery species.
+    if (which_god == GOD_DITHMENGOS
+        && (you.species == SP_DJINNI
+            || you.species == SP_LAVA_ORC))
+    {
+        return false;
+    }
+
     return _transformed_player_can_join_god(which_god);
 }
 
