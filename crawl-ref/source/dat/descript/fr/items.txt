@@ -1772,7 +1772,7 @@ whip
 
 Un fouet.
 %%%%
-wizard hat
+hat
 
 Un chapeau pointu.
 %%%%

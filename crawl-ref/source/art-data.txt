@@ -684,7 +684,7 @@ TILE_EQ: shield_bullseye
 EV:      -5
 
 NAME:    crown of Dyrovepreva
-OBJ:     OBJ_ARMOUR/ARM_CAP
+OBJ:     OBJ_ARMOUR/ARM_HAT
 PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_dyrovepreva
@@ -694,7 +694,7 @@ METAB:   1
 BOOL:    elec, seeinv
 
 NAME:     hat of the Bear Spirit
-OBJ:      OBJ_ARMOUR/ARM_CAP
+OBJ:      OBJ_ARMOUR/ARM_HAT
 PLUS:     +2
 COLOUR:   DARKGREY
 TILE:     urand_bear
@@ -805,7 +805,7 @@ BOOL:    nospell, notelep, cursed
 
 ENUM:    DRAGONMASK
 NAME:    mask of the Dragon
-OBJ:     OBJ_ARMOUR/ARM_CAP
+OBJ:     OBJ_ARMOUR/ARM_HAT
 COLOUR:  ETC_SHIMMER_BLUE
 TILE:    urand_dragonmask
 TILE_EQ: art_dragonhelm
@@ -833,7 +833,7 @@ TILE_EQ: dragonarm_gold
 MAGIC:   50
 
 NAME:    hat of the Alchemist
-OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
+OBJ:     OBJ_ARMOUR/ARM_HAT
 PLUS:    +2
 COLOUR:  LIGHTMAGENTA
 TILE:    urand_alchemist
@@ -962,7 +962,7 @@ TILE_EQ:  robe_clouds
 BOOL:     elec, fly
 
 NAME:     hat of Pondering
-OBJ:      OBJ_ARMOUR/ARM_WIZARD_HAT
+OBJ:      OBJ_ARMOUR/ARM_HAT
 PLUS:     +3
 COLOUR:   LIGHTRED
 TILE:     urand_pondering
@@ -1109,7 +1109,7 @@ BRAND:    SPWPN_VORPAL
 ENUM:    HIGH_COUNCIL
 NAME:    hat of the High Council
 INSCRIP: Wiz-
-OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
+OBJ:     OBJ_ARMOUR/ARM_HAT
 COLOUR:  LIGHTGREEN
 TILE:    urand_high_council
 TILE_EQ: wizard_lightgreen

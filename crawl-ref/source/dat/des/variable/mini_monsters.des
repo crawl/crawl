@@ -1828,8 +1828,8 @@ KMONS:   0 = orc ; robe race:orcish . wand of confusion | wand of slowing w:35 |
                    wand of magic darts w:35 | wand of flame | wand of frost . \
                    potion of invisibility | potion of speed | nothing w:980
 KMONS:   89 = deep elf mage
-KITEM:   8d = robe / robe race:orcish, wizard hat w:40 / wizard hat good_item, \
-              wizard hat w:20 / wizard hat good_item
+KITEM:   8d = robe / robe race:orcish, hat w:40 / hat good_item, \
+              hat w:20 / hat good_item
 KITEM:   9e = book of minor magic
 SUBST:   - = +
 KMASK:   de89 = no_item_gen
@@ -2101,7 +2101,7 @@ MONS:     wizard spells:venom_bolt;iskenderun's_mystic_blast;invisibility;\
 # Cloud.
 MONS:     tengu reaver spells:venom_bolt;.;iskenderun's_battlesphere;\
                               poisonous_cloud;iskenderun's_battlesphere;blink
-ITEM:     book of Power, robe good_item, wizard hat good_item, robe, wizard hat
+ITEM:     book of Power, robe good_item, hat good_item, robe, hat
 KFEAT:    _ = altar_vehumet
 SHUFFLE: ef, gh, ij
 MAP
@@ -5084,7 +5084,7 @@ DEPTH:  Depths
 WEIGHT: 3
 MONS:   patrolling crystal golem name:crystal_guardian n_rpl n_des spells:bolt_of_fire;bolt_of_cold
 MONS:   orange crystal statue
-ITEM:   cap unrand:crown_of_dyrovepreva no_pickup
+ITEM:   hat unrand:crown_of_dyrovepreva no_pickup
 KPROP:  12d' = no_rtele_into
 SUBST:  ' = .
 MAP

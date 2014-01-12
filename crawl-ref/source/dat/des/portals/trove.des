@@ -874,11 +874,11 @@ ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
          amulet of warding unrand:amulet_of_cekugob                          /\
          amulet of warding unrand:brooch_of_shielding                        /\
          amulet of rage unrand:necklace_of_bloodlust                         /\
-         helmet unrand:crown_of_dyrovepreva / randart helmet / randart cap   /\
-         cap unrand:mask_of_the_dragon / randart wizard hat                  /\
-         cap unrand:hat_of_the_bear_spirit                                   /\
-         wizard hat unrand:hat_of_the_alchemist / randart pair of gloves     /\
-         wizard hat unrand:hat_of_pondering / randart pair of boots          /\
+         hat unrand:crown_of_dyrovepreva / randart helmet / randart hat      /\
+         hat unrand:mask_of_the_dragon / randart hat                         /\
+         hat unrand:hat_of_the_bear_spirit                                   /\
+         hat unrand:hat_of_the_alchemist / randart pair of gloves            /\
+         hat unrand:hat_of_pondering / randart pair of boots                 /\
          pair of gloves unrand:gauntlets_of_war                              /\
          pair of gloves unrand:fencers_gloves                                /\
          naga barding unrand:lightning_scales                                /\
@@ -888,8 +888,8 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          dagger unrand:morg / great sword unrand:sword_of_the_doom_knight    /\
          great sword unrand:sword_of_power / demon blade unrand:bloodbane    /\
          scimitar unrand:scimitar_of_flaming_death / broad axe unrand:arga   /\
-         broad axe unrand:obsidian_axe / claymore unrand:plutonium_sword /\
-         demon blade unrand:leech / bastard sword unrand:sword_of_zonguldrok  /\
+         broad axe unrand:obsidian_axe / claymore unrand:plutonium_sword     /\
+         demon blade unrand:leech / bastard sword unrand:sword_of_zonguldrok /\
          staff of poison unrand:staff_of_olgreb / scythe unrand:finisher     /\
          quarterstaff unrand:elemental_staff / mace unrand:devastator        /\
          staff of energy unrand:staff_of_wucad_mu                            /\

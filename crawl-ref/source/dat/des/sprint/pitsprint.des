@@ -281,8 +281,8 @@ function general_item_setup(e)
     helmet plus:2 good_item not_cursed ident:all /\
     cloak plus:4 not_cursed ident:all /\
     cloak plus:2 good_item not_cursed ident:all /\
-    wizard hat plus:4 not_cursed ident:all /\
-    wizard hat plus:2 good_item not_cursed ident:all /\
+    hat plus:4 not_cursed ident:all /\
+    hat plus:2 good_item not_cursed ident:all /\
     large shield plus:5 not_cursed ident:all /\
     large shield plus:3 good_item not_cursed ident:all /\
     naga barding plus:6 not_cursed ident:all w:5 /\
@@ -339,8 +339,8 @@ function general_item_setup(e)
     helmet plus:0 good_item not_cursed ident:all /\
     cloak plus:2 not_cursed ident:all /\
     cloak plus:0 good_item not_cursed ident:all /\
-    wizard hat plus:2 not_cursed ident:all /\
-    wizard hat plus:0 good_item not_cursed ident:all /\
+    hat plus:2 not_cursed ident:all /\
+    hat plus:0 good_item not_cursed ident:all /\
     large shield plus:3 not_cursed ident:all /\
     large shield plus:0 good_item not_cursed ident:all /\
     naga barding plus:2 not_cursed ident:all w:5 /\

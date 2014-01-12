@@ -208,8 +208,10 @@ static int _armour_colour(const item_def &item)
     case ARM_ROBE:
         item_colour = RED;
         break;
+#if TAG_MAJOR_VERSION == 34
     case ARM_CAP:
-    case ARM_WIZARD_HAT:
+#endif
+    case ARM_HAT:
     case ARM_HELMET:
         item_colour = MAGENTA;
         break;
@@ -2144,12 +2146,7 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
                 rc = ISFLAG_DWARVEN;
             break;
 
-        case ARM_CAP:
-            if (one_chance_in(6))
-                rc = ISFLAG_ELVEN;
-            break;
-
-        case ARM_WIZARD_HAT:
+        case ARM_HAT:
             if (one_chance_in(6))
                 rc = ISFLAG_ORCISH;
             if (one_chance_in(6))
@@ -2220,20 +2217,14 @@ static special_armour_type _determine_armour_ego(const item_def& item,
                            -1);
         break;
 
-    case ARM_WIZARD_HAT:
+    case ARM_HAT:
         if (coinflip())
         {
-            rc = (one_chance_in(3) ? SPARM_MAGIC_RESISTANCE
-                                   : SPARM_INTELLIGENCE);
+            rc = random_choose(SPARM_MAGIC_RESISTANCE, SPARM_INTELLIGENCE,
+                               SPARM_SPIRIT_SHIELD, -1);
         }
         break;
 
-    case ARM_CAP:
-        if (one_chance_in(10))
-        {
-            rc = SPARM_SPIRIT_SHIELD;
-            break;
-        }
     case ARM_HELMET:
         rc = coinflip() ? SPARM_SEE_INVISIBLE : SPARM_INTELLIGENCE;
         break;
@@ -2367,7 +2358,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
         return true; // in portal vaults, these can happen on every slot
 
     case SPARM_MAGIC_RESISTANCE:
-        if (type == ARM_WIZARD_HAT)
+        if (type == ARM_HAT)
             return true;
         // deliberate fall-through
     case SPARM_POISON_RESISTANCE:
@@ -2379,7 +2370,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
                || !strict;
 
     case SPARM_SPIRIT_SHIELD:
-        return type == ARM_CAP || slot == EQ_SHIELD || !strict;
+        return type == ARM_HAT || slot == EQ_SHIELD || !strict;
     case NUM_SPECIAL_ARMOURS:
     case NUM_REAL_SPECIAL_ARMOURS:
         die("invalid armour brand");
@@ -2464,7 +2455,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         if (item_level == ISPEC_BAD)
             do_curse_item(item);
     }
-    else if ((forced_ego || item.sub_type == ARM_WIZARD_HAT
+    else if ((forced_ego || item.sub_type == ARM_HAT
                     || x_chance_in_y(51 + item_level, 250))
                 && !item.is_mundane() || force_good)
     {
@@ -3591,7 +3582,7 @@ static armour_type _get_random_armour_type(int item_level)
 
         if (armtype == ARM_HELMET && one_chance_in(3))
         {
-            const armour_type hats[] = { ARM_CAP, ARM_WIZARD_HAT, ARM_HELMET };
+            const armour_type hats[] = { ARM_HAT, ARM_HELMET };
 
             armtype = RANDOM_ELEMENT(hats);
         }

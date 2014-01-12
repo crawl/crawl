@@ -768,7 +768,7 @@ ITEM:     potion of flight w:50 / potion of invisibility / \
           potion of might w:3 / potion of agility w:4 / \
           potion of brilliance w:3 / nothing
 #       possibly rather generous loot, if you get to the center
-ITEM:     scroll of vulnerability / scroll of identify / wizard hat / \
+ITEM:     scroll of vulnerability / scroll of identify / hat / \
           potion of magic / potion of brilliance / potion of resistance
 ITEM:     scroll of identify / scroll of recharging / potion of invisibility / \
           pair of gloves w:5 / pair of boots w:5 / potion of agility / nothing
@@ -779,7 +779,7 @@ KITEM:    ' = scroll of random uselessness w:30 / \
               scroll of identify / scroll of teleportation / \
               potion of confusion w:50 / potion of paralysis w:50 / \
               potion of mutation / potion of flight / \
-              wizard hat / buckler / pair of gloves w:5 / pair of boots w:5
+              hat / buckler / pair of gloves w:5 / pair of boots w:5
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx

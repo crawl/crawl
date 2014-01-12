@@ -390,7 +390,7 @@ ENDMAP
 
 # 20.8k/23.8k/12.0k
 # Welcome to Pandemonium Pizzeria; is this for carry-out or delivery?
-# (Ideally the cashier would have a silly cap, but they can't wear caps.)
+# (Ideally the cashier would have a silly hat, but they can't wear hats.)
 NAME:   grunt_pizzeria
 DEPTH:  D:8-14
 : food_weight(_G, 8)

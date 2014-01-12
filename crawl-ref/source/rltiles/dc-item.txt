@@ -575,8 +575,8 @@ lshield_louise LSHIELD_LOUISE
 elven_leather_helm THELM_CAP
 cap_jester THELM_CAP_JESTER
 
-wizard_hat1 THELM_WIZARD_HAT
-wizard_hat2
+hat1 THELM_HAT
+hat2
 
 helmet1_visored THELM_HELM THELM_FIRST
 helmet2_etched

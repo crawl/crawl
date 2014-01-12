@@ -2205,7 +2205,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_OCTOPODE:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = coinflip() ? ARM_WIZARD_HAT : ARM_CAP;
+        item.sub_type  = ARM_HAT;
         break;
 
     case MONS_ANGEL:
@@ -2282,7 +2282,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         {
             item_race      = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_ARMOUR;
-            item.sub_type  = ARM_WIZARD_HAT;
+            item.sub_type  = ARM_HAT;
 
             // Not as good as it sounds. Still just +0 a lot of the time.
             level          = MAKE_GOOD_ITEM;

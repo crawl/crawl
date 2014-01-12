@@ -3464,11 +3464,13 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
     case ARM_CLOAK:
         return TILE_ARM_CLOAK;
 
-    case ARM_WIZARD_HAT:
-        return TILE_THELM_WIZARD_HAT;
+    case ARM_HAT:
+        return TILE_THELM_HAT;
 
+#if TAG_MAJOR_VERSION == 34
     case ARM_CAP:
         return TILE_THELM_CAP;
+#endif
 
     case ARM_HELMET:
         return _modrng(item.rnd, TILE_THELM_FIRST, TILE_THELM_LAST);
