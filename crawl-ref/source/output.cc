@@ -1667,7 +1667,7 @@ int update_monster_pane()
 // params:
 //  level : actual resistance level
 //  max : maximum number of levels of the resistance
-string _itosym(int level, int max = 1)
+static string _itosym(int level, int max = 1)
 {
     if (max < 1)
         return "";
