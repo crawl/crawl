@@ -571,10 +571,6 @@ hand axe
 Mała siekiera, zdatna bardziej do rąbania gałęzi niż do walki. Niezbyt dużych
 gałęzi.
 %%%%
-hat
-
-Szpiczasta czapka.
-%%%%
 helmet
 
 Metalowe nakrycie głowy.

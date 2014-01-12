@@ -89,10 +89,6 @@ grape
 
 Mazs auglis.
 %%%%
-hat
-
-Koniskas formas ādas cepure.
-%%%%
 helmet
 
 Metāla galvassega.

@@ -557,10 +557,6 @@ whip
 
 Um chicote.
 %%%%
-hat
-
-Um chapéu de tecido cônico.
-%%%%
 young poisoner's handbook
 
 Um livro de magia.

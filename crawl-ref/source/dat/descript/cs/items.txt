@@ -229,10 +229,6 @@ grape
 
 Drobné ovoce.
 %%%%
-hat
-
-Kuželovitý látkový klobouk.
-%%%%
 helmet
 
 Část kovové pokrývky hlavy.

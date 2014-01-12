@@ -688,10 +688,6 @@ Un outil pour trancher des bûches de bois, ou de la chair. Il peut être
 suffisant si vous êtes concerné principalement par le poids de l'arme, mais
 pour massacrer convenablement, il vous faut quelque chose de plus gros.
 %%%%
-hat
-
-Un chapeau pointu.
-%%%%
 helmet
 
 Un couvre-chef en métal.

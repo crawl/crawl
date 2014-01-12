@@ -729,10 +729,6 @@ Aus einem Hammerhai mit Spitzen auf einem mittleren durch langets verstärkten
 Heft bestehend, kann diese stumpfe Waffe bedeutende bemerkenswerte Kraft
 liefern und sogar durch die Rüstung eindringen.
 %%%%
-hat
-
-Ein kegelförmiger Stoffhut.
-%%%%
 helmet
 
 Ein Stück einer Kopfbedeckung aus Metall.
