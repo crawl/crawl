@@ -1050,6 +1050,8 @@ static bool _lamp_of_fire()
         if (you.confused())
             target.confusion_fuzz();
 
+        did_god_conduct(DID_ILLUMINATE, 6 + random2(3));
+
         mpr("The flames dance!");
 
         vector<bolt> beams;

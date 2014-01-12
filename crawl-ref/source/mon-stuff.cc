@@ -2027,6 +2027,15 @@ int monster_die(monster* mons, killer_type killer,
                     did_god_conduct(DID_KILL_HOLY, mons->hit_dice,
                                     true, mons);
                 }
+
+                // Dithmengos hates sources of illumination.
+                // (This is *after* the holy so that the right order of
+                //  messages appears.)
+                if (mons_is_illuminating(mons))
+                {
+                    did_god_conduct(DID_KILL_ILLUMINATING, mons->hit_dice,
+                                    true, mons);
+                }
             }
 
             // Divine health and mana restoration doesn't happen when

@@ -831,8 +831,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_CAUSE_GLOWING:
         case DID_DELIBERATE_MUTATING:
+            if (!you_worship(GOD_ZIN))
+                break;
+            // deliberate fall-through
+        case DID_CAUSE_GLOWING:
             if (you_worship(GOD_ZIN))
             {
                 if (!known && thing_done != DID_CAUSE_GLOWING)
@@ -859,6 +862,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     }
                 }
 
+                piety_change = -level;
+                retval = true;
+            }
+            if (you_worship(GOD_DITHMENGOS))
+            {
+                simple_god_message(" does not appreciate your lighting up"
+                                   " the environment like this.");
                 piety_change = -level;
                 retval = true;
             }
@@ -980,6 +990,35 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_ILLUMINATE:
+            if (you_worship(GOD_DITHMENGOS))
+            {
+                if (!known)
+                {
+                    simple_god_message(" forgives your accidental act of "
+                                       " illumination, just this once.");
+                    break;
+                }
+                simple_god_message(" does not appreciate your illumination!");
+                piety_change = -level;
+                if (level > 5)
+                    penance = level - 5;
+                retval = true;
+            }
+            break;
+
+        case DID_KILL_ILLUMINATING:
+            if (you_worship(GOD_DITHMENGOS)
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" appreciates your extinguishing a source "
+                                   "of illumination.");
+                retval = true;
+                piety_denom = level + 10;
+                piety_change = piety_denom - 6;
+            }
+            break;
+
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
@@ -1041,6 +1080,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
+                "Illuminate", "Kill Illuminating",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

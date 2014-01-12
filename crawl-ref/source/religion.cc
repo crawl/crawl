@@ -810,6 +810,10 @@ string get_god_likes(god_type which_god, bool verbose)
         really_likes.push_back("you kill wizards and other users of magic");
         break;
 
+    case GOD_DITHMENGOS:
+        really_likes.push_back("you kill beings that bring light to the "
+                               "dungeon, through fire or other means");
+        break;
     default:
         break;
     }
@@ -893,6 +897,11 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     case GOD_SIF_MUNA:
         really_dislikes.push_back("you destroy spellbooks");
+        break;
+
+    case GOD_DITHMENGOS:
+        dislikes.push_back("you light up the dungeon through fire magic or "
+                           "other magical means");
         break;
 
     default:
@@ -3938,6 +3947,10 @@ bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
         break;
     case GOD_CHEIBRIADOS:
         if (is_hasty_spell(spell))
+            return true;
+        break;
+    case GOD_DITHMENGOS:
+        if (is_illuminating_spell(spell))
             return true;
         break;
     default:

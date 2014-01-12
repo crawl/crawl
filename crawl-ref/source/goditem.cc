@@ -15,6 +15,7 @@
 #include <cmath>
 
 #include "artefact.h"
+#include "art-enum.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -392,6 +393,61 @@ bool is_poisoned_item(const item_def& item)
     return false;
 }
 
+bool is_illuminating_item(const item_def& item)
+{
+    // No halo for you! Also no glowy unrands.
+    if (is_unrandom_artefact(item)
+        && (item.special == UNRAND_BRILLIANCE
+            || item.special == UNRAND_PLUTONIUM_SWORD
+            || item.special == UNRAND_HIGH_COUNCIL))
+    {
+        return true;
+    }
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        {
+        const int item_brand = get_weapon_brand(item);
+        if (item_brand == SPWPN_FLAMING
+            || item_brand == SPWPN_FLAME
+            || item_brand == SPWPN_FREEZING // glows with a cold blue light!
+            || item_brand == SPWPN_HOLY_WRATH) // divine radiance!
+        {
+            return true;
+        }
+        }
+        break;
+    case OBJ_MISSILES:
+        {
+        const int item_brand = get_ammo_brand(item);
+        if (item_brand == SPMSL_FLAME)
+            return true;
+        }
+        break;
+    case OBJ_WANDS:
+        if (item.sub_type == WAND_FLAME
+            || item.sub_type == WAND_FIRE
+            || item.sub_type == WAND_FIREBALL)
+        {
+            return true;
+        }
+        break;
+    case OBJ_BOOKS:
+    case OBJ_RODS:
+        return _is_bookrod_type(item, is_illuminating_spell);
+        break;
+    case OBJ_MISCELLANY:
+        if (item.sub_type == MISC_LAMP_OF_FIRE)
+            return true;
+        break;
+    default:
+        break;
+    }
+
+    return false;
+}
+
 bool is_unholy_spell(spell_type spell)
 {
     unsigned int flags = get_spell_flags(spell);
@@ -432,6 +488,18 @@ bool is_hasty_spell(spell_type spell)
     unsigned int flags = get_spell_flags(spell);
 
     return flags & SPFLAG_HASTY;
+}
+
+bool is_illuminating_spell(spell_type spell)
+{
+    unsigned int disciplines = get_spell_disciplines(spell);
+
+    return (disciplines & SPTYP_FIRE)
+           || spell == SPELL_CORONA
+           || spell == SPELL_FREEZING_AURA
+           || spell == SPELL_OLGREBS_TOXIC_RADIANCE
+           || spell == SPELL_SUNRAY
+           || spell == SPELL_HOLY_LIGHT;
 }
 
 static bool _your_god_hates_spell(spell_type spell)
@@ -511,6 +579,12 @@ conduct_type god_hates_item_handling(const item_def &item)
             return DID_HASTY;
         }
         break;
+
+    case GOD_DITHMENGOS:
+        if (item_type_known(item) && is_illuminating_item(item))
+        {
+            return DID_ILLUMINATE;
+        }
 
     default:
         break;
@@ -612,6 +686,9 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
 
     case GOD_ELYVILON:
         return discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING);
+
+    case GOD_DITHMENGOS:
+        return discipline & SPTYP_FIRE;
 
     default:
         break;

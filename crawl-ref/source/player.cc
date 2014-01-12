@@ -5001,8 +5001,9 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you.magic_contamination > 0)
         learned_something_new(HINT_GLOWING);
 
-    // Zin doesn't like mutations or mutagenic radiation.
-    if (you_worship(GOD_ZIN))
+    // Zin doesn't like mutations or mutagenic radiation;
+    // Dithmengos doesn't like the glow it causes.
+    if (you_worship(GOD_ZIN) || you_worship(GOD_DITHMENGOS))
     {
         // Whenever the glow status is first reached, give a warning message.
         if (old_level < 2 && new_level >= 2)

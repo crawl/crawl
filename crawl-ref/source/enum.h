@@ -1003,7 +1003,7 @@ enum conduct_type
     DID_CANNIBALISM,
     DID_EAT_SOULED_BEING,                 // Zin
     DID_DELIBERATE_MUTATING,              // Zin
-    DID_CAUSE_GLOWING,                    // Zin
+    DID_CAUSE_GLOWING,                    // Zin, Dithmengos
     DID_UNCLEAN,                          // Zin (used unclean weapon/magic)
     DID_CHAOS,                            // Zin (used chaotic weapon/magic)
     DID_DESECRATE_ORCISH_REMAINS,         // Beogh
@@ -1025,6 +1025,8 @@ enum conduct_type
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
     DID_SEE_MONSTER,                      // TSO
+    DID_ILLUMINATE,                       // Dithmengos
+    DID_KILL_ILLUMINATING,                // Dithmengos
 
     NUM_CONDUCTS
 };
