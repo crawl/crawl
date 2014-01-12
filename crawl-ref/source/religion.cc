@@ -2496,9 +2496,7 @@ string adjust_abil_message(const char *pmsg, bool allow_upgrades)
         return "";
     }
     if (you.species == SP_FORMICID && strstr(pmsg, "speed up your combat"))
-    {
         return "";
-    }
 
     string pm = pmsg;
 

@@ -2271,17 +2271,11 @@ static vector<formatted_string> _get_overview_resistances(
     const int notele = you.no_tele(calc_unid);
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
-    {
         out += _resist_composer("NoTele", cwidth, 1, 1, false) + "\n";
-    }
     else if (rrtel && !stasis)
-    {
         out += _resist_composer("RndTele", cwidth, 1, 1, false) + "\n";
-    }
     else
-    {
         out += _resist_composer("Stasis", cwidth, stasis) + "\n";
-    }
     cols.add_formatted(1, out, false);
 
     const int no_cast = you.no_cast(calc_unid);
