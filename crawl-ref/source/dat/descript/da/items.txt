@@ -731,10 +731,6 @@ Et værktøj der kan adskille fibrene i træ eller kød. Det er måske
 tilstrækkeligt, hvis du primært er interesseret i våbnets vægt, men hvis du vil
 løbe ordentlig grassat, får du brug for noget større.
 %%%%
-hat
-
-En konisk stofhat.
-%%%%
 helmet
 
 En hovedbeklædning af metal.
