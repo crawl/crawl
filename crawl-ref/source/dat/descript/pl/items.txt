@@ -1604,7 +1604,7 @@ whip
 
 Bat z byczej skóry.
 %%%%
-wizard hat
+hat
 
 Szpiczasta czapka.
 %%%%

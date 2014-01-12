@@ -1626,8 +1626,10 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case ARM_HELMET:
+#if TAG_MAJOR_VERSION == 34
         case ARM_CAP:
-        case ARM_WIZARD_HAT:
+#endif
+        case ARM_HAT:
         case ARM_BUCKLER:
             valued += 25;
             break;

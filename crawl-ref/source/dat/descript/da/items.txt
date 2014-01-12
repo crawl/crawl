@@ -1783,7 +1783,7 @@ Et langt, flettet stykke læder. Dette enkle våben blev oprindeligt brugt i
 uoverensstemmelser med kvæg, men bruges nu i uoverensstemmelser mellem alle
 mulige former for væsener.
 %%%%
-wizard hat
+hat
 
 En konisk stofhat.
 %%%%

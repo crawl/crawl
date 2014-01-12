@@ -1795,9 +1795,9 @@ A long plaited strip of leather. Originally developed for use in disagreements
 with cattle, this simple weapon is now widely used to settle differences
 between all sorts of creatures.
 %%%%
-wizard hat
+hat
 
-A conical cloth hat.
+A cloth or leather hat.
 %%%%
 young poisoner's handbook
 

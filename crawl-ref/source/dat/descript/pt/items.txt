@@ -557,7 +557,7 @@ whip
 
 Um chicote.
 %%%%
-wizard hat
+hat
 
 Um chapéu de tecido cônico.
 %%%%

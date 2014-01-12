@@ -12,8 +12,10 @@ enum armour_type
 
     ARM_CLOAK,
 
+#if TAG_MAJOR_VERSION == 34
     ARM_CAP,
-    ARM_WIZARD_HAT,
+#endif
+    ARM_HAT,
     ARM_HELMET,
 
     ARM_GLOVES,

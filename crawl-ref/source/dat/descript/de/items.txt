@@ -1699,7 +1699,7 @@ Ein langer gepflochtener-Streifen aus Leder. Ursprünglich entwickelt für den
 Gebrauch in Unstimmigkeiten mit dem Vieh wird diese einfache Waffe jetzt weit
 verwendet, um Unterschiede zwischen allen Sorten von Wesen zu setzen.
 %%%%
-wizard hat
+hat
 
 Ein kegelförmiger Stoffhut.
 %%%%

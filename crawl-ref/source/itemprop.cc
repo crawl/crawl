@@ -122,10 +122,12 @@ static const armour_def Armour_prop[NUM_ARMOURS] =
     { ARM_HELMET,               "helmet",                 1,   0,   80,
         EQ_HELMET,      SIZE_SMALL,  SIZE_MEDIUM },
 
+#if TAG_MAJOR_VERSION == 34
     { ARM_CAP,                  "cap",                    0,   0,   40,
         EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
+#endif
 
-    { ARM_WIZARD_HAT,           "wizard hat",             0,   0,   40,
+    { ARM_HAT,                  "hat",                    0,   0,   40,
         EQ_HELMET,      SIZE_LITTLE, SIZE_LARGE },
 
     // Note that barding size is compared against torso so it currently
@@ -889,7 +891,7 @@ void set_equip_race(item_def &item, iflags_t flags)
             break;
         case OBJ_ARMOUR:
             if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item)
-                && item.sub_type != ARM_WIZARD_HAT)
+                && item.sub_type != ARM_HAT)
             {
                 return;
             }

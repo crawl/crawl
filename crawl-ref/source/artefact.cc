@@ -977,7 +977,7 @@ static void _get_randart_properties(const item_def &item,
     }
 
     if (!done_powers && one_chance_in(10) && aclass == OBJ_ARMOUR
-        && (atype == ARM_CAP || atype == ARM_SHIELD))
+        && (atype == ARM_HAT || atype == ARM_SHIELD))
     {
         proprt[ARTP_BRAND] = SPARM_SPIRIT_SHIELD;
         power_level++;
