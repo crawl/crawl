@@ -443,10 +443,6 @@ A small piece of wood and metal, to be strapped on one arm for defence. It is
 somewhat cumbersome to wear, and, without a little training, slightly slows the
 rate at which a warrior attacks.
 %%%%
-cap
-
-A cloth or leather cap.
-%%%%
 centaur barding
 
 An armour made for centaurs, to wear over their equine half.
@@ -741,6 +737,10 @@ hand axe
 A tool for rending apart the fibres of wood, or flesh. It might be enough if
 you care primarily for the weapon's weight, but for a proper rampage, you want
 something bigger.
+%%%%
+hat
+
+A cloth or leather hat.
 %%%%
 helmet
 
@@ -1794,10 +1794,6 @@ whip
 A long plaited strip of leather. Originally developed for use in disagreements
 with cattle, this simple weapon is now widely used to settle differences
 between all sorts of creatures.
-%%%%
-hat
-
-A cloth or leather hat.
 %%%%
 young poisoner's handbook
 

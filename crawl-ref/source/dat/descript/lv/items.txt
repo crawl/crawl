@@ -33,10 +33,6 @@ book of fixed theme
 
 Burvestību grāmata.
 %%%%
-cap
-
-Auduma vai ādas cepure.
-%%%%
 centaur barding
 
 Kentauriem domātas bruņas, valkāšanai tā zirga daļai.
@@ -92,6 +88,10 @@ Kaudze ar mirdzošām zelta monētām.
 grape
 
 Mazs auglis.
+%%%%
+hat
+
+Koniskas formas ādas cepure.
 %%%%
 helmet
 
@@ -180,8 +180,4 @@ Burvju ietaise, kas var sadziedēt radījuma brūces.
 wand of lightning
 
 Burvju ietaise, kas sviež lielus zibens šāviņus.
-%%%%
-hat
-
-Koniskas formas ādas cepure.
 %%%%

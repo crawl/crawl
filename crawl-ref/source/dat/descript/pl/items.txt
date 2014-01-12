@@ -315,10 +315,6 @@ buckler
 
 Mała tarcza.
 %%%%
-cap
-
-Coś do przykrycia głowy.
-%%%%
 centaur barding
 
 Końska zbroja, pasująca także na dolną część centaura.
@@ -574,6 +570,10 @@ hand axe
 
 Mała siekiera, zdatna bardziej do rąbania gałęzi niż do walki. Niezbyt dużych
 gałęzi.
+%%%%
+hat
+
+Szpiczasta czapka.
 %%%%
 helmet
 
@@ -1603,10 +1603,6 @@ znaczący sposób posługiwania się tarczą.
 whip
 
 Bat z byczej skóry.
-%%%%
-hat
-
-Szpiczasta czapka.
 %%%%
 young poisoner's handbook
 

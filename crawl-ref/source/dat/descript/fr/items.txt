@@ -380,10 +380,6 @@ buckler
 
 Un petit bouclier.
 %%%%
-cap
-
-Un bonnet en tissu ou en cuir.
-%%%%
 centaur barding
 
 Une armure pour les centaures, à porter sur la partie équine.
@@ -691,6 +687,10 @@ hand axe
 Un outil pour trancher des bûches de bois, ou de la chair. Il peut être
 suffisant si vous êtes concerné principalement par le poids de l'arme, mais
 pour massacrer convenablement, il vous faut quelque chose de plus gros.
+%%%%
+hat
+
+Un chapeau pointu.
 %%%%
 helmet
 
@@ -1771,10 +1771,6 @@ Une hache prévue pour le combat au corps à corps.
 whip
 
 Un fouet.
-%%%%
-hat
-
-Un chapeau pointu.
 %%%%
 young poisoner's handbook
 
