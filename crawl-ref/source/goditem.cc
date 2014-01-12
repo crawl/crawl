@@ -411,7 +411,6 @@ bool is_illuminating_item(const item_def& item)
         const int item_brand = get_weapon_brand(item);
         if (item_brand == SPWPN_FLAMING
             || item_brand == SPWPN_FLAME
-            || item_brand == SPWPN_FREEZING // glows with a cold blue light!
             || item_brand == SPWPN_HOLY_WRATH) // divine radiance!
         {
             return true;
@@ -496,7 +495,6 @@ bool is_illuminating_spell(spell_type spell)
 
     return (disciplines & SPTYP_FIRE)
            || spell == SPELL_CORONA
-           || spell == SPELL_FREEZING_AURA
            || spell == SPELL_OLGREBS_TOXIC_RADIANCE
            || spell == SPELL_SUNRAY
            || spell == SPELL_HOLY_LIGHT;
