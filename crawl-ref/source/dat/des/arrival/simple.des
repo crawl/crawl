@@ -1929,3 +1929,31 @@ MAP
    ....G.ccccx
     .@...xxxxx
 ENDMAP
+
+###############################################################################
+
+NAME:   wheals_arrival_linesprint
+ORIENT: float
+TAGS:   arrival no_monster_gen
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+x{.......................x
+xxxxxxxxxxxxxxxxxxxxxxxx.x
+x........................x
+x.xxxxxxxxxxxxxxxxxxxxxxxx
+x........................@
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   wheals_arrival_shading
+ORIENT: float
+TAGS:   arrival no_monster_gen
+SUBST:  a = xc
+SUBST:  b = cv
+MAP
+xxxxaaacccbbbvvv
+x..............@
+x{.............@
+x..............@
+xxxxaaacccbbbvvv
+ENDMAP

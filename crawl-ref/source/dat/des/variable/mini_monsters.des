@@ -5431,6 +5431,38 @@ ccccc+++ccccc
      .@.
 ENDMAP
 
+# autumn katana
+# An autumnal forest, with warriors paying respect to the last wielder
+NAME:    wheals_unrand_guarded_autumn_katana
+TAGS:    no_monster_gen no_item_gen patrolling
+DEPTH:   Depths
+WEIGHT:  3
+MONS:    minotaur, fire giant, frost giant, spriggan defender, \
+         deep elf blademaster
+SHUFFLE: 12345
+ITEM:    demon blade unrand:autumn_katana
+SUBST:   u = t.
+TILE:    t = DNGN_TREE_YELLOW / DNGN_TREE_LIGHTRED w:5 / DNGN_TREE_RED / \
+             DNGN_TREE_DEAD w:5
+COLOUR:  t = lightred w:5 / red / yellow / brown w:5
+MAP
+ttttttttttttttttttttt
+ttttttttttttttttttttt
+ttuuuuuuuuuuuuuuutttt
+@.................ttt
+ttuuuuuuuuuuuuuu..ttt
+tttttttttttttttuu..tt
+tttttttttttttttu1.ttt
+ttttttttttttttu..tttt
+ttttttttttttuu..ttttt
+tttttT.4.........tttt
+tttttGd....3..2..tttt
+tttttT.5.........tttt
+ttttttttttttttttttttt
+ttttttttttttttttttttt
+ENDMAP
+
+
 ###################################################################
 #
 # <<9>> The classics.

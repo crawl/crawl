@@ -979,6 +979,25 @@ Cczc....czcC
     CeeC
 ENDMAP
 
+NAME: wheals_shoals_ruined_temple
+TAGS: water_ok
+DEPTH: Shoals:1-4
+KPROP: c.GWuw1 = no_tide
+KMONS: 1 = kraken
+KFEAT: 1 = w
+SUBST: u = Ww
+SUBST: . = .:500 0
+MAP
+ccccccccccccccccccccccccccccccccc
+c...c.................WWWWWWuwwwc
+@.c...c..G....G...G...GWWWWWuwwwc
+c...c.................WWWWWWuwwwc
+@.c...c..G....G...G...GWWCWWuw1wc
+c...c.................WWWWWWuwwwc
+@.c...c..G....G...G...GWWWWWuwwwc
+c...c.................WWWWWWuwwwc
+ccccccccccccccccccccccccccccccccc
+ENDMAP
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps

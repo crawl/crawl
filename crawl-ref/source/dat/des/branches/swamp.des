@@ -1232,6 +1232,24 @@ tttc111cttt
    tcGct
 ENDMAP
 
+NAME: wheals_swamp_sinkhole
+DEPTH: Swamp, !Swamp:$
+TAGS: no_monster_gen
+KFEAT: t = mangrove
+KFEAT: ^ = known shaft trap
+SUBST: u = Ww
+MAP
+ttttttttt
+twwwwwwwt
+twuuuuuwt
+twuWWWuwt
+twuW^Wuwt
+twuWWWuwt
+twuuuuuwt
+@wwwwwwwt
+ttttttttt
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #
