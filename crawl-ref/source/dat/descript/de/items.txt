@@ -452,10 +452,6 @@ festgeschnallt zu werden. Es ist etwas beschwerlich, um, und ohne ein bisschen
 Ausbildung zu halten, verlangsamt ein bisschen die Rate, an der ein Krieger
 angreift.
 %%%%
-cap
-
-Eine Stoff- oder Lederkappe.
-%%%%
 centaur barding
 
 Eine Rüstung für Zentauren zum Tragen über ihrem Pferdekörper.
@@ -732,6 +728,10 @@ hammer
 Aus einem Hammerhai mit Spitzen auf einem mittleren durch langets verstärkten
 Heft bestehend, kann diese stumpfe Waffe bedeutende bemerkenswerte Kraft
 liefern und sogar durch die Rüstung eindringen.
+%%%%
+hat
+
+Ein kegelförmiger Stoffhut.
 %%%%
 helmet
 
@@ -1698,10 +1698,6 @@ whip
 Ein langer gepflochtener-Streifen aus Leder. Ursprünglich entwickelt für den
 Gebrauch in Unstimmigkeiten mit dem Vieh wird diese einfache Waffe jetzt weit
 verwendet, um Unterschiede zwischen allen Sorten von Wesen zu setzen.
-%%%%
-hat
-
-Ein kegelförmiger Stoffhut.
 %%%%
 young poisoner's handbook
 

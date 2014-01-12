@@ -439,10 +439,6 @@ Et lille stykke træ og metal, som spændes på den ene arm til forsvar. Det er
 lidt uhåndterligt, så en kriger uden en smule træning vil angribe en kende
 langsommere.
 %%%%
-cap
-
-En hat af stof eller læder.
-%%%%
 centaur barding
 
 Rustning til kentaurer, som de kan bære på deres hestehalvdel.
@@ -734,6 +730,10 @@ hand axe
 Et værktøj der kan adskille fibrene i træ eller kød. Det er måske
 tilstrækkeligt, hvis du primært er interesseret i våbnets vægt, men hvis du vil
 løbe ordentlig grassat, får du brug for noget større.
+%%%%
+hat
+
+En konisk stofhat.
 %%%%
 helmet
 
@@ -1782,10 +1782,6 @@ whip
 Et langt, flettet stykke læder. Dette enkle våben blev oprindeligt brugt i
 uoverensstemmelser med kvæg, men bruges nu i uoverensstemmelser mellem alle
 mulige former for væsener.
-%%%%
-hat
-
-En konisk stofhat.
 %%%%
 young poisoner's handbook
 
