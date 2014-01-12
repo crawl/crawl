@@ -90,11 +90,9 @@ A long pole with an enormous, cleaving blade on one end.
 %%%%
 bastard sword
 
-A long, large sword. A grown-up human or elf can manage to wield it in one
-hand, while anyone of a weaker race will need to grip it with two. In fact, it
-is the heaviest and most damaging weapon anyone other than certain humanoid
-insects can use with a shield. And meeting a sharp blade this long spells doom
-for any opponent.
+A long, large sword. In fact, it is one of the heaviest and most damaging
+weapon most races can use with a shield. And meeting a sharp blade this long
+spells doom for any opponent.
 %%%%
 battleaxe
 
@@ -800,8 +798,9 @@ a small cost attached.
 large rock
 
 A very large and very heavy stone. {{
-    if string.find(you.race(), "Ogre")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
+       or you.race() == "Formicid"
    then
        return ""
    else
@@ -813,8 +812,7 @@ A very large and very heavy stone. {{
 large shield
 
 A large piece of wood and metal, to be strapped on one arm for defence. {{
-    if string.find(you.race(), "Ogre")
-       or string.find(you.race(), "Draconian")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
     then
         return "It looks like it would fit you well."
@@ -1653,16 +1651,6 @@ A mesh of ropes knotted together with weights around the edge. Originally used
 by hunters to entangle and entrap prey, it soon found obvious application in
 battle and gladiatorial arenas. Struggling victims can eventually destroy the
 net and break free, if they live long enough.
-{{
-    if you.race() == "Halfling"
-        or you.race() == "Kobold"
-        or you.race() == "Spriggan"
-    then
-        return "Unfortunately, it is too large and awkward for you to use."
-    else
-        return ""
-    end
-}}
 %%%%
 tomahawk
 
