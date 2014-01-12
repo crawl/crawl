@@ -1545,7 +1545,9 @@ int monster_die(monster* mons, const actor *killer, bool silent,
     killer_type ktype = KILL_YOU;
     int kindex = NON_MONSTER;
 
-    if (killer->is_monster())
+    if (!killer)
+        ktype = KILL_NONE;
+    else if (killer->is_monster())
     {
         const monster *kmons = killer->as_monster();
         ktype = kmons->confused_by_you() ? KILL_YOU_CONF : KILL_MON;
