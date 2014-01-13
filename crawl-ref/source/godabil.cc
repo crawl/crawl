@@ -3497,6 +3497,9 @@ bool dithmengos_shadow_step()
 
 static bool _dithmengos_shadow_acts()
 {
+    if (!you_worship(GOD_DITHMENGOS) || you.piety < piety_breakpoint(3))
+        return false;
+
     // 10% chance at 4* piety; 50% chance at 200 piety.
     const int range = MAX_PIETY - piety_breakpoint(3);
     const int min   = range / 5;
