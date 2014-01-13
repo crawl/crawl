@@ -128,7 +128,7 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             if (cell.flags & MAP_SILENCED)
                 colour = BLUE; // Silence gets darker
             else
-                colour = ETC_DEATH; // If no holy or silence
+                colour = MAGENTA; // If no holy or silence
         }
         else if (cell.flags & MAP_SILENCED)
             colour = CYAN; // Silence but no holy/unholy
