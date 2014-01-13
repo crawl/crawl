@@ -601,10 +601,10 @@ adjacent to that creature.
 Shadow Form ability
 
 This invocation greatly amplifies your affinity for the darkness, transforming
-you into a swirling mass of dark shadows. While in this form, you are immune
-to poison, draining, unholy torment, and hostile enchantments, and all
-incoming damage is halved; you also bleed miasma instead of smoke (and do so
-on all incoming attacks). However, your ability to deal damage in melee is
+you into a swirling mass of dark shadows. While in this form, you are
+permanently invisible and are immune to poison, draining, unholy torment,
+and hostile enchantments; all incoming damage is halved, and you bleed smoke
+on all incoming attacks. However, your ability to deal damage in melee is
 halved, and your spellcasting power is greatly hampered.
 %%%%
 Renounce Religion ability
