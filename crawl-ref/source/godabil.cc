@@ -3533,7 +3533,7 @@ static monster* _dithmengos_shadow_monster()
         else if (wpn->base_type == OBJ_RODS)
         {
             new_item.base_type = OBJ_WEAPONS;
-            new_item.sub_type  = WPN_CLUB;
+            new_item.sub_type  = WPN_ROD;
         }
         else
         {
