@@ -440,11 +440,7 @@ void fire_thing(int item)
     {
         bolt beam;
         throw_it(beam, item, false, 0, &target);
-        if (you_worship(GOD_DITHMENGOS)
-            && you.inv[item].base_type == OBJ_MISSILES)
-        {
-            dithmengos_shadow_throw(beam.target);
-        }
+
     }
 }
 
@@ -2077,6 +2073,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     if (pbolt.special_explosion != NULL)
         delete pbolt.special_explosion;
+
+    if (!teleport
+        && you_worship(GOD_DITHMENGOS)
+        && thrown.base_type == OBJ_MISSILES)
+    {
+        dithmengos_shadow_throw(thr.target);
+    }
 
     return hit;
 }
