@@ -214,6 +214,10 @@ body {
     font-weight: bold;
 }
 
+#spectator_list .watcher {
+    font-weight: normal;
+}
+
 #chat_input {
     width: 394px;
     font: small monospace;
