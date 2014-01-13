@@ -393,6 +393,21 @@ bool is_poisoned_item(const item_def& item)
     return false;
 }
 
+static bool _is_potentially_illuminating_item(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WANDS:
+        if (item.sub_type == WAND_RANDOM_EFFECTS)
+            return true;
+        break;
+    default:
+        break;
+    }
+
+    return false;
+}
+
 bool is_illuminating_item(const item_def& item)
 {
     // No halo for you! Also no glowy unrands.
@@ -431,6 +446,10 @@ bool is_illuminating_item(const item_def& item)
         {
             return true;
         }
+        break;
+    case OBJ_SCROLLS:
+        if (item.sub_type == SCR_IMMOLATION)
+            return true;
         break;
     case OBJ_BOOKS:
     case OBJ_RODS:
@@ -579,7 +598,9 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_DITHMENGOS:
-        if (item_type_known(item) && is_illuminating_item(item))
+        if (item_type_known(item)
+            && (_is_potentially_illuminating_item(item)
+                || is_illuminating_item(item)))
         {
             return DID_ILLUMINATE;
         }
