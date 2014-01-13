@@ -2851,7 +2851,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_DITHMENGOS_SHADOW_FORM:
-        if (!transform(100, TRAN_SHADOW))
+        if (!transform(50, TRAN_SHADOW))
         {
             crawl_state.zero_turns_taken();
             return false;
