@@ -440,8 +440,11 @@ void fire_thing(int item)
     {
         bolt beam;
         throw_it(beam, item, false, 0, &target);
-        if (you_worship(GOD_DITHMENGOS))
+        if (you_worship(GOD_DITHMENGOS)
+            && you.inv[item].base_type == OBJ_MISSILES)
+        {
             dithmengos_shadow_throw(beam.target);
+        }
     }
 }
 
