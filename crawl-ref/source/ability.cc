@@ -1709,8 +1709,7 @@ bool activate_talent(const talent& tal)
     // Check that we can afford to pay the costs.
     // Note that mutation shenanigans might leave us with negative MP,
     // so don't fail in that case if there's no MP cost.
-    if (abil.mp_cost > 0
-        && !enough_mp(abil.mp_cost, false, true, !(abil.flags & ABFLAG_PERMANENT_MP)))
+    if (abil.mp_cost > 0 && !enough_mp(abil.mp_cost, false, true))
     {
         crawl_state.zero_turns_taken();
         return false;

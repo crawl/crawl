@@ -4623,8 +4623,7 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
     return true;
 }
 
-bool enough_mp(int minimum, bool suppress_msg,
-               bool abort_macros, bool include_items)
+bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
 {
     if (you.species == SP_DJINNI)
         return enough_hp(minimum * DJ_MP_RATE, suppress_msg);
@@ -4635,7 +4634,7 @@ bool enough_mp(int minimum, bool suppress_msg,
     {
         if (!suppress_msg)
         {
-            if (get_real_mp(include_items) < minimum)
+            if (get_real_mp(true) < minimum)
                 mpr("You haven't enough magic capacity.");
             else
                 mpr("You haven't enough magic at the moment.");
