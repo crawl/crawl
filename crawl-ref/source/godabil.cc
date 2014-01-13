@@ -3583,6 +3583,7 @@ static monster* _dithmengos_shadow_monster()
     mon->mid        = MID_PLAYER;
     mon->inv[MSLOT_WEAPON]  = wpn_index;
     mon->inv[MSLOT_MISSILE] = ammo_index;
+    mon->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 1, NULL, INFINITE_DURATION));
 
     mgrd(you.pos()) = mon->mindex();
 
