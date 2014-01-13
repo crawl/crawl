@@ -461,6 +461,8 @@ public:
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
     string      tile_display_mode;
+    bool        tile_level_map_hide_messages;
+    bool        tile_level_map_hide_sidebar;
 #endif
 
     typedef map<string, string> opt_map;

@@ -106,12 +106,19 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         if (layout_parameters == null) return;
         if (full)
         {
-            dungeon_renderer.fit_to(layout_parameters.window_width - 5,
-                                    layout_parameters.window_height - 5,
-                                    show_diameter);
-            $("#right_column").hide();
-            messages.hide();
-            minimap.stop_minimap_farview();
+            var width = layout_parameters.remaining_width;
+            var height = layout_parameters.remaining_height;
+
+            if (options.get("tile_level_map_hide_sidebar") === true) {
+                width = layout_parameters.window_width - 5;
+                $("#right_column").hide();
+            }
+            if (options.get("tile_level_map_hide_messages") === true) {
+                height = layout_parameters.window_height - 5;
+                messages.hide();
+            }
+
+            dungeon_renderer.fit_to(width, height, show_diameter);
         }
         else
         {
@@ -121,6 +128,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
             $("#right_column").show();
             messages.show();
         }
+        minimap.stop_minimap_farview();
         display.invalidate(true);
         display.display();
     }

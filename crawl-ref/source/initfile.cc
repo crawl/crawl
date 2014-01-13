@@ -1050,6 +1050,8 @@ void game_options::reset_options()
 #ifdef USE_TILE_WEB
     tile_realtime_anim = false;
     tile_display_mode = "tiles";
+    tile_level_map_hide_messages = true;
+    tile_level_map_hide_sidebar = false;
 #endif
 
     // map each colour to itself as default
@@ -3507,6 +3509,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (field == "tiles" || field == "glyphs" || field == "hybrid")
             tile_display_mode = field;
     }
+    else BOOL_OPTION(tile_level_map_hide_messages);
+    else BOOL_OPTION(tile_level_map_hide_sidebar);
 #endif
 
     else if (key == "bindkey")
@@ -4155,6 +4159,10 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_int("tile_cell_pixels", Options.tile_cell_pixels);
     tiles.json_write_bool("tile_filter_scaling", Options.tile_filter_scaling);
     tiles.json_write_bool("tile_realtime_anim", Options.tile_realtime_anim);
+    tiles.json_write_bool("tile_level_map_hide_messages",
+            Options.tile_level_map_hide_messages);
+    tiles.json_write_bool("tile_level_map_hide_sidebar",
+            Options.tile_level_map_hide_sidebar);
 
     tiles.json_write_int("tile_font_crt_size", Options.tile_font_crt_size);
     tiles.json_write_int("tile_font_stat_size", Options.tile_font_stat_size);
