@@ -1173,6 +1173,10 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     case TRAN_SHADOW:
         drain_exp(true, 25, true);
+        if (you.invisible())
+            mpr("You fade into the shadows.");
+        else
+            mpr("You feel less conspicuous.");
         break;
 
     default:
@@ -1335,8 +1339,13 @@ void untransform(bool skip_wielding, bool skip_move)
     case TRAN_JELLY:
     case TRAN_PORCUPINE:
     case TRAN_WISP:
+        break;
+
     case TRAN_SHADOW:
-        mprf(MSGCH_DURATION, "Your transformation has ended.");
+        if (you.invisible())
+            mprf(MSGCH_DURATION, "You feel less shadowy.");
+        else
+            mprf(MSGCH_DURATION, "You emerge from the shadows.");
         break;
 
     case TRAN_APPENDAGE:

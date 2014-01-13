@@ -950,11 +950,8 @@ static void _maybe_fog(int dam)
                && x_chance_in_y(dam - lower_threshold,
                                 upper_threshold - lower_threshold)))
     {
-        mprf("You emit a cloud of dark %s.",
-             you.form == TRAN_SHADOW ? "miasma" : "smoke");
-        big_cloud(you.form == TRAN_SHADOW ? CLOUD_MIASMA
-                                          : CLOUD_BLACK_SMOKE,
-                  &you, you.pos(), 50, 4 + random2(5));
+        mpr("You emit a cloud of dark smoke.");
+        big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
     }
 }
 

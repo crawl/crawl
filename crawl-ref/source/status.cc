@@ -247,6 +247,7 @@ static void _describe_transform(status_info* inf);
 static void _describe_stat_zero(status_info* inf, stat_type st);
 static void _describe_terrain(status_info* inf);
 static void _describe_missiles(status_info* inf);
+static void _describe_invisible(status_info* inf);
 
 bool fill_status_info(int status, status_info* inf)
 {
@@ -432,22 +433,6 @@ bool fill_status_info(int status, status_info* inf)
         break;
     }
 
-    case DUR_INVIS:
-        if (you.attribute[ATTR_INVIS_UNCANCELLABLE])
-            inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_INVIS));
-        else
-            inf->light_colour = _dur_colour(MAGENTA, dur_expiring(DUR_INVIS));
-        inf->light_text   = "Invis";
-        inf->short_text   = "invisible";
-        if (you.backlit())
-        {
-            inf->light_colour = DARKGREY;
-            inf->short_text += " (but backlit and visible)";
-        }
-        inf->long_text = "You are " + inf->short_text + ".";
-        _mark_expiring(inf, dur_expiring(DUR_INVIS));
-        break;
-
     case DUR_POISONING:
         _describe_poison(inf);
         break;
@@ -462,6 +447,10 @@ bool fill_status_info(int status, status_info* inf)
 
     case STATUS_MISSILES:
         _describe_missiles(inf);
+        break;
+
+    case STATUS_INVISIBLE:
+        _describe_invisible(inf);
         break;
 
     case STATUS_MANUAL:
@@ -1091,4 +1080,31 @@ static void _describe_missiles(status_info* inf)
 
     inf->light_colour = _dur_colour(inf->light_colour, expiring);
     _mark_expiring(inf, expiring);
+}
+
+static void _describe_invisible(status_info* inf)
+{
+    if (!you.duration[DUR_INVIS] && you.form != TRAN_SHADOW)
+        return;
+
+    if (you.form == TRAN_SHADOW)
+    {
+        inf->light_colour = _dur_colour(WHITE,
+                                        dur_expiring(DUR_TRANSFORMATION));
+    }
+    else if (you.attribute[ATTR_INVIS_UNCANCELLABLE])
+        inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_INVIS));
+    else
+        inf->light_colour = _dur_colour(MAGENTA, dur_expiring(DUR_INVIS));
+    inf->light_text   = "Invis";
+    inf->short_text   = "invisible";
+    if (you.backlit())
+    {
+        inf->light_colour = DARKGREY;
+        inf->short_text += " (but backlit and visible)";
+    }
+    inf->long_text = "You are " + inf->short_text + ".";
+    _mark_expiring(inf, dur_expiring(you.form == TRAN_SHADOW
+                                     ? DUR_TRANSFORMATION
+                                     : DUR_INVIS));
 }

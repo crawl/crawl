@@ -2632,9 +2632,13 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
     _decrement_a_duration(DUR_SLAYING, delay, "You feel less lethal.");
 
-    if (_decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
+    if (_decrement_a_duration(DUR_INVIS, delay, NULL,
                               coinflip(), "You flicker for a moment."))
     {
+        if (you.invisible())
+            mprf(MSGCH_DURATION, "You feel more conspicuous.");
+        else
+            mprf(MSGCH_DURATION, "You flicker back into view.");
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     }
 

@@ -4990,8 +4990,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         if (change > 0)
             xom_is_stimulated(new_level * 25);
 
-        if (old_level > 1 && new_level <= 1
-            && you.duration[DUR_INVIS] && !you.backlit())
+        if (old_level > 1 && new_level <= 1 && you.invisible())
         {
             mpr("You fade completely from view now that you are no longer "
                 "glowing from magical contamination.");
@@ -7479,7 +7478,8 @@ bool player::can_see_invisible() const
 
 bool player::invisible() const
 {
-    return duration[DUR_INVIS] && !backlit();
+    return (duration[DUR_INVIS] || you.form == TRAN_SHADOW)
+           && !backlit();
 }
 
 bool player::visible_to(const actor *looker) const
@@ -7527,7 +7527,7 @@ bool player::glows_naturally() const
 // This is the imperative version.
 void player::backlight()
 {
-    if (!duration[DUR_INVIS])
+    if (!duration[DUR_INVIS] && you.form != TRAN_SHADOW)
     {
         if (duration[DUR_CORONA] || glows_naturally())
             mpr("You glow brighter.");

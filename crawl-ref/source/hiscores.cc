@@ -1554,7 +1554,7 @@ void scorefile_entry::init(time_t dt)
         STATUS_REGENERATION,
         STATUS_SICK,
         STATUS_SPEED,
-        DUR_INVIS,
+        STATUS_INVISIBLE,
         DUR_POISONING,
         STATUS_MISSILES,
         DUR_SURE_BLADE,
