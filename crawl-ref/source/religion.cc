@@ -3907,8 +3907,7 @@ bool god_likes_fresh_corpses(god_type god)
 
     return god == GOD_OKAWARU
            || god == GOD_MAKHLEB
-           || god == GOD_TROG
-           || god == GOD_DITHMENGOS;
+           || god == GOD_TROG;
 }
 
 bool god_likes_spell(spell_type spell, god_type god)
