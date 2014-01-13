@@ -1429,7 +1429,7 @@ static bool _check_ability_possible(const ability_def& abil,
         && get_real_mp(false) < abil.mp_cost)
     {
         if (!quiet)
-            mpr("You don't have enough personal magic energy to sacrifice.");
+            mpr("You haven't enough innate magic capacity to sacrifice.");
         return false;
     }
 
