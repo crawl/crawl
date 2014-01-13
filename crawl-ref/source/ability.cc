@@ -1426,7 +1426,7 @@ static bool _check_ability_possible(const ability_def& abil,
     // in case of mp rot ability, check is the player have enough natural MP
     // (avoid use of ring/staf of magical power)
     if ((abil.flags & ABFLAG_PERMANENT_MP)
-            && get_real_mp(false) < 1)
+        && get_real_mp(false) < abil.mp_cost)
     {
         if (!quiet)
             mpr("You don't have enough personal magic energy to sacrifice.");
