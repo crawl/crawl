@@ -3414,10 +3414,10 @@ void spare_beogh_convert()
 
 bool dithmengos_shadow_step()
 {
-    // Range 3 at 2* piety (saves you one step) up to LOS at 6* piety.
-    const int range = 3 + ((LOS_RADIUS - 3)
-                           * (you.piety - piety_breakpoint(1))
-                           / (piety_breakpoint(5) - piety_breakpoint(1)));
+    // You can shadow-step anywhere within your umbra.
+    ASSERT(you.umbra_radius2() > -1);
+    const int range = isqrt_ceil(you.umbra_radius2());
+
     targetter_jump tgt(&you, range, false, true);
     direction_chooser_args args;
     args.hitfunc = &tgt;
