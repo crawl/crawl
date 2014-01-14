@@ -260,6 +260,7 @@ KFEAT: N = altar_nemelex_xobeh
 KITEM: N = any misc
 KFEAT: X = altar_xom
 KFEAT: M = altar_makhleb
+KFEAT: D = altar_dithmengos
 KMONS: l = patrolling spatial vortex
 KFEAT: ? = altar_jiyva / w:5 altar_lugonu / w:25 floor
 KMONS: m = demigod
@@ -282,7 +283,7 @@ x..........
 #.f........
 x...xxxxxx+
 x.f.x.lxm..
-x...xN.x...
+x...xNDx...
 x+xxxX?x...
 x.s5xM.x..*
 xVSKx..+..j
