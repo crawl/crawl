@@ -2845,17 +2845,3 @@ x'c+cccccc""T"ccccccccc+cccccc'x
 x''''''''''''''''''''''''''''''x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
-# 15 gods
-NAME:   kb_temple_not_superfluous
-PLACE:  Temple
-ORIENT: encompass
-SUBST:  v:xxxvvccXb
-MAP
-vvvvvv
-v{BBBx
-vBBBBx
-vBBBBx
-vBBBBx
-xxxxxx
-ENDMAP
