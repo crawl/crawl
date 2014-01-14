@@ -4241,15 +4241,17 @@ void seen_monster(monster* mons)
         }
     }
 
-    if (!mons->has_ench(ENCH_ABJ)
-        && !mons->has_ench(ENCH_FAKE_ABJURATION)
-        && !testbits(mons->flags, MF_NO_REWARD)
-        && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-        && !crawl_state.game_is_arena()
-        && !mons->props.exists("got_seen_piety"))
+    if (!(mons->flags & MF_TSO_SEEN))
     {
-        if (did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons))
-            mons->props["got_seen_piety"] = true;
+        if (!mons->has_ench(ENCH_ABJ)
+            && !mons->has_ench(ENCH_FAKE_ABJURATION)
+            && !testbits(mons->flags, MF_NO_REWARD)
+            && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
+            && !crawl_state.game_is_arena())
+        {
+            did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons);
+        }
+        mons->flags |= MF_TSO_SEEN;
     }
 
     if (mons_allows_beogh(mons))
