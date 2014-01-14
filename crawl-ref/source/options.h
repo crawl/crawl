@@ -380,6 +380,7 @@ public:
 #ifdef WIZARD
     // Parameters for fight simulations.
     string      fsim_mode;
+    bool        fsim_csv;
     int         fsim_rounds;
     string      fsim_mons;
     vector<string> fsim_scale;
