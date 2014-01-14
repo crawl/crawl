@@ -1324,17 +1324,19 @@ spret_type your_spells(spell_type spell, int powc,
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range, fail))
     {
     case SPRET_SUCCESS:
+    {
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you, beam);
+        actor* victim = actor_at(beam.target);
         if (you_worship(GOD_DITHMENGOS)
             && (flags & SPFLAG_TARGETING_MASK)
-            && (!old_target || actor_at(beam.target)))
+            && (!old_target || (victim && !victim->is_player())))
         {
             dithmengos_shadow_spell(beam.target, spell);
         }
         _spellcasting_side_effects(spell, powc, god);
         return SPRET_SUCCESS;
-
+    }
     case SPRET_FAIL:
     {
         if (antimagic)
