@@ -972,6 +972,12 @@ void wizard_edit_durations(void)
     you.duration[choice] = num;
 }
 
+void wizard_list_props()
+{
+    mprf(MSGCH_DIAGNOSTICS, "props: %s",
+         you.describe_props().c_str());
+}
+
 static void debug_uptick_xl(int newxl, bool train)
 {
     if (train)
