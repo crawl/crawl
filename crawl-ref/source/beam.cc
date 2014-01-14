@@ -4190,7 +4190,8 @@ void bolt::enchantment_affect_monster(monster* mon)
                 hit_woke_orc = true;
             }
         }
-        behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+        if (flavour != BEAM_HIBERNATION || !mon->asleep())
+            behaviour_event(mon, ME_ANNOY, beam_source_as_target());
     }
     else
         behaviour_event(mon, ME_ALERT, beam_source_as_target());
