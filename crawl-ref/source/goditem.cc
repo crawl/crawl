@@ -514,7 +514,6 @@ bool is_illuminating_spell(spell_type spell)
 
     return (disciplines & SPTYP_FIRE)
            || spell == SPELL_CORONA
-           || spell == SPELL_OLGREBS_TOXIC_RADIANCE
            || spell == SPELL_SUNRAY
            || spell == SPELL_HOLY_LIGHT;
 }
