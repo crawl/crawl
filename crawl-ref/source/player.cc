@@ -4240,7 +4240,7 @@ void display_char_status()
         DUR_PHASE_SHIFT,
         DUR_SILENCE,
         DUR_STONESKIN,
-        DUR_INVIS,
+        STATUS_INVISIBLE,
         DUR_CONF,
         STATUS_BEHELD,
         DUR_PARALYSIS,
