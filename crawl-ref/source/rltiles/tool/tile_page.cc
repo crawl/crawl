@@ -154,6 +154,10 @@ bool tile_page::write_image(const char *filename)
                 tile_colour &dest = pixels[(sx+x) + (sy+y)*m_width];
                 tile_colour &src = m_tiles[i]->get_pixel(ofs_x+x, ofs_y+y);
                 dest = src;
+
+                // Clear colour from transparent areas.
+                if (!dest.a)
+                    dest = tile_colour::transparent;
             }
     }
 
