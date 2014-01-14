@@ -62,6 +62,7 @@
 #include "env.h"
 #include "errors.h"
 #include "exercise.h"
+#include "goditem.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
@@ -4732,6 +4733,27 @@ static void _move_player(coord_def move)
         && you.run())
     {
         did_god_conduct(DID_HASTY, 1, true);
+    }
+    else if (!attacking && you_worship(GOD_DITHMENGOS) && one_chance_in(10))
+    {
+        bool illuminating = false, fiery = false;
+        const item_def* item;
+        for (int i = EQ_MIN_ARMOUR; i < NUM_EQUIP; i++)
+        {
+            item = you.slot_item(static_cast<equipment_type>(i));
+            if (!item)
+                continue;
+            if (is_illuminating_item(*item))
+                illuminating = true;
+            else if (is_fiery_item(*item))
+                fiery = true;
+            if (illuminating && fiery)
+                break;
+        }
+        if (illuminating)
+            did_god_conduct(DID_ILLUMINATE, 1, true);
+        else if (fiery)
+            did_god_conduct(DID_FIRE, 1, true);
     }
 }
 

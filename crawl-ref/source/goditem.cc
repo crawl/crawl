@@ -399,6 +399,7 @@ bool is_illuminating_item(const item_def& item)
     if (is_unrandom_artefact(item)
         && (item.special == UNRAND_BRILLIANCE
             || item.special == UNRAND_PLUTONIUM_SWORD
+            || item.special == UNRAND_STARLIGHT
             || item.special == UNRAND_HIGH_COUNCIL))
     {
         return true;
