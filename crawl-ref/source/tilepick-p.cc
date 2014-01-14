@@ -473,6 +473,7 @@ tileidx_t tileidx_player()
         case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
         case TRAN_JELLY:     ch = TILEP_MONS_JELLY;     break;
         case TRAN_FUNGUS:    ch = TILEP_MONS_WANDERING_MUSHROOM; break;
+        case TRAN_SHADOW:    ch = TILEP_MONS_SHADOW;    break;
         case TRAN_DRAGON:
         {
             switch (you.species)
@@ -493,7 +494,6 @@ tileidx_t tileidx_player()
         // no special tile
         case TRAN_BLADE_HANDS: break;
         case TRAN_APPENDAGE:
-        case TRAN_SHADOW:
         case TRAN_NONE:
         default:
             break;
