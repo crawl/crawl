@@ -1203,13 +1203,16 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     else
         pbolt.aux_source.clear();
 
-    if (spell_cast == SPELL_HASTE
-        || spell_cast == SPELL_MIGHT
-        || spell_cast == SPELL_INVISIBILITY
-        || spell_cast == SPELL_MINOR_HEALING
-        || spell_cast == SPELL_TELEPORT_SELF
-        || spell_cast == SPELL_SILENCE
-        || spell_cast == SPELL_FRENZY)
+    // Your shadow can target these spells at other monsters;
+    // other monsters can't.
+    if (mons->mid != MID_PLAYER
+        && (spell_cast == SPELL_HASTE
+            || spell_cast == SPELL_MIGHT
+            || spell_cast == SPELL_INVISIBILITY
+            || spell_cast == SPELL_MINOR_HEALING
+            || spell_cast == SPELL_TELEPORT_SELF
+            || spell_cast == SPELL_SILENCE
+            || spell_cast == SPELL_FRENZY))
     {
         pbolt.target = mons->pos();
     }
