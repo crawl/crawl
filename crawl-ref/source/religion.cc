@@ -3957,7 +3957,7 @@ bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
             return true;
         break;
     case GOD_DITHMENGOS:
-        if (is_illuminating_spell(spell))
+        if (is_illuminating_spell(spell) || is_fiery_spell(spell))
             return true;
         break;
     default:

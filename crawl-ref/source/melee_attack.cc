@@ -2239,11 +2239,10 @@ void melee_attack::player_weapon_upsets_god()
         {
             did_god_conduct(DID_HASTY, 1);
         }
-        if (get_weapon_brand(*weapon) == SPWPN_FLAMING
-            || get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH)
-        {
+        if (get_weapon_brand(*weapon) == SPWPN_FLAMING)
+            did_god_conduct(DID_FIRE, 1);
+        else if (get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH)
             did_god_conduct(DID_ILLUMINATE, 1);
-        }
     }
 }
 

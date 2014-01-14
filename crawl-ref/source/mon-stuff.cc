@@ -2036,6 +2036,11 @@ int monster_die(monster* mons, killer_type killer,
                     did_god_conduct(DID_KILL_ILLUMINATING, mons->hit_dice,
                                     true, mons);
                 }
+                else if (mons_is_fiery(mons))
+                {
+                    did_god_conduct(DID_KILL_FIERY, mons->hit_dice,
+                                    true, mons);
+                }
             }
 
             // Divine health and mana restoration doesn't happen when

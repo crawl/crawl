@@ -996,7 +996,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 if (!known)
                 {
                     simple_god_message(" forgives your accidental act of "
-                                       " illumination, just this once.");
+                                       "illumination, just this once.");
                     break;
                 }
                 simple_god_message(" does not appreciate your illumination!");
@@ -1013,6 +1013,34 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" appreciates your extinguishing a source "
                                    "of illumination.");
+                retval = true;
+                piety_denom = level + 10;
+                piety_change = piety_denom - 6;
+            }
+            break;
+
+        case DID_FIRE:
+            if (you_worship(GOD_DITHMENGOS))
+            {
+                if (!known)
+                {
+                    simple_god_message(" forgives your accidental "
+                                       "fire-starting, just this once.");
+                    break;
+                }
+                simple_god_message(" does not appreciate your starting fires!");
+                piety_change = -level;
+                if (level > 5)
+                    penance = level - 5;
+                retval = true;
+            }
+            break;
+
+        case DID_KILL_FIERY:
+            if (you_worship(GOD_DITHMENGOS)
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" appreciates your putting out a fire.");
                 retval = true;
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;

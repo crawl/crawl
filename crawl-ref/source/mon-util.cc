@@ -707,6 +707,11 @@ bool mons_is_illuminating(const monster* mon)
     return false;
 }
 
+bool mons_is_fiery(const monster* mon)
+{
+    return mon->has_spell_of_type(SPTYP_FIRE);
+}
+
 bool mons_is_projectile(monster_type mc)
 {
     return mc == MONS_ORB_OF_DESTRUCTION;

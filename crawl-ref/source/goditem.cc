@@ -393,21 +393,6 @@ bool is_poisoned_item(const item_def& item)
     return false;
 }
 
-static bool _is_potentially_illuminating_item(const item_def& item)
-{
-    switch (item.base_type)
-    {
-    case OBJ_WANDS:
-        if (item.sub_type == WAND_RANDOM_EFFECTS)
-            return true;
-        break;
-    default:
-        break;
-    }
-
-    return false;
-}
-
 bool is_illuminating_item(const item_def& item)
 {
     // No halo for you! Also no glowy unrands.
@@ -424,12 +409,58 @@ bool is_illuminating_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_FLAMING
-            || item_brand == SPWPN_FLAME
-            || item_brand == SPWPN_HOLY_WRATH) // divine radiance!
+        if (item_brand == SPWPN_HOLY_WRATH) // divine radiance!
         {
             return true;
         }
+        }
+        break;
+    case OBJ_MISSILES:
+        {
+        const int item_brand = get_ammo_brand(item);
+        if (item_brand == SPMSL_FLAME)
+            return true;
+        }
+        break;
+    case OBJ_BOOKS:
+    case OBJ_RODS:
+        return _is_bookrod_type(item, is_illuminating_spell);
+        break;
+    default:
+        break;
+    }
+
+    return false;
+}
+
+static bool _is_potentially_fiery_item(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WANDS:
+        if (item.sub_type == WAND_RANDOM_EFFECTS)
+            return true;
+        break;
+    default:
+        break;
+    }
+
+    return false;
+}
+
+bool is_fiery_item(const item_def& item)
+{
+    // Flaming Death is handled through its fire brand.
+    if (is_unrandom_artefact(item) && item.special == UNRAND_HELLFIRE)
+        return true;
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        {
+        const int item_brand = get_weapon_brand(item);
+        if (item_brand == SPWPN_FLAMING || item_brand == SPWPN_FLAME)
+            return true;
         }
         break;
     case OBJ_MISSILES:
@@ -453,7 +484,7 @@ bool is_illuminating_item(const item_def& item)
         break;
     case OBJ_BOOKS:
     case OBJ_RODS:
-        return _is_bookrod_type(item, is_illuminating_spell);
+        return _is_bookrod_type(item, is_fiery_spell);
         break;
     case OBJ_MISCELLANY:
         if (item.sub_type == MISC_LAMP_OF_FIRE)
@@ -510,12 +541,16 @@ bool is_hasty_spell(spell_type spell)
 
 bool is_illuminating_spell(spell_type spell)
 {
-    unsigned int disciplines = get_spell_disciplines(spell);
-
-    return (disciplines & SPTYP_FIRE)
-           || spell == SPELL_CORONA
+    return spell == SPELL_CORONA
            || spell == SPELL_SUNRAY
            || spell == SPELL_HOLY_LIGHT;
+}
+
+bool is_fiery_spell(spell_type spell)
+{
+    unsigned int disciplines = get_spell_disciplines(spell);
+
+    return (disciplines & SPTYP_FIRE);
 }
 
 static bool _your_god_hates_spell(spell_type spell)
@@ -597,12 +632,16 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_DITHMENGOS:
-        if (item_type_known(item)
-            && (_is_potentially_illuminating_item(item)
-                || is_illuminating_item(item)))
-        {
+        if (item_type_known(item) && is_illuminating_item(item))
             return DID_ILLUMINATE;
+
+        if (item_type_known(item)
+            && (_is_potentially_fiery_item(item)
+                || is_fiery_item(item)))
+        {
+            return DID_FIRE;
         }
+        break;
 
     default:
         break;

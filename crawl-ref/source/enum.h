@@ -1027,6 +1027,8 @@ enum conduct_type
     DID_SEE_MONSTER,                      // TSO
     DID_ILLUMINATE,                       // Dithmengos
     DID_KILL_ILLUMINATING,                // Dithmengos
+    DID_FIRE,                             // Dithmengos
+    DID_KILL_FIERY,                       // Dithmengos
 
     NUM_CONDUCTS
 };
