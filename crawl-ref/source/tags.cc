@@ -1101,7 +1101,10 @@ static void _shunt_monsters_out_of_walls()
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monster &m(menv[i]);
-        if (m.alive() && in_bounds(m.pos()) && cell_is_solid(m.pos()))
+        if (m.alive() && in_bounds(m.pos()) && cell_is_solid(m.pos())
+            && (grd(m.pos()) != DNGN_MALIGN_GATEWAY
+                || mons_genus(m.type) != MONS_ELDRITCH_TENTACLE))
+        {
             for (distance_iterator di(m.pos()); di; ++di)
                 if (!actor_at(*di) && !cell_is_solid(*di))
                 {
@@ -1118,6 +1121,7 @@ static void _shunt_monsters_out_of_walls()
                     env.mgrid(*di) = i;
                     break;
                 }
+        }
     }
 }
 
