@@ -662,11 +662,13 @@ void bolt::apply_beam_conducts()
         {
         case BEAM_HELLFIRE:
             did_god_conduct(DID_UNHOLY, 2 + random2(3), god_cares());
-            did_god_conduct(DID_ILLUMINATE, 6 + random2(7), god_cares());
+            did_god_conduct(DID_FIRE, 6 + random2(7), god_cares());
             break;
         case BEAM_FIRE:
         case BEAM_HOLY_FLAME:
         case BEAM_NAPALM:
+            did_god_conduct(DID_FIRE, 2 + random2(3), god_cares());
+            break;
         case BEAM_CORONA:
         case BEAM_LIGHT:
         case BEAM_HOLY_LIGHT:
