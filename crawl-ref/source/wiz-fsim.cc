@@ -212,7 +212,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
 
         if (abort)
         {
-            error = "Cannot weild weapon";
+            error = "Cannot wield weapon";
             return false;
         }
     }
