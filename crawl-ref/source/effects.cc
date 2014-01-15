@@ -848,6 +848,11 @@ static void _set_friendly_foes(bool allow_patrol = false)
     {
         if (!_follows_orders(*mi))
             continue;
+        if (you.pet_target != MHITNOT && mi->behaviour == BEH_WITHDRAW)
+        {
+            mi->behaviour = BEH_SEEK;
+            mi->patrol_point = coord_def(0, 0);
+        }
         mi->foe = (allow_patrol && mi->is_patrolling() ? MHITNOT
                                                          : you.pet_target);
     }
