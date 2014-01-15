@@ -3063,7 +3063,9 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 
     int rate = 4 + rod.special;
 
-    rate *= 10 * aut + skill_bump(SK_EVOCATIONS, aut);
+    rate *= 10 * aut;
+    if (in_inv)
+        rate += skill_bump(SK_EVOCATIONS, aut);
     rate = div_rand_round(rate, 100);
 
     if (rate > rod.plus2 - rod.plus) // Prevent overflow
