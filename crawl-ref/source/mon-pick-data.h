@@ -838,7 +838,6 @@ static const pop_entry pop_forest[] =
   {  1,  7,   85, PEAK, MONS_APIS },
   {  2,  8,  200, SEMI, MONS_ANCIENT_BEAR },
   {  2,  7,  165, SEMI, MONS_TREANT },
-  {  2,  5,  110, FLAT, MONS_SPIRIT_WOLF },
   {  1,  6,   80, SEMI, MONS_IRON_TROLL },
   {  1,  6,   85, SEMI, MONS_ANACONDA },
   {  1,  9,  100, PEAK, MONS_THORN_HUNTER },

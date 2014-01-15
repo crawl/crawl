@@ -2994,32 +2994,6 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
 
-    if (you.duration[DUR_SPIRIT_HOWL])
-    {
-        if (you.props.exists("next_spirit_pack")
-            && you.elapsed_time >= you.props["next_spirit_pack"].get_int()
-            && you.duration[DUR_SPIRIT_HOWL] > 185)
-        {
-            int num = spawn_spirit_pack(&you);
-            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 35
-                                                      + random2(60)
-                                                      + (num * num) * 7;
-
-            // If we somehow couldn't spawn any, wait longer than normal
-            // (probably the player is in some place where spawning more isn't
-            // possibly, so let's waste lest time trying)
-            if (num == 0)
-                you.props["next_spirit_pack"].get_int() += 100;
-        }
-        if (_decrement_a_duration(DUR_SPIRIT_HOWL, delay))
-        {
-            mprf(MSGCH_DURATION, "The howling abruptly ceases.");
-            add_daction(DACT_END_SPIRIT_HOWL);
-            you.props["spirit_howl_cooldown"].get_int() =
-                you.elapsed_time + random_range(1500, 3000);
-        }
-    }
-
     if (you.duration[DUR_TOXIC_RADIANCE])
     {
         int ticks = (you.duration[DUR_TOXIC_RADIANCE] / 10)

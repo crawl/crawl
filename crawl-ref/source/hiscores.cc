@@ -1562,7 +1562,6 @@ void scorefile_entry::init(time_t dt)
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
         DUR_ANTIMAGIC,
-        DUR_SPIRIT_HOWL,
         DUR_FLAYED,
         DUR_WATER_HOLD,
         STATUS_DRAINED,

@@ -4274,7 +4274,6 @@ void display_char_status()
         DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
-        DUR_SPIRIT_HOWL,
         DUR_INFUSION,
         DUR_SONG_OF_SLAYING,
         STATUS_DRAINED,

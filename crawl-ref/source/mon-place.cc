@@ -2573,11 +2573,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
-    case MONS_SPIRIT_WOLF:
-        band = BAND_SPIRIT_WOLVES;
-        band_size = random_range(0, 2);
-        break;
-
     case MONS_VAMPIRE_KNIGHT:
         if (one_chance_in(4))
         {
@@ -2987,9 +2982,6 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_SPRIGGAN_RIDERS:
         return MONS_SPRIGGAN_RIDER;
-
-    case BAND_SPIRIT_WOLVES:
-        return MONS_SPIRIT_WOLF;
 
     case BAND_PHANTASMAL_WARRIORS:
         return MONS_PHANTASMAL_WARRIOR;
