@@ -902,6 +902,7 @@ ccJ.1.Jcc
   cc+cc
 ENDMAP
 
+default-depth: Depths:2-, !Depths:$
 ###############################################################################
 #  This vault excercises varied old ideas for the Vaults branch:
 #  a primarily humanoid-based monster set, a focus on placing groups,
