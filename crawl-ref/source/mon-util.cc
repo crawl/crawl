@@ -713,6 +713,7 @@ bool mons_is_fiery(const monster* mon)
     // abilities.
     if (mons_genus(mon->type) == MONS_FIRE_DRAGON
         || mon->type == MONS_BURNING_BUSH
+        || mon->type == MONS_PHOENIX
         || (mons_genus(mon->type) == MONS_DRACONIAN
             && draco_subspecies(mon) == MONS_RED_DRACONIAN)
         || mon->type == MONS_HELL_HOUND
