@@ -3214,6 +3214,32 @@ static void _update_mold()
     }
 }
 
+// For worn items; weapons do this on melee attacks.
+static void _check_equipment_conducts()
+{
+    if (you_worship(GOD_DITHMENGOS) && one_chance_in(10))
+    {
+        bool illuminating = false, fiery = false;
+        const item_def* item;
+        for (int i = EQ_MIN_ARMOUR; i < NUM_EQUIP; i++)
+        {
+            item = you.slot_item(static_cast<equipment_type>(i));
+            if (!item)
+                continue;
+            if (is_illuminating_item(*item))
+                illuminating = true;
+            else if (is_fiery_item(*item))
+                fiery = true;
+            if (illuminating && fiery)
+                break;
+        }
+        if (illuminating)
+            did_god_conduct(DID_ILLUMINATE, 1, true);
+        else if (fiery)
+            did_god_conduct(DID_FIRE, 1, true);
+    }
+}
+
 static void _player_reacts()
 {
     search_around();
@@ -3233,6 +3259,8 @@ static void _player_reacts()
 
     if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
+
+    _check_equipment_conducts();
 
     if (you.unrand_reacts != 0)
         unrand_reacts();
@@ -4733,27 +4761,6 @@ static void _move_player(coord_def move)
         && you.run())
     {
         did_god_conduct(DID_HASTY, 1, true);
-    }
-    else if (!attacking && you_worship(GOD_DITHMENGOS) && one_chance_in(10))
-    {
-        bool illuminating = false, fiery = false;
-        const item_def* item;
-        for (int i = EQ_MIN_ARMOUR; i < NUM_EQUIP; i++)
-        {
-            item = you.slot_item(static_cast<equipment_type>(i));
-            if (!item)
-                continue;
-            if (is_illuminating_item(*item))
-                illuminating = true;
-            else if (is_fiery_item(*item))
-                fiery = true;
-            if (illuminating && fiery)
-                break;
-        }
-        if (illuminating)
-            did_god_conduct(DID_ILLUMINATE, 1, true);
-        else if (fiery)
-            did_god_conduct(DID_FIRE, 1, true);
     }
 }
 
