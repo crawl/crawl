@@ -264,12 +264,6 @@ static bool _evoke_horn_of_geryon(item_def &item)
     {
         mpr("You produce a weird and mournful sound.");
 
-        if (you.char_direction == GDT_ASCENDING)
-        {
-            mpr("But nothing happens...");
-            return false;
-        }
-
         for (int count_x = 0; count_x < GXM; count_x++)
             for (int count_y = 0; count_y < GYM; count_y++)
             {
