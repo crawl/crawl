@@ -260,56 +260,11 @@ static bool _evoke_horn_of_geryon(item_def &item)
         mpr("You can't produce a sound!");
         return false;
     }
-    else if (player_in_branch(BRANCH_VESTIBULE))
-    {
-        mpr("You produce a weird and mournful sound.");
 
-        for (int count_x = 0; count_x < GXM; count_x++)
-            for (int count_y = 0; count_y < GYM; count_y++)
-            {
-                if (grd[count_x][count_y] == DNGN_STONE_ARCH)
-                {
-                    rc = true;
-
-                    map_marker *marker =
-                        env.markers.find(coord_def(count_x, count_y),
-                                         MAT_FEATURE);
-
-                    if (marker)
-                    {
-                        map_feature_marker *featm =
-                            dynamic_cast<map_feature_marker*>(marker);
-                        // [ds] Ensure we're activating the correct feature
-                        // markers. Feature markers are also used for other
-                        // things, notably to indicate the return point from
-                        // a labyrinth or portal vault.
-                        switch (featm->feat)
-                        {
-                        case DNGN_ENTER_COCYTUS:
-                        case DNGN_ENTER_DIS:
-                        case DNGN_ENTER_GEHENNA:
-                        case DNGN_ENTER_TARTARUS:
-                            grd[count_x][count_y] = featm->feat;
-                            env.markers.remove(marker);
-                            item.plus2++;
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                }
-            }
-
-        if (rc)
-            mpr("Your way has been unbarred.");
-    }
-    else
-    {
-        mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
-        create_monster(
-            mgen_data::hostile_at(MONS_HELL_BEAST, "the horn of Geryon",
-                true, 4, 0, you.pos()));
-    }
+    mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
+    create_monster(
+        mgen_data::hostile_at(MONS_HELL_BEAST, "the horn of Geryon",
+            true, 4, 0, you.pos()));
     return rc;
 }
 
