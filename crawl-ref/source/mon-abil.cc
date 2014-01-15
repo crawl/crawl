@@ -4213,36 +4213,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     }
     break;
 
-    case MONS_SPIRIT_WOLF:
-    {
-        if (!you.duration[DUR_SPIRIT_HOWL] && !mons->is_summoned() && !mons->wont_attack()
-            && (one_chance_in(35)
-                || (mons->hit_points < mons->max_hit_points / 3 && one_chance_in(7))))
-        {
-            // Take a little breather between howl effects
-            if (you.props.exists("spirit_howl_cooldown")
-                && you.props["spirit_howl_cooldown"].get_int() > you.elapsed_time)
-            {
-                break;
-            }
-
-            // Set total number of wolves in the pack, if we haven't already
-            if (!you.props.exists("spirit_wolf_total"))
-                you.props["spirit_wolf_total"].get_int() = random_range(12, 20);
-
-            // Too few wolves to bother summoning
-            if (you.props["spirit_wolf_total"].get_int() < 3)
-                break;
-
-            simple_monster_message(mons, " howls for its pack!", MSGCH_MONSTER_SPELL);
-            you.duration[DUR_SPIRIT_HOWL] = 450 + random2(350);
-            spawn_spirit_pack(&you);
-            you.props["next_spirit_pack"].get_int() = you.elapsed_time + 40 + random2(85);
-            used = true;
-        }
-    }
-    break;
-
     case MONS_WATER_NYMPH:
     {
         if (one_chance_in(5))
@@ -4875,50 +4845,6 @@ void starcursed_merge(monster* mon, bool forced)
             }
         }
     }
-}
-
-int spawn_spirit_pack(const actor* target)
-{
-    for (int t = 0; t < 100; ++t)
-    {
-        coord_def area = clamp_in_bounds(target->pos() + coord_def(random_range(-15, 15),
-                                                                   random_range(-15, 15)));
-        if (cell_see_cell(target->pos(), area, LOS_DEFAULT))
-            continue;
-
-        coord_def base_spot;
-        int tries = 0;
-        while (tries < 10 && base_spot.origin())
-        {
-            find_habitable_spot_near(area, MONS_SPIRIT_WOLF, 6, false, base_spot);
-            if (cell_see_cell(target->pos(), base_spot, LOS_DEFAULT))
-                base_spot.reset();
-            ++tries;
-        }
-        if (base_spot.origin())
-            continue;
-
-        int wolves = min(1 + random2(3), you.props["spirit_wolf_total"].get_int());
-        int created = 0;
-        for (int i = 0; i < wolves; ++i)
-        {
-            if (monster *mons = create_monster(
-                                  mgen_data(MONS_SPIRIT_WOLF, BEH_HOSTILE, NULL,
-                                            0, SPELL_NO_SPELL, base_spot,
-                                            target->mindex(), MG_FORCE_BEH)))
-            {
-                mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target, INFINITE_DURATION));
-                mons->props["howl_called"].get_bool() = true;
-                mons->behaviour = BEH_SEEK;
-                ++created;
-                you.props["spirit_wolf_total"].get_int()--;
-            }
-        }
-
-        return created;
-    }
-
-    return 0;
 }
 
 void waterport_touch(monster* nymph, actor* target)

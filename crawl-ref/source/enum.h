@@ -1583,7 +1583,9 @@ enum duration_type
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
+#if TAG_MAJOR_VERSION == 34
     DUR_SPIRIT_HOWL,
+#endif
     DUR_INFUSION,
     DUR_SONG_OF_SLAYING,
 #if TAG_MAJOR_VERSION == 34
@@ -2802,7 +2804,9 @@ enum monster_type                      // menv[].type
     MONS_SNAPLASHER_VINE_SEGMENT,
     MONS_THORN_HUNTER,
     MONS_BRIAR_PATCH,
+#if TAG_MAJOR_VERSION == 34
     MONS_SPIRIT_WOLF,
+#endif
     MONS_ANCIENT_BEAR,
     MONS_WATER_NYMPH,
     MONS_TREANT,
@@ -3926,7 +3930,9 @@ enum daction_type
     DACT_SLIME_NEW_ATTEMPT,
 #endif
     DACT_KIRKE_HOGS,
+#if TAG_MAJOR_VERSION == 34
     DACT_END_SPIRIT_HOWL,
+#endif
     NUM_DACTIONS,
 };
 

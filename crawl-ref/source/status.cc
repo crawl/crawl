@@ -145,8 +145,6 @@ static duration_def duration_data[] =
       RED, "Weak", "weakened", "Your attacks are enfeebled." },
     { DUR_DIMENSION_ANCHOR, false,
       RED, "-Tele", "cannot translocate", "You are firmly anchored to this plane." },
-    { DUR_SPIRIT_HOWL, false,
-      MAGENTA, "Howl", "spirit howling", "The howling of a spirit pack pursues you." },
     { DUR_TOXIC_RADIANCE, false,
       MAGENTA, "Toxic", "radiating poison", "You are radiating toxic energy."},
     { DUR_RECITE, false,

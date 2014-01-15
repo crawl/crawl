@@ -840,7 +840,9 @@ static const char* dur_names[] =
     "weak",
     "dimension anchor",
     "antimagic",
+#if TAG_MAJOR_VERSION == 34
     "spirit howl",
+#endif
     "infused",
     "song of slaying",
 #if TAG_MAJOR_VERSION == 34

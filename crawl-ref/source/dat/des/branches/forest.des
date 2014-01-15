@@ -1041,7 +1041,7 @@ DEPTH:  Forest
 ORIENT: north
 TAGS:   no_monster_gen no_pool_fixup no_rotate patrolling
 SUBST:  R = tx, G = N L S:5, A = ML, E = tE
-MONS:   apis, dire elephant / spirit wolf, dryad / treant
+MONS:   apis, dire elephant, dryad / treant
 MONS:   thorn hunter / spriggan defender / ancient bear
 KMONS:  M = water elemental
 KMONS:  L = thorn lotus
@@ -1296,7 +1296,7 @@ MONS:   the Enchantress band
 MONS:   spriggan defender / thorn hunter
 MONS:   spriggan air mage / spriggan druid / spriggan enchanter / \
         dryad w:5 / dire elephant w:5 / thorn hunter w:2 / treant w:1 / \
-        spirit wolf w:1 / ancient bear w:1
+        ancient bear w:1
 KFEAT:  _ = altar_vehumet
 KFEAT:  - = floor
 SUBST:  T = tx
@@ -1341,7 +1341,7 @@ SUBVAULT: O : gammafunk_forest_water_palace_pool
 SUBVAULT: P : gammafunk_forest_water_palace_pool
 MONS:     nothing w:30 / spriggan / spriggan rider / spriggan assassin
 MONS:     w:30 faun / satyr, spriggan berserker / spriggan enchanter
-KMONS:    4 = w:20 spirit wolf / ancient bear
+KMONS:    4 = ancient bear
 KMONS:    5 = spriggan defender
 KMONS:    6 = thorn hunter
 KMONS:    A = water elemental
@@ -1399,7 +1399,7 @@ ENDMAP
 NAME: gammafunk_forest_column
 TAGS: gammafunk_forest_water_palace_column unrand no_rotate no_flip no_vmirror \
       allow_dup patrolling no_monster_gen
-KMONS:  4 = w:20 spirit wolf / ancient bear
+KMONS:  4 = ancient bear
 COLOUR: c = white
 FTILE:  G4. = floor_pebble_cyan
 MAP

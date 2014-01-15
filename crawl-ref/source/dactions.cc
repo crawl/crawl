@@ -56,7 +56,9 @@ static const char *daction_names[] =
     "slimes allow another conversion attempt",
 #endif
     "hogs to humans",
+#if TAG_MAJOR_VERSION == 34
     "end spirit howl",
+#endif
 };
 #endif
 
@@ -119,10 +121,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                // *or* another monster that got porkalated
                && (mon->props.exists("kirke_band")
                    || mon->props.exists(ORIG_MONSTER_KEY));
-
-    case DACT_END_SPIRIT_HOWL:
-        return mon->type == MONS_SPIRIT_WOLF
-               && mon->props.exists("howl_called");
 
     default:
         return false;
@@ -229,15 +227,6 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             _daction_hog_to_human(mon, in_transit);
             break;
 
-        case DACT_END_SPIRIT_HOWL:
-            if (!you.can_see(mon))
-            {
-                // This wolf is available to be called again later
-                you.props["spirit_wolf_total"].get_int()++;
-                monster_die(mon, KILL_RESET, NON_MONSTER);
-            }
-            break;
-
         // The other dactions do not affect monsters directly.
         default:
             break;
@@ -266,7 +255,6 @@ static void _apply_daction(daction_type act)
     case DACT_HOLY_PETS_GO_NEUTRAL:
     case DACT_PIKEL_SLAVES:
     case DACT_KIRKE_HOGS:
-    case DACT_END_SPIRIT_HOWL:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))
@@ -296,6 +284,9 @@ static void _apply_daction(daction_type act)
         if (player_in_branch(BRANCH_TOMB))
             unset_level_flags(LFLAG_NO_TELE_CONTROL, you.depth != 3);
         break;
+#if TAG_MAJOR_VERSION == 34
+    case DACT_END_SPIRIT_HOWL:
+#endif
     case NUM_DA_COUNTERS:
     case NUM_DACTIONS:
         ;

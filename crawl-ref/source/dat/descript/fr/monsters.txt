@@ -2590,15 +2590,6 @@ spiny worm
 Un énorme ver noir, son corps segmenté est couvert de plaques hérissées de
 pointes d'une armure chitineuse. Du venin acide coule de sa machoire dentée.
 %%%%
-spirit wolf
-
-Une pâle apparition ressemblant a un loup bordé de lumière éthérée. C'est le
-rusé chasseur d'une meute, courant librement avec sa parenté entre les royaumes
-de l’éveille et du rêve. Le son de son hurlement est un présage, il annonce le
-début d'une chasse sauvage — un cri répondu par un autre et un autre jusqu'à ce
-que les voix indépendantes ne se compte plus et semblent remplir l'air dans
-toutes les directions.
-%%%%
 spriggan
 
 Un petit humanoïde, ressemblant à un humain ou un elfe en dehors de sa taille.
