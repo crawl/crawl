@@ -924,29 +924,6 @@ static void _place_player_on_stair(branch_type old_branch,
     you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first));
 }
 
-static void _close_level_gates()
-{
-    for (rectangle_iterator ri(0); ri; ++ri)
-    {
-        switch (grd(*ri))
-        {
-        case DNGN_ENTER_ABYSS:
-        case DNGN_ENTER_COCYTUS:
-        case DNGN_ENTER_DIS:
-        case DNGN_ENTER_GEHENNA:
-        case DNGN_ENTER_TARTARUS:
-        case DNGN_ENTER_PANDEMONIUM:
-        case DNGN_ENTER_LABYRINTH:
-#if TAG_MAJOR_VERSION == 34
-        case DNGN_ENTER_PORTAL_VAULT:
-#endif
-            remove_markers_and_listeners_at(*ri);
-            grd(*ri) = DNGN_STONE_ARCH;
-        default: ;
-        }
-    }
-}
-
 static void _clear_env_map()
 {
     env.map_knowledge.init(map_cell());
@@ -1325,11 +1302,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
     env.final_effects.clear();
     los_changed();
-
-    // Closes all the gates if you're on the way out.
-    // Before marker activation since it removes some.
-    if (make_changes && you.char_direction == GDT_ASCENDING)
-        _close_level_gates();
 
     // Markers must be activated early, since they may rely on
     // events issued later, e.g. DET_ENTERING_LEVEL or
