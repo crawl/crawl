@@ -1218,6 +1218,12 @@ static monster_type _yred_servants[] =
 #define MIN_YRED_SERVANT_THRESHOLD 3
 #define MAX_YRED_SERVANT_THRESHOLD ARRAYSZ(_yred_servants)
 
+static bool _yred_high_level_servant(monster_type type)
+{
+    return (type == MONS_BONE_DRAGON
+            || type == MONS_PROFANE_SERVITOR);
+}
+
 int yred_random_servants(unsigned int threshold, bool force_hostile)
 {
     if (threshold == 0)
@@ -1229,10 +1235,31 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     }
 
     const unsigned int servant = random2(threshold);
+
+    // Skip some of the weakest servants, once the threshold is high.
     if ((servant + 2) * 2 < threshold && !force_hostile)
         return -1;
 
     monster_type mon_type = _yred_servants[servant];
+
+    // Cap some of the strongest servants.
+    if (!force_hostile && _yred_high_level_servant(mon_type))
+    {
+        int current_high_level = 0;
+        for (map<mid_t, companion>::iterator i = companion_list.begin();
+             i != companion_list.end(); ++i)
+        {
+            monster* mons = monster_by_mid(i->first);
+            if (!mons)
+                mons = &i->second.mons.mons;
+            if (_yred_high_level_servant(mons->type))
+                current_high_level++;
+        }
+
+        if (current_high_level >= 3)
+            return -1;
+    }
+
     int how_many = (mon_type == MONS_FLYING_SKULL) ? 2 + random2(4)
                                                    : 1;
 
