@@ -202,7 +202,9 @@ bool melee_attack::handle_phase_attempted()
     if (defender && (!adjacent(attack_position, defender->pos())
                      && !jumping_attack && !can_reach())
         || attk_type == AT_SHOOT
-        || attk_type == AT_CONSTRICT && !attacker->can_constrict(defender))
+        || attk_type == AT_CONSTRICT
+           && (!attacker->can_constrict(defender)
+               || attacker->is_monster() && attacker->mid == MID_PLAYER))
     {
         --effective_attack_number;
 
@@ -1816,6 +1818,10 @@ int melee_attack::player_apply_final_multipliers(int damage)
     if (you.form == TRAN_STATUE)
         damage = div_rand_round(damage * 3, 2);
 
+    // Can't affect much of anything as a shadow.
+    if (you.form == TRAN_SHADOW)
+        damage = div_rand_round(damage, 2);
+
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);
 
@@ -2121,6 +2127,7 @@ void melee_attack::set_attack_verb()
         case TRAN_APPENDAGE:
         case TRAN_FUNGUS:
         case TRAN_ICE_BEAST:
+        case TRAN_SHADOW:
         case TRAN_JELLY: // ?
             if (you.damage_type() == DVORP_CLAWING)
             {
@@ -2232,6 +2239,10 @@ void melee_attack::player_weapon_upsets_god()
         {
             did_god_conduct(DID_HASTY, 1);
         }
+        if (get_weapon_brand(*weapon) == SPWPN_FLAMING)
+            did_god_conduct(DID_FIRE, 1);
+        else if (get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH)
+            did_god_conduct(DID_ILLUMINATE, 1);
     }
 }
 
@@ -3874,6 +3885,7 @@ int melee_attack::calc_to_hit(bool random)
             case TRAN_PIG:
             case TRAN_APPENDAGE:
             case TRAN_JELLY:
+            case TRAN_SHADOW:
             case TRAN_NONE:
                 break;
             }
@@ -5559,6 +5571,7 @@ int melee_attack::calc_base_unarmed_damage()
         case TRAN_PIG:
         case TRAN_PORCUPINE:
         case TRAN_JELLY:
+        case TRAN_SHADOW:
             break;
         case TRAN_NONE:
         case TRAN_APPENDAGE:

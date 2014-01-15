@@ -881,7 +881,9 @@ aff_type targetter_spray::is_affected(coord_def loc)
     return affected;
 }
 
-targetter_jump::targetter_jump(const actor* act, int range)
+targetter_jump::targetter_jump(const actor* act, int range, bool cp,
+                               bool imm) :
+    clear_path(cp), immobile(imm)
 {
     ASSERT(act);
     agent = act;
@@ -896,7 +898,7 @@ bool targetter_jump::valid_aim(coord_def a)
     ray_def ray;
 
     if (origin == a)
-        return notify_fail("You cannot jump-attack yourself.");
+        return notify_fail("You cannot target yourself.");
     else if ((origin - a).abs() > range2)
         return notify_fail("Out of range.");
     else if (!cell_see_cell(origin, a, LOS_NO_TRANS))
@@ -920,10 +922,14 @@ bool targetter_jump::valid_aim(coord_def a)
             return notify_fail("A giant creature is in the way.");
         case BLOCKED_MOVE:
         case BLOCKED_OCCUPIED:
-            return notify_fail("There is no safe place to jump near that"
+            return notify_fail("There is no safe place near that"
                                " location.");
         case BLOCKED_PATH:
             return notify_fail("There's something in the way.");
+        case BLOCKED_NO_TARGET:
+            return notify_fail("There isn't a shadow there.");
+        case BLOCKED_MOBILE:
+            return notify_fail("That shadow isn't sufficiently still.");
         case BLOCKED_NONE:
             die("buggy no_landing_reason");
         }
@@ -963,6 +969,7 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
         blocked_landing_reason = BLOCKED_PATH;
         return false;
     }
+
     // Check if a landing site is invalid due to a visible monster obstructing
     // the path.
     ray.advance();
@@ -979,7 +986,7 @@ bool targetter_jump::valid_landing(coord_def a, bool check_invis)
             break;
         }
         const dungeon_feature_type grid = grd(ray.pos());
-        if (act && (!check_invis || agent->can_see(act)))
+        if (clear_path && act && (!check_invis || agent->can_see(act)))
         {
             // Can't jump over airborn enemies nor giant enemies not in deep
             // water or lava.
@@ -1056,6 +1063,25 @@ void targetter_jump::get_additional_sites(coord_def a)
 {
     bool agent_adjacent = a.distance_from(agent->pos()) == 1;
     temp_sites.clear();
+
+    if (immobile)
+    {
+        const actor *victim = actor_at(a);
+        if (!victim
+            || victim->invisible()
+            || victim->mons_species() == MONS_VAMPIRE)
+        {
+            no_landing_reason = BLOCKED_NO_TARGET;
+            return;
+        }
+        if (!victim->is_stationary()
+            && !victim->cannot_move()
+            && !victim->asleep())
+        {
+            no_landing_reason = BLOCKED_MOBILE;
+            return;
+        }
+    }
 
     no_landing_reason = BLOCKED_NONE;
     for (adjacent_iterator ai(a, false); ai; ++ai)

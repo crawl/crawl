@@ -197,12 +197,15 @@ enum jump_block_reason
     BLOCKED_GIANT,
     BLOCKED_MOVE,
     BLOCKED_PATH,
+    BLOCKED_NO_TARGET,
+    BLOCKED_MOBILE,
 };
 
 class targetter_jump : public targetter
 {
 public:
-    targetter_jump(const actor* act, int range);
+    targetter_jump(const actor* act, int range, bool clear_path = true,
+                   bool immobile = false);
 
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
@@ -219,6 +222,8 @@ private:
     jump_block_reason blocked_landing_reason;
     set<coord_def> temp_sites;
     int range2;
+    bool clear_path;
+    bool immobile;
 };
 
 #endif

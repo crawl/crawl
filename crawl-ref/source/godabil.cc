@@ -19,6 +19,7 @@
 #include "dactions.h"
 #include "effects.h"
 #include "env.h"
+#include "fight.h"
 #include "files.h"
 #include "food.h"
 #include "fprop.h"
@@ -34,6 +35,7 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"
@@ -57,6 +59,8 @@
 #include "stuff.h"
 #include "target.h"
 #include "terrain.h"
+#include "throw.h"
+#include "traps.h"
 #include "unwind.h"
 #include "view.h"
 #include "viewgeom.h"
@@ -3406,4 +3410,272 @@ void spare_beogh_convert()
         mpr("With a roar of approval, the orcs welcome you as one of their own,"
             " and spare your life.");
     }
+}
+
+bool dithmengos_shadow_step()
+{
+    // You can shadow-step anywhere within your umbra.
+    ASSERT(you.umbra_radius2() > -1);
+    const int range = isqrt_ceil(you.umbra_radius2());
+
+    targetter_jump tgt(&you, range, false, true);
+    direction_chooser_args args;
+    args.hitfunc = &tgt;
+    args.restricts = DIR_JUMP;
+    args.mode = TARG_HOSTILE;
+    args.range = range;
+    args.just_looking = false;
+    args.needs_path = false;
+    args.top_prompt = "Aiming: <white>Shadow Step</white>";
+    dist sdirect;
+    direction(sdirect, args);
+    if (!sdirect.isValid || tgt.landing_site.origin())
+        return false;
+
+    // Check for hazards.
+    bool zot_trap_prompted = false,
+         trap_prompted = false,
+         exclusion_prompted = false,
+         cloud_prompted = false,
+         terrain_prompted = false;
+
+    for (set<coord_def>::const_iterator site = tgt.additional_sites.begin();
+         site != tgt.additional_sites.end(); site++)
+    {
+        if (!cloud_prompted
+            && !check_moveto_cloud(*site, "shadow step", &cloud_prompted))
+        {
+            return false;
+        }
+
+        if (!zot_trap_prompted)
+        {
+            trap_def* trap = find_trap(*site);
+            if (trap && env.grid(*site) != DNGN_UNDISCOVERED_TRAP
+                && trap->type == TRAP_ZOT)
+            {
+                if (!check_moveto_trap(*site, "shadow step",
+                                       &trap_prompted))
+                {
+                    you.turn_is_over = false;
+                    return false;
+                }
+                zot_trap_prompted = true;
+            }
+            else if (!trap_prompted
+                     && !check_moveto_trap(*site, "shadow step",
+                                           &trap_prompted))
+            {
+                you.turn_is_over = false;
+                return false;
+            }
+        }
+
+        if (!exclusion_prompted
+            && !check_moveto_exclusion(*site, "shadow step",
+                                       &exclusion_prompted))
+        {
+            return false;
+        }
+
+        if (!terrain_prompted
+            && !check_moveto_terrain(*site, "shadow step", "",
+                                     &terrain_prompted))
+        {
+            return false;
+        }
+    }
+
+    const actor *victim = actor_at(sdirect.target);
+    mprf("You step into %s shadow.",
+         apostrophise(victim->name(DESC_THE)).c_str());
+
+    you.move_to_pos(tgt.landing_site);
+
+    return true;
+}
+
+static bool _dithmengos_shadow_acts()
+{
+    if (!you_worship(GOD_DITHMENGOS) || you.piety < piety_breakpoint(3))
+        return false;
+
+    // 10% chance at 4* piety; 50% chance at 200 piety.
+    const int range = MAX_PIETY - piety_breakpoint(3);
+    const int min   = range / 5;
+    return x_chance_in_y(min + ((range - min)
+                                * (you.piety - piety_breakpoint(3))
+                                / (MAX_PIETY - piety_breakpoint(3))),
+                         2 * range);
+}
+
+static monster* _dithmengos_shadow_monster()
+{
+    if (monster_at(you.pos()))
+        return NULL;
+
+    int wpn_index  = NON_ITEM;
+    int ammo_index = NON_ITEM;
+
+    // Do a basic clone of the weapon.
+    item_def* wpn = you.weapon();
+    if (wpn
+        && (wpn->base_type == OBJ_WEAPONS
+            || wpn->base_type == OBJ_STAVES
+            || wpn->base_type == OBJ_RODS))
+    {
+        wpn_index = get_mitm_slot(10);
+        if (wpn_index == NON_ITEM)
+            return NULL;
+        item_def& new_item = mitm[wpn_index];
+        if (wpn->base_type == OBJ_STAVES)
+        {
+            new_item.base_type = OBJ_WEAPONS;
+            new_item.sub_type  = WPN_STAFF;
+        }
+        else if (wpn->base_type == OBJ_RODS)
+        {
+            new_item.base_type = OBJ_WEAPONS;
+            new_item.sub_type  = WPN_ROD;
+        }
+        else
+        {
+            new_item.base_type = wpn->base_type;
+            new_item.sub_type  = wpn->sub_type;
+        }
+        new_item.quantity = 1;
+        new_item.flags   |= ISFLAG_SUMMONED;
+    }
+    const int missile = you.m_quiver->get_fire_item();
+    if (missile != -1)
+    {
+        ammo_index = get_mitm_slot(10);
+        if (ammo_index == NON_ITEM)
+        {
+            if (wpn_index != NON_ITEM)
+                destroy_item(wpn_index);
+            return NULL;
+        }
+        item_def& new_item = mitm[ammo_index];
+        item_def *ammo     = &you.inv[missile];
+        new_item.base_type = ammo->base_type;
+        new_item.sub_type  = ammo->sub_type;
+        new_item.quantity  = 1;
+        new_item.flags    |= ISFLAG_SUMMONED;
+    }
+
+    monster* mon = get_free_monster();
+    if (!mon)
+    {
+        if (wpn_index)
+            destroy_item(wpn_index);
+        return NULL;
+    }
+
+    mon->mname      = "shadow";
+    mon->type       = you.mons_species();
+    mon->behaviour  = BEH_SEEK;
+    mon->attitude   = ATT_FRIENDLY;
+    mon->flags      = (MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
+                       | MF_WAS_IN_VIEW | MF_HARD_RESET
+                       | MF_NAME_REPLACE | MF_NAME_DESCRIPTOR
+                       | MF_ACTUAL_SPELLS);
+    mon->hit_points = you.hp;
+    mon->hit_dice   = you.experience_level;
+    mon->set_position(you.pos());
+    mon->mid        = MID_PLAYER;
+    mon->inv[MSLOT_WEAPON]  = wpn_index;
+    mon->inv[MSLOT_MISSILE] = ammo_index;
+    mon->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 1, NULL, INFINITE_DURATION));
+
+    mgrd(you.pos()) = mon->mindex();
+
+    return mon;
+}
+
+static void _dithmengos_shadow_monster_reset(monster *mon)
+{
+    if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+        destroy_item(mon->inv[MSLOT_WEAPON]);
+    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
+        destroy_item(mon->inv[MSLOT_MISSILE]);
+
+    mon->reset();
+}
+
+void dithmengos_shadow_melee(actor* target)
+{
+    if (!target
+        || !target->alive()
+        || !_dithmengos_shadow_acts())
+    {
+        return;
+    }
+
+    monster* mon = _dithmengos_shadow_monster();
+    if (!mon)
+        return;
+
+    mon->target     = target->pos();
+    mon->foe        = target->mindex();
+
+    mprf("%s attacks!", mon->name(DESC_THE).c_str());
+    fight_melee(mon, target);
+
+    _dithmengos_shadow_monster_reset(mon);
+}
+
+void dithmengos_shadow_throw(coord_def target)
+{
+    if (target.origin()
+        || !_dithmengos_shadow_acts())
+    {
+        return;
+    }
+
+    monster* mon = _dithmengos_shadow_monster();
+    if (!mon)
+        return;
+
+    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
+    {
+        mon->target = target;
+
+        bolt beem;
+        beem.target = target;
+        mprf("%s attacks!", mon->name(DESC_THE).c_str());
+        setup_monster_throw_beam(mon, beem);
+        mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
+    }
+
+    _dithmengos_shadow_monster_reset(mon);
+}
+
+void dithmengos_shadow_spell(coord_def target, spell_type spell)
+{
+    if (target.origin()
+        || !is_valid_mon_spell(spell)
+        || !_dithmengos_shadow_acts())
+    {
+        return;
+    }
+
+    monster* mon = _dithmengos_shadow_monster();
+    if (!mon)
+        return;
+
+    // Don't let shadow spells get too powerful.
+    mon->hit_dice = min(1, mon->hit_dice / 2);
+
+    mon->target = target;
+    if (actor_at(target))
+        mon->foe = actor_at(target)->mindex();
+
+    bolt beem;
+    beem.target = target;
+    mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
+         mon->name(DESC_THE).c_str());
+    mons_cast(mon, beem, spell, false, false);
+
+    _dithmengos_shadow_monster_reset(mon);
 }

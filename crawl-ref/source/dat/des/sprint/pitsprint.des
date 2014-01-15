@@ -1032,12 +1032,13 @@ KFEAT:   o = altar_beogh
 KFEAT:   p = altar_jiyva
 KFEAT:   q = altar_fedhas
 KFEAT:   r = altar_cheibriados
+KFEAT:   s = altar_dithmengos
 : general_setup(_G)
 : general_item_setup(_G)
 : base_monster_setup(_G)
 MAP
 hopnlfjida
-gqrmk..ebc
+gqrmk.sebc
 ENDMAP
 
 

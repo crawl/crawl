@@ -691,6 +691,43 @@ bool cheibriados_thinks_mons_is_fast(const monster* mon)
     return cheibriados_monster_player_speed_delta(mon) > 0;
 }
 
+// Dithmengos hates halos and spells that cause illumination.
+bool mons_is_illuminating(const monster* mon)
+{
+    if (mon->halo_radius2() >= 0)
+        return true;
+
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    {
+        if (is_illuminating_spell(mon->spells[i]))
+            return true;
+    }
+
+    return false;
+}
+
+// Dithmengos also hates fire users and generally fiery beings.
+bool mons_is_fiery(const monster* mon)
+{
+    // This chain of checks is for fire breath weapons and special
+    // abilities.
+    if (mons_genus(mon->type) == MONS_FIRE_DRAGON
+        || mon->type == MONS_BURNING_BUSH
+        || (mons_genus(mon->type) == MONS_DRACONIAN
+            && draco_subspecies(mon) == MONS_RED_DRACONIAN)
+        || mon->type == MONS_HELL_HOUND
+        || mon->type == MONS_FIRE_DRAKE
+        || mon->type == MONS_LINDWURM
+        || mon->type == MONS_FIRE_CRAB)
+    {
+        return true;
+    }
+    return mon->has_attack_flavour(AF_FIRE)
+           || mon->has_attack_flavour(AF_PURE_FIRE)
+           || mon->has_attack_flavour(AF_NAPALM)
+           || mon->has_spell_of_type(SPTYP_FIRE);
+}
+
 bool mons_is_projectile(monster_type mc)
 {
     return mc == MONS_ORB_OF_DESTRUCTION;

@@ -60,6 +60,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
+#include "spl-clouds.h"
 #include "spl-selfench.h"
 #include "spl-other.h"
 #include "state.h"
@@ -713,11 +714,11 @@ void lose_level(int death_source, const char *aux)
     ouch(0, death_source, KILLED_BY_DRAINING, aux);
 }
 
-bool drain_exp(bool announce_full, int power)
+bool drain_exp(bool announce_full, int power, bool ignore_protection)
 {
     const int protection = player_prot_life();
 
-    if (protection == 3)
+    if (protection == 3 && !ignore_protection)
     {
         if (announce_full)
             canned_msg(MSG_YOU_RESIST);
@@ -725,7 +726,7 @@ bool drain_exp(bool announce_full, int power)
         return false;
     }
 
-    if (protection > 0)
+    if (protection > 0 && !ignore_protection)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
         power /= (protection * 2);
@@ -935,6 +936,25 @@ static void _powered_by_pain(int dam)
     }
 }
 
+static void _maybe_fog(int dam)
+{
+    const int upper_threshold = you.hp_max / 2;
+    const int lower_threshold = upper_threshold
+                                - upper_threshold
+                                  * (you.piety - piety_breakpoint(2))
+                                  / (MAX_PIETY - piety_breakpoint(2));
+    if (you_worship(GOD_DITHMENGOS)
+        && you.piety >= piety_breakpoint(2)
+        && (dam > 0 && you.form == TRAN_SHADOW
+            || dam >= lower_threshold
+               && x_chance_in_y(dam - lower_threshold,
+                                upper_threshold - lower_threshold)))
+    {
+        mpr("You emit a cloud of dark smoke.");
+        big_cloud(CLOUD_BLACK_SMOKE, &you, you.pos(), 50, 4 + random2(5));
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1026,6 +1046,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
     {
+        if (you.form == TRAN_SHADOW)
+            dam /= 2;
         if (you.petrified())
             dam /= 2;
         else if (you.petrifying())
@@ -1115,6 +1137,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
+            _maybe_fog(dam);
             _powered_by_pain(dam);
         }
         if (you.hp > 0)

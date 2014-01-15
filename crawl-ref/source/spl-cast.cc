@@ -60,6 +60,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
+#include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
@@ -519,6 +520,8 @@ static int _spell_enhancement(unsigned int typeflags)
         enhanced += player_spec_air() - player_spec_earth();
 
     if (you.attribute[ATTR_SHADOWS])
+        enhanced -= 2;
+    if (you.form == TRAN_SHADOW)
         enhanced -= 2;
 
     enhanced += you.archmagi();
@@ -1316,14 +1319,24 @@ spret_type your_spells(spell_type spell, int powc,
     if (you.props.exists("battlesphere") && allow_fail)
         aim_battlesphere(&you, spell, powc, beam);
 
+    const bool old_target = actor_at(beam.target);
+
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range, fail))
     {
     case SPRET_SUCCESS:
+    {
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you, beam);
+        actor* victim = actor_at(beam.target);
+        if (you_worship(GOD_DITHMENGOS)
+            && (flags & SPFLAG_TARGETING_MASK)
+            && (!old_target || (victim && !victim->is_player())))
+        {
+            dithmengos_shadow_spell(beam.target, spell);
+        }
         _spellcasting_side_effects(spell, powc, god);
         return SPRET_SUCCESS;
-
+    }
     case SPRET_FAIL:
     {
         if (antimagic)
