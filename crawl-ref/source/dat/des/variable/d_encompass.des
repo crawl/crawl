@@ -1,0 +1,90 @@
+##############################################################
+NAME:   kennysheep_town
+TAGS:   uniq_d_encompass
+ORIENT: encompass
+DEPTH:  D:8-11
+KMONS:  p = plant / bush / nothing w:50
+KMONS:  F = yak w:1 / hog w:1 / sheep w:5 / plant w:100 / nothing w:50
+KITEM:  F = strawberry / nothing w:400
+KFEAT:  M = mangrove
+KFEAT:  # = iron_grate
+SUBST:  M = Mww..
+KMONS:  1 = merfolk / nothing w:5
+KMONS:  2 = orc warrior / big kobold / two-headed ogre / troll / gnoll sergeant
+KMONS:  3 = orc priest / orc wizard / centaur / gnoll shaman
+SUBST:  H = .:25 %:1 !
+KMONS:  ! = orc / hound / kobold / goblin / hobgoblin / gnoll
+KMONS:  ' = wyvern w:5 / manticore w:5 / black bear w:20 / nothing w:350
+NSUBST: } = 1:] / 1:) / 1:} / *:**23..
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx'''''''''''xxxxxxwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxx''''''''''''''''''xxxxwwwwwwwxxxxxxxxxxxxxxxxxxxxx''''''''xxxxxxxxxxxxxxxx
+xxxx'''''''xx'}''xxx'''''xxxxwwwwwwxxxxxxxxxxxxxxxxx'''''xxxxxx''''''''xxxxxxxxx
+xxx''''xxxxxxx*'*xxxxx''''xxxwwwwwwxxxxxxxxxxxxxxxx''xx'xxxxxxxxxxxxx''''xxxxxxx
+xxx..xxxxxxxxxxxxxxxxxxx..xxxxwwwwwxxxxxxxxxxxxxxx.'xxx'..xxxxxxxxxxxxxx''xxxxxx
+xtt..xxxxxxttttttxxxxxxt..ttttwwwwwxxxxxxtttttttx..xxxxxx...xxxxxxxx*xx'''xxxxxx
+xtt..tttttttttttttttttt..tttttwwwwww..ptttttttttp..xxxxtttt..xxxxxxxx''''xxxxxxx
+xtt..tttttttttttttttttt.tttttt.wwwwww.ppttttttttpp.tttttttt.ptttxxxxxxxx'''xxxxx
+xttt..ttttttttttttttttt.tppppt.wwwwwww.pttpptttttp.tttttttt.ttttxxxxxxxxxx'''xxx
+xttt..tpttttttttttttttp.pp.....wwwwwwwwppppppppttp.ttttttttt.ttttxxxxxxxxxxx*xxx
+xtttt..pppppppppptttttp.........wwwwwwww......ppp.pttttttttt.ptttttttxxxxxxx}xxx
+xtttp...........pptttp..........wwwwwwwwww.........ptttttttt..ptttttttxxxxxxxxxx
+xtttp....cc##cc..ppppp...cc##cc..wwwwwwwwwwwwwwwwww.pptttttttt.pttttttttxxxxxxxx
+xttpp....cHHHHc..........cHHHHc....wwwwwwwwwwwwwwww...ptttttttt.pttttttttpxxxxxx
+xtttp....#H3HHc..........cHH3H#......wwwwwwwwwwwwwwww..ppppptpp..ppppppptp..xxxx
+xtttp....#HHHHc..........cHHHH#.......wwwwwwwwwwwwwwwww.....................xxxx
+xtttp....cHHHHccccccccccccHHHHc................wwwwwwww.FFFFFFFFFFFFFFFFFFFFFxxx
+xtttp....cccHHHHHHHHHHHHHHHHccc..................wwwwwww.....................xxx
+xttpp......cHcccccc++ccccccHc.........G..........wwwwwwwFFFFFFFFFFFFFFFFFFFFFFFx
+xttp.......cHc|**c2HHHHHH2cHc......cc...cc......wwwwwwww.......................x
+xttp.......cHc***+HHHHHH3HcHc......cc...cc......wwwwwwwwFFFFFFFFFFFFFFFFFFFFFFFx
+xttp.......cHc|**c2HHHHHH2cHc...................wwwwwwww.......................x
+xttpp......cHccccccccccccccHc.....G...C...G....wwwwwwwwwwFFFFFFFFFFFFFFFFFFFFFFx
+xtttpp...cccHHHHHH2HH2HHHHHHccc................wwwwwwwww.......................x
+xttttp...cHHHHccccHHHHccccHHHHc....cc...cc.....wwwwwwwwwFFFFFFFFFFFFFFFFFFFFFFFx
+xttttp...#HHHHc..cHHHHc..cHHHH#....cc...cc....wwwwwwwwww.......................x
+xttttp...#H3HHc..cc++cc..cHH3H#.......G......wwwwwwwwwwwFFFFFFFFFFFFxxxxxxxFFFFx
+xtttpp...cHHHHc..........cHHHHc.............wwwwwwwwwwww............xHHH}Hx....x
+xtttppp..cc##cc..........cc##cc............wwwwwwwwwwwwwFFFFFFFFFFFFxHHHHHxFFFFx
+xtttttpp..................................wwwwwwww..wwww............x++xxxx....x
+xttttttpp................................wwwwxxx.....wwwwFFFFFFFFFFFF..FFFFFFFFx
+xtttttttppppp.........xxxx..............wwwwxxHxx....wwww.....................tx
+xttttttttttttp........xH}x..............wwwxxHHHxx..wwwww.F.F.F.F.F.F..xxxx...tx
+xttttttttttpp.........xHHx.............wwwwxHH}HHx..wwwwwwF.F.F.F.F.F..+HHx.tttx
+xttttttttppp..........x+xx......xxxx..wwwwwxxHHHxx..wwwwwwF.F.F.F.F.F..xH}x.tttx
+xtttttttp.......................x}Hx..wwwwwwxxHx+...wwwww.F.F.F.F.F.F..xxxx.tttx
+xttttttp...xxxxxx...............xHHx..wwwwww.xxx....wwwww.F.F.F.F.F.F.......tttx
+xttttttp...xHHHH+.........xxxx..xx+x...wwwww........wwwww.F.F.F.F.F.F.....tttttx
+xttttttp...xH}HHx.........xH}x.........wwwww........wwwww.F.F.F.F.F.F....ttttttx
+xxxxtt.....xHHHHx.........xHHx.........wwwww........wwwww.F.F.F.F.F.Fttt.ttttttx
+x..xt...p..xHHHHx....T3...x+xx..........wwww.......wwwww..F.F.F.F.F.F.tt..tttttx
+x}.+..ttp..xxxxxx.....................................................ttt..ttttx
+xxxxtttpp.............................................................ttt...tttx
+ xtttttp................................wwww......wwwwww.............tttt.t..ttx
+ xtttttp....xxxx..........xx+x..x+xx....wwwww.....wwwww..............ttt.ttt.ttx
+ xttttpp....xHH+..........xHHx..xHHx...wwwwww....wwwwww...c+++c......ttt.ttt.ttx
+ xttttp.....x}Hx...x+xx...x}Hx..xHHx...wwwwww...wwwwww...cc...cc.....ttt.ttt.ttx
+xxxttpp.....xxxx...xHHx...xxxx..xH}x..wwwwwww..wwwwwww..cc.....cc....ttt.ttt.ttx
+xxxxpp.............x}Hx.........xxxx..wwwwwwwwwwwwwwww..c...{...c...tttt..tt.ttx
+xxxx...............xxxx.............MwwwwwwwwwwwwwwwwM..c.......c..tttttt.t..ttx
+xxxx..xxx...........................MwwwwwwwwwwwwwwwMM..c..(.[..c..tttttt.t.tttx
+xxxx..xxxx.........................MwwwwwwwwwwwwwwwMM...cc.....cc..ttttttt.ttttx
+xxxxx.xxxx......................MM.MwwwwwwwwwwwwwwMM.MMM.cc...cc..ttttttt...tttx
+xxxxx.'xxx..x.......MMM.......MMMwMMwwwwwwwwwwwwwMM.MwwMM.ccccc..ttttttt..t.ttxx
+xxxxxx'xxx..xxxMMMMMMwM.......MwwwMMMwwwwwwwwwwwMM..MwwwM........ttttttt.tt.txxx
+xxxxxx'xx...xxxxwwwwwwMMMMMM..MwwM..MwwwwwwwwwMMM....MMMM........tttttt..tt.txxx
+xxxxxx'''....xxxwwwwMMMMwwwwM.MMMM.MwwwwwwwwMMM..MMMM............tt.....ttt.txxx
+xxxxxxx''.xx.'xxxxxMM...MMwMw......MwwwwwwwMM..MMwwwM.MMMM.MM.........ttttt.txxx
+xxxxxxx''xxxx''xxxx..MMM......wwMM.MwcccccwM.wwwwwwwM.wwww.wMM.....tttttttt..xxx
+xxxxxx''xxxxxx'xxxxx.MwwMMwM.wwwwwM.ccwwwccM.MwwwwMMM.wwwM.MwMM.tttttttttxx..xxx
+xxxxxx'xxxxxxxx'xxxxx.MwwwM.....ww.ccwwwwwcc.MMMMMM..MM....MwwMMttttttttxxx..'xx
+xxxxx''xxxxxxx'''xxxxx.Mww.MMMMM..Mcww*1..wcM......MMwwwwM...wwMttttttttxxx.''xx
+xxxxx'xxx'''''xx'xxxxx..MM.MwwwwMM.+W.*}*.W+.M.MMwwwwwwwwMM...MMttttttttxxx'''xx
+xx'''''''xxxxxxx'xxxxxxxwwM.Mwwwww.cw.1*1wwcwM.MwwwwwwxxwwM..xxxxxxxxxxxxx''''xx
+x''''xxxxxxxxxxx''xxxxxxwwM...MwwMMccwwwwwccwMMMwxxxxxxxwwMxxxxxxxxxxxxxxx'''''x
+x'''xxxxxxxxxxxx'''''xxxxxxxxxxxxxxxccwwwccwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxx'''}'x
+x'}'xxxxxxxxxxxxx'''}'xxxxxxxxxxxxxxxcccccwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxx''''x
+x*''xxxxxxxxxxxxxx'''*xxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
