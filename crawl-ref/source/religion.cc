@@ -210,6 +210,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " pulsate% black.",          // unused
         " strongly pulsate% black.", // unused
     },
+    // Dithmengos
+    {
+        " slowly dissolves into the shadows.",
+        " dissolves into the shadows.",
+        " rapidly dissolves into the shadows.",
+    },
 };
 
 /**
@@ -326,6 +332,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
       "Ashenzari helps you to reconsider your skills."
+    },
+    // Dithmengos
+    { "",
+      "step into the shadows of nearby creatures",
+      "sometimes bleed smoke when heavily injured by enemies",
+      "Your shadow now sometimes tangibly mimics your actions.",
+      "transform into a swirling mass of dark shadows"
     },
 };
 
@@ -444,6 +457,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "scry through walls",
       "Ashenzari no longer helps you to reconsider your skills."
     },
+    // Dithmengos
+    { "",
+      "step into the shadows of nearby creatures",
+      "bleed smoke when heavily injured by enemies",
+      "Your shadow no longer tangibly mimics your actions.",
+      "transform into a swirling mass of dark shadows"
+    }
 };
 
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
@@ -460,7 +480,8 @@ bool is_evil_god(god_type god)
            || god == GOD_MAKHLEB
            || god == GOD_YREDELEMNUL
            || god == GOD_BEOGH
-           || god == GOD_LUGONU;
+           || god == GOD_LUGONU
+           || god == GOD_DITHMENGOS;
 }
 
 bool is_good_god(god_type god)
@@ -657,6 +678,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
+    case GOD_DITHMENGOS:
         likes.push_back("you kill living beings");
         break;
 
@@ -692,6 +714,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
+    case GOD_DITHMENGOS:
         likes.push_back("you kill the undead");
         break;
 
@@ -721,6 +744,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
+    case GOD_DITHMENGOS:
         likes.push_back("you kill demons");
         break;
 
@@ -763,6 +787,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_OKAWARU:
     case GOD_VEHUMET:
+    case GOD_DITHMENGOS:
         likes.push_back("you kill holy beings");
         break;
 
@@ -785,6 +810,10 @@ string get_god_likes(god_type which_god, bool verbose)
         really_likes.push_back("you kill wizards and other users of magic");
         break;
 
+    case GOD_DITHMENGOS:
+        really_likes.push_back("you kill beings that bring light to the "
+                               "dungeon, through fire or other means");
+        break;
     default:
         break;
     }
@@ -868,6 +897,11 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     case GOD_SIF_MUNA:
         really_dislikes.push_back("you destroy spellbooks");
+        break;
+
+    case GOD_DITHMENGOS:
+        dislikes.push_back("you light up the dungeon through fire magic or "
+                           "other magical means");
         break;
 
     default:
@@ -1021,6 +1055,13 @@ void dec_penance(god_type god, int val)
                 redraw_screen();
                 notify_stat_change("mollifying Cheibriados");
             }
+            // Likewise Dithmengos's umbra.
+            else if (god == GOD_DITHMENGOS
+                     && you.piety >= piety_breakpoint(0))
+            {
+                mpr("Your aura of darkness returns!");
+                invalidate_agrid(true);
+            }
 
             // When you've worked through all your penance, you get
             // another chance to make hostile holy beings good neutral.
@@ -1125,6 +1166,12 @@ static void _inc_penance(god_type god, int val)
         {
             redraw_screen();
             notify_stat_change("falling into Cheibriados' penance");
+        }
+        else if (god == GOD_DITHMENGOS)
+        {
+            if (you.umbraed())
+                mpr("Your aura of darkness fades away.");
+            invalidate_agrid();
         }
 
         if (you_worship(god))
@@ -2377,6 +2424,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_CHEIBRIADOS:   return "Cheibriados";
     case GOD_XOM:           return "Xom";
     case GOD_ASHENZARI:     return "Ashenzari";
+    case GOD_DITHMENGOS:    return "Dithmengos";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -2732,6 +2780,9 @@ static void _gain_piety_point()
                 auto_id_inventory();
             }
 
+            if (you_worship(GOD_DITHMENGOS) && i == 0)
+                mpr("You are shrouded in an aura of darkness!");
+
             // When you gain a piety level, you get another chance to
             // make hostile holy beings good neutral.
             if (is_good_god(you.religion))
@@ -2754,9 +2805,9 @@ static void _gain_piety_point()
         notify_stat_change("Cheibriados piety gain");
     }
 
-    if (you_worship(GOD_SHINING_ONE))
+    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENGOS))
     {
-        // Piety change affects halo radius.
+        // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
     }
 
@@ -2911,9 +2962,9 @@ void lose_piety(int pgn)
         notify_stat_change("Cheibriados piety loss");
     }
 
-    if (you_worship(GOD_SHINING_ONE))
+    if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENGOS))
     {
-        // Piety change affects halo radius.
+        // Piety change affects halo / umbra radius.
         invalidate_agrid(true);
     }
 }
@@ -2971,8 +3022,9 @@ void excommunication(god_type new_god)
     ASSERT(old_god != new_god);
     ASSERT(old_god != GOD_NO_GOD);
 
-    const bool was_haloed = you.haloed();
-    const int  old_piety  = you.piety;
+    const bool was_haloed  = you.haloed();
+    const bool was_umbraed = you.umbraed();
+    const int  old_piety   = you.piety;
 
     god_acting gdact(old_god, true);
 
@@ -3182,6 +3234,12 @@ void excommunication(god_type new_god)
         _set_penance(old_god, 50);
         break;
 
+    case GOD_DITHMENGOS:
+        if (was_umbraed)
+            mpr("Your aura of darkness fades away.");
+        _set_penance(old_god, 25);
+        break;
+
     case GOD_CHEIBRIADOS:
     default:
         _set_penance(old_god, 25);
@@ -3387,6 +3445,9 @@ static bool _transformed_player_can_join_god(god_type which_god)
         return false;
     }
 
+    if (is_good_god(which_god) && you.form == TRAN_SHADOW)
+        return false;
+
     if (which_god == GOD_ZIN && you.form != TRAN_NONE)
         return false;
 
@@ -3419,6 +3480,14 @@ bool player_can_join_god(god_type which_god)
 
     if (which_god == GOD_SIF_MUNA && !you.spell_no)
         return false;
+
+    // Dithmengos hates fiery species.
+    if (which_god == GOD_DITHMENGOS
+        && (you.species == SP_DJINNI
+            || you.species == SP_LAVA_ORC))
+    {
+        return false;
+    }
 
     return _transformed_player_can_join_god(which_god);
 }
@@ -3890,6 +3959,10 @@ bool god_hates_spell(spell_type spell, god_type god, bool rod_spell)
         if (is_hasty_spell(spell))
             return true;
         break;
+    case GOD_DITHMENGOS:
+        if (is_illuminating_spell(spell) || is_fiery_spell(spell))
+            return true;
+        break;
     default:
         break;
     }
@@ -4033,6 +4106,7 @@ void handle_god_time()
         case GOD_MAKHLEB:
         case GOD_BEOGH:
         case GOD_LUGONU:
+        case GOD_DITHMENGOS:
             if (one_chance_in(16))
                 lose_piety(1);
             break;
@@ -4116,6 +4190,9 @@ int god_colour(god_type god) // mv - added
     case GOD_CHEIBRIADOS:
         return LIGHTCYAN;
 
+    case GOD_DITHMENGOS:
+        return MAGENTA;
+
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
@@ -4189,6 +4266,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_JIYVA:
         return coinflip() ? GREEN : LIGHTGREEN;
+
+    case GOD_DITHMENGOS:
+        return MAGENTA;
 
     default:
         return YELLOW;

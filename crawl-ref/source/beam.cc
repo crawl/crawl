@@ -662,6 +662,17 @@ void bolt::apply_beam_conducts()
         {
         case BEAM_HELLFIRE:
             did_god_conduct(DID_UNHOLY, 2 + random2(3), god_cares());
+            did_god_conduct(DID_FIRE, 6 + random2(7), god_cares());
+            break;
+        case BEAM_FIRE:
+        case BEAM_HOLY_FLAME:
+        case BEAM_NAPALM:
+            did_god_conduct(DID_FIRE, 2 + random2(3), god_cares());
+            break;
+        case BEAM_CORONA:
+        case BEAM_LIGHT:
+        case BEAM_HOLY_LIGHT:
+            did_god_conduct(DID_ILLUMINATE, 2 + random2(3), god_cares());
             break;
         default:
             break;
@@ -3308,26 +3319,33 @@ void bolt::affect_player_enchantment()
             monster* mon = &menv[beam_source];
             if (!mon->observable())
             {
-                mpr("Something tries to affect you, but you resist.");
+                mprf("Something tries to affect you, but you %s.",
+                     you.res_magic() == MAG_IMMUNE ? "are unaffected"
+                                                   : "resist");
                 need_msg = false;
             }
         }
         if (need_msg)
         {
-            // the message reflects the level of difficulty resisting.
-            const int margin = you.res_magic() - ench_power;
-            if (margin >= 30)
-                mpr("You resist with almost no effort.");
-            else if (margin >= 15)
-                mpr("You easily resist.");
-            else if (margin >= 0)
-                mpr("You resist.");
-            else if (margin >= -14)
-                mpr("You resist with significant effort.");
-            else if (margin >= -30)
-                mpr("You struggle to resist.");
+            if (you.res_magic() == MAG_IMMUNE)
+                canned_msg(MSG_YOU_UNAFFECTED);
             else
-                mpr("You strain under the huge effort it takes to resist.");
+            {
+                // the message reflects the level of difficulty resisting.
+                const int margin = you.res_magic() - ench_power;
+                if (margin >= 30)
+                    mpr("You resist with almost no effort.");
+                else if (margin >= 15)
+                    mpr("You easily resist.");
+                else if (margin >= 0)
+                    mpr("You resist.");
+                else if (margin >= -14)
+                    mpr("You resist with significant effort.");
+                else if (margin >= -30)
+                    mpr("You struggle to resist.");
+                else
+                    mpr("You strain under the huge effort it takes to resist.");
+            }
         }
         // You *could* have gotten a free teleportation in the Abyss,
         // but no, you resisted.
@@ -4174,7 +4192,8 @@ void bolt::enchantment_affect_monster(monster* mon)
                 hit_woke_orc = true;
             }
         }
-        behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+        if (flavour != BEAM_HIBERNATION || !mon->asleep())
+            behaviour_event(mon, ME_ANNOY, beam_source_as_target());
     }
     else
         behaviour_event(mon, ME_ALERT, beam_source_as_target());

@@ -447,6 +447,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_CHEIBRIADOS;
     case DNGN_ALTAR_ASHENZARI:
         return TILE_DNGN_ALTAR_ASHENZARI;
+    case DNGN_ALTAR_DITHMENGOS:
+        return TILE_DNGN_ALTAR_DITHMENGOS;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
@@ -5580,6 +5582,11 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ASHENZARI_TRANSFER_KNOWLEDGE;
     case ABIL_ASHENZARI_END_TRANSFER:
         return TILEG_ABILITY_ASHENZARI_TRANSFER_KNOWLEDGE_END;
+    // Dithmengos
+    case ABIL_DITHMENGOS_SHADOW_STEP:
+        return TILEG_ABILITY_DITHMENGOS_SHADOW_STEP;
+    case ABIL_DITHMENGOS_SHADOW_FORM:
+        return TILEG_ABILITY_DITHMENGOS_SHADOW_FORM;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

@@ -140,6 +140,7 @@ bool player::extra_balanced() const
                   && (species == SP_NAGA // tails, not feet
                       || body_size(PSIZE_BODY) >= SIZE_LARGE)
                   && (form == TRAN_LICH || form == TRAN_STATUE
+                      || form == TRAN_SHADOW
                       || !form_changed_physiology());
 }
 
@@ -195,6 +196,7 @@ int player::body_weight(bool base) const
         weight *= 2;
         break;
     case TRAN_LICH:
+    case TRAN_SHADOW:
         weight /= 2;
         break;
     default:
@@ -432,6 +434,7 @@ string player::hand_name(bool plural, bool *can_plural) const
     else if (form == TRAN_JELLY)
         str = "bump"; // not even pseudopods...
     else if (form == TRAN_LICH || form == TRAN_STATUE
+             || form == TRAN_SHADOW
              || !form_changed_physiology())
     {
         if (species == SP_FELID)
@@ -469,6 +472,7 @@ string player::foot_name(bool plural, bool *can_plural) const
     else if (form == TRAN_JELLY)
         str = "underside", *can_plural = false;
     else if (form == TRAN_LICH || form == TRAN_STATUE
+             || form == TRAN_SHADOW
              || !form_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES) >= 3)
@@ -527,6 +531,8 @@ string player::arm_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_LICH)
         adj = "bony";
+    else if (form == TRAN_SHADOW)
+        adj = "shadowy";
 
     if (!adj.empty())
         str = adj + " " + str;

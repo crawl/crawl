@@ -563,6 +563,8 @@ bool is_player_same_genus(const monster_type mon, bool transform)
             return mon == MONS_PORCUPINE;
         case TRAN_WISP:
             return mon == MONS_INSUBSTANTIAL_WISP;
+        case TRAN_SHADOW:
+            return mons_genus(mon) == MONS_SHADOW;
         // Compare with monster *species*.
         case TRAN_LICH:
             return mons_species(mon) == MONS_LICH;
@@ -1846,6 +1848,7 @@ int player_res_torment(bool, bool temp)
            || you.form == TRAN_FUNGUS
            || you.form == TRAN_TREE
            || you.form == TRAN_WISP
+           || you.form == TRAN_SHADOW
            || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
            || you.petrified()
            || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
@@ -1867,6 +1870,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     if ((you.is_undead == US_SEMI_UNDEAD ? you.hunger_state == HS_STARVING
             : you.is_undead && (temp || you.form != TRAN_LICH))
         || you.is_artificial()
+        || (temp && you.form == TRAN_SHADOW)
         || player_equip_unrand(UNRAND_OLGREB)
         || you.duration[DUR_DIVINE_STAMINA])
     {
@@ -2182,6 +2186,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         case TRAN_TREE:
         case TRAN_WISP:
         case TRAN_LICH:
+        case TRAN_SHADOW:
             pl += 3;
             break;
         default:
@@ -2450,6 +2455,7 @@ bool player_is_shapechanged(void)
     if (you.form == TRAN_NONE
         || you.form == TRAN_BLADE_HANDS
         || you.form == TRAN_LICH
+        || you.form == TRAN_SHADOW
         || you.form == TRAN_APPENDAGE)
     {
         return false;
@@ -3793,6 +3799,7 @@ int check_stealth(void)
     switch (you.form)
     {
     case TRAN_FUNGUS:
+    case TRAN_SHADOW: // You slip into the shadows.
         race_mod = 30;
         break;
     case TRAN_TREE:
@@ -4233,7 +4240,7 @@ void display_char_status()
         DUR_PHASE_SHIFT,
         DUR_SILENCE,
         DUR_STONESKIN,
-        DUR_INVIS,
+        STATUS_INVISIBLE,
         DUR_CONF,
         STATUS_BEHELD,
         DUR_PARALYSIS,
@@ -4981,8 +4988,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         if (change > 0)
             xom_is_stimulated(new_level * 25);
 
-        if (old_level > 1 && new_level <= 1
-            && you.duration[DUR_INVIS] && !you.backlit())
+        if (old_level > 1 && new_level <= 1 && you.invisible())
         {
             mpr("You fade completely from view now that you are no longer "
                 "glowing from magical contamination.");
@@ -4992,8 +4998,9 @@ void contaminate_player(int change, bool controlled, bool msg)
     if (you.magic_contamination > 0)
         learned_something_new(HINT_GLOWING);
 
-    // Zin doesn't like mutations or mutagenic radiation.
-    if (you_worship(GOD_ZIN))
+    // Zin doesn't like mutations or mutagenic radiation;
+    // Dithmengos doesn't like the glow it causes.
+    if (you_worship(GOD_ZIN) || you_worship(GOD_DITHMENGOS))
     {
         // Whenever the glow status is first reached, give a warning message.
         if (old_level < 2 && new_level >= 2)
@@ -6510,6 +6517,7 @@ int player::armour_class() const
         case TRAN_BAT:
         case TRAN_PIG:
         case TRAN_PORCUPINE:
+        case TRAN_SHADOW:
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
@@ -6784,8 +6792,12 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
-    if (temp && (petrified() || form == TRAN_STATUE || form == TRAN_WISP))
+    if (temp
+        && (petrified() || form == TRAN_STATUE || form == TRAN_WISP
+            || form == TRAN_SHADOW))
+    {
         return 3;
+    }
 
     if (species == SP_GARGOYLE)
         return 3;
@@ -6877,6 +6889,9 @@ int player::res_magic() const
 int player_res_magic(bool calc_unid, bool temp)
 {
     int rm = 0;
+
+    if (temp && you.form == TRAN_SHADOW)
+        return MAG_IMMUNE;
 
     switch (you.species)
     {
@@ -6988,6 +7003,7 @@ bool player::tengu_flight() const
 bool player::nightvision() const
 {
     return is_undead
+           || (religion == GOD_DITHMENGOS && piety >= piety_breakpoint(0))
            || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2));
 }
 
@@ -7460,7 +7476,8 @@ bool player::can_see_invisible() const
 
 bool player::invisible() const
 {
-    return duration[DUR_INVIS] && !backlit();
+    return (duration[DUR_INVIS] || you.form == TRAN_SHADOW)
+           && !backlit();
 }
 
 bool player::visible_to(const actor *looker) const
@@ -7508,7 +7525,7 @@ bool player::glows_naturally() const
 // This is the imperative version.
 void player::backlight()
 {
-    if (!duration[DUR_INVIS])
+    if (!duration[DUR_INVIS] && you.form != TRAN_SHADOW)
     {
         if (duration[DUR_CORONA] || glows_naturally())
             mpr("You glow brighter.");
@@ -7568,7 +7585,8 @@ bool player::can_bleed(bool allow_tran) const
         // These transformations don't bleed. Lichform is handled as undead.
         if (form == TRAN_STATUE || form == TRAN_ICE_BEAST
             || form == TRAN_SPIDER || form == TRAN_TREE
-            || form == TRAN_FUNGUS || form == TRAN_PORCUPINE)
+            || form == TRAN_FUNGUS || form == TRAN_PORCUPINE
+            || form == TRAN_SHADOW)
         {
             return false;
         }

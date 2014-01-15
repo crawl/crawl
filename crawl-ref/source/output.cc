@@ -803,6 +803,7 @@ static void _print_stats_wp(int y)
             col = GREEN;
             break;
         case TRAN_LICH:
+        case TRAN_SHADOW:
             col = MAGENTA;
             break;
         case TRAN_BAT:
@@ -945,7 +946,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_BERSERK,
         DUR_RESISTANCE,
         STATUS_AIRBORNE,
-        DUR_INVIS,
+        STATUS_INVISIBLE,
         DUR_CONTROL_TELEPORT,
         DUR_DISJUNCTION,
         DUR_SILENCE,
@@ -2455,7 +2456,7 @@ static string _status_mut_abilities(int sw)
         DUR_DEATH_CHANNEL,
         DUR_PHASE_SHIFT,
         DUR_SILENCE,
-        DUR_INVIS,
+        STATUS_INVISIBLE,
         DUR_CONF,
         DUR_EXHAUSTED,
         DUR_MIGHT,

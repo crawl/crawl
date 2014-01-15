@@ -99,9 +99,9 @@ KMONS:     c = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
                Xtahua / Jory / Mennas / Mara
 NSUBST:    b = 1:c. / 1:cb. / 1:cb.. / 1:cbb.. / * = .:70 c:1
 MAP
-xxxxxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
-x{.......AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
-xxxxxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
+xxxxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxxxx
+x{......AAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDD&....x
+xxxxxxxxAAAAAAAAAAAAABBBBBBBBBBBBBBBBBBBCCCCCCCCCCDDDDDDDDDDDDDDxxxx.x
 x..........a.........a..........a.........a.............a............x
 x.xxxxxxEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHHxxxxxx
 x.......EEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFGGGGGGGGGGGGGHHHHHHHHH&....x
@@ -183,9 +183,9 @@ TAGS:     line_temple
 :           door_description_suffix=" to the Temple",
 :           })
 MAP
-xxxxxxxxxxxxxxxxxx
-~BBBBBBBBBBBBBBBBB
-xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx
+~BBBBBBBBBBBBBBBBBB
+xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 

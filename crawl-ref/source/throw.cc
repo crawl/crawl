@@ -20,6 +20,7 @@
 #include "exercise.h"
 #include "fight.h"
 #include "fineff.h"
+#include "godabil.h"
 #include "godconduct.h"
 #include "hints.h"
 #include "invent.h"
@@ -33,6 +34,7 @@
 #include "mon-behv.h"
 #include "mutation.h"
 #include "options.h"
+#include "religion.h"
 #include "shout.h"
 #include "skills2.h"
 #include "state.h"
@@ -438,6 +440,7 @@ void fire_thing(int item)
     {
         bolt beam;
         throw_it(beam, item, false, 0, &target);
+
     }
 }
 
@@ -2028,6 +2031,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (ammo_brand == SPMSL_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
 
+    if (bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
+    {
+        did_god_conduct(DID_ILLUMINATE, 1, true);
+    }
+
     if (did_return)
     {
         // Fire beam in reverse.
@@ -2065,6 +2073,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     if (pbolt.special_explosion != NULL)
         delete pbolt.special_explosion;
+
+    if (!teleport
+        && you_worship(GOD_DITHMENGOS)
+        && thrown.base_type == OBJ_MISSILES)
+    {
+        dithmengos_shadow_throw(thr.target);
+    }
 
     return hit;
 }

@@ -1666,12 +1666,15 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player instead
-    if (killer == KILL_MON
+    // Ditto Dithmengos shadow kills.
+    if ((killer == KILL_MON || killer == KILL_MON_MISSILE)
         && !invalid_monster_index(killer_index)
-        && menv[killer_index].type == MONS_SPECTRAL_WEAPON
-        && menv[killer_index].summoner == MID_PLAYER)
+        && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
+             && menv[killer_index].summoner == MID_PLAYER)
+            || (menv[killer_index].mid == MID_PLAYER)))
     {
-        killer = KILL_YOU;
+        killer = (killer == KILL_MON_MISSILE) ? KILL_YOU_MISSILE
+                                              : KILL_YOU;
         killer_index = you.mindex();
     }
 
@@ -2024,6 +2027,20 @@ int monster_die(monster* mons, killer_type killer,
                 if (mons->is_holy())
                 {
                     did_god_conduct(DID_KILL_HOLY, mons->hit_dice,
+                                    true, mons);
+                }
+
+                // Dithmengos hates sources of illumination.
+                // (This is *after* the holy so that the right order of
+                //  messages appears.)
+                if (mons_is_illuminating(mons))
+                {
+                    did_god_conduct(DID_KILL_ILLUMINATING, mons->hit_dice,
+                                    true, mons);
+                }
+                else if (mons_is_fiery(mons))
+                {
+                    did_god_conduct(DID_KILL_FIERY, mons->hit_dice,
                                     true, mons);
                 }
             }

@@ -62,6 +62,7 @@
 #include "env.h"
 #include "errors.h"
 #include "exercise.h"
+#include "goditem.h"
 #include "map_knowledge.h"
 #include "fprop.h"
 #include "fight.h"
@@ -2632,9 +2633,13 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_STEALTH, delay, "You feel less stealthy.");
     _decrement_a_duration(DUR_SLAYING, delay, "You feel less lethal.");
 
-    if (_decrement_a_duration(DUR_INVIS, delay, "You flicker back into view.",
+    if (_decrement_a_duration(DUR_INVIS, delay, NULL,
                               coinflip(), "You flicker for a moment."))
     {
+        if (you.invisible())
+            mprf(MSGCH_DURATION, "You feel more conspicuous.");
+        else
+            mprf(MSGCH_DURATION, "You flicker back into view.");
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
     }
 
@@ -3183,6 +3188,32 @@ static void _update_mold()
     }
 }
 
+// For worn items; weapons do this on melee attacks.
+static void _check_equipment_conducts()
+{
+    if (you_worship(GOD_DITHMENGOS) && one_chance_in(10))
+    {
+        bool illuminating = false, fiery = false;
+        const item_def* item;
+        for (int i = EQ_MIN_ARMOUR; i < NUM_EQUIP; i++)
+        {
+            item = you.slot_item(static_cast<equipment_type>(i));
+            if (!item)
+                continue;
+            if (is_illuminating_item(*item))
+                illuminating = true;
+            else if (is_fiery_item(*item))
+                fiery = true;
+            if (illuminating && fiery)
+                break;
+        }
+        if (illuminating)
+            did_god_conduct(DID_ILLUMINATE, 1, true);
+        else if (fiery)
+            did_god_conduct(DID_FIRE, 1, true);
+    }
+}
+
 static void _player_reacts()
 {
     search_around();
@@ -3202,6 +3233,8 @@ static void _player_reacts()
 
     if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
+
+    _check_equipment_conducts();
 
     if (you.unrand_reacts != 0)
         unrand_reacts();

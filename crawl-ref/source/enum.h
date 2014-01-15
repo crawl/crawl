@@ -179,9 +179,12 @@ enum ability_type
     ABIL_ASHENZARI_SCRYING = 1160,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
+    // Dithmengos
+    ABIL_DITHMENGOS_SHADOW_STEP = 1170,
+    ABIL_DITHMENGOS_SHADOW_FORM,
 
     // For both Yred and Beogh
-    ABIL_STOP_RECALL,
+    ABIL_STOP_RECALL = 1500,
 
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
@@ -328,8 +331,9 @@ enum transformation_type
     TRAN_WISP,
     TRAN_JELLY,
     TRAN_FUNGUS,
+    TRAN_SHADOW,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_FUNGUS
+    LAST_FORM = TRAN_SHADOW,
 };
 
 enum beam_type                  // bolt::flavour
@@ -999,7 +1003,7 @@ enum conduct_type
     DID_CANNIBALISM,
     DID_EAT_SOULED_BEING,                 // Zin
     DID_DELIBERATE_MUTATING,              // Zin
-    DID_CAUSE_GLOWING,                    // Zin
+    DID_CAUSE_GLOWING,                    // Zin, Dithmengos
     DID_UNCLEAN,                          // Zin (used unclean weapon/magic)
     DID_CHAOS,                            // Zin (used chaotic weapon/magic)
     DID_DESECRATE_ORCISH_REMAINS,         // Beogh
@@ -1021,6 +1025,10 @@ enum conduct_type
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
     DID_SEE_MONSTER,                      // TSO
+    DID_ILLUMINATE,                       // Dithmengos
+    DID_KILL_ILLUMINATING,                // Dithmengos
+    DID_FIRE,                             // Dithmengos
+    DID_KILL_FIERY,                       // Dithmengos
 
     NUM_CONDUCTS
 };
@@ -1413,8 +1421,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_FEDHAS,
     DNGN_ALTAR_CHEIBRIADOS,
     DNGN_ALTAR_ASHENZARI,
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_ASHENZARI,
-    DNGN_UNUSED_ALTAR_1,
+    DNGN_ALTAR_DITHMENGOS,
+        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENGOS,
 
     DNGN_FOUNTAIN_BLUE,
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1843,6 +1851,7 @@ enum god_type
     GOD_FEDHAS,
     GOD_CHEIBRIADOS,
     GOD_ASHENZARI,
+    GOD_DITHMENGOS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
