@@ -436,3 +436,166 @@ xtx...xtx...xtx
     ..xtx..
       .x.
 ENDMAP
+
+#############################################################
+NAME:   kennysheep_minor_cross
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+MAP
+     cccDccc
+     cwwEwwc
+     cw...wc
+     cw...wc
+     cw...wc
+ccccccwx.xwcccccc
+cwwwwwwx.xwwwwwwc
+cw...xxt.txx...wc
+FH.............HF
+cw...xxt.txx...wc
+cwwwwwwx.xwwwwwwc
+ccccccwx.xwcccccc
+     cw...wc
+     cw...wc
+     cw...wc
+     cww.wwc
+     ccc+ccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_another_room
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+MAP
+ ccccDccc
+ccwwwEwwcc
+cww....wwc
+cw..xt..wc
+FH.txxx.wc
+cw.xxxt.HF
+cw..tx..wc
+cww....wwc
+ccww.wwwcc
+ ccc+cccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_small_spiral
+TAGS:   extra decor
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+MAP
+ccccccccccFcc
+cwwwwwwwwwHwc
++..........wc
+cwxxxxxxxx.wc
+cw.......x.wc
+cw.xxxxx.x.wc
+cw.x..*x.x.wc
+cw.x.xtx.x.wc
+cw.x.xxx.x.wc
+cw.x.....x.wc
+cw.xxxxxxx.wc
+cw.........ED
+cwHwwwwwwwwwc
+ccFcccccccccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_nondescript
+TAGS:   extra decor allow_dup
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+MAP
+  ccDc
+cFctEc
+c...wc
+c.wwwc
+c.wccc
+c+cc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_dice
+TAGS:   extra
+SUBST:  %=%$.
+SUBST:  0=0.
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
+:ks_random_setup(_G)
+MAP
+ccccccccDDcccccccc
+cwwwwwwwEEwwwwwwwc
+cw..............wc
+cw.txxt....txxt.wc
+cw.xxxx....xxxx.wc
+cw.xxxx....xxxx.wc
+cw.txxt....txxt.wc
+cw.....0..0.....wc
+FH......%%......HF
+FH......%%......HF
+cw.....0..0.....wc
+cw.txxt....txxt.wc
+cw.xxxx....xxxx.wc
+cw.xxxx....xxxx.wc
+cw.txxt....txxt.wc
+cw..............wc
+cwwwwwww..wwwwwwwc
+cccccccc++cccccccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_decorative_pillar
+TAGS:   extra decor allow_dup transparent
+DEPTH:  D, Depths, !D:$, !Depths:$
+:ks_random_setup(_G, true)
+MAP
+     ...xtx....
+    .....x......
+   ..............
+  ..x..........x..
+ ..xx..........xx..
+....................
+.......wwwwww.......
+......wwccccww......
+......wccccccw.....x
+x.....wccccccw....xt
+tx....wccccccw.....x
+x.....wccccccw......
+......wwccccww......
+.......wwwwww.......
+....................
+ ..xx..........xx..
+  ..x..........x..
+   ..............
+    ......x.....
+     ....xtx...
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_nondecorative_pillar
+TAGS:   extra transparent
+DEPTH:  Depths:2-, !D:$, !Depths:$
+:ks_random_setup(_G, true)
+MAP
+     ...xtx....
+    .....x......
+   ..............
+  ..x..........x..
+ ..xx..........xx..
+....................
+.......wwwwww.......
+......wwccccww......
+......wcc||ccw.....x
+x.....wc*88*cw....xt
+tx....wc*..*cw.....x
+x.....wcc..ccw......
+......wwc++cww......
+.......ww..ww.......
+....................
+ ..xx..........xx..
+  ..x..........x..
+   ..............
+    ......x.....
+     ....xtx...
+ENDMAP
