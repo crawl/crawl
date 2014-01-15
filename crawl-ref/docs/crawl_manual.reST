@@ -3068,11 +3068,6 @@ Rot
 \-MR
   You are more vulnerable to hostile enchantments.
 
-Howl
-  You are being pursued by an insane howling, that against all logic summons
-  wolves out of nowhere to fight you. Eventually the howling should end after
-  a time.
-
 Brainless, Clumsy, Collapse
   One of your attributes (Intelligence, Dexterity, or Strength, respectively)
   has fallen to 0. You suffer extreme penalties to most actions related to
