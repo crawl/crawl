@@ -70,7 +70,6 @@ Monsters
   swimming in lava.
 * Geryon can fly once again.
 * Lamia has been de-throned.
-* Spirit wolves are no more.
 
 Spells
 ------
