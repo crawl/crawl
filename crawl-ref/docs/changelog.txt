@@ -1,7 +1,8 @@
-Stone Soup 0.14 (up to 0.14-a0-1169-g4815781)
+Stone Soup 0.14 (up to 0.14-a0-1948-g9be20ec)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Three new races: Lava Orcs, Djinn, and Formicids.
+* A new deity: Dithmengos the Shadowed.
 * A new branch: the Enchanted Forest.
 
 Branches, environment
@@ -13,6 +14,11 @@ Branches, environment
   long, and contains the entrance to Tomb where it exists.
 * The Vaults are now entered from D:14-15 and need a rune to enter.
 * The Abyss randomly draws monsters from elsewhere in the Dungeon.
+* Abyssal stairs appear more frequently, and are fixed with depth.
+* Ziggurats require three runes to enter; an entrance is guaranteed only
+  in Depths, but still spawn as normal in Pan.
+* Portals are no longer closed when carrying the Orb of Zot.
+* The Horn of Geryon is no longer necessary for entering Hell branches.
 
 Character
 ---------
@@ -36,6 +42,7 @@ Character
   are unchanged.
 * Venom Mages and Assassins no longer start with knowledge of potions of
   poison.
+* Fast/slow movement mutations no longer occur randomly.
 
 Monsters
 --------
@@ -43,19 +50,33 @@ Monsters
   Word of Recall and Blink Allies Encircle.
 * Lom Lobon can now cast Tornado.
 * The plain "dragon" is now known as "fire dragon".
+* Dragons, drakes, crabs, and acid blobs no longer flee at low health.
+* Jellies once again split.
 * Monsters are subject to summon caps.
 * Summoned creatures are dismissed upon the death of their summoner.
 * Word of Recall is now subject to a breath timer, and can be interrupted
   by causing a breath timeout (with e.g. curare).
 * Minotaurs appearing naturally outside of labyrinths now come with
   equipment.
+* Abominations don't heal naturally; those created from spells can heal
+  by melding further with crawling corpses and macabre masses.
 * New monster: the ignis, an abyssal monster that coronas the player.
 * New monster: the raiju, which can attack by transforming itself into
   a bolt of lightning.
 * Moths of suppression and rock worms are no more.
+* Ball lightnings are no longer permanently confused, instead seeking out
+  targets like giant spores.
+* Salamanders can now slither across land (like nagas) in addition to
+  swimming in lava.
+* Geryon can fly once again.
+* Lamia has been de-throned.
+* Spirit wolves are no more.
 
 Spells
 ------
+* Resisting an enchantment now displays a message showing how difficult in
+  general the target will be to enchant, rather than how well or how poorly
+  they fared on that particular resistance roll.
 * Sticks to Snakes only works on missiles (arrows and javelins) now.
 * Conjure Ball Lightning has been reduced from level 7 to 6.
 * Bolt of Draining has been reduced from level 6 to 5.
@@ -70,6 +91,8 @@ Spells
   explosion.
 * Orb of Destruction now only appears in the Book of Power (was also in
   Annihilations).
+* Call Canine Familiar now only summons one canine, and does not summon
+  jackals.
 * Removed spells: Song of Shielding, Polymorph.
 
 Items
@@ -114,6 +137,19 @@ Items
 * Potions with known type that would have no effect can no longer be quaffed
   at all.
 * Potions other than potions of porridge no longer give nutrition.
+* All gauntlets and bracers are now gloves.
+* All caps and wizard hats are now plain "hats".
+* Great maces deal slightly less damage and are much less available than
+  before.
+* Potions of restore abilities partially cure skill draining.
+* The last item-targeting scroll and healing potion are automatically
+  identified, assuming knowledge that they are item-targeting scrolls and
+  healing potions.
+* Renamed items:
+  - Sabres are now cutlasses (and the captain's cutlass has been adjusted to
+    match);
+  - Double swords are now bastard swords;
+  - Triple swords are now claymores.
 
 Cards
 -----
@@ -121,6 +157,22 @@ Cards
 
 Gods
 ----
+* A new deity: Dithmengos the Shadowed.
+  - A temple god; guaranteed an altar in Temple or somewhere on D:2-9.
+  - Accepts kills of most dungeon enemies, particularly those associated
+    with fire or light.
+  - Dislikes use of fire and light.
+  - 1* piety grants an umbra which expands with piety.
+  - 2*: Shadow Step - step adjacent to an immobile target creature no further
+    away than your umbra.
+  - 3* piety causes the player to occasionally bleed smoke on taking
+    sufficient damage.
+  - 4*: Shadow Mimic - the player's shadow sometimes mimics melee and ranged
+    attacks and targeted spells (so long as they're not self-targeted).
+  - 5*: Shadow Form - invisibility, resistance to many effects associated
+    with darkness and 50% damage resistance at the expense of skill drain,
+    a 50% reduction in melee damage output and significant reduction in
+    spell power.
 * Gods no longer forgive the player for disliked effects of known wands
   of random effects and weapons of chaos.
 * Trolls of Cheibriados hunger considerably more slowly.
@@ -130,6 +182,8 @@ Gods
 * Xom effects respect clarity and sustain abilities (as long as Xom is not
   feeling nasty).
 * Xom's confusion now caps at 20 turns.
+* Zin's Recite shows what will be affected by all of the relevant recitations.
+* Lugonu followers no longer suffer distortion unwield effects.
 
 Interface
 ---------
@@ -139,6 +193,11 @@ Interface
 * Different types of magical trap are coloured differently.
 * Unnaturally hard rock walls have a new default glyph.
 * The % screen has a new layout.
+* You are prompted to continue wearing/unwearing armour when a monster comes
+  into view.
+* "pickup_mode = multi|single" is now "pickup_menu = true|false", with true
+  being the default; "pickup_mode = auto:X" is no more.
+* The webtitles spectator box sorts names and links online player profiles.
 
 Stone Soup 0.13 (20131011)
 --------------------------
