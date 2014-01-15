@@ -389,11 +389,10 @@ NAME:   vestibule_of_hell
 PLACE:  Hell
 ORIENT: encompass
 TAGS:   no_rotate no_dump
-MARKER: D=feat:enter_dis
-MARKER: G=feat:enter_gehenna
-MARKER: C=feat:enter_cocytus
-MARKER: T=feat:enter_tartarus
-SUBST:  D=A, G=A, C=A, T=A
+KFEAT:  D=enter_dis
+KFEAT:  G=enter_gehenna
+KFEAT:  C=enter_cocytus
+KFEAT:  T=enter_tartarus
 MONS:   Geryon
 : if crawl.one_chance_in(4) then
 MONS:   Murray
@@ -552,10 +551,9 @@ ENDMAP
 ######################### Vestibule Tartarus
 NAME: vestibule_tar_mu
 TAGS: vestibule_tar
-MARKER: T=feat:enter_tartarus
+KFEAT:  T=enter_tartarus
 FTILE:  =T3Dz+'; = floor_infernal_blank
 TILE:   c = dngn_stone_dark
-SUBST:  T=A
 SUBST:  ; = .
 KMONS:  3 = shadow wraith
 KMONS:  z = skeletal warrior / zombie / nothing
@@ -582,8 +580,8 @@ ENDMAP
 
 NAME:   vestibule_tar_nicolae_necropolis
 TAGS:   vestibule_tar
-MARKER: T = feat:enter_tartarus
-SUBST:  T = A, d = ccc., z = zzz..
+KFEAT:  T = enter_tartarus
+SUBST:  d = ccc., z = zzz..
 KMONS:  z = place:Depths:1 zombie / lost soul
 KMONS:  b = revenant / lich / vampire mage / ancient lich / mummy priest / \
            curse skull
@@ -610,8 +608,7 @@ ENDMAP
 ######################### Vestibule Gehenna
 NAME: vestibule_geh_mu
 TAGS: vestibule_geh
-MARKER: G=feat:enter_gehenna
-SUBST:  G=A
+KFEAT:  G=enter_gehenna
 SUBST:  L = l.
 KMONS:  5 = crimson imp
 KMONS:  2 = hellion
@@ -643,8 +640,8 @@ SHUFFLE: ab/cd/ef, cd/cd/gh, ef/ef/ef/ij
 NSUBST:  a = G / H / ', b = 1:' / 2:'pp / *:p
 NSUBST:  h = 1:. / 2:.qq / *:q, j = 1:. / 2:.rr / *:r
 SUBST:   p : llXXx, q : llXXx, r : llXXx
-MARKER:  G = feat:enter_gehenna
-SUBST:   G = A, ce = x, d : xlllLX., f : xlllLX., gi = ....m, m = mm.
+KFEAT:   G = enter_gehenna
+SUBST:   ce = x, d : xlllLX., f : xlllLX., gi = ....m, m = mm.
 SUBST:   L = l., X = xl
 KMONS:   H = hellion
 KMONS:   m = crimson imp / red devil / smoke demon
@@ -672,8 +669,7 @@ ENDMAP
 ######################### Vestibule Cocytus
 NAME: vestibule_coc_mu
 TAGS: vestibule_coc
-MARKER: C=feat:enter_cocytus
-SUBST:  C=A
+KFEAT:  C=enter_cocytus
 SUBST:  8 = 8 .:59
 KMONS:  8 = ice statue
 KMONS:  3 = blue devil
@@ -699,9 +695,9 @@ ENDMAP
 
 NAME:    vestibule_coc_nicolae_fridge_bridge
 TAGS:    vestibule_coc no_pool_fixup
-MARKER:  C = feat:enter_cocytus
+KFEAT:   C = enter_cocytus
 SHUFFLE: ab
-SUBST:   C = A, a = I, b : w., W = w.
+SUBST:   a = I, b : w., W = w.
 KMONS:   I = ice statue
 KMONS:   3 = ice devil / blizzard demon
 KMONS:   2 = blue devil / freezing wraith / white imp / nothing
@@ -727,8 +723,7 @@ ENDMAP
 ######################### Vestibule Dis
 NAME: vestibule_dis_mu
 TAGS: vestibule_dis
-MARKER: D=feat:enter_dis
-SUBST:  D=A
+KFEAT:  D=enter_dis
 KMONS:  8 = iron golem
 KMONS:  3 = iron devil
 KMONS:  6 = metal gargoyle
@@ -754,10 +749,10 @@ ENDMAP
 
 NAME:   vestibule_dis_nicolae_mini_city_of_dis
 TAGS:   vestibule_dis
-MARKER: D = feat:enter_dis
+KFEAT:  D = enter_dis
 NSUBST: E = + / v, F = + / v, q = + / v, p = + / v, \
         B = 1:+ / 1:+vv / *:v, Z = 1:+ / 1:+v / *:v
-SUBST:  D = A, 2 = 22., 3 = 33.
+SUBST:  2 = 22., 3 = 33.
 KMONS:  1 = iron golem / iron dragon
 KMONS:  2 = iron devil / iron imp w:5
 KMONS:  3 = metal gargoyle / reaper w:5

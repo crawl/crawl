@@ -3489,7 +3489,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return item_type_known(item);
 #endif
         case MISC_HORN_OF_GERYON:
-            return item.plus2;
+            return true;
         default:
             return false;
         }

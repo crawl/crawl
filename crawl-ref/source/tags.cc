@@ -1036,6 +1036,38 @@ static void _add_missing_branches()
         _ensure_entry(BRANCH_PANDEMONIUM);
     if (lc == level_id(BRANCH_DEPTHS, 4) || lc == level_id(BRANCH_DUNGEON, 25))
         _ensure_entry(BRANCH_ABYSS);
+    if (player_in_branch(BRANCH_VESTIBULE))
+    {
+        for (rectangle_iterator ri(0); ri; ++ri)
+        {
+            if (grd(*ri) == DNGN_STONE_ARCH)
+            {
+                map_marker *marker = env.markers.find(*ri, MAT_FEATURE);
+                if (marker)
+                {
+                    map_feature_marker *featm =
+                        dynamic_cast<map_feature_marker*>(marker);
+                    // [ds] Ensure we're activating the correct feature
+                    // markers. Feature markers are also used for other
+                    // things, notably to indicate the return point from
+                    // a labyrinth or portal vault.
+                    switch (featm->feat)
+                    {
+                    case DNGN_ENTER_COCYTUS:
+                    case DNGN_ENTER_DIS:
+                    case DNGN_ENTER_GEHENNA:
+                    case DNGN_ENTER_TARTARUS:
+                        grd(*ri) = featm->feat;
+                        dprf("opened %s", dungeon_feature_name(featm->feat));
+                        env.markers.remove(marker);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 #endif
 
