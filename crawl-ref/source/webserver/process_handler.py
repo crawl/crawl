@@ -189,7 +189,7 @@ class CrawlProcessHandlerBase(object):
                 player_name = w.username
             else:
                 watchers.append(w.username)
-        watchers.sort()
+        watchers.sort(key=lambda s:s.lower())
         watcher_names = []
         if player_name is not None:
             watcher_names.append(wrap_name(player_name, True))
