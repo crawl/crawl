@@ -352,7 +352,7 @@ class ResourceIndex():
             (basename, ext) = os.path.splitext(f)
             if ext.lower() == '.txt':
                 self.default_resources.append(basename)
-            elif os.path.isdir(f) and f != 'en':
+            elif os.path.isdir(f) and f != 'en' and len(f) == 2:
                 self.default_languages.append(f)
 
         if options.source:
@@ -363,6 +363,29 @@ class ResourceIndex():
             self.languages = self.default_languages[1:]
         else:
             self.languages = self.default_languages[:]
+
+        self.lang_region = dict()
+        for lang in self.default_languages:
+            if lang == 'cs':
+                region = 'CZ'
+            elif lang == 'da':
+                region = 'DK'
+            elif lang == 'el':
+                region = 'GR'
+            elif lang == 'hi':
+                region = 'IN'
+            elif lang == 'ja':
+                region = 'JP'
+            elif lang == 'ko':
+                region = 'KR'
+            elif lang == 'zh':
+                region = 'CN'
+            else:
+                region = lang.upper()
+            if lang == 'en':
+                self.lang_region[lang] = lang
+            else:
+                self.lang_region[lang] = lang + "_" + region
 
         if options.resource:
             self.set_resources(options.resource)
@@ -499,7 +522,7 @@ class ResourceFile():
         self.language = lang
         self.resource = res
         self.path = res + "." + self.ext
-        self.path = os.path.join(lang, self.path)
+        self.path = os.path.join(self.lang_dir, self.path)
         self.git_path = os.path.join(descript_git_path, self.path).replace("\\", "/")
         self.mtime = 0
         self.modified = False
@@ -706,9 +729,11 @@ class TxtFile(ResourceFile):
         if lang:
             self.entries = dict()
             self.source_res = txt_files[('', res)]
+            self.lang_dir = lang
         else:
             self.entries = OrderedDict()
             self.source_res = self
+            self.lang_dir = ''
         self.key_comment = dict()
         self.value_comment = dict()
         self.ext = 'txt'
@@ -828,6 +853,7 @@ class IniFile(ResourceFile):
         self.entries = dict()
         self.source_res = txt_files[('', res)]
         self.ext = 'ini'
+        self.lang_dir = res_index.lang_region[lang]
         ResourceFile.__init__(self, lang, res)
 
     def __setitem__(self, key, e):
@@ -1071,13 +1097,13 @@ class IniCollection(ResourceCollection):
             call_tx(tx_cmd + ['-a'])
         elif all_res:
             for lang in res_index.languages:
-                call_tx(tx_cmd + ['-l', lang])
+                call_tx(tx_cmd + ['-l', res_index.lang_region[lang]])
         elif all_lang:
             for res in res_index.resources:
                 call_tx(tx_cmd + ['-r', 'dcss.' + res])
         else:
             for res in self:
-                call_tx(tx_cmd + ['-l', res.lang(), '-r', 'dcss.' + res.resource])
+                call_tx(tx_cmd + ['-l', res_index.lang_region[res.lang()], '-r', 'dcss.' + res.resource])
 
     def tx_push(self):
         tx_push = ['push']
@@ -1086,7 +1112,7 @@ class IniCollection(ResourceCollection):
         for res in self:
             if not res.modified: continue
             resource = ['-r', 'dcss.' + res.resource]
-            language = ['-l', res.lang()]
+            language = ['-l', res_index.lang_region[res.lang()]]
             if not res.language:
                 # We push the source then reset the fake translation resource
                 ret = call_tx(tx_push + ['-s'] + resource)
