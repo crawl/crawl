@@ -1344,7 +1344,7 @@ small_more = false
         small_more = true, it is just the bottom left character if
         clear_messages is not set.
 
-show_inventory_weights = false
+show_inventory_weights = true
         When this is set to true, inventory listings will mention the
         weight of each item.
         Note: This option doesn't currently work for Tiles unless you use
