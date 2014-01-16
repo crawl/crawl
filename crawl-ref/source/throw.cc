@@ -2033,7 +2033,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     if (bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
     {
-        did_god_conduct(DID_ILLUMINATE, 1, true);
+        did_god_conduct(DID_FIRE, 1, true);
     }
 
     if (did_return)

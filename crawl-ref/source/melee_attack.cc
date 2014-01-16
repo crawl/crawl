@@ -2241,8 +2241,6 @@ void melee_attack::player_weapon_upsets_god()
         }
         if (get_weapon_brand(*weapon) == SPWPN_FLAMING)
             did_god_conduct(DID_FIRE, 1);
-        else if (get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH)
-            did_god_conduct(DID_ILLUMINATE, 1);
     }
     else if (weapon
              && weapon->base_type == OBJ_STAVES

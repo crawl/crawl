@@ -395,34 +395,15 @@ bool is_poisoned_item(const item_def& item)
 
 bool is_illuminating_item(const item_def& item)
 {
-    // No halo for you! Also no glowy unrands.
+    // No halo for you!
     if (is_unrandom_artefact(item)
-        && (item.special == UNRAND_BRILLIANCE
-            || item.special == UNRAND_PLUTONIUM_SWORD
-            || item.special == UNRAND_STARLIGHT
-            || item.special == UNRAND_HIGH_COUNCIL))
+        && (item.special == UNRAND_BRILLIANCE))
     {
         return true;
     }
 
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_HOLY_WRATH) // divine radiance!
-        {
-            return true;
-        }
-        }
-        break;
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_FLAME)
-            return true;
-        }
-        break;
     case OBJ_BOOKS:
     case OBJ_RODS:
         return _is_bookrod_type(item, is_illuminating_spell);
