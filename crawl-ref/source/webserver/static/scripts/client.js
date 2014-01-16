@@ -196,8 +196,8 @@ function (exports, $, key_conversion, chat, comm) {
             // needed for Mozilla where neither ctrlKey or altKey is set
             if ($.browser.mozilla || !e.ctrlKey || !e.altKey)
             {
-                log("CTRL key: " + e.ctrlKey + " " + e.which
-                    + " " + String.fromCharCode(e.which));
+                //log("CTRL key: " + e.ctrlKey + " " + e.which
+                //    + " " + String.fromCharCode(e.which));
                 return;
             }
         }
@@ -340,8 +340,8 @@ function (exports, $, key_conversion, chat, comm) {
                 e.preventDefault();
                 send_keycode(key_conversion.simple[e.which]);
             }
-            else
-                log("Key: " + e.which);
+            //else
+            //    log("Key: " + e.which);
         }
     }
 
