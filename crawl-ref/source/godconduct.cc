@@ -1030,7 +1030,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             if (you_worship(GOD_DITHMENGOS)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
-                simple_god_message(" appreciates your putting out a fire.");
+                simple_god_message(" appreciates your removing a source of fire.");
                 retval = true;
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;
