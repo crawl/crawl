@@ -781,7 +781,7 @@ void game_options::reset_options()
     auto_switch             = false;
     suppress_startup_errors = false;
 
-    show_inventory_weights = false;
+    show_inventory_weights = true;
     clean_map              = false;
     show_uncursed          = true;
     easy_open              = true;
