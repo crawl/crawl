@@ -40,7 +40,7 @@ enum status_type
     STATUS_RAY,
     STATUS_ELIXIR,
     STATUS_INVISIBLE,
-    STATUS_LAST_STATUS = STATUS_ELIXIR
+    STATUS_LAST_STATUS = STATUS_INVISIBLE
 };
 
 struct status_info
