@@ -533,7 +533,7 @@ bool is_fiery_spell(spell_type spell)
 {
     unsigned int disciplines = get_spell_disciplines(spell);
 
-    return (disciplines & SPTYP_FIRE);
+    return disciplines & SPTYP_FIRE;
 }
 
 static bool _your_god_hates_spell(spell_type spell)

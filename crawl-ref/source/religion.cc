@@ -1220,8 +1220,8 @@ static monster_type _yred_servants[] =
 
 static bool _yred_high_level_servant(monster_type type)
 {
-    return (type == MONS_BONE_DRAGON
-            || type == MONS_PROFANE_SERVITOR);
+    return type == MONS_BONE_DRAGON
+           || type == MONS_PROFANE_SERVITOR;
 }
 
 int yred_random_servants(unsigned int threshold, bool force_hostile)
