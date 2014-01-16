@@ -2602,6 +2602,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     }
 
+    case MONS_RAVEN:
+    {
+        band = BAND_RAVENS;
+        band_size = random_range(1, 2);
+        break;
+    }
+
     default: ;
     }
 
@@ -2997,6 +3004,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_RAIJU:
         return MONS_RAIJU;
+
+    case BAND_RAVENS:
+        return MONS_RAVEN;
 
     default:
         die("unhandled band type %d", band);
