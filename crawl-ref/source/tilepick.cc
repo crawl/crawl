@@ -322,15 +322,15 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_DEPTHS:
         return TILE_DNGN_ENTER_DEPTHS;
     case DNGN_ENTER_VAULTS:
-        return TILE_DNGN_ENTER_VAULTS;
+        return is_existing_level(level_id(BRANCH_VAULTS, 1)) ? TILE_DNGN_ENTER_VAULTS_OPEN
+                              : TILE_DNGN_ENTER_VAULTS_CLOSED;
     case DNGN_ENTER_CRYPT:
         return TILE_DNGN_ENTER_CRYPT;
     case DNGN_ENTER_TOMB:
         return TILE_DNGN_ENTER_TOMB;
     case DNGN_ENTER_ZOT:
-        if (you.opened_zot)
-            return TILE_DNGN_ENTER_ZOT_OPEN;
-        return TILE_DNGN_ENTER_ZOT_CLOSED;
+        return you.opened_zot ? TILE_DNGN_ENTER_ZOT_OPEN
+                              : TILE_DNGN_ENTER_ZOT_CLOSED;
     case DNGN_ENTER_ZIGGURAT:
         return TILE_DNGN_PORTAL_ZIGGURAT;
     case DNGN_ENTER_BAZAAR:
