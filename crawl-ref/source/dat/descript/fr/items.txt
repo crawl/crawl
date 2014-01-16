@@ -97,12 +97,9 @@ Une longue perche avec une énorme lame tranchante au bout.
 %%%%
 bastard sword
 
-Une longue et large épée. Un humain adulte ou un elfe peut la manier à une
-main, tandis que quelqu'un d'une race plus faible aura besoin de ses deux mains
-pour la saisir. En fait, c'est l'arme la plus lourde et la plus meurtrière que
-quiconque, en dehors d'une certaine race d'insectes humanoïdes, puisse manier
-avec un bouclier. Tâter d'une lame aussi longue causera la perte de n'importe
-quel adversaire.
+Une longue et large épée. En fait, c'est l'arme la plus lourde et la plus
+meurtrière que la plupart des espèces peuvent manier avec un bouclier. Tâter
+d'une lame aussi longue causera la perte de n'importe quel adversaire.
 %%%%
 battleaxe
 

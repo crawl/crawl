@@ -34,11 +34,6 @@ Azrael
 
 強力で、好戦的なイフリートだ。(好戦的じゃないイフリートがいるんですか？)
 %%%%
-Blork the orc
-
-著しく太った醜悪なオークだ。 He seems to have scavenged a pair of
-rainbow-coloured suspenders from somewhere. They're not helping.
-%%%%
 Boris
 
 古代の強力なリッチだ。他の純粋なリッチと同様にボリスも不死の存在であり、
@@ -74,27 +69,10 @@ Dissolution
 彼は巨大な毒のある分泌物の塊になったが、彼はまだその知性を保っている。
 彼は形を保つ者全てへの憎しみに満たされている。
 %%%%
-Donald
-
-{{
-    local descript = "あなたと同じく、オーブを探す冒険者だ。"
-
-    if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
-        descript = descript .. " あなたとは違い、しかし"
-    else
-        descript = descript .. "しかし"
-    end
-
-    descript = descript .. "彼はこのことをよく思っていないが、
-まるで鶏のように水を渡ることができる。"
-
-    return descript
-}}
-%%%%
 Dowan
 
 美しいが自惚れの強いエルフだ。彼は魔法への適性があり、
-その他のことにもそれなりだ。
+その他のこともそれなりにこなす。
 彼の能力は双子の妹デュヴェッサの戦闘技術を完全に補完するためのものだ。
 %%%%
 Duvessa
@@ -194,16 +172,11 @@ Ignacio
 
 定命の者は神の干渉無しには悪魔へと転じることはできないのだが、
 イグナシオはマクレブが彼の仕事への愛を見て、
-彼に微笑みかけたことで斯様なものへと変貌した。彼は今現在、
+彼に微笑みかけたことで斯様なものへと変貌した。彼は現在、
 彼の人生の楽しみを永遠に続けることを予定している。
 
 彼の新しい姿に躯から生えている多くの鋭い刃があるが、
 彼は自分のお気に入りの斧を使い続け、その切れ味をあなたで試したいと望んでいる。
-%%%%
-Ijyb
-
-小さくて不細工なゴブリンだ。何やら青いぼろを着ている。 He claims dominion over
-this level of the dungeon; the punishment for trespassing is death.
 %%%%
 Ilsuiw
 
@@ -246,24 +219,67 @@ Kirke
 
 美貌の女魔術師だ。
 %%%%
-lorocyproca
+Lom Lobon
 
-背が高く痩せさらばえた人型の存在だ。
-生きているかのようにたなびく長いローブを羽織っている。 It thirsts for magical
-energies.
+禁欲的にして深遠な、
+ロム・ロボンはその魔法に精通していることで悪名を馳せる古代のデーモンだ。
+パンデモニウムの大広間で最も博識な存在であり、
+時おり神秘の秘奥の為に魂を差し出そうという常命の魔術師たちを探しにいくと噂されている。
+ほとんどの悪魔に見られる恐るべき怒りに欠けているが、
+ロム・ロボンの単眼はそうではなく、冷たく、誰彼かまわない残酷さを隠し持っている。
+%%%%
+Louise
+
+頭の天辺からつま先まで重鎧に身を包んだ、強力な女魔術師だ。
+かつては伝説のゾットのオーブを探す冒険者であったが、アビスに落とされ、
+どうしようもなく迷い込んでしまった。何らかの強大な力にもてあそばれ、
+彼女は10年近くも戦場から動けなくさせられていた。
+最終的にアビスから脱出した時には、彼女は本当に強力な存在になっていたが、
+全く正気を失ってしまっていた。彼女は現在ダンジョンの階層を彷徨い、
+彼女の不運な運命を共有すべく、他の冒険者を探している。
+%%%%
+Maurice
+
+ずる賢く陰謀を企てる盗賊だ。この道において、
+彼は伝説な存在と考えられている-少なくとも彼に言わせれば。にもかかわらず、
+彼は技巧に長け、そしてオーブに惹かれ集まった全ての盗賊やごろつきの中でも、
+モーリスは間違いなく最も狡猾だ。
+%%%%
+Mennas
+
+かつてメナスと名付けられた人間の司祭がいた。彼は遠方を旅し、
+耳を傾ける者にジンの教えを説教して回った。彼はオークの国にさえ出向き、
+オークたちに神の教えと慈悲を説いた。言うまでもなく、
+メナスはオークたちに受け入れられないかった。
+オークたちは彼にビオこそが唯一の神であると宣誓するように強要し、
+それに対して沈黙を保ったメナスの舌を切り落としてしまった。
+
+この天使がそのメナスと同一のものであるかは謎だが、
+彼は喋るのに難儀しているようだ。
+%%%%
+Menkaure
+
+公正にして高貴な、古代の強大な王国の統治者だ。
+彼は若くしてこの世を去ったのちにミイラにされた。彼の忠実な司祭はその後、
+彼が永遠の命を得られるように、強大で強力な魔力を吹き込んだ。現在彼は忘れ去られ、
+包帯や乾いて、脆くなった骨は朽ち始めている。
 %%%%
 Mnoleg
 
 不可思議に輝く人影だ。パンデモニウムの不気味な大気の中を踊っている。
 %%%%
+Murray
+
+ダンジョンの床を転がる悪魔の頭蓋骨だ。
+%%%%
+Nellie
+
+サーカスの一員として旅をする高い知力を持った象だ。ある暗い晩、彼女は鎖を外し、
+パンデモニウムへ消え去った。その後彼女を見た者はいない。
+%%%%
 Xtahua
 
 古代の強力なドラゴンだ。
-%%%%
-the Serpent of Hell gehenna
-
-地獄の業火に燃えて赤く輝く、巨大なドラゴンだ。 It seems to be possessed by the
-very essence of Gehenna and its eternal fire.
 %%%%
 acid blob
 
@@ -321,21 +337,10 @@ balrug
 
 巨大で非常に強力なデーモンだ。炎と影とに包まれている。
 %%%%
-black bear
+Brimstone Fiend
 
-小型の黒い熊だ。 Like all ursines, the black bear will become enraged if badly
-hurt or frightened.
-%%%%
-bone dragon
-
-忌まわしい巨大なアンデッドだ。 the broken bones of many dragons by powerful
-necromantic magic. This creature is unique among dragons in that it lacks a
-typical dragon's fearsome breath.
-%%%%
-crimson imp
-
-小さくて醜い下級デーモンだ。 Its fanged maw seems locked in a permanent malign
-grin, and its horns protrude obscenely from its scaly pate.
+大きく鱗のある翼を持った、地獄の業火を纏った巨大で、強力なデーモンだ。
+地獄の最も恐ろしい住人のうちの一体である。
 %%%%
 curse skull
 
@@ -346,11 +351,6 @@ curse skull
 curse toe
 
 切り離された足の指だ。宙に浮いていて、負のエネルギーの強烈な場を放射している。
-%%%%
-cyclops
-
-額の中央に一つだけ目を持つ巨人だ。両眼による立体視の欠如にも関らず、 throw
-boulders with fearsome accuracy.
 %%%%
 death yak
 
@@ -365,9 +365,10 @@ efreet
 
 灼熱の炎に包まれた、巨大で筋骨逞しい存在だ。
 %%%%
-eye of devastation
+Executioner
 
-宙に浮く巨大な眼球だ。 incandescent energy.
+恐ろしいほどに強力で敏捷なデーモンだ。
+渦巻く鎌のような刃の群れでその形状は曖昧なものに見える。
 %%%%
 fire elemental
 
@@ -390,35 +391,20 @@ goliath beetle
 
 噛み砕く力の強い下顎を持つ、巨大な黒い甲虫だ。非常に固いキチン質の殻を持つ。
 %%%%
-giant gecko
-
-足指の先に吸盤を持ち、壁や天井を上ることができる to walls and ceilings, and
-huge, sharp teeth. It is many times larger than a normal gecko, yet its size
-belies its agility.
-%%%%
-giant orange brain
-
-A huge wrinkled brain, floating just off the floor and glowing with mutagenic
-energies. 時々脈動している。
-%%%%
-glowing shapeshifter
-
-A shapeshifter which has lost control over its 常に変化を続けている。
-%%%%
 green death
 
 膨れあがった体をしたデーモンだ。全身が爛れた腫れ物に覆われ、
 致命的な毒の雲を放っている。
 %%%%
-griffon
-
-大鷲の頭と鉤爪と翼とを持ち、 lion and the wings, head and talons of a great
-eagle.
-%%%%
 guardian mummy
 
 古代の戦士だ。死体に防腐処理を施され、
 呪術によって永遠に死ぬこともなく使役されている。
+%%%%
+Hell Sentinel
+
+悪魔の軍勢によって建造され、支配されたそびえ立つモノリスだ。
+千もの目がギザギザした、棘の生えた鎧の隙間から視線を送ってくる。
 %%%%
 hellion
 
@@ -427,26 +413,6 @@ hellion
 hellwing
 
 おぞましい骸骨のデーモンだ。古代の干からびた皮の羽を持つ。
-%%%%
-hippogriff
-
-大鷲の頭と鉤爪と翼とを持ち、 horse and the wings, head and talons of a great
-eagle.
-%%%%
-hungry ghost
-
-飢えで死んだ何者かのアンデッドだ。 this creature drains sustenance from the
-bodies of its victims, hoping to inflict its own miserable fate on others.
-%%%%
-hydra
-
-A great and nightmarish lacertilian beast. これは複数の頭を持ち、
-更に頭を殖やす能力がある！
-
-Hitting it with any cutting weapon bigger than a dagger or a quick blade risks
-lopping a head off, which, considering hydra's unique biology, is not what you
-want unless the blade is hot enough to cauterize the wound. Even a troll's
-claws may be enough to rip hydra heads.
 %%%%
 ice beast
 
@@ -457,59 +423,19 @@ ice devil
 
 光り輝く氷に覆われた人間サイズのデーモンだ。
 %%%%
-inept item mimic
+Ice Fiend
 
-An apparently abandoned item, actually a small 擬態した姿だ。
-%%%%
-iron devil
-
-金属の皮膚をした見るもおぞましい人間型の存在だ。 While it lacks magical attacks
-and is slow of foot, it makes up for these failings with brute strength.
-%%%%
-item mimic
-
-An apparently abandoned item, actually 実は危険な小型の獣の擬態した姿だ。
-%%%%
-jackal
-
-A small canine scavenger. Packs of these creatures この生き物の群れは、
-ダンジョンの中を死肉を貪るために徘徊する。
+霜に覆われ、冷気を纏った巨大な極寒のデーモンだ。
+地獄の最も恐ろしい住人のうちの一体である。
 %%%%
 jelly
 
 脈動する酸性の原形質の塊だ。これは何でも消化してしまう。
 そして短時間のうちに増殖していく……。
 %%%%
-jellyfish
-
-脈動する透明な肉塊だ。 below the surface of the water to sting its prey with
-its many tentacles. The tentacles do little harm on their own, but the
-poisonous toxins they inject can cause significant damage to muscle tissue.
-%%%%
-Killer Klown
-
-A comical figure full of life and laughter. It
-あなたに会えてとても嬉しそうにしている……。 cast to its features? Is that red
-face paint or something altogether less pleasant?
-%%%%
 lava worm
 
 溶岩の中を泳ぐ危険な赤いワームだ。
-%%%%
-lemure
-
-かすかに人型をとどめた腐敗した白い肉の塊だ。 It gargles horribly as pus flows
-from its orifices.
-%%%%
-lindwurm
-
-力強い一対の前肢を持つ、蛇のような姿の小型ドラゴンだ。 forelimbs. Its thick
-scales give off an eerie green glow.
-%%%%
-manticore
-
-ひどく醜い交雑生物だ。人間の頭と、ライオンの銅と、とても大きな蝙蝠の羽とを持つ。
- bristles with spikes that can be loosed at potential prey.
 %%%%
 metal gargoyle
 
@@ -520,62 +446,9 @@ minotaur
 大きく筋肉質な人間の体に雄牛の頭部を持つモンスターだ。
 隔離された迷宮を棲み処としている。
 %%%%
-molten gargoyle
-
-A hideous molten stone statue come to life, with fearsome claws and flames
-licking out 鋭い歯の並んだ口からは酸性の毒液を滴らせている。
-%%%%
-mummy
-
-防腐処理を施され包帯に覆われた体を持つアンデッドだ。
-古代の魔術によって使役されている。 compelled to walk by an ancient curse. It
-radiates a malign aura to those who intrude on its domain.
-%%%%
-necrophage
-
-最も邪悪で不浄なアンデッド被造物で、腐敗した人間型生物の死体から作成される。 of
-humanoid creatures. They exist to spread disease and decay, and gain power from
-the decaying corpses of other beings.
-%%%%
-ogre mage
-
-稀少な血統のオーガで、魔法の使用に長けている。 It usually becomes a chieftain
-among its kin.
-%%%%
-orb of fire
-
-原初の炎そのものの球体だ。 impressive pyrotechnics, and of twisting the very
-flesh of creatures who come into its ken.
-%%%%
-orc
-
-オークは醜い地下の種族であり、豚と人間、そして worst features of humans, pigs
-and several other unpleasant creatures. They tend to run in packs or mobs, and
-delight in outbursts of insane violence.
-%%%%
-plant
-
-ほとんどの植物はダンジョンの不快な環境では生育しないが、 environment, but some
-have managed to adapt and even thrive underground in the absence of the sun.
-%%%%
-polar bear
-
-大きくて非常に力の強い熊だ。 white fur, habituated to cold conditions. Like all
-ursines, the polar bear will become enraged if badly hurt or frightened.
-%%%%
-quicksilver dragon
-
-長い体を曲がりくねらせたドラゴンだ。蛇に似た姿をしている。 magical energies arc
-from its pointed snout, and it moves with terrifying swiftness.
-%%%%
 reaper
 
 巨大な鎌を手にした、骸骨のような姿の存在だ。
-%%%%
-red wasp
-
-巨大な赤いススメバチだ。邪悪なかかりのついた毒針を持つ。 Potent paralytic
-poison drips from its tip.
 %%%%
 redback
 
@@ -586,29 +459,9 @@ the royal jelly
 
 とりわけ豪華な、金色をしたゼリー状の存在だ。
 %%%%
-seraph
-
-The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts,
-the mightiest servants 善き Gods. They have six wings and but one face, and are
-said to sometimes take the forms of fiery serpents.
-%%%%
-shadow demon
-
-不可思議な悪魔的存在だ。常に自身の複数の影の中に霞んでいる。 It weaves
-creatures into existence from the very shadows surrounding it.
-%%%%
 shadow imp
 
 小さくて影のような下級デーモンだ。
-%%%%
-shapeshifter
-
-A disturbing creature with the power to change its form.
-このモンスターが本来の形態で目撃されることは極めて稀だ。
-%%%%
-simulacrum
-
-An ice replica of a monster that is animated by 死霊術の力で操られている。
 %%%%
 skeletal warrior
 
@@ -632,16 +485,6 @@ spiny worm
 たくさんの節がある胴体は刺の生えたキチン質の装甲によって覆われている。
 鋭い歯の並んだ口からは酸性の毒液を滴らせている。
 %%%%
-steam dragon
-
-A relatively small grey dragon, with a resilient-looking scaly hide and steam
-pouring その顎からは蒸気が立ち昇っている。
-%%%%
-stone giant
-
-岩のように固い灰色の皮膚を持つ巨大な人型生物だ。 It carries several boulders,
-and is perfectly capable of flinging them a great distance.
-%%%%
 sun demon
 
 地に墜ちた星の光と激怒とに輝く、悪魔的な姿をした存在だ。
@@ -652,7 +495,7 @@ swamp drake
 
 {{
     if you.can_smell() then
-        return "It smells terrible."
+        return "ひどい臭いだ。"
     end
 }}
 %%%%
@@ -660,20 +503,10 @@ swamp worm
 
 大きなぬるぬるしたワームだ。この不浄な沼の泥の中を泳ぐのに特化している。
 %%%%
-titan
-
-This huge, bolt-hurling, lightning-limned humanoid is unusually large
-巨人族の中にあってさえ著しく巨大で力強い。
-%%%%
 toenail golem
 
 かりそめの生命を与えられた巨大な像だ。爪切りで切った足の爪だけで造られている。
 非常に時間の有り余った誰かが造ったのだろう。
-%%%%
-two-headed ogre
-
-肥大した体に二つの頭を持つ、巨大なオーガだ。 bloated ogre body. It is capable
-of holding a weapon in each giant hand.
 %%%%
 ufetubus
 
@@ -683,39 +516,17 @@ vault guard
 
 重武装重装甲を備えた宝物庫の番人だ。
 %%%%
-warg
-
-A particularly large and evil-looking wolf, usually
-大抵の場合はオークと一緒にいる。
-%%%%
-wraith
-
-精神体のアンデッドだ。実体のない骸骨の体に黒い霧を纏っている。 surrounding an
-insubstantial skeletal form. Its eyes burn bright with unholy malevolence and
-hunger for life essence, on which it feeds.
-%%%%
-wretched star
-
-A conflux of unearthly light and energy, awash in unnatural colours and strange
-forms no normal being was meant to perceive. Merely being near it fills your
-body with the disorder アビスの.
-%%%%
-wyvern
-
-A dragon-like creature with a long, sharply pointed tail.
-ワーバーンは本物の竜よりは小型で手強さも劣るが、とりもなおさず侮り難い敵である。
-%%%%
 yak
 
 ダンジョンに生息するヤクとしては普通のものだ。ぼさぼさした毛皮に覆われていて、
 一対の危険な角を持つ。
 %%%%
-yellow wasp
-
-巨大なススメバチだ。 chitinous armour. Its deadly venom can render most beings
-unable to move.
-%%%%
 zombie
 
 死霊術によって甦った死体だ。
+%%%%
+Cigotuvi's Monster
+
+想像出来うる限りの全ての怪物たちの体の一部から造りだされたように見える、
+恐るべき創造物だ。
 %%%%

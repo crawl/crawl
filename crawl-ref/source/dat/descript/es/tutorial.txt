@@ -1,9 +1,9 @@
 %%%%
 tutorial intro
 
-Puedes volver a leer los mensaje en cualquier momento mediante
+Puedes volver a leer los mensajes en cualquier momento mediante
 <input>$cmd[CMD_REPLAY_MESSAGES]</input>. Pulsa la tecla <input>Espacio</input>
-para marcar como leídas las notificaciones <cyan>--more--</cyan> que recibas.
+para marcar como leídas las notificaciones <cyan>--more--</cyan> que aparezcan.
 %%%%
 tutorial1 start
 
@@ -175,6 +175,62 @@ tutorial3 autopickup
 Algunos tipos de objetos<tiles>, marcados con un recuadro verde,</tiles> son
 recogidos de forma automática cuando pases por encima de ellos.
 %%%%
+tutorial3 scroll
+
+Muchos objetos no están identificados al encontrarlos. Una manera de averiguar
+para que sirven es usarlos.  Prueba a leer este pergamino con
+<input>$cmd[CMD_READ]</input><localtiles> o haciendo <input>clic con el
+ratón</input> sobre él en el panel de inventario.
+%%%%
+tutorial3 scroll_noautopickup
+
+La recolección automática no funcionará si hay algún monstruo alrededor. Tus
+opciones son, o bien tomar el pergamino mediante
+<input>$cmd[CMD_PICKUP]</input><localtiles> o haciendo <input>clic con el
+ratón</input> sobre tu personaje,</localtiles> o bien luchar contra los
+enemigos que haya cerca de ti y recorgerlo después.
+%%%%
+tutorial3 downstairs
+
+¡Bien luchado! Si es necesario, descansa con <input>$cmd[CMD_REST]</input>, y
+luego baja por las escaleras con <input>$cmd[CMD_GO_DOWNSTAIRS]</input>
+<localtiles> o haciendo <input>Shift-clic</input> sobre tu
+personaje</localtiles>.
+%%%%
+tutorial3 command_help
+
+Si te sientes abrumado por tantos comandos, puedes consultarlos en la ayuda de
+comandos <input>$cmd[CMD_DISPLAY_COMMANDS]</input>. <localtiles>Varios de los
+comandos también estan disponibles en el <w>panel de comandos</w> que se
+encuentra a la derecha de la pantalla, y sobre el cual puedes hacer clic.
+</localtiles>Como es habitual, también puedes volver a leer los mensajes
+pasados mediante <input>$cmd[CMD_REPLAY_MESSAGES]</input>.
+%%%%
+tutorial3 potion
+
+Para beber una de estas pociones emplea <input>$cmd[CMD_QUAFF]</input>
+<localtiles> o haz <input>clic con el ratón</input></localtiles>.
+%%%%
+tutorial3 wand_fire
+
+Puedes evocar varas mediante <input>$cmd[CMD_EVOKE]</input><localtiles> o
+haciendo <input>clic con el ratón</input> en el panel de
+inventario</localtiles>.
+%%%%
+tutorial3 wand_digging
+
+Una vara de excavación es capaz de destruir ciertos tipos de paredes. Usa
+<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input> <localtiles>o
+<input>pasa por encima el ratón</input>/<input>haz clic con el botón
+derecho</input> </localtiles>para comprobar el tipo de pared.
+%%%%
+tutorial3 amulet
+
+Para ponerse una pieza de joyería usa <input>$cmd[CMD_WEAR_JEWELLERY]</input>
+<localtiles> o haz <input>clic con el ratón</input> en el panel de
+inventario</localtiles>. La identidad de algunas joyas se desvelará al
+ponérserlas, pero otras requerirán ser identificadas de otra manera.
+%%%%
 tutorial3 gold
 
 Puedes gastar el oro en las tiendas. El oro no pesa y no puede ser depositado.
@@ -275,8 +331,8 @@ oponentes, siempre que no te quedes exhausto antes de acabar con todos ellos.
 %%%%
 tutorial5 tutorial_end
 
-¡Enhorabuena! Has completado la última lección del curso y ya estás preparado
-para el juego auténtico. ¡Buena suerte!
+¡Enhorabuena! Has completado la última lección del curso para principiantes y
+ya estás preparado para el juego auténtico. ¡Buena suerte!
 
 Para salir del curso, simplemente desciende estas escaleras.
 %%%%

@@ -22,6 +22,20 @@ death random 0
 Overvej altid at bruge projektiler, vånde eller besværgelser før du angriber
 monstre i nærkamp.
 %%%%
+death random 1
+
+Du må lære at stikke af fra ting, du ikke kan klare – det er vigtigt! Det er
+tit en god idé at springe over et særligt farligt niveau, men det er farligt at
+gøre det for meget, for uhyrerne bliver kun sværere, jo dybere du søger.
+%%%%
+death random 2
+
+Du bør hvile mellem sammenstød, helst i et område du allerede har udforsket og
+renset for uhyrer.  Når du trykker på <input>$cmd[CMD_REST]</input>
+<localtiles> eller <input>klikker i statistikområdet</input> kan du hvile et
+øjeblik (du holder op med at hvile efter 100 ture, eller når du er fuldt
+udhvilet).
+%%%%
 death random 3
 
 Husk nu at bruge de skriftruller, eliksirer og vånde du har fundet. Du kan
@@ -38,4 +52,66 @@ death random 5
 
 Kæmp aldrig mod mere end et monster hvis du kan undgå det. Bak altid ind i en
 korridor så de bliver tvunget til at kæmpe mod dig en mod en.
+%%%%
+finished
+
+Tillykke! Du har overlevet helt til slutningen af tip-tilstanden, men husk også
+at prøve de andre. Bemærk, at hjælpeskærmen med kommandoer
+(<input>$cmd[CMD_DISPLAY_COMMANDS]?</input>) kan se meget anderledes ud fra nu
+af. Her er et sidste spiltip:
+%%%%
+finished explored
+
+Det bliver lettere at udforske gangene, når man bruger auto-udforskning
+(<input>$cmd[CMD_EXPLORE]</input>). Crawl sørger automatisk for, at du bevæger
+dig rundt og samler interessante genstande op.<localtiles>
+
+Auto-udforskning kan også startes ved at <input>ctrl+venstreklikke</input> på
+minikortet.</localtiles>
+%%%%
+finished travel
+
+Der er en praktisk måde at rejse mellem fjerne steder på: Tryk på
+<input>$cmd[CMD_INTERLEVEL_TRAVEL]</input>, og vælg den ønskede destination.
+Hvis din rejse bliver afbrudt, kan du trykke <input>$cmd[CMD_INTERLEVEL_TRAVEL]
+og enter</input> for at fortsætte den.
+%%%%
+finished random 0
+
+Spillet fører en automatisk logbog for dine karakterer. Tryk på
+<input>$cmd[CMD_DISPLAY_COMMANDS]:</input> for at læse den. Du kan skrive noter
+manuelt med <input>$cmd[CMD_MAKE_NOTE]</input>. Når din karakter dør,
+efterlader den to morgue-filer i <w>morgue/</w>-mappen. Den, der slutter med
+.txt, indeholder en kopi af din logbog. Mens du spiller, kan du lave en
+dump-fil med <input>$cmd[CMD_CHARACTER_DUMP]</input>.
+%%%%
+finished random 1
+
+Crawl har en indbygget makro-funktion: Tryk på <input>-m</input> for at
+definere en makro ved først at vælge en udløsertast (det kunne være
+<input>F1</input>) og en kommandosekvens, for eksempel <input>za+</input>. Det
+betyder, at <input>F1</input>-tasten altid affyrer besværgelsen på plads a mod
+det nærmeste uhyre. Du kan få mere at vide om makroer ved at skrive
+<input>$cmd[CMD_DISPLAY_COMMANDS]-</input>.
+%%%%
+finished random 2
+
+Brugerfladen kan tilpasses på mange måder. Alle indstillingerne er forklaret i
+filen <w>options_guide.txt</w>, som findes i <w>docs</w>-mappen.
+Indstillingerne tilpasses i <w>init.txt</w> eller <w>.crawlrc</w>. Crawl
+brokker sig, hvis det ikke kan nogen af de filer.
+%%%%
+finished random 3
+
+Du kan spørge andre Crawl-spillere til råds i IRC-kanalen (Internet Relay Chat)
+<w>##crawl</w> på freenode-serveren (<w>irc.freenode.net</w>).
+%%%%
+HINT_CONVERT Xom
+
+Du er netop konverteret til <w>Xom</w>. Du kan glæde Xom ved at fornøje ham, og
+du ønsker virkelig ikke, at den her gud synes, at du er kedelig!
+
+Hvis du fornøjer Xom, behandler han dig som legetøj og skader og hjælper dig
+tilfældigt, alt efter hvad han synes er sjovest. Ellers behandler han dig som
+legetøj, han ikke bryder sig om.
 %%%%

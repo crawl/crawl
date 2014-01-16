@@ -96,11 +96,6 @@ Ogre
 Dideli ir stiprūs, jie paprastai laikomi gyvuliais. Vis dėlto žmogėdros yra
 gerai apsipratę su magijos pagrindais.
 %%%%
-Sludge Elf
-
-Pagędęs elfo tipas, kuris labiau mėgsta klastą negu teisingą kovą ir tamsiają
-magiją negu kitus burtus.
-%%%%
 Spriggan
 
 Labai maži, labai gležni ir labai greiti. Spriganai yra labai kompetetingi kai

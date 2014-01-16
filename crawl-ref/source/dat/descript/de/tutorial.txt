@@ -517,6 +517,23 @@ Um Ihre Kenntnisse von Zauber zu überprüfen, drücken Sie
 <input>mouseover</input> über Ihre gespeicherten Zauber</localtiles>.
 Vergleichen Sie Ihre Zauber Erfolgsraten vor und nach schwingt dieses Personal.
 %%%%
+tutorial4 mephitic_cloud
+
+Mephistische Wolke ist ein Zauberspruch der Stufe 3. Du kannst dir diesen
+Zauberspruch noch nicht einprägen. Um schneller in der Stufe aufzusteigen, sind
+hier noch ein einige Trainingspuppen —  dieses Mal ohne Steine zum Werfen.
+
+Auf der Erfahrungsstufe 3 wirst du in der Lage sein eine deiner Eigenschaften
+zu verbessern — wenn du <input>I</input>ntelligenz auswählst, wird dir dies
+beim Zaubern noch mehr helfen.
+%%%%
+tutorial4 meph_reminder
+
+Vergiss nicht dir den neu verfügbaren Zauberspruch einzuprägen, indem du
+<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> oder auf den
+Gedächtnis-Tab <input>klickst</input> und das Zauberspruch-Symbol
+auswählst</localtiles>!
+%%%%
 tutorial4 aiming_clouds
 
 Eine verpestete Wolke bedeckt, wenn geworfen, eine Fläche mit schädlichen

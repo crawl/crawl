@@ -1,0 +1,45 @@
+%%%%
+Centaur
+
+Spēji, stipri un miesīgi. Kentauriem vajag vairāk pārtikas kā citām sugām. Viņi
+ir īpaši prasmīgi ar tālcīņas ieročiem.
+%%%%
+Deep Dwarf
+
+Pazemes rūķi mitinās zemes dzīlēs un nespēj dabiskā ceļā atjaunot dzīvības,
+tomēr tie ir ļoti izturīgi pret ievainojumiem un līdzi nēsā dziedējošus
+līdzekļus.
+%%%%
+Demigod
+
+Viņi nekad nesekos dievam, taču Pusdievi to kompensē ar dievišķām spējām un
+izturību.
+%%%%
+Djinni
+
+Džini ir uguns gari, kuriem maģija ir pašas dzīvības pamatā.
+%%%%
+Halfling
+
+Mazi, taču rūdīgi, hobiti ir nepārspējami ar lingām. Tiem ir arī palielināta
+pretestība pret mutagēnisku iedarbību.
+%%%%
+High Elf
+
+Cēli elfi, kas spējīgi burties tikpat labi kā cīnīties ar zobenu.
+%%%%
+Merfolk
+
+Kā puszivis un puscilvēki jūrcilvēki ir gan ūdens, gan zemes iemītnieki. Tie ir
+spēcīgi kaujinieki, kas kaujas laikā mēdz ņemt arī talkā burvestības.
+%%%%
+Minotaur
+
+Liels muskuļots cilvēks ar buļļa galvu. Tiem padodas visa veida tuvcīņa un
+tālcīņa.
+%%%%
+Spriggan
+
+Ļoti mazi, ļoti vāri un ļoti ātri. No sprigāniem sanāk ārkārtīgi spējīgi
+slepkavas un burvji.
+%%%%

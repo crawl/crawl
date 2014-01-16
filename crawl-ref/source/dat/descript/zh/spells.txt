@@ -117,6 +117,11 @@ Conjure Flame spell
 
 这道法术创造出一团火云。
 %%%%
+Control Teleport spell
+
+这道法术允许施法者控制下一次传送——或是选择传送的大致地点，或是选择闪烁的方向。
+注意受控制的传送会让物体被魔法能量污染，同时受控传送比随机传送触发时间要长。
+%%%%
 Control Undead spell
 
 这道法术尝试让施法者周围的所有不死生物都变成施法者的奴仆。
@@ -145,6 +150,11 @@ Darkness spell
 这道法术让地城内的环境变得更为黑暗，缩小视野范围。这道法术的效果范围非常大，
 而且没有明显的边界，因此一般来说，除了非常靠近施法者的生物之外，
 这道法术不会惊动任何人。
+%%%%
+Dazzling Spray spell
+
+这道法术从施法者的指尖发射闪烁的能量箭，能强烈地眩晕任何被击中的生物，
+令它们失明，走路来跌跌撞撞。
 %%%%
 Death Channel spell
 
@@ -179,6 +189,10 @@ Delayed Fireball spell
 Demonic Horde spell
 
 这道法术召唤一小群小恶魔来与施法者的敌人作战（有时候也会闹内讧！）。
+%%%%
+Dig spell
+
+这道法术能从未成形的岩石中挖出一条路。
 %%%%
 Disjunction spell
 
@@ -231,6 +245,11 @@ Flight spell
 
 这道法术赋予施法者在空中飞行的能力。
 %%%%
+Force Lance spell
+
+这道法术能发射震荡性的能量冲击，如果这股冲击力没有被对方的防御消除，
+目标将会被击退。
+%%%%
 Freeze spell
 
 这道法术能冰冻一个生物。这么做可能会暂时减慢冷血动物的新陈代谢速度。
@@ -244,6 +263,12 @@ Freezing Aura spell
 Freezing Cloud spell
 
 这道法术塑造出一团致命的极寒冷气云。
+%%%%
+Fulminant Prism spell
+
+这道法术能制造并发射一个从周围环境引导魔法力量的棱镜，
+棱镜产生不久就会产生猛烈的奥术能量爆炸。小心，棱镜十分脆弱，
+任何伤害都可能导致其提前引爆而损失威力。
 %%%%
 Haste spell
 
@@ -281,6 +306,12 @@ Invisibility spell
 Iron Shot spell
 
 这道法术向施法者的敌人射出一支巨大而沉重的钢铁箭矢。
+%%%%
+Iskenderun's Battlesphere spell
+
+这道法术制造一个小巧的魔法球体，它与施法者自身的能量相连接，
+会在施法者周围徘徊并增加他们的破坏能量。尽管球体本身不能独立行动，
+不过每次它的制造者使用破坏性的法术时，它能同步向施法者的敌人发射能量。
 %%%%
 Iskenderun's Mystic Blast spell
 

@@ -790,8 +790,9 @@ herbeiruft, verbunden mit leichten Kosten.
 large rock
 
 Ein sehr großer und sehr schwerer Stein. {{
-    if string.find(you.race(), "Monster")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
+       or you.race() == "Formicid"
    then
        return ""
    else
@@ -803,8 +804,7 @@ Ein sehr großer und sehr schwerer Stein. {{
 large shield
 
 großes Stück Holz und Metall, auf einen Arm zur Abwehr geschnallt werden. {{
-    if string.find(you.race(), "Ogre")
-       or string.find(you.race (), "Draconian")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
     then
         return "Es sieht aus wie es Ihnen gut passen würde."
@@ -1563,16 +1563,6 @@ Ursprünglich verwendet von Jägern, um Beute zu verfangen und zu verführen, ha
 es bald offensichtliche Anwendung im Kampf und den Gladiatorarenen gefunden.
 Kämpfende Opfer können schließlich das Netz zerstören und sich freimachen, wenn
 sie genug lange leben.
-{{
-    if you.race() == "Halfling"
-       or you.race() == "Kobold"
-       or you.race() == "Spriggan"
-    then
-       return "Leider ist es zu groß und für Sie ungeschickt, um zu verwenden."
-    else
-       return ""
-    end
-}}
 %%%%
 tome of destruction
 

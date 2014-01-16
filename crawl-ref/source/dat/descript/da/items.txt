@@ -97,6 +97,14 @@ beef jerky
 
 Et stykke konserveret, død ko.
 %%%%
+blessed bastard sword
+
+Et langt, stort sværd, som er bestyrket af Den Strålendes kraft.
+%%%%
+blessed claymore
+
+Et enormt sværd, som er bestyrket af Den Strålendes kraft.
+%%%%
 blessed falchion
 
 Et sværd med en bred, skærende klinge. Det er blevet forbedret af Den
@@ -461,6 +469,13 @@ chunk of flesh
 
 En klump kød, du har fundet i de underjordiske gange.
 %%%%
+claymore
+
+Et kolossalt sværd, som man skal bruge to hænder bare for at holde, og stor
+styrke og dygtighed for at bruge effektivt. Det siger sig selv, at når en
+sværdkæmper er mægtig nok til at bruge det ubesværet, så er det et
+uovertruffent våben.
+%%%%
 cloak
 
 En stofkappe.
@@ -791,8 +806,9 @@ mod en lille pris.
 large rock
 
 En meget stor og meget tung sten. {{
-    if string.find(you.race(), "Ogre")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
+       or you.race() == "Formicid"
     then
         return ""
     else
@@ -804,8 +820,7 @@ En meget stor og meget tung sten. {{
 large shield
 
 Et stort stykke træ og metal som man spænder på armen til forsvar. {{
-    if string.find(you.race(), "Ogre")
-       or string.find(you.race(), "Draconian")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
     then
         return "Det ser ud til, at det ville passe dig godt."
@@ -1057,6 +1072,11 @@ potion of resistance
 
 En trylledrik, som gør dig midlertidigt modstandsdygtig mod elementerne og
 gift.
+%%%%
+potion of restore abilities
+
+En eliksir, som giver brugeren sine evner tilbage og kurerer dræning. Det lader
+også brugeren bruge et åndevåben igen med det samme.
 %%%%
 potion of slowing
 
@@ -1634,17 +1654,6 @@ Et net af reb, som er bundet sammen og har vægte i kanten. Det blev oprindeligt
 brugt af jægere til at besnære og indfange bytte, men blev hurtigt taget i brug
 i kamp og gladiatorarenaer. Sprællende ofre vil til sidst ødelægge nettet og
 bryde fri hvis de lever længe nok.
-{{
-    if you.race() == "Halfling"
-       or you.race() == "Kobold"
-       or you.race() == "Spriggan"
-    then
-        return "Det er desværre for stort og uhåndterligt til at du kan " ..
-               "bruge det."
-    else
-        return ""
-    end
-}}
 %%%%
 tomahawk
 

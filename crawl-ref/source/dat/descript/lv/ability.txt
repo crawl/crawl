@@ -19,6 +19,10 @@ Spit Acid ability
 
 Uzspļaut indi izvēlētajam briesmonim.
 %%%%
+Stop Singing ability
+
+Pārstāt dziedāt savu Slaktēšanas dziesmu.
+%%%%
 Evoke Teleportation ability
 
 Aizteleportē sevi uz nejaušu līmeņu vietu.
@@ -27,9 +31,22 @@ Turn Visible ability
 
 Atkal kļūt redzamam.
 %%%%
+Cure All Mutations ability
+
+Izdziedēt visas mutācijas, taču tikai vienreiz.
+%%%%
+Animate Dead ability
+
+Atdzīvināt visus apkārtnē esošos līķus un ģindeņus kā savus sekotājus. Ņemiet
+vērā, ka zombiji un ģindeņi nevar pamest to līmeni, kurā tika atdzīvināti.
+%%%%
 End Transfer Knowledge ability
 
 Pārtraukt notiekošo pramju parnesi.
+%%%%
+Make dart trap ability
+
+Izvēlētajā vietā izveidot šautriņu lamatas.
 %%%%
 Make arrow trap ability
 
@@ -39,9 +56,17 @@ Remove Curse ability
 
 Noņemt lāstu no sava apbruņojuma.
 %%%%
+Make altar ability
+
+Izvēlētajā vietā izveidot ziedokli vēlamajam dievam.
+%%%%
 Make net trap ability
 
 Izvēlētajā vietā izveidot tīkla lamatas.
+%%%%
+Make spear trap ability
+
+Izvēlētajā vietā izveidot šķēpu lamatas.
 %%%%
 Make water ability
 

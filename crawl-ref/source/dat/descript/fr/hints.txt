@@ -84,10 +84,9 @@ vous serez pleinement guéri).
 %%%%
 death random 3
 
-Rappelez-vous d'utiliser les parchemins, potions et baguettes que vous avez
-trouvez. Très souvent, vous ne pourrez espérer identifier chacun avec
-uniquement un parchemin d'identification. Apprenez à improviser : identifiez en
-utilisant.
+Pensez à utiliser les parchemins, potions et baguettes que vous avez trouvé.
+Très souvent, vous ne pourrez tout identifier uniquement avec des parchemins
+d'identification. Apprenez à improviser : identifiez en utilisant.
 %%%%
 death random 4
 

@@ -116,11 +116,6 @@ Ogre
 Groß und stark, werden sie meistens als Wüstlinge angesehen. Allerdings sind
 Oger sehr gut mit den Grundkenntnissen der Magie vertraut.
 %%%%
-Sludge Elf
-
-Eine verdorbene Elfenart, die List statt fairem Kampf bevorzugt, und dunkle
-Magie statt anderen Zaubern.
-%%%%
 Spriggan
 
 Sehr klein, sehr schmächtig und sehr schnell. Spriggans sind kompetente

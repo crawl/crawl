@@ -32,6 +32,11 @@ Draconian
 Drakoni jsou všeumělové, kteří dospívají na sedmé úrovni, kdy získavají
 charakteristický odstín.
 %%%%
+Formicid
+
+Formicidové jsou humanoidní mravenci, kteří jsou velmi zruční v kopání. Jejich
+končetiny jsou vyjímečně silné, a žijí v přirozeném stavu stáze.
+%%%%
 Felid
 
 Myslící plemeno koček s mnoha života, které zato nejsou schopny jemné
@@ -110,11 +115,6 @@ Ogre
 
 Velcí a silní, povětšinou považováni za bezmyšlenkovité bijce. Obrové jsou však
 zběhlí i v základech magie.
-%%%%
-Sludge Elf
-
-Zkažená rasa elfů, která dává přednost lstem před rovným bojem, a temné magii
-před jinými druhy kouzel.
 %%%%
 Spriggan
 

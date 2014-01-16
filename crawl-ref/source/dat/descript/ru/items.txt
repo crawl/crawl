@@ -462,8 +462,9 @@ lajatang
 large rock
 
 Булыжник, используемый гигантами как снаряд. {{
-    if string.find(you.race(), "Огр")
-       or you.race() == "Тролль"
+    if you.race() == "Ogre"
+       or you.race() == "Troll"
+       or you.race() == "Formicid"
     then
         return ""
     else
@@ -474,9 +475,8 @@ large rock
 large shield
 
 Обычный щит, только больше. {{
-    if string.find(you.race(), "Огр")
-       or string.find(you.race(), "Дракониан")
-       or you.race() == "Тролль"
+    if you.race() == "Ogre"
+       or you.race() == "Troll"
     then
         return "Похоже, что он вам подойдёт."
     else
