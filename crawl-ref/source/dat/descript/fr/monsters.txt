@@ -2778,16 +2778,6 @@ trapdoor spider
 Un arachnide rapide qui à la fois surprend ses proies et fait fuir ses ennemis
 en s'occultant lui-même dans les recoins du sol du donjon.
 %%%%
-treant
-
-À première vue, vous pourriez le confondre avec un arbre ordinaire, mais ses
-branches se balancer et grincer délibérément, et dans les noeuds et les
-rainures de son écorce rougeâtre peut remarquer les caractéristiques ratatiné
-d'un protecteur âgée de la forêt. Bien qu'il se déplace d'une lenteur délibéré,
-ses énormes branches noueuses peuvent égaler la force des géants et son écorce
-résister à la morsure des haches. Un bourdonnement étrange semble le suivre
-lorsqu'il se déplace ....
-%%%%
 troll
 
 Le troll de base est une créature humanoïde imposante et physiquement
