@@ -152,9 +152,9 @@ Dithmengos
 Dithmengos the Shadowed desires all to be darkness. In exchange for their
 life essence and that of the inhabitants of the dungeon, followers of
 Dithmengos gain a strange and otherwordly affinity to the shadows of their
-environment. Dithmengos despises sources of light, including most forms of
-fire, and forbids their use by worshippers; Dithmengos favours those who would
-instead destroy those sources of illumination.
+environment. Dithmengos despises fire, the ancient enemy of the shadows, and
+forbids its use by worshippers; Dithmengos favours those who would instead
+destroy sources of light.
 %%%%
 Zin powers
 

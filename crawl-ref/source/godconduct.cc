@@ -832,9 +832,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_DELIBERATE_MUTATING:
-            if (!you_worship(GOD_ZIN))
-                break;
-            // deliberate fall-through
         case DID_CAUSE_GLOWING:
             if (you_worship(GOD_ZIN))
             {
@@ -862,13 +859,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     }
                 }
 
-                piety_change = -level;
-                retval = true;
-            }
-            if (you_worship(GOD_DITHMENGOS))
-            {
-                simple_god_message(" does not appreciate your lighting up"
-                                   " the environment like this.");
                 piety_change = -level;
                 retval = true;
             }
