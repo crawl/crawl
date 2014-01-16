@@ -2559,7 +2559,7 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons->type == MONS_SHAMBLING_MANGROVE && !was_banished
              && !mons->pacified() && (!summoned || duration > 0) && !wizard)
     {
-        treant_release_wasps(mons);
+        treant_release_fauna(mons);
     }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
