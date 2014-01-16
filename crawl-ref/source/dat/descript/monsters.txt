@@ -2283,6 +2283,14 @@ shadow wraith
 A mist-wreathed skeletal shadow hanging in mid-air that leeches away the
 lifeforce of living beings.
 %%%%
+shambling mangrove
+
+A large and gnarled mangrove, possessed of sapience and a cantankerous
+disposition. Its roots run deep through the water and soil of its marshy home
+and can make footing very difficult for those who provoke its ire. Despite their
+kind's sour countenance, marsh fauna are often found nesting within their
+branches; beware, for they may not take kindly to being disturbed.
+%%%%
 shapeshifter
 
 A disturbing creature with the power to change its form. It is very rarely
@@ -2641,15 +2649,6 @@ trapdoor spider
 
 A fast-moving arachnid that both surprises its prey and evades its enemies by
 concealing itself in crannies in the dungeon floor.
-%%%%
-treant
-
-At first glance, you might mistake this being for an ordinary tree, but its
-branches sway and creak purposefully, and within the knots and grooves of its
-ruddy bark can be seen the wizened features of an aged forest protector. Though
-it moves with slow deliberateness, its enormous gnarled limbs can match the
-strength of giants and its bark withstand the bite of battleaxes. A curious
-buzzing sound seems to follow it as it moves....
 %%%%
 troll
 
