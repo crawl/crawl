@@ -96,11 +96,6 @@ Ogre
 Grandes y fuertes, la mayoría son vistos como brutos. Los ogros, sin embargo,
 se sienten cómodos con los rudimentos de la magia.
 %%%%
-Sludge Elf
-
-Un tipo depravado de elfo que prefiere la astucia a luchar limpiamente, y la
-magia oscura antes que otro tipo de magia.
-%%%%
 Spriggan
 
 Muy pequeños, muy delicados y muy rápidos. Los spriggans son muy competentes

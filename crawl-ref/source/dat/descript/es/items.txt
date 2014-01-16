@@ -308,10 +308,6 @@ buckler
 
 Un pequeño escudo.
 %%%%
-cap
-
-Un sombrero de tela o cuero.
-%%%%
 centaur barding
 
 Una armadura para que los centauros la lleven sobre su parte equina.
@@ -621,8 +617,9 @@ la oscuridad, aunque con un pequeño coste.
 large rock
 
 Un piedra, usada por los gigantes como proyectil. {{
-    if string.find(you.race(), "Ogre")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
+       or you.race() == "Formicid"
     then
         return ""
     else
@@ -634,8 +631,7 @@ eres incapaz de usarla."
 large shield
 
 Parecido a un escudo convencional, pero un poco más grande. {{
-    if string.find(you.race(), "Ogre")
-       or string.find(you.race(), "Draconian")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
     then
         return "Parece que es de tu talla."

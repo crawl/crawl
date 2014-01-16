@@ -93,11 +93,6 @@ Ogre
 
 Nagy és erős, de jól kiismeri magát a mágia alapjaiban.
 %%%%
-Sludge Elf
-
-Romlott tünde, aki többre értékeli a fortélyt a becsületes harcnál és a fekete
-mágiát más varázslatoknál.
-%%%%
 Spriggan
 
 Nagyon kicsi, nagyon törékeny és nagyon gyors. A sprigganok ügyesen szúrnak le

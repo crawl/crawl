@@ -1,4 +1,8 @@
 %%%%
+CMD_REST
+
+Odpočinek a léčení
+%%%%
 CMD_REST verbose
 
 Hráč stráví až 100 tahů regenerací zdraví a/nebo dobíjením magie, nebo
@@ -306,6 +310,10 @@ Přepíná mezi pastmi na současném patře.
 CMD_MAP_FIND_ALTAR
 
 Najít oltáře
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+Přepínat mezi oltáři na současném patře.
 %%%%
 CMD_MAP_FIND_EXCLUDED
 

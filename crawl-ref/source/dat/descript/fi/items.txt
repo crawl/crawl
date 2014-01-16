@@ -407,10 +407,6 @@ Pieni kappale puuta ja metallia, jonka voi kiinnittää käteen hihnalla
 puolustukseksi. Se on hieman vaivalloinen käyttää, ja ilman harjoitusta
 hidastaa soturin hyökkäysnopeutta.
 %%%%
-cap
-
-Kangas- tai nahkalakki.
-%%%%
 centaur barding
 
 Kentaureille tehty panssari, puettavaksi hevososansa ylle.

@@ -16,6 +16,20 @@ Breathe Dispelling Energy ability
 Spyer en strøm af kraft mod det valgte uhyrer, som muligvis fjerner nogle af
 dets fortryllelser.
 %%%%
+Breathe Fire ability
+
+{{
+    local desc = "Ånder ild på det valgte uhyre"
+
+    if you.race() == "Red Draconian" then
+        desc = desc .. ", og efterlader en sky af flammer"
+    end
+
+    desc = desc .. "."
+
+    return desc
+}}
+%%%%
 Breathe Frost ability
 
 Du kan spy en klump frost efter et uhyre.
@@ -311,6 +325,13 @@ Forget Spell ability
 
 Glemmer enhver af de besværgelser, du i øjeblikket kan huske, så du kan få
 hukommelse til at lære andre.
+%%%%
+Burn Spellbooks ability
+
+Sætter alle bøger med besværgelser i dit synsfelt i brand. Ilden er næret af
+Trogs had, og den brænder varmere end usselt pergament ville – hvilket er
+nyttigt, hvis du først kaster bogen ind under nogens fødder. Trog sætter
+naturligvis stor pris på brugen af denne evne.
 %%%%
 Berserk ability
 

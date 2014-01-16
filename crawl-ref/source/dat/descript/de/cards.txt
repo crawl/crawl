@@ -56,6 +56,12 @@ Diese Karte hilft beim davonlaufen indem sie dich umwandelt, beschleunigt oder
 andere Wege für die Flucht erzeugt. Man findet sie normalerweise in diesen
 Kartendecks: Verteidigung, Flucht und Krieg,
 %%%%
+the Elixir card
+
+Diese Karte stellt dein Leben oder Magie oder auf hohen Machtstufen sogar
+beides wieder her. Sie wird gewöhnlich in Kartenstapeln der Veränderung, der
+Verteidigung und des Krieges gefunden.
+%%%%
 Battlelust card
 
 Diese Karte macht dich viel stärker im  physikalischem Kampf. Man findet sie

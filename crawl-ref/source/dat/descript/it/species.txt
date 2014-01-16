@@ -120,12 +120,6 @@ Ogre
 Gli ogre, grandi e forti, sono spesso visti come esseri brutali, ma conoscono
 comunque le basi della magia.
 %%%%
-Sludge Elf
-
-Gli elfi della melma sono depravati e preferiscono il sotterfugio a un
-combattimento leale, così come la magia nera rispetto ad altri tipi di
-incantesimi.
-%%%%
 Spriggan
 
 Gli spriggan sono molto piccoli, molto fragili ed estremamente veloci. Questo

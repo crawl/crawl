@@ -1,4 +1,8 @@
 %%%%
+CMD_REST
+
+休息して傷を癒す
+%%%%
 CMD_REST verbose
 
 HPかMPが完全に回復するまで最大100ターン休憩する。
@@ -41,7 +45,7 @@ CMD_SEARCH_STASHES
 %%%%
 CMD_SEARCH_STASHES verbose
 
-既に発見したアイテムや施設を検索し、その後それの存在する場所まで自動移動する。
+既に発見したアイテムや施設を検索し、その後それの存在する場所まで自動で移動する。
 %%%%
 CMD_REPLAY_MESSAGES
 
@@ -53,7 +57,7 @@ CMD_RESISTS_SCREEN
 %%%%
 CMD_RESISTS_SCREEN verbose
 
-キャラクターの知っている耐性、能力、装備の能力、その他を表示する。
+キャラクターの判っている耐性、能力、装備の能力、その他を表示する。
 %%%%
 CMD_DISPLAY_OVERMAP
 
@@ -94,11 +98,11 @@ CMD_DISPLAY_KNOWN_OBJECTS
 %%%%
 CMD_SAVE_GAME_NOW
 
-ゲームの保存と終了
+ゲームを保存して終了
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
-ゲームを保存しゲームを終了します。
+ゲームを保存した後に終了します。
 一度ゲームを再開すると保存ファイルは再び削除されます。
 %%%%
 CMD_EDIT_PLAYER_TILE
@@ -107,7 +111,7 @@ CMD_EDIT_PLAYER_TILE
 %%%%
 CMD_EDIT_PLAYER_TILE verbose
 
-プレイヤードールに表示される装備と種族のタイルを改造します。
+プレイヤードールに表示される装備と種族のタイルを変更します。
 %%%%
 CMD_DISPLAY_COMMANDS
 
@@ -123,7 +127,7 @@ CMD_CHARACTER_DUMP
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-自由時間に熟読するためmorgueディレクトリー内のファイル『playername.txt』にあなたのキャラクターに関する膨大な量の情報を出力します。
+自由時間に熟読するためmorgueディレクトリ内のファイル『playername.txt』にあなたのキャラクターに関する膨大な量の情報を出力します。
 これはメインステータス、装備、呪文、スキル、注意事項などが含まれます。
 %%%%
 CMD_AUTOFIGHT
@@ -148,7 +152,7 @@ CMD_WAIT
 %%%%
 CMD_WAIT verbose
 
-1ターンその場で停止し休息する。
+1ターン待機し、休息する。
 %%%%
 CMD_DISPLAY_INVENTORY
 
@@ -180,7 +184,7 @@ CMD_MEMORISE_SPELL
 %%%%
 CMD_MEMORISE_SPELL verbose
 
-運んでいる本、もしくは足元にある本を読み、呪文を記憶に引き受ける。
+所持している本、もしくは足元にある本を読み、呪文を記憶に留める。
 %%%%
 CMD_DROP
 
@@ -188,15 +192,15 @@ CMD_DROP
 %%%%
 CMD_DROP verbose
 
-あなたの現在持っている一つ以上のアイテムを落とす。
+あなたの現在所持している1つまたは複数のアイテムを落とす。
 %%%%
 CMD_DISPLAY_MAP
 
-マップの表示
+地図モードに移行
 %%%%
 CMD_DISPLAY_MAP verbose
 
-以前探索したマップを案内する。
+以前探索したマップを探訪する。
 %%%%
 CMD_MAP_GOTO_TARGET
 
@@ -232,7 +236,7 @@ CMD_MAP_CLEAR_EXCLUDES verbose
 %%%%
 CMD_MAP_NEXT_LEVEL
 
-下層に下る
+下の階層に降りる
 %%%%
 CMD_MAP_NEXT_LEVEL verbose
 
@@ -240,7 +244,7 @@ CMD_MAP_NEXT_LEVEL verbose
 %%%%
 CMD_MAP_PREV_LEVEL
 
-上層に上がる
+上の階層に上る
 %%%%
 CMD_MAP_PREV_LEVEL verbose
 
@@ -320,11 +324,11 @@ CMD_MAP_FIND_WAYPOINT verbose
 %%%%
 CMD_MAP_FIND_STASH
 
-隠し場所の検索
+キャンプの検索
 %%%%
 CMD_MAP_FIND_STASH verbose
 
-現在の階層の全ての隠し場所を移動する。
+現在の階層の全てのキャンプを移動する。
 %%%%
 CMD_ZOOM_IN
 

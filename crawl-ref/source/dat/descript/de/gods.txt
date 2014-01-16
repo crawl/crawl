@@ -1,16 +1,4 @@
 %%%%
-No God
-
-„Gott ist tot!“ – Nietzsche (Wenn du das hier jemals siehst, ist es ein Fehler)
-%%%%
-random
-
-Random (Wenn du das hier jemals siehst, ist es ein Fehler)
-%%%%
-Buggy
-
-Buggy (Wenn du das hier jemals siehst, ist es ein Fehler)
-%%%%
 Zin
 
 Zin ist ein Gott für die, die sich auf innere Stärke konzentrieren möchten.
@@ -270,6 +258,20 @@ von Gegnern, was dazu führen kann, dass diese neutral werden. Elyvilon kann
 direkt eingreifen, um das Leben eines Anhängers zu retten, besonders dann, wenn
 er darum gebeten wurde. Besonders fromme Anhänger können sich einer solchen
 Rettung sicher sein.
+%%%%
+Lugonu powers
+
+Lugonus Anhänger erhalten Kräfte, um den Abgrund bei Bedarf zu verlassen, den
+umgebenden Raum zu verformen, und um Monster in den Abgrund zu verbannen.
+Später werden sie in der Lage sein, die geordnete Welt zu verderben, für die
+Kreaturen des Abgrunds ein Tor zur Passage zu öffnen und sich selbst direkt in
+den Abgrund zu begeben. Lugonu wird vermutlich anbieten die Waffe des Anhängers
+zu verderben, indem sie diese mit den verzerrenden Energien des Abgrundes
+durchtränkt. Zudem wird sie ihre Anhänger vor den normalerweise schädlichen
+Effekten schützen, die das Ablegen einer solchen Waffe mit sich bringt. Lugonu
+erwartet von ihren Anhängern, dass sie unendliches Chaos in der Oberwelt
+verbreiten und gewährt deswegen ihren Gläubigen keine Frömmigkeit, wenn diese
+sich im Abgrund aufhalten.
 %%%%
 Beogh powers
 

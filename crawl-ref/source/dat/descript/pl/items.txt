@@ -632,8 +632,9 @@ nieść ją w wyciągniętej ręce.
 large rock
 
 Wielki głaz, używany przez gigantów jako pocisk. {{
-    if string.find(you.race(), "Ogre")
+    if you.race() == "Ogre"
         or you.race() == "Troll"
+        or you.race() == "Formicid"
     then
         return ""
     else
@@ -644,8 +645,7 @@ Wielki głaz, używany przez gigantów jako pocisk. {{
 large shield
 
 Tarcza jak każda inna, tylko większych rozmiarów. {{
-    if string.find(you.race(), "Ogre")
-       or string.find(you.race(), "Draconian")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
     then
         return "W sam raz dla ciebie."
@@ -1447,16 +1447,7 @@ można z niej wykonać zbroję.
 %%%%
 throwing net
 
-Sieć do rzucania, często używana przez gladiatorów. {{
-    if you.race() == "Halfling"
-        or you.race() == "Kobold"
-        or you.race() == "Spriggan"
-    then
-        return "Niestety, jest za duża abyś mógł ją zarzucić."
-    else
-        return ""
-    end
-}}
+Sieć do rzucania, często używana przez gladiatorów.
 %%%%
 tomahawk
 

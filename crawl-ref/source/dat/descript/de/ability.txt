@@ -70,6 +70,16 @@ Fliege los. Während des Fluges kannst du Wasser und ähnliche Hindernisse siche
 überqueren. Sei gewarnt, der Flug kann in einem ungünstigen Moment zu Ende sein
 und du kannst dadurch in den Tod stürzen.
 %%%%
+Jump Attack ability
+
+Eine Fähigkeit, die die kinetische Energie einer Kreatur nutzt, um eine
+Hochgeschwindigkeitssprungattacke durchzuführen. Du kannst nicht über fliegende
+und nur über riesige Feinde, wenn diese in Lava oder tiefem Wasser stehen
+springen. In Wasser, Lava oder verflüssigtem Boden zu stehen oder zu schwimmen,
+verhindert ebenfalls die Anwendung dieser Fähigkeit. Katzen sind von Natur aus
+Springer und werden talentierter beim Springen, wenn sie die Erfahrungsstufen 6
+und 12 erreichen.
+%%%%
 Hellfire ability
 
 Beschießt deine Gegner mit Höllenfeuer.

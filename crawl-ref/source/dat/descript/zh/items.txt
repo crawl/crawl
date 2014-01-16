@@ -595,23 +595,14 @@ javelin
 
 这根轻型矛是为投掷而设计的，杀伤力可观。
 {{
-
     if you.race() == "Halfling"
-
         or you.race() == "Kobold"
-
         or you.race() == "Spriggan"
-
     then
-
         return "很遗憾，它太大太笨重了，你无法使用它。"
-
     else
-
         return ""
-
     end
-
 }}
 %%%%
 lajatang
@@ -626,48 +617,29 @@ lantern of shadows
 large rock
 
 一块沉重的巨石。 {{
-
-    if string.find(you.race(), "Ogre")
-
+    if you.race() == "Ogre"
        or you.race() == "Troll"
-
+       or you.race() == "Formicid"
    then
-
        return ""
-
    else
-
        return "只有非常强壮的生物才能背得动它，而且只有大型生物能将它" ..
-
               "作为投掷武器使用。"
-
     end
-
 }}
 %%%%
 large shield
 
 一大块用木头和铁制成的盾牌，可以绑在手臂上用作防御。
 {{
-
-    if string.find(you.race(), "Ogre")
-
-       or string.find(you.race(), "Draconian")
-
+    if you.race() == "Ogre"
        or you.race() == "Troll"
-
     then
-
         return "看起来它很适合你使用。"
-
     else
-
         return "由于这盾牌比较笨重，除了特别擅长使用盾牌的战士，任" ..
-
                "何人拿着它作战时攻击速度都会略有减慢。"
-
     end
-
 }}
 %%%%
 leather armour
@@ -1263,17 +1235,11 @@ swamp dragon armour
 swamp dragon hide
 
 一张黏糊糊{{
-
     if you.can_smell() then
-
         return "、臭烘烘"
-
     else
-
         return ""
-
     end
-
 }}的沼龙外皮。它赋予穿戴者对毒药的抗性。你可以通过魔法手段将它加工成正式的铠甲。
 %%%%
 throwing net
@@ -1281,26 +1247,6 @@ throwing net
 许多条绳子编在一起，再在边缘挂上一些重物，就制成一张网了。
 最初的投网只是猎手们的捕猎用具，但没过多久，冒险者和角斗士也开始使用它了。
 被这种网捕住的生物只要努力一点还是可以逃得掉的，但前提是他们得活到那时候。
-
-{{
-
-    if you.race() == "Halfling"
-
-        or you.race() == "Kobold"
-
-        or you.race() == "Spriggan"
-
-    then
-
-        return "很遗憾，它太大太笨重了，你无法使用它。"
-
-    else
-
-        return ""
-
-    end
-
-}}
 %%%%
 tome of destruction
 

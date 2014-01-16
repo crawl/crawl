@@ -90,13 +90,6 @@ bardiche
 적을 베기 위한 거대한 칼날이 끝부분에 달린 장창이다. 다루기는 어렵지만, 그만큼
 강력하다.
 %%%%
-bastard sword
-
-길고 큰 검이다. 다 성장한 인간이나 엘프는 한손에 쥘 수 있으나, 더 약한 종족은
-두손으로 쥐어야 한다. 실제로 이는 특정한 곤충형 인간 외의 다른 종족이 방패와
-동시에 들 수 있는 무기 중 제일 무겁고 강력하다. 이토록 날카롭고 긴 검은 어떠한
-적에게도 파멸을 선사한다.
-%%%%
 battleaxe
 
 무시무시하게 생긴 양날도끼로, 그 크기 때문에 한 손으로는 도저히 들 수가 없다.
@@ -787,8 +780,9 @@ lantern of shadows
 large rock
 
 굉장히 크고 무거운 바위. {{
-    if string.find(you.race(), "Ogre")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
+       or you.race() == "Formicid"
    then
        return ""
    else
@@ -801,8 +795,7 @@ large shield
 
 거대한 나무와 금속 조각을 이용해 만든, 한쪽 팔에 고정하는 방식으로 사용하는
 방패다. {{
-    if string.find(you.race(), "Ogre")
-       or string.find(you.race(), "Draconian")
+    if you.race() == "Ogre"
        or you.race() == "Troll"
     then
         return "사용하기에 딱 좋은 정도의 크기다."
@@ -1621,15 +1614,6 @@ throwing net
 만들어졌지만, 곧 전투와 투기장에서 굉장히 유용하게 쓰일 수 있다는 사실이
 발견되었다. 투망에 갇힌 자는 안에서 그물을 찢고 빠져나올 수도 있다. 만약 그들이
 그만큼 오래 살아남을 수 있다면...
-{{
-    if you.race() == "Halfling"
-        or you.race() == "Kobold"
-        or you.race() == "Spriggan"
-    then
-        return "불행하게도, 이것을 사용하기에는 당신의 덩치가 너무 작다."
-    else
-        return ""
-    end
 }}
 %%%%
 tomahawk

@@ -54,9 +54,8 @@ Géomancie contient d'autres sortilèges de la terre.
 %%%%
 Enchanter
 
-Les Enchanteurs utilisent des sorts pour se renforcer pendant un combat ou pour
-neutraliser leurs adversaires. Ils commencent aussi avec des fléchettes de
-bonne qualité.
+Les Enchanteurs utilisent des sorts pour neutraliser leurs adversaires. Ils
+commencent aussi avec des fléchettes de bonne qualité.
 %%%%
 Fighter
 
@@ -102,8 +101,8 @@ connaissent le sort Douleur.
 %%%%
 Skald
 
-Les Skalds sont des combattants de mêlée pouvant chanter des sorts de leur book
-of battle.
+Les Skalds sont des combattants qui se renforcent avec des sorts de leur livre
+des batailles.
 %%%%
 Summoner
 
@@ -112,7 +111,7 @@ Convoquer un Petit Mammifère dès le début.
 %%%%
 Transmuter
 
-Les Transmuteurs change leur forme pour combatre avec des attributs bestiaux.
+Les Transmuteurs changent leur forme pour combatre avec des attributs bestiaux.
 Ils sont aussi capables de transformer des bâtons en serpent.
 %%%%
 Venom Mage
@@ -127,6 +126,8 @@ Les Vagabonds commencent avec un équipement et des compétences aléatoires.
 Warper
 
 Les Translocateurs commencent avec une arme de leur choix et un parchemin de
+clignotement. Ils peuvent apprendre des sorts du livre des Déplacements
+Spaciaux.
 %%%%
 Wizard
 

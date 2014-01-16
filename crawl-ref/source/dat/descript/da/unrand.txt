@@ -25,6 +25,16 @@ Sword of Power
 
 Det belønner de magtfulde med magt og de svage med svaghed.
 %%%%
+Staff of Olgreb
+
+Det var dette magiske våben, den mægtige troldmand Olgreb bar, da han afgik ved
+døden et sted i disse underjordiske gange. Det øger sin brugers evne til at
+bruge giftmagi og bærer på magiske kræfter, som kan vækkes. Ifølge
+overleveringerne forskede Olgreb i sjældne gifte, som kunne have en begrænset
+virkning selv på væsener, som ellers er immune over for alle kendte gifte.
+Olgreb sørgede naturligvis for, at staven yder fuld beskyttelse mod selv hans
+egne gifte.
+%%%%
 Staff of Wucad Mu
 
 Den kan vækkes for at genoprette store mængder magisk energi, men risikerer
@@ -127,6 +137,18 @@ glaive of the Guard
 Dette våben har engang tilhørt Gar Dogh, som vogtede en konges skatte. I følge
 legenderne for han vild et sted i de underjordiske gange.
 %%%%
+sword of Jihad
+
+Et langsværd, som er lavet af et kæmpe stykke krystal. Legenderne vil vide, at
+det var en gave fra Den Strålende til en tilbeder. Klingen er berygtet for at
+fremkalde et blodtørstigt raseri i både brugeren og alle hans eller hendes
+dødelige følgesvende.
+%%%%
+crossbow "Hellfire"
+
+En flammende armbrøst, som er skabt i helvedernes ild. Den præger de bolte, den
+affyrer, med sit navns kraft.
+%%%%
 sword of the Doom Knight
 
 Et ubrydeligt slagsværd.
@@ -179,6 +201,22 @@ En yndig, lille kniv.
 Denne kniv er lavet af sprigger, eller til sprigger, eller måske ud af
 sprigger. Den er i hvert fald på en eller anden måde forbundet til dette
 huldrefolk.
+%%%%
+plutonium sword
+
+En claymore af et underligt, glødende metal. Du spekulerer over, om strålingen
+vil få et ekstra hoved til at vokse frem på dine skuldre.
+%%%%
+great mace "Undeadhunter"
+
+Legenderne vil vide, at for længe siden eksperimenterede en dødningeherre med
+at skabe bevidste tjenere i stedet for tankeløse tingester. For at sikre sig
+deres loyalitet lavede han en række våben, som var præget med magi, der kunne
+modvirke den, der holdt udøde sammen, og dermed forvolde dem stor skade.
+
+Selvom dødningen for længst er gået til grunde, så siges hans våben at have
+været meget populære på grund af den ravage, de forvolder blandt udøde. Denne
+stridskølle er muligvis det eneste af våbnene, der findes endnu.
 %%%%
 whip "Snakebite"
 
@@ -240,6 +278,12 @@ En pragtfuld, flagrende kåbe af pels og silke.
 cloak of Flash
 
 En vibrerende kappe.
+%%%%
+boots of the Assassin
+
+Et par bløde støvler, som er omhyggeligt formgivet af Snigmordernes Lav. De gør
+bæreren mere opmærksom på potentielle ofre og bedre til at få øje på svagheder
+hos uopmærksomme ofre.
 %%%%
 Lear's hauberk
 
@@ -435,6 +479,32 @@ uddød race af trolde. Det er umuligt at sige med sikkerhed, om denne rustning
 virkelig er en rest fra de legendariske vindrædsler, eller blot en tillempning
 for at gøre den mere mystisk. Men dens magt til hurtigt at helbrede brugeren på
 bekostning af magisk kraft er i hvert fald ikke til at komme uden om.
+%%%%
+macabre finger necklace
+
+Denne dinglende finger ville tage sig bedre ud med en ring på.
+%%%%
+boots of the spider
+
+Et opfindsomt par støvler, som en af Arachnes bejlere hittede på.
+%%%%
+dark maul
+
+Denne store, jernklædte mukkert er lige det værktøj, du skal bruge, hvis du
+skal have banket nogle bronagler i. Den er lavet til at uddele kolossale slag,
+og her taler vi ikke bare om hjernerystelser, men om rester af en hjelm, som
+hviler på et par sko, eller måske bare en våd plet. Den slags kraft er desværre
+ikke uden omkostning: Mukkertens hoved er så tungt, at det tager en evighed at
+løfte den til endnu et sving. Hammeren er i menneskestørrelse, så jætter vil
+måske hellere bruge deres gammelkendte køller i stedet, for de er lidt mere
+håndterlige i deres store hænder.
+%%%%
+hat of the High Council
+
+Et relikvie fra en fordums trolddomskrig. Flere århundreder senere knitrer det
+stadig af virkningerne af de resterende forbandelser og magiske energier, som
+det engang blev udsat for på daglig basis. Trolddomsbrugere, som formår at
+tøjle dets kræfter, vil dog opdage, at den øger deres besværgelsers kraft.
 %%%%
 milk chocolate
 

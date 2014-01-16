@@ -161,7 +161,7 @@ empêcher également d'utiliser ce talent.
 %%%%
 Stop Flying ability
 
-Arrêter de voler
+Atterrir.
 %%%%
 Evoke Fog ability
 
@@ -332,7 +332,7 @@ compétences en Invocations sont faibles.
 %%%%
 Channel Energy ability
 
-Rempli votre réservoir de magie d'un montant dépendant de votre compétence
+Rempli votre réservoir de magie d'une quantité dépendante de votre compétence
 d'Invocations.
 %%%%
 Forget Spell ability
@@ -383,7 +383,7 @@ majeur !
 %%%%
 Lesser Healing ability
 
-en fonction de votre compétence d'Invocations, guérissez une autre créature
+En fonction de votre compétence d'Invocations, guérissez une autre créature
 d'un faible montant de points de vie. Utilisez cette aptitude sur des monstres
 hostiles pourra éventuellement les pacifier. Cela marche mieux sur les animaux,
 moins bien sur les humanoïdes de votre propre race, encore moins bien sur les
@@ -467,7 +467,7 @@ recours à cette aptitude entamera votre santé et vos réserves magiques.
 %%%%
 Draw One ability
 
-Choisissez n'importe quel paquet dans votre inventaire et tirez une carte de
+Choisissez n'importe quel paquet de votre inventaire et tirez une carte de
 celui-ci.
 %%%%
 Peek at Two ability
@@ -601,7 +601,7 @@ Abandon d'un transfert de compétence en cours.
 Renounce Religion ability
 
 Renoncez à votre religion. Votre personnage quittera le service de son dieu (et
-généralement le met en colère).
+généralement le mettra en colère).
 %%%%
 Convert to Beogh ability
 

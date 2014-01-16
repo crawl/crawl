@@ -1,4 +1,8 @@
 %%%%
+CMD_REST
+
+Rasten und Heilen
+%%%%
 CMD_REST verbose
 
 Verbringe bis zu 100 Runden um Lebenspunkte und/oder Magiepunkte zu

@@ -1,16 +1,4 @@
 %%%%
-No God
-
-「神は死んだ」—ニーチェ (これが見えるってことはバグってこと)
-%%%%
-random
-
-ランダム(これが見えるってことはバグってこと)
-%%%%
-Buggy
-
-バグ(これが見えるってことはバグってこと)
-%%%%
 Zin
 
 ジンは内面的強さに注力した神である。信徒は心体を汚れなきままにすべきで、
@@ -247,6 +235,18 @@ Elyvilon powers
 エリヴィロンは敵対する怪物を中立に変えるために癒すことを許可する。
 エリヴィロンは信徒の生命を守るために直接介在するかもしれない。
 特に要求がある場合や、非常に敬虔な信徒はへの援助は確実なものとなるだろう。
+%%%%
+Lugonu powers
+
+Lugonu の信徒はアビスから力を得ており、
+モンスターをアビスの中に追放することができます。 Later they will be able to
+corrupt the ordered world, opening a gate for creatures of the Abyss to pass
+through, and to gate themselves directly into this realm of chaos. Lugonu will
+eventually offer to corrupt a follower's weapon, imbuing it with the distorting
+energies of the Abyss, and will protect the follower from the normally harmful
+effects of unwielding such a weapon.. Lugonu expects followers to spread
+unceasing chaos in the overworld, and as such does not grant piety to
+worshippers while they remain in the Abyss itself.
 %%%%
 Beogh powers
 

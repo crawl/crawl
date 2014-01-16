@@ -31,6 +31,11 @@ Draconian
 
 Drakonere er alsidige hybrider. De modnes og får en farve, når de når niveau 7.
 %%%%
+Formicid
+
+Formicider er humanoide myrer, som er dygtige til at grave. Deres lemmer er
+exceptionelt stærke og de lever i naturlig stase.
+%%%%
 Felid
 
 Disse katte besidder ikke bare flere liv, men også en bevidsthed. Til gengæld
@@ -109,11 +114,6 @@ Ogre
 
 De er store og stærke og ses mest som bøller. Ogrer har det dog udmærket med
 grundlæggende magi.
-%%%%
-Sludge Elf
-
-En depraveret slags elver, som foretrækker list frem for ærlig kamp, og sort
-magi frem for andre besværgelser.
 %%%%
 Spriggan
 

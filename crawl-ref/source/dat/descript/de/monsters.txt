@@ -119,6 +119,14 @@ Ein einfach aussehender Elfen Kämpfer, der in vielen Formen des Kampfs
 technisch hervorragend, aber wegen seiner übertrieben selbstbewusst ist. Sie
 wird durch die magischen Sachkenntnisse ihres Zwillingsbruders, Dowans ergänzt.
 %%%%
+Edmund
+
+Ein eifersüchtiger Bruder von Sigmund (gewiss, der Jüngste von neun Brüdern).
+Er hat nicht die magischen Fähigkeiten von Sigmund, aber macht dies wett durch
+seine Kampffähigkeiten und Gerissenheit. Er ist bedacht darauf seine
+Überlegenheit zu demonstrieren, indem er unglückselige Abenteurer mit seinem
+wertvollen Flegel und seiner guten Auffassungsgabe tötet.
+%%%%
 Ereshkigal
 
 Ein furchterregender Erzfeind welcher die tödliche Unterwelt von Tartarus
@@ -132,9 +140,32 @@ Erolcha
 
 Ein besonders listiger Oger-Magier.
 %%%%
+Eustachio
+
+Ein angehender Beschwörer mit einem wallenden Schnauzbart. Er hat seltsame
+Ansichten zu Ehre.
+%%%%
+Frederick
+
+Ein anmütiger Kampfmagier, der ein golden eingefasstes Monokel trägt und einen
+würdigen Gegner sucht. Du wirst ihm wahrscheinlich nicht gerecht werden.
+%%%%
+Gloorx Vloq
+
+Eine schattenhafte Gestalt umgeben von abgrundtiefer Dunkelheit.
+%%%%
+Grum
+
+Ein grob aussehender Gnoll, der das Fell eines seiner ehemaligen Kriegshunde
+trägt.
+%%%%
 Joseph
 
 Sieht aus wie ein Söldner.
+%%%%
+Khufu
+
+Ein unglaublich mächtiger Imperator auf dem Weg zur Gottheit.
 %%%%
 Kirke
 
@@ -161,15 +192,46 @@ ist, war Louise mächtig tatsächlich geworden, aber war auch völlig wahnsinnig
 gegangen. Sie wandert jetzt die Säle des Kerkers, andere Abenteurer suchend, um
 ihr Schicksal zu teilen.
 %%%%
+Murray
+
+Ein dämonischer Totenschädel, der auf dem Verliesboden herumrollt.
+%%%%
+Nergalle
+
+Eine vertrocknete Zauberin, die selbst für Ork-Standards ungewöhnlich hässlich
+ist.
+%%%%
+Nessos
+
+Ein schwarzer Zentaurenkrieger mit einem bösartigen Blick in seinen Augen.
+%%%%
 Purgy
 
 Ein ungewöhnlich dünner Troll.
 
 Du spürst einen Klumpen im inneren deines Magens.
 %%%%
+Rupert
+
+Ein Mann mit sehr schlechten Manieren, dessen Rülpser selbst Oger neidisch
+machen können.
+%%%%
+Saint Roka
+
+Ein mächtiger Kriegsherr. Einige Orks sagen sogar, dass er der Auserwählte von
+Beogh ist.
+%%%%
 Xtahua
 
 Ein uralter und mächtiger Drache.
+%%%%
+balrug
+
+Ein riesiger und sehr mächtiger Dämon, der umgeben ist von Feuer und Schatten.
+%%%%
+big fish
+
+Ein kräftiger Fisch mit einem großen zahnigen Maul.
 %%%%
 blizzard demon
 
@@ -194,6 +256,11 @@ deep troll
 
 Ein alters gebeugter Troll mit dunkler Haut, diese in Höhlen lebenden
 Tiefen-Trolle reisen oft in Gruppen.
+%%%%
+Executioner
+
+Ein schrecklich mächtiger und schneller Dämon dessen Form durch eine Wolke von
+herumwirbelnden Sensen-ähnlichen Klingen verzerrt wird.
 %%%%
 Cigotuvi's Monster
 

@@ -120,11 +120,6 @@ Ogre
 Grand et fort, ils sont vu la plupart du temps comme des brutes. Néanmoins, les
 Ogres sont très à l'aise avec les bases de la magie.
 %%%%
-Sludge Elf
-
-Un elfe de type dépravé, qui préfère la ruse au combat loyal, et la magie noire
-à toute autre forme de sorcellerie.
-%%%%
 Spriggan
 
 Très petits, très frêles et très rapides. Les Spriggans sont très forts pour
