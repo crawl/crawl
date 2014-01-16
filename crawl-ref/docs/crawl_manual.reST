@@ -1819,8 +1819,7 @@ Lava Orcs
   They are unique in their ability to swim in lava: even the Djinn, while immune
   to fire, can't swim through a treacle of molten rock. In order to be able to
   use regular equipment, Lava Orcs have invented special fire-proof backpacks;
-  vulnerable items like scrolls or books are not accessible when their owner is
-  too hot.
+  scrolls are not accessible when their owner is too hot.
 
   Many things can fire up their metabolism: facing multiple and/or dangerous
   enemies, being badly hurt, suffering fire damage, berserking, and obviously
