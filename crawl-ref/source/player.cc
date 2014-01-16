@@ -2279,7 +2279,7 @@ int player_movement_speed(bool ignore_burden)
         mv--;
 
     if (you.duration[DUR_GRASPING_ROOTS])
-        mv += 5;
+        mv += 3;
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     if (int fast = player_mutation_level(MUT_FAST))
@@ -2546,11 +2546,10 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
 // Player EV scaling for being flying tengu or swimming merfolk.
 static int _player_scale_evasion(int prescaled_ev, const int scale)
 {
-    if (you.duration[DUR_PETRIFYING] || you.duration[DUR_GRASPING_ROOTS]
-        || you.caught())
-    {
+    if (you.duration[DUR_PETRIFYING] || you.caught())
         prescaled_ev /= 2;
-    }
+    else if  (you.duration[DUR_GRASPING_ROOTS])
+        prescaled_ev = prescaled_ev * 2 / 3;
 
     switch (you.species)
     {

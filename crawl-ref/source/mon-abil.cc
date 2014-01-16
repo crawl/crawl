@@ -2162,9 +2162,8 @@ bool apply_grasping_roots(monster* mons)
 
         found_hostile = true;
 
-        // Roots don't work in water (even shallow) or lava, but they wait
-        // nearby without expiring.
-        if (!feat_has_dry_floor(grd(ai->pos())))
+        // Roots can't reach things over deep water or lava
+        if (!feat_has_solid_floor(grd(ai->pos())))
             continue;
 
         // Some messages are suppressed for monsters, to reduce message spam.
@@ -2212,7 +2211,7 @@ void check_grasping_roots(actor* act, bool quiet)
         }
     }
 
-    if (!source || !feat_has_dry_floor(grd(act->pos())))
+    if (!source || !feat_has_solid_floor(grd(act->pos())))
     {
         if (act->is_player())
         {
