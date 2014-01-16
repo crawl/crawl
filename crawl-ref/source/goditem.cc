@@ -487,6 +487,10 @@ bool is_fiery_item(const item_def& item)
     case OBJ_RODS:
         return _is_bookrod_type(item, is_fiery_spell);
         break;
+    case OBJ_STAVES:
+        if (item.sub_type == STAFF_FIRE)
+            return true;
+        break;
     case OBJ_MISCELLANY:
         if (item.sub_type == MISC_LAMP_OF_FIRE)
             return true;

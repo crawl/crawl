@@ -2244,6 +2244,12 @@ void melee_attack::player_weapon_upsets_god()
         else if (get_weapon_brand(*weapon) == SPWPN_HOLY_WRATH)
             did_god_conduct(DID_ILLUMINATE, 1);
     }
+    else if (weapon
+             && weapon->base_type == OBJ_STAVES
+             && weapon->sub_type == STAFF_FIRE)
+    {
+        did_god_conduct(DID_FIRE, 1);
+    }
 }
 
 /* Apply player-specific effects as well as brand damage.
