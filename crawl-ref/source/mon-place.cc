@@ -2545,11 +2545,21 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_SPRIGGAN_RIDER:
+        if (!one_chance_in(3))
+            break;
         band = BAND_SPRIGGAN_RIDERS;
-        band_size = random_range(2, 3);
+        band_size = random_range(1, 2);
         break;
 
     case MONS_SPRIGGAN_DRUID:
+        if (one_chance_in(3))
+        {
+            band = BAND_SPRIGGAN_DRUID;
+            natural_leader = true;
+            band_size = (one_chance_in(4) ? 3 : 2);
+        }
+        break;
+
     case MONS_SPRIGGAN_BERSERKER:
         if (one_chance_in(3))
             break;
@@ -2574,7 +2584,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     case MONS_SHAMBLING_MANGROVE:
         if (one_chance_in(4))
         {
-            band = BAND_SPRIGGAN_DRUID;
+            band = BAND_SPRIGGAN_RIDERS;
             band_size = 1;
         }
         break;
@@ -2991,7 +3001,7 @@ static monster_type _band_member(band_type band, int which)
         return MONS_AIR_ELEMENTAL;
 
     case BAND_SPRIGGAN_DRUID:
-        return MONS_SPRIGGAN_DRUID;
+        return (one_chance_in(3) ? MONS_SPRIGGAN_RIDER : MONS_SPRIGGAN);
 
     case BAND_SPRIGGAN_RIDERS:
         return MONS_SPRIGGAN_RIDER;
