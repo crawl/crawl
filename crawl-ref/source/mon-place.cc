@@ -2571,7 +2571,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 6 + random2avg(5, 2);
         break;
 
-    case MONS_TREANT:
+    case MONS_SHAMBLING_MANGROVE:
         if (one_chance_in(4))
         {
             band = BAND_SPRIGGAN_DRUID;
