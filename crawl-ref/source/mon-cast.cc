@@ -943,8 +943,8 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_THORN_VOLLEY:
         beam.colour   = BROWN;
         beam.name     = "volley of thorns";
-        beam.damage   = dice_def(3, 5 + (power / 11));
-        beam.hit      = 20 + power / 13;
+        beam.damage   = dice_def(3, 5 + (power / 13));
+        beam.hit      = 20 + power / 15;
         beam.flavour  = BEAM_MMISSILE;
         break;
 
