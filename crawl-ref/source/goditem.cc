@@ -396,11 +396,8 @@ bool is_poisoned_item(const item_def& item)
 bool is_illuminating_item(const item_def& item)
 {
     // No halo for you!
-    if (is_unrandom_artefact(item)
-        && (item.special == UNRAND_BRILLIANCE))
-    {
+    if (is_unrandom_artefact(item) && item.special == UNRAND_BRILLIANCE)
         return true;
-    }
 
     switch (item.base_type)
     {
