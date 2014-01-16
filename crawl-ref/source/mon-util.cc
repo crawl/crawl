@@ -2436,8 +2436,8 @@ void define_monster(monster* mons)
         monnumber = random2(360);
         break;
 
-    case MONS_TREANT:
-        monnumber = x_chance_in_y(3, 5) ? random_range(2, 4) : 0;
+    case MONS_SHAMBLING_MANGROVE:
+        monnumber = x_chance_in_y(3, 5) ? random_range(2, 3) : 0;
         break;
 
     default:

@@ -4236,7 +4236,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     }
     break;
 
-    case MONS_TREANT:
+    case MONS_SHAMBLING_MANGROVE:
     {
         if (mons->hit_points * 2 < mons->max_hit_points && mons->number > 0)
         {

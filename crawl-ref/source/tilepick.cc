@@ -1683,7 +1683,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_THORN_HUNTER;
     case MONS_BRIAR_PATCH:
         return TILEP_MONS_BRIAR_PATCH;
-    case MONS_TREANT:
+    case MONS_SHAMBLING_MANGROVE:
         return TILEP_MONS_TREANT;
 
     // rakshasa ('R')

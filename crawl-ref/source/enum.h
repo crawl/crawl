@@ -2820,7 +2820,7 @@ enum monster_type                      // menv[].type
 #endif
     MONS_ANCIENT_BEAR,
     MONS_WATER_NYMPH,
-    MONS_TREANT,
+    MONS_SHAMBLING_MANGROVE,
     MONS_THORN_LOTUS,
 #if TAG_MAJOR_VERSION == 34
     MONS_SPECTRAL_WEAPON,
