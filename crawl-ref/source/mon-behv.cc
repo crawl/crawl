@@ -1271,8 +1271,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             && !mon->has_ench(ENCH_INSANE)
             && (wontAttack == sourceWontAttack && mons_intel(mon) <= I_PLANT
                 || mons_is_fleeing(mon)
-                || mons_class_flag(mon->type, M_FLEEING)
-                || mons_is_panicking(mon)))
+                || mons_class_flag(mon->type, M_FLEEING)))
         {
             break;
         }
@@ -1371,7 +1370,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // It won't turn friends hostile either.
         if ((!mons_is_fleeing(mon) || mons_class_flag(mon->type, M_FLEEING))
             && !mons_is_retreating(mon)
-            && !mons_is_panicking(mon)
             && !mons_is_cornered(mon))
         {
             mon->behaviour = BEH_SEEK;

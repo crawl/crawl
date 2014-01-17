@@ -2878,7 +2878,9 @@ enum beh_type
     BEH_SEEK,
     BEH_FLEE,
     BEH_CORNERED,
+#if TAG_MAJOR_VERSION == 34
     BEH_PANIC,                         //  like flee but without running away
+#endif
     BEH_LURK,                          //  stay still until discovered or
                                        //  enemy close by
     BEH_RETREAT,                       //  like flee but when cannot attack
