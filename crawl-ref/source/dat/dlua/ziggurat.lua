@@ -314,6 +314,13 @@ local function mons_panlord_gen(x, y, nth)
 end
 
 mset_if(depth_ge(8), mons_panlord_gen)
+mset_if(depth_ge(14), with_props("place:Snake:$ w:14 / place:Swamp:$ w:14 / " ..
+                      "place:Shoals:$ w:14 / place:Spider:$ w:14 / " ..
+                      "greater naga w:12 / guardian serpent w:8 / hydra w:5 / " ..
+                      "swamp dragon w:5 / tentacled monstrosity / " ..
+                      "merfolk aquamancer w:6 / merfolk javelineer w:8 / " ..
+                      "alligator snapping turtle w:6 / ghost moth w:8 / " ..
+                      "emperor scorpion w:8 / moth of wrath w:4", { weight = 5 }))
 
 function ziggurat_monster_creators()
   return util.map(monster_creator_fn, mons_populations)
