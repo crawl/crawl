@@ -3560,6 +3560,7 @@ static monster* _dithmengos_shadow_monster()
         item_def *ammo     = &you.inv[missile];
         new_item.base_type = ammo->base_type;
         new_item.sub_type  = ammo->sub_type;
+        new_item.colour    = ammo->colour;
         new_item.quantity  = 1;
         new_item.flags    |= ISFLAG_SUMMONED;
     }
@@ -3645,6 +3646,7 @@ void dithmengos_shadow_throw(coord_def target)
         beem.target = target;
         mprf("%s attacks!", mon->name(DESC_THE).c_str());
         setup_monster_throw_beam(mon, beem);
+        beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
     }
 
