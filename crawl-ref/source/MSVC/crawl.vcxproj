@@ -758,6 +758,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\mon-abil.h" />
     <ClInclude Include="..\mon-act.h" />
     <ClInclude Include="..\mon-behv.h" />
+    <ClInclude Include="..\mon-book.h" />
     <ClInclude Include="..\mon-cast.h" />
     <ClInclude Include="..\mon-clone.h" />
     <ClInclude Include="..\mon-data.h" />

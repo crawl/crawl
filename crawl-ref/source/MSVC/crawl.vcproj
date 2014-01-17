@@ -1879,6 +1879,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\mon-book.h"
+			>
+		</File>
+		<File
 			RelativePath="..\mon-cast.cc"
 			>
 		</File>
