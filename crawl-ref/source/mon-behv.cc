@@ -1270,8 +1270,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (event != ME_WHACK
             && !mon->has_ench(ENCH_INSANE)
             && (wontAttack == sourceWontAttack && mons_intel(mon) <= I_PLANT
-                || mons_is_fleeing(mon)
-                || mons_class_flag(mon->type, M_FLEEING)))
+                || mons_is_fleeing(mon)))
         {
             break;
         }
@@ -1368,8 +1367,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if ((!mons_is_fleeing(mon) || mons_class_flag(mon->type, M_FLEEING))
-            && !mons_is_retreating(mon)
+        if (!mons_is_fleeing(mon) && !mons_is_retreating(mon)
             && !mons_is_cornered(mon))
         {
             mon->behaviour = BEH_SEEK;
