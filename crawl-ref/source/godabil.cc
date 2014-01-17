@@ -3573,7 +3573,7 @@ static monster* _dithmengos_shadow_monster()
     }
 
     mon->mname      = "shadow";
-    mon->type       = you.mons_species();
+    mon->type       = MONS_HUMAN;
     mon->behaviour  = BEH_SEEK;
     mon->attitude   = ATT_FRIENDLY;
     mon->flags      = (MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
