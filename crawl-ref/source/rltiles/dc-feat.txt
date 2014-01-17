@@ -610,6 +610,8 @@ fedhas DNGN_ALTAR_FEDHAS
 cheibriados DNGN_ALTAR_CHEIBRIADOS
 ashenzari DNGN_ALTAR_ASHENZARI
 dithmengos DNGN_ALTAR_DITHMENGOS
+dithmengos2
+dithmengos3
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
