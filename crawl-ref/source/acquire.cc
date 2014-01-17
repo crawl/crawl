@@ -939,10 +939,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
             skill_type sk = static_cast<skill_type>(i);
             int weight = you.skills[sk];
 
-            // Anyone can get Spellcasting 1. Doesn't prove anything.
-            if (sk == SK_SPELLCASTING && weight >= 1)
-                weight--;
-
             if (_is_magic_skill(sk))
                 magic_weights += weight;
             else
