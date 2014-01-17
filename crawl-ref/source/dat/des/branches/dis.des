@@ -525,6 +525,30 @@ MAP
         .....
 ENDMAP
 
+NAME:   hangedman_dis_chains
+TAGS:   transparent extra decor
+DEPTH:  Dis
+SUBST:  A : vv., B : vv., C : Gvv, D : Gvv
+NSUBST: . = 1 = (:1 ):1 .:98 / *:.
+: if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  ) = {
+: end
+: dis_statues(_G)
+MAP
+      .....vv.
+   .....vvv..C
+......Av...vv.
+...vvv..vvv.....
+.vv...vA........
+D..vvv.......vv.
+.vv.......vvv..D
+........Bv...vv.
+.....vvv..vvv...
+  .vv...vB......
+  C..vvv.....
+  .vv.....
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions

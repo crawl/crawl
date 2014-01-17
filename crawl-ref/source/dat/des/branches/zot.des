@@ -2320,6 +2320,42 @@ xxxxxGxxxxxxcww...wwcxxxxxxGxxxxxxcww...wwcx
              xxxxxxx               xxxxxxx
 ENDMAP
 
+NAME:    hangedman_zot_diagonal_lockstep
+TAGS:    transparent extra decor
+DEPTH:   Zot
+ITEM:    % no_pickup
+KFEAT:   Z = known zot trap
+SHUFFLE: ABCDEFG, defg / hijk / mnop / qrst, defg, hjik, mnop
+SUBST:   A : xbvcZ, B : xbvc, C : xxbvc, D : xxbvc, EFG = x
+SUBST:   d : xxZ, h = x, e : xx., i : xx., f : x.., j : x.., m : x..
+SUBST:   gknopqrst = .
+:  if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  { = {([ <:5 Z:5
+:  elseif you.depth() == "1" then
+SUBST:  { = {:40 })]> d:20 Z:20
+:  else
+SUBST:  { = {([<})]> d:20 Z:20
+:  end
+MAP
+             Dq...iC
+        .....rD...Ch..
+        .......x.x...p
+        ...mF...x...o.
+       Es..F...x.x....
+ ......tE.x..kx...x..eB
+ ........x...Cj....x.xd
+A..fB...x.x.....G...x..
+.A.xg.nG...{...Gn.gx.A.
+..x...G.....x.x...Bf..A
+dx.x....jC...x........
+Be..x...Ck..x.Et......
+ ....x.x...F..sE
+ .o...x...Fm...
+ p...x.x.......
+ ..hC...Dr.....
+   Ci...qD
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #

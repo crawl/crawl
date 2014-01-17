@@ -1043,6 +1043,62 @@ tttt....t.Wt     t.WtW...tttt
         tW         .t
 ENDMAP
 
+NAME:    hangedman_swamp_blocks
+TAGS:    transparent extra no_pool_fixup decor
+DEPTH:   Swamp
+KFEAT:   t = mangrove
+SHUFFLE: BC, DEF
+SUBST:   A : ttw, B : tttww, D : w., E : w..., C = t, F = .
+KMASK:   wW = no_monster_gen
+MAP
+  ...   ..    .. 
+ .WWW....WW....w.
+.Wtttt..ttt.D.tAw
+.WttttW.ttt.D.tt.
+.WttttW.tBt......
+ .ttttW.....ttt..
+ ..WWW..FE..CttW.
+ ......FE...tttW.
+.Wttt.FE.WWW....
+.WttB.E.Wtttt..
+ .ttt...WttttW.
+ .......WttttW.
+ .DD.tCt.ttttW.
+ ....ttt..WWW..
+..tt.ttt......
+.WAt..WW.
+ .W.....
+ENDMAP
+
+NAME:    hangedman_swamp_diagram
+TAGS:    transparent extra no_pool_fixup decor
+DEPTH:   Swamp
+MONS:    bush
+KFEAT:   t = mangrove
+SHUFFLE: AB, CD, EF, GH, IJ / IJ / JI
+SUBST:   A : tww.., C : tww.., E : t., G = t.
+SUBST:   I = wt1GT., BDF = t, H = .
+KMASK:   wW = no_monster_gen
+MAP
+   tt.tt@tt@tt.tt
+   tt.tt.tt.tt.tt
+   tttWWttttWWttt
+ttttttWWttttWWttt
+tttttttA.tt.Btttt
+..ttttttCWWDttttt
+ttWWtttttWWtttttt
+ttWWAttG.ttEtt
+@.tt.Ct.I.Fttt
+tttttWWt.JWttt
+tttttWWtFWWttt
+@.tt.DtEtttHtt
+ttWWBttttttttt
+ttWWtttttttttt
+..ttttt
+ttttttt
+ttttttt
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

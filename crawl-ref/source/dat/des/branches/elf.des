@@ -1115,6 +1115,54 @@ xxxx+xxxx-x_xx-xxxx+xxxx
             ..x..
 ENDMAP
 
+NAME:    hangedman_elf_targetted_burst
+TAGS:    transparent extra decor
+DEPTH:   Elf
+SUBST:   x : xxc, Y : yycvb, y : xxcbv, z : cbv, Z = cbvwl
+MAP
+        x
+   .x...y...x
+   ..Y.xxx.Y.
+   ...x...x..
+   ..x.....x.
+  xxyx..Z..xyx
+ ....x.....x.
+ .....z...x..
+ ...xz.xxx.Y.
+ ...zx..y...x
+..xz....x....
+..zx....x
+xz......
+zx..
+ENDMAP
+
+NAME:    hangedman_elf_simple_split
+TAGS:    extra transparent decor
+DEPTH:   Elf
+MONS:    fungus
+SHUFFLE: de, fg, hijk, CD
+SUBST:   d : +., e : +x., f : +x., e : +.
+SUBST:   h : +x, i : +x., i : +x., j : +x.
+SUBST:   C : CTG1wl., D : ., x : x:90 cvb
+KMASK:   wl = no_monster_gen
+MAP
+x..xx
+x...xxxxxx
+x...d....xxxxxx
+xxx.e....h.....
+xxxxx.CD.i....x
+....f....j....x
+....g....k.....
+xxxxxxxxxx....x
+....g....k.....
+....f....j....x
+xxxxx.CD.i....x
+xxx.e....h.....
+x...d....xxxxxx
+x...xxxxxx
+x..xx
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
