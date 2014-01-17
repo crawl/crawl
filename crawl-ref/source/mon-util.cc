@@ -1745,8 +1745,8 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (attk.flavour == AF_KLOWN)
     {
         attack_flavour flavours[] =
-            {AF_POISON_NASTY, AF_ROT, AF_DRAIN_XP, AF_FIRE, AF_COLD, AF_BLINK,
-             AF_ANTIMAGIC};
+            {AF_POISON_STRONG, AF_PAIN, AF_DRAIN_SPEED, AF_FIRE,
+             AF_COLD, AF_ELEC, AF_ANTIMAGIC};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
