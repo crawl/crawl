@@ -35,6 +35,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-book.h"
 #include "mon-chimera.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -2136,11 +2137,11 @@ monster_type random_draconian_monster_species()
 // If a monster has only one spellbook, it is specified in mon-data.h.
 // If it has multiple books, mon-data.h sets the book to MST_NO_SPELLS,
 // and the books are accounted for here.
-vector<mon_spellbook_type> mons_spellbook_list(monster_type mon_type)
+static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
 {
     vector<mon_spellbook_type> books;
     const monsterentry *m = get_monster_data(mon_type);
-    mon_spellbook_type book = (m->sec);
+    mon_spellbook_type book = static_cast<mon_spellbook_type>(m->sec);
 
     switch (mon_type)
     {
@@ -2231,9 +2232,23 @@ vector<mon_spellbook_type> mons_spellbook_list(monster_type mon_type)
     return books;
 }
 
+vector<mon_spellbook_type> get_spellbooks(const monster_info &mon)
+{
+    vector<mon_spellbook_type> books;
+
+    // special case for vault monsters: if they have a custom book,
+    // treat it as MST_GHOST
+    if (mon.props.exists("custom_spells"))
+        books.push_back(MST_GHOST);
+    else
+        books = _mons_spellbook_list(mon.type);
+
+    return books;
+}
+
 static void _mons_load_spells(monster* mon)
 {
-    vector<mon_spellbook_type> books = mons_spellbook_list(mon->type);
+    vector<mon_spellbook_type> books = _mons_spellbook_list(mon->type);
     mon_spellbook_type book = books[random2(books.size())];
 
     if (book == MST_GHOST)

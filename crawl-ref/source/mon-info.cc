@@ -1742,20 +1742,6 @@ bool monster_info::ground_level() const
     return !airborne() && !is(MB_CLINGING);
 }
 
-vector<mon_spellbook_type> monster_info::get_spellbooks() const
-{
-    vector<mon_spellbook_type> books;
-
-    // special case for vault monsters: if they have a custom book,
-    // treat it as MST_GHOST
-    if (this->props.exists("custom_spells"))
-        books.push_back(MST_GHOST);
-    else
-        books = mons_spellbook_list(this->type);
-
-    return books;
-}
-
 void get_monster_info(vector<monster_info>& mons)
 {
     vector<monster* > visible;

@@ -10,7 +10,6 @@
 #include "enum.h"
 #include "mon-enum.h"
 #include "player.h"
-#include "mon-mst.h"
 
 struct bolt;
 
@@ -96,14 +95,6 @@ private:
     }
 };
 
-struct mon_spellbook
-{
-    mon_spellbook_type type;
-    spell_type spells[NUM_MONSTER_SPELL_SLOTS];
-};
-
-extern const mon_spellbook mspell_list[];
-
 struct monsterentry
 {
     short mc;            // monster number
@@ -142,7 +133,7 @@ struct monsterentry
 
     int8_t AC; // armour class
     int8_t ev; // evasion
-    mon_spellbook_type sec;
+    int sec;   // actually mon_spellbook_type
     corpse_effect_type corpse_thingy;
     zombie_size_type   zombie_size;
     shout_type         shouts;
@@ -322,8 +313,6 @@ bool mons_has_known_ranged_attack(const monster* mon);
 bool mons_can_attack(const monster* mon);
 bool mons_has_incapacitating_spell(const monster* mon, const actor* foe);
 bool mons_has_incapacitating_ranged_attack(const monster* mon, const actor* foe);
-
-vector<mon_spellbook_type> mons_spellbook_list(monster_type mon);
 
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);

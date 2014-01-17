@@ -43,6 +43,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
+#include "mon-book.h"
 #include "mon-chimera.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -3135,7 +3136,7 @@ static string _monster_spells_description(const monster_info& mi)
     if (!mi.is_spellcaster())
         return "";
 
-    const vector<mon_spellbook_type> books = mi.get_spellbooks();
+    const vector<mon_spellbook_type> books = get_spellbooks(mi);
     const size_t num_books = books.size();
 
     // If there are really really no spells, print nothing.
