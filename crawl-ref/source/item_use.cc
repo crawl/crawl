@@ -2308,6 +2308,14 @@ static bool _god_hates_brand(const int brand)
         return true;
     }
 
+    if (you_worship(GOD_DITHMENGOS)
+        && (brand == SPWPN_FLAMING
+            || brand == SPWPN_FLAME
+            || brand == SPWPN_CHAOS))
+    {
+        return true;
+    }
+
     if (you_worship(GOD_SHINING_ONE) && brand == SPWPN_VENOM)
         return true;
 
