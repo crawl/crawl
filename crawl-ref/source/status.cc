@@ -336,7 +336,7 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_colour = MAGENTA;
             inf->light_text   = "Umbra";
             inf->short_text   = "wreathed by umbra";
-            inf->long_text    = "You are wreathed by an unholy umbra.";
+            inf->long_text    = "You are wreathed by an umbra.";
         }
         break;
 

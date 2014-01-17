@@ -3622,7 +3622,7 @@ static string _get_monster_desc(const monster_info& mi)
         text += pronoun + " is illuminated by a divine halo.\n";
 
     if (mi.is(MB_UMBRAED))
-        text += pronoun + " is wreathed by an unholy umbra.\n";
+        text += pronoun + " is wreathed by an umbra.\n";
 
     if (mi.intel() <= I_INSECT)
         text += pronoun + " is mindless.\n";
