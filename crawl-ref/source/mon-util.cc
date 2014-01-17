@@ -2939,11 +2939,6 @@ bool mons_is_retreating(const monster* m)
     return m->behaviour == BEH_RETREAT || mons_is_fleeing(m);
 }
 
-bool mons_is_panicking(const monster* m)
-{
-    return m->behaviour == BEH_PANIC;
-}
-
 bool mons_is_cornered(const monster* m)
 {
     return m->behaviour == BEH_CORNERED;
