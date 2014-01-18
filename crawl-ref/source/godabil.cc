@@ -3573,21 +3573,18 @@ static monster* _dithmengos_shadow_monster()
         return NULL;
     }
 
-    mon->mname      = "shadow";
-    mon->type       = MONS_HUMAN;
+    mon->type       = MONS_PLAYER_SHADOW;
     mon->behaviour  = BEH_SEEK;
     mon->attitude   = ATT_FRIENDLY;
-    mon->flags      = (MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
-                       | MF_WAS_IN_VIEW | MF_HARD_RESET
-                       | MF_NAME_REPLACE | MF_NAME_DESCRIPTOR
-                       | MF_ACTUAL_SPELLS);
+    mon->flags      = MF_NO_REWARD | MF_JUST_SUMMONED | MF_SEEN
+                    | MF_WAS_IN_VIEW | MF_HARD_RESET
+                    | MF_ACTUAL_SPELLS;
     mon->hit_points = you.hp;
     mon->hit_dice   = you.experience_level;
     mon->set_position(you.pos());
     mon->mid        = MID_PLAYER;
     mon->inv[MSLOT_WEAPON]  = wpn_index;
     mon->inv[MSLOT_MISSILE] = ammo_index;
-    mon->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 1, NULL, INFINITE_DURATION));
 
     mgrd(you.pos()) = mon->mindex();
 

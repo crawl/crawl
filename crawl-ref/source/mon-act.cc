@@ -871,9 +871,8 @@ static bool _handle_reaching(monster* mons)
     if (mons_aligned(mons, foe) && !mons->has_ench(ENCH_INSANE))
         return false;
 
-    // Greatly lowered chances if the monster is fleeing or pacified and
-    // leaving the level.
-    if ((mons_is_fleeing(mons) || mons->pacified()) && !one_chance_in(8))
+    // Don't stop to jab at things while fleeing or leaving the level
+    if ((mons_is_fleeing(mons) || mons->pacified()))
         return false;
 
     const coord_def foepos(foe->pos());
@@ -1565,13 +1564,9 @@ static bool _handle_throw(monster* mons, bolt & beem)
         return false;
     }
 
-    // Greatly lowered chances if the monster is fleeing or pacified and
-    // leaving the level.
-    if ((mons_is_fleeing(mons) || mons->pacified())
-        && !one_chance_in(8))
-    {
+    // Don't let fleeing (or pacified creatures) stop to shoot at things
+    if (mons_is_fleeing(mons) || mons->pacified())
         return false;
-    }
 
     item_def *launcher = NULL;
     const item_def *weapon = NULL;
@@ -3039,6 +3034,11 @@ static bool _mons_can_displace(const monster* mpusher,
     {
         return false;
     }
+
+    // Fleeing monsters cannot push past other fleeing monsters
+    // (This helps to prevent some traffic jams in confined spaces)
+    if (mons_is_fleeing(mpusher) && mons_is_fleeing(mpushee))
+        return false;
 
     // Batty monsters are unpushable.
     if (mons_is_batty(mpusher) || mons_is_batty(mpushee))

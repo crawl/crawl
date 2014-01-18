@@ -4158,6 +4158,8 @@ void corrode_item(item_def &item, actor *holder)
         if (you.equip[EQ_WEAPON] == item.link)
             you.wield_change = true;
     }
+    else if (holder && holder->type == MONS_PLAYER_SHADOW)
+        return; // it's just a temp copy of the item
     else if (holder && you.see_cell(holder->pos()))
     {
         if (holder->type == MONS_DANCING_WEAPON)

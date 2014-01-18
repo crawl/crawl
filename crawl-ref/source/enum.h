@@ -2766,8 +2766,8 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
-    MONS_ARACHNOID,             // genus
 #endif
+    MONS_PLAYER_SHADOW,         // Dithmengos
 
     MONS_DEEP_TROLL_EARTH_MAGE,
     MONS_DEEP_TROLL_SHAMAN,
@@ -2877,8 +2877,11 @@ enum beh_type
     BEH_WANDER,
     BEH_SEEK,
     BEH_FLEE,
-    BEH_CORNERED,
+    BEH_CORNERED,                      //  wanting to flee, but blocked by an
+                                       //  obstacle or monster
+#if TAG_MAJOR_VERSION == 34
     BEH_PANIC,                         //  like flee but without running away
+#endif
     BEH_LURK,                          //  stay still until discovered or
                                        //  enemy close by
     BEH_RETREAT,                       //  like flee but when cannot attack

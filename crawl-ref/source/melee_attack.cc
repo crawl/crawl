@@ -1659,13 +1659,14 @@ string melee_attack::player_why_missed()
 void melee_attack::player_warn_miss()
 {
     did_hit = false;
-    // Upset only non-sleeping monsters if we missed.
-    if (!defender->asleep())
-        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 
     mprf("%s%s.",
          player_why_missed().c_str(),
          defender->name(DESC_THE).c_str());
+
+    // Upset only non-sleeping non-fleeing monsters if we missed.
+    if (!defender->asleep() && !mons_is_fleeing(defender->as_monster()))
+        behaviour_event(defender->as_monster(), ME_WHACK, attacker);
 }
 
 int melee_attack::player_stat_modify_damage(int damage)
