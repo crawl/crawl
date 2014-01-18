@@ -1051,7 +1051,7 @@ SHUFFLE: BC, DEF
 SUBST:   A : ttw, B : tttww, D : w., E : w..., C = t, F = .
 KMASK:   wW = no_monster_gen
 MAP
-  ...   ..    .. 
+  ...   ..    ..
  .WWW....WW....w.
 .Wtttt..ttt.D.tAw
 .WttttW.ttt.D.tt.
