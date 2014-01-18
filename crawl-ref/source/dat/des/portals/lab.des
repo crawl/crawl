@@ -235,7 +235,7 @@ SHUFFLE: bxvc, ABCDEFHIJKLM
 {{
  -- Dwarven fighter. Maybe the minotaur got the last MD. 3 items.
 dgn.delayed_decay(_G, 'A', 'dwarf skeleton, battleaxe race:dwarven / '
-   .. "eveningstar race:dwarven / executioner's axe race:dwarven w:2 / "
+   .. 'eveningstar race:dwarven / executioner's axe race:dwarven w:2 / '
    .. 'great mace race:dwarven w:2, helmet good_item / '
    .. 'pair of gloves good_item / pair of boots good_item, '
    .. 'plate armour race:dwarven / crystal plate armour w:2' )
