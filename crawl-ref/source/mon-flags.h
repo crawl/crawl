@@ -121,8 +121,7 @@ const uint64_t M_FAKE_SPELLS       = (uint64_t)1<<35;
 // always leaves a corpse
 const uint64_t M_ALWAYS_CORPSE     = (uint64_t)1<<36;
 
-// is constantly "fleeing"
-const uint64_t M_FLEEING           = (uint64_t)1<<37;
+// 1<<37
 
 // is an artificial being
 const uint64_t M_ARTIFICIAL        = (uint64_t)1<<38;
