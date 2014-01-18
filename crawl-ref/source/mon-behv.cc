@@ -1312,9 +1312,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             }
             mon->del_ench(ENCH_FEAR, true);
         }
-        else if (!mons_is_cornered(mon) && mon->hit_points > fleeThreshold)
-            mon->behaviour = BEH_SEEK;
-        else if (mon->asleep())
+        else
             mon->behaviour = BEH_SEEK;
 
         if (src == &you
@@ -1375,11 +1373,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (!mons_is_fleeing(mon) && !mons_is_retreating(mon)
-            && !mons_is_cornered(mon))
-        {
+        if (!mons_is_fleeing(mon))
             mon->behaviour = BEH_SEEK;
-        }
 
         if (mon->foe == MHITNOT)
             mon->foe = src_idx;
@@ -1427,20 +1422,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         mon->foe       = src_idx;
         mon->target    = src_pos;
         if (src == &you)
-        {
-            // Friendly monsters don't become hostile if you read a
-            // scroll of fear, but enslaved ones will.
-            // Send friendlies off to a random target so they don't cling
-            // to you in fear.
-            if (mon->friendly())
-            {
-                breakCharm = true;
-                mon->foe   = MHITNOT;
-                set_random_target(mon);
-            }
-            else
                 setTarget = true;
-        }
         else if (mon->friendly() && !crawl_state.game_is_arena())
             mon->foe = MHITYOU;
 
@@ -1499,7 +1481,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         //   at 10 hp: 50% chance of fleeing
         //   (chance increases by 5% for every hp lost.)
         if (mons_class_flag(mon->type, M_FLEES)
-            && !mons_is_cornered(mon)
             && !mon->berserk_or_insane()
             && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
         {
