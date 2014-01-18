@@ -1949,12 +1949,34 @@
       }
     },
 
-    {  MST_FAUN,
+    {  MST_FAUN_I,
       {
        SPELL_CORONA,
        SPELL_NO_SPELL,
-       SPELL_CORONA,
        SPELL_SLOW,
+       SPELL_SLOW,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_FAUN_II,
+      {
+       SPELL_CORONA,
+       SPELL_NO_SPELL,
+       SPELL_SLOW,
+       SPELL_MELEE,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_FAUN_III,
+      {
+       SPELL_CORONA,
+       SPELL_NO_SPELL,
+       SPELL_MELEE,
+       SPELL_MELEE,
        SPELL_CONFUSE,
        SPELL_NO_SPELL
       }
@@ -1962,7 +1984,7 @@
 
     {  MST_SATYR,
       {
-       SPELL_NO_SPELL,
+       SPELL_MELEE,
        SPELL_NO_SPELL,
        SPELL_CAUSE_FEAR,
        SPELL_CAUSE_FEAR,

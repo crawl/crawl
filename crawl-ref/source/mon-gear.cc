@@ -969,10 +969,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         else
         {
-            item.sub_type = random_choose(WPN_SPEAR,
-                                          WPN_CLUB,
-                                          WPN_QUARTERSTAFF,
-                                          -1);
+            item.sub_type = random_choose_weighted(2, WPN_SPEAR,
+                                                   1, WPN_CLUB,
+                                                   2, WPN_QUARTERSTAFF,
+                                                   0);
         }
         break;
 

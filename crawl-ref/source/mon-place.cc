@@ -2519,10 +2519,20 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_SATYR:
-        natural_leader = true;
+        if (!one_chance_in(3))
+        {
+            natural_leader = true;
+            band = one_chance_in(5) ? BAND_FAUN_PARTY : BAND_FAUNS;
+            band_size = 3 + random2(2);
+        }
+        break;
+
     case MONS_FAUN:
-        band = BAND_FAUNS;
-        band_size = 2 + random2(3);
+        if (!one_chance_in(3))
+        {
+            band = coinflip() ? BAND_FAUNS : BAND_FAUN_PARTY;
+            band_size = 2 + random2(2);
+        }
         break;
 
     case MONS_TENGU_CONJURER:
@@ -2960,6 +2970,12 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_FAUNS:
         return MONS_FAUN;
+
+    case BAND_FAUN_PARTY:
+        if (which == 1)
+            return MONS_MERMAID;
+        else
+            return MONS_FAUN;
 
     case BAND_TENGU:
         if (which == 1 && coinflip())

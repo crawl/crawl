@@ -2226,6 +2226,12 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         books.push_back(MST_DEEP_ELF_MAGE_V);
         break;
 
+    case MONS_FAUN:
+        books.push_back(MST_FAUN_I);
+        books.push_back(MST_FAUN_II);
+        books.push_back(MST_FAUN_III);
+        break;
+
     default:
         books.push_back(book);
         break;

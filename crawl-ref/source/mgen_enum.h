@@ -101,6 +101,7 @@ enum band_type
     BAND_THRASHING_HORRORS,
     BAND_RAIJU,
     BAND_RAVENS,
+    BAND_FAUN_PARTY,
     NUM_BANDS                   // always last
 };
 
