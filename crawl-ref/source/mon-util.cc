@@ -198,6 +198,7 @@ void init_mon_name_cache()
         if (Mon_Name_Cache.count(name))
         {
             if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE
+                || mon == MONS_PLAYER_SHADOW
                 || mon != MONS_SERPENT_OF_HELL
                    && mons_species(mon) == MONS_SERPENT_OF_HELL)
             {
@@ -2680,14 +2681,8 @@ static string _get_proper_monster_name(const monster* mon)
     if (!name.empty())
         return name;
 
-    name = getRandNameString(get_monster_data(mons_genus(mon->type))->name,
+    return getRandNameString(get_monster_data(mons_genus(mon->type))->name,
                              " name");
-
-    if (!name.empty())
-        return name;
-
-    name = getRandNameString("generic_monster_name");
-    return name;
 }
 
 // Names a previously unnamed monster.
@@ -2929,19 +2924,17 @@ bool mons_is_seeking(const monster* m)
     return m->behaviour == BEH_SEEK;
 }
 
+// Either running in fear, or trapped and unable to do so (but still wishing to)
 bool mons_is_fleeing(const monster* m)
 {
-    return m->behaviour == BEH_FLEE || mons_class_flag(m->type, M_FLEEING);
+    return m->behaviour == BEH_FLEE || mons_is_cornered(m);
 }
 
+// Can be either an orderly withdrawal (from which the monster can stop at will)
+// or running in fear (from which they cannot)
 bool mons_is_retreating(const monster* m)
 {
     return m->behaviour == BEH_RETREAT || mons_is_fleeing(m);
-}
-
-bool mons_is_panicking(const monster* m)
-{
-    return m->behaviour == BEH_PANIC;
 }
 
 bool mons_is_cornered(const monster* m)

@@ -992,15 +992,13 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_CORNERED:
-            // Plants and nonliving monsters cannot fight back.
-            if (mon->holiness() == MH_PLANT
-                || mon->holiness() == MH_NONLIVING)
-            {
-                break;
-            }
 
-            if (isHealthy)
-                new_beh = BEH_SEEK;
+            // If we were able to move since becoming cornered, resume fleeing
+            if (mon->pos() != mon->props["last_pos"].get_coord())
+            {
+                new_beh = BEH_FLEE;
+                mon->props.erase("last_pos");
+            }
 
             // Foe gone out of LOS?
             if (!proxFoe)
@@ -1270,9 +1268,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (event != ME_WHACK
             && !mon->has_ench(ENCH_INSANE)
             && (wontAttack == sourceWontAttack && mons_intel(mon) <= I_PLANT
-                || mons_is_fleeing(mon)
-                || mons_class_flag(mon->type, M_FLEEING)
-                || mons_is_panicking(mon)))
+                || mons_is_fleeing(mon)))
         {
             break;
         }
@@ -1306,9 +1302,17 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             mon->behaviour = BEH_RETREAT;
         }
-        else if (!mons_is_cornered(mon) && mon->hit_points > fleeThreshold)
-            mon->behaviour = BEH_SEEK;
-        else if (mon->asleep())
+        else if (mons_is_fleeing(mon))
+        {
+            if (you.can_see(mon))
+            {
+                mprf("%s attack snaps %s out of its fear.",
+                        src->name(DESC_ITS).c_str(),
+                        mon->name(DESC_THE).c_str());
+            }
+            mon->del_ench(ENCH_FEAR, true);
+        }
+        else
             mon->behaviour = BEH_SEEK;
 
         if (src == &you
@@ -1369,13 +1373,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if ((!mons_is_fleeing(mon) || mons_class_flag(mon->type, M_FLEEING))
-            && !mons_is_retreating(mon)
-            && !mons_is_panicking(mon)
-            && !mons_is_cornered(mon))
-        {
+        if (!mons_is_retreating(mon))
             mon->behaviour = BEH_SEEK;
-        }
 
         if (mon->foe == MHITNOT)
             mon->foe = src_idx;
@@ -1423,20 +1422,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         mon->foe       = src_idx;
         mon->target    = src_pos;
         if (src == &you)
-        {
-            // Friendly monsters don't become hostile if you read a
-            // scroll of fear, but enslaved ones will.
-            // Send friendlies off to a random target so they don't cling
-            // to you in fear.
-            if (mon->friendly())
-            {
-                breakCharm = true;
-                mon->foe   = MHITNOT;
-                set_random_target(mon);
-            }
-            else
                 setTarget = true;
-        }
         else if (mon->friendly() && !crawl_state.game_is_arena())
             mon->foe = MHITYOU;
 
@@ -1446,16 +1432,18 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         break;
 
     case ME_CORNERED:
-        // Some monsters can't flee.
-        if (!mons_is_retreating(mon) && !mon->has_ench(ENCH_FEAR))
+        // We only care about this event if we were actually running away
+        if (!mons_is_retreating(mon))
             break;
 
         // Pacified monsters shouldn't change their behaviour.
         if (mon->pacified())
             break;
 
-        // Just set behaviour... foe doesn't change.
-        if (!mons_is_cornered(mon) && !mon->has_ench(ENCH_WITHDRAWN))
+        // If we were already cornered last turn, give up on trying to flee
+        // and turn to fight instead. Otherwise, pause a turn in hope that
+        // an escape route will open up.
+        if (mons_is_cornered(mon))
         {
             if (mon->friendly() && !crawl_state.game_is_arena())
             {
@@ -1466,11 +1454,20 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             {
                 msg = getSpeakString(mon->name(DESC_PLAIN) + " cornered");
                 if (msg.empty())
-                    msg = "PLAIN:@The_monster@ turns to fight!";
+                    msg = "PLAIN:Cornered, @The_monster@ turns to fight!";
             }
+            mon->del_ench(ENCH_FEAR, true);
+            mon->behaviour = BEH_SEEK;
         }
-
-        mon->behaviour = BEH_CORNERED;
+        else if (mons_is_fleeing(mon))
+        {
+            // Save their current position so we know if they manage to move
+            // on the following turn (and thus resume BEH_FLEE)
+            mon->props["last_pos"].get_coord() = mon->pos();
+            mon->behaviour = BEH_CORNERED;
+        }
+        else
+            mon->behaviour = BEH_SEEK;
         break;
 
     case ME_HURT:
@@ -1486,7 +1483,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         //   at 10 hp: 50% chance of fleeing
         //   (chance increases by 5% for every hp lost.)
         if (mons_class_flag(mon->type, M_FLEES)
-            && !mons_is_cornered(mon)
             && !mon->berserk_or_insane()
             && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
         {

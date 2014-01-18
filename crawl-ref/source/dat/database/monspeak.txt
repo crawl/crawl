@@ -5070,7 +5070,6 @@ silenced Mennas
 
 VISUAL:@The_monster@ gestures frantically.
 
-A booming voice calls from the heavens, "You cannot keep ME silent!"
 @Mennas@
 %%%%
 ############ MURRAY ### A disembodied skull.
@@ -5682,13 +5681,13 @@ _Rupert_rare_
 Saint Roka
 
 w:7
-@Saint Roka generic@
+@_Saint Roka generic_@
 
 @The_monster@ says @to_foe@, "Down here, you're an orc or you're nobody."
 
 @The_monster@ says @to_foe@, "In the orcish mines, orcs kill the likes of YOU!"
 %%%%
-Saint Roka generic
+_Saint Roka generic_
 
 w:2
 @_generic_orc_speech_@
@@ -5707,12 +5706,12 @@ w:2
 %%%%
 related Saint Roka
 
-@Saint Roka generic@
+@_Saint Roka generic_@
 
 w:2
 @The_monster@ calls out, "Join me or die!"
 %%%%
-Saint Roka rival
+_Saint Roka rival_
 
 @The_monster@ shouts @at_foe@, "You dare challenge my right as the Messiah?"
 
@@ -5734,7 +5733,7 @@ w:5
 @_hostile_orc_beogh_believer_speech_rare_@
 
 w:5
-@Saint Roka rival@
+@_Saint Roka rival_@
 ## END Saint Roka ##
 %%%%
 ############ SIGMUND ### Mad old wizard
