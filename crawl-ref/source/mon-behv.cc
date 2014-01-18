@@ -1302,6 +1302,16 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             mon->behaviour = BEH_RETREAT;
         }
+        else if (mons_is_fleeing(mon))
+        {
+            if (you.can_see(mon))
+            {
+                mprf("%s attack snaps %s out of its fear.",
+                        src->name(DESC_ITS).c_str(),
+                        mon->name(DESC_THE).c_str());
+            }
+            mon->del_ench(ENCH_FEAR, true);
+        }
         else if (!mons_is_cornered(mon) && mon->hit_points > fleeThreshold)
             mon->behaviour = BEH_SEEK;
         else if (mon->asleep())
