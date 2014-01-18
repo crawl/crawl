@@ -166,8 +166,14 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
         // Currently, holy word annoys the monsters it affects
         // because it can kill them, and because hostile
         // monsters don't use it.
-        if (attacker != NULL)
+        // Tolerate unknown scroll, to not annoy Yred worshippers too much.
+        if (attacker != NULL
+            && (attacker != &you
+                || source != HOLY_WORD_SCROLL
+                || item_type_known(OBJ_SCROLLS, SCR_HOLY_WORD)))
+        {
             behaviour_event(mons, ME_ANNOY, attacker);
+        }
 
         if (mons->speed_increment >= 25)
             mons->speed_increment -= 20;
