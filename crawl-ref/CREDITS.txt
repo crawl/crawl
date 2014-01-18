@@ -189,7 +189,6 @@
     Chris Terenzi
     Jared 'Twinge' Tinney
     Matt Titus
-    Jason Van
     wheals
     Steven Wheeler
     Thomas Willem
@@ -227,5 +226,6 @@ The Dungeon Crawl Stone Soup development team is:
     Charles Otto
     Aaron Pixton
     David Ploog
+    Jason Van
     Chris West
     Samuel Wilson
