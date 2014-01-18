@@ -32,13 +32,13 @@
 orc name
 
 w:14
-@beogh_name@
+@_beogh_name_@
 
 w:12
-@orcish_name@
+@_orcish_name_@
 
 w:45
-@other_orcish_name@
+@_other_orcish_name_@
 %%%%
 # some specials for orcish priests
 orc high priest name
@@ -56,7 +56,7 @@ w:50
 %%%%
 # Obvious references to Beogh
 # (14 at last count)
-beogh_name
+_beogh_name_
 
 Arbeogh
 
@@ -89,7 +89,7 @@ Warbeogh
 %%%%
 # Obvious references to orcs in general
 # (extremely subjective, and 13 at last count)
-orcish_name
+_orcish_name_
 
 Alork
 
@@ -119,7 +119,7 @@ Oruk
 %%%%
 # Other
 # (49 at last count)
-other_orcish_name
+_other_orcish_name_
 
 Agrik
 
