@@ -1296,18 +1296,31 @@ transparent_stone DNGN_TRANSPARENT_STONE DNGN_TRANSPARENT_STONE_CYAN DNGN_FIRST_
 mirrored_wall DNGN_MIRROR_WALL
 silver_wall DNGN_SILVER_WALL
 
-metal_wall DNGN_METAL_WALL
+%weight 10
+metal_wall0 DNGN_METAL_WALL
+metal_wall1
+metal_wall2
+%weight 3
+metal_wall3
+metal_wall4
+metal_wall5
+metal_wall6
+metal_wall7
+metal_wall8
 
 %variation DNGN_METAL_WALL blue
-%hue 26 240
-%hue 27 240
-%hue 28 240
-%hue 29 240
-%hue 30 240
-%hue 31 240
-%hue 32 240
-%hue 33 240
-metal_wall_brown DNGN_METAL_WALL_BLUE
+%hue 0 240
+%weight 10
+metal_wall_red0 DNGN_METAL_WALL_BLUE
+metal_wall_red1
+metal_wall_red2
+%weight 3
+metal_wall_red3
+metal_wall_red4
+metal_wall_red5
+metal_wall_red6
+metal_wall_red7
+metal_wall_red8
 %resetcol
 
 %variation DNGN_METAL_WALL green
@@ -1336,8 +1349,9 @@ metal_wall_brown DNGN_METAL_WALL_BLUE
 %resetcol
 
 %variation DNGN_METAL_WALL darkgray
-%lum 0 -20
-%repeat DNGN_METAL_WALL DNGN_METAL_WALL_DARKGRAY
+%desat 0
+%lum 0 -10
+%repeat DNGN_METAL_WALL_RED DNGN_METAL_WALL_DARKGRAY
 %resetcol
 
 %variation DNGN_METAL_WALL yellow
@@ -1346,8 +1360,9 @@ metal_wall_brown DNGN_METAL_WALL_BLUE
 %resetcol
 
 %variation DNGN_METAL_WALL white
-%lum 0 30
-%repeat DNGN_METAL_WALL DNGN_METAL_WALL_WHITE
+%desat 0
+%lum 0 10
+%repeat DNGN_METAL_WALL_RED DNGN_METAL_WALL_WHITE
 %resetcol
 
 metal_wall_cracked DNGN_METAL_WALL_CRACKED
