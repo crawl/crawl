@@ -198,6 +198,7 @@ void init_mon_name_cache()
         if (Mon_Name_Cache.count(name))
         {
             if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE
+                || mon == MONS_PLAYER_SHADOW
                 || mon != MONS_SERPENT_OF_HELL
                    && mons_species(mon) == MONS_SERPENT_OF_HELL)
             {
