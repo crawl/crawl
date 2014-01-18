@@ -2680,14 +2680,8 @@ static string _get_proper_monster_name(const monster* mon)
     if (!name.empty())
         return name;
 
-    name = getRandNameString(get_monster_data(mons_genus(mon->type))->name,
+    return getRandNameString(get_monster_data(mons_genus(mon->type))->name,
                              " name");
-
-    if (!name.empty())
-        return name;
-
-    name = getRandNameString("generic_monster_name");
-    return name;
 }
 
 // Names a previously unnamed monster.
