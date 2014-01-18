@@ -337,7 +337,7 @@ static const pop_entry pop_swamp[] =
 
 static const pop_entry pop_shoals[] =
 { // Shoals
-  {  1,  6,  258, DOWN, MONS_BAT },
+  { -1,  7,  258, DOWN, MONS_BAT },
   {  1,  5,  334, FLAT, MONS_SEA_SNAKE },
   {  1,  5,  258, FLAT, MONS_HIPPOGRIFF },
   {  1,  5,  981, FLAT, MONS_MERFOLK },
@@ -1157,8 +1157,6 @@ static const pop_entry pop_depths[] =
   {  1,  6,   25, FLAT, MONS_GREAT_ORB_OF_EYES },
   {  1,  6,   25, FLAT, MONS_GIANT_ORANGE_BRAIN },
   {  1,  6,   25, FLAT, MONS_MINOTAUR },
-  {  1,  6,   50, FLAT, MONS_LICH },
-  {  1,  6,   10, FLAT, MONS_FLAYED_GHOST },
   {  1,  6,   25, DOWN, MONS_REDBACK },
   {  1,  6,   25, DOWN, MONS_WOLF_SPIDER },
   {  1,  7,   25, DOWN, MONS_VAMPIRE_MAGE },
@@ -1171,6 +1169,8 @@ static const pop_entry pop_depths[] =
   {  1,  7,  100, DOWN, MONS_NAGA_MAGE },
   {  1,  7,  250, DOWN, MONS_TENGU_WARRIOR },
   {  1,  7,  100, DOWN, MONS_TENGU_CONJURER },
+  {  1, 10,   50, FLAT, MONS_LICH },
+  {  1, 10,   10, FLAT, MONS_FLAYED_GHOST },
   {  1, 14,  250, PEAK, MONS_GLOWING_SHAPESHIFTER },
   {  1, 14,  100, PEAK, MONS_TENGU_REAVER },
   {  1, 14,   25, SEMI, MONS_SPHINX },
@@ -1279,7 +1279,9 @@ static const pop_entry pop_water_swamp[] =
   {  1,  5,    75, FLAT, MONS_BIG_FISH },
   {  1,  5,    75, FLAT, MONS_GIANT_GOLDFISH },
   {  1,  5,    75, FLAT, MONS_ELECTRIC_EEL },
-  {  1,  5,    75, FLAT, MONS_JELLYFISH },
+  {  1,  6,    75, DOWN, MONS_JELLYFISH },
+  {  2,  6,    15,   UP, MONS_SWAMP_DRAGON },
+  {  2,  6,    15,   UP, MONS_HYDRA },
   { 0,0,0,FLAT,MONS_0 }
 };
 
