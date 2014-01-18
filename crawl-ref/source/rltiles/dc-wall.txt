@@ -1350,7 +1350,7 @@ metal_wall_red8
 
 %variation DNGN_METAL_WALL darkgray
 %desat 0
-%lum 0 -10
+%lum 0 -15
 %repeat DNGN_METAL_WALL_RED DNGN_METAL_WALL_DARKGRAY
 %resetcol
 
@@ -1360,10 +1360,9 @@ metal_wall_red8
 %resetcol
 
 %variation DNGN_METAL_WALL white
-%desat 0
-%lum 0 10
-%repeat DNGN_METAL_WALL_RED DNGN_METAL_WALL_WHITE
-%resetcol
+metal_wall_white0 DNGN_METAL_WALL_WHITE
+metal_wall_white1
+metal_wall_white2
 
 iron0-0 DNGN_METAL_IRON
 iron2-0
