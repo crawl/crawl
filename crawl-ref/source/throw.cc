@@ -1659,18 +1659,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (you.attribute[ATTR_HELD])
             baseHit = baseHit / 2 - 1;
 
-        // For all launched weapons, maximum effective specific skill
-        // is twice throwing skill.  This models the fact that no matter
-        // how 'good' you are with a bow, if you know nothing about
-        // trajectories you're going to be a damn poor bowman.  Ditto
-        // for crossbows and slings.
-
-        // [dshaligram] Throwing now two parts launcher skill, one part
-        // ranged combat. Removed the old model which is... silly.
-
-        // [jpeg] Throwing now only affects actual throwing weapons,
-        // i.e. not launched ones. (Sep 10, 2007)
-
         shoot_skill = you.skill_rdiv(launcher_skill);
         effSkill    = shoot_skill;
 
