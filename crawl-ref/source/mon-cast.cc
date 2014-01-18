@@ -3453,7 +3453,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
     {
         if (you.can_see(mons))
             simple_monster_message(mons, " radiates an aura of fear!");
-        else
+        else if (you.see_cell(mons->pos()))
             mpr("An aura of fear fills the air!");
     }
 
@@ -3461,7 +3461,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     const int pow = min(mons->hit_dice * 18, 200);
 
-    if (mons->can_see(&you) && !mons->wont_attack())
+    if (mons->can_see(&you) && !mons->wont_attack() && !you.afraid_of(mons))
     {
         if (you.holiness() != MH_NATURAL)
         {
@@ -3477,7 +3477,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         {
             retval = 1;
 
-            you.increase_duration(DUR_AFRAID, 10 + random2avg(pow, 4));
+            you.increase_duration(DUR_AFRAID, 10 + random2avg(pow / 10, 4));
 
             if (!mons->has_ench(ENCH_FEAR_INSPIRING))
                 mons->add_ench(ENCH_FEAR_INSPIRING);
@@ -3494,10 +3494,12 @@ static int _mons_cause_fear(monster* mons, bool actual)
         // Magic-immune, unnatural and "firewood" monsters are
         // immune to being scared. Same-aligned monsters are
         // never affected, even though they aren't immune.
+        // Will not further scare a monster that is already afraid.
         if (mons_immune_magic(*mi)
             || mi->holiness() != MH_NATURAL
             || mons_is_firewood(*mi)
-            || mons_atts_aligned(mi->attitude, mons->attitude))
+            || mons_atts_aligned(mi->attitude, mons->attitude)
+            || mi->has_ench(ENCH_FEAR))
         {
             continue;
         }
@@ -3529,7 +3531,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
         }
     }
 
-    if (actual && retval == 1)
+    if (actual && retval == 1 && you.see_cell(mons->pos()))
         flash_view_delay(DARKGREY, 300);
 
     return retval;
