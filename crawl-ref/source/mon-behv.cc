@@ -1373,7 +1373,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (!mons_is_fleeing(mon))
+        if (!mons_is_retreating(mon))
             mon->behaviour = BEH_SEEK;
 
         if (mon->foe == MHITNOT)
@@ -1459,13 +1459,15 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             mon->del_ench(ENCH_FEAR, true);
             mon->behaviour = BEH_SEEK;
         }
-        else
+        else if (mons_is_fleeing(mon))
         {
             // Save their current position so we know if they manage to move
             // on the following turn (and thus resume BEH_FLEE)
             mon->props["last_pos"].get_coord() = mon->pos();
             mon->behaviour = BEH_CORNERED;
         }
+        else
+            mon->behaviour = BEH_SEEK;
         break;
 
     case ME_HURT:
