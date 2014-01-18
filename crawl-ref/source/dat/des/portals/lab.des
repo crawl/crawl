@@ -115,6 +115,7 @@ TAGS:    generate_loot no_pool_fixup
 ORIENT:  float
 MONS:    patrolling generate_awake minotaur
 SUBST:   b:vvb
+KFEAT:   < : exit_labyrinth
 MAP
 .........
 .bbbbbbb.
@@ -133,6 +134,7 @@ NAME:   labyrinth_green
 TAGS:   generate_loot
 ORIENT: float
 MONS:   patrolling generate_awake minotaur
+KFEAT:  < : exit_labyrinth
 WEIGHT: 2
 MAP
 ........
@@ -148,6 +150,7 @@ NAME:   labyrinth_spiral
 TAGS:   generate_loot
 ORIENT: float
 MONS:   patrolling generate_awake minotaur
+KFEAT:  < : exit_labyrinth
 SUBST:  b : bvz, z = vb
 MAP
 ............
@@ -169,6 +172,7 @@ NAME:   labyrinth_hidden_loot
 TAGS:   generate_loot
 ORIENT: float
 MONS:   patrolling minotaur, minotaur zombie
+KFEAT:  < : exit_labyrinth
 SUBST:  d = 2%*
 SUBST:  b : bvv
 MAP
@@ -231,6 +235,7 @@ ORIENT: float
 KMONS: m = patrolling generate_awake minotaur
 KPROP: ABCD'm = bloody
 KFEAT: ' = floor
+KFEAT: < : exit_labyrinth
 SHUFFLE: bxvc, ABCDEFHIJKLM
 {{
  -- Dwarven fighter. Maybe the minotaur got the last MD. 3 items.
