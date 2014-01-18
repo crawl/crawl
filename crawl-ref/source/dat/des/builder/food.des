@@ -125,7 +125,7 @@ ENDMAP
 
 # 23.2k/19.9k/13k
 NAME:   hangedman_fish_farm
-DEPTH:  D:7-14
+DEPTH:  D:9-14
 : food_weight(_G, 7)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_pool_fixup \
@@ -284,7 +284,7 @@ ENDMAP
 
 # 20.6k/23k/12.5k (min 18k/6k/0)
 NAME:    hangedman_stone_soup
-DEPTH:   D:8-14
+DEPTH:   D:9-14
 : food_weight(_G, 8)
 WEIGHT:  10
 TAGS:    uniq_second_food extra chance_second_food patrolling no_rotate no_vmirror
