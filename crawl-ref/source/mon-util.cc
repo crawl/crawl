@@ -2932,8 +2932,7 @@ bool mons_is_seeking(const monster* m)
 // Either running in fear, or trapped and unable to do so (but still wishing to)
 bool mons_is_fleeing(const monster* m)
 {
-    return m->behaviour == BEH_FLEE || mons_class_flag(m->type, M_FLEEING)
-           || mons_is_cornered(m);
+    return m->behaviour == BEH_FLEE || mons_is_cornered(m);
 }
 
 // Can be either an orderly withdrawal (from which the monster can stop at will)
