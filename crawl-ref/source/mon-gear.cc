@@ -905,22 +905,18 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                     0);
             break;
         }
-        if (one_chance_in(3))
+        else
         {
             item_race = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = WPN_TRIDENT;
             break;
         }
-        // intentionally fall through
 
     case MONS_MERMAID:
-        if (one_chance_in(3))
-        {
-            item_race = MAKE_ITEM_NO_RACE;
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_SPEAR;
-        }
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = one_chance_in(3) ? WPN_TRIDENT : WPN_SPEAR;
         break;
 
     case MONS_OCTOPODE:
@@ -1690,7 +1686,7 @@ static void _give_ammo(monster* mon, int level,
                 if (active_monster_band == BAND_MERFOLK_JAVELINEER)
                     break;
             }
-            if (one_chance_in(6) && !mons_summoned)
+            if (one_chance_in(4) && !mons_summoned)
             {
                 weap_type  = MI_THROWING_NET;
                 qty        = 1;
