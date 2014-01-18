@@ -1365,8 +1365,6 @@ metal_wall_red8
 %repeat DNGN_METAL_WALL_RED DNGN_METAL_WALL_WHITE
 %resetcol
 
-metal_wall_cracked DNGN_METAL_WALL_CRACKED
-
 iron0-0 DNGN_METAL_IRON
 iron2-0
 iron3-0
