@@ -58,23 +58,7 @@ static bool _is_branch_fitting(branch_type pb, int wavenum)
     switch (pb)
     {
     case BRANCH_DUNGEON:
-        // reduce freq at high levels
-        if (wavenum > 40)
-            return coinflip();
-        return true;
-
-    case BRANCH_SNAKE:
-        // reduce freq at high levels
-        if (wavenum > 40 && !coinflip())
-           return false;
-        return wavenum > 10;
-
-    default:
-    case BRANCH_TEMPLE:
-    case BRANCH_VAULTS:
-    case BRANCH_VESTIBULE:
-        return false;       // vaults/vestibule same as dungeon
-
+        return wavenum < 30;                 // <6K turns only
     case BRANCH_ORC:
         return wavenum < 30;                 // <6K turns only
     case BRANCH_ELF:
@@ -85,8 +69,16 @@ static bool _is_branch_fitting(branch_type pb, int wavenum)
         return wavenum > 12 && wavenum < 40; // 2.6-8K turns
     case BRANCH_SHOALS:
         return wavenum > 12 && wavenum < 60; // 2.6-12K turns
-    case BRANCH_CRYPT:
+    case BRANCH_SNAKE:
+        return wavenum > 10 && wavenum < 60; // 2.2-12K turns
+    case BRANCH_VAULTS:
+        return wavenum > 12;                 // 2.6-
+    case BRANCH_DEPTHS:
         return wavenum > 13;                 // 2.8K-
+    case BRANCH_CRYPT:
+        return wavenum > 15;                 // 3.2K-
+    case BRANCH_FOREST:
+        return wavenum > 20;                 // 4K-
     case BRANCH_SLIME:
         return wavenum > 20 && coinflip();   // 4K-
     case BRANCH_BLADE:
@@ -98,8 +90,12 @@ static bool _is_branch_fitting(branch_type pb, int wavenum)
     case BRANCH_TARTARUS:
     case BRANCH_GEHENNA:
         return wavenum > 40 && one_chance_in(3);
+    case BRANCH_VESTIBULE:
+        return wavenum > 30 && one_chance_in(6);
     case BRANCH_ZOT:                         // 10K-
         return wavenum > 50;
+    default:
+        return false;
     }
 }
 
@@ -108,14 +104,17 @@ static bool _is_branch_fitting(branch_type pb, int wavenum)
 static branch_type _zotdef_random_branch()
 {
     int wavenum = you.num_turns / ZOTDEF_CYCLE_LENGTH;
+    branch_type pb;
 
-    while (true)
-    {
-        branch_type pb = static_cast<branch_type>(random2(NUM_BRANCHES));
-        if (_is_branch_fitting(pb, wavenum))
-            return one_chance_in(4) ? BRANCH_DUNGEON : pb;
-            // strong bias to main dungeon
-    }
+    do
+         pb = static_cast<branch_type>(random2(NUM_BRANCHES));
+    while (!_is_branch_fitting(pb, wavenum));
+
+    if (one_chance_in(4))
+        return wavenum < 15 ? BRANCH_DUNGEON : BRANCH_DEPTHS;
+        // strong bias to main dungeon and depths
+
+    return pb;
 }
 
 static int _mon_strength(monster_type mon_type)
