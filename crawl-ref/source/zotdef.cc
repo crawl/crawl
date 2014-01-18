@@ -65,63 +65,63 @@ static branch_type _zotdef_random_branch()
         bool ok = true;
         switch (pb)
         {
-            case BRANCH_DUNGEON:
-                ok = true;
-                // reduce freq at high levels
-                if (wavenum > 40)
-                    ok = coinflip();
-                break;
+        case BRANCH_DUNGEON:
+            ok = true;
+            // reduce freq at high levels
+            if (wavenum > 40)
+                ok = coinflip();
+            break;
 
-            case BRANCH_SNAKE:
-                ok = wavenum > 10;
-                // reduce freq at high levels
-                if (wavenum > 40 && !coinflip())
-                   ok = false;
-                break;
+        case BRANCH_SNAKE:
+            ok = wavenum > 10;
+            // reduce freq at high levels
+            if (wavenum > 40 && !coinflip())
+               ok = false;
+            break;
 
-            default:
-            case BRANCH_TEMPLE:
-            case BRANCH_VAULTS:
-            case BRANCH_VESTIBULE:
-                ok = false;
-                break;                // vaults/vestibule same as dungeon
+        default:
+        case BRANCH_TEMPLE:
+        case BRANCH_VAULTS:
+        case BRANCH_VESTIBULE:
+            ok = false;
+            break;                // vaults/vestibule same as dungeon
 
-            case BRANCH_ORC:
-                ok = wavenum < 30;                 // <6K turns only
-                break;
-            case BRANCH_ELF:
-                ok = wavenum > 10 && wavenum < 60; // 2.2-12K turns
-                break;
-            case BRANCH_LAIR:
-                ok = wavenum < 40;                 // <8K turns only
-                break;
-            case BRANCH_SWAMP:
-                ok = wavenum > 12 && wavenum < 40; // 2.6-8K turns
-                break;
-            case BRANCH_SHOALS:
-                ok = wavenum > 12 && wavenum < 60; // 2.6-12K turns
-                break;
-            case BRANCH_CRYPT:
-                ok = wavenum > 13;                 // 2.8K-
-                break;
-            case BRANCH_SLIME:
-                ok = wavenum > 20 && coinflip();   // 4K-
-                break;        // >4K turns only
-            case BRANCH_BLADE:
-                ok = wavenum > 30;                 // 6K-
-                break;
-            case BRANCH_TOMB:
-                ok = wavenum > 30 && coinflip();   // 6K-
-                break;
-            case BRANCH_DIS:                       // 8K-
-            case BRANCH_COCYTUS:
-            case BRANCH_TARTARUS:
-            case BRANCH_GEHENNA:
-                ok = wavenum > 40 && one_chance_in(3);
-                break;
-            case BRANCH_ZOT:               // 10K-
-                ok = wavenum > 50;
-                break;
+        case BRANCH_ORC:
+            ok = wavenum < 30;                 // <6K turns only
+            break;
+        case BRANCH_ELF:
+            ok = wavenum > 10 && wavenum < 60; // 2.2-12K turns
+            break;
+        case BRANCH_LAIR:
+            ok = wavenum < 40;                 // <8K turns only
+            break;
+        case BRANCH_SWAMP:
+            ok = wavenum > 12 && wavenum < 40; // 2.6-8K turns
+            break;
+        case BRANCH_SHOALS:
+            ok = wavenum > 12 && wavenum < 60; // 2.6-12K turns
+            break;
+        case BRANCH_CRYPT:
+            ok = wavenum > 13;                 // 2.8K-
+            break;
+        case BRANCH_SLIME:
+            ok = wavenum > 20 && coinflip();   // 4K-
+            break;        // >4K turns only
+        case BRANCH_BLADE:
+            ok = wavenum > 30;                 // 6K-
+            break;
+        case BRANCH_TOMB:
+            ok = wavenum > 30 && coinflip();   // 6K-
+            break;
+        case BRANCH_DIS:                       // 8K-
+        case BRANCH_COCYTUS:
+        case BRANCH_TARTARUS:
+        case BRANCH_GEHENNA:
+            ok = wavenum > 40 && one_chance_in(3);
+            break;
+        case BRANCH_ZOT:                       // 10K-
+            ok = wavenum > 50;
+            break;
         }
         if (ok)
             return one_chance_in(4) ? BRANCH_DUNGEON : pb;
