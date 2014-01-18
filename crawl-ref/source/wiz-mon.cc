@@ -627,7 +627,7 @@ void debug_stethoscope(int mon)
          : mons_is_wandering(&mons)       ? "wander"
          : mons_is_seeking(&mons)         ? "seek"
          : mons_is_fleeing(&mons)         ? "flee"
-         : mons_is_retreating(&mons)      ? "retreat"
+         : mons.behaviour == BEH_RETREAT  ? "retreat"
          : mons_is_cornered(&mons)        ? "cornered"
          : mons_is_lurking(&mons)         ? "lurk"
          : mons.behaviour == BEH_WITHDRAW ? "withdraw"

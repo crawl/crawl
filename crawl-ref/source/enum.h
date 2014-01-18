@@ -2877,7 +2877,8 @@ enum beh_type
     BEH_WANDER,
     BEH_SEEK,
     BEH_FLEE,
-    BEH_CORNERED,
+    BEH_CORNERED,                      //  wanting to flee, but blocked by an
+                                       //  obstacle or monster
 #if TAG_MAJOR_VERSION == 34
     BEH_PANIC,                         //  like flee but without running away
 #endif

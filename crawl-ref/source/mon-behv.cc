@@ -992,15 +992,13 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_CORNERED:
-            // Plants and nonliving monsters cannot fight back.
-            if (mon->holiness() == MH_PLANT
-                || mon->holiness() == MH_NONLIVING)
-            {
-                break;
-            }
 
-            if (isHealthy)
-                new_beh = BEH_SEEK;
+            // If we were able to move since becoming cornered, resume fleeing
+            if (mon->pos() != mon->props["last_pos"].get_coord())
+            {
+                new_beh = BEH_FLEE;
+                mon->props.erase("last_pos");
+            }
 
             // Foe gone out of LOS?
             if (!proxFoe)
@@ -1442,16 +1440,18 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         break;
 
     case ME_CORNERED:
-        // Some monsters can't flee.
-        if (!mons_is_retreating(mon) && !mon->has_ench(ENCH_FEAR))
+        // We only care about this event if we were actually running away
+        if (!mons_is_retreating(mon))
             break;
 
         // Pacified monsters shouldn't change their behaviour.
         if (mon->pacified())
             break;
 
-        // Just set behaviour... foe doesn't change.
-        if (!mons_is_cornered(mon) && !mon->has_ench(ENCH_WITHDRAWN))
+        // If we were already cornered last turn, give up on trying to flee
+        // and turn to fight instead. Otherwise, pause a turn in hope that
+        // an escape route will open up.
+        if (mons_is_cornered(mon))
         {
             if (mon->friendly() && !crawl_state.game_is_arena())
             {
@@ -1462,11 +1462,18 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             {
                 msg = getSpeakString(mon->name(DESC_PLAIN) + " cornered");
                 if (msg.empty())
-                    msg = "PLAIN:@The_monster@ turns to fight!";
+                    msg = "PLAIN:Cornered, @The_monster@ turns to fight!";
             }
+            mon->del_ench(ENCH_FEAR, true);
+            mon->behaviour = BEH_SEEK;
         }
-
-        mon->behaviour = BEH_CORNERED;
+        else
+        {
+            // Save their current position so we know if they manage to move
+            // on the following turn (and thus resume BEH_FLEE)
+            mon->props["last_pos"].get_coord() = mon->pos();
+            mon->behaviour = BEH_CORNERED;
+        }
         break;
 
     case ME_HURT:
