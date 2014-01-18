@@ -3040,6 +3040,11 @@ static bool _mons_can_displace(const monster* mpusher,
         return false;
     }
 
+    // Fleeing monsters cannot push past other fleeing monsters
+    // (This helps to prevent some traffic jams in confined spaces)
+    if (mons_is_fleeing(mpusher) && mons_is_fleeing(mpushee))
+        return false;
+
     // Batty monsters are unpushable.
     if (mons_is_batty(mpusher) || mons_is_batty(mpushee))
         return false;
