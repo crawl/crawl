@@ -3505,7 +3505,7 @@ static vector<string> _get_monster_behaviour_vector(const monster_info& mi)
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
         descs.push_back(mi.is(MB_CONFUSED) ? "sleepwalking" : "resting");
     else if (mi.is(MB_FLEEING))
-        descs.push_back("retreating");
+        descs.push_back("fleeing");
     else if (mi.attitude == ATT_HOSTILE && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
         descs.push_back("hasn't noticed you");
 
@@ -3593,7 +3593,7 @@ static string _get_monster_desc(const monster_info& mi)
     }
     // Applies to both friendlies and hostiles
     else if (mi.is(MB_FLEEING))
-        text += pronoun + " is retreating.\n";
+        text += pronoun + " is fleeing.\n";
     // hostile with target != you
     else if (mi.attitude == ATT_HOSTILE && (mi.is(MB_UNAWARE) || mi.is(MB_WANDERING)))
         text += pronoun + " doesn't appear to have noticed you.\n";
