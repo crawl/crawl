@@ -5070,7 +5070,6 @@ silenced Mennas
 
 VISUAL:@The_monster@ gestures frantically.
 
-A booming voice calls from the heavens, "You cannot keep ME silent!"
 @Mennas@
 %%%%
 ############ MURRAY ### A disembodied skull.
