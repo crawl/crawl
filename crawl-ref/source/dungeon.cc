@@ -1435,9 +1435,7 @@ void fixup_misplaced_items()
 
 static bool _at_top_of_branch()
 {
-    return your_branch().exit_stairs != NUM_FEATURES
-           && you.depth == 1
-           && player_in_connected_branch();
+    return you.depth == 1;
 }
 
 static void _fixup_branch_stairs()
@@ -2717,6 +2715,7 @@ static bool _builder_by_type()
     {
         dgn_build_labyrinth_level();
         // Labs placed their minivaults already
+        _fixup_branch_stairs();
         return false;
     }
     else if (player_in_branch(BRANCH_ABYSS))
