@@ -11,7 +11,11 @@ static const char * Job_Abbrev_List[] =
 #endif
       "Gl", "Ne",
       "As", "Be", "Hu",
-      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Sk",
+      "Cj", "En", "FE", "IE",
+#if TAG_MAJOR_VERSION == 34
+      "Su",
+#endif
+      "AE", "EE", "Sk",
       "VM",
       "CK", "Tm", "He",
 #if TAG_MAJOR_VERSION == 34
@@ -31,7 +35,11 @@ static const char * Job_Name_List[] =
 #endif
       "Gladiator", "Necromancer",
       "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
-      "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
+      "Fire Elementalist", "Ice Elementalist",
+#if TAG_MAJOR_VERSION == 34
+      "Summoner",
+#endif
+      "Air Elementalist",
       "Earth Elementalist", "Skald",
       "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer",

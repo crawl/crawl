@@ -98,11 +98,6 @@ Skald
 Skalds are melee fighters who can boost themselves in battle with spells from
 the book of Battle.
 %%%%
-Summoner
-
-Summoners start with the book of Callings and are able to cast Summon Small
-Mammal from the start.
-%%%%
 Transmuter
 
 Transmuters shift their form to fight in a beast's shape. They can turn sticks

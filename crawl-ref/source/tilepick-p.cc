@@ -951,6 +951,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case JOB_SUMMONER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
             parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
@@ -958,6 +959,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_YELLOW_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
+#endif
 
         case JOB_WARPER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;

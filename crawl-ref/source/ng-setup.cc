@@ -158,7 +158,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_ICE_ELEMENTALIST:  s =  0; i =  7; d =  5; break;
     case JOB_AIR_ELEMENTALIST:  s =  0; i =  7; d =  5; break;
     case JOB_EARTH_ELEMENTALIST:s =  0; i =  7; d =  5; break;
-    case JOB_SUMMONER:          s =  0; i =  7; d =  5; break;
     case JOB_VENOM_MAGE:        s =  0; i =  7; d =  5; break;
     case JOB_NECROMANCER:       s =  0; i =  7; d =  5; break;
 
@@ -787,16 +786,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_STEALTH]      = 2;
         break;
 
-    case JOB_SUMMONER:
-        newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
-
-        you.skills[SK_SUMMONINGS]   = 4;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
-        break;
-
     case JOB_NECROMANCER:
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
@@ -1130,9 +1119,6 @@ static void _give_basic_spells(job_type which_job)
         break;
     case JOB_VENOM_MAGE:
         which_spell = SPELL_STING;
-        break;
-    case JOB_SUMMONER:
-        which_spell = SPELL_SUMMON_SMALL_MAMMAL;
         break;
     case JOB_NECROMANCER:
         which_spell = SPELL_PAIN;

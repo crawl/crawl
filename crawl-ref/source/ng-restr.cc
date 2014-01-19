@@ -302,29 +302,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             return CC_UNRESTRICTED;
         }
 
-    case JOB_SUMMONER:
-        switch (speci)
-        {
-        case SP_HIGH_ELF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_LAVA_ORC:
-        case SP_MERFOLK:
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-        case SP_MINOTAUR:
-        case SP_MUMMY:
-        case SP_GHOUL:
-        case SP_FORMICID:
-            return CC_RESTRICTED;
-        default:
-            return CC_UNRESTRICTED;
-        }
-
     case JOB_NECROMANCER:
         switch (speci)
         {
