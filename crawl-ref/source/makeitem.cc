@@ -2945,7 +2945,11 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
 static void _generate_rod_item(item_def& item, int force_type, int item_level)
 {
     if (force_type == OBJ_RANDOM)
-        item.sub_type = random2(NUM_RODS);
+    {
+        do
+            item.sub_type = random2(NUM_RODS);
+        while (item.sub_type == ROD_DEMONOLOGY || item.sub_type == ROD_SWARM);
+    }
     else
         item.sub_type = force_type;
 

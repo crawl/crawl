@@ -802,7 +802,9 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
         case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
             break;
-        case OBJ_RODS:       type_wanted = random2(NUM_RODS); break;
+        case OBJ_RODS:       do type_wanted = random2(NUM_RODS);
+                             while (type_wanted == ROD_DEMONOLOGY || type_wanted == ROD_SWARM);
+                             break;
         case OBJ_JEWELLERY:  type_wanted = _acquirement_jewellery_subtype();
             break;
         default: break;         // gold, books
