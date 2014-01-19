@@ -2925,6 +2925,7 @@ static void _generate_staff_item(item_def& item, bool allow_uniques, int force_t
         do
             item.sub_type = random2(NUM_STAVES);
         while (item.sub_type == STAFF_ENCHANTMENT
+               || item.sub_type == STAFF_SUMMONING
                || item.sub_type == STAFF_CHANNELING);
 #else
         item.sub_type = random2(NUM_STAVES);

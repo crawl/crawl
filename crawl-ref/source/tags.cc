@@ -3402,6 +3402,8 @@ void unmarshallItem(reader &th, item_def &item)
         item.sub_type = POT_CONFUSION;
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_CHANNELING)
         item.sub_type = STAFF_ENERGY;
+    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_SUMMONING)
+        item.sub_type = STAFF_WIZARDRY;
 
     if (th.getMinorVersion() < TAG_MINOR_GOD_GIFT)
     {

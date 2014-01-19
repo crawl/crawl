@@ -2107,16 +2107,6 @@ int player_spec_charm()
     return 0;
 }
 
-int player_spec_summ()
-{
-    int ss = 0;
-
-    // Staves
-    ss += you.wearing(EQ_STAFF, STAFF_SUMMONING);
-
-    return ss;
-}
-
 int player_spec_poison()
 {
     int sp = 0;

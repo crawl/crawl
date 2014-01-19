@@ -1921,7 +1921,7 @@ KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      i = rod of demonology / ring of fire / ring of protection from fire /\
             amulet of conservation / scroll of torment / scroll of summoning /\
             demon blade w:1 / demon whip w:1 / demon trident w:1 / gold / wand of fire /\
-            wand of draining / staff of summoning / any book w:30 / any good_item w:15
+            wand of draining / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / *:i
 SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g

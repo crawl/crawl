@@ -1090,7 +1090,9 @@ static const char* staff_type_name(int stafftype)
 #endif
     case STAFF_AIR:         return "air";
     case STAFF_EARTH:       return "earth";
+#if TAG_MAJOR_VERSION == 34
     case STAFF_SUMMONING:   return "summoning";
+#endif
     default:                return "bugginess";
     }
 }

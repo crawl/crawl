@@ -492,9 +492,6 @@ static int _spell_enhancement(unsigned int typeflags)
     if (typeflags & SPTYP_CHARMS)
         enhanced += player_spec_charm();
 
-    if (typeflags & SPTYP_SUMMONING)
-        enhanced += player_spec_summ();
-
     if (typeflags & SPTYP_POISON)
         enhanced += player_spec_poison();
 

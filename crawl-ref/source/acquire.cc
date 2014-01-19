@@ -645,7 +645,6 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     case SK_POISON_MAGIC: TRY_GIVE(STAFF_POISON);      break;
     case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
     case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
-    case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
     default:                                           break;
     }
     if (one_chance_in(found_enhancer ? 2 : 3))

@@ -901,7 +901,6 @@ int player_spec_fire(void);
 int player_spec_hex(void);
 int player_spec_charm(void);
 int player_spec_poison(void);
-int player_spec_summ(void);
 
 int player_speed(void);
 

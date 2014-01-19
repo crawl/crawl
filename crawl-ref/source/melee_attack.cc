@@ -3724,23 +3724,11 @@ void melee_attack::apply_staff_damage()
         }
         break;
 
-    case STAFF_SUMMONING:
-        if (!defender->is_summoned())
-            break;
-
-        if (x_chance_in_y(attacker->skill(SK_EVOCATIONS, 20)
-                        + attacker->skill(SK_SUMMONINGS, 10), 300))
-        {
-            cast_abjuration((attacker->skill(SK_SUMMONINGS, 100)
-                            + attacker->skill(SK_EVOCATIONS, 50)) / 80,
-                            defender->pos());
-        }
-        break;
-
     case STAFF_POWER:
     case STAFF_CONJURATION:
 #if TAG_MAJOR_VERSION == 34
     case STAFF_ENCHANTMENT:
+    case STAFF_SUMMONING:
 #endif
     case STAFF_ENERGY:
     case STAFF_WIZARDRY:
@@ -4147,8 +4135,7 @@ bool melee_attack::attack_warded_off()
         }
 
         if (defender->is_player()
-            && you.wearing(EQ_AMULET, AMU_WARDING, true)
-            && !you.wearing(EQ_STAFF, STAFF_SUMMONING, true))
+            && you.wearing(EQ_AMULET, AMU_WARDING, true))
         {
             item_def *amu = you.slot_item(EQ_AMULET);
             ASSERT(amu);
