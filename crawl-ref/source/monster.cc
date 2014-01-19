@@ -841,7 +841,7 @@ bool monster::can_use_missile(const item_def &item) const
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         launch = mslot_item(static_cast<mon_inv_type>(i));
-        if (launch && fires_ammo_type(*launch) == item.sub_type)
+        if (launch && item.launched_by(*launch))
             return true;
     }
 
@@ -2135,8 +2135,8 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
                 // Don't upgrade to ammunition whose brand cancels the
                 // launcher brand or doesn't improve it further.
                 // Don't drop huge stacks for tiny stacks.
-                if (fires_ammo_type(*launch) == item.sub_type
-                    && (fires_ammo_type(*launch) != miss->sub_type
+                if (item.launched_by(*launch)
+                    && (!miss->launched_by(*launch)
                         || get_ammo_brand(*miss) == SPMSL_NORMAL
                            && item_brand != SPMSL_NORMAL
                            && _nonredundant_launcher_ammo_brands(launch, miss))
