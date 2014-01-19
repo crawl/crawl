@@ -1649,7 +1649,7 @@ struct spell_desc
 
 {
     SPELL_SUMMON_BUTTERFLIES, "Summon Butterflies",
-     SPTYP_SUMMONING,
+     SPTYP_HEXES,
      SPFLAG_NONE,
      1,
      100,
