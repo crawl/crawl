@@ -2388,7 +2388,9 @@ enum monster_type                      // menv[].type
     MONS_GNOLL,
     MONS_GNOLL_SHAMAN,
     MONS_GNOLL_SERGEANT,
+#if TAG_MAJOR_VERSION == 34
     MONS_BOGGART,
+#endif
     MONS_KOBOLD,
     MONS_BIG_KOBOLD,
     MONS_KOBOLD_DEMONOLOGIST,

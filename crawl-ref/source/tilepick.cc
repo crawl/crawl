@@ -1154,8 +1154,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GNOLL_SHAMAN;
     case MONS_GNOLL_SERGEANT:
         return TILEP_MONS_GNOLL_SERGEANT;
-    case MONS_BOGGART:
-        return TILEP_MONS_BOGGART;
 
     // hounds and hogs ('h')
     case MONS_JACKAL:

@@ -923,7 +923,7 @@ KMONS:   r = vault guard
 :     [42 - you.absdepth() * 2] =
 :         { "cyclops", "kobold demonologist", "naga", "Azrael", "Kirke" },
 :     [65 - you.absdepth() * 3] =
-:         { "boggart", "deep elf fighter", "necromancer", "centaur warrior", },
+:         { "deep elf fighter", "necromancer", "centaur warrior", },
 :     [29 - you.absdepth()] =
 :         { "orc knight", "ogre mage", "skeletal warrior",
 :           "yaktaur", "spriggan rider" },
@@ -1601,7 +1601,7 @@ MONS:    giant eyeball w:45 / bone dragon w:15 / tentacled monstrosity w:15 / \
          azure jelly / thorn hunter w:5 / flayed ghost / \
          dancing weapon w:5 ; glaive good_item
 MONS:    centaur warrior / yaktaur w:5 / orc knight / \
-         deep elf priest w:5 / deep troll / boggart w:5 / \
+         deep elf priest w:5 / deep troll / \
          rakshasa w:3 / wizard / necromancer / spriggan rider w:5 / \
          vault sentinel w:2 / cyclops w:5 / kobold demonologist w:3 / \
          skeletal warrior w:5 / vampire

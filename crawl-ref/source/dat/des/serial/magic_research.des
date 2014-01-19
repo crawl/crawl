@@ -242,7 +242,7 @@ dcbadabcd
 ENDMAP
 
 NAME:    hangedman_research_convocations
-MONS:    rakshasa, boggart, giant orange brain
+MONS:    rakshasa, nothing, giant orange brain
 KMONS:   D = silver statue
 KITEM:   D = randbook disc:summoning numspells:5 / \
              randbook disc:summoning numspells:6, star_item

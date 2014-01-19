@@ -2293,7 +2293,7 @@ KMONS:   Y = anaconda / alligator snapping turtle
 KMONS:   X = deep troll / orc knight / hill giant
 KMONS:   Z = iron troll / naga warrior / minotaur
 KMONS:   a = spriggan defender w:5 / merfolk impaler w:5 / orc warlord
-KMONS:   d = deep elf mage / wizard / boggart
+KMONS:   d = deep elf mage / wizard
 KMONS:   e = deep elf conjurer / ogre mage / great orb of eyes
 KMONS:   f = deep elf annihilator / sphinx w:5 / lich w:5
 KMONS:   g = centaur / yaktaur
@@ -2397,7 +2397,7 @@ TAGS:    patrolling no_monster_gen no_item_gen
 DEPTH:   Depths
 ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
-         deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
+         deep elf conjurer / deep troll / efreet w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
          vampire / octopode w:5 ; trident good_item
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \

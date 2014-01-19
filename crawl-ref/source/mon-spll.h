@@ -926,17 +926,6 @@
       }
     },
 
-    {  MST_BOGGART,
-      {
-       SPELL_CONFUSE,
-       SPELL_SLOW,
-       SPELL_INVISIBILITY,
-       SPELL_BLINK,
-       SPELL_SHADOW_CREATURES,
-       SPELL_SHADOW_CREATURES
-      }
-    },
-
     {  MST_EYE_OF_DEVASTATION,
       {
        SPELL_ENERGY_BOLT,

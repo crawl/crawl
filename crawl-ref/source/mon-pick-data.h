@@ -92,7 +92,6 @@ static const pop_entry pop_d[] =
   { 14, 20,   52, SEMI, MONS_BLINK_FROG },
   { 14, 20,   25, PEAK, MONS_STONE_GOLEM },
   { 14, 22,  272, SEMI, MONS_SIMULACRUM },
-  { 14, 22,  136, SEMI, MONS_BOGGART },
   { 14, 27,  192, PEAK, MONS_FIRE_DRAGON },
   { 15, 20,  334, SEMI, MONS_YAKTAUR },
   { 15, 21,   52, SEMI, MONS_CLAY_GOLEM },
@@ -450,7 +449,6 @@ static const pop_entry pop_vaults[] =
   { -6,  4,  334, SEMI, MONS_GRIFFON },
   {  1,  4,  999, FLAT, MONS_UGLY_THING },
   { -4,  2,   52, SEMI, MONS_CLAY_GOLEM },
-  { -5,  3,  136, SEMI, MONS_BOGGART },
   {  1,  4,  923, FLAT, MONS_CENTAUR_WARRIOR },
   { -5,  3,   89, PEAK, MONS_WIZARD },
   { -6,  4,  674, SEMI, MONS_SHAPESHIFTER },
@@ -1127,7 +1125,6 @@ static const pop_entry pop_wizlab[] =
 
 static const pop_entry pop_depths[] =
 { // Depths (OOD cap: 14)
-  { -2,  4,  200, SEMI, MONS_BOGGART },
   { -2,  4,  500, SEMI, MONS_SLIME_CREATURE },
   { -2,  4,  250, SEMI, MONS_RAKSHASA },
   { -2,  4,  100, SEMI, MONS_WIZARD },

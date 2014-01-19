@@ -678,13 +678,6 @@ A muscular horned humanoid figure originating from some frigid hell. It swoops
 through the air on powerful wings, taking sadistic joy from harrying those who
 would try to flee its grasp.
 %%%%
-boggart
-
-A malevolent and dangerous little sprite. Although physically unprepossessing,
-boggarts can rapidly summon large numbers of creatures, including more
-boggarts, to do their perverse bidding. These troublesome pests can also cloud
-one's mind and render themselves unseen.
-%%%%
 bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many

@@ -438,7 +438,7 @@ ENDMAP
 NAME:    hangedman_abyss_lost_library
 TAGS:    patrolling no_monster_gen no_item_gen
 MONS:    guardian serpent, great orb of eyes, giant orange brain
-MONS:    boggart, rakshasa, cacodemon, shadow demon
+MONS:    gnome, rakshasa, cacodemon, shadow demon
 KMONS:   0 = wizard
 KMONS:   8 = orc sorcerer
 KMONS:   9 = sphinx
@@ -539,8 +539,7 @@ KMONS:   9 = octopode ; trident | halberd | glaive / chaos spawn / \
          anaconda perm_ench:shapeshifter w:2
 KMONS:   0 = tentacled starspawn
 KMONS:   A = patrolling shadow demon
-KMONS:   B = boggart
-SHUFFLE: 12 / 34 / 56 / 78 / 90, A' / A' / A' / A' / 'B
+SHUFFLE: 12 / 34 / 56 / 78 / 90, A' / A' / A' / A'
 SUBST:   x = x:5 c:4 b:2 v:1, X = x:2 c:4 b:3 v:1, ' = ..lw
 SUBST:   . = .:199 W:1, * = .$%%***|, d = %$
 MAP

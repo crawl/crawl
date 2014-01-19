@@ -2297,11 +2297,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 1 + random2(3);
         break;
 
-    case MONS_BOGGART:
-        band = BAND_BOGGARTS;
-        band_size = 2 + random2(3);
-        break;
-
     case MONS_PRINCE_RIBBIT:
         natural_leader = true;
         // Intentional fallthrough
@@ -2819,8 +2814,6 @@ static monster_type _band_member(band_type band, int which)
         return MONS_VAMPIRE_MOSQUITO;
     case BAND_FIRE_BATS:
         return MONS_FIRE_BAT;
-    case BAND_BOGGARTS:
-        return MONS_BOGGART;
     case BAND_BLINK_FROGS:
         return MONS_BLINK_FROG;
     case BAND_WIGHTS:

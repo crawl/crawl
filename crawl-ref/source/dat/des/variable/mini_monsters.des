@@ -2156,7 +2156,7 @@ ENDMAP
 # XXX: Undiggable glass has been converted to statues.
 NAME:   horrible_house_mu
 DEPTH:  Depths
-KMONS:  g = boggart
+KMONS:  g = rakshasa
 KMONS:  h = unseen horror
 KMONS:  R = rakshasa
 KMONS:  V = vampire knight
