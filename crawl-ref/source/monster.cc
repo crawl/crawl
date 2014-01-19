@@ -2203,12 +2203,8 @@ bool monster::pickup_wand(item_def &item, int near)
 
 bool monster::pickup_scroll(item_def &item, int near)
 {
-    if (item.sub_type != SCR_TELEPORTATION
-        && item.sub_type != SCR_BLINKING
-        && item.sub_type != SCR_SUMMONING)
-    {
+    if (item.sub_type != SCR_TELEPORTATION && item.sub_type != SCR_BLINKING)
         return false;
-    }
 
     // Holy monsters and worshippers of good gods won't pick up evil or
     // unholy scrolls.

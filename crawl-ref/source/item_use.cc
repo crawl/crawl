@@ -3189,9 +3189,11 @@ void read_scroll(int slot)
         noisy(25, you.pos(), "You hear a loud clanging noise!");
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case SCR_SUMMONING:
         cast_shadow_creatures(true);
         break;
+#endif
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");

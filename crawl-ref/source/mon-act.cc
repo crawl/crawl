@@ -970,24 +970,6 @@ static bool _handle_scroll(monster* mons)
                 ident = ID_KNOWN_TYPE;
         }
         break;
-
-    case SCR_SUMMONING:
-        if (mons_near(mons))
-        {
-            simple_monster_message(mons, " reads a scroll.");
-            mprf("Wisps of shadow swirl around %s.", mons->name(DESC_THE).c_str());
-            read = true;
-            int count = roll_dice(2, 2);
-            for (int i = 0; i < count; ++i)
-            {
-                create_monster(
-                    mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
-                              3, SPELL_SHADOW_CREATURES, mons->pos(), mons->foe,
-                              0, GOD_NO_GOD));
-            }
-            ident = ID_KNOWN_TYPE;
-        }
-        break;
     }
 
     if (read)

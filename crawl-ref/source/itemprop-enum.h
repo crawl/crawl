@@ -309,7 +309,9 @@ enum scroll_type
     SCR_FEAR,
     SCR_NOISE,
     SCR_REMOVE_CURSE,
+#if TAG_MAJOR_VERSION == 34
     SCR_SUMMONING,
+#endif
     SCR_ENCHANT_WEAPON_I,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
