@@ -1104,7 +1104,8 @@ static void _shoals_apply_tide(int tide, bool incremental_tide)
         {
             coord_def c(cpage[i]);
             const dungeon_feature_type herefeat(grd(c));
-            const bool was_wet(_shoals_tide_passable_feat(herefeat));
+            const bool was_wet = (_shoals_tide_passable_feat(herefeat)
+                                  && !is_temp_terrain(c));
             seen_points(c) = true;
             if (_shoals_tide_susceptible_feat(herefeat))
             {
