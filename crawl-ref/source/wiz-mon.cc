@@ -1310,6 +1310,11 @@ void debug_pathfind(int idx)
     if (success)
     {
         vector<coord_def> path = mp.backtrack();
+        env.travel_trail = path;
+#ifdef USE_TILE_WEB
+        for (unsigned int i = 0; i < env.travel_trail.size(); ++i)
+            tiles.update_minimap(env.travel_trail[i]);
+#endif
         string path_str;
         mpr("Here's the shortest path: ");
         for (unsigned int i = 0; i < path.size(); ++i)
