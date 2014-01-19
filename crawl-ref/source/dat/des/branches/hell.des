@@ -58,7 +58,7 @@ MONS:   hellion / balrug / soul eater / smoke demon
 ITEM:   good_item demon blade / good_item demon whip / \
         good_item demon trident / wand of draining ident:type
 ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
-        grand grimoire / scroll of torment ident:type
+        scroll of torment ident:type
 SUBST:  d=de, ?:?.l, ?=l.
 : hell_entry_feature(_G, 'A')
 : hell_entry_tier(_G, "mid")
@@ -93,7 +93,7 @@ MONS:   hellion / balrug / soul eater w:20 / smoke demon w:20
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining ident:type
 ITEM:   wand of fire ident:type / ring of fire ident:type / Necronomicon / \
-        grand grimoire / scroll of torment ident:type
+        scroll of torment ident:type
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
 SUBST:  d=de, ?:?.l, ?=l.

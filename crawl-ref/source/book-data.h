@@ -42,6 +42,7 @@
     SPELL_NO_SPELL,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Summonings
     SPELL_ABJURATION,
     SPELL_RECALL,
@@ -52,6 +53,7 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
+#endif
 
 {   // Book of Fire
     SPELL_FIRE_BRAND,
@@ -207,6 +209,7 @@
     SPELL_NO_SPELL,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Callings
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_CALL_IMP,
@@ -217,6 +220,7 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
+#endif
 
 {   // Book of Maledictions
     SPELL_CORONA,
@@ -442,6 +446,7 @@
     SPELL_NO_SPELL,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Book of Beasts
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_STICKS_TO_SNAKES,
@@ -452,6 +457,7 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
+#endif
 
 {   // Book of Annihilations
     SPELL_POISON_ARROW,
@@ -464,6 +470,7 @@
     SPELL_NO_SPELL,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Grand Grimoire
     SPELL_DEMONIC_HORDE,
     SPELL_MASS_ABJURATION,
@@ -474,6 +481,7 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
+#endif
 
 {   // Necronomicon
     SPELL_HAUNT,

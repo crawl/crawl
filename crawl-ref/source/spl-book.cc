@@ -228,7 +228,6 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_CONJURATIONS:
     case BOOK_NECROMANCY:
-    case BOOK_CALLINGS:
     case BOOK_WIZARDRY:
         return 3;
 
@@ -253,7 +252,6 @@ int book_rarity(uint8_t which_book)
         return 7;
 
     case BOOK_TRANSFIGURATIONS:
-    case BOOK_BEASTS:
         return 8;
 
     case BOOK_FIRE:
@@ -279,11 +277,7 @@ int book_rarity(uint8_t which_book)
     case BOOK_DRAGON:
         return 15;
 
-    case BOOK_SUMMONINGS:
-        return 18;
-
     case BOOK_ANNIHILATIONS:
-    case BOOK_GRAND_GRIMOIRE:
     case BOOK_NECRONOMICON:  // Kikubaaqudgha special
     case BOOK_MANUAL:
         return 20;
@@ -293,6 +287,10 @@ int book_rarity(uint8_t which_book)
 
 #if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:
+    case BOOK_CALLINGS:
+    case BOOK_SUMMONINGS:
+    case BOOK_BEASTS:
+    case BOOK_GRAND_GRIMOIRE:
         return 100;
 #endif
 
@@ -384,9 +382,6 @@ bool player_can_memorise_from_spellbook(const item_def &book)
     if ((book.sub_type == BOOK_ANNIHILATIONS
          && (you.skill(SK_CONJURATIONS) < 10
              || you.skill(SK_SPELLCASTING) < 6))
-        || (book.sub_type == BOOK_GRAND_GRIMOIRE
-            && (you.skill(SK_SUMMONINGS) < 10
-                || you.skill(SK_SPELLCASTING) < 6))
         || (book.sub_type == BOOK_NECRONOMICON
             && !you_worship(GOD_KIKUBAAQUDGHA)
             && (you.skill(SK_NECROMANCY) < 10

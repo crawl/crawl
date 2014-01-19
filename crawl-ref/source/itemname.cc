@@ -999,7 +999,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_CONJURATIONS:           return "Conjurations";
     case BOOK_FLAMES:                 return "Flames";
     case BOOK_FROST:                  return "Frost";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_SUMMONINGS:             return "Summonings";
+#endif
     case BOOK_FIRE:                   return "Fire";
     case BOOK_ICE:                    return "Ice";
     case BOOK_SPATIAL_TRANSLOCATIONS: return "Spatial Translocations";
@@ -1013,7 +1015,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_BATTLE:                 return "Battle";
     case BOOK_CLOUDS:                 return "Clouds";
     case BOOK_NECROMANCY:             return "Necromancy";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_CALLINGS:               return "Callings";
+#endif
     case BOOK_MALEDICT:               return "Maledictions";
     case BOOK_AIR:                    return "Air";
     case BOOK_SKY:                    return "the Sky";
@@ -1036,7 +1040,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_BURGLARY:               return "Burglary";
     case BOOK_DREAMS:                 return "Dreams";
     case BOOK_ALCHEMY:                return "Alchemy";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_BEASTS:                 return "Beasts";
+#endif
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";
@@ -1188,8 +1194,10 @@ string sub_type_string(const item_def &item, bool known)
         }
         else if (sub_type == BOOK_NECRONOMICON)
             return "Necronomicon";
+#if TAG_MAJOR_VERSION == 34
         else if (sub_type == BOOK_GRAND_GRIMOIRE)
             return "Grand Grimoire";
+#endif
         else if (sub_type == BOOK_DESTRUCTION)
             return "tome of Destruction";
         else if (sub_type == BOOK_YOUNG_POISONERS)
