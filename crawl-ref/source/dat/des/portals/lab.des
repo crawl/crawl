@@ -200,7 +200,7 @@ SUBST:   d : b, e : ., f : b
 SUBST:   g : b, h : ., i : b
 SUBST:   k = <, l = ., m = .
 KMONS:   < = patrolling generate_awake minotaur
-KFEAT:   < = <
+KFEAT:   < : exit_labyrinth
 SUBST:   b : vvb
 # should not be necessary
 validate {{ return has_exit_from_glyph('<') }}
