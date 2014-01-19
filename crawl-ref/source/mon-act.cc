@@ -2325,6 +2325,17 @@ static void _post_monster_move(monster* mons)
             }
     }
 
+    if (mons->type == MONS_WATER_NYMPH)
+    {
+        for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
+            if (feat_has_solid_floor(grd(*ai))
+                && (coinflip() || *ai == mons->pos()))
+            {
+                temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
+                                    TERRAIN_CHANGE_FLOOD);
+            }
+    }
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
 }
