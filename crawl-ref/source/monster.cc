@@ -3029,6 +3029,8 @@ void monster::go_berserk(bool intentional, bool /* potion */)
                          pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
     }
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
+    del_ench(ENCH_FEAR, true);    // Going berserk breaks fear.
+    behaviour = BEH_SEEK;
 
     // If we're intentionally berserking, use a melee weapon;
     // we won't be able to swap afterwards.
