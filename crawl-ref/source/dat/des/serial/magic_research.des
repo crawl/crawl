@@ -241,30 +241,6 @@ c2m1D1m2c
 dcbadabcd
 ENDMAP
 
-NAME:    hangedman_research_convocations
-MONS:    rakshasa, nothing, giant orange brain
-KMONS:   D = silver statue
-KITEM:   D = randbook disc:summoning numspells:5 / \
-             randbook disc:summoning numspells:6, star_item
-MARKER:  ' = lua:fog_machine { cloud_type = "purple smoke", pow_min = 4, \
-                pow_max = 10, delay = 40, size = 2, walk_dist = 1 }
-# Note: these colours are to match the Hellbinder wizlab.
-COLOUR: .'0123D = yellow
-FTILE:  .'m+0123D = FLOOR_PEBBLE_LIGHTRED
-SHUFFLE: 23
-: init_research(_G)
-MAP
-@,,,@,,,@
-abcn+ncba
-b0.....0b
-c+mmmmm+c
-d...'...d
-a'..1..'a
-b..mmm..b
-c2.+D+.3c
-dcbadabcd
-ENDMAP
-
 NAME:   hangedman_research_probablistics
 MONS:   eidolon, golden eye, great orb of eyes, sphinx
 KITEM:  D = randbook disc:hexes numspells:5 / \
