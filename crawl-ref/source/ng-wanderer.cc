@@ -225,7 +225,7 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
     int dex_size = ARRAYSZ(dex_weapons);
 
     const skill_type casting_schools[] =
-        { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
+        { SK_NECROMANCY, SK_TRANSLOCATIONS,
           SK_TRANSMUTATIONS, SK_POISON_MAGIC, SK_CONJURATIONS,
           SK_HEXES, SK_CHARMS, SK_FIRE_MAGIC, SK_ICE_MAGIC,
           SK_AIR_MAGIC, SK_EARTH_MAGIC };
@@ -307,18 +307,6 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         case 1:
         case 2:
             book_type = BOOK_CONJURATIONS;
-            break;
-        }
-        break;
-
-    case SK_SUMMONINGS:
-        switch (random2(2))
-        {
-        case 0:
-            book_type = BOOK_MINOR_MAGIC;
-            break;
-        case 1:
-            book_type = BOOK_CALLINGS;
             break;
         }
         break;
@@ -536,7 +524,6 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
 
     case SK_SPELLCASTING:
     case SK_CONJURATIONS:
-    case SK_SUMMONINGS:
     case SK_NECROMANCY:
     case SK_TRANSLOCATIONS:
     case SK_TRANSMUTATIONS:
@@ -586,10 +573,6 @@ static void _give_wanderer_spell(skill_type skill)
     {
     case SK_CONJURATIONS:
         spell = SPELL_MAGIC_DART;
-        break;
-
-    case SK_SUMMONINGS:
-        spell = SPELL_SUMMON_SMALL_MAMMAL;
         break;
 
     case SK_NECROMANCY:
@@ -722,7 +705,6 @@ static void _wanderer_decent_equipment(skill_type & skill,
 
     case SK_SPELLCASTING:
     case SK_CONJURATIONS:
-    case SK_SUMMONINGS:
     case SK_NECROMANCY:
     case SK_TRANSLOCATIONS:
     case SK_TRANSMUTATIONS:
