@@ -749,7 +749,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_SPELLCASTING]   = 3;
         you.skills[SK_TRANSLOCATIONS] = 1;
         you.skills[SK_CONJURATIONS]   = 1;
-        you.skills[SK_SUMMONINGS]     = 1;
         break;
 
     case JOB_CONJURER:
