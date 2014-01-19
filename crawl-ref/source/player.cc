@@ -4842,9 +4842,6 @@ int get_real_hp(bool trans, bool rotted)
                    player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (player_mutation_level(MUT_FRAIL) * 10);
 
-    // Mutations that increase HP by a fixed value
-    hitp += 500 * sqr(player_mutation_level(MUT_EXOSKELETON));
-
     hitp /= 100;
 
     if (!rotted)
@@ -6576,7 +6573,7 @@ int player::armour_class() const
     AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
     AC += _mut_level(MUT_EXOSKELETON, MUTACT_FULL)
-          ? _mut_level(MUT_EXOSKELETON, MUTACT_FULL) * 100 : 0;                // +1, +2
+          ? sqr(_mut_level(MUT_EXOSKELETON, MUTACT_FULL)) * 100 : 0;           // +1, +4
 
     return AC / 100;
 }
