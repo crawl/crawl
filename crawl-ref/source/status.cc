@@ -333,8 +333,6 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_UMBRA:
         if (you.umbra())
         {
-            inf->light_colour = MAGENTA;
-            inf->light_text   = "Umbra";
             inf->short_text   = "wreathed by umbra";
             inf->long_text    = "You are wreathed by an umbra.";
         }
