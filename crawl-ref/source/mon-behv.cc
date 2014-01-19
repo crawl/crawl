@@ -1302,7 +1302,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         {
             mon->behaviour = BEH_RETREAT;
         }
-        else if (mons_is_fleeing(mon))
+        else if (mon->has_ench(ENCH_FEAR))
         {
             if (you.can_see(mon))
             {
@@ -1312,7 +1312,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             }
             mon->del_ench(ENCH_FEAR, true);
         }
-        else
+        else if (!mons_is_fleeing(mon))
             mon->behaviour = BEH_SEEK;
 
         if (src == &you
