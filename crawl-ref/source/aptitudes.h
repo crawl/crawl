@@ -39,7 +39,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HUMAN,           SK_CONJURATIONS,    0),
     APT(SP_HUMAN,           SK_HEXES,           0),
     APT(SP_HUMAN,           SK_CHARMS,          0),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_HUMAN,           SK_SUMMONINGS,      0),
+#endif
     APT(SP_HUMAN,           SK_NECROMANCY,      0),
     APT(SP_HUMAN,           SK_TRANSLOCATIONS,  0),
     APT(SP_HUMAN,           SK_TRANSMUTATIONS,  0),
@@ -78,7 +80,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HIGH_ELF,        SK_CONJURATIONS,    1),
     APT(SP_HIGH_ELF,        SK_HEXES,           0),
     APT(SP_HIGH_ELF,        SK_CHARMS,          2),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_HIGH_ELF,        SK_SUMMONINGS,     -1),
+#endif
     APT(SP_HIGH_ELF,        SK_NECROMANCY,     -2),
     APT(SP_HIGH_ELF,        SK_TRANSLOCATIONS,  1),
     APT(SP_HIGH_ELF,        SK_TRANSMUTATIONS,  1),
@@ -117,7 +121,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_ELF,        SK_CONJURATIONS,    1),
     APT(SP_DEEP_ELF,        SK_HEXES,           3),
     APT(SP_DEEP_ELF,        SK_CHARMS,          4),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_DEEP_ELF,        SK_SUMMONINGS,      1),
+#endif
     APT(SP_DEEP_ELF,        SK_NECROMANCY,      2),
     APT(SP_DEEP_ELF,        SK_TRANSLOCATIONS,  1),
     APT(SP_DEEP_ELF,        SK_TRANSMUTATIONS,  1),
@@ -156,7 +162,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_SLUDGE_ELF,      SK_CONJURATIONS,   -2),
     APT(SP_SLUDGE_ELF,      SK_HEXES,           0),
     APT(SP_SLUDGE_ELF,      SK_CHARMS,         -2),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_SLUDGE_ELF,      SK_SUMMONINGS,      1),
+#endif
     APT(SP_SLUDGE_ELF,      SK_NECROMANCY,      1),
     APT(SP_SLUDGE_ELF,      SK_TRANSLOCATIONS,  0),
     APT(SP_SLUDGE_ELF,      SK_TRANSMUTATIONS,  3),
@@ -195,7 +203,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HALFLING,        SK_CONJURATIONS,   -2),
     APT(SP_HALFLING,        SK_HEXES,          -1),
     APT(SP_HALFLING,        SK_CHARMS,          1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_HALFLING,        SK_SUMMONINGS,     -1),
+#endif
     APT(SP_HALFLING,        SK_NECROMANCY,     -2),
     APT(SP_HALFLING,        SK_TRANSLOCATIONS,  1),
     APT(SP_HALFLING,        SK_TRANSMUTATIONS, -4),
@@ -234,7 +244,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HILL_ORC,        SK_CONJURATIONS,    0),
     APT(SP_HILL_ORC,        SK_HEXES,           0),
     APT(SP_HILL_ORC,        SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_HILL_ORC,        SK_SUMMONINGS,      0),
+#endif
     APT(SP_HILL_ORC,        SK_NECROMANCY,      0),
     APT(SP_HILL_ORC,        SK_TRANSLOCATIONS, -2),
     APT(SP_HILL_ORC,        SK_TRANSMUTATIONS, -3),
@@ -273,7 +285,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_KOBOLD,          SK_CONJURATIONS,   -1),
     APT(SP_KOBOLD,          SK_HEXES,           0),
     APT(SP_KOBOLD,          SK_CHARMS,         -2),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_KOBOLD,          SK_SUMMONINGS,      0),
+#endif
     APT(SP_KOBOLD,          SK_NECROMANCY,      0),
     APT(SP_KOBOLD,          SK_TRANSLOCATIONS,  0),
     APT(SP_KOBOLD,          SK_TRANSMUTATIONS, -1),
@@ -312,7 +326,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_MUMMY,           SK_CONJURATIONS,   -2),
     APT(SP_MUMMY,           SK_HEXES,          -1),
     APT(SP_MUMMY,           SK_CHARMS,         -2),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_MUMMY,           SK_SUMMONINGS,     -2),
+#endif
     APT(SP_MUMMY,           SK_NECROMANCY,      0),
     APT(SP_MUMMY,           SK_TRANSLOCATIONS, -2),
     APT(SP_MUMMY,           SK_TRANSMUTATIONS, -2),
@@ -351,7 +367,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_NAGA,            SK_CONJURATIONS,    0),
     APT(SP_NAGA,            SK_HEXES,           0),
     APT(SP_NAGA,            SK_CHARMS,          0),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_NAGA,            SK_SUMMONINGS,      0),
+#endif
     APT(SP_NAGA,            SK_NECROMANCY,      0),
     APT(SP_NAGA,            SK_TRANSLOCATIONS,  0),
     APT(SP_NAGA,            SK_TRANSMUTATIONS,  0),
@@ -390,7 +408,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_OGRE,            SK_CONJURATIONS,   -3),
     APT(SP_OGRE,            SK_HEXES,          -3),
     APT(SP_OGRE,            SK_CHARMS,         -3),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_OGRE,            SK_SUMMONINGS,     -3),
+#endif
     APT(SP_OGRE,            SK_NECROMANCY,     -3),
     APT(SP_OGRE,            SK_TRANSLOCATIONS, -3),
     APT(SP_OGRE,            SK_TRANSMUTATIONS, -3),
@@ -429,7 +449,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_TROLL,           SK_CONJURATIONS,   -3),
     APT(SP_TROLL,           SK_HEXES,          -4),
     APT(SP_TROLL,           SK_CHARMS,         -4),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_TROLL,           SK_SUMMONINGS,     -3),
+#endif
     APT(SP_TROLL,           SK_NECROMANCY,     -2),
     APT(SP_TROLL,           SK_TRANSLOCATIONS, -3),
     APT(SP_TROLL,           SK_TRANSMUTATIONS, -3),
@@ -468,7 +490,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_RED_DRACONIAN,   SK_CONJURATIONS,    0),
     APT(SP_RED_DRACONIAN,   SK_HEXES,          -1),
     APT(SP_RED_DRACONIAN,   SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_RED_DRACONIAN,   SK_SUMMONINGS,      0),
+#endif
     APT(SP_RED_DRACONIAN,   SK_NECROMANCY,      0),
     APT(SP_RED_DRACONIAN,   SK_TRANSLOCATIONS,  0),
     APT(SP_RED_DRACONIAN,   SK_TRANSMUTATIONS,  0),
@@ -507,7 +531,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_WHITE_DRACONIAN, SK_CONJURATIONS,    0),
     APT(SP_WHITE_DRACONIAN, SK_HEXES,          -1),
     APT(SP_WHITE_DRACONIAN, SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_WHITE_DRACONIAN, SK_SUMMONINGS,      0),
+#endif
     APT(SP_WHITE_DRACONIAN, SK_NECROMANCY,      0),
     APT(SP_WHITE_DRACONIAN, SK_TRANSLOCATIONS,  0),
     APT(SP_WHITE_DRACONIAN, SK_TRANSMUTATIONS,  0),
@@ -546,7 +572,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GREEN_DRACONIAN, SK_CONJURATIONS,    0),
     APT(SP_GREEN_DRACONIAN, SK_HEXES,          -1),
     APT(SP_GREEN_DRACONIAN, SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_GREEN_DRACONIAN, SK_SUMMONINGS,      0),
+#endif
     APT(SP_GREEN_DRACONIAN, SK_NECROMANCY,      0),
     APT(SP_GREEN_DRACONIAN, SK_TRANSLOCATIONS,  0),
     APT(SP_GREEN_DRACONIAN, SK_TRANSMUTATIONS,  0),
@@ -585,7 +613,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_YELLOW_DRACONIAN,SK_CONJURATIONS,    0),
     APT(SP_YELLOW_DRACONIAN,SK_HEXES,          -1),
     APT(SP_YELLOW_DRACONIAN,SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_YELLOW_DRACONIAN,SK_SUMMONINGS,      0),
+#endif
     APT(SP_YELLOW_DRACONIAN,SK_NECROMANCY,      0),
     APT(SP_YELLOW_DRACONIAN,SK_TRANSLOCATIONS,  0),
     APT(SP_YELLOW_DRACONIAN,SK_TRANSMUTATIONS,  0),
@@ -624,7 +654,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GREY_DRACONIAN,  SK_CONJURATIONS,    0),
     APT(SP_GREY_DRACONIAN,  SK_HEXES,          -1),
     APT(SP_GREY_DRACONIAN,  SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_GREY_DRACONIAN,  SK_SUMMONINGS,      0),
+#endif
     APT(SP_GREY_DRACONIAN,  SK_NECROMANCY,      0),
     APT(SP_GREY_DRACONIAN,  SK_TRANSLOCATIONS,  0),
     APT(SP_GREY_DRACONIAN,  SK_TRANSMUTATIONS,  0),
@@ -663,7 +695,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_BLACK_DRACONIAN, SK_CONJURATIONS,    0),
     APT(SP_BLACK_DRACONIAN, SK_HEXES,          -1),
     APT(SP_BLACK_DRACONIAN, SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_BLACK_DRACONIAN, SK_SUMMONINGS,      0),
+#endif
     APT(SP_BLACK_DRACONIAN, SK_NECROMANCY,      0),
     APT(SP_BLACK_DRACONIAN, SK_TRANSLOCATIONS,  0),
     APT(SP_BLACK_DRACONIAN, SK_TRANSMUTATIONS,  0),
@@ -702,7 +736,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_PURPLE_DRACONIAN,SK_CONJURATIONS,    0),
     APT(SP_PURPLE_DRACONIAN,SK_HEXES,           1),
     APT(SP_PURPLE_DRACONIAN,SK_CHARMS,          1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_PURPLE_DRACONIAN,SK_SUMMONINGS,      0),
+#endif
     APT(SP_PURPLE_DRACONIAN,SK_NECROMANCY,      0),
     APT(SP_PURPLE_DRACONIAN,SK_TRANSLOCATIONS,  0),
     APT(SP_PURPLE_DRACONIAN,SK_TRANSMUTATIONS,  0),
@@ -741,7 +777,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_MOTTLED_DRACONIAN,SK_CONJURATIONS,    0),
     APT(SP_MOTTLED_DRACONIAN,SK_HEXES,          -1),
     APT(SP_MOTTLED_DRACONIAN,SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_MOTTLED_DRACONIAN,SK_SUMMONINGS,      0),
+#endif
     APT(SP_MOTTLED_DRACONIAN,SK_NECROMANCY,      0),
     APT(SP_MOTTLED_DRACONIAN,SK_TRANSLOCATIONS,  0),
     APT(SP_MOTTLED_DRACONIAN,SK_TRANSMUTATIONS,  0),
@@ -780,7 +818,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_PALE_DRACONIAN,  SK_CONJURATIONS,    0),
     APT(SP_PALE_DRACONIAN,  SK_HEXES,          -1),
     APT(SP_PALE_DRACONIAN,  SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_PALE_DRACONIAN,  SK_SUMMONINGS,      0),
+#endif
     APT(SP_PALE_DRACONIAN,  SK_NECROMANCY,      0),
     APT(SP_PALE_DRACONIAN,  SK_TRANSLOCATIONS,  0),
     APT(SP_PALE_DRACONIAN,  SK_TRANSMUTATIONS,  0),
@@ -819,7 +859,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_BASE_DRACONIAN,  SK_CONJURATIONS,    0),
     APT(SP_BASE_DRACONIAN,  SK_HEXES,          -1),
     APT(SP_BASE_DRACONIAN,  SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_BASE_DRACONIAN,  SK_SUMMONINGS,      0),
+#endif
     APT(SP_BASE_DRACONIAN,  SK_NECROMANCY,      0),
     APT(SP_BASE_DRACONIAN,  SK_TRANSLOCATIONS,  0),
     APT(SP_BASE_DRACONIAN,  SK_TRANSMUTATIONS,  0),
@@ -858,7 +900,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_CENTAUR,         SK_CONJURATIONS,   -1),
     APT(SP_CENTAUR,         SK_HEXES,          -1),
     APT(SP_CENTAUR,         SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_CENTAUR,         SK_SUMMONINGS,     -1),
+#endif
     APT(SP_CENTAUR,         SK_NECROMANCY,     -1),
     APT(SP_CENTAUR,         SK_TRANSLOCATIONS, -1),
     APT(SP_CENTAUR,         SK_TRANSMUTATIONS, -1),
@@ -897,7 +941,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEMIGOD,         SK_CONJURATIONS,   -1),
     APT(SP_DEMIGOD,         SK_HEXES,          -1),
     APT(SP_DEMIGOD,         SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_DEMIGOD,         SK_SUMMONINGS,     -1),
+#endif
     APT(SP_DEMIGOD,         SK_NECROMANCY,     -1),
     APT(SP_DEMIGOD,         SK_TRANSLOCATIONS, -1),
     APT(SP_DEMIGOD,         SK_TRANSMUTATIONS, -1),
@@ -936,7 +982,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_SPRIGGAN,        SK_CONJURATIONS,   -3),
     APT(SP_SPRIGGAN,        SK_HEXES,           2),
     APT(SP_SPRIGGAN,        SK_CHARMS,          4),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_SPRIGGAN,        SK_SUMMONINGS,     -2),
+#endif
     APT(SP_SPRIGGAN,        SK_NECROMANCY,     -1),
     APT(SP_SPRIGGAN,        SK_TRANSLOCATIONS,  4),
     APT(SP_SPRIGGAN,        SK_TRANSMUTATIONS,  3),
@@ -975,7 +1023,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_MINOTAUR,        SK_CONJURATIONS,   -3),
     APT(SP_MINOTAUR,        SK_HEXES,          -4),
     APT(SP_MINOTAUR,        SK_CHARMS,         -4),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_MINOTAUR,        SK_SUMMONINGS,     -3),
+#endif
     APT(SP_MINOTAUR,        SK_NECROMANCY,     -3),
     APT(SP_MINOTAUR,        SK_TRANSLOCATIONS, -3),
     APT(SP_MINOTAUR,        SK_TRANSMUTATIONS, -2),
@@ -1014,7 +1064,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GARGOYLE,         SK_CONJURATIONS,    1),
     APT(SP_GARGOYLE,         SK_HEXES,          -1),
     APT(SP_GARGOYLE,         SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_GARGOYLE,         SK_SUMMONINGS,     -1),
+#endif
     APT(SP_GARGOYLE,         SK_NECROMANCY,     -2),
     APT(SP_GARGOYLE,         SK_TRANSLOCATIONS, -1),
     APT(SP_GARGOYLE,         SK_TRANSMUTATIONS, -2),
@@ -1053,7 +1105,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEMONSPAWN,      SK_CONJURATIONS,    0),
     APT(SP_DEMONSPAWN,      SK_HEXES,           0),
     APT(SP_DEMONSPAWN,      SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_DEMONSPAWN,      SK_SUMMONINGS,      0),
+#endif
     APT(SP_DEMONSPAWN,      SK_NECROMANCY,      1),
     APT(SP_DEMONSPAWN,      SK_TRANSLOCATIONS, -1),
     APT(SP_DEMONSPAWN,      SK_TRANSMUTATIONS, -1),
@@ -1092,7 +1146,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GHOUL,           SK_CONJURATIONS,   -2),
     APT(SP_GHOUL,           SK_HEXES,          -2),
     APT(SP_GHOUL,           SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_GHOUL,           SK_SUMMONINGS,     -1),
+#endif
     APT(SP_GHOUL,           SK_NECROMANCY,      0),
     APT(SP_GHOUL,           SK_TRANSLOCATIONS, -1),
     APT(SP_GHOUL,           SK_TRANSMUTATIONS, -1),
@@ -1131,7 +1187,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_TENGU,           SK_CONJURATIONS,    3),
     APT(SP_TENGU,           SK_HEXES,          -3),
     APT(SP_TENGU,           SK_CHARMS,         -2),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_TENGU,           SK_SUMMONINGS,      2),
+#endif
     APT(SP_TENGU,           SK_NECROMANCY,      1),
     APT(SP_TENGU,           SK_TRANSLOCATIONS, -2),
     APT(SP_TENGU,           SK_TRANSMUTATIONS, -2),
@@ -1170,7 +1228,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_MERFOLK,         SK_CONJURATIONS,   -2),
     APT(SP_MERFOLK,         SK_HEXES,           0),
     APT(SP_MERFOLK,         SK_CHARMS,          1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_MERFOLK,         SK_SUMMONINGS,      0),
+#endif
     APT(SP_MERFOLK,         SK_NECROMANCY,     -2),
     APT(SP_MERFOLK,         SK_TRANSLOCATIONS, -2),
     APT(SP_MERFOLK,         SK_TRANSMUTATIONS,  3),
@@ -1209,7 +1269,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VAMPIRE,         SK_CONJURATIONS,   -3),
     APT(SP_VAMPIRE,         SK_HEXES,           4),
     APT(SP_VAMPIRE,         SK_CHARMS,          1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_VAMPIRE,         SK_SUMMONINGS,      0),
+#endif
     APT(SP_VAMPIRE,         SK_NECROMANCY,      1),
     APT(SP_VAMPIRE,         SK_TRANSLOCATIONS, -2),
     APT(SP_VAMPIRE,         SK_TRANSMUTATIONS,  1),
@@ -1248,7 +1310,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEEP_DWARF,      SK_CONJURATIONS,   -1),
     APT(SP_DEEP_DWARF,      SK_HEXES,          -2),
     APT(SP_DEEP_DWARF,      SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_DEEP_DWARF,      SK_SUMMONINGS,     -1),
+#endif
     APT(SP_DEEP_DWARF,      SK_NECROMANCY,      1),
     APT(SP_DEEP_DWARF,      SK_TRANSLOCATIONS,  1),
     APT(SP_DEEP_DWARF,      SK_TRANSMUTATIONS, -1),
@@ -1287,7 +1351,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FELID,           SK_CONJURATIONS,   -1),
     APT(SP_FELID,           SK_HEXES,           4),
     APT(SP_FELID,           SK_CHARMS,          2),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_FELID,           SK_SUMMONINGS,      0),
+#endif
     APT(SP_FELID,           SK_NECROMANCY,      0),
     APT(SP_FELID,           SK_TRANSLOCATIONS,  4),
     APT(SP_FELID,           SK_TRANSMUTATIONS,  1),
@@ -1326,7 +1392,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_OCTOPODE,        SK_CONJURATIONS,    0),
     APT(SP_OCTOPODE,        SK_HEXES,           0),
     APT(SP_OCTOPODE,        SK_CHARMS,          0),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_OCTOPODE,        SK_SUMMONINGS,      0),
+#endif
     APT(SP_OCTOPODE,        SK_NECROMANCY,      0),
     APT(SP_OCTOPODE,        SK_TRANSLOCATIONS,  0),
     APT(SP_OCTOPODE,        SK_TRANSMUTATIONS,  0),
@@ -1362,7 +1430,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_CONJURATIONS,    1),
     APT(SP_DJINNI,          SK_HEXES,           2),
     APT(SP_DJINNI,          SK_CHARMS,          0),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_DJINNI,          SK_SUMMONINGS,      0),
+#endif
     APT(SP_DJINNI,          SK_NECROMANCY,     -2),
     APT(SP_DJINNI,          SK_TRANSLOCATIONS,  0),
     APT(SP_DJINNI,          SK_TRANSMUTATIONS,  0),
@@ -1401,7 +1471,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_CONJURATIONS,    0),
     APT(SP_LAVA_ORC,        SK_HEXES,           0),
     APT(SP_LAVA_ORC,        SK_CHARMS,         -1),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_LAVA_ORC,        SK_SUMMONINGS,      0),
+#endif
     APT(SP_LAVA_ORC,        SK_NECROMANCY,      0),
     APT(SP_LAVA_ORC,        SK_TRANSLOCATIONS, -2),
     APT(SP_LAVA_ORC,        SK_TRANSMUTATIONS,  3),
@@ -1440,7 +1512,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FORMICID,        SK_CONJURATIONS,   -1),
     APT(SP_FORMICID,        SK_HEXES,           2),
     APT(SP_FORMICID,        SK_CHARMS,          0),
+#if TAG_MAJOR_VERSION == 34
     APT(SP_FORMICID,        SK_SUMMONINGS,      0),
+#endif
     APT(SP_FORMICID,        SK_NECROMANCY,      0),
     APT(SP_FORMICID,        SK_TRANSLOCATIONS, -1),
     APT(SP_FORMICID,        SK_TRANSMUTATIONS,  1),

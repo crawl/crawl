@@ -5196,7 +5196,9 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
     case SK_HEXES:          ch = TILEG_HEXES_ON; break;
     case SK_CHARMS:         ch = TILEG_CHARMS_ON; break;
+#if TAG_MAJOR_VERSION == 34
     case SK_SUMMONINGS:     ch = TILEG_SUMMONINGS_ON; break;
+#endif
     case SK_NECROMANCY:     ch = TILEG_NECROMANCY_ON; break;
     case SK_TRANSLOCATIONS: ch = TILEG_TRANSLOCATIONS_ON; break;
     case SK_TRANSMUTATIONS: ch = TILEG_TRANSMUTATIONS_ON; break;

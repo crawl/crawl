@@ -860,7 +860,9 @@ skill_type spell_type2skill(unsigned int spelltype)
     case SPTYP_ICE:            return SK_ICE_MAGIC;
     case SPTYP_TRANSMUTATION:  return SK_TRANSMUTATIONS;
     case SPTYP_NECROMANCY:     return SK_NECROMANCY;
+#if TAG_MAJOR_VERSION == 34
     case SPTYP_SUMMONING:      return SK_SUMMONINGS;
+#endif
     case SPTYP_TRANSLOCATION:  return SK_TRANSLOCATIONS;
     case SPTYP_POISON:         return SK_POISON_MAGIC;
     case SPTYP_EARTH:          return SK_EARTH_MAGIC;
