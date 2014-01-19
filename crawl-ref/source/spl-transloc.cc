@@ -22,10 +22,15 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
+#include "los.h"
 #include "losglobal.h"
+#include "losparam.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-place.h"
+#include "mon-util.h"
 #include "orb.h"
 #include "output.h"
 #include "prompt.h"
@@ -1126,6 +1131,176 @@ spret_type cast_dispersal(int pow, bool fail)
     {
         mpr("The air shimmers briefly around you.");
     }
+    return SPRET_SUCCESS;
+}
+
+int singularity_max_range(int pow)
+{
+    // XXX: unify some of this functionality.
+    // A singularity is HD (pow / 10) + 1; its strength is
+    // (HD / (4 + range)) for a given range, and the singularity needs
+    // to have a strength of at least 1 to do something at a given
+    // range; thus, range <= hit_dice - 4 = (pow / 10) - 3.
+
+    return max(0, min(LOS_RADIUS, (pow / 10) - 3));
+}
+
+spret_type cast_singularity(int pow, const coord_def& where, bool fail)
+{
+    if (cell_is_solid(where))
+    {
+        mpr("You can't place that within a solid object!");
+        return SPRET_ABORT;
+    }
+
+    monster* mons = monster_at(where);
+    if (mons)
+    {
+        if (you.can_see(mons))
+        {
+            mpr("You can't place the singularity on a creature.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        mpr("You see a ghostly outline there, and the spell fizzles.");
+        return SPRET_SUCCESS;
+    }
+
+    fail_check();
+
+    monster* singularity = create_monster(
+                                mgen_data(MONS_SINGULARITY,
+                                          BEH_FRIENDLY, &you,
+                                          // It's summoned, but it uses
+                                          // its own mechanic to time out.
+                                          0, SPELL_SINGULARITY,
+                                          where, MHITYOU, MG_FORCE_PLACE,
+                                          GOD_NO_GOD, MONS_NO_MONSTER,
+                                          pow / 20, COLOUR_INHERIT,
+                                          PROX_ANYWHERE,
+                                          level_id::current(),
+                                          (pow / 10) + 1));
+
+    if (singularity)
+    {
+        if (you.can_see(singularity))
+        {
+            const bool friendly = singularity->wont_attack();
+            mprf("Space collapses on itself with a %s crunch%s",
+                 friendly ? "satisfying" : "horrifying",
+                 friendly ? "." : "!");
+        }
+        invalidate_agrid(true);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
+}
+
+#define COLLISION_DAMAGE \
+    roll_dice(strength / 2, singularity->get_hit_dice() / 2)
+
+static void _move_creature_to_singularity(const monster* singularity,
+                                          actor* victim, int strength)
+{
+    coord_def dir(coord_def(0,0));
+    for (int i = 0; i < strength; i++)
+    {
+        ray_def ray;
+        if (!find_ray(singularity->pos(), victim->pos(), ray, opc_solid))
+        {
+            // This probably shouldn't ever happen, but just in case:
+            if (you.can_see(victim))
+            {
+                mprf("%s violently %s moving!",
+                     victim->name(DESC_THE).c_str(),
+                     victim->conj_verb("stop").c_str());
+            }
+            victim->hurt(singularity, COLLISION_DAMAGE);
+            break;
+        }
+
+        ray.advance();
+        const coord_def newpos = ray.pos();
+
+        if (!victim->can_pass_through_feat(grd(newpos)))
+        {
+            if (you.can_see(victim))
+            {
+                mprf("%s %s against the %s!",
+                     victim->name(DESC_THE).c_str(),
+                     victim->conj_verb("slam").c_str(),
+                     feature_description_at(newpos, false, DESC_THE, false)
+                         .c_str());
+            }
+            victim->hurt(singularity, COLLISION_DAMAGE);
+            break;
+        }
+        else if (actor* act_at_space = actor_at(newpos))
+        {
+            if (victim != act_at_space
+                && act_at_space->type != MONS_SINGULARITY)
+            {
+                if (you.can_see(victim) || you.can_see(act_at_space))
+                {
+                    mprf("%s %s with %s!",
+                         victim->name(DESC_THE).c_str(),
+                         victim->conj_verb("collide").c_str(),
+                         act_at_space->name(DESC_THE).c_str());
+                }
+                victim->hurt(act_at_space, COLLISION_DAMAGE);
+                act_at_space->hurt(victim, COLLISION_DAMAGE);
+            }
+            break;
+        }
+        else
+            victim->move_to_pos(newpos, false);
+    }
+}
+
+void singularity_pull(const monster *singularity)
+{
+    actor *agent = actor_by_mid(singularity->summoner);
+
+    for (actor_near_iterator ai(singularity, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (*ai == singularity
+            || agent && mons_aligned(*ai, agent))
+        {
+            continue;
+        }
+
+        const int range = isqrt((singularity->pos() - ai->pos()).abs());
+        const int strength =
+            max(0, min(5, (singularity->get_hit_dice()) / (4 + range)));
+        static const char *messages[] =
+        {
+            "%s pulls at %s.",
+            "%s crushes %s!",
+            "%s violently warps %s!",
+            "%s twists %s apart!",
+        };
+
+        if (strength >= 1)
+        {
+            if (you.can_see(*ai))
+            {
+                // Note that we don't care if you see the singularity if
+                // you can see its impact on the monster; "Something
+                // violently warps Sigmund!" is perfectly acceptable,
+                // after all.
+                mprf(messages[strength - 1],
+                     singularity->name(DESC_THE).c_str(),
+                     ai->name(DESC_THE).c_str());
+            }
+            ai->hurt(singularity, roll_dice(strength + 1,
+                                            singularity->get_hit_dice() / 2));
+        }
+
+        if (ai->alive())
+            _move_creature_to_singularity(singularity, *ai, strength);
+    }
 }

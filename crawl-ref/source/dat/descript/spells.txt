@@ -1209,6 +1209,11 @@ magic is unstable, so eventually the replica will sublimate into a freezing
 cloud, if it isn't hacked or melted into a small puddle of water first. Note
 that simulacra are incapable of leaving the level they were created on.
 %%%%
+Singularity spell
+
+This spell compresses space into a gravitational singularity, pulling nearby
+enemies of the caster towards it and warping them violently in the process.
+%%%%
 Siren Song spell
 
 Sings a haunting song, making nearby victims unwilling to move away from the

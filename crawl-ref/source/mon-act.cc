@@ -53,6 +53,7 @@
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stringutil.h"
@@ -2135,6 +2136,18 @@ void handle_monster_move(monster* mons)
 
     if (mons->type == MONS_GRAND_AVATAR)
         _grand_avatar_act(mons);
+
+    if (mons->type == MONS_SINGULARITY)
+    {
+        if (--mons->countdown <= 0)
+            mons->suicide();
+        else
+        {
+            singularity_pull(mons);
+            mons->speed_increment -= 10;
+        }
+        return;
+    }
 
     mons->shield_blocks = 0;
 

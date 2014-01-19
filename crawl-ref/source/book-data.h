@@ -262,7 +262,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_DISPERSAL,
     SPELL_CONTROLLED_BLINK,
     SPELL_DISJUNCTION,
-    SPELL_NO_SPELL,
+    SPELL_SINGULARITY,
     SPELL_NO_SPELL,
 },
 

@@ -1650,6 +1650,17 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_SINGULARITY, "Singularity",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
+     9,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     20, 0,
+     NULL,
+},
+
+{
     SPELL_PARALYSE, "Paralyse",
      SPTYP_HEXES,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_NEEDS_TRACER,
