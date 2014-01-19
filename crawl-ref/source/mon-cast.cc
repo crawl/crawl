@@ -1146,7 +1146,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SPECTRAL_WEAPON:
     case SPELL_WORD_OF_RECALL:
     case SPELL_INJURY_BOND:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_CALL_LOST_SOUL:
+#endif
     case SPELL_BLINK_ALLIES_ENCIRCLE:
     case SPELL_MASS_CONFUSION:
     case SPELL_ENGLACIATION:
@@ -1791,6 +1793,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
     case SPELL_MISLEAD:
+    case SPELL_CALL_LOST_SOUL:
 #endif
     case SPELL_NO_SPELL:
         ret = true;
@@ -4948,12 +4951,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         return;
     }
-
-    case SPELL_CALL_LOST_SOUL:
-        create_monster(mgen_data(MONS_LOST_SOUL, SAME_ATTITUDE(mons),
-                                 mons, 2, spell_cast, mons->pos(),
-                                 mons->foe, 0, god));
-        return;
 
     case SPELL_BLINK_ALLIES_ENCIRCLE:
         _blink_allies_encircle(mons);

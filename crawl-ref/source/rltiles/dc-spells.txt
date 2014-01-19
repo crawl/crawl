@@ -186,7 +186,6 @@ error BLINK_RANGE
 %sdir gui/spells/monster
 brain_feed BRAIN_FEED
 %sdir misc
-error CALL_LOST_SOUL
 error CALL_TIDE
 %sdir gui/spells/monster
 cantrip CANTRIP

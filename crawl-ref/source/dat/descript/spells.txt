@@ -167,15 +167,6 @@ Call Imp spell
 
 This spell calls forth a minor demon from the pits of Hell.
 %%%%
-Call Lost Soul spell
-
-This spell summons a necromantic spectre, and gives it a temporary material
-form. Such spectres, or “lost souls”, can enter the bodies of more powerful
-undead to bring them back from brink of demise, or turn dying living creatures
-into spectral versions of themselves. While the soul's material form is only
-temporary, the effect of such repair is not. At least, until you kill the
-repairee again.
-%%%%
 Call Tide spell
 
 This spell lets the caster affect the tidal phase of all water within a large

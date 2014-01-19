@@ -3049,6 +3049,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_CALL_LOST_SOUL, "Call Lost Soul",
      SPTYP_SUMMONING | SPTYP_NECROMANCY,
@@ -3061,6 +3062,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_DIMENSION_ANCHOR, "Dimension Anchor",
