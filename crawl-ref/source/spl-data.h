@@ -454,7 +454,7 @@ struct spell_desc
 
 {
     SPELL_ABJURATION, "Abjuration",
-     SPTYP_SUMMONING,
+     SPTYP_HEXES,
      SPFLAG_TARGET | SPFLAG_ESCAPE,
      3,
      200,
@@ -467,7 +467,7 @@ struct spell_desc
 
 {
     SPELL_MASS_ABJURATION, "Mass Abjuration",
-     SPTYP_SUMMONING,
+     SPTYP_HEXES,
      SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
      6,
      200,
@@ -677,7 +677,7 @@ struct spell_desc
 
 {
     SPELL_MALIGN_GATEWAY, "Malign Gateway",
-     SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
+     SPTYP_TRANSLOCATION,
      SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_CHAOTIC,
      7,
      200,
@@ -768,7 +768,7 @@ struct spell_desc
 
 {
     SPELL_HAUNT, "Haunt",
-     SPTYP_SUMMONING | SPTYP_NECROMANCY,
+     SPTYP_NECROMANCY,
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
      7,
      200,
