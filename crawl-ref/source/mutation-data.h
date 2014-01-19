@@ -1555,8 +1555,8 @@
 { MUT_EXOSKELETON,                         0,  2, false,  true,  true,
   "exoskeleton",
 
-  {"Your body is surrounded by an exoskeleton. (HP +5, AC +1)",
-   "Your body is surrounded by a tough exoskeleton. (HP +20, AC +2)",
+  {"Your body is surrounded by an exoskeleton. (AC +1)",
+   "Your body is surrounded by a tough exoskeleton. (AC +4)",
    ""},
 
   {"Your exoskeleton hardens.",

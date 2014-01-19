@@ -1436,7 +1436,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FORMICID,        SK_TRAPS,         -99),
 #endif
     APT(SP_FORMICID,        SK_UNARMED_COMBAT,  0),
-    APT(SP_FORMICID,        SK_SPELLCASTING,   -1),
+    APT(SP_FORMICID,        SK_SPELLCASTING,    0),
     APT(SP_FORMICID,        SK_CONJURATIONS,   -1),
     APT(SP_FORMICID,        SK_HEXES,           2),
     APT(SP_FORMICID,        SK_CHARMS,          0),
