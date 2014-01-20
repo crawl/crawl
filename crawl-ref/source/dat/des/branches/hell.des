@@ -28,6 +28,25 @@ function hell_entry_tier(e, tier)
         end
     end
 end
+
+function hell_water_abbrev(e, type, baseweight)
+    return "patrolling " .. type .. " zombie w:" .. math.floor(baseweight/2) ..
+        " / patrolling " .. type .. " skeleton w:" .. math.floor(baseweight/3) ..
+        " / patrolling " .. type .. " simulacrum w:" .. math.floor(baseweight/6)
+end
+
+function hell_water_spawns(e)
+    e.kmons("P = " .. hell_water_abbrev(_G, "spiny frog", 150) ..
+               " / " .. hell_water_abbrev(_G, "alligator", 120) ..
+               " / " .. hell_water_abbrev(_G, "anaconda", 130) ..
+               " / " .. hell_water_abbrev(_G, "hydra", 230) ..
+               "/ kraken zombie w:25 / kraken simulacrum w:12 \
+                / patrolling water elemental w:113")
+    e.kfeat("Pw = w")
+    e.kmask("wW = no_monster_gen")
+    e.nsubst("w = 8:P / 4 = Pw / *:w")
+end
+
 }}
 
 ##############################################################################
@@ -400,6 +419,7 @@ NSUBST: . = 1:2 / *:.
 : end
 FTILE:  +'T = floor_infernal_blank
 TILE:   c = dngn_stone_dark
+: hell_water_spawns(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -674,6 +694,7 @@ SUBST:  8 = 8 .:59
 KMONS:  8 = ice statue
 KMONS:  3 = blue devil
 KMONS:  2 = ice devil
+: hell_water_spawns(_G)
 MAP
 ...........wwwwwwwwwww...........
  ....33...wwwwwwwwwwwww...33....
@@ -701,6 +722,7 @@ SUBST:   a = I, b : w., W = w.
 KMONS:   I = ice statue
 KMONS:   3 = ice devil / blizzard demon
 KMONS:   2 = blue devil / freezing wraith / white imp / nothing
+: hell_water_spawns(_G)
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
  WWWWwwwwwwwww.....wwwwwwwwwWWWW
