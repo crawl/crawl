@@ -3163,6 +3163,11 @@ NAME:   evilmike_holy_pan
 TAGS:   no_pool_fixup
 ORIENT: encompass
 NSUBST: . = > / .
+: if you.have_rune("demonic") then
+KFEAT:  O = exit_pandemonium
+: else
+KITEM:  O = demonic rune of Zot
+: end
 ITEM:   w:5 any / potion of curing
 ITEM:   any / potion of heal wounds
 ITEM:   acquire any
@@ -3236,7 +3241,7 @@ xxxxxxxxx......xxx..wwwwwwwww.c*'ccccccccccccccccccccccccccccccc'*c...xxxxxxxxxx
 xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........3.......3..........+ccc...xxxxxxxxxx
 xxxxxxxx....xxxxx..wwwwwwwww...cc...............5...............cc...xxxxxxxxxxx
 xxxxxxx....xxxxx...wwwwwwww....cc..www.ccccccccccccccccccc.www..cc...xxxxxxxxxxx
-xxxxxx.....xxxx....wwwwwwwww...cc..wHw.cccccccc|||cccccccc.wHw..cc....xxxxxxxxxx
+xxxxxx.....xxxx....wwwwwwwww...cc..wHw.cccccccc|O|cccccccc.wHw..cc....xxxxxxxxxx
 xxxxxx....xxxx...wwwwwxxwwww...cc..www.ccw4''|||||||''4wcc.www..cc....xxxxxxxxxx
 xxxxxx....xxx...wwwwwxxwwww....cc......ccw''||||'||||''wcc......cc....xxxxxxxxxx
 xxxxxx...xxx...wwwwwwwwwww..xx.cc..ccc+cccccccccSccccccccc+ccc..cc.....xxxxxxxxx
