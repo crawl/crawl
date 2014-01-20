@@ -1310,19 +1310,21 @@ ENDMAP
 NAME:   rand_demon_1
 TAGS:   allow_dup
 ORIENT: float
-MONS:   pandemonium lord, greater demon
+MONS:   pandemonium lord, common demon
+KMONS:  ( = greater demon
+KFEAT:  ( = (
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
 .xx.xx.x.xx.
-..x.x2.x.x..
+..x.x1.x.x..
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x..x.x..
-..x.x1Px.x..
+..x.x(Px.x..
 ..x.x..x.x..
 ..x.x..x.x..
-..x.x.2x.x..
+..x.x.1x.x..
 .xx.x.xx.xx.
 ............
 ENDMAP
@@ -1333,6 +1335,8 @@ NAME:   rand_demon_2
 TAGS:   allow_dup
 ORIENT: float
 MONS:   greater demon, common demon, common demon
+KMONS:  ( = greater demon
+KFEAT:  ( = (
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
@@ -1340,7 +1344,7 @@ MAP
 .2.....xx.x.
 .xxxxxx3x.x.
 .xx3x..xx.x.
-.x.x.11.x.x.
+.x.x.1(.x.x.
 .x.x.P1.x.x.
 .x.xx..x3xx.
 .x.x3xxxxxx.
@@ -1355,6 +1359,9 @@ NAME:   rand_demon_3
 TAGS:   allow_dup
 ORIENT: float
 MONS:   common demon, common demon
+NSUBST: 1 = 1:( / *:1
+KMONS:  ( = greater demon
+KFEAT:  ( = (
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
@@ -1373,15 +1380,16 @@ ENDMAP
 
 ###################################
 
-NAME:   rand_demon_4
-TAGS:   allow_dup
-ORIENT: float
-MONS:   pandemonium lord, any demon, any demon
+NAME:    rand_demon_4
+TAGS:    allow_dup
+ORIENT:  float
+MONS:    pandemonium lord, any demon, any demon
+SHUFFLE: $(|
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
 .xxxxxxxxx..
-.x$+*+3+|x..
+.x$+*+3+(x..
 .xxxxxxx+x..
 .x2+3+2x|x..
 .x+xxxxx+x..
@@ -1407,7 +1415,7 @@ MAP
 .xx......xx.
 .x..3232..x.
 .x..2|P3..x.
-.x..3.|2..x.
+.x..3(|2..x.
 .x..2123..x.
 .xx......xx.
 ..xx....xx..
@@ -1420,19 +1428,21 @@ ENDMAP
 NAME:   rand_demon_6
 TAGS:   allow_dup
 ORIENT: float
-MONS:   pandemonium lord, any demon, any demon
+KMONS:  ( = pandemonium lord
+KFEAT:  ( = (
+MONS:   any demon, any demon
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
 ............
-......2.....
+......1.....
 ............
-.3..........
-..........2.
-.....1P.....
+.2..........
+..........1.
+.....(P.....
 ............
 ............
-.2.......3..
+.1.......2..
 ............
 ............
 ENDMAP
@@ -1443,6 +1453,7 @@ NAME:   rand_demon_7
 TAGS:   allow_dup
 ORIENT: float
 MONS:   any demon, greater demon
+NSUBST: | = 1:( / *:|
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
@@ -1486,20 +1497,22 @@ ENDMAP
 NAME:   rand_demon_9
 TAGS:   allow_dup
 ORIENT: float
+KMONS:  ( = pandemonium lord
+KFEAT:  ( = (
 # a crapload of greater demons, you fight them in small sets
-MONS:   pandemonium lord, any demon, greater demon
+MONS:   any demon, greater demon
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
 .xxxxxxxxxx.
-.x2+3+3+3xx.
-.x+xxxxxx2x.
-.x3x....x+x.
-.x+x.P..x2x.
-.x3x..1.x+x.
-.x+x....x3x.
-.x2xxxx+x+x.
-.xx2+2+3x3x.
+.x1+2+2+2xx.
+.x+xxxxxx1x.
+.x2x....x+x.
+.x+x.P..x1x.
+.x2x..(.x+x.
+.x+x....x2x.
+.x1xxxx+x+x.
+.xx1+1+2x2x.
 .xxxxxxxx=x.
 ............
 ENDMAP
@@ -1510,6 +1523,9 @@ NAME:   evilmike_mini_pan_diamond
 TAGS:   allow_dup
 ORIENT: float
 SUBST:  m : nx, n : mnxx.
+NSUBST: 1 = 1:( / *:1
+KMONS:  ( = greater demon
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1533,6 +1549,8 @@ ENDMAP
 NAME:   evilmike_mini_pan_thingy
 TAGS:   allow_dup
 ORIENT: float
+KITEM:  ( = |
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon, pandemonium lord
 : pan_demonic_rune(_G, 'P')
 MAP
@@ -1540,7 +1558,7 @@ MAP
     ..x+x.
   ...xx.x.
   .cccc.x.
- ..c|1c.x.
+ ..c(1c.x.
 ..xc3c2.x......
 .xxcc2c3xxxxxx.
 .+.....4.....+.
@@ -1560,6 +1578,8 @@ TAGS:   allow_dup
 ORIENT: float
 SUBST:  d : +x
 SUBST:  X : c., C : ccx
+KITEM:  ( = |
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1586,8 +1606,10 @@ ENDMAP
 NAME:   evilmike_mini_pan_3x3
 TAGS:   allow_dup
 ORIENT: float
+KITEM:  ( = |
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon
-NSUBST: 1 = 1:P / 3:1 / 2:2 / 2:3 / 1:|
+NSUBST: 1 = 1:P / 3:1 / 2:2 / 2:3 / 1:(
 SHUFFLE: =A
 SUBST:  A = x
 SUBST:  = = +
@@ -1613,13 +1635,15 @@ ENDMAP
 NAME:   evilmike_mini_pan_corridor
 TAGS:   allow_dup
 ORIENT: float
+KMONS:  ( = greater demon
+KFEAT:  ( = (
 SUBST:  Y : Xx, X : x., Z : c.
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxcccccxxxxxxx
-xxxxxxcc1..ccxxxxxx
+xxxxxxcc(..ccxxxxxx
 xXXXXXY3Z2Z3YXXXXXx
 @...2...cPc...2...@
 xXXXXXY3Z2Z3YXXXXXx
@@ -1635,6 +1659,9 @@ TAGS:   allow_dup
 ORIENT: float
 MONS:   greater demon, common demon, any demon, pandemonium lord
 SUBST:  X : x.., Y : x+, C : cx
+NSUBST: | = 1:( / *:|
+KITEM:  ( = |
+KFEAT:  ( = (
 : pan_demonic_rune(_G, 'P')
 MAP
 xxxxxxxxxxxxxx.@
@@ -1660,7 +1687,9 @@ WEIGHT: 2
 TAGS:   allow_dup
 ORIENT: float
 MONS:   greater demon, any demon, pandemonium lord
-NSUBST: | = 1:P / *:|
+NSUBST: | = 1:P / 1:( / *:|
+KITEM:  ( = |
+KFEAT:  ( = (
 SUBST:  + : +., X : =c, c : cccx
 # I don't want this vault to be an autoexplore trap
 MARKER: G = lua:props_marker { stop_explore = "ominous statue." }
@@ -1692,7 +1721,9 @@ WEIGHT:  3
 TAGS:    allow_dup
 ORIENT:  float
 SUBST:   + : +.
-SHUFFLE: 123|P
+SHUFFLE: 123(P
+KITEM:   ( = |
+KFEAT:   ( = (
 MONS:    any demon, any demon, any demon
 MONS:    greater demon / common demon, common demon
 : pan_demonic_rune(_G, 'P', true)
@@ -1718,6 +1749,8 @@ NAME:   evilmike_mini_pan_layers
 TAGS:   allow_dup
 ORIENT: float
 SUBST:  x = x:9 +:1
+KITEM:  ( = |
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1729,7 +1762,7 @@ MAP
     ..xxxxxxxxx..
    .......3.......
   ..xxxxxxxxxxxxx..
- ........2|1........
+ ........2(1........
 ..xxxxxxxxxxxxxxxxx..
 .........3P3.........
 ..xxxxxxxxxxxxxxxxx..
@@ -1759,7 +1792,7 @@ xxxxXX.xxxxxx
 xxxXXX.xxxxxx
 xxXXXX.xxxxxx
 xXXXXX.Yccccx
-@.......YYYcx
+@.....(.YYYcx
 xxxxxY...2Ycx
 xxxxxcY.213cx
 xxxxxcY21P3cx
@@ -1775,6 +1808,8 @@ TAGS:    allow_dup
 ORIENT:  float
 SHUFFLE: 4A
 SUBST:   A = 1
+KITEM:   ( = |
+KFEAT:   ( = (
 MONS:    greater demon, common demon, any demon, pandemonium lord
 : pan_demonic_rune(_G, 'P')
 MAP
@@ -1794,7 +1829,7 @@ xxxx%xxx3xx.c.cx
 xxxxxxxx*xx1c.cx
 xxxxxxxxxxx|cAcx
 xxxxxxxxxxccc.cx
-xxxxxxxxxxc|.ccx
+xxxxxxxxxxc(.ccx
 xxxxxxxxxxccccxx
 xxxxxxxxxxxxxxxx
 ENDMAP
@@ -1805,6 +1840,8 @@ NAME:   evilmike_mini_pan_T
 TAGS:   allow_dup
 ORIENT: float
 SUBST:  + : +..
+KITEM:  ( = |
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon, pandemonium lord
 : pan_demonic_rune(_G, 'P')
 MAP
@@ -1822,7 +1859,7 @@ xxxxxxxxxx...xxx
 xxxxxxxxxx...xxx
 xxxxxxxxxx2.3xxx
 xxxxxxxccc.1.xxx
-xxxxxxxc|+...xxx
+xxxxxxxc(+...xxx
 xxxxxxxcccxxxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
@@ -1835,13 +1872,15 @@ TAGS:    allow_dup
 ORIENT:  float
 SHUFFLE: mnxcll
 MONS:    greater demon, common demon, any demon
+KMONS:   ( = greater demon
+KFEAT:   ( = (
 : pan_demonic_rune(_G, 'P', true)
 MAP
  ...........
 .............
 ..m.m.m.m.m..
 ...m2m.m2m...
-..m2m.1.m2m..
+..m2m.(.m2m..
 ...m.....m...
 ..m.3.P.3.m..
 ...m.....m...
@@ -1860,7 +1899,9 @@ ORIENT: float
 SUBST:  X : x.
 SUBST:  Y : mmxxl
 MONS:   greater demon, common demon, any demon, pandemonium lord
-NSUBST: D = 1:P / 3:1 / 3:2 / 3:3 / 3:|
+NSUBST: D = 1:P / 3:1 / 3:2 / 3:3 / 1:( / 3:|
+KITEM:  ( = |
+KFEAT:  ( = (
 : pan_demonic_rune(_G, 'P')
 MAP
 @.xxxxxxxxxxx
@@ -1883,6 +1924,8 @@ ENDMAP
 NAME:   evilmike_mini_pan_doors
 TAGS:   allow_dup
 ORIENT: float
+KITEM:  ( = |
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1891,7 +1934,7 @@ MAP
 .xx......xx.
 .+.x3..2x.+.
 .x.2c++c3.x.
-.x..+|1+..x.
+.x..+(1+..x.
 .x..+1P+..x.
 .x.3c++c2.x.
 .+.x2..3x.+.
@@ -1908,7 +1951,9 @@ ORIENT: float
 # The doors are not treated as large gates, but individually:
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = +
-NSUBST: D = 2:1 / 2:2 / 2:3 / 1:P / 1:|
+NSUBST: D = 2:1 / 2:2 / 2:3 / 1:P / 1:(
+KITEM:  ( = |
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1928,6 +1973,8 @@ ENDMAP
 NAME:   evilmike_mini_pan_V
 TAGS:   allow_dup
 ORIENT: float
+KITEM:  ( = |
+KFEAT:  ( = (
 MONS:   greater demon, common demon, any demon, pandemonium lord
 : pan_demonic_rune(_G, 'P')
 MAP
@@ -1942,7 +1989,7 @@ xxxxxxxx...c+c...xxxxxxxx
  xxxxxxxx..3.3..xxxxxxxx
   xxxxxxxx..4..xxxxxxxx
    xxxxxxxx3.3xxxxxxxx
-    xxxxxxxx|xxxxxxxx
+    xxxxxxxx(xxxxxxxx
      xxxxxxxxxxxxxxx
 ENDMAP
 
@@ -1955,7 +2002,7 @@ WEIGHT: 5
 MONS: any demon, common demon, greater demon
 MARKER: + = lua:props_marker { connected_exclude="true" }
 MARKER: - = lua:props_marker { connected_exclude="true" }
-NSUBST: + = 1:P / 2:2 / 2:3 / *:+
+NSUBST: + = 1:P / 1:( / 2:2 / 2:3 / *:+
 SUBST: - = +
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1980,7 +2027,7 @@ NAME: nicolae_pan_diamonds
 TAGS: allow_dup
 ORIENT: float
 MONS: pandemonium lord, greater demon, any demon
-NSUBST: P = 1:P / *:.
+NSUBST: P = 1:P / *:(
 : pan_demonic_rune(_G, 'P')
 MAP
        c
@@ -2028,7 +2075,7 @@ MAP
     xc1=1cx
     xc1=1cx
     ccc=ccc
-    c.1.1.c
+    c.1(1.c
     c1.P.1c
     ccccccc
 ENDMAP
@@ -2038,7 +2085,7 @@ ENDMAP
 NAME: nicolae_pan_hourglass
 TAGS: allow_dup
 ORIENT: float
-NSUBST: P = 1:P / *:.
+NSUBST: P = 1:P / *:(
 MONS: common demon, greater demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -2071,6 +2118,8 @@ NAME: nicolae_pan_double_arrow
 TAGS: allow_dup
 ORIENT: float
 MONS: greater demon, common demon
+KMONS: ( = greater demon
+KFEAT: ( = (
 : pan_demonic_rune(_G, 'P', true)
 MAP
        c
@@ -2084,7 +2133,7 @@ ccxxx.....xxxcc
  xxx..2.2..xxx
   x.........x
   .2.x...x.2.
- ...xx.1.xx...
+ ...xx.(.xx...
 ...xxx...xxx...
 ..xxxx...xxxx..
 @xxxxx.P.xxxxx@
@@ -2110,13 +2159,15 @@ NAME: nicolae_pan_glass_arcs
 TAGS: allow_dup
 ORIENT: float
 MONS: any demon, greater demon
+KMONS: ( = greater demon
+KFEAT: ( = (
 : pan_demonic_rune(_G, 'P', true)
 MAP
      ccccc
   ccccccccccc
   ...ccccc...
   n.1..c..1.n
- ..nn..2..nn..
+ ..nn..(..nn..
  ...nn...nn...
  @1.nn.P.nn.1@
  ...nn...nn...
@@ -2140,6 +2191,8 @@ KMONS: p = human / elf / orc / naga / centaur / draconian / \
    ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \
    deep dwarf / felid / octopode / vampire / base draconian / demigod / \
    demonspawn / merfolk / halfling
+KMONS: ( = common demon
+KFEAT: ( = (
 : pan_demonic_rune(_G, 'P', true)
 MAP
       ccccc
@@ -2152,7 +2205,7 @@ MAP
 @....2..P..2....@
 ..cnn.1...1.nnc..
   cbnn.1.1.nnbc
-  ccbnn.2.nnbcc
+  ccbnn.(.nnbcc
    cbbnnnnnbbc
    ccbbbbbbbcc
     cccbbbccc
@@ -2166,6 +2219,7 @@ TAGS:    allow_dup no_trap_gen
 ORIENT:  float
 MONS:    greater demon, common demon
 KMONS:   d = pandemonium lord
+KFEAT:   d = (
 : pan_demonic_rune(_G, 'e')
 MAP
 ............
@@ -2187,6 +2241,7 @@ TAGS:    allow_dup no_trap_gen
 ORIENT:  float
 MONS:    greater demon, common demon
 KMONS:   d = pandemonium lord
+KFEAT:   d = (
 : pan_demonic_rune(_G, 'e')
 MAP
 ............
@@ -2208,6 +2263,7 @@ TAGS:    allow_dup no_trap_gen
 ORIENT:  float
 MONS:    greater demon, common demon
 KMONS:   d = pandemonium lord
+KFEAT:   d = (
 : pan_demonic_rune(_G, 'e')
 MAP
 ............
@@ -2239,7 +2295,7 @@ MAP
 .c..2.c1ccc1c.2..c.
 .c....cc+.+cc....c.
 .c..cccc.P.cccc..c.
-.c.cc.1+...+1.cc.c.
+.c.cc.1+.(.+1.cc.c.
 .cc+ccccc+ccccc+cc.
 .c......c1c......c.
 .cc..2..c.c..2..cc.
@@ -2255,6 +2311,7 @@ TAGS:    allow_dup no_trap_gen
 ORIENT:  float
 MONS:    greater demon, common demon
 KMONS:   d = pandemonium lord
+KFEAT:   d = (
 : pan_demonic_rune(_G, 'e')
 MAP
  @........@
@@ -2281,15 +2338,16 @@ ENDMAP
 NAME:    lemuel_draining_boxes
 ORIENT:  float
 MONS:    pandemonium lord, eye of draining, any demon
-SHUFFLE: aA/bB/cC/dD/eE/fF, eE/gG, fF/hH
+SHUFFLE: aA/bB/cC/dD/eE/fF, eE/gG, fF/hH, m(/nO
 SUBST:   a=m, b=m, c=m, d=m, e=m, f=m, g=., h=.
 SUBST:   A=2, B=2, C=2, D=2, E=2, F=2, G=., H=.
 # the two center boxes are granted;
 # of the six outer boxes, one or two may be missing
 SUBST:   n = m
 KFEAT:   m = iron_grate
-KMONS:   O = eye of draining
+KMONS:   O( = eye of draining
 KITEM:   O = demonic rune of Zot
+KFEAT:   ( = (
 MAP
                   ....bbb..
 .......           ....bBb..
@@ -2298,7 +2356,7 @@ MAP
 .aaa.......................
 ...........................
 .............mmm.............
-    .........m2m..........ccc
+    .........m(m..........ccc
     .........mmm3.........cCc
 ...............333........ccc
 ..............33133nnn.......
@@ -2321,6 +2379,9 @@ MONS:   hellion
 SUBST:  L=l.
 KMONS:  O = pandemonium lord
 KITEM:  O = demonic rune of Zot
+NSUBST: | = 1:( / *:|
+KITEM:  ( = |
+KFEAT:  ( = (
 MAP
     ..LlllL..
   ..LlllllllL..
@@ -2346,14 +2407,15 @@ MONS:    pandemonium lord, any demon
 MONS:    smoke demon / weight:1 brimstone fiend
 SHUFFLE: xc
 KFEAT:   m = iron_grate
-SHUFFLE: O1/AB
-SUBST:   A=|, B=|
+SHUFFLE: O1/(|
+KITEM:   ( = |
+KFEAT:   ( = (
 KITEM:   O = demonic rune of Zot
 MAP
 .......@.......
 xxxxxx+++xxxxxx
-xOx.xl...lx.xAx
-x1x3xl.2.lx3xBx
+xOx.xl...lx.x(x
+x1x3xl.2.lx3x|x
 x.x.ml...lm.x.x
 x2x.xl...lx.x2x
 x.x3xl...lx3x.x
@@ -2379,6 +2441,7 @@ SUBST:   W = wWW.
 KMONS:   O = ice statue
 KITEM:   O = demonic rune of Zot
 KMONS:   P = pandemonium lord
+KFEAT:   P = (
 MONS:    blizzard demon, ice devil / blue devil w:20
 : set_random_mon_list("blizzard demon / ice devil / blue devil")
 MAP
@@ -2513,7 +2576,7 @@ MONS:   red devil ; demon trident good_item ego:distortion
 MONS:   red devil ; lajatang good_item ego:distortion
 MONS:   red devil ; demon blade good_item ego:distortion
 KMONS:  P = pandemonium lord
-KFEAT:  P = floor
+KFEAT:  P = (
 FTILE:  P = floor_hall
 KFEAT:  _ = floor
 FTILE:  _ = floor_hall
