@@ -971,6 +971,26 @@ The offspring of a human and his or her demon lover, a young demonspawn, before
 its hellish heritage fully asserts itself, closely resembles a human being, but
 with a certain devilish cast to its features.
 %%%%
+demonspawn black sun
+
+<demonspawn>
+%%%%
+demonspawn blood saint
+
+<demonspawn>
+%%%%
+demonspawn chaos champion
+
+<demonspawn>
+%%%%
+demonspawn corrupter
+
+<demonspawn>
+%%%%
+demonspawn warmonger
+
+<demonspawn>
+%%%%
 diamond obelisk
 
 This obelisk appears to be indestructible. You'd better find a way around... it
@@ -1266,6 +1286,10 @@ goliath beetle
 
 A huge black beetle with great crunching mandibles and very hard chitinous
 armour.
+%%%%
+gelid demonspawn
+
+<demonspawn>
 %%%%
 giant centipede
 
@@ -1589,6 +1613,10 @@ iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.
 %%%%
+infernal demonspawn
+
+<demonspawn>
+%%%%
 inept feature mimic
 
 A predator masquerading as an ordinary dungeon feature. This one is less
@@ -1847,6 +1875,10 @@ molten gargoyle
 
 A hideous molten stone statue come to life, with fearsome claws and flames
 licking out from its toothy maw.
+%%%%
+monstrous demonspawn
+
+<demonspawn>
 %%%%
 moth
 
@@ -2113,6 +2145,10 @@ parts, it lacks the coordination needed to move quickly.
 purple draconian
 
 A scale-covered humanoid with a reptilian tail and small wings.
+%%%%
+putrid demonspawn
+
+<demonspawn>
 %%%%
 quasit
 
@@ -2637,6 +2673,10 @@ tormentor
 
 A malign devil covered in all manner of claws, spines, and cruel hooks. It is
 able to inflict torturous agony on those foolish enough to gaze upon it.
+%%%%
+torturous demonspawn
+
+<demonspawn>
 %%%%
 training dummy
 

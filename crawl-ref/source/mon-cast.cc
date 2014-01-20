@@ -278,7 +278,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     }
 
     const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
-                            ? draco_subspecies(mons) : mons->type;
+                            ? draco_or_demonspawn_subspecies(mons) : mons->type;
 
     spell_type real_spell = spell_cast;
 
@@ -1229,7 +1229,7 @@ static spell_type _get_draconian_breath_spell(monster* mons)
 
     if (mons_genus(mons->type) == MONS_DRACONIAN)
     {
-        switch (draco_subspecies(mons))
+        switch (draco_or_demonspawn_subspecies(mons))
         {
         case MONS_DRACONIAN:
         case MONS_YELLOW_DRACONIAN:     // already handled as ability
@@ -5444,7 +5444,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
     {
         monster_type type = mons->type;
         if (mons_genus(type) == MONS_DRACONIAN)
-            type = draco_subspecies(mons);
+            type = draco_or_demonspawn_subspecies(mons);
 
         switch (type)
         {

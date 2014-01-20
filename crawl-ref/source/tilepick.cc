@@ -3022,7 +3022,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 
 tileidx_t tileidx_draco_base(const monster_info& mon)
 {
-    int draco = mon.draco_subspecies();
+    int draco = mon.draco_or_demonspawn_subspecies();
     int colour = 0;
 
     switch (draco)

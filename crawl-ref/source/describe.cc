@@ -3086,6 +3086,70 @@ static string _describe_chimera(const monster_info& mi)
     return description;
 }
 
+static string _describe_demonspawn_role(monster_type type)
+{
+    switch (type)
+    {
+    case MONS_DEMONSPAWN_BLOOD_SAINT:
+        return "Its eyes are filled with a thirst for blood.";
+    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
+        return "It looks around wildly, filled with the throes of madness.";
+    case MONS_DEMONSPAWN_WARMONGER:
+        return "It hefts its weapon menacingly, ever ready for more battles.";
+    case MONS_DEMONSPAWN_CORRUPTER:
+        return "Space seems to shimmer and twist in its vicinity.";
+    case MONS_DEMONSPAWN_BLACK_SUN:
+        return "It menaces with an unholy aura.";
+    default:
+        return "";
+    }
+}
+
+static string _describe_demonspawn_base(int species)
+{
+    switch (species)
+    {
+    case MONS_MONSTROUS_DEMONSPAWN:
+        return "more beast now than whatever species it is descended from";
+    case MONS_GELID_DEMONSPAWN:
+        return "softly glowing with an icy aura";
+    case MONS_INFERNAL_DEMONSPAWN:
+        return "giving off an intense heat";
+    case MONS_PUTRID_DEMONSPAWN:
+        return "surrounded with sickly fumes and gases";
+    case MONS_TORTUROUS_DEMONSPAWN:
+        return "menacing with bony spines";
+    }
+    return "";
+}
+
+static string _describe_demonspawn(const monster_info& mi)
+{
+    string description;
+    const int subsp = mi.draco_subspecies();
+
+
+    if (subsp != MONS_DEMONSPAWN)
+    {
+        description += "A demonic-looking humanoid";
+        const string demonspawn_base = _describe_demonspawn_base(subsp);
+        if (!demonspawn_base.empty())
+            description += ", " + demonspawn_base;
+        description += ".";
+    }
+    else
+        description += "A vaguely demonic-looking humanoid.";
+
+    if (subsp != mi.type)
+    {
+        const string demonspawn_role = _describe_demonspawn_role(mi.type);
+        if (!demonspawn_role.empty())
+            description += " " + demonspawn_role;
+    }
+
+    return description;
+}
+
 static const char* _get_resist_name(mon_resist_flags res_type)
 {
     switch (res_type)
@@ -3522,6 +3586,21 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_DRACONIAN_KNIGHT:
     {
         inf.body << "\n" << _describe_draconian(mi) << "\n";
+        break;
+    }
+
+    case MONS_MONSTROUS_DEMONSPAWN:
+    case MONS_GELID_DEMONSPAWN:
+    case MONS_INFERNAL_DEMONSPAWN:
+    case MONS_PUTRID_DEMONSPAWN:
+    case MONS_TORTUROUS_DEMONSPAWN:
+    case MONS_DEMONSPAWN_BLOOD_SAINT:
+    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
+    case MONS_DEMONSPAWN_WARMONGER:
+    case MONS_DEMONSPAWN_CORRUPTER:
+    case MONS_DEMONSPAWN_BLACK_SUN:
+    {
+        inf.body << "\n" << _describe_demonspawn(mi) << "\n";
         break;
     }
 

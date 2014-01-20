@@ -266,7 +266,7 @@ bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = grd(p);
     return (mons_genus(type) == MONS_DRACONIAN
-            && draco_subspecies(this) == MONS_GREY_DRACONIAN)
+            && draco_or_demonspawn_subspecies(this) == MONS_GREY_DRACONIAN)
                 || grid == DNGN_SHALLOW_WATER
                    && (mons_genus(type) == MONS_NAGA // tails, not feet
                        || body_size(PSIZE_BODY) >= SIZE_LARGE);
@@ -5075,9 +5075,12 @@ bool monster::is_skeletal() const
 
 int monster::spiny_degree() const
 {
-    switch (type)
+    switch (mons_is_demonspawn(type)
+            ? base_monster
+            : type)
     {
         case MONS_PORCUPINE:
+        case MONS_TORTUROUS_DEMONSPAWN:
             return 3;
         case MONS_HELL_SENTINEL:
             return 5;
