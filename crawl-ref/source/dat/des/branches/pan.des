@@ -3228,13 +3228,3 @@ WEIGHT: 100
 MAP
 x
 ENDMAP
-
-# XXX: should we guarantee that all Pan levels place a panlord vault?
-# If so, this should be removed.
-NAME: pan_dummy_balancer
-TAGS: dummy
-ORIENT: float
-WEIGHT: 100
-MAP
-x
-ENDMAP
