@@ -2253,9 +2253,12 @@ static vector<formatted_string> _get_overview_resistances(
     cwidth = 9;
     const int rinvi = you.can_see_invisible(calc_unid);
     out += _resist_composer("SeeInvis", cwidth, rinvi) + "\n";
-    // TODO: Also show *Rage in clarity line
+    const bool show_angry = ((you.angry(calc_unid) || player_mutation_level(MUT_BERSERK))
+                            && !you.clarity(calc_unid)
+                            && !you.stasis(calc_unid));
     const int rclar = you.clarity(calc_unid);
-    out += _resist_composer("Clarity", cwidth, rclar) + "\n";
+    out += show_angry ? _resist_composer("Angry", cwidth, 1, 1, false) + "\n"
+                      : _resist_composer("Clarity", cwidth, rclar) + "\n";
     const int rcons = you.conservation(calc_unid);
     out += _resist_composer("Conserve", cwidth, rcons) + "\n";
     const int rcorr = you.res_corr(calc_unid);
