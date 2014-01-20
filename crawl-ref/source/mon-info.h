@@ -107,6 +107,7 @@ enum monster_info_flags
     MB_FIRE_VULN,
     MB_TORNADO,
     MB_TORNADO_COOLDOWN,
+    MB_ICEMAIL,
     NUM_MB_FLAGS
 };
 
