@@ -3543,6 +3543,7 @@ static monster* _dithmengos_shadow_monster()
             new_item.base_type = wpn->base_type;
             new_item.sub_type  = wpn->sub_type;
         }
+        new_item.colour   = wpn->colour;
         new_item.quantity = 1;
         new_item.flags   |= ISFLAG_SUMMONED;
     }
