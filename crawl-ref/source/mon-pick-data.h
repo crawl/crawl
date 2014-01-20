@@ -1307,12 +1307,12 @@ static const pop_entry pop_water_forest[] =
 
 static const pop_entry pop_water_hell[] =
 { // Hell branch water monsters
-  {  1,  7,   150, FLAT, MONS_BIG_FISH },
-  {  1,  7,   150, FLAT, MONS_GIANT_GOLDFISH },
+  {  1,  7,   150, FLAT, MONS_SPINY_FROG },
+  {  1,  7,   120, FLAT, MONS_ALLIGATOR },
+  {  1,  7,   130, FLAT, MONS_ANACONDA },
+  {  1,  7,   230, FLAT, MONS_HYDRA },
   {  1,  7,   113, FLAT, MONS_WATER_ELEMENTAL },
   {  1,  7,    37, FLAT, MONS_KRAKEN },
-  {  1,  7,   150, FLAT, MONS_JELLYFISH },
-  {  1,  7,   200, FLAT, MONS_SHARK },
   { 0,0,0,FLAT,MONS_0 }
 };
 
