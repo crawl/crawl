@@ -2253,12 +2253,16 @@ static vector<formatted_string> _get_overview_resistances(
     cwidth = 9;
     const int rinvi = you.can_see_invisible(calc_unid);
     out += _resist_composer("SeeInvis", cwidth, rinvi) + "\n";
-    const bool show_angry = ((you.angry(calc_unid) || player_mutation_level(MUT_BERSERK))
-                            && !you.clarity(calc_unid)
-                            && !you.stasis(calc_unid));
+
     const int rclar = you.clarity(calc_unid);
+    const int stasis = you.stasis(calc_unid);
+    // TODO: what about different levels of anger/berserkitis?
+    const bool show_angry = (you.angry(calc_unid)
+                             || player_mutation_level(MUT_BERSERK))
+                            && !rclar && !stasis;
     out += show_angry ? _resist_composer("Angry", cwidth, 1, 1, false) + "\n"
                       : _resist_composer("Clarity", cwidth, rclar) + "\n";
+
     const int rcons = you.conservation(calc_unid);
     out += _resist_composer("Conserve", cwidth, rcons) + "\n";
     const int rcorr = you.res_corr(calc_unid);
@@ -2270,7 +2274,6 @@ static vector<formatted_string> _get_overview_resistances(
     const int rward = you.warding(calc_unid);
     out += _resist_composer("Warding", cwidth, rward) + "\n";
 
-    const int stasis = you.stasis(calc_unid);
     const int notele = you.no_tele(calc_unid);
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
