@@ -582,7 +582,7 @@ void direct_effect(monster* source, spell_type spell,
             pbolt.flavour    = BEAM_WATER;
             pbolt.aux_source = "by the raging water";
 
-            damage_taken     = roll_dice(3, 8 + source->hit_dice);
+            damage_taken     = roll_dice(3, 7 + source->hit_dice);
 
             damage_taken = defender->beam_resists(pbolt, damage_taken, false);
             damage_taken = defender->apply_ac(damage_taken);
