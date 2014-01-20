@@ -329,7 +329,9 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     type = p_type;
     base_type = p_base_type;
 
-    draco_type = mons_genus(type) == MONS_DRACONIAN ? MONS_DRACONIAN : type;
+    draco_type = mons_genus(type) == MONS_DRACONIAN  ? MONS_DRACONIAN :
+                 mons_genus(type) == MONS_DEMONSPAWN ? MONS_DEMONSPAWN
+                                                     : type;
 
     number = 0;
     colour = mons_class_colour(type);
@@ -441,7 +443,10 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     draco_type =
-        mons_genus(type) == MONS_DRACONIAN ? ::draco_subspecies(m) : type;
+        (mons_genus(type) == MONS_DRACONIAN
+        || mons_genus(type) == MONS_DEMONSPAWN)
+            ? ::draco_or_demonspawn_subspecies(m)
+            : type;
 
     if (!mons_can_display_wounds(m)
         || !mons_class_can_display_wounds(type))
@@ -860,6 +865,15 @@ string monster_info::_core_name() const
                 s = draconian_colour_name(base_type) + " " + s;
             break;
 
+        case MONS_DEMONSPAWN_BLOOD_SAINT:
+        case MONS_DEMONSPAWN_CHAOS_CHAMPION:
+        case MONS_DEMONSPAWN_WARMONGER:
+        case MONS_DEMONSPAWN_CORRUPTER:
+        case MONS_DEMONSPAWN_BLACK_SUN:
+            if (base_type != MONS_NO_MONSTER)
+                s = demonspawn_base_name(base_type) + " " + s;
+            break;
+
         case MONS_DANCING_WEAPON:
         case MONS_SPECTRAL_WEAPON:
             if (inv[MSLOT_WEAPON].get())
@@ -1135,6 +1149,15 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         && m1.type <= MONS_PALE_DRACONIAN
         && m2.type >= MONS_DRACONIAN
         && m2.type <= MONS_PALE_DRACONIAN)
+    {
+        return false;
+    }
+
+    // Treat base demonspawn identically, as with draconians.
+    if (!zombified && m1.type >= MONS_FIRST_BASE_DEMONSPAWN
+        && m1.type <= MONS_LAST_BASE_DEMONSPAWN
+        && m2.type >= MONS_FIRST_BASE_DEMONSPAWN
+        && m2.type <= MONS_LAST_BASE_DEMONSPAWN)
     {
         return false;
     }

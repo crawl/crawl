@@ -556,6 +556,9 @@ static bool _needs_resolution(monster_type mon_type)
     return mon_type == RANDOM_DRACONIAN || mon_type == RANDOM_BASE_DRACONIAN
            || mon_type == RANDOM_NONBASE_DRACONIAN
            || mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON
+           || mon_type == RANDOM_DEMONSPAWN
+           || mon_type == RANDOM_BASE_DEMONSPAWN
+           || mon_type == RANDOM_NONBASE_DEMONSPAWN
            || _is_random_monster(mon_type);
 }
 
@@ -596,6 +599,28 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     }
     else if (mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON)
         mon_type = summon_any_demon(mon_type);
+    else if (mon_type == RANDOM_DEMONSPAWN)
+    {
+        do
+        {
+            mon_type =
+                static_cast<monster_type>(
+                    random_range(MONS_FIRST_DEMONSPAWN,
+                                 MONS_LAST_DEMONSPAWN));
+        }
+        while (base_type != MONS_PROGRAM_BUG
+               && mon_type != base_type
+               && mons_species(mon_type) == mon_type);
+    }
+    else if (mon_type == RANDOM_BASE_DEMONSPAWN)
+        mon_type = random_demonspawn_monster_species();
+    else if (mon_type == RANDOM_NONBASE_DEMONSPAWN)
+    {
+        mon_type =
+            static_cast<monster_type>(
+                random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
+                             MONS_LAST_NONBASE_DEMONSPAWN));
+    }
 
     // (2) Take care of non-draconian random monsters.
     else if (_is_random_monster(mon_type))

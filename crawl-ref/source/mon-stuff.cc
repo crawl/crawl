@@ -245,12 +245,14 @@ monster_type fill_out_corpse(const monster* mons,
             corpse_class = mons_zombie_base(mons);
         }
 
-        if (mons && mons_genus(mtype) == MONS_DRACONIAN)
+        if (mons
+            && (mons_genus(mtype) == MONS_DRACONIAN
+                || mons_genus(mtype) == MONS_DEMONSPAWN))
         {
             if (mons->type == MONS_TIAMAT)
                 corpse_class = MONS_DRACONIAN;
             else
-                corpse_class = draco_subspecies(mons);
+                corpse_class = draco_or_demonspawn_subspecies(mons);
         }
 
         if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
