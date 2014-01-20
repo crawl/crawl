@@ -408,7 +408,7 @@ bool melee_attack::handle_phase_attempted()
         needs_message = false;
     }
     else if (attacker->is_monster()
-             && mons_class_flag(attacker->as_monster()->type, M_STABBER)
+             && mons_class_flag(attacker->type, M_STABBER)
              && defender && defender->asleep())
     {
         to_hit = AUTOMATIC_HIT;
@@ -1937,7 +1937,7 @@ void melee_attack::set_attack_verb()
     // Take normal hits into account.  If the hit is from a weapon with
     // more than one damage type, randomly choose one damage type from
     // it.
-    monster_type defender_genus = mons_genus(defender->as_monster()->type);
+    monster_type defender_genus = mons_genus(defender->type);
     switch (weapon ? single_damage_type(*weapon) : -1)
     {
     case DAM_PIERCE:
@@ -2162,13 +2162,13 @@ void melee_attack::set_attack_verb()
                     attack_verb = "pummel";
                 // XXX: detect this better
                 else if (defender->is_monster()
-                         && (get_mon_shape(defender->as_monster()->type)
+                         && (get_mon_shape(defender->type)
                                == MON_SHAPE_INSECT
-                             || get_mon_shape(defender->as_monster()->type)
+                             || get_mon_shape(defender->type)
                                 == MON_SHAPE_INSECT_WINGED
-                             || get_mon_shape(defender->as_monster()->type)
+                             || get_mon_shape(defender->type)
                                 == MON_SHAPE_CENTIPEDE
-                             || get_mon_shape(defender->as_monster()->type)
+                             || get_mon_shape(defender->type)
                                 == MON_SHAPE_ARACHNID))
                 {
                     attack_verb = "squash";
@@ -2185,7 +2185,7 @@ void melee_attack::set_attack_verb()
                     // XXX: could this distinction work better?
                     if (choice == 0
                         && defender->is_monster()
-                        && mons_has_blood(defender->as_monster()->type))
+                        && mons_has_blood(defender->type))
                     {
                         attack_verb = "beat";
                         verb_degree = "into a bloody pulp";
@@ -2385,7 +2385,7 @@ bool melee_attack::distortion_affects_defender()
     // I think could be amended to let blink frogs "grow" like
     // jellies do {dlb}
     if (defender->is_monster()
-        && mons_genus(defender->as_monster()->type) == MONS_BLINK_FROG)
+        && mons_genus(defender->type) == MONS_BLINK_FROG)
     {
         if (one_chance_in(5))
         {
@@ -4192,7 +4192,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
         perceived_attack = true;
 
         if (attacker->is_monster()
-            && attacker->as_monster()->type == MONS_PHANTASMAL_WARRIOR)
+            && attacker->type == MONS_PHANTASMAL_WARRIOR)
         {
             if (needs_message && verbose)
             {
@@ -5129,8 +5129,8 @@ void melee_attack::do_spines()
                 mprf("%s %s struck by %s %s.", attacker->name(DESC_THE).c_str(),
                      attacker->conj_verb("are").c_str(),
                      defender->name(DESC_ITS).c_str(),
-                     defender->as_monster()->type == MONS_BRIAR_PATCH ? "thorns"
-                                                                      : "spines");
+                     defender->type == MONS_BRIAR_PATCH ? "thorns"
+                                                        : "spines");
             }
             if (attacker->is_player())
                 ouch(hurt, defender->mindex(), KILLED_BY_SPINES);
