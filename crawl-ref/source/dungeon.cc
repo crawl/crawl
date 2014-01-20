@@ -1433,16 +1433,18 @@ void fixup_misplaced_items()
     }
 }
 
-static bool _at_top_of_branch()
+static bool _at_top_of_branch(bool connected = true)
 {
-    return you.depth == 1;
+    return your_branch().exit_stairs != NUM_FEATURES
+           && you.depth == 1
+           && (!connected || player_in_connected_branch());
 }
 
 static void _fixup_branch_stairs()
 {
     // Top level of branch levels - replaces up stairs with stairs back to
     // dungeon or wherever:
-    if (_at_top_of_branch())
+    if (_at_top_of_branch(true))
     {
 #ifdef DEBUG_DIAGNOSTICS
         int count = 0;
@@ -2459,6 +2461,10 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         _post_vault_build();
     }
 
+    // Translate stairs for pandemonium levels.
+    if (player_in_branch(BRANCH_PANDEMONIUM))
+        _fixup_pandemonium_stairs();
+
     _fixup_branch_stairs();
     fixup_misplaced_items();
 
@@ -2472,10 +2478,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     {
         _prepare_water();
     }
-
-    // Translate stairs for pandemonium levels.
-    if (player_in_branch(BRANCH_PANDEMONIUM))
-        _fixup_pandemonium_stairs();
 
     if (player_in_hell())
         _fixup_hell_stairs();
