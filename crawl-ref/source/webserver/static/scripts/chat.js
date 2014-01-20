@@ -1,4 +1,4 @@
-define(["jquery", "comm"], function ($, comm) {
+define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
     var new_message_count = 0;
     var spectators = {
             count: 0,
@@ -16,10 +16,11 @@ define(["jquery", "comm"], function ($, comm) {
 
     function receive_message(data)
     {
-        var msg = data.content;
+        var msg = $("<div>").append(data.content);
         var histcon = $('#chat_history_container');
         var atBottom = (histcon[0].scrollHeight - histcon.scrollTop() == histcon.outerHeight());
-        $("#chat_history").append(msg + "<br>");
+        msg.find(".chat_msg").html(linkify(msg.find(".chat_msg").text()));
+        $("#chat_history").append(msg.html() + "<br>");
         if (atBottom)
             $('#chat_history_container').scrollTop($('#chat_history_container')[0].scrollHeight);
         if ($("#chat_body").css("display") === "none")
