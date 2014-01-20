@@ -493,7 +493,7 @@ bool melee_attack::handle_phase_dodged()
 static bool _flavour_triggers_damageless(attack_flavour flavour)
 {
     return flavour == AF_CRUSH
-           || flavour == AF_DROWN
+           || flavour == AF_ENGULF
            || flavour == AF_PURE_FIRE
            || flavour == AF_SHADOWSTAB;
 }
@@ -4874,7 +4874,7 @@ void melee_attack::mons_apply_attack_flavour()
             stop_delay(true);
         break;
 
-    case AF_DROWN:
+    case AF_ENGULF:
         if (x_chance_in_y(2, 3) && attacker->can_constrict(defender))
         {
             if (defender->is_player() && !you.duration[DUR_WATER_HOLD]
