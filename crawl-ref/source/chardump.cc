@@ -1206,7 +1206,7 @@ static string _describe_action_subtype(caction_type type, int subtype)
         return ability_name((ability_type)subtype);
     case CACT_EVOKE:
         if (subtype >= UNRAND_START && subtype <= UNRAND_LAST)
-            return get_unrand_entry(subtype)->name;
+            return uppercase_first(get_unrand_entry(subtype)->name);
 
         if (subtype >= 1 << 16)
         {
@@ -1214,7 +1214,7 @@ static string _describe_action_subtype(caction_type type, int subtype)
             dummy.base_type = (object_class_type)(subtype >> 16);
             dummy.sub_type  = subtype & 0xffff;
             dummy.quantity  = 1;
-            return dummy.name(DESC_PLAIN, true);
+            return uppercase_first(dummy.name(DESC_PLAIN, true));
         }
 
         switch ((evoc_type)subtype)
