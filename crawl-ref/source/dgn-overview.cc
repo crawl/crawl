@@ -423,6 +423,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
     char buffer[100];
     int num_printed = 0;
     char const *colour;
+    const int columns = 4;
 
     for (unsigned int cur_god = 0; cur_god < gods.size(); cur_god++)
     {
@@ -473,11 +474,11 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         disp += buffer;
         num_printed++;
 
-        if (num_printed % 5 == 0)
+        if (num_printed % columns == 0)
             disp += "\n";
         else
             // manually aligning the god columns: five whitespaces between columns
-            switch (num_printed % 5)
+            switch (num_printed % columns)
             {
             case 1: disp += string(20 - strwidth(god_name(god, false)), ' ');
                     break;
@@ -489,7 +490,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
             }
     }
 
-    if (num_printed > 0 && num_printed % 5 != 0)
+    if (num_printed > 0 && num_printed % columns != 0)
         disp += "\n";
     return disp;
 }
