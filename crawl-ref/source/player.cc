@@ -7157,7 +7157,7 @@ void player::paralyse(actor *who, int str, string source)
     if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
         return;
 
-    if (who && who->type != MONS_RED_WASP)
+    if (who && who->type != MONS_RED_WASP
         && (duration[DUR_PARALYSIS] || duration[DUR_PARALYSIS_IMMUNITY]))
     {
         canned_msg(MSG_YOU_RESIST);
