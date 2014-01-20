@@ -4373,10 +4373,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const int n = min(8, 2 + random2avg(mons->hit_dice / 4, 2));
         for (int i = 0; i < n; ++i)
         {
-            create_monster(
-                mgen_data(MONS_BALL_LIGHTNING, SAME_ATTITUDE(mons),
-                          mons, 2, spell_cast, mons->pos(), mons->foe,
-                          0, god));
+            if (monster *ball = create_monster(
+                    mgen_data(MONS_BALL_LIGHTNING, SAME_ATTITUDE(mons),
+                              mons, 0, spell_cast, mons->pos(), mons->foe,
+                              0, god)))
+            {
+                ball->add_ench(ENCH_SHORT_LIVED);
+            }
         }
         return;
     }
