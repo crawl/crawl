@@ -1799,12 +1799,14 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         else
         {
-            if (!res_water_drowning())
+            if (res_water_drowning() <= 0)
             {
                 lose_ench_duration(me, -speed_to_duration(speed));
                 int dam = div_rand_round((50 + stepdown((float)me.duration, 30.0))
                                           * speed_to_duration(speed),
                             BASELINE_DELAY * 10);
+                if (res_water_drowning() < 0)
+                    dam = dam * 3 / 2;
                 hurt(me.agent(), dam);
             }
         }
