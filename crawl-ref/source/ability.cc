@@ -948,8 +948,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_GRENADES:
     case ABIL_MAKE_SAGE:
     case ABIL_REMOVE_CURSE:
-    case ABIL_DIG:
-    case ABIL_SHAFT_SELF:
         failure = 0;
         break;
 
@@ -1006,6 +1004,11 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_RECHARGING:       // this is for deep dwarves {1KB}
         failure = 45 - (2 * you.experience_level);
+        break;
+
+    case ABIL_DIG:
+    case ABIL_SHAFT_SELF:
+        failure = 0;
         break;
         // end species abilities (some mutagenic)
 
