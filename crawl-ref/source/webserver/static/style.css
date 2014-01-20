@@ -172,6 +172,10 @@ body {
     z-index: 3000;
 }
 
+#chat a {
+    color: #A2A2A2;
+}
+
 #chat_caption {
     font-weight: normal;
     text-decoration: none;
@@ -200,6 +204,7 @@ body {
     overflow-x: hidden;
     text-overflow: ellipsis;
     word-wrap: break-word;
+    margin-bottom: 3px;
 }
 
 #chat_history {
