@@ -495,7 +495,8 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
     return flavour == AF_CRUSH
            || flavour == AF_ENGULF
            || flavour == AF_PURE_FIRE
-           || flavour == AF_SHADOWSTAB;
+           || flavour == AF_SHADOWSTAB
+           || flavour == AF_DROWN;
 }
 
 /* An attack has been determined to have hit something
@@ -5002,6 +5003,23 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_SHADOWSTAB:
         attacker->as_monster()->del_ench(ENCH_INVIS, true);
+        break;
+
+    case AF_DROWN:
+        if (defender->res_water_drowning() <= 0)
+        {
+            special_damage = attacker->get_experience_level() * 3 / 4
+                            + random2(attacker->get_experience_level() * 3 / 4);
+
+            if (needs_message)
+            {
+                mprf("%s %s %s%s",
+                    atk_name(DESC_THE).c_str(),
+                    attacker->conj_verb("drown").c_str(),
+                    defender_name().c_str(),
+                    special_attack_punctuation().c_str());
+            }
+        }
         break;
     }
 }
