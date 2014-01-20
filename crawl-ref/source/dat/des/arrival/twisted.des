@@ -111,27 +111,27 @@ MAP
  c.{.c
  c...c
 ccc+ccc
-cAm.mBc
+cAn.nBc
 ccc.ccc
-cCm.mDc
+cCn.nDc
 ccc.ccc
-cEm.mFc
+cEn.nFc
 ccc.ccc
-cGm.mHc
+cGn.nHc
 ccc.ccc
-cIm.mJc
+cIn.nJc
 ccc.ccc
-cKm.mLc
+cKn.nLc
 ccc.ccc
-cMm.mNc
+cMn.nNc
 ccc.ccc
-cOm.mPc
+cOn.nPc
 ccc.ccc
-cQm.mRc
+cQn.nRc
 ccc.ccc
-cSm.mTc
+cSn.nTc
 ccc.ccc
-cUm.mVc
+cUn.nVc
 ccc+ccc
   c@c
 ENDMAP
@@ -202,11 +202,11 @@ KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
 MAP
 xxxxxxxxxxxxxx     xxxxxxxxx
 xxxxxxxxMxMxMxxxxxxxMxMxMxMx
-xxxxxxxxmxmxmxMxMxMxmxmxmxmxxxx@x
-xxxxxxx......xmxmxmx.......mMxx=xx
-xxxxxx{..............xmxmx.xmx...xxx
-xxxxxxx..........xmxmxMxMm.....>.mMx
-xxxxxxxxmxmxmxmxmxMxMxxxxxmxmx...xxx
+xxxxxxxxnxnxnxMxMxMxnxnxnxnxxxx@x
+xxxxxxx......xnxnxnx.......nMxx=xx
+xxxxxx{..............xnxnx.xnx...xxx
+xxxxxxx..........xnxnxMxMn.....>.nMx
+xxxxxxxxnxnxnxnxnxMxMxxxxxnxnx...xxx
 xxxxxxxxMxMxMxMxMxxxxx   xMxMxxAxx
 xxxxxxxxxxxxxxxxxx       xxxxxxBx
 ENDMAP
