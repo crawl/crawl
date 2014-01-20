@@ -222,6 +222,8 @@ const int INVALID_ABSDEPTH = -1000;
 
 const int ANTITRAIN_PENALTY = 2;
 
+const int AGILITY_BONUS = 5;
+
 #define TORNADO_RADIUS 6
 
 #define NUMBER_OF_RUNES_NEEDED    3

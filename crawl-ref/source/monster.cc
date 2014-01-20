@@ -5798,6 +5798,38 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     }
     else if (type == MONS_STARCURSED_MASS)
         (new starcursed_merge_fineff(this))->schedule();
+    else if (mons_is_demonspawn(type)
+             && draco_or_demonspawn_subspecies(this)
+                    == MONS_TORTUROUS_DEMONSPAWN
+             && (random2(damage) > 8 || max_hit_points <= 2 * damage))
+    {
+        // Powered by pain
+        switch (random2(4))
+        {
+            case 0:
+            case 1:
+                if (!has_ench(ENCH_ANTIMAGIC))
+                    break;
+                simple_monster_message(this, " focuses on the pain.");
+                simple_monster_message(this, " looks invigorated.");
+                del_ench(ENCH_ANTIMAGIC);
+                break;
+            case 2:
+                if (has_ench(ENCH_MIGHT))
+                    break;
+                simple_monster_message(this, " focuses on the pain.");
+                add_ench(ENCH_MIGHT);
+                simple_monster_message(this, " seems to grow stronger.");
+                break;
+            case 3:
+                if (has_ench(ENCH_AGILE))
+                    break;
+                simple_monster_message(this, " focuses on the pain.");
+                add_ench(ENCH_AGILE);
+                simple_monster_message(this, " suddenly seems more agile.");
+                break;
+        }
+    }
 }
 
 reach_type monster::reach_range() const
