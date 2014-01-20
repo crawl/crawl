@@ -3124,7 +3124,6 @@ KMONS:  S = patrolling seraph
 KFEAT:  _ = altar_the_shining_one
 KFEAT:  E = altar_elyvilon
 KFEAT:  Z = altar_zin
-KFEAT:  > = transit_pandemonium
 TILE:   c = wall_church
 COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
@@ -3151,7 +3150,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
 xxxxxxxC%%%CxxxxxxxxxxwwwwwwwwwxxxwwwxwwwwwwwwxxxxxxCCCCC.......CCCCCxxxxxxxxxxx
-xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+.>.>.>.+...Cxxxxxxxxxxx
+xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+.{.[.(.+...Cxxxxxxxxxxx
 xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
 xxxCCCC.....Cxxxx""0"""wwwwwwwwwww"wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
 xxxCddC.A...CCC"""""""""wwwwwwww""0"wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
