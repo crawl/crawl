@@ -1444,7 +1444,7 @@ static void _fixup_branch_stairs()
 {
     // Top level of branch levels - replaces up stairs with stairs back to
     // dungeon or wherever:
-    if (_at_top_of_branch(true))
+    if (_at_top_of_branch(false))
     {
 #ifdef DEBUG_DIAGNOSTICS
         int count = 0;
