@@ -291,6 +291,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         ac += ICEMAIL_MAX;
         break;
 
+    case ENCH_AGILE:
+        ev += AGILITY_BONUS;
+        break;
+
     default:
         break;
     }
@@ -867,6 +871,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_AGILE:
+        ev -= AGILITY_BONUS;
+        if (!quiet)
+            simple_monster_message(this, " is no longer unusally agile.");
+        break;
+
     default:
         break;
     }
@@ -974,7 +984,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
-        case ENCH_FLAYED:
+        case ENCH_FLAYED: case ENCH_AGILE:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1184,6 +1194,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_AWAKEN_VINES:
     case ENCH_WIND_AIDED:
     case ENCH_FIRE_VULN:
+    case ENCH_AGILE:
     // case ENCH_ROLLING:
         decay_enchantment(en);
         break;
@@ -2028,7 +2039,8 @@ static const char *enchant_names[] =
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
-    "iood_charged", "fire_vuln", "tornado_cooldown",  "icemail", "buggy",
+    "iood_charged", "fire_vuln", "tornado_cooldown",  "icemail", "agile",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2171,6 +2183,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_FEAR_INSPIRING:
     case ENCH_STONESKIN:
     case ENCH_OZOCUBUS_ARMOUR:
+    case ENCH_AGILE:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:

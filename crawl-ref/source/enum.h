@@ -1723,6 +1723,7 @@ enum enchant_type
     ENCH_FIRE_VULN,
     ENCH_TORNADO_COOLDOWN,
     ENCH_ICEMAIL,
+    ENCH_AGILE,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

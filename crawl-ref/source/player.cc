@@ -2518,7 +2518,7 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
     int evbonus = _player_para_evasion_bonuses(evit);
 
     if (you.duration[DUR_AGILITY])
-        evbonus += 5;
+        evbonus += AGILITY_BONUS;
 
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
