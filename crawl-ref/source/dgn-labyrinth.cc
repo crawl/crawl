@@ -526,7 +526,7 @@ void dgn_build_labyrinth_level()
         if (rplace.map.has_tag("generate_loot"))
         {
             for (vault_place_iterator vi(rplace); vi; ++vi)
-                if (grd(*vi) == DNGN_EXIT_LABYRINTH)
+                if (grd(*vi) == DNGN_EXIT_LABYRINTH || feat_is_stone_stair(grd(*vi)))
                 {
                     _labyrinth_place_items(*vi);
                     break;
