@@ -2260,7 +2260,7 @@ static vector<formatted_string> _get_overview_resistances(
     const bool show_angry = (you.angry(calc_unid)
                              || player_mutation_level(MUT_BERSERK))
                             && !rclar && !stasis;
-    out += show_angry ? _resist_composer("Angry", cwidth, 1, 1, false) + "\n"
+    out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false) + "\n"
                       : _resist_composer("Clarity", cwidth, rclar) + "\n";
 
     const int rcons = you.conservation(calc_unid);
@@ -2279,7 +2279,7 @@ static vector<formatted_string> _get_overview_resistances(
     if (notele && !stasis)
         out += _resist_composer("NoTele", cwidth, 1, 1, false) + "\n";
     else if (rrtel && !stasis)
-        out += _resist_composer("RndTele", cwidth, 1, 1, false) + "\n";
+        out += _resist_composer("Rnd*Tele", cwidth, 1, 1, false) + "\n";
     else
         out += _resist_composer("Stasis", cwidth, stasis) + "\n";
     cols.add_formatted(1, out, false);
