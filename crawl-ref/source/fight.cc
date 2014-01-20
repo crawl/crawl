@@ -130,7 +130,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // about unpredictable or weird results from players.
 
     // If this is a spectral weapon check if it can attack
-    if (attacker->as_monster()->type == MONS_SPECTRAL_WEAPON
+    if (attacker->type == MONS_SPECTRAL_WEAPON
         && !confirm_attack_spectral_weapon(attacker->as_monster(), defender))
     {
         // Pretend an attack happened,
