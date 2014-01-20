@@ -186,6 +186,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_TORNADO;
     case ENCH_TORNADO_COOLDOWN:
         return MB_TORNADO_COOLDOWN;
+    case ENCH_ICEMAIL:
+        return MB_ICEMAIL;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1567,6 +1569,8 @@ vector<string> monster_info::attributes() const
         v.push_back("surrounded by raging winds");
     if (is(MB_TORNADO_COOLDOWN))
         v.push_back("surrounded by restless winds");
+    if (is(MB_ICEMAIL))
+        v.push_back("surrounded by an icy envelope");
     return v;
 }
 

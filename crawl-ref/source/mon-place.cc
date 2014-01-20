@@ -1491,6 +1491,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else if (mg.cls == MONS_HYPERACTIVE_BALLISTOMYCETE)
         mon->add_ench(ENCH_EXPLODING);
+    else if (mons_is_demonspawn(mon->type)
+             && draco_or_demonspawn_subspecies(mon) == MONS_GELID_DEMONSPAWN)
+    {
+        mon->add_ench(ENCH_ICEMAIL);
+    }
 
     if (mg.cls == MONS_TWISTER || mg.cls == MONS_DIAMOND_OBELISK)
     {

@@ -287,6 +287,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         calc_speed();
         break;
 
+    case ENCH_ICEMAIL:
+        ac += ICEMAIL_MAX;
+        break;
+
     default:
         break;
     }
@@ -852,6 +856,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_FIRE_VULN:
         if (!quiet)
             simple_monster_message(this, " is no longer more vulnerable to fire.");
+        break;
+
+    case ENCH_ICEMAIL:
+        ac -= ICEMAIL_MAX;
+        if (!quiet && you.can_see(this))
+        {
+            mprf("%s icy envelope dissipates!",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
         break;
 
     default:
@@ -2015,7 +2028,7 @@ static const char *enchant_names[] =
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
-    "iood_charged", "fire_vuln", "tornado_cooldown", "buggy",
+    "iood_charged", "fire_vuln", "tornado_cooldown",  "icemail", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
