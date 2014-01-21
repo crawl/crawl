@@ -296,8 +296,8 @@ bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
     return false;
 }
 
-// Counts deep water twice.
-static int _count_water_neighbours(coord_def p)
+// Counts deep water twice (and reports if any is found).
+static int _count_water_neighbours(coord_def p, bool& deep)
 {
     int water_count = 0;
     for (adjacent_iterator ai(p); ai; ++ai)
@@ -305,7 +305,10 @@ static int _count_water_neighbours(coord_def p)
         if (grd(*ai) == DNGN_SHALLOW_WATER)
             water_count++;
         else if (grd(*ai) == DNGN_DEEP_WATER)
+        {
             water_count += 2;
+            deep = true;
+        }
     }
     return water_count;
 }
@@ -347,6 +350,8 @@ bool find_siren_water_target(monster* mon)
     coord_def best_target;
     bool first = true;
 
+    deep = false;
+
     while (true)
     {
         int best_num = 0;
@@ -362,7 +367,7 @@ bool find_siren_water_target(monster* mon)
                 continue;
 
             // Counts deep water twice.
-            const int water_count = _count_water_neighbours(*ri);
+            const int water_count = _count_water_neighbours(*ri, deep);
             if (water_count < best_water_count)
                 continue;
 
@@ -389,7 +394,7 @@ bool find_siren_water_target(monster* mon)
             }
         }
 
-        if (!first || best_water_count > 0)
+        if (!first || deep)
             break;
 
         // Else start the second iteration.
