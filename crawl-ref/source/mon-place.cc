@@ -117,7 +117,7 @@ bool monster_habitable_grid(const monster* mon,
                                   actual_grid,
                                   DNGN_UNSEEN,
                                   mons_flies(mon),
-                                  mon->cannot_move());
+                                  mon->cannot_move() || mon->caught());
 }
 
 bool mons_airborne(monster_type mcls, int flies, bool paralysed)
