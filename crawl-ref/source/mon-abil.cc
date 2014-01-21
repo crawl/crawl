@@ -1001,21 +1001,24 @@ static bool _siren_movement_effect(const monster* mons)
 
     if (!do_resist)
     {
-        coord_def dir(coord_def(0,0));
-        if (mons->pos().x < you.pos().x)
-            dir.x = -1;
-        else if (mons->pos().x > you.pos().x)
-            dir.x = 1;
-        if (mons->pos().y < you.pos().y)
-            dir.y = -1;
-        else if (mons->pos().y > you.pos().y)
-            dir.y = 1;
+        // We use a beam tracer here since it is better at navigating
+        // obstructing walls than merely comparing our relative positions
+        bolt tracer;
+        tracer.is_beam = true;
+        tracer.affects_nothing = true;
+        tracer.target = mons->pos();
+        tracer.source = you.pos();
+        tracer.range = LOS_RADIUS;
+        tracer.is_tracer = true;
+        tracer.aimed_at_spot = true;
+        tracer.fire();
 
-        const coord_def newpos = you.pos() + dir;
+        const coord_def newpos = tracer.path_taken[0];
 
         if (!in_bounds(newpos)
             || (is_feat_dangerous(grd(newpos)) && !you.can_cling_to(newpos))
-            || !you.can_pass_through_feat(grd(newpos)))
+            || !you.can_pass_through_feat(grd(newpos))
+            || !cell_see_cell(mons->pos(), newpos, LOS_NO_TRANS))
         {
             do_resist = true;
         }
