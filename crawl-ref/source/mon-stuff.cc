@@ -415,7 +415,10 @@ int place_monster_corpse(const monster* mons, bool silent,
     // "always_corpse" forces monsters to always generate a corpse upon
     // their deaths.
     if (mons->props.exists("always_corpse")
-        || mons_class_flag(mons->type, M_ALWAYS_CORPSE))
+        || mons_class_flag(mons->type, M_ALWAYS_CORPSE)
+        || mons_is_demonspawn(mons->type)
+           && mons_class_flag(draco_or_demonspawn_subspecies(mons),
+                              M_ALWAYS_CORPSE))
     {
         vault_forced = true;
     }

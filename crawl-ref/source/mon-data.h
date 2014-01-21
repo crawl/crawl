@@ -5162,7 +5162,7 @@ static monsterentry mondata[] =
 
 {
     MONS_PUTRID_DEMONSPAWN, '6', GREEN, "putrid demonspawn",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_ALWAYS_CORPSE,
     MR_RES_POISON,
     550, 10, MONS_DEMONSPAWN, MONS_PUTRID_DEMONSPAWN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
