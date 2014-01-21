@@ -10,6 +10,7 @@
 
 #include "act-iter.h"
 #include "beam.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -30,6 +31,7 @@
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-project.h"
 #include "terrain.h"
@@ -1195,6 +1197,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_VERMIN:
     case SPELL_TORNADO:
     case SPELL_EPHEMERAL_INFUSION:
+    case SPELL_FORCEFUL_INVITATION:
+    case SPELL_PLANEREND:
         return true;
     default:
         if (check_validity)
@@ -3985,6 +3989,277 @@ static void _clone_monster(monster* mons, monster_type clone_type,
     new_fake->props = mons->props;
 }
 
+struct branch_summon_pair
+{
+    branch_type     origin;
+    const pop_entry *pop;
+};
+
+static const pop_entry _invitation_lair[] =
+{ // Lair enemies
+  {  1,   1,   80, FLAT, MONS_YAK },
+  {  1,   1,   60, FLAT, MONS_BLINK_FROG },
+  {  1,   1,   40, FLAT, MONS_ELEPHANT },
+  {  1,   1,   20, FLAT, MONS_SPINY_FROG },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _invitation_snake[] =
+{ // Snake enemies
+  {  1,   1,   90, FLAT, MONS_NAGA },
+  {  1,   1,   70, FLAT, MONS_WATER_MOCCASIN },
+  {  1,   1,   30, FLAT, MONS_BLACK_MAMBA },
+  {  1,   1,   10, FLAT, MONS_GUARDIAN_SERPENT },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _invitation_spider[] =
+{ // Spider enemies
+  {  1,   1,   80, FLAT, MONS_SPIDER },
+  {  1,   1,   60, FLAT, MONS_JUMPING_SPIDER },
+  {  1,   1,   40, FLAT, MONS_BORING_BEETLE },
+  {  1,   1,   20, FLAT, MONS_ORB_SPIDER },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _invitation_swamp[] =
+{ // Swamp enemies
+  {  1,   1,   60, FLAT, MONS_RAVEN },
+  {  1,   1,   60, FLAT, MONS_SWAMP_DRAKE },
+  {  1,   1,   40, FLAT, MONS_VAMPIRE_MOSQUITO },
+  {  1,   1,   40, FLAT, MONS_INSUBSTANTIAL_WISP },
+  {  1,   1,   20, FLAT, MONS_BABY_ALLIGATOR },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _invitation_shoals[] =
+{ // Swamp enemies
+  {  1,   1,   80, FLAT, MONS_MERFOLK },
+  {  1,   1,   60, FLAT, MONS_MERMAID },
+  {  1,   1,   40, FLAT, MONS_MANTICORE },
+  {  1,   1,   20, FLAT, MONS_SNAPPING_TURTLE },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _invitation_orc[] =
+{ // Orc enemies
+  {  1,   1,   90, FLAT, MONS_ORC_PRIEST },
+  {  1,   1,   70, FLAT, MONS_ORC_WARRIOR },
+  {  1,   1,   30, FLAT, MONS_WARG },
+  {  1,   1,   10, FLAT, MONS_TROLL },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _invitation_elf[] =
+{ // Elf enemies
+  {  1,   1,   90, FLAT, MONS_DEEP_ELF_FIGHTER },
+  {  1,   1,   70, FLAT, MONS_DEEP_ELF_PRIEST },
+  {  1,   1,   40, FLAT, MONS_DEEP_ELF_MAGE },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _invitation_vaults[] =
+{ // Vaults enemies
+  {  1,   1,   80, FLAT, MONS_HUMAN },
+  {  1,   1,   60, FLAT, MONS_YAKTAUR },
+  {  1,   1,   40, FLAT, MONS_IRONHEART_PRESERVER },
+  {  1,   1,   20, FLAT, MONS_VAULT_SENTINEL },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _invitation_crypt[] =
+{ // Crypt enemies
+  {  1,   1,   80, FLAT, MONS_WRAITH },
+  {  1,   1,   60, FLAT, MONS_SHADOW },
+  {  1,   1,   40, FLAT, MONS_VAMPIRE },
+  {  1,   1,   20, FLAT, MONS_SHADOW_WRAITH },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static branch_summon_pair _invitation_summons[] =
+{
+  { BRANCH_LAIR,   _invitation_lair },
+  { BRANCH_SNAKE,  _invitation_snake },
+  { BRANCH_SPIDER, _invitation_spider },
+  { BRANCH_SWAMP,  _invitation_swamp },
+  { BRANCH_ORC,    _invitation_orc },
+  { BRANCH_ELF,    _invitation_elf },
+  { BRANCH_VAULTS, _invitation_vaults },
+  { BRANCH_CRYPT,  _invitation_crypt }
+};
+
+static const pop_entry _planerend_lair[] =
+{ // Lair enemies
+  {  1,   1,  100, FLAT, MONS_CATOBLEPAS },
+  {  1,   1,  100, FLAT, MONS_DIRE_ELEPHANT },
+  {  1,   1,  100, FLAT, MONS_DEATH_YAK },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_snake[] =
+{ // Snake enemies
+  {  1,   1,  100, FLAT, MONS_ANACONDA },
+  {  1,   1,  100, FLAT, MONS_GUARDIAN_SERPENT },
+  {  1,   1,  100, FLAT, MONS_GREATER_NAGA },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_spider[] =
+{ // Spider enemies
+  {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
+  {  1,   1,  100, FLAT, MONS_EMPEROR_SCORPION },
+  {  1,   1,  100, FLAT, MONS_ORB_SPIDER },
+  {  1,   1,  100, FLAT, MONS_WOLF_SPIDER },
+  {  1,   1,  100, FLAT, MONS_RED_WASP },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_swamp[] =
+{ // Swamp enemies
+  {  1,   1,  100, FLAT, MONS_SWAMP_DRAGON },
+  {  1,   1,  100, FLAT, MONS_HYDRA },
+  {  1,   1,  100, FLAT, MONS_VAPOUR },
+  {  1,   1,  100, FLAT, MONS_SLIME_CREATURE }, // changed to titanic below
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_shoals[] =
+{ // Swamp enemies
+  {  1,   1,  100, FLAT, MONS_SIREN },
+  {  1,   1,  100, FLAT, MONS_MERFOLK_JAVELINEER },
+  {  1,   1,  100, FLAT, MONS_MERFOLK_AQUAMANCER },
+  {  1,   1,  100, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_slime[] =
+{ // Slime enemies
+  {  1,   1,  100, FLAT, MONS_ACID_BLOB },
+  {  1,   1,  100, FLAT, MONS_AZURE_JELLY },
+  {  1,   1,  100, FLAT, MONS_SLIME_CREATURE }, // changed to titanic below
+  {  1,   1,  100, FLAT, MONS_GIANT_ORANGE_BRAIN },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_orc[] =
+{ // Orc enemies
+  {  1,   1,  100, FLAT, MONS_ORC_WARLORD },
+  {  1,   1,  100, FLAT, MONS_ORC_SORCERER },
+  {  1,   1,  100, FLAT, MONS_ORC_HIGH_PRIEST },
+  {  1,   1,  100, FLAT, MONS_IRON_TROLL },
+  {  1,   1,  100, FLAT, MONS_OGRE_MAGE },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_elf[] =
+{ // Elf enemies
+  {  1,   1,  100, FLAT, MONS_DEEP_ELF_SORCERER },
+  {  1,   1,  100, FLAT, MONS_DEEP_ELF_DEMONOLOGIST },
+  {  1,   1,  100, FLAT, MONS_DEEP_ELF_HIGH_PRIEST },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_vaults[] =
+{ // Vaults enemies
+  {  1,   1,  100, FLAT, MONS_VAULT_SENTINEL },
+  {  1,   1,  100, FLAT, MONS_IRONHEART_PRESERVER },
+  {  1,   1,  100, FLAT, MONS_IRONBRAND_CONVOKER },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_crypt[] =
+{ // Crypt enemies
+  {  1,   1,  100, FLAT, MONS_VAMPIRE_KNIGHT },
+  {  1,   1,  100, FLAT, MONS_FLAYED_GHOST },
+  {  1,   1,  100, FLAT, MONS_EIDOLON },
+  {  1,   1,  100, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_tomb[] =
+{ // Tomb enemies
+  {  1,   1,  100, FLAT, MONS_GUARDIAN_MUMMY },
+  {  1,   1,  100, FLAT, MONS_SPHINX },
+  {  1,   1,  100, FLAT, MONS_MUMMY_PRIEST },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_abyss[] =
+{ // Abyss enemies
+  {  1,   1,  100, FLAT, MONS_STARCURSED_MASS },
+  {  1,   1,  100, FLAT, MONS_APOCALYPSE_CRAB },
+  {  1,   1,  100, FLAT, MONS_THRASHING_HORROR },
+  {  1,   1,  100, FLAT, MONS_WORLDBINDER },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry _planerend_zot[] =
+{ // Abyss enemies
+  {  1,   1,  100, FLAT, RANDOM_BASE_DRACONIAN },
+  {  1,   1,  100, FLAT, RANDOM_NONBASE_DRACONIAN },
+  {  1,   1,  100, FLAT, MONS_GOLDEN_DRAGON },
+  {  1,   1,  100, FLAT, MONS_MOTH_OF_WRATH },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static branch_summon_pair _planerend_summons[] =
+{
+  { BRANCH_LAIR,   _planerend_lair },
+  { BRANCH_SNAKE,  _planerend_snake },
+  { BRANCH_SPIDER, _planerend_spider },
+  { BRANCH_SWAMP,  _planerend_swamp },
+  { BRANCH_SHOALS, _planerend_shoals },
+  { BRANCH_SLIME,  _planerend_slime },
+  { BRANCH_ORC,    _planerend_orc },
+  { BRANCH_ELF,    _planerend_elf },
+  { BRANCH_VAULTS, _planerend_vaults },
+  { BRANCH_CRYPT,  _planerend_crypt },
+  { BRANCH_TOMB,   _planerend_tomb },
+  { BRANCH_ZOT,    _planerend_zot }
+};
+
+static void _branch_summon_helper(monster* mons, spell_type spell_cast,
+                                  branch_summon_pair *summon_list,
+                                  const size_t list_size, int count)
+{
+    int which = 0;
+    // XXX: should this not depend on the specific spell?
+    if (spell_cast == SPELL_FORCEFUL_INVITATION
+        && mons->props.exists("invitation_branch"))
+    {
+        which = mons->props["invitation_branch"].get_byte();
+    }
+    else
+    {
+        which = random2(list_size);
+        if (spell_cast == SPELL_FORCEFUL_INVITATION)
+            mons->props["invitation_branch"].get_byte() = which;
+    }
+
+    string msg = getSpeakString("branch summon cast prefix");
+    if (!msg.empty())
+    {
+        msg  = replace_all(msg, "@The_monster@", mons->name(DESC_THE));
+        msg += " ";
+        msg += branches[summon_list[which].origin].longname;
+        msg += "!";
+        mprf(mons->wont_attack() ? MSGCH_FRIEND_ENCHANT
+            : MSGCH_MONSTER_ENCHANT, "%s", msg.c_str());
+    }
+
+    for (int i = 0; i < count; i++)
+    {
+        monster_type type = pick_monster_from(summon_list[which].pop, 1);
+        if (type == MONS_NO_MONSTER)
+            continue;
+
+        create_monster(
+            mgen_data(type, SAME_ATTITUDE(mons), mons,
+                      1, spell_cast, mons->pos(), mons->foe, 0, GOD_NO_GOD,
+                      MONS_NO_MONSTER, type == MONS_SLIME_CREATURE ? 5 : 0));
+    }
+}
+
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                bool do_noise, bool special_ability)
 {
@@ -4018,7 +4293,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         || spell_cast == SPELL_INJURY_MIRROR
         || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
-        || spell_cast == SPELL_LEDAS_LIQUEFACTION)
+        || spell_cast == SPELL_LEDAS_LIQUEFACTION
+        || spell_cast == SPELL_FORCEFUL_INVITATION
+        || spell_cast == SPELL_PLANEREND)
     {
         do_noise = false;       // Spell itself does the messaging.
     }
@@ -5169,6 +5446,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons_cast(mons, pbolt, real_spell, orig_noise, special_ability);
         return;
     }
+
+    case SPELL_FORCEFUL_INVITATION:
+        _branch_summon_helper(mons, spell_cast, _invitation_summons,
+                              ARRAYSZ(_invitation_summons), 1 + random2(3));
+        return;
+
+    case SPELL_PLANEREND:
+        _branch_summon_helper(mons, spell_cast, _planerend_summons,
+                              ARRAYSZ(_planerend_summons), 1 + random2(3));
+        return;
     }
 
 

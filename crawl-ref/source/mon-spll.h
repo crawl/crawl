@@ -2301,6 +2301,17 @@
       }
     },
 
+    {  MST_WORLDBINDER,
+      {
+       SPELL_FORCEFUL_INVITATION,
+       SPELL_FORCEFUL_INVITATION,
+       SPELL_NO_SPELL,
+       SPELL_FORCEFUL_INVITATION,
+       SPELL_FORCEFUL_INVITATION,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_DEMONSPAWN_BLOOD_SAINT,
       {
        SPELL_LEGENDARY_DESTRUCTION,
@@ -2309,6 +2320,17 @@
        SPELL_LEGENDARY_DESTRUCTION,
        SPELL_MELEE,
        SPELL_EPHEMERAL_INFUSION
+      }
+    },
+
+    {  MST_DEMONSPAWN_CORRUPTER,
+      {
+       SPELL_PLANEREND,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_PLANEREND,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
       }
     },
 #endif
