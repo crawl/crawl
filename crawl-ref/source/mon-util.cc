@@ -3198,6 +3198,7 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
     case BEAM_MIGHT:
+    case BEAM_AGILITY:
         return true;
 
     default:

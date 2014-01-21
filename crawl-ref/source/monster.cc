@@ -5460,6 +5460,7 @@ bool monster::can_drink_potion(potion_type ptype) const
             return can_go_berserk();
         case POT_SPEED:
         case POT_MIGHT:
+        case POT_AGILITY:
         case POT_INVISIBILITY:
             // If there are any item using monsters that are permanently
             // invisible, this might have to be restricted.
@@ -5496,6 +5497,8 @@ bool monster::should_drink_potion(potion_type ptype) const
         return !has_ench(ENCH_HASTE);
     case POT_MIGHT:
         return !has_ench(ENCH_MIGHT) && foe_distance() <= 2;
+    case POT_AGILITY:
+        return !has_ench(ENCH_AGILE);
     case POT_INVISIBILITY:
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
@@ -5566,6 +5569,11 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
 
     case POT_INVISIBILITY:
         if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
+            ident = ID_KNOWN_TYPE;
+        break;
+
+    case POT_AGILITY:
+        if (enchant_monster_with_flavour(this, this, BEAM_AGILITY))
             ident = ID_KNOWN_TYPE;
         break;
 

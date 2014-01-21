@@ -170,6 +170,9 @@ static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
     case BEAM_HEALING:
         return monster.hit_points != monster.max_hit_points;
 
+    case BEAM_AGILITY:
+        return !monster.has_ench(ENCH_AGILE);
+
     default:
         return false;
     }
