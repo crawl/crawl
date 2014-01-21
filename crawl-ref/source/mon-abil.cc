@@ -3973,7 +3973,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // anymore.
             if (!already_mesmerised
                 && (you.species == SP_MERFOLK
-                    || you.check_res_magic(100) > 0
+                    || you.check_res_magic(mons->hit_dice * 10 + 20) > 0
                     || you.clarity()))
             {
                 if (!did_resist)
