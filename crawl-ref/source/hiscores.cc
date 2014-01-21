@@ -1571,6 +1571,7 @@ void scorefile_entry::init(time_t dt)
         STATUS_DRAINED,
         DUR_TOXIC_RADIANCE,
         DUR_FIRE_VULN,
+        DUR_FROZEN,
     };
 
     status_info inf;

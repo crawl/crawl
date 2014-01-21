@@ -419,6 +419,11 @@ of pain itself. It will not affect weapons which are otherwise subject to
 special enchantments. Note that unlike other brands, pain can not be made
 permanent by reading a scroll of brand weapon.
 %%%%
+Explosive Bolt spell
+
+This spell hurls a bolt containing fiery energy; on piercing a target, it
+lets loose an explosion that harms nearby creatures as well.
+%%%%
 Fire Brand spell
 
 This spell sets a weapon or launcher held by the caster ablaze. It will not
@@ -448,6 +453,12 @@ spell levels if the learner already knows Delayed Fireball.
 Flame Tongue spell
 
 This spell creates a short burst of flame.
+%%%%
+Flash Freeze spell
+
+This spell freezes the air around a target rapidly enough to both cause
+significant harm and cause a thick sheet of ice to form, hindering the
+target's movement.
 %%%%
 Flight spell
 
@@ -641,6 +652,13 @@ metal walls have a chance of being destroyed with at least 5, 6 or 7 bars of
 power. Crystal walls are particularly brittle and have a chance of being
 destroyed at any power level.
 %%%%
+Legendary Destruction spells
+
+At the expense of the caster's life force, this spell randomly conjures forth
+one of several powerful magical effects - Orb of Electrocution, Lehudib's
+Crystal Spear, Orb of Destruction, Ghostly Fireball, Explosive Bolt, or
+Flash Freeze.
+%%%%
 Lehudib's Crystal Spear spell
 
 This spell hurls a lethally sharp bolt of crystal.
@@ -780,6 +798,11 @@ stabilize, and a nascent orb won't do the full damage it is capable of.
 It is said that most copies of this spell suffer from a scribal error that
 makes the orbs unstable beyond a short range. Certain individuals may have
 access to spellbooks without this flaw, so beware!
+%%%%
+Orb of Electrocution spell
+
+This spell hurls a crackling orb of electrical energy which explodes with
+immense force on impact.
 %%%%
 Ozocubu's Armour spell
 

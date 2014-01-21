@@ -2347,6 +2347,28 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     }
 }
 
+static void _explosive_bolt_explode(bolt *parent, coord_def pos)
+{
+    bolt beam;
+    beam.name         = "fiery explosion";
+    beam.aux_source   = "explosive bolt";
+    beam.beam_source  = parent->beam_source;
+    beam.thrower      = parent->thrower;
+    beam.attitude     = parent->attitude;
+    beam.damage       = dice_def(3, 7 + parent->ench_power / 13);
+    beam.colour       = RED;
+    beam.flavour      = BEAM_FIRE;
+    beam.is_explosion = true;
+    beam.source       = pos;
+    beam.target       = pos;
+    beam.is_tracer    = parent->is_tracer;
+    beam.fire();
+    parent->friend_info += beam.friend_info;
+    parent->foe_info    += beam.foe_info;
+    if (beam.is_tracer && beam.beam_cancelled)
+        parent->beam_cancelled = true;
+}
+
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
     if (real_flavour == BEAM_CHAOS && feat_is_solid(feat))
@@ -3187,6 +3209,9 @@ void bolt::tracer_affect_player()
 
     apply_hit_funcs(&you, 0);
     extra_range_used += range_used_on_hit();
+
+    if (name == "explosive bolt")
+        _explosive_bolt_explode(this, you.pos());
 }
 
 bool bolt::misses_player()
@@ -3895,6 +3920,13 @@ void bolt::affect_player()
     {
         beam_hits_actor(&you);
     }
+    else if (name == "explosive bolt")
+        _explosive_bolt_explode(this, you.pos());
+    else if (name == "flash freeze")
+    {
+        mprf(MSGCH_WARN, "You are encased in ice.");
+        you.duration[DUR_FROZEN] = 3 * BASELINE_DELAY;
+    }
 }
 
 int bolt::apply_AC(const actor *victim, int hurted)
@@ -4141,6 +4173,9 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
+
+    if (name == "explosive bolt")
+        _explosive_bolt_explode(this, mon->pos());
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4333,16 +4368,23 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (dmg)
         beogh_follower_convert(mon, true);
 
-    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
-          (name == "freezing breath" && mon->flight_mode()) ||
-          (name == "lance of force" && dmg > 0) ||
-          name == "flood of elemental water")
+    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
+        || (name == "freezing breath" && mon->flight_mode())
+        || (name == "lance of force" && dmg > 0)
+        || name == "flood of elemental water")
     {
         beam_hits_actor(mon);
     }
+    else if (name == "explosive bolt")
+        _explosive_bolt_explode(this, mon->pos());
 
     if (name == "spray of energy")
         _dazzle_monster(mon, agent());
+    else if (name == "flash freeze")
+    {
+        simple_monster_message(mon, " is flash-frozen.");
+        mon->add_ench(ENCH_FROZEN);
+    }
 
     if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() == MH_UNDEAD)
     {
@@ -5532,6 +5574,16 @@ void bolt::refine_for_explosion()
         hearMsg = "You hear the shriek of haunting fire!";
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        ex_size = 1;
+    }
+
+    if (name == "fiery explosion")
+    {
+        seeMsg  = "The explosive bolt relases an explosion!";
+        hearMsg = "You hear an explosion!";
+
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_FIRE;
         ex_size = 1;
     }
 

@@ -103,6 +103,12 @@ static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
             else
                 you.props["melt_armour"] = true;
         }
+
+        if (you.duration[DUR_FROZEN] > 0)
+        {
+            mprf(MSGCH_RECOVERY, "The ice encasing you melts away.");
+            you.duration[DUR_FROZEN] = 0;
+        }
     }
 }
 

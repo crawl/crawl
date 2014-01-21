@@ -852,6 +852,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_IOOD: // tracer only
+    case SPELL_LEGENDARY_DESTRUCTION: // ditto
         beam.flavour  = BEAM_NUKE;
         beam.is_beam  = true;
         // Doesn't take distance into account, but this is just a tracer so
@@ -968,6 +969,34 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_MALIGN_OFFERING;
         beam.damage     = dice_def(2, 7 + (power / 13));
         beam.is_beam    = true;
+        break;
+
+    case SPELL_ORB_OF_ELECTROCUTION:
+        beam.name           = "orb of electricity";
+        beam.colour         = LIGHTBLUE;
+        beam.damage         = calc_dice(3, 13 + power * 4 / 5);
+        beam.hit            = 40;
+        beam.flavour        = BEAM_ELECTRICITY;
+        beam.is_explosion   = true;
+        beam.foe_ratio      = random_range(40, 55);
+        break;
+
+    case SPELL_EXPLOSIVE_BOLT:
+        beam.name       = "explosive bolt";
+        beam.damage     = dice_def(1, 0); // deals damage through explosions
+        beam.colour     = RED;
+        beam.flavour    = BEAM_FIRE;
+        beam.hit        = 17 + power / 25;
+        beam.ench_power = power;
+        beam.is_beam    = true;
+        break;
+
+    case SPELL_FLASH_FREEZE:
+        beam.name     = "flash freeze";
+        beam.damage   = dice_def(power / 4, 1);
+        beam.colour   = WHITE;
+        beam.flavour  = BEAM_ICE;
+        beam.hit      = AUTOMATIC_HIT;
         break;
 
     default:
@@ -1789,6 +1818,20 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     // Don't spam mesmerisation if you're already mesmerised
     case SPELL_MESMERISE:
         return (you.beheld_by(mon) && coinflip());
+
+    case SPELL_FLASH_FREEZE:
+        if (!foe
+            || (foe->is_player() && you.duration[DUR_FROZEN])
+            || (foe->is_monster() && foe->as_monster()->has_ench(ENCH_FROZEN)))
+        {
+            ret = true;
+        }
+        break;
+
+    case SPELL_LEGENDARY_DESTRUCTION:
+        if (!foe || mon->hit_points <= 10)
+            ret = true;
+        break;
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -3910,6 +3953,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (_mon_spell_bail_out_early(mons, spell_cast))
         return;
 
+    bool orig_noise = do_noise;
+
     if (spell_cast == SPELL_CANTRIP
         || spell_cast == SPELL_VAMPIRIC_DRAINING
         || spell_cast == SPELL_IOOD
@@ -5049,7 +5094,22 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         _do_high_level_summon(mons, monsterNearby, spell_cast,
                               _pick_vermin, one_chance_in(4) ? 3 : 2 , god);
         return;
+
+    case SPELL_LEGENDARY_DESTRUCTION:
+    {
+        mons->hurt(mons, 10);
+        spell_type real_spell = random_choose_weighted(
+                                    10, SPELL_ORB_OF_ELECTROCUTION,
+                                    10, SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+                                     2, SPELL_IOOD,
+                                     5, SPELL_GHOSTLY_FIREBALL,
+                                    10, SPELL_EXPLOSIVE_BOLT,
+                                     0);
+        mons_cast(mons, pbolt, real_spell, orig_noise, special_ability);
+        return;
     }
+    }
+
 
     // If a monster just came into view and immediately cast a spell,
     // we need to refresh the screen before drawing the beam.

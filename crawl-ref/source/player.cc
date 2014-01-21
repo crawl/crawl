@@ -2276,6 +2276,9 @@ int player_movement_speed(bool ignore_burden)
     if (you.tengu_flight())
         mv--;
 
+    if (you.duration[DUR_FROZEN])
+        mv += 4;
+
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 5;
 
@@ -4287,6 +4290,7 @@ void display_char_status()
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
         DUR_FIRE_VULN,
+        DUR_FROZEN,
     };
 
     status_info inf;

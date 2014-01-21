@@ -1012,6 +1012,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
         DUR_FIRE_VULN,
+        DUR_FROZEN,
         STATUS_ELIXIR,
     };
 
@@ -2513,6 +2514,7 @@ static string _status_mut_abilities(int sw)
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
         DUR_FIRE_VULN,
+        DUR_FROZEN,
     };
 
     status_info inf;
