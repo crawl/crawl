@@ -2182,6 +2182,7 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
         {
             BEAM_HASTE,
             BEAM_MIGHT,
+            BEAM_AGILITY,
             BEAM_INVISIBILITY,
         };
         ench = RANDOM_ELEMENT(enchantments);

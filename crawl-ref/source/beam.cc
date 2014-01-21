@@ -545,6 +545,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_BANISH,
             10, BEAM_DISINTEGRATION,
             10, BEAM_PETRIFY,
+            10, BEAM_AGILITY,
              2, BEAM_ENSNARE,
             0);
 
@@ -3043,6 +3044,7 @@ bool bolt::harmless_to_player() const
     case BEAM_HASTE:
     case BEAM_HEALING:
     case BEAM_MIGHT:
+    case BEAM_AGILITY:
     case BEAM_INVISIBILITY:
         return true;
 
@@ -3605,6 +3607,13 @@ void bolt::affect_player_enchantment()
             canned_msg(MSG_YOU_UNAFFECTED);
         break;
     }
+
+    case BEAM_AGILITY:
+        potion_effect(POT_AGILITY, ench_power, nullptr, blame_player);
+        obvious_effect = true;
+        nasty = false;
+        nice  = true;
+        break;
 
     default:
         // _All_ enchantments should be enumerated here!
@@ -4837,6 +4846,7 @@ bool bolt::has_saving_throw() const
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
     case BEAM_MALIGN_OFFERING:
+    case BEAM_AGILITY:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -5304,6 +5314,16 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         else
             simple_monster_message(mon, " is unaffected.");
     }
+
+    case BEAM_AGILITY:
+        if (!mon->has_ench(ENCH_AGILE)
+            && !mon->is_stationary()
+            && mon->add_ench(ENCH_AGILE))
+        {
+            if (simple_monster_message(mon, " suddenly seems more agile."))
+                obvious_effect = true;
+        }
+        return MON_AFFECTED;
 
     default:
         break;
@@ -5901,6 +5921,7 @@ bool bolt::nice_to(const monster* mon) const
     if (flavour == BEAM_HASTE
         || flavour == BEAM_HEALING
         || flavour == BEAM_MIGHT
+        || flavour == BEAM_AGILITY
         || flavour == BEAM_INVISIBILITY)
     {
         return true;
@@ -6145,6 +6166,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";
     case BEAM_VULNERABILITY:         return "vulnerability";
     case BEAM_MALIGN_OFFERING:       return "malign offering";
+    case BEAM_AGILITY:               return "agility";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
