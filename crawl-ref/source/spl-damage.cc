@@ -189,20 +189,35 @@ bool cast_hellfire_burst(int pow, bolt &beam)
 }
 
 // XXX no friendly check
-spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
+spret_type cast_chain_spell(spell_type spell_cast, int pow,
+                            const actor *caster, bool fail)
 {
     fail_check();
     bolt beam;
 
     // initialise beam structure
-    beam.name           = "lightning arc";
-    beam.aux_source     = "chain lightning";
+    switch (spell_cast)
+    {
+        case SPELL_CHAIN_LIGHTNING:
+            beam.name           = "lightning arc";
+            beam.aux_source     = "chain lightning";
+            beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
+            beam.flavour        = BEAM_ELECTRICITY;
+            break;
+        case SPELL_CHAIN_OF_CHAOS:
+            beam.name           = "arc of chaos";
+            beam.aux_source     = "chain of chaos";
+            beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
+            beam.flavour        = BEAM_CHAOS;
+            break;
+        default:
+            die("buggy chain spell %d cast", spell_cast);
+            break;
+    }
     beam.beam_source    = caster->mindex();
     beam.thrower        = caster->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
-    beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
-    beam.flavour        = BEAM_ELECTRICITY;
     beam.obvious_effect = true;
     beam.is_beam        = false;       // since we want to stop at our target
     beam.is_explosion   = false;
@@ -297,21 +312,34 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
         if (target.x == -1)
         {
             if (see_source)
-                mpr("The lightning grounds out.");
+                mprf("The %s grounds out.", beam.name.c_str());
 
             break;
         }
 
         // Trying to limit message spamming here so we'll only mention
         // the thunder at the start or when it's out of LoS.
-        const char* msg = "You hear a mighty clap of thunder!";
-        noisy(25, source, (first || !see_source) ? msg : NULL);
+        switch (spell_cast)
+        {
+            case SPELL_CHAIN_LIGHTNING:
+            {
+                const char* msg = "You hear a mighty clap of thunder!";
+                noisy(25, source, (first || !see_source) ? msg : NULL);
+                break;
+            }
+            case SPELL_CHAIN_OF_CHAOS:
+                if (first && see_source)
+                    mpr("A swirling arc of seething chaos appears!");
+                break;
+            default:
+                break;
+        }
         first = false;
 
         if (see_source && !see_targ)
-            mpr("The lightning arcs out of your line of sight!");
+            mprf("The %s arcs out of your line of sight!", beam.name.c_str());
         else if (!see_source && see_targ)
-            mpr("The lightning arc suddenly appears!");
+            mprf("The %s suddenly appears!", beam.name.c_str());
 
         if (!you.see_cell_no_trans(target))
         {
@@ -321,8 +349,20 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
 
         beam.source = source;
         beam.target = target;
-        beam.colour = LIGHTBLUE;
-        beam.damage = calc_dice(5, 10 + pow * 2 / 3);
+        switch (spell_cast)
+        {
+            case SPELL_CHAIN_LIGHTNING:
+                beam.colour = LIGHTBLUE;
+                beam.damage = calc_dice(5, 10 + pow * 2 / 3);
+                break;
+            case SPELL_CHAIN_OF_CHAOS:
+                beam.colour     = ETC_RANDOM;
+                beam.ench_power = pow;
+                beam.damage     = calc_dice(3, 5 + pow / 2);
+                beam.fake_flavour();
+            default:
+                break;
+        }
 
         // Be kinder to the caster.
         if (target == caster->pos())

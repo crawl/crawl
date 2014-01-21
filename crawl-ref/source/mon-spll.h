@@ -2333,4 +2333,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_DEMONSPAWN_CHAOS_CHAMPION,
+      {
+       SPELL_CHAIN_OF_CHAOS,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_CHAIN_OF_CHAOS,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
 #endif

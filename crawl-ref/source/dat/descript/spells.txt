@@ -195,6 +195,11 @@ Cause Fear spell
 
 This spell causes fear in those near to the caster.
 %%%%
+Chain of Chaos spell
+
+This spell creates an arc of pure chaos, striking nearby creatures for
+unpredictable effects.
+%%%%
 Chain Lightning spell
 
 This spell releases a massive electrical discharge that arcs from target to

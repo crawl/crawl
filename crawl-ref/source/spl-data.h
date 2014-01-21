@@ -3405,6 +3405,19 @@ struct spell_desc
 },
 
 {
+    SPELL_CHAIN_OF_CHAOS, "Chain of Chaos",
+     SPTYP_CONJURATION,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_CHAOTIC,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
