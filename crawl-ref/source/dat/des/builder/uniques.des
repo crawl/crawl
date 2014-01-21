@@ -72,7 +72,7 @@ end
 ################################################################################
 NAME:   uniq_dummy
 DEPTH:  1-50, !Lair, !Slime
-WEIGHT: 20
+WEIGHT: 20 (D:1-8), 50
 TAGS:   place_unique dummy
 MAP
 .
@@ -137,7 +137,7 @@ DEPTH:  D:4-9, Orc:1
 : place_unique(_G, "Edmund")
 
 NAME:   uniq_erica
-DEPTH:  D:10-, Orc:2-, Elf:1, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-, Orc:2-, Elf:1, Lair
 : place_unique(_G, "Erica")
 
 NAME:   uniq_erolcha
@@ -157,7 +157,7 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Frederick")
 
 NAME:   uniq_fannar
-DEPTH:  D:10-, Orc:2-, Elf, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-, Orc:2-, Elf, Lair
 : place_unique(_G, "Fannar")
 
 NAME:   uniq_gastronok
@@ -174,7 +174,7 @@ DEPTH:  D:3-6
 : place_unique(_G, "Grinder")
 
 NAME:   uniq_harold
-DEPTH:  D:10-, Orc:2-, Elf:1, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-, Orc:2-, Elf:1, Lair
 : place_unique(_G, "Harold")
 
 NAME:   uniq_iyjb
@@ -214,7 +214,7 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt, Forest, Blade, Tomb
 : place_unique(_G, "Margery band")
 
 NAME:   uniq_maud
-DEPTH:  D:14-, Lair:3-5, Swamp:1, Snake:1, Shoals:1, Spider:1, Elf:1
+DEPTH:  D:14-, Lair:3-, Swamp:1, Snake:1, Shoals:1, Spider:1, Elf:1
 : place_unique(_G, "Maud")
 
 NAME:   uniq_mara
@@ -230,7 +230,7 @@ DEPTH:  D:4-7
 : place_unique(_G, "Menkaure")
 
 NAME:   uniq_nergalle
-DEPTH:  D:10-, Orc:2-, Elf:1, Lair:1-5, Swamp:1, Shoals:1, Snake:1, Spider:1
+DEPTH:  D:10-, Orc:2-, Elf:1, Lair
 : place_unique(_G, "Nergalle")
 
 NAME:   uniq_nessos
