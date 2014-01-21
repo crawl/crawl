@@ -1781,6 +1781,10 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         return true;
 
+    // Don't spam mesmerisation if you're already mesmerised
+    case SPELL_MESMERISE:
+        return (you.beheld_by(mon) && coinflip());
+
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
         if (mon->friendly() && mon->foe == MHITYOU)
@@ -3416,24 +3420,26 @@ static int _mons_mesmerise(monster* mons, bool actual)
         return -1;
     }
 
-    // Messages can be simple: if the monster is invisible, it won't try to
-    // bespell you. If you're already mesmerised, then we don't need to spam
-    // you with messages. Otherwise, it's trying!
-    if (actual && !already_mesmerised && you.can_see(mons))
+    if (actual)
     {
-        simple_monster_message(mons, " attempts to bespell you!");
-
-        flash_view(LIGHTMAGENTA);
+        if (!already_mesmerised)
+        {
+            simple_monster_message(mons, " attempts to bespell you!");
+            flash_view(LIGHTMAGENTA);
+        }
+        else
+        {
+            mprf("%s draws you further into %s thrall.",
+                    mons->name(DESC_THE).c_str(),
+                    mons->pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
     }
 
-    const int pow = min(mons->hit_dice * 12, 200);
+    const int pow = min(mons->hit_dice * 10, 200);
 
-    // Don't spam mesmerisation if you're already mesmerised,
-    // or don't mesmerise at all if you pass an MR check or have clarity.
-    if (you.check_res_magic(pow) > 0
-        || you.clarity()
-        || !(mons->foe == MHITYOU
-             && !already_mesmerised && coinflip()))
+    // Don't mesmerise if you pass an MR check or have clarity.
+    // If you're already mesmerised, you cannot resist further.
+    if ((you.check_res_magic(pow) > 0 || you.clarity()) && !already_mesmerised)
     {
         if (actual)
             canned_msg(MSG_YOU_RESIST);
