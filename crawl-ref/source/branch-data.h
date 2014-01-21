@@ -243,7 +243,7 @@ const Branch branches[NUM_BRANCHES] =
       DNGN_ENTER_SEWER, DNGN_EXIT_SEWER,
       "Sewer", "a sewer", "Sewer",
       NULL,
-      false, LIGHTGREY, DARKGREY,
+      false, LIGHTGREY, BLUE,
       '3', false, 0 },
 
     { BRANCH_OSSUARY, NUM_BRANCHES, -1, -1, 1, 6,
