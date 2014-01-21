@@ -1737,8 +1737,7 @@ static void _give_ammo(monster* mon, int level,
                 set_item_ego_type(w, OBJ_MISSILES, SPMSL_RETURNING);
 
             w.quantity = qty;
-            _give_monster_item(mon, thing_created, false,
-                               &monster::pickup_missile);
+            _give_monster_item(mon, thing_created, false);
         }
     }
 }
