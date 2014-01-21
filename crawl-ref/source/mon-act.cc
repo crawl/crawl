@@ -3168,10 +3168,14 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         }
     }
 
-    // Don't voluntarily break LoS with a player we're mesmerising
     if (mons->type == MONS_SIREN)
     {
+        // Don't voluntarily break LoS with a player we're mesmerising
         if (you.beheld_by(mons) && !you.see_cell(targ))
+            return false;
+
+        // And path around players instead of into them
+        if (you.pos() == targ)
             return false;
     }
 
