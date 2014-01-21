@@ -13,12 +13,6 @@
 #include "itemprop-enum.h"
 #include "unicode.h"
 
-enum drop_mode_type
-{
-    DM_SINGLE,
-    DM_MULTI,
-};
-
 int str_to_summon_type(const string &str);
 string gametype_to_str(game_type type);
 

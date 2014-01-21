@@ -992,22 +992,6 @@ bool InvMenu::process_key(int key)
         }
     }
 
-    if (items.size()
-        && type == MT_DROP
-        && (key == CONTROL('D') || key == '@'))
-    {
-        int newflag = is_set(MF_MULTISELECT) ? MF_SINGLESELECT | MF_ANYPRINTABLE
-                                             : MF_MULTISELECT;
-
-        flags &= ~(MF_SINGLESELECT | MF_MULTISELECT | MF_ANYPRINTABLE);
-        flags |= newflag;
-
-        deselect_all();
-        sel.clear();
-        draw_select_count(0, true);
-        return true;
-    }
-
     return Menu::process_key(key);
 }
 
@@ -1461,21 +1445,16 @@ vector<SelItem> prompt_invent_items(
         }
         else if (keyin == '?' || keyin == '*' || keyin == ',')
         {
-            int selmode = Options.drop_mode == DM_SINGLE
-                          && (!pre_select || pre_select->empty()) ?
-                        MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE :
-                        MF_MULTISELECT | MF_ALLOW_FILTER;
-
             // The "view inventory listing" mode.
             const int ch = _invent_select(prompt,
                                           mtype,
                                           keyin == '*' ? OSEL_ANY : type_expect,
                                           -1,
-                                          selmode,
+                                          MF_MULTISELECT | MF_ALLOW_FILTER,
                                           titlefn, &items, select_filter, fn,
                                           pre_select);
 
-            if ((selmode & MF_SINGLESELECT) || key_is_escape(ch))
+            if (key_is_escape(ch))
             {
                 keyin       = ch;
                 need_prompt = false;

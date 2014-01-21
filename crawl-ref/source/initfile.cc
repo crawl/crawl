@@ -915,7 +915,6 @@ void game_options::reset_options()
     dump_item_origin_price = -1;
     dump_book_spells       = true;
 
-    drop_mode              = DM_MULTI;
     pickup_menu            = true;
     pickup_menu_limit      = 4;
 
@@ -3410,13 +3409,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "darken_beyond_range")
         darken_beyond_range = _read_bool(field, darken_beyond_range);
-    else if (key == "drop_mode")
-    {
-        if (field.find("multi") != string::npos)
-            drop_mode = DM_MULTI;
-        else
-            drop_mode = DM_SINGLE;
-    }
     else BOOL_OPTION(pickup_menu);
     else INT_OPTION(pickup_menu_limit, INT_MIN, INT_MAX);
     else if (key == "additional_macro_file")
