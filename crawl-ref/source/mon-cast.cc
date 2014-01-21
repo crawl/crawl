@@ -1199,6 +1199,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_EPHEMERAL_INFUSION:
     case SPELL_FORCEFUL_INVITATION:
     case SPELL_PLANEREND:
+    case SPELL_CHAIN_OF_CHAOS:
         return true;
     default:
         if (check_validity)
@@ -3912,6 +3913,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_SHATTER:
     case SPELL_TORNADO:
+    case SPELL_CHAIN_OF_CHAOS:
         if (!monsterNearby)
             return true;
         break;
@@ -5183,7 +5185,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
     }
     case SPELL_CHAIN_LIGHTNING:
-        cast_chain_lightning(4 * mons->spell_hd(spell_cast), mons);
+    case SPELL_CHAIN_OF_CHAOS:
+        cast_chain_spell(spell_cast, 4 * mons->spell_hd(spell_cast), mons);
         return;
     case SPELL_SUMMON_EYEBALLS:
         if (mons->type != MONS_DISSOLUTION
