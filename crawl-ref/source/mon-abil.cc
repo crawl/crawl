@@ -995,7 +995,7 @@ static bool _will_starcursed_scream(monster* mon)
 // Returns true if you resist the siren's call.
 static bool _siren_movement_effect(const monster* mons)
 {
-    bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70) > 0
+    bool do_resist = (you.attribute[ATTR_HELD]
                       || you.cannot_act() || you.asleep()
                       || you.clarity());
 
@@ -3853,6 +3853,20 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         bool already_mesmerised = you.beheld_by(mons);
 
+        if (mons->type == MONS_SIREN && already_mesmerised)
+        {
+            // Don't pull the player if they walked forward voluntarily this
+            // turn (to avoid making you jump two spaces at once)
+            if (!mons->props["foe_approaching"].get_bool())
+            {
+                _siren_movement_effect(mons);
+
+                // Reset foe tracking position so that we won't automatically
+                // veto pulling on a subsequent turn because you 'approached'
+                mons->props["foe_pos"].get_coord() = you.pos();
+            }
+        }
+
         if (one_chance_in(5)
             || mons->foe == MHITYOU && !already_mesmerised && coinflip())
         {
@@ -3866,14 +3880,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
                     already_mesmerised ? "her luring" : "a haunting").c_str(),
                     spl);
 
-                if (mons->type == MONS_SIREN)
-                {
-                    if (_siren_movement_effect(mons))
-                    {
-                        canned_msg(MSG_YOU_RESIST); // flavour only
-                        did_resist = true;
-                    }
-                }
             }
             else
             {
