@@ -1980,8 +1980,11 @@ static bool _should_recall(monster* caller)
         int ally_hd = 0;
         for (monster_iterator mi; mi; ++mi)
         {
-            if (*mi != caller && caller->can_see(*mi) && mons_aligned(caller, *mi))
+            if (*mi != caller && caller->can_see(*mi) && mons_aligned(caller, *mi)
+                && !mons_is_firewood(*mi))
+            {
                 ally_hd += mi->hit_dice;
+            }
         }
         return 25 + roll_dice(2, 22) > ally_hd;
     }
