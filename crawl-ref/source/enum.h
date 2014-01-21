@@ -1722,6 +1722,7 @@ enum enchant_type
     ENCH_IOOD_CHARGED,
     ENCH_FIRE_VULN,
     ENCH_TORNADO_COOLDOWN,
+    ENCH_SIREN_SONG,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2842,6 +2843,8 @@ enum monster_type                      // menv[].type
     MONS_SNAKE,                 // genus
 #endif
     MONS_VINE_STALKER,
+
+    MONS_DROWNED_SOUL,
 
     NUM_MONSTERS,               // used for polymorph
 

@@ -800,7 +800,7 @@ void handle_behaviour(monster* mon)
                     else
                         _set_firing_pos(mon, you.pos());
                 }
-                else if (mon->type == MONS_SIREN && you.beheld_by(mon))
+                else if (mon->type == MONS_SIREN)
                     find_siren_water_target(mon);
                 else if (!mon->firing_pos.zero()
                     && mon->see_cell_no_trans(mon->target))

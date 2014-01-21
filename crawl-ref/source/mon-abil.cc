@@ -3287,6 +3287,72 @@ void move_child_tentacles(monster* mons)
     }
 }
 
+void siren_song(monster* mons)
+{
+    // Only call up drowned souls if we're largely alone; otherwise our
+    // mesmerisation can support the present allies well enough.
+    int ally_hd = 0;
+    for (monster_near_iterator mi(&you); mi; ++mi)
+    {
+        if (*mi != mons && mons_aligned(mons, *mi) && !mons_is_firewood(*mi)
+            && mi->type != MONS_DROWNED_SOUL)
+        {
+            ally_hd += mi->hit_dice;
+        }
+    }
+    if (ally_hd > mons->hit_dice)
+        return;
+
+    // Can only call up drowned souls if there's deep water nearby
+    int deep_water_count = 0;
+    vector<coord_def> deep_water;
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    {
+        if (grd(*ri) == DNGN_DEEP_WATER)
+        {
+            deep_water_count++;
+            if (!actor_at(*ri))
+                deep_water.push_back(*ri);
+        }
+    }
+
+    if (deep_water_count)
+    {
+        mons->props["song_count"].get_int()++;
+
+        int song_count = mons->props["song_count"].get_int();
+        if (song_count == 4 && you.see_cell(mons->pos()))
+        {
+            mprf("Shadowy forms rise from the deep at %s song!",
+                 mons->name(DESC_ITS).c_str());
+        }
+        else if (song_count > 4 && coinflip())
+        {
+            int num = 1 + x_chance_in_y(song_count, song_count + 25);
+            shuffle_array(deep_water);
+
+            int existing = 0;
+            for (monster_near_iterator mi(mons); mi; ++mi)
+            {
+                if (mi->type == MONS_DROWNED_SOUL)
+                    existing++;
+            }
+            num = min(num, min(5, song_count / 7 + 1) - existing);
+
+            for (int i = 0; i < num; ++i)
+            {
+                monster* soul = create_monster(mgen_data(MONS_DROWNED_SOUL,
+                                 SAME_ATTITUDE(mons), mons, 1, SPELL_NO_SPELL,
+                                 deep_water[i], mons->foe, MG_FORCE_PLACE));
+
+                // Scale down drowned soul damage for low level sirens
+                if (soul)
+                    soul->hit_dice = mons->hit_dice;
+            }
+        }
+    }
+}
+
 //---------------------------------------------------------------
 //
 // mon_special_ability
@@ -3843,7 +3909,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
 
         // Don't even try on berserkers. Mermaids know their limits.
-        if (you.berserk())
+        // (Sirens should still sing since their song has other effects)
+        if (mons->type != MONS_SIREN && you.berserk())
             break;
 
         // Reduce probability because of spamminess.

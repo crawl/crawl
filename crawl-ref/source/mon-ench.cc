@@ -854,6 +854,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer more vulnerable to fire.");
         break;
 
+    case ENCH_SIREN_SONG:
+        props.erase("song_count");
+        break;
+
     default:
         break;
     }
@@ -1871,6 +1875,30 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+
+    case ENCH_SIREN_SONG:
+        // If we've gotten silenced or somehow incapacitated since we started,
+        // cancel the song
+        if (silenced(pos()) || paralysed() || petrified()
+            || confused() || asleep() || has_ench(ENCH_FEAR))
+        {
+            del_ench(ENCH_SIREN_SONG, true, false);
+            if (you.can_see(this))
+            {
+                mprf("%s song is interrupted.",
+                     name(DESC_ITS).c_str());
+            }
+            break;
+        }
+
+        siren_song(this);
+
+        // The siren will stop singing without her audience
+        if (!see_cell_no_trans(you.pos()))
+            decay_enchantment(en);
+
+        break;
+
     default:
         break;
     }
@@ -2017,7 +2045,7 @@ static const char *enchant_names[] =
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
-    "iood_charged", "fire_vuln", "tornado_cooldown", "buggy",
+    "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
