@@ -1194,6 +1194,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WIND_BLAST:
     case SPELL_SUMMON_VERMIN:
     case SPELL_TORNADO:
+    case SPELL_EPHEMERAL_INFUSION:
         return true;
     default:
         if (check_validity)
@@ -1932,6 +1933,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_FRENZY:
     case SPELL_MIGHT:
     case SPELL_WIND_BLAST:
+    case SPELL_EPHEMERAL_INFUSION:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -2384,6 +2386,56 @@ static bool _should_tornado(monster* agent)
         }
     }
     return mons_should_fire(tracer);
+}
+
+static bool _should_ephemeral_infusion(monster* agent)
+{
+    if (agent->has_ench(ENCH_EPHEMERAL_INFUSION)
+        || agent->hit_points == agent->max_hit_points)
+    {
+        return false;
+    }
+
+    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (agent == *ai || !ai->visible_to(agent)
+            || ai->is_player() || !mons_aligned(*ai, agent))
+        {
+            continue;
+        }
+        monster* mon = ai->as_monster();
+        if (!mon->has_ench(ENCH_EPHEMERAL_INFUSION)
+            && mon->hit_points * 3 <= mon->max_hit_points * 2)
+        {
+            return true;
+        }
+    }
+    return agent->hit_points * 3 <= agent->max_hit_points;
+}
+
+static void _cast_ephemeral_infusion(monster* agent)
+{
+    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!ai->visible_to(agent)
+            || ai->is_player()
+            || !mons_aligned(*ai, agent))
+        {
+            continue;
+        }
+        monster* mon = ai->as_monster();
+        if (!mon->has_ench(ENCH_EPHEMERAL_INFUSION)
+            && mon->hit_points < mon->max_hit_points)
+        {
+            const int dur =
+                random2avg(agent->spell_hd(SPELL_EPHEMERAL_INFUSION), 2)
+                * BASELINE_DELAY;
+            mon->add_ench(
+                mon_enchant(ENCH_EPHEMERAL_INFUSION,
+                            2 * agent->spell_hd(SPELL_EPHEMERAL_INFUSION),
+                            agent, dur));
+        }
+    }
 }
 
 //---------------------------------------------------------------
@@ -2919,6 +2971,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         else if (spell_cast == SPELL_TORNADO)
         {
             if (!_should_tornado(mons))
+                return false;
+        }
+        else if (spell_cast == SPELL_EPHEMERAL_INFUSION)
+        {
+            if (!_should_ephemeral_infusion(mons))
                 return false;
         }
 
@@ -4618,6 +4675,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             mons->add_ench(mon_enchant(ENCH_FLIGHT, 0, mons, dur));
         return;
     }
+
+    case SPELL_EPHEMERAL_INFUSION:
+        _cast_ephemeral_infusion(mons);
+        return;
 
     // TODO: Outsource the cantrip messages and allow specification of
     //       special cantrip spells per monster, like for speech, both as

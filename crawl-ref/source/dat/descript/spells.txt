@@ -412,6 +412,11 @@ Ensorcelled Hibernation spell
 This spell tries to lower its target's metabolic rate, inducing hypothermic
 hibernation.
 %%%%
+Ephemeral Infusion spell
+
+This spell temporarily heals the caster and nearby allies; its expiry may
+leave the recipients on the brink of death but never outright kills them.
+%%%%
 Excruciating Wounds spell
 
 This spell temporarily infuses the weapon held by the caster with the essence

@@ -1727,6 +1727,7 @@ enum enchant_type
     ENCH_ICEMAIL,
     ENCH_AGILE,
     ENCH_FROZEN,
+    ENCH_EPHEMERAL_INFUSION,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3771,6 +3772,7 @@ enum spell_type
     SPELL_EXPLOSIVE_BOLT,
     SPELL_FLASH_FREEZE,
     SPELL_LEGENDARY_DESTRUCTION,
+    SPELL_EPHEMERAL_INFUSION,
     NUM_SPELLS
 };
 
