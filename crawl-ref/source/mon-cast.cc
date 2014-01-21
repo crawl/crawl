@@ -562,7 +562,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_HEAL_OTHER:
     case SPELL_MINOR_HEALING:
-        beam.damage   = dice_def(2, mons->hit_dice / 2);
+        beam.damage   = dice_def(2, mons->spell_hd(real_spell) / 2);
         beam.flavour  = BEAM_HEALING;
         beam.hit      = 25 + (power / 5);
         break;
@@ -619,13 +619,13 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PAIN:
         beam.flavour    = BEAM_PAIN;
         beam.damage     = dice_def(1, 7 + (power / 20));
-        beam.ench_power = max(50, 8 * mons->hit_dice);
+        beam.ench_power = max(50, 8 * mons->spell_hd(real_spell));
         beam.is_beam    = true;
         break;
 
     case SPELL_AGONY:
         beam.flavour    = BEAM_PAIN;
-        beam.ench_power = mons->hit_dice * 6;
+        beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.is_beam    = true;
         break;
 
@@ -717,6 +717,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         if (crawl_state.game_is_zotdef())
             beam.damage   = dice_def(3, 2 + (power / 30));
 
+        // Natural ability, so don't use spell_hd here
         beam.hit      = 20 + (3 * mons->hit_dice);
         beam.flavour  = BEAM_ACID;
         break;
@@ -952,7 +953,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_STRIP_RESISTANCE:
-        beam.ench_power = mons->hit_dice * 6;
+        beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.flavour    = BEAM_VULNERABILITY;
         beam.is_beam    = true;
         break;
@@ -1026,12 +1027,12 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // [ds] Used to be 12 * MHD and later buggily forced to -1 downstairs.
     // Setting this to a more realistic number now that that bug is
     // squashed.
-    pbolt.ench_power = 4 * mons->hit_dice;
+    pbolt.ench_power = 4 * mons->spell_hd(spell_cast);
 
     if (spell_cast == SPELL_TELEPORT_SELF)
         pbolt.ench_power = 2000;
     else if (spell_cast == SPELL_SLEEP)
-        pbolt.ench_power = 6 * mons->hit_dice;
+        pbolt.ench_power = 6 * mons->spell_hd(spell_cast);
 
     pbolt.beam_source = mons->mindex();
 
@@ -1174,8 +1175,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         break;
     }
 
-    // Need to correct this for power of spellcaster
-    int power = 12 * mons->hit_dice;
+    int power = 12 * mons->spell_hd(spell_cast);
 
     bolt theBeam         = mons_spell_beam(mons, spell_cast, power);
 
@@ -1605,7 +1605,8 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
                 est_magic_resist += random2(30) - 15;
         }
 
-        int power = 12 * mon->hit_dice * (monspell == SPELL_PAIN ? 2 : 1);
+        int power = 12 * mon->spell_hd(monspell)
+                       * (monspell == SPELL_PAIN ? 2 : 1);
         power = stepdown_value(power, 30, 40, 100, 120);
 
         // Determine the amount of chance allowed by the benefit from
@@ -2818,8 +2819,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         else if (spell_cast == SPELL_DRAIN_LIFE
                  || spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
         {
-            if (cast_los_attack_spell(spell_cast, mons->hit_dice, mons,
-                                      false) != SPRET_SUCCESS)
+            if (cast_los_attack_spell(spell_cast, mons->spell_hd(spell_cast),
+                                      mons, false) != SPRET_SUCCESS)
                 return false;
         }
         else if (spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
@@ -2924,7 +2925,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 make_mons_stop_fleeing(mons);
 
             if (battlesphere)
-                aim_battlesphere(mons, spell_cast, 12 * mons->hit_dice, beem);
+                aim_battlesphere(mons, spell_cast, beem.ench_power, beem);
             mons_cast(mons, beem, spell_cast);
             if (battlesphere)
                 trigger_battlesphere(mons, beem);
@@ -3048,7 +3049,7 @@ static int _monster_abjuration(const monster* caster, bool actual)
     if (actual)
         mpr("Send 'em back where they came from!");
 
-    int pow = min(caster->hit_dice * 90, 2500);
+    int pow = min(caster->spell_hd(SPELL_ABJURATION) * 90, 2500);
 
     // Abjure radius.
     for (int rad = 1; rad < 5 && pow >= 30; ++rad)
@@ -3160,7 +3161,7 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
     if (_mons_abjured(mons, monsterNearby))
         return;
 
-    const int duration = min(2 + mons->hit_dice / 5, 6);
+    const int duration = min(2 + mons->spell_hd(spell_cast) / 5, 6);
 
     for (int i = 0; i < nsummons; ++i)
     {
@@ -3277,7 +3278,7 @@ static bool _mons_vampiric_drain(monster *mons)
     if (grid_distance(mons->pos(), target->pos()) > 1)
         return false;
 
-    int pow = mons->hit_dice * 12;
+    int pow = mons->spell_hd(SPELL_VAMPIRIC_DRAINING) * 12;
     int hp_cost = 3 + random2avg(9, 2) + 1 + random2(pow) / 7;
 
     hp_cost = min(hp_cost, target->stat_hp());
@@ -3339,7 +3340,7 @@ static bool _mons_cast_freeze(monster* mons)
     if (grid_distance(mons->pos(), target->pos()) > 1)
         return false;
 
-    const int pow = mons->hit_dice * 6;
+    const int pow = mons->spell_hd(SPELL_FREEZE) * 6;
 
     const int base_damage = roll_dice(1, 3 + pow / 3);
     int damage = 0;
@@ -3442,7 +3443,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
         }
     }
 
-    const int pow = min(mons->hit_dice * 10, 200);
+    const int pow = min(mons->spell_hd(SPELL_MESMERISE) * 10, 200);
 
     // Don't mesmerise if you pass an MR check or have clarity.
     // If you're already mesmerised, you cannot resist further.
@@ -3475,7 +3476,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     int retval = -1;
 
-    const int pow = min(mons->hit_dice * 18, 200);
+    const int pow = min(mons->spell_hd(SPELL_CAUSE_FEAR) * 18, 200);
 
     if (mons->can_see(&you) && !mons->wont_attack())
     {
@@ -3555,7 +3556,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 {
     int retval = -1;
 
-    const int pow = min(mons->hit_dice * 8, 200);
+    const int pow = min(mons->spell_hd(SPELL_MASS_CONFUSION) * 8, 200);
 
     if (mons->can_see(&you) && !mons->wont_attack())
     {
@@ -3605,7 +3606,7 @@ static int _mons_mass_confuse(monster* mons, bool actual)
 static coord_def _mons_fragment_target(monster *mons)
 {
     coord_def target(GXM+1, GYM+1);
-    int pow = 6 * mons->hit_dice;
+    int pow = 6 * mons->spell_hd(SPELL_LRD);
 
     // Shadow casting should try to affect the same tile as the player.
     if (mons->mid == MID_PLAYER)
@@ -3670,7 +3671,8 @@ static void _blink_allies_encircle(const monster* mon)
     }
     shuffle_array(allies);
 
-    int count = min(1, mon->hit_dice / 8 + random2(mon->hit_dice / 4));
+    int count = min(1, mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 8
+                       + random2(mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 4));
 
     for (unsigned int i = 0; i < allies.size() && count; ++i)
     {
@@ -3966,7 +3968,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         break;
 
     case SPELL_MAJOR_HEALING:
-        if (mons->heal(50 + random2avg(mons->hit_dice * 10, 2)))
+        if (mons->heal(50 + random2avg(mons->spell_hd(spell_cast) * 10, 2)))
             simple_monster_message(mons, " is healed.");
         return;
 
@@ -3999,6 +4001,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                make_stringf(" invokes %s protection!",
                                    apostrophise(god_name(mons->god)).c_str()).c_str(),
                                MSGCH_MONSTER_SPELL);
+        // Not spell_hd(spell_cast); this is an invocation
         const int dur = BASELINE_DELAY
             * min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
         mons->add_ench(mon_enchant(ENCH_RAISED_MR, 0, mons, dur));
@@ -4023,7 +4026,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (you.can_see(mons))
             mprf("%s skin hardens.",
                  apostrophise(mons->name(DESC_THE)).c_str());
-        const int power = (mons->hit_dice * 15) / 10;
+        const int power = (mons->spell_hd(spell_cast) * 15) / 10;
         mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, mons,
                        BASELINE_DELAY * (10 + (2 * random2(power)))));
         return;
@@ -4084,12 +4087,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_STICKS_TO_SNAKES:
     {
-        const int pow = (mons->hit_dice * 15) / 10;
+        const int pow = (mons->spell_hd(spell_cast) * 15) / 10;
         int cnt = 1 + random2(1 + pow / 4);
         monster_type sum;
         for (int i = 0; i < cnt; i++)
         {
-            if (random2(mons->hit_dice) > 27
+            if (random2(mons->spell_hd(spell_cast)) > 27
                 || one_chance_in(5 - min(4, div_rand_round(pow * 2, 25))))
             {
                 sum = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
@@ -4113,7 +4116,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(mons->hit_dice / 5 + 1);
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
@@ -4162,11 +4165,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (spell_cast == SPELL_SUMMON_ELEMENTAL)
         {
             sumcount2 = 1;
-            dur = min(2 + mons->hit_dice / 10, 6);
+            dur = min(2 + mons->spell_hd(spell_cast) / 10, 6);
         }
         else
         {
-            sumcount2 = 1 + (mons->hit_dice > 15) + random2(mons->hit_dice / 7 + 1);
+            sumcount2 = 1 + (mons->spell_hd(spell_cast) > 15)
+                          + random2(mons->spell_hd(spell_cast) / 7 + 1);
             dur = 3;
         }
 
@@ -4208,9 +4212,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(mons->hit_dice / 10 + 1);
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 10 + 1);
 
-        duration  = min(2 + mons->hit_dice / 10, 6);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
@@ -4224,9 +4228,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(mons->hit_dice / 10 + 1);
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 10 + 1);
 
-        duration  = min(2 + mons->hit_dice / 10, 6);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             const monster_type mon = (one_chance_in(3) ? MONS_VERY_UGLY_THING
@@ -4256,7 +4260,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CALL_IMP:
-        duration  = min(2 + mons->hit_dice / 5, 6);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
             create_monster(
                 mgen_data(random_choose_weighted(
                             1, MONS_IRON_IMP,
@@ -4272,7 +4276,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_MINOR_DEMON: // class 5 demons
         sumcount2 = 1 + random2(3);
 
-        duration  = min(2 + mons->hit_dice / 5, 6);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
@@ -4289,7 +4293,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         sumcount2 = 1 + random2(5);
 
-        duration  = min(2 + mons->hit_dice / 5, 6);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
@@ -4307,7 +4311,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_UFETUBUS:
         sumcount2 = 2 + random2(2);
 
-        duration  = min(2 + mons->hit_dice / 5, 6);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
 
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
@@ -4339,8 +4343,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 2 + random2(mons->hit_dice / 4 + 1);
-        duration  = min(2 + mons->hit_dice / 5, 6);
+        sumcount2 = 2 + random2(mons->spell_hd(spell_cast) / 4 + 1);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (int i = 0; i < sumcount2; ++i)
         {
             // Attempt to place adjacent to target first, and only at a wider
@@ -4383,7 +4387,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_CONJURE_BALL_LIGHTNING:
     {
-        const int n = min(8, 2 + random2avg(mons->hit_dice / 4, 2));
+        const int n = min(8, 2 + random2avg(mons->spell_hd(spell_cast) / 4, 2));
         for (int i = 0; i < n; ++i)
         {
             if (monster *ball = create_monster(
@@ -4400,12 +4404,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_UNDEAD:      // Summon undead around player.
         _do_high_level_summon(mons, monsterNearby, spell_cast,
                               _pick_undead_summon,
-                              2 + random2(mons->hit_dice / 5 + 1), god);
+                              2 + random2(mons->spell_hd(spell_cast) / 5 + 1), god);
         return;
 
     case SPELL_BROTHERS_IN_ARMS:
     {
-        const int power = (mons->hit_dice * 20) + random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
+        // Invocation; don't use spell_hd
+        const int power = (mons->hit_dice * 20)+ random2(mons->hit_dice * 5) - random2(mons->hit_dice * 5);
         monster_type to_summon;
 
         if (mons->type == MONS_SPRIGGAN_BERSERKER)
@@ -4440,18 +4445,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_DRAIN_LIFE:
     case SPELL_OZOCUBUS_REFRIGERATION:
-        cast_los_attack_spell(spell_cast, mons->hit_dice, mons, true);
+        cast_los_attack_spell(spell_cast, mons->spell_hd(spell_cast), mons, true);
         return;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        cast_toxic_radiance(mons, mons->hit_dice * 8);
+        cast_toxic_radiance(mons, mons->spell_hd(spell_cast) * 8);
         return;
 
     case SPELL_LRD:
     {
         const coord_def target = _mons_fragment_target(mons);
         if (in_bounds(target))
-           cast_fragmentation(6 * mons->hit_dice, mons, target, false);
+           cast_fragmentation(6 * mons->spell_hd(spell_cast), mons, target, false);
         else if (you.can_see(mons))
            canned_msg(MSG_NOTHING_HAPPENS);
 
@@ -4482,7 +4487,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        duration  = min(2 + mons->hit_dice / 10, 6);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
 
         create_monster(
             mgen_data(summon_any_demon(RANDOM_DEMON_GREATER),
@@ -4496,9 +4501,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(mons->hit_dice / 5 + 1);
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
-        duration  = min(2 + mons->hit_dice / 10, 6);
+        duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
 
         {
             vector<monster_type> monsters;
@@ -4535,11 +4540,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_BATTLESPHERE:
-        cast_battlesphere(mons, min(6 * mons->hit_dice, 200), mons->god, false);
+        cast_battlesphere(mons, min(6 * mons->spell_hd(spell_cast), 200), mons->god, false);
         return;
 
     case SPELL_SPECTRAL_WEAPON:
-        cast_spectral_weapon(mons, min(6 * mons->hit_dice, 200), mons->god, false);
+        cast_spectral_weapon(mons, min(6 * mons->spell_hd(spell_cast), 200), mons->god, false);
         return;
 
     case SPELL_TORNADO:
@@ -4784,7 +4789,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             // Also, base the regeneration rate on HD to avoid
             // randomness.
             const int tomb_duration = BASELINE_DELAY
-                * hp_lost * max(1, mons->hit_dice / 3);
+                * hp_lost * max(1, mons->spell_hd(spell_cast) / 3);
             int mon_index = mons->mindex();
             env.markers.add(new map_tomb_marker(mons->pos(),
                                                 tomb_duration,
@@ -4795,7 +4800,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
     }
     case SPELL_CHAIN_LIGHTNING:
-        cast_chain_lightning(4 * mons->hit_dice, mons);
+        cast_chain_lightning(4 * mons->spell_hd(spell_cast), mons);
         return;
     case SPELL_SUMMON_EYEBALLS:
         if (mons->type != MONS_DISSOLUTION
@@ -4804,9 +4809,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             return;
         }
 
-        sumcount2 = 1 + random2(mons->hit_dice / 7 + 1);
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 7 + 1);
 
-        duration = min(2 + mons->hit_dice / 10, 6);
+        duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
@@ -4825,7 +4830,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     case SPELL_SUMMON_BUTTERFLIES:
-        duration = min(2 + mons->hit_dice / 5, 6);
+        duration = min(2 + mons->spell_hd(spell_cast) / 5, 6);
         for (int i = 0; i < 10; ++i)
         {
             create_monster(
@@ -4852,10 +4857,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         mons->del_ench(ENCH_IOOD_CHARGED);
         mons_cast_noise(mons, pbolt, spell_cast, special_ability);
-        cast_iood(mons, 6 * mons->hit_dice, &pbolt);
+        cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
         return;
     case SPELL_AWAKEN_FOREST:
-        duration = 50 + random2(mons->hit_dice * 20);
+        duration = 50 + random2(mons->spell_hd(spell_cast) * 20);
 
         mons->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, mons, duration));
         // Actually, it's a boolean marker... save for a sanity check.
@@ -4869,21 +4874,21 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        cast_summon_dragon(mons, mons->hit_dice * 5, god);
+        cast_summon_dragon(mons, mons->spell_hd(spell_cast) * 5, god);
         return;
     case SPELL_SUMMON_HYDRA:
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        cast_summon_hydra(mons, mons->hit_dice * 5, god);
+        cast_summon_hydra(mons, mons->spell_hd(spell_cast) * 5, god);
         return;
     case SPELL_FIRE_SUMMON:
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(mons->hit_dice / 5 + 1);
+        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
-        duration = min(2 + mons->hit_dice / 10, 6);
+        duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
@@ -4918,7 +4923,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         simple_monster_message(mons,
                                "'s wounds begin to heal before your eyes!");
         const int dur = BASELINE_DELAY
-            * min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
+            * min(5 + roll_dice(2, (mons->spell_hd(spell_cast) * 10) / 3 + 1), 100);
         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
         return;
     }
@@ -4927,7 +4932,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     {
         mprf("A film of ice covers %s body!",
         apostrophise(mons->name(DESC_THE)).c_str());
-        const int power = (mons->hit_dice * 15) / 10;
+        const int power = (mons->spell_hd(spell_cast) * 15) / 10;
         mons->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 0, mons,
                                    BASELINE_DELAY *
                                    (20 + random2(power) + random2(power))));
@@ -4984,7 +4989,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             simple_monster_message(mons, " radiates an aura of cold.");
         else if (mons->see_cell_no_trans(you.pos()))
             mpr("A wave of cold passes over you.");
-        apply_area_visible(englaciate, min(12 * mons->hit_dice, 200), mons);
+        apply_area_visible(englaciate, min(12 * mons->spell_hd(spell_cast), 200), mons);
         return;
 
     case SPELL_AWAKEN_VINES:
@@ -5031,7 +5036,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (foe && mons->can_see(foe))
         {
             simple_monster_message(mons, " summons a great blast of wind!");
-            wind_blast(mons, 12 * mons->hit_dice, foe->pos());
+            wind_blast(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
         }
         return;
     }

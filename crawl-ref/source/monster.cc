@@ -6236,3 +6236,29 @@ bool monster::is_jumpy() const
         || mons_class_is_chimeric(type)
             && get_chimera_legs(this) == MONS_JUMPING_SPIDER;
 }
+
+int monster::aug_amount() const
+{
+    if (!mons_is_demonspawn(type)
+        || draco_or_demonspawn_subspecies(this) != MONS_TORTUROUS_DEMONSPAWN)
+    {
+        return 0;
+    }
+
+    int amount = 0;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (hit_points >= ((i + 3) * max_hit_points) / 6)
+            amount++;
+    }
+    return amount;
+}
+
+// HD for spellcasting purposes.
+// Currently only for torturous demonspawn, though there's a possibility here
+// for Archmagi, etc. to have an impact in some cases.
+int monster::spell_hd(spell_type spell) const
+{
+    return hit_dice + 2 * aug_amount();
+}
