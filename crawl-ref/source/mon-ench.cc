@@ -295,6 +295,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         ev += AGILITY_BONUS;
         break;
 
+    case ENCH_FROZEN:
+        calc_speed();
+        break;
+
     default:
         break;
     }
@@ -877,6 +881,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer unusally agile.");
         break;
 
+    case ENCH_FROZEN:
+        if (!quiet)
+            simple_monster_message(this, " is no longer encased in ice.");
+        calc_speed();
+        break;
+
     default:
         break;
     }
@@ -984,7 +994,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
-        case ENCH_FLAYED: case ENCH_AGILE:
+        case ENCH_FLAYED: case ENCH_AGILE: case ENCH_FROZEN:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1195,6 +1205,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WIND_AIDED:
     case ENCH_FIRE_VULN:
     case ENCH_AGILE:
+    case ENCH_FROZEN:
     // case ENCH_ROLLING:
         decay_enchantment(en);
         break;
@@ -2040,7 +2051,7 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown",  "icemail", "agile",
-    "buggy",
+    "frozen", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2305,6 +2316,9 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_TORNADO_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
+        break;
+    case ENCH_FROZEN:
+        cturn = 3 * BASELINE_DELAY;
         break;
     default:
         break;

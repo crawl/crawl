@@ -182,6 +182,10 @@ Haste Plants cast
 Druid's Call cast
 
 @The_monster@ calls out to the beasts of the land!
+%%%%
+Legendary Destruction cast
+
+@The_monster@ offers life energy for powerful magic!
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################

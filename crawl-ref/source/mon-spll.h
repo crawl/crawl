@@ -2300,4 +2300,15 @@
        SPELL_TELEPORT_OTHER
       }
     },
+
+    {  MST_DEMONSPAWN_BLOOD_SAINT,
+      {
+       SPELL_LEGENDARY_DESTRUCTION,
+       SPELL_MELEE,
+       SPELL_NO_SPELL,
+       SPELL_LEGENDARY_DESTRUCTION,
+       SPELL_MELEE,
+       SPELL_NO_SPELL
+      }
+    },
 #endif

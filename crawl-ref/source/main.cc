@@ -2685,6 +2685,10 @@ static void _decrement_durations()
         you.clear_fearmongers();
     }
 
+    _decrement_a_duration(DUR_FROZEN, delay,
+                          "The ice encasing you melts away.",
+                          0, NULL, MSGCH_RECOVERY);
+
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);

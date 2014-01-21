@@ -1611,6 +1611,7 @@ enum duration_type
     DUR_ANTENNAE_EXTEND,
 #endif
     DUR_TROGS_HAND,
+    DUR_FROZEN,
     NUM_DURATIONS
 };
 
@@ -1725,6 +1726,7 @@ enum enchant_type
     ENCH_TORNADO_COOLDOWN,
     ENCH_ICEMAIL,
     ENCH_AGILE,
+    ENCH_FROZEN,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3765,6 +3767,10 @@ enum spell_type
     SPELL_SHAFT_SELF,
 #endif
     SPELL_BLINKBOLT,
+    SPELL_ORB_OF_ELECTROCUTION,
+    SPELL_EXPLOSIVE_BOLT,
+    SPELL_FLASH_FREEZE,
+    SPELL_LEGENDARY_DESTRUCTION,
     NUM_SPELLS
 };
 

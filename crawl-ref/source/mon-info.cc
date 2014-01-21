@@ -190,6 +190,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_ICEMAIL;
     case ENCH_AGILE:
         return MB_AGILE;
+    case ENCH_FROZEN:
+        return MB_FROZEN;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1575,6 +1577,8 @@ vector<string> monster_info::attributes() const
         v.push_back("surrounded by an icy envelope");
     if (is(MB_AGILE))
         v.push_back("unusually agile");
+    if (is(MB_FROZEN))
+        v.push_back("encased in ice");
     return v;
 }
 
