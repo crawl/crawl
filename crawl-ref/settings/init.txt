@@ -28,7 +28,8 @@
 # Note that all boolean options (i.e. values of 'true' or 'false') have
 # their non-default value commented out. You can toggle these by just
 # uncommenting.
-# Options with several values, e.g. drop_mode = (multi | single),
+# Options with several values, e.g.
+#   confirm_butcher = (auto | always | never),
 # usually have the first value as default.
 #
 # The options for monster glyphs and item colours don't matter for Tiles.
@@ -86,7 +87,6 @@
 # chunks_autopickup = false
 # assign_item_slot = (forward | backward)
 #
-# drop_mode = (multi | single)
 # pickup_menu = false
 # pickup_menu_limit = 4
 # drop_filter += skeleton, corpse, useless_item

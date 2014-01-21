@@ -2244,11 +2244,7 @@ void drop_last()
 
 static string _drop_menu_title(const Menu *menu, const string &oldt)
 {
-    string res = _menu_burden_invstatus(menu) + " " + oldt;
-    if (menu->is_set(MF_SINGLESELECT))
-        res = "[Single drop] " + res;
-
-    return res;
+    return _menu_burden_invstatus(menu) + " " + oldt;
 }
 
 int get_equip_slot(const item_def *item)

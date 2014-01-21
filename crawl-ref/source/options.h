@@ -336,8 +336,6 @@ public:
     bool        target_unshifted_dirs; // Unshifted keys target if cursor is
                                        // on player.
 
-    int         drop_mode;          // Controls whether single or multidrop
-                                    // is the default.
     bool        pickup_menu;        // false for single, true for menu
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup

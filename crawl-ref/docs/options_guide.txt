@@ -24,7 +24,7 @@ The contents of this text are:
 3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 autopickup_no_burden, pickup_thrown, chunks_autopickup,
-                assign_item_slot, drop_mode, pickup_menu, pickup_menu_limit,
+                assign_item_slot, pickup_menu, pickup_menu_limit,
                 drop_filter, default_friendly_pickup
 3-b     Targeting.
                 default_target, target_unshifted_dirs, darken_beyond_range
@@ -206,10 +206,10 @@ There are two styles you can use to set options. The classic
 name=value syntax, one option per-line:
     remember_name  = true
     explore_greedy = false
-    drop_mode      = multi
+    confirm_butcher= never
 
 And the NetHack-style combined option line:
-    OPTION = remember_name, !explore_greedy, drop_mode:multi
+    OPTION = remember_name, !explore_greedy, confirm_butcher:never
 
 The second style is useful to specify simple options in a few lines,
 but it cannot be used for options that take complex lists of values
@@ -492,22 +492,6 @@ assign_item_slot = (forward | backward)
         instead.
         With "backward", items dropped/fired and picked up later are
         more likely to get their old slot back.
-
-drop_mode = (multi | single)
-        Single is the classic behaviour; when you select an inventory
-        letter, that item will be dropped immediately. Multidrop allows
-        you to select multiple items to be dropped. (You can also switch
-        to multidrop from the classic drop menu using the '@' key).
-
-        Multidrop is the default and can be very convenient, but be
-        aware that every item dropped takes one turn. (This is different
-        from picking up.)
-        When selecting multidrops, the top right corner shows the
-        estimated number of turns.
-
-        The order in which items get dropped is from top to bottom in
-        the inventory listing, but equipped items will be dropped last,
-        and may be dropped out of order.
 
 pickup_menu = true
         When true (the default), makes a menu appear, where you can
