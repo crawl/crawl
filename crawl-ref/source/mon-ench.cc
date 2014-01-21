@@ -299,6 +299,21 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         calc_speed();
         break;
 
+    case ENCH_EPHEMERAL_INFUSION:
+    {
+        if (!props.exists("eph_amount"))
+        {
+            int amount = min((ench.degree / 2) + random2avg(ench.degree, 2),
+                             max_hit_points - hit_points);
+            if (amount > 0 && heal(amount) && !quiet)
+                simple_monster_message(this, " seems to gain new vigour!");
+            else
+                amount = 0;
+            props["eph_amount"].get_byte() = amount;
+        }
+        break;
+    }
+
     default:
         break;
     }
@@ -887,6 +902,22 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
+    case ENCH_EPHEMERAL_INFUSION:
+    {
+        int dam = 0;
+        if (props.exists("eph_amount"))
+        {
+            dam = props["eph_amount"].get_byte();
+            props.erase("eph_amount");
+        }
+        dam = min(dam, hit_points - 1);
+        if (dam > 0)
+            hurt(NULL, dam);
+        if (!quiet)
+            simple_monster_message(this, " looks less vigorous.");
+        break;
+    }
+
     default:
         break;
     }
@@ -995,6 +1026,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
         case ENCH_FLAYED: case ENCH_AGILE: case ENCH_FROZEN:
+        case ENCH_EPHEMERAL_INFUSION:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1206,6 +1238,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FIRE_VULN:
     case ENCH_AGILE:
     case ENCH_FROZEN:
+    case ENCH_EPHEMERAL_INFUSION:
     // case ENCH_ROLLING:
         decay_enchantment(en);
         break;
@@ -2051,7 +2084,7 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown",  "icemail", "agile",
-    "frozen", "buggy",
+    "frozen", "ephemeral_infusion", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2203,6 +2236,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RAISED_MR:
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DEATHS_DOOR:
+    case ENCH_EPHEMERAL_INFUSION:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

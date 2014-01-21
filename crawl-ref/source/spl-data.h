@@ -3366,6 +3366,19 @@ struct spell_desc
 },
 
 {
+    SPELL_EPHEMERAL_INFUSION, "Ephemeral Infusion",
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
+     SPFLAG_MONSTER,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
