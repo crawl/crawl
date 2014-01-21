@@ -1754,7 +1754,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
         return mon_attack_def::attk(0, AT_NONE);
     }
-    else if (mons_is_demonspawn(mc))
+    else if (mons_is_demonspawn(mc) && attk_number != 0)
         mc = draco_or_demonspawn_subspecies(mon);
 
     if (zombified && mc != MONS_KRAKEN_TENTACLE)
@@ -1762,6 +1762,13 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
     ASSERT_smc();
     mon_attack_def attk = smc->attack[attk_number];
+
+    if (mons_is_demonspawn(mon->type) && attk_number == 0)
+    {
+        attk.flavour = get_monster_data(draco_or_demonspawn_subspecies(mon))
+                           ->attack[0].flavour;
+        return attk;
+    }
 
     if (attk.type == AT_RANDOM)
         attk.type = random_choose(AT_HIT, AT_GORE, -1);
