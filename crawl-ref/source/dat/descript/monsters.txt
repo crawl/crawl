@@ -1032,6 +1032,13 @@ draconian zealot
 This draconian derives its hellish powers and demonic allies from the worship
 of dark gods unknown to men, dwarves, elves or orcs.
 %%%%
+drowned soul
+
+A cold and hollow apparition of the drowned dead, chained by some lingering
+attachment to the depths in which it perished. They clamour around the living,
+sharing the last moments of their watery fate with whatever their pale form
+touches.
+%%%%
 dryad
 
 A spirit of nature, bound to the forest in which it resides. It is capable of
@@ -2339,8 +2346,9 @@ An ice replica of a monster that is animated by the powers of necromancy.
 %%%%
 siren
 
-A young woman with a fish tail in place of legs. Sirens are capable of casting
-a powerful spell over their audience.
+A young woman with a fish tail in place of legs. So entrancing is the spell she
+can weave with her song that even the souls of those who drowned in her waters
+will answer it.
 %%%%
 sixfirhy
 

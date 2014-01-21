@@ -5006,6 +5006,9 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_DROWN:
+        if (attacker->type == MONS_DROWNED_SOUL)
+            attacker->as_monster()->suicide(-10);
+
         if (defender->res_water_drowning() <= 0)
         {
             special_damage = attacker->get_experience_level() * 3 / 4

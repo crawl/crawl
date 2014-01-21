@@ -45,4 +45,6 @@ void treant_release_fauna(monster* mons);
 bool apply_grasping_roots(monster* mons);
 void check_grasping_roots(actor* act, bool quiet = false);
 
+void siren_song(monster* mons);
+
 #endif

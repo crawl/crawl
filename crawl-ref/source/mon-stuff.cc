@@ -4641,6 +4641,11 @@ string summoned_poof_msg(const monster* mons, bool plural)
         {
             msg = "dissolve%s into a puddle of slime";
         }
+
+        if (mons->type == MONS_DROWNED_SOUL)
+        {
+            msg = "returns to the deep";
+        }
     }
 
     // Conjugate.
