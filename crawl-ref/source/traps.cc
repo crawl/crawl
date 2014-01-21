@@ -347,7 +347,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
         return;
     }
 
-    if (mon->flight_mode() && (!mons_is_confused(mon) || one_chance_in(3)))
+    if (mon->flight_mode() && !mons_is_confused(mon) && one_chance_in(3))
     {
         simple_monster_message(mon, " darts out from under the net!");
         return;
@@ -379,7 +379,7 @@ bool player_caught_in_net()
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         return false;
 
-    if (you.flight_mode() && (!you.confused() || one_chance_in(3)))
+    if (you.flight_mode() && !you.confused() && one_chance_in(3))
     {
         mpr("You dart out from under the net!");
         return false;
