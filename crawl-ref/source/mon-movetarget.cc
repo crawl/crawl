@@ -317,12 +317,20 @@ bool find_siren_water_target(monster* mon)
     ASSERT(mon->type == MONS_SIREN);
 
     // Moving away could break the entrancement, so don't do this.
-    if ((mon->pos() - you.pos()).rdist() >= 6)
+    if (distance2(mon->pos(), you.pos()) >= 6 * 6 + 1)
+    {
+        mon->firing_pos.reset();
         return false;
+    }
+
+    bool deep;
 
     // Already completely surrounded by deep water.
-    if (_count_water_neighbours(mon->pos()) >= 16)
+    if (_count_water_neighbours(mon->pos(), deep) >= 16)
+    {
+        mon->firing_pos = mon->pos();
         return true;
+    }
 
     if (mon->travel_target == MTRAV_SIREN)
     {
@@ -393,7 +401,10 @@ bool find_siren_water_target(monster* mon)
 
     // We're already optimally placed.
     if (best_target == mon->pos())
+    {
+        mon->firing_pos = mon->pos();
         return true;
+    }
 
     monster_pathfind mp;
 #ifdef WIZARD
@@ -419,7 +430,7 @@ bool find_siren_water_target(monster* mon)
                  best_target.x, best_target.y, best_water_count);
 #endif
             // Okay then, we found a path.  Let's use it!
-            mon->target = mon->travel_path[0];
+            mon->firing_pos = mon->travel_path[0];
             mon->travel_target = MTRAV_SIREN;
             return true;
         }

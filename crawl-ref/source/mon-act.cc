@@ -3168,6 +3168,13 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         }
     }
 
+    // Don't voluntarily break LoS with a player we're mesmerising
+    if (mons->type == MONS_SIREN)
+    {
+        if (you.beheld_by(mons) && !you.see_cell(targ))
+            return false;
+    }
+
     // Fire elementals avoid water and cold.
     if (mons->type == MONS_FIRE_ELEMENTAL && feat_is_watery(target_grid))
         return false;
