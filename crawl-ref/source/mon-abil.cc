@@ -3850,13 +3850,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (you.species == SP_MERFOLK && !one_chance_in(4))
             break;
 
-        // A wounded invisible mermaid is less likely to give away her position.
-        if (mons->invisible()
-            && mons->hit_points <= mons->max_hit_points / 2
-            && !one_chance_in(3))
-        {
-            break;
-        }
 
         bool already_mesmerised = you.beheld_by(mons);
 
