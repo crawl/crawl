@@ -3912,6 +3912,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             {
                 if (!did_resist)
                     canned_msg(MSG_YOU_RESIST);
+                used = true;
                 break;
             }
 
