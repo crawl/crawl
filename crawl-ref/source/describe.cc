@@ -3322,7 +3322,7 @@ static string _monster_stat_description(const monster_info& mi)
 
     const int mr = mi.res_magic();
     // How resistant is it? Same scale as the player.
-    if (mr >= 10)
+    if (mr >= 40)
     {
         result << uppercase_first(pronoun)
                << make_stringf(" is %s to hostile enchantments.\n",
