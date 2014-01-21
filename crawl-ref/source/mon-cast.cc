@@ -211,6 +211,7 @@ static bool _set_allied_target(monster* caster, bolt& pbolt, bool ignore_genus)
                  || ignore_genus)
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
+            && !mons_is_firewood(*targ)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
         {
             got_target = true;
