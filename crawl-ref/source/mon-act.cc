@@ -1485,19 +1485,6 @@ static bool _handle_wand(monster* mons, bolt &beem)
     return false;
 }
 
-static bool _mons_has_launcher(const monster* mons)
-{
-    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
-    {
-        if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
-        {
-            if (is_range_weapon(*item))
-                return true;
-        }
-    }
-    return false;
-}
-
 //---------------------------------------------------------------
 //
 // handle_throw
@@ -1552,17 +1539,6 @@ static bool _handle_throw(monster* mons, bolt & beem)
     // Specialist archers are an exception to this rule.
     if (!archer && adjacent(beem.target, mons->pos()))
         return false;
-
-    // If the monster is a spellcaster, don't bother throwing stuff.
-    // Exception: Spellcasters that already start out with some kind
-    // ranged weapon. Seeing how monsters are disallowed from picking
-    // up launchers if they have ranged spells, this will only apply
-    // to very few monsters.
-    if (mons_has_ranged_spell(mons, true, false)
-        && !_mons_has_launcher(mons))
-    {
-        return false;
-    }
 
     // Don't let fleeing (or pacified creatures) stop to shoot at things
     if (mons_is_fleeing(mons) || mons->pacified())
