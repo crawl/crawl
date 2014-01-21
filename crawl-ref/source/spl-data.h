@@ -3379,6 +3379,32 @@ struct spell_desc
 },
 
 {
+    SPELL_FORCEFUL_INVITATION, "Forceful Invitation",
+     SPTYP_SUMMONING,
+     SPFLAG_BATTLE | SPFLAG_MONSTER,
+     4,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_PLANEREND, "Planerend",
+     SPTYP_SUMMONING,
+     SPFLAG_BATTLE | SPFLAG_MONSTER,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

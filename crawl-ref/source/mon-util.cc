@@ -868,7 +868,8 @@ bool mons_is_native_in_branch(const monster* mons,
                || mons->type == MONS_TENTACLED_MONSTROSITY
                || mons->type == MONS_TENTACLED_STARSPAWN
                || mons->type == MONS_THRASHING_HORROR
-               || mons->type == MONS_UNSEEN_HORROR;
+               || mons->type == MONS_UNSEEN_HORROR
+               || mons->type == MONS_WORLDBINDER;
 
     default:
         return false;

@@ -69,6 +69,10 @@ unseen Blinkbolt cast
 
 Living lightning bursts into view!
 %%%%
+branch summon cast prefix
+
+@The_monster@ calls forth creatures from
+%%%%
 Flame Tongue cast
 
 @The_monster@ issues a gush of flame.
