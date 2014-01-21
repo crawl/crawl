@@ -477,16 +477,15 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         if (num_printed % columns == 0)
             disp += "\n";
         else
-            // manually aligning the god columns: five whitespaces between columns
+            // manually aligning the god columns: ten spaces between columns
             switch (num_printed % columns)
             {
-            case 1: disp += string(20 - strwidth(god_name(god, false)), ' ');
+            case 1: disp += string(19 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 2: disp += string(16 - strwidth(god_name(god, false)), ' ');
+            case 2: disp += string(23 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 3: disp += string(18 - strwidth(god_name(god, false)), ' ');
+            case 3: disp += string(20 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 4: disp += string(16 - strwidth(god_name(god, false)), ' ');
             }
     }
 
