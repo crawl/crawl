@@ -1046,7 +1046,8 @@ static bool _los_free_spell(spell_type spell_cast)
        || spell_cast == SPELL_AIRSTRIKE
        || spell_cast == SPELL_WATERSTRIKE
        || spell_cast == SPELL_HOLY_FLAMES
-       || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS;
+       || spell_cast == SPELL_SUMMON_SPECTRAL_ORCS
+       || spell_cast == SPELL_CHAOTIC_MIRROR;
 }
 
 // Set up bolt structure for monster spell casting.
@@ -1084,6 +1085,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         case SPELL_AIRSTRIKE:
         case SPELL_WATERSTRIKE:
         case SPELL_HOLY_FLAMES:
+        case SPELL_CHAOTIC_MIRROR:
             return true;
         default:
             // Other spells get normal setup:

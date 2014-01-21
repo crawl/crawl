@@ -3418,6 +3418,19 @@ struct spell_desc
 },
 
 {
+    SPELL_CHAOTIC_MIRROR, "Chaotic Mirror",
+     SPTYP_NONE,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     4,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
