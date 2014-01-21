@@ -212,6 +212,11 @@ This creature may exhale a large cloud of fumes filled with the very essence of
 chaos. Effects of getting caught in this cloud are about as predictable as Xom
 him- or herself.
 %%%%
+Chaotic Mirror spell
+
+This spell mirrors a wild and unpredictable effect onto both the target and
+the caster.
+%%%%
 Cold Breath spell
 
 This creature may exhale a focused blast of icy-cold air. It may knock back

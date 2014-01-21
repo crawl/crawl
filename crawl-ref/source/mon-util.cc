@@ -3280,6 +3280,7 @@ static bool _ms_los_spell(spell_type monspell)
         || monspell == SPELL_AIRSTRIKE
         || monspell == SPELL_HAUNT
         || monspell == SPELL_SUMMON_SPECTRAL_ORCS
+        || monspell == SPELL_CHAOTIC_MIRROR
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return true;
@@ -3294,7 +3295,9 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     // Check for Smiting specially, so it's not filtered along
     // with the summon spells.
     if (attack_only
-        && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE))
+        && (monspell == SPELL_SMITING
+            || monspell == SPELL_AIRSTRIKE
+            || monspell == SPELL_CHAOTIC_MIRROR))
     {
         return true;
     }
@@ -3683,7 +3686,8 @@ static bool _mons_has_smite_attack(const monster* mons)
             || hspell_pass[i] == SPELL_SMITING
             || hspell_pass[i] == SPELL_HELLFIRE_BURST
             || hspell_pass[i] == SPELL_FIRE_STORM
-            || hspell_pass[i] == SPELL_AIRSTRIKE)
+            || hspell_pass[i] == SPELL_AIRSTRIKE
+            || hspell_pass[i] == SPELL_CHAOTIC_MIRROR)
         {
             return true;
         }
