@@ -2326,10 +2326,10 @@
     {  MST_DEMONSPAWN_CORRUPTER,
       {
        SPELL_PLANEREND,
-       SPELL_NO_SPELL,
+       SPELL_POLYMORPH,
        SPELL_NO_SPELL,
        SPELL_PLANEREND,
-       SPELL_NO_SPELL,
+       SPELL_POLYMORPH,
        SPELL_NO_SPELL
       }
     },
