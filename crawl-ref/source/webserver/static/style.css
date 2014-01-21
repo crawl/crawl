@@ -173,7 +173,8 @@ body {
 }
 
 #chat a {
-    color: #A2A2A2;
+    color: inherit;
+    font-weight: inherit;
 }
 
 #chat_caption {
