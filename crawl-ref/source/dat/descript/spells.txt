@@ -894,7 +894,7 @@ allowing them to occasionally avoid blows entirely.
 %%%%
 Planerend spell
 
-This ability summons some of the greaterer threats from one of the Lair of
+This ability summons some of the greater threats from one of the Lair of
 Beasts, the Snake Pit, the Spider Nest, the Swamp, the Shoals, the Pits of
 Slime, the Orcish Mines, the Elven Halls, the Vaults, the Crypt, the Tomb of
 Ancients, or the Realm of Zot; the specific branch varies with each cast of
