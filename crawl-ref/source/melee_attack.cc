@@ -518,7 +518,7 @@ void melee_attack::apply_black_mark_effects()
         case 2:
             if (defender->is_player())
             {
-                stat_type stat = random_choose(STAT_STR, STAT_DEX, STAT_INT);
+                stat_type stat = random_choose(STAT_STR, STAT_DEX, STAT_INT, -1);
                 defender->drain_stat(stat, 1, attacker);
                 break;
             }
