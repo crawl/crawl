@@ -3479,7 +3479,7 @@ bool monster::undead_or_demonic() const
 {
     const mon_holy_type holi = holiness();
 
-    return holi == MH_UNDEAD || holi == MH_DEMONIC || type == MONS_DEMONSPAWN;
+    return holi == MH_UNDEAD || holi == MH_DEMONIC || mons_is_demonspawn(type);
 }
 
 bool monster::is_holy(bool check_spells) const
