@@ -551,7 +551,7 @@ static bool _find_mon_place_near_stairs(coord_def& pos,
     return in_bounds(pos);
 }
 
-static bool _needs_resolution(monster_type mon_type)
+bool needs_resolution(monster_type mon_type)
 {
     return mon_type == RANDOM_DRACONIAN || mon_type == RANDOM_BASE_DRACONIAN
            || mon_type == RANDOM_NONBASE_DRACONIAN
@@ -662,7 +662,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 mon_type  = (monster_type) type;
                 if (want_band)
                     *want_band = banded;
-                if (_needs_resolution(mon_type))
+                if (needs_resolution(mon_type))
                 {
                     mon_type =
                         _resolve_monster_type(mon_type, proximity,
