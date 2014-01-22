@@ -862,10 +862,14 @@ static ability_type _fixup_ability(ability_type ability)
     case ABIL_EVOKE_BLINK:
         if (you.species == SP_FORMICID)
             return ABIL_NON_ABILITY;
+        else
+            return ability;
 
     case ABIL_DITHMENGOS_SHADOW_FORM:
         if (you.species == SP_MUMMY || you.species == SP_GHOUL)
             return ABIL_NON_ABILITY;
+        else
+            return ability;
 
     default:
         return ability;
