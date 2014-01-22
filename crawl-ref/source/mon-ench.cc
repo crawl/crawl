@@ -893,7 +893,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_AGILE:
         ev -= AGILITY_BONUS;
         if (!quiet)
-            simple_monster_message(this, " is no longer unusally agile.");
+            simple_monster_message(this, " is no longer unusually agile.");
         break;
 
     case ENCH_FROZEN:
