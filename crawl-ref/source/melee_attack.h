@@ -151,6 +151,7 @@ private:
     void mons_do_poison();
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
+    void apply_black_mark_effects();
 
     attack_flavour random_chaos_attack_flavour();
 private:

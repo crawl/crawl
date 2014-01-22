@@ -2344,4 +2344,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_DEMONSPAWN_BLACK_SUN,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_MALIGN_OFFERING,
+       SPELL_BLACK_MARK,
+       SPELL_BLACK_MARK,
+       SPELL_NO_SPELL,
+       SPELL_DEATHS_DOOR
+      }
+    },
 #endif

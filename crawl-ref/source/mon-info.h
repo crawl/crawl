@@ -110,6 +110,7 @@ enum monster_info_flags
     MB_ICEMAIL,
     MB_AGILE,
     MB_FROZEN,
+    MB_BLACK_MARK,
     NUM_MB_FLAGS
 };
 

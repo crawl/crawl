@@ -71,6 +71,12 @@ Berserker Rage spell
 
 <Berserk ability>
 %%%%
+Black Mark spell
+
+This spell empowers the caster and their nearby allies to steal the vital
+energies of their foes on a successful melee attack, variously draining magic,
+speed, abilities, or skills.
+%%%%
 Blade Hands spell
 
 This spell causes long, scythe-shaped blades to grow from the caster's hands.
