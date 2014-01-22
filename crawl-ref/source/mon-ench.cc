@@ -925,6 +925,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         calc_speed();
         break;
 
+    case ENCH_SAP_MAGIC:
+        if (!quiet)
+            simple_monster_message(this, " is no longer being sapped.");
+        break;
+
     default:
         break;
     }
@@ -1034,6 +1039,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
         case ENCH_FLAYED: case ENCH_AGILE: case ENCH_FROZEN:
         case ENCH_EPHEMERAL_INFUSION: case ENCH_BLACK_MARK:
+        case ENCH_SAP_MAGIC:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1220,7 +1226,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
-    case ENCH_ANTIMAGIC:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
     case ENCH_STONESKIN:
@@ -1246,8 +1251,14 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_AGILE:
     case ENCH_FROZEN:
     case ENCH_EPHEMERAL_INFUSION:
+    case ENCH_SAP_MAGIC:
     // case ENCH_ROLLING:
         decay_enchantment(en);
+        break;
+
+    case ENCH_ANTIMAGIC:
+        if (!has_ench(ENCH_SAP_MAGIC))
+            decay_enchantment(en);
         break;
 
     case ENCH_MIRROR_DAMAGE:
@@ -2096,7 +2107,8 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown",  "icemail", "agile",
-    "frozen", "ephemeral_infusion", "black_mark", "grand_avatar", "buggy",
+    "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
+    "sap magic", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2250,6 +2262,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DEATHS_DOOR:
     case ENCH_EPHEMERAL_INFUSION:
+    case ENCH_SAP_MAGIC:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

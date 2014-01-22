@@ -2974,6 +2974,15 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SICKENING, delay);
 
+    _decrement_a_duration(DUR_SAP_MAGIC, delay,
+                          "Your magic seems less tainted.");
+
+    if (!you.duration[DUR_SAP_MAGIC])
+    {
+        _decrement_a_duration(DUR_MAGIC_SAPPED, delay,
+                              "You feel more in control of your magic.");
+    }
+
     _decrement_a_duration(DUR_ANTIMAGIC, delay,
                           "You regain control over your magic.");
 

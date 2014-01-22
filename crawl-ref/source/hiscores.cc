@@ -1572,6 +1572,8 @@ void scorefile_entry::init(time_t dt)
         DUR_TOXIC_RADIANCE,
         DUR_FIRE_VULN,
         DUR_FROZEN,
+        DUR_SAP_MAGIC,
+        STATUS_MAGIC_SAPPED,
     };
 
     status_info inf;

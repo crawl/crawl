@@ -393,6 +393,8 @@ int spell_fail(spell_type spell)
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
 
+    chance2 += you.duration[DUR_MAGIC_SAPPED] / BASELINE_DELAY;
+
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
@@ -869,9 +871,18 @@ static void _spellcasting_side_effects(spell_type spell, int pow, god_type god)
         excommunication();
     }
 
-    // Make some noise if it's actually the player casting.
     if (god == GOD_NO_GOD)
+    {
+        if (you.duration[DUR_SAP_MAGIC])
+        {
+            mprf(MSGCH_WARN, "Your control over your magic is sapped.");
+            you.increase_duration(DUR_MAGIC_SAPPED,
+                                  2 * spell_difficulty(spell),
+                                  100);
+        }
+        // Make some noise if it's actually the player casting.
         noisy(spell_noise(spell), you.pos());
+    }
 
     alert_nearby_monsters();
 }
