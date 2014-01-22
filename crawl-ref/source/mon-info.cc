@@ -1335,6 +1335,8 @@ string monster_info::pluralised_name(bool fullname) const
         return "mimics";
     else if (mons_genus(type) == MONS_DRACONIAN)
         return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
+    else if (mons_genus(type) == MONS_DEMONSPAWN)
+        return pluralise(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || !fullname)
     {
