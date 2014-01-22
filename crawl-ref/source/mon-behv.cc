@@ -299,6 +299,14 @@ void handle_behaviour(monster* mon)
         }
     }
 
+    // Grand avatar targeting is handled through its triggerers
+    // and _grand_avatar_act in mon-act.cc.
+    if (mon->type == MONS_GRAND_AVATAR)
+    {
+        mon->behaviour = BEH_SEEK;
+        return;
+    }
+
     bool changed = true;
     bool isFriendly = mon->friendly();
     bool isNeutral  = mon->neutral();
@@ -455,7 +463,8 @@ void handle_behaviour(monster* mon)
         && mon->type != MONS_GIANT_SPORE
         && mon->type != MONS_BALL_LIGHTNING
         && mon->type != MONS_BATTLESPHERE
-        && mon->type != MONS_SPECTRAL_WEAPON)
+        && mon->type != MONS_SPECTRAL_WEAPON
+        && mon->type != MONS_GRAND_AVATAR)
     {
         if (!crawl_state.game_is_zotdef())
         {
@@ -1155,6 +1164,7 @@ static void _set_nearest_monster_foe(monster* mon)
             || mon->behaviour == BEH_WITHDRAW
             || mon->type == MONS_BATTLESPHERE
             || mon->type == MONS_SPECTRAL_WEAPON
+            || mon->type == MONS_GRAND_AVATAR
             || mon->has_ench(ENCH_HAUNTING))
     {
         return;
@@ -1318,7 +1328,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (src == &you
             && !mon->has_ench(ENCH_INSANE)
             && mon->type != MONS_BATTLESPHERE
-            && mon->type != MONS_SPECTRAL_WEAPON)
+            && mon->type != MONS_SPECTRAL_WEAPON
+            && mon->type != MONS_GRAND_AVATAR)
         {
             mon->attitude = ATT_HOSTILE;
             breakCharm    = true;
@@ -1500,7 +1511,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if (src->is_player()
             && !mon->has_ench(ENCH_INSANE)
             && mon->type != MONS_BATTLESPHERE
-            && mon->type != MONS_SPECTRAL_WEAPON)
+            && mon->type != MONS_SPECTRAL_WEAPON
+            && mon->type != MONS_GRAND_AVATAR)
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;

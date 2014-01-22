@@ -1203,6 +1203,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_PLANEREND:
     case SPELL_CHAIN_OF_CHAOS:
     case SPELL_BLACK_MARK:
+    case SPELL_GRAND_AVATAR:
         return true;
     default:
         if (check_validity)
@@ -1844,6 +1845,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_BLACK_MARK:
         if (mon->has_ench(ENCH_BLACK_MARK))
+            ret = true;
+        break;
+
+    case SPELL_GRAND_AVATAR:
+        if (mon->has_ench(ENCH_GRAND_AVATAR))
             ret = true;
         break;
 
@@ -3052,6 +3058,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         }
         else
         {
+            const int orig_hp = (foe) ? foe->stat_hp() : 0;
             const bool battlesphere = mons->props.exists("battlesphere");
             if (spell_needs_foe(spell_cast))
                 make_mons_stop_fleeing(mons);
@@ -3061,6 +3068,19 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons_cast(mons, beem, spell_cast);
             if (battlesphere)
                 trigger_battlesphere(mons, beem);
+            if (mons->has_ench(ENCH_GRAND_AVATAR)
+                && foe
+                && (orig_hp - foe->stat_hp()
+                    >= random2(GRAND_AVATAR_DAMAGE)))
+            {
+                actor* avatar = mons->get_ench(ENCH_GRAND_AVATAR).agent();
+                if (avatar)
+                {
+                    trigger_grand_avatar(avatar->as_monster(),
+                                         foe,
+                                         spell_cast);
+                }
+            }
             mons->lose_energy(EUT_SPELL);
 
             // Wellsprings "cast" from their own hp.
@@ -5490,6 +5510,30 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BLACK_MARK:
         _cast_black_mark(mons);
         return;
+
+    case SPELL_GRAND_AVATAR:
+    {
+        duration = min(2 + mons->spell_hd(spell_cast) / 10, 6);
+
+        monster* avatar =
+            create_monster(
+                mgen_data(MONS_GRAND_AVATAR, SAME_ATTITUDE(mons), mons,
+                          duration, spell_cast, mons->pos(), mons->foe, 0,
+                          god));
+        if (avatar)
+        {
+            simple_monster_message(mons, " calls forth a grand avatar!");
+            for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
+            {
+                if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
+                    && *mi != avatar)
+                {
+                    mi->add_ench(mon_enchant(ENCH_GRAND_AVATAR, 1, avatar));
+                }
+            }
+        }
+        return;
+    }
     }
 
 

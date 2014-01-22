@@ -539,6 +539,12 @@ fire besides appearance. Both the direct hit and residual flame does damage to
 living beings and heals the undead. The energy tends to coalesce into spectral
 undead creatures on its own.
 %%%%
+Grand Avatar spell
+
+This invocation calls forth an avatar of battle and bloodshed, mirroring
+sufficiently damaging attacks and spells of the invoker and their nearby
+allies.
+%%%%
 Haste Other spell
 
 This spell allows the caster to speed up all actions of a nearby ally.

@@ -1217,7 +1217,8 @@ bool mons_is_conjured(monster_type mc)
            || mc == MONS_BALL_LIGHTNING
            || mc == MONS_BATTLESPHERE
            || mc == MONS_SPECTRAL_WEAPON
-           || mc == MONS_FULMINANT_PRISM;
+           || mc == MONS_FULMINANT_PRISM
+           || mc == MONS_GRAND_AVATAR;
 }
 
 // Returns true if the given monster's foe is also a monster.

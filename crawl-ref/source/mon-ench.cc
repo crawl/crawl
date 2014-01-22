@@ -1944,6 +1944,11 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+    case ENCH_GRAND_AVATAR:
+        if (!me.agent() || !me.agent()->alive())
+            del_ench(ENCH_GRAND_AVATAR, true, false);
+        break;
+
     default:
         break;
     }
@@ -2091,7 +2096,7 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown",  "icemail", "agile",
-    "frozen", "ephemeral_infusion", "black_mark", "buggy",
+    "frozen", "ephemeral_infusion", "black_mark", "grand_avatar", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
