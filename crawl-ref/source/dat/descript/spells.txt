@@ -985,6 +985,12 @@ This spell creates a short blast of high-velocity particles. It works best when
 the caster provides some source (by wielding a stone), but will do what it can
 with whatever ambient grit is available.
 %%%%
+Sap Magic spell
+
+This ability taints the victim's ability to cast spells; casting a spell while
+afflicted with this condition causes them to lose control over their magic,
+progressively hindering their chances of success as more spells are cast.
+%%%%
 Searing Ray spell
 
 This spell fires a continuous ray of arcane energy from the caster's hands.

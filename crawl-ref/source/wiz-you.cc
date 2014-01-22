@@ -860,6 +860,8 @@ static const char* dur_names[] =
 #endif
     "trogs hand",
     "frozen",
+    "sap magic",
+    "magic sapped",
 };
 
 void wizard_edit_durations(void)

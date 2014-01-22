@@ -401,7 +401,8 @@ enum beam_type                  // bolt::flavour
     BEAM_VULNERABILITY,
     BEAM_MALIGN_OFFERING,
     BEAM_AGILITY,
-    BEAM_LAST_ENCHANTMENT = BEAM_AGILITY,
+    BEAM_SAP_MAGIC,
+    BEAM_LAST_ENCHANTMENT = BEAM_SAP_MAGIC,
 
     BEAM_MEPHITIC,
 #if TAG_MAJOR_VERSION == 34
@@ -1612,6 +1613,8 @@ enum duration_type
 #endif
     DUR_TROGS_HAND,
     DUR_FROZEN,
+    DUR_SAP_MAGIC,
+    DUR_MAGIC_SAPPED,
     NUM_DURATIONS
 };
 
@@ -1730,6 +1733,7 @@ enum enchant_type
     ENCH_EPHEMERAL_INFUSION,
     ENCH_BLACK_MARK,
     ENCH_GRAND_AVATAR,
+    ENCH_SAP_MAGIC,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3788,6 +3792,7 @@ enum spell_type
     SPELL_CHAOTIC_MIRROR,
     SPELL_BLACK_MARK,
     SPELL_GRAND_AVATAR,
+    SPELL_SAP_MAGIC,
     NUM_SPELLS
 };
 

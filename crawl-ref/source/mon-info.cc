@@ -194,6 +194,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_FROZEN;
     case ENCH_BLACK_MARK:
         return MB_BLACK_MARK;
+    case ENCH_SAP_MAGIC:
+        return MB_SAP_MAGIC;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1583,6 +1585,8 @@ vector<string> monster_info::attributes() const
         v.push_back("encased in ice");
     if (is(MB_BLACK_MARK))
         v.push_back("absorbing vital energies");
+    if (is(MB_SAP_MAGIC))
+        v.push_back("magic-sapped");
     return v;
 }
 

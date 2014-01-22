@@ -3640,6 +3640,12 @@ void bolt::affect_player_enchantment()
         nice  = true;
         break;
 
+    case BEAM_SAP_MAGIC:
+        mprf(MSGCH_WARN, "Your magic feels %stainted.",
+             you.duration[DUR_SAP_MAGIC] ? "more " : "");
+        you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -5369,6 +5375,19 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_SAP_MAGIC:
+        if (!mon->has_ench(ENCH_SAP_MAGIC)
+            && mon->add_ench(mon_enchant(ENCH_SAP_MAGIC, 0, agent())))
+        {
+            if (simple_monster_message(mon, " seems less certain of"
+                                            " their magic."))
+            {
+                obvious_effect = true;
+            }
+        }
+        return MON_AFFECTED;
+
+
     default:
         break;
     }
@@ -6221,6 +6240,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_VULNERABILITY:         return "vulnerability";
     case BEAM_MALIGN_OFFERING:       return "malign offering";
     case BEAM_AGILITY:               return "agility";
+    case BEAM_SAP_MAGIC:             return "sap magic";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

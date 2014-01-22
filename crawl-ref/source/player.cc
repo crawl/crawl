@@ -4291,6 +4291,8 @@ void display_char_status()
         DUR_GRASPING_ROOTS,
         DUR_FIRE_VULN,
         DUR_FROZEN,
+        DUR_SAP_MAGIC,
+        STATUS_MAGIC_SAPPED,
     };
 
     status_info inf;

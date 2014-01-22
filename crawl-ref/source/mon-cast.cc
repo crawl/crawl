@@ -1001,6 +1001,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit      = AUTOMATIC_HIT;
         break;
 
+    case SPELL_SAP_MAGIC:
+        beam.ench_power = mons->spell_hd(real_spell) * 10;
+        beam.flavour    = BEAM_SAP_MAGIC;
+        beam.is_beam    = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -3080,6 +3086,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                                          foe,
                                          spell_cast);
                 }
+            }
+            if (wizard && mons->has_ench(ENCH_SAP_MAGIC))
+            {
+                mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
+                                           mons->get_ench(ENCH_SAP_MAGIC)
+                                                 .agent(),
+                                           BASELINE_DELAY * 2
+                                           * spell_difficulty(spell_cast)));
             }
             mons->lose_energy(EUT_SPELL);
 
