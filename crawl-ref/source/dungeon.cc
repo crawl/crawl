@@ -4800,7 +4800,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mg.colour = random_monster_colour();
 
     if (!force_pos && monster_at(where)
-        && (mg.cls < NUM_MONSTERS || mg.cls == RANDOM_MONSTER))
+        && (mg.cls < NUM_MONSTERS || needs_resolution(mg.cls)))
     {
         const monster_type habitat_target =
             mg.cls == RANDOM_MONSTER ? MONS_BAT : mg.cls;
