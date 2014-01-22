@@ -2635,11 +2635,11 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 1 + random2(3);
         break;
 
-    case MONS_DEMONSPAWN_BLOOD_SAINT:
-    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
-    case MONS_DEMONSPAWN_WARMONGER:
-    case MONS_DEMONSPAWN_CORRUPTER:
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_BLOOD_SAINT:
+    case MONS_CHAOS_CHAMPION:
+    case MONS_WARMONGER:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
         band = BAND_NONBASE_DEMONSPAWN;
         band_size = 3 + random2(4);
         break;

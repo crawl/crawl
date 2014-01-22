@@ -2482,11 +2482,11 @@ void define_monster(monster* mons)
         monnumber = x_chance_in_y(3, 5) ? random_range(2, 4) : 0;
         break;
 
-    case MONS_DEMONSPAWN_BLOOD_SAINT:
-    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
-    case MONS_DEMONSPAWN_WARMONGER:
-    case MONS_DEMONSPAWN_CORRUPTER:
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_BLOOD_SAINT:
+    case MONS_CHAOS_CHAMPION:
+    case MONS_WARMONGER:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
     {
         // Some base demonspawn have more or less HP, AC, EV than their
         // brethren; those should be based on the base monster.

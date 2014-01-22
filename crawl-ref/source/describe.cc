@@ -3090,15 +3090,15 @@ static string _describe_demonspawn_role(monster_type type)
 {
     switch (type)
     {
-    case MONS_DEMONSPAWN_BLOOD_SAINT:
+    case MONS_BLOOD_SAINT:
         return "Its eyes are filled with a thirst for blood.";
-    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
+    case MONS_CHAOS_CHAMPION:
         return "It looks around wildly, filled with the throes of madness.";
-    case MONS_DEMONSPAWN_WARMONGER:
+    case MONS_WARMONGER:
         return "It hefts its weapon menacingly, ever ready for more battles.";
-    case MONS_DEMONSPAWN_CORRUPTER:
+    case MONS_CORRUPTER:
         return "Space seems to shimmer and twist in its vicinity.";
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_BLACK_SUN:
         return "It menaces with an unholy aura.";
     default:
         return "";
@@ -3594,11 +3594,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_INFERNAL_DEMONSPAWN:
     case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_DEMONSPAWN_BLOOD_SAINT:
-    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
-    case MONS_DEMONSPAWN_WARMONGER:
-    case MONS_DEMONSPAWN_CORRUPTER:
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_BLOOD_SAINT:
+    case MONS_CHAOS_CHAMPION:
+    case MONS_WARMONGER:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
     {
         inf.body << "\n" << _describe_demonspawn(mi) << "\n";
         break;
