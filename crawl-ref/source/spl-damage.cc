@@ -2677,6 +2677,7 @@ static bool _dazzle_can_hit(const actor *act)
 
         return mons->type != MONS_BATTLESPHERE
                && mons->type != MONS_ORB_OF_DESTRUCTION
+               && mons->type != MONS_GRAND_AVATAR
                && mons_species(mons->type) != MONS_BUSH
                && !fedhas_shoot_through(testbeam, mons);
     }

@@ -1729,6 +1729,7 @@ enum enchant_type
     ENCH_FROZEN,
     ENCH_EPHEMERAL_INFUSION,
     ENCH_BLACK_MARK,
+    ENCH_GRAND_AVATAR,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2263,6 +2264,7 @@ enum monster_type                      // menv[].type
     MONS_DANCING_WEAPON,
 #if TAG_MAJOR_VERSION > 34
     MONS_SPECTRAL_WEAPON,
+    MONS_GRAND_AVATAR,
 #endif
     MONS_HARPY,
     MONS_RAVEN,
@@ -2889,6 +2891,7 @@ enum monster_type                      // menv[].type
     MONS_LAST_DEMONSPAWN = MONS_DEMONSPAWN_BLACK_SUN,
 
     MONS_WORLDBINDER,
+    MONS_GRAND_AVATAR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3784,6 +3787,7 @@ enum spell_type
     SPELL_CHAIN_OF_CHAOS,
     SPELL_CHAOTIC_MIRROR,
     SPELL_BLACK_MARK,
+    SPELL_GRAND_AVATAR,
     NUM_SPELLS
 };
 

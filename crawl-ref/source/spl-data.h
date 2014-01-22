@@ -3444,6 +3444,19 @@ struct spell_desc
 },
 
 {
+    SPELL_GRAND_AVATAR, "Grand Avatar",
+      SPTYP_CONJURATION | SPTYP_CHARMS | SPTYP_HEXES,
+      SPFLAG_MONSTER,
+      4,
+      100,
+      -1, -1,
+      0,
+      NULL,
+      false,
+      true
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

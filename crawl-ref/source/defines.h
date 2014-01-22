@@ -240,6 +240,8 @@ const int AGILITY_BONUS = 5;
 #define MAX_MONSTER_HP 10000
 #define DJ_MP_RATE 2
 
+#define GRAND_AVATAR_DAMAGE 15
+
 // some shortcuts:
 #define menv   env.mons
 #define mitm   env.item

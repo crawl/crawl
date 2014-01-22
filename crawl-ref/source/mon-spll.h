@@ -2355,4 +2355,15 @@
        SPELL_DEATHS_DOOR
       }
     },
+
+    {  MST_DEMONSPAWN_WARMONGER,
+      {
+       SPELL_MELEE, // heh
+       SPELL_NO_SPELL,
+       SPELL_GRAND_AVATAR,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
 #endif

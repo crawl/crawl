@@ -1861,6 +1861,15 @@ int monster_die(monster* mons, killer_type killer,
             simple_monster_message(mons, " exhausts itself and dries up.");
         silent = true;
     }
+    else if (mons->type == MONS_GRAND_AVATAR)
+    {
+        if (!silent)
+        {
+            simple_monster_message(mons, " fades into the ether.",
+                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        }
+        silent = true;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
