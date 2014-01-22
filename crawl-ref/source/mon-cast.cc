@@ -1007,6 +1007,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_CORRUPT_BODY:
+        beam.flavour    = BEAM_CORRUPT_BODY;
+        beam.is_beam    = true;
+        break;
+
     default:
         if (check_validity)
         {
