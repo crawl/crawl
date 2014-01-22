@@ -100,6 +100,8 @@ enum band_type
     BAND_PHANTASMAL_WARRIORS,
     BAND_THRASHING_HORRORS,
     BAND_RAIJU,
+    BAND_BASE_DEMONSPAWN,
+    BAND_NONBASE_DEMONSPAWN,
     NUM_BANDS                   // always last
 };
 

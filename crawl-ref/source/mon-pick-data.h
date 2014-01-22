@@ -862,6 +862,7 @@ static const pop_entry pop_abyss[] =
   {  1, 10,  178, SEMI, MONS_SPATIAL_MAELSTROM },
   {  1,  5,   89, FLAT, MONS_APOCALYPSE_CRAB },
   {  1,  5,  300, FLAT, MONS_RAIJU },
+  {  1,  8,  165, DOWN, MONS_WORLDBINDER },
   {  1,  5,   52, FLAT, MONS_VERY_UGLY_THING },
   // Demons
   {  1,  4,   25, DOWN, MONS_CRIMSON_IMP },
@@ -877,7 +878,7 @@ static const pop_entry pop_abyss[] =
   {  1,  5,   73, DOWN, MONS_HELLWING },
   {  1,  5,   89, DOWN, MONS_SIXFIRHY },
   {  1,  5,  129, DOWN, MONS_ORANGE_DEMON },
-  {  1,  8,  494, DOWN, MONS_YNOXINUL },
+  {  1,  8,  329, DOWN, MONS_YNOXINUL },
   {  1,  5,  300, FLAT, MONS_NEQOXEC },
   {  1,  5,  300, FLAT, MONS_SMOKE_DEMON },
   {  1,  5,  192, FLAT, MONS_CHAOS_SPAWN },
@@ -1037,6 +1038,16 @@ static const pop_entry pop_pan[] =
   {  1,  1,   89, FLAT, MONS_RAKSHASA },
   {  1,  1, 1000, FLAT, MONS_ABOMINATION_LARGE },
   {  1,  1,    8, FLAT, MONS_PROFANE_SERVITOR },
+  {  1,  1, 1000, FLAT, MONS_MONSTROUS_DEMONSPAWN },
+  {  1,  1, 1000, FLAT, MONS_GELID_DEMONSPAWN },
+  {  1,  1, 1000, FLAT, MONS_INFERNAL_DEMONSPAWN },
+  {  1,  1, 1000, FLAT, MONS_PUTRID_DEMONSPAWN },
+  {  1,  1, 1000, FLAT, MONS_TORTUROUS_DEMONSPAWN },
+  {  1,  1,  800, FLAT, MONS_DEMONSPAWN_BLOOD_SAINT },
+  {  1,  1,  800, FLAT, MONS_DEMONSPAWN_CHAOS_CHAMPION },
+  {  1,  1,  800, FLAT, MONS_DEMONSPAWN_WARMONGER },
+  {  1,  1,  800, FLAT, MONS_DEMONSPAWN_CORRUPTER },
+  {  1,  1,  800, FLAT, MONS_DEMONSPAWN_BLACK_SUN },
   { 0,0,0,FLAT,MONS_0 }
 };
 
