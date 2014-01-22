@@ -1469,8 +1469,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_GELID_DEMONSPAWN:
     case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_DEMONSPAWN_CORRUPTER:
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         // Demonspawn probably want to use weapons close to the "natural"
@@ -1494,7 +1494,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                  0);
         break;
 
-    case MONS_DEMONSPAWN_BLOOD_SAINT:
+    case MONS_BLOOD_SAINT:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(4, WPN_DAGGER,
@@ -1502,7 +1502,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                 0);
         break;
 
-    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
+    case MONS_CHAOS_CHAMPION:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         do
@@ -1529,7 +1529,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             level = random2(300);
         break;
 
-    case MONS_DEMONSPAWN_WARMONGER:
+    case MONS_WARMONGER:
         level = MAKE_GOOD_ITEM;
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
@@ -1928,8 +1928,8 @@ static void _give_shield(monster* mon, int level)
     case MONS_GELID_DEMONSPAWN:
     case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_DEMONSPAWN_CORRUPTER:
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
         if (coinflip())
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
@@ -2045,7 +2045,7 @@ static void _give_shield(monster* mon, int level)
                                            level, MAKE_ITEM_NO_RACE);
         }
         break;
-    case MONS_DEMONSPAWN_WARMONGER:
+    case MONS_WARMONGER:
         make_item_for_monster(mon, OBJ_ARMOUR,
                               coinflip() ? ARM_LARGE_SHIELD : ARM_SHIELD,
                               MAKE_GOOD_ITEM, MAKE_ITEM_NO_RACE);
@@ -2516,8 +2516,8 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_INFERNAL_DEMONSPAWN:
     case MONS_PUTRID_DEMONSPAWN:
     case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_DEMONSPAWN_CORRUPTER:
-    case MONS_DEMONSPAWN_BLACK_SUN:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(2, ARM_LEATHER_ARMOUR,
@@ -2528,7 +2528,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                 0);
         break;
 
-    case MONS_DEMONSPAWN_BLOOD_SAINT:
+    case MONS_BLOOD_SAINT:
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         item_race      = MAKE_ITEM_NO_RACE;
@@ -2536,7 +2536,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type  = ARM_ROBE;
         break;
 
-    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
+    case MONS_CHAOS_CHAMPION:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         if (one_chance_in(30))
@@ -2563,7 +2563,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         level = random2(150);
         break;
 
-    case MONS_DEMONSPAWN_WARMONGER:
+    case MONS_WARMONGER:
         if (coinflip())
             level = MAKE_GOOD_ITEM;
         item_race      = MAKE_ITEM_NO_RACE;

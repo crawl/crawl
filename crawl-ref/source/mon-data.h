@@ -5212,7 +5212,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEMONSPAWN_BLOOD_SAINT, '6', LIGHTBLUE, "demonspawn blood saint",
+    MONS_BLOOD_SAINT, '6', LIGHTBLUE, "blood saint",
     M_WARM_BLOOD | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, -3,
@@ -5224,7 +5224,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEMONSPAWN_CHAOS_CHAMPION, '6', ETC_RANDOM, "demonspawn chaos champion",
+    MONS_CHAOS_CHAMPION, '6', ETC_RANDOM, "chaos champion",
     M_WARM_BLOOD | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, -3,
@@ -5236,7 +5236,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEMONSPAWN_WARMONGER, '6', LIGHTCYAN, "demonspawn warmonger",
+    MONS_WARMONGER, '6', LIGHTCYAN, "warmonger",
     M_WARM_BLOOD | M_SPEAKS | M_SPELLCASTER | M_PRIEST,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, -3,
@@ -5248,7 +5248,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEMONSPAWN_CORRUPTER, '6', LIGHTGREEN, "demonspawn corrupter",
+    MONS_CORRUPTER, '6', LIGHTGREEN, "corrupter",
     M_WARM_BLOOD | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, -3,
@@ -5260,7 +5260,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DEMONSPAWN_BLACK_SUN, '6', LIGHTMAGENTA, "demonspawn black sun",
+    MONS_BLACK_SUN, '6', LIGHTMAGENTA, "black sun",
     M_WARM_BLOOD | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, -3,

@@ -662,6 +662,10 @@ black mamba
 
 A large and astonishingly fast tropical snake whose bite bears a deadly venom.
 %%%%
+black sun
+
+<demonspawn>
+%%%%
 blink frog
 
 A species of giant frog that possesses the ability to blink at will. It can
@@ -671,6 +675,10 @@ commonly found in packs.
 blizzard demon
 
 A greater demon, wreathed in snow and lightning.
+%%%%
+blood saint
+
+<demonspawn>
 %%%%
 blue devil
 
@@ -767,6 +775,10 @@ centaur warrior
 A muscular centaur, a veteran of numerous battles, armed with well-made weapons
 and able to use them skillfully.
 %%%%
+chaos champion
+
+<demonspawn>
+%%%%
 chaos spawn
 
 A being of pure chaos, its form is constantly shifting, growing and then losing
@@ -788,6 +800,10 @@ individual beasts combined into one.
 clay golem
 
 A huge clay statue that has been animated by occult means.
+%%%%
+corrupter
+
+<demonspawn>
 %%%%
 crawling corpse
 
@@ -970,26 +986,6 @@ demonspawn
 The offspring of a human and his or her demon lover, a young demonspawn, before
 its hellish heritage fully asserts itself, closely resembles a human being, but
 with a certain devilish cast to its features.
-%%%%
-demonspawn black sun
-
-<demonspawn>
-%%%%
-demonspawn blood saint
-
-<demonspawn>
-%%%%
-demonspawn chaos champion
-
-<demonspawn>
-%%%%
-demonspawn corrupter
-
-<demonspawn>
-%%%%
-demonspawn warmonger
-
-<demonspawn>
 %%%%
 diamond obelisk
 
@@ -2798,6 +2794,10 @@ warg
 
 A particularly large and evil-looking wolf, usually found in the company of
 orcs.
+%%%%
+warmonger
+
+<demonspawn>
 %%%%
 water elemental
 
