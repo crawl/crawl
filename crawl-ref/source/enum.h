@@ -402,7 +402,8 @@ enum beam_type                  // bolt::flavour
     BEAM_MALIGN_OFFERING,
     BEAM_AGILITY,
     BEAM_SAP_MAGIC,
-    BEAM_LAST_ENCHANTMENT = BEAM_SAP_MAGIC,
+    BEAM_CORRUPT_BODY,
+    BEAM_LAST_ENCHANTMENT = BEAM_CORRUPT_BODY,
 
     BEAM_MEPHITIC,
 #if TAG_MAJOR_VERSION == 34
@@ -3117,6 +3118,7 @@ enum mutation_type
     RANDOM_BAD_MUTATION,
     RANDOM_SLIME_MUTATION,
     RANDOM_NON_SLIME_MUTATION,
+    RANDOM_CORRUPT_MUTATION,
 };
 
 enum object_class_type                 // mitm[].base_type
@@ -3793,6 +3795,7 @@ enum spell_type
     SPELL_BLACK_MARK,
     SPELL_GRAND_AVATAR,
     SPELL_SAP_MAGIC,
+    SPELL_CORRUPT_BODY,
     NUM_SPELLS
 };
 

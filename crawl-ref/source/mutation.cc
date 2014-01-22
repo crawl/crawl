@@ -1122,6 +1122,19 @@ static mutation_type _get_random_xom_mutation()
     return mutat;
 }
 
+static mutation_type _get_random_corrupt_mutation()
+{
+    const mutation_type corrupt_muts[] =
+    {
+        MUT_WEAK,          MUT_DOPEY,         MUT_CLUMSY,
+        MUT_DEFORMED,      MUT_DETERIORATION, MUT_BLURRY_VISION,
+        MUT_SLOW_HEALING,  MUT_FRAIL,         MUT_LOW_MAGIC,
+        MUT_FAST_METABOLISM
+    };
+
+    return RANDOM_ELEMENT(corrupt_muts);
+}
+
 static mutation_type _get_random_mutation(mutation_type mutclass)
 {
     mut_total mt;
@@ -1579,6 +1592,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_SLIME_MUTATION:
         mutat = _get_random_slime_mutation();
         break;
+    case RANDOM_CORRUPT_MUTATION:
+        mutat = _get_random_corrupt_mutation();
+        break;
     default:
         break;
     }
@@ -1887,7 +1903,8 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
         || which_mutation == RANDOM_XOM_MUTATION
         || which_mutation == RANDOM_GOOD_MUTATION
         || which_mutation == RANDOM_BAD_MUTATION
-        || which_mutation == RANDOM_NON_SLIME_MUTATION)
+        || which_mutation == RANDOM_NON_SLIME_MUTATION
+        || which_mutation == RANDOM_CORRUPT_MUTATION)
     {
         while (true)
         {

@@ -297,6 +297,12 @@ This spell rapidly accelerates the decomposition of any corpses lying around
 the caster, emitting in the process a foul miasmic vapour, which eats away at
 the life force of any creature it envelops.
 %%%%
+Corrupt Body spell
+
+This spell instills a corruption within a target, temporarily mutating their
+body in an adverse fashion. If cannot affect artificial beings, and the undead
+will decompose if affected.
+%%%%
 Cure Poison spell
 
 This spell removes poison from the caster's system.

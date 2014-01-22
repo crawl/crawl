@@ -208,6 +208,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         break;
     case BEAM_POLYMORPH:
     case BEAM_MALMUTATE:
+    case BEAM_CORRUPT_BODY:
         elem = ETC_MUTAGENIC;
         break;
     case BEAM_CHAOS:
@@ -3334,7 +3335,9 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    if (flavour != BEAM_MALMUTATE && has_saving_throw()
+    if (flavour != BEAM_MALMUTATE
+        && flavour != BEAM_CORRUPT_BODY
+        && has_saving_throw()
         && you.check_res_magic(ench_power) > 0)
     {
         // You resisted it.
@@ -3644,6 +3647,13 @@ void bolt::affect_player_enchantment()
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
+        break;
+
+    case BEAM_CORRUPT_BODY:
+        mprf(MSGCH_WARN, "A corruption grows within you!");
+        temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body");
+        if (one_chance_in(5))
+            temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body");
         break;
 
     default:
@@ -4912,6 +4922,7 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     switch (flavour)
     {
     case BEAM_MALMUTATE:
+    case BEAM_CORRUPT_BODY:
         rc = mon->can_mutate();
         break;
 
@@ -5387,6 +5398,29 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         }
         return MON_AFFECTED;
 
+    case BEAM_CORRUPT_BODY:
+        if (mon->can_mutate())
+        {
+            switch (mon->type)
+            {
+                case MONS_UGLY_THING:
+                case MONS_VERY_UGLY_THING:
+                    mon->malmutate("corrupt body");
+                    break;
+                case MONS_ABOMINATION_SMALL:
+                case MONS_ABOMINATION_LARGE:
+                    mon->props["tile_num"].get_short() = random2(256);
+                    break;
+                case MONS_WRETCHED_STAR:
+                case MONS_PULSATING_LUMP:
+                case MONS_CHAOS_SPAWN:
+                    break;
+                default:
+                    mon->add_ench(mon_enchant(ENCH_WRETCHED, 1));
+                    break;
+            }
+        }
+        break;
 
     default:
         break;
@@ -6241,6 +6275,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_MALIGN_OFFERING:       return "malign offering";
     case BEAM_AGILITY:               return "agility";
     case BEAM_SAP_MAGIC:             return "sap magic";
+    case BEAM_CORRUPT_BODY:          return "corrupt body";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
