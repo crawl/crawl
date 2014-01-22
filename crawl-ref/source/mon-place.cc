@@ -2626,6 +2626,24 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     }
 
+    case MONS_MONSTROUS_DEMONSPAWN:
+    case MONS_GELID_DEMONSPAWN:
+    case MONS_INFERNAL_DEMONSPAWN:
+    case MONS_PUTRID_DEMONSPAWN:
+    case MONS_TORTUROUS_DEMONSPAWN:
+        band = BAND_BASE_DEMONSPAWN;
+        band_size = 1 + random2(3);
+        break;
+
+    case MONS_DEMONSPAWN_BLOOD_SAINT:
+    case MONS_DEMONSPAWN_CHAOS_CHAMPION:
+    case MONS_DEMONSPAWN_WARMONGER:
+    case MONS_DEMONSPAWN_CORRUPTER:
+    case MONS_DEMONSPAWN_BLACK_SUN:
+        band = BAND_NONBASE_DEMONSPAWN;
+        band_size = 3 + random2(4);
+        break;
+
     default: ;
     }
 
@@ -3021,6 +3039,18 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_RAIJU:
         return MONS_RAIJU;
+
+    case BAND_NONBASE_DEMONSPAWN:
+        if (which == 1 && coinflip()
+            || which == 2 && one_chance_in(4))
+        {
+            return static_cast<monster_type>(
+                random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
+                             MONS_LAST_NONBASE_DEMONSPAWN));
+        }
+        // deliberate fall-through
+    case BAND_BASE_DEMONSPAWN:
+        return random_demonspawn_monster_species();
 
     default:
         die("unhandled band type %d", band);
