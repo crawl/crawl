@@ -1202,6 +1202,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FORCEFUL_INVITATION:
     case SPELL_PLANEREND:
     case SPELL_CHAIN_OF_CHAOS:
+    case SPELL_BLACK_MARK:
         return true;
     default:
         if (check_validity)
@@ -1841,6 +1842,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+    case SPELL_BLACK_MARK:
+        if (mon->has_ench(ENCH_BLACK_MARK))
+            ret = true;
+        break;
+
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
         if (mon->friendly() && mon->foe == MHITYOU)
@@ -2441,6 +2447,25 @@ static void _cast_ephemeral_infusion(monster* agent)
                 mon_enchant(ENCH_EPHEMERAL_INFUSION,
                             2 * agent->spell_hd(SPELL_EPHEMERAL_INFUSION),
                             agent, dur));
+        }
+    }
+}
+
+static void _cast_black_mark(monster* agent)
+{
+    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (!ai->visible_to(agent)
+            || ai->is_player()
+            || !mons_aligned(*ai, agent))
+        {
+            continue;
+        }
+        monster* mon = ai->as_monster();
+        if (!mon->has_ench(ENCH_BLACK_MARK))
+        {
+            mon->add_ench(ENCH_BLACK_MARK);
+            simple_monster_message(mon, " begins absorbing vital energies!");
         }
     }
 }
@@ -5460,6 +5485,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_PLANEREND:
         _branch_summon_helper(mons, spell_cast, _planerend_summons,
                               ARRAYSZ(_planerend_summons), 1 + random2(3));
+        return;
+
+    case SPELL_BLACK_MARK:
+        _cast_black_mark(mons);
         return;
     }
 

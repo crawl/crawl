@@ -499,6 +499,36 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
            || flavour == AF_WATERPORT;
 }
 
+void melee_attack::apply_black_mark_effects()
+{
+    ASSERT(attacker->is_monster());
+    monster* mon = attacker->as_monster();
+
+    if (mon->heal(random2avg(damage_done, 2)))
+        simple_monster_message(mon, " is healed.");
+
+    switch(random2(4))
+    {
+        case 0:
+            antimagic_affects_defender();
+            break;
+        case 1:
+            defender->slow_down(attacker, 5 + random2(7));
+            break;
+        case 2:
+            if (defender->is_player())
+            {
+                stat_type stat = random_choose(STAT_STR, STAT_DEX, STAT_INT);
+                defender->drain_stat(stat, 1, attacker);
+                break;
+            }
+            // deliberate fall-through
+        case 3:
+            defender->drain_exp(attacker, false, 10);
+            break;
+    }
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -606,6 +636,13 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
+
+    if (damage_done > 0
+        && attacker->is_monster()
+        && attacker->as_monster()->has_ench(ENCH_BLACK_MARK))
+    {
+        apply_black_mark_effects();
+    }
 
     if (attacker->is_player())
     {

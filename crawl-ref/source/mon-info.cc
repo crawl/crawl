@@ -192,6 +192,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_AGILE;
     case ENCH_FROZEN:
         return MB_FROZEN;
+    case ENCH_BLACK_MARK:
+        return MB_BLACK_MARK;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1579,6 +1581,8 @@ vector<string> monster_info::attributes() const
         v.push_back("unusually agile");
     if (is(MB_FROZEN))
         v.push_back("encased in ice");
+    if (is(MB_BLACK_MARK))
+        v.push_back("absorbing vital energies");
     return v;
 }
 

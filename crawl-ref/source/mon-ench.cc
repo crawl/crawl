@@ -918,6 +918,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
     }
 
+    case ENCH_BLACK_MARK:
+        if (!quiet)
+            simple_monster_message(this, " is no longer absorbing vital"
+                                         " energies.");
+        calc_speed();
+        break;
+
     default:
         break;
     }
@@ -1026,7 +1033,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
         case ENCH_FLAYED: case ENCH_AGILE: case ENCH_FROZEN:
-        case ENCH_EPHEMERAL_INFUSION:
+        case ENCH_EPHEMERAL_INFUSION: case ENCH_BLACK_MARK:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -2084,7 +2091,7 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown",  "icemail", "agile",
-    "frozen", "ephemeral_infusion", "buggy",
+    "frozen", "ephemeral_infusion", "black_mark", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2228,6 +2235,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_STONESKIN:
     case ENCH_OZOCUBUS_ARMOUR:
     case ENCH_AGILE:
+    case ENCH_BLACK_MARK:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:

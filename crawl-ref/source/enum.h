@@ -1728,6 +1728,7 @@ enum enchant_type
     ENCH_AGILE,
     ENCH_FROZEN,
     ENCH_EPHEMERAL_INFUSION,
+    ENCH_BLACK_MARK,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3782,6 +3783,7 @@ enum spell_type
     SPELL_PLANEREND,
     SPELL_CHAIN_OF_CHAOS,
     SPELL_CHAOTIC_MIRROR,
+    SPELL_BLACK_MARK,
     NUM_SPELLS
 };
 
