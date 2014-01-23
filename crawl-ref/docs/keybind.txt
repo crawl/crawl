@@ -33,8 +33,8 @@ Untrapping or opening/closing doors in a given direction:
 ^K        CMD_OPEN_DOOR_UP
 ^L        CMD_OPEN_DOOR_RIGHT
 ^N        CMD_OPEN_DOOR_DOWN_RIGHT
-^U        CMD_OPEN_DOOR_UP_LEFT
-^Y        CMD_OPEN_DOOR_UP_RIGHT
+^U        CMD_OPEN_DOOR_UP_RIGHT
+^Y        CMD_OPEN_DOOR_UP_LEFT
 
 Inventory management
 --------------------
