@@ -2038,6 +2038,7 @@ int exper_value(const monster* mon, bool real)
             case SPELL_SHATTER:
             case SPELL_CHAIN_LIGHTNING:
             case SPELL_TORNADO:
+            case SPELL_LEGENDARY_DESTRUCTION:
                 diff += 25;
                 break;
 
@@ -2056,12 +2057,14 @@ int exper_value(const monster* mon, bool real)
             case SPELL_HASTE:
             case SPELL_AGONY:
             case SPELL_LRD:
+            case SPELL_CHAIN_OF_CHAOS:
                 diff += 10;
                 break;
 
             case SPELL_HAUNT:
             case SPELL_SUMMON_DRAGON:
             case SPELL_SUMMON_HORRIBLE_THINGS:
+            case SPELL_PLANEREND:
                 diff += 7;
                 break;
 
