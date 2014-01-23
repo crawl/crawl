@@ -5499,7 +5499,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                     10, SPELL_LEHUDIBS_CRYSTAL_SPEAR,
                                      2, SPELL_IOOD,
                                      5, SPELL_GHOSTLY_FIREBALL,
-                                    10, SPELL_EXPLOSIVE_BOLT,
+                                    10, SPELL_FIREBALL,
                                      0);
         mons_cast(mons, pbolt, real_spell, orig_noise, special_ability);
         return;

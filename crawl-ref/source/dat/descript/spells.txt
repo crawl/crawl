@@ -696,8 +696,7 @@ Legendary Destruction spell
 
 At the expense of the caster's life force, this spell randomly conjures forth
 one of several powerful magical effects - Orb of Electrocution, Lehudib's
-Crystal Spear, Orb of Destruction, Ghostly Fireball, Explosive Bolt, or
-Flash Freeze.
+Crystal Spear, Orb of Destruction, Ghostly Fireball, Fireball, or Flash Freeze.
 %%%%
 Lehudib's Crystal Spear spell
 
