@@ -4363,6 +4363,12 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         if (mon->heal(roll_dice(3, 10)))
             simple_monster_message(mon, " is bolstered by the flame.");
     }
+
+    if (name == "volley of spikes" && dmg > 0
+        && !(mon->is_insubstantial() || mons_genus(mon->type) == MONS_JELLY))
+    {
+        mon->add_ench(mon_enchant(ENCH_BARBS, 1, agent(), random_range(5, 7) * 10));
+    }
 }
 
 void bolt::beam_hits_actor(actor *act)

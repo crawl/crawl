@@ -965,7 +965,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
-        case ENCH_FLAYED:
+        case ENCH_FLAYED: case ENCH_BARBS:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1175,6 +1175,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_AWAKEN_VINES:
     case ENCH_WIND_AIDED:
     case ENCH_FIRE_VULN:
+    case ENCH_BARBS:
     // case ENCH_ROLLING:
         decay_enchantment(en);
         break;
@@ -2045,7 +2046,8 @@ static const char *enchant_names[] =
     "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
-    "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song", "buggy",
+    "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
+    "barbs", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
