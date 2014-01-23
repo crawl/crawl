@@ -4453,8 +4453,16 @@ mons_spec mons_list::mons_by_name(string name) const
     if (name.find("draconian") != string::npos)
         return drac_monspec(name);
 
-    if (name.find("demonspawn") != string::npos)
+    // FIXME: cleaner way to do this?
+    if (name.find("demonspawn") != string::npos
+        || name.find("black sun") != string::npos
+        || name.find("blood saint") != string::npos
+        || name.find("chaos champion") != string::npos
+        || name.find("corrupter") != string::npos
+        || name.find("warmonger") != string::npos)
+    {
         return demonspawn_monspec(name);
+    }
 
     return get_monster_by_name(name);
 }
