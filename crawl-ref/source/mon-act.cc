@@ -1890,6 +1890,25 @@ static void _grand_avatar_act(monster* mons)
     }
     else
         grand_avatar_reset(mons);
+
+    bolt tracer;
+    tracer.source    = mons->pos();
+    tracer.target    = mons->target;
+    tracer.range     = LOS_RADIUS;
+    tracer.hit       = AUTOMATIC_HIT;
+    tracer.flavour   = BEAM_MMISSILE;
+    tracer.is_tracer = true;
+    fire_tracer(mons, tracer);
+
+    if (tracer.path_taken.back() != mons->target)
+    {
+        coord_def near;
+        if (find_habitable_spot_near(mons->target, mons->type, 2, false, near)
+            && mons->blink_to(near))
+        {
+            mons->lose_energy(EUT_SPECIAL);
+        }
+    }
 }
 
 void handle_monster_move(monster* mons)
