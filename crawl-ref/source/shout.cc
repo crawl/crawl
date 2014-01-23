@@ -674,8 +674,8 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                     else
                     {
                         mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, 0, dur));
-                        simple_monster_message(*mi, " is consumed with "
-                                                    "blood-lust!");
+                        simple_monster_message(*mi, " goes into a frenzy at the "
+                                                    "smell of blood!");
                     }
                 }
             }
