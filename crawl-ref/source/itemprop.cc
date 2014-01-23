@@ -494,6 +494,7 @@ void do_curse_item(item_def &item, bool quiet)
     {
         if (!quiet)
         {
+            const bool was_known = item_ident(item, ISFLAG_KNOW_TYPE);
             mprf("Your %s glows black briefly, but repels the curse.",
                  item.name(DESC_PLAIN).c_str());
             if (is_artefact(item))
@@ -501,7 +502,8 @@ void do_curse_item(item_def &item, bool quiet)
             else
                 set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
-            mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
+            if (!was_known)
+                mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
         }
         return;
     }
