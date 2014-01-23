@@ -618,7 +618,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (distance2(mi->pos(), where))
+        if (distance2(mi->pos(), where) > range)
             continue;
 
         switch (sense)
