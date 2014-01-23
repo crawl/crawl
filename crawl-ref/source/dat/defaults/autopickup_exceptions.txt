@@ -2,6 +2,9 @@ ae := autopickup_exceptions
 
 #### inclusions ###
 
+# Autopickup runes by default.
+ae = <rune of Zot
+
 # curare is always dangerous on the floor, so you may wish to always pick
 # it up.  Disabled by default.
 # ae = <curare-tipped
