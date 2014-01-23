@@ -1016,8 +1016,6 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         return;
 
     bool may_bleed = allow_bleeding_on_square(where);
-    if (!spatter && !may_bleed)
-        return;
 
     bool ignite_blood = player_mutation_level(MUT_IGNITE_BLOOD)
                         && you.see_cell(where);
@@ -1034,9 +1032,6 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
             env.pgrid(where) |= FPROP_BLOODY;
             _orient_wall_blood(where, from, old_blood);
 
-            if (smell_alert && in_bounds(where))
-                blood_smell(12, where);
-
             if (ignite_blood
                 && !cell_is_solid(where)
                 && env.cgrid(where) == EMPTY_CLOUD)
@@ -1044,6 +1039,12 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
                 place_cloud(CLOUD_FIRE, where, 5 + random2(6), &you);
             }
         }
+
+        // The blood spilled can be detected via blood scent even if the
+        // spot it would fall is prevented from becoming bloodied (for
+        // example, because it is water)
+        if (smell_alert && in_bounds(where))
+            blood_smell(12, where);
 
         if (spatter)
         {
