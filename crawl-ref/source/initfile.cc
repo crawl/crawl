@@ -778,6 +778,7 @@ void game_options::reset_options()
     autopickups.set(OBJ_JEWELLERY);
     autopickups.set(OBJ_WANDS);
     autopickups.set(OBJ_FOOD);
+    autopickups.set(OBJ_RODS);
     auto_switch             = false;
     suppress_startup_errors = false;
 
