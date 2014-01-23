@@ -83,7 +83,7 @@
 // Helper functions (some of these should probably be public).
 static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
-static beam_type _chaos_beam_flavour();
+static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
 static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
                                           bool intrinsic_only = false);
@@ -523,9 +523,12 @@ bool bolt::can_affect_wall_actor(const actor *act) const
     return false;
 }
 
-static beam_type _chaos_beam_flavour()
+static beam_type _chaos_beam_flavour(bolt* beam)
 {
-    const beam_type flavour = random_choose_weighted(
+    beam_type flavour;
+    do
+    {
+        flavour = random_choose_weighted(
             10, BEAM_FIRE,
             10, BEAM_COLD,
             10, BEAM_ELECTRICITY,
@@ -549,6 +552,10 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_AGILITY,
              2, BEAM_ENSNARE,
             0);
+    }
+    while (beam->name == "arc of chaos"
+           && (flavour == BEAM_BANISH
+               || flavour == BEAM_POLYMORPH));
 
     return flavour;
 }
@@ -769,7 +776,7 @@ void bolt::fake_flavour()
     if (real_flavour == BEAM_RANDOM)
         flavour = static_cast<beam_type>(random_range(BEAM_FIRE, BEAM_ACID));
     else if (real_flavour == BEAM_CHAOS)
-        flavour = _chaos_beam_flavour();
+        flavour = _chaos_beam_flavour(this);
 }
 
 void bolt::digging_wall_effect()
