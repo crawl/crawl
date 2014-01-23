@@ -3075,6 +3075,20 @@ void monster::expose_to_element(beam_type flavour, int strength,
         break;
     case BEAM_WATER:
         del_ench(ENCH_STICKY_FLAME);
+        break;
+    case BEAM_FIRE:
+    case BEAM_LAVA:
+    case BEAM_HELLFIRE:
+    case BEAM_NAPALM:
+    case BEAM_STEAM:
+        if (has_ench(ENCH_OZOCUBUS_ARMOUR))
+        {
+            lose_ench_duration(get_ench(ENCH_OZOCUBUS_ARMOUR),
+                               strength * BASELINE_DELAY);
+        }
+        if (has_ench(ENCH_ICEMAIL))
+            del_ench(ENCH_ICEMAIL);
+        break;
     default:
         break;
     }
@@ -5740,16 +5754,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (!alive())
         return;
 
-    if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
-        || flavour == BEAM_STEAM)
-    {
-        if (has_ench(ENCH_OZOCUBUS_ARMOUR))
-            lose_ench_duration(get_ench(ENCH_OZOCUBUS_ARMOUR),
-                               damage * BASELINE_DELAY);
-        if (has_ench(ENCH_ICEMAIL))
-            del_ench(ENCH_ICEMAIL);
-    }
 
     if (mons_species(type) == MONS_BUSH
         && res_fire() < 0 && flavour == BEAM_FIRE
