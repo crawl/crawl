@@ -1344,6 +1344,9 @@ static void _setup_generic(const newgame_def& ng)
         }
     }
 
+    // Autopickup runes by default
+    you.force_autopickup[OBJ_MISCELLANY][MISC_RUNE_OF_ZOT] = 1;
+
     reassess_starting_skills();
     init_skill_order();
     init_can_train();
