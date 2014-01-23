@@ -749,8 +749,11 @@ bool melee_attack::handle_phase_damaged()
             if (needs_message && !special_damage_message.empty())
                 mprf("%s", special_damage_message.c_str());
 
-            if (special_damage > 0)
-                inflict_damage(special_damage, special_damage_flavour);
+            if (special_damage > 0
+                && inflict_damage(special_damage, special_damage_flavour))
+            {
+                defender->expose_to_element(special_damage_flavour, 2);
+            }
         }
 
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
@@ -2336,7 +2339,9 @@ bool melee_attack::player_monattk_hit_effects()
              special_damage, special_damage_flavour);
     }
 
-    special_damage = inflict_damage(special_damage);
+    special_damage = inflict_damage(special_damage, special_damage_flavour);
+    if (special_damage > 0)
+        defender->expose_to_element(special_damage_flavour, 2);
 
     if (stab_attempt && stab_bonus > 0 && weapon
         && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
@@ -3685,6 +3690,7 @@ void melee_attack::apply_staff_damage()
                     attacker->name(DESC_THE).c_str(),
                     attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
+            special_damage_flavour = BEAM_COLD;
         }
         break;
 
@@ -3718,6 +3724,7 @@ void melee_attack::apply_staff_damage()
                     attacker->name(DESC_THE).c_str(),
                     attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
+            special_damage_flavour = BEAM_FIRE;
         }
         break;
 
