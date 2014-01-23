@@ -2537,15 +2537,13 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         if (one_chance_in(30))
         {
-            item.sub_type  = random_choose(ARM_CRYSTAL_PLATE_ARMOUR,
-                                           ARM_TROLL_LEATHER_ARMOUR,
+            item.sub_type  = random_choose(ARM_TROLL_LEATHER_ARMOUR,
                                            ARM_FIRE_DRAGON_ARMOUR,
                                            ARM_ICE_DRAGON_ARMOUR,
                                            ARM_STEAM_DRAGON_ARMOUR,
                                            ARM_MOTTLED_DRAGON_ARMOUR,
                                            ARM_STORM_DRAGON_ARMOUR,
                                            ARM_SWAMP_DRAGON_ARMOUR,
-                                           ARM_PEARL_DRAGON_ARMOUR,
                                            -1);
         }
         else
@@ -2569,9 +2567,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                   5, ARM_FIRE_DRAGON_ARMOUR,
                                                   5, ARM_ICE_DRAGON_ARMOUR,
                                                   5, ARM_MOTTLED_DRAGON_ARMOUR,
-                                                  5, ARM_GOLD_DRAGON_ARMOUR,
-                                                  1, ARM_CRYSTAL_PLATE_ARMOUR,
-                                                  1, ARM_PEARL_DRAGON_ARMOUR,
                                                   0);
         break;
 
