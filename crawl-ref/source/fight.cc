@@ -221,14 +221,10 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         trigger_spectral_weapon(attacker, defender);
     else if (!simu
              && attacker->is_monster()
-             && attacker->as_monster()->has_ench(ENCH_GRAND_AVATAR)
-             && orig_hp - defender->stat_hp()
-                >= random2(GRAND_AVATAR_DAMAGE))
+             && attacker->as_monster()->has_ench(ENCH_GRAND_AVATAR))
     {
-        actor* avatar = attacker->as_monster()->get_ench(ENCH_GRAND_AVATAR)
-                                                .agent();
-        if (avatar)
-            trigger_grand_avatar(avatar->as_monster(), defender, SPELL_MELEE);
+        trigger_grand_avatar(attacker->as_monster(), defender, SPELL_MELEE,
+                             orig_hp);
     }
 
     return true;
