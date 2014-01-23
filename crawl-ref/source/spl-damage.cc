@@ -356,10 +356,11 @@ spret_type cast_chain_spell(spell_type spell_cast, int pow,
                 beam.damage = calc_dice(5, 10 + pow * 2 / 3);
                 break;
             case SPELL_CHAIN_OF_CHAOS:
-                beam.colour     = ETC_RANDOM;
-                beam.ench_power = pow;
-                beam.damage     = calc_dice(3, 5 + pow / 2);
-                beam.fake_flavour();
+                beam.colour       = ETC_RANDOM;
+                beam.ench_power   = pow;
+                beam.damage       = calc_dice(3, 5 + pow / 2);
+                beam.real_flavour = BEAM_CHAOS;
+                beam.flavour      = BEAM_CHAOS;
             default:
                 break;
         }
