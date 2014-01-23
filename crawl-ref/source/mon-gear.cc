@@ -1924,12 +1924,6 @@ static void _give_shield(monster* mon, int level)
         break;
     case MONS_DRACONIAN_KNIGHT:
     case MONS_IRONHEART_PRESERVER:
-    case MONS_INFERNAL_DEMONSPAWN:
-    case MONS_GELID_DEMONSPAWN:
-    case MONS_PUTRID_DEMONSPAWN:
-    case MONS_TORTUROUS_DEMONSPAWN:
-    case MONS_CORRUPTER:
-    case MONS_BLACK_SUN:
         if (coinflip())
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
@@ -2037,6 +2031,8 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_FORMICID:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
         if (one_chance_in(3))
         {
             armour_type shield_type = coinflip() ? ARM_BUCKLER : ARM_SHIELD;
