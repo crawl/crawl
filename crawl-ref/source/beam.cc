@@ -3772,7 +3772,8 @@ void bolt::affect_player()
     int burn_power = (is_explosion) ? 5 : (is_beam) ? 3 : 2;
 
     // Roll the damage.
-    hurted += damage.roll();
+    if (name != "flash freeze" || !you.duration[DUR_FROZEN])
+        hurted += damage.roll();
 
 #ifdef DEBUG_DIAGNOSTICS
     int roll = hurted;
@@ -3951,8 +3952,13 @@ void bolt::affect_player()
         _explosive_bolt_explode(this, you.pos());
     else if (name == "flash freeze")
     {
-        mprf(MSGCH_WARN, "You are encased in ice.");
-        you.duration[DUR_FROZEN] = 3 * BASELINE_DELAY;
+        if (you.duration[DUR_FROZEN])
+            canned_msg(MSG_YOU_UNAFFECTED);
+        else
+        {
+            mprf(MSGCH_WARN, "You are encased in ice.");
+            you.duration[DUR_FROZEN] = 3 * BASELINE_DELAY;
+        }
     }
 }
 
@@ -4053,6 +4059,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
 {
     preac = postac = final = 0;
 
+    const bool freeze_immune =
+        (name == "flash freeze" && mon->has_ench(ENCH_FROZEN));
+
     // [ds] Changed how tracers determined damage: the old tracer
     // model took the average damage potential, subtracted the average
     // AC damage reduction and called that the average damage output.
@@ -4078,7 +4087,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // hurt monsters with low-damage ranged attacks and high-damage
     // melee attacks. I judge this an acceptable compromise (for now).
     //
-    const int preac_max_damage = damage.num * damage.size;
+    const int preac_max_damage =
+        (freeze_immune) ? 0
+                        : damage.num * damage.size;
 
     // preac: damage before AC modifier
     // postac: damage after AC modifier
@@ -4090,7 +4101,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
         // Was mean between min and max;
         preac = preac_max_damage;
     }
-    else
+    else if (!freeze_immune)
         preac = damage.roll();
 
     if (!apply_dmg_funcs(mon, preac, messages))
@@ -4409,8 +4420,13 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         _dazzle_monster(mon, agent());
     else if (name == "flash freeze")
     {
-        simple_monster_message(mon, " is flash-frozen.");
-        mon->add_ench(ENCH_FROZEN);
+        if (mon->has_ench(ENCH_FROZEN))
+            simple_monster_message(mon, " is unaffected.");
+        else
+        {
+            simple_monster_message(mon, " is flash-frozen.");
+            mon->add_ench(ENCH_FROZEN);
+        }
     }
 
     if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() == MH_UNDEAD)
