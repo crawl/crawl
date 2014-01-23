@@ -5494,14 +5494,23 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_LEGENDARY_DESTRUCTION:
     {
         mons->hurt(mons, 10);
-        spell_type real_spell = random_choose_weighted(
-                                    10, SPELL_ORB_OF_ELECTROCUTION,
-                                    10, SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-                                     2, SPELL_IOOD,
-                                     5, SPELL_GHOSTLY_FIREBALL,
-                                    10, SPELL_FIREBALL,
-                                    10, SPELL_FLASH_FREEZE,
-                                     0);
+        spell_type real_spell;
+        int range = 0;
+        do
+        {
+            real_spell = random_choose_weighted(
+                             10, SPELL_ORB_OF_ELECTROCUTION,
+                             10, SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+                              2, SPELL_IOOD,
+                              5, SPELL_GHOSTLY_FIREBALL,
+                             10, SPELL_FIREBALL,
+                             10, SPELL_FLASH_FREEZE,
+                              0);
+            range = spell_range(real_spell,
+                                12 * mons->spell_hd(real_spell),
+                                false);
+        }
+        while (distance2(mons->pos(), pbolt.target) > dist_range(range));
         mons_cast(mons, pbolt, real_spell, orig_noise, special_ability);
         return;
     }
