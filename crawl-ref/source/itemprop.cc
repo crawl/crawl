@@ -494,7 +494,9 @@ void do_curse_item(item_def &item, bool quiet)
     {
         if (!quiet)
         {
-            const bool was_known = item_ident(item, ISFLAG_KNOW_TYPE);
+            const bool was_known = is_artefact(item)
+                                 ? artefact_known_wpn_property(item, ARTP_BRAND)
+                                 : item_ident(item, ISFLAG_KNOW_TYPE);
             mprf("Your %s glows black briefly, but repels the curse.",
                  item.name(DESC_PLAIN).c_str());
             if (is_artefact(item))
