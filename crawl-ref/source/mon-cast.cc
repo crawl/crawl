@@ -5285,7 +5285,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             mons->add_ench(ENCH_IOOD_CHARGED);
 
-            if (!monsterNearby)
+            if (orig_noise || !monsterNearby)
                 return;
             string msg = getSpeakString("orb spider charge");
             if (!msg.empty())
@@ -5297,7 +5297,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             return;
         }
         mons->del_ench(ENCH_IOOD_CHARGED);
-        mons_cast_noise(mons, pbolt, spell_cast, special_ability);
+        if (orig_noise)
+            mons_cast_noise(mons, pbolt, spell_cast, special_ability);
         cast_iood(mons, 6 * mons->spell_hd(spell_cast), &pbolt);
         return;
     case SPELL_AWAKEN_FOREST:
@@ -5511,7 +5512,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                 false);
         }
         while (distance2(mons->pos(), pbolt.target) > dist_range(range));
-        mons_cast(mons, pbolt, real_spell, orig_noise, special_ability);
+        mons_cast(mons, pbolt, real_spell, false, special_ability);
         return;
     }
 
