@@ -50,11 +50,11 @@ typedef map<skill_type, int8_t>::iterator skill_map_iterator;
 static const char* _title_line =
     "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvSpeed | AvEffDam"; // 64 columns
 static const char* _csv_title_line =
-    "AvHitDam,MaxDam,Accuracy,AvDam,AvTime,AvSpeed,AvEffDam";
+    "AvHitDam\tMaxDam\tAccuracy\tAvDam\tAvTime\tAvSpeed\tAvEffDam";
 
 static const char* _fight_string(fight_data fdata, bool csv)
 {
-    return make_stringf(csv ? "%.1f,%d,%d%%,%.1f,%d,%.2f,%.1f"
+    return make_stringf(csv ? "%.1f\t%d\t%d%%\t%.1f\t%d\t%.2f\t%.1f"
                             : "   %5.1f |    %3d |     %3d%% |"
                               " %5.1f |   %3d  | %5.2f |    %5.1f",
                         fdata.av_hit_dam, fdata.max_dam, fdata.accuracy,
@@ -146,9 +146,9 @@ static void _write_you(FILE * o)
             you.dex());
 }
 
-static void _write_weapon(FILE * o, bool csv)
+static void _write_weapon(FILE * o)
 {
-    fprintf(o, csv ? "\"%s, Skill: %s\"\n" : "%s, Skill: %s\n",
+    fprintf(o, "%s, Skill: %s\n",
             _equipped_weapon_name().c_str(),
             skill_name(_equipped_skill()));
 }
@@ -524,7 +524,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     const char* title = make_stringf("%10.10s | %s", col_name.c_str(),
                                      _title_line).c_str();
     if (Options.fsim_csv)
-        fprintf(o, "%s,%s\n", col_name.c_str(), _csv_title_line);
+        fprintf(o, "%s\t%s\n", col_name.c_str(), _csv_title_line);
     else
         fprintf(o, "%s\n", title);
 
@@ -546,7 +546,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
                                          _fight_string(fdata, false));
         mprf("%s", line.c_str());
         if (Options.fsim_csv)
-            fprintf(o, "%d,%s\n", i, _fight_string(fdata, true));
+            fprintf(o, "%d\t%s\n", i, _fight_string(fdata, true));
         else
             fprintf(o, "%s\n", line.c_str());
         fflush(o);
@@ -576,16 +576,16 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
     }
 
     fprintf(o, "%s(x) vs %s(y)\n", skill_name(skx), skill_name(sky));
-    fprintf(o, Options.fsim_csv ? "," : "  ");
+    fprintf(o, Options.fsim_csv ? "\t" : "  ");
     for (int y = 1; y <= 27; y += 2)
-        fprintf(o,Options.fsim_csv ? "%d," : "   %2d", y);
+        fprintf(o,Options.fsim_csv ? "%d\t" : "   %2d", y);
 
     fprintf(o,"\n");
 
     const int iter_limit = Options.fsim_rounds;
     for (int y = 1; y <= 27; y += 2)
     {
-        fprintf(o, Options.fsim_csv ? "%d," : "%2d", y);
+        fprintf(o, Options.fsim_csv ? "%d\t" : "%2d", y);
         for (int x = 1; x <= 27; x += 2)
         {
             mesclr();
@@ -594,7 +594,7 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
             fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
             mprf("%s %d, %s %d: %d", skill_name(skx), x, skill_name(sky), y,
                  int(fdata.av_eff_dam));
-            fprintf(o,Options.fsim_csv ? "%.1f," : "%5.1f", fdata.av_eff_dam);
+            fprintf(o,Options.fsim_csv ? "%.1f\t" : "%5.1f", fdata.av_eff_dam);
             fflush(o);
 
             // kill the loop if the user hits escape
@@ -657,7 +657,7 @@ void wizard_fight_sim(bool double_scale)
     _write_version(o);
     _write_matchup(o, *mon, defense, Options.fsim_rounds);
     _write_you(o);
-    _write_weapon(o, Options.fsim_csv);
+    _write_weapon(o);
     _write_mon(o, *mon);
     fprintf(o,"\n");
 
@@ -682,7 +682,7 @@ void wizard_fight_sim(bool double_scale)
             string error;
             if (_fsim_kit_equip(Options.fsim_kit[i], error))
             {
-                _write_weapon(o, Options.fsim_csv);
+                _write_weapon(o);
                 fsim_proc(o, mon, defense);
                 fprintf(o, "\n");
             }
