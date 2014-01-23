@@ -148,6 +148,21 @@ static void _escape_water_hold(monster* mons)
     }
 }
 
+static void _handle_manticore_barbs(monster* mons)
+{
+    if (mons->has_ench(ENCH_BARBS))
+    {
+        mon_enchant barbs = mons->get_ench(ENCH_BARBS);
+        mons->hurt(monster_by_mid(barbs.source), roll_dice(2, barbs.degree * 2 + 2));
+        bleed_onto_floor(mons->pos(), mons->type, 2, false);
+        if (coinflip())
+        {
+            barbs.duration--;
+            mons->update_ench(barbs);
+        }
+    }
+}
+
 static bool _swap_monsters(monster* mover, monster* moved)
 {
     // Can't swap with a stationary monster.
@@ -227,6 +242,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     }
 
     _escape_water_hold(mover);
+
+    _handle_manticore_barbs(mover);
+    _handle_manticore_barbs(moved);
 
     return true;
 }
@@ -3427,6 +3445,9 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     mon->seen_context = SC_NONE;
     m2->seen_context = SC_NONE;
 
+    _handle_manticore_barbs(mon);
+    _handle_manticore_barbs(m2);
+
     return false;
 }
 
@@ -3538,6 +3559,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     mons->check_redraw(mons->pos() - delta);
     mons->apply_location_effects(mons->pos() - delta);
+
+    _handle_manticore_barbs(mons);
 
     return true;
 }
