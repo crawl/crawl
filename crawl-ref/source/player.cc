@@ -1573,6 +1573,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
+    rf -= player_mutation_level(MUT_HEAT_VULNERABILITY, temp);
     rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
 
     // spells:
@@ -1727,6 +1728,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
+    rc -= player_mutation_level(MUT_COLD_VULNERABILITY, temp);
     rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
     rc += player_mutation_level(MUT_SHAGGY_FUR, temp) == 3 ? 1 : 0;
 

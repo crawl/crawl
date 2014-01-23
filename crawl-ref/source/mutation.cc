@@ -1126,9 +1126,10 @@ static mutation_type _get_random_corrupt_mutation()
 {
     const mutation_type corrupt_muts[] =
     {
-        MUT_WEAK,          MUT_DOPEY,         MUT_CLUMSY,
         MUT_DEFORMED,      MUT_DETERIORATION, MUT_BLURRY_VISION,
         MUT_SLOW_HEALING,  MUT_FRAIL,         MUT_LOW_MAGIC,
+        MUT_HEAT_VULNERABILITY,
+        MUT_COLD_VULNERABILITY,
         MUT_FAST_METABOLISM
     };
 
@@ -1206,6 +1207,8 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_ACUTE_VISION,        MUT_BLURRY_VISION,    1},
         { MUT_FAST,                MUT_SLOW,             1},
         { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,       -1},
+        { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY, -1},
+        { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY, -1},
         };
 
     // If we have one of the pair, delete all levels of the other,
@@ -1392,6 +1395,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
 
     // Heat doesn't hurt fire, djinn don't care about hunger.
     if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE
+        || mutat == MUT_HEAT_VULNERABILITY
         || mutat == MUT_BERSERK
         || mutat == MUT_FAST_METABOLISM || mutat == MUT_SLOW_METABOLISM
         || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
@@ -1639,138 +1643,150 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     const unsigned int old_talents = your_talents(false).size();
 
+    int count = (which_mutation == RANDOM_CORRUPT_MUTATION)
+                ? min(2, mdef.levels - you.mutation[mutat])
+                : 1;
+
     bool gain_msg = true;
 
-    you.mutation[mutat]++;
-
-    // More than three messages, need to give them by hand.
-    switch (mutat)
+    while (count-- > 0)
     {
-    case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
-    case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-        mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, true));
-        gain_msg = false;
-        break;
+        you.mutation[mutat]++;
 
-    case MUT_LARGE_BONE_PLATES:
+        // More than three messages, need to give them by hand.
+        switch (mutat)
         {
-            const char *arms;
-            if (you.species == SP_FELID)
-                arms = "legs";
-            else if (you.species == SP_OCTOPODE)
-                arms = "tentacles";
-            else
-                break;
-            mprf(MSGCH_MUTATION, "%s",
-                 replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
-                             arms).c_str());
+        case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
+        case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
+            mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, true));
             gain_msg = false;
-        }
-        break;
+            break;
 
-    case MUT_BREATHE_POISON:
-        if (you.species == SP_NAGA)
-        {
-            // Breathe poison replaces spit poison (so it takes the slot).
-            for (int i = 0; i < 52; ++i)
+        case MUT_LARGE_BONE_PLATES:
             {
-                if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
-                    you.ability_letter_table[i] = ABIL_BREATHE_POISON;
+                const char *arms;
+                if (you.species == SP_FELID)
+                    arms = "legs";
+                else if (you.species == SP_OCTOPODE)
+                    arms = "tentacles";
+                else
+                    break;
+                mprf(MSGCH_MUTATION, "%s",
+                     replace_all(mdef.gain[you.mutation[mutat]-1], "arms",
+                                 arms).c_str());
+                gain_msg = false;
             }
+            break;
+
+        case MUT_BREATHE_POISON:
+            if (you.species == SP_NAGA)
+            {
+                // Breathe poison replaces spit poison (so it takes the slot).
+                for (int i = 0; i < 52; ++i)
+                {
+                    if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
+                        you.ability_letter_table[i] = ABIL_BREATHE_POISON;
+                }
+            }
+            break;
+
+        default:
+            break;
         }
-        break;
 
-    default:
-        break;
-    }
+        // For all those scale mutations.
+        you.redraw_armour_class = true;
 
-    // For all those scale mutations.
-    you.redraw_armour_class = true;
+        notify_stat_change("gaining a mutation");
 
-    notify_stat_change("gaining a mutation");
+        if (gain_msg)
+            mprf(MSGCH_MUTATION, "%s", mdef.gain[you.mutation[mutat]-1]);
 
-    if (gain_msg)
-        mprf(MSGCH_MUTATION, "%s", mdef.gain[you.mutation[mutat]-1]);
-
-    // Do post-mutation effects.
-    switch (mutat)
-    {
-    case MUT_FRAIL:
-    case MUT_ROBUST:
-    case MUT_RUGGED_BROWN_SCALES:
-        calc_hp();
-        break;
-
-    case MUT_LOW_MAGIC:
-    case MUT_HIGH_MAGIC:
-        calc_mp();
-        break;
-
-    case MUT_PASSIVE_MAPPING:
-        add_daction(DACT_REAUTOMAP);
-        break;
-
-    case MUT_HOOVES:
-    case MUT_TALONS:
-        // Hooves and talons force boots off at 3.
-        if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
-            remove_one_equip(EQ_BOOTS, false, true);
-        break;
-
-    case MUT_CLAWS:
-        // Claws force gloves off at 3.
-        if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
-            remove_one_equip(EQ_GLOVES, false, true);
-        break;
-
-    case MUT_HORNS:
-    case MUT_ANTENNAE:
-        // Horns & Antennae 3 removes all headgear.  Same algorithm as with
-        // glove removal.
-
-        if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
-            remove_one_equip(EQ_HELMET, false, true);
-        // Intentional fall-through
-    case MUT_BEAK:
-        // Horns, beaks, and antennae force hard helmets off.
-        if (you.equip[EQ_HELMET] != -1
-            && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
-            && !you.melded[EQ_HELMET])
+        // Do post-mutation effects.
+        switch (mutat)
         {
-            remove_one_equip(EQ_HELMET, false, true);
+        case MUT_FRAIL:
+        case MUT_ROBUST:
+        case MUT_RUGGED_BROWN_SCALES:
+            calc_hp();
+            break;
+
+        case MUT_LOW_MAGIC:
+        case MUT_HIGH_MAGIC:
+            calc_mp();
+            break;
+
+        case MUT_PASSIVE_MAPPING:
+            add_daction(DACT_REAUTOMAP);
+            break;
+
+        case MUT_HOOVES:
+        case MUT_TALONS:
+            // Hooves and talons force boots off at 3.
+            if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
+                remove_one_equip(EQ_BOOTS, false, true);
+            break;
+
+        case MUT_CLAWS:
+            // Claws force gloves off at 3.
+            if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
+                remove_one_equip(EQ_GLOVES, false, true);
+            break;
+
+        case MUT_HORNS:
+        case MUT_ANTENNAE:
+            // Horns & Antennae 3 removes all headgear.  Same algorithm as with
+            // glove removal.
+
+            if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
+                remove_one_equip(EQ_HELMET, false, true);
+            // Intentional fall-through
+        case MUT_BEAK:
+            // Horns, beaks, and antennae force hard helmets off.
+            if (you.equip[EQ_HELMET] != -1
+                && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
+                && !you.melded[EQ_HELMET])
+            {
+                remove_one_equip(EQ_HELMET, false, true);
+            }
+            break;
+
+        case MUT_ACUTE_VISION:
+            // We might have to turn autopickup back on again.
+            autotoggle_autopickup(false);
+            break;
+
+        case MUT_NIGHTSTALKER:
+            update_vision_range();
+            break;
+
+        default:
+            break;
         }
-        break;
 
-    case MUT_ACUTE_VISION:
-        // We might have to turn autopickup back on again.
-        autotoggle_autopickup(false);
-        break;
+        // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
+        xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
-    case MUT_NIGHTSTALKER:
-        update_vision_range();
-        break;
+        if (!temporary)
+        {
+            take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat],
+                           reason.c_str()));
+        }
+        else
+        {
+            you.temp_mutations[mutat]++;
+            you.attribute[ATTR_TEMP_MUTATIONS]++;
+            you.attribute[ATTR_TEMP_MUT_XP] =
+                    min(you.experience_level, 17)
+                    * (500 + roll_dice(5, 500)) / 17;
+        }
 
-    default:
-        break;
-    }
-
-    // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
-    xom_is_stimulated(_calc_mutation_amusement_value(mutat));
-
-    if (!temporary)
-        take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
-    else
-    {
-        you.temp_mutations[mutat]++;
-        you.attribute[ATTR_TEMP_MUTATIONS]++;
-        you.attribute[ATTR_TEMP_MUT_XP] =
-                min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
-    }
-
-    if (you.hp <= 0)
-    {
-        ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
-             make_stringf("gaining the %s mutation", mutation_name(mutat)).c_str());
+        if (you.hp <= 0)
+        {
+            ouch(0, NON_MONSTER, KILLED_BY_FRAILTY,
+                 make_stringf("gaining the %s mutation",
+                              mutation_name(mutat)).c_str());
+        }
     }
 
 #ifdef USE_TILE_LOCAL
