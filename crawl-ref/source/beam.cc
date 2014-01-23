@@ -3818,6 +3818,21 @@ void bolt::affect_player()
         }
     }
 
+    // Manticore spikes
+    if (name == "volley of spikes" && hurted > 0)
+    {
+        mpr("The barbed spikes become lodged in your body.");
+        if (!you.duration[DUR_BARBS])
+            you.set_duration(DUR_BARBS,  random_range(3, 6));
+        else
+            you.increase_duration(DUR_BARBS, random_range(2, 4), 12);
+
+        if (you.attribute[ATTR_BARBS_POW])
+            you.attribute[ATTR_BARBS_POW] = min(6, you.attribute[ATTR_BARBS_POW]++);
+        else
+            you.attribute[ATTR_BARBS_POW] = 4;
+    }
+
     // Acid.
     if (flavour == BEAM_ACID)
         splash_with_acid(5, beam_source, affects_items);

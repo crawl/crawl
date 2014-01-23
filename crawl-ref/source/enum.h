@@ -311,6 +311,8 @@ enum attribute_type
     ATTR_RECITE_SEED,          // Recite text seed.
     ATTR_RECITE_HP,            // HP on start of recitation.
     ATTR_SWIFTNESS,            // Duration of future antiswiftness.
+    ATTR_BARBS_MSG,            // Have we already printed a message on move?
+    ATTR_BARBS_POW,            // How badly we are currently skewered
     NUM_ATTRIBUTES
 };
 
@@ -1610,6 +1612,7 @@ enum duration_type
     DUR_ANTENNAE_EXTEND,
 #endif
     DUR_TROGS_HAND,
+    DUR_BARBS,
     NUM_DURATIONS
 };
 

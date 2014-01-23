@@ -200,6 +200,7 @@ NORETURN static void _launch_game();
 
 static void _do_berserk_no_combat_penalty(void);
 static void _do_searing_ray(void);
+static void _extract_manticore_spikes(void);
 static void _input(void);
 static void _move_player(int move_x, int move_y);
 static void _move_player(coord_def move);
@@ -1961,6 +1962,7 @@ void process_command(command_type cmd)
     case CMD_WAIT:
         you.check_clinging(false);
         you.turn_is_over = true;
+        _extract_manticore_spikes();
         break;
 
     case CMD_PICKUP:
@@ -4355,6 +4357,16 @@ static void _do_searing_ray()
         end_searing_ray();
 }
 
+static void _extract_manticore_spikes()
+{
+    if (_decrement_a_duration(DUR_BARBS, you.time_taken,
+        "You carefully extract the manticore spikes from your body."))
+    {
+        you.attribute[ATTR_BARBS_MSG] = 0;
+        you.attribute[ATTR_BARBS_POW] = 0;
+    }
+}
+
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.
 static void _move_player(int move_x, int move_y)
@@ -4699,6 +4711,27 @@ static void _move_player(coord_def move)
         you.stop_being_constricted();
 
         move_player_to_grid(targ, true, false);
+
+        if (you.duration[DUR_BARBS])
+        {
+            // Always announce the first time they hurt us, otherwise reduce
+            // message spam; hopefully the player has the idea by now.
+            if (!you.attribute[ATTR_BARBS_MSG] || one_chance_in(6))
+            {
+                mpr("The barbed spikes dig painfully into your body as you move.");
+                you.attribute[ATTR_BARBS_MSG] = 1;
+            }
+
+            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), NULL, KILLED_BY_BARBS);
+            bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
+
+            // Sometimes decrease duration even when we move.
+            if (one_chance_in(3))
+            {
+                _decrement_a_duration(DUR_BARBS, you.time_taken,
+                    "The manticore spikes snap loose.");
+            }
+        }
 
         if (delay_is_run(current_delay_action()))
             env.travel_trail.push_back(you.pos());

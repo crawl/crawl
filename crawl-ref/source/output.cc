@@ -1014,6 +1014,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_GRASPING_ROOTS,
         DUR_FIRE_VULN,
         STATUS_ELIXIR,
+        DUR_BARBS,
     };
 
     status_info inf;
