@@ -153,6 +153,8 @@ static duration_def duration_data[] =
       BROWN, "Roots", "grasped by roots", "Your movement is impeded by grasping roots." },
     { DUR_FIRE_VULN, false,
       RED, "-rF", "fire vulnerable", "You are more vulnerable to fire." },
+    { DUR_BARBS, false,
+      RED, "Barbs", "manticore barbs", "Manticore spikes are embedded in your body." },
 };
 
 static int duration_index[NUM_DURATIONS];

@@ -3748,12 +3748,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!you.visible_to(mons))
+        // Cannot fire without any spikes left
+        if (mons->number == 0)
             break;
 
-        // The fewer spikes the manticore has left, the less
-        // likely it will use them.
-        if (random2(16) >= static_cast<int>(mons->number))
+        // Will neither fire from melee range nor all the time
+        if (mons->foe_distance() < 2 || !coinflip())
             break;
 
         // Do the throwing right here, since the beam is so
@@ -3762,9 +3762,10 @@ bool mon_special_ability(monster* mons, bolt & beem)
         // Set up the beam.
         beem.name        = "volley of spikes";
         beem.aux_source  = "volley of spikes";
+        beem.hit_verb    = "skewers";
         beem.range       = 6;
-        beem.hit         = 14;
-        beem.damage      = dice_def(2, 10);
+        beem.hit         = 27;
+        beem.damage      = dice_def(2, 13);
         beem.beam_source = mons->mindex();
         beem.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
         beem.colour      = LIGHTGREY;

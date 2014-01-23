@@ -621,7 +621,7 @@ static const char *kill_method_names[] =
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
-    "mirror_damage", "spines", "frailty",
+    "mirror_damage", "spines", "frailty", "barbs",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -2433,6 +2433,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_FRAILTY:
         desc += terse ? "frailty" : "Became unviable by " + auxkilldata;
+        break;
+
+    case KILLED_BY_BARBS:
+        desc += terse ? "barbs" : "Succumbed to a manticore's barbed spikes";
         break;
 
     default:

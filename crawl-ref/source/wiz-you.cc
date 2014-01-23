@@ -859,6 +859,7 @@ static const char* dur_names[] =
     "antennae extend",
 #endif
     "trogs hand",
+    "manticore barbs",
 };
 
 void wizard_edit_durations(void)
