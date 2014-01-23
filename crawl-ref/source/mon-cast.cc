@@ -3079,19 +3079,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             mons_cast(mons, beem, spell_cast);
             if (battlesphere)
                 trigger_battlesphere(mons, beem);
-            if (mons->has_ench(ENCH_GRAND_AVATAR)
-                && foe
-                && (orig_hp - foe->stat_hp()
-                    >= random2(GRAND_AVATAR_DAMAGE)))
-            {
-                actor* avatar = mons->get_ench(ENCH_GRAND_AVATAR).agent();
-                if (avatar)
-                {
-                    trigger_grand_avatar(avatar->as_monster(),
-                                         foe,
-                                         spell_cast);
-                }
-            }
+            if (mons->has_ench(ENCH_GRAND_AVATAR))
+                trigger_grand_avatar(mons, foe, spell_cast, orig_hp);
             if (wizard && mons->has_ench(ENCH_SAP_MAGIC))
             {
                 mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,

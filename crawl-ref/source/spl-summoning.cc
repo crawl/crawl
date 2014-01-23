@@ -3099,24 +3099,37 @@ bool grand_avatar_check_melee(monster* mons, actor* target)
     return false;
 }
 
-void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell)
+void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
+                          const int old_hp)
 {
     const bool melee = (spell == SPELL_MELEE);
-    if (victim
-        && victim->alive()
-        && (melee || _battlesphere_can_mirror(spell)))
+    ASSERT(mons->has_ench(ENCH_GRAND_AVATAR));
+
+    if (!victim
+        || !victim->alive()
+        || (!melee && !_battlesphere_can_mirror(spell))
+        || old_hp - victim->stat_hp() < random2(GRAND_AVATAR_DAMAGE))
     {
-        mons->props[GA_TARGET_MID].get_int() = victim->mid;
-        if (melee)
-        {
-            mons->props[GA_MELEE].get_bool() = true;
-            mons->props.erase(GA_SPELL);
-        }
-        else
-        {
-            mons->props[GA_SPELL].get_bool() = true;
-            mons->props.erase(GA_MELEE);
-        }
+        return;
+    }
+
+    actor* avatar = mons->get_ench(ENCH_GRAND_AVATAR).agent();
+    if (!avatar)
+        return;
+
+    ASSERT(avatar->is_monster());
+    monster* av = avatar->as_monster();
+
+    av->props[GA_TARGET_MID].get_int() = victim->mid;
+    if (melee)
+    {
+        av->props[GA_MELEE].get_bool() = true;
+        av->props.erase(GA_SPELL);
+    }
+    else
+    {
+        av->props[GA_SPELL].get_bool() = true;
+        av->props.erase(GA_MELEE);
     }
 }
 
