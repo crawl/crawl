@@ -1889,7 +1889,11 @@ static void _grand_avatar_act(monster* mons)
             mons->target = target->pos();
     }
     else
+    {
         grand_avatar_reset(mons);
+        if (!mons->alive())
+            return;
+    }
 
     bolt tracer;
     tracer.source    = mons->pos();
