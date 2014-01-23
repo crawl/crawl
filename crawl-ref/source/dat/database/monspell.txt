@@ -189,7 +189,7 @@ Druid's Call cast
 %%%%
 Legendary Destruction cast
 
-@The_monster@ offers life energy for powerful magic!
+@The_monster@ offers @possessive@ life energy for powerful magic!
 %%%%
 Ephemeral Infusion cast
 
