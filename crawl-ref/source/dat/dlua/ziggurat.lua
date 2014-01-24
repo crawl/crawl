@@ -292,7 +292,7 @@ mset(spec_fn(function ()
                return "chaos spawn w:" .. d .. " / ugly thing w:" .. d ..
                  " / very ugly thing w:5 / apocalypse crab w:5 / " ..
                  "shapeshifter hd:16 w:" ..e .. " / glowing shapeshifter w:" .. e ..
-                 " / killer klown / pandemonium lord w:" .. f
+                 " / killer klown w:8 / chaos champion w:2 / pandemonium lord w:" .. f
              end))
 
 mset(spec_fn(function ()
@@ -301,12 +301,12 @@ mset(spec_fn(function ()
              end))
 
 local pan_lord_fn = zig_monster_fn("pandemonium lord")
-local pan_critter_fn = zig_monster_fn("place:Pan / greater demon w:5")
+local pan_critter_fn = zig_monster_fn("place:Pan / greater demon / nonbase demonspawn w:4")
 
 local function mons_panlord_gen(x, y, nth)
   if nth == 1 then
     local d = math.max(1, you.depth() - 11)
-    dgn.set_random_mon_list("place:Pan / greater demon w:5")
+    dgn.set_random_mon_list("place:Pan / greater demon / nonbase demonspawn w:4")
     return pan_lord_fn(x, y)
   else
     return pan_critter_fn(x, y)
