@@ -1,4 +1,11 @@
 %%%%
+Flight spell
+
+«Lo que más le asombró, sin embargo, fue la lógica de sus alas. Resultaban
+tan naturales en aquel organismo completamente humano, que no podía entender
+por qué no las tenían también los otros hombres.»
+    -Gabriel Garcia Marquez, Un señor muy viejo con unas alas enormes. 1955.
+%%%%
 arrow
 
 «En un corredor vi una flecha que indicaba una dirección y pensé que aquel
