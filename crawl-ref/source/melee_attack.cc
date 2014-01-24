@@ -2545,14 +2545,6 @@ void melee_attack::antimagic_affects_defender(int pow)
                     + " magic leaks into the air.";
         obvious_effect = true;
     }
-    if (amount > 0
-        && attacker->is_monster()
-        && attacker->as_monster()->type == MONS_SAPPER_SNAKE)
-    {
-        amount = random2(amount) + 1;
-        simple_monster_message(attacker->as_monster(), " looks invigorated.");
-        attacker->heal(amount);
-    }
 }
 
 void melee_attack::pain_affects_defender()
