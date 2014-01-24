@@ -2851,7 +2851,7 @@ enum monster_type                      // menv[].type
     MONS_DROWNED_SOUL,
 
     MONS_SHOCK_SERPENT,
-    MONS_SAPPER_SNAKE,
+    MONS_MANA_VIPER,
     MONS_NAGA_ENCHANTER,
     MONS_MARKSNAGA,
 
