@@ -487,10 +487,10 @@ static bool _zin_donate_gold()
 
 static int _leading_sacrifice_group()
 {
-    int weights[5];
+    int weights[4];
     get_pure_deck_weights(weights);
     int best_i = -1, maxweight = -1;
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < 4; ++i)
     {
         if (best_i == -1 || weights[i] > maxweight)
         {
@@ -503,10 +503,10 @@ static int _leading_sacrifice_group()
 
 static void _give_sac_group_feedback(int which)
 {
-    ASSERT_RANGE(which, 0, 5);
+    ASSERT_RANGE(which, 0, 4);
     const char* names[] =
     {
-        "Escape", "Destruction", "Dungeons", "Summoning", "Wonder",
+        "Escape", "Destruction", "Summoning", "Wonder",
     };
     mprf(MSGCH_GOD, "A symbol of %s coalesces before you, then vanishes.",
          names[which]);
@@ -780,12 +780,10 @@ bool check_nemelex_sacrificing_item_type(const item_def& item)
     // else fall through
     case OBJ_WANDS:
     case OBJ_SCROLLS:
-        return you.nemelex_sacrificing[NEM_GIFT_WONDERS];
-
     case OBJ_JEWELLERY:
     case OBJ_BOOKS:
     case OBJ_MISCELLANY:
-        return you.nemelex_sacrificing[NEM_GIFT_DUNGEONS];
+        return you.nemelex_sacrificing[NEM_GIFT_WONDERS];
 
     default:
         return false;

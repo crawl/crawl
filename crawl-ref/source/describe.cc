@@ -4363,16 +4363,13 @@ static void _detailed_god_description(god_type which_god)
                     case NEM_GIFT_DESTRUCTION:
                         desc = "decks of Destruction -- weapons and ammunition";
                         break;
-                    case NEM_GIFT_DUNGEONS:
-                        desc = "decks of Dungeons    -- jewellery, books, "
-                                                    "miscellaneous items";
-                        break;
                     case NEM_GIFT_SUMMONING:
                         desc = "decks of Summoning   -- corpses, chunks, blood";
                         break;
                     case NEM_GIFT_WONDERS:
-                        desc = "decks of Wonders     -- consumables: food, potions, "
-                                                    "scrolls, wands";
+                        desc = "decks of Wonders     -- Other items: food, potions, "
+                                                    "scrolls, wands, jewellery, books, "
+                                                    "miscellaneous items";
                         break;
                     }
                     broken += make_stringf(" <white>%c</white> %s%s%s\n",

@@ -3104,10 +3104,9 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
              || item.sub_type == MISC_BUGGY_EBONY_CASKET
              || item.sub_type == MISC_BOTTLED_EFREET
 #endif
-             // Pure decks are rare in the dungeon.
+             // Nemelex' decks are rare in the dungeon.
              || (item.sub_type == MISC_DECK_OF_ESCAPE
                     || item.sub_type == MISC_DECK_OF_DESTRUCTION
-                    || item.sub_type == MISC_DECK_OF_DUNGEONS
                     || item.sub_type == MISC_DECK_OF_SUMMONING
                     || item.sub_type == MISC_DECK_OF_WONDERS)
                  && !one_chance_in(5));

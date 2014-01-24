@@ -1324,15 +1324,15 @@ void get_pure_deck_weights(int weights[])
                                     + you.sacrifice_value[OBJ_STAVES]
                                     + you.sacrifice_value[OBJ_RODS]
                                     + you.sacrifice_value[OBJ_MISSILES] + 1;
-    weights[NEM_GIFT_DUNGEONS]    = you.sacrifice_value[OBJ_MISCELLANY]
-                                    + you.sacrifice_value[OBJ_JEWELLERY]
-                                    + you.sacrifice_value[OBJ_BOOKS];
     weights[NEM_GIFT_SUMMONING]   = you.sacrifice_value[OBJ_CORPSES] / 2;
     weights[NEM_GIFT_WONDERS]     = you.sacrifice_value[OBJ_POTIONS]
                                     + you.sacrifice_value[OBJ_SCROLLS]
                                     + you.sacrifice_value[OBJ_WANDS]
-                                    + you.sacrifice_value[OBJ_FOOD];
-}
+                                    + you.sacrifice_value[OBJ_FOOD]
+                                    + you.sacrifice_value[OBJ_MISCELLANY]
+                                    + you.sacrifice_value[OBJ_JEWELLERY]
+                                    + you.sacrifice_value[OBJ_BOOKS];
+ }
 
 static void _update_sacrifice_weights(int which)
 {
@@ -1352,13 +1352,6 @@ static void _update_sacrifice_weights(int which)
         you.sacrifice_value[OBJ_RODS]     *= 4;
         you.sacrifice_value[OBJ_MISSILES] *= 4;
         break;
-    case NEM_GIFT_DUNGEONS:
-        you.sacrifice_value[OBJ_MISCELLANY] /= 5;
-        you.sacrifice_value[OBJ_JEWELLERY]  /= 5;
-        you.sacrifice_value[OBJ_BOOKS]      /= 5;
-        you.sacrifice_value[OBJ_MISCELLANY] *= 4;
-        you.sacrifice_value[OBJ_JEWELLERY]  *= 4;
-        you.sacrifice_value[OBJ_BOOKS]      *= 4;
     case NEM_GIFT_SUMMONING:
         you.sacrifice_value[OBJ_CORPSES] /= 5;
         you.sacrifice_value[OBJ_CORPSES] *= 4;
@@ -1372,6 +1365,12 @@ static void _update_sacrifice_weights(int which)
         you.sacrifice_value[OBJ_SCROLLS] *= 4;
         you.sacrifice_value[OBJ_WANDS]   *= 4;
         you.sacrifice_value[OBJ_FOOD]    *= 4;
+        you.sacrifice_value[OBJ_MISCELLANY] /= 5;
+        you.sacrifice_value[OBJ_JEWELLERY]  /= 5;
+        you.sacrifice_value[OBJ_BOOKS]      /= 5;
+        you.sacrifice_value[OBJ_MISCELLANY] *= 4;
+        you.sacrifice_value[OBJ_JEWELLERY]  *= 4;
+        you.sacrifice_value[OBJ_BOOKS]      *= 4;
         break;
     }
 }
@@ -1379,7 +1378,7 @@ static void _update_sacrifice_weights(int which)
 #if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
 static void _show_pure_deck_chances()
 {
-    int weights[5];
+    int weights[4];
 
     get_pure_deck_weights(weights);
 
@@ -1388,13 +1387,12 @@ static void _show_pure_deck_chances()
         total += (float) weights[i];
 
     mprf(MSGCH_DIAGNOSTICS, "Pure cards chances: "
-         "escape %0.2f%%, destruction %0.2f%%, dungeons %0.2f%%,"
+         "escape %0.2f%%, destruction %0.2f%%, "
          "summoning %0.2f%%, wonders %0.2f%%",
          (float)weights[0] / total * 100.0,
          (float)weights[1] / total * 100.0,
          (float)weights[2] / total * 100.0,
-         (float)weights[3] / total * 100.0,
-         (float)weights[4] / total * 100.0);
+         (float)weights[3] / total * 100.0);
 }
 #endif
 
@@ -1404,7 +1402,6 @@ static misc_item_type _gift_type_to_deck(int gift)
     {
     case NEM_GIFT_ESCAPE:      return MISC_DECK_OF_ESCAPE;
     case NEM_GIFT_DESTRUCTION: return MISC_DECK_OF_DESTRUCTION;
-    case NEM_GIFT_DUNGEONS:    return MISC_DECK_OF_DUNGEONS;
     case NEM_GIFT_SUMMONING:   return MISC_DECK_OF_SUMMONING;
     case NEM_GIFT_WONDERS:     return MISC_DECK_OF_WONDERS;
     }
@@ -1430,9 +1427,9 @@ static bool _give_nemelex_gift(bool forced = false)
         misc_item_type gift_type;
 
         // Make a pure deck.
-        int weights[5];
+        int weights[4];
         get_pure_deck_weights(weights);
-        const int choice = choose_random_weighted(weights, weights+5);
+        const int choice = choose_random_weighted(weights, weights+4);
         gift_type = _gift_type_to_deck(choice);
 #if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
         _show_pure_deck_chances();
