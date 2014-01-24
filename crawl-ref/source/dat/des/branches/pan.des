@@ -41,18 +41,19 @@ function pan_lord_setup(_G, name)
                  "cacodemon w:300 / tormentor / " ..
                  "tentacled monstrosity w:5 / brain worm / " ..
                  "giant eyeball / golden eye band / eye of devastation / " ..
-                 "eye of draining / shining eye / very ugly thing band",
+                 "eye of draining / shining eye / very ugly thing band / "..
+                 "monstrous corrupter",
         ['Lom Lobon'] = "hellwing w:300 / sixfirhy w:100 / " ..
                  "smoke demon w:300 / blizzard demon w:100 / " ..
                  "green death w:200 / giant orange brain / rakshasa / " ..
                  "wizard / draconian annihilator / deep elf annihilator / " ..
-                 "titan w:5 / vapour / lich w:5",
+                 "titan w:5 / vapour / lich w:5 / gelid blood saint",
         Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
-                  "brimstone fiend w:1",
-        ['Gloorx Vloq'] = "skeleton w:400 / " ..
-                 "soul eater w:200 / lorocyproca w:100 / " ..
-                 "executioner w:300 / demonic crawler / shadow wraith / " ..
-                 "unseen horror"
+                  "brimstone fiend w:1 / infernal warmonger w:1",
+        ['Gloorx Vloq'] = "skeleton w:400 / soul eater w:200 / " ..
+                 "lorocyproca w:100 / executioner w:300 / " ..
+                 "demonic crawler / shadow wraith / " ..
+                 "unseen horror / torturous black sun"
     }
 
     _G.set_random_mon_list(monsters[name])
@@ -162,6 +163,16 @@ function pan_demonic_rune(e, glyph, place_lord)
     end
 end
 
+function pan_lord_vault_contents(e, anyglyph, commonglyph, greaterglyph)
+    e.tags('allow_dup')
+    e.orient('float')
+    e.kmons(anyglyph .. " = any demon w:17 / base demonspawn w:2 / \
+                            nonbase demonspawn w:1")
+    e.kmons(commonglyph .. " = common demon / base demonspawn w:2")
+    e.kmons(greaterglyph .. " = greater demon / nonbase demonspawn w:1")
+    e.kfeat('< = {')
+end
+
 function pan_entry_feature(e, glyph)
     e.tags("extra luniq_enter_pan chance_enter_pan")
     e.depth("Depths, D:21-")
@@ -177,7 +188,7 @@ end
 
 function pan_entry_vault_contents(e, glyph)
     e.tags("patrolling no_monster_gen nolayout_encompass")
-    e.mons("common demon")
+    e.mons("common demon / base demonspawn w:2")
     e.mons("lesser demon")
     if crawl.x_chance_in_y(you.depth() + 3, you.depth() + 5) then
         e.tags("luniq_hellpanabyss_threat_entry")
@@ -464,7 +475,8 @@ ORIENT:    northeast
 TAGS:      mnoleg uniq_mnoleg
 : pan_lord_setup(_G, 'Mnoleg')
 TILE:      c = dngn_stone_wall_yellow
-MONS:      patrolling Mnoleg, neqoxec
+MONS:      patrolling Mnoleg, neqoxec, cacodemon, tentacled monstrosity
+NSUBST:    2 = 4:3 / 3 = 234 / *:2
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -556,8 +568,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # The eyes probably make this vault harder than the others, but it's still Mnoleg.
-#
-# Note: if M were to cast malign gateway, there would be enough room for it here
 NAME:       evilmike_mnoleg_eyes
 ORIENT:     northwest
 TAGS:       mnoleg uniq_mnoleg
@@ -678,7 +688,8 @@ NAME:      lom_lobon
 TAGS:      lom_lobon uniq_lom_lobon no_rotate
 ORIENT:    north
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
+MONS:      patrolling Lom Lobon, giant orange brain, rakshasa
+MONS:      wizard w:20 / lich / draconian annihilator / deep elf annihilator
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -1308,23 +1319,19 @@ ENDMAP
 # Of these maps, rand_demon_1 to rand_demon_9 are ancient heritage.
 
 NAME:   rand_demon_1
-TAGS:   allow_dup
-ORIENT: float
-MONS:   pandemonium lord, common demon
-KMONS:  ( = greater demon
-KFEAT:  ( = (
-: pan_demonic_rune(_G, 'P')
+: pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 .xx.xx.x.xx.
-..x.x1.x.x..
+..x.xC.x.x..
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x(Px.x..
 ..x.x..x.x..
 ..x.x..x.x..
-..x.x.1x.x..
+..x.x.Cx.x..
 .xx.x.xx.xx.
 ............
 ENDMAP
@@ -1332,48 +1339,40 @@ ENDMAP
 ###################################
 
 NAME:   rand_demon_2
-TAGS:   allow_dup
-ORIENT: float
-MONS:   greater demon, common demon, common demon
-KMONS:  ( = greater demon
-KFEAT:  ( = (
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C<')
 MAP
 ............
-.xxxxxxxx2x.
-.2.....xx.x.
-.xxxxxx3x.x.
-.xx3x..xx.x.
-.x.x.1(.x.x.
-.x.x.P1.x.x.
-.x.xx..x3xx.
-.x.x3xxxxxx.
-.x.xx.....2.
-.x2xxxxxxxx.
+.xxxxxxxxBx.
+.B.....xx.x.
+.xxxxxxBx.x.
+.xxBx..xx.x.
+.x.x.C<.x.x.
+.x.x.PC.x.x.
+.x.xx..xBxx.
+.x.xBxxxxxx.
+.x.xx.....B.
+.xBxxxxxxxx.
 ............
 ENDMAP
 
 ###################################
 
 NAME:   rand_demon_3
-TAGS:   allow_dup
-ORIENT: float
-MONS:   common demon, common demon
-NSUBST: 1 = 1:( / *:1
-KMONS:  ( = greater demon
-KFEAT:  ( = (
+NSUBST: A = 1:< / *:B
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B<', 'C')
 MAP
 ............
-.x.x.x2x.x..
-..x.x2x2x.x.
-.x.x.x1x.x..
-..x2x1x1x2x.
-.x2x1xPx1x2.
-..x2x1x1x2x.
-.x.x.x1x2x..
-..x.x2x2x.x.
-.x.x.x2x.x..
+.x.x.xBx.x..
+..x.xBxBx.x.
+.x.x.xAx.x..
+..xBxAxAxBx.
+.xBxAxPxAxB.
+..xBxAxAxBx.
+.x.x.xAxBx..
+..x.xBxBx.x.
+.x.x.xBx.x..
 ..x.x.x.x.x.
 ............
 ENDMAP
@@ -1381,21 +1380,20 @@ ENDMAP
 ###################################
 
 NAME:    rand_demon_4
-TAGS:    allow_dup
-ORIENT:  float
-MONS:    pandemonium lord, any demon, any demon
+MONS:    pandemonium lord
 SHUFFLE: $(|
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B<', 'C')
 MAP
 ............
 .xxxxxxxxx..
-.x$+*+3+(x..
+.x$+*+A+(x..
 .xxxxxxx+x..
-.x2+3+2x|x..
+.xA+A+Ax|x..
 .x+xxxxx+x..
-.x3+*x1+Px..
+.xA+*x1+Px..
 .x+x+xxxxx..
-.x*x2+3+2=..
+.x*xA+A+A+..
 .xxxxxxxxx..
 ............
 ............
@@ -1404,19 +1402,18 @@ ENDMAP
 ###################################
 
 NAME:   rand_demon_5
-TAGS:   allow_dup
-ORIENT: float
-MONS:   pandemonium lord, any demon, any demon
+MONS:   pandemonium lord
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 ...xxxxxx...
 ..xx....xx..
 .xx......xx.
-.x..3232..x.
-.x..2|P3..x.
-.x..3(|2..x.
-.x..2123..x.
+.x..AAAA..x.
+.x..A|PA..x.
+.x..A(|A..x.
+.x..A1AA..x.
 .xx......xx.
 ..xx....xx..
 ...xxxxxx...
@@ -1426,23 +1423,19 @@ ENDMAP
 ###################################
 
 NAME:   rand_demon_6
-TAGS:   allow_dup
-ORIENT: float
-KMONS:  ( = pandemonium lord
-KFEAT:  ( = (
-MONS:   any demon, any demon
-: pan_demonic_rune(_G, 'P')
+: pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 ............
-......1.....
+......A.....
 ............
-.2..........
-..........1.
+.A..........
+..........A.
 .....(P.....
 ............
 ............
-.1.......2..
+.A.......A..
 ............
 ............
 ENDMAP
@@ -1450,19 +1443,17 @@ ENDMAP
 ###################################
 
 NAME:   rand_demon_7
-TAGS:   allow_dup
-ORIENT: float
-MONS:   any demon, greater demon
 NSUBST: | = 1:( / *:|
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 .xxx....xxx.
 .x|xx=xxx|x.
 .xx+....+xx.
 ..x.x++x.x..
-..x.+P1+.=..
-..=.+12+.x..
+..x.+PA+.=..
+..=.+AC+.x..
 ..x.x++x.x..
 .xx+....+xx.
 .x|xxx=xx|x.
@@ -1473,21 +1464,20 @@ ENDMAP
 ###################################
 
 NAME:   rand_demon_8
-TAGS:   allow_dup
-ORIENT: float
-MONS:   pandemonium lord, greater demon, any demon
+MONS:   pandemonium lord
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 ....xxxxxxx.
 ..xxx....1x.
-.xx..2..P.x.
-.x........x.
+.xx..C..P.x.
+.x.....(..x.
 .xx.......x.
-..xx33..2.x.
-....33...xx.
+..xxAA..C.x.
+....AA...xx.
 .....x...x..
-..F..xx.xx..
+..G..xx.xx..
 ......xxx...
 ............
 ENDMAP
@@ -1495,24 +1485,19 @@ ENDMAP
 ###################################
 
 NAME:   rand_demon_9
-TAGS:   allow_dup
-ORIENT: float
-KMONS:  ( = pandemonium lord
-KFEAT:  ( = (
-# a crapload of greater demons, you fight them in small sets
-MONS:   any demon, greater demon
-: pan_demonic_rune(_G, 'P')
+: pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 .xxxxxxxxxx.
-.x1+2+2+2xx.
-.x+xxxxxx1x.
-.x2x....x+x.
-.x+x.P..x1x.
-.x2x..(.x+x.
-.x+x....x2x.
-.x1xxxx+x+x.
-.xx1+1+2x2x.
+.xA+C+C+Cxx.
+.x+xxxxxxAx.
+.xCx....x+x.
+.x+x.P..xAx.
+.xCx..(.x+x.
+.x+x....xCx.
+.xAxxxx+x+x.
+.xxA+A+CxCx.
 .xxxxxxxx=x.
 ............
 ENDMAP
@@ -1520,26 +1505,22 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_diamond
-TAGS:   allow_dup
-ORIENT: float
 SUBST:  m : nx, n : mnxx.
-NSUBST: 1 = 1:( / *:1
-KMONS:  ( = greater demon
-KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon
+NSUBST: 1 = 1:< / *:1
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C<')
 MAP
     .....
    ..m.m..
-  ..mm2mm..
+  ..mmBmm..
  ..mm.n.mm..
-..mm3...3mm..
-.mm...1...mm.
-..2n.1P1.n2..
-.mm...1...mm.
-..mm3...3mm..
+..mmA...Amm..
+.mm...C...mm.
+..Bn.CPC.nB..
+.mm...C...mm.
+..mmA...Amm..
  ..mm.n.mm..
-  ..mm2mm..
+  ..mmBmm..
    ..m.m..
     .....
 ENDMAP
@@ -1547,24 +1528,22 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_thingy
-TAGS:   allow_dup
-ORIENT: float
-KITEM:  ( = |
-KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon, pandemonium lord
+KITEM:  | = |
+KFEAT:  | = (
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
      .....
     ..x+x.
   ...xx.x.
   .cccc.x.
- ..c(1c.x.
-..xc3c2.x......
-.xxcc2c3xxxxxx.
-.+.....4.....+.
-.xxxxxx3c2ccxx.
-......x.2c3cx..
-     .x.c1Pc..
+ ..c|Cc.x.
+..xcAcB.x......
+.xxccBcAxxxxxx.
+.+.....1.....+.
+.xxxxxxAcBccxx.
+......x.BcAcx..
+     .x.cCPc..
      .x.cccc.
      .x.xx...
      .x+x..
@@ -1574,55 +1553,49 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_other_thingy
-TAGS:   allow_dup
-ORIENT: float
-SUBST:  d : +x
-SUBST:  X : c., C : ccx
-KITEM:  ( = |
-KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon
+KITEM:  | = |
+KFEAT:  | = (
+SUBST:  d : +x, X : c., C : ccx
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 @...........@
 .............
 xxxxxd+dxxxxx
-xxxxC...Cxxxx
-xxxCC...CCxxx
-xxxC.....Cxxx
-xxCC.....CCxx
-xCC..1.1..CCx
-xC..3XcX3..Cx
-xC.2.cPc.2.Cx
-xC....c....Cx
-xCC.3...3.CCx
-xxCC..1..CCxx
-xxxCC*|*CCxxx
-xxxxCCCCCxxxx
+xxxxY...Yxxxx
+xxxYY...YYxxx
+xxxY.....Yxxx
+xxYY.....YYxx
+xYY..C.C..YYx
+xY..AXcXA..Yx
+xY.B.cPc.B.Yx
+xY....c....Yx
+xYY.A...A.YYx
+xxYY..C..YYxx
+xxxYY*|*YYxxx
+xxxxYYYYYxxxx
 xxxxxxxxxxxxx
 ENDMAP
 
 ###################################
 
-NAME:   evilmike_mini_pan_3x3
-TAGS:   allow_dup
-ORIENT: float
-KITEM:  ( = |
-KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon
-NSUBST: 1 = 1:P / 3:1 / 2:2 / 2:3 / 1:(
-SHUFFLE: =A
-SUBST:  A = x
-SUBST:  = = +
+NAME:    evilmike_mini_pan_3x3
+KITEM:   | = |
+KFEAT:   | = (
+NSUBST:  1 = 1:P / 3:C / 2:B / 2:A / 1:(
+SHUFFLE: =X
+SUBST:   X = x, = = +
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 .............
 .xxx.xxx.xxx.
 .x1x.x1x.x1x.
 .xx+.x+x.+xx.
 .............
-.xxx.A=A.xxx.
+.xxx.X=X.xxx.
 .x1+.=1=.+1x.
-.xxx.A=A.xxx.
+.xxx.X=X.xxx.
 .............
 .xx+.x+x.+xx.
 .x1x.x1x.x1x.
@@ -1633,21 +1606,17 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_corridor
-TAGS:   allow_dup
-ORIENT: float
-KMONS:  ( = greater demon
-KFEAT:  ( = (
 SUBST:  Y : Xx, X : x., Z : c.
-MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C<')
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxcccccxxxxxxx
-xxxxxxcc(..ccxxxxxx
-xXXXXXY3Z2Z3YXXXXXx
-@...2...cPc...2...@
-xXXXXXY3Z2Z3YXXXXXx
-xxxxxxcc..1ccxxxxxx
+xxxxxxcc<..ccxxxxxx
+xXXXXXYAZBZAYXXXXXx
+@...B...cPc...B...@
+xXXXXXYAZBZAYXXXXXx
+xxxxxxcc..Cccxxxxxx
 xxxxxxxcccccxxxxxxx
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1655,26 +1624,24 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_pillars
-TAGS:   allow_dup
-ORIENT: float
-MONS:   greater demon, common demon, any demon, pandemonium lord
-SUBST:  X : x.., Y : x+, C : cx
+SUBST:  X : x.., Y : x+, Z : cx
 NSUBST: | = 1:( / *:|
 KITEM:  ( = |
 KFEAT:  ( = (
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C<')
 MAP
 xxxxxxxxxxxxxx.@
 xc|.........|x..
-xc.C.C.C.C.C.x..
-xc....2.2....x..
-xc.C.3...3.C.x..
-xc..2.1X1.2..Y..
-xcPC..X4X..C.+..
-xc..2.1X1.2..Y..
-xc.C.3...3.C.x..
-xc....2.2....x..
-xc.C.C.C.C.C.x..
+xc.Z.Z.Z.Z.Z.x..
+xc....B.B....x..
+xc.Z.A...A.Z.x..
+xc..B.CXC.B..Y..
+xcPZ..X1X..Z.+..
+xc..B.CXC.B..Y..
+xc.Z.A...A.Z.x..
+xc....B.B....x..
+xc.Z.Z.Z.Z.Z.x..
 xc|.........|x..
 xxxxxxxxxxxxxx.@
 ENDMAP
@@ -1684,31 +1651,30 @@ ENDMAP
 # I'm sorry
 NAME:   evilmike_mini_pan_murderfest
 WEIGHT: 2
-TAGS:   allow_dup
-ORIENT: float
-MONS:   greater demon, any demon, pandemonium lord
-NSUBST: | = 1:P / 1:( / *:|
+MONS:   pandemonium lord
 KITEM:  ( = |
 KFEAT:  ( = (
+NSUBST: | = 1:P / 1:( / *:|
 SUBST:  + : +., X : =c, c : cccx
 # I don't want this vault to be an autoexplore trap
 MARKER: G = lua:props_marker { stop_explore = "ominous statue." }
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 xxxxxxxxxxxxxxxxx
 xcccccccccccccccx
 xc|c.........c|cx
-xcc+..2.1..2.+ccx
-xc..1.......1..cx
-xc.2..=====....cx
-xccccXX...==.2.cx
+xcc+..A.C..A.+ccx
+xc..C.......C..cx
+xc.A..=====....cx
+xccccXX...==.A.cx
 ...........=...cx
-@.......G..=.3.cx
+@.......G..=.1.cx
 ...........=...cx
 xccccXX...==...cx
-xc.2..=====..2.cx
-xc..1.......1..cx
-xcc+.2..1.2..+ccx
+xc.A..=====..A.cx
+xc..C.......C..cx
+xcc+.A..C.A..+ccx
 xc|c.........c|cx
 xcccccccccccccccx
 xxxxxxxxxxxxxxxxx
@@ -1718,15 +1684,13 @@ ENDMAP
 
 NAME:    evilmike_mini_pan_rooms
 WEIGHT:  3
-TAGS:    allow_dup
-ORIENT:  float
 SUBST:   + : +.
 SHUFFLE: 123(P
-KITEM:   ( = |
-KFEAT:   ( = (
-MONS:    any demon, any demon, any demon
-MONS:    greater demon / common demon, common demon
+KITEM:   | = |
+KFEAT:   | = (
+SUBST:   123 = A, 4 = BC, 5 = B
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 xxxxxxxxxxxxxx
 xx5..xxxxx..4x
@@ -1746,33 +1710,31 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_layers
-TAGS:   allow_dup
-ORIENT: float
-SUBST:  x = x:9 +:1
 KITEM:  ( = |
 KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon
+SUBST:  x = x:9 +:1
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
          ...
         ..x..
-       ...2...
+       ...B...
       ..xxxxx..
-     .....3.....
+     .....A.....
     ..xxxxxxxxx..
-   .......3.......
+   .......A.......
   ..xxxxxxxxxxxxx..
- ........2(1........
+ ........B(C........
 ..xxxxxxxxxxxxxxxxx..
-.........3P3.........
+.........APA.........
 ..xxxxxxxxxxxxxxxxx..
- ........1|2........
+ ........C|B........
   ..xxxxxxxxxxxxx..
-   .......3.......
+   .......A.......
     ..xxxxxxxxx..
-     .....3.....
+     .....A.....
       ..xxxxx..
-       ...2...
+       ...B...
         ..x..
          ...
 ENDMAP
@@ -1780,11 +1742,9 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_corner
-TAGS:   allow_dup
-ORIENT: float
 SUBST:  X : x., Y : c.
-MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 xxxxxx@xxxxxx
 xxxxxX.xxxxxx
@@ -1793,10 +1753,10 @@ xxxXXX.xxxxxx
 xxXXXX.xxxxxx
 xXXXXX.Yccccx
 @.....(.YYYcx
-xxxxxY...2Ycx
-xxxxxcY.213cx
-xxxxxcY21P3cx
-xxxxxcYY33Ycx
+xxxxxY...BYcx
+xxxxxcY.BCAcx
+xxxxxcYBCPAcx
+xxxxxcYYAAYcx
 xxxxxcccccccx
 xxxxxxxxxxxxx
 ENDMAP
@@ -1804,30 +1764,29 @@ ENDMAP
 ###################################
 
 NAME:    evilmike_mini_pan_branches
-TAGS:    allow_dup
-ORIENT:  float
-SHUFFLE: 4A
-SUBST:   A = 1
-KITEM:   ( = |
-KFEAT:   ( = (
-MONS:    greater demon, common demon, any demon, pandemonium lord
+KITEM:   | = |
+KFEAT:   | = (
+SHUFFLE: P|
+SUBST:   D = C
+MONS:    pandemonium lord
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 xxxxxxxxxxxxxxxx
 xxxxxxxxxxccccxx
 xxxxxxxxxxcP.ccx
 xxxxxxxxxxccc.cx
-xxxxxxxxxxx|c4cx
-xxxxxxxx*xx1c.cx
-xxxx%xxx3xx.c.cx
-xxxx2xxx.xx.c.cx
+xxxxxxxxxxx|c1cx
+xxxxxxxx*xxAc.cx
+xxxx%xxxCxx.c.cx
+xxxxBxxx.xx.c.cx
 xxxx.xxx.xx.c.cx
 @.............cx
 xxxx.xxx.xx.c.cx
-xxxx2xxx.xx.c.cx
-xxxx%xxx3xx.c.cx
-xxxxxxxx*xx1c.cx
-xxxxxxxxxxx|cAcx
+xxxxBxxx.xx.c.cx
+xxxx%xxxCxx.c.cx
+xxxxxxxx*xxAc.cx
+xxxxxxxxxxx|cDcx
 xxxxxxxxxxccc.cx
 xxxxxxxxxxc(.ccx
 xxxxxxxxxxccccxx
@@ -1837,29 +1796,28 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_T
-TAGS:   allow_dup
-ORIENT: float
+KITEM:  | = |
+KFEAT:  | = (
 SUBST:  + : +..
-KITEM:  ( = |
-KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon, pandemonium lord
+MONS:   pandemonium lord
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 xxxxxxxxxxxxxxxx
 xxxxxxxcccxxxxxx
 xxxxxxxcP+...xxx
-xxxxxxxccc.1.xxx
-xxxxxxxxxx3.2xxx
+xxxxxxxccc.C.xxx
+xxxxxxxxxxA.Bxxx
 xxxxxxxxxx...xxx
 xxxxxxxxxx...xxx
 ..............xx
-@.....3......4xx
+@.....A......1xx
 ..............xx
 xxxxxxxxxx...xxx
 xxxxxxxxxx...xxx
-xxxxxxxxxx2.3xxx
-xxxxxxxccc.1.xxx
-xxxxxxxc(+...xxx
+xxxxxxxxxxB.Axxx
+xxxxxxxccc.C.xxx
+xxxxxxxc|+...xxx
 xxxxxxxcccxxxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
@@ -1868,24 +1826,20 @@ ENDMAP
 
 # based slightly on rand_demon_3
 NAME:    evilmike_mini_pan_possible_glass
-TAGS:    allow_dup
-ORIENT:  float
 SHUFFLE: mnxcll
-MONS:    greater demon, common demon, any demon
-KMONS:   ( = greater demon
-KFEAT:   ( = (
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C<')
 MAP
  ...........
 .............
 ..m.m.m.m.m..
-...m2m.m2m...
-..m2m.(.m2m..
+...mBm.mBm...
+..mBm.<.mBm..
 ...m.....m...
-..m.3.P.3.m..
+..m.B.P.3.m..
 ...m.....m...
-..m2m.1.m2m..
-...m2m.m2m...
+..mBm.C.mBm..
+...mBm.mBm...
 ..m.m.m.m.m..
 .............
  ...........
@@ -1894,15 +1848,13 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_pillars_b
-TAGS:   allow_dup
-ORIENT: float
-SUBST:  X : x.
-SUBST:  Y : mmxxl
-MONS:   greater demon, common demon, any demon, pandemonium lord
-NSUBST: D = 1:P / 3:1 / 3:2 / 3:3 / 1:( / 3:|
+SUBST:  X : x., Y : mmxxl
+MONS:   pandemonium lord
+NSUBST: D = 1:P / 3:C / 3:B / 3:A / 1:( / 3:|
 KITEM:  ( = |
 KFEAT:  ( = (
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 @.xxxxxxxxxxx
 ..xXDXDXDXDXx
@@ -1910,7 +1862,7 @@ MAP
 ..xX.X.X.X.Xx
 ..x.Y.Y.Y.YDx
 ..xX.X.X.X.Xx
-....Y.Y4Y.YDx
+....Y.Y1Y.YDx
 ..xX.X.X.X.Xx
 ..x.Y.Y.Y.YDx
 ..xX.X.X.X.Xx
@@ -1922,22 +1874,20 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_doors
-TAGS:   allow_dup
-ORIENT: float
-KITEM:  ( = |
-KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon
+KITEM:  | = |
+KFEAT:  | = (
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 ..x+xxxx+x..
 .xx......xx.
-.+.x3..2x.+.
-.x.2c++c3.x.
-.x..+(1+..x.
-.x..+1P+..x.
-.x.3c++c2.x.
-.+.x2..3x.+.
+.+.xA..Bx.+.
+.x.Bc++cA.x.
+.x..+|C+..x.
+.x..+CP+..x.
+.x.Ac++cB.x.
+.+.xB..Ax.+.
 .xx......xx.
 ..x+xxxx+x..
 ............
@@ -1946,16 +1896,14 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_doors_b
-TAGS:   allow_dup
-ORIENT: float
 # The doors are not treated as large gates, but individually:
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = +
-NSUBST: D = 2:1 / 2:2 / 2:3 / 1:P / 1:(
-KITEM:  ( = |
-KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon
+NSUBST: D = 2:C / 2:B / 2:A / 1:P / 1:|
+KITEM:  | = |
+KFEAT:  | = (
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 xxxxxxxxxxxxx
 xxxxDxDxDxDxx
@@ -1971,24 +1919,22 @@ ENDMAP
 ###################################
 
 NAME:   evilmike_mini_pan_V
-TAGS:   allow_dup
-ORIENT: float
 KITEM:  ( = |
 KFEAT:  ( = (
-MONS:   greater demon, common demon, any demon, pandemonium lord
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 x.@.xxxxxxxxxxxxxxxxx.@.x
 xx...xxxxxxxxxxxxxxx...xx
-xxx.3.xxxxxxxxxxxxx.3.xxx
+xxx.A.xxxxxxxxxxxxx.A.xxx
 xxxx...xxxxxxxxxxx...xxxx
-xxxxx.2.xxxxxxxxx.2.xxxxx
+xxxxx.B.xxxxxxxxx.B.xxxxx
 xxxxxx...xxcccxx...xxxxxx
-xxxxxxx.1.xcPcx.1.xxxxxxx
+xxxxxxx.C.xcPcx.C.xxxxxxx
 xxxxxxxx...c+c...xxxxxxxx
- xxxxxxxx..3.3..xxxxxxxx
-  xxxxxxxx..4..xxxxxxxx
-   xxxxxxxx3.3xxxxxxxx
+ xxxxxxxx..A.A..xxxxxxxx
+  xxxxxxxx..1..xxxxxxxx
+   xxxxxxxxA.Axxxxxxxx
     xxxxxxxx(xxxxxxxx
      xxxxxxxxxxxxxxx
 ENDMAP
@@ -1996,27 +1942,25 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_door_chamber
-TAGS: allow_dup
-ORIENT: float
 WEIGHT: 5
-MONS: any demon, common demon, greater demon
 MARKER: + = lua:props_marker { connected_exclude="true" }
 MARKER: - = lua:props_marker { connected_exclude="true" }
-NSUBST: + = 1:P / 1:( / 2:2 / 2:3 / *:+
+NSUBST: + = 1:P / 1:( / 2:B / 2:C / *:+
 SUBST: - = +
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
    x..@..x
  xxx.....xxx
- xx...1...xx
+ xx...A...xx
 xx.-------.xx
 ...-+++++-...
 ...-+++++-...
-@.1-+++++-1.@
+@.A-+++++-A.@
 ...-+++++-...
 ...-+++++-...
 xx.-------.xx
- xx...1...xx
+ xx...A...xx
  xxx.....xxx
    x..@..x
 ENDMAP
@@ -2029,6 +1973,7 @@ ORIENT: float
 MONS: pandemonium lord, greater demon, any demon
 NSUBST: P = 1:P / *:(
 : pan_demonic_rune(_G, 'P')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
        c
       cxc
@@ -2037,17 +1982,17 @@ MAP
    cxm...mxc
     cxm.mxc
    cxm...mxc
-  cxm..2..mxc
+  cxm..C..mxc
    cxm...mxc
   cxcxm.mxcxc
  cxmxm...mxmxc
- .m.m.3.3.m.m.
-@m.2...1...2.m@
- .m.m.3.3.m.m.
+ .m.m.A.A.m.m.
+@m.C...1...C.m@
+ .m.m.A.A.m.m.
  cxmxm...mxmxc
   cxcxm.mxcxc
    cxm...mxc
-  cxm..2..mxc
+  cxm..C..mxc
    cxm...mxc
     cxm.mxc
    cxm...mxc
@@ -2060,54 +2005,52 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_giant_door
-TAGS: allow_dup no_trap_gen
-ORIENT: float
-MONS: any demon
+TAGS: no_trap_gen
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
      ..@..
    .........
  ....G...G....
  @..xxx=xxx..@
- ...xc1=1cx...
-  ..xc1=1cx..
-    xc1=1cx
-    xc1=1cx
-    xc1=1cx
+ ...xcA=Acx...
+  ..xcA=Acx..
+    xcA=Acx
+    xcA=Acx
+    xcA=Acx
     ccc=ccc
-    c.1(1.c
-    c1.P.1c
+    c.A(A.c
+    cA.P.Ac
     ccccccc
 ENDMAP
 
 ###################################
 
 NAME: nicolae_pan_hourglass
-TAGS: allow_dup
-ORIENT: float
 NSUBST: P = 1:P / *:(
 MONS: common demon, greater demon
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
    xxxxxxxxx
   xm...P...mx
- xm.2.....2.mx
+ xm.C.....C.mx
  xm...xxx...mx
  xm..xxxxx..mx
- xm..1xxx1..mx
+ xm..BxxxB..mx
   xm.......mx
-   xm..2..mx
-    xm.1.mx
-    ..m1m..
-    @11m11@
-    ..m1m..
-    xm.1.mx
-   xm..2..mx
+   xm..C..mx
+    xm.B.mx
+    ..mBm..
+    @BBmBB@
+    ..mBm..
+    xm.B.mx
+   xm..C..mx
   xm.......mx
- xm..1xxx1..mx
+ xm..BxxxB..mx
  xm..xxxxx..mx
  xm...xxx...mx
- xm.2.....2.mx
+ xm.C.....C.mx
   xm...P...mx
    xxxxxxxxx
 ENDMAP
@@ -2115,12 +2058,8 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_double_arrow
-TAGS: allow_dup
-ORIENT: float
-MONS: greater demon, common demon
-KMONS: ( = greater demon
-KFEAT: ( = (
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C<')
 MAP
        c
       ccc
@@ -2130,19 +2069,19 @@ MAP
   ccxxx.xxxcc
  ccxxx...xxxcc
 ccxxx.....xxxcc
- xxx..2.2..xxx
+ xxx..B.B..xxx
   x.........x
-  .2.x...x.2.
- ...xx.(.xx...
+  .B.x...x.B.
+ ...xx.<.xx...
 ...xxx...xxx...
 ..xxxx...xxxx..
 @xxxxx.P.xxxxx@
 ..xxxx...xxxx..
 ...xxx...xxx...
- ...xx.1.xx...
-  .2.x...x.2.
+ ...xx.C.xx...
+  .B.x...x.B.
   x.........x
- xxx..2.2..xxx
+ xxx..B.B..xxx
 ccxxx.....xxxcc
  ccxxx...xxxcc
   ccxxx.xxxcc
@@ -2156,23 +2095,19 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_glass_arcs
-TAGS: allow_dup
-ORIENT: float
-MONS: any demon, greater demon
-KMONS: ( = greater demon
-KFEAT: ( = (
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C<')
 MAP
      ccccc
   ccccccccccc
   ...ccccc...
-  n.1..c..1.n
- ..nn..(..nn..
+  n.A..c..A.n
+ ..nn..<..nn..
  ...nn...nn...
- @1.nn.P.nn.1@
+ @A.nn.P.nn.A@
  ...nn...nn...
- ..nn..2..nn..
-  n.1..c..1.n
+ ..nn..C..nn..
+  n.A..c..A.n
   ...ccccc...
   ccccccccccc
      ccccc
@@ -2181,31 +2116,28 @@ ENDMAP
 ###################################
 
 NAME: nicolae_pan_performance_anxiety
-TAGS: allow_dup no_trap_gen
-ORIENT: float
+TAGS: no_trap_gen
 WEIGHT: 1
 KPROP: tb = no_rtele_into
-MONS: greater demon, common demon
 NSUBST: t = 10:p / *:., b = 10:p / *:.
 KMONS: p = human / elf / orc / naga / centaur / draconian / \
    ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \
    deep dwarf / felid / octopode / vampire / base draconian / demigod / \
    demonspawn / merfolk / halfling
-KMONS: ( = common demon
-KFEAT: ( = (
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B<', 'C')
 MAP
       ccccc
     ccctttccc
    cctttttttcc
    cttnnnnnttc
-  cctnn.2.nntcc
-  ctnn.1.1.nntc
-..cnn.1...1.nnc..
-@....2..P..2....@
-..cnn.1...1.nnc..
-  cbnn.1.1.nnbc
-  ccbnn.(.nnbcc
+  cctnn.B.nntcc
+  ctnn.C.C.nntc
+..cnn.C...C.nnc..
+@....B..P..B....@
+..cnn.C...C.nnc..
+  cbnn.C.C.nnbc
+  ccbnn.<.nnbcc
    cbbnnnnnbbc
    ccbbbbbbbcc
     cccbbbccc
@@ -2215,90 +2147,86 @@ ENDMAP
 ###################################
 
 NAME:    grunt_pan_in_and_out
-TAGS:    allow_dup no_trap_gen
-ORIENT:  float
-MONS:    greater demon, common demon
+TAGS:    no_trap_gen
 KMONS:   d = pandemonium lord
 KFEAT:   d = (
 : pan_demonic_rune(_G, 'e')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 .c+cccccc+c.
 .c.c.de.c.c.
-.c2c....c2c.
-.c.c.11.c.c.
-.c2c....c2c.
+.cBc....cBc.
+.c.c.CC.c.c.
+.cBc....cBc.
 .c.cc++cc.c.
-.c2cc..cc2c.
+.cBcc..ccBc.
 .c.cc..cc.c.
-.c2..11..2c.
+.cB..CC..Bc.
 .cccccccccc.
 ............
 ENDMAP
 
 NAME:    grunt_pan_spiral
-TAGS:    allow_dup no_trap_gen
-ORIENT:  float
-MONS:    greater demon, common demon
+TAGS:    no_trap_gen
 KMONS:   d = pandemonium lord
 KFEAT:   d = (
-: pan_demonic_rune(_G, 'e')
+: pan_demonic_rune(_G, 'g')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 .c+cccccccc.
-.c.cc2.2..+.
+.c.ccB.B..+.
 .c.c.cccccc.
-.c2c1c.1.cc.
-.c.c.decc2c.
-.c2ccfg.c.c.
-.cc.1.c1c2c.
+.cBcCc.C.cc.
+.c.c.deccBc.
+.cBccfg.c.c.
+.cc.C.cCcBc.
 .cccccc.c.c.
-.+..2.2cc.c.
+.+..B.Bcc.c.
 .cccccccc+c.
 ............
 ENDMAP
 
 NAME:    grunt_pan_zigzag
-TAGS:    allow_dup no_trap_gen
-ORIENT:  float
-MONS:    greater demon, common demon
+TAGS:    no_trap_gen
 KMONS:   d = pandemonium lord
 KFEAT:   d = (
 : pan_demonic_rune(_G, 'e')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
 ............
 .cccccccccc.
-.c..2..2..+.
-.c.2.cccccc.
-.cc.1.cc....
-..cc.d1cc...
-...cc1e.cc..
-....cc.1.cc.
-.cccccc.2.c.
-.+..2..2..c.
+.c..B..B..+.
+.c.B.cccccc.
+.cc.C.cc....
+..cc.dCcc...
+...ccCe.cc..
+....cc.C.cc.
+.cccccc.B.c.
+.+..B..B..c.
 .cccccccccc.
 ............
 ENDMAP
 
 NAME:    grunt_pan_pentagram
-TAGS:    allow_dup no_trap_gen
-ORIENT:  float
-MONS:    greater demon, common demon
+TAGS:    no_trap_gen
 : pan_demonic_rune(_G, 'P', true)
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
     ...........
   ...cccc+cccc...
  ..ccc.......ccc..
- .cc.cc..2..cc.cc.
+ .cc.cc..B..cc.cc.
 ..c...+cc.cc+...c..
 .c+...c.ccc.c...+c.
-.c..2.c1ccc1c.2..c.
+.c..B.cCcccCc.B..c.
 .c....cc+.+cc....c.
 .c..cccc.P.cccc..c.
-.c.cc.1+.(.+1.cc.c.
+.c.cc.C+.(.+C.cc.c.
 .cc+ccccc+ccccc+cc.
-.c......c1c......c.
-.cc..2..c.c..2..cc.
+.c......cCc......c.
+.cc..B..c.c..B..cc.
 ..cc....c+c....cc..
  ..+c....c....c+..
   ..ccc..c..ccc..
@@ -2309,22 +2237,22 @@ ENDMAP
 NAME:    grunt_pan_sceptre
 TAGS:    allow_dup no_trap_gen
 ORIENT:  float
-MONS:    greater demon, common demon
 KMONS:   d = pandemonium lord
 KFEAT:   d = (
 : pan_demonic_rune(_G, 'e')
+: pan_lord_vault_contents(_G, 'A', 'B', 'C')
 MAP
  @........@
-@2.cccccc.2@
+@B.cccccc.B@
 ..cc.de.cc..
 c+c......c+c
-c.c.1..1.c.c
+c.c.C..C.c.c
 c.c......c.c
-c.c..22..c.c
-c2cc....cc2c
+c.c..BB..c.c
+cBcc....ccBc
 c..cc++cc..c
-cc..2..2..cc
- ccc.11.ccc
+cc..B..B..cc
+ ccc.CC.ccc
    cccccc
 ENDMAP
 
@@ -2404,7 +2332,7 @@ ENDMAP
 NAME:    lemuel_hall_of_pain
 ORIENT:  float
 MONS:    pandemonium lord, any demon
-MONS:    smoke demon / weight:1 brimstone fiend
+MONS:    smoke demon / brimstone fiend w:1
 SHUFFLE: xc
 KFEAT:   m = iron_grate
 SHUFFLE: O1/(|
@@ -2572,9 +2500,9 @@ MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
 MONS:   col:random name:demonic name_adjective plant tile:mons_demonic_plant
-MONS:   red devil ; demon trident good_item ego:distortion
-MONS:   red devil ; lajatang good_item ego:distortion
-MONS:   red devil ; demon blade good_item ego:distortion
+MONS:   red devil ; demon trident good_item ego:distortion ident:type
+MONS:   red devil ; lajatang good_item ego:distortion ident:type
+MONS:   red devil ; demon blade good_item ego:distortion ident:type
 KMONS:  P = pandemonium lord
 KFEAT:  P = (
 FTILE:  P = floor_hall
