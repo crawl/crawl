@@ -1485,7 +1485,7 @@ int prompt_eat_chunks(bool only_auto)
 
             const bool bad = is_bad_food(*item);
 
-            if (easy_eat && !bad)
+            if (easy_eat && !bad && i_feel_safe())
             {
                 // If this chunk is safe to eat, just do so without prompting.
                 autoeat = true;
