@@ -2349,9 +2349,9 @@ bool melee_attack::player_monattk_hit_effects()
         dprf(DIAG_COMBAT, "Special damage to %s: %d, flavour: %d",
              defender->name(DESC_THE).c_str(),
              special_damage, special_damage_flavour);
-    }
 
-    special_damage = inflict_damage(special_damage);
+        special_damage = inflict_damage(special_damage);
+    }
 
     if (stab_attempt && stab_bonus > 0 && weapon
         && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
