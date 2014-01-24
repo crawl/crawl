@@ -3078,8 +3078,16 @@ void grand_avatar_reset(monster* mons)
     mons->props.erase(GA_TARGET_MID);
     mons->props.erase(GA_MELEE);
     mons->props.erase(GA_SPELL);
-    mons->foe = agent->mindex();
-    mons->target = agent->pos();
+    actor* foe = mons->get_foe();
+    if (foe)
+    {
+        mons->target = foe->pos();
+    }
+    else
+    {
+        mons->foe = agent->mindex();
+        mons->target = agent->pos();
+    }
 }
 
 bool grand_avatar_check_melee(monster* mons, actor* target)
