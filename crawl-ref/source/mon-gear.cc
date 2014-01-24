@@ -223,6 +223,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                            bool spectral_orcs = false)
 {
     bool force_item = false;
+    bool force_uncursed = false;
 
     item_def               item;
     item_make_species_type item_race = MAKE_ITEM_RANDOM_RACE;
@@ -615,6 +616,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_NAGA_SHARPSHOOTER:
+        force_uncursed = true;
         if (!melee_only)
         {
             item.base_type = OBJ_WEAPONS;
@@ -956,8 +958,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.sub_type = WPN_LONGBOW;
         break;
 
-    case MONS_FAUN:
     case MONS_SATYR:
+        force_uncursed = true;
+    case MONS_FAUN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
@@ -1257,6 +1260,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             break;
         }
         force_item = true;
+        force_uncursed = true;
         item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = coinflip() ? WPN_DAGGER : WPN_SHORT_SWORD;
@@ -1349,6 +1353,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_SPRIGGAN_ASSASSIN:
+        force_uncursed = true;
         if (!melee_only)
         {
             item.base_type = OBJ_WEAPONS;
@@ -1517,6 +1522,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     if (force_item)
         item_set_appearance(i);
+
+    if (force_uncursed)
+        do_uncurse_item(i, false);
 
     _give_monster_item(mon, thing_created, force_item);
 
