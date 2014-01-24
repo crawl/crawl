@@ -2853,7 +2853,7 @@ enum monster_type                      // menv[].type
     MONS_SHOCK_SERPENT,
     MONS_MANA_VIPER,
     MONS_NAGA_ENCHANTER,
-    MONS_MARKSNAGA,
+    MONS_NAGA_SHARPSHOOTER,
 
     NUM_MONSTERS,               // used for polymorph
 

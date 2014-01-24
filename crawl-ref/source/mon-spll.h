@@ -2323,12 +2323,12 @@
       }
     },
 
-    {  MST_MARKSNAGA,
+    {  MST_NAGA_SNIPER,
       {
        SPELL_PORTAL_PROJECTILE,
-       SPELL_CORONA,
+       SPELL_PORTAL_PROJECTILE,
        SPELL_NO_SPELL,
-       SPELL_SLOW,
+       SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
