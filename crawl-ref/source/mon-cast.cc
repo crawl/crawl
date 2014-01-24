@@ -1402,6 +1402,13 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     if (_is_breath_caster(mon->type) && mon->has_ench(ENCH_BREATH_WEAPON))
         return true;
 
+    // Don't bother casting a summon spell if we're already at its cap
+    if (summons_are_capped(monspell)
+        && count_summons(mon, monspell) >= summons_limit(monspell))
+    {
+        return true;
+    }
+
     // Eventually, we'll probably want to be able to have monsters
     // learn which of their elemental bolts were resisted and have those
     // handled here as well. - bwr
