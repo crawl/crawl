@@ -169,6 +169,7 @@ const deck_archetype deck_of_wonders[] =
     { CARD_HELIX,      {5, 5, 5} },
     { CARD_SAGE,       {5, 5, 5} },
     { CARD_ALCHEMIST,  {5, 5, 5} },
+    { CARD_TROWEL,     {5, 5, 3} },
     END_OF_DECK
 };
 
