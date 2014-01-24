@@ -2970,7 +2970,7 @@ static string _describe_draconian_colour(int species)
 static string _describe_draconian(const monster_info& mi)
 {
     string description;
-    const int subsp = mi.draco_subspecies();
+    const int subsp = mi.draco_or_demonspawn_subspecies();
 
     if (subsp == MONS_DRACONIAN)
         description += "A ";
@@ -3126,7 +3126,7 @@ static string _describe_demonspawn_base(int species)
 static string _describe_demonspawn(const monster_info& mi)
 {
     string description;
-    const int subsp = mi.draco_subspecies();
+    const int subsp = mi.draco_or_demonspawn_subspecies();
 
 
     if (subsp != MONS_DEMONSPAWN)

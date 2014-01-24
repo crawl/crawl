@@ -247,7 +247,7 @@ struct monster_info : public monster_info_base
 
     string constriction_description() const;
 
-    monster_type draco_subspecies() const
+    monster_type draco_or_demonspawn_subspecies() const
     {
         return draco_type;
     }
