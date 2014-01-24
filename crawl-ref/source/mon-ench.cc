@@ -858,6 +858,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         props.erase("song_count");
         break;
 
+    case ENCH_BUILDING_CHARGE:
+        if (!quiet && you.can_see(this))
+            mprf("%s electrical charge dissipates.", name(DESC_ITS).c_str());
+        number = 0;
+        break;
+
     default:
         break;
     }
@@ -965,7 +971,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
-        case ENCH_FLAYED: case ENCH_BARBS:
+        case ENCH_FLAYED: case ENCH_BARBS: case ENCH_BUILDING_CHARGE:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1900,6 +1906,22 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         break;
 
+    case ENCH_BUILDING_CHARGE:
+        ASSERT(type == MONS_SHOCK_SERPENT);
+
+        if (decay_enchantment(en))
+            break;
+
+        // Announcing at 4, since it is about to increment and hit its cap of
+        // 5 and this prevents this message from being spammed
+        if (number == 4)
+        {
+            simple_monster_message(this, " bristles with a violent electric nimbus!",
+                                   MSGCH_MONSTER_ENCHANT);
+        }
+        number = min((int)number + 1, 5);
+        break;
+
     default:
         break;
     }
@@ -2047,7 +2069,7 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
-    "barbs", "buggy",
+    "barbs", "building_charge", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

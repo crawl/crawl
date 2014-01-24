@@ -150,6 +150,17 @@ public:
     void fire();
 };
 
+class shock_serpent_discharge_fineff : public final_effect
+{
+public:
+    shock_serpent_discharge_fineff(const actor *serpent)
+            : final_effect(0, serpent, coord_def())
+    {
+    }
+    bool mergeable(const final_effect &a) const;
+    void fire();
+};
+
 // A fineff that triggers a daction; otherwise the daction
 // occurs immediately (and then later) -- this might actually
 // be too soon in some cases.

@@ -5666,11 +5666,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         return;
     }
 
-    if (type == MONS_SHOCK_SERPENT)
+    // Don't discharge on small amounts of damage (this helps avoid
+    // continuously shocking when poisoned or sticky flamed)
+    if (type == MONS_SHOCK_SERPENT && damage > 4)
     {
-        simple_monster_message(this, " crackles with electricity!");
-        discharge_monsters(pos(), 50 + random2(100), 0, this);
-        return;
+        (new shock_serpent_discharge_fineff(this))->schedule();
     }
 
     // The royal jelly objects to taking damage and will SULK. :-)

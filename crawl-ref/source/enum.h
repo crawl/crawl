@@ -1727,6 +1727,7 @@ enum enchant_type
     ENCH_TORNADO_COOLDOWN,
     ENCH_SIREN_SONG,
     ENCH_BARBS,
+    ENCH_BUILDING_CHARGE,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

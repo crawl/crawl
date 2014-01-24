@@ -46,5 +46,6 @@ bool apply_grasping_roots(monster* mons);
 void check_grasping_roots(actor* act, bool quiet = false);
 
 void siren_song(monster* mons);
+void shock_serpent_discharge(monster* serpent);
 
 #endif

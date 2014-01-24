@@ -2541,7 +2541,8 @@ void forest_damage(const actor *mon)
     }
 }
 
-vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int max_rays)
+vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
+                            int max_rays, int max_spacing)
 {
     coord_def aim_dir = (caster->pos() - aim).sgn();
 
@@ -2574,7 +2575,7 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range, int m
     center_beam.friend_info.dont_stop = false;
     beams.push_back(center_beam);
 
-    for (distance_iterator di(aim, false, false, 3); di; ++di)
+    for (distance_iterator di(aim, false, false, max_spacing); di; ++di)
     {
         if (monster_at(*di))
         {
