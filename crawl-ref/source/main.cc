@@ -610,6 +610,7 @@ static void _take_starting_note()
             << you.class_name
             << ", began the quest for the Orb.";
     take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
+    mark_milestone("begin", "began the quest for the Orb.");
 
     notestr.str("");
     notestr.clear();
