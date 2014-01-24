@@ -1616,7 +1616,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 spell_user = true;
             }
 
-            antimagic_affects_defender(true);
+            antimagic_affects_defender(damage_done * 2);
             mprf("You drain %s %s.",
                  defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
                  spell_user ? "magic" : "power");
@@ -2518,12 +2518,12 @@ bool melee_attack::distortion_affects_defender()
     return false;
 }
 
-void melee_attack::antimagic_affects_defender(bool amplify_effect = false)
+void melee_attack::antimagic_affects_defender(int pow)
 {
     int amount = 0;
     if (defender->is_player())
     {
-        amount = min(you.magic_points, random2(damage_done * 2));
+        amount = min(you.magic_points, random2avg(pow, 3));
         if (!amount)
             return;
         mprf(MSGCH_WARN, "You feel your power leaking away.");
@@ -2534,11 +2534,9 @@ void melee_attack::antimagic_affects_defender(bool amplify_effect = false)
              && !defender->as_monster()->is_priest()
              && !mons_class_flag(defender->type, M_FAKE_SPELLS))
     {
-        int dur = div_rand_round(damage_done * 8, defender->as_monster()->hit_dice);
+        int dur = div_rand_round(pow * 8, defender->as_monster()->hit_dice);
         amount = random2(dur + 1);
         dur = amount * BASELINE_DELAY;
-        if (amplify_effect)
-            dur *= 2;
         defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                 attacker, // doesn't matter
                                 dur));
@@ -3393,7 +3391,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ANTIMAGIC:
-        antimagic_affects_defender();
+        antimagic_affects_defender(damage_done);
         break;
     }
 
@@ -4828,7 +4826,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ANTIMAGIC:
-        antimagic_affects_defender();
+        antimagic_affects_defender(attacker->get_experience_level() * 3 / 2);
+
         if (mons_genus(attacker->type) == MONS_VINE_STALKER
             && attacker->is_monster())
         {
