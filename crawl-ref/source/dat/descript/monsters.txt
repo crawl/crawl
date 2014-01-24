@@ -2344,8 +2344,10 @@ energy. Beauty is certainly nowhere to be found in this beholder.
 %%%%
 shock serpent
 
-A distant relative of electric eels, these snakes crackle with electricity
-ready to be set off at the merest touch of an adventurer's weapon.
+A sinuous serpent whose body crackles with volatile electricity. Its electric
+shroud inflicts a painful shock on anything that injures it, and if allowed to
+gather sufficient charge, can be unleashed by the serpent as a powerful torrent
+of electric energy.
 %%%%
 silent spectre
 

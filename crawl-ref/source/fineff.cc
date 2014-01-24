@@ -94,6 +94,12 @@ bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
     return o && def == o->def;
 }
 
+bool shock_serpent_discharge_fineff::mergeable(const final_effect &fe) const
+{
+    const shock_serpent_discharge_fineff *o = dynamic_cast<const shock_serpent_discharge_fineff *>(&fe);
+    return o && def == o->def;
+}
+
 bool delayed_action_fineff::mergeable(const final_effect &fe) const
 {
     return false;
@@ -303,6 +309,13 @@ void starcursed_merge_fineff::fire()
     actor *defend = defender();
     if (defend && defend->alive())
         starcursed_merge(defender()->as_monster(), true);
+}
+
+void shock_serpent_discharge_fineff::fire()
+{
+    actor *defend = defender();
+    if (defend && defend->alive())
+        shock_serpent_discharge(defender()->as_monster());
 }
 
 void delayed_action_fineff::fire()

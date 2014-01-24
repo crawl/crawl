@@ -2301,17 +2301,6 @@
       }
     },
 
-    {  MST_SHOCK_SERPENT,
-      {
-       SPELL_SHOCK,
-       SPELL_DISCHARGE,
-       SPELL_NO_SPELL,
-       SPELL_SHOCK,
-       SPELL_DISCHARGE,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_NAGA_ENCHANTER,
       {
        SPELL_NO_SPELL,
