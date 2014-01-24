@@ -2112,7 +2112,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     mon_inv_type slot = get_mon_equip_slot(mons, mitm[msl]);
     ASSERT(slot != NUM_MONSTER_SLOTS);
 
-    mons->lose_energy(EUT_MISSILE);
+    // Energy is already deducted for the spell cast, if using portal projectile
+    if (!teleport)
+        mons->lose_energy(EUT_MISSILE);
     const int throw_energy = mons->action_energy(EUT_MISSILE);
 
     // Dropping item copy, since the launched item might be different.
@@ -2292,7 +2294,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
             speed_brand = true;
         }
 
-        mons->speed_increment += speed_delta;
+        // Portal projectile is independent of weapon speed
+        if (!teleport)
+            mons->speed_increment += speed_delta;
     }
 
     // Chaos, flame, and frost.
