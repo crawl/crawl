@@ -3179,3 +3179,20 @@ void summoned_monster(const monster *mons, const actor *caster,
         oldest_summon->add_ench(ENCH_SUMMON_CAPPED);
     }
 }
+
+int count_summons(const actor *summoner, spell_type spell)
+{
+    int count = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (summoner == *mi)
+            continue;
+
+        int stype    = 0;
+        const bool summoned = mi->is_summoned(NULL, &stype);
+        if (summoned && stype == spell && summoner->mid == mi->summoner)
+            count++;
+    }
+
+    return count;
+}

@@ -109,6 +109,7 @@ void summoned_monster(const monster* mons, const actor* caster,
                       spell_type spell);
 bool summons_are_capped(spell_type spell);
 int summons_limit(spell_type spell);
+int count_summons(const actor *summoner, spell_type spell);
 
 struct summons_desc // : public data_index_entry<spell_type>
 {
