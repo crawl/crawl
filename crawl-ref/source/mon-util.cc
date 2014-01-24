@@ -3451,6 +3451,7 @@ static bool _mons_starts_with_ranged_weapon(monster_type mc)
     case MONS_URUG:
     case MONS_FAUN:
     case MONS_SATYR:
+    case MONS_NAGA_SHARPSHOOTER:
         return true;
     default:
         return false;

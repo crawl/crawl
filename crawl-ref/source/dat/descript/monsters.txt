@@ -1811,11 +1811,6 @@ A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
 %%%%
-marksnaga
-
-A rare breed of naga adept in the use of ranged weaponry; it has learned
-a few spells to debiliatate its enemies and make them easier targets.
-%%%%
 master elementalist
 
 The primal forces of the universe dance at this demented wizard's fingertips.
@@ -1904,6 +1899,12 @@ naga mage
 
 A naga that has trained in the use of magic, trailed by an eldritch nimbus. It
 is especially skilled in spells dealing with poison and venom.
+%%%%
+naga sharpshooter
+
+A naga with exceptionally keen eyesight, adept in the use of ranged weaponry
+and simple magics which allows it to snipe at targets across nearly any
+obstruction.
 %%%%
 naga warrior
 
