@@ -445,7 +445,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         if (!display)
         {
             if (has_altar_been_seen)
-                disp += god_name(god, false) + "\n";
+                disp += uppercase_first(god_name(god, false)) + "\n";
             continue;
         }
 
@@ -470,7 +470,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
             colour = "darkgrey";
 
         snprintf(buffer, sizeof buffer, "<%s>%s</%s>",
-                 colour, god_name(god, false).c_str(), colour);
+                 colour, uppercase_first(god_name(god, false)).c_str(), colour);
         disp += buffer;
         num_printed++;
 
