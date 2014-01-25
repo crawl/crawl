@@ -860,6 +860,7 @@ static const char* dur_names[] =
 #endif
     "trogs hand",
     "manticore barbs",
+    "poison vulnerability",
 };
 
 void wizard_edit_durations(void)

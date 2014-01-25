@@ -3327,6 +3327,19 @@ struct spell_desc
 },
 
 {
+    SPELL_VIRULENCE, "Virulence",
+     SPTYP_POISON | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

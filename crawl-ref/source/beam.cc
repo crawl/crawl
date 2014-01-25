@@ -3102,6 +3102,9 @@ bool bolt::harmless_to_player() const
     case BEAM_NAPALM:
         return you.species == SP_DJINNI;
 
+    case BEAM_VIRULENCE:
+        return player_res_poison(false) >= 3;
+
     default:
         return false;
     }
@@ -3324,7 +3327,7 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    if (flavour != BEAM_MALMUTATE && has_saving_throw()
+    if ((flavour != BEAM_MALMUTATE && has_saving_throw() || flavour == BEAM_VIRULENCE)
         && you.check_res_magic(ench_power) > 0)
     {
         // You resisted it.
@@ -3623,6 +3626,20 @@ void bolt::affect_player_enchantment()
         break;
     }
 
+    case BEAM_VIRULENCE:
+
+        // Those completely immune cannot be made more susceptible this way
+        if (you.res_poison(false) >= 3)
+        {
+            canned_msg(MSG_YOU_UNAFFECTED);
+            break;
+        }
+
+        mpr("You feel yourself grow more vulnerable to poison.");
+        you.increase_duration(DUR_POISON_VULN, 12 + random2(18), 50);
+        obvious_effect = true;
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -3713,6 +3730,15 @@ void bolt::affect_player()
                 hit_verb = engulfs ? "engulfs" : "hits";
             mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
         }
+
+        // Irresistible portion of resistable effect; must happen before MR
+        // check for the latter to print a proper message.
+        if (flavour == BEAM_VIRULENCE && you.duration[DUR_POISONING])
+        {
+            you.duration[DUR_POISONING] = you.duration[DUR_POISONING] * 3 / 2;
+            mpr("The poison in your body grows stronger.");
+        }
+
         affect_player_enchantment();
         return;
     }
@@ -4875,6 +4901,7 @@ bool bolt::has_saving_throw() const
     case BEAM_BLINK_CLOSE:
     case BEAM_BLINK:
     case BEAM_MALIGN_OFFERING:
+    case BEAM_VIRULENCE:        // saving throw handled specially
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -4926,6 +4953,9 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     case BEAM_MALIGN_OFFERING:
         rc = (mon->res_negative_energy(intrinsic_only) < 3);
         break;
+
+    case BEAM_VIRULENCE:
+        rc = (mon->res_poison() < 3);
 
     default:
         break;
@@ -5342,6 +5372,30 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         else
             simple_monster_message(mon, " is unaffected.");
     }
+
+    case BEAM_VIRULENCE:
+
+        // Handled before the MR check, since this portion is irresistible
+        if (mon->has_ench(ENCH_POISON))
+        {
+            mon_enchant ench = mon->get_ench(ENCH_POISON);
+            poison_monster(mon, agent(), ench.degree, false, false);
+            if (you.can_see(mon))
+                mprf("The poison in %s body grows stronger.",
+                     mon->name(DESC_ITS).c_str());
+        }
+
+        if (mon->check_res_magic(ench_power) > 0)
+            return MON_RESIST;
+
+        if (!mon->has_ench(ENCH_POISON_VULN)
+            && mon->add_ench(mon_enchant(ENCH_POISON_VULN, 0, agent(),
+                                         random_range(20, 30) * BASELINE_DELAY)))
+        {
+            simple_monster_message(mon, " grows more vulnerable to poison.");
+            obvious_effect = true;
+        }
+        return MON_AFFECTED;
 
     default:
         break;
@@ -6183,6 +6237,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";
     case BEAM_VULNERABILITY:         return "vulnerability";
     case BEAM_MALIGN_OFFERING:       return "malign offering";
+    case BEAM_VIRULENCE:             return "virulence";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

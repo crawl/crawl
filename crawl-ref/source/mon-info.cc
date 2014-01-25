@@ -188,6 +188,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_TORNADO_COOLDOWN;
     case ENCH_BARBS:
         return MB_BARBS;
+    case ENCH_POISON_VULN:
+        return MB_POISON_VULN;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1548,6 +1550,8 @@ vector<string> monster_info::attributes() const
         v.push_back("surrounded by restless winds");
     if (is(MB_BARBS))
         v.push_back("skewered by manticore barbs");
+    if (is(MB_POISON_VULN))
+        v.push_back("more vulnerable to poison");
     return v;
 }
 
