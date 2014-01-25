@@ -2630,22 +2630,28 @@ int monster_die(monster* mons, killer_type killer,
         if (pbd_dur > you.duration[DUR_POWERED_BY_DEATH])
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
     }
-    else if ((killer == KILL_MON
-              || killer == KILL_MON_MISSILE)
-              && corpse >= 0
-              && !invalid_monster_index(killer_index))
+
+    if (corpse >= 0)
     {
         // Powered by death.
-        // Rather than regen over time, the expected 24 + 2d8 duration
-        // is given as an instant health bonus.
-        // These numbers may need to be adjusted.
-        monster* mon = &menv[killer_index];
-        if (mon->alive()
-            && mons_is_demonspawn(mon->type)
-            && draco_or_demonspawn_subspecies(mon) == MONS_PUTRID_DEMONSPAWN)
+        // Find nearby putrid demonspawn.
+        for (monster_near_iterator mi(mons->pos()); mi; ++mi)
         {
-            if (mon->heal(random2avg(24, 2) + roll_dice(2, 8)))
-                simple_monster_message(mon, " regenerates before your eyes!");
+            monster* mon = *mi;
+            if (mon->alive()
+                && mons_is_demonspawn(mon->type)
+                && draco_or_demonspawn_subspecies(mon)
+                   == MONS_PUTRID_DEMONSPAWN)
+            {
+                // Rather than regen over time, the expected 24 + 2d8 duration
+                // is given as an instant health bonus.
+                // These numbers may need to be adjusted.
+                if (mon->heal(random2avg(24, 2) + roll_dice(2, 8)))
+                {
+                    simple_monster_message(mon,
+                                           " regenerates before your eyes!");
+                }
+            }
         }
     }
 
