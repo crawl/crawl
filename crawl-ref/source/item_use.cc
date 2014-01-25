@@ -2894,7 +2894,7 @@ static void _vulnerability_scroll()
     // First cast antimagic on yourself.
     antimagic();
 
-    mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 40);
+    mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, &you, 400);
 
     // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
