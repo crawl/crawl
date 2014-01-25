@@ -3091,15 +3091,20 @@ static string _describe_demonspawn_role(monster_type type)
     switch (type)
     {
     case MONS_BLOOD_SAINT:
-        return "Its eyes are filled with a thirst for blood.";
+        return "It is caked in blood and dusty residue from the wake of the "
+               "devastation it weaves, wreaking divinely-inspired destruction.";
     case MONS_CHAOS_CHAMPION:
-        return "It looks around wildly, filled with the throes of madness.";
+        return "Even other demonspawn fear its wild, maddened gaze, as well "
+               "as its reality-warping powers from the chaos gods.";
     case MONS_WARMONGER:
-        return "It hefts its weapon menacingly, ever ready for more battles.";
+        return "It is ever-ready for eternal conflict untainted by magic, "
+               "and fights as easily as it breathes for the gods of battle.";
     case MONS_CORRUPTER:
-        return "Space seems to shimmer and twist in its vicinity.";
+        return "Space and flesh shimmer and twist in its vicinity, as if "
+               "afraid of this unwavering servant of celestial corruption.";
     case MONS_BLACK_SUN:
-        return "It menaces with an unholy aura.";
+        return "Its endless devotion to deities of death have left it with "
+               "an unholy radiance, shining a brilliant darkness.";
     default:
         return "";
     }
