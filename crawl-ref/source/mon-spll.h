@@ -2322,4 +2322,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_NAGA_RITUALIST,
+      {
+       SPELL_FORCE_LANCE,
+       SPELL_OLGREBS_TOXIC_RADIANCE,
+       SPELL_OLGREBS_TOXIC_RADIANCE,
+       SPELL_VIRULENCE,
+       SPELL_VIRULENCE,
+       SPELL_NO_SPELL
+      }
+    },
 #endif
