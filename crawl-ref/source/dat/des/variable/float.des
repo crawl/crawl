@@ -2152,7 +2152,7 @@ NAME:   nicolae_whirlpool
 TAGS:   patrolling no_pool_fixup no_rotate no_monster_gen
 ORIENT: float
 MONS:   centaur, centaur warrior
-DEPTH:  D:3-, Depths
+DEPTH:  D:6-, Depths
 : if you.branch() == "D" then
 SUBST:  1 = ..1
 SUBST:  2 = 1
