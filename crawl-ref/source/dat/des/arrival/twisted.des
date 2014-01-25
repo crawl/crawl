@@ -167,7 +167,7 @@ NAME:    shiori_arrival_whats_in_store_for_you
 TAGS:    arrival no_monster_gen no_pool_fixup no_item_gen
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
-SUBST:   A=+ , B=@ , C=x , D=x
+SUBST:   A=+ , B=@ , C=c , D=c
 SUBST:   = = +
 NSUBST:  M = 2=E / *=M E:2
 KFEAT:   E = teleport trap
@@ -200,15 +200,17 @@ KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
            w:1 purple draconian; nothing / w:2 red draconian; nothing / \
            w:1 white draconian; nothing / w:1 pale draconian; nothing / nothing
 MAP
-xxxxxxxxxxxxxx     xxxxxxxxx
-xxxxxxxxMxMxMxxxxxxxMxMxMxMx
-xxxxxxxxnxnxnxMxMxMxnxnxnxnxxxx@x
-xxxxxxx......xnxnxnx.......nMxx=xx
-xxxxxx{..............xnxnx.xnx...xxx
-xxxxxxx..........xnxnxMxMn.....>.nMx
-xxxxxxxxnxnxnxnxnxMxMxxxxxnxnx...xxx
-xxxxxxxxMxMxMxMxMxxxxx   xMxMxxAxx
-xxxxxxxxxxxxxxxxxx       xxxxxxBx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxcccccccxxxxxcccccccccxx
+xxxxxxccMcMcMcccccccMcMcMcMcxx
+xxxxxcccncncncMcMcMcncncncncccc@c
+xxxxxcc......cncncnc.......nMcc=cc
+xxxxxc{..............cncnc.cnc...ccc
+xxxxxcc..........cncncMcMn.....>.nMc
+xxxxxcccncncncncncMcMcccccncnc...ccc
+xxxxxxccMcMcMcMcMcccccxxxcMcMccAcc
+xxxxxxxcccccccccccxxxxxxxccccccBc
+      xxxxxxxxxxxxx     xxxxxx
 ENDMAP
 
 #####################################

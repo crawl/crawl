@@ -2534,9 +2534,9 @@ xxxxxxxx@xxxxxxxx
 xxxxxx.G.G.xxxxxx
 xxx.G.......G.xxx
 x...............x
-x.G..xxxxxxx..G.x
-x....x12345x....x
-x.G..xmmmmmx..G.x
+x.G..ccccccc..G.x
+x....c12345c....x
+x.G..cnnnnnc..G.x
 x...............x
 xxx.............x
 xxxxxxxxxxxx....x
@@ -2832,19 +2832,19 @@ SUBST:  "'- : c
 : end
 MONS:   giant frog / spiny frog / yak / death yak w:1 / elephant / grizzly bear
 MAP
-          xxxxxxxxx
-       xxxxtccccctxxxx
-      xxtt1tc...ct1ttxx
-    xxxtttttc.{.ctttttxxx
-    xcccccccn...ncccccccx
+          ccccccccc
+       cccctccccctcccc
+      cctt1tc...ct1ttcc
+    ccctttttc.{.ctttttccc
+    ccccccccn...ncccccccc
     WWcc..+.......+..ccWW
    @WWz..."'-----'"...zWW@
     WWcc..+.......+..ccWW
-    xcccccccn...ncccccccx
-    xxxtttttc.{.ctttttxxx
-      xxtt1tc...ct1ttxx
-       xxxxtccccctxxxx
-          xxxxxxxxx
+    ccccccccn...ncccccccc
+    ccctttttc.{.ctttttccc
+      cctt1tc...ct1ttcc
+       cccctccccctcccc
+          ccccccccc
 ENDMAP
 
 ##############################################################################
