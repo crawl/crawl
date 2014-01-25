@@ -188,7 +188,8 @@ public:
     string      user_note_prefix; // Prefix for user notes
     int         note_hp_percent;  // percentage hp for notetaking
     bool        note_xom_effects; // take note of all Xom effects
-    bool        note_chat_messages; // log chat in DGL/Webtiles
+    bool        note_chat_messages; // log chat in Webtiles
+    bool        note_dgl_messages; // log chat in DGL
     confirm_level_type easy_confirm;    // make yesno() confirming easier
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
