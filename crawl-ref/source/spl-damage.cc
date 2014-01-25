@@ -2782,8 +2782,19 @@ void toxic_radiance_effect(actor* agent, int mult)
         if (!_toxic_can_affect(*ai))
             continue;
 
-        int dam = roll_dice(1, 3 + pow / 25) * mult
-                  * 3 / (2 + ai->pos().distance_from(agent->pos()));
+        int dam = roll_dice(1, 3 + pow / 25) * mult;
+
+        // Only applied if the player is also not the agent; Done early so that
+        // distance falloff won't frequently reduce damage to 1.
+        if (ai->is_player())
+            dam = dam * 5 / 2;
+
+        // Give monster OTR a weaker distance falloff than player OTR
+        if (agent->is_player())
+            dam = dam * 3 / (2 + ai->pos().distance_from(agent->pos()));
+        else
+            dam = dam * 9 / (8 + ai->pos().distance_from(agent->pos()));
+
         dam = resist_adjust_damage(*ai, BEAM_POISON, ai->res_poison(),
                                    dam, true);
 
@@ -2796,9 +2807,18 @@ void toxic_radiance_effect(actor* agent, int mult)
                 ouch(dam, agent->as_monster()->mindex(), KILLED_BY_BEAM,
                     "by Olgreb's Toxic Radiance", true,
                     agent->as_monster()->name(DESC_A).c_str());
+
+                if (coinflip())
+                {
+                    poison_player(1, agent->name(DESC_A),
+                                "toxic radiance", agent->is_player());
+                }
             }
-            poison_player(1, agent->name(DESC_A),
-                          "toxic radiance", agent->is_player());
+            else
+            {
+                poison_player(1, agent->name(DESC_A),
+                            "toxic radiance", agent->is_player());
+            }
         }
         else
         {
