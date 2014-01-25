@@ -114,6 +114,7 @@ private:
                     int spread_rate = -1);
     bool _lose_stat(stat_type which_stat, int8_t stat_loss);
     void _potion_effect(potion_type pot_eff, int pot_pow);
+    bool _paralyse(int dur);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     bool _send_to_abyss();
     bool _malign_gateway();

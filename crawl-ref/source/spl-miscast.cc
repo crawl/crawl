@@ -621,6 +621,17 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
     }
 }
 
+bool MiscastEffect::_paralyse(int dur)
+{
+    if (source != HELL_EFFECT_MISCAST)
+    {
+        target->paralyse(act_source, dur, cause);
+        return true;
+    }
+    else
+        return false;
+}
+
 bool MiscastEffect::_send_to_abyss()
 {
     if ((player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
@@ -1045,7 +1056,7 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(target->is_player() ? 4 : 2))
         {
         case 0:
-            target->paralyse(act_source, 2 + random2(6), cause);
+            _paralyse(2 + random2(6));
             break;
         case 1:
             _potion_effect(POT_CONFUSION, 10);
