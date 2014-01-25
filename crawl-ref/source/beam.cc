@@ -5340,7 +5340,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_DIMENSION_ANCHOR:
         if (!mon->has_ench(ENCH_DIMENSION_ANCHOR)
-            && mon->add_ench(mon_enchant(ENCH_DIMENSION_ANCHOR, 0, agent())))
+            && mon->add_ench(mon_enchant(ENCH_DIMENSION_ANCHOR, 0, agent(),
+                                         random_range(20, 30) * BASELINE_DELAY)))
         {
             if (simple_monster_message(mon, " is firmly anchored in space."))
                 obvious_effect = true;
@@ -5349,7 +5350,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_VULNERABILITY:
         if (!mon->has_ench(ENCH_LOWERED_MR)
-            && mon->add_ench(mon_enchant(ENCH_LOWERED_MR, 0, agent())))
+            && mon->add_ench(mon_enchant(ENCH_LOWERED_MR, 0, agent(),
+                                         random_range(20, 30) * BASELINE_DELAY)))
         {
             if (you.can_see(mon))
             {

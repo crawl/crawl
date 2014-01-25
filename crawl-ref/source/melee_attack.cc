@@ -4961,7 +4961,8 @@ void melee_attack::mons_apply_attack_flavour()
             {
                 if (!defender->as_monster()->has_ench(ENCH_LOWERED_MR))
                     visible_effect = true;
-                mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, attacker, 20 + random2(20));
+                mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, attacker,
+                                       (20 + random2(20)) * BASELINE_DELAY);
                 defender->as_monster()->add_ench(lowered_mr);
             }
 
@@ -4989,7 +4990,8 @@ void melee_attack::mons_apply_attack_flavour()
                     simple_monster_message(defender->as_monster(),
                                            " looks violently ill.");
                 }
-                defender->as_monster()->add_ench(ENCH_RETCHING);
+                defender->as_monster()->add_ench(mon_enchant(ENCH_RETCHING, 1,
+                                                             attacker, 7 + random2(9)));
             }
         }
         break;
