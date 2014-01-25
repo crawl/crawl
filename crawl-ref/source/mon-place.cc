@@ -2245,7 +2245,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
-    case MONS_NAGA_ENCHANTER:
+    case MONS_NAGA_RITUALIST:
     case MONS_NAGA_SHARPSHOOTER:
         band = BAND_NAGAS;
         band_size = 2 + random2(3);
@@ -2832,12 +2832,12 @@ static monster_type _band_member(band_type band, int which)
     case BAND_GUARDIAN_SERPENT:
         // No marksnagas here - they prefer to stay at a distance.
         return random_choose(MONS_NAGA_WARRIOR,   MONS_NAGA_MAGE,
-                             MONS_NAGA_ENCHANTER, -1);
+                             MONS_NAGA_RITUALIST, -1);
     case BAND_NAGAS:
         if (which == 1 && coinflip())
         {
             return random_choose(MONS_NAGA_WARRIOR,   MONS_NAGA_MAGE,
-                                 MONS_NAGA_ENCHANTER, MONS_NAGA_SHARPSHOOTER, -1);
+                                 MONS_NAGA_RITUALIST, MONS_NAGA_SHARPSHOOTER, -1);
         }
         return MONS_NAGA;
     case BAND_WOLVES:

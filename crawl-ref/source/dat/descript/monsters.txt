@@ -1891,10 +1891,6 @@ naga
 A hybrid that is human from the waist up; below is a scaly, muscular snakelike
 tail. Its mouth drips with venomous saliva.
 %%%%
-naga enchanter
-
-A naga trained specially in enchantments to aid its allies.
-%%%%
 naga mage
 
 A naga that has trained in the use of magic, trailed by an eldritch nimbus. It
@@ -1905,6 +1901,13 @@ naga sharpshooter
 A naga with exceptionally keen eyesight, adept in the use of ranged weaponry
 and simple magics which allows it to snipe at targets across nearly any
 obstruction.
+%%%%
+naga ritualist
+
+An esoteric mystic draped in talismans. Their sect venerate poison as a sacred
+gift and means of spiritual purification, and their affinity for it is even
+stronger than the rest of their kin. By invoking secret rites they can render
+any venom more potent and spread its touch upon all those around them.
 %%%%
 naga warrior
 

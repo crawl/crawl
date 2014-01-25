@@ -630,7 +630,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
-    case MONS_NAGA_ENCHANTER:
         item_race = MAKE_ITEM_NO_RACE;
         // deliberate fall-through {dlb}
 
@@ -667,6 +666,21 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             9,  WPN_WAR_AXE,    9, WPN_FLAIL,
             1,  WPN_BROAD_AXE,  1, WPN_MORNINGSTAR,
             0);
+        break;
+
+    case MONS_NAGA_RITUALIST:
+        force_item = true;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(12, WPN_DAGGER,
+                                                 5, WPN_SCIMITAR,
+                                                 0);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VENOM);
+        item.flags |= ISFLAG_KNOW_TYPE;
+        if (coinflip())
+        {
+            item.plus  = 1 + random2(4);
+            item.plus2 = 1 + random2(4);
+        }
         break;
 
     case MONS_TIAMAT:
@@ -2261,7 +2275,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
-    case MONS_NAGA_ENCHANTER:
+    case MONS_NAGA_RITUALIST:
     case MONS_NAGA_SHARPSHOOTER:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
@@ -2274,7 +2288,9 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
             item.base_type = OBJ_ARMOUR;
             item.sub_type  = ARM_NAGA_BARDING;
         }
-        else if (mon->type == MONS_GREATER_NAGA || one_chance_in(3))
+        else if (mon->type == MONS_GREATER_NAGA
+                 || mon->type == MONS_NAGA_RITUALIST
+                 || one_chance_in(3))
         {
             item_race      = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_ARMOUR;
