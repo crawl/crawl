@@ -2994,12 +2994,6 @@ void MiscastEffect::_zot()
                 goto reroll_2;
             break;
         case 4:
-            you_msg      = "You feel incredibly sick.";
-            mon_msg_seen = "@The_monster@ looks incredibly sick.";
-            _do_poison(10 + random2avg(19, 2));
-            do_msg();
-            break;
-        case 5:
             if (!target->is_player())
                 target->polymorph(0);
             else if (coinflip())
@@ -3017,8 +3011,8 @@ void MiscastEffect::_zot()
                 do_msg();
             }
             break;
+        case 5:
         case 6:
-        case 7:
             roll = random2(3); // Give 2 of 3 effects.
             if (roll != 0)
                 _potion_effect(POT_CONFUSION, 15);
@@ -3042,26 +3036,26 @@ void MiscastEffect::_zot()
                 }
             }
             break;
-        case 8:
+        case 7:
             you_msg      = "You are engulfed in negative energy!";
             mon_msg_seen = "@The_monster@ is engulfed in negative energy!";
             do_msg();
             target->drain_exp(act_source, false, 100);
             break;
-        case 9:
+        case 8:
             if (target->is_player())
                 contaminate_player(2000 + random2avg(13000, 2), false);
             else
                 target->polymorph(0);
             break;
-        case 10:
+        case 9:
             if (you.magic_points > 0)
             {
                 dec_mp(10 + random2(21));
                 mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");
             }
             break;
-        case 11:
+        case 10:
         {
             vector<string> wands;
             for (int i = 0; i < ENDOFPACK; ++i)
@@ -3086,15 +3080,15 @@ void MiscastEffect::_zot()
                 do_msg(); // For canned_msg(MSG_NOTHING_HAPPENS)
             break;
         }
-        case 12:
+        case 11:
             _lose_stat(STAT_RANDOM, 1 + random2avg((coinflip() ? 7 : 4), 2));
             break;
-        case 13:
+        case 12:
             mpr("An unnatural silence engulfs you.");
             you.increase_duration(DUR_SILENCE, 10 + random2(21), 30);
             invalidate_agrid(true);
             break;
-        case 14:
+        case 13:
             if (mons_word_of_recall(NULL, 2 + random2(3)) == 0)
                 canned_msg(MSG_NOTHING_HAPPENS);
             break;
