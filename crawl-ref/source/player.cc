@@ -1950,6 +1950,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     {
         if (you.form == TRAN_SPIDER)
             rp--;
+
+        if (you.duration[DUR_POISON_VULN])
+            rp--;
     }
 
     return rp;
@@ -4306,6 +4309,7 @@ void display_char_status()
         DUR_RECITE,
         DUR_GRASPING_ROOTS,
         DUR_FIRE_VULN,
+        DUR_POISON_VULN,
     };
 
     status_info inf;

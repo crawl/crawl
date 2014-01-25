@@ -108,6 +108,7 @@ enum monster_info_flags
     MB_TORNADO,
     MB_TORNADO_COOLDOWN,
     MB_BARBS,
+    MB_POISON_VULN,
     NUM_MB_FLAGS
 };
 

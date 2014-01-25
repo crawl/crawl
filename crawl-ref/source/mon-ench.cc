@@ -864,6 +864,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         number = 0;
         break;
 
+    case ENCH_POISON_VULN:
+        if (!quiet)
+            simple_monster_message(this, " is no longer more vulnerable to poison.");
+        break;
+
     default:
         break;
     }
@@ -1182,6 +1187,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_WIND_AIDED:
     case ENCH_FIRE_VULN:
     case ENCH_BARBS:
+    case ENCH_POISON_VULN:
     // case ENCH_ROLLING:
         decay_enchantment(en);
         break;
@@ -2069,7 +2075,7 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
-    "barbs", "building_charge", "buggy",
+    "barbs", "building_charge", "poison_vuln", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

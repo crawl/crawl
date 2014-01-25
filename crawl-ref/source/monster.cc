@@ -3790,9 +3790,11 @@ int monster::res_water_drowning() const
 
 int monster::res_poison(bool temp) const
 {
-    UNUSED(temp);
-
     int u = get_mons_resist(this, MR_RES_POISON);
+
+    if (temp && has_ench(ENCH_POISON_VULN))
+        u--;
+
     if (u > 0)
         return u;
 

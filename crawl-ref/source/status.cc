@@ -155,6 +155,8 @@ static duration_def duration_data[] =
       RED, "-rF", "fire vulnerable", "You are more vulnerable to fire." },
     { DUR_BARBS, false,
       RED, "Barbs", "manticore barbs", "Manticore spikes are embedded in your body." },
+    { DUR_POISON_VULN, false,
+      RED, "-rP", "poison vulnerable", "You are more vulnerable to poison." },
 };
 
 static int duration_index[NUM_DURATIONS];

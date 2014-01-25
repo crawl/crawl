@@ -402,7 +402,8 @@ enum beam_type                  // bolt::flavour
     BEAM_DIMENSION_ANCHOR,
     BEAM_VULNERABILITY,
     BEAM_MALIGN_OFFERING,
-    BEAM_LAST_ENCHANTMENT = BEAM_MALIGN_OFFERING,
+    BEAM_VIRULENCE,
+    BEAM_LAST_ENCHANTMENT = BEAM_VIRULENCE,
 
     BEAM_MEPHITIC,
 #if TAG_MAJOR_VERSION == 34
@@ -1613,6 +1614,7 @@ enum duration_type
 #endif
     DUR_TROGS_HAND,
     DUR_BARBS,
+    DUR_POISON_VULN,
     NUM_DURATIONS
 };
 
@@ -1728,6 +1730,7 @@ enum enchant_type
     ENCH_SIREN_SONG,
     ENCH_BARBS,
     ENCH_BUILDING_CHARGE,
+    ENCH_POISON_VULN,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3739,6 +3742,7 @@ enum spell_type
 #endif
     SPELL_BLINKBOLT,
     SPELL_INVISIBILITY_OTHER,
+    SPELL_VIRULENCE,
     NUM_SPELLS
 };
 
