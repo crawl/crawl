@@ -82,8 +82,8 @@ ENDMAP
 NAME:    kb_arrival_jail
 TAGS:    arrival no_monster_gen no_item_gen
 ORIENT:  north
-SHUFFLE: ABCDEFGHIJKLMNOPQRSTUV
-KFEAT:   ABCDEFGHIJKLMNOPQRSTUV = floor
+SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWX
+KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWX = floor
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
@@ -106,6 +106,8 @@ KMONS:   S = ghoul ; nothing
 KMONS:   T = vampire spells:. ; nothing
 KMONS:   U = demigod ; nothing
 KMONS:   V = octopode ; nothing
+KMONS:   W = formicid ; nothing
+KMONS:   X = nothing
 MAP
  ccccc
  c.{.c
@@ -132,6 +134,8 @@ ccc.ccc
 cSn.nTc
 ccc.ccc
 cUn.nVc
+ccc.ccc
+cWn.nXc
 ccc+ccc
   c@c
 ENDMAP
