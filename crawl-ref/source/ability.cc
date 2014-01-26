@@ -241,7 +241,7 @@ static const ability_def Ability_List[] =
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
       1, 0, 0, 0, 0, ABFLAG_PERMANENT_MP},
 
-    { ABIL_DIG, "Dig", 0, 0, 75, 0, 0, ABFLAG_NONE},
+    { ABIL_DIG, "Dig", 0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, ABFLAG_DELAY},
 
     // EVOKE abilities use Evocations and come from items.
@@ -2014,18 +2014,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_DIG:
-        power = 0;
-        beam.range = LOS_RADIUS;
-
-        if (!spell_direction(abild, beam, DIR_NONE, TARG_ANY, 0,
-                             true, true, false, NULL,
-                             "Aiming: Dig",
-                             true))
-        {
-            return false;
-        }
-        else
-            zapping(ZAP_DIG, power, beam);
+        you.digging = true;
+        mpr("You extend your mandibles.");
         break;
 
     case ABIL_SHAFT_SELF:

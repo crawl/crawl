@@ -944,6 +944,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_MISSILES,
         STATUS_REGENERATION,
         DUR_BERSERK,
+        STATUS_DIG,
         DUR_RESISTANCE,
         STATUS_AIRBORNE,
         STATUS_INVISIBLE,

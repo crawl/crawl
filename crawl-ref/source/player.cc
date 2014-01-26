@@ -5912,6 +5912,7 @@ void player::init()
     received_noskill_warning = false;
     wizmode_teleported_into_rock = false;
     ash_init_bondage(this);
+    digging = false;
 
     delay_queue.clear();
 

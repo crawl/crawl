@@ -4453,7 +4453,10 @@ static void _move_player(coord_def move)
         {
             you.walking = move.abs();
             you.turn_is_over = true;
-            mpr("Ouch!");
+            if (you.digging) // no actual damage
+                mpr("You hurt your mandibles, ouch!"), you.digging = false;
+            else
+                mpr("Ouch!");
             apply_berserk_penalty = true;
             crawl_state.cancel_cmd_repeat();
 
@@ -4479,7 +4482,12 @@ static void _move_player(coord_def move)
 
     // You can't walk out of bounds!
     if (!in_bounds(targ))
+    {
+        // Why isn't the border permarock?
+        if (you.digging)
+            mpr("This wall is too hard to dig through.");
         return;
+    }
 
     dungeon_feature_type targ_grid = grd(targ);
 
@@ -4510,6 +4518,17 @@ static void _move_player(coord_def move)
     }
 
     bool targ_pass = you.can_pass_through(targ) && you.form != TRAN_TREE;
+
+    if (you.digging)
+    {
+        if (grd(targ) == DNGN_ROCK_WALL || grd(targ) == DNGN_CLEAR_ROCK_WALL
+            || grd(targ) == DNGN_GRATE)
+        {
+            targ_pass = true;
+        }
+        else // moving or attacking ends dig
+            you.digging = false;
+    }
 
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
@@ -4646,6 +4665,14 @@ static void _move_player(coord_def move)
             }
             you.duration[DUR_WATER_HOLD] = 1;
             you.props.erase("water_holder");
+        }
+
+        if (you.digging)
+        {
+            mprf("You dig through %s.", feature_description_at(targ, false,
+                 DESC_THE, false).c_str());
+            nuke_wall(targ);
+            you.time_taken = you.time_taken * 3 / 2;
         }
 
         if (swap)
