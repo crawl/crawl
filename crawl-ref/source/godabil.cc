@@ -3486,11 +3486,17 @@ bool dithmengos_shadow_step()
         }
     }
 
+    // XXX: This only ever fails if something's on the landing site;
+    // perhaps this should be handled more gracefully.
+    if (!you.move_to_pos(tgt.landing_site))
+    {
+        mpr("Something blocks your shadow step.");
+        return true;
+    }
+
     const actor *victim = actor_at(sdirect.target);
     mprf("You step into %s shadow.",
          apostrophise(victim->name(DESC_THE)).c_str());
-
-    you.move_to_pos(tgt.landing_site);
 
     return true;
 }
