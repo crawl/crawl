@@ -1516,7 +1516,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_toxic_radiance(&you, powc, fail);
 
     case SPELL_IGNITE_POISON:
-        return cast_ignite_poison(powc, fail);
+        return cast_ignite_poison(&you, powc, fail);
 
     case SPELL_TORNADO:
         return cast_tornado(powc, fail);

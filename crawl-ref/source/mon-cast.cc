@@ -1171,6 +1171,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TORNADO:
     case SPELL_DISCHARGE:
     case SPELL_PORTAL_PROJECTILE:
+    case SPELL_IGNITE_POISON:
         return true;
     default:
         if (check_validity)
@@ -2864,6 +2865,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         else if (spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
         {
             if (cast_toxic_radiance(mons, 100, false, true) != SPRET_SUCCESS)
+                return false;
+        }
+        else if (spell_cast == SPELL_IGNITE_POISON)
+        {
+            if (cast_ignite_poison(mons, 0, false, true) != SPRET_SUCCESS)
                 return false;
         }
         // See if we have a good spot to cast LRD at.
@@ -5114,6 +5120,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         handle_throw(mons, pbolt, true, false);
         return;
     }
+
+    case SPELL_IGNITE_POISON:
+        cast_ignite_poison(mons, mons->hit_dice * 6, false);
+        return;
+
     }
 
     // If a monster just came into view and immediately cast a spell,
