@@ -23,7 +23,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail);
 spret_type cast_freeze(int pow, monster* mons, bool fail);
 spret_type cast_airstrike(int pow, const dist &beam, bool fail);
 spret_type cast_shatter(int pow, bool fail);
-spret_type cast_ignite_poison(int pow, bool fail);
+spret_type cast_ignite_poison(actor *agent, int pow, bool fail, bool mon_tracer = false);
 int discharge_monsters(coord_def where, int pow, int, actor *agent);
 spret_type cast_discharge(int pow, bool fail);
 int disperse_monsters(coord_def where, int pow);
