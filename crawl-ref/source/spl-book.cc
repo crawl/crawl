@@ -1325,7 +1325,7 @@ int rod_spell(int rod, bool check_range)
              "Evoke which spell from the rod ([a-%c] spell [?*] list)? ",
              'a' + num_spells - 1);
 
-        // Note that auto_list is ignored here.
+        // Note that the list of spells is not presented here.
         keyin = get_ch();
 
         if (keyin == '?' || keyin == '*')

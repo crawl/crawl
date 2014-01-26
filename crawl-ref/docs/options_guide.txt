@@ -987,14 +987,6 @@ auto_exclude += <monster name>, <monster name>, ...
 3-h     Command Enhancements.
 -----------------------------
 
-auto_list = true
-        When set (the default), the appropriate inventory items are
-        automatically listed for commands like eat and read. This is
-        like immediately hitting '?', and can be confusing to beginners
-        because they won't get to see the prompts. This option does not
-        apply to spell casting... Conjurers would probably find that
-        really annoying.
-
 auto_switch = false
         If you've got a melee weapon in slot a and a ranged weapon in
         slot b (or the opposite), this option will allow you to

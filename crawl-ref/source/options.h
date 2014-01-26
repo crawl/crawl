@@ -213,8 +213,6 @@ public:
     int         fire_items_start; // index of first item for fire command
     vector<unsigned> fire_order;  // missile search order for 'f' command
 
-    bool        auto_list;       // automatically jump to appropriate item lists
-
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
     char_set_type  char_set;

@@ -829,9 +829,6 @@ void game_options::reset_options()
     note_dgl_messages      = true;
     note_hp_percent        = 5;
 
-    // [ds] Grumble grumble.
-    auto_list              = true;
-
     clear_messages         = false;
 #ifdef TOUCH_UI
     show_more              = false;
@@ -2652,7 +2649,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         macro_dir = field;
 #endif
 #endif
-    else BOOL_OPTION(auto_list);
     else if (key == "default_target")
     {
         default_target = _read_bool(field, default_target);

@@ -722,8 +722,7 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
         if (!item_is_rechargeable(wand, known))
         {
             mpr("Choose an item to recharge, or Esc to abort.");
-            if (Options.auto_list)
-                more();
+            more();
 
             // Try again.
             item_slot = -1;

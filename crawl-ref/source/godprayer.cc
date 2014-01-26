@@ -218,8 +218,7 @@ static bool _altar_prayer()
         && !you.one_time_ability_used[GOD_SHINING_ONE])
     {
         simple_god_message(" will bless one of your weapons.");
-        if (Options.auto_list)
-            more();
+        more();
         did_something = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
                                       YELLOW);
     }
@@ -230,8 +229,7 @@ static bool _altar_prayer()
         && !you.one_time_ability_used[GOD_LUGONU])
     {
         simple_god_message(" will brand one of your weapons with the corruption of the Abyss.");
-        if (Options.auto_list)
-            more();
+        more();
         did_something = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
     }
 
@@ -245,8 +243,7 @@ static bool _altar_prayer()
             simple_god_message(
                 " will bloody your weapon with pain or grant you the Necronomicon.");
 
-            if (Options.auto_list)
-                 more();
+            more();
 
             if (_bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
                 return true;

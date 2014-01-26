@@ -108,7 +108,6 @@ void init_hints_options()
     // with messaging options.
     mesclr(true);
 //     Options.clear_messages = true;
-    Options.auto_list  = true;
     Options.show_more  = true;
     Options.small_more = false;
 

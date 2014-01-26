@@ -1258,7 +1258,7 @@ int eat_from_floor(bool skip_chunks)
         }
     }
 
-    if (need_more && Options.auto_list)
+    if (need_more)
         more();
 
     return 0;

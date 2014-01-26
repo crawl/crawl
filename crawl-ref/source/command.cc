@@ -321,16 +321,7 @@ static void _adjust_spell(void)
 
     // Select starting slot
     mprf(MSGCH_PROMPT, "Adjust which spell? ");
-
-    int keyin = 0;
-    if (Options.auto_list)
-        keyin = list_spells(false, false, false, "Adjust which spell?");
-    else
-    {
-        keyin = get_ch();
-        if (keyin == '?' || keyin == '*')
-            keyin = list_spells(false, false, false, "Adjust which spell?");
-    }
+    int keyin = list_spells(false, false, false, "Adjust which spell?");
 
     if (!isaalpha(keyin))
     {
@@ -396,39 +387,11 @@ static void _adjust_ability(void)
         return;
     }
 
-    int selected = -1;
     mprf(MSGCH_PROMPT, "Adjust which ability? ");
-
-    if (Options.auto_list)
-        selected = choose_ability_menu(talents);
-    else
-    {
-        const int keyin = get_ch();
-
-        if (keyin == '?' || keyin == '*')
-            selected = choose_ability_menu(talents);
-        else if (key_is_escape(keyin) || keyin == ' '
-                 || keyin == '\r' || keyin == '\n')
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
-        else if (isaalpha(keyin))
-        {
-            // Try to find the hotkey.
-            for (unsigned int i = 0; i < talents.size(); ++i)
-            {
-                if (talents[i].hotkey == keyin)
-                {
-                    selected = static_cast<int>(i);
-                    break;
-                }
-            }
-        }
-    }
+    int selected = choose_ability_menu(talents);
 
     // If we couldn't find anything, cancel out.
-    if (selected < 0)
+    if (selected == -1)
     {
         mpr("No such ability.");
         return;
