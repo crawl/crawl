@@ -25,7 +25,7 @@ static species_type species_order[] =
     SP_NAGA,           SP_CENTAUR,
     SP_MERFOLK,        SP_MINOTAUR,
     SP_TENGU,          SP_BASE_DRACONIAN,
-    SP_GARGOYLE,       SP_FORMICID,       
+    SP_GARGOYLE,       SP_FORMICID,
     // mostly human shape but made of a strange substance
     SP_LAVA_ORC,       SP_VINE_STALKER,
     // celestial species
