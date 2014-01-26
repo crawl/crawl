@@ -1222,7 +1222,9 @@ bool activate_ability()
             return false;
         }
     }
-#ifdef TOUCH_UI
+
+    msg::streams(MSGCH_PROMPT) << "Use which ability?" << endl;
+
     int selected = choose_ability_menu(talents);
     if (selected == -1)
     {
@@ -1230,54 +1232,7 @@ bool activate_ability()
         crawl_state.zero_turns_taken();
         return false;
     }
-#else
-    int selected = -1;
-    while (selected < 0)
-    {
-        msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list) "
-                                   << endl;
 
-        const int keyin = get_ch();
-
-        if (keyin == '?' || keyin == '*')
-        {
-            selected = choose_ability_menu(talents);
-            if (selected == -1)
-            {
-                canned_msg(MSG_OK);
-                crawl_state.zero_turns_taken();
-                return false;
-            }
-        }
-        else if (key_is_escape(keyin) || keyin == ' ' || keyin == '\r'
-                 || keyin == '\n')
-        {
-            canned_msg(MSG_OK);
-            crawl_state.zero_turns_taken();
-            return false;
-        }
-        else if (isaalpha(keyin))
-        {
-            // Try to find the hotkey.
-            for (unsigned int i = 0; i < talents.size(); ++i)
-            {
-                if (talents[i].hotkey == keyin)
-                {
-                    selected = static_cast<int>(i);
-                    break;
-                }
-            }
-
-            // If we can't, cancel out.
-            if (selected < 0)
-            {
-                mpr("You can't do that.");
-                crawl_state.zero_turns_taken();
-                return false;
-            }
-        }
-    }
-#endif
     return activate_talent(talents[selected]);
 }
 
