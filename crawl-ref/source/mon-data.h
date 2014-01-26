@@ -4832,6 +4832,19 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+{
+    MONS_SALAMANDER_FIREBRAND, 'N', WHITE, "salamander firebrand",
+    M_FIGHTER | M_WARM_BLOOD | M_SUBMERGES,
+    mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
+    1000, 10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, -4,
+    { {AT_HIT, AF_FIREBRAND, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 14, 3, 5, 0 },
+    5, 11, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
+    // energy here is ACTION_ENERGY, but includes swimming
+    I_HIGH, HT_AMPHIBIOUS_LAVA, FL_NONE, 8, {7, 6, 8, 8, 8, 8, 8, 80},
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // humans ('@')
 {
     MONS_HUMAN, '@', LIGHTGREY, "human",
