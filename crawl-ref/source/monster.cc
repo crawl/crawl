@@ -5368,7 +5368,7 @@ int monster::action_energy(energy_use_type et) const
             move_cost -= 2;
 
         if (wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS))
-            move_cost += 2;
+            move_cost += 1;
 
         if (run())
             move_cost -= 1;
