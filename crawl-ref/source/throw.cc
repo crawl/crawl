@@ -2062,7 +2062,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     if (!teleport
         && you_worship(GOD_DITHMENGOS)
-        && thrown.base_type == OBJ_MISSILES)
+        && thrown.base_type == OBJ_MISSILES
+        && thrown.sub_type != MI_NEEDLE)
     {
         dithmengos_shadow_throw(thr.target);
     }
