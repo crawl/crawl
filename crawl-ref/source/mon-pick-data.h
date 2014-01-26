@@ -1258,7 +1258,6 @@ static const pop_entry pop_water_d[] =
   {  9,  27,  300,   UP, MONS_OCTOPODE },
   {  9,  32,  200, SEMI, MONS_SHARK },
   {  11, 27,  600,   UP, MONS_WATER_ELEMENTAL },
-  {  15, 27,  325,   UP, MONS_ELEMENTAL_WELLSPRING },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1266,7 +1265,6 @@ static const pop_entry pop_water_depths[] =
 { // Depths water monsters
   {  1,  6,   200, DOWN, MONS_SHARK },
   {  1,  6,   600, FLAT, MONS_WATER_ELEMENTAL },
-  {  1,  6,   300,   UP, MONS_ELEMENTAL_WELLSPRING },
   {  1,  6,    50, FLAT, MONS_OCTOPODE },
   {  1,  6,    25, FLAT, MONS_MERFOLK_IMPALER },
   {  1,  6,    25, FLAT, MONS_MERFOLK_JAVELINEER },
@@ -1299,7 +1297,6 @@ static const pop_entry pop_water_forest[] =
   {  1,   5,  110, FLAT, MONS_GIANT_GOLDFISH },
   {  1,   5,   60, FLAT, MONS_JELLYFISH },
   {  1,   5,  125, FLAT, MONS_WATER_ELEMENTAL },
-  { -1,   5,   65,   UP, MONS_ELEMENTAL_WELLSPRING },
   {  1,   5,  135, FLAT, MONS_THORN_LOTUS },
   {  1,   9,  120, SEMI, MONS_WATER_NYMPH },
   { 0,0,0,FLAT,MONS_0 }

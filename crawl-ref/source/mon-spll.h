@@ -2147,17 +2147,6 @@
       }
     },
 
-    {  MST_ELEMENTAL_WELLSPRING,
-      {
-       SPELL_PRIMAL_WAVE,
-       SPELL_PRIMAL_WAVE,
-       SPELL_NO_SPELL,
-       SPELL_PRIMAL_WAVE,
-       SPELL_PRIMAL_WAVE,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_DRACONIAN_ZEALOT,
       {
        SPELL_SUMMON_DEMON,

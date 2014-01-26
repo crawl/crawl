@@ -564,8 +564,7 @@ MONS:    ice devil w:12 / blue devil / bog body
 MONS:    anaconda simulacrum / titan simulacrum / \
          hydra simulacrum / storm dragon simulacrum
 KMONS:   6 = ice statue
-KMONS:   7 = patrolling kraken simulacrum w:15 / \
-             patrolling elemental wellspring band
+KMONS:   7 = patrolling kraken simulacrum w:15
 KMONS:   89 = ice dragon / frost giant w:4
 KMONS:   & = patrolling ice fiend
 : serpent_of_hell_setup(_G)

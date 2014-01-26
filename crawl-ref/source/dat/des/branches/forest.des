@@ -564,7 +564,7 @@ SHUFFLE: abc
 SUBST:   a = W, b = .W, c = ., T = tw
 NSUBST:  W = 1 / W, . = 2 / .
 SUBST:   ' = .
-KMONS:   1 = elemental wellspring
+KMONS:   1 = water elemental
 KMONS:   2 = spriggan air mage
 KFEAT:   1 = W
 MAP
@@ -698,7 +698,7 @@ TAGS:   transparent
 NSUBST: b = 3:2 / *:b
 SUBST:  d = Ww, b = W.
 NSUBST: w = 1 / w
-KMONS:  1 = elemental wellspring
+KMONS:  1 = water elemental
 KMONS:  2 = water nymph
 KFEAT:  1 = w
 KFEAT:  2 = W
@@ -1046,7 +1046,7 @@ MONS:   thorn hunter / spriggan defender / ancient bear
 KMONS:  M = water elemental
 KMONS:  L = thorn lotus
 KMONS:  N = water nymph
-KMONS:  S = elemental wellspring
+KMONS:  S = water elemental
 KFEAT:  MLNE = deep_water
 FTILE:  _|* = floor_pebble_brown
 CLEAR:  E
@@ -1347,7 +1347,7 @@ KMONS:    6 = thorn hunter
 KMONS:    A = water elemental
 KMONS:    L = thorn lotus
 KMONS:    N = water nymph
-KMONS:    S = elemental wellspring
+KMONS:    S = water elemental
 KFEAT:    ALNS = shallow_water
 COLOUR:   c = white
 FTILE:    |*123456GTU+. = floor_pebble_cyan

@@ -2926,19 +2926,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (battlesphere)
                 trigger_battlesphere(mons, beem);
             mons->lose_energy(EUT_SPELL);
-
-            // Wellsprings "cast" from their own hp.
-            if (spell_cast == SPELL_PRIMAL_WAVE
-                && mons->type == MONS_ELEMENTAL_WELLSPRING)
-            {
-                mons->hurt(mons, 5 + random2(15));
-                if (mons->alive())
-                {
-                    create_monster(
-                        mgen_data(MONS_WATER_ELEMENTAL, SAME_ATTITUDE(mons), mons,
-                        3, spell_cast, mons->pos(), mons->foe, 0));
-                }
-            }
         }
     } // end "if (mons->can_use_spells())"
 
@@ -4148,11 +4135,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                               MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
                               -1);
 
-        if (mons->type != MONS_ELEMENTAL_WELLSPRING
-            && _mons_abjured(mons, monsterNearby))
-        {
+        if (_mons_abjured(mons, monsterNearby))
             return;
-        }
 
         int dur;
 
