@@ -2266,7 +2266,7 @@ int player_movement_speed(bool ignore_burden)
     if (you.run())
         mv -= 1;
 
-    mv += 2 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
+    mv += you.wearing_ego(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     // Cheibriados
     if (you_worship(GOD_CHEIBRIADOS))
