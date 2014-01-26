@@ -1895,7 +1895,7 @@ MONS:   orc warlord, orc knight, orc high priest, orc sorcerer
 MONS:   orc warrior, orc priest, orc wizard,      orc
 KFEAT:  A = any shop
 KFEAT:  B = altar_beogh
-KMONS:  C = Saint Roka band w:1 / orc warlord band w:2
+KMONS:  C = Saint Roka band w:3 / orc warlord band, orc warlord band
 KMONS:  D = orc warrior band
 : if you.where() == dgn.level_name(dgn.br_entrance("Elf")) then
 KFEAT:  E = enter_elven_halls no_mimic
