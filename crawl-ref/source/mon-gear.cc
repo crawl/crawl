@@ -1339,23 +1339,35 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = MISC_HORN_OF_GERYON;
         break;
 
-    case MONS_SALAMANDER: // mv: new 8 Aug 2001
-                          // Yes, they've got really nice items, but
-                          // it's almost impossible to get them.
+    case MONS_SALAMANDER:
+    {
+        // Give out EITHER a bow or a melee weapon, not both
+        // (and so bail if we've already been given something)
+        if (melee_only)
+            break;
+
         force_item = true;
         item_race  = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_GREAT_SWORD, WPN_TRIDENT,
-                                       WPN_SPEAR,       WPN_GLAIVE,
-                                       WPN_BOW,         WPN_HALBERD,
-                                       -1);
+        item.sub_type  = random_choose_weighted(5, WPN_HALBERD,
+                                                5, WPN_TRIDENT,
+                                                3, WPN_SPEAR,
+                                                2, WPN_GLAIVE,
+                                                5, WPN_BOW,
+                                                0);
 
-        set_item_ego_type(item, OBJ_WEAPONS, is_range_weapon(item) ?
-                          SPWPN_FLAME : SPWPN_FLAMING);
+        if (is_range_weapon(item))
+        {
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAME);
+            item.flags |= ISFLAG_KNOW_TYPE;
+        }
 
-        item.plus   = random2(5);
-        item.plus2  = random2(5);
-        item.flags |= ISFLAG_KNOW_TYPE;
+        if (one_chance_in(4))
+        {
+            item.plus   = random2(5);
+            item.plus2  = random2(5);
+        }
+    }
         break;
 
     case MONS_SPRIGGAN:
