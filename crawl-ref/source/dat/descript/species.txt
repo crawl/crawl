@@ -131,7 +131,7 @@ and casters.
 %%%%
 Vine Stalker
 
-Frail symbionts, vine stalkers regenerate quickly but cannot regain hp from
-devices or potions. They are protected by their magical reserves, and pack a
-mean bite that replenishes them.
+Frail symbionts, vine stalkers regenerate quickly but cannot regain health
+from devices or potions. They are protected by their magical reserves, and
+pack a mean bite that replenishes them.
 %%%%
