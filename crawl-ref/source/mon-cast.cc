@@ -4149,13 +4149,13 @@ static const pop_entry _planerend_lair[] =
 { // Lair enemies
   {  1,   1,  100, FLAT, MONS_CATOBLEPAS },
   {  1,   1,  100, FLAT, MONS_DIRE_ELEPHANT },
-  {  1,   1,  100, FLAT, MONS_DEATH_YAK },
+  {  1,   1,   60, FLAT, MONS_DEATH_YAK },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_snake[] =
 { // Snake enemies
-  {  1,   1,  100, FLAT, MONS_ANACONDA },
+  {  1,   1,   80, FLAT, MONS_ANACONDA },
   {  1,   1,  100, FLAT, MONS_GUARDIAN_SERPENT },
   {  1,   1,  100, FLAT, MONS_GREATER_NAGA },
   { 0,0,0,FLAT,MONS_0 }
@@ -4165,15 +4165,15 @@ static const pop_entry _planerend_spider[] =
 { // Spider enemies
   {  1,   1,  100, FLAT, MONS_GHOST_MOTH },
   {  1,   1,  100, FLAT, MONS_EMPEROR_SCORPION },
-  {  1,   1,  100, FLAT, MONS_ORB_SPIDER },
-  {  1,   1,  100, FLAT, MONS_WOLF_SPIDER },
-  {  1,   1,  100, FLAT, MONS_RED_WASP },
+  {  1,   1,   20, FLAT, MONS_RED_WASP },
+  {  1,   1,   20, FLAT, MONS_ORB_SPIDER },
+  {  1,   1,   60, FLAT, MONS_WOLF_SPIDER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_swamp[] =
 { // Swamp enemies
-  {  1,   1,  100, FLAT, MONS_SWAMP_DRAGON },
+  {  1,   1,   80, FLAT, MONS_SWAMP_DRAGON },
   {  1,   1,  100, FLAT, MONS_HYDRA },
   {  1,   1,  100, FLAT, MONS_VAPOUR },
   {  1,   1,  100, FLAT, MONS_SLIME_CREATURE }, // changed to titanic below
@@ -4182,10 +4182,10 @@ static const pop_entry _planerend_swamp[] =
 
 static const pop_entry _planerend_shoals[] =
 { // Swamp enemies
-  {  1,   1,  100, FLAT, MONS_SIREN },
+  {  1,   1,   80, FLAT, MONS_SIREN },
   {  1,   1,  100, FLAT, MONS_MERFOLK_JAVELINEER },
   {  1,   1,  100, FLAT, MONS_MERFOLK_AQUAMANCER },
-  {  1,   1,  100, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
+  {  1,   1,   80, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4201,26 +4201,29 @@ static const pop_entry _planerend_slime[] =
 static const pop_entry _planerend_orc[] =
 { // Orc enemies
   {  1,   1,  100, FLAT, MONS_ORC_WARLORD },
-  {  1,   1,  100, FLAT, MONS_ORC_SORCERER },
-  {  1,   1,  100, FLAT, MONS_ORC_HIGH_PRIEST },
-  {  1,   1,  100, FLAT, MONS_IRON_TROLL },
-  {  1,   1,  100, FLAT, MONS_OGRE_MAGE },
+  {  1,   1,   80, FLAT, MONS_ORC_SORCERER },
+  {  1,   1,   80, FLAT, MONS_ORC_HIGH_PRIEST },
+  {  1,   1,   40, FLAT, MONS_IRON_TROLL },
+  {  1,   1,   60, FLAT, MONS_OGRE_MAGE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_elf[] =
 { // Elf enemies
   {  1,   1,  100, FLAT, MONS_DEEP_ELF_SORCERER },
-  {  1,   1,  100, FLAT, MONS_DEEP_ELF_DEMONOLOGIST },
+  {  1,   1,   80, FLAT, MONS_DEEP_ELF_DEMONOLOGIST },
   {  1,   1,  100, FLAT, MONS_DEEP_ELF_HIGH_PRIEST },
+  {  1,   1,   60, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
+  {  1,   1,   60, FLAT, MONS_DEEP_ELF_BLADEMASTER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_vaults[] =
 { // Vaults enemies
-  {  1,   1,  100, FLAT, MONS_VAULT_SENTINEL },
-  {  1,   1,  100, FLAT, MONS_IRONHEART_PRESERVER },
+  {  1,   1,   80, FLAT, MONS_VAULT_SENTINEL },
+  {  1,   1,   80, FLAT, MONS_IRONHEART_PRESERVER },
   {  1,   1,  100, FLAT, MONS_IRONBRAND_CONVOKER },
+  {  1,   1,   40, FLAT, MONS_TITAN },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4228,14 +4231,14 @@ static const pop_entry _planerend_crypt[] =
 { // Crypt enemies
   {  1,   1,  100, FLAT, MONS_VAMPIRE_KNIGHT },
   {  1,   1,  100, FLAT, MONS_FLAYED_GHOST },
-  {  1,   1,  100, FLAT, MONS_EIDOLON },
-  {  1,   1,  100, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
+  {  1,   1,  100, FLAT, MONS_ANCIENT_CHAMPION },
+  {  1,   1,   80, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_tomb[] =
 { // Tomb enemies
-  {  1,   1,  100, FLAT, MONS_GUARDIAN_MUMMY },
+  {  1,   1,   80, FLAT, MONS_GUARDIAN_MUMMY },
   {  1,   1,  100, FLAT, MONS_SPHINX },
   {  1,   1,  100, FLAT, MONS_MUMMY_PRIEST },
   { 0,0,0,FLAT,MONS_0 }
@@ -4244,16 +4247,17 @@ static const pop_entry _planerend_tomb[] =
 static const pop_entry _planerend_abyss[] =
 { // Abyss enemies
   {  1,   1,  100, FLAT, MONS_STARCURSED_MASS },
-  {  1,   1,  100, FLAT, MONS_APOCALYPSE_CRAB },
-  {  1,   1,  100, FLAT, MONS_THRASHING_HORROR },
-  {  1,   1,  100, FLAT, MONS_WORLDBINDER },
+  {  1,   1,   80, FLAT, MONS_APOCALYPSE_CRAB },
+  {  1,   1,   50, FLAT, MONS_THRASHING_HORROR },
+  {  1,   1,   50, FLAT, MONS_WORLDBINDER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_zot[] =
 { // Abyss enemies
-  {  1,   1,  100, FLAT, RANDOM_BASE_DRACONIAN },
-  {  1,   1,  100, FLAT, RANDOM_NONBASE_DRACONIAN },
+  {  1,   1,   80, FLAT, MONS_DRACONIAN_SHIFTER },
+  {  1,   1,   80, FLAT, MONS_DRACONIAN_SCORCHER },
+  {  1,   1,   80, FLAT, MONS_DRACONIAN_ZEALOT },
   {  1,   1,  100, FLAT, MONS_GOLDEN_DRAGON },
   {  1,   1,  100, FLAT, MONS_MOTH_OF_WRATH },
   { 0,0,0,FLAT,MONS_0 }
