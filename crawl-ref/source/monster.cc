@@ -5682,8 +5682,11 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (type == MONS_SPECTRAL_WEAPON && oppressor)
     {
         // The owner should not be able to damage itself
+        // XXX: the mid check here is intended to treat the player's shadow
+        // mimic as the player itself, i.e. the weapon won't share damage
+        // the shadow mimic inflicts on it (this causes a crash).
         actor *owner = actor_by_mid(summoner);
-        if (owner && owner != oppressor)
+        if (owner && owner != oppressor && oppressor->mid != summoner)
         {
             int shared_damage = damage / 2;
             if (shared_damage > 0)
