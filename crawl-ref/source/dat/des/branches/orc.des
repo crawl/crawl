@@ -1897,7 +1897,11 @@ KFEAT:  A = any shop
 KFEAT:  B = altar_beogh
 KMONS:  C = Saint Roka band w:1 / orc warlord band w:2
 KMONS:  D = orc warrior band
+: if you.where() == dgn.level_name(dgn.br_entrance("Elf")) then
 KFEAT:  E = enter_elven_halls no_mimic
+: else
+KFEAT:  E = abandoned_shop w:5 / fountain_blue / floor w:30
+: end
 KMONS:  F = ogre w:8 / two-headed ogre w:4 / troll w:1 / nothing w:8
 KMONS:  G = orc w:8 / orc warrior w:1 / nothing w:1
 KITEM:  H = gold w:1 / nothing w:4
