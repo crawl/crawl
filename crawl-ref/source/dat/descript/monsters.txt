@@ -2743,6 +2743,11 @@ very ugly thing
 A very ugly thing. According to legend, this hideously mutated creature is the
 otherworldly spawn of a wizard's breeding experiment. Double yuck!
 %%%%
+vine stalker
+
+A bizarre symbiotic creature, made up of a carnivorous vine magically
+combined with a humanoid.
+%%%%
 wandering mushroom
 
 A large, fleshy mushroom that wanders slowly around the dungeon. It is both
