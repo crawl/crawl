@@ -8,32 +8,26 @@
 #include "version.h"
 
 // March 2008: change order of species and jobs on character selection
-// screen as suggested by Markus Maier. Summarizing comments below are
-// copied directly from Markus' SourceForge comments. (jpeg)
-//
-// These are listed in two columns to match the selection screen output.
-// Take care to list all valid species here, or they cannot be directly
-// chosen.
-//
-// Fantasy staples and humanoid creatures come first, then diminutive and
-// stealthy creatures, then monstrous creatures, then planetouched and after
-// all living creatures finally the undead. (MM)
+// screen as suggested by Markus Maier.
+// We have subsequently added a few new categories.
 static species_type species_order[] =
 {
     // comparatively human-like looks
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,       SP_DEEP_DWARF,
-    SP_HILL_ORC,       SP_LAVA_ORC,
-    SP_MERFOLK,        SP_FORMICID,
-    SP_VINE_STALKER,
+    SP_HILL_ORC,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
-    // significantly different body type from human
-    SP_NAGA,           SP_CENTAUR,
+    // large species
     SP_OGRE,           SP_TROLL,
-    SP_MINOTAUR,       SP_TENGU,
-    SP_BASE_DRACONIAN, SP_GARGOYLE,
+    // significantly different body type from human ("monstrous")
+    SP_NAGA,           SP_CENTAUR,
+    SP_MERFOLK,        SP_MINOTAUR,
+    SP_TENGU,          SP_BASE_DRACONIAN,
+    SP_GARGOYLE,       SP_FORMICID,       
+    // mostly human shape but made of a strange substance
+    SP_LAVA_ORC,       SP_VINE_STALKER,
     // celestial species
     SP_DEMIGOD,        SP_DEMONSPAWN,
     SP_DJINNI,
