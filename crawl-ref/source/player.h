@@ -319,6 +319,7 @@ public:
 
   // The last spell cast by the player.
   spell_type last_cast_spell;
+  map<int,int> last_pickup;
 
 
   // ---------------------------
@@ -480,8 +481,6 @@ public:
     string shout_verb() const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
-
-    map<int,int> last_pickup;
 
     // actor
     int mindex() const;
