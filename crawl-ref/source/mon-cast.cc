@@ -4471,8 +4471,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_DRAIN_LIFE:
-    case SPELL_OZOCUBUS_REFRIGERATION:
         cast_los_attack_spell(spell_cast, mons->hit_dice, mons, true);
+        return;
+
+    case SPELL_OZOCUBUS_REFRIGERATION:
+        cast_los_attack_spell(spell_cast, mons->hit_dice * 5, mons, true);
         return;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
