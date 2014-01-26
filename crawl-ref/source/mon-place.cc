@@ -1788,8 +1788,14 @@ static bool _good_zombie(monster_type base, monster_type cs,
 // Veto for the zombie picker class
 bool zombie_picker::veto(monster_type mt)
 {
+    monster_type corpse_type = mons_species(mt);
+
+    // XXX: nonbase draconian leave base draconian corpses.
+    if (mt != MONS_DRACONIAN && corpse_type == MONS_DRACONIAN)
+        corpse_type = random_draconian_monster_species();
+
     // Zombifiability in general.
-    if (mons_species(mt) != mt)
+    if (!mons_class_can_leave_corpse(corpse_type))
         return true;
     // Monsters that don't really exist
     if (mons_class_flag(mt, M_UNFINISHED))
@@ -1797,12 +1803,12 @@ bool zombie_picker::veto(monster_type mt)
     // Monsters that can have derived undead, but never randomly generated.
     if (mons_class_flag(mt, M_NO_GEN_DERIVED))
         return true;
-    if (!mons_zombie_size(mt) || mons_is_unique(mt))
+    if (!mons_zombie_size(corpse_type) || mons_is_unique(mt))
         return true;
-    if (mons_class_holiness(mt) != MH_NATURAL)
+    if (mons_class_holiness(corpse_type) != MH_NATURAL)
         return true;
 
-    return !_good_zombie(mt, zombie_kind, pos);
+    return !_good_zombie(corpse_type, zombie_kind, pos);
 }
 
 monster_type pick_local_zombifiable_monster(level_id place,
