@@ -1667,7 +1667,7 @@ ENDMAP
 NAME:   grunt_orc_community_town_hall
 TAGS:   transparent no_monster_gen no_item_gen
 PLACE:  Orc:$
-KMONS:  O = Saint Roka band / orc warlord band, orc warlord band
+KMONS:  O = Saint Roka band w:3 / orc warlord band, orc warlord band
 MONS:   orc knight / orc warrior w:30, orc sorcerer / orc wizard w:30
 MONS:   orc high priest / orc priest w:30
 MONS:   orc warrior / orc w:30, orc / nothing
@@ -1855,10 +1855,10 @@ PLACE:  Orc:$
 MONS:   orc knight, orc high priest, orc sorcerer
 MONS:   orc warrior, orc wizard, orc priest
 SHUFFLE: ABCD, EFGH
-KMONS:  A = Saint Roka band / orc warlord band, orc warlord band
-KMONS:  B = Nergalle / orc sorcerer, orc sorcerer
-KMONS:  C = Urug / orc knight, orc knight
-KMONS:  D = Blork the orc / orc wizard, orc wizard
+KMONS:  A = Saint Roka band w:3 / orc warlord band, orc warlord band
+KMONS:  B = Nergalle w:3 / orc sorcerer, orc sorcerer
+KMONS:  C = Urug w:3 / orc knight, orc knight
+KMONS:  D = Blork the orc w:3 / orc wizard, orc wizard
 KFEAT:  E = general shop
 KFEAT:  F = antique armour shop
 KFEAT:  G = antique weapon shop
