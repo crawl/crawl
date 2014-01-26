@@ -1368,6 +1368,22 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.plus2  = random2(5);
         }
     }
+    break;
+
+    case MONS_SALAMANDER_FIREBRAND:
+        force_item = true;
+        item_race  = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose(WPN_GREAT_SWORD, WPN_GREAT_MACE,
+                                       WPN_BATTLEAXE, -1);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
+        item.flags |= ISFLAG_KNOW_TYPE;
+        if (one_chance_in(3))
+        {
+            item.plus   = 2 + random2(4);
+            item.plus2  = 2 + random2(4);
+        }
+
         break;
 
     case MONS_SPRIGGAN:

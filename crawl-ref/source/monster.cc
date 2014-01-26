@@ -5049,6 +5049,7 @@ static bool _mons_is_fiery(int mc)
            || mc == MONS_LAVA_FISH
            || mc == MONS_LAVA_SNAKE
            || mc == MONS_SALAMANDER
+           || mc == MONS_SALAMANDER_FIREBRAND
            || mc == MONS_MOLTEN_GARGOYLE
            || mc == MONS_ORB_OF_FIRE;
 }

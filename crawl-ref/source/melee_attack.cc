@@ -19,6 +19,7 @@
 #include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
+#include "coordit.h"
 #include "database.h"
 #include "delay.h"
 #include "effects.h"
@@ -5026,6 +5027,48 @@ void melee_attack::mons_apply_attack_flavour()
                     special_attack_punctuation().c_str());
             }
         }
+        break;
+
+    case AF_FIREBRAND:
+        base_damage = attacker->get_experience_level() * 2 / 3
+                      + random2(attacker->get_experience_level() * 2 / 3);
+        special_damage =
+            resist_adjust_damage(defender,
+                                 BEAM_FIRE,
+                                 defender->res_fire(),
+                                 base_damage);
+        special_damage_flavour = BEAM_FIRE;
+
+        if (base_damage)
+        {
+            if (needs_message)
+            {
+                mprf("The air around %s erupts in flames!",
+                    def_name(DESC_THE).c_str());
+
+                for (adjacent_iterator ai(defender->pos()); ai; ++ai)
+                {
+                    if (!cell_is_solid(*ai)
+                        && (env.cgrid(*ai) == EMPTY_CLOUD
+                            || env.cloud[env.cgrid(*ai)].type == CLOUD_FIRE))
+                    {
+                        // Don't place clouds under non-resistant allies
+                        const actor* act = actor_at(*ai);
+                        if (act && mons_aligned(attacker, act)
+                            && act->res_fire() < 1)
+                        {
+                            continue;
+                        }
+
+                        place_cloud(CLOUD_FIRE, *ai, 4 + random2(9), attacker);
+                    }
+                }
+
+                _print_resist_messages(defender, base_damage, BEAM_FIRE);
+            }
+        }
+
+        defender->expose_to_element(BEAM_FIRE, 2);
         break;
     }
 }
