@@ -1784,7 +1784,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     // Don't spam mesmerisation if you're already mesmerised
     case SPELL_MESMERISE:
-        return (you.beheld_by(mon) && coinflip());
+        return you.beheld_by(mon) && coinflip();
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:

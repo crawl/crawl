@@ -1617,9 +1617,9 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             }
 
             antimagic_affects_defender(true);
-            mprf("You drain %s%s.",
+            mprf("You drain %s %s.",
                  defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                 spell_user ? " magic" : " power");
+                 spell_user ? "magic" : "power");
 
             if (!defender->as_monster()->is_summoned()
                 && !mons_is_firewood(defender->as_monster()))
@@ -5472,10 +5472,10 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
 
     case UNAT_BITE:
         return ((is_uc
-                || you.has_usable_fangs()
-                || player_mutation_level(MUT_ACIDIC_BITE))
+                 || you.has_usable_fangs()
+                 || player_mutation_level(MUT_ACIDIC_BITE))
                 && x_chance_in_y(2, 5))
-                || you.mutation[MUT_ANTIMAGIC_BITE];
+               || you.mutation[MUT_ANTIMAGIC_BITE];
 
     case UNAT_PUNCH:
         return is_uc && !one_chance_in(3);

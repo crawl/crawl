@@ -193,17 +193,17 @@ string species_name(species_type speci, bool genus, bool adj)
     default:
         switch (speci)
         {
-        case SP_HUMAN:          res = "Human";                                 break;
-        case SP_HALFLING:       res = "Halfling";                              break;
-        case SP_KOBOLD:         res = "Kobold";                                break;
-        case SP_MUMMY:          res = "Mummy";                                 break;
-        case SP_NAGA:           res = "Naga";                                  break;
-        case SP_CENTAUR:        res = "Centaur";                               break;
-        case SP_SPRIGGAN:       res = "Spriggan";                              break;
-        case SP_MINOTAUR:       res = "Minotaur";                              break;
-        case SP_TENGU:          res = "Tengu";                                 break;
-        case SP_GARGOYLE:       res = "Gargoyle";                              break;
-        case SP_FORMICID:       res = "Formicid";                              break;
+        case SP_HUMAN:    res = "Human";    break;
+        case SP_HALFLING: res = "Halfling"; break;
+        case SP_KOBOLD:   res = "Kobold";   break;
+        case SP_MUMMY:    res = "Mummy";    break;
+        case SP_NAGA:     res = "Naga";     break;
+        case SP_CENTAUR:  res = "Centaur";  break;
+        case SP_SPRIGGAN: res = "Spriggan"; break;
+        case SP_MINOTAUR: res = "Minotaur"; break;
+        case SP_TENGU:    res = "Tengu";    break;
+        case SP_GARGOYLE: res = "Gargoyle"; break;
+        case SP_FORMICID: res = "Formicid"; break;
 
         case SP_VINE_STALKER:
             res = (adj ? "Vine" : genus ? "Vine" : "Vine Stalker");
