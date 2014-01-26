@@ -1140,11 +1140,6 @@ Contrairement à ce que pourrait laisser penser son nom, l'anguille électrique
 est en fait une variété de poisson. Cette race cependant, génère bien plus de
 voltage que ses cousins de mer.
 %%%%
-elemental wellspring
-
-Un confluent tourbillonnant d'eau élémentaire se diffusant du plan élémentaire
-à celui-ci. Les inondations et les esprits qui y habitent semblent en sortir.
-%%%%
 elephant
 
 Un gros pachyderme à la peau dure. Il écrase ses ennemis puis les balance avec

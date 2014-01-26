@@ -271,7 +271,7 @@ ITEM:    scroll of teleportation
 ITEM:    amulet of stasis
 NSUBST:  T = 1:. / *:T
 KFEAT:   T = known teleport trap
-KMONS:   w = water elemental / elemental wellspring w:1 / \
+KMONS:   w = water elemental / \
              merfolk javelineer w:2 / merfolk impaler w:2 / \
              octopode w:3 / nothing w:300
 KFEAT:   w = w

@@ -401,10 +401,6 @@ Minor Healing dryad cast
 
 @The_monster@ draws upon the vitality of nature.
 %%%%
-Primal Wave elemental wellspring cast
-
-A great wave of water rises up around @The_monster@!
-%%%%
 Cause Fear satyr cast
 
 @The_monster@ plays a frightful melody on his pipes!
