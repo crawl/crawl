@@ -624,6 +624,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_DIG:
+        if (you.digging)
+        {
+            inf->light_colour = WHITE;
+            inf->light_text   = "Dig";
+        }
+        break;
+
     case STATUS_ELIXIR:
         if (you.duration[DUR_ELIXIR_HEALTH] || you.duration[DUR_ELIXIR_MAGIC])
         {

@@ -118,7 +118,9 @@ At the permanent loss of one magic point recharge a wand or rod.
 %%%%
 Dig ability
 
-Tunnels through rock walls in a straight line. Noisy.
+Allows making tunnels through soft rock and rusted grates. Using this
+ability merely states your intent to dig, to actually tunnel you need to
+move into a wall. Doing so is obviously slower than walking.
 %%%%
 Shaft Self ability
 
