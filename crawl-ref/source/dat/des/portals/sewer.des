@@ -1318,3 +1318,43 @@ x###~~~~~~~~~~~~{~~~~~~~~~~~~###x
 x###############################x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME:   sewer_ratzerg_badplayer
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+KFEAT: bcd = . w:1 / W w:9
+: local rnd = crawl.random2(3)
+: if rnd == 0 then
+KMONS: bcd = rat w:40 / grey rat w:1 / nothing w:59
+: elseif rnd == 1 then
+KMONS: bcd = ball python w:40 / adder w:1 / nothing w:59
+: else
+KMONS: bcd = giant newt w:40 / giant gecko w:1 / nothing w:59
+: end
+KITEM: $ = potion of might / potion of berserk rage /\
+           potion of agility / potion of magic /\
+           potion of brilliance / potion of speed w:5
+COLOUR: bcd = lightgreen
+SUBST: ^ = .:10 W:2, ! = .:5 W:5
+NSUBST: cbd = 5:$
+: sewer_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xddddd!xxxx^^^^^^^xxxx!bbbbbx
+xddddd!!!^^^.....^^^!!!bbbbbx
+xddddd!!!^^^..A<.^^^!!!bbbbbx
+xddddd!!!^^^.....^^^!!!bbbbbx
+xddddd!xxxx^^^^^^^xxxx!bbbbbx
+xxxxxxxxxxxxx^^^xxxxxxxxxxxxx
+xxxxxxxxxxxxx^^^xxxxxxxxxxxxx
+xxxxxxxxxxxxx^^^xxxxxxxxxxxxx
+xxxxxxxxxxxxx!!!xxxxxxxxxxxxx
+xxxxxxxxxxxxx!!!xxxxxxxxxxxxx
+xxxxxxxxxxxx!!!!!xxxxxxxxxxxx
+xxxxxxxxxxxxcccccxxxxxxxxxxxx
+xxxxxxxxxxxxcccccxxxxxxxxxxxx
+xxxxxxxxxxxxcccccxxxxxxxxxxxx
+xxxxxxxxxxxxcccccxxxxxxxxxxxx
+xxxxxxxxxxxxcccccxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
