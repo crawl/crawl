@@ -113,6 +113,7 @@ const deck_archetype deck_of_emergency[] =
     { CARD_SOLITUDE,   {5, 5, 5} },
     { CARD_WARPWRIGHT, {5, 5, 5} },
     { CARD_FLIGHT,     {5, 5, 5} },
+    { CARD_ALCHEMIST,  {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -168,7 +169,6 @@ const deck_archetype deck_of_wonders[] =
     { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_HELIX,      {5, 5, 5} },
     { CARD_SAGE,       {5, 5, 5} },
-    { CARD_ALCHEMIST,  {5, 5, 5} },
     { CARD_TROWEL,     {5, 5, 3} },
     END_OF_DECK
 };
