@@ -92,8 +92,7 @@ int identify(int power, int item_slot, bool alreadyknown, string *pre_msg)
             && (!is_deck(item) || top_card_is_known(item)))
         {
             mpr("Choose an unidentified item, or Esc to abort.");
-            if (Options.auto_list)
-                more();
+            more();
             item_slot = -1;
             continue;
         }
@@ -137,7 +136,7 @@ int identify(int power, int item_slot, bool alreadyknown, string *pre_msg)
             learned_something_new(HINT_INACCURACY);
         }
 
-        if (Options.auto_list && id_used > identified)
+        if (id_used > identified)
             more();
 
         // In case we get to try again.
@@ -663,8 +662,7 @@ static bool _selectively_remove_curse(string *pre_msg)
             || &item == you.weapon() && !is_weapon(item))
         {
             mpr("Choose a cursed equipped item, or Esc to abort.");
-            if (Options.auto_list)
-                more();
+            more();
             continue;
         }
 
@@ -751,8 +749,7 @@ static bool _selectively_curse_item(bool armour, string *pre_msg)
         {
             mprf("Choose an uncursed equipped piece of %s, or Esc to abort.",
                  armour ? "armour" : "jewellery");
-            if (Options.auto_list)
-                more();
+            more();
             continue;
         }
 

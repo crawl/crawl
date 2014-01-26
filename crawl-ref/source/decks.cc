@@ -1906,8 +1906,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
     }
 
     // Pause before jumping to the list.
-    if (Options.auto_list)
-        more();
+    more();
 
     // Don't take less time if we're swapping weapons.
     int old_time = you.time_taken;

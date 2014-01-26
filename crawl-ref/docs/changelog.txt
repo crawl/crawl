@@ -431,6 +431,7 @@ Interface
 * "pickup_mode = multi|single" is now "pickup_menu = true|false", with true
   being the default; "pickup_menu_limit" has been introduced to handle
   the old "auto:X" settings.
+* The "auto_list" option has been removed.
 * The WebTiles spectator box sorts names and links online player profiles.
 * URLs occurring in WebTiles chat messages are hyperlinked.
 * New default minimap colours.

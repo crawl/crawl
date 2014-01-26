@@ -281,9 +281,7 @@ int cast_selective_amnesia(string *pre_msg)
 
     // Pick a spell to forget.
     mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
-    keyin = Options.auto_list
-            ? list_spells(false, false, false, "Forget which spell?")
-            : get_ch();
+    keyin = list_spells(false, false, false, "Forget which spell?");
     redraw_screen();
 
     while (true)

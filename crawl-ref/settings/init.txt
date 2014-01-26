@@ -177,7 +177,6 @@
 
 ##### 3-h       Command Enhancements ##################
 #
-# auto_list     = false
 # auto_switch   = true
 # easy_open     = false
 # easy_unequip  = false

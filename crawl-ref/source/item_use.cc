@@ -2322,8 +2322,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scrol
             || !branding && !is_item_selected(*wpn, OSEL_ENCHANTABLE_WEAPON))
         {
             mpr("Choose a valid weapon, or Esc to abort.");
-            if (Options.auto_list)
-                more();
+            more();
 
             item_slot = -1;
             continue;
@@ -2534,8 +2533,7 @@ static int _handle_enchant_armour(int item_slot, bool alreadyknown,
         if (!is_enchantable_armour(arm, true, true))
         {
             mpr("Choose some type of armour to enchant, or Esc to abort.");
-            if (Options.auto_list)
-                more();
+            more();
 
             item_slot = -1;
             continue;
@@ -2970,8 +2968,7 @@ void read_scroll(int slot)
                     which_scroll == SCR_ENCHANT_WEAPON_II ? "II" :
                     "III");
             // Pause to display the message before jumping to the weapon list.
-            if (Options.auto_list)
-                more();
+            more();
         }
 
         cancel_scroll = !_handle_enchant_weapon(alreadyknown, &pre_succ_msg, which_scroll);
@@ -2982,8 +2979,8 @@ void read_scroll(int slot)
         {
             mpr(pre_succ_msg.c_str());
             mpr("It is a scroll of brand weapon.");
-            if (Options.auto_list)
-                more();
+            // Pause to display the message before jumping to the weapon list.
+            more();
         }
 
         cancel_scroll = !_handle_brand_weapon(alreadyknown, &pre_succ_msg);
@@ -2994,8 +2991,7 @@ void read_scroll(int slot)
         {
             mpr(pre_succ_msg.c_str());
             mpr("It is a scroll of identify.");
-            if (Options.auto_list)
-                more();
+            more();
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, ID_KNOWN_TYPE);
         }
@@ -3007,8 +3003,7 @@ void read_scroll(int slot)
         {
             mpr(pre_succ_msg.c_str());
             mpr("It is a scroll of recharging.");
-            if (Options.auto_list)
-                more();
+            more();
         }
         cancel_scroll = (recharge_wand(-1, alreadyknown, &pre_succ_msg) == -1);
         break;
@@ -3018,8 +3013,7 @@ void read_scroll(int slot)
         {
             mpr(pre_succ_msg.c_str());
             mpr("It is a scroll of enchant armour.");
-            if (Options.auto_list)
-                more();
+            more();
         }
         cancel_scroll =
             (_handle_enchant_armour(-1, alreadyknown, &pre_succ_msg) == -1);

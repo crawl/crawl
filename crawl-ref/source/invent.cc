@@ -1406,7 +1406,7 @@ vector<SelItem> prompt_invent_items(
                         menu_type mtype,
                         int type_expect,
                         invtitle_annotator titlefn,
-                        bool allow_auto_list,
+                        bool auto_list,
                         bool allow_easy_quit,
                         const char other_valid_char,
                         vector<text_pattern> *select_filter,
@@ -1419,7 +1419,6 @@ vector<SelItem> prompt_invent_items(
     bool           need_redraw = false;
     bool           need_prompt = true;
     bool           need_getch  = true;
-    bool           auto_list   = Options.auto_list && allow_auto_list;
 
     if (auto_list)
     {
@@ -1862,7 +1861,7 @@ bool check_warning_inscriptions(const item_def& item,
 // Note: This function never checks if the item is appropriate.
 int prompt_invent_item(const char *prompt,
                        menu_type mtype, int type_expect,
-                       bool must_exist, bool allow_auto_list,
+                       bool must_exist, bool auto_list,
                        bool allow_easy_quit,
                        const char other_valid_char,
                        int excluded_slot,
@@ -1893,7 +1892,6 @@ int prompt_invent_item(const char *prompt,
     bool           need_redraw = false;
     bool           need_prompt = true;
     bool           need_getch  = true;
-    bool           auto_list   = Options.auto_list && allow_auto_list;
 
     if (auto_list)
     {

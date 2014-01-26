@@ -550,8 +550,6 @@ void inspect_spells()
         return;
     }
 
-    // Maybe we should honour auto_list here, but if you want the
-    // description, you probably want the listing, too.
     list_spells(true, true);
 }
 

@@ -53,7 +53,6 @@ static option_handler handlers[] =
     { "note_skill_max",       &Options.note_skill_max, option_hboolean },
     { "clear_messages",  &Options.clear_messages, option_hboolean },
     { "no_dark_brand",   &Options.no_dark_brand, option_hboolean },
-    { "auto_list",       &Options.auto_list, option_hboolean },
     { "pickup_thrown",   &Options.pickup_thrown, option_hboolean },
     { "show_waypoints",  &Options.show_waypoints, option_hboolean },
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
