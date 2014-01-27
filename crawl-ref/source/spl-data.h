@@ -3392,7 +3392,7 @@ struct spell_desc
 },
 
 {
-    SPELL_PLANEREND, "Planerend",
+    SPELL_PLANEREND, "Plane Rend",
      SPTYP_SUMMONING,
      SPFLAG_BATTLE | SPFLAG_MONSTER,
      8,

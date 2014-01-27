@@ -897,7 +897,7 @@ Phase Shift spell
 This spell allows the caster to phase in and out of the material plane,
 allowing them to occasionally avoid blows entirely.
 %%%%
-Planerend spell
+Plane Rend spell
 
 This ability summons some of the greater threats from one of the Lair of
 Beasts, the Snake Pit, the Spider Nest, the Swamp, the Shoals, the Pits of
