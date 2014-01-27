@@ -112,8 +112,9 @@ item_type_id_state_type get_ident_type(object_class_type basetype,
                                        int subtype);
 void set_ident_type(item_def &item, item_type_id_state_type setting,
                      bool force = false);
-void set_ident_type(object_class_type basetype, int subtype,
+bool set_ident_type(object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);
+void pack_item_identify_message(int base_type, int sub_type);
 void identify_healing_pots();
 
 string item_prefix(const item_def &item, bool temp = true);
