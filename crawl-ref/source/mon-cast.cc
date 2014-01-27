@@ -56,6 +56,7 @@
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
+#include "xom.h"
 
 #include <algorithm>
 
@@ -1215,6 +1216,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CHAIN_OF_CHAOS:
     case SPELL_BLACK_MARK:
     case SPELL_GRAND_AVATAR:
+    case SPELL_REARRANGE_PIECES:
         return true;
     default:
         if (check_validity)
@@ -3969,6 +3971,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_SHATTER:
     case SPELL_TORNADO:
     case SPELL_CHAIN_OF_CHAOS:
+    case SPELL_REARRANGE_PIECES:
         if (!monsterNearby)
             return true;
         break;
@@ -5553,6 +5556,40 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 {
                     mi->add_ench(mon_enchant(ENCH_GRAND_AVATAR, 1, avatar));
                 }
+            }
+        }
+        return;
+    }
+    case SPELL_REARRANGE_PIECES:
+    {
+        bool did_message = false;
+        vector<actor* > victims;
+        for (actor_near_iterator ai(mons, LOS_NO_TRANS); ai; ++ai)
+            victims.push_back(*ai);
+        shuffle_array(victims);
+        for (vector<actor* >::iterator it = victims.begin();
+             it != victims.end(); it++)
+        {
+            actor* victim1 = *it;
+            it++;
+            if (it == victims.end())
+                break;
+            actor* victim2 = *it;
+            if (victim1->is_player())
+                swap_with_monster(victim2->as_monster());
+            else if (victim2->is_player())
+                swap_with_monster(victim1->as_monster());
+            else
+            {
+                if (!did_message
+                    && (you.can_see(victim1)
+                        || you.can_see(victim2)))
+                {
+                    mpr("Some monsters swap places.");
+                    did_message = true;
+                }
+
+                swap_monsters(victim1->as_monster(), victim2->as_monster());
             }
         }
         return;

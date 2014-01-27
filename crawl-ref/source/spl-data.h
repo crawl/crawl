@@ -3483,6 +3483,19 @@ struct spell_desc
 },
 
 {
+    SPELL_REARRANGE_PIECES, "Rearrange the Pieces",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_CHAOTIC,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

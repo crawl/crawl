@@ -101,6 +101,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
 void debug_xom_effects();
 #endif
 
+bool swap_monsters(monster* m1, monster* m2);
 bool move_stair(coord_def stair_pos, bool away, bool allow_under);
 
 #endif
