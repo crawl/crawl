@@ -662,12 +662,16 @@ void bolt::apply_beam_conducts()
         {
         case BEAM_HELLFIRE:
             did_god_conduct(DID_UNHOLY, 2 + random2(3), god_cares());
-            did_god_conduct(DID_FIRE, 6 + random2(7), god_cares());
+            did_god_conduct(DID_FIRE,
+                            max(div_rand_round(damage.roll(), 4), 1),
+                            god_cares());
             break;
         case BEAM_FIRE:
         case BEAM_HOLY_FLAME:
         case BEAM_NAPALM:
-            did_god_conduct(DID_FIRE, 2 + random2(3), god_cares());
+            did_god_conduct(DID_FIRE,
+                            max(div_rand_round(damage.roll(), 4), 1),
+                            god_cares());
             break;
         case BEAM_CORONA:
         case BEAM_LIGHT:
@@ -841,12 +845,16 @@ void bolt::fire_wall_effect()
     else if (you.can_smell())
         emit_message("You smell burning wood.");
     if (whose_kill() == KC_YOU)
+    {
         did_god_conduct(DID_KILL_PLANT, 1, god_cares());
+        did_god_conduct(DID_FIRE, 6, god_cares()); // guaranteed penance
+    }
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
     ASSERT(agent());
     place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
+
 
     finish_beam();
 }

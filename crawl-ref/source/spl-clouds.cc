@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
+#include "godconduct.h"
 #include "items.h"
 #include "losglobal.h"
 #include "message.h"
@@ -103,6 +104,8 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
     }
 
     fail_check();
+
+    did_god_conduct(DID_FIRE, min(5 + pow/2, 23));
 
     if (cloud != EMPTY_CLOUD)
     {
@@ -249,6 +252,7 @@ spret_type cast_ring_of_flames(int power, bool fail)
     }
 
     fail_check();
+    did_god_conduct(DID_FIRE, min(5 + power/5, 50));
     you.increase_duration(DUR_FIRE_SHIELD,
                           5 + (power / 10) + (random2(power) / 5), 50,
                           "The air around you leaps into flame!");
