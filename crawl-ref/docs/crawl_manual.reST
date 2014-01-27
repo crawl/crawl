@@ -1755,7 +1755,7 @@ Djinn
 
 
 Formicids
-  The Formicids are an species of humanoid ants. Just like their tiny insect
+  The Formicids are a species of humanoid ants. Just like their tiny insect
   ancestors, the Formicids are well adept at earth work, both on the physical
   and magical sides. Their abilities have been used to tunnel immense underground
   communities and structures, many of which are tens of thousands of years old.
@@ -1768,9 +1768,8 @@ Formicids
 
   With the ability to lift ten times their own weight, the Formicids have
   strength rivaling that of ogres. This, along with the fact that they have four
-  arms, allows Formicid warriors to carry both a shield and a two-handed weapon
-  at the same time, though they cannot use a shield along with a weapon meant for
-  and ogre.
+  arms, allows Formicid warriors to equip both a shield and a two-handed weapon
+  at the same time, or to wield a giant club using all four arms.
 
   Formicids make good earth and venom mages, but are quite capable at both melee
   and ranged combat too, albeit a bit flimsy. They are naturally bad at air magic
