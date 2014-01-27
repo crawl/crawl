@@ -4527,7 +4527,13 @@ static void _move_player(coord_def move)
             targ_pass = true;
         }
         else // moving or attacking ends dig
+        {
             you.digging = false;
+            if (feat_is_solid(grd(targ)))
+                mpr("You can't dig through that.");
+            else
+                mpr("You retract your mandibles.");
+        }
     }
 
     // You can swap places with a friendly or good neutral monster if
