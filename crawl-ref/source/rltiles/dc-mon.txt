@@ -331,6 +331,20 @@ mon/unique/grinder MONS_GRINDER
 ufetubus MONS_UFETUBUS
 white_imp MONS_WHITE_IMP
 
+# demonspawn ('6')
+%sdir mon/demonspawn
+demonspawn MONS_DEMONSPAWN
+monstrous MONS_MONSTROUS_DEMONSPAWN
+gelid MONS_GELID_DEMONSPAWN
+infernal MONS_INFERNAL_DEMONSPAWN
+putrid MONS_PUTRID_DEMONSPAWN
+torturous MONS_TORTUROUS_DEMONSPAWN
+blood_saint MONS_BLOOD_SAINT
+chaos_champion MONS_CHAOS_CHAMPION
+warmonger MONS_WARMONGER
+corrupter MONS_CORRUPTER
+black_sun MONS_BLACK_SUN
+
 # efreet ('E')
 %sdir mon/unique
 azrael MONS_AZRAEL
@@ -525,10 +539,9 @@ vault/master_elementalist MONS_MASTER_ELEMENTALIST
 halfling MONS_HALFLING
 %rim 0
 demigod MONS_DEMIGOD
-%rim 1
-demonspawn MONS_DEMONSPAWN
 
 ## Angels ('A')
+%rim 1
 %sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA

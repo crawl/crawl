@@ -26,6 +26,8 @@ void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, tileidx_t *cloud, const co
 tileidx_t tileidx_monster(const monster_info& mon);
 tileidx_t tileidx_draco_base(const monster_info& mon);
 tileidx_t tileidx_draco_job(const monster_info& mon);
+tileidx_t tileidx_demonspawn_base(const monster_info& mon);
+tileidx_t tileidx_demonspawn_job(const monster_info& mon);
 
 tileidx_t tileidx_item(const item_info &item);
 tileidx_t tileidx_item_throw(const item_info &item, int dx, int dy);
