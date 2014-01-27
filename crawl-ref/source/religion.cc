@@ -1039,13 +1039,13 @@ void dec_penance(god_type god, int val)
             else if (god == GOD_SHINING_ONE
                      && you.piety >= piety_breakpoint(0))
             {
-                mpr("Your divine halo returns!");
+                mprf(MSGCH_GOD, "Your divine halo returns!");
                 invalidate_agrid(true);
             }
             else if (god == GOD_ASHENZARI
                      && you.piety >= piety_breakpoint(2))
             {
-                mpr("Your vision regains its divine sight.");
+                mprf(MSGCH_GOD, "Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
             }
             else if (god == GOD_CHEIBRIADOS)
@@ -1058,7 +1058,7 @@ void dec_penance(god_type god, int val)
             else if (god == GOD_DITHMENGOS
                      && you.piety >= piety_breakpoint(0))
             {
-                mpr("Your aura of darkness returns!");
+                mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
 
@@ -1142,7 +1142,7 @@ static void _inc_penance(god_type god, int val)
         else if (god == GOD_SHINING_ONE)
         {
             if (you.haloed())
-                mpr("Your divine halo fades away.");
+                mprf(MSGCH_GOD, god, "Your divine halo fades away.");
 
             if (you.duration[DUR_DIVINE_SHIELD])
                 tso_remove_divine_shield();
@@ -1169,7 +1169,7 @@ static void _inc_penance(god_type god, int val)
         else if (god == GOD_DITHMENGOS)
         {
             if (you.umbraed())
-                mpr("Your aura of darkness fades away.");
+                mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
             invalidate_agrid();
         }
 
@@ -2788,7 +2788,7 @@ static void _gain_piety_point()
             }
 
             if (you_worship(GOD_SHINING_ONE) && i == 0)
-                mpr("A divine halo surrounds you!");
+                mprf(MSGCH_GOD, "A divine halo surrounds you!");
 
             if (you_worship(GOD_ASHENZARI))
             {
@@ -2804,7 +2804,7 @@ static void _gain_piety_point()
             }
 
             if (you_worship(GOD_DITHMENGOS) && i == 0)
-                mpr("You are shrouded in an aura of darkness!");
+                mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
 
             // When you gain a piety level, you get another chance to
             // make hostile holy beings good neutral.
@@ -3108,7 +3108,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        mpr("You sense decay."); // in the state of Denmark?
+        mprf(MSGCH_GOD, old_god, "You sense decay."); // in the state of Denmark
         add_daction(DACT_ROT_CORPSES);
         _set_penance(old_god, 30);
         break;
@@ -3178,7 +3178,7 @@ void excommunication(god_type new_god)
 
     case GOD_SHINING_ONE:
         if (was_haloed)
-            mpr("Your divine halo fades away.");
+            mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
 
         if (you.duration[DUR_DIVINE_SHIELD])
             tso_remove_divine_shield();
@@ -3259,7 +3259,7 @@ void excommunication(god_type new_god)
 
     case GOD_DITHMENGOS:
         if (was_umbraed)
-            mpr("Your aura of darkness fades away.");
+            mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
         _set_penance(old_god, 25);
         break;
 
