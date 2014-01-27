@@ -841,7 +841,12 @@ void bolt::fire_wall_effect()
     // Destroy the wall.
     nuke_wall(pos());
     if (you.see_cell(pos()))
-        emit_message("The tree burns like a torch!");
+    {
+        if (feat == DNGN_TREE)
+            emit_message("The tree burns like a torch!");
+        else // Mangroves
+            emit_message("The mangrove smolders and burns.");
+    }
     else if (you.can_smell())
         emit_message("You smell burning wood.");
     if (whose_kill() == KC_YOU)
@@ -852,7 +857,11 @@ void bolt::fire_wall_effect()
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
     ASSERT(agent());
-    place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
+    // Mangroves do not burn so readily, particularly in a wet environment
+    if (feat == DNGN_TREE)
+        place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
+    else
+        place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
     obvious_effect = true;
 
 
