@@ -3215,7 +3215,7 @@ very ugly thing
 %%%%
 wand
 
-"[The principle of selection] is the magician’s wand, by means of which he may
+“[The principle of selection] is the magician’s wand, by means of which he may
 summon into life whatever form and mould he pleases.”
     -William Youatt, _Sheep: their breeds, management, and diseases; to which
      is added the Mountain Shepherd's Manual_, ch. III. 1837.
