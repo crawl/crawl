@@ -3408,10 +3408,13 @@ void read_scroll(int slot)
             || which_scroll == SCR_RECHARGING
             || which_scroll == SCR_ENCHANT_ARMOUR))
     {
-        set_ident_type(OBJ_SCROLLS, SCR_IDENTIFY, ID_KNOWN_TYPE);
-        set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE);
-        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR, ID_KNOWN_TYPE);
         mpr("You have identified the last targeted scroll.");
+        if (set_ident_type(OBJ_SCROLLS, SCR_IDENTIFY, ID_KNOWN_TYPE))
+            pack_item_identify_message(OBJ_SCROLLS, SCR_IDENTIFY);
+        if (set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE))
+            pack_item_identify_message(OBJ_SCROLLS, SCR_RECHARGING);
+        if (set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR, ID_KNOWN_TYPE))
+            pack_item_identify_message(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR);
     }
 
     if (!alreadyknown && dangerous)

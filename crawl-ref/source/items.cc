@@ -4237,7 +4237,9 @@ bool maybe_identify_base_type(item_def &item)
         if (!in_inventory(item) && item_needs_autopickup(item)
             && (item.base_type == OBJ_STAVES
                 || item.base_type == OBJ_JEWELLERY))
+        {
             item.props["needs_autopickup"] = true;
+        }
 
         set_ident_type(item, ID_KNOWN_TYPE);
 
