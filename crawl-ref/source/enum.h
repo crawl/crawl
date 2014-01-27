@@ -2861,6 +2861,7 @@ enum monster_type                      // menv[].type
     MONS_NAGA_SHARPSHOOTER,
 
     MONS_SALAMANDER_FIREBRAND,
+    MONS_SALAMANDER_MYSTIC,
 
     NUM_MONSTERS,               // used for polymorph
 

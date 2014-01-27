@@ -1386,6 +1386,15 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
         break;
 
+    case MONS_SALAMANDER_MYSTIC:
+        item_race  = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(10, WPN_QUARTERSTAFF,
+                                                 5, WPN_DAGGER,
+                                                 2, WPN_SCIMITAR,
+                                                 0);
+        break;
+
     case MONS_SPRIGGAN:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -2219,6 +2228,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     // deliberate fall through
     case MONS_FORMICID_VENOM_MAGE:
     case MONS_HELLBINDER:
+    case MONS_SALAMANDER_MYSTIC:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
