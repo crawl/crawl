@@ -759,7 +759,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '#': wizard_load_dump_file();               break;
     case '&': wizard_list_companions();              break;
     case 'p': wizard_list_props();                   break;
-
+    case 'y': wizard_identify_all_items();           break;
+    case 'Y': wizard_unidentify_all_items();         break;
     case 'x':
         you.experience = 1 + exp_needed(1 + you.experience_level);
         level_change();

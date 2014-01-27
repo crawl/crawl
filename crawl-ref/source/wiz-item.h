@@ -17,7 +17,8 @@ void wizard_identify_pack();
 void wizard_unidentify_pack();
 void wizard_draw_card();
 void wizard_list_items();
-
+void wizard_identify_all_items();
+void wizard_unidentify_all_items();
 void debug_item_statistics(void);
 
 #endif

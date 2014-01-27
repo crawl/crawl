@@ -1620,4 +1620,43 @@ void wizard_draw_card()
     if (!found_card)
         mpr("Unknown card.");
 }
+
+void wizard_identify_all_items()
+{
+    wizard_identify_pack();
+    for (int i = 0; i < MAX_ITEMS; ++i)
+    {
+        item_def& item = mitm[i];
+        if (item.defined())
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
+    }
+    for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
+    {
+        object_class_type i = (object_class_type)ii;
+        if (!item_type_has_ids(i))
+            continue;
+        for (int j = 0; j < get_max_subtype(i); j++)
+            set_ident_type(i, j, ID_KNOWN_TYPE);
+    }
+}
+
+void wizard_unidentify_all_items()
+{
+    wizard_unidentify_pack();
+    for (int i = 0; i < MAX_ITEMS; ++i)
+    {
+        item_def& item = mitm[i];
+        if (item.defined())
+            unset_ident_flags(item, ISFLAG_IDENT_MASK);
+    }
+    for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
+    {
+        object_class_type i = (object_class_type)ii;
+        if (!item_type_has_ids(i))
+            continue;
+        for (int j = 0; j < get_max_subtype(i); j++)
+            set_ident_type(i, j, ID_UNKNOWN_TYPE);
+    }
+}
+
 #endif
