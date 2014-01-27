@@ -6306,6 +6306,26 @@ int player::missile_deflection() const
     return 0;
 }
 
+void player::ablate_deflection()
+{
+    if (attribute[ATTR_DEFLECT_MISSILES])
+    {
+        if (one_chance_in(attribute[ATTR_DEFLECT_MISSILES]))
+        {
+            attribute[ATTR_DEFLECT_MISSILES] = 0;
+            mprf(MSGCH_DURATION, "Your deflecting charm wavers...");
+        }
+    }
+    else if (attribute[ATTR_REPEL_MISSILES] && duration[DUR_DEFLECT_MISSILES] == 0)
+    {
+        if (one_chance_in(attribute[ATTR_REPEL_MISSILES]))
+        {
+            attribute[ATTR_REPEL_MISSILES] = 0;
+            mprf(MSGCH_DURATION, "Your repelling charm wavers...");
+        }
+    }
+}
+
 int player::unadjusted_body_armour_penalty() const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
