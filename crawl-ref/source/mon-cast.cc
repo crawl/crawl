@@ -50,7 +50,9 @@
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
+#include "target.h"
 #include "teleport.h"
+#include "transform.h"
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
@@ -1161,6 +1163,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WIND_BLAST:
     case SPELL_SUMMON_VERMIN:
     case SPELL_TORNADO:
+    case SPELL_IGNITE_POISON:
         return true;
     default:
         if (check_validity)
@@ -2324,16 +2327,55 @@ static bool _should_tornado(monster* agent)
         if (mons_aligned(agent, *ai))
         {
             tracer.friend_info.count++;
-            tracer.friend_info.power +=
-                    ai->is_player() ? you.experience_level
-                                    : ai->as_monster()->hit_dice;
+            tracer.friend_info.power += ai->get_experience_level();
         }
         else
         {
             tracer.foe_info.count++;
-            tracer.foe_info.power +=
-                    ai->is_player() ? you.experience_level
-                                    : ai->as_monster()->hit_dice;
+            tracer.friend_info.power += ai->get_experience_level();
+        }
+    }
+    return mons_should_fire(tracer);
+}
+
+static bool _should_ignite_poison(monster* agent)
+{
+    bool have_cloud = false;
+    bolt tracer;
+    tracer.foe_ratio = 80;
+    for (radius_iterator ri(agent->pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        const int i = env.cgrid(*ri);
+        if (i != EMPTY_CLOUD)
+        {
+            cloud_struct& cloud = env.cloud[i];
+            have_cloud = (cloud.type == CLOUD_MEPHITIC
+                          || cloud.type == CLOUD_POISON);
+        }
+
+        actor* victim = actor_at(*ri);
+        if (!victim)
+            continue;
+        monster* mon  = victim ? victim->as_monster() : NULL;
+        if (have_cloud
+            || (mon
+                && mon != agent
+                && (mons_is_poisoner(mon)
+                    || mon->has_ench(ENCH_POISON)))
+            || (!mon
+                && (player_is_poisonous()
+                    || you.duration[DUR_POISONING])))
+        {
+            if (mons_aligned(agent, victim))
+            {
+                tracer.friend_info.count++;
+                tracer.friend_info.power += victim->get_experience_level();
+            }
+            else
+            {
+                tracer.foe_info.count++;
+                tracer.foe_info.power += victim->get_experience_level();
+            }
         }
     }
     return mons_should_fire(tracer);
@@ -2872,6 +2914,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         else if (spell_cast == SPELL_TORNADO)
         {
             if (!_should_tornado(mons))
+                return false;
+        }
+        else if (spell_cast == SPELL_IGNITE_POISON)
+        {
+            if (!_should_ignite_poison(mons))
                 return false;
         }
 
@@ -5025,6 +5072,33 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         _do_high_level_summon(mons, monsterNearby, spell_cast,
                               _pick_vermin, one_chance_in(4) ? 3 : 2 , god);
         return;
+
+    case SPELL_IGNITE_POISON:
+    {
+        const int power = 12 * mons->hit_dice;
+        targetter_los hitfunc(mons, LOS_NO_TRANS);
+        flash_view(RED, &hitfunc);
+        if (you.can_see(mons))
+        {
+            mprf("%s ignites the poison in %s surroundings!",
+                 mons->name(DESC_THE).c_str(),
+                 mons->pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
+        else
+            mpr("Around you, poison ignites!");
+
+        apply_area_visible(ignite_poison_clouds, power, mons);
+        apply_area_visible(ignite_poison_objects, power, mons);
+        apply_area_visible(ignite_poison_monsters, power, mons);
+        apply_area_visible(ignite_poison_player, power, mons);
+
+#ifndef USE_TILE_LOCAL
+        delay(100);
+#endif
+        flash_view(0);
+
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,
