@@ -275,7 +275,7 @@ KMONS:   w = water elemental / \
              merfolk javelineer w:2 / merfolk impaler w:2 / \
              octopode w:3 / nothing w:300
 KFEAT:   w = w
-KMONS:   l = fire vortex / lava snake / lava fish / fire elemental w:1 /\
+KMONS:   l = fire vortex / lava snake / lava worm / fire elemental w:1 /\
              nothing w:50
 KFEAT:   l = l
 KMONS:   z = killer bee

@@ -318,7 +318,6 @@ KMONS:   3 = mermaid ; trident ego:flaming | spear ego:flaming . \
 KMONS:   4 = siren ; trident ego:flaming | spear ego:flaming . \
              robe ego:fire_resistance | robe w:5 . \
              buckler ego:fire_resistance w:20 | buckler | nothing w:70
-KMONS:   5 = lava fish
 KMONS:   67 = fire bat
 KMONS:   8 = fire crab
 KITEM:   67 = % w:15 / *
@@ -344,8 +343,8 @@ MAP
 WW.x2x''x"x.WW
 WW.1''''''3.WW
 W.xx'8ll6'xx.W
-Wx.''ll5l''.xW
-Wx.''l5ll''.xW
+Wx.''llll''.xW
+Wx.''llll''.xW
 W.xx'6ll7'xx.W
 WW.3''''''2.WW
 WW.x"x''x1x.WW

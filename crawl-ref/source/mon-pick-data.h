@@ -1375,18 +1375,16 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
 
 static const pop_entry pop_lava_generic[] =
 { // Generic lava monsters
-  {  1,  27,  145, FLAT, MONS_LAVA_FISH },
   {  1,  27,  145, FLAT, MONS_LAVA_SNAKE },
-  {  1,  27,  145, FLAT, MONS_LAVA_WORM },
+  {  1,  27,  290, FLAT, MONS_LAVA_WORM },
   {  1,  27,   15, FLAT, MONS_SALAMANDER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_lava_d[] =
 { // Dungeon lava monsters
-  {  7,  27,  145, FLAT, MONS_LAVA_FISH },
   {  7,  27,  145, FLAT, MONS_LAVA_SNAKE },
-  {  7,  27,  145, FLAT, MONS_LAVA_WORM },
+  {  7,  27,  290, FLAT, MONS_LAVA_WORM },
   { 0,0,0,FLAT,MONS_0 }
 };
 

@@ -1693,15 +1693,6 @@ lasher statue
  Which slashes the flesh, lacerates the back”
     -Samael, “Flagellation”
 %%%%
-lava fish
-
-“In the black rocks about Tahiti is found the black noki or lava-fish
-(Emmydrichthys vulcanus), which corresponds perfectly in color and form to a
-piece of lava. This fish is also noteworthy for having envenomed spines in the
-fin on its back.”
-    -Jordan, Kellogg and Heath, _Animal Studies: A Text-book of Elementary
-     Zoology_. 1903.
-%%%%
 lava worm
 
 “Type-species. — Magmatodrilus obscurus....From magma (Greek, =lava) + drilos

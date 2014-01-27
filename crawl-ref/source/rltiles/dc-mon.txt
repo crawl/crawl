@@ -145,7 +145,6 @@ moth_of_wrath MONS_MOTH_OF_WRATH
 big_fish MONS_BIG_FISH
 giant_goldfish MONS_GIANT_GOLDFISH
 electric_eel MONS_ELECTRIC_EEL
-lava_fish MONS_LAVA_FISH
 shark MONS_SHARK
 jellyfish MONS_JELLYFISH /*'J'*/
 %rim 1

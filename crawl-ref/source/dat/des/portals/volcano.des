@@ -622,7 +622,7 @@ WEIGHT:     50
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen
 SUBVAULT:   B : volcano_grotto_subvault
-KMONS:      l = lava snake w:2 / lava fish w:5 / fire bat w:1 / nothing w:119
+KMONS:      l = lava snake w:2 / lava worm w:5 / fire bat w:1 / nothing w:119
 KFEAT:      l = l
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
@@ -717,7 +717,7 @@ NSUBST: X = 1:+ / 1:G / *:x
 NSUBST: Y = 1:+ / 1:G / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
-KMONS:  3 = lava snake / lava fish w:20 / lava worm
+KMONS:  3 = lava snake / lava worm w:30
 KFEAT:  3 = l
 NSUBST: 3 = 3:4 / 2 = 4. / *:l
 #       Loot: 8 items.
@@ -825,7 +825,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 KMONS:  G = statue name:lasher name_adjective \
         tile:mons_statue_whip \
         generate_awake ; whip ego:flaming
-KMONS:  4 = lava snake / lava fish w:20 / lava worm
+KMONS:  4 = lava snake / lava worm w:30
 KFEAT:  4 = l
 NSUBST: l = 3:4 / 2 = 4. / *:l
 #       Loot: 10 items.
@@ -858,7 +858,7 @@ WEIGHT:     50
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 KFEAT:      _ = altar_makhleb / altar_trog / altar_vehumet
-KMONS:      l = lava snake w:2 / lava fish w:5 / fire bat w:1 / nothing w:899
+KMONS:      l = lava snake w:2 / lava worm w:5 / fire bat w:1 / nothing w:899
 KFEAT:      l = l
 #           Let's choose a path from m, u, z, i, r, n
 SHUFFLE:    muzirn
