@@ -274,10 +274,10 @@ Awaken Forest spell
 %%%%
 black sun
 
-"The sky is sad and beautiful, like a vast altar.
-The sun has drowned in its congealing blood."
-    -Charles Baud, _Les Fleurs du mal_, 43: Harmonie du soir. 1857.
-    trans. Ruth White, 1969.
+“The sky is sad and beautiful, like a vast altar.
+ The sun has drowned in its congealing blood.”
+    -Charles Baudelaire, _Flowers of Evil_, 43: Evening Harmony. 1857.
+     trans. Ruth White, 1969.
 %%%%
 Banishment spell
 
