@@ -226,6 +226,7 @@ static void _announce_goal_message();
 static void _god_greeting_message(bool game_start);
 static void _take_starting_note();
 static void _startup_hints_mode();
+static void _set_removed_types_as_identified();
 
 static void _compile_time_asserts();
 
@@ -413,6 +414,8 @@ NORETURN static void _launch_game()
 
     // Override some options when playing in hints mode.
     init_hints_options();
+
+    _set_removed_types_as_identified();
 
     if (!game_start && you.prev_save_version != Version::Long)
     {
@@ -646,6 +649,22 @@ static void _startup_hints_mode()
     const int ch = getch_ck();
     if (!key_is_escape(ch))
         hints_starting_screen();
+}
+
+// required so that maybe_identify_base_type works correctly
+static void _set_removed_types_as_identified()
+{
+#if TAG_MAJOR_VERSION == 34
+    you.type_ids[OBJ_JEWELLERY][AMU_CONTROLLED_FLIGHT] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_STAVES][STAFF_ENCHANTMENT] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_STAVES][STAFF_CHANNELING] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_GAIN_STRENGTH] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_GAIN_DEXTERITY] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_GAIN_INTELLIGENCE] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_POTIONS][POT_WATER] = ID_KNOWN_TYPE;
+#endif
+    // not generated, but the enum value is still used
+    you.type_ids[OBJ_POTIONS][POT_SLOWING] = ID_KNOWN_TYPE;
 }
 
 #ifdef WIZARD
