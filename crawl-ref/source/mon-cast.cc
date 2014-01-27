@@ -3086,7 +3086,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 mons->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
                                            mons->get_ench(ENCH_SAP_MAGIC)
                                                  .agent(),
-                                           BASELINE_DELAY * 2
+                                           BASELINE_DELAY
                                            * spell_difficulty(spell_cast)));
             }
             mons->lose_energy(EUT_SPELL);

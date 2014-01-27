@@ -877,7 +877,7 @@ static void _spellcasting_side_effects(spell_type spell, int pow, god_type god)
         {
             mprf(MSGCH_WARN, "Your control over your magic is sapped.");
             you.increase_duration(DUR_MAGIC_SAPPED,
-                                  2 * spell_difficulty(spell),
+                                  spell_difficulty(spell),
                                   100);
         }
         // Make some noise if it's actually the player casting.
