@@ -2165,7 +2165,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     case MONS_INSUBSTANTIAL_WISP:
         band = BAND_INSUBSTANTIAL_WISPS;
-        band_size = 4 + random2(5);
+        band_size = 3 + random2(4);
         break;
     case MONS_OGRE_MAGE:
         natural_leader = true;
@@ -2714,7 +2714,9 @@ static monster_type _band_member(band_type band, int which)
         return MONS_YAKTAUR;
 
     case BAND_INSUBSTANTIAL_WISPS:
-        return MONS_INSUBSTANTIAL_WISP;
+        return random_choose_weighted(8, MONS_INSUBSTANTIAL_WISP,
+                                      1, MONS_VAPOUR,
+                                      0);
 
     case BAND_POLYPHEMUS:
         if (which == 1)
