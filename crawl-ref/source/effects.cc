@@ -631,9 +631,7 @@ void direct_effect(monster* source, spell_type spell,
         break;
 
     case SPELL_CHAOTIC_MIRROR:
-        if (defender->get_experience_level() >= 28
-            ? one_chance_in(50)
-            : (1 + random2(27) >= defender->get_experience_level()))
+        if (x_chance_in_y(4, 10))
         {
             pbolt.name = "reflection of chaos";
             pbolt.beam_source = source->mindex();
@@ -651,10 +649,8 @@ void direct_effect(monster* source, spell_type spell,
             pbolt.source = pbolt.target = source->pos();
             pbolt.affect_actor(source);
         }
-        else if (def)
-            simple_monster_message(def, "resists.");
-        else
-            canned_msg(MSG_YOU_RESIST);
+        else if (!def || you.can_see(def))
+            canned_msg(MSG_NOTHING_HAPPENS);
 
         break;
 

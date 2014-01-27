@@ -80,6 +80,8 @@
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
 
+#define SAP_MAGIC_CHANCE() x_chance_in_y(7, 10)
+
 // Helper functions (some of these should probably be public).
 static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
@@ -3344,6 +3346,7 @@ void bolt::affect_player_enchantment()
 {
     if (flavour != BEAM_MALMUTATE
         && flavour != BEAM_CORRUPT_BODY
+        && flavour != BEAM_SAP_MAGIC
         && has_saving_throw()
         && you.check_res_magic(ench_power) > 0)
     {
@@ -3651,6 +3654,11 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_SAP_MAGIC:
+        if (!SAP_MAGIC_CHANCE())
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            break;
+        }
         mprf(MSGCH_WARN, "Your magic feels %stainted.",
              you.duration[DUR_SAP_MAGIC] ? "more " : "");
         you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
@@ -5414,6 +5422,12 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_SAP_MAGIC:
+        if (!SAP_MAGIC_CHANCE())
+        {
+            if (you.can_see(mon))
+                canned_msg(MSG_NOTHING_HAPPENS);
+            break;
+        }
         if (!mon->has_ench(ENCH_SAP_MAGIC)
             && mon->add_ench(mon_enchant(ENCH_SAP_MAGIC, 0, agent())))
         {
