@@ -2649,6 +2649,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>a</w>      acquirement\n"
                        "<w>C</w>      (un)curse item\n"
                        "<w>i</w>/<w>I</w>    identify/unidentify inventory\n"
+                       "<w>y</w>/<w>Y</w>    id/unid item types+level items\n"
                        "<w>o</w>/<w>%</w>    create an object\n"
                        "<w>t</w>      tweak object properties\n"
                        "<w>v</w>      show gold value of an item\n"
