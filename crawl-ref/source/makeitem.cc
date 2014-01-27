@@ -3725,9 +3725,14 @@ void makeitem_tests()
             item.special = SPARM_NORMAL;
         else
             item.special = random2(NUM_REAL_SPECIAL_ARMOURS);
+        int type = coinflip() ? OBJ_RANDOM : random2(NUM_ARMOURS);
+#if TAG_MAJOR_VERSION == 34
+        if (type == ARM_CAP)
+            type = ARM_HAT;
+#endif
         _generate_armour_item(item,
                               coinflip(),
-                              coinflip() ? OBJ_RANDOM : random2(NUM_ARMOURS),
+                              type,
                               level,
                               MAKE_ITEM_RANDOM_RACE);
     }
