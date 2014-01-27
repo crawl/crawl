@@ -214,6 +214,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         elem = ETC_MUTAGENIC;
         break;
     case BEAM_CHAOS:
+    case BEAM_CHAOTIC_REFLECTION:
         elem = ETC_RANDOM;
         break;
     case BEAM_TELEPORT:
@@ -562,6 +563,25 @@ static beam_type _chaos_beam_flavour(bolt* beam)
     return flavour;
 }
 
+static beam_type _chaotic_reflection_flavour(bolt* beam)
+{
+    return random_choose_weighted(
+            10, BEAM_SLOW,
+            10, BEAM_HASTE,
+            10, BEAM_MIGHT,
+            10, BEAM_BERSERK,
+            10, BEAM_PARALYSIS,
+            10, BEAM_CONFUSION,
+            10, BEAM_DISINTEGRATION,
+            10, BEAM_PETRIFY,
+            10, BEAM_AGILITY,
+            10, BEAM_BLINK,
+            10, BEAM_SLEEP,
+            10, BEAM_VULNERABILITY,
+             2, BEAM_ENSNARE,
+             0);
+}
+
 bool bolt::visible() const
 {
     return glyph != 0 && !is_enchantment();
@@ -779,6 +799,8 @@ void bolt::fake_flavour()
         flavour = static_cast<beam_type>(random_range(BEAM_FIRE, BEAM_ACID));
     else if (real_flavour == BEAM_CHAOS)
         flavour = _chaos_beam_flavour(this);
+    else if (real_flavour == BEAM_CHAOTIC_REFLECTION)
+        flavour = _chaotic_reflection_flavour(this);
 }
 
 void bolt::digging_wall_effect()
@@ -1343,8 +1365,11 @@ void bolt::do_fire()
 
         // Reset chaos beams so that it won't be considered an invisible
         // enchantment beam for the purposes of animation.
-        if (real_flavour == BEAM_CHAOS)
+        if (real_flavour == BEAM_CHAOS
+            || real_flavour == BEAM_CHAOTIC_REFLECTION)
+        {
             flavour = real_flavour;
+        }
 
         // Actually draw the beam/missile/whatever, if the player can see
         // the cell.
@@ -1388,7 +1413,9 @@ void bolt::do_fire()
     // something which ends up having no obvious effect then the player
     // isn't going to realise it).
     if (!msg_generated && !obvious_effect && is_enchantment()
-        && real_flavour != BEAM_CHAOS && YOU_KILL(thrower))
+        && real_flavour != BEAM_CHAOS
+        && real_flavour != BEAM_CHAOTIC_REFLECTION
+        && YOU_KILL(thrower))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
     }
@@ -2381,8 +2408,12 @@ static void _explosive_bolt_explode(bolt *parent, coord_def pos)
 
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
-    if (real_flavour == BEAM_CHAOS && feat_is_solid(feat))
+    if ((real_flavour == BEAM_CHAOS
+         || real_flavour == BEAM_CHAOTIC_REFLECTION)
+         && feat_is_solid(feat))
+    {
         return true;
+    }
 
     if (is_enchantment())
         return false;
@@ -5062,7 +5093,8 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
             ;
         }
         // Chaos effects don't get a resistance check to match melee chaos.
-        else if (real_flavour != BEAM_CHAOS)
+        else if (real_flavour != BEAM_CHAOS
+                 && real_flavour != BEAM_CHAOTIC_REFLECTION)
         {
             if (mon->check_res_magic(ench_power) > 0)
             {
@@ -5748,8 +5780,12 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     // explode() can be called manually without setting real_flavour.
     // FIXME: The entire flavour/real_flavour thing needs some
     // rewriting!
-    if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
+    if (real_flavour == BEAM_CHAOS
+        || real_flavour == BEAM_RANDOM
+        || real_flavour == BEAM_CHAOTIC_REFLECTION)
+    {
         flavour = real_flavour;
+    }
     else
         real_flavour = flavour;
 
@@ -6221,8 +6257,12 @@ string bolt::get_short_name() const
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                           | ISFLAG_RACIAL_MASK);
 
-    if (real_flavour == BEAM_RANDOM || real_flavour == BEAM_CHAOS)
+    if (real_flavour == BEAM_RANDOM
+        || real_flavour == BEAM_CHAOS
+        || real_flavour == BEAM_CHAOTIC_REFLECTION)
+    {
         return _beam_type_name(real_flavour);
+    }
 
     if (flavour == BEAM_FIRE && name == "sticky fire")
         return "sticky fire";
@@ -6317,6 +6357,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_AGILITY:               return "agility";
     case BEAM_SAP_MAGIC:             return "sap magic";
     case BEAM_CORRUPT_BODY:          return "corrupt body";
+    case BEAM_CHAOTIC_REFLECTION:    return "chaotic reflection";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
