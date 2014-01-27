@@ -2440,13 +2440,19 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_MERFOLK_JAVELINEER:
-        band = BAND_MERFOLK_JAVELINEER;
-        band_size = random_range(2, 4);
+        if (!player_in_branch(BRANCH_SHOALS) || x_chance_in_y(you.depth, 5))
+        {
+            band = BAND_MERFOLK_JAVELINEER;
+            band_size = random_range(2, 4);
+        }
         break;
 
     case MONS_MERFOLK_IMPALER:
-        band = BAND_MERFOLK_IMPALER;
-        band_size = random_range(2, 4);
+        if (!player_in_branch(BRANCH_SHOALS) || x_chance_in_y(you.depth, 5))
+        {
+            band = BAND_MERFOLK_IMPALER;
+            band_size = random_range(2, 4);
+        }
         break;
 
     case MONS_ELEPHANT:
@@ -2906,8 +2912,8 @@ static monster_type _band_member(band_type band, int which)
         return MONS_SLAVE;
 
     case BAND_MERFOLK_AQUAMANCER:
-        return random_choose_weighted( 7, MONS_MERFOLK,
-                                      10, MONS_WATER_ELEMENTAL,
+        return random_choose_weighted( 5, MONS_MERFOLK,
+                                      11, MONS_WATER_ELEMENTAL,
                                        0);
 
     case BAND_MERFOLK_IMPALER:
