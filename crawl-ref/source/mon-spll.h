@@ -2081,24 +2081,13 @@
       }
     },
 
-    {  MST_FORMICID,
-      {
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_DIG,
-       SPELL_NO_SPELL,
-      }
-    },
-
     {  MST_FORMICID_VENOM_MAGE,
       {
        SPELL_VENOM_BOLT,
        SPELL_POISON_ARROW,
        SPELL_CANTRIP,
        SPELL_STONE_ARROW,
-       SPELL_DIG,
+       SPELL_NO_SPELL,
        SPELL_NO_SPELL,
       }
     },
