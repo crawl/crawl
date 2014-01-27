@@ -1537,10 +1537,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_PEARL_DRAGON:
         return TILEP_MONS_PEARL_DRAGON;
 
-    // efreet ('E')
-    case MONS_EFREET:
-        return TILEP_MONS_EFREET;
-
     // frogs ('F')
     case MONS_GIANT_FROG:
         return TILEP_MONS_GIANT_FROG;
@@ -1690,10 +1686,14 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_TREANT:
         return TILEP_MONS_TREANT;
 
-    // rakshasa ('R')
+    // spiritual beings ('R')
     case MONS_RAKSHASA:
     case MONS_RAKSHASA_FAKE:
         return TILEP_MONS_RAKSHASA;
+    case MONS_EFREET:
+        return TILEP_MONS_EFREET;
+    case MONS_GRAND_AVATAR:
+        return TILEP_MONS_GRAND_AVATAR;
 
     // snakes ('S')
     case MONS_BALL_PYTHON:

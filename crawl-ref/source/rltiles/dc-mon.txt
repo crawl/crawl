@@ -346,19 +346,20 @@ warmonger MONS_WARMONGER
 corrupter MONS_CORRUPTER
 black_sun MONS_BLACK_SUN
 
-# efreet ('E')
-%sdir mon/unique
-azrael MONS_AZRAEL
-%sdir mon/demons
-efreet MONS_EFREET
-
-## Rakshasa ('R')
+## Spiritual beings ('R')
 %sdir mon/unique
 mara MONS_MARA
 %sdir mon/demons
 rakshasa MONS_RAKSHASA
+%sdir mon/unique
+azrael MONS_AZRAEL
+%sdir mon/demons
+efreet MONS_EFREET
+%sdir mon/nonliving
+grand_avatar MONS_GRAND_AVATAR
 
 ## Abominations ('X')
+%sdir mon/demons
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
 abomination_large MONS_ABOMINATION_LARGE
 abomination_large1
