@@ -2333,4 +2333,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_SALAMANDER_MYSTIC,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_NO_SPELL,
+       SPELL_HASTE_OTHER,
+       SPELL_IGNITE_POISON_SINGLE,
+       SPELL_NO_SPELL
+      }
+    },
 #endif
