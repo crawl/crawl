@@ -1827,12 +1827,6 @@ large abomination
 Un conglomérat hideux de membres mutilés, démoniaquement possédé et modifié de
 sorte à défier votre santé mentale.
 %%%%
-lava fish
-
-Un poisson rouge brillant qui nage dans la lave avec la même aise que les
-autres poissons nagent dans l'eau. La chaleur intense de la lave qui passe dans
-ses branchies bruleraient tout ce qui s'approche trop près de sa bouche.
-%%%%
 lava orc
 
 Un grand humanoïde musclé fortement en accord avec les forces élémentaires du

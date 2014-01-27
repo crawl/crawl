@@ -1819,8 +1819,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // lava monsters
     case MONS_LAVA_WORM:
         return TILEP_MONS_LAVA_WORM;
-    case MONS_LAVA_FISH:
-        return TILEP_MONS_LAVA_FISH;
     case MONS_LAVA_SNAKE:
         return TILEP_MONS_LAVA_SNAKE;
     case MONS_SALAMANDER:

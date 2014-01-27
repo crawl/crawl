@@ -15,7 +15,7 @@
 #   -> D:13-15 deep water, electric eel, shark, sea snake, snapping turtle
 #   -> D:16-18 ice, polar bear, yak, death yak, wolf
 #   -> D:19-21 ice, ice beast, simulacrum, freezing clouds
-#   -> D:22-24 lava, fire vortex, lava fish, lava snake, salamander
+#   -> D:22-24 lava, fire vortex, lava snake, salamander
 #   -> D:25-27 lava, fire vortex, fire bat, lava worm, fire elemental
 #   -> Elf     deep water, insubstantial wisp, water elemental, air elemental, diamond ob
 #
@@ -173,8 +173,7 @@ function init_aquarium(e)
     e.kmons('l = w:' .. nothing_weight .. [[ nothing /
                  w:20 generate_awake fire vortex /
                  w:8  generate_awake fire bat /
-                 w:5  generate_awake lava fish /
-                 w:3  generate_awake lava snake]] )
+                 w:5  generate_awake lava snake]] )
   else
     e.subst('w = l:25 !:1')
     e.kfeat('l = l')

@@ -2507,7 +2507,9 @@ enum monster_type                      // menv[].type
 
     // Lava monsters:
     MONS_LAVA_WORM,
+#if TAG_MAJOR_VERSION == 34
     MONS_LAVA_FISH,
+#endif
     MONS_LAVA_SNAKE,
     MONS_SALAMANDER,
     // Water monsters:
