@@ -4819,6 +4819,37 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_ANTIMAGIC:
         antimagic_affects_defender();
+        if (mons_genus(attacker->type) == MONS_VINE_STALKER
+            && attacker->is_monster())
+        {
+            const bool spell_user =
+                defender->is_player()
+                || defender->as_monster()->can_use_spells()
+                    && !defender->as_monster()->is_priest()
+                    && !mons_class_flag(defender->type, M_FAKE_SPELLS);
+
+            if (you.can_see(attacker) || you.can_see(defender))
+            {
+                mprf("%s drains %s %s.",
+                     attacker->name(DESC_THE).c_str(),
+                     defender->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     spell_user ? "magic" : "power");
+            }
+
+            monster* vine = attacker->as_monster();
+            if (vine->has_ench(ENCH_ANTIMAGIC)
+                && (defender->is_player()
+                    || (!defender->as_monster()->is_summoned()
+                        && !mons_is_firewood(defender->as_monster()))))
+            {
+                mon_enchant me = vine->get_ench(ENCH_ANTIMAGIC);
+                vine->lose_ench_duration(me, random2(damage_done) + 1);
+                simple_monster_message(attacker->as_monster(),
+                                       spell_user
+                                       ? " looks very invigorated."
+                                       : " looks invigorated.");
+            }
+        }
         break;
 
     case AF_PAIN:
