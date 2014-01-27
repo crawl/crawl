@@ -4398,6 +4398,8 @@ static void _move_player(coord_def move)
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
 
+    int additional_time_taken = 0; // Extra time independant of movement speed
+
     ASSERT(!in_bounds(you.pos()) || !cell_is_solid(you.pos())
            || you.wizmode_teleported_into_rock);
 
@@ -4711,7 +4713,7 @@ static void _move_player(coord_def move)
             mprf("You dig through %s.", feature_description_at(targ, false,
                  DESC_THE, false).c_str());
             nuke_wall(targ);
-            you.time_taken = you.time_taken * 3 / 2;
+            additional_time_taken += BASELINE_DELAY / 5;
         }
 
         if (swap)
@@ -4760,6 +4762,7 @@ static void _move_player(coord_def move)
 
         you.time_taken *= player_movement_speed();
         you.time_taken = div_rand_round(you.time_taken, 10);
+        you.time_taken += additional_time_taken;
 
         if (you.running && you.running.travel_speed)
         {
