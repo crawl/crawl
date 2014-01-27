@@ -639,7 +639,7 @@ void direct_effect(monster* source, spell_type spell,
             pbolt.hit = AUTOMATIC_HIT;
             pbolt.is_beam = true;
             pbolt.ench_power = MAG_IMMUNE;
-            pbolt.real_flavour = BEAM_CHAOS;
+            pbolt.real_flavour = BEAM_CHAOTIC_REFLECTION;
             pbolt.fake_flavour();
             pbolt.real_flavour = pbolt.flavour;
             pbolt.damage = dice_def(1, 6);
