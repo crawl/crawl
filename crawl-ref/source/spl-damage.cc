@@ -1484,7 +1484,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
     return strength;
 }
 
-int ignite_poison_objects(coord_def where, int pow, int, actor *actor)
+static int _ignite_poison_objects(coord_def where, int pow, int, actor *actor)
 {
     UNUSED(pow);
 
@@ -1502,7 +1502,7 @@ int ignite_poison_objects(coord_def where, int pow, int, actor *actor)
     return strength;
 }
 
-int ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
+static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
 {
     UNUSED(pow);
 
@@ -1531,7 +1531,7 @@ int ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
     return false;
 }
 
-int ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
+static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 {
     bolt beam;
     beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
@@ -1593,18 +1593,11 @@ int ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
     return 0;
 }
 
-bool player_is_poisonous()
-{
-    return (player_mutation_level(MUT_SPIT_POISON)
-            || player_mutation_level(MUT_STINGER)
-            || you.form == TRAN_SPIDER // poison attack
-            || (!form_changed_physiology()
-                && (you.species == SP_GREEN_DRACONIAN       // poison breath
-                    || you.species == SP_KOBOLD             // poisonous corpse
-                    || you.species == SP_NAGA)));           // spit poison
-}
+// The self effects of Ignite Poison are beautiful and
+// shouldn't be thrown out. Let's save them for a monster
+// version of the spell!
 
-int ignite_poison_player(coord_def where, int pow, int, actor *actor)
+static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
 {
     if (actor->is_player() || where != you.pos())
         return 0;
@@ -1630,7 +1623,14 @@ int ignite_poison_player(coord_def where, int pow, int, actor *actor)
     }
 
     int damage = 0;
-    if (player_is_poisonous())
+    // Player is poisonous.
+    if (player_mutation_level(MUT_SPIT_POISON)
+        || player_mutation_level(MUT_STINGER)
+        || you.form == TRAN_SPIDER // poison attack
+        || (!form_changed_physiology()
+            && (you.species == SP_GREEN_DRACONIAN       // poison breath
+                || you.species == SP_KOBOLD             // poisonous corpse
+                || you.species == SP_NAGA)))            // spit poison
     {
         damage = roll_dice(3, 5 + pow / 7);
     }
@@ -1654,8 +1654,8 @@ int ignite_poison_player(coord_def where, int pow, int, actor *actor)
         else
             mpr("The poison in your system burns!");
 
-        ouch(damage, actor->as_monster()->mindex(), KILLED_BY_BEAM,
-             "by burning poison");
+        ouch(damage, actor->as_monster()->mindex(), KILLED_BY_MONSTER,
+             actor->as_monster()->name(DESC_A).c_str());
 
         if (you.duration[DUR_POISONING] > 0)
         {
@@ -1759,12 +1759,12 @@ spret_type cast_ignite_poison(int pow, bool fail)
 
     mpr("You ignite the poison in your surroundings!");
 
-    apply_area_visible(ignite_poison_clouds, pow, &you);
-    apply_area_visible(ignite_poison_objects, pow, &you);
-    apply_area_visible(ignite_poison_monsters, pow, &you);
+    apply_area_visible(_ignite_poison_clouds, pow, &you);
+    apply_area_visible(_ignite_poison_objects, pow, &you);
+    apply_area_visible(_ignite_poison_monsters, pow, &you);
 // Not currently relevant - nothing will ever happen as long as
 // the actor is &you.
-    apply_area_visible(ignite_poison_player, pow, &you);
+    apply_area_visible(_ignite_poison_player, pow, &you);
 
 #ifndef USE_TILE_LOCAL
     delay(100); // show a brief flash
