@@ -4234,10 +4234,15 @@ bool maybe_identify_base_type(item_def &item)
 
     if (ident_count == item_count - 1)
     {
-        set_ident_type(item, ID_KNOWN_TYPE);
-        if (!in_inventory(item) && item_needs_autopickup(item) &&
-            (item.base_type == OBJ_STAVES || item.base_type == OBJ_JEWELLERY))
+        if (!in_inventory(item) && item_needs_autopickup(item)
+            && (item.base_type == OBJ_STAVES
+                || item.base_type == OBJ_JEWELLERY))
             item.props["needs_autopickup"] = true;
+
+        set_ident_type(item, ID_KNOWN_TYPE);
+
+        if (item.props.exists("needs_autopickup") && is_useless_item(item))
+            item.props.erase("needs_autopickup");
 
         string class_name;
         if (item.base_type == OBJ_JEWELLERY)
