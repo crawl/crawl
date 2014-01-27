@@ -253,6 +253,7 @@ lurking_horror MONS_LURKING_HORROR
 starcursed_mass MONS_STARCURSED_MASS
 tentacled_starspawn MONS_TENTACLED_STARSPAWN
 thrashing_horror MONS_THRASHING_HORROR
+worldbinder MONS_WORLDBINDER
 wretched_star MONS_WRETCHED_STAR
 
 ### Demonic monsters

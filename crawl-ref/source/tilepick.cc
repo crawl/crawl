@@ -1417,6 +1417,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TENTACLED_STARSPAWN;
     case MONS_THRASHING_HORROR:
         return TILEP_MONS_THRASHING_HORROR;
+    case MONS_WORLDBINDER:
+        return TILEP_MONS_WORLDBINDER;
     case MONS_WRETCHED_STAR:
         return TILEP_MONS_WRETCHED_STAR;
 
