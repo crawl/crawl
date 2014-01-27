@@ -269,10 +269,10 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
                 && feat_is_watery(grd(p))
                 && !cell_is_solid(p) // mangroves
                 && env.cgrid(p) == EMPTY_CLOUD
-                && one_chance_in(10))
+                && one_chance_in(7))
             {
                 _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
-                                 cloud.whose, cloud.killer, cloud.source);
+                                 cloud.whose, cloud.killer, cloud.source, 22);
             }
         }
     }
