@@ -1582,6 +1582,17 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
     return 0;
 }
 
+static bool _player_has_poisonous_physiology()
+{
+    return (player_mutation_level(MUT_SPIT_POISON)
+            || player_mutation_level(MUT_STINGER)
+            || you.form == TRAN_SPIDER // poison attack
+            || (!form_changed_physiology()
+                && (you.species == SP_GREEN_DRACONIAN       // poison breath
+                    || you.species == SP_KOBOLD             // poisonous corpse
+                    || you.species == SP_NAGA)));           // spit poison
+}
+
 static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
 {
     if (agent->is_player() || where != you.pos())
@@ -1594,16 +1605,8 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
     int str = 0;        // Amount of poison for the spell to work with
 
     // Player is poisonous.
-    if (player_mutation_level(MUT_SPIT_POISON)
-        || player_mutation_level(MUT_STINGER)
-        || you.form == TRAN_SPIDER // poison attack
-        || (!form_changed_physiology()
-            && (you.species == SP_GREEN_DRACONIAN       // poison breath
-                || you.species == SP_KOBOLD             // poisonous corpse
-                || you.species == SP_NAGA)))            // spit poison
-    {
+    if (_player_has_poisonous_physiology())
         str = 2;
-    }
 
     // Use the greater of the degree of player poisoning or the player's own
     // natural poison (meaning that poisoned kobolds are not affected much
@@ -1720,6 +1723,17 @@ static bool maybe_abort_ignite()
     return false;
 }
 
+bool ignite_poison_affects(const actor* act)
+{
+    if (act->is_player())
+        return (_player_has_poisonous_physiology() || you.duration[DUR_POISONING]);
+    else
+    {
+        return (mons_is_poisoner(act->as_monster())
+                || act->as_monster()->has_ench(ENCH_POISON));
+    }
+}
+
 spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
 {
     if (agent->is_player())
@@ -1757,6 +1771,14 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
     apply_area_visible(_ignite_poison_player, pow, agent);
 
     return SPRET_SUCCESS;
+}
+
+void local_ignite_poison(coord_def pos, int pow, actor* agent)
+{
+    _ignite_poison_clouds(pos, pow, 0, agent);
+    _ignite_poison_objects(pos, pow, 0, agent);
+    _ignite_poison_monsters(pos, pow, 0, agent);
+    _ignite_poison_player(pos, pow, 0, agent);
 }
 
 int discharge_monsters(coord_def where, int pow, int, actor *agent)

@@ -974,6 +974,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_IGNITE_POISON_SINGLE:
+        beam.flavour    = BEAM_IGNITE_POISON;
+        beam.ench_power = mons->hit_dice * 12;
+        beam.is_beam    = true;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1826,6 +1832,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_VIRULENCE:
         return (foe && foe->res_poison(false) >= 3);
+
+    case SPELL_IGNITE_POISON_SINGLE:
+        return (!foe || !ignite_poison_affects(foe));
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
