@@ -2327,9 +2327,9 @@
       {
        SPELL_PLANEREND,
        SPELL_CORRUPT_BODY,
+       SPELL_NO_SPELL,
        SPELL_PLANEREND,
        SPELL_CORRUPT_BODY,
-       SPELL_POLYMORPH,
        SPELL_NO_SPELL
       }
     },
