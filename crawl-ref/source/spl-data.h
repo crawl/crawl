@@ -3340,6 +3340,19 @@ struct spell_desc
 },
 
 {
+    SPELL_IGNITE_POISON_SINGLE, "Localized Ignite Poison",
+     SPTYP_FIRE | SPTYP_TRANSMUTATION,
+     SPFLAG_MONSTER | SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
