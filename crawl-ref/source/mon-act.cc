@@ -3810,11 +3810,16 @@ static bool _monster_move(monster* mons)
             }
             else if (player_can_hear(mons->pos() + mmov))
             {
-                // Message depends on whether caused by boring beetle or
-                // acid (Dissolution).
-                mprf(MSGCH_SOUND, (mons->type == MONS_BORING_BEETLE) ?
-                     "You hear a grinding noise." :
-                     "You hear a sizzling sound.");
+                // Formicids take 50% more time to dig.
+                if (mons_genus(mons->type) == MONS_FORMICID)
+                    mons->lose_energy(EUT_MOVE, 2);
+
+                // Message depends on whether caused by acid (Dissolution)
+                // or direct digging (boring beetles, formicids).
+                mprf(MSGCH_SOUND, (mons->type == MONS_DISSOLUTION) ?
+                     "You hear a sizzling sound." :
+                     "You hear a grinding noise."
+                     );
             }
         }
     }
