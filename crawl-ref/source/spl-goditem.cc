@@ -436,6 +436,12 @@ void antimagic()
         mprf(MSGCH_DURATION, "Your charged fireball dissipates.");
     }
 
+    if (you.attribute[ATTR_REPEL_MISSILES])
+        you.attribute[ATTR_REPEL_MISSILES] = 0;
+
+    if (you.attribute[ATTR_DEFLECT_MISSILES])
+        you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+
     if (you.attribute[ATTR_SWIFTNESS] > 0)
         you.attribute[ATTR_SWIFTNESS] = 0;
 

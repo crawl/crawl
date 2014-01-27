@@ -888,7 +888,7 @@ struct spell_desc
      SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
      2,
-     200,
+     50,
      -1, -1,
      0,
      NULL,

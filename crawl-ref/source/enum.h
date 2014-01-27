@@ -313,6 +313,8 @@ enum attribute_type
     ATTR_SWIFTNESS,            // Duration of future antiswiftness.
     ATTR_BARBS_MSG,            // Have we already printed a message on move?
     ATTR_BARBS_POW,            // How badly we are currently skewered
+    ATTR_REPEL_MISSILES,       // Chance to expire repel missiles
+    ATTR_DEFLECT_MISSILES,     // Chance to expire deflect missiles
     NUM_ATTRIBUTES
 };
 

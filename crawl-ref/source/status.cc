@@ -1104,7 +1104,8 @@ static void _describe_missiles(status_info* inf)
         inf->light_text   = "DMsl";
         inf->short_text   = "deflect missiles";
         inf->long_text    = "You deflect missiles.";
-        expiring = dur_expiring(DUR_DEFLECT_MISSILES);
+        expiring = (you.attribute[ATTR_DEFLECT_MISSILES] == 0
+                    && dur_expiring(DUR_DEFLECT_MISSILES));
     }
     else
     {
@@ -1114,7 +1115,8 @@ static void _describe_missiles(status_info* inf)
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";
         inf->long_text    = "You repel missiles.";
-        expiring = (!perm && dur_expiring(DUR_REPEL_MISSILES));
+        expiring = (!perm && you.attribute[ATTR_REPEL_MISSILES] == 0
+                    && dur_expiring(DUR_REPEL_MISSILES));
     }
 
     inf->light_colour = _dur_colour(inf->light_colour, expiring);
