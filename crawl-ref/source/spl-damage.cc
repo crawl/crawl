@@ -2726,30 +2726,16 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
     }
     else if (mon_tracer)
     {
-        bolt tracer;
-        tracer.foe_ratio = 60;
         for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
         {
-            if (!_toxic_can_affect(*ai))
+            if (!_toxic_can_affect(*ai) || mons_aligned(agent, *ai))
                 continue;
-
-            if (mons_aligned(agent, *ai))
-            {
-                tracer.friend_info.count++;
-                tracer.friend_info.power +=
-                        ai->is_player() ? you.experience_level
-                                        : ai->as_monster()->hit_dice;
-            }
             else
-            {
-                tracer.foe_info.count++;
-                tracer.foe_info.power +=
-                        ai->is_player() ? you.experience_level
-                                        : ai->as_monster()->hit_dice;
-            }
+                return SPRET_SUCCESS;
         }
 
-        return mons_should_fire(tracer) ? SPRET_SUCCESS : SPRET_ABORT;
+        // Didn't find any susceptible targets
+        return SPRET_ABORT;
     }
     else
     {
@@ -2788,6 +2774,10 @@ void toxic_radiance_effect(actor* agent, int mult)
     for (actor_near_iterator ai(agent->pos(), LOS_NO_TRANS); ai; ++ai)
     {
         if (!_toxic_can_affect(*ai))
+            continue;
+
+        // Monsters can skip hurting friendlies
+        if (agent->is_monster() && mons_aligned(agent, *ai))
             continue;
 
         int dam = roll_dice(1, 3 + pow / 25) * mult;
