@@ -2014,8 +2014,16 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_DIG:
-        you.digging = true;
-        mpr("You extend your mandibles.");
+        if (!you.digging)
+        {
+            you.digging = true;
+            mpr("You extend your mandibles.");
+        }
+        else
+        {
+            mpr("You are already prepared to dig.");
+            return false;
+        }
         break;
 
     case ABIL_SHAFT_SELF:
