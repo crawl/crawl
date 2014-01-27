@@ -4556,8 +4556,14 @@ static void _move_player(coord_def move)
 
     if (you.digging)
     {
-        if (grd(targ) == DNGN_ROCK_WALL || grd(targ) == DNGN_CLEAR_ROCK_WALL
-            || grd(targ) == DNGN_GRATE)
+        if (you.hunger_state == HS_STARVING && !you.is_undead)
+        {
+            you.digging = false;
+            canned_msg(MSG_TOO_HUNGRY);
+        }
+        else if (grd(targ) == DNGN_ROCK_WALL
+                 || grd(targ) == DNGN_CLEAR_ROCK_WALL
+                 || grd(targ) == DNGN_GRATE)
         {
             targ_pass = true;
         }
@@ -4713,6 +4719,8 @@ static void _move_player(coord_def move)
             mprf("You dig through %s.", feature_description_at(targ, false,
                  DESC_THE, false).c_str());
             nuke_wall(targ);
+            noisy(6, you.pos());
+            make_hungry(50, true);
             additional_time_taken += BASELINE_DELAY / 5;
         }
 
