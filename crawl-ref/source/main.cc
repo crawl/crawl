@@ -4725,7 +4725,8 @@ static void _move_player(coord_def move)
                 you.attribute[ATTR_BARBS_MSG] = 1;
             }
 
-            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), NULL, KILLED_BY_BARBS);
+            ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), NON_MONSTER,
+                 KILLED_BY_BARBS);
             bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
 
             // Sometimes decrease duration even when we move.
