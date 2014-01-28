@@ -3440,7 +3440,7 @@ void bolt::affect_player_enchantment()
                 else if (margin >= -30)
                     mpr("You struggle to resist.");
                 else
-                    mpr("You strain under the huge effort it takes to resist.");
+                    mpr("You barely resist.");
             }
         }
         // You *could* have gotten a free teleportation in the Abyss,

@@ -1825,7 +1825,7 @@ const char* resist_margin_phrase(int margin)
            margin >= 0   ? " resists." :
            margin >= -14 ? " resists with significant effort.":
            margin >= -30 ? " struggles to resist."
-                         : " strains under the huge effort it takes to resist.";
+                         : " barely resists.";
 }
 
 bool mons_immune_magic(const monster* mon)
