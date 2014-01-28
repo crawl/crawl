@@ -2241,14 +2241,30 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_GUARDIAN_SERPENT:
         band = BAND_GUARDIAN_SERPENT;
-        band_size = 2;
+        band_size = 2 + random2(4);
         break;
+
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
-    case MONS_NAGA_RITUALIST:
-    case MONS_NAGA_SHARPSHOOTER:
+        // Spawn alone more frequently at shallow depths
+        if (player_in_branch(BRANCH_SNAKE) && !x_chance_in_y(you.depth, 5))
+            break;
+
         band = BAND_NAGAS;
         band_size = 2 + random2(3);
+        break;
+
+    case MONS_NAGA_SHARPSHOOTER:
+        if (coinflip())
+        {
+            band = BAND_NAGA_SHARPSHOOTER;
+            band_size = 1 + random2(3);
+        }
+        break;
+
+    case MONS_NAGA_RITUALIST:
+        band = BAND_NAGA_RITUALIST;
+        band_size = 3 + random2(3);
         break;
 
     case MONS_WOLF:
@@ -2637,6 +2653,16 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
     }
 
+    // Don't give them a band in shallower places; one can be enough
+    case MONS_SALAMANDER:
+        if (!player_in_branch(BRANCH_DEPTHS) || !coinflip())
+            break;
+
+    case MONS_SALAMANDER_MYSTIC:
+        band = BAND_SALAMANDERS;
+        band_size = random_range(2, 3);
+        break;
+
     default: ;
     }
 
@@ -2830,16 +2856,35 @@ static monster_type _band_member(band_type band, int which)
         break;
 
     case BAND_GUARDIAN_SERPENT:
-        // No marksnagas here - they prefer to stay at a distance.
-        return random_choose(MONS_NAGA_WARRIOR,   MONS_NAGA_MAGE,
-                             MONS_NAGA_RITUALIST, -1);
+        // Favor tougher naga suited to melee, compared to normal naga bands
+        if (which == 1 || which == 2 && coinflip())
+            return (one_chance_in(3) ? MONS_NAGA_MAGE : MONS_NAGA_WARRIOR);
+        else
+            return (one_chance_in(5) ? MONS_SALAMANDER : MONS_NAGA);
+
     case BAND_NAGAS:
-        if (which == 1 && coinflip())
+        if (which == 1 && coinflip() || which == 2 && one_chance_in(4))
         {
-            return random_choose(MONS_NAGA_WARRIOR,   MONS_NAGA_MAGE,
-                                 MONS_NAGA_RITUALIST, MONS_NAGA_SHARPSHOOTER, -1);
+            return random_choose_weighted( 8, MONS_NAGA_WARRIOR,
+                                          11, MONS_NAGA_MAGE,
+                                           6, MONS_NAGA_RITUALIST,
+                                           8, MONS_NAGA_SHARPSHOOTER,
+                                           4, MONS_SALAMANDER_MYSTIC,
+                                           0);
         }
-        return MONS_NAGA;
+        else
+            return one_chance_in(7) ? MONS_SALAMANDER : MONS_NAGA;
+
+    case BAND_NAGA_RITUALIST:
+        return random_choose_weighted(15, MONS_BLACK_MAMBA,
+                                       7, MONS_MANA_VIPER,
+                                       5, MONS_WATER_MOCCASIN,
+                                       4, MONS_ANACONDA,
+                                       0);
+
+    case BAND_NAGA_SHARPSHOOTER:
+        return (one_chance_in(3) ? MONS_NAGA_SHARPSHOOTER : MONS_NAGA);
+
     case BAND_WOLVES:
         return MONS_WOLF;
     case BAND_GREEN_RATS:
@@ -3048,6 +3093,15 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_RAVENS:
         return MONS_RAVEN;
+
+    case BAND_SALAMANDERS:
+        return MONS_SALAMANDER;
+
+    case BAND_SALAMANDER_ELITES:
+        if (which == 1 && coinflip())
+            return MONS_SALAMANDER_MYSTIC;
+        else
+            return MONS_SALAMANDER;
 
     default:
         die("unhandled band type %d", band);
