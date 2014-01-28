@@ -471,8 +471,8 @@ tileidx_t tileidx_player()
         case TRAN_ICE_BEAST: ch = TILEP_TRAN_ICE_BEAST; break;
         case TRAN_WISP:      ch = TILEP_MONS_INSUBSTANTIAL_WISP; break;
         case TRAN_JELLY:     ch = TILEP_MONS_JELLY;     break;
-        case TRAN_FUNGUS:    ch = TILEP_MONS_WANDERING_MUSHROOM; break;
-        case TRAN_SHADOW:    ch = TILEP_MONS_SHADOW;    break;
+        case TRAN_FUNGUS:    ch = TILEP_TRAN_MUSHROOM;  break;
+        case TRAN_SHADOW:    ch = TILEP_TRAN_SHADOW;    break;
         case TRAN_DRAGON:
         {
             switch (you.species)
