@@ -4301,6 +4301,73 @@ mons_spec mons_list::drac_monspec(string name) const
     return spec;
 }
 
+// As with draconians, so with demonspawn.
+mons_spec mons_list::demonspawn_monspec(string name) const
+{
+    mons_spec spec;
+
+    spec.type = get_monster_by_name(name);
+
+    // Check if it's a simple demonspawn name, we're done.
+    if (spec.type != MONS_PROGRAM_BUG)
+        return spec;
+
+    spec.type = RANDOM_DEMONSPAWN;
+
+    // Request for any demonspawn?
+    if (starts_with(name, "any "))
+        name = name.substr(4); // Strip "any "
+
+    if (starts_with(name, "base "))
+    {
+        // Base demonspawn need no further work.
+        return RANDOM_BASE_DEMONSPAWN;
+    }
+    else if (starts_with(name, "nonbase "))
+    {
+        spec.type = RANDOM_NONBASE_DEMONSPAWN;
+        name = name.substr(8);
+    }
+
+    trim_string(name);
+
+    // Match "any demonspawn"
+    if (name == "demonspawn")
+        return spec;
+
+    // Check for recognition again to match any (nonbase) <base> demonspawn.
+    const monster_type base = get_monster_by_name(name);
+    if (base != MONS_PROGRAM_BUG)
+    {
+        spec.monbase = base;
+        return spec;
+    }
+
+    // Only legal possibility left is <base> boss demonspawn.
+    string::size_type wordend = name.find(' ');
+    if (wordend == string::npos)
+        return MONS_PROGRAM_BUG;
+
+    string sbase = name.substr(0, wordend);
+    if ((spec.monbase = demonspawn_base_by_name(sbase)) == MONS_PROGRAM_BUG)
+        return MONS_PROGRAM_BUG;
+
+    name = trimmed_string(name.substr(wordend + 1));
+    spec.type = get_monster_by_name(name);
+
+    // We should have a non-base demonspawn here.
+    if (spec.type == MONS_PROGRAM_BUG
+        || mons_genus(static_cast<monster_type>(spec.type)) != MONS_DEMONSPAWN
+        || spec.type == MONS_DEMONSPAWN
+        || (spec.type >= MONS_FIRST_BASE_DEMONSPAWN
+            && spec.type <= MONS_LAST_BASE_DEMONSPAWN))
+    {
+        return MONS_PROGRAM_BUG;
+    }
+
+    return spec;
+}
+
 mons_spec mons_list::mons_by_name(string name) const
 {
     name = replace_all_of(name, "_", " ");
@@ -4385,6 +4452,17 @@ mons_spec mons_list::mons_by_name(string name) const
 
     if (name.find("draconian") != string::npos)
         return drac_monspec(name);
+
+    // FIXME: cleaner way to do this?
+    if (name.find("demonspawn") != string::npos
+        || name.find("black sun") != string::npos
+        || name.find("blood saint") != string::npos
+        || name.find("chaos champion") != string::npos
+        || name.find("corrupter") != string::npos
+        || name.find("warmonger") != string::npos)
+    {
+        return demonspawn_monspec(name);
+    }
 
     return get_monster_by_name(name);
 }
@@ -4736,9 +4814,9 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
                                         bool skeleton,
                                         bool chunk)
 {
-    if (*mons == RANDOM_NONBASE_DRACONIAN)
+    if (*mons == RANDOM_NONBASE_DRACONIAN || *mons == RANDOM_NONBASE_DEMONSPAWN)
     {
-        error = "Can't use non-base draconian for corpse/chunk items";
+        error = "Can't use non-base monster for corpse/chunk items";
         return false;
     }
 

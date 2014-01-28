@@ -287,6 +287,33 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         calc_speed();
         break;
 
+    case ENCH_ICEMAIL:
+        ac += ICEMAIL_MAX;
+        break;
+
+    case ENCH_AGILE:
+        ev += AGILITY_BONUS;
+        break;
+
+    case ENCH_FROZEN:
+        calc_speed();
+        break;
+
+    case ENCH_EPHEMERAL_INFUSION:
+    {
+        if (!props.exists("eph_amount"))
+        {
+            int amount = min((ench.degree / 2) + random2avg(ench.degree, 2),
+                             max_hit_points - hit_points);
+            if (amount > 0 && heal(amount) && !quiet)
+                simple_monster_message(this, " seems to gain new vigour!");
+            else
+                amount = 0;
+            props["eph_amount"].get_byte() = amount;
+        }
+        break;
+    }
+
     default:
         break;
     }
@@ -869,6 +896,55 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer more vulnerable to poison.");
         break;
 
+    case ENCH_ICEMAIL:
+        ac -= ICEMAIL_MAX;
+        if (!quiet && you.can_see(this))
+        {
+            mprf("%s icy envelope dissipates!",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
+        break;
+
+    case ENCH_AGILE:
+        ev -= AGILITY_BONUS;
+        if (!quiet)
+            simple_monster_message(this, " is no longer unusually agile.");
+        break;
+
+    case ENCH_FROZEN:
+        if (!quiet)
+            simple_monster_message(this, " is no longer encased in ice.");
+        calc_speed();
+        break;
+
+    case ENCH_EPHEMERAL_INFUSION:
+    {
+        int dam = 0;
+        if (props.exists("eph_amount"))
+        {
+            dam = props["eph_amount"].get_byte();
+            props.erase("eph_amount");
+        }
+        dam = min(dam, hit_points - 1);
+        if (dam > 0)
+            hurt(NULL, dam);
+        if (!quiet)
+            simple_monster_message(this, " looks less vigorous.");
+        break;
+    }
+
+    case ENCH_BLACK_MARK:
+        if (!quiet)
+            simple_monster_message(this, " is no longer absorbing vital"
+                                         " energies.");
+        calc_speed();
+        break;
+
+    case ENCH_SAP_MAGIC:
+        if (!quiet)
+            simple_monster_message(this, " is no longer being sapped.");
+        break;
+
     default:
         break;
     }
@@ -977,6 +1053,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
         case ENCH_FLAYED: case ENCH_BARBS: case ENCH_BUILDING_CHARGE:
+        case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
+        case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1163,7 +1241,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
-    case ENCH_ANTIMAGIC:
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
     case ENCH_STONESKIN:
@@ -1190,8 +1267,17 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_POISON_VULN:
     case ENCH_RETCHING:
     case ENCH_DIMENSION_ANCHOR:
+    case ENCH_AGILE:
+    case ENCH_FROZEN:
+    case ENCH_EPHEMERAL_INFUSION:
+    case ENCH_SAP_MAGIC:
     // case ENCH_ROLLING:
         decay_enchantment(en);
+        break;
+
+    case ENCH_ANTIMAGIC:
+        if (!has_ench(ENCH_SAP_MAGIC))
+            decay_enchantment(en);
         break;
 
     case ENCH_MIRROR_DAMAGE:
@@ -1890,7 +1976,6 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
-
     case ENCH_SIREN_SONG:
         // If we've gotten silenced or somehow incapacitated since we started,
         // cancel the song
@@ -1928,6 +2013,11 @@ void monster::apply_enchantment(const mon_enchant &me)
                                    MSGCH_MONSTER_ENCHANT);
         }
         number = min((int)number + 1, 5);
+        break;
+
+    case ENCH_GRAND_AVATAR:
+        if (!me.agent() || !me.agent()->alive())
+            del_ench(ENCH_GRAND_AVATAR, true, false);
         break;
 
     default:
@@ -2077,7 +2167,9 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
-    "barbs", "building_charge", "poison_vuln", "buggy",
+    "barbs", "building_charge", "poison_vuln", "icemail", "agile",
+    "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
+    "sap magic", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2220,6 +2312,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_FEAR_INSPIRING:
     case ENCH_STONESKIN:
     case ENCH_OZOCUBUS_ARMOUR:
+    case ENCH_AGILE:
+    case ENCH_BLACK_MARK:
         cturn = 1000 / _mod_speed(25, mons->speed);
         break;
     case ENCH_LIQUEFYING:
@@ -2228,6 +2322,8 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_RAISED_MR:
     case ENCH_MIRROR_DAMAGE:
     case ENCH_DEATHS_DOOR:
+    case ENCH_EPHEMERAL_INFUSION:
+    case ENCH_SAP_MAGIC:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
@@ -2341,6 +2437,9 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_TORNADO_COOLDOWN:
         cturn = random_range(25, 35) * 10 / _mod_speed(10, mons->speed);
+        break;
+    case ENCH_FROZEN:
+        cturn = 3 * BASELINE_DELAY;
         break;
     default:
         break;

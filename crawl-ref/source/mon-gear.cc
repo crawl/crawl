@@ -1528,6 +1528,96 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         level = MAKE_GOOD_ITEM;
         break;
 
+    case MONS_DEMONSPAWN:
+    // case MONS_MONSTROUS_DEMONSPAWN: - they use claws instead
+    case MONS_INFERNAL_DEMONSPAWN:
+    case MONS_GELID_DEMONSPAWN:
+    case MONS_PUTRID_DEMONSPAWN:
+    case MONS_TORTUROUS_DEMONSPAWN:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        // Demonspawn probably want to use weapons close to the "natural"
+        // demon weapons - demon blades, demon whips, and demon tridents.
+        // So pick from a selection of good weapons from those classes
+        // with about a 1/4 chance in each category of having the demon
+        // weapon.
+        item.sub_type  = random_choose_weighted(10, WPN_LONG_SWORD,
+                                                10, WPN_SCIMITAR,
+                                                10, WPN_GREAT_SWORD,
+                                                10, WPN_DEMON_BLADE,
+                                                10, WPN_MACE,
+                                                 8, WPN_MORNINGSTAR,
+                                                 2, WPN_EVENINGSTAR,
+                                                10, WPN_DIRE_FLAIL,
+                                                10, WPN_DEMON_WHIP,
+                                                10, WPN_TRIDENT,
+                                                10, WPN_HALBERD,
+                                                10, WPN_GLAIVE,
+                                                10, WPN_DEMON_TRIDENT,
+                                                 0);
+        break;
+
+    case MONS_BLOOD_SAINT:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(4, WPN_DAGGER,
+                                                1, WPN_QUARTERSTAFF,
+                                                0);
+        break;
+
+    case MONS_CHAOS_CHAMPION:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        do
+        {
+            item.sub_type = random2(NUM_WEAPONS);
+        }
+        while ((melee_only && (item.sub_type == WPN_BLOWGUN
+                               || item.sub_type == WPN_CROSSBOW
+                               || item.sub_type == WPN_BOW
+                               || item.sub_type == WPN_LONGBOW))
+               || item.sub_type == WPN_STAFF
+               || item.sub_type == WPN_ROD
+               || item.sub_type == WPN_HAMMER
+               || item.sub_type > WPN_SLING); // the last of these checks for
+                                              // blessed base weapon types
+        if (one_chance_in(100))
+        {
+            force_item = true;
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
+            item.plus  = random2(9) - 2;
+            item.plus2 = random2(9) - 2;
+        }
+        else
+            level = random2(300);
+        break;
+
+    case MONS_WARMONGER:
+        level = MAKE_GOOD_ITEM;
+        item.base_type = OBJ_WEAPONS;
+        if (!melee_only)
+            item.sub_type = coinflip() ? WPN_CROSSBOW : WPN_LONGBOW;
+        else
+        {
+            item.sub_type = random_choose_weighted(10, WPN_DEMON_BLADE,
+                                                   10, WPN_DEMON_WHIP,
+                                                   10, WPN_DEMON_TRIDENT,
+                                                    5, WPN_BATTLEAXE,
+                                                    2, WPN_EXECUTIONERS_AXE,
+                                                    5, WPN_GREAT_SWORD,
+                                                    1, WPN_BASTARD_SWORD,
+                                                    1, WPN_CLAYMORE,
+                                                    5, WPN_DIRE_FLAIL,
+                                                    2, WPN_GREAT_MACE,
+                                                    5, WPN_GLAIVE,
+                                                    2, WPN_BARDICHE,
+                                                    1, WPN_LAJATANG,
+                                                    0);
+        }
+        break;
+
     default:
         break;
     }
@@ -1914,6 +2004,7 @@ static void _give_shield(monster* mon, int level)
             level = MAKE_GOOD_ITEM;
         // deliberate fall-through
     case MONS_TENGU:
+    case MONS_DEMONSPAWN:
     case MONS_GNOLL_SERGEANT:
         if (mon->type != MONS_TENGU_WARRIOR && !one_chance_in(3))
             break;
@@ -2008,6 +2099,8 @@ static void _give_shield(monster* mon, int level)
         break;
 
     case MONS_FORMICID:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
         if (one_chance_in(3))
         {
             armour_type shield_type = coinflip() ? ARM_BUCKLER : ARM_SHIELD;
@@ -2015,6 +2108,11 @@ static void _give_shield(monster* mon, int level)
             shield = make_item_for_monster(mon, OBJ_ARMOUR, shield_type,
                                            level, MAKE_ITEM_NO_RACE);
         }
+        break;
+    case MONS_WARMONGER:
+        make_item_for_monster(mon, OBJ_ARMOUR,
+                              coinflip() ? ARM_LARGE_SHIELD : ARM_SHIELD,
+                              MAKE_GOOD_ITEM, MAKE_ITEM_NO_RACE);
         break;
     default:
         break;
@@ -2339,6 +2437,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_TENGU_WARRIOR:
+    case MONS_DEMONSPAWN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = coinflip() ? ARM_LEATHER_ARMOUR : ARM_RING_MAIL;
@@ -2479,6 +2578,69 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_CLOAK;
+        break;
+
+    case MONS_MONSTROUS_DEMONSPAWN:
+    case MONS_GELID_DEMONSPAWN:
+    case MONS_INFERNAL_DEMONSPAWN:
+    case MONS_PUTRID_DEMONSPAWN:
+    case MONS_TORTUROUS_DEMONSPAWN:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = random_choose_weighted(2, ARM_LEATHER_ARMOUR,
+                                                3, ARM_RING_MAIL,
+                                                5, ARM_SCALE_MAIL,
+                                                3, ARM_CHAIN_MAIL,
+                                                2, ARM_PLATE_ARMOUR,
+                                                0);
+        break;
+
+    case MONS_BLOOD_SAINT:
+        if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
+        break;
+
+    case MONS_CHAOS_CHAMPION:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        if (one_chance_in(30))
+        {
+            item.sub_type  = random_choose(ARM_TROLL_LEATHER_ARMOUR,
+                                           ARM_FIRE_DRAGON_ARMOUR,
+                                           ARM_ICE_DRAGON_ARMOUR,
+                                           ARM_STEAM_DRAGON_ARMOUR,
+                                           ARM_MOTTLED_DRAGON_ARMOUR,
+                                           ARM_STORM_DRAGON_ARMOUR,
+                                           ARM_SWAMP_DRAGON_ARMOUR,
+                                           -1);
+        }
+        else
+        {
+            item.sub_type  = random_choose(ARM_ROBE,         ARM_LEATHER_ARMOUR,
+                                           ARM_RING_MAIL,    ARM_SCALE_MAIL,
+                                           ARM_CHAIN_MAIL,   ARM_PLATE_ARMOUR,
+                                           -1);
+        }
+        // Yes, this overrides the spec. Xom thinks this is hilarious!
+        level = random2(150);
+        break;
+
+    case MONS_WARMONGER:
+        if (coinflip())
+            level = MAKE_GOOD_ITEM;
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = random_choose_weighted( 50, ARM_CHAIN_MAIL,
+                                                100, ARM_PLATE_ARMOUR,
+                                                  5, ARM_FIRE_DRAGON_ARMOUR,
+                                                  5, ARM_ICE_DRAGON_ARMOUR,
+                                                  5, ARM_MOTTLED_DRAGON_ARMOUR,
+                                                  0);
         break;
 
     default:

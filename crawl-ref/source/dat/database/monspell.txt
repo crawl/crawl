@@ -69,6 +69,10 @@ unseen Blinkbolt cast
 
 Living lightning bursts into view!
 %%%%
+branch summon cast prefix
+
+@The_monster@ calls forth creatures from
+%%%%
 Flame Tongue cast
 
 @The_monster@ issues a gush of flame.
@@ -182,6 +186,14 @@ Haste Plants cast
 Druid's Call cast
 
 @The_monster@ calls out to the beasts of the land!
+%%%%
+Legendary Destruction cast
+
+@The_monster@ offers @possessive@ life energy for powerful magic!
+%%%%
+Ephemeral Infusion cast
+
+@The_monster@ gestures around itself.
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################

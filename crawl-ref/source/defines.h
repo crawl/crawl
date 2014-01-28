@@ -222,6 +222,8 @@ const int INVALID_ABSDEPTH = -1000;
 
 const int ANTITRAIN_PENALTY = 2;
 
+const int AGILITY_BONUS = 5;
+
 #define TORNADO_RADIUS 6
 
 #define NUMBER_OF_RUNES_NEEDED    3
@@ -237,6 +239,8 @@ const int ANTITRAIN_PENALTY = 2;
 
 #define MAX_MONSTER_HP 10000
 #define DJ_MP_RATE 2
+
+#define GRAND_AVATAR_DAMAGE 15
 
 // some shortcuts:
 #define menv   env.mons

@@ -2707,6 +2707,10 @@ static void _decrement_durations()
         you.clear_fearmongers();
     }
 
+    _decrement_a_duration(DUR_FROZEN, delay,
+                          "The ice encasing you melts away.",
+                          0, NULL, MSGCH_RECOVERY);
+
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);
@@ -2991,6 +2995,15 @@ static void _decrement_durations()
                           "You are no longer firmly anchored in space.");
 
     _decrement_a_duration(DUR_SICKENING, delay);
+
+    _decrement_a_duration(DUR_SAP_MAGIC, delay,
+                          "Your magic seems less tainted.");
+
+    if (!you.duration[DUR_SAP_MAGIC])
+    {
+        _decrement_a_duration(DUR_MAGIC_SAPPED, delay,
+                              "You feel more in control of your magic.");
+    }
 
     _decrement_a_duration(DUR_ANTIMAGIC, delay,
                           "You regain control over your magic.");

@@ -630,6 +630,30 @@ void direct_effect(monster* source, spell_type spell,
         }
         break;
 
+    case SPELL_CHAOTIC_MIRROR:
+        if (x_chance_in_y(4, 10))
+        {
+            pbolt.name = "reflection of chaos";
+            pbolt.beam_source = source->mindex();
+            pbolt.aux_source = "chaotic mirror";
+            pbolt.hit = AUTOMATIC_HIT;
+            pbolt.is_beam = true;
+            pbolt.ench_power = MAG_IMMUNE;
+            pbolt.real_flavour = BEAM_CHAOTIC_REFLECTION;
+            pbolt.fake_flavour();
+            pbolt.real_flavour = pbolt.flavour;
+            pbolt.damage = dice_def(1, 6);
+            pbolt.use_target_as_pos = true;
+            pbolt.source = pbolt.target = defender->pos();
+            pbolt.affect_actor(defender);
+            pbolt.source = pbolt.target = source->pos();
+            pbolt.affect_actor(source);
+        }
+        else if (!def || you.can_see(def))
+            canned_msg(MSG_NOTHING_HAPPENS);
+
+        break;
+
     default:
         die("unknown direct_effect spell: %d", spell);
     }
@@ -835,6 +859,7 @@ static bool _follows_orders(monster* mon)
            && mon->type != MONS_BALL_LIGHTNING
            && mon->type != MONS_BATTLESPHERE
            && mon->type != MONS_SPECTRAL_WEAPON
+           && mon->type != MONS_GRAND_AVATAR
            && !mon->berserk_or_insane()
            && !mon->is_projectile()
            && !mon->has_ench(ENCH_HAUNTING);

@@ -144,6 +144,42 @@
   "cold resistance"
 },
 
+{ MUT_HEAT_VULNERABILITY,             0,  3, true, false,  true,
+  "heat vulnerability",
+
+  {"You are vulnerable to heat.",
+   "You are very vulnerable to heat.",
+   "You are extremely vulnerable to heat."},
+
+  {"You feel hot for a moment.",
+   "You feel hot for a moment.",
+   "You feel hot for a moment."},
+
+  {"You feel a sudden chill.",
+   "You feel a sudden chill.",
+   "You feel a sudden chill."},
+
+  "heat vulnerability"
+},
+
+{ MUT_COLD_VULNERABILITY,             0,  3, true, false,  true,
+  "cold vulnerability",
+
+  {"You are vulnerable to cold.",
+   "You are very vulnerable to cold.",
+   "You are extremely vulnerable to cold."},
+
+  {"You feel a sudden chill.",
+   "You feel a sudden chill.",
+   "You feel a sudden chill."},
+
+  {"You feel hot for a moment.",
+   "You feel hot for a moment.",
+   "You feel hot for a moment."},
+
+  "cold vulnerability"
+},
+
 { MUT_DEMONIC_GUARDIAN,               0,  3, false, false, false,
   "demonic guardian",
 

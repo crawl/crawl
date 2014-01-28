@@ -662,6 +662,10 @@ black mamba
 
 A large and astonishingly fast tropical snake whose bite bears a deadly venom.
 %%%%
+black sun
+
+<demonspawn>
+%%%%
 blink frog
 
 A species of giant frog that possesses the ability to blink at will. It can
@@ -671,6 +675,10 @@ commonly found in packs.
 blizzard demon
 
 A greater demon, wreathed in snow and lightning.
+%%%%
+blood saint
+
+<demonspawn>
 %%%%
 blue devil
 
@@ -767,6 +775,10 @@ centaur warrior
 A muscular centaur, a veteran of numerous battles, armed with well-made weapons
 and able to use them skillfully.
 %%%%
+chaos champion
+
+<demonspawn>
+%%%%
 chaos spawn
 
 A being of pure chaos, its form is constantly shifting, growing and then losing
@@ -788,6 +800,10 @@ individual beasts combined into one.
 clay golem
 
 A huge clay statue that has been animated by occult means.
+%%%%
+corrupter
+
+<demonspawn>
 %%%%
 crawling corpse
 
@@ -967,9 +983,8 @@ of short jointed legs and topped with an almost human head.
 %%%%
 demonspawn
 
-The offspring of a human and his or her demon lover, a young demonspawn, before
-its hellish heritage fully asserts itself, closely resembles a human being, but
-with a certain devilish cast to its features.
+The offspring of mortals and demons, with its hellish heritage asserting
+itself through a certain devilish cast to its features.
 %%%%
 diamond obelisk
 
@@ -1269,6 +1284,10 @@ goliath beetle
 A huge black beetle with great crunching mandibles and very hard chitinous
 armour.
 %%%%
+gelid demonspawn
+
+<demonspawn>
+%%%%
 giant centipede
 
 A chilopod of quite an unusual size, the giant centipede mostly comes out to
@@ -1386,6 +1405,11 @@ golden eye
 
 A tiny and shimmering floating eye, swift as the wind and glistening like gold.
 It has a peculiarly hypnotic look.
+%%%%
+grand avatar
+
+An avatar of battle and bloodshed, capable of mimicking sufficiently damaging
+melee attacks and conjurations from its creator and their allies.
 %%%%
 great orb of eyes
 
@@ -1590,6 +1614,10 @@ A tiny ball of light that flits and flickers at the edge of your vision.
 iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.
+%%%%
+infernal demonspawn
+
+<demonspawn>
 %%%%
 inept feature mimic
 
@@ -1850,6 +1878,10 @@ molten gargoyle
 
 A hideous molten stone statue come to life, with fearsome claws and flames
 licking out from its toothy maw.
+%%%%
+monstrous demonspawn
+
+<demonspawn>
 %%%%
 moth
 
@@ -2129,6 +2161,10 @@ parts, it lacks the coordination needed to move quickly.
 purple draconian
 
 A scale-covered humanoid with a reptilian tail and small wings.
+%%%%
+putrid demonspawn
+
+<demonspawn>
 %%%%
 quasit
 
@@ -2686,6 +2722,10 @@ tormentor
 A malign devil covered in all manner of claws, spines, and cruel hooks. It is
 able to inflict torturous agony on those foolish enough to gaze upon it.
 %%%%
+torturous demonspawn
+
+<demonspawn>
+%%%%
 training dummy
 
 A mannequin used for battle practice.
@@ -2798,6 +2838,10 @@ warg
 A particularly large and evil-looking wolf, usually found in the company of
 orcs.
 %%%%
+warmonger
+
+<demonspawn>
+%%%%
 water elemental
 
 A spirit drawn from the elemental plane of water. It exists on this world as
@@ -2847,6 +2891,14 @@ wolf spider
 
 A hairy fast-moving hunting spider with vicious mandibles, roaming the dungeon
 in search of prey, which it kills with its deadly venom.
+%%%%
+worldbinder
+
+A cloud of thick fog, with faint, feeble claws constantly reaching
+out and grasping futily before being pulled back in by the fog.
+Worldbinders tie themselves to specific locations and absorb part of
+the weaker natives banished to the Abyss, enabling them to summon
+echoes from one of many locations against percieved threats.
 %%%%
 worm
 

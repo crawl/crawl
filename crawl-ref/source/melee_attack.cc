@@ -500,6 +500,28 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
            || flavour == AF_DROWN;
 }
 
+void melee_attack::apply_black_mark_effects()
+{
+    ASSERT(attacker->is_monster());
+    monster* mon = attacker->as_monster();
+
+    if (mon->heal(random2avg(damage_done, 2)))
+        simple_monster_message(mon, " is healed.");
+
+    switch(random2(3))
+    {
+        case 0:
+            antimagic_affects_defender(damage_done);
+            break;
+        case 1:
+            defender->slow_down(attacker, 5 + random2(7));
+            break;
+        case 2:
+            defender->drain_exp(attacker, false, 10);
+            break;
+    }
+}
+
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
@@ -607,6 +629,13 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
+
+    if (damage_done > 0
+        && attacker->is_monster()
+        && attacker->as_monster()->has_ench(ENCH_BLACK_MARK))
+    {
+        apply_black_mark_effects();
+    }
 
     if (attacker->is_player())
     {
@@ -721,8 +750,11 @@ bool melee_attack::handle_phase_damaged()
             if (needs_message && !special_damage_message.empty())
                 mprf("%s", special_damage_message.c_str());
 
-            if (special_damage > 0)
-                inflict_damage(special_damage, special_damage_flavour);
+            if (special_damage > 0
+                && inflict_damage(special_damage, special_damage_flavour))
+            {
+                defender->expose_to_element(special_damage_flavour, 2);
+            }
         }
 
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
@@ -2352,6 +2384,8 @@ bool melee_attack::player_monattk_hit_effects()
              special_damage, special_damage_flavour);
 
         special_damage = inflict_damage(special_damage);
+        if (special_damage > 0)
+            defender->expose_to_element(special_damage_flavour, 2);
     }
 
     if (stab_attempt && stab_bonus > 0 && weapon
@@ -3703,6 +3737,7 @@ void melee_attack::apply_staff_damage()
                     attacker->name(DESC_THE).c_str(),
                     attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
+            special_damage_flavour = BEAM_COLD;
         }
         break;
 
@@ -3736,6 +3771,7 @@ void melee_attack::apply_staff_damage()
                     attacker->name(DESC_THE).c_str(),
                     attacker->is_player() ? "" : "s",
                     defender->name(DESC_THE).c_str());
+            special_damage_flavour = BEAM_FIRE;
         }
         break;
 
@@ -5793,6 +5829,12 @@ int melee_attack::calc_damage()
             frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
         else if (as_mon->has_ench(ENCH_ROUSED))
             frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
+        else
+        {
+            frenzy_degree = as_mon->aug_amount();
+            if (frenzy_degree <= 0)
+                frenzy_degree = -1;
+        }
 
         if (frenzy_degree != -1)
         {

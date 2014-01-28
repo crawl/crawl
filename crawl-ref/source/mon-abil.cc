@@ -3433,7 +3433,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     bool used = false;
 
     const monster_type mclass = (mons_genus(mons->type) == MONS_DRACONIAN)
-                                  ? draco_subspecies(mons)
+                                  ? draco_or_demonspawn_subspecies(mons)
                                   // Pick a random chimera component
                                   : (mons->type == MONS_CHIMERA ?
                                      get_chimera_part(mons, random2(3) + 1)

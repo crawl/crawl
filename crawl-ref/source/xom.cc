@@ -1342,7 +1342,7 @@ static void _confuse_monster(monster* mons, int sever)
     }
 }
 
-static bool _swap_monsters(monster* m1, monster* m2)
+bool swap_monsters(monster* m1, monster* m2)
 {
     monster& mon1(*m1);
     monster& mon2(*m2);
@@ -1573,7 +1573,7 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
             while (mon1 == mon2)
                 mon2 = random2(num_mons);
 
-            if (_swap_monsters(mons[mon1], mons[mon2]))
+            if (swap_monsters(mons[mon1], mons[mon2]))
             {
                 if (!did_message)
                 {
@@ -2182,6 +2182,7 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
         {
             BEAM_HASTE,
             BEAM_MIGHT,
+            BEAM_AGILITY,
             BEAM_INVISIBILITY,
         };
         ench = RANDOM_ELEMENT(enchantments);

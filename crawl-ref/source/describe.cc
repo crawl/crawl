@@ -2972,7 +2972,7 @@ static string _describe_draconian_colour(int species)
 static string _describe_draconian(const monster_info& mi)
 {
     string description;
-    const int subsp = mi.draco_subspecies();
+    const int subsp = mi.draco_or_demonspawn_subspecies();
 
     if (subsp == MONS_DRACONIAN)
         description += "A ";
@@ -3085,6 +3085,75 @@ static string _describe_chimera(const monster_info& mi)
                                          get_monster_data(wing_part)->name);
     }
     description += ".";
+    return description;
+}
+
+static string _describe_demonspawn_role(monster_type type)
+{
+    switch (type)
+    {
+    case MONS_BLOOD_SAINT:
+        return "It is caked in blood and dusty residue from the wake of the "
+               "devastation it weaves, wreaking divinely-inspired destruction.";
+    case MONS_CHAOS_CHAMPION:
+        return "Even other demonspawn fear its wild, maddened gaze, as well "
+               "as its reality-warping powers from the chaos gods.";
+    case MONS_WARMONGER:
+        return "It is ever-ready for eternal conflict untainted by magic, "
+               "and fights as easily as it breathes for the gods of battle.";
+    case MONS_CORRUPTER:
+        return "Space and flesh shimmer and twist in its vicinity, as if "
+               "afraid of this unwavering servant of celestial corruption.";
+    case MONS_BLACK_SUN:
+        return "Its endless devotion to deities of death have left it with "
+               "an unholy radiance, shining a brilliant darkness.";
+    default:
+        return "";
+    }
+}
+
+static string _describe_demonspawn_base(int species)
+{
+    switch (species)
+    {
+    case MONS_MONSTROUS_DEMONSPAWN:
+        return "more beast now than whatever species it is descended from";
+    case MONS_GELID_DEMONSPAWN:
+        return "softly glowing with an icy aura";
+    case MONS_INFERNAL_DEMONSPAWN:
+        return "giving off an intense heat";
+    case MONS_PUTRID_DEMONSPAWN:
+        return "surrounded with sickly fumes and gases";
+    case MONS_TORTUROUS_DEMONSPAWN:
+        return "menacing with bony spines";
+    }
+    return "";
+}
+
+static string _describe_demonspawn(const monster_info& mi)
+{
+    string description;
+    const int subsp = mi.draco_or_demonspawn_subspecies();
+
+
+    if (subsp != MONS_DEMONSPAWN)
+    {
+        description += "A demonic-looking humanoid";
+        const string demonspawn_base = _describe_demonspawn_base(subsp);
+        if (!demonspawn_base.empty())
+            description += ", " + demonspawn_base;
+        description += ".";
+    }
+    else
+        description += "A vaguely demonic-looking humanoid.";
+
+    if (subsp != mi.type)
+    {
+        const string demonspawn_role = _describe_demonspawn_role(mi.type);
+        if (!demonspawn_role.empty())
+            description += " " + demonspawn_role;
+    }
+
     return description;
 }
 
@@ -3524,6 +3593,21 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     case MONS_DRACONIAN_KNIGHT:
     {
         inf.body << "\n" << _describe_draconian(mi) << "\n";
+        break;
+    }
+
+    case MONS_MONSTROUS_DEMONSPAWN:
+    case MONS_GELID_DEMONSPAWN:
+    case MONS_INFERNAL_DEMONSPAWN:
+    case MONS_PUTRID_DEMONSPAWN:
+    case MONS_TORTUROUS_DEMONSPAWN:
+    case MONS_BLOOD_SAINT:
+    case MONS_CHAOS_CHAMPION:
+    case MONS_WARMONGER:
+    case MONS_CORRUPTER:
+    case MONS_BLACK_SUN:
+    {
+        inf.body << "\n" << _describe_demonspawn(mi) << "\n";
         break;
     }
 
