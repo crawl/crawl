@@ -102,6 +102,11 @@ enum band_type
     BAND_RAIJU,
     BAND_RAVENS,
     BAND_FAUN_PARTY,
+    BAND_NAGA_ELITES,
+    BAND_NAGA_RITUALIST,
+    BAND_NAGA_SHARPSHOOTER,
+    BAND_SALAMANDERS,
+    BAND_SALAMANDER_ELITES,
     NUM_BANDS                   // always last
 };
 
