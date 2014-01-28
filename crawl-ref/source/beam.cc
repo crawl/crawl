@@ -81,10 +81,12 @@
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
 
+#define SAP_MAGIC_CHANCE() x_chance_in_y(7, 10)
+
 // Helper functions (some of these should probably be public).
 static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
-static beam_type _chaos_beam_flavour();
+static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
 static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
                                           bool intrinsic_only = false);
@@ -209,9 +211,11 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
         break;
     case BEAM_POLYMORPH:
     case BEAM_MALMUTATE:
+    case BEAM_CORRUPT_BODY:
         elem = ETC_MUTAGENIC;
         break;
     case BEAM_CHAOS:
+    case BEAM_CHAOTIC_REFLECTION:
         elem = ETC_RANDOM;
         break;
     case BEAM_TELEPORT:
@@ -523,9 +527,12 @@ bool bolt::can_affect_wall_actor(const actor *act) const
     return false;
 }
 
-static beam_type _chaos_beam_flavour()
+static beam_type _chaos_beam_flavour(bolt* beam)
 {
-    const beam_type flavour = random_choose_weighted(
+    beam_type flavour;
+    do
+    {
+        flavour = random_choose_weighted(
             10, BEAM_FIRE,
             10, BEAM_COLD,
             10, BEAM_ELECTRICITY,
@@ -546,10 +553,34 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_BANISH,
             10, BEAM_DISINTEGRATION,
             10, BEAM_PETRIFY,
+            10, BEAM_AGILITY,
              2, BEAM_ENSNARE,
             0);
+    }
+    while (beam->name == "arc of chaos"
+           && (flavour == BEAM_BANISH
+               || flavour == BEAM_POLYMORPH));
 
     return flavour;
+}
+
+static beam_type _chaotic_reflection_flavour(bolt* beam)
+{
+    return random_choose_weighted(
+            10, BEAM_SLOW,
+            10, BEAM_HASTE,
+            10, BEAM_MIGHT,
+            10, BEAM_BERSERK,
+            10, BEAM_PARALYSIS,
+            10, BEAM_CONFUSION,
+            10, BEAM_DISINTEGRATION,
+            10, BEAM_PETRIFY,
+            10, BEAM_AGILITY,
+            10, BEAM_BLINK,
+            10, BEAM_SLEEP,
+            10, BEAM_VULNERABILITY,
+             2, BEAM_ENSNARE,
+             0);
 }
 
 bool bolt::visible() const
@@ -772,7 +803,9 @@ void bolt::fake_flavour()
     if (real_flavour == BEAM_RANDOM)
         flavour = static_cast<beam_type>(random_range(BEAM_FIRE, BEAM_ACID));
     else if (real_flavour == BEAM_CHAOS)
-        flavour = _chaos_beam_flavour();
+        flavour = _chaos_beam_flavour(this);
+    else if (real_flavour == BEAM_CHAOTIC_REFLECTION)
+        flavour = _chaotic_reflection_flavour(this);
 }
 
 void bolt::digging_wall_effect()
@@ -1350,8 +1383,11 @@ void bolt::do_fire()
 
         // Reset chaos beams so that it won't be considered an invisible
         // enchantment beam for the purposes of animation.
-        if (real_flavour == BEAM_CHAOS)
+        if (real_flavour == BEAM_CHAOS
+            || real_flavour == BEAM_CHAOTIC_REFLECTION)
+        {
             flavour = real_flavour;
+        }
 
         // Actually draw the beam/missile/whatever, if the player can see
         // the cell.
@@ -1395,7 +1431,9 @@ void bolt::do_fire()
     // something which ends up having no obvious effect then the player
     // isn't going to realise it).
     if (!msg_generated && !obvious_effect && is_enchantment()
-        && real_flavour != BEAM_CHAOS && YOU_KILL(thrower))
+        && real_flavour != BEAM_CHAOS
+        && real_flavour != BEAM_CHAOTIC_REFLECTION
+        && YOU_KILL(thrower))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
     }
@@ -2364,10 +2402,36 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
     }
 }
 
+static void _explosive_bolt_explode(bolt *parent, coord_def pos)
+{
+    bolt beam;
+    beam.name         = "fiery explosion";
+    beam.aux_source   = "explosive bolt";
+    beam.beam_source  = parent->beam_source;
+    beam.thrower      = parent->thrower;
+    beam.attitude     = parent->attitude;
+    beam.damage       = dice_def(3, 7 + parent->ench_power / 13);
+    beam.colour       = RED;
+    beam.flavour      = BEAM_FIRE;
+    beam.is_explosion = true;
+    beam.source       = pos;
+    beam.target       = pos;
+    beam.is_tracer    = parent->is_tracer;
+    beam.fire();
+    parent->friend_info += beam.friend_info;
+    parent->foe_info    += beam.foe_info;
+    if (beam.is_tracer && beam.beam_cancelled)
+        parent->beam_cancelled = true;
+}
+
 bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
-    if (real_flavour == BEAM_CHAOS && feat_is_solid(feat))
+    if ((real_flavour == BEAM_CHAOS
+         || real_flavour == BEAM_CHAOTIC_REFLECTION)
+         && feat_is_solid(feat))
+    {
         return true;
+    }
 
     if (is_enchantment())
         return false;
@@ -3061,6 +3125,7 @@ bool bolt::harmless_to_player() const
     case BEAM_HASTE:
     case BEAM_HEALING:
     case BEAM_MIGHT:
+    case BEAM_AGILITY:
     case BEAM_INVISIBILITY:
         return true;
 
@@ -3209,6 +3274,9 @@ void bolt::tracer_affect_player()
 
     apply_hit_funcs(&you, 0);
     extra_range_used += range_used_on_hit();
+
+    if (name == "explosive bolt")
+        _explosive_bolt_explode(this, you.pos());
 }
 
 bool bolt::misses_player()
@@ -3331,7 +3399,11 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    if ((flavour != BEAM_MALMUTATE && has_saving_throw() || flavour == BEAM_VIRULENCE)
+    if (((flavour != BEAM_MALMUTATE
+         && flavour != BEAM_CORRUPT_BODY
+         && flavour != BEAM_SAP_MAGIC
+         && has_saving_throw())
+          || flavour == BEAM_VIRULENCE)
         && you.check_res_magic(ench_power) > 0)
     {
         // You resisted it.
@@ -3648,6 +3720,35 @@ void bolt::affect_player_enchantment()
         local_ignite_poison(you.pos(), ench_power, agent());
         break;
 
+    case BEAM_AGILITY:
+        potion_effect(POT_AGILITY, ench_power, nullptr, blame_player);
+        obvious_effect = true;
+        nasty = false;
+        nice  = true;
+        break;
+
+    case BEAM_SAP_MAGIC:
+        if (!SAP_MAGIC_CHANCE())
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            break;
+        }
+        mprf(MSGCH_WARN, "Your magic feels %stainted.",
+             you.duration[DUR_SAP_MAGIC] ? "more " : "");
+        you.increase_duration(DUR_SAP_MAGIC, random_range(20, 30), 50);
+        break;
+
+    case BEAM_CORRUPT_BODY:
+        if (temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body"))
+        {
+            if (one_chance_in(5))
+                temp_mutate(RANDOM_CORRUPT_MUTATION, "corrupt body");
+            mprf(MSGCH_WARN, "A corruption grows within you!");
+        }
+        else
+           mpr("You feel corrupt for a moment.");
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -3762,7 +3863,8 @@ void bolt::affect_player()
     int burn_power = (is_explosion) ? 5 : (is_beam) ? 3 : 2;
 
     // Roll the damage.
-    hurted += damage.roll();
+    if (name != "flash freeze" || !you.duration[DUR_FROZEN])
+        hurted += damage.roll();
 
 #ifdef DEBUG_DIAGNOSTICS
     int roll = hurted;
@@ -3952,6 +4054,18 @@ void bolt::affect_player()
     {
         beam_hits_actor(&you);
     }
+    else if (name == "explosive bolt")
+        _explosive_bolt_explode(this, you.pos());
+    else if (name == "flash freeze")
+    {
+        if (you.duration[DUR_FROZEN])
+            canned_msg(MSG_YOU_UNAFFECTED);
+        else
+        {
+            mprf(MSGCH_WARN, "You are encased in ice.");
+            you.duration[DUR_FROZEN] = 3 * BASELINE_DELAY;
+        }
+    }
 }
 
 int bolt::apply_AC(const actor *victim, int hurted)
@@ -4051,6 +4165,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
 {
     preac = postac = final = 0;
 
+    const bool freeze_immune =
+        (name == "flash freeze" && mon->has_ench(ENCH_FROZEN));
+
     // [ds] Changed how tracers determined damage: the old tracer
     // model took the average damage potential, subtracted the average
     // AC damage reduction and called that the average damage output.
@@ -4076,7 +4193,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // hurt monsters with low-damage ranged attacks and high-damage
     // melee attacks. I judge this an acceptable compromise (for now).
     //
-    const int preac_max_damage = damage.num * damage.size;
+    const int preac_max_damage =
+        (freeze_immune) ? 0
+                        : damage.num * damage.size;
 
     // preac: damage before AC modifier
     // postac: damage after AC modifier
@@ -4088,7 +4207,7 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
         // Was mean between min and max;
         preac = preac_max_damage;
     }
-    else
+    else if (!freeze_immune)
         preac = damage.roll();
 
     if (!apply_dmg_funcs(mon, preac, messages))
@@ -4198,6 +4317,9 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
 
     // Either way, we could hit this monster, so update range used.
     extra_range_used += range_used_on_hit();
+
+    if (name == "explosive bolt")
+        _explosive_bolt_explode(this, mon->pos());
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4390,16 +4512,28 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (dmg)
         beogh_follower_convert(mon, true);
 
-    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
-          (name == "freezing breath" && mon->flight_mode()) ||
-          (name == "lance of force" && dmg > 0) ||
-          name == "flood of elemental water")
+    if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
+        || (name == "freezing breath" && mon->flight_mode())
+        || (name == "lance of force" && dmg > 0)
+        || name == "flood of elemental water")
     {
         beam_hits_actor(mon);
     }
+    else if (name == "explosive bolt")
+        _explosive_bolt_explode(this, mon->pos());
 
     if (name == "spray of energy")
         _dazzle_monster(mon, agent());
+    else if (name == "flash freeze")
+    {
+        if (mon->has_ench(ENCH_FROZEN))
+            simple_monster_message(mon, " is unaffected.");
+        else
+        {
+            simple_monster_message(mon, " is flash-frozen.");
+            mon->add_ench(ENCH_FROZEN);
+        }
+    }
 
     if (flavour == BEAM_GHOSTLY_FLAME && mon->holiness() == MH_UNDEAD)
     {
@@ -4861,7 +4995,9 @@ bool bolt::ignores_monster(const monster* mon) const
     // battlespheres. We don't check mon->is_projectile() because that
     // check includes boulder beetles which should be hit.
     if (mons_is_projectile(mon)
-        || (mon->type == MONS_BATTLESPHERE || mon->type == MONS_SPECTRAL_WEAPON)
+        || (mon->type == MONS_BATTLESPHERE
+            || mon->type == MONS_SPECTRAL_WEAPON
+            || mon->type == MONS_GRAND_AVATAR)
             && mons_aligned(agent(), mon))
     {
         return true;
@@ -4911,6 +5047,7 @@ bool bolt::has_saving_throw() const
     case BEAM_MALIGN_OFFERING:
     case BEAM_VIRULENCE:        // saving throw handled specially
     case BEAM_IGNITE_POISON:
+    case BEAM_AGILITY:
         return false;
     case BEAM_VULNERABILITY:
         return !one_chance_in(3);  // Ignores MR 1/3 of the time
@@ -4926,6 +5063,7 @@ static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     switch (flavour)
     {
     case BEAM_MALMUTATE:
+    case BEAM_CORRUPT_BODY:
         rc = mon->can_mutate();
         break;
 
@@ -5038,7 +5176,8 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
             ;
         }
         // Chaos effects don't get a resistance check to match melee chaos.
-        else if (real_flavour != BEAM_CHAOS)
+        else if (real_flavour != BEAM_CHAOS
+                 && real_flavour != BEAM_CHAOTIC_REFLECTION)
         {
             if (mon->check_res_magic(ench_power) > 0)
             {
@@ -5418,6 +5557,58 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         obvious_effect = true;
         return MON_AFFECTED;
 
+    case BEAM_AGILITY:
+        if (!mon->has_ench(ENCH_AGILE)
+            && !mon->is_stationary()
+            && mon->add_ench(ENCH_AGILE))
+        {
+            if (simple_monster_message(mon, " suddenly seems more agile."))
+                obvious_effect = true;
+        }
+        return MON_AFFECTED;
+
+    case BEAM_SAP_MAGIC:
+        if (!SAP_MAGIC_CHANCE())
+        {
+            if (you.can_see(mon))
+                canned_msg(MSG_NOTHING_HAPPENS);
+            break;
+        }
+        if (!mon->has_ench(ENCH_SAP_MAGIC)
+            && mon->add_ench(mon_enchant(ENCH_SAP_MAGIC, 0, agent())))
+        {
+            if (simple_monster_message(mon, " seems less certain of"
+                                            " their magic."))
+            {
+                obvious_effect = true;
+            }
+        }
+        return MON_AFFECTED;
+
+    case BEAM_CORRUPT_BODY:
+        if (mon->can_mutate())
+        {
+            switch (mon->type)
+            {
+                case MONS_UGLY_THING:
+                case MONS_VERY_UGLY_THING:
+                    mon->malmutate("corrupt body");
+                    break;
+                case MONS_ABOMINATION_SMALL:
+                case MONS_ABOMINATION_LARGE:
+                    mon->props["tile_num"].get_short() = random2(256);
+                    break;
+                case MONS_WRETCHED_STAR:
+                case MONS_PULSATING_LUMP:
+                case MONS_CHAOS_SPAWN:
+                    break;
+                default:
+                    mon->add_ench(mon_enchant(ENCH_WRETCHED, 1));
+                    break;
+            }
+        }
+        break;
+
     default:
         break;
     }
@@ -5628,6 +5819,16 @@ void bolt::refine_for_explosion()
         ex_size = 1;
     }
 
+    if (name == "fiery explosion")
+    {
+        seeMsg  = "The explosive bolt relases an explosion!";
+        hearMsg = "You hear an explosion!";
+
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_FIRE;
+        ex_size = 1;
+    }
+
     if (seeMsg == NULL)
     {
         seeMsg  = "The beam explodes into a cloud of software bugs!";
@@ -5693,8 +5894,12 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     // explode() can be called manually without setting real_flavour.
     // FIXME: The entire flavour/real_flavour thing needs some
     // rewriting!
-    if (real_flavour == BEAM_CHAOS || real_flavour == BEAM_RANDOM)
+    if (real_flavour == BEAM_CHAOS
+        || real_flavour == BEAM_RANDOM
+        || real_flavour == BEAM_CHAOTIC_REFLECTION)
+    {
         flavour = real_flavour;
+    }
     else
         real_flavour = flavour;
 
@@ -6014,6 +6219,7 @@ bool bolt::nice_to(const monster* mon) const
     if (flavour == BEAM_HASTE
         || flavour == BEAM_HEALING
         || flavour == BEAM_MIGHT
+        || flavour == BEAM_AGILITY
         || flavour == BEAM_INVISIBILITY)
     {
         return true;
@@ -6165,8 +6371,12 @@ string bolt::get_short_name() const
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                           | ISFLAG_RACIAL_MASK);
 
-    if (real_flavour == BEAM_RANDOM || real_flavour == BEAM_CHAOS)
+    if (real_flavour == BEAM_RANDOM
+        || real_flavour == BEAM_CHAOS
+        || real_flavour == BEAM_CHAOTIC_REFLECTION)
+    {
         return _beam_type_name(real_flavour);
+    }
 
     if (flavour == BEAM_FIRE && name == "sticky fire")
         return "sticky fire";
@@ -6260,6 +6470,10 @@ static string _beam_type_name(beam_type type)
     case BEAM_MALIGN_OFFERING:       return "malign offering";
     case BEAM_VIRULENCE:             return "virulence";
     case BEAM_IGNITE_POISON:         return "ignite poison";
+    case BEAM_AGILITY:               return "agility";
+    case BEAM_SAP_MAGIC:             return "sap magic";
+    case BEAM_CORRUPT_BODY:          return "corrupt body";
+    case BEAM_CHAOTIC_REFLECTION:    return "chaotic reflection";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

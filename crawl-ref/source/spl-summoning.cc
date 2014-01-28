@@ -3065,6 +3065,82 @@ bool confirm_attack_spectral_weapon(monster* mons, const actor *defender)
     return false;
 }
 
+void grand_avatar_reset(monster* mons)
+{
+    ASSERT(mons);
+    ASSERT(mons->type == MONS_GRAND_AVATAR);
+    actor* agent = actor_by_mid(mons->summoner);
+    if (!agent || !agent->alive())
+    {
+        monster_die(mons, KILL_TIMEOUT, NON_MONSTER);
+        return;
+    }
+    mons->props.erase(GA_TARGET_MID);
+    mons->props.erase(GA_MELEE);
+    mons->props.erase(GA_SPELL);
+    actor* foe = mons->get_foe();
+    if (foe)
+    {
+        mons->target = foe->pos();
+    }
+    else
+    {
+        mons->foe = agent->mindex();
+        mons->target = agent->pos();
+    }
+}
+
+bool grand_avatar_check_melee(monster* mons, actor* target)
+{
+    if (mons->props.exists(GA_TARGET_MID)
+        && mons->props.exists(GA_MELEE))
+    {
+        actor* desired_target =
+            actor_by_mid(mons->props[GA_TARGET_MID].get_int());
+        if (target == desired_target)
+        {
+            grand_avatar_reset(mons);
+            return true;
+        }
+    }
+    mons->lose_energy(EUT_ATTACK);
+    return false;
+}
+
+void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
+                          const int old_hp)
+{
+    const bool melee = (spell == SPELL_MELEE);
+    ASSERT(mons->has_ench(ENCH_GRAND_AVATAR));
+
+    if (!victim
+        || !victim->alive()
+        || (!melee && !_battlesphere_can_mirror(spell))
+        || old_hp - victim->stat_hp() < random2(GRAND_AVATAR_DAMAGE))
+    {
+        return;
+    }
+
+    actor* avatar = mons->get_ench(ENCH_GRAND_AVATAR).agent();
+    if (!avatar)
+        return;
+
+    ASSERT(avatar->is_monster());
+    monster* av = avatar->as_monster();
+
+    av->props[GA_TARGET_MID].get_int() = victim->mid;
+    if (melee)
+    {
+        av->props[GA_MELEE].get_bool() = true;
+        av->props.erase(GA_SPELL);
+    }
+    else
+    {
+        av->props[GA_SPELL].get_bool() = true;
+        av->props.erase(GA_MELEE);
+    }
+}
+
 spell_type summons_index::map(const summons_desc* val)
 {
     return val->which;
@@ -3109,6 +3185,8 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_MINOR_DEMON,         3, 3 },
     { SPELL_CALL_LOST_SOUL,             3, 2 },
     { SPELL_SUMMON_VERMIN,              3, 2 },
+    { SPELL_FORCEFUL_INVITATION,        3, 1 },
+    { SPELL_PLANEREND,                  8, 1 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              99, 2 },
     { SPELL_NO_SPELL,                   0, 0 }

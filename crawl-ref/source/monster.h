@@ -500,6 +500,9 @@ public:
     // Jumping spiders (jump instead of blink)
     bool is_jumpy() const;
 
+    int  aug_amount() const;
+    int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+
 private:
     void init_with(const monster& mons);
     void swap_slots(mon_inv_type a, mon_inv_type b);

@@ -245,12 +245,14 @@ monster_type fill_out_corpse(const monster* mons,
             corpse_class = mons_zombie_base(mons);
         }
 
-        if (mons && mons_genus(mtype) == MONS_DRACONIAN)
+        if (mons
+            && (mons_genus(mtype) == MONS_DRACONIAN
+                || mons_genus(mtype) == MONS_DEMONSPAWN))
         {
             if (mons->type == MONS_TIAMAT)
                 corpse_class = MONS_DRACONIAN;
             else
-                corpse_class = draco_subspecies(mons);
+                corpse_class = draco_or_demonspawn_subspecies(mons);
         }
 
         if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
@@ -413,7 +415,10 @@ int place_monster_corpse(const monster* mons, bool silent,
     // "always_corpse" forces monsters to always generate a corpse upon
     // their deaths.
     if (mons->props.exists("always_corpse")
-        || mons_class_flag(mons->type, M_ALWAYS_CORPSE))
+        || mons_class_flag(mons->type, M_ALWAYS_CORPSE)
+        || mons_is_demonspawn(mons->type)
+           && mons_class_flag(draco_or_demonspawn_subspecies(mons),
+                              M_ALWAYS_CORPSE))
     {
         vault_forced = true;
     }
@@ -1849,6 +1854,15 @@ int monster_die(monster* mons, killer_type killer,
         end_spectral_weapon(mons, true, killer == KILL_RESET);
         silent = true;
     }
+    else if (mons->type == MONS_GRAND_AVATAR)
+    {
+        if (!silent)
+        {
+            simple_monster_message(mons, " fades into the ether.",
+                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+        }
+        silent = true;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
@@ -2608,6 +2622,30 @@ int monster_die(monster* mons, killer_type killer,
                             + roll_dice(2, 8);
         if (pbd_dur > you.duration[DUR_POWERED_BY_DEATH])
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+    }
+
+    if (corpse >= 0)
+    {
+        // Powered by death.
+        // Find nearby putrid demonspawn.
+        for (monster_near_iterator mi(mons->pos()); mi; ++mi)
+        {
+            monster* mon = *mi;
+            if (mon->alive()
+                && mons_is_demonspawn(mon->type)
+                && draco_or_demonspawn_subspecies(mon)
+                   == MONS_PUTRID_DEMONSPAWN)
+            {
+                // Rather than regen over time, the expected 24 + 2d8 duration
+                // is given as an instant health bonus.
+                // These numbers may need to be adjusted.
+                if (mon->heal(random2avg(24, 2) + roll_dice(2, 8)))
+                {
+                    simple_monster_message(mon,
+                                           " regenerates before your eyes!");
+                }
+            }
+        }
     }
 
     unsigned int player_exp = 0, monster_exp = 0;

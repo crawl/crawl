@@ -253,6 +253,7 @@ lurking_horror MONS_LURKING_HORROR
 starcursed_mass MONS_STARCURSED_MASS
 tentacled_starspawn MONS_TENTACLED_STARSPAWN
 thrashing_horror MONS_THRASHING_HORROR
+worldbinder MONS_WORLDBINDER
 wretched_star MONS_WRETCHED_STAR
 
 ### Demonic monsters
@@ -331,19 +332,34 @@ mon/unique/grinder MONS_GRINDER
 ufetubus MONS_UFETUBUS
 white_imp MONS_WHITE_IMP
 
-# efreet ('E')
-%sdir mon/unique
-azrael MONS_AZRAEL
-%sdir mon/demons
-efreet MONS_EFREET
+# demonspawn ('6')
+%sdir mon/demonspawn
+demonspawn MONS_DEMONSPAWN
+monstrous MONS_MONSTROUS_DEMONSPAWN
+gelid MONS_GELID_DEMONSPAWN
+infernal MONS_INFERNAL_DEMONSPAWN
+putrid MONS_PUTRID_DEMONSPAWN
+torturous MONS_TORTUROUS_DEMONSPAWN
+blood_saint MONS_BLOOD_SAINT
+chaos_champion MONS_CHAOS_CHAMPION
+warmonger MONS_WARMONGER
+corrupter MONS_CORRUPTER
+black_sun MONS_BLACK_SUN
 
-## Rakshasa ('R')
+## Spiritual beings ('R')
 %sdir mon/unique
 mara MONS_MARA
 %sdir mon/demons
 rakshasa MONS_RAKSHASA
+%sdir mon/unique
+azrael MONS_AZRAEL
+%sdir mon/demons
+efreet MONS_EFREET
+%sdir mon/nonliving
+grand_avatar MONS_GRAND_AVATAR
 
 ## Abominations ('X')
+%sdir mon/demons
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
 abomination_large MONS_ABOMINATION_LARGE
 abomination_large1
@@ -525,10 +541,9 @@ vault/master_elementalist MONS_MASTER_ELEMENTALIST
 halfling MONS_HALFLING
 %rim 0
 demigod MONS_DEMIGOD
-%rim 1
-demonspawn MONS_DEMONSPAWN
 
 ## Angels ('A')
+%rim 1
 %sdir mon/holy
 angel MONS_ANGEL
 daeva MONS_DAEVA

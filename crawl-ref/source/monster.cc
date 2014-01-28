@@ -266,7 +266,7 @@ bool monster::extra_balanced_at(const coord_def p) const
 {
     const dungeon_feature_type grid = grd(p);
     return (mons_genus(type) == MONS_DRACONIAN
-            && draco_subspecies(this) == MONS_GREY_DRACONIAN)
+            && draco_or_demonspawn_subspecies(this) == MONS_GREY_DRACONIAN)
                 || grid == DNGN_SHALLOW_WATER
                    && (mons_genus(type) == MONS_NAGA // tails, not feet
                        || body_size(PSIZE_BODY) >= SIZE_LARGE);
@@ -1587,6 +1587,14 @@ static bool _item_race_matches_monster(const item_def &item, monster* mons)
 
 bool monster::pickup_melee_weapon(item_def &item, int near)
 {
+    // Monstrous demonspawn prefer to RIP AND TEAR with their claws.
+    // XXX: this could probably be a monster flag
+    if (mons_is_demonspawn(type)
+        && draco_or_demonspawn_subspecies(this) == MONS_MONSTROUS_DEMONSPAWN)
+    {
+        return false;
+    }
+
     const bool dual_wielding = mons_wields_two_weapons(this);
     if (dual_wielding)
     {
@@ -3067,6 +3075,20 @@ void monster::expose_to_element(beam_type flavour, int strength,
         break;
     case BEAM_WATER:
         del_ench(ENCH_STICKY_FLAME);
+        break;
+    case BEAM_FIRE:
+    case BEAM_LAVA:
+    case BEAM_HELLFIRE:
+    case BEAM_NAPALM:
+    case BEAM_STEAM:
+        if (has_ench(ENCH_OZOCUBUS_ARMOUR))
+        {
+            lose_ench_duration(get_ench(ENCH_OZOCUBUS_ARMOUR),
+                               strength * BASELINE_DELAY);
+        }
+        if (has_ench(ENCH_ICEMAIL))
+            del_ench(ENCH_ICEMAIL);
+        break;
     default:
         break;
     }
@@ -3479,7 +3501,7 @@ bool monster::undead_or_demonic() const
 {
     const mon_holy_type holi = holiness();
 
-    return holi == MH_UNDEAD || holi == MH_DEMONIC || type == MONS_DEMONSPAWN;
+    return holi == MH_UNDEAD || holi == MH_DEMONIC || mons_is_demonspawn(type);
 }
 
 bool monster::is_holy(bool check_spells) const
@@ -4898,8 +4920,13 @@ bool monster::can_see_invisible() const
 {
     if (mons_is_ghost_demon(type))
         return ghost->see_invis;
-    else if (mons_class_flag(type, M_SEE_INVIS))
+    else if (mons_class_flag(type, M_SEE_INVIS)
+             || (mons_is_demonspawn(type)
+                 && mons_class_flag(draco_or_demonspawn_subspecies(this),
+                                    M_SEE_INVIS)))
+    {
         return true;
+    }
     else if (scan_artefacts(ARTP_EYESIGHT) > 0)
         return true;
     else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
@@ -5077,9 +5104,12 @@ bool monster::is_skeletal() const
 
 int monster::spiny_degree() const
 {
-    switch (type)
+    switch (mons_is_demonspawn(type)
+            ? base_monster
+            : type)
     {
         case MONS_PORCUPINE:
+        case MONS_TORTUROUS_DEMONSPAWN:
             return 3;
         case MONS_HELL_SENTINEL:
             return 5;
@@ -5404,6 +5434,9 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_GRASPING_ROOTS))
         energy_loss += 5;
 
+    if ((et == EUT_MOVE || et == EUT_SWIM) && has_ench(ENCH_FROZEN))
+        energy_loss += 4;
+
     // Randomize movement cost slightly, to make it less predictable,
     // and make pillar-dancing not entirely safe.
     // No randomization for allies following you to avoid traffic jam
@@ -5455,6 +5488,7 @@ bool monster::can_drink_potion(potion_type ptype) const
             return can_go_berserk();
         case POT_SPEED:
         case POT_MIGHT:
+        case POT_AGILITY:
         case POT_INVISIBILITY:
             // If there are any item using monsters that are permanently
             // invisible, this might have to be restricted.
@@ -5491,6 +5525,8 @@ bool monster::should_drink_potion(potion_type ptype) const
         return !has_ench(ENCH_HASTE);
     case POT_MIGHT:
         return !has_ench(ENCH_MIGHT) && foe_distance() <= 2;
+    case POT_AGILITY:
+        return !has_ench(ENCH_AGILE);
     case POT_INVISIBILITY:
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
@@ -5561,6 +5597,11 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
 
     case POT_INVISIBILITY:
         if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
+            ident = ID_KNOWN_TYPE;
+        break;
+
+    case POT_AGILITY:
+        if (enchant_monster_with_flavour(this, this, BEAM_AGILITY))
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -5726,14 +5767,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (!alive())
         return;
 
-    if (has_ench(ENCH_OZOCUBUS_ARMOUR)
-        && (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-            || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
-            || flavour == BEAM_STEAM))
-    {
-        lose_ench_duration(get_ench(ENCH_OZOCUBUS_ARMOUR),
-                           damage * BASELINE_DELAY);
-    }
 
     if (mons_species(type) == MONS_BUSH
         && res_fire() < 0 && flavour == BEAM_FIRE
@@ -5801,6 +5834,38 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     }
     else if (type == MONS_STARCURSED_MASS)
         (new starcursed_merge_fineff(this))->schedule();
+    else if (mons_is_demonspawn(type)
+             && draco_or_demonspawn_subspecies(this)
+                    == MONS_TORTUROUS_DEMONSPAWN
+             && (random2(damage) > 8 || max_hit_points <= 2 * damage))
+    {
+        // Powered by pain
+        switch (random2(4))
+        {
+            case 0:
+            case 1:
+                if (!has_ench(ENCH_ANTIMAGIC))
+                    break;
+                simple_monster_message(this, " focuses on the pain.");
+                simple_monster_message(this, " looks invigorated.");
+                del_ench(ENCH_ANTIMAGIC);
+                break;
+            case 2:
+                if (has_ench(ENCH_MIGHT))
+                    break;
+                simple_monster_message(this, " focuses on the pain.");
+                add_ench(ENCH_MIGHT);
+                simple_monster_message(this, " seems to grow stronger.");
+                break;
+            case 3:
+                if (has_ench(ENCH_AGILE))
+                    break;
+                simple_monster_message(this, " focuses on the pain.");
+                add_ench(ENCH_AGILE);
+                simple_monster_message(this, " suddenly seems more agile.");
+                break;
+        }
+    }
 }
 
 reach_type monster::reach_range() const
@@ -6198,4 +6263,30 @@ bool monster::is_jumpy() const
     return type == MONS_JUMPING_SPIDER
         || mons_class_is_chimeric(type)
             && get_chimera_legs(this) == MONS_JUMPING_SPIDER;
+}
+
+int monster::aug_amount() const
+{
+    if (!mons_is_demonspawn(type)
+        || draco_or_demonspawn_subspecies(this) != MONS_TORTUROUS_DEMONSPAWN)
+    {
+        return 0;
+    }
+
+    int amount = 0;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (hit_points >= ((i + 3) * max_hit_points) / 6)
+            amount++;
+    }
+    return amount;
+}
+
+// HD for spellcasting purposes.
+// Currently only for torturous demonspawn, though there's a possibility here
+// for Archmagi, etc. to have an impact in some cases.
+int monster::spell_hd(spell_type spell) const
+{
+    return hit_dice + 2 * aug_amount();
 }

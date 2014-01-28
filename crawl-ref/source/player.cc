@@ -1573,6 +1573,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
+    rf -= player_mutation_level(MUT_HEAT_VULNERABILITY, temp);
     rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
 
     // spells:
@@ -1727,6 +1728,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE, temp);
+    rc -= player_mutation_level(MUT_COLD_VULNERABILITY, temp);
     rc += player_mutation_level(MUT_ICY_BLUE_SCALES, temp) == 3 ? 1 : 0;
     rc += player_mutation_level(MUT_SHAGGY_FUR, temp) == 3 ? 1 : 0;
 
@@ -2281,6 +2283,9 @@ int player_movement_speed(bool ignore_burden)
     if (you.tengu_flight())
         mv--;
 
+    if (you.duration[DUR_FROZEN])
+        mv += 4;
+
     if (you.duration[DUR_GRASPING_ROOTS])
         mv += 3;
 
@@ -2523,7 +2528,7 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
     int evbonus = _player_para_evasion_bonuses(evit);
 
     if (you.duration[DUR_AGILITY])
-        evbonus += 5;
+        evbonus += AGILITY_BONUS;
 
     evbonus += you.wearing(EQ_RINGS_PLUS, RING_EVASION);
 
@@ -4310,6 +4315,9 @@ void display_char_status()
         DUR_GRASPING_ROOTS,
         DUR_FIRE_VULN,
         DUR_POISON_VULN,
+        DUR_FROZEN,
+        DUR_SAP_MAGIC,
+        STATUS_MAGIC_SAPPED,
     };
 
     status_info inf;

@@ -3353,6 +3353,188 @@ struct spell_desc
 },
 
 {
+    SPELL_ORB_OF_ELECTROCUTION, "Orb of Electrocution",
+     SPTYP_CONJURATION | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     7,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_EXPLOSIVE_BOLT, "Explosive Bolt",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     7,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_FLASH_FREEZE, "Flash Freeze",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     7,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_LEGENDARY_DESTRUCTION, "Legendary Destruction",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     8,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_EPHEMERAL_INFUSION, "Ephemeral Infusion",
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
+     SPFLAG_MONSTER,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_FORCEFUL_INVITATION, "Forceful Invitation",
+     SPTYP_SUMMONING,
+     SPFLAG_BATTLE | SPFLAG_MONSTER,
+     4,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_PLANEREND, "Plane Rend",
+     SPTYP_SUMMONING,
+     SPFLAG_BATTLE | SPFLAG_MONSTER,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_CHAIN_OF_CHAOS, "Chain of Chaos",
+     SPTYP_CONJURATION,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_CHAOTIC,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_CHAOTIC_MIRROR, "Chaotic Mirror",
+     SPTYP_NONE,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     4,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_BLACK_MARK, "Black Mark",
+     SPTYP_CHARMS | SPTYP_NECROMANCY,
+     SPFLAG_MONSTER,
+     7,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GRAND_AVATAR, "Grand Avatar",
+      SPTYP_CONJURATION | SPTYP_CHARMS | SPTYP_HEXES,
+      SPFLAG_MONSTER,
+      4,
+      100,
+      -1, -1,
+      0,
+      NULL,
+      false,
+      true
+},
+
+{
+    SPELL_SAP_MAGIC, "Sap Magic",
+     SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_CORRUPT_BODY, "Corrupt Body",
+     SPTYP_TRANSMUTATION | SPTYP_HEXES,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CHAOTIC,
+     4,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_REARRANGE_PIECES, "Rearrange the Pieces",
+     SPTYP_HEXES,
+     SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_CHAOTIC,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

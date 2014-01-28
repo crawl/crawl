@@ -71,6 +71,12 @@ Berserker Rage spell
 
 <Berserk ability>
 %%%%
+Black Mark spell
+
+This spell empowers the caster and their nearby allies to steal the vital
+energies of their foes on a successful melee attack, variously draining magic,
+speed, abilities, or skills.
+%%%%
 Blade Hands spell
 
 This spell causes long, scythe-shaped blades to grow from the caster's hands.
@@ -195,6 +201,11 @@ Cause Fear spell
 
 This spell causes fear in those near to the caster.
 %%%%
+Chain of Chaos spell
+
+This spell creates an arc of pure chaos, striking nearby creatures for
+unpredictable effects.
+%%%%
 Chain Lightning spell
 
 This spell releases a massive electrical discharge that arcs from target to
@@ -206,6 +217,11 @@ Chaos Breath spell
 This creature may exhale a large cloud of fumes filled with the very essence of
 chaos. Effects of getting caught in this cloud are about as predictable as Xom
 him- or herself.
+%%%%
+Chaotic Mirror spell
+
+This spell mirrors a wild and unpredictable effect onto both the target and
+the caster.
 %%%%
 Cold Breath spell
 
@@ -280,6 +296,12 @@ Corpse Rot spell
 This spell rapidly accelerates the decomposition of any corpses lying around
 the caster, emitting in the process a foul miasmic vapour, which eats away at
 the life force of any creature it envelops.
+%%%%
+Corrupt Body spell
+
+This spell instills a corruption within a target, temporarily mutating their
+body in an adverse fashion. If cannot affect artificial beings, and the undead
+will decompose if affected.
 %%%%
 Cure Poison spell
 
@@ -412,12 +434,22 @@ Ensorcelled Hibernation spell
 This spell tries to lower its target's metabolic rate, inducing hypothermic
 hibernation.
 %%%%
+Ephemeral Infusion spell
+
+This spell temporarily heals the caster and nearby allies; its expiry may
+leave the recipients on the brink of death but never outright kills them.
+%%%%
 Excruciating Wounds spell
 
 This spell temporarily infuses the weapon held by the caster with the essence
 of pain itself. It will not affect weapons which are otherwise subject to
 special enchantments. Note that unlike other brands, pain can not be made
 permanent by reading a scroll of brand weapon.
+%%%%
+Explosive Bolt spell
+
+This spell hurls a bolt containing fiery energy; on piercing a target, it
+lets loose an explosion that harms nearby creatures as well.
 %%%%
 Fire Brand spell
 
@@ -449,6 +481,12 @@ Flame Tongue spell
 
 This spell creates a short burst of flame.
 %%%%
+Flash Freeze spell
+
+This spell freezes the air around a target rapidly enough to both cause
+significant harm and cause a thick sheet of ice to form, hindering the
+target's movement.
+%%%%
 Flight spell
 
 This spell grants to the caster the ability to fly through the air.
@@ -457,6 +495,13 @@ Force Lance spell
 
 This spell fires a shaft of concussive force which can send its target hurtling
 backwards if the impact is not nullified by their defenses.
+%%%%
+Forceful Invitation spell
+
+This ability summons some of the lesser threats from one of the Lair of
+Beasts, the Snake Pit, the Spider Nest, the Swamp, the Shoals, the Orcish
+Mines, the Elven Halls, the Vaults, or the Crypt; the specific branch
+varies with the caster.
 %%%%
 Freeze spell
 
@@ -499,6 +544,12 @@ energy. It resembles eerie greenish flames, but it has nothing in common with
 fire besides appearance. Both the direct hit and residual flame does damage to
 living beings and heals the undead. The energy tends to coalesce into spectral
 undead creatures on its own.
+%%%%
+Grand Avatar spell
+
+This invocation calls forth an avatar of battle and bloodshed, mirroring
+sufficiently damaging attacks and spells of the invoker and their nearby
+allies.
 %%%%
 Haste Other spell
 
@@ -645,6 +696,12 @@ metal walls have a chance of being destroyed with at least 5, 6 or 7 bars of
 power. Crystal walls are particularly brittle and have a chance of being
 destroyed at any power level.
 %%%%
+Legendary Destruction spell
+
+At the expense of the caster's life force, this spell randomly conjures forth
+one of several powerful magical effects - Orb of Electrocution, Lehudib's
+Crystal Spear, Orb of Destruction, Ghostly Fireball, Fireball, or Flash Freeze.
+%%%%
 Lehudib's Crystal Spear spell
 
 This spell hurls a lethally sharp bolt of crystal.
@@ -785,6 +842,11 @@ It is said that most copies of this spell suffer from a scribal error that
 makes the orbs unstable beyond a short range. Certain individuals may have
 access to spellbooks without this flaw, so beware!
 %%%%
+Orb of Electrocution spell
+
+This spell hurls a crackling orb of electrical energy which explodes with
+immense force on impact.
+%%%%
 Ozocubu's Armour spell
 
 This spell envelops the caster's body in a protective layer of ice, the power
@@ -838,6 +900,14 @@ Phase Shift spell
 
 This spell allows the caster to phase in and out of the material plane,
 allowing them to occasionally avoid blows entirely.
+%%%%
+Plane Rend spell
+
+This ability summons some of the greater threats from one of the Lair of
+Beasts, the Snake Pit, the Spider Nest, the Swamp, the Shoals, the Pits of
+Slime, the Orcish Mines, the Elven Halls, the Vaults, the Crypt, the Tomb of
+Ancients, or the Realm of Zot; the specific branch varies with each cast of
+the spell.
 %%%%
 Poison Arrow spell
 
@@ -894,6 +964,10 @@ Rakshasas are known to often weave illusions of themselves to fool their foes.
 These illusions are partially real, and can even hit you or cast spells,
 although it takes but a single hit to dispel them.
 %%%%
+Rearrange the Pieces spell
+
+This spell swaps positions of random pairs of nearby creatures.
+%%%%
 Recall spell
 
 This spell is greatly prized by summoners and necromancers, as it allows the
@@ -923,6 +997,12 @@ Sandblast spell
 This spell creates a short blast of high-velocity particles. It works best when
 the caster provides some source (by wielding a stone), but will do what it can
 with whatever ambient grit is available.
+%%%%
+Sap Magic spell
+
+This ability taints the victim's ability to cast spells; casting a spell while
+afflicted with this condition causes them to lose control over their magic,
+progressively hindering their chances of success as more spells are cast.
 %%%%
 Searing Ray spell
 

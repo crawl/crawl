@@ -157,6 +157,10 @@ static duration_def duration_data[] =
       RED, "Barbs", "manticore barbs", "Manticore spikes are embedded in your body." },
     { DUR_POISON_VULN, false,
       RED, "-rP", "poison vulnerable", "You are more vulnerable to poison." },
+    { DUR_FROZEN, false,
+      RED, "Frozen", "frozen", "You are partly encased in ice." },
+    { DUR_SAP_MAGIC, false,
+      RED, "Sap", "sap magic", "Casting spells hinders your spell success." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -646,6 +650,33 @@ bool fill_status_info(int status, status_info* inf)
             else
                 inf->light_colour = LIGHTMAGENTA;
             inf->light_text   = "Elixir";
+        }
+        break;
+
+    case STATUS_MAGIC_SAPPED:
+        if (you.duration[DUR_MAGIC_SAPPED] > 50 * BASELINE_DELAY)
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "-Wiz";
+            inf->short_text   = "extremely magic sapped";
+            inf->long_text    = "Your control over your magic has "
+                                "been greatly sapped.";
+        }
+        else if (you.duration[DUR_MAGIC_SAPPED] > 20 * BASELINE_DELAY)
+        {
+            inf->light_colour = LIGHTRED;
+            inf->light_text   = "-Wiz";
+            inf->short_text   = "very magic sapped";
+            inf->long_text    = "Your control over your magic has "
+                                "been significantly sapped.";
+        }
+        else if (you.duration[DUR_MAGIC_SAPPED])
+        {
+            inf->light_colour = YELLOW;
+            inf->light_text   = "-Wiz";
+            inf->short_text   = "magic sapped";
+            inf->long_text    = "Your control over your magic has "
+                                "been sapped.";
         }
         break;
 

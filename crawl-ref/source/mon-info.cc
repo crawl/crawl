@@ -190,6 +190,16 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_BARBS;
     case ENCH_POISON_VULN:
         return MB_POISON_VULN;
+    case ENCH_ICEMAIL:
+        return MB_ICEMAIL;
+    case ENCH_AGILE:
+        return MB_AGILE;
+    case ENCH_FROZEN:
+        return MB_FROZEN;
+    case ENCH_BLACK_MARK:
+        return MB_BLACK_MARK;
+    case ENCH_SAP_MAGIC:
+        return MB_SAP_MAGIC;
     default:
         return NUM_MB_FLAGS;
     }
@@ -333,7 +343,9 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     type = p_type;
     base_type = p_base_type;
 
-    draco_type = mons_genus(type) == MONS_DRACONIAN ? MONS_DRACONIAN : type;
+    draco_type = mons_genus(type) == MONS_DRACONIAN  ? MONS_DRACONIAN :
+                 mons_genus(type) == MONS_DEMONSPAWN ? MONS_DEMONSPAWN
+                                                     : type;
 
     number = 0;
     colour = mons_class_colour(type);
@@ -445,7 +457,10 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     draco_type =
-        mons_genus(type) == MONS_DRACONIAN ? ::draco_subspecies(m) : type;
+        (mons_genus(type) == MONS_DRACONIAN
+        || mons_genus(type) == MONS_DEMONSPAWN)
+            ? ::draco_or_demonspawn_subspecies(m)
+            : type;
 
     if (!mons_can_display_wounds(m)
         || !mons_class_can_display_wounds(type))
@@ -864,6 +879,15 @@ string monster_info::_core_name() const
                 s = draconian_colour_name(base_type) + " " + s;
             break;
 
+        case MONS_BLOOD_SAINT:
+        case MONS_CHAOS_CHAMPION:
+        case MONS_WARMONGER:
+        case MONS_CORRUPTER:
+        case MONS_BLACK_SUN:
+            if (base_type != MONS_NO_MONSTER)
+                s = demonspawn_base_name(base_type) + " " + s;
+            break;
+
         case MONS_DANCING_WEAPON:
         case MONS_SPECTRAL_WEAPON:
             if (inv[MSLOT_WEAPON].get())
@@ -1143,6 +1167,15 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return false;
     }
 
+    // Treat base demonspawn identically, as with draconians.
+    if (!zombified && m1.type >= MONS_FIRST_BASE_DEMONSPAWN
+        && m1.type <= MONS_LAST_BASE_DEMONSPAWN
+        && m2.type >= MONS_FIRST_BASE_DEMONSPAWN
+        && m2.type <= MONS_LAST_BASE_DEMONSPAWN)
+    {
+        return false;
+    }
+
     int diff_delta = mons_avg_hp(m1.type) - mons_avg_hp(m2.type);
 
     // By descending difficulty
@@ -1306,6 +1339,8 @@ string monster_info::pluralised_name(bool fullname) const
         return "mimics";
     else if (mons_genus(type) == MONS_DRACONIAN)
         return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
+    else if (mons_genus(type) == MONS_DEMONSPAWN)
+        return pluralise(mons_type_name(MONS_DEMONSPAWN, DESC_PLAIN));
     else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
              || type == MONS_DANCING_WEAPON || !fullname)
     {
@@ -1552,6 +1587,16 @@ vector<string> monster_info::attributes() const
         v.push_back("skewered by manticore barbs");
     if (is(MB_POISON_VULN))
         v.push_back("more vulnerable to poison");
+    if (is(MB_ICEMAIL))
+        v.push_back("surrounded by an icy envelope");
+    if (is(MB_AGILE))
+        v.push_back("unusually agile");
+    if (is(MB_FROZEN))
+        v.push_back("encased in ice");
+    if (is(MB_BLACK_MARK))
+        v.push_back("absorbing vital energies");
+    if (is(MB_SAP_MAGIC))
+        v.push_back("magic-sapped");
     return v;
 }
 

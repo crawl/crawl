@@ -1415,6 +1415,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TENTACLED_STARSPAWN;
     case MONS_THRASHING_HORROR:
         return TILEP_MONS_THRASHING_HORROR;
+    case MONS_WORLDBINDER:
+        return TILEP_MONS_WORLDBINDER;
     case MONS_WRETCHED_STAR:
         return TILEP_MONS_WRETCHED_STAR;
 
@@ -1532,10 +1534,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SERPENT_OF_HELL_TARTARUS;
     case MONS_PEARL_DRAGON:
         return TILEP_MONS_PEARL_DRAGON;
-
-    // efreet ('E')
-    case MONS_EFREET:
-        return TILEP_MONS_EFREET;
 
     // frogs ('F')
     case MONS_GIANT_FROG:
@@ -1690,10 +1688,14 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_SHAMBLING_MANGROVE:
         return TILEP_MONS_TREANT;
 
-    // rakshasa ('R')
+    // spiritual beings ('R')
     case MONS_RAKSHASA:
     case MONS_RAKSHASA_FAKE:
         return TILEP_MONS_RAKSHASA;
+    case MONS_EFREET:
+        return TILEP_MONS_EFREET;
+    case MONS_GRAND_AVATAR:
+        return TILEP_MONS_GRAND_AVATAR;
 
     // snakes ('S')
     case MONS_BALL_PYTHON:
@@ -1855,8 +1857,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return _mon_mod(TILEP_MONS_KILLER_KLOWN, colour);
     case MONS_SLAVE:
         return TILEP_MONS_SLAVE;
-    case MONS_DEMONSPAWN:
-        return TILEP_MONS_DEMONSPAWN;
     case MONS_DEMIGOD:
         return TILEP_MONS_DEMIGOD;
     case MONS_HALFLING:
@@ -1872,6 +1872,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // See tileidx_feature.
     case MONS_FEATURE_MIMIC:
         return 0;
+
+    // demonspawn ('6')
+    case MONS_DEMONSPAWN:
+        return TILEP_MONS_DEMONSPAWN;
 
     // '5' demons
     case MONS_CRIMSON_IMP:
@@ -3026,7 +3030,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 
 tileidx_t tileidx_draco_base(const monster_info& mon)
 {
-    int draco = mon.draco_subspecies();
+    int draco = mon.draco_or_demonspawn_subspecies();
     int colour = 0;
 
     switch (draco)
@@ -3058,6 +3062,35 @@ tileidx_t tileidx_draco_job(const monster_info& mon)
         case MONS_DRACONIAN_ANNIHILATOR: return TILEP_DRACO_ANNIHILATOR;
         case MONS_DRACONIAN_KNIGHT:      return TILEP_DRACO_KNIGHT;
         case MONS_DRACONIAN_SCORCHER:    return TILEP_DRACO_SCORCHER;
+        default:                         return 0;
+    }
+}
+
+tileidx_t tileidx_demonspawn_base(const monster_info& mon)
+{
+    int demonspawn = mon.draco_or_demonspawn_subspecies();
+
+    switch (demonspawn)
+    {
+        case MONS_DEMONSPAWN:            return TILEP_MONS_DEMONSPAWN;
+        case MONS_MONSTROUS_DEMONSPAWN:  return TILEP_MONS_MONSTROUS_DEMONSPAWN;
+        case MONS_GELID_DEMONSPAWN:      return TILEP_MONS_GELID_DEMONSPAWN;
+        case MONS_INFERNAL_DEMONSPAWN:   return TILEP_MONS_INFERNAL_DEMONSPAWN;
+        case MONS_PUTRID_DEMONSPAWN:     return TILEP_MONS_PUTRID_DEMONSPAWN;
+        case MONS_TORTUROUS_DEMONSPAWN:  return TILEP_MONS_TORTUROUS_DEMONSPAWN;
+        default:                         return 0;
+    }
+}
+
+tileidx_t tileidx_demonspawn_job(const monster_info& mon)
+{
+    switch (mon.type)
+    {
+        case MONS_BLOOD_SAINT:           return TILEP_MONS_BLOOD_SAINT;
+        case MONS_CHAOS_CHAMPION:        return TILEP_MONS_CHAOS_CHAMPION;
+        case MONS_WARMONGER:             return TILEP_MONS_WARMONGER;
+        case MONS_CORRUPTER:             return TILEP_MONS_CORRUPTER;
+        case MONS_BLACK_SUN:             return TILEP_MONS_BLACK_SUN;
         default:                         return 0;
     }
 }
@@ -4174,6 +4207,20 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_APIS:
         return TILE_CORPSE_APIS;
 
+    // demonspawn ('6')
+    case MONS_DEMONSPAWN:
+        return TILE_CORPSE_DEMONSPAWN;
+    case MONS_MONSTROUS_DEMONSPAWN:
+        return TILE_CORPSE_MONSTROUS_DEMONSPAWN;
+    case MONS_GELID_DEMONSPAWN:
+        return TILE_CORPSE_GELID_DEMONSPAWN;
+    case MONS_INFERNAL_DEMONSPAWN:
+        return TILE_CORPSE_INFERNAL_DEMONSPAWN;
+    case MONS_PUTRID_DEMONSPAWN:
+        return TILE_CORPSE_PUTRID_DEMONSPAWN;
+    case MONS_TORTUROUS_DEMONSPAWN:
+        return TILE_CORPSE_TORTUROUS_DEMONSPAWN;
+
     // water monsters
     case MONS_BIG_FISH:
         return TILE_CORPSE_BIG_FISH;
@@ -4193,8 +4240,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_WIZARD:
     case MONS_DEMIGOD: // haloed corpse looks abysmal
         return TILE_CORPSE_HUMAN;
-    case MONS_DEMONSPAWN:
-        return TILE_CORPSE_DEMONSPAWN;
     case MONS_HALFLING:
         return TILE_CORPSE_HALFLING;
     case MONS_SHAPESHIFTER:

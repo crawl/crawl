@@ -53,6 +53,7 @@
  */
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
+    const int orig_hp = defender->stat_hp();
     if (defender->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
@@ -137,6 +138,11 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // so the weapon doesn't advance unecessarily.
         return true;
     }
+    else if (attacker->type == MONS_GRAND_AVATAR
+             && !grand_avatar_check_melee(attacker->as_monster(), defender))
+    {
+        return true;
+    }
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
         attacker->as_monster()->number : 4;
@@ -213,6 +219,13 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
     // A spectral weapon attacks whenever the player does
     if (!simu && attacker->props.exists("spectral_weapon"))
         trigger_spectral_weapon(attacker, defender);
+    else if (!simu
+             && attacker->is_monster()
+             && attacker->as_monster()->has_ench(ENCH_GRAND_AVATAR))
+    {
+        trigger_grand_avatar(attacker->as_monster(), defender, SPELL_MELEE,
+                             orig_hp);
+    }
 
     return true;
 }

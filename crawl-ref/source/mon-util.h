@@ -234,6 +234,7 @@ void discover_shifter(monster* shifter);
 bool mons_is_statue(monster_type mc, bool allow_disintegrate = false);
 bool mons_is_demon(monster_type mc);
 bool mons_is_draconian(monster_type mc);
+bool mons_is_demonspawn(monster_type mc);
 bool mons_is_conjured(monster_type mc);
 bool mons_is_beast(monster_type mc);
 int mons_demon_tier(monster_type mc);
@@ -296,6 +297,7 @@ int mons_class_colour(monster_type mc);
 
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
+monster_type random_demonspawn_monster_species();
 
 bool init_abomination(monster* mon, int hd);
 void define_monster(monster* mons);
@@ -352,7 +354,7 @@ bool mons_eats_corpses(const monster* mon);
 bool mons_eats_food(const monster* mon);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
-monster_type draco_subspecies(const monster* mon);
+monster_type draco_or_demonspawn_subspecies(const monster* mon);
 monster_type mons_detected_base(monster_type mt);
 
 bool mons_looks_stabbable(const monster* m);
@@ -404,6 +406,8 @@ colour_t random_monster_colour();
 int ugly_thing_colour_offset(colour_t colour);
 string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const string &colour);
+string  demonspawn_base_name(monster_type mon_type);
+monster_type demonspawn_base_by_name(const string &colour);
 
 monster_type random_monster_at_grid(const coord_def& p, bool species = false);
 

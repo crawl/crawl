@@ -314,7 +314,6 @@ deep_troll CORPSE_DEEP_TROLL
 
 ## Human shaped ('@')
 human CORPSE_HUMAN
-demonspawn CORPSE_DEMONSPAWN
 halfling CORPSE_HALFLING
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 shapeshifter CORPSE_SHAPESHIFTER
@@ -382,5 +381,14 @@ glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
 %compose base/draconian_gold_f
 %compose drchead/drchead_yellow
 %finish CORPSE_DRACONIAN_YELLOW
+
+# Demonspawn ('6')
+%sdir mon/demonspawn
+demonspawn CORPSE_DEMONSPAWN
+monstrous CORPSE_MONSTROUS_DEMONSPAWN
+gelid CORPSE_GELID_DEMONSPAWN
+infernal CORPSE_INFERNAL_DEMONSPAWN
+putrid CORPSE_PUTRID_DEMONSPAWN
+torturous CORPSE_TORTUROUS_DEMONSPAWN
 
 %corpse 0
