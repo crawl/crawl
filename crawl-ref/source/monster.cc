@@ -3541,7 +3541,6 @@ bool monster::is_unclean(bool check_spells) const
         || has_attack_flavour(AF_HUNGER)
         || has_attack_flavour(AF_ROT)
         || has_attack_flavour(AF_STEAL)
-        || has_attack_flavour(AF_STEAL_FOOD)
         || has_attack_flavour(AF_PLAGUE))
     {
         return true;
