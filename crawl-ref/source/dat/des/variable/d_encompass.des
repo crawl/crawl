@@ -14,7 +14,7 @@ KMONS:  2 = orc warrior / big kobold / two-headed ogre / troll / gnoll sergeant
 KMONS:  3 = orc priest / orc wizard / centaur / gnoll shaman
 SUBST:  H = .:25 %:1 !
 KMONS:  ! = orc / hound / kobold / goblin / hobgoblin / gnoll
-KMONS:  ' = wyvern w:5 / manticore w:5 / black bear w:20 / nothing w:350
+KMONS:  ' = wyvern w:5 / manticore w:3 / black bear w:20 / nothing w:350
 NSUBST: } = 1:] / 1:) / 1:} / *:**23..
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
