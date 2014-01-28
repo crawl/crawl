@@ -1041,7 +1041,7 @@ DEPTH:  Forest
 ORIENT: north
 TAGS:   no_monster_gen no_pool_fixup no_rotate patrolling
 SUBST:  R = tx, G = N L S:5, A = ML, E = tE
-MONS:   apis, dire elephant, dryad / treant
+MONS:   apis, dire elephant, dryad / shambling mangrove
 MONS:   thorn hunter / spriggan defender / ancient bear
 KMONS:  M = water elemental
 KMONS:  L = thorn lotus
@@ -1295,7 +1295,7 @@ ORIENT: float
 MONS:   the Enchantress band
 MONS:   spriggan defender / thorn hunter
 MONS:   spriggan air mage / spriggan druid / spriggan enchanter / \
-        dryad w:5 / dire elephant w:5 / thorn hunter w:2 / treant w:1 / \
+        dryad w:5 / dire elephant w:5 / thorn hunter w:2 / shambling mangrove w:1 / \
         ancient bear w:1
 KFEAT:  _ = altar_vehumet
 KFEAT:  - = floor

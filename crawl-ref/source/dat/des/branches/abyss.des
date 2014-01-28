@@ -1434,7 +1434,7 @@ ENDMAP
 NAME:    grunt_abyss_rune_twisted_forest
 TAGS:    abyss_rune unrand patrolling no_pool_fixup
 SHUFFLE: 1234
-MONS:    treant, thorn hunter, dryad, satyr
+MONS:    shambling mangrove, thorn hunter, dryad, satyr
 SUBST:   T = t.
 SUBST:   E = ttWw
 NSUBST:  w = 2:5 / *:w
