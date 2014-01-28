@@ -3307,7 +3307,7 @@ static monsterentry mondata[] =
     M_WARM_BLOOD | M_BATTY | M_HYBRID,
     MR_RES_POISON,
     480, 9, MONS_HARPY, MONS_HARPY, MH_NATURAL, -3,
-    { {AT_CLAW, AF_PLAIN, 19}, {AT_CLAW, AF_STEAL_FOOD, 14}, AT_NO_ATK,
+    { {AT_CLAW, AF_PLAIN, 19}, {AT_CLAW, AF_PLAIN, 14}, AT_NO_ATK,
        AT_NO_ATK },
     { 7, 3, 5, 0 },
     2, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SCREECH,

@@ -4789,20 +4789,6 @@ void melee_attack::mons_apply_attack_flavour()
         attacker->as_monster()->steal_item_from_player();
         break;
 
-    case AF_STEAL_FOOD:
-    {
-        // Monsters don't carry food.
-        if (!defender->is_player())
-            break;
-
-        // The expose_ message doesn't convey the agent.
-        if (needs_message)
-            mprf("%s lunges at you hungrily!", atk_name(DESC_THE).c_str());
-
-        expose_player_to_element(BEAM_DEVOUR_FOOD, 10);
-        break;
-    }
-
     case AF_HOLY:
         if (defender->undead_or_demonic())
             special_damage = attk_damage * 0.75;

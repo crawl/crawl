@@ -98,7 +98,9 @@ enum attack_flavour
     AF_NAPALM,
     AF_CHAOS,
     AF_STEAL,
+#if TAG_MAJOR_VERSION == 34
     AF_STEAL_FOOD,
+#endif
     AF_CRUSH,
     AF_REACH,
     AF_HOLY,
