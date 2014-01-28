@@ -1951,6 +1951,19 @@ int mons_avg_hp(monster_type mc)
     if (!me)
         return 0;
 
+    // Hack for nonbase demonspawn: pretend it's a basic demonspawn with
+    // a job.
+    if (mons_is_demonspawn(mc)
+        && mc != MONS_DEMONSPAWN
+        && mons_species(mc) == MONS_DEMONSPAWN)
+    {
+        const monsterentry* mbase = get_monster_data(MONS_DEMONSPAWN);
+        return me->hpdice[0] *
+               (2 * (me->hpdice[1] + mbase->hpdice[1])
+                + me->hpdice[2] + mbase->hpdice[2])
+               / 2 + me->hpdice[3] + mbase->hpdice[3];
+    }
+
     // [ds] XXX: Use monster experience value as a better indicator of diff.?
     return me->hpdice[0] * (2 * me->hpdice[1] + me->hpdice[2]) / 2
            + me->hpdice[3];
@@ -2492,13 +2505,18 @@ void define_monster(monster* mons)
     case MONS_BLACK_SUN:
     {
         // Some base demonspawn have more or less HP, AC, EV than their
-        // brethren; those should be based on the base monster.
-        monbase = random_demonspawn_monster_species();
+        // brethren; those should be based on the base monster,
+        // with modifiers taken from the job.
+        monbase = mons->base_monster != MONS_NO_MONSTER
+                  ? mons->base_monster
+                  : random_demonspawn_monster_species();
         const monsterentry* mbase = get_monster_data(monbase);
-        hp     = hit_points(hd, mbase->hpdice[1], mbase->hpdice[2]);
-        hp    += mbase->hpdice[3];
-        ac     = mbase->AC;
-        ev     = mbase->ev;
+        hp     = hit_points(hd,
+                            mbase->hpdice[1] + m->hpdice[1],
+                            mbase->hpdice[2] + m->hpdice[2]);
+        hp    += mbase->hpdice[3] + m->hpdice[3];
+        ac    += mbase->AC;
+        ev    += mbase->ev;
         break;
     }
 
