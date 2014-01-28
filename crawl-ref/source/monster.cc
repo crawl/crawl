@@ -4919,8 +4919,13 @@ bool monster::can_see_invisible() const
 {
     if (mons_is_ghost_demon(type))
         return ghost->see_invis;
-    else if (mons_class_flag(type, M_SEE_INVIS))
+    else if (mons_class_flag(type, M_SEE_INVIS)
+             || (mons_is_demonspawn(type)
+                 && mons_class_flag(draco_or_demonspawn_subspecies(this),
+                                    M_SEE_INVIS)))
+    {
         return true;
+    }
     else if (scan_artefacts(ARTP_EYESIGHT) > 0)
         return true;
     else if (wearing(EQ_RINGS, RING_SEE_INVISIBLE))
