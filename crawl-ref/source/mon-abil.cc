@@ -4010,6 +4010,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             noisy(LOS_RADIUS, mons->pos(), mons->mindex(), true);
 
+            if (mons->type == MONS_SIREN && !mons->has_ench(ENCH_SIREN_SONG))
+                mons->add_ench(mon_enchant(ENCH_SIREN_SONG, 0, mons, 70));
+
             bool did_resist = false;
             if (you.can_see(mons))
             {
