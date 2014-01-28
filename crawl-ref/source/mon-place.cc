@@ -2847,7 +2847,7 @@ static monster_type _band_member(band_type band, int which)
                                       2, MONS_PLAGUE_SHAMBLER,
                                       0);
     case BAND_DEEP_TROLLS:
-        if (one_chance_in(3))
+        if (one_chance_in(4))
             return random_choose(MONS_DEEP_TROLL_EARTH_MAGE,
                                  MONS_DEEP_TROLL_SHAMAN,
                                  -1);
