@@ -1436,12 +1436,26 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (mg.hd != 0)
     {
+        int bonus1 = 0, bonus2 = 0, bonus3 = 0;
+        if (mons_is_demonspawn(mg.cls)
+            && mg.cls != MONS_DEMONSPAWN
+            && mons_species(mg.cls) == MONS_DEMONSPAWN)
+        {
+            // Nonbase demonspawn get bonuses from their base type.
+            const monsterentry *mbase =
+                get_monster_data(draco_or_demonspawn_subspecies(mon));
+            bonus1 = mbase->hpdice[1];
+            bonus2 = mbase->hpdice[2];
+            bonus3 = mbase->hpdice[3];
+        }
         mon->hit_dice = mg.hd;
         // Re-roll HP.
-        int hp = hit_points(mg.hd, m_ent->hpdice[1], m_ent->hpdice[2]);
+        int hp = hit_points(mg.hd, m_ent->hpdice[1] + bonus1,
+                                   m_ent->hpdice[2] + bonus2);
         // But only for monsters with random HP.
         if (hp > 0)
         {
+            hp += m_ent->hpdice[3] + bonus3;
             mon->max_hit_points = hp;
             mon->hit_points = hp;
         }
