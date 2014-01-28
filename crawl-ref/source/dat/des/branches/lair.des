@@ -21,7 +21,7 @@ function wad_woods_setup(e, uniq, weight, mist, delaynum, sizenum, spreadnum)
     if you.branch() == "Forest" then
         e.mons("spriggan w:4 / w:4 spriggan rider / w:2 spriggan druid"
                 .. " / w:3 spriggan air mage / w:3 spriggan berserker")
-        e.mons("wind drake / w:5 dryad / w:2 ancient bear / w:1 treant")
+        e.mons("wind drake / w:5 dryad / w:2 ancient bear / w:1 shambling mangrove")
         e.ftile(".t+%*|q01234567COGTU = floor_lair")
     else
         if you.branch() == "Lair" then

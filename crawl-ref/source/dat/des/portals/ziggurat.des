@@ -524,7 +524,7 @@ NAME:    ziggurat_pillar_centre_more_plants
 TAGS:    ziggurat_pillar centered
 DEPTH:   Zig:18-
 WEIGHT:  5
-MONS:    plant, bush, patrolling thorn hunter, patrolling treant
+MONS:    plant, bush, patrolling thorn hunter, patrolling shambling mangrove
 SHUFFLE: 1t
 SUBST:   1 : 12, 3 : 34..., x : bcmvxG
 MAP
