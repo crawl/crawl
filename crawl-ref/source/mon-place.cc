@@ -2988,7 +2988,7 @@ static monster_type _band_member(band_type band, int which)
     case BAND_TENGU:
         if (which == 1 && coinflip())
             return coinflip() ? MONS_TENGU_WARRIOR : MONS_TENGU_CONJURER;
-        return MONS_TENGU;
+        return MONS_RAVEN;
 
     case BAND_SOJOBO:
         return MONS_TENGU_REAVER;
