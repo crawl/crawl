@@ -1395,6 +1395,15 @@ static const pop_entry pop_lava_snake[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_lava_depths[] =
+{ // Depths lava monsters
+  {  1,  6,  100, FLAT, MONS_SALAMANDER },
+  {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },
+  {  3,  6,   55,   UP, MONS_SALAMANDER_FIREBRAND },
+  {  1,  6,  400, FLAT, MONS_NO_MONSTER },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const struct { const pop_entry *pop; int count; } population_lava[] =
 {
     POP(lava_d),
@@ -1433,5 +1442,5 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
     POP(lava_generic),
     POP(lava_generic),
     POP(lava_generic),
-    POP(lava_generic),
+    POP(lava_depths),
 };

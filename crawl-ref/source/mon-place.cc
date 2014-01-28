@@ -2655,12 +2655,25 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     // Don't give them a band in shallower places; one can be enough
     case MONS_SALAMANDER:
-        if (!player_in_branch(BRANCH_DEPTHS) || !coinflip())
-            break;
+        if (player_in_branch(BRANCH_DEPTHS) && coinflip())
+        {
+            band = BAND_SALAMANDERS;
+            band_size = random_range(1, 2);
+        }
+        break;
 
     case MONS_SALAMANDER_MYSTIC:
         band = BAND_SALAMANDERS;
         band_size = random_range(2, 3);
+        break;
+
+    case MONS_SALAMANDER_FIREBRAND:
+        if (coinflip())
+        {
+            band = BAND_SALAMANDER_ELITES;
+            band_size = random_range(3, 4);
+            break;
+        }
         break;
 
     default: ;
