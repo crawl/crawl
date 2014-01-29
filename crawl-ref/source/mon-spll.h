@@ -2382,9 +2382,9 @@
       {
        SPELL_REARRANGE_PIECES,
        SPELL_CHAOTIC_MIRROR,
+       SPELL_MELEE,
+       SPELL_MELEE,
        SPELL_NO_SPELL,
-       SPELL_REARRANGE_PIECES,
-       SPELL_CHAOTIC_MIRROR,
        SPELL_NO_SPELL
       }
     },
