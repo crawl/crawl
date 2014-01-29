@@ -2752,7 +2752,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_CHAOS_CHAMPION:
         band = BAND_CHAOS_CHAMPION;
-        band_size = 2 + random2(3);
+        band_size = 1 + random2(3);
         break;
 
     case MONS_WARMONGER:
@@ -3261,7 +3261,7 @@ static monster_type _band_member(band_type band, int which)
         return random_demonspawn_monster_species();
 
      case BAND_CHAOS_CHAMPION:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || which == 2 && one_chance_in(6))
             if (x_chance_in_y(2, 5))
                 return one_chance_in(3) ? MONS_TORMENTOR : MONS_HELL_BEAST;
             else
