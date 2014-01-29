@@ -3839,7 +3839,12 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.type = unmarshallMonType_Info(th);
     ASSERT(!invalid_monster_type(mi.type));
     mi.base_type = unmarshallMonType_Info(th);
-    if (mons_genus(mi.type) == MONS_DRACONIAN
+    if (mons_genus(mi.type) == MONS_DEMONSPAWN
+        && th.getMinorVersion() < TAG_MINOR_DEMONSPAWN)
+    {
+        mi.draco_type = mi.base_type;
+    }
+    else if (mons_genus(mi.type) == MONS_DRACONIAN
         || (mons_genus(mi.type) == MONS_DEMONSPAWN
             && th.getMinorVersion() >= TAG_MINOR_DEMONSPAWN))
     {
