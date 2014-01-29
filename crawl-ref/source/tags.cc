@@ -32,6 +32,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "describe.h"
@@ -3777,13 +3778,19 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
 #if TAG_MAJOR_VERSION == 34
     marshallUnsigned(th, mi.type);
     marshallUnsigned(th, mi.base_type);
-    if (mons_genus(mi.type) == MONS_DRACONIAN)
+    if (mons_genus(mi.type) == MONS_DRACONIAN
+        || mons_genus(mi.type) == MONS_DEMONSPAWN)
+    {
         marshallUnsigned(th, mi.draco_type);
+    }
 #else
     marshallShort(th, mi.type);
     marshallShort(th, mi.base_type);
-    if (mons_genus(mi.type) == MONS_DRACONIAN)
+    if (mons_genus(mi.type) == MONS_DRACONIAN
+        || mons_genus(mi.type) == MONS_DEMONSPAWN)
+    {
         marshallShort(th, mi.draco_type);
+    }
 #endif
     marshallUnsigned(th, mi.number);
     marshallUnsigned(th, mi.colour);
@@ -3832,14 +3839,21 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.type = unmarshallMonType_Info(th);
     ASSERT(!invalid_monster_type(mi.type));
     mi.base_type = unmarshallMonType_Info(th);
-    if (mons_genus(mi.type) == MONS_DRACONIAN)
+    if (mons_genus(mi.type) == MONS_DRACONIAN
+        || (mons_genus(mi.type) == MONS_DEMONSPAWN
+            && th.getMinorVersion() >= TAG_MINOR_DEMONSPAWN))
+    {
         mi.draco_type = unmarshallMonType_Info(th);
+    }
 #else
     mi.type = unmarshallMonType(th);
     ASSERT(!invalid_monster_type(mi.type));
     mi.base_type = unmarshallMonType(th);
-    if (mons_genus(mi.type) == MONS_DRACONIAN)
+    if (mons_genus(mi.type) == MONS_DRACONIAN
+        || mons_genus(mi.type) == MONS_DEMONSPAWN)
+    {
         mi.draco_type = unmarshallMonType(th);
+    }
 #endif
     unmarshallUnsigned(th, mi.number);
     unmarshallUnsigned(th, mi.colour);
@@ -3884,6 +3898,77 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         default:
             die("Unexpected monster_info with type %d and speed %d",
                 mi.type, mi.base_speed());
+        }
+    }
+
+    // As above; this could be one of several monsters.
+    if (th.getMinorVersion() < TAG_MINOR_DEMONSPAWN
+        && mi.type >= MONS_MONSTROUS_DEMONSPAWN
+        && mi.type <= MONS_SALAMANDER_MYSTIC)
+    {
+        switch (mi.colour)
+        {
+        case BROWN:        // monstrous demonspawn, naga ritualist
+            if (mi.spells[0] == SPELL_FORCE_LANCE)
+                mi.type = MONS_NAGA_RITUALIST;
+            else
+                mi.type = MONS_MONSTROUS_DEMONSPAWN;
+            break;
+        case BLUE:         // gelid demonspawn
+            mi.type = MONS_GELID_DEMONSPAWN;
+            break;
+        case RED:          // infernal demonspawn
+            mi.type = MONS_INFERNAL_DEMONSPAWN;
+            break;
+        case GREEN:        // putrid demonspawn
+            mi.type = MONS_PUTRID_DEMONSPAWN;
+            break;
+        case LIGHTGRAY:    // torturous demonspawn, naga sharpshooter
+            if (mi.spells[0] == SPELL_PORTAL_PROJECTILE)
+                mi.type = MONS_NAGA_SHARPSHOOTER;
+            else
+                mi.type = MONS_TORTUROUS_DEMONSPAWN;
+            break;
+        case LIGHTBLUE:    // blood saint, shock serpent
+            if (mi.base_type != MONS_NO_MONSTER)
+                mi.type = MONS_BLOOD_SAINT;
+            else
+                mi.type = MONS_SHOCK_SERPENT;
+            break;
+        case ETC_RANDOM:   // chaos champion
+            mi.type = MONS_CHAOS_CHAMPION;
+            break;
+        case LIGHTCYAN:    // warmonger, drowned soul
+            if (mi.base_type != MONS_NO_MONSTER)
+                mi.type = MONS_WARMONGER;
+            else
+                mi.type = MONS_DROWNED_SOUL;
+            break;
+        case LIGHTGREEN:   // corrupter
+            mi.type = MONS_CORRUPTER;
+            break;
+        case LIGHTMAGENTA: // black sun
+            mi.type = MONS_BLACK_SUN;
+            break;
+        case MAGENTA:      // vine stalker, mana viper
+            // The vine stalker doesn't place anywhere currently, so...
+            mi.type = MONS_MANA_VIPER;
+            break;
+        case WHITE:        // salamander firebrand
+            mi.type = MONS_SALAMANDER_FIREBRAND;
+            break;
+        case YELLOW:       // salamander mystic
+            mi.type = MONS_SALAMANDER_MYSTIC;
+            break;
+        default:
+            die("Unexpected monster with type %d and colour %d",
+                mi.type, mi.colour);
+        }
+        if (mons_is_demonspawn(mi.type)
+            && mons_species(mi.type) == MONS_DEMONSPAWN
+            && mi.type != MONS_DEMONSPAWN)
+        {
+            ASSERT(mi.base_type != MONS_NO_MONSTER);
         }
     }
 #endif
@@ -4404,6 +4489,79 @@ void unmarshallMonster(reader &th, monster& m)
              && th.getMinorVersion() < TAG_MINOR_CHIMERA_GHOST_DEMON)
     {
         // Don't unmarshall the ghost demon if this is an invalid chimera
+    }
+    else if (th.getMinorVersion() < TAG_MINOR_DEMONSPAWN
+             && m.type >= MONS_MONSTROUS_DEMONSPAWN
+             && m.type <= MONS_SALAMANDER_MYSTIC)
+    {
+        // The demonspawn-enemies branch was merged in such a fashion
+        // that it bumped several monster enums (see merge commit:
+        // 0.14-a0-2321-gdab6825).
+        // Try to figure out what it is.
+        switch (m.colour)
+        {
+        case BROWN:        // monstrous demonspawn, naga ritualist
+            if (m.spells[0] == SPELL_FORCE_LANCE)
+                m.type = MONS_NAGA_RITUALIST;
+            else
+                m.type = MONS_MONSTROUS_DEMONSPAWN;
+            break;
+        case BLUE:         // gelid demonspawn
+            m.type = MONS_GELID_DEMONSPAWN;
+            break;
+        case RED:          // infernal demonspawn
+            m.type = MONS_INFERNAL_DEMONSPAWN;
+            break;
+        case GREEN:        // putrid demonspawn
+            m.type = MONS_PUTRID_DEMONSPAWN;
+            break;
+        case LIGHTGRAY:    // torturous demonspawn, naga sharpshooter
+            if (m.spells[0] == SPELL_PORTAL_PROJECTILE)
+                m.type = MONS_NAGA_SHARPSHOOTER;
+            else
+                m.type = MONS_TORTUROUS_DEMONSPAWN;
+            break;
+        case LIGHTBLUE:    // blood saint, shock serpent
+            if (m.base_monster != MONS_NO_MONSTER)
+                m.type = MONS_BLOOD_SAINT;
+            else
+                m.type = MONS_SHOCK_SERPENT;
+            break;
+        case ETC_RANDOM:   // chaos champion
+            m.type = MONS_CHAOS_CHAMPION;
+            break;
+        case LIGHTCYAN:    // warmonger, drowned soul
+            if (m.base_monster != MONS_NO_MONSTER)
+                m.type = MONS_WARMONGER;
+            else
+                m.type = MONS_DROWNED_SOUL;
+            break;
+        case LIGHTGREEN:   // corrupter
+            m.type = MONS_CORRUPTER;
+            break;
+        case LIGHTMAGENTA: // black sun
+            m.type = MONS_BLACK_SUN;
+            break;
+        case MAGENTA:      // vine stalker, mana viper
+            // The vine stalker doesn't place anywhere currently, so...
+            m.type = MONS_MANA_VIPER;
+            break;
+        case WHITE:        // salamander firebrand
+            m.type = MONS_SALAMANDER_FIREBRAND;
+            break;
+        case YELLOW:       // salamander mystic
+            m.type = MONS_SALAMANDER_MYSTIC;
+            break;
+        default:
+            die("Unexpected monster with type %d and colour %d",
+                m.type, m.colour);
+        }
+        if (mons_is_demonspawn(m.type)
+            && mons_species(m.type) == MONS_DEMONSPAWN
+            && m.type != MONS_DEMONSPAWN)
+        {
+            ASSERT(m.base_monster != MONS_NO_MONSTER);
+        }
     }
     else
 #endif
