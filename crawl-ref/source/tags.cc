@@ -3950,9 +3950,14 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         case LIGHTMAGENTA: // black sun
             mi.type = MONS_BLACK_SUN;
             break;
-        case MAGENTA:      // vine stalker, mana viper
-            // The vine stalker doesn't place anywhere currently, so...
-            mi.type = MONS_MANA_VIPER;
+        case CYAN:         // worldbinder
+            mi.type = MONS_WORLDBINDER;
+            break;
+        case MAGENTA:      // vine stalker, mana viper, grand avatar
+            if (mi.base_speed() == 30)
+                mi.type = MONS_GRAND_AVATAR;
+            else
+                mi.type = MONS_MANA_VIPER;
             break;
         case WHITE:        // salamander firebrand
             mi.type = MONS_SALAMANDER_FIREBRAND;
@@ -4542,9 +4547,27 @@ void unmarshallMonster(reader &th, monster& m)
         case LIGHTMAGENTA: // black sun
             m.type = MONS_BLACK_SUN;
             break;
-        case MAGENTA:      // vine stalker, mana viper
-            // The vine stalker doesn't place anywhere currently, so...
-            m.type = MONS_MANA_VIPER;
+        case CYAN:         // worldbinder
+            m.type = MONS_WORLDBINDER;
+            break;
+        case MAGENTA:      // vine stalker, mana viper, grand avatar
+            switch (m.speed)
+            {
+                case 20:
+                case 30:
+                case 45:
+                    m.type = MONS_GRAND_AVATAR;
+                    break;
+                case 9:
+                case 10:
+                case 14:
+                case 21:
+                    m.type = MONS_MANA_VIPER;
+                    break;
+                default:
+                    die("Unexpected monster with type %d and speed %d",
+                        m.type, m.speed);
+            }
             break;
         case WHITE:        // salamander firebrand
             m.type = MONS_SALAMANDER_FIREBRAND;
