@@ -431,7 +431,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                      self.username, config.games[game_id])
         return os.path.join(path, self.username + ".rc")
 
-    def send_json_options(self, game_id):
+    def send_json_options(self, game_id, player_name):
         def do_send(data, returncode):
             if returncode != 0:
                 # fail silently for returncode 1 for now, probably just an old
@@ -449,7 +449,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if not "send_json_options" in game or not game["send_json_options"]:
             return
 
-        call = [game["crawl_binary"], "-rc", self.rcfile_path(game_id)]
+        call = [game["crawl_binary"]]
+
+        if "pre_options" in game:
+            call += game["pre_options"]
+
+        call += ["-name", player_name,
+                 "-rc", self.rcfile_path(game_id)]
         if "options" in game:
             call += game["options"]
         call.append("-print-webtiles-options")
@@ -474,7 +480,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.watched_game = process
             process.add_watcher(self)
             self.send_message("watching_started")
-            self.send_json_options(process.game_params["id"])
+            self.send_json_options(process.game_params["id"], process.username)
         else:
             if self.watched_game:
                 self.stop_watching()
