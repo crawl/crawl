@@ -98,3 +98,6 @@ force_more_message += crackle of arcane power
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss
 force_more_message += Found .* abyssal rune of Zot
+
+# Generally exciting things that are somewhat automated
+force_more_message += You pick up the .* rune and feel its power
