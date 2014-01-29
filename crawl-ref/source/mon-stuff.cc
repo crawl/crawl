@@ -1969,7 +1969,8 @@ int monster_die(monster* mons, killer_type killer,
                     did_god_conduct(DID_KILL_UNDEAD,
                                     mons->hit_dice, true, mons);
                 }
-                else if (targ_holy == MH_DEMONIC)
+                else if (targ_holy == MH_DEMONIC
+                         || mons_is_demonspawn(mons->type))
                 {
                     did_god_conduct(DID_KILL_DEMON,
                                     mons->hit_dice, true, mons);
@@ -2202,7 +2203,8 @@ int monster_die(monster* mons, killer_type killer,
                                                       DID_UNDEAD_KILLED_BY_SERVANT,
                                           mons->hit_dice);
                         }
-                        else if (targ_holy == MH_DEMONIC)
+                        else if (targ_holy == MH_DEMONIC
+                                 || mons_is_demonspawn(mons->type))
                         {
                             notice |= did_god_conduct(
                                           !confused ? DID_DEMON_KILLED_BY_UNDEAD_SLAVE :
@@ -2263,7 +2265,8 @@ int monster_die(monster* mons, killer_type killer,
                         notice |= did_god_conduct(DID_UNDEAD_KILLED_BY_SERVANT,
                                                   mons->hit_dice);
                     }
-                    else if (targ_holy == MH_DEMONIC)
+                    else if (targ_holy == MH_DEMONIC
+                             || mons_is_demonspawn(mons->type))
                     {
                         notice |= did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
                                                   mons->hit_dice);
