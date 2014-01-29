@@ -76,6 +76,7 @@ enum tag_minor_version
     TAG_MINOR_NOISES,              // Save incompat recovery wrt ATTR_NOISES.
     TAG_MINOR_ABIL_GOD_FIXUP,      // Movement of some non-god-specific abils.
     TAG_MINOR_NEMELEX_DUNGEONS,    // Make nemelex not give/track decks of dungeons.
+    TAG_MINOR_DEMONSPAWN,          // Save compat wrt demonspawn enemies.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

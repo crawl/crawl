@@ -1768,8 +1768,10 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
     if (mons_is_demonspawn(mon->type) && attk_number == 0)
     {
-        attk.flavour = get_monster_data(draco_or_demonspawn_subspecies(mon))
-                           ->attack[0].flavour;
+        const monsterentry* mbase =
+            get_monster_data (draco_or_demonspawn_subspecies(mon));
+        ASSERT(mbase);
+        attk.flavour = mbase->attack[0].flavour;
         return attk;
     }
 
