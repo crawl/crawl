@@ -802,7 +802,9 @@ jory MONS_JORY
 wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
+%rim 0
 phantasmal_warrior MONS_PHANTASMAL_WARRIOR
+%rim 1
 eidolon MONS_EIDOLON
 
 %sdir mon
