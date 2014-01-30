@@ -1176,15 +1176,14 @@ NAME:   okawaru_gym_becter
 TAGS:   uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 DEPTH:  2-9
 TAGS:   transparent mini_float
-MONS:   training dummy ; club
 KFEAT:  _ = altar_okawaru
 MAP
    .....
  .........
  .vv...vv.
-..v1...1v..
+..v.....v..
 ....._.....
-..v1...1v..
+..v.....v..
  .vv...vv.
  .........
    .....
