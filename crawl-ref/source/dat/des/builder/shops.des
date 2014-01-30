@@ -162,17 +162,6 @@ MAP
 .....
 ENDMAP
 
-NAME: nicolae_shop_with_dummies
-TAGS: allow_dup extra shop transparent
-WEIGHT: 5
-KFEAT: O = weapon shop / antique weapon shop w:5
-MONS: training dummy
-MAP
-1.1
-.O.
-1.1
-ENDMAP
-
 # A shop owner has copied a temple entry for their shop. Is nothing sacred?
 # (minmay_temple_entry_statues_fountains)
 NAME: nicolae_shop_temple_entry_statues_fountains

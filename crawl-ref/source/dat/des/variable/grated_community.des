@@ -332,16 +332,14 @@ ENDMAP
 ####  taur, entrace w/feature, shooting range, closets
 NAME: grated_community_mu_taur_home
 TAGS: grated_community_mu_home grated_community_mu_home6 unrand
-FTILE:  123.c'+%$W8n~ = floor_grass_dirt_mix
+FTILE:  12.c'+%$W8n~ = floor_grass_dirt_mix
 : if crawl.coinflip() then
 MONS:   patrolling centaur warrior, plant
-KITEM:  3 = q:5 arrow
 KITEM:  ' = q:1 arrow
 KITEM:  $ = centaur barding / nothing, q:30 arrow /\
             q:30 arrow ego:flame, any good_item
 : else
 MONS:   patrolling yaktaur captain, plant
-KITEM:  3 = q:5 bolt
 KITEM:  ' = q:1 bolt
 KITEM:  $ = centaur barding / nothing, q:30 bolt /\
             q:30 bolt ego:flame, any good_item
@@ -349,7 +347,6 @@ KITEM:  $ = centaur barding / nothing, q:30 bolt /\
 SHUFFLE: %$
 SUBST:  % = %W
 KITEM:  % = q:2 meat ration
-KMONS:  3 = generate_awake training dummy
 SUBST:  8 = 82
 KFEAT:  8 = granite_statue / floor
 MARKER: + = lua:restrict_door()
@@ -358,7 +355,7 @@ KFEAT:  = = floor
 TILE:   c = wall_brick_vines
 MAP
 ccccccc
-c3''..c
+c'''..c
 ccccc+c
 c%+.1.c
 ccc.8.c
