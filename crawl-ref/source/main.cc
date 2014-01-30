@@ -4468,8 +4468,7 @@ static void _move_player(coord_def move)
                 prompt += " (Use ctrl+direction to attack without moving)";
 
             if (!crawl_state.disables[DIS_CONFIRMATIONS]
-                && (penance && !yes_or_no("%s", prompt.c_str())
-                    || !penance && !yesno(prompt.c_str(), false, 'n')))
+                && !yesno(prompt.c_str(), false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;

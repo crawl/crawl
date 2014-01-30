@@ -2336,9 +2336,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (prompted)
         *prompted = true;
 
-    if (penance && yes_or_no("%s", info))
-        return false;
-    else if (!penance && yesno(info, false, 'n'))
+    if (yesno(info, false, 'n'))
         return false;
     else
     {
@@ -2401,9 +2399,7 @@ bool stop_attack_prompt(targetter &hitfunc, const char* verb,
     if (prompted)
         *prompted = true;
 
-    if (penance && yes_or_no("%s", info))
-        return false;
-    else if (!penance && yesno(info, false, 'n'))
+    if (yesno(info, false, 'n'))
         return false;
     else
     {
