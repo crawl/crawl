@@ -1569,7 +1569,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // "Fire through friendly?" prompts.
     if (cancelled)
     {
-        canned_msg(MSG_OK);
         you.turn_is_over = false;
         if (pbolt.special_explosion != NULL)
             delete pbolt.special_explosion;
