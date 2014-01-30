@@ -357,10 +357,11 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
             {
                 const char* verb = "jump-attack";
                 string junk1, junk2;
+                bool junk3 = false;
                 if (defender)
                 {
                     verb = (bad_attack(defender->as_monster(),
-                                       junk1, junk2)
+                                       junk1, junk2, junk3)
                             ? "jump-attack" : "jump-attack near");
                 }
 
