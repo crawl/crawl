@@ -314,6 +314,31 @@ int dam_colour(const monster_info& mi)
     }
 }
 
+colour_t rune_colour(int type)
+{
+    switch (type)
+    {
+        case RUNE_SWAMP: return GREEN;
+        case RUNE_SNAKE: return GREEN;
+        case RUNE_SHOALS: return LIGHTBLUE;
+        case RUNE_SLIME: return LIGHTGREEN;
+        case RUNE_VAULTS: return WHITE;
+        case RUNE_TOMB: return YELLOW;
+        case RUNE_DIS: return CYAN;
+        case RUNE_GEHENNA: return RED;
+        case RUNE_COCYTUS: return LIGHTCYAN;
+        case RUNE_TARTARUS: return LIGHTMAGENTA;
+        case RUNE_ABYSSAL: return MAGENTA;
+        case RUNE_DEMONIC: return MAGENTA;
+        case RUNE_MNOLEG: return LIGHTGREEN;
+        case RUNE_LOM_LOBON: return BLUE;
+        case RUNE_CEREBOV: return RED;
+        case RUNE_GLOORX_VLOQ: return DARKGRAY;
+        case RUNE_SPIDER: return BROWN;
+        default: return GREEN;
+    }
+}
+
 static int _etc_random(int, const coord_def&)
 {
     return random_colour();
