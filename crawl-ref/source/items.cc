@@ -4192,6 +4192,8 @@ void corrode_item(item_def &item, actor *holder)
 // automatically identify it.
 bool maybe_identify_base_type(item_def &item)
 {
+    if (is_artefact(item))
+        return false;
     if (get_ident_type(item) == ID_KNOWN_TYPE)
         return false;
 
