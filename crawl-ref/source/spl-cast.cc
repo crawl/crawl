@@ -1340,6 +1340,7 @@ spret_type your_spells(spell_type spell, int powc,
             trigger_battlesphere(&you, beam);
         actor* victim = actor_at(beam.target);
         if (you_worship(GOD_DITHMENGOS)
+            && allow_fail
             && (flags & SPFLAG_TARGETING_MASK)
             && !(flags & SPFLAG_NEUTRAL)
             && (!old_target || (victim && !victim->is_player())))
