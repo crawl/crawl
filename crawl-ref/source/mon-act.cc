@@ -154,8 +154,13 @@ static void _handle_manticore_barbs(monster* mons)
     if (mons->has_ench(ENCH_BARBS))
     {
         mon_enchant barbs = mons->get_ench(ENCH_BARBS);
-        mons->hurt(monster_by_mid(barbs.source), roll_dice(2, barbs.degree * 2 + 2));
-        bleed_onto_floor(mons->pos(), mons->type, 2, false);
+
+        // Save these first because hurt() might kill the monster.
+        const coord_def pos = mons->pos();
+        const monster_type type = mons->type;
+        mons->hurt(monster_by_mid(barbs.source),
+                   roll_dice(2, barbs.degree * 2 + 2));
+        bleed_onto_floor(pos, type, 2, false);
         if (coinflip())
         {
             barbs.duration--;
