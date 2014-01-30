@@ -24,6 +24,7 @@ msc += $danger:you block its attack
 msc += $danger:constricts you
 msc += $danger:you convulse
 msc += $danger:You feel a build-up of mutagenic energy
+msc += $danger:place you under penance
 
 msc += $item_dmg:acid corrodes
 msc += $item_dmg:catch(es)? fire
