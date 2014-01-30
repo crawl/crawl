@@ -246,8 +246,9 @@ bool melee_attack::handle_phase_attempted()
             else
             {
                 string junk1, junk2;
+                bool junk3;
                 const char *verb = (bad_attack(defender->as_monster(),
-                                               junk1, junk2)
+                                               junk1, junk2, junk3)
                                     ? "attack" : "attack near");
                 bool (*aff_func)(const coord_def &) = 0;
                 if (damage_brand == SPWPN_ELECTROCUTION)

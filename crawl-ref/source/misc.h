@@ -114,6 +114,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
                           const activity_interrupt_data &at);
 
 bool bad_attack(const monster *mon, string& adj, string& suffix,
+                bool& would_cause_penance,
                 coord_def attack_pos = coord_def(0, 0),
                 bool check_landing_only = false);
 

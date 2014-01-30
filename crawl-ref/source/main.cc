@@ -4415,6 +4415,7 @@ static void _move_player(coord_def move)
         dungeon_feature_type dangerous = DNGN_FLOOR;
         monster *bad_mons = 0;
         string bad_suff, bad_adj;
+        bool penance = false;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
             if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
@@ -4427,12 +4428,13 @@ static void _move_player(coord_def move)
             {
                 string suffix, adj;
                 monster *mons = monster_at(*ai);
-                if (mons && bad_attack(mons, adj, suffix))
+                if (mons && bad_attack(mons, adj, suffix, penance))
                 {
                     bad_mons = mons;
                     bad_suff = suffix;
                     bad_adj = adj;
-                    break;
+                    if (penance)
+                        break;
                 }
             }
         }
@@ -4458,12 +4460,16 @@ static void _move_player(coord_def move)
             }
             prompt += "?";
 
+            if (penance)
+                prompt += " This could place you under penance!";
+
             monster* targ = monster_at(you.pos() + move);
             if (targ && !targ->wont_attack() && you.can_see(targ))
                 prompt += " (Use ctrl+direction to attack without moving)";
 
             if (!crawl_state.disables[DIS_CONFIRMATIONS]
-                && !yesno(prompt.c_str(), false, 'n'))
+                && (penance && !yes_or_no("%s", prompt.c_str())
+                    || !penance && !yesno(prompt.c_str(), false, 'n')))
             {
                 canned_msg(MSG_OK);
                 return;
