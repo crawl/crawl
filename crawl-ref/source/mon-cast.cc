@@ -1248,6 +1248,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_GRAND_AVATAR:
     case SPELL_REARRANGE_PIECES:
     case SPELL_BLINK_ALLIES_AWAY:
+    case SPELL_SHROUD_OF_GOLUBRIA:
         return true;
     default:
         if (check_validity)
@@ -1962,6 +1963,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         }
         return true;
     }
+
+    case SPELL_SHROUD_OF_GOLUBRIA:
+        if (mon->has_ench(ENCH_SHROUD))
+            ret = true;
+        break;
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
@@ -5759,6 +5765,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_BLINK_ALLIES_AWAY:
         _blink_allies_away(mons);
+        return;
+
+    case SPELL_SHROUD_OF_GOLUBRIA:
+        if (you.can_see(mons))
+        {
+            mprf("Space distorts along a thin shroud covering %s body.",
+                 apostrophise(mons->name(DESC_THE)).c_str());
+        }
+        mons->add_ench(mon_enchant(ENCH_SHROUD));
+
         return;
     }
 

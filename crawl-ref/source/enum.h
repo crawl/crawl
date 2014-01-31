@@ -1746,6 +1746,7 @@ enum enchant_type
     ENCH_BLACK_MARK,
     ENCH_GRAND_AVATAR,
     ENCH_SAP_MAGIC,
+    ENCH_SHROUD,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
