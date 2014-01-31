@@ -1626,6 +1626,7 @@
   "exoskeleton"
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_FUMES,            0,  2, false, false, false,
   "fuming",
 
@@ -1635,3 +1636,4 @@
 
   "fumes"
 }
+#endif
