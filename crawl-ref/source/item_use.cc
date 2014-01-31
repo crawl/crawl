@@ -1890,8 +1890,7 @@ void zap_wand(int slot)
 
     if (alreadyknown && zap_wand.target == you.pos())
     {
-        if (wand.sub_type == WAND_TELEPORTATION
-            && you.no_tele(false, false))
+        if (wand.sub_type == WAND_TELEPORTATION && you.no_tele(false, false))
         {
             if (you.species == SP_FORMICID)
                 mpr("You cannot teleport.");
@@ -1899,11 +1898,16 @@ void zap_wand(int slot)
                 mpr("You cannot teleport right now.");
             return;
         }
-        else if (wand.sub_type == WAND_INVISIBILITY
-                 && _dont_use_invis())
+        else if (wand.sub_type == WAND_HASTING && you.stasis(false))
         {
+            if (you.species == SP_FORMICID)
+                mpr("You cannot haste.");
+            else
+                mpr("You cannot haste right now.");
             return;
         }
+        else if (wand.sub_type == WAND_INVISIBILITY && _dont_use_invis())
+            return;
     }
 
     if (!has_charges)
