@@ -1881,8 +1881,12 @@ monster_type pick_local_zombifiable_monster(level_id place,
 
     place.depth = max(1, min(place.depth, branch_ood_cap(place.branch)));
 
-    if (monster_type mt = pick_monster(place, picker))
+    if (monster_type mt =
+            picker.pick_with_veto(zombie_population(place.branch),
+                                  place.depth, MONS_0))
+    {
         return mt;
+    }
 
     return pick_monster_all_branches(place.absdepth(), picker);
 }
