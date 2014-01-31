@@ -136,7 +136,7 @@ monster_type monster_picker::pick_with_veto(const pop_entry *weights,
 // stored veto function. Can subclass further for more complex veto behaviour.
 bool monster_picker::veto(monster_type mon)
 {
-    return _veto && _veto(mon);
+    return _veto && (invalid_monster_type(mon) || _veto(mon));
 }
 
 bool positioned_monster_picker::veto(monster_type mon)
