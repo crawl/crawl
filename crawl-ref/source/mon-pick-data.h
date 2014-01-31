@@ -1269,6 +1269,48 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(depths),
 };
 
+// Lists for picking zombies from.
+static const struct { const pop_entry *pop; int count; } population_zombie[] =
+{
+    POP(d),
+    POP(temple),
+    POP(orc),
+    POP(elf),
+#if TAG_MAJOR_VERSION == 34
+    POP(dwarf),
+#endif
+    POP(lair),
+    POP(swamp),
+    POP(shoals),
+    POP(snake),
+    POP(spider),
+    POP(slime),
+    POP(vaults),
+    POP(blade),
+    POP(crypt),
+    POP(tomb),
+    POP(hell),
+    POP(dis),
+    POP(geh),
+    POP(coc),
+    POP(tar),
+    POP(zot),
+    POP(forest),
+    POP(abyss),
+    POP(pan),
+    POP(zig),
+    POP(lab),
+    POP(bazaar),
+    POP(trove),
+    POP(sewer),
+    POP(ossuary),
+    POP(bailey),
+    POP(icecv),
+    POP(volcano),
+    POP(wizlab),
+    POP(depths),
+};
+
 static const pop_entry pop_water_generic[] =
 { // Generic water monsters
   {  1,  27,  150, FLAT, MONS_BIG_FISH },

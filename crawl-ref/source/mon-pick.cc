@@ -229,6 +229,13 @@ const pop_entry* fish_population(branch_type br, bool lava)
         return population_water[br].pop;
 }
 
+const pop_entry* zombie_population(branch_type br)
+{
+    COMPILE_CHECK(ARRAYSZ(population_zombie) == NUM_BRANCHES);
+    ASSERT_RANGE(br, 0, NUM_BRANCHES);
+    return population_zombie[br].pop;
+}
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static bool _not_skeletonable(monster_type mt)
 {
