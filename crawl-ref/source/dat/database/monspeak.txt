@@ -6174,6 +6174,64 @@ VISUAL:@The_monster@ winks @at_foe@... or blinks.
 @The_monster@ mutters, "Sometimes I wonder if they all really are harpies."
 ## END Urug ##
 %%%%
+############ VASHNIA ### An elite marksnaga
+Vashnia
+
+@_Vashnia_common_@
+
+w:5
+@_Vashnia_rare_@
+
+w:5
+@_Vashnia_nonnaga_@
+%%%%
+
+related Vashnia
+
+@_Vashnia_common_@
+
+w:5
+@_Vashnia_rare_@
+
+w:5
+@_Vashnia_naga_@
+%%%%
+_Vashnia_common_
+
+VISUAL:@The_monster@ makes some cryptic hand gestures, then points @at_foe@.
+
+VISUAL:@The_monster@ takes aim @at_foe@.
+
+VISUAL:Space seems to twist oddly around @the_monster@.
+
+VISUAL:@The_monster@ looks @foe@ over, as though planning @possessive@ next attack.
+
+VISUAL:@The_monster@ glares at @possessive@ squad, motioning for silence.
+%%%%
+_Vashnia_rare_
+@The_monster@ mutters @at_foe@, "Right between the eyes..."
+
+@The_monster@ says @to_foe@, "You'll make a fine pincushion."
+
+@The_monster@ says @to_foe@, "Hold still for a moment. You're making this shot difficult."
+%%%%
+_Vashnia_naga_
+
+@The_monster@ says @to_foe@, "You are a traitor to our kind!"
+
+@The_monster@ sneers @at_foe@, "Heretic!"
+
+@The_monster@ says @to_foe@, "Swear allegiance to our queen and you may yet be spared!"
+%%%%
+_Vashnia_nonnaga_
+
+@The_monster@ says @to_foe@, "Slay the @foe_genus@ at once!" @player_only@
+
+@The_monster@ says @to_foe@, "We do not look kindly on intruders!"
+
+@The_monster@ says to @possessive@ squad, "Do not let the @foe_genus@ escape!"
+## END Vashnia ##
+%%%%
 ############ WIGLAF ### A dwarf. Nuff said.
 Wiglaf
 

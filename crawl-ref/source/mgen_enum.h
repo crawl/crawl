@@ -117,6 +117,7 @@ enum band_type
     BAND_WARMONGER,
     BAND_CORRUPTER,
     BAND_BLACK_SUN,
+    BAND_VASHNIA,
     NUM_BANDS                   // always last
 };
 

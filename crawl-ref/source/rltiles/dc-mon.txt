@@ -721,6 +721,7 @@ mummy_priest MONS_MUMMY_PRIEST
 ## Nagas ('N')
 %sdir mon/unique
 aizul MONS_AIZUL
+vashnia MONS_VASHNIA
 %sdir mon
 naga MONS_NAGA
 naga_mage MONS_NAGA_MAGE
