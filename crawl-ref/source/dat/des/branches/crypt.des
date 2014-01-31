@@ -1468,8 +1468,8 @@ COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
 COLOUR: x'D = white
 COLOUR: G = lightgrey
 COLOUR: "2 = brown
-NSUBST: . = 68:f / *:.
-KMONS:  f = col:darkgrey plant name:withered name_adjective               \
+NSUBST: . = 68:p / *:.
+KMONS:  p = col:darkgrey plant name:withered name_adjective               \
             tile:mons_withered_plant / col:lightgrey plant name:withered  \
             name_adjective tile:mons_withered_plant
 FTILE:  .tT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
