@@ -3879,7 +3879,7 @@ static void _blink_allies_encircle(const monster* mon)
     }
     shuffle_array(allies);
 
-    int count = min(1, mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 8
+    int count = max(1, mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 8
                        + random2(mon->spell_hd(SPELL_BLINK_ALLIES_ENCIRCLE) / 4));
 
     for (unsigned int i = 0; i < allies.size() && count; ++i)
