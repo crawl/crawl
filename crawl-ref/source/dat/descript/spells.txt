@@ -82,6 +82,11 @@ Blade Hands spell
 This spell causes long, scythe-shaped blades to grow from the caster's hands.
 It makes spellcasting somewhat difficult.
 %%%%
+Blink Allies Away spell
+
+This spell blinks allies in sight of the caster near a pointed-at enemy and
+blinks them away from that enemy.
+%%%%
 Blink Allies Encircling spell
 
 This spell takes a bunch of allies in the caster's sight and translocates them

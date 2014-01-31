@@ -1247,6 +1247,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BLACK_MARK:
     case SPELL_GRAND_AVATAR:
     case SPELL_REARRANGE_PIECES:
+    case SPELL_BLINK_ALLIES_AWAY:
         return true;
     default:
         if (check_validity)
@@ -1429,12 +1430,24 @@ static bool _foe_should_res_negative_energy(const actor* foe)
     return foe->holiness() != MH_NATURAL;
 }
 
+static bool _valid_blink_ally(const monster* caster, const monster* target)
+{
+    return mons_aligned(caster, target) && caster != target
+           && !target->no_tele(true, false, true);
+}
+
 static bool _valid_encircle_ally(const monster* caster, const monster* target,
                                  const coord_def foepos)
 {
-    return mons_aligned(caster, target) && caster != target
-           && !target->no_tele(true, false, true)
+    return _valid_blink_ally(caster, target)
            && target->pos().distance_from(foepos) > 1;
+}
+
+static bool _valid_blink_away_ally(const monster* caster, const monster* target,
+                                   const coord_def foepos)
+{
+    return _valid_blink_ally(caster, target)
+           && target->pos().distance_from(foepos) < 3;
 }
 
 static bool _valid_druids_call_target(const monster* caller, const monster* callee)
@@ -1934,6 +1947,21 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         if (mon->friendly() && mon->foe == MHITYOU)
             ret = true;
         break;
+
+    case SPELL_BLINK_ALLIES_AWAY:
+    {
+        if (!mon->get_foe() || mon->get_foe() && !mon->can_see(mon->get_foe()))
+            return true;
+
+        const coord_def foepos = mon->get_foe()->pos();
+
+        for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+        {
+            if (_valid_blink_away_ally(mon, *mi, foepos))
+                return false;
+        }
+        return true;
+    }
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
@@ -3918,6 +3946,28 @@ static void _blink_allies_encircle(const monster* mon)
     }
 }
 
+static void _blink_allies_away(const monster* mon)
+{
+    vector<monster*> allies;
+    const coord_def foepos = mon->get_foe()->pos();
+
+    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (_valid_blink_away_ally(mon, *mi, foepos))
+            allies.push_back(*mi);
+    }
+    shuffle_array(allies);
+
+    int count = max(1, mon->spell_hd(SPELL_BLINK_ALLIES_AWAY) / 8
+                       + random2(mon->spell_hd(SPELL_BLINK_ALLIES_AWAY) / 4));
+
+    for (unsigned int i = 0; i < allies.size() && count; ++i)
+    {
+        if (blink_away(allies[i], &you, false))
+            count--;
+    }
+}
+
 static int _max_tentacles(const monster* mon)
 {
     if (mons_base_type(mon) == MONS_KRAKEN)
@@ -5706,6 +5756,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     }
+
+    case SPELL_BLINK_ALLIES_AWAY:
+        _blink_allies_away(mons);
+        return;
     }
 
 
