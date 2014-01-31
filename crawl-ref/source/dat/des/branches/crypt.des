@@ -81,8 +81,8 @@ function crypt_loot_plus(e)
           " / great mace " .. pain .. " / glaive " .. pain ..
           " / quarterstaff " .. pain)
   e.kitem("f = great sword " .. vamp .." / quick blade " .. vamp ..
-          " / quick blade " .. vamp .. " / battleaxe " .. vamp ..
-          " / great mace " .. vamp .. " / glaive " .. vamp)
+          " / battleaxe " .. vamp .. " / great mace " .. vamp ..
+          " / glaive " .. vamp)
   e.kitem("g = " .. ring .. ", " .. ring .. " / " .. amulet .. " w:2, " ..
           ring .. " / " .. amulet .. " w:2 / nothing")
   -- and one drop-off of these.
