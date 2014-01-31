@@ -1254,6 +1254,16 @@ spret_type your_spells(spell_type spell, int powc,
 
             return SPRET_ABORT;
         }
+
+        if (spell == SPELL_HASTE && spd.isMe() && you.stasis(false))
+        {
+            if (you.species == SP_FORMICID)
+                mpr("You cannot haste.");
+            else
+                mpr("You cannot haste right now.");
+
+            return SPRET_ABORT;
+        }
     }
 
     // Enhancers only matter for calc_spell_power() and spell_fail().
