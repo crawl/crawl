@@ -615,15 +615,24 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        -1);
         break;
 
+    case MONS_VASHNIA:
+        level = MAKE_GOOD_ITEM;
+        // deliberate fall-through
+
     case MONS_NAGA_SHARPSHOOTER:
         force_uncursed = true;
         if (!melee_only)
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = random_choose_weighted(3, WPN_CROSSBOW,
-                                                    2, WPN_BOW,
-                                                    1, WPN_LONGBOW,
-                                                    0);
+            if (type == MONS_VASHNIA)
+                item.sub_type = coinflip() ? WPN_LONGBOW : WPN_CROSSBOW;
+            else
+            {
+                item.sub_type = random_choose_weighted(3, WPN_CROSSBOW,
+                                                       2, WPN_BOW,
+                                                       1, WPN_LONGBOW,
+                                                       0);
+            }
             break;
         }
         // deliberate fall-through
@@ -2450,6 +2459,13 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         }
         else
             return;
+        break;
+
+    case MONS_VASHNIA:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_NAGA_BARDING;
+        level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_TENGU_WARRIOR:

@@ -2766,6 +2766,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_ASTERION,
     MONS_NATASHA,
+    MONS_VASHNIA,
 #endif
     MONS_IRON_ELEMENTAL,
 
@@ -2929,6 +2930,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_ASTERION,
     MONS_NATASHA,
+    MONS_VASHNIA,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

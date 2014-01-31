@@ -3657,6 +3657,7 @@ static gender_type _mons_class_gender(monster_type mc)
         case MONS_NELLIE:
         case MONS_ARACHNE:
         case MONS_NATASHA:
+        case MONS_VASHNIA:
             gender = GENDER_FEMALE;
             break;
         case MONS_ROYAL_JELLY:

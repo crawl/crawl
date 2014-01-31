@@ -2464,4 +2464,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_VASHNIA,
+      {
+       SPELL_PORTAL_PROJECTILE,
+       SPELL_BLINK_ALLIES_AWAY,
+       SPELL_BLINK_AWAY,
+       SPELL_PORTAL_PROJECTILE,
+       SPELL_BLINK_ALLIES_AWAY,
+       SPELL_BLINK_OTHER
+      }
+    },
 #endif
