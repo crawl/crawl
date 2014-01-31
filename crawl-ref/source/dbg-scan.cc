@@ -687,10 +687,14 @@ void check_map_validity()
             continue;
         // no mimics below
 
-        if (feat == portal)
+        const dungeon_feature_type orig = orig_terrain(*ri);
+        if (feat == portal || orig == portal)
             portal = DNGN_UNSEEN;
-        if (feat == exit)
+        if (feat == exit || orig == exit)
             exit = DNGN_UNSEEN;
+
+
+
     }
 
     if (portal && you.char_direction != GDT_ASCENDING)

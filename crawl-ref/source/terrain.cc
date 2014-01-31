@@ -1883,6 +1883,19 @@ bool is_boring_terrain(dungeon_feature_type feat)
     return false;
 }
 
+dungeon_feature_type orig_terrain(coord_def pos)
+{
+    const map_marker *mark = env.markers.find(pos, MAT_TERRAIN_CHANGE);
+    if (!mark)
+        return grd(pos);
+
+    const map_terrain_change_marker *terch
+        = dynamic_cast<const map_terrain_change_marker *>(mark);
+    ASSERTM(terch, "%s has incorrect class", mark->debug_describe().c_str());
+
+    return terch->old_feature;
+}
+
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type, const monster* mon)
 {

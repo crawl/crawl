@@ -125,6 +125,7 @@ bool cell_is_clingable(const coord_def pos);
 bool cell_can_cling_to(const coord_def& from, const coord_def to);
 bool is_boring_terrain(dungeon_feature_type feat);
 
+dungeon_feature_type orig_terrain(coord_def pos);
 void temp_change_terrain(coord_def pos, dungeon_feature_type newfeat, int dur,
                          terrain_change_type type = TERRAIN_CHANGE_GENERIC,
                          const monster* mon = NULL);
