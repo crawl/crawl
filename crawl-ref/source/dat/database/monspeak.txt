@@ -1832,9 +1832,9 @@ WARN:@The_monster@'s eyes glow. You hear demonic laughter.
     if you.skill("Hexes") >= 5 then
       return "Your hexes are useless. I'm stronger than any curse."
     elseif you.skill("Spellcasting") >= 5 then
-      return "Ah, a wizard! I'll enjoy hearing you beg for you life."
+      return "Ah, a wizard! I'll enjoy hearing you beg for your life."
     else
-      return "You're no warrior. You fight like peasant!"
+      return "You're no warrior. You fight like a peasant!"
     end }}" @player_only@
 
 @The_monster@ screams @at_foe@, "What ORB?! I have an entire kingdom!" @player_only@
