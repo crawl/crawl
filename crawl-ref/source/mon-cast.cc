@@ -5426,12 +5426,15 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_OZOCUBUS_ARMOUR:
     {
-        mprf("A film of ice covers %s body!",
-        apostrophise(mons->name(DESC_THE)).c_str());
+        if (you.can_see(mons))
+        {
+            mprf("A film of ice covers %s body!",
+                 apostrophise(mons->name(DESC_THE)).c_str());
+        }
         const int power = (mons->spell_hd(spell_cast) * 15) / 10;
-        mons->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 0, mons,
-                                   BASELINE_DELAY *
-                                   (20 + random2(power) + random2(power))));
+        mons->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR,
+                                   20 + random2(power) + random2(power),
+                                   mons));
 
         return;
     }

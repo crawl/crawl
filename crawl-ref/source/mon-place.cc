@@ -1517,6 +1517,14 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         mon->add_ench(mon_enchant(ENCH_TORNADO, 0, 0, INFINITE_DURATION));
     }
 
+    if (mons_class_flag(mg.cls, M_OZOCUBUS_ARMOUR))
+    {
+        const int power = (mon->spell_hd(SPELL_OZOCUBUS_ARMOUR) * 15) / 10;
+        mon->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR,
+                                  20 + random2(power) + random2(power),
+                                  mon));
+    }
+
     mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.

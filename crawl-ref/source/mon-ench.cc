@@ -950,12 +950,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     }
 }
 
-bool monster::lose_ench_levels(const mon_enchant &e, int lev)
+bool monster::lose_ench_levels(const mon_enchant &e, int lev, bool infinite)
 {
     if (!lev)
         return false;
 
-    if (e.duration >= INFINITE_DURATION)
+    if (e.duration >= INFINITE_DURATION && !infinite)
         return false;
     if (e.degree <= lev)
     {
@@ -1050,7 +1050,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
+        case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
         case ENCH_FLAYED: case ENCH_BARBS: case ENCH_BUILDING_CHARGE:
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
@@ -1256,7 +1256,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DUMB:
     case ENCH_MAD:
     case ENCH_BREATH_WEAPON:
-    case ENCH_OZOCUBUS_ARMOUR:
     case ENCH_WRETCHED:
     case ENCH_SCREAMED:
     case ENCH_WEAK:
@@ -2311,7 +2310,6 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_INVIS:
     case ENCH_FEAR_INSPIRING:
     case ENCH_STONESKIN:
-    case ENCH_OZOCUBUS_ARMOUR:
     case ENCH_AGILE:
     case ENCH_BLACK_MARK:
         cturn = 1000 / _mod_speed(25, mons->speed);
