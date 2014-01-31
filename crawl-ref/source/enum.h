@@ -3140,8 +3140,8 @@ enum mutation_type
     MUT_TRAMPLE_RESISTANCE,
 #if TAG_MAJOR_VERSION == 34
     MUT_CLING,
-#endif
     MUT_FUMES,
+#endif
     MUT_JUMP,
     MUT_EXOSKELETON,
     MUT_ANTIMAGIC_BITE,
