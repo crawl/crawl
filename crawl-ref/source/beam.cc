@@ -1873,6 +1873,14 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
     }
 
+    if (doFlavouredEffects)
+    {
+        const int burn_power = (pbolt.is_explosion) ? 5 :
+                               (pbolt.is_beam)      ? 3
+                                                    : 2;
+        mons->expose_to_element(pbolt.flavour, burn_power);
+    }
+
     return hurted;
 }
 
