@@ -2168,7 +2168,7 @@ static const char *enchant_names[] =
     "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
     "barbs", "building_charge", "poison_vuln", "icemail", "agile",
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
-    "sap magic", "buggy",
+    "sap magic", "shroud", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

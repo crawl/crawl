@@ -200,6 +200,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_BLACK_MARK;
     case ENCH_SAP_MAGIC:
         return MB_SAP_MAGIC;
+    case ENCH_SHROUD:
+        return MB_SHROUD;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1597,6 +1599,8 @@ vector<string> monster_info::attributes() const
         v.push_back("absorbing vital energies");
     if (is(MB_SAP_MAGIC))
         v.push_back("magic-sapped");
+    if (is(MB_SHROUD))
+        v.push_back("shrouded");
     return v;
 }
 

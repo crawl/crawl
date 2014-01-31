@@ -1528,6 +1528,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                   mon));
     }
 
+    if (mons_class_flag(mg.cls, M_SHROUD))
+        mon->add_ench(ENCH_SHROUD);
+
     mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.

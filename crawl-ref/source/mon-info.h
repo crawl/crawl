@@ -114,6 +114,7 @@ enum monster_info_flags
     MB_FROZEN,
     MB_BLACK_MARK,
     MB_SAP_MAGIC,
+    MB_SHROUD,
     NUM_MB_FLAGS
 };
 
