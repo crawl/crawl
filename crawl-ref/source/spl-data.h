@@ -3537,7 +3537,7 @@ struct spell_desc
 {
     SPELL_MAJOR_DESTRUCTION, "Major Destruction",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_CHAOTIC,
      7,
      200,
      7, 7,
