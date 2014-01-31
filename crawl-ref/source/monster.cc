@@ -3083,8 +3083,15 @@ void monster::expose_to_element(beam_type flavour, int strength,
     case BEAM_STEAM:
         if (has_ench(ENCH_OZOCUBUS_ARMOUR))
         {
-            lose_ench_duration(get_ench(ENCH_OZOCUBUS_ARMOUR),
-                               strength * BASELINE_DELAY);
+            // The 10 here is from expose_player_to_element.
+            const int amount = strength ? strength : 10;
+            if (!lose_ench_levels(get_ench(ENCH_OZOCUBUS_ARMOUR),
+                                  amount * BASELINE_DELAY, true)
+                && you.can_see(this))
+            {
+                mprf("The heat melts %s icy armour.",
+                     apostrophise(name(DESC_THE)).c_str());
+            }
         }
         if (has_ench(ENCH_ICEMAIL))
             del_ench(ENCH_ICEMAIL);
