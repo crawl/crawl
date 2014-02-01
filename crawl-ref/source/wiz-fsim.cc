@@ -222,6 +222,8 @@ static bool _fsim_kit_equip(const string &kit, string &error)
     else if (you.weapon())
         unwield_item(false);
 
+    you.wield_change = true;
+
     if (!missile.empty())
     {
         for (int i = 0; i < ENDOFPACK; ++i)
@@ -232,11 +234,13 @@ static bool _fsim_kit_equip(const string &kit, string &error)
             if (you.inv[i].name(DESC_PLAIN).find(missile) != string::npos)
             {
                 quiver_item(i);
+                you.redraw_quiver = true;
                 break;
             }
         }
     }
 
+    redraw_screen();
     return true;
 }
 
@@ -315,6 +319,8 @@ static monster* _init_fsim()
     // this line is actually kind of important for distortion now
     mon->hit_points = mon->max_hit_points = MAX_MONSTER_HP;
     mon->behaviour = BEH_SEEK;
+
+    redraw_screen();
 
     return mon;
 }
