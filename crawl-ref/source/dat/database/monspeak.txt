@@ -4300,17 +4300,91 @@ _Grum_common_
 
 VISUAL:@The_monster@ bares @possessive@ teeth.
 
-@The_monster@ grunts.
+@The_monster@ @_Grum_verb_@.
 
-@The_monster@ says @to_foe@, "My dogs and I will have a feast tonight..."
+@The_monster@ stares @at_foe@ intently and @_Grum_verb_@.
 
-@The_monster@ says @to_foe@, "You look like good eating."
+@The_monster@ lets out an intimidating howl.
+
+VISUAL:@The_monster@ sniffs the air and quickly glances around.
+
+## The following ones make little sense after you've killed his dogs. Maybe Grum is a little bit crazy..? ##
+@The_monster@ points @possessive@ finger @at_foe@ and @_Grum_verb_@, "Attack!"
+
+@The_monster@ points @possessive@ finger @at_foe@ and shouts, "@_Grum_dog_name_@! Sic 'em!"
+
+@The_monster@ glances around and shouts, "@_Grum_dog_name_@! Here boy!"
+
+@The_monster@ shouts, "@_Grum_dog_name_@! Good boy!"
+
 %%%%
 _Grum_rare_
 
-@The_monster@ shouts, "Attack!"
+VISUAL:@The_monster@ is momentarily distracted by a flea in @possessive@ coat.
 
-@The_monster@ says, "You're dog chow, @player_name@!"
+@The_monster@ @_Grum_verb_@ @at_foe@, "I'll hound you night and day!"
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "My dogs and I will have a feast tonight..."
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "You look like good eating."
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "I'll squash you like a puppy."
+
+@The_monster@ looks @at_foe@ in disgust and @_Grum_verb_@, "You ain't no friend of mine."
+
+@The_monster@ cheerfully says, "No dog meat for Grum tonight!"
+
+@The_monster@ @_Grum_verb_@, "You're dog chow, @player_name@!"
+
+@The_monster@ asks, "What kind of bones do @player_genus_plural@ have? My dogs are dying to find out." @player_only@
+
+@The_monster@ says @to_foe@, "What's my secret? I feed my dogs @player_genus_plural@. It makes their fur nice and shiny." @player_only@
+
+@The_monster@ looks @at_foe@ and @_Grum_verb_@, "Time to put down the runt of the litter."
+
+@The_monster@ @_Grum_verb_@ @at_foe@, "Me and @_Grum_dog_name_@ will play fetch with your bones!"
+
+# stupid dog pun
+@The_monster@ @_Grum_verb_@ @at_foe@, "You will fight me? This will be... rough!"
+
+@The_monster@ shouts, "Release the hounds!"
+
+@The_monster@ says @to_foe@, "I'm selling these fine leather pelts."
+
+@The_monster@ shouts, "Faster, @_Grum_dog_name_@! Kill! Kill!"
+
+%%%%
+_Grum_verb_
+
+snarls
+
+growls
+
+grunts
+
+barks
+%%%%
+_Grum_dog_name_
+
+Fido
+
+Rex
+
+Rover
+
+Spot
+
+Spike
+
+Duke
+
+Junior
+
+Sparky
+
+Pluto
+
+Cujo
 ## END Grum ##
 %%%%
 ############ HAROLD ### A middle aged man, anxious to retire after killing you.
@@ -5972,34 +6046,69 @@ _Terence_rare_
 
 ## END Terence ###
 %%%%
-############ URUG ### An orc hired to kill you
+##################### A coarse and lanky orc. Urug lost his eye in a fight with a harpy,
+############ URUG ### and has sworn to slay every last one of them. Unfortunately, the
+##################### vision in his remaining eye is not very good, and he has mistaken you for one.
 Urug
 
-# some chance of generic orc speech
-w:20
+@_Urug_common_@
+
+w:2
+@_Urug_rare_@
+%%%%
+_Urug_common_
+
 @_generic_orc_speech_@
 
 VISUAL:@The_monster@ grins evilly.
+
+VISUAL:@The_monster@ adjusts @possessive@ eyepatch.
+
+VISUAL:@The_monster@ stares @at_foe@ with @possessive@ one eyeball.
 
 @The_monster@ roars.
 
 @The_monster@ howls with blood-lust.
 
-@The_monster@ says @to_foe@, "Maybe you aren't @foe_name@. It doesn't matter."
+@The_monster@ squints and says @to_foe@, "You're the ugliest harpy I ever saw."
 
-@The_monster@ sneers @at_foe@, "Innocent? I'll kill you anyway."
+@The_monster@ squints and says @to_foe@, "My one eye mightn't be all that good, but I can see you just fine with it, harpy."
 
-@The_monster@ screams @at_foe@, "Die!"
+@The_monster@ squints and screams @at_foe@, "A harpy? Time to die, you blasted buzzard!"
 
-@The_monster@ screams @at_foe@, "I'm going to kill you! Now!"
+@The_monster@ squints and screams @at_foe@, "I know a harpy when I see one!"
 
-@The_monster@ screams @at_foe@, "Blood and destruction!"
+@The_monster@ squints, then shrugs and mutters, "Close enough."
 
-@The_monster@ screams @at_foe@, "I'll get 30 silver pieces for your head!"
+@The_monster@ grins and says, "Time to carve some turkeys."
+
+@The_monster@ screams @at_foe@, "Bird-brain!"
+
+@The_monster@ screams @at_foe@, "Prepare for a defeathering!"
+
+@The_monster@ screams @at_foe@, "Revenge!"
+
+@The_monster@ screams @at_foe@, "Die, harpy!"
+
+@The_monster@ screams @at_foe@, "All you harpies will die!"
+
+@The_monster@ screams @at_foe@, "Payback for my eye!"
+
+@The_monster@ screams @at_foe@, "Damn your eyes!"
+
+@The_monster@ screams @at_foe@, "I'm goin' to kill you! Now!"
+%%%%
+_Urug_rare_
+
+VISUAL:@The_monster@ winks @at_foe@... or blinks.
+
+@The_monster@ screams @at_foe@, "Your bloody kin took my one good eye. Now you die, harpy!"
+
+@The_monster@ says @to_foe@, "They call me one-eyed Urug. When I'm done with you they'll have to call you no-head @player_name@." @player_only@
 
 @The_monster@ screams @at_foe@, "You are already dead."
 
-@The_monster@ screams @at_foe@, "I love blood!"
+@The_monster@ mutters, "Sometimes I wonder if they all really are harpies."
 ## END Urug ##
 %%%%
 ############ WIGLAF ### A dwarf. Nuff said.
