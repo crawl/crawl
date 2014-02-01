@@ -2928,14 +2928,11 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case WAND_HASTING:
-            if (you_worship(GOD_CHEIBRIADOS))
-                return false;
+            return !you_worship(GOD_CHEIBRIADOS) && you.species != SP_FORMICID;
         case WAND_TELEPORTATION:
-            if (you.species == SP_FORMICID)
-                return false;
+            return you.species != SP_FORMICID;
         case WAND_HEAL_WOUNDS:
-            if (!you.mutation[MUT_NO_DEVICE_HEAL])
-                return true;
+            return !you.mutation[MUT_NO_DEVICE_HEAL];
         default:
             return false;
         }
@@ -2944,8 +2941,7 @@ bool is_emergency_item(const item_def &item)
         {
         case SCR_TELEPORTATION:
         case SCR_BLINKING:
-            if (you.species == SP_FORMICID)
-                return false;
+            return you.species != SP_FORMICID;
         case SCR_FEAR:
         case SCR_FOG:
             return true;
@@ -2959,11 +2955,9 @@ bool is_emergency_item(const item_def &item)
         switch (item.sub_type)
         {
         case POT_SPEED:
-            if (you_worship(GOD_CHEIBRIADOS) || you.species == SP_FORMICID)
-                return false;
+            return !you_worship(GOD_CHEIBRIADOS) && you.species != SP_FORMICID;
         case POT_HEAL_WOUNDS:
-            if (you.mutation[MUT_NO_DEVICE_HEAL])
-                return false;
+            return !you.mutation[MUT_NO_DEVICE_HEAL];
         case POT_CURING:
         case POT_RESISTANCE:
         case POT_MAGIC:
