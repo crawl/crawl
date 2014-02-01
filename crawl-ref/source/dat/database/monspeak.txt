@@ -3326,7 +3326,7 @@ w:50
 
 @The_monster@ says, "Beogh's pretty racist."
 
-@The_monster@ says, "So, how long did it take you to find an altar to Beogh?"
+@The_monster@ says, "One of the priests looked like he was going to ask me to join... I guess he changed his mind."
 
 @The_monster@ says, "You think walking on water is cool? I can swim."
 
