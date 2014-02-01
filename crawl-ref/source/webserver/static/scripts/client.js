@@ -48,7 +48,20 @@ function (exports, $, key_conversion, chat, comm) {
         if (msgtext.match(/^{/))
         {
             // JSON message
-            var msgobj = eval("(" + msgtext + ")");
+            var msgobj;
+            try
+            {
+                if (JSON && JSON.parse)
+                    msgobj = JSON.parse(msgtext);
+                else
+                    msgobj = eval("(" + msgtext + ")");
+            }
+            catch (e)
+            {
+                console.error("Parsing error:", e);
+                console.error("Source message:", msgtext);
+                return;
+            }
             var msgs = msgobj.msgs;
             if (msgs == null)
                 msgs = [ msgobj ];
@@ -84,7 +97,7 @@ function (exports, $, key_conversion, chat, comm) {
                 }
                 catch (err)
                 {
-                    console.error("Error in message: " + msg);
+                    console.error("Error in message:", msg);
                     console.error(err.message);
                     console.error(err.stack);
                 }
@@ -1133,7 +1146,7 @@ function (exports, $, key_conversion, chat, comm) {
                     var decompressed = [inflater.append(data)];
                     if (decompressed[0] === -1)
                     {
-                        console.log("decompression error!");
+                        console.error("Decompression error!");
                         var x = inflater.append(data);
                     }
                     decode_utf8(decompressed, function (s) {
