@@ -991,13 +991,13 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_VIRULENCE:
         beam.flavour    = BEAM_VIRULENCE;
-        beam.ench_power = mons->hit_dice * 6;
+        beam.ench_power = mons->spell_hd(real_spell) * 6;
         beam.is_beam    = true;
         break;
 
     case SPELL_IGNITE_POISON_SINGLE:
         beam.flavour    = BEAM_IGNITE_POISON;
-        beam.ench_power = mons->hit_dice * 12;
+        beam.ench_power = mons->spell_hd(real_spell) * 12;
         beam.is_beam    = true;
         break;
 
@@ -4948,7 +4948,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_OZOCUBUS_REFRIGERATION:
-        cast_los_attack_spell(spell_cast, mons->hit_dice * 5, mons, true);
+        cast_los_attack_spell(spell_cast, mons->spell_hd(spell_cast) * 5,
+                              mons, true);
         return;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
@@ -5564,7 +5565,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_DISCHARGE:
     {
-        const int power = (mons->hit_dice * 12) / 10;
+        const int power = (mons->spell_hd(spell_cast) * 12) / 10;
         const int num_targs = 1 + random2(random_range(1, 3) + power / 20);
         const int dam = apply_random_around_square(discharge_monsters,
                                                    mons->pos(), true, power,
@@ -5607,7 +5608,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_IGNITE_POISON:
-        cast_ignite_poison(mons, mons->hit_dice * 6, false);
+        cast_ignite_poison(mons, mons->spell_hd(spell_cast) * 6, false);
         return;
 
     case SPELL_LEGENDARY_DESTRUCTION:
