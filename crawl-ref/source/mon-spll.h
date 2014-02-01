@@ -2420,4 +2420,37 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_DRACONIAN_KNIGHT_I,
+      {
+       SPELL_BOLT_OF_COLD,
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_INVISIBILITY,
+       SPELL_ANIMATE_DEAD,
+       SPELL_THROW_ICICLE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DRACONIAN_KNIGHT_II,
+      {
+       SPELL_BOLT_OF_COLD,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_VAMPIRIC_DRAINING,
+       SPELL_AGONY,
+       SPELL_THROW_ICICLE,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_DRACONIAN_KNIGHT_III,
+      {
+       SPELL_BOLT_OF_COLD,
+       SPELL_THROW_ICICLE,
+       SPELL_HASTE,
+       SPELL_SIMULACRUM,
+       SPELL_OZOCUBUS_ARMOUR,
+       SPELL_NO_SPELL
+      }
+    },
 #endif
