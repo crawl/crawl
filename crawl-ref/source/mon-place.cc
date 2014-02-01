@@ -3225,31 +3225,37 @@ static monster_type _band_member(band_type band, int which)
         else
             return MONS_SALAMANDER;
 
-     case BAND_MONSTROUS_DEMONSPAWN:
+    case BAND_MONSTROUS_DEMONSPAWN:
         if (which == 1 || which == 2 && one_chance_in(5))
+        {
             return random_choose_weighted( 2, MONS_DEMONIC_CRAWLER,
                                            2, MONS_SIXFIRHY,
                                            3, MONS_MONSTROUS_DEMONSPAWN,
                                            0);
+        }
         return random_demonspawn_monster_species();
 
-     case BAND_GELID_DEMONSPAWN:
+    case BAND_GELID_DEMONSPAWN:
         if (which == 1 || which == 2 && one_chance_in(5))
+        {
             return random_choose_weighted( 2, MONS_BLUE_DEVIL,
                                            2, MONS_ICE_DEVIL,
                                            3, MONS_GELID_DEMONSPAWN,
                                            0);
+        }
         return random_demonspawn_monster_species();
 
-     case BAND_INFERNAL_DEMONSPAWN:
+    case BAND_INFERNAL_DEMONSPAWN:
         if (which == 1 || which == 2 && one_chance_in(5))
+        {
             return random_choose_weighted( 2, MONS_RED_DEVIL,
                                            2, MONS_SUN_DEMON,
                                            3, MONS_INFERNAL_DEMONSPAWN,
                                            0);
+        }
         return random_demonspawn_monster_species();
 
-     case BAND_PUTRID_DEMONSPAWN:
+    case BAND_PUTRID_DEMONSPAWN:
         if (which == 1 || which == 2 && one_chance_in(5))
             return random_choose_weighted( 2, MONS_HELLWING,
                                            2, MONS_ORANGE_DEMON,
@@ -3257,62 +3263,82 @@ static monster_type _band_member(band_type band, int which)
                                            0);
         return random_demonspawn_monster_species();
 
-     case BAND_TORTUROUS_DEMONSPAWN:
+    case BAND_TORTUROUS_DEMONSPAWN:
         if (which == 1 || which == 2 && one_chance_in(5))
+        {
             return random_choose_weighted( 2, MONS_ROTTING_DEVIL,
                                            2, MONS_SIXFIRHY,
                                            3, MONS_TORTUROUS_DEMONSPAWN,
                                            0);
+        }
         return random_demonspawn_monster_species();
 
-     case BAND_BLOOD_SAINT:
+    case BAND_BLOOD_SAINT:
         if (which == 1 || which == 2 && one_chance_in(5))
+        {
             if (x_chance_in_y(3, 5))
                 return coinflip() ? MONS_BALRUG : MONS_BLIZZARD_DEMON;
             else
                 return static_cast<monster_type>(
                     random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
                                  MONS_LAST_NONBASE_DEMONSPAWN));
+        }
         return random_demonspawn_monster_species();
 
-     case BAND_CHAOS_CHAMPION:
+    case BAND_CHAOS_CHAMPION:
         if (which == 1 || which == 2 && one_chance_in(6))
+        {
             if (x_chance_in_y(2, 5))
                 return one_chance_in(3) ? MONS_TORMENTOR : MONS_HELL_BEAST;
             else
+            {
                 return static_cast<monster_type>(
                     random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
                                  MONS_LAST_NONBASE_DEMONSPAWN));
+            }
+        }
         return random_demonspawn_monster_species();
 
-     case BAND_WARMONGER:
+    case BAND_WARMONGER:
         if (which == 1 || which == 2 && one_chance_in(5))
+        {
             if (x_chance_in_y(3, 5))
                 return one_chance_in(4) ? MONS_EXECUTIONER : MONS_REAPER;
             else
+            {
                 return static_cast<monster_type>(
                     random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
-                                 MONS_LAST_NONBASE_DEMONSPAWN));
+                                MONS_LAST_NONBASE_DEMONSPAWN));
+            }
+        }
         return random_demonspawn_monster_species();
 
-     case BAND_CORRUPTER:
+    case BAND_CORRUPTER:
         if (which == 1 || which == 2 && one_chance_in(5))
+        {
             if (x_chance_in_y(3, 5))
                 return one_chance_in(4) ? MONS_CACODEMON : MONS_SHADOW_DEMON;
             else
+            {
                 return static_cast<monster_type>(
                     random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
                                  MONS_LAST_NONBASE_DEMONSPAWN));
+            }
+        }
         return random_demonspawn_monster_species();
 
-     case BAND_BLACK_SUN:
+    case BAND_BLACK_SUN:
         if (which == 1 || which == 2 && one_chance_in(5))
+        {
             if (x_chance_in_y(3, 5))
                 return one_chance_in(3) ? MONS_LOROCYPROCA : MONS_SOUL_EATER;
             else
+            {
                 return static_cast<monster_type>(
                     random_range(MONS_FIRST_NONBASE_DEMONSPAWN,
                                  MONS_LAST_NONBASE_DEMONSPAWN));
+            }
+        }
         return random_demonspawn_monster_species();
 
     default:
