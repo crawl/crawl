@@ -1910,18 +1910,19 @@ int melee_attack::player_apply_final_multipliers(int damage)
 int melee_attack::player_stab_weapon_bonus(int damage)
 {
     int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
-    int modified_wpn_skill = (player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
-                              ? SK_SHORT_BLADES : wpn_skill);
+    int modified_wpn_skill = wpn_skill;
 
-    if (weapon && weapon->base_type == OBJ_WEAPONS
-        && (weapon->sub_type == WPN_CLUB
-            || weapon->sub_type == WPN_SPEAR
-            || weapon->sub_type == WPN_TRIDENT
-            || weapon->sub_type == WPN_DEMON_TRIDENT
-            || weapon->sub_type == WPN_TRISHULA)
-        || !weapon && you.species == SP_FELID)
+    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
+        modified_wpn_skill = SK_SHORT_BLADES;
+    else if (weapon && weapon->base_type == OBJ_WEAPONS
+             && (weapon->sub_type == WPN_CLUB
+                 || weapon->sub_type == WPN_SPEAR
+                 || weapon->sub_type == WPN_TRIDENT
+                 || weapon->sub_type == WPN_DEMON_TRIDENT
+                 || weapon->sub_type == WPN_TRISHULA)
+             || !weapon && you.species == SP_FELID)
     {
-        goto ok_weaps;
+        modified_wpn_skill = SK_LONG_BLADES;
     }
 
     switch (modified_wpn_skill)
@@ -1938,7 +1939,6 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         damage += bonus;
     }
     // fall through
-    ok_weaps:
     case SK_LONG_BLADES:
         damage *= 10 + div_rand_round(stab_skill, 100 *
                        (stab_bonus + (modified_wpn_skill == SK_SHORT_BLADES ? 0 : 2)));
