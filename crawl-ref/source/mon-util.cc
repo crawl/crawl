@@ -4047,21 +4047,6 @@ static string _get_species_insult(const string &species, const string &type)
     return insult;
 }
 
-static string _pluralise_player_genus()
-{
-    string sp = species_name(you.species, true, false);
-    if (player_genus(GENPC_ELVEN, you.species)
-        || you.species == SP_DEEP_DWARF)
-    {
-        sp = sp.substr(0, sp.find("f"));
-        sp += "ves";
-    }
-    else if (you.species != SP_DEMONSPAWN)
-        sp += "s";
-
-    return sp;
-}
-
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
 string do_mon_str_replacements(const string &in_msg, const monster* mons,
@@ -4082,7 +4067,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     msg = replace_all(msg, "@a_player_genus@",
                       article_a(species_name(you.species, true)));
     msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
-    msg = replace_all(msg, "@player_genus_plural@", _pluralise_player_genus());
+    msg = replace_all(msg, "@player_genus_plural@", pluralise(species_name(you.species, true)));
 
     string foe_species;
 
@@ -4110,7 +4095,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         msg = replace_all(msg, "@foe_genus@", foe_species);
         msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_species));
         msg = replace_all(msg, "@foe_genus_plural@",
-                          _pluralise_player_genus());
+                          pluralise(species_name(you.species, true)));
     }
     else
     {
