@@ -1034,9 +1034,9 @@ drakes.
 %%%%
 draconian knight
 
-Protected by both its thick scales and its skill in use of weapons and armour,
-this draconian is a dangerous opponent. It complements its abilities in combat
-with powerful magic.
+Protected by thick scales, skillful weapon use, and complementary magic,
+this draconian is a dangerous opponent. To round out the threats of other
+draconians, these knights have specialized in ice magic and necromancy.
 %%%%
 draconian monk
 

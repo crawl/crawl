@@ -2252,11 +2252,9 @@ static vector<mon_spellbook_type> _mons_spellbook_list(monster_type mon_type)
         break;
 
     case MONS_DRACONIAN_KNIGHT:
-        books.push_back(MST_DEEP_ELF_CONJURER);
-        books.push_back(MST_HELL_KNIGHT_I);
-        books.push_back(MST_HELL_KNIGHT_II);
-        books.push_back(MST_NECROMANCER_I);
-        books.push_back(MST_NECROMANCER_II);
+        books.push_back(MST_DRACONIAN_KNIGHT_I);
+        books.push_back(MST_DRACONIAN_KNIGHT_II);
+        books.push_back(MST_DRACONIAN_KNIGHT_III);
         break;
 
     case MONS_ANCIENT_CHAMPION:
