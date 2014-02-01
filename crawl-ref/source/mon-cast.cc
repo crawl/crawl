@@ -302,7 +302,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         case 3: real_spell = SPELL_STICKY_FLAME;         break;
         case 4: real_spell = SPELL_IRON_SHOT;            break;
         case 5: real_spell = SPELL_BOLT_OF_DRAINING;     break;
-        case 6: real_spell = SPELL_ORB_OF_ELECTROCUTION; break;
+        case 6: real_spell = SPELL_ORB_OF_ELECTRICITY;   break;
         }
     }
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
@@ -1001,7 +1001,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
-    case SPELL_ORB_OF_ELECTROCUTION:
+    case SPELL_ORB_OF_ELECTRICITY:
         beam.name           = "orb of electricity";
         beam.colour         = LIGHTBLUE;
         beam.damage         = calc_dice(3, 13 + power * 4 / 5);
@@ -5619,7 +5619,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         do
         {
             real_spell = random_choose_weighted(
-                             10, SPELL_ORB_OF_ELECTROCUTION,
+                             10, SPELL_ORB_OF_ELECTRICITY,
                              10, SPELL_LEHUDIBS_CRYSTAL_SPEAR,
                               2, SPELL_IOOD,
                               5, SPELL_GHOSTLY_FIREBALL,
