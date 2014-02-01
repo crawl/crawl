@@ -699,7 +699,7 @@ destroyed at any power level.
 Legendary Destruction spell
 
 At the expense of the caster's life force, this spell randomly conjures forth
-one of several powerful magical effects - Orb of Electrocution, Lehudib's
+one of several powerful magical effects - Orb of Electricity, Lehudib's
 Crystal Spear, Orb of Destruction, Ghostly Fireball, Fireball, or Flash Freeze.
 %%%%
 Lehudib's Crystal Spear spell
@@ -846,7 +846,7 @@ It is said that most copies of this spell suffer from a scribal error that
 makes the orbs unstable beyond a short range. Certain individuals may have
 access to spellbooks without this flaw, so beware!
 %%%%
-Orb of Electrocution spell
+Orb of Electricity spell
 
 This spell hurls a crackling orb of electrical energy which explodes with
 immense force on impact.

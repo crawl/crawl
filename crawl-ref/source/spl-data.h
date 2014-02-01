@@ -3353,7 +3353,7 @@ struct spell_desc
 },
 
 {
-    SPELL_ORB_OF_ELECTROCUTION, "Orb of Electrocution",
+    SPELL_ORB_OF_ELECTRICITY, "Orb of Electricity",
      SPTYP_CONJURATION | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      7,
