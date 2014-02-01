@@ -213,6 +213,7 @@ class CrawlProcessHandlerBase(object):
         self._receivers.add(watcher)
         if self.client_path:
             self._send_client(watcher)
+            watcher.send_json_options(self.game_params["id"], self.username)
         self.update_watcher_description()
 
     def remove_watcher(self, watcher):
@@ -225,6 +226,9 @@ class CrawlProcessHandlerBase(object):
     def send_client_to_all(self):
         for receiver in self._receivers:
             self._send_client(receiver)
+            if receiver.watched_game:
+                receiver.send_json_options(self.game_params["id"],
+                                           self.username)
 
     def _send_client(self, watcher):
         h = hashlib.sha1(os.path.abspath(self.client_path))
