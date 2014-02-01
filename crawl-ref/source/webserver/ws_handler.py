@@ -480,7 +480,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.watched_game = process
             process.add_watcher(self)
             self.send_message("watching_started")
-            self.send_json_options(process.game_params["id"], process.username)
         else:
             if self.watched_game:
                 self.stop_watching()
