@@ -337,6 +337,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
             case GOD_LUGONU:
             case GOD_DITHMENOS:
+                if (you_worship(GOD_DITHMENOS)
+                    && mons_class_flag(victim->type, M_SHADOW))
+                {
+                    break;
+                }
+
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -365,6 +371,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
             case GOD_LUGONU:
             case GOD_DITHMENOS:
+                if (you_worship(GOD_DITHMENOS)
+                    && mons_class_flag(victim->type, M_SHADOW))
+                {
+                    break;
+                }
+
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -394,6 +406,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
             case GOD_LUGONU:
             case GOD_DITHMENOS:
+                if (you_worship(GOD_DITHMENOS)
+                    && mons_class_flag(victim->type, M_SHADOW))
+                {
+                    break;
+                }
+
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -525,6 +543,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
             case GOD_LUGONU:
             case GOD_DITHMENOS:
+                if (you_worship(GOD_DITHMENOS)
+                    && mons_class_flag(victim->type, M_SHADOW))
+                {
+                    break;
+                }
+
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
