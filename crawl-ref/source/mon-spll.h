@@ -1795,6 +1795,17 @@
       }
     },
 
+    {  MST_NATASHA,
+      {
+       SPELL_MAGIC_DART,
+       SPELL_SLOW,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_NO_SPELL,
+       SPELL_MEPHITIC_CLOUD
+      }
+    },
+
     {  MST_THRASHING_HORROR,
       {
        SPELL_NO_SPELL,

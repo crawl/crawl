@@ -1526,6 +1526,8 @@ static void _make_spectral_thing(monster* mons, bool quiet)
     }
 }
 
+
+
 static bool _mons_reaped(actor *killer, monster* victim);
 
 static bool _reaping(monster *mons)
@@ -2486,6 +2488,12 @@ int monster_die(monster* mons, killer_type killer,
              && !testbits(mons->flags, MF_WAS_NEUTRAL))
     {
         hogs_to_humans();
+    }
+    else if (mons_is_natasha(mons) && !in_transit && mons->hit_dice > 1)
+    {
+        //Like Boris, but her vault can't come back
+        you.unique_creatures.set(MONS_NATASHA, false);
+        natasha_revive(mons);
     }
     else if (mons_is_pikel(mons))
     {
