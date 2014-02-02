@@ -3968,9 +3968,9 @@ static bool _monster_move(monster* mons)
             }
             else if (player_can_hear(mons->pos() + mmov))
             {
-                // Formicids take 50% more time to dig.
+                // Formicids take extra time to dig.
                 if (mons_genus(mons->type) == MONS_FORMICID)
-                    mons->lose_energy(EUT_MOVE, 2);
+                    mons->lose_energy(EUT_MOVE, 5);
 
                 // Message depends on whether caused by acid (Dissolution)
                 // or direct digging (boring beetles, formicids).
