@@ -1947,7 +1947,12 @@ int monster_die(monster* mons, killer_type killer,
             // Prevent summoned creatures from being good kills.
             if (bad_kill || good_kill)
             {
-                if (targ_holy == MH_NATURAL)
+                if (targ_holy == MH_DEMONIC || mons_is_demonspawn(mons->type))
+                {
+                    did_god_conduct(DID_KILL_DEMON,
+                                    mons->hit_dice, true, mons);
+                }
+                else if (targ_holy == MH_NATURAL)
                 {
                     did_god_conduct(DID_KILL_LIVING,
                                     mons->hit_dice, true, mons);
@@ -1967,12 +1972,6 @@ int monster_die(monster* mons, killer_type killer,
                 else if (targ_holy == MH_UNDEAD)
                 {
                     did_god_conduct(DID_KILL_UNDEAD,
-                                    mons->hit_dice, true, mons);
-                }
-                else if (targ_holy == MH_DEMONIC
-                         || mons_is_demonspawn(mons->type))
-                {
-                    did_god_conduct(DID_KILL_DEMON,
                                     mons->hit_dice, true, mons);
                 }
 
@@ -2189,7 +2188,15 @@ int monster_die(monster* mons, killer_type killer,
                         // okay that e.g. Yredelemnul ignores kills done
                         // by confused monsters as opposed to enslaved
                         // or friendly ones. (jpeg)
-                        if (targ_holy == MH_NATURAL)
+                        if (targ_holy == MH_DEMONIC
+                            || mons_is_demonspawn(mons->type))
+                        {
+                            notice |= did_god_conduct(
+                                          !confused ? DID_DEMON_KILLED_BY_UNDEAD_SLAVE :
+                                                      DID_DEMON_KILLED_BY_SERVANT,
+                                          mons->hit_dice);
+                        }
+                        else if (targ_holy == MH_NATURAL)
                         {
                             notice |= did_god_conduct(
                                           !confused ? DID_LIVING_KILLED_BY_UNDEAD_SLAVE :
@@ -2201,14 +2208,6 @@ int monster_die(monster* mons, killer_type killer,
                             notice |= did_god_conduct(
                                           !confused ? DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE :
                                                       DID_UNDEAD_KILLED_BY_SERVANT,
-                                          mons->hit_dice);
-                        }
-                        else if (targ_holy == MH_DEMONIC
-                                 || mons_is_demonspawn(mons->type))
-                        {
-                            notice |= did_god_conduct(
-                                          !confused ? DID_DEMON_KILLED_BY_UNDEAD_SLAVE :
-                                                      DID_DEMON_KILLED_BY_SERVANT,
                                           mons->hit_dice);
                         }
 
@@ -2241,6 +2240,12 @@ int monster_die(monster* mons, killer_type killer,
                     // followers are assumed to come from summoning
                     // spells...  the others are from invocations (TSO,
                     // Makhleb, Kiku). - bwr
+                    else if (targ_holy == MH_DEMONIC
+                             || mons_is_demonspawn(mons->type))
+                    {
+                        notice |= did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
+                                                  mons->hit_dice);
+                    }
                     else if (targ_holy == MH_NATURAL)
                     {
                         notice |= did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
@@ -2263,12 +2268,6 @@ int monster_die(monster* mons, killer_type killer,
                     else if (targ_holy == MH_UNDEAD)
                     {
                         notice |= did_god_conduct(DID_UNDEAD_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
-                    }
-                    else if (targ_holy == MH_DEMONIC
-                             || mons_is_demonspawn(mons->type))
-                    {
-                        notice |= did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
                                                   mons->hit_dice);
                     }
 
