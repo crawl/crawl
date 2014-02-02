@@ -1635,6 +1635,70 @@ TAGS: overwritable layout allow_dup unrand layout_type_swamp
 {{
     if is_validating() then return; end
 
+    local gxm, gym = dgn.max_bounds()
+
+    local min_size      = 3
+    local max_size      = 7
+    local max_doors     = 2
+
+    local min_x = 15
+    local max_x = gxm - 16
+    local min_y = 15
+    local max_y = gym - 16
+
+    local min_tries = 3
+    local max_buildings = 6
+
+    local wall_type = 'c'
+    local floor_type = '.'
+
+    extend_map{width = gxm, height = gym, fill = ' '}
+
+    function make_room(room)
+        local door_count = crawl.random_range(1, max_doors)
+
+        local inner_room = {
+            x1 = room.x1, x2 = room.x2,
+            y1 = room.y1, y2 = room.y2,
+            wall = wall_type,
+            floor = '1',
+            number = door_count
+        }
+
+        make_irregular_box { x1 = room.x1 - crawl.random_range(0, 1),
+                             x2 = room.x2 + crawl.random_range(0, 1),
+                             y1 = room.y1 - crawl.random_range(0, 1),
+                             y2 = room.y2 + crawl.random_range(0, 1),
+                             wall = floor_type, floor = floor_type,
+                             number = 0, door = floor_type }
+        make_box(inner_room)
+        make_box_doors(inner_room)
+    end
+
+    local num_tries = crawl.random_range(min_tries, max_buildings)
+
+    for i = 1, num_tries do
+        local size_x = crawl.random_range(min_size, max_size)
+        local size_y = crawl.random_range(min_size, max_size)
+        local x = crawl.random_range(min_x, max_x - size_x)
+        local y = crawl.random_range(min_y, max_y - size_y)
+
+        local blocked = find_in_area {x1 = x - 1, x2 = x + size_x + 1,
+                                      y1 = y - 1, y2 = y + size_y + 1,
+                                      find = "xcvb+", find_vault = true }
+        if not blocked then
+            make_room({ x1 = x, x2 = x + size_x,
+                        y1 = y, y2 = y + size_y })
+        end
+    end
+
+    -- Add some loot or monsters inside the buildings
+    subst('1 = .:1000 1:100 $:5 %:5')
+
+    -- Prevent vaults from placing on buildings
+    kmask('c+$%1 = vault')
+
+    -- Now generate the rest of the swamp
     dgn.layout_swamp()
 
     -- Prevent tele closets

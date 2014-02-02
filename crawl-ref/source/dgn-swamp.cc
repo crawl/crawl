@@ -34,10 +34,10 @@ static void _swamp_slushy_patches(int depth_multiplier)
 
 static dungeon_feature_type _swamp_feature_for_height(int height)
 {
-    return height >= 14 ? DNGN_DEEP_WATER :
-        height > (8 - you.depth * 2) ? DNGN_SHALLOW_WATER :
-        height > -8 ? DNGN_FLOOR :
-        height > -10 ? DNGN_SHALLOW_WATER :
+    return height >= 18 ? DNGN_TREE :
+        height > 8 ? DNGN_SHALLOW_WATER :
+        height > 0 ? DNGN_FLOOR :
+        height > -6 ? DNGN_SHALLOW_WATER :
         DNGN_TREE;
 }
 
@@ -54,7 +54,14 @@ static void _swamp_apply_features(int margin)
                 grd(c) = DNGN_TREE;
             }
             else
-               grd(c) = _swamp_feature_for_height(dgn_height_at(c));
+            {
+                // This gets done in two passes.
+                // First, mangroves are placed, then the heightmap is smoothed,
+                // then the rest of the features are placed.
+                // That's why this conditional exists.
+                if (grd(c) != DNGN_TREE)
+                    grd(c) = _swamp_feature_for_height(dgn_height_at(c));
+            }
         }
     }
 }
@@ -64,10 +71,11 @@ void dgn_build_swamp_level()
     env.level_build_method += " swamp";
     env.level_layout_types.insert("swamp");
 
-    const int swamp_depth = you.depth - 1;
     dgn_initialise_heightmap(-19);
-    _swamp_slushy_patches(swamp_depth * 3);
-    dgn_smooth_heights();
+    _swamp_slushy_patches(3);
+    dgn_smooth_heights(2, 1);
+    _swamp_apply_features(2);
+    dgn_smooth_heights(1, 2);
     _swamp_apply_features(2);
     env.heightmap.reset(NULL);
 }

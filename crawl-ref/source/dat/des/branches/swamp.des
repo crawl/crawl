@@ -197,7 +197,8 @@ default-depth: Swamp
 # A series of pools by Jude.
 NAME:   swamp_pool1
 TAGS:   no_pool_fixup allow_dup extra luniq_pool
-WEIGHT: 1000
+DEPTH:  Swamp
+WEIGHT: 100
 {{ smear_map({iterations=5, smear='w', onto='wwt"', boxy=false}) }}
 SUBST:  "=ttw
 MAP
@@ -212,7 +213,8 @@ ENDMAP
 
 NAME:   swamp_pool2
 TAGS:   no_pool_fixup allow_dup extra luniq_pool
-WEIGHT: 500
+DEPTH:  Swamp
+WEIGHT: 50
 SUBST:  "=ttttw
 MAP
      ""
@@ -226,7 +228,8 @@ ENDMAP
 
 NAME:   swamp_pool3
 TAGS:   no_pool_fixup allow_dup extra luniq_pool
-WEIGHT: 500
+DEPTH:  Swamp
+WEIGHT: 50
 SUBST:  '=Wt, "=wwt
 MAP
 "'ttt'
@@ -239,7 +242,8 @@ ENDMAP
 
 NAME:   swamp_pool4
 TAGS:   no_pool_fixup allow_dup extra luniq_pool
-WEIGHT: 500
+DEPTH:  Swamp
+WEIGHT: 50
 SUBST:  "=ttttw
 MAP
   t""tt
@@ -255,7 +259,7 @@ NAME:   swamp_pool5
 TAGS:   no_pool_fixup allow_dup extra luniq_pool
 KMONS:  1 = patrolling swamp drake
 KFEAT:  1 = deep_water
-WEIGHT: 500
+WEIGHT: 50
 SUBST:  "=ttttw, '=ttW
 MAP
   't't'
@@ -1667,6 +1671,128 @@ tttwWttttttt.www.tttttttt  tc2.+.cccttt
   .Wtt       tttt          tcccc3+%ctt
   @.                         ttttccct
                                  ttt
+ENDMAP
+
+###############################################################################
+# Buildings
+###############################################################################
+
+NAME:   pubby_swamp_hut_small
+TAGS:   allow_dup
+DEPTH:  Swamp
+KMONS:  S = spriggan w:5 / spriggan rider w:3 / spriggan druid w:1
+KMONS:  U = phantom w:5 / bog body w:3 / freezing wraith w:1
+KMONS:  K = kobold w:5 / big kobold w:3 / kobold demonologist w:1
+SUBST:  ? = ...M
+SUBST:  M : SSSUK
+NSUBST: D = 1:+ / *:c
+WEIGHT: 50
+MAP
+ .@.
+ccDcc
+c???c
+c???c
+ccDcc
+ .@.
+ENDMAP
+
+NAME:   pubby_swamp_hut_medium
+TAGS:   allow_dup
+DEPTH:  Swamp
+KMONS:  S = spriggan w:5 / spriggan rider w:3 / spriggan druid w:1
+KMONS:  U = phantom w:5 / bog body w:3 / freezing wraith w:1
+KMONS:  K = kobold w:5 / big kobold w:3 / kobold demonologist w:1
+SUBST:  ? = ...M
+SUBST:  I = $%*TVM
+SUBST:  M : SSSUK
+NSUBST: D = 2:+ / *:c
+WEIGHT: 50
+MAP
+ ..@..
+.ccDcc.
+.c???c.
+@D?I?D@
+.c???c.
+.ccDcc.
+ ..@..
+ENDMAP
+
+NAME:   pubby_swamp_hut_large
+TAGS:   allow_dup
+DEPTH:  Swamp
+KMONS:  S = spriggan w:5 / spriggan rider w:3 / spriggan druid w:1
+KMONS:  U = phantom w:5 / bog body w:3 / freezing wraith w:1
+KMONS:  K = kobold w:5 / big kobold w:3 / kobold demonologist w:1
+SUBST:  ? = ..M
+SUBST:  I = $%*TVM
+SUBST:  M : SSSUK
+NSUBST: D = 3:+ / *:c
+WEIGHT: 50
+MAP
+ ..@.@..
+.ccDcDcc.
+.c??c??c.
+@D?.+.?D@
+.c??c??c.
+.ccDcDcc.
+ ..@.@..
+ENDMAP
+
+NAME:   pubby_swamp_house
+DEPTH:  Swamp
+KMONS:  S = spriggan w:5 / spriggan rider w:3 / spriggan druid w:1
+SUBST:  I = $%*.
+NSUBST: ? = 5:S / *:.
+NSUBST: D = 2:+ / *:c
+WEIGHT: 30
+MAP
+ ...@...
+.ccc+ccc.
+.c.....c..
+.c.S.S.ccc.
+.ccc+cccIc.
+@D?????+Ic.
+.c?????cIc.
+.c?????ccc.
+@D?????D@.
+.ccDcDcc.
+ ..@.@..
+ENDMAP
+
+NAME:   pubby_swamp_estate
+DEPTH:  Swamp
+KMONS:  S = spriggan w:5 / spriggan rider w:3 / spriggan druid w:1
+SUBST:  I = $%*.
+NSUBST: ? = 7:S / *:.
+NSUBST: D = 2:+ / *:c
+WEIGHT: 30
+MAP
+  .....
+ .ccccc.@.
+ .cISIccDcc
+ @cc+cc?.?c
+cDc?.?c??.c
+c??.?.+.??c
+c?.???c?.?c
+ccccccccDcc
+       .@.
+ENDMAP
+
+NAME:   pubby_swamp_quad
+DEPTH:  Swamp
+KMONS:  S = spriggan w:5 / spriggan rider w:3 / spriggan druid w:1
+SUBST:  I = $%*.
+NSUBST: ? = 4:S / *:.
+MAP
+  ccccccc
+ cc??c??cc
+ c?S?+?S?c
+ c???c???c
+.cc+ccc+cc
+.c???c???c
+@+?S?+?S?c
+.cc??c??cc
+ .ccccccc
 ENDMAP
 
 ###############################################################################
