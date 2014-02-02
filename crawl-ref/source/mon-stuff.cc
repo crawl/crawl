@@ -4296,7 +4296,7 @@ void seen_monster(monster* mons)
         }
     }
 
-    if (!(mons->flags & MF_TSO_SEEN))
+    if (!(mons->flags & MF_SEEN_CREDIT))
     {
         if (!mons->has_ench(ENCH_ABJ)
             && !mons->has_ench(ENCH_FAKE_ABJURATION)
@@ -4305,8 +4305,19 @@ void seen_monster(monster* mons)
             && !crawl_state.game_is_arena())
         {
             did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons);
+
+            // Dithmengos gives partial XP for seeing monsters for the
+            // first time.
+            if (you_worship(GOD_DITHMENGOS) && !player_under_penance())
+            {
+                // One third XP, rounded up.
+                const int partxp = (exper_value(mons) + 2) / 3;
+                const int xpgain = max(partxp - mons->xp_awarded, 0);
+                gain_exp(xpgain);
+                mons->xp_awarded += xpgain;
+            }
         }
-        mons->flags |= MF_TSO_SEEN;
+        mons->flags |= MF_SEEN_CREDIT;
     }
 
     if (mons_allows_beogh(mons))

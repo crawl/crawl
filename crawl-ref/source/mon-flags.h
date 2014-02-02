@@ -241,5 +241,6 @@ const uint64_t MF_SEEN_RANGED        = BIT(35); // known to have a ranged attack
 
 const uint64_t MF_POLYMORPHED        = BIT(36); // this monster has been polymorphed.
 const uint64_t MF_JUST_SLEPT         = BIT(37); // just got hibernated/slept
-const uint64_t MF_TSO_SEEN           = BIT(38); // possibly got piety with TSO
+const uint64_t MF_SEEN_CREDIT        = BIT(38); // possibly got piety with TSO
+                                                // or XP with Dith.
 #endif
