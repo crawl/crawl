@@ -4266,9 +4266,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
         runed_doors.push_back(rdoor);
         es_flags |= ES_RUNED_DOOR;
     }
-    else if (feat_is_altar(feat)
-             && ES_altar
-             && !player_in_branch(BRANCH_TEMPLE))
+    else if (feat_is_altar(feat) && ES_altar)
     {
         const named_thing<int> altar(cleaned_feature_description(pos), 1);
         if (!merge_feature(altars, altar))
