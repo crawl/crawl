@@ -1900,10 +1900,10 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     }
 
     case SPELL_VIRULENCE:
-        return (foe && foe->res_poison(false) >= 3);
+        return foe && foe->res_poison(false) >= 3;
 
     case SPELL_IGNITE_POISON_SINGLE:
-        return (!foe || !ignite_poison_affects(foe));
+        return !foe || !ignite_poison_affects(foe);
 
     case SPELL_FLASH_FREEZE:
         if (!foe

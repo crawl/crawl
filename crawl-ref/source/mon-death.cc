@@ -432,9 +432,9 @@ void natasha_revive(monster* mons)
         {
             tries++;
             continue;
-        } else {
-            break;
         }
+        else
+            break;
     }
 
     create_monster(

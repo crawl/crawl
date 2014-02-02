@@ -1571,9 +1571,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         do
-        {
             item.sub_type = random2(NUM_WEAPONS);
-        }
         while ((melee_only && (item.sub_type == WPN_BLOWGUN
                                || item.sub_type == WPN_CROSSBOW
                                || item.sub_type == WPN_BOW
