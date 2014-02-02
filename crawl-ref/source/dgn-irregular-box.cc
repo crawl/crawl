@@ -575,7 +575,7 @@ void make_irregular_box(map_lines& map, int x1, int y1, int x2, int y2,
         for (int i = 0; i < door_count && !wall_cells.empty(); i++)
         {
             unsigned int index = random2(wall_cells.size());
-            new_glyphs[wall_cells[index].x][wall_cells[index].y] = '+';
+            new_glyphs[wall_cells[index].x][wall_cells[index].y] = door_glyph;
             wall_cells[index] = wall_cells.back();
             wall_cells.pop_back();
         }
