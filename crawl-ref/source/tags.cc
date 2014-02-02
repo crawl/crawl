@@ -3757,6 +3757,7 @@ void marshallMonster(writer &th, const monster& m)
     marshallInt(th, m.foe_memory);
     marshallShort(th, m.damage_friendly);
     marshallShort(th, m.damage_total);
+    marshallShort(th, m.xp_awarded);
 
     if (parts & MP_GHOST_DEMON)
     {
@@ -4440,6 +4441,16 @@ void unmarshallMonster(reader &th, monster& m)
     m.damage_total = unmarshallShort(th);
 
 #if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_XP_AWARDED)
+    {
+        // We'll need to fix this up once it's completely unmarshalled.
+        m.xp_awarded = 0;
+    }
+    else
+#endif
+    m.xp_awarded = unmarshallShort(th);
+
+#if TAG_MAJOR_VERSION == 34
     if (m.type == MONS_LABORATORY_RAT)
         unmarshallGhost(th), m.type = MONS_RAT;
 
@@ -4681,6 +4692,14 @@ void unmarshallMonster(reader &th, monster& m)
     ASSERT(parts & MP_GHOST_DEMON || !mons_is_ghost_demon(m.type));
 
     m.check_speed();
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_XP_AWARDED
+        && testbits(m.flags, MF_PACIFIED))
+    {
+        m.xp_awarded = (exper_value(&m) + 1) / 2;
+    }
+#endif
 }
 
 static void tag_read_level_monsters(reader &th)

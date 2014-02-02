@@ -405,6 +405,7 @@ static monster* _do_split(monster* thing, coord_def & target)
     int split_off = thing->number / 2;
     float max_per_blob = thing->max_hit_points / float(thing->number);
     float current_per_blob = thing->hit_points / float(thing->number);
+    float xp_frac = float(thing->xp_awarded) / exper_value(thing);
 
     thing->number -= split_off;
     new_slime->number = split_off;
@@ -413,6 +414,9 @@ static monster* _do_split(monster* thing, coord_def & target)
 
     _stats_from_blob_count(thing, max_per_blob, current_per_blob);
     _stats_from_blob_count(new_slime, max_per_blob, current_per_blob);
+
+    thing->xp_awarded = xp_frac * exper_value(thing);
+    new_slime->xp_awarded = xp_frac * exper_value(new_slime);
 
     if (crawl_state.game_is_arena())
         arena_split_monster(thing, new_slime);

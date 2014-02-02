@@ -72,8 +72,8 @@ monster::monster()
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0),
-      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0)
-
+      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), xp_awarded(0),
+      client_id(0)
 {
     type = MONS_NO_MONSTER;
     travel_path.clear();
@@ -132,6 +132,7 @@ void monster::reset()
     number          = 0;
     damage_friendly = 0;
     damage_total    = 0;
+    xp_awarded      = 0;
     shield_blocks   = 0;
     foe_memory      = 0;
     god             = GOD_NO_GOD;
@@ -195,6 +196,7 @@ void monster::init_with(const monster& mon)
     props             = mon.props;
     damage_friendly   = mon.damage_friendly;
     damage_total      = mon.damage_total;
+    xp_awarded        = mon.xp_awarded;
 
     if (mon.ghost.get())
         ghost.reset(new ghost_demon(*mon.ghost));
@@ -3118,7 +3120,7 @@ void monster::banish(actor *agent, const string &)
         damage_total *= 2;
         damage_friendly *= 2;
         blame_damage(agent, hit_points);
-        // Note: we do not set MF_GOT_HALF_XP, the monster is usually not
+        // Note: we do not set xp_awarded, the monster is usually not
         // distinguishable from others of the same kind in the Abyss.
 
         if (agent->is_player())
@@ -3348,7 +3350,7 @@ bool monster::wont_attack() const
 
 bool monster::pacified() const
 {
-    return attitude == ATT_NEUTRAL && testbits(flags, MF_GOT_HALF_XP);
+    return attitude == ATT_NEUTRAL && testbits(flags, MF_PACIFIED);
 }
 
 int monster::shield_bonus() const

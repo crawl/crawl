@@ -3161,13 +3161,18 @@ void mons_pacify(monster* mon, mon_attitude_type att, bool no_xp)
     mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
 
-    if (!testbits(mon->flags, MF_GOT_HALF_XP) && !no_xp
+    if (!testbits(mon->flags, MF_PACIFIED) && !no_xp
         && !mon->is_summoned()
         && !testbits(mon->flags, MF_NO_REWARD))
     {
-        // Give the player half of the monster's XP.
-        gain_exp((exper_value(mon) + 1) / 2);
-        mon->flags |= MF_GOT_HALF_XP;
+        // Half of the monster's XP, minus XP already awarded.
+        const int halfxp = (exper_value(mon) + 1) / 2;
+        const int xpgain = max(halfxp - mon->xp_awarded, 0);
+
+        // Give whatever is left over.
+        gain_exp(xpgain);
+        mon->xp_awarded += xpgain;
+        mon->flags |= MF_PACIFIED;
     }
 
     if (mon->type == MONS_GERYON)

@@ -437,8 +437,8 @@ void debug_list_monsters()
         {
             continue;
         }
-        if (mi->flags & MF_GOT_HALF_XP)
-            exp /= 2;
+        if (mi->xp_awarded)
+            exp = max(exp - mi->xp_awarded, 0);
 
         total_adj_exp += exp;
     }
@@ -592,7 +592,7 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d SP=%d "
+         "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d XP=%d/%d SP=%d "
          "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.hit_dice,
          mons.experience,
@@ -600,6 +600,7 @@ void debug_stethoscope(int mon)
          mons.ac, mons.armour_class(),
          mons.ev,
          mons.res_magic(),
+         mons.xp_awarded,
          exper_value(&mons),
          mons.speed, mons.speed_increment,
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",

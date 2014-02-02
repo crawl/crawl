@@ -188,7 +188,7 @@ const uint64_t MF_ATT_CHANGE_ATTEMPT = BIT(9);  // Saw player and attitude chang
 const uint64_t MF_WAS_IN_VIEW        = BIT(10); // Was in view during previous turn.
 
 const uint64_t MF_BAND_MEMBER        = BIT(11); // Created as a member of a band
-const uint64_t MF_GOT_HALF_XP        = BIT(12); // Player already got half xp value earlier
+const uint64_t MF_PACIFIED           = BIT(12); // Monster was pacified
 const uint64_t MF_FAKE_UNDEAD        = BIT(13); // Consider this monster to have MH_UNDEAD
                                      // holiness, regardless of its actual type
 const uint64_t MF_ENSLAVED_SOUL      = BIT(14); // An undead monster soul enslaved by

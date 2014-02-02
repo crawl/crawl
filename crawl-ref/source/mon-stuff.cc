@@ -619,7 +619,7 @@ static int _calc_player_experience(const monster* mons)
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
     const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
     const bool no_xp = mons->has_ench(ENCH_ABJ) || !experience || mons->has_ench(ENCH_FAKE_ABJURATION);
-    const bool already_got_half_xp = testbits(mons->flags, MF_GOT_HALF_XP);
+    const int already_xp = mons->xp_awarded;
     const int half_xp = (experience + 1) / 2;
 
     // We give double exp for shedu here, rather than artificially
@@ -652,12 +652,9 @@ static int _calc_player_experience(const monster* mons)
     if (crawl_state.game_is_zotdef() && experience < half_xp)
         experience = half_xp;
 
-    // Note: This doesn't happen currently since monsters with
-    //       MF_GOT_HALF_XP have always gone through pacification,
-    //       hence also have MF_WAS_NEUTRAL. [rob]
-    if (already_got_half_xp)
+    if (already_xp)
     {
-        experience -= half_xp;
+        experience -= already_xp;
         if (experience < 0)
             experience = 0;
     }
