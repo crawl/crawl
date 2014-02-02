@@ -4691,9 +4691,7 @@ string summoned_poof_msg(const monster* mons, bool plural)
         }
 
         if (mons->type == MONS_DROWNED_SOUL)
-        {
             msg = "returns to the deep";
-        }
     }
 
     // Conjugate.

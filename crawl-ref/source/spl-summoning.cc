@@ -3080,9 +3080,7 @@ void grand_avatar_reset(monster* mons)
     mons->props.erase(GA_SPELL);
     actor* foe = mons->get_foe();
     if (foe)
-    {
         mons->target = foe->pos();
-    }
     else
     {
         mons->foe = agent->mindex();

@@ -296,7 +296,8 @@ static string _get_speak_string(const vector<string> &prefixes,
     int duration = 1;
     if (mons->hit_points <= 0)
     {
-        if (mons->type == MONS_NATASHA && mons->hit_dice == 1) //let her have separate death/permadeath lines
+        //let her have separate death/permadeath lines
+        if (mons->type == MONS_NATASHA && mons->hit_dice == 1)
             key += " permanently";
         key += " killed";
     }

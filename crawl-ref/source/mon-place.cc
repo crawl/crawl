@@ -2980,9 +2980,9 @@ static monster_type _band_member(band_type band, int which)
     case BAND_GUARDIAN_SERPENT:
         // Favor tougher naga suited to melee, compared to normal naga bands
         if (which == 1 || which == 2 && coinflip())
-            return (one_chance_in(3) ? MONS_NAGA_MAGE : MONS_NAGA_WARRIOR);
+            return one_chance_in(3) ? MONS_NAGA_MAGE : MONS_NAGA_WARRIOR;
         else
-            return (one_chance_in(5) ? MONS_SALAMANDER : MONS_NAGA);
+            return one_chance_in(5) ? MONS_SALAMANDER : MONS_NAGA;
 
     case BAND_NAGAS:
         if (which == 1 && coinflip() || which == 2 && one_chance_in(4))
@@ -3005,7 +3005,7 @@ static monster_type _band_member(band_type band, int which)
                                        0);
 
     case BAND_NAGA_SHARPSHOOTER:
-        return (one_chance_in(3) ? MONS_NAGA_SHARPSHOOTER : MONS_NAGA);
+        return one_chance_in(3) ? MONS_NAGA_SHARPSHOOTER : MONS_NAGA;
 
     case BAND_WOLVES:
         return MONS_WOLF;
@@ -3199,7 +3199,7 @@ static monster_type _band_member(band_type band, int which)
         return MONS_AIR_ELEMENTAL;
 
     case BAND_SPRIGGAN_DRUID:
-        return (one_chance_in(3) ? MONS_SPRIGGAN_RIDER : MONS_SPRIGGAN);
+        return one_chance_in(3) ? MONS_SPRIGGAN_RIDER : MONS_SPRIGGAN;
 
     case BAND_SPRIGGAN_RIDERS:
         return MONS_SPRIGGAN_RIDER;

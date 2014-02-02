@@ -1488,7 +1488,7 @@ static int _ignite_tracer_cloud_value(coord_def where, actor *agent)
     if (act)
     {
         int dam = resist_adjust_damage(act, BEAM_FIRE, act->res_fire(), 40, true);
-        return (mons_aligned(act, agent) ? -dam : dam);
+        return mons_aligned(act, agent) ? -dam : dam;
     }
     // We've done something, but its value is indeterminate
     else
@@ -1592,7 +1592,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
     if (damage > 0)
     {
         if (tracer)
-            return (mons_aligned(mon, agent) ? -1 * damage : damage);
+            return mons_aligned(mon, agent) ? -1 * damage : damage;
         else
         {
             simple_monster_message(mon, " seems to burn from within!");
@@ -1625,13 +1625,13 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *agent)
 
 static bool _player_has_poisonous_physiology()
 {
-    return (player_mutation_level(MUT_SPIT_POISON)
-            || player_mutation_level(MUT_STINGER)
-            || you.form == TRAN_SPIDER // poison attack
-            || (!form_changed_physiology()
-                && (you.species == SP_GREEN_DRACONIAN       // poison breath
-                    || you.species == SP_KOBOLD             // poisonous corpse
-                    || you.species == SP_NAGA)));           // spit poison
+    return player_mutation_level(MUT_SPIT_POISON)
+           || player_mutation_level(MUT_STINGER)
+           || you.form == TRAN_SPIDER // poison attack
+           || (!form_changed_physiology()
+               && (you.species == SP_GREEN_DRACONIAN       // poison breath
+                   || you.species == SP_KOBOLD             // poisonous corpse
+                   || you.species == SP_NAGA));           // spit poison
 }
 
 static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
@@ -1662,7 +1662,7 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
         damage = resist_adjust_damage(&you, BEAM_FIRE, resist, damage, true);
 
         if (tracer)
-            return (mons_aligned(&you, agent) ? -1 * damage : damage);
+            return mons_aligned(&you, agent) ? -1 * damage : damage;
         else
         {
             if (resist > 0)
@@ -1767,11 +1767,11 @@ static bool maybe_abort_ignite()
 bool ignite_poison_affects(const actor* act)
 {
     if (act->is_player())
-        return (_player_has_poisonous_physiology() || you.duration[DUR_POISONING]);
+        return _player_has_poisonous_physiology() || you.duration[DUR_POISONING];
     else
     {
-        return (mons_is_poisoner(act->as_monster())
-                || act->as_monster()->has_ench(ENCH_POISON));
+        return mons_is_poisoner(act->as_monster())
+               || act->as_monster()->has_ench(ENCH_POISON);
     }
 }
 
@@ -1795,7 +1795,7 @@ spret_type cast_ignite_poison(actor* agent, int pow, bool fail, bool mon_tracer)
         work += apply_area_visible(_ignite_poison_monsters, -1, agent);
         work += apply_area_visible(_ignite_poison_player, -1, agent);
 
-        return (work > 0 ? SPRET_SUCCESS : SPRET_ABORT);
+        return work > 0 ? SPRET_SUCCESS : SPRET_ABORT;
     }
 
     targetter_los hitfunc(agent, LOS_NO_TRANS);
