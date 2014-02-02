@@ -3421,6 +3421,8 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " is outlined in light.\n";
     if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
         result << uppercase_first(pronoun) << " is glowing with mutagenic radiation.\n";
+    if (mons_class_flag(mi.type, M_SHADOW))
+        result << uppercase_first(pronoun) << " is wreathed in shadows.\n";
 
     // Seeing/sensing invisible.
     if (mons_class_flag(mi.type, M_SEE_INVIS))
