@@ -164,6 +164,9 @@ const uint64_t M_VIGILANT          = (uint64_t)1<<50;
 // monster starts with Ozocubu's Armour
 const uint64_t M_OZOCUBUS_ARMOUR   = (uint64_t)1<<51;
 
+// monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
+const uint64_t M_SHADOW            = (uint64_t)1<<52;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing

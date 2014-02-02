@@ -1531,7 +1531,8 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_CORONA:
-        ret = (!foe || foe->backlit() || foe->glows_naturally());
+        ret = (!foe || foe->backlit() || foe->glows_naturally()
+               || mons_class_flag(foe->type, M_SHADOW));
         break;
 
     case SPELL_BERSERKER_RAGE:
