@@ -77,8 +77,8 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     if (mons == NULL)
         return false;
 
-    // Already glowing.
-    if (mons->glows_naturally())
+    // Already glowing, or shadowy.
+    if (mons->glows_naturally() || mons_class_flag(mons->type, M_SHADOW))
         return false;
 
     mon_enchant bklt = mons->get_ench(ENCH_CORONA);

@@ -66,7 +66,7 @@ int monster::stealth() const
         actual_stealth -= 3;
 
     // Having an umbra makes you more stealthy, on the other hand.
-    if (umbra_radius2() != -1)
+    if (mons_class_flag(type, M_SHADOW) || umbra_radius2() != -1)
         actual_stealth += 3;
 
     // Some specific overrides

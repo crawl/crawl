@@ -167,6 +167,9 @@ const uint64_t M_OZOCUBUS_ARMOUR   = (uint64_t)1<<51;
 // monster starts with a Shroud of Golubria
 const uint64_t M_SHROUD            = (uint64_t)1<<52;
 
+// monster is shadowy and cannot be backlit (was M_GLOWS_LIGHT)
+const uint64_t M_SHADOW            = (uint64_t)1<<53;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing
