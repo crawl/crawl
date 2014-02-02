@@ -30,8 +30,10 @@ ae += amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasi
 # Rings of teleportation are not redundant -- double *Tele is pretty good in
 # the Abyss. Still, they're more in line with lanterns of shadow, so you can
 # pick up the second one by hand.
-ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (invisibility|teleport control)
+ae += ring of (see invisible|flight|teleportation|invisibility|teleport control)
+: if you.race() ~= "Formicid" then
+ae += ring of poison resistance
+: end
 : if you.race() ~= "Ogre" and you.race() ~= "Troll"
 :    and you.race() ~= "Centaur" and you.race() ~= "Octopode" then
 ae += ring of sustenance
