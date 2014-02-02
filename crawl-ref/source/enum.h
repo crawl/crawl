@@ -2764,6 +2764,7 @@ enum monster_type                      // menv[].type
     MONS_NELLIE,
 #if TAG_MAJOR_VERSION > 34
     MONS_ASTERION,
+    MONS_NATASHA,
 #endif
     MONS_IRON_ELEMENTAL,
 
@@ -2926,7 +2927,9 @@ enum monster_type                      // menv[].type
 
 #if TAG_MAJOR_VERSION == 34
     MONS_ASTERION,
+    MONS_NATASHA,
 #endif
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change

@@ -229,6 +229,10 @@ NAME:   uniq_menkaure
 DEPTH:  D:4-7
 : place_unique(_G, "Menkaure")
 
+NAME:   uniq_natasha
+DEPTH:  D:3-6
+: place_unique(_G, "Natasha")
+
 NAME:   uniq_nergalle
 DEPTH:  D:10-, Orc:2-, Elf:1, Lair
 : place_unique(_G, "Nergalle")

@@ -14,6 +14,7 @@
 #include "database.h"
 #include "env.h"
 #include "fineff.h"
+#include "fprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -404,6 +405,42 @@ void elven_twins_unpacify(monster* twin)
         return;
 
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
+}
+
+bool mons_is_natasha(monster* mons)
+{
+    return mons->type == MONS_NATASHA
+           || (mons->props.exists("original_name")
+               && mons->props["original_name"].get_string() == "Natasha");
+}
+
+void natasha_revive(monster* mons)
+{
+    // Mostly adapted from bring_to_safety()
+    coord_def revive_place;
+    int tries = 0;
+    while (tries < 10000) // Don't try too hard.
+    {
+        revive_place.x = random2(GXM);
+        revive_place.y = random2(GYM);
+        if (!in_bounds(revive_place)
+            || grd(revive_place) != DNGN_FLOOR
+            || env.cgrid(revive_place) != EMPTY_CLOUD
+            || monster_at(revive_place)
+            || env.pgrid(revive_place) & FPROP_NO_TELE_INTO
+            || distance2(revive_place, mons->pos()) < dist_range(10))
+        {
+            tries++;
+            continue;
+        } else {
+            break;
+        }
+    }
+
+    create_monster(
+            mgen_data(MONS_NATASHA, mons->behaviour, 0, 0, 0, revive_place,
+            mons->foe, 0, GOD_NO_GOD, MONS_NO_MONSTER, 0, BLUE,
+            PROX_ANYWHERE, level_id::current(), mons->hit_dice-1));
 }
 
 /**

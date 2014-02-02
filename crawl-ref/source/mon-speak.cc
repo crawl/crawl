@@ -295,7 +295,11 @@ static string _get_speak_string(const vector<string> &prefixes,
 {
     int duration = 1;
     if (mons->hit_points <= 0)
+    {
+        if (mons->type == MONS_NATASHA && mons->hit_dice == 1) //let her have separate death/permadeath lines
+            key += " permanently";
         key += " killed";
+    }
     else if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
         key += " banished";
     else if (mons->is_summoned(&duration) && duration <= 0)

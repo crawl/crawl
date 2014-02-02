@@ -5252,6 +5252,69 @@ VISUAL:@The_monster@ seems to say something.
 VISUAL:@The_monster@ says something you can't hear. It was probably not a compliment. @player_only@
 ## END silenced Murray ##
 %%%%
+############ NATASHA ### An abandoned felid familiar.
+Natasha
+
+@_Natasha_common_@
+
+w:5
+@_Natasha_rare_@
+%%%%
+_Natasha_common_
+
+VISUAL SPELL:@The_monster@ stares at you.
+@_visual_fake_spell_effect_@
+
+SPELL:@The_monster@ casts a spell.
+@_warn_fake_spell_effect_@
+
+VISUAL SPELL:@The_monster@ gestures.
+@_warn_fake_spell_effect_@
+%%%%
+_Natasha_rare_
+
+@The_monster@ hisses @at_foe@.
+
+@The_monster@ growls @at_foe@.
+
+@The_monster@ mewls in sadness.
+
+VISUAL:@The_monster@ extends @possessive@ claws.
+%%%%
+friendly Natasha
+
+@The_monster@ meows.
+
+@The_monster@ purrs.
+%%%%
+Natasha killed
+
+@_Natasha_death_common_@
+
+w:1
+@_Natasha_death_rare_@
+%%%%
+_Natasha_death_common_
+
+@The_monster@ screams in fury as @subjective@ dies!
+
+@The_monster@ screams in pain as @subjective@ dies!
+
+@The_monster@ growls in agony!
+%%%%
+_Natasha_death_rare_
+Suddenly @the_monster@'s spirit rises from its lifeless body.
+
+Moaning pathetically, @the_monster@'s spirit plunges in to the ground.
+
+You hear a faint echoing roar filled with hate and sorrow!
+
+%%%%
+Natasha permanently killed
+
+You feel @the_monster@'s spirit has finally been put to rest.
+%%%%
+############ NELLIE ### An escaped circus (h)elephant.
 Nellie
 
 @_Nellie_common_@
