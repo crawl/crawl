@@ -836,7 +836,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     return true;
 }
 
-static void _spellcasting_side_effects(spell_type spell, int pow, god_type god)
+static void _spellcasting_side_effects(spell_type spell, int pow, god_type god,
+                                       bool real_spell)
 {
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
@@ -873,7 +874,7 @@ static void _spellcasting_side_effects(spell_type spell, int pow, god_type god)
 
     if (god == GOD_NO_GOD)
     {
-        if (you.duration[DUR_SAP_MAGIC])
+        if (you.duration[DUR_SAP_MAGIC] && real_spell)
         {
             mprf(MSGCH_WARN, "Your control over your magic is sapped.");
             you.increase_duration(DUR_MAGIC_SAPPED,
@@ -1357,7 +1358,7 @@ spret_type your_spells(spell_type spell, int powc,
         {
             dithmengos_shadow_spell(beam.target, spell);
         }
-        _spellcasting_side_effects(spell, powc, god);
+        _spellcasting_side_effects(spell, powc, god, allow_fail);
         return SPRET_SUCCESS;
     }
     case SPRET_FAIL:
