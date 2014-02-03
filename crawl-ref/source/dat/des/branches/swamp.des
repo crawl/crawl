@@ -1117,7 +1117,7 @@ WEIGHT:  20
 ORIENT:  float
 TAGS:    no_rotate
 MONS:    swamp dragon, swamp drake, hydra
-MONS:    thorn hunter / treant / spriggan druid
+MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = the lernaean hydra w:2 / fire dragon w:1 / ice dragon w:1 / hydra w:18
 SHUFFLE: 12
 KITEM:   O = decaying rune of Zot
@@ -1155,7 +1155,7 @@ WEIGHT:  20
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, fire drake, bog body
-MONS:    thorn hunter / treant / spriggan druid
+MONS:    thorn hunter / shambling mangrove / spriggan druid
 KMONS:   O = the lernaean hydra w:2 / fire dragon w:1 / hydra w:19
 KMONS:   P = the lernaean hydra w:2 / ice dragon w:1 / hydra w:19
 SHUFFLE: Od, 123, lLO4 / wWP5

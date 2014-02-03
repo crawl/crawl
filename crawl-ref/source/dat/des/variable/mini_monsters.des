@@ -2159,6 +2159,45 @@ MAP
    xxxxxxxxxxx
 ENDMAP
 
+NAME:   cheibrodos_orc_bank
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  Orc:1-3, D:10-14
+ORIENT: float
+MONS:   orc, orc warrior, orc knight, hobgoblin
+KITEM:  $ = $ no_pickup
+SUBST:  ? = $., " = .14
+MAP
+cccccccccccccccc
+cccccccccccc???c
+cc22+.....3+???c
+cc..cccccccc???c
+cc..cccccccc???c
+cc..c......c???c
+cc..+......c???c
+ccccc1.1.1.c???c
+cccccmmmmm+ccccc
+    c""""""c
+    c""""""c
+    c""""""c
+    cc+cc+cc
+    ...@....
+ENDMAP
+
+NAME:  cheibrodos_gnoll_hut
+DEPTH: D:2-5
+TAGS:  no_item_gen no_monster_gen
+MONS:  gnoll, hound, bush
+KFEAT: S = known shaft trap
+MAP
+...@...
+..3.3..
+xxx+xxx
+x%+...x
+xxx2.2x
+xS+.1.x
+xxxxxxx
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead

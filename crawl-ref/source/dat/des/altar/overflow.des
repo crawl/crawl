@@ -127,6 +127,21 @@ xxxxx.xxxxx
      @
 ENDMAP
 
+NAME:  cheibrodos_chained_mummies
+TAGS:  temple_overflow_1
+TAGS:  temple_overflow_ashenzari uniq_altar_ashenzari
+DEPTH: D:3-9
+MONS:  mummy
+KFEAT: _ = altar_ashenzari
+KFEAT: m = iron_grate
+MAP
+.............
+.mmm.....mmm.
+.m1mmc_cmm1m.
+.mmm.....mmm.
+.............
+ENDMAP
+
 ### Cheibriados overflow altars ###############################################
 
 NAME:   cheibriados_altar_1
@@ -231,7 +246,8 @@ ENDMAP
 
 NAME:   chei_snail_safe_becter
 TAGS:   overflow_altar_cheibriados transparent mini_float no_monster_gen
-DEPTH:  D:2-9
+DEPTH:  D:4-9
+WEIGHT: 5
 KMONS:  a = agate snail
 NSUBST: ' = 1:a / *:.
 KFEAT:  _ = altar_cheibriados
@@ -246,6 +262,29 @@ MAP
 .x.....xx.
 .xxxxxxx..
 .........
+ENDMAP
+
+NAME:   cheibrodos_slug_habitat
+TAGS:   no_item_gen no_monster_gen temple_overflow_1
+TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
+DEPTH:  D:5-9
+WEIGHT: 5
+KFEAT:  _ = altar_cheibriados
+MONS:   giant slug
+MAP
+.............
+.xxxxx.xxxxx.
+.xTWWxxxWWTx.
+.xWWWWWWWWWx.
+.xWWWxWxWWWx.
+.xxWxx.xxWxx.
+..xWm._.mWx..
+.xxWxx1xxWxx.
+.xWWWxmxWWWx.
+.xWWWWWWWWWx.
+.xTWWx+xWWTx.
+.xxxxx.xxxxx.
+......@......
 ENDMAP
 
 ### Dithmengos overflow altars ################################################
