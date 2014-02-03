@@ -84,8 +84,8 @@ It makes spellcasting somewhat difficult.
 %%%%
 Blink Allies Away spell
 
-This spell blinks allies in sight of the caster near a pointed-at enemy and
-blinks them away from that enemy.
+This spell blinks allies in sight of the caster near a pointed-at enemy away
+from that enemy.
 %%%%
 Blink Allies Encircling spell
 
