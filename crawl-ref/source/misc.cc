@@ -118,6 +118,10 @@ static void _create_monster_hide(const item_def corpse)
     item_def& item = mitm[o];
 
     do_uncurse_item(item, false);
+
+    // Automatically identify the created hide.
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+
     const monster_type montype =
         static_cast<monster_type>(corpse.orig_monnum);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
