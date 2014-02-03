@@ -940,7 +940,7 @@ NAME:    hangedman_vaults_pinch
 TAGS:    vaults_room
 SHUFFLE: ac, AC
 SUBST:   b : axX..., B : AxX..., c : ax, C : Ax, a : Axx., A : xxx.
-SUBST:   d : x.., D : x.. X : x
+SUBST:   d : x.., D : x.., X : x
 : vaults_room_setup(_G, "0", "small")
 MAP
       x.......
