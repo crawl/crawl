@@ -309,11 +309,13 @@ void ghost_demon::init_random_demon()
             spells[0] = SPELL_METAL_SPLINTERS;
         if (one_chance_in(25))
             spells[0] = SPELL_ENERGY_BOLT;  // eye of devastation
+        if (one_chance_in(25))
+            spells[0] = SPELL_ORB_OF_ELECTRICITY;
 
         if (one_chance_in(25))
             spells[1] = SPELL_STEAM_BALL;
         if (one_chance_in(25))
-            spells[1] = SPELL_ISKENDERUNS_MYSTIC_BLAST;
+            spells[1] = SPELL_QUICKSILVER_BOLT;
         if (one_chance_in(25))
             spells[1] = SPELL_HELLFIRE;
         if (one_chance_in(25))
