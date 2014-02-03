@@ -2515,6 +2515,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         do_uncurse_item(item, false);
         item.plus = 0;
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 }
 
