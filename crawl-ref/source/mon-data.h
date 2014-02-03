@@ -4856,8 +4856,7 @@ static monsterentry mondata[] =
     { {AT_HIT, AF_FIREBRAND, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 14, 3, 5, 0 },
     5, 11, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
-    // energy here is ACTION_ENERGY, but includes swimming
-    I_HIGH, HT_AMPHIBIOUS_LAVA, FL_NONE, 8, {7, 6, 8, 8, 8, 8, 8, 80},
+    I_HIGH, HT_AMPHIBIOUS_LAVA, FL_NONE, 10, {9, 7, 10, 10, 10, 10, 10, 100},
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
