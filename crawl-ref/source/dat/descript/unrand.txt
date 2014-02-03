@@ -230,9 +230,10 @@ Although the lich met his end long ago, his weapons, spreading disruption among
 the undead, are said to have been popular. However, this mace might be the only
 one remaining.
 %%%%
-demon whip "Snakebite"
+whip "Snakebite"
 
-A terrible weapon, said to be forged from a molted hide of the Serpent of Hell.
+A double-ended whip made from the cured hides of the Lair of Beasts' deadly
+black mambas, and enchanted with a range of deadly toxins.
 %%%%
 # TAG_MAJOR_VERSION == 34
 knife of Accuracy
