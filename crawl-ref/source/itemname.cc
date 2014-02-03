@@ -1443,8 +1443,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 buff << "uncursed ";
         }
 
-        // Don't list hides as +0.
-        if (know_pluses && !armour_is_hide(*this))
+        // Don't list uncorroded hides as +0.
+        if (know_pluses && !(armour_is_hide(*this) && it_plus == 0))
             buff << make_stringf("%+d ", it_plus);
 
         if (item_typ == ARM_GLOVES || item_typ == ARM_BOOTS)
