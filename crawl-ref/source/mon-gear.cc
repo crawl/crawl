@@ -2258,6 +2258,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_ASTERION:
     case MONS_EDMUND:
+    case MONS_FRANCES:
     case MONS_RUPERT:
     {
         item.base_type = OBJ_ARMOUR;
@@ -2580,7 +2581,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         level = MAKE_GOOD_ITEM;
         // fall-through
     case MONS_AGNES:
-    case MONS_FRANCES:
     case MONS_NECROMANCER:
     case MONS_VAMPIRE_MAGE:
     case MONS_PIKEL:
