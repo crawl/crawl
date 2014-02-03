@@ -1,9 +1,9 @@
-Stone Soup 0.14 (up to 0.14-a0-1948-g9be20ec)
+Stone Soup 0.14 (up to 0.14-a0-2411-g037c4a0)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
-* Three new races: Lava Orcs, Djinn, and Formicids.
+* Four new races: Lava Orcs, Djinn, Formicids, and Vine Stalkers.
 * A new deity: Dithmengos the Shadowed.
-* A new branch: the Enchanted Forest.
+* Greatly revised monster sets in the Lair branches.
 
 Branches, environment
 ---------------------
@@ -19,6 +19,11 @@ Branches, environment
   in Depths, but still spawn as normal in Pan.
 * Portals are no longer closed when carrying the Orb of Zot.
 * The Horn of Geryon is no longer necessary for entering Hell branches.
+* Labyrinths contain more enemies, and the minotaur is normally awake.
+* More Ziggurat enemy sets.
+* Crypt endings now contain some pieces of thematic loot: draining and/or
+  pain and/or vampiric weapons, rings of positive energy and amulets of
+  warding, one of several unrands, the Necronomicon, or evokers/staves.
 
 Character
 ---------
@@ -30,6 +35,8 @@ Character
     - Formicids possess four strong arms to use large weapons together with
       shields, in addition to strong natural digging abilities and a permanent
       stasis effect.
+    - Vine stalkers regenerate quickly, but cannot heal with wands or
+      potions; they possess innate spirit shield and an anti-magic bite.
 * Felids have an innate jump attack ability, allowing them to jump over
   other monsters to attack their target.
     - There must be a safe, unoccupied landing spot next to the target.
@@ -60,15 +67,86 @@ Monsters
   equipment.
 * Abominations don't heal naturally; those created from spells can heal
   by melding further with crawling corpses and macabre masses.
-* New monster: the ignis, an abyssal monster that coronas the player.
-* New monster: the raiju, which can attack by transforming itself into
-  a bolt of lightning.
-* Moths of suppression and rock worms are no more.
+* New enemies:
+    - Fauns, who hex the player before attacking from afar, and their larger
+      brethren satyrs, who can empower their nearby allies.
+    - Wind drakes, who can breathe powerful blasts of wind and airstrike the
+      player.
+    - Thorn lotuses, plants adrift on the water that pepper the player with
+      thorns fired from afar.
+    - Thorn hunters, who fire volleys of thorns and create briar patches to
+      impede their foes' movements.
+    - Water nymphs, who passively form a pool of water around themselves
+      and strike down the player with said water.
+    - Shambling mangroves, slow-moving, tough plants home to a nest of ravens
+      or wasps.
+    - Raiju, which can attack by transforming themselves into a bolt of
+      lightning.
+    - Worldbinders, abyssal enemies which summon low tier enemies from other
+      branches.
+    - Shock serpents, who build up electrical energy for a static discharge;
+    - Mana vipers, snakes with an antimagic bite;
+    - Naga sharpshooters, who snipe at the player with Portal Projectile;
+    - Naga ritualists, who can amplify poison in enemies and also cast
+      Olgreb's Toxic Radiance;
+    - Salamander mystics, with Bolt of Magma, Haste Other, a single-target
+      version of Ignite Poison, ans Iskenderun's Mystic Blast;
+    - Salamander firebrands, whose attacks cause a ring of flames to appear
+      around the target.
+* A new set of enemies based on demonspawn, appearing in Pan.
+    - Base types:
+        - monstrous (auxiliary attacks and more HP);
+        - gelid (rC++ and icemail - bonus AC which dissipates on fire damage);
+        - infernal (rF++ and fire attacks);
+        - putrid (rPois, gains HP on nearby kills);
+        - torturous (augmentation, powered by pain, and spines).
+      - Classes:
+        - blood saint (Legendary Destruction, which casts random powerful
+          conjurations, and Ephemeral Infusion, which temporarily heals
+          nearby allies);
+        - chaos champions (Chaotic Reflection, which inflicts a random hex-like
+          effect on itself and the target, and Rearrange the Pieces, which
+          shuffles the placement of nearby creatures);
+        - warmongers (Grand Avatar, essentially a hybrid battlesphere and
+          spectral weapon which triggers on sufficiently damaging attacks of
+          nearby allies, and Sap Magic, a hex which hinders spellcasting success
+          progressively as spells are cast);
+        - corrupters (Plane Rend, which summons high tier enemies from other
+          branches, and Corrupt Body, which inflicts a small set of temporary
+          mutations);
+        - black suns (Black Mark, which empowers nearby allies with various
+          draining attacks that heal on hit, and previously existing spells
+          Bolt of Draining, Malign Offering, Dispel Undead, and Death's Door).
+* Adjustments to lair enemies:
+    - Siren songs' pulling effects are now irresistible if the player is
+      already mesmerised.
+    - Siren songs call drowned souls, weak temporary enemies with a drowning
+      attack.
+    - Manticores' spines now embed themselves in targets, causing damage while
+      moving until a few turns is spent doing nothing to remove them.
+    - Harpies no longer steal food.
+* Adjustments to other enemies:
+    - Deep elf demonologists summon more greater demons instead of minor
+      demons.
+    - Draconian knights have fewer but distinct spell sets focusing on
+      ice and necromancy.
+* New uniques:
+    - Asterion, a minotaur of Makhleb who flings Major Destruction and
+      can employ Spectral Weapon with his demon weapon;
+    - Natasha, a felid ex-familiar with minor spellcasting abilities;
+    - Vashnia, leader of a squad of naga sharpshooters with translocational
+      ability to match.
+* Moths of suppression, rock worms, and lava fish are no more.
 * Ball lightnings are no longer permanently confused, instead seeking out
   targets like giant spores.
 * Salamanders can now slither across land (like nagas) in addition to
   swimming in lava.
 * Geryon can fly once again.
+* Killer Klowns have a different set of possible damage brands: strong
+  poison, pain, drain speed, fire, cold, electric, and anti-magic.
+* Flying enemies are no longer immune to throwing nets.
+* Antaeus gains Flash Freeze, an ice conjuration which impedes the target's
+  movement for three turns.
 * Lamia has been de-throned.
 
 Spells
@@ -183,6 +261,12 @@ Gods
 * Xom's confusion now caps at 20 turns.
 * Zin's Recite shows what will be affected by all of the relevant recitations.
 * Lugonu followers no longer suffer distortion unwield effects.
+* Yredelemnul gifts vampires instead of freezing wraiths.
+* Yredelemnul armies have a maximum combined total of three profane servitors
+  and bone dragons.
+* Yredelemnul's servants are no longer angered when read-identifying a scroll
+  of holy word.
+* Nemelex no longer gifts decks of dungeons.
 
 Interface
 ---------
@@ -303,27 +387,9 @@ Monsters
 * New forest-themed monsters:
     - Spriggan assassins and enchanters, who attempt to disable the player
       with blowguns and hexes respectively before moving in for the kill.
-    - Fauns, who hex the player before attacking from afar, and their larger
-      brethren satyrs, who can empower their nearby allies.
-    - Dryads, who can awaken the forest and summon vines to pull their
-      enemies closer to trees.
-    - Wind drakes, who can breathe powerful blasts of wind and airstrike the
-      player.
-    - Thorn lotuses, plants adrift on the water that pepper the player with
-      thorns fired from afar.
-    - Thorn hunters, who fire volleys of thorns and create briar patches to
-      impede their foes' movements.
-    - Spirit wolves, who can howl to summon additional spirit wolves at
-      periodic intervals.
-    - Ancient bears, a bear to rival a dire elephant and fire resistance.
-    - Water nymphs, who can teleport their target to their home water area
-      and strike down the player with said water.
-    - Treants, slow-moving, tough plants home to a nest of wasps.
 * Other new monsters:
     - Tengu reavers, skilled with both steel and spells; appearing in the
       late dungeon and in Vaults.
-    - Elemental wellsprings, aquatic enemies that fire primal waves at their
-      foes while they're busy dealing with water elementals.
     - Deathcaps, summonable by curse toes - tougher wandering mushrooms
       with Drain Life.
 * New unique: Sojobo, king of the tengu.
