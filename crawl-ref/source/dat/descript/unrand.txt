@@ -110,6 +110,8 @@ demon blade "Leech"
 
 It drives its owner's mind into a narrow purpose: gorging on drained life
 force.
+
+It is unerringly vampiric.
 %%%%
 dagger of Chilly Death
 
@@ -185,10 +187,10 @@ Elemental Staff
 
 This powerful staff used to belong to the leader of the Guild of Five Elements.
 %%%%
-# TAG_MAJOR_VERSION == 34
 crossbow "Sniper"
 
-A crossbow made of some black material.
+A crossbow made of some black material. It is highly damaging but extremely
+cumbersome to load.
 %%%%
 longbow "Piercer"
 
@@ -228,16 +230,16 @@ Although the lich met his end long ago, his weapons, spreading disruption among
 the undead, are said to have been popular. However, this mace might be the only
 one remaining.
 %%%%
-whip "Snakebite"
+demon whip "Snakebite"
 
-A double-ended whip made from the cured hides of the Lair of Beasts' deadly
-black mambas.
+A terrible weapon, said to be forged from a molted hide of the Serpent of Hell.
 %%%%
 # TAG_MAJOR_VERSION == 34
 knife of Accuracy
 
 It is almost unerringly accurate.
 %%%%
+# TAG_MAJOR_VERSION == 34
 Lehudib's crystal spear
 
 Presumably this relic led to the invention of the famous spell, or maybe the
@@ -267,6 +269,7 @@ cloak of the Thief
 It allows its wearer to excel in the arts of thievery, and can be evoked to
 release thick clouds of smoke to allow for a hasty escape.
 %%%%
+# TAG_MAJOR_VERSION == 34
 large shield "Bullseye"
 
 Just in case you had trouble getting hit.
@@ -372,7 +375,7 @@ shield of the gong
 This is a large bronze gong that can be worn as a shield. According to certain
 mystics, beating on such a gong can grant you spiritual protection.
 
-And this shield surely will be heard!
+And this shield will surely be heard!
 %%%%
 amulet of the Air
 

@@ -2203,6 +2203,16 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
     return new_flame.degree > old_flame.degree;
 }
 
+bool curare_actor(actor* target, actor* source, string name, string source_name)
+{
+    if (target->is_player())
+        return curare_hits_player(actor_to_death_source(source), 1 + random2(3),
+                                  name, source_name);
+    else
+        return _curare_hits_monster(source, target->as_monster(), 2);
+}
+
+
 //  Used by monsters in "planning" which spell to cast. Fires off a "tracer"
 //  which tells the monster what it'll hit if it breathes/casts etc.
 //
@@ -3942,8 +3952,7 @@ void bolt::affect_player()
         {
             if (x_chance_in_y(90 - 3 * you.armour_class(), 100))
             {
-                curare_hits_player(actor_to_death_source(agent()),
-                                   1 + random2(3), *this);
+                curare_actor(agent(), (actor*) &you, name, source_name);
                 was_affected = true;
             }
         }
@@ -4510,7 +4519,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         // SPMSL_POISONED handled via callback _poison_hit_victim() in
         // item_use.cc
         if (item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
-            _curare_hits_monster(agent(), mon, 2);
+            curare_actor(agent(), mon, name, source_name);
     }
 
     // purple draconian breath

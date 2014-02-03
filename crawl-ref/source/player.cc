@@ -5087,14 +5087,15 @@ bool confuse_player(int amount, bool quiet)
     return true;
 }
 
-bool curare_hits_player(int death_source, int amount, const bolt &beam)
+bool curare_hits_player(int death_source, int amount, string name,
+                        string source_name)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (player_res_poison() >= 3)
         return false;
 
-    if (!poison_player(amount, beam.get_source_name(), beam.name))
+    if (!poison_player(amount, source_name, name))
         return false;
 
     int hurted = 0;
