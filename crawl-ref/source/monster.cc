@@ -3923,6 +3923,7 @@ int monster::res_holy_energy(const actor *attacker) const
 
 int monster::res_negative_energy(bool intrinsic_only) const
 {
+    // If you change this, also change get_mons_resists.
     if (holiness() != MH_NATURAL)
         return 3;
 
