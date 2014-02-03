@@ -325,6 +325,8 @@ bool poison_monster(monster* mons, const actor* who, int levels = 1,
 bool miasma_monster(monster* mons, const actor* who);
 bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
+bool curare_actor(actor* target, actor* source, string name,
+                  string source_name);
 void fire_tracer(const monster* mons, bolt &pbolt,
                   bool explode_only = false);
 bool imb_can_splash(coord_def origin, coord_def center,

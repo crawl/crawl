@@ -3341,7 +3341,7 @@ bool melee_attack::apply_damage_brand()
             || attacker->is_player() && you.duration[DUR_DEATHS_DOOR]
             || !attacker->is_player()
                && attacker->as_monster()->has_ench(ENCH_DEATHS_DOOR)
-            || x_chance_in_y(2, 5))
+            || (x_chance_in_y(2, 5) && !(weapon->special == UNRAND_LEECH)))
         {
             break;
         }

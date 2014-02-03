@@ -790,6 +790,8 @@ _rare_speaking_no_tension_
 
 @The_weapon@ recounts funny stories of hydra head multiplication.
 
+@The_weapon@ says, "Sometimes people call me a magnificent bastard."
+
 w:1
 @The_weapon@ snarls, "Dear diary, yet another boring day with @player_name@..."
 
