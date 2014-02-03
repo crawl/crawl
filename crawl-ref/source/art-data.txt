@@ -351,7 +351,7 @@ BOOL:    life, seeinv
 
 NAME:    demon blade "Leech"
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
-PLUS:    +13/+4
+PLUS:    +13/+1
 COLOUR:  ETC_DARK
 TILE:    urand_leech
 TILE_EQ: leech
@@ -595,9 +595,9 @@ TILE:     urand_undeadhunter
 TILE_EQ:  undeadhunter
 BOOL:     life
 
-NAME:    demon whip "Snakebite"
-OBJ:     OBJ_WEAPONS/WPN_DEMON_WHIP
-PLUS:    +5/+5
+NAME:    whip "Snakebite"
+OBJ:     OBJ_WEAPONS/WPN_WHIP
+PLUS:    +5/+10
 COLOUR:  DARKGREY
 TILE:    urand_snakebite
 TILE_EQ: snakebite
