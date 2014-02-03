@@ -390,6 +390,12 @@ resists_t get_mons_resists(const monster* mon)
     if (mon->holiness() == MH_UNDEAD)
         resists = resists & ~(MR_RES_POISON * 7) | MR_RES_POISON * 3;
 
+    // Everything but natural creatures have full rNeg. Set here for the
+    // benefit of the monster_info constructor.  If you change this, also
+    // change monster::res_negative_energy.
+    if (mon->holiness() != MH_NATURAL)
+        resists = resists & ~(MR_RES_NEG * 7) | MR_RES_NEG * 3;
+
     return resists;
 }
 
