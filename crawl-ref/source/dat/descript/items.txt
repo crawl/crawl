@@ -1253,7 +1253,7 @@ This rod contains a varied set of spells of mayhem and destruction.
 %%%%
 rod of fiery destruction
 
-This rod contains spells that launch destructive fire against your enemies.
+This rod allows its wielder to launch a fiery bolt of explosive energy.
 %%%%
 rod of frigid destruction
 

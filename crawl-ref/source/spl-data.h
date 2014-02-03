@@ -3368,7 +3368,7 @@ struct spell_desc
 {
     SPELL_EXPLOSIVE_BOLT, "Explosive Bolt",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     SPFLAG_DIR_OR_TARGET,
      7,
      200,
      LOS_RADIUS, LOS_RADIUS,

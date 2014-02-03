@@ -511,9 +511,9 @@
 },
 
 {   // Rod of fiery destruction
-    SPELL_THROW_FLAME,
-    SPELL_FIREBALL,
-    SPELL_BOLT_OF_FIRE,
+    SPELL_EXPLOSIVE_BOLT,
+    SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
