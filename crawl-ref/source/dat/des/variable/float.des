@@ -5634,3 +5634,45 @@ MAP
       ..ccccc......ccccc..
        ..................
 ENDMAP
+
+###############################################################################
+
+NAME:   cheibrodos_leafed_vault
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  D:14-16, Depths:1-5
+ORIENT: float
+NSUBST: - = 4 = 8 / 8 = 9 / 90 = . / * = .:45 0
+SUBST:  " = $:5 * |:3
+FTILE:  '$tT$*| = floor_grass
+MAP
+             ccc
+            cc-cc
+           cc---cc
+           c-----c
+      cccccc-----cccccc
+     cc.c.c+-----+c.c.cc
+    cc.c.c.c-----c.c.c.cc
+    c.c.cccc-----cccc.c.c
+    cc.cn'tc-----ct'nc.cc
+    c.cc'T'cc---cc'T'cc.c
+    cc.ct'''cc-cc'''tc.cc
+  ccc+cccc'''c+c'''cccc+ccc
+ cc------cc''"""''cc------cc
+cc--------cc"""""cc--------cc
+c----------c"""""c----------c
+cc--------cc"""""cc--------cc
+ cc------cc''"""''cc------cc
+  ccc+cccc'''ccc'''cccc+ccc
+    cc.ct'''cc-cc'''tc.cc
+    c.cc'T'cc---cc'T'cc.c
+    cc.cn'tc-----ct'nc.cc
+    c.c.cccc-----cccc.c.c
+    cc.c.c.c-----c.c.c.cc
+     cc.c.c+-----+c.c.cc
+      cccccc-----cccccc
+           c-----c
+           cc...cc
+            cc.cc
+             c+c
+             .@.
+ENDMAP
