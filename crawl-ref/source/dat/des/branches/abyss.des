@@ -866,7 +866,7 @@ WEIGHT:  5 (D), 10
 SUBST:   ' = 00., " = %%., x = xxxxxcccb, cX = xxccb
 : else
 TAGS:    extra
-SUBST:   x : xxxxc, c : xxc. X : xxc, '" = .
+SUBST:   x : xxxxc, c : xxc., X : xxc, '" = .
 : end
 MAP
         ..c
