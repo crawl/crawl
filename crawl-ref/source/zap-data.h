@@ -1111,3 +1111,19 @@ struct zap_info
     false,
     2
 },
+
+{
+    ZAP_EXPLOSIVE_BOLT,
+    "explosive bolt",
+    200,
+    NULL,
+    new tohit_calculator<17, 1, 25>,
+    RED,
+    false,
+    BEAM_FIRE,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    0
+},

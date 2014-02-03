@@ -4010,6 +4010,7 @@ enum zap_type
     ZAP_SEARING_RAY_I,
     ZAP_SEARING_RAY_II,
     ZAP_SEARING_RAY_III,
+    ZAP_EXPLOSIVE_BOLT,
 
     NUM_ZAPS
 };

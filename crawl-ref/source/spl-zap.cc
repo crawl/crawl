@@ -104,6 +104,8 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_DIG;
     case SPELL_HOLY_LIGHT:
         return ZAP_HOLY_LIGHT;
+    case SPELL_EXPLOSIVE_BOLT:
+        return ZAP_EXPLOSIVE_BOLT;
     case SPELL_DEBUGGING_RAY:
         return ZAP_DEBUGGING_RAY;
     default:
