@@ -2256,6 +2256,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall through {dlb}
 
+    case MONS_ASTERION:
     case MONS_EDMUND:
     case MONS_RUPERT:
     {
@@ -2316,13 +2317,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_ANCIENT_CHAMPION:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose(ARM_CHAIN_MAIL, ARM_PLATE_ARMOUR, -1);
-        break;
-
-    case MONS_ASTERION:
-        level = MAKE_GOOD_ITEM;
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_ROBE;
         break;
 
     case MONS_VAULT_SENTINEL:
