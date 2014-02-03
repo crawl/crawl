@@ -438,7 +438,7 @@ void natasha_revive(monster* mons)
     }
 
     create_monster(
-            mgen_data(MONS_NATASHA, mons->behaviour, 0, 0, 0, revive_place,
+            mgen_data(MONS_NATASHA, SAME_ATTITUDE(mons), 0, 0, 0, revive_place,
             mons->foe, 0, GOD_NO_GOD, MONS_NO_MONSTER, 0, BLUE,
             PROX_ANYWHERE, level_id::current(), mons->hit_dice-1));
 }
