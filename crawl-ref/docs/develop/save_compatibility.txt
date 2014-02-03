@@ -226,3 +226,28 @@ the current version and one for future versions:
     #endif
 
 neil
+
+
+Merges
+------
+
+Whenever you do a merge or rebase of a branch that introduces new monsters,
+items, etc., it is very important to pay attention to enums. Unfortunately, git
+will sometimes automatically resolve the merge in exactly the way you didn't
+want, putting enumerators in their branch location rather than after the new
+trunk enumerators, all without giving any kind of conflict warning. If such a
+problem isn't caught before the servers are rebuilt, players will be left with
+buggy saves and the problems can be very hard to fix, with nasty kludges to try
+to guess the correct type of a monster. See for example the fixes in:
+    0.13-a0-2175-ga079a5c
+    0.14-a0-2325-gf687a29
+
+To avoid situations like these, do not rely on conflict detection and
+resolution to merge enums correctly! Manually review all enum changes to make
+sure that nothing is inserted before an enumerator that already exists in
+trunk. You can look at the overall changes, with intervening history squashed,
+using a command like:
+
+    ~$ git diff master..HEAD enum.h
+
+neil
