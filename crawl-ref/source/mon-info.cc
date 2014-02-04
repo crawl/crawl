@@ -512,7 +512,7 @@ monster_info::monster_info(const monster* m, int milev)
     {
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
-            || type == MONS_SERPENT_OF_HELL)
+            || mons_species(type) == MONS_SERPENT_OF_HELL)
         {
             mb.set(MB_NAME_THE);
         }
@@ -847,7 +847,7 @@ string monster_info::_core_name() const
         s = "Lernaean hydra"; // TODO: put this into mon-data.h
     else if (nametype == MONS_ROYAL_JELLY)
         s = "royal jelly";
-    else if (nametype == MONS_SERPENT_OF_HELL)
+    else if (mons_species(nametype) == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
     else if (mons_is_mimic(nametype))
         s = mimic_name();
