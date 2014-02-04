@@ -4038,7 +4038,12 @@ int monster::res_magic() const
     if (mons_immune_magic(this))
         return MAG_IMMUNE;
 
-    int u = (get_monster_data(type))->resist_magic;
+    const monster_type base_type =
+        (mons_is_draconian(type) || mons_is_demonspawn(type))
+        ? draco_or_demonspawn_subspecies(this)
+        : type;
+
+    int u = (get_monster_data(base_type))->resist_magic;
 
     // Negative values get multiplied with monster hit dice.
     if (u < 0)
