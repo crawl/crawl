@@ -641,6 +641,9 @@ ophan MONS_OPHAN
 %sdir mon
 hippogriff MONS_HIPPOGRIFF
 minotaur MONS_MINOTAUR
+%sdir mon/unique
+asterion MONS_ASTERION
+%sdir mon
 manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
