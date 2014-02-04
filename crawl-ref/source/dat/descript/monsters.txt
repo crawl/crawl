@@ -1,4 +1,4 @@
-%%%%
+﻿%%%%
 # Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
@@ -66,7 +66,7 @@ Asterion
 Once a king infamous for waging bloodthirsty campaigns, Asterion was
 transformed into a horrible minotaur by the curse of a clever wizard-for-hire.
 Shunned and exiled from his land, he now wanders the dungeon clothed in
-tattered finery, hoping to establish a new kindgom in its depths by any means
+tattered finery, hoping to establish a new kingdom in its depths by any means
 necessary.
 
 These aspirations are appreciated by Makhleb, who has granted the minotaur
