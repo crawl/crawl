@@ -90,7 +90,7 @@ Monsters
     - Naga ritualists, who can amplify poison in enemies and also cast
       Olgreb's Toxic Radiance;
     - Salamander mystics, with Bolt of Magma, Haste Other, a single-target
-      version of Ignite Poison, ans Iskenderun's Mystic Blast;
+      version of Ignite Poison, and Iskenderun's Mystic Blast;
     - Salamander firebrands, whose attacks cause a ring of flames to appear
       around the target.
 * A new set of enemies based on demonspawn, appearing in Pan.
@@ -280,7 +280,7 @@ Interface
   into view.
 * "pickup_mode = multi|single" is now "pickup_menu = true|false", with true
   being the default; "pickup_mode = auto:X" is no more.
-* The webtitles spectator box sorts names and links online player profiles.
+* The WebTiles spectator box sorts names and links online player profiles.
 
 Stone Soup 0.13 (20131011)
 --------------------------
