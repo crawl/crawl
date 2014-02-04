@@ -4368,6 +4368,27 @@ mons_spec mons_list::demonspawn_monspec(string name) const
     return spec;
 }
 
+mons_spec mons_list::soh_monspec(string name) const
+{
+    // "serpent of hell " is 16 characters
+    name = name.substr(16);
+    string abbrev =
+        uppercase_first(lowercase(name)).substr(0, 3);
+    switch (str_to_branch(abbrev))
+    {
+        case BRANCH_GEHENNA:
+            return MONS_SERPENT_OF_HELL;
+        case BRANCH_COCYTUS:
+            return MONS_SERPENT_OF_HELL_COCYTUS;
+        case BRANCH_DIS:
+            return MONS_SERPENT_OF_HELL_DIS;
+        case BRANCH_TARTARUS:
+            return MONS_SERPENT_OF_HELL_TARTARUS;
+        default:
+            return MONS_PROGRAM_BUG;
+    }
+}
+
 mons_spec mons_list::mons_by_name(string name) const
 {
     name = replace_all_of(name, "_", " ");
@@ -4463,6 +4484,10 @@ mons_spec mons_list::mons_by_name(string name) const
     {
         return demonspawn_monspec(name);
     }
+
+    // The space is important - it indicates a flavour is being specified.
+    if (name.find("serpent of hell ") != string::npos)
+        return soh_monspec(name);
 
     return get_monster_by_name(name);
 }
