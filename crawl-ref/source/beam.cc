@@ -3297,6 +3297,16 @@ void bolt::tracer_affect_player()
         _explosive_bolt_explode(this, you.pos());
 }
 
+// Magical penetrating projectiles should pass through shields.
+// Natural ones (large rocks) shouldn't.
+static bool _shield_piercing(bolt *pbolt)
+{
+    return pbolt->range_used_on_hit() == 0
+           && (!pbolt->item
+               || pbolt->item->base_type != OBJ_MISSILES
+               || pbolt->item->sub_type  != MI_LARGE_ROCK);
+}
+
 bool bolt::misses_player()
 {
     if (is_enchantment())
@@ -3348,6 +3358,7 @@ bool bolt::misses_player()
         dprf(DIAG_BEAM, "Beamshield: hit: %d, block %d", testhit, block);
         if (testhit < block)
         {
+            bool penet = false;
             if (is_reflectable(you.shield()))
             {
                 mprf("Your %s reflects the %s!",
@@ -3356,13 +3367,22 @@ bool bolt::misses_player()
                 ident_reflector(you.shield());
                 reflect();
             }
+            else if (_shield_piercing(this))
+            {
+                penet = true;
+                mprf("The %s pierces through your %s!",
+                      name.c_str(),
+                      you.shield() ? you.shield()->name(DESC_PLAIN).c_str()
+                                   : "shielding");
+            }
             else
             {
                 mprf("You block the %s.", name.c_str());
                 finish_beam();
             }
             you.shield_block_succeeded(agent());
-            return true;
+            if (!penet)
+                return true;
         }
 
         // Some training just for the "attempt".
@@ -4638,6 +4658,15 @@ bool bolt::attempt_block(monster* mon)
                     mprf("The %s bounces off of thin air!", name.c_str());
 
                 reflect();
+            }
+            else if (_shield_piercing(this))
+            {
+                rc = false;
+                mprf("The %s pierces through %s %s!",
+                      name.c_str(),
+                      apostrophise(mon->name(DESC_THE)).c_str(),
+                      shield ? shield->name(DESC_PLAIN).c_str()
+                             : "shielding");
             }
             else if (you.see_cell(pos()))
             {

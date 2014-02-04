@@ -204,6 +204,8 @@ public:
 
     maybe_bool affects_wall(dungeon_feature_type wall) const;
 
+    int range_used_on_hit() const;
+
 private:
     void do_fire();
     coord_def pos() const;
@@ -227,8 +229,6 @@ private:
     bool need_regress() const;
 
     const actor* beam_source_as_target() const;
-
-    int range_used_on_hit() const;
 
     string zapper() const;
 
