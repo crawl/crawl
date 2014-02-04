@@ -1827,6 +1827,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_LAVA_SNAKE;
     case MONS_SALAMANDER:
         return TILEP_MONS_SALAMANDER;
+    case MONS_SALAMANDER_MYSTIC:
+        return TILEP_MONS_SALAMANDER_MYSTIC;
+    case MONS_SALAMANDER_FIREBRAND:
+        return TILEP_MONS_SALAMANDER_FIREBRAND;
 
     // humans ('@')
     case MONS_HUMAN:
