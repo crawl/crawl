@@ -1924,10 +1924,10 @@ int failure_rate_colour(spell_type spell)
 //Converts the raw failure rate into a number to be displayed.
 int failure_rate_to_int(int fail)
 {
-    if (fail == 0)
+    if (fail <= 0)
         return 0;
-    else if (fail == 100)
-        return 100;
+    else if (fail >= 100)
+        return (fail + 100)/2;
     else
         return max(1, (int) (100 * _get_true_fail_rate(fail)));
 }
