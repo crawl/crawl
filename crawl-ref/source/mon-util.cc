@@ -5077,3 +5077,9 @@ bool mons_is_beast(monster_type mc)
     else
         return true;
 }
+
+bool mons_is_avatar(monster_type mc)
+{
+    return mc == MONS_SPECTRAL_WEAPON || mc == MONS_BATTLESPHERE
+        || mc == MONS_GRAND_AVATAR;
+}

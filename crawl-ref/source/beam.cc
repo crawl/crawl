@@ -5043,10 +5043,7 @@ bool bolt::ignores_monster(const monster* mon) const
     // battlespheres. We don't check mon->is_projectile() because that
     // check includes boulder beetles which should be hit.
     if (mons_is_projectile(mon)
-        || (mon->type == MONS_BATTLESPHERE
-            || mon->type == MONS_SPECTRAL_WEAPON
-            || mon->type == MONS_GRAND_AVATAR)
-            && mons_aligned(agent(), mon))
+        || (mons_is_avatar(mon->type) && mons_aligned(agent(), mon)))
     {
         return true;
     }

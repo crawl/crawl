@@ -64,7 +64,7 @@ static void _mon_check_foe_invalid(monster* mon)
 {
     // Assume a spectral weapon has a valid target
     // Ideally this is not outside special cased like this
-    if (mon->type == MONS_SPECTRAL_WEAPON)
+    if (mons_is_avatar(mon->type))
         return;
 
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
@@ -373,14 +373,14 @@ void handle_behaviour(monster* mon)
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
 
-    // The target and foe set here for a spectral weapon should never change
+    actor *owner = (mon->summoner ? actor_by_mid(mon->summoner) : nullptr);
     if (mon->type == MONS_SPECTRAL_WEAPON)
     {
         // Do nothing if we're still being placed
         if (!mon->summoner)
             return;
 
-        actor *owner = actor_by_mid(mon->summoner);
+        owner = actor_by_mid(mon->summoner);
 
         if (!owner || !owner->alive())
         {
@@ -388,22 +388,24 @@ void handle_behaviour(monster* mon)
             return;
         }
 
-        mon->target = owner->pos();
-        mon->foe = MHITNOT;
-        // Try to move towards any monsters the owner is attacking
-        if (mon->props.exists(SW_TARGET_MID))
+        // Only go after the target if it's still near the owner, and
+        // so are we.  The weapon is restricted to a leash range of 2,
+        // and things reachable within that leash range [qoala]
+        const int leash = 2;
+
+        if (grid_distance(owner->pos(), mon->pos()) > leash
+            || mon->foe == MHITNOT)
+        {
+            mon->foe = owner->mindex();
+            mon->target = owner->pos();
+        }
+        else if (mon->props.exists(SW_TARGET_MID))
         {
             actor *atarget = actor_by_mid(mon->props[SW_TARGET_MID].get_int());
 
-            // Only go after the target if it's still near the owner,
-            // and so are we.
-            // The weapon is restricted to a leash range of 2,
-            // and things reachable within that leash range [qoala]
-            const int leash = 2;
             if (atarget && atarget->alive()
                 && (grid_distance(owner->pos(), atarget->pos())
-                    <= ((mon->reach_range() == REACH_TWO) ? leash + 2 : leash + 1))
-                && (grid_distance(owner->pos(), mon->pos()) <= leash))
+                    <= ((mon->reach_range() == REACH_TWO) ? leash + 2 : leash + 1)))
             {
                 mon->target = atarget->pos();
                 mon->foe = atarget->mindex();
@@ -462,9 +464,7 @@ void handle_behaviour(monster* mon)
         && mon->behaviour != BEH_WITHDRAW
         && mon->type != MONS_GIANT_SPORE
         && mon->type != MONS_BALL_LIGHTNING
-        && mon->type != MONS_BATTLESPHERE
-        && mon->type != MONS_SPECTRAL_WEAPON
-        && mon->type != MONS_GRAND_AVATAR)
+        && !mons_is_avatar(mon->type))
     {
         if (!crawl_state.game_is_zotdef())
         {
@@ -527,8 +527,7 @@ void handle_behaviour(monster* mon)
     }
 
     // Friendly summons will come back to the player if they go out of sight.
-    // Spectral weapon should keep its target even though it can't attack it
-    if (!summon_can_attack(mon) && mon->type!=MONS_SPECTRAL_WEAPON)
+    if (!summon_can_attack(mon))
         mon->target = you.pos();
 
     // Monsters do not attack themselves. {dlb}
@@ -537,7 +536,7 @@ void handle_behaviour(monster* mon)
 
     // Friendly and good neutral monsters do not attack other friendly
     // and good neutral monsters.
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU
+    if (!mons_is_avatar(mon->type) && mon->foe != MHITNOT && mon->foe != MHITYOU
         && wontAttack && menv[mon->foe].wont_attack())
     {
         mon->foe = MHITNOT;
@@ -556,6 +555,7 @@ void handle_behaviour(monster* mon)
     // target the player, if they're healthy.
     // Zotdef: 2/3 chance of retargeting changed to 1/4
     if (!isFriendly && !isNeutral
+        && !mons_is_avatar(mon->type)
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk_or_insane()
         && isHealthy
@@ -686,7 +686,15 @@ void handle_behaviour(monster* mon)
                 if (mon->travel_target == MTRAV_SIREN)
                     mon->travel_target = MTRAV_NONE;
 
-                if (isFriendly && mon->foe != MHITYOU)
+                // Spectral weapons simply seek back to their owner if
+                // they can't see their seek target.
+                if (mons_is_avatar(mon->type))
+                {
+                    new_foe = owner->mindex();
+                    mon->target = owner->pos();
+                    break;
+                }
+                else if (isFriendly && mon->foe != MHITYOU)
                 {
                     if (patrolling || crawl_state.game_is_arena())
                     {
@@ -716,8 +724,9 @@ void handle_behaviour(monster* mon)
                     {   // hostiles only in Zotdef
                         if (mon->foe == MHITYOU)
                         {
+                            // infallible tracking in zotdef
                             if (crawl_state.game_is_zotdef())
-                                mon->target = PLAYER_POS;  // infallible tracking in zotdef
+                                mon->target = PLAYER_POS;
                             else
                             {
                                 if (x_chance_in_y(50, you.stealth())
@@ -762,6 +771,11 @@ void handle_behaviour(monster* mon)
 
                 if (!isFriendly)
                     break;
+                else if (mons_is_avatar(mon->type) && !owner->is_player())
+                {
+                    mon->foe = owner->mindex();
+                    break;
+                }
             }
 
             ASSERT(proxFoe || isFriendly);
@@ -827,8 +841,8 @@ void handle_behaviour(monster* mon)
                 // the traditional way.
 
                 // Sometimes, your friends will wander a bit.
-                if (isFriendly && one_chance_in(8)
-                    && mon->foe == MHITYOU && proxFoe)
+                if (isFriendly && !mons_is_avatar(mon->type)
+                    && one_chance_in(8))
                 {
                     set_random_target(mon);
                     mon->foe = MHITNOT;
@@ -844,7 +858,9 @@ void handle_behaviour(monster* mon)
                 mon->target = target->pos();
 
                 if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-                    && !mon->berserk_or_insane())
+                    && !mon->berserk_or_insane()
+                    && !(mons_is_avatar(mon->type)
+                         && mon->foe == owner->mindex()))
                 {
                     _set_firing_pos(mon, mon->target);
                 }
@@ -920,7 +936,8 @@ void handle_behaviour(monster* mon)
             // Creatures not currently pursuing another foe are
             // alerted by a sentinel's mark
             if (mon->foe == MHITNOT && you.duration[DUR_SENTINEL_MARK]
-                && (!isFriendly && !isNeutral && !isPacified
+                && (!isFriendly && !mons_is_avatar(mon->type) && !isNeutral
+                    && !isPacified
                     || mon->has_ench(ENCH_INSANE)))
             {
                 new_foe = MHITYOU;
@@ -935,7 +952,7 @@ void handle_behaviour(monster* mon)
             // monsters have longer memories).  Pacified monsters will
             // also eventually switch the place from which they want to
             // leave the level, in case their current choice is blocked.
-            if (!proxFoe && mon->foe != MHITNOT
+            if (!proxFoe && !mons_is_avatar(mon->type) && mon->foe != MHITNOT
                    && one_chance_in(isSmart ? 60 : 20)
                    && !mons_foe_is_marked(mon)
                 || isPacified && one_chance_in(isSmart ? 40 : 120))
@@ -1156,11 +1173,9 @@ static void _set_nearest_monster_foe(monster* mon)
 {
     // These don't look for foes.
     if (mon->good_neutral() || mon->strict_neutral()
-            || mon->behaviour == BEH_WITHDRAW
-            || mon->type == MONS_BATTLESPHERE
-            || mon->type == MONS_SPECTRAL_WEAPON
-            || mon->type == MONS_GRAND_AVATAR
-            || mon->has_ench(ENCH_HAUNTING))
+        || mon->behaviour == BEH_WITHDRAW
+        || mons_is_avatar(mon->type)
+        || mon->has_ench(ENCH_HAUNTING))
     {
         return;
     }
@@ -1322,9 +1337,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         if (src == &you
             && !mon->has_ench(ENCH_INSANE)
-            && mon->type != MONS_BATTLESPHERE
-            && mon->type != MONS_SPECTRAL_WEAPON
-            && mon->type != MONS_GRAND_AVATAR)
+            && !mons_is_avatar(mon->type))
         {
             mon->attitude = ATT_HOSTILE;
             breakCharm    = true;
@@ -1505,9 +1518,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         mon->target = src_pos;
         if (src->is_player()
             && !mon->has_ench(ENCH_INSANE)
-            && mon->type != MONS_BATTLESPHERE
-            && mon->type != MONS_SPECTRAL_WEAPON
-            && mon->type != MONS_GRAND_AVATAR)
+            && !mons_is_avatar(mon->type))
         {
             // Why only attacks by the player change attitude? -- 1KB
             mon->attitude = ATT_HOSTILE;
