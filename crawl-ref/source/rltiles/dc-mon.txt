@@ -58,6 +58,10 @@ holy_swine MONS_HOLY_SWINE
 %rim 1
 %sdir player/felids
 cat4 MONS_FELID
+%rim 0
+%sdir mon/unique
+natasha MONS_NATASHA
+%rim 1
 %sdir mon/animals
 
 ## Bees ('k')
