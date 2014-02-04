@@ -391,6 +391,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
     case TILEP_MONS_FREDERICK:
+    case TILEP_MONS_SALAMANDER_FIREBRAND:
         *ofs_x = 0;
         *ofs_y = -2;
         break;
@@ -443,6 +444,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_PRIEST:
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_ANNIHILATOR:
+    case TILEP_MONS_SALAMANDER:
+    case TILEP_MONS_SALAMANDER_MYSTIC:
         *ofs_x = -1;
         *ofs_y = -2;
         break;
@@ -660,6 +663,12 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_ASTERION:
         *ofs_x = 1;
         *ofs_y = 1;
+        break;
+
+    case TILEP_MONS_SALAMANDER:
+    case TILEP_MONS_SALAMANDER_FIREBRAND:
+        *ofs_x = 1;
+        *ofs_y = -1;
         break;
 
     case TILEP_MONS_SPRIGGAN_RIDER: // shield covered, out of picture
