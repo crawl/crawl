@@ -2487,6 +2487,9 @@ void define_monster(monster* mons)
         do
             monbase = random_draconian_monster_species();
         while (drac_colour_incompatible(mcls, monbase));
+        const monsterentry* mbase = get_monster_data(monbase);
+        ac += mbase->AC;
+        ev += mbase->ev;
         break;
     }
 
