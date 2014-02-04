@@ -2789,6 +2789,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_VASHNIA:
+        natural_leader = true;
         band = BAND_VASHNIA;
         band_size = 3 + random2(3);
         break;
