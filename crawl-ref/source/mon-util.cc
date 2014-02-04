@@ -1781,6 +1781,22 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
         return attk;
     }
 
+    // Nonbase draconians inherit aux attacks from their base type.
+    // Implicit assumption: base draconian types only get one aux
+    // attack, and it's in their second attack slot.
+    // If that changes this code will need to be changed.
+    if (mons_species(mon->type) == MONS_DRACONIAN
+        && mon->type != MONS_DRACONIAN
+        && attk.type == AT_NONE
+        && attk_number > 0
+        && smc->attack[attk_number - 1].type != AT_NONE)
+    {
+        const monsterentry* mbase =
+            get_monster_data (draco_or_demonspawn_subspecies(mon));
+        ASSERT(mbase);
+        return mbase->attack[1];
+    }
+
     if (attk.type == AT_RANDOM)
         attk.type = random_choose(AT_HIT, AT_GORE, -1);
 
