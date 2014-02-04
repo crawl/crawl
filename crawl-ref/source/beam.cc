@@ -2203,7 +2203,7 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
     return new_flame.degree > old_flame.degree;
 }
 
-bool curare_actor(actor* target, actor* source, string name, string source_name)
+bool curare_actor(actor* source, actor* target, string name, string source_name)
 {
     if (target->is_player())
         return curare_hits_player(actor_to_death_source(source), 1 + random2(3),
