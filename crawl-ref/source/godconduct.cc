@@ -1043,22 +1043,26 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
         }
 
-        if (you_worship(GOD_OKAWARU)
-            // currently no constructs and plants
-            && (thing_done == DID_KILL_LIVING
-                || thing_done == DID_KILL_UNDEAD
-                || thing_done == DID_KILL_DEMON
-                || thing_done == DID_KILL_HOLY)
+        // currently no constructs and plants
+        if ((thing_done == DID_KILL_LIVING
+             || thing_done == DID_KILL_UNDEAD
+             || thing_done == DID_KILL_DEMON
+             || thing_done == DID_KILL_HOLY)
             && !god_hates_attacking_friend(you.religion, victim))
         {
-            piety_change = get_fuzzied_monster_difficulty(victim);
-            dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
-            piety_denom = 700;
-            if (piety_change > 3200)
-                simple_god_message(" appreciates your kill.");
-            else if (piety_change > 9) // might still be miniscule
-                simple_god_message(" accepts your kill.");
-            retval = true;
+            if (you_worship(GOD_OKAWARU))
+            {
+                piety_change = get_fuzzied_monster_difficulty(victim);
+                dprf("fuzzied monster difficulty: %4.2f", piety_change * 0.01);
+                piety_denom = 700;
+                if (piety_change > 3200)
+                    simple_god_message(" appreciates your kill.");
+                else if (piety_change > 9) // might still be miniscule
+                    simple_god_message(" accepts your kill.");
+                retval = true;
+            }
+            if (you_worship(GOD_DITHMENGOS))
+                piety_denom *= 2;
         }
 
 #ifdef DEBUG_DIAGNOSTICS
