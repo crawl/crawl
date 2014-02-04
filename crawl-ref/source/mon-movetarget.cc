@@ -918,7 +918,7 @@ void check_wander_target(monster* mon, bool isPacified)
     // default wander behaviour
     if (mon->pos() == mon->target
         || mons_is_batty(mon)
-        || !isPacified && one_chance_in(20) && mon->type != MONS_BATTLESPHERE
+        || (!isPacified && !mons_is_avatar(mon->type) && one_chance_in(20))
         || herd_monster(mon) && !_herd_ok(mon)
         || !_band_ok(mon))
     {
