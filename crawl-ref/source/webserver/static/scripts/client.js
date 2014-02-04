@@ -16,8 +16,8 @@ function (exports, $, key_conversion, chat, comm) {
     var message_queue = [];
 
     var logging_in = false;
-
     var showing_close_message = false;
+    var current_hash;
 
     var send_message = comm.send_message;
 
@@ -418,10 +418,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         if (!watching)
         {
-            if (location.hash == "" || location.hash.match(/^#lobby$/i))
-                go_lobby();
-            else
-                hash_changed();
+            current_hash = null;
+            hash_changed();
         }
     }
 
@@ -633,6 +631,7 @@ function (exports, $, key_conversion, chat, comm) {
     function go_lobby()
     {
         cleanup();
+        current_hash = "#lobby";
         location.hash = "#lobby";
         set_layer("lobby");
         $("#username").focus();
@@ -891,6 +890,10 @@ function (exports, $, key_conversion, chat, comm) {
 
     function hash_changed()
     {
+        if (location.hash === current_hash)
+            return;
+        current_hash = location.hash;
+
         var watch = location.hash.match(/^#watch-(.+)/i);
         var play = location.hash.match(/^#play-(.+)/i);
         if (watch)
@@ -1129,11 +1132,8 @@ function (exports, $, key_conversion, chat, comm) {
 
                 start_login();
 
-                if (location.hash == "" ||
-                    location.hash.match(/^#lobby$/i))
-                    go_lobby();
-                else
-                    hash_changed();
+                current_hash = null;
+                hash_changed();
             };
 
             socket.onmessage = function (msg)
