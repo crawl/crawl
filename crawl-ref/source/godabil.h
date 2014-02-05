@@ -76,6 +76,8 @@ bool can_convert_to_beogh();
 void spare_beogh_convert();
 
 bool dithmenos_shadow_step();
+monster* shadow_monster(bool equip = true);
+void shadow_monster_reset(monster *mon);
 void dithmenos_shadow_melee(actor* target);
 void dithmenos_shadow_throw(coord_def target);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);

@@ -24,6 +24,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-cast.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "terrain.h"
@@ -902,10 +903,96 @@ static bool _vehumet_retribution()
     // conjuration theme
     const god_type god = GOD_VEHUMET;
 
-    simple_god_message("'s vengeance finds you.", god);
-    MiscastEffect(&you, -god, SPTYP_CONJURATION,
-                  8 + you.experience_level, random2avg(98, 3),
-                  "the wrath of Vehumet");
+    monster* avatar = shadow_monster(false);
+    if (!avatar)
+    {
+        simple_god_message("has no time to deal with you just now.", god);
+        return false;
+    }
+    avatar->mname = "the wrath of Vehumet";
+    avatar->flags |= MF_NAME_REPLACE;
+
+    spell_type spell = SPELL_NO_SPELL;
+    const int severity = min(random_range(1 + you.experience_level / 5,
+                                          1 + you.experience_level / 3),
+                             9);
+    // Mostly player-castable conjurations with a couple of additions.
+    switch (severity)
+    {
+        case 1:
+            spell = random_choose(SPELL_MAGIC_DART,
+                                  SPELL_STING,
+                                  SPELL_SHOCK,
+                                  SPELL_FLAME_TONGUE,
+                                  -1);
+            break;
+        case 2:
+            spell = random_choose(SPELL_THROW_FLAME,
+                                  SPELL_THROW_FROST,
+                                  -1);
+            break;
+        case 3:
+            spell = random_choose(SPELL_MEPHITIC_CLOUD,
+                                  SPELL_STONE_ARROW,
+                                  -1);
+            break;
+        case 4:
+            spell = random_choose(SPELL_ISKENDERUNS_MYSTIC_BLAST,
+                                  SPELL_STICKY_FLAME,
+                                  SPELL_THROW_ICICLE,
+                                  SPELL_ENERGY_BOLT,
+                                  -1);
+            break;
+        case 5:
+            spell = random_choose(SPELL_FIREBALL,
+                                  SPELL_LIGHTNING_BOLT,
+                                  SPELL_BOLT_OF_MAGMA,
+                                  SPELL_VENOM_BOLT,
+                                  SPELL_BOLT_OF_DRAINING,
+                                  SPELL_QUICKSILVER_BOLT,
+                                  SPELL_METAL_SPLINTERS,
+                                  -1);
+            break;
+        case 6:
+            spell = random_choose(SPELL_BOLT_OF_FIRE,
+                                  SPELL_BOLT_OF_COLD,
+                                  SPELL_FREEZING_CLOUD,
+                                  SPELL_POISONOUS_CLOUD,
+                                  SPELL_POISON_ARROW,
+                                  SPELL_IRON_SHOT,
+                                  SPELL_CONJURE_BALL_LIGHTNING,
+                                  -1);
+            break;
+        case 7:
+            spell = random_choose(SPELL_ORB_OF_ELECTRICITY,
+                                  SPELL_FLASH_FREEZE,
+                                  -1);
+            break;
+        case 8:
+            spell = random_choose(SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+                                  -1);
+            break;
+        case 9:
+            spell = random_choose(SPELL_FIRE_STORM,
+                                  SPELL_ICE_STORM,
+                                  SPELL_HELLFIRE, // let it end...
+                                  -1);
+            break;
+        default:
+            simple_god_message("has no time to deal with you just now.", god);
+            shadow_monster_reset(avatar);
+            return false;
+    }
+
+    simple_god_message(" rains destruction down upon you!", god);
+    avatar->attitude = ATT_HOSTILE;
+    bolt beam;
+    beam.source = you.pos();
+    beam.target = you.pos();
+    beam.aimed_at_feet = true;
+    beam.source_name = "the wrath of Vehumet";
+    mons_cast(avatar, beam, spell, false, false);
+    shadow_monster_reset(avatar);
     return true;
 }
 

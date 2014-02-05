@@ -2992,9 +2992,16 @@ void bolt::internal_ouch(int dam)
         dam *= 4;
 
     // The order of this is important.
-    if (monst && (monst->type == MONS_GIANT_SPORE
-                  || monst->type == MONS_BALL_LIGHTNING
-                  || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
+    if (monst && monst->type == MONS_PLAYER_SHADOW
+        && !monst->mname.empty())
+    {
+        ouch(dam, NON_MONSTER, KILLED_BY_DIVINE_WRATH,
+             aux_source.empty() ? NULL : aux_source.c_str(), true,
+             source_name.empty() ? NULL : source_name.c_str());
+    }
+    else if (monst && (monst->type == MONS_GIANT_SPORE
+                       || monst->type == MONS_BALL_LIGHTNING
+                       || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
     {
         ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
@@ -4732,7 +4739,7 @@ bool bolt::handle_statue_disintegration(monster* mon)
 void bolt::affect_monster(monster* mon)
 {
     // Don't hit dead monsters.
-    if (!mon->alive())
+    if (!mon->alive() || mon->type == MONS_PLAYER_SHADOW)
     {
         apply_hit_funcs(mon, 0);
         return;
