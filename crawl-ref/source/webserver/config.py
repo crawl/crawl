@@ -40,7 +40,8 @@ game_data_no_cache = True
 watch_socket_dirs = False
 
 # Game configs
-# %n in paths is replaced by the current username
+# %n in paths and urls is replaced by the current username
+# morgue_url is for a publicly available URL to access morgue_path
 games = OrderedDict([
     ("dcss-web-trunk", dict(
         name = "DCSS trunk",
@@ -52,6 +53,7 @@ games = OrderedDict([
         ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
+        morgue_url = None,
         send_json_options = True)),
     ("sprint-web-trunk", dict(
         name = "Sprint trunk",
@@ -63,6 +65,7 @@ games = OrderedDict([
         ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
+        morgue_url = None,
         send_json_options = True,
         options = ["-sprint"])),
     ("zd-web-trunk", dict(
@@ -75,6 +78,7 @@ games = OrderedDict([
         ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
+        morgue_url = None,
         send_json_options = True,
         options = ["-zotdef"])),
     ("tut-web-trunk", dict(
@@ -87,6 +91,7 @@ games = OrderedDict([
         ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
+        morgue_url = None,
         send_json_options = True,
         options = ["-tutorial"])),
 ])
@@ -161,3 +166,7 @@ daemon = False # If true, the server will detach from the session after startup
 # For example: "http://crawl.akrasiac.org/scoring/players/%s.html"
 # Set to None to disable player page hyperlinks
 player_url = None
+
+# Only for development:
+# Automatically log in all users with the username given here.
+autologin = None
