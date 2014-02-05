@@ -2429,7 +2429,7 @@ static void _explosive_bolt_explode(bolt *parent, coord_def pos)
     beam.beam_source  = parent->beam_source;
     beam.thrower      = parent->thrower;
     beam.attitude     = parent->attitude;
-    beam.damage       = dice_def(3, 7 + parent->ench_power / 13);
+    beam.damage       = dice_def(3, 9 + parent->ench_power / 10);
     beam.colour       = RED;
     beam.flavour      = BEAM_FIRE;
     beam.is_explosion = true;
