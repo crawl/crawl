@@ -1111,3 +1111,63 @@ bool targetter_jump::has_additional_sites(coord_def a)
     get_additional_sites(a);
     return temp_sites.size();
 }
+
+targetter_explosive_bolt::targetter_explosive_bolt(const actor *act, int pow, int range) :
+                          targetter_beam(act, range, ZAP_EXPLOSIVE_BOLT, pow, 0, 0)
+{
+}
+
+bool targetter_explosive_bolt::set_aim(coord_def a)
+{
+    if (!targetter_beam::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+    tempbeam.target = origin;
+    for (vector<coord_def>::const_iterator i = path_taken.begin();
+         i != path_taken.end(); ++i)
+    {
+        if (cell_is_solid(*i))
+            break;
+
+        tempbeam.target = *i;
+        if (anyone_there(*i))
+        {
+            tempbeam.use_target_as_pos = true;
+            exp_map.init(INT_MAX);
+            tempbeam.determine_affected_cells(exp_map, coord_def(), 0,
+                                              1, true, true);
+        }
+    }
+
+    return true;
+}
+
+aff_type targetter_explosive_bolt::is_affected(coord_def loc)
+{
+    bool on_path = false;
+    coord_def c;
+    for (vector<coord_def>::const_iterator i = path_taken.begin();
+         i != path_taken.end(); ++i)
+    {
+        if (cell_is_solid(*i))
+            break;
+
+        c = *i;
+        if (c == loc)
+            on_path = true;
+        if (anyone_there(*i)
+            && !beam.ignores_monster(monster_at(c))
+            && (loc - c).rdist() <= 9)
+        {
+            coord_def centre(9,9);
+            if (exp_map(loc - c + centre) < INT_MAX
+                && !cell_is_solid(loc))
+            {
+                return AFF_MAYBE;
+            }
+        }
+    }
+
+    return on_path ? AFF_TRACER : AFF_NO;
+}
