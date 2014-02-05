@@ -1216,7 +1216,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         if (death || you.can_see(mons))
             death_source_name = mons->full_name(desc, true);
 
-        if (mons->mid == MID_PLAYER)
+        if (mons->mid == MID_PLAYER && mons->mname.empty())
             death_source_name = "their own shadow"; // heh
 
         if (death && mons->type == MONS_MARA_FAKE)
@@ -2413,9 +2413,23 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         if (terse)
             desc += "divine wrath";
         else
-            desc += "Killed by " +
-                    (auxkilldata.empty() ? "divine wrath" : auxkilldata);
+        {
+            desc += "Killed by ";
+            if (auxkilldata.empty())
+                desc += "divine wrath";
+            else
+            {
+                // Lugonu's touch or "the <retribution> of <deity>";
+                // otherwise it's a beam
+                if (!isupper(auxkilldata[0]) && auxkilldata.find("the ") != 0)
+                    desc += is_vowel(auxkilldata[0]) ? "an " : "a ";
+
+                desc += auxkilldata;
+            }
+        }
         needs_damage = true;
+        if (!death_source_name.empty())
+            needs_called_by_monster_line = true;
         break;
 
     case KILLED_BY_DISINT:

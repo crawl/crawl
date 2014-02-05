@@ -3513,7 +3513,7 @@ static bool _dithmenos_shadow_acts()
                          2 * range);
 }
 
-static monster* _dithmenos_shadow_monster()
+monster* shadow_monster(bool equip)
 {
     if (monster_at(you.pos()))
         return NULL;
@@ -3523,7 +3523,8 @@ static monster* _dithmenos_shadow_monster()
 
     // Do a basic clone of the weapon.
     item_def* wpn = you.weapon();
-    if (wpn
+    if (equip
+        && wpn
         && (wpn->base_type == OBJ_WEAPONS
             || wpn->base_type == OBJ_STAVES
             || wpn->base_type == OBJ_RODS))
@@ -3552,7 +3553,7 @@ static monster* _dithmenos_shadow_monster()
         new_item.flags   |= ISFLAG_SUMMONED;
     }
     const int missile = you.m_quiver->get_fire_item();
-    if (missile != -1)
+    if (equip && missile != -1)
     {
         ammo_index = get_mitm_slot(10);
         if (ammo_index == NON_ITEM)
@@ -3599,7 +3600,7 @@ static monster* _dithmenos_shadow_monster()
     return mon;
 }
 
-static void _dithmenos_shadow_monster_reset(monster *mon)
+void shadow_monster_reset(monster *mon)
 {
     if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
         destroy_item(mon->inv[MSLOT_WEAPON]);
@@ -3618,7 +3619,7 @@ void dithmenos_shadow_melee(actor* target)
         return;
     }
 
-    monster* mon = _dithmenos_shadow_monster();
+    monster* mon = shadow_monster();
     if (!mon)
         return;
 
@@ -3628,7 +3629,7 @@ void dithmenos_shadow_melee(actor* target)
     mprf("%s attacks!", mon->name(DESC_THE).c_str());
     fight_melee(mon, target);
 
-    _dithmenos_shadow_monster_reset(mon);
+    shadow_monster_reset(mon);
 }
 
 void dithmenos_shadow_throw(coord_def target)
@@ -3639,7 +3640,7 @@ void dithmenos_shadow_throw(coord_def target)
         return;
     }
 
-    monster* mon = _dithmenos_shadow_monster();
+    monster* mon = shadow_monster();
     if (!mon)
         return;
 
@@ -3655,7 +3656,7 @@ void dithmenos_shadow_throw(coord_def target)
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
     }
 
-    _dithmenos_shadow_monster_reset(mon);
+    shadow_monster_reset(mon);
 }
 
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
@@ -3670,7 +3671,7 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 
     const coord_def target = orig_beam->target;
 
-    monster* mon = _dithmenos_shadow_monster();
+    monster* mon = shadow_monster();
     if (!mon)
         return;
 
@@ -3696,5 +3697,5 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
          mon->name(DESC_THE).c_str());
     mons_cast(mon, beem, shadow_spell, false, false);
 
-    _dithmenos_shadow_monster_reset(mon);
+    shadow_monster_reset(mon);
 }
