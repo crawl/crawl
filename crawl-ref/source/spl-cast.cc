@@ -312,7 +312,7 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     return chance * fail_reduce / 100;
 }
 
-int spell_fail(spell_type spell,bool capped)
+int spell_fail(spell_type spell)
 {
     int chance = 60;
 
@@ -398,7 +398,7 @@ int spell_fail(spell_type spell,bool capped)
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
-    if (capped && chance2 > 100)
+    if (chance2 > 100)
         chance2 = 100;
 
     return chance2;
