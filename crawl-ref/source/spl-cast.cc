@@ -1124,6 +1124,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_smite(&you, range, 0, 2);
     case SPELL_DAZZLING_SPRAY:
         return new targetter_spray(&you, range, ZAP_DAZZLING_SPRAY);
+    case SPELL_EXPLOSIVE_BOLT:
+        return new targetter_explosive_bolt(&you, pow, range);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1154,7 +1156,6 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_POLYMORPH:
     case SPELL_DIG:
     case SPELL_DISPEL_UNDEAD:
-    case SPELL_EXPLOSIVE_BOLT:
         return new targetter_beam(&you, range, spell_to_zap(spell), pow, 0, 0);
     default:
         return 0;

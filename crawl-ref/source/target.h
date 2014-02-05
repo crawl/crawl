@@ -226,4 +226,14 @@ private:
     bool immobile;
 };
 
+class targetter_explosive_bolt : public targetter_beam
+{
+public:
+    targetter_explosive_bolt(const actor *act, int pow, int range);
+    bool set_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+private:
+    explosion_map exp_map;
+};
+
 #endif
