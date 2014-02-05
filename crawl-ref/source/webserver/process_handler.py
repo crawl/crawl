@@ -158,6 +158,8 @@ class CrawlProcessHandlerBase(object):
 
         for watcher in list(self._receivers):
             if watcher.watched_game == self:
+                watcher.send_message("game_ended", reason = self.exit_reason,
+                                     message = self.exit_message)
                 watcher.go_lobby()
 
         if self.end_callback:
@@ -210,10 +212,10 @@ class CrawlProcessHandlerBase(object):
 
     def add_watcher(self, watcher):
         self.last_watcher_join = time.time()
-        self._receivers.add(watcher)
         if self.client_path:
             self._send_client(watcher)
             watcher.send_json_options(self.game_params["id"], self.username)
+        self._receivers.add(watcher)
         self.update_watcher_description()
 
     def remove_watcher(self, watcher):
@@ -354,6 +356,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.ttyrec_filename = None
         self.inprogress_lock = None
         self.inprogress_lock_file = None
+
+        self.exit_reason = None
+        self.exit_message = None
 
         self._stale_pid = None
         self._stale_lockfile = None
@@ -658,6 +663,12 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 # only queue, once we know the crawl process asks for flushes
                 self.queue_messages = True;
                 self.flush_messages_to_all()
+            elif msgobj["msg"] == "exit_reason":
+                self.exit_reason = msgobj["type"]
+                if "message" in msgobj:
+                    self.exit_message = msgobj["message"]
+                else:
+                    self.exit_message = None
             else:
                 self.logger.warning("Unknown message from the crawl process: %s",
                                     msgobj["msg"])

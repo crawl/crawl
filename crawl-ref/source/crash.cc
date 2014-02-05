@@ -153,6 +153,7 @@ void crash_signal_handler(int sig_num)
 #endif
 
 #ifdef USE_TILE_WEB
+    tiles.send_exit_reason("crash");
     tiles.shutdown();
 #endif
 

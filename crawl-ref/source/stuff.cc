@@ -283,6 +283,10 @@ NORETURN void game_ended_with_error(const string &message)
     if (crawl_state.seen_hups)
         end(1);
 
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason("error", message);
+#endif
+
     if (Options.restart_after_game)
     {
         if (crawl_state.io_inited)

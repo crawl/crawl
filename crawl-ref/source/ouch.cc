@@ -1403,11 +1403,14 @@ void _end_game(scorefile_entry &se)
         clrscr();
     }
 
+#if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
+    string reason = se.get_death_type() == KILLED_BY_QUITTING? "quit" :
+                    se.get_death_type() == KILLED_BY_WINNING ? "won"  :
+                    se.get_death_type() == KILLED_BY_LEAVING ? "bailed out"
+                                                             : "dead";
 #ifdef DGL_WHEREIS
-    whereis_record(se.get_death_type() == KILLED_BY_QUITTING? "quit" :
-                   se.get_death_type() == KILLED_BY_WINNING ? "won"  :
-                   se.get_death_type() == KILLED_BY_LEAVING ? "bailed out"
-                                                            : "dead");
+    whereis_record(reason);
+#endif
 #endif
 
     if (!crawl_state.seen_hups)
@@ -1448,6 +1451,10 @@ void _end_game(scorefile_entry &se)
 
     if (se.get_death_type() == KILLED_BY_WINNING)
         crawl_state.last_game_won = true;
+
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason(reason, hiscore);
+#endif
 
     game_ended();
 }

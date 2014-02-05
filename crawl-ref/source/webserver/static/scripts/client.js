@@ -15,9 +15,13 @@ function (exports, $, key_conversion, chat, comm) {
     var message_inhibit = 0;
     var message_queue = [];
 
+    var watching = false;
+    var watching_username;
+    var playing = false;
     var logging_in = false;
     var showing_close_message = false;
     var current_hash;
+    var exit_reason, exit_message;
 
     var send_message = comm.send_message;
 
@@ -505,6 +509,62 @@ function (exports, $, key_conversion, chat, comm) {
         show_dialog(dialog);
     }
 
+    function possessive(name)
+    {
+        return name + "'" + (name.slice(-1) === "s" ? "" : "s");
+    }
+
+    function exit_reason_message(reason, watched_name)
+    {
+        if (watched_name)
+        {
+            switch (reason)
+            {
+            case "saved":
+                return watched_name + " stopped playing (saved).";
+            case "quit":
+                return watched_name + " quit his game.";
+            case "won":
+                return watched_name + " won his game.";
+            case "bailed out":
+                return watched_name + " bailed out of his game.";
+            case "dead":
+                return watched_name + " died in his game.";
+            case "crash":
+                return possessive(watched_name) + " game crashed.";
+            case "error":
+                return possessive(watched_name)
+                       + " game was terminated due to an error.";
+            default:
+                return possessive(watched_name) + " game ended unexpectedly."
+                       + (reason != "unknown" ? " (" + reason + ")" : "");
+            }
+        }
+        else
+        {
+            switch (reason)
+            {
+            case "crash":
+                return "Unfortunately your game crashed.";
+            case "error":
+                return "Unfortunately your game terminated due to an error.";
+            default:
+                return "Unfortunately your game ended unexpectedly."
+                       + (reason != "unknown" ? " (" + reason + ")" : "");
+            }
+        }
+    }
+
+    function show_exit_dialog(reason, message, watched_name)
+    {
+        $("#exit_game_reason").text(exit_reason_message(reason, watched_name));
+        if (message)
+            $("#exit_game_message").text(message).show();
+        else
+            $("#exit_game_message").hide();
+        show_dialog("#exit_game");
+    }
+
     function start_register()
     {
         show_dialog("#register");
@@ -628,13 +688,27 @@ function (exports, $, key_conversion, chat, comm) {
         watching = false;
     }
 
+    var normal_exit = ["saved", "quit", "won", "bailed out", "dead"];
     function go_lobby()
     {
+        var was_watching = watching_username;
+
         cleanup();
         current_hash = "#lobby";
         location.hash = "#lobby";
         set_layer("lobby");
         $("#username").focus();
+
+        if (exit_reason)
+        {
+            if (was_watching || normal_exit.indexOf(exit_reason) === -1)
+            {
+                show_exit_dialog(exit_reason, exit_message,
+                                 was_watching ? watching_username : null);
+            }
+        }
+        exit_reason = null;
+        exit_message = null;
     }
 
     function login_required(data)
@@ -866,10 +940,10 @@ function (exports, $, key_conversion, chat, comm) {
         "force_terminate?": handle_force_terminate
     });
 
-    var watching = false;
-    function watching_started()
+    function watching_started(data)
     {
         watching = true;
+        watching_username = data.username;
         playing = false;
     }
     exports.is_watching = function ()
@@ -877,15 +951,17 @@ function (exports, $, key_conversion, chat, comm) {
         return watching;
     }
 
-    var playing = false;
     function crawl_started()
     {
         playing = true;
         watching = false;
     }
-    function crawl_ended()
+    function crawl_ended(data)
     {
         playing = false;
+
+        exit_reason = data.reason;
+        exit_message = data.message;
     }
 
     function hash_changed()
@@ -1081,6 +1157,8 @@ function (exports, $, key_conversion, chat, comm) {
                 return "Really save and quit the game?";
             }
         });
+
+        $(".hide_dialog").click(hide_dialog);
 
         $("#login_form").bind("submit", login);
         $("#remember_me").bind("click", remember_me_click);

@@ -149,6 +149,7 @@ bool TilesFramework::initialise()
         _await_connection();
 
     _send_version();
+    send_exit_reason("unknown");
     _send_options();
 
     m_cursor[CURSOR_MOUSE] = NO_CURSOR;
@@ -440,6 +441,20 @@ void TilesFramework::dump()
                 m_json_stack[i].start, m_json_stack[i].prefix_end,
                 m_json_stack[i].type);
     }
+}
+
+void TilesFramework::send_exit_reason(const string& type, const string& message)
+{
+    write_message("*");
+    write_message("{\"msg\":\"exit_reason\",\"type\":\"");
+    write_message_escaped(type);
+    if (!message.empty())
+    {
+        write_message("\",\"message\":\"");
+        write_message_escaped(message);
+    }
+    write_message("\"}");
+    finish_message();
 }
 
 void TilesFramework::_send_version()
