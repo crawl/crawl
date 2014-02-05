@@ -2763,13 +2763,12 @@ static void _append_spell_stats(const spell_type spell,
     else
     {
         const string schools = spell_schools_string(spell);
-        char* failure = failure_rate_to_string(spell_fail(spell,false));
+        char* failure = failure_rate_to_string(spell_fail(spell));
         snprintf(info, INFO_SIZE,
-                 "\nLevel: %d        School%s: %s        %s Fail: %s",
+                 "\nLevel: %d        School%s: %s        Fail: %s",
                  spell_difficulty(spell),
                  schools.find("/") != string::npos ? "s" : "",
                  schools.c_str(),
-                 ((spell_fail(spell,false)>=100)?"Guaranteed":""),
                  failure);
         free(failure);
     }
