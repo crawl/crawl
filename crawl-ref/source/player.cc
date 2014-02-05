@@ -2990,6 +2990,22 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
         you.experience += exp_gained;
 
     you.attribute[ATTR_EVOL_XP] += exp_gained;
+    you.attribute[ATTR_GOD_WRATH_XP] -= exp_gained;
+    if (you.attribute[ATTR_GOD_WRATH_XP] < 0)
+    {
+        for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+        {
+            if (player_under_penance((god_type) i))
+            {
+                while (you.attribute[ATTR_GOD_WRATH_XP] < 0)
+                {
+                    you.attribute[ATTR_GOD_WRATH_COUNT]++;
+                    set_penance_xp_timeout();
+                }
+                break;
+            }
+        }
+    }
 
     if (!you.sage_skills.empty())
     {
