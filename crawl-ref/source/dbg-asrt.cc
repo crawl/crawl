@@ -764,6 +764,13 @@ void do_crash_dump()
 
     mark_milestone("crash", _assert_msg, "", t);
 
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason("crash", _assert_msg);
+    snprintf(name, sizeof(name), "crash-%s-%s", you.your_name.c_str(),
+             make_file_time(t).c_str());
+    tiles.send_dump_info("crash", name);
+#endif
+
     if (file != stderr)
         fclose(file);
 }

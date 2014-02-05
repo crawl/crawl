@@ -578,6 +578,8 @@ function (exports, $, key_conversion, chat, comm) {
                             .attr("href", dump + ".txt");
             if (reason === "saved")
                 a.text("Character dump");
+            else if (reason === "crash")
+                a.text("Crash log");
             else
                 a.text("Morgue file");
             $("#exit_game_dump").html(a).show();
