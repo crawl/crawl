@@ -2513,6 +2513,9 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 static bool _find_feature(const coord_def& where, int mode,
                            bool /* need_path */, int /* range */, targetter*)
 {
+    if (!map_bounds(where))
+        return false;
+
     // The stair need not be in LOS if the square is mapped.
     if (!you.see_cell(where) && !env.map_knowledge(where).seen())
         return false;
