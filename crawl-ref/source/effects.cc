@@ -1162,8 +1162,13 @@ bool vitrify_area(int radius)
     return something_happened;
 }
 
-static void _hell_effects()
+// Nasty things happen to people who spend too long in Hell.
+static void _hell_effects(int time_delta)
 {
+    UNUSED(time_delta);
+    if (!player_in_hell())
+        return;
+
     if ((you_worship(GOD_ZIN) && x_chance_in_y(you.piety, MAX_PIETY))
         || is_sanctuary(you.pos()))
     {
@@ -2030,8 +2035,11 @@ static void _handle_magic_contamination()
     contaminate_player(added_contamination, false);
 }
 
-static void _magic_contamination_effects()
+// Bad effects from magic contamination.
+static void _magic_contamination_effects(int time_delta)
 {
+    UNUSED(time_delta);
+
     // [ds] Move magic contamination effects closer to b26 again.
     const bool glow_effect = get_contamination_level() > 1
             && x_chance_in_y(you.magic_contamination, 12000);
@@ -2087,59 +2095,10 @@ static void _magic_contamination_effects()
     }
 }
 
-// Get around C++ dividing integers towards 0.
-static int _div(int num, int denom)
+// Adjust the player's stats if s/he's diseased (or recovering).
+static void _recover_stats(int time_delta)
 {
-    div_t res = div(num, denom);
-    return res.rem >= 0 ? res.quot : res.quot - 1;
-}
-
-// Do various time related actions...
-void handle_time()
-{
-    int base_time = you.elapsed_time % 200;
-    int old_time = base_time - you.time_taken;
-
-    // The checks below assume the function is called at least
-    // once every 50 elapsed time units.
-
-    // Every 5 turns, spawn random monsters, not in Zotdef.
-    if (_div(base_time, 50) > _div(old_time, 50)
-        && !crawl_state.game_is_zotdef())
-    {
-        spawn_random_monsters();
-        if (player_in_branch(BRANCH_ABYSS))
-          for (int i = 1; i < you.depth; ++i)
-                if (x_chance_in_y(i, 5))
-                    spawn_random_monsters();
-    }
-
-    // Labyrinth and Abyss maprot.
-    if (player_in_branch(BRANCH_LABYRINTH) || player_in_branch(BRANCH_ABYSS))
-        forget_map(true);
-
-    // Magic contamination from spells and Orb.
-    if (!crawl_state.game_is_arena())
-        _handle_magic_contamination();
-
-    // Every 20 turns, a variety of other effects.
-    if (! (_div(base_time, 200) > _div(old_time, 200)))
-        return;
-
-    int time_delta = 200;
-
-    // Update all of the corpses, food chunks, and potions of blood on
-    // the floor.
-    _update_corpses(time_delta);
-
-    if (crawl_state.game_is_arena())
-        return;
-
-    // Nasty things happen to people who spend too long in Hell.
-    if (player_in_hell() && coinflip())
-        _hell_effects();
-
-    // Adjust the player's stats if s/he's diseased (or recovering).
+    UNUSED(time_delta);
     if (!you.disease)
     {
         bool recovery = true;
@@ -2184,50 +2143,68 @@ void handle_time()
             lose_stat(STAT_RANDOM, 1, false, "disease");
         }
     }
+}
 
-    // Bad effects from magic contamination.
-    if (coinflip())
-        _magic_contamination_effects();
-
-    // Adjust the player's stats if s/he has the deterioration mutation.
+// Adjust the player's stats if s/he has the deterioration mutation.
+static void _deteriorate(int time_delta)
+{
+    UNUSED(time_delta);
     if (player_mutation_level(MUT_DETERIORATION)
         && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
     {
         lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
     }
+}
 
-    // Check to see if an upset god wants to do something to the player.
-    handle_god_time();
-
+static void _scream(int time_delta)
+{
+    UNUSED(time_delta);
     if (player_mutation_level(MUT_SCREAM)
         && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100)
         && !(you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()))
     {
         yell(true);
     }
+}
 
-    _rot_inventory_food(time_delta);
-
-    // Exercise armour *xor* stealth skill: {dlb}
+// Exercise armour *xor* stealth skill: {dlb}
+static void _wait_practice(int time_delta)
+{
+    UNUSED(time_delta);
     practise(EX_WAIT);
+}
 
-    // From time to time change a section of the labyrinth.
-    if (player_in_branch(BRANCH_LABYRINTH) && one_chance_in(10))
+static void _lab_change(int time_delta)
+{
+    UNUSED(time_delta);
+    if (player_in_branch(BRANCH_LABYRINTH))
         change_labyrinth();
+}
 
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        // Update the abyss speed. This place is unstable and the speed can
-        // fluctuate. It's not a constant increase.
-        if (you_worship(GOD_CHEIBRIADOS) && coinflip())
-            ; // Speed change less often for Chei.
-        else if (coinflip() && you.abyss_speed < 100)
-            ++you.abyss_speed;
-        else if (one_chance_in(5) && you.abyss_speed > 0)
-            --you.abyss_speed;
-    }
+// Update the abyss speed. This place is unstable and the speed can
+// fluctuate. It's not a constant increase.
+static void _abyss_speed(int time_delta)
+{
+    UNUSED(time_delta);
+    if (!player_in_branch(BRANCH_ABYSS))
+        return;
 
-    if (you_worship(GOD_JIYVA) && one_chance_in(10))
+    if (you_worship(GOD_CHEIBRIADOS) && coinflip())
+        ; // Speed change less often for Chei.
+    else if (coinflip() && you.abyss_speed < 100)
+        ++you.abyss_speed;
+    else if (one_chance_in(5) && you.abyss_speed > 0)
+        --you.abyss_speed;
+}
+
+static void _jiyva_effects(int time_delta)
+{
+    UNUSED(time_delta);
+
+    if (!you_worship(GOD_JIYVA))
+        return;
+
+    if (one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
@@ -2270,17 +2247,20 @@ void handle_time()
         }
     }
 
-    if (you_worship(GOD_JIYVA) && x_chance_in_y(you.piety / 4, MAX_PIETY)
+    if (x_chance_in_y(you.piety / 4, MAX_PIETY)
         && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }
 
-    if (you_worship(GOD_JIYVA) && one_chance_in(25))
+    if (one_chance_in(25))
         jiyva_eat_offlevel_items();
+}
 
+static void _evolve(int time_delta)
+{
     if (int lev = player_mutation_level(MUT_EVOLUTION))
-        if (one_chance_in(100 / lev)
+        if (one_chance_in(2 / lev)
             && you.attribute[ATTR_EVOL_XP] * (1 + random2(10))
                > (int)exp_needed(you.experience_level + 1))
         {
@@ -2301,6 +2281,86 @@ void handle_time()
             if (evol)
                 more();
         }
+}
+
+
+// Get around C++ dividing integers towards 0.
+static int _div(int num, int denom)
+{
+    div_t res = div(num, denom);
+    return res.rem >= 0 ? res.quot : res.quot - 1;
+}
+
+struct timed_effect
+{
+    timed_effect_type effect;
+    void              (*trigger)(int);
+    int               min_time;
+    int               max_time;
+    bool              arena;
+};
+
+static struct timed_effect timed_effects[] =
+{
+    { TIMER_CORPSES,       _update_corpses,               200,   200, true  },
+    { TIMER_HELL_EFFECTS,  _hell_effects,                 200,   600, false },
+    { TIMER_STAT_RECOVERY, _recover_stats,                100,   300, false },
+    { TIMER_CONTAM,        _magic_contamination_effects,  200,   600, false },
+    { TIMER_DETERIORATION, _deteriorate,                  100,   300, false },
+    { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },
+    { TIMER_SCREAM,        _scream,                       100,   300, false },
+    { TIMER_FOOD_ROT,      _rot_inventory_food,           100,   300, false },
+    { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
+    { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
+    { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
+    { TIMER_JIYVA,         _jiyva_effects,                100,   300, false },
+    { TIMER_EVOLUTION,     _evolve,                      5000, 15000, false },
+};
+
+// Do various time related actions...
+void handle_time()
+{
+    int base_time = you.elapsed_time % 200;
+    int old_time = base_time - you.time_taken;
+
+    // The checks below assume the function is called at least
+    // once every 50 elapsed time units.
+
+    // Every 5 turns, spawn random monsters, not in Zotdef.
+    if (_div(base_time, 50) > _div(old_time, 50)
+        && !crawl_state.game_is_zotdef())
+    {
+        spawn_random_monsters();
+        if (player_in_branch(BRANCH_ABYSS))
+          for (int i = 1; i < you.depth; ++i)
+                if (x_chance_in_y(i, 5))
+                    spawn_random_monsters();
+    }
+
+    // Labyrinth and Abyss maprot.
+    if (player_in_branch(BRANCH_LABYRINTH) || player_in_branch(BRANCH_ABYSS))
+        forget_map(true);
+
+    // Magic contamination from spells and Orb.
+    if (!crawl_state.game_is_arena())
+        _handle_magic_contamination();
+
+    for (unsigned int i = 0; i < ARRAYSZ(timed_effects); i++)
+    {
+        if (crawl_state.game_is_arena() && !timed_effects[i].arena)
+            continue;
+
+        if (you.elapsed_time >= you.next_timer_effect[i])
+        {
+            int time_delta = you.elapsed_time - you.last_timer_effect[i];
+            (timed_effects[i].trigger)(time_delta);
+            you.last_timer_effect[i] = you.next_timer_effect[i];
+            you.next_timer_effect[i] =
+                you.last_timer_effect[i]
+                + random_range(timed_effects[i].min_time,
+                               timed_effects[i].max_time);
+        }
+    }
 }
 
 // Move monsters around to fake them walking around while player was
