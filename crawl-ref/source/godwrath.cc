@@ -665,13 +665,16 @@ static bool _trog_retribution()
 
             while (points > 0)
             {
-                int cost = min(random2(8) + 3, points);
+                int cost =
+                    min(min(random2avg((1 + you.experience_level / 3), 2) + 3,
+                            10),
+                        points);
 
                 // quick reduction for large values
                 if (points > 20 && coinflip())
                 {
                     points -= 10;
-                    cost = 10;
+                    cost = min(1 + div_rand_round(you.experience_level, 2), 10);
                 }
 
                 points -= cost;
