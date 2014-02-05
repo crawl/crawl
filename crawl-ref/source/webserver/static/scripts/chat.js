@@ -31,6 +31,13 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
         $(document).trigger("chat_message", [data.content]);
     }
 
+    function handle_dump(data)
+    {
+        var msg = $("<span>").addClass("chat_msg chat_automated")
+                             .text(data.url + ".txt")
+        receive_message({ content: msg[0].outerHTML });
+    }
+
     function update_message_count()
     {
         var press_key = new_message_count > 0 ? " (Press F12)" : "";
@@ -107,6 +114,7 @@ define(["jquery", "comm", "linkify"], function ($, comm, linkify) {
     });
 
     comm.register_handlers({
+        "dump": handle_dump,
         "chat": receive_message,
         "update_spectators": update_spectators
     });

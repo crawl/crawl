@@ -194,6 +194,11 @@ body {
     border-top: 1px dashed #626262;
 }
 
+.chat_automated {
+    color: white;
+    font-style: italic;
+}
+
 #message_count {
     float: right;
 }
