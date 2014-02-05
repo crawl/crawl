@@ -1394,14 +1394,18 @@ void _end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(morgue_name(you.your_name, se.get_death_time()),
-                   true, true, &se))
+    string fname = morgue_name(you.your_name, se.get_death_time());
+    if (!dump_char(fname, true, true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
             more();
         clrscr();
     }
+#ifdef USE_TILE_WEB
+    else
+        tiles.send_dump_info("morgue", fname);
+#endif
 
 #if defined(DGL_WHEREIS) || defined(USE_TILE_WEB)
     string reason = se.get_death_type() == KILLED_BY_QUITTING? "quit" :

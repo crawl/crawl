@@ -457,6 +457,17 @@ void TilesFramework::send_exit_reason(const string& type, const string& message)
     finish_message();
 }
 
+void TilesFramework::send_dump_info(const string& type, const string& filename)
+{
+    write_message("*");
+    write_message("{\"msg\":\"dump\",\"type\":\"");
+    write_message_escaped(type);
+    write_message("\",\"filename\":\"");
+    write_message_escaped(strip_filename_unsafe_chars(filename));
+    write_message("\"}");
+    finish_message();
+}
+
 void TilesFramework::_send_version()
 {
 #ifdef WEB_DIR_PATH

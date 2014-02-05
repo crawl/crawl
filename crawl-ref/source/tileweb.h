@@ -133,6 +133,7 @@ public:
     void close_all_menus();
 
     void send_exit_reason(const string& type, const string& message = "");
+    void send_dump_info(const string& type, const string& filename);
 
     string get_message();
     void write_message(PRINTF(1, ));
