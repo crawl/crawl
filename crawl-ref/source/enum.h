@@ -4337,4 +4337,22 @@ enum wizard_option_type
 
 #endif
 
+enum timed_effect_type
+{
+    TIMER_CORPSES,
+    TIMER_HELL_EFFECTS,
+    TIMER_STAT_RECOVERY,
+    TIMER_CONTAM,
+    TIMER_DETERIORATION,
+    TIMER_GOD_EFFECTS,
+    TIMER_SCREAM,
+    TIMER_FOOD_ROT,
+    TIMER_PRACTICE,
+    TIMER_LABYRINTH,
+    TIMER_ABYSS_SPEED,
+    TIMER_JIYVA,
+    TIMER_EVOLUTION,
+    NUM_TIMERS,
+};
+
 #endif // ENUM_H

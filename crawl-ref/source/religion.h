@@ -50,7 +50,7 @@ void gain_piety(int pgn, int denominator = 1,
 void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
-void handle_god_time(void);
+void handle_god_time(int time_delta);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);

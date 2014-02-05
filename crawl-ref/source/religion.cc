@@ -4052,8 +4052,10 @@ bool god_protects_from_harm()
 }
 
 //jmf: moved stuff from effects::handle_time()
-void handle_god_time()
+void handle_god_time(int time_delta)
 {
+    UNUSED(time_delta);
+
     // First count the number of gods to whom we owe penance.
     unsigned int penance_count = 0;
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)

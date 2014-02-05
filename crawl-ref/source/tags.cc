@@ -1426,6 +1426,14 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_OBJECT_CLASSES; ++j)
         marshallInt(th, you.sacrifice_value[j]);
 
+    // Event timers.
+    marshallByte(th, NUM_TIMERS);
+    for (j = 0; j < NUM_TIMERS; ++j)
+    {
+        marshallInt(th, you.last_timer_effect[j]);
+        marshallInt(th, you.next_timer_effect[j]);
+    }
+
     // how many mutations/demon powers?
     marshallShort(th, NUM_MUTATIONS);
     for (j = 0; j < NUM_MUTATIONS; ++j)
@@ -2425,6 +2433,30 @@ static void tag_read_you(reader &th)
         you.sacrifice_value[j] = unmarshallInt(th);
     for (j = count; j < NUM_OBJECT_CLASSES; ++j)
         you.sacrifice_value[j] = 0;
+
+    const int last_20_turns =
+        you.elapsed_time - (you.elapsed_time % 200);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_EVENT_TIMERS)
+    {
+#endif
+    count = unmarshallByte(th);
+    ASSERT(count <= NUM_TIMERS);
+    for (j = 0; j < count; ++j)
+    {
+        you.last_timer_effect[j] = unmarshallInt(th);
+        you.next_timer_effect[j] = unmarshallInt(th);
+    }
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+        count = 0;
+#endif
+    for (j = count; j < NUM_OBJECT_CLASSES; ++j)
+    {
+        you.last_timer_effect[j] = last_20_turns;
+        you.next_timer_effect[j] = last_20_turns + 200;
+    }
 
     // how many mutations/demon powers?
     count = unmarshallShort(th);
