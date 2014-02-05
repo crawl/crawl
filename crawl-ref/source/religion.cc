@@ -1102,6 +1102,19 @@ bool jiyva_is_dead()
            && !you_worship(GOD_JIYVA) && !you.penance[GOD_JIYVA];
 }
 
+void set_penance_xp_timeout()
+{
+    if (you.attribute[ATTR_GOD_WRATH_XP] > 0)
+        return;
+
+    // TODO: make this more random?
+    you.attribute[ATTR_GOD_WRATH_XP] +=
+        max(div_rand_round(exp_needed(you.experience_level + 1)
+                          - exp_needed(you.experience_level),
+                          100),
+            1);
+}
+
 static void _inc_penance(god_type god, int val)
 {
     if (val <= 0)
@@ -1185,6 +1198,8 @@ static void _inc_penance(god_type god, int val)
         you.penance[god] += val;
         you.penance[god] = min((uint8_t)MAX_PENANCE, you.penance[god]);
     }
+
+    set_penance_xp_timeout();
 }
 
 static void _inc_penance(int val)
@@ -4053,35 +4068,27 @@ void handle_god_time(int time_delta)
 {
     UNUSED(time_delta);
 
-    // First count the number of gods to whom we owe penance.
-    unsigned int penance_count = 0;
-    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    if (you.attribute[ATTR_GOD_WRATH_COUNT] > 0)
     {
-        // Nemelex penance is special: it's only "active"
-        // when penance > 100, else it's passive.
-        if (player_under_penance((god_type) i) && (i != GOD_NEMELEX_XOBEH
-                               || you.penance[i] > 100))
-        {
-            penance_count++;
-        }
-    }
-    // Now roll to see whether we get retribution and from which god.
-    const unsigned int which_penance = random2(100);
-    if (which_penance < penance_count)
-    {
-        unsigned int count = 0;
+        vector<god_type> angry_gods;
+        // First count the number of gods to whom we owe penance.
         for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
         {
+            // Nemelex penance is special: it's only "active"
+            // when penance > 100, else it's passive.
             if (player_under_penance((god_type) i) && (i != GOD_NEMELEX_XOBEH
                                    || you.penance[i] > 100))
             {
-                if (count == which_penance)
-                {
-                    divine_retribution((god_type)i);
-                    break;
-                }
-                count++;
+                angry_gods.push_back((god_type) i);
             }
+        }
+        shuffle_array(angry_gods);
+        // Now roll to see whether we get retribution and from which god.
+        const unsigned int which_penance = random2(10);
+        if (which_penance < angry_gods.size())
+        {
+            if (divine_retribution(angry_gods[which_penance]))
+                you.attribute[ATTR_GOD_WRATH_COUNT]--;
         }
     }
 

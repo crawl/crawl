@@ -316,6 +316,8 @@ enum attribute_type
     ATTR_REPEL_MISSILES,       // Chance to expire repel missiles
     ATTR_DEFLECT_MISSILES,     // Chance to expire deflect missiles
     ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
+    ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
+    ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
     NUM_ATTRIBUTES
 };
 
