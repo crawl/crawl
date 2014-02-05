@@ -5800,6 +5800,9 @@ void player::init()
     quiver.init(ENDOFPACK);
     sacrifice_value.init(0);
 
+    last_timer_effect.init(0);
+    next_timer_effect.init(20 * BASELINE_DELAY);
+
     is_undead       = US_ALIVE;
 
     friendly_pickup = 0;

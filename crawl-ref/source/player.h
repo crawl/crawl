@@ -112,6 +112,8 @@ public:
   FixedVector<int, NUM_ATTRIBUTES> attribute;
   FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
   FixedVector<int, NUM_OBJECT_CLASSES> sacrifice_value;
+  FixedVector<int, NUM_TIMERS> last_timer_effect;
+  FixedVector<int, NUM_TIMERS> next_timer_effect;
 
   undead_state_type is_undead;
 
