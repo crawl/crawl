@@ -532,10 +532,10 @@
     SPELL_NO_SPELL,
 },
 
-{   // Rod of destruction (lightning, fireball, iron)
-    SPELL_LIGHTNING_BOLT,
-    SPELL_FIREBALL,
-    SPELL_IRON_SHOT,
+{   // Rod of destruction
+    SPELL_RANDOM_BOLT,
+    SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,

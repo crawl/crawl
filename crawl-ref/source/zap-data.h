@@ -1143,3 +1143,19 @@ struct zap_info
     false,
     6
 },
+
+{
+    ZAP_QUICKSILVER_BOLT,
+    "bolt of dispelling energy",
+    200,
+    new calcdice_calculator<6, 15, 2, 3>,
+    new tohit_calculator<10, 1, 25>,
+    BLUE,
+    false,
+    BEAM_MMISSILE,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    6
+},

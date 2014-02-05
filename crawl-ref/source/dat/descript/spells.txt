@@ -981,6 +981,12 @@ Rakshasas are known to often weave illusions of themselves to fool their foes.
 These illusions are partially real, and can even hit you or cast spells,
 although it takes but a single hit to dispel them.
 %%%%
+Random Bolt spell
+
+This spell creates, at random, a bolt of venom, negative energy, fire, cold,
+dispelling energy, electricity, or reflectable crystal randomly manifesting
+as either fiery or cold.
+%%%%
 Rearrange the Pieces spell
 
 This spell swaps positions of random pairs of nearby creatures.

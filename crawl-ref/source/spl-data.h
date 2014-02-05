@@ -2125,9 +2125,9 @@ struct spell_desc
 {
     SPELL_QUICKSILVER_BOLT, "Quicksilver Bolt",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     SPFLAG_DIR_OR_TARGET,
      5,
-     0,
+     200,
      8, 8,
      0,
      NULL,
@@ -3638,6 +3638,19 @@ struct spell_desc
      NULL,
      true,
      false
+},
+
+{
+    SPELL_RANDOM_BOLT, "Random Bolt",
+    SPTYP_CONJURATION,
+    SPFLAG_DIR_OR_TARGET,
+    5,
+    200,
+    6, 6,
+    0,
+    NULL,
+    true,
+    false
 },
 
 {
