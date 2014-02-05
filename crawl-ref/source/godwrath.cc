@@ -26,6 +26,7 @@
 #include "misc.h"
 #include "mon-cast.h"
 #include "mon-util.h"
+#include "mon-pick.h"
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
@@ -77,24 +78,48 @@ static bool _yred_random_zombified_hostile()
     return create_monster(temp, false);
 }
 
+static const pop_entry _okawaru_servants[] =
+{ // warriors
+  {  1,  3,   3, DOWN, MONS_ORC },
+  {  1,  3,   3, DOWN, MONS_GNOLL },
+  {  2,  6,   3, PEAK, MONS_OGRE },
+  {  2,  6,   2, PEAK, MONS_GNOLL_SERGEANT },
+  {  3,  7,   1, FLAT, MONS_TWO_HEADED_OGRE },
+  {  3, 13,   3, PEAK, MONS_ORC_WARRIOR },
+  {  5, 15,   3, PEAK, MONS_ORC_KNIGHT },
+  {  5, 15,   1, PEAK, MONS_HILL_GIANT },
+  {  5, 15,   2, PEAK, MONS_CYCLOPS },
+  {  7, 21,   2, PEAK, MONS_CENTAUR_WARRIOR },
+  {  7, 21,   2, PEAK, MONS_NAGA_WARRIOR },
+  {  7, 21,   2, PEAK, MONS_TENGU_WARRIOR },
+  {  7, 21,   1, FLAT, MONS_MERFOLK_IMPALER },
+  {  7, 21,   1, FLAT, MONS_MERFOLK_JAVELINEER },
+  {  7, 21,   1, FLAT, MONS_MINOTAUR },
+  {  9, 27,   2, FLAT, MONS_STONE_GIANT },
+  {  9, 27,   1, FLAT, MONS_DEEP_ELF_KNIGHT },
+  { 11, 21,   1, FLAT, MONS_ORC_WARLORD },
+  { 11, 27,   2, FLAT, MONS_FIRE_GIANT },
+  { 11, 27,   2, FLAT, MONS_FROST_GIANT },
+  { 13, 27,   1, FLAT, MONS_DEEP_ELF_BLADEMASTER },
+  { 13, 27,   1, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
+  { 13, 27,   1, FLAT, RANDOM_BASE_DRACONIAN },
+  { 15, 27,   2, FLAT, MONS_TITAN },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static bool _okawaru_random_servant()
 {
-    // warriors
-    monster_type mon_type = random_choose_weighted(3, MONS_ORC_WARRIOR,
-                                                   3, MONS_ORC_KNIGHT,
-                                                   2, MONS_NAGA_WARRIOR,
-                                                   2, MONS_CENTAUR_WARRIOR,
-                                                   2, MONS_STONE_GIANT,
-                                                   2, MONS_FIRE_GIANT,
-                                                   2, MONS_FROST_GIANT,
-                                                   2, MONS_CYCLOPS,
-                                                   1, MONS_HILL_GIANT,
-                                                   1, MONS_TITAN,
-                                                   0);
+    monster_type mon_type = pick_monster_from(_okawaru_servants,
+                                              you.experience_level);
 
     mgen_data temp = mgen_data::hostile_at(mon_type, "the fury of Okawaru",
                                            true, 0, 0, you.pos(), 0,
                                            GOD_OKAWARU);
+
+    // Don't send sheep into battle, but otherwise let bands in.
+    // This makes sure you get multiple orcs/gnolls early on.
+    if (mon_type != MONS_CYCLOPS)
+        temp.flags |= MG_PERMIT_BANDS;
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
