@@ -21,7 +21,8 @@ function (exports, $, key_conversion, chat, comm) {
     var logging_in = false;
     var showing_close_message = false;
     var current_hash;
-    var exit_reason, exit_message;
+    var exit_reason, exit_message, exit_dump;
+    var normal_exit = ["saved", "quit", "won", "bailed out", "dead"];
 
     var send_message = comm.send_message;
 
@@ -520,16 +521,13 @@ function (exports, $, key_conversion, chat, comm) {
         {
             switch (reason)
             {
+            case "quit":
+            case "won":
+            case "bailed out":
+            case "dead":
+                return null;
             case "saved":
                 return watched_name + " stopped playing (saved).";
-            case "quit":
-                return watched_name + " quit his game.";
-            case "won":
-                return watched_name + " won his game.";
-            case "bailed out":
-                return watched_name + " bailed out of his game.";
-            case "dead":
-                return watched_name + " died in his game.";
             case "crash":
                 return possessive(watched_name) + " game crashed.";
             case "error":
@@ -544,6 +542,12 @@ function (exports, $, key_conversion, chat, comm) {
         {
             switch (reason)
             {
+            case "quit":
+            case "won":
+            case "bailed out":
+            case "dead":
+            case "saved":
+                return null;
             case "crash":
                 return "Unfortunately your game crashed.";
             case "error":
@@ -555,13 +559,32 @@ function (exports, $, key_conversion, chat, comm) {
         }
     }
 
-    function show_exit_dialog(reason, message, watched_name)
+    function show_exit_dialog(reason, message, dump, watched_name)
     {
-        $("#exit_game_reason").text(exit_reason_message(reason, watched_name));
+        var reason_msg = exit_reason_message(reason, watched_name);
+        if (reason_msg != null)
+            $("#exit_game_reason").text(reason_msg).show();
+        else
+            $("#exit_game_reason").hide();
+
         if (message)
-            $("#exit_game_message").text(message).show();
+            $("#exit_game_message").text(message.replace(/\s+$/, "")).show();
         else
             $("#exit_game_message").hide();
+
+        if (dump)
+        {
+            var a = $("<a>").attr("target", "_blank")
+                            .attr("href", dump + ".txt");
+            if (reason === "saved")
+                a.text("Character dump");
+            else
+                a.text("Morgue file");
+            $("#exit_game_dump").html(a).show();
+        }
+        else
+            $("#exit_game_dump").hide();
+
         show_dialog("#exit_game");
     }
 
@@ -688,7 +711,6 @@ function (exports, $, key_conversion, chat, comm) {
         watching = false;
     }
 
-    var normal_exit = ["saved", "quit", "won", "bailed out", "dead"];
     function go_lobby()
     {
         var was_watching = watching_username;
@@ -703,12 +725,13 @@ function (exports, $, key_conversion, chat, comm) {
         {
             if (was_watching || normal_exit.indexOf(exit_reason) === -1)
             {
-                show_exit_dialog(exit_reason, exit_message,
+                show_exit_dialog(exit_reason, exit_message, exit_dump,
                                  was_watching ? watching_username : null);
             }
         }
         exit_reason = null;
         exit_message = null;
+        exit_dump = null;
     }
 
     function login_required(data)
@@ -962,6 +985,7 @@ function (exports, $, key_conversion, chat, comm) {
 
         exit_reason = data.reason;
         exit_message = data.message;
+        exit_dump = data.dump;
     }
 
     function hash_changed()

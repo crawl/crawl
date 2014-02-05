@@ -1603,11 +1603,19 @@ void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
 
-    if (leave_game && Options.dump_on_save && !dump_char(you.your_name, true))
+
+    if (leave_game && Options.dump_on_save)
     {
-        mpr("Char dump unsuccessful! Sorry about that.");
-        if (!crawl_state.seen_hups)
-            more();
+        if (!dump_char(you.your_name, true))
+        {
+            mpr("Char dump unsuccessful! Sorry about that.");
+            if (!crawl_state.seen_hups)
+                more();
+        }
+#ifdef USE_TILE_WEB
+        else
+            tiles.send_dump_info("save", you.your_name);
+#endif
     }
 
     // Stack allocated string's go in separate function,

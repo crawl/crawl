@@ -159,7 +159,8 @@ class CrawlProcessHandlerBase(object):
         for watcher in list(self._receivers):
             if watcher.watched_game == self:
                 watcher.send_message("game_ended", reason = self.exit_reason,
-                                     message = self.exit_message)
+                                     message = self.exit_message,
+                                     dump = self.exit_dump_url)
                 watcher.go_lobby()
 
         if self.end_callback:
@@ -359,6 +360,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.exit_reason = None
         self.exit_message = None
+        self.exit_dump_url = None
 
         self._stale_pid = None
         self._stale_lockfile = None
@@ -663,6 +665,13 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 # only queue, once we know the crawl process asks for flushes
                 self.queue_messages = True;
                 self.flush_messages_to_all()
+            elif msgobj["msg"] == "dump":
+                if "morgue_url" in self.game_params and self.game_params["morgue_url"]:
+                    url = self.game_params["morgue_url"].replace("%n", self.username) + msgobj["filename"]
+                    if msgobj["type"] == "command":
+                        self.send_to_all("dump", url = url)
+                    else:
+                        self.exit_dump_url = url
             elif msgobj["msg"] == "exit_reason":
                 self.exit_reason = msgobj["type"]
                 if "message" in msgobj:

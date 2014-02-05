@@ -155,6 +155,10 @@ body {
     border: 1px solid white;
 }
 
+#exit_game_dump {
+    text-align: right;
+}
+
 #chat {
     background: rgba(0, 0, 0, 0.75);
     width: 400px;

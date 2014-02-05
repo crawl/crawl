@@ -2059,6 +2059,10 @@ void process_command(command_type cmd)
     case CMD_CHARACTER_DUMP:
         if (!dump_char(you.your_name))
             mpr("Char dump unsuccessful! Sorry about that.");
+#ifdef USE_TILE_WEB
+        else
+            tiles.send_dump_info("command", you.your_name);
+#endif
         break;
 
         // Travel commands.
