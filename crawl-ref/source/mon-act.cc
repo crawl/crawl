@@ -1253,10 +1253,16 @@ static bool _handle_rod(monster *mons, bolt &beem)
     // monster-castable rod spells!
     switch (mzap)
     {
-    case SPELL_BOLT_OF_FIRE:
+    case SPELL_RANDOM_BOLT:
+        // don't use quicksilver, it does fixed damage from monsters
+        mzap = random_choose(SPELL_BOLT_OF_FIRE,
+                             SPELL_BOLT_OF_COLD,
+                             SPELL_VENOM_BOLT,
+                             SPELL_BOLT_OF_DRAINING,
+                             SPELL_CRYSTAL_BOLT,
+                             SPELL_LIGHTNING_BOLT,
+                             -1);
     case SPELL_BOLT_OF_INACCURACY:
-    case SPELL_IRON_SHOT:
-    case SPELL_LIGHTNING_BOLT:
     case SPELL_POISON_ARROW:
     case SPELL_THROW_FLAME:
     case SPELL_THROW_FROST:
@@ -1291,6 +1297,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
         mons_cast(mons, beem, mzap, false);
         _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
         return true;
+
+       break;
 
     default:
         return false;

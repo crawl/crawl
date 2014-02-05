@@ -1250,7 +1250,8 @@ this unsuspecting world.
 %%%%
 rod of destruction
 
-This rod contains a varied set of spells of mayhem and destruction.
+This rod can be evoked to release a random spells of mayhem and destruction
+from a small set, all able to damage multiple monsters in a line.
 %%%%
 rod of fiery destruction
 
