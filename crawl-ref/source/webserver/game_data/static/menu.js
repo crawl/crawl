@@ -59,6 +59,24 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
 
     var menu_stack = [];
     var menu = null;
+    var update_server_scroll_timeout = null;
+    var menu_close_timeout = null;
+
+    function menu_cleanup()
+    {
+        menu_stack = [];
+        menu = null;
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+        if (menu_close_timeout)
+        {
+            clearTimeout(menu_close_timeout);
+            menu_close_timeout = null;
+        }
+    }
 
     function display_menu()
     {
@@ -368,7 +386,6 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         menu.last_visible = menu.last_visible || menu.last_present;
     }
 
-    var update_server_scroll_timeout = null;
     function update_server_scroll()
     {
         if (update_server_scroll_timeout)
@@ -462,7 +479,10 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
             // Delay closing the dialog a bit to prevent flickering
             // if the game immediately opens another one
             // (e.g. when looking at an item from the inventory)
-            setTimeout(function () {
+            if (menu_close_timeout)
+                clearTimeout(menu_close_timeout);
+            menu_close_timeout = setTimeout(function () {
+                menu_close_timeout = null;
                 if (menu_stack.length == 0)
                     client.hide_dialog();
             }, 50);
@@ -687,5 +707,7 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         $(document).off("game_keydown.menu game_keypress.menu")
                    .on("game_keydown.menu", menu_keydown_handler)
                    .on("game_keypress.menu", menu_keypress_handler);
+        $(document).off("game_cleanup_menu")
+                   .on("game_cleanup.menu", menu_cleanup);
     });
 });
