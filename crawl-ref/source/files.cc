@@ -1591,6 +1591,9 @@ static void _save_game_exit()
 #ifdef DGL_WHEREIS
     whereis_record("saved");
 #endif
+#ifdef USE_TILE_WEB
+    tiles.send_exit_reason("saved");
+#endif
 
     delete you.save;
     you.save = 0;

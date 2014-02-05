@@ -132,6 +132,8 @@ public:
     void pop_menu();
     void close_all_menus();
 
+    void send_exit_reason(const string& type, const string& message = "");
+
     string get_message();
     void write_message(PRINTF(1, ));
     void finish_message();
