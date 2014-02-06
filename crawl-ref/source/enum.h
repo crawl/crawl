@@ -2355,7 +2355,7 @@ enum monster_type                      // menv[].type
     MONS_LAST_DEMONSPAWN = MONS_BLACK_SUN,
 #endif
     MONS_GARGOYLE,
-    MONS_METAL_GARGOYLE,
+    MONS_WAR_GARGOYLE,
     MONS_MOLTEN_GARGOYLE,
     MONS_UGLY_THING,
     MONS_VERY_UGLY_THING,

@@ -1464,10 +1464,10 @@ ENDMAP
 NAME:    gargoyle_guard
 ORIENT:  float
 TAGS:    patrolling no_monster_gen
-DEPTH:   D:10-, !D:$
+DEPTH:   D:12-, !D:$
 # you should be able to arrive both via stairs and via corridor
 SUBST:   { = {([)]}
-MONS:    gargoyle, metal gargoyle / gargoyle
+MONS:    gargoyle, war gargoyle
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxxx2xxxxxxxxx

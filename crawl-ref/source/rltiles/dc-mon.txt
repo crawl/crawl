@@ -459,7 +459,7 @@ lightning_spire MONS_LIGHTNING_SPIRE
 ## Gargoyles ('9')
 %sdir mon/nonliving
 gargoyle MONS_GARGOYLE
-metal_gargoyle MONS_METAL_GARGOYLE
+war_gargoyle MONS_WAR_GARGOYLE
 molten_gargoyle MONS_MOLTEN_GARGOYLE
 
 ## Weaponry ('(')

@@ -533,6 +533,7 @@ static const pop_entry pop_vaults[] =
   {  7,  9,    6, FLAT, MONS_DEEP_ELF_CONJURER },
   {  4, 12,   89, PEAK, MONS_PHANTASMAL_WARRIOR },
   {  8, 10,    4, SEMI, MONS_DEEP_ELF_PRIEST },
+  {  5, 10,   70, FLAT, MONS_WAR_GARGOYLE },
   {  4, 14,  258, PEAK, MONS_GLOWING_SHAPESHIFTER },
   {  5, 13,   66, PEAK, MONS_TENTACLED_MONSTROSITY },
   {  8, 12,   89, UP,   MONS_SHADOW_DRAGON },

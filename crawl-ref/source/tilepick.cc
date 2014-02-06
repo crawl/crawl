@@ -2003,8 +2003,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // gargoyles ('9')
     case MONS_GARGOYLE:
         return TILEP_MONS_GARGOYLE;
-    case MONS_METAL_GARGOYLE:
-        return TILEP_MONS_METAL_GARGOYLE;
+    case MONS_WAR_GARGOYLE:
+        return TILEP_MONS_WAR_GARGOYLE;
     case MONS_MOLTEN_GARGOYLE:
         return TILEP_MONS_MOLTEN_GARGOYLE;
 
