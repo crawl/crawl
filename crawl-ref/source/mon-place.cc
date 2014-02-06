@@ -1781,10 +1781,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         if (mg.flags & MG_DONT_COME)
             mon->seen_context = SC_JUST_SEEN;
-        // FIXME: This causes "comes into view" messages at the
-        //        wrong time, since code checks for placement
-        //        success before printing messages.
-        handle_seen_interrupt(mon);
     }
 
     // Area effects can produce additional messages, and thus need to be
