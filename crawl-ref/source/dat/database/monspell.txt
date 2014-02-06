@@ -424,6 +424,10 @@ Cause Fear satyr cast
 Sleep satyr cast
 
 @The_monster@ plays a lulling melody on his pipes!
+%%%%
+Metal Splinters war gargoyle cast
+
+@The_monster@ launches @beam@ @at@ @target@.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

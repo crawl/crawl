@@ -1261,7 +1261,7 @@ NAME: sprint_mu_dis_giant
 TAGS: sprint_mu_dis no_rotate no_hmirror no_vmirror no_dup
 MONS: patrolling iron elemental
 MONS: patrolling the iron giant ; giant club unrand:skullcrusher
-MONS: iron dragon, iron devil, patrolling hell sentinel, metal gargoyle, iron golem
+MONS: iron dragon, iron devil, patrolling hell sentinel, war gargoyle, iron golem
 KMONS: & = dispater
 KITEM: * = superb_item, superb_item, superb_item
 KITEM: ? = star_item, star_item, scroll of enchant armour ident:all q:4

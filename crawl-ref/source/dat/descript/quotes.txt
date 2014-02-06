@@ -1880,19 +1880,6 @@ mermaid
     -“Sir Patrick Spens”, Scottish folk song, version 58J in Francis James
      Child, _The English and Scottish Popular Ballads_. 1898.
 %%%%
-metal gargoyle
-
-“Their innumerable sculptures of demons and dragons assumed a lugubrious
-aspect. The restless light of the flame made them move to the eye. There were
-griffins which had the air of laughing, gargoyles which one fancied one heard
-yelping, salamanders which puffed at the fire, tarasques which sneezed in the
-smoke. And among the monsters thus roused from their sleep of stone by this
-flame, by this noise, there was one who walked about, and who was seen, from
-time to time, to pass across the glowing face of the pile, like a bat in front
-of a candle.”
-    -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
-     trans. Isabel F. Hapgood
-%%%%
 microbat
 
 <bat>
@@ -3330,6 +3317,19 @@ war axe
  With pray'rful palms close seal'd, ‘God speed the axe!’”
     -Isabella Valancey Crawford, “Malcolm's Katie: A Love Story”, Part I, _Old
      Spookses' Pass, Malcolm's Katie and Other Poems_. 1884.
+%%%%
+war gargoyle
+
+“Their innumerable sculptures of demons and dragons assumed a lugubrious
+aspect. The restless light of the flame made them move to the eye. There were
+griffins which had the air of laughing, gargoyles which one fancied one heard
+yelping, salamanders which puffed at the fire, tarasques which sneezed in the
+smoke. And among the monsters thus roused from their sleep of stone by this
+flame, by this noise, there was one who walked about, and who was seen, from
+time to time, to pass across the glowing face of the pile, like a bat in front
+of a candle.”
+    -Victor Hugo, _The Hunchback of Notre-Dame_, 10, ch. IV. 1831.
+     trans. Isabel F. Hapgood
 %%%%
 water nymph
 

@@ -28,7 +28,7 @@ function base_monster_setup(e)
            hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
            trapdoor spider / basilisk / cyclops band / efreet /\
            mottled dragon / blink frog band / vampire mosquito band /\
-           griffon / ugly thing / gargoyle / molten gargoyle / metal gargoyle /\
+           griffon / ugly thing / gargoyle / molten gargoyle /\
            kobold demonologist band / giant slug / deep troll /\
            deep elf fighter band / agate snail / boulder beetle / red wasp /\
            orc high priest band w:5 / pulsating lump / boring beetle /\
@@ -81,7 +81,7 @@ function base_monster_setup(e)
            base draconian band w:5 / lorocyproca / daeva / angel /\
            profane servitor / soul eater / hell beast / cherub / apis / ophan /\
            balrug / green death / blizzard demon / deep elf blademaster /\
-           deep elf master archer")
+           deep elf master archer / war gargoyle")
   e.kmons("E = lich / tentacled monstrosity / golden dragon /\
            iron dragon / quicksilver dragon / titan / acid blob /\
            azure jelly / golden eye / ancient lich w:5 /\

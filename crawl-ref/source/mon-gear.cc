@@ -1635,6 +1635,16 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         level = MAKE_GOOD_ITEM;
         break;
 
+    case MONS_WAR_GARGOYLE:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        if (one_chance_in(4))
+            level = MAKE_GOOD_ITEM;
+        item.sub_type = random_choose_weighted(10, WPN_MORNINGSTAR, 10, WPN_FLAIL,
+                                                5, WPN_DIRE_FLAIL,   5, WPN_GREAT_MACE,
+                                                1, WPN_LAJATANG, 0);
+        break;
+
     default:
         break;
     }

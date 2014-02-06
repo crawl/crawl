@@ -1914,10 +1914,6 @@ mermaid
 Une jeune femme avec une queue de poisson en guise de jambes. Les sirènes
 adorent chanter et charmer leur public.
 %%%%
-metal gargoyle
-
-Un hideuse statue de métal ayant pris vie.
-%%%%
 microbat
 
 Une chauve-souris qui, en dépit de son nom, n'est pas plus petite qu'une
@@ -2875,6 +2871,10 @@ warg
 
 Un loup particulièrement gros et à l'air mauvais, couramment trouvé en
 compagnie des orcs.
+%%%%
+war gargoyle
+
+Un hideuse statue de métal ayant pris vie.
 %%%%
 water elemental
 

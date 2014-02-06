@@ -1884,10 +1884,6 @@ mermaid
 A young woman with a fish tail in place of legs. Mermaids love to sing and
 charm their audience.
 %%%%
-metal gargoyle
-
-A hideous metal statue come to life.
-%%%%
 microbat
 
 A bat that, despite its name, is not any smaller than a megabat.
@@ -2860,6 +2856,15 @@ warg
 
 A particularly large and evil-looking wolf, usually found in the company of
 orcs.
+%%%%
+war gargoyle
+
+When standard gargoyles are created, they're animated from intimidating,
+carved stone figures and serve as immensely armoured and resilient, if
+structurally fragile, guardians for their positions. Rarely, gargoyles
+are prepared for their animation, smithed from impressively lightweight
+metal into solid winged statues with nasty speed, strength, and
+weaponized breath. These gargoyles ruthlessly crush intruders.
 %%%%
 warmonger
 
