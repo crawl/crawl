@@ -2305,7 +2305,8 @@ void shock_serpent_discharge(monster* serpent)
 
 static bool _shock_serpent_torrent(monster* serpent, actor* target)
 {
-    vector<bolt> beams = get_spray_rays(serpent, target->pos(), 8, 3, 5);
+    vector<bolt> beams = get_spray_rays(serpent, target->pos(), 8, 3,
+                                        NUM_ZAPS, 5);
 
     if (beams.size() == 0)
         return false;

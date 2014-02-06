@@ -14,6 +14,8 @@
 #include "spl-damage.h"
 #include "terrain.h"
 
+#include <math.h>
+
 #define notify_fail(x) (why_not = (x), false)
 
 static string _wallmsg(coord_def c)
@@ -812,6 +814,7 @@ targetter_spray::targetter_spray(const actor* act, int range, zap_type zap)
     origin = aim = act->pos();
     _range = range;
     range2 = dist_range(range);
+    _zap = zap;
 }
 
 bool targetter_spray::valid_aim(coord_def a)
@@ -835,7 +838,7 @@ bool targetter_spray::set_aim(coord_def a)
     if (a == origin)
         return false;
 
-    beams = get_spray_rays(agent, aim, _range, 3);
+    beams = get_spray_rays(agent, aim, _range, 3, _zap);
 
     paths_taken.clear();
     for (unsigned int i = 0; i < beams.size(); ++i)
@@ -1170,4 +1173,113 @@ aff_type targetter_explosive_bolt::is_affected(coord_def loc)
     }
 
     return on_path ? AFF_TRACER : AFF_NO;
+}
+
+targetter_cone::targetter_cone(const actor *act, int minr, int maxr)
+{
+    ASSERT(act);
+    agent = act;
+    origin = act->pos();
+    aim = origin;
+    ASSERT_RANGE(minr, 1 + 1, you.current_vision + 1);
+    ASSERT_RANGE(maxr, 1 + 1, you.current_vision + 1);
+    minrange2 = sqr(minr) + 1;
+    maxrange2 = sqr(maxr) + 1;
+}
+
+bool targetter_cone::valid_aim(coord_def a)
+{
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        // Scrying/glass/tree/grate.
+        if (agent->see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    if ((origin - a).abs() > maxrange2)
+        return notify_fail("Out of range.");
+    return true;
+}
+
+// Ripped off from targetter_thunderbolt::set_aim.
+bool targetter_cone::set_aim(coord_def a)
+{
+    aim = a;
+    zapped.clear();
+
+    if (a == origin)
+        return false;
+
+    const coord_def delta = a - origin;
+    range2 = max(minrange2, delta.abs());
+    const double arc = PI/4;
+    coord_def l, r;
+    l.x = origin.x + (cos(-arc) * delta.x - sin(-arc) * delta.y + 0.5);
+    l.y = origin.y + (sin(-arc) * delta.x + cos(-arc) * delta.y + 0.5);
+    r.x = origin.x + (cos( arc) * delta.x - sin( arc) * delta.y + 0.5);
+    r.y = origin.y + (sin( arc) * delta.x + cos( arc) * delta.y + 0.5);
+
+    ray_def ray;
+    coord_def p; // ray.pos() does lots of processing, cache it
+
+    _make_ray(ray, origin, l);
+    bool hit = true;
+    while ((origin - (p = ray.pos())).abs() <= range2)
+    {
+        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
+            hit = false;
+        if (hit && p != origin && zapped[p] <= 0)
+            zapped[p] = AFF_YES;
+        ray.advance();
+    }
+
+    _make_ray(ray, origin, r);
+    hit = true;
+    while ((origin - (p = ray.pos())).abs() <= range2)
+    {
+        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
+            hit = false;
+        if (hit && p != origin && zapped[p] <= 0)
+            zapped[p] = AFF_YES;
+        ray.advance();
+    }
+
+    coord_def a1 = l - origin;
+    coord_def a2 = r - origin;
+    if (left_of(a2, a1))
+        swapv(a1, a2);
+
+    for (int x = -LOS_RADIUS; x <= LOS_RADIUS; ++x)
+        for (int y = -LOS_RADIUS; y <= LOS_RADIUS; ++y)
+        {
+            if (sqr(x) + sqr(y) > range2)
+                continue;
+            coord_def q(x, y);
+            if (left_of(a1, q) && left_of(q, a2))
+            {
+                (p = q) += origin;
+                if (zapped[p] <= 0
+                    && map_bounds(p)
+                    && opc_solid_see(p) < OPC_OPAQUE
+                    && cell_see_cell(origin, p, LOS_NO_TRANS))
+                {
+                    zapped[p] = AFF_YES;
+                }
+            }
+        }
+
+    zapped[origin] = AFF_NO;
+
+    return true;
+}
+
+aff_type targetter_cone::is_affected(coord_def loc)
+{
+    if (loc == aim)
+        return zapped[loc] ? AFF_YES : AFF_TRACER;
+
+    if ((loc - origin).abs() > range2)
+        return AFF_NO;
+
+    return zapped[loc];
 }

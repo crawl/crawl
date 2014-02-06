@@ -1597,6 +1597,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             {
                 if (type == MONS_PILLAR_OF_SALT)
                     mprf("%s crumbles away.", name(DESC_THE, false).c_str());
+                else if (type == MONS_BLOCK_OF_ICE)
+                    mprf("%s melts away.", name(DESC_THE, false).c_str());
                 else
                 {
                     mprf("A nearby %s withers and dies.",

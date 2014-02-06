@@ -3561,6 +3561,45 @@ struct spell_desc
 },
 
 {
+    SPELL_GLACIATE_ICICLE, "Glaciate (Icicle)",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     9,
+     200,
+     7, 7,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GLACIATE_CONSTANT, "Glaciate (Constant)",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
+     9,
+     200,
+     3, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GLACIATE_FALLOFF, "Glaciate (Falloff)",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
+     9,
+     200,
+     3, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

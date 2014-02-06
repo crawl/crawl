@@ -2778,6 +2778,9 @@ enum monster_type                      // menv[].type
     MONS_BALL_LIGHTNING,
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
     MONS_PILLAR_OF_SALT,
+#if TAG_MAJOR_VERSION > 34
+    MONS_BLOCK_OF_ICE,
+#endif
     MONS_HELL_LORD,             // genus
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
     MONS_SENSED,                // dummy monster for unspecified sensed mons
@@ -2933,6 +2936,8 @@ enum monster_type                      // menv[].type
     MONS_ASTERION,
     MONS_NATASHA,
     MONS_VASHNIA,
+
+    MONS_BLOCK_OF_ICE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3852,6 +3857,9 @@ enum spell_type
     SPELL_REARRANGE_PIECES,
     SPELL_MAJOR_DESTRUCTION,
     SPELL_BLINK_ALLIES_AWAY,
+    SPELL_GLACIATE_ICICLE,
+    SPELL_GLACIATE_CONSTANT,
+    SPELL_GLACIATE_FALLOFF,
     NUM_SPELLS
 };
 
@@ -4014,6 +4022,7 @@ enum zap_type
     ZAP_SEARING_RAY_II,
     ZAP_SEARING_RAY_III,
     ZAP_EXPLOSIVE_BOLT,
+    ZAP_GLACIATE,
 
     NUM_ZAPS
 };

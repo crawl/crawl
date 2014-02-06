@@ -184,6 +184,7 @@ public:
     bolt base_beam;
     vector<bolt> beams;
 private:
+    zap_type _zap;
     vector<vector<coord_def> > paths_taken;
     int _range;
     int range2;
@@ -234,6 +235,21 @@ public:
     aff_type is_affected(coord_def loc);
 private:
     explosion_map exp_map;
+};
+
+class targetter_cone : public targetter
+{
+public:
+    targetter_cone(const actor *act, int minr, int maxr);
+
+    bool valid_aim(coord_def a);
+    bool set_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+    map<coord_def, aff_type> zapped;
+private:
+    int range2;
+    int minrange2;
+    int maxrange2;
 };
 
 #endif

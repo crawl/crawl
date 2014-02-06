@@ -53,6 +53,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
+#include "target.h"
 #include "teleport.h"
 #include "traps.h"
 #include "view.h"
@@ -1249,6 +1250,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_REARRANGE_PIECES:
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_SHROUD_OF_GOLUBRIA:
+    case SPELL_GLACIATE_CONSTANT:
+    case SPELL_GLACIATE_FALLOFF:
         return true;
     default:
         if (check_validity)
@@ -2586,6 +2589,38 @@ static void _cast_black_mark(monster* agent)
     }
 }
 
+static bool _glaciate_tracer(monster *caster, int pow, coord_def aim,
+                             bool falloff)
+{
+    spell_type spell = falloff ? SPELL_GLACIATE_FALLOFF
+                               : SPELL_GLACIATE_CONSTANT;
+    targetter_cone hitfunc(caster,
+                           spell_range(spell, falloff ? pow : 0),
+                           spell_range(spell, pow));
+    hitfunc.set_aim(aim);
+
+    mon_attitude_type castatt = caster->temp_attitude();
+    int friendly = 0, enemy = 0;
+
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        const actor *victim = actor_at(p->first);
+        if (!victim)
+            continue;
+
+        if (mons_atts_aligned(castatt, victim->temp_attitude()))
+            friendly += victim->get_experience_level();
+        else
+            enemy += victim->get_experience_level();
+    }
+
+    return enemy > friendly;
+}
+
 //---------------------------------------------------------------
 //
 // handle_mon_spell
@@ -3132,6 +3167,18 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             if (!_should_ephemeral_infusion(mons))
                 return false;
+        }
+        else if (spell_cast == SPELL_GLACIATE_CONSTANT
+                 || spell_cast == SPELL_GLACIATE_FALLOFF)
+        {
+            if (!foe
+                || !_glaciate_tracer(mons,
+                                     12 * mons->spell_hd(spell_cast),
+                                     foe->pos(),
+                                     spell_cast == SPELL_GLACIATE_FALLOFF))
+            {
+                return false;
+            }
         }
 
         if (mons->type == MONS_BALL_LIGHTNING)
@@ -5777,6 +5824,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_SHROUD));
 
         return;
+
+    case SPELL_GLACIATE_CONSTANT:
+    case SPELL_GLACIATE_FALLOFF:
+    {
+        actor *foe = mons->get_foe();
+        ASSERT(foe);
+        cast_glaciate_cone(mons, 12 * mons->spell_hd(spell_cast), foe->pos(),
+                           spell_cast == SPELL_GLACIATE_FALLOFF);
+        return;
+    }
     }
 
 
@@ -6227,7 +6284,9 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                                || pbolt.visible())
                            // ugh. --Grunt
                            && (actual_spell != SPELL_LRD)
-                           && (actual_spell != SPELL_PORTAL_PROJECTILE);
+                           && (actual_spell != SPELL_PORTAL_PROJECTILE)
+                           && (actual_spell != SPELL_GLACIATE_CONSTANT)
+                           && (actual_spell != SPELL_GLACIATE_FALLOFF);
 
     vector<string> key_list;
     unsigned int num_spell_keys =

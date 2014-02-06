@@ -2590,8 +2590,76 @@ void forest_damage(const actor *mon)
     }
 }
 
+static bool _dazzle_can_hit(const actor *act)
+{
+    if (act->is_monster())
+    {
+        const monster* mons = act->as_monster();
+        bolt testbeam;
+        testbeam.thrower = KILL_YOU;
+        zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
+
+        return mons->type != MONS_BATTLESPHERE
+               && mons->type != MONS_ORB_OF_DESTRUCTION
+               && mons->type != MONS_GRAND_AVATAR
+               && mons_species(mons->type) != MONS_BUSH
+               && !fedhas_shoot_through(testbeam, mons);
+    }
+    else
+        return false;
+}
+
+static bool _glaciate_can_hit(const actor *act)
+{
+    if (act->is_monster())
+    {
+        const monster* mons = act->as_monster();
+        bolt testbeam;
+        testbeam.thrower = KILL_YOU;
+        zappy(ZAP_GLACIATE, 200, testbeam);
+
+        return mons->type != MONS_BATTLESPHERE
+               && mons->type != MONS_ORB_OF_DESTRUCTION
+               && mons->type != MONS_BLOCK_OF_ICE
+               && mons_species(mons->type) != MONS_BUSH
+               && !fedhas_shoot_through(testbeam, mons);
+    }
+    else
+        return false;
+}
+
+// Whether spray spells can target specific targets.
+static bool _spray_rays_can_target(const actor *caster, const actor *target,
+                                   zap_type zaptype)
+{
+    //Can't target what we can't see
+    if (!caster->can_see(target))
+        return false;
+
+    //Don't aim secondary rays at friendlies
+    if ((caster->is_player()
+        ? target->as_monster()->attitude != ATT_HOSTILE
+        : target->as_monster()->attitude != ATT_FRIENDLY))
+    {
+        return false;
+    }
+
+    // Spell specific exceptions (This allows certain types of targets
+    // which can't be spray targeted by certain types of spells)
+    switch(zaptype)
+    {
+        case ZAP_GLACIATE:
+            return _glaciate_can_hit(target);
+        case ZAP_DAZZLING_SPRAY:
+            return _dazzle_can_hit(target);
+        default:
+            break;
+    }
+    return true;
+}
+
 vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
-                            int max_rays, int max_spacing)
+                            int max_rays, zap_type zaptype, int max_spacing)
 {
     coord_def aim_dir = (caster->pos() - aim).sgn();
 
@@ -2630,12 +2698,8 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
         {
             coord_def delta = caster->pos() - *di;
 
-            //Don't aim secondary rays at friendlies
-            if ((caster->is_player() ? monster_at(*di)->attitude != ATT_HOSTILE
-                    : monster_at(*di)->attitude != ATT_FRIENDLY))
-                continue;
-
-            if (!caster->can_see(monster_at(*di)))
+            // Can this spray target this monster?
+            if (!_spray_rays_can_target(caster, monster_at(*di), zaptype))
                 continue;
 
             //Don't try to aim at a target if it's out of range
@@ -2683,25 +2747,6 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
     return beams;
 }
 
-static bool _dazzle_can_hit(const actor *act)
-{
-    if (act->is_monster())
-    {
-        const monster* mons = act->as_monster();
-        bolt testbeam;
-        testbeam.thrower = KILL_YOU;
-        zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
-
-        return mons->type != MONS_BATTLESPHERE
-               && mons->type != MONS_ORB_OF_DESTRUCTION
-               && mons->type != MONS_GRAND_AVATAR
-               && mons_species(mons->type) != MONS_BUSH
-               && !fedhas_shoot_through(testbeam, mons);
-    }
-    else
-        return false;
-}
-
 spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim, bool fail)
 {
     int range = spell_range(SPELL_DAZZLING_SPRAY, pow);
@@ -2718,7 +2763,8 @@ spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim, bool fail)
 
     fail_check();
 
-    vector<bolt> beams = get_spray_rays(caster, aim, range, 3);
+    vector<bolt> beams = get_spray_rays(caster, aim, range, 3,
+                                        ZAP_DAZZLING_SPRAY);
 
     if (beams.size() == 0)
     {
@@ -2945,4 +2991,138 @@ void end_searing_ray()
     you.attribute[ATTR_SEARING_RAY] = 0;
     you.props.erase("searing_ray_target");
     you.props.erase("searing_ray_aimed_at_spot");
+}
+
+spret_type cast_glaciate_icicle(actor *caster, int pow, coord_def aim,
+                                bool fail)
+{
+    int range = spell_range(SPELL_GLACIATE_ICICLE, pow);
+    unsigned int min_beams = 3;
+    unsigned int max_beams = min_beams
+                            + x_chance_in_y(pow, 150)
+                            + x_chance_in_y(pow, 300)
+                            + x_chance_in_y(pow, 600);
+
+    targetter_spray hitfunc(&you, range, ZAP_GLACIATE);
+
+    hitfunc.set_aim(aim);
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "fire towards", _glaciate_can_hit))
+            return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    vector<bolt> beams = get_spray_rays(caster, aim, range, min_beams,
+                                        ZAP_GLACIATE);
+
+    if (beams.size() == 0)
+    {
+        mpr("You can't see any targets in that direction!");
+        return SPRET_ABORT;
+    }
+
+    for (unsigned int i = 0; i < beams.size(); ++i)
+    {
+        zappy(ZAP_GLACIATE, pow, beams[i]);
+                       beams[i].fire();
+    }
+
+    // Re-fire beams to go up to max_beams total (So always hit max_beams times)
+    for (unsigned int i = 0; i < max_beams-beams.size();++i)
+    {
+        unsigned int j;
+        j = i % beams.size();
+        zappy(ZAP_GLACIATE, pow, beams[j]);
+        beams[j].extra_range_used = 0; // resetting for another firing of the
+                                       // same beam.
+        beams[j].fire();
+    }
+
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_glaciate_cone(actor *caster, int pow, coord_def aim,
+                              bool falloff, bool fail)
+{
+    const spell_type spell = falloff ? SPELL_GLACIATE_FALLOFF
+                                     : SPELL_GLACIATE_CONSTANT;
+    const int minr = spell_range(spell, falloff ? pow : 0);
+    targetter_cone hitfunc(caster, minr, spell_range(spell, pow));
+    hitfunc.set_aim(aim);
+    int range2 = max(minr*minr, (aim - caster->pos()).abs());
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "glaciate"))
+            return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    if (you.can_see(caster) || caster->is_player())
+    {
+        mprf("%s %s a mighty blast of ice!",
+             caster->name(DESC_THE).c_str(),
+             caster->conj_verb("conjure").c_str());
+    }
+
+    bolt beam;
+    beam.name              = "great icy blast";
+    beam.aux_source        = "great icy blast";
+    beam.flavour           = BEAM_ICE;
+    beam.glyph             = dchar_glyph(DCHAR_EXPLOSION);
+    beam.colour            = WHITE;
+    beam.range             = 1;
+    beam.hit               = AUTOMATIC_HIT;
+    // At range 3 (max ice storm size), this is equivalent to ice storm damage.
+    beam.damage            = calc_dice(7, (198 + 9 * pow) / range2);
+    beam.beam_source       = caster->mindex();
+    beam.set_agent(caster);
+#ifdef USE_TILE
+    beam.tile_beam = -1;
+#endif
+    beam.draw_delay = 0;
+
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        beam.draw(p->first);
+    }
+
+    delay(200);
+
+    beam.glyph = 0;
+
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        if (falloff)
+        {
+            range2 = max(9, (p->first - caster->pos()).abs());
+            beam.damage = calc_dice(7, (198 + 9 * pow) / range2);
+        }
+
+        if (actor_at(p->first))
+        {
+            beam.source = beam.target = p->first;
+            beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
+            beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
+            beam.fire();
+        }
+        place_cloud(CLOUD_COLD, p->first,
+                    (18 + random2avg(45,2)) / range2, caster);
+    }
+
+    noisy(25, hitfunc.origin);
+
+    return SPRET_SUCCESS;
 }

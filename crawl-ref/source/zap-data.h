@@ -1127,3 +1127,22 @@ struct zap_info
     false,
     0
 },
+
+{
+    ZAP_GLACIATE,
+    "huge glittering icicle",
+    200,
+    new calcdice_calculator<3, 8, 3, 7>, // 3-6 shots, half ice, half
+                                         // physical, AC and resist applied
+                                         // per shot, may be spread among
+                                         // targets
+    new tohit_calculator<40>,
+    WHITE,
+    false,
+    BEAM_ICE,
+    DCHAR_FIRED_ZAP,
+    false,
+    true,
+    true,
+    0 // Noise comes from explosions
+}

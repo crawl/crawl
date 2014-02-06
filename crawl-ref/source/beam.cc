@@ -4095,10 +4095,14 @@ void bolt::affect_player()
     }
     else if (name == "explosive bolt")
         _explosive_bolt_explode(this, you.pos());
-    else if (name == "flash freeze")
+    else if (name == "flash freeze"
+             || name == "great icy blast" && !is_explosion)
     {
         if (you.duration[DUR_FROZEN])
-            canned_msg(MSG_YOU_UNAFFECTED);
+        {
+            if (name == "flash freeze")
+                canned_msg(MSG_YOU_UNAFFECTED);
+        }
         else
         {
             mprf(MSGCH_WARN, "You are encased in ice.");
@@ -4485,6 +4489,42 @@ static bool _dazzle_monster(monster* mons, actor* act)
     return false;
 }
 
+static void _glaciate_freeze(monster* mon, killer_type englaciator,
+                             int beam_source)
+{
+    const coord_def where = mon->pos();
+    const monster_type pillar_type =
+        mons_is_zombified(mon) ? mons_zombie_base(mon)
+                               : mons_species(mon->type);
+    const int hd = mon->get_experience_level();
+
+    simple_monster_message(mon, " is frozen into a solid block of ice!");
+
+    // If the monster leaves a corpse when it dies, destroy the corpse.
+    int corpse = monster_die(mon, englaciator, beam_source);
+    if (corpse != -1)
+        destroy_item(corpse);
+
+    if (monster *pillar = create_monster(
+                        mgen_data(MONS_BLOCK_OF_ICE,
+                                  BEH_HOSTILE,
+                                  0,
+                                  0,
+                                  0,
+                                  where,
+                                  MHITNOT,
+                                  MG_FORCE_PLACE,
+                                  GOD_NO_GOD,
+                                  pillar_type),
+                                  false))
+    {
+        // Enemies with more HD leave longer-lasting blocks of ice.
+        int time_left = (random2(8) + hd) * BASELINE_DELAY;
+        mon_enchant temp_en(ENCH_SLOWLY_DYING, 1, 0, time_left);
+        pillar->update_ench(temp_en);
+    }
+}
+
 void bolt::monster_post_hit(monster* mon, int dmg)
 {
     if (YOU_KILL(thrower) && mons_near(mon))
@@ -4563,10 +4603,14 @@ void bolt::monster_post_hit(monster* mon, int dmg)
 
     if (name == "spray of energy")
         _dazzle_monster(mon, agent());
-    else if (name == "flash freeze")
+    else if (name == "flash freeze"
+             || name == "great icy blast" && !is_explosion)
     {
         if (mon->has_ench(ENCH_FROZEN))
-            simple_monster_message(mon, " is unaffected.");
+        {
+            if (name == "flash freeze")
+                simple_monster_message(mon, " is unaffected.");
+        }
         else
         {
             simple_monster_message(mon, " is flash-frozen.");
@@ -5002,6 +5046,12 @@ void bolt::affect_monster(monster* mon)
         if (mon->mindex() == beam_source && source_name.empty())
             source_name = mon->name(DESC_A, true);
 
+        if ((name == "great icy blast" || name == "huge glittering icicle")
+            && x_chance_in_y(3, 5))
+        {
+            // Includes monster_die as part of converting to block of ice.
+            _glaciate_freeze(mon, thrower, beam_source);
+        }
         // Prevent spore explosions killing plants from being registered
         // as a Fedhas misconduct.  Deaths can trigger the ally dying or
         // plant dying conducts, but spore explosions shouldn't count
@@ -5009,7 +5059,7 @@ void bolt::affect_monster(monster* mon)
         //
         // FIXME: Should be a better way of doing this.  For now, we are
         // just falsifying the death report... -cao
-        if (you_worship(GOD_FEDHAS) && flavour == BEAM_SPORE
+        else if (you_worship(GOD_FEDHAS) && flavour == BEAM_SPORE
             && fedhas_protects(mon))
         {
             if (mon->attitude == ATT_FRIENDLY)
@@ -5069,6 +5119,13 @@ bool bolt::ignores_monster(const monster* mon) const
     // Fire storm creates these, so we'll avoid affecting them.
     if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
         return true;
+
+    // Don't blow up blocks of ice with the spell that creates them.
+    if ((name == "great icy blast" || name == "huge glittering icicle")
+        && mon->type == MONS_BLOCK_OF_ICE)
+    {
+        return true;
+    }
 
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL)
         return true;
@@ -5874,6 +5931,17 @@ void bolt::refine_for_explosion()
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_FIRE;
+        ex_size = 1;
+    }
+
+    if (name == "huge glittering icicle")
+    {
+        seeMsg  = "Shards of ice explode everywhere!";
+        hearMsg = "You hear the sound of shattering ice!";
+
+        name    = "great icy blast";
+        glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
+        colour  = WHITE;
         ex_size = 1;
     }
 

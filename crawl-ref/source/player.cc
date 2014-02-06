@@ -1481,6 +1481,7 @@ int player_spell_levels(void)
 
     bool fireball = false;
     bool delayed_fireball = false;
+    int glaciate_count = 0;
 
     if (sl > 99)
         sl = 99;
@@ -1491,6 +1492,12 @@ int player_spell_levels(void)
             fireball = true;
         else if (you.spells[i] == SPELL_DELAYED_FIREBALL)
             delayed_fireball = true;
+        else if (you.spells[i] == SPELL_GLACIATE_ICICLE
+                 || you.spells[i] == SPELL_GLACIATE_CONSTANT
+                 || you.spells[i] == SPELL_GLACIATE_FALLOFF)
+        {
+            glaciate_count++;
+        }
 
         if (you.spells[i] != SPELL_NO_SPELL)
             sl -= spell_difficulty(you.spells[i]);
@@ -1499,6 +1506,10 @@ int player_spell_levels(void)
     // Fireball is free for characters with delayed fireball
     if (fireball && delayed_fireball)
         sl += spell_difficulty(SPELL_FIREBALL);
+
+    // Glaciate spells are free if you have more than one...
+    if (glaciate_count > 1)
+        sl += (glaciate_count - 1) * spell_difficulty(SPELL_GLACIATE_ICICLE);
 
     // Note: This can happen because of level drain.  Maybe we should
     // force random spells out when that happens. -- bwr

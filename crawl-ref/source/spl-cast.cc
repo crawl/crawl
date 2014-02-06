@@ -1126,6 +1126,12 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_spray(&you, range, ZAP_DAZZLING_SPRAY);
     case SPELL_EXPLOSIVE_BOLT:
         return new targetter_explosive_bolt(&you, pow, range);
+    case SPELL_GLACIATE_ICICLE:
+        return new targetter_spray(&you, range, ZAP_GLACIATE);
+    case SPELL_GLACIATE_CONSTANT:
+        return new targetter_cone(&you, 3, range);
+    case SPELL_GLACIATE_FALLOFF:
+        return new targetter_cone(&you, range, range);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1853,6 +1859,15 @@ static spret_type _do_cast(spell_type spell, int powc,
         mpr("This rod is automatically evoked when it strikes in combat.");
         return SPRET_ABORT;
 
+    case SPELL_GLACIATE_ICICLE:
+        return cast_glaciate_icicle(&you, powc, target, fail);
+
+    case SPELL_GLACIATE_CONSTANT:
+        return cast_glaciate_cone(&you, powc, target, false, fail);
+
+    case SPELL_GLACIATE_FALLOFF:
+        return cast_glaciate_cone(&you, powc, target, true, fail);
+
     default:
         return SPRET_NONE;
     }
@@ -1987,6 +2002,7 @@ string spell_noise_string(spell_type spell)
     case SPELL_DELAYED_FIREBALL:
     case SPELL_HELLFIRE_BURST:
     case SPELL_TORNADO:
+    case SPELL_GLACIATE_ICICLE:
         effect_noise = 15;
         break;
 
@@ -2001,6 +2017,8 @@ string spell_noise_string(spell_type spell)
     case SPELL_LIGHTNING_BOLT:
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_CONJURE_BALL_LIGHTNING:
+    case SPELL_GLACIATE_CONSTANT:
+    case SPELL_GLACIATE_FALLOFF:
         effect_noise = 25;
         break;
 

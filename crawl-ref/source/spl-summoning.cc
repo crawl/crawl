@@ -2512,7 +2512,8 @@ static bool _battlesphere_can_mirror(spell_type spell)
            || spell == SPELL_SANDBLAST
            || spell == SPELL_AIRSTRIKE
            || spell == SPELL_DAZZLING_SPRAY
-           || spell == SPELL_SEARING_RAY;
+           || spell == SPELL_SEARING_RAY
+           || spell == SPELL_GLACIATE_ICICLE;
 }
 
 bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)

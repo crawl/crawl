@@ -461,6 +461,19 @@ int spell_levels_required(spell_type which_spell)
         levels = 0;
     }
 
+    if ((which_spell == SPELL_GLACIATE_ICICLE
+         && (you.has_spell(SPELL_GLACIATE_CONSTANT)
+             || you.has_spell(SPELL_GLACIATE_FALLOFF)))
+        || (which_spell == SPELL_GLACIATE_CONSTANT
+            && (you.has_spell(SPELL_GLACIATE_ICICLE)
+                || you.has_spell(SPELL_GLACIATE_FALLOFF)))
+        || (which_spell == SPELL_GLACIATE_FALLOFF
+            && (you.has_spell(SPELL_GLACIATE_ICICLE)
+                || you.has_spell(SPELL_GLACIATE_CONSTANT))))
+    {
+        levels = 0;
+    }
+
     return levels;
 }
 
