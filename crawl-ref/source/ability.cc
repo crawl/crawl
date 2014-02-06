@@ -2504,6 +2504,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
+        beam.range = 8;
+
         if (!spell_direction(spd, beam))
             return false;
 
@@ -2518,11 +2520,11 @@ static bool _do_ability(const ability_def& abil)
 
         switch (random2(5))
         {
-        case 0: beam.range =  8; zapping(ZAP_THROW_FLAME, power, beam); break;
-        case 1: beam.range =  8; zapping(ZAP_PAIN,  power, beam); break;
-        case 2: beam.range =  5; zapping(ZAP_STONE_ARROW, power, beam); break;
-        case 3: beam.range =  8; zapping(ZAP_SHOCK, power, beam); break;
-        case 4: beam.range =  8; zapping(ZAP_BREATHE_ACID, power/2, beam); break;
+        case 0: zapping(ZAP_THROW_FLAME, power, beam); break;
+        case 1: zapping(ZAP_PAIN,  power, beam); break;
+        case 2: zapping(ZAP_STONE_ARROW, power, beam); break;
+        case 3: zapping(ZAP_SHOCK, power, beam); break;
+        case 4: zapping(ZAP_BREATHE_ACID, power/2, beam); break;
         }
         break;
 
@@ -2533,6 +2535,8 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
+        beam.range = 6;
+
         if (!spell_direction(spd, beam))
             return false;
 
@@ -2546,17 +2550,15 @@ static bool _do_ability(const ability_def& abil)
             return false;
 
         {
-            zap_type ztype = ZAP_DEBUGGING_RAY;
-            switch (random2(7))
-            {
-            case 0: beam.range =  7; ztype = ZAP_BOLT_OF_FIRE;       break;
-            case 1: beam.range =  6; ztype = ZAP_FIREBALL;           break;
-            case 2: beam.range =  8; ztype = ZAP_LIGHTNING_BOLT;     break;
-            case 3: beam.range =  5; ztype = ZAP_STICKY_FLAME;       break;
-            case 4: beam.range =  5; ztype = ZAP_IRON_SHOT;          break;
-            case 5: beam.range =  6; ztype = ZAP_BOLT_OF_DRAINING;   break;
-            case 6: beam.range =  8; ztype = ZAP_ORB_OF_ELECTRICITY; break;
-            }
+            zap_type ztype =
+                random_choose(ZAP_BOLT_OF_FIRE,
+                              ZAP_FIREBALL,
+                              ZAP_LIGHTNING_BOLT,
+                              ZAP_STICKY_FLAME,
+                              ZAP_IRON_SHOT,
+                              ZAP_BOLT_OF_DRAINING,
+                              ZAP_ORB_OF_ELECTRICITY,
+                              -1);
             zapping(ztype, power, beam);
         }
         break;
