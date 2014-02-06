@@ -1587,10 +1587,12 @@ static bool _item_race_matches_monster(const item_def &item, monster* mons)
 
 bool monster::pickup_melee_weapon(item_def &item, int near)
 {
+    // Draconian monks are masters of unarmed combat.
     // Monstrous demonspawn prefer to RIP AND TEAR with their claws.
     // XXX: this could probably be a monster flag
-    if (mons_is_demonspawn(type)
-        && draco_or_demonspawn_subspecies(this) == MONS_MONSTROUS_DEMONSPAWN)
+    if (type == MONS_DRACONIAN_MONK
+        || mons_is_demonspawn(type)
+           && draco_or_demonspawn_subspecies(this) == MONS_MONSTROUS_DEMONSPAWN)
     {
         return false;
     }
