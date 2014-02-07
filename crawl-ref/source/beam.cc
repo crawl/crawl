@@ -4109,6 +4109,14 @@ void bolt::affect_player()
             you.duration[DUR_FROZEN] = 3 * BASELINE_DELAY;
         }
     }
+    else if (name == "spray of energy"
+             && !(you.holiness() == MH_UNDEAD
+                  || you.holiness() == MH_NONLIVING
+                  || you.holiness() == MH_PLANT))
+    {
+        if (x_chance_in_y(85 - you.experience_level * 3 , 100))
+            you.confuse(agent(), 4 + random2(5));
+    }
 }
 
 int bolt::apply_AC(const actor *victim, int hurted)

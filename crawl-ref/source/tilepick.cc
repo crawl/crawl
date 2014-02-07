@@ -5010,6 +5010,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_ENGLACIATION:             return TILEG_METABOLIC_ENGLACIATION;
     case SPELL_SIMULACRUM:               return TILEG_SIMULACRUM;
     case SPELL_ICE_STORM:                return TILEG_ICE_STORM;
+    case SPELL_GLACIATE_ICICLE:          return TILEG_ICE_STORM;
+    case SPELL_GLACIATE_CONSTANT:        return TILEG_ICE_STORM;
+    case SPELL_GLACIATE_FALLOFF:         return TILEG_ICE_STORM;
 
     // Poison
     case SPELL_STING:                    return TILEG_STING;

@@ -2966,7 +2966,7 @@ struct spell_desc
      6, 6,
      0,
      NULL,
-     true,
+     false,
      false
 },
 

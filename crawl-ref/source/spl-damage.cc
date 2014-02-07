@@ -2606,7 +2606,7 @@ static bool _dazzle_can_hit(const actor *act)
                && !fedhas_shoot_through(testbeam, mons);
     }
     else
-        return false;
+        return true;
 }
 
 static bool _glaciate_can_hit(const actor *act)
@@ -2625,24 +2625,20 @@ static bool _glaciate_can_hit(const actor *act)
                && !fedhas_shoot_through(testbeam, mons);
     }
     else
-        return false;
+        return true;
 }
 
 // Whether spray spells can target specific targets.
 static bool _spray_rays_can_target(const actor *caster, const actor *target,
                                    zap_type zaptype)
 {
-    //Can't target what we can't see
+    // Can't target what we can't see
     if (!caster->can_see(target))
         return false;
 
-    //Don't aim secondary rays at friendlies
-    if ((caster->is_player()
-        ? target->as_monster()->attitude != ATT_HOSTILE
-        : target->as_monster()->attitude != ATT_FRIENDLY))
-    {
+    // Don't aim secondary rays at friendlies
+    if (mons_aligned(caster, target))
         return false;
-    }
 
     // Spell specific exceptions (This allows certain types of targets
     // which can't be spray targeted by certain types of spells)
@@ -2670,7 +2666,8 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
     bolt base_beam;
 
     base_beam.set_agent(const_cast<actor *>(caster));
-    base_beam.attitude = ATT_FRIENDLY;
+    base_beam.attitude = caster->is_player() ? ATT_FRIENDLY
+                                             : caster->as_monster()->attitude;
     base_beam.is_tracer = true;
     base_beam.is_targeting = true;
     base_beam.dont_stop_player = true;
@@ -2694,12 +2691,12 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
 
     for (distance_iterator di(aim, false, false, max_spacing); di; ++di)
     {
-        if (monster_at(*di))
+        if (actor_at(*di))
         {
             coord_def delta = caster->pos() - *di;
 
             // Can this spray target this monster?
-            if (!_spray_rays_can_target(caster, monster_at(*di), zaptype))
+            if (!_spray_rays_can_target(caster, actor_at(*di), zaptype))
                 continue;
 
             //Don't try to aim at a target if it's out of range

@@ -1250,6 +1250,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_REARRANGE_PIECES:
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_SHROUD_OF_GOLUBRIA:
+    case SPELL_DAZZLING_SPRAY:
+    case SPELL_GLACIATE_ICICLE:
     case SPELL_GLACIATE_CONSTANT:
     case SPELL_GLACIATE_FALLOFF:
         return true;
@@ -2589,6 +2591,30 @@ static void _cast_black_mark(monster* agent)
     }
 }
 
+static bool _spray_tracer(monster *caster, int pow, coord_def aim,
+                          spell_type spell)
+{
+    vector<bolt> beams =
+        get_spray_rays(caster, aim, spell_range(spell, pow), 3,
+                       spell == SPELL_DAZZLING_SPRAY  ? ZAP_DAZZLING_SPRAY :
+                       spell == SPELL_GLACIATE_ICICLE ? ZAP_GLACIATE
+                                                      : NUM_ZAPS);
+
+    if (beams.size() == 0)
+        return false;
+
+    bolt beam;
+
+    for (unsigned int i = 0; i < beams.size(); ++i)
+    {
+        fire_tracer(caster, beams[i]);
+        beam.friend_info += beams[i].friend_info;
+        beam.foe_info    += beams[i].foe_info;
+    }
+
+    return mons_should_fire(beam);
+}
+
 static bool _glaciate_tracer(monster *caster, int pow, coord_def aim,
                              bool falloff)
 {
@@ -3167,6 +3193,18 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             if (!_should_ephemeral_infusion(mons))
                 return false;
+        }
+        else if (spell_cast == SPELL_DAZZLING_SPRAY
+                 || spell_cast == SPELL_GLACIATE_ICICLE)
+        {
+            if (!foe
+                || !_spray_tracer(mons,
+                                     12 * mons->spell_hd(spell_cast),
+                                     foe->pos(),
+                                     spell_cast))
+            {
+                return false;
+            }
         }
         else if (spell_cast == SPELL_GLACIATE_CONSTANT
                  || spell_cast == SPELL_GLACIATE_FALLOFF)
@@ -5825,6 +5863,22 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         return;
 
+    case SPELL_DAZZLING_SPRAY:
+    {
+        actor *foe = mons->get_foe();
+        ASSERT(foe);
+        cast_dazzling_spray(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
+        return;
+    }
+
+    case SPELL_GLACIATE_ICICLE:
+    {
+        actor *foe = mons->get_foe();
+        ASSERT(foe);
+        cast_glaciate_icicle(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
+        return;
+    }
+
     case SPELL_GLACIATE_CONSTANT:
     case SPELL_GLACIATE_FALLOFF:
     {
@@ -6285,6 +6339,8 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                            // ugh. --Grunt
                            && (actual_spell != SPELL_LRD)
                            && (actual_spell != SPELL_PORTAL_PROJECTILE)
+                           && (actual_spell != SPELL_DAZZLING_SPRAY)
+                           && (actual_spell != SPELL_GLACIATE_ICICLE)
                            && (actual_spell != SPELL_GLACIATE_CONSTANT)
                            && (actual_spell != SPELL_GLACIATE_FALLOFF);
 
