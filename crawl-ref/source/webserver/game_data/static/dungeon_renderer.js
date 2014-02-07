@@ -17,7 +17,8 @@ function ($, cr, map_knowledge, options, dngn) {
         var base_bg = dngn.basetile(cell.bg.value);
         return (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
                 || is_torch(base_bg)
-                || (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.BLOOD));
+                || options.get("tile_water_anim")
+                   && (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.BLOOD));
     }
 
     function animate_cell(cell)

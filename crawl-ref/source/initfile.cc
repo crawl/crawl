@@ -4182,6 +4182,7 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_string("tile_display_mode", Options.tile_display_mode);
     tiles.json_write_int("tile_cell_pixels", Options.tile_cell_pixels);
     tiles.json_write_bool("tile_filter_scaling", Options.tile_filter_scaling);
+    tiles.json_write_bool("tile_water_anim", Options.tile_water_anim);
     tiles.json_write_bool("tile_realtime_anim", Options.tile_realtime_anim);
     tiles.json_write_bool("tile_level_map_hide_messages",
             Options.tile_level_map_hide_messages);
