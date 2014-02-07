@@ -1286,6 +1286,12 @@ Summon Iron Elementals spell
 
 This spell summons one or more iron elementals.
 %%%%
+Summon Lightning Spire spell
+
+This spell constructs a temporary lightning spire in an adjacent tile. Though
+it can fire bouncing bolts of electricity at the caster's foes, it is completely
+immobile.
+%%%%
 Summon Minor Demon spell
 
 This spell summons between one and three minor (rank 5) demons.

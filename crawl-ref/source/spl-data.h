@@ -3574,6 +3574,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SUMMON_LIGHTNING_SPIRE, "Summon Lightning Spire",
+     SPTYP_SUMMONING | SPTYP_AIR,
+     SPFLAG_GRID | SPFLAG_NOT_SELF,
+     4,
+     200,
+     1, 1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

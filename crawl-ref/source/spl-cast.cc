@@ -1597,6 +1597,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CONJURE_BALL_LIGHTNING:
         return cast_conjure_ball_lightning(powc, god, fail);
 
+    case SPELL_SUMMON_LIGHTNING_SPIRE:
+        return cast_summon_lightning_spire(powc, beam.target, god, fail);
+
     case SPELL_CALL_IMP:
         return cast_call_imp(powc, god, fail);
 

@@ -875,6 +875,56 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type god, bool fail)
+{
+    const int dur = min(1 + (random2(pow) / 10), 4);
+
+    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_SUMMON_LIGHTNING_SPIRE,
+                                                      pow))
+        || !in_bounds(where))
+    {
+        mpr("That's too far away.");
+        return SPRET_ABORT;
+    }
+
+    if (!monster_habitable_grid(MONS_HUMAN, grd(where)))
+    {
+        mpr("You can't construct there.");
+        return SPRET_ABORT;
+    }
+
+    monster* mons = monster_at(where);
+    if (mons)
+    {
+        if (you.can_see(mons))
+        {
+            mpr("That space is already occupied.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        // invisible monster
+        mpr("Something you can't see is blocking your construction!");
+        return SPRET_SUCCESS;
+    }
+
+    fail_check();
+
+    if (create_monster(
+            mgen_data(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, &you, dur, SPELL_SUMMON_LIGHTNING_SPIRE,
+                      where, MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE, god)))
+    {
+        if (!silenced(where))
+            mpr("An electric hum fills the air.");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+
+}
+
 spret_type cast_call_imp(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -3213,6 +3263,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
+    { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
     // Monster spells
     { SPELL_FAKE_RAKSHASA_SUMMON,       4, 2 },
     { SPELL_SUMMON_UFETUBUS,            8, 2 },
