@@ -1249,6 +1249,49 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
+{
+    coord_def point = find_gateway_location(caster);
+    bool success = (point != coord_def(0, 0));
+    const int duration = random_range(100 + pow / 10, 170 + pow / 10);
+
+    if (you.duration[DUR_FORESTED])
+    {
+        mpr("This spell is already ongoing.");
+        return SPRET_ABORT;
+    }
+
+    if (success)
+    {
+        for (distance_iterator di(point, false, true, LOS_RADIUS); di; ++di)
+        {
+            if (grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 200))
+                temp_change_terrain(*di, DNGN_SHALLOW_WATER, duration,
+                                    TERRAIN_CHANGE_FORESTED);
+            else if (grd(*di) == DNGN_ROCK_WALL && x_chance_in_y(pow, 150))
+                temp_change_terrain(*di, DNGN_TREE, duration,
+                                    TERRAIN_CHANGE_FORESTED);
+        }
+
+        mpr("A forested plane collides here with a resounding crunch!");
+        noisy(10, point);
+
+        if (monster *dryad = create_monster(
+                mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 2, SPELL_SUMMON_FOREST,
+                point, MHITYOU, MG_FORCE_BEH, god)))
+        {
+            player_angers_monster(dryad);
+        }
+
+        you.duration[DUR_FORESTED] = duration;
+
+        return SPRET_SUCCESS;
+    }
+
+    mpr("You need more open space to cast this spell.");
+    return SPRET_ABORT;
+}
+
 static bool _animatable_remains(const item_def& item)
 {
     return item.base_type == OBJ_CORPSES
