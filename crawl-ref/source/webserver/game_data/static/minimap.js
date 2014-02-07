@@ -91,18 +91,6 @@ function ($, map_knowledge, dungeon_renderer, view_data,
                      $("#minimap").height());
     }
 
-    function get_cell_map_feature(map_cell)
-    {
-        var cell = map_cell.t;
-
-        if (cell) cell.fg = enums.prepare_fg_flags(cell.fg || 0);
-
-        if (cell && cell.fg.value == tileinfo_player.PLAYER)
-            return enums.MF_PLAYER;
-        else
-            return map_cell.mf || enums.MF_UNSEEN;
-    }
-
     function center()
     {
         if (!enabled) return;
@@ -158,10 +146,10 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     function update(x, y, cell)
     {
         cell = cell || map_knowledge.get(x, y);
-        var feat = get_cell_map_feature(cell);
         if (x == player.pos.x && y == player.pos.y)
-            feat = enums.MF_PLAYER;
-        set(x, y, minimap_colours[feat]);
+            set(x, y, minimap_colours[enums.MF_PLAYER]);
+        else
+            set(x, y, minimap_colours[cell.mf || enums.MF_UNSEEN]);
     }
 
     // Minimap controls ------------------------------------------------------------
