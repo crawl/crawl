@@ -1618,6 +1618,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_MALIGN_GATEWAY:
         return cast_malign_gateway(&you, powc, god, fail);
 
+    case SPELL_SUMMON_FOREST:
+        return cast_summon_forest(&you, powc, god, fail);
+
     case SPELL_ANIMATE_SKELETON:
         return cast_animate_skeleton(god, fail);
 

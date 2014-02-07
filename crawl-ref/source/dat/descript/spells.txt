@@ -1246,6 +1246,12 @@ Summon Fire Elementals spell
 
 This spell summons one or more fire elementals.
 %%%%
+Summon Forest spell
+
+This spell finds a forested plane and forcefully intersects it with this
+world; however, it requires open space to succeed. While the spell holds,
+some of its terrain and spirit inhabitants may be trapped here.
+%%%%
 Summon Greater Demon spell
 
 This spell calls forth one of the greater demons of Pandemonium to serve the
