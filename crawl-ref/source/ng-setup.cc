@@ -211,6 +211,11 @@ static void _give_bonus_items()
     _newgame_give_item(OBJ_SCROLLS, SCR_BLINKING);
 }
 
+static void _give_glaciate_items()
+{
+    _newgame_give_item(OBJ_BOOKS, BOOK_RANDART_THEME);
+}
+
 void autopickup_starting_ammo(missile_type missile)
 {
     if (Options.autopickup_starting_ammo)
@@ -407,6 +412,18 @@ void newgame_make_item(int slot, equipment_type eqslot,
         item.plus = 6 + random2(6); // # of cards
         item.special = DECK_RARITY_COMMON;
         init_deck(item);
+    }
+    else if (item.base_type == OBJ_BOOKS
+             && item.sub_type == BOOK_RANDART_THEME)
+    {
+        vector<spell_type> incl_spells;
+        incl_spells.push_back(SPELL_GLACIATE_ICICLE);
+        incl_spells.push_back(SPELL_GLACIATE_CONSTANT);
+        incl_spells.push_back(SPELL_GLACIATE_FALLOFF);
+
+        make_book_theme_randart(item, incl_spells,
+                                SPTYP_ICE, SPTYP_NONE,
+                                3, 27, "Ozocubu", "Glaciation");
     }
 
     // If the character is restricted in wearing armour of equipment
@@ -1327,6 +1344,9 @@ static void _setup_generic(const newgame_def& ng)
 
     if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef())
         _give_bonus_items();
+
+    // XXX: don't keep this here
+    _give_glaciate_items();
 
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())
