@@ -1470,6 +1470,12 @@ grizzly bear
 A large grey-furred bear. Like all ursines, the grizzly bear will become
 enraged if badly hurt or frightened.
 %%%%
+guardian golem
+
+A large construct, designed to protect. It can take the blows
+dealt to others upon itself, though it is prone to becoming unstable
+and overheating after heavy punishment.
+%%%%
 guardian mummy
 
 An ancient warrior, embalmed and cursed to walk in undeath for eternity.

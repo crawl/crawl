@@ -4532,6 +4532,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_GUARDIAN_GOLEM:
+
+        if (mons->hit_points * 2 < mons->max_hit_points && one_chance_in(4)
+             && !mons->has_ench(ENCH_INNER_FLAME))
+        {
+            simple_monster_message(mons, " overheats!");
+            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, 0, INFINITE_DURATION));
+        }
+        break;
+
     default:
         break;
     }

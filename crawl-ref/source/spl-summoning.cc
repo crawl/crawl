@@ -925,6 +925,21 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
 
 }
 
+spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
+{
+    fail_check();
+
+    if (create_monster(
+            mgen_data(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY, &you, 3, SPELL_SUMMON_GUARDIAN_GOLEM,
+                      you.pos(), MHITYOU, MG_FORCE_BEH, god)))
+        mpr("A guardian golem appears.");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+}
+
+
 spret_type cast_call_imp(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -3264,6 +3279,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
+    { SPELL_SUMMON_GUARDIAN_GOLEM,      1, 2 },
     // Monster spells
     { SPELL_FAKE_RAKSHASA_SUMMON,       4, 2 },
     { SPELL_SUMMON_UFETUBUS,            8, 2 },

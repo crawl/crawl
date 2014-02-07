@@ -67,6 +67,7 @@ spret_type cast_malign_gateway(actor* caster, int pow,
                                god_type god = GOD_NO_GOD, bool fail = false);
 coord_def find_gateway_location(actor* caster);
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail);
+spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail);
 
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,

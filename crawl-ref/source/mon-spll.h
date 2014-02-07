@@ -2475,4 +2475,15 @@
        SPELL_BLINK_OTHER
       }
     },
+
+    {  MST_GUARDIAN_GOLEM,
+      {
+       SPELL_INJURY_BOND,
+       SPELL_INJURY_BOND,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_INJURY_BOND,
+       SPELL_NO_SPELL
+      }
+    },
 #endif
