@@ -1553,6 +1553,10 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_DAZZLING_SPRAY:
         return cast_dazzling_spray(&you, powc, target, fail);
 
+    case SPELL_CHAIN_OF_CHAOS:
+        return cast_chain_spell(SPELL_CHAIN_OF_CHAOS, powc, &you, fail);
+
+
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters
     // produced will count as god gifts.
