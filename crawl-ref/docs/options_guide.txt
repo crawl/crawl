@@ -105,8 +105,8 @@ The contents of this text are:
                 tile_font_tip_size, tile_font_lbl_size,
                 tile_font_ft_light, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier,
-                tile_water_anim, tile_layout_priority,
-                tile_realtime_anim, tile_display_mode,
+                tile_water_anim, tile_misc_anim, tile_realtime_anim,
+                tile_layout_priority, tile_display_mode,
                 tile_level_map_hide_messages, tile_level_map_hide_sidebar
 4-  Character Dump.
 4-a     Saving.
@@ -1904,6 +1904,15 @@ tile_show_demon_tier = true
 tile_water_anim = true
         If disabled, animation of liquids will be suppressed.
 
+tile_misc_anim = true
+        If disabled, animation of miscellaneous things such as altars and
+        torches will be suppressed.
+
+tile_realtime_anim = false
+        If enabled, tile animations will run in real time and will not be tied
+        to player actions.
+        This option is only available on WebTiles.
+
 tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         (Ordered list option)
         This option allows you to control the order in which elements are
@@ -1917,11 +1926,6 @@ tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         expand to its maximum size (6 lines). The minimap is always placed
         between the stat area and the tabs. The memorisation and skill tabs can
         be added to the list too, but are not by default.
-
-tile_realtime_anim = false
-        If enabled, tile animations will run in real time and will not be tied
-        to player actions.
-        This option is only available on WebTiles.
 
 tile_display_mode = (tiles | glyphs | hybrid)
         Controls how the dungeon is rendered. You can use normal tiles (default)

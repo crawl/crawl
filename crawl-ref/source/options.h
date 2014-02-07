@@ -458,6 +458,7 @@ public:
     bool        tile_show_minimagicbar;
     bool        tile_show_demon_tier;
     bool        tile_water_anim;
+    bool        tile_misc_anim;
     vector<string> tile_layout_priority;
 #endif
 #ifdef USE_TILE_WEB
