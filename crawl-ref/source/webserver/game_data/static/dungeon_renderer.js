@@ -17,12 +17,11 @@ function ($, cr, map_knowledge, options, dngn) {
         var base_bg = dngn.basetile(cell.bg.value);
         if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.DNGN_ENTER_ZOT_CLOSED)
             return options.get("tile_water_anim");
+        else if (base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED && base_bg < dngn.BLOOD
+                 || is_torch(base_bg))
+            return options.get("tile_misc_anim");
         else
-        {
-            return is_torch(base_bg)
-                   || (base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED
-                       && base_bg < dngn.BLOOD);
-        }
+            return false;
     }
 
     function animate_cell(cell)

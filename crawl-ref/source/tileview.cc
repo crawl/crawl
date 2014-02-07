@@ -1059,7 +1059,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB)
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB && Options.tile_misc_anim)
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
     else if (bg_idx == TILE_DNGN_LAVA && Options.tile_water_anim)
     {
@@ -1074,11 +1074,12 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         flv->special = random2(256);
     }
-    else if (bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_BLOOD)
+    else if (bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_BLOOD
+             && Options.tile_misc_anim)
     {
         flv->special = random2(256);
     }
-    else if (bg_idx == TILE_WALL_NORMAL)
+    else if (bg_idx == TILE_WALL_NORMAL && Options.tile_misc_anim)
     {
         tileidx_t basetile = tile_dngn_basetile(flv->wall);
         if (_is_torch(basetile))
