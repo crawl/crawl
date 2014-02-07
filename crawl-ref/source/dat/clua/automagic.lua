@@ -219,7 +219,7 @@ local function getkey()
       return "escape"
     end
     -- Similar check to libutil.h isaalpha(int c) for valid key
-    if (key > 96 and key < 122) or (key > 64 and key < 91) then
+    if (key > 96 and key < 123) or (key > 64 and key < 91) then
       local c = string.char(key)
       return c
     else
