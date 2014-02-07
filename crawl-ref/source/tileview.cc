@@ -1069,8 +1069,12 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
         flv->special = ((flv->special - ((flv->special % 4)))
                         + 4 + random2(4)) % tile_dngn_count(bg_idx);
     }
-    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_BLOOD
+    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_DNGN_ENTER_ZOT_CLOSED
              && Options.tile_water_anim)
+    {
+        flv->special = random2(256);
+    }
+    else if (bg_idx >= TILE_DNGN_ENTER_ZOT_CLOSED && bg_idx < TILE_BLOOD)
     {
         flv->special = random2(256);
     }

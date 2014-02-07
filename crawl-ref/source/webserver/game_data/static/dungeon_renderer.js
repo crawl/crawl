@@ -15,10 +15,14 @@ function ($, cr, map_knowledge, options, dngn) {
     {
         if (cell == null || cell.bg == null) return false;
         var base_bg = dngn.basetile(cell.bg.value);
-        return (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
-                || is_torch(base_bg)
-                || options.get("tile_water_anim")
-                   && (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.BLOOD));
+        if (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.DNGN_ENTER_ZOT_CLOSED)
+            return options.get("tile_water_anim");
+        else
+        {
+            return is_torch(base_bg)
+                   || (base_bg >= dngn.DNGN_ENTER_ZOT_CLOSED
+                       && base_bg < dngn.BLOOD);
+        }
     }
 
     function animate_cell(cell)
