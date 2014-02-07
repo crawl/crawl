@@ -2516,6 +2516,8 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_MERFOLK_JAVELINEER:
+        if (player_in_branch(BRANCH_DEPTHS))
+            break;
         if (!player_in_branch(BRANCH_SHOALS) || x_chance_in_y(you.depth, 5))
         {
             band = BAND_MERFOLK_JAVELINEER;
@@ -2524,6 +2526,8 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_MERFOLK_IMPALER:
+        if (player_in_branch(BRANCH_DEPTHS))
+            break;
         if (!player_in_branch(BRANCH_SHOALS) || x_chance_in_y(you.depth, 5))
         {
             band = BAND_MERFOLK_IMPALER;
