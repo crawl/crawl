@@ -2940,6 +2940,7 @@ enum monster_type                      // menv[].type
     MONS_NATASHA,
     MONS_VASHNIA,
 #endif
+    MONS_GUARDIAN_GOLEM,
 
     NUM_MONSTERS,               // used for polymorph
 
@@ -3860,6 +3861,7 @@ enum spell_type
     SPELL_BLINK_ALLIES_AWAY,
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_LIGHTNING_SPIRE,
+    SPELL_SUMMON_GUARDIAN_GOLEM,
     NUM_SPELLS
 };
 
