@@ -1903,6 +1903,7 @@ tile_show_demon_tier = true
 
 tile_water_anim = true
         If disabled, animation of liquids will be suppressed.
+        Defaults to false on WebTiles.
 
 tile_misc_anim = true
         If disabled, animation of miscellaneous things such as altars and
