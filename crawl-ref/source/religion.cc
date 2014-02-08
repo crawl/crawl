@@ -1325,13 +1325,13 @@ void get_pure_deck_weights(int weights[])
                                     + you.sacrifice_value[OBJ_RODS]
                                     + you.sacrifice_value[OBJ_MISSILES] + 1;
     weights[NEM_GIFT_SUMMONING]   = you.sacrifice_value[OBJ_CORPSES] / 2;
-    weights[NEM_GIFT_WONDERS]     = you.sacrifice_value[OBJ_POTIONS]
-                                    + you.sacrifice_value[OBJ_SCROLLS]
-                                    + you.sacrifice_value[OBJ_WANDS]
-                                    + you.sacrifice_value[OBJ_FOOD]
-                                    + you.sacrifice_value[OBJ_MISCELLANY]
-                                    + you.sacrifice_value[OBJ_JEWELLERY]
-                                    + you.sacrifice_value[OBJ_BOOKS];
+    weights[NEM_GIFT_WONDERS]     = (you.sacrifice_value[OBJ_POTIONS]
+                                     + you.sacrifice_value[OBJ_SCROLLS]
+                                     + you.sacrifice_value[OBJ_WANDS]
+                                     + you.sacrifice_value[OBJ_FOOD]
+                                     + you.sacrifice_value[OBJ_MISCELLANY]
+                                     + you.sacrifice_value[OBJ_JEWELLERY]
+                                     + you.sacrifice_value[OBJ_BOOKS]) / 2;
  }
 
 static void _update_sacrifice_weights(int which)
