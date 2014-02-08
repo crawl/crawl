@@ -24,19 +24,19 @@ __(_suffix_examine
 It has been enchanted to dance through the air and attack under its own power.
 %%%%
 # Uniques
-Aizul
-
-Once the primary guardian serpent of a legendary treasure hoard, he was
-disgraced after thieves looted it while he slept. He now slithers about the
-dungeon, seeking vengeance against all would-be looters. He is an accomplished
-spellcaster, but no more deadly in melee combat than others of his kind.
-%%%%
 Agnes
 
 This somewhat older looking spriggan carries a bladed staff (almost as large as
 she is). The pockets of her threadbare robe bulge with jangling coins. The
 coins and lajatang do not seem to slow her, though, as she darts to and fro,
 her pockets streaming behind her and trembling as if about to burst.
+%%%%
+Aizul
+
+Once the primary guardian serpent of a legendary treasure hoard, he was
+disgraced after thieves looted it while he slept. He now slithers about the
+dungeon, seeking vengeance against all would-be looters. He is an accomplished
+spellcaster, but no more deadly in melee combat than others of his kind.
 %%%%
 Antaeus
 
@@ -174,18 +174,6 @@ Eustachio
 An apprentice summoner with a flowing moustache. He has funny ideas about
 honour.
 %%%%
-Frances
-
-A stout warrior who once bested a powerful lord of Pandemonium in combat,
-gaining control over the demon's realm and thanes. The battle left her with a
-deep facial scar, one that she carries as a badge of honour rather than a
-symbol of shame.
-%%%%
-Frederick
-
-A svelte fighter-mage who wears a gold-rimmed monocle and seeks a suitable and
-worthy opponent. You likely do not fit the bill.
-%%%%
 Fannar
 
 A cold-hearted elven sorcerer, draped in robes of high office. He whispers
@@ -204,6 +192,18 @@ into paranoia and despotism. Even his closest supporters now whisper that his
 magical power has begun to border on the self-destructive. Fannar still tries
 to keep the elves from falling to evil, unwilling or unable to notice that he
 failed long ago.
+%%%%
+Frances
+
+A stout warrior who once bested a powerful lord of Pandemonium in combat,
+gaining control over the demon's realm and thanes. The battle left her with a
+deep facial scar, one that she carries as a badge of honour rather than a
+symbol of shame.
+%%%%
+Frederick
+
+A svelte fighter-mage who wears a gold-rimmed monocle and seeks a suitable and
+worthy opponent. You likely do not fit the bill.
 %%%%
 Gastronok
 
@@ -354,6 +354,13 @@ A sly, conniving thief. In his profession, Maurice is considered a legend — at
 least according to himself. He is skilled, nonetheless, and among all the
 thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
 %%%%
+Menkaure
+
+A fair and noble ruler of an ancient and mighty kingdom, mummified after an
+early death. His faithful priests subsequently infused him with great and
+powerful magic, seeking to grant him eternal life. Now he is forgotten and
+reduced to mouldering bandages and dry, brittle bones.
+%%%%
 Mennas
 
 There was once a human priest named Mennas. He travelled far and wide preaching
@@ -364,13 +371,6 @@ when Mennas remained silent they cut out his tongue.
 
 Whether or not this angel is that same Mennas is something of a mystery, as he
 seems to have difficulty speaking.
-%%%%
-Menkaure
-
-A fair and noble ruler of an ancient and mighty kingdom, mummified after an
-early death. His faithful priests subsequently infused him with great and
-powerful magic, seeking to grant him eternal life. Now he is forgotten and
-reduced to mouldering bandages and dry, brittle bones.
 %%%%
 Mnoleg
 
@@ -468,14 +468,15 @@ A particularly corpulent troll with a short temper and a sizable gut.
 Uninterested in the Orb, Snorg delights in the endless parade of adventurers –
 that is, easy meals — it attracts.
 %%%%
+Sojobo
+
+King of the tengu, with legendary skill in swordsmanship, tactics, and magic.
+%%%%
+
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
 daring leaps! But watch out for her knives!
-%%%%
-Sojobo
-
-King of the tengu, with legendary skill in swordsmanship, tactics, and magic.
 %%%%
 Terence
 
@@ -652,6 +653,11 @@ basilisk
 
 A crested lizard of middling size with a terrible petrifying gaze.
 %%%%
+bat
+
+A large grey bat that, despite being herbivorous, is quite aggressive. It is
+myopic and uses echolocation to navigate.
+%%%%
 battlesphere
 
 A small globe of magical energy that follows a spellcaster. It cannot operate
@@ -709,6 +715,12 @@ A muscular horned humanoid figure originating from some frigid hell. It swoops
 through the air on powerful wings, taking sadistic joy from harrying those who
 would try to flee its grasp.
 %%%%
+bog body
+
+An undead figure preserved by the brackish waters of a bog. Though it has been
+reanimated by some unknown magic, this magic is not enough to prevent its
+decaying.
+%%%%
 boggart
 
 A malevolent and dangerous little sprite. Although physically unprepossessing,
@@ -721,12 +733,6 @@ bone dragon
 A huge undead abomination, pieced together from the broken bones of many
 dragons by powerful necromantic magic. This creature is unique among dragons in
 that it lacks a typical dragon's fearsome breath.
-%%%%
-bog body
-
-An undead figure preserved by the brackish waters of a bog. Though it has been
-reanimated by some unknown magic, this magic is not enough to prevent its
-decaying.
 %%%%
 boring beetle
 
@@ -759,16 +765,16 @@ brown ooze
 A viscous liquid being that flows along the floor in search of matter to
 dissolve and consume.
 %%%%
+burning bush
+
+A mass of blackened twigs wreathed in orange flames. The walls and floor
+surrounding it are covered in scorch marks.
+%%%%
 bush
 
 A woody plant. It looks dry enough to be easily set on fire, and its foliage is
 not very dense, permitting missiles to pass through it. However, it is firmly
 rooted, and requires much effort to destroy.
-%%%%
-burning bush
-
-A mass of blackened twigs wreathed in orange flames. The walls and floor
-surrounding it are covered in scorch marks.
 %%%%
 butterfly
 
@@ -1145,6 +1151,13 @@ An elf, a member of an ancient fey race. Elves are slightly built when compared
 to humans, and have an innate magical acumen, though less than their deep elf
 cousins.
 %%%%
+emperor scorpion
+
+The emperor scorpion is the largest arachnid known to exist. The massive barb
+on its tail drips with a deadly venom, and its pincers are big enough to shear
+you in half. Though the ordinary dungeon scorpion may be both large and
+dangerous, this freakish relative puts it to shame.
+%%%%
 ettin
 
 A two-headed giant, stronger than most giants, able to land devastating blows
@@ -1194,6 +1207,10 @@ A great reptilian beast with powerful claws on its limbs, covered in thick
 green scales and with two huge bat-like wings. Little trails of smoke spill
 from its toothy maw.
 %%%%
+fire drake
+
+A small but dangerous dragon, puffing clouds of smoke.
+%%%%
 fire elemental
 
 A spirit drawn from the elemental plane of fire, which exists in this world as
@@ -1210,10 +1227,6 @@ the meantime, they'll settle for adventurers foolish enough to approach them.
 fire vortex
 
 A swirling cloud of flame.
-%%%%
-fire drake
-
-A small but dangerous dragon, puffing clouds of smoke.
 %%%%
 flaming corpse
 
@@ -1287,21 +1300,6 @@ giant amoeba
 A massive pulsating organism that uses thick pseudopods of protoplasm to ooze
 through the dungeons in search of food.
 %%%%
-worker ant
-
-A wingless black insect with sharp mandibles capable of injecting a deadly
-poison. It is a worker, and thus tasked with gathering food — any living being
-it encounters is a potential meal.
-%%%%
-bat
-
-A large grey bat that, despite being herbivorous, is quite aggressive. It is
-myopic and uses echolocation to navigate.
-%%%%
-megabat
-
-A huge black bat.
-%%%%
 goliath beetle
 
 A huge black beetle with great crunching mandibles and very hard chitinous
@@ -1367,13 +1365,6 @@ giant orange brain
 
 A huge wrinkled brain, floating just off the floor and glowing with mutagenic
 energies. Every now and then it seems to pulsate.
-%%%%
-emperor scorpion
-
-The emperor scorpion is the largest arachnid known to exist. The massive barb
-on its tail drips with a deadly venom, and its pincers are big enough to shear
-you in half. Though the ordinary dungeon scorpion may be both large and
-dangerous, this freakish relative puts it to shame.
 %%%%
 giant slug
 
@@ -1504,6 +1495,15 @@ Harpies have roamed the coasts as long as seafarers can remember. They strike
 fear in the hearts of the wary, for their sharp claws and harrying strikes have
 torn many a luckless traveler to shreds.
 %%%%
+hell beast
+
+An abominable crossbreed of beast and man that makes horrible barking noises.
+%%%%
+hell hog
+
+An extremely large and aggressive swine, bred in Hell, whose fiery breath is
+capable of setting unwary adventurers alight.
+%%%%
 hell hound
 
 A huge black dog, with glowing red eyes and smoke pouring from its fanged
@@ -1513,15 +1513,6 @@ hell knight
 
 A heavily armoured warrior, in league with the powers of Hell, and usually
 accompanied by other unsavoury beings of its ilk.
-%%%%
-hell hog
-
-An extremely large and aggressive swine, bred in Hell, whose fiery breath is
-capable of setting unwary adventurers alight.
-%%%%
-hell beast
-
-An abominable crossbreed of beast and man that makes horrible barking noises.
 %%%%
 Hell Sentinel
 
@@ -1860,19 +1851,23 @@ master elementalist
 
 The primal forces of the universe dance at this demented wizard's fingertips.
 %%%%
+megabat
+
+A huge black bat.
+%%%%
 merfolk
 
 A hybrid with the torso of a man and the tail of a fish, a merfolk dwells both
 in water and on land, and fiercely defends its domain.
 %%%%
-merfolk impaler
-
-A powerfully muscled merfolk warrior, bearing a deadly weapon.
-%%%%
 merfolk aquamancer
 
 A slender merfolk mystic with unusually webby hands. Its form shifts and
 glistens as if seen through ocean spray.
+%%%%
+merfolk impaler
+
+A powerfully muscled merfolk warrior, bearing a deadly weapon.
 %%%%
 merfolk javelineer
 
@@ -1941,18 +1936,18 @@ naga mage
 A naga that has trained in the use of magic, trailed by an eldritch nimbus. It
 is especially skilled in spells dealing with poison and venom.
 %%%%
-naga sharpshooter
-
-A naga with exceptionally keen eyesight, adept in the use of ranged weaponry
-and simple magics which allows it to snipe at targets across nearly any
-obstruction.
-%%%%
 naga ritualist
 
 An esoteric mystic draped in talismans. Their sect venerate poison as a sacred
 gift and means of spiritual purification, and their affinity for it is even
 stronger than the rest of their kin. By invoking secret rites they can render
 any venom more potent and spread its touch upon all those around them.
+%%%%
+naga sharpshooter
+
+A naga with exceptionally keen eyesight, adept in the use of ranged weaponry
+and simple magics which allows it to snipe at targets across nearly any
+obstruction.
 %%%%
 naga warrior
 
@@ -2726,15 +2721,15 @@ Beware, for its beauty is deceptive; cradled within its petals lies a stigma
 bristling with needle-like thorns, fully capable of impaling predators and
 unwitting adventurers alike before they can draw close enough to threaten it.
 %%%%
-toenail golem
-
-A huge animated statue made entirely from toenail clippings. Some people just
-have too much time on their hands.
-%%%%
 toadstool
 
 A short-lived species of fungus typically found on or around decaying organic
 matter.
+%%%%
+toenail golem
+
+A huge animated statue made entirely from toenail clippings. Some people just
+have too much time on their hands.
 %%%%
 tormentor
 
@@ -2919,6 +2914,12 @@ wolf spider
 
 A hairy fast-moving hunting spider with vicious mandibles, roaming the dungeon
 in search of prey, which it kills with its deadly venom.
+%%%%
+worker ant
+
+A wingless black insect with sharp mandibles capable of injecting a deadly
+poison. It is a worker, and thus tasked with gathering food — any living being
+it encounters is a potential meal.
 %%%%
 worldbinder
 
