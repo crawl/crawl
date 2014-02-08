@@ -4862,11 +4862,7 @@ void activate_ballistomycetes(monster* mons, const coord_def& origin,
             && mons->attitude == ATT_HOSTILE)
         {
             if (player_kill)
-            {
-                mpr("Having destroyed the fungal colony, you feel a bit more "
-                    "experienced.");
-                gain_exp(200);
-            }
+                mpr("The fungal colony is destroyed.");
 
             // Get rid of the mold, so it'll be more useful when new fungi
             // spawn.
