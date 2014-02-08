@@ -47,6 +47,14 @@ function hell_water_spawns(e)
     e.nsubst("w = 8:P / 4 = Pw / *:w")
 end
 
+function hell_lava_spawns(e)
+    e.kmons("~ = patrolling molten gargoyle w:5 / patrolling smoke demon w:5 / \
+                 patrolling fire elemental w:60 / \
+                 patrolling salamander firebrand w:30")
+    e.kfeat("~l = l")
+    e.kmask("l = no_monster_gen")
+    e.nsubst("l = 6:~ / 4 = ~l / *:l")
+end
 }}
 
 ##############################################################################
@@ -408,6 +416,10 @@ NAME:   vestibule_of_hell
 PLACE:  Hell
 ORIENT: encompass
 TAGS:   no_rotate no_dump
+KMONS:  D = war gargoyle / reaper
+KMONS:  G = hellion / balrug
+KMONS:  C = blizzard demon / ice statue
+KMONS:  T = revenant / shadow dragon
 KFEAT:  D=enter_dis
 KFEAT:  G=enter_gehenna
 KFEAT:  C=enter_cocytus
@@ -420,6 +432,7 @@ NSUBST: . = 1:2 / *:.
 FTILE:  +'T = floor_infernal_blank
 TILE:   c = dngn_stone_dark
 : hell_water_spawns(_G)
+: hell_lava_spawns(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -635,6 +648,7 @@ KMONS:  2 = hellion
 KMONS:  3 = red devil
 KMONS:  2 = reaper / soul eater
 FTILE:  x'5a2V+ = floor_infernal_blank
+: hell_lava_spawns(_G)
 MAP
 lllllllllllllllllllllllllllllllll
  Lllllllllllllllllllllllllllllll
@@ -667,6 +681,7 @@ KMONS:   H = hellion
 KMONS:   m = crimson imp / red devil / smoke demon
 KMONS:   ' = hell beast / hell hound / hell hog / nothing w:140
 FTILE:   AH' = floor_infernal_blank
+: hell_lava_spawns(_G)
 MAP
 .........bab.........dcd.........
  ...m..bbbabbb.....dddcddd..m...
