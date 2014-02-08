@@ -594,6 +594,10 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
     case TILEP_MONS_ZOMBIE_SMALL:
     case TILEP_MONS_SKELETON_SMALL:
+    case TILEP_MONS_VAULT_GUARD:
+    case TILEP_MONS_IRONBRAND_CONVOKER:
+    case TILEP_MONS_IRONHEART_PRESERVER:
+    case TILEP_MONS_VAULT_WARDEN:
         *ofs_x = -2;
         *ofs_y = 1;
         break;
