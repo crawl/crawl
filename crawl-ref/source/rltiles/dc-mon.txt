@@ -3,10 +3,35 @@ mon/panlord/pandemonium_lord MONS_PANDEMONIUM_LORD
 
 misc/error MONS_PROGRAM_BUG
 
+### Larger tiles (32x48)
+%sdir mon/unique
+%rim 0
+asmodeus MONS_ASMODEUS
+cerebov MONS_CEREBOV
+dispater MONS_DISPATER
+ereshkigal MONS_ERESHKIGAL
+gloorx_vloq MONS_GLOORX_VLOQ
+lom_lobon MONS_LOM_LOBON
+mnoleg MONS_MNOLEG
+antaeus MONS_ANTAEUS
+lernaean_hydra01 MONS_LERNAEAN_HYDRA
+lernaean_hydra02
+lernaean_hydra03
+lernaean_hydra04
+lernaean_hydra05
+lernaean_hydra06
+lernaean_hydra07
+lernaean_hydra08
+lernaean_hydra09
+lernaean_hydra10
+%sdir mon/sprint
+meatlord MONS_MEATLORD
+
 ### Animals
 %sdir mon/animals
 
 ## Insects ('a')
+%rim 1
 giant_cockroach MONS_GIANT_COCKROACH
 worker_ant MONS_WORKER_ANT
 soldier_ant MONS_SOLDIER_ANT
@@ -264,14 +289,7 @@ wretched_star MONS_WRETCHED_STAR
 ## Arch demons ('&')
 %sdir mon/unique
 %rim 0
-asmodeus MONS_ASMODEUS
-cerebov MONS_CEREBOV
-dispater MONS_DISPATER
-ereshkigal MONS_ERESHKIGAL
 geryon MONS_GERYON
-gloorx_vloq MONS_GLOORX_VLOQ
-lom_lobon MONS_LOM_LOBON
-mnoleg MONS_MNOLEG
 
 ## Demons 1-5
 %sdir mon/demons
@@ -562,7 +580,6 @@ mennas MONS_MENNAS
 polyphemus MONS_POLYPHEMUS
 chuck MONS_CHUCK
 iron_giant MONS_IRON_GIANT
-antaeus MONS_ANTAEUS
 %sdir mon
 hill_giant MONS_HILL_GIANT
 ettin MONS_ETTIN
@@ -583,16 +600,6 @@ wind_drake MONS_WIND_DRAKE
 ## Dragons ('D')
 %sdir mon/unique
 xtahua MONS_XTAHUA
-lernaean_hydra01 MONS_LERNAEAN_HYDRA
-lernaean_hydra02
-lernaean_hydra03
-lernaean_hydra04
-lernaean_hydra05
-lernaean_hydra06
-lernaean_hydra07
-lernaean_hydra08
-lernaean_hydra09
-lernaean_hydra10
 serpent_of_hell-geh MONS_SERPENT_OF_HELL_GEHENNA
 serpent_of_hell-coc MONS_SERPENT_OF_HELL_COCYTUS
 serpent_of_hell-dis MONS_SERPENT_OF_HELL_DIS
@@ -1013,7 +1020,6 @@ murray MONS_MURRAY
 %sdir mon/sprint
 succubus MONS_SUCCUBUS
 %rim 0
-meatlord MONS_MEATLORD
 orb_of_ice MONS_ORB_OF_ICE
 orb_of_electricity MONS_ORB_OF_ELECTRICITY
 %rim 1
