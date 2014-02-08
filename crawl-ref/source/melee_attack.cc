@@ -503,23 +503,52 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
 
 void melee_attack::apply_black_mark_effects()
 {
-    ASSERT(attacker->is_monster());
-    monster* mon = attacker->as_monster();
-
-    if (mon->heal(random2avg(damage_done, 2)))
-        simple_monster_message(mon, " is healed.");
-
-    switch(random2(3))
+    // Slightly weaker and less reliable effects for players.
+    if (attacker->is_player()
+        && you.mutation[MUT_BLACK_MARK]
+        && one_chance_in(5))
     {
-        case 0:
-            antimagic_affects_defender(damage_done);
-            break;
-        case 1:
-            defender->slow_down(attacker, 5 + random2(7));
-            break;
-        case 2:
-            defender->drain_exp(attacker, false, 10);
-            break;
+        if (you.hp < you.hp_max
+            && !you.duration[DUR_DEATHS_DOOR]
+            && !defender->as_monster()->is_summoned())
+        {
+            mpr("You feel better.");
+            attacker->heal(random2(damage_done));
+        }
+
+        switch(random2(3))
+        {
+            case 0:
+                antimagic_affects_defender(damage_done);
+                break;
+            case 1:
+                defender->weaken(attacker, 2);
+                break;
+            case 2:
+                defender->drain_exp(attacker);
+                break;
+        }
+    }
+    else if (attacker->is_monster()
+             && attacker->as_monster()->has_ench(ENCH_BLACK_MARK))
+    {
+        monster* mon = attacker->as_monster();
+
+        if (mon->heal(random2avg(damage_done, 2)))
+            simple_monster_message(mon, " is healed.");
+
+        switch(random2(3))
+        {
+            case 0:
+                antimagic_affects_defender(damage_done);
+                break;
+            case 1:
+                defender->slow_down(attacker, 5 + random2(7));
+                break;
+            case 2:
+                defender->drain_exp(attacker, false, 10);
+                break;
+        }
     }
 }
 
@@ -631,12 +660,8 @@ bool melee_attack::handle_phase_hit()
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
-    if (damage_done > 0
-        && attacker->is_monster()
-        && attacker->as_monster()->has_ench(ENCH_BLACK_MARK))
-    {
+    if (damage_done > 0)
         apply_black_mark_effects();
-    }
 
     if (attacker->is_player())
     {
@@ -653,7 +678,7 @@ bool melee_attack::handle_phase_hit()
     {
         // These effects (mutations right now) are only triggered when
         // the player is hit, each of them will verify their own required
-        // parameters of the effec
+        // parameters.
         do_passive_freeze();
         do_passive_heat();
         emit_foul_stench();

@@ -1635,5 +1635,15 @@
   {"You stop fuming.", "You fume less.", ""},
 
   "fumes"
-}
+},
 #endif
+
+{ MUT_BLACK_MARK,                  0,  1, false, false, false,
+  "black mark",
+
+  {"Your melee attacks sometimes drain vitality from your foes.", "", ""},
+  {"An ominous black mark forms on your body.", "", ""},
+  {"", "", ""},
+
+  "black mark"
+}
