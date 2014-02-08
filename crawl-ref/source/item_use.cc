@@ -2386,7 +2386,9 @@ static void _rebrand_weapon(item_def& wpn)
 
     set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
 
-    if (old_brand == SPWPN_DISTORTION && wpn.index() == you.weapon()->index())
+    if (old_brand == SPWPN_DISTORTION
+        && wpn.index() == you.weapon()->index()
+        && !you_worship(GOD_LUGONU))
     {
         // you can't get rid of distortion this easily
         mprf("%s twongs alarmingly.", itname.c_str());
