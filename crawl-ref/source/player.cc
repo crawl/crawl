@@ -7094,8 +7094,8 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     {
         const monster* mon = agent->as_monster();
         ouch(amount, mon->mindex(),
-             KILLED_BY_MONSTER, "", mon->visible_to(this), NULL,
-             attacker_effects);
+             flavour == BEAM_WATER ? KILLED_BY_WATER : KILLED_BY_MONSTER,
+             "", mon->visible_to(this), NULL, attacker_effects);
     }
     else
     {

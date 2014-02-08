@@ -1159,6 +1159,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     if (!invalid_monster_index(death_source)
         && !env.mons[death_source].alive()
         && death_type != KILLED_BY_SPORE
+        && death_type != KILLED_BY_WATER
         && auxkilldata != "exploding inner flame")
     {
         death_source = NON_MONSTER;
@@ -2133,6 +2134,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             {
                 desc += terse? "drowned by " : "Drowned by ";
                 desc += death_source_name;
+                needs_damage = true;
             }
             else
                 desc += terse? "drowned" : "Drowned";

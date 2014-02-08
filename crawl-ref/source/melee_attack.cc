@@ -5050,6 +5050,7 @@ void melee_attack::mons_apply_attack_flavour()
         {
             special_damage = attacker->get_experience_level() * 3 / 4
                             + random2(attacker->get_experience_level() * 3 / 4);
+            special_damage_flavour = BEAM_WATER;
 
             if (needs_message)
             {
