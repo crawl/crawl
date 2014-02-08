@@ -356,6 +356,7 @@ white_imp MONS_WHITE_IMP
 
 # demonspawn ('6')
 %sdir mon/demonspawn
+%rim 0
 demonspawn MONS_DEMONSPAWN
 monstrous MONS_MONSTROUS_DEMONSPAWN
 gelid MONS_GELID_DEMONSPAWN
@@ -370,6 +371,7 @@ black_sun MONS_BLACK_SUN
 
 ## Spiritual beings ('R')
 %sdir mon/unique
+%rim 1
 mara MONS_MARA
 %sdir mon/demons
 rakshasa MONS_RAKSHASA
@@ -1048,6 +1050,7 @@ draco-base-pale
 draco-base-purple
 draco-base-red
 draco-base-white
+%rim 0
 draco-job-annihilator DRACO_ANNIHILATOR
 draco-job-caller DRACO_CALLER
 draco-job-knight DRACO_KNIGHT
@@ -1055,6 +1058,7 @@ draco-job-monk DRACO_MONK
 draco-job-scorcher DRACO_SCORCHER
 draco-job-shifter DRACO_SHIFTER
 draco-job-zealot DRACO_ZEALOT
+%rim 1
 
 mon/nonliving/test_spawner MONS_TEST_SPAWNER
 
