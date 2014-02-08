@@ -112,8 +112,8 @@ spret_type ice_armour(int pow, bool fail)
 spret_type missile_prot(int pow, bool fail)
 {
     fail_check();
-    you.attribute[ATTR_REPEL_MISSILES] = 2 + pow/6;
-    you.set_duration(DUR_REPEL_MISSILES, 3, 50, NULL);
+    you.attribute[ATTR_REPEL_MISSILES] = 1 + pow / 6;
+    you.set_duration(DUR_REPEL_MISSILES, 1 + random2(3));
     mpr("You feel protected from missiles.");
     return SPRET_SUCCESS;
 }
@@ -121,8 +121,8 @@ spret_type missile_prot(int pow, bool fail)
 spret_type deflection(int pow, bool fail)
 {
     fail_check();
-    you.attribute[ATTR_DEFLECT_MISSILES] = 1 + pow/5;
-    you.set_duration(DUR_DEFLECT_MISSILES, 5, 50, NULL);
+    you.attribute[ATTR_DEFLECT_MISSILES] = 1 + pow / 6;
+    you.set_duration(DUR_DEFLECT_MISSILES, 1 + random2(3));
     mpr("You feel very safe from missiles.");
     return SPRET_SUCCESS;
 }

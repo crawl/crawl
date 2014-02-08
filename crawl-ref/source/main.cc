@@ -2442,20 +2442,16 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
 
-    if (you.attribute[ATTR_REPEL_MISSILES] == 0)
+    if (!you.attribute[ATTR_REPEL_MISSILES])
     {
         _decrement_a_duration(DUR_REPEL_MISSILES, delay,
-                          "You feel less protected from missiles.",
-                          coinflip(),
-                          "Your repel missiles spell is about to expire...");
+                          "You feel less protected from missiles.");
     }
 
-    if (you.attribute[ATTR_DEFLECT_MISSILES] == 0)
+    if (!you.attribute[ATTR_DEFLECT_MISSILES])
     {
         _decrement_a_duration(DUR_DEFLECT_MISSILES, delay,
-                          "You feel less protected from missiles.",
-                          coinflip(),
-                          "Your deflect missiles spell is about to expire...");
+                          "You feel less protected from missiles.");
     }
 
     if (_decrement_a_duration(DUR_TROGS_HAND, delay,
