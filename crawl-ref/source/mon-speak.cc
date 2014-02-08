@@ -22,6 +22,7 @@
 #include "ghost.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "player.h"
@@ -297,7 +298,7 @@ static string _get_speak_string(const vector<string> &prefixes,
     if (mons->hit_points <= 0)
     {
         //let her have separate death/permadeath lines
-        if (mons->type == MONS_NATASHA && mons->hit_dice == 1)
+        if (mons_is_natasha(mons) && !mons_felid_can_revive(mons))
             key += " permanently";
         key += " killed";
     }

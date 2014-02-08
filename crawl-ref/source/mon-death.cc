@@ -407,14 +407,20 @@ void elven_twins_unpacify(monster* twin)
     behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
 }
 
-bool mons_is_natasha(monster* mons)
+bool mons_is_natasha(const monster* mons)
 {
     return mons->type == MONS_NATASHA
            || (mons->props.exists("original_name")
                && mons->props["original_name"].get_string() == "Natasha");
 }
 
-void natasha_revive(monster* mons)
+bool mons_felid_can_revive(const monster* mons)
+{
+    return !mons->props.exists("felid_revives")
+           || mons->props["felid_revives"].get_byte() < 2;
+}
+
+void mons_felid_revive(monster* mons)
 {
     // Mostly adapted from bring_to_safety()
     coord_def revive_place;
@@ -437,10 +443,27 @@ void natasha_revive(monster* mons)
             break;
     }
 
-    create_monster(
-            mgen_data(MONS_NATASHA, SAME_ATTITUDE(mons), 0, 0, 0, revive_place,
-            mons->foe, 0, GOD_NO_GOD, MONS_NO_MONSTER, 0, BLUE,
-            PROX_ANYWHERE, level_id::current(), mons->hit_dice-1));
+    // XXX: this will need to be extended if we get more types of enemy
+    // felids
+    monster_type type = (mons_is_natasha(mons)) ? MONS_NATASHA
+                                                : MONS_FELID;
+    monsterentry* me = get_monster_data(type);
+    ASSERT(me);
+
+    const int revives = (mons->props.exists("felid_revives"))
+                        ? mons->props["felid_revives"].get_int() + 1
+                        : 1;
+
+    const int hd = me->hpdice[0] - revives;
+
+    monster *newmons =
+        create_monster(
+            mgen_data(type, SAME_ATTITUDE(mons), 0, 0, 0, revive_place,
+            mons->foe, 0, GOD_NO_GOD, MONS_NO_MONSTER, 0, BLACK,
+            PROX_ANYWHERE, level_id::current(), hd));
+
+    if (newmons)
+        newmons->props["felid_revives"].get_byte() = revives;
 }
 
 /**
