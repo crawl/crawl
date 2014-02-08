@@ -403,6 +403,78 @@ xx....cccc....xx
     x@xxxx@x
 ENDMAP
 
+####
+# A couple of Dis-inspired mini-entries; total weight 14.
+NAME: grunt_hell_entry_dis_old
+TAGS: transparent nolayout_encompass
+WEIGHT: 4
+MONS: iron imp / nothing
+KMONS: O = iron devil
+: hell_entry_feature(_G, 'O')
+MAP
+...................
+.vvvv.........vvvv.
+.v%.vvvvvvvvvvv.%v.
+.v.1+$%vvvvv$%+1.v.
+.vv+vvvv...vvvv+vv.
+..v....+.1.+....v..
+..v+vvvv...vvvv.v..
+..v....vv+vv.%v.v..
+..v..vOvv.vv.vv.v..
+..v....vv.vv....v..
+.vv+v..vv.vvvvv+vv.
+.v.1vvvvv.vvvvv1.v.
+.v%.vvvvv+vvvvv.%v.
+.vvvv.........vvvv.
+.........@.........
+ENDMAP
+
+NAME: grunt_hell_entry_dis_mu
+TAGS: transparent nolayout_encompass
+WEIGHT: 5
+MONS: iron imp / nothing
+KMONS: O = iron devil
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+...................
+..vvvvvvv.vvv......
+..v$v$v$vvv$vvv....
+.vv+v+v1+.+1vvvvv..
+.v....vvv.vvv...vv.
+.v1vvvvv...v.vvv.v.
+.v.+.1.+.1.+.vO+1v.
+.v1vvvvv...v.vvv.v.
+.v....vvv+vvv...vv.
+.vv+v+vvv.vvvvvvv..
+..v$v$v.v.vvvvv....
+..vvvvv.v+v........
+.........@.........
+ENDMAP
+
+NAME: grunt_hell_entry_dis_grunt
+TAGS: transparent nolayout_encompass
+WEIGHT: 5
+MONS: iron imp / nothing
+KMONS: O = iron devil
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+...................
+...................
+...vvvvvvvvv...vvv.
+...v.+1v$v1vv.vv1v.
+...v1v+v+vv.vvv.vv.
+.v+v.v.v1vvv...vv..
+.+1+.v1+.+1+.%.v...
+.v+v.v.v1vvv...vv..
+...v1v+v+vv.vvv.vv.
+...v.+1v$vOvv.vv1v.
+...vvvvvvvvv...vvv.
+...................
+.........@.........
+ENDMAP
+
 ##############################################################################
 # Vestibule of Hell and Geryon
 ##############################################################################
@@ -576,6 +648,32 @@ MAP
                ...
 ENDMAP
 
+NAME: vestibule_tar_grunt_deathgaze
+TAGS: vestibule_tar
+KFEAT: T = enter_tartarus
+KMONS: T = revenant / lich / unborn / shadow dragon
+MONS: ancient champion band, reaper / soul eater, skeletal warrior band
+FTILE: +'T12 = floor_infernal_blank
+TILE: c = dngn_stone_dark
+MAP
+...........ccccccccccc...........
+ ...cc...ccc'''''''''ccc...cc...
+  ..cc..cc'''''''''''''cc..cc..
+   .....c'''2'''T'''2'''c.....
+    ..3.cc'''''''''''''cc.3..
+     ....cccc'''''''cccc....
+      ...c''cc'''''cc''c...
+       ..cc'''''c'''''cc..
+        ..cc'1'ccc'1'cc..
+         ..cc''c'c''cc..
+          ..cc'''''cc..
+           ..cc+++cc..
+            .........
+             ...3...
+              .....
+               ...
+ENDMAP
+
 ######################### Vestibule Gehenna
 NAME: vestibule_geh_old
 TAGS: vestibule_geh
@@ -663,6 +761,35 @@ MAP
                ...
 ENDMAP
 
+NAME: vestibule_geh_grunt_obsidian_fortress
+TAGS: vestibule_geh
+KFEAT: G = enter_gehenna
+MONS: balrug / hellion, sun demon / smoke demon
+MONS: red devil / orange demon / hell hound / hell hog
+MONS: red devil / orange demon / hell hound / hell hog
+NSUBST: 2 = 3:2 / *:.
+NSUBST: 3 = 3:3 / *:.
+FTILE: 123+G = floor_infernal_blank
+: hell_lava_spawns(_G)
+MAP
+lllllllllccccccccccccccclllllllll
+ llllllccc'''c''1''c'''cccllllll
+  llllcc3''2'+''G''+'2''3ccllll
+   lllc''''''c''1''c''''''clll
+    llc'2'2'ccccccccc'2'2'cll
+     lcc''''c'''''''c''''ccl
+      lcc''c+''2'2''+c''ccl
+       lcccc'3'''''3'ccccl
+        lllc''3'''3''clll
+         llcc'''''''ccll
+          llccc+++cccll
+           lll.....lll
+            l.l4.4l.l
+             .lllll.
+              .lll.
+               ...
+ENDMAP
+
 ######################### Vestibule Cocytus
 NAME: vestibule_coc_old
 TAGS: vestibule_coc
@@ -743,6 +870,35 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
                ...
 ENDMAP
 
+NAME: vestibule_coc_grunt_go_with_the_floe
+TAGS: vestibule_coc no_pool_fixup
+MONS: frost giant / blizzard demon / ice statue
+MONS: blizzard demon / ice devil, ice devil / blue devil / freezing wraith
+NSUBST: 3 = 3:3 / *:.
+SUBST: W = wW.
+KFEAT: A = stone_arch
+KFEAT: C = enter_cocytus
+KFEAT: W = W
+: hell_water_spawns(_G)
+MAP
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ wwwwwWWWWWWWWWWwWWWWWWWWWWwwwww
+  wwwWW...WW...WWW...WW...WWwww
+   wwW..W2....3...3....2W..Www
+    wwW.3W...W..W..W...W3.Www
+     wwW..W.WWW.3.WWW.W..Www
+      wwW.C.WwW.W.WwW.A.Www
+       wwW..WwW.W.WwW..Www
+        wwW1WwW.3.WwW1Www
+         wwWWwW.W.WwWWww
+          wwwwW.W.Wwwww
+           wwwW.3.Wwww
+            wwW.W.Www
+             wW.W.Ww
+              W.3.W
+               .W.
+ENDMAP
+
 ######################### Vestibule Dis
 NAME: vestibule_dis_old
 TAGS: vestibule_dis
@@ -820,6 +976,32 @@ vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
           ..2Gv...vG2..
            ...vZvZv...
             ..G...G..
+             .......
+              .....
+               ...
+ENDMAP
+
+NAME: vestibule_dis_grunt_castle
+TAGS: vestibule_dis
+MONS: war gargoyle / iron dragon, iron troll / iron golem
+MONS: iron devil / iron imp w:5
+NSUBST: D = 1:D / *:A
+KFEAT: D = enter_dis
+KFEAT: A = stone_arch
+MAP
+.......v.vvvvxxxxxxxvvvv.v.......
+ ..vv...vvD.vvxxxxxvv.Dvv...vv..
+  .3v...vv.2vvvvvvvvv2.vv...v3.
+   ....v.vvv.........vvv.v....
+    ....v.vv..1...1..vv.v....
+     ..v.vvv.........vvv.v..
+      ..vv.2vvv+++vvv2.vv..
+       .vvD.vv.....vv.Dvv.
+        .vvvv.v...v.vvvv.
+         .vv.v.3.3.v.vv.
+          ..v.v...v.v..
+           ..3.....3..
+            ..v...v..
              .......
               .....
                ...
@@ -920,5 +1102,34 @@ MAP
     ....C....
      .......
       .....
+       ...
+ENDMAP
+
+NAME: vestibule_geryon_grunt_focused
+TAGS: vestibule_geryon
+MONS: Geryon
+# Missing: abcde - we don't want it to be *completely* open.
+SHUFFLE: ABCDE / ABCDe / ABCdE / ABCde / ABcDE / ABcDe / ABcdE / ABcde / \
+         AbCDE / AbCDe / AbCdE / AbCde / AbcDE / AbcDe / AbcdE / Abcde / \
+         aBCDE / aBCDe / aBCdE / aBCde / aBcDE / aBcDe / aBcdE / aBcde / \
+         abCDE / abCDe / abCdE / abCde / abcDE / abcDe / abcdE
+SUBST: ABCDE = x, abcde = .
+MAP
+       ...
+      ..B..
+     ...C...
+    ....B....
+   .ED.....DE.
+  ..D{.....[D..
+ .......A.......
+.................
+.BCB..A.1.A..BCB.
+.................
+ .......A.......
+  ..D(.....<D..
+   .ED.....DE.
+    ....B....
+     ...C...
+      ..B..
        ...
 ENDMAP
