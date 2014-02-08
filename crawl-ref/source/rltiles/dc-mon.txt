@@ -25,7 +25,7 @@ lernaean_hydra08
 lernaean_hydra09
 lernaean_hydra10
 %sdir mon/sprint
-meatlord MONS_MEATLORD
+unspeakable MONS_UNSPEAKABLE
 
 ### Animals
 %sdir mon/animals
