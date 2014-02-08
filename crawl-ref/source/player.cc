@@ -6313,15 +6313,15 @@ void player::ablate_deflection()
         if (one_chance_in(attribute[ATTR_DEFLECT_MISSILES]))
         {
             attribute[ATTR_DEFLECT_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "Your deflecting charm wavers...");
+            mprf(MSGCH_DURATION, "Your deflect missiles spell is about to expire...");
         }
     }
-    else if (attribute[ATTR_REPEL_MISSILES] && duration[DUR_DEFLECT_MISSILES] == 0)
+    else if (attribute[ATTR_REPEL_MISSILES] && !duration[DUR_DEFLECT_MISSILES])
     {
         if (one_chance_in(attribute[ATTR_REPEL_MISSILES]))
         {
             attribute[ATTR_REPEL_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "Your repelling charm wavers...");
+            mprf(MSGCH_DURATION, "Your repel missiles spell is about to expire...");
         }
     }
 }
