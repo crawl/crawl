@@ -1530,6 +1530,13 @@ static const pop_entry pop_lava_depths[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_lava_hell[] =
+{ // Hell branch lava monsters
+  {  1,  7,   300, DOWN, MONS_FIRE_ELEMENTAL },
+  {  1,  7,   150, FLAT, MONS_SALAMANDER_FIREBRAND },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 static const struct { const pop_entry *pop; int count; } population_lava[] =
 {
     POP(lava_d),
@@ -1549,11 +1556,11 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
     POP(lava_generic),
     POP(lava_generic),
     POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
-    POP(lava_generic),
+    POP(lava_hell),
+    POP(lava_hell),
+    POP(lava_hell),
+    POP(lava_hell),
+    POP(lava_hell),
     POP(lava_generic),
     POP(lava_generic),
     POP(lava_generic),
