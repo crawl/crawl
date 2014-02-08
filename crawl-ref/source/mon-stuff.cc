@@ -2489,11 +2489,13 @@ int monster_die(monster* mons, killer_type killer,
     {
         hogs_to_humans();
     }
-    else if (mons_is_natasha(mons) && !in_transit && mons->hit_dice > 1)
+    else if ((mons_is_natasha(mons) || mons_genus(mons->type) == MONS_FELID)
+             && !in_transit && mons_felid_can_revive(mons))
     {
-        //Like Boris, but her vault can't come back
-        you.unique_creatures.set(MONS_NATASHA, false);
-        natasha_revive(mons);
+        // Like Boris, but her vault can't come back
+        if (mons_is_natasha(mons))
+            you.unique_creatures.set(MONS_NATASHA, false);
+        mons_felid_revive(mons);
     }
     else if (mons_is_pikel(mons))
     {
