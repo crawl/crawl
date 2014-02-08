@@ -4273,7 +4273,8 @@ static const pop_entry _planerend_lair[] =
 
 static const pop_entry _planerend_snake[] =
 { // Snake enemies
-  {  1,   1,   80, FLAT, MONS_ANACONDA },
+  {  1,   1,   40, FLAT, MONS_ANACONDA },
+  {  1,   1,   60, FLAT, MONS_SALAMANDER_FIREBRAND },
   {  1,   1,  100, FLAT, MONS_GUARDIAN_SERPENT },
   {  1,   1,  100, FLAT, MONS_GREATER_NAGA },
   { 0,0,0,FLAT,MONS_0 }
@@ -4292,15 +4293,16 @@ static const pop_entry _planerend_spider[] =
 static const pop_entry _planerend_swamp[] =
 { // Swamp enemies
   {  1,   1,   80, FLAT, MONS_SWAMP_DRAGON },
-  {  1,   1,  100, FLAT, MONS_HYDRA },
-  {  1,   1,  100, FLAT, MONS_VAPOUR },
-  {  1,   1,  100, FLAT, MONS_SLIME_CREATURE }, // changed to titanic below
+  {  1,   1,   80, FLAT, MONS_HYDRA },
+  {  1,   1,   80, FLAT, MONS_VAPOUR },
+  {  1,   1,  100, FLAT, MONS_SHAMBLING_MANGROVE },
+  {  1,   1,   40, FLAT, MONS_THORN_HUNTER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry _planerend_shoals[] =
 { // Swamp enemies
-  {  1,   1,   80, FLAT, MONS_SIREN },
+  {  1,   1,   50, FLAT, MONS_SIREN },
   {  1,   1,  100, FLAT, MONS_MERFOLK_JAVELINEER },
   {  1,   1,  100, FLAT, MONS_MERFOLK_AQUAMANCER },
   {  1,   1,   80, FLAT, MONS_ALLIGATOR_SNAPPING_TURTLE },
@@ -4312,7 +4314,7 @@ static const pop_entry _planerend_slime[] =
   {  1,   1,  100, FLAT, MONS_ACID_BLOB },
   {  1,   1,  100, FLAT, MONS_AZURE_JELLY },
   {  1,   1,  100, FLAT, MONS_SLIME_CREATURE }, // changed to titanic below
-  {  1,   1,  100, FLAT, MONS_GIANT_ORANGE_BRAIN },
+  {  1,   1,   80, FLAT, MONS_GIANT_ORANGE_BRAIN },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4329,7 +4331,6 @@ static const pop_entry _planerend_orc[] =
 static const pop_entry _planerend_elf[] =
 { // Elf enemies
   {  1,   1,  100, FLAT, MONS_DEEP_ELF_SORCERER },
-  {  1,   1,   80, FLAT, MONS_DEEP_ELF_DEMONOLOGIST },
   {  1,   1,  100, FLAT, MONS_DEEP_ELF_HIGH_PRIEST },
   {  1,   1,   60, FLAT, MONS_DEEP_ELF_MASTER_ARCHER },
   {  1,   1,   60, FLAT, MONS_DEEP_ELF_BLADEMASTER },
@@ -4340,8 +4341,8 @@ static const pop_entry _planerend_vaults[] =
 { // Vaults enemies
   {  1,   1,   80, FLAT, MONS_VAULT_SENTINEL },
   {  1,   1,   80, FLAT, MONS_IRONHEART_PRESERVER },
-  {  1,   1,  100, FLAT, MONS_IRONBRAND_CONVOKER },
-  {  1,   1,   40, FLAT, MONS_TITAN },
+  {  1,   1,   60, FLAT, MONS_IRONBRAND_CONVOKER },
+  {  1,   1,  100, FLAT, MONS_WAR_GARGOYLE },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -4372,7 +4373,7 @@ static const pop_entry _planerend_abyss[] =
 };
 
 static const pop_entry _planerend_zot[] =
-{ // Abyss enemies
+{ // Zot enemies
   {  1,   1,   80, FLAT, MONS_DRACONIAN_SHIFTER },
   {  1,   1,   80, FLAT, MONS_DRACONIAN_SCORCHER },
   {  1,   1,   80, FLAT, MONS_DRACONIAN_ZEALOT },
