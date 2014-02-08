@@ -1062,7 +1062,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
             }
             if (you_worship(GOD_DITHMENGOS))
-                piety_denom *= 2;
+            {
+                piety_change *= 2;
+                piety_denom *= 3;
+            }
         }
 
 #ifdef DEBUG_DIAGNOSTICS
