@@ -3448,7 +3448,6 @@ bool god_likes_item(god_type god, const item_def& item)
                && !item_is_rune(item)
                && item.base_type != OBJ_GOLD
                && (item.base_type != OBJ_MISCELLANY
-                   || item.sub_type != MISC_HORN_OF_GERYON
                    || item.plus2);
 
     case GOD_ASHENZARI:

@@ -881,8 +881,6 @@ static bool _offer_items()
             simple_god_message(" wants the Orb's power used on the surface!");
         else if (item_is_rune(*disliked_item))
             simple_god_message(" wants the runes to be proudly displayed.");
-        else if (item_is_horn_of_geryon(*disliked_item))
-            simple_god_message(" doesn't want your path blocked.");
         // Zin was handled above, and the other gods don't care about
         // sacrifices.
         else if (god_likes_fresh_corpses(you.religion))
