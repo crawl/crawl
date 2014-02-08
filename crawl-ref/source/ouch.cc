@@ -1413,7 +1413,7 @@ void _end_game(scorefile_entry &se)
                     se.get_death_type() == KILLED_BY_LEAVING ? "bailed out"
                                                              : "dead";
 #ifdef DGL_WHEREIS
-    whereis_record(reason);
+    whereis_record(reason.c_str());
 #endif
 #endif
 
