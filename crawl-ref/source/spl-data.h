@@ -3590,7 +3590,7 @@ struct spell_desc
     SPELL_SUMMON_GUARDIAN_GOLEM, "Summon Guardian Golem",
      SPTYP_SUMMONING | SPTYP_HEXES,
      SPFLAG_NONE,
-     3,
+     4,
      0,
      -1, -1,
      0,
