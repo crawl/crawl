@@ -1512,7 +1512,9 @@ static const pop_entry pop_lava_d[] =
 static const pop_entry pop_lava_snake[] =
 { // Snake lava monsters
   {  1,   5,  200, FLAT, MONS_LAVA_SNAKE },
-  {  3,   5,   40,   UP, MONS_SALAMANDER },
+  {  1,   5,  200, FLAT, MONS_SALAMANDER },
+  {  1,   7,  85,  SEMI, MONS_SALAMANDER_MYSTIC },
+  {  3,   5,  55,    UP, MONS_SALAMANDER_FIREBRAND },
   { 0,0,0,FLAT,MONS_0 }
 };
 
