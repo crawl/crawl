@@ -3671,7 +3671,7 @@ static int _place_uniques()
 }
 
 static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
-                              int level)
+                              int level, bool allow_zombies)
 {
     if (places.size() < 50)
         return;
@@ -3695,8 +3695,9 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
         if (mons_class_primary_habitat(mon) == HT_LAND)
             mg.flags |= MG_PATROLLING;
 
-        if (player_in_hell() &&
-            mons_class_can_be_zombified(mg.cls))
+        if (allow_zombies
+            && player_in_hell()
+            && mons_class_can_be_zombified(mg.cls))
         {
             static const monster_type lut[3] =
                 { MONS_SKELETON, MONS_ZOMBIE, MONS_SIMULACRUM };
@@ -3742,8 +3743,10 @@ static void _place_aquatic_monsters()
             lava.push_back(*ri);
     }
 
-    _place_aquatic_in(water, fish_population(you.where_are_you, false), level);
-    _place_aquatic_in(lava, fish_population(you.where_are_you, true), level);
+    _place_aquatic_in(water, fish_population(you.where_are_you, false), level,
+                      true);
+    _place_aquatic_in(lava, fish_population(you.where_are_you, true), level,
+                      false);
 }
 
 // For Crypt, adds a bunch of skeletons and zombies that do not respect
