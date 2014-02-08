@@ -1494,6 +1494,9 @@ static const pop_entry pop_lava_generic[] =
   {  1,  27,  145, FLAT, MONS_LAVA_SNAKE },
   {  1,  27,  290, FLAT, MONS_LAVA_WORM },
   {  1,  27,   15, FLAT, MONS_SALAMANDER },
+  {  1,  27,  100, FLAT, MONS_FIRE_ELEMENTAL },
+  {  1,  27,  100, FLAT, MONS_FIRE_BAT },
+  {  1,  27,   50, FLAT, MONS_FIRE_VORTEX },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1501,6 +1504,8 @@ static const pop_entry pop_lava_d[] =
 { // Dungeon lava monsters
   {  7,  27,  145, FLAT, MONS_LAVA_SNAKE },
   {  7,  27,  290, FLAT, MONS_LAVA_WORM },
+  {  11, 27,  290,   UP, MONS_FIRE_ELEMENTAL },
+  {  11, 27,  145,   UP, MONS_FIRE_VORTEX },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1513,6 +1518,9 @@ static const pop_entry pop_lava_snake[] =
 
 static const pop_entry pop_lava_depths[] =
 { // Depths lava monsters
+  {  1,  6,   22, DOWN, MONS_FIRE_ELEMENTAL },
+  {  1,  6,   22, DOWN, MONS_FIRE_BAT },
+  {  1,  6,   11, DOWN, MONS_FIRE_VORTEX },
   {  1,  6,  100, FLAT, MONS_SALAMANDER },
   {  1,  8,   85, SEMI, MONS_SALAMANDER_MYSTIC },
   {  3,  6,   55,   UP, MONS_SALAMANDER_FIREBRAND },
