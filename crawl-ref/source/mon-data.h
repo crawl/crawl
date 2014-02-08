@@ -5220,7 +5220,7 @@ static monsterentry mondata[] =
 // demonspawn ('6')
 {
     MONS_DEMONSPAWN, '6', BROWN, "demonspawn",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_DEMONSPAWN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5232,7 +5232,7 @@ static monsterentry mondata[] =
 
 {
     MONS_MONSTROUS_DEMONSPAWN, '6', LIGHTGRAY, "monstrous demonspawn",
-    M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS,
+    M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_MONSTROUS_DEMONSPAWN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 15},
@@ -5245,7 +5245,7 @@ static monsterentry mondata[] =
 
 {
     MONS_GELID_DEMONSPAWN, '6', BLUE, "gelid demonspawn",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     mrd(MR_RES_COLD, 2),
     550, 10, MONS_DEMONSPAWN, MONS_GELID_DEMONSPAWN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5257,7 +5257,7 @@ static monsterentry mondata[] =
 
 {
     MONS_INFERNAL_DEMONSPAWN, '6', RED, "infernal demonspawn",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     mrd(MR_RES_FIRE, 2),
     550, 10, MONS_DEMONSPAWN, MONS_INFERNAL_DEMONSPAWN, MH_NATURAL, -3,
     { {AT_HIT, AF_FIRE, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5269,7 +5269,7 @@ static monsterentry mondata[] =
 
 {
     MONS_PUTRID_DEMONSPAWN, '6', GREEN, "putrid demonspawn",
-    M_WARM_BLOOD | M_SPEAKS | M_ALWAYS_CORPSE,
+    M_WARM_BLOOD | M_SPEAKS | M_ALWAYS_CORPSE | M_NO_POLY_TO,
     MR_RES_POISON,
     550, 10, MONS_DEMONSPAWN, MONS_PUTRID_DEMONSPAWN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5281,7 +5281,7 @@ static monsterentry mondata[] =
 
 {
     MONS_TORTUROUS_DEMONSPAWN, '6', MAGENTA, "torturous demonspawn",
-    M_WARM_BLOOD | M_SPEAKS,
+    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     550, 10, MONS_DEMONSPAWN, MONS_TORTUROUS_DEMONSPAWN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
