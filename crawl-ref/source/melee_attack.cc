@@ -215,53 +215,27 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->is_player() && defender && defender->is_monster())
     {
         // These checks are handled in fight_jump() for jump attacks
-        if (!jumping_attack
-            && ((damage_brand == SPWPN_ELECTROCUTION
-                 && conduction_affected(defender->pos()))
-                || (weapon && is_unrandom_artefact(*weapon)
-                    && weapon->special == UNRAND_DEVASTATOR)))
+        if (!jumping_attack && weapon
+            && is_unrandom_artefact(*weapon)
+            && weapon->special == UNRAND_DEVASTATOR)
         {
-            if (damage_brand == SPWPN_ELECTROCUTION
-                && adjacent(attack_position, defender->pos())
-                && conduction_affected(attack_position)
-                && !attacker->res_elec()
-                && !you.received_weapon_warning)
+            const char* verb = "attack";
+            string junk1, junk2;
+            bool junk3 = false;
+            if (defender)
             {
-                string prompt = "Really attack with ";
-                if (weapon)
-                    prompt += weapon->name(DESC_YOUR);
-                else
-                    prompt += "your electric unarmed attack";
-                prompt += " while in water? ";
-
-                if (yesno(prompt.c_str(), true, 'n'))
-                    you.received_weapon_warning = true;
-                else
-                {
-                    canned_msg(MSG_OK);
-                    cancel_attack = true;
-                    return false;
-                }
+                verb = (bad_attack(defender->as_monster(),
+                                   junk1, junk2, junk3)
+                        ? "attack" : "attack near");
             }
-            else
+
+            targetter_smite hitfunc(attacker, 1, 1, 1, false);
+            hitfunc.set_aim(defender->pos());
+
+            if (stop_attack_prompt(hitfunc, verb))
             {
-                string junk1, junk2;
-                bool junk3;
-                const char *verb = (bad_attack(defender->as_monster(),
-                                               junk1, junk2, junk3)
-                                    ? "attack" : "attack near");
-                bool (*aff_func)(const coord_def &) = 0;
-                if (damage_brand == SPWPN_ELECTROCUTION)
-                    aff_func = conduction_affected;
-
-                targetter_smite hitfunc(attacker, 1, 1, 1, false, aff_func);
-                hitfunc.set_aim(defender->pos());
-
-                if (stop_attack_prompt(hitfunc, verb))
-                {
-                    cancel_attack = true;
-                    return false;
-                }
+                cancel_attack = true;
+                return false;
             }
         }
         else if (can_cleave)
@@ -3288,14 +3262,6 @@ bool melee_attack::apply_damage_brand()
                 :  "There is a sudden explosion of sparks!";
             special_damage = 10 + random2(15);
             special_damage_flavour = BEAM_ELECTRICITY;
-
-            // Check for arcing in water, and add the final effect.
-            const coord_def& pos = defender->pos();
-
-            // We know the defender isn't electricity resistant, from
-            // above, but we still have to make sure it is in water.
-            if (conduction_affected(pos))
-                (new lightning_fineff(attacker, pos))->schedule();
         }
 
         break;

@@ -53,6 +53,4 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
 
 int weapon_min_delay(const item_def &weapon);
 int finesse_adjust_delay(int delay);
-
-bool conduction_affected(const coord_def &pos);
 #endif

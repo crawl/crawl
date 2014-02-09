@@ -337,62 +337,6 @@ int torment(actor *attacker, int taux, const coord_def& where)
     return r;
 }
 
-static bool _conduct_electricity_affects_actor(const bolt& beam,
-                                               const actor* victim)
-{
-    return victim->alive() && victim->res_elec() <= 0
-           && victim->ground_level();
-}
-
-static bool _conduct_electricity_damage(bolt &beam, actor* victim,
-                                        int &dmg, string &dmg_msg)
-{
-    dmg = (10 + random2(15)) / 2;
-    return false;
-}
-
-static bool _conduct_electricity_aoe(bolt& beam, const coord_def& target)
-{
-    if (feat_is_water(grd(target)))
-        return true;
-
-    return false;
-}
-
-void conduct_electricity(coord_def where, actor *attacker)
-{
-    bolt beam;
-
-    beam.flavour       = BEAM_ELECTRICITY;
-    beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.damage        = dice_def(1, 15);
-    beam.target        = where;
-    beam.name          = "electric current";
-    beam.hit_verb      = "shocks";
-    beam.colour        = ETC_ELECTRICITY;
-    beam.aux_source    = "arcing electricity";
-    beam.ex_size       = 1;
-    beam.is_explosion  = true;
-    beam.effect_known  = true;
-    beam.affects_items = false;
-    beam.aoe_funcs.push_back(_conduct_electricity_aoe);
-    beam.damage_funcs.push_back(_conduct_electricity_damage);
-    beam.affect_func   = _conduct_electricity_affects_actor;
-
-    if (attacker && attacker->is_player())
-    {
-        beam.thrower     = KILL_YOU;
-        beam.beam_source = NON_MONSTER;
-    }
-    else
-    {
-        beam.thrower     = KILL_MON;
-        beam.beam_source = attacker ? attacker->mindex() : MHITNOT;
-    }
-
-    beam.explode(false, true);
-}
-
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker)
 {
