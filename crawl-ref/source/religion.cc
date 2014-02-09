@@ -3446,9 +3446,7 @@ bool god_likes_item(god_type god, const item_def& item)
         return !is_deck(item)
                && !item.is_critical()
                && !item_is_rune(item)
-               && item.base_type != OBJ_GOLD
-               && (item.base_type != OBJ_MISCELLANY
-                   || item.plus2);
+               && item.base_type != OBJ_GOLD;
 
     case GOD_ASHENZARI:
         return item.base_type == OBJ_SCROLLS
