@@ -3420,8 +3420,11 @@ string feature_description_at(const coord_def& where, bool covering,
             dtype = DESC_THE;
         // fallthrough
     default:
+        const string featdesc = grid == grd(where)
+                              ? raw_feature_description(where)
+                              : _base_feature_desc(grid, get_trap_type(where));
         return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
-                   raw_feature_description(where) + covering_description);
+                                featdesc + covering_description);
     }
 }
 
