@@ -1280,7 +1280,7 @@ static bool _swap_rings(int ring_slot)
     {
         mprf("You're already wearing %s cursed rings!%s",
              number_in_words(cursed).c_str(),
-             (cursed == 8 ? " Isn't that enough for you?" : ""));
+             (cursed > 2 ? " Isn't that enough for you?" : ""));
         return false;
     }
     // The simple case - only one available ring.
