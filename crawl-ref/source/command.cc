@@ -1048,44 +1048,6 @@ static void _recap_card_keys(vector<string> &keys)
     }
 }
 
-// Extra info on this item wasn't found anywhere else.
-static void _append_non_item(string &desc, string key)
-{
-    if (ends_with(key, " spell"))
-        key.erase(key.length() - 6);
-
-    spell_type type = spell_by_name(key);
-
-    if (type == SPELL_NO_SPELL)
-        return;
-
-    unsigned int flags = get_spell_flags(type);
-
-    if (flags & SPFLAG_TESTING)
-    {
-        desc += "\nThis is a testing spell, only available via the "
-                "&Z wizard command.";
-    }
-    else if (flags & SPFLAG_MONSTER)
-    {
-        // We can get here only in wizmode, the spell isn't listed otherwise.
-        // And only if it has a description -- no monster ones do.
-        desc += "\nThis is a monster-only spell, only available via the "
-                "&Z wizard command.";
-    }
-    else
-    {
-        desc += "\nOdd, this spell can't be found anywhere. Please "
-                "file a bug report.";
-    }
-
-    if (!you.wizard && (flags & (SPFLAG_TESTING | SPFLAG_MONSTER)))
-    {
-        desc += "\n\nYou aren't in wizard mode, so you shouldn't be "
-                "seeing this entry. Please file a bug report.";
-    }
-}
-
 static bool _is_rod_spell(spell_type spell)
 {
     if (spell == SPELL_NO_SPELL)
@@ -1289,8 +1251,6 @@ static int _do_description(string key, string type, const string &suffix,
                         append_spells(desc, mitm[thing_created]);
                     }
                 }
-                else
-                    _append_non_item(desc, key);
             }
 
             // Now we don't need the item anymore.
