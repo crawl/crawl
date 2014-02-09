@@ -1197,7 +1197,7 @@ spret_type your_spells(spell_type spell, int powc,
     // targeting.  There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it).  Hopefully, those will eventually be fixed. - bwr
-    if ((flags & SPFLAG_TARGETING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
+    if (flags & SPFLAG_TARGETING_MASK)
     {
         targ_mode_type targ =
               (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_HOSTILE);
@@ -1516,9 +1516,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_LRD:
         return cast_fragmentation(powc, &you, spd.target, fail);
 
-    case SPELL_PORTAL_PROJECTILE:
-        return cast_portal_projectile(powc, fail);
-
     // other effects
     case SPELL_DISCHARGE:
         return cast_discharge(powc, fail);
@@ -1786,6 +1783,9 @@ static spret_type _do_cast(spell_type spell, int powc,
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
 #endif
+
+    case SPELL_PORTAL_PROJECTILE:
+        return cast_portal_projectile(powc, fail);
 
     // other
     case SPELL_BORGNJORS_REVIVIFICATION:

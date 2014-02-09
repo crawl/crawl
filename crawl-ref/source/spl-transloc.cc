@@ -796,33 +796,14 @@ void you_teleport_now(bool allow_control, bool new_abyss_area,
 
 spret_type cast_portal_projectile(int pow, bool fail)
 {
-    dist target;
-    int item = get_ammo_to_shoot(-1, target, true);
-    if (item == -1)
-        return SPRET_ABORT;
-
-    if (cell_is_solid(target.target))
-    {
-        mpr("You can't shoot at gazebos.");
-        return SPRET_ABORT;
-    }
-
-    // Can't use portal through walls. (That'd be just too cheap!)
-    if (you.trans_wall_blocking(target.target))
-    {
-        mpr("There's something in the way!");
-        return SPRET_ABORT;
-    }
-
-    if (!check_warning_inscriptions(you.inv[item], OPER_FIRE))
-        return SPRET_ABORT;
-
     fail_check();
-    bolt beam;
-    throw_it(beam, item, true, random2(pow/4), &target);
-    if (!you.turn_is_over)
-        return SPRET_ABORT;
-
+    if (!you.duration[DUR_PORTAL_PROJECTILE])
+        mpr("You begin teleporting projectiles to their destination.");
+    else
+        mpr("You renew your portal.");
+    // Calculate the accuracy bonus based on current spellpower.
+    you.attribute[ATTR_PORTAL_PROJECTILE] = pow;
+    you.increase_duration(DUR_PORTAL_PROJECTILE, 3 + random2(pow / 2) + random2(pow / 5), 50);
     return SPRET_SUCCESS;
 }
 

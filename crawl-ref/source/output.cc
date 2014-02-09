@@ -1019,6 +1019,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_ELIXIR,
         DUR_BARBS,
         DUR_POISON_VULN,
+        DUR_PORTAL_PROJECTILE,
     };
 
     status_info inf;

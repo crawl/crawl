@@ -315,6 +315,7 @@ enum attribute_type
     ATTR_BARBS_POW,            // How badly we are currently skewered
     ATTR_REPEL_MISSILES,       // Chance to expire repel missiles
     ATTR_DEFLECT_MISSILES,     // Chance to expire deflect missiles
+    ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
     NUM_ATTRIBUTES
 };
 
@@ -1625,6 +1626,7 @@ enum duration_type
     DUR_FROZEN,
     DUR_SAP_MAGIC,
     DUR_MAGIC_SAPPED,
+    DUR_PORTAL_PROJECTILE,
     NUM_DURATIONS
 };
 

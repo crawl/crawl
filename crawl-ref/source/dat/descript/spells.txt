@@ -951,8 +951,10 @@ turn the victims back into their former shapes.
 %%%%
 Portal Projectile spell
 
-This spell teleports a fired or thrown missile directly to its target, greatly
-increasing its accuracy (but not damage).
+This spell allows the caster to teleport fired or thrown missiles directly to
+their targets for a short duration, spending an additional small amount of
+magic for each shot. Teleported projectiles have their accuracy (but not
+damage) greatly improved.
 %%%%
 Primal Wave spell
 

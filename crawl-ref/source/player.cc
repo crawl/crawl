@@ -4318,6 +4318,7 @@ void display_char_status()
         DUR_FROZEN,
         DUR_SAP_MAGIC,
         STATUS_MAGIC_SAPPED,
+        DUR_PORTAL_PROJECTILE,
     };
 
     status_info inf;
