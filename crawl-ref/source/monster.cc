@@ -1533,6 +1533,13 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return weapon.base_type == OBJ_STAVES
                    && weapon.sub_type == STAFF_COLD;
         }
+
+        // Asterion's demon weapon was a gift from Makhleb.
+        if (mons->type == MONS_ASTERION)
+        {
+            return wtype == WPN_DEMON_BLADE || wtype == WPN_DEMON_WHIP
+                || wtype == WPN_DEMON_TRIDENT;
+        }
     }
 
     if (mons->is_holy())
