@@ -891,12 +891,9 @@ static void _abyss_generate_monsters(int nmonsters)
     mgen_data mg;
     mg.proximity = PROX_ANYWHERE;
 
-    level_id level = one_chance_in(9)
-        ? abyssal_state.level
-        : level_id::current();
     for (int mcount = 0; mcount < nmonsters; mcount++)
     {
-        mg.cls = pick_random_monster(level);
+        mg.cls = pick_random_monster(level_id::current());
         if (!invalid_monster_type(mg.cls))
             mons_place(mg);
     }
@@ -1353,49 +1350,6 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
     env.density = 0;
 }
 
-#define guest_entry random_pick_entry<branch_type>
-static guest_entry guests[] =
-{
-  { 1, 3, 100, DOWN, BRANCH_DUNGEON },
-  { 1, 2,  10, FLAT, BRANCH_ORC },
-  { 1, 5,  30, FLAT, BRANCH_ELF },
-  { 1, 3, 100, DOWN, BRANCH_LAIR },
-  { 1, 5,  80, DOWN, BRANCH_SWAMP },
-  { 1, 5,  80, DOWN, BRANCH_SHOALS },
-  { 1, 5,  80, DOWN, BRANCH_SNAKE },
-  { 1, 5,  80, DOWN, BRANCH_SPIDER },
-//{ 1, 5, 100, FLAT, BRANCH_SLIME },
-  { 1, 5, 100, FLAT, BRANCH_VAULTS },
-//{ 1, 5, 100, FLAT, BRANCH_BLADE },
-  { 1, 5,  50, FLAT, BRANCH_CRYPT },
-//{ 1, 5, 100, FLAT, BRANCH_TOMB },
-  { 1, 5,  50,   UP, BRANCH_VESTIBULE },
-  { 3, 5,  20,   UP, BRANCH_DIS },
-  { 3, 5,  20,   UP, BRANCH_GEHENNA },
-  { 3, 5,  20,   UP, BRANCH_COCYTUS },
-  { 3, 5,  20,   UP, BRANCH_TARTARUS },
-//{ 1, 5, 100, FLAT, BRANCH_ZOT },
-  { 1, 5, 100,   UP, BRANCH_FOREST },
-//{ 1, 5, 100, FLAT, BRANCH_ABYSS },
-  { 1, 5, 100,   UP, BRANCH_PANDEMONIUM },
-  { 1, 5,   5, FLAT, BRANCH_ICE_CAVE },
-  { 1, 5,   5, FLAT, BRANCH_VOLCANO },
-  { 1, 5, 100, FLAT, BRANCH_DEPTHS },
-  {0,0,0,FLAT,NUM_BRANCHES},
-};
-
-static level_id _pick_guest_level()
-{
-    const int d = min(you.depth, 5);
-    random_picker<branch_type, NUM_BRANCHES> picker;
-    branch_type br = picker.pick(guests, d, NUM_BRANCHES);
-    ASSERT(br != NUM_BRANCHES);
-
-    const int brd = max(brdepth[br], 1);
-    // On Abyss:1, pick from half of the branch, on Abyss:5 from branch:$.
-    return level_id(br, (brd * (4 + d - 1)/4 + 1) / 2);
-}
-
 static void _initialize_abyss_state()
 {
     abyssal_state.major_coord.x = random_int() & 0x7FFFFFFF;
@@ -1404,9 +1358,7 @@ static void _initialize_abyss_state()
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random_int() & 0x7FFFFFFF;
     abyssal_state.nuke_all = false;
-    abyssal_state.level = _pick_guest_level();
-    dprf("Guest monsters will come from %s.",
-         abyssal_state.level.describe().c_str());
+    abyssal_state.level = _get_random_level();
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
 
