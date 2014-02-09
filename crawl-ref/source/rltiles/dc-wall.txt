@@ -1025,6 +1025,12 @@ icy_stone1
 icy_stone2
 icy_stone3
 
+ice_block0 WALL_ICE_BLOCK
+ice_block1
+ice_block2
+ice_block3
+ice_block4
+
 lab-rock0 WALL_LAB_ROCK WALL_SWAMP
 lab-rock1
 lab-rock2

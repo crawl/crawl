@@ -277,7 +277,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_ICE_CAVE:
-        flv.wall  = TILE_WALL_ZOT_CYAN;
+        flv.wall  = TILE_WALL_ICE_BLOCK;
         flv.floor = TILE_FLOOR_ICE;
         return;
 
