@@ -3373,20 +3373,13 @@ void siren_song(monster* mons)
     if (ally_hd > mons->hit_dice)
         return;
 
-    // Can only call up drowned souls if there's deep water nearby
-    int deep_water_count = 0;
+    // Can only call up drowned souls if there's free deep water nearby
     vector<coord_def> deep_water;
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
-    {
-        if (grd(*ri) == DNGN_DEEP_WATER)
-        {
-            deep_water_count++;
-            if (!actor_at(*ri))
-                deep_water.push_back(*ri);
-        }
-    }
+        if (grd(*ri) == DNGN_DEEP_WATER && !actor_at(*ri))
+            deep_water.push_back(*ri);
 
-    if (deep_water_count)
+    if (deep_water.size())
     {
         mons->props["song_count"].get_int()++;
 
@@ -3408,6 +3401,7 @@ void siren_song(monster* mons)
                     existing++;
             }
             num = min(num, min(5, song_count / 7 + 1) - existing);
+            num = min(num, int(deep_water.size()));
 
             for (int i = 0; i < num; ++i)
             {
