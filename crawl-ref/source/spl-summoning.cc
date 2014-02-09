@@ -2912,7 +2912,8 @@ spret_type cast_spectral_weapon(actor *agent, int pow, god_type god, bool fail)
 
     item_def cp = *wpn;
 
-    // Remove any existing spectral weapons --- only one should be alive at any given time
+    // Remove any existing spectral weapons. Only one should be alive at any
+    // given time.
     monster *old_mons = find_spectral_weapon(agent);
     if (old_mons)
         end_spectral_weapon(old_mons, false);
