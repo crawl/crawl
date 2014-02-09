@@ -1180,16 +1180,16 @@ static bool _append_books(string &desc, item_def &item, string key)
         desc += "\n\nThis spell can be found in the following book";
         if (books.size() > 1)
             desc += "s";
-        desc += ":\n";
-        desc += comma_separated_line(books.begin(), books.end(), "\n", "\n");
+        desc += ":\n ";
+        desc += comma_separated_line(books.begin(), books.end(), "\n ", "\n ");
 
         if (!rods.empty())
         {
             desc += "\n\n... and the following rod";
             if (rods.size() > 1)
                 desc += "s";
-            desc += ":\n";
-            desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
+            desc += ":\n ";
+            desc += comma_separated_line(rods.begin(), rods.end(), "\n ", "\n ");
         }
     }
     else if (!rods.empty()) // rods-only
@@ -1197,8 +1197,8 @@ static bool _append_books(string &desc, item_def &item, string key)
         desc += "\n\nThis spell can be found in the following rod";
         if (rods.size() > 1)
             desc += "s";
-        desc += ":\n";
-        desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
+        desc += ":\n ";
+        desc += comma_separated_line(rods.begin(), rods.end(), "\n ", "\n ");
     }
     else
         desc += "\n\nThis spell is not found in any books or rods.";
