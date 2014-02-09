@@ -284,6 +284,12 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
             canned_msg(MSG_OK);
         return false;
     }
+    if (teleport && cell_is_solid(target.target))
+    {
+        const char *feat = feat_type_name(grd(target.target));
+        mprf("There is %s there.", article_a(feat).c_str());
+        return false;
+    }
 
     you.m_quiver->on_item_fired(*beh.active_item(), beh.chosen_ammo);
     you.redraw_quiver = true;
@@ -433,15 +439,21 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
 void fire_thing(int item)
 {
     dist target;
-    item = get_ammo_to_shoot(item, target);
+    // Portal Projectile, requires MP per shot.
+    bool teleport = !you.confused()
+                    && you.duration[DUR_PORTAL_PROJECTILE]
+                    && enough_mp(1, true, false);
+    int acc_bonus = 0;
+    item = get_ammo_to_shoot(item, target, teleport);
     if (item == -1)
         return;
 
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
     {
         bolt beam;
-        throw_it(beam, item, false, 0, &target);
-
+        if (teleport)
+            acc_bonus = random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4);
+        throw_it(beam, item, teleport, acc_bonus, &target);
     }
 }
 
@@ -2008,6 +2020,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.affect_endpoint();
         if (!did_return && acc_bonus != DEBUG_COOKIE)
             pbolt.drop_object();
+        // Costs 1 MP per shot.
+        dec_mp(1);
     }
     else
     {

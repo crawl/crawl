@@ -1873,10 +1873,10 @@ struct spell_desc
 {
     SPELL_PORTAL_PROJECTILE, "Portal Projectile",
      SPTYP_TRANSLOCATION,
-     SPFLAG_TARGET | SPFLAG_BATTLE,
-     2,
+     SPFLAG_BATTLE,
+     3,
      50,
-     LOS_RADIUS, LOS_RADIUS,
+     -1, -1,
      0,
      NULL,
      false,
