@@ -4164,7 +4164,7 @@ int monster::skill(skill_type sk, int scale, bool real) const
     case SK_MACES_FLAILS:
     case SK_POLEARMS:
     case SK_STAVES:
-        ret = is_fighter() ? hd : hd / 2;
+        ret = hd;
         if (weapon()
             && sk == weapon_skill(*weapon())
             && _is_signature_weapon(this, *weapon()))
