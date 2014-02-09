@@ -1,4 +1,4 @@
-Stone Soup 0.14 (up to 0.14-a0-2411-g037c4a0)
+Stone Soup 0.14 (up to 0.14-a0-2527-g57e2a1b)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Four new races: Lava Orcs, Djinn, Formicids, and Vine Stalkers.
@@ -130,6 +130,8 @@ Monsters
       demons.
     - Draconian knights have fewer but distinct spell sets focusing on
       ice and necromancy.
+    - Metal gargoyles are now war gargoyles - fast and with the ability to
+      fire metal fragments at targets.
 * New uniques:
     - Asterion, a minotaur of Makhleb who flings Major Destruction and
       can employ Spectral Weapon with his demon weapon;
@@ -170,6 +172,10 @@ Spells
   Annihilations).
 * Call Canine Familiar now only summons one canine, and does not summon
   jackals.
+* Repel and Deflect Missiles now expire on a per-deflection basis rather than
+  being a duration.
+* Portal Projectile is now a duration, rather than firing individual
+  projectiles.
 * Removed spells: Song of Shielding, Polymorph.
 
 Items
@@ -202,6 +208,13 @@ Items
 * The Elemental Staff is reworked considerably - it grants rElec, rF++,
   rC++, MR++, AC+5, and randomly deals elemental-branded attacks based
   on the user's Evocations skill.
+* The skin of Zhor now grants rC+++.
+* Leech drains HP on all hits (instead of 3/5 for other vampiric weapons).
+* Sniper is now a +15 vorpal crossbow with a slower rate of fire.
+* Snakebite is now a +5 venom whip that applies a curare effect on one out of
+  five hits.
+* The Singing Sword is now a bastard sword.
+* The shield of the gong is now +27 with -5 EV.
 * New unrand: "macabre finger necklace" - gives warding and an extra ring slot.
 * New unrand: "boots of the spider" - gives clinging, trample immunity, and
   jump attack.
@@ -209,7 +222,7 @@ Items
   the Maces and Flails skill.
 * New unrand: "hat of the High Council" - spellpower at the expense of
   spell success rates.
-* Sniper, the Blowgun of the Assassin, and Snakebite have been removed.
+* The blowgun of the Assassin and Bullseye have been removed.
 * Potions of slowing are no more.
 * Potions with known type that would have no effect can no longer be quaffed
   at all.
@@ -222,6 +235,10 @@ Items
 * The last item-targeting scroll and healing potion are automatically
   identified, assuming knowledge that they are item-targeting scrolls and
   healing potions.
+* Magical penetrating projectiles now pierce shields.
+* Electrocution weapons no longer cause discharges on targets in water.
+* Wearing body armour / rings no longer requires removing cloakes / gloves
+  first.
 * Renamed items:
   - Sabres are now cutlasses (and the captain's cutlass has been adjusted to
     match);
@@ -267,6 +284,7 @@ Gods
 * Yredelemnul's servants are no longer angered when read-identifying a scroll
   of holy word.
 * Nemelex no longer gifts decks of dungeons.
+* Divine wrath is now contingent on XP gain.
 
 Interface
 ---------
