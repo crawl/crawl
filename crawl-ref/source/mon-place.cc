@@ -406,11 +406,9 @@ void spawn_random_monsters()
     }
 
     mgen_data mg(WANDERING_MONSTER);
-    if (player_in_branch(BRANCH_ABYSS) && one_chance_in(3))
-        mg.place = abyssal_state.level;
-    else if (player_in_branch(BRANCH_PANDEMONIUM)
-             && !env.properties.exists("vault_mon_weights")
-             && !one_chance_in(40))
+    if (player_in_branch(BRANCH_PANDEMONIUM)
+        && !env.properties.exists("vault_mon_weights")
+        && !one_chance_in(40))
     {
         mg.cls = env.mons_alloc[random2(PAN_MONS_ALLOC)];
         mg.flags |= MG_PERMIT_BANDS;
