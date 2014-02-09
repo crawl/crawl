@@ -604,16 +604,16 @@ SUBST:   c = cccbbv
 SHUFFLE: ABCD
 MARKER:  A = lua:fog_machine {cloud_type = "flame", \
              pow_min = 2, pow_max = 3, delay = 85, size_min = 2, size_max = 4, \
-             walk_dist = 4, start_clouds = 1, excl_rad = -1 }
+             walk_dist = 4, start_clouds = 1, excl_rad = 0 }
 MARKER:  B = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 2, pow_max = 3, delay = 75, size_min = 2, size_max = 4, \
-             walk_dist = 4, start_clouds = 1, excl_rad = -1 }
+             walk_dist = 4, start_clouds = 1, excl_rad = 0 }
 MARKER:  C = lua:fog_machine {cloud_type = "rain", \
              pow_min = 3, pow_max = 4, delay = 30, size_min = 3, size_max = 4, \
-             walk_dist = 4, start_clouds = 1, excl_rad = -1 }
+             walk_dist = 4, start_clouds = 1, excl_rad = 0 }
 MARKER:  D = lua:fog_machine {cloud_type = "calcifying dust", \
              pow_min = 2, pow_max = 3, delay = 75, size_min = 2, size_max = 3, \
-             walk_dist = 4, start_clouds = 1, excl_rad = -1 }
+             walk_dist = 4, start_clouds = 1, excl_rad = 0 }
 TILE:    ABCD = dngn_transparent_wall_blue
 COLOUR:  ABCD = lightblue
 MAP

@@ -1699,7 +1699,7 @@ FTILE:  *|_1+'c = floor_hall
 FTILE:  # = floor_rough_lightred
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                 pow_min = 10, pow_max = 10, delay = 10, \
-                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = -1 }
+                size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }
 SUBST:  '# = .
 MAP
 .................
@@ -1839,7 +1839,7 @@ FTILE:   F = floor_pebble_lightred
 {{
   local fog = chained_fog_machine {
                             cloud_type = 'flame', pow_min = 6, pow_max = 6,
-                            delay = 100, size = 1, walk_dist = 0, excl_rad = -1
+                            delay = 100, size = 1, walk_dist = 0, excl_rad = 0
                           }
   lua_marker('F', fog)
 }}
