@@ -524,20 +524,6 @@ static int _acquirement_weapon_subtype(bool divine)
     return result;
 }
 
-static bool _have_item_with_types(object_class_type basetype, int subtype)
-{
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        const item_def& item = you.inv[i];
-        if (item.defined()
-            && item.base_type == basetype && item.sub_type == subtype)
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
 static missile_type _acquirement_missile_subtype()
 {
     int count = 0;
@@ -567,10 +553,11 @@ static missile_type _acquirement_missile_subtype()
             // Only give needles if they have a blowgun in inventory.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.push_back(make_pair(MI_DART, 100));
-            missile_weights.push_back(make_pair(MI_TOMAHAWK, 100));
+            missile_weights.push_back(make_pair(MI_DART, 50));
+            missile_weights.push_back(make_pair(MI_TOMAHAWK, 75));
 
-            if (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN))
+            // Include the possibility of needles if they have some stealth skill.
+            if (x_chance_in_y(you.skills[SK_STEALTH], 15))
                 missile_weights.push_back(make_pair(MI_NEEDLE, 100));
 
             if (you.body_size() >= SIZE_MEDIUM)
