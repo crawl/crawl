@@ -1904,7 +1904,7 @@ MARKER:     h = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "flame", \
-                excl_rad = -1 }
+                excl_rad = 0 }
 KMONS:      2 = lorocyproca w:1 / hell beast w:15 / reaper /\
             green death / soul eater w:20 / tormentor w:5
 KMONS:      3u = ice devil / red devil / orange demon / blue devil / \

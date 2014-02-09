@@ -263,10 +263,10 @@ SUBST:   % = $:2 %:5 *:2, ] = ] >:5, [ = [ <:5, G : G:6 c:2 b:1 .:1
 # Clearly, they commissioned the deep dwarves.
 MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 3, pow_max = 3, delay = 75, size_min = 2, size_max = 2, \
-             walk_dist = 1, start_clouds = 1, excl_rad = -1 }
+             walk_dist = 1, start_clouds = 1, excl_rad = 0 }
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 3, pow_max = 3, delay = 100, size_min = 2, size_max = 2, \
-             walk_dist = 1, start_clouds = 1, excl_rad = -1 }
+             walk_dist = 1, start_clouds = 1, excl_rad = 0 }
 MAP
   xx+++xxx
   xc...ccxx

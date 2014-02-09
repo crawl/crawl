@@ -1939,10 +1939,10 @@ COLOUR:  qQ = darkgray
 FTILE:   qQ = floor_rough_darkgray
 MARKER:  q = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = -1 }
+             start_clouds = 1, excl_rad = 0 }
 MARKER:  Q = lua:fog_machine {cloud_type = "flame", \
              pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = -1 }
+             start_clouds = 1, excl_rad = 0 }
 :  if you.depth() == dgn.br_depth(you.branch()) then
 SUBST:  { = {([<
 :  else
@@ -1996,10 +1996,10 @@ COLOUR:  fF = darkgray
 FTILE:   fF = floor_rough_darkgray
 MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = -1 }
+             start_clouds = 1, excl_rad = 0 }
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 9, pow_max = 10, delay = 20, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = -1 }
+             start_clouds = 1, excl_rad = 0 }
 MAP
       XXXX...&&.
       Xllvv......
@@ -2066,10 +2066,10 @@ COLOUR:  fF = darkgray
 FTILE:   fF = floor_rough_darkgray
 MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
              pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = -1 }
+             start_clouds = 1, excl_rad = 0 }
 MARKER:  F = lua:fog_machine {cloud_type = "flame", \
              pow_min = 9, pow_max = 10, delay = 2, size_min = 1, size_max = 1, \
-             start_clouds = 1, excl_rad = -1 }
+             start_clouds = 1, excl_rad = 0 }
 MAP
             ...!..
            ........
