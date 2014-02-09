@@ -243,15 +243,11 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
     melee_attack first_attk(attacker, defender, -1, -1, false, true,
                             jump_blocked, landing_pos);
 
-    // Do player warnings for electrocution and sanctuary based on possible
-    // landing sites.
+    // Do player warnings based on possible landing sites.
     if (attacker->is_player())
     {
         bool conduct_prompted, zot_trap_prompted, trap_prompted,
             exclusion_prompted, cloud_prompted, terrain_prompted;
-        bool defender_vuln = !defender
-            || (feat_is_water(grd(defender->pos()))
-                && (!you.can_see(defender) || defender->ground_level()));
         bool check_landing_only = false;
         string prompt;
         item_def *weapon = attacker->weapon(-1);
@@ -287,30 +283,6 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
 
         for (site = landing_sites.begin(); site != landing_sites.end(); site++)
         {
-            bool ground_level = !you.airborne() && !you.can_cling_to(*site)
-                && you.species != SP_DJINNI;
-            if (attacker->damage_brand(-1) == SPWPN_ELECTROCUTION
-                && !you.received_weapon_warning
-                && (feat_is_water(grd(*site)) && ground_level)
-                && !attacker->res_elec()
-                && defender_vuln
-                && adjacent(*site, defender->pos()))
-            {
-                prompt = "Really jump-attack with ";
-                if (weapon)
-                    prompt += weapon->name(DESC_YOUR);
-                else
-                    prompt += "your electric unarmed attack";
-                prompt += " when you might land in water? ";
-                if (yesno(prompt.c_str(), true, 'n'))
-                    you.received_weapon_warning = true;
-                else
-                {
-                    canned_msg(MSG_OK);
-                    you.turn_is_over = false;
-                    return false;
-                }
-            }
             // If we have no defender or have one we can't see and are attacking
             // from within or at a sanctuary position , prompt.
             if (!conduct_prompted && (!defender || !you.can_see(defender)))
@@ -348,12 +320,10 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 }
             }
 
-            // On the first landing site, check the hit function for elec or
-            // devastator for conduct
+            // On the first landing site, check the hit function for Devastator.
             if (!check_landing_only && !conduct_prompted
-                && (attacker->damage_brand(-1) == SPWPN_ELECTROCUTION
-                    || weapon && is_unrandom_artefact(*weapon)
-                    && weapon->special == UNRAND_DEVASTATOR))
+                && weapon && is_unrandom_artefact(*weapon)
+                && weapon->special == UNRAND_DEVASTATOR)
             {
                 const char* verb = "jump-attack";
                 string junk1, junk2;
@@ -365,11 +335,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                             ? "jump-attack" : "jump-attack near");
                 }
 
-                bool (*aff_func)(const coord_def &) = 0;
-                if (attacker->damage_brand(-1) == SPWPN_ELECTROCUTION)
-                    aff_func = conduction_affected;
-
-                targetter_smite hitfunc(attacker, 1, 1, 1, false, aff_func);
+                targetter_smite hitfunc(attacker, 1, 1, 1, false);
                 hitfunc.set_aim(attack_pos);
                 hitfunc.origin = *site;
 
@@ -381,7 +347,7 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
                 }
             }
 
-            // Check landing in dangerous clouds
+            // Check landing in dangerous clouds.
             if (!cloud_prompted
                 && !check_moveto_cloud(*site, "jump-attack", &cloud_prompted))
             {
@@ -749,12 +715,4 @@ int finesse_adjust_delay(int delay)
         delay = div_rand_round(delay, 2);
     }
     return delay;
-}
-
-bool conduction_affected(const coord_def &pos)
-{
-    const actor *act = actor_at(pos);
-
-    // Don't check rElec to avoid leaking information about armour etc.
-    return feat_is_water(grd(pos)) && act && act->ground_level();
 }

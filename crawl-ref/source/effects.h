@@ -57,8 +57,6 @@ int torment(actor *attacker, int taux, const coord_def& where);
 int torment_player(actor *attacker, int taux);
 int torment_monsters(coord_def where, actor *attacker, int taux);
 
-void conduct_electricity(coord_def where, actor *attacker);
-
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker = NULL);
 

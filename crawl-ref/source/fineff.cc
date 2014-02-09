@@ -36,12 +36,6 @@ void final_effect::schedule()
     env.final_effects.push_back(this);
 }
 
-bool lightning_fineff::mergeable(const final_effect &fe) const
-{
-    const lightning_fineff *o = dynamic_cast<const lightning_fineff *>(&fe);
-    return o && att == o->att && posn == o->posn;
-}
-
 bool mirror_damage_fineff::mergeable(const final_effect &fe) const
 {
     const mirror_damage_fineff *o =
@@ -138,13 +132,6 @@ void deferred_damage_fineff::merge(const final_effect &fe)
     ASSERT(ddamfe);
     ASSERT(mergeable(*ddamfe));
     damage += ddamfe->damage;
-}
-
-void lightning_fineff::fire()
-{
-    if (you.see_cell(posn))
-        mpr("Electricity arcs through the water!");
-    conduct_electricity(posn, attacker());
 }
 
 void mirror_damage_fineff::fire()

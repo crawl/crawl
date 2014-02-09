@@ -33,17 +33,6 @@ protected:
     actor *defender() const { return actor_by_mid(def); }
 };
 
-class lightning_fineff : public final_effect
-{
-public:
-    lightning_fineff(const actor *attack, const coord_def &pos)
-        : final_effect(attack, 0, pos)
-    {
-    }
-    bool mergeable(const final_effect &a) const;
-    void fire();
-};
-
 class mirror_damage_fineff : public final_effect
 {
 public:

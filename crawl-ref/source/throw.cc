@@ -775,9 +775,6 @@ static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
             dmg_msg = "There is a sudden explosion of sparks!";
     }
 
-    if (feat_is_water(grd(victim->pos())))
-        (new lightning_fineff(beam.agent(), victim->pos()))->schedule();
-
     return false;
 }
 
