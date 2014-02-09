@@ -211,7 +211,7 @@ Items
 * The skin of Zhor now grants rC+++.
 * Leech drains HP on all hits (instead of 3/5 for other vampiric weapons).
 * Sniper is now a +15 vorpal crossbow with a slower rate of fire.
-* Snakebite is now a +5 venom whip that applies a curare effect on one out of
+* Snakebite is now a +5 venom whip that applies a curare effect on two out of
   five hits.
 * The Singing Sword is now a bastard sword.
 * The shield of the gong is now +27 with -5 EV.
