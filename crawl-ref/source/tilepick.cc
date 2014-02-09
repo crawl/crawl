@@ -1656,7 +1656,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_NAGA_MAGE:
         return TILEP_MONS_NAGA_MAGE;
     case MONS_NAGA_RITUALIST:
-        return TILEP_MONS_NAGA_ENCHANTER;
+        return TILEP_MONS_NAGA_RITUALIST;
     case MONS_NAGA_SHARPSHOOTER:
         return TILEP_MONS_MARKSNAGA;
     case MONS_NAGA_WARRIOR:
