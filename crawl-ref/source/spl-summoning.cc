@@ -3263,6 +3263,22 @@ void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
     const bool melee = (spell == SPELL_MELEE);
     ASSERT(mons->has_ench(ENCH_GRAND_AVATAR));
 
+    actor* avatar = mons->get_ench(ENCH_GRAND_AVATAR).agent();
+    if (!avatar)
+    {
+        mons->del_ench(ENCH_GRAND_AVATAR);
+        return;
+    }
+
+    ASSERT(avatar->is_monster());
+    monster* av = avatar->as_monster();
+    monster* owner = monster_by_mid(av->summoner);
+    if (!owner || !mons_aligned(mons, owner))
+    {
+        mons->del_ench(ENCH_GRAND_AVATAR);
+        return;
+    }
+
     if (!victim
         || !victim->alive()
         || (!melee && !battlesphere_can_mirror(spell))
@@ -3270,13 +3286,6 @@ void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
     {
         return;
     }
-
-    actor* avatar = mons->get_ench(ENCH_GRAND_AVATAR).agent();
-    if (!avatar)
-        return;
-
-    ASSERT(avatar->is_monster());
-    monster* av = avatar->as_monster();
 
     av->props[GA_TARGET_MID].get_int() = victim->mid;
     if (melee)
@@ -3288,6 +3297,26 @@ void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
     {
         av->props[GA_SPELL].get_bool() = true;
         av->props.erase(GA_MELEE);
+    }
+}
+
+void end_grand_avatar(monster* mons, bool killed)
+{
+    if (!mons)
+        return;
+
+    actor* agent = actor_by_mid(mons->summoner);
+    if (agent)
+    {
+        monster* owner = agent->as_monster();
+        owner->del_ench(ENCH_GRAND_AVATAR);
+    }
+
+    if (!killed)
+    {
+        place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(),
+                    3 + random2(3), mons);
+        monster_die(mons, KILL_RESET, NON_MONSTER);
     }
 }
 

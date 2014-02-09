@@ -6311,3 +6311,65 @@ int monster::spell_hd(spell_type spell) const
 {
     return hit_dice + 2 * aug_amount();
 }
+
+void monster::align_avatars(bool force_friendly)
+{
+    mon_attitude_type new_att = (force_friendly ? ATT_FRIENDLY
+                                   : this->attitude);
+
+    // Neutral monsters don't need avatars, and in same cases would attack their
+    // own avatars if they had them.
+    if (new_att == ATT_NEUTRAL || new_att == ATT_STRICT_NEUTRAL
+        || new_att == ATT_GOOD_NEUTRAL)
+    {
+        this->remove_avatars();
+        return;
+    }
+
+    monster* avatar = find_spectral_weapon(this);
+    if (avatar)
+    {
+        avatar->attitude = new_att;
+        reset_spectral_weapon(avatar);
+    }
+
+    avatar = find_battlesphere(this);
+    if (avatar)
+    {
+        avatar->attitude = new_att;
+        reset_battlesphere(avatar);
+    }
+
+    actor* gavatar = this->get_ench(ENCH_GRAND_AVATAR).agent();
+    if (!gavatar)
+        return;
+    avatar = gavatar->as_monster();
+    monster *owner = monster_by_mid(avatar->summoner);
+    if (avatar->summoner == this->mid)
+    {
+        avatar->attitude = new_att;
+        grand_avatar_reset(avatar);
+    }
+    else if (!owner || !mons_aligned(this, owner))
+        this->del_ench(ENCH_GRAND_AVATAR);
+}
+
+void monster::remove_avatars()
+{
+    monster* avatar = find_spectral_weapon(this);
+    if (avatar)
+        end_spectral_weapon(avatar, false, false);
+
+    avatar = find_battlesphere(this);
+    if (avatar)
+        end_battlesphere(avatar, false);
+
+    actor* gavatar = this->get_ench(ENCH_GRAND_AVATAR).agent();
+    if (!gavatar)
+        return;
+    avatar = gavatar->as_monster();
+    if (avatar->summoner == this->mid)
+        end_grand_avatar(avatar, false);
+    else
+        this->del_ench(ENCH_GRAND_AVATAR);
+}

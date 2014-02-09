@@ -151,6 +151,8 @@ bool monster::add_ench(const mon_enchant &ench)
     if (new_enchantment)
         add_enchantment_effect(ench);
 
+    if (ench.ench == ENCH_CHARM)
+        this->align_avatars(true);
     return true;
 }
 
@@ -1726,6 +1728,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             // Severed tentacles immediately become "hostile" to everyone (or insane)
             attitude = ATT_NEUTRAL;
+            mons_att_changed(this);
             behaviour_event(this, ME_ALERT);
         }
     }
@@ -1750,6 +1753,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             }
 
             attitude = ATT_HOSTILE;
+            mons_att_changed(this);
             behaviour_event(this, ME_ALERT, &you);
         }
     }
