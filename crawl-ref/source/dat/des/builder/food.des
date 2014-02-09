@@ -282,48 +282,6 @@ ccxx1x.c3gc
  cccccccccc
 ENDMAP
 
-# 20.6k/23k/12.5k (min 18k/6k/0)
-NAME:    hangedman_stone_soup
-DEPTH:   D:9-14
-: food_weight(_G, 8)
-WEIGHT:  10
-TAGS:    uniq_second_food extra chance_second_food patrolling no_rotate no_vmirror
-# Branch representatives working together to cook some soup:
-# D, Orc, Elf, Snake, Shoals, Vaults, Crypt, Hells, Zot.
-KMONS:   A = kobold
-KMONS:   B = orc
-KMONS:   C = deep elf fighter
-KMONS:   D = naga
-KMONS:   E = merfolk
-KMONS:   F = human
-KMONS:   G = necrophage
-KMONS:   H = crimson imp
-KMONS:   I = draconian
-KITEM:   1 = stone q:1 no_pickup / large rock q:1 w:5
-KITEM:   Ya = royal jelly no_mimic / meat ration no_mimic / \
-              bread ration no_mimic
-KITEM:   b = honeycomb no_mimic / cheese no_mimic / apricot q:2 no_mimic / \
-             apple q:2 no_mimic / choko q:2 no_mimic
-KFEAT:   1Yab = shallow_water
-KMASK:   1Yac = no_monster_gen
-MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
-                 pow_max = 10, delay = 60, size = 1, walk_dist = 0 }
-MARKER:  Z = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
-                 delay = 10, size = 1, walk_dist = 0, excl_rad = -1 }
-NSUBST:  c = 2:a / *:b
-SHUFFLE: ABCDEFGHI
-MAP
- .......
-..A...B..
-..vv.vv..
-..vcccv..
-..vY1cv..
-..vcccv..
-.CvvvvvD.
-...Z.Z...
- .......
-ENDMAP
-
 # 22.0k/29.5k/0
 # A couple of tengu have staked out a little piece of the dungeon.
 NAME:   grunt_tengu_nest
