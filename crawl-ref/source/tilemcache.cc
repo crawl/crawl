@@ -445,7 +445,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_PRIEST:
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_ANNIHILATOR:
-    case TILEP_MONS_SALAMANDER:
         *ofs_x = -1;
         *ofs_y = -2;
         break;
@@ -457,6 +456,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SONJA:
     case TILEP_MONS_ANCIENT_CHAMPION:
     case TILEP_MONS_SKELETAL_WARRIOR:
+    case TILEP_MONS_SALAMANDER:
         *ofs_x = -2;
         *ofs_y = -2;
         break;
@@ -670,6 +670,10 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         break;
 
     case TILEP_MONS_SALAMANDER:
+        *ofs_x = 0;
+        *ofs_y = -1;
+        break;
+
     case TILEP_MONS_SALAMANDER_FIREBRAND:
         *ofs_x = 1;
         *ofs_y = -1;
