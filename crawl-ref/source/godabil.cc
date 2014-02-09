@@ -1717,8 +1717,10 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
-    // Drop the monster's holy equipment, and keep wielding the rest.
+    // Drop the monster's holy equipment, and keep wielding the rest.  Also
+    // remove any of its active avatars.
     monster_drop_things(mon, false, is_holy_item);
+    mon->remove_avatars();
 
     const monster orig = *mon;
 

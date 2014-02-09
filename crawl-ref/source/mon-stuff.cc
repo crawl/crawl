@@ -4814,6 +4814,7 @@ void mons_att_changed(monster* mon)
     {
         remove_companion(mon);
     }
+    mon->align_avatars();
 }
 
 void debuff_monster(monster* mon)

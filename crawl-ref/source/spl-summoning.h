@@ -113,6 +113,7 @@ void reset_spectral_weapon(monster* mons);
 
 void grand_avatar_reset(monster* mons);
 bool grand_avatar_check_melee(monster* mons, actor* target);
+void end_grand_avatar(monster* mons, bool killed);
 void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
                           const int old_hp);
 

@@ -502,6 +502,8 @@ public:
 
     int  aug_amount() const;
     int  spell_hd(spell_type spell = SPELL_NO_SPELL) const;
+    void align_avatars(bool force_friendly = false);
+    void remove_avatars();
 
 private:
     void init_with(const monster& mons);

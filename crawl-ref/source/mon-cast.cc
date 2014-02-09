@@ -5731,10 +5731,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (avatar)
         {
             simple_monster_message(mons, " calls forth a grand avatar!");
+            mons->add_ench(mon_enchant(ENCH_GRAND_AVATAR, 1, avatar));
             for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
             {
-                if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
-                    && *mi != avatar)
+                if (*mi != mons && mons_aligned(mons, *mi)
+                    && !mi->has_ench(ENCH_CHARM)
+                    && !mons_is_avatar((*mi)->type))
                 {
                     mi->add_ench(mon_enchant(ENCH_GRAND_AVATAR, 1, avatar));
                 }
