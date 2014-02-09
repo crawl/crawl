@@ -2233,9 +2233,9 @@ public:
         else
             symbol = '-';
 
-        return make_stringf("%c%c%c%c%s", hotkeys[0], need_cursor ? '[' : ' ',
-                                          symbol, need_cursor ? ']' : ' ',
-                                          name.c_str());
+        return make_stringf(" %c%c%c%c%s", hotkeys[0], need_cursor ? '[' : ' ',
+                                           symbol, need_cursor ? ']' : ' ',
+                                           name.c_str());
     }
 
     virtual int highlight_colour() const
