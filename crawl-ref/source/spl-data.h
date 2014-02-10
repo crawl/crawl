@@ -478,6 +478,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
      SPTYP_SUMMONING | SPTYP_POISON,
@@ -490,6 +491,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",

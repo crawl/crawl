@@ -189,35 +189,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_summon_scorpions(int pow, god_type god, bool fail)
-{
-    fail_check();
-    bool success = false;
-
-    const int how_many = stepdown_value(1 + random2(pow)/10 + random2(pow)/10,
-                                        2, 2, 6, 8);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        const bool friendly = (random2(pow) > 3);
-
-        if (create_monster(
-                mgen_data(MONS_SCORPION,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                          3, SPELL_SUMMON_SCORPIONS,
-                          you.pos(), MHITYOU,
-                          0, god)))
-        {
-            success = true;
-        }
-    }
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return SPRET_SUCCESS;
-}
-
 // Creates a mixed swarm of typical swarming animals.
 // Number and duration depend on spell power.
 spret_type cast_summon_swarm(int pow, god_type god, bool fail)
@@ -3265,7 +3236,6 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_SMALL_MAMMAL,        4, 2 },
     { SPELL_CALL_CANINE_FAMILIAR,       1, 2 },
     { SPELL_SUMMON_ICE_BEAST,           3, 3 },
-    { SPELL_SUMMON_SCORPIONS,           6, 3 },
     { SPELL_SUMMON_HYDRA,               3, 2 },
     // Demons
     { SPELL_CALL_IMP,                   3, 3 },
@@ -3321,7 +3291,7 @@ int summons_limit(spell_type spell)
     return desc->type_cap;
 }
 
-// Call when a monster has been summoned to manager this summoner's caps
+// Call when a monster has been summoned, to manage this summoner's caps.
 void summoned_monster(const monster *mons, const actor *caster,
                       spell_type spell)
 {

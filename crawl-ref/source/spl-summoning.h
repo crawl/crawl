@@ -30,7 +30,6 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail);
 bool item_is_snakable(const item_def& item);
 spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail);
 
-spret_type cast_summon_scorpions(int pow, god_type god, bool fail);
 spret_type cast_summon_swarm(int pow, god_type god, bool fail);
 spret_type cast_call_canine_familiar(int pow, god_type god, bool fail);
 spret_type cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,

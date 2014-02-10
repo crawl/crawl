@@ -673,11 +673,6 @@ Summon Ice Beast spell
 
 Ten czar przyzywa lodową bestię.
 %%%%
-Summon Scorpions spell
-
-Ten czar przyzywa jednego lub kilka skorpionów. Niektóre z nich mogą być wrogo
-nastawione.
-%%%%
 Summon Small Mammal spell
 
 Ten czar przyzywa jedno lub parę małych stworzeń.

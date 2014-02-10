@@ -605,10 +605,6 @@ Summon Ice Beast spell
 
 这道法术召唤出一只冰之怪兽来协助施法者。
 %%%%
-Summon Scorpions spell
-
-这道法术召唤出一只或多只蝎子（其中有些也许并不会服从施法者的命令）。
-%%%%
 Summon Small Mammal spell
 
 这道法术召唤出一只或两只小动物来帮助施法者。

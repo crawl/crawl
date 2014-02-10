@@ -1566,8 +1566,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_STICKS_TO_SNAKES:
         return cast_sticks_to_snakes(powc, god, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SCORPIONS:
-        return cast_summon_scorpions(powc, god, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_SUMMON_SWARM:
         return cast_summon_swarm(powc, god, fail);
