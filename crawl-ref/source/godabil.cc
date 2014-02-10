@@ -3655,31 +3655,42 @@ void dithmengos_shadow_throw(coord_def target)
     _dithmengos_shadow_monster_reset(mon);
 }
 
-void dithmengos_shadow_spell(coord_def target, spell_type spell)
+void dithmengos_shadow_spell(bolt* orig_beam, spell_type spell)
 {
-    if (target.origin()
-        || !is_valid_mon_spell(spell)
+    if (!orig_beam
+        || orig_beam->target.origin()
+        || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
         || !_dithmengos_shadow_acts())
     {
         return;
     }
+
+    const coord_def target = orig_beam->target;
 
     monster* mon = _dithmengos_shadow_monster();
     if (!mon)
         return;
 
     // Don't let shadow spells get too powerful.
-    mon->hit_dice = max(1, mon->hit_dice / 2);
+    mon->hit_dice = max(1,
+                        min(3 * spell_difficulty(spell), mon->hit_dice) / 2);
 
     mon->target = target;
     if (actor_at(target))
         mon->foe = actor_at(target)->mindex();
 
+    spell_type shadow_spell = spell;
+    if (!orig_beam->is_enchantment())
+    {
+        shadow_spell = (orig_beam->is_beam) ? SPELL_SHADOW_BOLT
+                                            : SPELL_SHADOW_SHARD;
+    }
+
     bolt beem;
     beem.target = target;
     mprf(MSGCH_FRIEND_SPELL, "%s mimicks your spell!",
          mon->name(DESC_THE).c_str());
-    mons_cast(mon, beem, spell, false, false);
+    mons_cast(mon, beem, shadow_spell, false, false);
 
     _dithmengos_shadow_monster_reset(mon);
 }

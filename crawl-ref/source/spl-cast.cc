@@ -1356,9 +1356,11 @@ spret_type your_spells(spell_type spell, int powc,
             && allow_fail
             && (flags & SPFLAG_TARGETING_MASK)
             && !(flags & SPFLAG_NEUTRAL)
+            && (beam.is_enchantment()
+                || battlesphere_can_mirror(spell))
             && (!old_target || (victim && !victim->is_player())))
         {
-            dithmengos_shadow_spell(beam.target, spell);
+            dithmengos_shadow_spell(&beam, spell);
         }
         _spellcasting_side_effects(spell, powc, god, allow_fail);
         return SPRET_SUCCESS;

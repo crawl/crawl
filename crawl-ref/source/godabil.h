@@ -78,5 +78,5 @@ void spare_beogh_convert();
 bool dithmengos_shadow_step();
 void dithmengos_shadow_melee(actor* target);
 void dithmengos_shadow_throw(coord_def target);
-void dithmengos_shadow_spell(coord_def target, spell_type spell);
+void dithmengos_shadow_spell(bolt* orig_beam, spell_type spell);
 #endif
