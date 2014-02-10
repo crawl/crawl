@@ -1797,6 +1797,12 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
         return mbase->attack[1];
     }
 
+    if (mon->type == MONS_PLAYER_SHADOW && attk_number == 0)
+    {
+        if (!you.weapon())
+            attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
+    }
+
     if (attk.type == AT_RANDOM)
         attk.type = random_choose(AT_HIT, AT_GORE, -1);
 

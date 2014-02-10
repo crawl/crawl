@@ -3585,7 +3585,10 @@ static monster* _dithmengos_shadow_monster()
                     | MF_WAS_IN_VIEW | MF_HARD_RESET
                     | MF_ACTUAL_SPELLS;
     mon->hit_points = you.hp;
-    mon->hit_dice   = you.experience_level;
+    mon->hit_dice   = min(1,
+                          you.skill_rdiv(wpn_index != NON_ITEM
+                                         ? weapon_skill(mitm[wpn_index])
+                                         : SK_UNARMED_COMBAT, 10, 20));
     mon->set_position(you.pos());
     mon->mid        = MID_PLAYER;
     mon->inv[MSLOT_WEAPON]  = wpn_index;
@@ -3673,7 +3676,8 @@ void dithmengos_shadow_spell(bolt* orig_beam, spell_type spell)
 
     // Don't let shadow spells get too powerful.
     mon->hit_dice = max(1,
-                        min(3 * spell_difficulty(spell), mon->hit_dice) / 2);
+                        min(3 * spell_difficulty(spell),
+                            you.experience_level) / 2);
 
     mon->target = target;
     if (actor_at(target))
