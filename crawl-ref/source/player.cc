@@ -3970,9 +3970,13 @@ int check_stealth(void)
     // makes you extremely unstealthy.
     if (you.backlit())
         stealth = stealth * 2 / 5;
-    // On the other hand, shrouding has the reverse effect:
-    if (you.umbra())
-        stealth *= 2;
+    // On the other hand, shrouding has the reverse effect, if you know
+    // how to make use of it:
+    if (you.umbra()
+        && (you_worship(GOD_DITHMENGOS) || you_worship(GOD_YREDELEMNUL)))
+    {
+        stealth = stealth * (you.piety + MAX_PIETY) / MAX_PIETY;
+    }
     // The shifting glow from the Orb, while too unstable to negate invis
     // or affect to-hit, affects stealth even more than regular glow.
     if (orb_haloed(you.pos()))
