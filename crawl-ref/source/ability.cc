@@ -1076,6 +1076,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_FEDHAS_SUNLIGHT:
     case ABIL_FEDHAS_EVOLUTION:
+    case ABIL_DITHMENGOS_SHADOW_STEP:
         invoc = true;
         failure = 30 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 6);
         break;
@@ -1090,8 +1091,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
-    case ABIL_DITHMENGOS_SHADOW_STEP:
-    case ABIL_DITHMENGOS_SHADOW_FORM:
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
@@ -1194,6 +1193,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
     case ABIL_CHEIBRIADOS_TIME_STEP:
+    case ABIL_DITHMENGOS_SHADOW_FORM:
         invoc = true;
         failure = 80 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
         break;
@@ -2879,7 +2879,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_DITHMENGOS_SHADOW_FORM:
-        if (!transform(50, TRAN_SHADOW))
+        if (!transform(you.skill(SK_INVOCATIONS, 2), TRAN_SHADOW))
         {
             crawl_state.zero_turns_taken();
             return false;
