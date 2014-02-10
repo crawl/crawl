@@ -1865,10 +1865,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         break;
     }
 
-    // Orcish ammo gets poisoned a lot more often.
-    if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
-        rc = SPMSL_POISONED;
-
     ASSERT(is_missile_brand_ok(item.sub_type, rc, true));
 
     return rc;
