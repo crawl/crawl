@@ -1015,14 +1015,20 @@ hell09
 hell10
 hell11
 
+%weight 10
 ice_wall0 WALL_ICE
 ice_wall1
 ice_wall2
+%weight 5
 ice_wall3
+ice_wall4
 
+%weight 10
 icy_stone0 WALL_ICY_STONE
 icy_stone1
 icy_stone2
+%weight 5
+icy_stone3
 icy_stone3
 
 ice_block0 WALL_ICE_BLOCK
