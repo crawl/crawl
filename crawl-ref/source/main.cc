@@ -2442,18 +2442,6 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns.");
 
-    if (!you.attribute[ATTR_REPEL_MISSILES])
-    {
-        _decrement_a_duration(DUR_REPEL_MISSILES, delay,
-                          "You feel less protected from missiles.");
-    }
-
-    if (!you.attribute[ATTR_DEFLECT_MISSILES])
-    {
-        _decrement_a_duration(DUR_DEFLECT_MISSILES, delay,
-                          "You feel less protected from missiles.");
-    }
-
     if (_decrement_a_duration(DUR_TROGS_HAND, delay,
                               NULL, coinflip(),
                               "You feel the effects of Trog's Hand fading."))

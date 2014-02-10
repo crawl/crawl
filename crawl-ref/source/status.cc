@@ -1102,27 +1102,20 @@ static void _describe_missiles(status_info* inf)
     bool expiring;
     if (level > 1)
     {
-        inf->light_colour = MAGENTA;
+        inf->light_colour = LIGHTMAGENTA;
         inf->light_text   = "DMsl";
         inf->short_text   = "deflect missiles";
         inf->long_text    = "You deflect missiles.";
-        expiring = (you.attribute[ATTR_DEFLECT_MISSILES] == 0
-                    && dur_expiring(DUR_DEFLECT_MISSILES));
     }
     else
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
                     || you.scan_artefacts(ARTP_RMSL);
-        inf->light_colour = perm ? WHITE : BLUE;
+        inf->light_colour = perm ? WHITE : LIGHTBLUE;
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";
         inf->long_text    = "You repel missiles.";
-        expiring = (!perm && you.attribute[ATTR_REPEL_MISSILES] == 0
-                    && dur_expiring(DUR_REPEL_MISSILES));
     }
-
-    inf->light_colour = _dur_colour(inf->light_colour, expiring);
-    _mark_expiring(inf, expiring);
 }
 
 static void _describe_invisible(status_info* inf)

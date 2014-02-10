@@ -313,8 +313,8 @@ enum attribute_type
     ATTR_SWIFTNESS,            // Duration of future antiswiftness.
     ATTR_BARBS_MSG,            // Have we already printed a message on move?
     ATTR_BARBS_POW,            // How badly we are currently skewered
-    ATTR_REPEL_MISSILES,       // Chance to expire repel missiles
-    ATTR_DEFLECT_MISSILES,     // Chance to expire deflect missiles
+    ATTR_REPEL_MISSILES,       // Repel missiles active
+    ATTR_DEFLECT_MISSILES,     // Deflect missiles active
     ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
@@ -1520,7 +1520,9 @@ enum duration_type
 
     DUR_LIQUID_FLAMES,
     DUR_ICY_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     DUR_REPEL_MISSILES,
+#endif
     DUR_JELLY_PRAYER,
     DUR_PIETY_POOL,             // distribute piety over time
     DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
@@ -1536,7 +1538,9 @@ enum duration_type
     DUR_BREATH_WEAPON,
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
+#if TAG_MAJOR_VERSION == 34
     DUR_DEFLECT_MISSILES,
+#endif
     DUR_PHASE_SHIFT,
 #if TAG_MAJOR_VERSION == 34
     DUR_SEE_INVISIBLE,
