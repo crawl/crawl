@@ -690,8 +690,9 @@ void handle_behaviour(monster* mon)
                 // they can't see their seek target.
                 if (mons_is_avatar(mon->type))
                 {
-                    new_foe = owner->mindex();
-                    mon->target = owner->pos();
+                    // XXX: should owner ever not be set here?
+                    new_foe = owner ? owner->mindex() : MHITNOT;
+                    mon->target = owner ? owner->pos() : mon->pos();
                     break;
                 }
                 else if (isFriendly && mon->foe != MHITYOU)
@@ -771,7 +772,9 @@ void handle_behaviour(monster* mon)
 
                 if (!isFriendly)
                     break;
-                else if (mons_is_avatar(mon->type) && !owner->is_player())
+                else if (mons_is_avatar(mon->type)
+                         && owner
+                         && !owner->is_player())
                 {
                     mon->foe = owner->mindex();
                     break;
