@@ -265,6 +265,9 @@ static string _get_seen_branches(bool display)
     {
         const branch_type branch = branches[i].id;
 
+        if (branch == BRANCH_ZIGGURAT)
+            continue;
+
         if (branch == root_branch
             || stair_level.count(branch))
         {
