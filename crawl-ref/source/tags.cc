@@ -2434,15 +2434,14 @@ static void tag_read_you(reader &th)
     for (j = count; j < NUM_OBJECT_CLASSES; ++j)
         you.sacrifice_value[j] = 0;
 
-    const int last_20_turns =
-        you.elapsed_time - (you.elapsed_time % 200);
+    int timer_count = 0;
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_EVENT_TIMERS)
     {
 #endif
-    count = unmarshallByte(th);
-    ASSERT(count <= NUM_TIMERS);
-    for (j = 0; j < count; ++j)
+    timer_count = unmarshallByte(th);
+    ASSERT(timer_count <= NUM_TIMERS);
+    for (j = 0; j < timer_count; ++j)
     {
         you.last_timer_effect[j] = unmarshallInt(th);
         you.next_timer_effect[j] = unmarshallInt(th);
@@ -2450,13 +2449,10 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     }
     else
-        count = 0;
+        timer_count = 0;
 #endif
-    for (j = count; j < NUM_TIMERS; ++j)
-    {
-        you.last_timer_effect[j] = last_20_turns;
-        you.next_timer_effect[j] = last_20_turns + 200;
-    }
+    // We'll have to fix up missing/broken timer entries after
+    // we unmarshall you.elapsed_time.
 
     // how many mutations/demon powers?
     count = unmarshallShort(th);
@@ -2638,6 +2634,35 @@ static void tag_read_you(reader &th)
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
     you.elapsed_time_at_last_input = you.elapsed_time;
+
+    // Initialize new timers now that we know the time.
+    const int last_20_turns = you.elapsed_time - (you.elapsed_time % 200);
+    for (j = timer_count; j < NUM_TIMERS; ++j)
+    {
+        you.last_timer_effect[j] = last_20_turns;
+        you.next_timer_effect[j] = last_20_turns + 200;
+    }
+
+    // Verify that timers aren't scheduled for the past.
+    for (j = 0; j < NUM_TIMERS; ++j)
+    {
+        if (you.next_timer_effect[j] < you.elapsed_time)
+        {
+#if TAG_MAJOR_VERSION == 34
+            if (th.getMinorVersion() >= TAG_MINOR_EVENT_TIMERS
+                && th.getMinorVersion() < TAG_MINOR_EVENT_TIMER_FIX)
+            {
+                dprf("Fixing up timer %d from %d to %d",
+                     j, you.next_timer_effect[j], last_20_turns + 200);
+                you.last_timer_effect[j] = last_20_turns;
+                you.next_timer_effect[j] = last_20_turns + 200;
+            }
+            else
+#endif
+            die("Timer %d next trigger in the past [%d < %d]",
+                j, you.next_timer_effect[j], you.elapsed_time);
+        }
+    }
 
     // time of character creation
     you.birth_time = unmarshallInt(th);

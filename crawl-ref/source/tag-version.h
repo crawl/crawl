@@ -78,6 +78,7 @@ enum tag_minor_version
     TAG_MINOR_NEMELEX_DUNGEONS,    // Make nemelex not give/track decks of dungeons.
     TAG_MINOR_DEMONSPAWN,          // Save compat wrt demonspawn enemies.
     TAG_MINOR_EVENT_TIMERS,        // "Every 20 turn" effects are less determinstic.
+    TAG_MINOR_EVENT_TIMER_FIX,     // Correct event timers in transferred games
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
