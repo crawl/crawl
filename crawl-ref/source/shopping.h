@@ -6,6 +6,8 @@
 #ifndef SHOPPING_H
 #define SHOPPING_H
 
+#include "itemprop-enum.h" // mercenary_type
+
 int artefact_value(const item_def &item);
 
 // ident == true overrides the item ident level and gives the price
@@ -26,6 +28,8 @@ string shop_name(const coord_def& where, bool add_stop = false);
 string shop_type_name(shop_type type);
 
 bool shoptype_identifies_stock(shop_type type);
+
+monster_type merc_to_monster_type(mercenary_type merc);
 
 bool is_shop_item(const item_def &item);
 bool shop_item_unknown(const item_def &item);

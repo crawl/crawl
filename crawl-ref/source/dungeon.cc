@@ -5562,7 +5562,7 @@ void place_spec_shop(const coord_def& where, shop_type force_type)
 
 int greed_for_shop_type(shop_type shop, int level_number)
 {
-    if (shop == SHOP_FOOD)
+    if (shop == SHOP_FOOD || shop == SHOP_MERCENARY)
         return 10 + random2(5);
     if (_shop_sells_antiques(shop))
         return 15 + random2avg(19, 2) + random2(level_number);
@@ -5938,6 +5938,9 @@ object_class_type item_in_shop(shop_type shop_type)
 
     case SHOP_SCROLL:
         return OBJ_SCROLLS;
+
+    case SHOP_MERCENARY:
+        return OBJ_MERCENARY;
 
     default:
         die("unknown shop type %d", shop_type);

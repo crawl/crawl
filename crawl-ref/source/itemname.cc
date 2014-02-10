@@ -161,6 +161,8 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
             break;
         }
     }
+    else if (base_type == OBJ_MERCENARY)
+        ;
     else if (quantity > 1)
     {
         switch (descrip)
@@ -1923,6 +1925,19 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
             buff << " of " << _name;
         }
+        break;
+    }
+
+    case OBJ_MERCENARY:
+    {
+        const monster_type merc =
+            merc_to_monster_type(static_cast<mercenary_type>(sub_type));
+
+        if (dbname)
+            return mons_type_name(merc, DESC_DBNAME);
+
+        buff << props["name"].get_string() << " ";
+        buff << mons_type_name(merc, DESC_THE);
         break;
     }
 

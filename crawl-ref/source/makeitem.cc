@@ -18,6 +18,8 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h" // map_find
+#include "random-pick.h"
+#include "shopping.h" // merc_to_monster_type
 #include "spl-book.h"
 #include "state.h"
 #include "stepdown.h"
@@ -1834,6 +1836,56 @@ void squash_plusses(int item_slot)
     set_equip_desc(item, ISFLAG_NO_DESC);
 }
 
+const random_pick_entry<mercenary_type> merc_types[] =
+{
+    {  1, 3,  100, DOWN, MERC_BIG_KOBOLD },
+    {  1, 5,  100, FLAT, MERC_ORC_WARRIOR },
+    {  1, 9,  100, PEAK, MERC_TENGU },
+    {  3, 12, 100, FLAT, MERC_NAGA },
+    {  5, 15, 100, FLAT, MERC_DEEP_ELF_FIGHTER },
+    {  9, 18, 100, FLAT, MERC_TENGU_CONJURER },
+    {  9, 18, 100, FLAT, MERC_DEEP_ELF_CONJURER },
+    {  9, 18, 100, FLAT, MERC_MERFOLK },
+    { 10, 18, 100, FLAT, MERC_ORC_KNIGHT },
+    { 10, 18, 100, FLAT, MERC_CENTAUR_WARRIOR },
+    { 10, 18, 100, FLAT, MERC_NAGA_WARRIOR },
+    { 12, 18, 100, FLAT, MERC_TENGU_WARRIOR },
+    { 12, 21, 100, SEMI, MERC_OGRE_MAGE },
+    { 12, 21, 100, FLAT, MERC_SPRIGGAN_RIDER },
+    { 15, 24, 100, FLAT, MERC_MINOTAUR },
+    { 15, 24, 100, SEMI, MERC_ORC_WARLORD },
+    { 18, 24, 100,   UP, MERC_DRACONIAN },
+    { 18, 27, 100,   UP, MERC_TENGU_REAVER },
+    { 21, 27, 100,   UP, MERC_DEEP_ELF_MASTER_ARCHER },
+    { 21, 27, 100,   UP, MERC_DEEP_ELF_BLADEMASTER },
+    { 0, 0, 0, FLAT, NUM_MERCS }
+};
+
+static void _generate_mercenary_item(item_def& item, int force_type,
+                                     int item_level)
+{
+    int level = max(1, min(27, random2avg(item_level, 2) + 1));
+    if (force_type == OBJ_RANDOM)
+    {
+        random_picker<mercenary_type, NUM_MERCS> picker;
+        item.sub_type = picker.pick(merc_types, level, NUM_MERCS);
+        ASSERT(item.sub_type != NUM_MERCS);
+    }
+    else
+        item.sub_type = force_type;
+
+    monster tempmon;
+    tempmon.type =
+    merc_to_monster_type(static_cast<mercenary_type>(item.sub_type));
+    define_monster(&tempmon);
+    if (give_monster_proper_name(&tempmon, false))
+        item.props["name"].get_string() = tempmon.mname;
+    else
+        item.props["name"].get_string() = make_name(random_int(), false);
+    item.props["exp"].get_int() =
+    max(1, fuzz_value(exper_value(&tempmon), 15, 15));
+}
+
 /**
  * Create an item.
  *
@@ -2010,6 +2062,10 @@ int items(bool allow_uniques,
 
     case OBJ_MISCELLANY:
         _generate_misc_item(item, force_type, force_ego);
+        break;
+
+    case OBJ_MERCENARY:
+        _generate_mercenary_item(item, force_type, item_level);
         break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}

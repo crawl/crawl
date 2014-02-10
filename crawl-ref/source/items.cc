@@ -3162,6 +3162,7 @@ int get_max_subtype(object_class_type base_type)
         -1,              // corpses     -- handled specially
         1,              // gold         -- handled specially
         NUM_RODS,
+        NUM_MERCS,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -3938,6 +3939,8 @@ colour_t item_def::get_colour() const
             return miscellany_colour();
         case OBJ_GOLD:
             return special > 0 ? static_cast<colour_t>(ETC_SHINING) : (YELLOW);
+        case OBJ_MERCENARY:
+            return YELLOW; // just so they're valid
         case OBJ_DETECTED:
             return Options.detected_item_colour;
         case NUM_OBJECT_CLASSES:

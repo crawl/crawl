@@ -2500,8 +2500,16 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
     tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
 #endif
 
+    if (item.base_type == OBJ_MERCENARY)
+    {
+        monster_info mi(
+                        merc_to_monster_type(static_cast<mercenary_type>(item.sub_type)));
+        return describe_monsters(mi, true);
+    }
+
     // we might destroy the item, so save this first.
     const bool item_had_spells = _can_show_spells(item);
+
     _show_item_description(item);
 
     // spellbooks & rods have their own UIs, so we don't currently support the
