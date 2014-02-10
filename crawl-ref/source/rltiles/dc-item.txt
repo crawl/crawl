@@ -943,9 +943,10 @@ i-speed POT_SPEED
 i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
 i-agility POT_AGILITY
-i-gain-strength POT_GAIN_STRENGTH
-i-gain-dexterity POT_GAIN_DEXTERITY
-i-gain-intelligence POT_GAIN_INTELLIGENCE
+# please remove these 3 when TAG_MAJOR_VERSION is bumped
+i-gain-strength POT_REMOVEME2
+i-gain-dexterity POT_REMOVEME3
+i-gain-intelligence POT_REMOVEME4
 i-flight POT_FLIGHT
 i-poison POT_POISON
 i-slowing POT_SLOWING
@@ -967,8 +968,7 @@ i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
-# please remove when TAG_MAJOR_VERSION is bumped
-i-confusion POT_REMOVE_ME2
+i-lignify POT_LIGNIFY
 i-good-mutation POT_BENEFICIAL_MUTATION POT_ID_LAST
 %back none
 %rim 1
