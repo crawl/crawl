@@ -868,7 +868,7 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
 
             const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
             const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
-            if (current_prefcol != prefcol)
+            if (force_full || current_prefcol != prefcol)
                 json_write_int("col", prefcol);
         }
 
