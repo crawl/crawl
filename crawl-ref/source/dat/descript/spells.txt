@@ -1307,11 +1307,6 @@ Summon Mushrooms spell
 This spell summons a bunch of icky wandering mushrooms and deathcaps next to a
 chosen foe.
 %%%%
-Summon Scorpions spell
-
-This spell summons one or more scorpions (some of which may not be bound to the
-caster's service).
-%%%%
 Summon Small Mammal spell
 
 This spell summons a small creature to the caster's aid.

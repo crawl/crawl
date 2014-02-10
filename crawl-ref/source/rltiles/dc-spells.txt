@@ -138,7 +138,6 @@ summon_greater_demon SUMMON_GREATER_DEMON
 summon_horrible_things SUMMON_HORRIBLE_THINGS
 summon_hydra SUMMON_HYDRA
 summon_ice_beast SUMMON_ICE_BEAST
-summon_scorpions SUMMON_SCORPIONS
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammal SUMMON_SMALL_MAMMAL
 summon_ugly_thing SUMMON_UGLY_THING

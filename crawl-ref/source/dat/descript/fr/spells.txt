@@ -1136,11 +1136,6 @@ Summon Mushrooms spell
 Ce sort convoque un tas de poisseux champignons errants et de calices de la
 mort à côté de l'ennemi choisi.
 %%%%
-Summon Scorpions spell
-
-Ce sort convoque un ou plusieurs scorpions (dont certains pourraient ne pas
-être liés au service du sorcier).
-%%%%
 Summon Small Mammal spell
 
 Ce sort convoque une ou deux petites créatures pour aider le sorcier.

@@ -1114,11 +1114,6 @@ Summon Mushrooms spell
 이 주문은 대상으로 한 적의 주변에 불쾌한 떠돌이 버섯이나 광대버섯을 한무리
 소환한다.
 %%%%
-Summon Scorpions spell
-
-이 주문은 하나 이상의 전갈을 소환한다. (그 중 몇몇은 시전자를 따르지 않을 수도
-있다)
-%%%%
 Summon Small Mammal spell
 
 이 주문은 시전자를 따르는 작은 동물을 소환한다. 보통 한 마리가 소환되지만, 소환
