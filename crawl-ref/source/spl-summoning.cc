@@ -2505,7 +2505,7 @@ void end_battlesphere(monster* mons, bool killed)
     }
 }
 
-static bool _battlesphere_can_mirror(spell_type spell)
+bool battlesphere_can_mirror(spell_type spell)
 {
     return (spell_typematch(spell, SPTYP_CONJURATION)
            && spell_to_zap(spell) != NUM_ZAPS)
@@ -2520,7 +2520,7 @@ static bool _battlesphere_can_mirror(spell_type spell)
 bool aim_battlesphere(actor* agent, spell_type spell, int powc, bolt& beam)
 {
     //Is this spell something that will trigger the battlesphere?
-    if (_battlesphere_can_mirror(spell))
+    if (battlesphere_can_mirror(spell))
     {
         monster* battlesphere = find_battlesphere(agent);
 
@@ -3118,7 +3118,7 @@ void trigger_grand_avatar(monster* mons, actor* victim, spell_type spell,
 
     if (!victim
         || !victim->alive()
-        || (!melee && !_battlesphere_can_mirror(spell))
+        || (!melee && !battlesphere_can_mirror(spell))
         || old_hp - victim->stat_hp() < random2(GRAND_AVATAR_DAMAGE))
     {
         return;

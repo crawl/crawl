@@ -1040,6 +1040,19 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_SHADOW_BOLT:
+        beam.name     = "shadow bolt";
+        beam.is_beam  = true;
+        // deliberate fall-through
+    case SPELL_SHADOW_SHARD:
+        if (real_spell == SPELL_SHADOW_SHARD)
+            beam.name  = "shadow shard";
+        beam.damage   = dice_def(3, 8 + power / 11);
+        beam.colour   = MAGENTA;
+        beam.flavour  = BEAM_MMISSILE;
+        beam.hit      = 17 + power / 25;
+        break;
+
     default:
         if (check_validity)
         {
