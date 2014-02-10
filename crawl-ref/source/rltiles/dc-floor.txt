@@ -821,6 +821,12 @@ frozen4
 frozen5
 frozen6
 frozen7
+%weight 1
+frozen8
+frozen9
+frozen10
+frozen11
+frozen12
 
 %lum 0 -5
 %weight 50
