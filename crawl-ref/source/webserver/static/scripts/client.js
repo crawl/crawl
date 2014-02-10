@@ -715,7 +715,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function go_lobby()
     {
-        var was_watching = watching_username;
+        var was_watching = watching;
 
         cleanup();
         current_hash = "#lobby";
