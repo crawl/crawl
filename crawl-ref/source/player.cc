@@ -4006,8 +4006,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_SILENCE: // no message
         return 5 * BASELINE_DELAY;
 
-    case DUR_DEFLECT_MISSILES:
-    case DUR_REPEL_MISSILES:
     case DUR_REGENERATION:
     case DUR_RESISTANCE:
     case DUR_SWIFTNESS:
@@ -6319,9 +6317,9 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::missile_deflection() const
 {
-    if (duration[DUR_DEFLECT_MISSILES])
+    if (attribute[ATTR_DEFLECT_MISSILES])
         return 2;
-    if (duration[DUR_REPEL_MISSILES]
+    if (attribute[ATTR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
         || scan_artefacts(ARTP_RMSL, true))
     {
@@ -6332,20 +6330,23 @@ int player::missile_deflection() const
 
 void player::ablate_deflection()
 {
+    int power;
     if (attribute[ATTR_DEFLECT_MISSILES])
     {
-        if (one_chance_in(attribute[ATTR_DEFLECT_MISSILES]))
+        power = calc_spell_power(SPELL_DEFLECT_MISSILES, true);
+        if (one_chance_in(1 + power / 6))
         {
             attribute[ATTR_DEFLECT_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "Your deflect missiles spell is about to expire...");
+            mprf(MSGCH_DURATION, "You feel less protected from missiles.");
         }
     }
-    else if (attribute[ATTR_REPEL_MISSILES] && !duration[DUR_DEFLECT_MISSILES])
+    else if (attribute[ATTR_REPEL_MISSILES])
     {
-        if (one_chance_in(attribute[ATTR_REPEL_MISSILES]))
+        power = calc_spell_power(SPELL_REPEL_MISSILES, true);
+        if (one_chance_in(1 + power / 6))
         {
             attribute[ATTR_REPEL_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "Your repel missiles spell is about to expire...");
+            mprf(MSGCH_DURATION, "You feel less protected from missiles.");
         }
     }
 }
