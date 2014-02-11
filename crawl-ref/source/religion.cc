@@ -4085,13 +4085,22 @@ void handle_god_time(int time_delta)
             }
         }
         shuffle_array(angry_gods);
-        // Now roll to see whether we get retribution and from which god.
-        const unsigned int which_penance = random2(10);
-        if (which_penance < angry_gods.size())
+        int tries = 10;
+        while (tries-- > 0)
         {
-            if (divine_retribution(angry_gods[which_penance]))
-                you.attribute[ATTR_GOD_WRATH_COUNT]--;
+            // Now roll to see whether we get retribution and from which god.
+            const unsigned int which_penance = random2(10);
+            if (which_penance < angry_gods.size())
+            {
+                // If this *fails*, we rolled a god who doesn't exist or whose
+                // wrath doesn't occur this way, so try again.
+                if (!divine_retribution(angry_gods[which_penance]))
+                    continue;
+            }
+            else
+                break;
         }
+        you.attribute[ATTR_GOD_WRATH_COUNT]--;
     }
 
     // Update the god's opinion of the player.
