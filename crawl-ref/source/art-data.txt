@@ -1124,6 +1124,8 @@ INSCRIP:  discharge,
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
 PLUS:     +3/+5
 COLOUR:   ETC_ELECTRICITY
+TILE:     urand_arc_blade
+TILE_EQ:  arc_blade
 BOOL:     elec
 
 ENUM:     SPELLBINDER
