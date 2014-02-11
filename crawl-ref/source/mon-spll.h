@@ -1480,9 +1480,9 @@
       {
        SPELL_SUNRAY,
        SPELL_AWAKEN_FOREST,
-       SPELL_HASTE_PLANTS,
+       SPELL_NO_SPELL,
        SPELL_DRUIDS_CALL,
-       SPELL_HASTE_PLANTS,
+       SPELL_NO_SPELL,
        SPELL_MINOR_HEALING
       }
     },
