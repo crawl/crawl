@@ -1082,7 +1082,30 @@ void dec_penance(god_type god, int val)
         take_note(Note(NOTE_MOLLIFY_GOD, god));
     }
     else
+    {
         you.penance[god] -= val;
+        return;
+    }
+
+    // We only get this far if we just mollified a god.
+    // If we just mollified a god, see if we have any angry gods left.
+    // If we don't, clear the stored wrath / XP counter.
+    int i = GOD_NO_GOD;
+    for (; i < NUM_GODS; ++i)
+    {
+        if (player_under_penance((god_type) i)
+            && (i != GOD_NEMELEX_XOBEH || you.penance[i] > 100)
+            && (i != GOD_ASHENZARI))
+        {
+            break;
+        }
+    }
+
+    if (i != NUM_GODS)
+        return;
+
+    you.attribute[ATTR_GOD_WRATH_COUNT] = 0;
+    you.attribute[ATTR_GOD_WRATH_XP] = 0;
 }
 
 void dec_penance(int val)
@@ -4078,8 +4101,10 @@ void handle_god_time(int time_delta)
         {
             // Nemelex penance is special: it's only "active"
             // when penance > 100, else it's passive.
-            if (player_under_penance((god_type) i) && (i != GOD_NEMELEX_XOBEH
-                                   || you.penance[i] > 100))
+            // Ash wrath is not impacted by time.
+            if (player_under_penance((god_type) i)
+                && (i != GOD_NEMELEX_XOBEH || you.penance[i] > 100)
+                && (i != GOD_ASHENZARI))
             {
                 angry_gods.push_back((god_type) i);
             }
