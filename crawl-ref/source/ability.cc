@@ -3624,7 +3624,7 @@ static int _find_ability_slot(const ability_def &abil)
     return -1;
 }
 
-vector<ability_type> get_god_abilities(bool include_unusable)
+vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
 {
     vector<ability_type> abilities;
     if (you_worship(GOD_TROG) && (include_unusable || !silenced(you.pos())))
@@ -3650,7 +3650,7 @@ vector<ability_type> get_god_abilities(bool include_unusable)
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
-        if (you.piety < piety_breakpoint(i))
+        if (you.piety < piety_breakpoint(i) && !ignore_piety)
             continue;
 
         const ability_type abil =
@@ -3683,20 +3683,6 @@ vector<ability_type> get_god_abilities(bool include_unusable)
     }
 
     return abilities;
-}
-
-void gain_god_ability(int i)
-{
-    you.start_train.insert(abil_skill(god_abilities[you.religion][i]));
-    if (god_abilities[you.religion][i] == ABIL_TSO_DIVINE_SHIELD)
-        you.start_train.insert(SK_SHIELDS);
-}
-
-void lose_god_ability(int i)
-{
-    you.stop_train.insert(abil_skill(god_abilities[you.religion][i]));
-    if (god_abilities[you.religion][i] == ABIL_TSO_DIVINE_SHIELD)
-        you.stop_train.insert(SK_SHIELDS);
 }
 
 ////////////////////////////////////////////////////////////////////////
