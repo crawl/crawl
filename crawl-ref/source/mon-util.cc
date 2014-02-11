@@ -2896,6 +2896,12 @@ int mons_class_base_speed(monster_type mc)
     return smc->speed;
 }
 
+mon_energy_usage mons_class_energy(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->energy_usage;
+}
+
 int mons_class_zombie_base_speed(monster_type zombie_base_mc)
 {
     return max(3, mons_class_base_speed(zombie_base_mc) - 2);
