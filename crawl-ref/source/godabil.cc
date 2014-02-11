@@ -3410,7 +3410,7 @@ void spare_beogh_convert()
     }
 }
 
-bool dithmengos_shadow_step()
+bool dithmenos_shadow_step()
 {
     // You can shadow-step anywhere within your umbra.
     ASSERT(you.umbra_radius2() > -1);
@@ -3499,9 +3499,9 @@ bool dithmengos_shadow_step()
     return true;
 }
 
-static bool _dithmengos_shadow_acts()
+static bool _dithmenos_shadow_acts()
 {
-    if (!you_worship(GOD_DITHMENGOS) || you.piety < piety_breakpoint(3))
+    if (!you_worship(GOD_DITHMENOS) || you.piety < piety_breakpoint(3))
         return false;
 
     // 10% chance at 4* piety; 50% chance at 200 piety.
@@ -3513,7 +3513,7 @@ static bool _dithmengos_shadow_acts()
                          2 * range);
 }
 
-static monster* _dithmengos_shadow_monster()
+static monster* _dithmenos_shadow_monster()
 {
     if (monster_at(you.pos()))
         return NULL;
@@ -3599,7 +3599,7 @@ static monster* _dithmengos_shadow_monster()
     return mon;
 }
 
-static void _dithmengos_shadow_monster_reset(monster *mon)
+static void _dithmenos_shadow_monster_reset(monster *mon)
 {
     if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
         destroy_item(mon->inv[MSLOT_WEAPON]);
@@ -3609,16 +3609,16 @@ static void _dithmengos_shadow_monster_reset(monster *mon)
     mon->reset();
 }
 
-void dithmengos_shadow_melee(actor* target)
+void dithmenos_shadow_melee(actor* target)
 {
     if (!target
         || !target->alive()
-        || !_dithmengos_shadow_acts())
+        || !_dithmenos_shadow_acts())
     {
         return;
     }
 
-    monster* mon = _dithmengos_shadow_monster();
+    monster* mon = _dithmenos_shadow_monster();
     if (!mon)
         return;
 
@@ -3628,18 +3628,18 @@ void dithmengos_shadow_melee(actor* target)
     mprf("%s attacks!", mon->name(DESC_THE).c_str());
     fight_melee(mon, target);
 
-    _dithmengos_shadow_monster_reset(mon);
+    _dithmenos_shadow_monster_reset(mon);
 }
 
-void dithmengos_shadow_throw(coord_def target)
+void dithmenos_shadow_throw(coord_def target)
 {
     if (target.origin()
-        || !_dithmengos_shadow_acts())
+        || !_dithmenos_shadow_acts())
     {
         return;
     }
 
-    monster* mon = _dithmengos_shadow_monster();
+    monster* mon = _dithmenos_shadow_monster();
     if (!mon)
         return;
 
@@ -3655,22 +3655,22 @@ void dithmengos_shadow_throw(coord_def target)
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
     }
 
-    _dithmengos_shadow_monster_reset(mon);
+    _dithmenos_shadow_monster_reset(mon);
 }
 
-void dithmengos_shadow_spell(bolt* orig_beam, spell_type spell)
+void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
 {
     if (!orig_beam
         || orig_beam->target.origin()
         || (orig_beam->is_enchantment() && !is_valid_mon_spell(spell))
-        || !_dithmengos_shadow_acts())
+        || !_dithmenos_shadow_acts())
     {
         return;
     }
 
     const coord_def target = orig_beam->target;
 
-    monster* mon = _dithmengos_shadow_monster();
+    monster* mon = _dithmenos_shadow_monster();
     if (!mon)
         return;
 
@@ -3696,5 +3696,5 @@ void dithmengos_shadow_spell(bolt* orig_beam, spell_type spell)
          mon->name(DESC_THE).c_str());
     mons_cast(mon, beem, shadow_spell, false, false);
 
-    _dithmengos_shadow_monster_reset(mon);
+    _dithmenos_shadow_monster_reset(mon);
 }

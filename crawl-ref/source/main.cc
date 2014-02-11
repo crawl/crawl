@@ -3243,7 +3243,7 @@ static void _update_mold()
 // For worn items; weapons do this on melee attacks.
 static void _check_equipment_conducts()
 {
-    if (you_worship(GOD_DITHMENGOS) && one_chance_in(10))
+    if (you_worship(GOD_DITHMENOS) && one_chance_in(10))
     {
         bool illuminating = false, fiery = false;
         const item_def* item;

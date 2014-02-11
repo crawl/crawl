@@ -179,9 +179,9 @@ enum ability_type
     ABIL_ASHENZARI_SCRYING = 1160,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
-    // Dithmengos
-    ABIL_DITHMENGOS_SHADOW_STEP = 1170,
-    ABIL_DITHMENGOS_SHADOW_FORM,
+    // Dithmenos
+    ABIL_DITHMENOS_SHADOW_STEP = 1170,
+    ABIL_DITHMENOS_SHADOW_FORM,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -1038,10 +1038,10 @@ enum conduct_type
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
     DID_SEE_MONSTER,                      // TSO
-    DID_ILLUMINATE,                       // Dithmengos
-    DID_KILL_ILLUMINATING,                // Dithmengos
-    DID_FIRE,                             // Dithmengos
-    DID_KILL_FIERY,                       // Dithmengos
+    DID_ILLUMINATE,                       // Dithmenos
+    DID_KILL_ILLUMINATING,                // Dithmenos
+    DID_FIRE,                             // Dithmenos
+    DID_KILL_FIERY,                       // Dithmenos
 
     NUM_CONDUCTS
 };
@@ -1434,8 +1434,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_FEDHAS,
     DNGN_ALTAR_CHEIBRIADOS,
     DNGN_ALTAR_ASHENZARI,
-    DNGN_ALTAR_DITHMENGOS,
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENGOS,
+    DNGN_ALTAR_DITHMENOS,
+        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENOS,
 
     DNGN_FOUNTAIN_BLUE,
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1882,7 +1882,7 @@ enum god_type
     GOD_FEDHAS,
     GOD_CHEIBRIADOS,
     GOD_ASHENZARI,
-    GOD_DITHMENGOS,
+    GOD_DITHMENOS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -2829,7 +2829,7 @@ enum monster_type                      // menv[].type
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
 #endif
-    MONS_PLAYER_SHADOW,         // Dithmengos
+    MONS_PLAYER_SHADOW,         // Dithmenos
 
     MONS_DEEP_TROLL_EARTH_MAGE,
     MONS_DEEP_TROLL_SHAMAN,

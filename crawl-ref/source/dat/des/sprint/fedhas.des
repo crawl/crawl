@@ -103,7 +103,7 @@ KFEAT:  M = altar_jiyva
 KFEAT:  N = altar_vehumet
 KFEAT:  O = altar_sif_muna
 KFEAT:  P = altar_makhleb
-KFEAT:  Q = altar_dithmengos
+KFEAT:  Q = altar_dithmenos
 KMONS:  X = oklob sapling name:priest n_suf spells:cantrip;.;cantrip;smiting priest_spells
 
 MAP

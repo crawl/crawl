@@ -287,12 +287,12 @@ MAP
 ......@......
 ENDMAP
 
-### Dithmengos overflow altars ################################################
+### Dithmenos overflow altars ################################################
 
-NAME:   grunt_dithmengos_smoke
-TAGS:   uniq_altar_dithmengos temple_overflow_1 temple_overflow_dithmengos decor
+NAME:   grunt_dithmenos_smoke
+TAGS:   uniq_altar_dithmenos temple_overflow_1 temple_overflow_dithmenos decor
 DEPTH:  D:2-
-KFEAT:  C = altar_dithmengos
+KFEAT:  C = altar_dithmenos
 MARKER: C = lua:fog_machine { cloud_type = "black smoke", \
                               pow_min = 10, pow_max = 20, \
                               delay = 100, size = 1, walk_dist = 1 }
@@ -304,10 +304,10 @@ MAP
 ENDMAP
 
 # Reflect upon the darkness, mortal.
-NAME:   grunt_dithmengos_smoke_and_mirrors
-TAGS:   uniq_altar_dithmengos temple_overflow_1 temple_overflow_dithmengos decor
+NAME:   grunt_dithmenos_smoke_and_mirrors
+TAGS:   uniq_altar_dithmenos temple_overflow_1 temple_overflow_dithmenos decor
 DEPTH:  D:2-
-KFEAT:  C = altar_dithmengos
+KFEAT:  C = altar_dithmenos
 KFEAT:  O = .
 MARKER: O = lua:fog_machine { cloud_type = "black smoke", \
                               pow_min = 25, pow_max = 25, \
@@ -323,10 +323,10 @@ b.b.b.b
   b.b
 ENDMAP
 
-NAME:  grunt_dithmengos_shadows
-TAGS:  uniq_altar_dithmengos temple_overflow_1 temple_overflow_dithmengos decor
+NAME:  grunt_dithmenos_shadows
+TAGS:  uniq_altar_dithmenos temple_overflow_1 temple_overflow_dithmenos decor
 DEPTH: D:4-
-KFEAT: C = altar_dithmengos
+KFEAT: C = altar_dithmenos
 {{
   if you.absdepth() >= 14 then
      mons("shadow")

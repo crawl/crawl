@@ -134,7 +134,7 @@ static colour_t _feat_colour(dungeon_feature_type feat)
     case DNGN_ALTAR_FEDHAS:             return GREEN;
     case DNGN_ALTAR_CHEIBRIADOS:        return LIGHTCYAN;
     case DNGN_ALTAR_ASHENZARI:          return LIGHTRED;
-    case DNGN_ALTAR_DITHMENGOS:         return ETC_DITHMENGOS;
+    case DNGN_ALTAR_DITHMENOS:          return ETC_DITHMENOS;
     default: return 0;
     }
 }

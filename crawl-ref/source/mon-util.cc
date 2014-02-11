@@ -701,7 +701,7 @@ bool cheibriados_thinks_mons_is_fast(const monster* mon)
     return cheibriados_monster_player_speed_delta(mon) > 0;
 }
 
-// Dithmengos hates halos and spells that cause illumination.
+// Dithmenos hates halos and spells that cause illumination.
 bool mons_is_illuminating(const monster* mon)
 {
     if (mon->halo_radius2() >= 0)
@@ -716,7 +716,7 @@ bool mons_is_illuminating(const monster* mon)
     return false;
 }
 
-// Dithmengos also hates fire users and generally fiery beings.
+// Dithmenos also hates fire users and generally fiery beings.
 bool mons_is_fiery(const monster* mon)
 {
     // This chain of checks is for fire breath weapons and special

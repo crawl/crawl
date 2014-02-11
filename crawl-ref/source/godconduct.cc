@@ -336,7 +336,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_TROG:
             case GOD_BEOGH:
             case GOD_LUGONU:
-            case GOD_DITHMENGOS:
+            case GOD_DITHMENOS:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -364,7 +364,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
-            case GOD_DITHMENGOS:
+            case GOD_DITHMENOS:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -393,7 +393,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_KIKUBAAQUDGHA:
             case GOD_BEOGH:
             case GOD_LUGONU:
-            case GOD_DITHMENGOS:
+            case GOD_DITHMENOS:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -524,7 +524,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
-            case GOD_DITHMENGOS:
+            case GOD_DITHMENOS:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -981,7 +981,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_ILLUMINATE:
-            if (you_worship(GOD_DITHMENGOS))
+            if (you_worship(GOD_DITHMENOS))
             {
                 if (!known)
                 {
@@ -998,7 +998,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_KILL_ILLUMINATING:
-            if (you_worship(GOD_DITHMENGOS)
+            if (you_worship(GOD_DITHMENOS)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 simple_god_message(" appreciates your extinguishing a source "
@@ -1010,7 +1010,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_FIRE:
-            if (you_worship(GOD_DITHMENGOS))
+            if (you_worship(GOD_DITHMENOS))
             {
                 if (!known)
                 {
@@ -1027,7 +1027,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_KILL_FIERY:
-            if (you_worship(GOD_DITHMENGOS)
+            if (you_worship(GOD_DITHMENOS)
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 simple_god_message(" appreciates your extinguishing a source "
@@ -1061,7 +1061,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     simple_god_message(" accepts your kill.");
                 retval = true;
             }
-            if (you_worship(GOD_DITHMENGOS))
+            if (you_worship(GOD_DITHMENOS))
             {
                 piety_change *= 2;
                 piety_denom *= 3;

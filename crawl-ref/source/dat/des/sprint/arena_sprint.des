@@ -1015,7 +1015,7 @@ KFEAT:  j = altar_elyvilon
 KFEAT:  k = altar_cheibriados
 KFEAT:  l = altar_jiyva
 KFEAT:  n = altar_fedhas
-KFEAT:  o = altar_dithmengos
+KFEAT:  o = altar_dithmenos
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of speed q:3, \
             wand of fire charges:5 ident:all, \

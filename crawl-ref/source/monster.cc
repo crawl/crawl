@@ -6119,12 +6119,12 @@ bool monster::is_web_immune() const
 }
 
 // Undead monsters have nightvision, as do all followers of Yredelemnul
-// and Dithmengos.
+// and Dithmenos.
 bool monster::nightvision() const
 {
     return holiness() == MH_UNDEAD
            || god == GOD_YREDELEMNUL
-           || god == GOD_DITHMENGOS;
+           || god == GOD_DITHMENOS;
 }
 
 bool monster::attempt_escape(int attempts)
