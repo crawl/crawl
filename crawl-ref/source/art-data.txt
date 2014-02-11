@@ -1134,6 +1134,8 @@ OBJ:      OBJ_WEAPONS/WPN_DEMON_WHIP
 BRAND:    SPWPN_ANTIMAGIC
 PLUS:     +3/+6
 COLOUR:   ETC_ENCHANT
+TILE:     urand_spellbinder
+TILE_EQ:  spellbinder
 MAGIC:    30
 BOOL:     evil
 
