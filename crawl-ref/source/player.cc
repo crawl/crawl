@@ -6334,7 +6334,7 @@ void player::ablate_deflection()
     if (attribute[ATTR_DEFLECT_MISSILES])
     {
         power = calc_spell_power(SPELL_DEFLECT_MISSILES, true);
-        if (one_chance_in(1 + power / 6))
+        if (one_chance_in(2 + power / 8))
         {
             attribute[ATTR_DEFLECT_MISSILES] = 0;
             mprf(MSGCH_DURATION, "You feel less protected from missiles.");
@@ -6343,7 +6343,7 @@ void player::ablate_deflection()
     else if (attribute[ATTR_REPEL_MISSILES])
     {
         power = calc_spell_power(SPELL_REPEL_MISSILES, true);
-        if (one_chance_in(1 + power / 6))
+        if (one_chance_in(2 + power / 8))
         {
             attribute[ATTR_REPEL_MISSILES] = 0;
             mprf(MSGCH_DURATION, "You feel less protected from missiles.");
