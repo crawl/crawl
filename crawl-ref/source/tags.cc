@@ -3862,6 +3862,14 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
+    marshallByte(th, mi.menergy.move);
+    marshallByte(th, mi.menergy.swim);
+    marshallByte(th, mi.menergy.attack);
+    marshallByte(th, mi.menergy.missile);
+    marshallByte(th, mi.menergy.spell);
+    marshallByte(th, mi.menergy.special);
+    marshallByte(th, mi.menergy.item);
+    marshallByte(th, mi.menergy.pickup_percent);
     marshallUnsigned(th, mi.fly);
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
@@ -4037,6 +4045,22 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
         {
             ASSERT(mi.base_type != MONS_NO_MONSTER);
         }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_MONINFO_ENERGY)
+        mi.menergy = mons_class_energy(mi.type);
+    else
+    {
+#endif
+    mi.menergy.move = unmarshallByte(th);
+    mi.menergy.swim = unmarshallByte(th);
+    mi.menergy.attack = unmarshallByte(th);
+    mi.menergy.missile = unmarshallByte(th);
+    mi.menergy.spell = unmarshallByte(th);
+    mi.menergy.special = unmarshallByte(th);
+    mi.menergy.item = unmarshallByte(th);
+    mi.menergy.pickup_percent = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
     }
 #endif
 

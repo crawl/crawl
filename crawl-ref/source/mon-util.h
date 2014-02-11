@@ -88,6 +88,18 @@ struct mon_energy_usage
         me.pickup_percent = combine(pickup_percent, o.pickup_percent, 100);
         return me;
     }
+
+    bool operator == (const mon_energy_usage &rvalue) const
+    {
+        return move == rvalue.move
+               && swim == rvalue.swim
+               && attack == rvalue.attack
+               && missile == rvalue.missile
+               && spell == rvalue.spell
+               && special == rvalue.special
+               && item == rvalue.item
+               && pickup_percent == rvalue.pickup_percent;
+    }
 private:
     static uint8_t combine(uint8_t a, uint8_t b, uint8_t def = 10)
     {
@@ -262,6 +274,7 @@ bool mons_zombifiable(monster_type mc);
 
 int mons_weight(monster_type mc);
 int mons_class_base_speed(monster_type mc);
+mon_energy_usage mons_class_energy(monster_type mc);
 int mons_class_zombie_base_speed(monster_type zombie_base_mc);
 int mons_base_speed(const monster* mon);
 
