@@ -882,7 +882,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_SUNRAY:
         beam.colour   = ETC_HOLY;
         beam.name     = "ray of light";
-        beam.damage   = dice_def(3, 7 + (power / 12));
+        beam.damage   = dice_def(3, 6 + (power / 13));
         beam.hit      = 10 + power / 25; // lousy accuracy, but ignores RMsl
         beam.flavour  = BEAM_LIGHT;
         break;
@@ -2364,10 +2364,13 @@ static void _cast_druids_call(const monster* mon)
             mon_list[i]->flags |= MF_WAS_IN_VIEW;
             simple_monster_message(mon_list[i], " answers the druid's call!");
 
-            // If this is a low-HD monster, try to summon a second. Otherwise,
-            // we're done. (Only normal druids can ever summon two monsters)
-            if (!second && mon_list[i]->hit_dice <= 10 && mon->hit_dice > 10)
+            // If this is a low-HD monster, sometimes try to summon a second.
+            // Otherwise, we're done. (Young druids can ever summon one)
+            if (!second && mon_list[i]->hit_dice <= 10 && mon->hit_dice > 10
+                && coinflip())
+            {
                 second = true;
+            }
             else
                 return;
         }
