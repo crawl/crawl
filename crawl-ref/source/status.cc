@@ -1099,7 +1099,6 @@ static void _describe_missiles(status_info* inf)
     if (!level)
         return;
 
-    bool expiring;
     if (level > 1)
     {
         inf->light_colour = LIGHTMAGENTA;
