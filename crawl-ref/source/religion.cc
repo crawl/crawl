@@ -2790,8 +2790,6 @@ static void _gain_piety_point()
             // title.
             you.redraw_title = true;
 
-            gain_god_ability(i);
-
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
                                   "You can now %s.", i))
             {
@@ -2966,7 +2964,6 @@ void lose_piety(int pgn)
                 // title.
                 you.redraw_title = true;
 
-                lose_god_ability(i);
                 _abil_chg_message(god_lose_power_messages[you.religion][i],
                                   "You can no longer %s.", i);
 
@@ -3068,7 +3065,7 @@ void excommunication(god_type new_god)
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
-    vector<ability_type> abilities = get_god_abilities(true);
+    vector<ability_type> abilities = get_god_abilities(true, true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
         you.stop_train.insert(abil_skill(abilities[i]));
@@ -3714,9 +3711,14 @@ void god_pitch(god_type which_god)
                 you.train[sk] = 0;
     }
 
-    // Elyvilon and Cheibriados give you invocations immediately.
-    if (you_worship(GOD_ELYVILON) || you_worship(GOD_CHEIBRIADOS))
-        you.start_train.insert(SK_INVOCATIONS);
+    // Allow training all divine ability skills immediately.
+    vector<ability_type> abilities = get_god_abilities(true, true);
+    for (unsigned int i = 0; i < abilities.size(); ++i)
+    {
+        you.start_train.insert(abil_skill(abilities[i]));
+        if (abilities[i] == ABIL_TSO_DIVINE_SHIELD)
+            you.start_train.insert(SK_SHIELDS);
+    }
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
