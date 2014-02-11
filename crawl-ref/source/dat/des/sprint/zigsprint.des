@@ -708,7 +708,7 @@ KFEAT:  o = altar_beogh
 KFEAT:  p = altar_jiyva
 KFEAT:  q = altar_fedhas
 KFEAT:  r = altar_cheibriados
-KFEAT:  s = altar_dithmengos
+KFEAT:  s = altar_dithmenos
 KITEM:    B = plate armour race:none mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \

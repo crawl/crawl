@@ -191,9 +191,9 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Ashenzari
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_ASHENZARI_SCRYING, ABIL_ASHENZARI_TRANSFER_KNOWLEDGE },
-    // Dithmengos
-    { ABIL_NON_ABILITY, ABIL_DITHMENGOS_SHADOW_STEP, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_DITHMENGOS_SHADOW_FORM },
+    // Dithmenos
+    { ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_STEP, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_FORM },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -401,10 +401,10 @@ static const ability_def Ability_List[] =
     { ABIL_ASHENZARI_END_TRANSFER, "End Transfer Knowledge",
       0, 0, 0, 0, 0, ABFLAG_NONE},
 
-    // Dithmengos
-    { ABIL_DITHMENGOS_SHADOW_STEP, "Shadow Step",
+    // Dithmenos
+    { ABIL_DITHMENOS_SHADOW_STEP, "Shadow Step",
       4, 0, 0, 4, 0, ABFLAG_NONE },
-    { ABIL_DITHMENGOS_SHADOW_FORM, "Shadow Form",
+    { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
       9, 0, 0, 10, 0, ABFLAG_SKILL_DRAIN },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
@@ -865,7 +865,7 @@ static ability_type _fixup_ability(ability_type ability)
         else
             return ability;
 
-    case ABIL_DITHMENGOS_SHADOW_FORM:
+    case ABIL_DITHMENOS_SHADOW_FORM:
         if (you.species == SP_MUMMY || you.species == SP_GHOUL)
             return ABIL_NON_ABILITY;
         else
@@ -1076,7 +1076,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_FEDHAS_SUNLIGHT:
     case ABIL_FEDHAS_EVOLUTION:
-    case ABIL_DITHMENGOS_SHADOW_STEP:
+    case ABIL_DITHMENOS_SHADOW_STEP:
         invoc = true;
         failure = 30 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 6);
         break;
@@ -1193,7 +1193,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
     case ABIL_CHEIBRIADOS_TIME_STEP:
-    case ABIL_DITHMENGOS_SHADOW_FORM:
+    case ABIL_DITHMENOS_SHADOW_FORM:
         invoc = true;
         failure = 80 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
         break;
@@ -2870,15 +2870,15 @@ static bool _do_ability(const ability_def& abil)
         ashenzari_end_transfer();
         break;
 
-    case ABIL_DITHMENGOS_SHADOW_STEP:
-        if (!dithmengos_shadow_step())
+    case ABIL_DITHMENOS_SHADOW_STEP:
+        if (!dithmenos_shadow_step())
         {
             canned_msg(MSG_OK);
             return false;
         }
         break;
 
-    case ABIL_DITHMENGOS_SHADOW_FORM:
+    case ABIL_DITHMENOS_SHADOW_FORM:
         if (!transform(you.skill(SK_INVOCATIONS, 2), TRAN_SHADOW))
         {
             crawl_state.zero_turns_taken();

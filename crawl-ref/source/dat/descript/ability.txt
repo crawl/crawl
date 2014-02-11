@@ -592,7 +592,7 @@ End Transfer Knowledge ability
 
 Abort an ongoing skill transfer.
 %%%%
-# Dithmengos
+# Dithmenos
 Shadow Step ability
 
 If a creature within your umbra is still enough for you to focus on its shadow,

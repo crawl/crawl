@@ -2207,7 +2207,7 @@ static bool _god_hates_brand(const int brand)
         return true;
     }
 
-    if (you_worship(GOD_DITHMENGOS)
+    if (you_worship(GOD_DITHMENOS)
         && (brand == SPWPN_FLAMING
             || brand == SPWPN_FLAME
             || brand == SPWPN_CHAOS))
@@ -3113,7 +3113,7 @@ void read_scroll(int slot)
 
     case SCR_IMMOLATION:
     {
-        // Dithmengos hates trying to play with fire, even if it does nothing.
+        // Dithmenos hates trying to play with fire, even if it does nothing.
         did_god_conduct(DID_FIRE, 3 + random2(4), item_type_known(scroll));
 
         bool had_effect = false;

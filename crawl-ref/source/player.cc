@@ -3973,7 +3973,7 @@ int check_stealth(void)
     // On the other hand, shrouding has the reverse effect, if you know
     // how to make use of it:
     if (you.umbra()
-        && (you_worship(GOD_DITHMENGOS) || you_worship(GOD_YREDELEMNUL)))
+        && (you_worship(GOD_DITHMENOS) || you_worship(GOD_YREDELEMNUL)))
     {
         stealth = stealth * (you.piety + MAX_PIETY) / MAX_PIETY;
     }
@@ -7076,7 +7076,7 @@ bool player::tengu_flight() const
 bool player::nightvision() const
 {
     return is_undead
-           || (religion == GOD_DITHMENGOS && piety >= piety_breakpoint(0))
+           || (religion == GOD_DITHMENOS && piety >= piety_breakpoint(0))
            || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2));
 }
 

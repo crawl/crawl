@@ -643,13 +643,13 @@ Cheibriados welcome
 
 Cheibriados says: Take it easy.
 %%%%
-Dithmengos penance
+Dithmenos penance
 
-Dithmengos says: Return to the darkness!
+Dithmenos says: Return to the darkness!
 %%%%
-Dithmengos welcome
+Dithmenos welcome
 
-Dithmengos says: Spread the eternal night.
+Dithmenos says: Spread the eternal night.
 %%%%
 Elyvilon penance
 
