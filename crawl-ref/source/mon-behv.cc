@@ -700,6 +700,13 @@ void handle_behaviour(monster* mon)
                         new_foe = MHITNOT;
                         new_beh = BEH_WANDER;
                     }
+                    // If the player can see the target location, do not reset
+                    // our target, even if this monster cannot (we'll assume
+                    // the player passes along this information to allies)
+                    else if (!foepos.origin() && you.see_cell(foepos))
+                    {
+                        mon->target = foepos;
+                    }
                     else
                     {
                         new_foe = MHITYOU;
