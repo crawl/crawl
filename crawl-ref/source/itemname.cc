@@ -1129,21 +1129,6 @@ static const char* rod_type_name(int type)
     }
 }
 
-const char* racial_description_string(const item_def& item, bool terse)
-{
-    switch (get_equip_race(item))
-    {
-    case ISFLAG_ORCISH:
-        return terse ? "orc " : "orcish ";
-    case ISFLAG_ELVEN:
-        return terse ? "elf " : "elven ";
-    case ISFLAG_DWARVEN:
-        return terse ? "dwarf " : "dwarven ";
-    default:
-        return "";
-    }
-}
-
 string base_type_string(const item_def &item, bool known)
 {
     return base_type_string(item.base_type, known);
@@ -1485,12 +1470,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                     buff << "glowing ";
                 break;
             }
-        }
-
-        if (!basename && !dbname)
-        {
-            // always give racial description (has game effects)
-            buff << racial_description_string(*this, terse);
         }
 
         buff << item_base_name(*this);

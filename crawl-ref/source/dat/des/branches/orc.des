@@ -663,7 +663,7 @@ MONS:    patrolling orc high priest
 MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf priest
 MONS:    deep elf fighter / deep elf mage / deep elf priest
 MONS:    deep elf fighter / nothing
-ITEM:    good_item scimitar / good_item chain mail race:elven
+ITEM:    good_item scimitar / good_item chain mail
 SUBST:   = : +x
 MAP
  xxxxx=xxx

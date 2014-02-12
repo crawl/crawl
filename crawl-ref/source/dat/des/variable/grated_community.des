@@ -283,8 +283,8 @@ KITEM:   % = w:12 animal skin / hammer / hand axe /\
              sausage / slice of pizza / nothing
 KFEAT:   8 = orcish_idol / w:5 floor
 KFEAT:   _ = altar_beogh / w:15 floor
-KITEM:   $ = battleaxe / nothing, race:orcish plate armour /\
-             nothing, meat ration, q:2 sausage / nothing, gold, any, any
+KITEM:   $ = battleaxe / nothing, plate armour / nothing, \
+             meat ration, q:2 sausage / nothing, gold, any, any
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \
                  size = 1, walk_dist = 0, start_clouds = 1, excl_rad = 0 }

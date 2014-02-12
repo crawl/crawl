@@ -45,8 +45,7 @@ static void _make_all_books()
 {
     for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
-        int thing = items(0, OBJ_BOOKS, i, true, 0, MAKE_ITEM_NO_RACE,
-                          0, 0, AQ_WIZMODE);
+        int thing = items(0, OBJ_BOOKS, i, true, 0, 0, 0, 0, AQ_WIZMODE);
         if (thing == NON_ITEM)
             continue;
 

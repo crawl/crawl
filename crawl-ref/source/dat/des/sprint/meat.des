@@ -119,7 +119,7 @@
     ; ring of slaying plus:27000 plus2:250 not_cursed ident:all \
     no_pickup . demon whip plus:9 plus2:9 not_cursed ego:vorpal \
     ident:all no_pickup \
-    . large shield plus:12 not_cursed ego:none race:no_race \
+    . large shield plus:12 not_cursed ego:none \
     ident:all no_pickup"
 
   -- Meatlord shadow creatures will be shadow fiends

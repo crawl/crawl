@@ -1579,20 +1579,6 @@ static int _ego_damage_bonus(item_def &item)
     }
 }
 
-static bool _item_race_matches_monster(const item_def &item, monster* mons)
-{
-    if (get_equip_race(item) == ISFLAG_ELVEN)
-        return mons_genus(mons->type) == MONS_ELF;
-
-    if (get_equip_race(item) == ISFLAG_DWARVEN)
-        return mons_genus(mons->type) == MONS_DWARF;
-
-    if (get_equip_race(item) == ISFLAG_ORCISH)
-        return mons_genus(mons->type) == MONS_ORC;
-
-    return false;
-}
-
 bool monster::pickup_melee_weapon(item_def &item, int near)
 {
     // Draconian monks are masters of unarmed combat.
@@ -1954,22 +1940,13 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
 
             if (value_old == value_new)
             {
-                // Prefer matching racial type.
-                if (_item_race_matches_monster(*existing_armour, this))
-                    value_old++;
-                if (_item_race_matches_monster(item, this))
-                    value_new++;
-
-                if (value_old == value_new)
-                {
-                    // If items are of the same value, use shopping
-                    // value as a further crude estimate.
-                    value_old = item_value(*existing_armour, true);
-                    value_new = item_value(item, true);
-                }
-                if (value_old >= value_new)
-                    return false;
+                // If items are of the same value, use shopping
+                // value as a further crude estimate.
+                value_old = item_value(*existing_armour, true);
+                value_new = item_value(item, true);
             }
+            if (value_old >= value_new)
+                return false;
         }
 
         if (!drop_item(mslot, near))

@@ -711,15 +711,15 @@ KFEAT:  p = altar_jiyva
 KFEAT:  q = altar_fedhas
 KFEAT:  r = altar_cheibriados
 KFEAT:  s = altar_dithmenos
-KITEM:    B = plate armour race:none mundane not_cursed ident:all plus:5, \
+KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
               fire dragon armour mundane not_cursed ident:all plus:5, \
               ice dragon armour mundane not_cursed ident:all plus:5, \
               storm dragon armour mundane not_cursed ident:all plus:5, \
               gold dragon armour mundane not_cursed ident:all plus:5, \
               crystal plate armour mundane not_cursed ident:all plus:5
-KITEM:    C = buckler race:none mundane not_cursed ident:all plus:3, \
-              shield race:none mundane not_cursed ident:all plus:3, \
-              large shield race:none mundane not_cursed ident:all plus:3
+KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
+              shield mundane not_cursed ident:all plus:3, \
+              large shield mundane not_cursed ident:all plus:3
 KITEM:    D = broad axe mundane not_cursed ident:all plus:5 plus2:5, \
               battleaxe mundane not_cursed ident:all plus:5 plus2:5, \
               executioner's axe mundane not_cursed ident:all plus:5 plus2:5

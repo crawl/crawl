@@ -1984,12 +1984,12 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_NO_PICKUP         = 0x00400000,  // Monsters won't pick this up
 
-    ISFLAG_NO_RACE           = 0x00000000,  // used for clearing these flags
-    ISFLAG_ORCISH            = 0x01000000,  // low quality items
-    ISFLAG_DWARVEN           = 0x02000000,  // strong and robust items
-    ISFLAG_ELVEN             = 0x04000000,  // light and accurate items
+#if TAG_MAJOR_VERSION == 34
+    ISFLAG_UNUSED1           = 0x01000000,  // was ISFLAG_ORCISH
+    ISFLAG_UNUSED2           = 0x02000000,  // was ISFLAG_DWARVEN
+    ISFLAG_UNUSED3           = 0x04000000,  // was ISFLAG_ELVEN
     ISFLAG_RACIAL_MASK       = 0x07000000,  // mask of racial equipment types
-
+#endif
     ISFLAG_NOTED_ID          = 0x08000000,
     ISFLAG_NOTED_GET         = 0x10000000,
 

@@ -239,10 +239,10 @@ dgn.delayed_decay_extra(_G, 'A', 'dwarf skeleton', 'battleaxe / '
    .. "eveningstar / executioner's axe w:2 / "
    .. 'great mace w:2, helmet good_item / '
    .. 'pair of gloves good_item / pair of boots good_item, '
-   .. 'plate armour race:dwarven / crystal plate armour w:2' )
+   .. 'plate armour / crystal plate armour w:2' )
 
  -- Elf caster. 4 items.
-dgn.delayed_decay_extra(_G, 'B', 'elf skeleton', 'robe race:elven, randbook, '
+dgn.delayed_decay_extra(_G, 'B', 'elf skeleton', 'robe, randbook, '
    .. 'any magical staff, any jewellery' )
 
  -- Spriggan stabber. 4 items.
@@ -278,10 +278,10 @@ dgn.delayed_decay_extra(_G, 'I', 'human skeleton', 'any armour, any weapon, '
  -- Orc fighter. 3 items.
 dgn.delayed_decay_extra(_G, 'J', 'orc skeleton', 'shield / large shield w:2, '
    .. 'long sword / eveningstar / broad axe / demon blade, '
-   .. 'plate armour race:orcish / crystal plate armour w:2' )
+   .. 'plate armour / crystal plate armour w:2' )
 
  -- Dwarven heavy armour earth elementalist. 3-4 items.
-dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour race:dwarven, '
+dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour, '
    .. 'randbook disc:earth / any book, staff of earth / any magical staff, '
    .. 'ring of wizardry / any jewellery / nothing w:20' )
 

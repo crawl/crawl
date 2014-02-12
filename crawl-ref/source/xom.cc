@@ -730,9 +730,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 {
     god_acting gdact(GOD_XOM);
 
-    int thing_created =
-        items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE,
-              0, 0, GOD_XOM);
+    int thing_created = items(true, base, subtype, true, power, 0, 0, 0, GOD_XOM);
 
     if (feat_destroys_item(grd(you.pos()), mitm[thing_created],
                            !silenced(you.pos())))
@@ -1653,8 +1651,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
                             : _xom_random_stickable(mi->hit_dice));
 
             int thing_created = items(0, base_type, sub_type, true,
-                                      mi->hit_dice / 3 - 1, MAKE_ITEM_NO_RACE,
-                                      0, -1, -1);
+                                      mi->hit_dice / 3 - 1, 0, 0, -1, -1);
 
             if (thing_created == NON_ITEM)
                 continue;
