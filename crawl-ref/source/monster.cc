@@ -47,6 +47,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
@@ -3079,7 +3080,7 @@ void monster::expose_to_element(beam_type flavour, int strength,
         if (slow_cold_blood && mons_class_flag(type, M_COLD_BLOOD)
             && res_cold() <= 0 && coinflip())
         {
-            slow_down(this, strength);
+            do_slow_monster(this, this, (strength + random2(5)) * BASELINE_DELAY);
         }
         break;
     case BEAM_WATER:
