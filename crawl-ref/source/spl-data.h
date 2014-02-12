@@ -1610,7 +1610,7 @@ struct spell_desc
     SPELL_ENGLACIATION, "Metabolic Englaciation",
      SPTYP_HEXES | SPTYP_ICE,
      SPFLAG_AREA,
-     6,
+     5,
      200,
      -1, -1,
      0,
