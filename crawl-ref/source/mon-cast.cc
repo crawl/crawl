@@ -5426,7 +5426,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             mons->add_ench(ENCH_IOOD_CHARGED);
 
-            if (orig_noise || !monsterNearby)
+            if (!monsterNearby)
                 return;
             string msg = getSpeakString("orb spider charge");
             if (!msg.empty())
