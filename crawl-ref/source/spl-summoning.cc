@@ -101,7 +101,7 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
             mgen_data(mon, BEH_FRIENDLY, &you,
                       3, SPELL_SUMMON_SMALL_MAMMAL,
                       you.pos(), MHITYOU,
-                      0, god)))
+                      MG_AUTOFOE, god)))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
     }
@@ -170,7 +170,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
             if (monster *snake = create_monster(mgen_data(mon, beha, &you,
                                       0, SPELL_STICKS_TO_SNAKES, you.pos(),
-                                      MHITYOU, 0, god), false))
+                                      MHITYOU, MG_AUTOFOE, god), false))
             {
                 count++;
                 snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
@@ -206,7 +206,7 @@ spret_type cast_summon_scorpions(int pow, god_type god, bool fail)
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                           3, SPELL_SUMMON_SCORPIONS,
                           you.pos(), MHITYOU,
-                          0, god)))
+                          MG_AUTOFOE, god)))
         {
             success = true;
         }
@@ -252,7 +252,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
                           dur, SPELL_SUMMON_SWARM,
                           you.pos(),
                           MHITYOU,
-                          0, god)))
+                          MG_AUTOFOE, god)))
         {
             success = true;
         }
@@ -298,7 +298,7 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
                       dur, SPELL_CALL_CANINE_FAMILIAR,
                       you.pos(),
                       MHITYOU,
-                      0, god)))
+                      MG_AUTOFOE, god)))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
     }
@@ -476,7 +476,7 @@ spret_type cast_summon_elemental(int pow, god_type god,
                       dur, SPELL_SUMMON_ELEMENTAL,
                       targ,
                       MHITYOU,
-                      0, god)))
+                      MG_AUTOFOE, god)))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS;
@@ -499,7 +499,7 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
             mgen_data(MONS_ICE_BEAST, BEH_FRIENDLY, &you,
                       dur, SPELL_SUMMON_ICE_BEAST,
                       you.pos(), MHITYOU,
-                      0, god)))
+                      MG_AUTOFOE, god)))
     {
         mpr("A chill wind blows around you.");
     }
@@ -527,7 +527,7 @@ spret_type cast_summon_ugly_thing(int pow, god_type god, bool fail)
                       dur, SPELL_SUMMON_UGLY_THING,
                       you.pos(),
                       MHITYOU,
-                      0, god)))
+                      MG_AUTOFOE, god)))
     {
         mpr((mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears."
                                           : "An ugly thing appears.");
@@ -560,7 +560,7 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
                       1, SPELL_SUMMON_HYDRA, caster->pos(),
                       (caster->is_player()) ?
                           MHITYOU : caster->as_monster()->foe,
-                      0, (god == GOD_NO_GOD) ? caster->deity() : god,
+                      MG_AUTOFOE, (god == GOD_NO_GOD) ? caster->deity() : god,
                       MONS_HYDRA, heads)))
     {
         if (you.see_cell(hydra->pos()))
@@ -626,7 +626,7 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
                           caster->pos(),
                           (caster->is_player()) ? MHITYOU
                             : caster->as_monster()->foe,
-                          0, god)))
+                          MG_AUTOFOE, god)))
         {
             if (you.see_cell(dragon->pos()))
                 mpr("A dragon appears.");
@@ -707,7 +707,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
                  caster ? caster->pos() : you.pos(),
                  (caster && caster->is_monster())
                      ? ((monster*)caster)->foe : MHITYOU,
-                 0, GOD_TROG);
+                 MG_AUTOFOE, GOD_TROG);
 
     if (!caster)
         mg.non_actor_summoner = "the rage of " + god_name(GOD_TROG, false);
@@ -729,7 +729,7 @@ bool summon_holy_warrior(int pow, bool punish)
                  punish ? 0 : &you,
                  punish ? 0 : min(2 + (random2(pow) / 4), 6),
                  0, you.pos(), MHITYOU,
-                 MG_FORCE_BEH, GOD_SHINING_ONE);
+                 MG_FORCE_BEH | MG_AUTOFOE, GOD_SHINING_ONE);
 
     if (punish)
     {
@@ -794,7 +794,7 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
                  dur, SPELL_TUKIMAS_DANCE,
                  you.pos(),
                  MHITYOU,
-                 0, god);
+                 MG_AUTOFOE, god);
     mg.props[TUKIMA_WEAPON] = cp;
     mg.props[TUKIMA_POWER] = pow;
 
@@ -889,7 +889,7 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
 
     if (monster *imp = create_monster(
             mgen_data(mon, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
-                      you.pos(), MHITYOU, MG_FORCE_BEH, god)))
+                      you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god)))
     {
         mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
             (mon == MONS_IRON_IMP)   ? "A metallic apparition takes form in the air." :
@@ -915,7 +915,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY :
                           charmed ? BEH_CHARMED : BEH_HOSTILE, &you,
-                      dur, spell, you.pos(), MHITYOU, MG_FORCE_BEH, god)))
+                      dur, spell, you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god)))
     {
         success = true;
 
@@ -1045,7 +1045,7 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
             mgen_data(critter, BEH_FRIENDLY, &you,
                       (scroll ? 2 : 1), // This duration is only used for band members.
                       SPELL_SHADOW_CREATURES, you.pos(), MHITYOU,
-                      MG_FORCE_BEH, god), false))
+                      MG_FORCE_BEH | MG_AUTOFOE, god), false))
         {
             // In the rare cases that a specific spell set of a monster will
             // cause anger, even if others do not, try rerolling
@@ -1223,7 +1223,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
-                         MG_FORCE_BEH, god)))
+                         MG_FORCE_BEH | MG_AUTOFOE, god)))
         {
             count++;
             player_angers_monster(mons);
@@ -1236,7 +1236,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
                          6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
-                         MG_FORCE_BEH, god)))
+                         MG_FORCE_BEH | MG_AUTOFOE, god)))
         {
             count++;
             player_angers_monster(mons);
@@ -1490,7 +1490,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     // Use the original monster type as the zombified type here, to get
     // the proper stats from it.
-    mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH|MG_FORCE_PLACE,
+    mgen_data mg(mon, beha, as, 0, 0, pos, hitting,
+                 MG_FORCE_BEH|MG_FORCE_PLACE|MG_AUTOFOE,
                  god, monnum, number);
 
     // No experience for monsters animated by god wrath or the Sword of
@@ -1818,7 +1819,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you,
                  0, SPELL_SIMULACRUM,
                  you.pos(), MHITYOU,
-                 MG_FORCE_BEH, god,
+                 MG_FORCE_BEH | MG_AUTOFOE, god,
                  flesh->sub_type == FOOD_CHUNK ?
                      static_cast<monster_type>(flesh->orig_monnum) :
                      sim_type);
@@ -2139,7 +2140,8 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         else
             montype = MONS_CRAWLING_CORPSE;
 
-        mgen_data mg(montype, beha, caster, 0, 0, *ri, foe, MG_FORCE_BEH, god);
+        mgen_data mg(montype, beha, caster, 0, 0, *ri, foe,
+                     MG_FORCE_BEH | MG_AUTOFOE, god);
         if (monster *mons = create_monster(mg))
         {
             // Set hit dice, AC, and HP.
