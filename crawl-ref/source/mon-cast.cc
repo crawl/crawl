@@ -3413,10 +3413,10 @@ static monster_type _pick_undead_summon()
 
 static monster_type _pick_vermin()
 {
-    return random_choose_weighted(9, MONS_ORANGE_RAT,
+    return random_choose_weighted(8, MONS_ORANGE_RAT,
                                   5, MONS_REDBACK,
                                   2, MONS_TARANTELLA,
-                                  1, MONS_JUMPING_SPIDER,
+                                  2, MONS_JUMPING_SPIDER,
                                   3, MONS_DEMONIC_CRAWLER,
                                   0);
 }
