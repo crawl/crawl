@@ -34,8 +34,8 @@ end
 NAME:   due_megacathedral
 ORIENT: float
 DEPTH:  D:8-14
-MONS:   wraith / freezing wraith w:2
-MONS:   eidolon
+MONS:   wraith / shadow w:2
+MONS:   flayed ghost
 TAGS:   no_rotate no_vmirror no_hmirror
 NSUBST: C = 5:C / *:.
 SUBST:  X = C
@@ -62,17 +62,17 @@ MAP
          ccc...cc+cc1..ccc
       ccccc..C..c.c..D..ccccc
      ccc.ccc...cc.cc...ccc.ccc
-     cc1..ccc+cc...cc=ccc...cc
+     cc1..ccc+cc...cc+ccc...cc
   ccccc.D.ccc.........ccc.C.ccccc
- cccccc...=c..ccc+ccc..c+...cccccc
+ cccccc...+c..ccc+ccc..c+...cccccc
  cc...cc.cc..ccc...ccc..cc.cc..1cc
 cc.....ccc..cc.......cc..ccc.....cc
-cc..C...+....+...X...+....=...D..cc
+cc..C...+....+...X...+....+...D..cc
 cc.....ccc..cc.......cc..ccc.....cc
  cc...cc.cc..ccc...ccc..cc.cc...cc
- cccccc...=c..ccc+ccc..c+...cccccc
+ cccccc...+c..ccc+ccc..c+...cccccc
   ccccc.D.ccc.........ccc.C.ccccc
-     cc1..ccc=ccG.Gcc+ccc...cc
+     cc1..ccc+ccG.Gcc+ccc...cc
      ccc.ccc...cc=cc...ccc.ccc
       ccccc..D..c.c..C..ccccc
          ccc..1cc2cc...ccc

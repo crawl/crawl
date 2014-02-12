@@ -670,11 +670,11 @@ MAP
              xxwwwwxxx...xxx..xx
             xxwwwwxxx...xxx..xx
     xxxxxxxxxwwwxxxx3..xxx...x
-   xx.G...G.xxwwxx..33xxxx..xx     xxxxx
+   xx.G...G.xxwwxx...3xxxx..xx     xxxxx
 xxxx.........xwwx....xxxxx...xxx xxx...xxxx
 xdx....2_424.xwwx..xxxxxxxx....xxx...2....xx
 x*+.....44..2xxwx...xxxxxxxx.......2.1.2...xx
-xdx....423.342xwxx.33xxxxxxxxxx...1.....1...x
+xdx....423.342xwxx.3.xxxxxxxxxx...1.....1...x
 xxxx..4...324xxwwxxx3..xxxxxxxxx............x
    xxxG4.2G...xxwwwxxx...xxxxwwxx2........2xx
      xxxxxx....xxxxxxxx....xxxwwxx1x....x1xx
@@ -684,8 +684,8 @@ xxxx..4...324xxwwxxx3..xxxxxxxxx............x
    xxxx+xxxx.....xxx.....xxx..xxwxx..xx
   xx444544xxx...xxxxx........xxxwwx...xx
  xx.444444.xxxxxxxxx..3..3...xxwwwxx...xx
-xx..xgdegx..xxxxxx*%...3.....xxwwwxxx.66x
-x...xxffxx...xxxxx*%....3.3..xwwwwwxx6.6x
+xx..xgdegx..xxxxxx*%...1.....xxwwwxxx.66x
+x...xxffxx...xxxxx*%....3....xwwwwwxx6.6x
 x....xxxx...xxxxxxxxx.......xxxwwwxx...xx
 xxx.........xxxxxxxxxxx...xxxxwwwxxx...xx
   x...7....xxxxxxxxxxxxx..xxxwwwxxx.....xx
