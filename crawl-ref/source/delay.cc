@@ -1728,7 +1728,11 @@ bool interrupt_activity(activity_interrupt_type ai,
     const delay_queue_item &item = you.delay_queue.front();
 
     if (ai == AI_FULL_HP)
-        mprf("%s restored.", you.species == SP_DJINNI ? "EP" : "HP");
+        mprf("%s restored.",
+#if TAG_MAJOR_VERSION == 34
+                you.species == SP_DJINNI ? "EP" :
+#endif
+                "HP");
     else if (ai == AI_FULL_MP)
         mpr("Magic restored.");
 

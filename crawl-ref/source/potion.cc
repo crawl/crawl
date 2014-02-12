@@ -425,8 +425,10 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
     case POT_MAGIC:
         // Allow repairing rot, disallow going through Death's Door.
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DJINNI)
             return potion_effect(POT_HEAL_WOUNDS, pow, potion, was_known, from_fountain);
+#endif
 
         inc_mp(10 + random2avg(28, 3));
         mpr("Magic courses through your body.");

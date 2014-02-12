@@ -698,8 +698,10 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.hp, you.hp, "hp");
     _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
     int max_max_hp = get_real_hp(true, true);
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
         max_max_hp += get_real_mp(true); // compare _print_stats_hp
+
     _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
 
     if (you.species != SP_DJINNI)
@@ -719,6 +721,11 @@ void TilesFramework::_send_player(bool force_full)
             contam = 16000;
         _update_int(force_full, c.contam, contam, "contam");
     }
+#else
+    _update_int(force_full, c.real_hp_max, max_max_hp, "real_hp_max");
+    _update_int(force_full, c.mp, you.magic_points, "mp");
+    _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
+#endif
 
     if (you.species == SP_LAVA_ORC)
         _update_int(force_full, c.heat, temperature(), "heat");

@@ -159,7 +159,11 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
     if (!can_pass_through_feat(actual_grid))
         return false;
 
-    if (airborne() || species == SP_DJINNI)
+    if (airborne()
+#if TAG_MAJOR_VERSION == 34
+            || species == SP_DJINNI
+#endif
+            )
         return true;
 
     if (actual_grid == DNGN_LAVA && species != SP_LAVA_ORC
@@ -491,8 +495,10 @@ string player::foot_name(bool plural, bool *can_plural) const
         }
         else if (species == SP_FELID)
             str = "paw";
+#if TAG_MAJOR_VERSION == 34
         else if (species == SP_DJINNI)
             str = "underside", *can_plural = false;
+#endif
         else if (fishtail)
         {
             str         = "tail";
@@ -694,6 +700,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
     {
         if (verbose)
@@ -702,6 +709,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
         return false;
     }
 
+#endif
     if (is_lifeless_undead())
     {
         if (verbose)

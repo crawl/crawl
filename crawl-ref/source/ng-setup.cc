@@ -324,9 +324,11 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ANTENNAE]    = 3;
         you.mutation[MUT_EXOSKELETON] = 1;
         break;
+#if TAG_MAJOR_VERSION == 34
     case SP_DJINNI:
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         break;
+#endif
     case SP_VINE_STALKER:
         you.mutation[MUT_FANGS]          = 2;
         you.mutation[MUT_ANTIMAGIC_BITE] = 1;

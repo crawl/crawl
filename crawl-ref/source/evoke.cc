@@ -270,13 +270,14 @@ static bool _evoke_horn_of_geryon(item_def &item)
 
 static bool _check_crystal_ball()
 {
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_DJINNI)
     {
         mpr("These balls have not yet been approved for use by djinn. "
             "(OOC: they're supposed to work, but need a redesign.)");
         return false;
     }
-
+#endif
     if (you.intel() <= 1)
     {
         mpr("You lack the intelligence to focus on the shapes in the ball.");
@@ -1612,7 +1613,10 @@ bool evoke_item(int slot, bool check_range)
             return false;
         }
         else if (you.magic_points >= you.max_magic_points
-                 && (you.species != SP_DJINNI || you.hp == you.hp_max))
+#if TAG_MAJOR_VERSION == 34
+                 && (you.species != SP_DJINNI || you.hp == you.hp_max)
+#endif
+                )
         {
             mpr("Your reserves of magic are already full.");
             return false;

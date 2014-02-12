@@ -694,9 +694,11 @@ static bool _transformation_is_safe(transformation_type which_trans,
         if (cloud != EMPTY_CLOUD && is_damaging_cloud(env.cloud[cloud].type, false))
             return false;
     }
+#if TAG_MAJOR_VERSION == 34
 
     if (which_trans == TRAN_ICE_BEAST && you.species == SP_DJINNI)
         return false; // melting is fatal...
+#endif
 
     if (!feat_dangerous_for_form(which_trans, feat))
         return true;

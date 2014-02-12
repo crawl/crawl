@@ -522,6 +522,7 @@ string describe_mutations(bool center_title)
             !form_keeps_mutations());
         have_any = true;
         break;
+#if TAG_MAJOR_VERSION == 34
 
     case SP_DJINNI:
         result += "You are immune to all types of fire, even holy and hellish.\n";
@@ -530,6 +531,7 @@ string describe_mutations(bool center_title)
         result += "You have no legs.\n";
         have_any = true;
         break;
+#endif
 
     case SP_LAVA_ORC:
     {
@@ -1391,6 +1393,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
             return true;
         }
     }
+#if TAG_MAJOR_VERSION == 34
 
     // Heat doesn't hurt fire, djinn don't care about hunger.
     if (you.species == SP_DJINNI && (mutat == MUT_HEAT_RESISTANCE
@@ -1401,6 +1404,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     {
         return true;
     }
+#endif
 
     // Already immune.
     if (you.species == SP_GARGOYLE && mutat == MUT_POISON_RESISTANCE)

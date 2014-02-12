@@ -920,7 +920,11 @@ static bool _sif_muna_retribution()
         break;
 
     case 8:
-        if (you.magic_points > 0 || you.species == SP_DJINNI)
+        if (you.magic_points > 0
+#if TAG_MAJOR_VERSION == 34
+                 || you.species == SP_DJINNI
+#endif
+                )
         {
             drain_mp(100);  // This should zero it.
             mprf(MSGCH_WARN, "You suddenly feel drained of magical energy!");

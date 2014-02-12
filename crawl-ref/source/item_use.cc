@@ -200,6 +200,7 @@ bool can_wield(item_def *weapon, bool say_reason,
             id_brand = true;
         }
     }
+#if TAG_MAJOR_VERSION == 34
     else if (you.species == SP_DJINNI
              && get_weapon_brand(*weapon) == SPWPN_ANTIMAGIC
              && (item_type_known(*weapon) || !only_known))
@@ -210,6 +211,7 @@ bool can_wield(item_def *weapon, bool say_reason,
             id_brand = true;
         }
     }
+#endif
 
     if (id_brand)
     {
@@ -733,7 +735,11 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.species == SP_NAGA || you.species == SP_DJINNI)
+        if (you.species == SP_NAGA ||
+#if TAG_MAJOR_VERSION == 34
+                you.species == SP_DJINNI
+#endif
+           )
         {
             if (verbose)
                 mpr("You have no legs!");
