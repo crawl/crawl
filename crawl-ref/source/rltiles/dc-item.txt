@@ -9,9 +9,7 @@
 #
 # If only the first line has a define on it, then the following images will be
 # considered as variations.  If you don't have five, images will be reused for
-# multiple types.  Orcish/elven/dwarven equipment are considered separate items
-# with respect to variations and will not share variations with the base
-# equipment.  See tilepick.cc for more details.
+# multiple types. See tilepick.cc for more details.
 
 ##### Artefacts (fixed and unrandart)
 %include dc-unrand.txt
@@ -359,38 +357,22 @@ robe3
 leather_armour1 ARM_LEATHER_ARMOUR
 leather_armour2
 leather_armour3
-orcish_leather_armour ARM_LEATHER_ARMOUR_ORC
-orcish_leather_armour2
-elven_leather_armour ARM_LEATHER_ARMOUR_ELF
-elven_leather_armour2
 
 ring_mail1 ARM_RING_MAIL
 ring_mail2
 ring_mail3
-orcish_ringmail ARM_RING_MAIL_ORC
-orcish_ringmail2
-elven_ringmail ARM_RING_MAIL_ELF
-elven_ringmail2
-dwarven_ringmail ARM_RING_MAIL_DWA
 
 scale_mail1 ARM_SCALE_MAIL
 scale_mail2
 scale_mail3
-elven_scalemail ARM_SCALE_MAIL_ELF
-elven_scalemail2
 
 chain_mail1 ARM_CHAIN_MAIL
 chain_mail2
 chain_mail3
-elven_chain_mail ARM_CHAIN_MAIL_ELF
-orcish_chain_mail ARM_CHAIN_MAIL_ORC
-orcish_chain_mail2
 
 plate1 ARM_PLATE_ARMOUR
 plate2
 plate3
-orcish_plate ARM_PLATE_ARMOUR_ORC
-orcish_plate2
 
 crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
 crystal_plate2
@@ -438,15 +420,6 @@ centaur_barding_red
 buckler1 ARM_BUCKLER
 buckler2
 buckler3
-
-dwarven_buckler1 ARM_BUCKLER_DWARVEN
-dwarven_buckler2
-
-elven_buckler1 ARM_BUCKLER_ELVEN
-elven_buckler2
-
-orcish_buckler1 ARM_BUCKLER_ORCISH
-orcish_buckler2
 %rim 1
 
 buckler_spriggan ARM_BUCKLER_SPRIGGAN

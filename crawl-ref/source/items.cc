@@ -4107,8 +4107,7 @@ void corrode_item(item_def &item, actor *holder)
 
     // Corrosion-resistant items.
     if (item.base_type == OBJ_ARMOUR
-        && (item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
-            || get_equip_race(item) == ISFLAG_DWARVEN)
+        && item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
         && !one_chance_in(5))
     {
         return;

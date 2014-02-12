@@ -1098,31 +1098,6 @@ static void _mark_starting_books()
             mark_had_book(you.inv[i]);
 }
 
-static void _racialise_starting_equipment()
-{
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (you.inv[i].defined())
-        {
-            if (is_useless_item(you.inv[i]))
-                _newgame_clear_item(i);
-            // Don't change object type modifier unless it starts plain.
-            else if ((you.inv[i].base_type == OBJ_ARMOUR
-                    || you.inv[i].base_type == OBJ_WEAPONS)
-                && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE)
-            {
-                // Now add appropriate species type mod.
-                if (player_genus(GENPC_ELVEN))
-                    set_equip_race(you.inv[i], ISFLAG_ELVEN);
-                else if (you.species == SP_DEEP_DWARF)
-                    set_equip_race(you.inv[i], ISFLAG_DWARVEN);
-                else if (player_genus(GENPC_ORCISH))
-                    set_equip_race(you.inv[i], ISFLAG_ORCISH);
-            }
-        }
-    }
-}
-
 static void _give_basic_spells(job_type which_job)
 {
     // Wanderers may or may not already have a spell. - bwr
@@ -1338,7 +1313,6 @@ static void _setup_generic(const newgame_def& ng)
     _give_basic_spells(you.char_class);
     _give_basic_knowledge(you.char_class);
 
-    _racialise_starting_equipment();
     initialise_item_descriptions();
 
     for (int i = 0; i < ENDOFPACK; ++i)

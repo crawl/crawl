@@ -548,7 +548,6 @@ public:
     int ego;
     int allow_uniques;
     int level;
-    int race;
     int item_special;
     int qty;
     int acquirement_source;
@@ -559,8 +558,7 @@ public:
 
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
-        race(MAKE_ITEM_RANDOM_RACE), item_special(0), qty(0),
-        acquirement_source(0), place(), props(),
+        item_special(0), qty(0), acquirement_source(0), place(), props(),
         _corpse_monster_spec(NULL)
     {
     }

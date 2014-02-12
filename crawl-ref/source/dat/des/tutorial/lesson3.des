@@ -29,7 +29,7 @@ ORIENT:  encompass
 KFEAT:   ABC = .
 COLOUR:  defgABC = lightblue
 FTILE:   defgABC = tutorial_pad
-ITEM:    pair of boots race:no_race mundane not_cursed
+ITEM:    pair of boots mundane not_cursed
 ITEM:    scroll of fog q:1
 ITEM:    scroll of fear q:1
 ITEM:    scimitar ego:venom not_cursed

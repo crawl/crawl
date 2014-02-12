@@ -767,11 +767,6 @@ static string _corrosion_resistance_string(const item_def &item)
         return "\nBeing made of crystal renders it very resistant to acidic "
                "corrosion.";
     }
-    else if (get_equip_race(item) == ISFLAG_DWARVEN)
-    {
-        return "\nBeing of dwarven fabrication renders it very resistant to "
-               "acidic corrosion.";
-    }
     else if (ench >= 3 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "resistant");
     else if (ench >= 2 && item_ident(item, ISFLAG_KNOW_PLUSES))
@@ -1347,32 +1342,6 @@ static string _describe_armour(const item_def &item, bool verbose)
         // Can't happen, right? (XXX)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
             description += "\nThis armour may have some hidden properties.";
-    }
-    else if (get_equip_race(item) != ISFLAG_NO_RACE)
-    {
-        // Randart armour can't be racial.
-        description += "\n";
-
-        iflags_t race = get_equip_race(item);
-
-        if (race == ISFLAG_DWARVEN)
-            description += "\nIt is well-crafted and durable.";
-        else if (race == ISFLAG_ELVEN)
-        {
-            if (get_item_slot(item) == EQ_BODY_ARMOUR)
-            description += "\nIt is well-crafted and unobstructive";
-            else
-                description += "\nIt is well-crafted and lightweight";
-            if (item.sub_type == ARM_CLOAK || item.sub_type == ARM_BOOTS)
-                description += ", and helps its wearer avoid being noticed";
-            description += ".";
-        }
-
-        description += "\nIt fits ";
-        description += (race == ISFLAG_DWARVEN) ? "dwarves" :
-                       (race == ISFLAG_ELVEN)   ? "elves"
-                                                : "orcs";
-        description += " well.";
     }
 
     if (!is_artefact(item))

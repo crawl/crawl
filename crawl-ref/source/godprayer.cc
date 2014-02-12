@@ -260,8 +260,7 @@ static bool _altar_prayer()
         }
 
         int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
-                                  MAKE_ITEM_RANDOM_RACE,
-                                  0, 0, you.religion);
+                                  0, 0, 0, you.religion);
 
         if (thing_created == NON_ITEM)
             return false;
@@ -535,8 +534,7 @@ static void _ashenzari_sac_scroll(const item_def& item)
                                          jwl, SCR_CURSE_JEWELLERY,
                                          0);
         }
-        int it = items(0, OBJ_SCROLLS, scr, true, 0, MAKE_ITEM_NO_RACE,
-                       0, 0, GOD_ASHENZARI);
+        int it = items(0, OBJ_SCROLLS, scr, true, 0, 0, 0, 0, GOD_ASHENZARI);
         if (it == NON_ITEM)
         {
             mpr("You feel the world is against you.");

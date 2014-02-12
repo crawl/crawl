@@ -238,12 +238,12 @@ function fiery_guardians (e, village)
         local warriorstuff = "scimitar " .. flame
                              .. " | war axe " .. flame
                              .. " | halberd " .. flame
-                             .. " . ring mail race:orcish " .. res
-                             .. " | scale mail race:orcish " .. res
+                             .. " . ring mail " .. res
+                             .. " | scale mail " .. res
         local knightstuff = "great mace " .. flame
                             .. " | great sword " .. flame
                             .. " | glaive " .. flame
-                            .. " . chain mail race:orcish " .. res
+                            .. " . chain mail " .. res
         local magestuff = "spear " .. flame
                           .. " | whip " .. flame
                           .. " . robe " .. res
@@ -253,8 +253,8 @@ function fiery_guardians (e, village)
                              .. " . bow ego:flame ident:type . arrow"
         local elfstuff = "long sword " .. flame
                          .. " | short sword " .. flame
-                         .. " | leather armour race:elven " .. res
-                         .. " | ring mail race:elven " .. res
+                         .. " | leather armour " .. res
+                         .. " | ring mail " .. res
         local dracstuff = "long sword " .. flame
                           .. " | halberd " .. flame
                           .. " | war axe " .. flame .. " . cloak"

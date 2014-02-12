@@ -105,8 +105,8 @@ ITEM:    scroll of amnesia ident:type
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
 ITEM:    never_decay bat skeleton / never_decay goblin; nothing skeleton
 ITEM:    never_decay ball python skeleton / never_decay jackal skeleton
-ITEM:    shield race:none not_cursed
-ITEM:    ring mail race:none not_cursed
+ITEM:    shield not_cursed
+ITEM:    ring mail not_cursed
 MONS:    hobgoblin
 MONS:    rat
 MONS:    goblin

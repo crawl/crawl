@@ -1464,8 +1464,6 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     item.plus  = 0;
     item.plus2 = 0;
 
-    set_equip_race(item, ISFLAG_NO_RACE);
-
     if (item_level < 0)
     {
         // Thoroughly damaged, could had been good once.
@@ -1779,8 +1777,6 @@ static void _generate_missile_item(item_def& item, int force_type,
         return;
     }
 
-    set_equip_race(item, ISFLAG_NO_RACE);
-
     if (!no_brand)
     {
         set_item_ego_type(item, OBJ_MISSILES,
@@ -1857,105 +1853,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
     }
 
     return false;
-}
-
-static item_status_flag_type _determine_armour_race(const item_def& item,
-                                                    int item_race)
-{
-    item_status_flag_type rc = ISFLAG_NO_RACE;
-
-    if (item.sub_type > ARM_MAX_RACIAL)
-        return rc;
-
-    switch (item_race)
-    {
-    case MAKE_ITEM_ELVEN:
-        rc = ISFLAG_ELVEN;
-        break;
-
-    case MAKE_ITEM_DWARVEN:
-        rc = ISFLAG_DWARVEN;
-        break;
-
-    case MAKE_ITEM_ORCISH:
-        rc = ISFLAG_ORCISH;
-        break;
-
-    case MAKE_ITEM_RANDOM_RACE:
-        if (coinflip())
-            break;
-
-        switch (item.sub_type)
-        {
-        case ARM_BUCKLER:
-        case ARM_SHIELD:
-        case ARM_LARGE_SHIELD:
-            if (one_chance_in(4))
-                rc = ISFLAG_ORCISH;
-            if (one_chance_in(4))
-                rc = ISFLAG_ELVEN;
-            if (one_chance_in(3))
-                rc = ISFLAG_DWARVEN;
-            break;
-
-        case ARM_CLOAK:
-            if (one_chance_in(4))
-                rc = ISFLAG_ORCISH;
-            if (one_chance_in(4))
-                rc = ISFLAG_DWARVEN;
-            if (one_chance_in(4))
-                rc = ISFLAG_ELVEN;
-            break;
-
-        case ARM_GLOVES:
-        case ARM_BOOTS:
-            if (one_chance_in(4))
-                rc = ISFLAG_ORCISH;
-            if (one_chance_in(4))
-                rc = ISFLAG_ELVEN;
-            if (one_chance_in(6))
-                rc = ISFLAG_DWARVEN;
-            break;
-
-        case ARM_HAT:
-            if (one_chance_in(6))
-                rc = ISFLAG_ORCISH;
-            if (one_chance_in(6))
-                rc = ISFLAG_ELVEN;
-            break;
-
-        case ARM_HELMET:
-            if (one_chance_in(6))
-                rc = ISFLAG_ORCISH;
-            if (one_chance_in(5))
-                rc = ISFLAG_DWARVEN;
-            break;
-
-        case ARM_ROBE:
-            if (one_chance_in(6))
-                rc = ISFLAG_ORCISH;
-            if (one_chance_in(4))
-                rc = ISFLAG_ELVEN;
-            break;
-
-        case ARM_LEATHER_ARMOUR:
-        case ARM_RING_MAIL:
-        case ARM_SCALE_MAIL:
-        case ARM_CHAIN_MAIL:
-        case ARM_PLATE_ARMOUR:
-            if (item.sub_type <= ARM_CHAIN_MAIL && one_chance_in(6))
-                rc = ISFLAG_ELVEN;
-            if (item.sub_type >= ARM_RING_MAIL && one_chance_in(5))
-                rc = ISFLAG_DWARVEN;
-            if (one_chance_in(5))
-                rc = ISFLAG_ORCISH;
-
-        default:
-            break;
-        }
-    }
-
-    return rc;
 }
 
 static special_armour_type _determine_armour_ego(const item_def& item,
@@ -2158,8 +2055,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 }
 
 static void _generate_armour_item(item_def& item, bool allow_uniques,
-                                  int force_type, int item_level,
-                                  int item_race)
+                                  int force_type, int item_level)
 {
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
@@ -2196,19 +2092,13 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         return;
     }
 
-    if (item_race == MAKE_ITEM_RANDOM_RACE && item.sub_type == ARM_BOOTS)
+    if (item.sub_type == ARM_BOOTS)
     {
         if (one_chance_in(8))
             item.sub_type = ARM_NAGA_BARDING;
         else if (one_chance_in(7))
             item.sub_type = ARM_CENTAUR_BARDING;
     }
-
-    set_equip_race(item, _determine_armour_race(item, item_race));
-
-    // Dwarven armour is high-quality.
-    if (get_equip_race(item) == ISFLAG_DWARVEN && coinflip())
-        item.plus++;
 
     const bool force_good = item_level >= MAKE_GIFT_ITEM;
     const bool forced_ego = (item.special > 0);
@@ -2246,12 +2136,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             item.plus += random2(3);
         }
 
-        if (!no_ego
-            && x_chance_in_y(31 + item_level, 350)
-            && (force_good
-                || forced_ego
-                || get_equip_race(item) != ISFLAG_ORCISH
-                || item.sub_type <= ARM_PLATE_ARMOUR && coinflip()))
+        if (!no_ego && x_chance_in_y(31 + item_level, 350))
         {
             // ...an ego item, in fact.
             set_item_ego_type(item, OBJ_ARMOUR,
@@ -2918,8 +2803,7 @@ int items(bool allow_uniques,
           int force_type,          // desired SUBTYPE - enum varies by OBJ
           bool dont_place,         // don't randomly place item on level
           int item_level,          // level of the item, can differ from global
-          int item_race,           // weapon / armour racial categories
-                                   // item_race also gives type of rune!
+          int rune_type,           // type of rune
           uint32_t mapmask,
           int force_ego,           // desired ego/brand
           int agent,               // acquirement agent, if not -1
@@ -3028,8 +2912,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_ARMOUR:
-        _generate_armour_item(item, allow_uniques, force_type,
-                              item_level, item_race);
+        _generate_armour_item(item, allow_uniques, force_type, item_level);
         break;
 
     case OBJ_WANDS:
@@ -3415,25 +3298,6 @@ void item_set_appearance(item_def &item)
     }
 }
 
-void maybe_set_armour_race(item_def &item, int allowed, int num_rolls)
-{
-    ASSERT(item.base_type == OBJ_ARMOUR);
-
-    if (!allowed)
-        return;
-
-    while (num_rolls-- > 0)
-    {
-        iflags_t irace = 0;
-        irace = _determine_armour_race(item, MAKE_ITEM_RANDOM_RACE);
-        if (!(allowed & irace))
-            continue;
-        dprf("Extra race roll passed!");
-        set_equip_race(item, irace);
-        return;
-    }
-}
-
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static int _test_item_level()
 {
@@ -3500,8 +3364,7 @@ void makeitem_tests()
         _generate_armour_item(item,
                               coinflip(),
                               type,
-                              level,
-                              MAKE_ITEM_RANDOM_RACE);
+                              level);
     }
 }
 #endif

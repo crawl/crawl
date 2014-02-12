@@ -4512,8 +4512,8 @@ retry:
                                  true, where)
          : spec.corpselike() ? _dgn_item_corpse(spec, where)
          : items(spec.allow_uniques, base_type,
-                  spec.sub_type, true, level, spec.race, 0,
-                  spec.ego, -1, spec.level == ISPEC_MUNDANE));
+                 spec.sub_type, true, level, 0, 0, spec.ego, -1,
+                 spec.level == ISPEC_MUNDANE));
 
     if (item_made != NON_ITEM && item_made != -1)
     {
@@ -4578,15 +4578,6 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             mon->inv[i] = NON_ITEM;
         }
 
-    item_make_species_type racial = MAKE_ITEM_RANDOM_RACE;
-
-    if (mons_genus(type) == MONS_ORC)
-        racial = MAKE_ITEM_ORCISH;
-    else if (mons_genus(type) == MONS_DWARF)
-        racial = MAKE_ITEM_DWARVEN;
-    else if (mons_genus(type) == MONS_ELF)
-        racial = MAKE_ITEM_ELVEN;
-
     item_list &list = mspec.items;
 
     const int size = list.size();
@@ -4605,22 +4596,6 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             spec.allow_uniques = 0;
             if (spec.ego == 0)
                 spec.ego = SP_FORBID_EGO;
-        }
-
-        // Gives orcs and elves appropriate racial gear, unless
-        // otherwise specified.
-        if (spec.race == MAKE_ITEM_RANDOM_RACE)
-        {
-            // But don't automatically give elves elven boots or
-            // elven cloaks, or the same for dwarves.
-            if ((racial != MAKE_ITEM_ELVEN
-                    && racial != MAKE_ITEM_DWARVEN)
-                || spec.base_type != OBJ_ARMOUR
-                || (spec.sub_type != ARM_CLOAK
-                    && spec.sub_type != ARM_BOOTS))
-            {
-                spec.race = racial;
-            }
         }
 
         int item_level = mspec.place.absdepth();
@@ -4650,7 +4625,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
                                _dgn_item_corpse(spec, mon->pos())
                                : items(spec.allow_uniques, spec.base_type,
                                        spec.sub_type, true, item_level,
-                                       spec.race, 0, spec.ego, -1,
+                                       0, 0, spec.ego, -1,
                                        spec.level == ISPEC_MUNDANE));
 
         if (item_made != NON_ITEM && item_made != -1)
@@ -5585,8 +5560,7 @@ static void _place_spec_shop(const coord_def& where,
             else
             {
                 orb = items(1, basetype, subtype, true,
-                             one_chance_in(4) ? MAKE_GOOD_ITEM : item_level,
-                             MAKE_ITEM_RANDOM_RACE);
+                            one_chance_in(4) ? MAKE_GOOD_ITEM : item_level);
             }
 
             // Try for a better selection.

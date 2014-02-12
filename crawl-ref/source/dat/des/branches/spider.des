@@ -641,8 +641,7 @@ SUBST:  z = v:1 z:14
 KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
             tarantella w:1 /  nothing w:100
 : dgn.delayed_decay(_G, 'v', 'orc skeleton')
-KITEM: z = any armour race:orcish w:5 / any weapon w:5 / \
-           gold w:1 / nothing w:50
+KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
 KFEAT: z = web / floor w:60
 MAP
 xxxxxxxxxxxxxxx
@@ -682,8 +681,7 @@ SUBST:  z = v:1 z:14
 KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
             tarantella w:1 / nothing w:100
 : dgn.delayed_decay(_G, 'v', 'orc skeleton')
-KITEM: z = any armour race:orcish w:5 / any weapon w:5 / \
-           gold w:1 / nothing w:50
+KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
 KFEAT: z = web / floor w:60
 KFEAT:  _ = altar_beogh
 
@@ -723,8 +721,7 @@ SUBST:  z = v:1 z:14
 KMONS:  z = jumping spider w:5 / wolf spider w:3 / spider w:5 / redback w:1 / \
             tarantella w:1 / nothing w:100
 : dgn.delayed_decay(_G, 'v', 'orc skeleton')
-KITEM: z = any armour race:orcish w:5 / any weapon w:5 / \
-           gold w:1 / nothing w:50
+KITEM: z = any armour w:5 / any weapon w:5 / gold w:1 / nothing w:50
 KFEAT: z = web / floor w:60
 KFEAT: Q = abandoned_shop
 MAP

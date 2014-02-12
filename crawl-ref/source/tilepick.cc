@@ -3265,7 +3265,6 @@ static tileidx_t _tileidx_missile(const item_def &item)
 
 static tileidx_t _tileidx_armour_base(const item_def &item)
 {
-    int race  = item.flags & ISFLAG_RACIAL_MASK;
     int type  = item.sub_type;
     switch (type)
     {
@@ -3273,36 +3272,18 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
         return TILE_ARM_ROBE;
 
     case ARM_LEATHER_ARMOUR:
-        if (race == ISFLAG_ORCISH)
-            return TILE_ARM_LEATHER_ARMOUR_ORC;
-        if (race == ISFLAG_ELVEN)
-            return TILE_ARM_LEATHER_ARMOUR_ELF;
         return TILE_ARM_LEATHER_ARMOUR;
 
     case ARM_RING_MAIL:
-        if (race == ISFLAG_ORCISH)
-            return TILE_ARM_RING_MAIL_ORC;
-        if (race == ISFLAG_ELVEN)
-            return TILE_ARM_RING_MAIL_ELF;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_ARM_RING_MAIL_DWA;
         return TILE_ARM_RING_MAIL;
 
     case ARM_SCALE_MAIL:
-        if (race == ISFLAG_ELVEN)
-            return TILE_ARM_SCALE_MAIL_ELF;
         return TILE_ARM_SCALE_MAIL;
 
     case ARM_CHAIN_MAIL:
-        if (race == ISFLAG_ELVEN)
-            return TILE_ARM_CHAIN_MAIL_ELF;
-        if (race == ISFLAG_ORCISH)
-            return TILE_ARM_CHAIN_MAIL_ORC;
         return TILE_ARM_CHAIN_MAIL;
 
     case ARM_PLATE_ARMOUR:
-        if (race == ISFLAG_ORCISH)
-            return TILE_ARM_PLATE_ARMOUR_ORC;
         return TILE_ARM_PLATE_ARMOUR;
 
     case ARM_CRYSTAL_PLATE_ARMOUR:
@@ -3332,12 +3313,6 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
         return TILE_ARM_BOOTS;
 
     case ARM_BUCKLER:
-        if (race == ISFLAG_DWARVEN)
-            return TILE_ARM_BUCKLER_DWARVEN;
-        else if (race == ISFLAG_ELVEN)
-            return TILE_ARM_BUCKLER_ELVEN;
-        else if (race == ISFLAG_ORCISH)
-            return TILE_ARM_BUCKLER_ORCISH;
         return TILE_ARM_BUCKLER;
 
     case ARM_LARGE_SHIELD:

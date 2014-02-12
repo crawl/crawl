@@ -788,56 +788,11 @@ bool fully_identified(const item_def& item)
 }
 
 //
-// Equipment race and description:
+// Equipment description:
 //
-iflags_t get_equip_race(const item_def &item)
-{
-    return item.flags & ISFLAG_RACIAL_MASK;
-}
-
 iflags_t get_equip_desc(const item_def &item)
 {
     return item.flags & ISFLAG_COSMETIC_MASK;
-}
-
-void set_equip_race(item_def &item, iflags_t flags)
-{
-    ASSERT((flags & ~ISFLAG_RACIAL_MASK) == 0);
-
-    if (item.base_type != OBJ_ARMOUR
-        || item.sub_type > ARM_MAX_RACIAL)
-    {
-        return;
-    }
-
-    // check that item is appropriate for racial type
-    switch (flags)
-    {
-    case ISFLAG_ELVEN:
-        if (item.sub_type == ARM_PLATE_ARMOUR || is_hard_helmet(item))
-            return;
-        break;
-
-    case ISFLAG_DWARVEN:
-        if (item.sub_type == ARM_ROBE
-            || item.sub_type == ARM_LEATHER_ARMOUR
-            || get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
-        {
-            return;
-        }
-        break;
-
-    case ISFLAG_ORCISH:
-        if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
-            return;
-        break;
-
-    default:
-        break;
-    }
-
-    item.flags &= ~ISFLAG_RACIAL_MASK; // delete previous
-    item.flags |= flags;
 }
 
 void set_equip_desc(item_def &item, iflags_t flags)
@@ -846,14 +801,6 @@ void set_equip_desc(item_def &item, iflags_t flags)
 
     item.flags &= ~ISFLAG_COSMETIC_MASK; // delete previous
     item.flags |= flags;
-}
-
-iflags_t get_species_race(species_type sp)
-{
-    return you.species == SP_DEEP_DWARF ? ISFLAG_DWARVEN :
-           player_genus(GENPC_ELVEN)    ? ISFLAG_ELVEN :
-           player_genus(GENPC_ORCISH)   ? ISFLAG_ORCISH
-                                        : 0;
 }
 
 bool is_helmet(const item_def& item)
@@ -2589,15 +2536,6 @@ int item_mass(const item_def &item)
 
     case OBJ_ARMOUR:
         unit_mass = Armour_prop[ Armour_index[item.sub_type] ].mass;
-
-        if (get_equip_race(item) == ISFLAG_ELVEN)
-        {
-            const int reduc = (unit_mass >= 25) ? unit_mass / 5 : 5;
-
-            // Truncate to the nearest 5 and reduce the item mass:
-            unit_mass -= ((reduc / 5) * 5);
-            unit_mass = max(unit_mass, 5);
-        }
         break;
 
     case OBJ_MISSILES:

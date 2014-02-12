@@ -98,30 +98,20 @@ end
 function orc_with_polearm(e)
   e.mons("orc ; \
           spear | trident | halberd .\
-          scale mail race:orcish  | scale mail |\
-          ring mail race:orcish   | ring mail |\
-          chain mail race:orcish  | chain mail")
+          scale mail  | ring mail | chain mail")
 end
 
 function orc_warrior_with_polearm(e)
   e.mons("orc warrior ; \
-          spear w:5 | trident w:5 |\
-          halberd | glaive | bardiche w:1 .\
-          scale mail race:orcish    | scale mail |\
-          ring mail race:orcish     | ring mail |\
-          chain mail race:orcish    | chain mail |\
-          plate armour race:orcish  | plate armour |\
+          spear w:5 | trident w:5 | halberd | glaive | bardiche w:1 .\
+          ring mail | scale mail | chain mail | plate armour |\
           crystal plate armour w:1")
 end
 
 function orc_knight_with_polearm(e)
   e.mons("orc knight ; \
-          trident w:5 | halberd |\
-          glaive | bardiche w:1 .\
-          ring mail race:orcish     | ring mail |\
-          chain mail race:orcish    | chain mail |\
-          chain mail race:orcish    | chain mail |\
-          plate armour race:orcish  | plate armour |\
+          trident w:5 | halberd | glaive | bardiche w:1 .\
+          ring mail | scale mail | chain mail | plate armour |\
           crystal plate armour w:1")
 end
 
@@ -129,9 +119,7 @@ end
 function orc_warlord_with_polearm(e)
   e.mons("orc warlord ; \
           halberd | glaive | bardiche w:1 .\
-          chain mail race:orcish w:20 | chain mail w:20 |\
-          plate armour race:orcish    | plate armour |\
-          crystal plate armour w:1")
+          chain mail w:20 | plate armour | crystal plate armour w:1")
 end
 
 }}
@@ -710,13 +698,12 @@ NSUBST: E = 1:+ / *:c
 : orc_knight_with_polearm(_G)
 SUBST:  2 = 223.
 SUBST:  1 = 1 2:1 .
-ITEM:   good_item crystal plate armour / good_item plate armour race:orcish /\
+ITEM:   good_item crystal plate armour / good_item plate armour /\
         good_item gold dragon armour w:5 / good_item ice dragon armour w:5 /\
         good_item fire dragon armour w:5 / good_item steam dragon armour w:5
-# XXX: Which armour pieces can be orcish?
-ITEM:   good_item cloak race:orcish / good_item pair of gloves race:orcish /\
-        good_item helmet race:orcish / good_item pair of boots race:orcish /\
-        good_item large shield race:orcish / good_item shield race:orcish
+ITEM:   good_item cloak / good_item pair of gloves /\
+        good_item helmet / good_item pair of boots /\
+        good_item large shield / good_item shield
 : bailey_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

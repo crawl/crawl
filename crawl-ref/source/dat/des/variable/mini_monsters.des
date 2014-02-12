@@ -1824,11 +1824,11 @@ TAGS:    no_monster_gen
 DEPTH:   D:9-11, Orc
 MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
-KMONS:   0 = orc ; robe race:orcish . wand of confusion | wand of slowing w:35 | \
+KMONS:   0 = orc ; robe . wand of confusion | wand of slowing w:35 | \
                    wand of magic darts w:35 | wand of flame | wand of frost . \
                    potion of invisibility | potion of speed | nothing w:980
 KMONS:   89 = deep elf mage
-KITEM:   8d = robe / robe race:orcish, hat w:40 / hat good_item, \
+KITEM:   8d = robe / robe, hat w:40 / hat good_item, \
               hat w:20 / hat good_item
 KITEM:   9e = book of minor magic
 SUBST:   - = +
@@ -1865,14 +1865,14 @@ TAGS:    transparent patrolling
 DEPTH:   Depths
 MONS:    deep dwarf ; wand of cold | wand of frost w:5 . \
          staff of fire w:15 | quarterstaff ego:flaming w:14 | rod of fiery destruction w:1 . \
-         robe race:none ego:fire_resistance w:15 | \
-         robe race:none ego:cold_resistance w:14 | \
-         robe race:none ego:resistance w:1
+         robe ego:fire_resistance w:15 | \
+         robe ego:cold_resistance w:14 | \
+         robe ego:resistance w:1
 MONS:    deep dwarf ; wand of fire | wand of flame w:5 . \
          staff of cold w:15 | quarterstaff ego:freezing w:15 | \
-         robe race:none ego:fire_resistance w:15 | \
-         robe race:none ego:cold_resistance w:14 | \
-         robe race:none ego:resistance w:1
+         robe ego:fire_resistance w:15 | \
+         robe ego:cold_resistance w:14 | \
+         robe ego:resistance w:1
 MONS:    simulacrum, fire elemental
 ITEM:    nothing, lamp of fire
 SHUFFLE: 12, 3df / 4eF
@@ -5304,21 +5304,16 @@ TAGS:   no_monster_gen no_item_gen patrolling
 DEPTH:  Depths
 WEIGHT: 3
 # KMONS is used here to get the fallback to work properly.
-KMONS:  W = Wiglaf ; broad axe unrand:arga . \
-                     shield race:dwarven . \
-                     chain mail w:8 race:dwarven | \
-                     plate armour w:10 race:dwarven | \
-                     crystal plate armour w:1 race:dwarven, \
+KMONS:  W = Wiglaf ; broad axe unrand:arga . shield . \
+                     chain mail w:8 | plate armour w:10 | crystal plate armour w:1, \
             deep dwarf name:berserker n_suf god:trog hd:8 col:lightred \
                      spells:brothers_in_arms;.;trog's_hand;berserker_rage;.;. priest_spells \
-                                   ; broad axe unrand:arga . \
-                                   chain mail w:7 race:dwarven | \
-                                   plate armour w:1 race:dwarven
+                     ; broad axe unrand:arga . \
+                     chain mail w:7 | plate armour w:1
 KMONS:  J = Jorgrun, deep dwarf death knight
 MONS:   deep dwarf name:berserker n_suf god:trog hd:8 col:lightred \
                      spells:brothers_in_arms;.;trog's_hand;berserker_rage;.;. priest_spells \
-                    ; broad axe good_item . \
-                    chain mail race:dwarven
+                    ; broad axe good_item . chain mail
 MONS:   deep dwarf death knight w:5 / nothing
 MONS:   deep dwarf
 SUBST:  X = x.
@@ -5348,8 +5343,8 @@ DEPTH:  Depths, Crypt
 WEIGHT: 3
 MONS:   deep dwarf death knight ; \
         great sword unrand:sword_of_the_doom_knight . \
-        chain mail race:dwarven w:7 | \
-        plate armour race:dwarven w:1
+        chain mail w:7 | \
+        plate armour w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
 MONS:   freezing wraith / phantasmal warrior / \
         flaming corpse / flayed ghost / skeletal warrior

@@ -761,10 +761,9 @@ SUBST:  ' = '''B, . = ....b
 KPROP:  Bbop = bloody
 SUBST:  B = ', b = .
 : dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'hand axe / ' ..
-:    'broad axe, leather armour race:orcish / ' ..
-:    'pair of gloves race:orcish, mundane quarterstaff ')
+:    'broad axe, leather armour / pair of gloves, mundane quarterstaff ')
 : dgn.delayed_decay_extra(_G, 'p', 'orc corpse', 'hand axe / ' ..
-:    'broad axe, leather armour race:orcish / pair of gloves race:orcish ')
+:    'broad axe, leather armour / pair of gloves ')
 KITEM:  w = mundane quarterstaff
 KITEM:  s = meat ration / bread ration
 FTILE:  'o = floor_dirt

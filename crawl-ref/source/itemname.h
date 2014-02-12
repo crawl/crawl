@@ -81,8 +81,6 @@ enum
 
 bool is_vowel(const ucs_t chr);
 
-const char* racial_description_string(const item_def& item, bool terse = false);
-
 void check_item_knowledge(bool unknown_items = false);
 void display_runes();
 

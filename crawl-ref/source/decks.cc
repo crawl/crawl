@@ -2608,8 +2608,6 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         ASSERT(mon->weapon() != NULL);
         item_def& wpn(*mon->weapon());
 
-        set_equip_race(wpn, ISFLAG_NO_RACE);
-
         if (power_level == 0)
         {
             // Wimpy, negative-enchantment weapon.

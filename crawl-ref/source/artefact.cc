@@ -1076,12 +1076,8 @@ static void _get_randart_properties(const item_def &item,
     }
 
     if (one_chance_in(10)
-        && (aclass != OBJ_ARMOUR
-            || atype != ARM_CLOAK
-            || get_equip_race(item) != ISFLAG_ELVEN)
-        && (aclass != OBJ_ARMOUR
-            || atype != ARM_BOOTS
-            || get_equip_race(item) != ISFLAG_ELVEN)
+        && (aclass != OBJ_ARMOUR || atype != ARM_CLOAK)
+        && (aclass != OBJ_ARMOUR || atype != ARM_BOOTS)
         && get_armour_ego_type(item) != SPARM_STEALTH)
     {
         power_level++;

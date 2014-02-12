@@ -2408,38 +2408,20 @@ static int _player_armour_racial_bonus(const item_def& item)
         return 0;
 
     int racial_bonus = 0;
-    const iflags_t armour_race = get_equip_race(item);
-    const iflags_t racial_type = get_species_race(you.species);
 
-    // Dwarven armour is universally good -- bwr
-    if (armour_race == ISFLAG_DWARVEN)
-        racial_bonus += 4;
-
-    if (racial_type && armour_race == racial_type)
+    // an additional bonus for Beogh worshippers
+    if (you_worship(GOD_BEOGH) && !player_under_penance())
     {
-        // Elven armour is light, but still gives one level to elves.
-        // Orcish and Dwarven armour are worth +2 to the correct
-        // species, plus the plus that anyone gets with dwarven armour.
-        // -- bwr
-        if (racial_type == ISFLAG_ELVEN)
-            racial_bonus += 2;
+        if (you.piety >= piety_breakpoint(5))
+            racial_bonus = 10;
+        else if (you.piety >= piety_breakpoint(4))
+            racial_bonus = 8;
+        else if (you.piety >= piety_breakpoint(2))
+            racial_bonus = 6;
+        else if (you.piety >= piety_breakpoint(0))
+            racial_bonus = 4;
         else
-            racial_bonus += 4;
-
-        // an additional bonus for Beogh worshippers
-        if (you_worship(GOD_BEOGH) && !player_under_penance())
-        {
-            if (you.piety >= piety_breakpoint(5))
-                racial_bonus += racial_bonus * 9 / 4;
-            else if (you.piety >= piety_breakpoint(4))
-                racial_bonus += racial_bonus * 7 / 4;
-            else if (you.piety >= piety_breakpoint(2))
-                racial_bonus += racial_bonus * 5 / 4;
-            else if (you.piety >= piety_breakpoint(0))
-                racial_bonus += racial_bonus * 3 / 4;
-            else
-                racial_bonus += racial_bonus / 4;
-        }
+            racial_bonus = 2;
     }
 
     return racial_bonus;
@@ -2652,28 +2634,6 @@ int player_evasion(ev_ignore_type evit)
     return unscale_round_up(final_evasion, scale);
 }
 
-static int _player_body_armour_racial_spellcasting_bonus(const int scale)
-{
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    if (!body_armour)
-        return 0;
-
-    const iflags_t armour_race = get_equip_race(*body_armour);
-    const iflags_t player_race = get_species_race(you.species);
-
-    int armour_racial_spellcasting_bonus = 0;
-    if (armour_race & ISFLAG_ELVEN)
-        armour_racial_spellcasting_bonus += 25;
-
-    if (armour_race & ISFLAG_DWARVEN)
-        armour_racial_spellcasting_bonus -= 15;
-
-    if (armour_race & player_race)
-        armour_racial_spellcasting_bonus += 15;
-
-    return armour_racial_spellcasting_bonus * scale;
-}
-
 // Returns the spellcasting penalty (increase in spell failure) for the
 // player's worn body armour and shield.
 int player_armour_shield_spell_penalty()
@@ -2681,8 +2641,7 @@ int player_armour_shield_spell_penalty()
     const int scale = 100;
 
     const int body_armour_penalty =
-        max(25 * you.adjusted_body_armour_penalty(scale)
-            - _player_body_armour_racial_spellcasting_bonus(scale), 0);
+        max(25 * you.adjusted_body_armour_penalty(scale), 0);
 
     const int total_penalty = body_armour_penalty
                  + 25 * you.adjusted_shield_penalty(scale)
@@ -3882,7 +3841,6 @@ int check_stealth(void)
         stealth /= 3;
 
     const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, false);
-    const item_def *cloak = you.slot_item(EQ_CLOAK, false);
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
 
     if (arm)
@@ -3898,9 +3856,6 @@ int check_stealth(void)
     }
 
     stealth += you.scan_artefacts(ARTP_STEALTH);
-
-    if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
-        stealth += 20;
 
     if (you.duration[DUR_STEALTH])
         stealth += 80;
@@ -3925,9 +3880,6 @@ int check_stealth(void)
     {
         if (get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += 50;
-
-        if (get_equip_race(*boots) == ISFLAG_ELVEN)
-            stealth += 20;
     }
 
     else if (player_mutation_level(MUT_HOOVES) > 0)
