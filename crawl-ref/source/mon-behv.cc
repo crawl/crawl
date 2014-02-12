@@ -37,8 +37,6 @@
 #include "view.h"
 #include "shout.h"
 
-static void _set_nearest_monster_foe(monster* mons);
-
 static void _guess_invis_foe_pos(monster* mon)
 {
     const actor* foe          = mon->get_foe();
@@ -471,7 +469,7 @@ void handle_behaviour(monster* mon)
             if (you.pet_target != MHITNOT)
                 mon->foe = you.pet_target;
             else if (mons_class_is_stationary(mon->type))
-                _set_nearest_monster_foe(mon);
+                set_nearest_monster_foe(mon);
         }
         else    // Zotdef only
         {
@@ -486,7 +484,7 @@ void handle_behaviour(monster* mon)
             {
                 // Zotdef - this is all new, for out-of-sight friendlies to do
                 // something useful.  If no current target, get the closest one.
-                _set_nearest_monster_foe(mon);
+                set_nearest_monster_foe(mon);
             }
         }
     }
@@ -510,7 +508,7 @@ void handle_behaviour(monster* mon)
             mon->foe = MHITYOU;
         }
         else
-            _set_nearest_monster_foe(mon);
+            set_nearest_monster_foe(mon);
     }
 
     // Pacified monsters leaving the level prefer not to attack.
@@ -521,7 +519,7 @@ void handle_behaviour(monster* mon)
         && mon->behaviour != BEH_SLEEP
         && (proxPlayer || one_chance_in(3)))
     {
-        _set_nearest_monster_foe(mon);
+        set_nearest_monster_foe(mon);
         if (mon->foe == MHITNOT && crawl_state.game_is_zotdef())
             mon->foe = MHITYOU;
     }
@@ -673,7 +671,7 @@ void handle_behaviour(monster* mon)
                         // Having a seeking mon with a foe who's target is
                         // (0, 0) can lead to asserts, so lets try to
                         // avoid that.
-                        _set_nearest_monster_foe(mon);
+                        set_nearest_monster_foe(mon);
                         if (mon->foe == MHITNOT)
                         {
                             new_beh = BEH_WANDER;
@@ -1143,7 +1141,7 @@ void handle_behaviour(monster* mon)
 }
 
 static bool _mons_check_foe(monster* mon, const coord_def& p,
-                            bool friendly, bool neutral)
+                            bool friendly, bool neutral, bool ignore_sight)
 {
     // We don't check for the player here because otherwise wandering
     // monsters will always attack you.
@@ -1155,7 +1153,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
         && (mon->has_ench(ENCH_INSANE)
             || foe->friendly() != friendly
             || neutral && !foe->neutral())
-        && mon->can_see(foe)
+        && (ignore_sight || mon->can_see(foe))
         && !foe->is_projectile()
         && summon_can_attack(mon, p)
         && (friendly || !is_sanctuary(p))
@@ -1172,7 +1170,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
 }
 
 // Choose random nearest monster as a foe.
-static void _set_nearest_monster_foe(monster* mon)
+void set_nearest_monster_foe(monster* mon, bool near_player)
 {
     // These don't look for foes.
     if (mon->good_neutral() || mon->strict_neutral()
@@ -1186,25 +1184,46 @@ static void _set_nearest_monster_foe(monster* mon)
     const bool friendly = mon->friendly();
     const bool neutral  = mon->neutral();
 
-    for (int k = 1; k <= LOS_RADIUS; ++k)
-    {
-        vector<coord_def> monster_pos;
-        for (int i = -k; i <= k; ++i)
-            for (int j = -k; j <= k; (abs(i) == k ? j++ : j += 2*k))
-            {
-                const coord_def p = mon->pos() + coord_def(i, j);
-                if (_mons_check_foe(mon, p, friendly, neutral))
-                    monster_pos.push_back(p);
-            }
-        if (monster_pos.empty())
-            continue;
+    coord_def center = mon->pos();
+    bool second_pass = false;
 
-        const coord_def mpos = monster_pos[random2(monster_pos.size())];
-        if (mpos == you.pos())
-            mon->foe = MHITYOU;
+    while (true)
+    {
+        for (int k = 1; k <= LOS_RADIUS; ++k)
+        {
+            vector<coord_def> monster_pos;
+            for (int i = -k; i <= k; ++i)
+                for (int j = -k; j <= k; (abs(i) == k ? j++ : j += 2*k))
+                {
+                    const coord_def p = center + coord_def(i, j);
+
+                    if (near_player && !you.see_cell(p))
+                        continue;
+
+                    if (_mons_check_foe(mon, p, friendly, neutral, second_pass))
+                        monster_pos.push_back(p);
+                }
+            if (monster_pos.empty())
+                continue;
+
+            const coord_def mpos = monster_pos[random2(monster_pos.size())];
+            if (mpos == you.pos())
+                mon->foe = MHITYOU;
+            else
+                mon->foe = env.mgrid(mpos);
+            return;
+        }
+
+        // If we're selecting a new summon's autofoe and we were unable to
+        // find a foe in los of the monster, try a second pass using the
+        // player's los instead.
+        if (near_player && !second_pass)
+        {
+            center = you.pos();
+            second_pass = true;
+        }
         else
-            mon->foe = env.mgrid(mpos);
-        return;
+            break;
     }
 }
 

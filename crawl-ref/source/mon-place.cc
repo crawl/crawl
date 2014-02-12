@@ -3507,6 +3507,9 @@ monster* mons_place(mgen_data mg)
         behaviour_event(creation, ME_EVAL);
     }
 
+    if (mg.flags & MG_AUTOFOE && creation->attitude == ATT_FRIENDLY)
+        set_nearest_monster_foe(creation, true);
+
     return creation;
 }
 
