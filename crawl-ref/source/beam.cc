@@ -5568,9 +5568,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             _malign_offering_effect(mon, agent(), dam);
             obvious_effect = true;
+            return MON_AFFECTED;
         }
         else
+        {
             simple_monster_message(mon, " is unaffected.");
+            return MON_UNAFFECTED;
+        }
     }
 
     case BEAM_VIRULENCE:
