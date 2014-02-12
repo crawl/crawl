@@ -3578,7 +3578,7 @@ struct spell_desc
 {
     SPELL_SUMMON_LIGHTNING_SPIRE, "Summon Lightning Spire",
      SPTYP_SUMMONING | SPTYP_AIR,
-     SPFLAG_GRID | SPFLAG_NOT_SELF,
+     SPFLAG_GRID | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      4,
      200,
      1, 1,
