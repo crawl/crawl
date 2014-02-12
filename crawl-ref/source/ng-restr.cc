@@ -776,14 +776,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             default:
                 return CC_RESTRICTED;
         }
-    case SP_DJINNI:
-        switch (job)
-        {
-            case JOB_CHAOS_KNIGHT:
-                return CC_UNRESTRICTED;
-            default:
-                return CC_RESTRICTED;
-        }
     case SP_LAVA_ORC:
         switch (job)
         {
@@ -888,9 +880,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             // else fall through
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
-            // Sludge elves have bad aptitudes with short swords (-1), but
-            // are still better with them than any other starting weapon.
-        case SP_SLUDGE_ELF:
         case SP_HALFLING:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
@@ -905,8 +894,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     case WPN_MACE:
         if (ng.species == SP_TROLL
             || ng.species == SP_OGRE
-            || ng.species == SP_GARGOYLE
-            || ng.species == SP_DJINNI)
+            || ng.species == SP_GARGOYLE)
         {
             return CC_UNRESTRICTED;
         }
@@ -955,7 +943,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_MUMMY:
         case SP_OCTOPODE:
         case SP_BASE_DRACONIAN:
-        case SP_DJINNI:
         case SP_FORMICID:
         case SP_VINE_STALKER:
             return CC_UNRESTRICTED;
@@ -983,7 +970,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_HIGH_ELF:
-        case SP_SLUDGE_ELF:
         case SP_DEEP_DWARF:
         case SP_TENGU:
         case SP_DEMIGOD:
@@ -992,7 +978,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_VAMPIRE:
         case SP_OCTOPODE:
         case SP_BASE_DRACONIAN:
-        case SP_DJINNI:
         case SP_FORMICID:
         case SP_VINE_STALKER:
             return CC_UNRESTRICTED;
@@ -1039,9 +1024,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_MINOTAUR:
         case SP_MUMMY:
         case SP_OCTOPODE:
-        case SP_SLUDGE_ELF:
         case SP_BASE_DRACONIAN:
-        case SP_DJINNI:
         case SP_FORMICID:
         case SP_GARGOYLE:
         case SP_VINE_STALKER:
@@ -1063,7 +1046,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_LAVA_ORC:
         case SP_SPRIGGAN:
         case SP_TROLL:
-        case SP_SLUDGE_ELF:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
@@ -1081,8 +1063,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_TROLL:
         case SP_HILL_ORC:
         case SP_LAVA_ORC:
-        case SP_SLUDGE_ELF:
-        case SP_DJINNI:
         case SP_FORMICID:
             return CC_RESTRICTED;
         case SP_FELID:
@@ -1096,7 +1076,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         {
         case SP_DEEP_ELF:
         case SP_HIGH_ELF:
-        case SP_SLUDGE_ELF:
         case SP_TENGU:
         case SP_MERFOLK:
         case SP_OGRE:
@@ -1115,7 +1094,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         switch (ng.species)
         {
         case SP_DEEP_DWARF:
-        case SP_DJINNI:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;

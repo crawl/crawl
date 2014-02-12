@@ -124,6 +124,7 @@ sub aptitude_table
     for my $sp (sort_species(@SPECIES))
     {
         next if $sp eq 'Sludge Elf';
+        next if $sp eq 'Djinni';
 
         my $line = '';
         $line .= fix_draco_species($sp, \$seen_draconian_length);
@@ -273,7 +274,4 @@ sub load_mods
     {
         die "Can't find table: $_ in $modfile\n" unless $SPECIES_SKILLS{Spriggan}{$_};
     }
-
-    $SPECIES_SKILLS{Djinni}{'Hit Points'} = -99;
-    $SPECIES_SKILLS{Djinni}{'Magic Points'} = -99;
 }

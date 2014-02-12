@@ -573,6 +573,7 @@ bool you_cannot_memorise(spell_type spell, bool &form)
     {
         rc = true, form = false;
     }
+#if TAG_MAJOR_VERSION == 34
 
     if (you.species == SP_DJINNI
         && (spell == SPELL_ICE_FORM
@@ -581,6 +582,7 @@ bool you_cannot_memorise(spell_type spell, bool &form)
     {
         rc = true, form = false;
     }
+#endif
 
     if (you.species == SP_LAVA_ORC
         && (spell == SPELL_STONESKIN

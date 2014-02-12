@@ -2868,7 +2868,9 @@ enum monster_type                      // menv[].type
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
 
+#if TAG_MAJOR_VERSION == 34
     MONS_DJINNI,
+#endif
     MONS_LAVA_ORC,
 
     MONS_DRYAD,
@@ -3533,7 +3535,9 @@ enum species_type
     SP_DEEP_DWARF,
     SP_FELID,
     SP_OCTOPODE,
+#if TAG_MAJOR_VERSION == 34
     SP_DJINNI,
+#endif
     SP_LAVA_ORC,
     SP_GARGOYLE,
     SP_FORMICID,
@@ -3548,6 +3552,7 @@ enum species_type
     SP_MOUNTAIN_DWARF,                 // (placeholder)
 #if TAG_MAJOR_VERSION > 34
     SP_SLUDGE_ELF,                     // (placeholder)
+    SP_DJINNI,                         // (placeholder)
 #endif
 
     NUM_SPECIES,                       // always after the last species

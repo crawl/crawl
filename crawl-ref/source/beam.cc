@@ -3204,11 +3204,13 @@ bool bolt::harmless_to_player() const
     case BEAM_ACID:
         return false;
 
+#if TAG_MAJOR_VERSION == 34
     case BEAM_FIRE:
     case BEAM_HELLFIRE:
     case BEAM_HOLY_FLAME:
     case BEAM_NAPALM:
         return you.species == SP_DJINNI;
+#endif
 
     case BEAM_VIRULENCE:
         return player_res_poison(false) >= 3;

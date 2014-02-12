@@ -517,10 +517,12 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             int mp = item.special - you.elapsed_time / POWER_DECAY;
 
             if (mp > 0)
+#if TAG_MAJOR_VERSION == 34
                 if (you.species == SP_DJINNI)
                     you.hp += mp;
                 else
-                    you.magic_points += mp;
+#endif
+                you.magic_points += mp;
 
             if (get_real_mp(true) >= 50)
                 mpr("You feel your magic capacity is already quite full.");
@@ -857,6 +859,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
     else if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
     {
         int mp = you.magic_points;
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DJINNI)
         {
             mp = you.hp;
@@ -868,6 +871,10 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
             calc_mp();
             mp -= you.magic_points;
         }
+#else
+        calc_mp();
+        mp -= you.magic_points;
+#endif
 
         // Store the MP in case you'll re-wield quickly.
         item.special = mp + you.elapsed_time / POWER_DECAY;
@@ -984,7 +991,11 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             if (!unmeld && you.spirit_shield() < 2)
             {
                 dec_mp(you.magic_points);
-                if (you.species == SP_DJINNI || you.species == SP_VINE_STALKER)
+                if (
+#if TAG_MAJOR_VERSION == 34
+                        you.species == SP_DJINNI ||
+#endif
+                        you.species == SP_VINE_STALKER)
                     mpr("You feel the presence of a powerless spirit.");
                 else
                     mpr("You feel your power drawn to a protective spirit.");
@@ -1382,7 +1393,11 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (you.spirit_shield() < 2 && !unmeld)
         {
             dec_mp(you.magic_points);
-            if (you.species == SP_DJINNI || you.species == SP_VINE_STALKER)
+            if (
+#if TAG_MAJOR_VERSION == 34
+                    you.species == SP_DJINNI ||
+#endif
+                    you.species == SP_VINE_STALKER)
                 mpr("You feel the presence of a powerless spirit.");
             else
                 mpr("You feel your power drawn to a protective spirit.");

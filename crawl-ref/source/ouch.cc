@@ -164,12 +164,14 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
 
     case BEAM_HELLFIRE:
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DJINNI)
         {
             hurted = 0;
             if (doEffects)
                 mpr("You resist completely.");
         }
+#endif
         // Inconsistency: no penalty for rF-, unlike monsters.  That's
         // probably good, and monsters should be changed.
         break;

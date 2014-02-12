@@ -4703,6 +4703,7 @@ void mon_nearby_ability(monster* mons)
             interrupt_activity(AI_MONSTER_ATTACKS, mons);
 
             int mp = 5 + random2avg(13, 3);
+#if TAG_MAJOR_VERSION == 34
             if (you.species != SP_DJINNI)
                 mp = min(mp, you.magic_points);
             else
@@ -4713,6 +4714,9 @@ void mon_nearby_ability(monster* mons)
                 mp = mp * (you.hp_max - you.duration[DUR_ANTIMAGIC] / 3)
                         / you.hp_max;
             }
+#else
+            mp = min(mp, you.magic_points);
+#endif
             drain_mp(mp);
 
             mons->heal(mp, true); // heh heh {dlb}

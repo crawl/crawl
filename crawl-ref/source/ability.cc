@@ -655,6 +655,7 @@ const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
     string ret;
+#if TAG_MAJOR_VERSION == 34
     int ep = 0;
     if (abil.mp_cost)
         if (you.species == SP_DJINNI)
@@ -674,6 +675,15 @@ const string make_cost_description(ability_type ability)
             abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "",
             you.species == SP_DJINNI ? "EP" : "HP");
     }
+#else
+    if (abil.mp_cost)
+        ret += make_stringf(", %d %sMP", abil.mp_cost,
+             abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
+
+    if (abil.hp_cost)
+        ret += make_stringf(", %d %sHP", abil.hp_cost.cost(you.hp_max),
+            abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "",
+#endif
 
     if (abil.zp_cost)
         ret += make_stringf(", %d ZP", (int)_zp_cost(abil));
@@ -681,9 +691,11 @@ const string make_cost_description(ability_type ability)
     if (abil.food_cost && !you_foodless(true)
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DJINNI)
             ret += ", Glow";
         else
+#endif
             ret += ", Food"; // randomised and exact amount hidden from player
     }
 
@@ -775,9 +787,11 @@ static const string _detailed_cost_description(ability_type ability)
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
         have_cost = true;
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DJINNI)
             ret << "\nGlow   : ";
         else
+#endif
             ret << "\nHunger : ";
         ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
     }
@@ -847,7 +861,9 @@ static ability_type _fixup_ability(ability_type ability)
     case ABIL_TROG_BERSERK:
         switch (you.species)
         {
+#if TAG_MAJOR_VERSION == 34
         case SP_DJINNI:
+#endif
         case SP_GHOUL:
         case SP_MUMMY:
         case SP_FORMICID:
@@ -2630,8 +2646,10 @@ static bool _do_ability(const ability_def& abil)
     {
         const bool self = (abil.ability == ABIL_ELYVILON_LESSER_HEALING_SELF);
         int pow = 3 + (you.skill_rdiv(SK_INVOCATIONS, 1, 6));
+#if TAG_MAJOR_VERSION == 34
         if (self && you.species == SP_DJINNI)
             pow /= 2;
+#endif
         if (cast_healing(pow,
                          3 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 6.0),
                          true, self ? you.pos() : coord_def(0, 0), !self,
@@ -2653,8 +2671,10 @@ static bool _do_ability(const ability_def& abil)
         const bool self = (abil.ability == ABIL_ELYVILON_GREATER_HEALING_SELF);
 
         int pow = 10 + (you.skill_rdiv(SK_INVOCATIONS, 1, 3));
+#if TAG_MAJOR_VERSION == 34
         if (self && you.species == SP_DJINNI)
             pow /= 2;
+#endif
         if (cast_healing(pow,
                          10 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 3.0),
                          true, self ? you.pos() : coord_def(0, 0), !self,
@@ -3343,7 +3363,10 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if ((you.species == SP_TENGU && you.experience_level >= 5
          || player_mutation_level(MUT_BIG_WINGS)) && !you.airborne()
         || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT]
-           && you.species != SP_DJINNI)
+#if TAG_MAJOR_VERSION == 34
+           && you.species != SP_DJINNI
+#endif
+           )
     {
         // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).

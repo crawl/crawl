@@ -3934,6 +3934,7 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LARGE
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     MONS_DJINNI, 'R', LIGHTBLUE, "djinni",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
@@ -3945,6 +3946,7 @@ static monsterentry mondata[] =
     I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
+#endif
 
 {
     MONS_RAKSHASA, 'R', YELLOW, "rakshasa",
