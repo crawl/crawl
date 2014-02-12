@@ -247,6 +247,50 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns
   theme.D.caves(_G)
 }}
 
+# A mash-up of layout_waterfall and layout_pools for Swamp,
+# with dripping splatters in a more enclosed layout.
+# TODO: Somebody with greater noise manipulation prowress than I
+# should widen the occasional thin corridor at the end of each drip.
+NAME:   layout_falls_marsh
+DEPTH:  Swamp:1-4
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand layout_type_caverns no_pool_fixup
+KFEAT: t = mangrove
+{{
+  if is_validating() then return end
+
+  local gxm,gym = dgn.max_bounds()
+  local limit,border,margin = 0.35,8,8
+  local reps = crawl.random_range(0.7,0.85)
+
+  local fcaves = procedural.worley_diff { scale = .075/reps }
+  fcaves = procedural.transform.polar_inverse(fcaves,gym/1.8,gxm/reps,gym/2)
+  fcaves = procedural.add(fcaves,procedural.mul(limit,procedural.border{padding=border,margin=margin}))
+
+  procedural.render_map(_G,fcaves,function(value) return value < limit and '.' or 't' end)
+  zonify.map_fill_zones(_G, 1)
+
+  local pool_contents = {}
+  pool_contents["w"] = 75 + you.depth() * 10
+  pool_contents["W"] = 60 - you.depth() * 10
+  pool_contents["c"] = 5 + you.depth() * 5
+  pool_contents["t"] = 10
+  add_pools { replace = ".",
+              pool_size = 8 + crawl.random2(8),
+              contents = pool_contents,
+              frequency = pool_frequency }
+
+  subst('W = W:75 t')
+  subst('w = w:75 t')
+  subst('c = .:570 w W t')
+  subst('. = .:' .. 71 - you.depth() * 4 .. ' W:' .. 29 + you.depth() * 4)
+  subst('x = t')
+
+  remove_isolated_glyphs { find = "w", percent = 80 }
+  remove_isolated_glyphs { find = "W", percent = 80 }
+  zonify.grid_fill_water_zones(1,"t")
+}}
+
 # Intended as a series of interconnected roughly geometrically-shaped rooms
 # for e.g. Dis/Zot, came out much more organic like a burrow of caves.
 NAME:   layout_cave_pods

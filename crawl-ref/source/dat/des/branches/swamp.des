@@ -741,6 +741,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_swamp_alligator_family
+TAGS: layout_swamp
 DEPTH: Swamp
 NSUBST: T = 2:W / *:t
 KMONS: 1 = alligator
