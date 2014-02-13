@@ -901,9 +901,12 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
 {
     fail_check();
 
-    monster* mons = (create_monster(mgen_data(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY,
-                                              &you, 3, SPELL_SUMMON_GUARDIAN_GOLEM,
-                                              you.pos(), MHITYOU, MG_FORCE_BEH, god)));
+    mgen_data golem = mgen_data(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY, &you, 3,
+                                SPELL_SUMMON_GUARDIAN_GOLEM, you.pos(), MHITYOU,
+                                MG_FORCE_BEH, god);
+    golem.hd = 4 + div_rand_round(pow, 16);
+
+    monster* mons = (create_monster(golem));
 
     if (mons)
     {
