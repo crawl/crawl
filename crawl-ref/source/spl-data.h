@@ -3593,7 +3593,7 @@ struct spell_desc
      SPTYP_SUMMONING | SPTYP_HEXES,
      SPFLAG_NONE,
      4,
-     0,
+     100,
      -1, -1,
      0,
      NULL,
