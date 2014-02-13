@@ -1333,10 +1333,13 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         noisy(10, caster->pos());
 
         if (monster *dryad = create_monster(
-                mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 2, SPELL_SUMMON_FOREST,
+                mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 1, SPELL_SUMMON_FOREST,
                 caster->pos(), MHITYOU, MG_FORCE_BEH, god)))
         {
             player_angers_monster(dryad);
+            mon_enchant abj = dryad->get_ench(ENCH_ABJ);
+            abj.duration = duration - 10;
+            dryad->update_ench(abj);
         }
 
         you.duration[DUR_FORESTED] = duration;
