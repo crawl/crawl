@@ -2467,6 +2467,9 @@ static void _post_monster_move(monster* mons)
             }
     }
 
+    if (mons->type == MONS_GUARDIAN_GOLEM)
+        guardian_golem_bond(mons);
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
 }
