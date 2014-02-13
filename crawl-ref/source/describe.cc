@@ -3494,9 +3494,13 @@ static string _monster_stat_description(const monster_info& mi)
         if (speed >= 10)
         {
             if (did_speed && fast.size() == 1)
-                result << "and " << fast[0];
+                result << " and " << fast[0];
             else if (!fast.empty())
+            {
+                if (did_speed)
+                    result << ", ";
                 result << comma_separated_line(fast.begin(), fast.end());
+            }
             if (!slow.empty())
             {
                 if (did_speed || !fast.empty())
@@ -3507,9 +3511,13 @@ static string _monster_stat_description(const monster_info& mi)
         else if (speed < 10)
         {
             if (did_speed && slow.size() == 1)
-                result << "and " << slow[0];
+                result << " and " << slow[0];
             else if (!slow.empty())
+            {
+                if (did_speed)
+                    result << ", ";
                 result << comma_separated_line(slow.begin(), slow.end());
+            }
             if (!fast.empty())
             {
                 if (did_speed || !slow.empty())
