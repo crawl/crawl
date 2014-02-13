@@ -1298,8 +1298,6 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
 
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
-    coord_def point = find_gateway_location(caster);
-    bool success = (point != coord_def(0, 0));
     const int duration = random_range(100 + pow / 10, 170 + pow / 10);
 
     if (you.duration[DUR_FORESTED])
@@ -1308,9 +1306,20 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         return SPRET_ABORT;
     }
 
+    // Is this area open enough to summon a forest?
+    bool success = false;
+    for (adjacent_iterator ai(caster->pos(), false); ai; ++ai)
+    {
+        if (count_neighbours_with_func(*ai, &feat_is_solid) == 0)
+        {
+            success = true;
+            break;
+        }
+    }
+
     if (success)
     {
-        for (distance_iterator di(point, false, true, LOS_RADIUS); di; ++di)
+        for (distance_iterator di(caster->pos(), false, true, LOS_RADIUS); di; ++di)
         {
             if (grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 200))
                 temp_change_terrain(*di, DNGN_SHALLOW_WATER, duration,
@@ -1321,11 +1330,11 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         }
 
         mpr("A forested plane collides here with a resounding crunch!");
-        noisy(10, point);
+        noisy(10, caster->pos());
 
         if (monster *dryad = create_monster(
                 mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 2, SPELL_SUMMON_FOREST,
-                point, MHITYOU, MG_FORCE_BEH, god)))
+                caster->pos(), MHITYOU, MG_FORCE_BEH, god)))
         {
             player_angers_monster(dryad);
         }
