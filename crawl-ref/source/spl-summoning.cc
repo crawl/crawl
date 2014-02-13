@@ -1296,6 +1296,17 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+static bool _water_adjacent(coord_def p)
+{
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
+    {
+        if (feat_is_water(grd(*ai)))
+            return true;
+    }
+
+    return false;
+}
+
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
     const int duration = random_range(100 + pow / 10, 170 + pow / 10);
@@ -1321,12 +1332,40 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
     {
         for (distance_iterator di(caster->pos(), false, true, LOS_RADIUS); di; ++di)
         {
-            if (grd(*di) == DNGN_FLOOR && x_chance_in_y(pow, 200))
-                temp_change_terrain(*di, DNGN_SHALLOW_WATER, duration,
-                                    TERRAIN_CHANGE_FORESTED);
-            else if (grd(*di) == DNGN_ROCK_WALL && x_chance_in_y(pow, 150))
+           if (grd(*di) == DNGN_ROCK_WALL && x_chance_in_y(pow, 150))
+           {
                 temp_change_terrain(*di, DNGN_TREE, duration,
                                     TERRAIN_CHANGE_FORESTED);
+           }
+        }
+
+        // Maybe make a pond
+        if (coinflip())
+        {
+            coord_def pond = find_gateway_location(caster);
+            int num = random_range(10, 22);
+            int deep = (!one_chance_in(3) ? div_rand_round(num, 3) : 0);
+
+            for (distance_iterator di(pond, true, false, 4); di && num > 0; ++di)
+            {
+                if (grd(*di) == DNGN_FLOOR
+                    && (di.radius() == 0 || _water_adjacent(*di))
+                    && x_chance_in_y(4, di.radius() + 3))
+                {
+                    num--;
+                    deep--;
+
+                    dungeon_feature_type feat = DNGN_SHALLOW_WATER;
+                    if (deep > 0 && *di != you.pos())
+                    {
+                        monster* mon = monster_at(*di);
+                        if (!mon || mon->is_habitable_feat(DNGN_DEEP_WATER))
+                            feat = DNGN_DEEP_WATER;
+                    }
+
+                    temp_change_terrain(*di, feat, duration, TERRAIN_CHANGE_FORESTED);
+                }
+            }
         }
 
         mpr("A forested plane collides here with a resounding crunch!");
