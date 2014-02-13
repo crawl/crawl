@@ -2522,7 +2522,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
             //               and -1133 in sprint
             item.sub_type = random_choose_weighted(
                 1800, SCR_IDENTIFY,
-                1250, SCR_REMOVE_CURSE,
+                1120, SCR_REMOVE_CURSE,
                  // [Cha] don't generate teleportation scrolls if in sprint
                  802, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
                  331, SCR_FEAR,
@@ -2545,7 +2545,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_ENCHANT_WEAPON_III),
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
-                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
+                 270, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
 
                  // High-level scrolls.
                  140, (depth_mod < 7 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
