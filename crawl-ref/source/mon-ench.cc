@@ -1889,8 +1889,11 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_INJURY_BOND:
         // It's hard to absorb someone else's injuries when you're dead
-        if (!me.agent() || !me.agent()->alive())
+        if (!me.agent() || !me.agent()->alive()
+            || me.agent()->mindex() == ANON_FRIENDLY_MONSTER)
+        {
             del_ench(ENCH_INJURY_BOND, true, false);
+        }
         else
             decay_enchantment(en);
         break;
