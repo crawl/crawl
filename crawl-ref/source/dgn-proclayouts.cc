@@ -148,7 +148,7 @@ RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
         if (!(hash % 5))
             feat = DNGN_DEEP_WATER;
         if (!(hash % 23))
-            feat = DNGN_MANGROVE;
+            feat = DNGN_TREE;
         return ProceduralSample(p, feat, changepoint);
     }
     return layout(p, offset);
@@ -394,7 +394,7 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
 
     // TODO: The abyss doesn't support all of these yet but would be nice if:
     //  * Clusters of plants around water edge
-    //  * Hot and wet areas are "tropical" with plants/trees/mangroves (and steam)
+    //  * Hot and wet areas are "tropical" with plants/trees (and steam)
     //  * Extremely hot or cold areas should generate fire or ice clouds respectively.
     //    If an "ice" feature were ever created this would be a good place for it.
     //  * Wet cities have
@@ -467,7 +467,7 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
             if (is_river)
             {
                 if (forest > 0.5 && wet > 0.5)
-                    feat = DNGN_MANGROVE;
+                    feat = DNGN_TREE;
             }
             else
                 feat = DNGN_TREE;

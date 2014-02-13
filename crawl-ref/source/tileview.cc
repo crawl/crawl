@@ -1389,7 +1389,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_SILENCED)
         cell.is_silenced = true;
 
-    if (feat == DNGN_MANGROVE)
+    if (feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP))
         cell.mangrove_water = true;
 
     if (mc.flags & MAP_ORB_HALOED)

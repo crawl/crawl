@@ -1202,7 +1202,6 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
         break;
 
     case DNGN_TREE:
-    case DNGN_MANGROVE:
         chance = 33;
         break;
 

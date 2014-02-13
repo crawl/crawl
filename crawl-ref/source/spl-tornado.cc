@@ -27,7 +27,7 @@ static bool _airtight(coord_def c)
     // either.
 
     // return grd(c) <= DNGN_MAXWALL && grd(c) != DNGN_MANGROVE;
-    return grd(c) <= DNGN_GRATE && grd(c) != DNGN_MANGROVE;
+    return grd(c) <= DNGN_GRATE;
 }
 
 /* Explanation of the algorithm:

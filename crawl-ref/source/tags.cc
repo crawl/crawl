@@ -952,11 +952,17 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() == TAG_MINOR_0_11)
     {
+        // turn old trees into...trees
         if (x == DNGN_OPEN_SEA)
-            x = DNGN_MANGROVE;
+            x = DNGN_TREE;
         else if (x >= DNGN_LAVA_SEA && x < 30)
             x = (dungeon_feature_type)(x - 1);
     }
+    // turn mangroves into trees
+    else if (th.getMinorVersion() < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
+        x = DNGN_TREE;
+
+
     if (x >= DNGN_DRY_FOUNTAIN_BLUE && x <= DNGN_DRY_FOUNTAIN_BLOOD)
         x = DNGN_DRY_FOUNTAIN;
 #endif
@@ -973,10 +979,12 @@ static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
     if (th.getMinorVersion() == TAG_MINOR_0_11)
     {
         if (x == DNGN_OPEN_SEA)
-            x = DNGN_MANGROVE;
+            x = DNGN_TREE;
         else if (x >= DNGN_LAVA_SEA && x < 30)
             x = (dungeon_feature_type)(x - 1);
     }
+    else if (th.getMinorVersion() < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
+        x = DNGN_TREE;
 
     return x;
 }

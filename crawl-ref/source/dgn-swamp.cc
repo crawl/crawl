@@ -38,7 +38,7 @@ static dungeon_feature_type _swamp_feature_for_height(int height)
         height > (8 - you.depth * 2) ? DNGN_SHALLOW_WATER :
         height > -8 ? DNGN_FLOOR :
         height > -10 ? DNGN_SHALLOW_WATER :
-        DNGN_MANGROVE;
+        DNGN_TREE;
 }
 
 static void _swamp_apply_features(int margin)
@@ -51,7 +51,7 @@ static void _swamp_apply_features(int margin)
             if (c.x < margin || c.y < margin || c.x >= GXM - margin
                 || c.y >= GYM - margin)
             {
-                grd(c) = DNGN_MANGROVE;
+                grd(c) = DNGN_TREE;
             }
             else
                grd(c) = _swamp_feature_for_height(dgn_height_at(c));

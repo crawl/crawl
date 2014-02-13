@@ -4226,7 +4226,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
         && player_in_branch(BRANCH_SWAMP))
     {
-        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_TREE);
     }
 
     if (!make_no_exits)
