@@ -301,10 +301,6 @@ bool check_awaken(monster* mons)
     if (you.berserk())
         return true;
 
-    // Vigilant monsters are always alerted
-    if (mons_class_flag(mons->type, M_VIGILANT))
-        return true;
-
     // I assume that creatures who can sense invisible are very perceptive.
     int mons_perc = 10 + (mons_intel(mons) * 4) + mons->hit_dice
                        + mons_sense_invis(mons) * 5;
