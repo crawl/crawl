@@ -275,8 +275,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
     // Special cases so that tracers behave properly.
     if (pbolt.name != "orb of energy"
-        && pbolt.affects_wall(DNGN_TREE) == MB_FALSE
-        && pbolt.affects_wall(DNGN_MANGROVE) == MB_FALSE)
+        && pbolt.affects_wall(DNGN_TREE) == MB_FALSE)
     {
         pbolt.name = "unimportant";
     }
@@ -868,10 +867,10 @@ void bolt::fire_wall_effect()
     nuke_wall(pos());
     if (you.see_cell(pos()))
     {
-        if (feat == DNGN_TREE)
+        if (player_in_branch(BRANCH_SWAMP))
+            emit_message("The tree smolders and burns.");
+        else
             emit_message("The tree burns like a torch!");
-        else // Mangroves
-            emit_message("The mangrove smolders and burns.");
     }
     else if (you.can_smell())
         emit_message("You smell burning wood.");
@@ -883,11 +882,11 @@ void bolt::fire_wall_effect()
     else if (whose_kill() == KC_FRIENDLY && !crawl_state.game_is_arena())
         did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
     ASSERT(agent());
-    // Mangroves do not burn so readily, particularly in a wet environment
-    if (feat == DNGN_TREE)
-        place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
-    else
+    // Trees do not burn so readily in a wet environment
+    if (player_in_branch(BRANCH_SWAMP))
         place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
+    else
+        place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
 
 
@@ -954,7 +953,6 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         break;
 
     case DNGN_TREE:
-    case DNGN_MANGROVE:
         if (see)
             msg = "The tree breaks and falls down!";
         else if (hear)
@@ -996,7 +994,6 @@ void bolt::nuke_wall_effect()
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
     case DNGN_TREE:
-    case DNGN_MANGROVE:
         nuke_wall(pos());
         break;
 

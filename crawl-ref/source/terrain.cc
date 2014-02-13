@@ -295,7 +295,11 @@ command_type feat_stair_direction(dungeon_feature_type feat)
 
 bool feat_is_opaque(dungeon_feature_type feat)
 {
-    return feat <= DNGN_MAXOPAQUE;
+    return feat <= DNGN_MAXOPAQUE
+#if TAG_MAJOR_VERSION == 34
+                || feat == DNGN_TREE
+#endif
+    ;
 }
 
 bool feat_is_solid(dungeon_feature_type feat)
@@ -362,8 +366,7 @@ bool feat_is_water(dungeon_feature_type feat)
 {
     return feat == DNGN_SHALLOW_WATER
            || feat == DNGN_DEEP_WATER
-           || feat == DNGN_OPEN_SEA
-           || feat == DNGN_MANGROVE;
+           || feat == DNGN_OPEN_SEA;
 }
 
 bool feat_is_watery(dungeon_feature_type feat)
@@ -425,7 +428,7 @@ bool feat_is_branchlike(dungeon_feature_type feat)
 
 bool feat_is_tree(dungeon_feature_type feat)
 {
-    return feat == DNGN_TREE || feat == DNGN_MANGROVE;
+    return feat == DNGN_TREE;
 }
 
 bool feat_is_metal(dungeon_feature_type feat)
@@ -1568,11 +1571,11 @@ string stair_climb_verb(dungeon_feature_type feat)
 static const char *dngn_feature_names[] =
 {
 "unseen", "closed_door", "runed_door", "sealed_door",
-"mangrove", "metal_wall", "green_crystal_wall", "rock_wall",
+"tree", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"tree", "open_sea", "endless_lava", "orcish_idol",
-"granite_statue", "malign_gateway", "", "", "", "", "", "", "", "", "",
+"open_sea", "endless_lava", "orcish_idol",
+"granite_statue", "malign_gateway", "", "", "", "", "", "", "", "", "", "",
 
 // DNGN_MINMOVE
 "lava", "deep_water",
@@ -1744,8 +1747,8 @@ void nuke_wall(const coord_def& p)
 
     remove_mold(p);
 
-    _revert_terrain_to(p, ((grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER
-                                                     : DNGN_FLOOR));
+    _revert_terrain_to(p, (player_in_branch(BRANCH_SWAMP) ? DNGN_SHALLOW_WATER
+                                                          : DNGN_FLOOR));
     env.level_map_mask(p) |= MMT_NUKED;
 }
 

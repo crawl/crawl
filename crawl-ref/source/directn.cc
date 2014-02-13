@@ -3014,8 +3014,6 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "iron grate";
     case DNGN_TREE:
         return "tree";
-    case DNGN_MANGROVE:
-        return "mangrove";
     case DNGN_ORCISH_IDOL:
         if (player_genus(GENPC_ORCISH))
             return "idol of Beogh";

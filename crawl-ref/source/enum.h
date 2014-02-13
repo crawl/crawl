@@ -1308,7 +1308,7 @@ enum dungeon_feature_type
     DNGN_CLOSED_DOOR,
     DNGN_RUNED_DOOR,
     DNGN_SEALED_DOOR,
-    DNGN_MANGROVE,
+    DNGN_TREE,
     DNGN_METAL_WALL,
         DNGN_MINWALL = DNGN_METAL_WALL,
     DNGN_GREEN_CRYSTAL_WALL,
@@ -1324,8 +1324,7 @@ enum dungeon_feature_type
     DNGN_CLEAR_PERMAROCK_WALL,
         DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
     DNGN_GRATE,
-    DNGN_TREE,
-        DNGN_MAX_NONREACH = DNGN_TREE,
+        DNGN_MAX_NONREACH = DNGN_GRATE,
 
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
     DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
