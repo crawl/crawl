@@ -34,6 +34,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-act.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-speak.h"
@@ -900,10 +901,17 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
 {
     fail_check();
 
-    if (create_monster(
-            mgen_data(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY, &you, 3, SPELL_SUMMON_GUARDIAN_GOLEM,
-                      you.pos(), MHITYOU, MG_FORCE_BEH, god)))
-        mpr("A guardian golem appears.");
+    monster* mons = (create_monster(mgen_data(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY,
+                                              &you, 3, SPELL_SUMMON_GUARDIAN_GOLEM,
+                                              you.pos(), MHITYOU, MG_FORCE_BEH, god)));
+
+    if (mons)
+    {
+        // Immediately apply injury bond
+        guardian_golem_bond(mons);
+
+        mpr("A guardian golem appears, shielding your allies.");
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
