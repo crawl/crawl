@@ -3581,7 +3581,7 @@ struct spell_desc
      SPFLAG_GRID | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      4,
      200,
-     1, 1,
+     2, 2,
      0,
      NULL,
      false,
