@@ -4274,14 +4274,14 @@ static object_class_type _acquirement_object_class()
     {
         OBJ_JEWELLERY,
         OBJ_BOOKS,
+        OBJ_WANDS,
         OBJ_MISCELLANY, // Felids stop here
         OBJ_WEAPONS,
         OBJ_ARMOUR,
-        OBJ_WANDS,
         OBJ_STAVES,
     };
 
-    const int nc = (you.species == SP_FELID) ? 3 : ARRAYSZ(classes);
+    const int nc = (you.species == SP_FELID) ? 4 : ARRAYSZ(classes);
     return classes[random2(nc)];
 }
 

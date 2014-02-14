@@ -3250,8 +3250,6 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_WANDS:
-        if (you.species == SP_FELID)
-            return true;
 
         if (you.mutation[MUT_NO_DEVICE_HEAL]
             && item_type_known(item)

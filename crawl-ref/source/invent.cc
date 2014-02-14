@@ -2065,13 +2065,6 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
     switch (item.base_type)
     {
     case OBJ_WANDS:
-        if (you.species == SP_FELID)
-        {
-            if (msg)
-                mpr("You cannot grasp it well enough.");
-            return false;
-        }
-
         if (all_wands)
             return true;
 
