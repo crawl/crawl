@@ -884,8 +884,9 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
     fail_check();
 
     if (create_monster(
-            mgen_data(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, &you, dur, SPELL_SUMMON_LIGHTNING_SPIRE,
-                      where, MHITYOU, MG_FORCE_BEH | MG_FORCE_PLACE, god)))
+            mgen_data(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, &you, dur,
+                      SPELL_SUMMON_LIGHTNING_SPIRE, where, MHITYOU,
+                      MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, god)))
     {
         if (!silenced(where))
             mpr("An electric hum fills the air.");
@@ -1373,7 +1374,7 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 
         mgen_data dryad_data = mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 1,
                                          SPELL_SUMMON_FOREST, caster->pos(),
-                                         MHITYOU, MG_FORCE_BEH, god);
+                                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god);
         dryad_data.hd = 5 + div_rand_round(pow, 18);
 
         if (monster *dryad = create_monster(dryad_data))
