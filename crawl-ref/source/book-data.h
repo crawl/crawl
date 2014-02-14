@@ -320,14 +320,14 @@
 },
 
 {   // Book of Earth
-    SPELL_DIG,
     SPELL_LEDAS_LIQUEFACTION,
     SPELL_BOLT_OF_MAGMA,
     SPELL_STATUE_FORM,
     SPELL_IRON_SHOT,
     SPELL_SHATTER,
     SPELL_NO_SPELL,
-    SPELL_NO_SPELL
+    SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
 },
 
 {   // Book of Wizardry
@@ -378,7 +378,7 @@
 {   // Book of Stalking
     SPELL_PASSWALL,
     SPELL_PETRIFY,
-    SPELL_DIG,
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,

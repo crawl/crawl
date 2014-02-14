@@ -1649,6 +1649,8 @@ static targetter *_wand_targetter(const item_def *wand)
         return new targetter_beam(&you, range, ZAP_THROW_FROST, power, 0, 0);
     case WAND_COLD:
         return new targetter_beam(&you, range, ZAP_BOLT_OF_COLD, power, 0, 0);
+    case WAND_DIGGING:
+        return new targetter_beam(&you, range, ZAP_DIG, power, 0, 0);
     default:
         return 0;
     }
