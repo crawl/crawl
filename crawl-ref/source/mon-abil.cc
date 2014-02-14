@@ -2309,6 +2309,13 @@ static bool _shock_serpent_torrent(monster* serpent, actor* target)
 
     if (beams.size() == 0)
         return false;
+    // If we can't hit our primary target, at least don't hit a friendly
+    else if (beams[0].path_taken.back() != target->pos())
+    {
+        actor* act = actor_at(beams[0].path_taken.back());
+        if (!act || act && mons_aligned(serpent, act))
+            return false;
+    }
 
     simple_monster_message(serpent,
                            " unleashes its stored charge as a torrent of lightning!",
