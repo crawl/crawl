@@ -3721,6 +3721,7 @@ static void _place_aquatic_monsters()
     //
     if (player_in_branch(BRANCH_SHOALS)
         || player_in_branch(BRANCH_ABYSS)
+        || player_in_branch(BRANCH_PANDEMONIUM)
         || player_in_branch(BRANCH_DUNGEON) && you.depth < 6)
     {
         return;
