@@ -2260,8 +2260,6 @@ int player_movement_speed(bool ignore_burden)
         mv = 8;
     else if (you.form == TRAN_JELLY)
         mv = 11;
-    else if (you.form == TRAN_ICE_BEAST && you.in_liquid())
-        mv = 11;
     else if (you.fishtail)
         mv = 6;
 
@@ -3970,9 +3968,13 @@ int check_stealth(void)
     // makes you extremely unstealthy.
     if (you.backlit())
         stealth = stealth * 2 / 5;
-    // On the other hand, shrouding has the reverse effect:
-    if (you.umbra())
-        stealth *= 2;
+    // On the other hand, shrouding has the reverse effect, if you know
+    // how to make use of it:
+    if (you.umbra()
+        && (you_worship(GOD_DITHMENOS) || you_worship(GOD_YREDELEMNUL)))
+    {
+        stealth = stealth * (you.piety + MAX_PIETY) / MAX_PIETY;
+    }
     // The shifting glow from the Orb, while too unstable to negate invis
     // or affect to-hit, affects stealth even more than regular glow.
     if (orb_haloed(you.pos()))
@@ -4002,8 +4004,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_SILENCE: // no message
         return 5 * BASELINE_DELAY;
 
-    case DUR_DEFLECT_MISSILES:
-    case DUR_REPEL_MISSILES:
     case DUR_REGENERATION:
     case DUR_RESISTANCE:
     case DUR_SWIFTNESS:
@@ -6315,9 +6315,9 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::missile_deflection() const
 {
-    if (duration[DUR_DEFLECT_MISSILES])
+    if (attribute[ATTR_DEFLECT_MISSILES])
         return 2;
-    if (duration[DUR_REPEL_MISSILES]
+    if (attribute[ATTR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
         || scan_artefacts(ARTP_RMSL, true))
     {
@@ -6328,20 +6328,23 @@ int player::missile_deflection() const
 
 void player::ablate_deflection()
 {
+    int power;
     if (attribute[ATTR_DEFLECT_MISSILES])
     {
-        if (one_chance_in(attribute[ATTR_DEFLECT_MISSILES]))
+        power = calc_spell_power(SPELL_DEFLECT_MISSILES, true);
+        if (one_chance_in(2 + power / 8))
         {
             attribute[ATTR_DEFLECT_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "Your deflect missiles spell is about to expire...");
+            mprf(MSGCH_DURATION, "You feel less protected from missiles.");
         }
     }
-    else if (attribute[ATTR_REPEL_MISSILES] && !duration[DUR_DEFLECT_MISSILES])
+    else if (attribute[ATTR_REPEL_MISSILES])
     {
-        if (one_chance_in(attribute[ATTR_REPEL_MISSILES]))
+        power = calc_spell_power(SPELL_REPEL_MISSILES, true);
+        if (one_chance_in(2 + power / 8))
         {
             attribute[ATTR_REPEL_MISSILES] = 0;
-            mprf(MSGCH_DURATION, "Your repel missiles spell is about to expire...");
+            mprf(MSGCH_DURATION, "You feel less protected from missiles.");
         }
     }
 }
@@ -7072,7 +7075,7 @@ bool player::tengu_flight() const
 bool player::nightvision() const
 {
     return is_undead
-           || (religion == GOD_DITHMENGOS && piety >= piety_breakpoint(0))
+           || (religion == GOD_DITHMENOS && piety >= piety_breakpoint(0))
            || (religion == GOD_YREDELEMNUL && piety >= piety_breakpoint(2));
 }
 

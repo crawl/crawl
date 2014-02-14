@@ -5269,7 +5269,7 @@ void melee_attack::do_spines()
         // Thorn hunters can attack their own brambles without injury
         if (defender->type == MONS_BRIAR_PATCH
             && attacker->type == MONS_THORN_HUNTER
-            // Dithmengos' shadow can't take damage, don't spam.
+            // Dithmenos' shadow can't take damage, don't spam.
             || attacker->type == MONS_PLAYER_SHADOW)
         {
             return;

@@ -3000,44 +3000,48 @@ void move_solo_tentacle(monster* tentacle)
         actor::constricting_t::const_iterator it = tentacle->constricting->begin();
         constrictee = actor_by_mid(it->first);
 
-        if (retract_found)
+        // Don't drag things that cannot move
+        if (!constrictee->is_stationary())
         {
-            if (constrictee->is_habitable(old_pos))
+            if (retract_found)
             {
-                pull_constrictee = true;
-                shift_pos = old_pos;
-            }
-        }
-        else if (tentacle->type == MONS_SNAPLASHER_VINE)
-        {
-            // Don't shift our victim if they're already next to a tree
-            // (To avoid shaking players back and forth constantly)
-            bool near_tree = false;
-            for (adjacent_iterator ai(constrictee->pos()); ai; ++ai)
-            {
-                if (feat_is_tree(grd(*ai)))
+                if (constrictee->is_habitable(old_pos))
                 {
-                    near_tree = true;
-                    break;
+                    pull_constrictee = true;
+                    shift_pos = old_pos;
                 }
             }
-
-            if (!near_tree)
+            else if (tentacle->type == MONS_SNAPLASHER_VINE)
             {
-                for (adjacent_iterator ai(tentacle->pos()); ai; ++ai)
+                // Don't shift our victim if they're already next to a tree
+                // (To avoid shaking players back and forth constantly)
+                bool near_tree = false;
+                for (adjacent_iterator ai(constrictee->pos()); ai; ++ai)
                 {
-                    if (adjacent(*ai, constrictee->pos())
-                        && constrictee->is_habitable(*ai)
-                        && !actor_at(*ai))
+                    if (feat_is_tree(grd(*ai)))
                     {
-                        for (adjacent_iterator ai2(*ai); ai2; ++ai2)
+                        near_tree = true;
+                        break;
+                    }
+                }
+
+                if (!near_tree)
+                {
+                    for (adjacent_iterator ai(tentacle->pos()); ai; ++ai)
+                    {
+                        if (adjacent(*ai, constrictee->pos())
+                            && constrictee->is_habitable(*ai)
+                            && !actor_at(*ai))
                         {
-                            if (feat_is_tree(grd(*ai2)))
+                            for (adjacent_iterator ai2(*ai); ai2; ++ai2)
                             {
-                                pull_constrictee = true;
-                                shift_constrictee = true;
-                                shift_pos = *ai;
-                                break;
+                                if (feat_is_tree(grd(*ai2)))
+                                {
+                                    pull_constrictee = true;
+                                    shift_constrictee = true;
+                                    shift_pos = *ai;
+                                    break;
+                                }
                             }
                         }
                     }

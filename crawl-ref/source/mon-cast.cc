@@ -882,7 +882,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_SUNRAY:
         beam.colour   = ETC_HOLY;
         beam.name     = "ray of light";
-        beam.damage   = dice_def(3, 7 + (power / 12));
+        beam.damage   = dice_def(3, 6 + (power / 13));
         beam.hit      = 10 + power / 25; // lousy accuracy, but ignores RMsl
         beam.flavour  = BEAM_LIGHT;
         break;
@@ -1038,6 +1038,19 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_CORRUPT_BODY:
         beam.flavour    = BEAM_CORRUPT_BODY;
         beam.is_beam    = true;
+        break;
+
+    case SPELL_SHADOW_BOLT:
+        beam.name     = "shadow bolt";
+        beam.is_beam  = true;
+        // deliberate fall-through
+    case SPELL_SHADOW_SHARD:
+        if (real_spell == SPELL_SHADOW_SHARD)
+            beam.name  = "shadow shard";
+        beam.damage   = dice_def(3, 8 + power / 11);
+        beam.colour   = MAGENTA;
+        beam.flavour  = BEAM_MMISSILE;
+        beam.hit      = 17 + power / 25;
         break;
 
     default:
@@ -2354,10 +2367,13 @@ static void _cast_druids_call(const monster* mon)
             mon_list[i]->flags |= MF_WAS_IN_VIEW;
             simple_monster_message(mon_list[i], " answers the druid's call!");
 
-            // If this is a low-HD monster, try to summon a second. Otherwise,
-            // we're done. (Only normal druids can ever summon two monsters)
-            if (!second && mon_list[i]->hit_dice <= 10 && mon->hit_dice > 10)
+            // If this is a low-HD monster, sometimes try to summon a second.
+            // Otherwise, we're done. (Young druids can ever summon one)
+            if (!second && mon_list[i]->hit_dice <= 10 && mon->hit_dice > 10
+                && coinflip())
+            {
                 second = true;
+            }
             else
                 return;
         }
@@ -3400,10 +3416,10 @@ static monster_type _pick_undead_summon()
 
 static monster_type _pick_vermin()
 {
-    return random_choose_weighted(9, MONS_ORANGE_RAT,
+    return random_choose_weighted(8, MONS_ORANGE_RAT,
                                   5, MONS_REDBACK,
                                   2, MONS_TARANTELLA,
-                                  1, MONS_JUMPING_SPIDER,
+                                  2, MONS_JUMPING_SPIDER,
                                   3, MONS_DEMONIC_CRAWLER,
                                   0);
 }
@@ -5397,7 +5413,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             mons->add_ench(ENCH_IOOD_CHARGED);
 
-            if (orig_noise || !monsterNearby)
+            if (!monsterNearby)
                 return;
             string msg = getSpeakString("orb spider charge");
             if (!msg.empty())

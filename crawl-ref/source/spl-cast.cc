@@ -1352,13 +1352,16 @@ spret_type your_spells(spell_type spell, int powc,
         if (you.props.exists("battlesphere") && allow_fail)
             trigger_battlesphere(&you, beam);
         actor* victim = actor_at(beam.target);
-        if (you_worship(GOD_DITHMENGOS)
+        if (you_worship(GOD_DITHMENOS)
             && allow_fail
+            && !god_hates_spell(spell, GOD_DITHMENOS, !allow_fail)
             && (flags & SPFLAG_TARGETING_MASK)
             && !(flags & SPFLAG_NEUTRAL)
+            && (beam.is_enchantment()
+                || battlesphere_can_mirror(spell))
             && (!old_target || (victim && !victim->is_player())))
         {
-            dithmengos_shadow_spell(beam.target, spell);
+            dithmenos_shadow_spell(&beam, spell);
         }
         _spellcasting_side_effects(spell, powc, god, allow_fail);
         return SPRET_SUCCESS;

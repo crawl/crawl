@@ -153,7 +153,7 @@ void MiscastEffect::init()
             kill_source = NON_MONSTER;
     }
 
-    if (kill_source == NON_MONSTER)
+    if (kill_source == NON_MONSTER || kill_source == MHITYOU)
     {
         kc           = KC_YOU;
         kt           = KILL_YOU_MISSILE;

@@ -3290,6 +3290,39 @@ static string _monster_spells_description(const monster_info& mi)
     return result.str();
 }
 
+static const char *_speed_description(int speed)
+{
+    // These thresholds correspond to the player mutations for fast and slow.
+    ASSERT(speed != 10);
+    if (speed < 7)
+        return "extremely slowly";
+    else if (speed < 8)
+        return "very slowly";
+    else if (speed < 10)
+        return "slowly";
+    else if (speed > 15)
+        return "extremely quickly";
+    else if (speed > 13)
+        return "very quickly";
+    else if (speed > 10)
+        return "quickly";
+
+    return "buggily";
+}
+
+static void _add_energy_to_string(int speed, int energy, string what,
+                                  vector<string> &fast, vector<string> &slow)
+{
+    if (energy == 10)
+        return;
+
+    const int act_speed = (speed * 10) / energy;
+    if (act_speed > 10)
+        fast.push_back(what + " " + _speed_description(act_speed));
+    if (act_speed < 10)
+        slow.push_back(what + " " + _speed_description(act_speed));
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static string _monster_stat_description(const monster_info& mi)
@@ -3420,8 +3453,10 @@ static string _monster_stat_description(const monster_info& mi)
 
     // Unusual monster speed.
     const int speed = mi.base_speed();
+    bool did_speed = false;
     if (speed != 10 && speed != 0)
     {
+        did_speed = true;
         result << uppercase_first(pronoun) << " is ";
         if (speed < 7)
             result << "very slow";
@@ -3433,8 +3468,67 @@ static string _monster_stat_description(const monster_info& mi)
             result << "very fast";
         else if (speed > 10)
             result << "fast";
+    }
+    const mon_energy_usage def = DEFAULT_ENERGY;
+    if (!(mi.menergy == def))
+    {
+        const mon_energy_usage me = mi.menergy;
+        vector<string> fast, slow;
+        if (!did_speed)
+            result << uppercase_first(pronoun) << " ";
+        _add_energy_to_string(speed, me.move, "covers ground", fast, slow);
+        // since MOVE_ENERGY also sets me.swim
+        if (me.swim != me.move)
+            _add_energy_to_string(speed, me.swim, "swims", fast, slow);
+        _add_energy_to_string(speed, me.attack, "attacks", fast, slow);
+        _add_energy_to_string(speed, me.missile, "shoots", fast, slow);
+        _add_energy_to_string(
+            speed, me.spell,
+            mi.is_actual_spellcaster() ? "casts spells" :
+            mi.is_priest()             ? "uses invocations"
+                                       : "uses natural abilities", fast, slow);
+        _add_energy_to_string(speed, me.special, "uses special abilities",
+                              fast, slow);
+        _add_energy_to_string(speed, me.item, "uses items", fast, slow);
+
+        if (speed >= 10)
+        {
+            if (did_speed && fast.size() == 1)
+                result << " and " << fast[0];
+            else if (!fast.empty())
+            {
+                if (did_speed)
+                    result << ", ";
+                result << comma_separated_line(fast.begin(), fast.end());
+            }
+            if (!slow.empty())
+            {
+                if (did_speed || !fast.empty())
+                    result << ", but ";
+                result << comma_separated_line(slow.begin(), slow.end());
+            }
+        }
+        else if (speed < 10)
+        {
+            if (did_speed && slow.size() == 1)
+                result << " and " << slow[0];
+            else if (!slow.empty())
+            {
+                if (did_speed)
+                    result << ", ";
+                result << comma_separated_line(slow.begin(), slow.end());
+            }
+            if (!fast.empty())
+            {
+                if (did_speed || !slow.empty())
+                    result << ", but ";
+                result << comma_separated_line(fast.begin(), fast.end());
+            }
+        }
         result << ".\n";
     }
+    else if (did_speed)
+        result << ".\n";
 
     // Can the monster fly, and how?
     // This doesn't give anything away since no (very) ugly things can
@@ -4249,7 +4343,7 @@ static const char *divine_title[NUM_GODS][8] =
     {"Star-crossed",       "Cursed",                "Initiated",                "Seer",
      "Soothsayer",         "Oracle",                "Illuminatus",              "Omniscient"},
 
-    // Dithmengos -- darkness theme
+    // Dithmenos -- darkness theme
     {"Illuminated",        "Gloomy",                "Aphotic",                  "Caliginous",
      "Darkened",           "Shadowed",              "Eclipsing",                "Eternal Night"},
 };

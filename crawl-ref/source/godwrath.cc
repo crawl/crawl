@@ -100,7 +100,7 @@ static bool _okawaru_random_servant()
     return create_monster(temp, false);
 }
 
-static bool _dithmengos_random_shadow(const int count, const int tier)
+static bool _dithmenos_random_shadow(const int count, const int tier)
 {
     monster_type mon_type = MONS_SHADOW;
     if (tier >= 2 && count == 0 && coinflip())
@@ -109,9 +109,9 @@ static bool _dithmengos_random_shadow(const int count, const int tier)
         mon_type = MONS_SHADOW_DEMON;
 
     mgen_data temp = mgen_data::hostile_at(mon_type,
-                                           "the darkness of Dithmengos",
+                                           "the darkness of Dithmenos",
                                            true, 0, 0, you.pos(), 0,
-                                           GOD_DITHMENGOS);
+                                           GOD_DITHMENOS);
 
     temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
@@ -1177,10 +1177,10 @@ static bool _fedhas_retribution()
     return true;
 }
 
-static bool _dithmengos_retribution()
+static bool _dithmenos_retribution()
 {
     // shadow theme
-    const god_type god = GOD_DITHMENGOS;
+    const god_type god = GOD_DITHMENOS;
 
     switch(random2(4))
     {
@@ -1192,7 +1192,7 @@ static bool _dithmengos_retribution()
         const int tier = div_rand_round(you.experience_level, 9);
         while (how_many-- > 0)
         {
-            if (_dithmengos_random_shadow(count, tier))
+            if (_dithmenos_random_shadow(count, tier))
                 count++;
         }
         simple_god_message(count ? " calls forth shadows to punish you."
@@ -1209,7 +1209,7 @@ static bool _dithmengos_retribution()
         {
             if (create_monster(
                     mgen_data::hostile_at(
-                        RANDOM_MOBILE_MONSTER, "the darkness of Dithmengos",
+                        RANDOM_MOBILE_MONSTER, "the darkness of Dithmenos",
                         true, 4, MON_SUMM_WRATH, you.pos(), 0, god)))
             {
                 count++;
@@ -1276,7 +1276,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
     case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
-    case GOD_DITHMENGOS:    do_more = _dithmengos_retribution(); break;
+    case GOD_DITHMENOS:    do_more = _dithmenos_retribution(); break;
 
     case GOD_ASHENZARI:
         // No reduction with time.

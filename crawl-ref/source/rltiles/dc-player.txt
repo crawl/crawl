@@ -496,6 +496,7 @@ knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
 spriggans_knife SPRIGGANS_KNIFE
 capt_cutlass CAPT_CUTLASS
+arc_blade ARC_BLADE
 ## blunt
 wucad_mu WUCAD_MU
 mace_of_variability MACE_OF_VARIABILITY
@@ -505,6 +506,7 @@ eos EOS
 snakebite SNAKEBITE
 shillelagh SHILLELAGH
 dark_maul DARK_MAUL
+spellbinder SPELLBINDER
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE

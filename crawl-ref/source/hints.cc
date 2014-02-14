@@ -217,9 +217,15 @@ void pick_hints(newgame_def* choice)
         switch (keyn)
         {
         CASE_ESCAPE
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("cancel");
+#endif
             game_ended();
         case 'X':
             cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("cancel");
+#endif
             end(0);
             return;
         }

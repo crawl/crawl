@@ -1067,9 +1067,7 @@ void targetter_jump::get_additional_sites(coord_def a)
     if (immobile)
     {
         const actor *victim = actor_at(a);
-        if (!victim
-            || victim->invisible()
-            || victim->mons_species() == MONS_VAMPIRE)
+        if (!victim || victim->invisible())
         {
             no_landing_reason = BLOCKED_NO_TARGET;
             return;

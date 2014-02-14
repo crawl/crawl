@@ -611,7 +611,7 @@
       {
        SPELL_BLINK,
        SPELL_SUMMON_VERMIN,
-       SPELL_NO_SPELL,
+       SPELL_SUMMON_VERMIN,
        SPELL_SUMMON_VERMIN,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
@@ -1480,9 +1480,9 @@
       {
        SPELL_SUNRAY,
        SPELL_AWAKEN_FOREST,
-       SPELL_HASTE_PLANTS,
+       SPELL_NO_SPELL,
        SPELL_DRUIDS_CALL,
-       SPELL_HASTE_PLANTS,
+       SPELL_NO_SPELL,
        SPELL_MINOR_HEALING
       }
     },
@@ -1800,7 +1800,7 @@
        SPELL_MAGIC_DART,
        SPELL_SLOW,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_CALL_IMP,
        SPELL_NO_SPELL,
        SPELL_MEPHITIC_CLOUD
       }

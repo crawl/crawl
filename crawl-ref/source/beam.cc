@@ -2436,7 +2436,12 @@ static void _explosive_bolt_explode(bolt *parent, coord_def pos)
     beam.source       = pos;
     beam.target       = pos;
     beam.is_tracer    = parent->is_tracer;
-    beam.fire();
+    beam.is_targeting = parent->is_targeting;
+    beam.friend_info.dont_stop = parent->friend_info.dont_stop;
+    beam.foe_info.dont_stop = parent->foe_info.dont_stop;
+    beam.dont_stop_player = parent->dont_stop_player;
+    beam.refine_for_explosion();
+    beam.explode();
     parent->friend_info += beam.friend_info;
     parent->foe_info    += beam.foe_info;
     if (beam.is_tracer && beam.beam_cancelled)
@@ -5568,9 +5573,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             _malign_offering_effect(mon, agent(), dam);
             obvious_effect = true;
+            return MON_AFFECTED;
         }
         else
+        {
             simple_monster_message(mon, " is unaffected.");
+            return MON_UNAFFECTED;
+        }
     }
 
     case BEAM_VIRULENCE:

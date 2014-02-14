@@ -346,12 +346,10 @@ A ray which does massive damage (1500 hp) and always hits.
 %%%%
 Deflect Missiles spell
 
-This spell protects the caster from all kinds of projectile attacks, by slowing
-them and somewhat diverting their path. Successfully deflecting an incoming
-projectile still requires a reflexive action (your ability to do so is measured
-by the Evasion stat), but unlike lesser spells like Repel Missiles, Deflect
-Missiles typically makes this so easy that even a drunk plate-clad orc can do
-it.
+This spell protects the caster from all kinds of projectile attacks, making
+them significantly easier to dodge. It is highly effective against both
+single-target and penetrating attacks. Each time a missile is deflected the
+spell has a chance of expiring, with a lower chance of expiry at high power.
 %%%%
 Delayed Fireball spell
 
@@ -993,8 +991,10 @@ while also increasing the rate of food consumption.
 %%%%
 Repel Missiles spell
 
-This spell reduces the chance of projectile attacks striking the caster, by
-making them significantly easier to dodge.
+This spell reduces the chance of projectile attacks striking the caster, making
+them easier to dodge. Single-target attacks are much easier to repel than
+penetrating attacks. Each time a missile is repelled the spell has a chance of
+expiring, with a lower chance of expiry at high power.
 %%%%
 Ring of Flames spell
 

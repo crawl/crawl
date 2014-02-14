@@ -701,7 +701,7 @@ bool cheibriados_thinks_mons_is_fast(const monster* mon)
     return cheibriados_monster_player_speed_delta(mon) > 0;
 }
 
-// Dithmengos hates halos and spells that cause illumination.
+// Dithmenos hates halos and spells that cause illumination.
 bool mons_is_illuminating(const monster* mon)
 {
     if (mon->halo_radius2() >= 0)
@@ -716,7 +716,7 @@ bool mons_is_illuminating(const monster* mon)
     return false;
 }
 
-// Dithmengos also hates fire users and generally fiery beings.
+// Dithmenos also hates fire users and generally fiery beings.
 bool mons_is_fiery(const monster* mon)
 {
     // This chain of checks is for fire breath weapons and special
@@ -1795,6 +1795,12 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
             get_monster_data (draco_or_demonspawn_subspecies(mon));
         ASSERT(mbase);
         return mbase->attack[1];
+    }
+
+    if (mon->type == MONS_PLAYER_SHADOW && attk_number == 0)
+    {
+        if (!you.weapon())
+            attk.damage = max(1, you.skill_rdiv(SK_UNARMED_COMBAT, 10, 20));
     }
 
     if (attk.type == AT_RANDOM)
@@ -2888,6 +2894,12 @@ int mons_class_base_speed(monster_type mc)
 {
     ASSERT_smc();
     return smc->speed;
+}
+
+mon_energy_usage mons_class_energy(monster_type mc)
+{
+    ASSERT_smc();
+    return smc->energy_usage;
 }
 
 int mons_class_zombie_base_speed(monster_type zombie_base_mc)

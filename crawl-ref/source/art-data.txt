@@ -1119,6 +1119,26 @@ PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
 STEALTH: -20
 
+NAME:     arc blade
+INSCRIP:  discharge,
+OBJ:      OBJ_WEAPONS/WPN_CUTLASS
+PLUS:     +3/+5
+COLOUR:   ETC_ELECTRICITY
+TILE:     urand_arc_blade
+TILE_EQ:  arc_blade
+BOOL:     elec
+
+ENUM:     SPELLBINDER
+NAME:     demon whip "Spellbinder"
+OBJ:      OBJ_WEAPONS/WPN_DEMON_WHIP
+BRAND:    SPWPN_ANTIMAGIC
+PLUS:     +3/+6
+COLOUR:   ETC_ENCHANT
+TILE:     urand_spellbinder
+TILE_EQ:  spellbinder
+MAGIC:    30
+BOOL:     evil
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn
