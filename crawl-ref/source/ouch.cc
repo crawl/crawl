@@ -88,7 +88,8 @@ static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
                 you.props["melt_shield"] = true;
         }
 
-        if (you.mutation[MUT_ICEMAIL])
+        if (you.mutation[MUT_ICEMAIL]
+            && you.duration[DUR_ICEMAIL_DEPLETED] < ICEMAIL_TIME)
         {
             mprf(MSGCH_DURATION, "Your icy envelope dissipates!");
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
@@ -520,6 +521,9 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
             {
                 continue;
             }
+
+            if (target_class == OBJ_SCROLLS && you.form == TRAN_MAGMA)
+                continue;
 
             // These stack with conservation; they're supposed to be good.
             if (target_class == OBJ_SCROLLS
@@ -959,6 +963,26 @@ static void _maybe_fog(int dam)
     }
 }
 
+static void _maybe_erupt(int dam)
+{
+    if (you.form != TRAN_MAGMA)
+        return;
+
+    const int upper_threshold = you.hp_max * 3 / 5;
+    const int lower_threshold = you.hp_max / 7;
+
+    const int test_dam = you.attribute[ATTR_ERUPT_DAMAGE] / 2 + dam;
+    you.attribute[ATTR_ERUPT_DAMAGE] += dam;
+
+    if (test_dam >= lower_threshold
+        && x_chance_in_y(test_dam - lower_threshold,
+                         upper_threshold - lower_threshold)
+        || one_chance_in(27))
+    {
+        you.erupt = true;
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1147,6 +1171,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
             _maybe_fog(dam);
+            _maybe_erupt(dam);
             _powered_by_pain(dam);
             if (drain_amount > 0)
                 drain_exp(true, drain_amount, true);

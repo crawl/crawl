@@ -1577,6 +1577,7 @@ void scorefile_entry::init(time_t dt)
         DUR_SAP_MAGIC,
         STATUS_MAGIC_SAPPED,
         DUR_PORTAL_PROJECTILE,
+        DUR_MAGMA_DEPLETED,
     };
 
     status_info inf;

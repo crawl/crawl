@@ -77,7 +77,9 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+    // Magma Form
+    ABIL_ERUPTION,
+    ABIL_MAX_INTRINSIC = ABIL_ERUPTION,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -182,6 +184,11 @@ enum ability_type
     // Dithmenos
     ABIL_DITHMENOS_SHADOW_STEP = 1170,
     ABIL_DITHMENOS_SHADOW_FORM,
+    // Igni Ipthes
+    ABIL_IGNI_REFORGE_WEAPON = 1180,
+    ABIL_IGNI_FIREBRAND_WEAPON,
+    ABIL_IGNI_DIVINE_BELLOWS,
+    ABIL_IGNI_TRAN_MAGMA,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -320,6 +327,7 @@ enum attribute_type
     ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
+    ATTR_ERUPT_DAMAGE,         // Amount of damage taken in magma form
     NUM_ATTRIBUTES
 };
 
@@ -341,8 +349,9 @@ enum transformation_type
     TRAN_JELLY,
     TRAN_FUNGUS,
     TRAN_SHADOW,
+    TRAN_MAGMA,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_SHADOW,
+    LAST_FORM = TRAN_MAGMA,
 };
 
 enum beam_type                  // bolt::flavour
@@ -1045,6 +1054,7 @@ enum conduct_type
     DID_KILL_ILLUMINATING,                // Dithmenos
     DID_FIRE,                             // Dithmenos
     DID_KILL_FIERY,                       // Dithmenos
+    DID_ENCHANT_GEAR,                     // Igni Ipthes
 
     NUM_CONDUCTS
 };
@@ -1438,15 +1448,26 @@ enum dungeon_feature_type
     DNGN_ALTAR_CHEIBRIADOS,
     DNGN_ALTAR_ASHENZARI,
     DNGN_ALTAR_DITHMENOS,
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENOS,
+    DNGN_ALTAR_IGNI_IPTHES,
+#if TAG_MAJOR_VERSION == 34
+    DNGN_FOUNTAIN_BLUE_OLD = DNGN_ALTAR_IGNI_IPTHES,
+#endif
+        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_IGNI_IPTHES,
+
+    DNGN_UNUSED_ALTAR_1,
+    DNGN_UNUSED_ALTAR_2,
+#if TAG_MAJOR_VERSION == 34
+    DNGN_FOUNTAIN_SPARKLING_OLD = DNGN_UNUSED_ALTAR_1,
+    DNGN_FOUNTAIN_BLOOD_OLD     = DNGN_UNUSED_ALTAR_2,
+#endif
 
     DNGN_FOUNTAIN_BLUE,
-    DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
+    DNGN_FOUNTAIN_SPARKLING,
     DNGN_FOUNTAIN_BLOOD,
 #if TAG_MAJOR_VERSION == 34
-    DNGN_DRY_FOUNTAIN_BLUE,
-    DNGN_DRY_FOUNTAIN_SPARKLING,
-    DNGN_DRY_FOUNTAIN_BLOOD,
+    DNGN_DRY_FOUNTAIN_BLUE_OLD      = DNGN_FOUNTAIN_BLUE,
+    DNGN_DRY_FOUNTAIN_SPARKLING_OLD = DNGN_FOUNTAIN_SPARKLING,
+    DNGN_DRY_FOUNTAIN_BLOOD_OLD     = DNGN_FOUNTAIN_BLOOD,
 #endif
     DNGN_DRY_FOUNTAIN,
 
@@ -1637,6 +1658,7 @@ enum duration_type
     DUR_MAGIC_SAPPED,
     DUR_PORTAL_PROJECTILE,
     DUR_FORESTED,
+    DUR_MAGMA_DEPLETED,
     NUM_DURATIONS
 };
 
@@ -1891,6 +1913,7 @@ enum god_type
     GOD_CHEIBRIADOS,
     GOD_ASHENZARI,
     GOD_DITHMENOS,
+    GOD_IGNI_IPTHES,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

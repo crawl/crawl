@@ -2170,6 +2170,7 @@ void melee_attack::set_attack_verb()
             break;
         case TRAN_STATUE:
         case TRAN_LICH:
+        case TRAN_MAGMA:
             if (you.has_usable_claws())
             {
                 if (damage_done < HIT_WEAK)
@@ -3946,6 +3947,7 @@ int melee_attack::calc_to_hit(bool random)
             case TRAN_FUNGUS:
             case TRAN_TREE:
             case TRAN_WISP:
+            case TRAN_MAGMA:
                 mhit += maybe_random2(10, random);
                 break;
             case TRAN_BAT:
@@ -5707,6 +5709,7 @@ int melee_attack::calc_base_unarmed_damage()
         case TRAN_ICE_BEAST:
         case TRAN_FUNGUS:
         case TRAN_TREE:
+        case TRAN_MAGMA:
             damage = 12;
             break;
         case TRAN_BLADE_HANDS:

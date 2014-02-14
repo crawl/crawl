@@ -163,6 +163,8 @@ static duration_def duration_data[] =
       LIGHTBLUE, "PProj", "portal projectile", "You are teleporting projectiles to their destination." },
     { DUR_FORESTED, false,
       YELLOW, "Forest", "", "" },
+    { DUR_MAGMA_DEPLETED, false,
+      RED, "-Magma", "depleted magma", "Your magma is depleted." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -1048,6 +1050,11 @@ static void _describe_transform(status_info* inf)
         inf->light_text = "Shadow",
         inf->short_text = "shadow form";
         inf->long_text  = "You are a swirling mass of dark shadows.";
+        break;
+    case TRAN_MAGMA:
+        inf->light_text = "Magma",
+        inf->short_text = "magma form";
+        inf->long_text  = "You are a fiery being of magma.";
         break;
     case TRAN_NONE:
         break;

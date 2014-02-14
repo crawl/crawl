@@ -47,6 +47,10 @@ Ashenzari lastname
 
 Ashenzari the Shackled
 %%%%
+Igni Ipthes lastname
+
+Igni Ipthes the Firesmith
+%%%%
 Xom lastname
 
 w:280

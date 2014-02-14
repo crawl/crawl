@@ -4345,6 +4345,10 @@ static const char *divine_title[NUM_GODS][8] =
     // Dithmenos -- darkness theme
     {"Illuminated",        "Gloomy",                "Aphotic",                  "Caliginous",
      "Darkened",           "Shadowed",              "Eclipsing",                "Eternal Night"},
+
+    // Igni Ipthes -- hephaestus/ptah inspiration
+    {"Shrewd",             "Crafty %s",             "Molten Fury",              "Coppersmith",
+     "Ironworker",         "Golden",                "Vindictive Volcano",       "Fiery Creator"},
 };
 
 static int _piety_level(int piety)

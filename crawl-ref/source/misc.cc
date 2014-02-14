@@ -1382,6 +1382,9 @@ bool go_berserk(bool intentional, bool potion)
         you.temperature = TEMP_MAX;
     }
 
+    if (you.form == TRAN_MAGMA)
+        you.erupt = true;
+
     if (player_equip_unrand(UNRAND_JIHAD))
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             if (mi->friendly())

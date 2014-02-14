@@ -193,6 +193,7 @@ int player::body_weight(bool base) const
     switch (form)
     {
     case TRAN_STATUE:
+    case TRAN_MAGMA:
         weight *= 2;
         break;
     case TRAN_LICH:
@@ -260,6 +261,10 @@ brand_type player::damage_brand(int)
 
         case TRAN_JELLY:
             ret = SPWPN_ACID;
+            break;
+
+        case TRAN_MAGMA:
+            ret = SPWPN_FLAMING;
             break;
 
         default:
@@ -533,6 +538,8 @@ string player::arm_name(bool plural, bool *can_plural) const
         adj = "bony";
     else if (form == TRAN_SHADOW)
         adj = "shadowy";
+    else if (form == TRAN_MAGMA)
+        adj = "fiery";
 
     if (!adj.empty())
         str = adj + " " + str;
@@ -578,6 +585,9 @@ string player::unarmed_attack_name() const
         break;
     case TRAN_LICH:
         text += " (drain)";
+        break;
+    case TRAN_MAGMA:
+        text += " (flame)";
         break;
     case TRAN_BAT:
     case TRAN_PIG:

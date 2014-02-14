@@ -1095,6 +1095,7 @@ tree_form TRAN_TREE
 %rim 0
 mushroom_form TRAN_MUSHROOM
 shadow_form TRAN_SHADOW
+magma_form TRAN_MAGMA
 %rim 1
 
 %sdir misc

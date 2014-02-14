@@ -965,6 +965,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level;
                 retval = true;
             }
+
+            if (you_worship(GOD_IGNI_IPTHES))
+            {
+                piety_change = 4;
+                piety_denom = level;
+                retval = true;
+            }
             break;
 
         case DID_SEE_MONSTER:
@@ -1038,6 +1045,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_ENCHANT_GEAR:
+            if (you_worship(GOD_IGNI_IPTHES))
+            {
+                simple_god_message(" appreciates your attempt.");
+                retval = true;
+                piety_change = 1 + random2avg(level * 7, 3);
+            }
+            break;
+
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
@@ -1107,6 +1123,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
                 "Illuminate", "Kill Illuminating", "Fire", "Kill Fiery",
+                "Enchant Gear",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

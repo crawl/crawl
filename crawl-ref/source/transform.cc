@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -34,6 +35,8 @@
 #include "random.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spl-other.h"
+#include "spl-selfench.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -60,6 +63,7 @@ static const char* form_names[] =
     "jelly",
     "fungus",
     "shadow",
+    "magma",
 };
 
 const char* transform_name(transformation_type form)
@@ -73,7 +77,7 @@ bool form_can_wield(transformation_type form)
 {
     return form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
            || form == TRAN_APPENDAGE || form == TRAN_TREE
-           || form == TRAN_SHADOW;
+           || form == TRAN_SHADOW || form == TRAN_MAGMA;
 }
 
 bool form_can_wear(transformation_type form)
@@ -142,8 +146,8 @@ bool form_has_mouth(transformation_type form)
 bool form_likes_lava(transformation_type form)
 {
     // Lava orcs can only swim in non-phys-change forms.
-    return you.species == SP_LAVA_ORC
-           && !form_changed_physiology(form);
+    return you.species == SP_LAVA_ORC && !form_changed_physiology(form)
+           || form == TRAN_MAGMA;
 }
 
 bool form_can_butcher(transformation_type form)
@@ -188,6 +192,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     case TRAN_NONE:
     case TRAN_LICH:
     case TRAN_SHADOW:
+    case TRAN_MAGMA:
     case TRAN_APPENDAGE: // handled as mutations
         return true;
 
@@ -230,6 +235,7 @@ bool form_keeps_mutations(transformation_type form)
     case TRAN_LICH:
     case TRAN_SHADOW:
     case TRAN_APPENDAGE:
+    case TRAN_MAGMA:
         return true;
     default:
         return false;
@@ -496,6 +502,8 @@ monster_type transform_mons()
         return MONS_INSUBSTANTIAL_WISP;
     case TRAN_SHADOW:
         return MONS_SHADOW; // XXX: should get its own monster?
+    case TRAN_MAGMA:
+        return MONS_FIRE_ELEMENTAL; // XXX: needs a monster
     case TRAN_BLADE_HANDS:
     case TRAN_APPENDAGE:
     case TRAN_NONE:
@@ -723,6 +731,7 @@ static int _transform_duration(transformation_type which_trans, int pow)
     case TRAN_LICH:
     case TRAN_SHADOW:
     case TRAN_BAT:
+    case TRAN_MAGMA:
         return min(20 + random2(pow) + random2(pow), 100);
     case TRAN_ICE_BEAST:
         return min(30 + random2(pow) + random2(pow), 100);
@@ -815,6 +824,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         case TRAN_STATUE:
         case TRAN_LICH:
         case TRAN_SHADOW:
+        case TRAN_MAGMA:
             break;
         default:
             skip_wielding = true;
@@ -1002,6 +1012,11 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         msg      += "a swirling mass of dark shadows.";
         break;
 
+    case TRAN_MAGMA:
+        tran_name = "magma";
+        msg      += "a fiery being of magma.";
+        break;
+
     case TRAN_NONE:
         tran_name = "null";
         msg += "your old self.";
@@ -1178,6 +1193,31 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             mpr("You fade into the shadows.");
         else
             mpr("You feel less conspicuous.");
+        break;
+
+    case TRAN_MAGMA:
+        if (you.duration[DUR_STONESKIN])
+        {
+            mprf(MSGCH_DURATION,
+                 "Your stone armour melts in the extreme heat.");
+            you.duration[DUR_STONESKIN] = 0;
+        }
+
+        if (you.duration[DUR_CONDENSATION_SHIELD])
+            remove_condensation_shield();
+
+        if (you.duration[DUR_ICY_ARMOUR])
+            remove_ice_armour();
+
+        if (you.mutation[MUT_ICEMAIL])
+        {
+            mprf(MSGCH_DURATION,
+                 "Your icy envelope dissipates in the extreme heat.");
+            you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
+        }
+
+        you.redraw_armour_class = true;
+        invalidate_agrid(true);
         break;
 
     default:
@@ -1389,6 +1429,13 @@ void untransform(bool skip_wielding, bool skip_move)
         }
         notify_stat_change(STAT_STR, -10, true,
                      "losing the tree transformation");
+        break;
+
+    case TRAN_MAGMA:
+        mprf(MSGCH_DURATION, "You feel yourself cool down.");
+        invalidate_agrid(true);
+        you.attribute[ATTR_ERUPT_DAMAGE] = 0;
+        you.erupt = false;
         break;
 
     default:

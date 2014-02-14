@@ -957,8 +957,22 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
         else if (x >= DNGN_LAVA_SEA && x < 30)
             x = (dungeon_feature_type)(x - 1);
     }
-    if (x >= DNGN_DRY_FOUNTAIN_BLUE && x <= DNGN_DRY_FOUNTAIN_BLOOD)
-        x = DNGN_DRY_FOUNTAIN;
+
+    if (th.getMinorVersion() < TAG_MINOR_MORE_ALTAR_ENUMS)
+    {
+        if (x >= DNGN_DRY_FOUNTAIN_BLUE_OLD
+            && x <= DNGN_DRY_FOUNTAIN_BLOOD_OLD)
+        {
+            x = DNGN_DRY_FOUNTAIN;
+        }
+
+        if (x == DNGN_FOUNTAIN_BLUE_OLD)
+            x = DNGN_FOUNTAIN_BLUE;
+        if (x == DNGN_FOUNTAIN_SPARKLING_OLD)
+            x = DNGN_FOUNTAIN_SPARKLING;
+        if (x == DNGN_FOUNTAIN_BLOOD_OLD)
+            x = DNGN_FOUNTAIN_BLOOD;
+    }
 #endif
 
     return x;
@@ -976,6 +990,22 @@ static dungeon_feature_type unmarshallFeatureType_Info(reader &th)
             x = DNGN_MANGROVE;
         else if (x >= DNGN_LAVA_SEA && x < 30)
             x = (dungeon_feature_type)(x - 1);
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_MORE_ALTAR_ENUMS)
+    {
+        if (x >= DNGN_DRY_FOUNTAIN_BLUE_OLD
+            && x <= DNGN_DRY_FOUNTAIN_BLOOD_OLD)
+        {
+            x = DNGN_DRY_FOUNTAIN;
+        }
+
+        if (x == DNGN_FOUNTAIN_BLUE_OLD)
+            x = DNGN_FOUNTAIN_BLUE;
+        if (x == DNGN_FOUNTAIN_SPARKLING_OLD)
+            x = DNGN_FOUNTAIN_SPARKLING;
+        if (x == DNGN_FOUNTAIN_BLOOD_OLD)
+            x = DNGN_FOUNTAIN_BLOOD;
     }
 
     return x;

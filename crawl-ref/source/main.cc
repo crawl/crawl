@@ -2397,7 +2397,7 @@ static void _decrement_durations()
     else
         you.duration[DUR_GOURMAND] = 0;
 
-    if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
+    if (you.duration[DUR_ICEMAIL_DEPLETED] > 0 && you.form != TRAN_MAGMA)
     {
         if (delay > you.duration[DUR_ICEMAIL_DEPLETED])
             you.duration[DUR_ICEMAIL_DEPLETED] = 0;
@@ -2558,8 +2558,10 @@ static void _decrement_durations()
     }
 
     // Vampire bat transformations are permanent (until ended).
-    if (you.species != SP_VAMPIRE || you.form != TRAN_BAT
-        || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY)
+    if ((you.species != SP_VAMPIRE || you.form != TRAN_BAT
+         || you.duration[DUR_TRANSFORMATION] <= 5 * BASELINE_DELAY)
+        // Don't decrement magma form in lava
+        && (you.form != TRAN_MAGMA || grd(you.pos()) != DNGN_LAVA))
     {
         if (_decrement_a_duration(DUR_TRANSFORMATION, delay, NULL, random2(3),
                                   "Your transformation is almost over."))
@@ -3072,6 +3074,9 @@ static void _decrement_durations()
         you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
     }
 
+    _decrement_a_duration(DUR_MAGMA_DEPLETED, delay,
+                          "Your magma supply has returned.");
+
     dec_elixir_player(delay);
 
     if (!env.sunlight.empty())
@@ -3094,6 +3099,22 @@ static void _check_banished()
         banished(you.banished_by);
         you.banished_by.clear();
     }
+}
+
+static void _check_erupt()
+{
+    if (you.form == TRAN_MAGMA && !you.duration[DUR_DEATHS_DOOR])
+    {
+        if (you.erupt)
+        {
+            magma_form_eruption();
+            you.attribute[ATTR_ERUPT_DAMAGE] = 0;
+        }
+    }
+    else
+        you.attribute[ATTR_ERUPT_DAMAGE] = 0;
+
+    you.erupt = false;
 }
 
 static void _check_shafts()
@@ -3490,6 +3511,7 @@ void world_reacts()
 #endif
 
     _check_banished();
+    _check_erupt();
     _check_shafts();
     _check_sanctuary();
 

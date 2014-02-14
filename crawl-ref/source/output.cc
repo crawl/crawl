@@ -818,6 +818,8 @@ static void _print_stats_wp(int y)
         case TRAN_JELLY:
             col = LIGHTRED;
             break;
+        case TRAN_MAGMA:
+            col = RED;
         default:
             break;
         }
@@ -1020,6 +1022,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_POISON_VULN,
         DUR_PORTAL_PROJECTILE,
         DUR_FORESTED,
+        DUR_MAGMA_DEPLETED,
     };
 
     status_info inf;
