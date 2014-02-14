@@ -3236,7 +3236,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.species == SP_FORMICID;
         case SCR_AMNESIA:
             return you_worship(GOD_TROG);
-        case SCR_RECHARGING:
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
         case SCR_ENCHANT_WEAPON_I:
