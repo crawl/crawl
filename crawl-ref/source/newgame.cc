@@ -199,7 +199,7 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
         for (int i = 0; i < ng_num_species(); i++)
         {
             species_type sp = get_species(i);
-            if (is_good_combination(sp, ng->job, true)
+            if (is_good_combination(sp, ng->job, false, true)
                 && one_chance_in(++good_choices))
             {
                 ng->species = sp;
@@ -224,7 +224,7 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
             for (int i = 0; i < ng_num_species(); i++)
             {
                 species_type sp = get_species(i);
-                if (is_good_combination(sp, ng->job, false)
+                if (is_good_combination(sp, ng->job, false, false)
                     && one_chance_in(++good_choices))
                 {
                     ng->species = sp;
@@ -258,7 +258,7 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
         for (int i = 0; i < NUM_JOBS; i++)
         {
             job_type job = job_type(i);
-            if (is_good_combination(ng->species, job, true)
+            if (is_good_combination(ng->species, job, true, true)
                 && one_chance_in(++good_choices))
             {
                 ng->job = job;
@@ -283,7 +283,7 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
             for (int i = 0; i < NUM_JOBS; i++)
             {
                 job_type job = job_type(i);
-                if (is_good_combination(ng->species, job, false)
+                if (is_good_combination(ng->species, job, true, false)
                     && one_chance_in(++good_choices))
                 {
                     ASSERT(is_job_valid_choice(job));
@@ -322,7 +322,7 @@ static string _highlight_pattern(const newgame_def* ng)
         if (!is_species_valid_choice(species))
             continue;
 
-        if (is_good_combination(species, ng->job, true))
+        if (is_good_combination(species, ng->job, false, true))
             ret += species_name(species) + "  |";
     }
 
@@ -582,7 +582,7 @@ static void _construct_species_menu(const newgame_def* ng,
         text.clear();
 
         if (ng->job == JOB_UNKNOWN
-            || job_allowed(species, ng->job) == CC_UNRESTRICTED)
+            || species_allowed(ng->job, species) == CC_UNRESTRICTED)
         {
             tmp->set_fg_colour(LIGHTGRAY);
             tmp->set_highlight_colour(GREEN);
@@ -593,7 +593,7 @@ static void _construct_species_menu(const newgame_def* ng,
             tmp->set_highlight_colour(YELLOW);
         }
         if (ng->job != JOB_UNKNOWN
-            && job_allowed(species, ng->job) == CC_BANNED)
+            && species_allowed(ng->job, species) == CC_BANNED)
         {
             text = "    ";
             text += species_name(species);
@@ -905,7 +905,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
                 // we have a species selection
                 species_type species = static_cast<species_type> (selection_key);
                 if (ng->job == JOB_UNKNOWN
-                    || job_allowed(species, ng->job) != CC_BANNED)
+                    || species_allowed(ng->job, species) != CC_BANNED)
                 {
                     ng_choice->species = species;
                     return;
