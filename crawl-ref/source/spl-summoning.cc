@@ -1309,7 +1309,7 @@ static bool _water_adjacent(coord_def p)
 
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
-    const int duration = random_range(100 + pow / 10, 170 + pow / 10);
+    const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
 
     if (you.duration[DUR_FORESTED])
     {
@@ -1371,9 +1371,12 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
         mpr("A forested plane collides here with a resounding crunch!");
         noisy(10, caster->pos());
 
-        if (monster *dryad = create_monster(
-                mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 1, SPELL_SUMMON_FOREST,
-                caster->pos(), MHITYOU, MG_FORCE_BEH, god)))
+        mgen_data dryad_data = mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 1,
+                                         SPELL_SUMMON_FOREST, caster->pos(),
+                                         MHITYOU, MG_FORCE_BEH, god);
+        dryad_data.hd = 5 + div_rand_round(pow, 18);
+
+        if (monster *dryad = create_monster(dryad_data))
         {
             player_angers_monster(dryad);
             mon_enchant abj = dryad->get_ench(ENCH_ABJ);
