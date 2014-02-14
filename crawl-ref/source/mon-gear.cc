@@ -1315,6 +1315,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.plus      = random2(5);
         item.plus2     = random2(5);
         item.flags    |= ISFLAG_KNOW_TYPE;
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_ARC_BLADE))
+            make_item_unrandart(item, UNRAND_ARC_BLADE);
         break;
 
     case MONS_ARACHNE:
