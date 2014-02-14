@@ -961,15 +961,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 const int base_gain = 8; // base gain per dungeon level
                 // levels: x1, x1.25, x1.5, x1.75, x2
                 piety_change = base_gain + base_gain * you.bondage_level / 4;
-                piety_denom = level;
-                retval = true;
             }
             else if (you_worship(GOD_NEMELEX_XOBEH))
-            {
                 piety_change = 12;
-                piety_denom = level;
-                retval = true;
-            }
+            else if (you_worship(GOD_IGNI_IPTHES))
+                piety_change = 6;
+
+            piety_denom = level;
+            retval = true;
             break;
 
         case DID_SEE_MONSTER:
@@ -1040,6 +1039,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 piety_denom = level + 10;
                 piety_change = piety_denom - 6;
+            }
+            break;
+
+        case DID_ENCHANT_GEAR:
+            if (you_worship(GOD_IGNI_IPTHES))
+            {
+                simple_god_message(" appreciates your attempt.");
+                retval = true;
+                piety_change = 1 + random2avg(level * 11, 3);
             }
             break;
 
@@ -1114,6 +1122,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Artificial", "Destroy Spellbook",
                 "Exploration", "Desecrate Holy Remains", "Seen Monster",
                 "Illuminate", "Kill Illuminating", "Fire", "Kill Fiery",
+                "Enchant Gear",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);

@@ -450,6 +450,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_GOZAG;
     case DNGN_ALTAR_QAZLAL:
         return TILE_DNGN_ALTAR_QAZLAL;
+    case DNGN_ALTAR_IGNI_IPTHES:
+        return TILE_DNGN_ALTAR_IGNI_IPTHES;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:

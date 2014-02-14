@@ -36,5 +36,6 @@ int gozag_gold_in_los(actor* who);
 int qazlal_sh_boost(int piety = you.piety);
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);
+int igni_armour_bonus(const item_def& item);
 
 #endif

@@ -228,6 +228,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " is consumed by the earth.",
         " is consumed by a violent tear in the earth.",
     },
+    // Igni Ipthes
+    {
+        " slowly dissolves into the earth.",
+        " dissolves into the earth.",
+        " turns red-hot and explodes.",
+    },
 };
 
 /**
@@ -366,6 +372,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "You adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
     },
+    // Igni Ipthes
+    { "reforge weapons into hammers",
+      "Igni Ipthes supports the use of metal body armour.",
+      "permanently firebrand a weapon",
+      "release gusts of air using the Divine Bellows",
+      "transform into a being of fiery magma"
+    },
 };
 
 /**
@@ -503,6 +516,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "give life to nearby clouds",
       "You no longer adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
+    },
+    // Igni Ipthes
+    { "reforge weapons",
+      "Igni Ipthes no longer supports the use of metal body armour.",
+      "firebrand a weapon",
+      "use the Divine Bellows",
+      "transform into a being of fiery magma"
     },
 };
 
@@ -652,6 +672,11 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_GOZAG:
         likes.push_back("you collect gold");
+        break;
+
+    case GOD_IGNI_IPTHES:
+        really_likes.push_back("you enchant your weapons and armour");
+        likes.push_back("you explore the world");
         break;
 
     default:
@@ -1085,8 +1110,8 @@ void dec_penance(god_type god, int val)
 
         if (you_worship(god))
         {
-            // Orcish bonuses are now once more effective.
-            if (god == GOD_BEOGH)
+            // Orcish/metal armour bonuses are now once more effective.
+            if (god == GOD_BEOGH || god == GOD_IGNI_IPTHES)
                  you.redraw_armour_class = true;
             // TSO's halo is once more available.
             else if (god == GOD_SHINING_ONE
@@ -1327,6 +1352,8 @@ static void _inc_penance(god_type god, int val)
                 you.redraw_armour_class = true;
             }
         }
+        else if (god == GOD_IGNI_IPTHES)
+            you.redraw_armour_class = true;
 
         if (you_worship(god))
         {
@@ -2510,6 +2537,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_DITHMENOS:     return "Dithmenos";
     case GOD_GOZAG:         return "Gozag";
     case GOD_QAZLAL:        return "Qazlal";
+    case GOD_IGNI_IPTHES:   return "Igni Ipthes";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -2890,6 +2918,13 @@ static void _gain_piety_point()
         update_player_symbol();
     }
 
+    if (you_worship(GOD_IGNI_IPTHES))
+    {
+        // Every piety level change also affects AC from metal gear.
+        you.redraw_armour_class = true;
+    }
+
+
     if (you_worship(GOD_CHEIBRIADOS)
         && chei_stat_boost(old_piety) < chei_stat_boost())
     {
@@ -3058,9 +3093,9 @@ void lose_piety(int pgn)
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(HINT_GOD_DISPLEASED);
 
-    if (you_worship(GOD_BEOGH))
+    if (you_worship(GOD_BEOGH) || you_worship(GOD_IGNI_IPTHES))
     {
-        // Every piety level change also affects AC from orcish gear.
+        // Every piety level change also affects AC from orcish/metal gear.
         you.redraw_armour_class = true;
     }
 
@@ -3422,6 +3457,13 @@ void excommunication(god_type new_god)
         _set_penance(old_god, 25);
         break;
 
+    case GOD_IGNI_IPTHES:
+        if (you.form == TRAN_MAGMA)
+            you.erupt = true;
+
+        _set_penance(old_god, 50);
+        break;
+
     case GOD_CHEIBRIADOS:
     default:
         _set_penance(old_god, 25);
@@ -3673,6 +3715,9 @@ static bool _transformed_player_can_join_god(god_type which_god)
         return false;
     }
 
+    if (which_god == GOD_DITHMENOS && you.form == TRAN_MAGMA)
+        return true;
+
     return true;
 }
 
@@ -3747,6 +3792,14 @@ static void _god_welcome_handle_gear()
         set_ident_type(OBJ_SCROLLS, SCR_REMOVE_CURSE, ID_KNOWN_TYPE);
         auto_id_inventory();
         ash_detect_portals(true);
+    }
+
+    if (you_worship(GOD_IGNI_IPTHES))
+    {
+        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_I, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_II, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR, ID_KNOWN_TYPE);
     }
 
     // detect evil weapons
@@ -4451,7 +4504,8 @@ void handle_god_time(int time_delta)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            // Nemelex is relatively patient.
+        case GOD_IGNI_IPTHES:
+            // Relatively patient.
             if (one_chance_in(35))
                 lose_piety(1);
             break;
@@ -4515,6 +4569,7 @@ int god_colour(god_type god) // mv - added
     case GOD_BEOGH:
     case GOD_LUGONU:
     case GOD_ASHENZARI:
+    case GOD_IGNI_IPTHES:
         return LIGHTRED;
 
     case GOD_GOZAG:
@@ -4621,6 +4676,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_QAZLAL:
         return BROWN;
+
+    case GOD_IGNI_IPTHES:
+        return LIGHTRED;
 
     default:
         return YELLOW;

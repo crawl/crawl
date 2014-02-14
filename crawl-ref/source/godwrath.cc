@@ -154,6 +154,39 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
     return create_monster(temp, false);
 }
 
+static int _igni_random_summon(int availible_cost)
+{
+    monster_type mon_type = coinflip() ? MONS_FIRE_ELEMENTAL
+                                       : MONS_STONE_GOLEM;
+    int ret_cost = 1;
+
+    if (availible_cost > 3
+        && coinflip()
+        && x_chance_in_y(sqr(you.experience_level), 300))
+    {
+        mon_type = MONS_IRON_GOLEM;
+        ret_cost = 3;
+    }
+
+    if (availible_cost > 8 && x_chance_in_y(sqr(you.experience_level), 1000))
+    {
+        mon_type = MONS_ORB_OF_FIRE;
+        ret_cost = 8;
+    }
+
+    mgen_data temp = mgen_data::hostile_at(mon_type,
+                                           "the wrath of Igni Ipthes",
+                                           true, 0, 0, you.pos(), 0,
+                                           GOD_IGNI_IPTHES);
+
+    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+    if (create_monster(temp, false))
+        return ret_cost;
+    else
+        return 0;
+}
+
 static bool _tso_retribution()
 {
     // holy warriors/cleansing theme
@@ -1543,7 +1576,67 @@ static bool _qazlal_retribution()
         }
         break;
     }
+}
 
+static bool _igni_retribution()
+{
+    const god_type god = GOD_IGNI_IPTHES;
+
+    switch (random2(4))
+    {
+    case 0:
+    {
+        int c = 1 + random2avg(div_rand_round(you.experience_level, 2), 2);
+        int max_summon = 5;
+        bool success = false;
+        while (c > 0 && max_summon-- > 0)
+        {
+            const int spent_c = _igni_random_summon(c);
+            c -= spent_c;
+            if (spent_c)
+                success = true;
+        }
+
+        if (success)
+        {
+            simple_god_message(" summons his creations to punish you!",
+                               god);
+            break;
+        }
+    }
+    // intentional fall-through
+    case 1:
+    {
+        bool had_effect = false;
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        {
+            if (mons_immune_magic(*mi) || mi->is_summoned())
+                continue;
+
+            if (mi->add_ench(ENCH_INNER_FLAME))
+                had_effect = true;
+        }
+
+        if (had_effect)
+        {
+            god_speaks(god, "The flame burns in all of us!");
+            break;
+        }
+    }
+    // intentional fall-through
+    case 2:
+    case 3:
+        // fire miscast, 20% chance of additional miscast
+        do
+        {
+            MiscastEffect(&you, -god, SPTYP_FIRE,
+                          1 + div_rand_round(you.experience_level, 9),
+                          random2avg(80, 3),
+                          "the disappointment of Igni Ipthes");
+        }
+        while (one_chance_in(5));
+        break;
+    }
     return true;
 }
 
@@ -1590,6 +1683,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
     case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
+    case GOD_IGNI_IPTHES:   do_more = _igni_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:

@@ -968,8 +968,6 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
         x = static_cast<dungeon_feature_type>(x - 1);
     }
 
-    if (x >= DNGN_DRY_FOUNTAIN_BLUE && x <= DNGN_DRY_FOUNTAIN_BLOOD)
-        x = DNGN_DRY_FOUNTAIN;
 #endif
 
     return x;

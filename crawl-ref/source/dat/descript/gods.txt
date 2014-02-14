@@ -179,6 +179,17 @@ will find themselves the eye in a storm of elemental destruction, from which
 only their God can protect them. Pious worshippers of Qazlal will gain the
 ability to direct and control the destructive might of the storm.
 %%%%
+Igni Ipthes
+
+Igni Ipthes controls the fire beneath the earth, understanding that the element
+is more useful for creation than destruction. As a patron of blacksmiths and
+craftsmen, Igni appreciates those who enchant their equipment, along with those
+who explore the world. Followers gain access to Igni's smithy, providing them
+with a number of metalworking abilities. Additionally, the most pious
+worshipers gain knowledge of magma transformation, granting them immunity
+from the effects of fire. Unlike other gods, Igni's abilities require a payment
+in gold.
+%%%%
 Zin powers
 
 Zin grants followers the ability to preach to the unenlightened masses, and

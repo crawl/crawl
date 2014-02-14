@@ -84,6 +84,12 @@ spret_type ice_armour(int pow, bool fail)
         return SPRET_ABORT;
     }
 
+    if (you.form == TRAN_MAGMA)
+    {
+        mpr("The film of ice would instantly melt.");
+        return SPRET_ABORT;
+    }
+
     if (you.duration[DUR_FIRE_SHIELD])
     {
         mpr("Your ring of flames would instantly melt the ice.");

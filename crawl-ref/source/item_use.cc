@@ -2238,6 +2238,8 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     string iname = wpn.name(DESC_YOUR);
     const char *s = wpn.quantity == 1 ? "s" : "";
 
+    const int acc_dam_sum = acc + dam;
+
     // Blowguns only have one stat.
     if (wpn.base_type == OBJ_WEAPONS && wpn.sub_type == WPN_BLOWGUN)
     {
@@ -2280,6 +2282,8 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
 
     if (success)
         you.wield_change = true;
+
+    did_god_conduct(DID_ENCHANT_GEAR, max(1, acc_dam_sum));
 
     return success;
 }
@@ -2403,6 +2407,8 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
         do_uncurse_item(arm, true, true);
 
+        did_god_conduct(DID_ENCHANT_GEAR, 1);
+
         // No additional enchantment.
         return true;
     }
@@ -2440,6 +2446,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     arm.plus++;
     ac_change++;
     do_uncurse_item(arm, true, true);
+    did_god_conduct(DID_ENCHANT_GEAR, 1);
 
     return true;
 }
@@ -2661,7 +2668,8 @@ void read_scroll(int slot)
 
 #if TAG_MAJOR_VERSION == 34
     // Prevent hot lava orcs reading scrolls
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS)
+        || you.form == TRAN_MAGMA)
     {
         crawl_state.zero_turns_taken();
         return mpr("You'd burn any scroll you tried to read!");

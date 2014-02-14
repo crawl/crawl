@@ -459,7 +459,9 @@ void remove_condensation_shield()
 
 spret_type cast_condensation_shield(int pow, bool fail)
 {
-    if (you.shield() || you.duration[DUR_FIRE_SHIELD])
+    if (you.shield()
+        || you.duration[DUR_FIRE_SHIELD]
+        || you.form == TRAN_MAGMA)
     {
         canned_msg(MSG_SPELL_FIZZLES);
         return SPRET_ABORT;

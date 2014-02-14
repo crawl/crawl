@@ -2223,6 +2223,22 @@ static void _check_banished()
     }
 }
 
+static void _check_erupt()
+{
+    if (you.form == TRAN_MAGMA && !you.duration[DUR_DEATHS_DOOR])
+    {
+        if (you.erupt)
+        {
+            magma_form_eruption();
+            you.attribute[ATTR_ERUPT_DAMAGE] = 0;
+        }
+    }
+    else
+        you.attribute[ATTR_ERUPT_DAMAGE] = 0;
+
+    you.erupt = false;
+}
+
 static void _check_shafts()
 {
     for (int i = 0; i < MAX_TRAPS; ++i)
@@ -2351,6 +2367,7 @@ void world_reacts()
 #endif
 
     _check_banished();
+    _check_erupt();
     _check_shafts();
     _check_sanctuary();
 
@@ -3979,6 +3996,6 @@ static void _compile_time_asserts()
     ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 1 == DNGN_ALTAR_LAST_GOD + 1);
 #else
     // This needs to be updated if more gods are added at the end.
-    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 3 == DNGN_ALTAR_LAST_GOD + 1);
+    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 4 == DNGN_ALTAR_LAST_GOD + 1);
 #endif
 }

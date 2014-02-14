@@ -895,6 +895,11 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "shadow form";
         inf->long_text  = "You are a swirling mass of dark shadows.";
         break;
+    case TRAN_MAGMA:
+        inf->light_text = "Magma",
+        inf->short_text = "magma form";
+        inf->long_text  = "You are a fiery being of magma.";
+        break;
     case TRAN_NONE:
         break;
     }

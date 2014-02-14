@@ -81,7 +81,9 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+    // Magma Form
+    ABIL_ERUPTION,
+    ABIL_MAX_INTRINSIC = ABIL_ERUPTION,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -186,6 +188,7 @@ enum ability_type
     // Dithmenos
     ABIL_DITHMENOS_SHADOW_STEP = 1170,
     ABIL_DITHMENOS_SHADOW_FORM,
+
     // Gozag
     ABIL_GOZAG_POTION_PETITION = 1180,
     ABIL_GOZAG_CALL_MERCHANT,
@@ -194,6 +197,12 @@ enum ability_type
     ABIL_QAZLAL_UPHEAVAL = 1190,
     ABIL_QAZLAL_ELEMENTAL_FORCE,
     ABIL_QAZLAL_DISASTER_AREA,
+
+    // Igni Ipthes
+    ABIL_IGNI_REFORGE_WEAPON = 1200,
+    ABIL_IGNI_FIREBRAND_WEAPON,
+    ABIL_IGNI_DIVINE_BELLOWS,
+    ABIL_IGNI_TRAN_MAGMA,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -343,6 +352,7 @@ enum attribute_type
     ATTR_DIVINE_ELEC_RES,      // Divine electricity resistance (Qazlal).
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
+    ATTR_ERUPT_DAMAGE,         // Amount of damage taken in magma form
     NUM_ATTRIBUTES
 };
 
@@ -366,8 +376,9 @@ enum transformation_type
 #endif
     TRAN_FUNGUS,
     TRAN_SHADOW,
+    TRAN_MAGMA,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_SHADOW,
+    LAST_FORM = TRAN_MAGMA,
 };
 
 enum beam_type                  // bolt::flavour
@@ -1085,6 +1096,7 @@ enum conduct_type
     DID_KILL_ILLUMINATING,                // Dithmenos
     DID_FIRE,                             // Dithmenos
     DID_KILL_FIERY,                       // Dithmenos
+    DID_ENCHANT_GEAR,                     // Igni Ipthes
 
     NUM_CONDUCTS
 };
@@ -1493,7 +1505,8 @@ enum dungeon_feature_type
 #else
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_QAZLAL,
+    DNGN_ALTAR_IGNI_IPTHES,
+        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_IGNI_IPTHES,
     DNGN_ALTAR_UNUSED_3,
     DNGN_ALTAR_UNUSED_4,
     DNGN_ALTAR_UNUSED_5,
@@ -1559,6 +1572,7 @@ enum dungeon_feature_type
 #if TAG_MAJOR_VERSION == 34
     DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_QAZLAL,
+    DNGN_ALTAR_IGNI_IPTHES,
 #endif
 
     NUM_FEATURES
@@ -1719,6 +1733,7 @@ enum duration_type
     DUR_QAZLAL_AC,
     DUR_CORROSION,
     DUR_FORTITUDE,
+    DUR_MAGMA_DEPLETED,
     NUM_DURATIONS
 };
 
@@ -1985,6 +2000,7 @@ enum god_type
     GOD_DITHMENOS,
     GOD_GOZAG,
     GOD_QAZLAL,
+    GOD_IGNI_IPTHES,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

@@ -22,6 +22,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
+#include "evoke.h"
 #include "fight.h"
 #include "files.h"
 #include "food.h"
@@ -58,6 +59,8 @@
 #include "shopping.h"
 #include "shout.h"
 #include "spl-book.h"
+#include "spl-clouds.h"
+#include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
@@ -68,6 +71,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "throw.h"
+#include "transform.h"
 #include "traps.h"
 #include "unwind.h"
 #include "view.h"
@@ -4746,4 +4750,228 @@ bool qazlal_disaster_area()
     scaled_delay(100);
 
     return true;
+}
+
+void igni_divine_bellows()
+{
+    wind_blast(&you, 100, coord_def());
+}
+
+// XXX: combine this and _bless_weapon and _rebrand_weapon into a single
+//      function rather than duplicating code everywhere.
+bool igni_firebrand_weapon()
+{
+    if (!you.weapon())
+    {
+        mpr("You need to wield a weapon if you want to firebrand it.");
+        return false;
+    }
+
+    item_def& wpn = *you.weapon();
+
+    // Only TSO allows blessing ranged weapons.
+    if (!is_brandable_weapon(wpn, true) || is_blessed(wpn))
+    {
+        mpr("That is not a suitable weapon for branding.");
+        return false;
+    }
+
+    const int new_brand = is_range_weapon(wpn) ? SPWPN_FLAME : SPWPN_FLAMING;
+    if (get_weapon_brand(wpn) == new_brand)
+    {
+        mpr("That weapon is already burning!");
+        return false;
+    }
+
+    string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
+                       + " coated with flames?";
+
+    if (!yesno(prompt.c_str(), true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
+
+    string old_name = wpn.name(DESC_A);
+    set_equip_desc(wpn, ISFLAG_GLOWING);
+    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
+
+    if (wpn.cursed())
+        do_uncurse_item(wpn, false);
+
+    you.wield_change = true;
+    calc_mp(); // in case the old brand was antimagic
+    string desc  = old_name + " coated with flames by Igni Ipthes";
+
+    take_note(Note(NOTE_ID_ITEM, 0, 0,
+              wpn.name(DESC_A).c_str(), desc.c_str()));
+    wpn.flags |= ISFLAG_NOTED_ID;
+
+    mprf(MSGCH_GOD, "The weapon ignites!");
+
+    flash_view_delay(RED, 1000);
+
+    return true;
+}
+
+static item_def* _reforge_check_weapon(item_def* wpn)
+{
+    if (!wpn)
+        return NULL;
+
+    if (!is_weapon(*wpn) || is_artefact(*wpn) || wpn->sub_type == WPN_HAMMER)
+        return NULL;
+
+    return wpn;
+}
+
+static void _reforge_weapon(item_def& wpn, bool friendly)
+{
+    const string old_name(wpn.name(DESC_THE));
+
+    wpn.sub_type = WPN_HAMMER;
+    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
+    if (!friendly)
+        do_curse_item(wpn, true);
+
+    const string new_name(wpn.name(DESC_A));
+
+    mprf(MSGCH_GOD, "%s is reforged into %s!",
+         old_name.c_str(), new_name.c_str());
+}
+
+bool igni_reforge_player_weapon()
+{
+    item_def* wpn = _reforge_check_weapon(you.weapon());
+
+    if (!wpn)
+    {
+        mpr("You're not holding a weapon that can be reforged.");
+        return false;
+    }
+
+    if (!yes_or_no("Are you sure you want to reforge your %s "
+                   "into a hammer?",
+                   wpn->name(DESC_PLAIN).c_str()))
+    {
+        return false;
+    }
+
+    _reforge_weapon(*wpn, true);
+    you.wield_change = true;
+    place_cloud(CLOUD_GREY_SMOKE, you.pos(), 3, &you);
+
+    return true;
+}
+
+bool igni_reforge_monster_weapon(monster* mons)
+{
+    if (mons == NULL || !you.can_see(mons))
+    {
+        mpr("There's no monster there!");
+        return false;
+    }
+
+    if (mons_is_firewood(mons) || mons_is_conjured(mons->type))
+    {
+        mpr("That's not a suitable target!");
+        return false;
+    }
+
+    if ((mons->friendly() || mons->good_neutral())
+        && !yesno("That monster isn't hostile. Reforge anyways?",
+                   true, 'n'))
+    {
+        return false;
+    }
+
+    item_def* wpn1 = _reforge_check_weapon(mons->mslot_item(MSLOT_WEAPON));
+    item_def* wpn2 = _reforge_check_weapon(mons->mslot_item(MSLOT_ALT_WEAPON));
+
+    if (!wpn1 && !wpn2)
+    {
+        mprf("%s isn't holding a weapon that can be reforged.",
+            mons->full_name(DESC_THE).c_str());
+        return false;
+    }
+
+    if (wpn1)
+        _reforge_weapon(*wpn1, mons->friendly());
+    if (wpn2)
+        _reforge_weapon(*wpn2, mons->friendly());
+
+    place_cloud(CLOUD_GREY_SMOKE, mons->pos(), 3, &you);
+
+    return true;
+}
+
+void magma_form_eruption()
+{
+    ASSERT(you.form == TRAN_MAGMA);
+
+    mpr("You erupt!");
+
+    const int predam = you.attribute[ATTR_ERUPT_DAMAGE];
+    const int nowdam = max(0, min(you.hp * 2 / 3, you.hp_max/3 - predam));
+    const int total_dam = predam + nowdam;
+
+    if (nowdam)
+        ouch(nowdam, MHITNOT, KILLED_BY_SOMETHING, "erupting");
+
+    int pow = min(100, random2avg(total_dam * 2, 3) + you.experience_level);
+
+    const int magma_beams = 2 + random2avg(pow / 10, 3);
+    for (int i = 0; i < magma_beams; ++i)
+    {
+        bolt beam;
+        beam.source = you.pos();
+        beam.range    = random_range(4, 4 + min(4, random2(pow / 10)));
+        beam.damage   = dice_def(3, 7 + pow / 5);
+        beam.hit      = 40;
+        beam.is_explosion = true;
+        beam.ench_power = pow;
+        beam.beam_source = MHITYOU;
+        beam.loudness    = 14;
+
+        // Attempt to find a position that isn't close to the player
+        beam.is_tracer = true;
+        const int attempts = 20;
+        for (int j = 0; j != attempts; ++j)
+        {
+            beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+            if (beam.target == you.pos())
+                continue;
+            beam.fire();
+            if (beam.path_taken.size() >= 2)
+                break;
+        }
+        beam.is_tracer = false;
+
+        if (beam.target == you.pos())
+            continue;
+
+        beam.name     = "plume of ash";
+        beam.colour   = LIGHTGREY;
+        beam.flavour  = BEAM_FIRE;
+
+        beam.fire();
+
+        beam.name     = "blast of magma";
+        beam.range /= 2;
+        beam.colour   = RED;
+        beam.flavour  = BEAM_LAVA;
+
+        beam.fire();
+    }
+
+    if (grd(you.pos()) != DNGN_LAVA)
+    {
+        untransform();
+        you.set_duration(DUR_MAGMA_DEPLETED, 30);
+    }
+
+    you.attribute[ATTR_ERUPT_DAMAGE] = 0;
+    you.erupt = false; // just in case
 }

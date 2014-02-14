@@ -1376,6 +1376,7 @@ int attack::calc_base_unarmed_damage()
         case TRAN_ICE_BEAST:
         case TRAN_FUNGUS:
         case TRAN_TREE:
+        case TRAN_MAGMA:
             damage = 12;
             break;
         case TRAN_BLADE_HANDS:

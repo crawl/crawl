@@ -836,3 +836,24 @@ void qazlal_element_adapt(beam_type flavour, int strength)
     if (what == BEAM_MISSILE)
         you.redraw_armour_class = true;
 }
+
+int igni_armour_bonus(const item_def& item)
+{
+    if (item.base_type != OBJ_ARMOUR)
+        return 0;
+
+    if (you_worship(GOD_IGNI_IPTHES)
+        && you.piety >= piety_breakpoint(1)
+        && !player_under_penance())
+    {
+        if (item.sub_type == ARM_RING_MAIL
+            || item.sub_type == ARM_SCALE_MAIL
+            || item.sub_type == ARM_CHAIN_MAIL
+            || item.sub_type == ARM_PLATE_ARMOUR)
+        {
+            return 4 + max(1, min(32, you.piety * you.experience_level / 130));
+        }
+    }
+
+    return 0;
+}

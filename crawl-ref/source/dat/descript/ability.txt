@@ -655,6 +655,40 @@ Disaster Area ability
 
 Blasts the entire area around you with powerful natural forces.
 %%%%
+# Igni
+Divine Bellows ability
+
+This ability releases a great gust of air around you that will push away
+nearby monsters and clouds.
+%%%%
+Firebrand Weapon ability
+
+Using the great forges beneath the earth, Igni will permanently imbue your
+weapon with a brand of flaming.
+%%%%
+Reforge Weapon ability
+
+This ability transforms a non-artefact weapon into a mundane hammer.
+%%%%
+Magma Form ability
+
+Gain the power of the volcano by transforming your flesh into magma. This
+transformation will render your immune to the effects of fire and
+petrification, but weak to cold. While in this form, you radiate a damaging
+heat aura, and your fire and earth magic will be enhanced. Your scrolls will
+be safely stored underneath your magma covering, which means that you won't
+be able to read them while transformed. Unfortunately, this form is extremely
+unstable; taking high amounts of damage may cause you to erupt catastrophically
+into clouds of petrifying ash and fire.
+%%%%
+Erupt ability
+
+While eruption is normally an unpredictable event, it can also be triggered
+at a moment's notice by those in magma form. This ability releases large
+amounts of fire and petrifying ash, but with it comes great pain to yourself.
+After erupting, your transformation will end, and your magma will be
+temporarily depleted.
+%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually

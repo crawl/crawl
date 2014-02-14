@@ -325,6 +325,10 @@ static const duration_def duration_data[] =
       false, LIGHTBLUE, "Fort",
       "immense fortitude", "",
       "You have immense fortitude and shrug off injury." },
+    { DUR_MAGMA_DEPLETED,
+      false, RED, "-Magma",
+      "depleted magma", "",
+      "Your magma is depleted." },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

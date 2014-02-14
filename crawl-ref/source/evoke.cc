@@ -1265,12 +1265,15 @@ void wind_blast(actor* agent, int pow, coord_def target)
         }
     }
 
+    // Remove the cloud where the blast originates from.
+    delete_cloud_at(agent->pos());
+
     if (agent->is_player())
     {
         if (pow > 120)
-            mpr("A mighty gale blasts forth from the fan!");
+            mpr("A mighty gale blasts forth!");
         else
-            mpr("A fierce wind blows from the fan.");
+            mpr("A fierce wind blows.");
     }
 
     noisy(8, agent->pos());

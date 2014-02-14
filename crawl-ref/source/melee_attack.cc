@@ -1729,6 +1729,32 @@ void melee_attack::set_attack_verb()
             break;
         case TRAN_STATUE:
         case TRAN_LICH:
+        case TRAN_MAGMA:
+            if (you.has_usable_claws())
+            {
+                if (damage_to_display < HIT_WEAK)
+                    attack_verb = "scratch";
+                else if (damage_to_display < HIT_MED)
+                    attack_verb = "claw";
+                else if (damage_to_display < HIT_STRONG)
+                    attack_verb = "mangle";
+                else
+                    attack_verb = "eviscerate";
+                break;
+            }
+            else if (you.has_usable_tentacles())
+            {
+                if (damage_to_display < HIT_WEAK)
+                    attack_verb = "tentacle-slap";
+                else if (damage_to_display < HIT_MED)
+                    attack_verb = "bludgeon";
+                else if (damage_to_display < HIT_STRONG)
+                    attack_verb = "batter";
+                else
+                    attack_verb = "thrash";
+                break;
+            }
+            // or fall-through
         case TRAN_NONE:
         case TRAN_APPENDAGE:
         case TRAN_ICE_BEAST:
@@ -2426,6 +2452,7 @@ int melee_attack::calc_to_hit(bool random)
             case TRAN_FUNGUS:
             case TRAN_TREE:
             case TRAN_WISP:
+            case TRAN_MAGMA:
                 mhit += maybe_random2(10, random);
                 break;
             case TRAN_BAT:

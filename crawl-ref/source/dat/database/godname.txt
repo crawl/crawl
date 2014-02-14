@@ -63,6 +63,10 @@ Qazlal lastname
 
 Qazlal Stormbringer
 %%%%
+Igni Ipthes lastname
+
+Igni Ipthes the Firesmith
+%%%%
 Xom lastname
 
 w:280

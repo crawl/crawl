@@ -416,6 +416,14 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                     mpr("...and don't expect to remain undetected.");
             }
         }
+
+        if (feat_is_water(new_grid) && you.form == TRAN_MAGMA)
+        {
+            mpr("The water cools you down.");
+            you.duration[DUR_TRANSFORMATION] /= 2;
+            you.duration[DUR_TRANSFORMATION]++;
+        }
+
     }
 
     // Traps go off.
@@ -556,6 +564,8 @@ bool is_player_same_genus(const monster_type mon, bool transform)
         case TRAN_JELLY:
             return mons_genus(mon) == MONS_JELLY;
 #endif
+
+        case TRAN_MAGMA: // XXX: give magma form a MONS?
         case TRAN_STATUE:
         case TRAN_BLADE_HANDS:
         case TRAN_NONE:
@@ -1488,11 +1498,14 @@ int player_likes_chunks(bool permanently)
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_fire(bool calc_unid, bool temp, bool items)
 {
+    if (you.form == TRAN_MAGMA
 #if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_DJINNI)
-        return 4; // full immunity
-
+    || you.species == SP_DJINNI
 #endif
+    )
+    {
+        return 4; // full immunity
+    }
     int rf = 0;
 
     if (items)
@@ -1571,6 +1584,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             rf++;
 
         // transformations:
+        // (magma form handled earlier)
         switch (you.form)
         {
         case TRAN_ICE_BEAST:
@@ -1592,6 +1606,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
             break;
         }
     }
+
+    if (player_under_penance(GOD_IGNI_IPTHES))
+        rf--;
 
     if (rf > 3)
         rf = 3;
@@ -1662,6 +1679,8 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         case TRAN_LICH:
             rc++;
             break;
+        case TRAN_MAGMA:
+            rc -= 2;
         default:
             break;
         }
@@ -1729,6 +1748,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     {
         rc++;
     }
+
+    if (player_under_penance(GOD_IGNI_IPTHES))
+        rc--;
 
     if (rc < -3)
         rc = -3;
@@ -2030,6 +2052,9 @@ int player_spec_fire()
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
 
+    if (you.form == TRAN_MAGMA)
+        sf++;
+
     return sf;
 }
 
@@ -2061,6 +2086,9 @@ int player_spec_earth()
 
     // Staves
     se += you.wearing(EQ_STAFF, STAFF_EARTH);
+
+    if (you.form == TRAN_MAGMA)
+        se++;
 
     return se;
 }
@@ -2405,7 +2433,8 @@ bool player_is_shapechanged()
         || you.form == TRAN_BLADE_HANDS
         || you.form == TRAN_LICH
         || you.form == TRAN_SHADOW
-        || you.form == TRAN_APPENDAGE)
+        || you.form == TRAN_APPENDAGE
+        || you.form == TRAN_MAGMA)
     {
         return false;
     }
@@ -2634,12 +2663,14 @@ int player_shield_class()
                         * (item.sub_type - ARM_LARGE_SHIELD);
         int base_shield = property(item, PARM_AC) * 2 + size_factor;
 
-        int beogh_bonus = _player_armour_beogh_bonus(item);
+        const int beogh_bonus = _player_armour_beogh_bonus(item);
+        const int igni_bonus   = igni_armour_bonus(item);
+        const int total_bonus = beogh_bonus + igni_bonus;
 
         // bonus applied only to base, see above for effect:
         shield += base_shield * 50;
         shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
-        shield += base_shield * beogh_bonus * 10 / 6;
+        shield += base_shield * total_bonus * 10 / 6;
 
         shield += item.plus * 100;
 
@@ -3674,6 +3705,7 @@ int check_stealth()
         race_mod -= 3; // depends on the base race
         break;
     case TRAN_DRAGON:
+    case TRAN_MAGMA:
         race_mod = 6;
         break;
     case TRAN_PORCUPINE:
@@ -4441,6 +4473,25 @@ bool enough_zp(int minimum, bool suppress_msg)
 
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
+        return false;
+    }
+    return true;
+}
+
+bool enough_gold(int minimum, bool suppress_msg, bool abort_macros)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (you.gold < minimum)
+    {
+        if (!suppress_msg)
+            mpr("You haven't enough gold.");
+
+        if (abort_macros)
+        {
+            crawl_state.cancel_cmd_again();
+            crawl_state.cancel_cmd_repeat();
+        }
         return false;
     }
     return true;
@@ -5788,6 +5839,8 @@ void player::init()
     banished         = false;
     banished_by.clear();
 
+    erupt            = false;
+
     wield_change     = false;
     redraw_quiver    = false;
     redraw_status_flags = 0;
@@ -6340,6 +6393,8 @@ bool player_stoneskin()
 
         return temperature_effect(LORC_STONESKIN);
     }
+    else if (you.form == TRAN_MAGMA)
+        return false;
     else
 #endif
     return you.duration[DUR_STONESKIN];
@@ -6389,10 +6444,12 @@ int player::armour_class() const
         const item_def& item   = inv[equip[eq]];
         const int ac_value     = property(item, PARM_AC) * 100;
         const int beogh_bonus  = _player_armour_beogh_bonus(item);
+        const int igni_bonus   = igni_armour_bonus(item);
+        const int total_bonus  = beogh_bonus + igni_bonus;
 
         // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
-        // Armour Skill + beogh_bonus / 2.
-        AC += ac_value * (440 + skill(SK_ARMOUR, 20) + beogh_bonus * 10) / 440;
+        // Armour Skill + racial_skill_bonus / 2.
+        AC += ac_value * (440 + skill(SK_ARMOUR, 20) + total_bonus * 10) / 440;
         AC += item.plus * 100;
 
         // The deformed don't fit into body armour very well.
@@ -6442,6 +6499,9 @@ int player::armour_class() const
         if (form == TRAN_LICH)
             AC += 600;
 
+        if (form == TRAN_MAGMA)
+            AC += 100 * experience_level / 5;
+
         if (player_genus(GENPC_DRACONIAN))
         {
             AC += 400 + 100 * (experience_level / 3);  // max 13
@@ -6479,6 +6539,7 @@ int player::armour_class() const
         case TRAN_APPENDAGE:
         case TRAN_BLADE_HANDS:
         case TRAN_LICH:  // can wear normal body armour (no bonus)
+        case TRAN_MAGMA:
             break;
 
 #if TAG_MAJOR_VERSION == 34
@@ -6834,8 +6895,12 @@ int player::res_petrify(bool temp) const
     if (player_mutation_level(MUT_PETRIFICATION_RESISTANCE))
         return 1;
 
-    if (temp && (form == TRAN_STATUE || form == TRAN_WISP))
+    if (temp && (form == TRAN_STATUE
+                 || form == TRAN_WISP
+                 || form == TRAN_MAGMA))
+    {
         return 1;
+    }
     return 0;
 }
 
@@ -7596,7 +7661,7 @@ bool player::can_bleed(bool allow_tran) const
         if (form == TRAN_STATUE || form == TRAN_ICE_BEAST
             || form == TRAN_SPIDER || form == TRAN_TREE
             || form == TRAN_FUNGUS || form == TRAN_PORCUPINE
-            || form == TRAN_SHADOW)
+            || form == TRAN_SHADOW || form == TRAN_MAGMA)
         {
             return false;
         }

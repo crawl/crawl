@@ -233,6 +233,11 @@ A radiant altar of Vehumet
 An altar, ablaze in the lights of Iskenderun and promising great destructive
 powers to those who would follow Vehumet.
 %%%%
+A red-hot altar of Igni Ipthes
+
+An anvil that is serving as an altar to Igni Ipthes the Firesmith. An inferno
+appears to be contained inside of it.
+%%%%
 A rock wall
 
 This wall consists of simple rock.

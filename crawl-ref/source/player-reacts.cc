@@ -1152,7 +1152,8 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
-    dec_elixir_player(delay);
+    _decrement_a_duration(DUR_MAGMA_DEPLETED, delay,
+                          "Your magma supply has returned.");
 
     if (!env.sunlight.empty())
         process_sunlights();

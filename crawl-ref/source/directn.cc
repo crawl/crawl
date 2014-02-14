@@ -3245,6 +3245,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "opulent altar of Gozag";
     case DNGN_ALTAR_QAZLAL:
         return "stormy altar of Qazlal";
+    case DNGN_ALTAR_IGNI_IPTHES:
+        return "red-hot altar of Igni Ipthes";
 
     case DNGN_FOUNTAIN_BLUE:
         return "fountain of clear blue water";

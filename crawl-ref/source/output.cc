@@ -868,6 +868,8 @@ static void _print_stats_wp(int y)
         case TRAN_TREE:
             col = BROWN;
             break;
+        case TRAN_MAGMA:
+            col = RED;
         default:
             break;
         }

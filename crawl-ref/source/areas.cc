@@ -780,13 +780,13 @@ int monster::umbra_radius2() const
 // Player radius
 int player::heat_radius2() const
 {
-    if (species != SP_LAVA_ORC)
-        return -1;
+    if (you.form == TRAN_MAGMA)
+        return 4;
 
-    if (!temperature_effect(LORC_HEAT_AURA))
-        return -1;
+    if (species == SP_LAVA_ORC && temperature_effect(LORC_HEAT_AURA))
+        return 2; // Surrounds you to radius of 1.
 
-    return 2; // Surrounds you to radius of 1.
+    return -1;
 }
 
 // Stub for monster radius

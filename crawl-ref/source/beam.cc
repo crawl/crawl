@@ -2804,6 +2804,7 @@ bool bolt::is_superhot() const
            || name == "bolt of magma"
            || name == "fireball"
            || name == "bolt of lightning"
+           || name == "blast of magma"
            || name.find("hellfire") != string::npos
               && in_explosion_phase;
 }
@@ -2931,6 +2932,12 @@ void bolt::affect_place_clouds()
 
     if (name == "trail of fire")
         place_cloud(CLOUD_FIRE, p, random2(ench_power) + ench_power, agent());
+
+    if (name == "blast of magma")
+        place_cloud(CLOUD_FIRE, p, random2(5) + 3, agent());
+
+    if (name == "plume of ash" && one_chance_in(2))
+        place_cloud(CLOUD_PETRIFY, p, random2(8) + 3, agent());
 
     if (origin_spell == SPELL_GHOSTLY_FLAMES)
         place_cloud(CLOUD_GHOSTLY_FLAME, p, random2(6) + 5, agent());
@@ -6004,6 +6011,33 @@ void bolt::refine_for_explosion()
         hearMsg = "You hear an explosion!";
 
         glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_FIRE;
+        ex_size = 1;
+    }
+
+    if (name == "blast of magma")
+    {
+        seeMsg  = "The blast of magma explodes!";
+        hearMsg = "You hear an explosion!";
+
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_FIRE;
+        if (is_tracer)
+            ex_size = 3;
+        else
+        {
+            ex_size = 1;
+            ex_size += random2(ench_power) > 50;
+            ex_size += random2(ench_power) > 75;
+        }
+    }
+
+    if (name == "plume of ash")
+    {
+        seeMsg  = "The plume of ash settles!";
+        hearMsg = "You hear an explosion!";
+
+        glyph   = dchar_glyph(DCHAR_CLOUD);
         flavour = BEAM_FIRE;
         ex_size = 1;
     }
