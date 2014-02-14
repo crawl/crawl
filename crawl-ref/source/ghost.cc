@@ -840,7 +840,7 @@ void ghost_demon::add_spells()
     spells[0] = search_first_list(SPELL_NO_SPELL);
     spells[1] = search_first_list(spells[0]);
     spells[2] = search_second_list(SPELL_NO_SPELL);
-    spells[3] = search_third_list(SPELL_DIG);
+    spells[3] = search_third_list(SPELL_NO_SPELL);
 
     if (spells[3] == SPELL_NO_SPELL)
         spells[3] = search_first_list(SPELL_NO_SPELL);
@@ -849,9 +849,6 @@ void ghost_demon::add_spells()
 
     if (spells[4] == SPELL_NO_SPELL)
         spells[4] = search_first_list(spells[3]);
-
-    if (_know_spell(SPELL_DIG))
-        spells[4] = SPELL_DIG;
 
     // Look for Blink or Teleport Self for the emergency slot.
     if (_know_spell(SPELL_CONTROLLED_BLINK)
