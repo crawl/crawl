@@ -303,8 +303,18 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
 
 static void _resolve_species_job(newgame_def* ng, const newgame_def* ng_choice)
 {
-    _resolve_species(ng, ng_choice);
-    _resolve_job(ng, ng_choice);
+    // Since recommendations are no longer bidirectional, pick one of
+    // species or job to start.
+    if (coinflip())
+    {
+        _resolve_species(ng, ng_choice);
+        _resolve_job(ng, ng_choice);
+    }
+    else
+    {
+        _resolve_job(ng, ng_choice);
+        _resolve_species(ng, ng_choice);
+    }
 }
 
 static string _highlight_pattern(const newgame_def* ng)
