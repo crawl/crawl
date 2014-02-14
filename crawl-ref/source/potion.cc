@@ -442,19 +442,6 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             nothing_happens = false;
         }
 
-        if (you.attribute[ATTR_XP_DRAIN])
-        {
-            you.attribute[ATTR_XP_DRAIN] = max(0, you.attribute[ATTR_XP_DRAIN] / 2 - 25);
-            // Regaining skills may affect AC/EV.
-            you.redraw_armour_class = true;
-            you.redraw_evasion = true;
-            if (!you.attribute[ATTR_XP_DRAIN])
-                mprf(MSGCH_RECOVERY, "Your life force feels restored.");
-            else
-                mpr("Your life force feels less drained.");
-            nothing_happens = false;
-        }
-
         // Give a message if no message otherwise.
         if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
             mpr("You feel refreshed.");
