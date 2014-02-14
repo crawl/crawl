@@ -2715,7 +2715,7 @@ static string _status_mut_abilities(int sw)
     if (you.species == SP_FELID)
     {
         mutations.push_back("no armour");
-        mutations.push_back("no advanced items");
+        mutations.push_back("no weapons or thrown items");
     }
 
     if (you.species == SP_OCTOPODE)

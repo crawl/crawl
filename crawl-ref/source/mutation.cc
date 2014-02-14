@@ -505,7 +505,7 @@ string describe_mutations(bool center_title)
 
     case SP_FELID:
         result += "You cannot wear armour.\n";
-        result += "You are incapable of any advanced item manipulation.\n";
+        result += "You are incapable of wielding weapons or throwing items.\n";
         result += _annotate_form_based("Your paws have sharp claws.",
             !form_keeps_mutations() || you.form == TRAN_BLADE_HANDS);
         have_any = true;

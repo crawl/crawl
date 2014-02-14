@@ -1497,7 +1497,6 @@ bool acquirement(object_class_type class_wanted, int agent,
         bad_class.set(OBJ_WEAPONS);
         bad_class.set(OBJ_MISSILES);
         bad_class.set(OBJ_ARMOUR);
-        bad_class.set(OBJ_WANDS);
         bad_class.set(OBJ_STAVES);
         bad_class.set(OBJ_RODS);
     }
