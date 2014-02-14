@@ -7686,8 +7686,8 @@ bool player::malmutate(const string &reason)
     if (!can_mutate())
         return false;
 
-    const mutation_type mut_quality = one_chance_in(5) ? RANDOM_BAD_MUTATION
-                                                       : RANDOM_MUTATION;
+    const mutation_type mut_quality = one_chance_in(5) ? RANDOM_MUTATION
+                                                       : RANDOM_BAD_MUTATION;
     if (mutate(mut_quality, reason))
     {
         learned_something_new(HINT_YOU_MUTATED);
