@@ -576,9 +576,534 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     }
 }
 
-bool is_good_combination(species_type spc, job_type job, bool good)
+char_choice_restriction species_allowed(job_type job, species_type speci)
 {
-    const char_choice_restriction restrict = job_allowed(spc, job);
+    if (!is_species_valid_choice(speci) || !is_job_valid_choice(job))
+        return CC_BANNED;
+
+    switch (speci)
+    {
+    case SP_HUMAN:
+        switch (job)
+        {
+            // note the reversed logic - this should change with more
+            // restrictions
+            case JOB_WANDERER:
+            case JOB_CHAOS_KNIGHT:
+                return CC_RESTRICTED;
+            default:
+                return CC_UNRESTRICTED;
+        }
+    case SP_HIGH_ELF:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_HUNTER:
+            case JOB_SKALD:
+            case JOB_WARPER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_DEEP_ELF:
+        switch (job)
+        {
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_ENCHANTER:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_HALFLING:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_HUNTER:
+            case JOB_ASSASSIN:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_SKALD:
+            case JOB_WARPER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_ENCHANTER:
+            case JOB_EARTH_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_HILL_ORC:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_SKALD:
+            case JOB_CONJURER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_KOBOLD:
+        switch (job)
+        {
+            case JOB_HUNTER:
+            case JOB_ASSASSIN:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_HEALER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_ENCHANTER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_MUMMY:
+        switch (job)
+        {
+            case JOB_HEALER:
+            case JOB_TRANSMUTER:
+                return CC_BANNED;
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_NECROMANCER:
+            case JOB_ICE_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_NAGA:
+        switch (job)
+        {
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_SKALD:
+            case JOB_TRANSMUTER:
+            case JOB_ENCHANTER:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_OGRE:
+        switch (job)
+        {
+            case JOB_HUNTER:
+            case JOB_BERSERKER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_WIZARD:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_TROLL:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_HUNTER:
+            case JOB_BERSERKER:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_WIZARD:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_BASE_DRACONIAN:
+        switch (job)
+        {
+            case JOB_MONK:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_SKALD:
+            case JOB_TRANSMUTER:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_CENTAUR:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_HUNTER:
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_TRANSMUTER:
+            case JOB_ARCANE_MARKSMAN:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_DEMIGOD:
+        switch (job)
+        {
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_CHAOS_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+                return CC_BANNED;
+            case JOB_SKALD:
+            case JOB_TRANSMUTER:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_SPRIGGAN:
+        switch (job)
+        {
+            case JOB_ASSASSIN:
+            case JOB_ARTIFICER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_TRANSMUTER:
+            case JOB_WARPER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_ENCHANTER:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_NECROMANCER:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_MINOTAUR:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_HUNTER:
+            case JOB_BERSERKER:
+            case JOB_DEATH_KNIGHT:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_DEMONSPAWN:
+        switch (job)
+        {
+            case JOB_HEALER:
+                return CC_BANNED;
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_HUNTER:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_SKALD:
+            case JOB_TRANSMUTER:
+            case JOB_WARPER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_GHOUL:
+        switch (job)
+        {
+            case JOB_HEALER:
+            case JOB_TRANSMUTER:
+                return CC_BANNED;
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_NECROMANCER:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_TENGU:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_ASSASSIN:
+            case JOB_BERSERKER:
+            case JOB_DEATH_KNIGHT:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_MERFOLK:
+        switch (job)
+        {
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_ASSASSIN:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_SKALD:
+            case JOB_TRANSMUTER:
+            case JOB_ENCHANTER:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_VAMPIRE:
+        switch (job)
+        {
+            case JOB_HEALER:
+                return CC_BANNED;
+            case JOB_MONK:
+            case JOB_ASSASSIN:
+            case JOB_SKALD:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_ENCHANTER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_ICE_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_DEEP_DWARF:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_HUNTER:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_HEALER:
+            case JOB_WARPER:
+            case JOB_NECROMANCER:
+            case JOB_EARTH_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_FELID:
+        switch (job)
+        {
+            case JOB_GLADIATOR:
+            case JOB_HUNTER:
+            case JOB_ASSASSIN:
+            case JOB_ARCANE_MARKSMAN:
+                return CC_BANNED;
+            case JOB_FIGHTER:
+            case JOB_MONK:
+            case JOB_BERSERKER:
+            case JOB_DEATH_KNIGHT:
+            case JOB_TRANSMUTER:
+            case JOB_WARPER:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_OCTOPODE:
+        switch (job)
+        {
+            case JOB_TRANSMUTER:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_DJINNI:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_HUNTER:
+            case JOB_ARTIFICER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_WARPER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_ENCHANTER:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_SUMMONER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_LAVA_ORC:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_SKALD:
+            case JOB_TRANSMUTER:
+            case JOB_NECROMANCER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_GARGOYLE:
+        switch (job)
+        {
+            case JOB_DEATH_KNIGHT:
+                return CC_BANNED;
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_MONK:
+            case JOB_HUNTER:
+            case JOB_ASSASSIN:
+            case JOB_ARTIFICER:
+            case JOB_BERSERKER:
+            case JOB_HEALER:
+            case JOB_SKALD:
+            case JOB_WARPER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_ENCHANTER:
+            case JOB_WIZARD:
+            case JOB_SUMMONER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_FORMICID:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_HUNTER:
+            case JOB_ARTIFICER:
+            case JOB_ABYSSAL_KNIGHT:
+            case JOB_DEATH_KNIGHT:
+            case JOB_HEALER:
+            case JOB_TRANSMUTER:
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_ENCHANTER:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+    case SP_VINE_STALKER:
+        return CC_RESTRICTED; // todo: figure this out
+    default:
+        return CC_BANNED;
+    }
+}
+
+bool is_good_combination(species_type spc, job_type job, bool species_first,
+                         bool good)
+{
+    const char_choice_restriction restrict =
+        species_first ? job_allowed(spc, job) : species_allowed(job, spc);
 
     if (good)
         return restrict == CC_UNRESTRICTED;
