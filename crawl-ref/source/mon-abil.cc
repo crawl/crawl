@@ -2296,7 +2296,7 @@ void shock_serpent_discharge(monster* serpent)
     {
         int amount = roll_dice(2, 5) + div_rand_round(pow * 3, 2);
         amount = targets[i]->apply_ac(amount, 0, AC_HALF);
-        mprf("The lightning shocks %s", targets[i]->name(DESC_THE).c_str());
+        mprf("The lightning shocks %s.", targets[i]->name(DESC_THE).c_str());
         targets[i]->hurt(serpent, amount, BEAM_ELECTRICITY);
     }
 
