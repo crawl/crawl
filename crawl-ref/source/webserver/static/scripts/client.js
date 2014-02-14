@@ -22,7 +22,7 @@ function (exports, $, key_conversion, chat, comm) {
     var showing_close_message = false;
     var current_hash;
     var exit_reason, exit_message, exit_dump;
-    var normal_exit = ["saved", "quit", "won", "bailed out", "dead"];
+    var normal_exit = ["saved", "cancel", "quit", "won", "bailed out", "dead"];
 
     var send_message = comm.send_message;
 
@@ -526,6 +526,8 @@ function (exports, $, key_conversion, chat, comm) {
             case "bailed out":
             case "dead":
                 return null;
+            case "cancel":
+                return watched_name + " quit before creating a character.";
             case "saved":
                 return watched_name + " stopped playing (saved).";
             case "crash":
@@ -547,6 +549,7 @@ function (exports, $, key_conversion, chat, comm) {
             case "bailed out":
             case "dead":
             case "saved":
+            case "cancel":
                 return null;
             case "crash":
                 return "Unfortunately your game crashed.";

@@ -940,3 +940,67 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
          defender->name(DESC_THE).c_str());
     defender->hurt(attacker, d);
 }
+
+///////////////////////////////////////////////////
+
+static void _ARC_BLADE_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "The arc blade crackles to life.");
+}
+
+static void _ARC_BLADE_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "The arc blade stops crackling.");
+}
+
+static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
+                                     actor* defender, bool mondied,
+                                     int dam)
+{
+    if (!mondied && one_chance_in(3))
+        cast_discharge(75 + random2avg(75, 2), false);
+}
+
+///////////////////////////////////////////////////
+
+static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
+                                       actor* defender, bool mondied,
+                                       int dam)
+{
+    // Only cause miscasts if the target has magic to disrupt.
+    if ((defender->is_player()
+         || (defender->as_monster()->can_use_spells()
+             && !defender->as_monster()->is_priest()
+             && !mons_class_flag(defender->type, M_FAKE_SPELLS)))
+        && !mondied)
+    {
+        int school = SPTYP_NONE;
+        if (defender->is_player())
+        {
+            for (int i = 0; i < you.spell_no; i++)
+                school |= get_spell_disciplines(you.spells[i]);
+        }
+        else
+        {
+            const monster* mons = defender->as_monster();
+            for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+                school |= get_spell_disciplines(mons->spells[i]);
+        }
+        if (school != SPTYP_NONE)
+        {
+            vector<spschool_flag_type> schools;
+            for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+            {
+                if (testbits(school, 1 << i))
+                    schools.push_back(
+                        static_cast<spschool_flag_type>(1 << i));
+            }
+            ASSERT(schools.size() > 0);
+            MiscastEffect(defender, attacker->mindex(),
+                          schools[random2(schools.size())],
+                          random2(9),
+                          random2(70), "the demon whip \"Spellbinder\"",
+                          NH_NEVER);
+        }
+    }
+}

@@ -179,9 +179,9 @@ enum ability_type
     ABIL_ASHENZARI_SCRYING = 1160,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
-    // Dithmengos
-    ABIL_DITHMENGOS_SHADOW_STEP = 1170,
-    ABIL_DITHMENGOS_SHADOW_FORM,
+    // Dithmenos
+    ABIL_DITHMENOS_SHADOW_STEP = 1170,
+    ABIL_DITHMENOS_SHADOW_FORM,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -313,8 +313,8 @@ enum attribute_type
     ATTR_SWIFTNESS,            // Duration of future antiswiftness.
     ATTR_BARBS_MSG,            // Have we already printed a message on move?
     ATTR_BARBS_POW,            // How badly we are currently skewered
-    ATTR_REPEL_MISSILES,       // Chance to expire repel missiles
-    ATTR_DEFLECT_MISSILES,     // Chance to expire deflect missiles
+    ATTR_REPEL_MISSILES,       // Repel missiles active
+    ATTR_DEFLECT_MISSILES,     // Deflect missiles active
     ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
@@ -1038,10 +1038,10 @@ enum conduct_type
     DID_EXPLORATION,                      // Ashenzari, wrath timers
     DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO/Yredelemnul
     DID_SEE_MONSTER,                      // TSO
-    DID_ILLUMINATE,                       // Dithmengos
-    DID_KILL_ILLUMINATING,                // Dithmengos
-    DID_FIRE,                             // Dithmengos
-    DID_KILL_FIERY,                       // Dithmengos
+    DID_ILLUMINATE,                       // Dithmenos
+    DID_KILL_ILLUMINATING,                // Dithmenos
+    DID_FIRE,                             // Dithmenos
+    DID_KILL_FIERY,                       // Dithmenos
 
     NUM_CONDUCTS
 };
@@ -1434,8 +1434,8 @@ enum dungeon_feature_type
     DNGN_ALTAR_FEDHAS,
     DNGN_ALTAR_CHEIBRIADOS,
     DNGN_ALTAR_ASHENZARI,
-    DNGN_ALTAR_DITHMENGOS,
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENGOS,
+    DNGN_ALTAR_DITHMENOS,
+        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENOS,
 
     DNGN_FOUNTAIN_BLUE,
     DNGN_FOUNTAIN_SPARKLING,           // aka 'Magic Fountain' {dlb}
@@ -1520,7 +1520,9 @@ enum duration_type
 
     DUR_LIQUID_FLAMES,
     DUR_ICY_ARMOUR,
+#if TAG_MAJOR_VERSION == 34
     DUR_REPEL_MISSILES,
+#endif
     DUR_JELLY_PRAYER,
     DUR_PIETY_POOL,             // distribute piety over time
     DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
@@ -1536,7 +1538,9 @@ enum duration_type
     DUR_BREATH_WEAPON,
     DUR_TRANSFORMATION,
     DUR_DEATH_CHANNEL,
+#if TAG_MAJOR_VERSION == 34
     DUR_DEFLECT_MISSILES,
+#endif
     DUR_PHASE_SHIFT,
 #if TAG_MAJOR_VERSION == 34
     DUR_SEE_INVISIBLE,
@@ -1883,7 +1887,7 @@ enum god_type
     GOD_FEDHAS,
     GOD_CHEIBRIADOS,
     GOD_ASHENZARI,
-    GOD_DITHMENGOS,
+    GOD_DITHMENOS,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
@@ -2831,7 +2835,7 @@ enum monster_type                      // menv[].type
     MONS_GIANT_LIZARD,          // genus
     MONS_DRAKE,                 // genus
 #endif
-    MONS_PLAYER_SHADOW,         // Dithmengos
+    MONS_PLAYER_SHADOW,         // Dithmenos
 
     MONS_DEEP_TROLL_EARTH_MAGE,
     MONS_DEEP_TROLL_SHAMAN,
@@ -3864,6 +3868,8 @@ enum spell_type
     SPELL_SUMMON_FOREST,
     SPELL_SUMMON_LIGHTNING_SPIRE,
     SPELL_SUMMON_GUARDIAN_GOLEM,
+    SPELL_SHADOW_SHARD,
+    SPELL_SHADOW_BOLT,
     NUM_SPELLS
 };
 

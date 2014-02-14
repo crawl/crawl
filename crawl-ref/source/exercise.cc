@@ -78,6 +78,8 @@ skill_type abil_skill(ability_type abil)
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_CHEIBRIADOS_DISTORTION:
+    case ABIL_DITHMENOS_SHADOW_STEP:
+    case ABIL_DITHMENOS_SHADOW_FORM:
         return SK_INVOCATIONS;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
@@ -122,6 +124,7 @@ static int _abil_degree(ability_type abil)
         return 1;
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
     case ABIL_OKAWARU_HEROISM:
+    case ABIL_DITHMENOS_SHADOW_STEP:
         return 1 + random2(3);
 
     case ABIL_ZIN_RECITE:
@@ -170,6 +173,7 @@ static int _abil_degree(ability_type abil)
         return 5 + random2(8);
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
+    case ABIL_DITHMENOS_SHADOW_FORM:
         return 6 + random2(6);
     case ABIL_ELYVILON_DIVINE_VIGOUR:
         return 6 + random2(10);

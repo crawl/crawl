@@ -455,9 +455,9 @@ static void _equip_use_warning(const item_def& item)
         mpr("You really shouldn't be using a hasty item like this.");
     else if (is_poisoned_item(item) && you_worship(GOD_SHINING_ONE))
         mpr("You really shouldn't be using a poisoned item like this.");
-    else if (is_illuminating_item(item) && you_worship(GOD_DITHMENGOS))
+    else if (is_illuminating_item(item) && you_worship(GOD_DITHMENOS))
         mpr("You really shouldn't be using an illuminating item like this.");
-    else if (is_fiery_item(item) && you_worship(GOD_DITHMENGOS))
+    else if (is_fiery_item(item) && you_worship(GOD_DITHMENOS))
         mpr("You really shouldn't be using a fiery item like this.");
 }
 

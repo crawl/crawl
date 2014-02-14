@@ -361,6 +361,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mitemuse = mons_class_itemuse(type);
 
     mbase_speed = mons_class_base_speed(type);
+    menergy = mons_class_energy(type);
 
     fly = max(mons_class_flies(type), mons_class_flies(base_type));
 
@@ -585,6 +586,7 @@ monster_info::monster_info(const monster* m, int milev)
     mresists = get_mons_resists(m);
     mitemuse = mons_itemuse(m);
     mbase_speed = mons_base_speed(m);
+    menergy = mons_class_energy(m->type);
     fly = mons_flies(m);
 
     if (mons_wields_two_weapons(m))

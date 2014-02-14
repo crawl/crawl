@@ -102,8 +102,7 @@ bool do_slow_monster(monster* mon, const actor* agent, int dur)
     if (mon->check_stasis(false))
         return true;
 
-    if (!mon->has_ench(ENCH_SLOW)
-        && !mon->is_stationary()
+    if (!mon->is_stationary()
         && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
     {
         if (!mon->paralysed() && !mon->petrified()

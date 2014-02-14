@@ -1588,6 +1588,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                || item.sub_type == WPN_STAFF
                || item.sub_type == WPN_ROD
                || item.sub_type == WPN_HAMMER
+               || is_giant_club_type(item.sub_type)
                || item.sub_type > WPN_SLING); // the last of these checks for
                                               // blessed base weapon types
         if (one_chance_in(100))
@@ -1611,11 +1612,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.sub_type = random_choose_weighted(10, WPN_DEMON_BLADE,
                                                    10, WPN_DEMON_WHIP,
                                                    10, WPN_DEMON_TRIDENT,
-                                                    5, WPN_BATTLEAXE,
-                                                    2, WPN_EXECUTIONERS_AXE,
+                                                    7, WPN_BATTLEAXE,
                                                     5, WPN_GREAT_SWORD,
-                                                    1, WPN_BASTARD_SWORD,
-                                                    1, WPN_CLAYMORE,
+                                                    2, WPN_BASTARD_SWORD,
                                                     5, WPN_DIRE_FLAIL,
                                                     2, WPN_GREAT_MACE,
                                                     5, WPN_GLAIVE,

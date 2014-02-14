@@ -94,8 +94,7 @@ bool string_matches_ability_name(const string& key);
 string print_abilities(void);
 
 void set_god_ability_slots(void);
-vector<ability_type> get_god_abilities(bool include_unusable = false);
-void gain_god_ability(int i);
-void lose_god_ability(int i);
+vector<ability_type> get_god_abilities(bool include_unusable = false,
+                                       bool ignore_piety = false);
 
 #endif

@@ -47,6 +47,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
@@ -3079,7 +3080,7 @@ void monster::expose_to_element(beam_type flavour, int strength,
         if (slow_cold_blood && mons_class_flag(type, M_COLD_BLOOD)
             && res_cold() <= 0 && coinflip())
         {
-            slow_down(this, strength);
+            do_slow_monster(this, this, (strength + random2(5)) * BASELINE_DELAY);
         }
         break;
     case BEAM_WATER:
@@ -6119,12 +6120,12 @@ bool monster::is_web_immune() const
 }
 
 // Undead monsters have nightvision, as do all followers of Yredelemnul
-// and Dithmengos.
+// and Dithmenos.
 bool monster::nightvision() const
 {
     return holiness() == MH_UNDEAD
            || god == GOD_YREDELEMNUL
-           || god == GOD_DITHMENGOS;
+           || god == GOD_DITHMENOS;
 }
 
 bool monster::attempt_escape(int attempts)

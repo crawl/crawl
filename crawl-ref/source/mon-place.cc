@@ -2510,7 +2510,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
 
     case MONS_MERFOLK_AQUAMANCER:
         band = BAND_MERFOLK_AQUAMANCER;
-        band_size = random_range(3, 6);
+        band_size = random_range(3, 4);
         break;
 
     case MONS_MERFOLK_JAVELINEER:
@@ -3093,7 +3093,7 @@ static monster_type _band_member(band_type band, int which)
         return MONS_SLAVE;
 
     case BAND_MERFOLK_AQUAMANCER:
-        return random_choose_weighted( 5, MONS_MERFOLK,
+        return random_choose_weighted( 4, MONS_MERFOLK,
                                       11, MONS_WATER_ELEMENTAL,
                                        0);
 
@@ -3506,6 +3506,9 @@ monster* mons_place(mgen_data mg)
 
         behaviour_event(creation, ME_EVAL);
     }
+
+    if (mg.flags & MG_AUTOFOE && creation->attitude == ATT_FRIENDLY)
+        set_nearest_monster_foe(creation, true);
 
     return creation;
 }

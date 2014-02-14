@@ -614,7 +614,7 @@ conduct_type god_hates_item_handling(const item_def &item)
         }
         break;
 
-    case GOD_DITHMENGOS:
+    case GOD_DITHMENOS:
         if (item_type_known(item) && is_illuminating_item(item))
             return DID_ILLUMINATE;
 
@@ -727,7 +727,7 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
     case GOD_ELYVILON:
         return discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING);
 
-    case GOD_DITHMENGOS:
+    case GOD_DITHMENOS:
         return discipline & SPTYP_FIRE;
 
     default:

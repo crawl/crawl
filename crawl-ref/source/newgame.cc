@@ -379,7 +379,12 @@ static bool _reroll_random(newgame_def* ng)
     cprintf("\nDo you want to play this combination? (ynq) [y]");
     char c = getchm();
     if (key_is_escape(c) || toalower(c) == 'q')
+    {
+#ifdef USE_TILE_WEB
+        tiles.send_exit_reason("cancel");
+#endif
         game_ended();
+    }
     return toalower(c) == 'n';
 }
 
@@ -400,6 +405,9 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
         if (!yesno("Trunk games don't count for the tournament, you want "
                    TOURNEY ". Play trunk anyway? (Y/N)", false, 'n'))
         {
+#ifdef USE_TILE_WEB
+            tiles.send_exit_reason("cancel");
+#endif
             game_ended();
         }
     }
@@ -827,10 +835,16 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
             {
             case 'X':
                 cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
                 end(0);
                 return;
             CASE_ESCAPE
-                    game_ended();
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
+                game_ended();
             case CK_BKSP:
                 ng_choice->species = SP_UNKNOWN;
                 return;
@@ -1225,9 +1239,15 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
             {
             case 'X':
                 cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
                 end(0);
                 return;
             CASE_ESCAPE
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
                 game_ended();
             case CK_BKSP:
                 ng_choice->job = JOB_UNKNOWN;
@@ -1540,6 +1560,9 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
             {
             case 'X':
                 cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
                 end(0);
                 break;
             case ' ':
@@ -1957,9 +1980,15 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
             {
             case 'X':
                 cprintf("\nGoodbye!");
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
                 end(0);
                 break;
             CASE_ESCAPE
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
                 game_ended();
                 break;
             case ' ':

@@ -1612,7 +1612,7 @@ struct spell_desc
     SPELL_ENGLACIATION, "Metabolic Englaciation",
      SPTYP_HEXES | SPTYP_ICE,
      SPFLAG_AREA,
-     6,
+     5,
      200,
      -1, -1,
      0,
@@ -3598,6 +3598,30 @@ struct spell_desc
      0,
      NULL,
      false,
+},
+
+{
+    SPELL_SHADOW_SHARD, "Shadow Shard",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+},
+
+{
+    SPELL_SHADOW_BOLT, "Shadow Bolt",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     5,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
      false
 },
 

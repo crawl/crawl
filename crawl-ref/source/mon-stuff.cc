@@ -1673,7 +1673,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     // Kills by the spectral weapon are considered as kills by the player instead
-    // Ditto Dithmengos shadow kills.
+    // Ditto Dithmenos shadow kills.
     if ((killer == KILL_MON || killer == KILL_MON_MISSILE)
         && !invalid_monster_index(killer_index)
         && ((menv[killer_index].type == MONS_SPECTRAL_WEAPON
@@ -2039,7 +2039,7 @@ int monster_die(monster* mons, killer_type killer,
                                     true, mons);
                 }
 
-                // Dithmengos hates sources of illumination.
+                // Dithmenos hates sources of illumination.
                 // (This is *after* the holy so that the right order of
                 //  messages appears.)
                 if (mons_is_illuminating(mons))
