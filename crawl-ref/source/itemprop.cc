@@ -269,10 +269,10 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -4, 15, 250,  5,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 0 },
-    { WPN_CLAYMORE,              "claymore",              20, -4, 20, 260,  5,
+    { WPN_CLAYMORE,              "claymore",              19, -4, 19, 260,  5,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_CLAYMORE,      "blessed claymore",      21, -5, 19, 260,  5,
+    { WPN_BLESSED_CLAYMORE,      "blessed claymore",      20, -5, 18, 260,  5,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_SLICING, 0 },
 
