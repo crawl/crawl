@@ -66,7 +66,7 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
-    const int how_many = min(15, 3 + random2(3) + random2(pow) / 10);
+    const int how_many = min(8, 3 + random2(3) + random2(pow) / 10);
 
     for (int i = 0; i < how_many; ++i)
     {
@@ -3164,7 +3164,7 @@ static const summons_desc summonsdata[] =
     // Demons
     { SPELL_CALL_IMP,                   3, 3 },
     { SPELL_SUMMON_DEMON,               3, 2 },
-    { SPELL_DEMONIC_HORDE,              8, 5 },
+    { SPELL_DEMONIC_HORDE,             12, 5 },
     { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
     // General monsters
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },
