@@ -2439,7 +2439,8 @@ static void _explosive_bolt_explode(bolt *parent, coord_def pos)
     beam.is_targeting = parent->is_targeting;
     beam.friend_info.dont_stop = parent->friend_info.dont_stop;
     beam.foe_info.dont_stop = parent->foe_info.dont_stop;
-    beam.fire();
+    beam.refine_for_explosion();
+    beam.explode();
     parent->friend_info += beam.friend_info;
     parent->foe_info    += beam.foe_info;
     if (beam.is_tracer && beam.beam_cancelled)
