@@ -7686,16 +7686,14 @@ bool player::malmutate(const string &reason)
     if (!can_mutate())
         return false;
 
-    if (one_chance_in(5))
+    const mutation_type mut_quality = one_chance_in(5) ? RANDOM_BAD_MUTATION
+                                                       : RANDOM_MUTATION;
+    if (mutate(mut_quality, reason))
     {
-        if (mutate(RANDOM_MUTATION, reason))
-        {
-            learned_something_new(HINT_YOU_MUTATED);
-            return true;
-        }
+        learned_something_new(HINT_YOU_MUTATED);
+        return true;
     }
-
-    return mutate(RANDOM_BAD_MUTATION, reason);
+    return false;
 }
 
 bool player::polymorph(int pow)
