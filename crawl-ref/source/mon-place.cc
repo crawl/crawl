@@ -3788,10 +3788,10 @@ monster* create_monster(mgen_data mg, bool fail_msg)
         // If the arena vetoed the placement then give no fail message.
         if (crawl_state.game_is_arena())
             fail_msg = false;
-    }
 
-    if (!summd && fail_msg && you.see_cell(mg.pos))
-        mpr("You see a puff of smoke.");
+        if (!summd && fail_msg && you.see_cell(mg.pos))
+            mpr("You see a puff of smoke.");
+    }
 
     return summd;
 }
