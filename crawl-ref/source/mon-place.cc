@@ -3756,10 +3756,6 @@ monster* create_monster(mgen_data mg, bool fail_msg)
         || you.pos() == mg.pos && !fedhas_passthrough_class(mg.cls)
         || !mons_class_can_pass(montype, grd(mg.pos)))
     {
-        mg.pos = find_newmons_square(montype, mg.pos);
-        if (!in_bounds(mg.pos))
-            return 0; // no valid spot, bail (even no "puff of smoke"?)
-
         // Gods other than Xom will try to avoid placing their monsters
         // directly in harm's way.
         if (mg.god != GOD_NO_GOD && mg.god != GOD_XOM)
