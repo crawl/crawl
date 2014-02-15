@@ -76,8 +76,8 @@
         local size_max = 6 + 4 * depth_fraction
         local separation_min = crawl.random_range(1, border - depth_fraction*2)
 
-        local room_count_min = ( 50 + depth_fraction *  950) / size_max
-        local room_count_max = (150 + depth_fraction * 1850) / size_max
+        local room_count_min = (150 + depth_fraction *  850) / size_max
+        local room_count_max = (300 + depth_fraction * 1700) / size_max
         for i = 1, crawl.random_range(room_count_min, room_count_max) do
             local size = crawl.random_range(4, size_max)
             local min_x = crawl.random_range(border, right  - size)
