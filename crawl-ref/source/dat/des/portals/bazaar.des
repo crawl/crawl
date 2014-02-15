@@ -60,6 +60,7 @@ function random_bazaar_colour()
 end
 
 function bazaar_setup(e)
+  e.tags('no_monster_gen')
   e.kfeat("< = stone_arch")
   e.kfeat("> = exit_bazaar")
 end
