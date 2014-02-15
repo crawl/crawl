@@ -43,7 +43,6 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
-#include "version.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -1131,10 +1130,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     const bool exploding    = (ammo_brand == SPMSL_EXPLODING);
     const bool penetrating  = (bow_brand  == SPWPN_PENETRATION
-                                || ammo_brand == SPMSL_PENETRATION
-                                || (Version::ReleaseType == VER_ALPHA
-                                    && item.base_type == OBJ_MISSILES
-                                    && item.sub_type == MI_LARGE_ROCK));
+                                || ammo_brand == SPMSL_PENETRATION);
     const bool silver       = (ammo_brand == SPMSL_SILVER);
     const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
     const bool charged      = bow_brand  == SPWPN_ELECTROCUTION;
@@ -1220,10 +1216,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (penetrating)
     {
         beam.range_funcs.push_back(_item_penetrates_victim);
-        if (item.base_type == OBJ_MISSILES && item.sub_type == MI_LARGE_ROCK)
-            beam.hit_verb = "crashes through";
-        else
-            beam.hit_verb = "pierces through";
+        beam.hit_verb = "pierces through";
     }
     if (disperses)
         beam.hit_funcs.push_back(_dispersal_hit_victim);
@@ -1272,8 +1265,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         ammo_name = "poisoned " + ammo_name;
     }
 
-    if (penetrating && item.special != SPMSL_PENETRATION
-        && item.sub_type != MI_LARGE_ROCK)
+    if (penetrating && item.special != SPMSL_PENETRATION)
     {
         beam.name = "penetrating " + beam.name;
         ammo_name = "penetrating " + ammo_name;
