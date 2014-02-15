@@ -2264,8 +2264,6 @@ int player_movement_speed(bool ignore_burden)
         mv = 7;
     else if (you.form == TRAN_PORCUPINE || you.form == TRAN_WISP)
         mv = 8;
-    else if (you.form == TRAN_JELLY)
-        mv = 11;
     else if (you.fishtail)
         mv = 6;
 
