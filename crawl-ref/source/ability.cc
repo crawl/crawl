@@ -865,12 +865,6 @@ static ability_type _fixup_ability(ability_type ability)
         else
             return ability;
 
-    case ABIL_DITHMENOS_SHADOW_FORM:
-        if (you.species == SP_MUMMY || you.species == SP_GHOUL)
-            return ABIL_NON_ABILITY;
-        else
-            return ability;
-
     default:
         return ability;
     }
