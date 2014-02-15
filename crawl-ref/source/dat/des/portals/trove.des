@@ -880,7 +880,7 @@ ENDMAP
 
 # 20 items, but you have to dig for them.  Wand is included.
 NAME:    trove_dig
-TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:    no_item_gen no_monster_gen allow_dup
 WEIGHT:  5
 ORIENT:  encompass
 ITEM:    acquire armour / any useful armour good_item / any armour w:2
@@ -1021,7 +1021,7 @@ ENDMAP
 
 # 16 scrolls and wands
 NAME:   trove_wands_scrolls
-TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
 ITEM:   acquire wand
 SUBST:  e = eeed
