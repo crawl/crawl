@@ -127,7 +127,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     if (_form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
-    to_hit          = calc_to_hit();
     can_cleave = !jumping_attack && wpn_skill == SK_AXES && attacker != defender
         && !attacker->confused();
 
@@ -140,6 +139,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
         div_rand_round(attacker->armour_tohit_penalty(true, 20), 20);
     attacker_shield_tohit_penalty =
         div_rand_round(attacker->shield_tohit_penalty(true, 20), 20);
+    to_hit          = calc_to_hit();
 
     if (attacker->is_monster())
     {
