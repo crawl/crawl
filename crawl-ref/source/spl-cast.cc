@@ -280,9 +280,8 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 
 static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 {
-    int wizardry = player_mag_abil(false);
+    const int wizardry = player_wizardry();
     int fail_reduce = 100;
-    int wiz_factor = 87;
 
     if (you_worship(GOD_VEHUMET)
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
@@ -290,20 +289,14 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
     {
         // [dshaligram] Fail rate multiplier used to be .5, scaled
         // back to 67%.
-        fail_reduce = fail_reduce * 67 / 100;
+        fail_reduce = fail_reduce * 2 / 3;
     }
 
-    // [dshaligram] Apply wizardry factor here, rather than mixed into the
-    // pre-scaling spell power.
-    while (wizardry-- > 0)
-    {
-        fail_reduce  = fail_reduce * wiz_factor / 100;
-        wiz_factor  += (100 - wiz_factor) / 3;
-    }
+    if (wizardry > 0)
+      fail_reduce = fail_reduce * 6 / (7 + wizardry);
 
-    // Apply Brilliance factor here.
     if (you.duration[DUR_BRILLIANCE])
-        fail_reduce = fail_reduce * 67 / 100;
+        fail_reduce = fail_reduce / 2;
 
     // Hard cap on fail rate reduction.
     if (fail_reduce < 50)

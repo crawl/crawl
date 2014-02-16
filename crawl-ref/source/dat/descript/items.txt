@@ -1583,8 +1583,7 @@ evocations, they can attempt to dismiss summoned creatures that they strike.
 %%%%
 staff of wizardry
 
-This staff significantly increases the ability of its wielder to use magical
-spells.
+This staff increases the ability of its wielder to use magical spells.
 %%%%
 steam dragon armour
 
