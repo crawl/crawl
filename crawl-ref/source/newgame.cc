@@ -933,7 +933,7 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
     TextItem* tmp = new NoSelectTextItem();
     string text;
     tmp->set_text(name);
-    tmp->set_fg_colour(WHITE);
+    tmp->set_fg_colour(BLUE);
     coord_def min_coord(2 + position.x, 3 + position.y);
     coord_def max_coord(min_coord.x + width, min_coord.y + 1);
     tmp->set_bounds(min_coord, max_coord);
