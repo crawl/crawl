@@ -1017,6 +1017,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (you.dead) // ... but eligible for revival
         return;
 
+    int drain_amount = 0;
+
     if (attacker_effects && dam != INSTANT_DEATH
         && !invalid_monster_index(death_source)
         && menv[death_source].has_ench(ENCH_WRETCHED))
@@ -1047,7 +1049,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (dam != INSTANT_DEATH)
     {
         if (you.form == TRAN_SHADOW)
+        {
+            drain_amount = (dam - (dam / 2));
             dam /= 2;
+        }
         if (you.petrified())
             dam /= 2;
         else if (you.petrifying())
@@ -1139,6 +1144,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
             _maybe_fog(dam);
             _powered_by_pain(dam);
+            if (drain_amount > 0)
+                drain_exp(true, drain_amount, true);
         }
         if (you.hp > 0)
           return;
