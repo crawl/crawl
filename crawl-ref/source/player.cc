@@ -2687,20 +2687,10 @@ int player_armour_shield_spell_penalty()
     return max(total_penalty, 0) / scale;
 }
 
-int player_mag_abil(bool is_weighted)
+int player_wizardry(void)
 {
-    int ma = 0;
-
-    // Brilliance Potion
-    ma += 6 * (you.duration[DUR_BRILLIANCE] ? 1 : 0);
-
-    // Rings
-    ma += 3 * you.wearing(EQ_RINGS, RING_WIZARDRY);
-
-    // Staves
-    ma += 4 * you.wearing(EQ_STAFF, STAFF_WIZARDRY);
-
-    return (is_weighted) ? ((ma * you.intel()) / 10) : ma;
+    return (you.wearing(EQ_RINGS, RING_WIZARDRY)
+            + you.wearing(EQ_STAFF, STAFF_WIZARDRY));
 }
 
 int player_shield_class(void)
