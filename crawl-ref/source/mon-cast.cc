@@ -5739,7 +5739,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(MONS_GRAND_AVATAR, SAME_ATTITUDE(mons), mons,
                           duration, spell_cast, mons->pos(), mons->foe, 0,
-                          god));
+                          god, MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
+                          level_id::current(), mons->spell_hd(spell_cast)));
         if (avatar)
         {
             simple_monster_message(mons, " calls forth a grand avatar!");
