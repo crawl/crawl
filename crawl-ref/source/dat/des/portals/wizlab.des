@@ -1926,7 +1926,7 @@ KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / *:i
 SHUFFLE:    A<, 4d, 7f, 4d / 5e, 7f / 8g
 SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
-:           set_random_mon_list([[crimson imp / shadow imp / lemure / iron imp / quasit / ]]
+:           set_random_mon_list([[crimson imp / shadow imp / iron imp / quasit / ]]
 :                        .. [[white imp / ufetubus / red devil / rotting devil / orange demon / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
 :           set_feature_name("floor", "hot floor")
