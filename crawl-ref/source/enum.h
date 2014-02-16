@@ -311,7 +311,9 @@ enum attribute_type
     ATTR_RECITE_SEED,          // Recite text seed.
     ATTR_RECITE_HP,            // HP on start of recitation.
     ATTR_SWIFTNESS,            // Duration of future antiswiftness.
+#if TAG_MAJOR_VERSION == 34
     ATTR_BARBS_MSG,            // Have we already printed a message on move?
+#endif
     ATTR_BARBS_POW,            // How badly we are currently skewered
     ATTR_REPEL_MISSILES,       // Repel missiles active
     ATTR_DEFLECT_MISSILES,     // Deflect missiles active
