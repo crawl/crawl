@@ -2041,7 +2041,7 @@ static bool _jiyva_mutate()
 
     const int rand = random2(100);
 
-    if (rand < 10)
+    if (rand < 5)
         return delete_mutation(RANDOM_SLIME_MUTATION, "Jiyva's grace", true, false, true);
     else if (rand < 30)
         return delete_mutation(RANDOM_NON_SLIME_MUTATION, "Jiyva's grace", true, false, true);
