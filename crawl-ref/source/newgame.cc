@@ -592,15 +592,15 @@ static void _construct_species_menu(const newgame_def* ng,
         text.clear();
 
         if (ng->job == JOB_UNKNOWN
-            || species_allowed(ng->job, species) == CC_UNRESTRICTED)
+            || species_allowed(ng->job, species) == CC_RESTRICTED)
         {
             tmp->set_fg_colour(LIGHTGRAY);
-            tmp->set_highlight_colour(GREEN);
+            tmp->set_highlight_colour(YELLOW);
         }
         else
         {
-            tmp->set_fg_colour(DARKGRAY);
-            tmp->set_highlight_colour(YELLOW);
+            tmp->set_fg_colour(WHITE);
+            tmp->set_highlight_colour(GREEN);
         }
         if (ng->job != JOB_UNKNOWN
             && species_allowed(ng->job, species) == CC_BANNED)
@@ -949,15 +949,15 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
         tmp = new TextItem();
 
         if (ng->species == SP_UNKNOWN
-            || job_allowed(ng->species, job) == CC_UNRESTRICTED)
+            || job_allowed(ng->species, job) == CC_RESTRICTED)
         {
             tmp->set_fg_colour(LIGHTGRAY);
-            tmp->set_highlight_colour(GREEN);
+            tmp->set_highlight_colour(YELLOW);
         }
         else
         {
-            tmp->set_fg_colour(DARKGRAY);
-            tmp->set_highlight_colour(YELLOW);
+            tmp->set_fg_colour(WHITE);
+            tmp->set_highlight_colour(GREEN);
         }
         if (ng->species != SP_UNKNOWN
             && job_allowed(ng->species, job) == CC_BANNED)
@@ -1365,12 +1365,12 @@ static void _construct_weapon_menu(const newgame_def* ng,
 
         if (weapons[i].second == CC_UNRESTRICTED)
         {
-            tmp->set_fg_colour(LIGHTGRAY);
+            tmp->set_fg_colour(WHITE);
             tmp->set_highlight_colour(GREEN);
         }
         else
         {
-            tmp->set_fg_colour(DARKGRAY);
+            tmp->set_fg_colour(LIGHTGRAY);
             tmp->set_highlight_colour(YELLOW);
         }
         const char letter = 'a' + i;
