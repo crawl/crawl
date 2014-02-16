@@ -1459,7 +1459,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
     case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
-    case GOD_DITHMENOS:    do_more = _dithmenos_retribution(); break;
+    case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
 
     case GOD_ASHENZARI:
         // No reduction with time.
