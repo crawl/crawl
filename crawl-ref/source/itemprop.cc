@@ -72,9 +72,9 @@ static const armour_def Armour_prop[NUM_ARMOURS] =
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
     { ARM_CHAIN_MAIL,           "chain mail",             8, -15,  400,
         EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_PLATE_ARMOUR,         "plate armour",          10, -19,  650,
+    { ARM_PLATE_ARMOUR,         "plate armour",          10, -18,  650,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
-    { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -24, 1200,
+    { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -23, 1200,
         EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
 
     { ARM_TROLL_HIDE,           "troll hide",             2,  -4,  220,
@@ -109,9 +109,9 @@ static const armour_def Armour_prop[NUM_ARMOURS] =
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",   10, -15,  600,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -27, 1100,
+    { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -25, 1100,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -27, 1100,
+    { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -25, 1100,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
 
     { ARM_CLOAK,                "cloak",                  1,   0,   40,
