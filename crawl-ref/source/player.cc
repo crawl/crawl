@@ -1285,7 +1285,7 @@ static int _player_bonus_regen()
          || you.wearing(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
         && you.species != SP_TROLL)
     {
-        rr += 30;
+        rr += 40;
     }
 
     // Fast heal mutation.
