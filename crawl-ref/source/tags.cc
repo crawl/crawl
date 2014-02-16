@@ -2585,6 +2585,25 @@ static void tag_read_you(reader &th)
         ASSERT(you.penance[i] <= MAX_PENANCE);
     }
 
+#if TAG_MAJOR_VERSION == 34
+    // Fix invalid ATTR_GOD_WRATH_XP if no god is giving penance.
+    // cf. 0.14-a0-2640-g5c5a558
+    if (you.attribute[ATTR_GOD_WRATH_XP] != 0
+        || you.attribute[ATTR_GOD_WRATH_COUNT] != 0)
+    {
+        for (i = GOD_NO_GOD; i < NUM_GODS; ++i)
+        {
+            if (player_under_penance((god_type) i))
+                break;
+        }
+        if (i == NUM_GODS)
+        {
+            you.attribute[ATTR_GOD_WRATH_XP] = 0;
+            you.attribute[ATTR_GOD_WRATH_COUNT] = 0;
+        }
+    }
+#endif
+
     for (i = 0; i < count; i++)
         you.worshipped[i] = unmarshallByte(th);
 
