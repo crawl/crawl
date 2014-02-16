@@ -409,51 +409,124 @@ static bool _cheibriados_retribution()
     return glammer;
 }
 
+static void _spell_retribution(monster* avatar, spell_type spell, god_type god)
+{
+    simple_god_message(" rains destruction down upon you!", god);
+    bolt beam;
+    beam.source = you.pos();
+    beam.target = you.pos();
+    beam.aimed_at_feet = true;
+    beam.source_name = avatar->mname;
+    mons_cast(avatar, beam, spell, false, false);
+}
+
 static bool _makhleb_retribution()
 {
     // demonic servant theme
     const god_type god = GOD_MAKHLEB;
 
-    if (random2(you.experience_level) > 7 && !one_chance_in(5))
+    if (coinflip())
     {
+        // Half the time, fling destruction at the player instead.
+        monster* avatar = shadow_monster(false);
+        if (!avatar)
+        {
+            simple_god_message("has no time to deal with you just now.", god);
+            return false;
+        }
+        avatar->mname = "the fury of Makhleb";
+        avatar->flags |= MF_NAME_REPLACE;
+        avatar->attitude = ATT_HOSTILE;
+        avatar->hit_dice = you.experience_level;
+
+        spell_type spell = SPELL_NO_SPELL;
+        const int severity = min(random_range(you.experience_level / 14,
+                                              you.experience_level / 9),
+                                 2);
+        switch (severity)
+        {
+            case 0:
+            default:
+                // minor destruction
+                spell = random_choose(SPELL_THROW_FLAME,
+                                      SPELL_PAIN,
+                                      SPELL_STONE_ARROW,
+                                      SPELL_SHOCK,
+                                      SPELL_SPIT_ACID,
+                                      -1);
+                break;
+            case 1:
+                // major destruction
+                spell = random_choose(SPELL_BOLT_OF_FIRE,
+                                      SPELL_FIREBALL,
+                                      SPELL_LIGHTNING_BOLT,
+                                      SPELL_STICKY_FLAME,
+                                      SPELL_IRON_SHOT,
+                                      SPELL_BOLT_OF_DRAINING,
+                                      SPELL_ORB_OF_ELECTRICITY,
+                                      -1);
+                break;
+            case 2:
+                // legendary destruction (no IOOD because it doesn't really
+                // work here)
+                spell = random_choose(SPELL_FIREBALL,
+                                      SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+                                      SPELL_ORB_OF_ELECTRICITY,
+                                      SPELL_FLASH_FREEZE,
+                                      SPELL_GHOSTLY_FIREBALL,
+                                      -1);
+
+                break;
+        }
+        _spell_retribution(avatar, spell, god);
+        shadow_monster_reset(avatar);
+        return true;
+    }
+
+    const int severity = 1 + you.experience_level / 2
+                           + random2(you.experience_level / 2);
+    int greater = 0;
+    if (severity > 13)
+        greater = 2 + random2(you.experience_level / 5 - 2); // up to 6 at XL27
+    else if (severity > 7 && !one_chance_in(5))
+        greater = 1;
+
+    // up to 6 at XL25+
+    int how_many =
+        max(greater,
+            1 + (random2(you.experience_level)
+                 + random2(you.experience_level)) / 10);
+    int count = 0;
+
+    for (; how_many > 0; --how_many)
+    {
+        monster_type servant = MONS_NO_MONSTER;
+        if (greater)
+        {
+            greater--;
+            servant = random_choose(MONS_EXECUTIONER,    MONS_GREEN_DEATH,
+                                    MONS_BLIZZARD_DEMON, MONS_BALRUG,
+                                    MONS_CACODEMON,      -1);
+        }
+        else
+        {
+            servant = random_choose(MONS_HELLWING,     MONS_NEQOXEC,
+                                    MONS_ORANGE_DEMON, MONS_SMOKE_DEMON,
+                                    MONS_YNOXINUL,     -1);
+        }
         mgen_data temp =
-            mgen_data::hostile_at(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
-                                  MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
-                                  "the fury of Makhleb",
+            mgen_data::hostile_at(servant, "the fury of Makhleb",
                                   true, 0, 0, you.pos(), 0, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
-        bool success = create_monster(temp, false);
-
-        simple_god_message(success ? " sends a greater servant after you!"
-                                   : "'s greater servant is unavoidably "
-                                     "detained.", god);
+        if (create_monster(temp, false))
+            count++;
     }
-    else
-    {
-        int how_many = 1 + (you.experience_level / 7);
-        int count = 0;
 
-        for (; how_many > 0; --how_many)
-        {
-            mgen_data temp =
-                mgen_data::hostile_at(random_choose(MONS_HELLWING, MONS_NEQOXEC,
-                                      MONS_ORANGE_DEMON, MONS_SMOKE_DEMON,
-                                      MONS_YNOXINUL, -1),
-                                      "the fury of Makhleb",
-                                      true, 0, 0, you.pos(), 0, god);
-
-            temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
-            if (create_monster(temp, false))
-                count++;
-        }
-
-        simple_god_message(count > 1 ? " sends minions to punish you." :
-                           count > 0 ? " sends a minion to punish you."
-                                     : "'s minions fail to arrive.", god);
-    }
+    simple_god_message(count > 1 ? " sends minions to punish you." :
+                       count > 0 ? " sends a minion to punish you."
+                                 : "'s minions fail to arrive.", god);
 
     return true;
 }
@@ -911,6 +984,8 @@ static bool _vehumet_retribution()
     }
     avatar->mname = "the wrath of Vehumet";
     avatar->flags |= MF_NAME_REPLACE;
+    avatar->attitude = ATT_HOSTILE;
+    avatar->hit_dice = you.experience_level;
 
     spell_type spell = SPELL_NO_SPELL;
     const int severity = min(random_range(1 + you.experience_level / 5,
@@ -984,14 +1059,7 @@ static bool _vehumet_retribution()
             return false;
     }
 
-    simple_god_message(" rains destruction down upon you!", god);
-    avatar->attitude = ATT_HOSTILE;
-    bolt beam;
-    beam.source = you.pos();
-    beam.target = you.pos();
-    beam.aimed_at_feet = true;
-    beam.source_name = "the wrath of Vehumet";
-    mons_cast(avatar, beam, spell, false, false);
+    _spell_retribution(avatar, spell, god);
     shadow_monster_reset(avatar);
     return true;
 }
