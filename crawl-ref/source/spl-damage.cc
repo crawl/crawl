@@ -1090,7 +1090,6 @@ static int _shatter_mon_dice(const monster *mon)
         return 6;
 
     // 1/3 damage to liquids.
-    case MONS_JELLYFISH:
     case MONS_WATER_ELEMENTAL:
         return 1;
 

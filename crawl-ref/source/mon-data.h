@@ -217,6 +217,7 @@ static monsterentry mondata[] =
     AXED_MON(MONS_ELEMENTAL_WELLSPRING)
     AXED_MON(MONS_LAVA_FISH)
     AXED_MON(MONS_LEMURE)
+    AXED_MON(MONS_JELLYFISH)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -4731,19 +4732,6 @@ static monsterentry mondata[] =
     1, 15, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
     I_REPTILE, HT_WATER, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
-},
-
-{
-    MONS_JELLYFISH, 'J', CYAN, "jellyfish",
-    M_NO_SKELETON | M_SUBMERGES,
-    MR_RES_POISON,
-    0, 10, MONS_JELLYFISH, MONS_JELLYFISH, MH_NATURAL, -3,
-    { {AT_STING, AF_POISON_STR, 1}, {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK,
-       AT_NO_ATK },
-    { 4, 3, 5, 0 },
-    0, 5, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_WATER, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
 
 // A shark goes into a battle frenzy when it smells blood.

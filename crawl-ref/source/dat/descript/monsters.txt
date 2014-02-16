@@ -1710,13 +1710,6 @@ jelly
 A pulsating mass of acidic protoplasm. It can and will eat almost anything, and
 grows a little each time...
 %%%%
-jellyfish
-
-A pulsating glob of transparent flesh, waiting just below the surface of the
-water to sting its prey with its many tentacles. The tentacles do little harm
-on their own, but the poisonous toxins they inject can cause significant damage
-to muscle tissue.
-%%%%
 jiangshi
 
 A vampiric thrall bound into servitude by esoteric rituals. Though its rigid

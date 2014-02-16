@@ -4587,7 +4587,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
             return MON_SHAPE_QUADRUPED_WINGED;
     case 'I': // ice beasts
         return MON_SHAPE_QUADRUPED;
-    case 'J': // jellies and jellyfish
+    case 'J': // jellies
         return MON_SHAPE_BLOB;
     case 'K': // kobolds
         return MON_SHAPE_HUMANOID;

@@ -1651,16 +1651,6 @@ jelly
  A splotch, a blotch...”
     -Burt Bacharach, “Beware of the Blob”
 %%%%
-jellyfish
-
-“From this story it is evident that in former times the jellyfish once had a
-shell and bones something like a tortoise, but, ever since the Dragon King's
-sentence was carried out on the ancestor of the jelly fishes, his descendants
-have all been soft and boneless just as you see them to-day thrown up by the
-waves high upon the shores of Japan.”
-    -“The Jellyfish and the Monkey”, adapted by Yei Theodora Ozaki, _Young
-     Folk's Treasury_, vol. II. 1909.
-%%%%
 kobold
 
 “Kobolds are harmless.”
