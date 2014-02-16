@@ -849,19 +849,6 @@ bool melee_attack::handle_phase_damaged()
              def_name(DESC_ITS).c_str());
     }
 
-    if (defender->is_player() && you.mutation[MUT_JELLY_GROWTH]
-        && x_chance_in_y(damage_done, you.hp_max))
-    {
-        mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0,
-                     you.pos(), MHITNOT, 0, you.religion);
-
-        if (create_monster(mg))
-        {
-            mpr("Your attached jelly is knocked off by the blow!");
-            you.mutation[MUT_JELLY_GROWTH] = 0;
-        }
-    }
-
     return true;
 }
 
