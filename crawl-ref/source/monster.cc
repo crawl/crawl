@@ -377,7 +377,7 @@ int monster::body_weight(bool /*base*/) const
 
         case MONS_STONE_GOLEM:
         case MONS_EARTH_ELEMENTAL:
-        case MONS_CRYSTAL_GOLEM:
+        case MONS_CRYSTAL_GUARDIAN:
             weight *= 2;
             break;
 

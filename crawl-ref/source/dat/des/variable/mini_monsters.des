@@ -2780,22 +2780,26 @@ ENDMAP
 
 # Rather shallow depth but you cannot randomly teleport in there.
 NAME:    minmay_crystal_box
+TAGS:    no_monster_gen patrolling
 DEPTH:   D:12-, Depths, !Depths:$
-MONS:    crystal golem, orange crystal statue
-KPROP:   .12 = no_rtele_into
+MONS:    crystal guardian, orange crystal statue
 SUBST:   . = .:80 %$*|
+KPROP:   .012 = no_rtele_into
+: if you.absdepth() > 16 then
+SUBST:   0 = 1
+: end
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
-Wbb1...1...1bW
+Wbb1.......0bW
 Wbb.........bW
 Wbb.........bW
 Wnn.........bW
-WW=1...2...1bW
+WW=....2....bW
 Wnn.........bW
 Wbb.........bW
 Wbb.........bW
-Wbb1...1...1bW
+Wbb1.......0bW
 WbbbbbbbbbbbbW
 WWWWWWWWWWWWWW
 ENDMAP
@@ -5121,7 +5125,7 @@ NAME:   minmay_guarded_unrand_dyrovepreva
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  Depths
 WEIGHT: 3
-MONS:   patrolling crystal golem name:crystal_guardian n_rpl n_des spells:bolt_of_fire;bolt_of_cold
+MONS:   patrolling crystal guardian
 MONS:   orange crystal statue
 ITEM:   hat unrand:crown_of_dyrovepreva no_pickup
 KPROP:  12d' = no_rtele_into

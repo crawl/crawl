@@ -1155,6 +1155,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_PETRIFY:
     case SPELL_POLYMORPH:
     case SPELL_DISPEL_UNDEAD:
+    case SPELL_CRYSTAL_BOLT:
         return new targetter_beam(&you, range, spell_to_zap(spell), pow, 0, 0);
     default:
         return 0;

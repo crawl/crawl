@@ -1114,7 +1114,7 @@ KMONS:   J = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
              quicksilver dragon w:14 / \
              quicksilver dragon perm_ench:shapeshifter w:1
 KMONS:   K = glowing shapeshifter hd:16 / glowing shapeshifter hd:15
-KMONS:   L = crystal golem
+KMONS:   L = crystal guardian
 KFEAT:   V = enter_vaults
 SHUFFLE: ABCD
 NSUBST:  "~ = 1:{ / 1:[ / 1:( / 1:} / 1:] / 1:) / 1:<<. / 1:>>. / 3:T

@@ -308,6 +308,14 @@ This spell instills a corruption within a target, temporarily mutating their
 body in an adverse fashion. If cannot affect artificial beings, and the undead
 will decompose if affected.
 %%%%
+Crystal Bolt spell
+
+This spell launches a penetrating projectile with peculiar magical
+properties. This projectile shines violently with the elements of fire
+and cold to the point of striking with different elements per cast.
+The bolt also reflects off of walls of any material, due to the
+crystal embedded in the shot.
+%%%%
 Cure Poison spell
 
 This spell removes poison from the caster's system.

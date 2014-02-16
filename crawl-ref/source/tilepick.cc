@@ -1977,8 +1977,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_IRON_GOLEM;
     case MONS_STONE_GOLEM:
         return TILEP_MONS_STONE_GOLEM;
-    case MONS_CRYSTAL_GOLEM:
-        return TILEP_MONS_CRYSTAL_GOLEM;
+    case MONS_CRYSTAL_GUARDIAN:
+        return TILEP_MONS_CRYSTAL_GUARDIAN;
     case MONS_TOENAIL_GOLEM:
         return TILEP_MONS_TOENAIL_GOLEM;
     case MONS_ELECTRIC_GOLEM:

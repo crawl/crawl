@@ -965,10 +965,10 @@ SUBST:      opqrstu = *
 :           local mrnd = crawl.random2(4)
 :           if mrnd == 0 then
 KMONS:      0% = clay golem / earth elemental / toenail golem w:1
-KMONS:      * = stone golem / crystal golem / iron golem
+KMONS:      * = stone golem / crystal guardian / iron golem
 KMONS:      | = electric golem
 :           set_random_mon_list("clay golem / toenail golem w:1 / " ..
-:                               "stone golem / crystal golem / iron golem")
+:                               "stone golem / crystal guardian / iron golem")
 :           elseif mrnd == 1 then
 KMONS:      0% = smoke demon / ynoxinul / neqoxec / ice devil /\
                  chaos spawn / soul eater / sun demon

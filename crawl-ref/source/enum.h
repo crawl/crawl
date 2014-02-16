@@ -426,7 +426,8 @@ enum beam_type                  // bolt::flavour
     BEAM_PETRIFYING_CLOUD,
     BEAM_BOLT_OF_ZIN,
     BEAM_ENSNARE,
-    BEAM_LAST_REAL = BEAM_ENSNARE,
+    BEAM_CRYSTAL,
+    BEAM_LAST_REAL = BEAM_CRYSTAL,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -2381,7 +2382,7 @@ enum monster_type                      // menv[].type
 #endif
     MONS_STONE_GOLEM,
     MONS_IRON_GOLEM,
-    MONS_CRYSTAL_GOLEM,
+    MONS_CRYSTAL_GUARDIAN,
     MONS_TOENAIL_GOLEM,
     MONS_ELECTRIC_GOLEM, // replacing the guardian robot -- bwr
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
@@ -3862,6 +3863,7 @@ enum spell_type
     SPELL_BLINK_ALLIES_AWAY,
     SPELL_SHADOW_SHARD,
     SPELL_SHADOW_BOLT,
+    SPELL_CRYSTAL_BOLT,
     NUM_SPELLS
 };
 
@@ -4024,6 +4026,7 @@ enum zap_type
     ZAP_SEARING_RAY_II,
     ZAP_SEARING_RAY_III,
     ZAP_EXPLOSIVE_BOLT,
+    ZAP_CRYSTAL_BOLT,
 
     NUM_ZAPS
 };

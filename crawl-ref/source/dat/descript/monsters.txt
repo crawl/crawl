@@ -848,10 +848,13 @@ crocodile
 
 An aggressive crocodilian with great crunching jaws full of sharp teeth.
 %%%%
-crystal golem
+crystal guardian
 
-A huge animated figure made of heavily ensorcelled crystal. It is immune to
-most forms of magic.
+An intricate animated statue made of heavily ensorcelled, tough crystal.
+Though these magical defense structures are delicately sculpted to the
+point of lacking structural integrity and have little capability for
+dodging, they are immune to most forms of magic, and are magically charged
+to toss great bolts of fire and cold that are reflected by any surface.
 %%%%
 curse skull
 
@@ -3108,12 +3111,6 @@ This statue seems to harness the mightiest pure conjurations ever devised by
 Iskenderun. It is not made in her likeness, as legends describe her as a female
 felid, but, if I were you, I'd pay more heed to the orbs of magic flying your
 way than the statue's appearance.
-%%%%
-crystal guardian
-
-This crystal golem is so ensorcelled that it is immune to nearly any magic
-itself, and it can also shoot powerful beams of fire and cold at any
-tresspassers.
 %%%%
 decayed bog body
 

@@ -1127,3 +1127,19 @@ struct zap_info
     false,
     0
 },
+
+{
+    ZAP_CRYSTAL_BOLT,
+    "crystal bolt",
+    200,
+    new calcdice_calculator<6, 18, 2, 3>,
+    new tohit_calculator<10, 1, 25>,
+    GREEN,
+    false,
+    BEAM_CRYSTAL,
+    DCHAR_FIRED_ZAP,
+    true,
+    true,
+    false,
+    6
+},
