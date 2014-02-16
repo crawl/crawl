@@ -4378,7 +4378,6 @@ static void _extract_manticore_spikes()
     if (_decrement_a_duration(DUR_BARBS, you.time_taken,
         "You carefully extract the manticore spikes from your body."))
     {
-        you.attribute[ATTR_BARBS_MSG] = 0;
         you.attribute[ATTR_BARBS_POW] = 0;
     }
 }
@@ -4745,14 +4744,7 @@ static void _move_player(coord_def move)
 
         if (you.duration[DUR_BARBS])
         {
-            // Always announce the first time they hurt us, otherwise reduce
-            // message spam; hopefully the player has the idea by now.
-            if (!you.attribute[ATTR_BARBS_MSG] || one_chance_in(6))
-            {
-                mpr("The barbed spikes dig painfully into your body as you move.");
-                you.attribute[ATTR_BARBS_MSG] = 1;
-            }
-
+            mpr("The barbed spikes dig painfully into your body as you move.");
             ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), NON_MONSTER,
                  KILLED_BY_BARBS);
             bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
