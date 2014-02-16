@@ -845,11 +845,6 @@ crocodile
 Un crocodile agressif avec une grande mâchoire fracassante et pleine de dents
 pointues.
 %%%%
-crystal golem
-
-Une imposante statue animée faite de lourd cristal ensorcelé. Il est immunisé à
-la plupart des formes de magie.
-%%%%
 curse skull
 
 Un crâne carbonisé flottant dans les airs et se tournant lentement. Des

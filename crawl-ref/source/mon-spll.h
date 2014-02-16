@@ -2475,4 +2475,15 @@
        SPELL_BLINK_OTHER
       }
     },
+
+    {  MST_CRYSTAL_GUARDIAN,
+      {
+       SPELL_CRYSTAL_BOLT,
+       SPELL_CRYSTAL_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_CRYSTAL_BOLT
+      }
+    },
 #endif

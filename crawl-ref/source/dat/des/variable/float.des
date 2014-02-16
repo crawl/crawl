@@ -2276,7 +2276,7 @@ KMONS:   H = air elemental / sixfirhy / vapour w:5
 KMONS:   I = spriggan air mage / storm dragon
 KMONS:   J = stone golem w:5 / earth elemental w:5 / basilisk
 KMONS:   K = catoblepas / iron golem w:5 / boulder beetle
-KMONS:   L = iron dragon / crystal golem
+KMONS:   L = iron dragon / crystal guardian
 KMONS:   M = orc warrior ; long sword ego:holy_wrath / holy swine / \
              merfolk ; trident ego:holy_wrath
 KMONS:   N = apis / phoenix w:5

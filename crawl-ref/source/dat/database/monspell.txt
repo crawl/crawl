@@ -428,6 +428,10 @@ Sleep satyr cast
 Metal Splinters war gargoyle cast
 
 @The_monster@ launches @beam@ @at@ @target@.
+%%%%
+Crystal Bolt crystal guardian cast
+
+@The_monster@ fires a crystalline bolt @at@ @target@.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

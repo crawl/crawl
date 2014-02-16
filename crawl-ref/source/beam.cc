@@ -807,6 +807,13 @@ void bolt::fake_flavour()
         flavour = _chaos_beam_flavour(this);
     else if (real_flavour == BEAM_CHAOTIC_REFLECTION)
         flavour = _chaotic_reflection_flavour(this);
+    else if (real_flavour == BEAM_CRYSTAL && flavour == BEAM_CRYSTAL)
+    {
+        flavour = coinflip() ? BEAM_FIRE : BEAM_COLD;
+        hit_verb = (flavour == BEAM_FIRE) ? "burns" :
+                   (flavour == BEAM_COLD) ? "freezes"
+                                          : "bugs";
+    }
 }
 
 void bolt::digging_wall_effect()
@@ -2453,6 +2460,13 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
     if ((real_flavour == BEAM_CHAOS
          || real_flavour == BEAM_CHAOTIC_REFLECTION)
          && feat_is_solid(feat))
+    {
+        return true;
+    }
+
+    if ((flavour == BEAM_CRYSTAL || real_flavour == BEAM_CRYSTAL)
+        && feat_is_solid(feat)
+        && !feat_is_tree(feat))
     {
         return true;
     }
@@ -5946,7 +5960,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     // rewriting!
     if (real_flavour == BEAM_CHAOS
         || real_flavour == BEAM_RANDOM
-        || real_flavour == BEAM_CHAOTIC_REFLECTION)
+        || real_flavour == BEAM_CHAOTIC_REFLECTION
+        || real_flavour == BEAM_CRYSTAL)
     {
         flavour = real_flavour;
     }
@@ -6423,7 +6438,8 @@ string bolt::get_short_name() const
 
     if (real_flavour == BEAM_RANDOM
         || real_flavour == BEAM_CHAOS
-        || real_flavour == BEAM_CHAOTIC_REFLECTION)
+        || real_flavour == BEAM_CHAOTIC_REFLECTION
+        || real_flavour == BEAM_CRYSTAL)
     {
         return _beam_type_name(real_flavour);
     }
@@ -6524,6 +6540,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SAP_MAGIC:             return "sap magic";
     case BEAM_CORRUPT_BODY:          return "corrupt body";
     case BEAM_CHAOTIC_REFLECTION:    return "chaotic reflection";
+    case BEAM_CRYSTAL:               return "crystal bolt";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

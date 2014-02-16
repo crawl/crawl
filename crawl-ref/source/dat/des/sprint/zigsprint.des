@@ -365,7 +365,8 @@ function choose_mset_3(e)
 -- Earth
   elseif rnd < 79 then
     e.kmons("1 = clay golem / stone golem / earth elemental / iron golem /\
-               crystal golem / stone giant w:5 / iron dragon w:5 / quicksilver dragon w:5")
+               crystal guardian / stone giant w:5 / iron dragon w:5 /\
+               quicksilver dragon w:5")
 -- Dragon
   elseif rnd < 81 then
     e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon /\
@@ -498,7 +499,8 @@ local rnd = crawl.random2(142)
 -- Earth
   elseif rnd < 87 then
     e.kmons("1 = clay golem / stone golem / earth elemental / iron golem /\
-               crystal golem / stone giant / iron dragon / quicksilver dragon")
+               crystal guardian / stone giant / iron dragon /\
+               quicksilver dragon")
 -- Dragon
   elseif rnd < 90 then
     e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon /\

@@ -307,7 +307,7 @@ static void _golem_wave(int power)
 {
     wave_name("GOLEM WAVE");
     monster_type golems[] = {MONS_CLAY_GOLEM, MONS_STONE_GOLEM,
-            MONS_IRON_GOLEM, MONS_CRYSTAL_GOLEM, MONS_TOENAIL_GOLEM, END};
+            MONS_IRON_GOLEM, MONS_CRYSTAL_GUARDIAN, MONS_TOENAIL_GOLEM, END};
     monster_type boss[] = {MONS_ELECTRIC_GOLEM, END};
     _zotdef_fill_from_list(golems, 6, power * 2 / 3); // reduced size
     _zotdef_choose_boss(boss, power);

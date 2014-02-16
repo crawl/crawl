@@ -622,7 +622,7 @@ MARKER: z = lua:fog_machine { \
                 size = 2, size_buildup_amnt = 1, \
                 size_buildup_time = 25, cloud_type = "freezing vapour" \
             }
-MONS:   clay golem, toenail golem, stone golem, iron golem, crystal golem
+MONS:   clay golem, toenail golem, stone golem, iron golem, crystal guardian
 KFEAT:  o = granite_statue
 KFEAT:  m = .
 KFEAT:  z = .
@@ -690,7 +690,7 @@ NAME:   minmay_crystal_thing
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: west
 DEPTH:  Depths, !Depths:$
-MONS:   crystal golem, orange crystal statue
+MONS:   crystal guardian, orange crystal statue
 ITEM:   any magical staff / any rod w:2 / any book / any jewellery w:15 / \
         any scroll w:20 / potion of magic / potion of brilliance / \
         fan of gales w:1 / lamp of fire w:1 / \

@@ -418,7 +418,7 @@ abomination_small1
 ## Golems ('8')
 %sdir mon/nonliving
 clay_golem MONS_CLAY_GOLEM
-crystal_golem MONS_CRYSTAL_GOLEM
+crystal_guardian MONS_CRYSTAL_GUARDIAN
 %rim 0
 electric_golem MONS_ELECTRIC_GOLEM
 %rim 1

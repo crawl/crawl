@@ -1053,6 +1053,15 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.hit      = 17 + power / 25;
         break;
 
+    case SPELL_CRYSTAL_BOLT:
+        beam.name     = "crystal bolt";
+        beam.damage   = dice_def(3, 8 + power / 11);
+        beam.colour   = GREEN;
+        beam.flavour  = BEAM_CRYSTAL;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
+        break;
+
     default:
         if (check_validity)
         {
