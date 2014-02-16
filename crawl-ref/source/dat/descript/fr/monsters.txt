@@ -1742,13 +1742,6 @@ jelly
 Une masse palpitante de protoplasme acide. Il peut et veut manger à peu près
 tout ce qui est à sa portée, et ainsi il grossira petit à petit...
 %%%%
-jellyfish
-
-Un globe palpitant de chair transparente, patientant sous la surface de l'eau
-pour piquer sa proie avec ses tentacules. Les tentacules ne blessent pas
-vraiment mais les toxines venimeuses qu'elles injectent peuvent faire des
-dégâts considérables sur le tissu musculaire.
-%%%%
 jiangshi
 
 Un vampire réduit a l'esclavage par des rituels ésotériques. Bien que ses

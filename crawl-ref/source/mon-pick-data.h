@@ -1380,7 +1380,6 @@ static const pop_entry pop_water_generic[] =
   {  1,  27,  150, FLAT, MONS_BIG_FISH },
   {  1,  27,  150, FLAT, MONS_GIANT_GOLDFISH },
   {  1,  27,  150, FLAT, MONS_ELECTRIC_EEL },
-  {  1,  27,  150, FLAT, MONS_JELLYFISH },
   {  1,  27,  200, FLAT, MONS_SHARK },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1391,7 +1390,6 @@ static const pop_entry pop_water_d[] =
   {  5,  24,  100, FLAT, MONS_GIANT_GOLDFISH },
   {  5,  16,   60, FLAT, MONS_ELECTRIC_EEL },
   {  7,  16,  185, PEAK, MONS_ELECTRIC_EEL },
-  {  5,  20,  100, FLAT, MONS_JELLYFISH },
   {  9,  27,  300,   UP, MONS_OCTOPODE },
   {  9,  32,  200, SEMI, MONS_SHARK },
   {  11, 27,  600,   UP, MONS_WATER_ELEMENTAL },
@@ -1413,7 +1411,6 @@ static const pop_entry pop_water_swamp[] =
   {  1,  5,   600, FLAT, MONS_SWAMP_WORM },
   {  1,  5,    75, FLAT, MONS_BIG_FISH },
   {  1,  5,    75, FLAT, MONS_GIANT_GOLDFISH },
-  {  1,  6,    75, DOWN, MONS_JELLYFISH },
   {  2,  6,   165, SEMI, MONS_THORN_LOTUS },
   {  1,  5,   900, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
@@ -1422,7 +1419,6 @@ static const pop_entry pop_water_swamp[] =
 static const pop_entry pop_water_snake[] =
 { // Snake water monsters
   {  1,   5,  100, DOWN, MONS_ELECTRIC_EEL },
-  {  1,   5,  100, DOWN, MONS_JELLYFISH },
   {  1,   5,  200,   UP, MONS_SEA_SNAKE },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1431,7 +1427,6 @@ static const pop_entry pop_water_forest[] =
 { // Forest water monsters
   {  1,   5,   35, FLAT, MONS_BIG_FISH },
   {  1,   5,  110, FLAT, MONS_GIANT_GOLDFISH },
-  {  1,   5,   60, FLAT, MONS_JELLYFISH },
   {  1,   5,  125, FLAT, MONS_WATER_ELEMENTAL },
   {  1,   5,  135, FLAT, MONS_THORN_LOTUS },
   {  1,   9,  120, SEMI, MONS_WATER_NYMPH },

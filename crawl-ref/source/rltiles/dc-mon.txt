@@ -175,7 +175,6 @@ big_fish MONS_BIG_FISH
 giant_goldfish MONS_GIANT_GOLDFISH
 electric_eel MONS_ELECTRIC_EEL
 shark MONS_SHARK
-jellyfish MONS_JELLYFISH /*'J'*/
 %rim 1
 
 %include dc-tentacles.txt
