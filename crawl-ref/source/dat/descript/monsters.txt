@@ -1801,11 +1801,6 @@ lava worm
 
 A vicious red worm which swims through molten rock.
 %%%%
-lemure
-
-A vaguely humanoid blob of putrid white flesh. It gargles horribly as pus flows
-from its orifices.
-%%%%
 lich
 
 A powerful wizard who has learned to cheat death itself, a lich is a skeletal,

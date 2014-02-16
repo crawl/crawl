@@ -2583,7 +2583,9 @@ enum monster_type                      // menv[].type
     MONS_CRIMSON_IMP,
     MONS_QUASIT,
     MONS_WHITE_IMP,
+#if TAG_MAJOR_VERSION == 34
     MONS_LEMURE,
+#endif
     MONS_UFETUBUS,
     MONS_IRON_IMP,
     MONS_SHADOW_IMP,

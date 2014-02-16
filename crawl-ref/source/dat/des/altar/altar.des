@@ -280,7 +280,7 @@ DEPTH: D:8-, Crypt, Geh
 TAGS:  no_monster_gen mini_float
 MONS:  iron devil/orange demon
 MONS:  hell beast/rotting devil
-MONS:  lemure/iron imp
+MONS:  iron imp
 MONS:  hellion
 SUBST: 2 = 23
 SUBST: 2 = 12

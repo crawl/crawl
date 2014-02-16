@@ -3877,7 +3877,6 @@ monster_type summon_any_demon(monster_type dct)
             1, MONS_CRIMSON_IMP,
             1, MONS_QUASIT,
             1, MONS_WHITE_IMP,
-            1, MONS_LEMURE,
             1, MONS_UFETUBUS,
             1, MONS_IRON_IMP,
             1, MONS_SHADOW_IMP,

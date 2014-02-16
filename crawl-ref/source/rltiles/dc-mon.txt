@@ -345,7 +345,6 @@ crimson_imp MONS_CRIMSON_IMP
 %rim 0
 quasit MONS_QUASIT
 %rim 1
-lemure MONS_LEMURE
 iron_imp MONS_IRON_IMP
 %rim 0
 shadow_imp MONS_SHADOW_IMP

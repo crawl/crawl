@@ -1838,11 +1838,6 @@ lava worm
 
 Un vers rouge vicieux qui nage dans la lave.
 %%%%
-lemure
-
-Un blob vaguement humanoïde de chair blanche putride. Il se gargarise
-horriblement lorsque du pus suinte de ses orifices.
-%%%%
 lich
 
 Un magicien puissant qui a appris à tromper la Mort elle-même, une liche est un

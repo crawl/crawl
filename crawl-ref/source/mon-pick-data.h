@@ -883,7 +883,7 @@ static const pop_entry pop_abyss[] =
   // Demons
   {  1,  4,   25, DOWN, MONS_CRIMSON_IMP },
   {  1,  4,  192, DOWN, MONS_WHITE_IMP },
-  {  1,  4,  192, DOWN, MONS_LEMURE },
+  {  1,  4,  192, DOWN, MONS_QUASIT },
   {  1,  4,  192, DOWN, MONS_UFETUBUS },
   {  1,  4,  192, DOWN, MONS_IRON_IMP },
   {  1,  4,   25, DOWN, MONS_SHADOW_IMP },

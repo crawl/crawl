@@ -2566,7 +2566,7 @@ void check_demonic_guardian()
         switch (mutlevel)
         {
         case 1:
-            mt = random_choose(MONS_WHITE_IMP, MONS_LEMURE, MONS_UFETUBUS,
+            mt = random_choose(MONS_WHITE_IMP, MONS_QUASIT, MONS_UFETUBUS,
                                MONS_IRON_IMP, MONS_CRIMSON_IMP, -1);
             break;
         case 2:
