@@ -132,7 +132,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             options.get("tile_unseen_col"),         // MF_UNSEEN
             options.get("tile_floor_col"),          // MF_FLOOR
             options.get("tile_wall_col"),           // MF_WALL
-            options.get("tile_floor_col"),          // MF_MAP_FLOOR
+            options.get("tile_mapped_floor_col"),   // MF_MAP_FLOOR
             options.get("tile_mapped_wall_col"),    // MF_MAP_WALL
             options.get("tile_door_col"),           // MF_DOOR
             options.get("tile_item_col"),           // MF_ITEM
@@ -143,7 +143,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             options.get("tile_plant_col"),          // MF_MONS_NO_EXP
             options.get("tile_upstairs_col"),       // MF_STAIR_UP
             options.get("tile_downstairs_col"),     // MF_STAIR_DOWN
-            options.get("tile_feature_col"),        // MF_STAIR_BRANCH
+            options.get("tile_branchstairs_col"),   // MF_STAIR_BRANCH
             options.get("tile_feature_col"),        // MF_FEATURE
             options.get("tile_water_col"),          // MF_WATER
             options.get("tile_lava_col"),           // MF_LAVA

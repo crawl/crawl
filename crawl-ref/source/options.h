@@ -402,10 +402,12 @@ public:
     VColour     tile_unseen_col;
     VColour     tile_floor_col;
     VColour     tile_wall_col;
+    VColour     tile_mapped_floor_col;
     VColour     tile_mapped_wall_col;
     VColour     tile_door_col;
     VColour     tile_downstairs_col;
     VColour     tile_upstairs_col;
+    VColour     tile_branchstairs_col;
     VColour     tile_feature_col;
     VColour     tile_trap_col;
     VColour     tile_water_col;
