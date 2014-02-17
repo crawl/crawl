@@ -3100,12 +3100,6 @@ void excommunication(god_type new_god)
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
     vector<ability_type> abilities = get_god_abilities(true, true);
-    for (unsigned int i = 0; i < abilities.size(); ++i)
-    {
-        you.stop_train.insert(abil_skill(abilities[i]));
-        if (abilities[i] == ABIL_TSO_DIVINE_SHIELD)
-            you.stop_train.insert(SK_SHIELDS);
-    }
 
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.duration[DUR_RECITE] = 0;
@@ -3331,6 +3325,15 @@ void excommunication(god_type new_god)
     // Evil hack.
     learned_something_new(HINT_EXCOMMUNICATE,
                           coord_def((int)new_god, old_piety));
+
+    for (unsigned int i = 0; i < abilities.size(); ++i)
+    {
+        you.stop_train.insert(abil_skill(abilities[i]));
+        if (abilities[i] == ABIL_TSO_DIVINE_SHIELD)
+            you.stop_train.insert(SK_SHIELDS);
+    }
+
+    update_can_train();
 
     // Perhaps we abandoned Trog with everything but Spellcasting maxed out.
     check_selected_skills();
@@ -3753,6 +3756,7 @@ void god_pitch(god_type which_god)
         if (abilities[i] == ABIL_TSO_DIVINE_SHIELD)
             you.start_train.insert(SK_SHIELDS);
     }
+    update_can_train();
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
