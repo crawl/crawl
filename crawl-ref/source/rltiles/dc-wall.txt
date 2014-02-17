@@ -398,6 +398,21 @@ vault1
 vault2
 vault3
 
+vault_stone00 STONE_WALL_VAULT
+vault_stone01
+vault_stone02
+vault_stone03
+%weight 4
+vault_stone04
+vault_stone05
+vault_stone06
+vault_stone07
+%weight 1
+vault_stone08
+vault_stone09
+vault_stone10
+vault_stone11
+
 zot_blue0 WALL_ZOT WALL_ZOT_BLUE
 zot_blue1
 zot_blue2
