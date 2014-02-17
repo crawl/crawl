@@ -428,8 +428,13 @@ void tile_init_flavour(const coord_def &gc)
             floor_base = tile_dngn_coloured(floor_base, colour);
         env.tile_flv(gc).floor = _pick_random_dngn_tile(floor_base);
     }
-    else
+    else if (env.tile_flv(gc).floor != TILE_HALO_GRASS
+             && env.tile_flv(gc).floor != TILE_HALO_GRASS2
+             && env.tile_flv(gc).floor != TILE_HALO_VAULT
+             && env.tile_flv(gc).floor != TILE_HALO_DIRT)
+    {
         env.tile_flv(gc).floor = _pick_random_dngn_tile(env.tile_flv(gc).floor);
+    }
 
     if (!env.tile_flv(gc).wall)
     {
