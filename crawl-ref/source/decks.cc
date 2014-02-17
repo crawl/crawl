@@ -186,7 +186,6 @@ const deck_archetype deck_of_dungeons[] =
 const deck_archetype deck_of_oddities[] =
 {
     { CARD_GENIE,   {5, 5, 5} },
-    { CARD_BARGAIN, {5, 5, 5} },
     { CARD_WRATH,   {5, 5, 5} },
     { CARD_XOM,     {5, 5, 5} },
     { CARD_FEAST,   {5, 5, 5} },
@@ -353,7 +352,9 @@ const char* card_name(card_type card)
     case CARD_HAMMER:          return "the Hammer";
     case CARD_PAIN:            return "Pain";
     case CARD_TORMENT:         return "Torment";
+#if TAG_MAJOR_VERSION == 34
     case CARD_BARGAIN:         return "the Bargain";
+#endif
     case CARD_WRATH:           return "Wrath";
     case CARD_WRAITH:          return "the Wraith";
     case CARD_CURSE:           return "the Curse";
@@ -2973,10 +2974,11 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case CARD_BARGAIN:
-        you.increase_duration(DUR_BARGAIN,
-                              random2(power) + random2(power) + 2);
+        canned_msg(MSG_NOTHING_HAPPENS);
         break;
+#endif
 
     case CARD_WILD_MAGIC:
         // Yes, high power is bad here.

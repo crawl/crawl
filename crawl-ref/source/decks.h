@@ -104,7 +104,9 @@ enum card_type
     CARD_STAIRS,                // moves stairs around
 
     CARD_GENIE,                 // acquirement OR rotting/deterioration
+#if TAG_MAJOR_VERSION == 34
     CARD_BARGAIN,               // shopping discount
+#endif
     CARD_WRATH,                 // Godly wrath
     CARD_WRAITH,                // drain XP
     CARD_XOM,
