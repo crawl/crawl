@@ -1453,19 +1453,6 @@ struct spell_desc
 },
 
 {
-    SPELL_ICE_STORM, "Ice Storm",
-     SPTYP_CONJURATION | SPTYP_ICE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
-     9,
-     200,
-     6, 6,
-     0,
-     NULL,
-     true,
-     false
-},
-
-{
     SPELL_AIRSTRIKE, "Airstrike",
      SPTYP_AIR,
      SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
@@ -3651,6 +3638,19 @@ struct spell_desc
     NULL,
     true,
     false
+},
+
+{
+    SPELL_GLACIATE, "Glaciate",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF,
+     9,
+     200,
+     3, 6,
+     0,
+     NULL,
+     false,
+     false
 },
 
 {

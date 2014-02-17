@@ -759,6 +759,7 @@ struct zap_info
     4
 },
 
+#if TAG_MAJOR_VERSION == 34
 {                           // ench_power controls radius
     ZAP_ICE_STORM,
     "great blast of cold",
@@ -774,6 +775,7 @@ struct zap_info
     true,
     9 // XXX: Should a storm be louder?
 },
+#endif
 
 {
     ZAP_CORONA,

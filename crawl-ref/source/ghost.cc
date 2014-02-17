@@ -40,7 +40,7 @@ static spell_type search_order_conj[] =
 {
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_FIRE_STORM,
-    SPELL_ICE_STORM,
+    SPELL_GLACIATE,
     SPELL_CHAIN_LIGHTNING,
     SPELL_BOLT_OF_DRAINING,
     SPELL_AGONY,
@@ -303,7 +303,7 @@ void ghost_demon::init_random_demon()
         if (one_chance_in(25))
             spells[0] = SPELL_FIRE_STORM;
         if (one_chance_in(25))
-            spells[0] = SPELL_ICE_STORM;
+            spells[0] = SPELL_GLACIATE;
         if (one_chance_in(25))
             spells[0] = SPELL_METAL_SPLINTERS;
         if (one_chance_in(25))

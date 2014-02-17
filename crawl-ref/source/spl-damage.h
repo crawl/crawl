@@ -64,4 +64,7 @@ void toxic_radiance_effect(actor* agent, int mult);
 spret_type cast_searing_ray(int pow, bolt &beam, bool fail);
 void handle_searing_ray();
 void end_searing_ray();
+
+spret_type cast_glaciate(actor *caster, int pow, coord_def aim,
+                         bool fail = false);
 #endif

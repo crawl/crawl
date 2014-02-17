@@ -53,6 +53,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
+#include "target.h"
 #include "teleport.h"
 #include "traps.h"
 #include "view.h"
@@ -551,17 +552,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_FIRE_STORM:
         setup_fire_storm(mons, power / 2, beam);
         beam.foe_ratio = random_range(40, 55);
-        break;
-
-    case SPELL_ICE_STORM:
-        beam.name           = "great blast of cold";
-        beam.colour         = BLUE;
-        beam.damage         = calc_dice(10, 18 + power / 2);
-        beam.hit            = 20 + power / 10;    // 50: 25   100: 30
-        beam.ench_power     = power;              // used for radius
-        beam.flavour        = BEAM_ICE;           // half resisted
-        beam.is_explosion   = true;
-        beam.foe_ratio      = random_range(40, 55);
         break;
 
     case SPELL_HELLFIRE_BURST:
@@ -1273,6 +1263,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_REARRANGE_PIECES:
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_SHROUD_OF_GOLUBRIA:
+    case SPELL_GLACIATE:
         return true;
     default:
         if (check_validity)
@@ -2614,6 +2605,33 @@ static void _cast_black_mark(monster* agent)
     }
 }
 
+static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
+{
+    targetter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
+    hitfunc.set_aim(aim);
+
+    mon_attitude_type castatt = caster->temp_attitude();
+    int friendly = 0, enemy = 0;
+
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        const actor *victim = actor_at(p->first);
+        if (!victim)
+            continue;
+
+        if (mons_atts_aligned(castatt, victim->temp_attitude()))
+            friendly += victim->get_experience_level();
+        else
+            enemy += victim->get_experience_level();
+    }
+
+    return enemy > friendly;
+}
+
 //---------------------------------------------------------------
 //
 // handle_mon_spell
@@ -3160,6 +3178,16 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             if (!_should_ephemeral_infusion(mons))
                 return false;
+        }
+        else if (spell_cast == SPELL_GLACIATE)
+        {
+            if (!foe
+                || !_glaciate_tracer(mons,
+                                     12 * mons->spell_hd(spell_cast),
+                                     foe->pos()))
+            {
+                return false;
+            }
         }
 
         if (mons->type == MONS_BALL_LIGHTNING)
@@ -5791,6 +5819,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         mons->add_ench(mon_enchant(ENCH_SHROUD));
 
         return;
+
+    case SPELL_GLACIATE:
+    {
+        actor *foe = mons->get_foe();
+        ASSERT(foe);
+        cast_glaciate(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
+        return;
+    }
     }
 
 
@@ -6241,7 +6277,8 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                                || pbolt.visible())
                            // ugh. --Grunt
                            && (actual_spell != SPELL_LRD)
-                           && (actual_spell != SPELL_PORTAL_PROJECTILE);
+                           && (actual_spell != SPELL_PORTAL_PROJECTILE)
+                           && (actual_spell != SPELL_GLACIATE);
 
     vector<string> key_list;
     unsigned int num_spell_keys =

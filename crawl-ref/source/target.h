@@ -236,4 +236,17 @@ private:
     explosion_map exp_map;
 };
 
+class targetter_cone : public targetter
+{
+public:
+    targetter_cone(const actor *act, int range);
+
+    bool valid_aim(coord_def a);
+    bool set_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+    map<coord_def, aff_type> zapped;
+private:
+    int range2;
+};
+
 #endif

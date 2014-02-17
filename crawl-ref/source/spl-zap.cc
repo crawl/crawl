@@ -81,8 +81,6 @@ zap_type spell_to_zap(spell_type spell)
         // Should only be available from Staff of Dispater and Sceptre
         // of Asmodeus.
         return ZAP_HELLFIRE;
-    case SPELL_ICE_STORM:
-        return ZAP_ICE_STORM;
     case SPELL_CORONA:
         return ZAP_CORONA;
     case SPELL_SLOW:
