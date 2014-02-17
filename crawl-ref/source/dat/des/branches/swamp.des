@@ -703,7 +703,7 @@ SUBST: q = tW., r = W., W = zWW
 # Necromancer gets the spell set without bolt of fire so he doesn't torch the place.
 MONS: necromancer actual_spells spells:bolt_of_cold;bolt_of_draining;animate_dead;simulacrum
 KMONS: z = big fish zombie / swamp drake zombie / swamp worm zombie / \
-        water moccasin zombie / agate snail zombie / swamp dragon zombie / \
+        water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / red wasp zombie / alligator zombie / \
         crocodile zombie / hydra zombie / giant leech zombie / hydra zombie / \
         alligator simulacrum w:1 / swamp drake simulacrum w:1 / \

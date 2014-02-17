@@ -2789,9 +2789,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_ALLIGATOR_SNAPPING_TURTLE:
             return TILEP_MONS_ALLIGATOR_SNAPPING_TURTLE
                     + (mon.is(MB_WITHDRAWN) ? 1 : 0);
+#if TAG_MAJOR_VERSION == 34
         case MONS_AGATE_SNAIL:
             return TILEP_MONS_AGATE_SNAIL
                     + (mon.is(MB_WITHDRAWN) ? 1 : 0);
+#endif
 
         case MONS_BOULDER_BEETLE:
             return mon.is(MB_ROLLING)
@@ -3659,8 +3661,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_ELEPHANT_SLUG;
     case MONS_GIANT_SLUG:
         return TILE_CORPSE_GIANT_SLUG;
+#if TAG_MAJOR_VERSION == 34
     case MONS_AGATE_SNAIL:
         return TILE_CORPSE_AGATE_SNAIL;
+#endif
 
     // bees ('k')
     case MONS_KILLER_BEE:

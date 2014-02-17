@@ -2225,7 +2225,9 @@ enum monster_type                      // menv[].type
     MONS_HELL_HOG,
     MONS_HOLY_SWINE,            // porkalator
     MONS_GIANT_SLUG,
+#if TAG_MAJOR_VERSION == 34
     MONS_AGATE_SNAIL,
+#endif
     MONS_ELEPHANT_SLUG,
     MONS_GIANT_LEECH,
     MONS_BABY_ALLIGATOR,

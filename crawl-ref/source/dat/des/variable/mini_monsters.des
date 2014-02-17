@@ -1107,7 +1107,7 @@ NAME:  guppyfry_early_lair_pool
 DEPTH: D:2-5
 TAGS:  patrolling no_monster_gen transparent mini_float
 KMONS: 1 = big fish / giant goldfish
-KMONS: 2 = agate snail / giant slug / giant centipede
+KMONS: 2 = giant slug / giant centipede
 KMONS: 3 = plant
 ITEM:  apple / apricot / pear / orange / banana / strawberry
 SUBST: - = wwwwwwWWW1
