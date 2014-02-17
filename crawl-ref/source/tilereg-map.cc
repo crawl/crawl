@@ -43,7 +43,7 @@ void MapRegion::init_colours()
     m_colours[MF_UNSEEN]        = Options.tile_unseen_col;
     m_colours[MF_FLOOR]         = Options.tile_floor_col;
     m_colours[MF_WALL]          = Options.tile_wall_col;
-    m_colours[MF_MAP_FLOOR]     = Options.tile_floor_col; // TODO enne
+    m_colours[MF_MAP_FLOOR]     = Options.tile_mapped_floor_col;
     m_colours[MF_MAP_WALL]      = Options.tile_mapped_wall_col;
     m_colours[MF_DOOR]          = Options.tile_door_col;
     m_colours[MF_ITEM]          = Options.tile_item_col;
@@ -54,7 +54,7 @@ void MapRegion::init_colours()
     m_colours[MF_MONS_NO_EXP]   = Options.tile_plant_col;
     m_colours[MF_STAIR_UP]      = Options.tile_upstairs_col;
     m_colours[MF_STAIR_DOWN]    = Options.tile_downstairs_col;
-    m_colours[MF_STAIR_BRANCH]  = Options.tile_feature_col;
+    m_colours[MF_STAIR_BRANCH]  = Options.tile_branchstairs_col;
     m_colours[MF_FEATURE]       = Options.tile_feature_col;
     m_colours[MF_WATER]         = Options.tile_water_col;
     m_colours[MF_LAVA]          = Options.tile_lava_col;

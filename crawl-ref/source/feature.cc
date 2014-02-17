@@ -204,7 +204,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
                 f.colour = f.seen_colour = YELLOW;
             f.dchar       = DCHAR_STAIRS_UP;
             f.map_colour  = GREEN;
-            f.minimap     = MF_STAIR_BRANCH;
+            f.minimap     = MF_STAIR_UP;
             break;
         }
         else if (feat_is_altar(feat) || feat == DNGN_UNKNOWN_ALTAR)

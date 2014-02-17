@@ -970,27 +970,29 @@ void game_options::reset_options()
     tile_menu_icons      = true;
 
     // minimap colours
-    tile_player_col      = str_to_tile_colour("white");
-    tile_monster_col     = str_to_tile_colour("red");
-    tile_neutral_col     = str_to_tile_colour("red");
-    tile_peaceful_col    = str_to_tile_colour("lightred");
-    tile_friendly_col    = str_to_tile_colour("lightred");
-    tile_plant_col       = str_to_tile_colour("darkgreen");
-    tile_item_col        = str_to_tile_colour("green");
-    tile_unseen_col      = str_to_tile_colour("black");
-    tile_floor_col       = str_to_tile_colour("lightgrey");
-    tile_wall_col        = str_to_tile_colour("darkgrey");
-    tile_mapped_wall_col = str_to_tile_colour("blue");
-    tile_door_col        = str_to_tile_colour("brown");
-    tile_downstairs_col  = str_to_tile_colour("magenta");
-    tile_upstairs_col    = str_to_tile_colour("blue");
-    tile_feature_col     = str_to_tile_colour("cyan");
-    tile_trap_col        = str_to_tile_colour("yellow");
-    tile_water_col       = str_to_tile_colour("grey");
-    tile_lava_col        = str_to_tile_colour("grey");
-    tile_excluded_col    = str_to_tile_colour("darkcyan");
-    tile_excl_centre_col = str_to_tile_colour("darkblue");
-    tile_window_col      = str_to_tile_colour("yellow");
+    tile_player_col       = str_to_tile_colour("white");
+    tile_monster_col      = str_to_tile_colour("red");
+    tile_neutral_col      = str_to_tile_colour("red");
+    tile_peaceful_col     = str_to_tile_colour("lightred");
+    tile_friendly_col     = str_to_tile_colour("lightred");
+    tile_plant_col        = str_to_tile_colour("darkgreen");
+    tile_item_col         = str_to_tile_colour("green");
+    tile_unseen_col       = str_to_tile_colour("black");
+    tile_floor_col        = str_to_tile_colour("lightgrey");
+    tile_wall_col         = str_to_tile_colour("darkgrey");
+    tile_mapped_floor_col = str_to_tile_colour("lightblue");
+    tile_mapped_wall_col  = str_to_tile_colour("blue");
+    tile_door_col         = str_to_tile_colour("brown");
+    tile_downstairs_col   = str_to_tile_colour("magenta");
+    tile_upstairs_col     = str_to_tile_colour("blue");
+    tile_branchstairs_col = str_to_tile_colour("magenta");
+    tile_feature_col      = str_to_tile_colour("cyan");
+    tile_trap_col         = str_to_tile_colour("yellow");
+    tile_water_col        = str_to_tile_colour("grey");
+    tile_lava_col         = str_to_tile_colour("grey");
+    tile_excluded_col     = str_to_tile_colour("darkcyan");
+    tile_excl_centre_col  = str_to_tile_colour("darkblue");
+    tile_window_col       = str_to_tile_colour("yellow");
 #endif
 
 #ifdef USE_TILE_LOCAL
@@ -3441,6 +3443,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_floor_col = str_to_tile_colour(field);
     else if (key == "tile_wall_col")
         tile_wall_col = str_to_tile_colour(field);
+    else if (key == "tile_mapped_floor_col")
+        tile_mapped_floor_col = str_to_tile_colour(field);
     else if (key == "tile_mapped_wall_col")
         tile_mapped_wall_col = str_to_tile_colour(field);
     else if (key == "tile_door_col")
@@ -3449,6 +3453,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_downstairs_col = str_to_tile_colour(field);
     else if (key == "tile_upstairs_col")
         tile_upstairs_col = str_to_tile_colour(field);
+    else if (key == "tile_branchstairs_col")
+        tile_branchstairs_col = str_to_tile_colour(field);
     else if (key == "tile_feature_col")
         tile_feature_col = str_to_tile_colour(field);
     else if (key == "tile_trap_col")
@@ -4181,10 +4187,12 @@ static void _write_minimap_colours()
     _write_vcolour("tile_unseen_col", Options.tile_unseen_col);
     _write_vcolour("tile_floor_col", Options.tile_floor_col);
     _write_vcolour("tile_wall_col", Options.tile_wall_col);
+    _write_vcolour("tile_mapped_floor_col", Options.tile_mapped_floor_col);
     _write_vcolour("tile_mapped_wall_col", Options.tile_mapped_wall_col);
     _write_vcolour("tile_door_col", Options.tile_door_col);
     _write_vcolour("tile_downstairs_col", Options.tile_downstairs_col);
     _write_vcolour("tile_upstairs_col", Options.tile_upstairs_col);
+    _write_vcolour("tile_branchstairs_col", Options.tile_branchstairs_col);
     _write_vcolour("tile_feature_col", Options.tile_feature_col);
     _write_vcolour("tile_trap_col", Options.tile_trap_col);
     _write_vcolour("tile_water_col", Options.tile_water_col);
