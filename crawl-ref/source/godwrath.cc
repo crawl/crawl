@@ -65,7 +65,13 @@ static bool _yred_random_zombified_hostile()
     monster_type z_base;
 
     do
-        z_base = pick_random_zombie();
+    {
+        // XXX: better zombie selection?
+        level_id place(BRANCH_DUNGEON,
+                       min(27, you.experience_level + 5));
+        z_base = pick_local_zombifiable_monster(place, RANDOM_MONSTER,
+                                                you.pos());
+    }
     while (skel && !mons_skeleton(z_base));
 
     mgen_data temp = mgen_data::hostile_at(skel ? MONS_SKELETON : MONS_ZOMBIE,
@@ -579,7 +585,7 @@ static bool _kikubaaqudgha_retribution()
         do
         {
             MiscastEffect(&you, -god, SPTYP_NECROMANCY,
-                          5 + you.experience_level,
+                          2 + div_rand_round(you.experience_level, 9),
                           random2avg(88, 3), "the malice of Kikubaaqudgha");
         }
         while (one_chance_in(5));
@@ -594,7 +600,7 @@ static bool _kikubaaqudgha_retribution()
             for (int i = 0; i < 3; ++i)
             {
                 MiscastEffect(&you, -god, SPTYP_NECROMANCY,
-                              5 + you.experience_level,
+                              2 + div_rand_round(you.experience_level, 9),
                               random2avg(88, 3), "the malice of Kikubaaqudgha");
             }
         }
@@ -613,26 +619,30 @@ static bool _yredelemnul_retribution()
     // undead theme
     const god_type god = GOD_YREDELEMNUL;
 
-    if (random2(you.experience_level) > 4)
+    if (coinflip())
     {
         if (you_worship(god) && coinflip() && yred_slaves_abandon_you())
             ;
         else
         {
-            const bool zombified = one_chance_in(4);
-
-            int how_many = 1 + random2(1 + (you.experience_level / 5));
+            int how_many = 1 + random2avg(1 + (you.experience_level / 5), 2);
             int count = 0;
 
             for (; how_many > 0; --how_many)
             {
-                if (zombified)
+                if (one_chance_in(you.experience_level))
                 {
                     if (_yred_random_zombified_hostile())
                         count++;
                 }
                 else
-                    count += yred_random_servants(0, true);
+                {
+                    const int num = yred_random_servants(0, true);
+                    if (num >= 0)
+                        count += num;
+                    else
+                        ++how_many;
+                }
             }
 
             simple_god_message(count > 1 ? " sends servants to punish you." :
@@ -643,7 +653,8 @@ static bool _yredelemnul_retribution()
     else
     {
         simple_god_message("'s anger turns toward you for a moment.", god);
-        MiscastEffect(&you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
+        MiscastEffect(&you, -god, SPTYP_NECROMANCY,
+                      2 + div_rand_round(you.experience_level, 9),
                       random2avg(88, 3), "the anger of Yredelemnul");
     }
 
