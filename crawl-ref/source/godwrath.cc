@@ -570,7 +570,7 @@ static bool _kikubaaqudgha_retribution()
     god_speaks(god, coinflip() ? "You hear Kikubaaqudgha cackling."
                                : "Kikubaaqudgha's malice focuses upon you.");
 
-    if (random2(you.experience_level) > 4)
+    if (!count_corpses_in_los(NULL) || random2(you.experience_level) > 4)
     {
         // Either zombies, or corpse rot + skeletons.
         kiku_receive_corpses(you.experience_level * 4);
@@ -579,18 +579,7 @@ static bool _kikubaaqudgha_retribution()
             corpse_rot(nullptr);
     }
 
-    if (coinflip())
-    {
-        // necromancy miscast, 20% chance of additional miscast
-        do
-        {
-            MiscastEffect(&you, -god, SPTYP_NECROMANCY,
-                          2 + div_rand_round(you.experience_level, 9),
-                          random2avg(88, 3), "the malice of Kikubaaqudgha");
-        }
-        while (one_chance_in(5));
-    }
-    else if (one_chance_in(10))
+    if (x_chance_in_y(you.experience_level, 27))
     {
         // torment, or 3 necromancy miscasts
         if (!player_res_torment(false))
@@ -604,6 +593,17 @@ static bool _kikubaaqudgha_retribution()
                               random2avg(88, 3), "the malice of Kikubaaqudgha");
             }
         }
+    }
+    else if (random2(you.experience_level) >= 4)
+    {
+        // necromancy miscast, 20% chance of additional miscast
+        do
+        {
+            MiscastEffect(&you, -god, SPTYP_NECROMANCY,
+                          2 + div_rand_round(you.experience_level, 9),
+                          random2avg(88, 3), "the malice of Kikubaaqudgha");
+        }
+        while (one_chance_in(5));
     }
 
     // Every act of retribution causes corpses in view to rise against

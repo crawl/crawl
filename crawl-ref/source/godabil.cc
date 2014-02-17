@@ -2696,14 +2696,9 @@ int fedhas_rain(const coord_def &target)
     return processed_count;
 }
 
-// Destroy corpses in the player's LOS (first corpse on a stack only)
-// and make 1 giant spore per corpse.  Spores are given the input as
-// their starting behavior; the function returns the number of corpses
-// processed.
-int fedhas_corpse_spores(beh_type attitude, bool interactive)
+int count_corpses_in_los(vector<stack_iterator> *positions)
 {
     int count = 0;
-    vector<stack_iterator> positions;
 
     for (radius_iterator rad(you.pos(), LOS_NO_TRANS, true); rad;
          ++rad)
@@ -2716,12 +2711,25 @@ int fedhas_corpse_spores(beh_type attitude, bool interactive)
             if (stack_it->base_type == OBJ_CORPSES
                 && stack_it->sub_type == CORPSE_BODY)
             {
-                positions.push_back(stack_it);
+                if (positions)
+                    positions->push_back(stack_it);
                 count++;
                 break;
             }
         }
     }
+
+    return count;
+}
+
+// Destroy corpses in the player's LOS (first corpse on a stack only)
+// and make 1 giant spore per corpse.  Spores are given the input as
+// their starting behavior; the function returns the number of corpses
+// processed.
+int fedhas_corpse_spores(beh_type attitude, bool interactive)
+{
+    vector<stack_iterator> positions;
+    int count = count_corpses_in_los(&positions);
 
     if (count == 0)
         return count;
