@@ -677,6 +677,9 @@ static void _unforget_map()
             // magic-mapped data -- what was forgotten is less up to date.
             env.map_knowledge(*ri) = old(*ri);
             env.map_seen.set(*ri);
+#ifdef USE_TILE
+            tiles.update_minimap(*ri);
+#endif
         }
 }
 
@@ -689,6 +692,9 @@ static void _forget_map()
         env.map_knowledge(*ri).flags &= ~MAP_SEEN_FLAG;
         env.map_knowledge(*ri).flags |= MAP_MAGIC_MAPPED_FLAG;
         env.map_seen.set(*ri, false);
+#ifdef USE_TILE
+        tiles.update_minimap(*ri);
+#endif
     }
 }
 
