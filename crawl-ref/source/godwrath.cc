@@ -1116,7 +1116,10 @@ static bool _jiyva_retribution()
         for (int i = 0; i < mutat; ++i)
             mutate(RANDOM_BAD_MUTATION, "Jiyva's wrath", true, false, true);
     }
-    else if (there_are_monsters_nearby() && coinflip())
+    // Don't create hostile slimes while under penance.
+    else if (!you_worship(GOD_JIYVA)
+             && there_are_monsters_nearby()
+             && coinflip())
     {
         int tries = 0;
         bool found_one = false;
@@ -1147,7 +1150,7 @@ static bool _jiyva_retribution()
             slimify_monster(mon, true);
         }
     }
-    else if (!one_chance_in(3))
+    else if (!one_chance_in(3) || you_worship(GOD_JIYVA))
     {
         god_speaks(god, "Mutagenic energy floods into your body!");
         contaminate_player(random2(you.penance[GOD_JIYVA] * 500));
