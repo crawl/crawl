@@ -111,9 +111,10 @@ spret_type ice_armour(int pow, bool fail)
 
 spret_type missile_prot(int pow, bool fail)
 {
-    if (you.attribute[ATTR_REPEL_MISSILES])
+    if (you.attribute[ATTR_REPEL_MISSILES]
+        || you.attribute[ATTR_DEFLECT_MISSILES])
     {
-        mpr("You are already repelling missiles.");
+        mpr("You are already protected from missiles.");
         return SPRET_ABORT;
     }
     fail_check();
@@ -132,6 +133,10 @@ spret_type deflection(int pow, bool fail)
     fail_check();
     you.attribute[ATTR_DEFLECT_MISSILES] = 1;
     mpr("You feel very safe from missiles.");
+    // Replace RMsl, if active.
+    if (you.attribute[ATTR_REPEL_MISSILES])
+        you.attribute[ATTR_REPEL_MISSILES] = 0;
+
     return SPRET_SUCCESS;
 }
 
