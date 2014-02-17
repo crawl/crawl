@@ -1073,10 +1073,10 @@ int artefact_value(const item_def &item)
     // Brands are already accounted for via existing ego checks
 
     // This should probably be more complex... but this isn't so bad:
-    ret += 3 * prop[ ARTP_AC ] + 3 * prop[ ARTP_EVASION ]
-            + 3 * prop[ ARTP_ACCURACY ] + 3 * prop[ ARTP_DAMAGE ]
-            + 6 * prop[ ARTP_STRENGTH ] + 6 * prop[ ARTP_INTELLIGENCE ]
-            + 6 * prop[ ARTP_DEXTERITY ];
+    ret += 6 * prop[ ARTP_AC ] + 6 * prop[ ARTP_EVASION ]
+            + 3 * prop[ ARTP_ACCURACY ] + 6 * prop[ ARTP_DAMAGE ]
+            + 3 * prop[ ARTP_STRENGTH ] + 3 * prop[ ARTP_INTELLIGENCE ]
+            + 3 * prop[ ARTP_DEXTERITY ];
 
     // These resistances have meaningful levels
     if (prop[ ARTP_FIRE ] > 0)
@@ -1089,21 +1089,16 @@ int artefact_value(const item_def &item)
     else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
-    // These normally come alone or in resist/susceptible pairs...
-    // we're making items a bit more expensive if they have both positive.
-    if (prop[ ARTP_FIRE ] > 0 && prop[ ARTP_COLD ] > 0)
-        ret += 20;
-
     if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
-        ret += 5 + 5 * (prop[ARTP_NEGATIVE_ENERGY] * prop[ARTP_NEGATIVE_ENERGY]);
+        ret += 3 + 3 * (prop[ARTP_NEGATIVE_ENERGY] * prop[ARTP_NEGATIVE_ENERGY]);
 
     // only one meaningful level:
     if (prop[ ARTP_POISON ])
-        ret += 15;
+        ret += 6;
 
     // only one meaningful level (hard to get):
     if (prop[ ARTP_ELECTRICITY ])
-        ret += 30;
+        ret += 10;
 
     // magic resistance is from 35-100
     if (prop[ ARTP_MAGIC ] > 0)
@@ -1112,20 +1107,20 @@ int artefact_value(const item_def &item)
         ret -= 5;
 
     if (prop[ ARTP_EYESIGHT ])
-        ret += 10;
+        ret += 6;
 
     // abilities:
     if (prop[ ARTP_FLY ])
         ret += 3;
 
     if (prop[ ARTP_BLINK ])
-        ret += 3;
+        ret += 10;
 
     if (prop[ ARTP_BERSERK ])
         ret += 5;
 
     if (prop[ ARTP_INVISIBLE ])
-        ret += 20;
+        ret += 10;
 
     if (prop[ ARTP_ANGRY ])
         ret -= 3;
@@ -1173,11 +1168,13 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_WEAPONS:
         switch (item.sub_type)
         {
+
         case WPN_CLUB:
             valued += 10;
             break;
 
         case WPN_SLING:
+        case WPN_STAFF:
             valued += 15;
             break;
 
@@ -1190,43 +1187,41 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case WPN_DAGGER:
-        case WPN_STAFF:
             valued += 20;
             break;
 
-        case WPN_WHIP:
         case WPN_BLOWGUN:
+        case WPN_HAMMER:
+        case WPN_WHIP:
             valued += 25;
             break;
 
+        case WPN_BOW:
         case WPN_HAND_AXE:
-            valued += 28;
-            break;
-
-        case WPN_HAMMER:
         case WPN_FALCHION:
         case WPN_MACE:
         case WPN_SCYTHE:
+        case WPN_SHORT_SWORD:
+        case WPN_SPEAR:
             valued += 30;
             break;
 
-        case WPN_BOW:
-            valued += 31;
-            break;
-
-        case WPN_SHORT_SWORD:
-        case WPN_SPEAR:
-            valued += 32;
-            break;
-
+        case WPN_BLESSED_FALCHION:
+        case WPN_WAR_AXE:
         case WPN_FLAIL:
+        case WPN_LONG_SWORD:
+        case WPN_TRIDENT:
             valued += 35;
             break;
 
-        case WPN_WAR_AXE:
-        case WPN_MORNINGSTAR:
+        case WPN_BLESSED_LONG_SWORD:
+        case WPN_BROAD_AXE:
         case WPN_CUTLASS:
+        case WPN_DIRE_FLAIL:
+        case WPN_HALBERD:
+        case WPN_MORNINGSTAR:
         case WPN_QUARTERSTAFF:
+        case WPN_SCIMITAR:
             valued += 40;
             break;
 
@@ -1234,71 +1229,43 @@ unsigned int item_value(item_def item, bool ident)
             valued += 41;
             break;
 
-        case WPN_TRIDENT:
-            valued += 42;
-            break;
-
-        case WPN_LONG_SWORD:
         case WPN_LONGBOW:
-        case WPN_SCIMITAR:
-        case WPN_BLESSED_FALCHION:
             valued += 45;
             break;
 
-        case WPN_BLESSED_LONG_SWORD:
-        case WPN_BLESSED_SCIMITAR:
-            valued += 50;
-
-        case WPN_HALBERD:
-            valued += 52;
-            break;
-
-        case WPN_GLAIVE:
-            valued += 55;
-            break;
-
-        case WPN_BROAD_AXE:
-        case WPN_GREAT_SWORD:
-            valued += 60;
-            break;
-
         case WPN_BATTLEAXE:
+        case WPN_GLAIVE:
         case WPN_GREAT_MACE:
-        case WPN_EVENINGSTAR:
+        case WPN_GREAT_SWORD:
             valued += 65;
             break;
 
-        case WPN_DIRE_FLAIL:
         case WPN_BARDICHE:
             valued += 90;
             break;
 
+        case WPN_CLAYMORE:
         case WPN_EXECUTIONERS_AXE:
             valued += 100;
             break;
 
         case WPN_BASTARD_SWORD:
-            valued += 100;
-            break;
-
+        case WPN_BLESSED_GREAT_SWORD:
+        case WPN_BLESSED_SCIMITAR:
         case WPN_DEMON_WHIP:
-            valued += 130;
-            break;
-
-        case WPN_QUICK_BLADE:
         case WPN_DEMON_TRIDENT:
+        case WPN_DEMON_BLADE:
+        case WPN_EVENINGSTAR:
+        case WPN_LAJATANG:
+        case WPN_QUICK_BLADE:
             valued += 150;
             break;
 
-        case WPN_DEMON_BLADE:
-        case WPN_CLAYMORE:
-        case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_BASTARD_SWORD:
-        case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_CLAYMORE:
+        case WPN_EUDEMON_BLADE:
         case WPN_SACRED_SCOURGE:
         case WPN_TRISHULA:
-        case WPN_LAJATANG:
             valued += 200;
             break;
         }
@@ -1312,45 +1279,36 @@ unsigned int item_value(item_def item, bool ident)
                 valued *= 10;
                 break;
 
-            case SPWPN_DRAINING:
-                valued *= 64;
-                break;
-
-            case SPWPN_VAMPIRICISM:
-                valued *= 60;
-                break;
-
-            case SPWPN_FLAME:
-            case SPWPN_FROST:
-            case SPWPN_HOLY_WRATH:
-                valued *= 50;
-                break;
-
-            case SPWPN_CHAOS:
             case SPWPN_SPEED:
-                valued *= 40;
+            case SPWPN_VAMPIRICISM:
+                valued *= 30;
                 break;
 
             case SPWPN_DISTORTION:
             case SPWPN_ELECTROCUTION:
             case SPWPN_PAIN:
-                valued *= 30;
-                break;
-
-            case SPWPN_FLAMING:
-            case SPWPN_FREEZING:
-            case SPWPN_DRAGON_SLAYING:
                 valued *= 25;
                 break;
 
-            case SPWPN_VENOM:
-                valued *= 23;
+            case SPWPN_CHAOS:
+            case SPWPN_DRAINING:
+            case SPWPN_FLAME:
+            case SPWPN_FLAMING:
+            case SPWPN_FREEZING:
+            case SPWPN_FROST:
+            case SPWPN_HOLY_WRATH:
+                valued *= 18;
                 break;
 
             case SPWPN_VORPAL:
-            case SPWPN_PROTECTION:
+                valued *= 15;
+                break;
+
+            case SPWPN_DRAGON_SLAYING:
             case SPWPN_EVASION:
-                valued *= 20;
+            case SPWPN_PROTECTION:
+            case SPWPN_VENOM:
+                valued *= 12;
                 break;
             }
 
@@ -1359,37 +1317,9 @@ unsigned int item_value(item_def item, bool ident)
 
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            if (item.plus >= 0)
-            {
-                valued += item.plus * 2;
-                valued *= 10 + 3 * item.plus;
-                valued /= 10;
-            }
-
-            if (item.plus2 >= 0)
-            {
-                valued += item.plus2 * 2;
-                valued *= 10 + 3 * item.plus2;
-                valued /= 10;
-            }
-
-            if (item.plus < 0)
-            {
-                valued -= 5;
-                valued += (item.plus * item.plus * item.plus);
-
-                if (valued < 1)
-                    valued = 1;
-            }
-
-            if (item.plus2 < 0)
-            {
-                valued -= 5;
-                valued += (item.plus2 * item.plus2 * item.plus2);
-
-                if (valued < 1)
-                    valued = 1;
-            }
+            valued += 10 * item.plus + 50 * item.plus2;
+            if (valued < 1)
+                valued = 1;
         }
 
         if (is_artefact(item))
@@ -1406,10 +1336,8 @@ unsigned int item_value(item_def item, bool ident)
         }
 
         if (item_known_cursed(item))
-        {
-            valued *= 6;
-            valued /= 10;
-        }
+            valued -= 30;
+
         break;
 
     case OBJ_MISSILES:          // ammunition
@@ -1443,13 +1371,9 @@ unsigned int item_value(item_def item, bool ident)
         {
             switch (get_ammo_brand(item))
             {
-            case SPMSL_NORMAL:
+           case SPMSL_NORMAL:
             default:
                 valued *= 10;
-                break;
-
-            case SPMSL_RETURNING:
-                valued *= 50;
                 break;
 
             case SPMSL_CHAOS:
@@ -1457,29 +1381,30 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SPMSL_CURARE:
+            case SPMSL_PARALYSIS:
             case SPMSL_PENETRATION:
             case SPMSL_SILVER:
             case SPMSL_STEEL:
             case SPMSL_DISPERSAL:
-            case SPMSL_EXPLODING:
                 valued *= 30;
                 break;
 
             case SPMSL_FLAME:
             case SPMSL_FROST:
+            case SPMSL_SLEEP:
+            case SPMSL_CONFUSION:
                 valued *= 25;
                 break;
 
+            case SPMSL_EXPLODING:
             case SPMSL_POISONED:
-            case SPMSL_PARALYSIS:
+            case SPMSL_RETURNING:
             case SPMSL_SLOW:
-            case SPMSL_SLEEP:
-            case SPMSL_CONFUSION:
 #if TAG_MAJOR_VERSION == 34
             case SPMSL_SICKNESS:
 #endif
             case SPMSL_FRENZY:
-                valued *= 23;
+                valued *= 20;
                 break;
             }
 
@@ -1505,109 +1430,79 @@ unsigned int item_value(item_def item, bool ident)
         switch (item.sub_type)
         {
         case ARM_PEARL_DRAGON_ARMOUR:
-        case ARM_GOLD_DRAGON_ARMOUR:
-            valued += 1600;
+            valued += 1000;
             break;
 
         case ARM_PEARL_DRAGON_HIDE:
-        case ARM_GOLD_DRAGON_HIDE:
-            valued += 1400;
-            break;
-
-        case ARM_STORM_DRAGON_ARMOUR:
-            valued += 1050;
-            break;
-
-        case ARM_STORM_DRAGON_HIDE:
             valued += 900;
+            break;
+
+        case ARM_CRYSTAL_PLATE_ARMOUR:
+        case ARM_GOLD_DRAGON_ARMOUR:
+        case ARM_STORM_DRAGON_ARMOUR:
+            valued += 800;
+            break;
+
+        case ARM_GOLD_DRAGON_HIDE:
+        case ARM_STORM_DRAGON_HIDE:
+            valued += 700;
             break;
 
         case ARM_FIRE_DRAGON_ARMOUR:
         case ARM_ICE_DRAGON_ARMOUR:
-            valued += 750;
-            break;
-
-        case ARM_SWAMP_DRAGON_ARMOUR:
-            valued += 650;
+            valued += 600;
             break;
 
         case ARM_FIRE_DRAGON_HIDE:
-        case ARM_CRYSTAL_PLATE_ARMOUR:
-        case ARM_TROLL_LEATHER_ARMOUR:
         case ARM_ICE_DRAGON_HIDE:
+        case ARM_SWAMP_DRAGON_ARMOUR:
             valued += 500;
             break;
 
         case ARM_MOTTLED_DRAGON_ARMOUR:
+        case ARM_STEAM_DRAGON_ARMOUR:
         case ARM_SWAMP_DRAGON_HIDE:
             valued += 400;
             break;
 
-        case ARM_STEAM_DRAGON_ARMOUR:
         case ARM_MOTTLED_DRAGON_HIDE:
-            valued += 300;
-            break;
-
-        case ARM_PLATE_ARMOUR:
-            valued += 230;
-            break;
-
         case ARM_STEAM_DRAGON_HIDE:
-            valued += 200;
+            valued += 300;
             break;
 
         case ARM_CENTAUR_BARDING:
         case ARM_NAGA_BARDING:
+        case ARM_PLATE_ARMOUR:
+            valued += 230;
+            break;
+
+        case ARM_TROLL_LEATHER_ARMOUR:
             valued += 150;
             break;
 
-        case ARM_TROLL_HIDE:
-            valued += 130;
-            break;
-
         case ARM_CHAIN_MAIL:
-            valued += 110;
-            break;
-
-        case ARM_SCALE_MAIL:
-            valued += 83;
-            break;
-
+        case ARM_HELMET:
+     #if TAG_MAJOR_VERSION == 34
+        case ARM_CAP:
+     #endif
+        case ARM_BOOTS:
+        case ARM_GLOVES:
+        case ARM_CLOAK:
         case ARM_LARGE_SHIELD:
-            valued += 75;
-            break;
-
         case ARM_SHIELD:
+        case ARM_BUCKLER:
             valued += 45;
             break;
 
+        case ARM_SCALE_MAIL:
+        case ARM_TROLL_HIDE:
         case ARM_RING_MAIL:
-            valued += 40;
-            break;
-
-        case ARM_HELMET:
-#if TAG_MAJOR_VERSION == 34
-        case ARM_CAP:
-#endif
         case ARM_HAT:
-        case ARM_BUCKLER:
-            valued += 25;
+            valued += 40;
             break;
 
         case ARM_LEATHER_ARMOUR:
             valued += 20;
-            break;
-
-        case ARM_BOOTS:
-            valued += 15;
-            break;
-
-        case ARM_GLOVES:
-            valued += 12;
-            break;
-
-        case ARM_CLOAK:
-            valued += 10;
             break;
 
         case ARM_ROBE:
@@ -1624,29 +1519,11 @@ unsigned int item_value(item_def item, bool ident)
             const int sparm = get_armour_ego_type(item);
             switch (sparm)
             {
-            case SPARM_NORMAL:
-            default:
-                valued *= 10;
-                break;
-
-            case SPARM_ARCHMAGI:
-                valued *= 100;
-                break;
-
-            case SPARM_DARKNESS:
-            case SPARM_RESISTANCE:
-            case SPARM_REFLECTION:
-                valued *= 60;
-                break;
-
-            case SPARM_POSITIVE_ENERGY:
-                valued *= 50;
-                break;
-
-            case SPARM_MAGIC_RESISTANCE:
-            case SPARM_PROTECTION:
             case SPARM_RUNNING:
-                valued *= 40;
+            case SPARM_ARCHMAGI:
+            case SPARM_PRESERVATION:
+            case SPARM_RESISTANCE:
+                valued += 250;
                 break;
 
             case SPARM_COLD_RESISTANCE:
@@ -1656,54 +1533,31 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_INTELLIGENCE:
             case SPARM_FLYING:
             case SPARM_JUMPING:
-            case SPARM_PRESERVATION:
             case SPARM_STEALTH:
             case SPARM_STRENGTH:
-                valued *= 30;
+            case SPARM_DARKNESS:
+            case SPARM_MAGIC_RESISTANCE:
+            case SPARM_PROTECTION:
+                valued += 50;
                 break;
 
+            case SPARM_POSITIVE_ENERGY:
             case SPARM_POISON_RESISTANCE:
-                valued *= 20;
+            case SPARM_REFLECTION:
+                valued += 20;
                 break;
 
             case SPARM_PONDEROUSNESS:
-                valued /= 3;
+                valued -= 250;
                 break;
             }
-
-            valued /= 10;
-        }
-
-        if (get_equip_race(item) == ISFLAG_ELVEN
-            || get_equip_race(item) == ISFLAG_DWARVEN)
-        {
-            valued *= 12;
-            valued /= 10;
-        }
-
-        if (get_equip_race(item) == ISFLAG_ORCISH)
-        {
-            valued *= 8;
-            valued /= 10;
         }
 
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            valued += 5;
-            if (item.plus >= 0)
-            {
-                valued += item.plus * 30;
-                valued *= 10 + 4 * item.plus;
-                valued /= 10;
-            }
-
-            if (item.plus < 0)
-            {
-                valued += item.plus * item.plus * item.plus;
-
-                if (valued < 1)
-                    valued = 1;
-            }
+            valued += 50 * item.plus;
+            if (valued < 1)
+                valued = 1;
         }
 
         if (is_artefact(item))
@@ -1717,15 +1571,13 @@ unsigned int item_value(item_def item, bool ident)
             valued += 20;
 
         if (item_known_cursed(item))
-        {
-            valued *= 6;
-            valued /= 10;
-        }
+            valued -= 30;
+
         break;
 
     case OBJ_WANDS:
         if (!item_type_known(item))
-            valued += 200;
+            valued += 40;
         else
         {
             // true if the wand is of a good type, a type with significant
@@ -1813,12 +1665,12 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 350;
                 break;
 
-            case POT_MAGIC:
             case POT_RESISTANCE:
+            case POT_SPEED:
                 valued += 70;
                 break;
 
-            case POT_SPEED:
+            case POT_MAGIC:
             case POT_INVISIBILITY:
                 valued += 55;
                 break;
@@ -1827,14 +1679,13 @@ unsigned int item_value(item_def item, bool ident)
             case POT_HEAL_WOUNDS:
             case POT_RESTORE_ABILITIES:
             case POT_FLIGHT:
-            case POT_MUTATION:
-            case POT_LIGNIFY:
                 valued += 30;
                 break;
 
             case POT_MIGHT:
             case POT_AGILITY:
             case POT_BRILLIANCE:
+            case POT_MUTATION:
                 valued += 25;
                 break;
 
@@ -1842,6 +1693,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_DECAY:
             case POT_DEGENERATION:
             case POT_STRONG_POISON:
+            case POT_LIGNIFY:
                 valued += 20;
                 break;
 
@@ -1869,34 +1721,38 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case FOOD_MEAT_RATION:
+            valued = 50;
+            break;
+
         case FOOD_BREAD_RATION:
-            valued = 40;
+            valued = 44;
             break;
 
         case FOOD_HONEYCOMB:
-            valued = 25;
+            valued = 20;
             break;
 
         case FOOD_BEEF_JERKY:
         case FOOD_PIZZA:
-            valued = 18;
+        case FOOD_SNOZZCUMBER:
+            valued = 15;
             break;
 
         case FOOD_CHEESE:
         case FOOD_SAUSAGE:
-            valued = 15;
+            valued = 12;
             break;
 
         case FOOD_LEMON:
         case FOOD_ORANGE:
         case FOOD_BANANA:
-            valued = 12;
+            valued = 10;
             break;
 
         case FOOD_APPLE:
         case FOOD_APRICOT:
         case FOOD_PEAR:
-            valued = 8;
+            valued = 7;
             break;
 
         case FOOD_CHUNK:
@@ -1906,11 +1762,13 @@ unsigned int item_value(item_def item, bool ident)
         case FOOD_CHOKO:
         case FOOD_LYCHEE:
         case FOOD_RAMBUTAN:
-        case FOOD_SNOZZCUMBER:
-            valued = 4;
+            valued = 6;
             break;
 
         case FOOD_STRAWBERRY:
+            valued = 2;
+            break;
+
         case FOOD_GRAPE:
         case FOOD_SULTANA:
             valued = 1;
@@ -1934,10 +1792,13 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 200;
                 break;
 
+            case SCR_RECHARGING:
             case SCR_SUMMONING:
                 valued += 95;
                 break;
 
+            case SCR_BLINKING:
+            case SCR_ENCHANT_ARMOUR:
             case SCR_TORMENT:
             case SCR_HOLY_WORD:
             case SCR_SILENCE:
@@ -1945,15 +1806,12 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 75;
                 break;
 
-            case SCR_RECHARGING:
-            case SCR_AMNESIA:
-            case SCR_ENCHANT_ARMOUR:
-            case SCR_ENCHANT_WEAPON_I:
             case SCR_ENCHANT_WEAPON_II:
-            case SCR_BLINKING:
                 valued += 55;
                 break;
 
+            case SCR_AMNESIA:
+            case SCR_ENCHANT_WEAPON_I:
             case SCR_FEAR:
             case SCR_IMMOLATION:
             case SCR_MAGIC_MAPPING:
@@ -1983,10 +1841,10 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_JEWELLERY:
         if (item_known_cursed(item))
-            valued -= 10;
+            valued -= 30;
 
         if (!item_type_known(item))
-            valued += 250;
+            valued += 50;
         else
         {
             // Variable-strength rings.
@@ -2038,6 +1896,7 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 500;
                     break;
 
+                case AMU_FAITH:
                 case AMU_RESIST_MUTATION:
                 case AMU_RAGE:
                     valued += 400;
@@ -2046,22 +1905,21 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_INVISIBILITY:
                 case RING_REGENERATION:
                 case RING_WIZARDRY:
-                case AMU_FAITH:
+                case AMU_GUARDIAN_SPIRIT:
+                case AMU_CONSERVATION:
                 case AMU_THE_GOURMAND:
                     valued += 300;
                     break;
 
+                case RING_FIRE:
+                case RING_ICE:
                 case RING_PROTECTION_FROM_COLD:
                 case RING_PROTECTION_FROM_FIRE:
                 case RING_PROTECTION_FROM_MAGIC:
-                case AMU_GUARDIAN_SPIRIT:
-                case AMU_CONSERVATION:
                     valued += 250;
                     break;
 
                 case RING_MAGICAL_POWER:
-                case RING_FIRE:
-                case RING_ICE:
                 case RING_LIFE_PROTECTION:
                 case RING_POISON_RESISTANCE:
                 case AMU_CLARITY:
@@ -2116,30 +1974,24 @@ unsigned int item_value(item_def item, bool ident)
             valued += 5000;
             break;
 
-        case MISC_DISC_OF_STORMS:
-            valued += 2000;
-            break;
-
-        case MISC_SACK_OF_SPIDERS:
-            valued += 400;
-            break;
-
         case MISC_FAN_OF_GALES:
         case MISC_STONE_OF_TREMORS:
         case MISC_PHIAL_OF_FLOODS:
         case MISC_LAMP_OF_FIRE:
-            valued += 1000;
+            valued += 400;
             break;
 
         case MISC_BOX_OF_BEASTS:
-            valued += 500;
+        case MISC_DISC_OF_STORMS:
+        case MISC_SACK_OF_SPIDERS:
+            valued += 200;
             break;
 
         default:
             if (is_deck(item))
-                valued += 200 + item.special * 150;
+                valued += 80 + item.special * 60;
             else
-                valued += 500;
+                valued += 200;
         }
         break;
 
