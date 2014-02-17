@@ -1246,6 +1246,12 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_STONE_WALL_SLIME;
     }
+    else if (player_in_branch(BRANCH_VAULTS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_VAULT;
+    }
+
 
     const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);
 
