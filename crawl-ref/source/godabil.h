@@ -10,6 +10,7 @@
 #include "externs.h"
 
 struct bolt;
+class stack_iterator;
 
 string zin_recite_text(const int seed, const int prayertype, int step);
 bool zin_check_able_to_recite(bool quiet = false);
@@ -58,6 +59,7 @@ void process_sunlights(bool future = false);
 bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates);
 bool fedhas_plant_ring_from_fruit();
 int fedhas_rain(const coord_def &target);
+int count_corpses_in_los(vector<stack_iterator> *positions);
 int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY,
                          bool interactive = true);
 bool mons_is_evolvable(const monster* mon);
