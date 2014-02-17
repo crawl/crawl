@@ -758,7 +758,9 @@ static const char* dur_names[] =
     "exhausted",
     "liquid flames",
     "icy armour",
+#if TAG_MAJOR_VERSION == 34
     "repel missiles",
+#endif
     "prayer",
     "piety pool",
     "divine vigour",
@@ -774,7 +776,9 @@ static const char* dur_names[] =
     "breath weapon",
     "transformation",
     "death channel",
+#if TAG_MAJOR_VERSION == 34
     "deflect missiles",
+#endif
     "phase shift",
 #if TAG_MAJOR_VERSION == 34
     "see invisible",
@@ -786,8 +790,8 @@ static const char* dur_names[] =
     "condensation shield",
     "stoneskin",
     "gourmand",
-    "bargain",
 #if TAG_MAJOR_VERSION == 34
+    "bargain",
     "insulation",
 #endif
     "resistance",
