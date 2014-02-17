@@ -903,7 +903,7 @@ struct status_light
 //
 // Prints burden, hunger,
 // pray, holy, teleport, regen, fly/lev, invis, silence,
-//   conf. touch, bargain, sage
+//   conf. touch, sage
 // confused, mesmerised, fire, poison, disease, rot, held, glow, swift,
 //   fast, slow, breath
 //
@@ -952,7 +952,6 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_DISJUNCTION,
         DUR_SILENCE,
         DUR_CONFUSING_TOUCH,
-        DUR_BARGAIN,
         STATUS_SAGE,
         DUR_FIRE_SHIELD,
         DUR_SLIMIFY,
@@ -2479,7 +2478,6 @@ static string _status_mut_abilities(int sw)
         DUR_DIVINE_STAMINA,
         DUR_BERSERK,
         STATUS_AIRBORNE,
-        DUR_BARGAIN,
         DUR_SLAYING,
         STATUS_MANUAL,
         STATUS_SAGE,

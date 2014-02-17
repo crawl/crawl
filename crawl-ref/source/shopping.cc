@@ -425,22 +425,9 @@ static vector<int> _shop_get_stock(int shopidx)
     return result;
 }
 
-static int _bargain_cost(int value)
-{
-    // 20% discount
-    value *= 8;
-    value /= 10;
-
-    return max(value, 1);
-}
-
-static int _shop_get_item_value(const item_def& item, int greed, bool id,
-                                bool ignore_bargain = false)
+static int _shop_get_item_value(const item_def& item, int greed, bool id)
 {
     int result = (greed * item_value(item, id) / 10);
-
-    if (you.duration[DUR_BARGAIN] && !ignore_bargain)
-        result = _bargain_cost(result);
 
     return max(result, 1);
 }
@@ -675,7 +662,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             {
                 const item_def& item = mitm[stock[i]];
                 const int cost = _shop_get_item_value(item, shop.greed,
-                                                      id_stock, true);
+                                                      id_stock);
 
                 unsigned int num = shopping_list.cull_identical_items(item,
                                                                       cost);
@@ -896,9 +883,8 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                     {
                         if (!shopping_list.is_on_list(item))
                         {
-                            // Ignore Bargaining.
                             const int cost = _shop_get_item_value(item,
-                                        shop.greed, id_stock, true);
+                                        shop.greed, id_stock);
                             shopping_list.add_thing(item, cost);
                         }
                         in_list[i]  = true;
@@ -2850,7 +2836,7 @@ void ShoppingList::item_type_identified(object_class_type base_type,
             continue;
 
         thing[SHOPPING_THING_COST_KEY] =
-            _shop_get_item_value(item, shop->greed, false, true);
+            _shop_get_item_value(item, shop->greed, false);
     }
 }
 
@@ -3005,9 +2991,6 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
         if (thing_is_item(thing))
             unknown = shop_item_unknown(get_thing_item(thing));
 
-        if (you.duration[DUR_BARGAIN])
-            cost = _bargain_cost(cost);
-
         string etitle =
             make_stringf("[%s] %s%s (%d gp)", short_place_name(pos.id).c_str(),
                          name_thing(thing, DESC_A).c_str(),
@@ -3084,8 +3067,6 @@ void ShoppingList::display()
         if (shopmenu.menu_action == Menu::ACT_EXECUTE)
         {
             int cost = thing_cost(*thing);
-            if (you.duration[DUR_BARGAIN])
-                cost = _bargain_cost(cost);
 
             if (cost > you.gold)
             {

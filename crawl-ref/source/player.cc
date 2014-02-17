@@ -4015,9 +4015,6 @@ int get_expiration_threshold(duration_type dur)
         return 10 * BASELINE_DELAY;
 
     // These get no messages when they "flicker".
-    case DUR_BARGAIN:
-        return 15 * BASELINE_DELAY;
-
     case DUR_CONFUSING_TOUCH:
         return 20 * BASELINE_DELAY;
 
@@ -4251,7 +4248,6 @@ void display_char_status()
         STATUS_BURDEN,
         STATUS_MANUAL,
         STATUS_SAGE,
-        DUR_BARGAIN,
         DUR_BREATH_WEAPON,
         DUR_LIQUID_FLAMES,
         DUR_FIRE_SHIELD,

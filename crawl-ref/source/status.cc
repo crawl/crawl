@@ -34,8 +34,6 @@ static duration_def duration_data[] =
       0, "", "agile", "You are agile." },
     { DUR_ANTIMAGIC, true,
       RED, "-Mag", "antimagic", "You have trouble accessing your magic." },
-    { DUR_BARGAIN, true,
-      BLUE, "Brgn", "charismatic", "You get a bargain in shops." },
     { DUR_BERSERK, true,
       BLUE, "Berserk", "berserking", "You are possessed by a berserker rage." },
     { DUR_BREATH_WEAPON, false,
