@@ -832,7 +832,7 @@ string monster_info::_core_name() const
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
 #endif
     case MONS_SPECTRAL_THING:   case MONS_PILLAR_OF_SALT:
-    case MONS_CHIMERA:
+    case MONS_BLOCK_OF_ICE:     case MONS_CHIMERA:
     case MONS_SENSED:
         nametype = base_type;
         break;
@@ -1034,6 +1034,9 @@ string monster_info::common_name(description_level_type desc) const
         break;
     case MONS_PILLAR_OF_SALT:
         ss << (nocore ? "" : " ") << "shaped pillar of salt";
+        break;
+    case MONS_BLOCK_OF_ICE:
+        ss << (nocore ? "" : " ") << "shaped block of ice";
         break;
     default:
         break;

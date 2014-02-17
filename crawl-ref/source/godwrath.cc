@@ -1091,7 +1091,6 @@ static bool _vehumet_retribution()
             break;
         case 9:
             spell = random_choose(SPELL_FIRE_STORM,
-                                  SPELL_ICE_STORM,
                                   SPELL_HELLFIRE, // let it end...
                                   -1);
             break;

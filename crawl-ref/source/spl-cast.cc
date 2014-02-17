@@ -1097,8 +1097,6 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
 {
     switch (spell)
     {
-    case SPELL_ICE_STORM:
-        return new targetter_beam(&you, range, ZAP_ICE_STORM, pow, 2, (pow > 76) ? 3 : 2);
     case SPELL_FIREBALL:
         return new targetter_beam(&you, range, ZAP_FIREBALL, pow, 1, 1);
     case SPELL_HELLFIRE:
@@ -1127,6 +1125,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_spray(&you, range, ZAP_DAZZLING_SPRAY);
     case SPELL_EXPLOSIVE_BOLT:
         return new targetter_explosive_bolt(&you, pow, range);
+    case SPELL_GLACIATE:
+        return new targetter_cone(&you, range);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1871,6 +1871,9 @@ static spret_type _do_cast(spell_type spell, int powc,
         mpr("This rod is automatically evoked when it strikes in combat.");
         return SPRET_ABORT;
 
+    case SPELL_GLACIATE:
+        return cast_glaciate(&you, powc, target, fail);
+
     default:
         return SPRET_NONE;
     }
@@ -2015,7 +2018,7 @@ string spell_noise_string(spell_type spell)
 
     // Big explosions
     case SPELL_FIRE_STORM:  //The storms make medium or big explosions
-    case SPELL_ICE_STORM:
+    case SPELL_GLACIATE:
     case SPELL_LIGHTNING_BOLT:
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_CONJURE_BALL_LIGHTNING:

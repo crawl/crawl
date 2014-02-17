@@ -2803,6 +2803,9 @@ enum monster_type                      // menv[].type
     MONS_BALL_LIGHTNING,
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
     MONS_PILLAR_OF_SALT,
+#if TAG_MAJOR_VERSION > 34
+    MONS_BLOCK_OF_ICE,
+#endif
     MONS_HELL_LORD,             // genus
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
     MONS_SENSED,                // dummy monster for unspecified sensed mons
@@ -2960,6 +2963,8 @@ enum monster_type                      // menv[].type
     MONS_ASTERION,
     MONS_NATASHA,
     MONS_VASHNIA,
+
+    MONS_BLOCK_OF_ICE,
 #endif
     MONS_GUARDIAN_GOLEM,
 
@@ -3680,7 +3685,7 @@ enum spell_type
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_DEFLECT_MISSILES,
     SPELL_THROW_ICICLE,
-    SPELL_ICE_STORM,
+    SPELL_GLACIATE,
     SPELL_AIRSTRIKE,
     SPELL_SHADOW_CREATURES,
     SPELL_CONFUSING_TOUCH,
@@ -4029,7 +4034,9 @@ enum zap_type
     ZAP_DISINTEGRATE,
     ZAP_BREATHE_STEAM,
     ZAP_THROW_ICICLE,
+#if TAG_MAJOR_VERSION == 34
     ZAP_ICE_STORM,
+#endif
     ZAP_CORONA,
     ZAP_HIBERNATION,
     ZAP_FLAME_TONGUE,

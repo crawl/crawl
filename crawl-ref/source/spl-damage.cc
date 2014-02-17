@@ -2956,3 +2956,80 @@ void end_searing_ray()
     you.props.erase("searing_ray_target");
     you.props.erase("searing_ray_aimed_at_spot");
 }
+
+spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
+{
+    targetter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
+    hitfunc.set_aim(aim);
+    int range2 = 0;
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "glaciate"))
+            return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    if (you.can_see(caster) || caster->is_player())
+    {
+        mprf("%s %s a mighty blast of ice!",
+             caster->name(DESC_THE).c_str(),
+             caster->conj_verb("conjure").c_str());
+    }
+
+    bolt beam;
+    beam.name              = "great icy blast";
+    beam.aux_source        = "great icy blast";
+    beam.flavour           = BEAM_ICE;
+    beam.glyph             = dchar_glyph(DCHAR_EXPLOSION);
+    beam.colour            = WHITE;
+    beam.range             = 1;
+    beam.hit               = AUTOMATIC_HIT;
+    beam.beam_source       = caster->mindex();
+    beam.hit_verb          = "engulfs";
+    beam.set_agent(caster);
+#ifdef USE_TILE
+    beam.tile_beam = -1;
+#endif
+    beam.draw_delay = 0;
+
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        beam.draw(p->first);
+    }
+
+    delay(200);
+
+    beam.glyph = 0;
+
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+
+        range2 = max(9, (p->first - caster->pos()).abs());
+        // At or within range 3 (range2 9), this is equivalent to the
+        // old Ice Storm damage.
+        beam.damage = calc_dice(7, (198 + 9 * pow) / range2);
+
+        if (actor_at(p->first))
+        {
+            beam.source = beam.target = p->first;
+            beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
+            beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
+            beam.fire();
+        }
+        place_cloud(CLOUD_COLD, p->first,
+                    (18 + random2avg(45,2)) / range2, caster);
+    }
+
+    noisy(25, hitfunc.origin);
+
+    return SPRET_SUCCESS;
+}

@@ -2078,7 +2078,7 @@ int exper_value(const monster* mon, bool real)
             case SPELL_HELLFIRE_BURST:
             case SPELL_HELLFIRE:
             case SPELL_SYMBOL_OF_TORMENT:
-            case SPELL_ICE_STORM:
+            case SPELL_GLACIATE:
             case SPELL_FIRE_STORM:
             case SPELL_SHATTER:
             case SPELL_CHAIN_LIGHTNING:

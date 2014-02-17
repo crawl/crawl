@@ -556,6 +556,14 @@ fire besides appearance. Both the direct hit and residual flame does damage to
 living beings and heals the undead. The energy tends to coalesce into spectral
 undead creatures on its own.
 %%%%
+Glaciate spell
+
+This spell conjures forth a mighty blast of ice; targets within its
+cone-shaped area of effect take progressively more ice damage the closer they
+are to the caster. Targets hit by the blast are encased in ice, slowing their
+movement for a few turns; targets killed by the blast may be frozen into solid
+blocks of ice.
+%%%%
 Grand Avatar spell
 
 This invocation calls forth an avatar of battle and bloodshed, mirroring
