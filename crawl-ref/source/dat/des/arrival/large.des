@@ -808,17 +808,13 @@ ENDMAP
 NAME:   roderic_crop_circles_arrival_small
 TAGS:   arrival  no_item_gen no_trap_gen
 ORIENT: float
-MONS:   col:green plant, col:yellow plant, col:brown plant
+MONS:   col:green plant, col:brown plant
 SUBST:  '=111.
 COLOUR: . = brown
-: if crawl.one_chance_in(50) then
-SUBST:  1 = 2:100 1:10 3:1
-: elseif crawl.one_chance_in(5) then
-SUBST:  1 = 3:100 1:20
-: elseif crawl.one_chance_in(2) then
-SUBST:  1 = 1:100 2:5
+: if crawl.one_chance_in(5) then
+SUBST:  1 = 2:100 1:20
 : else
-SUBST:  1 = 1:100 3:10
+SUBST:  1 = 1:100 2:10
 : end
 MAP
 11111111111111111
@@ -843,17 +839,13 @@ NAME:   roderic_crop_circles_arrival_large
 TAGS:   arrival no_item_gen no_trap_gen
 ORIENT: float
 WEIGHT: 1
-MONS:   col:green plant, col:yellow plant, col:brown plant
+MONS:   col:green plant, col:brown plant
 SUBST:  '=111.
 COLOUR: . = brown
-: if crawl.one_chance_in(50) then
-SUBST:  1 = 2:100 1:10 3:1
-: elseif crawl.one_chance_in(5) then
-SUBST:  1 = 3:100 1:20
-: elseif crawl.one_chance_in(2) then
-SUBST:  1 = 1:100 2:5
+: if crawl.one_chance_in(5) then
+SUBST:  1 = 2:100 1:20
 : else
-SUBST:  1 = 1:100 3:10
+SUBST:  1 = 1:100 2:10
 : end
 MAP
 111111.111111111'111111
