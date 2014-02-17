@@ -1264,7 +1264,18 @@ static bool _yred_high_level_servant(monster_type type)
 int yred_random_servants(unsigned int threshold, bool force_hostile)
 {
     if (threshold == 0)
-        threshold = ARRAYSZ(_yred_servants);
+    {
+        if (force_hostile)
+        {
+            // This implies wrath - scale the threshold with XL.
+            threshold =
+                MIN_YRED_SERVANT_THRESHOLD
+                + (MAX_YRED_SERVANT_THRESHOLD - MIN_YRED_SERVANT_THRESHOLD)
+                  * you.experience_level / 27;
+        }
+        else
+            threshold = ARRAYSZ(_yred_servants);
+    }
     else
     {
         threshold = min(static_cast<unsigned int>(ARRAYSZ(_yred_servants)),
@@ -1274,7 +1285,7 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     const unsigned int servant = random2(threshold);
 
     // Skip some of the weakest servants, once the threshold is high.
-    if ((servant + 2) * 2 < threshold && !force_hostile)
+    if ((servant + 2) * 2 < threshold)
         return -1;
 
     monster_type mon_type = _yred_servants[servant];
