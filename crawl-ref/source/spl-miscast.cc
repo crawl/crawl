@@ -635,7 +635,7 @@ bool MiscastEffect::_send_to_abyss()
 // XXX: Mostly duplicated from cast_malign_gateway.
 bool MiscastEffect::_malign_gateway()
 {
-    coord_def point = find_gateway_location(&you);
+    coord_def point = find_gateway_location(target);
     bool success = (point != coord_def(0, 0));
 
     if (success)
