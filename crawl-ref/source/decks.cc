@@ -169,7 +169,7 @@ const deck_archetype deck_of_wonders[] =
     { CARD_WILD_MAGIC, {5, 5, 5} },
     { CARD_HELIX,      {5, 5, 5} },
     { CARD_SAGE,       {5, 5, 5} },
-    { CARD_TROWEL,     {0, 0, 3} },
+    { CARD_TROWEL,     {0, 0, 2} },
     END_OF_DECK
 };
 
@@ -178,7 +178,7 @@ const deck_archetype deck_of_dungeons[] =
     { CARD_WATER,     {5, 5, 5} },
     { CARD_GLASS,     {5, 5, 5} },
     { CARD_DOWSING,   {5, 5, 5} },
-    { CARD_TROWEL,    {5, 5, 3} },
+    { CARD_TROWEL,    {0, 0, 3} },
     { CARD_MINEFIELD, {5, 5, 5} },
     END_OF_DECK
 };
@@ -2367,18 +2367,14 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _create_altar(coord_def pos)
-{
-    god_type god = random_god();
-
-    grd(pos) = altar_for_god(god);
-    ASSERT(grd(pos) != DNGN_FLOOR);
-    mprf("An altar to %s grows from the floor before you!",
-         god_name(god).c_str());
-}
-
 static void _trowel_card(int power, deck_rarity_type rarity)
 {
+    if (!crawl_state.game_standard_levelgen())
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return;
+    }
+
     coord_def p;
     for (distance_iterator di(you.pos(), true, false); di; ++di)
     {
@@ -2391,105 +2387,30 @@ static void _trowel_card(int power, deck_rarity_type rarity)
     if (p.origin()) // can't happen outside wizmode
         return mpr("The dungeon trembles momentarily.");
 
-    const int power_level = _get_power_level(power, rarity);
-    bool done_stuff = false;
-
-    if (power_level >= 2 && crawl_state.game_standard_levelgen())
+    // Vetoes are done too late, should not pass random_map_for_tag()
+    // at all.  Thus, allow retries.
+    int tries;
+    for (tries = 100; tries > 0; tries--)
     {
-        // Vetoes are done too late, should not pass random_map_for_tag()
-        // at all.  Thus, allow retries.
-        int tries;
-        for (tries = 100; tries > 0; tries--)
-        {
-            // Generate a portal to something.
-            const map_def *map = random_map_for_tag("trowel_portal", true, true);
+        // Generate a portal to something.
+        const map_def *map = random_map_for_tag("trowel_portal", true, true);
 
-            if (!map)
+        if (!map)
+            break;
+
+        {
+            no_messages n;
+            if (dgn_safe_place_map(map, true, true, p))
+            {
+                tries = -1; // hrm no_messages
                 break;
-
-            {
-                no_messages n;
-                if (dgn_safe_place_map(map, true, true, p))
-                {
-                    tries = -1; // hrm no_messages
-                    break;
-                }
-            }
-        }
-        if (tries > -1)
-            mpr("A portal flickers into view, then vanishes.");
-        else
-            mpr("A mystic portal forms.");
-        return;
-    }
-    else if (power_level == 1)
-    {
-        if (coinflip())
-        {
-            // Create a random bad statue and a friendly, timed golem.
-            // This could be really bad, because they're placed adjacent
-            // to you...
-            int num_made = 0;
-
-            const monster_type statues[] =
-            {
-                MONS_ORANGE_STATUE, MONS_SILVER_STATUE, MONS_ICE_STATUE
-            };
-
-            if (create_monster(
-                    mgen_data::hostile_at(
-                        RANDOM_ELEMENT(statues), "the Trowel card",
-                        true, 0, 0, you.pos())))
-            {
-                mpr("A menacing statue appears!");
-                num_made++;
-            }
-
-            const monster_type golems[] =
-            {
-                MONS_CLAY_GOLEM, MONS_STONE_GOLEM, MONS_IRON_GOLEM,
-                MONS_CRYSTAL_GUARDIAN, MONS_TOENAIL_GOLEM
-            };
-
-            if (create_monster(
-                    mgen_data(RANDOM_ELEMENT(golems),
-                              BEH_FRIENDLY, &you, 5, 0,
-                              you.pos(), MHITYOU)))
-            {
-                mpr("You construct a golem!");
-                num_made++;
-            }
-
-            if (num_made == 2)
-                mpr("The constructs glare at each other.");
-
-            done_stuff = (num_made > 0);
-        }
-        else
-        {
-            // Do-nothing (effectively): create a cosmetic feature
-            const coord_def pos = pick_adjacent_free_square(you.pos());
-            if (in_bounds(pos))
-            {
-                const dungeon_feature_type statfeat[] =
-                {
-                    DNGN_GRANITE_STATUE, DNGN_ORCISH_IDOL
-                };
-                // We leave the items on the square
-                grd(pos) = RANDOM_ELEMENT(statfeat);
-                mpr("A statue takes form beside you.");
-                done_stuff = true;
             }
         }
     }
+    if (tries > -1)
+        mpr("A portal flickers into view, then vanishes.");
     else
-    {
-        _create_altar(p);
-        done_stuff = true;
-    }
-
-    if (!done_stuff)
-        canned_msg(MSG_NOTHING_HAPPENS);
+        mpr("A mystic portal forms.");
 }
 
 static void _genie_card(int power, deck_rarity_type rarity)
