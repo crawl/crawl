@@ -162,7 +162,7 @@ DEPTH:   D:2-
 WEIGHT:  1
 KPROP:   1 = no_rtele_into
 KFEAT:   _ = altar_cheibriados
-MONS:    giant slug, agate snail, elephant slug
+MONS:    giant slug, elephant slug
 SUBST:   1 : 1:50 2:30 3:10 4:10
 NSUBST:  4 = 1:1 / 1:2 / 1:3
 : interest_check(_G)
@@ -248,7 +248,7 @@ NAME:   chei_snail_safe_becter
 TAGS:   overflow_altar_cheibriados transparent mini_float no_monster_gen
 DEPTH:  D:4-9
 WEIGHT: 5
-KMONS:  a = agate snail
+KMONS:  a = giant slug
 NSUBST: ' = 1:a / *:.
 KFEAT:  _ = altar_cheibriados
 MAP

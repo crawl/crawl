@@ -525,11 +525,6 @@ adder
 The common dungeon snake. A species of troglodytic reptile commonly found in
 subterranean spaces.
 %%%%
-agate snail
-
-A huge and disgusting gastropod with a celadon shell, inside which it will hide
-when frightened.
-%%%%
 air elemental
 
 A spirit drawn from the elemental plane of air. It exists in this world as a
