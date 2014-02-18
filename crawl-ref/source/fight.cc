@@ -417,11 +417,14 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     const monster* def = defender->as_monster();
     unchivalric_attack_type unchivalric = UCAT_NO_ATTACK;
 
-    // No unchivalric attacks on monsters that cannot fight (e.g.
-    // plants) or monsters the attacker can't see (either due to
-    // invisibility or being behind opaque clouds).
-    if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
+    // No unchivalric attacks on monsters that cannot fight (e.g.  plants) or
+    // monsters that are objects or monsters the attacker can't see (either due
+    // to invisibility or being behind opaque clouds).
+    if (defender->cannot_fight() || mons_is_object(def->mons_species()) ||
+        (attacker && !attacker->can_see(defender)))
+    {
         return unchivalric;
+    }
 
     // Distracted (but not batty); this only applies to players.
     if (attacker && attacker->is_player()
@@ -435,8 +438,11 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         unchivalric = UCAT_CONFUSED;
 
     // allies
-    if (def && def->friendly())
+    if (def && def->friendly() && attacker->is_player()
+        && god_hates_attacking_friend(you.religion, defender))
+    {
         unchivalric = UCAT_ALLY;
+    }
 
     // fleeing
     if (def && mons_is_fleeing(def))
