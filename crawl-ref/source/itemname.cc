@@ -1110,7 +1110,9 @@ static const char* rod_type_name(int type)
     switch ((rod_type)type)
     {
     case ROD_SWARM:           return "the swarm";
+#if TAG_MAJOR_VERSION == 34
     case ROD_WARDING:         return "warding";
+#endif
     case ROD_LIGHTNING:       return "lightning";
     case ROD_STRIKING:        return "striking";
     case ROD_DEMONOLOGY:      return "demonology";

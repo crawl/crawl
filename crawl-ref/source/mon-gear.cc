@@ -746,9 +746,13 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (one_chance_in(25))
         {
             item.base_type = OBJ_RODS;
+#if TAG_MAJOR_VERSION == 34
             do
                 item.sub_type  = static_cast<rod_type>(random2(NUM_RODS));
             while (item.sub_type == ROD_WARDING);
+#else
+            item.sub_type = static_cast<rod_type>(random2(NUM_RODS));
+#endif
             break;
         }
         // deliberate fall-through

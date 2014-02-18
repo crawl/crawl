@@ -1090,10 +1090,6 @@ rod of venom
 
 Ten pręt zawiera ofensywne czary Magii Trucizn.
 %%%%
-rod of warding
-
-Ten pręt zawiera czary pozwalające uchronić się przed wrogami.
-%%%%
 royal jelly
 
 Lekko złotawa galaretowata substancja, wyjątkowo bogata w składniki odżywcze.

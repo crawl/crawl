@@ -1074,10 +1074,6 @@ rod of venom
 
 このロッドは攻撃用の毒の呪文を収めている。
 %%%%
-rod of warding
-
-このロッドは敵を退けるための呪文を収めている。
-%%%%
 royal jelly
 
 とりわけ豪華な、金色をしたゼリー状の存在だ。 Consuming it will restore lost

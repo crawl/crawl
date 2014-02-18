@@ -554,6 +554,7 @@
     SPELL_NO_SPELL,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {   // Rod of warding
     SPELL_ABJURATION,
     SPELL_CONDENSATION_SHIELD,
@@ -564,6 +565,7 @@
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
+#endif
 
 {   // Rod of demonology
     SPELL_CALL_IMP,

@@ -1231,10 +1231,6 @@ rod of venom
 
 Diese Stange enthält beleidigendes Zauber des Giftes.
 %%%%
-rod of warding
-
-Diese Stange enthält Zaubersprüche, entwickelt um die Feinde abzuwehren.
-%%%%
 royal jelly
 
 Eine besonders reiche und goldene gallertartige Sache. Der Konsum wird

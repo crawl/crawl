@@ -1279,10 +1279,6 @@ rod of venom
 
 This rod contains offensive spells of poison.
 %%%%
-rod of warding
-
-This rod contains spells designed to repel one's enemies.
-%%%%
 royal jelly
 
 A particularly rich and golden gelatinous thing. Consuming it will restore lost
