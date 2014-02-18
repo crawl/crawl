@@ -161,6 +161,8 @@ static duration_def duration_data[] =
       RED, "Sap", "sap magic", "Casting spells hinders your spell success." },
     { DUR_PORTAL_PROJECTILE, false,
       LIGHTBLUE, "PProj", "portal projectile", "You are teleporting projectiles to their destination." },
+    { DUR_FORESTED, false,
+      YELLOW, "Forest", "", "" },
 };
 
 static int duration_index[NUM_DURATIONS];

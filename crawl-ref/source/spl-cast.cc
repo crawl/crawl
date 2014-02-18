@@ -1562,8 +1562,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_STICKS_TO_SNAKES:
         return cast_sticks_to_snakes(powc, god, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SCORPIONS:
-        return cast_summon_scorpions(powc, god, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_SUMMON_SWARM:
         return cast_summon_swarm(powc, god, fail);
@@ -1593,6 +1596,12 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CONJURE_BALL_LIGHTNING:
         return cast_conjure_ball_lightning(powc, god, fail);
 
+    case SPELL_SUMMON_LIGHTNING_SPIRE:
+        return cast_summon_lightning_spire(powc, beam.target, god, fail);
+
+    case SPELL_SUMMON_GUARDIAN_GOLEM:
+        return cast_summon_guardian_golem(powc, god, fail);
+
     case SPELL_CALL_IMP:
         return cast_call_imp(powc, god, fail);
 
@@ -1613,6 +1622,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_MALIGN_GATEWAY:
         return cast_malign_gateway(&you, powc, god, fail);
+
+    case SPELL_SUMMON_FOREST:
+        return cast_summon_forest(&you, powc, god, fail);
 
     case SPELL_ANIMATE_SKELETON:
         return cast_animate_skeleton(god, fail);

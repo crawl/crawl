@@ -4543,6 +4543,16 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
+    case MONS_GUARDIAN_GOLEM:
+
+        if (mons->hit_points * 2 < mons->max_hit_points && one_chance_in(4)
+             && !mons->has_ench(ENCH_INNER_FLAME))
+        {
+            simple_monster_message(mons, " overheats!");
+            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, 0, INFINITE_DURATION));
+        }
+        break;
+
     default:
         break;
     }
@@ -5051,6 +5061,18 @@ void starcursed_merge(monster* mon, bool forced)
                 simple_monster_message(mon, " shudders and withdraws towards its neighbour.");
                 mon->speed_increment -= 10;
             }
+        }
+    }
+}
+
+void guardian_golem_bond(monster* mons)
+{
+    for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (mons_aligned(mons, *mi) && !mi->has_ench(ENCH_CHARM)
+            && *mi != mons)
+        {
+            mi->add_ench(mon_enchant(ENCH_INJURY_BOND, 1, mons, INFINITE_DURATION));
         }
     }
 }

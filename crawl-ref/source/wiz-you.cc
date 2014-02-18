@@ -871,6 +871,7 @@ static const char* dur_names[] =
     "sap magic",
     "magic sapped",
     "portal projectile",
+    "forested",
 };
 
 void wizard_edit_durations(void)

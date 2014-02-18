@@ -2687,6 +2687,9 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SURE_BLADE, delay,
                           "The bond with your blade fades away.");
 
+    _decrement_a_duration(DUR_FORESTED, delay,
+                          "Space becomes stable.");
+
     if (_decrement_a_duration(DUR_MESMERISED, delay,
                               "You break out of your daze.",
                               0, NULL, MSGCH_RECOVERY))

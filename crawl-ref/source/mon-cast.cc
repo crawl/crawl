@@ -1177,7 +1177,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SIMULACRUM:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_MINOR_DEMON:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_SCORPIONS:
+#endif
     case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_UFETUBUS:
     case SPELL_SUMMON_HELL_BEAST:  // Geryon
@@ -1995,6 +1997,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
     case SPELL_MISLEAD:
+    case SPELL_SUMMON_SCORPIONS:
 #endif
     case SPELL_NO_SPELL:
         ret = true;
@@ -4864,22 +4867,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             create_monster(
                 mgen_data(summon_any_demon(RANDOM_DEMON_LESSER),
                           SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, 0,
-                          god));
-        }
-        return;
-
-    case SPELL_SUMMON_SCORPIONS:
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
-        sumcount2 = 1 + random2(5);
-
-        duration  = min(2 + mons->spell_hd(spell_cast) / 5, 6);
-        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
-        {
-            create_monster(
-                mgen_data(MONS_SCORPION, SAME_ATTITUDE(mons), mons,
                           duration, spell_cast, mons->pos(), mons->foe, 0,
                           god));
         }

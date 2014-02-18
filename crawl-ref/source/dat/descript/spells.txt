@@ -1221,12 +1221,14 @@ This spell creates a shower of colourful butterflies. How pretty!
 Summon Demon spell
 
 This spell opens a gate to the realm of Pandemonium and draws forth one of its
-inhabitants to serve the caster for a time (although the demon's servitude is
-by no means guaranteed).
+inhabitants to serve the caster for a time. The demon's servitude is not
+guaranteed, but will be more likely with high power.
 %%%%
 Summon Dragon spell
 
 This spell summons and binds a powerful dragon to perform the caster's bidding.
+At high power it may summon particularly deadly varieties of dragon, or
+multiple lesser dragons at once.
 %%%%
 Summon Drakes spell
 
@@ -1254,11 +1256,24 @@ Summon Fire Elementals spell
 
 This spell summons one or more fire elementals.
 %%%%
+Summon Forest spell
+
+This spell finds a forested plane and forcefully intersects it with this
+world; however, it requires open space to succeed. While the spell holds,
+some of its terrain and spirit inhabitants may be trapped here.
+%%%%
 Summon Greater Demon spell
 
 This spell calls forth one of the greater demons of Pandemonium to serve the
-caster. Beware, for the spell binding it to service may not outlast that which
-binds it to this world!
+caster. With high power, the summoned demon will be less likely to be initially
+hostile — but the strongest demons may eventually turn against their summoner
+regardless!
+%%%%
+Summon Guardian Golem spell
+
+This spell summons a protective golem. It redirects the injuries of its
+allies to itself, though it risks overheating after absorbing significant
+amounts of damage. It will gain more health at high power.
 %%%%
 Summon Hell Beast spell
 
@@ -1288,6 +1303,12 @@ Summon Iron Elementals spell
 
 This spell summons one or more iron elementals.
 %%%%
+Summon Lightning Spire spell
+
+This spell constructs a temporary lightning spire in an adjacent tile. Though
+it can fire bouncing bolts of electricity at the caster's foes, it is completely
+immobile.
+%%%%
 Summon Minor Demon spell
 
 This spell summons between one and three minor (rank 5) demons.
@@ -1296,11 +1317,6 @@ Summon Mushrooms spell
 
 This spell summons a bunch of icky wandering mushrooms and deathcaps next to a
 chosen foe.
-%%%%
-Summon Scorpions spell
-
-This spell summons one or more scorpions (some of which may not be bound to the
-caster's service).
 %%%%
 Summon Small Mammal spell
 
