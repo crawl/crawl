@@ -139,7 +139,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         if (state == ui_state) return;
         var old_state = ui_state;
         ui_state = state;
-        if (old_state == -1) client.hide_dialog();
         switch (ui_state)
         {
         case enums.ui.NORMAL:
