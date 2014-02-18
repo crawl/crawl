@@ -2246,18 +2246,13 @@ bool bad_attack(const monster *mon, string& adj, string& suffix,
             monster_info mi(mon, MILEV_NAME);
             if (!mi.is(MB_NAME_UNQUALIFIED))
                 adj += "the ";
-
-            would_cause_penance = true;
         }
         else
-        {
             adj = "your ";
-            if (is_good_god(you.religion)
-                || you_worship(GOD_FEDHAS) && fedhas_protects(mon))
-            {
-                would_cause_penance = true;
-            }
-        }
+
+        if (god_hates_attacking_friend(you.religion, mon))
+            would_cause_penance = true;
+
         return true;
     }
 
