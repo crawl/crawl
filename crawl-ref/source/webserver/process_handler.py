@@ -215,7 +215,8 @@ class CrawlProcessHandlerBase(object):
         self.last_watcher_join = time.time()
         if self.client_path:
             self._send_client(watcher)
-            watcher.send_json_options(self.game_params["id"], self.username)
+            if watcher.watched_game == self:
+                watcher.send_json_options(self.game_params["id"], self.username)
         self._receivers.add(watcher)
         self.update_watcher_description()
 
@@ -229,7 +230,7 @@ class CrawlProcessHandlerBase(object):
     def send_client_to_all(self):
         for receiver in self._receivers:
             self._send_client(receiver)
-            if receiver.watched_game:
+            if receiver.watched_game == self:
                 receiver.send_json_options(self.game_params["id"],
                                            self.username)
 
