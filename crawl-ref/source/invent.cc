@@ -1668,19 +1668,36 @@ static string _operation_verb(operation_types oper)
     }
 }
 
-static bool _nasty_stasis(const item_def &item, operation_types oper)
-{
-    return oper == OPER_PUTON
-           && item.base_type == OBJ_JEWELLERY
-           && item.sub_type == AMU_STASIS
-           && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-               || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE]);
-}
-
 static bool _is_wielded(const item_def &item)
 {
     int equip = you.equip[EQ_WEAPON];
     return equip != -1 && item.link == equip;
+}
+
+static bool _is_known_no_tele_item(const item_def &item)
+{
+    if (!is_artefact(item))
+        return false;
+
+    bool known;
+    int val = artefact_wpn_property(item, ARTP_PREVENT_TELEPORTATION, known);
+
+    if (known && val)
+        return true;
+    else
+        return false;
+}
+
+static bool _nasty_stasis(const item_def &item, operation_types oper)
+{
+    return (oper == OPER_PUTON
+           && (item.base_type == OBJ_JEWELLERY
+               && item.sub_type == AMU_STASIS
+               && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
+                   || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE])))
+            || (oper == OPER_PUTON || oper == OPER_WEAR
+                || oper == OPER_WIELD && !_is_wielded(item))
+                && (_is_known_no_tele_item(item) && you.duration[DUR_TELEPORT]);
 }
 
 bool needs_handle_warning(const item_def &item, operation_types oper)
