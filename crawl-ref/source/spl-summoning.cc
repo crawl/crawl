@@ -1173,7 +1173,7 @@ coord_def find_gateway_location(actor* caster)
             if (!in_bounds(test) || !feat_is_malign_gateway_suitable(grd(test))
                 || actor_at(test)
                 || count_neighbours_with_func(test, &feat_is_solid) != 0
-                || !caster->see_cell(test))
+                || !caster->see_cell_no_trans(test))
             {
                 continue;
             }
