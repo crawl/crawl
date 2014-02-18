@@ -2456,6 +2456,28 @@ static bool _do_ability(const ability_def& abil)
         if (!spell_direction(spd, beam))
             return false;
 
+
+        if (beam.target == you.pos())
+        {
+            mpr("Your soul already belongs to Yredelemnul.");
+            return false;
+        }
+
+        monster* mons = monster_at(beam.target);
+        if (mons == NULL || !you.can_see(mons)
+            || !ench_flavour_affects_monster(BEAM_ENSLAVE_SOUL, mons))
+        {
+            mpr("You see nothing there to enslave the soul of!");
+            return false;
+        }
+
+        // The monster can be no more than lightly wounded/damaged.
+        if (mons_get_damage_level(mons) > MDAM_LIGHTLY_DAMAGED)
+        {
+            simple_monster_message(mons, "'s soul is too badly injured.");
+            return false;
+        }
+
         if (!zapping(ZAP_ENSLAVE_SOUL, power, beam))
             return false;
         break;

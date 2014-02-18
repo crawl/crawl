@@ -317,6 +317,8 @@ bool enchant_monster_with_flavour(monster* mon, actor *atk,
 
 bool enchant_monster_invisible(monster* mon, const string &how);
 
+bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
+                                                  bool intrinsic_only = false);
 spret_type mass_enchantment(enchant_type wh_enchant, int pow,
                             bool fail = false);
 
