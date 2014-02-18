@@ -129,7 +129,7 @@ MAP
     ...
 ENDMAP
 
-NAME:   enter_shallow_ziggurat_a
+NAME:   enter_ziggurat_e
 TAGS:   zig_entry
 KFEAT:  O = enter_ziggurat
 COLOUR: ; : cyan / lightblue
@@ -147,7 +147,7 @@ MAP
 .......
 ENDMAP
 
-NAME:   enter_shallow_ziggurat_c
+NAME:   enter_ziggurat_f
 TAGS:   zig_entry no_trap_gen
 KFEAT:  O = enter_ziggurat
 MONS:   angel / nothing w:20
@@ -162,24 +162,6 @@ MAP
  ..mm1mm..
   ..mmm..
    ..m..
-    ...
-ENDMAP
-
-NAME:   enter_shallow_ziggurat_d
-TAGS:   zig_entry no_trap_gen
-KFEAT:  O = enter_ziggurat
-MONS:   angel / nothing w:20
-KPROP:  1On; = no_rtele_into
-SUBST:  ;=.
-MAP
-    ...
-   ..n..
-  .nnnnn.
- ..n;1;n..
-..nn;O;nn..
- ..n;1;n..
-  .nnnnn.
-   ..n..
     ...
 ENDMAP
 
