@@ -2839,7 +2839,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
                  you.max_magic_points - you.magic_points);
     if (mp > 0 && x_chance_in_y(power_level + 1, 5))
     {
-        you.del_gold(hp * 5);
+        you.del_gold(mp * 5);
         inc_mp(mp);
         gold_used += mp * 5;
         mpr("You feel your power returning.");
