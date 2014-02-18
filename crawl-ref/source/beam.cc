@@ -88,8 +88,6 @@ static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
 static beam_type _chaos_beam_flavour(bolt* beam);
 static string _beam_type_name(beam_type type);
-static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
-                                          bool intrinsic_only = false);
 
 tracer_info::tracer_info()
 {
@@ -4197,7 +4195,7 @@ void bolt::update_hurt_or_helped(monster* mon)
 void bolt::tracer_enchantment_affect_monster(monster* mon)
 {
     // Only count tracers as hitting creatures they could potentially affect
-    if (_ench_flavour_affects_monster(flavour, mon, true))
+    if (ench_flavour_affects_monster(flavour, mon, true))
     {
         // Update friend or foe encountered.
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
@@ -5123,7 +5121,7 @@ bool bolt::has_saving_throw() const
     }
 }
 
-static bool _ench_flavour_affects_monster(beam_type flavour, const monster* mon,
+bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
                                           bool intrinsic_only)
 {
     bool rc = true;
@@ -5225,7 +5223,7 @@ bool enchant_monster_invisible(monster* mon, const string &how)
 mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
 {
     // Early out if the enchantment is meaningless.
-    if (!_ench_flavour_affects_monster(flavour, mon))
+    if (!ench_flavour_affects_monster(flavour, mon))
         return MON_UNAFFECTED;
     // Check magic resistance.
     if (has_saving_throw())
@@ -5327,13 +5325,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
         if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
             return MON_UNAFFECTED;
-
-        // The monster can be no more than lightly wounded/damaged.
-        if (mons_get_damage_level(mon) > MDAM_LIGHTLY_DAMAGED)
-        {
-            simple_monster_message(mon, "'s soul is too badly injured.");
-            return MON_OTHER;
-        }
 
         obvious_effect = true;
         const int duration = you.skill_rdiv(SK_INVOCATIONS, 3, 4) + 2;
