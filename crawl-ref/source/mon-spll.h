@@ -2417,7 +2417,7 @@
        SPELL_BLACK_MARK,
        SPELL_BLACK_MARK,
        SPELL_DISPEL_UNDEAD,
-       SPELL_DEATHS_DOOR
+       SPELL_NO_SPELL
       }
     },
 
