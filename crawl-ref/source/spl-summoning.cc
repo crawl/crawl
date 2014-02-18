@@ -34,6 +34,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-act.h"
+#include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-place.h"
 #include "mon-speak.h"
@@ -186,35 +187,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 
     dec_inv_item_quantity(you.equip[EQ_WEAPON], count);
     mpr((count > 1) ? "You create some snakes!" : "You create a snake!");
-    return SPRET_SUCCESS;
-}
-
-spret_type cast_summon_scorpions(int pow, god_type god, bool fail)
-{
-    fail_check();
-    bool success = false;
-
-    const int how_many = stepdown_value(1 + random2(pow)/10 + random2(pow)/10,
-                                        2, 2, 6, 8);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        const bool friendly = (random2(pow) > 3);
-
-        if (create_monster(
-                mgen_data(MONS_SCORPION,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                          3, SPELL_SUMMON_SCORPIONS,
-                          you.pos(), MHITYOU,
-                          MG_AUTOFOE, god)))
-        {
-            success = true;
-        }
-    }
-
-    if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
-
     return SPRET_SUCCESS;
 }
 
@@ -875,6 +847,82 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type god, bool fail)
+{
+    const int dur = min(1 + (random2(pow) / 10), 4);
+
+    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_SUMMON_LIGHTNING_SPIRE,
+                                                      pow))
+        || !in_bounds(where))
+    {
+        mpr("That's too far away.");
+        return SPRET_ABORT;
+    }
+
+    if (!monster_habitable_grid(MONS_HUMAN, grd(where)))
+    {
+        mpr("You can't construct there.");
+        return SPRET_ABORT;
+    }
+
+    monster* mons = monster_at(where);
+    if (mons)
+    {
+        if (you.can_see(mons))
+        {
+            mpr("That space is already occupied.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        // invisible monster
+        mpr("Something you can't see is blocking your construction!");
+        return SPRET_SUCCESS;
+    }
+
+    fail_check();
+
+    if (create_monster(
+            mgen_data(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, &you, dur,
+                      SPELL_SUMMON_LIGHTNING_SPIRE, where, MHITYOU,
+                      MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, god)))
+    {
+        if (!silenced(where))
+            mpr("An electric hum fills the air.");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+
+}
+
+spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail)
+{
+    fail_check();
+
+    mgen_data golem = mgen_data(MONS_GUARDIAN_GOLEM, BEH_FRIENDLY, &you, 3,
+                                SPELL_SUMMON_GUARDIAN_GOLEM, you.pos(), MHITYOU,
+                                MG_FORCE_BEH, god);
+    golem.hd = 4 + div_rand_round(pow, 16);
+
+    monster* mons = (create_monster(golem));
+
+    if (mons)
+    {
+        // Immediately apply injury bond
+        guardian_golem_bond(mons);
+
+        mpr("A guardian golem appears, shielding your allies.");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+}
+
+
 spret_type cast_call_imp(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -1247,6 +1295,103 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
+}
+
+static bool _water_adjacent(coord_def p)
+{
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
+    {
+        if (feat_is_water(grd(*ai)))
+            return true;
+    }
+
+    return false;
+}
+
+spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
+{
+    const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
+
+    if (you.duration[DUR_FORESTED])
+    {
+        mpr("This spell is already ongoing.");
+        return SPRET_ABORT;
+    }
+
+    // Is this area open enough to summon a forest?
+    bool success = false;
+    for (adjacent_iterator ai(caster->pos(), false); ai; ++ai)
+    {
+        if (count_neighbours_with_func(*ai, &feat_is_solid) == 0)
+        {
+            success = true;
+            break;
+        }
+    }
+
+    if (success)
+    {
+        for (distance_iterator di(caster->pos(), false, true, LOS_RADIUS); di; ++di)
+        {
+           if (grd(*di) == DNGN_ROCK_WALL && x_chance_in_y(pow, 150))
+           {
+                temp_change_terrain(*di, DNGN_TREE, duration,
+                                    TERRAIN_CHANGE_FORESTED);
+           }
+        }
+
+        // Maybe make a pond
+        if (coinflip())
+        {
+            coord_def pond = find_gateway_location(caster);
+            int num = random_range(10, 22);
+            int deep = (!one_chance_in(3) ? div_rand_round(num, 3) : 0);
+
+            for (distance_iterator di(pond, true, false, 4); di && num > 0; ++di)
+            {
+                if (grd(*di) == DNGN_FLOOR
+                    && (di.radius() == 0 || _water_adjacent(*di))
+                    && x_chance_in_y(4, di.radius() + 3))
+                {
+                    num--;
+                    deep--;
+
+                    dungeon_feature_type feat = DNGN_SHALLOW_WATER;
+                    if (deep > 0 && *di != you.pos())
+                    {
+                        monster* mon = monster_at(*di);
+                        if (!mon || mon->is_habitable_feat(DNGN_DEEP_WATER))
+                            feat = DNGN_DEEP_WATER;
+                    }
+
+                    temp_change_terrain(*di, feat, duration, TERRAIN_CHANGE_FORESTED);
+                }
+            }
+        }
+
+        mpr("A forested plane collides here with a resounding crunch!");
+        noisy(10, caster->pos());
+
+        mgen_data dryad_data = mgen_data(MONS_DRYAD, BEH_FRIENDLY, &you, 1,
+                                         SPELL_SUMMON_FOREST, caster->pos(),
+                                         MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god);
+        dryad_data.hd = 5 + div_rand_round(pow, 18);
+
+        if (monster *dryad = create_monster(dryad_data))
+        {
+            player_angers_monster(dryad);
+            mon_enchant abj = dryad->get_ench(ENCH_ABJ);
+            abj.duration = duration - 10;
+            dryad->update_ench(abj);
+        }
+
+        you.duration[DUR_FORESTED] = duration;
+
+        return SPRET_SUCCESS;
+    }
+
+    mpr("You need more open space to cast this spell.");
+    return SPRET_ABORT;
 }
 
 static bool _animatable_remains(const item_def& item)
@@ -3159,7 +3304,6 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_SMALL_MAMMAL,        4, 2 },
     { SPELL_CALL_CANINE_FAMILIAR,       1, 2 },
     { SPELL_SUMMON_ICE_BEAST,           3, 3 },
-    { SPELL_SUMMON_SCORPIONS,           6, 3 },
     { SPELL_SUMMON_HYDRA,               3, 2 },
     // Demons
     { SPELL_CALL_IMP,                   3, 3 },
@@ -3172,6 +3316,8 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
+    { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
+    { SPELL_SUMMON_GUARDIAN_GOLEM,      1, 2 },
     // Monster spells
     { SPELL_FAKE_RAKSHASA_SUMMON,       4, 2 },
     { SPELL_SUMMON_UFETUBUS,            8, 2 },
@@ -3213,7 +3359,7 @@ int summons_limit(spell_type spell)
     return desc->type_cap;
 }
 
-// Call when a monster has been summoned to manager this summoner's caps
+// Call when a monster has been summoned, to manage this summoner's caps.
 void summoned_monster(const monster *mons, const actor *caster,
                       spell_type spell)
 {

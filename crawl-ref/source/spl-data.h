@@ -478,6 +478,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
      SPTYP_SUMMONING | SPTYP_POISON,
@@ -490,6 +491,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",
@@ -3561,6 +3563,45 @@ struct spell_desc
 },
 
 {
+    SPELL_SUMMON_FOREST, "Summon Forest",
+     SPTYP_SUMMONING | SPTYP_TRANSLOCATION,
+     SPFLAG_NONE,
+     5,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUMMON_LIGHTNING_SPIRE, "Summon Lightning Spire",
+     SPTYP_SUMMONING | SPTYP_AIR,
+     SPFLAG_GRID | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
+     4,
+     200,
+     2, 2,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUMMON_GUARDIAN_GOLEM, "Summon Guardian Golem",
+     SPTYP_SUMMONING | SPTYP_HEXES,
+     SPFLAG_NONE,
+     4,
+     100,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false,
+},
+
+{
     SPELL_SHADOW_SHARD, "Shadow Shard",
      SPTYP_CONJURATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
@@ -3570,7 +3611,7 @@ struct spell_desc
      0,
      NULL,
      true,
-     false
+     false,
 },
 
 {

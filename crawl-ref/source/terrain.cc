@@ -1963,7 +1963,9 @@ static bool _revert_terrain_to(coord_def pos, dungeon_feature_type newfeat)
 
             // Don't revert sealed doors to normal doors if we're trying to
             // remove the door altogether
-            if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
+            // Same for destroyed trees
+            if ((marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
+                || marker->change_type == TERRAIN_CHANGE_FORESTED)
                 && newfeat == DNGN_FLOOR)
             {
                 env.markers.remove(marker);
