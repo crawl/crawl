@@ -433,13 +433,13 @@ local function ziggurat_create_loot_at(c)
   end
 
   -- dgn.good_scrolls is a list of items with total weight 1000
-  local good_loot = dgn.item_spec("* no_pickup w:7000 / " .. dgn.good_scrolls)
-  local super_loot = dgn.item_spec("| no_pickup w:7000 /" ..
-                                   "potion of experience no_pickup w:200 /" ..
-                                   "potion of cure mutation no_pickup w:200 /" ..
-                                   "potion of porridge no_pickup w:100 /" ..
-                                   "wand of heal wounds no_pickup w:10 / " ..
-                                   "wand of hasting no_pickup w:10 / " ..
+  local good_loot = dgn.item_spec("* no_pickup no_mimic w:7000 / " .. dgn.good_scrolls)
+  local super_loot = dgn.item_spec("| no_pickup no_mimic w:7000 /" ..
+                                   "potion of experience no_pickup no_mimic w:200 /" ..
+                                   "potion of cure mutation no_pickup no_mimic w:200 /" ..
+                                   "potion of porridge no_pickup no_mimic w:100 /" ..
+                                   "wand of heal wounds no_pickup no_mimic w:10 / " ..
+                                   "wand of hasting no_pickup no_mimic w:10 / " ..
                                    dgn.good_scrolls)
 
   local loot_spots = find_free_space(nloot * 4)

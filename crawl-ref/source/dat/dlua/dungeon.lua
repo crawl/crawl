@@ -639,42 +639,42 @@ end
 -- Attention: total weight is 1000 = 2*110 + 2*100 + 5*70 + 4*40 + 25 + 15 + 3*10.
 -- When changing the list or the weights, please keep the total weight at 1000.
 dgn.good_scrolls = [[
-    w:70  scroll of identify no_pickup /
-    w:30  scroll of identify no_pickup q:2 /
-    w:10  scroll of identify no_pickup q:3 /
-    w:70  scroll of teleportation no_pickup /
-    w:30  scroll of teleportation no_pickup q:2 /
-    w:10  scroll of teleportation no_pickup q:3 /
-    w:70  scroll of fog no_pickup /
-    w:30  scroll of fog no_pickup q:2 /
-    w:70  scroll of remove curse no_pickup /
-    w:30  scroll of remove curse no_pickup q:2 /
-    w:50  scroll of enchant weapon I no_pickup /
-    w:20  scroll of enchant weapon I no_pickup q:2 /
-    w:50  scroll of enchant weapon II no_pickup /
-    w:20  scroll of enchant weapon II no_pickup q:2 /
-    w:50  scroll of blinking no_pickup /
-    w:20  scroll of blinking no_pickup q:2 /
-    w:50  scroll of enchant armour no_pickup /
-    w:20  scroll of enchant armour no_pickup q:2 /
-    w:50  scroll of recharging no_pickup /
-    w:20  scroll of recharging no_pickup q:2 /
-    w:30  scroll of magic mapping no_pickup /
-    w:10  scroll of magic mapping no_pickup q:2 /
-    w:30  scroll of amnesia no_pickup /
-    w:10  scroll of amnesia no_pickup q:2 /
-    w:30  scroll of holy word no_pickup /
-    w:10  scroll of holy word no_pickup q:2 /
-    w:30  scroll of enchant weapon III no_pickup /
-    w:10  scroll of enchant weapon III no_pickup q:2 /
-    w:20  scroll of silence no_pickup /
-    w:5   scroll of silence no_pickup q:2 /
-    w:10  scroll of acquirement no_pickup /
-    w:4   scroll of acquirement no_pickup q:2 /
-    w:1   scroll of acquirement no_pickup q:3 /
-    w:10  scroll of brand weapon no_pickup /
-    w:10  scroll of torment no_pickup /
-    w:10  scroll of vulnerability no_pickup
+    w:70  scroll of identify no_pickup no_mimic /
+    w:30  scroll of identify no_pickup no_mimic q:2 /
+    w:10  scroll of identify no_pickup no_mimic q:3 /
+    w:70  scroll of teleportation no_pickup no_mimic /
+    w:30  scroll of teleportation no_pickup no_mimic q:2 /
+    w:10  scroll of teleportation no_pickup no_mimic q:3 /
+    w:70  scroll of fog no_pickup no_mimic /
+    w:30  scroll of fog no_pickup no_mimic q:2 /
+    w:70  scroll of remove curse no_pickup no_mimic /
+    w:30  scroll of remove curse no_pickup no_mimic q:2 /
+    w:50  scroll of enchant weapon I no_pickup no_mimic /
+    w:20  scroll of enchant weapon I no_pickup no_mimic q:2 /
+    w:50  scroll of enchant weapon II no_pickup no_mimic /
+    w:20  scroll of enchant weapon II no_pickup no_mimic q:2 /
+    w:50  scroll of blinking no_pickup no_mimic /
+    w:20  scroll of blinking no_pickup no_mimic q:2 /
+    w:50  scroll of enchant armour no_pickup no_mimic /
+    w:20  scroll of enchant armour no_pickup no_mimic q:2 /
+    w:50  scroll of recharging no_pickup no_mimic /
+    w:20  scroll of recharging no_pickup no_mimic q:2 /
+    w:30  scroll of magic mapping no_pickup no_mimic /
+    w:10  scroll of magic mapping no_pickup no_mimic q:2 /
+    w:30  scroll of amnesia no_pickup no_mimic /
+    w:10  scroll of amnesia no_pickup no_mimic q:2 /
+    w:30  scroll of holy word no_pickup no_mimic /
+    w:10  scroll of holy word no_pickup no_mimic q:2 /
+    w:30  scroll of enchant weapon III no_pickup no_mimic /
+    w:10  scroll of enchant weapon III no_pickup no_mimic q:2 /
+    w:20  scroll of silence no_pickup no_mimic /
+    w:5   scroll of silence no_pickup no_mimic q:2 /
+    w:10  scroll of acquirement no_pickup no_mimic /
+    w:4   scroll of acquirement no_pickup no_mimic q:2 /
+    w:1   scroll of acquirement no_pickup no_mimic q:3 /
+    w:10  scroll of brand weapon no_pickup no_mimic /
+    w:10  scroll of torment no_pickup no_mimic /
+    w:10  scroll of vulnerability no_pickup no_mimic
     ]]
 
 -- Returns true if point1 is inside radius(X, point2).
