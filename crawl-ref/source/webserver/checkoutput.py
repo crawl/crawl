@@ -25,8 +25,14 @@ def check_output(call, callback, ioloop):
 
         if p.returncode is not None:
             ioloop.remove_handler(out_r)
+            try:
+                buf = os.read(out_r, BUFSIZ)
+            except (IOError, OSError) as e:
+                pass
             os.close(out_r)
 
+            if buf:
+                data.append(buf)
             callback("".join(data), p.returncode)
 
     def _handle_read(fd, events):
