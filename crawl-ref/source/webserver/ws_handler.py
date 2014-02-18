@@ -561,7 +561,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process.handle_input(message)
 
     def flush_messages(self):
-        if len(self.message_queue) == 0:
+        if self.client_closed or len(self.message_queue) == 0:
             return
         msg = "{\"msgs\":[" + ",".join(self.message_queue) + "]}"
         self.message_queue = []
