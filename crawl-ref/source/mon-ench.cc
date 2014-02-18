@@ -1067,6 +1067,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
         case ENCH_ROLLING:
+        case ENCH_SIREN_SONG:
             del_ench(i->first);
             break;
 
