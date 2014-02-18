@@ -120,7 +120,6 @@ moth_of_wrath CORPSE_MOTH_OF_WRATH
 big_fish CORPSE_BIG_FISH
 giant_goldfish CORPSE_GIANT_GOLDFISH
 electric_eel CORPSE_ELECTRIC_EEL
-#lava_fish CORPSE_LAVA_FISH
 shark CORPSE_SHARK
 kraken_head CORPSE_KRAKEN /*'x'*/
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
