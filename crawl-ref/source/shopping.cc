@@ -2215,8 +2215,7 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_RODS:
         if (!item_type_known(item))
             valued = 120;
-        else if (item.sub_type == ROD_STRIKING
-                 || item.sub_type == ROD_WARDING)
+        else if (item.sub_type == ROD_STRIKING)
         {
             valued = 150;
         }

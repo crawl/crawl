@@ -1234,10 +1234,6 @@ rod of venom
 
 Ce sceptre contient des sorts offensifs et défensifs de poison.
 %%%%
-rod of warding
-
-Ce sceptre contient des sorts conçus pour se protéger des ennemis.
-%%%%
 royal jelly
 
 Une gelée dorée et particulièrement nutritive. La consommer restaure les

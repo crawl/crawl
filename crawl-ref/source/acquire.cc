@@ -795,7 +795,15 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
         case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
             break;
+#if TAG_MAJOR_VERSION == 34
+        case OBJ_RODS:
+            do
+                type_wanted = random2(NUM_RODS);
+            while (type_wanted == ROD_WARDING);
+            break;
+#else
         case OBJ_RODS:       type_wanted = random2(NUM_RODS); break;
+#endif
         case OBJ_JEWELLERY:  type_wanted = _acquirement_jewellery_subtype();
             break;
         default: break;         // gold, books

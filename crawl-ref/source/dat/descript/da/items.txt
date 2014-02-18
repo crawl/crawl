@@ -1283,10 +1283,6 @@ rod of venom
 
 Denne stok indeholder giftbaserede angrebsbesværgelser.
 %%%%
-rod of warding
-
-Denne stok indeholder besværgelser, der driver dine fjender bort.
-%%%%
 royal jelly
 
 En særligt fed og gylden geléagtig tingest. Hvis du indtager den, giver den,

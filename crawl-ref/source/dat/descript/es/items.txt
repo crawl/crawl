@@ -986,10 +986,6 @@ rod of venom
 
 Esta vara contiene hechizos ofensivos de veneno.
 %%%%
-rod of warding
-
-Esta vara contiene hechizos diseñados para repeler enemigos.
-%%%%
 royal jelly
 
 Una cosa gelatinosa dorada bastante nutritiva. Consumirla restaurará tus
