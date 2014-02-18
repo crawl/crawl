@@ -223,7 +223,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
      with_props("place:Tar:$ w:460 / Shadow Fiend / " ..
                  "curse toe / shadow demon w:20", { weight = 5 }),
      with_props("daeva / angel / cherub / pearl dragon / shedu band / " ..
-                "ophan / apis / w:5 phoenix / w:5 silver star", { weight = 2 }),
+                "ophan / apis / w:2 silver star", { weight = 2 }),
      with_props("hill giant / cyclops / stone giant / fire giant / " ..
                 "frost giant / ettin / titan", { weight = 2 }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
