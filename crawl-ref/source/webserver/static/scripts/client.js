@@ -72,6 +72,8 @@ function (exports, $, key_conversion, chat, comm) {
                 msgs = [ msgobj ];
             for (var i in msgs)
             {
+                if (window.log_messages && window.log_messages !== 2)
+                    console.log("Message: " + msgs[i].msg, msgs[i]);
                 if (!comm.handle_message_immediately(msgs[i]))
                     message_queue.push(msgs[i]);
             }
@@ -1257,7 +1259,7 @@ function (exports, $, key_conversion, chat, comm) {
                         var x = inflater.append(data);
                     }
                     decode_utf8(decompressed, function (s) {
-                        if (window.log_messages)
+                        if (window.log_messages === 2)
                             console.log("Message: " + s);
                         if (window.log_message_size)
                             console.log("Message size: " + s.length);
@@ -1267,7 +1269,7 @@ function (exports, $, key_conversion, chat, comm) {
                     return;
                 }
 
-                if (window.log_messages)
+                if (window.log_messages === 2)
                     console.log("Message: " + msg.data);
                 if (window.log_message_size)
                     console.log("Message size: " + msg.data.length);
