@@ -870,7 +870,7 @@ void handle_behaviour(monster* mon)
                 if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
                     && !mon->berserk_or_insane()
                     && !(mons_is_avatar(mon->type)
-                         && mon->foe == owner->mindex()))
+                         && owner && mon->foe == owner->mindex()))
                 {
                     _set_firing_pos(mon, mon->target);
                 }
