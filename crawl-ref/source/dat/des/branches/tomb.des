@@ -289,35 +289,33 @@ ENDMAP
 ##############################################################################
 # Tomb:1
 #
-NAME:    tomb_1
-PLACE:   Tomb:1
+NAME:     tomb_1
+PLACE:    Tomb:1
 
-ORIENT:  encompass
-TAGS:    no_dump
+ORIENT:   encompass
+TAGS:     no_dump
+SUBVAULT: A : tomb_1_centre
+SUBVAULT: B : tomb_1_hall_stairs
 #
-SHUFFLE: ([{, AB), ]}, _-
-SUBST:   A=|*, B=|*
+SHUFFLE:  ([{
 : if crawl.coinflip() then
-SUBST:   I = I:900 6, N = N:900 6
-SUBST:   J = J:750 6, O = O:750 6
-SUBST:   K = K:550 6, P = P:550 6
-SUBST:   L = L:300 6, Q = Q:300 6
+SUBST:    I = I:900 6, N = N:900 6
+SUBST:    J = J:750 6, O = O:750 6
+SUBST:    K = K:550 6, P = P:550 6
+SUBST:    L = L:300 6, Q = Q:300 6
 : end
-TILE:    FIJKL = dngn_sarcophagus_pedestal_left
-TILE:    MNOPQ = dngn_sarcophagus_pedestal_right
-COLOUR:  FIJKLMNOPQ = yellow
-SUBST:   FIJKLMNOPQ = G
-SUBST:   - = T
-SUBST:   _ = F 6 ~:30 .:30
-SUBST:   T = ~ .
-SUBST:   t = ~ .:50
-SUBST:   ' = 5 .:100
-SUBST:   2 = 2 1:2 .
-SUBST:   1 = 1 2:3 .
-SUBST:   3 = 3., 4 = 4., 5 = 5.
+TILE:     FIJKL = dngn_sarcophagus_pedestal_left
+TILE:     MNOPQ = dngn_sarcophagus_pedestal_right
+COLOUR:   FIJKLMNOPQ = yellow
+SUBST:    FIJKLMNOPQ = G
+SUBST:    ' = 5 .:100
 #
-MONS:    mummy, guardian mummy, mummy priest, sphinx, greater mummy
-MONS:    silver statue / orange crystal statue / ice statue
+MONS:     mummy / guardian mummy w:3 / nothing
+# Re 233: this used to involve "SUBST: 1 = 1 2:2 . / SUBST: 2 = 2 1:3 .";
+# the weights reflect the recursive SUBST: to keep them the same as before.
+MONS:     guardian mummy w:233 / mummy / nothing w:233
+MONS:     mummy priest / nothing, sphinx / nothing, greater mummy / nothing
+MONS:     silver statue / orange crystal statue / ice statue
 #
 : set_feature_name("granite_statue", "sarcophagus")
 MAP
@@ -338,37 +336,37 @@ xxxxxxxxx..........ccccccccccccccccccccccccccccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx..........cc'''''''''''''''''''''''''''''''''''''''cc.........xxxxxxxxx
 xxxxxxxxx..........cc'''''''''''''''''''''''''''''''''''''''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''ccccccccccccccccccccccccccccccccccc''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..ttttttttttc................ctt)c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..ccccccccctc..3..........2..ct-tc''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..cA22c111ctc....3..........5c_ttc''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..c2c222ctttc......2.........+cccc''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..ccccccccccc.5........3...3..5..c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c.................................c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c............3.............3....2.c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''cccccccccccccc.......2...2........c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c............c....................c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c............c.................3..c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..cccccccc..c..........2..2......c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..ctttc1Bc..c....................c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..ctctc11c..c...3.......3........c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..ctct11cc..c..............2.....c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..ctcccccc..c.......2............c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..cttttttt..c.3...............2..c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c..ccccccccccc....2.....3.........c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c.......5.........................c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c.................................c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''ccccccccccccccTTTTTTTcccccccccccccc''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c'''''''''''ccc+++++ccc'''''''''''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c'''''''''''cc.2...2.cc'''''''''''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''ccccccc''cc.L...Q.cc''ccccccc''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''cc.322c''cc.......cc''c22.'cc''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''c]'c22c''cc.2...2.cc''c22c.}c''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''cccc''c''cc.K...P.cc''c3'cccc''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''''''''c''cc.......cc''c''''''''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''''''''c''cc.2...2.cc''c''''''''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''cccccccccc''cc.J...O.cc''cccccccccc''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAc''cc.........xxxxxxxxx
+xxxxxxxxx..........ccBBccccccccccccccAAAAAAAccccccccccccccBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBccc+++++cccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.2...2.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.L...Q.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.......ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.2...2.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.K...P.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.......ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.2...2.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.J...O.ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.......ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
+xxxxxxxxx..........ccBBBBBBBBBBBBBBcc.......ccBBBBBBBBBBBBBBcc.........xxxxxxxxx
 xxxxxxxxx..........cccccccccccccccccc.I...N.cccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx..........cccccccccccccccccc.......cccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx.............................4...4............................xxxxxxxxx
@@ -393,29 +391,96 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+####
+
+NAME:    tomb_1_centre_old
+TAGS:    tomb_1_centre unrand
+SHUFFLE: AB), _-
+SUBST:   A=|*, B=|*
+SUBST:   - = T
+SUBST:   _ = F 5 ~:30 .:30
+SUBST:   T = ~ .
+TILE:    F = dngn_sarcophagus_pedestal_left
+COLOUR:  F = yellow
+SUBST:   F = G
+#
+MONS:    mummy / guardian mummy w:3 / nothing
+MONS:    guardian mummy w:233 / mummy / nothing w:233
+MONS:    mummy priest / nothing, greater mummy / nothing
+MONS:    silver statue / orange crystal statue / ice statue
+SUBST:   t = ~ .:50
+#
+: set_feature_name("granite_statue", "sarcophagus")
+MAP
+..ttttttttttc................ctt)
+..ccccccccctc..3..........2..ct-t
+..cA22c111ctc....3..........4c_tt
+..c2c222ctttc......2.........+ccc
+..ccccccccccc.4........3...3..4..
+.................................
+............3.............3....2.
+ccccccccccccc.......2...2........
+............c....................
+............c.................3..
+..cccccccc..c..........2..2......
+..ctttc1Bc..c....................
+..ctctc11c..c...3.......3........
+..ctct11cc..c..............2.....
+..ctcccccc..c.......2............
+..cttttttt..c.3...............2..
+..ccccccccccc....2.....3.........
+.......4.........................
+.................................
+             TTTTTTT
+ENDMAP
+
+####
+
+NAME:    tomb_1_hall_stairs_old
+TAGS:    tomb_1_hall_stairs unrand
+SHUFFLE: ]}
+SUBST:   ' = 3 .:200
+MONS:    guardian mummy w:233 / mummy / nothing w:233
+MONS:    mummy priest / nothing, greater mummy
+MAP
+''                                   ''
+''c'''''''''''           '''''''''''c''
+''c'''''''''''           '''''''''''c''
+''c''ccccccc''           ''ccccccc''c''
+''c''cc.211c''           ''c11.'cc''c''
+''c''c]'c11c''           ''c11c.}c''c''
+''c''cccc''c''           ''c2'cccc''c''
+''c''''''''c''           ''c''''''''c''
+''c''''''''c''           ''c''''''''c''
+''cccccccccc''           ''cccccccccc''
+''''''''''''''           ''''''''''''''
+''''''''''''''           ''''''''''''''
+ENDMAP
+
 ###############################################################################
 # Tomb:2
 #
-NAME:    tomb_2
-PLACE:   Tomb:2
+NAME:     tomb_2
+PLACE:    Tomb:2
 # Can be rotated!
-ORIENT:  encompass
-TAGS:    no_dump
+ORIENT:   encompass
+TAGS:     no_dump
+SUBVAULT: B : tomb_2_ambush
 #
-NSUBST:  A = [ / '
-SHUFFLE: Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
-SUBST:   W=', w=c, Y=T, y=+, Z=T, z=+
-SUBST:   U=', u=c, V=T, v=+
-SUBST:   Q=', q=c, R=T, r=+, S=T, s=+
+NSUBST:   A = [ / '
+SHUFFLE:  Ww/Yy/Zz, Uu/Vv, Qq/Rr/Ss
+SUBST:    W=', w=c, Y=T, y=+, Z=T, z=+
+SUBST:    U=', u=c, V=T, v=+
+SUBST:    Q=', q=c, R=T, r=+, S=T, s=+
 #
-SHUFFLE: ])}def
-SUBST:   d=", e=", f="
+SHUFFLE:  ])}def
+SUBST:    d=", e=", f="
 #
-SUBST:   T = ~ .
-SUBST:   ' = ~ ':100
-SUBST:   ' = 1:5 2:5 3:1 .:89
-SUBST:   " = ~ ":50
-SUBST:   " = 2:3 3:1 .:96
+SUBST:    T = ~ .
+SUBST:    ' = ~ ':100
+SUBST:    ' = 1:5 2:5 3:1 .:89
+SUBST:    " = ~ ":50
+SUBST:    " = 2:3 3:1 .:96
 #
 # Number of ' symbols is 211+3=214, hence statistically in the lower
 # circumference we'll have 10.7 mummies, another 10.7 guardian mummies
@@ -426,7 +491,7 @@ SUBST:   " = 2:3 3:1 .:96
 # Perhaps to do: use KFEAT to make mummies possibly appear at T spots.
 #                have clustering of 1, 2 in the lower area as before?
 #
-MONS: mummy, guardian mummy, mummy priest, greater mummy
+MONS: mummy, guardian mummy, mummy priest
 #
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -449,28 +514,28 @@ XXXXXXXXXXXXXXcc""""c"""2"T+T""""""""T+T""2"""T+T""""""ccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXcc"""TcT""""TcT""""""""TcT""""""TcT""""""ccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXcc""TT+T"""""c""""""""""c""""""""c"""""""ccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXccccc+ccccccccccccccccccccccccccccccc""""ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc""TTc.............................c"3""ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc""""c.............................c""""ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc""3"c..xxx4.................4xxx..c"""fccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc""""c..xxx...................xxx..c""""ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc""""c..xxx.........1.........xxx..c)""}ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc""""c..xxx.....2.......2.....xxx..cccccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc""""c.............................c''''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcce"""c.............................cT'''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc""""c........X...........X........+T'''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc]""dc.............................cT'''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccccccc.....3........(........3.....c''''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc''''c.............................c'QQQccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc'''Tc........X...........X........cccqcccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc'''T+.............................c'QQQccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc'''Tc.............................c''''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc'ZZZc..xxx.....2.......2.....xxx..c''''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccczcc..xxx.........1.........xxx..c''''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc'ZZZc..xxx...................xxx..c''''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccA'''c..xxx4.................4xxx..c''''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc'YYYc.............................c''''ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccccycc.............................cRRRAccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc'YYYc.............................ccrccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""TTcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc"3""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""3"cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc"""fccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc)""}ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcce"""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcT'''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""cBBBBBBBBBBBBBBBBBBBBBBBBBBBBB+T'''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc]""dcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcT'''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc''''cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc'QQQccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''TcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcccqcccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''T+BBBBBBBBBBBBBBBBBBBBBBBBBBBBBc'QQQccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''TcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'ZZZcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccczccBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'ZZZcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccA'''cBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'YYYcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBc''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccyccBBBBBBBBBBBBBBBBBBBBBBBBBBBBBcRRRAccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'YYYcBBBBBBBBBBBBBBBBBBBBBBBBBBBBBccrccccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXcc''''ccccc+ccccccccccccccc+cccccccccRRR'ccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXcc''''''c'TTTc''''''''''''cTT''''''c'''''ccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccXXXXXXXXXXXXX
@@ -501,27 +566,53 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
+NAME: tomb_2_ambush_old
+TAGS: tomb_2_ambush unrand
+MONS: mummy, guardian mummy, mummy priest, greater mummy
+MAP
+.............................
+.............................
+..xxx4.................4xxx..
+..xxx...................xxx..
+..xxx.........1.........xxx..
+..xxx.....2.......2.....xxx..
+.............................
+.............................
+........X...........X........
+.............................
+.....3........(........3.....
+.............................
+........X...........X........
+.............................
+.............................
+..xxx.....2.......2.....xxx..
+..xxx.........1.........xxx..
+..xxx...................xxx..
+..xxx4.................4xxx..
+.............................
+.............................
+.............................
+ENDMAP
 
 #############################################################################
 # Tomb:3
 #
-NAME:    tomb_3
-PLACE:   Tomb:3
-ORIENT:  encompass
-TAGS:    no_rotate no_dump
+NAME:     tomb_3
+PLACE:    Tomb:3
+ORIENT:   encompass
+TAGS:     no_rotate no_dump
+SUBVAULT: A : tomb_3_rune
 #
-SUBST:   ' : " $ ':80
-SUBST:   ' = " $
-SUBST:   " = ~:1 .
-SUBST:   $ = *:2 |:1 $:17
+SUBST:    ' : " $ ':80
+SUBST:    ' = " $
+SUBST:    " = ~:1 .
+SUBST:    $ = *:2 |:1 $:17
 #
-MONS:    mummy, guardian mummy, mummy priest, greater mummy
+MONS:     guardian mummy
 #
-KITEM:   $ = $ no_pickup
-KITEM:   * = * no_pickup
-KITEM:   | = | no_pickup
-KMASK:   O = no_item_gen
-KITEM:   O = golden rune of Zot
+KITEM:    $ = $ no_pickup
+KITEM:    * = * no_pickup
+KITEM:    | = | no_pickup
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -536,31 +627,31 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccccccc.............................cccccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccc...............cccccc..............ccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccc...............cccccccc..............cccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccc.......4......ccccO4cccc......4......cccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccc............cccc......cccc...........cccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc............cccc........cccc...........ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc............cccc........cccc...........ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc...........cccc..444444..cccc..........ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc.......................................ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc.......................................ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcc.................222222................ccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccc................223322...............cccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccc...3............223322............3..cccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccc...............222222..............ccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccc....2..........................2...ccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccccc....2......................2....cccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccccccc............................cccccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccccccccc+ccc..................ccc+ccccccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccccccc""""cc................cc""""cccccccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXcccccc"""""""cc22222222222222cc"""""'$cccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccc""""ccAAAAAAAAAAAAAAAAcc""""cccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccc"""""""cc11111111111111cc"""""'$cccccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXcccc""""""""""cc............cc"""""""'$ccccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXcccc'""""""""""cc..........cc""""""""'$ccccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXccc$''""""""""""cc........cc"""""""""'$$cccXXXXXXXXXXXXX
-XXXXXXXXXXXXXXccc$$$'""""""""""cc222222cc""""""""''$$$cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc$$$'""""""""""cc111111cc""""""""''$$$cccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXccc|$$$''"""""""""c......c"""""""''$$$$$cccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXccc||$$$$'""""""""c......c""""""'$$$$$$$cccXXXXXXXXXXXXX
 XXXXXXXXXXXXXXccc|||||$$'"""""""c......c"""""'$$$$$$$$cccXXXXXXXXXXXXX
@@ -593,4 +684,33 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ENDMAP
+
+####
+NAME:  tomb_3_rune_old
+TAGS:  tomb_3_rune unrand
+MONS:  guardian mummy, mummy priest, greater mummy
+KMASK: O = no_item_gen
+KITEM: O = golden rune of Zot
+MAP
+ccccccccccccccccccccccccccccccccccccccccc
+cccccc.............................cccccc
+ccc...............cccccc..............ccc
+cc...............cccccccc..............cc
+cc.......3......ccccO3cccc......3......cc
+cc............cccc......cccc...........cc
+c............cccc........cccc...........c
+c............cccc........cccc...........c
+c...........cccc..333333..cccc..........c
+c.......................................c
+c.......................................c
+c.................111111................c
+cc................112211...............cc
+cc...2............112211............2..cc
+ccc...............111111..............ccc
+ccc....1..........................1...ccc
+ccccc....1......................1....cccc
+ccccccc............................cccccc
+cccccccc+ccc..................ccc+ccccccc
+             ................
 ENDMAP
