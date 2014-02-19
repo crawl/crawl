@@ -2216,9 +2216,7 @@ unsigned int item_value(item_def item, bool ident)
         if (!item_type_known(item))
             valued = 120;
         else if (item.sub_type == ROD_STRIKING)
-        {
             valued = 150;
-        }
         else
             valued = 250;
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
