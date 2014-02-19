@@ -704,9 +704,7 @@ void handle_behaviour(monster* mon)
                     // our target, even if this monster cannot (we'll assume
                     // the player passes along this information to allies)
                     else if (!foepos.origin() && you.see_cell(foepos))
-                    {
                         mon->target = foepos;
-                    }
                     else
                     {
                         new_foe = MHITYOU;
