@@ -4134,8 +4134,8 @@ void handle_god_time(int time_delta)
             {
                 // If this *fails*, we rolled a god who doesn't exist or whose
                 // wrath doesn't occur this way, so try again.
-                if (!divine_retribution(angry_gods[which_penance]))
-                    continue;
+                if (divine_retribution(angry_gods[which_penance]))
+                    break;
             }
             else
                 break;
