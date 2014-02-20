@@ -465,13 +465,15 @@ spret_type cast_summon_elemental(int pow, god_type god,
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
     fail_check();
-    const int dur = min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + (random2(pow) / 4), 4);
 
-    if (create_monster(
-            mgen_data(MONS_ICE_BEAST, BEH_FRIENDLY, &you,
-                      dur, SPELL_SUMMON_ICE_BEAST,
-                      you.pos(), MHITYOU,
-                      MG_AUTOFOE, god)))
+    mgen_data ice_beast = mgen_data(MONS_ICE_BEAST, BEH_FRIENDLY, &you,
+                                    dur, SPELL_SUMMON_ICE_BEAST,
+                                    you.pos(), MHITYOU,
+                                    MG_AUTOFOE, god);
+    ice_beast.hd = (3 + div_rand_round(pow, 13));
+
+    if (create_monster(ice_beast))
     {
         mpr("A chill wind blows around you.");
     }
