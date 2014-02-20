@@ -150,7 +150,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
             options.get("tile_trap_col"),           // MF_TRAP
             options.get("tile_excl_centre_col"),    // MF_EXCL_ROOT
             options.get("tile_excluded_col"),       // MF_EXCL
-            options.get("tile_player_col")          // MF_PLAYER
+            options.get("tile_player_col"),         // MF_PLAYER
+            options.get("tile_deep_water_col"),     // MF_DEEP_WATER
+            options.get("tile_portal_col")          // MF_PORTAL
         ].map(vcolour_to_css_colour);
     }
 

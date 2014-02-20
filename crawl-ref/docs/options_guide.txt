@@ -1748,9 +1748,11 @@ tile_door_col         = #775544
 tile_downstairs_col   = #ff00ff
 tile_upstairs_col     = cyan
 tile_branchstairs_col = #ff7788
-tile_feature_col      = #ffcc00
+tile_portal_col       = #ffdd00
+tile_feature_col      = #997700
 tile_trap_col         = #aa6644
 tile_water_col        = #114455
+tile_deep_water_col   = #001122
 tile_lava_col         = #552211
 tile_excluded_col     = #552266
 tile_excl_centre_col  = #552266
@@ -1775,10 +1777,12 @@ level. Using RGB hex codes is also allowed, such as #00ff00 for green.
    tile_downstairs_col   - colour of downstairs
    tile_upstairs_col     - colour of upstairs, including branch exits
    tile_branchstairs_col - colour of branch entrances
-   tile_feature_col      - colour of any non-stair feature
-                           (altar, shop, portal, fountain, ...)
+   tile_portal_col       - colour of any portal
+   tile_feature_col      - colour of any non-stair, non-portal feature
+                           (altar, shop, fountain, ...)
    tile_trap_col         - colour of known traps of any type
-   tile_water_col        - colour of both shallow and deep water
+   tile_water_col        - colour of shallow water
+   tile_deep_water_col   - colour of deep water
    tile_lava_col         - colour of lava
    tile_excluded_col     - colour of squares excluded for autotravel
                            (will only override tile_floor_col colour)
