@@ -1936,10 +1936,14 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         sim_type = flesh->mon_type;
         break;
     case FOOD_BEEF_JERKY:
-        if (coinflip())
-            sim_type = MONS_YAK, name = "cow";
-        else
-            sim_type = MONS_DEATH_YAK, name = "bull";
+        sim_type = random_choose_weighted(4, MONS_YAK,
+                                          5, MONS_DEATH_YAK,
+                                          1, MONS_MINOTAUR,
+                                          0);
+        if (sim_type == MONS_YAK)
+            name = "cow";
+        else if (sim_type == MONS_DEATH_YAK)
+            name = "bull";
         break;
     case FOOD_SAUSAGE:
         sim_type = MONS_HOG;
