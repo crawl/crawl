@@ -1561,7 +1561,7 @@ struct spell_desc
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      3,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
