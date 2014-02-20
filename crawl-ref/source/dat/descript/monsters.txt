@@ -2529,11 +2529,6 @@ spiny frog
 These frogs are the size of a wolf, and are covered in small spines and spurs,
 dripping with venom. Toad licking anyone?
 %%%%
-spiny worm
-
-A great black worm, its many-segmented body covered in spiky plates of
-chitinous armour. Acidic venom drips from its toothy maw.
-%%%%
 spriggan
 
 A small humanoid, resembling a human or elf except for the size. They move at a

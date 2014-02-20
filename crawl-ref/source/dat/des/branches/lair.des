@@ -755,7 +755,7 @@ NAME:   minmay_lair_venomous_thicket
 TAGS:   ruin_lair
 DEPTH:  Lair
 ORIENT: north
-MONS:   black mamba / spiny frog / wolf spider / spiny worm
+MONS:   black mamba / spiny frog / wolf spider
 MONS:   basilisk / komodo dragon / yellow wasp
 MONS:   giant mite / giant centipede
 MONS:   plant / fungus w:2 / bush w:1, bush
@@ -1822,7 +1822,7 @@ TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
 MONS:    plant
 MONS:    elephant slug / agate snail, worm, brain worm
-MONS:    spiny worm / giant leech w:8, lindwurm, fire dragon
+MONS:    giant leech, lindwurm, fire dragon
 KMONS:   8 = giant firefly
 SHUFFLE: ABC
 SUBST:   P = 11.

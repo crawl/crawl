@@ -1391,8 +1391,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SWAMP_WORM;
     case MONS_GIANT_LEECH:
         return TILEP_MONS_GIANT_LEECH;
+#if TAG_MAJOR_VERSION == 34
     case MONS_SPINY_WORM:
         return TILEP_MONS_SPINY_WORM;
+#endif
 
     // small abominations ('x')
     case MONS_UNSEEN_HORROR:
@@ -4005,8 +4007,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SWAMP_WORM;
     case MONS_GIANT_LEECH:
         return TILE_CORPSE_GIANT_LEECH;
+#if TAG_MAJOR_VERSION == 34
     case MONS_SPINY_WORM:
         return TILE_CORPSE_SPINY_WORM;
+#endif
 
     // flying insects ('y')
     case MONS_VAMPIRE_MOSQUITO:

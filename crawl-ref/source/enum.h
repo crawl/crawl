@@ -2255,8 +2255,8 @@ enum monster_type                      // menv[].type
     MONS_BRAIN_WORM,
 #if TAG_MAJOR_VERSION == 34
     MONS_ROCK_WORM,
-#endif
     MONS_SPINY_WORM,
+#endif
     MONS_WYVERN,
 #if TAG_MAJOR_VERSION > 34
     MONS_DRAKE,                 // genus
