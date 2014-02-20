@@ -971,28 +971,28 @@ void game_options::reset_options()
 
     // minimap colours
     tile_player_col       = str_to_tile_colour("white");
-    tile_monster_col      = str_to_tile_colour("red");
-    tile_neutral_col      = str_to_tile_colour("red");
-    tile_peaceful_col     = str_to_tile_colour("lightred");
-    tile_friendly_col     = str_to_tile_colour("lightred");
-    tile_plant_col        = str_to_tile_colour("darkgreen");
-    tile_item_col         = str_to_tile_colour("green");
+    tile_monster_col      = str_to_tile_colour("#660000");
+    tile_neutral_col      = str_to_tile_colour("#660000");
+    tile_peaceful_col     = str_to_tile_colour("#664400");
+    tile_friendly_col     = str_to_tile_colour("#664400");
+    tile_plant_col        = str_to_tile_colour("#446633");
+    tile_item_col         = str_to_tile_colour("#005544");
     tile_unseen_col       = str_to_tile_colour("black");
-    tile_floor_col        = str_to_tile_colour("lightgrey");
-    tile_wall_col         = str_to_tile_colour("darkgrey");
-    tile_mapped_floor_col = str_to_tile_colour("lightblue");
-    tile_mapped_wall_col  = str_to_tile_colour("blue");
-    tile_door_col         = str_to_tile_colour("brown");
-    tile_downstairs_col   = str_to_tile_colour("magenta");
-    tile_upstairs_col     = str_to_tile_colour("blue");
-    tile_branchstairs_col = str_to_tile_colour("magenta");
-    tile_feature_col      = str_to_tile_colour("cyan");
-    tile_trap_col         = str_to_tile_colour("yellow");
-    tile_water_col        = str_to_tile_colour("grey");
-    tile_lava_col         = str_to_tile_colour("grey");
-    tile_excluded_col     = str_to_tile_colour("darkcyan");
-    tile_excl_centre_col  = str_to_tile_colour("darkblue");
-    tile_window_col       = str_to_tile_colour("yellow");
+    tile_floor_col        = str_to_tile_colour("#333333");
+    tile_wall_col         = str_to_tile_colour("#666666");
+    tile_mapped_floor_col = str_to_tile_colour("#222266");
+    tile_mapped_wall_col  = str_to_tile_colour("#444499");
+    tile_door_col         = str_to_tile_colour("#775544");
+    tile_downstairs_col   = str_to_tile_colour("#ff00ff");
+    tile_upstairs_col     = str_to_tile_colour("cyan");
+    tile_branchstairs_col = str_to_tile_colour("#ff7788");
+    tile_feature_col      = str_to_tile_colour("#ffcc00");
+    tile_trap_col         = str_to_tile_colour("#aa6644");
+    tile_water_col        = str_to_tile_colour("#114455");
+    tile_lava_col         = str_to_tile_colour("#552211");
+    tile_excluded_col     = str_to_tile_colour("#552266");
+    tile_excl_centre_col  = str_to_tile_colour("#552266");
+    tile_window_col       = str_to_tile_colour("#558855");
 #endif
 
 #ifdef USE_TILE_LOCAL
