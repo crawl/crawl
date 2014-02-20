@@ -778,7 +778,8 @@ bool mons_is_object(monster_type mc)
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
            || mc == MONS_LURKING_HORROR
-           || mc == MONS_DANCING_WEAPON;
+           || mc == MONS_DANCING_WEAPON
+           || mc == MONS_LIGHTNING_SPIRE;
 }
 
 bool mons_has_blood(monster_type mc)
