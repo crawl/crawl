@@ -576,7 +576,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_CHARM:
         if (!quiet)
-            simple_monster_message(this, " is no longer charmed.");
+        {
+            if (props.exists("charmed_demon"))
+                simple_monster_message(this, " breaks free of your control!");
+            else
+                simple_monster_message(this, " is no longer charmed.");
+        }
 
         if (you.can_see(this))
         {
@@ -592,6 +597,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             patrol_point.reset();
         }
         mons_att_changed(this);
+
+        // If a greater demon is breaking free, give the player time to respond
+        if (props.exists("charmed_demon"))
+        {
+            speed_increment -= speed;
+            props.erase("charmed_demon");
+        }
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);

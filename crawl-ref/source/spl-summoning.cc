@@ -971,6 +971,27 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                 _monster_greeting(demon, "_friendly_imp_greeting");
             }
         }
+
+        if (charmed && !friendly)
+        {
+            int charm_dur = random_range(15 + pow / 14, 27 + pow / 11)
+                            * BASELINE_DELAY;
+
+            mon_enchant charm = demon->get_ench(ENCH_CHARM);
+            charm.duration = charm_dur;
+            demon->update_ench(charm);
+
+            // Ensure that temporarily-charmed demons will outlast their charm
+            mon_enchant abj = demon->get_ench(ENCH_ABJ);
+            if (charm.duration + 100 > abj.duration)
+            {
+                abj.duration = charm.duration + 100;
+                demon->update_ench(abj);
+            }
+
+            // Affects messaging, and stuns demon a turn upon charm wearing off
+            demon->props["charmed_demon"].get_bool() = true;
+        }
     }
 
     return success;
@@ -998,7 +1019,7 @@ static bool _summon_greater_demon(int pow, god_type god, int spell, bool quiet)
     const bool friendly = (charmed && mons_demon_tier(mon) == 2);
 
     return _summon_demon_wrapper(pow, god, spell, mon,
-                                 5, friendly, charmed, quiet);
+                                 4, friendly, charmed, quiet);
 }
 
 bool summon_demon_type(monster_type mon, int pow, god_type god,
