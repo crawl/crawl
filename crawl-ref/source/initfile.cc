@@ -986,9 +986,11 @@ void game_options::reset_options()
     tile_downstairs_col   = str_to_tile_colour("#ff00ff");
     tile_upstairs_col     = str_to_tile_colour("cyan");
     tile_branchstairs_col = str_to_tile_colour("#ff7788");
-    tile_feature_col      = str_to_tile_colour("#ffcc00");
+    tile_portal_col       = str_to_tile_colour("#ffdd00");
+    tile_feature_col      = str_to_tile_colour("#997700");
     tile_trap_col         = str_to_tile_colour("#aa6644");
     tile_water_col        = str_to_tile_colour("#114455");
+    tile_deep_water_col   = str_to_tile_colour("#001122");
     tile_lava_col         = str_to_tile_colour("#552211");
     tile_excluded_col     = str_to_tile_colour("#552266");
     tile_excl_centre_col  = str_to_tile_colour("#552266");
@@ -3455,12 +3457,16 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_upstairs_col = str_to_tile_colour(field);
     else if (key == "tile_branchstairs_col")
         tile_branchstairs_col = str_to_tile_colour(field);
+    else if (key == "tile_portal_col")
+        tile_portal_col = str_to_tile_colour(field);
     else if (key == "tile_feature_col")
         tile_feature_col = str_to_tile_colour(field);
     else if (key == "tile_trap_col")
         tile_trap_col = str_to_tile_colour(field);
     else if (key == "tile_water_col")
         tile_water_col = str_to_tile_colour(field);
+    else if (key == "tile_deep_water_col")
+        tile_deep_water_col = str_to_tile_colour(field);
     else if (key == "tile_lava_col")
         tile_lava_col = str_to_tile_colour(field);
     else if (key == "tile_excluded_col")
@@ -4193,9 +4199,11 @@ static void _write_minimap_colours()
     _write_vcolour("tile_downstairs_col", Options.tile_downstairs_col);
     _write_vcolour("tile_upstairs_col", Options.tile_upstairs_col);
     _write_vcolour("tile_branchstairs_col", Options.tile_branchstairs_col);
+    _write_vcolour("tile_portal_col", Options.tile_portal_col);
     _write_vcolour("tile_feature_col", Options.tile_feature_col);
     _write_vcolour("tile_trap_col", Options.tile_trap_col);
     _write_vcolour("tile_water_col", Options.tile_water_col);
+    _write_vcolour("tile_deep_water_col", Options.tile_deep_water_col);
     _write_vcolour("tile_lava_col", Options.tile_lava_col);
     _write_vcolour("tile_excluded_col", Options.tile_excluded_col);
     _write_vcolour("tile_excl_centre_col", Options.tile_excl_centre_col);

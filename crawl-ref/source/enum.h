@@ -2135,6 +2135,8 @@ enum map_feature
     MF_EXCL_ROOT,
     MF_EXCL,
     MF_PLAYER,
+    MF_DEEP_WATER,
+    MF_PORTAL,
     MF_MAX,
 
     MF_SKIP,

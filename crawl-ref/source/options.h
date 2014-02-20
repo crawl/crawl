@@ -408,9 +408,11 @@ public:
     VColour     tile_downstairs_col;
     VColour     tile_upstairs_col;
     VColour     tile_branchstairs_col;
+    VColour     tile_portal_col;
     VColour     tile_feature_col;
     VColour     tile_trap_col;
     VColour     tile_water_col;
+    VColour     tile_deep_water_col;
     VColour     tile_lava_col;
     VColour     tile_excluded_col;
     VColour     tile_excl_centre_col;

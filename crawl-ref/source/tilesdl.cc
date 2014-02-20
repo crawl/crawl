@@ -1489,7 +1489,8 @@ void TilesFramework::update_minimap(const coord_def& gc)
         mf = get_cell_map_feature(env.map_knowledge(gc));
 
     // XXX: map_cell show have exclusion info
-    if (mf == MF_FLOOR || mf == MF_MAP_FLOOR || mf == MF_WATER)
+    if (mf == MF_FLOOR || mf == MF_MAP_FLOOR || mf == MF_WATER
+        || mf == MF_DEEP_WATER || mf == MF_LAVA)
     {
         if (is_exclude_root(gc))
             mf = MF_EXCL_ROOT;

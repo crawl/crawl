@@ -157,7 +157,8 @@ void map_cell::set_detected_item()
 
 static bool _floor_mf(map_feature mf)
 {
-    return mf == MF_FLOOR || mf == MF_WATER || mf == MF_LAVA;
+    return mf == MF_FLOOR || mf == MF_WATER || mf == MF_DEEP_WATER
+           || mf == MF_LAVA;
 }
 
 map_feature get_cell_map_feature(const map_cell& cell)

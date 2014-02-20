@@ -55,8 +55,10 @@ void MapRegion::init_colours()
     m_colours[MF_STAIR_UP]      = Options.tile_upstairs_col;
     m_colours[MF_STAIR_DOWN]    = Options.tile_downstairs_col;
     m_colours[MF_STAIR_BRANCH]  = Options.tile_branchstairs_col;
+    m_colours[MF_PORTAL]        = Options.tile_portal_col;
     m_colours[MF_FEATURE]       = Options.tile_feature_col;
     m_colours[MF_WATER]         = Options.tile_water_col;
+    m_colours[MF_DEEP_WATER]    = Options.tile_deep_water_col;
     m_colours[MF_LAVA]          = Options.tile_lava_col;
     m_colours[MF_TRAP]          = Options.tile_trap_col;
     m_colours[MF_EXCL_ROOT]     = Options.tile_excl_centre_col;

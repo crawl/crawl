@@ -162,7 +162,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
                 f.colour = f.seen_colour = ETC_SHIMMER_BLUE;
             f.dchar       = DCHAR_ARCH;
             f.map_colour  = LIGHTGREY;
-            f.minimap     = MF_STAIR_BRANCH;
+            f.minimap     = MF_PORTAL;
             f.flags      |= FFT_NOTABLE;
             if (feat == DNGN_ENTER_LABYRINTH)
                 f.flags |= FFT_EXAMINE_HINT;
@@ -182,7 +182,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
                 f.colour = f.seen_colour = ETC_SHIMMER_BLUE;
             f.dchar       = DCHAR_ARCH;
             f.map_colour  = LIGHTGREY;
-            f.minimap     = MF_STAIR_BRANCH;
+            f.minimap     = MF_PORTAL;
             break;
         }
         else if (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
@@ -288,7 +288,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     case DNGN_OPEN_SEA:
         f.dchar        = DCHAR_WALL;
         f.colour       = BLUE;
-        f.minimap      = MF_WATER;
+        f.minimap      = MF_DEEP_WATER;
         break;
 
     case DNGN_LAVA_SEA:
@@ -358,7 +358,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     case DNGN_DEEP_WATER:
         f.dchar   = DCHAR_WAVY;
         f.colour  = BLUE;
-        f.minimap = MF_WATER;
+        f.minimap = MF_DEEP_WATER;
         break;
 
     case DNGN_SHALLOW_WATER:
@@ -550,7 +550,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     case DNGN_UNKNOWN_PORTAL:
         f.colour  = LIGHTGREY;
         f.dchar   = DCHAR_ARCH;
-        f.minimap = MF_FEATURE;
+        f.minimap = MF_PORTAL;
         break;
     }
 }

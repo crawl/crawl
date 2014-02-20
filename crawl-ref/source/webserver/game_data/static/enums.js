@@ -308,6 +308,8 @@ define(function () {
     exports.MF_EXCL_ROOT = val++;
     exports.MF_EXCL = val++;
     exports.MF_PLAYER = val++;
+    exports.MF_DEEP_WATER = val++;
+    exports.MF_PORTAL = val++;
     exports.MF_MAX = val++;
 
     exports.MF_SKIP = val++;
