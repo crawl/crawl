@@ -1267,7 +1267,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     {
         if (monster *mons = create_monster(
                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
-                         6, SPELL_SUMMON_HORRIBLE_THINGS,
+                         3, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH | MG_AUTOFOE, god)))
         {
@@ -1280,7 +1280,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     {
         if (monster *mons = create_monster(
                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
-                         6, SPELL_SUMMON_HORRIBLE_THINGS,
+                         3, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH | MG_AUTOFOE, god)))
         {
@@ -3342,7 +3342,7 @@ static const summons_desc summonsdata[] =
     // General monsters
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },
     { SPELL_SUMMON_UGLY_THING,          3, 2 },
-    { SPELL_SUMMON_HORRIBLE_THINGS,     8, 2 },
+    { SPELL_SUMMON_HORRIBLE_THINGS,     8, 8 },
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_DRAGON,              2, 8 },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
