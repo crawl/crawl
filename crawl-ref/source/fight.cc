@@ -438,7 +438,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         unchivalric = UCAT_CONFUSED;
 
     // allies
-    if (def && def->friendly() && attacker->is_player()
+    if (def && def->friendly() && attacker && attacker->is_player()
         && god_hates_attacking_friend(you.religion, defender))
     {
         unchivalric = UCAT_ALLY;
