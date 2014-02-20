@@ -2549,11 +2549,6 @@ spiny frog
 Ces grenouilles font la taille d'un loup, et sont couvertes de petites épines
 et d'ergots, dégouttant de venin. Qui veut goûter du crapaud ?
 %%%%
-spiny worm
-
-Un énorme ver noir, son corps segmenté est couvert de plaques hérissées de
-pointes d'une armure chitineuse. Du venin acide coule de sa machoire dentée.
-%%%%
 spriggan
 
 Un petit humanoïde, ressemblant à un humain ou un elfe en dehors de sa taille.

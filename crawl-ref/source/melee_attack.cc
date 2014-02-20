@@ -4771,8 +4771,6 @@ void melee_attack::mons_apply_attack_flavour()
     }
 
     case AF_ACID:
-        if (attacker->type == MONS_SPINY_WORM)
-            defender->poison(attacker, 2 + random2(4));
         splash_defender_with_acid(3);
         break;
 

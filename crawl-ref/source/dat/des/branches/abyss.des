@@ -257,7 +257,7 @@ MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
 MONS:   kobold demonologist, deep elf summoner / orc sorcerer w:7
 MONS:   worker ant w:40 / goliath beetle w:20 / vampire mosquito
 KMONS:  8 = demonic crawler
-KMONS:  9 = spiny worm / emperor scorpion w:7
+KMONS:  9 = emperor scorpion
 KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
             small abomination w:15 / ugly thing w:15 / chaos spawn
 KMONS:  E = very ugly thing
@@ -1971,7 +1971,7 @@ KMONS:   0 = air elemental
 KMONS:   A = shadow wraith
 KMONS:   B = unseen horror
 KMONS:   C = giant leech
-KMONS:   D = spiny worm
+KMONS:   D = brain worm
 KMONS:   E = elephant
 KMONS:   F = catoblepas / dire elephant
 NSUBST:  J = 1/2, K = 5/6, L = 9/0, M = C/D

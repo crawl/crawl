@@ -318,7 +318,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur w:20 / centaur warrior w:2 / nessos w:1",
                 "ugly thing",
-                "spiny worm w:5 / giant leech / worm / brain worm w:5",
+                "giant leech / worm / brain worm w:5",
                 "ogre w:15 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
                 "troll / deep troll w:12 / iron troll w:2",
                 "fire drake / swamp drake / steam dragon / swamp dragon /\

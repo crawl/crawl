@@ -134,10 +134,10 @@ ENDMAP
 # Should work without explicit floor margin (dp)
 NAME:  hive_lemuel
 DEPTH: D:9-, Spider
-MONS:  killer bee, yellow wasp, red wasp, spiny worm
+MONS:  killer bee, yellow wasp, red wasp
 SUBST: ? : .w
 SUBST: 1 = 1 a:2
-SUBST: 1 : 1:15 2 3:2 4:1
+SUBST: 1 : 1:15 2 3:2
 SUBST: * : * R:3
 KITEM: R = w:2 honeycomb / w:1 royal jelly
 COLOUR:a = yellow

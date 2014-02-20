@@ -521,7 +521,7 @@ KMONS:   2 = soldier ant / goliath beetle / vampire mosquito w:5
 KMONS:   3aAdD = brain worm / boulder beetle w:5
 KMONS:   4bB = demonic crawler
 KMONS:   5eE = place:Spider:$ zombie
-KMONS:   6cCfF = spiny worm / emperor scorpion w:8
+KMONS:   6cCfF = wolf spider / emperor scorpion w:8
 KMONS:   0% = crawling corpse hd:3 / nothing
 KITEM:   fF = star_item w:8 / superb_item w:2
 KITEM:   6 = superb_item w:5 / any armour good_item ego:poison_resistance w:5
@@ -1052,7 +1052,7 @@ NSUBST: a = 1:} / 1:] / 1:) / 1:1 / *:.
 KMONS:  bcdefghi = tarantella / redback / wolf spider / \
         jumping spider / orb spider / demonic crawler / \
         scorpion / emperor scorpion / \
-        trapdoor spider / spiny worm / yellow wasp / \
+        trapdoor spider / yellow wasp / \
         red wasp / giant mite / nothing w:100
 SUBST: X = xxxx^....0
 KFEAT: ^ = web / floor w:20

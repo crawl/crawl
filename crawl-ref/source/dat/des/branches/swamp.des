@@ -299,7 +299,7 @@ NAME:    hangedman_swamp_wriggling
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 KMONS:   0 = swamp worm
-MONS:    giant leech, spiny worm
+MONS:    giant leech, worm
 KFEAT:   0 = shallow_water
 KFEAT:   t = mangrove
 SHUFFLE: })

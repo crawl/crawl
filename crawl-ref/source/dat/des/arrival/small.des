@@ -2515,7 +2515,7 @@ SHUFFLE: 16
 MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / green rat / orange rat / quokka
 MONS:    worker ant / soldier ant / queen ant
-MONS:    spiny worm / brain worm / worm / giant leech
+MONS:    brain worm / worm / giant leech
 MONS:    lindwurm / death drake / komodo dragon / basilisk / swamp drake
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 : else
@@ -2524,7 +2524,7 @@ MONS:    giant gecko / iguana / giant newt / crocodile / komodo dragon
 MONS:    hog / jackal / wolf / hound
 MONS:    giant cockroach / worker ant / butterfly / killer bee /\
          redback / giant mite
-MONS:    swamp worm / lindwurm / worm / spiny worm
+MONS:    swamp worm / lindwurm / worm
 MONS:    swamp drake / hydra / wyvern / fire drake
 MONS:    polar bear / grizzly bear / black bear
 MONS:    black mamba / water moccasin / anaconda / salamander
