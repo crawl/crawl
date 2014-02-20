@@ -241,27 +241,14 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
     fail_check();
     monster_type mon = MONS_PROGRAM_BUG;
 
-    const int chance = random2(pow);
-    if (chance < 15)
-        mon = MONS_HOUND;
+    const int chance = pow + random_range(-10, 10);
+
+    if (chance > 46)
+        mon = MONS_WARG;
+    else if (chance > 28)
+        mon = MONS_WOLF;
     else
-    {
-        switch (chance % 7)
-        {
-        case 0:
-            mon = MONS_WARG;
-            break;
-
-        case 1:
-        case 2:
-            mon = MONS_WOLF;
-            break;
-
-        default:
-            mon = MONS_HOUND;
-            break;
-        }
-    }
+        mon = MONS_HOUND;
 
     const int dur = min(2 + (random2(pow) / 4), 6);
 
