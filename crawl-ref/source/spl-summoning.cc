@@ -1255,25 +1255,15 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
         lose_stat(STAT_INT, 1 + random2(3), false, "summoning horrible things");
     }
 
-    int how_many_small =
-        stepdown_value(2 + (random2(pow) / 10) + (random2(pow) / 10),
-                       2, 2, 6, -1);
-    int how_many_big = 0;
+    int num_abominations = random_range(2, 4) + x_chance_in_y(pow, 200);
+    int num_tmons = random2(pow) > 120 ? 2 : random2(pow) > 50 ? 1 : 0;
 
-    // No more than 2 tentacled monstrosities.
-    while (how_many_small > 2 && how_many_big < 2 && one_chance_in(3))
-    {
-        how_many_small -= 2;
-        how_many_big++;
-    }
-
-    // No more than 8 summons.
-    how_many_small = min(8, how_many_small);
-    how_many_big   = min(8, how_many_big);
+    if (num_tmons == 0)
+        num_abominations++;
 
     int count = 0;
 
-    while (how_many_small-- > 0)
+    while (num_abominations-- > 0)
     {
         if (monster *mons = create_monster(
                mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
@@ -1286,7 +1276,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
         }
     }
 
-    while (how_many_big-- > 0)
+    while (num_tmons-- > 0)
     {
         if (monster *mons = create_monster(
                mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
