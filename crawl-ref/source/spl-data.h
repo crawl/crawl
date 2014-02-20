@@ -851,7 +851,7 @@ struct spell_desc
      SPTYP_ICE | SPTYP_SUMMONING,
      SPFLAG_BATTLE,
      4,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
