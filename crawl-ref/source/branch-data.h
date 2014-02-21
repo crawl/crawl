@@ -36,7 +36,7 @@ const Branch branches[NUM_BRANCHES] =
       true, BROWN, BROWN,
       'O', false, 4 },
 
-    { BRANCH_ELF, BRANCH_ORC, 3, 4, 3, 15,
+    { BRANCH_ELF, BRANCH_ORC, 3, 4, 7, 15,
       0, 0,
       DNGN_ENTER_ELF, DNGN_RETURN_FROM_ELF,
       "Elven Halls", "the Elven Halls", "Elf",
@@ -54,7 +54,7 @@ const Branch branches[NUM_BRANCHES] =
       'K', false, 0 },
 #endif
 
-    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 8, 10,
+    { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 10, 10,
       0, 0,
       DNGN_ENTER_LAIR, DNGN_RETURN_FROM_LAIR,
       "Lair", "the Lair of Beasts", "Lair",
@@ -102,7 +102,7 @@ const Branch branches[NUM_BRANCHES] =
       true, GREEN, BROWN,
       'M', true, -5 },
 
-    { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 5, 19,
+    { BRANCH_VAULTS, BRANCH_DUNGEON, 13, 14, 8, 19,
       0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
       "Vaults", "the Vaults", "Vaults",
