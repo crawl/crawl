@@ -3,9 +3,10 @@
 # The Ice Cave (Eino)
 #
 #
-# Ice Cave is aimed to appear at somewhere in the middle game. It should be
-# fairly challenging, but also allow retreating. The entries shouldn't be out
-# of depth.
+# Ice Cave is aimed to appear at somewhere in the middle game. Two challenge
+# levels exist: easy and hard. See ice_cave_difficulty and entry default depth
+# for depths. Both versions should be fairly challenging, but also allow
+# retreating. The entries shouldn't be out of depth.
 #
 # Flavour: white colours, ice monsters, appropriate clouds.
 # The escape is at the start. The player can back away if s/he decides
@@ -56,25 +57,19 @@ end
 
 -- Figure out if an easy or a hard ice cave should be used. Players
 -- that enter the portal deeper in the dungeon end up in the hard ones.
--- Possible depths for easy ice caves are D:11-14, Lair, Orc.
--- Hard ice caves are in D:14-19, Elf, and Vaults. Those depths are
--- set in the entry vault default-depth.
+-- Possible depths for easy ice caves are D:11-16, Lair, Orc. Hard ice caves
+-- are in Elf and the Lair roulette branches. Those depths are set in the entry
+-- vault default-depth.
+--
+-- Returns true for hard difficulty.
 function ice_cave_difficulty()
 
-  -- First default to easy destinations.
-  local hard = false
-
-  -- Handle overlapping depths for easy and hard maps with a coinflip.
-  if you.branch() == "D" and you.depth() == 14 then
-      hard = crawl.coinflip()
+  if you.branch() == "D" or you.branch() == "Lair" or
+     you.branch() == "Orc" then
+       return false
   end
 
-  if you.branch() == "D" and you.depth() >= 15 or
-     you.branch() == "Elf" or you.branch() == "Vaults" then
-      hard = true
-  end
-
-  return hard
+  return true
 end
 
 -- Find the slave of the teleporter and move to it.
@@ -228,7 +223,7 @@ end
 
 # Entries ##########################################
 
-default-depth: D:11-, Lair, Orc, Elf, Vaults:1-4
+default-depth: D:11-, Lair, Orc, Elf, Swamp, Shoals, Snake, Spider
 
 NAME:   portal_ice_cave_entry_pillars_01
 WEIGHT: 4
@@ -273,7 +268,6 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_imps
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:11-14, Lair:1-6, Orc
 : ice_cave_portal(_G)
 MONS:   white imp
 MAP
@@ -286,7 +280,6 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_beasts
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:11-14, Lair:1-6, Orc
 : ice_cave_portal(_G)
 MONS:   ice beast
 MAP
@@ -299,7 +292,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_animals_and_master
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-, Lair:6-, Orc:$, Elf
+DEPTH:  D:14-, Lair:6-, Orc, Elf
 : ice_cave_portal(_G)
 MONS:   wolf / yak / nothing w:1
 MONS:   yak / polar bear w:5 / nothing w:1
@@ -324,7 +317,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-, Elf
+DEPTH:  D:14-, Elf, Snake
 : ice_cave_portal(_G)
 MONS:   ice beast / freezing wraith w:2 / nothing w:2
 MONS:   freezing wraith / nothing w:3
@@ -343,7 +336,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_demonic_guard
 TAGS:   patrolling no_monster_gen
-DEPTH:  D:14-, Elf
+DEPTH:  D:14-, Elf, Snake
 : ice_cave_portal(_G)
 MONS:   ice devil
 MAP
@@ -362,7 +355,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_01
 WEIGHT: 5
-DEPTH:  D:11-, Elf
+DEPTH:  D:11-, Elf, Snake
 : ice_cave_portal(_G)
 MONS:   ice statue
 MAP
@@ -379,7 +372,7 @@ ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_02
 WEIGHT: 5
-DEPTH:  D:14-, Elf:2-, Vaults:1-4
+DEPTH:  D:14-, Elf, Swamp, Snake, Shoals, Spider
 : ice_cave_portal(_G)
 MONS:   ice statue, ice statue w:9 / patrolling ice dragon w:1
 MAP
@@ -397,7 +390,7 @@ ENDMAP
 NAME:   portal_ice_cave_entry_dragon
 TAGS:   no_monster_gen
 WEIGHT: 4
-DEPTH:  D:14-, Elf
+DEPTH:  D:14-, Lair:6-
 MONS:   ice dragon
 : ice_cave_portal(_G)
 MAP
@@ -414,7 +407,7 @@ ENDMAP
 NAME:   portal_ice_cave_entry_frozen_things
 TAGS:   no_monster_gen
 WEIGHT: 4
-DEPTH:  D:14-, Elf:2-, Vaults:1-4
+DEPTH:  D:14-, Elf, Swamp, Shoals, Snake, Spider
 MONS:   freezing wraith
 MONS:   azure jelly / freezing wraith / nothing
 : ice_cave_portal(_G)
@@ -433,7 +426,7 @@ ENDMAP
 
 NAME:     portal_ice_cave_entry_ugly_swarm
 TAGS:     no_monster_gen no_item_gen
-DEPTH:    D:14-, Elf, Vaults:1-4
+DEPTH:    D:14-, Elf, Swamp, Shoals, Snake, Spider
 WEIGHT:   2
 SUBST:    : = 1.
 NSUBST:   2 = 1:2 / 1:12 / * = 1.
