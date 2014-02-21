@@ -533,22 +533,11 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
+static monster_type _choose_dragon_type(int pow, god_type god, bool player)
 {
-    // Dragons are always friendly. Dragon type depends on power and
-    // random chance, with two low-tier dragons possible at high power.
-    // Duration fixed at 6.
-
-    fail_check();
-    bool success = false;
-
-    if (god == GOD_NO_GOD)
-        god = caster->deity();
-
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int chance = random2(pow);
-    int how_many = 1;
 
     if (chance >= 80 || one_chance_in(6))
         mon = (coinflip()) ? MONS_GOLDEN_DRAGON : MONS_QUICKSILVER_DRAGON;
@@ -566,11 +555,132 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
             break;
         }
     else
-    {
         mon = (coinflip()) ? MONS_FIRE_DRAGON : MONS_ICE_DRAGON;
-        if (pow >= 100)
-            how_many = 2;
+
+    // For good gods, switch away from shadow dragons (and, for TSO,
+    // golden dragons, since they poison) to storm/iron dragons.
+    if (player && player_will_anger_monster(mon)
+        || (god == GOD_SHINING_ONE && mon == MONS_GOLDEN_DRAGON))
+    {
+        mon = (coinflip()) ? MONS_STORM_DRAGON : MONS_IRON_DRAGON;
     }
+
+    return mon;
+}
+
+spret_type cast_dragon_call(int pow, bool fail)
+{
+    if (you.duration[DUR_DRAGON_CALL_COOLDOWN])
+    {
+        mpr("You cannot issue another dragon's call so soon.");
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    mpr("You call out to the draconic realm and the roar of the horde responds!");
+    noisy(15, you.pos());
+
+    you.duration[DUR_DRAGON_CALL] = (15 + pow / 5 + random2(15)) * BASELINE_DELAY;
+
+    return SPRET_SUCCESS;
+}
+
+static bool _place_dragon()
+{
+    const int pow = calc_spell_power(SPELL_DRAGON_CALL, true);
+    monster_type mon = _choose_dragon_type(pow, you.religion, true);
+
+    vector<monster*> targets;
+
+    // Pick a random hostile in sight
+    for (monster_near_iterator mi(&you, LOS_NO_TRANS); mi; ++mi)
+    {
+        if (!mons_aligned(&you, *mi))
+            targets.push_back(*mi);
+    }
+
+    shuffle_array(targets);
+
+    // Attempt to place adjacent to the first chosen hostile. If there is no
+    // valid spot, move on to the next one.
+    for (unsigned int i = 0; i < targets.size(); ++i)
+    {
+        // Chose a random viable adjacent spot to the select target
+        vector<coord_def> spots;
+        for (adjacent_iterator ai(targets[i]->pos()); ai; ++ai)
+        {
+            if (monster_habitable_grid(MONS_FIRE_DRAGON, grd(*ai)) && !actor_at(*ai))
+                spots.push_back(*ai);
+        }
+
+        // Now try to create the actual dragon
+        if (spots.size() > 0)
+        {
+            const coord_def pos = spots[random2(spots.size())];
+
+            if (monster *dragon = create_monster(mgen_data(mon, BEH_COPY, &you,
+                                                           2, SPELL_DRAGON_CALL,
+                                                           pos, MHITYOU,
+                                                           MG_FORCE_PLACE | MG_AUTOFOE)))
+            {
+                dec_mp(random_range(2, 3));
+
+                if (you.see_cell(dragon->pos()))
+                    mpr("A dragon arrives to answer your call!");
+
+                // The dragon is allowed to act immediately here
+                dragon->flags &= ~MF_JUST_SUMMONED;
+
+                if (!enough_mp(2, true))
+                {
+                    mprf(MSGCH_DURATION, "Having expended the last of your "
+                                         "magical power, your connection to the "
+                                         "dragon horde fades.");
+                    you.duration[DUR_DRAGON_CALL] = 0;
+                    you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
+                }
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+void do_dragon_call(int time)
+{
+    noisy(15, you.pos());
+
+    while (time > you.attribute[ATTR_NEXT_DRAGON_TIME])
+    {
+        time -= you.attribute[ATTR_NEXT_DRAGON_TIME];
+        _place_dragon();
+        you.attribute[ATTR_NEXT_DRAGON_TIME] = 3 + random2(5)
+                                               + count_summons(&you, SPELL_DRAGON_CALL) * 5;
+    }
+    you.attribute[ATTR_NEXT_DRAGON_TIME] -= time;
+}
+
+spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
+{
+    // Dragons are always friendly. Dragon type depends on power and
+    // random chance, with two low-tier dragons possible at high power.
+    // Duration fixed at 6.
+
+    fail_check();
+    bool success = false;
+
+    if (god == GOD_NO_GOD)
+        god = caster->deity();
+
+    int how_many = 1;
+    monster_type mon = _choose_dragon_type(pow, god, caster->is_player());
+
+    if (pow >= 100 && (mon == MONS_FIRE_DRAGON || mon == MONS_ICE_DRAGON))
+        how_many = 2;
+
     // For good gods, switch away from shadow dragons (and, for TSO,
     // golden dragons, since they poison) to storm/iron dragons.
     if (player_will_anger_monster(mon)

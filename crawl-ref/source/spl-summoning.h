@@ -70,6 +70,9 @@ coord_def find_gateway_location(actor* caster);
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail);
 spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail);
 
+spret_type cast_dragon_call(int pow, bool fail);
+void do_dragon_call(int time);
+
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     actor *as = NULL, string nas = "",

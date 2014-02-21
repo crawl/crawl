@@ -163,6 +163,10 @@ static duration_def duration_data[] =
       LIGHTBLUE, "PProj", "portal projectile", "You are teleporting projectiles to their destination." },
     { DUR_FORESTED, false,
       YELLOW, "Forest", "", "" },
+    { DUR_DRAGON_CALL, false,
+      WHITE, "Dragoncall", "dragon's call", "You are beckoning forth a horde of dragons." },
+    { DUR_DRAGON_CALL_COOLDOWN, false,
+      RED, "Dragoncall", "", "" },
 };
 
 static int duration_index[NUM_DURATIONS];

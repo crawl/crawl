@@ -320,6 +320,7 @@ enum attribute_type
     ATTR_PORTAL_PROJECTILE,    // Accuracy bonus during portal projectile
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
+    ATTR_NEXT_DRAGON_TIME,     // aut remaining until Dragon's Call summons another
     NUM_ATTRIBUTES
 };
 
@@ -1662,6 +1663,8 @@ enum duration_type
     DUR_MAGIC_SAPPED,
     DUR_PORTAL_PROJECTILE,
     DUR_FORESTED,
+    DUR_DRAGON_CALL,
+    DUR_DRAGON_CALL_COOLDOWN,
     NUM_DURATIONS
 };
 
@@ -4029,6 +4032,7 @@ enum spell_type
     SPELL_RANDOM_BOLT,
     SPELL_CLOUD_CONE,
     SPELL_WEAVE_SHADOWS,
+    SPELL_DRAGON_CALL,
     NUM_SPELLS
 };
 
