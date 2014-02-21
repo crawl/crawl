@@ -5228,7 +5228,6 @@ NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item demon blade /\
             good_item claymore / good_item bastard sword
 KFEAT:  S = known teleport trap
-NSUBST: n = n/cbn
 : if you.branch() == "Orc" then
 NSUBST: k = 1:o / *:k
 KMONS:  k = orc warrior / orc knight w:5 / orc w:1
@@ -5271,9 +5270,9 @@ KMONS: o = Blork the orc / orc warrior; great sword | long sword . chain mail . 
 MAP
 kkkkkkk
 kkkkkkk
-kknnnkk
-kknSnkk
-kknnnkk
+kkmmmkk
+kkmSmkk
+kkmmmkk
 kkkkkkk
 kkkkkkk
 ENDMAP
