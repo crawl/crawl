@@ -28,6 +28,9 @@ monster* mons_place(mgen_data mg);
 
 bool needs_resolution(monster_type mon_type);
 
+const monster_type fixup_zombie_type(const monster_type cls,
+                                     const monster_type base_type);
+
 /* ***********************************************************************
  * This isn't really meant to be a public function.  It is a low level
  * monster placement function used by dungeon building routines and

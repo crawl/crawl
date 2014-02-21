@@ -2955,7 +2955,9 @@ static habitat_type _mons_class_habitat(monster_type mc,
 
 habitat_type mons_habitat(const monster* mon, bool real_amphibious)
 {
-    return _mons_class_habitat(mons_base_type(mon), real_amphibious);
+    return _mons_class_habitat(fixup_zombie_type(mon->type,
+                                                 mons_base_type(mon)),
+                               real_amphibious);
 }
 
 habitat_type mons_class_primary_habitat(monster_type mc)

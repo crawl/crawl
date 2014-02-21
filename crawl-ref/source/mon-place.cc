@@ -110,8 +110,10 @@ bool feat_compatible(dungeon_feature_type feat_wanted,
 bool monster_habitable_grid(const monster* mon,
                             dungeon_feature_type actual_grid)
 {
-    // Zombified monsters enjoy the same habitat as their original.
-    const monster_type mt = mons_base_type(mon);
+    // Zombified monsters enjoy the same habitat as their original,
+    // except lava-based monsters.
+    const monster_type mt = fixup_zombie_type(mon->type,
+                                              mons_base_type(mon));
 
     return monster_habitable_grid(mt,
                                   actual_grid,
@@ -730,6 +732,17 @@ static int _is_near_stairs(coord_def &p)
     return result;
 }
 
+// For generation purposes, don't treat simulacra of lava enemies as
+// being able to place on lava.
+const monster_type fixup_zombie_type(const monster_type cls,
+                                         const monster_type base_type)
+{
+    return (mons_class_is_zombified(cls)
+            && mons_class_secondary_habitat(base_type) != HT_LAVA)
+            ? base_type
+            : cls;
+}
+
 // Checks if the monster is ok to place at mg_pos. If force_location
 // is true, then we'll be less rigorous in our checks, in particular
 // allowing land monsters to be placed in shallow water and water
@@ -744,8 +757,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
         return false;
     }
 
-    const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                                  : mg.cls);
+    const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
     if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
         || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
@@ -1183,8 +1195,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (!mon)
         return 0;
 
-    const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                                  : mg.cls);
+    const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
@@ -1783,6 +1794,8 @@ monster_type pick_random_zombie()
 static bool _good_zombie(monster_type base, monster_type cs,
                          const coord_def& pos)
 {
+    base = fixup_zombie_type(cs, base);
+
     // Actually pick a monster that is happy where we want to put it.
     // Fish zombies on land are helpless and uncool.
     if (in_bounds(pos) && !monster_habitable_grid(base, grd(pos)))
@@ -3711,8 +3724,7 @@ monster* create_monster(mgen_data mg, bool fail_msg)
 {
     ASSERT(in_bounds(mg.pos)); // otherwise it's a guaranteed fail
 
-    const monster_type montype = mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                                 : mg.cls;
+    const monster_type montype = fixup_zombie_type(mg.cls, mg.base_type);
 
     monster *summd = 0;
 

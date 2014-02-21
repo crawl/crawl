@@ -205,9 +205,9 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    monster_type type = static_cast<monster_type>(mspec.type);
-    if (mons_class_is_zombified(type))
-        type = mspec.monbase;
+    monster_type type =
+        fixup_zombie_type(static_cast<monster_type>(mspec.type),
+                          mspec.monbase);
 
     coord_def place = find_newmons_square(type, you.pos());
     if (!in_bounds(place))
