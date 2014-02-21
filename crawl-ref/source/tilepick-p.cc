@@ -563,11 +563,14 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     {
     case SP_HUMAN:
         return TILEP_BASE_HUMAN;
+    case SP_ELF:
+    case SP_GREY_ELF:
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
         return TILEP_BASE_ELF;
     case SP_DEEP_ELF:
         return TILEP_BASE_DEEP_ELF;
+    case SP_HILL_DWARF:
     case SP_MOUNTAIN_DWARF:
         return TILEP_BASE_DWARF;
     case SP_HALFLING:
@@ -583,6 +586,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_NAGA:
         return TILEP_BASE_NAGA;
     case SP_OGRE:
+    case SP_OGRE_MAGE:
         return TILEP_BASE_OGRE;
     case SP_TROLL:
         return TILEP_BASE_TROLL;

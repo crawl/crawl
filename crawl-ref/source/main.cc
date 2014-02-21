@@ -2636,6 +2636,8 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_STONESKIN, delay, "Your skin feels tender."))
         you.redraw_armour_class = true;
 
+    _decrement_a_duration(DUR_GLAMOUR, delay);
+
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
         you_teleport_now(true);

@@ -227,6 +227,7 @@ static string _stk_weight()
     switch (Skill_Species)
     {
     case SP_OGRE:
+    case SP_OGRE_MAGE:
     case SP_TROLL:
         return "Heavy";
 
@@ -245,6 +246,7 @@ static string _stk_weight()
 
     case SP_HALFLING:
     case SP_KOBOLD:
+    case SP_GNOME:
         return "Feather";
 
     case SP_SPRIGGAN:
@@ -372,7 +374,7 @@ string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_SPELLCASTING:
-            if (species == SP_OGRE)
+            if (player_genus(GENPC_OGREISH, static_cast<species_type>(species)))
                 result = "Ogre Mage";
             break;
 

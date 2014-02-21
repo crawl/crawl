@@ -836,6 +836,13 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             default:
                 return CC_RESTRICTED;
         }
+    case SP_ELF:
+    case SP_HILL_DWARF:
+    case SP_OGRE_MAGE:
+    case SP_GREY_ELF:
+    case SP_GNOME:
+    case SP_MOUNTAIN_DWARF:
+        return CC_RESTRICTED;
     default:
         return CC_BANNED;
     }

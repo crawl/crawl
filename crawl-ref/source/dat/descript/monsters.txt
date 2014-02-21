@@ -1301,6 +1301,12 @@ gnoll shaman
 A haggard old gnoll, wise and wicked. Its strange chants and ululations send
 other gnolls into a wild frenzy.
 %%%%
+gnome
+
+A small, stout humanoid said to be good at finding its way through underground
+passages. Once commonly found in dungeons across the world, gnomes are now on
+the verge of extinction. This one may be the last of its kind.
+%%%%
 goblin
 
 A short, ugly and unfriendly humanoid: squat, broad, flat-nosed,

@@ -59,6 +59,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     switch (you.species)
     {
     case SP_OGRE:
+    case SP_OGRE_MAGE:
     case SP_TROLL:
     case SP_SPRIGGAN:
         if (arm == ARM_GLOVES

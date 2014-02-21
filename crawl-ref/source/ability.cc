@@ -44,6 +44,7 @@
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
+#include "mon-ench.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -208,6 +209,7 @@ static const ability_def Ability_List[] =
     // NON_ABILITY should always come first
     { ABIL_NON_ABILITY, "No ability", 0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_SPIT_POISON, "Spit Poison", 0, 0, 40, 0, 0, ABFLAG_BREATH},
+    { ABIL_GLAMOUR, "Glamour", 5, 0, 40, 0, 0, ABFLAG_DELAY },
 
     { ABIL_BLINK, "Blink", 0, 50, 50, 0, 0, ABFLAG_NONE},
     { ABIL_WISP_BLINK, "Blink", 2, 0, 0, 0, 0, ABFLAG_CONF_OK},
@@ -968,6 +970,10 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     // begin species abilities - some are mutagenic, too {dlb}
+    case ABIL_GLAMOUR:
+        failure = 50 - (you.experience_level * 2);
+        break;
+
     case ABIL_SPIT_POISON:
         failure = ((you.species == SP_NAGA) ? 20 : 40)
                         - 10 * player_mutation_level(MUT_SPIT_POISON)
@@ -1640,6 +1646,15 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
+    case ABIL_GLAMOUR:
+        if (you.duration[DUR_GLAMOUR])
+        {
+            if (!quiet)
+                canned_msg(MSG_CANNOT_DO_YET);
+            return false;
+        }
+        return true;
+
     default:
         return true;
     }
@@ -1839,6 +1854,83 @@ static bool _sticky_flame_can_hit(const actor *act)
     }
     else
         return false;
+}
+
+static int _glamour_monsters(coord_def where, int pow, int, actor *agent)
+{
+    monster* victim = monster_at(where);
+
+    if (!victim
+        || one_chance_in(5)
+        || mons_intel(victim) < I_NORMAL
+        || victim->holiness() != MH_NATURAL
+        || mons_genus(victim->type) == MONS_GARGOYLE)
+    {
+        return 0;
+    }
+
+    mon_body_shape shape = get_mon_shape(victim);
+    if (shape < MON_SHAPE_HUMANOID || shape > MON_SHAPE_NAGA)
+        return 0;
+
+    if (mons_genus(victim->type) == MONS_ORC
+        || mons_genus(victim->type) == MONS_ELF
+        || victim->type == MONS_BOGGART)
+    {
+        pow = (pow / 2) + 1;
+    }
+
+    if (victim->check_res_magic(pow) > 0)
+        return 0;
+
+    switch (random2(6))
+    {
+        case 0:
+            victim->add_ench(ENCH_FEAR);
+            break;
+        case 1:
+        case 2:
+            victim->add_ench(ENCH_CONFUSION);
+            break;
+        case 3:
+        case 4:
+            victim->add_ench(ENCH_CHARM);
+            break;
+        case 5:
+            if (victim->has_ench(ENCH_SLEEP_WARY))
+                return 0;
+            victim->behaviour = BEH_SLEEP;
+            victim->add_ench(ENCH_SLEEP_WARY);
+            break;
+    }
+
+    if (!one_chance_in(4) && you.can_see(victim))
+    {
+        switch(random2(4))
+        {
+            case 0:
+                simple_monster_message(victim, " looks dazed.");
+                break;
+            case 1:
+                simple_monster_message(victim, " blinks several times.");
+                break;
+            case 2:
+                mprf("%s rubs %s eye%s.",
+                     victim->name(DESC_THE).c_str(),
+                     victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     mons_genus(victim->type) == MONS_CYCLOPS ? "" : "s");
+            case 3:
+                mprf("%s tilts %s head%s.",
+                     victim->name(DESC_THE).c_str(),
+                     victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     victim->type == MONS_TWO_HEADED_OGRE
+                     || victim->type == MONS_ETTIN
+                         ? "s" : "");
+                break;
+        }
+    }
+
+    return 1;
 }
 
 static bool _do_ability(const ability_def& abil)
@@ -2080,6 +2172,15 @@ static bool _do_ability(const ability_def& abil)
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
         break;
     }
+
+    case ABIL_GLAMOUR:
+        mpr("You use your Elvish wiles.");
+        apply_area_visible(_glamour_monsters,
+                           10 + random2(you.experience_level)
+                              + random2(you.experience_level),
+                              &you);
+        you.duration[DUR_GLAMOUR] = 20 + random2avg(13, 3);
+        break;
 
     case ABIL_SPIT_POISON:      // Naga + spit poison mutation
         power = you.experience_level
@@ -3320,6 +3421,13 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // Species-based abilities.
     if (you.species == SP_MUMMY && you.experience_level >= 13)
         _add_talent(talents, ABIL_MUMMY_RESTORATION, check_confused);
+
+    if (!form_changed_physiology()
+        && (you.species == SP_GREY_ELF && you.experience_level >= 5
+            || you.species == SP_HIGH_ELF && you.experience_level >= 15))
+    {
+        _add_talent(talents, ABIL_GLAMOUR, check_confused);
+    }
 
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);

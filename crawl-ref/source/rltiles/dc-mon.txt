@@ -994,6 +994,8 @@ deep_dwarf MONS_DEEP_DWARF
 deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
 %sdir mon/unique
 jorgrun MONS_JORGRUN
+%sdir mon
+gnome MONS_GNOME
 
 ## Small zombified monsters ('z')
 %sdir mon/undead

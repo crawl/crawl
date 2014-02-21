@@ -1110,6 +1110,13 @@ gnoll shaman
 Un vieux gnoll blême, sage et mauvais. Ses chants étranges et ses youyous font
 entrer les autres gnolls dans une frénésie sauvage.
 %%%%
+gnome
+
+Un humanoïde petit mais solide, connu pour réussir à trouver son chemin dans
+les passages souterrains. Auparavant courant dans tous les donjons du monde
+entier, les gnomes sont maintenant en voie d'extinction. Celui-là est
+probablement le dernier de son espèce.
+%%%%
 goblin
 
 Un humanoïde petit, moche et fort peu amical. Courtaud, large, à la peau blême

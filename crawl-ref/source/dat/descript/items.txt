@@ -738,6 +738,7 @@ javelin
 This lightweight spear is designed for throwing and can cause serious injury.
 {{
     if you.race() == "Halfling"
+        or you.race() == "Gnome"
         or you.race() == "Kobold"
         or you.race() == "Spriggan"
     then

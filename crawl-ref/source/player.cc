@@ -707,7 +707,7 @@ bool you_can_wear(int eq, bool special_armour)
         // These species cannot wear gloves.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE)
+            || player_genus(GENPC_OGREISH))
         {
             return false;
         }
@@ -728,7 +728,7 @@ bool you_can_wear(int eq, bool special_armour)
 #if TAG_MAJOR_VERSION == 34
             || you.species == SP_DJINNI
 #endif
-            || you.species == SP_OGRE)
+            || player_genus(GENPC_OGREISH))
         {
             return false;
         }
@@ -744,7 +744,7 @@ bool you_can_wear(int eq, bool special_armour)
             return true;
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE)
+            || player_genus(GENPC_OGREISH))
         {
             return false;
         }
@@ -768,7 +768,7 @@ bool you_can_wear(int eq, bool special_armour)
         }
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE
+            || player_genus(GENPC_OGREISH)
             || player_genus(GENPC_DRACONIAN))
         {
             return false;
@@ -3185,7 +3185,26 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_HIGH_ELF:
+                // Glamour
+                if (you.experience_level == 15)
+                    mprf(MSGCH_INTRINSIC_GAIN, "You feel charming!");
+
                 if (!(you.experience_level % 3))
+                {
+                    modify_stat((coinflip() ? STAT_INT
+                                            : STAT_DEX), 1, false,
+                                "level gain");
+                }
+                break;
+
+            case SP_GREY_ELF:
+                // Glamour
+                if (you.experience_level == 5)
+                    mprf(MSGCH_INTRINSIC_GAIN, "You feel charming!");
+
+                // deliberate fall-through
+            case SP_ELF:
+                if (!(you.experience_level % 4))
                 {
                     modify_stat((coinflip() ? STAT_INT
                                             : STAT_DEX), 1, false,
@@ -3205,6 +3224,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                                             : STAT_DEX), 1, false,
                                 "level gain");
                 }
+                break;
+
+            case SP_HILL_DWARF:
+            case SP_MOUNTAIN_DWARF:
+                if (!(you.experience_level % 4))
+                    modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_DEEP_DWARF:
@@ -3291,6 +3316,21 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 {
                     mprf(MSGCH_INTRINSIC_GAIN,
                          "Your tail grows strong enough to constrict your enemies.");
+                }
+                break;
+
+            case SP_GNOME:
+                if (you.experience_level == 9
+                    || you.experience_level == 18)
+                {
+                    perma_mutate(MUT_PASSIVE_MAPPING, 1, "level up");
+                }
+
+                if (!(you.experience_level % 4))
+                {
+                    modify_stat(coinflip() ? STAT_INT
+                                           : STAT_DEX, 1, false,
+                                "level gain");
                 }
                 break;
 
@@ -3748,6 +3788,7 @@ int check_stealth(void)
         {
         case SP_TROLL:
         case SP_OGRE:
+        case SP_OGRE_MAGE:
         case SP_CENTAUR:
 #if TAG_MAJOR_VERSION == 34
         case SP_DJINNI:
@@ -3773,6 +3814,7 @@ int check_stealth(void)
             break;
         case SP_HALFLING:
         case SP_KOBOLD:
+        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_NAGA:       // not small but very good at stealth
         case SP_FELID:
@@ -7086,9 +7128,12 @@ int player_res_magic(bool calc_unid, bool temp)
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
+    case SP_MOUNTAIN_DWARF:
+    case SP_HILL_DWARF:
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
+    case SP_OGRE_MAGE:
     case SP_FORMICID:
         rm = you.experience_level * 4;
         break;
@@ -7098,6 +7143,7 @@ int player_res_magic(bool calc_unid, bool temp)
         rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
+    case SP_GNOME:
     case SP_DEEP_DWARF:
     case SP_FELID:
         rm = you.experience_level * 6;

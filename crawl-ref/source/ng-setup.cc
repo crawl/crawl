@@ -59,14 +59,19 @@ static void _species_stat_init(species_type which_species)
     case SP_DEMIGOD:            s = 11; i = 12; d = 11;      break;  // 34
     case SP_DEMONSPAWN:         s =  8; i =  9; d =  8;      break;  // 25
 
+    case SP_ELF:                s =  7; i = 10; d = 10;      break;  // 27
     case SP_HIGH_ELF:           s =  7; i = 11; d = 10;      break;  // 28
+    case SP_GREY_ELF:           s =  6; i = 11; d = 10;      break;  // 27
     case SP_DEEP_ELF:           s =  5; i = 12; d = 10;      break;  // 27
     case SP_SLUDGE_ELF:         s =  8; i =  9; d =  9;      break;  // 26
 
+    case SP_HILL_DWARF:         s = 12; i =  5; d =  6;      break;  // 23
+    case SP_MOUNTAIN_DWARF:     s = 11; i =  6; d =  7;      break;  // 24
     case SP_DEEP_DWARF:         s = 11; i =  8; d =  8;      break;  // 27
 
     case SP_TROLL:              s = 15; i =  4; d =  5;      break;  // 24
-    case SP_OGRE:               s = 12; i =  7; d =  5;      break;  // 24
+    case SP_OGRE:               s = 14; i =  5; d =  5;      break;  // 24
+    case SP_OGRE_MAGE:          s =  9; i =  9; d =  5;      break;  // 25
 
     case SP_MINOTAUR:           s = 12; i =  5; d =  5;      break;  // 22
     case SP_GARGOYLE:           s = 11; i =  8; d =  5;      break;  // 24
@@ -75,6 +80,7 @@ static void _species_stat_init(species_type which_species)
     case SP_CENTAUR:            s = 10; i =  7; d =  4;      break;  // 21
     case SP_NAGA:               s = 10; i =  8; d =  6;      break;  // 24
 
+    case SP_GNOME:              s =  8; i =  8; d =  9;      break;  // 25
     case SP_MERFOLK:            s =  8; i =  7; d =  9;      break;  // 24
     case SP_TENGU:              s =  8; i =  8; d =  9;      break;  // 25
     case SP_FORMICID:           s = 12; i =  7; d =  6;      break;  // 25
@@ -232,6 +238,9 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_FAST_METABOLISM] = 1;
         you.mutation[MUT_SAPROVOROUS]     = 1;
         break;
+    case SP_OGRE_MAGE:
+        you.mutation[MUT_FAST_METABOLISM] = 1;
+        break;
     case SP_HALFLING:
         you.mutation[MUT_SLOW_METABOLISM]     = 1;
         you.mutation[MUT_MUTATION_RESISTANCE] = 1;
@@ -265,6 +274,9 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         you.mutation[MUT_UNBREATHING]                = 1;
+        break;
+    case SP_GNOME:
+        you.mutation[MUT_PASSIVE_MAPPING] = 1;
         break;
     case SP_DEEP_DWARF:
         you.mutation[MUT_SLOW_HEALING]    = 3;
@@ -792,7 +804,7 @@ static void _give_items_skills(const newgame_def& ng)
         // Plain darts are maybe too weak for autopickup.
         // autopickup_starting_ammo(MI_DART);
 
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
+        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
@@ -912,7 +924,7 @@ static void _give_items_skills(const newgame_def& ng)
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
         autopickup_starting_ammo(MI_NEEDLE);
 
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
+        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 2;
@@ -1051,8 +1063,8 @@ static void _give_starting_food()
     else
     {
         item.base_type = OBJ_FOOD;
-        if (player_genus(GENPC_ORCISH) || you.species == SP_KOBOLD
-            || you.species == SP_OGRE || you.species == SP_TROLL
+        if (player_genus(GENPC_ORCISH) || player_genus(GENPC_OGREISH)
+            || you.species == SP_KOBOLD || you.species == SP_TROLL
             || you.species == SP_FELID)
         {
             item.sub_type = FOOD_MEAT_RATION;

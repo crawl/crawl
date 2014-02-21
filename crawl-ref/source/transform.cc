@@ -878,7 +878,9 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         tran_name = "statue";
         str       = 2;
         dex       = -2;
-        if (you.species == SP_DEEP_DWARF && one_chance_in(10))
+        if (you.species == SP_GNOME && coinflip())
+           msg = "Look, a garden gnome.  How cute!";
+        else if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
         else if (you.species == SP_GARGOYLE)
             msg = "Your body stiffens and grows slower.";

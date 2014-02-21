@@ -170,10 +170,11 @@ void wizard_change_species(void)
         break;
     }
 
+    case SP_GNOME:
     case SP_DEEP_DWARF:
         if (you.experience_level >= 9)
             perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
-        if (you.experience_level >= 14)
+        if (sp == SP_DEEP_DWARF && you.experience_level >= 14)
             perma_mutate(MUT_NEGATIVE_ENERGY_RESISTANCE, 1, "wizard race change");
         if (you.experience_level >= 18)
             perma_mutate(MUT_PASSIVE_MAPPING, 1, "wizard race change");
@@ -876,6 +877,7 @@ static const char* dur_names[] =
     "dragon call cooldown",
     "aura of abjuration",
     "mesmerisation immunity",
+    "glamour",
 };
 
 void wizard_edit_durations(void)

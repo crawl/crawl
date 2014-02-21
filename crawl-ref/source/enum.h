@@ -77,7 +77,9 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+    // High and grey elves
+    ABIL_GLAMOUR,
+    ABIL_MAX_INTRINSIC = ABIL_GLAMOUR,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -1682,6 +1684,7 @@ enum duration_type
     DUR_DRAGON_CALL_COOLDOWN,
     DUR_ABJURATION_AURA,
     DUR_MESMERISE_IMMUNE,
+    DUR_GLAMOUR,
     NUM_DURATIONS
 };
 
@@ -2417,9 +2420,7 @@ enum monster_type                      // menv[].type
     MONS_DEMONIC_CRAWLER,
     MONS_SNAPPING_TURTLE,
     MONS_ALLIGATOR_SNAPPING_TURTLE,
-#if TAG_MAJOR_VERSION == 34
-    MONS_GNOME,
-#endif
+    MONS_GNOME,                 // single vault
     MONS_HALFLING,              // recolouring + single vault.
     MONS_FELID,                 // recolouring + single vault.  Miaow!
     MONS_VAMPIRE_BAT,           // recolouring + vaults
@@ -3675,9 +3676,7 @@ enum species_type
     SP_HUMAN,
     SP_HIGH_ELF,
     SP_DEEP_ELF,
-#if TAG_MAJOR_VERSION == 34
     SP_SLUDGE_ELF,
-#endif
     SP_HALFLING,
     SP_HILL_ORC,
     SP_KOBOLD,
@@ -3714,7 +3713,6 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
-    LAST_VALID_SPECIES = SP_VINE_STALKER,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
@@ -3723,9 +3721,9 @@ enum species_type
     SP_GNOME,                          // (placeholder)
     SP_MOUNTAIN_DWARF,                 // (placeholder)
 #if TAG_MAJOR_VERSION > 34
-    SP_SLUDGE_ELF,                     // (placeholder)
     SP_DJINNI,                         // (placeholder)
 #endif
+    LAST_VALID_SPECIES = SP_MOUNTAIN_DWARF,
 
     NUM_SPECIES,                       // always after the last species
 

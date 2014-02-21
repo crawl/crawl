@@ -28,6 +28,10 @@ Draconian
 Draconians are versatile hybrids. They mature when reaching level 7 and develop
 a colour.
 %%%%
+Elf
+
+Humanoids who can cast spells as well as they can fight with the sword.
+%%%%
 Formicid
 
 Formicids are humanoid ants adept at digging. Their limbs are exceptionally
@@ -47,6 +51,14 @@ Gargoyle
 
 Made of living stone, Gargoyles have a preternatural affinity for the earth.
 %%%%
+Gnome
+
+A small relative of dwarves with a natural empathy for the earth.
+%%%%
+Grey Elf
+
+Elves with a particular talent for swordsmanship and magic.
+%%%%
 Halfling
 
 Small but hardy, Halflings excel with slings. They have an increased resistance
@@ -54,7 +66,11 @@ to mutagenic effects.
 %%%%
 High Elf
 
-Proud elves, who can cast spells as well as they can fight with the sword.
+Proud elves, with a more pronounced degree of elvenness.
+%%%%
+Hill Dwarf
+
+Sturdy, strong and not too intelligent, they love heavy weapons and armours.
 %%%%
 Hill Orc
 
@@ -90,6 +106,10 @@ Minotaur
 A large muscular human with the head of a bull. They excel at all forms of
 close and ranged combat.
 %%%%
+Mountain Dwarf
+
+Sturdy, strong and not too intelligent, they love heavy weapons and armours.
+%%%%
 Mummy
 
 An undead figure covered in bandages and embalming fluids, compelled to walk by
@@ -107,8 +127,16 @@ armour fits them.
 %%%%
 Ogre
 
-Large and strong, they're mostly seen as brutes. Ogres are very comfortable
-with the basics of magic, however.
+Large and strong, they're mostly seen as brutes.
+%%%%
+Ogre-Mage
+
+A more civilised relative of ogres, quite comfortable with magic.
+%%%%
+Sludge Elf
+
+A depraved type of elf, who prefers cunning to fair fighting, and dark magic
+to other wizardry.
 %%%%
 Spriggan
 
