@@ -1031,6 +1031,8 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_POISON_VULN,
         DUR_PORTAL_PROJECTILE,
         DUR_FORESTED,
+        DUR_DRAGON_CALL,
+        DUR_DRAGON_CALL_COOLDOWN,
     };
 
     status_info inf;
@@ -2539,6 +2541,7 @@ static string _status_mut_abilities(int sw)
         DUR_SAP_MAGIC,
         STATUS_MAGIC_SAPPED,
         DUR_FORESTED,
+        DUR_DRAGON_CALL,
     };
 
     status_info inf;

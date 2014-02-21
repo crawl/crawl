@@ -424,6 +424,13 @@ This spell temporarily transforms the caster into a great, fire-breathing
 dragon. Draconian casters will instead retain their innate colour and breath
 weapon once transformed.
 %%%%
+Dragon's Call spell
+
+This spell issues a powerful call to a draconic realm, beckoning forth dragon
+after dragon to engage the summoner's enemies. The spell is taxing to maintain,
+and each new dragon which answers the call will further drain the summoner's
+magical reserves.
+%%%%
 Drain Life spell
 
 <Drain Life ability>

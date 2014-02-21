@@ -3680,6 +3680,19 @@ struct spell_desc
 },
 
 {
+    SPELL_DRAGON_CALL, "Dragon's Call",
+     SPTYP_SUMMONING,
+     SPFLAG_NONE,
+     9,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

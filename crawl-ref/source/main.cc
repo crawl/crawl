@@ -119,6 +119,7 @@
 #include "spl-goditem.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
@@ -3069,6 +3070,20 @@ static void _decrement_durations()
             "You are no longer teleporting projectiles to their destination."))
     {
         you.attribute[ATTR_PORTAL_PROJECTILE] = 0;
+    }
+
+     _decrement_a_duration(DUR_DRAGON_CALL_COOLDOWN, delay,
+                              "You can once more reach out to the dragon horde.");
+
+    if (you.duration[DUR_DRAGON_CALL])
+    {
+        do_dragon_call(delay);
+        if (_decrement_a_duration(DUR_DRAGON_CALL, delay,
+                              "The roar of the dragon horde subsides."))
+        {
+            you.duration[DUR_DRAGON_CALL_COOLDOWN] = random_range(150, 250);
+        }
+
     }
 
     dec_elixir_player(delay);
