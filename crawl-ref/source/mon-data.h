@@ -1085,7 +1085,7 @@ static monsterentry mondata[] =
 
 { // a dummy monster for recolouring
     MONS_FELID, 'h', BLUE, "felid",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
+    M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     200, 10, MONS_FELID, MONS_FELID, MH_NATURAL, -6,
     { {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6470,8 +6470,8 @@ static monsterentry mondata[] =
 // "h" - carnivorous quadrupeds
 {
     MONS_NATASHA, 'h', BLUE, "Natasha",
-    M_WARM_BLOOD | M_SPEAKS | M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS
-        | M_NO_WAND,
+    M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS | M_UNIQUE | M_SPELLCASTER
+        | M_ACTUAL_SPELLS | M_NO_WAND,
     MR_NO_FLAGS,
     200, 10, MONS_FELID, MONS_FELID, MH_NATURAL, -6,
     { {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
