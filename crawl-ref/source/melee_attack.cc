@@ -1869,9 +1869,6 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         // Demonspawn get a damage bonus for demonic weapons.
         if (you.species == SP_DEMONSPAWN && is_demonic(*weapon))
             damage += random2(3);
-
-        if (get_weapon_brand(*weapon) == SPWPN_SPEED)
-            damage = div_rand_round(damage * 9, 10);
     }
 
     return damage;
@@ -4087,7 +4084,7 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
 
         int delay = property(*weapon, PWPN_SPEED);
         if (damage_brand == SPWPN_SPEED)
-            delay = (delay + 1) / 2;
+            delay = random ? div_rand_round(2 * delay, 3) : (2 * delay)/3;
         return random ? div_rand_round(10 + delay, 2) : (10 + delay) / 2;
     }
 
@@ -4174,7 +4171,7 @@ random_var melee_attack::player_weapon_speed()
         if (weapon->base_type == OBJ_WEAPONS
             && damage_brand == SPWPN_SPEED)
         {
-            attack_delay = (attack_delay + constant(1)) / 2;
+            attack_delay = div_rand_round(constant(2) * attack_delay, 3);
         }
     }
 
@@ -5840,9 +5837,6 @@ int melee_attack::calc_damage()
 
         if (as_mon->has_ench(ENCH_WEAK))
             damage = damage * 2 / 3;
-
-        if (weapon && get_weapon_brand(*weapon) == SPWPN_SPEED)
-            damage = div_rand_round(damage * 9, 10);
 
         bool half_ac = (as_mon->type == MONS_PHANTASMAL_WARRIOR);
 
