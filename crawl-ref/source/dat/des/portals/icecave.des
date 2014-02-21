@@ -50,7 +50,7 @@ function ice_cave_portal(e)
   e.kfeat("O = enter_ice_cave")
   e.colour("X = white")
   e.kfeat("X = x")
-  e.rtile("X = wall_zot_cyan")
+  e.rtile("X = wall_ice_block")
   e.colour(".1234 = blue")
   e.ftile(".1234O+ = floor_ice")
 end
