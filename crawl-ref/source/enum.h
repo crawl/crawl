@@ -2040,9 +2040,7 @@ enum job_type
 {
     JOB_FIGHTER,
     JOB_WIZARD,
-#if TAG_MAJOR_VERSION == 34
     JOB_PRIEST,
-#endif
     JOB_GLADIATOR,
     JOB_NECROMANCER,
     JOB_ASSASSIN,
@@ -2060,9 +2058,7 @@ enum job_type
     JOB_CHAOS_KNIGHT,
     JOB_TRANSMUTER,
     JOB_HEALER,
-#if TAG_MAJOR_VERSION == 34
     JOB_STALKER,
-#endif
     JOB_MONK,
     JOB_WARPER,
     JOB_WANDERER,
@@ -2073,6 +2069,9 @@ enum job_type
 #if TAG_MAJOR_VERSION == 34
     JOB_JESTER,
 #endif
+    JOB_THIEF,
+    JOB_PALADIN,
+    JOB_REAVER,
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,

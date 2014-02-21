@@ -93,15 +93,39 @@ Necromancer
 Necromancers are wizards specializing in the practice of death magic. They
 start out with the Pain spell.
 %%%%
+Paladin
+
+Paladins are righteous warriors joining the Shining One's crusade against
+evil.
+%%%%
+Priest
+
+Priests are followers of Zin, spreading the god's word to the Dungeon's
+inhabitants. Hill Orcs instead follow the orc god Beogh.
+%%%%
 Skald
 
 Skalds are melee fighters who can boost themselves in battle with spells from
 the book of Battle.
 %%%%
+Reaver
+
+Reavers are versatile, using destructive magics alongside melee fighting.
+%%%%
+Stalker
+
+Stalkers use stealth and transformative magic to approach and subdue their
+victims.
+%%%%
 Summoner
 
 Summoners start with the book of Callings and are able to cast Summon Small
 Mammal from the start.
+%%%%
+Thief
+
+Thieves start with a robe, cloak, and a weapon and have trained a multitude
+of skills.
 %%%%
 Transmuter
 

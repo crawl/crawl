@@ -141,15 +141,19 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_FIGHTER:           s =  8; i =  0; d =  4; break;
     case JOB_BERSERKER:         s =  9; i = -1; d =  4; break;
     case JOB_GLADIATOR:         s =  7; i =  0; d =  5; break;
+    case JOB_PALADIN:           s =  7; i =  2; d =  3; break;
 
     case JOB_SKALD:             s =  4; i =  4; d =  4; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; break;
     case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; break;
 
+    case JOB_REAVER:            s =  5; i =  5; d =  2; break;
     case JOB_HEALER:            s =  4; i =  4; d =  4; break;
 
+    case JOB_STALKER:           s =  2; i =  4; d =  6; break;
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; break;
+    case JOB_THIEF:             s =  4; i =  2; d =  6; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; break;
     case JOB_WARPER:            s =  3; i =  5; d =  4; break;
@@ -166,8 +170,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_AIR_ELEMENTALIST:  s =  0; i =  7; d =  5; break;
     case JOB_EARTH_ELEMENTALIST:s =  0; i =  7; d =  5; break;
     case JOB_SUMMONER:          s =  0; i =  7; d =  5; break;
-    case JOB_VENOM_MAGE:        s =  0; i =  7; d =  5; break;
-    case JOB_NECROMANCER:       s =  0; i =  7; d =  5; break;
 
     case JOB_WANDERER:
         // Wanderers get their stats randomly distributed.
@@ -630,6 +632,48 @@ static void _give_items_skills(const newgame_def& ng)
         }
         break;
 
+    case JOB_PALADIN:
+        you.religion = GOD_SHINING_ONE;
+        you.piety = 28;
+
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_FALCHION);
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_RING_MAIL,
+                           ARM_ROBE);
+        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR,
+                          you.body_size() >= SIZE_MEDIUM ? ARM_SHIELD
+                                                         : ARM_BUCKLER);
+        newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_CURING);
+
+        you.skills[(player_effectively_in_light_armour()
+                    ? SK_DODGING : SK_ARMOUR)] = 2;
+        you.skills[SK_FIGHTING]    = 2;
+        you.skills[SK_SHIELDS]     = 2;
+        you.skills[SK_LONG_BLADES] = 3;
+        you.skills[SK_INVOCATIONS] = 2;
+        weap_skill = 2;
+        break;
+
+    case JOB_PRIEST:
+        if (you.species == SP_HILL_ORC)
+            you.religion = GOD_BEOGH;
+        else
+            you.religion = GOD_ZIN;
+
+        you.piety = 45;
+
+        if (you.religion == GOD_BEOGH)
+            newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
+        else
+            newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
+
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+
+        you.skills[SK_FIGHTING]    = 2;
+        you.skills[SK_INVOCATIONS] = 5;
+        you.skills[SK_DODGING]     = 1;
+        weap_skill = 3;
+        break;
+
     case JOB_CHAOS_KNIGHT:
         you.religion = GOD_XOM;
         you.piety = 100;
@@ -724,6 +768,21 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_CHARMS]       = 3;
         weap_skill = 2;
+        break;
+
+    case JOB_REAVER:
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _update_weapon(ng);
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                           ARM_ROBE);
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CONJURATIONS);
+
+        you.skills[SK_FIGHTING]       = 2;
+        you.skills[SK_ARMOUR]         = 1;
+        you.skills[SK_DODGING]        = 1;
+        you.skills[SK_SPELLCASTING]   = 1;
+        you.skills[SK_CONJURATIONS]   = 2;
+        weap_skill = 3;
         break;
 
     case JOB_WARPER:
@@ -909,6 +968,43 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
+        break;
+
+    case JOB_STALKER:
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 2, 2);
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
+
+        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
+
+        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
+            you.inv[0].sub_type = WPN_CLUB;
+
+        weap_skill = 1;
+        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_DODGING]        = 2;
+        you.skills[SK_STEALTH]        = 2;
+        you.skills[SK_SPELLCASTING]   = 1;
+        you.skills[SK_TRANSMUTATIONS] = 2;
+        break;
+
+    case JOB_THIEF:
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+
+        if (you.species == SP_SPRIGGAN)
+            you.inv[0].sub_type = WPN_DAGGER;
+        else if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
+            you.inv[0].sub_type = WPN_CLUB;
+
+        weap_skill = 2;
+        you.skills[SK_FIGHTING] = 1;
+        you.skills[SK_DODGING]  = 2;
+        you.skills[SK_STEALTH]  = 4;
+        you.skills[SK_THROWING] = 2;
         break;
 
     case JOB_ASSASSIN:
@@ -1129,6 +1225,7 @@ static void _give_basic_spells(job_type which_job)
     {
     case JOB_WIZARD:
     case JOB_CONJURER:
+    case JOB_REAVER:
         which_spell = SPELL_MAGIC_DART;
         break;
     case JOB_VENOM_MAGE:

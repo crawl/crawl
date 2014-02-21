@@ -13,15 +13,13 @@ static const char * Job_Abbrev_List[] =
       "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Sk",
       "VM",
-      "CK", "Tm", "He",
-#if TAG_MAJOR_VERSION == 34
-      "St",
-#endif
+      "CK", "Tm", "He", "St",
       "Mo", "Wr", "Wn", "Ar", "AM",
       "DK", "AK",
 #if TAG_MAJOR_VERSION == 34
       "Jr",
 #endif
+      "Th", "Pa", "Re",
 };
 
 static const char * Job_Name_List[] =
@@ -35,14 +33,13 @@ static const char * Job_Name_List[] =
       "Earth Elementalist", "Skald",
       "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer",
-#if TAG_MAJOR_VERSION == 34
       "Stalker",
-#endif
       "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman",
       "Death Knight", "Abyssal Knight",
 #if TAG_MAJOR_VERSION == 34
       "Jester",
 #endif
+      "Thief", "Paladin", "Reaver",
 };
 
 const char *get_job_abbrev(int which_job)
@@ -116,7 +113,7 @@ bool is_job_valid_choice(job_type job)
 {
     return is_valid_job(job)
 #if TAG_MAJOR_VERSION == 34
-        && job != JOB_STALKER && job != JOB_JESTER && job != JOB_PRIEST
+        && job != JOB_JESTER
 #endif
         ;
 }
