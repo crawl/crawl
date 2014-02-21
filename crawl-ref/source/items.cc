@@ -2890,6 +2890,8 @@ static void _do_autopickup()
             clear_item_pickup_flags(mitm[o]);
 
             const int result = move_item_to_player(o, num_to_take);
+            if (mitm[o].base_type == OBJ_FOOD && mitm[o].sub_type == FOOD_CHUNK)
+                mitm[o].flags |= ISFLAG_DROPPED;
 
             if (result == 0 || result == -1)
             {
