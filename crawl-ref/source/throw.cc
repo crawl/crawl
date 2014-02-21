@@ -1428,7 +1428,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool returning   = false;    // Item can return to pack.
     bool did_return  = false;    // Returning item actually does return to pack.
     int slayDam      = 0;
-    bool speed_brand = false;
 
     if (you.confused())
     {
@@ -1803,9 +1802,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         if (_elemental_missile_beam(bow_brand, ammo_brand))
             dice_mult = dice_mult * 140 / 100;
-
-        if (get_weapon_brand(launcher) == SPWPN_SPEED)
-            speed_brand = true;
     }
 
     // check for returning ammo from launchers
@@ -1968,9 +1964,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.damage.size += ammoDamBonus + lnchDamBonus;
     }
 
-    if (speed_brand)
-        pbolt.damage.size = div_rand_round(pbolt.damage.size * 9, 10);
-
     // Add in bonus (only from Portal Projectile for now).
     if (acc_bonus != DEBUG_COOKIE)
         pbolt.hit += acc_bonus;
@@ -2114,7 +2107,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     string ammo_name;
 
     bool returning = false;
-    bool speed_brand = false;
 
     int baseHit = 0, baseDam = 0;       // from thrown or ammo
     int ammoHitBonus = 0, ammoDamBonus = 0;     // from thrown or ammo
@@ -2301,10 +2293,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         {
             if (bow_brand == SPWPN_SPEED)
             {
-                // Speed crossbows take 50% less time to use than
+                // Speed crossbows take 33% less time to use than
                 // ordinary crossbows.
-                speed_delta = div_rand_round(throw_energy * 2, 5);
-                speed_brand = true;
+                speed_delta = div_rand_round(throw_energy, 5);
             }
             else
             {
@@ -2315,10 +2306,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         }
         else if (bow_brand == SPWPN_SPEED)
         {
-            // Speed bows take 50% less time to use than
+            // Speed bows take 33% less time to use than
             // ordinary bows.
-            speed_delta = div_rand_round(throw_energy, 2);
-            speed_brand = true;
+            speed_delta = div_rand_round(throw_energy, 3);
         }
 
         // Portal projectile is independent of weapon speed
@@ -2440,9 +2430,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     if (mons->has_ench(ENCH_WIND_AIDED))
         beam.hit = beam.hit * 125 / 100;
-
-    if (speed_brand)
-        beam.damage.size = div_rand_round(beam.damage.size * 9, 10);
 
     scale_dice(beam.damage);
 
