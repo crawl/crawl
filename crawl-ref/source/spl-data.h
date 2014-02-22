@@ -1072,6 +1072,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_DEMONIC_HORDE, "Demonic Horde",
      SPTYP_SUMMONING,
@@ -1084,6 +1085,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_SUMMON_GREATER_DEMON, "Summon Greater Demon",

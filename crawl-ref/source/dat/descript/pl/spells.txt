@@ -216,11 +216,6 @@ przygotować tylko jedną kulę naraz, można ją trzymać bez limitu czasu.
 Znajomość tego czasu pozwala nauczyć się zwykłej Ognistej Kuli bez zajmowania
 miejsca w pamięci.
 %%%%
-Demonic Horde spell
-
-Ten czar przyzywa grupę pomniejszych demonów na usługi rzucającego, jakkolwiek
-niektóre z nich mogą być niesforne.
-%%%%
 Dig spell
 
 Ten czar pozwala drążyć tunele w niewzmocnionej skale. Nadaje on skale

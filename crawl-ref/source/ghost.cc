@@ -87,7 +87,6 @@ static spell_type search_order_third[] =
     SPELL_HAUNT,
     SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,
-    SPELL_DEMONIC_HORDE,
     SPELL_HASTE,
     SPELL_SILENCE,
     SPELL_BATTLESPHERE,
@@ -881,8 +880,6 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     {
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;        // approximate
-    case SPELL_DEMONIC_HORDE:
-        return SPELL_SUMMON_MINOR_DEMON;
     case SPELL_DELAYED_FIREBALL:
         return SPELL_FIREBALL;
     case SPELL_DRAGON_CALL:
