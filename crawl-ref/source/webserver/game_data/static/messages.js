@@ -120,11 +120,11 @@ function ($, comm, client, util, options) {
         var historyPosition;
 
         if ("maxlen" in msg)
-            input.attr("maxlength", msg.maxlen)
+            input.attr("maxlength", msg.maxlen);
         if ("size" in msg)
-            input.attr("size", msg.size)
+            input.attr("size", msg.size);
         if ("prefill" in msg)
-            input.val(msg.prefill)
+            input.val(msg.prefill);
         if ("historyId" in msg)
         {
             if (!histories[msg.historyId])
@@ -134,6 +134,8 @@ function ($, comm, client, util, options) {
         }
 
         prompt.append(input);
+        if (input[0].setSelectionRange)
+            input[0].setSelectionRange(input.val().length, input.val().length);
         input.focus();
 
         function send_input_line(finalChar) {
