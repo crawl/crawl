@@ -1791,7 +1791,7 @@ static monsterentry mondata[] =
 
 {
     MONS_PLAYER_SHADOW, '@', MAGENTA, "shadow",
-    M_CANT_SPAWN,
+    M_CANT_SPAWN | M_NO_EXP_GAIN,
     MR_NO_FLAGS,
     0, 10, MONS_HUMAN, MONS_HUMAN, MH_NONLIVING, -3,
     { {AT_HIT, AF_PLAIN, 0}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
