@@ -980,6 +980,10 @@ static void _describe_cards(vector<card_type> cards)
 {
     ASSERT(!cards.empty());
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_cards");
+#endif
+
     ostringstream data;
     for (unsigned int i = 0; i < cards.size(); ++i)
     {
@@ -997,7 +1001,6 @@ static void _describe_cards(vector<card_type> cards)
     clrscr();
     fs.display();
     getchm();
-    redraw_screen();
 }
 
 // Stack a deck: look at the next five cards, put them back in any
@@ -1233,6 +1236,7 @@ bool draw_three(int slot)
         if (keyin == '?')
         {
             _describe_cards(draws);
+            redraw_screen();
             need_prompt_redraw = true;
         }
         else if (keyin >= 'a' && keyin < 'a' + num_to_draw)
