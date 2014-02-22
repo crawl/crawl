@@ -3636,7 +3636,6 @@ void dithmenos_shadow_melee(actor* target)
     mon->target     = target->pos();
     mon->foe        = target->mindex();
 
-    mprf("%s attacks!", mon->name(DESC_THE).c_str());
     fight_melee(mon, target);
 
     shadow_monster_reset(mon);
@@ -3660,7 +3659,6 @@ void dithmenos_shadow_throw(coord_def target)
 
         bolt beem;
         beem.target = target;
-        mprf("%s attacks!", mon->name(DESC_THE).c_str());
         setup_monster_throw_beam(mon, beem);
         beem.item = &mitm[mon->inv[MSLOT_MISSILE]];
         mons_throw(mon, beem, mon->inv[MSLOT_MISSILE]);
