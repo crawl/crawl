@@ -731,7 +731,6 @@ void game_options::reset_options()
 
     additional_macro_files.clear();
 
-    seed = 0;
 #ifdef DGL_SIMPLE_MESSAGING
     messaging = true;
 #endif
@@ -1627,6 +1626,7 @@ game_options::game_options()
     if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
         set_lang(ln);
 #endif
+    seed = 0;
     reset_options();
 }
 
