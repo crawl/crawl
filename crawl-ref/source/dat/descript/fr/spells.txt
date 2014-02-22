@@ -621,12 +621,6 @@ Mara, le seigneur des rakshasas, aime tisser des illusions de lui-même.
 Contrairement aux rakshasas inferieur, ses doubles sont physiquement aussi fort
 que Mara lui-même, et à peine plus faible en magie.
 %%%%
-Mass Abjuration spell
-
-Ce sort tente d'envoyer d'où elles viennent toutes les créatures, convoquées et
-hostiles à portée de vue, ou au moins de raccourcir leur temps de séjour sur le
-plan.
-%%%%
 Mass Confusion spell
 
 Ce sort provoque la confusion à tous ceux qui contemplent le sorcier.

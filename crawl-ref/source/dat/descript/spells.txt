@@ -46,6 +46,12 @@ be moved by this spell.
 Extremely powerful magical items, such as the Orb of Zot, may actively resist
 the pull of this spell.
 %%%%
+Aura of Abjuration spell
+
+This spell causes the caster to continuously abjure nearby hostile summoned
+creatures for a short while, rapidly sending each of them back where they came
+from.
+%%%%
 Awaken Forest spell
 
 This spell allows the caster to give some very limited motility to surrounding
@@ -782,12 +788,6 @@ Mara Summon spell
 Mara, the lord of rakshasas, likes to weave illusions of himself. Unlike lesser
 rakshasas, his doubles are physically as strong as Mara himself, and hardly
 weaker in magic.
-%%%%
-Mass Abjuration spell
-
-This spell attempts to send all hostile summoned creatures in sight to the
-place whence they came, or at least shorten their stay in the caster's
-locality.
 %%%%
 Mass Confusion spell
 

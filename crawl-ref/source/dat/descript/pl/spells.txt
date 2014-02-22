@@ -370,11 +370,6 @@ stronie. Nie jest dobrze być wówczas z pobliżu.
 
 Ten portal jest jednostronny.
 %%%%
-Mass Abjuration spell
-
-Ten czar próbuje odesłać wszystkie wrogie przyzwane istoty w zasięgu wzroku — a
-nawet jeśli zostanie odparty, mocno skraca pozostały czas przyzwania.
-%%%%
 Mass Confusion spell
 
 Ten czar powoduje zaćmienie umysłu we wszystkich w zasięgu wzroku którzy nie

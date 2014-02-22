@@ -167,6 +167,8 @@ static duration_def duration_data[] =
       WHITE, "Dragoncall", "dragon's call", "You are beckoning forth a horde of dragons." },
     { DUR_DRAGON_CALL_COOLDOWN, false,
       RED, "Dragoncall", "", "" },
+    { DUR_ABJURATION_AURA, false,
+      BLUE, "Abj", "aura of abjuration", "You are abjuring all hostile summons around you." },
 };
 
 static int duration_index[NUM_DURATIONS];
