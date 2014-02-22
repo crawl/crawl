@@ -3329,7 +3329,7 @@ static int _monster_abjure_target(monster* target, int pow, bool actual)
     }
     else if (you_worship(GOD_TROG))
     {
-        pow = pow * 4 / 5;
+        pow = pow / 2;
         if (pow < duration)
         {
             simple_god_message(" shields your ally from puny magic!");
