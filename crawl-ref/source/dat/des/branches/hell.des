@@ -406,7 +406,7 @@ ENDMAP
 ####
 # A couple of Dis-inspired mini-entries; total weight 14.
 NAME: grunt_hell_entry_dis_old
-TAGS: transparent nolayout_encompass
+TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 4
 MONS: iron imp / nothing
 KMONS: O = iron devil
@@ -430,7 +430,7 @@ MAP
 ENDMAP
 
 NAME: grunt_hell_entry_dis_mu
-TAGS: transparent nolayout_encompass
+TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
 MONS: iron imp / nothing
 KMONS: O = iron devil
@@ -453,7 +453,7 @@ MAP
 ENDMAP
 
 NAME: grunt_hell_entry_dis_grunt
-TAGS: transparent nolayout_encompass
+TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
 MONS: iron imp / nothing
 KMONS: O = iron devil
