@@ -170,6 +170,8 @@ bow3
 crossbow1 WPN_CROSSBOW
 crossbow2
 crossbow3
+hand_crossbow WPN_HAND_CROSSBOW
+hand_crossbow2
 longbow1 WPN_LONGBOW
 longbow2
 longbow3

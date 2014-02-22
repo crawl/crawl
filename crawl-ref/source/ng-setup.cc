@@ -991,9 +991,10 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_THIEF:
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW);
+        newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
 
         if (you.species == SP_SPRIGGAN)
             you.inv[0].sub_type = WPN_DAGGER;
@@ -1001,10 +1002,10 @@ static void _give_items_skills(const newgame_def& ng)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 2;
-        you.skills[SK_FIGHTING] = 1;
-        you.skills[SK_DODGING]  = 2;
-        you.skills[SK_STEALTH]  = 4;
-        you.skills[SK_THROWING] = 2;
+        you.skills[SK_FIGHTING]  = 1;
+        you.skills[SK_DODGING]   = 2;
+        you.skills[SK_STEALTH]   = 4;
+        you.skills[SK_CROSSBOWS] = 1;
         break;
 
     case JOB_ASSASSIN:

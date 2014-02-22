@@ -1627,7 +1627,7 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
     if (ng->job == JOB_HUNTER || ng->job == JOB_ARCANE_MARKSMAN)
     {
         weapon_type startwep[4] = { WPN_THROWN, WPN_SLING, WPN_BOW,
-                                    WPN_CROSSBOW };
+                                    WPN_HAND_CROSSBOW };
 
         for (int i = 0; i < 4; i++)
         {

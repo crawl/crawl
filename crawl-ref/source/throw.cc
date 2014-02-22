@@ -1359,6 +1359,9 @@ static void _throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
         level = 1;
         msg   = "You hear a whirring sound.";
         break;
+     case WPN_HAND_CROSSBOW:
+        level = 3;
+        msg   = "You hear a small twanging sound.";
      case WPN_BOW:
         level = 5;
         msg   = "You hear a twanging sound.";
@@ -1753,6 +1756,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // exDamBonus += effSkill * 2 / 3 + 4;
 
             dice_mult = dice_mult * (22 + random2(1 + effSkill)) / 22;
+
+            if (launcher.sub_type == WPN_HAND_CROSSBOW)
+            {
+                exHitBonus -= 2;
+                dice_mult = dice_mult * 26 / 30;
+            }
+            break;
 
         default:
             break;
@@ -2199,6 +2209,11 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
             baseHit = 4;
             hitMult = 70;
             damMult = 30;
+            break;
+        case WPN_HAND_CROSSBOW:
+            baseHit = 2;
+            hitMult = 50;
+            damMult = 20;
             break;
         case WPN_SLING:
             baseHit = 10;

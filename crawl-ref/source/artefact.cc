@@ -734,6 +734,11 @@ static void _get_randart_properties(const item_def &item,
                 else if (one_chance_in(5))
                     proprt[ARTP_BRAND] = SPWPN_PENETRATION;
             }
+            else if (atype == WPN_HAND_CROSSBOW)
+            {
+                if (one_chance_in(10))
+                    proprt[ARTP_BRAND] = SPWPN_ELECTROCUTION;
+            }
         }
         else if (is_demonic(item) && x_chance_in_y(7, 9))
         {

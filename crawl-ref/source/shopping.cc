@@ -1006,6 +1006,7 @@ unsigned int item_value(item_def item, bool ident)
         case WPN_MORNINGSTAR:
         case WPN_QUARTERSTAFF:
         case WPN_SCIMITAR:
+        case WPN_HAND_CROSSBOW:
             valued += 40;
             break;
 

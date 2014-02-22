@@ -164,7 +164,8 @@ void quiver_item(int slot)
          t == AMMO_BLOWGUN  ? "blowguns" :
          t == AMMO_SLING    ? "slings" :
          t == AMMO_BOW      ? "bows" :
-                              "crossbows");
+         t == AMMO_CROSSBOW ? "crossbows"
+                            : "hand crossbows");
 }
 
 void choose_item_for_quiver()
@@ -602,6 +603,8 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
             return AMMO_BOW;
         case WPN_CROSSBOW:
             return AMMO_CROSSBOW;
+        case WPN_HAND_CROSSBOW:
+            return AMMO_HAND_CROSSBOW;
         default:
             return AMMO_THROW;
     }

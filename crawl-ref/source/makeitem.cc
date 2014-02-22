@@ -1180,6 +1180,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         case WPN_SLING:
+        case WPN_HAND_CROSSBOW:
             if (coinflip())
                 break;
             // **** possible intentional fall through here ****

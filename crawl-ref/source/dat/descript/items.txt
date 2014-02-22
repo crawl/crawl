@@ -521,7 +521,8 @@ of last resort, others appreciate it as a perfect tool for assassinations.
 %%%%
 dart
 
-A little, fletched, sharply pointed projectile designed to be thrown by hand.
+A little, fletched, sharply pointed projectile designed to be thrown by hand
+or fired from a hand crossbow.
 %%%%
 decaying skeleton
 
@@ -708,6 +709,10 @@ hand axe
 A tool for rending apart the fibres of wood, or flesh. It might be enough if
 you care primarily for the weapon's weight, but for a proper rampage, you want
 something bigger.
+%%%%
+hand crossbow
+
+A small crossbow, for firing darts.
 %%%%
 hat
 

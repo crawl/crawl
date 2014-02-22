@@ -249,6 +249,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_BOW:
         tile = TILEP_HAND1_BOW2;
         break;
+    case WPN_HAND_CROSSBOW:
     case WPN_CROSSBOW:
         tile = TILEP_HAND1_CROSSBOW;
         break;
