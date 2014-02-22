@@ -1770,13 +1770,14 @@ ITEM:       wand of lightning / staff of air / ring of flight /\
             book of clouds / any book w:15 / any good_item / any w:20
 ITEM:       randbook disc:air
 KFEAT:      #4 = deep_water
+KPROP:      #4 = no_rtele_into
 NSUBST:     e = 2:f / * = de, # = 5:4 / 4 = 4## / *:#
 COLOUR:     +<b = white
 LFLOORCOL:  lightblue
 LFLOORTILE: floor_rough_lightblue
 TILE:       o = dngn_transparent_stone_white
 TILE:       b = dngn_crystal_white
-COLOUR:     wWv# = silver
+COLOUR:     wWv#4 = silver
 :           set_border_fill_type('open_sea')
 :           set_random_mon_list("vapour / air elemental")
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
