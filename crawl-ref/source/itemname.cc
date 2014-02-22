@@ -1968,7 +1968,7 @@ bool item_type_has_ids(object_class_type base_type)
 
     return base_type == OBJ_WANDS || base_type == OBJ_SCROLLS
         || base_type == OBJ_JEWELLERY || base_type == OBJ_POTIONS
-        || base_type == OBJ_STAVES;
+        || base_type == OBJ_STAVES || base_type == OBJ_BOOKS;
 }
 
 bool item_type_known(const item_def& item)
@@ -1992,6 +1992,9 @@ bool item_type_known(const item_def& item)
 
     if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_DESTRUCTION)
         return true;
+
+    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
+        return false;
 
     if (!item_type_has_ids(item.base_type))
         return false;
@@ -2207,13 +2210,8 @@ public:
             else
                 name = "miscellaneous";
         }
-        else if (item->base_type == OBJ_BOOKS)
-        {
-            if (item->sub_type == BOOK_MANUAL)
-                name = "manuals";
-            else
-                name = "spellbooks";
-        }
+        else if (item->base_type == OBJ_BOOKS && item->sub_type == BOOK_MANUAL)
+            name = "manuals";
         else if (item->base_type == OBJ_RODS || item->base_type == OBJ_GOLD)
         {
             name = lowercase_string(item_class_name(item->base_type));
@@ -2332,6 +2330,9 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
+            if (i == OBJ_BOOKS && j > MAX_RARE_BOOK)
+                continue;
+
 #if TAG_MAJOR_VERSION == 34
             // Water is never interesting either. [1KB]
             if (i == OBJ_POTIONS
@@ -2351,6 +2352,9 @@ void check_item_knowledge(bool unknown_items)
                 continue;
 
             if (i == OBJ_STAVES && j == STAFF_CHANNELING)
+                continue;
+
+            if (i == OBJ_BOOKS && j == BOOK_STALKING)
                 continue;
 #endif
 
@@ -2429,13 +2433,13 @@ void check_item_knowledge(bool unknown_items)
         static const object_class_type misc_list[] =
         {
             OBJ_FOOD, OBJ_FOOD, OBJ_FOOD, OBJ_FOOD,
-            OBJ_BOOKS, OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
+            OBJ_BOOKS, OBJ_RODS, OBJ_GOLD,
             OBJ_MISCELLANY, OBJ_MISCELLANY
         };
         static const int misc_ST_list[] =
         {
             FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_HONEYCOMB,
-            NUM_BOOKS, BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
+            BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
             NUM_MISCELLANY
         };
         COMPILE_CHECK(ARRAYSZ(misc_list) == ARRAYSZ(misc_ST_list));
