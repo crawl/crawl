@@ -165,7 +165,8 @@ function (exports, $, key_conversion, chat, comm) {
 
     function in_game()
     {
-        return current_layer != "lobby" && current_layer != "loader";
+        return current_layer != "lobby" && current_layer != "loader"
+               && !showing_close_message;
     }
 
     function set_layer(layer)
