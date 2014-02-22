@@ -27,14 +27,14 @@
       <div class="login_placeholder">
         <div id="login">
           <span id="login_message"></span>
-          <form action="" id="login_form">
+          <form action="#" id="login_form">
             <label for="username">User:</label>
-            <input class="text" type="text" name="username" id="username"></input>
+            <input class="text" type="text" name="username" id="username">
             <label for="password">Pass:</label>
-            <input class="text" type="password" name="password" id="password"></input>
-            <input class="button" type="submit" name="submit" id="submit" value="Login"></input>
+            <input class="text" type="password" name="password" id="password">
+            <input class="button" type="submit" name="submit" id="submit" value="Login">
           </form>
-          <input type="checkbox" name="remember_me" id="remember_me"></input>
+          <input type="checkbox" name="remember_me" id="remember_me">
           <label for="remember_me">Stay logged in</label>
           <span class="extra_links">|
           <a id="reg_link" href="javascript:">Register</a>
@@ -44,33 +44,33 @@
 
       <div id="register" class="floating_dialog" style="display: none;">
         <span id="register_message"></span>
-        <form action="" id="register_form">
+        <form action="#" id="register_form">
           <label for="username">Username:</label>
-          <input class="text" type="text" name="username" id="reg_username"></input>
+          <input class="text" type="text" name="username" id="reg_username">
           <br>
-          <label for="password">Password:</label>
-          <input class="text" type="password" name="password" id="reg_password"></input>
+          <label for="reg_password">Password:</label>
+          <input class="text" type="password" name="reg_password" id="reg_password">
           <br>
-          <label for="repeat_password">Repeat password:</label>
-          <input class="text" type="password" name="repeat_password" id="reg_repeat_password"></input>
+          <label for="reg_repeat_password">Repeat password:</label>
+          <input class="text" type="password" name="reg_repeat_password" id="reg_repeat_password">
           <br>
-          <label for="email">Email address:</label>
-          <input class="text" type="text" name="email" id="reg_email"></input>
+          <label for="reg_email">Email address:</label>
+          <input class="text" type="text" name="reg_email" id="reg_email">
           <br>
           <input class="button" type="button" name="cancel" id="reg_cancel"
-                 value="Cancel"></input>
-          <input class="button" type="submit" name="submit" id="reg_submit" value="Submit"></input>
+                 value="Cancel">
+          <input class="button" type="submit" name="submit" id="reg_submit" value="Submit">
         </form>
       </div>
 
       <div id="rc_edit" class="floating_dialog" style="display: none;">
-        <form action="" id="rc_edit_form">
+        <form action="#" id="rc_edit_form">
           <textarea class="text" name="rc_file_contents" id="rc_file_contents"
                     cols="80" rows="25">
           </textarea>
           <br>
           <input class="button" type="submit" name="submit" id="rc_submit" value="Save"
-                 style="float: right;"></input>
+                 style="float: right;">
         </form>
       </div>
 
@@ -145,20 +145,20 @@
       <div id="loader_center">
         <span id="loader_text">Loading...</span><br>
 
-        <img style="display:none;" src="{{ static_url("title_denzi_dragon.png") }}">
-        <img style="display:none;" src="{{ static_url("title_denzi_evil_mage.png") }}">
-        <img style="display:none;" src="{{ static_url("title_denzi_invasion.png") }}">
-        <img style="display:none;" src="{{ static_url("title_denzi_kitchen_duty.png") }}">
-        <img style="display:none;" src="{{ static_url("title_denzi_summoner.png") }}">
-        <img style="display:none;" src="{{ static_url("title_denzi_undead_warrior.png") }}">
-        <img style="display:none;" src="{{ static_url("title_firemage.png") }}">
-        <img style="display:none;" src="{{ static_url("title_omndra_zot_demon.png") }}">
-        <img style="display:none;" src="{{ static_url("title_pooryurik_knight.png") }}">
-        <img style="display:none;" src="{{ static_url("title_psiweapon_kiku.png") }}">
-        <img style="display:none;" src="{{ static_url("title_psiweapon_roxanne.png") }}">
-        <img style="display:none;" src="{{ static_url("title_shadyamish_octm.png") }}">
-        <img style="display:none;" src="{{ static_url("title_white_noise_entering_the_dungeon.png") }}">
-        <img style="display:none;" src="{{ static_url("title_white_noise_grabbing_the_orb.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_denzi_dragon.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_denzi_evil_mage.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_denzi_invasion.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_denzi_kitchen_duty.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_denzi_summoner.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_denzi_undead_warrior.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_firemage.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_omndra_zot_demon.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_pooryurik_knight.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_psiweapon_kiku.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_psiweapon_roxanne.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_shadyamish_octm.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_white_noise_entering_the_dungeon.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url("title_white_noise_grabbing_the_orb.png") }}">
       </div>
 
       <div id="stale_processes_message" class="floating_dialog"
@@ -174,9 +174,9 @@
         gracefully. Force its termination? [yn]
         <br>
         <input class="button" type="button" name="force_terminate_no"
-               id="force_terminate_no" value="No" style="float: right;"></input>
+               id="force_terminate_no" value="No" style="float: right;">
         <input class="button" type="button" name="force_terminate_yes"
-               id="force_terminate_yes" value="Yes" style="float: right;"></input>
+               id="force_terminate_yes" value="Yes" style="float: right;">
       </div>
     </div>
 
@@ -202,7 +202,7 @@
         </div>
 
         <input class="text" type="text" name="chat_input"
-               id="chat_input" style="display: none"></input>
+               id="chat_input" style="display: none">
         <div id="chat_login_text">
           <a id="chat_login_link" href="javascript:">Login</a> to chat
         </div>
