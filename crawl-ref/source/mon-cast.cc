@@ -3303,20 +3303,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     return true;
 }
 
-static int _monster_abjure_square(const coord_def &pos,
-                                  int pow, int actual,
-                                  int wont_attack)
+static int _monster_abjure_target(monster* target, int pow, bool actual)
 {
-    monster* target = monster_at(pos);
-    if (target == NULL)
-        return 0;
-
-    if (!target->alive()
-        || ((bool)wont_attack == target->wont_attack()))
-    {
-        return 0;
-    }
-
     int duration;
 
     if (!target->is_summoned(&duration))
@@ -3368,63 +3356,21 @@ static int _monster_abjure_square(const coord_def &pos,
     return 0;
 }
 
-static int _apply_radius_around_square(const coord_def &c, int radius,
-                                int (*fn)(const coord_def &, int, int, int),
-                                int pow, int par1, int par2)
-{
-    int res = 0;
-    for (int yi = -radius; yi <= radius; ++yi)
-    {
-        const coord_def c1(c.x - radius, c.y + yi);
-        const coord_def c2(c.x + radius, c.y + yi);
-        if (in_bounds(c1))
-            res += fn(c1, pow, par1, par2);
-        if (in_bounds(c2))
-            res += fn(c2, pow, par1, par2);
-    }
-
-    for (int xi = -radius + 1; xi < radius; ++xi)
-    {
-        const coord_def c1(c.x + xi, c.y - radius);
-        const coord_def c2(c.x + xi, c.y + radius);
-        if (in_bounds(c1))
-            res += fn(c1, pow, par1, par2);
-        if (in_bounds(c2))
-            res += fn(c2, pow, par1, par2);
-    }
-    return res;
-}
-
 static int _monster_abjuration(const monster* caster, bool actual)
 {
-    const bool wont_attack = caster->wont_attack();
     int maffected = 0;
 
     if (actual)
         mpr("Send 'em back where they came from!");
 
-    int pow = min(caster->spell_hd(SPELL_ABJURATION) * 90, 2500);
+    int pow = caster->spell_hd(SPELL_ABJURATION) * 20;
 
-    // Abjure radius.
-    for (int rad = 1; rad < 5 && pow >= 30; ++rad)
+    for (monster_near_iterator mi(caster->pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        int number_hit =
-            _apply_radius_around_square(caster->pos(), rad,
-                                        _monster_abjure_square,
-                                        pow, actual, wont_attack);
-
-        maffected += number_hit;
-
-        // Each affected monster drops power.
-        //
-        // We could further tune this by the actual amount of abjuration
-        // damage done to each summon, but the player will probably never
-        // notice. :-)
-        while (number_hit-- > 0)
-            pow = pow * 90 / 100;
-
-        pow /= 2;
+        if (!mons_aligned(caster, *mi))
+            maffected += _monster_abjure_target(*mi, pow, actual);
     }
+
     return maffected;
 }
 
