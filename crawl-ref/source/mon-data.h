@@ -335,7 +335,7 @@ static monsterentry mondata[] =
 
 {
     MONS_RAVEN, 'b', BLUE, "raven",
-    M_SENSE_INVIS,
+    M_SENSE_INVIS | M_WARM_BLOOD,
     MR_NO_FLAGS,
     250, 9, MONS_RAVEN, MONS_RAVEN, MH_NATURAL, -2,
     { {AT_PECK, AF_PLAIN, 14}, {AT_CLAW, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK },
