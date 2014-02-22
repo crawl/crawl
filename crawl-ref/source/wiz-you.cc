@@ -874,6 +874,7 @@ static const char* dur_names[] =
     "forested",
     "dragon call",
     "dragon call cooldown",
+    "aura of abjuration",
 };
 
 void wizard_edit_durations(void)

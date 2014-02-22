@@ -466,7 +466,7 @@ struct spell_desc
 },
 
 {
-    SPELL_MASS_ABJURATION, "Mass Abjuration",
+    SPELL_AURA_OF_ABJURATION, "Aura of Abjuration",
      SPTYP_SUMMONING,
      SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
      6,

@@ -3086,6 +3086,13 @@ static void _decrement_durations()
 
     }
 
+    if (you.duration[DUR_ABJURATION_AURA])
+    {
+        do_aura_of_abjuration(delay);
+        _decrement_a_duration(DUR_ABJURATION_AURA, delay,
+                              "Your aura of abjuration expires.");
+    }
+
     dec_elixir_player(delay);
 
     if (!env.sunlight.empty())

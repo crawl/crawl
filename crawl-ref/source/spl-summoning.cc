@@ -2608,14 +2608,26 @@ spret_type cast_abjuration(int pow, const coord_def& where, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_mass_abjuration(int pow, bool fail)
+spret_type cast_aura_of_abjuration(int pow, bool fail)
 {
     fail_check();
-    mpr("Send 'em back where they came from!");
-    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        _abjuration(pow, *mi);
+
+    if (!you.duration[DUR_ABJURATION_AURA])
+        mpr("You begin to abjure the creatures around you!");
+    else
+        mpr("You extend your aura of abjuration.");
+
+    you.increase_duration(DUR_ABJURATION_AURA,  6 + roll_dice(2, pow / 12), 50);
+    you.props["abj_aura_pow"].get_int() = pow;
 
     return SPRET_SUCCESS;
+}
+
+void do_aura_of_abjuration(int delay)
+{
+    const int pow = you.props["abj_aura_pow"].get_int() * delay / 10;
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+        _abjuration(pow / 2, *mi);
 }
 
 monster* find_battlesphere(const actor* agent)
