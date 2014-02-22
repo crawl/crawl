@@ -373,11 +373,6 @@ Successfully casting this spell gives the caster the ability to instantaneously
 release a fireball at a later time. Knowing this spell allows the learner to
 memorise Fireball for no additional spell levels.
 %%%%
-Demonic Horde spell
-
-This spell calls forth a small swarm of small demons to do battle with the
-caster's foes (and sometimes with each other!).
-%%%%
 Dig spell
 
 This spell digs a tunnel through unworked rock.

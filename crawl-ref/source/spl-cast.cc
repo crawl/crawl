@@ -1631,8 +1631,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_DEMON:
         return cast_summon_demon(powc, god, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_DEMONIC_HORDE:
-        return cast_demonic_horde(powc, god, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_SUMMON_GREATER_DEMON:
         return cast_summon_greater_demon(powc, god, fail);

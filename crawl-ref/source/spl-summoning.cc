@@ -1107,13 +1107,6 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
     return success;
 }
 
-static bool _summon_lesser_demon(int pow, god_type god, int spell, bool quiet)
-{
-    return _summon_demon_wrapper(pow, god, spell, RANDOM_DEMON_LESSER,
-                                 min(2 + (random2(pow) / 4), 6),
-                                 random2(pow) > 3, false, quiet);
-}
-
 static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, RANDOM_DEMON_COMMON,
@@ -1146,27 +1139,6 @@ spret_type cast_summon_demon(int pow, god_type god, bool fail)
     mpr("You open a gate to Pandemonium!");
 
     if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON, false))
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return SPRET_SUCCESS;
-}
-
-spret_type cast_demonic_horde(int pow, god_type god, bool fail)
-{
-    fail_check();
-    mpr("You open a gate to Pandemonium!");
-
-    bool success = false;
-
-    const int how_many = 7 + random2(5);
-
-    for (int i = 0; i < how_many; ++i)
-    {
-        if (_summon_lesser_demon(pow, god, SPELL_DEMONIC_HORDE, true))
-            success = true;
-    }
-
-    if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
@@ -3457,7 +3429,6 @@ static const summons_desc summonsdata[] =
     // Demons
     { SPELL_CALL_IMP,                   3, 3 },
     { SPELL_SUMMON_DEMON,               3, 2 },
-    { SPELL_DEMONIC_HORDE,             12, 5 },
     { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
     // General monsters
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },

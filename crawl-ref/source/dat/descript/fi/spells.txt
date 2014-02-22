@@ -61,11 +61,6 @@ Debugging Ray spell
 
 Säde joka tekee massiivista vahinkoa (1500 hp) ja osuu aina.
 %%%%
-Demonic Horde spell
-
-Tämä taika kutsuu pienen lauman pikkupiruja taistelemaan loitsijan vastustajia
-vastaan (ja joskus toisiaan!)
-%%%%
 Dispersal spell
 
 Tämä taika yrittää teleportata läheisen hirviön jonnekin muualle.
