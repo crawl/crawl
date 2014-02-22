@@ -715,7 +715,7 @@ ENDMAP
 # walls.
 #
 NAME: layout_caves
-DEPTH: D:9-, Depths, Orc, Slime
+DEPTH: D:9-, Depths, Hive, Orc, Slime
 CHANCE: 100% (Orc), 100% (Slime)
 WEIGHT: 10
 ORIENT: encompass

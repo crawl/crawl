@@ -44,15 +44,13 @@ const Branch branches[NUM_BRANCHES] =
       true, WHITE, ETC_ELVEN_BRICK,
       'E', true, 0 },
 
-#if TAG_MAJOR_VERSION == 34
-    { BRANCH_DWARF, BRANCH_ELF, -1, -1, 0, 17,
+    { BRANCH_HIVE, BRANCH_DUNGEON, 11, 16, 4, 15,
       0, 0,
-      DNGN_ENTER_DWARF, DNGN_RETURN_FROM_DWARF,
-      "Dwarven Hall", "the Dwarven Hall", "Dwarf",
-      NULL,
-      true, BROWN, BROWN,
-      'K', false, 0 },
-#endif
+      DNGN_ENTER_HIVE, DNGN_RETURN_FROM_HIVE,
+      "Hive", "the Hive", "Hive",
+      "You hear a buzzing sound coming from all directions.",
+      false, YELLOW, BROWN,
+      'K', true, 5 },
 
     { BRANCH_LAIR, BRANCH_DUNGEON, 8, 11, 10, 10,
       0, 0,

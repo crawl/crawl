@@ -154,9 +154,8 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
+    case DNGN_ENTER_HIVE:
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_DWARF:
-    case DNGN_RETURN_FROM_DWARF:
     case DNGN_ENTER_FOREST:
     case DNGN_RETURN_FROM_FOREST:
 #endif
@@ -175,6 +174,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_SHOALS:
     case DNGN_ENTER_SPIDER:
     case DNGN_ENTER_DEPTHS:
+    case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_ORC:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME:
@@ -1600,9 +1600,7 @@ static const char *dngn_feature_names[] =
 #endif
 "expired_portal",
 
-#if TAG_MAJOR_VERSION == 34
-"enter_dwarven_hall",
-#endif
+"enter_hive",
 "enter_orcish_mines", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
@@ -1613,9 +1611,7 @@ static const char *dngn_feature_names[] =
 #endif
 "enter_depths",
 
-#if TAG_MAJOR_VERSION == 34
-"return_from_dwarven_hall",
-#endif
+"return_from_hive",
 "return_from_orcish_mines",
 "return_from_lair", "return_from_slime_pits",
 "return_from_vaults", "return_from_crypt",

@@ -584,32 +584,6 @@ MAP
   ......
 ENDMAP
 
-NAME:   lemuel_wasp_nest
-DEPTH:  Spider
-MONS:   yellow wasp / weight:2 red wasp
-WEIGHT: 1
-SUBST:  1=1 .:15
-SUBST:  ?=a.
-COLOUR: a = brown
-SUBST:  a = x
-MAP
-     a?@?a
-     a?.?a
-  aaaaa.aaaaa
- aa111a.a111aa
-aa111aa.aa111aa
-a111aaa.aaa111a
-a?1.??a.a??.1?a
-aa?...a.a...?aa
- aaa?.....?aaa
-   aaa?.?aaa
-     aa.aa
-      a.a
-      a.a
-      a*a
-      aaa
-ENDMAP
-
 NAME:   guppyfry_wasp_nest
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  Spider

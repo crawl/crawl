@@ -91,6 +91,7 @@ natasha MONS_NATASHA
 %sdir mon/animals
 
 ## Bees ('k')
+killer_bee_larva MONS_KILLER_BEE_LARVA
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
 giant_firefly MONS_FIREFLY

@@ -390,6 +390,10 @@ static bool _mon_on_interesting_grid(monster* mon)
     case DNGN_RETURN_FROM_ELF:
         return mons_is_native_in_branch(mon, BRANCH_ELF);
 
+    // Killer bees always return to their hive.
+    case DNGN_ENTER_HIVE:
+        return mons_is_native_in_branch(mon, BRANCH_HIVE);
+
     // Spiders...
     case DNGN_ENTER_SPIDER:
         return mons_is_native_in_branch(mon, BRANCH_SPIDER);

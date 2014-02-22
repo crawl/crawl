@@ -170,8 +170,8 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_II:
         case DNGN_STONE_STAIRS_UP_III:
         case DNGN_EXIT_DUNGEON:
+        case DNGN_RETURN_FROM_HIVE:
 #if TAG_MAJOR_VERSION == 34
-        case DNGN_RETURN_FROM_DWARF:
         case DNGN_RETURN_FROM_FOREST:
 #endif
         case DNGN_RETURN_FROM_ORC:
@@ -202,8 +202,8 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
         case DNGN_ABYSSAL_STAIR:
+        case DNGN_ENTER_HIVE:
 #if TAG_MAJOR_VERSION == 34
-        case DNGN_ENTER_DWARF:
         case DNGN_ENTER_FOREST:
 #endif
         case DNGN_ENTER_ORC:

@@ -1249,6 +1249,18 @@ static monsterentry mondata[] =
 },
 
 {
+    MONS_KILLER_BEE_LARVA, 'k', LIGHTGREY, "killer bee larva",
+    M_NO_SKELETON,
+    MR_VUL_POISON,
+    100, 5, MONS_KILLER_BEE, MONS_KILLER_BEE, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 3, 5, 0 },
+    1, 5, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
+    I_INSECT, HT_LAND, FL_NONE, 5, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
+},
+
+{
     MONS_FIREFLY, 'k', LIGHTBLUE, "giant firefly",
     M_NO_SKELETON,
     MR_VUL_POISON,

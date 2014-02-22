@@ -527,9 +527,7 @@ enum branch_type                // you.where_are_you
     BRANCH_FIRST_NON_DUNGEON = BRANCH_TEMPLE,
     BRANCH_ORC,
     BRANCH_ELF,
-#if TAG_MAJOR_VERSION == 34
-    BRANCH_DWARF,
-#endif
+    BRANCH_HIVE,
     BRANCH_LAIR,
     BRANCH_SWAMP,
     BRANCH_SHOALS,
@@ -1398,11 +1396,9 @@ enum dungeon_feature_type
     DNGN_EXPIRED_PORTAL,
 
     // Entrances to various branches
-#if TAG_MAJOR_VERSION == 34
-    DNGN_ENTER_DWARF,
-#endif
+    DNGN_ENTER_HIVE,
+        DNGN_ENTER_FIRST_BRANCH = DNGN_ENTER_HIVE,
     DNGN_ENTER_ORC,
-        DNGN_ENTER_FIRST_BRANCH = DNGN_ENTER_ORC,
     DNGN_ENTER_LAIR,
     DNGN_ENTER_SLIME,
     DNGN_ENTER_VAULTS,
@@ -1424,11 +1420,9 @@ enum dungeon_feature_type
 
     // Exits from various branches
     // Order must be the same as above
-#if TAG_MAJOR_VERSION == 34
-    DNGN_RETURN_FROM_DWARF,
-#endif
+    DNGN_RETURN_FROM_HIVE,
+        DNGN_RETURN_FROM_FIRST_BRANCH = DNGN_RETURN_FROM_HIVE,
     DNGN_RETURN_FROM_ORC,
-        DNGN_RETURN_FROM_FIRST_BRANCH = DNGN_RETURN_FROM_ORC,
     DNGN_RETURN_FROM_LAIR,
     DNGN_RETURN_FROM_SLIME,
     DNGN_RETURN_FROM_VAULTS,
@@ -2384,6 +2378,7 @@ enum monster_type                      // menv[].type
     MONS_QUEEN_ANT,
 #if TAG_MAJOR_VERSION > 34
     MONS_FORMICID,
+    MONS_KILLER_BEE_LARVA,
 #endif
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
@@ -3129,6 +3124,10 @@ enum monster_type                      // menv[].type
     MONS_GUARDIAN_GOLEM,
     MONS_SPELLFORGED_SERVITOR,
     MONS_OCTOPODE_CRUSHER,
+#endif
+
+#if TAG_MAJOR_VERSION == 34
+    MONS_KILLER_BEE_LARVA,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

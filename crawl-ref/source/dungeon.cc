@@ -779,8 +779,8 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_EXIT_HELL:
+    case DNGN_RETURN_FROM_HIVE:
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
     case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_ORC:
@@ -825,8 +825,8 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
+    case DNGN_RETURN_FROM_HIVE:
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
     case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_ORC:

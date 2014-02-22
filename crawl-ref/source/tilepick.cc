@@ -294,8 +294,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_EXIT_PANDEMONIUM;
 
     // branch entry stairs
+    case DNGN_ENTER_HIVE:
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_ENTER_DWARF:
     case DNGN_ENTER_FOREST:
 #endif
     case DNGN_ENTER_BLADE:
@@ -350,8 +350,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_PORTAL_WIZARD_LAB;
 
     // branch exit stairs
+    case DNGN_RETURN_FROM_HIVE:
 #if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
     case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_BLADE:
@@ -1194,6 +1194,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GIANT_SLUG;
 
     // killer bees ('k')
+    case MONS_KILLER_BEE_LARVA:
+        return TILEP_MONS_KILLER_BEE_LARVA;
     case MONS_KILLER_BEE:
         return TILEP_MONS_KILLER_BEE;
     case MONS_QUEEN_BEE:
@@ -3623,6 +3625,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_SLUG;
 
     // bees ('k')
+    case MONS_KILLER_BEE_LARVA:
+        return TILE_CORPSE_KILLER_BEE_LARVA;
     case MONS_KILLER_BEE:
         return TILE_CORPSE_KILLER_BEE;
     case MONS_QUEEN_BEE:

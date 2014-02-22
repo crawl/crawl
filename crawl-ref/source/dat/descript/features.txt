@@ -403,6 +403,10 @@ A staircase to the Hall of Blades
 These stairs lead to the Hall of Blades. The steps seem to have been beaten and
 chipped by assaults from the animated weapons therein.
 %%%%
+A staircase to the Hive
+
+You hear an angry and manifold buzzing.
+%%%%
 A staircase to the Lair
 
 These stairs lead down to the Lair of Beasts, for a change of climate.
