@@ -82,8 +82,8 @@ static spell_type search_order_third[] =
 {
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
+    SPELL_DRAGON_CALL,
     SPELL_SUMMON_HORRIBLE_THINGS,
-    SPELL_SUMMON_DRAGON,
     SPELL_HAUNT,
     SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,
@@ -885,6 +885,8 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
         return SPELL_SUMMON_MINOR_DEMON;
     case SPELL_DELAYED_FIREBALL:
         return SPELL_FIREBALL;
+    case SPELL_DRAGON_CALL:
+        return SPELL_SUMMON_DRAGON;
     default:
         break;
     }
