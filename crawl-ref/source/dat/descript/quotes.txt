@@ -482,6 +482,16 @@ Murray
 “Look behind you! A three-headed monkey!”
     -Guybrush Threepwood, _The Secret of Monkey Island_
 %%%%
+Natasha
+
+“It dooth appéere that there is in Cats as in all other kindes of beasts, a
+certaine reason and language wherby they vnderstand one another. But as touching
+this Grimmalkin: I take rather to be an Hagat or a VVitch then a Cat. For
+witches haue gone often in that likenes, And therof hath come the prouerb as
+trew as common, that a Cat hath nine liues, that is to say, a witch may take on
+her a Cats body nine times.”
+    -William Baldwin, “Beware the Cat”, 1584
+%%%%
 Nikola
 
 “One can prophesy with a Daniel's confidence that skilled electricians will
