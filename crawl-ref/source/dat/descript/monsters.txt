@@ -49,9 +49,7 @@ all but the strongest of them.
 Arachne
 
 Once the best human weaver, Arachne was cursed by being transformed into her
-present form: half-human, half-spider. No longer aging, she has the youth and
-beauty of a human female, along with the legs and abdomen of a monstrous giant
-spider.
+present form: half-human, half-spider.
 
 Thousands of years old, she has learned magic and quite a few other tricks.
 Expect to be ensnared by webs and magic while her pets digest and then drink
@@ -163,7 +161,7 @@ A fearsome arch-fiend who rules the deathly netherworld of Tartarus.
 %%%%
 Erica
 
-A comely spellweaver.
+A wild-tempered adventuress.
 %%%%
 Erolcha
 
@@ -179,19 +177,6 @@ Fannar
 A cold-hearted elven sorcerer, draped in robes of high office. He whispers
 grimly to himself as he stalks the dungeon, trailing ice crystals through the
 air behind him.
-
-In ages long past, Fannar's wisdom and precocious talent with frost magic won
-him the coveted position of magistrate, placing him in charge of enforcing the
-law throughout the Elven Halls. By all accounts, he was once well known for
-being benevolent, just, and passionate in keeping the elves free from
-corruption and crime, even as those around him began to dabble in necromancy
-and demonic magic.
-
-Over the long centuries of his tenure, Fannar's devotion to justice has warped
-into paranoia and despotism. Even his closest supporters now whisper that his
-magical power has begun to border on the self-destructive. Fannar still tries
-to keep the elves from falling to evil, unwilling or unable to notice that he
-failed long ago.
 %%%%
 Frances
 
@@ -253,7 +238,7 @@ over this level of the dungeon; the punishment for trespassing is death.
 %%%%
 Ilsuiw
 
-A cunning merfolk water-witch, who uses her beauty and spellcraft to draw
+A deadly merfolk water-witch, who uses her dominion over the tides to draw
 unwitting adventurers to their deaths.
 %%%%
 Jessica
@@ -279,11 +264,8 @@ Looks like a mercenary.
 %%%%
 Josephine
 
-A hideous crone, her face covered in warts, moles and the occasional patch of
-hair, Josephine's appearance may fool one into thinking she is some weak old
-woman, but she is truly a formidable necromancer. The use of black magic has
-taken a physical toll on and prematurely aged Josephine, turning the once
-beautiful lady into an ugly hag.
+A formidable necromancer, committed to her craft even after it left her aged,
+decaying, and half-undead herself.
 %%%%
 Khufu
 
@@ -291,7 +273,8 @@ An incredibly powerful emperor on the way to godhood.
 %%%%
 Kirke
 
-A beautiful enchantress.
+A master of transformation and treachery. Beware, or you may be the next swine
+to join her herd!
 %%%%
 the Lernaean hydra
 
@@ -395,7 +378,7 @@ be seen again.
 %%%%
 Nergalle
 
-A withered sorceress, exceptionally ugly even by orc standards.
+A withered sorceress, exceptionally cruel even by orc standards.
 %%%%
 Nessos
 
@@ -443,8 +426,8 @@ You feel a lump in the pit of your stomach.
 %%%%
 Roxanne
 
-A beautiful sapphire statue of a famous earth mage who disappeared after a
-catastrophic spell failure. She is clutching a book.
+A strikingly realistic sapphire statue of a famous earth mage, who disappeared
+after a catastrophic spell failure. She is clutching a book.
 %%%%
 Rupert
 
@@ -472,7 +455,6 @@ Sojobo
 
 King of the tengu, with legendary skill in swordsmanship, tactics, and magic.
 %%%%
-
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
