@@ -2203,7 +2203,9 @@ enum monster_type                      // menv[].type
     MONS_ANACONDA,
     MONS_SEA_SNAKE,
     MONS_RAT,
+#if TAG_MAJOR_VERSION == 34
     MONS_GREY_RAT,
+#endif
     MONS_GREEN_RAT,
     MONS_ORANGE_RAT,
 #if TAG_MAJOR_VERSION == 34

@@ -64,7 +64,6 @@ agate_snail CORPSE_AGATE_SNAIL
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 rat CORPSE_RAT
 quokka CORPSE_QUOKKA
-grey_rat CORPSE_GREY_RAT
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
 porcupine CORPSE_PORCUPINE

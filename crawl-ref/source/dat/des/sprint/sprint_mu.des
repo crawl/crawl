@@ -161,8 +161,8 @@ ENDMAP
 # Entry 1, Forest
 NAME: sprint_mu_entry_forest
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror no_dup
-MONS: patrolling ooze / patrolling grey rat
-MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
+MONS: patrolling ooze / patrolling rat
+MONS: patrolling giant mite / patrolling rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
@@ -194,8 +194,8 @@ ENDMAP
 # Entry 2, Cave
 NAME: sprint_mu_entry_cave
 TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror no_dup
-MONS: patrolling ooze / patrolling grey rat
-MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
+MONS: patrolling ooze / patrolling rat
+MONS: patrolling giant mite / patrolling rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30

@@ -1307,8 +1307,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_RAT;
     case MONS_QUOKKA:
         return TILEP_MONS_QUOKKA;
-    case MONS_GREY_RAT:
-        return TILEP_MONS_GREY_RAT;
     case MONS_GREEN_RAT:
         return TILEP_MONS_GREEN_RAT;
     case MONS_ORANGE_RAT:
@@ -3935,8 +3933,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_RAT;
     case MONS_QUOKKA:
         return TILE_CORPSE_QUOKKA;
-    case MONS_GREY_RAT:
-        return TILE_CORPSE_GREY_RAT;
     case MONS_GREEN_RAT:
         return TILE_CORPSE_GREEN_RAT;
     case MONS_ORANGE_RAT:

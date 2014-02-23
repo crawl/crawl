@@ -221,7 +221,7 @@ static void _fire_wave(int power)
 {
     wave_name("FIRE WAVE");
     monster_type firemons[] = {MONS_FIRE_ELEMENTAL, MONS_FIRE_DRAKE, MONS_CRIMSON_IMP,
-        MONS_FIRE_DRAGON, MONS_FIRE_VORTEX ,MONS_FIRE_GIANT, MONS_HELLION,
+        MONS_FIRE_DRAGON, MONS_FIRE_VORTEX, MONS_FIRE_GIANT, MONS_HELLION,
         MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER, MONS_SUN_DEMON,
         MONS_RED_DRACONIAN, MONS_MOTTLED_DRACONIAN, MONS_DRACONIAN_SCORCHER,
         MONS_FLAMING_CORPSE, MONS_MOTTLED_DRAGON, MONS_EFREET,
@@ -263,8 +263,7 @@ static void _gnoll_wave(int power)
 static void _rat_wave(int power)
 {
     wave_name("RAT WAVE");
-    monster_type rats[] = {MONS_RAT, MONS_GREEN_RAT, MONS_GREY_RAT,
-                MONS_ORANGE_RAT, END};
+    monster_type rats[] = {MONS_RAT, MONS_GREEN_RAT, MONS_ORANGE_RAT, END};
     monster_type boss[] = {MONS_ORANGE_RAT, END};
     _zotdef_fill_from_list(rats, 0, power); // full power
     _zotdef_choose_boss(boss, power);

@@ -426,7 +426,7 @@ NAME:    lemuel_ratsnest
 ORIENT:  northeast
 DEPTH:   D:5-8, Lair
 SHUFFLE: 23, 34
-MONS:    rat, grey rat, green rat, orange rat
+MONS:    rat, rat / green rat w:5, green rat, orange rat
 ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
 SUBST:   d = d$..., e = d$
 : if you.branch() == "Lair" then
@@ -1586,7 +1586,7 @@ NAME:   kennysheep_rathole
 TAGS:   no_monster_gen
 DEPTH:  Lair
 ORIENT: float
-MONS:   green rat band, orange rat, grey rat / green rat / rat
+MONS:   green rat band, orange rat, green rat / rat
 KMONS:  P = plant / fungus w:2
 KITEM:  d = cheese / slice of pizza / sausage / bread ration
 NSUBST: W = 1:1 / 2:P / 2:2 / 2:3 / 2:d
@@ -1607,7 +1607,7 @@ NAME:   kennysheep_abandoned_house
 TAGS:   ruin
 DEPTH:  Lair
 ORIENT: float
-MONS:   green rat / rat, orange rat, grey rat / rat
+MONS:   green rat / rat, orange rat, rat
 KITEM:  d = cheese / slice of pizza / sausage / bread ration
 SUBST:  d = d123..., 2 = 2.
 NSUBST: 1 = *:1
