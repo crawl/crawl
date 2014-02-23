@@ -92,7 +92,8 @@ void initialise_branch_depths()
     // This way you get one "water" branch and one "poison" branch.
     branch_type disabled_branch[] =
     {
-        random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
+        // random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
+        BRANCH_SHOALS,
         random_choose(BRANCH_SNAKE, BRANCH_SPIDER, -1),
     };
 
