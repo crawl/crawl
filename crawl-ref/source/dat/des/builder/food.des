@@ -424,7 +424,7 @@ DEPTH:  D:7-14
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
-MONS:   rat, grey rat, green rat, orange rat
+MONS:   rat, rat / green rat w:5, green rat, orange rat
 ITEM:   cheese q:3 no_mimic
 : if you.absdepth() < 11 then
 NSUBST: 4 = 1:4 / *:3

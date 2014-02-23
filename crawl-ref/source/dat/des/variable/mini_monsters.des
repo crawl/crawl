@@ -458,7 +458,7 @@ ENDMAP
 
 NAME:  minmay_rat_gold_closets
 DEPTH: D:1-2
-MONS:  rat / grey rat w:1
+MONS:  rat
 SUBST: 1 = 111$
 MAP
 .............
@@ -474,7 +474,7 @@ NAME:  rats_and_rats_again
 TAGS:  mini_float
 DEPTH: D:8-14
 MONS:  shadow imp
-MONS:  rat w:40 / grey rat w:40 / green rat w:12 / orange rat w:1 / nothing
+MONS:  rat w:40 / green rat w:20 / orange rat w:1 / nothing
 MAP
 ...........
 .xxx+++xxx.
@@ -511,7 +511,7 @@ ENDMAP
 
 NAME:  minmay_rat_hole
 DEPTH: D:2-4
-MONS:  rat / grey rat w:1
+MONS:  rat
 ITEM:  cheese w:30 / bread ration / meat ration / nothing w:60
 MAP
  xxx
@@ -1042,7 +1042,7 @@ NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
 TAGS:    layout_rooms layout_misc layout_rooms layout_basic
 DEPTH:   D:11-
-MONS:    rat / grey rat w:2, bat, giant newt / giant gecko, worm, ooze
+MONS:    rat, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
 KMONS:   8 = ball python / adder w:8
 KMONS:   A = green rat

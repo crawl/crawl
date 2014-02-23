@@ -113,7 +113,6 @@ elephant_slug MONS_ELEPHANT_SLUG
 ## Rodents ('r')
 %rim 0
 rat MONS_RAT
-grey_rat MONS_GREY_RAT
 green_rat MONS_GREEN_RAT
 orange_rat MONS_ORANGE_RAT
 porcupine MONS_PORCUPINE

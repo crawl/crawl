@@ -1459,10 +1459,6 @@ grey draconian
 
 A scale-covered humanoid with a reptilian tail and small wings.
 %%%%
-grey rat
-
-A sickening rodent that has a tendency to move in packs.
-%%%%
 griffon
 
 A large creature with the hindquarters of a lion and the wings, head and talons

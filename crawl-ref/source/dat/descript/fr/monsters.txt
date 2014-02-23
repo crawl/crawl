@@ -1474,10 +1474,6 @@ grey draconian
 Un humanoïde au corps couvert d'écailles avec une queue reptilienne, et de
 petites ailes.
 %%%%
-grey rat
-
-Un rongeur écœurant qui à tendance à se déplacer en meute.
-%%%%
 griffon
 
 Une grande créature avec le postérieur d'un lion et les ailes, la tête et les
