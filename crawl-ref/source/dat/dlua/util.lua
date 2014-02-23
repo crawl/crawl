@@ -264,7 +264,7 @@ function util.random_weighted_from(weightfn, list)
   return chosen
 end
 
-function util.random_weighted_keys(weightfn, list)
+function util.random_weighted_keys(weightfn, list, order)
   if type(weightfn) ~= "function" then
     local weightkey = weightfn
     weightfn = function (table)
@@ -273,7 +273,17 @@ function util.random_weighted_keys(weightfn, list)
   end
   local cweight = 0
   local chosen = nil
-  for k,v in pairs(list) do
+  local keys = {}
+  for k in pairs(list) do
+    keys[#keys+1] = k
+  end
+  if order then
+    table.sort(keys, order)
+  else
+    table.sort(keys)
+  end
+  for i,k in ipairs(keys) do
+    v = list[k]
     local wt = weightfn(k,v) or 10
     cweight = cweight + wt
     if crawl.random2(cweight) < wt then
