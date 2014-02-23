@@ -1875,9 +1875,9 @@ struct spell_desc
 },
 
 {
-    SPELL_SUMMON_UGLY_THING, "Summon Ugly Thing",
+    SPELL_SUMMON_MENAGERIE, "Summon Menagerie",
      SPTYP_SUMMONING,
-     SPFLAG_CHAOTIC,
+     SPFLAG_NONE,
      6,
      200,
      -1, -1,

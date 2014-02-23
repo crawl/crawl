@@ -1163,7 +1163,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FAKE_MARA_SUMMON:
     case SPELL_SUMMON_ILLUSION:
     case SPELL_SUMMON_DEMON:
-    case SPELL_SUMMON_UGLY_THING:
+    case SPELL_SUMMON_MENAGERIE:
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SIMULACRUM:
@@ -4836,23 +4836,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_UGLY_THING:
+    case SPELL_SUMMON_MENAGERIE:
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 10 + 1);
-
-        duration  = min(2 + mons->spell_hd(spell_cast) / 10, 6);
-        for (sumcount = 0; sumcount < sumcount2; ++sumcount)
-        {
-            const monster_type mon = (one_chance_in(3) ? MONS_VERY_UGLY_THING
-                                                       : MONS_UGLY_THING);
-
-            create_monster(
-                mgen_data(mon, SAME_ATTITUDE(mons), mons,
-                          duration, spell_cast, mons->pos(), mons->foe, 0,
-                          god));
-        }
+        cast_summon_menagerie(mons, mons->spell_hd(spell_cast) * 6, mons->god);
         return;
 
     case SPELL_ANIMATE_DEAD:

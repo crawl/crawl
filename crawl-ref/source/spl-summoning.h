@@ -37,7 +37,8 @@ spret_type cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
                                  int unfriendly = 2, int horde_penalty = 0,
                                  bool fail = false);
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail);
-spret_type cast_summon_ugly_thing(int pow, god_type god, bool fail);
+spret_type cast_summon_menagerie(actor* caster, int pow, god_type god,
+                                 bool fail = false);
 spret_type cast_summon_dragon(actor *caster, int pow,
                               god_type god = GOD_NO_GOD, bool fail = false);
 spret_type cast_summon_hydra(actor *caster, int pow, god_type god = GOD_NO_GOD,

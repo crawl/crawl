@@ -665,10 +665,6 @@ Summon Swarm spell
 
 Ten czar przyzywa rój wściekle jadowitych owadów.
 %%%%
-Summon Ugly Thing spell
-
-Ten czar przyzywa zmutowaną kreaturę na służbę rzucającemu.
-%%%%
 Sure Blade spell
 
 Ten czar tworzy więź pomiędzy rzucającym a krótkim ostrzem trzymanym w dłoni,

@@ -1138,10 +1138,6 @@ Summon Ufetubus spell
 Ce sort convoque plein d'ufetubi, petits démons ennuyeux se pressant autour de
 vous.
 %%%%
-Summon Ugly Thing spell
-
-Ce sort convoque une créature mutante d'un autre monde pour aider le sorcier.
-%%%%
 Summon Undead spell
 
 Ce sort convoque plusieurs monstres morts-vivants. Il ne peut pas faire
