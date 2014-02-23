@@ -987,7 +987,7 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
 spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type god, bool fail)
 {
-    const int dur = min(1 + (random2(pow) / 10), 4);
+    const int dur = 2;
 
     if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_SUMMON_LIGHTNING_SPIRE,
                                                       pow))
@@ -1021,10 +1021,12 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
 
     fail_check();
 
-    if (create_monster(
-            mgen_data(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, &you, dur,
-                      SPELL_SUMMON_LIGHTNING_SPIRE, where, MHITYOU,
-                      MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, god)))
+    mgen_data spire = mgen_data(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, &you, dur,
+                                SPELL_SUMMON_LIGHTNING_SPIRE, where, MHITYOU,
+                                MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, god);
+    spire.hd = 2 + div_rand_round(pow, 16);
+
+    if (create_monster(spire))
     {
         if (!silenced(where))
             mpr("An electric hum fills the air.");

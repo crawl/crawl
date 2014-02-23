@@ -3569,7 +3569,7 @@ struct spell_desc
      SPTYP_SUMMONING | SPTYP_AIR,
      SPFLAG_GRID | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      4,
-     200,
+     100,
      2, 2,
      0,
      NULL,
