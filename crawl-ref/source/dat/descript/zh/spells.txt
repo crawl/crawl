@@ -599,10 +599,6 @@ Summon Swarm spell
 
 这道法术能召唤出瘟疫虫群。
 %%%%
-Summon Ugly Thing spell
-
-这道法术召唤出一个奇异的变异怪物来帮助施法者。
-%%%%
 Sure Blade spell
 
 这道法术用一个神秘的链接将施法者和施法者所持用的一把短刀连结起来，

@@ -1118,10 +1118,6 @@ Summon Ufetubus spell
 
 이 주문은 당신 주위에 떼지어 귀찮게 구는 작은 악마인 우페투비를 여럿 소환한다.
 %%%%
-Summon Ugly Thing spell
-
-이 주문은 비현실적일 정도로 기괴하게 변이된 생명체를 소환한다.
-%%%%
 Summon Undead spell
 
 이 주문은 여러 마리의 언데드들을 소환한다. 리치, 레버넌트나 고위 미라들은

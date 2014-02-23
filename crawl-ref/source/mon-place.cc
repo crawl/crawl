@@ -1615,7 +1615,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                            mark_items,
                            mg.summon_type);
 
-        if (mg.summon_type > 0 && mg.summoner)
+        if (mg.summon_type > 0 && mg.summoner && !(mg.flags & MG_DONT_CAP))
         {
             // If this is a band member created by shadow creatures, link its
             // ID and don't count it against the summon cap

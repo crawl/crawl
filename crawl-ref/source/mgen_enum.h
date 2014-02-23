@@ -145,6 +145,7 @@ enum mgen_flag_type
     MG_PATROLLING   = 0x10,
     MG_BAND_MINION  = 0x20,
     MG_DONT_COME    = 0x40, // suppress the "comes into view" spam
+    MG_DONT_CAP     = 0x80, // don't automatically apply the summon cap to this monster
 };
 
 #endif

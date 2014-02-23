@@ -470,28 +470,67 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_summon_ugly_thing(int pow, god_type god, bool fail)
+spret_type cast_summon_menagerie(actor* caster, int pow, god_type god, bool fail)
 {
     fail_check();
-    monster_type mon = MONS_PROGRAM_BUG;
+    monster_type type = MONS_PROGRAM_BUG;
 
-    if (random2(pow) >= 46 || one_chance_in(6))
-        mon = MONS_VERY_UGLY_THING;
+    if (random2(pow) > 60 && coinflip())
+        type = MONS_SPHINX;
     else
-        mon = MONS_UGLY_THING;
+        type = random_choose(MONS_HARPY, MONS_MANTICORE, MONS_LINDWURM, -1);
 
-    const int dur = min(2 + (random2(pow) / 4), 6);
+    int num = (type == MONS_HARPY ? 1 + x_chance_in_y(pow, 80)
+                                      + x_chance_in_y(pow - 75, 100)
+                                  : 1);
+    const bool plural = (num > 1);
 
-    if (create_monster(
-            mgen_data(mon,
-                      BEH_FRIENDLY, &you,
-                      dur, SPELL_SUMMON_UGLY_THING,
-                      you.pos(),
-                      MHITYOU,
-                      MG_AUTOFOE, god)))
+    const int hd_bonus = div_rand_round(pow - 50, 25);
+
+    mgen_data mdata = mgen_data(type, BEH_COPY, caster, 4,
+                                SPELL_SUMMON_MENAGERIE, caster->pos(),
+                                (caster->is_player()) ?
+                                    MHITYOU : caster->as_monster()->foe,
+                                MG_AUTOFOE | MG_DONT_CAP, god);
+
+    if (caster->is_player())
+        mdata.hd = get_monster_data(type)->hpdice[0] +  hd_bonus;
+
+    bool seen = false;
+    bool first = true;
+    int mid = -1;
+    while (num-- > 0)
     {
-        mpr((mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears."
-                                          : "An ugly thing appears.");
+        if (monster* beast = create_monster(mdata))
+        {
+            if (you.can_see(beast))
+                seen = true;
+
+            // Link the harpies together as one entity as far as the summon
+            // cap is concerned.
+            if (type == MONS_HARPY)
+            {
+                if (mid == -1)
+                    mid = beast->mid;
+
+                beast->props["summon_id"].get_int() = mid;
+            }
+
+            // Handle cap only for the first of the batch being summoned
+            if (first)
+                summoned_monster(beast, &you, SPELL_SUMMON_MENAGERIE);
+
+            first = false;
+        }
+    }
+
+    if (seen)
+    {
+        mprf("%s %s %s %s!", caster->name(DESC_THE).c_str(),
+                             caster->conj_verb("summon").c_str(),
+                             plural ? "some" : "a",
+                             plural ? pluralise(mons_type_name(type, DESC_PLAIN)).c_str()
+                                    : mons_type_name(type, DESC_PLAIN).c_str());
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -3444,7 +3483,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
     // General monsters
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },
-    { SPELL_SUMMON_UGLY_THING,          3, 2 },
+    { SPELL_SUMMON_MENAGERIE,           4, 2 },
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 8 },
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
@@ -3495,7 +3534,8 @@ int summons_limit(spell_type spell)
 static bool _spell_has_variable_cap(spell_type spell)
 {
     return spell == SPELL_SHADOW_CREATURES
-           || spell == SPELL_WEAVE_SHADOWS;
+           || spell == SPELL_WEAVE_SHADOWS
+           || spell == SPELL_SUMMON_MENAGERIE;
 }
 
 static void _expire_capped_summon(monster* mon, int delay, bool recurse)

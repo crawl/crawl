@@ -1122,10 +1122,6 @@ Summon Ufetubus spell
 
 この呪文はウフェツバスの大群を召喚し、あなたを取り囲む。
 %%%%
-Summon Ugly Thing spell
-
-この呪文は醜きものを召喚し、術者の助けとする。
-%%%%
 Summon Undead spell
 
 この呪文は大量のアンデッドモンスターを召喚する。この呪文によりリッチ、
