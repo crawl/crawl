@@ -1092,7 +1092,8 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
         if (monster *mons = create_monster(
             mgen_data(critter, BEH_FRIENDLY, &you,
                       (scroll ? 2 : 1), // This duration is only used for band members.
-                      SPELL_SHADOW_CREATURES, you.pos(), MHITYOU,
+                      (scroll ? (int)MON_SUMM_SCROLL : SPELL_SHADOW_CREATURES),
+                      you.pos(), MHITYOU,
                       MG_FORCE_BEH | MG_AUTOFOE, god), false))
         {
             // In the rare cases that a specific spell set of a monster will
