@@ -6460,7 +6460,7 @@ static monsterentry mondata[] =
 {
     MONS_NATASHA, 'h', BLUE, "Natasha",
     M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS | M_UNIQUE | M_SPELLCASTER
-        | M_ACTUAL_SPELLS | M_NO_WAND,
+        | M_ACTUAL_SPELLS,
     MR_NO_FLAGS,
     200, 10, MONS_FELID, MONS_FELID, MH_NATURAL, -6,
     { {AT_CLAW, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
