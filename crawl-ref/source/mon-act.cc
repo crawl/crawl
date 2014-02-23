@@ -994,7 +994,7 @@ static bool _handle_scroll(monster* mons)
             {
                 create_monster(
                     mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
-                              3, SPELL_SHADOW_CREATURES, mons->pos(), mons->foe,
+                              3, MON_SUMM_SCROLL, mons->pos(), mons->foe,
                               0, GOD_NO_GOD));
             }
             ident = ID_KNOWN_TYPE;

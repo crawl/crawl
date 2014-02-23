@@ -133,6 +133,7 @@ enum mon_summon_type
     MON_SUMM_ZOT,     // Zot trap
     MON_SUMM_WRATH,   // Divine wrath
     MON_SUMM_AID,     // Divine aid
+    MON_SUMM_SCROLL,  // Scroll of summoning
 };
 
 #include "mon-flags.h"
