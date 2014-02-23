@@ -1619,8 +1619,15 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
         if (mg.summon_type > 0 && mg.summoner)
         {
-            summoned_monster(mon, mg.summoner,
-                             static_cast<spell_type>(mg.summon_type));
+            // If this is a band member created by shadow creatures, link its
+            // ID and don't count it against the summon cap
+            if (mg.summon_type == SPELL_SHADOW_CREATURES && leader)
+                mon->props["summon_id"].get_int() = leader->mid;
+            else
+            {
+                summoned_monster(mon, mg.summoner,
+                                static_cast<spell_type>(mg.summon_type));
+            }
         }
     }
 

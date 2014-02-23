@@ -1126,9 +1126,13 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
                 mon_enchant me = mon_enchant(ENCH_ABJ, d);
                 me.set_duration(mons, &me);
                 mons->update_ench(me);
+
+                // Set summon ID, to share summon cap with its band members
+                mons->props["summon_id"].get_int() = mons->mid;
             }
 
-            // Remove any band members that would turn hostile
+            // Remove any band members that would turn hostile, and link their
+            // summon IDs
             for (monster_iterator mi; mi; ++mi)
             {
                 if (testbits(mi->flags, MF_BAND_MEMBER)
@@ -1136,6 +1140,8 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
                 {
                     if (player_will_anger_monster(*mi))
                         monster_die(*mi, KILL_RESET, NON_MONSTER);
+
+                    mi->props["summon_id"].get_int() = mons->mid;
                 }
             }
 
@@ -3393,6 +3399,39 @@ int summons_limit(spell_type spell)
     return desc->type_cap;
 }
 
+static bool _spell_has_variable_cap(spell_type spell)
+{
+    return (spell == SPELL_SHADOW_CREATURES);
+}
+
+static void _expire_capped_summon(monster* mon, int delay, bool recurse)
+{
+    // Timeout the summon
+    mon_enchant abj = mon->get_ench(ENCH_ABJ);
+    abj.duration = delay;
+    mon->update_ench(abj);
+    // Mark our cap abjuration so we don't keep abjuring the same
+    // one if creating multiple summons (also, should show a status light).
+    mon->add_ench(ENCH_SUMMON_CAPPED);
+
+    if (recurse && mon->props.exists("summon_id"))
+    {
+        const int summon_id = mon->props["summon_id"].get_int();
+        for (monster_iterator mi; mi; ++mi)
+        {
+            // Summoner check should be technically unnecessary, but saves
+            // scanning props for all monsters on the level.
+            if (mi->summoner == mon->summoner
+                && mi->props.exists("summon_id")
+                && mi->props["summon_id"].get_int() == summon_id
+                && !mi->has_ench(ENCH_SUMMON_CAPPED))
+            {
+                _expire_capped_summon(*mi, delay, false);
+            }
+        }
+    }
+}
+
 // Call when a monster has been summoned, to manage this summoner's caps.
 void summoned_monster(const monster *mons, const actor *caster,
                       spell_type spell)
@@ -3407,6 +3446,9 @@ void summoned_monster(const monster *mons, const actor *caster,
     monster* oldest_summon = 0;
     int oldest_duration = 0;
 
+    // Linked summons that have already been counted once
+    set<int> seen_ids;
+
     int count = 1;
     for (monster_iterator mi; mi; ++mi)
     {
@@ -3418,6 +3460,18 @@ void summoned_monster(const monster *mons, const actor *caster,
         const bool summoned = mi->is_summoned(&duration, &stype);
         if (summoned && stype == spell && caster->mid == mi->summoner)
         {
+            if (_spell_has_variable_cap(spell) && mi->props.exists("summon_id"))
+            {
+                const int id = mi->props["summon_id"].get_int();
+
+                // Skip any linked summon whose set we have seen already,
+                // otherwise add it to the list of seen summon IDs
+                if (seen_ids.find(id) == seen_ids.end())
+                    seen_ids.insert(id);
+                else
+                    continue;
+            }
+
             count++;
 
             // If this summon is the oldest (well, the closest to expiry)
@@ -3432,15 +3486,7 @@ void summoned_monster(const monster *mons, const actor *caster,
     }
 
     if (oldest_summon && count > max_this_time)
-    {
-        // Timeout the oldest summon
-        mon_enchant abj = oldest_summon->get_ench(ENCH_ABJ);
-        abj.duration = desc->timeout * 5;
-        oldest_summon->update_ench(abj);
-        // Mark our cap abjuration so we don't keep abduring the same
-        // one if creating multiple summons (also, should show a status light).
-        oldest_summon->add_ench(ENCH_SUMMON_CAPPED);
-    }
+        _expire_capped_summon(oldest_summon, desc->timeout * 5, true);
 }
 
 int count_summons(const actor *summoner, spell_type spell)
