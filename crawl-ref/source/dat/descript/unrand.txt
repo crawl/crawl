@@ -52,9 +52,8 @@ Vampire's Tooth
 
 This ivory-like dagger looks like it could actually have been created from a
 tooth of some enormous predatory creature, although obviously not an average
-human-sized bloodsucker.
-
-It is lethally vampiric.
+human-sized bloodsucker. It is lethally vampiric, and restores a greater
+portion of life to its user than other vampiric weapons.
 %%%%
 Scythe of Curses
 
@@ -66,7 +65,8 @@ This truly accursed weapon is an instrument of Hell.
 %%%%
 Sword of Zonguldrok
 
-This dreadful weapon is used at the user's peril.
+This dreadful weapon is used at the user's peril. Those slain in its presence
+are reanimated by its power, and forced to fight on.
 %%%%
 Sword of Cerebov
 
@@ -75,15 +75,15 @@ defender's fire resistance.
 %%%%
 Staff of Dispater
 
-This legendary item can unleash the fury of Hell. The unholy flames it evokes
+This legendary item can unleash the fury of Hell. The unholy hellfire it evokes
 may cost a portion of your life and your soul, but since when have such details
 stopped anyone in their quest for power?
 %%%%
 Sceptre of Asmodeus
 
-It carries some of the powers of the arch-fiend Asmodeus. Waving this sceptre
-can yank powerful hellspawn from their infernal home and enslave them to do
-your bidding. Obviously, they're not going to like you when the spell expires.
+It carries some of the powers of the arch-fiend Asmodeus. Evoking the sceptre
+can summon fiery demons from their infernal home and enslave them to do
+your bidding, although they may not remain enslaved for long.
 %%%%
 faerie dragon armour
 
@@ -109,9 +109,7 @@ undead, and can reveal any machinations of those who try to stay invisible.
 demon blade "Leech"
 
 It drives its owner's mind into a narrow purpose: gorging on drained life
-force.
-
-It is unerringly vampiric.
+force. It is unerringly vampiric, draining life every time it strikes.
 %%%%
 dagger of Chilly Death
 
@@ -119,10 +117,8 @@ A dagger made of one huge piece of sapphire.
 %%%%
 dagger "Morg"
 
-An ugly rusty dagger.
-
-Many years ago it was the property of a powerful mage called Boris. He got lost
-in the Dungeon while seeking the Orb.
+An ugly rusty dagger. Many years ago it was the property of a powerful mage
+called Boris. He got lost in the Dungeon while seeking the Orb.
 %%%%
 scythe "Finisher"
 
@@ -134,10 +130,8 @@ A sling made of weird blue leather.
 %%%%
 bow of Krishna "Sharnga"
 
-A wonderful golden bow.
-
-It once belonged to a foreign god. It works best with special arrows which are
-not generally available.
+A wonderful golden bow that once belonged to a foreign god. It works best with
+special arrows which are not generally available.
 %%%%
 giant club "Skullcrusher"
 
@@ -175,9 +169,8 @@ unwise enough to risk wielding it.
 %%%%
 trident of the Octopus King
 
-This trident was stolen many years ago from the Octopus King's garden by a
-really unimportant and already dead man. But beware of the Octopus King's
-wrath!
+This trident was stolen many years ago from the Octopus King's garden. Beware
+the Octopus King's wrath!
 %%%%
 mithril axe "Arga"
 
@@ -186,6 +179,8 @@ A beautiful mithril axe, probably lost by some dwarven hero.
 Elemental Staff
 
 This powerful staff used to belong to the leader of the Guild of Five Elements.
+In addition to the protection it provides, it sometimes discharges powerful
+blasts of elemental energy when it strikes.
 %%%%
 crossbow "Sniper"
 
@@ -209,10 +204,8 @@ be to find a worthy opponent.
 %%%%
 Spriggan's Knife
 
-A dainty little knife.
-
-This knife was made by Spriggans, or for Spriggans, or possibly from Spriggans.
-Anyway, it's in some way associated with those fey folk.
+This dainty little knife was made by Spriggans, or for Spriggans, or possibly
+from Spriggans. Anyway, it's in some way associated with those fey folk.
 %%%%
 plutonium sword
 
@@ -337,10 +330,8 @@ resemble a dragon's visage.
 robe of Night
 
 A long black robe made of strange glossy material. It seems to shroud its
-wearer in darkness.
-
-According to legend, it was the gift of Ratri the Goddess of the Night to one
-of her followers.
+wearer in darkness. According to legend, it was the gift of Ratri the Goddess
+of the Night to one of her followers.
 %%%%
 armour of the Dragon King
 
@@ -427,11 +418,9 @@ A robe of a material so flimsy it could almost be clouds.
 %%%%
 hat of Pondering
 
-A slimy wizard hat.
-
 The favorite hat of the slug wizard Gastronok, stained with reddish slime and
 enchanted to aid in his arcane pondering. It has been specially enchanted to
-protect against the effects of salt, though you probably don't care.
+protect against the effects of salt.
 %%%%
 obsidian axe
 
@@ -503,13 +492,9 @@ A novel pair of boots invented by a suitor of Arachne.
 %%%%
 dark maul
 
-This large iron-shod maul is just the tool you need, if you had some bridge
-stakes to drive in. It is made for dealing massing blows — we're not talking
-about a mere concussion, but about remnants of a helmet standing on shoes, or
-perhaps an outright wet stain. Alas, such power comes at a price: the maul's
-head is so heavy it takes forever to lift it up for another swing. The maul is
-sized for a human, so ogres may want to use their customary clubs instead, them
-being less unwieldy in their large hands.
+This large iron-shod maul is specialised for dealing massively powerful blows.
+Alas, such power comes at a price: the maul's head is so heavy it takes forever
+to lift it up for another swing.
 %%%%
 hat of the High Council
 
@@ -520,7 +505,7 @@ find it enhances their spell power.
 %%%%
 arc blade
 
-A cutlass somehow crafted from pure electricity. Striking an enemy with it
+A blade somehow crafted from pure electricity. Striking an enemy with it
 occasionally unleashes a static discharge.
 %%%%
 demon whip "Spellbinder"
