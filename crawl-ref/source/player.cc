@@ -2980,7 +2980,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     you.attribute[ATTR_EVOL_XP] += exp_gained;
     for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
     {
-        if (player_under_penance((god_type) i))
+        if (active_penance((god_type) i))
         {
             you.attribute[ATTR_GOD_WRATH_XP] -= exp_gained;
             while (you.attribute[ATTR_GOD_WRATH_XP] < 0)

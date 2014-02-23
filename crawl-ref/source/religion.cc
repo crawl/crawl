@@ -996,6 +996,19 @@ string get_god_dislikes(god_type which_god, bool /*verbose*/)
     return text;
 }
 
+bool active_penance(god_type god)
+{
+    // Ashenzari's penance isn't active; Nemelex's penance is only active
+    // when the penance counter is above 100; good gods only have active
+    // wrath when they hate your current god.
+    return player_under_penance(god)
+           && !is_unavailable_god(god)
+           && god != GOD_ASHENZARI
+           && (god != GOD_NEMELEX_XOBEH || you.penance[god] > 100)
+           && (god == you.religion && !is_good_god(god)
+               || god_hates_your_god(god, you.religion));
+}
+
 void dec_penance(god_type god, int val)
 {
     if (val <= 0 || you.penance[god] <= 0)
@@ -1093,12 +1106,8 @@ void dec_penance(god_type god, int val)
     int i = GOD_NO_GOD;
     for (; i < NUM_GODS; ++i)
     {
-        if (player_under_penance((god_type) i)
-            && (i != GOD_NEMELEX_XOBEH || you.penance[i] > 100)
-            && (i != GOD_ASHENZARI))
-        {
+        if (active_penance((god_type) i))
             break;
-        }
     }
 
     if (i != NUM_GODS)
@@ -1134,7 +1143,7 @@ void set_penance_xp_timeout()
     you.attribute[ATTR_GOD_WRATH_XP] +=
         max(div_rand_round(exp_needed(you.experience_level + 1)
                           - exp_needed(you.experience_level),
-                          100),
+                          200),
             1);
 }
 
@@ -3843,12 +3852,14 @@ void god_pitch(god_type which_god)
     {
         simple_god_message(" says: Your evil deeds will not go unpunished!",
                            GOD_ELYVILON);
+        set_penance_xp_timeout();
     }
     if (old_god != GOD_SHINING_ONE && you.penance[GOD_SHINING_ONE]
         && god_hates_your_god(GOD_SHINING_ONE, you.religion))
     {
         simple_god_message(" says: You will pay for your evil ways, mortal!",
                            GOD_SHINING_ONE);
+        set_penance_xp_timeout();
     }
     if (old_god != GOD_ZIN && you.penance[GOD_ZIN]
         && god_hates_your_god(GOD_ZIN, you.religion))
@@ -3856,6 +3867,7 @@ void god_pitch(god_type which_god)
         simple_god_message(make_stringf(" says: You will suffer for embracing such %s!",
                                         is_chaotic_god(you.religion) ? "chaos" : "evil").c_str(),
                            GOD_ZIN);
+        set_penance_xp_timeout();
     }
 
     // Note that you.worshipped[] has already been incremented.
@@ -4114,33 +4126,16 @@ void handle_god_time(int time_delta)
         // First count the number of gods to whom we owe penance.
         for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
         {
-            // Nemelex penance is special: it's only "active"
-            // when penance > 100, else it's passive.
-            // Ash wrath is not impacted by time.
-            if (player_under_penance((god_type) i)
-                && (i != GOD_NEMELEX_XOBEH || you.penance[i] > 100)
-                && (i != GOD_ASHENZARI))
-            {
+            if (active_penance((god_type) i))
                 angry_gods.push_back((god_type) i);
-            }
         }
-        shuffle_array(angry_gods);
-        int tries = 10;
-        while (tries-- > 0)
+        if (x_chance_in_y(angry_gods.size(), 20))
         {
-            // Now roll to see whether we get retribution and from which god.
-            const unsigned int which_penance = random2(10);
-            if (which_penance < angry_gods.size())
-            {
-                // If this *fails*, we rolled a god who doesn't exist or whose
-                // wrath doesn't occur this way, so try again.
-                if (divine_retribution(angry_gods[which_penance]))
-                    break;
-            }
-            else
-                break;
+            // This should be guaranteed; otherwise the god wouldn't have
+            // appeared in the angry_gods list.
+            ASSERT(divine_retribution(angry_gods[random2(angry_gods.size())]));
+            you.attribute[ATTR_GOD_WRATH_COUNT]--;
         }
-        you.attribute[ATTR_GOD_WRATH_COUNT]--;
     }
 
     // Update the god's opinion of the player.
