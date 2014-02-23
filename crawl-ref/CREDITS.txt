@@ -217,6 +217,7 @@ The Dungeon Crawl Stone Soup development team is:
     Raphaël Langella
     Nat Lanza
     Jesse Luehrs
+    Shmuale Mark
     Steve Melenchuk
     Neil Middleton
     Neil Moore
@@ -228,5 +229,4 @@ The Dungeon Crawl Stone Soup development team is:
     Sage
     Jason Van
     Chris West
-    wheals
     Samuel Wilson
