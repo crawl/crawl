@@ -5519,7 +5519,7 @@ static void _place_spec_shop(const coord_def& where,
 
     int plojy = 5 + random2avg(12, 3);
     if (representative)
-        plojy = env.shop[i].type == SHOP_WAND ? NUM_WANDS : 16;
+        plojy = env.shop[i].type == SHOP_EVOKABLES ? NUM_WANDS : 16;
 
     if (spec->use_all && !spec->items.empty())
     {
@@ -5570,6 +5570,10 @@ static void _place_spec_shop(const coord_def& where,
         // general stores (see item_in_shop() below)   (GDL)
         while (true)
         {
+            const object_class_type basetype =
+                (representative && env.shop[i].type == SHOP_EVOKABLES)
+                ? OBJ_WANDS
+                : _item_in_shop(env.shop[i].type);
             const int subtype = representative? j : OBJ_RANDOM;
 
             if (!spec->items.empty() && !spec->use_all)
@@ -5581,7 +5585,7 @@ static void _place_spec_shop(const coord_def& where,
                 orb = dgn_place_item(spec->items.get_item(j), stock_loc, item_level);
             else
             {
-                orb = items(1, _item_in_shop(env.shop[i].type), subtype, true,
+                orb = items(1, basetype, subtype, true,
                              one_chance_in(4) ? MAKE_GOOD_ITEM : item_level,
                              MAKE_ITEM_RANDOM_RACE);
             }
@@ -5666,8 +5670,10 @@ static object_class_type _item_in_shop(shop_type shop_type)
     case SHOP_JEWELLERY:
         return OBJ_JEWELLERY;
 
-    case SHOP_WAND:
-        return OBJ_WANDS;
+    case SHOP_EVOKABLES:
+        if (one_chance_in(10))
+            return OBJ_RODS;
+        return coinflip() ? OBJ_WANDS : OBJ_MISCELLANY;
 
     case SHOP_BOOK:
         return OBJ_BOOKS;
@@ -5680,9 +5686,6 @@ static object_class_type _item_in_shop(shop_type shop_type)
 
     case SHOP_SCROLL:
         return OBJ_SCROLLS;
-
-    case SHOP_MISCELLANY:
-        return OBJ_MISCELLANY;
 
     default:
         die("unknown shop type");

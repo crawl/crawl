@@ -152,8 +152,8 @@ static tileidx_t _tileidx_shop(coord_def where)
             return TILE_SHOP_ARMOUR;
         case SHOP_JEWELLERY:
             return TILE_SHOP_JEWELLERY;
-        case SHOP_WAND:
-            return TILE_SHOP_WANDS;
+        case SHOP_EVOKABLES:
+            return TILE_SHOP_GADGETS;
         case SHOP_FOOD:
             return TILE_SHOP_FOOD;
         case SHOP_BOOK:
@@ -162,8 +162,6 @@ static tileidx_t _tileidx_shop(coord_def where)
             return TILE_SHOP_SCROLLS;
         case SHOP_DISTILLERY:
             return TILE_SHOP_POTIONS;
-        case SHOP_MISCELLANY:
-            return TILE_SHOP_GADGETS;
         case SHOP_GENERAL:
         case SHOP_GENERAL_ANTIQUE:
             return TILE_SHOP_GENERAL;
