@@ -357,6 +357,7 @@ int holy_flames(monster* caster, actor* defender)
 {
     const coord_def pos = defender->pos();
     int cloud_count = 0;
+    const int dur = 8 + random2avg(caster->hit_dice * 3, 2);
 
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
@@ -369,7 +370,7 @@ int holy_flames(monster* caster, actor* defender)
             continue;
         }
 
-        place_cloud(CLOUD_HOLY_FLAMES, *ai, caster->hit_dice * 5, caster);
+        place_cloud(CLOUD_HOLY_FLAMES, *ai, dur, caster);
 
         cloud_count++;
     }
