@@ -2214,8 +2214,8 @@ static string _shop_type_name(shop_type type)
             return "Armour";
         case SHOP_JEWELLERY:
             return "Jewellery";
-        case SHOP_WAND:
-            return "Magical Wand";
+        case SHOP_EVOKABLES:
+            return "Gadget";
         case SHOP_BOOK:
             return "Book";
         case SHOP_FOOD:
@@ -2228,8 +2228,6 @@ static string _shop_type_name(shop_type type)
             return "Distillery";
         case SHOP_GENERAL:
             return "General Store";
-        case SHOP_MISCELLANY:
-            return "Gadget";
         default:
             return "Bug";
     }

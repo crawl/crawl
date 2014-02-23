@@ -4345,6 +4345,14 @@ static void tag_read_level(reader &th)
         env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
         if (env.shop[i].type == SHOP_UNASSIGNED)
             continue;
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_MISC_SHOP_CHANGE
+            && env.shop[i].type == NUM_SHOPS)
+        {
+            // This was SHOP_MISCELLANY, which is now part of SHOP_EVOKABLES.
+            env.shop[i].type = SHOP_EVOKABLES;
+        }
+#endif
         env.shop[i].keeper_name[0] = unmarshallUByte(th);
         env.shop[i].keeper_name[1] = unmarshallUByte(th);
         env.shop[i].keeper_name[2] = unmarshallUByte(th);

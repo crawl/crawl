@@ -81,6 +81,7 @@ enum tag_minor_version
     TAG_MINOR_EVENT_TIMER_FIX,     // Correct event timers in transferred games
     TAG_MINOR_MONINFO_ENERGY,      // Energy usage in monster_info
     TAG_MINOR_BOOK_ID,             // Track spellbooks you've identified
+    TAG_MINOR_MISC_SHOP_CHANGE,    // Wand and gadget shops merged
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
