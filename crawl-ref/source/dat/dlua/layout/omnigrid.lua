@@ -259,6 +259,28 @@ function omnigrid.group(groups,cell)
   return group
 end
 
+function omnigrid.group_comparison(a,b)
+  local aa = {#a}
+  for i,cell in ipairs(a) do
+    aa[#aa+1] = cell.x1
+    aa[#aa+1] = cell.x2
+    aa[#aa+1] = cell.y1
+    aa[#aa+1] = cell.y2
+  end
+  local bb = {#b}
+  for i,cell in ipairs(b) do
+    bb[#bb+1] = cell.x1
+    bb[#bb+1] = cell.x2
+    bb[#bb+1] = cell.y1
+    bb[#bb+1] = cell.y2
+  end
+  for i,j in ipairs(aa) do
+    if j < bb[i] then return true end
+    if j > bb[i] then return false end
+  end
+  return false
+end
+
 function omnigrid.merge(groups,a,b)
   if a == b then return; end
   for i,cell in ipairs(b) do
@@ -293,7 +315,7 @@ function omnigrid.connect(options)
     iters = iters + 1
 
     -- Randomly pick a group
-    local group = util.random_weighted_keys(wgroup, groups)
+    local group = util.random_weighted_keys(wgroup, groups, omnigrid.group_comparison)
     -- Pick a cell from the group
     local cell = group and util.random_weighted_from(wcell, group)
     local border = cell and util.random_weighted_from(wbord, cell.borders)
@@ -353,7 +375,7 @@ function omnigrid.tilepick(options)
     -- Pick the tile
     tile = ftile()
     -- Pick the group
-    local group = util.random_weighted_keys(wgroup,groups)
+    local group = util.random_weighted_keys(wgroup,groups,omnigrid.group_comparison)
     local cell = group and group[1]
 
     if cell ~= nil then
