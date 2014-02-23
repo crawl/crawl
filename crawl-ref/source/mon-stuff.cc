@@ -2493,6 +2493,8 @@ int monster_die(monster* mons, killer_type killer,
     else if ((mons_is_natasha(mons) || mons_genus(mons->type) == MONS_FELID)
              && !in_transit && mons_felid_can_revive(mons))
     {
+        drop_items = false;
+
         // Like Boris, but her vault can't come back
         if (mons_is_natasha(mons))
             you.unique_creatures.set(MONS_NATASHA, false);

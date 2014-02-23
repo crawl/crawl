@@ -21,6 +21,7 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "mon-behv.h"
+#include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
@@ -462,8 +463,19 @@ void mons_felid_revive(monster* mons)
             mons->foe, 0, GOD_NO_GOD, MONS_NO_MONSTER, 0, BLACK,
             PROX_ANYWHERE, level_id::current(), hd));
 
+    for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
+        if (mons->inv[i] != NON_ITEM)
+        {
+            int item = mons->inv[i];
+            give_specific_item(newmons, mitm[item]);
+            destroy_item(item);
+            mons->inv[i] = NON_ITEM;
+        }
+
+
     if (newmons)
         newmons->props["felid_revives"].get_byte() = revives;
+
 }
 
 /**
