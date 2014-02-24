@@ -1951,6 +1951,8 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     return buff.str();
 }
 
+// WARNING: You can break save compatibility if you edit this without
+// amending tags.cc to properly marshall the change.
 bool item_type_has_ids(object_class_type base_type)
 {
     COMPILE_CHECK(NUM_WEAPONS    < MAX_SUBTYPES);
