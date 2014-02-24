@@ -5096,3 +5096,9 @@ bool mons_is_avatar(monster_type mc)
     return mc == MONS_SPECTRAL_WEAPON || mc == MONS_BATTLESPHERE
         || mc == MONS_GRAND_AVATAR;
 }
+
+bool mons_is_player_shadow(const monster* mon)
+{
+    return mon->type == MONS_PLAYER_SHADOW
+           && mon->mname.empty();
+}
