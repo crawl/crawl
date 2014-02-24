@@ -220,6 +220,8 @@ static monsterentry mondata[] =
     AXED_MON(MONS_JELLYFISH)
     AXED_MON(MONS_GREY_RAT)
     AXED_MON(MONS_SPINY_WORM)
+    AXED_MON(MONS_ROCK_TROLL)
+    AXED_MON(MONS_MONSTROUS_ITEM_MIMIC)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -4154,21 +4156,6 @@ static monsterentry mondata[] =
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
 
-#if TAG_MAJOR_VERSION == 34
-{
-    MONS_ROCK_TROLL, 'T', LIGHTGREY, "rock troll",
-    M_WARM_BLOOD | M_SPEAKS | M_CANT_SPAWN | M_FAST_REGEN,
-    MR_NO_FLAGS,
-    1600, 11, MONS_TROLL, MONS_ROCK_TROLL, MH_NATURAL, -4,
-    { {AT_BITE, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 20},
-      {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK },
-    { 11, 3, 5, 0 },
-    13, 6, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
-    I_NORMAL, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
-},
-#endif
-
 {
     MONS_IRON_TROLL, 'T', CYAN, "iron troll",
     M_WARM_BLOOD | M_SPEAKS | M_FAST_REGEN,
@@ -5123,21 +5110,6 @@ static monsterentry mondata[] =
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
-
-#if TAG_MAJOR_VERSION == 34
-{
-    MONS_MONSTROUS_ITEM_MIMIC, 'X', BLACK, "monstrous item mimic",
-    M_NO_FLAGS,
-    MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
-    0, 13, MONS_ITEM_MIMIC, MONS_ITEM_MIMIC, MH_NONLIVING, -3,
-    { {AT_HIT, AF_PLAIN, 20}, {AT_HIT, AF_POISON, 20},
-      {AT_CONSTRICT, AF_CRUSH, 5}, AT_NO_ATK },
-    { 16, 3, 5, 0 },
-    5, 1, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
-},
-#endif
 
 // dancing weapon
 // These are named more explicitly when they attack, also when you use 'x'
