@@ -114,21 +114,8 @@ static void _monster_regenerate(monster* mons)
     }
 
     if (mons_class_fast_regen(mons->type)
-        || (mons->type == MONS_FIRE_ELEMENTAL
-            && (grd(mons->pos()) == DNGN_LAVA
-                || cloud_type_at(mons->pos()) == CLOUD_FIRE))
-
-        || (mons->type == MONS_WATER_ELEMENTAL
-            && feat_is_watery(grd(mons->pos())))
-
-        || (mons->type == MONS_AIR_ELEMENTAL
-            && env.cgrid(mons->pos()) == EMPTY_CLOUD
-            && one_chance_in(3))
-
         || mons->has_ench(ENCH_REGENERATION)
-
         || mons->has_ench(ENCH_WITHDRAWN)
-
         || _mons_natural_regen_roll(mons))
     {
         mons->heal(1);
