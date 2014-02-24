@@ -256,6 +256,11 @@ function ($, comm, client, util, options) {
             $("#message_pane").css("font-size",
                 options.get("tile_font_msg_size") + "px");
         }
+
+        var family = options.get("tile_font_msg_family");
+        if (family !== "")
+            family += ", ";
+        $("#message_pane").css("font-family", family + "monospace");
     });
 
     comm.register_handlers({

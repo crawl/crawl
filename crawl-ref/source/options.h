@@ -418,7 +418,6 @@ public:
     VColour     tile_excluded_col;
     VColour     tile_excl_centre_col;
     VColour     tile_window_col;
-#endif
 #ifdef USE_TILE_LOCAL
     // font settings
     string      tile_font_crt_file;
@@ -427,13 +426,17 @@ public:
     string      tile_font_lbl_file;
     string      tile_font_tip_file;
 #endif
-#ifdef USE_TILE
+#ifdef USE_TILE_WEB
+    string      tile_font_crt_family;
+    string      tile_font_msg_family;
+    string      tile_font_stat_family;
+    string      tile_font_lbl_family;
+#endif
     int         tile_font_crt_size;
     int         tile_font_msg_size;
     int         tile_font_stat_size;
     int         tile_font_lbl_size;
     int         tile_font_tip_size;
-#endif
 #ifdef USE_TILE_LOCAL
 #ifdef USE_FT
     bool        tile_font_ft_light;
@@ -444,7 +447,6 @@ public:
     int         tile_window_height;
     maybe_bool  tile_use_small_layout;
 #endif
-#ifdef USE_TILE
     int         tile_cell_pixels;
     bool        tile_filter_scaling;
     int         tile_map_pixels;
@@ -463,13 +465,13 @@ public:
     bool        tile_water_anim;
     bool        tile_misc_anim;
     vector<string> tile_layout_priority;
-#endif
 #ifdef USE_TILE_WEB
     bool        tile_realtime_anim;
     string      tile_display_mode;
     bool        tile_level_map_hide_messages;
     bool        tile_level_map_hide_sidebar;
 #endif
+#endif // USE_TILE
 
     typedef map<string, string> opt_map;
     opt_map     named_options;          // All options not caught above are

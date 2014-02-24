@@ -98,8 +98,10 @@ The contents of this text are:
                 tile_window_height, tile_map_pixels, tile_cell_pixels,
                 tile_force_overlay, tile_font_crt_file, tile_font_stat_file,
                 tile_font_msg_file, tile_font_tip_file, tile_font_lbl_file,
-                tile_font_crt_size, tile_font_stat_size, tile_font_msg_size,
-                tile_font_tip_size, tile_font_lbl_size, tile_font_ft_light,
+                tile_font_crt_family, tile_font_stat_family,
+                tile_font_msg_family, tile_font_lbl_family, tile_font_crt_size,
+                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
+                tile_font_lbl_size, tile_font_ft_light,
                 tile_show_minihealthbar, tile_show_minimagicbar,
                 tile_show_demon_tier, tile_water_anim, tile_misc_anim,
                 tile_realtime_anim, tile_layout_priority, tile_display_mode,
@@ -1863,15 +1865,23 @@ tile_font_stat_file = VeraMono.ttf
 tile_font_msg_file  = VeraMono.ttf
 tile_font_tip_file  = VeraMono.ttf
 tile_font_lbl_file  = Vera.ttf
-        Fonts used in various sections of the screen. If you want to use
-        another font, you'll have to place the corresponding *.ttf file into
-        the dat/tiles/ folder.
+        Fonts used in various sections of the screen for local tiles. For
+        WebTiles use tile_font_*_family instead. If you want to use another
+        font, you'll have to place the corresponding *.ttf file into the
+        dat/tiles/ folder.
         Screen regions are as follows:
             crt  - non-map screens (menus, message history, etc.)
             stat - stat area (hit points, AC, etc.)
             msg  - message area
             tip  - tooltips (mouseover information)
             lbl  - item/monster names in inventory/main map
+
+tile_font_crt_family  = monospace
+tile_font_stat_family = monospace
+tile_font_msg_family  = monospace
+tile_font_lbl_family  = monospace
+        Fonts used in various sections of the screen for WebTiles. For local
+        tiles use tile_font_*_file instead.
 
 tile_font_crt_size  = 15
 tile_font_stat_size = 16
