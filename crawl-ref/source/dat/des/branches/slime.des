@@ -362,6 +362,33 @@ X'xxxxxxxxxxxxxxxx'X
   X'            'X
 ENDMAP
 
+NAME: nicolae_slime_pool
+DEPTH: Slime
+TAGS: transparent mini_float
+MONS: slime creature
+ORIENT: float
+SHUFFLE: abcd
+SUBST: ab : @, cd : .
+KPROP: f = no_rtele_into
+SUBST: f = w.1
+KMASK: w = no_monster_gen
+KMASK: W = no_monster_gen
+MAP
+   cccc
+ ..........
+d.w.wwwf..w.
+d..wwfwwf....
+d.fwwfffwffbb
+d..fwwwfww.b
+ ...ffwwww.b
+  ..wffw...b
+  ..wfwfw.fw
+ ...ffffw.ww
+.ff.wwwwf.f
+ .....f..ff
+    aaaa..fw
+ENDMAP
+
 NAME: nicolae_slime_jelly_donut
 DEPTH: Slime, !Slime:$
 ORIENT: float
@@ -439,6 +466,37 @@ xxxXX.....1.@
  xxxxXXX..1@
    xxxxxxxx
       xxx
+ENDMAP
+
+NAME: nicolae_slime_phagocytosis
+DEPTH: Slime
+TAGS: transparent
+SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = Wx, ' = ._
+NSUBST: W = 4:1 / *:W
+KMONS: 1 = slime creature
+KFEAT: 1 = W
+CLEAR: _
+MAP
+       '.......'
+      '..........'
+    '.....................'
+ '........ee...............'
+'........exxe...............'
+.......eexxxxeee.xxxxxxx.....'
+....ddxxxxxxxxxxxxxxxxxxx.....
+@..dxxxxxXXXXxxxxx.....xxx....
+@..dxxxxXWWWWXx.........xxx...
+@...ddxxXWWWW............xx...
+@.....cxXWWWW....{..x....x....
+@.....cxXWWWWXx.....xx........
+'....cxxxXXXXxxx...xxx.......'
+ ...cxxxxxxxxxxxxxxxx.......'
+ ...cxxxxabxxxxxxxxx.......
+ ....axxa..bxxxb.........'
+ .....aa....bbb.........'
+ '....................'
+  '...............'
+   ''...........''
 ENDMAP
 
 NAME: nicolae_slime_round_cave
