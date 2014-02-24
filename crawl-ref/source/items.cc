@@ -4106,6 +4106,10 @@ void corrode_item(item_def &item, actor *holder)
     if (is_artefact(item))
         return;
 
+    // Only weapons and armour can be corroded.
+    if (item.base_type != OBJ_ARMOUR && item.base_type != OBJ_WEAPONS)
+        return;
+
     // Anti-corrosion items protect against 90% of corrosion.
     if (holder && holder->res_corr() && !one_chance_in(10))
     {
@@ -4118,25 +4122,12 @@ void corrode_item(item_def &item, actor *holder)
     if (how_rusty < -5)
         return;
 
-    // determine possibility of resistance by object type {dlb}:
-    switch (item.base_type)
+    // Corrosion-resistant items.
+    if (item.base_type == OBJ_ARMOUR
+        && (item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
+            || get_equip_race(item) == ISFLAG_DWARVEN)
+        && !one_chance_in(5))
     {
-    case OBJ_ARMOUR:
-        if ((item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
-             || get_equip_race(item) == ISFLAG_DWARVEN)
-            && !one_chance_in(5))
-        {
-            return;
-        }
-        break;
-
-    case OBJ_WEAPONS:
-        if (get_equip_race(item) == ISFLAG_DWARVEN && !one_chance_in(5))
-            return;
-        break;
-
-    default:
-        // Other items can't corrode.
         return;
     }
 
