@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "ability.h"
+#include "areas.h"
 #include "artefact.h"
 #include "clua.h"
 #include "command.h"
@@ -1495,6 +1496,36 @@ static bool _should_stop_activity(const delay_queue_item &item,
            || Options.activity_interrupts[item.type][ai];
 }
 
+static string _abyss_monster_creation_message(const monster* mon)
+{
+    if (mon->type == MONS_DEATH_COB)
+    {
+        return coinflip() ? " appears in a burst of microwaves!"
+                          : " pops from nullspace!";
+    }
+
+    return make_stringf(
+        random_choose_weighted(
+            17, " appears in a shower of translocational energy.",
+            34, " appears in a shower of sparks.",
+            45, " materialises.",
+            13, " emerges from chaos.",
+            26, " emerges from the beyond.",
+            33, " assembles %s!",
+             9, " erupts from nowhere!",
+            18, " bursts from nowhere!",
+             7, " is cast out of space!",
+            14, " is cast out of reality!",
+             5, " coalesces out of pure chaos.",
+            10, " coalesces out of seething chaos.",
+             2, " punctures the fabric of time!",
+             7, " punctures the fabric of the universe.",
+             3, " manifests%2$s!%1$.0s",
+             0),
+        mon->pronoun(PRONOUN_REFLEXIVE).c_str(),
+        silenced(you.pos()) ? "" : " with a bang");
+}
+
 static inline bool _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
                                     delay_type atype,
@@ -1579,6 +1610,14 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         }
         else if (at.context == SC_NONSWIMMER_SURFACES_FROM_DEEP)
             text += " emerges from the water.";
+        else if (at.context == SC_UPSTAIRS)
+            text += " comes up the stairs.";
+        else if (at.context == SC_DOWNSTAIRS)
+            text += " comes up the stairs.";
+        else if (at.context == SC_GATE)
+            text += " comes through the gate.";
+        else if (at.context == SC_ABYSS)
+            text += _abyss_monster_creation_message(mon);
         else
             text += " comes into view.";
 

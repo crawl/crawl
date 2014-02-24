@@ -4143,6 +4143,10 @@ enum seen_context_type
     SC_DOOR,            // they opened a door
     SC_GATE,            // ... or a big door
     SC_LEAP_IN,         // leaps into view
+    SC_UPSTAIRS,        // comes up the stairs
+    SC_DOWNSTAIRS,      // comes down the stairs
+    SC_ARCH,            // through the gate
+    SC_ABYSS,           // abyss creation
 };
 
 enum los_type
