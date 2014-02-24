@@ -1400,7 +1400,7 @@ It has a peculiarly hypnotic look.
 grand avatar
 
 An avatar of battle and bloodshed, capable of mimicking sufficiently damaging
-melee attacks and conjurations from its creator and their allies.
+physical attacks and conjurations from its creator and their allies.
 %%%%
 great orb of eyes
 
