@@ -5,6 +5,8 @@
 
 {{
 function lab_portal(e)
+  local timeout_turns = crawl.random_range(400, 600)
+
   local messager =
     timed_msg {
       initmsg = { "You hear a distant snort.",
@@ -18,8 +20,7 @@ function lab_portal(e)
 
     e.lua_marker('O',
       timed_marker {
-        low = 400,
-        high = 600,
+        turns = timeout_turns,
         msg = messager,
         floor = 'stone_arch',
         feat_tile = 'dngn_portal_labyrinth_gone',

@@ -13,8 +13,7 @@
 
 {{
 function bailey_portal(e, ptype, trowel)
-  local timeout_turns_long = crawl.random_range(2700, 3300)
-  local timeout_turns_short = timeout_turns_long/10;
+  local timeout_turns = crawl.random_range(600, 800)
 
   local messager =
     timed_msg {
@@ -39,8 +38,8 @@ function bailey_portal(e, ptype, trowel)
         disappear = "The portal closes with a thud.",
         entity = 'oriflamme',
         bailey_type = ptype,
-        turns = timeout_turns_long,
-        turns_short = timeout_turns_short,
+        turns = timeout_turns,
+        single_timed = true,
         floor = "stone_arch",
         feat_tile = "dngn_portal_bailey_gone",
         msg = messager })

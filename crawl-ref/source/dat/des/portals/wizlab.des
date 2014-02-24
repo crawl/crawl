@@ -75,8 +75,8 @@
 
 {{
 function wizlab_portal (e)
-    local timeout_turns_long = crawl.random_range(2700, 3300)
-    local timeout_turns_short = timeout_turns_long/10
+    local timeout_turns = crawl.random_range(600, 800)
+
     local messager =
       timed_msg {
            initmsg = { "You hear the crackle of arcane power.",
@@ -98,8 +98,8 @@ function wizlab_portal (e)
       timed_marker {
         disappear = "The flow of magic halts.",
         entity = 'portal',
-        turns = timeout_turns_long,
-        turns_short = timeout_turns_short,
+        turns = timeout_turns,
+        single_timed = true,
         floor = "stone_arch",
         feat_tile = "dngn_portal_bazaar_gone",
         msg = messager })

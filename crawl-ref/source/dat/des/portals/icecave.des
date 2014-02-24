@@ -16,8 +16,7 @@
 
 {{
 function ice_cave_portal(e)
-  local timeout_turns_long = crawl.random_range(2700, 3300)
-  local timeout_turns_short = timeout_turns_long/10
+  local timeout_turns = crawl.random_range(600, 800)
 
   local messager =
     timed_msg {
@@ -40,8 +39,8 @@ function ice_cave_portal(e)
       timed_marker {
         disappear = "The archway melts and disappears.",
         entity = 'archway',
-        turns = timeout_turns_long,
-        turns_short = timeout_turns_short,
+        turns = timeout_turns,
+        single_timed = true,
         floor = "expired_portal",
         feat_tile = "dngn_portal_ice_cave_gone",
         msg = messager })
