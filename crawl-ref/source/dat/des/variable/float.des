@@ -1789,8 +1789,8 @@ KMONS:  Z = col:flash deep elf sorcerer \
         summon_water_elementals;haste;blink actual_spells \
         ; robe ego:fire_resistance race:elven | \
         robe ego:cold_resistance race:elven | \
-        robe ego:resistance race:elven . dagger ego:freezing race:elven | \
-        dagger ego:flaming race:elven | dagger ego:electrocution race:elven
+        robe ego:resistance race:elven . dagger ego:freezing | \
+        dagger ego:flaming | dagger ego:electrocution
 : else
 KMONS:  Z = col:flash wizard hd:15 tile:mons_master_elementalist \
         name:master_elementalist n_rpl n_des n_noc \

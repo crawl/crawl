@@ -477,7 +477,6 @@ enum weapon_type
     WPN_CROSSBOW,
     WPN_BOW,
     WPN_LONGBOW,
-    WPN_MAX_RACIAL = WPN_LONGBOW,
 
     WPN_DEMON_WHIP,
     WPN_GIANT_CLUB,

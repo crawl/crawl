@@ -235,14 +235,14 @@ function fiery_guardians (e, village)
 
     -- Weighings back and forth with humanoids or not.
     if crawl.x_chance_in_y(humanweight, "10") or village then
-        local warriorstuff = "scimitar race:orcish " .. flame
-                             .. " | war axe race:orcish " .. flame
-                             .. " | halberd race:orcish " .. flame
+        local warriorstuff = "scimitar " .. flame
+                             .. " | war axe " .. flame
+                             .. " | halberd " .. flame
                              .. " . ring mail race:orcish " .. res
                              .. " | scale mail race:orcish " .. res
-        local knightstuff = "great mace race:orcish " .. flame
-                            .. " | great sword race:orcish " .. flame
-                            .. " | glaive race:orcish " .. flame
+        local knightstuff = "great mace " .. flame
+                            .. " | great sword " .. flame
+                            .. " | glaive " .. flame
                             .. " . chain mail race:orcish " .. res
         local magestuff = "spear " .. flame
                           .. " | whip " .. flame
@@ -251,8 +251,8 @@ function fiery_guardians (e, village)
         local centaur = "centaur ; bow ego:none . arrow ego:flame"
         local centaurstuff = "robe " .. res
                              .. " . bow ego:flame ident:type . arrow"
-        local elfstuff = "long sword race:elven " .. flame
-                         .. " | short sword race:elven " .. flame
+        local elfstuff = "long sword " .. flame
+                         .. " | short sword " .. flame
                          .. " | leather armour race:elven " .. res
                          .. " | ring mail race:elven " .. res
         local dracstuff = "long sword " .. flame

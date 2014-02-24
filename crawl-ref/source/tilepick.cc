@@ -3111,258 +3111,62 @@ static tileidx_t _tileidx_unrand_artefact(int idx)
 
 static tileidx_t _tileidx_weapon_base(const item_def &item)
 {
-    int race  = item.flags & ISFLAG_RACIAL_MASK;
-
     switch (item.sub_type)
     {
-    case WPN_DAGGER:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_DAGGER_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_DAGGER_DWARF;
-        if (race == ISFLAG_ELVEN)
-            return TILE_WPN_DAGGER_ELF;
-        return TILE_WPN_DAGGER;
-
-    case WPN_SHORT_SWORD:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_SHORT_SWORD_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_SHORT_SWORD_DWARF;
-        if (race == ISFLAG_ELVEN)
-            return TILE_WPN_SHORT_SWORD_ELF;
-        return TILE_WPN_SHORT_SWORD;
-
-    case WPN_QUICK_BLADE:
-        return TILE_WPN_QUICK_BLADE;
-
-    case WPN_CUTLASS:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_CUTLASS_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_CUTLASS_DWARF;
-        if (race == ISFLAG_ELVEN)
-            return TILE_WPN_CUTLASS_ELF;
-        return TILE_WPN_CUTLASS;
-
-    case WPN_FALCHION:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_FALCHION_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_FALCHION_DWARF;
-        if (race == ISFLAG_ELVEN)
-            return TILE_WPN_FALCHION_ELF;
-        return TILE_WPN_FALCHION;
-
-    case WPN_LONG_SWORD:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_LONG_SWORD_ORC;
-        if (race == ISFLAG_ELVEN)
-            return TILE_WPN_LONG_SWORD_ELF;
-        return TILE_WPN_LONG_SWORD;
-
-    case WPN_GREAT_SWORD:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_GREAT_SWORD_ORC;
-        return TILE_WPN_GREAT_SWORD;
-
-    case WPN_SCIMITAR:
-        return TILE_WPN_SCIMITAR;
-
-    case WPN_BASTARD_SWORD:
-        return TILE_WPN_BASTARD_SWORD;
-
-    case WPN_CLAYMORE:
-        return TILE_WPN_CLAYMORE;
-
-    case WPN_HAND_AXE:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_HAND_AXE_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_HAND_AXE_DWARF;
-        return TILE_WPN_HAND_AXE;
-
-    case WPN_WAR_AXE:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_WAR_AXE_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_WAR_AXE_DWARF;
-        return TILE_WPN_WAR_AXE;
-
-    case WPN_BROAD_AXE:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_BROAD_AXE_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_BROAD_AXE_DWARF;
-        return TILE_WPN_BROAD_AXE;
-
-    case WPN_BATTLEAXE:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_BATTLEAXE_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_BATTLEAXE_DWARF;
-        return TILE_WPN_BATTLEAXE;
-
-    case WPN_EXECUTIONERS_AXE:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_EXECUTIONERS_AXE_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_EXECUTIONERS_AXE_DWARF;
-        return TILE_WPN_EXECUTIONERS_AXE;
-
-    case WPN_BLOWGUN:
-        return TILE_WPN_BLOWGUN;
-
-    case WPN_SLING:
-        return TILE_WPN_SLING;
-
-    case WPN_BOW:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_BOW_ORC;
-        if (race == ISFLAG_ELVEN)
-            return TILE_WPN_BOW_ELF;
-        return TILE_WPN_BOW;
-
-    case WPN_CROSSBOW:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_CROSSBOW_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_CROSSBOW_DWARF;
-        return TILE_WPN_CROSSBOW;
-
-    case WPN_SPEAR:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_SPEAR_ORC;
-        if (race == ISFLAG_ELVEN)
-            return TILE_WPN_SPEAR_ELF;
-        return TILE_WPN_SPEAR;
-
-    case WPN_TRIDENT:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_TRIDENT_ORC;
-        return TILE_WPN_TRIDENT;
-
-    case WPN_HALBERD:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_HALBERD_ORC;
-        return TILE_WPN_HALBERD;
-
-    case WPN_SCYTHE:
-        return TILE_WPN_SCYTHE;
-
-    case WPN_GLAIVE:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_GLAIVE_ORC;
-        return TILE_WPN_GLAIVE;
-
+    case WPN_DAGGER:                return TILE_WPN_DAGGER;
+    case WPN_SHORT_SWORD:           return TILE_WPN_SHORT_SWORD;
+    case WPN_QUICK_BLADE:           return TILE_WPN_QUICK_BLADE;
+    case WPN_CUTLASS:               return TILE_WPN_CUTLASS;
+    case WPN_FALCHION:              return TILE_WPN_FALCHION;
+    case WPN_LONG_SWORD:            return TILE_WPN_LONG_SWORD;
+    case WPN_GREAT_SWORD:           return TILE_WPN_GREAT_SWORD;
+    case WPN_SCIMITAR:              return TILE_WPN_SCIMITAR;
+    case WPN_BASTARD_SWORD:         return TILE_WPN_BASTARD_SWORD;
+    case WPN_CLAYMORE:              return TILE_WPN_CLAYMORE;
+    case WPN_HAND_AXE:              return TILE_WPN_HAND_AXE;
+    case WPN_WAR_AXE:               return TILE_WPN_WAR_AXE;
+    case WPN_BROAD_AXE:             return TILE_WPN_BROAD_AXE;
+    case WPN_BATTLEAXE:             return TILE_WPN_BATTLEAXE;
+    case WPN_EXECUTIONERS_AXE:      return TILE_WPN_EXECUTIONERS_AXE;
+    case WPN_BLOWGUN:               return TILE_WPN_BLOWGUN;
+    case WPN_SLING:                 return TILE_WPN_SLING;
+    case WPN_BOW:                   return TILE_WPN_BOW;
+    case WPN_CROSSBOW:              return TILE_WPN_CROSSBOW;
+    case WPN_SPEAR:                 return TILE_WPN_SPEAR;
+    case WPN_TRIDENT:               return TILE_WPN_TRIDENT;
+    case WPN_HALBERD:               return TILE_WPN_HALBERD;
+    case WPN_SCYTHE:                return TILE_WPN_SCYTHE;
+    case WPN_GLAIVE:                return TILE_WPN_GLAIVE;
 #if TAG_MAJOR_VERSION == 34
-    case WPN_STAFF:
-        return TILE_WPN_STAFF;
+    case WPN_STAFF:                 return TILE_WPN_STAFF;
 #endif
-    case WPN_QUARTERSTAFF:
-        return TILE_WPN_QUARTERSTAFF;
-
-    case WPN_CLUB:
-        return TILE_WPN_CLUB;
-
-    case WPN_HAMMER:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_HAMMER_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_HAMMER_DWARF;
-        return TILE_WPN_HAMMER;
-
-    case WPN_MACE:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_MACE_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_MACE_DWARF;
-        return TILE_WPN_MACE;
-
-    case WPN_FLAIL:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_FLAIL_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_FLAIL_DWARF;
-        return TILE_WPN_FLAIL;
-
-    case WPN_GREAT_MACE:
-        return TILE_WPN_GREAT_MACE;
-
-    case WPN_DIRE_FLAIL:
-        return TILE_WPN_DIRE_FLAIL;
-
-    case WPN_MORNINGSTAR:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_MORNINGSTAR_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_MORNINGSTAR_DWARF;
-        return TILE_WPN_MORNINGSTAR;
-
-    case WPN_EVENINGSTAR:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_EVENINGSTAR_ORC;
-        if (race == ISFLAG_DWARVEN)
-            return TILE_WPN_EVENINGSTAR_DWARF;
-        return TILE_WPN_EVENINGSTAR;
-
-    case WPN_GIANT_CLUB:
-        return TILE_WPN_GIANT_CLUB;
-
-    case WPN_GIANT_SPIKED_CLUB:
-        return TILE_WPN_GIANT_SPIKED_CLUB;
-
-    case WPN_WHIP:
-        return TILE_WPN_WHIP;
-
-    case WPN_DEMON_BLADE:
-        return TILE_WPN_DEMON_BLADE;
-
-    case WPN_EUDEMON_BLADE:
-        return TILE_WPN_BLESSED_BLADE;
-
-    case WPN_DEMON_WHIP:
-        return TILE_WPN_DEMON_WHIP;
-
-    case WPN_SACRED_SCOURGE:
-        return TILE_WPN_SACRED_SCOURGE;
-
-    case WPN_DEMON_TRIDENT:
-        return TILE_WPN_DEMON_TRIDENT;
-
-    case WPN_TRISHULA:
-        return TILE_WPN_TRISHULA;
-
-    case WPN_LONGBOW:
-        if (race == ISFLAG_ELVEN)
-            return TILE_WPN_LONGBOW_ELF;
-        return TILE_WPN_LONGBOW;
-
-    case WPN_LAJATANG:
-        return TILE_WPN_LAJATANG;
-
-    case WPN_BARDICHE:
-        if (race == ISFLAG_ORCISH)
-            return TILE_WPN_BARDICHE_ORC;
-        return TILE_WPN_BARDICHE;
-
-    case WPN_BLESSED_FALCHION:
-        return TILE_WPN_FALCHION;
-
-    case WPN_BLESSED_LONG_SWORD:
-        return TILE_WPN_LONG_SWORD;
-
-    case WPN_BLESSED_SCIMITAR:
-        return TILE_WPN_SCIMITAR;
-
-    case WPN_BLESSED_GREAT_SWORD:
-        return TILE_WPN_GREAT_SWORD;
-
-    case WPN_BLESSED_BASTARD_SWORD:
-        return TILE_WPN_BLESSED_BASTARD_SWORD;
-
-    case WPN_BLESSED_CLAYMORE:
-        return TILE_WPN_BLESSED_CLAYMORE;
+    case WPN_QUARTERSTAFF:          return TILE_WPN_QUARTERSTAFF;
+    case WPN_CLUB:                  return TILE_WPN_CLUB;
+    case WPN_HAMMER:                return TILE_WPN_HAMMER;
+    case WPN_MACE:                  return TILE_WPN_MACE;
+    case WPN_FLAIL:                 return TILE_WPN_FLAIL;
+    case WPN_GREAT_MACE:            return TILE_WPN_GREAT_MACE;
+    case WPN_DIRE_FLAIL:            return TILE_WPN_DIRE_FLAIL;
+    case WPN_MORNINGSTAR:           return TILE_WPN_MORNINGSTAR;
+    case WPN_EVENINGSTAR:           return TILE_WPN_EVENINGSTAR;
+    case WPN_GIANT_CLUB:            return TILE_WPN_GIANT_CLUB;
+    case WPN_GIANT_SPIKED_CLUB:     return TILE_WPN_GIANT_SPIKED_CLUB;
+    case WPN_WHIP:                  return TILE_WPN_WHIP;
+    case WPN_DEMON_BLADE:           return TILE_WPN_DEMON_BLADE;
+    case WPN_EUDEMON_BLADE:         return TILE_WPN_BLESSED_BLADE;
+    case WPN_DEMON_WHIP:            return TILE_WPN_DEMON_WHIP;
+    case WPN_SACRED_SCOURGE:        return TILE_WPN_SACRED_SCOURGE;
+    case WPN_DEMON_TRIDENT:         return TILE_WPN_DEMON_TRIDENT;
+    case WPN_TRISHULA:              return TILE_WPN_TRISHULA;
+    case WPN_LONGBOW:               return TILE_WPN_LONGBOW;
+    case WPN_LAJATANG:              return TILE_WPN_LAJATANG;
+    case WPN_BARDICHE:              return TILE_WPN_BARDICHE;
+    case WPN_BLESSED_FALCHION:      return TILE_WPN_FALCHION;
+    case WPN_BLESSED_LONG_SWORD:    return TILE_WPN_LONG_SWORD;
+    case WPN_BLESSED_SCIMITAR:      return TILE_WPN_SCIMITAR;
+    case WPN_BLESSED_GREAT_SWORD:   return TILE_WPN_GREAT_SWORD;
+    case WPN_BLESSED_BASTARD_SWORD: return TILE_WPN_BLESSED_BASTARD_SWORD;
+    case WPN_BLESSED_CLAYMORE:      return TILE_WPN_BLESSED_CLAYMORE;
     }
 
     return TILE_ERROR;

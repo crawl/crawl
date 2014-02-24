@@ -78,28 +78,26 @@ function kobold_axe_returning(e)
 end
 
 function easy_axe_fighter(e)
-  e.mons("w:3 orc warrior ; hand axe race:orcish w:6 | war axe race:orcish w:1 /\
+  e.mons("w:3 orc warrior ; hand axe w:6 | war axe w:1 /\
           w:7 gnoll ; hand axe w:6 | war axe w:1 /\
           w:10 hobgoblin ; hand axe w:6 | war axe w:1 /\
-          w:10 orc ; hand axe race:orcish w:6 | war race:orcish axe w:1 /\
+          w:10 orc ; hand axe w:6 | war axe w:1 /\
           w:12 goblin ; hand axe w:6 | war axe w:1")
 end
 
 function hard_axe_fighter(e)
-  e.mons("w:8 orc warrior ; war axe race:orcish w:10  |\
-                            broad axe race:orcish w:2 |\
-                            battleaxe race:orcish w:1 /\
-          w:2 orc knight ;  war axe race:orcish w:10  |\
-                            broad axe race:orcish w:2 |\
-                            battleaxe race:orcish w:1")
+  e.mons("w:8 orc warrior ; war axe w:10  |\
+                            broad axe w:2 |\
+                            battleaxe w:1 /\
+          w:2 orc knight ;  war axe w:10  |\
+                            broad axe w:2 |\
+                            battleaxe w:1")
 end
 
 -- Polearms.
 function orc_with_polearm(e)
   e.mons("orc ; \
-          spear      | spear race:orcish |\
-          trident    | trident race:orcish |\
-          halberd    | halberd race:orcish .\
+          spear | trident | halberd .\
           scale mail race:orcish  | scale mail |\
           ring mail race:orcish   | ring mail |\
           chain mail race:orcish  | chain mail")
@@ -107,11 +105,8 @@ end
 
 function orc_warrior_with_polearm(e)
   e.mons("orc warrior ; \
-          spear w:5    | spear w:5 race:orcish |\
-          trident w:5  | trident w:5 race:orcish |\
-          halberd      | halberd race:orcish |\
-          glaive       | glaive race:orcish |\
-          bardiche w:1 | bardiche w:1 race:orcish .\
+          spear w:5 | trident w:5 |\
+          halberd | glaive | bardiche w:1 .\
           scale mail race:orcish    | scale mail |\
           ring mail race:orcish     | ring mail |\
           chain mail race:orcish    | chain mail |\
@@ -121,10 +116,8 @@ end
 
 function orc_knight_with_polearm(e)
   e.mons("orc knight ; \
-          trident w:5  | trident w:5 race:orcish |\
-          halberd      | halberd race:orcish |\
-          glaive       | glaive race:orcish |\
-          bardiche w:1 | bardiche w:1 race:orcish .\
+          trident w:5 | halberd |\
+          glaive | bardiche w:1 .\
           ring mail race:orcish     | ring mail |\
           chain mail race:orcish    | chain mail |\
           chain mail race:orcish    | chain mail |\
@@ -135,9 +128,7 @@ end
 -- defined but not used, since the depth for the current entry vaults is 7-16
 function orc_warlord_with_polearm(e)
   e.mons("orc warlord ; \
-          halberd      | halberd race:orcish |\
-          glaive       | glaive race:orcish |\
-          bardiche w:1 | bardiche w:1 race:orcish . \
+          halberd | glaive | bardiche w:1 .\
           chain mail race:orcish w:20 | chain mail w:20 |\
           plate armour race:orcish    | plate armour |\
           crystal plate armour w:1")
@@ -218,14 +209,14 @@ NAME:   enter_bailey_4
 WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe race:orcish
+MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe
 MONS:   goblin ; tomahawk ego:returning / hobgoblin ; tomahawk ego:returning /\
         orc ; tomahawk ego:returning
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-MONS:   goblin ; spear / hobgoblin ; spear / orc ; spear race:orcish
+MONS:   goblin ; spear / hobgoblin ; spear / orc ; spear
 MONS:   goblin ; spear / hobgoblin ; spear /\
-        orc ; spear race:orcish
+        orc ; spear
 :   bailey_portal_polearm(_G)
 : end
 SUBST: 1 = 122
@@ -777,7 +768,7 @@ KFEAT:  T = teleport trap
 SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
-        good_item bardiche race:orcish / good_item executioner's axe race:orcish
+        good_item bardiche / good_item executioner's axe
 ITEM:   potion of experience / scroll of acquirement /\
         scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
         legendary deck of wonders

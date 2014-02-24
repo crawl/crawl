@@ -80,8 +80,8 @@ MONS:   w:10 generate_awake deep troll ; robe . nothing /\
         w:10 generate_awake two-headed ogre ; giant spiked club | robe
 MONS:   w:10 generate_awake orc priest /\
         w:4  generate_awake orc high priest /\
-        w:10 generate_awake orc warrior ; javelin ego:returning race:orcish /\
-        w:4  generate_awake orc warlord ; bardiche good_item race:orcish
+        w:10 generate_awake orc warrior ; javelin ego:returning /\
+        w:4  generate_awake orc warlord ; bardiche good_item
 MAP
      x@xx
      x.xx

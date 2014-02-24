@@ -235,9 +235,9 @@ KFEAT: ' = floor
 SHUFFLE: bxvc, ABCDEFHIJKLM
 {{
  -- Dwarven fighter. Maybe the minotaur got the last MD. 3 items.
-dgn.delayed_decay_extra(_G, 'A', 'dwarf skeleton', 'battleaxe race:dwarven / '
-   .. "eveningstar race:dwarven / executioner's axe race:dwarven w:2 / "
-   .. 'great mace race:dwarven w:2, helmet good_item / '
+dgn.delayed_decay_extra(_G, 'A', 'dwarf skeleton', 'battleaxe / '
+   .. "eveningstar / executioner's axe w:2 / "
+   .. 'great mace w:2, helmet good_item / '
    .. 'pair of gloves good_item / pair of boots good_item, '
    .. 'plate armour race:dwarven / crystal plate armour w:2' )
 
@@ -277,8 +277,7 @@ dgn.delayed_decay_extra(_G, 'I', 'human skeleton', 'any armour, any weapon, '
 
  -- Orc fighter. 3 items.
 dgn.delayed_decay_extra(_G, 'J', 'orc skeleton', 'shield / large shield w:2, '
-   .. 'long sword race:orcish / eveningstar race:orcish / '
-   .. 'broad axe race:orcish / demon blade, '
+   .. 'long sword / eveningstar / broad axe / demon blade, '
    .. 'plate armour race:orcish / crystal plate armour w:2' )
 
  -- Dwarven heavy armour earth elementalist. 3-4 items.

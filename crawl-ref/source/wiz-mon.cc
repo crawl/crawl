@@ -106,12 +106,6 @@ static int _make_mimic_item(object_class_type type)
             set_equip_desc(item, ISFLAG_GLOWING);
         else if (prop < 80)
             set_equip_desc(item, ISFLAG_RUNED);
-        else if (prop < 85)
-            set_equip_race(item, ISFLAG_ORCISH);
-        else if (prop < 90)
-            set_equip_race(item, ISFLAG_DWARVEN);
-        else if (prop < 95)
-            set_equip_race(item, ISFLAG_ELVEN);
         break;
 
     case OBJ_ARMOUR:

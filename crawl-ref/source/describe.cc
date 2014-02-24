@@ -1018,28 +1018,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += "\nIt is too large for you to wield.";
     }
 
-    if (verbose)
-    {
-        if (is_demonic(item) && !launcher)
-            description += "\nDemonspawn deal slightly more damage with it.";
-        else if (get_equip_race(item) != ISFLAG_NO_RACE)
-        {
-            iflags_t race = get_equip_race(item);
-
-            if (race == ISFLAG_DWARVEN)
-            {
-                description += "\nIt is well-crafted and durable. Dwarves "
-                               "deal slightly more damage with it.";
-            }
-
-            if (race == ISFLAG_ORCISH)
-                description += "\nOrcs deal slightly more damage with it.";
-
-            if (race == ISFLAG_ELVEN)
-                description += "\nElves are slightly more accurate with it.";
-        }
-    }
-
     if (!is_artefact(item))
     {
         if (item_ident(item, ISFLAG_KNOW_PLUSES)

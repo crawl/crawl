@@ -1011,7 +1011,7 @@ TAGS:    overflow_altar_nemelex_xobeh transparent
 TAGS:    no_rotate no_vmirror no_monster_gen no_item_gen
 DEPTH:   D:2-9
 : if you.depth() <= 4 then
-MONS:    orc ; club race:orcish
+MONS:    orc ; club
 : else
 MONS:    ogre ; giant club
 : end
