@@ -1307,8 +1307,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     const bool know_pluses = __know_pluses
         && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 
-    const bool know_racial = !(ignore_flags & ISFLAG_RACIAL_MASK);
-
     const bool need_plural = !basename && !dbname;
 
     ostringstream buff;
