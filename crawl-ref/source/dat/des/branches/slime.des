@@ -80,7 +80,7 @@ TAGS:   slime_entry
 KFEAT:  Z = altar_jiyva
 SUBST:  1 : 111223
 NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
-MONS:   jelly / ooze / brown ooze / giant amoeba
+MONS:   jelly / ooze / brown ooze
 MONS:   acid blob / slime creature w:5
 MONS:   azure jelly
 KFEAT:  O = enter_slime_pits
@@ -134,7 +134,7 @@ ENDMAP
 
 NAME:   minmay_slime_entry_pillars
 TAGS:   slime_entry ruin_lair
-MONS:   giant amoeba / brown ooze
+MONS:   brown ooze
 KFEAT:  O = enter_slime_pits
 MAP
 ...........
@@ -329,7 +329,7 @@ NAME:    hangedman_slime_tunnels
 TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   Slime:1-5
 WEIGHT:  1
-KMONS:   1 = slime creature / brown ooze / giant amoeba / nothing w:2
+KMONS:   1 = slime creature w:15 / brown ooze w:15 / nothing w:2
 KMONS:   2 = shining eye / giant eyeball / eye of devastation w:5 / \
              great orb of eyes / giant orange brain / random w:1
 KFEAT:   2 = alarm trap / . w:30
@@ -360,33 +360,6 @@ X'xxxxxxxxxxxxxxxx'X
 X'xxxxxxxxxxxxxxxx'X
  X'XX x  x  x X'X'X
   X'            'X
-ENDMAP
-
-NAME: nicolae_amoeba_pool
-DEPTH: Slime
-TAGS: transparent mini_float
-MONS: giant amoeba
-ORIENT: float
-SHUFFLE: abcd
-SUBST: ab : @, cd : .
-KPROP: f = no_rtele_into
-SUBST: f = w.1
-KMASK: w = no_monster_gen
-KMASK: W = no_monster_gen
-MAP
-   cccc
- ..........
-d.w.wwwf..w.
-d..wwfwwf....
-d.fwwfffwffbb
-d..fwwwfww.b
- ...ffwwww.b
-  ..wffw...b
-  ..wfwfw.fw
- ...ffffw.ww
-.ff.wwwwf.f
- .....f..ff
-    aaaa..fw
 ENDMAP
 
 NAME: nicolae_slime_jelly_donut
@@ -452,8 +425,8 @@ NAME: nicolae_slime_welcoming_committee
 TAGS: no_monster_gen no_item_gen no_trap_gen
 DEPTH: Slime:2-5
 SUBST: X = x., { = {[(
-KMONS: 1 : jelly w:20 / pulsating lump w:20 / ooze / slime creature / giant amoeba / \
-   brown ooze / acid blob w:5 / death ooze w:5 / azure jelly w:5
+KMONS: 1 : jelly w:20 / pulsating lump w:20 / ooze / slime creature w:15 / \
+   brown ooze w:15 / acid blob w:5 / death ooze w:5 / azure jelly w:5
 MAP
       xxx
    xxxxxxxx
@@ -466,37 +439,6 @@ xxxXX.....1.@
  xxxxXXX..1@
    xxxxxxxx
       xxx
-ENDMAP
-
-NAME: nicolae_slime_phagocytosis
-DEPTH: Slime
-TAGS: transparent
-SUBST: a : .x, b : .x, c : .x, d : .x, e : .x, { = {[(, X = Wx, ' = ._
-NSUBST: W = 4:1 / *:W
-KMONS: 1 = giant amoeba
-KFEAT: 1 = W
-CLEAR: _
-MAP
-       '.......'
-      '..........'
-    '.....................'
- '........ee...............'
-'........exxe...............'
-.......eexxxxeee.xxxxxxx.....'
-....ddxxxxxxxxxxxxxxxxxxx.....
-@..dxxxxxXXXXxxxxx.....xxx....
-@..dxxxxXWWWWXx.........xxx...
-@...ddxxXWWWW............xx...
-@.....cxXWWWW....{..x....x....
-@.....cxXWWWWXx.....xx........
-'....cxxxXXXXxxx...xxx.......'
- ...cxxxxxxxxxxxxxxxx.......'
- ...cxxxxabxxxxxxxxx.......
- ....axxa..bxxxb.........'
- .....aa....bbb.........'
- '....................'
-  '...............'
-   ''...........''
 ENDMAP
 
 NAME: nicolae_slime_round_cave

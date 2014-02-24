@@ -1607,8 +1607,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return _mon_clamp(TILEP_MONS_SLIME_CREATURE, number - 1);
     case MONS_PULSATING_LUMP:
         return TILEP_MONS_PULSATING_LUMP;
-    case MONS_GIANT_AMOEBA:
-        return TILEP_MONS_GIANT_AMOEBA;
     case MONS_BROWN_OOZE:
         return TILEP_MONS_BROWN_OOZE;
     case MONS_AZURE_JELLY:
@@ -4121,10 +4119,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // beasts ('I')
     case MONS_SKY_BEAST:
         return TILE_CORPSE_SKY_BEAST;
-
-    // jellies ('J')
-    case MONS_GIANT_AMOEBA:
-        return TILE_CORPSE_GIANT_AMOEBA;
 
     // kobolds ('K')
     case MONS_KOBOLD:

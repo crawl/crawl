@@ -346,7 +346,7 @@ NAME:    hangedman_swamp_muck
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 KMONS:   1 = slime creature
-KMONS:   2 = giant amoeba
+KMONS:   2 = slime creature / brown ooze
 KMONS:   3 = brown ooze
 KFEAT:   t = mangrove
 KFEAT:   12 = shallow_water

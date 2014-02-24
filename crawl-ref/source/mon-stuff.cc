@@ -2958,7 +2958,6 @@ static bool _jiyva_slime_target(monster_type targetc)
               || targetc == MONS_JELLY
               || targetc == MONS_BROWN_OOZE
               || targetc == MONS_SLIME_CREATURE
-              || targetc == MONS_GIANT_AMOEBA
               || targetc == MONS_ACID_BLOB
               || targetc == MONS_AZURE_JELLY);
 }
@@ -3428,12 +3427,7 @@ void slimify_monster(monster* mon, bool hostile)
     else if (x >= 5 && x < 7)
         target = MONS_BROWN_OOZE;
     else if (x >= 7 && x <= 11)
-    {
-        if (coinflip())
-            target = MONS_SLIME_CREATURE;
-        else
-            target = MONS_GIANT_AMOEBA;
-    }
+        target = MONS_SLIME_CREATURE;
     else
     {
         if (coinflip())

@@ -1185,7 +1185,7 @@ ENDMAP
 ##############################################################################
 # Starter slime pit
 #
-# The slime creature or amoeba may seem too tough for the level where this
+# The slime creature or brown ooze may seem too tough for the level where this
 # appears, but since they are normal speed with no range attacks, they can
 # be escaped.
 #
@@ -1193,7 +1193,7 @@ NAME:   lemuel_slime
 DEPTH:  D:6-, Lair
 ORIENT: float
 MONS:   w:20 ooze / jelly / fungus
-MONS:   slime creature / giant amoeba / oklob plant
+MONS:   slime creature / brown ooze / oklob plant
 MAP
 xxxxxxxxxx
 xxxx111xxx
