@@ -3892,7 +3892,7 @@ static coord_def _mons_fragment_target(monster *mons)
     int pow = 6 * mons->spell_hd(SPELL_LRD);
 
     // Shadow casting should try to affect the same tile as the player.
-    if (mons->mid == MID_PLAYER)
+    if (mons_is_player_shadow(mons))
     {
         bool temp;
         bolt beam;
