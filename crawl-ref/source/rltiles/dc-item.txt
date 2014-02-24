@@ -24,19 +24,11 @@ club WPN_CLUB
 mace1 WPN_MACE
 mace2
 mace3
-%rim 0
-mace4
-mace5
-%rim 1
 mace_large1 WPN_GREAT_MACE
 mace_large2
 flail1 WPN_FLAIL
 flail2
 flail3
-%rim 0
-flail4
-flail5
-%rim 1
 dire_flail1 WPN_DIRE_FLAIL
 dire_flail2
 dire_flail3
@@ -44,21 +36,12 @@ dire_flail3
 morningstar1 WPN_MORNINGSTAR
 morningstar2
 morningstar3
-morningstar4
-morningstar5
 eveningstar1 WPN_EVENINGSTAR
 eveningstar2
 eveningstar3
-eveningstar4
-eveningstar5
 %rim 1
 hammer1 WPN_HAMMER
 hammer2
-%rim 0
-hammer3
-hammer4
-hammer5
-%rim 1
 bullwhip WPN_WHIP
 bullwhip2
 %rim 0
@@ -73,38 +56,25 @@ giant_spiked_club WPN_GIANT_SPIKED_CLUB
 dagger WPN_DAGGER
 dagger2
 dagger3
-dagger4
-dagger5
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
 short_sword3
-%rim 0
-short_sword4
-short_sword5
-%rim 1
 
 long_sword1 WPN_LONG_SWORD
 %rim 0
 long_sword2
 long_sword3
-long_sword4
-long_sword5
 %rim 1
 
 greatsword1 WPN_GREAT_SWORD
 greatsword2
-%rim 0
-greatsword3
-greatsword4
 
 
 %rim 0
 falchion1 WPN_FALCHION
 falchion2
 falchion3
-falchion4
-falchion5
 %rim 1
 scimitar1 WPN_SCIMITAR
 scimitar2
@@ -114,8 +84,6 @@ scimitar3
 cutlass1 WPN_CUTLASS
 cutlass2
 cutlass3
-cutlass4
-cutlass5
 
 quickblade1 WPN_QUICK_BLADE
 quickblade2
@@ -138,28 +106,18 @@ hand_axe1 WPN_HAND_AXE
 hand_axe2
 hand_axe3
 %rim 0
-hand_axe4
-hand_axe5
 war_axe1 WPN_WAR_AXE
 war_axe2
 war_axe3
-war_axe4
-war_axe5
 broad_axe1 WPN_BROAD_AXE
 broad_axe2
 broad_axe3
-broad_axe4
-broad_axe5
 battle_axe1 WPN_BATTLEAXE
 battle_axe2
 battle_axe3
-battle_axe4
-battle_axe5
 executioner_axe1 WPN_EXECUTIONERS_AXE
 executioner_axe2
 executioner_axe3
-executioner_axe4
-executioner_axe5
 %rim 1
 
 ##Polearm
@@ -168,20 +126,13 @@ spear1 WPN_SPEAR
 %rim 1
 spear2
 %rim 0
-spear3
-spear4
-spear5
 trident1 WPN_TRIDENT
 trident2
 trident3
-trident4
-trident5
 demon_trident WPN_DEMON_TRIDENT
 halberd1 WPN_HALBERD
 halberd2
 halberd3
-halberd4
-halberd5
 %rim 1
 scythe1 WPN_SCYTHE
 scythe2
@@ -189,13 +140,9 @@ scythe2
 glaive1 WPN_GLAIVE
 glaive2
 glaive3
-glaive4
-glaive5
 bardiche1 WPN_BARDICHE
 bardiche2
 bardiche3
-bardiche4
-bardiche5
 
 ##Staff
 staff WPN_STAFF
@@ -221,18 +168,12 @@ sling2
 bow1 WPN_BOW
 bow2
 bow3
-bow4
-bow5
 crossbow1 WPN_CROSSBOW
 crossbow2
 crossbow3
-crossbow4
-crossbow5
 longbow1 WPN_LONGBOW
 longbow2
 longbow3
-longbow4
-longbow5
 
 %sdir item/weapon/brands
 %rim 0
