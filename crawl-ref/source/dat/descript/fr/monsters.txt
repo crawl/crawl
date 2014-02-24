@@ -1295,11 +1295,6 @@ d'autre que de se nourrir de la chaire des vivants, et elle fera tomber ses
 victimes avec ses griffes vicieuses ou avec une de ses maladies qu'elle
 transporte.
 %%%%
-giant amoeba
-
-Un organisme massif et palpitant qui utilise des épais pseudopodes de
-protoplasme pour suinter dans tout le donjon à la recherche de nourriture.
-%%%%
 worker ant
 
 Un insecte sans ailes avec des mandibules acérées capable d'injecter un poison

@@ -281,11 +281,6 @@ tengu CORPSE_TENGU
 holy/shedu CORPSE_SHEDU
 unique/arachne_staveless CORPSE_ARACHNE
 
-## Jellies ('J')
-%sdir mon/amorphous
-%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-giant_amoeba CORPSE_GIANT_AMOEBA
-
 ## Kobolds ('K')
 %sdir mon/
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4

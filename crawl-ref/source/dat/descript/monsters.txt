@@ -1272,11 +1272,6 @@ accursed with a terrible hunger. It desires nothing but to feed on the flesh of
 the living, and will fell its victims with its vicious claws or with one of the
 diseases it is host to.
 %%%%
-giant amoeba
-
-A massive pulsating organism that uses thick pseudopods of protoplasm to ooze
-through the dungeons in search of food.
-%%%%
 goliath beetle
 
 A huge black beetle with great crunching mandibles and very hard chitinous

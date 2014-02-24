@@ -445,12 +445,8 @@ string pluralise(const string &name, const char *qualifiers[],
             // Fungus, ufetubus, for instance.
             return name.substr(0, name.length() - 2) + "i";
     }
-    else if (ends_with(name, "larva") || ends_with(name, "amoeba")
-          || ends_with(name, "antenna"))
-    {
-        // Giant amoebae sounds a little weird, to tell the truth.
+    else if (ends_with(name, "larva") || ends_with(name, "antenna"))
         return name + "e";
-    }
     else if (ends_with(name, "ex"))
     {
         // Vortex; vortexes is legal, but the classic plural is cooler.

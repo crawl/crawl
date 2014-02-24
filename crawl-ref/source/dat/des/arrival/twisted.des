@@ -433,7 +433,7 @@ SUBST:   t : U....
 KFEAT:   C = altar_jiyva
 SUBST:   D = .
 SUBST:   t : U....
-KMONS:   1 = jelly / ooze / giant amoeba w:3 / brown ooze w:2 / pulsating lump w:1
+KMONS:   1 = jelly / ooze / brown ooze w:5 / pulsating lump w:1
 :else
 SUBST:   D = C
 SHUFFLE: VCd
