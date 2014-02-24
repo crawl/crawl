@@ -359,7 +359,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_VAULT_SENTINEL:
     case TILEP_MONS_IRONBRAND_CONVOKER:
     case TILEP_MONS_IRONHEART_PRESERVER:
-    case TILEP_MONS_DEMONSPAWN:
     case TILEP_MONS_DONALD:
         *ofs_x = 1;
         *ofs_y = 0;
@@ -747,12 +746,7 @@ int mcache_draco::info(tile_draw_info *dinfo) const
             dinfo[i++].set(m_equ_tile, -1, 0);
     }
     if (m_shd_tile)
-    {
-        if (draco)
-            dinfo[i++].set(m_shd_tile, 2, 0);
-        else
-            dinfo[i++].set(m_shd_tile, -4, 2);
-    }
+        dinfo[i++].set(m_shd_tile, 2, 0);
 
     return i;
 }
