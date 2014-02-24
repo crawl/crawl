@@ -635,17 +635,16 @@ class message_store
     bool last_of_turn;
     int temp; // number of temporary messages
 
+#ifdef USE_TILE_WEB
     int unsent; // number of messages not yet sent to the webtiles client
     int client_rollback;
-#ifdef USE_TILE_WEB
     bool send_ignore_one;
 #endif
 
 public:
-    message_store() : last_of_turn(false), temp(0),
-                      unsent(0), client_rollback(0)
+    message_store() : last_of_turn(false), temp(0)
 #ifdef USE_TILE_WEB
-                      , send_ignore_one(false)
+                      , unsent(0), client_rollback(0), send_ignore_one(false)
 #endif
     {}
 
@@ -685,7 +684,9 @@ public:
 
     void roll_back()
     {
+#ifdef USE_TILE_WEB
         client_rollback = max(0, temp - unsent);
+#endif
         msgs.roll_back(temp);
         temp = 0;
     }
@@ -704,7 +705,9 @@ public:
         // writing out to the message window might
         // in turn result in a recursive flush_prev.
         prev_msg = message_item();
+#ifdef USE_TILE_WEB
         unsent++;
+#endif
         store_msg(msg);
         if (last_of_turn)
         {
