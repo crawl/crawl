@@ -2889,16 +2889,6 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         return false;
     }
 
-    // [ds] Non-base draconians are much more trouble than their HD
-    // suggests.
-    if (mons_genus(new_mclass) == MONS_DRACONIAN
-        && new_mclass != MONS_DRACONIAN
-        && !player_in_branch(BRANCH_ZOT)
-        && !one_chance_in(10))
-    {
-        return false;
-    }
-
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons_class_holiness(old_mclass)
         || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
