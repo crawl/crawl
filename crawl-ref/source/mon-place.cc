@@ -3728,8 +3728,8 @@ monster* create_monster(mgen_data mg, bool fail_msg)
             monster dummy;
             const monster_type resistless_mon = MONS_HUMAN;
             // If the type isn't known yet assume no resists or anything.
-            dummy.type         = _is_random_monster(mg.cls) ? resistless_mon
-                                                            : mg.cls;
+            dummy.type         = needs_resolution(mg.cls) ? resistless_mon
+                                                          : mg.cls;
             dummy.base_monster = mg.base_type;
             dummy.god          = mg.god;
             dummy.behaviour    = mg.behaviour;
