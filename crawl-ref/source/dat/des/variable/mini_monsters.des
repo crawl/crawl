@@ -1683,14 +1683,14 @@ MAP
 ...............
 ENDMAP
 
-NAME:   evilmike_dwarf_trog_shrine
+NAME:   evilmike_spriggan_trog_shrine
 DEPTH:  Depths, Elf
-MONS:   deep dwarf berserker
+MONS:   spriggan berserker
 : if you.absdepth() < 19 then
 NSUBST: 1 = 2:2 / *:1
 : end
 SUBST:  2 = 1'
-KMONS:  _ = deep dwarf berserker
+KMONS:  _ = spriggan berserker
 KFEAT:  _ = altar_trog
 SUBST:  C : c', B : +', D : +', E : +c
 SUBST:  = = ccc+
@@ -5325,11 +5325,16 @@ KMONS:  W = Wiglaf ; broad axe unrand:arga . \
                      chain mail w:8 race:dwarven | \
                      plate armour w:10 race:dwarven | \
                      crystal plate armour w:1 race:dwarven, \
-            deep dwarf berserker ; broad axe unrand:arga . \
+            deep dwarf name:berserker n_suf god:trog hd:8 col:lightred \
+                     spells:brothers_in_arms;.;trog's_hand;berserker_rage;.;. priest_spells \
+                                   ; broad axe unrand:arga . \
                                    chain mail w:7 race:dwarven | \
                                    plate armour w:1 race:dwarven
 KMONS:  J = Jorgrun, deep dwarf death knight
-MONS:   deep dwarf berserker
+MONS:   deep dwarf name:berserker n_suf god:trog hd:8 col:lightred \
+                     spells:brothers_in_arms;.;trog's_hand;berserker_rage;.;. priest_spells \
+                    ; broad axe good_item . \
+                    chain mail race:dwarven
 MONS:   deep dwarf death knight w:5 / nothing
 MONS:   deep dwarf
 SUBST:  X = x.

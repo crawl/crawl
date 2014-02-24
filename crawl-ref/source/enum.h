@@ -2459,8 +2459,8 @@ enum monster_type                      // menv[].type
     MONS_DEEP_DWARF_SCION,
     MONS_DEEP_DWARF_ARTIFICER,
     MONS_DEEP_DWARF_NECROMANCER,
-#endif
     MONS_DEEP_DWARF_BERSERKER,
+#endif
     MONS_DEEP_DWARF_DEATH_KNIGHT,
     MONS_UNBORN,
     MONS_ELF,

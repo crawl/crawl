@@ -220,7 +220,6 @@ static const pop_entry pop_elf[] =
 static const pop_entry pop_dwarf[] =
 { // Dwarven Hall
   {  1,  1, 1000, FLAT, MONS_DEEP_DWARF },
-  {  1,  1,  690, FLAT, MONS_DEEP_DWARF_BERSERKER },
   {  1,  1,  690, FLAT, MONS_DEEP_DWARF_DEATH_KNIGHT },
   {  1,  1,  334, FLAT, MONS_UNBORN },
   {  1,  1,    3, FLAT, MONS_IRON_TROLL },
@@ -989,7 +988,6 @@ static const pop_entry pop_abyss[] =
   {  1,  4,   21, DOWN, MONS_ICE_BEAST },
   {  1,  4,   21, DOWN, MONS_SKY_BEAST },
   {  1,  5,   14, DOWN, MONS_KOBOLD_DEMONOLOGIST },
-  {  1,  5,    8, FLAT, MONS_DEEP_DWARF_BERSERKER },
   {  1,  5,    8, FLAT, MONS_DEEP_DWARF_DEATH_KNIGHT },
   {  1,  5,   16, FLAT, MONS_OCTOPODE },
   {  1,  5,    4, FLAT, MONS_HELL_KNIGHT },
