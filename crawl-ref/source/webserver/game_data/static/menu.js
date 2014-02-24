@@ -696,6 +696,13 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
             $("#menu").css("font-size",
                 options.get("tile_font_crt_size") + "px");
         }
+
+        var family = options.get("tile_font_crt_family");
+        if (family !== "")
+            family += ", ";
+        $("#crt").css("font-family", family + "monospace");
+        $("#menu").css("font-family", family + "monospace");
+
         client.center_element($("#menu"));
     });
 

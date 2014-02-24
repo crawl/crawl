@@ -401,6 +401,11 @@ function ($, comm, enums, map_knowledge, messages, options) {
             $("#stats").css("font-size",
                 options.get("tile_font_stat_size") + "px");
         }
+
+        var family = options.get("tile_font_stat_family");
+        if (family !== "")
+            family += ", ";
+        $("#stats").css("font-family", family + "monospace");
     });
 
     comm.register_handlers({

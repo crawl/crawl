@@ -1005,6 +1005,12 @@ void game_options::reset_options()
     tile_font_tip_file   = MONOSPACED_FONT;
     tile_font_lbl_file   = PROPORTIONAL_FONT;
 #endif
+#ifdef USE_TILE_WEB
+    tile_font_crt_family  = "monospace";
+    tile_font_stat_family = "monospace";
+    tile_font_msg_family  = "monospace";
+    tile_font_lbl_family  = "monospace";
+#endif
 
 #ifdef USE_TILE
     tile_font_crt_size   = 0;
@@ -3476,7 +3482,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         tile_excl_centre_col = str_to_tile_colour(field);
     else if (key == "tile_window_col")
         tile_window_col = str_to_tile_colour(field);
-#endif
 #ifdef USE_TILE_LOCAL
     else if (key == "tile_font_crt_file")
         tile_font_crt_file = field;
@@ -3489,13 +3494,21 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "tile_font_lbl_file")
         tile_font_lbl_file = field;
 #endif
-#ifdef USE_TILE
+#ifdef USE_TILE_WEB
+    else if (key == "tile_font_crt_family")
+        tile_font_crt_family = field;
+    else if (key == "tile_font_msg_family")
+        tile_font_msg_family = field;
+    else if (key == "tile_font_stat_family")
+        tile_font_stat_family = field;
+    else if (key == "tile_font_lbl_family")
+        tile_font_lbl_family = field;
+#endif
     else INT_OPTION(tile_font_crt_size, 0, INT_MAX);
     else INT_OPTION(tile_font_msg_size, 0, INT_MAX);
     else INT_OPTION(tile_font_stat_size, 0, INT_MAX);
     else INT_OPTION(tile_font_tip_size, 0, INT_MAX);
     else INT_OPTION(tile_font_lbl_size, 0, INT_MAX);
-#endif
 #ifdef USE_TILE_LOCAL
 #ifdef USE_FT
     else BOOL_OPTION(tile_font_ft_light);
@@ -3518,7 +3531,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             tile_use_small_layout = MB_MAYBE;
     }
 #endif
-#ifdef USE_TILE
     else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
     else BOOL_OPTION(tile_filter_scaling);
     else INT_OPTION(tile_map_pixels, 0, INT_MAX);
@@ -3534,7 +3546,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else LIST_OPTION(tile_layout_priority);
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
-#endif
 #ifdef USE_TILE_WEB
     else BOOL_OPTION(tile_realtime_anim);
     else if (key == "tile_display_mode")
@@ -3545,6 +3556,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(tile_level_map_hide_messages);
     else BOOL_OPTION(tile_level_map_hide_sidebar);
 #endif
+#endif // USE_TILE
 
     else if (key == "bindkey")
         _bindkey(field);
@@ -4239,6 +4251,14 @@ void game_options::write_webtiles_options(const string& name)
     tiles.json_write_bool("tile_level_map_hide_sidebar",
             Options.tile_level_map_hide_sidebar);
 
+    tiles.json_write_string("tile_font_crt_family",
+            Options.tile_font_crt_family);
+    tiles.json_write_string("tile_font_stat_family",
+            Options.tile_font_stat_family);
+    tiles.json_write_string("tile_font_msg_family",
+            Options.tile_font_msg_family);
+    tiles.json_write_string("tile_font_lbl_family",
+            Options.tile_font_lbl_family);
     tiles.json_write_int("tile_font_crt_size", Options.tile_font_crt_size);
     tiles.json_write_int("tile_font_stat_size", Options.tile_font_stat_size);
     tiles.json_write_int("tile_font_msg_size", Options.tile_font_msg_size);

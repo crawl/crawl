@@ -230,6 +230,11 @@ function ($, map_knowledge, cr, dungeon_renderer, options) {
             $("#monster_list").css("font-size",
                 options.get("tile_font_lbl_size") + "px");
         }
+
+        var family = options.get("tile_font_lbl_family");
+        if (family !== "")
+            family += ", ";
+        $("#monster_list").css("font-family", family + "monospace");
     });
 
     return {
