@@ -24,12 +24,23 @@ rectangle_iterator::rectangle_iterator(const coord_def& corner1,
     current = topleft;
 }
 
-rectangle_iterator::rectangle_iterator(const coord_def& center, int halfside)
+rectangle_iterator::rectangle_iterator(const coord_def& center, int halfside,
+                                       bool clip_to_map)
 {
     topleft.x = center.x - halfside;
     topleft.y = center.y - halfside;
+    if (clip_to_map)
+    {
+        topleft.x = max(topleft.x, X_BOUND_1);
+        topleft.y = max(topleft.y, Y_BOUND_1);
+    }
     bottomright.x = center.x + halfside;
     bottomright.y = center.y + halfside;
+    if (clip_to_map)
+    {
+        bottomright.x = min(bottomright.x, X_BOUND_2);
+        bottomright.y = min(bottomright.y, Y_BOUND_2);
+    }
     current = topleft;
 }
 

@@ -7,7 +7,8 @@ class rectangle_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:
     rectangle_iterator(const coord_def& corner1, const coord_def& corner2);
-    rectangle_iterator(const coord_def& center, int halfside);
+    rectangle_iterator(const coord_def& center, int halfside,
+                       bool clip_to_map = false);
     explicit rectangle_iterator(int x_border_dist, int y_border_dist = -1);
     operator bool() const PURE;
     coord_def operator *() const PURE;
