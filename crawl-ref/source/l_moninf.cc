@@ -128,6 +128,13 @@ LUAFN(moninf_get_stabbability)
     return 1;
 }
 
+LUAFN(moninf_get_is_caught)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, mi->is(MB_CAUGHT));
+    return 1;
+}
+
 LUAFN(moninf_get_is_constricted)
 {
     MONINF(ls, 1, mi);
@@ -243,6 +250,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(holiness),
     MIREG(attitude),
     MIREG(threat),
+    MIREG(is_caught),
     MIREG(is_constricted),
     MIREG(is_constricting),
     MIREG(is_constricting_you),
