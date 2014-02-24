@@ -1935,6 +1935,191 @@ bool make_item_randart(item_def &item, bool force_mundane)
     return true;
 }
 
+struct _igni_artp_def
+{
+    artefact_prop_type prop;
+    short value;
+    bool overwrite;
+};
+
+static void _igni_add_prop(item_def& wpn, const _igni_artp_def& def)
+{
+    if (def.prop == ARTP_DAMAGE)
+    {
+        if (wpn.sub_type != WPN_BLOWGUN)
+            wpn.plus2 += def.value;
+        else
+            wpn.plus += def.value;
+    }
+    else
+    {
+        CrawlVector &rap = wpn.props[ARTEFACT_PROPS_KEY].get_vector();
+        if (def.overwrite)
+            rap[def.prop] = static_cast<short>(def.value);
+        else
+        {
+            short current_val = rap[def.prop];
+            rap[def.prop] = static_cast<short>(current_val + def.value);
+        }
+    }
+}
+
+// Generates a list of artefacts by copying wpn and adding some randart
+// prorerties to it.
+// It also improves the weapon's enchantment.
+// The function returns an empty vector if something went wrong.
+vector<item_def> make_igni_randarts(const item_def& wpn)
+{
+    vector<item_def> choices;
+
+    if (wpn.base_type != OBJ_WEAPONS
+        || wpn.flags & ISFLAG_RANDART
+        || wpn.flags & ISFLAG_UNRANDART)
+    {
+        return choices; // Empty vector
+    }
+
+    // The artefact properties have a special generation algorithm for Igni.
+    // It chooses either a tier1 value and a tier2 value, or a tier0 value and
+    // a bad_tier value.
+    // Duplicate values will not be pulled from the same tier array.
+    //
+    // The intent of this system is to generate a set of artefacts that have
+    // lots of variation, but also have approximately the same power level.
+
+    _igni_artp_def tier1[] =
+    {
+        { ARTP_FIRE, 1 },
+        { ARTP_COLD, 1 },
+        { ARTP_NEGATIVE_ENERGY, 1 },
+        { ARTP_ELECTRICITY, 1 },
+        { ARTP_AC, 4 },
+        { ARTP_EVASION, 4 },
+        { ARTP_INVISIBLE, 1 },
+        { ARTP_MAGIC, 100 },
+    };
+
+    _igni_artp_def tier2[] =
+    {
+        { ARTP_STRENGTH, 3 },
+        { ARTP_INTELLIGENCE, 3 },
+        { ARTP_DEXTERITY, 3 },
+        { ARTP_POISON, 1 },
+        { ARTP_NEGATIVE_ENERGY, 1 },
+        { ARTP_FLY, 1 },
+        { ARTP_BLINK, 1 },
+        { ARTP_BERSERK, 1 },
+        { ARTP_STEALTH, 50 },
+        { ARTP_MAGIC, 40 },
+        { ARTP_AC, 2 },
+        { ARTP_EVASION, 2 },
+        { ARTP_EYESIGHT, 1 },
+        { ARTP_DAMAGE, 3 },
+        { ARTP_BRAND, SPWPN_PROTECTION, true },
+    };
+
+    _igni_artp_def tier0[] =
+    {
+        { ARTP_FIRE, 2 },
+        { ARTP_COLD, 2 },
+        { ARTP_AC, 6 },
+        { ARTP_EVASION, 6 },
+        { ARTP_NEGATIVE_ENERGY, 2 },
+        { ARTP_REGENERATION, 40 },
+        { ARTP_STRENGTH, 6 },
+        { ARTP_INTELLIGENCE, 6 },
+        { ARTP_DEXTERITY, 6 },
+        { ARTP_DAMAGE, 6 },
+        { ARTP_BRAND, SPWPN_SPEED, true },
+    };
+
+    _igni_artp_def bad_tier[] =
+    {
+        { ARTP_INTELLIGENCE, -6 },
+        { ARTP_DEXTERITY, -6 },
+        { ARTP_AC, -4 },
+        { ARTP_EVASION, -4 },
+        { ARTP_FIRE, -1 },
+        { ARTP_COLD, -1 },
+        { ARTP_MUTAGENIC, 1 },
+        { ARTP_NOISES, 3 },
+    };
+
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier0));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier1));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier2));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(bad_tier));
+
+    reproducible_rng rng(you.birth_time);
+    std::random_shuffle(tier1, tier1 + ARRAYSZ(tier1), rng);
+    std::random_shuffle(tier2, tier2 + ARRAYSZ(tier2), rng);
+    std::random_shuffle(bad_tier, bad_tier + ARRAYSZ(bad_tier), rng);
+
+    for (int i = 0; i != MAX_IGNI_ARTEFACTS; ++i)
+    {
+        // Do the RNG now so that the results won't differ.
+        const int added_plus  = rng(3) - rng(2);
+        const int added_plus2 = rng(3) - rng(2);
+        const bool first_tiers = rng(2);
+
+        int flag = 1 << i;
+        if (you.attribute[ATTR_IGNI_ARTEFACTS_MADE] & flag)
+            continue;
+
+        choices.push_back(wpn);
+        item_def& choice = choices.back();
+
+        // This hack is used to pass the flag back to the caller.
+        choice.slot = flag;
+
+        choice.plus += added_plus;
+        if (choice.sub_type != WPN_BLOWGUN)
+            choice.plus2 += added_plus2;
+
+        _artefact_setup_prop_vectors(choice);
+        choice.flags |= ISFLAG_RANDART;
+
+        CrawlVector &rap = choice.props[ARTEFACT_PROPS_KEY].get_vector();
+        for (vec_size j = 0; j < ART_PROPERTIES; j++)
+            rap[j] = static_cast<short>(0);
+
+        if (wpn.special == SPWPN_NORMAL)
+        {
+            if (choice.sub_type == WPN_BLOWGUN)
+                rap[ARTP_BRAND] = static_cast<short>(SPWPN_NORMAL);
+            else if (is_range_weapon(wpn))
+                rap[ARTP_BRAND] = static_cast<short>(SPWPN_FLAME);
+            else
+                rap[ARTP_BRAND] = static_cast<short>(SPWPN_FLAMING);
+        }
+        else
+            rap[ARTP_BRAND] = static_cast<short>(wpn.special);
+
+        if (first_tiers)
+        {
+            _igni_add_prop(choice, tier1[i]);
+            _igni_add_prop(choice, tier2[i]);
+        }
+        else
+        {
+            _igni_add_prop(choice, tier0[i]);
+            _igni_add_prop(choice, bad_tier[i]);
+        }
+
+        // get true artefact name
+        set_artefact_name(choice, item_base_name(choice));
+
+        // get artefact appearance
+        if (choice.props.exists(ARTEFACT_APPEAR_KEY))
+            ASSERT(choice.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
+        else
+            choice.props[ARTEFACT_APPEAR_KEY].get_string() =
+                make_artefact_name(choice, true);
+    }
+
+    return choices;
+}
+
 static void _make_faerie_armour(item_def &item)
 {
     item_def doodad;

@@ -377,7 +377,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Igni Ipthes supports the use of metal body armour.",
       "permanently firebrand a weapon",
       "release gusts of air using the Divine Bellows",
-      "transform into a being of fiery magma"
+      "artefactize your weapon."
     },
 };
 
@@ -522,7 +522,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Igni Ipthes no longer supports the use of metal body armour.",
       "firebrand a weapon",
       "use the Divine Bellows",
-      "transform into a being of fiery magma"
+      "artefactize your weapon."
     },
 };
 

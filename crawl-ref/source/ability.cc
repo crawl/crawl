@@ -205,7 +205,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Igni Ipthes
     { ABIL_IGNI_REFORGE_WEAPON, ABIL_NON_ABILITY,
       ABIL_IGNI_FIREBRAND_WEAPON, ABIL_IGNI_DIVINE_BELLOWS,
-      ABIL_IGNI_TRAN_MAGMA },
+      ABIL_IGNI_ARTEFACTIZE_WEAPON },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -429,6 +429,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, 500, ABFLAG_NONE },
     { ABIL_IGNI_DIVINE_BELLOWS, "Divine Bellows",
       0, 0, 100, 3, 0, 100, ABFLAG_NONE },
+    { ABIL_IGNI_ARTEFACTIZE_WEAPON, "Artefactize Weapon",
+      0, 0, 0, 10, 0, 500, ABFLAG_NONE },
     { ABIL_IGNI_TRAN_MAGMA, "Magma Form",
       0, 0, 250, 3, 0, 50, ABFLAG_NONE },
 
@@ -3082,6 +3084,14 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_IGNI_DIVINE_BELLOWS:
         igni_divine_bellows();
+        break;
+
+    case ABIL_IGNI_ARTEFACTIZE_WEAPON:
+        if (!igni_artefactize_weapon())
+        {
+            crawl_state.zero_turns_taken();
+            return false;
+        }
         break;
 
     case ABIL_IGNI_TRAN_MAGMA:

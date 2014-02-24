@@ -4907,6 +4907,111 @@ bool igni_reforge_monster_weapon(monster* mons)
     return true;
 }
 
+bool igni_artefactize_weapon()
+{
+    if (you.attribute[ATTR_IGNI_ARTEFACTS_MADE]
+        >= (1 << (MAX_IGNI_ARTEFACTS)) - 1)
+    {
+        simple_god_message(" thinks you have created enough artefacts.");
+        return false;
+    }
+
+    item_def* wpn = you.weapon();
+
+    if (!wpn)
+    {
+        mpr("You aren't wielding a weapon.");
+        return false;
+    }
+
+    const string old_name(wpn->name(DESC_YOUR));
+
+    vector<item_def> wpn_choices = make_igni_randarts(*wpn);
+
+    if (wpn_choices.empty())
+    {
+        mpr("That's not a suitable weapon.");
+        return false;
+    }
+
+    if (!yesno("Do you want Igni to artefactize your weapon?", true, 'n'))
+        return false;
+
+    ToggleableMenu menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                        | MF_ALLOW_FORMATTING,
+                        true);
+
+    menu.set_title(
+        new MenuEntry("Choose how you want Igni to artefactize your weapon.",
+            MEL_TITLE));
+
+    menu.set_highlighter(NULL);
+
+    menu.action_cycle = Menu::CYCLE_TOGGLE;
+    menu.menu_action  = Menu::ACT_EXECUTE;
+
+    for (unsigned int i = 0; i < wpn_choices.size(); ++i)
+    {
+        item_def& choice = wpn_choices[i];
+
+        MenuEntry* me =
+            new MenuEntry(choice.name(DESC_THE), MEL_ITEM, 1,
+                          index_to_letter(i % 52));
+
+        me->data = &choice;
+        menu.add_entry(me);
+    }
+
+    vector<MenuEntry*> sel = menu.show();
+
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    if (sel.empty())
+        return NULL;
+
+    item_def choice = *static_cast<item_def*>(sel[0]->data);
+
+    you.attribute[ATTR_IGNI_ARTEFACTS_MADE] |= choice.slot;
+    choice.slot = wpn->slot;
+
+    while (true)
+    {
+        mprf(MSGCH_PROMPT, "Give it a name: ");
+
+        char buf[17];
+        buf[sizeof(buf)-1] = 0;
+        if (cancellable_get_line(buf, sizeof(buf)))
+            return false;
+
+        if (buf[0] != '\0')
+        {
+            set_artefact_name(choice,
+                              item_base_name(choice) + " \"" + buf + "\"");
+            break;
+        }
+    }
+
+    *wpn = choice;
+
+    you.wield_change = true;
+    calc_mp(); // just in case the old brand was antimagic
+    string desc  = old_name + " artefactized by Igni Ipthes";
+    take_note(Note(NOTE_ID_ITEM, 0, 0,
+              wpn->name(DESC_A).c_str(), desc.c_str()));
+    wpn->flags |= ISFLAG_NOTED_ID;
+
+    mprf("%s is now %s!",
+         old_name.c_str(),
+         wpn->name(DESC_THE).c_str());
+
+    simple_god_message(" booms: Use this gift wisely!");
+
+    flash_view_delay(WHITE, 1000);
+
+    return true;
+}
+
 void magma_form_eruption()
 {
     ASSERT(you.form == TRAN_MAGMA);

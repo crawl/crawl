@@ -1,7 +1,6 @@
 #include "AppHdr.h"
 
 #include <math.h>
-#include "asg.h"
 #include "random.h"
 #include "syscalls.h"
 
@@ -18,10 +17,35 @@
 # include <process.h>
 #endif
 
+static AsgKISS asg_rng[2];
+
+static uint32_t _get_uint32(int generator = 0)
+{
+    return asg_rng[generator].get_uint32();
+}
+
+static void _seed_asg(uint32_t seed_array[], int seed_len)
+{
+    {
+        const AsgKISS seeded(seed_array, seed_len);
+        asg_rng[0] = seeded;
+    }
+
+    // Use the just seeded RNG to initialize the rest.
+    for (size_t i = 1; i < ARRAYSZ(asg_rng); ++i)
+    {
+        uint32_t key[5];
+        for (size_t j = 0; j < ARRAYSZ(key); ++j)
+            key[j] = asg_rng[0].get_uint32();
+        const AsgKISS seeded(key, ARRAYSZ(key));
+        asg_rng[i] = seeded;
+    }
+}
+
 void seed_rng(uint32_t seed)
 {
     uint32_t sarg[1] = { seed };
-    seed_asg(sarg, 1);
+    _seed_asg(sarg, 1);
 }
 
 void seed_rng()
@@ -37,12 +61,12 @@ void seed_rng()
     seed_key[1] += getpid();
     seed_key[2] += time(NULL);
 
-    seed_asg(seed_key, 5);
+    _seed_asg(seed_key, 5);
 }
 
 uint32_t random_int()
 {
-    return get_uint32();
+    return _get_uint32();
 }
 
 // [low, high]
@@ -115,8 +139,7 @@ const char* random_choose_weighted(int weight, const char* first, ...)
 #define UINT32_MAX ((uint32_t)(-1))
 #endif
 
-// [0, max)
-int random2(int max)
+static int _random2_asg(AsgKISS& asg, int max)
 {
     if (max <= 1)
         return 0;
@@ -125,7 +148,7 @@ int random2(int max)
 
     while (true)
     {
-        uint32_t bits = get_uint32();
+        uint32_t bits = asg.get_uint32();
         uint32_t val  = bits / partn;
 
         if (val < (uint32_t)max)
@@ -133,22 +156,16 @@ int random2(int max)
     }
 }
 
+// [0, max)
+int random2(int max)
+{
+    return _random2_asg(asg_rng[0], max);
+}
+
 // [0, max), separate RNG state
 int ui_random(int max)
 {
-    if (max <= 1)
-        return 0;
-
-    uint32_t partn = UINT32_MAX / max;
-
-    while (true)
-    {
-        uint32_t bits = get_uint32(1);
-        uint32_t val  = bits / partn;
-
-        if (val < (uint32_t)max)
-            return (int)val;
-    }
+    return _random2_asg(asg_rng[1], max);
 }
 
 // [0, 1]
@@ -341,7 +358,7 @@ int binomial_generator(unsigned n_trials, unsigned trial_prob)
 // range [0, 1.0)
 double random_real()
 {
-    return get_uint32() / 4294967296.0;
+    return _get_uint32() / 4294967296.0;
 }
 
 // Roll n_trials, return true if at least one succeeded.  n_trials might be
@@ -396,7 +413,7 @@ bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
     do
     {
         if (index == int(bits.size()))
-            bits.push_back(get_uint32());
+            bits.push_back(_get_uint32());
 
         uint64_t expn_rand_1 = uint64_t(bits[index++]) * y;
         uint64_t expn_rand_2 = expn_rand_1 + y;
@@ -419,7 +436,7 @@ int defer_rand::random2(int maxp1)
         return 0;
 
     if (bits.empty())
-        bits.push_back(get_uint32());
+        bits.push_back(_get_uint32());
 
     uint64_t expn_rand_1 = uint64_t(bits[0]) * maxp1;
     uint64_t expn_rand_2 = expn_rand_1 + maxp1;
@@ -457,4 +474,15 @@ int defer_rand::random2avg(int max, int rolls)
         sum += (*this)[i+1].random2(max + 1);
 
     return sum / rolls;
+}
+
+reproducible_rng::reproducible_rng(uint32_t seed)
+{
+    uint32_t sarg[1] = { seed };
+    state = AsgKISS(sarg, 1);
+}
+
+int reproducible_rng::operator()(int max)
+{
+    return _random2_asg(state, max);
 }

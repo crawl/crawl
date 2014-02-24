@@ -11,7 +11,4 @@ class AsgKISS
     private:
         uint32_t m_lcg, m_mwcm, m_mwcc, m_xorshift, m_lfsr;
 };
-
-uint32_t get_uint32(int generator = 0);
-void seed_asg(uint32_t[], int);
 #endif

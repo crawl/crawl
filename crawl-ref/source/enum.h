@@ -201,6 +201,7 @@ enum ability_type
     // Igni Ipthes
     ABIL_IGNI_REFORGE_WEAPON = 1200,
     ABIL_IGNI_FIREBRAND_WEAPON,
+    ABIL_IGNI_ARTEFACTIZE_WEAPON,
     ABIL_IGNI_DIVINE_BELLOWS,
     ABIL_IGNI_TRAN_MAGMA,
 
@@ -353,6 +354,7 @@ enum attribute_type
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
     ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
     ATTR_ERUPT_DAMAGE,         // Amount of damage taken in magma form
+    ATTR_IGNI_ARTEFACTS_MADE,  // Bit flags of which artefacts were made.
     NUM_ATTRIBUTES
 };
 

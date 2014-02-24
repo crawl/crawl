@@ -670,6 +670,12 @@ Reforge Weapon ability
 
 This ability transforms a non-artefact weapon into a mundane hammer.
 %%%%
+Artefactize Weapon ability
+
+This ability will transform your weapon into an artefact, adding magical
+properties to it in the process. You will be given some choices over what
+properties the artefact gains.
+%%%%
 Magma Form ability
 
 Gain the power of the volcano by transforming your flesh into magma. This

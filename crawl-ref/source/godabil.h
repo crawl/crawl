@@ -101,6 +101,7 @@ void qazlal_elemental_force();
 bool qazlal_disaster_area();
 void igni_divine_bellows();
 bool igni_firebrand_weapon();
+bool igni_artefactize_weapon();
 bool igni_reforge_player_weapon();
 bool igni_reforge_monster_weapon(monster* mons);
 void magma_form_eruption();

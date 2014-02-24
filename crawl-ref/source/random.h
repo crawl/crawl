@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include "asg.h"
 #include "hash.h"
 
 void seed_rng();
@@ -199,5 +200,15 @@ int choose_random_weighted(Iterator beg, const Iterator end)
 #endif
     return result;
 }
+
+// A rng engine that is seeded on construction.
+class reproducible_rng
+{
+    AsgKISS state;
+public:
+    reproducible_rng(uint32_t seed);
+
+    int operator()(int max);
+};
 
 #endif
