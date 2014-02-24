@@ -742,7 +742,7 @@ OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
 PLUS:    27
 COLOUR:  ETC_GOLD
 TILE:    urand_lear
-TILE_EQ: lears_chain_mail
+TILE_EQ: lears_hauberk
 BOOL:    special
 
 NAME:    skin of Zhor
