@@ -636,7 +636,6 @@ class message_store
     int temp; // number of temporary messages
 
     int unsent; // number of messages not yet sent to the webtiles client
-    bool prev_unsent;
     int client_rollback;
 #ifdef USE_TILE_WEB
     bool send_ignore_one;
@@ -644,8 +643,7 @@ class message_store
 
 public:
     message_store() : last_of_turn(false), temp(0),
-                      unsent(0), prev_unsent(false),
-                      client_rollback(0)
+                      unsent(0), client_rollback(0)
 #ifdef USE_TILE_WEB
                       , send_ignore_one(false)
 #endif
@@ -654,13 +652,9 @@ public:
     void add(const message_item& msg)
     {
         if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
-        {
-            prev_unsent = true;
             return;
-        }
         flush_prev();
         prev_msg = msg;
-        prev_unsent = true;
         if (msg.channel == MSGCH_PROMPT || _temporary)
             flush_prev();
     }
@@ -710,11 +704,7 @@ public:
         // writing out to the message window might
         // in turn result in a recursive flush_prev.
         prev_msg = message_item();
-        if (prev_unsent)
-        {
-            unsent++;
-            prev_unsent = false;
-        }
+        unsent++;
         store_msg(msg);
         if (last_of_turn)
         {
@@ -770,19 +760,8 @@ public:
                 tiles.json_write_int("repeats", msg.repeats);
             tiles.json_close_object();
         }
-        if (prev_unsent && have_prev())
-        {
-            tiles.json_open_object();
-            tiles.json_write_string("text", prev_msg.text);
-            tiles.json_write_int("turn", prev_msg.turn);
-            tiles.json_write_int("channel", prev_msg.channel);
-            if (prev_msg.repeats > 1)
-                tiles.json_write_int("repeats", prev_msg.repeats);
-            tiles.json_close_object();
-        }
         tiles.json_close_array();
         unsent = send_ignore_one ? 1 : 0;
-        prev_unsent = false;
     }
 #endif
 };
