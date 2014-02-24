@@ -188,6 +188,94 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     return true;
 }
 
+static bool _igni_enchant_weapon()
+{
+    if (!you.weapon())
+        return false;
+
+    const string old_name(you.weapon()->name(DESC_YOUR));
+
+    vector<item_def> wpn_choices = make_igni_randarts(*you.weapon());
+
+    if (wpn_choices.empty())
+        return false;
+
+    if (!yesno("Do you want Igni to artefactize your weapon?", true, 'n'))
+        return false;
+
+    ToggleableMenu menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                        | MF_ALLOW_FORMATTING,
+                        true);
+
+    menu.set_title(
+        new MenuEntry("Choose how you want Igni to artefactize your weapon.",
+            MEL_TITLE));
+
+    menu.set_highlighter(NULL);
+
+    menu.action_cycle = Menu::CYCLE_TOGGLE;
+    menu.menu_action  = Menu::ACT_EXECUTE;
+
+    for (unsigned int i = 0; i < wpn_choices.size(); ++i)
+    {
+        item_def& choice = wpn_choices[i];
+
+        MenuEntry* me =
+            new MenuEntry(choice.name(DESC_THE), MEL_ITEM, 1,
+                          index_to_letter(i % 52));
+
+        me->data = &choice;
+        menu.add_entry(me);
+    }
+
+    vector<MenuEntry*> sel = menu.show();
+
+    if (!crawl_state.doing_prev_cmd_again)
+        redraw_screen();
+
+    if (sel.empty())
+        return NULL;
+
+    item_def choice = *static_cast<item_def*>(sel[0]->data);
+
+    while (true)
+    {
+        mprf(MSGCH_PROMPT, "Give it a name: ");
+
+        char buf[17];
+        buf[sizeof(buf)-1] = 0;
+        if (cancellable_get_line(buf, sizeof(buf)))
+            return false;
+
+        if (buf[0] != '\0')
+        {
+            set_artefact_name(choice,
+                              item_base_name(choice) + " \"" + buf + "\"");
+            break;
+        }
+    }
+
+    *you.weapon() = choice;
+
+    you.wield_change = true;
+    you.one_time_ability_used.set(GOD_IGNI_IPTHES);
+    calc_mp(); // just in case the old brand was antimagic
+    string desc  = old_name + " artefactized by Igni Ipthes";
+    take_note(Note(NOTE_ID_ITEM, 0, 0,
+              you.weapon()->name(DESC_A).c_str(), desc.c_str()));
+    you.weapon()->flags |= ISFLAG_NOTED_ID;
+
+    mprf("%s is now %s!",
+         old_name.c_str(),
+         you.weapon()->name(DESC_THE).c_str());
+
+    simple_god_message(" booms: Use this gift wisely!");
+
+    flash_view_delay(WHITE, 1000);
+
+    return true;
+}
+
 // Prayer at your god's altar.
 static bool _altar_prayer()
 {
@@ -280,6 +368,14 @@ static bool _altar_prayer()
 
         // Return early so we don't offer our Necronomicon to Kiku.
         return true;
+    }
+
+    // Igni turns your weapon into an artefact
+    if (you_worship(GOD_IGNI_IPTHES) && !player_under_penance()
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_IGNI_IPTHES])
+    {
+        did_something = _igni_enchant_weapon();
     }
 
     return did_something;

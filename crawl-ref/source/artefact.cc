@@ -1924,6 +1924,153 @@ bool make_item_randart(item_def &item, bool force_mundane)
     return true;
 }
 
+struct _igni_artp_def
+{
+    artefact_prop_type prop;
+    short value;
+};
+
+static void _igni_add_prop(CrawlVector &rap, const _igni_artp_def& def)
+{
+    short current_val = rap[def.prop];
+    rap[def.prop] = static_cast<short>(current_val + def.value);
+}
+
+// Generates a list of artefacts by copying wpn and adding some randart
+// prorerties to it.
+// It also improves the weapon's enchantment.
+// The function returns an empty vector if something went wrong.
+vector<item_def> make_igni_randarts(const item_def& wpn)
+{
+    const int num_choices = 5;
+    vector<item_def> choices;
+
+    if (wpn.base_type != OBJ_WEAPONS
+        || wpn.flags & ISFLAG_RANDART
+        || wpn.flags & ISFLAG_UNRANDART)
+    {
+        return choices; // Empty vector
+    }
+
+    // The artefact properties have a special generation algorithm for Igni.
+    // It chooses either a tier1 value and a tier2 value, or a tier0 value and
+    // a bad_tier value.
+    // Duplicate values will not be pulled from the same tier array.
+    //
+    // The intent of this system is to generate a set of artefacts that have
+    // lots of variation, but also have approximately the same power level.
+
+    _igni_artp_def tier1[] =
+    {
+        { ARTP_FIRE, 1 },
+        { ARTP_COLD, 1 },
+        { ARTP_NEGATIVE_ENERGY, 1 },
+        { ARTP_ELECTRICITY, 1 },
+        { ARTP_AC, 5 },
+        { ARTP_EVASION, 5 },
+        { ARTP_INVISIBLE, 1 },
+        { ARTP_MAGIC, 100 },
+    };
+    const int tier1_n = sizeof(tier1) / sizeof(_igni_artp_def);
+
+    _igni_artp_def tier2[] =
+    {
+        { ARTP_STRENGTH, 3 },
+        { ARTP_INTELLIGENCE, 3 },
+        { ARTP_DEXTERITY, 3 },
+        { ARTP_POISON, 1 },
+        { ARTP_NEGATIVE_ENERGY, 1 },
+        { ARTP_FLY, 1 },
+        { ARTP_BLINK, 1 },
+        { ARTP_BERSERK, 1 },
+        { ARTP_STEALTH, 50 },
+        { ARTP_MAGIC, 40 },
+        { ARTP_AC, 2 },
+        { ARTP_EVASION, 2 },
+        { ARTP_EYESIGHT, 1 },
+    };
+    const int tier2_n = sizeof(tier2) / sizeof(_igni_artp_def);
+
+    _igni_artp_def tier0[] =
+    {
+        { ARTP_FIRE, 2 },
+        { ARTP_COLD, 2 },
+        { ARTP_AC, 6 },
+        { ARTP_EVASION, 6 },
+        { ARTP_NEGATIVE_ENERGY, 2 },
+        { ARTP_REGENERATION, 40 },
+        { ARTP_STRENGTH, 6 },
+        { ARTP_INTELLIGENCE, 6 },
+        { ARTP_DEXTERITY, 6 },
+    };
+    const int tier0_n = sizeof(tier0) / sizeof(_igni_artp_def);
+
+    _igni_artp_def bad_tier[] =
+    {
+        { ARTP_INTELLIGENCE, -6 },
+        { ARTP_DEXTERITY, -6 },
+        { ARTP_AC, -5 },
+        { ARTP_EVASION, -5 },
+        { ARTP_FIRE, -1 },
+        { ARTP_COLD, -1 },
+        { ARTP_ANGRY, 1 },
+        { ARTP_MUTAGENIC, 1 },
+        { ARTP_NOISES, 1 },
+    };
+    const int bad_tier_n = sizeof(bad_tier) / sizeof(_igni_artp_def);
+
+    ASSERT(num_choices <= tier0_n);
+    ASSERT(num_choices <= tier1_n);
+    ASSERT(num_choices <= tier2_n);
+    ASSERT(num_choices <= bad_tier_n);
+
+    reproducible_rng rng(you.birth_time);
+    std::random_shuffle(tier1, tier1 + tier1_n, rng);
+    std::random_shuffle(tier2, tier2 + tier2_n, rng);
+    std::random_shuffle(bad_tier, bad_tier + bad_tier_n, rng);
+
+    for (int i = 0; i != num_choices; ++i)
+    {
+        choices.push_back(wpn);
+        item_def& choice = choices.back();
+
+        if (choice.plus < 9)
+            choice.plus = 9;
+        if (choice.plus2 < 9 && choice.sub_type != WPN_BLOWGUN)
+            choice.plus2 = 9;
+
+        _artefact_setup_prop_vectors(choice);
+        choice.flags |= ISFLAG_RANDART;
+
+        CrawlVector &rap = choice.props[ARTEFACT_PROPS_KEY].get_vector();
+        for (vec_size j = 0; j < ART_PROPERTIES; j++)
+            rap[j] = static_cast<short>(0);
+
+        if (rng(2))
+        {
+            _igni_add_prop(rap, tier1[i]);
+            _igni_add_prop(rap, tier2[i]);
+        }
+        else
+        {
+            _igni_add_prop(rap, tier0[i]);
+            _igni_add_prop(rap, bad_tier[i]);
+        }
+
+        // get true artefact name
+        set_artefact_name(choice, item_base_name(choice));
+
+        // get artefact appearance
+        if (choice.props.exists(ARTEFACT_APPEAR_KEY))
+            ASSERT(choice.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
+        else
+            choice.props[ARTEFACT_APPEAR_KEY].get_string() =
+                make_artefact_name(choice, true);
+    }
+
+    return choices;
+}
+
 static void _make_faerie_armour(item_def &item)
 {
     item_def doodad;
