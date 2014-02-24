@@ -125,6 +125,10 @@ Dowan
 A beautiful but vain elf with an aptitude for magic and little else. His skills
 are the perfect complement of his twin sister Duvessa's fighting prowess.
 %%%%
+Duane
+
+A mercenary whose only significant trait is his unusually large ears. He was hired to guard something (or possibly someone), but who or what that is, he can't tell you. If he did, he'd have to kill you. In fact, he'd like to just kill you anyway.
+%%%%
 Duvessa
 
 A plain-looking elven fighter who is technically brilliant in many forms of
@@ -175,6 +179,10 @@ A stout warrior who once bested a powerful lord of Pandemonium in combat,
 gaining control over the demon's realm and thanes. The battle left her with a
 deep facial scar, one that she carries as a badge of honour rather than a
 symbol of shame.
+%%%%
+Francis
+
+A wizened spellcaster.
 %%%%
 Frederick
 
@@ -258,6 +266,10 @@ Josephine
 A formidable necromancer, committed to her craft even after it left her aged,
 decaying, and half-undead herself.
 %%%%
+Jozef
+
+A tall bounty hunter.
+%%%%
 Khufu
 
 An incredibly powerful emperor on the way to godhood.
@@ -333,6 +345,10 @@ when Mennas remained silent they cut out his tongue.
 Whether or not this angel is that same Mennas is something of a mystery, as he
 seems to have difficulty speaking.
 %%%%
+Michael
+
+A powerful spellcaster, dressed in a long robe.
+%%%%
 Mnoleg
 
 A weirdly glowing figure, dancing through the twisted air of Pandemonium.
@@ -367,6 +383,10 @@ Nikola
 A brilliant scientist obsessed with electricity. In his attempts to perfect his
 electric golem, he was involved in a terrible accident, and now phases in and
 out of reality.
+%%%%
+Norbert
+
+A skilled warrior, looking to further develop his reputation as a great slayer of monsters. Be warned: he defines 'monster' rather more liberally than most dictionaries.
 %%%%
 Norris
 

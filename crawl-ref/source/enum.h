@@ -2894,17 +2894,30 @@ enum monster_type                      // menv[].type
     MONS_EROLCHA,
     MONS_DONALD,
     MONS_URUG,
+#if TAG_MAJOR_VERSION > 34
+    MONS_MICHAEL,
+#endif
     MONS_JOSEPH,
     MONS_SNORG, // was Anita - 16jan2000 {dlb}
     MONS_ERICA,
     MONS_JOSEPHINE,
     MONS_HAROLD,
+#if TAG_MAJOR_VERSION > 34
+    MONS_NORBERT,
+    MONS_JOZEF,
+#endif
     MONS_AGNES,
     MONS_MAUD,
     MONS_LOUISE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_FRANCIS,
+#endif
     MONS_FRANCES,
     MONS_RUPERT,
     MONS_WIGLAF,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DUANE,                        //  305
+#endif
     MONS_XTAHUA,
     MONS_NORRIS,
     MONS_FREDERICK,
@@ -3128,6 +3141,11 @@ enum monster_type                      // menv[].type
 
 #if TAG_MAJOR_VERSION == 34
     MONS_KILLER_BEE_LARVA,
+    MONS_JOZEF,
+    MONS_NORBERT,
+    MONS_FRANCIS,
+    MONS_DUANE,
+    MONS_MICHAEL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph

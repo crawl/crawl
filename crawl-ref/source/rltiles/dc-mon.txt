@@ -500,10 +500,12 @@ spectral_spear MONS_SPECTRAL_SPEAR
 %sdir mon/unique
 # Unique humans, in alphabetical order
 donald MONS_DONALD
+duane MONS_DUANE
 edmund MONS_EDMUND
 erica MONS_ERICA
 eustachio MONS_EUSTACHIO
 frances MONS_FRANCES
+francis MONS_FRANCIS
 %rim 0
 frederick MONS_FREDERICK
 %rim 1
@@ -511,13 +513,16 @@ harold MONS_HAROLD
 jessica MONS_JESSICA
 joseph MONS_JOSEPH
 josephine MONS_JOSEPHINE
+jozef MONS_JOZEF
 kirke MONS_KIRKE
 louise MONS_LOUISE
 margery MONS_MARGERY
 maud MONS_MAUD
 maurice MONS_MAURICE
+michael MONS_MICHAEL
 %rim 0
 nikola MONS_NIKOLA
+norbert MONS_NORBERT
 %rim 1
 norris MONS_NORRIS
 %rim 0

@@ -2240,6 +2240,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_PSYCHE;
     case MONS_DONALD:
         return TILEP_MONS_DONALD;
+    case MONS_MICHAEL:
+        return TILEP_MONS_MICHAEL;
     case MONS_JOSEPH:
         return TILEP_MONS_JOSEPH;
     case MONS_ERICA:
@@ -2248,16 +2250,24 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_JOSEPHINE;
     case MONS_HAROLD:
         return TILEP_MONS_HAROLD;
+    case MONS_NORBERT:
+        return TILEP_MONS_NORBERT;
+    case MONS_JOZEF:
+        return TILEP_MONS_JOZEF;
     case MONS_MAUD:
         return TILEP_MONS_MAUD;
     case MONS_LOUISE:
         return TILEP_MONS_LOUISE;
+    case MONS_FRANCIS:
+        return TILEP_MONS_FRANCIS;
     case MONS_FRANCES:
         return TILEP_MONS_FRANCES;
     case MONS_RUPERT:
         return TILEP_MONS_RUPERT;
     case MONS_WIGLAF:
         return TILEP_MONS_WIGLAF;
+    case MONS_DUANE:
+        return TILEP_MONS_DUANE;
     case MONS_NORRIS:
         return TILEP_MONS_NORRIS;
     case MONS_FREDERICK:

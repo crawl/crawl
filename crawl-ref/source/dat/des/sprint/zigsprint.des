@@ -193,7 +193,7 @@ function choose_mset_1(e)
     e.kmons("1 = Sigmund, Jessica, Blork the orc, Crazy Yiuf, Dowan, \
                Duvessa, Edmund, Erica, Erolcha, Eustachio, Gastronok, \
                Grum, Grinder, Harold, Ijyb, Joseph, Josephine, \
-               Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
+               Jozef, Maurice, Menkaure, Pikel, Prince Ribbit, Psyche, \
                Purgy, Sonja, Terence, Urug, human")
   end
 end

@@ -2484,4 +2484,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_JOZEF,
+      {
+       SPELL_TELEPORT_OTHER,
+       SPELL_TELEPORT_OTHER,
+       SPELL_MINOR_HEALING,
+       SPELL_VENOM_BOLT,
+       SPELL_SLOW,
+       SPELL_MINOR_HEALING
+      }
+    },
 #endif
