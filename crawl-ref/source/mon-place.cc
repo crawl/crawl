@@ -786,37 +786,6 @@ static bool _in_ood_pack_protected_place()
     return env.turns_on_level < 1400 - env.absdepth0 * 117;
 }
 
-static void _abyss_monster_creation_message(const monster* mon)
-{
-    if (mon->type == MONS_DEATH_COB)
-    {
-        mprf(coinflip() ? "%s appears in a burst of microwaves!"
-                        : "%s pops from nullspace!",
-             mon->name(DESC_A).c_str()); // always "a death cob"
-        return;
-    }
-
-    mprf(random_choose_weighted(
-         17, "%s appears in a shower of translocational energy.",
-         34, "%s appears in a shower of sparks.",
-         45, "%s materialises.",
-         13, "%s emerges from chaos.",
-         26, "%s emerges from the beyond.",
-         33, "%s assembles %s!",
-          9, "%s erupts from nowhere!",
-         18, "%s bursts from nowhere!",
-          7, "%s is cast out of space!",
-         14, "%s is cast out of reality!",
-          5, "%s coalesces out of pure chaos.",
-         10, "%s coalesces out of seething chaos.",
-          2, "%s punctures the fabric of time!",
-          7, "%s punctures the fabric of the universe.",
-          3, "%s manifests%3$s!",
-          0),
-         mon->name(DESC_A).c_str(), mon->pronoun(PRONOUN_REFLEXIVE).c_str(),
-         silenced(you.pos()) ? "" : " with a bang");
-}
-
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
 #ifdef DEBUG_MON_CREATION
@@ -1069,16 +1038,13 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
     else if (mg.proximity == PROX_NEAR_STAIRS && you.can_see(mon))
     {
-        const char *msg = nullptr;
         switch (stair_type)
         {
-        case DCHAR_STAIRS_DOWN: msg = "up the stairs."; break;
-        case DCHAR_STAIRS_UP:   msg = "down the stairs."; break;
-        case DCHAR_ARCH:        msg = "through the gate."; break;
+        case DCHAR_STAIRS_DOWN: mon->seen_context = SC_UPSTAIRS; break;
+        case DCHAR_STAIRS_UP:   mon->seen_context = SC_DOWNSTAIRS; break;
+        case DCHAR_ARCH:        mon->seen_context = SC_GATE; break;
         default: ;
         }
-        if (msg)
-            mprf("%s comes %s", mon->name(DESC_A).c_str(), msg);
     }
     else if (player_in_branch(BRANCH_ABYSS) && you.can_see(mon)
              && !crawl_state.generating_level
@@ -1086,7 +1052,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
              && !crawl_state.is_god_acting()
              && !(mon->flags & MF_WAS_IN_VIEW)) // is this possible?
     {
-        _abyss_monster_creation_message(mon);
+        mon->seen_context = SC_ABYSS;
     }
 
     // Now, forget about banding if the first placement failed, or there are
