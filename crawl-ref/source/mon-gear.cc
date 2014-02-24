@@ -375,8 +375,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.sub_type  = WPN_CROSSBOW;
             break;
         }
-        // deliberate fall through
-    case MONS_DEEP_DWARF_BERSERKER:
+
         item.base_type = OBJ_WEAPONS;
 
         if (one_chance_in(6))
@@ -393,14 +392,11 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                    15, WPN_HAND_AXE, 0);
         }
 
-        if (coinflip() || mon->type == MONS_DEEP_DWARF_BERSERKER)
+        if (coinflip())
         {
             force_item  = true;
             item.plus  += 1 + random2(4);
             item.plus2 += 1 + random2(4);
-
-            if (one_chance_in(30) && mon->type == MONS_DEEP_DWARF_BERSERKER)
-                level = MAKE_GOOD_ITEM;
         }
         break;
 
@@ -2267,7 +2263,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
-    case MONS_DEEP_DWARF_BERSERKER:
         item_race      = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(7, ARM_CHAIN_MAIL,

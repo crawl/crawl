@@ -2655,8 +2655,7 @@ PLACE:  Depths:$
      kmons("1 = titan w:" .. bigweight
            .. " / spriggan air mage w:" .. littleweight)
      kmons("2 = ettin w:" .. 2*bigweight
-           .. " / spriggan berserker w:" .. littleweight
-           .. " / deep dwarf berserker w:" .. littleweight)
+           .. " / spriggan berserker w:" .. littleweight)
      kmons("3 = nothing")
      kitem("1 = superb_item")
      kitem("2 = any")

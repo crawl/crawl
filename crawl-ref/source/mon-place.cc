@@ -1313,8 +1313,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
         // Berserkers belong to Trog.
-        if (mg.cls == MONS_DEEP_DWARF_BERSERKER
-            || mg.cls == MONS_SPRIGGAN_BERSERKER)
+        if (mg.cls == MONS_SPRIGGAN_BERSERKER)
         {
             mon->god = GOD_TROG;
         }
