@@ -590,14 +590,14 @@ ORIENT:  float
 MONS:    deep elf fighter; falchion | long sword | scimitar | cutlass / nothing w:15
 MONS:    deep elf blademaster
 MONS:    training dummy tile:mons_training_dummy
-KITEM:   d = long sword race:elven, long sword race:elven / nothing, \
-             long sword race:elven / nothing, long sword race:elven / nothing
-KITEM:   e = falchion race:elven, falchion race:elven / nothing, \
-             falchion race:elven / nothing, falchion race:elven / nothing
-KITEM:   f = scimitar race:elven, scimitar race:elven / nothing, \
-             scimitar race:elven / nothing, scimitar race:elven / nothing
-KITEM:   g = cutlass race:elven, cutlass race:elven / nothing, \
-             cutlass race:elven / nothing, cutlass race:elven / nothing
+KITEM:   d = long sword, long sword / nothing, \
+             long sword / nothing, long sword / nothing
+KITEM:   e = falchion, falchion / nothing, \
+             falchion / nothing, falchion / nothing
+KITEM:   f = scimitar, scimitar / nothing, \
+             scimitar / nothing, scimitar / nothing
+KITEM:   g = cutlass, cutlass / nothing, \
+             cutlass / nothing, cutlass / nothing
 SHUFFLE: defg
 MAP
 xxxxxxxxxx+xxx
@@ -618,15 +618,15 @@ ENDMAP
 NAME:    orc_legates
 DEPTH:   Elf:1-2
 SHUFFLE: AB , 34 , 12
-SUBST:   6=4
-SUBST:   0= 0 .:9 9:1
-SUBST:   5= 5 .:9 4:1
-NSUBST:  1= 2:1 / *:.
-NSUBST:  2= 2:2 / *:.
-KITEM:   A= any good_item race:elven
-KITEM:   B= any good_item race:elven
-KMONS:   A= patrolling deep elf knight
-KMONS:   B= patrolling deep elf high priest / patrolling deep elf demonologist
+SUBST:   6 = 4
+SUBST:   0 = 0 .:9 9:1
+SUBST:   5 = 5 .:9 4:1
+NSUBST:  1 = 2:1 / *:.
+NSUBST:  2 = 2:2 / *:.
+KITEM:   A = any good_item
+KITEM:   B = any good_item
+KMONS:   A = patrolling deep elf knight
+KMONS:   B = patrolling deep elf high priest / patrolling deep elf demonologist
 MONS:    ice dragon, fire dragon
 MONS:    orc knight / orc sorcerer / orc high priest
 MONS:    orc warrior / orc wizard / orc priest

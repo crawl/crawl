@@ -1829,51 +1829,6 @@ int melee_attack::player_apply_slaying_bonuses(int damage, bool aux)
     return damage;
 }
 
-// Modifiers dependent on wielding a weapon. Does not include weapon
-// enchantment, which is handled by player_apply_slaying_bonuses.
-int melee_attack::player_apply_weapon_bonuses(int damage)
-{
-    if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
-    {
-        if (get_equip_race(*weapon) == ISFLAG_DWARVEN
-            && you.species == SP_DEEP_DWARF)
-        {
-            damage += random2(3);
-        }
-
-        if (get_equip_race(*weapon) == ISFLAG_ORCISH
-            && player_genus(GENPC_ORCISH))
-        {
-            if (you_worship(GOD_BEOGH) && !player_under_penance())
-            {
-#ifdef DEBUG_DIAGNOSTICS
-                const int orig_damage = damage;
-#endif
-
-                if (you.piety >= piety_breakpoint(2) || coinflip())
-                    damage++;
-
-                damage +=
-                    random2avg(
-                        div_rand_round(
-                            min(static_cast<int>(you.piety), 180), 33), 2);
-
-                dprf(DIAG_COMBAT, "Damage: %d -> %d, Beogh bonus: %d",
-                     orig_damage, damage, damage - orig_damage);
-            }
-
-            if (coinflip())
-                damage++;
-        }
-
-        // Demonspawn get a damage bonus for demonic weapons.
-        if (you.species == SP_DEMONSPAWN && is_demonic(*weapon))
-            damage += random2(3);
-    }
-
-    return damage;
-}
-
 // Multipliers to be applied to the final (pre-stab, pre-AC) damage.
 // It might be tempting to try to pick and choose what pieces of the damage
 // get affected by such multipliers, but putting them at the end is the
@@ -3879,18 +3834,6 @@ int melee_attack::calc_to_hit(bool random)
             {
                 mhit += weapon->plus;
                 mhit += property(*weapon, PWPN_HIT);
-
-                if (get_equip_race(*weapon) == ISFLAG_ELVEN
-                    && player_genus(GENPC_ELVEN))
-                {
-                    mhit += (random && coinflip() ? 2 : 1);
-                }
-                else if (get_equip_race(*weapon) == ISFLAG_ORCISH
-                         && you_worship(GOD_BEOGH) && !player_under_penance())
-                {
-                    mhit++;
-                }
-
             }
             else if (weapon->base_type == OBJ_STAVES)
                 mhit += property(*weapon, PWPN_HIT);
@@ -5771,13 +5714,6 @@ int melee_attack::calc_damage()
             damage_max = property(*weapon, PWPN_DAMAGE);
             damage += random2(damage_max);
 
-            if (get_equip_race(*weapon) == ISFLAG_ORCISH
-                && mons_genus(attacker->mons_species()) == MONS_ORC
-                && coinflip())
-            {
-                damage++;
-            }
-
             int wpn_damage_plus = weapon->plus2;
             if (weapon->base_type == OBJ_RODS)
                 wpn_damage_plus = weapon->special;
@@ -5878,7 +5814,6 @@ int melee_attack::calc_damage()
         damage_done = player_apply_fighting_skill(damage_done, false);
         damage_done = player_apply_misc_modifiers(damage_done);
         damage_done = player_apply_slaying_bonuses(damage_done, false);
-        damage_done = player_apply_weapon_bonuses(damage_done);
         damage_done = player_apply_final_multipliers(damage_done);
 
         damage_done = player_stab(damage_done);

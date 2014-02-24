@@ -1669,13 +1669,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         baseHit, baseDam,
                         item_base_dam, lnch_base_dam);
 
-        // elves with elven bows
-        if (get_equip_race(*you.weapon()) == ISFLAG_ELVEN
-            && player_genus(GENPC_ELVEN))
-        {
-            baseHit++;
-        }
-
         // Lower accuracy if held in a net.
         if (you.attribute[ATTR_HELD])
             baseHit = baseHit / 2 - 1;
@@ -1826,13 +1819,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             || wepType == MI_DART || wepType == MI_JAVELIN
             || wepType == MI_TOMAHAWK)
         {
-            // Elves with elven weapons.
-            if (get_equip_race(item) == ISFLAG_ELVEN
-                && player_genus(GENPC_ELVEN))
-            {
-                baseHit++;
-            }
-
             // Give an appropriate 'tohit':
             // * large rocks, stones and throwing nets are 0
             // * javelins are +1
@@ -2271,13 +2257,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
         // consider this beam "needle-like".
         if (wepType == MI_NEEDLE)
             beam.ench_power = AUTOMATIC_HIT;
-
-        // elf with elven launcher
-        if (get_equip_race(mitm[weapon]) == ISFLAG_ELVEN
-            && mons_genus(mons->type) == MONS_ELF)
-        {
-            beam.hit++;
-        }
 
         // Vorpal brand increases damage dice size.
         if (bow_brand == SPWPN_VORPAL)

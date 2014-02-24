@@ -1376,12 +1376,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             }
         }
 
-        if (!basename && !dbname && know_racial)
-        {
-            // Always give racial type (it does have game effects).
-            buff << racial_description_string(*this, terse);
-        }
-
         if (know_brand && !terse)
         {
             int brand = get_weapon_brand(*this);

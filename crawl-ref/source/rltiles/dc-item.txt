@@ -25,10 +25,10 @@ mace1 WPN_MACE
 mace2
 mace3
 %rim 0
-orcish_mace1 WPN_MACE_ORC
-orcish_mace2
-dwarven_mace1 WPN_MACE_DWARF
-dwarven_mace2
+mace4
+mace5
+mace6
+mace7
 %rim 1
 mace_large1 WPN_GREAT_MACE
 mace_large2
@@ -36,10 +36,10 @@ flail1 WPN_FLAIL
 flail2
 flail3
 %rim 0
-orcish_flail1 WPN_FLAIL_ORC
-orcish_flail2
-dwarven_flail1 WPN_FLAIL_DWARF
-dwarven_flail2
+flail4
+flail5
+flail6
+flail7
 %rim 1
 dire_flail1 WPN_DIRE_FLAIL
 dire_flail2
@@ -48,25 +48,25 @@ dire_flail3
 morningstar1 WPN_MORNINGSTAR
 morningstar2
 morningstar3
-dwarven_morningstar1 WPN_MORNINGSTAR_DWARF
-dwarven_morningstar2
-orcish_morningstar1 WPN_MORNINGSTAR_ORC
-orcish_morningstar2
+morningstar4
+morningstar5
+morningstar6
+morningstar7
 eveningstar1 WPN_EVENINGSTAR
 eveningstar2
 eveningstar3
-dwarven_eveningstar1 WPN_EVENINGSTAR_DWARF
-dwarven_eveningstar2
-orcish_eveningstar1 WPN_EVENINGSTAR_ORC
-orcish_eveningstar2
+eveningstar4
+eveningstar5
+eveningstar6
+eveningstar7
 %rim 1
 hammer1 WPN_HAMMER
 hammer2
 %rim 0
-orcish_hammer1 WPN_HAMMER_ORC
-orcish_hammer2
-dwarven_hammer1 WPN_HAMMER_DWARF
-dwarven_hammer2
+hammer3
+hammer4
+hammer5
+hammer6
 %rim 1
 bullwhip WPN_WHIP
 bullwhip2
@@ -82,54 +82,54 @@ giant_spiked_club WPN_GIANT_SPIKED_CLUB
 dagger WPN_DAGGER
 dagger2
 dagger3
-orcish_dagger WPN_DAGGER_ORC
-orcish_dagger2
+dagger4
+dagger5
 %rim 0
-dwarven_dagger1 WPN_DAGGER_DWARF
-dwarven_dagger2
-elven_dagger1 WPN_DAGGER_ELF
-elven_dagger2
+dagger6
+dagger7
+dagger8
+dagger9
 %rim 1
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
 short_sword3
 %rim 0
-dwarven_short_sword1 WPN_SHORT_SWORD_DWARF
-dwarven_short_sword2
-orcish_short_sword WPN_SHORT_SWORD_ORC
-orcish_short_sword2
-elven_short_sword1 WPN_SHORT_SWORD_ELF
-elven_short_sword2
+short_sword4
+short_sword5
+short_sword6
+short_sword7
+short_sword8
+short_sword9
 %rim 1
 
 long_sword1 WPN_LONG_SWORD
 %rim 0
 long_sword2
 long_sword3
-orcish_long_sword1 WPN_LONG_SWORD_ORC
-orcish_long_sword2
-elven_long_sword1 WPN_LONG_SWORD_ELF
-elven_long_sword2
+long_sword4
+long_sword5
+long_sword6
+long_sword7
 %rim 1
 
 greatsword1 WPN_GREAT_SWORD
 greatsword2
 %rim 0
-orcish_great_sword1 WPN_GREAT_SWORD_ORC
-orcish_great_sword2
+greatsword3
+greatsword4
 
 
 %rim 0
 falchion1 WPN_FALCHION
 falchion2
 falchion3
-orcish_falchion1 WPN_FALCHION_ORC
-orcish_falchion2
-dwarven_falchion1 WPN_FALCHION_DWARF
-dwarven_falchion2
-elven_falchion1 WPN_FALCHION_ELF
-elven_falchion2
+falchion4
+falchion5
+falchion6
+falchion7
+falchion8
+falchion9
 %rim 1
 scimitar1 WPN_SCIMITAR
 scimitar2
@@ -139,12 +139,12 @@ scimitar3
 cutlass1 WPN_CUTLASS
 cutlass2
 cutlass3
-orcish_cutlass1 WPN_CUTLASS_ORC
-orcish_cutlass2
-dwarven_cutlass1 WPN_CUTLASS_DWARF
-dwarven_cutlass2
-elven_cutlass1 WPN_CUTLASS_ELF
-elven_cutlass2
+cutlass4
+cutlass5
+cutlass6
+cutlass7
+cutlass8
+cutlass9
 
 quickblade1 WPN_QUICK_BLADE
 quickblade2
@@ -167,38 +167,38 @@ hand_axe1 WPN_HAND_AXE
 hand_axe2
 hand_axe3
 %rim 0
-dwarven_hand_axe1 WPN_HAND_AXE_DWARF
-dwarven_hand_axe2
-orcish_hand_axe1 WPN_HAND_AXE_ORC
-orcish_hand_axe2
+hand_axe4
+hand_axe5
+hand_axe6
+hand_axe7
 war_axe1 WPN_WAR_AXE
 war_axe2
 war_axe3
-dwarven_war_axe1 WPN_WAR_AXE_DWARF
-dwarven_war_axe2
-orcish_war_axe1 WPN_WAR_AXE_ORC
-orcish_war_axe2
+war_axe4
+war_axe5
+war_axe6
+war_axe7
 broad_axe1 WPN_BROAD_AXE
 broad_axe2
 broad_axe3
-dwarven_broad_axe1 WPN_BROAD_AXE_DWARF
-dwarven_broad_axe2
-orcish_broad_axe1 WPN_BROAD_AXE_ORC
-orcish_broad_axe2
+broad_axe4
+broad_axe5
+broad_axe6
+broad_axe7
 battle_axe1 WPN_BATTLEAXE
 battle_axe2
 battle_axe3
-dwarven_battle_axe1 WPN_BATTLEAXE_DWARF
-dwarven_battle_axe2
-orcish_battle_axe1 WPN_BATTLEAXE_ORC
-orcish_battle_axe2
+battle_axe4
+battle_axe5
+battle_axe6
+battle_axe7
 executioner_axe1 WPN_EXECUTIONERS_AXE
 executioner_axe2
 executioner_axe3
-dwarven_executioner_axe1 WPN_EXECUTIONERS_AXE_DWARF
-dwarven_executioner_axe2
-orcish_executioner_axe1 WPN_EXECUTIONERS_AXE_ORC
-orcish_executioner_axe2
+executioner_axe4
+executioner_axe5
+executioner_axe6
+executioner_axe7
 %rim 1
 
 ##Polearm
@@ -208,21 +208,21 @@ spear1 WPN_SPEAR
 spear2
 %rim 0
 spear3
-orcish_spear1 WPN_SPEAR_ORC
-orcish_spear2
-elven_spear1 WPN_SPEAR_ELF
-elven_spear2
+spear4
+spear5
+spear6
+spear7
 trident1 WPN_TRIDENT
 trident2
 trident3
-orcish_trident1 WPN_TRIDENT_ORC
-orcish_trident2
+trident4
+trident5
 demon_trident WPN_DEMON_TRIDENT
 halberd1 WPN_HALBERD
 halberd2
 halberd3
-orcish_halberd1 WPN_HALBERD_ORC
-orcish_halberd2
+halberd4
+halberd5
 %rim 1
 scythe1 WPN_SCYTHE
 scythe2
@@ -230,13 +230,13 @@ scythe2
 glaive1 WPN_GLAIVE
 glaive2
 glaive3
-orcish_glaive1 WPN_GLAIVE_ORC
-orcish_glaive2
+glaive4
+glaive5
 bardiche1 WPN_BARDICHE
 bardiche2
 bardiche3
-orcish_bardiche WPN_BARDICHE_ORC
-orcish_bardiche2
+bardiche4
+bardiche5
 
 ##Staff
 staff WPN_STAFF
@@ -262,22 +262,22 @@ sling2
 bow1 WPN_BOW
 bow2
 bow3
-orcish_bow1 WPN_BOW_ORC
-orcish_bow2
-elvish_bow1 WPN_BOW_ELF
-elvish_bow2
+bow4
+bow5
+bow6
+bow7
 crossbow1 WPN_CROSSBOW
 crossbow2
 crossbow3
-orcish_crossbow1 WPN_CROSSBOW_ORC
-orcish_crossbow2
-dwarven_crossbow1 WPN_CROSSBOW_DWARF
-dwarven_crossbow2
+crossbow4
+crossbow5
+crossbow6
+crossbow7
 longbow1 WPN_LONGBOW
 longbow2
 longbow3
-elvish_longbow1 WPN_LONGBOW_ELF
-elvish_longbow2
+longbow4
+longbow5
 
 %sdir item/weapon/brands
 %rim 0

@@ -31,7 +31,7 @@ void init_rod_mp(item_def &item, int ncharges = -1, int item_level = -1);
 jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
 void item_set_appearance(item_def &item);
-void maybe_set_item_race(item_def &item, int allowed, int num_rolls = 1);
+void maybe_set_armour_race(item_def &item, int allowed, int num_rolls = 1);
 
 bool is_weapon_brand_ok(int type, int brand, bool strict);
 bool is_armour_brand_ok(int type, int brand, bool strict);

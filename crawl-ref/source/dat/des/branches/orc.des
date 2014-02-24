@@ -663,7 +663,7 @@ MONS:    patrolling orc high priest
 MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf priest
 MONS:    deep elf fighter / deep elf mage / deep elf priest
 MONS:    deep elf fighter / nothing
-ITEM:    good_item scimitar race:elven / good_item chain mail race:elven
+ITEM:    good_item scimitar / good_item chain mail race:elven
 SUBST:   = : +x
 MAP
  xxxxx=xxx
@@ -1295,9 +1295,9 @@ TAGS: extra decor no_item_gen
 DEPTH: Orc
 NSUBST: r = 1:H / 1:C / *:r
 SUBST: G = GGGI
-KITEM: H = hammer race:orcish
+KITEM: H = hammer
 # There's no chisel item, so
-KITEM: C = dagger race:orcish
+KITEM: C = dagger
 KITEM: r = stone q:1 / nothing w:5
 MAP
 ...xxxxxx

@@ -804,20 +804,9 @@ void set_equip_race(item_def &item, iflags_t flags)
 {
     ASSERT((flags & ~ISFLAG_RACIAL_MASK) == 0);
 
-    // first check for base-sub pairs that can't ever have racial types
-    switch (item.base_type)
+    if (item.base_type != OBJ_ARMOUR
+        || item.sub_type > ARM_MAX_RACIAL)
     {
-    case OBJ_WEAPONS:
-        if (item.sub_type > WPN_MAX_RACIAL)
-            return;
-        break;
-
-    case OBJ_ARMOUR:
-        if (item.sub_type > ARM_MAX_RACIAL)
-            return;
-        break;
-
-    default:
         return;
     }
 
@@ -825,84 +814,23 @@ void set_equip_race(item_def &item, iflags_t flags)
     switch (flags)
     {
     case ISFLAG_ELVEN:
-        switch (item.base_type)
-        {
-        case OBJ_WEAPONS:
-            if ((weapon_skill(item) == SK_MACES_FLAILS
-                    && item.sub_type != WPN_WHIP)
-                || (weapon_skill(item) == SK_LONG_BLADES
-                    && item.sub_type != WPN_FALCHION
-                    && item.sub_type != WPN_LONG_SWORD
-                    && item.sub_type != WPN_SCIMITAR)
-                || weapon_skill(item) == SK_AXES
-                || (weapon_skill(item) == SK_POLEARMS
-                    && item.sub_type != WPN_SPEAR
-                    && item.sub_type != WPN_TRIDENT)
-                || item.sub_type == WPN_CROSSBOW)
-            {
-                return;
-            }
-            break;
-        case OBJ_ARMOUR:
-            if (item.sub_type == ARM_PLATE_ARMOUR || is_hard_helmet(item))
-                return;
-            break;
-        default:
-            break;
-        }
+        if (item.sub_type == ARM_PLATE_ARMOUR || is_hard_helmet(item))
+            return;
         break;
 
     case ISFLAG_DWARVEN:
-        switch (item.base_type)
+        if (item.sub_type == ARM_ROBE
+            || item.sub_type == ARM_LEATHER_ARMOUR
+            || get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
         {
-        case OBJ_WEAPONS:
-            if (item.sub_type == WPN_WHIP
-                || item.sub_type == WPN_CLUB
-                || item.sub_type == WPN_QUICK_BLADE
-                || (weapon_skill(item) == SK_LONG_BLADES
-                    && item.sub_type != WPN_FALCHION
-                    && item.sub_type != WPN_LONG_SWORD)
-                || weapon_skill(item) == SK_POLEARMS
-                || item.sub_type == WPN_BLOWGUN
-                || item.sub_type == WPN_BOW
-                || item.sub_type == WPN_LONGBOW)
-            {
-                return;
-            }
-            break;
-        case OBJ_ARMOUR:
-            if (item.sub_type == ARM_ROBE
-                || item.sub_type == ARM_LEATHER_ARMOUR
-                || get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
-            {
-                return;
-            }
-            break;
-        default:
-            break;
+            return;
         }
         break;
 
     case ISFLAG_ORCISH:
-        switch (item.base_type)
-        {
-        case OBJ_WEAPONS:
-            if (item.sub_type == WPN_QUICK_BLADE
-                || item.sub_type == WPN_LONGBOW)
-            {
-                return;
-            }
-            break;
-        case OBJ_ARMOUR:
-            if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item)
-                && item.sub_type != ARM_HAT)
-            {
-                return;
-            }
-            break;
-        default:
-            break;
-        }
+        if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
+            return;
+        break;
 
     default:
         break;

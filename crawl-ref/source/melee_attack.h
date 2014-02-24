@@ -165,7 +165,6 @@ private:
 
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
-    int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);
     int  player_apply_fighting_skill(int damage, bool aux);
     int  player_apply_misc_modifiers(int damage);

@@ -1357,19 +1357,6 @@ unsigned int item_value(item_def item, bool ident)
             valued /= 10;
         }
 
-        if (get_equip_race(item) == ISFLAG_ELVEN
-            || get_equip_race(item) == ISFLAG_DWARVEN)
-        {
-            valued *= 12;
-            valued /= 10;
-        }
-
-        if (get_equip_race(item) == ISFLAG_ORCISH)
-        {
-            valued *= 8;
-            valued /= 10;
-        }
-
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
         {
             if (item.plus >= 0)

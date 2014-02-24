@@ -1668,12 +1668,6 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
                 int oldval = item_value(*weap, true);
                 int newval = item_value(item, true);
 
-                // Vastly prefer matching racial type.
-                if (_item_race_matches_monster(*weap, this))
-                    oldval *= 2;
-                if (_item_race_matches_monster(item, this))
-                    newval *= 2;
-
                 if (newval > oldval)
                     new_wpn_better = true;
             }

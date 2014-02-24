@@ -278,11 +278,11 @@ SUBST:   _ = _8
 SUBST:   2 = 2.
 SUBST:   3 = 3.
 NSUBST:  . = 5:% / *:.
-KITEM:   % = w:12 animal skin / race:orcish hammer / race:orcish hand axe /\
+KITEM:   % = w:12 animal skin / hammer / hand axe /\
              sausage / slice of pizza / nothing
 KFEAT:   8 = orcish_idol / w:5 floor
 KFEAT:   _ = altar_beogh / w:15 floor
-KITEM:   $ = race:orcish battleaxe / nothing, race:orcish plate armour /\
+KITEM:   $ = battleaxe / nothing, race:orcish plate armour /\
              nothing, meat ration, q:2 sausage / nothing, gold, any, any
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
                  pow_min = 10, pow_max = 10, delay = 10, \
