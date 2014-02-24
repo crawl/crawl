@@ -15,7 +15,7 @@
 
 {{
 function sewer_portal(e)
-  local timeout_turns = crawl.random_range(2700, 3300)
+  local timeout_turns = crawl.random_range(800, 1000)
 
   local messager =
     timed_msg {
@@ -38,6 +38,7 @@ function sewer_portal(e)
         disappear = "The drain falls to bits.",
         entity = 'drain',
         turns = timeout_turns,
+        single_timed = true,
         floor = "expired_portal",
         feat_tile = "dngn_portal_sewer_rusted",
         msg = messager })
