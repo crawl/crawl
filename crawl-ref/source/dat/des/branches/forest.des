@@ -971,7 +971,7 @@ TILE:    D = dngn_tree_dead
 : dgn.delayed_decay(_G, 'g', 'death yak corpse')
 : dgn.delayed_decay(_G, 'h', 'minotaur corpse')
 : dgn.delayed_decay(_G, 'i', 'grizzly bear corpse')
-: dgn.delayed_decay(_G, 'j', 'ancient bear corpse')
+: dgn.delayed_decay(_G, 'j', 'black bear corpse')
 MONS:    flaming corpse / flayed ghost / phantasmal warrior
 MONS:    skeletal warrior / deep dwarf death knight
 MONS:    jiangshi / eidolon / revenant
@@ -1042,7 +1042,7 @@ ORIENT: north
 TAGS:   no_monster_gen no_pool_fixup no_rotate patrolling
 SUBST:  R = tx, G = N L S:5, A = ML, E = tE
 MONS:   apis, dire elephant, dryad / shambling mangrove
-MONS:   thorn hunter / spriggan defender / ancient bear
+MONS:   thorn hunter / spriggan defender / dire elephant
 KMONS:  M = water elemental
 KMONS:  L = thorn lotus
 KMONS:  N = water nymph
@@ -1077,35 +1077,6 @@ Ettttttttt..WWWW....ttttttttE
 Ettttttttt........ttttttttttE
 Ettttttttt........ttttttttttE
 EEEEEEEEEE...@@...EEEEEEEEEEE
-ENDMAP
-
-###############################################################################
-## A den of ancient bears
-NAME:   gammafunk_forest_bear_cave
-DEPTH:  Forest
-ORIENT: float
-TAGS:   patrolling no_monster_gen
-SUBST:  E = tE, * = *:40 |, B = 1 / nothing
-MONS:   ancient bear
-KMONS:  L = thorn lotus
-KITEM:  f = w:1 strawberry / w:1 grape / w:1 lychee / w:1 choko / w:1 rambutan \
-           / w:1 apple / w:1 pear / w:1 orange
-KFEAT:  L = shallow_water
-FTILE:  .1f* = floor_lair
-CLEAR:  E
-MAP
-EEEEEEEEEEEEEEEEEEEEEEEEE
-EtttttxxtttxxxxxxttxxtttE
-EttxxxxxxxxxxxxxxxxxxxxxE
-Etxxxxxxxxxxx..xxxxxxxxtE
-EtxxxxxLWxx......x.xxxttE
-Exxxf*..1.....x....xxxxtE
-ExxxfB.1...xxxxx.....xxtE
-Exxxxfff*xxxxxxxxxxx._xtE
-Etxxx*xxxxxxxtxxxxxxx___@
-EtxxxxxxxxxxtttttttxxxttE
-EttxxxxxttttttttttttttttE
-EEEEEEEEEEEEEEEEEEEEEEEEE
 ENDMAP
 
 # Place the Enchantress on Forest:$ if the ending doesn't.
@@ -1295,8 +1266,7 @@ ORIENT: float
 MONS:   the Enchantress band
 MONS:   spriggan defender / thorn hunter
 MONS:   spriggan air mage / spriggan druid / spriggan enchanter / \
-        dryad w:5 / dire elephant w:5 / thorn hunter w:2 / shambling mangrove w:1 / \
-        ancient bear w:1
+        dryad w:5 / dire elephant w:5 / thorn hunter w:2 / shambling mangrove w:1
 KFEAT:  _ = altar_vehumet
 KFEAT:  - = floor
 SUBST:  T = tx
@@ -1341,7 +1311,7 @@ SUBVAULT: O : gammafunk_forest_water_palace_pool
 SUBVAULT: P : gammafunk_forest_water_palace_pool
 MONS:     nothing w:30 / spriggan / spriggan rider / spriggan assassin
 MONS:     w:30 faun / satyr, spriggan berserker / spriggan enchanter
-KMONS:    4 = ancient bear
+KMONS:    4 = dire elephant
 KMONS:    5 = spriggan defender
 KMONS:    6 = thorn hunter
 KMONS:    A = water elemental
@@ -1399,7 +1369,7 @@ ENDMAP
 NAME: gammafunk_forest_column
 TAGS: gammafunk_forest_water_palace_column unrand no_rotate no_flip no_vmirror \
       allow_dup patrolling no_monster_gen
-KMONS:  4 = ancient bear
+KMONS:  4 = dire elephant
 COLOUR: c = white
 FTILE:  G4. = floor_pebble_cyan
 MAP

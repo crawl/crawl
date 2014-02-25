@@ -547,13 +547,6 @@ anaconda
 A very large snake that moves with startling rapidity on both land and in the
 water. It kills not by poison but by constricting its prey.
 %%%%
-ancient bear
-
-A lumbering ursine figure, grown venerable beyond its natural years by the
-magic of its forest home. Centuries of basking in the enchanted sunlight has
-left its russet fur with a strange warm sheen and an unnatural resilience to
-heat.
-%%%%
 ancient lich
 
 A lich who, having existed for countless centuries, has grown almost

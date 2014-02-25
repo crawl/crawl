@@ -578,13 +578,6 @@ anaconda
 Un serpent énorme qui se déplace étonnamment rapidement à la fois sur terre et
 dans l'eau. Il ne tue pas avec du poison mais en étranglant sa proie.
 %%%%
-ancient bear
-
-Une pesante silhouette ursine, continuant a vieillir au delà de son age naturel
-grâce à la magie de sa foret. Des siècles à se dorer au soleil enchanté a
-laissé sa fourrure roussir d'un étrange éclat chaud et lui a donné une
-résistance naturelle à la chaleur.
-%%%%
 ancient lich
 
 Une liche qui, durant son existence multicentenaire, possède une puissance

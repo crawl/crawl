@@ -2905,8 +2905,8 @@ enum monster_type                      // menv[].type
     MONS_BRIAR_PATCH,
 #if TAG_MAJOR_VERSION == 34
     MONS_SPIRIT_WOLF,
-#endif
     MONS_ANCIENT_BEAR,
+#endif
     MONS_WATER_NYMPH,
     MONS_SHAMBLING_MANGROVE,
     MONS_THORN_LOTUS,
