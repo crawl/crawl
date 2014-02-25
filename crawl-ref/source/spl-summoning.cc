@@ -2607,6 +2607,22 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_spellforged_servitor(int pow, god_type god, bool fail)
+{
+    fail_check();
+
+    mgen_data mdata(MONS_SPELLFORGED_SERVITOR, BEH_FRIENDLY, &you,
+                    4, SPELL_SPELLFORGED_SERVITOR, you.pos(), MHITYOU,
+                    MG_AUTOFOE, god);
+
+    if (create_monster(mdata))
+        mpr ("You summon a servant imbued with your destructive magic!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+}
+
 static int _abjuration(int pow, monster *mon)
 {
     // Scale power into something comparable to summon lifetime.
@@ -3512,6 +3528,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
     { SPELL_SUMMON_GUARDIAN_GOLEM,      1, 2 },
+    { SPELL_SPELLFORGED_SERVITOR,       1, 2 },
     // Monster spells
     { SPELL_FAKE_RAKSHASA_SUMMON,       4, 2 },
     { SPELL_SUMMON_UFETUBUS,            8, 2 },

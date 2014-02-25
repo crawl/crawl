@@ -2445,6 +2445,7 @@ enum monster_type                      // menv[].type
     MONS_ELECTRIC_GOLEM, // replacing the guardian robot -- bwr
 #if TAG_MAJOR_VERSION > 34
     MONS_GUARDIAN_GOLEM,
+    MONS_SPELLFORGED_SERVITOR,
 #endif
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
 #if TAG_MAJOR_VERSION > 34
@@ -3099,6 +3100,7 @@ enum monster_type                      // menv[].type
 
     MONS_BLOCK_OF_ICE,
     MONS_GUARDIAN_GOLEM,
+    MONS_SPELLFORGED_SERVITOR,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4036,6 +4038,7 @@ enum spell_type
     SPELL_CLOUD_CONE,
     SPELL_WEAVE_SHADOWS,
     SPELL_DRAGON_CALL,
+    SPELL_SPELLFORGED_SERVITOR,
     NUM_SPELLS
 };
 

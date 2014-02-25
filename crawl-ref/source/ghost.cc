@@ -20,6 +20,7 @@
 #include "random.h"
 #include "skills2.h"
 #include "spl-cast.h"
+#include "spl-util.h"
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "player.h"
@@ -1043,4 +1044,131 @@ int ghost_level_to_rank(const int xl)
     if (xl < 26) return 5;
     if (xl < 27) return 6;
     return 7;
+}
+
+static spell_type servitor_spells_primary[] =
+{
+    SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+    SPELL_IOOD,
+    SPELL_IRON_SHOT,
+    SPELL_BOLT_OF_FIRE,
+    SPELL_BOLT_OF_COLD,
+    SPELL_POISON_ARROW,
+    SPELL_LIGHTNING_BOLT,
+    SPELL_BOLT_OF_MAGMA,
+    SPELL_VENOM_BOLT,
+    SPELL_THROW_ICICLE,
+    SPELL_ISKENDERUNS_MYSTIC_BLAST,
+    SPELL_NO_SPELL,                        // end search
+};
+
+static spell_type servitor_spells_secondary[] =
+{
+    SPELL_CONJURE_BALL_LIGHTNING,
+    SPELL_FIREBALL,
+    SPELL_AIRSTRIKE,
+    SPELL_LRD,
+    SPELL_FREEZING_CLOUD,
+    SPELL_POISONOUS_CLOUD,
+    SPELL_FORCE_LANCE,
+    SPELL_MEPHITIC_CLOUD,
+    SPELL_NO_SPELL,                        // end search
+};
+
+static spell_type servitor_spells_fallback[] =
+{
+    SPELL_STONE_ARROW,
+    SPELL_STICKY_FLAME,
+    SPELL_THROW_FLAME,
+    SPELL_THROW_FROST,
+    SPELL_FREEZE,
+    SPELL_FLAME_TONGUE,
+    SPELL_STING,
+    SPELL_SANDBLAST,
+    SPELL_MAGIC_DART,
+    SPELL_NO_SPELL,                        // end search
+};
+
+static spell_type _best_aligned_spell(vector<spell_type> spells, skill_type skill)
+{
+    for (unsigned int i = 0; i < spells.size(); ++i)
+    {
+        if (spell_typematch(spells[i], skill))
+            return spells[i];
+    }
+
+    // If we couldn't find any that match, just pick the first one
+    return spells[0];
+}
+
+// Select servitor spells based on those known to the player
+// (Primary determines whether we are populating the first 3 or next 2 slots)
+bool ghost_demon::populate_servitor_spells(spell_type* spell_list, bool primary,
+                                           skill_type primary_skill)
+{
+    vector<spell_type> candidates;
+    const unsigned int num = (primary ? 3 : 2);
+    const unsigned int offset = (primary ? 0 : 3);
+
+    int i = 0;
+    spell_type spell = SPELL_NO_SPELL;
+    while ((spell = spell_list[i++]) != SPELL_NO_SPELL)
+    {
+        if (_know_spell(spell))
+            candidates.push_back(spell);
+    }
+
+    if (candidates.size() >= num)
+    {
+        for (unsigned int j = offset; j < offset + num; ++j)
+            spells[j] = candidates[j - offset];
+    }
+    else if (candidates.size() > 0)
+    {
+        // Choose the highest-level spell best aligned with our spell
+        // skills to duplicate
+        const spell_type copy_spell = _best_aligned_spell(candidates,
+                                                            primary_skill);
+
+        for (unsigned int j = offset; j < offset + num; ++j)
+        {
+            if (candidates.size() > j - offset)
+                spells[j] = candidates[j - offset];
+            else
+                spells[j] = copy_spell;
+        }
+    }
+
+    return (candidates.size() > 0);
+}
+
+void ghost_demon::init_spellforged_servitor()
+{
+    // Determine highest magic skill (used for solving some tie-breakers)
+    skill_type best_magic_skill = NUM_SKILLS;
+    int skill_level = -1;
+    for (int i = SK_FIRE_MAGIC; i <= SK_POISON_MAGIC; ++i)
+    {
+        if (you.skill((skill_type)i) >= skill_level)
+        {
+            skill_level = you.skill((skill_type)i);
+            best_magic_skill = (skill_type)i;
+        }
+    }
+
+    int pow = calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
+
+    speed = 10;
+    ev = 10;
+    ac = 10;
+    xl = 9 + (pow/16);
+    max_hp = 80;
+    spellcaster = true;
+    damage = 0;
+    att_type = AT_NONE;
+
+    // Give the servitor its spells
+    if (!populate_servitor_spells(servitor_spells_primary, true, best_magic_skill))
+        populate_servitor_spells(servitor_spells_fallback, true, best_magic_skill);
+    populate_servitor_spells(servitor_spells_secondary, false, best_magic_skill);
 }
