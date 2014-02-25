@@ -4757,116 +4757,57 @@ void igni_divine_bellows()
     wind_blast(&you, 100, coord_def());
 }
 
-// XXX: combine this and _bless_weapon and _rebrand_weapon into a single
-//      function rather than duplicating code everywhere.
-bool igni_firebrand_weapon()
+static item_def* _firebrand_check_weapon(item_def* wpn)
 {
-    if (!you.weapon())
-    {
-        mpr("You need to wield a weapon if you want to firebrand it.");
-        return false;
-    }
-
-    item_def& wpn = *you.weapon();
-
-    // Only TSO allows blessing ranged weapons.
-    if (!is_brandable_weapon(wpn, true) || is_blessed(wpn))
-    {
-        mpr("That is not a suitable weapon for branding.");
-        return false;
-    }
-
-    const int new_brand = is_range_weapon(wpn) ? SPWPN_FLAME : SPWPN_FLAMING;
-    if (get_weapon_brand(wpn) == new_brand)
-    {
-        mpr("That weapon is already burning!");
-        return false;
-    }
-
-    string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
-                       + " coated with flames?";
-
-    if (!yesno(prompt.c_str(), true, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
-
-    string old_name = wpn.name(DESC_A);
-    set_equip_desc(wpn, ISFLAG_GLOWING);
-    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
-
-    if (wpn.cursed())
-        do_uncurse_item(wpn, false);
-
-    you.wield_change = true;
-    calc_mp(); // in case the old brand was antimagic
-    string desc  = old_name + " coated with flames by Igni Ipthes";
-
-    take_note(Note(NOTE_ID_ITEM, 0, 0,
-              wpn.name(DESC_A).c_str(), desc.c_str()));
-    wpn.flags |= ISFLAG_NOTED_ID;
-
-    mprf(MSGCH_GOD, "The weapon ignites!");
-
-    flash_view_delay(RED, 1000);
-
-    return true;
-}
-
-static item_def* _reforge_check_weapon(item_def* wpn)
-{
-    if (!wpn)
+    if (!wpn || !is_brandable_weapon(*wpn, true))
         return NULL;
 
-    if (!is_weapon(*wpn) || is_artefact(*wpn) || wpn->sub_type == WPN_HAMMER)
+    if (wpn->flags & ISFLAG_KNOW_TYPE
+        && (get_weapon_brand(*wpn) == SPWPN_FLAMING
+            || get_weapon_brand(*wpn) == SPWPN_FLAME))
+    {
         return NULL;
+    }
 
     return wpn;
 }
 
-static void _reforge_weapon(item_def& wpn, bool friendly)
+static void _firebrand_weapon(item_def& wpn)
 {
     const string old_name(wpn.name(DESC_THE));
 
-    wpn.sub_type = WPN_HAMMER;
-    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
-    if (!friendly)
-        do_curse_item(wpn, true);
+    const int new_brand = is_range_weapon(wpn) ? SPWPN_FLAME : SPWPN_FLAMING;
+    you.duration[DUR_WEAPON_BRAND] = 0; // just in case
+    set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
+    set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
 
     const string new_name(wpn.name(DESC_A));
 
-    mprf(MSGCH_GOD, "%s is reforged into %s!",
+    mprf(MSGCH_GOD, "%s is firebranded into %s!",
          old_name.c_str(), new_name.c_str());
+
+    flash_view_delay(RED, 500);
 }
 
-bool igni_reforge_player_weapon()
+// XXX: combine this and _bless_weapon and _rebrand_weapon into a single
+//      function rather than duplicating code everywhere.
+bool igni_firebrand_player_weapon()
 {
-    item_def* wpn = _reforge_check_weapon(you.weapon());
+    item_def* wpn = _firebrand_check_weapon(you.weapon());
 
     if (!wpn)
     {
-        mpr("You're not holding a weapon that can be reforged.");
+        mpr("You aren't wielding a suitable weapon.");
         return false;
     }
 
-    if (!yes_or_no("Are you sure you want to reforge your %s "
-                   "into a hammer?",
-                   wpn->name(DESC_PLAIN).c_str()))
-    {
-        return false;
-    }
-
-    _reforge_weapon(*wpn, true);
+    _firebrand_weapon(*wpn);
     you.wield_change = true;
-    place_cloud(CLOUD_GREY_SMOKE, you.pos(), 3, &you);
 
     return true;
 }
 
-bool igni_reforge_monster_weapon(monster* mons)
+bool igni_firebrand_monster_weapon(monster* mons)
 {
     if (mons == NULL || !you.can_see(mons))
     {
@@ -4887,20 +4828,25 @@ bool igni_reforge_monster_weapon(monster* mons)
         return false;
     }
 
-    item_def* wpn1 = _reforge_check_weapon(mons->mslot_item(MSLOT_WEAPON));
-    item_def* wpn2 = _reforge_check_weapon(mons->mslot_item(MSLOT_ALT_WEAPON));
+    item_def* wpn1 = mons->mslot_item(MSLOT_WEAPON);
+    item_def* wpn2 = mons->mslot_item(MSLOT_ALT_WEAPON);
+    if (!mons_wields_two_weapons(mons))
+        wpn2 = NULL;
+
+    wpn1 = _firebrand_check_weapon(wpn1);
+    wpn2 = _firebrand_check_weapon(wpn2);
 
     if (!wpn1 && !wpn2)
     {
-        mprf("%s isn't holding a weapon that can be reforged.",
+        mprf("%s isn't holding a weapon that can be rebranded.",
             mons->full_name(DESC_THE).c_str());
         return false;
     }
 
     if (wpn1)
-        _reforge_weapon(*wpn1, mons->friendly());
+        _firebrand_weapon(*wpn1);
     if (wpn2)
-        _reforge_weapon(*wpn2, mons->friendly());
+        _firebrand_weapon(*wpn2);
 
     place_cloud(CLOUD_GREY_SMOKE, mons->pos(), 3, &you);
 

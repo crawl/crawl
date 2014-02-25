@@ -663,12 +663,11 @@ nearby monsters and clouds.
 %%%%
 Firebrand Weapon ability
 
-Using the great forges beneath the earth, Igni will permanently imbue your
+Using the great forges beneath the earth, Igni will permanently imbue a
 weapon with a brand of flaming.
-%%%%
-Reforge Weapon ability
 
-This ability transforms a non-artefact weapon into a mundane hammer.
+Monsters who hold such weapons will be burned by the fire of Igni, thus, it
+is tactically useful to use this ability on enemy weapons.
 %%%%
 Artefactize Weapon ability
 

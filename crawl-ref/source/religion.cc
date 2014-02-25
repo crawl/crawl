@@ -373,9 +373,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon nature's wrath in a wide area around you"
     },
     // Igni Ipthes
-    { "reforge weapons into hammers",
-      "Igni Ipthes supports the use of metal body armour.",
-      "permanently firebrand a weapon",
+    { "Igni Ipthes supports the use of metal body armour.",
+      "firebrand a weapon",
+      "",
       "release gusts of air using the Divine Bellows",
       "artefactize your weapon."
     },
@@ -518,9 +518,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon nature's wrath in a wide area around you"
     },
     // Igni Ipthes
-    { "reforge weapons",
-      "Igni Ipthes no longer supports the use of metal body armour.",
+    { "Igni Ipthes no longer supports the use of metal body armour.",
       "firebrand a weapon",
+      "",
       "use the Divine Bellows",
       "artefactize your weapon."
     },

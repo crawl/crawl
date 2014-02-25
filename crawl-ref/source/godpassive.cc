@@ -843,7 +843,7 @@ int igni_armour_bonus(const item_def& item)
         return 0;
 
     if (you_worship(GOD_IGNI_IPTHES)
-        && you.piety >= piety_breakpoint(1)
+        && you.piety >= piety_breakpoint(0)
         && !player_under_penance())
     {
         if (item.sub_type == ARM_RING_MAIL

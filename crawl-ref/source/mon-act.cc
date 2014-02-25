@@ -70,6 +70,7 @@ static void _mons_in_cloud(monster* mons);
 #if TAG_MAJOR_VERSION == 34
 static void _heated_area(monster* mons);
 #endif
+static void _igni_flame_weapon(monster* mons);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
@@ -1784,7 +1785,10 @@ static void _pre_monster_move(monster* mons)
 
 #if TAG_MAJOR_VERSION == 34
         _heated_area(mons);
+
 #endif
+        _igni_flame_weapon(mons);
+
         if (mons->type == MONS_NO_MONSTER)
             return;
     }
@@ -2038,7 +2042,10 @@ void handle_monster_move(monster* mons)
     _mons_in_cloud(mons);
 #if TAG_MAJOR_VERSION == 34
     _heated_area(mons);
+
 #endif
+    _igni_flame_weapon(mons);
+
     if (!mons->alive())
         return;
 
@@ -4150,6 +4157,48 @@ static void _heated_area(monster* mons)
     }
 }
 #endif
+
+static void _igni_flame_weapon(monster* mons, mon_inv_type slot)
+{
+    if (!mons->alive() || !mons->observable())
+        return;
+
+    item_def* wpn = mons->mslot_item(slot);
+
+    if (wpn && (get_weapon_brand(*wpn) == SPWPN_FLAMING
+                || get_weapon_brand(*wpn) == SPWPN_FLAME))
+    {
+        const int resist = mons->res_fire();
+
+        const int base_damage = 3 + random2(5);
+        const int adjusted_damage = resist_adjust_damage(mons,
+                                    BEAM_FIRE, resist,
+                                    base_damage, true);
+
+        set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
+        mprf("%s is burned by %s due to Igni's heat!",
+             mons->name(DESC_THE).c_str(),
+             wpn->name(DESC_THE).c_str());
+
+        behaviour_event(mons, ME_DISTURB, 0, mons->pos());
+        mons->hurt(mons, adjusted_damage);
+        mons->drop_item(slot, -1);
+    }
+}
+
+static void _igni_flame_weapon(monster* mons)
+{
+    if (!mons->alive()
+        || mons->res_fire() > 0
+        || !you_worship(GOD_IGNI_IPTHES)
+        || you.piety < piety_breakpoint(1))
+    {
+        return;
+    }
+
+    _igni_flame_weapon(mons, MSLOT_WEAPON);
+    _igni_flame_weapon(mons, MSLOT_ALT_WEAPON);
+}
 
 static spell_type _map_wand_to_mspell(wand_type kind)
 {

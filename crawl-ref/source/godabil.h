@@ -99,10 +99,10 @@ bool gozag_bribe_branch();
 bool qazlal_upheaval(coord_def target, bool quiet = false);
 void qazlal_elemental_force();
 bool qazlal_disaster_area();
+
 void igni_divine_bellows();
-bool igni_firebrand_weapon();
+bool igni_firebrand_player_weapon();
+bool igni_firebrand_monster_weapon(monster* mons);
 bool igni_artefactize_weapon();
-bool igni_reforge_player_weapon();
-bool igni_reforge_monster_weapon(monster* mons);
 void magma_form_eruption();
 #endif

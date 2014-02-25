@@ -1702,6 +1702,15 @@ bool monster::wants_weapon(const item_def &weap) const
     if (!could_wield(weap))
         return false;
 
+    if ((get_weapon_brand(weap) == SPWPN_FLAMING
+         || get_weapon_brand(weap) == SPWPN_FLAME)
+        && res_fire() <= 0
+        && you_worship(GOD_IGNI_IPTHES)
+        && you.piety >= piety_breakpoint(1))
+    {
+        return false;
+    }
+
     // Blademasters and master archers like their starting weapon and
     // don't want another, thank you.
     if (type == MONS_DEEP_ELF_BLADEMASTER
