@@ -30,6 +30,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "los.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -3328,6 +3329,31 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     // Fire elementals avoid water and cold.
     if (mons->type == MONS_FIRE_ELEMENTAL && feat_is_watery(target_grid))
         return false;
+
+    // Try to avoid deliberately blocking the player's line of fire.
+    if (mons->type == MONS_SPELLFORGED_SERVITOR)
+    {
+        // Only check if our target is something the player could theoretically
+        // be aiming at.
+        if (mons->get_foe() && mons->target != you.pos()
+                            && you.see_cell_no_trans(mons->target))
+        {
+            ray_def ray;
+            if (find_ray(you.pos(), mons->target, ray, opc_immob))
+            {
+                while (ray.advance())
+                {
+                    // Either we've reached the end of the ray, or we're already
+                    // (maybe) in the player's way and shouldn't care if our
+                    // next step also is.
+                    if (ray.pos() == mons->target || ray.pos() == mons->pos())
+                        break;
+                    else if (ray.pos() == targ)
+                        return false;
+                }
+            }
+        }
+    }
 
     // Submerged water creatures avoid the shallows where
     // they would be forced to surface. -- bwr

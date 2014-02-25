@@ -2615,8 +2615,19 @@ spret_type cast_spellforged_servitor(int pow, god_type god, bool fail)
                     4, SPELL_SPELLFORGED_SERVITOR, you.pos(), MHITYOU,
                     MG_AUTOFOE, god);
 
-    if (create_monster(mdata))
+    if (monster* mon = create_monster(mdata))
+    {
         mpr ("You summon a servant imbued with your destructive magic!");
+
+        int shortest_range = LOS_RADIUS + 1;
+        for (int i = 0; i < 5; ++i)
+        {
+            int range = spell_range(mon->spells[i], 100, false);
+            if (range < shortest_range)
+                shortest_range = range;
+        }
+        mon->props["ideal_range"].get_int() = shortest_range;
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
