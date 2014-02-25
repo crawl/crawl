@@ -39,7 +39,6 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "player.h"
@@ -3130,6 +3129,14 @@ static bool _mons_can_displace(const monster* mpusher,
     if (invalid_monster_index(ipushee))
         return false;
 
+    if (mpusher->type == MONS_WANDERING_MUSHROOM
+        && mpushee->type == MONS_TOADSTOOL
+        || mpusher->type == MONS_TOADSTOOL
+           && mpushee->type == MONS_WANDERING_MUSHROOM)
+    {
+        return true;
+    }
+
     if (!mpushee->has_action_energy()
         && !_same_tentacle_parts(mpusher, mpushee))
     {
@@ -3346,6 +3353,10 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         if (!summon_can_attack(mons, targ))
             return false;
 
+        if (targmonster->type == MONS_TOADSTOOL
+            && mons->type == MONS_WANDERING_MUSHROOM)
+            return true;
+
         // Cut down plants only when no alternative, or they're
         // our target.
         if (mons_is_firewood(targmonster) && mons->target != targ)
@@ -3487,7 +3498,7 @@ static void _jelly_grows(monster* mons)
     _jelly_divide(mons);
 }
 
-static bool _monster_swaps_places(monster* mon, const coord_def& delta)
+bool monster_swaps_places(monster* mon, const coord_def& delta, bool takes_time)
 {
     if (delta.origin())
         return false;
@@ -3522,11 +3533,14 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     }
 
     // Okay, do the swap!
+    if (takes_time)
+    {
 #ifdef EUCLIDEAN
-    _swim_or_move_energy(mon, delta.abs() == 2);
+        _swim_or_move_energy(mon, delta.abs() == 2);
 #else
-    _swim_or_move_energy(mon);
+        _swim_or_move_energy(mon);
 #endif
+    }
 
     mon->set_position(n);
     mgrd(n) = mon->mindex();
@@ -3538,7 +3552,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     const int m2i = m2->mindex();
     ASSERT_RANGE(m2i, 0, MAX_MONSTERS);
     mgrd(c) = m2i;
-    _swim_or_move_energy(m2);
+    if (takes_time)
+        _swim_or_move_energy(m2);
 
     mon->check_redraw(c, false);
     if (mon->is_wall_clinging())
@@ -4021,8 +4036,12 @@ static bool _monster_move(monster* mons)
                 && (!crawl_state.game_is_zotdef()
                     || !_may_cutdown(mons, targ)))
             {
+                bool takes_time = !(mons->type == MONS_WANDERING_MUSHROOM
+                                    && targ->type == MONS_TOADSTOOL
+                                    || mons->type == MONS_TOADSTOOL
+                                       && targ->type == MONS_WANDERING_MUSHROOM);
                 // Zotdef: monsters will cut down firewood
-                ret = _monster_swaps_places(mons, mmov);
+                ret = monster_swaps_places(mons, mmov, takes_time);
             }
             else
             {
