@@ -11,6 +11,7 @@
 #include "mon-util.h"
 #include "monster.h"
 #include "random.h"
+#include "state.h"
 #include "terrain.h"
 #include "traps.h"
 
@@ -109,6 +110,10 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
     pos    = start;
     allow_diagonals   = diag;
     traverse_unmapped = pass_unmapped;
+    traverse_in_sight = (!crawl_state.game_is_arena()
+                         && !crawl_state.game_is_zotdef()
+                         && mon->friendly() &&  mon->is_summoned()
+                         && you.see_cell_no_trans(mon->pos()));
 
     // Easy enough. :P
     if (start == target)
@@ -438,9 +443,10 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    return mons_can_traverse(mons, p) || mons->can_cling_to_walls()
-                                         && cell_is_clingable(pos)
-                                         && cell_can_cling_to(pos, p);
+    return mons_can_traverse(mons, p, traverse_in_sight)
+            || mons->can_cling_to_walls()
+               && cell_is_clingable(pos)
+               && cell_can_cling_to(pos, p);
 }
 
 int monster_pathfind::travel_cost(coord_def npos)

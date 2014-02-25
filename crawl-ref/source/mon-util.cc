@@ -3946,8 +3946,14 @@ static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
 }
 
 bool mons_can_traverse(const monster* mon, const coord_def& p,
-                       bool checktraps)
+                       bool only_in_sight, bool checktraps)
 {
+    // Friendly summons should avoid pathing out of the player's sight
+    // (especially as attempting this may make them ignore valid, but longer
+    // paths).
+    if (only_in_sight && !you.see_cell_no_trans(p))
+        return false;
+
     if ((grd(p) == DNGN_CLOSED_DOOR
         || grd(p) == DNGN_SEALED_DOOR)
             && _mons_can_pass_door(mon, p))
