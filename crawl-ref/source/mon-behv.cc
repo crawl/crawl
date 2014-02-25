@@ -848,16 +848,7 @@ void handle_behaviour(monster* mon)
                 // (or wasn't even attempted) and we need to set our target
                 // the traditional way.
 
-                // Sometimes, your friends will wander a bit.
-                if (isFriendly && !mons_is_avatar(mon->type)
-                    && one_chance_in(8))
-                {
-                    set_random_target(mon);
-                    mon->foe = MHITNOT;
-                    new_beh  = BEH_WANDER;
-                }
-                else
-                    mon->target = PLAYER_POS;
+                mon->target = PLAYER_POS;
             }
             else
             {
