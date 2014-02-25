@@ -1277,10 +1277,6 @@ rod of the swarm
 
 This rod allows its wielder to summon a swarm of insects.
 %%%%
-rod of venom
-
-This rod contains offensive spells of poison.
-%%%%
 royal jelly
 
 A particularly rich and golden gelatinous thing. Consuming it will restore lost

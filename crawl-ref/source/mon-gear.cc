@@ -701,7 +701,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 #if TAG_MAJOR_VERSION == 34
             do
                 item.sub_type  = static_cast<rod_type>(random2(NUM_RODS));
-            while (item.sub_type == ROD_WARDING);
+            while (item.sub_type == ROD_WARDING || item.sub_type == ROD_VENOM);
 #else
             item.sub_type = static_cast<rod_type>(random2(NUM_RODS));
 #endif

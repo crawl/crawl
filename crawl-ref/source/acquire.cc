@@ -799,7 +799,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         case OBJ_RODS:
             do
                 type_wanted = random2(NUM_RODS);
-            while (type_wanted == ROD_WARDING);
+            while (type_wanted == ROD_WARDING || type_wanted == ROD_VENOM);
             break;
 #else
         case OBJ_RODS:       type_wanted = random2(NUM_RODS); break;

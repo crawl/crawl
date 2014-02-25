@@ -1116,7 +1116,9 @@ static const char* rod_type_name(int type)
     case ROD_LIGHTNING:       return "lightning";
     case ROD_STRIKING:        return "striking";
     case ROD_SHADOWS:         return "shadows";
+#if TAG_MAJOR_VERSION == 34
     case ROD_VENOM:           return "venom";
+#endif
     case ROD_INACCURACY:      return "inaccuracy";
 
     case ROD_FIERY_DESTRUCTION:  return "fiery destruction";

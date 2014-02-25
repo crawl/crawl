@@ -2722,7 +2722,7 @@ static void _generate_rod_item(item_def& item, int force_type, int item_level)
     {
         do
             item.sub_type = random2(NUM_RODS);
-        while (item.sub_type == ROD_WARDING);
+        while (item.sub_type == ROD_WARDING || item.sub_type == ROD_VENOM);
     }
 #else
         item.sub_type = random2(NUM_RODS);
