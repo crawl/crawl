@@ -176,6 +176,8 @@ Spells
 * Conjure Ball Lightning has been reduced from level 7 to 6.
 * Bolt of Draining has been reduced from level 6 to 5.
 * Metabolic Englaciation has been reduced from level 6 to 5.
+* Fulminant Prism has been reduced from level 5 to 4.
+* Iskenderun's Battlesphere has been increased from level 4 to 5.
 * Ozocubu's Armour now has an encumbrance cap of 4, rendering it no longer
   usable with mottled dragon armour.
 * Song of Slaying has an increased duration and grants more slaying, but
