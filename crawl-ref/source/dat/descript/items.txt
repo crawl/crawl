@@ -1249,11 +1249,6 @@ This rod allows its wielder to blast a cone-shaped area in front of them with
 various destructive clouds, their lethality increasing with the evocation
 ability of the wielder.
 %%%%
-rod of demonology
-
-This rod contains spells of summoning, some of which can unleash demons unto
-this unsuspecting world.
-%%%%
 rod of destruction
 
 This rod can be evoked to release a damaging spell picked at random from a small
@@ -1267,6 +1262,10 @@ rod of inaccuracy
 
 This rod allows its wielder to fire a powerful but extremely inaccurate bolt of
 power.
+%%%%
+rod of shadows
+
+This rod weaves creatures from shadows and ethereal matter.
 %%%%
 rod of striking
 

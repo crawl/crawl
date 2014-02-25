@@ -567,10 +567,10 @@
 },
 #endif
 
-{   // Rod of demonology
-    SPELL_CALL_IMP,
-    SPELL_ABJURATION,
-    SPELL_SUMMON_DEMON,
+{   // Rod of shadows
+    SPELL_WEAVE_SHADOWS,
+    SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,

@@ -432,7 +432,7 @@ enum rod_type
 #if TAG_MAJOR_VERSION == 34
     ROD_WARDING,
 #endif
-    ROD_DEMONOLOGY,
+    ROD_SHADOWS,
     ROD_STRIKING,
     ROD_VENOM,
     NUM_RODS,

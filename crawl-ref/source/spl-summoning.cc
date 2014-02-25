@@ -1075,9 +1075,11 @@ static monster_type _zotdef_shadow()
     return RANDOM_COMPATIBLE_MONSTER;
 }
 
-spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
+spret_type cast_shadow_creatures(int st, god_type god, level_id place,
+                                 bool fail)
 {
     fail_check();
+    const bool scroll = (st == MON_SUMM_SCROLL);
     mpr("Wisps of shadow whirl around you...");
 
     monster_type critter = RANDOM_COMPATIBLE_MONSTER;
@@ -1092,9 +1094,8 @@ spret_type cast_shadow_creatures(bool scroll, god_type god, bool fail)
         if (monster *mons = create_monster(
             mgen_data(critter, BEH_FRIENDLY, &you,
                       (scroll ? 2 : 1), // This duration is only used for band members.
-                      (scroll ? (int)MON_SUMM_SCROLL : SPELL_SHADOW_CREATURES),
-                      you.pos(), MHITYOU,
-                      MG_FORCE_BEH | MG_AUTOFOE, god), false))
+                      st, you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god,
+                      MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE, place), false))
         {
             // In the rare cases that a specific spell set of a monster will
             // cause anger, even if others do not, try rerolling
@@ -3380,6 +3381,7 @@ static const summons_desc summonsdata[] =
     { SPELL_PLANEREND,                  8, 1 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              99, 2 },
+    { SPELL_WEAVE_SHADOWS,              4, 2 },
     { SPELL_NO_SPELL,                   0, 0 }
 };
 
@@ -3401,7 +3403,8 @@ int summons_limit(spell_type spell)
 
 static bool _spell_has_variable_cap(spell_type spell)
 {
-    return (spell == SPELL_SHADOW_CREATURES);
+    return spell == SPELL_SHADOW_CREATURES
+           || spell == SPELL_WEAVE_SHADOWS;
 }
 
 static void _expire_capped_summon(monster* mon, int delay, bool recurse)

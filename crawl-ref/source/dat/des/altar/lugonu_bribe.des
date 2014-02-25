@@ -44,7 +44,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                        numspells:2 /\
               rat corpse w:5 / kobold corpse w:5 / ugly thing corpse",
          Lugonu="no",
-         Makhleb="tome of destruction / rod of demonology ident:type",
+         Makhleb="tome of destruction / rod of shadows ident:type",
          ["Nemelex Xobeh"]="scroll of random uselessness ident:type q:5-10",
          Okawaru="randbook owner:Lugonu spells:summon_butterflies numspells:1 /\
               book of Callings / scroll of summoning ident:type q:2-3",

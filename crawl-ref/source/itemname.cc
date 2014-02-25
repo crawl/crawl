@@ -1115,7 +1115,7 @@ static const char* rod_type_name(int type)
 #endif
     case ROD_LIGHTNING:       return "lightning";
     case ROD_STRIKING:        return "striking";
-    case ROD_DEMONOLOGY:      return "demonology";
+    case ROD_SHADOWS:         return "shadows";
     case ROD_VENOM:           return "venom";
     case ROD_INACCURACY:      return "inaccuracy";
 

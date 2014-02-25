@@ -1629,7 +1629,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_summon_greater_demon(powc, god, fail);
 
     case SPELL_SHADOW_CREATURES:
-        return cast_shadow_creatures(false, god, fail);
+        return cast_shadow_creatures(spell, god, level_id::current(), fail);
 
     case SPELL_SUMMON_HORRIBLE_THINGS:
         return cast_summon_horrible_things(powc, god, fail);
@@ -1691,6 +1691,13 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_MASS_ABJURATION:
         return cast_mass_abjuration(powc, fail);
+
+    case SPELL_WEAVE_SHADOWS:
+    {
+        level_id place(BRANCH_DUNGEON,
+                       min(27, max(1, div_rand_round(powc, 3))));
+        return cast_shadow_creatures(spell, god, place, fail);
+    }
 
     // XXX: I don't think any call to healing goes through here. --rla
     case SPELL_MINOR_HEALING:

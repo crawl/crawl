@@ -1499,6 +1499,13 @@ This spell causes water around or under the target to violently swirl, dealing
 damage. It cannot be cast at those not already in water, although floating
 above the surface doesn't make you safe.
 %%%%
+Weave Shadows spell
+
+This spell weaves a creature from shadows and threads of ethereal matter. The
+creatures thus brought into existence increase in power with spellpower.
+The spell even creates appropriate equipment for the creature, which are given
+a lasting substance by their firm contact with reality.
+%%%%
 Wind Blast spell
 
 This spell causes a strong gust of wind to push away creatures and clouds in a
