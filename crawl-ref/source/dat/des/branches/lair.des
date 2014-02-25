@@ -757,7 +757,7 @@ DEPTH:  Lair
 ORIENT: north
 MONS:   black mamba / spiny frog / wolf spider
 MONS:   basilisk / komodo dragon / yellow wasp
-MONS:   giant mite / giant centipede
+MONS:   giant mite / adder
 MONS:   plant / fungus w:2 / bush w:1, bush
 SUBST:  4 = 444. 5:2, . = ...4 5:2
 SUBST:  1 = 1., 2 = 2., 3 = 3.
@@ -2224,7 +2224,7 @@ ENDMAP
 NAME:    hangedman_lair_tendril_chambers
 PLACE:   Lair:$
 ORIENT:  float
-MONS:    worker ant w:16 / adder w:14 / giant centipede / green rat w:2
+MONS:    worker ant w:16 / adder w:24 / green rat w:2
 MONS:    water moccasin / spider w:6, yellow wasp / wyvern w:6
 MONS:    spiny frog, black mamba, red wasp / redback w:5, wolf spider
 KMONS:   8 = guardian serpent

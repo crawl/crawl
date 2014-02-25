@@ -177,8 +177,7 @@ NAME: nicolae_spider_entry_non_spiders
 TAGS: spider_entry ruin_lair
 NSUBST: 1 = 21 / 1
 KFEAT: O = enter_spider_nest
-KMONS: 1 = scorpion / goliath beetle / worm / giant centipede / giant mite / \
-           giant cockroach
+KMONS: 1 = scorpion / goliath beetle / worm / giant mite / giant cockroach
 KMONS: 2 = demonic crawler / boulder beetle / yellow wasp
 MAP
 ...........
@@ -227,7 +226,7 @@ TAGS:    no_item_gen no_monster_gen no_pool_fixup
 DEPTH:   Spider:1-4
 WEIGHT:  5
 ORIENT:  southeast
-MONS:    giant centipede
+MONS:    giant mite / scorpion w:5
 MONS:    scorpion / emperor scorpion w:1
 MONS:    trapdoor spider generate_awake / nothing w:20
 MONS:    redback / wolf spider
@@ -515,8 +514,8 @@ TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   Spider:1-4
 WEIGHT:  5
-KMONS:   1 = giant centipede w:35 / scorpion w:20 / spider w:13 / \
-             worker ant w:4 / giant mite w:1 / giant cockroach w:1 / worm w:1
+KMONS:   1 = scorpion w:20 / spider w:13 / worker ant w:35 / \
+             giant mite w:5 / giant cockroach w:1 / worm w:1
 KMONS:   2 = soldier ant / goliath beetle / vampire mosquito w:5
 KMONS:   3aAdD = brain worm / boulder beetle w:5
 KMONS:   4bB = demonic crawler

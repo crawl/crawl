@@ -1315,12 +1315,6 @@ goliath beetle
 Un gros scarabée avec de grandes mandibules écrasantes et une carapace très
 solide.
 %%%%
-giant centipede
-
-Un chilopode d'une taille plutôt inhabituelle, le mille-pattes géant vient
-souvent chasser lorsqu'il fait sombre. Physiquement faible, il se fie à son
-poison désagréable pour expédier ses victimes.
-%%%%
 giant cockroach
 
 Un gros insecte brun qui produit des sifflements désagréables. Contrairement à
