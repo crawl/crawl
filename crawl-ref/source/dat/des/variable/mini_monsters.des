@@ -1869,7 +1869,7 @@ MONS:    deep dwarf ; wand of cold | wand of frost w:5 . \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1
 MONS:    deep dwarf ; wand of fire | wand of flame w:5 . \
-         staff of cold w:15 | quarterstaff ego:freezing w:14 | rod of frigid destruction w:1 . \
+         staff of cold w:15 | quarterstaff ego:freezing w:15 | \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1

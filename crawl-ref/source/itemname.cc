@@ -1120,7 +1120,7 @@ static const char* rod_type_name(int type)
     case ROD_INACCURACY:      return "inaccuracy";
 
     case ROD_FIERY_DESTRUCTION:  return "fiery destruction";
-    case ROD_FRIGID_DESTRUCTION: return "frigid destruction";
+    case ROD_CLOUDS:             return "clouds";
     case ROD_DESTRUCTION:        return "destruction";
 
     default: return "bugginess";

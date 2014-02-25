@@ -1243,6 +1243,12 @@ offer only a little protection against physical harm, but their generous cut
 does not hinder evasion from attack or the proper performance of thaumaturgical
 gestures.
 %%%%
+rod of clouds
+
+This rod allows its wielder to blast a cone-shaped area in front of them with
+various destructive clouds, their lethality increasing with the evocation
+ability of the wielder.
+%%%%
 rod of demonology
 
 This rod contains spells of summoning, some of which can unleash demons unto
@@ -1256,10 +1262,6 @@ set, all able to pierce through monsters to damage the ones behind them.
 rod of fiery destruction
 
 This rod allows its wielder to launch a fiery bolt of explosive energy.
-%%%%
-rod of frigid destruction
-
-This rod contains spells that destroy your enemies with projected cold.
 %%%%
 rod of inaccuracy
 

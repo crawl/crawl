@@ -31,6 +31,7 @@
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -57,6 +58,7 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_BLACK_SMOKE:
         return 22;
     case CLOUD_RAIN:
+    case CLOUD_STORM:
     case CLOUD_INK:
         return 11;
     default:
@@ -85,6 +87,9 @@ static beam_type _cloud2beam(cloud_type flavour)
     case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
     case CLOUD_PETRIFY:      return BEAM_PETRIFYING_CLOUD;
     case CLOUD_RANDOM:       return BEAM_RANDOM;
+    case CLOUD_ACID:         return BEAM_ACID;
+    case CLOUD_NEGATIVE_ENERGY:
+                             return BEAM_NEG;
     }
 }
 
@@ -367,6 +372,21 @@ void manage_clouds()
         // rain and cold clouds dissipate faster over lava.
         if (cloud.type == CLOUD_FIRE && grd(cloud.pos) == DNGN_DEEP_WATER)
             dissipate *= 4;
+        else if (cloud.type == CLOUD_STORM)
+        {
+            // This was initially 40, but that was far too spammy.
+            if (x_chance_in_y(dissipate, 160) && !actor_at(cloud.pos))
+            {
+                bool you_see = you.see_cell(cloud.pos);
+                if (you_see)
+                    mpr("Lightning arcs down from a storm cloud!");
+                noisy(25, cloud.pos,
+                      you_see ? NULL
+                              : "You hear a mighty clap of thunder!");
+            }
+            if (grd(cloud.pos) == DNGN_LAVA)
+                dissipate *= 4;
+        }
         else if ((cloud.type == CLOUD_COLD || cloud.type == CLOUD_RAIN)
                  && grd(cloud.pos) == DNGN_LAVA)
             dissipate *= 4;
@@ -428,7 +448,7 @@ void delete_cloud(int cloud)
     if (c.type != CLOUD_NONE)
     {
         cloud_type t = c.type;
-        if (c.type == CLOUD_RAIN)
+        if (c.type == CLOUD_RAIN || c.type == CLOUD_STORM)
             _maybe_leave_water(c);
 
         c.type        = CLOUD_NONE;
@@ -712,6 +732,8 @@ static bool _cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_MUTAGENIC:
     case CLOUD_CHAOS:
     case CLOUD_PETRIFY:
+    case CLOUD_ACID:
+    case CLOUD_NEGATIVE_ENERGY:
         return true;
     default:
         return false;
@@ -741,6 +763,8 @@ static int _cloud_base_damage(const actor *act,
     case CLOUD_FOREST_FIRE:
     case CLOUD_COLD:
     case CLOUD_HOLY_FLAMES:
+    case CLOUD_ACID:
+    case CLOUD_NEGATIVE_ENERGY:
         // Yes, we really hate players, damn their guts.
         //
         // XXX: Some superior way of linking cloud damage to cloud
@@ -750,6 +774,13 @@ static int _cloud_base_damage(const actor *act,
             return _cloud_damage_calc(23, 3, 10, maximum_damage);
         else
             return _cloud_damage_calc(16, 3, 6, maximum_damage);
+
+    case CLOUD_STORM:
+        // Four times the damage, because it's a quarter as often.
+        if (act->is_player())
+            return _cloud_damage_calc(92, 3, 40, maximum_damage);
+        else
+            return _cloud_damage_calc(64, 3, 24, maximum_damage);
 
     case CLOUD_MEPHITIC:
         return _cloud_damage_calc(3, 1, 0, maximum_damage);
@@ -821,6 +852,12 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->res_petrify();
     case CLOUD_GHOSTLY_FLAME:
         return act->holiness() == MH_UNDEAD;
+    case CLOUD_ACID:
+        return act->res_acid() > 0;
+    case CLOUD_STORM:
+        return act->res_elec() >= 3;
+    case CLOUD_NEGATIVE_ENERGY:
+        return act->res_negative_energy() > 0;
     default:
         return false;
     }
@@ -848,6 +885,12 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
         return act->res_cold();
     case CLOUD_PETRIFY:
         return act->res_petrify();
+    case CLOUD_ACID:
+        return act->res_acid();
+    case CLOUD_STORM:
+        return act->res_elec();
+    case CLOUD_NEGATIVE_ENERGY:
+        return act->res_negative_energy();
 
     default:
         return 0;
@@ -872,7 +915,8 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     switch (cloud.type)
     {
     case CLOUD_RAIN:
-        if (final_damage > 0)
+    case CLOUD_STORM:
+        if (act->is_fiery() && final_damage > 0)
         {
             if (you.can_see(act))
             {
@@ -1001,6 +1045,23 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         }
         break;
 
+    case CLOUD_ACID:
+    {
+        const actor* agent = find_agent(cloud.source, cloud.whose);
+        if (player)
+            splash_with_acid(5, agent ? agent->mindex() : NON_MONSTER, true);
+        else
+            corrode_monster(mons, agent);
+        return true;
+    }
+
+    case CLOUD_NEGATIVE_ENERGY:
+    {
+        actor* agent = find_agent(cloud.source, cloud.whose);
+        return act->drain_exp(agent, "cloud of negative energy");
+        break;
+    }
+
     default:
         break;
     }
@@ -1055,11 +1116,50 @@ static int _actor_cloud_damage(actor *act,
     case CLOUD_COLD:
     case CLOUD_STEAM:
     case CLOUD_GHOSTLY_FLAME:
+    case CLOUD_ACID:
+    case CLOUD_NEGATIVE_ENERGY:
         final_damage =
             _cloud_damage_output(act, _cloud2beam(cloud.type), resist,
                                  cloud_base_damage,
                                  maximum_damage);
         break;
+    case CLOUD_STORM:
+    {
+        if (you.turn_is_over && you.time_taken > 0)
+        {
+            if (!maximum_damage)
+                cloud.announce_actor_engulfed(act);
+            if (maximum_damage || x_chance_in_y(you.time_taken, 40))
+            {
+                if (!maximum_damage)
+                {
+                    if (act->is_player())
+                        mpr("You are struck by lightning!");
+                    else if (you.can_see(act))
+                    {
+                        simple_monster_message(act->as_monster(),
+                                           " is struck by lightning.");
+                    }
+                    else if (you.see_cell(act->pos()))
+                    {
+                        mpr("Lightning from the thunderstorm strikes something"
+                            " you cannot see.");
+                    }
+                    noisy(25, act->pos(),
+                          act->is_player() || you.see_cell(act->pos())
+                          ? NULL
+                          : "You hear a clap of thunder!");
+
+                    return _cloud_damage_output(act, _cloud2beam(cloud.type),
+                                            resist, cloud_base_damage,
+                                            maximum_damage);
+                }
+            }
+        }
+        cloud_struct dupl = cloud;
+        dupl.type = CLOUD_RAIN;
+        return _actor_cloud_damage(act, dupl, maximum_damage);
+    }
     default:
         break;
     }
@@ -1091,12 +1191,14 @@ int actor_apply_cloud(actor *act)
         _actor_cloud_base_damage(act, cloud, resist, true);
     const int final_damage = _actor_cloud_damage(act, cloud, false);
 
-    if (player || final_damage > 0
-        || _cloud_has_negative_side_effects(cloud.type))
+    if ((player || final_damage > 0
+         || _cloud_has_negative_side_effects(cloud.type))
+        && cloud.type != CLOUD_STORM) // handled elsewhere
     {
         cloud.announce_actor_engulfed(act);
     }
-    if (player && cloud_max_base_damage > 0 && resist > 0)
+    if (player && cloud_max_base_damage > 0 && resist > 0
+        && (cloud.type != CLOUD_STORM || final_damage > 0))
     {
         canned_msg(MSG_YOU_RESIST);
         maybe_id_resist(cloud_flavour);
@@ -1242,7 +1344,8 @@ static const char *_terse_cloud_names[] =
     "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
     "raging winds",
-    "sparse dust", "ghostly flame"
+    "sparse dust", "ghostly flame",
+    "acidic fog", "thunder", "negative energy"
 };
 
 static const char *_verbose_cloud_names[] =
@@ -1259,7 +1362,8 @@ static const char *_verbose_cloud_names[] =
     "calcifying dust",
     "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
     "mutagenic fog", "magical condensation", "raging winds",
-    "sparse dust", "ghostly flame"
+    "sparse dust", "ghostly flame",
+    "acidic fog", "a thunderstorm", "negative energy"
 };
 
 string cloud_type_name(cloud_type type, bool terse)
@@ -1350,16 +1454,17 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
     if (you.can_see(act))
     {
         // Special message for unmodified rain clouds:
-        if (type == CLOUD_RAIN
+        if ((type == CLOUD_RAIN || type == CLOUD_STORM)
             && cloud_name() == cloud_type_name(type, false))
         {
             // Don't produce monster-in-rain messages in the interests
             // of spam reduction.
             if (act->is_player())
             {
-                mprf("%s %s standing in the rain.",
+                mprf("%s %s standing in %s.",
                      act->name(DESC_THE).c_str(),
-                     act->conj_verb("are").c_str());
+                     act->conj_verb("are").c_str(),
+                     type == CLOUD_STORM ? "a thunderstorm" : "the rain");
             }
         }
         else
@@ -1469,6 +1574,18 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_GHOSTLY_FLAME:
         which_colour = ETC_ELECTRICITY;
+        break;
+
+    case CLOUD_ACID:
+        which_colour = YELLOW;
+        break;
+
+    case CLOUD_STORM:
+        which_colour = ETC_DARK;
+        break;
+
+    case CLOUD_NEGATIVE_ENERGY:
+        which_colour = ETC_DEATH;
         break;
 
     default:

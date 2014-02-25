@@ -1284,3 +1284,75 @@ aff_type targetter_cone::is_affected(coord_def loc)
 
     return zapped[loc];
 }
+
+targetter_shotgun::targetter_shotgun(const actor* act, int range)
+{
+    ASSERT(act);
+    agent = act;
+    origin = act->pos();
+    range2 = dist_range(range);
+}
+
+bool targetter_shotgun::valid_aim(coord_def a)
+{
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        if (agent->see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    if ((origin - a).abs() > range2)
+        return notify_fail("Out of range.");
+    return true;
+}
+
+bool targetter_shotgun::set_aim(coord_def a)
+{
+    zapped.clear();
+    rays.init(ray_def());
+
+    if (!targetter::set_aim(a))
+        return false;
+
+    ray_def orig_ray;
+    _make_ray(orig_ray, origin, a);
+    coord_def p;
+    bool hit = false;
+
+    const double spread_range = PI / 4.0;
+    for (int i = 0; i < SHOTGUN_BEAMS; i++)
+    {
+        hit = true;
+        double spread = -(spread_range / 2.0)
+                        + (spread_range * (double)i)
+                                        / (double)(SHOTGUN_BEAMS - 1);
+        rays[i].r.start = orig_ray.r.start;
+        rays[i].r.dir.x =
+             orig_ray.r.dir.x * cos(spread) + orig_ray.r.dir.y * sin(spread);
+        rays[i].r.dir.y =
+            -orig_ray.r.dir.x * sin(spread) + orig_ray.r.dir.y * cos(spread);
+        ray_def tempray = rays[i];
+        p = tempray.pos();
+        while ((origin - (p = tempray.pos())).abs() <= range2)
+        {
+            if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
+                hit = false;
+            if (hit && p != origin)
+                zapped[p] = zapped[p] + 1;
+            tempray.advance();
+        }
+    }
+
+    zapped[origin] = 0;
+    return true;
+}
+
+aff_type targetter_shotgun::is_affected(coord_def loc)
+{
+    if ((loc - origin).abs() > range2)
+        return AFF_NO;
+
+    return (zapped[loc] >= SHOTGUN_BEAMS) ? AFF_YES :
+           (zapped[loc] > 0)              ? AFF_MAYBE
+                                          : AFF_NO;
+}

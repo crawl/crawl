@@ -47,6 +47,7 @@
 #include "religion.h"
 #include "shopping.h" // for item values
 #include "spl-book.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
@@ -1266,6 +1267,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     case SPELL_POISON_ARROW:
     case SPELL_THROW_FLAME:
     case SPELL_THROW_FROST:
+    case SPELL_CLOUD_CONE:
         break;
 
     case SPELL_FIREBALL:
@@ -1325,6 +1327,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
     }
     else if (mzap == SPELL_THUNDERBOLT)
         zap = _thunderbolt_tracer(mons, power, beem.target);
+    else if (mzap == SPELL_CLOUD_CONE)
+        zap = mons_should_cloud_cone(mons, power, beem.target);
     else
     {
         fire_tracer(mons, beem);
@@ -1344,6 +1348,12 @@ static bool _handle_rod(monster *mons, bolt &beem)
     {
         _rod_fired_pre(mons);
         cast_thunderbolt(mons, power, beem.target);
+        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
+    }
+    else if (mzap == SPELL_CLOUD_CONE)
+    {
+        _rod_fired_pre(mons);
+        cast_cloud_cone(mons, power, beem.target);
         return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
     }
     else if (zap)
