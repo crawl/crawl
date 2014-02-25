@@ -1637,14 +1637,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         if (damage_brand == SPWPN_ANTIMAGIC && you.mutation[MUT_ANTIMAGIC_BITE]
             && damage_done > 0)
         {
-            bool spell_user = false;
-
-            if (defender->as_monster()->can_use_spells()
-                && !defender->as_monster()->is_priest()
-                && !mons_class_flag(defender->type, M_FAKE_SPELLS))
-            {
-                spell_user = true;
-            }
+            const bool spell_user = mons_antimagic_affected(defender->as_monster());
 
             antimagic_affects_defender(damage_done * 2);
             mprf("You drain %s %s.",
@@ -2514,9 +2507,7 @@ void melee_attack::antimagic_affects_defender(int pow)
         drain_mp(amount);
         obvious_effect = true;
     }
-    else if (defender->as_monster()->can_use_spells()
-             && !defender->as_monster()->is_priest()
-             && !mons_class_flag(defender->type, M_FAKE_SPELLS))
+    else if (mons_antimagic_affected(defender->as_monster()))
     {
         int dur = div_rand_round(pow * 8, defender->as_monster()->hit_dice);
         amount = random2(dur + 1);
@@ -4775,9 +4766,7 @@ void melee_attack::mons_apply_attack_flavour()
         {
             const bool spell_user =
                 defender->is_player()
-                || defender->as_monster()->can_use_spells()
-                    && !defender->as_monster()->is_priest()
-                    && !mons_class_flag(defender->type, M_FAKE_SPELLS);
+                || mons_antimagic_affected(defender->as_monster());
 
             if (you.can_see(attacker) || you.can_see(defender))
             {

@@ -971,9 +971,7 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
 {
     // Only cause miscasts if the target has magic to disrupt.
     if ((defender->is_player()
-         || (defender->as_monster()->can_use_spells()
-             && !defender->as_monster()->is_priest()
-             && !mons_class_flag(defender->type, M_FAKE_SPELLS)))
+         || mons_antimagic_affected(defender->as_monster()))
         && !mondied)
     {
         int school = SPTYP_NONE;
