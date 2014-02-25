@@ -440,6 +440,7 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
 bool mons_can_open_door(const monster* mon, const coord_def& pos);
 bool mons_can_eat_door(const monster* mon, const coord_def& pos);
 bool mons_can_traverse(const monster* mon, const coord_def& pos,
+                       bool only_in_sight = false,
                        bool checktraps = true);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);

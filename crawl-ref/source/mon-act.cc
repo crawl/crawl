@@ -3266,7 +3266,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
         || target_grid == DNGN_GRATE && digs)
     {
     }
-    else if (!mons_can_traverse(mons, targ, false)
+    else if (!mons_can_traverse(mons, targ, false, false)
              && !monster_habitable_grid(mons, target_grid))
     {
         // If the monster somehow ended up in this habitat (and is
