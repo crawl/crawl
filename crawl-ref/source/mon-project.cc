@@ -408,7 +408,10 @@ move_again:
         if (mons && iood && mons_is_projectile(victim->type))
         {
             if (mon.observable())
+            {
                 mpr("The orbs collide in a blinding explosion!");
+                noisy(40, pos);
+            }
             else
                 noisy(40, pos, "You hear a loud magical explosion!");
             monster_die(mons, KILL_DISMISSED, NON_MONSTER);
@@ -419,7 +422,10 @@ move_again:
         if (mons && mons_is_boulder(&mon) && mons_is_boulder(mons))
         {
             if (mon.observable())
+            {
                 mpr("The boulders collide with a stupendous crash!");
+                noisy(20, pos);
+            }
             else
                 noisy(20, pos, "You hear a loud crashing sound!");
 
