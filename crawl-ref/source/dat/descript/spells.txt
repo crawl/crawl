@@ -984,8 +984,8 @@ although it takes but a single hit to dispel them.
 Random Bolt spell
 
 This spell creates, at random, a bolt of venom, negative energy, fire, cold,
-dispelling energy, electricity, or reflectable crystal randomly manifesting
-as either fiery or cold.
+dispelling energy, electricity, or a bouncing crystal bolt either freezing or
+burning the unfortunate victim.
 %%%%
 Rearrange the Pieces spell
 

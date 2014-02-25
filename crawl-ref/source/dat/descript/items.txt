@@ -1250,8 +1250,8 @@ this unsuspecting world.
 %%%%
 rod of destruction
 
-This rod can be evoked to release a random spells of mayhem and destruction
-from a small set, all able to damage multiple monsters in a line.
+This rod can be evoked to release a damaging spell picked at random from a small
+set, all able to pierce through monsters to damage the ones behind them.
 %%%%
 rod of fiery destruction
 
