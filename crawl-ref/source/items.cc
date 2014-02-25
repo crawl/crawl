@@ -72,7 +72,6 @@
 #include "viewchar.h"
 #include "xom.h"
 
-static bool _invisible_to_player(const item_def& item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
@@ -617,40 +616,21 @@ void lose_item_stack(const coord_def& where)
     igrd(where) = NON_ITEM;
 }
 
-static bool _invisible_to_player(const item_def& item)
-{
-    return strstr(item.inscription.c_str(), "=k") != 0;
-}
-
-static int _count_nonsquelched_items(int obj)
+static int _count_items(int obj)
 {
     int result = 0;
 
     for (stack_iterator si(obj); si; ++si)
-        if (!_invisible_to_player(*si))
-            ++result;
+        ++result;
 
     return result;
 }
 
 // Fill items with the items on a square.
-// Squelched items (marked with =k) are ignored, unless
-// the square contains *only* squelched items, in which case they
-// are included. If force_squelch is true, squelched items are
-// never displayed.
-void item_list_on_square(vector<const item_def*>& items, int obj,
-                         bool force_squelch)
+void item_list_on_square(vector<const item_def*>& items, int obj)
 {
-    const bool have_nonsquelched = (force_squelch
-                                    || _count_nonsquelched_items(obj));
-
-    // Loop through the items.
     for (stack_iterator si(obj); si; ++si)
-    {
-        // Add them to the items list if they qualify.
-        if (!have_nonsquelched || !_invisible_to_player(*si))
-            items.push_back(& (*si));
-    }
+        items.push_back(& (*si));
 }
 
 bool need_to_autopickup()
@@ -735,7 +715,7 @@ void item_check(bool verbose)
 
     vector<const item_def*> items;
 
-    item_list_on_square(items, you.visible_igrd(you.pos()), true);
+    item_list_on_square(items, you.visible_igrd(you.pos()));
 
     if (items.empty())
     {
@@ -872,7 +852,7 @@ void pickup_menu(int item_link)
     int n_tried_pickup = 0;
 
     vector<const item_def*> items;
-    item_list_on_square(items, item_link, false);
+    item_list_on_square(items, item_link);
 
 #ifdef TOUCH_UI
     string prompt = "Pick up what? (<Enter> or tap header to pick up)";
@@ -1250,7 +1230,7 @@ void pickup(bool partial_quantity)
     int keyin = 'x';
 
     int o = you.visible_igrd(you.pos());
-    const int num_nonsquelched = _count_nonsquelched_items(o);
+    const int num_items = _count_items(o);
 
     // Store last_pickup in case we need to restore it.
     // Then clear it to fill with items picked up.
@@ -1262,16 +1242,12 @@ void pickup(bool partial_quantity)
     else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
         mpr("You can't reach the bottom while floating on water.");
     else if (mitm[o].link == NON_ITEM)      // just one item?
-    {
-        // Deliberately allowing the player to pick up
-        // a killed item here.
         pickup_single_item(o, partial_quantity ? 0 : mitm[o].quantity);
-    }
     else if (Options.pickup_menu
              || Options.pickup_menu_limit
-                && num_nonsquelched >= (Options.pickup_menu_limit < 0
-                                        ? Options.item_stack_summary_minimum
-                                        : Options.pickup_menu_limit))
+                && num_items >= (Options.pickup_menu_limit < 0
+                                 ? Options.item_stack_summary_minimum
+                                 : Options.pickup_menu_limit))
     {
         pickup_menu(o);
     }
@@ -1284,12 +1260,6 @@ void pickup(bool partial_quantity)
         {
             // Must save this because pickup can destroy the item.
             next = mitm[o].link;
-
-            if (num_nonsquelched && _invisible_to_player(mitm[o]))
-            {
-                o = next;
-                continue;
-            }
 
             if (keyin != 'a')
             {
