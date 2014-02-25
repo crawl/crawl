@@ -1414,7 +1414,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
 
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
-    if (mon->travel_target == MTRAV_PLAYER)
+    if (mon->travel_target == MTRAV_FOE)
         return true;
 
     if (mon->travel_target == MTRAV_KNOWN_UNREACHABLE)

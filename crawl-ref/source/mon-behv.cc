@@ -651,7 +651,7 @@ void handle_behaviour(monster* mon)
                 && !(mon->friendly()
                      && mon->foe == MHITYOU
                      && mon->is_travelling()
-                     && mon->travel_target == MTRAV_PLAYER))
+                     && mon->travel_target == MTRAV_FOE))
             {
                 // If their foe is marked, the monster always knows exactly
                 // where they are.
