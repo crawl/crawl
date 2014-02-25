@@ -968,7 +968,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             if (you_worship(GOD_IGNI_IPTHES))
             {
-                piety_change = 4;
+                piety_change = 5;
                 piety_denom = level;
                 retval = true;
             }
@@ -1050,7 +1050,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
                 simple_god_message(" appreciates your attempt.");
                 retval = true;
-                piety_change = 1 + random2avg(level * 7, 3);
+                piety_change = 1 + random2avg(level * 8, 3);
             }
             break;
 
