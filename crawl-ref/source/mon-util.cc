@@ -905,7 +905,6 @@ bool mons_is_poisoner(const monster* mon)
         return true;
 
     if (mon->has_attack_flavour(AF_POISON)
-        || mon->has_attack_flavour(AF_POISON_NASTY)
         || mon->has_attack_flavour(AF_POISON_MEDIUM)
         || mon->has_attack_flavour(AF_POISON_STRONG)
         || mon->has_attack_flavour(AF_POISON_STR)
