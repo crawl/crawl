@@ -1127,6 +1127,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_explosive_bolt(&you, pow, range);
     case SPELL_GLACIATE:
         return new targetter_cone(&you, range);
+    case SPELL_CLOUD_CONE:
+        return new targetter_shotgun(&you, range);
     case SPELL_MAGIC_DART:
     case SPELL_FORCE_LANCE:
     case SPELL_SHOCK:
@@ -1559,6 +1561,8 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CHAIN_OF_CHAOS:
         return cast_chain_spell(SPELL_CHAIN_OF_CHAOS, powc, &you, fail);
 
+    case SPELL_CLOUD_CONE:
+        return cast_cloud_cone(&you, powc, target, fail);
 
     // Summoning spells, and other spells that create new monsters.
     // If a god is making you cast one of these spells, any monsters

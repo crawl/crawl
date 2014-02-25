@@ -228,6 +228,14 @@ Chaotic Mirror spell
 This spell mirrors a wild and unpredictable effect onto both the target and
 the caster.
 %%%%
+Cloud Cone spell
+
+This spell blasts the area near the caster with various destructive clouds.
+At low power, the most lethal clouds the spell can create are noxious fumes;
+as power increases, this gives way to roaring flames, freezing vapours,
+and poisonous gas, and at the highest tiers of power even stronger clouds
+become available.
+%%%%
 Cold Breath spell
 
 This creature may exhale a focused blast of icy-cold air. It may knock back

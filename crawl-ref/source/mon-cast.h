@@ -14,6 +14,8 @@ struct bolt;
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);
 
+bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos);
+
 bool handle_mon_spell(monster* mons, bolt &beem);
 
 bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,

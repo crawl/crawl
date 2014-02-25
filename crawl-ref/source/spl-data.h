@@ -3654,6 +3654,19 @@ struct spell_desc
 },
 
 {
+    SPELL_CLOUD_CONE, "Cloud Cone",
+     SPTYP_CONJURATION | SPTYP_AIR,
+     SPFLAG_GRID | SPFLAG_NOT_SELF,
+     6,
+     100,
+     3, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

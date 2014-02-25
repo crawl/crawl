@@ -26,8 +26,10 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "random-pick.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "target.h"
 #include "terrain.h"
 #include "transform.h"
 #include "viewchar.h"
@@ -495,4 +497,54 @@ void apply_control_winds(const monster* mon)
             mi->update_ench(aid);
         }
     }
+}
+
+random_pick_entry<cloud_type> cloud_cone_clouds[] =
+{
+  { 0,   50, 100, DOWN, CLOUD_RAIN },
+  { 0,   50, 100, DOWN, CLOUD_MIST },
+  { 0,   50, 100, DOWN, CLOUD_MEPHITIC },
+  { 0,  100, 100, PEAK, CLOUD_FIRE },
+  { 0,  100, 100, PEAK, CLOUD_COLD },
+  { 0,  100, 100, PEAK, CLOUD_POISON },
+  { 50, 100, 100, UP,   CLOUD_ACID },
+  { 50, 100, 100, UP,   CLOUD_STORM },
+  { 50, 100, 100, UP,   CLOUD_NEGATIVE_ENERGY },
+  { 0,0,0,FLAT,CLOUD_NONE }
+};
+
+spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
+                           bool fail)
+{
+    // For monsters:
+    pow = min(100, pow);
+
+    const int range = spell_range(SPELL_CLOUD_CONE, pow);
+
+    targetter_shotgun hitfunc(caster, range);
+
+    hitfunc.set_aim(pos);
+
+    if (caster->is_player())
+    {
+        if (stop_attack_prompt(hitfunc, "cloud"))
+            return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    random_picker<cloud_type, NUM_CLOUD_TYPES> cloud_picker;
+    cloud_type cloud = cloud_picker.pick(cloud_cone_clouds, pow, CLOUD_NONE);
+
+    for (map<coord_def, int>::const_iterator p = hitfunc.zapped.begin();
+         p != hitfunc.zapped.end(); ++p)
+    {
+        if (p->second <= 0)
+            continue;
+        place_cloud(cloud, p->first,
+                    random2avg(p->second * div_rand_round(pow, 3), 2),
+                    caster);
+    }
+
+    return SPRET_SUCCESS;
 }

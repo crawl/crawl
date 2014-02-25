@@ -861,6 +861,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_IOOD: // tracer only
     case SPELL_LEGENDARY_DESTRUCTION: // ditto
+    case SPELL_CLOUD_CONE: // for noise generation purposes
         beam.flavour  = BEAM_NUKE;
         beam.is_beam  = true;
         // Doesn't take distance into account, but this is just a tracer so
@@ -2632,6 +2633,34 @@ static bool _glaciate_tracer(monster *caster, int pow, coord_def aim)
     return enemy > friendly;
 }
 
+bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
+{
+    targetter_shotgun hitfunc(agent,
+                              spell_range(SPELL_CLOUD_CONE, power));
+
+    hitfunc.set_aim(pos);
+
+    bolt tracer;
+    for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
+    {
+        if (hitfunc.is_affected(ai->pos()) == AFF_NO || !agent->can_see(*ai))
+            continue;
+
+        if (mons_aligned(agent, *ai))
+        {
+            tracer.friend_info.count++;
+            tracer.friend_info.power += ai->get_experience_level();
+        }
+        else
+        {
+            tracer.foe_info.count++;
+            tracer.foe_info.power += ai->get_experience_level();
+        }
+    }
+
+    return mons_should_fire(tracer);
+}
+
 //---------------------------------------------------------------
 //
 // handle_mon_spell
@@ -3185,6 +3214,16 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 || !_glaciate_tracer(mons,
                                      12 * mons->spell_hd(spell_cast),
                                      foe->pos()))
+            {
+                return false;
+            }
+        }
+        else if (spell_cast == SPELL_CLOUD_CONE)
+        {
+            if (!foe
+                || !mons_should_cloud_cone(mons,
+                                           12 * mons->spell_hd(spell_cast),
+                                           foe->pos()))
             {
                 return false;
             }
@@ -5827,6 +5866,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         cast_glaciate(mons, 12 * mons->spell_hd(spell_cast), foe->pos());
         return;
     }
+
+    case SPELL_CLOUD_CONE:
+        ASSERT(mons->get_foe());
+        cast_cloud_cone(mons, 12 * mons->spell_hd(spell_cast),
+                        mons->get_foe()->pos());
+        return;
     }
 
 

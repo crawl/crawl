@@ -521,10 +521,10 @@
     SPELL_NO_SPELL,
 },
 
-{   // Rod of frigid destruction
-    SPELL_THROW_FROST,
-    SPELL_THROW_ICICLE,
-    SPELL_FREEZING_CLOUD,
+{   // Rod of clouds
+    SPELL_CLOUD_CONE,
+    SPELL_NO_SPELL,
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
