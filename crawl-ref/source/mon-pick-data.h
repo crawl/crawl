@@ -52,7 +52,6 @@ static const pop_entry pop_d[] =
   {  7, 17,  350, SEMI, MONS_HUNGRY_GHOST },
   {  7, 17,  192, PEAK, MONS_CROCODILE },
   {  7, 17,  192, PEAK, MONS_YELLOW_WASP },
-  {  8, 17,  300, SEMI, MONS_GIANT_CENTIPEDE },
   {  8, 17,  300, SEMI, MONS_TWO_HEADED_OGRE },
   {  8, 18,  334, SEMI, MONS_WYVERN },
   {  8, 18,  230, PEAK, MONS_EYE_OF_DRAINING },
@@ -245,7 +244,6 @@ static const pop_entry pop_lair[] =
   {  1,  6, 1000, FLAT, MONS_RAT },
   {  1,  6,  999, FLAT, MONS_QUOKKA },
   { -4,  6,  826, SEMI, MONS_JACKAL },
-  { -4,  6,  514, SEMI, MONS_GIANT_CENTIPEDE },
   {  1,  7,  999, FLAT, MONS_PORCUPINE },
   { -3,  7,  690, SEMI, MONS_HOUND },
   {  1,  7,  999, FLAT, MONS_GIANT_FROG },
@@ -387,7 +385,6 @@ static const pop_entry pop_spider[] =
 { // Spider Nest
   { -1,  5,   89, SEMI, MONS_WORM },
   { -1,  5,   52, SEMI, MONS_GIANT_COCKROACH },
-  { -1,  5,   52, SEMI, MONS_GIANT_CENTIPEDE },
   { -1,  5,   52, SEMI, MONS_GIANT_MITE },
   { -1,  5,  167, SEMI, MONS_FORMICID },
   {  1,  5,  334, FLAT, MONS_SPIDER },

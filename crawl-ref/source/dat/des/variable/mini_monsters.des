@@ -927,7 +927,7 @@ KFEAT:  ~ = alarm trap / floor
 KFEAT:  ` = web / floor w:30
 KMONS:  6 = water moccasin
 KMONS:  7 = spider
-KMONS:  8 = giant centipede
+KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal
 KMONS:  B = butterfly att:neutral
 KMONS:  ' = wandering mushroom
@@ -988,7 +988,7 @@ KFEAT:  ' = known shaft trap
 KFEAT:  ` = web / floor w:60
 KMONS:  6 = water moccasin
 KMONS:  7 = spider
-KMONS:  8 = giant centipede
+KMONS:  8 = worker ant
 KMONS:  9 = hound / jackal band
 KMONS:  B = butterfly att:neutral
 KMONS:  ' = wandering mushroom
@@ -1050,7 +1050,7 @@ KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
 KMONS:   D = brain worm w:5 / giant leech
 KMONS:   E = jelly
-KMONS:   F = worker ant / giant centipede w:8
+KMONS:   F = worker ant
 KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
 KMONS:   I = orange rat
@@ -1107,7 +1107,7 @@ NAME:  guppyfry_early_lair_pool
 DEPTH: D:2-5
 TAGS:  patrolling no_monster_gen transparent mini_float
 KMONS: 1 = big fish / giant goldfish
-KMONS: 2 = giant slug / giant centipede
+KMONS: 2 = giant slug / adder
 KMONS: 3 = plant
 ITEM:  apple / apricot / pear / orange / banana / strawberry
 SUBST: - = wwwwwwWWW1

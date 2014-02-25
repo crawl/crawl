@@ -121,7 +121,6 @@ quokka MONS_QUOKKA
 %sdir mon/animals
 
 ## Spiders and insects ('s')
-giant_centipede MONS_GIANT_CENTIPEDE
 giant_mite MONS_GIANT_MITE
 scorpion MONS_SCORPION
 emperor_scorpion MONS_EMPEROR_SCORPION

@@ -1276,12 +1276,6 @@ gelid demonspawn
 
 <demonspawn>
 %%%%
-giant centipede
-
-A chilopod of quite an unusual size, the giant centipede mostly comes out to
-hunt when it is dark. Physically weak, it relies on its nasty poison to
-dispatch its victims.
-%%%%
 giant cockroach
 
 A big brown insect that makes a nasty hissing noise. Contrary to popular myth,

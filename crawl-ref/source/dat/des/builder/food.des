@@ -150,7 +150,7 @@ DEPTH:  D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   spider / brain worm w:5 / goliath beetle / giant centipede
+MONS:   spider / brain worm w:5 / goliath beetle / worker ant
 MONS:   yellow wasp w:7 / boring beetle / soldier ant w:13 / giant slug
 ITEM:   cheese q:3 no_mimic / beef jerky q:3 no_mimic / lemon q:3 no_mimic
 ITEM:   potion of porridge no_mimic, honeycomb q:6 no_mimic

@@ -424,7 +424,7 @@ static void _insect_wave(int power)
                 MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_FIREFLY, MONS_REDBACK,
                 MONS_VAMPIRE_MOSQUITO, MONS_RED_WASP, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
                 MONS_GIANT_COCKROACH, MONS_BORING_BEETLE, MONS_TRAPDOOR_SPIDER,
-                MONS_SCORPION, MONS_GIANT_CENTIPEDE, END};
+                MONS_SCORPION, END};
     monster_type boss[] = {MONS_GOLIATH_BEETLE, MONS_BOULDER_BEETLE,
                 MONS_QUEEN_ANT, MONS_BORING_BEETLE, MONS_QUEEN_BEE, END};
     _zotdef_fill_from_list(insects, 0, power); // full

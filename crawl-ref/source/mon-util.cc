@@ -4536,7 +4536,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     case 'r': // rodents
         return MON_SHAPE_QUADRUPED;
     case 's': // arachnids and centipedes/cockroaches
-        if (mc == MONS_GIANT_CENTIPEDE || mc == MONS_DEMONIC_CRAWLER)
+        if (mc == MONS_DEMONIC_CRAWLER)
             return MON_SHAPE_CENTIPEDE;
         else if (mc == MONS_GIANT_COCKROACH)
             return MON_SHAPE_INSECT;

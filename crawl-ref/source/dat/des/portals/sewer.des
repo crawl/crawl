@@ -177,7 +177,7 @@ ENDMAP
 NAME:   gup_sewer_entry_spiral
 TAGS:   patrolling
 : sewer_portal(_G)
-KMONS:  1 = rat / green rat w:5 / giant centipede w:5 / giant cockroach / \
+KMONS:  1 = rat / green rat w:5 / adder w:5 / giant cockroach / \
             giant mite / giant gecko / worm w:5 / nothing
 NSUBST: - : 8:1 / 8:. / *:W
 MAP
@@ -197,7 +197,7 @@ ENDMAP
 NAME:   gup_sewer_entry_bubbles
 TAGS:   mini_float patrolling
 : sewer_portal(_G)
-KMONS:  1 = rat / green rat w:5 / giant centipede w:5 / giant cockroach / \
+KMONS:  1 = rat / green rat w:5 / adder w:5 / giant cockroach / \
             giant mite / giant gecko / worm w:5 / nothing
 NSUBST: - = 8:1 / *:W
 MAP
@@ -234,7 +234,7 @@ ENDMAP
 NAME:   gup_sewer_entry_glass
 TAGS:   mini_float
 : sewer_portal(_G)
-KMONS:  1 = giant centipede / giant cockroach / nothing
+KMONS:  1 = adder / giant cockroach / nothing
 MAP
 ..........
 .mmmmmmm.
