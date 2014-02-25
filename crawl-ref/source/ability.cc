@@ -205,7 +205,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Igni Ipthes
     { ABIL_IGNI_REFORGE_WEAPON, ABIL_NON_ABILITY,
       ABIL_IGNI_FIREBRAND_WEAPON, ABIL_IGNI_DIVINE_BELLOWS,
-      ABIL_IGNI_ARTEFACTIZE_WEAPON },
+      ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -256,7 +256,7 @@ static const ability_def Ability_List[] =
     { ABIL_DIG, "Dig", 0, 0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, 0, ABFLAG_DELAY},
 
-    // Igni magma form ability
+    // Magma form ability
     { ABIL_ERUPTION, "Eruption", 0, 0, 250, 0, 0, 0, ABFLAG_PAIN },
 
     // EVOKE abilities use Evocations and come from items.

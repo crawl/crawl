@@ -1607,8 +1607,8 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         }
     }
 
-    if (player_under_penance(GOD_IGNI_IPTHES))
-        rf--;
+    if (you_worship(GOD_IGNI_IPTHES) && !player_under_penance())
+        rf++;
 
     if (rf > 3)
         rf = 3;
@@ -1749,7 +1749,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc++;
     }
 
-    if (player_under_penance(GOD_IGNI_IPTHES))
+    if (you_worship(GOD_IGNI_IPTHES) || player_under_penance(GOD_IGNI_IPTHES))
         rc--;
 
     if (rc < -3)

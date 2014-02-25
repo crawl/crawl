@@ -4067,6 +4067,8 @@ void god_pitch(god_type which_god)
             for (monster_iterator mi; mi; ++mi)
                 mi->del_ench(ENCH_AWAKEN_FOREST);
     }
+    else if (you_worship(GOD_IGNI_IPTHES))
+        mprf(MSGCH_GOD, "You feel your temperature rising.");
 
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
