@@ -974,6 +974,7 @@ i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
 i-rod_warding ROD_WARDING
 i-rod_demonology ROD_DEMONOLOGY
 i-rod_striking ROD_STRIKING
+# Remove when TAG_MAJOR_VERSION > 34
 i-rod_venom ROD_VENOM ROD_ID_LAST
 %rim 1
 

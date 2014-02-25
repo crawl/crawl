@@ -434,7 +434,9 @@ enum rod_type
 #endif
     ROD_SHADOWS,
     ROD_STRIKING,
+#if TAG_MAJOR_VERSION == 34
     ROD_VENOM,
+#endif
     NUM_RODS,
 };
 
