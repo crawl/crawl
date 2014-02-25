@@ -3121,7 +3121,8 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_MUTATION:
-            // Only living characters can mutate.
+        case POT_LIGNIFY:
+            // Only living characters can mutate or change form
             return !you.is_undead
                    || temp && you.species == SP_VAMPIRE
                       && you.hunger_state >= HS_SATIATED;
