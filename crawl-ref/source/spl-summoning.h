@@ -73,6 +73,8 @@ spret_type cast_summon_guardian_golem(int pow, god_type god, bool fail);
 spret_type cast_dragon_call(int pow, bool fail);
 void do_dragon_call(int time);
 
+spret_type cast_spellforged_servitor(int pow, god_type god, bool fail);
+
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     actor *as = NULL, string nas = "",

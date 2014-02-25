@@ -3695,6 +3695,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SPELLFORGED_SERVITOR, "Spellforged Servitor",
+     SPTYP_CONJURATION | SPTYP_SUMMONING,
+     SPFLAG_NONE,
+     7,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

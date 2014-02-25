@@ -1378,7 +1378,8 @@ bool mons_is_ghost_demon(monster_type mc)
             || mc == MONS_PLAYER_ILLUSION
             || mons_class_is_animated_weapon(mc)
             || mc == MONS_PANDEMONIUM_LORD
-            || mons_class_is_chimeric(mc);
+            || mons_class_is_chimeric(mc)
+            || mc == MONS_SPELLFORGED_SERVITOR;
 }
 
 bool mons_is_pghost(monster_type mc)
@@ -2645,6 +2646,16 @@ void define_monster(monster* mons)
     {
         ghost_demon ghost;
         mons->set_ghost(ghost);
+    }
+
+    case MONS_SPELLFORGED_SERVITOR:
+    {
+        ghost_demon ghost;
+        ghost.init_spellforged_servitor();
+        mons->set_ghost(ghost);
+        mons->ghost_demon_init();
+        mons->props["custom_spells"].get_bool() = true;
+        break;
     }
 
     default:

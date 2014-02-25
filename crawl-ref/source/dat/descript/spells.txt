@@ -1166,6 +1166,14 @@ Kills by a spectral weapon count as your own when singing a Song of Slaying.
 Certain powerful named artefacts possess too strong a spirit for this spell to
 be able to draw them out.
 %%%%
+Spellforged Servitor spell
+
+This spell summons an extraplanar elemental and binds it to a durable shell of
+magical power forged from the caster's own magic. By drawing upon the energy of
+the vessel which gives it form, the servitor is capable of unleashing some of
+the destructive spells known to its creator, though the strongest and most
+volatile of magics cannot be embewed in this fashion.
+%%%%
 Spider Form spell
 
 This spell temporarily transforms the caster into a swift, venomous (but

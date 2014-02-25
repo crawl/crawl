@@ -2469,6 +2469,13 @@ spectral weapon
 
 A spirit drawn from a weapon — it never strikes on its own.
 %%%%
+spellforged servitor
+
+A magical construct woven with a portion of a conjurer's magic and bonded with
+a primitive elemental intelligence summoned from an outer plane. The magic it
+is forged with gives it the capacity to wield some of its creator's destructive
+spells.
+%%%%
 sphinx
 
 A large creature with a woman's head, a lion's body and the wings of a huge

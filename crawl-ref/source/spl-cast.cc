@@ -1670,6 +1670,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_DEATH_CHANNEL:
         return cast_death_channel(powc, god, fail);
 
+    case SPELL_SPELLFORGED_SERVITOR:
+        return cast_spellforged_servitor(powc, god, fail);
+
     case SPELL_SPECTRAL_WEAPON:
         return cast_spectral_weapon(&you, powc, god, fail);
 
