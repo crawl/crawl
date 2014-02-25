@@ -4061,7 +4061,7 @@ enum zap_type
 enum montravel_target_type
 {
     MTRAV_NONE = 0,
-    MTRAV_PLAYER,      // Travelling to reach the player.
+    MTRAV_FOE,         // Travelling to reach its foe.
     MTRAV_PATROL,      // Travelling to reach the patrol point.
     MTRAV_SIREN,       // Sirens travelling towards deep water.
     MTRAV_UNREACHABLE, // Not travelling because target is unreachable.

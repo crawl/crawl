@@ -76,7 +76,9 @@ static void _mark_neighbours_target_unreachable(monster* mon)
             continue;
         }
 
-        if (m->travel_target == MTRAV_NONE)
+        // If the monster is trying to reach the same foe, consider their
+        // foe also unreachable.
+        if (m->travel_target == MTRAV_NONE && m->foe == mon->foe)
             m->travel_target = MTRAV_UNREACHABLE;
     }
 }
@@ -127,25 +129,34 @@ bool target_is_unreachable(monster* mon)
 
 //#define DEBUG_PATHFIND
 
-// The monster is trying to get to the player (MHITYOU).
-// Check whether there's an unobstructed path to the player (in sight!),
+// Check whether there's an unobstructed path to our foe,
 // either by using an existing travel_path or calculating a new one.
 // Returns true if no further handling necessary, else false.
 bool try_pathfind(monster* mon)
 {
-    // Just because we can *see* the player, that doesn't mean
+    // Just because we can *see* our target, that doesn't mean
     // we can actually get there.
     // If no path is found (too far away, perhaps) set a
     // flag, so we don't directly calculate the whole thing again
     // next turn, and even extend that flag to neighbouring
     // monsters of similar movement restrictions.
 
-    bool need_pathfind = !can_go_straight(mon, mon->pos(), PLAYER_POS);
+    const actor* foe = (mon->friendly() && mon->foe == MHITYOU ? &you
+                                                               : mon->get_foe());
+
+    // Trying to pathfind towards nothing in particular; bail out.
+    if (!foe)
+        return false;
+
+    const coord_def targpos = foe->pos();
+
+    bool need_pathfind = !can_go_straight(mon, mon->pos(), targpos);
 
     // Smart monsters that can fire through obstacles won't use
     // pathfinding.
     if (need_pathfind
         && mons_intel(mon) >= I_NORMAL && !mon->friendly()
+        && mon->can_see(foe)
         && mons_has_los_ability(mon->type))
     {
         need_pathfind = false;
@@ -157,14 +168,14 @@ bool try_pathfind(monster* mon)
     if ((!crawl_state.game_is_zotdef()) && need_pathfind
         && mons_intel(mon) >= I_NORMAL && !mon->friendly()
         && mons_has_ranged_attack(mon)
-        && cell_see_cell(mon->pos(), PLAYER_POS, LOS_SOLID_SEE))
+        && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
     {
         need_pathfind = false;
     }
 
     if (!need_pathfind)
     {
-        // The player is easily reachable.
+        // The target is easily reachable.
         // Clear travel path and target, if necessary.
         if (mon->travel_target != MTRAV_PATROL
             && mon->travel_target != MTRAV_NONE)
@@ -187,17 +198,17 @@ bool try_pathfind(monster* mon)
     }
 
 #ifdef DEBUG_PATHFIND
-    mprf("%s: Player out of reach! What now?",
+    mprf("%s: Target out of reach! What now?",
          mon->name(DESC_PLAIN).c_str());
 #endif
     // If we're already on our way, do nothing.
-    if (mon->is_travelling() && mon->travel_target == MTRAV_PLAYER)
+    if (mon->is_travelling() && mon->travel_target == MTRAV_FOE)
     {
         const int len = mon->travel_path.size();
         const coord_def targ = mon->travel_path[len - 1];
 
         // Current target still valid?
-        if (can_go_straight(mon, targ, PLAYER_POS))
+        if (can_go_straight(mon, targ, targpos))
         {
             // Did we reach the target?
             if (mon->pos() == mon->travel_path[0])
@@ -219,8 +230,8 @@ bool try_pathfind(monster* mon)
         }
     }
 
-    // Use pathfinding to find a (new) path to the player.
-    const int dist = grid_distance(mon->pos(), PLAYER_POS);
+    // Use pathfinding to find a (new) path to the target.
+    const int dist = grid_distance(mon->pos(), targpos);
 
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
@@ -241,20 +252,20 @@ bool try_pathfind(monster* mon)
 #ifdef DEBUG_PATHFIND
     mprf("Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
          mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y,
-         PLAYER_POS.x, PLAYER_POS.y, range);
+         targpos.x, targpos.y, range);
 #endif
     monster_pathfind mp;
     if (range > 0)
         mp.set_range(range);
 
-    if (mp.init_pathfind(mon, PLAYER_POS))
+    if (mp.init_pathfind(mon, targpos))
     {
         mon->travel_path = mp.calc_waypoints();
         if (!mon->travel_path.empty())
         {
             // Okay then, we found a path.  Let's use it!
             mon->target = mon->travel_path[0];
-            mon->travel_target = MTRAV_PLAYER;
+            mon->travel_target = MTRAV_FOE;
             return true;
         }
     }
