@@ -1655,7 +1655,7 @@ void Menu::webtiles_update_section_boundaries()
         {
             _webtiles_section_start--;
         }
-        _webtiles_section_end = first_entry + 1;
+        _webtiles_section_end = min(first_entry + 1, (int) items.size());
         while (_webtiles_section_end < (int) items.size()
                && items[_webtiles_section_end]->level != MEL_TITLE)
         {
