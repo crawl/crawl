@@ -2372,7 +2372,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn += 1000 / _mod_speed(100, mons->speed);
         break;
     case ENCH_SHORT_LIVED:
-        cturn = 1200 / _mod_speed(200, mons->speed);
+        cturn = 400 / _mod_speed(200, mons->speed);
         break;
     case ENCH_SLOWLY_DYING:
         // This may be a little too direct but the randomization at the end
