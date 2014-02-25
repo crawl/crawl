@@ -47,6 +47,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
@@ -3501,8 +3502,17 @@ bool swap_places(monster* mons, const coord_def &loc)
 
     if (monster_at(loc))
     {
-        mpr("Something prevents you from swapping places.");
-        return false;
+        if (mons->type == MONS_WANDERING_MUSHROOM
+            && monster_at(loc)->type == MONS_TOADSTOOL)
+        {
+            monster_swaps_places(mons, loc - mons->pos());
+            return true;
+        }
+        else
+        {
+            mpr("Something prevents you from swapping places.");
+            return false;
+        }
     }
 
     mpr("You swap places.");
@@ -3558,6 +3568,13 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 
     // First try: move monster onto your position.
     bool swap = !monster_at(loc) && monster_habitable_grid(mons, grd(loc));
+
+    if (monster_at(loc)
+        && monster_at(loc)->type == MONS_TOADSTOOL
+        && mons->type == MONS_WANDERING_MUSHROOM)
+    {
+        swap = monster_habitable_grid(mons, grd(loc));
+    }
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)

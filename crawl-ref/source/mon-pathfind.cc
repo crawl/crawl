@@ -430,6 +430,13 @@ bool monster_pathfind::traversable(const coord_def& p)
             return true;
         }
 
+        else if (mons && mons->type == MONS_WANDERING_MUSHROOM
+                 && monster_at(p)
+                 && monster_at(p)->type == MONS_TOADSTOOL)
+        {
+            return true;
+        }
+
         return false;
     }
 
