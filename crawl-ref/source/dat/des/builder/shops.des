@@ -317,7 +317,7 @@ SUBST: G : YlG
 :   potion of blood | any weapon ego:draining w:15 | any weapon ego:pain w:5 | \
 :   any weapon ego:vampiricism w:5 | demon blade w:5 | \
 :   demon whip w:5 | demon trident w:5 | wand of draining | scroll of torment | \
-:   staff of death | rod of demonology w:5 | \
+:   staff of death | \
 :   lantern of shadows w:5 | book of necromancy | book of death | \
 :   book of unlife | randbook disc:necromancy w:5 | necronomicon w:1 | \
 :   grand grimoire w:1 | scythe unrand:scythe_of_curses w:1 | \

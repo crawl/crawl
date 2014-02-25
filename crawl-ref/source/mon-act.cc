@@ -1290,11 +1290,10 @@ static bool _handle_rod(monster *mons, bolt &beem)
         }
         break;
 
-    case SPELL_CALL_IMP:
     case SPELL_CAUSE_FEAR:
-    case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_SWARM:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
+    case SPELL_WEAVE_SHADOWS:
         _rod_fired_pre(mons);
         mons_cast(mons, beem, mzap, false);
         _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);

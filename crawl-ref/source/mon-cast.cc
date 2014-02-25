@@ -1158,6 +1158,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_VAMPIRE_SUMMON:
 #endif
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
+    case SPELL_WEAVE_SHADOWS:
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_FAKE_MARA_SUMMON:
     case SPELL_SUMMON_ILLUSION:
@@ -4767,8 +4768,15 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
+    case SPELL_WEAVE_SHADOWS:
+    {
         if (_mons_abjured(mons, monsterNearby))
             return;
+
+        level_id place = (spell_cast == SPELL_SHADOW_CREATURES)
+                         ? level_id::current()
+                         : level_id(BRANCH_DUNGEON,
+                                    min(27, max(1, mons->spell_hd(spell_cast))));
 
         sumcount2 = 1 + random2(mons->spell_hd(spell_cast) / 5 + 1);
 
@@ -4776,9 +4784,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(RANDOM_MOBILE_MONSTER, SAME_ATTITUDE(mons), mons,
-                          5, spell_cast, mons->pos(), mons->foe, 0, god));
+                          5, spell_cast, mons->pos(), mons->foe, 0, god,
+                          MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE, place));
         }
         return;
+    }
 
     case SPELL_WATER_ELEMENTALS:
         if (summon_type == MONS_NO_MONSTER)
