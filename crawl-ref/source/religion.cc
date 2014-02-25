@@ -3364,6 +3364,7 @@ void excommunication(god_type new_god)
         if (you.form == TRAN_MAGMA)
             you.erupt = true;
 
+        mprf(MSGCH_GOD, old_god, "You feel colder.");
         _set_penance(old_god, 50);
         break;
 
@@ -3876,6 +3877,10 @@ void god_pitch(god_type which_god)
         if (env.forest_awoken_until)
             for (monster_iterator mi; mi; ++mi)
                 mi->del_ench(ENCH_AWAKEN_FOREST);
+    }
+    else if (you_worship(GOD_IGNI_IPTHES))
+    {
+        mprf(MSGCH_GOD, "You feel your temperature rising.");
     }
 
     if (you.worshipped[you.religion] < 100)
