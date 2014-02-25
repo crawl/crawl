@@ -347,9 +347,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "transform into a swirling mass of shadows"
     },
     // Igni Ipthes
-    { "reforge weapons into hammers",
-      "Igni Ipthes supports the use of metal body armour.",
-      "permanently firebrand a weapon",
+    { "Igni Ipthes supports the use of metal body armour.",
+      "firebrand a weapon",
+      "",
       "release gusts of air using the Divine Bellows",
       "transform into a being of fiery magma"
     },
@@ -478,9 +478,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "transform into a swirling mass of shadows"
     },
     // Igni Ipthes
-    { "reforge weapons",
-      "Igni Ipthes no longer supports the use of metal body armour.",
+    { "Igni Ipthes no longer supports the use of metal body armour.",
       "firebrand a weapon",
+      "",
       "use the Divine Bellows",
       "transform into a being of fiery magma"
     },

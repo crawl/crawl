@@ -195,9 +195,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_STEP, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_FORM },
     // Igni Ipthes
-    { ABIL_IGNI_REFORGE_WEAPON, ABIL_NON_ABILITY,
-      ABIL_IGNI_FIREBRAND_WEAPON, ABIL_IGNI_DIVINE_BELLOWS,
-      ABIL_NON_ABILITY },
+    { ABIL_NON_ABILITY, ABIL_IGNI_FIREBRAND_WEAPON, ABIL_NON_ABILITY,
+      ABIL_IGNI_DIVINE_BELLOWS, ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -415,10 +414,8 @@ static const ability_def Ability_List[] =
       9, 0, 0, 10, 0, 0, ABFLAG_SKILL_DRAIN },
 
     // Igni Ipthes
-    { ABIL_IGNI_REFORGE_WEAPON, "Reforge Weapon",
-      0, 0, 0, 1, 0, 50, ABFLAG_NONE },
     { ABIL_IGNI_FIREBRAND_WEAPON, "Firebrand Weapon",
-      0, 0, 0, 0, 0, 500, ABFLAG_NONE },
+      0, 0, 0, 1, 0, 100, ABFLAG_NONE },
     { ABIL_IGNI_DIVINE_BELLOWS, "Divine Bellows",
       0, 0, 100, 3, 0, 100, ABFLAG_NONE },
     { ABIL_IGNI_TRAN_MAGMA, "Magma Form",
@@ -888,12 +885,6 @@ static ability_type _fixup_ability(ability_type ability)
     case ABIL_WISP_BLINK:
     case ABIL_EVOKE_BLINK:
         if (you.species == SP_FORMICID)
-            return ABIL_NON_ABILITY;
-        else
-            return ability;
-
-    case ABIL_IGNI_FIREBRAND_WEAPON:
-        if (you.species == SP_FELID)
             return ABIL_NON_ABILITY;
         else
             return ability;
@@ -2940,7 +2931,7 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
-    case ABIL_IGNI_REFORGE_WEAPON:
+    case ABIL_IGNI_FIREBRAND_WEAPON:
     {
         beam.range = LOS_RADIUS;
 
@@ -2949,21 +2940,16 @@ static bool _do_ability(const ability_def& abil)
 
         if (beam.target == you.pos())
         {
-            if (!igni_reforge_player_weapon())
+            if (!igni_firebrand_player_weapon())
                 return false;
         }
         else
         {
-            if (!igni_reforge_monster_weapon(monster_at(beam.target)))
+            if (!igni_firebrand_monster_weapon(monster_at(beam.target)))
                 return false;
         }
         break;
     }
-
-    case ABIL_IGNI_FIREBRAND_WEAPON:
-        if (!igni_firebrand_weapon())
-            return false;
-        break;
 
     case ABIL_IGNI_DIVINE_BELLOWS:
         igni_divine_bellows();
