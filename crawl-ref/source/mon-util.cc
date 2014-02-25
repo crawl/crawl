@@ -5110,3 +5110,10 @@ bool mons_is_player_shadow(const monster* mon)
     return mon->type == MONS_PLAYER_SHADOW
            && mon->mname.empty();
 }
+
+bool mons_antimagic_affected(const monster* mons)
+{
+    return mons->can_use_spells()
+           && !mons->is_priest()
+           && !mons_class_flag(mons->type, M_FAKE_SPELLS);
+}
