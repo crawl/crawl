@@ -50,13 +50,14 @@ Character
   poison.
 * Fast/slow movement mutations no longer occur randomly.
 * Recommended backgrounds and species have been adjusted; in particular
-  species can recommend backgrounds that aren't necessarily recommended by
-  that species and vice versa.
+  species can recommend backgrounds that don't necessarily recommended
+  that species and vice versa (e.g. CK -> Tr may be recommended whereas
+  Tr -> CK is not).
 
 Monsters
 --------
 * Guardian serpents no longer have Teleport Other; instead they get
-  Word of Recall and Blink Allies Encircle.
+  Blink Allies Encircle.
 * Lom Lobon can now cast Tornado.
 * The plain "dragon" is now known as "fire dragon".
 * Dragons, drakes, crabs, and acid blobs no longer flee at low health.
@@ -261,7 +262,6 @@ Items
 * Scrolls are destroyed less frequently by sticky flame.
 * Gold dragon armour, crystal plate armour, and plate armour have had their
   encumbrance ratings reduced (27 -> 25, 24 -> 23, and 19 -> 18 respectively).
-* The Bargain card has been removed.
 * The speed brand now grants 2/3 weapon delay and no damage reduction (was
   1/2 delay and 10% damage reduction for melee weapons).
 * Racial weapons are no more.
@@ -277,6 +277,7 @@ Items
 Cards
 -----
 * The Elixir card now heals over time instead of instantly.
+* The Bargain card has been removed.
 
 Gods
 ----
