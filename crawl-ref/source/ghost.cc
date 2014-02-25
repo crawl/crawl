@@ -504,8 +504,8 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
         u_att_flav = AF_NAPALM;
         break;
 
-    case AF_POISON_NASTY:
-        u_att_flav = AF_POISON_MEDIUM;
+    case AF_POISON_MEDIUM:
+        u_att_flav = AF_POISON_STRONG;
         break;
 
     case AF_DISEASE:
@@ -534,7 +534,7 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
         break;
 
     case GREEN:
-        u_att_flav = AF_POISON_NASTY;
+        u_att_flav = AF_POISON_MEDIUM;
         break;
 
     case CYAN:
@@ -648,8 +648,8 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
     case AF_ACID:
         return MR_RES_ACID;
 
-    case AF_POISON_NASTY:
     case AF_POISON_MEDIUM:
+    case AF_POISON_STRONG:
         return MR_RES_POISON * (very_ugly ? 2 : 1);
 
     case AF_ELEC:

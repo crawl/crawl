@@ -3109,7 +3109,7 @@ brand_type melee_attack::random_chaos_brand()
 attack_flavour melee_attack::random_chaos_attack_flavour()
 {
     attack_flavour flavours[] =
-        {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON_NASTY, AF_VAMPIRIC, AF_DISTORT,
+        {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON_MEDIUM, AF_VAMPIRIC, AF_DISTORT,
          AF_CONFUSE, AF_CHAOS};
     return RANDOM_ELEMENT(flavours);
 }
@@ -4357,17 +4357,14 @@ void melee_attack::announce_hit()
 
 void melee_attack::mons_do_poison()
 {
-    if (attk_flavour == AF_POISON_NASTY
-        || one_chance_in(15 + 5 * (attk_flavour == AF_POISON ? 1 : 0))
+    if (one_chance_in(15 + 5 * (attk_flavour == AF_POISON ? 1 : 0))
         || (damage_done > 1
             && one_chance_in(attk_flavour == AF_POISON ? 4 : 3)))
     {
         int amount = 1;
         bool force = false;
 
-        if (attk_flavour == AF_POISON_NASTY)
-            amount++;
-        else if (attk_flavour == AF_POISON_MEDIUM)
+        if (attk_flavour == AF_POISON_MEDIUM)
             amount += random2(3);
         else if (attk_flavour == AF_POISON_STRONG)
         {
@@ -4488,7 +4485,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_POISON:
-    case AF_POISON_NASTY:
     case AF_POISON_MEDIUM:
     case AF_POISON_STRONG:
         mons_do_poison();

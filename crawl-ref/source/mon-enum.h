@@ -83,7 +83,9 @@ enum attack_flavour
     AF_MUTATE,
     AF_PARALYSE,
     AF_POISON,
+#if TAG_MAJOR_VERSION == 34
     AF_POISON_NASTY,
+#endif
     AF_POISON_MEDIUM,
     AF_POISON_STRONG,
     AF_POISON_STR,
