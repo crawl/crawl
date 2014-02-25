@@ -1,8 +1,8 @@
-Stone Soup 0.14 (up to 0.14-a0-2527-g57e2a1b)
+Stone Soup 0.14 (up to 0.14-a0-2807-g7181bdc)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
-* Four new races: Lava Orcs, Djinn, Formicids, and Vine Stalkers.
-* A new deity: Dithmengos the Shadowed.
+* Two new races: Formicids and Vine Stalkers.
+* A new deity: Dithmenos the Shadowed.
 * Greatly revised monster sets in the Lair branches.
 
 Branches, environment
@@ -24,14 +24,12 @@ Branches, environment
 * Crypt endings now contain some pieces of thematic loot: draining and/or
   pain and/or vampiric weapons, rings of positive energy and amulets of
   warding, one of several unrands, the Necronomicon, or evokers/staves.
+* Easy ice cave portals now appear only in D, Lair, and Orc; hard ice cave
+  portals appear in Elf and rotating Lair branches.
 
 Character
 ---------
 * New races:
-    - Lava Orcs heat up and cool down in response to their surroundings, with
-      their abilities changing as a result;
-    - Djinn draw both health and magic from a shared Essence pool, and have
-      complete immunity to all forms of fire;
     - Formicids possess four strong arms to use large weapons together with
       shields, in addition to strong natural digging abilities and a permanent
       stasis effect.
@@ -43,6 +41,7 @@ Character
       One of these spots is selected at random for landing.
     - It is not possible to jump over giant or flying creatures.
     - Jumping causes exhaustion like berserk (but no slowing).
+* Felids can use wands.
 * The first two levels of the slow healing mutation only affect rates of
   healing when enemies are in sight (half and no healing for those levels
   respectively). Stat regeneration and the third level of the mutation
@@ -50,6 +49,9 @@ Character
 * Venom Mages and Assassins no longer start with knowledge of potions of
   poison.
 * Fast/slow movement mutations no longer occur randomly.
+* Recommended backgrounds and species have been adjusted; in particular
+  species can recommend backgrounds that aren't necessarily recommended by
+  that species and vice versa.
 
 Monsters
 --------
@@ -132,13 +134,17 @@ Monsters
       ice and necromancy.
     - Metal gargoyles are now war gargoyles - fast and with the ability to
       fire metal fragments at targets.
+    - Crystal golems are now crystal guardians - less health, but with the
+      ability to fire crystal bolts that bounce off of all walls and deal
+      either fire or cold damage on a per-bolt basis.
 * New uniques:
     - Asterion, a minotaur of Makhleb who flings Major Destruction and
       can employ Spectral Weapon with his demon weapon;
     - Natasha, a felid ex-familiar with minor spellcasting abilities;
     - Vashnia, leader of a squad of naga sharpshooters with translocational
       ability to match.
-* Moths of suppression, rock worms, and lava fish are no more.
+* Moths of suppression, rock worms, lava fish, lemures, jellyfish, grey rats,
+  spiny worms, giant amoebae and deep dwarf berserkers are no more.
 * Ball lightnings are no longer permanently confused, instead seeking out
   targets like giant spores.
 * Salamanders can now slither across land (like nagas) in addition to
@@ -156,9 +162,20 @@ Spells
 * Resisting an enchantment now displays a message showing how difficult in
   general the target will be to enchant, rather than how well or how poorly
   they fared on that particular resistance roll.
+* New spells:
+    - Summon Lightning Spire (L4 Summoning/Air), which places a lightning
+      spire up to two squares away from the player; it replaces Summon
+      Scorpions in the book of Callings.
+    - Summon Guardian Golem (L4 Summoning/Charms), which creates a golem
+      that protects the player with Injury Bond and occasionally explodes
+      on death; appears in the book of Callings.
+    - Summon Forest (L5 Summoning/Translocations), which summons a dryad
+      and temporarily converts terrain near the player to forest; it
+      is in the Book of the Warp.
 * Sticks to Snakes only works on missiles (arrows and javelins) now.
 * Conjure Ball Lightning has been reduced from level 7 to 6.
 * Bolt of Draining has been reduced from level 6 to 5.
+* Metabolic Englaciation has been reduced from level 6 to 5.
 * Ozocubu's Armour now has an encumbrance cap of 4, rendering it no longer
   usable with mottled dragon armour.
 * Song of Slaying has an increased duration and grants more slaying, but
@@ -176,7 +193,7 @@ Spells
   being a duration.
 * Portal Projectile is now a duration, rather than firing individual
   projectiles.
-* Removed spells: Song of Shielding, Polymorph.
+* Removed spells: Dig, Summon Scorpions, Song of Shielding, Polymorph.
 
 Items
 -----
@@ -190,8 +207,6 @@ Items
 * The jumping ego (available only on boots) gives a jump attack ability
   like that of felids.
 * The reaching brand for whips is no more.
-* Large rocks now crash through monsters / the player, i.e. implicitly have
-  the penetration brand.
 * Enchantment-like effects of chaos projectiles are now irresistible.
 * Spears, daggers, clubs, and hand axes are no longer good for throwing.
     - The artefact "Lehudib's crystal spear" has been removed.
@@ -222,8 +237,11 @@ Items
   the Maces and Flails skill.
 * New unrand: "hat of the High Council" - spellpower at the expense of
   spell success rates.
+* New unrand: "arc blade" - a cutlass which inflicts discharges of static
+  electricity on targets it hits.
+* New unrand: "Spellbinder" - an antimagic demon whip which inflicts miscasts
+  on magic-using targets.
 * The blowgun of the Assassin and Bullseye have been removed.
-* Potions of slowing are no more.
 * Potions with known type that would have no effect can no longer be quaffed
   at all.
 * Potions other than potions of porridge no longer give nutrition.
@@ -231,7 +249,6 @@ Items
 * All caps and wizard hats are now plain "hats".
 * Great maces deal slightly less damage and are much less available than
   before.
-* Potions of restore abilities partially cure skill draining.
 * The last item-targeting scroll and healing potion are automatically
   identified, assuming knowledge that they are item-targeting scrolls and
   healing potions.
@@ -239,11 +256,21 @@ Items
 * Electrocution weapons no longer cause discharges on targets in water.
 * Wearing body armour / rings no longer requires removing cloakes / gloves
   first.
+* Scrolls are destroyed less frequently by sticky flame.
+* Gold dragon armour, crystal plate armour, and plate armour have had their
+  encumbrance ratings reduced (27 -> 25, 24 -> 23, and 19 -> 18 respectively).
+* The Bargain card has been removed.
+* The speed brand now grants 2/3 weapon delay and no damage reduction (was
+  1/2 delay and 10% damage reduction for melee weapons).
+* Racial weapons are no more.
+* The rod of destruction now fires random bolts instead of having a pre-set
+  selection.
 * Renamed items:
   - Sabres are now cutlasses (and the captain's cutlass has been adjusted to
     match);
   - Double swords are now bastard swords;
   - Triple swords are now claymores.
+* Removed items: potions of slowing; rod of warding.
 
 Cards
 -----
@@ -251,7 +278,7 @@ Cards
 
 Gods
 ----
-* A new deity: Dithmengos the Shadowed.
+* A new deity: Dithmenos the Shadowed.
   - A temple god; guaranteed an altar in Temple or somewhere on D:2-9.
   - Accepts kills of most dungeon enemies, particularly those associated
     with fire or light.
@@ -285,6 +312,14 @@ Gods
   of holy word.
 * Nemelex no longer gifts decks of dungeons.
 * Divine wrath is now contingent on XP gain.
+* Okawaru, Trog, Makhleb, Yredelemnul, and Kikubaaqudgha wrath now scales
+  better with player XL.
+* Vehmuet wrath now employs actual conjurations instead of miscasts.
+* Makhleb wrath can now hurl destruction at the player instead of being
+  limited to servant summoning.
+* All skills eventually trainable by divine abilities can be trained
+  immediately on worshipping that god (Invocations for many gods, Evocations
+  for Nemelex, Necromancy for Kiku, and Shields for TSO per Divine Shield).
 
 Interface
 ---------
@@ -297,8 +332,10 @@ Interface
 * You are prompted to continue wearing/unwearing armour when a monster comes
   into view.
 * "pickup_mode = multi|single" is now "pickup_menu = true|false", with true
-  being the default; "pickup_mode = auto:X" is no more.
+  being the default; "pickup_menu_limit" has been introduced to handle
+  the old "auto:X" settings.
 * The WebTiles spectator box sorts names and links online player profiles.
+* New default minimap colours.
 
 Stone Soup 0.13 (20131011)
 --------------------------
