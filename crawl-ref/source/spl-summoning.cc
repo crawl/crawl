@@ -2786,8 +2786,9 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
     }
     targetter_list hitfunc(affected, you.pos());
 
-    if (!yesno("Really unbind your summons while standing next to them?", false,
-              'n'))
+    if (harm_player
+        && !yesno("Really unbind your summons while standing next to them?",
+                  false, 'n'))
     {
         canned_msg(MSG_OK);
         return SPRET_ABORT;
