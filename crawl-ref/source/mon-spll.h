@@ -2238,10 +2238,10 @@
       {
        SPELL_MAJOR_DESTRUCTION,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
+       SPELL_HASTE,
        SPELL_SPECTRAL_WEAPON,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL
+       SPELL_HASTE,
       }
     },
 
