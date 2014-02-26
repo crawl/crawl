@@ -752,6 +752,27 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+spret_type cast_summon_mana_viper(int pow, god_type god, bool fail)
+{
+    fail_check();
+
+    mgen_data viper = mgen_data(MONS_MANA_VIPER, BEH_FRIENDLY, &you,
+                                2, SPELL_SUMMON_MANA_VIPER,
+                                you.pos(), MHITYOU,
+                                MG_AUTOFOE, god);
+    viper.hd = (5 + div_rand_round(pow, 12));
+
+    // Don't scale hp at the same time as their antimagic power
+    viper.hp = hit_points(9, 3, 5);
+
+    if (create_monster(viper))
+        mpr("A mana viper appears with a sibilant hiss.");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+}
+
 // This assumes that the specified monster can go berserk.
 static void _make_mons_berserk_summon(monster* mon)
 {
@@ -3614,6 +3635,7 @@ static const summons_desc summonsdata[] =
     { SPELL_CALL_CANINE_FAMILIAR,       1, 2 },
     { SPELL_SUMMON_ICE_BEAST,           3, 3 },
     { SPELL_SUMMON_HYDRA,               3, 2 },
+    { SPELL_SUMMON_MANA_VIPER,          2, 2 },
     // Demons
     { SPELL_CALL_IMP,                   3, 3 },
     { SPELL_SUMMON_DEMON,               3, 2 },

@@ -1361,6 +1361,12 @@ This spell constructs a temporary lightning spire in a nearby tile. Though it
 can fire bouncing bolts of electricity at the caster's foes, it is completely
 immobile.
 %%%%
+Summon Mana Viper spell
+
+This spell summons a violet-scaled serpent whose bite can swiftly drain the
+magical reserves of nearly any foe. At higher power, the antimagic properties
+of the viper's bite grow even stronger.
+%%%%
 Summon Minor Demon spell
 
 This spell summons between one and three minor (rank 5) demons.
