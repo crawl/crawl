@@ -1141,7 +1141,6 @@ BOOL:     evil
 
 NAME:    lajatang of Order
 OBJ:     OBJ_WEAPONS/WPN_LAJATANG
-TYPE:    tipstaff
 INSCRIP: silver, rMut
 COLOUR:  ETC_SILVER
 PLUS:    7/7
