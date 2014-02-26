@@ -3721,6 +3721,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SUMMON_MANA_VIPER, "Summon Mana Viper",
+     SPTYP_SUMMONING | SPTYP_HEXES,
+     SPFLAG_NONE,
+     6,
+     100,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

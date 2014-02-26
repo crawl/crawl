@@ -1612,6 +1612,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SUMMON_HYDRA:
         return cast_summon_hydra(&you, powc, god, fail);
 
+    case SPELL_SUMMON_MANA_VIPER:
+        return cast_summon_mana_viper(powc, god, fail);
+
     case SPELL_TUKIMAS_DANCE:
         // Temporarily turns a wielded weapon into a dancing weapon.
         return cast_tukimas_dance(powc, god, false, fail);
