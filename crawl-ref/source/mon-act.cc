@@ -19,6 +19,7 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
+#include "evoke.h"
 #include "food.h"
 #include "fight.h"
 #include "fineff.h"
@@ -2453,7 +2454,7 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_WATER_NYMPH)
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
-            if (feat_has_solid_floor(grd(*ai))
+            if (can_flood_feature(grd(*ai))
                 && (coinflip() || *ai == mons->pos()))
             {
                 temp_change_terrain(*ai, DNGN_SHALLOW_WATER, random_range(50, 80),
