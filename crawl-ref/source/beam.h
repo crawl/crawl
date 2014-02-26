@@ -98,6 +98,7 @@ struct bolt
     bool        effect_wanton;         // could we have guessed it would happen?
 
     int         draw_delay;            // delay used when drawing beam.
+    int         explode_delay;         // delay when drawing explosions.
 
     bolt*       special_explosion;     // For exploding with a different
                                        // flavour/damage/etc than the beam

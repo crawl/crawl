@@ -6078,7 +6078,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             }
             update_screen();
 
-            scaled_delay(50);
+            scaled_delay(explode_delay);
         }
     }
 
@@ -6105,7 +6105,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     // Delay after entire explosion has been drawn.
     if (!is_tracer && cells_seen > 0 && show_more)
-        scaled_delay(150);
+        scaled_delay(explode_delay * 3);
 
     return cells_seen > 0;
 }
@@ -6337,7 +6337,8 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
                effect_wanton(false),
-               draw_delay(15), special_explosion(NULL), animate(true),
+               draw_delay(15), explode_delay(50),
+               special_explosion(NULL), animate(true),
                ac_rule(AC_NORMAL),
 #ifdef DEBUG_DIAGNOSTICS
                quiet_debug(false),
