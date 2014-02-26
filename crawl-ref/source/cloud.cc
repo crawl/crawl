@@ -358,6 +358,11 @@ void manage_clouds()
 
         int dissipate = you.time_taken;
 
+        // If a player-created cloud is out of LOS, it dissipated much faster.
+        // it dissipates much faster.
+        if (cloud.source == MID_PLAYER && !you.see_cell(cloud.pos))
+            dissipate *= 4;
+
         // Fire clouds dissipate faster over water,
         // rain and cold clouds dissipate faster over lava.
         if (cloud.type == CLOUD_FIRE && grd(cloud.pos) == DNGN_DEEP_WATER)
