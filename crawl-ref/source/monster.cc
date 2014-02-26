@@ -3618,6 +3618,7 @@ bool monster::is_known_chaotic() const
         || type == MONS_WRETCHED_STAR
         || type == MONS_KILLER_KLOWN // For their random attacks.
         || type == MONS_TIAMAT       // For her colour-changing.
+        || mons_is_demonspawn(type)  // Like player demonspawn
         || mons_class_is_chimeric(type))
     {
         return true;
