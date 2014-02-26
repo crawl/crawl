@@ -3658,6 +3658,13 @@ string item_prefix(const item_def &item, bool temp)
             prefixes.push_back("equipped");
         break;
 
+    case OBJ_BOOKS:
+        if (item.sub_type != BOOK_MANUAL
+            && item.sub_type != BOOK_DESTRUCTION
+            && item.sub_type != NUM_BOOKS)
+            prefixes.push_back("spellbook");
+        break;
+
     default:
         break;
     }

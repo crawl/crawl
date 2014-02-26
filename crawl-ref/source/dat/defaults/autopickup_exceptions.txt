@@ -22,6 +22,9 @@ ae += dangerous_item
 # Exclude items which your god disapproves of.
 ae += forbidden
 
+# Ignore books that you have already seen
+ae += [^n]identified.*spellbook
+
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.
 # Some items may already be excluded as bad_item, e.g. inaccuracy.
