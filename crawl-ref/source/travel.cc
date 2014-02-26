@@ -3011,6 +3011,30 @@ void start_explore(bool grab_items)
     if (!i_feel_safe(true, true))
         return;
 
+    if (you_worship(GOD_FEDHAS))
+    {
+        bool corpse_on_pos = false;
+        for (radius_iterator i(you.pos(), LOS_NO_TRANS); i && !corpse_on_pos; ++i)
+        {
+            for (stack_iterator j(*i); j; ++j)
+            {
+                if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
+                {
+                    corpse_on_pos = true;
+                    break;
+                }
+            }
+        }
+
+         if ((corpse_on_pos
+              && (Options.auto_sacrifice == AS_YES
+                  || Options.auto_sacrifice == AS_BEFORE_EXPLORE)))
+         {
+             pray();
+         }
+
+    }
+
     you.running = (grab_items ? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
 
     if (you.running == RMODE_EXPLORE_GREEDY && god_likes_items(you.religion, true))
