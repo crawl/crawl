@@ -181,14 +181,17 @@ ability to direct and control the destructive might of the storm.
 %%%%
 Igni Ipthes
 
-Igni Ipthes controls the fire beneath the earth, understanding that the element
-is more useful for creation than destruction. As a patron of blacksmiths and
-craftsmen, Igni appreciates those who enchant their equipment, along with those
-who explore the world. Followers gain access to Igni's smithy, providing them
-with a number of metalworking abilities. Additionally, the most pious
-worshipers gain knowledge of magma transformation, granting them immunity
-from the effects of fire. Unlike other gods, Igni's abilities require a payment
-in gold.
+0*: Enchant scrolls never fail.
+
+1*: AC of metal body armour is boosted. Any size character can now wear metal
+    body armour. The deformed body mutation affects AC less.
+
+2*: You can add flame brand to weapons. Monsters wielding flaming weapons will
+    get burned and drop them.
+
+3*: You can push enemies away using divine bellows.
+
+5*: You can turn a weapon into an artefact.
 %%%%
 Zin powers
 
