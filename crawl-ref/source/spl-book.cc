@@ -270,6 +270,7 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_TEMPESTS:
     case BOOK_DEATH:
+    case BOOK_SUMMONINGS:
         return 11;
 
     case BOOK_BURGLARY:
@@ -281,9 +282,6 @@ int book_rarity(uint8_t which_book)
     case BOOK_WARP:
     case BOOK_DRAGON:
         return 15;
-
-    case BOOK_SUMMONINGS:
-        return 18;
 
     case BOOK_ANNIHILATIONS:
     case BOOK_GRAND_GRIMOIRE:
