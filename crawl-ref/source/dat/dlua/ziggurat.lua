@@ -412,8 +412,7 @@ local function ziggurat_create_monsters(p, mfn)
 end
 
 local function ziggurat_create_loot_at(c)
-  -- Basically, loot grows linearly with depth. However, the entry fee
-  -- affects the loot randomly (separatedly on each stage).
+  -- Basically, loot grows linearly with depth.
   local depth = you.depth()
   local nloot = depth
   local nloot = depth + crawl.random2(math.floor(nloot * 0.5))
