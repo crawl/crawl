@@ -245,6 +245,7 @@ public:
     bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
     map<coord_def, aff_type> zapped;
+    FixedVector< map<coord_def, aff_type>, LOS_RADIUS + 1 > sweep;
 private:
     int range2;
 };
