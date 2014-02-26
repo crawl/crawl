@@ -4637,7 +4637,8 @@ void mon_nearby_ability(monster* mons)
         break;
 
     case MONS_GOLDEN_EYE:
-        if (_eyeball_will_use_ability(mons))
+        if (_eyeball_will_use_ability(mons)
+            && mons->see_cell_no_trans(foe->pos()))
         {
             const bool can_see = you.can_see(mons);
             if (can_see && you.can_see(foe))
@@ -4673,7 +4674,8 @@ void mon_nearby_ability(monster* mons)
         break;
 
     case MONS_GIANT_EYEBALL:
-        if (_eyeball_will_use_ability(mons))
+        if (_eyeball_will_use_ability(mons)
+            && mons->see_cell_no_trans(foe->pos()))
         {
             const bool can_see = you.can_see(mons);
             if (can_see && you.can_see(foe))
@@ -4692,7 +4694,9 @@ void mon_nearby_ability(monster* mons)
 
     case MONS_EYE_OF_DRAINING:
     case MONS_GHOST_MOTH:
-        if (_eyeball_will_use_ability(mons) && foe->is_player())
+        if (_eyeball_will_use_ability(mons)
+            && mons->see_cell_no_trans(foe->pos())
+            && foe->is_player())
         {
             if (you.can_see(mons))
                 simple_monster_message(mons, " stares at you.");

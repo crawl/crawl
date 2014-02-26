@@ -2219,6 +2219,7 @@ WEIGHT:  3
 MONS:    generate_awake giant eyeball, eye of devastation, giant orange brain
 MONS:    generate_awake golden eye, slime creature, brown ooze
 KFEAT:   > = known shaft trap
+KFEAT:   n = iron_grate
 KMASK:   ' = !no_monster_gen
 KMASK:   ' = !no_item_gen
 SHUFFLE: {[(

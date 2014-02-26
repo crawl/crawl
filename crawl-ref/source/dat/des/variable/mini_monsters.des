@@ -3085,6 +3085,7 @@ MONS:   golden eye, eye of draining, giant eyeball
 MONS:   eye of devastation, great orb of eyes / shining eye w:5
 NSUBST: 5 = 2:5 / *:4 5:15
 KPROP:  13' = no_rtele_into
+KFEAT:  m = iron_grate
 : if you.branch() == "Abyss" then
 SUBST:  c = c:4 v:1 b:1
 : end
