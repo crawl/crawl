@@ -562,8 +562,12 @@ string manual_skill_names(bool short_text)
     FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
     for (;iter!=you.inv.end(); ++iter)
     {
-        if (iter->base_type != OBJ_BOOKS || iter->sub_type != BOOK_MANUAL)
+        if (iter->base_type != OBJ_BOOKS
+            || iter->sub_type != BOOK_MANUAL
+            || is_useless_item(*iter))
+        {
             continue;
+        }
 
         skills.insert(static_cast<skill_type>(iter->plus));
     }
