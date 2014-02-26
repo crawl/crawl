@@ -1008,11 +1008,6 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _ORDER_equip(item_def *item, bool *show_msgs, bool unmeld)
-{
-    _equip_mpr(show_msgs, "You feel Zin shielding your body from chaos.");
-}
-
 static void _ORDER_melee_effects(item_def* item, actor* attacker,
                                          actor* defender, bool mondied, int dam)
 {
