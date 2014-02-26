@@ -622,6 +622,12 @@ weapon with a brand of flaming.
 Monsters who hold such weapons will be burned by the fire of Igni, thus, it
 is tactically useful to use this ability on enemy weapons.
 %%%%
+Artefactize Weapon ability
+
+This ability will transform your weapon into an artefact, adding magical
+properties to it in the process. You will be given some choices over what
+properties the artefact gains.
+%%%%
 Magma Form ability
 
 Gain the power of the volcano by transforming your flesh into magma. This

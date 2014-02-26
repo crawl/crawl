@@ -186,6 +186,7 @@ enum ability_type
     ABIL_DITHMENOS_SHADOW_FORM,
     // Igni Ipthes
     ABIL_IGNI_FIREBRAND_WEAPON = 1180,
+    ABIL_IGNI_ARTEFACTIZE_WEAPON,
     ABIL_IGNI_DIVINE_BELLOWS,
     ABIL_IGNI_TRAN_MAGMA,
 
@@ -327,6 +328,7 @@ enum attribute_type
     ATTR_GOD_WRATH_XP,         // How much XP before our next god wrath check?
     ATTR_GOD_WRATH_COUNT,      // Number of stored retributions
     ATTR_ERUPT_DAMAGE,         // Amount of damage taken in magma form
+    ATTR_IGNI_ARTEFACTS_MADE,  // Bit flags of which artefacts were made.
     NUM_ATTRIBUTES
 };
 

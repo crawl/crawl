@@ -231,6 +231,9 @@ const int AGILITY_BONUS = 5;
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 150
 
+// Number of times players can use Igni's artefactize ability
+#define MAX_IGNI_ARTEFACTS 5
+
 // Haste/slow boost.
 #define haste_mul(x) div_rand_round((x) * 3, 2)
 #define haste_div(x) div_rand_round((x) * 2, 3)

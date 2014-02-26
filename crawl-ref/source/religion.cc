@@ -352,7 +352,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "firebrand a weapon",
       "",
       "release gusts of air using the Divine Bellows",
-      "transform into a being of fiery magma"
+      "artefactize your weapon."
     },
 };
 
@@ -483,7 +483,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "firebrand a weapon",
       "",
       "use the Divine Bellows",
-      "transform into a being of fiery magma"
+      "artefactize your weapon."
     },
 };
 
@@ -2964,11 +2964,6 @@ static void _gain_piety_point()
 
                     you.one_time_ability_used.set(you.religion);
                     break;
-                case GOD_IGNI_IPTHES:
-                    if (you.species == SP_FELID)
-                        break;
-                    simple_god_message(" will now artefactize your weapon at an altar... once.");
-                    break;
                 default:
                     break;
             }
@@ -3039,11 +3034,6 @@ void lose_piety(int pgn)
             {
                 simple_god_message(
                     " is no longer ready to corrupt your weapon.");
-            }
-            else if (you_worship(GOD_IGNI_IPTHES) && you.species != SP_FELID)
-            {
-                simple_god_message(
-                    " is no longer ready to artefactize your weapon.");
             }
         }
 

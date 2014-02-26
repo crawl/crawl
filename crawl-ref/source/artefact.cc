@@ -1930,10 +1930,21 @@ struct _igni_artp_def
     short value;
 };
 
-static void _igni_add_prop(CrawlVector &rap, const _igni_artp_def& def)
+static void _igni_add_prop(item_def& wpn, const _igni_artp_def& def)
 {
-    short current_val = rap[def.prop];
-    rap[def.prop] = static_cast<short>(current_val + def.value);
+    if (def.prop == ARTP_DAMAGE)
+    {
+        if (wpn.sub_type != WPN_BLOWGUN)
+            wpn.plus2 += def.value;
+        else
+            wpn.plus += def.value;
+    }
+    else
+    {
+        CrawlVector &rap = wpn.props[ARTEFACT_PROPS_KEY].get_vector();
+        short current_val = rap[def.prop];
+        rap[def.prop] = static_cast<short>(current_val + def.value);
+    }
 }
 
 // Generates a list of artefacts by copying wpn and adding some randart
@@ -1942,7 +1953,6 @@ static void _igni_add_prop(CrawlVector &rap, const _igni_artp_def& def)
 // The function returns an empty vector if something went wrong.
 vector<item_def> make_igni_randarts(const item_def& wpn)
 {
-    const int num_choices = 5;
     vector<item_def> choices;
 
     if (wpn.base_type != OBJ_WEAPONS
@@ -1966,8 +1976,8 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_COLD, 1 },
         { ARTP_NEGATIVE_ENERGY, 1 },
         { ARTP_ELECTRICITY, 1 },
-        { ARTP_AC, 5 },
-        { ARTP_EVASION, 5 },
+        { ARTP_AC, 4 },
+        { ARTP_EVASION, 4 },
         { ARTP_INVISIBLE, 1 },
         { ARTP_MAGIC, 100 },
     };
@@ -1988,6 +1998,7 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_AC, 2 },
         { ARTP_EVASION, 2 },
         { ARTP_EYESIGHT, 1 },
+        { ARTP_DAMAGE, 3 }
     };
     const int tier2_n = sizeof(tier2) / sizeof(_igni_artp_def);
 
@@ -2002,6 +2013,7 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_STRENGTH, 6 },
         { ARTP_INTELLIGENCE, 6 },
         { ARTP_DEXTERITY, 6 },
+        { ARTP_DAMAGE, 6 }
     };
     const int tier0_n = sizeof(tier0) / sizeof(_igni_artp_def);
 
@@ -2009,8 +2021,8 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
     {
         { ARTP_INTELLIGENCE, -6 },
         { ARTP_DEXTERITY, -6 },
-        { ARTP_AC, -5 },
-        { ARTP_EVASION, -5 },
+        { ARTP_AC, -4 },
+        { ARTP_EVASION, -4 },
         { ARTP_FIRE, -1 },
         { ARTP_COLD, -1 },
         { ARTP_ANGRY, 1 },
@@ -2019,25 +2031,31 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
     };
     const int bad_tier_n = sizeof(bad_tier) / sizeof(_igni_artp_def);
 
-    ASSERT(num_choices <= tier0_n);
-    ASSERT(num_choices <= tier1_n);
-    ASSERT(num_choices <= tier2_n);
-    ASSERT(num_choices <= bad_tier_n);
+    ASSERT(MAX_IGNI_ARTEFACTS <= tier0_n);
+    ASSERT(MAX_IGNI_ARTEFACTS <= tier1_n);
+    ASSERT(MAX_IGNI_ARTEFACTS <= tier2_n);
+    ASSERT(MAX_IGNI_ARTEFACTS <= bad_tier_n);
 
     reproducible_rng rng(you.birth_time);
     std::random_shuffle(tier1, tier1 + tier1_n, rng);
     std::random_shuffle(tier2, tier2 + tier2_n, rng);
     std::random_shuffle(bad_tier, bad_tier + bad_tier_n, rng);
 
-    for (int i = 0; i != num_choices; ++i)
+    for (int i = 0; i != MAX_IGNI_ARTEFACTS; ++i)
     {
+        int flag = 1 << i;
+        if (you.attribute[ATTR_IGNI_ARTEFACTS_MADE] & flag)
+            continue;
+
         choices.push_back(wpn);
         item_def& choice = choices.back();
 
-        if (choice.plus < 9)
-            choice.plus = 9;
-        if (choice.plus2 < 9 && choice.sub_type != WPN_BLOWGUN)
-            choice.plus2 = 9;
+        // This hack is used to pass the flag back to the caller.
+        choice.slot = flag;
+
+        choice.plus += rng(3) - rng(2);
+        if (choice.sub_type != WPN_BLOWGUN)
+            choice.plus2 += rng(3) - rng(2);
 
         _artefact_setup_prop_vectors(choice);
         choice.flags |= ISFLAG_RANDART;
@@ -2048,13 +2066,13 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
 
         if (rng(2))
         {
-            _igni_add_prop(rap, tier1[i]);
-            _igni_add_prop(rap, tier2[i]);
+            _igni_add_prop(choice, tier1[i]);
+            _igni_add_prop(choice, tier2[i]);
         }
         else
         {
-            _igni_add_prop(rap, tier0[i]);
-            _igni_add_prop(rap, bad_tier[i]);
+            _igni_add_prop(choice, tier0[i]);
+            _igni_add_prop(choice, bad_tier[i]);
         }
 
         // get true artefact name
