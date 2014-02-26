@@ -6087,7 +6087,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             const int dist = (xpos-basex)*(xpos-basex)
                              + (ypos-basey)*(ypos-basey);
 
-            if (grd[xpos][ypos] == stair_to_find
+            if (orig_terrain(coord_def(xpos, ypos)) == stair_to_find
                 && !feature_mimic_at(coord_def(xpos, ypos)))
             {
                 found++;
@@ -6131,7 +6131,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             const int ypos  = (basey + ydiff + GYM) % GYM;
 
             bool good_stair;
-            const int looking_at = grd[xpos][ypos];
+            const int looking_at = orig_terrain(coord_def(xpos, ypos));
 
             if (stair_to_find <= DNGN_ESCAPE_HATCH_DOWN)
             {
