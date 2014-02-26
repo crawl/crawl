@@ -176,6 +176,7 @@
     Sigurd
     Edgar Simo
     Alex Smith
+    Keanan Smith
     Solf
     Michael Spang
     Jan 'heftig' Steffens
