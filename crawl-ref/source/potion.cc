@@ -42,18 +42,14 @@
  *
  * @param pot_eff       The potion type.
  * @param pow           The power of the effect. 40 for actual potions.
- * @param drank_it      Whether the player actually quaffed (potions and fountains).
  * @param was_known     Whether the potion was already identified.
- * @param from_fountain Is this from a fountain?
  *
  * @return If the potion was used.
  */
-bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_known,
-                   bool from_fountain)
+bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_known)
 {
     pow = min(pow, 150);
 
-    bool drank_it = potion || from_fountain;
     int factor = (you.species == SP_VAMPIRE
                   && you.hunger_state < HS_SATIATED
                   && potion ? 2 : 1);
@@ -295,8 +291,6 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
                 amount = 3 + random2avg(13, 2);
                 msg = "a potion of strong poison";
             }
-            if (from_fountain)
-                msg = "a sparkling fountain";
             poison_player(amount, "", msg);
             xom_is_stimulated(100 / xom_factor);
         }
@@ -362,7 +356,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         else
             you.increase_duration(DUR_INVIS, random2(pow), 100);
 
-        if (drank_it)
+        if (potion)
             you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
 
         break;
@@ -381,7 +375,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_DEGENERATION:
-        if (drank_it)
+        if (potion)
             mpr("There was something very wrong with that liquid!");
 
         if (lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)) / factor, false,
@@ -427,7 +421,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         // Allow repairing rot, disallow going through Death's Door.
 #if TAG_MAJOR_VERSION == 34
         if (you.species == SP_DJINNI)
-            return potion_effect(POT_HEAL_WOUNDS, pow, potion, was_known, from_fountain);
+            return potion_effect(POT_HEAL_WOUNDS, pow, potion, was_known);
 #endif
 
         inc_mp(10 + random2avg(28, 3));
@@ -451,7 +445,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     }
 
     case POT_BERSERK_RAGE:
-        if (potion && was_known && !you.can_go_berserk(true, drank_it, false))
+        if (potion && was_known && !you.can_go_berserk(true, potion, false))
             return false;
 
         if (you.species == SP_VAMPIRE && you.hunger_state <= HS_SATIATED)
