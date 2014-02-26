@@ -678,6 +678,30 @@ void update_vision_range()
     set_los_radius(you.current_vision);
 }
 
+// Returns number of sizes off (0 if fitting).
+int player_fit_armour_size(const item_def &item, bool base)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+
+    if (you_worship(GOD_IGNI_IPTHES)
+        && you.piety >= piety_breakpoint(0)
+        && get_armour_slot(item) == EQ_BODY_ARMOUR
+        && body_armour_is_metal(item))
+    {
+        return 0;
+    }
+
+    return fit_armour_size(item, you.body_size(PSIZE_TORSO, base));
+}
+
+// Returns true if armour fits size (shape needs additional verification).
+bool player_check_armour_size(const item_def &item, bool base)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+
+    return player_fit_armour_size(item, base) == 0;
+}
+
 // Checks whether the player's current species can
 // use (usually wear) a given piece of equipment.
 // Note that EQ_BODY_ARMOUR and EQ_HELMET only check
@@ -836,7 +860,7 @@ bool you_tran_can_wear(const item_def &item)
         else if (item.sub_type == ARM_CENTAUR_BARDING)
             return you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS);
 
-        if (fit_armour_size(item, you.body_size()) != 0)
+        if (player_fit_armour_size(item) != 0)
             return false;
 
         return you_tran_can_wear(get_armour_slot(item), true);
@@ -6543,7 +6567,9 @@ int player::armour_class() const
         // The deformed don't fit into body armour very well.
         // (This includes nagas and centaurs.)
         if (eq == EQ_BODY_ARMOUR && (player_mutation_level(MUT_DEFORMED)
-                                     || player_mutation_level(MUT_PSEUDOPODS)))
+                                     || player_mutation_level(MUT_PSEUDOPODS))
+            && !(you_worship(GOD_IGNI_IPTHES)
+                 && you.piety >= piety_breakpoint(0)))
         {
             AC -= ac_value / 2;
         }

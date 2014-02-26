@@ -13,4 +13,6 @@ bool unmeld_slot(equipment_type slot, bool msg=true);
 
 bool unwield_item(bool showMsgs = true);
 
+void unequip_wrong_size_armour();
+
 #endif

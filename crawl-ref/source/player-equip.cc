@@ -1618,3 +1618,16 @@ bool unwield_item(bool showMsgs)
 
     return true;
 }
+
+// If you're wearing an armour that doesn't fit because you're the wrong size,
+// then this function will unequip it.
+void unequip_wrong_size_armour()
+{
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; ++i)
+    {
+        const equipment_type eq = static_cast<equipment_type>(i);
+        item_def* arm = you.slot_item(eq, false);
+        if (arm && !player_check_armour_size(*arm))
+            remove_one_equip(eq, false, false);
+    }
+}
