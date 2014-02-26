@@ -286,7 +286,7 @@ MAP
 ENDMAP
 
 NAME:   uniq_rupert
-DEPTH:  D:14-16, Lair:3-, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3, Slime:1-2
+DEPTH:  D:14-16, Lair:3-, Elf, Swamp, Snake, Shoals, Spider, Vaults:1-3
 : place_unique(_G, "Rupert")
 
 NAME:   uniq_saint_roka
