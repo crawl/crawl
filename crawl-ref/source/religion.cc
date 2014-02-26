@@ -1245,9 +1245,7 @@ static void _inc_penance(god_type god, int val)
             invalidate_agrid();
         }
         else if (god == GOD_IGNI_IPTHES)
-        {
             you.redraw_armour_class = true;
-        }
 
         if (you_worship(god))
         {
@@ -3882,9 +3880,7 @@ void god_pitch(god_type which_god)
                 mi->del_ench(ENCH_AWAKEN_FOREST);
     }
     else if (you_worship(GOD_IGNI_IPTHES))
-    {
         mprf(MSGCH_GOD, "You feel your temperature rising.");
-    }
 
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
