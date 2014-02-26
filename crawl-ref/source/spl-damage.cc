@@ -34,11 +34,13 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-stuff.h"
+#include "options.h"
 #include "ouch.h"
 #include "player-equip.h"
 #include "shout.h"
 #include "spl-summoning.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "target.h"
 #include "terrain.h"
@@ -2441,7 +2443,13 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.draw(p->first);
     }
 
-    delay(200);
+    int flash_delay = 200;
+    if (crawl_state.game_is_arena())
+    {
+        flash_delay *= Options.arena_delay;
+        flash_delay /= 600;
+    }
+    delay(flash_delay);
 
     beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
 
