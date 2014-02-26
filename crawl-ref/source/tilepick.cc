@@ -1981,6 +1981,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // statues and statue-like things (also '8')
     case MONS_PILLAR_OF_SALT:
         return TILEP_MONS_PILLAR_OF_SALT;
+    case MONS_BLOCK_OF_ICE:
+        return _mon_mod(TILEP_MONS_BLOCK_OF_ICE, tile_num_prop);
     case MONS_TRAINING_DUMMY:
         return TILEP_MONS_TRAINING_DUMMY;
     case MONS_ICE_STATUE:
@@ -5801,7 +5803,8 @@ void tile_init_props(monster* mon)
         && mon->type != MONS_FIRE_VORTEX && mon->type != MONS_TWISTER
         && mon->type != MONS_SPATIAL_VORTEX && mon->type != MONS_SPATIAL_MAELSTROM
         && mon->type != MONS_ABOMINATION_SMALL
-        && mon->type != MONS_ABOMINATION_LARGE)
+        && mon->type != MONS_ABOMINATION_LARGE
+        && mon->type != MONS_BLOCK_OF_ICE)
     {
         return;
     }
