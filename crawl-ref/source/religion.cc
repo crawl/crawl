@@ -63,6 +63,7 @@
 #include "options.h"
 #include "ouch.h"
 #include "player.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "shopping.h"
 #include "skills.h"
@@ -373,7 +374,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon nature's wrath in a wide area around you"
     },
     // Igni Ipthes
-    { "Igni Ipthes supports the use of metal body armour.",
+    { "Igni Ipthes enhances the fit of metal body armour.",
       "firebrand a weapon",
       "",
       "release gusts of air using the Divine Bellows",
@@ -518,7 +519,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon nature's wrath in a wide area around you"
     },
     // Igni Ipthes
-    { "Igni Ipthes no longer supports the use of metal body armour.",
+    { "Igni Ipthes no longer enhances the fit of metal body armour.",
       "firebrand a weapon",
       "",
       "use the Divine Bellows",
@@ -3093,10 +3094,22 @@ void lose_piety(int pgn)
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(HINT_GOD_DISPLEASED);
 
-    if (you_worship(GOD_BEOGH) || you_worship(GOD_IGNI_IPTHES))
+    if (you_worship(GOD_BEOGH))
     {
         // Every piety level change also affects AC from orcish/metal gear.
         you.redraw_armour_class = true;
+    }
+
+    if (you_worship(GOD_IGNI_IPTHES))
+    {
+        // Every piety level change also affects AC from metal armour.
+        you.redraw_armour_class = true;
+        // In case Igni stops refitting your armour.
+        if (old_piety >= piety_breakpoint(0)
+            && you.piety < piety_breakpoint(0))
+        {
+            unequip_wrong_size_armour();
+        }
     }
 
     if (you_worship(GOD_CHEIBRIADOS)

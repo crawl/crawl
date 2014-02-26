@@ -415,6 +415,9 @@ static void _unmeld_equipment(const set<equipment_type>& melded)
 
         _unmeld_equipment_type(e);
     }
+
+    // In case armour size changed while transformed
+    unequip_wrong_size_armour();
 }
 
 void unmeld_one_equip(equipment_type eq)

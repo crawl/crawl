@@ -1035,6 +1035,17 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     return false;
 }
 
+bool body_armour_is_metal(const item_def &item)
+{
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    ASSERT(get_armour_slot(item) == EQ_BODY_ARMOUR);
+
+    return item.sub_type == ARM_RING_MAIL
+           || item.sub_type == ARM_SCALE_MAIL
+           || item.sub_type == ARM_CHAIN_MAIL
+           || item.sub_type == ARM_PLATE_ARMOUR;
+}
+
 equipment_type get_armour_slot(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);

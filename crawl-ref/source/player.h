@@ -943,6 +943,9 @@ monster_type player_mons(bool transform = true);
 void update_player_symbol();
 void update_vision_range();
 
+int  player_fit_armour_size(const item_def &item, bool base = false);
+bool player_check_armour_size(const item_def &item, bool base = false);
+
 bool you_can_wear(int eq, bool special_armour = false);
 bool player_has_feet(bool temp = true);
 bool player_wearing_slot(int eq);
