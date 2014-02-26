@@ -75,6 +75,8 @@ void do_dragon_call(int time);
 
 spret_type cast_spellforged_servitor(int pow, god_type god, bool fail);
 
+spret_type cast_forceful_dismissal(int pow, bool fail);
+
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     actor *as = NULL, string nas = "",

@@ -14,12 +14,14 @@
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "env.h"
+#include "target.h"
 #include "fprop.h"
 #include "godconduct.h"
 #include "goditem.h"
@@ -2718,6 +2720,90 @@ void do_aura_of_abjuration(int delay)
     const int pow = you.props["abj_aura_pow"].get_int() * delay / 10;
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
         _abjuration(pow / 2, *mi);
+}
+
+spret_type cast_forceful_dismissal(int pow, bool fail)
+{
+    fail_check();
+    vector<pair<coord_def, int> > explode;
+
+    // Gather the list of summons to be dismissed
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->friendly() && mi->is_summoned() && mi->summoner == you.mid
+            && you.see_cell_no_trans(mi->pos()))
+        {
+            explode.push_back(make_pair(mi->pos(), mi->hit_dice));
+        }
+    }
+
+    // Abort if there are no valid summons nearby
+    if (!explode.size())
+    {
+        mpr("You have no nearby summons to unbind.");
+        return SPRET_ABORT;
+    }
+
+    // Now prompt if we would harm something (other than those creatures
+    // that are about to disappear anyway)
+    vector<coord_def> affected;
+    bool harm_player = false;
+    for (unsigned int i = 0; i < explode.size(); ++i)
+    {
+        for (adjacent_iterator ai(explode[i].first, false); ai; ++ai)
+        {
+            monster* mon = monster_at(*ai);
+            if (mon && mon->friendly()
+                 && !(mon->is_summoned() && mon->summoner == you.mid))
+            {
+                affected.push_back(*ai);
+            }
+
+            if (*ai == you.pos())
+                harm_player = true;
+        }
+    }
+    targetter_list hitfunc(affected, you.pos());
+
+    if (!yesno("Really unbind your summons while standing next to them?", false,
+              'n'))
+    {
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
+
+    if (stop_attack_prompt(hitfunc, "harm"))
+        return SPRET_ABORT;
+
+    // Dismiss the summons
+    for (unsigned int i = 0; i < explode.size(); ++i)
+    {
+        monster_die(monster_at(explode[i].first), KILL_DISMISSED, NON_MONSTER,
+                    true);
+    }
+
+    // Now do the explosions
+    mpr("You violently release the magic binding your summons!");
+    for (unsigned int i = 0; i < explode.size(); ++i)
+    {
+        bolt explosion;
+        explosion.source = explode[i].first;
+        explosion.target = explode[i].first;
+        explosion.name = "magical backlash";
+        explosion.is_explosion = true;
+        explosion.auto_hit = true;
+        explosion.damage = dice_def(max(1, div_rand_round(explode[i].second, 4)),
+                                    10 + pow / 8);
+        explosion.flavour = BEAM_MMISSILE;
+        explosion.colour  = ETC_MAGIC;
+        explosion.ex_size = 1;
+        explosion.draw_delay = 1;
+        explosion.explode_delay = 20;
+
+        explosion.explode(true, false);
+    }
+
+    return SPRET_SUCCESS;
 }
 
 monster* find_battlesphere(const actor* agent)

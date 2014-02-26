@@ -265,4 +265,14 @@ private:
     int range2;
 };
 
+class targetter_list : public targetter
+{
+public:
+    targetter_list(vector<coord_def> targets, coord_def center);
+    aff_type is_affected(coord_def loc);
+    bool valid_aim(coord_def a);
+private:
+    vector<coord_def> targets;
+};
+
 #endif

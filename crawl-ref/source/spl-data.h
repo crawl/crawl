@@ -3708,6 +3708,19 @@ struct spell_desc
 },
 
 {
+    SPELL_FORCEFUL_DISMISSAL, "Forceful Dismissal",
+     SPTYP_SUMMONING,
+     SPFLAG_AREA,
+     6,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

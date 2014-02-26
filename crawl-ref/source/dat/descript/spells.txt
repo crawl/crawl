@@ -523,6 +523,12 @@ Force Lance spell
 This spell fires a shaft of concussive force which can send its target hurtling
 backwards if the impact is not nullified by their defenses.
 %%%%
+Forceful Dismissal spell
+
+This spell violently unbinds the magic which keep's the caster's summoned
+creatures in this world, engulfing anything near them in a maelstrom of magical
+force.
+%%%%
 Forceful Invitation spell
 
 This ability summons some of the lesser threats from one of the Lair of
