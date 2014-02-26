@@ -203,8 +203,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_QAZLAL_ELEMENTAL_FORCE,
       ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
     // Igni Ipthes
-    { ABIL_NON_ABILITY, ABIL_IGNI_FIREBRAND_WEAPON, ABIL_NON_ABILITY,
-      ABIL_IGNI_DIVINE_BELLOWS, ABIL_NON_ABILITY },
+    { ABIL_NON_ABILITY, ABIL_IGNI_FIREBRAND_WEAPON, ABIL_IGNI_DIVINE_BELLOWS,
+      ABIL_NON_ABILITY, ABIL_IGNI_ARTEFACTIZE_WEAPON },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -423,9 +423,9 @@ static const ability_def Ability_List[] =
 
     // Igni Ipthes
     { ABIL_IGNI_FIREBRAND_WEAPON, "Firebrand Weapon",
-      0, 0, 0, 1, 0, 100, ABFLAG_NONE },
+      0, 0, 100, 1, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_DIVINE_BELLOWS, "Divine Bellows",
-      0, 0, 100, 3, 0, 100, ABFLAG_NONE },
+      0, 0, 100, 3, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_ARTEFACTIZE_WEAPON, "Artefactize Weapon",
       0, 0, 0, 6, 0, 0, ABFLAG_NONE },
 

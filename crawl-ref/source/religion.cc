@@ -376,9 +376,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Igni Ipthes
     { "Igni Ipthes enhances the fit of metal body armour.",
       "firebrand a weapon",
-      "",
       "release gusts of air using the Divine Bellows",
-      "artefactize your weapon."
+      "",
+      "artefactize your weapon"
     },
 };
 
@@ -521,9 +521,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Igni Ipthes
     { "Igni Ipthes no longer enhances the fit of metal body armour.",
       "firebrand a weapon",
-      "",
       "use the Divine Bellows",
-      "artefactize your weapon."
+      "",
+      "artefactize your weapon"
     },
 };
 
