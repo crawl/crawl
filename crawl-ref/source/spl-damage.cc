@@ -2989,7 +2989,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-    int zap_delay = 50;
+    int zap_delay = 25;
     if (crawl_state.game_is_arena())
     {
         zap_delay *= Options.arena_delay;
