@@ -1198,6 +1198,8 @@ bool targetter_cone::set_aim(coord_def a)
 {
     aim = a;
     zapped.clear();
+    for (int i = 0; i < LOS_RADIUS + 1; i++)
+        sweep[i].clear();
 
     if (a == origin)
         return false;
@@ -1220,7 +1222,10 @@ bool targetter_cone::set_aim(coord_def a)
         if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
             hit = false;
         if (hit && p != origin && zapped[p] <= 0)
+        {
             zapped[p] = AFF_YES;
+            sweep[isqrt((origin - p).abs())][p] = AFF_YES;
+        }
         ray.advance();
     }
 
@@ -1231,7 +1236,10 @@ bool targetter_cone::set_aim(coord_def a)
         if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
             hit = false;
         if (hit && p != origin && zapped[p] <= 0)
+        {
             zapped[p] = AFF_YES;
+            sweep[isqrt((origin - p).abs())][p] = AFF_YES;
+        }
         ray.advance();
     }
 
@@ -1255,11 +1263,13 @@ bool targetter_cone::set_aim(coord_def a)
                     && cell_see_cell(origin, p, LOS_NO_TRANS))
                 {
                     zapped[p] = AFF_YES;
+                    sweep[isqrt((origin - p).abs())][p] = AFF_YES;
                 }
             }
         }
 
     zapped[origin] = AFF_NO;
+    sweep[0].clear();
 
     return true;
 }

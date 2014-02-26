@@ -36,6 +36,7 @@
 #include "mon-stuff.h"
 #include "options.h"
 #include "ouch.h"
+#include "options.h"
 #include "player-equip.h"
 #include "shout.h"
 #include "spl-summoning.h"
@@ -2959,7 +2960,8 @@ void end_searing_ray()
 
 spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 {
-    targetter_cone hitfunc(caster, spell_range(SPELL_GLACIATE, pow));
+    const int range = spell_range(SPELL_GLACIATE, pow);
+    targetter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
     int range2 = 0;
 
@@ -2970,13 +2972,6 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
     }
 
     fail_check();
-
-    if (you.can_see(caster) || caster->is_player())
-    {
-        mprf("%s %s a mighty blast of ice!",
-             caster->name(DESC_THE).c_str(),
-             caster->conj_verb("conjure").c_str());
-    }
 
     bolt beam;
     beam.name              = "great icy blast";
@@ -2994,39 +2989,63 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    int zap_delay = 50;
+    if (crawl_state.game_is_arena())
     {
-        if (p->second <= 0)
-            continue;
-
-        beam.draw(p->first);
+        zap_delay *= Options.arena_delay;
+        zap_delay /= 600;
     }
 
-    delay(200);
+    for (int i = 1; i <= range; i++)
+    {
+        for (map<coord_def, aff_type>::const_iterator p =
+                 hitfunc.sweep[i].begin();
+             p != hitfunc.sweep[i].end(); ++p)
+        {
+            if (p->second <= 0)
+                continue;
+
+            beam.draw(p->first);
+        }
+        delay(zap_delay);
+    }
+
+    zap_delay *= 3;
+    delay(zap_delay);
+
+    if (you.can_see(caster) || caster->is_player())
+    {
+        mprf("%s %s a mighty blast of ice!",
+             caster->name(DESC_THE).c_str(),
+             caster->conj_verb("conjure").c_str());
+    }
 
     beam.glyph = 0;
 
-    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
-         p != hitfunc.zapped.end(); ++p)
+    for (int i = 1; i <= range; i++)
     {
-        if (p->second <= 0)
-            continue;
-
-        range2 = max(9, (p->first - caster->pos()).abs());
-        // At or within range 3 (range2 9), this is equivalent to the
-        // old Ice Storm damage.
-        beam.damage = calc_dice(7, (198 + 9 * pow) / range2);
-
-        if (actor_at(p->first))
+        for (map<coord_def, aff_type>::const_iterator p =
+                 hitfunc.sweep[i].begin();
+             p != hitfunc.sweep[i].end(); ++p)
         {
-            beam.source = beam.target = p->first;
-            beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
-            beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-            beam.fire();
+            if (p->second <= 0)
+                continue;
+
+            range2 = max(9, (p->first - caster->pos()).abs());
+            // At or within range 3 (range2 9), this is equivalent to the
+            // old Ice Storm damage.
+            beam.damage = calc_dice(7, (198 + 9 * pow) / range2);
+
+            if (actor_at(p->first))
+            {
+                beam.source = beam.target = p->first;
+                beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
+                beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
+                beam.fire();
+            }
+            place_cloud(CLOUD_COLD, p->first,
+                        (18 + random2avg(45,2)) / range2, caster);
         }
-        place_cloud(CLOUD_COLD, p->first,
-                    (18 + random2avg(45,2)) / range2, caster);
     }
 
     noisy(25, hitfunc.origin);
