@@ -1166,6 +1166,7 @@ KFEAT:   0 = known zot trap
 KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
+KFEAT:   z = iron_grate
 KPROP:   ^~'"> = no_rtele_into
 MARKER:  - = lua:restrict_door()
 COLOUR:  ^~ = warp
@@ -1190,11 +1191,11 @@ MAP
  mMl``c..`.>.`..c``lMm
  mMM``.>.`d..`d>.``MMm
 mmmM``.d.^~~^`...``Mmmm
-m3ml`````m--mm^````lm6m
-m.+``...^m999-~d..``+.m
+m3ml`````z--zz^````lm6m
+m.+``...^z999-~d..``+.m
 m4m``c>.~-9_9-~.>c``m5m
-m.+``..d~-999m^...``+.m
-m3ml````^mm--m`````lm6m
+m.+``..d~-999z^...``+.m
+m3ml````^zz--z`````lm6m
 mmmM``...`^~~^.d.``Mmmm
  mMM``.>d`..d`.>.``MMm
  mMl``c..`.>.`..c``lMm
