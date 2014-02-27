@@ -249,7 +249,7 @@ static bool _altar_prayer()
                  more();
 
             if (_bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
-                    return true;
+                return true;
 
             // If not, ask if the player wants a Necronomicon.
             if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))

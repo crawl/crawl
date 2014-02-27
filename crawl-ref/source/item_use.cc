@@ -2188,7 +2188,7 @@ static void _rebrand_weapon(item_def& wpn)
     }
 }
 
-static void _brand_weapon(bool alreadyknown, item_def &wpn)
+static void _brand_weapon(item_def &wpn)
 {
     you.wield_change = true;
 
@@ -2300,19 +2300,21 @@ static void _brand_weapon(bool alreadyknown, item_def &wpn)
     return;
 }
 
-// Returns false if we're cancelling the scroll.
-static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
+// Returns NULL if no weapon was chosen.
+static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scroll_type scroll)
 {
     int item_slot;
+    bool branding = scroll == SCR_BRAND_WEAPON;
 
     while (true)
     {
-        item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
-                                       OSEL_BRANDABLE_WEAPON, true, true, false);
+        item_slot = prompt_invent_item(branding ? "Brand which weapon?" : "Enchant which weapon?",
+                                       MT_INVLIST, branding ? OSEL_BRANDABLE_WEAPON : OSEL_ENCHANTABLE_WEAPON,
+                                       true, true, false);
 
         // The scroll is used up if we didn't know what it was originally.
         if (item_slot == PROMPT_NOTHING)
-            return !alreadyknown;
+            return NULL;
 
         if (item_slot == PROMPT_ABORT)
         {
@@ -2322,7 +2324,7 @@ static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
                 || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
-                return !alreadyknown;
+                return NULL;
             }
             else
             {
@@ -2331,11 +2333,12 @@ static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
             }
         }
 
-        item_def& wpn(you.inv[item_slot]);
+        item_def* wpn = &you.inv[item_slot];
 
-        if (!is_brandable_weapon(wpn, true))
+        if (branding && !is_brandable_weapon(*wpn, true)
+            || !branding && !is_item_selected(*wpn, OSEL_ENCHANTABLE_WEAPON))
         {
-            mpr("Choose a weapon to brand, or Esc to abort.");
+            mpr("Choose a valid weapon, or Esc to abort.");
             if (Options.auto_list)
                 more();
 
@@ -2347,11 +2350,22 @@ static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
         if (pre_msg && alreadyknown)
             mpr(pre_msg->c_str());
 
-        _brand_weapon(alreadyknown, wpn);
-
-        return true;
+        return wpn;
     }
+}
 
+// Returns true if the scroll is used up.
+static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
+{
+    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_BRAND_WEAPON);
+
+    if (!weapon)
+        if (alreadyknown)
+            return false;
+        else
+            return true;
+
+    _brand_weapon(*weapon);
     return true;
 }
 
@@ -2401,11 +2415,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     }
 
     if (!success && colour)
-    {
-        if (!wpn.defined())
-            iname = "Your " + you.hand_name(true);
         mprf("%s very briefly gain%s a %s sheen.", iname.c_str(), s, colour);
-    }
 
     if (success)
         you.wield_change = true;
@@ -2413,12 +2423,21 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     return success;
 }
 
-static void _handle_enchant_weapon(int acc, int dam, const char *colour)
+static bool _handle_enchant_weapon(bool alreadyknown, string *pre_msg, scroll_type scr)
 {
-    item_def nothing, *weapon = you.weapon();
+    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_ENCHANT_WEAPON_I);
     if (!weapon)
-        weapon = &nothing;
-    enchant_weapon(*weapon, acc, dam, colour);
+        if (alreadyknown)
+            return false;
+        else
+            return true;
+
+    int acc = (scr == SCR_ENCHANT_WEAPON_I ? 1 : scr == SCR_ENCHANT_WEAPON_II ? 0 : 1 + random2(2));
+    int dam = (scr == SCR_ENCHANT_WEAPON_I ? 0 : scr == SCR_ENCHANT_WEAPON_II ? 1 : 1 + random2(2));
+    enchant_weapon(*weapon, acc, dam, scr == SCR_ENCHANT_WEAPON_I ? "green" :
+                                     scr == SCR_ENCHANT_WEAPON_II ? "red"  :
+                                     "yellow");
+    return true;
 }
 
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
@@ -2722,7 +2741,10 @@ bool _is_cancellable_scroll(scroll_type scroll)
            || scroll == SCR_REMOVE_CURSE
            || scroll == SCR_CURSE_ARMOUR
            || scroll == SCR_CURSE_JEWELLERY
-           || scroll == SCR_BRAND_WEAPON;
+           || scroll == SCR_BRAND_WEAPON
+           || scroll == SCR_ENCHANT_WEAPON_I
+           || scroll == SCR_ENCHANT_WEAPON_II
+           || scroll == SCR_ENCHANT_WEAPON_III;
 }
 
 void read_scroll(int slot)
@@ -2825,19 +2847,8 @@ void read_scroll(int slot)
         case SCR_ENCHANT_WEAPON_I:
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
-            if (you.weapon() && is_weapon(*you.weapon())
-                && !you.weapon()->cursed()
-                && (is_artefact(*you.weapon())
-                    || you.weapon()->base_type != OBJ_WEAPONS))
-            {
-                mpr("This weapon cannot be enchanted.");
+            if (!any_items_to_select(OSEL_ENCHANTABLE_WEAPON, true))
                 return;
-            }
-            else if (!you.weapon() || !is_weapon(*you.weapon()))
-            {
-                mpr("You are not wielding a weapon.");
-                return;
-            }
             break;
 
         case SCR_IDENTIFY:
@@ -3047,15 +3058,21 @@ void read_scroll(int slot)
         break;
 
     case SCR_ENCHANT_WEAPON_I:
-        _handle_enchant_weapon(1, 0, "green");
-        break;
-
     case SCR_ENCHANT_WEAPON_II:
-        _handle_enchant_weapon(0, 1, "red");
-        break;
-
     case SCR_ENCHANT_WEAPON_III:
-        _handle_enchant_weapon(1 + random2(2), 1 + random2(2), "bright yellow");
+        if (!alreadyknown)
+        {
+            mpr(pre_succ_msg.c_str());
+            mprf("It is a scroll of enchant weapon %s.",
+                    which_scroll == SCR_ENCHANT_WEAPON_I ? "I" :
+                    which_scroll == SCR_ENCHANT_WEAPON_II ? "II" :
+                    "III");
+            // Pause to display the message before jumping to the weapon list.
+            if (Options.auto_list)
+                more();
+        }
+
+        cancel_scroll = !_handle_enchant_weapon(alreadyknown, &pre_succ_msg, which_scroll);
         break;
 
     case SCR_BRAND_WEAPON:
@@ -3063,10 +3080,10 @@ void read_scroll(int slot)
         {
             mpr(pre_succ_msg.c_str());
             mpr("It is a scroll of brand weapon.");
-            // Pause to display the message before jumping to the weapon list.
             if (Options.auto_list)
                 more();
         }
+
         cancel_scroll = !_handle_brand_weapon(alreadyknown, &pre_succ_msg);
         break;
 

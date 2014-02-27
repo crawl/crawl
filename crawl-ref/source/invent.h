@@ -32,6 +32,7 @@ enum object_selector
     OSEL_UNCURSED_WORN_JEWELLERY = -16,
     OSEL_SCROLL_TARGET           = -17,
     OSEL_BRANDABLE_WEAPON        = -18,
+    OSEL_ENCHANTABLE_WEAPON      = -19,
 };
 
 #define SLOT_BARE_HANDS      -2
@@ -174,6 +175,7 @@ protected:
 
 void get_class_hotkeys(const int type, vector<char> &glyphs);
 
+bool is_item_selected(const item_def &item, int selector);
 bool any_items_to_select(int type_expect, bool msg = false, int excluded_slot = -1);
 
 int prompt_invent_item(const char *prompt,
