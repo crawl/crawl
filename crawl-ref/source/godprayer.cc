@@ -24,6 +24,7 @@
 #include "misc.h"
 #include "monster.h"
 #include "notes.h"
+#include "options.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -80,7 +81,13 @@ string god_prayer_reaction()
 
 static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
-    item_def& wpn = *you.weapon();
+    int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
+                                       OSEL_BRANDABLE_WEAPON, true, true, false);
+
+    if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
+        return false;
+
+    item_def& wpn(you.inv[item_slot]);
 
     // Only TSO allows blessing ranged weapons.
     if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH))
@@ -139,7 +146,9 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     you.wield_change = true;
     you.one_time_ability_used.set(god);
-    calc_mp(); // in case the old brand was antimagic
+    calc_mp(); // in case the old brand was antimagic,
+    you.redraw_armour_class = true; // protection,
+    you.redraw_evasion = true;      // or evasion
     string desc  = old_name + " ";
             desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
                      god == GOD_LUGONU        ? "corrupted by Lugonu" :
@@ -150,7 +159,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
               wpn.name(DESC_A).c_str(), desc.c_str()));
     wpn.flags |= ISFLAG_NOTED_ID;
 
-    mprf(MSGCH_GOD, "Your weapon shines brightly!");
+    mprf(MSGCH_GOD, "Your %s shines brightly!", wpn.name(DESC_QUALNAME).c_str());
 
     flash_view(colour);
 
@@ -208,15 +217,11 @@ static bool _altar_prayer()
         && you.piety >= piety_breakpoint(5)
         && !you.one_time_ability_used[GOD_SHINING_ONE])
     {
-        item_def *wpn = you.weapon();
-
-        if (wpn
-            && (get_weapon_brand(*wpn) != SPWPN_HOLY_WRATH
-                || is_blessed_convertible(*wpn)))
-        {
-            did_something = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
-                                          YELLOW);
-        }
+        simple_god_message(" will bless one of your weapons.");
+        if (Options.auto_list)
+            more();
+        did_something = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
+                                      YELLOW);
     }
 
     // Lugonu blesses weapons with distortion.
@@ -224,10 +229,10 @@ static bool _altar_prayer()
         && you.piety >= piety_breakpoint(5)
         && !you.one_time_ability_used[GOD_LUGONU])
     {
-        item_def *wpn = you.weapon();
-
-        if (wpn && get_weapon_brand(*wpn) != SPWPN_DISTORTION)
-            did_something = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
+        simple_god_message(" will brand one of your weapons with the corruption of the Abyss.");
+        if (Options.auto_list)
+            more();
+        did_something = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
     }
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
@@ -240,16 +245,11 @@ static bool _altar_prayer()
             simple_god_message(
                 " will bloody your weapon with pain or grant you the Necronomicon.");
 
-            item_def *wpn = you.weapon();
+            if (Options.auto_list)
+                 more();
 
-            // Does the player want a pain branding?
-            if (wpn && get_weapon_brand(*wpn) != SPWPN_PAIN)
-            {
-                if (_bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
+            if (_bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED))
                     return true;
-            }
-            else
-                mpr("You have no weapon to bloody with pain.");
 
             // If not, ask if the player wants a Necronomicon.
             if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
@@ -330,8 +330,9 @@ void pray()
         return;
     }
 
-    mprf(MSGCH_PRAY, "You offer a prayer to %s.",
-         god_name(you.religion).c_str());
+    if (!something_happened) // If something happened, there already was a prayer
+        mprf(MSGCH_PRAY, "You offer a prayer to %s.",
+            god_name(you.religion).c_str());
 
     if (you_worship(GOD_FEDHAS) && fedhas_fungal_bloom())
         something_happened = true;
