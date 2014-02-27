@@ -511,8 +511,8 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     if ((ce == CE_ROT || ce == CE_MUTAGEN) && !mon->is_chaotic())
         eligibility[RECITE_IMPURE]++;
 
-    // Death drakes and rotting devils get a bump to uncleanliness.
-    if (mon->type == MONS_ROTTING_DEVIL || mon->type == MONS_DEATH_DRAKE)
+    // Death drakes and necrophage get a bump to uncleanliness.
+    if (mon->type == MONS_NECROPHAGE || mon->type == MONS_DEATH_DRAKE)
         eligibility[RECITE_IMPURE]++;
 
     // Sanity check: if a monster is 'really' natural, don't consider it impure.

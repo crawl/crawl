@@ -2604,7 +2604,9 @@ enum monster_type                      // menv[].type
     MONS_IRON_IMP,
     MONS_SHADOW_IMP,
     MONS_RED_DEVIL,
+#if TAG_MAJOR_VERSION == 34
     MONS_ROTTING_DEVIL,
+#endif
     MONS_HELLWING,
     MONS_SIXFIRHY,
     MONS_NEQOXEC,
