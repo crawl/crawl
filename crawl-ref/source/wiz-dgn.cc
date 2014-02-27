@@ -419,7 +419,13 @@ bool debug_make_trap(const coord_def& pos)
     if (spec == "random" || spec == "any")
         trap = TRAP_RANDOM;
 
-    for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
+    for (int t =
+#if TAG_MAJOR_VERSION == 34
+            TRAP_DART
+#else
+            TRAP_ARROW
+#endif
+            ; t < NUM_TRAPS; ++t)
     {
         const trap_type tr = static_cast<trap_type>(t);
         string tname       = lowercase_string(trap_name(tr));

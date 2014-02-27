@@ -670,10 +670,6 @@ you've built your reputation!
 All other gods hate Beogh, and don't take desertion lightly.
 %%%%
 # Zotdef
-Make dart trap ability
-
-Create a dart trap at the targeted location.
-%%%%
 Make oklob sapling ability
 
 Plant an oklob sapling with the ability to spit acid at the targeted location.

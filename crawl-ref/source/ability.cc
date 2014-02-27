@@ -433,7 +433,6 @@ static const ability_def Ability_List[] =
 
     // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, 10, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, 5, ABFLAG_ZOTDEF},
     { ABIL_MAKE_PLANT, "Make plant", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
     { ABIL_MAKE_OKLOB_SAPLING, "Make oklob sapling", 0, 0, 0, 0, 60, ABFLAG_ZOTDEF},
     { ABIL_MAKE_BURNING_BUSH, "Make burning bush", 0, 0, 0, 0, 200, ABFLAG_ZOTDEF},
@@ -579,7 +578,6 @@ static trap_type _trap_for_ability(const ability_def& abil)
 {
     switch (abil.ability)
     {
-        case ABIL_MAKE_DART_TRAP: return TRAP_DART;
         case ABIL_MAKE_ARROW_TRAP: return TRAP_ARROW;
         case ABIL_MAKE_BOLT_TRAP: return TRAP_BOLT;
         case ABIL_MAKE_SPEAR_TRAP: return TRAP_SPEAR;
@@ -644,10 +642,6 @@ static int _zp_cost(const ability_def& abil)
             break;
 
         // Simple Traps
-        case ABIL_MAKE_DART_TRAP:
-            scale10 = max(count_traps(TRAP_DART)-10, 0); // First 10 at base cost
-            break;
-
         case ABIL_MAKE_ARROW_TRAP:
         case ABIL_MAKE_BOLT_TRAP:
         case ABIL_MAKE_SPEAR_TRAP:
@@ -968,7 +962,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_OKLOB_PLANT:
     case ABIL_MAKE_OKLOB_SAPLING:
     case ABIL_MAKE_BURNING_BUSH:
-    case ABIL_MAKE_DART_TRAP:
     case ABIL_MAKE_ICE_STATUE:
     case ABIL_MAKE_OCS:
     case ABIL_MAKE_SILVER_STATUE:
@@ -1960,7 +1953,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     // ZotDef traps
-    case ABIL_MAKE_DART_TRAP:
     case ABIL_MAKE_ARROW_TRAP:
     case ABIL_MAKE_BOLT_TRAP:
     case ABIL_MAKE_SPEAR_TRAP:
@@ -3323,8 +3315,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // zot defence abilities; must also be updated in player.cc when these levels are changed
     if (crawl_state.game_is_zotdef())
     {
-        if (you.experience_level >= 1)
-            _add_talent(talents, ABIL_MAKE_DART_TRAP, check_confused);
         if (you.experience_level >= 2)
             _add_talent(talents, ABIL_MAKE_OKLOB_SAPLING, check_confused);
         if (you.experience_level >= 3)

@@ -2881,7 +2881,6 @@ static int _estimated_trap_damage(trap_type trap)
     switch (trap)
     {
         case TRAP_BLADE: return 10 + random2(30);
-        case TRAP_DART:  return random2(4);
         case TRAP_ARROW: return random2(7);
         case TRAP_SPEAR: return random2(10);
         case TRAP_BOLT:  return random2(13);

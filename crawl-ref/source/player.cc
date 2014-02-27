@@ -3432,8 +3432,6 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
         // zot defence abilities; must also be updated in ability.cc when these levels are changed
         if (crawl_state.game_is_zotdef())
         {
-            if (you.experience_level == 1)
-                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of dart traps.");
             if (you.experience_level == 2)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob saplings.");
             if (you.experience_level == 3)

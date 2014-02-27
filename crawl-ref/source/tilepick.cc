@@ -102,8 +102,6 @@ static tileidx_t _tileidx_trap(trap_type type)
 {
     switch (type)
     {
-    case TRAP_DART:
-        return TILE_DNGN_TRAP_DART;
     case TRAP_ARROW:
         return TILE_DNGN_TRAP_ARROW;
     case TRAP_SPEAR:
@@ -225,7 +223,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_OPEN_DOOR:
         return TILE_DNGN_OPEN_DOOR;
     case DNGN_TRAP_MECHANICAL:
-        return TILE_DNGN_TRAP_DART;
+        return TILE_DNGN_TRAP_ARROW;
     case DNGN_TRAP_TELEPORT:
         return TILE_DNGN_TRAP_TELEPORT;
     case DNGN_TRAP_ALARM:
@@ -5418,8 +5416,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZOTDEF_PLANT;
     case ABIL_MAKE_OKLOB_SAPLING:
         return TILEG_ABILITY_ZOTDEF_OKLOB_SAPLING;
-    case ABIL_MAKE_DART_TRAP:
-        return TILEG_ABILITY_ZOTDEF_DART_TRAP;
     case ABIL_MAKE_ICE_STATUE:
         return TILEG_ABILITY_ZOTDEF_ICE_STATUE;
     case ABIL_MAKE_OCS:
