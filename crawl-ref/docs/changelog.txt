@@ -1,4 +1,4 @@
-Stone Soup 0.14 (up to 0.14-a0-2807-g7181bdc)
+Stone Soup 0.14 (up to 0.14-a0-2864-gf72b609)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new races: Formicids and Vine Stalkers.
