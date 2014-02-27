@@ -38,11 +38,7 @@ Character
     - Vine stalkers regenerate quickly, but cannot heal with wands or
       potions; they possess innate spirit shield and an anti-magic bite.
 * Felids have an innate jump attack ability, allowing them to jump over
-  other monsters to attack their target.
-    - There must be a safe, unoccupied landing spot next to the target.
-      One of these spots is selected at random for landing.
-    - It is not possible to jump over giant or flying creatures.
-    - Jumping causes exhaustion like berserk (but no slowing).
+  other monsters and attack their target in a single turn.
 * Felids can use wands.
 * Demonspawns' negative energy facet has the second level of rN replaced by
   "black mark," which gives melee attacks a chance to heal the player and apply
@@ -371,6 +367,7 @@ Interface
   being the default; "pickup_menu_limit" has been introduced to handle
   the old "auto:X" settings.
 * The WebTiles spectator box sorts names and links online player profiles.
+* URLs occurring in WebTiles chat messages are hyperlinked.
 * New default minimap colours.
 * Examining a monster now displays the speeds at which it takes actions if
   those actions are slower or faster than its normal speed.
