@@ -274,10 +274,10 @@ Apart from (de)selecting skills, you also have the following toggles:
 Fighting, Throwing, Armour, Dodging, Stealth, Unarmed Combat, and Spellcasting
 can always be trained. For the rest:
 * Weapon skills require carrying a weapon of the appropriate type.
-* Shields requires that you either be wearing a shield, or have the capacity
-      to obtain one through divine means.
-* Evocations requires carrying an evocable item, or having a Nemelex ability.
+* Shields requires that you either be wearing a shield, or worship a deity
+      who can offer one through divine means (The Shining One).
+* Evocations requires carrying an evocable item, or worshipping Nemelex.
 * Spell schools require knowing a spell of the school.
-* Necromancy can also be trained when having a Kikubaaqudgha ability.
-* Invocations requires having at least one divine ability that exercises it.
+* Necromancy can also be trained when worshipping Kikubaaqudgha.
+* Invocations requires worshipping a god whose abilities require it.
 %%%%
