@@ -1367,7 +1367,7 @@ unsigned int item_value(item_def item, bool ident)
         {
             switch (get_ammo_brand(item))
             {
-           case SPMSL_NORMAL:
+            case SPMSL_NORMAL:
             default:
                 valued *= 10;
                 break;
@@ -1473,9 +1473,9 @@ unsigned int item_value(item_def item, bool ident)
 
         case ARM_CHAIN_MAIL:
         case ARM_HELMET:
-     #if TAG_MAJOR_VERSION == 34
+#if TAG_MAJOR_VERSION == 34
         case ARM_CAP:
-     #endif
+#endif
         case ARM_BOOTS:
         case ARM_GLOVES:
         case ARM_CLOAK:
