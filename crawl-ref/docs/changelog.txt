@@ -10,12 +10,9 @@ Branches, environment
 * The main Dungeon is now sixteen levels.
 * A new branch: the Depths; entered from the end of Dungeon, it is six levels
   long and contains the entrance to the Realm of Zot.
-* A new branch: the Enchanted Forest, alternating with Crypt; five levels
-  long, and contains the entrance to Tomb where it exists.
 * The Vaults are now entered from D:14-15 and need a rune to enter.
-* The Abyss randomly draws monsters from elsewhere in the Dungeon.
 * Abyssal stairs appear more frequently, and are fixed with depth.
-* Ziggurats require three runes to enter; an entrance is guaranteed only
+* Ziggurats require only three runes to enter; an entrance is guaranteed
   in Depths, but still spawn as normal in Pan.
 * Portals are no longer closed when carrying the Orb of Zot.
 * The Horn of Geryon is no longer necessary for entering Hell branches.
@@ -26,6 +23,11 @@ Branches, environment
   warding, one of several unrands, the Necronomicon, or evokers/staves.
 * Easy ice cave portals now appear only in D, Lair, and Orc; hard ice cave
   portals appear in Elf and rotating Lair branches.
+* Portal timers have been generally shortened and made more consistent with
+  each other; additionally, the shorter timer started upon first seeing them
+  has been removed.
+* The layout of the last level of the Vaults has been changed, with all four
+  subsections being open at each corner.
 
 Character
 ---------
@@ -120,7 +122,7 @@ Monsters
         - black suns (Black Mark, which empowers nearby allies with various
           draining attacks that heal on hit, and previously existing spells
           Bolt of Draining, Malign Offering, Dispel Undead, and Death's Door).
-* Adjustments to lair enemies:
+* Adjustments to lair branch enemies:
     - Siren songs' pulling effects are now irresistible if the player is
       already mesmerised.
     - Siren songs call drowned souls, weak temporary enemies with a drowning
@@ -128,6 +130,8 @@ Monsters
     - Manticores' spines now embed themselves in targets, causing damage while
       moving until a few turns is spent doing nothing to remove them.
     - Harpies no longer steal food.
+    - Plain salamanders have been weakened, and all salamnders can slither
+      around on land.
 * Adjustments to other enemies:
     - Deep elf demonologists summon more greater demons instead of minor
       demons.
@@ -145,15 +149,14 @@ Monsters
     - Vashnia, leader of a squad of naga sharpshooters with translocational
       ability to match.
 * Moths of suppression, rock worms, lava fish, lemures, jellyfish, grey rats,
-  spiny worms, giant amoebae and deep dwarf berserkers are no more.
+  spiny worms, giant amoebae, deep dwarf berserkers, agate snails, giant
+  centipedes, and rotting devils are no more.
 * Ball lightnings are no longer permanently confused, instead seeking out
   targets like giant spores.
-* Salamanders can now slither across land (like nagas) in addition to
-  swimming in lava.
-* Geryon can fly once again.
 * Killer Klowns have a different set of possible damage brands: strong
   poison, pain, drain speed, fire, cold, electric, and anti-magic.
 * Flying enemies are no longer immune to throwing nets.
+* Geryon can fly once again.
 * Antaeus gains Flash Freeze, an ice conjuration which impedes the target's
   movement for three turns.
 * Lamia has been de-throned.
@@ -173,10 +176,15 @@ Spells
     - Summon Forest (L5 Summoning/Translocations), which summons a dryad
       and temporarily converts terrain near the player to forest; it
       is in the Book of the Warp.
+    - Glaciate (L9 Ice/Conjurations), which fires a great blast of ice in
+      a cone, turning slain monsters into blocks of ice and Flash Freezing the
+      survivors; it replaces Ice Storm in the Book of Annihilations.
 * Sticks to Snakes only works on missiles (arrows and javelins) now.
-* Conjure Ball Lightning has been reduced from level 7 to 6.
+* Conjure Ball Lightning has been reduced from level 7 to 6, and the
+  duration of the ball lightning has been lowered.
+* Metabolic Englaciation has been reduced from level 6 to 5, and the slow
+  duration is cumulative across casts.
 * Bolt of Draining has been reduced from level 6 to 5.
-* Metabolic Englaciation has been reduced from level 6 to 5.
 * Fulminant Prism has been reduced from level 5 to 4.
 * Iskenderun's Battlesphere has been increased from level 4 to 5.
 * Ozocubu's Armour now has an encumbrance cap of 4, rendering it no longer
@@ -196,7 +204,10 @@ Spells
   being a duration.
 * Portal Projectile is now a duration, rather than firing individual
   projectiles.
-* Removed spells: Dig, Summon Scorpions, Song of Shielding, Polymorph.
+* All clouds caused by the player will dissipate much faster outside of your
+  line of sight.
+* Removed spells: Dig, Summon Scorpions, Song of Shielding, Polymorph, Ice
+  Storm.
 
 Items
 -----
@@ -244,10 +255,12 @@ Items
   electricity on targets it hits.
 * New unrand: "Spellbinder" - an antimagic demon whip which inflicts miscasts
   on magic-using targets.
+* New unrand: "lajatang of Order" - does silver damage like ammunition and
+  grants resistance to mutation.
 * The blowgun of the Assassin and Bullseye have been removed.
 * Potions with known type that would have no effect can no longer be quaffed
   at all.
-* Potions other than potions of porridge no longer give nutrition.
+* Potions other than potions of porridge and blood no longer give nutrition.
 * All gauntlets and bracers are now gloves.
 * All caps and wizard hats are now plain "hats".
 * Great maces deal slightly less damage and are much less available than
@@ -256,6 +269,8 @@ Items
   identified, assuming knowledge that they are item-targeting scrolls and
   healing potions.
 * Magical penetrating projectiles now pierce shields.
+* Ponderous items reduce movement delay by -1 (was -2), to match running
+  items.
 * Electrocution weapons no longer cause discharges on targets in water.
 * Wearing body armour / rings no longer requires removing cloakes / gloves
   first.
@@ -265,19 +280,30 @@ Items
 * The speed brand now grants 2/3 weapon delay and no damage reduction (was
   1/2 delay and 10% damage reduction for melee weapons).
 * Racial weapons are no more.
-* The rod of destruction now fires random bolts instead of having a pre-set
-  selection.
+* Many changes to rods:
+    - The rod of destruction now fires random bolts instead of having a pre-set
+      selection.
+    - The rod of fiery destruction has only one spell, Explosive Bolt, which
+      explodes a fireball on every target hit in a line.
+    - New rod: rod of shadows, which summons Shadow Creatures from a depth in
+      the dungeon roughly equivalent to the user's skill with Evocations,
+      drawing out-of-depth spawns after 16.
+    - New rod: rod of clouds, which creates various clouds based on power,
+      with high skill giving several new types of clouds.
+    - The rod of warding, venom, demonology, and frigid destruction are gone.
 * Renamed items:
-  - Sabres are now cutlasses (and the captain's cutlass has been adjusted to
-    match);
-  - Double swords are now bastard swords;
-  - Triple swords are now claymores.
+    - Sabres are now cutlasses (and the captain's cutlass has been adjusted to
+      match);
+    - Double swords are now bastard swords;
+    - Triple swords are now claymores.
 * Removed items: potions of slowing; rod of warding.
 
 Cards
 -----
 * The Elixir card now heals over time instead of instantly.
+* The Alchemist card is in decks of escape, but not wonders.
 * The Bargain card has been removed.
+* The Trowel card is in decks of wonder and only creates portals.
 
 Gods
 ----
@@ -314,7 +340,8 @@ Gods
 * Yredelemnul's servants are no longer angered when read-identifying a scroll
   of holy word.
 * Nemelex no longer gifts decks of dungeons.
-* Divine wrath is now contingent on XP gain.
+* Jiyva's abilities no longer use Invocations.
+* Divine wrath is now contingent on XP gain and cannot be waited out.
 * Okawaru, Trog, Makhleb, Yredelemnul, and Kikubaaqudgha wrath now scales
   better with player XL.
 * Vehmuet wrath now employs actual conjurations instead of miscasts.
@@ -339,6 +366,8 @@ Interface
   the old "auto:X" settings.
 * The WebTiles spectator box sorts names and links online player profiles.
 * New default minimap colours.
+* Examining a monster now displays the speeds at which it takes actions if
+  those actions are slower or faster than its normal speed.
 
 Stone Soup 0.13 (20131011)
 --------------------------
