@@ -44,6 +44,9 @@ Character
     - It is not possible to jump over giant or flying creatures.
     - Jumping causes exhaustion like berserk (but no slowing).
 * Felids can use wands.
+* Demonspawns' negative energy facet has the second level of rN replaced by
+  "black mark," which gives melee attacks a chance to heal the player and apply
+  a bad status to the victim.
 * The first two levels of the slow healing mutation only affect rates of
   healing when enemies are in sight (half and no healing for those levels
   respectively). Stat regeneration and the third level of the mutation
@@ -81,6 +84,9 @@ Monsters
       thorns fired from afar.
     - Thorn hunters, who fire volleys of thorns and create briar patches to
       impede their foes' movements.
+    - Dryads, who turn the forest against you by casting Awaken Forest like
+      spriggan druids and summoning snaplasher vines that pull their enemies
+      around.
     - Water nymphs, who passively form a pool of water around themselves
       and strike down the player with said water.
     - Shambling mangroves, slow-moving, tough plants home to a nest of ravens
@@ -121,7 +127,7 @@ Monsters
           mutations);
         - black suns (Black Mark, which empowers nearby allies with various
           draining attacks that heal on hit, and previously existing spells
-          Bolt of Draining, Malign Offering, Dispel Undead, and Death's Door).
+          Bolt of Draining, Malign Offering, and Dispel Undead).
 * Adjustments to lair branch enemies:
     - Siren songs' pulling effects are now irresistible if the player is
       already mesmerised.
@@ -227,8 +233,8 @@ Items
 * New "tomahawk" item: a throwing missile, usable by all non-felids, between
   darts and javelins in damage.
     - Small race hunters and arcane marksmen may select tomahawks.
-    - Small race gladiators receive tomahawks instead of nets.
 * New "potion of lignification" - induces tree form.
+* Small races can use throwing nets.
 * Piercer gets the penetration brand (was vorpal).
 * Boots of the Assassin return in a new form: they now detect monsters and
   allow short-blade-quality stabbing with any weapon (or unarmed).
@@ -255,8 +261,8 @@ Items
   electricity on targets it hits.
 * New unrand: "Spellbinder" - an antimagic demon whip which inflicts miscasts
   on magic-using targets.
-* New unrand: "lajatang of Order" - does silver damage like ammunition and
-  grants resistance to mutation.
+* New unrand: "lajatang of Order" - does silver damage (like the ammunition
+  brand) and grants resistance to mutation.
 * The blowgun of the Assassin and Bullseye have been removed.
 * Potions with known type that would have no effect can no longer be quaffed
   at all.
@@ -296,7 +302,7 @@ Items
       match);
     - Double swords are now bastard swords;
     - Triple swords are now claymores.
-* Removed items: potions of slowing; rod of warding.
+* Removed potions of slowing.
 
 Cards
 -----
