@@ -62,7 +62,6 @@ void init_pandemonium(void)
         {
             env.mons_alloc[pc] = random_choose(
                                     MONS_HELLION,
-                                    MONS_ROTTING_DEVIL,
                                     MONS_TORMENTOR,
                                     MONS_REAPER,
                                     MONS_SOUL_EATER,

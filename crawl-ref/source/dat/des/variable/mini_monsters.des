@@ -2265,7 +2265,7 @@ ENDMAP
 
 NAME:   minmay_beelzebubs_servants
 DEPTH:  D:6-12
-MONS:   orange demon / nothing, rotting devil / nothing
+MONS:   orange demon / nothing, red devil / nothing
 MAP
 ........................
 ..xxxx....xxxx....xxxx..
@@ -2329,22 +2329,6 @@ MAP
 ...vv.vv...
 .l..v.v..l.
 .ll.v.v.ll.
-...........
-ENDMAP
-
-##### A rotting devil (4) & necrophages.
-NAME:  einodemon_rotting_minivault
-TAGS:  patrolling mini_float
-DEPTH: D:8-
-MONS:  rotting devil
-MONS:  necrophage
-MAP
-...........
-.cccc+cccc.
-.c2c...c2c.
-.c..1.1..c.
-.c2c...c2c.
-.cccc+cccc.
 ...........
 ENDMAP
 
@@ -5288,7 +5272,7 @@ MONS:   silver statue
 MONS:   patrolling hell knight
 MONS:   sun demon / soul eater / ice devil / smoke demon / neqoxec / \
         ynoxinul / chaos spawn
-MONS:   blue devil / iron devil / orange demon / red devil / rotting devil / \
+MONS:   blue devil / iron devil / orange demon / red devil / hellwing / \
         sixfirhy
 KPROP:  ._-cGO12345 = bloody / nothing w:20
 KFEAT:  _ = altar_makhleb

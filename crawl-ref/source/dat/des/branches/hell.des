@@ -379,7 +379,7 @@ ENDMAP
 
 NAME:    hangedman_tar_grid_catacomb
 TAGS:    transparent
-KMONS:   O = rotting devil / shadow imp w:20 / nothing
+KMONS:   O = shadow imp w:20 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: o@O& / O&o@
 SUBST:   o = ., & = x

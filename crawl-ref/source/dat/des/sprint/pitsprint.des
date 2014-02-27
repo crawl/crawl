@@ -21,7 +21,7 @@ function base_monster_setup(e)
            hungry ghost / big kobold band /\
            brain worm / warg / wolf / porcupine / black bear /\
            giant mite / green rat / flying skull / iron imp /\
-           white imp / ufetubus / fire bat / rotting devil")
+           white imp / ufetubus / fire bat")
   e.kmons("B = goliath beetle / steam dragon / crocodile / hippogriff /\
            killer bee band / yellow wasp / eye of draining / manticore /\
            wyvern / troll / two-headed ogre / yak band /\

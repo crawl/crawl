@@ -3256,7 +3256,7 @@ static monster_type _band_member(band_type band, int which)
     case BAND_TORTUROUS_DEMONSPAWN:
         if (which == 1 || which == 2 && one_chance_in(5))
         {
-            return random_choose_weighted( 2, MONS_ROTTING_DEVIL,
+            return random_choose_weighted( 2, MONS_ORANGE_DEMON,
                                            2, MONS_SIXFIRHY,
                                            3, MONS_TORTUROUS_DEMONSPAWN,
                                            0);
@@ -3873,7 +3873,6 @@ monster_type summon_any_demon(monster_type dct)
                 1, MONS_IRON_DEVIL,
                 1, MONS_ORANGE_DEMON,
                 1, MONS_RED_DEVIL,
-                1, MONS_ROTTING_DEVIL,
                 1, MONS_SIXFIRHY,
                 1, MONS_HELLWING,
                 0);

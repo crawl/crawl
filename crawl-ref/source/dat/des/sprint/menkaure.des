@@ -863,7 +863,7 @@ KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of 
 KFEAT:  e = any shop
 KITEM:  f = potion of flight q:3
 SHUFFLE: 12
-MONS:   golden dragon, storm dragon, rotting devil, iron imp
+MONS:   golden dragon, storm dragon, necrophage, iron imp
 SUBVAULT: A : sprint2_smallroom
 SUBVAULT: B : sprint2_smallroom
 SUBVAULT: C : sprint2_smallroom
