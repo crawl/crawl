@@ -256,7 +256,8 @@ public:
 
     bool        show_travel_trail;
 
-    int         arena_delay;
+    int         view_delay;
+
     bool        arena_dump_msgs;
     bool        arena_dump_msgs_all;
     bool        arena_list_eq;

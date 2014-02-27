@@ -1971,7 +1971,7 @@ bool lugonu_corrupt_level(int power)
 
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
-    delay(1000);
+    scaled_delay(1000);
 #endif
 
     return true;

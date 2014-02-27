@@ -2446,13 +2446,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.draw(p->first);
     }
 
-    int flash_delay = 200;
-    if (crawl_state.game_is_arena())
-    {
-        flash_delay *= Options.arena_delay;
-        flash_delay /= 600;
-    }
-    delay(flash_delay);
+    scaled_delay(200);
 
     beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
 
@@ -2991,13 +2985,6 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-    int zap_delay = 25;
-    if (crawl_state.game_is_arena())
-    {
-        zap_delay *= Options.arena_delay;
-        zap_delay /= 600;
-    }
-
     for (int i = 1; i <= range; i++)
     {
         for (map<coord_def, aff_type>::const_iterator p =
@@ -3009,11 +2996,10 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
             beam.draw(p->first);
         }
-        delay(zap_delay);
+        scaled_delay(25);
     }
 
-    zap_delay *= 3;
-    delay(zap_delay);
+    scaled_delay(100);
 
     if (you.can_see(caster) || caster->is_player())
     {

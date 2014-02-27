@@ -840,7 +840,8 @@ void game_options::reset_options()
 
     travel_stair_cost      = 500;
 
-    arena_delay            = 600;
+    view_delay             = DEFAULT_VIEW_DELAY;
+
     arena_dump_msgs        = false;
     arena_dump_msgs_all    = false;
     arena_list_eq          = false;
@@ -3556,7 +3557,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             constants.insert(field);
     }
-    else INT_OPTION(arena_delay, 0, INT_MAX);
+    else INT_OPTION(view_delay, 0, INT_MAX);
     else BOOL_OPTION(arena_dump_msgs);
     else BOOL_OPTION(arena_dump_msgs_all);
     else BOOL_OPTION(arena_list_eq);

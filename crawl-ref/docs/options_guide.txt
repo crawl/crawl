@@ -70,7 +70,7 @@ The contents of this text are:
                 mlist_allow_alternate_layout, mlist_targeting,
                 menu_colour, message_colour, force_more_message,
                 msg_condense_repeats, msg_condense_short, show_travel_trail,
-                monster_list_colour
+                monster_list_colour, view_delay
 3-j     Missiles.
                 fire_items_start, fire_order
 3-k     Message Channels.
@@ -1553,6 +1553,10 @@ monster_list_colour -= <key>
          Note that, for TSO worshippers, monsters whom it is forbidden to
          attack will appear in the "evil colour" (magenta by default)
          regardless of this option.
+
+view_delay = 600
+        Controls the speed of animations from, e.g., ranged and magical
+        attacks and invocations with visual effects.
 
 3-j     Missiles.
 -----------------
