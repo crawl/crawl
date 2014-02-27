@@ -51,10 +51,10 @@ Character
 * Venom Mages and Assassins no longer start with knowledge of potions of
   poison.
 * Fast/slow movement mutations no longer occur randomly.
-* Recommended backgrounds and species have been adjusted; in particular
-  species can recommend backgrounds that don't necessarily recommended
-  that species and vice versa (e.g. CK -> Tr may be recommended whereas
-  Tr -> CK is not).
+* Recommended backgrounds and species have been adjusted; in particular,
+  backgrounds can recommend species that don't necessarily recommend that
+  background and vice versa (e.g. CK -> Tr may be recommended whereas Tr -> CK
+  is not).
 
 Monsters
 --------
@@ -130,7 +130,7 @@ Monsters
     - Manticores' spines now embed themselves in targets, causing damage while
       moving until a few turns is spent doing nothing to remove them.
     - Harpies no longer steal food.
-    - Plain salamanders have been weakened, and all salamnders can slither
+    - Plain salamanders have been weakened, and all salamanders can slither
       around on land.
 * Adjustments to other enemies:
     - Deep elf demonologists summon more greater demons instead of minor
@@ -272,7 +272,7 @@ Items
 * Ponderous items reduce movement delay by -1 (was -2), to match running
   items.
 * Electrocution weapons no longer cause discharges on targets in water.
-* Wearing body armour / rings no longer requires removing cloakes / gloves
+* Wearing body armour / rings no longer requires removing cloaks / gloves
   first.
 * Scrolls are destroyed less frequently by sticky flame.
 * Gold dragon armour, crystal plate armour, and plate armour have had their
