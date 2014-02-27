@@ -1339,8 +1339,8 @@ NAME:  okawaru_altar_gauntlet_db
 TAGS:  uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 DEPTH: D:2-9
 KFEAT: _ = altar_okawaru
-MONS:  goblin; dart q:5 / hobgoblin; dart q:5 / gnoll; dart q:5 /\
-       orc; dart q:5 / kobold; dart q:5
+MONS:  goblin; stone q:5 / hobgoblin; stone q:5 / gnoll; stone q:5 /\
+       orc; stone q:5 / kobold; stone q:5
 MAP
   xxx
 xxx_xxx

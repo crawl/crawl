@@ -72,7 +72,7 @@ ENDMAP
 NAME:  marbit_kobold_abyss_entry
 TAGS:  no_monster_gen nolayout_encompass
 WEIGHT: 5
-MONS:  big kobold ; dart ego:dispersal, kobold demonologist
+MONS:  big kobold ; tomahawk ego:dispersal, kobold demonologist
 : abyss_entry(_G, '_')
 MAP
 xxxxxxxxxxxxxxx
@@ -904,7 +904,7 @@ MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
          glowing shapeshifter
 ITEM:    superb_item, royal jelly q:2
-ITEM:    dart good_item q:100, any magical staff
+ITEM:    bolt good_item q:40 / arrow good_item q:40, any magical staff
 ITEM:    scroll of magic mapping q:4 / scroll of random uselessness q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
 ITEM:    demon blade ego:chaos good_item ident:type / \
@@ -1370,10 +1370,9 @@ KMONS:   34 = guardian serpent perm_ench:shapeshifter
 KMONS:   e = crystal guardian
 # Note: if anything in these two item sets becomes useful for more then a tiny
 # fraction of characters finding the abyssal rune, remove or replace them.
-KITEM:   24d = scroll of random uselessness w:15 q:1 / mundane robe w:5 / \
-         club w:5 / hammer w:5 / stone q:1 / mundane dart q:1 / \
-         needle q:1 ego:confusion / mundane animal skin / \
-         mundane ring mail / gold q:1
+KITEM:   24d = scroll of random uselessness w:15 q:1 / fruit q:1 w:5 / \
+         club w:5 / hammer w:5 / stone q:1 / needle q:1 ego:confusion / \
+         mundane animal skin / mundane ring mail / gold q:1
 KITEM:   13e = wand of slowing / wand of confusion / wand of magic darts / \
          wand of flame w:5 / wand of frost w:5 / plain deck w:5 / \
          whip not_cursed w:2 / hat not_cursed mundane w:5

@@ -277,7 +277,7 @@ dgn.delayed_decay_extra(_G, 'K', 'dwarf skeleton', 'plate armour, '
    .. 'ring of wizardry / any jewellery / nothing w:20' )
 
  -- Halfling warper. 4-5 items.
-dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'dart ego:dispersal / dart, '
+dgn.delayed_decay_extra(_G, 'L', 'halfling skeleton', 'tomahawk ego:dispersal / sling bullet, '
    .. 'randbook disc:translocation / any book, scroll of blinking / '
    .. 'scroll of teleportation / ring of teleportation / '
    .. 'ring of teleport control w:5 / nothing w:30, robe / leather armour, '
