@@ -1843,7 +1843,9 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
-        ouch(damage, agent->mindex(), KILLED_BY_BEAM, "by static electricity");
+        ouch(damage, agent->mindex(), KILLED_BY_BEAM, "by static electricity",
+             true,
+             agent->is_player() ? "you" : agent->name(DESC_A).c_str());
     }
     else if (mons == NULL)
         return 0;
@@ -2320,7 +2322,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
         ouch(beam.damage.roll(), caster->mindex(), KILLED_BY_BEAM,
              "by Lee's Rapid Deconstruction", true,
-             caster->is_player() ? "themself"
+             caster->is_player() ? "you"
                                  : caster->name(DESC_A).c_str());
     }
     else // Monster explodes.
