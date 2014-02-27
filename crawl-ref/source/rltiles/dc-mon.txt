@@ -381,7 +381,6 @@ grand_avatar MONS_GRAND_AVATAR
 
 ## Abominations ('X')
 %sdir mon/demons
-cigotuvis_monster MONS_CIGOTUVIS_MONSTER
 abomination_large MONS_ABOMINATION_LARGE
 abomination_large1
 abomination_large2
@@ -390,6 +389,8 @@ abomination_large4
 abomination_large5
 abomination_large6
 tentacled_monstrosity MONS_TENTACLED_MONSTROSITY
+%sdir mon/vault
+cigotuvis_monster MONS_CIGOTUVIS_MONSTER
 
 ## Ugly things ('u')
 %sdir mon/aberr
