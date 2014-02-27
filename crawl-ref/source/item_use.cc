@@ -67,7 +67,6 @@
 #include "view.h"
 #include "xom.h"
 
-static bool _drink_fountain();
 static int _handle_enchant_armour(int item_slot = -1,
                                   string *pre_msg = NULL);
 
