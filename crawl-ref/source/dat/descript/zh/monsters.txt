@@ -2362,14 +2362,6 @@ frost-covered statue
 
 一尊劣质的法师雕像。你由它一直往外泄漏的魔力可以判断出它会使用冰系法术。
 %%%%
-human monk
-
-它看起来是个浅薄的武僧形像；只不过是一段模糊的记忆而已。
-%%%%
-iron troll monk
-
-它看起来是个浅薄的武僧形像；只不过是一段模糊的记忆而已。
-%%%%
 kamikaze kobold
 
 这个狗头人要么是疯了，要么就是某个隐秘狗头人教团的圣战者。它被附了一道魔法，
@@ -2456,7 +2448,7 @@ young spriggan druid
     end
 }}
 %%%%
-vine covered stone golem
+vine covered earth elemental
 
 虽然这尊魔像只是用普通风化岩制成的，而且它的身上还爬满了苔藓和藤条，
 但它仍然是个值得敬畏的对手。不管怎么说，它的身体依然坚如磐石，

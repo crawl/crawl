@@ -3072,7 +3072,7 @@ young spriggan druid
     end
 }}
 %%%%
-vine covered stone golem
+vine covered earth elemental
 
 보통의 돌로 만들어졌지만 수많은 덩굴과 이끼로 덮여있어, 골렘들의 사회가 있다면
 존중받아 마땅할 만큼의 나이를 먹었을 골렘이다. 그 단단함은 보통 바위정도지만,

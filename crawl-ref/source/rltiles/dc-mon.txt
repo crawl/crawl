@@ -363,6 +363,8 @@ chaos_champion MONS_CHAOS_CHAMPION
 warmonger MONS_WARMONGER
 corrupter MONS_CORRUPTER
 black_sun MONS_BLACK_SUN
+## From the Wucad Mu wizard laboratory
+mon/vault/demonspawn_monk_ghost MONS_FAINT_DEMONSPAWN_MONK
 
 ## Spiritual beings ('R')
 %sdir mon/unique
@@ -546,8 +548,6 @@ vault/hell_wizard_50 MONS_HELL_WIZARD
 vault/hell_wizard_75
 vault/hell_wizard_100
 %rim 1
-## From the Wucad Mu wizlab
-vault/human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
 vault/deformed_human MONS_DEFORMED_HUMAN
 ## From the Cloud Mage wizlab
@@ -800,8 +800,7 @@ deep_troll MONS_DEEP_TROLL
 deep_troll_earth_mage MONS_DEEP_TROLL_EARTH_MAGE
 deep_troll_shaman MONS_DEEP_TROLL_SHAMAN
 ## From the Wucad Mu wizard laboratory
-vault/deep_troll_monk_ghost MONS_DEEP_TROLL_MONK
-vault/iron_troll_monk_ghost MONS_IRON_TROLL_MONK
+vault/deep_troll_monk_ghost MONS_FAINT_DEEP_TROLL_MONK
 
 ## Vampires ('V')
 %sdir mon/undead
@@ -1054,8 +1053,10 @@ draco-job-monk DRACO_MONK
 draco-job-scorcher DRACO_SCORCHER
 draco-job-shifter DRACO_SHIFTER
 draco-job-zealot DRACO_ZEALOT
-%rim 1
+## From the Wucad Mu wizard laboratory
+mon/vault/draconian_monk_ghost MONS_FAINT_GREY_DRACONIAN_MONK
 
+%rim 1
 mon/nonliving/test_spawner MONS_TEST_SPAWNER
 
 misc/unseen PLAYER

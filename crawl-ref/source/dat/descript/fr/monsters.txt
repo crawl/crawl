@@ -3238,7 +3238,7 @@ s'occuper des intrus comme vous.
     end
 }}
 %%%%
-vine covered stone golem
+vine covered earth elemental
 
 Tout en étant fait d'une vielle pierre ordinaire, couvert de mousse et de
 lierre, ce golem à toujours besoin d'être respecté. Il est toujours aussi dur
