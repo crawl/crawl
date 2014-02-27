@@ -2985,7 +2985,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_SUMMONING:
-        cast_shadow_creatures(true);
+        cast_shadow_creatures(MON_SUMM_SCROLL);
         break;
 
     case SCR_FOG:
