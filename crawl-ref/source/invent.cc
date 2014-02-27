@@ -1231,6 +1231,15 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OSEL_BRANDABLE_WEAPON:
         return is_brandable_weapon(i, true);
 
+    case OSEL_ENCHANTABLE_WEAPON:
+        return is_weapon(i)
+               && (itype == OBJ_WEAPONS
+                    && !is_artefact(i)
+                    && (i.plus < MAX_WPN_ENCHANT
+                        || i.plus2 < MAX_WPN_ENCHANT
+                        || !(item_ident(i, ISFLAG_KNOW_PLUSES)))
+                   || i.cursed());
+
     default:
         return false;
     }
@@ -1247,7 +1256,7 @@ static bool _userdef_item_selected(const item_def &i, int selector)
 #endif
 }
 
-static bool _is_item_selected(const item_def &i, int selector)
+bool is_item_selected(const item_def &i, int selector)
 {
     return _item_class_selected(i, selector)
            || _userdef_item_selected(i, selector);
@@ -1260,7 +1269,7 @@ static void _get_inv_items_to_show(vector<const item_def*> &v,
     {
         if (you.inv[i].defined()
             && you.inv[i].link != excluded_slot
-            && _is_item_selected(you.inv[i], selector))
+            && is_item_selected(you.inv[i], selector))
         {
             v.push_back(&you.inv[i]);
         }
@@ -1273,7 +1282,7 @@ bool any_items_to_select(int selector, bool msg, int excluded_slot)
     {
         if (you.inv[i].defined()
             && you.inv[i].link != excluded_slot
-            && _is_item_selected(you.inv[i], selector))
+            && is_item_selected(you.inv[i], selector))
         {
             return true;
         }
