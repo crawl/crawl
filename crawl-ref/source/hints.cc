@@ -1272,7 +1272,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<console>('<w>"
              << stringize_glyph(get_item_symbol(SHOW_ITEM_MISSILE))
              << "</w>') </console>"
-                "you've picked up. Missiles like darts and throwing nets "
+                "you've picked up. Missiles like tomahwaks and throwing nets "
                 "can be thrown by hand, but other missiles like arrows and "
                 "needles require a launcher and training in using it to be "
                 "really effective. "
@@ -1299,8 +1299,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         else
         {
-            text << "\nFor now you might be best off with sticking to darts "
-                    "or stones for ranged attacks.";
+            text << "\nFor now you might be best off with sticking to "
+                    "stones for ranged attacks.";
         }
         break;
 
@@ -2547,8 +2547,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "absolutely have to follow it. Rather, you can let it run "
                 "away. Sometimes, though, it can be useful to attack a "
                 "fleeing creature by throwing something after it. If you "
-                "have any darts or stones in your <w>%</w>nventory, you can "
-                "look at one of them to read an explanation of how to do this.";
+                "have any stones in your <w>%</w>nventory, you can look "
+                "at one of them to read an explanation of how to do this.";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 

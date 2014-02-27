@@ -2127,7 +2127,7 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
 
         // Darts don't absolutely need a launcher - still allow upgrading.
         if (item.sub_type == miss->sub_type
-            && item.sub_type == MI_DART
+            && item.sub_type == MI_TOMAHAWK
             && (item.plus > miss->plus
                 || item.plus == miss->plus
                    && get_ammo_brand(*miss) == SPMSL_NORMAL

@@ -530,7 +530,7 @@ static missile_type _acquirement_missile_subtype()
         }
     }
 
-    missile_type result = MI_DART;
+    missile_type result = MI_TOMAHAWK;
 
     switch (skill)
     {
@@ -544,7 +544,6 @@ static missile_type _acquirement_missile_subtype()
             // Only give needles if they have a blowgun in inventory.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.push_back(make_pair(MI_DART, 50));
             missile_weights.push_back(make_pair(MI_TOMAHAWK, 75));
 
             // Include the possibility of needles if they have some stealth skill.

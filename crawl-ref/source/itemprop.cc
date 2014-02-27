@@ -368,9 +368,11 @@ struct missile_def
 static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
+#if TAG_MAJOR_VERSION == 34
+    { MI_DART,          "dart",          2,    3, true  },
+#endif
     { MI_NEEDLE,        "needle",        0,    1, false },
     { MI_STONE,         "stone",         2,    6, true  },
-    { MI_DART,          "dart",          2,    3, true  },
     { MI_ARROW,         "arrow",         7,    5, false },
     { MI_BOLT,          "bolt",          9,    5, false },
     { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
@@ -1728,8 +1730,10 @@ const char *ammo_name(const item_def &bow)
 bool has_launcher(const item_def &ammo)
 {
     ASSERT(ammo.base_type == OBJ_MISSILES);
-    return ammo.sub_type != MI_DART
-           && ammo.sub_type != MI_LARGE_ROCK
+    return ammo.sub_type != MI_LARGE_ROCK
+#if TAG_MAJOR_VERSION == 34
+           && ammo.sub_type != MI_DART
+#endif
            && ammo.sub_type != MI_JAVELIN
            && ammo.sub_type != MI_TOMAHAWK
            && ammo.sub_type != MI_THROWING_NET;

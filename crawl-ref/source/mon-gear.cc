@@ -1687,7 +1687,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
         case MONS_BIG_KOBOLD:
             if (x_chance_in_y(2, 5))
             {
-                weap_type  = MI_DART;
+                weap_type  = MI_STONE;
                 qty = 1 + random2(5);
             }
             break;

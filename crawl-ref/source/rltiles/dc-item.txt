@@ -273,23 +273,6 @@ effect/bolt5 MI_BOLT5
 effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
-dart1 MI_DART UNSEEN_MISSILE
-dart2
-dart-p MI_DART_POISONED
-steel_dart1 MI_DART_STEEL
-steel_dart2
-silver_dart1 MI_DART_SILVER
-silver_dart2
-# flying darts
-effect/dart0 MI_DART0
-effect/dart1 MI_DART1
-effect/dart2 MI_DART2
-effect/dart3 MI_DART3
-effect/dart4 MI_DART4
-effect/dart5 MI_DART5
-effect/dart6 MI_DART6
-effect/dart7 MI_DART7
-
 tomahawk1 MI_TOMAHAWK
 tomahawk2
 steel_tomahawk MI_TOMAHAWK_STEEL

@@ -257,7 +257,9 @@ enum misc_item_type
 
 enum missile_type
 {
+#if TAG_MAJOR_VERSION == 34
     MI_DART,
+#endif
     MI_NEEDLE,
     MI_ARROW,
     MI_BOLT,
