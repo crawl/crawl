@@ -759,8 +759,8 @@ MONS:    golden dragon zombie
 MONS:    fire dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
 ITEM:    gold dragon hide / storm dragon hide / fire dragon hide / troll hide / any useful armour good_item
-ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_item
-ITEM:    shortbow good_item / crossbow good_item / any useful weapon good_item
+ITEM:    arrow good_item / bolt good_item
+ITEM:    longbow good_item / crossbow good_item / any useful weapon good_item
 SHUFFLE: 123
 SHUFFLE: defg
 : trove.setup_features(_G)

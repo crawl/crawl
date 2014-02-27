@@ -285,7 +285,7 @@ MONS:    ball python w:5 / adder / water moccasin, place:Snake:1
 KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          w:25 potion of poison | w:5 potion of strong poison | \
          w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
-         w:14 arrow ego:poisoned | w:14 dart ego:poisoned | \
+         w:14 arrow ego:poisoned | w:14 tomahawk ego:poisoned | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
          w:2 staff of poison | w:4 any weapon ego:venom | \
          w:4 any armour ego:poison_resistance | w:1 swamp dragon hide
@@ -412,7 +412,7 @@ TAGS: no_monster_gen no_trap_gen
 SHUFFLE: _s
 KFEAT: s = general shop type:Hallowed suffix:Reliquary ; \
    potion of heal wounds | potion of curing | potion of restore abilities | \
-   wand of heal wounds | dart ego:silver w:2 | javelin ego:silver w:2 | \
+   wand of heal wounds | tomahawk ego:silver w:2 | javelin ego:silver w:2 | \
    bolt ego:silver w:2 | any weapon ego:holy_wrath | scroll of holy word | \
    sling bullet ego:silver w:2 | amulet of faith w:2 | potion of cure mutation | \
    ring of positive energy w:5 | any armour ego:positive_energy w:5
@@ -466,7 +466,7 @@ KFEAT: s = general shop type:Demolitions suffix:Depot ; \
    wand of fire | wand of fireball | wand of flame | wand of disintegration | \
    wand of frost | wand of cold | wand of lightning | wand of magic darts | \
    staff of conjuration | lightning rod | rod of inaccuracy | \
-   rod of destruction | rod of striking | dart ego:exploding | \
+   rod of destruction | rod of striking | large rock ego:exploding | \
    arrow ego:exploding | bolt ego:exploding | tome of destruction | \
    sling bullet ego:exploding | scroll of immolation | book of flames | \
    book of fire | book of air | manual of conjurations

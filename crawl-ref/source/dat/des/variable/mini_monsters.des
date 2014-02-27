@@ -894,7 +894,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:5 title:Nature \
         spells:beastly_appendage|sting|sticks_to_snakes|cure_poison|spider_form w:245
 : if crawl.coinflip() then
-KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / dart ego:poisoned
+ITEM:   f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
 KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
 : end
@@ -950,7 +950,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:5 title:Nature \
         spells:beastly_appendage|sting|sticks_to_snakes|cure_poison|spider_form w:245
 : if crawl.coinflip() then
-KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / dart ego:poisoned
+ITEM:   arrow ego:poisoned / javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
 KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
 : end
@@ -1234,8 +1234,8 @@ ENDMAP
 # Very unpleasant kobold minivaults
 NAME:   minmay_unpleasant_kobolds
 DEPTH:  D:6-
-MONS:   kobold ; dart ego:dispersal q:2 / w:3 big kobold ; dart ego:dispersal q:4
-MONS:   kobold ; dart ego:exploding q:2 / w:3 big kobold ; dart ego:exploding q:4
+MONS:   kobold ; tomahawk ego:dispersal q:2 / w:3 big kobold ; tomahawk ego:dispersal q:4
+MONS:   kobold ; tomahawk ego:exploding q:2 / w:3 big kobold ; tomahawk ego:exploding q:4
 MONS:   kobold ; blowgun . needle ego:curare q:1 / \
         w:3 big kobold ; blowgun . needle ego:curare q:2
 : if you.absdepth() > 13 then
@@ -1320,7 +1320,7 @@ TAGS:    no_monster_gen
 KPROP:   56' = no_rtele_into
 MONS:    kobold, plant, bush
 : if you.absdepth() < 4 then
-MONS:    kobold ; dagger . dart
+MONS:    kobold ; dagger . stone
 : else
 MONS:    big kobold ; dagger . throwing net q:2
 : end

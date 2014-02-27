@@ -100,10 +100,10 @@ FTILE:   deABCDEF = tutorial_pad
 MONS:    training dummy hp:2 ; stone q:10
 MONS:    rat always_corpse
 MONS:    worm
-ITEM:    dart mundane q:30
+ITEM:    tomahawk mundane q:10
 ITEM:    shortbow mundane not_cursed
 ITEM:    arrow mundane q:30
-MARKER:  d = lua:tutorial2.msg("darts")
+MARKER:  d = lua:tutorial2.msg("tomahawks")
 MARKER:  A = lua:tutorial2.msg("throwing")
 MARKER:  B = lua:tutorial2.msg("resting_reminder")
 MARKER:  e = lua:tutorial2.msg("wield_bow")

@@ -260,7 +260,7 @@ NAME:    lemuel_arrival_cross
 TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: >d
-ITEM:    stone / dart
+ITEM:    stone
 MAP
       xxx
       x{x
@@ -974,7 +974,7 @@ NAME:   dpeg_arrival_snail
 TAGS:   arrival no_monster_gen no_rotate
 ORIENT: float
 NSUBST: . = 1:d / *:.
-ITEM:   stone / dart
+ITEM:   stone
 MAP
          xxxxxxxxxxxxxxxxx
       xxxxxxxx.......xxxxxxx
