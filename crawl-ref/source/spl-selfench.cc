@@ -9,6 +9,7 @@
 #include "externs.h"
 
 #include "areas.h"
+#include "art-enum.h"
 #include "env.h"
 #include "godconduct.h"
 #include "hints.h"
@@ -112,7 +113,8 @@ spret_type ice_armour(int pow, bool fail)
 spret_type missile_prot(int pow, bool fail)
 {
     if (you.attribute[ATTR_REPEL_MISSILES]
-        || you.attribute[ATTR_DEFLECT_MISSILES])
+        || you.attribute[ATTR_DEFLECT_MISSILES]
+        || player_equip_unrand(UNRAND_AIR))
     {
         mpr("You are already protected from missiles.");
         return SPRET_ABORT;
