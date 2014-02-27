@@ -723,13 +723,8 @@ static void _give_items_skills(const newgame_def& ng)
 
         // One free escape.
         newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
-
-        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 10);
+        newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_TOMAHAWK, -1, 5);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
-
-        // Plain darts are maybe too weak for autopickup.
-        // autopickup_starting_ammo(MI_DART);
 
         you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
@@ -785,21 +780,14 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
         newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_MALEDICT);
 
-        // Gets some darts - this job is difficult to start off with.
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 12);
-
-        // Plain darts are maybe too weak for autopickup.
-        // autopickup_starting_ammo(MI_DART);
-
         if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
-        you.skills[SK_THROWING]     = 1;
         you.skills[SK_HEXES]        = 3;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_DODGING]      = 2;
-        you.skills[SK_STEALTH]      = 2;
+        you.skills[SK_STEALTH]      = 3;
         break;
 
     case JOB_SUMMONER:

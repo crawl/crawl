@@ -51,7 +51,7 @@ spell's power. More earthen spells are in their book of Geomancy.
 Enchanter
 
 Enchanters use spells from the book of Maledictions to incapacitate their foes,
-and are equipped with a dagger and some darts.
+and are equipped with an enchanted dagger.
 %%%%
 Fighter
 
