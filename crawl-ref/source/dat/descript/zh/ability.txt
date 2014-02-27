@@ -416,10 +416,6 @@ Convert to Beogh ability
 除了比欧弗自己之外，所有的神祗都厌恶比欧弗。另外，
 比欧弗也不会轻易饶过背离祂的叛教者。
 %%%%
-Make dart trap ability
-
-在目标地点创造出一个飞镖陷阱。
-%%%%
 Make oklob sapling ability
 
 在目标地点长出一株酸箭草幼苗。

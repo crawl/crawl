@@ -455,10 +455,6 @@ reputación.
 
 Todos los demás dios odian a Beogh, y no se tomarán la deserción a la ligera.
 %%%%
-Make dart trap ability
-
-Creas una trampa de dardos en la posición señalada.
-%%%%
 Make oklob sapling ability
 
 Plantas una planta oklob joven con la habilidad de escupir ácido en la posición

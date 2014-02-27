@@ -462,10 +462,6 @@ Ruf aufgebaut haben!
 Alle anderen Götter hassen Beogh, und nehmen Sie Fahnenfluch nicht auf die
 leichte Schulter.
 %%%%
-Make dart trap ability
-
-Erschaffe eine Dart-Falle an der gewählten Position.
-%%%%
 Make oklob sapling ability
 
 Pflanzt ein Oklob-Bäumchen an der gewählten Position, mit der Fähigkeit Säure

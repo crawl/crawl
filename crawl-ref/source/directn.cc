@@ -2932,8 +2932,6 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     {
         switch (trap)
         {
-        case TRAP_DART:
-            return "dart trap";
         case TRAP_ARROW:
             return "arrow trap";
         case TRAP_NEEDLE:
@@ -2947,6 +2945,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         case TRAP_NET:
             return "net trap";
 #if TAG_MAJOR_VERSION == 34
+        case TRAP_DART:
+            return "dart trap";
         case TRAP_GAS:
             return "gas trap";
 #endif

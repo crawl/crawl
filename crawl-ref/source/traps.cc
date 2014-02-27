@@ -63,7 +63,10 @@ bool trap_def::type_has_ammo() const
 {
     switch (type)
     {
-    case TRAP_DART:   case TRAP_ARROW:  case TRAP_BOLT:
+#if TAG_MAJOR_VERSION == 34
+    case TRAP_DART:
+#endif
+    case TRAP_ARROW:  case TRAP_BOLT:
     case TRAP_NEEDLE: case TRAP_SPEAR:
         return true;
     default:
@@ -116,7 +119,6 @@ void trap_def::prepare_ammo(int charges)
     }
     switch (type)
     {
-    case TRAP_DART:
     case TRAP_ARROW:
     case TRAP_BOLT:
     case TRAP_NEEDLE:
@@ -1007,7 +1009,6 @@ int trap_def::max_damage(const actor& act)
     switch (type)
     {
         case TRAP_NEEDLE: return 0;
-        case TRAP_DART:   return mon ?  4 :  6;
         case TRAP_ARROW:  return mon ?  7 : 15;
         case TRAP_SPEAR:  return mon ? 10 : 26;
         case TRAP_BOLT:   return mon ? 18 : 40;
@@ -1032,8 +1033,6 @@ int trap_def::difficulty()
     switch (type)
     {
     // To-hit and disarming:
-    case TRAP_DART:
-        return 3;
     case TRAP_ARROW:
         return 7;
     case TRAP_SPEAR:
@@ -1054,7 +1053,9 @@ int trap_def::difficulty()
 #if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
         return 15;
-#endif
+    case TRAP_DART:
+        return 3;
+ #endif
     // Irrelevant:
     default:
         return 0;
@@ -1448,7 +1449,9 @@ item_def trap_def::generate_trap_item()
 
     switch (type)
     {
+#if TAG_MAJOR_VERSION == 34
     case TRAP_DART:   base = OBJ_MISSILES; sub = MI_DART;         break;
+#endif
     case TRAP_ARROW:  base = OBJ_MISSILES; sub = MI_ARROW;        break;
     case TRAP_BOLT:   base = OBJ_MISSILES; sub = MI_BOLT;         break;
     case TRAP_SPEAR:  base = OBJ_WEAPONS;  sub = WPN_SPEAR;       break;
@@ -1615,7 +1618,6 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_GOLUBRIA:
         return DNGN_PASSAGE_OF_GOLUBRIA;
 
-    case TRAP_DART:
     case TRAP_ARROW:
     case TRAP_SPEAR:
     case TRAP_BLADE:
@@ -1624,6 +1626,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_NET:
 #if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
+    case TRAP_DART:
 #endif
     case TRAP_PLATE:
         return DNGN_TRAP_MECHANICAL;
@@ -1832,20 +1835,14 @@ static trap_type _random_trap_slime(int level_number)
 
 static trap_type _random_trap_default(int level_number)
 {
-    trap_type type = TRAP_DART;
+    trap_type type = TRAP_ARROW;
 
     if ((random2(1 + level_number) > 1) && one_chance_in(4))
         type = TRAP_NEEDLE;
     if (random2(1 + level_number) > 3)
         type = TRAP_SPEAR;
 
-    if (type == TRAP_DART ? random2(1 + level_number) > 2
-                          : one_chance_in(7))
-    {
-        type = TRAP_ARROW;
-    }
-
-    if ((type == TRAP_DART || type == TRAP_ARROW) && one_chance_in(15))
+    if (type == TRAP_ARROW && one_chance_in(15))
         type = TRAP_NET;
 
     if (random2(1 + level_number) > 7)

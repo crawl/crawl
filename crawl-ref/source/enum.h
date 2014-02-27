@@ -207,7 +207,9 @@ enum ability_type
     ABIL_MIN_ZOTDEF = ABIL_MAKE_FUNGUS,
     ABIL_MAKE_PLANT,
     ABIL_MAKE_OKLOB_SAPLING,
+#if TAG_MAJOR_VERSION == 34
     ABIL_MAKE_DART_TRAP,
+#endif
     ABIL_MAKE_ICE_STATUE,
     ABIL_MAKE_OCS,
     ABIL_MAKE_SILVER_STATUE,
@@ -4208,7 +4210,9 @@ enum torment_source_type
 
 enum trap_type
 {
+#if TAG_MAJOR_VERSION == 34
     TRAP_DART,
+#endif
     TRAP_ARROW,
     TRAP_SPEAR,
     TRAP_TELEPORT,
