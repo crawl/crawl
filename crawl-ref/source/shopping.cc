@@ -1316,11 +1316,7 @@ unsigned int item_value(item_def item, bool ident)
         }
 
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
-        {
             valued += 10 * item.plus + 50 * item.plus2;
-            if (valued < 1)
-                valued = 1;
-        }
 
         if (is_artefact(item))
         {
@@ -1417,12 +1413,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += (item.plus * 2);
 
             if (item.plus < 0)
-            {
                 valued += item.plus * item.plus * item.plus;
-
-                if (valued < 1)
-                    valued = 1;
-            }
         }
         break;
 
@@ -1554,11 +1545,7 @@ unsigned int item_value(item_def item, bool ident)
         }
 
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
-        {
             valued += 50 * item.plus;
-            if (valued < 1)
-                valued = 1;
-        }
 
         if (is_artefact(item))
         {
