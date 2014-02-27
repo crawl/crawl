@@ -1200,9 +1200,11 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         chance = 8;
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case MI_DART:
         chance = 6;
         break;
+#endif
 
     case MI_TOMAHAWK:
         chance = 20;

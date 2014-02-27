@@ -170,9 +170,11 @@ static int _missile_colour(const item_def &item)
     case MI_BOLT:
         item_colour = LIGHTBLUE;
         break;
+#if TAG_MAJOR_VERSION == 34
     case MI_DART:
         item_colour = CYAN;
         break;
+#endif
     case MI_JAVELIN:
         item_colour = RED;
         break;
@@ -1517,17 +1519,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     nw, SPMSL_POISONED,
                                     0);
         break;
-    case MI_DART:
-        rc = random_choose_weighted(30, SPMSL_FLAME,
-                                    30, SPMSL_FROST,
-                                    20, SPMSL_POISONED,
-                                    12, SPMSL_SILVER,
-                                    12, SPMSL_STEEL,
-                                    12, SPMSL_DISPERSAL,
-                                    20, SPMSL_EXPLODING,
-                                    nw, SPMSL_NORMAL,
-                                    0);
-        break;
     case MI_ARROW:
         rc = random_choose_weighted(30, SPMSL_FLAME,
                                     30, SPMSL_FROST,
@@ -1559,10 +1550,14 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         rc = random_choose_weighted(15, SPMSL_POISONED,
                                     10, SPMSL_SILVER,
                                     10, SPMSL_STEEL,
-                                    40, SPMSL_RETURNING,
+                                    12, SPMSL_DISPERSAL,
+                                    28, SPMSL_RETURNING,
                                     nw, SPMSL_NORMAL,
                                     0);
         break;
+#if TAG_MAJOR_VERSION == 34
+    case MI_DART:
+#endif
     case MI_STONE:
         // deliberate fall through
     case MI_LARGE_ROCK:
@@ -1649,26 +1644,26 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
     {
     case SPMSL_FLAME:
         return type == MI_SLING_BULLET || type == MI_ARROW
-               || type == MI_BOLT || type == MI_DART;
+               || type == MI_BOLT;
     case SPMSL_FROST:
         return type == MI_SLING_BULLET || type == MI_ARROW
-               || type == MI_BOLT || type == MI_DART;
+               || type == MI_BOLT;
     case SPMSL_POISONED:
         return type == MI_SLING_BULLET || type == MI_ARROW
-               || type == MI_BOLT || type == MI_DART
-               || type == MI_JAVELIN || type == MI_TOMAHAWK;
+               || type == MI_BOLT || type == MI_JAVELIN
+               || type == MI_TOMAHAWK;
     case SPMSL_RETURNING:
         return type == MI_JAVELIN || type == MI_TOMAHAWK;
     case SPMSL_CHAOS:
         return type == MI_SLING_BULLET || type == MI_ARROW
-               || type == MI_BOLT || type == MI_DART || type == MI_TOMAHAWK
+               || type == MI_BOLT || type == MI_TOMAHAWK
                || type == MI_JAVELIN || type == MI_THROWING_NET;
     case SPMSL_PENETRATION:
         return type == MI_JAVELIN || type == MI_BOLT;
     case SPMSL_DISPERSAL:
-        return type == MI_ARROW || type == MI_DART;
+        return type == MI_ARROW || type == MI_TOMAHAWK;
     case SPMSL_EXPLODING:
-        return type == MI_SLING_BULLET || type == MI_DART;
+        return type == MI_SLING_BULLET;
     case SPMSL_STEEL: // deliberate fall through
     case SPMSL_SILVER:
         return type == MI_BOLT || type == MI_SLING_BULLET
@@ -1695,8 +1690,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     else
     {
         item.sub_type =
-            random_choose_weighted(30, MI_STONE,
-                                   20, MI_DART,
+            random_choose_weighted(50, MI_STONE,
                                    20, MI_ARROW,
                                    12, MI_BOLT,
                                    12, MI_SLING_BULLET,
@@ -1734,8 +1728,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN || item.sub_type == MI_TOMAHAWK
         || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
-        || get_ammo_brand(item) == SPMSL_RETURNING
-        || (item.sub_type == MI_DART && get_ammo_brand(item) == SPMSL_POISONED))
+        || get_ammo_brand(item) == SPMSL_RETURNING)
     {
         item.quantity = random_range(2, 8);
     }

@@ -427,10 +427,6 @@ dagger
 
 A double-edged fighting knife with a sharp point.
 %%%%
-dart
-
-A fletched, sharply pointed projectile designed to be thrown by hand.
-%%%%
 decaying skeleton
 
 A decaying skeleton.

@@ -370,7 +370,6 @@ void practise(exer_type ex, int param1)
     case EX_WILL_THROW_MSL:
         switch (param1) // missile subtype
         {
-        case MI_DART:
         case MI_TOMAHAWK:
         case MI_JAVELIN:
         case MI_THROWING_NET:

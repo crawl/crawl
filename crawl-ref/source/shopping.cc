@@ -1125,7 +1125,6 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_MISSILES:          // ammunition
         switch (item.sub_type)
         {
-        case MI_DART:
         case MI_STONE:
         case MI_NONE:
             valued++;
