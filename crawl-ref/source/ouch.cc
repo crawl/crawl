@@ -531,6 +531,13 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 continue;
             }
 
+            if (target_class == OBJ_SCROLLS
+                && player_equip_unrand(UNRAND_FIRESTARTER)
+                && !one_chance_in(10))
+            {
+                continue;
+            }
+
             if (target_class == OBJ_POTIONS
                 && you.mutation[MUT_CONSERVE_POTIONS]
                 && !one_chance_in(10))

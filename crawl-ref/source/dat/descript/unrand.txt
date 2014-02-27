@@ -519,6 +519,11 @@ lajatang of Order
 Legend says that once the staff was the favoured weapon of the many priests of
 Zin. Long ago Zin bestowed this gift upon a favoured worshipper.
 %%%%
+great mace "Firestarter"
+
+Alongside its obvious effects, this weapon protects its owner's inventory from
+fire, and fills monsters that it hits with an inner flame.
+%%%%
 milk chocolate
 
 This item is a debugging aid, granting a vast array of mostly beneficial

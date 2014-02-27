@@ -1026,3 +1026,33 @@ static void _ORDER_melee_effects(item_def* item, actor* attacker,
         }
     }
 }
+
+///////////////////////////////////////////////////
+
+static void _FIRESTARTER_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "You are filled with an inner flame.");
+}
+
+static void _FIRESTARTER_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "Your inner flame fades away.");
+}
+
+static void _FIRESTARTER_melee_effects(item_def* weapon, actor* attacker,
+                                   actor* defender, bool mondied, int dam)
+{
+    if (dam)
+    {
+        if (defender->is_monster()
+            && !mondied
+            && !defender->as_monster()->has_ench(ENCH_INNER_FLAME))
+        {
+            mprf("%s is filled with an inner flame.",
+                 defender->name(DESC_THE).c_str());
+            defender->as_monster()->add_ench(
+                mon_enchant(ENCH_INNER_FLAME, 0, attacker,
+                            (3 + random2(dam)) * BASELINE_DELAY));
+        }
+    }
+}
