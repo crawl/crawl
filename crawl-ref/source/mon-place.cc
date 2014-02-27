@@ -2717,6 +2717,9 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_MONSTROUS_DEMONSPAWN:
+        // Horrible hack for wizlab_wucad_mu.
+        if (player_in_branch(BRANCH_WIZLAB))
+            break;
         band = BAND_MONSTROUS_DEMONSPAWN;
         band_size = random2(4);
         break;

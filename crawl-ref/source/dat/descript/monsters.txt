@@ -3043,7 +3043,7 @@ and its charring shows that it has trouble controlling its magic as well.
 Cigotuvi's Monster
 
 This terrifying creation looks to have been constructed from the body parts of
-every monstrous creature imaginable.
+every monstrous creature imaginable, and sprouts some writhing tentacles.
 %%%%
 # In the first umpteen pages of googling, the only use of "Iskenderun" for a
 # living being is the first Turkish Van cat brought to Britain. With
@@ -3060,11 +3060,6 @@ decayed bog body
 
 An undead figure preserved by the brackish waters of a bog. This one seems to
 have decayed quite a bit, and looks weak.
-%%%%
-deep troll monk
-
-It seems a flimsy representation of a monk; nothing more than a half-formed
-memory.
 %%%%
 deformed humanoid
 
@@ -3086,6 +3081,21 @@ earth elementalist statue
 
 A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
 %%%%
+faint deep troll monk
+
+A flimsy representation of a deep troll monk; little more than a half-formed
+memory, yet still ready to fight.
+%%%%
+faint demonspawn monk
+
+A flimsy representation of a monstrous demonspawn monk; little more than
+a half-formed memory, yet still ready to fight.
+%%%%
+faint grey draconian monk
+
+A flimsy representation of a draconian monk; little more than a half-formed
+memory, yet still ready to fight.
+%%%%
 fire elementalist statue
 
 An ornately worked statue of an orc holding a torch aloft, hewn from black
@@ -3099,7 +3109,7 @@ eyes.
 %%%%
 flesh golem
 
-An animated mound of misshapen flesh.
+An animated mound of misshapen flesh, sculpted over an iron skeleton.
 %%%%
 frost-covered statue
 
@@ -3109,16 +3119,6 @@ what kind of spells you can expect: cold-based ones.
 greater air elemental
 
 <air elemental>
-%%%%
-human monk
-
-It seems a flimsy representation of a monk; nothing more than a half-formed
-memory.
-%%%%
-iron troll monk
-
-It seems a flimsy representation of a monk; nothing more than a half-formed
-memory.
 %%%%
 kamikaze kobold
 
@@ -3245,11 +3245,11 @@ trespassers like you.
     end
 }}
 %%%%
-vine covered stone golem
+vine covered earth elemental
 
-While made of ordinary old weathered stone, covered with moss and vines, this
-golem still needs to be respected. It is still hard as stone, after all, and
-its weight spells massive damage if it connects a blow.
+While formed from ordinary old weathered stone, covered with moss and vines, this
+earth elemental still demands respect. It is still hard as stone, after all,
+and its weight spells massive damage if it connects a blow.
 %%%%
 witch
 

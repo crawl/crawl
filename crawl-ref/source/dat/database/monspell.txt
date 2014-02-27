@@ -432,6 +432,10 @@ Metal Splinters war gargoyle cast
 Crystal Bolt crystal guardian cast
 
 @The_monster@ fires a crystalline bolt @at@ @target@.
+%%%%
+Blink Other statue cast
+
+@The_monster@ casts a spell @at@ @target@.
 ########################################################################
 # Monster species and genus messages.
 ########################################################################
