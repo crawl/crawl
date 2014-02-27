@@ -4651,6 +4651,8 @@ string summoned_poof_msg(const monster* mons, bool plural)
     switch (summon_type)
     {
     case SPELL_SHADOW_CREATURES:
+    case SPELL_WEAVE_SHADOWS:
+    case MON_SUMM_SCROLL:
         msg      = "dissolve%s into shadows";
         no_chaos = true;
         break;
