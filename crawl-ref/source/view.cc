@@ -740,14 +740,7 @@ void flash_view(colour_t colour, targetter *where)
 void flash_view_delay(colour_t colour, int flash_delay, targetter *where)
 {
     flash_view(colour, where);
-    // Scale delay to match change in arena_delay.
-    if (crawl_state.game_is_arena())
-    {
-        flash_delay *= Options.arena_delay;
-        flash_delay /= 600;
-    }
-
-    delay(flash_delay);
+    scaled_delay(flash_delay);
     flash_view(0);
 }
 

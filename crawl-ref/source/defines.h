@@ -360,6 +360,8 @@ enum mouse_mode
     MOUSE_MODE_MAX,
 };
 
+const int DEFAULT_VIEW_DELAY = 600;
+
 #define PI 3.14159265359f
 
 #endif

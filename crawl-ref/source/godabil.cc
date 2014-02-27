@@ -1333,7 +1333,7 @@ bool zin_sanctuary()
 
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
-    delay(1000);
+    scaled_delay(1000);
 #endif
 
     // Pets stop attacking and converge on you.
@@ -2199,7 +2199,7 @@ bool fedhas_sunlight()
     coord_def temp = grid2view(base);
     cgotoxy(temp.x, temp.y, GOTO_DNGN);
 #endif
-    delay(200);
+    scaled_delay(200);
 
     if (revealed_count)
     {
@@ -2586,7 +2586,7 @@ bool fedhas_plant_ring_from_fruit()
             tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
         viewwindow(false);
 #endif
-        delay(200);
+        scaled_delay(200);
     }
 
     _decrease_amount(collected_fruit, created_count);
@@ -3253,7 +3253,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     update_level(pow * 10);
 
 #ifndef USE_TILE_LOCAL
-    delay(1000);
+    scaled_delay(1000);
 #endif
 
     monster* mon;

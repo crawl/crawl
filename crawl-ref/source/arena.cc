@@ -351,7 +351,7 @@ namespace arena
 
         const int arena_delay = strip_number_tag(spec, "delay:");
         if (arena_delay >= 0 && arena_delay < 2000)
-            Options.arena_delay = arena_delay;
+            Options.view_delay = arena_delay;
 
         string arena_place = strip_tag_prefix(spec, "arena_place:");
         if (!arena_place.empty())
@@ -821,7 +821,7 @@ namespace arena
                 do_respawn(faction_a);
                 do_respawn(faction_b);
                 balance_spawners();
-                delay(Options.arena_delay);
+                delay(Options.view_delay);
                 mesclr();
                 dump_messages();
                 ASSERT(you.pet_target == MHITNOT);
@@ -1004,7 +1004,7 @@ namespace arena
             do_fight();
 
             if (trials_done < total_trials)
-                delay(Options.arena_delay * 5);
+                delay(Options.view_delay * 5);
         }
         while (!contest_cancelled && trials_done < total_trials);
 
@@ -1015,7 +1015,7 @@ namespace arena
                  faction_b.desc.c_str(), trials_done - team_a_wins - ties,
                  ties);
         }
-        delay(Options.arena_delay * 5);
+        delay(Options.view_delay * 5);
 
         write_results();
     }

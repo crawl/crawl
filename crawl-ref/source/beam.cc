@@ -180,15 +180,7 @@ static void _zap_animation(int colour, const monster* mon = NULL,
 
         update_screen();
 
-        int zap_delay = 50;
-        // Scale delay to match change in arena_delay.
-        if (crawl_state.game_is_arena())
-        {
-            zap_delay *= Options.arena_delay;
-            zap_delay /= 600;
-        }
-
-        delay(zap_delay);
+        scaled_delay(50);
     }
 }
 
@@ -657,13 +649,6 @@ void bolt::initialise_fire()
     if (you.see_cell(source) && target == source && visible())
         seen = true;
 
-    // Scale draw_delay to match change in arena_delay.
-    if (crawl_state.game_is_arena() && !is_tracer)
-    {
-        draw_delay *= Options.arena_delay;
-        draw_delay /= 600;
-    }
-
 #ifdef DEBUG_DIAGNOSTICS
     // Not a "real" tracer, merely a range/reachability check.
     if (quiet_debug)
@@ -758,7 +743,7 @@ void bolt::draw(const coord_def& p)
     // Get curses to update the screen so we can see the beam.
     update_screen();
 #endif
-    delay(draw_delay);
+    scaled_delay(draw_delay);
 }
 
 // Bounce a bolt off a solid feature.
@@ -6092,15 +6077,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             }
             update_screen();
 
-            int explode_delay = 50;
-            // Scale delay to match change in arena_delay.
-            if (crawl_state.game_is_arena())
-            {
-                explode_delay *= Options.arena_delay;
-                explode_delay /= 600;
-            }
-
-            delay(explode_delay);
+            scaled_delay(50);
         }
     }
 
@@ -6127,17 +6104,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     // Delay after entire explosion has been drawn.
     if (!is_tracer && cells_seen > 0 && show_more)
-    {
-        int explode_delay = 150;
-        // Scale delay to match change in arena_delay.
-        if (crawl_state.game_is_arena())
-        {
-            explode_delay *= Options.arena_delay;
-            explode_delay /= 600;
-        }
-
-        delay(explode_delay);
-    }
+        scaled_delay(150);
 
     return cells_seen > 0;
 }

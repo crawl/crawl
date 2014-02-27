@@ -1532,7 +1532,7 @@ static bool _pre_more()
 
     if (crawl_state.game_is_arena())
     {
-        delay(Options.arena_delay);
+        delay(Options.view_delay);
         return true;
     }
 

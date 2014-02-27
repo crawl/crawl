@@ -217,15 +217,16 @@
 # show_gold_turns              = false
 # show_game_turns              = false
 # show_newturn_mark            = false
-# clear_messages             = true
-# small_more                 = true
-# show_more                  = false
-# show_inventory_weights     = false
-# item_stack_summary_minimum = 5
-# msg_condense_repeats   = false
-# msg_condense_short     = false
-# skill_focus            = false
-# show_travel_trail       = false (true for online)
+# clear_messages               = true
+# small_more                   = true
+# show_more                    = false
+# show_inventory_weights       = false
+# item_stack_summary_minimum   = 5
+# msg_condense_repeats         = false
+# msg_condense_short           = false
+# skill_focus                  = false
+# show_travel_trail            = false (true for online)
+# view_delay                   = 600
 
 ##### 3-j       Colours (messages and menus) ##########
 #
