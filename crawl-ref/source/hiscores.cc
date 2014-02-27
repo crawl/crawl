@@ -2068,7 +2068,8 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             snprintf(scratch, sizeof(scratch), "%s by ",
                       _range_type_verb(auxkilldata.c_str()));
             desc += scratch;
-            desc += death_source_desc();
+            desc += (death_source_name == "you") ? "themself"
+                                                 : death_source_desc();
 
             if (semiverbose)
             {
@@ -2091,9 +2092,18 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
         {
             // "by" is used for priest attacks where the effect is indirect
             // in verbose format we have another line for the monster
-            needs_called_by_monster_line = true;
-            snprintf(scratch, sizeof(scratch), "Killed %s",
-                      auxkilldata.c_str());
+            if (death_source_name == "you")
+            {
+                needs_damage = true;
+                snprintf(scratch, sizeof(scratch), "Killed by their own %s",
+                         auxkilldata.substr(3).c_str());
+            }
+            else
+            {
+                needs_called_by_monster_line = true;
+                snprintf(scratch, sizeof(scratch), "Killed %s",
+                          auxkilldata.c_str());
+            }
             desc += scratch;
         }
         else
@@ -2105,7 +2115,10 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             else if (!terse)
                 desc += "Killed from afar by ";
 
-            desc += death_source_desc();
+            if (death_source_name == "you")
+                desc += "themself";
+            else
+                desc += death_source_desc();
 
             if (!auxkilldata.empty())
                 needs_beam_cause_line = true;
