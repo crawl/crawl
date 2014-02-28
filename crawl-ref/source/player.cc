@@ -3057,7 +3057,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
             _remove_temp_mutations();
     }
 
-    recharge_elemental_evokers(exp_gained);
+    recharge_xp_evokers(exp_gained);
 
     if (you.attribute[ATTR_XP_DRAIN])
     {

@@ -3197,13 +3197,13 @@ void slime_wall_damage(actor* act, int delay)
     }
 }
 
-void recharge_elemental_evokers(int exp)
+void recharge_xp_evokers(int exp)
 {
     FixedVector<item_def*, NUM_MISCELLANY> evokers(nullptr);
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item(you.inv[i]);
-        if (is_elemental_evoker(item) && item.plus2 > 0)
+        if (is_xp_evoker(item) && item.plus2 > 0)
         {
             // Only recharge one of each type of evoker at a time.
             if (evokers[item.sub_type]

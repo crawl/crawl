@@ -3545,6 +3545,12 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.special = SPWPN_NORMAL;
     }
+
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_HORN_OF_GERYON
+        && th.getMinorVersion() < TAG_MINOR_HORN_GERYON_CHANGE)
+    {
+        item.plus2 = 0;
+    }
 #endif
 
     if (is_unrandom_artefact(item))
