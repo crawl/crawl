@@ -185,7 +185,7 @@ my @monspeak_at_at = at_at_replaces("mon-util.cc", "do_mon_str_replacements");
 
 my @gods = ("the Shining One", "Sif Muna","Nemelex Xobeh",
             qw(Zin Kikubaaqudgha Yredelemnul Xom Vehumet
-               Okawaru Makhleb Trog Elyvilon Lugonu Dithmengos
+               Okawaru Makhleb Trog Elyvilon Lugonu Dithmenos
                Beogh Jiyva Fedhas Cheibriados Ashenzari));
 
 sub godspeak_keys()
