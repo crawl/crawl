@@ -23,10 +23,6 @@ Demonspawn
 Dæmonyngel er halvt menneske, halvt dæmon. De pådrager sig stærke, dæmoniske
 mutationer, når de vokser.
 %%%%
-Djinni
-
-Djinn er ildånder, og for dem er magi selve livets essens.
-%%%%
 Draconian
 
 Drakonere er alsidige hybrider. De modnes og får en farve, når de når niveau 7.

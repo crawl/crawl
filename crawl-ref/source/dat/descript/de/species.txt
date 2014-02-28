@@ -24,10 +24,6 @@ Demonspawn
 Dämonenbruten sind halb Mensch, halb Dämon. Sie erlangen während ihres
 Wachstums starke Mutationen.
 %%%%
-Djinni
-
-Die Dschinn sind Geister des Feuers, für die Magie die Essenz des Lebens ist.
-%%%%
 Draconian
 
 Draken sind vielseitige Hybride. Sie werden mit Level 7 erwachsen und

@@ -285,11 +285,6 @@ the Swine card
 Diese Karte macht dich rosa und wild auf Trüffel. Man findet normalerweise nur
 in Nemelex Xobeh's Deck der Bestrafung.
 %%%%
-the Bargain card
-
-Diese Karte gewährt dir einen kurzzeitigen Preisnachlass in Läden. Sie ist
-normalerweise in keinem Kartendeck.
-%%%%
 the Genie card
 
 Der Kartengeist gewährt dir etwas Nützliches oder bestraft dich für den

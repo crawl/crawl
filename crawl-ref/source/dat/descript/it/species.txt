@@ -25,11 +25,6 @@ Demonspawn
 I demoniaci sono mezzi uomini e mezzi demoni. Acquisendo potere subiscono
 potenti mutazioni che derivano dalla loro discendenza.
 %%%%
-Djinni
-
-I Djinn sono gli spiriti del fuoco, per loro la magia è la stessa essenza
-vitale.
-%%%%
 Draconian
 
 I draconici sono ibridi versatili. Al raggiungimento del livello sette maturano

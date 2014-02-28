@@ -990,11 +990,6 @@ dire elephant
 A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
 %%%%
-djinni
-
-A blue-skinned fellow without legs who hovers here, with not the slightest hint
-of having an urge to fulfill your wishes.
-%%%%
 draconian
 
 A bipedal reptilian creature slightly larger than a human. Draconians have
@@ -2225,22 +2220,6 @@ next. Echoes of the lingering dead flicker within its ghostly flames.
 rotten bat
 
 I guess this bat is well past its sell-by date.
-%%%%
-rotting devil
-
-A hideous, miserable creature covered in oozing sores, afflicted by some
-horrible disease. Bits and pieces fall from its body as it shambles toward its
-next victim.
-
-{{
-    if you.can_smell() then
-        if you.saprovorous() == 3 then
-            return "It smells delicious."
-        else
-            return "It stinks."
-        end
-    end
-}}
 %%%%
 the royal jelly
 

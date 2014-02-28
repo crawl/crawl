@@ -270,11 +270,6 @@ Questa carta ti farà diventare rosa e ti farà crescere delle radici per
 tartufi. È tipicamente trovata soltanto nel mazzo della punizione di Nemelex
 Xobeh.
 %%%%
-the Bargain card
-
-Questa carta garantisce temporaneamente uno sconto nei negozi. Normalmente non
-fa parte di alcun mazzo.
-%%%%
 the Genie card
 
 Il Genio potrebbe concederti un'acquisizione o punirti per averci provat .

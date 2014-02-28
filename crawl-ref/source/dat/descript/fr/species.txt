@@ -24,11 +24,6 @@ Demonspawn
 Les tieffelins sont moitié humain, moitié démon. Ils développent de puissantes
 mutations démoniaques à mesure qu'ils grandissent.
 %%%%
-Djinni
-
-Les Djinn sont des esprits du feu, pour qui la magie est l'essence même de la
-vie.
-%%%%
 Draconian
 
 Les Draconiens sont des hybrides polyvalents. Ils arrivent à maturité au niveau

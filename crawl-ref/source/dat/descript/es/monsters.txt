@@ -462,11 +462,6 @@ adder
 La serpiente más común del calabozo. Una especie de vetusto reptil que
 habitualmente se halla en lugares subterráneos.
 %%%%
-agate snail
-
-Un enorme y desagradable gasterópodo con una concha de color celadón, dentro de
-la cual se esconde cuando está asustado.
-%%%%
 air elemental
 
 Un espíritu proveniente del plano elemental del aire. Se materializa en este

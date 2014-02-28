@@ -261,11 +261,6 @@ the Swine card
 Esta carta te volverá de color rosa y te hará escarbar buscando trufas.
 Solamente se encuentra en el mazo de castigo de Nemelex Xobeh.
 %%%%
-the Bargain card
-
-Esta carta te garantiza un descuento temporal en tiendas. No suele formar parte
-de ningún mazo.
-%%%%
 the Genie card
 
 El Genio puede concederte una petición o castigarte por intentarlo. No suele

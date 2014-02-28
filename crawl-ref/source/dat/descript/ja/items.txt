@@ -1039,11 +1039,6 @@ ring of wizardry
 
 この指輪は装着者が魔法の呪文を使う能力を増強する。
 %%%%
-rod of demonology
-
-このロッドは召喚の呪文を収めている。
-そのいくつかは何も知らないこの世界に悪魔を解き放つことができる。
-%%%%
 rod of destruction
 
 このロッドは破壊と騒乱を引き起こす呪文一式を収めている。
@@ -1051,10 +1046,6 @@ rod of destruction
 rod of fiery destruction
 
 このロッドは敵対者に破壊的な炎を発射する呪文を収めている。
-%%%%
-rod of frigid destruction
-
-このロッドは発射された氷で敵対者を破壊する呪文を収めている。
 %%%%
 rod of inaccuracy
 
@@ -1069,10 +1060,6 @@ rod of striking
 rod of the swarm
 
 このロッドは手にしている者に昆虫の群れを召喚することを可能にする。
-%%%%
-rod of venom
-
-このロッドは攻撃用の毒の呪文を収めている。
 %%%%
 royal jelly
 

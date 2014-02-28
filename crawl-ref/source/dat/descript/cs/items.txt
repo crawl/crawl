@@ -417,10 +417,6 @@ rod of the swarm
 
 Tato hůl umožňuje jeho nositely přivolat roj hmyzu.
 %%%%
-rod of venom
-
-Tato hůl obsahuje útočná kouzla jedu.
-%%%%
 scroll of fear
 
 Tento svitek způsobuje velký strach v těch, které vidí ten, kdo ho čte.

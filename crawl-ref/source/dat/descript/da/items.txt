@@ -1244,11 +1244,6 @@ størrelse. Klædedragter af denne art yder kun en smule beskyttelse mod fysiske
 men, men deres gavmilde snit hæmmer ikke evnen til at undvige angreb eller
 udføre trolddom ordentligt.
 %%%%
-rod of demonology
-
-Denne stok indeholder hidkaldelsesbesværgelser, endda nogle, som kan slippe
-dæmoner løs i denne intetanende verden.
-%%%%
 rod of destruction
 
 Denne stok indeholder et varieret udvalg af besværgelser, der forårsager død og
@@ -1258,11 +1253,6 @@ rod of fiery destruction
 
 Denne stok indeholder besværgelser, der kan slynge altødelæggende ild efter
 dine fjender.
-%%%%
-rod of frigid destruction
-
-Denne stok indeholder besværgelser, der kan udrydde dine fjender ved at
-udslynge kulde.
 %%%%
 rod of inaccuracy
 
@@ -1278,10 +1268,6 @@ grundlæggende effektivitet med våbnet.
 rod of the swarm
 
 Denne stok lader brugeren hidkalde en sværm af insekter.
-%%%%
-rod of venom
-
-Denne stok indeholder giftbaserede angrebsbesværgelser.
 %%%%
 royal jelly
 
