@@ -476,10 +476,6 @@ adder
 
 一条普通的地城蛇。它是一种在地下常见的穴居爬行类动物。
 %%%%
-agate snail
-
-一个巨大又恶心的软体动物。如果受到惊吓，它会躲入身上长着的灰绿色甲壳中。
-%%%%
 air elemental
 
 一个来自气元素位面的灵体。它以一团气旋的方式存在于这个世界中，时而飘散，
@@ -1762,21 +1758,6 @@ redback
 rotten bat
 
 这只蝙蝠大概早就过了它的最迟销售日期了。
-%%%%
-rotting devil
-
-这个丑陋的悲惨生物得了一种可怕的疾病，全身上下都是流脓的疮口。
-在它摇摇晃晃走动的同时，它身上不断有肉块掉落下来。
-
-{{
-    if you.can_smell() then
-        if you.saprovorous() == 3 then
-            return "它闻起来似乎很好吃。"
-        else
-            return "它发出难闻的臭气。"
-        end
-    end
-}}
 %%%%
 the royal jelly
 

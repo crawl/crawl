@@ -278,11 +278,6 @@ the Swine card
 Cette carte vous rendra tout rose et avide de truffes. on la trouve uniquement
 dans le paquet de punition de Nemelex Xobeh.
 %%%%
-the Bargain card
-
-Cette carte vous accorde temporairement des réductions dans les échoppes. On ne
-la trouve normalement dans aucun paquet.
-%%%%
 the Genie card
 
 Ce Génie pourrait vous faire un don ou vous punir pour avoir essayé. On ne la

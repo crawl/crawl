@@ -274,11 +274,6 @@ This card will make you turn pink and root for truffles. It is usually only
 found in Nemelex Xobeh's deck of punishment.
 %%%%
 # deck of oddities (random card, along with a few others)
-the Bargain card
-
-This card grants you a temporary discount in shops. It is not normally part of
-any deck.
-%%%%
 the Genie card
 
 The Genie may grant you an acquirement or punish you for trying. It is not

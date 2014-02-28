@@ -187,11 +187,6 @@ adder
 
 Izplatīta pazemes čūska. Troglodītiska rāpuļa suga, kas bieži sastopama pazemē.
 %%%%
-agate snail
-
-Milzīgs un pretīgs gliemezis zaļpelēkā čaulā, kurā, tiekot nobiedēts, tas
-noslēpjas.
-%%%%
 anaconda
 
 Ļoti liela čūska, kas gan pa zemi, gan ūdenī pārvietojas ar pārsteidzošu

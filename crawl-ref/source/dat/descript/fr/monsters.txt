@@ -551,11 +551,6 @@ adder
 Le serpent commun dans le donjon. Une espèce de reptile troglodyte que l'on
 trouve souvent dans les espaces souterrains.
 %%%%
-agate snail
-
-Un gros gastropode dégoutant avec une coquille de céladon dans laquelle il se
-cache lorsqu'il est effrayé.
-%%%%
 air elemental
 
 Un esprit issu du plan élémentaire de l'air. Il existe dans ce monde sous la
@@ -1020,11 +1015,6 @@ dire elephant
 
 Un énorme pachyderme , plus sauvage et féroce que les éléphants normaux, avec
 une peau très épaisse, des pattes puissante et une mémoire à tomber par terre.
-%%%%
-djinni
-
-Un homme à la peau bleue sans jambes qui plane ici, sans le moindre soupçon
-d'avoir une envie de répondre à vos souhaits.
 %%%%
 draconian
 
@@ -2274,22 +2264,6 @@ rotten bat
 
 Je suppose que cette chauve-souris à largement dépasser sa date de péremption.
 %%%%
-rotting devil
-
-Une misérable créature hideuse couverte de plaies purulentes, affecté par
-quelque maladie horrible. Des morceaux tombent petit à petit de son corps
-tandis qu'il se traîne vers sa prochaine victime.
-
-{{
-    if you.can_smell() then
-        if you.saprovorous() == 3 then
-            return "Il sent drôlement bon."
-        else
-            return "Il empeste."
-        end
-    end
-}}
-%%%%
 the royal jelly
 
 Une chose gélatineuse particulièrement riche et dorée.
@@ -3078,10 +3052,6 @@ decayed bog body
 Une figure mort-vivante préservée par les eaux saumâtres des marais. Celle-ci
 semble s'être pas mal décomposée et elle à l'air faible.
 %%%%
-deep troll monk
-
-Il ressemble a un moine fragile, rien de plus qu'un souvenir à moitié formée.
-%%%%
 deformed humanoid
 
 La pauvre créature semble hideusement déformée.
@@ -3123,16 +3093,6 @@ frost-covered statue
 
 Une statue maladroitement faite d'un mage. Sa magie continue de fuir, vous
 laissant savoir de quel genre de sorts s'attendre : ceux qui sont froids.
-%%%%
-human monk
-
-Il a l'air d'une piètre représentation d'un moine ; rien de plus qu'un souvenir
-à moité formé.
-%%%%
-iron troll monk
-
-Il semble etre une pietre représentation d'un moine, rien de plus qu'un
-souvenir à demi formée.
 %%%%
 kamikaze kobold
 

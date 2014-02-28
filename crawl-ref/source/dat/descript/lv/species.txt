@@ -15,10 +15,6 @@ Demigod
 Viņi nekad nesekos dievam, taču Pusdievi to kompensē ar dievišķām spējām un
 izturību.
 %%%%
-Djinni
-
-Džini ir uguns gari, kuriem maģija ir pašas dzīvības pamatā.
-%%%%
 Halfling
 
 Mazi, taču rūdīgi, hobiti ir nepārspējami ar lingām. Tiem ir arī palielināta

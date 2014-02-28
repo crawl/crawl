@@ -23,10 +23,6 @@ Demonspawn
 Démonik je napůl člověk, napůl démon, který postupně získáva silné démonické
 mutace.
 %%%%
-Djinni
-
-Džinové jsou duchové ohně, pro které je magie životodárnou silou.
-%%%%
 Draconian
 
 Drakoni jsou všeumělové, kteří dospívají na sedmé úrovni, kdy získavají

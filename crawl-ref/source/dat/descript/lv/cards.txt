@@ -34,8 +34,3 @@ Foxfire card
 Šī kārts izsauc lidojošus radījumus. Tā parasti ir atrodama izsaucamo radījumu
 un kara kāršu komplektos.
 %%%%
-the Bargain card
-
-Šī kārts Jums veikalos dod īslaicīgas atlaides. Tā parasti nav nevienā no kāršu
-komplektiem.
-%%%%

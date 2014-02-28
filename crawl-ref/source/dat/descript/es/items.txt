@@ -977,15 +977,6 @@ Esta vestimenta ofrece poca protección ante el daño físico, pero no obstaculi
 la capacidad para evadir ataques, o la adecuada realización de los gestos
 taumatúrgicos.
 %%%%
-rod of demonology
-
-Esta vara contiene hechizos de invocación, algunos de los cuales pueden liberar
-demonios hacia este mundo desprevenido.
-%%%%
-rod of venom
-
-Esta vara contiene hechizos ofensivos de veneno.
-%%%%
 royal jelly
 
 Una cosa gelatinosa dorada bastante nutritiva. Consumirla restaurará tus

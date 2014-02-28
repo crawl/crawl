@@ -271,11 +271,6 @@ the Swine card
 Dette kort gør dig lyserød og får dig til at rode efter trøfler. Det findes som
 regel kun i Nemelex Xobehs stak med straffe.
 %%%%
-the Bargain card
-
-Dette kort giver dig midlertidigt rabat i butikker. Det er normalt ikke en del
-af nogen stakke.
-%%%%
 the Genie card
 
 Lampeånden kan skænke dig erhvervelse eller straffe dig for at prøve. Den er

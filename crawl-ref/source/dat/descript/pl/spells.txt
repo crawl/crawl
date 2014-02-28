@@ -309,12 +309,6 @@ Ten czar tymczasowo zmienia rzucającego w lodową bestię — mniej więcej w
 kształcie niedźwiedzia, jednak zrobioną całkowicie z lodu. Jak wiadomo, lód
 może pływać po wodzie.
 %%%%
-Ice Storm spell
-
-Ten czar ciska groźną burzę lodu, gradu i mroźnego powietrza we wskazanym
-kierunku. Zadaje to to ogromne obrażenia, tak od zimna jak i od uderzeń lodu,
-na sporym obszarze.
-%%%%
 Ignite Poison spell
 
 Ten czar zamienia wszelką truciznę w pobliżu w ogień, paląc od środka istoty

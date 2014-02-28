@@ -1198,11 +1198,6 @@ passen. Kleidungsstücke dieser Sorte bieten nur einen kleinen Schutz gegen den
 physischen Schaden an, aber ihre großzügige Kürzung hindert Vermeidung am
 Angriff oder der richtigen Leistung von thaumaturgical Gesten nicht.
 %%%%
-rod of demonology
-
-Diese Stange enthält Zauber des Zusammenrufens, von denen einige Dämonen zu
-dieser ahnungslosen Welt loslassen können.
-%%%%
 rod of destruction
 
 Diese Rute enthält eine abwechslungsreiche Auswahl von Zaubern von Chaos und
@@ -1213,11 +1208,6 @@ rod of fiery destruction
 Diese Rute enthält Zaubersprüche, die zerstörerische Feuer gegen deine Feinde
 abschießen.
 %%%%
-rod of frigid destruction
-
-Diese Rute enthält Zaubersprüche, die deine Feinde mit projizierter Kälte
-zerstören.
-%%%%
 rod of inaccuracy
 
 Dieser Stab erlaubt seinem Benutzer, einen kräftigen aber äußerst ungenauen
@@ -1226,10 +1216,6 @@ Energieblitz abzuschießen.
 rod of the swarm
 
 Dieser Stab erlaubt seinem Benutzer einen Schwarm Insekten zu rufen.
-%%%%
-rod of venom
-
-Diese Stange enthält beleidigendes Zauber des Giftes.
 %%%%
 royal jelly
 

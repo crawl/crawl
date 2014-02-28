@@ -499,12 +499,6 @@ Ice Form spell
 Ce sort transforme temporairement le corps du sorcier en une créature de glace
 gelée, suffisamment légère pour flotter sur l'eau.
 %%%%
-Ice Storm spell
-
-Ce sort propulse un blizzard de glace rageur, des giboulées, et du gaz gelés
-sur votre cible, causant des dégâts de froid partiellement irrésistibles sur
-une large zone.
-%%%%
 Ignite Poison spell
 
 Ce sort tente de transformer tous les poisons à proximité en flammes liquides,

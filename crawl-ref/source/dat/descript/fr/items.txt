@@ -1194,11 +1194,6 @@ Les habits de cette sorte offrent une faible protection contre les dégâts
 physiques, mais n'entravent pas les mouvements lorsqu'il s'agit d'esquiver une
 attaque, ou d'exécuter précisément des gestes thaumaturgiques.
 %%%%
-rod of demonology
-
-Ce sceptre contient des sorts de convocation, dont certains peuvent déchaîner
-des démons dans ce monde sans méfiance.
-%%%%
 rod of destruction
 
 Ce sceptre contient un ensemble varié de sorts de destruction et
@@ -1208,11 +1203,6 @@ rod of fiery destruction
 
 Ce sceptre contient des sorts qui lancent un feu destructeur contre vos
 ennemis.
-%%%%
-rod of frigid destruction
-
-Ce sceptre contient des sorts qui détruisent vos ennemis en projetant de la
-glace.
 %%%%
 rod of inaccuracy
 
@@ -1229,10 +1219,6 @@ fonction de votre compétence en évocations. La compétence Masses et Fléaux a
 rod of the swarm
 
 Ce sceptre permet à son porteur de convoquer un essaim d'insectes.
-%%%%
-rod of venom
-
-Ce sceptre contient des sorts offensifs et défensifs de poison.
 %%%%
 royal jelly
 

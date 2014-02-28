@@ -398,13 +398,6 @@ crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion out
 in the gloomy meadow beyond fabulous Okeanos.”
     -Hesiod, _Theogony_, circa 700 BCE.
 %%%%
-Ice Storm spell
-
-“Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall
-Stay These Messengers About Their Sacred Business. Do Not Ask Us About
-Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess Czol.”
-    -Anghammarad, “Going Postal”, Terry Pratchett.
-%%%%
 Ilsuiw
 
 “We have lingered in the chambers of the sea
@@ -632,16 +625,6 @@ imagination is a mirror, imparting vividness to all ideas, without the power of
 selecting or controlling them; then pray that your grieves may slumber, and the
 brotherhood of remorse not break their chain.”
     -Nathaniel Hawthorne, “The Haunted Mind”. 1835.
-%%%%
-agate snail
-
-“Snail, snail, slug-slow,
- To me thy four horns show;
- If thou dost not show me thy four,
- I will throw thee out of the door,
- For the crow in the gutter,
- To eat for bread and butter.”
-    -Silesian rhyme, _Notes and Queries_, Number 69. 1851.
 %%%%
 alligator
 
@@ -1852,7 +1835,7 @@ microbat
 %%%%
 molten gargoyle
 
-<metal gargoyle>
+<war gargoyle>
 %%%%
 morningstar
 
@@ -2348,14 +2331,6 @@ rod of striking
 rotten bat
 
 <bat>
-%%%%
-rotting devil
-
-“The slow adagio begins;
- The winding-sheets are ravelled out
- That swathe the minds of men, the sins
- That wrap their rotting souls about.“
-    -John Davidson, ”A Ballad of Heaven". Late 19th cent.
 %%%%
 salamander
 

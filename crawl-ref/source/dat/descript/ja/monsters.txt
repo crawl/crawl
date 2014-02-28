@@ -290,11 +290,6 @@ adder
 ダンジョンに生息する蛇としては一般的なものだ。 A species of troglodytic reptile
 commonly found in subterranean spaces.
 %%%%
-agate snail
-
-青磁のような殻を持つ、巨大で不快なカタツムリだ。
-これはひどく驚いたときにはその殻の中に身を隠してしまう。
-%%%%
 air elemental
 
 大気の精霊界から召換された精霊だ。 It exists in this world as a swirling vortex

@@ -636,11 +636,6 @@ Ice Form spell
 This spell temporarily transforms the caster's body into a frozen ice-creature,
 light enough to float on water.
 %%%%
-Ice Storm spell
-
-This spell hurls a raging blizzard of ice, sleet and freezing gasses at the
-target, dealing partially irresistible cold damage in a large area.
-%%%%
 Ignite Poison spell
 
 This spell attempts to convert all nearby poison into liquid flame, burning
