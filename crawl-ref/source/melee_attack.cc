@@ -601,8 +601,11 @@ bool melee_attack::handle_phase_hit()
 
     // check_unrand_effects is safe to call with a dead defender, so always
     // call it, even if the hit effects said to stop.
-    if (check_unrand_effects() || stop_hit)
+    if (stop_hit)
+    {
+        check_unrand_effects();
         return false;
+    }
 
     if (damage_done > 0 || _flavour_triggers_damageless(attk_flavour))
     {
@@ -633,6 +636,9 @@ bool melee_attack::handle_phase_hit()
 
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
+
+    if (check_unrand_effects())
+        return false;
 
     if (damage_done > 0)
         apply_black_mark_effects();
