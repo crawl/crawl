@@ -1767,7 +1767,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
                 buff << "}";
             }
-            else if (is_elemental_evoker(*this) && !evoker_is_charged(*this)
+            else if (is_xp_evoker(*this) && !evoker_is_charged(*this)
                      && !dbname)
             {
                 buff << " (inert)";
@@ -3549,8 +3549,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_BUGGY_EBONY_CASKET:
             return item_type_known(item);
 #endif
-        case MISC_HORN_OF_GERYON:
-            return true;
         default:
             return false;
         }

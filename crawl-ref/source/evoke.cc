@@ -252,8 +252,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 
 static bool _evoke_horn_of_geryon(item_def &item)
 {
-    // Note: This assumes that the Vestibule has not been changed.
-    bool rc = false;
+    bool created = false;
 
     if (silenced(you.pos()))
     {
@@ -262,10 +261,37 @@ static bool _evoke_horn_of_geryon(item_def &item)
     }
 
     mprf(MSGCH_SOUND, "You produce a hideous howling noise!");
-    create_monster(
-        mgen_data::hostile_at(MONS_HELL_BEAST, "the horn of Geryon",
-            true, 4, 0, you.pos()));
-    return rc;
+    did_god_conduct(DID_UNHOLY, 3);
+    int num = 1;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(90) > 130)
+        ++num;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(90) > 180)
+        ++num;
+    if (you.skill(SK_EVOCATIONS, 10) + random2(90) > 230)
+        ++num;
+    for (int n = 0; n < num; ++n)
+    {
+        monster* mon;
+        beh_type beh = BEH_HOSTILE;
+        bool will_anger = player_will_anger_monster(MONS_HELL_BEAST);
+
+        if (!will_anger && random2(you.skill(SK_EVOCATIONS, 10)) > 7)
+            beh = BEH_FRIENDLY;
+        mgen_data mg(MONS_HELL_BEAST, beh, &you, 3, SPELL_NO_SPELL, you.pos(),
+                     MHITYOU, MG_FORCE_BEH, GOD_NO_GOD, MONS_HELL_BEAST, 0, BLACK,
+                     PROX_CLOSE_TO_PLAYER);
+        mon = create_monster(mg);
+        if (mon)
+            created = true;
+        if (mon && will_anger)
+        {
+            mprf("%s is enraged by your holy aura!",
+                 mon->name(DESC_THE).c_str());
+        }
+    }
+    if (!created)
+        mpr("Nothing answers your call.");
+    return true;
 }
 
 static bool _check_crystal_ball()
@@ -1498,7 +1524,7 @@ static bool _phial_of_floods()
     return false;
 }
 
-static void _expend_elemental_evoker(item_def &item)
+static void _expend_xp_evoker(item_def &item)
 {
     item.plus2 = 10;
 }
@@ -1670,7 +1696,7 @@ bool evoke_item(int slot, bool check_range)
             }
             wind_blast(&you, you.skill(SK_EVOCATIONS, 10), coord_def());
             _fan_of_gales_elementals();
-            _expend_elemental_evoker(item);
+            _expend_xp_evoker(item);
             break;
 
         case MISC_LAMP_OF_FIRE:
@@ -1680,7 +1706,7 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
             if (_lamp_of_fire())
-                _expend_elemental_evoker(item);
+                _expend_xp_evoker(item);
             else
                 return false;
 
@@ -1693,7 +1719,7 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
             if (_stone_of_tremors())
-                _expend_elemental_evoker(item);
+                _expend_xp_evoker(item);
             else
                 return false;
             break;
@@ -1705,14 +1731,21 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
             if (_phial_of_floods())
-                _expend_elemental_evoker(item);
+                _expend_xp_evoker(item);
             else
                 return false;
             break;
 
         case MISC_HORN_OF_GERYON:
+            if (!evoker_is_charged(item))
+            {
+                mpr("That is presently inert.");
+                return false;
+            }
             if (_evoke_horn_of_geryon(item))
-                pract = 1;
+                _expend_xp_evoker(item);
+            else
+                return false;
             break;
 
         case MISC_BOX_OF_BEASTS:

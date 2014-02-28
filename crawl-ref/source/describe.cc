@@ -2027,7 +2027,7 @@ string get_item_description(const item_def &item, bool verbose,
     case OBJ_MISCELLANY:
         if (is_deck(item))
             description << _describe_deck(item);
-        if (is_elemental_evoker(item))
+        if (is_xp_evoker(item))
         {
             description << "\nOnce released, the spirits within this device "
                            "will dissipate, leaving it inert, though new ones "

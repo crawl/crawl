@@ -3644,7 +3644,7 @@ bool get_item_by_name(item_def *item, char* specs,
         {
             item->plus = 50;
         }
-        else if (!item_is_rune(*item) && !is_deck(*item) && !is_elemental_evoker(*item))
+        else if (!item_is_rune(*item) && !is_deck(*item) && !is_xp_evoker(*item))
             item->plus2 = 50;
         break;
 

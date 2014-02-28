@@ -199,8 +199,8 @@ spells: by consuming their former owner, a powerful wizard.
 %%%%
 Geryon
 
-A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends
-say that his silver horn is used to throw open the gates of Hell themselves.
+A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends say
+that his silver horn can summon terrible beasts to aid him in battle.
 %%%%
 Gloorx Vloq
 

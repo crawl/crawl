@@ -133,7 +133,7 @@ bool item_is_orb(const item_def &orb) PURE;
 bool item_is_horn_of_geryon(const item_def &item) PURE;
 bool item_is_spellbook(const item_def &item) PURE;
 
-bool is_elemental_evoker(const item_def &item);
+bool is_xp_evoker(const item_def &item);
 bool evoker_is_charged(const item_def &item);
 
 // ring functions:
