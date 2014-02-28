@@ -1800,7 +1800,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // check for returning ammo from launchers
     if (returning && projected == LRET_LAUNCHED)
     {
-        if (!x_chance_in_y(1, 1 + skill_bump(range_skill(*you.weapon()))))
+        if (!one_chance_in(1 + skill_bump(range_skill(*you.weapon()))))
             did_return = true;
     }
 
@@ -1809,7 +1809,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         returning = returning && !teleport;
 
-        if (returning && !x_chance_in_y(1, 1 + skill_bump(SK_THROWING)))
+        if (returning && !one_chance_in(1 + skill_bump(SK_THROWING)))
             did_return = true;
 
         baseHit = 0;

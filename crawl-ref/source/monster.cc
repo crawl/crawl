@@ -4215,7 +4215,7 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
 
     if (alive())
     {
-        if (x_chance_in_y(1, 5))
+        if (one_chance_in(5))
         {
             if (hit_dice > 1)
                 hit_dice--;

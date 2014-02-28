@@ -287,7 +287,7 @@ void xom_is_stimulated(int maxinterestingness, const string& message,
 void xom_tick()
 {
     // Xom now ticks every action, not every 20 turns.
-    if (x_chance_in_y(1, 20))
+    if (one_chance_in(20))
     {
         // Xom semi-randomly drifts your piety.
         const string old_xom_favour = describe_xom_favour();
