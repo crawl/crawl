@@ -739,6 +739,11 @@ This spell hurls a mighty bolt of lightning. Although this spell inflicts less
 damage than similar fire and ice spells, it can at once rip through whole rows
 of creatures.
 %%%%
+Localized Ignite Poison spell
+
+This spell attempts to convert the poison in and around one creature into
+liquid flame, burning a poisoned creature from within.
+%%%%
 Magic Dart spell
 
 This spell hurls a small bolt of magical energy. It never misses.
@@ -1053,6 +1058,10 @@ Sentinel's Mark spell
 This spell bestows a strong beacon upon an enemy. It announces the presence and
 location of the marked person to everyone on the same same dungeon level.
 %%%%
+Shadow Bolt spell
+
+A bolt spell mimicked by the shadow of a Dithmenos worshipper.
+%%%%
 Shadow Creatures spell
 
 This spell weaves a creature from shadows and threads of ethereal matter. The
@@ -1060,6 +1069,10 @@ creature thus brought into existence will recreate some type of creature found
 in the caster's immediate vicinity. The spell even creates appropriate
 equipment for the creature, which are given a lasting substance by their firm
 contact with reality.
+%%%%
+Shadow Shard spell
+
+A damaging spell mimicked by the shadow of a Dithmenos worshipper.
 %%%%
 Shatter spell
 
@@ -1470,6 +1483,11 @@ caster.
 Venom Bolt spell
 
 This spell throws a bolt of poison.
+%%%%
+Virulence spell
+
+This spell makes a target more vulnerable to poison, and enhances any poison
+that was already in their body.
 %%%%
 Volley of Thorns spell
 

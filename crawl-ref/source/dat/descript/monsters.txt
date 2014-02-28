@@ -667,6 +667,10 @@ blizzard demon
 
 A greater demon, wreathed in snow and lightning.
 %%%%
+block of ice
+
+A large block of ice that is quickly melting.
+%%%%
 blood saint
 
 <demonspawn>
