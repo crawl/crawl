@@ -937,7 +937,7 @@ static void _starcursed_scream(monster* mon, actor* target)
     else if (n > 4)
     {
         message = "A deafening chorus of shrieks assaults your mind!";
-        if (x_chance_in_y(1,3))
+        if (one_chance_in(3))
             stun = 1;
     }
     else if (n > 1)
@@ -990,7 +990,7 @@ static bool _will_starcursed_scream(monster* mon)
             n++;
     }
 
-    return x_chance_in_y(1, n);
+    return one_chance_in(n);
 }
 
 // Returns true if you resist the siren's call.
