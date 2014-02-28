@@ -799,3 +799,8 @@ starspawn_corner_NW STARSPAWN_OVERLAY_NW
 starspawn_corner_NE STARSPAWN_OVERLAY_NE
 starspawn_corner_SE STARSPAWN_OVERLAY_SE
 starspawn_corner_SW STARSPAWN_OVERLAY_SW
+%sdir mon/tentacles/vine_corners
+vine_corner_NW VINE_OVERLAY_NW
+vine_corner_NE VINE_OVERLAY_NE
+vine_corner_SE VINE_OVERLAY_SE
+vine_corner_SW VINE_OVERLAY_SW

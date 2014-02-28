@@ -172,3 +172,43 @@ starspawn_tentacle_segment_E_NW MONS_STARSPAWN_TENTACLE_SEGMENT_E_NW
 starspawn_tentacle_segment_E_SW MONS_STARSPAWN_TENTACLE_SEGMENT_E_SW
 starspawn_tentacle_segment_W_NE MONS_STARSPAWN_TENTACLE_SEGMENT_W_NE
 starspawn_tentacle_segment_W_SE MONS_STARSPAWN_TENTACLE_SEGMENT_W_SE
+
+## Vines
+
+## Vines connected to another segment
+%sdir mon/tentacles/vine_ends
+vine_N MONS_VINE_N
+vine_S MONS_VINE_S
+vine_E MONS_VINE_E
+vine_W MONS_VINE_W
+vine_NE MONS_VINE_NE
+vine_NW MONS_VINE_NW
+vine_SE MONS_VINE_SE
+vine_SW MONS_VINE_SW
+
+## Fully connected vine segments
+%sdir mon/tentacles/vine_segments
+
+### (a) straight ones
+vine_segment_E_W MONS_VINE_SEGMENT_E_W
+vine_segment_N_S MONS_VINE_SEGMENT_N_S
+vine_segment_NE_SW MONS_VINE_SEGMENT_NE_SW
+vine_segment_NW_SE MONS_VINE_SEGMENT_NW_SE
+### (b) curved ones
+vine_segment_E_N MONS_VINE_SEGMENT_E_N
+vine_segment_E_S MONS_VINE_SEGMENT_E_S
+vine_segment_N_W MONS_VINE_SEGMENT_N_W
+vine_segment_S_W MONS_VINE_SEGMENT_S_W
+vine_segment_NE_NW MONS_VINE_SEGMENT_NE_NW
+vine_segment_NE_SE MONS_VINE_SEGMENT_NE_SE
+vine_segment_NW_SW MONS_VINE_SEGMENT_NW_SW
+vine_segment_SE_SW MONS_VINE_SEGMENT_SE_SW
+### (c) connecting edges and corners
+vine_segment_N_SE MONS_VINE_SEGMENT_N_SE
+vine_segment_N_SW MONS_VINE_SEGMENT_N_SW
+vine_segment_S_NE MONS_VINE_SEGMENT_S_NE
+vine_segment_S_NW MONS_VINE_SEGMENT_S_NW
+vine_segment_E_NW MONS_VINE_SEGMENT_E_NW
+vine_segment_E_SW MONS_VINE_SEGMENT_E_SW
+vine_segment_W_NE MONS_VINE_SEGMENT_W_NE
+vine_segment_W_SE MONS_VINE_SEGMENT_W_SE
