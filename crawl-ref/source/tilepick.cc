@@ -2305,7 +2305,8 @@ enum tentacle_type
 {
     TYPE_KRAKEN = 0,
     TYPE_ELDRITCH = 1,
-    TYPE_STARSPAWN = 2
+    TYPE_STARSPAWN = 2,
+    TYPE_VINE = 3
 };
 
 static void _add_tentacle_overlay(const coord_def pos,
@@ -2332,40 +2333,20 @@ static void _add_tentacle_overlay(const coord_def pos,
     tile_flags flag;
     switch (dir)
     {
-        case NORTH: // SW
-            if (type == TYPE_KRAKEN)
-                flag = TILE_FLAG_KRAKEN_SW;
-            else if (type == TYPE_ELDRITCH)
-                flag = TILE_FLAG_ELDRITCH_SW;
-            else
-                flag = TILE_FLAG_STARSPAWN_SW;
-            break;
-        case EAST: // NW
-            if (type == TYPE_KRAKEN)
-                flag = TILE_FLAG_KRAKEN_NW;
-            else if (type == TYPE_ELDRITCH)
-                flag = TILE_FLAG_ELDRITCH_NW;
-            else
-                flag = TILE_FLAG_STARSPAWN_NW;
-            break;
-        case SOUTH: // NE
-            if (type == TYPE_KRAKEN)
-                flag = TILE_FLAG_KRAKEN_NE;
-            else if (type == TYPE_ELDRITCH)
-                flag = TILE_FLAG_ELDRITCH_NE;
-            else
-                flag = TILE_FLAG_STARSPAWN_NE;
-            break;
-        case WEST: // SE
-            if (type == TYPE_KRAKEN)
-                flag = TILE_FLAG_KRAKEN_SE;
-            else if (type == TYPE_ELDRITCH)
-                flag = TILE_FLAG_ELDRITCH_SE;
-            else
-                flag = TILE_FLAG_STARSPAWN_SE;
-            break;
-        default:
-            die("invalid direction");
+        case NORTH: flag = TILE_FLAG_TENTACLE_SW; break;
+        case EAST: flag = TILE_FLAG_TENTACLE_NW; break;
+        case SOUTH: flag = TILE_FLAG_TENTACLE_NE; break;
+        case WEST: flag = TILE_FLAG_TENTACLE_SE; break;
+        default: die("invalid direction");
+    }
+    env.tile_bg(next_showpos) |= flag;
+
+    switch (type)
+    {
+        case TYPE_ELDRITCH: flag = TILE_FLAG_TENTACLE_ELDRITCH; break;
+        case TYPE_STARSPAWN: flag = TILE_FLAG_TENTACLE_STARSPAWN; break;
+        case TYPE_VINE: flag = TILE_FLAG_TENTACLE_VINE; break;
+        default: flag = TILE_FLAG_TENTACLE_KRAKEN;
     }
     env.tile_bg(next_showpos) |= flag;
 }
@@ -2450,7 +2431,7 @@ static tentacle_type _get_tentacle_type(const int mtype)
             return TYPE_STARSPAWN;
         case MONS_SNAPLASHER_VINE:
         case MONS_SNAPLASHER_VINE_SEGMENT:
-            return TYPE_KRAKEN;
+            return TYPE_VINE;
 
         default:
             ASSERT("Invalid tentacle type!");
@@ -2475,17 +2456,29 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
         // Get the parent tentacle's location.
         h_pos = t_pos + mon.props["inwards"].get_coord();
     }
+    if (no_head_connect && (mon.type == MONS_SNAPLASHER_VINE
+                            || mon.type == MONS_SNAPLASHER_VINE_SEGMENT))
+    {
+        // Find an adjacent tree to pretend we're connected to.
+        for (adjacent_iterator ai(t_pos); ai; ++ai)
+        {
+            if (feat_is_tree(grd(*ai)))
+            {
+                h_pos = *ai;
+                no_head_connect = false;
+                break;
+            }
+        }
+    }
 
     // Tentacle only requires checking of head position.
     if (mons_is_tentacle(mon.type))
     {
         if (no_head_connect)
         {
-            if (_mons_is_kraken_tentacle(mon.type)
-                || mon.type == MONS_SNAPLASHER_VINE
-                || mon.type == MONS_SNAPLASHER_VINE_SEGMENT)
+            if (_mons_is_kraken_tentacle(mon.type))
                 return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
-            return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
+            else return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
         }
 
         // Different handling according to relative positions.
@@ -2862,9 +2855,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             tileidx_t tile = _tileidx_tentacle(mon);
             _handle_tentacle_overlay(mon.pos, tile, _get_tentacle_type(mon.type));
 
-            if ((!_mons_is_kraken_tentacle(mon.type)
-                 && mon.type != MONS_SNAPLASHER_VINE
-                 && mon.type != MONS_SNAPLASHER_VINE_SEGMENT)
+            if (!_mons_is_kraken_tentacle(mon.type)
                 && tile >= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_N
                 && tile <= TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_W_SE)
             {
@@ -2875,6 +2866,12 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                     || mon.type == MONS_STARSPAWN_TENTACLE_SEGMENT)
                 {
                     tile += TILEP_MONS_STARSPAWN_TENTACLE_N;
+                    tile -= TILEP_MONS_ELDRITCH_TENTACLE_N;
+                }
+                else if (mon.type == MONS_SNAPLASHER_VINE
+                         || mon.type == MONS_SNAPLASHER_VINE_SEGMENT)
+                {
+                    tile += TILEP_MONS_VINE_N;
                     tile -= TILEP_MONS_ELDRITCH_TENTACLE_N;
                 }
             }
