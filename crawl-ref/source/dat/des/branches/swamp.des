@@ -1100,6 +1100,138 @@ ttttttt
 ttttttt
 ENDMAP
 
+NAME:    cheibrodos_swamp_mausoleum
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
+DEPTH:   Swamp, !Swamp:$
+ORIENT:  south
+WEIGHT:  5
+MONS:    spectral hydra, spectral swamp dragon, death drake, necromancer
+MONS:    bog body w:8 / w:5 shadow / w:5 wraith / w:3 phantasmal warrior / \
+         w:1 freezing wraith
+KMONS:   6 = bog body / spriggan zombie w:4 / troll zombie w:4
+KMONS:   7 = large abomination w:2 / swamp worm zombie / giant leech zombie / \
+             alligator zombie w:6 / spiny frog zombie w:6
+KMONS:   q = w:2 col:darkgrey plant name:withered name_adjective              \
+              tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
+              name_adjective tile:mons_withered_plant
+KFEAT:   67 = W
+KFEAT:   t = mangrove
+KPROP:   ~ = no_rtele_into
+SUBST:   1 = 12, " = 6:15 W
+SHUFFLE: DE
+SUBST:   D = W, E = t, W = W:299 .:1, + = ++W, - = +, ~ = W
+MARKER:  V = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
+             pow_max = 3, delay = 20, start_clouds = 1, size_min = 2, \
+             size_max = 4, spread_rate = -1 }
+SUBST:   u = V
+MAP
+ tttttt   tttttttttt
+ ttt..tt t~tt.tt.t.tttt
+txxx.Wtttttt.5..u.WWWttt  xxxxxx
+xxx.WWW..t..5.W..WW7tttttxxx%%xxx
+x"+.W-W...u..W7WW7WWWWuttx6+..+6x
+xxxWWxW7W...tttWWW7WWWWWDDxx..xxx
+x"+WWW7WtWttWxxxxEEEWWW7WDW+..+6x
+xxxWWxWxtWWtxxtWtWWEEW..Wxxx..xxx
+x"WWW+WxWWWxxDWWWWtWEx..Wx"+.W+"x
+xxxWWxxxWttx.DDDWWW7tx.WWxxxWWxxxtt
+xxx.WWxxxxxx..WDDW7WtxWWWxxxWWxxxWtW
+x....WWWW..+...WDDWWxxtWtt7WWWWWtWW@
+x......W...+...WuDWWxxxttWW7WWWWWW..
+xxx..xxxxxxx..WW.tDWWxxxxxxxWWxxWtW@
+xxx..xxxWWxxWWWt..DDEEtttxxxWWxxxtt
+x6+..+6xWWWxxxW....xxEEWWW5-WW-"xt~
+xxx..xxxq..qxx.....xxtW5WWxxWWxxxt
+x6+..-.q..|..xx...xxttWW5WWWWWW"x
+xxx..xxx...qq3x+++xttttWWWWWWWxxx
+x6+..+6xq..xxxx...xxxxttWxW..W+"x
+xxx%%xxxxxxxx.......xxxxxxxx..xxx
+ xxxxxxt~xx...1.1.1...xxt~xxxxxx
+   ttttt~xV....141....Vx~tt~ttt
+      tttxx%....1....%xx~ttt
+       tttxxx*.....*xxx~~tt
+        tttxxxx|W|xxxx~ttt
+         ttt~xxxxxxx~~tt
+          tttt~~t~~tttt
+            ttttttttt
+ENDMAP
+
+NAME:  cheibrodos_swamp_kobolds
+TAGS:  no_item_gen no_monster_gen
+DEPTH: Swamp, !Swamp:$
+MONS:  kobold demonologist
+ITEM:  book of callings, book of summonings
+SUBST: ' = %:20 d:1 e:1
+MAP
+        WWW
+       WxxxW
+      Wxx'xxW
+      Wx.1'xW
+    WWWx+.xxW
+  WWWW..xxxW
+ Wxxx..WWWWW
+Wxx.+xW..WW
+Wx'1.xWWW@
+Wxx'xxWWW
+ WxxxWW
+  WWW
+ENDMAP
+
+NAME:  cheibrodos_swamp_pet_leeches
+TAGS:  no_item_gen no_monster_gen
+DEPTH: Swamp:1-4
+MONS:  vampire ; potion of blood . long sword . robe, giant leech
+KFEAT: t = mangrove
+KPROP: e' = no_rtele_into
+KPROP: .21 = bloody / w:30 nothing
+KPROP: e = bloody
+: dgn.delayed_decay(_G, 'e', 'human corpse')
+MAP
+ ttttt
+tt''ett
+txxmxxt
+tx.1.xt
+tx2.2xt
+tx...xt
+txx+xxt
+ tt@tt
+ENDMAP
+
+NAME:  cheibrodos_swamp_minitomb
+TAGS:  no_item_gen no_monster_gen mini_float
+DEPTH: Swamp
+KFEAT: t = mangrove
+KMONS: - = bog body w:20 / troll zombie / troll skeleton / shadow w:5
+KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing
+SUBST: ' = .W
+MAP
+  W@WWtW
+tWWWWtxW
+xtWWWtxx
+xtWWW+-x
+xxxWWxxx
+x-+WW+-x
+xxxW'xxx
+x-+'.+-x
+xxx..xxx
+x-+..+-x
+xxxxxxxx
+ xxxxxx
+ENDMAP
+
+NAME:  cheibrodos_swamp_slimy
+TAGS:  no_item_gen no_monster_gen
+DEPTH: Swamp
+KFEAT: t = mangrove
+MONS:  slime creature
+MAP
+   tcGct
+tttc111cttt
+@...1U1...@
+tttc111cttt
+   tcGct
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #
