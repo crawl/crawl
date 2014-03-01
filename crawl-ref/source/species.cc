@@ -565,6 +565,7 @@ int species_mp_modifier(species_type species)
 #endif
     case SP_TENGU:
     case SP_VINE_STALKER:
+    case SP_FORMICID:
         return 1;
     case SP_FELID:
     case SP_HIGH_ELF:
