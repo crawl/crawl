@@ -322,7 +322,6 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_FORMICID:
         you.mutation[MUT_ANTENNAE]    = 3;
-        you.mutation[MUT_EXOSKELETON] = 1;
         break;
 #if TAG_MAJOR_VERSION == 34
     case SP_DJINNI:

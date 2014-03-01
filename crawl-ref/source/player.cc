@@ -6648,8 +6648,6 @@ int player::armour_class() const
           ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0; // +2, +3, +4
     AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
-    AC += _mut_level(MUT_EXOSKELETON, MUTACT_FULL)
-          ? sqr(_mut_level(MUT_EXOSKELETON, MUTACT_FULL)) * 100 : 0;           // +1, +4
 
     return AC / 100;
 }
