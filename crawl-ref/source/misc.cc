@@ -1591,6 +1591,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         // so presence of monsters won't matter -- until it starts shrinking...
         if (is_sanctuary(you.pos()) && env.sanctuary_time >= 5)
             return true;
+
+        if (get_player_poisoning() >= you.hp)
+        {
+            if (announce)
+                mprf(MSGCH_WARN, "There is a lethal amount of poison in your body!");
+
+            return false;
+        }
     }
 
     // Monster check.
