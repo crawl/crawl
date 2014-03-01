@@ -160,7 +160,7 @@ ENDMAP
 #
 # Entry 1, Forest
 NAME: sprint_mu_entry_forest
-TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
 MONS: patrolling ooze / patrolling rat
 MONS: patrolling giant mite / patrolling rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
@@ -193,7 +193,7 @@ ENDMAP
 ##############################################################################
 # Entry 2, Cave
 NAME: sprint_mu_entry_cave
-TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_entry no_rotate no_hmirror no_vmirror
 MONS: patrolling ooze / patrolling rat
 MONS: patrolling giant mite / patrolling rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
@@ -227,7 +227,7 @@ ENDMAP
 #
 # Temple 1, Rooms
 NAME: sprint_mu_temple_rooms
-TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror
 KFEAT: E = altar_elyvilon
 KFEAT: 1 = altar_the_shining_one
 KFEAT: Z = altar_zin
@@ -294,7 +294,7 @@ ENDMAP
 #
 # D1_1, horror grid
 NAME: sprint_mu_d1_horrors
-TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
 MONS: Erica / Josephine / Snorg
 MONS: centaur
 MONS: centaur warrior
@@ -334,7 +334,7 @@ ENDMAP
 ##############################################################################
 # D1_2, spiderweb
 NAME: sprint_mu_d1_spiders
-TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_d1 no_rotate no_hmirror no_vmirror
 MONS: two-headed ogre hd:3 hp:40
 MONS: hill giant hd:5 hp:68
 MONS: Erolcha
@@ -371,7 +371,7 @@ ENDMAP
 #
 # Orc 1, the legion
 NAME: sprint_mu_orc_legion
-TAGS: sprint_mu_orc no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_orc no_rotate no_hmirror no_vmirror
 MONS: orc, orc wizard, orc priest, orc warrior
 MONS: orc knight, orc sorcerer, orc high priest, orc warlord
 NSUBST: r = 1:B / 2:! / 1:s / *:r
@@ -404,7 +404,7 @@ ENDMAP
 #
 # Elf 1, gauntlet
 NAME: sprint_mu_elf_gauntlet
-TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_elf no_rotate no_hmirror no_vmirror
 MONS: deep elf knight / deep elf priest / deep elf summoner / deep elf conjurer
 MONS: deep elf annihilator ; robe ego:poison_resistance | robe ego:resistance | robe /\
       deep elf demonologist ; robe ego:poison_resistance | robe ego:cold_resistance | robe /\
@@ -440,7 +440,7 @@ ENDMAP
 #
 # Hive 1, Nellie
 NAME: sprint_mu_hive_nellie
-TAGS: sprint_mu_hive no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_hive no_rotate no_hmirror no_vmirror
 KMONS: 1 = killer bee
 KITEM: 1 = honeycomb / w:2 royal jelly / w:4 nothing
 KMONS: 2 = queen bee
@@ -477,7 +477,7 @@ ENDMAP
 #
 # Lair 1, fedhas
 NAME: sprint_mu_lair_fedhas
-TAGS: sprint_mu_lair no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_lair no_rotate no_hmirror no_vmirror
 KMONS: P = plant / w:1 giant spore
 KMONS: p = plant
 KMONS: 1 = patrolling wandering mushroom
@@ -549,7 +549,7 @@ ENDMAP
 #
 # Slime 1, circle
 NAME: sprint_mu_slime_circle
-TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_slime no_rotate no_hmirror no_vmirror
 MONS: the royal jelly, shining eye, giant eyeball, acid blob, azure jelly
 SHUFFLE: 234
 SUBST: 4 = 45
@@ -589,7 +589,7 @@ ENDMAP
 #
 # Snake 1, twists
 NAME: sprint_mu_snake_twists
-TAGS: sprint_mu_snake no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_snake no_rotate no_hmirror no_vmirror
 MONS: guardian serpent, naga warrior, greater naga, naga
 MONS: adder, water moccasin, black mamba
 KMONS: 8 = anaconda
@@ -631,7 +631,7 @@ ENDMAP
 #
 # Shoals 1, archipelago
 NAME: sprint_mu_shoals_archi
-TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror
 MONS: Polyphemus, sheep, sea snake, Ilsuiw, merfolk javelineer
 KITEM: $ = barnacled rune of zot
 KFEAT: A = antique armour shop / antique weapon shop
@@ -668,7 +668,7 @@ ENDMAP
 ##############################################################################
 # Shoals 2, Kraken!
 NAME: sprint_mu_shoals_kraken
-TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_shoals no_rotate no_hmirror no_vmirror
 MONS: snapping turtle, alligator snapping turtle
 MONS: plant, fungus
 KMONS: ! = kraken
@@ -716,7 +716,7 @@ ENDMAP
 #
 # Swamp 1, forest cave
 NAME: sprint_mu_swamp_cave
-TAGS: sprint_mu_swamp no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_swamp no_rotate no_hmirror no_vmirror
 
 : local swamprnd = crawl.random2(4)
 : if swamprnd == 0 then
@@ -788,7 +788,7 @@ ENDMAP
 #
 # D2_1, wish-granting genie
 NAME: sprint_mu_d2_genie
-TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_d2 no_rotate no_hmirror no_vmirror
 MONS: yaktaur / yaktaur captain, giant eyeball, orc priest / \
  orc high priest hd:5 hp:70
 MONS: spriggan defender hd:5 hp:55 ; dagger
@@ -898,7 +898,7 @@ ENDMAP
 #
 # Vaults 1, butterflies
 NAME: sprint_mu_vaults_butterflies
-TAGS: sprint_mu_vaults no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_vaults no_rotate no_hmirror no_vmirror
 MONS: centaur warrior, lich, shadow dragon, ogre mage
 MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
       dire flail ego:vampiricism | war axe ego:freezing | spear ego:vorpal |\
@@ -1002,7 +1002,7 @@ ENDMAP
 #
 # Blade 1, basic
 NAME: sprint_mu_blade_basic
-TAGS: sprint_mu_blade no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_blade no_rotate no_hmirror no_vmirror
 MONS: dancing weapon
 : acq_on_sight(_G, '$', {"weapon","weapon"});
 KFEAT: $ = floor
@@ -1023,7 +1023,7 @@ ENDMAP
 #
 # Crypt 1, chambers
 NAME: sprint_mu_crypt_chambers
-TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling vampire knight
 KMONS: 2 = patrolling skeletal warrior
 KMONS: 3 = patrolling bone dragon
@@ -1051,7 +1051,7 @@ ENDMAP
 ##############################################################################
 # Crypt 2, fortress
 NAME: sprint_mu_crypt_fortress
-TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror
 MONS: patrolling iron golem, patrolling necromancer
 MONS: patrolling hell knight, patrolling skeletal warrior
 KMONS: 5 = lich
@@ -1072,7 +1072,7 @@ ENDMAP
 ##############################################################################
 # Crypt 3, Revenge of the Return of the Lich Under Glass 2: Revenge Harder
 NAME: sprint_mu_crypt_lich
-TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror
 MONS: ancient lich, skeletal warrior
 KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
 NSUBST: . = 10:- / *:.
@@ -1093,7 +1093,7 @@ ENDMAP
 #
 # Tomb 1, spiral
 NAME: sprint_mu_tomb_spiral
-TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror
 MONS: patrolling greater mummy, patrolling mummy priest
 MONS: patrolling guardian mummy, patrolling sphinx
 KFEAT: - = needle trap / net trap / blade trap / bolt trap / spear trap / zot trap
@@ -1127,7 +1127,7 @@ ENDMAP
 #
 # D3_1, branching
 NAME:  sprint_mu_d3_branching
-TAGS:  sprint_mu_d3 no_rotate no_hmirror no_vmirror no_dup
+TAGS:  sprint_mu_d3 no_rotate no_hmirror no_vmirror
 KMONS: a = col:red generate_awake statue name:fire_elementalist name_adjective hp:50 \
  spells:summon_fire_elementals;cantrip \
  tile:mons_fire_elementalist_statue
@@ -1243,7 +1243,7 @@ ENDMAP
 #
 # Vestibule 1, basic
 NAME: sprint_mu_vestibule_basic
-TAGS: sprint_mu_vestibule no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_vestibule no_rotate no_hmirror no_vmirror
 MONS: patrolling Geryon, yaktaur, yaktaur captain, stone giant
 MAP
 ............................
@@ -1258,7 +1258,7 @@ ENDMAP
 #
 # Dis 1, the iron giant
 NAME: sprint_mu_dis_giant
-TAGS: sprint_mu_dis no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_dis no_rotate no_hmirror no_vmirror
 MONS: patrolling iron elemental
 MONS: patrolling the iron giant ; giant club unrand:skullcrusher
 MONS: iron dragon, iron devil, patrolling hell sentinel, war gargoyle, iron golem
@@ -1296,7 +1296,7 @@ ENDMAP
 #
 # Gehenna 1, hellfire
 NAME: sprint_mu_gehenna_hellfire
-TAGS: sprint_mu_gehenna no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_gehenna no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling the serpent of hell
 KFEAT: 1 = lava
 KMONS: 2 = hellion
@@ -1338,7 +1338,7 @@ ENDMAP
 #
 # Cocytus 1, islands
 NAME: sprint_mu_cocytus_islands
-TAGS: sprint_mu_cocytus no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_cocytus no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling Antaeus ; large shield ego:reflection
 KMONS: 2 = patrolling ice fiend
 KMONS: 3 = kraken simulacrum
@@ -1384,7 +1384,7 @@ ENDMAP
 #
 # Tartarus 1, statrot
 NAME: sprint_mu_tartarus_statrot
-TAGS: sprint_mu_tartarus no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_tartarus no_rotate no_hmirror no_vmirror
 KMONS: 1 = patrolling Khufu / patrolling Murray / patrolling Ereshkigal
 KMONS: 2 = patrolling guardian mummy
 KMONS: 3 = patrolling quasit
@@ -1432,7 +1432,7 @@ ENDMAP
 #
 # Zot
 NAME: sprint_mu_zot1
-TAGS: sprint_mu_zot no_rotate no_hmirror no_vmirror no_dup
+TAGS: sprint_mu_zot no_rotate no_hmirror no_vmirror
 KMONS: T = col:magenta statue name:zot n_adj \
         spells:summon_eyeballs;malmutate;haste;shadow_creatures;\
         shadow_creatures;summon_eyeballs hd:30 hp:300 \
