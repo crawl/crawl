@@ -309,27 +309,31 @@
 ### The following lines define the colours of various objects within the
 ### tiles minimap. See options_guide.txt for more details.
 
-# tile_player_col      = white
-# tile_monster_col     = red
-# tile_neutral_col     = red
-# tile_peaceful_col    = lightred
-# tile_friendly_col    = lightred
-# tile_plant_col       = darkgreen
-# tile_item_col        = green
-# tile_unseen_col      = black
-# tile_floor_col       = lightgrey
-# tile_wall_col        = darkgrey
-# tile_mapped_wall_col = blue
-# tile_door_col        = brown
-# tile_downstairs_col  = magenta
-# tile_upstairs_col    = blue
-# tile_feature_col     = cyan
-# tile_trap_col        = yellow
-# tile_water_col       = grey
-# tile_lava_col        = grey
-# tile_excluded_col    = darkcyan
-# tile_excl_centre     = darkblue
-# tile_window_col      = yellow
+# tile_player_col       = white
+# tile_monster_col      = #660000
+# tile_neutral_col      = #660000
+# tile_peaceful_col     = #664400
+# tile_friendly_col     = #664400
+# tile_plant_col        = #446633
+# tile_item_col         = #005544
+# tile_unseen_col       = black
+# tile_floor_col        = #333333
+# tile_wall_col         = #666666
+# tile_mapped_floor_col = #222266
+# tile_mapped_wall_col  = #444499
+# tile_door_col         = #775544
+# tile_downstairs_col   = #ff00ff
+# tile_upstairs_col     = cyan
+# tile_branchstairs_col = #ff7788
+# tile_portal_col       = #ffdd00
+# tile_feature_col      = #997700
+# tile_trap_col         = #aa6644
+# tile_water_col        = #114455
+# tile_deep_water_col   = #001122
+# tile_lava_col         = #552211
+# tile_excluded_col     = #552266
+# tile_excl_centre_col  = #552266
+# tile_window_col       = #558855
 
 # If Crawl's response rate is too slow, try increasing the update rate.
 # tile_update_rate      = 1000
@@ -356,24 +360,36 @@
 # tile_layout_priority += ability, monster
 
 # tile_font_crt_file  = VeraMono.ttf
-# tile_font_crt_size  = 15
 # tile_font_stat_file = VeraMono.ttf
-# tile_font_stat_size = 16
 # tile_font_msg_file  = VeraMono.ttf
-# tile_font_msg_size  = 14
 # tile_font_tip_file  = VeraMono.ttf
-# tile_font_tip_size  = 15
 # tile_font_lbl_file  = Vera.ttf
-# tile_font_lbl_size  = 14
 # tile_font_ft_light  = false
+
+# tile_font_crt_size  = 15
+# tile_font_stat_size = 16
+# tile_font_msg_size  = 14
+# tile_font_tip_size  = 15
+# tile_font_lbl_size  = 14
 
 # tile_show_minihealthbar = false
 # tile_show_minimagicbar  = false
+# tile_show_demon_tier  = false
+
+# tile_water_anim = false
+# tile_misc_anim = false
 
 ### WebTiles only
 
+# tile_font_crt_family  = monospace
+# tile_font_stat_family = monospace
+# tile_font_msg_family  = monospace
+# tile_font_lbl_family  = monospace
+
 # tile_realtime_anim = true
 # tile_display_mode = glyph
+# tile_level_map_hide_messages = false
+# tile_level_map_hide_sidebar = true
 
 ##### 4-  Dump File #################################################
 #
