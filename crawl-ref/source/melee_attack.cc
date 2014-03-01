@@ -3230,7 +3230,7 @@ bool melee_attack::apply_damage_brand()
 
             // Weapons of venom do two levels of poisoning to the player,
             // but only one level to monsters.
-            defender->poison(attacker, 2);
+            defender->poison(attacker, 1 + random2(5) + random2(damage_done * 2 / 3));
 
             if (defender->is_player()
                    && old_poison < you.duration[DUR_POISONING]
