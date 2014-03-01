@@ -2370,6 +2370,9 @@ static void _cast_druids_call(const monster* mon)
             mon_list[i]->flags |= MF_WAS_IN_VIEW;
             simple_monster_message(mon_list[i], " answers the druid's call!");
 
+            // Assign blame (for statistical purposes, mostly)
+            mons_add_blame(mon_list[i], "called by " + mon->name(DESC_A));
+
             // If this is a low-HD monster, sometimes try to summon a second.
             // Otherwise, we're done. (Young druids can ever summon one)
             if (!second && mon_list[i]->hit_dice <= 10 && mon->hit_dice > 10
