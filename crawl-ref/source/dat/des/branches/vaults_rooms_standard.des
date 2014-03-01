@@ -794,7 +794,7 @@ MAP
 ENDMAP
 
 NAME:    v_rooms_1
-TAGS:    vault_orient_n vault_orient_s vault_orient_w
+TAGS:    vaults_orient_n vaults_orient_s vaults_orient_w
 NSUBST:  y = 1:+ / *:x
 NSUBST:  z = 1:+ / *:x
 NSUBST:  w = 1:+ / *:x

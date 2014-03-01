@@ -30,7 +30,7 @@ end
 }}
 
 NAME: arena_default
-TAGS: arena_default no_mons_gen
+TAGS: arena_default no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -58,7 +58,7 @@ ENDMAP
 
 # Metal-lined vault, when electricity reflection is important
 NAME: arena_metal
-TAGS: arena_metal no_mons_gen
+TAGS: arena_metal no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -87,7 +87,7 @@ XXXXXXXXXXXXXXXXXXX
 ENDMAP
 # Especially for immobile monsters... all locations are in LOS of each other
 NAME: arena_small
-TAGS: arena_small no_mons_gen
+TAGS: arena_small no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -115,7 +115,7 @@ ENDMAP
 
 # for fine-tuning interactions
 NAME: arena_narrow
-TAGS: arena_narrow no_mons_gen
+TAGS: arena_narrow no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -142,7 +142,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_corridor
-TAGS: arena_corridor no_mons_gen
+TAGS: arena_corridor no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -169,7 +169,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_pillarred
-TAGS: arena_pillarred no_mons_gen
+TAGS: arena_pillarred no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -196,7 +196,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_lattice
-TAGS: arena_lattice no_mons_gen
+TAGS: arena_lattice no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -223,7 +223,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_river
-TAGS: arena_river no_mons_gen no_pool_fixup
+TAGS: arena_river no_monster_gen no_pool_fixup
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -250,7 +250,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_swamp
-TAGS: arena_swamp no_mons_gen
+TAGS: arena_swamp no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -279,7 +279,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_pool
-TAGS: arena_pool no_mons_gen
+TAGS: arena_pool no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -307,7 +307,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_lava
-TAGS: arena_lava no_mons_gen
+TAGS: arena_lava no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -336,7 +336,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_baffles
-TAGS: arena_baffles no_mons_gen
+TAGS: arena_baffles no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -363,7 +363,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_glassbaffles
-TAGS: arena_glassbaffles no_mons_gen
+TAGS: arena_glassbaffles no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -390,7 +390,7 @@ ooooooooooooooooo
 ENDMAP
 
 NAME: arena_items
-TAGS: arena_items no_mons_gen no_item_gen
+TAGS: arena_items no_monster_gen no_item_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -421,7 +421,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_smoke
-TAGS: arena_smoke no_mons_gen
+TAGS: arena_smoke no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -454,7 +454,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_glassdoors
-TAGS: arena_glassdoors no_mons_gen
+TAGS: arena_glassdoors no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -481,7 +481,7 @@ ooooooooooooooooo
 ENDMAP
 
 NAME: arena_wall
-TAGS: arena_wall no_mons_gen
+TAGS: arena_wall no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -508,7 +508,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_glasswall
-TAGS: arena_glasswall no_mons_gen
+TAGS: arena_glasswall no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -535,7 +535,7 @@ XXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME: arena_doorwall
-TAGS: arena_doorwall no_mons_gen
+TAGS: arena_doorwall no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -563,7 +563,7 @@ ENDMAP
 
 
 NAME: arena_small_deep_pool
-TAGS: arena_small_deep_pool no_mons_gen
+TAGS: arena_small_deep_pool no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -592,7 +592,7 @@ ENDMAP
 
 
 NAME: arena_chaos
-TAGS: arena_chaos no_mons_gen
+TAGS: arena_chaos no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -624,7 +624,7 @@ ENDMAP
 
 
 NAME: arena_forest
-TAGS: arena_forest no_mons_gen
+TAGS: arena_forest no_monster_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
