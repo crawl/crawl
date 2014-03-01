@@ -6541,6 +6541,16 @@ static int _stoneskin_bonus()
     return boost;
 }
 
+static bool _bad_fitting_body_armour(const item_def& eq)
+{
+    // The deformed don't fit into body armour very well.
+    // (This includes nagas and centaurs.)
+    return player_mutation_level(MUT_DEFORMED)
+           || player_mutation_level(MUT_PSEUDOPODS)
+           || player_check_armour_size(eq, true)
+              != check_armour_size(eq, you.body_size(PSIZE_TORSO, true));
+}
+
 int player::armour_class() const
 {
     int AC = 0;
@@ -6564,14 +6574,12 @@ int player::armour_class() const
         AC += ac_value * (440 + skill(SK_ARMOUR, 20) + total_bonus * 10) / 440;
         AC += item.plus * 100;
 
-        // The deformed don't fit into body armour very well.
-        // (This includes nagas and centaurs.)
-        if (eq == EQ_BODY_ARMOUR && (player_mutation_level(MUT_DEFORMED)
-                                     || player_mutation_level(MUT_PSEUDOPODS))
-            && !(you_worship(GOD_IGNI_IPTHES)
-                 && you.piety >= piety_breakpoint(0)))
+        if (eq == EQ_BODY_ARMOUR && _bad_fitting_body_armour(item))
         {
-            AC -= ac_value / 2;
+            int AC_lost = ac_value / 2;
+            if (igni_bonus)
+                AC_lost -= min(AC_lost, igni_bonus * 100 / 3);
+            AC -= AC_lost;
         }
     }
 
