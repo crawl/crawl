@@ -74,13 +74,15 @@ end
 
 function rr_handle_hploss(hplost, source)
     -- source == 1 for poisoning
-    if not g_rr_yhpmin or not g_rr_hplmax or source ~= 1 then
+    if not g_rr_pois_curhp_ratio or not g_rr_pois_maxhp_ratio or source ~= 1 then
         return false
     end
 
-    -- If the hp lost is smaller than configured, and you have more than the
-    -- minimum health, ignore this poison event.
-    if hplost <= g_rr_hplmax and you.hp() >= g_rr_yhpmin then
+    -- If the the poison in your system is less than the given percentages
+    -- of both current and maximum hp, ignore
+    local hp, mhp = you.hp()
+    if (you.poisoning() * 100 / hp) <= g_rr_pois_curhp_ratio
+       and (you.poisoning() * 100 / mhp) <= g_rr_pois_maxhp_ratio then
         return nil
     end
 
@@ -88,15 +90,15 @@ function rr_handle_hploss(hplost, source)
 end
 
 function rr_check_params()
-    if (not g_rr_hplmax or not g_rr_yhpmin)
+    if (not g_rr_pois_maxhp_ratio or not g_rr_pois_curhp_ratio)
             and options.runrest_ignore_poison
     then
         local opt = options.runrest_ignore_poison
-        local hpl, hpm
-        _, _, hpl, hpm = string.find(opt, "(%d+)%s*:%s*(%d+)")
-        if hpl and hpm then
-            g_rr_hplmax = tonumber(hpl)
-            g_rr_yhpmin = tonumber(hpm)
+        local cur_r, max_r
+        _, _, cur_r, max_r = string.find(opt, "(%d+)%s*:%s*(%d+)")
+        if cur_r and max_r then
+            g_rr_pois_curhp_ratio = tonumber(cur_r)
+            g_rr_pois_maxhp_ratio = tonumber(max_r)
         end
     end
     return true
