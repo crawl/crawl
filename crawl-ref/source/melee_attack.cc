@@ -4499,21 +4499,6 @@ void melee_attack::mons_apply_attack_flavour()
         mons_do_poison();
         break;
 
-    case AF_POISON_STR:
-    case AF_POISON_INT:
-    case AF_POISON_DEX:
-        if (defender->poison(attacker, 1))
-        {
-            if (one_chance_in(3))
-            {
-                stat_type drained_stat = (flavour == AF_POISON_STR ? STAT_STR :
-                                          flavour == AF_POISON_INT ? STAT_INT
-                                                                   : STAT_DEX);
-                defender->drain_stat(drained_stat, 1, attacker);
-            }
-        }
-        break;
-
     case AF_ROT:
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
             rot_defender(2 + random2(3), damage_done > 5 ? 1 : 0);
