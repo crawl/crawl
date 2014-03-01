@@ -209,7 +209,7 @@ KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
          w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
          w:14 arrow ego:poisoned | w:14 dart ego:poisoned | \
          w:3 ring of poison resistance | w:6 randbook disc:poison | \
-         w:2 rod of venom | w:2 staff of poison | w:4 any weapon ego:venom | \
+         w:2 staff of poison | w:4 any weapon ego:venom | \
          w:4 any armour ego:poison_resistance | w:1 swamp dragon hide
 SUBST:   ? = 2..
 : if you.absdepth() < 13 then

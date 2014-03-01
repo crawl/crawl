@@ -50,7 +50,6 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               book of Callings / scroll of summoning ident:type q:2-3",
          ["Sif Muna"]="staff of channeling ident:type / good_item plate armour",
          ["the Shining One"]="wand of invisibility ident:type w:20 /\
-              rod of venom ident:type /\
               book of Envenomations / Young Poisoner's Handbook /\
               potion of invisibility ident:type q:3-6",
          Trog="manual of Spellcasting / manual of Air Magic /\
