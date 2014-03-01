@@ -43,7 +43,12 @@ spret_type cast_cure_poison(int pow, bool fail)
     }
 
     fail_check();
-    reduce_poison_player(2 + random2(pow) + random2(3));
+    reduce_player_poison((15 + roll_dice(3, pow / 2)) * 4);
+
+    // A message is already printed if we removed all of the poison
+    if (you.duration[DUR_POISONING])
+        mpr("The poison in your system diminishes.");
+
     return SPRET_SUCCESS;
 }
 
