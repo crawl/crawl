@@ -148,7 +148,7 @@ private:
     string mons_attack_verb();
     string mons_attack_desc();
     // TODO: Unify do_poison and poison_monster
-    void mons_do_poison();
+    bool mons_do_poison(bool always = false);
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
     void apply_black_mark_effects();
