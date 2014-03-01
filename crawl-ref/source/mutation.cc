@@ -2583,7 +2583,8 @@ void check_demonic_guardian()
 
         monster *guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
                                                      2, 0, you.pos(),
-                                                     MHITYOU, MG_FORCE_BEH));
+                                                     MHITYOU, MG_FORCE_BEH
+                                                              | MG_AUTOFOE));
 
         if (!guardian)
             return;
