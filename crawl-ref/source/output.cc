@@ -2697,7 +2697,6 @@ static string _status_mut_abilities(int sw)
         mutations.push_back("permanent stasis");
         mutations.push_back("dig shafts and tunnels");
         mutations.push_back("four strong arms");
-        mutations.push_back("poison weakness");
         break;
 
     case SP_GARGOYLE:
