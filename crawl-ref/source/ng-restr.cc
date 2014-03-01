@@ -836,6 +836,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             default:
                 return CC_RESTRICTED;
         }
+    case SP_CHERUFE:
+        return CC_RESTRICTED;
     default:
         return CC_BANNED;
     }

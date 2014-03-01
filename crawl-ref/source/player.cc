@@ -3473,6 +3473,17 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     perma_mutate(MUT_REGENERATION, 1, "vine stalker growth");
                 break;
 
+            case SP_CHERUFE:
+                if (!(you.experience_level % 4))
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+
+                if (you.experience_level == 8)
+                {
+                    mprf(MSGCH_INTRINSIC_GAIN,
+                         "You can now transform into magma.");
+                }
+                break;
+
             default:
                 break;
             }

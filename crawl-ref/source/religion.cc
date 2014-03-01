@@ -3471,9 +3471,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_IGNI_IPTHES:
-        if (you.form == TRAN_MAGMA)
-            you.erupt = true;
-
         _set_penance(old_god, 50);
         break;
 

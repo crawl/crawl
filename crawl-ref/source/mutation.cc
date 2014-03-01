@@ -577,6 +577,11 @@ string describe_mutations(bool center_title)
         break;
     }
 
+    case SP_CHERUFE:
+        result += "You cast spells using a little HP and little less MP.\n";
+        have_any = true;
+        break;
+
     default:
         break;
     }

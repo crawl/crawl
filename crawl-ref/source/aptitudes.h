@@ -1484,6 +1484,45 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VINE_STALKER,    SK_POISON_MAGIC,    0),
     APT(SP_VINE_STALKER,    SK_INVOCATIONS,     0),
     APT(SP_VINE_STALKER,    SK_EVOCATIONS,      0),
+
+    // SP_CHERUFE
+    APT(SP_CHERUFE,         SK_FIGHTING,        2),
+    APT(SP_CHERUFE,         SK_SHORT_BLADES,    0),
+    APT(SP_CHERUFE,         SK_LONG_BLADES,     0),
+    APT(SP_CHERUFE,         SK_AXES,            0),
+    APT(SP_CHERUFE,         SK_MACES_FLAILS,    0),
+    APT(SP_CHERUFE,         SK_POLEARMS,        0),
+    APT(SP_CHERUFE,         SK_STAVES,          0),
+    APT(SP_CHERUFE,         SK_SLINGS,         -2),
+    APT(SP_CHERUFE,         SK_BOWS,           -2),
+    APT(SP_CHERUFE,         SK_CROSSBOWS,      -2),
+    APT(SP_CHERUFE,         SK_THROWING,       -2),
+    APT(SP_CHERUFE,         SK_ARMOUR,          1),
+    APT(SP_CHERUFE,         SK_DODGING,        -2),
+    APT(SP_CHERUFE,         SK_STEALTH,        -4),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_CHERUFE,         SK_STABBING,      -99),
+#endif
+    APT(SP_CHERUFE,         SK_SHIELDS,         0),
+#if TAG_MAJOR_VERSION == 34
+    APT(SP_CHERUFE,         SK_TRAPS,         -99),
+#endif
+    APT(SP_CHERUFE,         SK_UNARMED_COMBAT,  1),
+    APT(SP_CHERUFE,         SK_SPELLCASTING,   -2),
+    APT(SP_CHERUFE,         SK_CONJURATIONS,   -1),
+    APT(SP_CHERUFE,         SK_HEXES,          -1),
+    APT(SP_CHERUFE,         SK_CHARMS,         -1),
+    APT(SP_CHERUFE,         SK_SUMMONINGS,     -1),
+    APT(SP_CHERUFE,         SK_NECROMANCY,      0),
+    APT(SP_CHERUFE,         SK_TRANSLOCATIONS,  0),
+    APT(SP_CHERUFE,         SK_TRANSMUTATIONS,  2),
+    APT(SP_CHERUFE,         SK_FIRE_MAGIC,      3),
+    APT(SP_CHERUFE,         SK_ICE_MAGIC,      -3),
+    APT(SP_CHERUFE,         SK_AIR_MAGIC,      -1),
+    APT(SP_CHERUFE,         SK_EARTH_MAGIC,     1),
+    APT(SP_CHERUFE,         SK_POISON_MAGIC,    0),
+    APT(SP_CHERUFE,         SK_INVOCATIONS,     1),
+    APT(SP_CHERUFE,         SK_EVOCATIONS,      1),
 };
 
 #endif

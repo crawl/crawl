@@ -1741,6 +1741,9 @@ Vine Stalkers
   reserves start to run low, thus replenishing their shroud of magic and their
   spells' fuel with each voracious bite.
 
+Cherufes
+    A combination of LO, Dj, and fire god ideas.
+
 Elves
 ========================================
 

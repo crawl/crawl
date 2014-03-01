@@ -725,10 +725,25 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    const int cost = spell_mana(spell);
-    if (!enough_mp(cost, true))
+    int mp_cost = spell_mana(spell);
+    int hp_cost = 0;
+
+    if (you.species == SP_CHERUFE)
+    {
+        mp_cost -= mp_cost / 3;
+        hp_cost += (spell_mana(spell) - mp_cost) * 2;
+    }
+
+    if (!enough_mp(mp_cost, true))
     {
         mpr("You don't have enough magic to cast that spell.");
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    if (!enough_hp(hp_cost, true))
+    {
+        mpr("You don't have enough vitality to cast that spell.");
         crawl_state.zero_turns_taken();
         return false;
     }
@@ -783,15 +798,18 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
     const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
-    // Silently take MP before the spell.
-    dec_mp(cost, true);
 
+    // Silently take MP and HP before the spell.
+    dec_mp(mp_cost, true);
+    dec_hp(hp_cost, false);
     const spret_type cast_result = your_spells(spell, 0, true);
+
     if (cast_result == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
-        // Return the MP since the spell is aborted.
-        inc_mp(cost, true);
+        // Return the MP and HP since the spell is aborted.
+        inc_mp(mp_cost, true);
+        inc_hp(hp_cost);
         return false;
     }
 
@@ -814,7 +832,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
          || spell == SPELL_SUBLIMATION_OF_BLOOD && you.hp == you.hp_max))
     {
         // These spells have replenished essence to full.
-        inc_mp(cost, true);
+        inc_mp(mp_cost, true);
     }
     else // Redraw MP
 #endif

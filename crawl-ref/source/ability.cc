@@ -255,8 +255,8 @@ static const ability_def Ability_List[] =
     { ABIL_DIG, "Dig", 0, 0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, 0, ABFLAG_DELAY},
 
-    // Magma form ability
     { ABIL_ERUPTION, "Eruption", 0, 0, 250, 0, 0, 0, ABFLAG_PAIN },
+    { ABIL_TRAN_MAGMA, "Magma Form", 0, 0, 250, 0, 0, 0, ABFLAG_NONE },
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -1077,6 +1077,9 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_SHAFT_SELF:
         failure = 0;
         break;
+
+    case ABIL_TRAN_MAGMA:
+        failure = 45 - (2 * you.experience_level);
         // end species abilities (some mutagenic)
 
         // begin demonic powers {dlb}
@@ -1733,7 +1736,7 @@ static bool _check_ability_possible(const ability_def& abil,
         }
 
     // intentional fall-through
-    case ABIL_IGNI_TRAN_MAGMA:
+    case ABIL_TRAN_MAGMA:
         if (you.duration[DUR_MAGMA_DEPLETED])
         {
             if (!quiet)
@@ -2932,6 +2935,18 @@ static bool _do_ability(const ability_def& abil)
             return false;
         break;
 
+    case ABIL_TRAN_MAGMA:
+        if (!transform(100, TRAN_MAGMA))
+        {
+            crawl_state.zero_turns_taken();
+            return false;
+        }
+        break;
+
+    case ABIL_ERUPTION:
+        magma_form_eruption();
+        break;
+
     case ABIL_JIYVA_CALL_JELLY:
     {
         mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0, you.pos(),
@@ -3076,18 +3091,6 @@ static bool _do_ability(const ability_def& abil)
             crawl_state.zero_turns_taken();
             return false;
         }
-        break;
-
-    case ABIL_IGNI_TRAN_MAGMA:
-        if (!transform(100, TRAN_MAGMA))
-        {
-            crawl_state.zero_turns_taken();
-            return false;
-        }
-        break;
-
-    case ABIL_ERUPTION:
-        magma_form_eruption();
         break;
 
     case ABIL_RENOUNCE_RELIGION:
@@ -3560,6 +3563,15 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_FLY, check_confused);
     }
 
+    if (you.species == SP_CHERUFE && you.experience_level >= 8
+        && you.form != TRAN_MAGMA)
+    {
+        _add_talent(talents, ABIL_TRAN_MAGMA, check_confused);
+    }
+
+    if (you.form == TRAN_MAGMA)
+        _add_talent(talents, ABIL_ERUPTION, check_confused);
+
     if (you.attribute[ATTR_PERM_FLIGHT] && you.racial_permanent_flight())
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
 
@@ -3577,10 +3589,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     vector<ability_type> abilities = get_god_abilities(include_unusable);
     for (unsigned int i = 0; i < abilities.size(); ++i)
         _add_talent(talents, abilities[i], check_confused);
-
-    // Igni eruption ability
-    if (you.form == TRAN_MAGMA)
-        _add_talent(talents, ABIL_ERUPTION, check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (!you_worship(GOD_NO_GOD)
