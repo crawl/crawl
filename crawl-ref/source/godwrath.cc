@@ -1407,9 +1407,13 @@ static bool _dithmenos_retribution()
         for (int i = 0; i < how_many; ++i)
         {
             if (create_monster(
-                    mgen_data::hostile_at(
-                        RANDOM_MOBILE_MONSTER, "the darkness of Dithmenos",
-                        true, 4, MON_SUMM_WRATH, you.pos(), 0, god)))
+                    mgen_data(
+                        RANDOM_MOBILE_MONSTER, BEH_HOSTILE, 0,
+                        4, MON_SUMM_WRATH, you.pos(), MHITYOU, 0, god,
+                        MONS_NO_MONSTER, 0, BLACK, PROX_ANYWHERE,
+                        level_id(BRANCH_DUNGEON,
+                                 min(27, you.experience_level + 5)),
+                        0, 0, 0, "", "the darkness of Dithmenos")))
             {
                 count++;
             }
