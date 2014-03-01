@@ -2916,7 +2916,7 @@ static void _decrement_durations()
     dec_disease_player(delay);
 
     if (you.duration[DUR_POISONING])
-        dec_poison_player();
+        handle_player_poison(delay);
 
     if (you.duration[DUR_DEATHS_DOOR])
     {

@@ -5111,17 +5111,22 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         return false;
 
     const int old_value = you.duration[DUR_POISONING];
+    const bool was_fatal = get_player_poisoning() >= you.hp;
+
     if (player_res_poison() < 0)
         amount *= 2;
-    you.duration[DUR_POISONING] += amount;
 
-    if (you.duration[DUR_POISONING] > 40)
-        you.duration[DUR_POISONING] = 40;
+    you.duration[DUR_POISONING] += amount * 4;
 
     if (you.duration[DUR_POISONING] > old_value)
     {
-        mprf(MSGCH_WARN, "You are %spoisoned.",
-             old_value > 0 ? "more " : "");
+        if (get_player_poisoning() >= you.hp && !was_fatal)
+            mprf(MSGCH_DANGER, "You are lethally poisoned!");
+        else
+        {
+            mprf(MSGCH_WARN, "You are %spoisoned.",
+                old_value > 0 ? "more " : "");
+        }
 
         learned_something_new(HINT_YOU_POISON);
     }
@@ -5129,20 +5134,30 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     you.props["poisoner"] = source;
     you.props["poison_aux"] = source_aux;
 
+    // Display the poisoned segment of our health, in case we take no damage
+    you.redraw_hit_points = true;
+
     return amount;
 }
 
-void dec_poison_player()
+int get_player_poisoning()
 {
-    // If Cheibriados has slowed your life processes, there's a
-    // chance that your poison level is simply unaffected and
-    // you aren't hurt by poison.
-    if (GOD_CHEIBRIADOS == you.religion
-        && you.piety >= piety_breakpoint(0)
-        && coinflip())
-    {
-        return;
-    }
+    if (player_res_poison() < 3)
+        return you.duration[DUR_POISONING] / 4;
+    else
+        return 0;
+}
+
+void handle_player_poison(int delay)
+{
+    int decrease = min(60, max(1, you.duration[DUR_POISONING] / 10
+                                  * delay / BASELINE_DELAY));
+
+    // If Cheibriados has slowed your life processes, poison affects you less
+    // quickly (you take the same total damage, but spread out over a longer
+    // period of time).
+    if (GOD_CHEIBRIADOS == you.religion && you.piety >= piety_breakpoint(0))
+        decrease = decrease * 2 / 3;
 
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
@@ -5154,49 +5169,47 @@ void dec_poison_player()
     }
 
     // Other sources of immunity (Zin, staff of Olgreb) let poison dissipate.
-    if (player_res_poison() >= 3)
-        return reduce_poison_player(1);
+    bool do_dmg = (player_res_poison() >= 3 ? false : true);
 
-    if (x_chance_in_y(you.duration[DUR_POISONING], 5))
+    int dmg = (you.duration[DUR_POISONING] / 4)
+               - ((you.duration[DUR_POISONING] - decrease) / 4);
+
+    msg_channel_type channel = MSGCH_PLAIN;
+    const char *adj = "";
+
+    if (dmg > 9)
     {
-        int hurted = 1;
-        msg_channel_type channel = MSGCH_PLAIN;
-        const char *adj = "";
+        channel = MSGCH_DANGER;
+        adj = "extremely ";
+    }
+    if (dmg > 4)
+    {
+        channel = MSGCH_WARN;
+        adj = "very ";
+    }
 
-        if (you.duration[DUR_POISONING] > 10
-            && random2(you.duration[DUR_POISONING]) >= 8)
-        {
-            hurted = random2(10) + 5;
-            channel = MSGCH_DANGER;
-            adj = "extremely ";
-        }
-        else if (you.duration[DUR_POISONING] > 5 && coinflip())
-        {
-            hurted = coinflip() ? 3 : 2;
-            channel = MSGCH_WARN;
-            adj = "very ";
-        }
-
+    if (do_dmg)
+    {
         int oldhp = you.hp;
-        ouch(hurted, NON_MONSTER, KILLED_BY_POISON);
+        ouch(dmg, NON_MONSTER, KILLED_BY_POISON);
         if (you.hp < oldhp)
             mprf(channel, "You feel %ssick.", adj);
-
-        if ((you.hp == 1 && one_chance_in(3)) || one_chance_in(8))
-            reduce_poison_player(1);
-
-        if (!you.duration[DUR_POISONING] && you.hp * 12 < you.hp_max)
-            xom_is_stimulated(you.hp == 1 ? 50 : 20);
     }
+
+    // Now decrease the poison in our system
+    reduce_player_poison(decrease);
 }
 
-void reduce_poison_player(int amount)
+void reduce_player_poison(int amount)
 {
     if (amount <= 0)
         return;
 
-    const int old_value = you.duration[DUR_POISONING];
     you.duration[DUR_POISONING] -= amount;
+
+    // Less than 1 point of damage remaining, so just end the poison
+    if (you.duration[DUR_POISONING] < 4)
+        you.duration[DUR_POISONING] = 0;
 
     if (you.duration[DUR_POISONING] <= 0)
     {
@@ -5205,11 +5218,10 @@ void reduce_poison_player(int amount)
         you.props.erase("poison_aux");
     }
 
-    if (you.duration[DUR_POISONING] < old_value)
-    {
-        mprf(MSGCH_RECOVERY, "You feel %sbetter.",
-             you.duration[DUR_POISONING] > 0 ? "a little " : "");
-    }
+    if (!you.duration[DUR_POISONING])
+         mprf(MSGCH_RECOVERY, "The poison has left your system.");
+
+    you.redraw_hit_points = true;
 }
 
 bool miasma_player(string source, string source_aux)

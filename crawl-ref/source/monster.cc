@@ -4109,8 +4109,7 @@ bool monster::poison(actor *agent, int amount, bool force)
         return false;
 
     // Scale poison down for monsters.
-    if (!(amount /= 2))
-        amount = 1;
+    amount = 1 + amount / 7;
 
     return poison_monster(this, agent, amount, force);
 }
