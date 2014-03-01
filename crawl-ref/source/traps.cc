@@ -1585,7 +1585,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             }
 
             if (poison)
-                act.poison(NULL, 1 + random2(3));
+                act.poison(NULL, 3 + roll_dice(2, 5));
             act.hurt(NULL, damage_taken);
         }
     }

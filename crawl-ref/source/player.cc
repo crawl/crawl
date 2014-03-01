@@ -5049,15 +5049,14 @@ bool confuse_player(int amount, bool quiet)
     return true;
 }
 
-bool curare_hits_player(int death_source, int amount, string name,
-                        string source_name)
+bool curare_hits_player(int death_source, string name, string source_name)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (player_res_poison() >= 3)
         return false;
 
-    if (!poison_player(amount, source_name, name))
+    if (!poison_player(roll_dice(2, 9), source_name, name))
         return false;
 
     int hurted = 0;
@@ -5075,7 +5074,7 @@ bool curare_hits_player(int death_source, int amount, string name,
         }
     }
 
-    potion_effect(POT_SLOWING, 2 + random2(4 + amount));
+    potion_effect(POT_SLOWING, 2 + random2(6));
 
     return hurted > 0;
 }
@@ -5237,7 +5236,7 @@ bool miasma_player(string source, string source_aux)
         return false;
     }
 
-    bool success = poison_player(1, source, source_aux);
+    bool success = poison_player(roll_dice(2, 9), source, source_aux);
 
     if (you.hp_max > 4 && coinflip())
     {

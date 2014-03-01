@@ -283,12 +283,12 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             string msg;
             if (pot_eff == POT_POISON)
             {
-                amount = 1 + random2avg(5, 2);
+                amount = 10 + random2avg(15, 2);
                 msg = "a potion of poison";
             }
             else
             {
-                amount = 3 + random2avg(13, 2);
+                amount = 30 + random2avg(55, 2);
                 msg = "a potion of strong poison";
             }
             poison_player(amount, "", msg);

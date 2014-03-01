@@ -2199,8 +2199,7 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
 bool curare_actor(actor* source, actor* target, string name, string source_name)
 {
     if (target->is_player())
-        return curare_hits_player(actor_to_death_source(source), 1 + random2(3),
-                                  name, source_name);
+        return curare_hits_player(actor_to_death_source(source), name, source_name);
     else
         return _curare_hits_monster(source, target->as_monster(), 2);
 }
