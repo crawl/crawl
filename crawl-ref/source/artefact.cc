@@ -1928,6 +1928,7 @@ struct _igni_artp_def
 {
     artefact_prop_type prop;
     short value;
+    bool overwrite;
 };
 
 static void _igni_add_prop(item_def& wpn, const _igni_artp_def& def)
@@ -1942,8 +1943,13 @@ static void _igni_add_prop(item_def& wpn, const _igni_artp_def& def)
     else
     {
         CrawlVector &rap = wpn.props[ARTEFACT_PROPS_KEY].get_vector();
-        short current_val = rap[def.prop];
-        rap[def.prop] = static_cast<short>(current_val + def.value);
+        if (def.overwrite)
+            rap[def.prop] = static_cast<short>(def.value);
+        else
+        {
+            short current_val = rap[def.prop];
+            rap[def.prop] = static_cast<short>(current_val + def.value);
+        }
     }
 }
 
@@ -1998,7 +2004,8 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_AC, 2 },
         { ARTP_EVASION, 2 },
         { ARTP_EYESIGHT, 1 },
-        { ARTP_DAMAGE, 3 }
+        { ARTP_DAMAGE, 3 },
+        { ARTP_BRAND, SPWPN_PROTECTION, true },
     };
     const int tier2_n = sizeof(tier2) / sizeof(_igni_artp_def);
 
@@ -2013,7 +2020,8 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_STRENGTH, 6 },
         { ARTP_INTELLIGENCE, 6 },
         { ARTP_DEXTERITY, 6 },
-        { ARTP_DAMAGE, 6 }
+        { ARTP_DAMAGE, 6 },
+        { ARTP_BRAND, SPWPN_SPEED, true },
     };
     const int tier0_n = sizeof(tier0) / sizeof(_igni_artp_def);
 
@@ -2027,7 +2035,7 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_COLD, -1 },
         { ARTP_ANGRY, 1 },
         { ARTP_MUTAGENIC, 1 },
-        { ARTP_NOISES, 1 },
+        { ARTP_NOISES, 3 },
     };
     const int bad_tier_n = sizeof(bad_tier) / sizeof(_igni_artp_def);
 
@@ -2063,6 +2071,16 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         CrawlVector &rap = choice.props[ARTEFACT_PROPS_KEY].get_vector();
         for (vec_size j = 0; j < ART_PROPERTIES; j++)
             rap[j] = static_cast<short>(0);
+
+        if (wpn.special == SPWPN_NORMAL)
+        {
+            if (is_range_weapon(wpn))
+                rap[ARTP_BRAND] = static_cast<short>(SPWPN_FLAME);
+            else
+                rap[ARTP_BRAND] = static_cast<short>(SPWPN_FLAMING);
+        }
+        else
+            rap[ARTP_BRAND] = static_cast<short>(wpn.special);
 
         if (rng(2))
         {
