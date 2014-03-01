@@ -2861,16 +2861,13 @@ void toxic_radiance_effect(actor* agent, int mult)
                     "by Olgreb's Toxic Radiance", true,
                     agent->as_monster()->name(DESC_A).c_str());
 
-                if (coinflip())
-                {
-                    poison_player(1, agent->name(DESC_A),
-                                "toxic radiance", agent->is_player());
-                }
+                poison_player(dam * 2 / 3, agent->name(DESC_A), "toxic radiance",
+                              false);
             }
             else
             {
-                poison_player(1, agent->name(DESC_A),
-                            "toxic radiance", agent->is_player());
+                poison_player(roll_dice(2, 3), agent->name(DESC_A),
+                              "toxic radiance", true);
             }
         }
         else
