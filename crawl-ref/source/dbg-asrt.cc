@@ -617,6 +617,10 @@ void do_crash_dump()
         // info to stderr and quit.
         fprintf(stderr, "Crashed while calling exit()!!!!\n");
 
+#ifdef USE_TILE_WEB
+        tiles.shutdown();
+#endif
+
         _dump_ver_stuff(stderr);
 
         dump_crash_info(stderr);
@@ -625,6 +629,18 @@ void do_crash_dump()
 
         return;
     }
+
+    // Want same time for file name and crash milestone.
+    const time_t t = time(NULL);
+
+#ifdef USE_TILE_WEB
+    char basename[180] = {};
+    tiles.send_exit_reason("crash", _assert_msg);
+    snprintf(basename, sizeof(basename), "crash-%s-%s", you.your_name.c_str(),
+             make_file_time(t).c_str());
+    tiles.send_dump_info("crash", basename);
+    tiles.shutdown();
+#endif
 
     string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
                   !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
@@ -635,8 +651,6 @@ void do_crash_dump()
 
     char name[180] = {};
 
-    // Want same time for file name and crash milestone.
-    const time_t t = time(NULL);
     snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
             you.your_name.c_str(), make_file_time(t).c_str());
 
@@ -763,13 +777,6 @@ void do_crash_dump()
     set_msg_dump_file(NULL);
 
     mark_milestone("crash", _assert_msg, "", t);
-
-#ifdef USE_TILE_WEB
-    tiles.send_exit_reason("crash", _assert_msg);
-    snprintf(name, sizeof(name), "crash-%s-%s", you.your_name.c_str(),
-             make_file_time(t).c_str());
-    tiles.send_dump_info("crash", name);
-#endif
 
     if (file != stderr)
         fclose(file);
