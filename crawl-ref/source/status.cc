@@ -832,15 +832,16 @@ static void _describe_regen(status_info* inf)
 
 static void _describe_poison(status_info* inf)
 {
-    int pois = you.duration[DUR_POISONING];
+    int pois_perc = (get_player_poisoning() >= you.hp ? 100
+                       : get_player_poisoning() * 100 / you.hp);
     inf->light_colour = (player_res_poison(false) >= 3
-                         ? DARKGREY : _bad_ench_colour(pois, 5, 10));
+                         ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
     inf->light_text   = "Pois";
     const string adj =
-         (pois > 10) ? "extremely" :
-         (pois > 5)  ? "very" :
-         (pois > 3)  ? "quite"
-                     : "mildly";
+         (pois_perc >= 100) ? "lethally" :
+         (pois_perc > 65)   ? "seriously" :
+         (pois_perc > 35)   ? "quite"
+                            : "mildly";
     inf->short_text   = adj + " poisoned";
     inf->long_text    = "You are " + inf->short_text + ".";
 }
