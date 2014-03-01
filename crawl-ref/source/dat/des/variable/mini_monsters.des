@@ -878,7 +878,7 @@ xxxxbbbMNOwwwx
 ENDMAP
 
 NAME:    hangedman_aviary
-TAGS:    no_rotate no_h_mirror
+TAGS:    no_rotate no_hmirror
 DEPTH:   D:13-, Depths
 MONS:    raven, tengu, harpy, phoenix
 : if you.absdepth() < 18 then
