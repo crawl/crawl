@@ -4257,12 +4257,12 @@ void handle_god_time(int time_delta)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            // Nemelex is relatively patient.
+        case GOD_IGNI_IPTHES:
+            // Relatively patient.
             if (one_chance_in(35))
                 lose_piety(1);
             break;
 
-        case GOD_IGNI_IPTHES:
         case GOD_SIF_MUNA:
             // [dshaligram] Sif Muna is now very patient - has to be
             // to make up for the new spell training requirements, else
