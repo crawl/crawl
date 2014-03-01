@@ -1815,7 +1815,7 @@ static bool _flay_creature(monster* mon, actor* victim)
     {
         // Bypassing ::hurt so that flay damage can ignore guardian spirit
         ouch(dam, mon->mindex(), KILLED_BY_MONSTER, "flay_damage",
-             mon->visible_to(&you));
+             you.can_see(mon));
     }
     else
         victim->hurt(mon, dam, BEAM_NONE, true);
@@ -3549,9 +3549,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!you.visible_to(mons))
-            break;
-
         if (coinflip())
             break;
 
@@ -3583,9 +3580,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_ELECTRIC_EEL:
     case MONS_LIGHTNING_SPIRE:
         if (mons->has_ench(ENCH_CONFUSION))
-            break;
-
-        if (!you.visible_to(mons))
             break;
 
         if (coinflip())
@@ -3770,8 +3764,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             mon_enchant rot = mon_enchant(ENCH_ROT, 0, 0, 10);
             mons->add_ench(rot);
 
-            if (mons->visible_to(&you))
-                simple_monster_message(mons, " begins to rapidly decay!");
+            simple_monster_message(mons, " begins to rapidly decay!");
         }
         break;
 
@@ -3903,9 +3896,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             spell = SPELL_FIRE_BREATH;
 
         if (mons->has_ench(ENCH_CONFUSION))
-            break;
-
-        if (!you.visible_to(mons))
             break;
 
         if ((mons_genus(mons->type) == MONS_DRAGON
