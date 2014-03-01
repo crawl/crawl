@@ -1048,7 +1048,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         dam = div_rand_round(dam * (10 - min(degree, 5)), 10);
     }
 
-    if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
+    if (you.species == SP_DEEP_DWARF && dam != INSTANT_DEATH
+                                     && death_type != KILLED_BY_POISON)
     {
         // Deep Dwarves get to shave any hp loss.
         int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));

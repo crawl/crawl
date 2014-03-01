@@ -5142,7 +5142,14 @@ bool poison_player(int amount, string source, string source_aux, bool force)
 int get_player_poisoning()
 {
     if (player_res_poison() < 3)
-        return you.duration[DUR_POISONING] / 4;
+    {
+        // Approximate the effect of damage shaving by giving the first
+        // 20 points of poison damage for 'free'
+        if (you.species == SP_DEEP_DWARF)
+            return max(0, (you.duration[DUR_POISONING] / 4) - 20);
+        else
+            return you.duration[DUR_POISONING] / 4;
+    }
     else
         return 0;
 }
@@ -5172,6 +5179,17 @@ void handle_player_poison(int delay)
 
     int dmg = (you.duration[DUR_POISONING] / 4)
                - ((you.duration[DUR_POISONING] - decrease) / 4);
+
+    // Approximate damage shaving by pretending that we have less poison in
+    // our system than we actually do (and downscaling damage proportionally)
+    if (you.species == SP_DEEP_DWARF)
+    {
+       dmg = div_rand_round((you.duration[DUR_POISONING] - 80) * dmg,
+                             you.duration[DUR_POISONING]);
+
+       if (dmg < 1)
+           do_dmg = false;
+    }
 
     msg_channel_type channel = MSGCH_PLAIN;
     const char *adj = "";
