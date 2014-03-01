@@ -85,6 +85,8 @@ syn match desBranchname contained /ziggurat\|labyrinth\|bazaar\|trove\|sewer\|os
 syn match desBranchname contained /bailey\|ice_cave\|volcano\|wizlab/
 
 " TAGS
+" in abyss.cc
+syn keyword desOrientation abyss_exit
 " in decks.cc and dgn-labyrinth.cc (without `minotaur` because monster)
 syn keyword desOrientation trowel_portal lab generate_loot
 " from dlua.ziggurat
@@ -98,6 +100,8 @@ syn keyword desOrientation no_dump
 " vault placement in maps.cc
 syn keyword desOrientation unrand place_unique special_room tutorial
 syn keyword desOrientation water_ok can_overwrite replace_portal
+" V vault building (mostly dlua/v_layouts and v_rooms)
+syn keyword desOrientation vaults_room vaults_empty vaults_hard no_windows preserve_wall
 
 " LFLAGS (in l_dgn.cc)
 syn keyword desOrientation no_tele_control not_mappable no_magic_map
@@ -159,10 +163,13 @@ syn region desAttribute start=/\</ end=/:/ contained oneline
 
 syn match desEntry "\<\w*_entry\>" contains=desBranch
 syn match desEntry "\<serial_\w*\>"
+syn match desEntry "\<no_species_\w\w\>"
 syn match desEntry "\<\(no\)\=layout_\w*\>"
 syn match desEntry "\<l\=uniq_\w*\>"
 syn match desEntry "\<chance_\w*\>"
 syn match desEntry "\<fallback_\w*\>"
+syn match desEntry "\<vaults_entry_\w*\>" contains=desBranch
+syn match desEntry "\<vaults_orient_\w\>"
 syn match desEntry "\<altar_\w*\>"           contains=desGod
 syn match desEntry "\<uniq_altar_\w*\>"      contains=desGod
 syn match desEntry "\<temple_overflow_\w*\>" contains=desGod
