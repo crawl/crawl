@@ -4163,7 +4163,7 @@ static void _heated_area(monster* mons)
 
 static void _igni_flame_weapon(monster* mons, item_def* wpn)
 {
-    if (!mons->alive())
+    if (!mons->alive() || !mons->observable())
         return;
 
     if (wpn && (get_weapon_brand(*wpn) == SPWPN_FLAMING
@@ -4176,13 +4176,10 @@ static void _igni_flame_weapon(monster* mons, item_def* wpn)
                                     BEAM_FIRE, resist,
                                     base_damage, true);
 
-        if (mons->observable())
-        {
-            set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
-            mprf("%s is burned by %s.",
-                 mons->name(DESC_THE).c_str(),
-                 wpn->name(DESC_THE).c_str());
-        }
+        set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
+        mprf("%s is burned by %s due to Igni's heat!",
+             mons->name(DESC_THE).c_str(),
+             wpn->name(DESC_THE).c_str());
 
         behaviour_event(mons, ME_DISTURB, 0, mons->pos());
         mons->hurt(mons, adjusted_damage);
