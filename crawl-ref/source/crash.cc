@@ -131,6 +131,10 @@ void crash_signal_handler(int sig_num)
 
         if (file != stderr)
             fclose(file);
+
+#ifdef USE_TILE_WEB
+        tiles.shutdown();
+#endif
         return;
     }
 
@@ -177,10 +181,6 @@ void crash_signal_handler(int sig_num)
 #endif
 
     do_crash_dump();
-
-#ifdef USE_TILE_WEB
-    tiles.shutdown();
-#endif
 
     // Now crash for real.
     signal(sig_num, SIG_DFL);
