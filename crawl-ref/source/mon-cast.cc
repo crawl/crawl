@@ -1471,6 +1471,7 @@ static bool _valid_blink_away_ally(const monster* caster, const monster* target,
 static bool _valid_druids_call_target(const monster* caller, const monster* callee)
 {
     return mons_aligned(caller, callee) && mons_is_beast(callee->type)
+           && callee->hit_dice <= 20
            && !callee->is_shapeshifter()
            && !caller->see_cell(callee->pos())
            && mons_habitat(callee) != HT_WATER
