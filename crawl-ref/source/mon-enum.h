@@ -88,10 +88,12 @@ enum attack_flavour
     AF_POISON_MEDIUM,
 #endif
     AF_POISON_STRONG,
+#if TAG_MAJOR_VERSION == 34
     AF_POISON_STR,
     AF_POISON_INT,
     AF_POISON_DEX,
     AF_POISON_STAT,
+#endif
     AF_ROT,
     AF_VAMPIRIC,
     AF_KLOWN,
