@@ -2780,7 +2780,7 @@ void MiscastEffect::_poison(int severity)
             {
                 you_msg      = "You feel sick.";
                 mon_msg_seen = "@The_monster@ looks sick.";
-                _do_poison(2 + random2(3));
+                _do_poison(7 + random2(9));
             }
             do_msg();
             break;
@@ -2806,7 +2806,7 @@ void MiscastEffect::_poison(int severity)
             {
                 you_msg      = "You feel very sick.";
                 mon_msg_seen = "@The_monster@ looks very sick.";
-                _do_poison(3 + random2avg(9, 2));
+                _do_poison(14 + random2avg(17, 2));
             }
             do_msg();
             break;
@@ -2838,7 +2838,7 @@ void MiscastEffect::_poison(int severity)
             {
                 you_msg      = "You feel incredibly sick.";
                 mon_msg_seen = "@The_monster@ looks incredibly sick.";
-                _do_poison(10 + random2avg(19, 2));
+                _do_poison(20 + random2avg(35, 2));
             }
             do_msg();
             break;
