@@ -131,10 +131,6 @@ void crash_signal_handler(int sig_num)
 
         if (file != stderr)
             fclose(file);
-
-#ifdef USE_TILE_WEB
-        tiles.shutdown();
-#endif
         return;
     }
 
@@ -154,6 +150,10 @@ void crash_signal_handler(int sig_num)
 #ifndef USE_TILE_LOCAL
     if (crawl_state.io_inited)
         console_shutdown();
+#endif
+
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
 #endif
 
 #ifdef WATCHDOG
