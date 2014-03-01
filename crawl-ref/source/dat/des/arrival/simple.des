@@ -1165,7 +1165,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    roderic_crossed_star
-TAGS:    arrival no_mons_gen
+TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: ?', !"
 SUBST:   ?:.x , ':. , !:.x, ":.

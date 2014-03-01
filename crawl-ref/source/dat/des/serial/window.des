@@ -61,7 +61,7 @@ ENDMAP
 
 NAME:   co_window_paths_b
 WEIGHT: 3
-TAGS:   transparentallow_dup extra serial_co_window_small
+TAGS:   transparent allow_dup extra serial_co_window_small
 SUBST:  X=xm
 MAP
   x
@@ -376,7 +376,7 @@ ENDMAP
 
 NAME:   co_window_unsneaky_path_e
 WEIGHT: 1
-TAGS:   transparents allow_dup extra serial_co_window_common
+TAGS:   transparent allow_dup extra serial_co_window_common
 SUBST:  X:xm
 MAP
 xxxxxxx@@@xxxxxxx

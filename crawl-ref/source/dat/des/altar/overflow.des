@@ -1604,7 +1604,7 @@ ENDMAP
 
 NAME:   tgw_xom
 DEPTH:  D:2-, Depths
-TAGS:   no_item_gen no_monster gen temple_overflow_1 temple_overflow_xom
+TAGS:   no_item_gen no_monster_gen temple_overflow_1 temple_overflow_xom
 TAGS:   uniq_altar_xom
 KFEAT:  _ = altar_xom
 MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
