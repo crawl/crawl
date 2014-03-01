@@ -327,7 +327,7 @@ class colour_bar
                && you.num_turns >= m_request_redraw_after;
     }
 
-    void draw(int ox, int oy, int val, int max_val, bool temp = false)
+    void draw(int ox, int oy, int val, int max_val, bool temp = false, int sub_val = 0)
     {
         ASSERT(val <= max_val);
         if (max_val <= 0)
@@ -338,9 +338,14 @@ class colour_bar
 
         const colour_t temp_colour = temperature_colour(temperature());
         const int width = crawl_view.hudsz.x - (ox - 1);
-        const int disp  = width * val / max_val;
-        const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
-        m_old_disp = disp;
+        const int sub_disp = (width * val / max_val);
+        int disp  = width * max(0, val - sub_val) / max_val;
+        const int old_disp = (m_old_disp < 0) ? sub_disp : m_old_disp;
+        m_old_disp = sub_disp;
+
+        // Always show at least one sliver of the sub-bar, if it exists
+        if (sub_val)
+            disp = max(0, min(sub_disp - 1, disp));
 
         CGOTOXY(ox, oy, GOTO_STAT);
 
@@ -353,7 +358,9 @@ class colour_bar
 
             if (cx < disp)
                 textcolor(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
-            else if (old_disp > disp && cx < old_disp)
+            else if (cx < sub_disp)
+                textcolor(BLACK + YELLOW * 16);
+            else if (old_disp >= sub_disp && cx < old_disp)
                 textcolor(BLACK + m_change_neg * 16);
             putwch(' ');
 #else
@@ -365,6 +372,11 @@ class colour_bar
             else if (cx < disp)
             {
                 textcolor(m_change_pos);
+                putwch('=');
+            }
+            else if (cx < sub_disp)
+            {
+                textcolor(YELLOW);
                 putwch('=');
             }
             else if (cx < old_disp)
@@ -689,7 +701,7 @@ static void _print_stats_hp(int x, int y)
         EP_Bar.draw(19, y, you.hp, you.hp_max);
     else
 #endif
-        HP_Bar.draw(19, y, you.hp, you.hp_max);
+        HP_Bar.draw(19, y, you.hp, you.hp_max, false, get_player_poisoning());
 }
 
 static short _get_stat_colour(stat_type stat)
