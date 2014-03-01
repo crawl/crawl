@@ -3111,7 +3111,7 @@ brand_type melee_attack::random_chaos_brand()
 attack_flavour melee_attack::random_chaos_attack_flavour()
 {
     attack_flavour flavours[] =
-        {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON_MEDIUM, AF_VAMPIRIC, AF_DISTORT,
+        {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON, AF_VAMPIRIC, AF_DISTORT,
          AF_CONFUSE, AF_CHAOS};
     return RANDOM_ELEMENT(flavours);
 }
@@ -4358,30 +4358,33 @@ void melee_attack::announce_hit()
     }
 }
 
-void melee_attack::mons_do_poison()
+// Returns if the target was actually poisoned by this attack
+bool melee_attack::mons_do_poison(bool always)
 {
-    if (one_chance_in(15 + 5 * (attk_flavour == AF_POISON ? 1 : 0))
-        || (damage_done > 1
-            && one_chance_in(attk_flavour == AF_POISON ? 4 : 3)))
+    if (one_chance_in(3) || always)
     {
         int amount = 1;
         bool force = false;
 
-        if (attk_flavour == AF_POISON_MEDIUM)
-            amount += random2(3);
-        else if (attk_flavour == AF_POISON_STRONG)
+        if (attk_flavour == AF_POISON_STRONG)
         {
+            amount = random_range(attacker->get_experience_level() * 3 / 2,
+                                  attacker->get_experience_level() * 5 / 2 + 2);
+
             if (defender->res_poison() > 0 && defender->has_lifeforce())
             {
-                amount += random2(3);
+                amount /= 3;
                 force = true;
             }
-            else
-                amount += roll_dice(2, 5);
+        }
+        else
+        {
+            amount = random_range(attacker->get_experience_level(),
+                                  attacker->get_experience_level() * 5 / 3 + 2);
         }
 
         if (!defender->poison(attacker, amount, force))
-            return;
+            return false;
 
         if (needs_message)
         {
@@ -4395,7 +4398,11 @@ void melee_attack::mons_do_poison()
                     defender->is_player() ? "" : "s");
             }
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void melee_attack::mons_do_napalm()
@@ -4488,7 +4495,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_POISON:
-    case AF_POISON_MEDIUM:
     case AF_POISON_STRONG:
         mons_do_poison();
         break;
@@ -4687,7 +4693,11 @@ void melee_attack::mons_apply_attack_flavour()
         }
 
         if (attacker->type == MONS_RED_WASP || one_chance_in(3))
-            defender->poison(attacker, coinflip() ? 2 : 1);
+        {
+            int dmg = random_range(attacker->get_experience_level() * 3 / 2,
+                                   attacker->get_experience_level() * 5 / 2);
+            defender->poison(attacker, dmg);
+        }
 
         int paralyse_roll = (damage_done > 4 ? 3 : 20);
         if (attacker->type == MONS_YELLOW_WASP)
@@ -4935,7 +4945,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_WEAKNESS_POISON:
-        if (defender->poison(attacker, 1))
+        if (mons_do_poison(true))
         {
             if (coinflip())
                 defender->weaken(attacker, 12);
