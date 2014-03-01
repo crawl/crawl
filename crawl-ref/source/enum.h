@@ -77,9 +77,10 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    // Magma Form
+    // Cherufes
     ABIL_ERUPTION,
-    ABIL_MAX_INTRINSIC = ABIL_ERUPTION,
+    ABIL_TRAN_MAGMA,
+    ABIL_MAX_INTRINSIC = ABIL_TRAN_MAGMA,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -188,7 +189,6 @@ enum ability_type
     ABIL_IGNI_FIREBRAND_WEAPON = 1180,
     ABIL_IGNI_ARTEFACTIZE_WEAPON,
     ABIL_IGNI_DIVINE_BELLOWS,
-    ABIL_IGNI_TRAN_MAGMA,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -2981,6 +2981,8 @@ enum monster_type                      // menv[].type
 #endif
     MONS_GUARDIAN_GOLEM,
 
+    MONS_CHERUFE,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3560,7 +3562,8 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
-    LAST_VALID_SPECIES = SP_VINE_STALKER,
+    SP_CHERUFE,
+    LAST_VALID_SPECIES = SP_CHERUFE,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)

@@ -74,6 +74,7 @@ static void _species_stat_init(species_type which_species)
     case SP_LAVA_ORC:           s = 10; i =  8; d =  6;      break;  // 24
     case SP_CENTAUR:            s = 10; i =  7; d =  4;      break;  // 21
     case SP_NAGA:               s = 10; i =  8; d =  6;      break;  // 24
+    case SP_CHERUFE:            s =  9; i =  9; d =  8;      break;  // 26
 
     case SP_MERFOLK:            s =  8; i =  7; d =  9;      break;  // 24
     case SP_TENGU:              s =  8; i =  8; d =  9;      break;  // 25
@@ -333,6 +334,10 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_REGENERATION]   = 1;
         you.mutation[MUT_MANA_SHIELD]    = 1;
         you.mutation[MUT_NO_DEVICE_HEAL] = 1;
+        break;
+    case SP_CHERUFE:
+        you.mutation[MUT_CARNIVOROUS]    = 1;
+        you.mutation[MUT_MOLTEN_SCALES]  = 1;
         break;
     default:
         break;

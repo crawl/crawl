@@ -135,3 +135,8 @@ Frail symbionts, vine stalkers regenerate quickly but cannot regain health
 from devices or potions. They are protected by their magical reserves, and
 pack a mean bite that replenishes them.
 %%%%
+Cherufe
+
+A combination of LO, Dj, and fire god ideas. Spells cost some HP instead of MP.
+Cherufes can transform into magma when they reach maturity.
+%%%%
