@@ -29,6 +29,7 @@ class TerminalRecorder(object):
         self.end_callback = None
         self.output_callback = None
         self.activity_callback = None
+        self.error_callback = None
 
         self.errpipe_read = None
         self.error_buffer = ""
@@ -151,6 +152,8 @@ class TerminalRecorder(object):
                 if line[-1] == "\r": line = line[:-1]
 
                 self.logger.info("ERR: %s", line)
+                if self.error_callback:
+                    self.error_callback(line)
 
             pos = self.error_buffer.find("\n")
 

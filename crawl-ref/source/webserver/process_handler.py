@@ -512,6 +512,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.process.end_callback = self._on_process_end
             self.process.output_callback = self._on_process_output
             self.process.activity_callback = self.note_activity
+            self.process.error_callback = self._on_process_error
 
             self.gen_inprogress_lock()
 
@@ -643,6 +644,21 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.check_where()
 
         self.write_to_all(line, True)
+
+    def _on_process_error(self, line):
+        if line.startswith("ERROR"):
+            self.exit_reason = "crash"
+            if line.rfind(":") != -1:
+                self.exit_message = line[line.rfind(":") + 1:].strip()
+        elif line.startswith("Writing crash info to"):
+            self.exit_reason = "crash"
+            url = None
+            if line.rfind("/") != -1:
+                url = line[line.rfind("/") + 1:].strip()
+            elif line.rfind(" ") != -1:
+                url = line[line.rfind(" ") + 1:].strip()
+            if url != None:
+                self.exit_dump_url = self.game_params["morgue_url"].replace("%n", self.username) + os.path.splitext(url)[0]
 
     def _on_socket_message(self, msg):
         # stdout data is only used for compatibility to wrapper
