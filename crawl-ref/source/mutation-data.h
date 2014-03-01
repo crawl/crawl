@@ -1606,13 +1606,12 @@
 
   "cling"
 },
-#endif
 
 { MUT_EXOSKELETON,                         0,  2, false,  true,  true,
   "exoskeleton",
 
-  {"Your body is surrounded by an exoskeleton. (AC +1)",
-   "Your body is surrounded by a tough exoskeleton. (AC +4)",
+  {"Your body is surrounded by an exoskeleton. (buggy)",
+   "Your body is surrounded by a tough exoskeleton. (buggy)",
    ""},
 
   {"Your exoskeleton hardens.",
@@ -1626,7 +1625,6 @@
   "exoskeleton"
 },
 
-#if TAG_MAJOR_VERSION == 34
 { MUT_FUMES,            0,  2, false, false, false,
   "fuming",
 

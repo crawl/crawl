@@ -2559,7 +2559,11 @@ static void tag_read_you(reader &th)
                                = min(1 + you.experience_level / 6, 3);
     }
     if (you.species == SP_FORMICID)
+    {
         you.mutation[MUT_ANTENNAE] = you.innate_mutations[MUT_ANTENNAE] = 3;
+        you.mutation[MUT_EXOSKELETON] =
+        you.innate_mutations[MUT_EXOSKELETON] = 0;
+    }
 #endif
 
     count = unmarshallUByte(th);

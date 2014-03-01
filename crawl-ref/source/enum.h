@@ -3191,7 +3191,9 @@ enum mutation_type
     MUT_FUMES,
 #endif
     MUT_JUMP,
+#if TAG_MAJOR_VERSION == 34
     MUT_EXOSKELETON,
+#endif
     MUT_ANTIMAGIC_BITE,
     MUT_NO_DEVICE_HEAL,
 #if TAG_MAJOR_VERSION == 34
