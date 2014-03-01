@@ -4163,6 +4163,9 @@ static void _heated_area(monster* mons)
 
 static void _igni_flame_weapon(monster* mons, item_def* wpn)
 {
+    if (!mons->alive())
+        return;
+
     if (wpn && (get_weapon_brand(*wpn) == SPWPN_FLAMING
                 || get_weapon_brand(*wpn) == SPWPN_FLAME))
     {
@@ -4189,7 +4192,8 @@ static void _igni_flame_weapon(monster* mons, item_def* wpn)
 
 static void _igni_flame_weapon(monster* mons)
 {
-    if (mons->res_fire() > 0
+    if (!mons->alive()
+        || mons->res_fire() > 0
         || !you_worship(GOD_IGNI_IPTHES)
         || you.piety < piety_breakpoint(1))
     {
