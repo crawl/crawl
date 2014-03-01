@@ -1987,7 +1987,6 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_INVISIBLE, 1 },
         { ARTP_MAGIC, 100 },
     };
-    const int tier1_n = sizeof(tier1) / sizeof(_igni_artp_def);
 
     _igni_artp_def tier2[] =
     {
@@ -2007,7 +2006,6 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_DAMAGE, 3 },
         { ARTP_BRAND, SPWPN_PROTECTION, true },
     };
-    const int tier2_n = sizeof(tier2) / sizeof(_igni_artp_def);
 
     _igni_artp_def tier0[] =
     {
@@ -2023,7 +2021,6 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_DAMAGE, 6 },
         { ARTP_BRAND, SPWPN_SPEED, true },
     };
-    const int tier0_n = sizeof(tier0) / sizeof(_igni_artp_def);
 
     _igni_artp_def bad_tier[] =
     {
@@ -2037,17 +2034,16 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_MUTAGENIC, 1 },
         { ARTP_NOISES, 3 },
     };
-    const int bad_tier_n = sizeof(bad_tier) / sizeof(_igni_artp_def);
 
-    ASSERT(MAX_IGNI_ARTEFACTS <= tier0_n);
-    ASSERT(MAX_IGNI_ARTEFACTS <= tier1_n);
-    ASSERT(MAX_IGNI_ARTEFACTS <= tier2_n);
-    ASSERT(MAX_IGNI_ARTEFACTS <= bad_tier_n);
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier0));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier1));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier2));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(bad_tier));
 
     reproducible_rng rng(you.birth_time);
-    std::random_shuffle(tier1, tier1 + tier1_n, rng);
-    std::random_shuffle(tier2, tier2 + tier2_n, rng);
-    std::random_shuffle(bad_tier, bad_tier + bad_tier_n, rng);
+    std::random_shuffle(tier1, tier1 + ARRAYSZ(tier1), rng);
+    std::random_shuffle(tier2, tier2 + ARRAYSZ(tier2), rng);
+    std::random_shuffle(bad_tier, bad_tier + ARRAYSZ(bad_tier), rng);
 
     for (int i = 0; i != MAX_IGNI_ARTEFACTS; ++i)
     {
