@@ -1144,6 +1144,13 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_METABOLISM ])
         ret -= (2 * prop[ ARTP_METABOLISM ]);
 
+    // extremely good
+    if (prop[ ARTP_FOG ])
+        ret += 50;
+
+    if (prop[ ARTP_RMSL ])
+        ret += 20;
+
     return (ret > 0) ? ret : 0;
 }
 
