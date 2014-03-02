@@ -2959,7 +2959,6 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
     const int range = spell_range(SPELL_GLACIATE, pow);
     targetter_cone hitfunc(caster, range);
     hitfunc.set_aim(aim);
-    int range2 = 0;
 
     if (caster->is_player())
     {
@@ -3019,10 +3018,11 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
             if (p->second <= 0)
                 continue;
 
-            range2 = max(9, (p->first - caster->pos()).abs());
-            // At or within range 3 (range2 9), this is equivalent to the
-            // old Ice Storm damage.
-            beam.damage = calc_dice(7, (198 + 9 * pow) / range2);
+            const int eff_range = max(3, i);
+
+            // At or within range 3, this is equivalent to the old Ice Storm
+            // damage.
+            beam.damage = calc_dice(7, (66 + 3 * pow) / eff_range);
 
             if (actor_at(p->first))
             {
@@ -3032,7 +3032,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
                 beam.fire();
             }
             place_cloud(CLOUD_COLD, p->first,
-                        (18 + random2avg(45,2)) / range2, caster);
+                        (18 + random2avg(45,2)) / eff_range, caster);
         }
     }
 
