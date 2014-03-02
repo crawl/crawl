@@ -348,8 +348,8 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "transform into a swirling mass of shadows"
     },
     // Igni Ipthes
-    { "Igni Ipthes enhances the fit of metal body armour.",
-      "firebrand a weapon",
+    { "Igni Ipthes enhances the fit of metal body armour based on piety.",
+      "firebrand a weapon. Monsters will be unable to wield flaming weapons.",
       "release gusts of air using the Divine Bellows",
       "",
       "artefactize your weapon"
@@ -3876,7 +3876,7 @@ void god_pitch(god_type which_god)
                 mi->del_ench(ENCH_AWAKEN_FOREST);
     }
     else if (you_worship(GOD_IGNI_IPTHES))
-        mprf(MSGCH_GOD, "You feel your temperature rising.");
+        mprf(MSGCH_GOD, "You feel your temperature rising. (rF+, rC-)");
 
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
