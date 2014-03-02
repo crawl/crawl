@@ -3993,6 +3993,7 @@ int monster::res_petrify(bool temp) const
     if (type == MONS_STONE_GOLEM
         || type == MONS_CATOBLEPAS
         || type == MONS_EARTH_ELEMENTAL
+        || type == MONS_LIGHTNING_SPIRE
         || mons_is_statue(type))
     {
         return 1;
