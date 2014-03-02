@@ -703,7 +703,7 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
     {
         if (pre_msg)
             mprf("%s", pre_msg->c_str());
-        canned_msg(MSG_NOTHING_HAPPENS);
+        mpr("You feel blessed for a moment.");
     }
 
     return success;
@@ -770,9 +770,30 @@ bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
         }
         else
         {
+            count = 0;
+            string name = "Your body";
             if (pre_msg)
                 mprf("%s", pre_msg->c_str());
-            canned_msg(MSG_NOTHING_HAPPENS);
+
+            for (int i = min_type; i <= max_type; i++)
+            {
+                if (you.equip[i] != -1)
+                {
+                    count++;
+                    if (one_chance_in(count))
+                        affected = i;
+                }
+            }
+            if (affected != EQ_WEAPON)
+                name = you.inv[you.equip[affected]].name(DESC_YOUR);
+            else if (!armour)
+            {
+                name =
+                    you.species == SP_OCTOPODE ? "One of your tentacles" :
+                    one_chance_in(3)           ? "Your neck"
+                                               : "Your finger";
+            }
+            mprf("%s very briefly gains a black sheen.", name.c_str());
         }
 
         return false;
