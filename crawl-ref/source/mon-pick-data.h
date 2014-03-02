@@ -1140,6 +1140,7 @@ static const pop_entry pop_depths[] =
   {  1,  6,  295, FLAT, MONS_FIRE_DRAGON },
   {  1,  6,  295, FLAT, MONS_ICE_DRAGON },
   {  1,  6,  200, FLAT, MONS_VERY_UGLY_THING },
+  {  1,  6,  150, FLAT, MONS_GIANT_EYEBALL },
   {  1,  6,   50, FLAT, MONS_GREAT_ORB_OF_EYES },
   {  1,  6,   50, FLAT, MONS_GIANT_ORANGE_BRAIN },
   {  1,  6,   50, FLAT, MONS_MINOTAUR },
