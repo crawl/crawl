@@ -1212,36 +1212,7 @@ bool targetter_cone::set_aim(coord_def a)
     r.x = origin.x + (cos( arc) * delta.x - sin( arc) * delta.y + 0.5);
     r.y = origin.y + (sin( arc) * delta.x + cos( arc) * delta.y + 0.5);
 
-    ray_def ray;
-    coord_def p; // ray.pos() does lots of processing, cache it
-
-    _make_ray(ray, origin, l);
-    bool hit = true;
-    while ((origin - (p = ray.pos())).abs() <= range2)
-    {
-        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
-            hit = false;
-        if (hit && p != origin && zapped[p] <= 0)
-        {
-            zapped[p] = AFF_YES;
-            sweep[isqrt((origin - p).abs())][p] = AFF_YES;
-        }
-        ray.advance();
-    }
-
-    _make_ray(ray, origin, r);
-    hit = true;
-    while ((origin - (p = ray.pos())).abs() <= range2)
-    {
-        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
-            hit = false;
-        if (hit && p != origin && zapped[p] <= 0)
-        {
-            zapped[p] = AFF_YES;
-            sweep[isqrt((origin - p).abs())][p] = AFF_YES;
-        }
-        ray.advance();
-    }
+    coord_def p;
 
     coord_def a1 = l - origin;
     coord_def a2 = r - origin;
