@@ -77,8 +77,6 @@ static bool _is_branch_fitting(branch_type pb, int wavenum)
         return wavenum > 13;                 // 2.8K-
     case BRANCH_CRYPT:
         return wavenum > 15;                 // 3.2K-
-    case BRANCH_FOREST:
-        return wavenum > 20;                 // 4K-
     case BRANCH_SLIME:
         return wavenum > 20 && coinflip();   // 4K-
     case BRANCH_BLADE:

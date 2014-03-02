@@ -172,6 +172,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_EXIT_DUNGEON:
 #if TAG_MAJOR_VERSION == 34
         case DNGN_RETURN_FROM_DWARF:
+        case DNGN_RETURN_FROM_FOREST:
 #endif
         case DNGN_RETURN_FROM_ORC:
         case DNGN_RETURN_FROM_LAIR:
@@ -186,7 +187,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
         case DNGN_RETURN_FROM_SPIDER:
-        case DNGN_RETURN_FROM_FOREST:
 #if TAG_MAJOR_VERSION == 34
         case DNGN_EXIT_PORTAL_VAULT:
 #endif
@@ -204,6 +204,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ABYSSAL_STAIR:
 #if TAG_MAJOR_VERSION == 34
         case DNGN_ENTER_DWARF:
+        case DNGN_ENTER_FOREST:
 #endif
         case DNGN_ENTER_ORC:
         case DNGN_ENTER_LAIR:
@@ -218,7 +219,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
         case DNGN_ENTER_SPIDER:
-        case DNGN_ENTER_FOREST:
             return true;
         default:
             return false;

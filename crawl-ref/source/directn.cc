@@ -3133,8 +3133,10 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "staircase to the Shoals";
     case DNGN_ENTER_SPIDER:
         return "hole to the Spider Nest";
+#if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_FOREST:
         return "staircase to the Enchanted Forest";
+#endif
     case DNGN_ENTER_DEPTHS:
         return "staircase to the Depths";
     case DNGN_ENTER_ZIGGURAT:

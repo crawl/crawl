@@ -192,11 +192,12 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_TOMB;
         return;
 
+#if TAG_MAJOR_VERSION == 34
     case BRANCH_FOREST:
         flv.wall  = TILE_WALL_LAIR;
         flv.floor = TILE_FLOOR_GRASS;
         return;
-
+#endif
     case BRANCH_ABYSS:
         flv.floor = tile_dngn_coloured(TILE_FLOOR_NERVES, env.floor_colour);
         switch (random2(6))

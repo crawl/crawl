@@ -181,7 +181,7 @@ const Branch branches[NUM_BRANCHES] =
       NULL,
       true, BLACK, BLACK, // set per-map
       'Z', true, 0 },
-
+#if TAG_MAJOR_VERSION == 34
     { BRANCH_FOREST, BRANCH_VAULTS, 2, 3, 5, 19,
       0, 0,
       DNGN_ENTER_FOREST, DNGN_RETURN_FROM_FOREST,
@@ -189,6 +189,7 @@ const Branch branches[NUM_BRANCHES] =
       NULL,
       true, BROWN, BROWN,
       'F', true, 0 },
+#endif
 
     { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 5, 24,
       BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,

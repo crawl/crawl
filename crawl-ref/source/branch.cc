@@ -40,8 +40,7 @@ bool is_random_subbranch(branch_type branch)
 {
     return (parent_branch(branch) == BRANCH_LAIR
             && branch != BRANCH_SLIME)
-           || branch == BRANCH_CRYPT
-           || branch == BRANCH_FOREST;
+           || branch == BRANCH_CRYPT;
 }
 
 bool is_connected_branch(branch_type branch)
@@ -77,7 +76,8 @@ branch_type get_branch_at(const coord_def& pos)
 bool branch_is_unfinished(branch_type branch)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (branch == BRANCH_DWARF)
+    if (branch == BRANCH_DWARF
+        || branch == BRANCH_FOREST)
         return true;
 #endif
     return false;
