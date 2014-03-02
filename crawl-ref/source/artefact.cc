@@ -2047,6 +2047,11 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
 
     for (int i = 0; i != MAX_IGNI_ARTEFACTS; ++i)
     {
+        // Do the RNG now so that the results won't differ.
+        const int added_plus  = rng(3) - rng(2);
+        const int added_plus2 = rng(3) - rng(2);
+        const bool first_tiers = rng(2);
+
         int flag = 1 << i;
         if (you.attribute[ATTR_IGNI_ARTEFACTS_MADE] & flag)
             continue;
@@ -2057,9 +2062,9 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         // This hack is used to pass the flag back to the caller.
         choice.slot = flag;
 
-        choice.plus += rng(3) - rng(2);
+        choice.plus += added_plus;
         if (choice.sub_type != WPN_BLOWGUN)
-            choice.plus2 += rng(3) - rng(2);
+            choice.plus2 += added_plus2;
 
         _artefact_setup_prop_vectors(choice);
         choice.flags |= ISFLAG_RANDART;
@@ -2070,7 +2075,9 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
 
         if (wpn.special == SPWPN_NORMAL)
         {
-            if (is_range_weapon(wpn))
+            if (choice.sub_type == WPN_BLOWGUN)
+                rap[ARTP_BRAND] = static_cast<short>(SPWPN_NORMAL);
+            else if (is_range_weapon(wpn))
                 rap[ARTP_BRAND] = static_cast<short>(SPWPN_FLAME);
             else
                 rap[ARTP_BRAND] = static_cast<short>(SPWPN_FLAMING);
@@ -2078,7 +2085,7 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         else
             rap[ARTP_BRAND] = static_cast<short>(wpn.special);
 
-        if (rng(2))
+        if (first_tiers)
         {
             _igni_add_prop(choice, tier1[i]);
             _igni_add_prop(choice, tier2[i]);
