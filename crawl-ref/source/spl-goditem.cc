@@ -759,15 +759,15 @@ static bool _selectively_curse_item(bool armour, string *pre_msg)
         if (pre_msg)
             mprf("%s", pre_msg->c_str());
         do_curse_item(item, false);
+        learned_something_new(HINT_YOU_CURSED);
         return true;
     }
 }
 
-bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
+bool curse_item(bool armour, string *pre_msg)
 {
-    // make sure there's something to curse first
-    int count = 0;
-    int affected = EQ_WEAPON;
+    // Make sure there's something to curse first.
+    bool found = false;
     int min_type, max_type;
     if (armour)
         min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
@@ -776,60 +776,16 @@ bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
     for (int i = min_type; i <= max_type; i++)
     {
         if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
-        {
-            count++;
-            if (one_chance_in(count))
-                affected = i;
-        }
+            found = true;
     }
-
-    if (affected == EQ_WEAPON)
+    if (!found)
     {
-        if (you_worship(GOD_ASHENZARI) && alreadyknown)
-        {
-            mprf(MSGCH_PROMPT, "You aren't wearing any piece of uncursed %s.",
-                 armour ? "armour" : "jewellery");
-        }
-        else
-        {
-            count = 0;
-            string name = "Your body";
-            if (pre_msg)
-                mprf("%s", pre_msg->c_str());
-
-            for (int i = min_type; i <= max_type; i++)
-            {
-                if (you.equip[i] != -1)
-                {
-                    count++;
-                    if (one_chance_in(count))
-                        affected = i;
-                }
-            }
-            if (affected != EQ_WEAPON)
-                name = you.inv[you.equip[affected]].name(DESC_YOUR);
-            else if (!armour)
-            {
-                name =
-                    you.species == SP_OCTOPODE ? "One of your tentacles" :
-                    one_chance_in(3)           ? "Your neck"
-                                               : "Your finger";
-            }
-            mprf("%s very briefly gains a black sheen.", name.c_str());
-        }
-
+        mprf(MSGCH_PROMPT, "You aren't wearing any piece of uncursed %s.",
+             armour ? "armour" : "jewellery");
         return false;
     }
 
-    if (you_worship(GOD_ASHENZARI) && alreadyknown)
-        return _selectively_curse_item(armour, pre_msg);
-
-    if (pre_msg)
-        mprf("%s", pre_msg->c_str());
-    // Make the name before we curse it.
-    do_curse_item(you.inv[you.equip[affected]], false);
-    learned_something_new(HINT_YOU_CURSED);
-    return true;
+    return _selectively_curse_item(armour, pre_msg);
 }
 
 static bool _do_imprison(int pow, const coord_def& where, bool zin)

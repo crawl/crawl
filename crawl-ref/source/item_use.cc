@@ -2783,19 +2783,13 @@ void read_scroll(int slot)
             break;
 
         case SCR_CURSE_ARMOUR:
-            if (you_worship(GOD_ASHENZARI)
-                && !any_items_to_select(OSEL_UNCURSED_WORN_ARMOUR, true))
-            {
+            if (!any_items_to_select(OSEL_UNCURSED_WORN_ARMOUR, true))
                 return;
-            }
             break;
 
         case SCR_CURSE_JEWELLERY:
-            if (you_worship(GOD_ASHENZARI)
-                && !any_items_to_select(OSEL_UNCURSED_WORN_JEWELLERY, true))
-            {
+            if (!any_items_to_select(OSEL_UNCURSED_WORN_JEWELLERY, true))
                 return;
-            }
             break;
 
         default:
@@ -3031,23 +3025,12 @@ void read_scroll(int slot)
             (_handle_enchant_armour(-1, alreadyknown, &pre_succ_msg) == -1);
         break;
 
+    // Should always be identified by Ashenzari.
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
     {
         const bool armour = which_scroll == SCR_CURSE_ARMOUR;
-        if (!alreadyknown)
-        {
-            mprf("%s", pre_succ_msg.c_str());
-            if (curse_item(armour, false))
-                bad_effect = true;
-        }
-        else if (curse_item(armour, true, &pre_succ_msg))
-        {
-            bad_effect = true;
-        }
-        else
-            cancel_scroll = you_worship(GOD_ASHENZARI);
-
+        cancel_scroll = curse_item(armour, &pre_succ_msg);
         break;
     }
 

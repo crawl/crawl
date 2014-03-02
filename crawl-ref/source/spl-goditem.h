@@ -13,7 +13,7 @@ int detect_traps(int pow);
 int detect_items(int pow);
 int detect_creatures(int pow, bool telepathic = false);
 bool remove_curse(bool alreadyknown = true, string *pre_msg = NULL);
-bool curse_item(bool armour, bool alreadyknown, string *pre_msg = NULL);
+bool curse_item(bool armour, string *pre_msg = NULL);
 
 bool entomb(int pow);
 bool cast_imprison(int pow, monster* mons, int source);
