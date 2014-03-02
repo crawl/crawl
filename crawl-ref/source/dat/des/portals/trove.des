@@ -191,7 +191,7 @@ function trove.setup_features(e)
     e.kfeat("< = exit_trove")
 end
 
--- "any scroll good_item" still gets you 'scroll of noise', 'scroll of curse weapon', etc
+-- "any scroll good_item" still gets you 'scroll of noise' etc
 -- so let's limit it to the enchant/recharge scrolls, tloc scrolls, identify scrolls,
 -- mapping scrolls with a low chance of silence, vulnerability or acquirement (lowest)
 function trove.good_scroll (e)

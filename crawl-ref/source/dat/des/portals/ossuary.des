@@ -457,18 +457,17 @@ MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
          human zombie / kobold zombie / goblin zombie / \
          big kobold zombie / centaur zombie
 # mix of strictly good items with strictly useless ones
-ITEM:    scroll of curse armour / scroll of enchant armour w:5 / \
-         scroll of curse weapon / scroll of remove curse       / \
+ITEM:    scroll of random uselessness w:20 / \
+         scroll of enchant armour w:5 / scroll of remove curse / \
          potion of mutation w:5 / potion of cure mutation w:5  / \
-         potion of confusion    / potion of curing w:15       / \
+         potion of confusion    / potion of curing w:15        / \
          potion of degeneration / potion of restore abilities  / \
          scroll of immolation   / scroll of identify
 # and sometimes strictly useless ones
-ITEM:    scroll of curse armour / scroll of curse weapon / \
-         scroll of random uselessness / \
-         potion of mutation w:5 / potion of confusion    / \
-         potion of degeneration / scroll of immolation   / \
-         potion of confusion    / potion of paralysis
+ITEM:    scroll of noise / scroll of random uselessness w:20 / \
+         potion of mutation w:5 / potion of confusion / \
+         potion of degeneration / scroll of immolation / \
+         potion of confusion / potion of paralysis
 # occasionally just use this
 ITEM:    any potion / any scroll w:5 / nothing
 SHUFFLE: hjkl
@@ -728,7 +727,7 @@ ITEM:    potion of curing / potion of heal wounds / potion of speed / \
          potion of confusion w:5 / potion of mutation w:5 / \
          scroll of identify / scroll of teleportation w:5 / \
          scroll of blinking w:5 / scroll of holy word / \
-         scroll of curse armour w:5 / scroll of curse weapon w:5
+         scroll of random uselessness
 # There are three setups than can occur:
 # 10% - part of the loot in the closets, bit more loot
 # 45% - traps are nasty, monsters asleep
