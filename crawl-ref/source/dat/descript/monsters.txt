@@ -2854,10 +2854,10 @@ it encounters is a potential meal.
 worldbinder
 
 A cloud of thick fog, with faint, feeble claws constantly reaching
-out and grasping futily before being pulled back in by the fog.
+out and grasping futilely before being pulled back in by the fog.
 Worldbinders tie themselves to specific locations and absorb part of
 the weaker natives banished to the Abyss, enabling them to summon
-echoes from one of many locations against percieved threats.
+echoes from one of many locations against perceived threats.
 %%%%
 worm
 
