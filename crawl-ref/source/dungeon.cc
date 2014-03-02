@@ -781,6 +781,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_EXIT_HELL:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARF:
+    case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_ORC:
     case DNGN_RETURN_FROM_LAIR:
@@ -796,7 +797,6 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
     case DNGN_RETURN_FROM_SPIDER:
-    case DNGN_RETURN_FROM_FOREST:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
@@ -827,6 +827,7 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_EXIT_HELL:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARF:
+    case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_ORC:
     case DNGN_RETURN_FROM_LAIR:
@@ -842,7 +843,6 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
     case DNGN_RETURN_FROM_SPIDER:
-    case DNGN_RETURN_FROM_FOREST:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
@@ -2373,9 +2373,6 @@ static void _post_vault_build()
             depth -= 3;
         } while (depth > 0);
     }
-
-    if (player_in_branch(BRANCH_FOREST))
-        _add_plant_clumps(2);
 }
 
 static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
@@ -4224,8 +4221,10 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
     if (!make_no_exits)
     {
         const bool spotty = player_in_branch(BRANCH_ORC)
-                            || player_in_branch(BRANCH_SLIME)
-                            || player_in_branch(BRANCH_FOREST);
+#if TAG_MAJOR_VERSION == 34
+                            || player_in_branch(BRANCH_FOREST)
+#endif
+                            || player_in_branch(BRANCH_SLIME);
         place.connect(spotty);
     }
 
@@ -5706,10 +5705,12 @@ static bool _spotty_seed_ok(const coord_def& p)
 static bool _feat_is_wall_floor_liquid(dungeon_feature_type feat)
 {
     return feat_is_water(feat)
+#if TAG_MAJOR_VERSION == 34
+           || player_in_branch(BRANCH_FOREST) && feat == DNGN_TREE
+#endif
            || feat_is_lava(feat)
            || feat_is_wall(feat)
-           || feat == DNGN_FLOOR
-           || player_in_branch(BRANCH_FOREST) && feat == DNGN_TREE;
+           || feat == DNGN_FLOOR;
 }
 
 // Connect vault exit "from" to dungeon floor by growing a spotty chamber.

@@ -156,6 +156,9 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_TARTARUS:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARF:
+    case DNGN_RETURN_FROM_DWARF:
+    case DNGN_ENTER_FOREST:
+    case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_ENTER_ORC:
     case DNGN_ENTER_LAIR:
@@ -171,11 +174,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
     case DNGN_ENTER_SPIDER:
-    case DNGN_ENTER_FOREST:
     case DNGN_ENTER_DEPTHS:
-#if TAG_MAJOR_VERSION == 34
-    case DNGN_RETURN_FROM_DWARF:
-#endif
     case DNGN_RETURN_FROM_ORC:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME:
@@ -190,7 +189,6 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
     case DNGN_RETURN_FROM_SPIDER:
-    case DNGN_RETURN_FROM_FOREST:
     case DNGN_RETURN_FROM_DEPTHS:
         return true;
     default:

@@ -98,7 +98,6 @@ void initialise_branch_depths()
         dprf("Disabling branch: %s", branches[disabled_branch[i]].shortname);
         brentry[disabled_branch[i]].clear();
     }
-    brentry[BRANCH_FOREST].clear();
 
     for (int i = 0; i < NUM_BRANCHES; i++)
         brdepth[i] = branches[i].numlevels;
