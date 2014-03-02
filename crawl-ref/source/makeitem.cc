@@ -2516,9 +2516,9 @@ static void _generate_scroll_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight: 8634 if depth_mod < 4,
-            //               9334 if 4 <= depth_mod < 7,
-            //               9754 if depth_mod >= 7,
+            // total weight: 7824 if depth_mod < 4,
+            //               8524 if 4 <= depth_mod < 7,
+            //               8944 if depth_mod >= 7,
             //               and -1133 in sprint
             item.sub_type = random_choose_weighted(
                 1800, SCR_IDENTIFY,
@@ -2539,10 +2539,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  331, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
 
                  331, SCR_IMMOLATION,
-
-                 270, SCR_CURSE_WEAPON,
-                 270, SCR_CURSE_ARMOUR,
-                 270, SCR_CURSE_JEWELLERY,
 
                  // Medium-level scrolls.
                  140, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
@@ -2975,7 +2971,7 @@ int items(bool allow_uniques,
                                    200, OBJ_WEAPONS,
                                    200, OBJ_POTIONS,
                                    300, OBJ_MISSILES,
-                                   400, OBJ_SCROLLS,
+                                   360, OBJ_SCROLLS,
                                    400, OBJ_GOLD,
                                      0);
 
