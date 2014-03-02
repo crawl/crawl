@@ -374,8 +374,8 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon nature's wrath in a wide area around you"
     },
     // Igni Ipthes
-    { "Igni Ipthes enhances the fit of metal body armour.",
-      "firebrand a weapon",
+    { "Igni Ipthes enhances the fit of metal body armour based on piety.",
+      "firebrand a weapon. Monsters will be unable to wield flaming weapons.",
       "release gusts of air using the Divine Bellows",
       "",
       "artefactize your weapon"
