@@ -68,13 +68,12 @@
 #include "xom.h"
 
 static int _handle_enchant_armour(int item_slot = -1,
+                                  bool alreadyknown = false,
                                   string *pre_msg = NULL);
 
 static bool _is_cancellable_scroll(scroll_type scroll);
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
                                     bool quiet = false);
-static bool _two_targeted_scrolls_identified();
-static bool _one_targeted_scroll_tried();
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
@@ -1168,22 +1167,6 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
         return false;
     }
     return true;
-}
-
-static bool _two_targeted_scrolls_identified()
-{
-    int ident_count = (you.type_ids[OBJ_SCROLLS][SCR_RECHARGING] == ID_KNOWN_TYPE)
-                    + (you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_ARMOUR] == ID_KNOWN_TYPE)
-                    + (you.type_ids[OBJ_SCROLLS][SCR_IDENTIFY] == ID_KNOWN_TYPE);
-
-    return ident_count == 2;
-}
-
-static bool _one_targeted_scroll_tried()
-{
-    return you.type_ids[OBJ_SCROLLS][SCR_RECHARGING] ==  ID_TRIED_ITEM_TYPE
-           || you.type_ids[OBJ_SCROLLS][SCR_ENCHANT_ARMOUR] == ID_TRIED_ITEM_TYPE
-           || you.type_ids[OBJ_SCROLLS][SCR_IDENTIFY] == ID_TRIED_ITEM_TYPE;
 }
 
 // Checks whether removing an item would cause flight to end and the
@@ -2516,7 +2499,8 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     return true;
 }
 
-static int _handle_enchant_armour(int item_slot, string *pre_msg)
+static int _handle_enchant_armour(int item_slot, bool alreadyknown,
+                                  string *pre_msg)
 {
     do
     {
@@ -2525,8 +2509,25 @@ static int _handle_enchant_armour(int item_slot, string *pre_msg)
             item_slot = prompt_invent_item("Enchant which item?", MT_INVLIST,
                                            OSEL_ENCH_ARM, true, true, false);
         }
-        if (prompt_failed(item_slot))
+
+        if (item_slot == PROMPT_NOTHING)
             return -1;
+
+        if (item_slot == PROMPT_ABORT)
+        {
+            if (alreadyknown
+                || crawl_state.seen_hups
+                || yesno("Really abort (and waste the scroll)?", false, 0))
+            {
+                canned_msg(MSG_OK);
+                return (alreadyknown || crawl_state.seen_hups) ? -1 : 0;
+            }
+            else
+            {
+                item_slot = -1;
+                continue;
+            }
+        }
 
         item_def& arm(you.inv[item_slot]);
 
@@ -2541,7 +2542,7 @@ static int _handle_enchant_armour(int item_slot, string *pre_msg)
         }
 
         // Okay, we may actually (attempt to) enchant something.
-        if (pre_msg)
+        if (!alreadyknown && pre_msg)
             mpr(pre_msg->c_str());
 
         int ac_change;
@@ -2608,99 +2609,6 @@ static void _handle_read_book(int item_slot)
         if (you.turn_is_over)
             return;
     }
-}
-
-// For unidentified scrolls of recharging, identify and enchant armour
-// offer full choice of inventory and only identify the scroll if you chose
-// something that is affected by the scroll. Once they're identified, you'll
-// get the limited inventory listing.
-// Returns true if the scroll had an obvious effect and should be identified.
-static bool _scroll_modify_item(item_def scroll)
-{
-    ASSERT(scroll.base_type == OBJ_SCROLLS);
-
-    int item_slot;
-
-retry:
-    do
-    {
-        // Get the slot of the item the scroll is to be used on.
-        // Ban the scroll's own slot from the prompt to avoid the stupid situation
-        // where you use identify on itself.
-        item_slot = prompt_invent_item("Use on which item? (\\ to view known items)",
-                                       MT_INVLIST, OSEL_SCROLL_TARGET, true, true, false, 0,
-                                       scroll.link, NULL, OPER_ANY, true);
-
-        if (item_slot == PROMPT_NOTHING)
-            return false;
-
-        // FIXME: when interrupted by a HUP, the scroll shouldn't get lost.
-        if (item_slot == PROMPT_ABORT
-            && (crawl_state.seen_hups
-                || yesno("Really abort (and waste the scroll)?", false, 0)))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-    while (item_slot < 0);
-
-    item_def &item = you.inv[item_slot];
-
-    if (item_is_melded(you.inv[item_slot]))
-    {
-        mpr("This item is melded into your body!");
-        if (Options.auto_list)
-            more();
-        goto retry;
-    }
-
-    bool show_msg = true;
-    const char* id_prop = nullptr;
-
-    switch (scroll.sub_type)
-    {
-    case SCR_IDENTIFY:
-        if (!fully_identified(item) || is_deck(item) && !top_card_is_known(item))
-        {
-            identify(-1, item_slot);
-            return true;
-        }
-        else
-            id_prop = "SCR_ID";
-        break;
-
-    case SCR_RECHARGING:
-        if (item_is_rechargeable(item) && recharge_wand(item_slot, false))
-            return true;
-        id_prop = "SCR_RC";
-        break;
-
-    case SCR_ENCHANT_ARMOUR:
-        if (is_enchantable_armour(item, true))
-        {
-            // Might still fail because of already high enchantment.
-            // (If so, already prints the "Nothing happens" message.)
-            if (_handle_enchant_armour(item_slot) > 0)
-                return true;
-            show_msg = false;
-        }
-
-        id_prop = "SCR_EA";
-        break;
-
-    default:
-        mprf("Buggy scroll %d can't modify item!", scroll.sub_type);
-        break;
-    }
-
-    if (id_prop)
-        you.type_id_props[id_prop] = item.name(DESC_PLAIN, false, false, false);
-
-    // Oops, wrong item...
-    if (show_msg)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    return false;
 }
 
 static void _vulnerability_scroll()
@@ -2935,11 +2843,6 @@ void read_scroll(int slot)
 
     const bool dangerous = player_in_a_dangerous_place();
 
-    // It is the exception, not the rule, that the scroll will not
-    // be identified. {dlb}
-    bool id_the_scroll = true;  // to prevent unnecessary repetition
-    bool tried_on_item = false; // used to modify item (?EA, ?RC, ?ID)
-
     bool bad_effect = false; // for Xom: result is bad (or at least dangerous)
 
     int prev_quantity = you.inv[item_slot].quantity;
@@ -3093,39 +2996,39 @@ void read_scroll(int slot)
         break;
 
     case SCR_IDENTIFY:
-        if (!item_type_known(scroll))
+        if (!alreadyknown)
         {
             mpr(pre_succ_msg.c_str());
-            id_the_scroll = _scroll_modify_item(scroll);
-            if (!id_the_scroll)
-                tried_on_item = true;
+            mpr("It is a scroll of identify.");
+            if (Options.auto_list)
+                more();
+            // Do this here so it doesn't turn up in the ID menu.
+            set_ident_type(scroll, ID_KNOWN_TYPE);
         }
-        else
-            cancel_scroll = (identify(-1, -1, &pre_succ_msg) == 0);
+        cancel_scroll = (identify(-1, -1, alreadyknown, &pre_succ_msg) == 0);
         break;
 
     case SCR_RECHARGING:
-        if (!item_type_known(scroll))
+        if (!alreadyknown)
         {
             mpr(pre_succ_msg.c_str());
-            id_the_scroll = _scroll_modify_item(scroll);
-            if (!id_the_scroll)
-                tried_on_item = true;
+            mpr("It is a scroll of recharging.");
+            if (Options.auto_list)
+                more();
         }
-        else
-            cancel_scroll = (recharge_wand(-1, true, &pre_succ_msg) == -1);
+        cancel_scroll = (recharge_wand(-1, alreadyknown, &pre_succ_msg) == -1);
         break;
 
     case SCR_ENCHANT_ARMOUR:
-        if (!item_type_known(scroll))
+        if (!alreadyknown)
         {
             mpr(pre_succ_msg.c_str());
-            id_the_scroll = _scroll_modify_item(scroll);
-            if (!id_the_scroll)
-                tried_on_item = true;
+            mpr("It is a scroll of enchant armour.");
+            if (Options.auto_list)
+                more();
         }
-        else
-            cancel_scroll = (_handle_enchant_armour(-1, &pre_succ_msg) == -1);
+        cancel_scroll =
+            (_handle_enchant_armour(-1, alreadyknown, &pre_succ_msg) == -1);
         break;
 
     case SCR_CURSE_ARMOUR:
@@ -3193,13 +3096,8 @@ void read_scroll(int slot)
     if (cancel_scroll)
         you.turn_is_over = false;
 
-    set_ident_type(scroll, id_the_scroll ? ID_KNOWN_TYPE :
-                           tried_on_item ? ID_TRIED_ITEM_TYPE
-                                         : ID_TRIED_TYPE);
-
-    // Finally, destroy and identify the scroll.
-    if (id_the_scroll)
-        set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
+    set_ident_type(scroll, ID_KNOWN_TYPE);
+    set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
     string scroll_name = scroll.name(DESC_QUALNAME).c_str();
 
@@ -3209,32 +3107,19 @@ void read_scroll(int slot)
         count_action(CACT_USE, OBJ_SCROLLS);
     }
 
-    if (id_the_scroll
-        && !alreadyknown
+    if (!alreadyknown
         && which_scroll != SCR_ACQUIREMENT
         && which_scroll != SCR_BRAND_WEAPON
         && which_scroll != SCR_ENCHANT_WEAPON_I
         && which_scroll != SCR_ENCHANT_WEAPON_II
-        && which_scroll != SCR_ENCHANT_WEAPON_III)
+        && which_scroll != SCR_ENCHANT_WEAPON_III
+        && which_scroll != SCR_IDENTIFY
+        && which_scroll != SCR_ENCHANT_ARMOUR
+        && which_scroll != SCR_RECHARGING)
     {
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",
              scroll_name.c_str());
-    }
-
-    if (_two_targeted_scrolls_identified()
-        && _one_targeted_scroll_tried()
-        && (which_scroll == SCR_IDENTIFY
-            || which_scroll == SCR_RECHARGING
-            || which_scroll == SCR_ENCHANT_ARMOUR))
-    {
-        mpr("You have identified the last targeted scroll.");
-        if (set_ident_type(OBJ_SCROLLS, SCR_IDENTIFY, ID_KNOWN_TYPE))
-            pack_item_identify_message(OBJ_SCROLLS, SCR_IDENTIFY);
-        if (set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE))
-            pack_item_identify_message(OBJ_SCROLLS, SCR_RECHARGING);
-        if (set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR, ID_KNOWN_TYPE))
-            pack_item_identify_message(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR);
     }
 
     if (!alreadyknown && dangerous)
