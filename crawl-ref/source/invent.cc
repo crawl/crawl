@@ -524,6 +524,8 @@ static string _no_selectables_message(int item_selector)
         return "You aren't wearing any piece of uncursed jewellery.";
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
+    case OSEL_ENCHANTABLE_WEAPON:
+        return "You aren't carrying any weapons that can be enchanted.";
     }
 
     return "You aren't carrying any such object.";

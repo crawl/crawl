@@ -3207,7 +3207,10 @@ void read_scroll(int slot)
     if (id_the_scroll
         && !alreadyknown
         && which_scroll != SCR_ACQUIREMENT
-        && which_scroll != SCR_BRAND_WEAPON)
+        && which_scroll != SCR_BRAND_WEAPON
+        && which_scroll != SCR_ENCHANT_WEAPON_I
+        && which_scroll != SCR_ENCHANT_WEAPON_II
+        && which_scroll != SCR_ENCHANT_WEAPON_III)
     {
         mprf("It %s a %s.",
              you.inv[item_slot].quantity < prev_quantity ? "was" : "is",
