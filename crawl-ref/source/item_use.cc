@@ -2972,7 +2972,7 @@ void read_scroll(int slot)
         if (!alreadyknown)
         {
             mprf("%s", pre_succ_msg.c_str());
-            id_the_scroll = remove_curse(false);
+            remove_curse(false);
         }
         else
             cancel_scroll = !remove_curse(true, &pre_succ_msg);
@@ -3045,8 +3045,13 @@ void read_scroll(int slot)
             || !is_weapon(*you.weapon())
             || you.weapon()->cursed())
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
+            bool plural = false;
+            string weapon_name =
+                you.weapon()
+                ? you.weapon()->name(DESC_YOUR)
+                : "Your " + you.hand_name(true, &plural);
+            mprf("%s very briefly gain%s a black sheen.",
+                 weapon_name.c_str(), plural ? "" : "s");
         }
         else
         {
@@ -3125,16 +3130,15 @@ void read_scroll(int slot)
 
     case SCR_CURSE_ARMOUR:
     case SCR_CURSE_JEWELLERY:
+    {
+        const bool armour = which_scroll == SCR_CURSE_ARMOUR;
         if (!alreadyknown)
         {
             mprf("%s", pre_succ_msg.c_str());
-            if (curse_item(which_scroll == SCR_CURSE_ARMOUR, false))
+            if (curse_item(armour, false))
                 bad_effect = true;
-            else
-                id_the_scroll = false;
         }
-        else if (curse_item(which_scroll == SCR_CURSE_ARMOUR, true,
-                            &pre_succ_msg))
+        else if (curse_item(armour, true, &pre_succ_msg))
         {
             bad_effect = true;
         }
@@ -3142,6 +3146,7 @@ void read_scroll(int slot)
             cancel_scroll = you_worship(GOD_ASHENZARI);
 
         break;
+    }
 
     case SCR_HOLY_WORD:
     {
