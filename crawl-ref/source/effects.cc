@@ -697,8 +697,25 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
             item_slot = prompt_invent_item("Charge which item?", MT_INVLIST,
                                             OSEL_RECHARGE, true, true, false);
         }
-        if (prompt_failed(item_slot))
+
+        if (item_slot == PROMPT_NOTHING)
             return -1;
+
+        if (item_slot == PROMPT_ABORT)
+        {
+            if (known
+                || crawl_state.seen_hups
+                || yesno("Really abort (and waste the scroll)?", false, 0))
+            {
+                canned_msg(MSG_OK);
+                return known || crawl_state.seen_hups ? -1 : 0;
+            }
+            else
+            {
+                item_slot = -1;
+                continue;
+            }
+        }
 
         item_def &wand = you.inv[ item_slot ];
 
@@ -737,7 +754,7 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
                 desc = info;
             }
 
-            if (pre_msg)
+            if (known && pre_msg)
                 mpr(pre_msg->c_str());
 
             mprf("%s %s for a moment%s.",
@@ -787,7 +804,7 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
             if (!work)
                 return 0;
 
-            if (pre_msg)
+            if (known && pre_msg)
                 mpr(pre_msg->c_str());
 
             mprf("%s glows for a moment.", wand.name(DESC_YOUR).c_str());

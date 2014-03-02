@@ -43,7 +43,7 @@
 #include "traps.h"
 #include "view.h"
 
-int identify(int power, int item_slot, string *pre_msg)
+int identify(int power, int item_slot, bool alreadyknown, string *pre_msg)
 {
     int id_used = 1;
     int identified = 0;
@@ -61,8 +61,30 @@ int identify(int power, int item_slot, string *pre_msg)
                 MT_INVLIST, OSEL_UNIDENT, true, true, false, 0,
                 -1, NULL, OPER_ANY, true);
         }
-        if (prompt_failed(item_slot))
-            return identified;
+
+        if (item_slot == PROMPT_NOTHING)
+        {
+            return identified > 0 ? identified :
+                   alreadyknown   ? 0 : -1;
+        }
+
+        if (item_slot == PROMPT_ABORT)
+        {
+            if (alreadyknown
+                || crawl_state.seen_hups
+                || yesno("Really abort (and waste the scroll)?", false, 0))
+            {
+                canned_msg(MSG_OK);
+                return identified > 0                        ? identified :
+                       alreadyknown || crawl_state.seen_hups ? 0
+                                                             : -1;
+            }
+            else
+            {
+                item_slot = -1;
+                continue;
+            }
+        }
 
         item_def& item(you.inv[item_slot]);
 
@@ -76,7 +98,7 @@ int identify(int power, int item_slot, string *pre_msg)
             continue;
         }
 
-        if (pre_msg && identified == 0)
+        if (alreadyknown && pre_msg && identified == 0)
             mpr(pre_msg->c_str());
 
         set_ident_type(item, ID_KNOWN_TYPE);
