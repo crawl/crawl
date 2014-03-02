@@ -4161,10 +4161,12 @@ static void _heated_area(monster* mons)
     }
 }
 
-static void _igni_flame_weapon(monster* mons, item_def* wpn)
+static void _igni_flame_weapon(monster* mons, mon_inv_type slot)
 {
     if (!mons->alive() || !mons->observable())
         return;
+
+    item_def* wpn = mons->mslot_item(slot);
 
     if (wpn && (get_weapon_brand(*wpn) == SPWPN_FLAMING
                 || get_weapon_brand(*wpn) == SPWPN_FLAME))
@@ -4183,7 +4185,7 @@ static void _igni_flame_weapon(monster* mons, item_def* wpn)
 
         behaviour_event(mons, ME_DISTURB, 0, mons->pos());
         mons->hurt(mons, adjusted_damage);
-        mons->drop_item(MSLOT_WEAPON, -1);
+        mons->drop_item(slot, -1);
     }
 }
 
@@ -4197,11 +4199,8 @@ static void _igni_flame_weapon(monster* mons)
         return;
     }
 
-    item_def* wpn1 = mons->mslot_item(MSLOT_WEAPON);
-    item_def* wpn2 = mons->mslot_item(MSLOT_ALT_WEAPON);
-
-    _igni_flame_weapon(mons, wpn1);
-    _igni_flame_weapon(mons, wpn2);
+    _igni_flame_weapon(mons, MSLOT_WEAPON);
+    _igni_flame_weapon(mons, MSLOT_ALT_WEAPON);
 }
 
 static spell_type _map_wand_to_mspell(wand_type kind)
