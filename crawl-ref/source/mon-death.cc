@@ -425,8 +425,8 @@ void mons_felid_revive(monster* mons)
 {
     // Mostly adapted from bring_to_safety()
     coord_def revive_place;
-    int tries = 0;
-    while (tries < 10000) // Don't try too hard.
+    int tries = 10000;
+    while (tries > 0) // Don't try too hard.
     {
         revive_place.x = random2(GXM);
         revive_place.y = random2(GYM);
@@ -437,12 +437,14 @@ void mons_felid_revive(monster* mons)
             || env.pgrid(revive_place) & FPROP_NO_TELE_INTO
             || distance2(revive_place, mons->pos()) < dist_range(10))
         {
-            tries++;
+            tries--;
             continue;
         }
         else
             break;
     }
+    if (tries == 0)
+        return;
 
     // XXX: this will need to be extended if we get more types of enemy
     // felids
@@ -452,7 +454,7 @@ void mons_felid_revive(monster* mons)
     ASSERT(me);
 
     const int revives = (mons->props.exists("felid_revives"))
-                        ? mons->props["felid_revives"].get_int() + 1
+                        ? mons->props["felid_revives"].get_byte() + 1
                         : 1;
 
     const int hd = me->hpdice[0] - revives;
@@ -463,19 +465,19 @@ void mons_felid_revive(monster* mons)
             mons->foe, 0, GOD_NO_GOD, MONS_NO_MONSTER, 0, BLACK,
             PROX_ANYWHERE, level_id::current(), hd));
 
-    for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
-        if (mons->inv[i] != NON_ITEM)
-        {
-            int item = mons->inv[i];
-            give_specific_item(newmons, mitm[item]);
-            destroy_item(item);
-            mons->inv[i] = NON_ITEM;
-        }
-
-
     if (newmons)
-        newmons->props["felid_revives"].get_byte() = revives;
+    {
+        for (int i = NUM_MONSTER_SLOTS - 1; i >= 0; --i)
+            if (mons->inv[i] != NON_ITEM)
+            {
+                int item = mons->inv[i];
+                give_specific_item(newmons, mitm[item]);
+                destroy_item(item);
+                mons->inv[i] = NON_ITEM;
+            }
 
+        newmons->props["felid_revives"].get_byte() = revives;
+    }
 }
 
 /**
