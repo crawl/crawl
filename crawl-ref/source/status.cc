@@ -444,7 +444,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_POWERED_BY_DEATH:
-        if (handle_pbd_corpses(false) > 0)
+        if (handle_pbd_corpses() > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
             inf->light_text   = "Regen+";
