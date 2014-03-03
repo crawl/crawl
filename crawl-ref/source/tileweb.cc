@@ -1867,8 +1867,12 @@ void TilesFramework::write_message_escaped(const string& s)
             m_msg_buf.append("\\\"");
         else if (c == '\\')
             m_msg_buf.append("\\\\");
-        else if (c == '\n')
-            m_msg_buf.append("\\n");
+        else if (c < 0x20)
+        {
+            char buf[7];
+            snprintf(buf, sizeof(buf), "\\u%04x", c);
+            m_msg_buf.append(buf);
+        }
         else
             m_msg_buf.append(1, c);
     }
