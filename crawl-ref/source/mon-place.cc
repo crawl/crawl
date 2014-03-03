@@ -1325,9 +1325,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         // Berserkers belong to Trog.
         if (mg.cls == MONS_SPRIGGAN_BERSERKER)
-        {
             mon->god = GOD_TROG;
-        }
         // Profane servitors and deep dwarf death knights belong to Yredelemnul.
         else if (mg.cls == MONS_PROFANE_SERVITOR
                  || mg.cls == MONS_DEEP_DWARF_DEATH_KNIGHT)
