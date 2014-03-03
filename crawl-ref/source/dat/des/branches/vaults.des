@@ -284,28 +284,27 @@ TAGS: vaults_entry no_pool_fixup no_monster_gen patrolling
 ORIENT: north
 MONS: human ; crossbow . bolt q:10 . short sword | dagger . \
               leather armour w:5 | ring mail | scale mail / \
-      orc knight ; crossbow . bolt q:10 . short sword | dagger . \
-                   leather armour w:5 | ring mail | scale mail / \
-      deep elf knight / centaur warrior / yaktaur
+      orc warrior ; crossbow . bolt q:10 . short sword | dagger . \
+                    leather armour w:5 | ring mail | scale mail / \
+      deep elf fighter / gargoyle / yaktaur
 MONS: vault guard / orc knight w:2
-MONS: wizard / orc sorcerer / ogre mage
-MONS: necromancer band / orc high priest band
+MONS: wizard / tengu conjurer / orc sorcerer / ogre mage
 NSUBST: T = 1:U / *:T
 KFEAT: O = enter_vaults
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxvvvvvxxxxxxx
-xxxxxxxvT2Tvxxxxxxx
+xxxxxxxvT.Tvxxxxxxx
 xxxxxxxv2O2vxxxxxxx
 xxxxxxxvT.Tvxxxxxxx
 xvvvvvvvv+vvvvvvvvx
-xv*...3.....4...*vx
-xv.1....2.2....1.vx
+xv*...3.....3...*vx
+xv.......2.......vx
 xv...............vx
 xvv+vvvv.v.vvvv+vvx
-xv...vxv.2.vxv...vx
 xv...vxv...vxv...vx
-xv...vxv1.1vxv...vx
+xv...vxv.1.vxv...vx
+xv...vxv...vxv...vx
 xvv12vvv+++vvv21vvx
 .wwwwwwW...Wwwwwww.
 .WwwwwwW...WwwwwwW.
