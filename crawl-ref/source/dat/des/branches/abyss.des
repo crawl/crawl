@@ -1329,9 +1329,8 @@ KITEM:   24d = scroll of random uselessness w:15 q:1 / sultana q:1 w:5 / \
          club w:5 / stone q:1 / mundane dart q:1 / needle q:1 ego:confusion / \
          mundane animal skin / gold q:1
 KITEM:   13e = rod of striking w:2 / wand of slowing / wand of magic darts / \
-         wand of flame w:5 / wand of frost w:5 / lamp of fire w:2 / \
-         plain deck w:2 / whip not_cursed w:2 / \
-         hat not_cursed mundane race:none w:5
+         wand of flame w:5 / wand of frost w:5 / plain deck w:2 / \
+         whip not_cursed w:2 / hat not_cursed mundane race:none w:5
 KITEM:   f = abyssal rune of zot mimic, abyssal rune of zot mimic
 KITEM:   g = abyssal rune of zot mimic, abyssal rune of zot
 SHUFFLE: 14 / 23
