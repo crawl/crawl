@@ -1623,7 +1623,25 @@ static inline bool _monster_warning(activity_interrupt_type ai,
 
         ash_id_monster_equipment(const_cast<monster* >(mon));
         bool ash_id = mon->props.exists("ash_id") && mon->props["ash_id"];
-        string ash_warning;
+        bool zin_id = false;
+        string god_warning;
+
+        if (you_worship(GOD_ZIN)
+            && mon->is_shapeshifter()
+            && !(mon->flags & MF_KNOWN_SHIFTER))
+        {
+            ASSERT(!ash_id);
+            zin_id = true;
+            (const_cast<monster *>(mon))->props["zin_id"] = true;
+            discover_shifter(const_cast<monster *>(mon));
+            god_warning = "Zin warns you: "
+                          + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE))
+                          + " is a foul ";
+            if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+                god_warning += "glowing ";
+            god_warning += "shapeshifter.";
+        }
+
 
         monster_info mi(mon);
 
@@ -1635,9 +1653,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         if (!mweap.empty())
         {
             if (ash_id)
-                ash_warning = "Ashenzari warns you:";
+                god_warning = "Ashenzari warns you:";
 
-            (ash_id ? ash_warning : text) +=
+            (ash_id ? god_warning : text) +=
                 " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"
                 + mweap + ".";
         }
@@ -1647,8 +1665,12 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         else
         {
             mprf(MSGCH_WARN, "%s", text.c_str());
-            if (ash_id)
-                mprf(MSGCH_GOD, "%s", ash_warning.c_str());
+            if (ash_id || zin_id)
+                mprf(MSGCH_GOD, "%s", god_warning.c_str());
+#ifndef USE_TILE_LOCAL
+            if (zin_id)
+                update_monster_pane();
+#endif
         }
         const_cast<monster* >(mon)->seen_context = SC_JUST_SEEN;
     }
