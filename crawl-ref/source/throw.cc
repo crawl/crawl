@@ -681,39 +681,16 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
 
     coord_def pos, pos2;
 
-    int tries = 0;
-    do
-    {
-        if (!random_near_space(victim->pos(), pos, false, true, false,
-                               no_sanct))
-        {
-            return false;
-        }
-    }
-    while (!victim->is_habitable(pos) && tries++ < 100);
-
-    if (!victim->is_habitable(pos))
+    if (!random_near_space(victim->pos(), pos, false, no_sanct))
         return false;
 
-    tries = 0;
-    do
-        if (!random_near_space(victim->pos(), pos2, false, true, false,
-                               no_sanct))
-        {
-            return false;
-        }
-    while (!victim->is_habitable(pos2) && tries++ < 100);
-
-    if (!victim->is_habitable(pos2))
+    if (!random_near_space(victim->pos(), pos2, false, no_sanct))
         return false;
 
     // Pick the square further away from the agent.
     const coord_def from = agent->pos();
-    if (in_bounds(pos2) && distance2(pos2, from) > distance2(pos, from))
+    if (distance2(pos2, from) > distance2(pos, from))
         pos = pos2;
-
-    if (pos == victim->pos())
-        return false;
 
     const coord_def oldpos = victim->pos();
     victim->clear_clinging();
