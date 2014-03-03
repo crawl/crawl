@@ -5124,9 +5124,7 @@ bool bolt::ignores_monster(const monster* mon) const
 
     // Don't blow up blocks of ice with the spell that creates them.
     if (name == "great icy blast" && mon->type == MONS_BLOCK_OF_ICE)
-    {
         return true;
-    }
 
     if (flavour == BEAM_WATER && mon->type == MONS_WATER_ELEMENTAL)
         return true;

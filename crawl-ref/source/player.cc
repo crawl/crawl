@@ -4655,9 +4655,7 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
     if (you.hp < minimum + 1)
     {
         if (!suppress_msg)
-        {
             mpr("You haven't enough vitality at the moment.");
-        }
 
         if (abort_macros)
         {
