@@ -52,7 +52,9 @@ enum element_type
     ETC_RANDOM,         // any colour (except BLACK)
     ETC_TORNADO,        // twisting swirls of gray
     ETC_LIQUEFIED,      // ripples of yellow and brown.
+#if TAG_MAJOR_VERSION == 34
     ETC_MANGROVE,       // colour of trees on water
+#endif
     ETC_ORB_GLOW,       // halo coming from the Orb of Zot
     ETC_DISJUNCTION,    // halo from Disjunction
     ETC_DITHMENOS,      // Dithmenos altar colours
