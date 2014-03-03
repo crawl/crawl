@@ -720,11 +720,18 @@ int player::umbra_radius2() const
         size = min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
+    if (player_equip_unrand(UNRAND_SHADOWS))
+        size = max(size, 9);
+
     return size;
 }
 
 int monster::umbra_radius2() const
 {
+    item_def* ring = mslot_item(MSLOT_JEWELLERY);
+    if (ring && ring->special == UNRAND_SHADOWS)
+        return 9;
+
     if (holiness() != MH_UNDEAD)
         return -1;
 
