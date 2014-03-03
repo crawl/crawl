@@ -2265,8 +2265,6 @@ void melee_attack::player_weapon_upsets_god()
         {
             did_god_conduct(DID_HASTY, 1);
         }
-        if (get_weapon_brand(*weapon) == SPWPN_FLAMING)
-            did_god_conduct(DID_FIRE, 1);
     }
     else if (weapon
              && weapon->base_type == OBJ_STAVES
@@ -3164,6 +3162,7 @@ bool melee_attack::apply_damage_brand()
                                     defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
         noise_factor += 400 / max(1, damage_done);
+        attacker->god_conduct(DID_FIRE, 1);
         break;
 
     case SPWPN_FREEZING:
