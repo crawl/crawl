@@ -96,7 +96,7 @@ int how_mutated(bool all = false, bool levels = false);
 
 void check_demonic_guardian();
 void check_antennae_detect();
-int handle_pbd_corpses(bool do_rot);
+int handle_pbd_corpses();
 equipment_type beastly_slot(int mut);
 bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();

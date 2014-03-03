@@ -2608,8 +2608,6 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_POWERED_BY_DEATH, delay,
                           "You feel less regenerative.");
-    if (you.duration[DUR_POWERED_BY_DEATH] > 0)
-        handle_pbd_corpses(true);
 
     _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
 

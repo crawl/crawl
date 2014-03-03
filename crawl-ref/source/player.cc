@@ -1301,7 +1301,7 @@ static int _player_bonus_regen()
     // corpses.  If and only if the duration of the effect is
     // still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
-        rr += handle_pbd_corpses(false) * 100;
+        rr += handle_pbd_corpses() * 100;
 
     return rr;
 }
