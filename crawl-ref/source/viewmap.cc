@@ -430,7 +430,10 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
-                if (_is_explore_horizon(c))
+                const show_class show = get_cell_show_class(
+                        env.map_knowledge(c), Options.clean_map);
+
+                if (show == SH_NOTHING && _is_explore_horizon(c))
                 {
                     const feature_def& fd = get_feature_def(DNGN_EXPLORE_HORIZON);
                     cell->glyph = fd.symbol;
