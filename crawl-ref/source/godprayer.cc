@@ -516,23 +516,38 @@ static void _give_sac_group_feedback(int which)
 static void _ashenzari_sac_scroll(const item_def& item)
 {
     int scr = SCR_CURSE_JEWELLERY;
-    if (you.species != SP_FELID
-        && (you.species != SP_OCTOPODE || one_chance_in(4)))
-    {
-        scr = random_choose(SCR_CURSE_WEAPON, SCR_CURSE_ARMOUR,
-                            SCR_CURSE_JEWELLERY, -1);
-    }
-    int it = items(0, OBJ_SCROLLS, scr, true, 0, MAKE_ITEM_NO_RACE,
-                   0, 0, GOD_ASHENZARI);
-    if (it == NON_ITEM)
-    {
-        mpr("You feel the world is against you.");
-        return;
-    }
+    int num = min(1 + random2(1 + you.piety / 50), 3);
 
-    mitm[it].quantity = 1;
-    if (!move_item_to_grid(&it, you.pos(), true))
-        destroy_item(it, true); // can't happen
+    int wpn = 3;
+    int arm = 0;
+    int jwl = (you.species != SP_OCTOPODE) ? 3 : 9;
+
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+        if (you_can_wear(i, true))
+            arm++;
+
+    do
+    {
+        if (you.species != SP_FELID)
+        {
+            scr = random_choose_weighted(wpn, SCR_CURSE_WEAPON,
+                                         arm, SCR_CURSE_ARMOUR,
+                                         jwl, SCR_CURSE_JEWELLERY,
+                                         0);
+        }
+        int it = items(0, OBJ_SCROLLS, scr, true, 0, MAKE_ITEM_NO_RACE,
+                       0, 0, GOD_ASHENZARI);
+        if (it == NON_ITEM)
+        {
+            mpr("You feel the world is against you.");
+            return;
+        }
+
+        mitm[it].quantity = 1;
+        if (!move_item_to_grid(&it, you.pos(), true))
+            destroy_item(it, true); // can't happen
+    }
+    while (--num > 0);
 }
 
 // Is the destroyed weapon valuable enough to gain piety by doing so?
