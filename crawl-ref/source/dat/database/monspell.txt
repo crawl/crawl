@@ -436,6 +436,14 @@ Crystal Bolt crystal guardian cast
 Blink Other statue cast
 
 @The_monster@ casts a spell @at@ @target@.
+%%%%
+Stone Arrow gargoyle cast
+
+@The_monster@ hurls a @beam@ @at@ @target@.
+%%%%
+Bolt of Magma molten gargoyle cast
+
+@The_monster@ blasts magma @at@ @target@!
 ########################################################################
 # Monster species and genus messages.
 ########################################################################

@@ -1530,6 +1530,16 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         level = MAKE_GOOD_ITEM;
         break;
 
+    case MONS_GARGOYLE:
+    case MONS_MOLTEN_GARGOYLE:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted(15, WPN_CLUB,
+                                               10, WPN_MACE,
+                                               10, WPN_FLAIL,
+                                                1, WPN_MORNINGSTAR,
+                                                0);
+        break;
+
     case MONS_WAR_GARGOYLE:
         item.base_type = OBJ_WEAPONS;
         if (one_chance_in(4))
