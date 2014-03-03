@@ -2486,4 +2486,26 @@
        SPELL_CRYSTAL_BOLT
       }
     },
+
+    {  MST_GARGOYLE,
+      {
+       SPELL_STONE_ARROW,
+       SPELL_STONE_ARROW,
+       SPELL_NO_SPELL,
+       SPELL_STONE_ARROW,
+       SPELL_STONE_ARROW,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_MOLTEN_GARGOYLE,
+      {
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_NO_SPELL,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_NO_SPELL
+      }
+    },
 #endif
