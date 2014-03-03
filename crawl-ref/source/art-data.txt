@@ -892,12 +892,10 @@ EV:      5
 BOOL:    elec, fly, rmsl
 
 NAME:    ring of Shadows
+INSCRIP: Umbra
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
-EV:      4
-ACC:     -4
-STEALTH: 40
 BOOL:    life, seeinv
 
 NAME:    amulet of Cekugob
@@ -1140,8 +1138,8 @@ MAGIC:    30
 BOOL:     evil
 
 NAME:    lajatang of Order
-OBJ:     OBJ_WEAPONS/WPN_LAJATANG
 INSCRIP: silver, rMut
+OBJ:     OBJ_WEAPONS/WPN_LAJATANG
 COLOUR:  ETC_SILVER
 PLUS:    7/7
 

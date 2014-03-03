@@ -753,6 +753,17 @@ static void _BRILLIANCE_unequip(item_def *item, bool *show_msgs)
 }
 
 ///////////////////////////////////////////////////
+static void _SHADOWS_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    invalidate_agrid(true);
+}
+
+static void _SHADOWS_unequip(item_def *item, bool *show_msgs)
+{
+    invalidate_agrid(true);
+}
+
+///////////////////////////////////////////////////
 static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "Time to lay down the shillelagh law.");
