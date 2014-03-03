@@ -3030,7 +3030,7 @@ void read_scroll(int slot)
     case SCR_CURSE_JEWELLERY:
     {
         const bool armour = which_scroll == SCR_CURSE_ARMOUR;
-        cancel_scroll = curse_item(armour, &pre_succ_msg);
+        cancel_scroll = !curse_item(armour, &pre_succ_msg);
         break;
     }
 
