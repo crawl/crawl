@@ -1068,17 +1068,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
     ucs_t glyph = next_sc.glyph;
     if (current_sc.glyph != glyph)
     {
-        json_write_comma();
-        if (glyph == '\\')
-            write_message("\"g\":\"\\\\\"");
-        else if (glyph == '"')
-            write_message("\"g\":\"\\\"\"");
-        else
-        {
-            char buf[5];
-            buf[wctoutf8(buf, glyph)] = 0;
-            write_message("\"g\":\"%s\"", buf);
-        }
+        char buf[5];
+        buf[wctoutf8(buf, glyph)] = 0;
+        json_write_string("g", buf);
     }
     if ((current_sc.colour != next_sc.colour
          || current_sc.glyph == ' ') && glyph != ' ')
