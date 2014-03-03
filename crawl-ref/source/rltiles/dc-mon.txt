@@ -789,6 +789,7 @@ thorn_hunter MONS_THORN_HUNTER
 treant MONS_TREANT
 briar_patch MONS_BRIAR_PATCH
 %rim 1
+vine_stalker MONS_VINE_STALKER
 
 ## Trolls ('T')
 %sdir mon/unique

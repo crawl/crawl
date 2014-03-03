@@ -2123,7 +2123,7 @@ NSUBST: t = 10:p / *:., b = 10:p / *:.
 KMONS: p = human / elf / orc / naga / centaur / draconian / \
    ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \
    deep dwarf / felid / octopode / vampire / base draconian / demigod / \
-   demonspawn / merfolk / halfling
+   demonspawn / merfolk / halfling / gargoyle / formicid / vine stalker
 : pan_demonic_rune(_G, 'P', true)
 : pan_lord_vault_contents(_G, 'A', 'B<', 'C')
 MAP

@@ -82,8 +82,8 @@ ENDMAP
 NAME:    kb_arrival_jail
 TAGS:    arrival no_monster_gen no_item_gen
 ORIENT:  north
-SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWX
-KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWX = floor
+SHUFFLE: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+KFEAT:   ABCDEFGHIJKLMNOPQRSTUVWXYZ = floor
 KMONS:   A = human ; nothing
 KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
@@ -107,7 +107,9 @@ KMONS:   T = vampire spells:. ; nothing
 KMONS:   U = demigod ; nothing
 KMONS:   V = octopode ; nothing
 KMONS:   W = formicid ; nothing
-KMONS:   X = nothing
+KMONS:   X = gargoyle ; nothing
+KMONS:   Y = vine stalker ; nothing
+KMONS:   Z = nothing
 MAP
  ccccc
  c.{.c
@@ -136,6 +138,8 @@ ccc.ccc
 cUn.nVc
 ccc.ccc
 cWn.nXc
+ccc.ccc
+cYn.nZc
 ccc+ccc
   c@c
 ENDMAP
@@ -183,13 +187,14 @@ SUBST:   P = MNO
 KMONS: M = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
            draconian; nothing / ogre; nothing / minotaur / troll / kobold / \
            mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
-           octopode; nothing / vampire spells:.
+           octopode; nothing / vampire spells:. / formicid; nothing / \
+           gargoyle; nothing / vine stalker; nothing
 # Player monsters, zombie versions (ghouls drop out because they need sustenance
-# and can't be reanimated once starved):
+# and can't be reanimated once starved; gargoyles don't leave corpses):
 KMONS: N = human zombie / elf zombie / orc zombie / naga zombie / ogre zombie / \
            centaur zombie / draconian zombie / minotaur zombie / troll zombie / \
            kobold zombie / mummy / spriggan zombie / merfolk zombie / \
-           dwarf zombie / felid zombie / octopode zombie
+           dwarf zombie / felid zombie / octopode zombie / formicid zombie
 # Player monsters, skeleton versions:
 KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
            centaur skeleton / draconian skeleton / ogre skeleton / \
@@ -744,9 +749,10 @@ KMONS: K = kraken att:neutral
 KFEAT: K = w
 NSUBST: ' = 12:! / *:'
 KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
-           draconian; nothing / ogre; nothing / minotaur / troll / kobold / \
-           mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
-           octopode; nothing / vampire spells:.
+           draconian; nothing / ogre; nothing / minotaur; nothing / troll / \
+           kobold; nothing / mummy / ghoul / spriggan; nothing / \
+           dwarf; nothing / octopode; nothing / vampire spells:. / \
+           formicid; nothing / gargoyle; nothing / vine stalker; nothing
 KPROP: Kw'! = no_rtele_into
 KFEAT: ' = .
 MAP
@@ -773,9 +779,10 @@ KMONS: K = kraken att:neutral
 KFEAT: K = w
 NSUBST: ' = 15:! / *:'
 KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
-           draconian; nothing / ogre; nothing / minotaur / troll / kobold / \
-           mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
-           octopode; nothing / vampire spells:.
+           draconian; nothing / ogre; nothing / minotaur; nothing / troll / \
+           kobold; nothing / mummy / ghoul / spriggan; nothing / \
+           dwarf; nothing / octopode; nothing / vampire spells:. / \
+           formicid; nothing / gargoyle; nothing / vine stalker; nothing
 KPROP: Kw'! = no_rtele_into
 KFEAT: ' = .
 MAP

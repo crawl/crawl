@@ -1686,6 +1686,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BRIAR_PATCH;
     case MONS_SHAMBLING_MANGROVE:
         return TILEP_MONS_TREANT;
+    case MONS_VINE_STALKER:
+        return TILEP_MONS_VINE_STALKER;
 
     // spiritual beings ('R')
     case MONS_RAKSHASA:
