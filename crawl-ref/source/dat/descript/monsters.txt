@@ -1576,10 +1576,6 @@ ice statue
 An imposing idol of some nameless arctic god, carved in glistening deep blue
 ice. Freezing vapours swirl about it, and a chill pervades the air.
 %%%%
-ignis
-
-A tiny ball of light that flits and flickers at the edge of your vision.
-%%%%
 iguana
 
 A green lizard with strong jaws and sharp teeth, prized for its flesh.
