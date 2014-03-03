@@ -58,7 +58,6 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     case CLOUD_BLACK_SMOKE:
         return 22;
     case CLOUD_RAIN:
-    case CLOUD_STORM:
     case CLOUD_INK:
         return 11;
     default:
@@ -375,7 +374,7 @@ void manage_clouds()
         else if (cloud.type == CLOUD_STORM)
         {
             // This was initially 40, but that was far too spammy.
-            if (x_chance_in_y(dissipate, 160) && !actor_at(cloud.pos))
+            if (x_chance_in_y(dissipate, 400) && !actor_at(cloud.pos))
             {
                 bool you_see = you.see_cell(cloud.pos);
                 if (you_see)
