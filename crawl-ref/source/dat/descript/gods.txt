@@ -158,7 +158,7 @@ light.
 %%%%
 Igni Ipthes
 
-0*: rF+, rC-
+0*: You can enchant weapons without a chance of failure.
 
 1*: AC of metal body armour is boosted. Any size character can now wear metal
     body armour. The deformed body mutation affects AC less.
