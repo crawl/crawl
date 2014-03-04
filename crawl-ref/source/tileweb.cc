@@ -1854,7 +1854,7 @@ void TilesFramework::write_message_escaped(const string& s)
 
     for (size_t i = 0; i < s.size(); ++i)
     {
-        char c = s[i];
+        unsigned char c = s[i];
         if (c == '"')
             m_msg_buf.append("\\\"");
         else if (c == '\\')
