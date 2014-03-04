@@ -100,6 +100,7 @@ bool qazlal_upheaval(coord_def target, bool quiet = false);
 void qazlal_elemental_force();
 bool qazlal_disaster_area();
 
+bool igni_fire_fortress();
 void igni_divine_bellows();
 bool igni_firebrand_player_weapon();
 bool igni_firebrand_monster_weapon(monster* mons);

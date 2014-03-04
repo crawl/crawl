@@ -191,6 +191,8 @@ Igni Ipthes
 
 3*: You can push enemies away using divine bellows.
 
+4*: You can create a fire fortress. (surrounds with fire clouds)
+
 5*: You can turn a weapon into an artefact.
 %%%%
 Zin powers

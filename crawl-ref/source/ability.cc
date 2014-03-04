@@ -204,7 +204,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
     // Igni Ipthes
     { ABIL_NON_ABILITY, ABIL_IGNI_FIREBRAND_WEAPON, ABIL_IGNI_DIVINE_BELLOWS,
-      ABIL_NON_ABILITY, ABIL_IGNI_ARTEFACTIZE_WEAPON },
+      ABIL_IGNI_FIRE_FORTRESS, ABIL_IGNI_ARTEFACTIZE_WEAPON },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -426,6 +426,8 @@ static const ability_def Ability_List[] =
       0, 0, 100, 1, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_DIVINE_BELLOWS, "Divine Bellows",
       0, 0, 200, 2, 0, 0, ABFLAG_NONE },
+    { ABIL_IGNI_FIRE_FORTRESS, "Fire Fortress",
+      0, 0, 300, 3, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_ARTEFACTIZE_WEAPON, "Artefactize Weapon",
       0, 0, 0, 6, 0, 0, ABFLAG_NONE },
 
@@ -3080,6 +3082,15 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
     }
+
+    case ABIL_IGNI_FIRE_FORTRESS:
+        if (!igni_fire_fortress())
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            crawl_state.zero_turns_taken();
+            return false;
+        }
+        break;
 
     case ABIL_IGNI_DIVINE_BELLOWS:
         igni_divine_bellows();

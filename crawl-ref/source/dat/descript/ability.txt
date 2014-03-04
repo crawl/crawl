@@ -669,6 +669,11 @@ weapon with a brand of flaming.
 Monsters who hold such weapons will be burned by the fire of Igni, thus, it
 is tactically useful to use this ability on enemy weapons.
 %%%%
+Fire Fortress ability
+
+This ability creates a wall of fire around you and adjacent monsters. Clouds of
+fire will be placed on hostile enemies inside the wall.
+%%%%
 Artefactize Weapon ability
 
 This ability will transform your weapon into an artefact, adding magical

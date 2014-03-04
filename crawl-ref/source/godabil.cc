@@ -4752,6 +4752,79 @@ bool qazlal_disaster_area()
     return true;
 }
 
+static void _igni_fire_fortress_find_centers(coord_def where,
+                                             set<coord_def>& centers)
+{
+    for (adjacent_iterator ai(where); ai; ++ai)
+        if (actor* a = actor_at(*ai))
+            if (centers.insert(a->pos()).second)
+                _igni_fire_fortress_find_centers(a->pos(), centers);
+}
+
+bool igni_fire_fortress()
+{
+    set<coord_def> centers;
+    centers.insert(you.pos());
+    _igni_fire_fortress_find_centers(you.pos(), centers);
+
+    set<coord_def> clouds;
+    for (set<coord_def>::iterator it = centers.begin();
+         it != centers.end(); ++it)
+    {
+        for (adjacent_iterator ai(*it); ai; ++ai)
+        {
+            if (*ai == you.pos() || cell_is_solid(*ai))
+                continue;
+
+            const int cloud = env.cgrid(*ai);
+            if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+                continue;
+
+            if (monster* mons = monster_at(*ai))
+            {
+                if (mons->friendly() && mons->res_fire() < 3)
+                    continue;
+            }
+
+            clouds.insert(*ai);
+        }
+    }
+
+    bool success = false;
+
+    for (set<coord_def>::iterator it = clouds.begin();
+         it != clouds.end(); ++it)
+    {
+        int durat = min(5 + random2avg(36, 3), 23);
+        if (monster* mons = monster_at(*it))
+        {
+            if (!mons->friendly())
+                durat /= 4;
+        }
+
+        const int cloud = env.cgrid(*it);
+        if (cloud != EMPTY_CLOUD)
+        {
+            // Rejuvenate the cloud.
+            env.cloud[cloud].decay += durat * 5;
+            env.cloud[cloud].set_whose(KC_YOU);
+        }
+        else
+        {
+            place_cloud(CLOUD_FIRE, *it, durat, &you);
+        }
+        success = true;
+    }
+
+    if (success)
+    {
+        mpr("A fiery fortress appears around you!");
+        noisy(8, you.pos());
+    }
+
+    return success;
+}
+
 void igni_divine_bellows()
 {
     wind_blast(&you, 200, coord_def());
