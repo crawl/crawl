@@ -170,6 +170,8 @@ error BOLT_OF_INACCURACY
 error SUMMON_SWARM
 error THUNDERBOLT
 error MELEE
+%sdir gui/spells/air
+cloud_cone CLOUD_CONE
 
 # spells normally only used by monsters
 %sdir gui/spells/monster
