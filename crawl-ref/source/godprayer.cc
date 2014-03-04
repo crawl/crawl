@@ -516,7 +516,7 @@ static void _give_sac_group_feedback(int which)
 static void _ashenzari_sac_scroll(const item_def& item)
 {
     int scr = SCR_CURSE_JEWELLERY;
-    int num = min(1 + random2(1 + you.piety / 50), 3);
+    int num = 1 + random2(3);
 
     int wpn = 3;
     int arm = 0;
