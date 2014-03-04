@@ -1810,7 +1810,7 @@ void StashTracker::search_stashes()
 
     bool sort_by_dist = true;
     bool show_as_stacks = false;
-    bool filter_useless = true;
+    bool filter_useless = false;
     bool default_execute = true;
     while (true)
     {
