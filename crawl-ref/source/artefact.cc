@@ -2030,7 +2030,6 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_EVASION, -4 },
         { ARTP_FIRE, -1 },
         { ARTP_COLD, -1 },
-        { ARTP_ANGRY, 1 },
         { ARTP_MUTAGENIC, 1 },
         { ARTP_NOISES, 3 },
     };
