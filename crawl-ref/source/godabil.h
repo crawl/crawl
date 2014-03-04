@@ -84,6 +84,7 @@ void dithmenos_shadow_melee(actor* target);
 void dithmenos_shadow_throw(coord_def target);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
+bool igni_fire_fortress();
 void igni_divine_bellows();
 bool igni_firebrand_player_weapon();
 bool igni_firebrand_monster_weapon(monster* mons);
