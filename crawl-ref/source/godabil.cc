@@ -4754,7 +4754,7 @@ bool qazlal_disaster_area()
 
 void igni_divine_bellows()
 {
-    wind_blast(&you, 100, coord_def());
+    wind_blast(&you, 200, coord_def());
 }
 
 static item_def* _firebrand_check_weapon(item_def* wpn)

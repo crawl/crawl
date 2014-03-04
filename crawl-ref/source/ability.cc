@@ -425,7 +425,7 @@ static const ability_def Ability_List[] =
     { ABIL_IGNI_FIREBRAND_WEAPON, "Firebrand Weapon",
       0, 0, 100, 1, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_DIVINE_BELLOWS, "Divine Bellows",
-      0, 0, 100, 3, 0, 0, ABFLAG_NONE },
+      0, 0, 200, 2, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_ARTEFACTIZE_WEAPON, "Artefactize Weapon",
       0, 0, 0, 6, 0, 0, ABFLAG_NONE },
 
