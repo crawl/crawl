@@ -4916,8 +4916,10 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SUMMON_SWARM:             return TILEG_SUMMON_SWARM;
     case SPELL_THUNDERBOLT:              return TILEG_THUNDERBOLT;
     case SPELL_MELEE:                    return TILEG_MELEE;
-    case SPELL_WEAVE_SHADOWS:            return TILEG_SUMMON_SHADOW_CREATURES;
+    case SPELL_EXPLOSIVE_BOLT:           return TILEG_EXPLOSIVE_BOLT;
+    case SPELL_WEAVE_SHADOWS:            return TILEG_WEAVE_SHADOWS;
     case SPELL_CLOUD_CONE:               return TILEG_CLOUD_CONE;
+    case SPELL_RANDOM_BOLT:              return TILEG_RANDOM_BOLT;
 
     // --------------------------------------------
     // Monster spells
@@ -4934,6 +4936,8 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MAJOR_HEALING:            return TILEG_MAJOR_HEALING;
     // Lugonu powers
     case SPELL_BANISHMENT:               return TILEG_BANISHMENT;
+    // Makhleb powers
+    case SPELL_MAJOR_DESTRUCTION:        return TILEG_MAJOR_DESTRUCTION;
     // Trog powers
     case SPELL_TROGS_HAND:               return TILEG_TROGS_HAND;
     case SPELL_BROTHERS_IN_ARMS:         return TILEG_BROTHERS_IN_ARMS;
@@ -4945,6 +4949,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_AIR_ELEMENTALS:           return TILEG_AIR_ELEMENTALS;
     case SPELL_AWAKEN_FOREST:            return TILEG_AWAKEN_FOREST;
     case SPELL_AWAKEN_VINES:             return TILEG_AWAKEN_VINES;
+    case SPELL_BLACK_MARK:               return TILEG_BLACK_MARK;
+    case SPELL_BLINKBOLT:                return TILEG_BLINKBOLT;
+    case SPELL_BLINK_ALLIES_AWAY:        return TILEG_BLINK_ALLIES_AWAY;
     case SPELL_BLINK_ALLIES_ENCIRCLE:    return TILEG_BLINK_ALLIES_ENCIRCLE;
     case SPELL_BLINK_AWAY:               return TILEG_BLINK_AWAY;
     case SPELL_BLINK_CLOSE:              return TILEG_BLINK_CLOSE;
@@ -4955,10 +4962,14 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CALL_LOST_SOUL:           return TILEG_CALL_LOST_SOUL;
     case SPELL_CALL_TIDE:                return TILEG_CALL_TIDE;
     case SPELL_CANTRIP:                  return TILEG_CANTRIP;
+    case SPELL_CHAIN_OF_CHAOS:           return TILEG_CHAIN_OF_CHAOS;
     case SPELL_CHAOS_BREATH:             return TILEG_CHAOS_BREATH;
+    case SPELL_CHAOTIC_MIRROR:           return TILEG_CHAOTIC_MIRROR;
     case SPELL_COLD_BREATH:              return TILEG_COLD_BREATH;
     case SPELL_CONTROL_WINDS:            return TILEG_CONTROL_WINDS;
+    case SPELL_CORRUPT_BODY:             return TILEG_CORRUPT_BODY;
     case SPELL_CREATE_TENTACLES:         return TILEG_CREATE_TENTACLES;
+    case SPELL_CRYSTAL_BOLT:             return TILEG_CRYSTAL_BOLT;
     case SPELL_DIMENSION_ANCHOR:         return TILEG_DIMENSION_ANCHOR;
     case SPELL_DISINTEGRATE:             return TILEG_DISINTEGRATE;
     case SPELL_DRACONIAN_BREATH:         return TILEG_DRACONIAN_BREATH;
@@ -4966,22 +4977,29 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_EARTH_ELEMENTALS:         return TILEG_EARTH_ELEMENTALS;
     case SPELL_ENERGY_BOLT:              return TILEG_ENERGY_BOLT;
     case SPELL_ENSNARE:                  return TILEG_ENSNARE;
+    case SPELL_EPHEMERAL_INFUSION:       return TILEG_EPHEMERAL_INFUSION;
     case SPELL_FAKE_MARA_SUMMON:         return TILEG_FAKE_MARA_SUMMON;
     case SPELL_FAKE_RAKSHASA_SUMMON:     return TILEG_FAKE_RAKSHASA_SUMMON;
     case SPELL_FIRE_BREATH:              return TILEG_FIRE_BREATH;
     case SPELL_FIRE_ELEMENTALS:          return TILEG_FIRE_ELEMENTALS;
     case SPELL_FIRE_SUMMON:              return TILEG_FIRE_SUMMON;
+    case SPELL_FLASH_FREEZE:             return TILEG_FLASH_FREEZE;
+    case SPELL_FORCEFUL_INVITATION:      return TILEG_FORCEFUL_INVITATION;
     case SPELL_GHOSTLY_FIREBALL:         return TILEG_GHOSTLY_FIREBALL;
     case SPELL_GHOSTLY_FLAMES:           return TILEG_GHOSTLY_FLAMES;
+    case SPELL_GRAND_AVATAR:             return TILEG_GRAND_AVATAR;
     case SPELL_HASTE_OTHER:              return TILEG_HASTE_OTHER;
     case SPELL_HASTE_PLANTS:             return TILEG_HASTE_PLANTS;
     case SPELL_HELLFIRE_BURST:           return TILEG_HELLFIRE_BURST;
     case SPELL_HOLY_BREATH:              return TILEG_HOLY_BREATH;
     case SPELL_HOLY_FLAMES:              return TILEG_HOLY_FLAMES;
     case SPELL_HOLY_LIGHT:               return TILEG_HOLY_LIGHT;
+    case SPELL_IGNITE_POISON_SINGLE:     return TILEG_IGNITE_POISON_SINGLE;
     case SPELL_INJURY_BOND:              return TILEG_INJURY_BOND;
     case SPELL_INK_CLOUD:                return TILEG_INK_CLOUD;
+    case SPELL_INVISIBILITY_OTHER:       return TILEG_INVISIBILITY_OTHER;
     case SPELL_IRON_ELEMENTALS:          return TILEG_IRON_ELEMENTALS;
+    case SPELL_LEGENDARY_DESTRUCTION:    return TILEG_LEGENDARY_DESTRUCTION;
     case SPELL_MALIGN_OFFERING:          return TILEG_MALIGN_OFFERING;
     case SPELL_MALMUTATE:                return TILEG_MALMUTATE;
     case SPELL_MESMERISE:                return TILEG_MESMERISE;
@@ -4990,12 +5008,18 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MIGHT:                    return TILEG_MIGHT;
     case SPELL_MIGHT_OTHER:              return TILEG_MIGHT_OTHER;
     case SPELL_NOXIOUS_CLOUD:            return TILEG_NOXIOUS_CLOUD;
+    case SPELL_ORB_OF_ELECTRICITY:       return TILEG_ORB_OF_ELECTRICITY;
     case SPELL_PETRIFYING_CLOUD:         return TILEG_PETRIFYING_CLOUD;
+    case SPELL_PLANEREND:                return TILEG_PLANEREND;
     case SPELL_POLYMORPH:                return TILEG_POLYMORPH;
     case SPELL_PORKALATOR:               return TILEG_PORKALATOR;
     case SPELL_PRIMAL_WAVE:              return TILEG_PRIMAL_WAVE;
     case SPELL_QUICKSILVER_BOLT:         return TILEG_QUICKSILVER_BOLT;
+    case SPELL_REARRANGE_PIECES:         return TILEG_REARRANGE_PIECES;
+    case SPELL_SAP_MAGIC:                return TILEG_SAP_MAGIC;
     case SPELL_SENTINEL_MARK:            return TILEG_SENTINEL_MARK;
+    case SPELL_SHADOW_BOLT:              return TILEG_SHADOW_BOLT;
+    case SPELL_SHADOW_SHARD:             return TILEG_SHADOW_SHARD;
     case SPELL_SILVER_BLAST:             return TILEG_SILVER_BLAST;
     case SPELL_SLEEP:                    return TILEG_SLEEP;
     case SPELL_SPIT_ACID:                return TILEG_SPIT_ACID;
@@ -5018,6 +5042,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_TELEPORT_SELF:            return TILEG_TELEPORT_SELF;
     case SPELL_THORN_VOLLEY:             return TILEG_THORN_VOLLEY;
     case SPELL_TOMB_OF_DOROKLOHE:        return TILEG_TOMB_OF_DOROKLOHE;
+    case SPELL_VIRULENCE:                return TILEG_VIRULENCE;
     case SPELL_WALL_OF_BRAMBLES:         return TILEG_WALL_OF_BRAMBLES;
     case SPELL_WATERSTRIKE:              return TILEG_WATERSTRIKE;
     case SPELL_WATER_ELEMENTALS:         return TILEG_WATER_ELEMENTALS;
