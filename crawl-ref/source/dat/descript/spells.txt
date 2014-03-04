@@ -688,7 +688,8 @@ This spell conjures a small globe of magical energy linked to the caster's own
 reserves of power, which will hover alongside its creator and augment their
 destructive might. While the battlesphere cannot take independent action, it
 will fire volleys of energy at the caster's enemies in near-perfect sync with
-its creator's own destructive conjurations.
+its creator's own destructive conjurations.  With increasing spell power, the
+battlesphere lasts longer and deals more damage per volley.
 %%%%
 Iskenderun's Mystic Blast spell
 
