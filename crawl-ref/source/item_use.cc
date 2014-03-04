@@ -2253,13 +2253,23 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
         {
             while (acc--)
             {
-                if (wpn.plus < 4 || !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT))
+                if (wpn.plus < 4
+                    || you_worship(GOD_IGNI_IPTHES)
+                       && wpn.plus < MAX_WPN_ENCHANT
+                    || !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT))
+                {
                     wpn.plus++, success = true;
+                }
             }
             while (dam--)
             {
-                if (wpn.plus2 < 4 || !x_chance_in_y(wpn.plus2, MAX_WPN_ENCHANT))
+                if (wpn.plus2 < 4
+                    || you_worship(GOD_IGNI_IPTHES)
+                       && wpn.plus2 < MAX_WPN_ENCHANT
+                    || !x_chance_in_y(wpn.plus2, MAX_WPN_ENCHANT))
+                {
                     wpn.plus2++, success = true;
+                }
             }
             if (success && colour)
                 mprf("%s glow%s %s for a moment.", iname.c_str(), s, colour);
