@@ -4865,6 +4865,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MALIGN_GATEWAY:           return TILEG_MALIGN_GATEWAY;
     case SPELL_SUMMON_DRAGON:            return TILEG_SUMMON_DRAGON;
     case SPELL_SUMMON_HYDRA:             return TILEG_SUMMON_HYDRA;
+    case SPELL_SUMMON_LIGHTNING_SPIRE:   return TILEG_SUMMON_LIGHTNING_SPIRE;
+    case SPELL_SUMMON_GUARDIAN_GOLEM:    return TILEG_SUMMON_GUARDIAN_GOLEM;
+    case SPELL_SUMMON_FOREST:            return TILEG_SUMMON_FOREST;
 
     // Necromancy
     case SPELL_ANIMATE_SKELETON:         return TILEG_ANIMATE_SKELETON;

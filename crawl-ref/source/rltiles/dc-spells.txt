@@ -141,6 +141,9 @@ summon_ice_beast SUMMON_ICE_BEAST
 summon_shadow_creatures SUMMON_SHADOW_CREATURES
 summon_small_mammal SUMMON_SMALL_MAMMAL
 summon_ugly_thing SUMMON_UGLY_THING
+summon_lightning_spire SUMMON_LIGHTNING_SPIRE
+summon_guardian_golem SUMMON_GUARDIAN_GOLEM
+summon_forest SUMMON_FOREST
 
 %sdir gui/spells/translocation
 apportation APPORTATION
