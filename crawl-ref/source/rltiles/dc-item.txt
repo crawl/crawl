@@ -967,12 +967,12 @@ rod09
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
-i-rod_destruction_ice ROD_DESTRUCTION_ICE
+i-rod_clouds ROD_CLOUDS
 i-rod_iron ROD_DESTRUCTION_IRON
 i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_warding ROD_WARDING
-i-rod_demonology ROD_DEMONOLOGY
+i-rod_shadows ROD_SHADOWS
 i-rod_striking ROD_STRIKING
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_venom ROD_VENOM ROD_ID_LAST

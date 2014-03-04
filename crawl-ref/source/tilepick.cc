@@ -4917,6 +4917,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_THUNDERBOLT:              return TILEG_THUNDERBOLT;
     case SPELL_MELEE:                    return TILEG_MELEE;
     case SPELL_WEAVE_SHADOWS:            return TILEG_SUMMON_SHADOW_CREATURES;
+    case SPELL_CLOUD_CONE:               return TILEG_CLOUD_CONE;
 
     // --------------------------------------------
     // Monster spells
