@@ -254,17 +254,12 @@ default-depth: Sewer
 
 ############################################################################
 # Sewer with a small kobold camp, potion treasure and Ely/Zin altar.
-# Easier than sewer_minmay_treatment, so more probably.
+# Easier than sewer_minmay_treatment, so more common.
 #
 NAME:     sewer_kobolds
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
 WEIGHT:   35
 ORIENT:   encompass
-: if crawl.one_chance_in(12) then
-SUBST:    C=c, X=w, V=W, v=w, *=f
-: else
-SUBST:    X=c, C=x, V=x, v=x, *=x
-: end
 SUBST:    ' = .W
 SUBST:    ? = .x
 : sewer_setup(_G)
@@ -276,22 +271,18 @@ KMONS:    q = big fish
 KFEAT:    q = w
 COLOUR:   q = green
 MONS:     jackal / w:3 nothing, kobold / w:5 nothing, big kobold
-SHUFFLE:  deef
-ITEM:     potion of heal wounds / potion of curing
-ITEM:     potion of curing / potion of curing q:2 w:5 / \
-          potion of heal wounds / potion of heal wounds q:2 w:5
-KITEM:    f = potion of flight q:2 ident:type, potion of restore abilities w:7 / \
-          potion of beneficial mutation w:30
-KFEAT:    f = shallow_water
+SHUFFLE:  de
+ITEM:     potion of curing / potion of heal wounds
+ITEM:     potion of flight / potion of restore abilities
 MONS:     rat w:15 / green rat w:7 / nothing w:3
 MAP
-        cccCCCCCCCCCCCC
-        cwXvvvvvvvvvvvCCC         CCC
-        cwccCCCCCCCCCvvVCCCC      C*CCC
-        cwwc        CCCvvvvCCCC  CCvvvC
-        ccwc          CCCCvvvvCCCCvvvvC
-         cwcc            CCCCvvvvvvvvvC
-        ccwwc               CCCCCCCCCCC
+        ccc
+        cwc
+        cwcc
+        cwwc
+        ccwc
+         cwcc
+        ccwwc
         cwwwc
         cwwwc
         cwwwc
@@ -314,7 +305,7 @@ MAP
       c.'WWW''c
       c..''''.c
 xxxxxxcccc1ccccx
-xefExxxx.122...xx
+xedExxxx.122...xx
 xdexxxx.2232.y..x
 xx?.?xxx....yYy.x
  xx?.xxx?....y.xx
