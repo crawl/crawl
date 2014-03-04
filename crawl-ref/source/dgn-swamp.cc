@@ -35,7 +35,7 @@ static void _swamp_slushy_patches(int depth_multiplier)
 static dungeon_feature_type _swamp_feature_for_height(int height)
 {
     return height >= 18 ? DNGN_TREE :
-        height > 8 ? DNGN_SHALLOW_WATER :
+        height > 6 ? DNGN_SHALLOW_WATER :
         height > 0 ? DNGN_FLOOR :
         height > -6 ? DNGN_SHALLOW_WATER :
         DNGN_TREE;
@@ -73,7 +73,7 @@ void dgn_build_swamp_level()
 
     dgn_initialise_heightmap(-19);
     _swamp_slushy_patches(3);
-    dgn_smooth_heights(2, 1);
+    dgn_smooth_heights(3, 1);
     _swamp_apply_features(2);
     dgn_smooth_heights(1, 2);
     _swamp_apply_features(2);
