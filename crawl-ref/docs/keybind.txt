@@ -45,8 +45,9 @@ g, ,      CMD_PICKUP
 i         CMD_DISPLAY_INVENTORY
 q         CMD_QUAFF
 r         CMD_READ
-v         CMD_EVOKE_WIELDED
 V         CMD_EVOKE
+v         CMD_EVOKE_WIELDED
+<unbound> CMD_FORCE_EVOKE_WIELDED
 w         CMD_WIELD_WEAPON
 F         CMD_THROW_ITEM_NO_QUIVER
 M         CMD_MEMORISE_SPELL
