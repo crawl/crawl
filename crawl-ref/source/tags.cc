@@ -2952,18 +2952,21 @@ static void tag_read_you_items(reader &th)
             continue;
         for (j = 0; j < count2; ++j)
         {
+#if TAG_MAJOR_VERSION == 34
             uint8_t x;
 
-#if TAG_MAJOR_VERSION == 34
             if (th.getMinorVersion() < TAG_MINOR_BOOK_ID
                 && i == OBJ_BOOKS)
                 x = ID_UNKNOWN_TYPE;
             else
                 x = unmarshallUByte(th);
-#endif
 
             ASSERT(x < NUM_ID_STATE_TYPES);
             you.type_ids[i][j] = static_cast<item_type_id_state_type>(x);
+#else
+            you.type_ids[i][j] = static_cast<item_type_id_state_type>(
+                                     unmarshallUByte(th));
+#endif
         }
         for (j = count2; j < MAX_SUBTYPES; ++j)
             you.type_ids[i][j] = ID_UNKNOWN_TYPE;

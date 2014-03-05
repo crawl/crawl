@@ -678,11 +678,11 @@ const string make_cost_description(ability_type ability)
 #else
     if (abil.mp_cost)
         ret += make_stringf(", %d %sMP", abil.mp_cost,
-             abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
+            abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
 
     if (abil.hp_cost)
         ret += make_stringf(", %d %sHP", abil.hp_cost.cost(you.hp_max),
-            abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "",
+            abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "");
 #endif
 
     if (abil.zp_cost)

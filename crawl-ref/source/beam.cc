@@ -462,12 +462,15 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     if (zinfo->damage)
         pbolt.damage = (*zinfo->damage)(power);
 
+#if TAG_MAJOR_VERSION == 34
     if (z_type == ZAP_ICE_STORM)
     {
         pbolt.ench_power = power; // used for radius
         pbolt.ex_size = power > 76 ? 3 : 2; // for tracer, overwritten later
     }
-    else if (z_type == ZAP_EXPLOSIVE_BOLT)
+    else
+#endif
+    if (z_type == ZAP_EXPLOSIVE_BOLT)
         pbolt.ench_power = power;
     else if (z_type == ZAP_BREATHE_FROST)
         pbolt.ac_rule = AC_NONE;

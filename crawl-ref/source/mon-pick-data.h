@@ -1189,7 +1189,9 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(coc),
     POP(tar),
     POP(zot),
+#if TAG_MAJOR_VERSION == 34
     POP(forest),
+#endif
     POP(abyss),
     POP(pan),
     POP(zig),
@@ -1293,7 +1295,9 @@ static const struct { const pop_entry *pop; int count; } population_zombie[] =
     POP(generic_late_zombie),
     POP(generic_late_zombie),
     POP(zot),
+#if TAG_MAJOR_VERSION == 34
     POP(forest),
+#endif
     POP(generic_late_zombie),
     POP(generic_late_zombie),
     POP(zig),
@@ -1403,7 +1407,9 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
     POP(water_hell),
     POP(water_hell),
     POP(water_generic),
+#if TAG_MAJOR_VERSION == 34
     POP(water_forest),
+#endif
     POP(water_generic),
     POP(water_generic),
     POP(water_generic),
@@ -1498,7 +1504,9 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
     POP(lava_hell),
     POP(lava_hell),
     POP(lava_generic),
+#if TAG_MAJOR_VERSION == 34
     POP(lava_generic),
+#endif
     POP(lava_generic),
     POP(lava_generic),
     POP(lava_generic),

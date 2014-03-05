@@ -1608,7 +1608,10 @@ static const char *dngn_feature_names[] =
 "enter_hall_of_blades", "enter_zot", "enter_temple",
 "enter_snake_pit", "enter_elven_halls", "enter_tomb",
 "enter_swamp", "enter_shoals", "enter_spider_nest",
-"enter_forest", "enter_depths",
+#if TAG_MAJOR_VERSION == 34
+"enter_forest",
+#endif
+"enter_depths",
 
 #if TAG_MAJOR_VERSION == 34
 "return_from_dwarven_hall",
@@ -1620,7 +1623,10 @@ static const char *dngn_feature_names[] =
 "return_from_temple", "return_from_snake_pit",
 "return_from_elven_halls", "return_from_tomb",
 "return_from_swamp", "return_from_shoals", "return_from_spider_nest",
-"return_from_forest", "return_from_depths",
+#if TAG_MAJOR_VERSION == 34
+"return_from_forest",
+#endif
+"return_from_depths",
 
 "altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
