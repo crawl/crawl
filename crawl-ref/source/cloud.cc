@@ -362,8 +362,7 @@ void manage_clouds()
 
         int dissipate = you.time_taken;
 
-        // If a player-created cloud is out of LOS, it dissipated much faster.
-        // it dissipates much faster.
+        // If a player-created cloud is out of LOS, it dissipates much faster.
         if (cloud.source == MID_PLAYER && !you.see_cell(cloud.pos))
             dissipate *= 4;
 
