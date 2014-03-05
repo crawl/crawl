@@ -309,6 +309,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
     beam.origin_spell = real_spell;
+    beam.beam_source = mons->mindex();
 
     // FIXME: this should use the zap_data[] struct from beam.cc!
     switch (real_spell)
@@ -393,8 +394,9 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_SLEEP:
-        beam.flavour  = BEAM_SLEEP;
-        beam.is_beam  = true;
+        beam.flavour    = BEAM_SLEEP;
+        beam.is_beam    = true;
+        beam.ench_power = 6 * mons->spell_hd(real_spell);
         break;
 
     case SPELL_POLYMORPH:
@@ -576,7 +578,8 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_TELEPORT_SELF:
-        beam.flavour  = BEAM_TELEPORT;
+        beam.flavour    = BEAM_TELEPORT;
+        beam.ench_power = 2000;
         break;
 
     case SPELL_TELEPORT_OTHER:
@@ -1069,8 +1072,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         die("Unknown monster spell '%s' cast by %s",
                  spell_title(real_spell),
                  mons->name(DESC_PLAIN, true).c_str());
-
-        return beam;
     }
 
     if (beam.is_enchantment())
@@ -1112,12 +1113,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // Setting this to a more realistic number now that that bug is
     // squashed.
     pbolt.ench_power = 4 * mons->spell_hd(spell_cast);
-
-    if (spell_cast == SPELL_TELEPORT_SELF)
-        pbolt.ench_power = 2000;
-    else if (spell_cast == SPELL_SLEEP)
-        pbolt.ench_power = 6 * mons->spell_hd(spell_cast);
-
     pbolt.beam_source = mons->mindex();
 
     // Convenience for the hapless innocent who assumes that this
@@ -1278,31 +1273,11 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     int power = 12 * mons->spell_hd(spell_cast);
 
-    bolt theBeam         = mons_spell_beam(mons, spell_cast, power);
+    bolt theBeam = mons_spell_beam(mons, spell_cast, power);
 
-    // [ds] remind me again why we're doing this piecemeal copying?
-    pbolt.origin_spell   = theBeam.origin_spell;
-    pbolt.colour         = theBeam.colour;
-    pbolt.range          = theBeam.range;
-    pbolt.hit            = theBeam.hit;
-    pbolt.damage         = theBeam.damage;
-
-    if (theBeam.ench_power != -1)
-        pbolt.ench_power = theBeam.ench_power;
-
-    pbolt.glyph          = theBeam.glyph;
-    pbolt.flavour        = theBeam.flavour;
-    pbolt.thrower        = theBeam.thrower;
-    pbolt.name           = theBeam.name;
-    pbolt.short_name     = theBeam.short_name;
-    pbolt.is_beam        = theBeam.is_beam;
-    pbolt.source         = mons->pos();
-    pbolt.is_tracer      = false;
-    pbolt.is_explosion   = theBeam.is_explosion;
-    pbolt.ex_size        = theBeam.ex_size;
-
-    pbolt.foe_ratio      = theBeam.foe_ratio;
-
+    bolt_parent_init(&theBeam, &pbolt);
+    pbolt.source = mons->pos();
+    pbolt.is_tracer = false;
     if (!pbolt.is_enchantment())
         pbolt.aux_source = pbolt.name;
     else
@@ -5817,10 +5792,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_CLOUD_CONE:
+    {
         ASSERT(mons->get_foe());
         cast_cloud_cone(mons, 12 * mons->spell_hd(spell_cast),
                         mons->get_foe()->pos());
         return;
+    }
     }
 
 

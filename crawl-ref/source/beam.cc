@@ -2320,37 +2320,70 @@ bool imb_can_splash(coord_def origin, coord_def center,
     return true;
 }
 
+void bolt_parent_init(bolt *parent, bolt *child)
+{
+    child->name           = parent->name;
+    child->short_name     = parent->short_name;
+    child->aux_source     = parent->aux_source;
+    child->beam_source    = parent->beam_source;
+    child->origin_spell   = parent->origin_spell;
+    child->glyph          = parent->glyph;
+    child->colour         = parent->colour;
+
+    child->flavour        = parent->flavour;
+    child->origin_spell   = parent->origin_spell;
+
+    // We don't copy target since that is often overriden.
+    child->thrower        = parent->thrower;
+    child->source         = parent->source;
+    child->source_name    = parent->source_name;
+    child->attitude       = parent->attitude;
+
+    child->is_beam        = parent->is_beam;
+    child->is_explosion   = parent->is_explosion;
+    child->ex_size        = parent->ex_size;
+    child->foe_ratio      = parent->foe_ratio;
+
+    child->is_tracer      = parent->is_tracer;
+    child->is_targeting   = parent->is_targeting;
+
+    child->range          = parent->range;
+    child->hit            = parent->hit;
+    child->damage         = parent->damage;
+    if (parent->ench_power != -1)
+        child->ench_power = parent->ench_power;
+
+    child->friend_info.dont_stop = parent->friend_info.dont_stop;
+    child->foe_info.dont_stop    = parent->foe_info.dont_stop;
+    child->dont_stop_player      = parent->dont_stop_player;
+
+#ifdef DEBUG_DIAGNOSTICS
+    child->quiet_debug    = parent->quiet_debug;
+#endif
+}
+
 static void _imb_explosion(bolt *parent, coord_def center)
 {
     const int dist = grid_distance(parent->source, center);
     if (dist == 0 || (!parent->is_tracer && !x_chance_in_y(3, 2 + 2 * dist)))
         return;
     bolt beam;
+
+    bolt_parent_init(parent, &beam);
     beam.name           = "mystic blast";
     beam.aux_source     = "orb of energy";
-    beam.beam_source    = parent->beam_source;
-    beam.thrower        = parent->thrower;
-    beam.attitude       = parent->attitude;
     beam.range          = 3;
     beam.hit            = AUTOMATIC_HIT;
-    beam.damage         = parent->damage;
-    beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour         = MAGENTA;
-    beam.flavour        = BEAM_MMISSILE;
     beam.obvious_effect = true;
     beam.is_beam        = false;
     beam.is_explosion   = false;
     beam.passed_target  = true; // The centre was the target.
-    beam.is_tracer      = parent->is_tracer;
-    beam.is_targeting   = parent->is_targeting;
     beam.aimed_at_spot  = true;
     if (you.see_cell(center))
         beam.seen = true;
-    beam.source_name    = parent->source_name;
     beam.source         = center;
-#ifdef DEBUG_DIAGNOSTICS
-    beam.quiet_debug    = parent->quiet_debug;
-#endif
+
     bool first = true;
     for (adjacent_iterator ai(center); ai; ++ai)
     {
@@ -2415,22 +2448,16 @@ static void _malign_offering_effect(actor* victim, const actor* agent, int damag
 static void _explosive_bolt_explode(bolt *parent, coord_def pos)
 {
     bolt beam;
+
+    bolt_parent_init(parent, &beam);
     beam.name         = "fiery explosion";
     beam.aux_source   = "explosive bolt";
-    beam.beam_source  = parent->beam_source;
-    beam.thrower      = parent->thrower;
-    beam.attitude     = parent->attitude;
     beam.damage       = dice_def(3, 9 + parent->ench_power / 10);
     beam.colour       = RED;
     beam.flavour      = BEAM_FIRE;
     beam.is_explosion = true;
     beam.source       = pos;
     beam.target       = pos;
-    beam.is_tracer    = parent->is_tracer;
-    beam.is_targeting = parent->is_targeting;
-    beam.friend_info.dont_stop = parent->friend_info.dont_stop;
-    beam.foe_info.dont_stop = parent->foe_info.dont_stop;
-    beam.dont_stop_player = parent->dont_stop_player;
     beam.refine_for_explosion();
     beam.explode();
     parent->friend_info += beam.friend_info;
