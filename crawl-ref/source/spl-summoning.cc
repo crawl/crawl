@@ -245,9 +245,9 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
 
     const int chance = pow + random_range(-10, 10);
 
-    if (chance > 46)
+    if (chance > 59)
         mon = MONS_WARG;
-    else if (chance > 28)
+    else if (chance > 39)
         mon = MONS_WOLF;
     else
         mon = MONS_HOUND;
