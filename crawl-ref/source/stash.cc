@@ -1903,7 +1903,7 @@ void StashSearchMenu::draw_title()
                  " by <w>%s</w> [<w>/</w>],"
                  " <w>%s</w> useless [<w>=</w>]"
                  "</lightgrey>",
-                 menu_action == ACT_EXECUTE ? " view " : "travel",
+                 menu_action == ACT_EXECUTE ? "travel" : "view  ",
                  stack_style, sort_style, filtered)), false);
     }
 }
