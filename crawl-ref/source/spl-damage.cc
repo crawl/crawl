@@ -1658,7 +1658,7 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
     // natural poison (meaning that poisoned kobolds are not affected much
     // worse than poisoned members of other races), but step down heavily beyond
     // light poisoning (or we could easily one-shot a heavily poisoned character)
-    str = max(str, (int)stepdown((double)you.duration[DUR_POISONING], 2.25));
+    str = max(str, (int)stepdown((double)you.duration[DUR_POISONING]/20, 2.25));
 
     int damage = roll_dice(str, 5 + pow/7);
     if (damage)
