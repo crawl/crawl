@@ -1087,8 +1087,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             if (you_worship(GOD_DITHMENOS))
             {
-                piety_change *= 2;
-                piety_denom *= 3;
+                // Full gains at full piety down to 2/3 at 6* piety.
+                // (piety_rank starts at 1, not 0.)
+                piety_change *= 25 - piety_rank();
+                piety_denom *= 24;
             }
         }
 
