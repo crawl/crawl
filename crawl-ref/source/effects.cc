@@ -2141,13 +2141,9 @@ static void _recover_stats(int time_delta)
             }
         }
 
-        // Slow heal mutation.  Applied last.
-        // Each level reduces your stat recovery by one third.
-        if (player_mutation_level(MUT_SLOW_HEALING) > 0
-            && x_chance_in_y(player_mutation_level(MUT_SLOW_HEALING), 3))
-        {
+        // Slow heal 3 mutation stops stat recovery.
+        if (player_mutation_level(MUT_SLOW_HEALING) == 3)
             recovery = false;
-        }
 
         // Rate of recovery equals one level of MUT_DETERIORATION.
         if (recovery && x_chance_in_y(4, 200))
