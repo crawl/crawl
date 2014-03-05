@@ -5687,7 +5687,7 @@ static object_class_type _item_in_shop(shop_type shop_type)
         return OBJ_SCROLLS;
 
     default:
-        die("unknown shop type");
+        die("unknown shop type %d", shop_type);
     }
 
     return OBJ_RANDOM;
