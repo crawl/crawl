@@ -4926,7 +4926,7 @@ bool igni_artefactize_weapon()
 
     const string old_name(wpn->name(DESC_YOUR));
 
-    vector<item_def> wpn_choices = make_igni_randarts(*wpn);
+    vector<igni_art> wpn_choices = make_igni_randarts(*wpn);
 
     if (wpn_choices.empty())
     {
@@ -4952,10 +4952,17 @@ bool igni_artefactize_weapon()
 
     for (unsigned int i = 0; i < wpn_choices.size(); ++i)
     {
-        item_def& choice = wpn_choices[i];
+        igni_art& choice = wpn_choices[i];
+        string desc = choice.itm.name(DESC_THE);
+        string colour = colour_to_str(choice.cost.find_in_inv() == -1
+                                          ? RED
+                                          : CYAN);
+        desc += "<" + colour + "> Cost: ";
+        desc += choice.cost.to_item().name(DESC_PLAIN);
+        desc += "</" + colour + ">";
 
         MenuEntry* me =
-            new MenuEntry(choice.name(DESC_THE), MEL_ITEM, 1,
+            new MenuEntry(desc, MEL_ITEM, 1,
                           index_to_letter(i % 52));
 
         me->data = &choice;
@@ -4970,10 +4977,14 @@ bool igni_artefactize_weapon()
     if (sel.empty())
         return NULL;
 
-    item_def choice = *static_cast<item_def*>(sel[0]->data);
+    igni_art choice = *static_cast<igni_art*>(sel[0]->data);
 
-    you.attribute[ATTR_IGNI_ARTEFACTS_MADE] |= choice.slot;
-    choice.slot = wpn->slot;
+    const int cost_inv_item = choice.cost.find_in_inv();
+    if (cost_inv_item == -1)
+    {
+        mpr("You don't have the required items!");
+        return false;
+    }
 
     while (true)
     {
@@ -4986,13 +4997,19 @@ bool igni_artefactize_weapon()
 
         if (buf[0] != '\0')
         {
-            set_artefact_name(choice,
-                              item_base_name(choice) + " \"" + buf + "\"");
+            set_artefact_name(choice.itm,
+                              item_base_name(choice.itm) + " \"" + buf + "\"");
             break;
         }
     }
 
-    *wpn = choice;
+    // Pay for it.
+    dec_inv_item_quantity(cost_inv_item, choice.cost.quantity);
+
+    you.attribute[ATTR_IGNI_ARTEFACTS_MADE] |= choice.itm.slot;
+    choice.itm.slot = wpn->slot;
+
+    *wpn = choice.itm;
 
     you.wield_change = true;
     calc_mp(); // just in case the old brand was antimagic

@@ -1964,13 +1964,43 @@ static void _igni_add_prop(item_def& wpn, const _igni_artp_def& def)
     }
 }
 
+item_def igni_art_cost::to_item() const
+{
+    item_def itm;
+    itm.base_type = base_type;
+    itm.sub_type = sub_type;
+    itm.quantity = quantity;
+    set_ident_flags(itm, ISFLAG_IDENT_MASK);
+    return itm;
+}
+
+bool igni_art_cost::matches(const item_def& itm) const
+{
+    return base_type == itm.base_type
+           && sub_type == itm.sub_type
+           && quantity <= itm.quantity;
+}
+
+int igni_art_cost::find_in_inv() const
+{
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (!you.inv[i].defined())
+            continue;
+
+        if (matches(you.inv[i]))
+            return i;
+    }
+    return -1;
+}
+
 // Generates a list of artefacts by copying wpn and adding some randart
 // prorerties to it.
 // It also improves the weapon's enchantment.
 // The function returns an empty vector if something went wrong.
-vector<item_def> make_igni_randarts(const item_def& wpn)
+vector<igni_art> make_igni_randarts(const item_def& wpn)
 {
-    vector<item_def> choices;
+    vector<igni_art> choices;
 
     if (wpn.base_type != OBJ_WEAPONS
         || wpn.flags & ISFLAG_RANDART
@@ -1978,6 +2008,21 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
     {
         return choices; // Empty vector
     }
+
+    igni_art_cost costs[] =
+    {
+        { OBJ_POTIONS, POT_CURE_MUTATION, 1 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
+        { OBJ_SCROLLS, SCR_ACQUIREMENT, 1 },
+        { OBJ_SCROLLS, SCR_BRAND_WEAPON, 1 },
+        { OBJ_SCROLLS, SCR_RECHARGING, 3 },
+        { OBJ_MISCELLANY, MISC_LAMP_OF_FIRE, 1 },
+        { OBJ_MISCELLANY, MISC_STONE_OF_TREMORS, 1 },
+        { OBJ_JEWELLERY, AMU_CONSERVATION, 1 },
+        { OBJ_JEWELLERY, AMU_RESIST_MUTATION, 1 },
+        { OBJ_JEWELLERY, RING_PROTECTION_FROM_FIRE, 1 },
+        { OBJ_JEWELLERY, RING_PROTECTION_FROM_COLD, 1 },
+    };
 
     // The artefact properties have a special generation algorithm for Igni.
     // It chooses either a tier1 value and a tier2 value, or a tier0 value and
@@ -2045,12 +2090,14 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         { ARTP_NOISES, 3 },
     };
 
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(costs));
     ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier0));
     ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier1));
     ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier2));
     ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(bad_tier));
 
     reproducible_rng rng(you.birth_time);
+    std::random_shuffle(costs, costs + ARRAYSZ(costs), rng);
     std::random_shuffle(tier1, tier1 + ARRAYSZ(tier1), rng);
     std::random_shuffle(tier2, tier2 + ARRAYSZ(tier2), rng);
     std::random_shuffle(bad_tier, bad_tier + ARRAYSZ(bad_tier), rng);
@@ -2066,8 +2113,9 @@ vector<item_def> make_igni_randarts(const item_def& wpn)
         if (you.attribute[ATTR_IGNI_ARTEFACTS_MADE] & flag)
             continue;
 
-        choices.push_back(wpn);
-        item_def& choice = choices.back();
+        igni_art art = { costs[i], wpn };
+        choices.push_back(art);
+        item_def& choice = choices.back().itm;
 
         // This hack is used to pass the flag back to the caller.
         choice.slot = flag;

@@ -123,7 +123,6 @@ void reveal_randapp_artefact(item_def &item);
 
 bool make_item_randart(item_def &item, bool force_mundane = false);
 bool make_item_unrandart(item_def &item, int unrand_index);
-vector<item_def> make_igni_randarts(const item_def& wpn);
 void setup_unrandart(item_def &item);
 
 bool randart_is_bad(const item_def &item);
@@ -140,5 +139,23 @@ void artefact_set_property(item_def           &item,
 int get_unrandart_num(const char *name);
 
 void unrand_reacts();
+
+struct igni_art_cost
+{
+    object_class_type base_type;
+    uint8_t sub_type;
+    short quantity;
+    item_def to_item() const;
+    bool matches(const item_def& itm) const;
+    int find_in_inv() const;
+};
+
+struct igni_art
+{
+    igni_art_cost cost;
+    item_def itm;
+};
+vector<igni_art> make_igni_randarts(const item_def& wpn);
+string igni_art_cost_name(const igni_art_cost& cost);
 
 #endif
