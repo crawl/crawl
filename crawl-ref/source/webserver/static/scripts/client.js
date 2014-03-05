@@ -56,10 +56,9 @@ function (exports, $, key_conversion, chat, comm) {
             var msgobj;
             try
             {
-                if (JSON && JSON.parse)
-                    msgobj = JSON.parse(msgtext);
-                else
-                    msgobj = eval("(" + msgtext + ")");
+                // Can't use JSON.parse here, because 0.11 and older send
+                // invalid JSON messages
+                msgobj = eval("(" + msgtext + ")");
             }
             catch (e)
             {
