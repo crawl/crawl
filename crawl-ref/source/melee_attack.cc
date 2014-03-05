@@ -4359,50 +4359,45 @@ void melee_attack::announce_hit()
 }
 
 // Returns if the target was actually poisoned by this attack
-bool melee_attack::mons_do_poison(bool always)
+bool melee_attack::mons_do_poison()
 {
-    if (one_chance_in(3) || always)
+    int amount = 1;
+    bool force = false;
+
+    if (attk_flavour == AF_POISON_STRONG)
     {
-        int amount = 1;
-        bool force = false;
+        amount = random_range(attacker->get_experience_level() * 5 / 2 + 1,
+                                attacker->get_experience_level() * 4 + 4);
 
-        if (attk_flavour == AF_POISON_STRONG)
+        if (defender->res_poison() > 0 && defender->has_lifeforce())
         {
-            amount = random_range(attacker->get_experience_level() * 5 / 2 + 1,
-                                  attacker->get_experience_level() * 4 + 4);
-
-            if (defender->res_poison() > 0 && defender->has_lifeforce())
-            {
-                amount /= 2;
-                force = true;
-            }
+            amount /= 2;
+            force = true;
         }
-        else
-        {
-            amount = random_range(attacker->get_experience_level() * 2 + 1,
-                                  attacker->get_experience_level() * 3 + 4);
-        }
-
-        if (!defender->poison(attacker, amount, force))
-            return false;
-
-        if (needs_message)
-        {
-            mprf("%s poisons %s!",
-                 atk_name(DESC_THE).c_str(),
-                 defender_name().c_str());
-            if (force)
-            {
-                mprf("%s partially resist%s.",
-                    defender_name().c_str(),
-                    defender->is_player() ? "" : "s");
-            }
-        }
-
-        return true;
+    }
+    else
+    {
+        amount = random_range(attacker->get_experience_level() * 2 + 1,
+                                attacker->get_experience_level() * 3 + 4);
     }
 
-    return false;
+    if (!defender->poison(attacker, amount, force))
+        return false;
+
+    if (needs_message)
+    {
+        mprf("%s poisons %s!",
+                atk_name(DESC_THE).c_str(),
+                defender_name().c_str());
+        if (force)
+        {
+            mprf("%s partially resist%s.",
+                defender_name().c_str(),
+                defender->is_player() ? "" : "s");
+        }
+    }
+
+    return true;
 }
 
 void melee_attack::mons_do_napalm()
@@ -4496,7 +4491,8 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_POISON:
     case AF_POISON_STRONG:
-        mons_do_poison();
+        if (one_chance_in(3))
+            mons_do_poison();
         break;
 
     case AF_ROT:
@@ -4930,11 +4926,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_WEAKNESS_POISON:
-        if (mons_do_poison(true))
-        {
-            if (coinflip())
-                defender->weaken(attacker, 12);
-        }
+        if (coinflip() && mons_do_poison())
+            defender->weaken(attacker, 12);
         break;
 
     case AF_SHADOWSTAB:
