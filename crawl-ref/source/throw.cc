@@ -601,8 +601,8 @@ static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
     if (dmg > 0 || beam.ench_power == AUTOMATIC_HIT
                    && x_chance_in_y(90 - 3 * victim->armour_class(), 100))
     {
-        levels = 1 + roll_dice(2, 5)
-                 + random2(div_rand_round(beam.damage.num * beam.damage.size, 4));
+        levels = 1 + roll_dice(2, 7)
+                 + random2(div_rand_round(beam.damage.num * beam.damage.size, 3));
     }
 
     if (levels <= 0)
