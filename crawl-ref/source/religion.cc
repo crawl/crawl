@@ -3362,7 +3362,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_IGNI_IPTHES:
-        mprf(MSGCH_GOD, old_god, "You feel colder.");
         _set_penance(old_god, 50);
         break;
 
