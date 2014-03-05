@@ -1047,7 +1047,8 @@ function (exports, $, key_conversion, chat, comm) {
     {
         if (game_version == null || data["version"] != game_version)
         {
-            $(document).unbind("game_preinit game_init game_cleanup");
+            $(document).off();
+            bind_document_events();
             for (var i in loaded_modules)
                 requirejs.undef(loaded_modules[i]);
             loaded_modules = [];
@@ -1130,6 +1131,14 @@ function (exports, $, key_conversion, chat, comm) {
         return true;
     }
 
+    function bind_document_events()
+    {
+        $(document).on("keypress.client", handle_keypress);
+        $(document).on("keydown.client", handle_keydown);
+        $(document).on("game_keypress", stale_processes_keypress);
+        $(document).on("game_keypress", force_terminate_keypress);
+    }
+
     // Global functions for backwards compatibility (HACK)
     window.log = log;
     window.set_layer = set_layer;
@@ -1174,9 +1183,7 @@ function (exports, $, key_conversion, chat, comm) {
     });
 
     $(document).ready(function () {
-        // Key handler
-        $(document).bind('keypress.client', handle_keypress);
-        $(document).bind('keydown.client', handle_keydown);
+        bind_document_events();
 
         $(window).resize(function (ev) {
             do_layout();
@@ -1205,8 +1212,6 @@ function (exports, $, key_conversion, chat, comm) {
 
         $("#force_terminate_no").click(force_terminate_no);
         $("#force_terminate_yes").click(force_terminate_yes);
-        $(document).on("game_keypress", stale_processes_keypress);
-        $(document).on("game_keypress", force_terminate_keypress);
 
         do_layout();
 
