@@ -5883,7 +5883,7 @@ feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,
         err = make_stringf("too many semi-colons for '%s' spec", orig.c_str());
 
     item_list items;
-    if (parts.size() == 2)
+    if (err.empty() && parts.size() == 2)
     {
         string item_list = parts[1];
         vector<string> str_items = split_string("|", item_list);
