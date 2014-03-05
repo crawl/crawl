@@ -415,7 +415,7 @@ static const ability_def Ability_List[] =
 
     // Igni Ipthes
     { ABIL_IGNI_FIREBRAND_WEAPON, "Firebrand Weapon",
-      0, 0, 0, 0, 0, 100, ABFLAG_NONE },
+      0, 0, 100, 1, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_DIVINE_BELLOWS, "Divine Bellows",
       0, 0, 200, 2, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_FIRE_FORTRESS, "Fire Fortress",
