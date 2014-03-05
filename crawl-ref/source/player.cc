@@ -5194,12 +5194,12 @@ void handle_player_poison(int delay)
     msg_channel_type channel = MSGCH_PLAIN;
     const char *adj = "";
 
-    if (dmg > 9)
+    if (dmg > 6)
     {
         channel = MSGCH_DANGER;
         adj = "extremely ";
     }
-    if (dmg > 4)
+    else if (dmg > 2)
     {
         channel = MSGCH_WARN;
         adj = "very ";
