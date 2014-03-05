@@ -694,7 +694,8 @@ void do_dragon_call(int time)
 {
     noisy(15, you.pos());
 
-    while (time > you.attribute[ATTR_NEXT_DRAGON_TIME])
+    while (time > you.attribute[ATTR_NEXT_DRAGON_TIME]
+           && you.duration[DUR_DRAGON_CALL])
     {
         time -= you.attribute[ATTR_NEXT_DRAGON_TIME];
         _place_dragon();
