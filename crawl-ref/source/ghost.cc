@@ -562,8 +562,8 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
                                   colour_t force_colour)
 {
-    // Movement speed: 11, the same as in mon-data.h.
-    speed = 11;
+    // Movement speed: 10, the same as in mon-data.h.
+    speed = 10;
 
     // Midpoint: 10, as in mon-data.h.
     ev = 9 + random2(3);
