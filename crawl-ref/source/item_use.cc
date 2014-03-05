@@ -733,9 +733,9 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return false;
         }
 
-        if (you.species == SP_NAGA ||
+        if (you.species == SP_NAGA
 #if TAG_MAJOR_VERSION == 34
-                you.species == SP_DJINNI
+            || you.species == SP_DJINNI
 #endif
            )
         {

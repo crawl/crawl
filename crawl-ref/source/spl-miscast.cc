@@ -1536,9 +1536,9 @@ void MiscastEffect::_divination_you(int severity)
         {
         case 0:
             mpr("You lose concentration completely!");
-            if (you.magic_points > 0 ||
+            if (you.magic_points > 0
 #if TAG_MAJOR_VERSION == 34
-                    you.species == SP_DJINNI
+                || you.species == SP_DJINNI
 #endif
                     )
             {

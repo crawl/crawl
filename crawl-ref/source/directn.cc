@@ -3184,7 +3184,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "crawl-hole back to the Lair";
     case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_BLADE:
+#if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_FOREST:
+#endif
         return "staircase back to the Vaults";
     case DNGN_RETURN_FROM_ELF:
         return "staircase back to the Mines";
