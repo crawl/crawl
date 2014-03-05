@@ -1925,6 +1925,10 @@ static void _grand_avatar_act(monster* mons)
             return;
     }
 
+    // Avatar may have dissipated after firing.
+    if (!mons->alive())
+        return;
+
     bolt tracer;
     tracer.source    = mons->pos();
     tracer.target    = mons->target;
