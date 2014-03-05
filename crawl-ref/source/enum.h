@@ -531,6 +531,9 @@ enum branch_type                // you.where_are_you
     BRANCH_BLADE,
     BRANCH_CRYPT,
     BRANCH_TOMB,
+#if TAG_MAJOR_VERSION > 34
+    BRANCH_DEPTHS,
+#endif
     BRANCH_VESTIBULE,
     BRANCH_DIS,
     BRANCH_GEHENNA,
@@ -554,7 +557,9 @@ enum branch_type                // you.where_are_you
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_WIZLAB,
+#if TAG_MAJOR_VERSION == 34
     BRANCH_DEPTHS,
+#endif
     NUM_BRANCHES
 };
 
