@@ -5056,7 +5056,7 @@ bool curare_hits_player(int death_source, string name, string source_name)
     if (player_res_poison() >= 3)
         return false;
 
-    if (!poison_player(roll_dice(2, 9), source_name, name))
+    if (!poison_player(roll_dice(2, 11), source_name, name))
         return false;
 
     int hurted = 0;
@@ -5156,7 +5156,7 @@ int get_player_poisoning()
 
 void handle_player_poison(int delay)
 {
-    int decrease = min(60, max(1, you.duration[DUR_POISONING] / 10
+    int decrease = min(40, max(1, you.duration[DUR_POISONING] / 15
                                   * delay / BASELINE_DELAY));
 
     // If Cheibriados has slowed your life processes, poison affects you less
@@ -5254,7 +5254,7 @@ bool miasma_player(string source, string source_aux)
         return false;
     }
 
-    bool success = poison_player(roll_dice(2, 9), source, source_aux);
+    bool success = poison_player(roll_dice(2, 11), source, source_aux);
 
     if (you.hp_max > 4 && coinflip())
     {

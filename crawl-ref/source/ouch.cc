@@ -200,7 +200,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     case BEAM_POISON:
         if (doEffects)
         {
-            int pois = div_rand_round(beam->damage.num * beam->damage.size, 4);
+            int pois = div_rand_round(beam->damage.num * beam->damage.size, 3);
             pois = 3 + random_range(pois * 2 / 3, pois * 4 / 3);
 
             resist = poison_player(pois, source, kaux) ? 0 : 1;
