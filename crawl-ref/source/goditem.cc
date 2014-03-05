@@ -430,6 +430,7 @@ static bool _is_potentially_fiery_item(const item_def& item)
         if (item_brand == SPWPN_CHAOS)
             return true;
         }
+        break;
     case OBJ_WANDS:
         if (item.sub_type == WAND_RANDOM_EFFECTS)
             return true;
