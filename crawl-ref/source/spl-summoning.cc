@@ -1047,7 +1047,7 @@ spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type
     mgen_data spire = mgen_data(MONS_LIGHTNING_SPIRE, BEH_FRIENDLY, &you, dur,
                                 SPELL_SUMMON_LIGHTNING_SPIRE, where, MHITYOU,
                                 MG_FORCE_BEH | MG_FORCE_PLACE | MG_AUTOFOE, god);
-    spire.hd = 2 + div_rand_round(pow, 16);
+    spire.hd = max(1, div_rand_round(pow, 10));
 
     if (create_monster(spire))
     {
