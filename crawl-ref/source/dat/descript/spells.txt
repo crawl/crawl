@@ -525,9 +525,10 @@ backwards if the impact is not nullified by their defenses.
 %%%%
 Forceful Dismissal spell
 
-This spell violently unbinds the magic which keep's the caster's summoned
+This spell violently unbinds the magic which keeps the caster's summoned
 creatures in this world, engulfing anything near them in a maelstrom of magical
-force.
+force. The more powerful the creature released, the stronger the resulting
+backlash will be.
 %%%%
 Forceful Invitation spell
 
