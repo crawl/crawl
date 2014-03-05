@@ -1,7 +1,7 @@
 #include "AppHdr.h"
 
 #include "player-equip.h"
-
+#include "act-iter.h"
 #include "art-enum.h"
 #include "areas.h"
 #include "artefact.h"
@@ -14,6 +14,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "misc.h"
 #include "notes.h"
 #include "options.h"
@@ -36,6 +37,7 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
                           bool msg);
 static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
                             bool msg);
+static void _mark_unseen_monsters();
 
 static void _calc_hp_artefact()
 {
@@ -421,6 +423,9 @@ static void _unequip_artefact_effect(item_def &item,
         mpr("Mutagenic energies flood into your body!");
         contaminate_player(7000, true);
     }
+
+    if (proprt[ARTP_EYESIGHT])
+        _mark_unseen_monsters();
 
     if (is_unrandom_artefact(item))
     {
@@ -1077,7 +1082,10 @@ static void _unequip_armour_effect(item_def& item, bool meld)
 
     case SPARM_SEE_INVISIBLE:
         if (!you.can_see_invisible())
+        {
             mpr("You feel less perceptive.");
+            _mark_unseen_monsters();
+        }
         break;
 
     case SPARM_DARKNESS:
@@ -1534,13 +1542,16 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
     case RING_PROTECTION_FROM_FIRE:
     case RING_PROTECTION_FROM_MAGIC:
     case RING_REGENERATION:
-    case RING_SEE_INVISIBLE:
     case RING_SLAYING:
     case RING_SUSTAIN_ABILITIES:
     case RING_SUSTENANCE:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
     case RING_TELEPORT_CONTROL:
+        break;
+
+    case RING_SEE_INVISIBLE:
+        _mark_unseen_monsters();
         break;
 
     case RING_PROTECTION:
@@ -1632,4 +1643,18 @@ bool unwield_item(bool showMsgs)
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
     return true;
+}
+
+static void _mark_unseen_monsters()
+{
+
+    for (monster_iterator mi; mi; mi++)
+    {
+        if (testbits((*mi)->flags, MF_WAS_IN_VIEW) && !you.can_see(*mi))
+        {
+            (*mi)->went_unseen_this_turn = true;
+            (*mi)->unseen_pos = (*mi)->pos();
+        }
+
+    }
 }
