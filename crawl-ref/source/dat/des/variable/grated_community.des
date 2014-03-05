@@ -66,7 +66,8 @@ KFEAT:  B = food shop name:Stan type:Special suffix:Sausages count:10 ; \
             q:5 sausage
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
             greed:50 ; potion of confusion
-: kfeat("D = armour shop name:The_Legendary_" .. crawl.make_name() .. " \
+: local smithy = string.gsub(crawl.make_name(), " ", "_")
+: kfeat("D = armour shop name:The_Legendary_" .. smithy .. " \
 :        type:Legendary suffix:Smithy count:10 greed:40 ;\
 :        damaged plate armour ego:none | damaged chain mail ego:none |\
 :        damaged long sword ego:none | damaged shield ego:none |\
