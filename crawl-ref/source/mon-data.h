@@ -5874,7 +5874,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_LIGHTNING_SPIRE, '{', LIGHTCYAN, "lightning spire",
+    MONS_LIGHTNING_SPIRE, '8', LIGHTCYAN, "lightning spire",
     M_STATIONARY | M_NO_POLY_TO,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 2),
     0, 10, MONS_LIGHTNING_SPIRE, MONS_LIGHTNING_SPIRE, MH_NONLIVING, MAG_IMMUNE,
