@@ -5715,7 +5715,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_DISCHARGE:
     {
-        const int power = (mons->spell_hd(spell_cast) * 12) / 10;
+        const int power = min(200, mons->spell_hd(spell_cast) * 12);
         const int num_targs = 1 + random2(random_range(1, 3) + power / 20);
         const int dam = apply_random_around_square(discharge_monsters,
                                                    mons->pos(), true, power,

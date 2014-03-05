@@ -1829,14 +1829,20 @@ void local_ignite_poison(coord_def pos, int pow, actor* agent)
 
 int discharge_monsters(coord_def where, int pow, int, actor *agent)
 {
-    monster* mons = monster_at(where);
-    int damage = 0;
+    actor* victim = actor_at(where);
+
+    if (!victim)
+        return 0;
+
+    int damage = (agent == victim) ? 1 + random2(3 + pow / 15)
+                                   : 3 + random2(5 + pow / 10
+                                                 + (random2(pow) / 10));
 
     bolt beam;
     beam.flavour = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
 
     dprf("Static discharge on (%d,%d) pow: %d", where.x, where.y, pow);
-    if (where == you.pos())
+    if (victim->is_player())
     {
         mpr("You are struck by lightning.");
         damage = 1 + random2(3 + pow / 15);
@@ -1847,17 +1853,17 @@ int discharge_monsters(coord_def where, int pow, int, actor *agent)
              true,
              agent->is_player() ? "you" : agent->name(DESC_A).c_str());
     }
-    else if (mons == NULL)
-        return 0;
-    else if (mons->res_elec() > 0)
+    else if (victim->res_elec() > 0)
     {
         // Shock serpents conduct electricity just fine.
-        if (mons->type != MONS_SHOCK_SERPENT)
+        if (victim->type != MONS_SHOCK_SERPENT)
             return 0;
     }
     else
     {
-        damage = 3 + random2(5 + pow / 10 + (random2(pow) / 10));
+        monster* mons = victim->as_monster();
+        ASSERT(mons);
+
         dprf("%s: static discharge damage: %d",
              mons->name(DESC_PLAIN, true).c_str(), damage);
         damage = mons_adjust_flavoured(mons, beam, damage);
