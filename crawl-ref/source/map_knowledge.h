@@ -36,6 +36,7 @@ struct cloud_info
 #define MAP_SILENCED           0x800
 #define MAP_BLOODY            0x1000
 #define MAP_CORRODING         0x2000
+#define MAP_INVISIBLE_UPDATE  0x4000 // Used for invis redraws by show_init()
 
 /* these flags require more space to serialize: put infrequently used ones there */
 #define MAP_EXCLUDED_STAIRS  0x10000
@@ -111,7 +112,7 @@ struct map_cell
     // Clear prior to show update. Need to retain at least "seen" flag.
     void clear_data()
     {
-        const uint8_t f = flags & MAP_SEEN_FLAG;
+        const uint32_t f = flags & (MAP_SEEN_FLAG | MAP_INVISIBLE_UPDATE);
         clear();
         flags = f;
     }

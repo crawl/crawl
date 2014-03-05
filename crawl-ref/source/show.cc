@@ -324,10 +324,13 @@ static void _check_monster_pos(const monster* mons)
  * @param mons     The moster being mimicked.
  * @returns        True if valid, otherwise False.
 */
-static bool _valid_invis_spot(const coord_def &where, const monster* mons)
+static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
 {
-    monster *mons_at = monster_at(where);
+    if (!you.see_cell(where) || where == you.pos()
+        || env.map_knowledge(where).flags & MAP_INVISIBLE_UPDATE)
+        return false;
 
+    monster *mons_at = monster_at(where);
     if (mons_at && mons_at != mons)
         return false;
 
@@ -359,14 +362,57 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
  * Mark the estimated position of an invisible monster.
  *
  * Marks a spot on the map as possibly containing an unseen monster
- * (showing up as a disturbance in the air), and also places the
- * corresponding tile.
+ * (showing up as a disturbance in the air).  Also flags the square as
+ * updated for invisible monster, which is used by show_init().
  *
  * @param where    The disturbance's map position.
 **/
-static void _mark_invisible_monster(const coord_def &where)
+static void _mark_invisible_at(const coord_def &where)
 {
     env.map_knowledge(where).set_invisible_monster();
+    env.map_knowledge(where).flags |= MAP_INVISIBLE_UPDATE;
+}
+
+// Monsters that transition from seen to unseen in the last turn get marked as
+// an invisible monster at their position if their current position isn't given
+// away by failing the stealth checks in _update_monster().
+static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
+{
+    // Monster didn't go unseen last turn.
+    if(mons->unseen_pos.origin())
+        return;
+
+    // We expire these unseen invis markers after one turn.
+    if (you.turn_is_over && !mons->went_unseen_this_turn)
+    {
+        mons->unseen_pos = coord_def(0, 0);
+        return;
+    }
+
+    // Try to use the original position where the monster became unseen.
+    if (_valid_invisible_spot(mons->unseen_pos, mons))
+    {
+        _mark_invisible_at(mons->unseen_pos);
+        return;
+    }
+
+    // Fall back to a random position adjacent to the unseen position.
+    vector <coord_def> adj_unseen;
+    for (adjacent_iterator ai(mons->unseen_pos); ai; ai++)
+    {
+        if (_valid_invisible_spot(*ai, mons))
+            adj_unseen.push_back(*ai);
+    }
+    if (adj_unseen.size())
+    {
+        _mark_invisible_at(adj_unseen[_hashed_rand(mons, hash_ind,
+                                                   adj_unseen.size())]);
+    }
+    // Try to mark the monster's true position if the above failed.
+    else if (_valid_invisible_spot(mons->pos(), mons))
+    {
+        _mark_invisible_at(mons->pos());
+    }
 }
 
 /**
@@ -376,87 +422,108 @@ static void _mark_invisible_monster(const coord_def &where)
  * If the monster is not currently visible to the player, the map knowledge will
  * be upated with a disturbance if necessary.
  *
- * @param mons    The monster at the relevant location.
+ * @param mons        The monster at the relevant location.
+ * @param mark_invis  Should we always mark this monster with an invis indicator
+ *                    if it's invisible?
 **/
 static void _update_monster(monster* mons)
 {
     _check_monster_pos(mons);
-
     const coord_def gp = mons->pos();
 
-    if (!mons->visible_to(&you))
+    if (mons->visible_to(&you))
     {
-        // ripple effect?
-        if (grd(gp) == DNGN_SHALLOW_WATER
-                && !mons_flies(mons)
-                && env.cgrid(gp) == EMPTY_CLOUD
-            || is_opaque_cloud(env.cgrid(gp))
-                && !mons->submerged()
-                && !mons->is_insubstantial())
-        {
-            env.map_knowledge(gp).set_invisible_monster();
-        }
-
-        // Being submerged is not the same as invisibility.
-        if (mons->submerged())
-            return;
-
-        if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
-        {
-            you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
-            you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
-        }
-
-        bool show_location = (mons->constricted_by == MID_PLAYER);
-
-        // maybe show unstealthy invis monsters
-        if (show_location
-            || _hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
-        {
-            // We cannot use regular randomness here, otherwise redrawing the
-            // screen would give out the real position.  We need to save the
-            // seed too -- but it needs to be regenerated every turn.
-
-            // Maybe mark their square.
-            if (show_location
-                || mons->stealth() <= -2
-                || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
-            {
-                env.map_knowledge(gp).set_invisible_monster();
-                if (show_location) // Don't add extra fake trails.
-                    return;
-            }
-
-            // Exceptionally stealthy monsters have a higher chance of
-            // not leaving any other trails.
-            if (mons->stealth() == 1 && !_hashed_rand(mons, 2, 3)
-                || mons->stealth() == 2 && coinflip()
-                || mons->stealth() == 3)
-            {
-                return;
-            }
-
-            // Otherwise just indicate that there's a monster nearby
-            coord_def new_pos = gp + Compass[_hashed_rand(mons, 3, 8)];
-            if (_valid_invis_spot(new_pos, mons) && _hashed_rand(mons, 4, 2))
-                _mark_invisible_monster(new_pos);
-
-            new_pos = gp + Compass[_hashed_rand(mons, 5, 8)];
-            if (_valid_invis_spot(new_pos, mons) && !_hashed_rand(mons, 6, 3))
-                _mark_invisible_monster(new_pos);
-        }
-
+        mons->ensure_has_client_id();
+        monster_info mi(mons);
+        env.map_knowledge(gp).set_monster(mi);
         return;
     }
 
-    mons->ensure_has_client_id();
-    monster_info mi(mons);
-    env.map_knowledge(gp).set_monster(mi);
+    // From here on we're handling an invisible monster, possibly leaving an
+    // invisible monster indicator.
+
+    // We cannot use regular randomness here, otherwise redrawing the screen
+    // would give out the real position.  We need to save the seed too -- but it
+    // needs to be regenerated every turn.
+    if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
+    {
+        you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
+        you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
+    }
+    // After the player finishes this turn, the monster's unseen pos (and
+    // its invis indicator due to going unseen) will be erased.
+    if (!you.turn_is_over)
+        mons->went_unseen_this_turn = false;
+
+    // ripple effect?
+    if (grd(gp) == DNGN_SHALLOW_WATER
+        && !mons_flies(mons)
+        && env.cgrid(gp) == EMPTY_CLOUD
+        || is_opaque_cloud(env.cgrid(gp))
+        && !mons->submerged()
+        && !mons->is_insubstantial())
+    {
+        _mark_invisible_at(gp);
+        return;
+    }
+
+    // Being submerged is not the same as invisibility.
+    if (mons->submerged())
+        return;
+
+    if (mons->constricted_by == MID_PLAYER
+        || player_mutation_level(MUT_ANTENNAE))
+    {
+        _mark_invisible_at(gp);
+        return;
+    }
+
+    // Only leave a marker at the position where the monster went unseen last
+    // turn if we don't otherwise mark their current position.
+    bool need_handle_unseen = true;
+    // Initial monster stealth check; if it fails this, it may get an invis
+    // trail.
+    if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
+    {
+        // Maybe mark monster's true square if the monster has less than max
+        // stealth.
+        if (mons->stealth() <= -2
+            || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
+        {
+            _mark_invisible_at(gp);
+            need_handle_unseen = false;
+        }
+        else if((mons->stealth() < 1
+                 // Exceptionally stealthy monsters have a higher chance of not
+                 // leaving any invis trail.
+                 || mons->stealth() == 1 && _hashed_rand(mons, 2, 3)
+                 || mons->stealth() == 2 && _hashed_rand(mons, 2, 2))
+                // final flat chance to leave an indicator in an adjacent
+                // square.
+                && _hashed_rand(mons, 3, 2))
+        {
+            // Otherwise just indicate that there's a monster nearby
+            vector <coord_def> adj_invis;
+            for (adjacent_iterator ai(gp); ai; ai++)
+            {
+                if (_valid_invisible_spot(*ai, mons))
+                    adj_invis.push_back(*ai);
+            }
+            if (adj_invis.size())
+            {
+                _mark_invisible_at(adj_invis[_hashed_rand(mons, 4,
+                                                          adj_invis.size())]);
+                need_handle_unseen = false;
+            }
+        }
+    }
+    if (need_handle_unseen)
+        _handle_unseen_mons(mons, 5);
 }
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    if (you.see_cell(gp)) // XXX this prevents detecting invisible monsters
+    if (you.see_cell(gp))
         env.map_knowledge(gp).clear_data();
     else if (!env.map_knowledge(gp).known())
         return;
@@ -473,6 +540,8 @@ void show_update_at(const coord_def &gp, bool terrain_only)
         monster* mons = monster_at(gp);
         if (mons && mons->alive())
             _update_monster(mons);
+        else if (env.map_knowledge(gp).flags & MAP_INVISIBLE_UPDATE)
+            _mark_invisible_at(gp);
 
         const int cloud = env.cgrid(gp);
         if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
@@ -483,13 +552,6 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 
         _update_item_at(gp);
     }
-
-#ifdef USE_TILE
-    tile_draw_map_cell(gp, true);
-#endif
-#ifdef USE_TILE_WEB
-    tiles.mark_for_redraw(gp);
-#endif
 }
 
 void show_init(bool terrain_only)
@@ -502,8 +564,25 @@ void show_init(bool terrain_only)
         return;
     }
 
+
+    vector <coord_def> update_locs;
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
+    {
         show_update_at(*ri, terrain_only);
+        update_locs.push_back(*ri);
+    }
+
+    for (unsigned int i = 0; i < update_locs.size(); i++)
+    {
+        // Need to clear these update flags now so they don't persist.
+        env.map_knowledge(update_locs[i]).flags &= ~MAP_INVISIBLE_UPDATE;
+#ifdef USE_TILE
+        tile_draw_map_cell(update_locs[i], true);
+#endif
+#ifdef USE_TILE_WEB
+        tiles.mark_for_redraw(update_locs[i]);
+#endif
+    }
 }
 
 // Emphasis may change while off-level (precisely, after

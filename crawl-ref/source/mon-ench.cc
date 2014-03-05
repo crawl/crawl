@@ -316,6 +316,14 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
     }
 
+    case ENCH_INVIS:
+        if (testbits(flags, MF_WAS_IN_VIEW))
+        {
+            went_unseen_this_turn = true;
+            unseen_pos = pos();
+        }
+        break;
+
     default:
         break;
     }
