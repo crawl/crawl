@@ -1,9 +1,10 @@
-Stone Soup 0.14 (up to 0.14-a0-2864-gf72b609)
+Stone Soup 0.14 (up to 0.14-a0-3104-g4f99434)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new races: Formicids and Vine Stalkers.
 * A new deity: Dithmenos the Shadowed.
 * Greatly revised monster sets in the Lair branches.
+* Greatly revised summoning spell sets.
 
 Branches, environment
 ---------------------
@@ -28,6 +29,9 @@ Branches, environment
   has been removed.
 * The layout of the last level of the Vaults has been changed, with all four
   subsections being open at each corner.
+* Gadget shops and wand shops have been merged; the resulting gadget shops
+  now also sell wands.
+* The price of items in shops has been recalibrated.
 
 Character
 ---------
@@ -54,6 +58,7 @@ Character
   backgrounds can recommend species that don't necessarily recommend that
   background and vice versa (e.g. CK -> Tr may be recommended whereas Tr -> CK
   is not).
+* Poison damage is now determinstic.
 
 Monsters
 --------
@@ -139,6 +144,8 @@ Monsters
       demons.
     - Draconian knights have fewer but distinct spell sets focusing on
       ice and necromancy.
+    - Gargoyles and molten gargoyles now have Stone Arrow and Bolt of
+      Magma respectively, and generate with mace-type weapons.
     - Metal gargoyles are now war gargoyles - fast and with the ability to
       fire metal fragments at targets.
     - Crystal golems are now crystal guardians - less health, but with the
@@ -178,9 +185,25 @@ Spells
     - Summon Forest (L5 Summoning/Translocations), which summons a dryad
       and temporarily converts terrain near the player to forest; it
       is in the Book of the Warp.
+    - Summon Mana Viper (L5 Summoning/Hexes); it appears in the Book of
+      Beasts.
+    - Monstrous Menagerie (L6 Summoning), which summons a manticore, some
+      harpies, a lindwurm, or a sphinx (at high spellpower); it appears in
+      the book of Beasts and the book of Summonings (replacing Summon
+      Ugly Thing).
+    - Forceful Dismissal (L6 Summoning), which ends all player summons
+      and damages enemies next to them; it appears in the Grand Grimoire.
+    - Aura of Abjuration (L6 Summoning), a less powerful but per-turn mass
+      abjuration effect; it replaces Mass Abjuration in the Grand Grimoire.
+    - Spellforged Servitor (L7 Conjuration/Summoning), which summons a
+      servitor with a subset of the player's most destructive conjurations;
+      it replaces Fireball in the book of Wizardry.
     - Glaciate (L9 Ice/Conjurations), which fires a great blast of ice in
       a cone, turning slain monsters into blocks of ice and Flash Freezing the
       survivors; it replaces Ice Storm in the Book of Annihilations.
+    - Dragon's Call (L9 Summoning), which for its duration of effect summons
+      dragons near targets at the end of LOS (at the full spell cost per
+      summon); replaces Summon Dragon in the Book of the Dragon.
 * Sticks to Snakes only works on missiles (arrows and javelins) now.
 * Conjure Ball Lightning has been reduced from level 7 to 6, and the
   duration of the ball lightning has been lowered.
@@ -209,7 +232,7 @@ Spells
 * All clouds caused by the player will dissipate much faster outside of your
   line of sight.
 * Removed spells: Dig, Summon Scorpions, Song of Shielding, Polymorph, Ice
-  Storm.
+  Storm, Demonic Horde, Summon Ugly Thing, Summon Dragon, Mass Abjuration.
 
 Items
 -----
@@ -246,6 +269,7 @@ Items
   five hits.
 * The Singing Sword is now a bastard sword.
 * The shield of the gong is now +27 with -5 EV.
+* The ring of Shadows now has an umbra instead of +4 EV and -4 Acc.
 * New unrand: "macabre finger necklace" - gives warding and an extra ring slot.
 * New unrand: "boots of the spider" - gives clinging, trample immunity, and
   jump attack.
@@ -259,6 +283,8 @@ Items
   on magic-using targets.
 * New unrand: "lajatang of Order" - does silver damage (like the ammunition
   brand) and grants resistance to mutation.
+* New unrand: "Firestarter" - a +7 great mace {flame, rF++} which protects
+  scrolls from fire damage and inner flames targets it hits.
 * The blowgun of the Assassin and Bullseye have been removed.
 * Potions with known type that would have no effect can no longer be quaffed
   at all.
@@ -267,9 +293,9 @@ Items
 * All caps and wizard hats are now plain "hats".
 * Great maces deal slightly less damage and are much less available than
   before.
-* The last item-targeting scroll and healing potion are automatically
-  identified, assuming knowledge that they are item-targeting scrolls and
-  healing potions.
+* All scrolls now identify on read.
+* The last healing potion is automatically identified assuming knowledge that
+  it is a healing potion.
 * Magical penetrating projectiles now pierce shields.
 * Ponderous items reduce movement delay by -1 (was -2), to match running
   items.
@@ -281,7 +307,7 @@ Items
   encumbrance ratings reduced (27 -> 25, 24 -> 23, and 19 -> 18 respectively).
 * The speed brand now grants 2/3 weapon delay and no damage reduction (was
   1/2 delay and 10% damage reduction for melee weapons).
-* Racial weapons are no more.
+* Racial equipment is no more.
 * Many changes to rods:
     - The rod of destruction now fires random bolts instead of having a pre-set
       selection.
@@ -293,11 +319,17 @@ Items
     - New rod: rod of clouds, which creates various clouds based on power,
       with high skill giving several new types of clouds.
     - The rod of warding, venom, demonology, and frigid destruction are gone.
+* The Horn of Geryon has been reworked into an XP-charged evokable, summoning
+  1-4 hell beasts whose friendliness depends on evocations power.
 * Renamed items:
     - Sabres are now cutlasses (and the captain's cutlass has been adjusted to
       match);
     - Double swords are now bastard swords;
     - Triple swords are now claymores.
+* Scrolls of vulnerability are now more common.
+* Curse scrolls and potions of blood no longer randomly generate.
+* All curse scrolls now accept targets (as though the player was worshipping
+  Ashenzari in previous versions).
 * Removed potions of slowing.
 
 Cards
@@ -341,7 +373,8 @@ Gods
   and bone dragons.
 * Yredelemnul's servants are no longer angered when read-identifying a scroll
   of holy word.
-* Nemelex no longer gifts decks of dungeons.
+* Nemelex no longer gifts decks of dungeons, and deck gift types are now
+  independent of sacrificed item types.
 * Jiyva's abilities no longer use Invocations.
 * Divine wrath is now contingent on XP gain and cannot be waited out.
 * Okawaru, Trog, Makhleb, Yredelemnul, and Kikubaaqudgha wrath now scales
@@ -352,6 +385,7 @@ Gods
 * All skills eventually trainable by divine abilities can be trained
   immediately on worshipping that god (Invocations for many gods, Evocations
   for Nemelex, Necromancy for Kiku, and Shields for TSO per Divine Shield).
+* Ashenzari now generate 1-3 curse scrolls per remove curse scroll.
 
 Interface
 ---------
@@ -371,6 +405,8 @@ Interface
 * New default minimap colours.
 * Examining a monster now displays the speeds at which it takes actions if
   those actions are slower or faster than its normal speed.
+* arena_delay, which controls the speed of arena play and animations, is now
+  available outside of arena mode as view_delay.
 
 Stone Soup 0.13 (20131011)
 --------------------------
@@ -404,6 +440,7 @@ Branches, environment
 * Zot trap effects are now only a subset of the full set of miscasts, and
   have some new unique effects - draining of wand charges and Word of Recall
   (as per ironbrand convokers).
+* Hell effects no longer paralyse the player.
 
 Character
 ---------
