@@ -300,7 +300,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "corrupt the fabric of space",
       "gate yourself to the Abyss" },
     // Beogh
-    { "Beogh supports the use of orcish armour.",
+    { "Beogh aids your use of armour.",
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
@@ -424,7 +424,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "corrupt the fabric of space",
       "gate yourself to the Abyss" },
     // Beogh
-    { "Beogh no longer supports the use of orcish armour.",
+    { "Beogh no longer aids your use of armour.",
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",

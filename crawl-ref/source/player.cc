@@ -2402,29 +2402,28 @@ int player_mutation_level(mutation_type mut, bool temp)
     return _mut_level(mut, temp ? MUTACT_PARTIAL : MUTACT_INACTIVE);
 }
 
-static int _player_armour_racial_bonus(const item_def& item)
+static int _player_armour_beogh_bonus(const item_def& item)
 {
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
-    int racial_bonus = 0;
+    int bonus = 0;
 
-    // an additional bonus for Beogh worshippers
     if (you_worship(GOD_BEOGH) && !player_under_penance())
     {
         if (you.piety >= piety_breakpoint(5))
-            racial_bonus = 10;
+            bonus = 10;
         else if (you.piety >= piety_breakpoint(4))
-            racial_bonus = 8;
+            bonus = 8;
         else if (you.piety >= piety_breakpoint(2))
-            racial_bonus = 6;
+            bonus = 6;
         else if (you.piety >= piety_breakpoint(0))
-            racial_bonus = 4;
+            bonus = 4;
         else
-            racial_bonus = 2;
+            bonus = 2;
     }
 
-    return racial_bonus;
+    return bonus;
 }
 
 bool is_effectively_light_armour(const item_def *item)
@@ -2671,12 +2670,12 @@ int player_shield_class(void)
                         * (item.sub_type - ARM_LARGE_SHIELD);
         int base_shield = property(item, PARM_AC) * 2 + size_factor;
 
-        int racial_bonus = _player_armour_racial_bonus(item);
+        int beogh_bonus = _player_armour_beogh_bonus(item);
 
         // bonus applied only to base, see above for effect:
         shield += base_shield * 50;
         shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
-        shield += base_shield * racial_bonus * 10 / 6;
+        shield += base_shield * beogh_bonus * 10 / 6;
 
         shield += item.plus * 100;
 
@@ -6452,11 +6451,11 @@ int player::armour_class() const
 
         const item_def& item   = inv[equip[eq]];
         const int ac_value     = property(item, PARM_AC) * 100;
-        const int racial_bonus = _player_armour_racial_bonus(item);
+        const int beogh_bonus  = _player_armour_beogh_bonus(item);
 
         // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
-        // Armour Skill + racial_skill_bonus / 2.
-        AC += ac_value * (440 + skill(SK_ARMOUR, 20) + racial_bonus * 10) / 440;
+        // Armour Skill + beogh_bonus / 2.
+        AC += ac_value * (440 + skill(SK_ARMOUR, 20) + beogh_bonus * 10) / 440;
         AC += item.plus * 100;
 
         // The deformed don't fit into body armour very well.
