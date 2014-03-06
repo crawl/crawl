@@ -682,10 +682,10 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
 
     coord_def pos, pos2;
 
-    if (!random_near_space(victim->pos(), pos, false, no_sanct))
+    if (!random_near_space(victim, victim->pos(), pos, false, no_sanct))
         return false;
 
-    if (!random_near_space(victim->pos(), pos2, false, no_sanct))
+    if (!random_near_space(victim, victim->pos(), pos2, false, no_sanct))
         return false;
 
     // Pick the square further away from the agent.

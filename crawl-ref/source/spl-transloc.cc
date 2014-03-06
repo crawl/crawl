@@ -319,8 +319,8 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
     }
     // First try to find a random square not adjacent to the player,
     // then one adjacent if that fails.
-    else if (!random_near_space(you.pos(), target)
-             && !random_near_space(you.pos(), target, true))
+    else if (!random_near_space(&you, you.pos(), target)
+             && !random_near_space(&you, you.pos(), target, true))
     {
         mpr("You feel jittery for a moment.");
     }
@@ -989,8 +989,8 @@ static bool _quadrant_blink(coord_def dir, int pow)
         // Find a space near our base point...
         // First try to find a random square not adjacent to the basepoint,
         // then one adjacent if that fails.
-        if (!random_near_space(base, target)
-            && !random_near_space(base, target, true))
+        if (!random_near_space(&you, base, target)
+            && !random_near_space(&you, base, target, true))
         {
             // Uh oh, WHY should this fail the blink?
             return false;

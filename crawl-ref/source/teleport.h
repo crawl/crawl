@@ -13,7 +13,8 @@ void blink_close(monster* mon);
 bool valid_blink_destination(const actor* moved, const coord_def& target,
                              bool forbid_sanctuary = false,
                              bool forbid_unhabitable = true);
-bool random_near_space(const coord_def& origin, coord_def& target,
+bool random_near_space(const actor* victim,
+                       const coord_def& origin, coord_def& target,
                        bool allow_adjacent = false,
                        bool forbid_sanctuary = false,
                        bool forbid_unhabitable = true);

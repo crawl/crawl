@@ -1978,8 +1978,8 @@ static int _xom_change_scenery(bool debug = false)
         const int max_altars = max(1, random2(random2(14)));
         for (int tries = max_altars; tries > 0; --tries)
         {
-            if ((random_near_space(you.pos(), place, false)
-                    || random_near_space(you.pos(), place, true))
+            if ((random_near_space(&you, you.pos(), place, false)
+                    || random_near_space(&you, you.pos(), place, true))
                 && grd(place) == DNGN_FLOOR)
             {
                 if (debug)
