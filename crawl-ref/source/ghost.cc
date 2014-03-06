@@ -1160,6 +1160,7 @@ void ghost_demon::init_spellforged_servitor()
 
     int pow = calc_spell_power(SPELL_SPELLFORGED_SERVITOR, true);
 
+    colour = LIGHTMAGENTA; // cf. mon-data.h
     speed = 10;
     ev = 10;
     ac = 10;
