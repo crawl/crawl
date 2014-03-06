@@ -1682,7 +1682,7 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *agent)
 
             if (you.duration[DUR_POISONING] > 0)
             {
-                mpr("You feel that the poison has left your system.");
+                mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
                 you.duration[DUR_POISONING] = 0;
             }
         }
