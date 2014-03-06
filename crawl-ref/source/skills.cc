@@ -336,7 +336,7 @@ static void _check_spell_skills()
 
 static void _check_abil_skills()
 {
-    vector<ability_type> abilities = get_god_abilities(true);
+    vector<ability_type> abilities = get_god_abilities(true, true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
         // Exit early if there's no more skill to check.
