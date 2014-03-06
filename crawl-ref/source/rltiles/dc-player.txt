@@ -875,8 +875,11 @@ bladehands BLADEHAND
 # The 1-2 "typos" are intentional; the equivalent tiles above have no
 # enums and become TILEP_GREAT_FLAIL_1 and TILEP_GREAT_MACE_1 respectively.
 dagger DAGGER
+dagger2 DAGGER_1
 cutlass CUTLASS
+cutlass2 CUTLASS_1
 short_sword_slant SHORT_SWORD_SLANT
+short_sword_slant2 SHORT_SWORD_SLANT_1
 flail_great GREAT_FLAIL
 flail_great2 GREAT_FLAIL_1
 great_mace GREAT_MACE
