@@ -1933,6 +1933,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (you.inaccuracy())
         pbolt.hit -= 5;
 
+    if (you.duration[DUR_WEAK])
+        pbolt.damage.size = (div_rand_round(pbolt.damage.size * 3, 4));
+
     scale_dice(pbolt.damage);
 
     dprf("H:%d+%d;a%dl%d.  D:%d+%d;a%dl%d -> %d,%dd%d",
