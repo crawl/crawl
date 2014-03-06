@@ -1376,10 +1376,6 @@ static void mpr_check_patterns(const string& message,
     if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
         interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
 
-    // Any sound has a chance of waking the PC if the PC is asleep.
-    if (channel == MSGCH_SOUND)
-        you.check_awaken(5);
-
     if (!Options.sound_mappings.empty())
         for (unsigned i = 0; i < Options.sound_mappings.size(); i++)
         {
