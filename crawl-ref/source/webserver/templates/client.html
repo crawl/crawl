@@ -6,18 +6,7 @@
     <script type="text/javascript">
       var socket_server = "{{ socket_server }}";
     </script>
-    <script src="/static/scripts/contrib/require.js"></script>
-    <script>
-      require({
-          baseUrl: '/static/scripts',
-          shim: {
-            'client': ['jquery']
-          },
-          paths: {
-              'jquery': '/static/scripts/contrib/jquery'
-          }
-      }, ['client']);
-    </script>
+    <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
   </head>
   <body>
