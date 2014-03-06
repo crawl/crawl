@@ -4044,36 +4044,36 @@ void melee_attack::player_stab_check()
         return;
     }
 
-    const unchivalric_attack_type uat = is_unchivalric_attack(&you, defender);
-    stab_attempt = (uat != UCAT_NO_ATTACK);
-    const bool roll_needed = (uat != UCAT_SLEEPING && uat != UCAT_PARALYSED);
+    const stab_type st = find_stab_type(&you, defender);
+    stab_attempt = (st != STAB_NO_STAB);
+    const bool roll_needed = (st != STAB_SLEEPING && st != STAB_PARALYSED);
 
     int roll = 100;
-    if (uat == UCAT_INVISIBLE && !mons_sense_invis(defender->as_monster()))
+    if (st == STAB_INVISIBLE && !mons_sense_invis(defender->as_monster()))
         roll -= 10;
 
-    switch (uat)
+    switch (st)
     {
-    case UCAT_NO_ATTACK:
-    case NUM_UCAT:
+    case STAB_NO_STAB:
+    case NUM_STAB:
         stab_bonus = 0;
         break;
-    case UCAT_SLEEPING:
-    case UCAT_PARALYSED:
+    case STAB_SLEEPING:
+    case STAB_PARALYSED:
         stab_bonus = 1;
         break;
-    case UCAT_HELD_IN_NET:
-    case UCAT_PETRIFYING:
-    case UCAT_PETRIFIED:
+    case STAB_HELD_IN_NET:
+    case STAB_PETRIFYING:
+    case STAB_PETRIFIED:
         stab_bonus = 2;
         break;
-    case UCAT_INVISIBLE:
-    case UCAT_CONFUSED:
-    case UCAT_FLEEING:
-    case UCAT_ALLY:
+    case STAB_INVISIBLE:
+    case STAB_CONFUSED:
+    case STAB_FLEEING:
+    case STAB_ALLY:
         stab_bonus = 4;
         break;
-    case UCAT_DISTRACTED:
+    case STAB_DISTRACTED:
         stab_bonus = 6;
         break;
     }
@@ -4088,7 +4088,7 @@ void melee_attack::player_stab_check()
     }
 
     if (stab_attempt)
-        count_action(CACT_STAB, uat);
+        count_action(CACT_STAB, st);
 }
 
 // TODO: Unify this and player_unarmed_speed (if possible), then unify with

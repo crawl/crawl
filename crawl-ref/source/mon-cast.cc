@@ -3037,7 +3037,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         // Don't allow TSO-worshipping daevas to make
                         // unchivalric magic attacks, except against
                         // appropriate monsters.
-                        if (is_unchivalric_attack(mons, mon)
+                        if (find_stab_type(mons, mon) != STAB_NO_STAB
                             && !tso_unchivalric_attack_safe_monster(mon))
                         {
                             spellOK = false;

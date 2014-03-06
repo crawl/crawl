@@ -3898,7 +3898,7 @@ int monster::res_holy_energy(const actor *attacker) const
     if (is_holy()
         || is_good_god(god)
         || neutral()
-        || is_unchivalric_attack(attacker, this)
+        || find_stab_type(attacker, this) != STAB_NO_STAB
         || is_good_god(you.religion) && is_follower(this))
     {
         return 1;
