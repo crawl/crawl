@@ -126,6 +126,7 @@ spear1 WPN_SPEAR
 %rim 1
 spear2
 %rim 0
+spear3
 trident1 WPN_TRIDENT
 trident2
 trident3
