@@ -211,7 +211,7 @@ lava_snake MONS_LAVA_SNAKE
 %sdir mon/animals
 sea_snake MONS_SEA_SNAKE
 shock_serpent MONS_SHOCK_SERPENT
-sapper_snake MONS_SAPPER_SNAKE
+mana_viper MONS_MANA_VIPER
 
 ## Bears ('U')
 black_bear MONS_BLACK_BEAR
@@ -741,7 +741,7 @@ vashnia MONS_VASHNIA
 naga MONS_NAGA
 naga_mage MONS_NAGA_MAGE
 naga_ritualist MONS_NAGA_RITUALIST
-marksnaga MONS_MARKSNAGA
+naga_sharpshooter MONS_NAGA_SHARPSHOOTER
 naga_warrior MONS_NAGA_WARRIOR
 greater_naga MONS_GREATER_NAGA
 guardian_serpent MONS_GUARDIAN_SERPENT
