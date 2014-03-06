@@ -1573,12 +1573,6 @@ ice dragon hide
 
 <steam dragon hide>
 %%%%
-ignis
-
-“When Alexander the Great addressed him with greetings, and asked if he wanted
-anything, Diogenes replied “Yes, stand a little out of my sunshine..””
-    -Plutarch, _Alexander_. 75.
-%%%%
 iguana
 
 “Once on a time when Brahmadatta was reigning in Benares, the Bodhisatta was
