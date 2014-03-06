@@ -2615,7 +2615,8 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
     bolt base_beam;
 
     base_beam.set_agent(const_cast<actor *>(caster));
-    base_beam.attitude = ATT_FRIENDLY;
+    base_beam.attitude = caster->is_player() ? ATT_FRIENDLY
+                                             : caster->as_monster()->attitude;
     base_beam.is_tracer = true;
     base_beam.is_targeting = true;
     base_beam.dont_stop_player = true;
@@ -2705,9 +2706,7 @@ static bool _dazzle_can_hit(const actor *act)
         testbeam.thrower = KILL_YOU;
         zappy(ZAP_DAZZLING_SPRAY, 100, testbeam);
 
-        return mons->type != MONS_BATTLESPHERE
-               && mons->type != MONS_ORB_OF_DESTRUCTION
-               && mons->type != MONS_GRAND_AVATAR
+        return !mons_is_avatar(mons->type)
                && mons_species(mons->type) != MONS_BUSH
                && !fedhas_shoot_through(testbeam, mons);
     }
@@ -2715,34 +2714,27 @@ static bool _dazzle_can_hit(const actor *act)
         return false;
 }
 
-spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim, bool fail)
+spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail)
 {
     int range = spell_range(SPELL_DAZZLING_SPRAY, pow);
 
     targetter_spray hitfunc(&you, range, ZAP_DAZZLING_SPRAY);
-
     hitfunc.set_aim(aim);
-
-    if (caster->is_player())
-    {
-        if (stop_attack_prompt(hitfunc, "fire towards", _dazzle_can_hit))
-            return SPRET_ABORT;
-    }
+    if (stop_attack_prompt(hitfunc, "fire towards", _dazzle_can_hit))
+        return SPRET_ABORT;
 
     fail_check();
 
-    vector<bolt> beams = get_spray_rays(caster, aim, range, 3);
-
-    if (beams.size() == 0)
+    if (hitfunc.beams.size() == 0)
     {
         mpr("You can't see any targets in that direction!");
         return SPRET_ABORT;
     }
 
-    for (unsigned int i = 0; i < beams.size(); ++i)
+    for (unsigned int i = 0; i < hitfunc.beams.size(); ++i)
     {
-        zappy(ZAP_DAZZLING_SPRAY, pow, beams[i]);
-        beams[i].fire();
+        zappy(ZAP_DAZZLING_SPRAY, pow, hitfunc.beams[i]);
+        hitfunc.beams[i].fire();
     }
 
     return SPRET_SUCCESS;

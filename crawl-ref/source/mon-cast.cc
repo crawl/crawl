@@ -619,6 +619,15 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_MMISSILE;
         break;
 
+    case SPELL_DAZZLING_SPRAY: // dazzlingspray
+        beam.colour     = LIGHTMAGENTA;
+        beam.name       = "spray of energy";
+        beam.short_name = "energy";
+        beam.damage     = dice_def(3, 5 + (power / 10));
+        beam.hit        = 20 + (power / 20);
+        beam.flavour    = BEAM_MMISSILE;
+        break;
+
     case SPELL_STEAM_BALL:
         beam.colour   = LIGHTGREY;
         beam.name     = "ball of steam";
@@ -2642,6 +2651,27 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
     return mons_should_fire(tracer);
 }
 
+static bool _spray_tracer(monster *caster, int pow, coord_def aim,
+                          spell_type spell)
+{
+    vector<bolt> beams = get_spray_rays(caster, aim, spell_range(spell, pow), 3,
+                                        spell == SPELL_DAZZLING_SPRAY
+                                        ? ZAP_DAZZLING_SPRAY : NUM_ZAPS);
+    if (beams.size() == 0)
+        return false;
+
+    bolt beam;
+
+    for (unsigned int i = 0; i < beams.size(); ++i)
+    {
+        fire_tracer(caster, beams[i]);
+        beam.friend_info += beams[i].friend_info;
+        beam.foe_info    += beams[i].foe_info;
+    }
+
+    return mons_should_fire(beam);
+}
+
 //---------------------------------------------------------------
 //
 // handle_mon_spell
@@ -3205,6 +3235,15 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 || !mons_should_cloud_cone(mons,
                                            12 * mons->spell_hd(spell_cast),
                                            foe->pos()))
+            {
+                return false;
+            }
+        }
+        else if (spell_cast == SPELL_DAZZLING_SPRAY)
+        {
+            if (!foe
+                || !_spray_tracer(mons, 12 * mons->spell_hd(spell_cast),
+                                  foe->pos(), spell_cast))
             {
                 return false;
             }
@@ -5780,8 +5819,19 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                  apostrophise(mons->name(DESC_THE)).c_str());
         }
         mons->add_ench(mon_enchant(ENCH_SHROUD));
-
         return;
+
+    case SPELL_DAZZLING_SPRAY:
+    {
+        vector<bolt> beams = get_spray_rays(mons, pbolt.target, pbolt.range, 3,
+                                            ZAP_DAZZLING_SPRAY);
+        for (unsigned int i = 0; i < beams.size(); ++i)
+        {
+            bolt_parent_init(&pbolt, &(beams[i]));
+            beams[i].fire();
+        }
+        return;
+    }
 
     case SPELL_GLACIATE:
     {
@@ -6249,7 +6299,8 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                            // ugh. --Grunt
                            && (actual_spell != SPELL_LRD)
                            && (actual_spell != SPELL_PORTAL_PROJECTILE)
-                           && (actual_spell != SPELL_GLACIATE);
+                           && (actual_spell != SPELL_GLACIATE)
+                           && (actual_spell != SPELL_DAZZLING_SPRAY);
 
     vector<string> key_list;
     unsigned int num_spell_keys =
