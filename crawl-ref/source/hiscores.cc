@@ -621,7 +621,7 @@ static const char *kill_method_names[] =
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration", "headbutt", "rolling",
-    "mirror_damage", "spines", "frailty", "barbs",
+    "mirror_damage", "spines", "frailty", "barbs", "being_thrown",
 };
 
 static const char *_kill_method_name(kill_method_type kmt)
@@ -1178,7 +1178,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_REFLECTION
             || death_type == KILLED_BY_ROLLING
             || death_type == KILLED_BY_SPINES
-            || death_type == KILLED_BY_WATER)
+            || death_type == KILLED_BY_WATER
+            || death_type == KILLED_BY_BEING_THROWN)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != MONS_NO_MONSTER)
     {
@@ -2471,6 +2472,14 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 
     case KILLED_BY_BARBS:
         desc += terse ? "barbs" : "Succumbed to a manticore's barbed spikes";
+        break;
+
+    case KILLED_BY_BEING_THROWN:
+        if (terse)
+            desc += apostrophise(death_source_desc()) + " throw";
+        else
+            desc += "Thrown by " + death_source_desc();
+        needs_damage = true;
         break;
 
     default:

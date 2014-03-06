@@ -2577,6 +2577,9 @@ enum monster_type                      // menv[].type
     MONS_GREATER_NAGA,
     MONS_GUARDIAN_SERPENT,
     MONS_OCTOPODE,
+#if TAG_MAJOR_VERSION > 34
+    MONS_OCTOPODE_CRUSHER,
+#endif
     MONS_MERFOLK,
     MONS_MERMAID,
     MONS_SIREN,
@@ -3101,6 +3104,7 @@ enum monster_type                      // menv[].type
     MONS_BLOCK_OF_ICE,
     MONS_GUARDIAN_GOLEM,
     MONS_SPELLFORGED_SERVITOR,
+    MONS_OCTOPODE_CRUSHER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4309,6 +4313,7 @@ enum seen_context_type
     SC_DOWNSTAIRS,      // comes down the stairs
     SC_ARCH,            // through the gate
     SC_ABYSS,           // abyss creation
+    SC_THROWN_IN,       // thrown into view from the monster throw ability
 };
 
 enum los_type

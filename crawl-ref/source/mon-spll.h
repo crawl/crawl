@@ -2497,4 +2497,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_OCTOPODE_CRUSHER,
+      {
+       SPELL_THROW_ICICLE,
+       SPELL_THROW_ICICLE,
+       SPELL_NO_SPELL,
+       SPELL_MELEE,
+       SPELL_MELEE,
+       SPELL_NO_SPELL,
+      }
+    },
 #endif

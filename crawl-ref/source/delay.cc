@@ -1618,6 +1618,8 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " comes through the gate.";
         else if (at.context == SC_ABYSS)
             text += _abyss_monster_creation_message(mon);
+        else if (at.context == SC_THROWN_IN)
+            text += " is thrown into view!";
         else
             text += " comes into view.";
 
