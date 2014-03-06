@@ -63,6 +63,7 @@ static spell_type search_order_conj[] =
     SPELL_STONE_ARROW,
     SPELL_FORCE_LANCE,
     SPELL_DISCHARGE,
+    SPELL_DAZZLING_SPRAY,
     SPELL_THROW_FLAME,
     SPELL_THROW_FROST,
     SPELL_FREEZE,

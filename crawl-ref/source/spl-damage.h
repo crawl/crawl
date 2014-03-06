@@ -54,8 +54,7 @@ void forest_damage(const actor *mon);
 
 vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
                             int max_rays, int max_spacing = 3);
-spret_type cast_dazzling_spray(actor *caster, int pow, coord_def aim,
-                               bool fail = false);
+spret_type cast_dazzling_spray(int pow, coord_def aim, bool fail = false);
 
 spret_type cast_toxic_radiance(actor *caster, int pow, bool fail = false,
                                bool mon_tracer = false);
