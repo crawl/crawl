@@ -102,3 +102,6 @@ force_more_message += Found .* abyssal rune of Zot
 
 # Generally exciting things that are somewhat automated
 force_more_message += You pick up the .* rune and feel its power
+
+# First chance of Beogh conversion
+force_more_message += press .* to convert to Beogh
