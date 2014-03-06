@@ -1350,7 +1350,7 @@ static const pop_entry pop_water_depths[] =
   {  1,  6,   600, FLAT, MONS_WATER_ELEMENTAL },
   {  1,  6,    45, FLAT, MONS_MERFOLK_IMPALER },
   {  1,  6,    45, FLAT, MONS_MERFOLK_JAVELINEER },
-  {  1,  6,    35, FLAT, MONS_OCTOPODE_CRUSHER },
+  {  1,  6,   100, FLAT, MONS_OCTOPODE_CRUSHER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
