@@ -938,7 +938,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_NAGA:
-        case SP_OGRE:
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_TENGU:
