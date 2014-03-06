@@ -936,6 +936,10 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
         else
         {
+            // Uppercase means add the item to the shopping list or
+            // remove it from the shopping list and mark for purchase
+            // without confirmation.
+            bool to_shoplist = isaupper(key);
             key = toalower(key) - 'a';
             if (key >= static_cast<int>(stock.size()))
             {
@@ -971,21 +975,11 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
                 if (in_list[key])
                 {
-                    if (gp_value > you.gold)
+                    if (gp_value <= you.gold || to_shoplist)
                     {
-                        if (_shop_yesno("Remove from shopping list? (y/N)",
-                                         'n'))
-                        {
-                            shopping_list.del_thing(item);
-                            in_list[key]  = false;
-                            selected[key] = false;
-                        }
-                        continue;
-                    }
-                    else
-                    {
-                        if (_shop_yesno("Remove item from shopping list and "
-                                         "mark for purchase? (Y/n)",  'y'))
+                        if (to_shoplist
+                            || _shop_yesno("Remove item from shopping list and "
+                                           "mark for purchase? (Y/n)",  'y'))
                         {
                             shopping_list.del_thing(item);
                             in_list[key] = false;
@@ -995,7 +989,33 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                         else
                             continue;
                     }
+                    else
+                    {
+                        if (_shop_yesno("Remove from shopping list? (y/N)",
+                                        'n'))
+                        {
+                            shopping_list.del_thing(item);
+                            in_list[key]  = false;
+                            selected[key] = false;
+                        }
+                        continue;
+                    }
                 }
+                else if (to_shoplist)
+                {
+                    in_list[key] = true;
+                    if (selected[key])
+                        total_cost -= gp_value;
+                    selected[key] = false;
+                    const int cost = _shop_get_item_value(item, shop.greed,
+                                                          id_stock);
+                    shopping_list.add_thing(item, cost);
+                    continue;
+                }
+
+                // Okay, we are now selecting an item normally, and it
+                // is not on the shopping list.
+                ASSERT(!in_list[key]);
 
                 selected[key] = !selected[key];
                 if (selected[key])
