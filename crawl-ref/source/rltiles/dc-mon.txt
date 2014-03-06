@@ -473,9 +473,9 @@ guardian-eyeclosed-flame4
 
 firespitter_statue MONS_FIRESPITTER_STATUE
 obelisk MONS_DIAMOND_OBELISK
-
-## Spirey things ('{')
 lightning_spire MONS_LIGHTNING_SPIRE
+%sdir misc
+error MONS_SPELLFORGED_SERVITOR
 %rim 1
 
 ## Gargoyles ('9')
