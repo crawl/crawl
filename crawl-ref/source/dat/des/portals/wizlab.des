@@ -390,10 +390,12 @@ function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
   end
 
   local msp = "monstrous demonspawn seen sum:shadow_creatures dur:2 " ..
-              "nas:old_memories generate_awake / deep troll seen " ..
+              "nas:old_memories generate_awake " ..
+              "tile:mons_faint_demonspawn_monk / deep troll seen " ..
               "sum:shadow_creatures dur:2 nas:old_memories generate_awake " ..
-              " / grey draconian monk w:5 seen sum:shadow_creatures dur:2 " ..
-              "nas:old_memories generate_awake"
+              "tile:mons_faint_deep_troll_monk / grey draconian monk w:5" ..
+              "seen sum:shadow_creatures dur:2 nas:old_memories " ..
+              "generate_awake tile:mons_faint_grey_draconian_monk"
 
   local count = 0
   for point in iter.circle_iterator(3) do
