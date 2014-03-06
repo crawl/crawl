@@ -206,9 +206,9 @@ static void _reset_status_info(status_info* inf)
 
 static int _bad_ench_colour(int lvl, int orange, int red)
 {
-    if (lvl > red)
+    if (lvl >= red)
         return RED;
-    else if (lvl > orange)
+    else if (lvl >= orange)
         return LIGHTRED;
 
     return YELLOW;
@@ -751,7 +751,7 @@ static void _describe_glow(status_info* inf)
     {
         inf->light_colour = DARKGREY;
         if (cont > 1)
-            inf->light_colour = _bad_ench_colour(cont, 2, 3);
+            inf->light_colour = _bad_ench_colour(cont, 3, 4);
         if (cont > 1
 #if TAG_MAJOR_VERSION == 34
                 || you.species != SP_DJINNI
@@ -909,7 +909,7 @@ static void _describe_rotting(status_info* inf)
 {
     if (you.rotting)
     {
-        inf->light_colour = _bad_ench_colour(you.rotting, 4, 8);
+        inf->light_colour = _bad_ench_colour(you.rotting, 5, 9);
         inf->light_text   = "Rot";
     }
 
