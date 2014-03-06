@@ -111,7 +111,6 @@ public:
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
   FixedVector<uint8_t, NUM_AMMO> quiver; // default items for quiver
-  FixedVector<int, NUM_OBJECT_CLASSES> sacrifice_value;
   FixedVector<int, NUM_TIMERS> last_timer_effect;
   FixedVector<int, NUM_TIMERS> next_timer_effect;
 
@@ -192,9 +191,6 @@ public:
   FixedVector<short,   NUM_GODS>  num_total_gifts;
   FixedBitVector<   NUM_GODS>  one_time_ability_used;
   FixedVector<uint8_t, NUM_GODS>  piety_max;
-
-  // Nemelex sacrifice toggles
-  FixedBitVector<NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;

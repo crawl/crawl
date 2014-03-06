@@ -109,8 +109,6 @@ bool god_hates_attacking_friend(god_type god, const actor *fr);
 bool god_likes_item(god_type god, const item_def& item);
 bool god_likes_items(god_type god, bool greedy_explore = false);
 
-void get_pure_deck_weights(int weights[]);
-
 void religion_turn_start();
 void religion_turn_end();
 

@@ -1421,11 +1421,6 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
         marshallInt(th, you.attribute[j]);
 
-    // Sacrifice values.
-    marshallByte(th, NUM_OBJECT_CLASSES);
-    for (j = 0; j < NUM_OBJECT_CLASSES; ++j)
-        marshallInt(th, you.sacrifice_value[j]);
-
     // Event timers.
     marshallByte(th, NUM_TIMERS);
     for (j = 0; j < NUM_TIMERS; ++j)
@@ -1472,10 +1467,6 @@ static void tag_construct_you(writer &th)
     // how much piety have you achieved at highest with each god?
     for (i = 0; i < NUM_GODS; i++)
         marshallByte(th, you.piety_max[i]);
-
-    marshallByte(th, NUM_NEMELEX_GIFT_TYPES);
-    for (i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
-        marshallBoolean(th, you.nemelex_sacrificing[i]);
 
     marshallByte(th, you.gift_timeout);
 
@@ -2427,12 +2418,16 @@ static void tag_read_you(reader &th)
         you.attribute[ATTR_SEARING_RAY] = 0;
 #endif
 
-    count = unmarshallByte(th);
-    ASSERT(count <= NUM_OBJECT_CLASSES);
-    for (j = 0; j < count; ++j)
-        you.sacrifice_value[j] = unmarshallInt(th);
-    for (j = count; j < NUM_OBJECT_CLASSES; ++j)
-        you.sacrifice_value[j] = 0;
+#if TAG_MAJOR_VERSION == 34
+    // Nemelex item type sacrifice toggles.
+    if (th.getMinorVersion() < TAG_MINOR_NEMELEX_WEIGHTS)
+    {
+        count = unmarshallByte(th);
+        ASSERT(count <= NUM_OBJECT_CLASSES);
+        for (j = 0; j < count; ++j)
+            unmarshallInt(th);
+    }
+#endif
 
     int timer_count = 0;
 #if TAG_MAJOR_VERSION == 34
@@ -2619,23 +2614,22 @@ static void tag_read_you(reader &th)
         you.one_time_ability_used.set(i, unmarshallBoolean(th));
     for (i = 0; i < count; i++)
         you.piety_max[i] = unmarshallByte(th);
-    count = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NEMELEX_DUNGEONS)
     {
+        unmarshallByte(th);
         for (i = 0; i < NEM_GIFT_SUMMONING; i++)
-            you.nemelex_sacrificing.set(i, unmarshallBoolean(th));
+            unmarshallBoolean(th);
         unmarshallBoolean(th); // dungeons weight
         for (i = NEM_GIFT_SUMMONING; i < NUM_NEMELEX_GIFT_TYPES; i++)
-            you.nemelex_sacrificing.set(i, unmarshallBoolean(th));
+            unmarshallBoolean(th);
     }
-    else
+    else if (th.getMinorVersion() < TAG_MINOR_NEMELEX_WEIGHTS)
     {
-#endif
-    ASSERT(count == NUM_NEMELEX_GIFT_TYPES);
-    for (i = 0; i < count; i++)
-        you.nemelex_sacrificing.set(i, unmarshallBoolean(th));
-#if TAG_MAJOR_VERSION == 34
+        count = unmarshallByte(th);
+        ASSERT(count == NUM_NEMELEX_GIFT_TYPES);
+        for (i = 0; i < count; i++)
+            unmarshallBoolean(th);
     }
 #endif
 

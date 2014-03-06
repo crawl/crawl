@@ -241,7 +241,12 @@ damage.
 Nemelex Xobeh powers
 
 The Trickster's followers gain various ways to influence fate when playing
-cards.
+cards. They will quickly gain the ability to draw from decks without needing
+to wield them, and to peek at the contents of decks in order to identify them.
+Later, followers will gain much more powerful abilities to manipulate the
+cards, allowing them to choose one of three drawn cards, to gain the effects
+of multiple cards at once, and finally to stack decks and re-order their
+contents.
 %%%%
 Elyvilon powers
 
