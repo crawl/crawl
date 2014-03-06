@@ -1007,7 +1007,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_ORB_OF_ELECTRICITY:
         beam.name           = "orb of electricity";
         beam.colour         = LIGHTBLUE;
-        beam.damage         = calc_dice(3, 13 + power * 4 / 5);
+        beam.damage         = dice_def(3, 7 + power / 9);
         beam.hit            = 40;
         beam.flavour        = BEAM_ELECTRICITY;
         beam.is_explosion   = true;
