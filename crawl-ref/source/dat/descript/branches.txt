@@ -121,9 +121,8 @@ A huge repository for the ancient dead. The air is chill and fetid, the walls
 cold and damp. Bones are strewn liberally everywhere and the whole place
 resounds with the keening of the tortured souls of the unquiet dead.
 
-The Crypt is five levels deep. The dungeon features either the Crypt or the
-Forest; if the Crypt is present, it can be found between Vaults:2 and Vaults:3,
-and contains the entrance to the Tomb.
+The Crypt is five levels deep, and contains the entrance to the Tomb. Its
+entry is either on Vaults:2 or Vaults:3.
 %%%%
 Tomb
 
@@ -184,17 +183,6 @@ ever laid eyes on before.
 
 The Realm of Zot is five levels deep and can only be entered when carrying at
 least three runes.
-%%%%
-Forest
-
-Amongst these dark and sinister woods lie the lairs of spriggans, fauns, tengu,
-and other creatures capable of bending the minds of unwilling intruders to
-their will. Powerful illusory and hindering magicks are the norm, rather than
-the exception.
-
-The Enchanted Forest is five levels deep. The dungeon features either the Crypt
-or the Forest; if the Forest is present, it can be found between Vaults:2 and
-Vaults:3, and contains the entrance to the Tomb.
 %%%%
 Abyss
 
