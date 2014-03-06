@@ -3253,7 +3253,7 @@ struct spell_desc
 {
     SPELL_SUMMON_VERMIN, "Summon Vermin",
      SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
+     SPFLAG_MONSTER | SPFLAG_UNHOLY,
      5,
      0,
      -1, -1,
