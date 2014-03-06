@@ -1163,7 +1163,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FAKE_MARA_SUMMON:
     case SPELL_SUMMON_ILLUSION:
     case SPELL_SUMMON_DEMON:
-    case SPELL_SUMMON_MENAGERIE:
+    case SPELL_MONSTROUS_MENAGERIE:
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SIMULACRUM:
@@ -4836,11 +4836,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_MENAGERIE:
+    case SPELL_MONSTROUS_MENAGERIE:
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        cast_summon_menagerie(mons, mons->spell_hd(spell_cast) * 6, mons->god);
+        cast_monstrous_menagerie(mons, mons->spell_hd(spell_cast) * 6, mons->god);
         return;
 
     case SPELL_ANIMATE_DEAD:

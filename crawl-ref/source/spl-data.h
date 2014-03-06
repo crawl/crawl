@@ -1875,7 +1875,7 @@ struct spell_desc
 },
 
 {
-    SPELL_SUMMON_MENAGERIE, "Summon Menagerie",
+    SPELL_MONSTROUS_MENAGERIE, "Monstrous Menagerie",
      SPTYP_SUMMONING,
      SPFLAG_NONE,
      6,

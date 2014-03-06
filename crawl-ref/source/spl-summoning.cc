@@ -472,7 +472,7 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_summon_menagerie(actor* caster, int pow, god_type god, bool fail)
+spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god, bool fail)
 {
     fail_check();
     monster_type type = MONS_PROGRAM_BUG;
@@ -490,7 +490,7 @@ spret_type cast_summon_menagerie(actor* caster, int pow, god_type god, bool fail
     const int hd_bonus = div_rand_round(pow - 50, 25);
 
     mgen_data mdata = mgen_data(type, BEH_COPY, caster, 4,
-                                SPELL_SUMMON_MENAGERIE, caster->pos(),
+                                SPELL_MONSTROUS_MENAGERIE, caster->pos(),
                                 (caster->is_player()) ?
                                     MHITYOU : caster->as_monster()->foe,
                                 MG_AUTOFOE | MG_DONT_CAP, god);
@@ -520,7 +520,7 @@ spret_type cast_summon_menagerie(actor* caster, int pow, god_type god, bool fail
 
             // Handle cap only for the first of the batch being summoned
             if (first)
-                summoned_monster(beast, &you, SPELL_SUMMON_MENAGERIE);
+                summoned_monster(beast, &you, SPELL_MONSTROUS_MENAGERIE);
 
             first = false;
         }
@@ -3644,7 +3644,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
     // General monsters
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },
-    { SPELL_SUMMON_MENAGERIE,           4, 2 },
+    { SPELL_MONSTROUS_MENAGERIE,           4, 2 },
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 8 },
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
@@ -3697,7 +3697,7 @@ static bool _spell_has_variable_cap(spell_type spell)
 {
     return spell == SPELL_SHADOW_CREATURES
            || spell == SPELL_WEAVE_SHADOWS
-           || spell == SPELL_SUMMON_MENAGERIE;
+           || spell == SPELL_MONSTROUS_MENAGERIE;
 }
 
 static void _expire_capped_summon(monster* mon, int delay, bool recurse)
