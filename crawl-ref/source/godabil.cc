@@ -3423,7 +3423,7 @@ bool dithmenos_shadow_step()
     ASSERT(you.umbra_radius2() > -1);
     const int range = isqrt_ceil(you.umbra_radius2());
 
-    targetter_jump tgt(&you, range, false, true);
+    targetter_jump tgt(&you, you.umbra_radius2(), false, true);
     direction_chooser_args args;
     args.hitfunc = &tgt;
     args.restricts = DIR_JUMP;

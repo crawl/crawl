@@ -204,7 +204,7 @@ enum jump_block_reason
 class targetter_jump : public targetter
 {
 public:
-    targetter_jump(const actor* act, int range, bool clear_path = true,
+    targetter_jump(const actor* act, int r2, bool clear_path = true,
                    bool immobile = false);
 
     bool valid_aim(coord_def a);

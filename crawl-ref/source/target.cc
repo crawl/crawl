@@ -880,14 +880,13 @@ aff_type targetter_spray::is_affected(coord_def loc)
     return affected;
 }
 
-targetter_jump::targetter_jump(const actor* act, int range, bool cp,
+targetter_jump::targetter_jump(const actor* act, int r2, bool cp,
                                bool imm) :
-    clear_path(cp), immobile(imm)
+    range2(r2), clear_path(cp), immobile(imm)
 {
     ASSERT(act);
     agent = act;
     origin = act->pos();
-    range2 = dist_range(range);
     jump_is_blocked = false;
 }
 
@@ -1066,7 +1065,7 @@ void targetter_jump::get_additional_sites(coord_def a)
     if (immobile)
     {
         const actor *victim = actor_at(a);
-        if (!victim || victim->invisible())
+        if (!victim || victim->invisible() || !victim->umbraed())
         {
             no_landing_reason = BLOCKED_NO_TARGET;
             return;
