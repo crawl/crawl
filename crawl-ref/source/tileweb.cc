@@ -333,7 +333,6 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
     else if (msgtype == "spectator_joined")
     {
         flush_messages();
-        _send_options();
         _send_everything();
         flush_messages();
     }
@@ -1519,6 +1518,7 @@ void TilesFramework::resize()
 void TilesFramework::_send_everything()
 {
     _send_version();
+    _send_options();
 
     // UI State
     _send_ui_state(m_ui_state);
