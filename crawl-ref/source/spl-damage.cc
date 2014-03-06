@@ -3013,7 +3013,7 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
             if (p->second <= 0)
                 continue;
 
-            const int eff_range = max(3, i);
+            const int eff_range = max(3, (6 * i / LOS_RADIUS));
 
             // At or within range 3, this is equivalent to the old Ice Storm
             // damage.
