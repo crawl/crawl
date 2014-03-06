@@ -966,6 +966,11 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
+    // XXX: for finding a nearby space
+    monster temp;
+    temp.type = MONS_BALL_LIGHTNING;
+    temp.position = you.pos();
+
     // Restricted so that the situation doesn't get too gross.  Each of
     // these will explode for 3d20 damage. -- bwr
     const int how_many = min(8, 3 + random2avg(2 + pow / 50, 2));
@@ -976,7 +981,7 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
         bool found = false;
         for (int j = 0; j < 10; ++j)
         {
-            if (random_near_space(you.pos(), target, true, false, false)
+            if (random_near_space(&temp, you.pos(), target, true, false, false)
                 && distance2(you.pos(), target) <= 5)
             {
                 found = true;

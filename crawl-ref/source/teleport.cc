@@ -231,6 +231,7 @@ bool valid_blink_destination(const actor* moved, const coord_def& target,
                              bool forbid_sanctuary,
                              bool forbid_unhabitable)
 {
+    ASSERT(moved);
 
     if (!in_bounds(target))
         return false;
@@ -246,7 +247,8 @@ bool valid_blink_destination(const actor* moved, const coord_def& target,
     return true;
 }
 
-bool random_near_space(const coord_def& origin, coord_def& target,
+bool random_near_space(const actor* victim,
+                       const coord_def& origin, coord_def& target,
                        bool allow_adjacent, bool forbid_sanctuary,
                        bool forbid_unhabitable)
 {
@@ -268,7 +270,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
 
         target = origin + (p - tried_o);
 
-        if (valid_blink_destination(actor_at(origin), target,
+        if (valid_blink_destination(victim, target,
                                     forbid_sanctuary, forbid_unhabitable)
             && (allow_adjacent || distance2(origin, target) > 2))
         {
