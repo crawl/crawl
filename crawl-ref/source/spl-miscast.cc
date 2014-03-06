@@ -1053,22 +1053,29 @@ void MiscastEffect::_enchantment(int severity)
 
     case 3:         // potentially lethal
         // Only use first two cases for monsters.
-        switch (random2(target->is_player() ? 4 : 2))
+        bool reroll = true;
+        while (reroll)
         {
-        case 0:
-            _paralyse(2 + random2(6));
-            break;
-        case 1:
-            _potion_effect(POT_CONFUSION, 10);
-            break;
-        case 2:
-            contaminate_player(random2avg(18000, 3), spell != SPELL_NO_SPELL);
-            break;
-        case 3:
-            while (curse_an_item(true) && !one_chance_in(3))
-                ;
-            mpr("You sense an overwhelmingly malignant aura!");
-            break;
+            switch (random2(target->is_player() ? 4 : 2))
+            {
+            case 0:
+                reroll = !_paralyse(2 + random2(6));
+                break;
+            case 1:
+                _potion_effect(POT_CONFUSION, 10);
+                reroll = false;
+                break;
+            case 2:
+                contaminate_player(random2avg(18000, 3), spell != SPELL_NO_SPELL);
+                reroll = false;
+                break;
+            case 3:
+                while (curse_an_item(true) && !one_chance_in(3))
+                    ;
+                mpr("You sense an overwhelmingly malignant aura!");
+                reroll = false;
+                break;
+            }
         }
         break;
     }
