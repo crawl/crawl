@@ -490,6 +490,9 @@ void melee_attack::apply_black_mark_effects()
             attacker->heal(random2(damage_done));
         }
 
+        if (!defender->alive())
+            return;
+
         switch(random2(3))
         {
             case 0:
@@ -510,6 +513,9 @@ void melee_attack::apply_black_mark_effects()
 
         if (mon->heal(random2avg(damage_done, 2)))
             simple_monster_message(mon, " is healed.");
+
+        if (!defender->alive())
+            return;
 
         switch(random2(3))
         {
