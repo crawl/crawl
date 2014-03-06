@@ -1313,6 +1313,16 @@ static void _setup_generic(const newgame_def& ng)
     _give_basic_spells(you.char_class);
     _give_basic_knowledge(you.char_class);
 
+    // Clear known-useless items (potions for Mummies, etc).
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (you.inv[i].defined())
+        {
+            if (is_useless_item(you.inv[i]))
+                _newgame_clear_item(i);
+        }
+    }
+
     initialise_item_descriptions();
 
     for (int i = 0; i < ENDOFPACK; ++i)
