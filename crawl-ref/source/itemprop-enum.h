@@ -25,7 +25,6 @@ enum armour_type
     ARM_BUCKLER, // order of shields matters
     ARM_SHIELD,
     ARM_LARGE_SHIELD,
-    ARM_MAX_RACIAL = ARM_LARGE_SHIELD,
 
     ARM_CRYSTAL_PLATE_ARMOUR,
     ARM_MIN_UNBRANDED = ARM_CRYSTAL_PLATE_ARMOUR,

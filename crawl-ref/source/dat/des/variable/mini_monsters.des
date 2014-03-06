@@ -1828,7 +1828,7 @@ KMONS:   0 = orc ; robe . wand of confusion | wand of slowing w:35 | \
                    wand of magic darts w:35 | wand of flame | wand of frost . \
                    potion of invisibility | potion of speed | nothing w:980
 KMONS:   89 = deep elf mage
-KITEM:   8d = robe / robe, hat w:40 / hat good_item, \
+KITEM:   8d = robe, hat w:40 / hat good_item, \
               hat w:20 / hat good_item
 KITEM:   9e = book of minor magic
 SUBST:   - = +

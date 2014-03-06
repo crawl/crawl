@@ -1277,8 +1277,7 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
             const string short_name =
                 item.name(DESC_BASENAME, true, false, false, false,
-                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
-                          | ISFLAG_RACIAL_MASK);
+                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
 
             expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
                                      short_name);

@@ -1419,9 +1419,6 @@ bool convert2good(item_def &item)
     case WPN_DEMON_TRIDENT: item.sub_type = WPN_TRISHULA; break;
     }
 
-    if (is_blessed(item))
-        item.flags &= ~ISFLAG_RACIAL_MASK;
-
     return true;
 }
 

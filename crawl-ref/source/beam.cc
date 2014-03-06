@@ -6455,8 +6455,7 @@ string bolt::get_short_name() const
 
     if (item != NULL && item->defined())
         return item->name(DESC_A, false, false, false, false,
-                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
-                          | ISFLAG_RACIAL_MASK);
+                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
 
     if (real_flavour == BEAM_RANDOM
         || real_flavour == BEAM_CHAOS
