@@ -69,6 +69,7 @@
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
 static bool _slime_split_merge(monster* thing);
+static bool _do_throw(actor *thrower, actor *victim, int radius, int pow);
 template<typename valid_T, typename connect_T>
 static void _search_dungeon(const coord_def & start,
                     valid_T & valid_target,
@@ -4533,12 +4534,24 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_GUARDIAN_GOLEM:
-
         if (mons->hit_points * 2 < mons->max_hit_points && one_chance_in(4)
              && !mons->has_ench(ENCH_INNER_FLAME))
         {
             simple_monster_message(mons, " overheats!");
-            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, 0, INFINITE_DURATION));
+            mons->add_ench(mon_enchant(ENCH_INNER_FLAME, 0, 0,
+                                       INFINITE_DURATION));
+        }
+        break;
+
+    case MONS_OCTOPODE_CRUSHER:
+        if (mons->is_constricting() && x_chance_in_y(2, 5))
+        {
+            actor* const foe = mons->get_foe();
+            // Can't throw something if we're being constricted by it.
+            if ((mons->is_constricted()
+                 && actor_by_mid(mons->constricted_by) == foe))
+                break;
+            used = _do_throw(mons, foe, LOS_RADIUS, mons->hit_dice * 3);
         }
         break;
 
@@ -5072,4 +5085,104 @@ void guardian_golem_bond(monster* mons)
             mi->add_ench(mon_enchant(ENCH_INJURY_BOND, 1, mons, INFINITE_DURATION));
         }
     }
+}
+
+static bool _do_throw(actor *thrower, actor *victim, int radius, int pow)
+{
+
+    vector<coord_def> floor_sites;
+    vector<coord_def> feat_floor_sites;
+    vector<coord_def> feat_sites;
+
+    ASSERT(radius <= LOS_RADIUS);
+    for (distance_iterator di(thrower->pos(), false, true, radius); di; ++di)
+    {
+        if (thrower->pos().distance_from(*di) < 4)
+            continue;
+        if (victim->is_habitable(*di)
+            && !actor_at(*di)
+            && cell_see_cell(thrower->pos(), *di, LOS_NO_TRANS)
+            && cell_see_cell(victim->pos(), *di, LOS_NO_TRANS))
+            floor_sites.push_back(*di);
+        else
+            continue;
+        // See if it's site next to a visible solid feature, which we prefer.
+        for (adjacent_iterator ai(*di); ai; ai++)
+        {
+            if (cell_is_solid(*ai)
+                && grd(*ai) != DNGN_OPEN_SEA
+                && grd(*ai) != DNGN_LAVA_SEA
+                && cell_see_cell(thrower->pos(), *ai, LOS_NO_TRANS))
+            {
+                feat_floor_sites.push_back(*di);
+                feat_sites.push_back(*ai);
+                break;
+            }
+        }
+    }
+    int floor_ind = 0;
+    bool have_feat = feat_floor_sites.size();
+    string feat_desc = "";
+    coord_def floor_pos, feat_pos;
+    if (have_feat)
+    {
+        floor_ind = random2(feat_floor_sites.size());
+        floor_pos = feat_floor_sites[floor_ind];
+        feat_pos = feat_sites[floor_ind];
+        if (victim->is_player()
+            || cell_see_cell(you.pos(), feat_pos, LOS_DEFAULT))
+        {
+            feat_desc = feature_description_at(feat_pos, false, DESC_THE, false);
+            feat_desc = make_stringf(" onto %s", feat_desc.c_str());
+        }
+        else
+            feat_desc = " onto something solid";
+    }
+    // Found an empty space, so we can still throw
+    else if (floor_sites.size())
+    {
+        floor_ind = random2(floor_sites.size());
+        floor_pos = floor_sites[floor_ind];
+    }
+    // Couldn't find a place to throw the victim
+    else
+        return false;
+
+    bool thrower_seen = you.can_see(thrower);
+    bool victim_was_seen = you.can_see(victim);
+    const string thrower_name = thrower->name(DESC_THE);
+
+    // Increase damage by 50% if we hit something hard.
+    int dam = random2(pow) * (have_feat ? 3 : 2);
+    dam = victim->apply_ac(dam / 2);
+    if (victim->is_player())
+    {
+        monster *mon = thrower->as_monster();
+        mprf("%s throws you%s!",
+             (thrower_seen ? thrower_name.c_str() : "Something"),
+             feat_desc.c_str());
+        move_player_to_grid(floor_pos, false, true);
+        ouch(dam, mon->mindex(), KILLED_BY_BEING_THROWN);
+    }
+    else
+    {
+        monster *mon = victim->as_monster();
+        const string victim_name = victim->name(DESC_THE);
+        coord_def old_pos = mon->pos();
+
+        if (!(mon->flags & MF_WAS_IN_VIEW))
+            mon->seen_context = SC_THROWN_IN;
+        mon->move_to_pos(floor_pos);
+        mon->apply_location_effects(old_pos);
+        mon->check_redraw(old_pos);
+        if (thrower_seen || victim_was_seen)
+        {
+            mprf("%s throws %s%s!",
+                 (thrower_seen ? thrower_name.c_str() : "Something"),
+                 (victim_was_seen ? victim_name.c_str() : "something"),
+                 (you.can_see(mon) ? feat_desc.c_str() : "out of view"));
+        }
+        victim->hurt(thrower, dam, BEAM_NONE, true);
+    }
+    return true;
 }
