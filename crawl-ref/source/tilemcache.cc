@@ -232,12 +232,21 @@ mcache_monster::mcache_monster(const monster_info& mon)
                 case TILEP_HAND1_DAGGER:
                     m_shd_tile = TILEP_HAND2_DAGGER;
                     break;
+                case TILEP_DAGGER_1:
+                    m_shd_tile = TILEP_HAND2_DAGGER_1;
+                    break;
                 case TILEP_HAND1_CUTLASS:
                     m_shd_tile = TILEP_HAND2_CUTLASS;
+                    break;
+                case TILEP_CUTLASS_1:
+                    m_shd_tile = TILEP_HAND2_CUTLASS_1;
                     break;
                 default:
                 case TILEP_HAND1_SHORT_SWORD_SLANT:
                     m_shd_tile = TILEP_HAND2_SHORT_SWORD_SLANT;
+                    break;
+                case TILEP_SHORT_SWORD_SLANT_1:
+                    m_shd_tile = TILEP_HAND2_SHORT_SWORD_SLANT_1;
                     break;
                 case TILEP_HAND1_GREAT_FLAIL:
                     m_shd_tile = TILEP_HAND2_GREAT_FLAIL;
