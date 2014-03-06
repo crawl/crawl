@@ -411,17 +411,15 @@ bool fight_jump(actor *attacker, actor *defender, coord_def attack_pos,
     return true;
 }
 
-// This function is used to determine strength of stab, and should be
-// you.religion-agnostic.
-unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
-                                              const actor *defender)
+stab_type find_stab_type(const actor *attacker,
+                         const actor *defender)
 {
     const monster* def = defender->as_monster();
-    unchivalric_attack_type unchivalric = UCAT_NO_ATTACK;
+    stab_type unchivalric = STAB_NO_STAB;
 
-    // No unchivalric attacks on monsters that cannot fight (e.g.  plants)
-    // or monsters the attacker can't see (either due
-    // to invisibility or being behind opaque clouds).
+    // No stabbing monsters that cannot fight (e.g.  plants) or monsters
+    // the attacker can't see (either due to invisibility or being behind
+    // opaque clouds).
     if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
     {
         return unchivalric;
@@ -431,46 +429,46 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     if (attacker && attacker->is_player()
         && def && def->foe != MHITYOU && !mons_is_batty(def))
     {
-        unchivalric = UCAT_DISTRACTED;
+        unchivalric = STAB_DISTRACTED;
     }
 
     // confused (but not perma-confused)
     if (def && mons_is_confused(def, false))
-        unchivalric = UCAT_CONFUSED;
+        unchivalric = STAB_CONFUSED;
 
     // allies
     if (def && def->friendly())
     {
-        unchivalric = UCAT_ALLY;
+        unchivalric = STAB_ALLY;
     }
 
     // fleeing
     if (def && mons_is_fleeing(def))
-        unchivalric = UCAT_FLEEING;
+        unchivalric = STAB_FLEEING;
 
     // invisible
     if (attacker && !attacker->visible_to(defender))
-        unchivalric = UCAT_INVISIBLE;
+        unchivalric = STAB_INVISIBLE;
 
     // held in a net
     if (def && def->caught())
-        unchivalric = UCAT_HELD_IN_NET;
+        unchivalric = STAB_HELD_IN_NET;
 
     // petrifying
     if (def && def->petrifying())
-        unchivalric = UCAT_PETRIFYING;
+        unchivalric = STAB_PETRIFYING;
 
     // petrified
     if (defender->petrified())
-        unchivalric = UCAT_PETRIFIED;
+        unchivalric = STAB_PETRIFIED;
 
     // paralysed
     if (defender->paralysed())
-        unchivalric = UCAT_PARALYSED;
+        unchivalric = STAB_PARALYSED;
 
     // sleeping
     if (defender->asleep())
-        unchivalric = UCAT_SLEEPING;
+        unchivalric = STAB_SLEEPING;
 
     return unchivalric;
 }

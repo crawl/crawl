@@ -3146,18 +3146,18 @@ bool mons_is_batty(const monster* m)
 
 bool mons_looks_stabbable(const monster* m)
 {
-    const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
+    const stab_type st = find_stab_type(&you, m);
     return !m->friendly()
-           && (uat == UCAT_PARALYSED || uat == UCAT_SLEEPING);
+           && (st == STAB_PARALYSED || st == STAB_SLEEPING);
 }
 
 bool mons_looks_distracted(const monster* m)
 {
-    const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
+    const stab_type st = find_stab_type(&you, m);
     return !m->friendly()
-           && uat != UCAT_NO_ATTACK
-           && uat != UCAT_PARALYSED
-           && uat != UCAT_SLEEPING;
+           && st != STAB_NO_STAB
+           && st != STAB_PARALYSED
+           && st != STAB_SLEEPING;
 }
 
 void mons_start_fleeing_from_sanctuary(monster* mons)

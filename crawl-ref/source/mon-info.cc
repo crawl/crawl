@@ -664,7 +664,7 @@ monster_info::monster_info(const monster* m, int milev)
     case ATT_HOSTILE:
         if (you_worship(GOD_SHINING_ONE)
             && !tso_unchivalric_attack_safe_monster(m)
-            && is_unchivalric_attack(&you, m))
+            && find_stab_type(&you, m) != STAB_NO_STAB)
         {
             mb.set(MB_EVIL_ATTACK);
         }

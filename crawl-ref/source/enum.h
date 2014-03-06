@@ -583,7 +583,7 @@ enum caction_type    // Primary categorization of counted actions.
                      //   or item.basetype << 16 | subtype
                      //   or unrand index
     CACT_USE,        // object_class_type
-    CACT_STAB,       // unchivalric_attack_type
+    CACT_STAB,       // stab_type
     NUM_CACTIONS,
 };
 

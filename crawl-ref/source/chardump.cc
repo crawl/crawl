@@ -1237,8 +1237,8 @@ static string _describe_action_subtype(caction_type type, int subtype)
     case CACT_USE:
         return uppercase_first(base_type_string((object_class_type)subtype));
     case CACT_STAB:
-        COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_UCAT);
-        ASSERT_RANGE(subtype, 1, NUM_UCAT);
+        COMPILE_CHECK(ARRAYSZ(_stab_names) == NUM_STAB);
+        ASSERT_RANGE(subtype, 1, NUM_STAB);
         return _stab_names[subtype];
     default:
         return "Error";
