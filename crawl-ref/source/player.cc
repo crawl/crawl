@@ -3862,30 +3862,26 @@ int check_stealth(void)
     if (you.duration[DUR_AGILITY])
         stealth += 50;
 
-    if (you.airborne())
-        stealth += 10;
-
-    else if (you.in_water())
+    if (!you.airborne())
     {
-        // Merfolk can sneak up on monsters underwater -- bwr
-        if (you.fishtail || you.species == SP_OCTOPODE)
+        if (you.in_water())
+        {
+            // Merfolk can sneak up on monsters underwater -- bwr
+            if (you.fishtail || you.species == SP_OCTOPODE)
+                stealth += 50;
+            else if (!you.can_swim() && !you.extra_balanced())
+                stealth /= 2;       // splashy-splashy
+        }
+
+        else if (boots && get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += 50;
-        else if (!you.can_swim() && !you.extra_balanced())
-            stealth /= 2;       // splashy-splashy
+
+        else if (player_mutation_level(MUT_HOOVES) > 0)
+            stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
+
+        else if (you.species == SP_FELID && (!you.form || you.form == TRAN_APPENDAGE))
+            stealth += 20;  // paws
     }
-
-    // No stealth bonus from boots if you're airborne or in water
-    else if (boots)
-    {
-        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
-            stealth += 50;
-    }
-
-    else if (player_mutation_level(MUT_HOOVES) > 0)
-        stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
-
-    else if (you.species == SP_FELID && (!you.form || you.form == TRAN_APPENDAGE))
-        stealth += 20;  // paws
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
