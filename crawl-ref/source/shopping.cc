@@ -497,13 +497,12 @@ static string _shop_print_stock(const vector<int>& stock,
         if (shop_item_unknown(item))
             item_name += " (unknown)";
 
-        const int cols = get_number_of_cols();
-
         cprintf("%4d gold   %s", gp_value, item_name.c_str());
 
         si.add_item(item, gp_value);
 
 #ifdef USE_TILE_LOCAL
+        const int cols = get_number_of_cols();
         tmp = new TextItem();
         tmp->set_highlight_colour(WHITE);
         tmp->set_text(""); // will print bounding box around formatted text
