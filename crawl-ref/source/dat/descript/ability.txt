@@ -319,7 +319,8 @@ Shoot a random harmful blast at the targeted monster.
 %%%%
 Lesser Servant of Makhleb ability
 
-Summon a minor demon, with a chance of being hostile at low Invocations skill.
+Summon a minor demon. High Invocations skill reduces the chance of it being
+hostile.
 %%%%
 Major Destruction ability
 
@@ -327,7 +328,8 @@ Shoot a random harmful beam or explosion at the targeted monster.
 %%%%
 Greater Servant of Makhleb ability
 
-Summon a major demon, with a chance of being hostile at low Invocations skill.
+Summon a major demon. High Invocations skill reduces the chance of it being
+hostile.
 %%%%
 # Sif Muna
 Channel Energy ability
