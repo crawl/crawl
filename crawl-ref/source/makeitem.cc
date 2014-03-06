@@ -1760,7 +1760,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    0);
     }
 
-    // No fancy rocks -- break out before we get to racial/special stuff.
+    // No fancy rocks -- break out before we get to special stuff.
     if (item.sub_type == MI_LARGE_ROCK)
     {
         item.quantity = 2 + random2avg(5,2);

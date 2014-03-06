@@ -2967,9 +2967,7 @@ void melee_attack::do_miscast()
             // Ignore a lot of item flags to make cause as short as possible,
             // so it will (hopefully) fit onto a single line in the death
             // cause screen.
-            cause += wep_name(DESC_YOUR,
-                              ignore_mask
-                              | ISFLAG_COSMETIC_MASK | ISFLAG_RACIAL_MASK);
+            cause += wep_name(DESC_YOUR, ignore_mask | ISFLAG_COSMETIC_MASK);
 
             if (miscast_target == attacker)
                 hand_str = wep_name(DESC_PLAIN, ignore_mask);
