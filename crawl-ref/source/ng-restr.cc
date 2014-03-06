@@ -1043,6 +1043,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_HILL_ORC:
         case SP_LAVA_ORC:
         case SP_FORMICID:
+        case SP_SPRIGGAN:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
