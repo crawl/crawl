@@ -8056,7 +8056,7 @@ bool player::made_nervous_by(const coord_def &p)
 void player::weaken(actor *attacker, int pow)
 {
     if (!duration[DUR_WEAK])
-        mprf(MSGCH_WARN, "You feel yourself grow feeble.");
+        mprf(MSGCH_WARN, "You feel your attacks grow feeble.");
     else
         mprf(MSGCH_WARN, "You feel as though you will be weak longer.");
 
