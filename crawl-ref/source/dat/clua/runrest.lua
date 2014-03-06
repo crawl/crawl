@@ -5,8 +5,8 @@
 -- What it does:
 --
 --  * Any message in runrest_ignore_message will *not* stop your run.
---  * Poison damage of x will be ignored if you have at least y hp if you've
---    defined a runrest_ignore_poison = x:y option.
+--  * Poison damage will be ignored if it is less than x% of your current
+--    hp and y% of your max hp if you have defined runrest_safe_poison = x:y
 --  * Any monster in runrest_ignore_monster will *not* stop your run
 --    if it's at least the specified distance away.
 --    You can specify this with runrest_ignore_monster = regex:distance.
@@ -91,9 +91,9 @@ end
 
 function rr_check_params()
     if (not g_rr_pois_maxhp_ratio or not g_rr_pois_curhp_ratio)
-            and options.runrest_ignore_poison
+            and options.runrest_safe_poison
     then
-        local opt = options.runrest_ignore_poison
+        local opt = options.runrest_safe_poison
         local cur_r, max_r
         _, _, cur_r, max_r = string.find(opt, "(%d+)%s*:%s*(%d+)")
         if cur_r and max_r then
