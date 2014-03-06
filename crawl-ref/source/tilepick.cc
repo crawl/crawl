@@ -1653,7 +1653,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_NAGA_RITUALIST:
         return TILEP_MONS_NAGA_RITUALIST;
     case MONS_NAGA_SHARPSHOOTER:
-        return TILEP_MONS_MARKSNAGA;
+        return TILEP_MONS_NAGA_SHARPSHOOTER;
     case MONS_NAGA_WARRIOR:
         return TILEP_MONS_NAGA_WARRIOR;
     case MONS_GREATER_NAGA:
@@ -1714,7 +1714,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_SHOCK_SERPENT:
         return TILEP_MONS_SHOCK_SERPENT;
     case MONS_MANA_VIPER:
-        return TILEP_MONS_SAPPER_SNAKE;
+        return TILEP_MONS_MANA_VIPER;
 
     // trolls ('T')
     case MONS_TROLL:
@@ -3942,7 +3942,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_SHOCK_SERPENT:
         return TILE_CORPSE_SHOCK_SERPENT;
     case MONS_MANA_VIPER:
-        return TILE_CORPSE_SAPPER_SNAKE;
+        return TILE_CORPSE_MANA_VIPER;
 
     // trolls ('T')
     case MONS_TROLL:
