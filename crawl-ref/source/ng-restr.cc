@@ -870,6 +870,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         return CC_BANNED;
 
     case WPN_SHORT_SWORD:
+    case WPN_CUTLASS:
         switch (ng.species)
         {
         case SP_NAGA:
@@ -890,8 +891,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_RESTRICTED;
         }
 
-        // Maces and hand axes usually share the same restrictions.
+        // Maces and axes usually share the same restrictions.
     case WPN_MACE:
+    case WPN_FLAIL:
         if (ng.species == SP_TROLL
             || ng.species == SP_OGRE
             || ng.species == SP_GARGOYLE)
@@ -902,6 +904,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_RESTRICTED;
         // else fall-through
     case WPN_HAND_AXE:
+    case WPN_WAR_AXE:
         switch (ng.species)
         {
         case SP_HUMAN:
@@ -927,6 +930,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         }
 
     case WPN_SPEAR:
+    case WPN_TRIDENT:
         switch (ng.species)
         {
         case SP_HUMAN:
@@ -948,18 +952,15 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_UNRESTRICTED;
 
         case SP_SPRIGGAN:
-        case SP_HALFLING:
-        case SP_KOBOLD:
-            // Can't use them with a shield, terrible upgrade path;
-            // jobs with other benefits like Warper, Skald or godlies
-            // are better with two-handers.
-            if (ng.job == JOB_FIGHTER || ng.job == JOB_GLADIATOR)
+            // Can't use them with a shield.
+            if (ng.job == JOB_FIGHTER)
                 return CC_BANNED;
 
         default:
             return CC_RESTRICTED;
         }
     case WPN_FALCHION:
+    case WPN_LONG_SWORD:
         switch (ng.species)
         {
         case SP_HUMAN:
@@ -985,28 +986,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         default:
             return CC_RESTRICTED;
         }
-
-    case WPN_TRIDENT:
-        if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR
-            || species_size(ng.species, PSIZE_BODY) < SIZE_MEDIUM)
-        {
-            return CC_BANNED;
-        }
-
-        // Tridents are strictly better than spears, so unrestrict them
-        // for some species whose Polearm aptitudes are not too bad.
-        switch (ng.species)
-        {
-        case SP_DEEP_DWARF:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
-            return CC_UNRESTRICTED;
-        default:
-            break;
-        }
-
-        // Both are polearms, right?
-        return weapon_restriction(WPN_SPEAR, ng);
 
     case WPN_QUARTERSTAFF:
         if (ng.job != JOB_GLADIATOR)

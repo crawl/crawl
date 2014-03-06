@@ -1664,12 +1664,42 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
                 if (!species_has_claws(ng->species))
                     continue;
                 break;
+            case WPN_SHORT_SWORD:
+                // Fighters and gladiators get cutlasses.
+                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
+                {
+                    wp.first = WPN_CUTLASS;
+                }
+                break;
+            case WPN_MACE:
+                // Fighters and gladiators get flails.
+                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
+                {
+                    wp.first = WPN_FLAIL;
+                }
+                break;
+            case WPN_HAND_AXE:
+                // Non-little fighters and gladiators get war axes.
+                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
+                      && species_size(ng->species, PSIZE_BODY) >= SIZE_SMALL)
+                {
+                    wp.first = WPN_WAR_AXE;
+                }
+                break;
             case WPN_SPEAR:
                 // Non-small fighters and gladiators get tridents.
-                if ((ng->job == JOB_FIGHTER || ng->job == JOB_GLADIATOR)
+                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
                       && species_size(ng->species, PSIZE_BODY) >= SIZE_MEDIUM)
                 {
                     wp.first = WPN_TRIDENT;
+                }
+                break;
+            case WPN_FALCHION:
+                // Non-little fighters and gladiators get long swords.
+                if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER
+                      && species_size(ng->species, PSIZE_BODY) >= SIZE_SMALL)
+                {
+                    wp.first = WPN_LONG_SWORD;
                 }
                 break;
             default:
