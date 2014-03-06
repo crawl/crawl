@@ -699,7 +699,7 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
         }
 
         if (item_slot == PROMPT_NOTHING)
-            return -1;
+            return known || crawl_state.seen_hups ? -1 : 0;
 
         if (item_slot == PROMPT_ABORT)
         {
