@@ -1187,8 +1187,7 @@ static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
         // tier 4
         type = random_choose(MONS_BLUE_DEVIL,    MONS_IRON_DEVIL,
                              MONS_ORANGE_DEMON,  MONS_RED_DEVIL,
-                             MONS_ROTTING_DEVIL, MONS_SIXFIRHY,
-                             MONS_HELLWING,
+                             MONS_SIXFIRHY,      MONS_HELLWING,
                              -1);
     }
     else
