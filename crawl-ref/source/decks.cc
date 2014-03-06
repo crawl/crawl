@@ -2533,7 +2533,7 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     // This hack appears later in this file as well.
     if (!create_monster(
             mgen_data(summon_any_demon(dct), BEH_FRIENDLY, &you,
-                      5 - power_level, 0, you.pos(), MHITYOU),
+                      5 - power_level, 0, you.pos(), MHITYOU, MG_AUTOFOE),
             false))
     {
         mpr("You see a puff of smoke.");
@@ -2584,7 +2584,7 @@ static void _summon_animals(int power)
         create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                      4, 0, you.pos(), MHITYOU));
+                      4, 0, you.pos(), MHITYOU, MG_AUTOFOE));
     }
 }
 
@@ -2595,7 +2595,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     monster *mon =
         create_monster(
             mgen_data(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you,
-                      power_level + 2, 0, you.pos(), MHITYOU),
+                      power_level + 2, 0, you.pos(), MHITYOU, MG_AUTOFOE),
             false);
 
     // Given the abundance of Nemelex decks, not setting hard reset
@@ -2680,7 +2680,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
         create_monster(
             mgen_data(result,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                      3, 0, you.pos(), MHITYOU));
+                      3, 0, you.pos(), MHITYOU, MG_AUTOFOE));
 
         if (mons_class_flag(result, M_INVIS) && !you.can_see_invisible() && !friendly)
             hostile_invis = true;
@@ -2702,7 +2702,7 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
     if (!create_monster(mgen_data(skeltypes[power_level],
                                   friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                                   min(power/50 + 1, 5), 0,
-                                  you.pos(), MHITYOU),
+                                  you.pos(), MHITYOU, MG_AUTOFOE),
                         false))
     {
         mpr("You see a puff of smoke.");
@@ -2725,7 +2725,7 @@ static void _summon_ugly(int power, deck_rarity_type rarity)
                                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                                   &you,
                                   min(power/50 + 1, 5), 0,
-                                  you.pos(), MHITYOU),
+                                  you.pos(), MHITYOU, MG_AUTOFOE),
                         false))
     {
         mpr("You see a puff of smoke.");
