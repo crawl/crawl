@@ -3017,7 +3017,10 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
             // At or within range 3, this is equivalent to the old Ice Storm
             // damage.
-            beam.damage = calc_dice(7, (66 + 3 * pow) / eff_range);
+            beam.damage =
+                caster->is_player()
+                    ? calc_dice(7, (66 + 3 * pow) / eff_range)
+                    : calc_dice(10, (54 + 3 * pow / 2) / eff_range);
 
             if (actor_at(p->first))
             {
