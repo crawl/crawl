@@ -1320,12 +1320,6 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
     const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
 
-    if (you.duration[DUR_FORESTED])
-    {
-        mpr("This spell is already ongoing.");
-        return SPRET_ABORT;
-    }
-
     // Is this area open enough to summon a forest?
     bool success = false;
     for (adjacent_iterator ai(caster->pos(), false); ai; ++ai)

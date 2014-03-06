@@ -1090,6 +1090,12 @@ static bool _spellcasting_aborted(spell_type spell,
         return true;
     }
 
+    if (spell == SPELL_SUMMON_FOREST && you.duration[DUR_FORESTED])
+    {
+        mpr("This spell is already ongoing.");
+        return true;
+    }
+
     return false;
 }
 
