@@ -1375,97 +1375,6 @@ static bool _need_missile_gift(bool forced)
            && you.skills[sk] /* no skill boosts */ >= 8;
 }
 
-void get_pure_deck_weights(int weights[])
-{
-    weights[NEM_GIFT_ESCAPE]      = you.sacrifice_value[OBJ_ARMOUR] + 1;
-    weights[NEM_GIFT_DESTRUCTION] = you.sacrifice_value[OBJ_WEAPONS]
-                                    + you.sacrifice_value[OBJ_STAVES]
-                                    + you.sacrifice_value[OBJ_RODS]
-                                    + you.sacrifice_value[OBJ_MISSILES] + 1;
-    weights[NEM_GIFT_SUMMONING]   = you.sacrifice_value[OBJ_CORPSES] / 2;
-    weights[NEM_GIFT_WONDERS]     = (you.sacrifice_value[OBJ_POTIONS]
-                                     + you.sacrifice_value[OBJ_SCROLLS]
-                                     + you.sacrifice_value[OBJ_WANDS]
-                                     + you.sacrifice_value[OBJ_FOOD]
-                                     + you.sacrifice_value[OBJ_MISCELLANY]
-                                     + you.sacrifice_value[OBJ_JEWELLERY]
-                                     + you.sacrifice_value[OBJ_BOOKS]) / 2;
- }
-
-static void _update_sacrifice_weights(int which)
-{
-    switch (which)
-    {
-    case NEM_GIFT_ESCAPE:
-        you.sacrifice_value[OBJ_ARMOUR] /= 5;
-        you.sacrifice_value[OBJ_ARMOUR] *= 4;
-        break;
-    case NEM_GIFT_DESTRUCTION:
-        you.sacrifice_value[OBJ_WEAPONS]  /= 5;
-        you.sacrifice_value[OBJ_STAVES]   /= 5;
-        you.sacrifice_value[OBJ_RODS]     /= 5;
-        you.sacrifice_value[OBJ_MISSILES] /= 5;
-        you.sacrifice_value[OBJ_WEAPONS]  *= 4;
-        you.sacrifice_value[OBJ_STAVES]   *= 4;
-        you.sacrifice_value[OBJ_RODS]     *= 4;
-        you.sacrifice_value[OBJ_MISSILES] *= 4;
-        break;
-    case NEM_GIFT_SUMMONING:
-        you.sacrifice_value[OBJ_CORPSES] /= 5;
-        you.sacrifice_value[OBJ_CORPSES] *= 4;
-        break;
-    case NEM_GIFT_WONDERS:
-        you.sacrifice_value[OBJ_POTIONS] /= 5;
-        you.sacrifice_value[OBJ_SCROLLS] /= 5;
-        you.sacrifice_value[OBJ_WANDS]   /= 5;
-        you.sacrifice_value[OBJ_FOOD]    /= 5;
-        you.sacrifice_value[OBJ_POTIONS] *= 4;
-        you.sacrifice_value[OBJ_SCROLLS] *= 4;
-        you.sacrifice_value[OBJ_WANDS]   *= 4;
-        you.sacrifice_value[OBJ_FOOD]    *= 4;
-        you.sacrifice_value[OBJ_MISCELLANY] /= 5;
-        you.sacrifice_value[OBJ_JEWELLERY]  /= 5;
-        you.sacrifice_value[OBJ_BOOKS]      /= 5;
-        you.sacrifice_value[OBJ_MISCELLANY] *= 4;
-        you.sacrifice_value[OBJ_JEWELLERY]  *= 4;
-        you.sacrifice_value[OBJ_BOOKS]      *= 4;
-        break;
-    }
-}
-
-#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
-static void _show_pure_deck_chances()
-{
-    int weights[4];
-
-    get_pure_deck_weights(weights);
-
-    float total = 0;
-    for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
-        total += (float) weights[i];
-
-    mprf(MSGCH_DIAGNOSTICS, "Pure cards chances: "
-         "escape %0.2f%%, destruction %0.2f%%, "
-         "summoning %0.2f%%, wonders %0.2f%%",
-         (float)weights[0] / total * 100.0,
-         (float)weights[1] / total * 100.0,
-         (float)weights[2] / total * 100.0,
-         (float)weights[3] / total * 100.0);
-}
-#endif
-
-static misc_item_type _gift_type_to_deck(int gift)
-{
-    switch (gift)
-    {
-    case NEM_GIFT_ESCAPE:      return MISC_DECK_OF_ESCAPE;
-    case NEM_GIFT_DESTRUCTION: return MISC_DECK_OF_DESTRUCTION;
-    case NEM_GIFT_SUMMONING:   return MISC_DECK_OF_SUMMONING;
-    case NEM_GIFT_WONDERS:     return MISC_DECK_OF_WONDERS;
-    }
-    die("invalid gift card type");
-}
-
 static bool _give_nemelex_gift(bool forced = false)
 {
     // But only if you're not flying over deep water.
@@ -1482,16 +1391,13 @@ static bool _give_nemelex_gift(bool forced = false)
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
            && !you.attribute[ATTR_CARD_COUNTDOWN])
     {
-        misc_item_type gift_type;
+        misc_item_type gift_type = random_choose_weighted(
+                                       4, MISC_DECK_OF_DESTRUCTION,
+                                       3, MISC_DECK_OF_SUMMONING,
+                                       2, MISC_DECK_OF_ESCAPE,
+                                       1, MISC_DECK_OF_WONDERS,
+                                       0);
 
-        // Make a pure deck.
-        int weights[4];
-        get_pure_deck_weights(weights);
-        const int choice = choose_random_weighted(weights, weights+4);
-        gift_type = _gift_type_to_deck(choice);
-#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
-        _show_pure_deck_chances();
-#endif
         int thing_created = items(1, OBJ_MISCELLANY, gift_type,
                                   true, 1, 0, 0, 0, GOD_NEMELEX_XOBEH);
 
@@ -1499,8 +1405,6 @@ static bool _give_nemelex_gift(bool forced = false)
 
         if (thing_created != NON_ITEM)
         {
-            _update_sacrifice_weights(choice);
-
             // Piety|Common  | Rare  |Legendary
             // --------------------------------
             //     0:  95.00%,  5.00%,  0.00%

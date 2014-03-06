@@ -3196,16 +3196,14 @@ bool item_def::is_mundane() const
     return false;
 }
 
-// Does the item causes autoexplore to visit it. It excludes ?RC for Ash,
-// disabled items for Nemelex and items already visited (dropped flag).
+// Does the item cause autoexplore to visit it?
+// Excludes visited items (dropped flag) and ?RC for Ash.
 bool item_def::is_greedy_sacrificeable() const
 {
     if (!god_likes_items(you.religion, true))
         return false;
 
-    if (you_worship(GOD_NEMELEX_XOBEH)
-        && !check_nemelex_sacrificing_item_type(*this)
-        || flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
+    if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
         || item_needs_autopickup(*this)
         || item_is_stationary(*this))
     {

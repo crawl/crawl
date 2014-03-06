@@ -4183,8 +4183,7 @@ static string _religion_help(god_type god)
     case GOD_NEMELEX_XOBEH:
         result += "You can pray to sacrifice all items on your square. "
                   "Inscribe items with !p, !* or =p to avoid sacrificing "
-                  "them accidentally. See the detailed description to "
-                  "sacrifice only some kinds of items.";
+                  "them accidentally.";
         break;
 
     case GOD_FEDHAS:
@@ -4408,17 +4407,13 @@ static void _detailed_god_description(god_type which_god)
     textcolor(LIGHTGREY);
     cprintf("\n");
 
-    string broken;
-    if (which_god != GOD_NEMELEX_XOBEH)
+    string broken = get_god_powers(which_god);
+    if (!broken.empty())
     {
-        broken = get_god_powers(which_god);
-        if (!broken.empty())
-        {
-            linebreak_string(broken, width);
-            display_tagged_block(broken);
-            cprintf("\n");
-            cprintf("\n");
-        }
+        linebreak_string(broken, width);
+        display_tagged_block(broken);
+        cprintf("\n");
+        cprintf("\n");
     }
 
     if (which_god != GOD_XOM)
@@ -4467,43 +4462,9 @@ static void _detailed_god_description(god_type which_god)
                          "item), or with <w>!D</w> (causes item to be ignored "
                          "in sacrifices)."
                          "\n\n"
-                         "Nemelex Xobeh gifts various types of decks of cards. "
-                         "Each deck type comes in three power levels: plain, "
-                         "ornate, legendary. The latter contain very powerful "
-                         "card effects, potentially hazardous. High piety and "
-                         "Evocations skill help here, as the power of Nemelex's "
-                         "abilities is governed by Evocations instead of "
-                         "Invocations. The type of the deck gifts strongly "
-                         "depends on the dominating item class sacrificed. "
-                         "Press a letter now to toggle a class:\n";
-
-                for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
-                {
-                    const bool active = you.nemelex_sacrificing[i];
-                    string desc = "";
-                    switch (i)
-                    {
-                    case NEM_GIFT_ESCAPE:
-                        desc = "decks of Escape      -- armour";
-                        break;
-                    case NEM_GIFT_DESTRUCTION:
-                        desc = "decks of Destruction -- weapons and ammunition";
-                        break;
-                    case NEM_GIFT_SUMMONING:
-                        desc = "decks of Summoning   -- corpses, chunks, blood";
-                        break;
-                    case NEM_GIFT_WONDERS:
-                        desc = "decks of Wonders     -- Other items: food, potions, "
-                                                    "scrolls, wands, jewellery, books, "
-                                                    "miscellaneous items";
-                        break;
-                    }
-                    broken += make_stringf(" <white>%c</white> %s%s%s\n",
-                                           'a' + (char) i,
-                                           active ? "+ " : "- <darkgrey>",
-                                           desc.c_str(),
-                                           active ? "" : "</darkgrey>");
-                }
+                         "The power of Nemelex Xobeh's abilities and of the "
+                         "cards' effects is governed by Evocations skill "
+                         "instead of Invocations.";
             }
         break;
         case GOD_ASHENZARI:
@@ -4536,14 +4497,7 @@ static void _detailed_god_description(god_type which_god)
     mouse_control mc(MOUSE_MODE_MORE);
 
     const int keyin = getchm();
-    if (you_worship(GOD_NEMELEX_XOBEH)
-        && keyin >= 'a' && keyin < 'a' + (char) NUM_NEMELEX_GIFT_TYPES)
-    {
-        const int num = keyin - 'a';
-        you.nemelex_sacrificing.set(num, !you.nemelex_sacrificing[num]);
-        _detailed_god_description(which_god);
-    }
-    else if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
+    if (keyin == '!' || keyin == CK_MOUSE_CMD || keyin == '^')
         describe_god(which_god, true);
 }
 
