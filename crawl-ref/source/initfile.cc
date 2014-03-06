@@ -200,18 +200,26 @@ weapon_type str_to_weapon(const string &str)
 {
     if (str == "shortsword" || str == "short sword")
         return WPN_SHORT_SWORD;
+    else if (str == "cutlass")
+        return WPN_CUTLASS;
     else if (str == "falchion")
         return WPN_FALCHION;
+    else if (str == "longsword" || str == "long sword")
+        return WPN_LONG_SWORD;
     else if (str == "quarterstaff" || str == "staff")
         return WPN_QUARTERSTAFF;
     else if (str == "mace")
         return WPN_MACE;
+    else if (str == "flail")
+        return WPN_FLAIL;
     else if (str == "spear")
         return WPN_SPEAR;
     else if (str == "trident")
         return WPN_TRIDENT;
-    else if (str == "hand axe" || str == "handaxe" || str == "axe")
+    else if (str == "hand axe" || str == "handaxe")
         return WPN_HAND_AXE;
+    else if (str == "war axe" || str == "waraxe")
+        return WPN_WAR_AXE;
     else if (str == "unarmed" || str == "claws")
         return WPN_UNARMED;
     else if (str == "sling")
@@ -241,18 +249,26 @@ static string _weapon_to_str(int weapon)
     {
     case WPN_SHORT_SWORD:
         return "short sword";
+    case WPN_CUTLASS:
+        return "cutlass";
     case WPN_FALCHION:
         return "falchion";
+    case WPN_LONG_SWORD:
+        return "long sword";
     case WPN_QUARTERSTAFF:
         return "quarterstaff";
     case WPN_MACE:
         return "mace";
+    case WPN_FLAIL:
+        return "flail";
     case WPN_SPEAR:
         return "spear";
     case WPN_TRIDENT:
         return "trident";
     case WPN_HAND_AXE:
         return "hand axe";
+    case WPN_WAR_AXE:
+        return "war axe";
     case WPN_UNARMED:
         return "claws";
     case WPN_SLING:
