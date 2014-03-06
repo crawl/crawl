@@ -844,6 +844,12 @@ Minor Healing spell
 
 This spell heals a small amount of damage to the caster's body.
 %%%%
+Monstrous Menagerie spell
+
+This spell summons a powerful exotic creature to the caster's aid. At high
+power, the beings which it calls will be even mightier examples of their
+species.
+%%%%
 Necromutation spell
 
 This spell first transforms the caster into a lich — a powerful skeletal
@@ -1261,11 +1267,6 @@ power into themselves.
 Summon Air Elementals spell
 
 This spell summons one or more air elementals.
-%%%%
-Summon Menagerie spell
-
-This spell summons a powerful exotic creature to the caster's aid. At high power,
-the beings which it calls will be even mightier examples of their species.
 %%%%
 Summon Butterflies spell
 
