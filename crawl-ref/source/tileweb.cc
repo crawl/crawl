@@ -867,17 +867,14 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
     {
         string name = next.name(DESC_A, true, false, true);
         if (force_full || current.name(DESC_A, true, false, true) != name)
-        {
             json_write_string("name", name);
 
-            const string current_prefix = item_prefix(current);
-            const string prefix = item_prefix(next);
-
-            const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
-            const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
-            if (force_full || current_prefcol != prefcol)
-                json_write_int("col", prefcol);
-        }
+        const string current_prefix = item_prefix(current);
+        const string prefix = item_prefix(next);
+        const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);
+        const int prefcol = menu_colour(next.name(DESC_INVENTORY), prefix);
+        if (force_full || current_prefcol != prefcol)
+            json_write_int("col", prefcol);
 
         tileidx_t tile = tileidx_item(next);
         if (force_full || tileidx_item(current) != tile)
