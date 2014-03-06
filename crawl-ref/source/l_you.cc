@@ -137,6 +137,7 @@ LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
 LUARET1(you_exhausted, boolean, you.duration[DUR_EXHAUSTED])
 LUARET1(you_teleporting, boolean, you.duration[DUR_TELEPORT])
 LUARET1(you_anchored, boolean, you.duration[DUR_DIMENSION_ANCHOR])
+LUARET1(you_rooted, boolean, you.duration[DUR_GRASPING_ROOTS])
 LUARET1(you_poisoned, boolean, you.duration[DUR_POISONING])
 LUARET1(you_invisible, boolean, you.duration[DUR_INVIS])
 LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
@@ -482,6 +483,7 @@ static const struct luaL_reg you_clib[] =
     { "exhausted",    you_exhausted },
     { "teleporting",  you_teleporting },
     { "anchored",     you_anchored },
+    { "rooted",       you_rooted },
     { "poisoned",     you_poisoned },
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
