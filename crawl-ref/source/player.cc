@@ -5233,10 +5233,8 @@ void reduce_player_poison(int amount)
         you.duration[DUR_POISONING] = 0;
         you.props.erase("poisoner");
         you.props.erase("poison_aux");
+        mprf(MSGCH_RECOVERY, "You are no longer poisoned.");
     }
-
-    if (!you.duration[DUR_POISONING])
-         mprf(MSGCH_RECOVERY, "The poison has left your system.");
 
     you.redraw_hit_points = true;
 }
