@@ -3741,7 +3741,7 @@ bool _jump_player(int jump_range)
 {
     coord_def landing;
     direction_chooser_args args;
-    targetter_jump tgt(&you, jump_range);
+    targetter_jump tgt(&you, dist_range(jump_range));
     dist jdirect;
 
     args.restricts = DIR_JUMP;
