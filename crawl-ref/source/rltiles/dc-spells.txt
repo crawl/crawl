@@ -142,6 +142,11 @@ summon_small_mammal SUMMON_SMALL_MAMMAL
 summon_lightning_spire SUMMON_LIGHTNING_SPIRE
 summon_guardian_golem SUMMON_GUARDIAN_GOLEM
 summon_forest SUMMON_FOREST
+monstrous_menagerie MONSTROUS_MENAGERIE
+summon_mana_viper SUMMON_MANA_VIPER
+forceful_dismissal FORCEFUL_DISMISSAL
+%sdir misc
+error SPELLFORGED_SERVITOR
 
 %sdir gui/spells/translocation
 apportation APPORTATION
