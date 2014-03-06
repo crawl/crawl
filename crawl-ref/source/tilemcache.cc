@@ -139,7 +139,14 @@ unsigned int mcache_manager::register_monster(const monster_info& minf)
 
     mcache_entry *entry;
 
-    if (mcache_demon::valid(minf))
+    if (minf.props.exists("monster_tile"))
+    {
+        if (mcache_monster::valid(minf))
+            entry = new mcache_monster(minf);
+        else
+            return 0;
+    }
+    else if (mcache_demon::valid(minf))
         entry = new mcache_demon(minf);
     else if (mcache_ghost::valid(minf))
         entry = new mcache_ghost(minf);
