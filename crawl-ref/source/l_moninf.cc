@@ -131,7 +131,7 @@ LUAFN(moninf_get_stabbability)
 LUAFN(moninf_get_is_caught)
 {
     MONINF(ls, 1, mi);
-    lua_pushboolean(ls, mi->is(MB_CAUGHT));
+    lua_pushboolean(ls, mi->is(MB_CAUGHT) || mi->is(MB_WEBBED));
     return 1;
 }
 
