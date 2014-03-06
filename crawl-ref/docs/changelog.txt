@@ -58,7 +58,9 @@ Character
   backgrounds can recommend species that don't necessarily recommend that
   background and vice versa (e.g. CK -> Tr may be recommended whereas Tr -> CK
   is not).
-* Poison damage is now determinstic.
+* Poison damage is now deterministic.
+* The antennae mutation gives invisible monster indicators for every invisible
+  enemy in LOS.
 
 Monsters
 --------
@@ -105,6 +107,9 @@ Monsters
       version of Ignite Poison, and Iskenderun's Mystic Blast;
     - Salamander firebrands, whose attacks cause a ring of flames to appear
       around the target.
+    - Octopode crushers, who can throw both the victims they constrict as well
+      as icicles.
+
 * A new set of enemies based on demonspawn, appearing in Pan.
     - Base types:
         - monstrous (auxiliary attacks and more HP);
@@ -169,6 +174,8 @@ Monsters
 * Antaeus gains Flash Freeze, an ice conjuration which impedes the target's
   movement for three turns.
 * Lamia has been de-throned.
+* Player ghosts can retain and cast dazzling spray, which has a chance to cause
+  a confusion effect against the player.
 
 Spells
 ------
@@ -407,6 +414,8 @@ Interface
   those actions are slower or faster than its normal speed.
 * arena_delay, which controls the speed of arena play and animations, is now
   available outside of arena mode as view_delay.
+* Monsters get invisible monster indicators for one turn after they become
+  invisible to the player.
 
 Stone Soup 0.13 (20131011)
 --------------------------
