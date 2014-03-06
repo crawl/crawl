@@ -600,7 +600,7 @@ float species_apt_factor(skill_type sk, species_type sp)
     return _apt_to_factor(species_apt(sk, sp));
 }
 
-static vector<skill_type> _get_crosstrain_skills(skill_type sk)
+vector<skill_type> get_crosstrain_skills(skill_type sk)
 {
     vector<skill_type> ret;
 
@@ -633,14 +633,11 @@ static vector<skill_type> _get_crosstrain_skills(skill_type sk)
     }
 }
 
-// This threshold is in tenths of a skill point.
-#define CROSSTRAIN_THRESHOLD 1
-
 float crosstrain_bonus(skill_type sk)
 {
     int bonus = 1;
 
-    vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+    vector<skill_type> crosstrain_skills = get_crosstrain_skills(sk);
 
     for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
         if (you.skill(crosstrain_skills[i], 10, true)
@@ -652,22 +649,7 @@ float crosstrain_bonus(skill_type sk)
     return bonus;
 }
 
-bool crosstrain_other(skill_type sk, bool show_zero)
-{
-    vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
-
-    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
-        if (you.skill(crosstrain_skills[i], 10, true)
-            <= you.skill(sk, 10, true) - CROSSTRAIN_THRESHOLD
-           && (you.skills[crosstrain_skills[i]] > 0 || show_zero))
-        {
-            return true;
-        }
-
-    return false;
-}
-
-static skill_type _get_opposite(skill_type sk)
+skill_type opposite_skill(skill_type sk)
 {
     switch (sk)
     {
@@ -681,7 +663,7 @@ static skill_type _get_opposite(skill_type sk)
 
 static int _skill_elemental_preference(skill_type sk, int scale)
 {
-    const skill_type sk2 = _get_opposite(sk);
+    const skill_type sk2 = opposite_skill(sk);
     if (sk2 == SK_NONE)
         return 0;
     return you.skill(sk, scale) - you.skill(sk2, scale);
@@ -706,7 +688,7 @@ int elemental_preference(spell_type spell, int scale)
  * @param sk2 Second skill.
  * @return Whether first skill is higher than second skill.
  */
-static bool _compare_skills(skill_type sk1, skill_type sk2)
+bool compare_skills(skill_type sk1, skill_type sk2)
 {
     if (is_invalid_skill(sk1))
         return false;
@@ -720,21 +702,11 @@ static bool _compare_skills(skill_type sk1, skill_type sk2)
 
 bool is_antitrained(skill_type sk)
 {
-    skill_type opposite = _get_opposite(sk);
+    skill_type opposite = opposite_skill(sk);
     if (opposite == SK_NONE || you.skills[sk] >= 27)
         return false;
 
-    return _compare_skills(opposite, sk) && you.skills[opposite];
-}
-
-bool antitrain_other(skill_type sk, bool show_zero)
-{
-    skill_type opposite = _get_opposite(sk);
-    if (opposite == SK_NONE)
-        return false;
-
-    return (you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
-           && you.skills[opposite] < 27 && _compare_skills(sk, opposite);
+    return compare_skills(opposite, sk) && you.skills[opposite];
 }
 
 void dump_skills(string &text)

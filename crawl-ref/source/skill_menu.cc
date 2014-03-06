@@ -328,13 +328,39 @@ string SkillMenuEntry::get_prefix()
 #endif
 }
 
+static bool _crosstrain_other(skill_type sk, skill_menu_state state)
+{
+    vector<skill_type> crosstrain_skills = get_crosstrain_skills(sk);
+
+    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
+    {
+        if (you.skill(crosstrain_skills[i], 10, true)
+            <= you.skill(sk, 10, true) - CROSSTRAIN_THRESHOLD
+           && _show_skill(crosstrain_skills[i], state))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static bool _antitrain_other(skill_type sk, skill_menu_state state)
+{
+    skill_type opposite = opposite_skill(sk);
+    if (opposite == SK_NONE)
+        return false;
+
+    return _show_skill(opposite, state) && you.skills[sk] > 0
+           && you.skills[opposite] < 27 && compare_skills(sk, opposite);
+}
+
 void SkillMenuEntry::set_aptitude()
 {
     string text = "<white>";
 
     const bool manual = skill_has_manual(m_sk);
     const int apt = species_apt(m_sk, you.species);
-    const bool show_all = skm.get_state(SKM_SHOW) == SKM_SHOW_ALL;
 
     // Crosstraining + manuals aptitude bonus.
     int ct_bonus = manual ? 4 : 0;
@@ -349,12 +375,12 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</white>";
 
-    if (antitrain_other(m_sk, show_all))
+    if (_antitrain_other(m_sk, skm.get_state(SKM_SHOW)))
     {
         skm.set_flag(SKMF_ANTITRAIN);
         text += "<red>*</red>";
     }
-    else if (crosstrain_other(m_sk, show_all))
+    else if (_crosstrain_other(m_sk, skm.get_state(SKM_SHOW)))
     {
         skm.set_flag(SKMF_CROSSTRAIN);
         text += "<green>*</green>";
