@@ -195,11 +195,14 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
 
         if (revert_colour)
         {
-            if (colour_stack.size() > 1)
+            const int endcolour = get_colour(tagtext);
+
+            if (colour_stack.size() > 1 && endcolour == colour_stack.back())
                 colour_stack.pop_back();
             else
             {
-                // If we have an extra tag, display it as a warning.
+                // If this was the only tag, or the colour didn't match
+                // the one we are popping, display the tag as a warning.
                 fs.textcolor(LIGHTRED);
                 fs.cprintf("</%s>", tagtext.c_str());
             }
