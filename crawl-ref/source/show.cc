@@ -365,12 +365,17 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
  * (showing up as a disturbance in the air).  Also flags the square as
  * updated for invisible monster, which is used by show_init().
  *
- * @param where    The disturbance's map position.
+ * @param where          The disturbance's map position.
+ * @param do_tiles_draw  Trigger a tiles draw of this cell.
 **/
-static void _mark_invisible_at(const coord_def &where)
+static void _mark_invisible_at(const coord_def &where,
+                               bool do_tiles_draw = false)
 {
     env.map_knowledge(where).set_invisible_monster();
     env.map_knowledge(where).flags |= MAP_INVISIBLE_UPDATE;
+
+    if (do_tiles_draw)
+        show_update_at(where);
 }
 
 // Monsters that transition from seen to unseen in the last turn get marked as
@@ -382,6 +387,7 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
     if(mons->unseen_pos.origin())
         return;
 
+
     // We expire these unseen invis markers after one turn.
     if (you.turn_is_over && !mons->went_unseen_this_turn)
     {
@@ -389,29 +395,28 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
         return;
     }
 
+    bool do_tiles_draw;
     // Try to use the original position where the monster became unseen.
     if (_valid_invisible_spot(mons->unseen_pos, mons))
     {
-        _mark_invisible_at(mons->unseen_pos);
+        do_tiles_draw = mons->unseen_pos != mons->pos();
+        _mark_invisible_at(mons->unseen_pos, do_tiles_draw);
         return;
     }
 
     // Fall back to a random position adjacent to the unseen position.
     vector <coord_def> adj_unseen;
-    for (adjacent_iterator ai(mons->unseen_pos); ai; ai++)
+    for (adjacent_iterator ai(mons->unseen_pos, false); ai; ai++)
     {
         if (_valid_invisible_spot(*ai, mons))
             adj_unseen.push_back(*ai);
     }
     if (adj_unseen.size())
     {
-        _mark_invisible_at(adj_unseen[_hashed_rand(mons, hash_ind,
-                                                   adj_unseen.size())]);
-    }
-    // Try to mark the monster's true position if the above failed.
-    else if (_valid_invisible_spot(mons->pos(), mons))
-    {
-        _mark_invisible_at(mons->pos());
+        coord_def new_pos = adj_unseen[_hashed_rand(mons, hash_ind,
+                                                    adj_unseen.size())];
+        do_tiles_draw = mons->unseen_pos != mons->pos();
+        _mark_invisible_at(new_pos, do_tiles_draw);
     }
 }
 
@@ -423,8 +428,6 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
  * be upated with a disturbance if necessary.
  *
  * @param mons        The monster at the relevant location.
- * @param mark_invis  Should we always mark this monster with an invis indicator
- *                    if it's invisible?
 **/
 static void _update_monster(monster* mons)
 {
@@ -512,7 +515,8 @@ static void _update_monster(monster* mons)
             if (adj_invis.size())
             {
                 _mark_invisible_at(adj_invis[_hashed_rand(mons, 4,
-                                                          adj_invis.size())]);
+                                                          adj_invis.size())],
+                                   true);
                 need_handle_unseen = false;
             }
         }
@@ -552,6 +556,13 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 
         _update_item_at(gp);
     }
+
+#ifdef USE_TILE
+    tile_draw_map_cell(gp, true);
+#endif
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(gp);
+#endif
 }
 
 void show_init(bool terrain_only)
@@ -560,10 +571,13 @@ void show_init(bool terrain_only)
     if (crawl_state.game_is_arena())
     {
         for (rectangle_iterator ri(crawl_view.vgrdc, LOS_MAX_RANGE); ri; ++ri)
+        {
             show_update_at(*ri, terrain_only);
+            // Invis indicators and update flags not used in Arena.
+            env.map_knowledge(*ri).flags &= ~MAP_INVISIBLE_UPDATE;
+        }
         return;
     }
-
 
     vector <coord_def> update_locs;
     for (radius_iterator ri(you.pos(), you.xray_vision ? LOS_NONE : LOS_DEFAULT); ri; ++ri)
@@ -572,17 +586,9 @@ void show_init(bool terrain_only)
         update_locs.push_back(*ri);
     }
 
+    // Need to clear these update flags now so they don't persist.
     for (unsigned int i = 0; i < update_locs.size(); i++)
-    {
-        // Need to clear these update flags now so they don't persist.
         env.map_knowledge(update_locs[i]).flags &= ~MAP_INVISIBLE_UPDATE;
-#ifdef USE_TILE
-        tile_draw_map_cell(update_locs[i], true);
-#endif
-#ifdef USE_TILE_WEB
-        tiles.mark_for_redraw(update_locs[i]);
-#endif
-    }
 }
 
 // Emphasis may change while off-level (precisely, after
