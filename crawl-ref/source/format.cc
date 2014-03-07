@@ -195,9 +195,14 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
 
         if (revert_colour)
         {
-            colour_stack.pop_back();
-            if (colour_stack.size() < 1)
-                die("Stack underflow in string \"%s\"", s.c_str());
+            if (colour_stack.size() > 1)
+                colour_stack.pop_back();
+            else
+            {
+                // If we have an extra tag, display it as a warning.
+                fs.textcolor(LIGHTRED);
+                fs.cprintf("</%s>", tagtext.c_str());
+            }
         }
         else
             colour_stack.push_back(get_colour(tagtext));
