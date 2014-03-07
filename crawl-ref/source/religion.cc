@@ -1143,7 +1143,7 @@ void set_penance_xp_timeout()
     you.attribute[ATTR_GOD_WRATH_XP] +=
         max(div_rand_round(exp_needed(you.experience_level + 1)
                           - exp_needed(you.experience_level),
-                          200),
+                          50),
             1);
 }
 
