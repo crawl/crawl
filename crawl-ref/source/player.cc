@@ -592,9 +592,6 @@ bool is_player_same_genus(const monster_type mon, bool transform)
     if (you.species == SP_GHOUL)
         return mons_species(mon) == MONS_GHOUL;
 
-    if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
-        return true;
-
     // Note that these are currently considered to be the same genus:
     // * humans, demigods, and demonspawn
     // * ogres and two-headed ogres
