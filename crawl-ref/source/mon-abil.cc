@@ -4003,7 +4003,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (mons->type == MONS_SIREN && !mons->has_ench(ENCH_SIREN_SONG))
                 mons->add_ench(mon_enchant(ENCH_SIREN_SONG, 0, mons, 70));
 
-            bool did_resist = false;
             if (you.can_see(mons))
             {
                 simple_monster_message(mons,
@@ -4039,8 +4038,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 && (you.check_res_magic(mons->hit_dice * 10 + 20) > 0
                     || you.clarity()))
             {
-                if (!did_resist)
-                    canned_msg(MSG_YOU_RESIST);
+                canned_msg(MSG_YOU_RESIST);
                 used = true;
                 break;
             }
