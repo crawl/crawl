@@ -1809,7 +1809,16 @@ void StashTracker::search_stashes()
     }
 
     bool sort_by_dist = true;
-    bool show_as_stacks = false;
+    bool show_as_stacks = true;
+    for (unsigned i = 0; i < results.size(); ++i)
+        if (!(results[i].matching_items.empty() && results[i].shop))
+        {
+            // Only split up stacks if at least one match is a
+            // non-shop (and split anyway in the case of a
+            // weapon shop and a search for "weapon").
+            show_as_stacks = false;
+            break;
+        }
     bool filter_useless = false;
     bool default_execute = true;
     while (true)
