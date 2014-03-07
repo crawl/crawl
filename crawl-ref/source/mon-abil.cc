@@ -3979,11 +3979,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->type != MONS_SIREN && you.berserk())
             break;
 
-        // Reduce probability because of spamminess.
-        if (you.species == SP_MERFOLK && !one_chance_in(4))
-            break;
-
-
         bool already_mesmerised = you.beheld_by(mons);
 
         if (mons->type == MONS_SIREN && already_mesmerised)
@@ -4041,8 +4036,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // Once mesmerised by a particular monster, you cannot resist
             // anymore.
             if (!already_mesmerised
-                && (you.species == SP_MERFOLK
-                    || you.check_res_magic(mons->hit_dice * 10 + 20) > 0
+                && (you.check_res_magic(mons->hit_dice * 10 + 20) > 0
                     || you.clarity()))
             {
                 if (!did_resist)
