@@ -3372,6 +3372,21 @@ void move_child_tentacles(monster* mons)
 
 void siren_song(monster* mons)
 {
+    // First, attempt to pull the player, if mesmerised
+    if (you.beheld_by(mons) && coinflip())
+    {
+        // Don't pull the player if they walked forward voluntarily this
+        // turn (to avoid making you jump two spaces at once)
+        if (!mons->props["foe_approaching"].get_bool())
+        {
+            _siren_movement_effect(mons);
+
+            // Reset foe tracking position so that we won't automatically
+            // veto pulling on a subsequent turn because you 'approached'
+            mons->props["foe_pos"].get_coord() = you.pos();
+        }
+    }
+
     // Only call up drowned souls if we're largely alone; otherwise our
     // mesmerisation can support the present allies well enough.
     int ally_hd = 0;
@@ -3981,20 +3996,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
 
         bool already_mesmerised = you.beheld_by(mons);
-
-        if (mons->type == MONS_SIREN && already_mesmerised)
-        {
-            // Don't pull the player if they walked forward voluntarily this
-            // turn (to avoid making you jump two spaces at once)
-            if (!mons->props["foe_approaching"].get_bool())
-            {
-                _siren_movement_effect(mons);
-
-                // Reset foe tracking position so that we won't automatically
-                // veto pulling on a subsequent turn because you 'approached'
-                mons->props["foe_pos"].get_coord() = you.pos();
-            }
-        }
 
         if (one_chance_in(5)
             || mons->foe == MHITYOU && !already_mesmerised && coinflip())
