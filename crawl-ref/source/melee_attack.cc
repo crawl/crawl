@@ -4942,7 +4942,7 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_DROWN:
         if (attacker->type == MONS_DROWNED_SOUL)
-            attacker->as_monster()->suicide(-10);
+            attacker->as_monster()->suicide(-1000);
 
         if (defender->res_water_drowning() <= 0)
         {
