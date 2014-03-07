@@ -3275,8 +3275,6 @@ static string _monster_stat_description(const monster_info& mi)
 {
     ostringstream result;
 
-    // Don't leak or duplicate resistance information for ghost demon
-    // monsters, except for (very) ugly things.
     resists_t resist = mi.resists();
 
     const mon_resist_flags resists[] =
