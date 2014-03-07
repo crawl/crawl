@@ -210,6 +210,7 @@ struct monster_info : public monster_info_base
             short damage;
             short ac;
             monster_type acting_part;
+            bool can_sinv;
         } ghost;
     } u;
 

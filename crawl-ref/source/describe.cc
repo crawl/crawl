@@ -3392,8 +3392,12 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " is wreathed in shadows.\n";
 
     // Seeing/sensing invisible.
-    if (mons_class_flag(mi.type, M_SEE_INVIS))
+    if (mons_class_flag(mi.type, M_SEE_INVIS)
+            || ((mons_is_pghost(mi.type) || mi.type == MONS_PANDEMONIUM_LORD)
+                && mi.u.ghost.can_sinv))
+    {
         result << uppercase_first(pronoun) << " can see invisible.\n";
+    }
     else if (mons_class_flag(mi.type, M_SENSE_INVIS))
         result << uppercase_first(pronoun) << " can sense the presence of invisible creatures.\n";
 
