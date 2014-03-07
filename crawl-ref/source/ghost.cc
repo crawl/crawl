@@ -186,7 +186,7 @@ void ghost_demon::init_random_demon()
     // Non-spellcasters get some boosts to their melee and speed instead.
     spellcaster = !one_chance_in(3);
 
-    see_invis = !one_chance_in(10);
+    see_invis = true;
 
     resists = 0;
 
