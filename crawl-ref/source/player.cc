@@ -5163,7 +5163,7 @@ void handle_player_poison(int delay)
     // quickly (you take the same total damage, but spread out over a longer
     // period of time).
     if (GOD_CHEIBRIADOS == you.religion && you.piety >= piety_breakpoint(0))
-        decrease = decrease * 2 / 3;
+        decrease = div_rand_round(decrease * 2, 3);
 
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
