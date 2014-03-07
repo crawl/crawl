@@ -748,17 +748,22 @@ void item_check(bool verbose)
 
         string out_string = "Items here: ";
         int cur_state = -1;
+        string colour = "";
         for (unsigned int i = 0; i < item_chars.size(); ++i)
         {
             const int specialness = 10 - (item_chars[i] % 0x100);
             if (specialness != cur_state)
             {
+                if (!colour.empty())
+                    out_string += "</" + colour + ">";
                 switch (specialness)
                 {
-                case 2: out_string += "<yellow>";   break; // artefact
-                case 1: out_string += "<white>";    break; // glowing/runed
-                case 0: out_string += "<darkgrey>"; break; // mundane
+                case 2: colour = "yellow";   break; // artefact
+                case 1: colour = "white";    break; // glowing/runed
+                case 0: colour = "darkgrey"; break; // mundane
                 }
+                if (!colour.empty())
+                    out_string += "<" + colour + ">";
                 cur_state = specialness;
             }
 
@@ -769,6 +774,8 @@ void item_check(bool verbose)
                 out_string += ' ';
             }
         }
+        if (!colour.empty())
+            out_string += "</" + colour + ">";
         mpr_nojoin(MSGCH_FLOOR_ITEMS, out_string);
         done_init_line = true;
     }
