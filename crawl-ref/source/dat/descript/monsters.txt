@@ -1804,8 +1804,8 @@ A huge black bat.
 %%%%
 merfolk
 
-A hybrid with the torso of a man and the tail of a fish, a merfolk dwells both
-in water and on land, and fiercely defends its domain.
+A hybrid with the torso of a human and the tail of a fish, a merfolk dwells
+both in water and on land, and fiercely defends its domain.
 %%%%
 merfolk aquamancer
 
