@@ -2579,13 +2579,24 @@ void ShoppingListMenu::draw_title()
 #ifdef USE_TILE_WEB
         webtiles_set_title(fs);
 #endif
+        string s = "<lightgrey>  [<w>a-z</w>] ";
 
-        const char *verb = menu_action == ACT_EXECUTE ? "travel" :
-                           menu_action == ACT_EXAMINE ? "examine" :
-                                                        "delete";
-        draw_title_suffix(formatted_string::parse_string(make_stringf(
-            "<lightgrey>  [<w>a-z</w>: %-8s <w>?</w>/<w>!</w>: change action]",
-            verb)), false);
+        switch (menu_action)
+        {
+        case ACT_EXECUTE:
+            s += "<w>travel</w>|examine|delete";
+            break;
+        case ACT_EXAMINE:
+            s += "travel|<w>examine</w>|delete";
+            break;
+        default:
+            s += "travel|examine|<w>delete</w>";
+            break;
+        }
+
+        s += "  [<w>?</w>/<w>!</w>] change action</lightgrey>";
+
+        draw_title_suffix(formatted_string::parse_string(s), false);
     }
 }
 
