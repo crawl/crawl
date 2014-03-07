@@ -364,7 +364,7 @@ static int _player_ghost_base_movement_speed()
         speed -= slow + 1;
 
     if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
-        speed += 2;
+        speed += 1;
 
     // Cap speeds.
     if (speed < MIN_GHOST_SPEED)
