@@ -39,7 +39,7 @@ define(["jquery", "./enums"], function ($, enums) {
         if (cell.t)
         {
             cell.t.bg = enums.prepare_bg_flags(cell.t.bg || 0);
-            return !cell.t.bg.UNSEEN;
+            return !cell.t.bg.UNSEEN && !cell.t.bg.MM_UNSEEN;
         }
         return false;
     }
