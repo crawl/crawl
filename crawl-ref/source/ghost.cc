@@ -184,7 +184,7 @@ void ghost_demon::init_random_demon()
 
     // Is demon a spellcaster?
     // Non-spellcasters get some boosts to their melee and speed instead.
-    spellcaster = !one_chance_in(3);
+    spellcaster = !one_chance_in(4);
 
     see_invis = true;
 
