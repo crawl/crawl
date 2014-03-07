@@ -3417,7 +3417,7 @@ void siren_song(monster* mons)
             mprf("Shadowy forms rise from the deep at %s song!",
                  mons->name(DESC_ITS).c_str());
         }
-        else if (song_count > 4 && coinflip())
+        else if (song_count > 4 && x_chance_in_y(2, 3))
         {
             int num = 1 + x_chance_in_y(song_count, song_count + 25);
             shuffle_array(deep_water);

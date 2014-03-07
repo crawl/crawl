@@ -382,7 +382,8 @@ bool melee_attack::handle_phase_attempted()
     }
     else if (attacker->is_monster()
              && mons_class_flag(attacker->type, M_STABBER)
-             && defender && defender->asleep())
+             && defender && defender->asleep()
+             || attacker->type == MONS_DROWNED_SOUL)
     {
         to_hit = AUTOMATIC_HIT;
     }
