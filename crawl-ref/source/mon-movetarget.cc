@@ -307,21 +307,40 @@ bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
     return false;
 }
 
-// Counts deep water twice (and reports if any is found).
-static int _count_water_neighbours(coord_def p, bool& deep)
+// Assesses how desirable a spot is to a siren (preferring spaces surrounded
+// by water, at least one of which is deep, and with at least one neighbour
+// which is inhabitable without swimming or flight)
+static int _siren_water_score(coord_def p, bool& deep)
 {
-    int water_count = 0;
+    int score = 0;
+    bool near_floor = false;
+    deep = false;
+
     for (adjacent_iterator ai(p); ai; ++ai)
     {
         if (grd(*ai) == DNGN_SHALLOW_WATER)
-            water_count++;
+        {
+            score++;
+            near_floor = true;
+        }
         else if (grd(*ai) == DNGN_DEEP_WATER)
         {
-            water_count += 2;
+            score++;
             deep = true;
         }
+        else if (feat_has_solid_floor(grd(*ai)))
+            near_floor = true;
     }
-    return water_count;
+
+    // Greatly prefer at least one tile of neighbouring deep water
+    if (deep)
+        score += 6;
+
+    // Slightly prefer standing in deep water, if possible
+    if (grd(p) == DNGN_DEEP_WATER)
+        score++;
+
+    return score;
 }
 
 // Pick the nearest water grid that is surrounded by the most
@@ -339,8 +358,10 @@ bool find_siren_water_target(monster* mon)
 
     bool deep;
 
-    // Already completely surrounded by deep water.
-    if (_count_water_neighbours(mon->pos(), deep) >= 16)
+    // If our current location is good enough, don't bother moving towards
+    // some other spot which might be somewhat better
+    if (_siren_water_score(mon->pos(), deep) >= 12 && deep
+        && grd(mon->pos()) == DNGN_DEEP_WATER)
     {
         mon->firing_pos = mon->pos();
         return true;
@@ -378,7 +399,7 @@ bool find_siren_water_target(monster* mon)
                 continue;
 
             // Counts deep water twice.
-            const int water_count = _count_water_neighbours(*ri, deep);
+            const int water_count = _siren_water_score(*ri, deep);
             if (water_count < best_water_count)
                 continue;
 
