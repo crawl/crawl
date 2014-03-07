@@ -1866,6 +1866,12 @@ int monster_die(monster* mons, killer_type killer,
         }
         silent = true;
     }
+    else if (mons->type == MONS_DROWNED_SOUL)
+    {
+        // Suppress death message if 'killed' by touching something
+        if (mons->hit_points == -1000)
+            silent = true;
+    }
 
     const bool death_message = !silent && !did_death_message
                                && mons_near(mons)
