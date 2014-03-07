@@ -5205,7 +5205,7 @@ void handle_player_poison(int delay)
         adj = "very ";
     }
 
-    if (do_dmg)
+    if (do_dmg && dmg > 0)
     {
         int oldhp = you.hp;
         ouch(dmg, NON_MONSTER, KILLED_BY_POISON);
