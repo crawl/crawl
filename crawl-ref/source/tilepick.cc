@@ -668,7 +668,8 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_BEE:
         return TILEP_MONS_SPECTRAL_BEE;
     case TILEP_MONS_ZOMBIE_BEETLE:
-        return TILEP_MONS_SPECTRAL_BEETLE;
+    case TILEP_MONS_ZOMBIE_BUG:
+        return TILEP_MONS_SPECTRAL_BUG;
     case TILEP_MONS_ZOMBIE_FISH:
         return TILEP_MONS_SPECTRAL_FISH;
     case TILEP_MONS_ZOMBIE_CENTAUR:
@@ -723,7 +724,8 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_BEE:
         return TILEP_MONS_SIMULACRUM_BEE;
     case TILEP_MONS_ZOMBIE_BEETLE:
-        return TILEP_MONS_SIMULACRUM_BEETLE;
+    case TILEP_MONS_ZOMBIE_BUG:
+        return TILEP_MONS_SIMULACRUM_BUG;
     case TILEP_MONS_ZOMBIE_FISH:
         return TILEP_MONS_SIMULACRUM_FISH;
     case TILEP_MONS_ZOMBIE_CENTAUR:
@@ -768,6 +770,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     case TILEP_MONS_ZOMBIE_RAT:
     case TILEP_MONS_ZOMBIE_HOUND:
     case TILEP_MONS_ZOMBIE_BEETLE:
+    case TILEP_MONS_ZOMBIE_BUG:
         return TILEP_MONS_SKELETON_QUADRUPED_SMALL;
     case TILEP_MONS_ZOMBIE_LIZARD:
     case TILEP_MONS_ZOMBIE_CRAB:
@@ -932,7 +935,10 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         break;
     case MON_SHAPE_CENTIPEDE:
     case MON_SHAPE_INSECT:
-        z_tile = TILEP_MONS_ZOMBIE_BEETLE;
+        if (mons_genus(subtype) == MONS_GOLIATH_BEETLE)
+            z_tile = TILEP_MONS_ZOMBIE_BEETLE;
+        else
+            z_tile = TILEP_MONS_ZOMBIE_BUG;
         break;
     case MON_SHAPE_INSECT_WINGED:
         z_tile = TILEP_MONS_ZOMBIE_BEE;

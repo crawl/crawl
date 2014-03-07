@@ -8,7 +8,8 @@ zombie_ogre MONS_ZOMBIE_OGRE
 zombie_toad MONS_ZOMBIE_TOAD
 zombie_bat MONS_ZOMBIE_BAT
 zombie_bee MONS_ZOMBIE_BEE
-zombie_bug MONS_ZOMBIE_BEETLE
+zombie_beetle MONS_ZOMBIE_BEETLE
+zombie_bug MONS_ZOMBIE_BUG
 zombie_rat MONS_ZOMBIE_RAT
 zombie_hound MONS_ZOMBIE_HOUND
 zombie_fish MONS_ZOMBIE_FISH
@@ -71,7 +72,7 @@ simulacrum_quadruped_small MONS_SIMULACRUM_QUADRUPED_SMALL
 simulacrum_quadruped_large MONS_SIMULACRUM_QUADRUPED_LARGE
 simulacrum_bat MONS_SIMULACRUM_BAT
 simulacrum_bee MONS_SIMULACRUM_BEE
-simulacrum_ant MONS_SIMULACRUM_BEETLE
+simulacrum_ant MONS_SIMULACRUM_BUG
 simulacrum_fish MONS_SIMULACRUM_FISH
 simulacrum_centaur MONS_SIMULACRUM_CENTAUR
 simulacrum_naga MONS_SIMULACRUM_NAGA
@@ -96,7 +97,7 @@ spectral_quadruped_large MONS_SPECTRAL_QUADRUPED_LARGE
 spectral_toad MONS_SPECTRAL_TOAD
 spectral_bat MONS_SPECTRAL_BAT
 spectral_bee MONS_SPECTRAL_BEE
-spectral_ant MONS_SPECTRAL_BEETLE
+spectral_ant MONS_SPECTRAL_BUG
 spectral_fish MONS_SPECTRAL_FISH
 spectral_centaur MONS_SPECTRAL_CENTAUR
 spectral_naga MONS_SPECTRAL_NAGA
