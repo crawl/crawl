@@ -463,9 +463,7 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
     ice_beast.hd = (3 + div_rand_round(pow, 13));
 
     if (create_monster(ice_beast))
-    {
         mpr("A chill wind blows around you.");
-    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 

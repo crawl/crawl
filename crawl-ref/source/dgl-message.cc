@@ -36,8 +36,10 @@ static void _show_message_line(string line)
         fs.cprintf("%s", line.c_str());
         formatted_mpr(fs, MSGCH_PLAIN, 0);
         if (Options.note_dgl_messages)
+        {
             take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0,
                            (sender + ": " + line).c_str()));
+        }
     }
 }
 
