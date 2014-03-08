@@ -2118,8 +2118,8 @@
       {
        SPELL_VENOM_BOLT,
        SPELL_POISON_ARROW,
-       SPELL_CANTRIP,
-       SPELL_STONE_ARROW,
+       SPELL_NO_SPELL,
+       SPELL_IGNITE_POISON_SINGLE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
       }
