@@ -871,15 +871,19 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
-    case SPELL_IOOD: // tracer only
+    case SPELL_IOOD:                  // tracer only
     case SPELL_LEGENDARY_DESTRUCTION: // ditto
-    case SPELL_CLOUD_CONE: // for noise generation purposes
+    case SPELL_LRD:                   // for noise generation purposes
+    case SPELL_PORTAL_PROJECTILE:     // ditto
+    case SPELL_GLACIATE:              // ditto
+    case SPELL_CLOUD_CONE:            // ditto
         beam.flavour  = BEAM_NUKE;
         beam.is_beam  = true;
         // Doesn't take distance into account, but this is just a tracer so
         // we'll ignore that.  We need some damage on the tracer so the monster
         // doesn't think the spell is useless against other monsters.
         beam.damage   = dice_def(42, 1);
+        beam.range    = LOS_RADIUS;
         break;
 
     case SPELL_SUNRAY:
@@ -1232,7 +1236,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEATHS_DOOR:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OZOCUBUS_REFRIGERATION:
-    case SPELL_LRD:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_SHATTER:
     case SPELL_FRENZY:
@@ -1258,7 +1261,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_VERMIN:
     case SPELL_TORNADO:
     case SPELL_DISCHARGE:
-    case SPELL_PORTAL_PROJECTILE:
     case SPELL_IGNITE_POISON:
     case SPELL_EPHEMERAL_INFUSION:
     case SPELL_FORCEFUL_INVITATION:
@@ -1269,7 +1271,6 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_REARRANGE_PIECES:
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_SHROUD_OF_GOLUBRIA:
-    case SPELL_GLACIATE:
         return true;
     default:
         if (check_validity)
@@ -1294,17 +1295,24 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     // Your shadow can target these spells at other monsters;
     // other monsters can't.
-    if (mons->mid != MID_PLAYER
-        && (spell_cast == SPELL_HASTE
+    if (mons->mid != MID_PLAYER)
+    {
+        if (spell_cast == SPELL_HASTE
             || spell_cast == SPELL_MIGHT
             || spell_cast == SPELL_INVISIBILITY
             || spell_cast == SPELL_MINOR_HEALING
             || spell_cast == SPELL_TELEPORT_SELF
             || spell_cast == SPELL_SILENCE
-            || spell_cast == SPELL_FRENZY))
-    {
-        pbolt.target = mons->pos();
-    }
+            || spell_cast == SPELL_FRENZY)
+        {
+            pbolt.target = mons->pos();
+        }
+        else if (spell_cast == SPELL_LRD)
+        {
+            pbolt.target = _mons_fragment_target(mons);
+            pbolt.aimed_at_spot = true; // to get noise to work properly
+        }
+     }
 
     return true;
 }
@@ -3167,7 +3175,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // See if we have a good spot to cast LRD at.
         else if (spell_cast == SPELL_LRD)
         {
-            if (!in_bounds(_mons_fragment_target(mons)))
+            if (!in_bounds(beem.target))
                 return false;
         }
         // Try to cast Shatter; if nothing happened, pretend we didn't cast it.
@@ -5056,11 +5064,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_LRD:
     {
-        const coord_def target = _mons_fragment_target(mons);
-        if (in_bounds(target))
-           cast_fragmentation(6 * mons->spell_hd(spell_cast), mons, target, false);
+        if (in_bounds(pbolt.target))
+        {
+           cast_fragmentation(6 * mons->spell_hd(spell_cast), mons,
+                              pbolt.target, false);
+        }
         else if (you.can_see(mons))
-           canned_msg(MSG_NOTHING_HAPPENS);
+            canned_msg(MSG_NOTHING_HAPPENS);
 
         return;
     }
@@ -6113,7 +6123,7 @@ static void _noise_fill_target(string& targ_prep, string& target,
     // been applied because the target is invisible.
     if (target == "nothing")
     {
-        if (pbolt.aimed_at_spot)
+        if (pbolt.aimed_at_spot || pbolt.origin_spell == SPELL_DIG)
         {
             int count = 0;
             for (adjacent_iterator ai(pbolt.target); ai; ++ai)
@@ -6130,6 +6140,20 @@ static void _noise_fill_target(string& targ_prep, string& target,
                         break;
                 }
             }
+
+            if (targ_prep == "at")
+            {
+                if (grd(pbolt.target) != DNGN_FLOOR)
+                {
+                    target = feature_description(grd(pbolt.target),
+                                                 NUM_TRAPS, "", DESC_THE,
+                                                 false);
+                }
+                else
+                    target = "thin air";
+            }
+
+            return;
         }
 
         bool mons_targ_aligned = false;
@@ -6295,12 +6319,7 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     const bool targeted = (flags & SPFLAG_TARGETING_MASK)
                            && (pbolt.target != mons->pos()
-                               || pbolt.visible())
-                           // ugh. --Grunt
-                           && (actual_spell != SPELL_LRD)
-                           && (actual_spell != SPELL_PORTAL_PROJECTILE)
-                           && (actual_spell != SPELL_GLACIATE)
-                           && (actual_spell != SPELL_DAZZLING_SPRAY);
+                               || pbolt.visible());
 
     vector<string> key_list;
     unsigned int num_spell_keys =
