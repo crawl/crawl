@@ -1887,9 +1887,7 @@ static void _give_shield(monster* mon, int level)
 
     case MONS_DEEP_ELF_FIGHTER:
         if (one_chance_in(6))
-        {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER, level);
-        }
         break;
 
     case MONS_MINOTAUR:

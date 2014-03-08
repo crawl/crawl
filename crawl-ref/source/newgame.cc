@@ -1667,16 +1667,12 @@ static vector<weapon_choice> _get_weapons(const newgame_def* ng)
             case WPN_SHORT_SWORD:
                 // Fighters and gladiators get cutlasses.
                 if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
-                {
                     wp.first = WPN_CUTLASS;
-                }
                 break;
             case WPN_MACE:
                 // Fighters and gladiators get flails.
                 if (ng->job == JOB_GLADIATOR || ng->job == JOB_FIGHTER)
-                {
                     wp.first = WPN_FLAIL;
-                }
                 break;
             case WPN_HAND_AXE:
                 // Non-little fighters and gladiators get war axes.

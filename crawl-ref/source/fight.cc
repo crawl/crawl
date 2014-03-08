@@ -421,9 +421,7 @@ stab_type find_stab_type(const actor *attacker,
     // the attacker can't see (either due to invisibility or being behind
     // opaque clouds).
     if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
-    {
         return unchivalric;
-    }
 
     // Distracted (but not batty); this only applies to players.
     if (attacker && attacker->is_player()
@@ -438,9 +436,7 @@ stab_type find_stab_type(const actor *attacker,
 
     // allies
     if (def && def->friendly())
-    {
         unchivalric = STAB_ALLY;
-    }
 
     // fleeing
     if (def && mons_is_fleeing(def))

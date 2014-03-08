@@ -1141,7 +1141,7 @@ bool ghost_demon::populate_servitor_spells(spell_type* spell_list, bool primary,
         }
     }
 
-    return (candidates.size() > 0);
+    return candidates.size() > 0;
 }
 
 void ghost_demon::init_spellforged_servitor()
