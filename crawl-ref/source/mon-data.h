@@ -1160,7 +1160,7 @@ static monsterentry mondata[] =
 {
     MONS_SPRIGGAN_DRUID, 'i', GREEN, "spriggan druid",
     M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS | M_SPELLCASTER | M_ACTUAL_SPELLS,
-    MR_NO_FLAGS,
+    MR_RES_POISON,
     200, 10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, -7,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 2, 2, 0 },
