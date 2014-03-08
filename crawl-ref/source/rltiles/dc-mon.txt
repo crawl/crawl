@@ -37,9 +37,11 @@ worker_ant MONS_WORKER_ANT
 soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
 %sdir mon
+%rim 0
 formicid MONS_FORMICID
 formicid_venom_mage MONS_FORMICID_VENOM_MAGE
 %sdir mon/animals
+%rim 1
 
 ## Batty monsters ('b')
 bat MONS_BAT
@@ -280,7 +282,9 @@ lurking_horror MONS_LURKING_HORROR
 starcursed_mass MONS_STARCURSED_MASS
 tentacled_starspawn MONS_TENTACLED_STARSPAWN
 thrashing_horror MONS_THRASHING_HORROR
+%rim 0
 worldbinder MONS_WORLDBINDER
+%rim 1
 wretched_star MONS_WRETCHED_STAR
 
 ### Demonic monsters
