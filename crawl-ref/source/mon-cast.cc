@@ -31,6 +31,7 @@
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mon-pathfind.h"
 #include "mon-pick.h"
 #include "mon-place.h"
 #include "mon-project.h"
@@ -1481,7 +1482,8 @@ static bool _valid_druids_call_target(const monster* caller, const monster* call
            && !callee->is_shapeshifter()
            && !caller->see_cell(callee->pos())
            && mons_habitat(callee) != HT_WATER
-           && mons_habitat(callee) != HT_LAVA;
+           && mons_habitat(callee) != HT_LAVA
+           && !callee->is_travelling();
 }
 
 // If true, this monster's spellcasting should respect the breath timer.
@@ -2347,6 +2349,59 @@ static bool _awaken_vines(monster* mon, bool test_only = false)
     }
 }
 
+static bool _place_druids_call_beast(const monster* druid, monster* beast,
+                                     const actor* target)
+{
+    for (int t = 0; t < 20; ++t)
+    {
+        // Attempt to find some random spot out of the target's los to place
+        // the beast (but not too far away).
+        coord_def area = clamp_in_bounds(target->pos() + coord_def(random_range(-11, 11),
+                                                                   random_range(-11, 11)));
+        if (cell_see_cell(target->pos(), area, LOS_DEFAULT))
+            continue;
+
+        coord_def base_spot;
+        int tries = 0;
+        while (tries < 10 && base_spot.origin())
+        {
+            find_habitable_spot_near(area, mons_base_type(beast), 3, false, base_spot);
+            if (cell_see_cell(target->pos(), base_spot, LOS_DEFAULT))
+                base_spot.reset();
+            ++tries;
+        }
+
+        if (base_spot.origin())
+            continue;
+
+        beast->move_to_pos(base_spot);
+
+        // Wake the beast up and calculate a path to the druid's target.
+        // (Note that both BEH_WANDER and MTRAV_PATROL are necessary for it
+        // to follow the given path and also not randomly wander off instead)
+        beast->behaviour = BEH_WANDER;
+        beast->foe = druid->foe;
+
+        monster_pathfind mp;
+        if (mp.init_pathfind(beast, target->pos()))
+        {
+            beast->travel_path = mp.calc_waypoints();
+            if (!beast->travel_path.empty())
+            {
+                beast->target = beast->travel_path[0];
+                beast->travel_target = MTRAV_PATROL;
+            }
+        }
+
+        // Assign blame (for statistical purposes, mostly)
+        mons_add_blame(beast, "called by " + druid->name(DESC_A));
+
+        return true;
+    }
+
+    return false;
+}
+
 static void _cast_druids_call(const monster* mon)
 {
     vector<monster*> mon_list;
@@ -2358,38 +2413,13 @@ static void _cast_druids_call(const monster* mon)
 
     shuffle_array(mon_list);
 
-    // Can call a second low-HD monster if (and only if) the first called was
-    // also low-HD (otherwise this summons a single creature)
-    bool second = false;
-    for (unsigned int i = 0; i < mon_list.size(); ++i)
+    const actor* target = mon->get_foe();
+    const int num = min((int)mon_list.size(), mon->hit_dice > 10 ? random_range(2, 3)
+                                                                 : random_range(1, 2));
+
+    for (int i = 0; i < num; ++i)
     {
-        if (second && mon_list[i]->hit_dice > 10)
-            continue;
-
-        coord_def empty;
-        if (find_habitable_spot_near(mon->pos(), mons_base_type(mon_list[i]),
-                                     3, false, empty)
-            && mon_list[i]->move_to_pos(empty))
-        {
-            mon_list[i]->behaviour = BEH_SEEK;
-            mon_list[i]->foe = mon->foe;
-            mon_list[i]->add_ench(ENCH_MIGHT);
-            mon_list[i]->flags |= MF_WAS_IN_VIEW;
-            simple_monster_message(mon_list[i], " answers the druid's call!");
-
-            // Assign blame (for statistical purposes, mostly)
-            mons_add_blame(mon_list[i], "called by " + mon->name(DESC_A));
-
-            // If this is a low-HD monster, sometimes try to summon a second.
-            // Otherwise, we're done. (Young druids can ever summon one)
-            if (!second && mon_list[i]->hit_dice <= 10 && mon->hit_dice > 10
-                && coinflip())
-            {
-                second = true;
-            }
-            else
-                return;
-        }
+        _place_druids_call_beast(mon, mon_list[i], target);
     }
 }
 
