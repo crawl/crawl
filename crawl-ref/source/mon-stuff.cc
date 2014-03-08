@@ -2201,14 +2201,14 @@ int monster_die(monster* mons, killer_type killer,
                         notice |= did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
                                                   mons->hit_dice);
 
+                        // TSO hates natural evil and unholy beings.
                         if (mons->is_unholy())
                         {
                             notice |= did_god_conduct(
                                           DID_NATURAL_UNHOLY_KILLED_BY_SERVANT,
                                           mons->hit_dice);
                         }
-
-                        if (mons->is_evil())
+                        else if (mons->is_evil())
                         {
                             notice |= did_god_conduct(
                                           DID_NATURAL_EVIL_KILLED_BY_SERVANT,
