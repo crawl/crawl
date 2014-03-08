@@ -88,17 +88,15 @@ A dried-up fountain that has seen better days.
 %%%%
 A fountain of clear blue water
 
-Press ‘q’ to drink from this fountain. Not that it would have any effect,
-though...
+A decorative fountain, flowing with clear water.
 %%%%
 A fountain of blood
 
-Press ‘q’ to drink from this fountain, if you absolutely wish to.
+A decorative fountain, spurting with foul-looking blood.
 %%%%
 A fountain of sparkling water
 
-Press ‘q’ to drink from this magic fountain. Expect magical effects, as long as
-it's still magic.
+A decorative fountain, flowing with brightly sparkling water.
 %%%%
 A gate leading back out of here
 
