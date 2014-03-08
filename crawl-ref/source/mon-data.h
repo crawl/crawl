@@ -270,6 +270,7 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+// dummy for recolouring
 {
     MONS_FORMICID, 'a', GREEN, "formicid",
     M_WARM_BLOOD | M_SEE_INVIS | M_SPEAKS | M_NO_SKELETON | M_BURROWS,
