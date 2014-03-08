@@ -8,6 +8,7 @@
 
 #include "externs.h"
 
+#include "actor.h"
 #include "act-iter.h"
 #include "arena.h"
 #include "beam.h"
@@ -4538,12 +4539,34 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_OCTOPODE_CRUSHER:
         if (mons->is_constricting() && x_chance_in_y(2, 5))
         {
-            actor* const foe = mons->get_foe();
-            // Can't throw something if we're being constricted by it.
-            if ((mons->is_constricted()
-                 && actor_by_mid(mons->constricted_by) == foe))
+
+            mid_t throw_choice = 0;
+            int highest_dur = -1;
+            actor::constricting_t::iterator co = mons->constricting->begin();
+            actor* victim = nullptr;
+            for (; co != mons->constricting->end(); ++co)
+            {
+                victim = actor_by_mid(co->first);
+                if (victim && victim->alive()
+                    // Always throw the player, if we can, otherwise
+                    // throw whomever we've been constricting the
+                    // longest.
+                    && (victim->is_player() || co->second > highest_dur)
+                    && (!mons->is_constricted()
+                        || mons->constricted_by != co->first))
+
+                {
+                    throw_choice = co->first;
+                    highest_dur = co->second;
+                    if (victim->is_player())
+                        break;
+                }
+            }
+            victim = actor_by_mid(throw_choice);
+            if (!victim)
                 break;
-            used = _do_throw(mons, foe, LOS_RADIUS, mons->hit_dice * 3);
+            used = _do_throw(mons, actor_by_mid(throw_choice), LOS_RADIUS,
+                             mons->hit_dice * 3);
         }
         break;
 
@@ -5147,32 +5170,33 @@ static bool _do_throw(actor *thrower, actor *victim, int radius, int pow)
     // Increase damage by 50% if we hit something hard.
     int dam = random2(pow) * (have_feat ? 3 : 2);
     dam = victim->apply_ac(dam / 2);
+    victim->stop_being_constricted(true);
     if (victim->is_player())
     {
-        monster *mon = thrower->as_monster();
+        monster *tmon = thrower->as_monster();
         mprf("%s throws you%s!",
              (thrower_seen ? thrower_name.c_str() : "Something"),
              feat_desc.c_str());
         move_player_to_grid(floor_pos, false, true);
-        ouch(dam, mon->mindex(), KILLED_BY_BEING_THROWN);
+        ouch(dam, tmon->mindex(), KILLED_BY_BEING_THROWN);
     }
     else
     {
-        monster *mon = victim->as_monster();
+        monster *vmon = victim->as_monster();
         const string victim_name = victim->name(DESC_THE);
-        coord_def old_pos = mon->pos();
+        coord_def old_pos = vmon->pos();
 
-        if (!(mon->flags & MF_WAS_IN_VIEW))
-            mon->seen_context = SC_THROWN_IN;
-        mon->move_to_pos(floor_pos);
-        mon->apply_location_effects(old_pos);
-        mon->check_redraw(old_pos);
+        if (!(vmon->flags & MF_WAS_IN_VIEW))
+            vmon->seen_context = SC_THROWN_IN;
+        vmon->move_to_pos(floor_pos);
+        vmon->apply_location_effects(old_pos);
+        vmon->check_redraw(old_pos);
         if (thrower_seen || victim_was_seen)
         {
             mprf("%s throws %s%s!",
                  (thrower_seen ? thrower_name.c_str() : "Something"),
                  (victim_was_seen ? victim_name.c_str() : "something"),
-                 (you.can_see(mon) ? feat_desc.c_str() : "out of view"));
+                 (you.can_see(vmon) ? feat_desc.c_str() : "out of view"));
         }
         victim->hurt(thrower, dam, BEAM_NONE, true);
     }
