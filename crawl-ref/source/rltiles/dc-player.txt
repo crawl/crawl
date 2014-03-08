@@ -507,6 +507,7 @@ snakebite SNAKEBITE
 shillelagh SHILLELAGH
 dark_maul DARK_MAUL
 spellbinder SPELLBINDER
+firestarter FIRESTARTER
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE
@@ -520,6 +521,7 @@ elemental_staff ELEMENTAL_STAFF
 asmodeus ASMODEUS
 dispater DISPATER
 olgreb OLGREB
+order ORDER
 ## axes
 axe_trog AXE_TROG
 arga ARGA
