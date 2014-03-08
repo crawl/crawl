@@ -692,7 +692,6 @@ void bolt::apply_beam_conducts()
                             god_cares());
             break;
         case BEAM_CORONA:
-        case BEAM_LIGHT:
         case BEAM_HOLY_LIGHT:
             did_god_conduct(DID_ILLUMINATE, 2 + random2(3), god_cares());
             break;
@@ -1785,29 +1784,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 
             hurted *= 12;       // hellfire
             hurted /= 10;
-        }
-        break;
-
-    case BEAM_LIGHT:
-        if (mons->invisible())
-            hurted = 0;
-        else if (mons_genus(mons->type) == MONS_VAMPIRE || mons->type == MONS_SHADOW)
-            hurted += hurted / 2;
-        if (!hurted)
-        {
-            if (doFlavouredEffects)
-            {
-                if (original > 0)
-                    simple_monster_message(mons, " appears unharmed.");
-                else if (mons->observable())
-                    mprf("The beam of light passes harmlessly through %s.",
-                         mons->name(DESC_THE, true).c_str());
-            }
-        }
-        else if (original < hurted)
-        {
-            if (doFlavouredEffects)
-                simple_monster_message(mons, " is burned terribly!");
         }
         break;
 
@@ -3432,10 +3408,6 @@ bool bolt::misses_player()
     bool miss = true;
 
     int defl = you.missile_deflection();
-    // rmsl/dmsl works on missiles and bolts, but not light -- otherwise
-    // we'd need to deflect Olgreb's Toxic Radiance, halos, etc.
-    if (flavour == BEAM_LIGHT)
-        defl = 0;
 
     if (!_test_beam_hit(real_tohit, dodge_less, is_beam, 0, r))
         mprf("The %s misses you.", name.c_str());
@@ -6543,7 +6515,9 @@ static string _beam_type_name(beam_type type)
     case BEAM_LAVA:                  return "magma";
     case BEAM_ICE:                   return "ice";
     case BEAM_NUKE:                  return "nuke";
+#if TAG_MAJOR_VERSION == 34
     case BEAM_LIGHT:                 return "light";
+#endif
     case BEAM_RANDOM:                return "random";
     case BEAM_CHAOS:                 return "chaos";
     case BEAM_GHOSTLY_FLAME:         return "ghostly flame";

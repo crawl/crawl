@@ -2569,6 +2569,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SUNRAY, "Sunray",
      SPTYP_CONJURATION,
@@ -2581,6 +2582,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_AWAKEN_FOREST, "Awaken Forest",

@@ -342,17 +342,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
-    case BEAM_LIGHT:
-        if (you.species == SP_VAMPIRE)
-            hurted += hurted / 2;
-
-        if (hurted > original && doEffects)
-        {
-            mpr("The light scorches you terribly!");
-            xom_is_stimulated(200);
-        }
-        break;
-
     case BEAM_AIR:
     {
         // Airstrike.

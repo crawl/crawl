@@ -1152,16 +1152,6 @@ Summon Water Elementals spell
 
 Ce sort invoque un ou plusieurs élémentaires d'eau.
 %%%%
-Sunray spell
-
-Ce sort suscite un faisceau de lumière intense, endommageant sa cible. De toute
-évidence, l'invisibilité laisse passer la lumière, laissant ces créatures
-saines et sauves. Les vampires et les ombres sont connus pour y être
-particulièrement vulnérables.
-
-N'étant pas un missile, ce sort n'est pas affecté par les effets de Renvoie et
-de Déflection — vous voulez être en mesure de voir, n'est-ce pas ?
-%%%%
 Sure Blade spell
 
 Ce sort forme un lien mystique entre le sorcier et une épée courte portée,

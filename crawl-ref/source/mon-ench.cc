@@ -1866,7 +1866,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         if (is_chaotic())
         {
             bolt beam;
-            beam.flavour = BEAM_LIGHT;
+            beam.flavour = BEAM_HOLY_LIGHT;
             int dam = roll_dice(2, 4) - 1;
 
             int newdam = mons_adjust_flavoured(this, beam, dam, false);
@@ -1880,7 +1880,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             }
 
             dprf("Zin's Corona damage: %d", dam);
-            hurt(me.agent(), dam, BEAM_LIGHT);
+            hurt(me.agent(), dam, BEAM_HOLY_LIGHT);
         }
 
         decay_enchantment(en, true);

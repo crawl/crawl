@@ -544,7 +544,6 @@ bool is_hasty_spell(spell_type spell)
 bool is_illuminating_spell(spell_type spell)
 {
     return spell == SPELL_CORONA
-           || spell == SPELL_SUNRAY
            || spell == SPELL_HOLY_LIGHT;
 }
 
