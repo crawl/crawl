@@ -1527,7 +1527,46 @@ static void _make_spectral_thing(monster* mons, bool quiet)
     }
 }
 
+static void _druid_final_boon(const monster* mons)
+{
+    vector<monster*> beasts;
+    for (monster_near_iterator mi(mons); mi; ++mi)
+    {
+        if (mons_is_beast(mons_base_type(*mi)) && mons_aligned(mons, *mi))
+            beasts.push_back(*mi);
+    }
 
+    if (!beasts.size())
+        return;
+
+    if (you.can_see(mons))
+    {
+        mprf(MSGCH_MONSTER_SPELL, "With its final breath, %s offers up its power "
+                                  "to the beasts of the wild!",
+                                  mons->name(DESC_THE).c_str());
+    }
+
+    shuffle_array(beasts);
+    int num = min((int)beasts.size(), random_range(mons->hit_dice / 3,
+                                                   mons->hit_dice / 2 + 1));
+
+    // Healing and empowering done in two separate loops for tidier messages
+    for (int i = 0; i < num; ++i)
+    {
+        if (beasts[i]->heal(roll_dice(3, mons->hit_dice)) && you.can_see(beasts[i]))
+        {
+            mprf("%s %s healed.", beasts[i]->name(DESC_THE).c_str(),
+                                  beasts[i]->conj_verb("are").c_str());
+        }
+    }
+
+    for (int i = 0; i < num; ++i)
+    {
+        simple_monster_message(beasts[i], " seems to grow more fierce.");
+        beasts[i]->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, mons,
+                                        random_range(120, 200)));
+    }
+}
 
 static bool _mons_reaped(actor *killer, monster* victim);
 
@@ -1871,6 +1910,11 @@ int monster_die(monster* mons, killer_type killer,
         // Suppress death message if 'killed' by touching something
         if (mons->hit_points == -1000)
             silent = true;
+    }
+    else if (mons->type == MONS_SPRIGGAN_DRUID && !silent && !was_banished
+             && !wizard)
+    {
+        _druid_final_boon(mons);
     }
 
     const bool death_message = !silent && !did_death_message
