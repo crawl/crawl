@@ -5028,7 +5028,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SUMMON_UFETUBUS:          return TILEG_SUMMON_UFETUBUS;
     case SPELL_SUMMON_UNDEAD:            return TILEG_SUMMON_UNDEAD;
     case SPELL_SUMMON_VERMIN:            return TILEG_SUMMON_VERMIN;
-    case SPELL_SUNRAY:                   return TILEG_SUNRAY;
     case SPELL_TELEPORT_SELF:            return TILEG_TELEPORT_SELF;
     case SPELL_THORN_VOLLEY:             return TILEG_THORN_VOLLEY;
     case SPELL_TOMB_OF_DOROKLOHE:        return TILEG_TOMB_OF_DOROKLOHE;

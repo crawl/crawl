@@ -147,18 +147,6 @@ Sticky Flame cast
 
 @The_monster@ sprays @target@ with burning goo.
 %%%%
-Sunray cast
-
-@The_monster@ raises @possessive@ hand.
-
-@The_monster@ calls in a beam of light.
-%%%%
-unseen Sunray cast
-
-Suddenly, a bright light shines from nowhere!
-
-An intense light blinds you for a moment.
-%%%%
 Holy Flames cast
 
 @The_monster@ calls forth blessed flames!

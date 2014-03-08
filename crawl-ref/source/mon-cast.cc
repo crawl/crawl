@@ -899,14 +899,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.range    = LOS_RADIUS;
         break;
 
-    case SPELL_SUNRAY:
-        beam.colour   = ETC_HOLY;
-        beam.name     = "ray of light";
-        beam.damage   = dice_def(3, 6 + (power / 13));
-        beam.hit      = 10 + power / 25; // lousy accuracy, but ignores RMsl
-        beam.flavour  = BEAM_LIGHT;
-        break;
-
     case SPELL_PETRIFYING_CLOUD:
         beam.name     = "blast of calcifying dust";
         beam.colour   = WHITE;

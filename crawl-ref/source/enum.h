@@ -373,7 +373,9 @@ enum beam_type                  // bolt::flavour
     BEAM_LAVA,
     BEAM_ICE,
     BEAM_NUKE,
+#if TAG_MAJOR_VERSION == 34
     BEAM_LIGHT,
+#endif
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
     BEAM_GHOSTLY_FLAME,
@@ -3922,7 +3924,9 @@ enum spell_type
     SPELL_IOOD,
     SPELL_INK_CLOUD,
     SPELL_MIGHT,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SUNRAY,
+#endif
     SPELL_AWAKEN_FOREST,
     SPELL_DRUIDS_CALL,
     SPELL_IRON_ELEMENTALS,
