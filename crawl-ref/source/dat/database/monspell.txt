@@ -189,7 +189,7 @@ Major Destruction cast
 %%%%
 Druid's Call cast
 
-@The_monster@ calls out to the beasts of the land!
+@The_monster@ calls out to the beasts of the wild!
 %%%%
 Legendary Destruction cast
 
