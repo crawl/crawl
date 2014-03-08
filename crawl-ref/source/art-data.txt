@@ -1141,14 +1141,16 @@ NAME:    lajatang of Order
 INSCRIP: silver, rMut
 OBJ:     OBJ_WEAPONS/WPN_LAJATANG
 COLOUR:  ETC_SILVER
+TILE:    urand_order
+TILE_EQ: order
 PLUS:    7/7
 
 ENUM:     FIRESTARTER
 NAME:     great mace "Firestarter"
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
 COLOUR:   RED
-#TILE:     urand_firestarter
-#TILE_EQ:  firestarter
+TILE:     urand_firestarter
+TILE_EQ:  firestarter
 PLUS:     +7/+7
 BRAND:    SPWPN_FLAMING
 FIRE:    2

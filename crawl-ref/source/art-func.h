@@ -915,6 +915,7 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
                                         actor* defender, bool mondied, int dam)
 {
     int evoc = attacker->skill(SK_EVOCATIONS, 27);
+    beam_type flavour = BEAM_NONE;
 
     if (mondied || !(x_chance_in_y(evoc, 729) || x_chance_in_y(evoc, 729)))
         return;
@@ -928,16 +929,19 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
         d = resist_adjust_damage(defender, BEAM_FIRE,
                                  defender->res_fire(), d);
         verb = "burn";
+        flavour = BEAM_FIRE;
         break;
     case 1:
         d = resist_adjust_damage(defender, BEAM_COLD,
                                  defender->res_cold(), d);
         verb = "freeze";
+        flavour = BEAM_COLD;
         break;
     case 2:
         d = resist_adjust_damage(defender, BEAM_ELECTRICITY,
                                  defender->res_elec(), d);
         verb = "electrocute";
+        flavour = BEAM_ELECTRICITY;
         break;
     case 3:
         d = defender->apply_ac(d);
@@ -953,6 +957,8 @@ static void _ELEMENTAL_STAFF_melee_effects(item_def* item, actor* attacker,
          attacker->is_player() ? verb : pluralise(verb).c_str(),
          defender->name(DESC_THE).c_str());
     defender->hurt(attacker, d);
+    if (defender->alive() && flavour != BEAM_NONE)
+        defender->expose_to_element(flavour, 2);
 }
 
 ///////////////////////////////////////////////////
