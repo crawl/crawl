@@ -2966,6 +2966,8 @@ bool is_good_item(const item_def &item)
     case OBJ_SCROLLS:
         return item.sub_type == SCR_ACQUIREMENT;
     case OBJ_POTIONS:
+        if (you.species == SP_MUMMY)
+            return false;
         switch (item.sub_type)
         {
         case POT_CURE_MUTATION:
@@ -2974,9 +2976,10 @@ bool is_good_item(const item_def &item)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
-        case POT_BENEFICIAL_MUTATION:
         case POT_EXPERIENCE:
             return true;
+        case POT_BENEFICIAL_MUTATION:
+            return you.species != SP_GHOUL; // Mummies are already handled
         default:
             return false;
         }
