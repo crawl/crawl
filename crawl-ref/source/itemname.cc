@@ -3031,7 +3031,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case POT_BENEFICIAL_MUTATION:
             return you.is_undead && (temp || you.form != TRAN_LICH)
                    && (you.species != SP_VAMPIRE
-                       || temp && you.hunger_state < HS_SATIATED);
+                       || temp && item.sub_type == POT_MUTATION
+                          && you.hunger_state < HS_SATIATED);
         default:
             return false;
         }
