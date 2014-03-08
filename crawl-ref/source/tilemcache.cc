@@ -322,11 +322,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_ZOMBIE_OCTOPODE:
     case TILEP_MONS_NIKOLA:
-    case TILEP_MONS_FORMICID:
-    case TILEP_MONS_FORMICID_VENOM_MAGE:
     case TILEP_MONS_NAGA_RITUALIST:
     case TILEP_MONS_WAR_GARGOYLE:
-    case TILEP_MONS_VINE_STALKER:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -469,6 +466,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ANCIENT_CHAMPION:
     case TILEP_MONS_SKELETAL_WARRIOR:
     case TILEP_MONS_SALAMANDER:
+    case TILEP_MONS_VINE_STALKER:
         *ofs_x = -2;
         *ofs_y = -2;
         break;
@@ -479,6 +477,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_ELEMENTALIST:
     case TILEP_MONS_MERFOLK_AQUAMANCER:
     case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
+    case TILEP_MONS_FORMICID:
+    case TILEP_MONS_FORMICID_VENOM_MAGE:
         *ofs_x = -2;
         *ofs_y = -1;
         break;
