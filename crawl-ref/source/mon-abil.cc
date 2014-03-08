@@ -5112,36 +5112,44 @@ static bool _do_throw(actor *thrower, actor *victim, int radius, int pow)
     ASSERT(radius <= LOS_RADIUS);
     for (distance_iterator di(thrower->pos(), false, true, radius); di; ++di)
     {
-        if (thrower->pos().distance_from(*di) < 4)
+        if (thrower->pos().distance_from(*di) < 3)
             continue;
+        ray_def ray;
         if (victim->is_habitable(*di)
             && !actor_at(*di)
-            && cell_see_cell(thrower->pos(), *di, LOS_NO_TRANS)
-            && cell_see_cell(victim->pos(), *di, LOS_NO_TRANS))
+            && thrower->see_cell(*di)
+            && victim->see_cell(*di)
+            && find_ray(victim->pos(), *di, ray, opc_solid_see))
             floor_sites.push_back(*di);
         else
             continue;
-        // See if it's site next to a visible solid feature, which we prefer.
-        for (adjacent_iterator ai(*di); ai; ai++)
+
+        while (ray.advance() && ray.pos() != *di);
         {
-            if (cell_is_solid(*ai)
-                && grd(*ai) != DNGN_OPEN_SEA
-                && grd(*ai) != DNGN_LAVA_SEA
-                && cell_see_cell(thrower->pos(), *ai, LOS_NO_TRANS))
-            {
-                feat_floor_sites.push_back(*di);
-                feat_sites.push_back(*ai);
+            if (!map_bounds(ray.pos()))
                 break;
-            }
+        }
+
+        // Go one past the landing position and see if we have a valid solid
+        // feature.
+        if (ray.pos() != *di || !ray.advance() || !map_bounds(ray.pos()))
+            continue;
+        if (thrower->see_cell(ray.pos())
+            && cell_is_solid(ray.pos())
+            && grd(ray.pos()) != DNGN_OPEN_SEA
+            && grd(ray.pos()) != DNGN_LAVA_SEA)
+        {
+            feat_floor_sites.push_back(*di);
+            feat_sites.push_back(ray.pos());
         }
     }
-    int floor_ind = 0;
+
     bool have_feat = feat_floor_sites.size();
     string feat_desc = "";
     coord_def floor_pos, feat_pos;
     if (have_feat)
     {
-        floor_ind = random2(feat_floor_sites.size());
+        int floor_ind = random2(feat_floor_sites.size());
         floor_pos = feat_floor_sites[floor_ind];
         feat_pos = feat_sites[floor_ind];
         if (victim->is_player()
@@ -5151,13 +5159,12 @@ static bool _do_throw(actor *thrower, actor *victim, int radius, int pow)
             feat_desc = make_stringf(" onto %s", feat_desc.c_str());
         }
         else
-            feat_desc = " onto something solid";
+            feat_desc = " onto something hard";
     }
     // Found an empty space, so we can still throw
     else if (floor_sites.size())
     {
-        floor_ind = random2(floor_sites.size());
-        floor_pos = floor_sites[floor_ind];
+        floor_pos = floor_sites[random2(floor_sites.size())];
     }
     // Couldn't find a place to throw the victim
     else
