@@ -370,7 +370,6 @@ static const pop_entry pop_spider[] =
   { -1,  5,   89, SEMI, MONS_WORM },
   { -1,  5,   52, SEMI, MONS_GIANT_COCKROACH },
   { -1,  5,   52, SEMI, MONS_GIANT_MITE },
-  { -1,  5,  167, SEMI, MONS_FORMICID },
   {  1,  5,  334, FLAT, MONS_SPIDER },
   {  1,  5,  258, FLAT, MONS_SCORPION },
   {  1,  5,   52, FLAT, MONS_YELLOW_WASP },

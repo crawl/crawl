@@ -344,28 +344,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
         break;
 
-    case MONS_FORMICID:
-        item.base_type = OBJ_WEAPONS;
-        if (one_chance_in(4))
-            item.sub_type = coinflip() ? WPN_GIANT_CLUB : WPN_GIANT_SPIKED_CLUB;
-        else
-        {
-            item.sub_type = random_choose_weighted(10, WPN_HAND_AXE,   15, WPN_GLAIVE,
-                                                   10, WPN_MACE,       15, WPN_FLAIL,
-                                                    5, WPN_GREAT_SWORD, 5, WPN_DIRE_FLAIL,
-                                                    5, WPN_BATTLEAXE,   3, WPN_GREAT_MACE,
-                                                    0);
-        }
-        if (coinflip())
-        {
-            force_item  = true;
-            item.plus  += random2(3);
-            item.plus2 += random2(3);
-            if (one_chance_in(20))
-                level = MAKE_GOOD_ITEM;
-        }
-        break;
-
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
         if (one_chance_in(9))
@@ -2011,7 +1989,6 @@ static void _give_shield(monster* mon, int level)
         }
         break;
 
-    case MONS_FORMICID:
     case MONS_CORRUPTER:
     case MONS_BLACK_SUN:
         if (one_chance_in(3))
@@ -2220,14 +2197,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_SALAMANDER_MYSTIC:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
-        break;
-
-    case MONS_FORMICID:
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = random_choose_weighted(5, ARM_SCALE_MAIL,
-                                                3, ARM_CHAIN_MAIL,
-                                                1, ARM_PLATE_ARMOUR,
-                                                0);
         break;
 
     case MONS_DWARF:
