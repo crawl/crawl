@@ -3031,11 +3031,10 @@ bool is_bad_item(const item_def &item, bool temp)
             return player_res_poison(false) <= 0
                    || !temp && you.species == SP_VAMPIRE;
         case POT_MUTATION:
-        case POT_BENEFICIAL_MUTATION:
-            return you.is_undead && (temp || you.form != TRAN_LICH)
-                   && (you.species != SP_VAMPIRE
-                       || temp && item.sub_type == POT_MUTATION
-                          && you.hunger_state < HS_SATIATED);
+            // Not bad_item, just useless, for mummies, ghouls, and liches,
+            // as they can't even drink known mutation potions.
+            return temp && you.species == SP_VAMPIRE
+                   && you.hunger_state < HS_SATIATED;
         default:
             return false;
         }
@@ -3293,13 +3292,16 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.species == SP_FORMICID;
 
         case POT_CURE_MUTATION:
+        case POT_MUTATION:
+        case POT_BENEFICIAL_MUTATION:
 #if TAG_MAJOR_VERSION == 34
         case POT_GAIN_STRENGTH:
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
             if (you.species == SP_VAMPIRE)
-                return temp && you.hunger_state < HS_SATIATED;
+                return temp && you.hunger_state < HS_SATIATED
+                       && item.sub_type != POT_BENEFICIAL_MUTATION;
             if (you.form == TRAN_LICH)
                 return temp;
             return you.is_undead;
