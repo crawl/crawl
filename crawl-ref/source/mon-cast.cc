@@ -5059,7 +5059,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         if (mons->type == MONS_SPRIGGAN_BERSERKER)
         {
-            monster_type berserkers[2] = { MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR };
+            monster_type berserkers[3] = { MONS_POLAR_BEAR, MONS_ELEPHANT, MONS_DEATH_YAK };
             to_summon = RANDOM_ELEMENT(berserkers);
         }
         else /* if (mons->type == MONS_DEEP_DWARF_BERSERKER) */
