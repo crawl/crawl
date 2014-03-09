@@ -1685,20 +1685,13 @@ xE..xxxxxxx...xx.......xx...xxxxxxx..Ex
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# You will either need to get through a rock wall (but there is a wand shop),
-# or you will have to teleport into the room, possibly randomly. In that case,
-# inner area=13*11=143, outer area=104 or 148, making chances for teleporation
-# to land inside either 57% or 49%.
 NAME:    bazaar_minmay_challenge
 TAGS:    no_rotate
 WEIGHT:  1
 ORIENT:  encompass
-: if crawl.coinflip() then
-SUBST:   B=., N=., n=T, t=., '=., "=.
+SUBST:   B = ., N = ., n = T, t = ., ' = ., " = .
+KITEM:   ? = wand of disintegration ident:type
 KFEAT:   ? = gadget shop
-: else
-SUBST:   b=., m=., B=b, N=n, T=., t=T, ?=!, '=x, ":x.
-:end
 KFEAT:   ! = any shop
 SUBST:   T = V T U:1
 SHUFFLE: XY
@@ -1738,33 +1731,31 @@ TAGS:   no_rotate
 WEIGHT: 1
 ORIENT: encompass
 KFEAT:  ! = any shop
-SUBST:  . = 2 .:200
-SUBST:  ' = .
-SUBST:  3 = 2.
+SUBST:  . = 2 .:200, ' = ., 3 = 2.
 MONS:   oklob plant, plant
 :       bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx.........xxxxxxxxx
-xxxxxxxxx.!.....!.xxxxxxxxx
-xxxxxxxxx.........xxxxxxxxx
-xxx'''xxx.........xxx'''xxx
-xxx'<''+...........+''>'xxx
-xxx'''xxx.........xxx'''xxx
-xxxxxxxxx.........xxxxxxxxx
-xxxxxxxxx...222...xxxxxxxxx
-xxxxxxxxx....1....xxxxxxxxx
-xxxxxxxxx.........xxxxxxxxx
-xxxxxxxxx.........xxxxxxxxx
-xxxxxxxxx.........xxxxxxxxx
-xxxxxxxxx.........xxxxxxxxx
-xxxxxxxxx.........xxxxxxxxx
-xxx'''xxx.........xxx'''xxx
-xxx'!''+3.........3+''!'xxx
-xxx'''xxx.........xxx'''xxx
-xxxxxxxxx.........xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx.!..'..!.xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxx'''xxx....'....xxx'''xxx
+xxx'<''+.....'.....+''>'xxx
+xxx'''xxx....'....xxx'''xxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxxxxxxxt....'....txxxxxxxx
+xxxxx222t....'....t222xxxxx
+xxxx1222t....'....t2221xxxx
+xxxxx222t....'....t222xxxxx
+xxxxxxxxt....'....txxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
+xxx'''xxx....'....xxx'''xxx
+xxx'!''+3....'....3+''!'xxx
+xxx'''xxx....'....xxx'''xxx
+xxxxxxxxx....'....xxxxxxxxx
 xxxxxxxxx.!..>..!.xxxxxxxxx
-xxxxxxxxx.........xxxxxxxxx
+xxxxxxxxx....'....xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -1775,7 +1766,7 @@ WEIGHT: 1
 KFEAT:  ! = general shop
 MARKER: d = lua:fog_machine { cloud_type = "mutagenic fog", \
              pow_min = 1, pow_max = 3, delay_min = 5, delay_max = 10, \
-             size = 6, walk_dist = 0, spread_rate= 0 }
+             size = 1, walk_dist = 0, spread_rate= 0 }
 ITEM:   nothing
 NSUBST: < = 1:< / *:.
 :       bazaar_setup(_G)

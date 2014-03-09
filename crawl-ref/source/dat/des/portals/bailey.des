@@ -225,7 +225,7 @@ ENDMAP
 NAME: enter_bailey_5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: goblin ; tomahawk ego:returning ident:type q:4 / \
+MONS: goblin ; tomahawk ego:returning ident:type q:4 | \
                tomahawk ego:returning ident:type q:3
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
