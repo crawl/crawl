@@ -421,29 +421,6 @@ static void _good_potion_or_scroll(int & slot)
     slot++;
 }
 
-// Make n random attempts at identifying curing or teleportation.
-static void _curing_or_teleport(int n)
-{
-    int temp_rand = 2;
-
-    // No potions for mummies.
-    if (you.is_undead == US_UNDEAD)
-        temp_rand--;
-
-    for (int i = 0; i < n; ++i)
-    {
-        switch (random2(temp_rand))
-        {
-        case 0:
-            set_ident_type(OBJ_SCROLLS, SCR_TELEPORTATION, ID_KNOWN_TYPE);
-            break;
-        case 1:
-            set_ident_type(OBJ_POTIONS, POT_CURING, ID_KNOWN_TYPE);
-            break;
-        }
-    }
-}
-
 // Create a random wand in the inventory.
 static void _wanderer_random_evokable(int & slot)
 {
@@ -556,9 +533,8 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     {
-        // Random consumables: 2x attempts to ID curing/teleportation
-        // 1 good potion/scroll.
-        _curing_or_teleport(2);
+        // 2 random good potions/scrolls
+        _good_potion_or_scroll(slot);
         _good_potion_or_scroll(slot);
         break;
     }
@@ -738,7 +714,6 @@ static void _wanderer_decent_equipment(skill_type & skill,
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
     case SK_NONE:
-        _curing_or_teleport(1);
         break;
     }
 }
