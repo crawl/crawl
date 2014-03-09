@@ -1568,6 +1568,47 @@ MAP
 ENDMAP
 
 ##############################################################################
+# And for now, something woody (1KB)
+NAME:   forest_paths
+DEPTH:  D, Depths, Lair
+ORIENT: float
+FTILE:  .t0@*123 = floor_moss
+: if you.absdepth()>15 then
+:   if you.branch()=="Lair" then
+MONS:   spriggan, spriggan druid n_adj n_noc name:young hd:8, spriggan rider
+:   else
+MONS:   spriggan, spriggan druid, spriggan rider
+:   end
+: end
+MAP
+        xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
+    xxxxxtttttttttttttttttt.tttttttttttttttttttttxx
+ xxxxtttttttttttttttttttttt...ttttttttttttttttttttx
+xxttttttttttttttttttttttttttt..tttttttttttttt0}tttx
+xttttttttt.tt......ttttttttttt..tttttttttttt..ttttx
+xtttttttt.t...ttt.0.tttttttttt.tttttttttt3..ttttttx
+xtt......tttttttt...ttttttttttt.tttttt...ttttttttxx
+xt.ttttttttttttttt...1tttttttttt.tttt.tttttttttttxx
+@.ttttttttttttttt..tttttttttttt1.tt...ttttttttttttx
+xttttttttttttttt..tttttttttttttt2...ttttttttttttttx
+xtttttttttttttttt..ttttttttttttttt.tttttttttttttttx
+xtttttttttttttttt1.1.tttttttttttt.tttttttttt...tttx
+xtttttttttttttttttt.1...tttttttttt..ttttttt.2*..ttx
+xttttttttttttttttttttt1...ttttttttt.ttttttt.000.ttx
+xttttttttttttttttttttttt...tttttttt.ttttt1..3.2tttx
+xttttttttttttttttttttttttt....tttt.ttttttt.tt.t0ttx
+xtttttttttttttttttttttttttttt.....tttttttt.tttttttx
+.....ttttttttttttttttttttttt1..tttttttttt.ttttttttx
+@.....tttttttt...ttttttttttt1..tttttttt..ttttttttxx
+xttttt..ttt....tt...tt.......30.ttttt..tttttttttxx
+xttttttt....ttttttt....ttttttt..ttt..ttttttttttxx
+xxxtttttttttttttttttttttttttttt....ttttttttttxxx
+  xxxtttttttttttttttttttttttttttttttttttttxxxx
+    xxxxxttttttttxxxxxxxxttttttttttttttxxxx
+        xxxxxxxxxx      xxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
 # The Shining One Protects a Powerful Item, vault series by abrahamwl
 #
 # The basic theme of these vaults is that the Shining One has placed a
