@@ -3931,7 +3931,7 @@ static void _fixup_after_vault()
     env.markers.activate_all();
 
     // Force teleport to place the player somewhere sane.
-    you_teleport_now(false, false);
+    you_teleport_now(false);
 
     setup_environment_effects();
 }

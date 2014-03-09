@@ -593,7 +593,7 @@ LUAFN(you_teleport_to)
 
 LUAFN(you_random_teleport)
 {
-    you_teleport_now(false, false);
+    you_teleport_now(false);
     return 0;
 }
 

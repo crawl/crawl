@@ -683,7 +683,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         return;
     }
 
-    case CONTROL('B'): you.teleport(true, false, true); break;
+    case CONTROL('B'): you.teleport(true, true); break;
     case CONTROL('D'): wizard_edit_durations(); break;
     case CONTROL('E'): debug_dump_levgen(); break;
     case CONTROL('F'): wizard_fight_sim(true); break;
@@ -2632,8 +2632,7 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_TELEPORT, delay))
     {
-        // Only to a new area of the abyss sometimes (for abyss teleports).
-        you_teleport_now(true, one_chance_in(5));
+        you_teleport_now(true);
         untag_followers();
     }
 
@@ -3325,13 +3324,13 @@ static void _player_reacts()
             if (teleportitis_level >= 8)
                 you_teleport_now(true);
             else
-                you_teleport_now(true, false, false, teleportitis_level * 5);
+                you_teleport_now(true, false, teleportitis_level * 5);
         }
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
           && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
             mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
-            you_teleport_now(false, true); // to new area of the Abyss
+            you_teleport_now(false); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
             // crashes lose less of the player's progress (and fresh new bad

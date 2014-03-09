@@ -1888,7 +1888,7 @@ static bool _do_ability(const ability_def& abil)
     // End ZotDef Allies
 
     case ABIL_MAKE_TELEPORT:
-        you_teleport_now(true, true);
+        you_teleport_now(true);
         break;
 
     // ZotDef traps
