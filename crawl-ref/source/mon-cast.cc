@@ -3805,7 +3805,8 @@ static int _mons_mesmerise(monster* mons, bool actual)
 
     // Don't mesmerise if you pass an MR check or have clarity.
     // If you're already mesmerised, you cannot resist further.
-    if ((you.check_res_magic(pow) > 0 || you.clarity()) && !already_mesmerised)
+    if ((you.check_res_magic(pow) > 0 || you.clarity()
+         || you.duration[DUR_MESMERISE_IMMUNE]) && !already_mesmerised)
     {
         if (actual)
             canned_msg(MSG_YOU_RESIST);
