@@ -155,7 +155,7 @@ bool try_pathfind(monster* mon)
     // Smart monsters that can fire through obstacles won't use
     // pathfinding.
     if (need_pathfind
-        && mons_intel(mon) >= I_NORMAL && !mon->friendly()
+        && !mon->friendly()
         && mon->can_see(foe)
         && mons_has_los_ability(mon->type))
     {
@@ -166,7 +166,7 @@ bool try_pathfind(monster* mon)
     // across the blocking terrain, and is smart enough to
     // realise that.
     if ((!crawl_state.game_is_zotdef()) && need_pathfind
-        && mons_intel(mon) >= I_NORMAL && !mon->friendly()
+        && !mon->friendly()
         && mons_has_ranged_attack(mon)
         && cell_see_cell(mon->pos(), targpos, LOS_SOLID_SEE))
     {
