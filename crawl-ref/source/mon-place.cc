@@ -2644,18 +2644,18 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_SPRIGGAN_BERSERKER:
-        if (one_chance_in(3))
-            break;
-        natural_leader = true;
-    case MONS_SPRIGGAN:
-        band = BAND_SPRIGGANS;
-        band_size = 2 + random2(3);
+        if (coinflip())
+        {
+            natural_leader = true;
+            band = BAND_SPRIGGANS;
+            band_size = 2 + random2(2);
+        }
         break;
 
     case MONS_SPRIGGAN_DEFENDER:
         natural_leader = true;
         band = BAND_SPRIGGAN_ELITES;
-        band_size = 2 + random2(4);
+        band_size = 2 + random2(3);
         break;
 
     case MONS_THE_ENCHANTRESS:
@@ -3180,19 +3180,13 @@ static monster_type _band_member(band_type band, int which)
         }
         return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
-        if (which == 1 && one_chance_in(3))
+        if (which == 1 && coinflip())
             return coinflip() ? MONS_SPRIGGAN_ENCHANTER : MONS_SPRIGGAN_ASSASSIN;
     case BAND_SPRIGGANS:
-        if ((band == BAND_SPRIGGAN_ELITES && which <= 2)
-            || one_chance_in(4))
-        {
-            return random_choose_weighted(5, MONS_SPRIGGAN_AIR_MAGE,
-                                          3, MONS_SPRIGGAN_BERSERKER,
-                                          1, MONS_SPRIGGAN_DRUID,
-                                          2, MONS_SPRIGGAN_RIDER,
-                                          0);
-        }
-        return MONS_SPRIGGAN;
+        return random_choose_weighted( 4, MONS_SPRIGGAN_AIR_MAGE,
+                                       3, MONS_SPRIGGAN_BERSERKER,
+                                      11, MONS_SPRIGGAN_RIDER,
+                                       0);
 
     case BAND_AIR_ELEMENTALS:
         return MONS_AIR_ELEMENTAL;
