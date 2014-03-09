@@ -361,7 +361,7 @@ static const pop_entry pop_snake[] =
   {  2,  8,  225, PEAK, MONS_GUARDIAN_SERPENT },
   {  3,  9,  245, SEMI, MONS_GREATER_NAGA },
   {  1,  5,  215, SEMI, MONS_SALAMANDER },
-  {  3,  7,   90, PEAK, MONS_SALAMANDER_MYSTIC },
+  {  3,  7,  110, PEAK, MONS_SALAMANDER_MYSTIC },
   { 0,0,0,FLAT,MONS_0 }
 };
 
