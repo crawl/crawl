@@ -223,7 +223,7 @@ function trove.weapon_skills (e)
 end
 
 function trove.spell_skills (e)
-  local spell_skills = {"Spellcasting", "Conjurations", "Enchantments", "Summoning", "Necromancy", "Translocation", "Transmutation", "Fire Magic", "Ice Magic", "Air Magic", "Earth Magic", "Poison Magic"}
+  local spell_skills = {"Spellcasting", "Conjurations", "Charms", "Hexes", "Summoning", "Necromancy", "Translocation", "Transmutation", "Fire Magic", "Ice Magic", "Air Magic", "Earth Magic", "Poison Magic"}
   local skill_total = 0
   local nonzero_skills = 0
   for _, skill in ipairs(spell_skills) do
@@ -530,8 +530,8 @@ MONS:    plant col:white / plant col:blue w:6
 MONS:    plant col:white / plant col:cyan w:3 / plant col:blue w:3
 #
 ITEM:    any useful good_item
-ITEM:    any useful jewellery good_item / any useful good_item
-ITEM:    any useful weapon good_item / any useful armour good_item / any useful good_item
+ITEM:    any useful jewellery good_item / any useful good_item w:5
+ITEM:    any useful weapon good_item / any useful armour good_item / any useful good_item w:5
 KFEAT:   w = W
 : trove.setup_features(_G)
 : trove.place_fog(_G, "blue smoke", 30)
@@ -785,11 +785,9 @@ ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
 WEIGHT: 2
 COLOUR: x = blue
-COLOUR: = = blue
 NSUBST: " = 1:+ / *:x
 NSUBST: ' = 1:+ / *:x
-# Rock is actually diggable for those people driven mad by hatred.
-MONS:   deep elf summoner
+MONS:   ynoxinul
 # 24 items, just because we're feeling generous.
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
@@ -816,8 +814,6 @@ ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
 WEIGHT: 2
 COLOUR: x = blue
-COLOUR: o = blue
-COLOUR: = = blue
 KFEAT:  1 = deep_water
 KMONS:  1 = shining eye
 # 21 items, 'cos this one is *nasty*. There are 4 extra potions of cure mutation.
@@ -899,8 +895,10 @@ ORIENT:  encompass
 ITEM:    acquire armour / any useful armour good_item / any armour w:2
 ITEM:    acquire weapon / any useful weapon good_item / any weapon w:2
 ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
+ITEM:    any useful armour good_item / any useful weapon good_item / \
+         any useful jewellery good_item
 : trove.good_scroll(_G)
-ITEM:   wand of digging
+KITEM:   h = wand of disintegration ident:type, wand of disintegration ident:type
 SHUFFLE: defg
 : trove.setup_features(_G)
 MAP

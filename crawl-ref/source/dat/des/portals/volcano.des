@@ -100,7 +100,6 @@ function volcano_setup (e)
     e.subst("y : yyy.x")
     e.subst("y = xxx.")
     e.colour("c = lightred")
-    e.colour("= = lightred")
     e.set_feature_name("stone_arch", "rock-blocked tunnel")
 end
 
@@ -214,15 +213,15 @@ end
 -- This function sets up two slots of monsters: in general, the first
 -- slot (say, 1) is the "surrounding" guardians, while the third slot
 -- is a "levelled" up version of the 1s. It's currently balanced for
--- two or three 1s, and one 2, alongside scattered 1s.
+-- two or three 1s, and one 2, alongside scattered lone 1s.
 --
 -- HangedMan, March 2013:
 -- Humanoids mostly consistent of orcs, centaurs, or ogres with fiery
--- equipment, alongside rare minotaurs, deep elves, and mixed others.
+-- equipment, alongside rare salamanders, deep elves, and mixed others.
 -- Otherwise, there are mixed sets of "natural" beasts, demons,
 -- and mostly-unliving monsters, with potentially a mix of all three.
 -- The weight for the first half is (slightly) lowered in lair.
--- There are still a few uniques to echo the old set's intent of course.
+-- There are still a few uniques to echo the old set's intent, of course.
 --
 
 function fiery_guardians (e, village)
@@ -287,8 +286,8 @@ function fiery_guardians (e, village)
             e.kmons("2 = Nessos / centaur warrior w:40 ; " .. centaurstuff
                     .. ", centaur warrior ; " .. centaurstuff)
         elseif set_weight < 10 then
-           e.mons("nothing")
-           e.mons("minotaur ; " .. knightstuff)
+           e.mons("salamander")
+           e.mons("salamander mystic")
         elseif set_weight < 11 then
            e.mons("deep elf fighter ; " .. elfstuff
                   .. " / deep elf priest ; " .. elfstuff)
@@ -315,9 +314,9 @@ function fiery_guardians (e, village)
         local set_weight = crawl.random2(8)
         if set_weight < 3 then
             -- "Lair"-esque monster pack.
-            e.mons("komodo dragon w:3 / fire bat band / fire drake / manticore"
+            e.mons("komodo dragon w:3 / fire bat band / fire drake / mottled dragon"
                    .. " / hell hound w:3")
-            e.mons("mottled dragon w:4 / lindwurm w:4 / fire dragon w:1"
+            e.mons("manticore w:4 / lindwurm w:4 / fire dragon w:1"
                    .. " / fire crab w:1")
         elseif set_weight < 5 then
             -- "Demonic" monster pack.
@@ -327,13 +326,13 @@ function fiery_guardians (e, village)
             e.mons("efreet / sun demon / smoke demon / " .. hellknight)
         elseif set_weight < 7 then
             -- Unliving themed pack.
-            e.mons("molten gargoyle / fire elemental / toenail golem"
+            e.mons("gargoyle / fire elemental / toenail golem w:5"
                    .. " / red ugly thing / earth elemental / fire vortex")
             e.mons("efreet / molten gargoyle / flaming corpse")
         else
             -- Let's go all out.
             e.mons("hell hound / fire drake / toenail golem / fire elemental"
-                   .. " / komodo dragon")
+                   .. " / manticore")
             e.mons(hellknight .. " / fire crab")
         end
     end
@@ -666,7 +665,7 @@ TAGS:  volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
 KFEAT: _ = altar_makhleb / altar_trog / altar_vehumet
 #      Sets up the temple guardians.
 :      fiery_guardians(_G)
-MONS:  clay golem w:18 / molten gargoyle w:2
+MONS:  molten gargoyle w:90 / gargoyle
 #      Loot: 9 items, 8 gold.
 :      volcano_setup(_G)
 MAP
@@ -718,7 +717,7 @@ NSUBST: Y = 1:+ / 1:G / *:x
 :       fiery_guardians(_G)
 KMONS:  3 = lava snake / lava worm w:30
 KFEAT:  3 = l
-NSUBST: 3 = 3:4 / 2 = 4. / *:l
+NSUBST: l = 3:3 / 2 = 3. / *:l
 #       Loot: 8 items.
 :       volcano_setup(_G)
 COLOUR: + = red
@@ -726,14 +725,14 @@ MAP
          .
 xxxxxxxxx.xxxxxxxxx
 xxx..xxxx.xcccccccc
-xx.xx..x.xxc.3.3d3c
-x.xXXXx.xxcc313.3ec
-x.xXgXxxxxGc.3.3.3c
-xx.XXX..<...313.32c
-xx.xx.xxxxGc.3.3.3c
-xx.xxx.xcccc313.3fc
-x.xx..YYc....3.3e3c
-xx..xxYgc._.3.3d3fc
+xx.xx..x.xxc.l.ldlc
+x.xXXXx.xxccl1l.lec
+x.xXgXxxxxGc.l.l.lc
+xx.XXX..<...l1l.l2c
+xx.xx.xxxxGc.l.l.lc
+xx.xxx.xccccl1l.lfc
+x.xx..YYc....l.lelc
+xx..xxYgc._.l.ldlfc
 xxxxxxxxccccccccccc
 ENDMAP
 
@@ -744,7 +743,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 NSUBST: X = 1:+ / *:x, Y = 1:+ / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
-MONS:   clay golem w:18 / molten gargoyle w:2
+MONS:   molten gargoyle w:90 / gargoyle
 #       Loot: 8 items, 10 gold.
 :       volcano_setup(_G)
 MAP
@@ -864,7 +863,7 @@ SHUFFLE:    muzirn
 SUBST:      m = ., u : l:19 .:1, zirn = l
 #           Sets up the temple guardians.
 :           fiery_guardians(_G)
-KMONS:      3 = clay golem w:18 / molten gargoyle w:2
+KMONS:      3 = molten gargoyle w:90 / gargoyle
 #           Loot: 10 items, 6 gold.
 :           volcano_setup(_G)
 :           place_lake_volcanoes(_G, {"M", "E", "V", "Q", "T", "S"})
@@ -1058,16 +1057,16 @@ NAME:    vts_chambers
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror
 #        Traps and doors.
-NSUBST:  X = 1:= / *:v
+NSUBST:  X = 1:+ / *:v
 NSUBST:  Y = 1:+ / *:c
 NSUBST:  t = 1:! / *:.
 KFEAT:   ! = alarm trap
 #        The monsters.
 MONS:    mummy / vampire
-MONS:    manticore skeleton / ogre skeleton / spriggan skeleton / centaur skeleton / \
-         tengu skeleton
-MONS:    hill giant skeleton / troll skeleton / draconian skeleton / naga skeleton / \
-         minotaur skeleton / sphinx skeleton w:5
+MONS:    troll skeleton / ogre skeleton / spriggan skeleton / centaur skeleton / \
+         merfolk skeleton
+MONS:    hill giant skeleton / manticore skeleton / naga skeleton / \
+         two-headed ogre skeleton / minotaur skeleton / sphinx skeleton w:5
 KMONS:   4 = guardian mummy / Menkaure w:5, guardian mummy
 #        Loot: 21 gold, 10 items.
 :        volcano_setup(_G)
@@ -1103,7 +1102,7 @@ NAME:       volcano_aerie
 WEIGHT:     30
 ORIENT:     encompass
 MONS:       lindwurm
-MONS:       toenail golem / molten gargoyle
+MONS:       molten gargoyle / gargoyle / toenail golem w:2
 MONS:       fire elemental / fire vortex
 NSUBST:     R = 1:1 / 1:L / 1:l / 1:.
 NSUBST:     Y = 8:3 / 6:J / *:.
@@ -1179,7 +1178,6 @@ TAGS:       no_item_gen no_monster_gen no_rotate
 :           volcano_setup(_G)
 ITEM:       apple / choko
 COLOUR:     m = blue
-COLOUR:     + = cyan
 MONS:       human ; robe ego:fire_resistance ident:type
 MONS:       toenail golem
 :           place_chained_volcano(_G)
