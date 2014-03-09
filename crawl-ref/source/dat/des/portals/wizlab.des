@@ -28,9 +28,9 @@
 #          |Abyss monsters          |abyss-escape aides      |
 #--------------------------------------------------------------------
 #Cloud Mage|air elementals,         |potions, robe of clouds,|16000
-#          |vapours, cloud mage     |speed/air-related misc  |
+#          |vapours, Cloud Mage     |speed/air-related misc  |
 #--------------------------------------------------------------------
-#Hellbinder|Demons, summoners,      |fire/summoning/         |17000
+#Hellbinder|demons, summoners,      |fire/summoning/         |17000
 #          |Hellbinder              |demonic items           |
 #---------------------------------------------------------------------
 #Full Name                |Layout               |Colours
@@ -1414,18 +1414,15 @@ ENDMAP
 # Wucad Mu's Monastery
 #
 # TODO: Could use more "alien" statue tiles.
-#       The new bases for the "monks" block retiling/recolouring them,
-#       and any spawn list (explicitly used here) blocks any redefinition
-#       for monsters, which altogether means I've cut out most of the
-#       flavour redefinitions for the monks while it doesn't work
-#       consistently. I'd only use a dbname and tile change, myself,
-#       but for now with the above two bugs there's a cut in old flavour.
+#       Any spawn list (explicitly used here) blocks any redefinition
+#       for monsters, which altogether means the flavour redefinitions
+#       of the monks were cut they don't work consistently; currently,
+#       retiles apply to the level spawns but not the OCS spawns.
+#       dbname use may or may not be warranted to preserve old flavour.
 #       (also, OCS boss sucks while disint is still binary.)
 #
 #       A prefix as well as suffix but no regular modifier
 #       (so, "faint draconian monk") would be the best, if it's done.
-#       tile:mons_faint_[foo]_monk is set up for future retiling, too,
-#       and so is a description for each monster. See the unused KMONS.
 NAME:       wizlab_wucad
 TAGS:       no_rotate
 SUBST:      T = t.
@@ -1457,9 +1454,7 @@ ITEM:       manual of fighting / manual of armour / manual of spellcasting / \
 ITEM:       book of enchantments
 SHUFFLE:    defg
 LFLOORCOL:  white
-KMONS:      F = monstrous demonspawn name:faint_demonspawn_monk n_rpl \
-                / deep troll name:faint_deep_troll_monk n_rpl \
-                / grey draconian monk name:faint n_adj
+
 {{
 dgn.persist.wucad_mu_died = false
 

@@ -126,10 +126,10 @@ function savage_simulacrum(e)
 end
 
 function cruel_simulacrum(e)
-   cruel_ice = "harpy simulacrum w:2 / anaconda simulacrum w:3 / " ..
+   cruel_ice = "harpy simulacrum w:3 / anaconda simulacrum w:3 / " ..
                "dire elephant simulacrum w:2 / hydra simulacrum w:3 / " ..
                "ettin simulacrum w:1 / iron troll simulacrum w:2 / " ..
-               "golden dragon simulacrum w:1 / phoenix simulacrum w:1"
+               "golden dragon simulacrum w:1"
 end
 
 -- Some random monster lists are the same for multiple destination caves.
@@ -1096,6 +1096,7 @@ ENDMAP
 # them (if they want loot, that is).
 
 NAME:   ice_cave_statue_garden_01
+veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
@@ -1139,6 +1140,7 @@ xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   ice_cave_statue_garden_02
+veto {{ return dgn.persist.ice_cave_hard }}
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
