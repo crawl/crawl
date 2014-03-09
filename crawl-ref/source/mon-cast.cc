@@ -3809,7 +3809,12 @@ static int _mons_mesmerise(monster* mons, bool actual)
          || you.duration[DUR_MESMERISE_IMMUNE]) && !already_mesmerised)
     {
         if (actual)
-            canned_msg(MSG_YOU_RESIST);
+        {
+            if (you.clarity())
+                canned_msg(MSG_YOU_UNAFFECTED);
+            else
+                canned_msg(MSG_YOU_RESIST);
+        }
 
         return 0;
     }
