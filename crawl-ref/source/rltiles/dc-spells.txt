@@ -277,6 +277,7 @@ error PRIMAL_WAVE
 %sdir gui/spells/monster
 quicksilver_bolt QUICKSILVER_BOLT
 %sdir misc
+# Remove when TAG_MAJOR_VERSION > 34
 error REARRANGE_PIECES
 error SAP_MAGIC
 error SENTINEL_MARK
