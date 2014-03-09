@@ -4041,7 +4041,10 @@ bool mon_special_ability(monster* mons, bolt & beem)
                     || you.clarity())
                     || you.duration[DUR_MESMERISE_IMMUNE])
             {
-                canned_msg(MSG_YOU_RESIST);
+                if (you.clarity())
+                    canned_msg(MSG_YOU_UNAFFECTED);
+                else
+                    canned_msg(MSG_YOU_RESIST);
                 used = true;
                 break;
             }
