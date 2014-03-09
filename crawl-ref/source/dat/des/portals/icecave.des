@@ -182,7 +182,8 @@ function ice_cave_caverns_natural_giant_monster_set(e)
   e.mons("polar bear / death yak w:5")
   e.mons("polar bear / yak")
   e.mons("wolf / nothing w:3")
-  e.mons("patrolling frost giant / patrolling white draconian w:1")
+  e.mons("patrolling frost giant / patrolling white draconian w:1 ; \
+          battleaxe ego:freezing ident:type . cloak ")
 end
 
 function ice_cave_item_attributes(e)

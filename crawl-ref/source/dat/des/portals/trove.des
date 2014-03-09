@@ -788,23 +788,24 @@ COLOUR: x = blue
 NSUBST: " = 1:+ / *:x
 NSUBST: ' = 1:+ / *:x
 MONS:   ynoxinul
-# 24 items, just because we're feeling generous.
+# 25 items, just because we're feeling generous.
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
+ITEM:   wand of disintegration ident:type
 KFEAT:  m = iron_grate
 : trove.setup_features(_G)
 MAP
         mmmmmmmmmm
-        mmm1..1mmm
+        m..1mm1..m
 xxxxxxxxmmmmmmmmmmxxxxxxxx
 x........................x
 x.x'x'xxxxxxxxxxxxxxxxxx.x
 x.'edd+...............<x.x
 x.xdedx.mmmmmmmmmm.xx"xx"x
-x.'ddex.mmm1..1mmm."dedddx
+x.'ddex.m..1mm1..m."dedddx
 x'xxxxx.mmmmmmmmmm.xededfx
-xA................."fffedx
+xA.h..............."fffedx
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -812,15 +813,19 @@ ENDMAP
 NAME:   trove_treasure_island
 ORIENT: encompass
 TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
+# If we're going to negate the results, might as well
+# block the few who don't get free help.
+TAGS:   no_species_mu no_species_vp
 WEIGHT: 2
 COLOUR: x = blue
 KFEAT:  1 = deep_water
-KMONS:  1 = shining eye
-# 21 items, 'cos this one is *nasty*. There are 4 extra potions of cure mutation.
+KMONS:  1 = generate_awake shining eye
+# 21 items, 'cos this one is *nasty*.
+# There are 4 extra potions of cure mutation, anyway.
 ITEM:   any useful good_item / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
-ITEM:   potion of cure mutation
+ITEM:   potion of cure mutation ident:type
 : trove.setup_features(_G)
 : set_border_fill_type("open_sea")
 MAP
