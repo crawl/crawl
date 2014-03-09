@@ -958,7 +958,6 @@ plate armour
 # often filled with mail.
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. Chainmail covers gaps, allowing movement.
-
 It provides excellent protection, yet donning it takes forever.
 %%%%
 potion of agility
