@@ -894,21 +894,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_FAUN:
         item.base_type = OBJ_WEAPONS;
         if (!melee_only)
-        {
-            switch (mon->type)
-            {
-                case MONS_FAUN:
-                default:
-                    item.sub_type = WPN_SLING;
-                    break;
-                case MONS_SATYR:
-                    item.sub_type = random_choose_weighted(3, WPN_LONGBOW,
-                                                           1, WPN_BOW,
-                                                           1, WPN_SLING,
-                                                           0);
-                    break;
-            }
-        }
+            item.sub_type = (mon->type == MONS_SATYR ? WPN_LONGBOW : WPN_SLING);
         else
         {
             item.sub_type = random_choose_weighted(2, WPN_SPEAR,
