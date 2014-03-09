@@ -2133,18 +2133,9 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     // FIXME: ammo enchantment
     ammoHitBonus = ammoDamBonus = min(3, div_rand_round(mons->hit_dice , 3));
 
-    // Archers get a boost from their melee attack.
-    if (mons->is_archer())
-    {
-        const mon_attack_def attk = mons_attack_spec(mons, 0);
-        if (attk.type == AT_SHOOT)
-        {
-            if (projected == LRET_THROWN)
-                ammoHitBonus += random2avg(attk.damage, 2);
-            else
-                ammoDamBonus += random2avg(attk.damage, 2);
-        }
-    }
+    // Archers get an accuracy boost with thrown weapons
+    if (mons->is_archer() && projected == LRET_THROWN)
+        ammoHitBonus += random2avg(mons->hit_dice * 4 / 3, 2);
 
     if (projected == LRET_THROWN)
     {
