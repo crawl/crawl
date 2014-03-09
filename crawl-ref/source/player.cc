@@ -7088,12 +7088,12 @@ void player::blink(bool allow_partial_control)
     random_blink(allow_partial_control);
 }
 
-void player::teleport(bool now, bool abyss_shift, bool wizard_tele)
+void player::teleport(bool now, bool wizard_tele)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (now)
-        you_teleport_now(true, abyss_shift, wizard_tele);
+        you_teleport_now(true, wizard_tele);
     else
         you_teleport();
 }

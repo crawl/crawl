@@ -270,12 +270,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
         }
-        else if (player_in_branch(BRANCH_ABYSS) && !wizard_blink)
-        {
-            abyss_teleport(false);
-            if (you.pet_target != MHITYOU)
-                you.pet_target = MHITNOT;
-        }
         else
         {
             // Leave a purple cloud.
@@ -462,8 +456,8 @@ static void _handle_teleport_update(bool large_change, const coord_def old_pos)
 #endif
 }
 
-static bool _teleport_player(bool allow_control, bool new_abyss_area,
-                             bool wizard_tele, int range)
+static bool _teleport_player(bool allow_control, bool wizard_tele,
+                             int range)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
@@ -474,10 +468,9 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     if (wizard_tele)
         is_controlled = true;
 
-    // Stasis can't block the Abyss from shifting.
     if (!wizard_tele
         && (crawl_state.game_is_sprint() || you.no_tele(true, true))
-            && !new_abyss_area)
+            && !player_in_branch(BRANCH_ABYSS))
     {
         canned_msg(MSG_STRANGE_STASIS);
         return false;
@@ -495,7 +488,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
 
     if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
-        abyss_teleport(new_abyss_area);
+        abyss_teleport();
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
 
@@ -774,11 +767,10 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool allow_control, bool new_abyss_area,
-                      bool wizard_tele, int range)
+void you_teleport_now(bool allow_control, bool wizard_tele,
+                      int range)
 {
-    const bool randtele = _teleport_player(allow_control, new_abyss_area,
-                                           wizard_tele, range);
+    const bool randtele = _teleport_player(allow_control, wizard_tele, range);
 
     // Xom is amused by uncontrolled teleports that land you in a
     // dangerous place, unless the player is in the Abyss and

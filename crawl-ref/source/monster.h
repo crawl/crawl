@@ -438,7 +438,6 @@ public:
     void blame_damage(const actor *attacker, int amount);
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
-                  bool abyss_shift = false,
                   bool wizard_tele = false);
     void suicide(int hp = -1);
 

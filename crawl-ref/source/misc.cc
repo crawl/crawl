@@ -1959,7 +1959,7 @@ void timeout_terrain_changes(int duration, bool force)
 void bring_to_safety()
 {
     if (player_in_branch(BRANCH_ABYSS))
-        return abyss_teleport(true);
+        return abyss_teleport();
 
     if (crawl_state.game_is_zotdef() && !orb_position().origin())
     {

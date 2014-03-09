@@ -190,7 +190,7 @@ void distortion_tele_fineff::fire()
 {
     actor *defend = defender();
     if (defend && defend->alive() && !defend->no_tele(true, false))
-        defend->teleport(true, one_chance_in(5));
+        defend->teleport(true);
 }
 
 void trj_spawn_fineff::fire()

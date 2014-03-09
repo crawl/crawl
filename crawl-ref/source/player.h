@@ -575,7 +575,6 @@ public:
     void banish(actor *agent, const string &who = "");
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
-                  bool abyss_shift = false,
                   bool wizard_tele = false);
     void drain_stat(stat_type stat, int amount, actor* attacker);
 

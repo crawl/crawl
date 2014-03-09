@@ -899,29 +899,6 @@ static void _abyss_generate_monsters(int nmonsters)
     }
 }
 
-static bool _abyss_teleport_within_level()
-{
-    // Try to find a good spot within the shift zone.
-    for (int i = 0; i < 100; i++)
-    {
-        const coord_def newspot =
-            dgn_random_point_in_margin(MAPGEN_BORDER
-                                       + ABYSS_AREA_SHIFT_RADIUS
-                                       + 1);
-
-        if ((grd(newspot) == DNGN_FLOOR
-             || grd(newspot) == DNGN_SHALLOW_WATER)
-            && !monster_at(newspot)
-            && env.cgrid(newspot) == EMPTY_CLOUD)
-        {
-            dprf(DIAG_ABYSS, "Abyss same-area teleport to (%d,%d).",
-                 newspot.x, newspot.y);
-            you.moveto(newspot);
-            return true;
-        }
-    }
-    return false;
-}
 
 void maybe_shift_abyss_around_player()
 {
@@ -1592,21 +1569,9 @@ void abyss_morph(double duration)
     los_changed();
 }
 
-void abyss_teleport(bool new_area)
+void abyss_teleport()
 {
     xom_abyss_feature_amusement_check xomcheck;
-    if (!new_area)
-    {
-        _abyss_teleport_within_level();
-        abyss_area_shift();
-        _initialize_abyss_state();
-        _nuke_all_terrain(true);
-        forget_map(false);
-        clear_excludes();
-        more();
-        return;
-    }
-
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
     _abyss_generate_new_area();
     _write_abyssal_features();

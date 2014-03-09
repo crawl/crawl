@@ -415,7 +415,7 @@ void banished(const string &who)
         {
             // On Abyss:5 we can't go deeper; cause a shift to a new area
             mprf(MSGCH_BANISHMENT, "You are banished to a different region of the Abyss.");
-            abyss_teleport(true);
+            abyss_teleport();
         }
         return;
     }
