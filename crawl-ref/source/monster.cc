@@ -3510,7 +3510,7 @@ bool monster::is_holy(bool check_spells) const
 
 bool monster::is_unholy(bool check_spells) const
 {
-    if (type == MONS_SILVER_STATUE || type == MONS_DEMONSPAWN)
+    if (type == MONS_SILVER_STATUE || mons_is_demonspawn(type))
         return true;
 
     if (holiness() == MH_DEMONIC)
