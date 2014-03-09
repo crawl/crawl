@@ -201,7 +201,8 @@ KMONS:    D = big kobold
 KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
 KITEM:    C = cheese q:4 no_mimic
-KITEM:    E = falchion ego:flaming ident:type / short sword ego:flaming
+KITEM:    E = falchion ego:flaming ident:type / \
+              short sword ego:flaming ident:type
 KITEM:    H = meat ration q:2 no_mimic
 KITEM:    I = cutlass
 KFEAT:    EF = shallow_water
@@ -248,7 +249,8 @@ NAME:   hangedman_tell_no_tales
 DEPTH:  D:9-14
 : food_weight(_G, 9)
 WEIGHT: 10
-TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_item_gen patrolling
+TAGS:   uniq_second_food extra chance_second_food
+TAGS:   no_monster_gen no_item_gen patrolling
 MONS:   spriggan skeleton / centaur skeleton
 MONS:   troll skeleton / hungry ghost
 MONS:   shadow imp
@@ -259,7 +261,7 @@ KMONS:  A = vapour w:4 / trapdoor spider w:6 / unseen horror / nothing w:2
 : end
 ITEM:  sultana q:1 no_mimic / grape w:8 q:1 no_mimic
 ITEM:  sultana mimic q:1 w:8 / grape mimic w:8 q:1
-ITEM:  honeycomb q:2, bread ration q:3
+ITEM:  honeycomb q:2 no_mimic, bread ration q:3 no_mimic
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'h', 'spriggan skeleton')
 : else
@@ -289,7 +291,7 @@ DEPTH:   D:10-14
 WEIGHT:  10
 TAGS:    uniq_second_food extra chance_second_food patrolling no_rotate no_vmirror
 # Branch representatives working together to cook some soup:
-# D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Hells, Zot.
+# D, Orc, Elf, Swamp, Shoals, Vaults, Crypt, Hells.
 KMONS:   A = kobold
 KMONS:   B = orc
 KMONS:   C = deep elf fighter
@@ -324,13 +326,13 @@ MAP
 ENDMAP
 
 # 22.0k/29.5k/0
-# A couple of tengu have staked out a little piece of the dungeon.
-NAME:   grunt_tengu_nest
+# A naga has staked out a little piece of the dungeon.
+NAME:   grunt_snake_nest
 DEPTH:  D:9-14
 : food_weight(_G, 9)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   tengu ; war axe | scimitar | long sword, plant
+MONS:   naga, adder / water moccasin w:15, plant
 NSUBST: 2 : 3:2 / *:.
 ITEM:   bread ration no_mimic / snozzcumber q:3 no_mimic / \
         orange q:4 w:5 no_mimic / orange q:5 w:5 no_mimic / \
@@ -340,10 +342,10 @@ ITEM:   bread ration no_mimic / snozzcumber q:3 no_mimic / \
         choko q:7 no_mimic / rambutan q:7 no_mimic / lychee q:7 no_mimic
 MAP
  xx+xx
-xx2.2xx
-x22222x
-x22222x
-xd1t1dx
+xx3.3xx
+x33333x
+x33133x
+xd2t2dx
 xxdddxx
  xxxxx
 ENDMAP
@@ -397,8 +399,7 @@ WEIGHT: 10
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
 MONS:   deep elf fighter ; cutlass | falchion / \
-        human hd:5 ; short sword | cutlass / \
-        deep dwarf ; hand axe / \
+        human ; short sword | cutlass / \
         orc warrior ; dagger / \
         spriggan ; dagger
 ITEM:   slice of pizza q:8 no_mimic, bread ration q:2 no_mimic
@@ -453,7 +454,7 @@ DEPTH:  D:7-14
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_trap_gen \
         patrolling
-MONS:   human hd:5 ; animal skin . hand axe
+MONS:   human ; animal skin . hand axe
 {{
   local sheep_weight = 14 - you.absdepth()
   if sheep_weight <= 0 then

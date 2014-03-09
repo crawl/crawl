@@ -906,7 +906,7 @@ ENDMAP
 
 ##############################################################################
 
-NAME:   lightli_hangedman_arrival_farm
+NAME:   lightli_arrival_farm
 ORIENT: float
 TAGS:   no_monster_gen arrival
 MONS:   plant
