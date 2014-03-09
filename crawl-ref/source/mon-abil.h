@@ -46,7 +46,8 @@ bool apply_grasping_roots(monster* mons);
 void check_grasping_roots(actor* act, bool quiet = false);
 
 void siren_song(monster* mons);
-void shock_serpent_discharge(monster* serpent);
+void shock_serpent_discharge(monster* serpent, coord_def pos, int pow,
+                             mon_attitude_type attitude);
 
 void guardian_golem_bond(monster* mons);
 

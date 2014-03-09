@@ -907,12 +907,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         props.erase("song_count");
         break;
 
-    case ENCH_BUILDING_CHARGE:
-        if (!quiet && you.can_see(this))
-            mprf("%s electrical charge dissipates.", name(DESC_ITS).c_str());
-        number = 0;
-        break;
-
     case ENCH_POISON_VULN:
         if (!quiet)
             simple_monster_message(this, " is no longer more vulnerable to poison.");
@@ -1074,7 +1068,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_WRETCHED: case ENCH_SCREAMED:
         case ENCH_BLIND: case ENCH_WORD_OF_RECALL: case ENCH_INJURY_BOND:
-        case ENCH_FLAYED: case ENCH_BARBS: case ENCH_BUILDING_CHARGE:
+        case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC:
             lose_ench_levels(i->second, levels);
@@ -2028,22 +2022,6 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         break;
 
-    case ENCH_BUILDING_CHARGE:
-        ASSERT(type == MONS_SHOCK_SERPENT);
-
-        if (decay_enchantment(en))
-            break;
-
-        // Announcing at 4, since it is about to increment and hit its cap of
-        // 5 and this prevents this message from being spammed
-        if (number == 4)
-        {
-            simple_monster_message(this, " bristles with a violent electric nimbus!",
-                                   MSGCH_MONSTER_ENCHANT);
-        }
-        number = min((int)number + 1, 5);
-        break;
-
     case ENCH_GRAND_AVATAR:
         if (!me.agent() || !me.agent()->alive())
             del_ench(ENCH_GRAND_AVATAR, true, false);
@@ -2196,7 +2174,11 @@ static const char *enchant_names[] =
     "awaken vines", "control_winds", "wind_aided", "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
-    "barbs", "building_charge", "poison_vuln", "icemail", "agile",
+    "barbs",
+#if TAG_MAJOR_VERSION == 34
+    "building_charge",
+#endif
+    "poison_vuln", "icemail", "agile",
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "buggy",
 };

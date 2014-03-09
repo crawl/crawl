@@ -134,6 +134,13 @@ void deferred_damage_fineff::merge(const final_effect &fe)
     damage += ddamfe->damage;
 }
 
+void shock_serpent_discharge_fineff::merge(const final_effect &fe)
+{
+    const shock_serpent_discharge_fineff *ssdfe =
+        dynamic_cast<const shock_serpent_discharge_fineff *>(&fe);
+    power += ssdfe->power;
+}
+
 void mirror_damage_fineff::fire()
 {
     actor *attack = attacker();
@@ -301,8 +308,8 @@ void starcursed_merge_fineff::fire()
 void shock_serpent_discharge_fineff::fire()
 {
     actor *defend = defender();
-    if (defend && defend->alive())
-        shock_serpent_discharge(defender()->as_monster());
+    shock_serpent_discharge((defend ? defend->as_monster() : NULL), position,
+                             power, attitude);
 }
 
 void delayed_action_fineff::fire()
