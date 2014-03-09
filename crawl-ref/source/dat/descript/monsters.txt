@@ -2345,9 +2345,8 @@ energy. Beauty is certainly nowhere to be found in this beholder.
 shock serpent
 
 A sinuous serpent whose body crackles with volatile electricity. Its electric
-shroud inflicts a painful shock on anything that injures it, and if allowed to
-gather sufficient charge, can be unleashed by the serpent as a powerful torrent
-of electric energy.
+shroud can discharge when struck, inflicting a painful shock on any nearby
+foes.
 %%%%
 silent spectre
 

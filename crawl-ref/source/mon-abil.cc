@@ -2271,80 +2271,38 @@ static bool _swoop_attack(monster* mons, actor* defender)
     return false;
 }
 
-void shock_serpent_discharge(monster* serpent)
+void shock_serpent_discharge(monster* serpent, coord_def pos, int pow,
+                             mon_attitude_type attitude)
 {
-    int pow = serpent->number;
-    int range = max(1, pow * 2 / 3);
+    int range = min(3, pow);
 
     vector <actor*> targets;
-    for (actor_near_iterator ai(serpent); ai; ++ai)
+    for (actor_near_iterator ai(pos); ai; ++ai)
     {
-        if (ai->pos().distance_from(serpent->pos()) <= range
-            && !mons_aligned(serpent, *ai) && ai->res_elec() < 3)
+        if (ai->pos().distance_from(pos) <= range
+            && !mons_atts_aligned(attitude, ai->is_player() ? ATT_FRIENDLY
+                                                            : mons_attitude(ai->as_monster()))
+            && ai->res_elec() < 3)
         {
             targets.push_back(*ai);
         }
     }
 
-    if (you.can_see(serpent))
+    if (serpent && you.can_see(serpent))
     {
         mprf("%s electric aura discharges%s!", serpent->name(DESC_ITS).c_str(),
-             pow > 4 ? "" : " violently");
+             pow < 4 ? "" : " violently");
     }
-    else if (you.see_cell(serpent->pos()))
+    else if (you.see_cell(pos))
         mpr("The air sparks with electricity!");
 
     for (unsigned int i = 0; i < targets.size(); ++i)
     {
-        int amount = roll_dice(2, 5) + div_rand_round(pow * 3, 2);
+        int amount = roll_dice(3, 4 + pow * 3 / 2);
         amount = targets[i]->apply_ac(amount, 0, AC_HALF);
         mprf("The lightning shocks %s.", targets[i]->name(DESC_THE).c_str());
         targets[i]->hurt(serpent, amount, BEAM_ELECTRICITY);
     }
-
-    serpent->number = 0;
-}
-
-static bool _shock_serpent_torrent(monster* serpent, actor* target)
-{
-    vector<bolt> beams = get_spray_rays(serpent, target->pos(), 8, 3, 5);
-
-    if (beams.size() == 0)
-        return false;
-    // If we can't hit our primary target, at least don't hit a friendly
-    else if (beams[0].path_taken.back() != target->pos())
-    {
-        actor* act = actor_at(beams[0].path_taken.back());
-        if (!act || act && mons_aligned(serpent, act))
-            return false;
-    }
-
-    simple_monster_message(serpent,
-                           " unleashes its stored charge as a torrent of lightning!",
-                           MSGCH_MONSTER_SPELL);
-
-    for (unsigned int i = 0; i < beams.size(); ++i)
-    {
-        beams[i].name           = "torrent of lightning";
-        beams[i].aux_source     = "lightning torrent";
-        beams[i].hit_verb       = "arcs to";
-        beams[i].thrower        = KILL_MON_MISSILE;
-        beams[i].range          = 8;
-        beams[i].hit            = AUTOMATIC_HIT;
-        beams[i].glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
-        beams[i].flavour        = BEAM_ELECTRICITY;
-        beams[i].obvious_effect = true;
-        beams[i].is_beam        = false;
-        beams[i].is_explosion   = false;
-        beams[i].is_tracer      = false;
-        beams[i].colour         = LIGHTBLUE;
-        beams[i].damage         = dice_def(2, 29);
-        beams[i].fire();
-    }
-
-    serpent->number = 0;
-
-    return true;
 }
 
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
@@ -4488,19 +4446,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons->has_ench(ENCH_BUILDING_CHARGE))
-        {
-            mons->add_ench(mon_enchant(ENCH_BUILDING_CHARGE, 0, mons,
-                                       random_range(300, 500)));
-            simple_monster_message(mons, " begins to gather electrical charge!");
-        }
-
-        if (mons->number == 5 && one_chance_in(3))
-        {
-            if (_shock_serpent_torrent(mons, mons->get_foe()))
-                used = true;
-        }
-        else if (one_chance_in(6))
+        if (one_chance_in(6))
         {
             // Setup tracer.
             beem.name        = "bolt of electricity";

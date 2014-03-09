@@ -142,12 +142,18 @@ public:
 class shock_serpent_discharge_fineff : public final_effect
 {
 public:
-    shock_serpent_discharge_fineff(const actor *serpent)
-            : final_effect(0, serpent, coord_def())
+    shock_serpent_discharge_fineff(const actor *serpent, coord_def pos, int pow)
+            : final_effect(0, serpent, coord_def()), position(pos), power(pow),
+                    attitude(mons_attitude(serpent->as_monster()))
     {
     }
     bool mergeable(const final_effect &a) const;
+    void merge(const final_effect &a);
     void fire();
+protected:
+    coord_def position;
+    int power;
+    mon_attitude_type attitude;
 };
 
 // A fineff that triggers a daction; otherwise the daction
