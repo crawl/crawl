@@ -153,10 +153,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
         if (attk_type == AT_WEAP_ONLY)
         {
             int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
-            if (weap == NON_ITEM)
+            if (weap == NON_ITEM || is_range_weapon(mitm[weap]))
                 attk_type = AT_NONE;
-            else if (is_range_weapon(mitm[weap]))
-                attk_type = AT_SHOOT;
             else
                 attk_type = AT_HIT;
         }
@@ -202,7 +200,6 @@ bool melee_attack::handle_phase_attempted()
     // Skip invalid and dummy attacks.
     if (defender && (!adjacent(attack_position, defender->pos())
                      && !jumping_attack && !can_reach())
-        || attk_type == AT_SHOOT
         || attk_type == AT_CONSTRICT
            && (!attacker->can_constrict(defender)
                || attacker->is_monster() && attacker->mid == MID_PLAYER))
@@ -1186,7 +1183,9 @@ void melee_attack::adjust_noise()
         // To prevent compiler warnings.
         case AT_NONE:
         case AT_RANDOM:
+#if TAG_MAJOR_VERSION == 34
         case AT_SHOOT:
+#endif
             die("Invalid attack type for noise_factor");
             break;
 

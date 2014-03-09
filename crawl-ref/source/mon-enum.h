@@ -57,10 +57,10 @@ enum attack_type
     AT_POUNCE,
     AT_REACH_STING,
     AT_CHERUB,
-
-    AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
-    AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap
-                    //   use it, no weapon: stand there doing nothing.
+#if TAG_MAJOR_VERSION == 34
+    AT_SHOOT,
+#endif
+    AT_WEAP_ONLY,   // AT_HIT if wielding a melee weapon, AT_NONE otherwise
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
 };
 
