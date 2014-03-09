@@ -4037,8 +4037,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // Once mesmerised by a particular monster, you cannot resist
             // anymore.
             if (!already_mesmerised
-                && (you.check_res_magic(mons->hit_dice * 10 + 20) > 0
-                    || you.clarity()))
+                && (you.check_res_magic(mons->hit_dice * 22 / 3 + 15) > 0
+                    || you.clarity())
+                    || you.duration[DUR_MESMERISE_IMMUNE])
             {
                 canned_msg(MSG_YOU_RESIST);
                 used = true;

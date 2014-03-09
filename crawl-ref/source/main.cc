@@ -2695,6 +2695,8 @@ static void _decrement_durations()
         you.clear_beholders();
     }
 
+    _decrement_a_duration(DUR_MESMERISE_IMMUNE, delay);
+
     if (_decrement_a_duration(DUR_AFRAID, delay,
                               "Your fear fades away.",
                               0, NULL, MSGCH_RECOVERY))

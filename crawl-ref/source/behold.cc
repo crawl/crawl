@@ -50,7 +50,7 @@ void player::add_beholder(const monster* mon, bool axe)
 
     if (!duration[DUR_MESMERISED])
     {
-        set_duration(DUR_MESMERISED, 7, 12);
+        set_duration(DUR_MESMERISED, random_range(7, 15), 15);
         beholders.push_back(mon->mindex());
         if (!axe)
         {
@@ -60,7 +60,7 @@ void player::add_beholder(const monster* mon, bool axe)
     }
     else
     {
-        increase_duration(DUR_MESMERISED, 5, 12);
+        increase_duration(DUR_MESMERISED, random_range(5, 8), 15);
         if (!beheld_by(mon))
             beholders.push_back(mon->mindex());
     }
@@ -123,6 +123,7 @@ void player::clear_beholders()
 {
     beholders.clear();
     duration[DUR_MESMERISED] = 0;
+    you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
 }
 
 // Possibly end mesmerisation if a loud noise happened.
@@ -245,6 +246,7 @@ void player::_removed_beholder(bool quiet)
     if (beholders.empty())
     {
         duration[DUR_MESMERISED] = 0;
+        you.duration[DUR_MESMERISE_IMMUNE] = random_range(21, 40);
         if (!quiet)
         {
             mprf(MSGCH_DURATION,
