@@ -1492,8 +1492,8 @@
        SPELL_AIRSTRIKE,
        SPELL_LIGHTNING_BOLT,
        SPELL_CONTROL_WINDS,
-       SPELL_SHOCK,
-       SPELL_NO_SPELL,
+       SPELL_AIRSTRIKE,
+       SPELL_HASTE,
        SPELL_NO_SPELL
       }
     },
@@ -2086,7 +2086,7 @@
        SPELL_SLEEP,
        SPELL_SLEEP,
        SPELL_INVISIBILITY,
-       SPELL_NO_SPELL,
+       SPELL_HASTE,
        SPELL_STRIP_RESISTANCE,
        SPELL_NO_SPELL
       }

@@ -1316,7 +1316,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         break;
 
     case MONS_SPRIGGAN_RIDER:
-        if (!melee_only && one_chance_in(4))
+        if (!melee_only && one_chance_in(15))
         {
             item.base_type = OBJ_WEAPONS;
             item.sub_type  = WPN_BLOWGUN;
@@ -1328,10 +1328,13 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     case MONS_SPRIGGAN_BERSERKER:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_HAND_AXE,
-                                       WPN_MACE,
-                                       WPN_SHORT_SWORD,
-                                       -1);
+        item.sub_type  = random_choose_weighted(10, WPN_QUARTERSTAFF,
+                                                 9, WPN_HAND_AXE,
+                                                12, WPN_WAR_AXE,
+                                                 5, WPN_BROAD_AXE,
+                                                 8, WPN_FLAIL,
+                                                10, WPN_CUTLASS,
+                                                 0);
         if (one_chance_in(4))
         {
             force_item = true;
@@ -1644,6 +1647,13 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                 set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                                     brand);
 
+            }
+            if (mon->type == MONS_SPRIGGAN_RIDER)
+            {
+                set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
+                                  SPMSL_CURARE);
+
+                mitm[thing_created].quantity = random_range(2, 4);
             }
             else
             {
