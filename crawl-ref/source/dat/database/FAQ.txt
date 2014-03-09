@@ -114,7 +114,7 @@ A:survival
 
 A: If you've got trouble even reaching the Temple, you might want to try a game or two in hints mode for some general playing hints.
 
-Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
+Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution, try to choose the location where you fight monsters, and keep an eye on your hit points and magic.
 
 For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/), so other players can comment on your equipment, skills or spell selection. Please trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list).
 
@@ -130,27 +130,13 @@ A: They may be in a part of the level that is not reachable from the upstairs yo
 
 Alternatively, if you are in one of the branches, you might also have reached its lowest level and have to turn around to explore another one. Check the dungeon overview ('Ctrl-O') to see how deep you've delved into a given branch, or the database ('?/b') for the number of levels for unseen branches.
 %%%%
-Q:stuck
-
-I teleported and ended up in a closed room without any exits. Am I stuck?
-%%%%
-A:stuck
-
-A: Unlike previous versions of Crawl that had secret doors, this cannot happen anymore. If it somehow does, it could be a bug that needs fixing, so please report it on our Mantis bug tracker: https://crawl.develz.org/mantis/
-
-If you're playing locally, be sure to upload your save file!
-
-If you're playing online console, you can create a copy of your save file for the developers to access by selecting the version you are playing and then pressing 'A' for Advanced options. Don't forget to include the server and your username in your bug report!
-
-In the meantime, you can try to escape with digging, disintegration or teleportation.
-%%%%
 Q:starving
 
 My characters keep starving. What am I doing wrong?
 %%%%
 A:starving
 
-A: It's possible that you simply spend too much time on cleared levels where not enough monsters are generated to dine on. You might also be too choosy about what you eat; unless you are herbivorous, you will have to occasionally eat monster chunks. If you worship a god who enjoys sacrifices, pay attention to your own hunger status instead of offering all corpses you come across.
+A: It's possible that you simply spend too much time on cleared levels where not enough monsters are generated to dine on. You might also be too choosy about what you eat; unless you are herbivorous, you should usually be eating monster chunks. If you worship a god who enjoys sacrifices, pay attention to your own hunger status instead of offering all corpses you come across.
 
 Also, casting (difficult) spells will make you hungry, but high Intelligence and Spellcasting will lessen this effect. If you press 'II', you can read about the hunger effects of your spells. Invocations likewise often have a Food cost.
 %%%%
@@ -214,14 +200,6 @@ For a more constructive answer, once a ghost has been loaded onto a level, it wo
 
 Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers or spellcasters with Conjure Flame.
 %%%%
-Q:instadeath
-
-I went down these stairs and got killed instantly! Is this a bug?
-%%%%
-A:instadeath
-
-A: Probably not. While your death might be due to an ill-placed vault (this would be a bug), it is generally just really bad luck. We believe that a game is more fun if the risk of death is real. This means that such instant deaths cannot be fully avoided, as Crawl relies on randomness for posing challenges. It is important to realize that for highly skilled players, the margin of such deaths is really slim...
-%%%%
 Q:abyss
 
 I've somehow ended up in a place called "Abyss". How do I get out of here?
@@ -236,23 +214,13 @@ A: If you are in the Abyss for the first time, chances of getting out are slim. 
 
 * If you have it, use defensive equipment (weapons of protection, etc.).
 
-* Use teleportation to hopefully end up in a completely new part of the Abyss.
+* Use teleportation to end up in a completely new part of the Abyss.
 
 * Teleportation might take much longer to kick in than in the Dungeon.
 
 * Consider switching your allegiance to Lugonu to get out of there.
 
 * Descending deeper in the Abyss will increase the chance of finding an exit out, but also increase the danger you face.
-%%%%
-Q:oklobs
-
-Oklob plants suck! Are you planning to remove them at last?
-%%%%
-A:oklobs
-
-A: No, we don't, because we feel that Oklob plants provide an interesting challenge. Resist the urge to kill them at once. If you absolutely need to bypass them, use your resources wisely.
-
-A hint: They cannot see invisible.
 %%%%
 Q:randart
 
@@ -274,7 +242,7 @@ Is there a way for me to interact with other players?
 %%%%
 A:interact
 
-A: If you play online on http://crawl.akrasiac.org, https://crawl.develz.org, or https://crawl.s-z.org you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages.
+A: If you play online you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages.
 
 Check https://crawl.develz.org/wordpress/howto for an explanation about how to play online.
 
@@ -328,59 +296,21 @@ Sometimes a screenshot can be helpful. If there are error messages, please write
 
 Thanks in advance!
 %%%%
-Q:ideas
+Q:idea
 
-I've got millions of ideas! Can I join the team?
+I've got a cool idea! What can I do with it?
 %%%%
-A:ideas
+A:idea
 
-A: Sorry, but no. At least not on ideas alone.
-
-All of the devteam members submitted a number of code intensive patches and/or took over responsibility over an important side project before joining. A good way to become indispensable is to help us with patches or vaults, etc.
-
-Please add your ideas in the appropriate section of the Mantis wiki: https://crawl.develz.org/wiki
+A: If you'd like your idea to get in, your surest bet is to put it in a place where a developer can see it. One good place is an appropriate section of the Mantis wiki: https://crawl.develz.org/wiki. Another possibility is the official forum at https://crawl.develz.org/tavern/.
 
 If they catch the interest of at least one coder, chances are they'll make it into the game.
 
 Note that your idea has a better chance of being accepted if you present the ramifications on gameplay. Since we put a lot of emphasis on the interface, a good proposal on how to make the game play smoother may go in without much ado.
 %%%%
-Q:feature
-
-Hey! Why did you close my feature request?
-%%%%
-A:feature
-
-A: If you submitted a report on our Mantis tracker, you will get an email any time someone replies to (or fiddles with) the thread in question. Once a thread has been resolved or closed, you can still access it by searching for requests with the "Resolved" and "Closed" status, respectively.
-
-We always try to give a reason for closing a request that has not been implemented, but it usually boils down to three reasons:
-
-* It doesn't fit into the Crawl world as we see it.
-
-* It violates Crawl's philosophy to avoid grinding and spoiler-heavy stuff.
-
-* We just don't think it's interesting enough to ever be implemented.
-
-Also, the Mantis tracker is primarily intended for bug reports and patches. Feature requests should generally be added to the wiki instead: https://crawl.develz.org/wiki
-
-Please don't let this stop you from bringing up more suggestions. Already the next one might generate heavy interest and excitement, and end up in the game. However, do try to be specific in your suggestions. If you cannot even explain the basics of your idea, why should we bother to flesh it out, let alone code it?
-%%%%
-Q:patch
-
-I've written a patch for a cool new feature! Where should I send it?
-%%%%
-A:patch
-
-A: Please submit it as a new issue on our Mantis tracker: https://crawl.develz.org/mantis/
-
-Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. In general, it is safer to first file your suggestions under Feature Requests and wait for people to become enthusiastic and give feedback before you submit a patch. If you want, you can also write a patch that implements an existing FR or fixes a bug.
-
-If you'd like to write a patch but don't know how to go about it, patch_guide.txt in the docs/develop/ directory is the file for you.
-
-We really appreciate your help!
-%%%%
 Q:help
 
-I cannot code, but I'd like to help improve the game. What can I do?
+I'd like to help improve the game. What can I do?
 %%%%
 A:help
 
@@ -394,9 +324,14 @@ A: There are several areas where you can get creative and outside help is much a
 
 * tiles (see source/rltiles/, docs/develop/tiles_creation.txt)
 
-Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ directory.
+Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ directory. Submit it and other new things on our Mantis tracker: https://crawl.develz.org/mantis/
+Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. It's possible that it won't be accepted, usually for one of three reasons:
 
-If you've got some cool addition, you can post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows and Mac binaries downloadable from https://crawl.develz.org/trunk/).
+* It doesn't fit into the Crawl world as we see it.
+
+* It violates Crawl's philosophy to avoid grinding and spoiler-heavy stuff.
+
+* We just don't think it's interesting enough to ever be implemented.
 
 Thanks a lot for your support!
 %%%%
@@ -406,11 +341,8 @@ What did you change in the most recent version?
 %%%%
 A:changes
 
-A: The admittedly highly subjective highlights of the most recent major release are listed along with the version information under '?v'. For more details, check out changelog.txt in the docs/ directory.
+A: The admittedly highly subjective highlights of the most recent major release are listed along with the version information under '?v'. For older releases' changes, check out changelog.txt in the docs/ directory.
 %%%%
-##############################################
-# Questions about the Tiles version
-##############################################
 Q:tiles lag
 
 The Tiles version is awfully slow! How can I improve that?
@@ -422,30 +354,4 @@ A: Crawl renders its graphics using OpenGL and SDL. Because it uses OpenGL, it d
 On Windows, the default driver that ships with Windows is extremely slow. Make sure to update your graphics card driver to the latest one available. On Linux, you should be sure to enable DRI.
 
 In addition to these suggestions, you can also try to see whether tweaking some options will improve performance. See docs/tiles_help.txt for details. If things are still too laggy after all of that, you could try the non-graphical console version, or wait for a future version that does not depend on OpenGL.
-%%%%
-Q:tiles online
-
-Can I play Tiles online?
-%%%%
-A:tiles online
-
-A: A web-based tile interface is available at http://webtiles.akrasiac.org or https://crawl.s-z.org/, though it is missing some features of the local Tiles version.
-%%%%
-Q:tiles commands
-
-Is there a list of mouse commands anywhere?
-%%%%
-A:tiles commands
-
-Yes, check tiles_help.txt. You can also browse it in-game via the '?t' command.
-%%%%
-Q:tiles options
-
-Is there a way to modify the size of the tiles screen, the font, etc.?
-%%%%
-A:tiles options
-
-A: Yes. Play around with the options in settings/init.txt until you are satisfied. See docs/options_guide.txt and docs/tiles_help.txt for some explanations.
-
-It is currently not possible to modify any options from within the game itself.
 %%%%
