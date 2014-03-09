@@ -306,6 +306,18 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         case 6: real_spell = SPELL_ORB_OF_ELECTRICITY;   break;
         }
     }
+    else if (spell_cast == SPELL_RANDOM_BOLT) // if casting directly
+    {
+        switch (random2(6))
+        {
+        case 0: real_spell = SPELL_VENOM_BOLT;           break;
+        case 1: real_spell = SPELL_BOLT_OF_DRAINING;     break;
+        case 2: real_spell = SPELL_BOLT_OF_FIRE;         break;
+        case 3: real_spell = SPELL_LIGHTNING_BOLT;       break;
+        case 4: real_spell = SPELL_QUICKSILVER_BOLT;     break;
+        case 5: real_spell = SPELL_CRYSTAL_BOLT;         break;
+        }
+    }
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
     beam.origin_spell = real_spell;
@@ -1268,7 +1280,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CHAIN_OF_CHAOS:
     case SPELL_BLACK_MARK:
     case SPELL_GRAND_AVATAR:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_REARRANGE_PIECES:
+#endif
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_SHROUD_OF_GOLUBRIA:
         return true;
@@ -4155,7 +4169,9 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_SHATTER:
     case SPELL_TORNADO:
     case SPELL_CHAIN_OF_CHAOS:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_REARRANGE_PIECES:
+#endif
         if (!monsterNearby)
             return true;
         break;
@@ -5783,6 +5799,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     }
+#if TAG_MAJOR_VERSION == 34
     case SPELL_REARRANGE_PIECES:
     {
         bool did_message = false;
@@ -5817,6 +5834,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     }
+#endif
 
     case SPELL_BLINK_ALLIES_AWAY:
         _blink_allies_away(mons);

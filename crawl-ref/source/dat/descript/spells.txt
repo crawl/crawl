@@ -1019,6 +1019,7 @@ This spell creates, at random, a bolt of venom, negative energy, fire, cold,
 dispelling energy, electricity, or a bouncing crystal bolt either freezing or
 burning the unfortunate victim.
 %%%%
+# TAG_MAJOR_VERSION == 34
 Rearrange the Pieces spell
 
 This spell swaps positions of random pairs of nearby creatures.

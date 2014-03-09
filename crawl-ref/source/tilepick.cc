@@ -5001,7 +5001,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_PORKALATOR:               return TILEG_PORKALATOR;
     case SPELL_PRIMAL_WAVE:              return TILEG_PRIMAL_WAVE;
     case SPELL_QUICKSILVER_BOLT:         return TILEG_QUICKSILVER_BOLT;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_REARRANGE_PIECES:         return TILEG_REARRANGE_PIECES;
+#endif
     case SPELL_SAP_MAGIC:                return TILEG_SAP_MAGIC;
     case SPELL_SENTINEL_MARK:            return TILEG_SENTINEL_MARK;
     case SPELL_SHADOW_BOLT:              return TILEG_SHADOW_BOLT;
