@@ -3671,7 +3671,7 @@ static const summons_desc summonsdata[] =
     { SPELL_CALL_LOST_SOUL,             3, 2 },
     { SPELL_SUMMON_VERMIN,              5, 2 },
     { SPELL_FORCEFUL_INVITATION,        3, 1 },
-    { SPELL_PLANEREND,                  8, 1 },
+    { SPELL_PLANEREND,                  6, 1 },
     { SPELL_SUMMON_DRAGON,              4, 8 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              99, 2 },

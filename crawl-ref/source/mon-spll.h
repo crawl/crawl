@@ -2415,7 +2415,7 @@
        SPELL_MELEE, // heh
        SPELL_SAP_MAGIC,
        SPELL_GRAND_AVATAR,
-       SPELL_NO_SPELL,
+       SPELL_GRAND_AVATAR,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
