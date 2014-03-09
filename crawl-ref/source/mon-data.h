@@ -4743,7 +4743,7 @@ static monsterentry mondata[] =
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     1000, 10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, -4,
     { {AT_HIT, AF_FIRE, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 4, 5, 0 },
+    { 8, 5, 6, 0 },
     5, 7, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
     // energy here is MOVE_ENERGY, but excludes swimming
     I_HIGH, HT_AMPHIBIOUS_LAVA, FL_NONE, 10, {14, 10, 10, 10, 10, 10, 10, 100},
@@ -4756,8 +4756,8 @@ static monsterentry mondata[] =
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     1000, 10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, -4,
     { {AT_HIT, AF_FIREBRAND, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 14, 3, 5, 0 },
-    5, 11, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
+    { 14, 4, 6, 0 },
+    5, 13, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
     I_HIGH, HT_AMPHIBIOUS_LAVA, FL_NONE, 10, {8, 7, 10, 10, 10, 10, 10, 100},
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -4767,8 +4767,8 @@ static monsterentry mondata[] =
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     1000, 10, MONS_SALAMANDER, MONS_SALAMANDER, MH_NATURAL, -4,
-    { {AT_HIT, AF_FIRE, 11}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 4, 0 },
+    { {AT_HIT, AF_FIRE, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 4, 5, 0 },
     5, 7, MST_SALAMANDER_MYSTIC, CE_CLEAN, Z_SMALL, S_SILENT,
     // energy here is MOVE_ENERGY, but excludes swimming
     I_HIGH, HT_AMPHIBIOUS_LAVA, FL_NONE, 10, {14, 10, 10, 10, 10, 10, 10, 100},

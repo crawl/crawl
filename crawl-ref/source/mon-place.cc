@@ -2990,7 +2990,7 @@ static monster_type _band_member(band_type band, int which)
                                           11, MONS_NAGA_MAGE,
                                            6, MONS_NAGA_RITUALIST,
                                            8, MONS_NAGA_SHARPSHOOTER,
-                                           4, MONS_SALAMANDER_MYSTIC,
+                                           6, MONS_SALAMANDER_MYSTIC,
                                            0);
         }
         else
