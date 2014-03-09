@@ -1613,7 +1613,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         else if (at.context == SC_UPSTAIRS)
             text += " comes up the stairs.";
         else if (at.context == SC_DOWNSTAIRS)
-            text += " comes up the stairs.";
+            text += " comes down the stairs.";
         else if (at.context == SC_GATE)
             text += " comes through the gate.";
         else if (at.context == SC_ABYSS)
