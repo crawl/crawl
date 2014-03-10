@@ -2897,8 +2897,15 @@ bool is_interesting_item(const item_def& item)
     return false;
 }
 
-// Returns true if an item is a potential life saver in an emergency
-// situation.
+/**
+ * Is an item a potentially life-saving consumable in emergency situations?
+ * Unlike similar functions, this one never takes temporary conditions into
+ * account. It does, however, take religion and mutations into account.
+ * Permanently unusable items are in general not considered emergency items.
+ *
+ * @param item The item being queried.
+ * @return True if the item is known to be an emergency item.
+ */
 bool is_emergency_item(const item_def &item)
 {
     if (!item_type_known(item))
@@ -2952,7 +2959,14 @@ bool is_emergency_item(const item_def &item)
     }
 }
 
-// Returns true if an item can be considered particularly good.
+/**
+ * Is an item a particularly good consumable? Unlike similar functions,
+ * this one never takes temporary conditions into account. Permanently
+ * unusable items are in general not considered good.
+ *
+ * @param item The item being queried.
+ * @return True if the item is known to be good.
+ */
 bool is_good_item(const item_def &item)
 {
     if (!item_type_known(item))
@@ -2988,7 +3002,15 @@ bool is_good_item(const item_def &item)
     }
 }
 
-// Returns true if using an item only has harmful effects.
+/**
+ * Is an item strictly harmful?
+ *
+ * @param item The item being queried.
+ * @param temp Should temporary conditions such as transformations and
+ *             vampire hunger levels be taken into account?  Religion (but
+ *             not its absence) is considered to be permanent here.
+ * @return True if the item is known to have only harmful effects.
+ */
 bool is_bad_item(const item_def &item, bool temp)
 {
     if (!item_type_known(item))
@@ -3076,8 +3098,16 @@ bool is_bad_item(const item_def &item, bool temp)
     }
 }
 
-// Returns true if using an item is risky but may occasionally be
-// worthwhile.
+/**
+ * Is an item dangerous but potentially worthwhile?
+ *
+ * @param item The item being queried.
+ * @param temp Should temporary conditions such as transformations and
+ *             vampire hunger levels be taken into account?  Religion (but
+ *             not its absence) is considered to be permanent here.
+ * @return True if using the item is known to be risky but occasionally
+ *         worthwhile.
+ */
 bool is_dangerous_item(const item_def &item, bool temp)
 {
     if (!item_type_known(item))
@@ -3130,9 +3160,27 @@ static bool _invisibility_is_useless(const bool temp)
                 : you.haloed() && you_worship(GOD_SHINING_ONE);
 }
 
+/**
+ * Is an item (more or less) useless to the player? Uselessness includes
+ * but is not limited to situations such as:
+ * \li The item cannot be used.
+ * \li Using the item would have no effect, or would have a negligible effect
+ *     such as random uselessness.
+ * \li Using the item would have purely negative effects (<tt>is_bad_item</tt>).
+ * \li Using the item is expected to produce no benefit for a player of their
+ *     religious standing. For example, magic enhancers for Trog worshippers
+ *     are "useless", even if the player knows a spell and therefore could
+ *     benefit.
+ *
+ * @param item The item being queried.
+ * @param temp Should temporary conditions such as transformations and
+ *             vampire hunger levels be taken into account? Religion (but
+ *             not its absence) is considered to be permanent here.
+ * @return True if the item is known to be useless.
+ */
 bool is_useless_item(const item_def &item, bool temp)
 {
-    // During game startup, no item is useless.  If someone re-glyphs an item
+    // During game startup, no item is useless. If someone re-glyphs an item
     // based on its uselessness, the glyph-to-item cache will use the useless
     // value even if your god or species can make use of it.
     if (you.species == SP_UNKNOWN)
