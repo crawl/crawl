@@ -429,19 +429,8 @@ monster_info::monster_info(const monster* m, int milev)
 
     bool nomsg_wounds = false;
 
-    // friendly fake Rakshasas/Maras are known
-    if ((m->type == MONS_RAKSHASA_FAKE || m->type == MONS_MARA_FAKE)
-        && attitude != ATT_FRIENDLY && monster_by_mid(m->summoner))
-    {
-        const monster* real = monster_by_mid(m->summoner);
-        type = real->type;
-        threat = mons_threat_level(real);
-    }
-    else
-    {
-        type = m->type;
-        threat = mons_threat_level(m);
-    }
+    type = m->type;
+    threat = mons_threat_level(m);
 
     props.clear();
     if (!m->props.empty())
@@ -494,7 +483,6 @@ monster_info::monster_info(const monster* m, int milev)
 
     int stype = 0;
     if (m->is_summoned(0, &stype)
-        && m->type != MONS_RAKSHASA_FAKE && m->type != MONS_MARA_FAKE
         && !m->has_ench(ENCH_PHANTOM_MIRROR))
     {
         mb.set(MB_SUMMONED);

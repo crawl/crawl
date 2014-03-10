@@ -1703,7 +1703,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // spiritual beings ('R')
     case MONS_RAKSHASA:
-    case MONS_RAKSHASA_FAKE:
         return TILEP_MONS_RAKSHASA;
     case MONS_EFREET:
         return TILEP_MONS_EFREET;
@@ -2215,7 +2214,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // rakshasas ('R')
     case MONS_MARA:
-    case MONS_MARA_FAKE:
         return TILEP_MONS_MARA;
 
     // trolls ('T')

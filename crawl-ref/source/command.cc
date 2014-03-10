@@ -878,9 +878,6 @@ static vector<string> _get_monster_keys(ucs_t showchar)
         if (me->mc != i)
             continue;
 
-        if (i == MONS_MARA_FAKE || i == MONS_RAKSHASA_FAKE)
-            continue;
-
         if (getLongDescription(me->name).empty())
             continue;
 

@@ -3665,7 +3665,6 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_GUARDIAN_GOLEM,      1, 2 },
     { SPELL_SPELLFORGED_SERVITOR,       1, 2 },
     // Monster spells
-    { SPELL_FAKE_RAKSHASA_SUMMON,       4, 2 },
     { SPELL_SUMMON_UFETUBUS,            8, 2 },
     { SPELL_SUMMON_HELL_BEAST,          8, 2 },
     { SPELL_SUMMON_UNDEAD,              8, 2 },
@@ -3686,6 +3685,7 @@ static const summons_desc summonsdata[] =
     { SPELL_PLANEREND,                  6, 1 },
     { SPELL_SUMMON_DRAGON,              4, 8 },
     { SPELL_PHANTOM_MIRROR,             4, 1 },
+    { SPELL_FAKE_MARA_SUMMON,           2, 1 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              99, 2 },
     { SPELL_WEAVE_SHADOWS,              4, 2 },
