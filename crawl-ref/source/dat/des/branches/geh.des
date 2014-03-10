@@ -739,3 +739,64 @@ Llllllllllllllllllllll--------------------------lllllllllllllllllllllL
 LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
 LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 ENDMAP
+
+##############################################################################
+# Asmodeus (Gehenna) by Lightli
+##############################################################################
+
+NAME: lightli_geh_unto_the_cruel
+TAGS: no_vmirror
+ORIENT: encompass
+MONS: patrolling Asmodeus
+MONS: smoke demon w:9 / sun demon w:9 / hellion w:1 / balrug w:1
+MONS: hell knight / fire giant w:2, Brimstone Fiend, fire giant / balrug w:2
+MONS: red devil / sun demon w:1 / smoke demon w:1, hellion
+NSUBST: 2  = 10:2 / *:.
+NSUBST: 4  = 2:4 / *:.
+KFEAT:  g  = iron_grate
+NSUBST: l  = 3:L / *:l
+KMONS:  G  = cacodemon
+KMONS:  L  = flying skull
+KFEAT:  GL = lava
+KITEM:  A  = any weapon good_item / any armour good_item
+: serpent_of_hell_setup(_G)
+: geh_setup(_G)
+MAP
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccc..6........6......cccccccccccccccccccccccccccccc|*%...2...2...2...ccccccccccc
+cc7.c.....6....6......ccccccccccccccccccccccccccccc|*%.....2...2...2....cccccccc
+cc..cccccccccccccccc..cccccccccccccccccccccccccccccccccccggggcggggg..2....cccccc
+cc...ccccccccccccc.5..5.cccccccccccccccccccccccccccccccclllllcllllggg..2...ccccc
+cc....ccccccccccc........cccccccccccccccccccccccccccccclllllllGlllllggg..2..cccc
+ccc.....cccccccc...cccc...ccccccccccccccccccccccccccccllllllllllllllllggg..2.ccc
+cccc.....cccccc...cccccc...cccccccccccccccccccccccccclllllllllllllllllllgg...ccc
+ccccc..2..ccccc..cccccccc..ccccccccccccccccccccccccclllllllllllllllllllllgg.2.cc
+cccccc.....6c....cccccccc.................ccccccccclllllllllllllllllllllllg...cc
+ccccccc..6..c.....cccccc...................ccccccccllGlllllllll...6...lllGgg.2cc
+cccccccc....+.................6......ccc....ccccccclllllllllll.........llllg..cc
+ccccccccc.6.+........................c3c....cccccccllllllllll...cc+cc...lllg..cc
+cccccccccc..c.....4...5..............c+c....cccccccllllllcll..6ccc$ccc6..llc..cc
+ccccccccccc.c.................xxx...........ccccccclllllccc...ccc$3$ccc...ccc2cc
+ccccccccccccc................xx.xx..........ccccccc......c...ccccccccccc...c..cc
+ccccccccccccc...............xx*|*xx.........+..c..+..5.......cc*ccccc(cc.....2cc
+ccccccccO|||+...4...1...5...g.|A|.x...D.....+..+..+..5.....6.+*3ccccc{.+.6....cc
+ccccccccccccc...............xx*|*xx.........+..c..+..5.......cc*ccccc[cc.....2cc
+ccccccccccccc................xx.xx..........ccccccc......c...ccccccccccc...c..cc
+ccccccccccc.c.................xxx...........ccccccclllllccc...ccc$3$ccc...ccc2cc
+cccccccccc..c.....4...5..............c+c....cccccccllllllcll...ccc$ccc6..llc..cc
+ccccccccc.6.+........................c3c....cccccccllllllllll...cc+cc...lllg.2cc
+cccccccc....+.................6......ccc....ccccccclllllllllll.........llllg..cc
+ccccccc..6..c.....cccccc...................ccccccccllGlllllllll...6...lllGgg.2cc
+cccccc.....6c....cccccccc.................ccccccccclllllllllllllllllllllllg...cc
+ccccc..2..ccccc..cccccccc..ccccccccccccccccccccccccclllllllllllllllllllllgg.2.cc
+cccc.....cccccc...cccccc...cccccccccccccccccccccccccclllllllllllllllllllgg...ccc
+ccc.....cccccccc...cccc...ccccccccccccccccccccccccccccllllllllllllllllggg..2.ccc
+cc....ccccccccccc........cccccccccccccccccccccccccccccclllllllGlllllggg..2..cccc
+cc...ccccccccccccc.5..5.cccccccccccccccccccccccccccccccclllllcllllggg..2...ccccc
+cc..cccccccccccccccc..cccccccccccccccccccccccccccccccccccggggcggggg..2....cccccc
+cc7.c.....6....6......cccccccccccccccccccccccccccccccccc...2...2...2....cccccccc
+ccc..6.......6.......cccccccccccccccccccccccccccccccccA+.2...2...2...ccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
