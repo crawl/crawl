@@ -3851,8 +3851,8 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
     // or spectral zombified undead can push past non-spectral zombified
     // undead).
-    if (m1->holiness() == m2->holiness() && mons_can_use_stairs(m1)
-        && !mons_can_use_stairs(m2))
+    if (m1->holiness() == m2->holiness() && mons_class_can_use_stairs(m1->type)
+        && !mons_class_can_use_stairs(m2->type))
     {
         return true;
     }
