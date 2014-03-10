@@ -1141,3 +1141,25 @@ x.0...0...0.x
 .............
 x.x.x.x.x.x.x
 ENDMAP
+
+####
+
+NAME: lightli_bank_vault
+TAGS: vaults_hard vaults_orient_s
+MONS: vault guard, vault guard, vault warden
+KITEM: 2 = $
+KITEM: 3 = $
+KFEAT: ^ = known alarm trap
+MAP
+xxxxxxxxxxx
+x$$$$$$$$$x
+x$$2$3$2$$x
+x$2$$$$$2$x
+x$2$$$$$2$x
+x$$$$$$$$$x
+xx+xx=xx+xx
+x$$$x1x$$$x
+x$*$x^x$*$x
+x$$$x.x$$$x
+xxxxx+xxxxx
+ENDMAP

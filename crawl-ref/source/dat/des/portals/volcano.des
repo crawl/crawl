@@ -604,6 +604,22 @@ xxxxxxxxxxYYYYYxxxYxx
  ________xxxxxxx_xxx
 ENDMAP
 
+NAME: lightli_volcano_entry_magma_tube
+: volcano_portal(_G)
+MAP
+  xxxxxxx
+ xx.....xx
+ x.......x
+xx...x...xx
+xxlSlxx...x
+xllSllx...x
+xllSllx...x
+xllSllx...x
+xxXOXxx...x
+xxXXXx...xx
+ xxxxx..xx
+ENDMAP
+
 ###############################################################################
 
 default-depth: Volcano

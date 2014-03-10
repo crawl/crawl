@@ -684,6 +684,25 @@ xG.bbbbbbbbb.Gx
 xx...........xx
 ENDMAP
 
+NAME: lightli_enter_wizlab_magi_temple
+COLOUR: . = magenta
+FTILE: . = floor_rough_magenta
+: wizlab_portal(_G)
+MAP
+bmm...mmb
+m.......m
+m.bmmmb.m
+m.bGOGb.m
+m.m...m.m
+b.mb.bm.b
+b.mb.bm.b
+m.m...m.m
+m.b...b.m
+m.b...b.m
+m.......m
+bmmbbbmmb
+ENDMAP
+
 ###############################################################################
 
 default-depth: WizLab

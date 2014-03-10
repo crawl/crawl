@@ -2144,6 +2144,50 @@ xS+.1.x
 xxxxxxx
 ENDMAP
 
+NAME: lightli_minifort
+DEPTH: D:4-, Depths
+TAGS: no_pool_fixup
+: if you.branch() == "Depths" then
+MONS: fire giant / frost giant / titan
+: elseif you.absdepth () > 11 then
+MONS: orc knight band
+: elseif you.absdepth () > 8 then
+MONS: cyclops band
+: elseif you.absdepth () > 5 then
+MONS: orc warrior band
+: else
+MONS: gnoll sergeant band
+: end
+MAP
+wwwwwwwww
+wccwwwccw
+wcccccccw
+wwc.*.cww
+wwc.1.cww
+wwc...cww
+wccc+cccw
+wccw.wccw
+wwww.wwww
+ENDMAP
+
+NAME: lightli_wizard_tower
+TAGS: no_monster_gen
+DEPTH: D:9-
+MONS: patrolling wizard, patrolling crimson imp
+ITEM: any book, any scroll
+MAP
+   bbbb
+  bbdebb
+ bb....bb
+bb......bb
+b...12...b
+b........b
+bb......bb
+ bb....bb
+  bb..bb
+   b++b
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
