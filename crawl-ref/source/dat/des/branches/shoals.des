@@ -136,6 +136,66 @@ WWwwwWW
  WWWWW
 ENDMAP
 
+NAME:   elwin_shoals_entry_rocks
+TAGS:   shoals_entry
+KFEAT:  O = enter_shoals
+MAP
+.WW...W..
+WxxW..xWW
+WWxxWxxx.
+.WW..WW..
+.WW.O.xW.
+W..W...WW
+.xWW.WWW.
+Wxx.WxxW.
+.x....xx.
+ENDMAP
+
+NAME:   elwin_shoals_entry_stream
+TAGS:   shoals_entry
+KFEAT:  O = enter_shoals
+NSUBST: Z = 4:1 / *:W
+KFEAT:  1 = W
+KMONS:  1 = big fish w:5 / shark w:5 / merfolk w:5 / mermaid w:5
+MAP
+..xxx
+xZ..x
+x.Z.xx
+xxZ..x
+ xZZ.xx
+ xxZx.x
+  xZO.x
+ xxZx.x
+ xZZ.xx
+xxZ..x
+x.Z.xx
+xZ..x
+..xxx
+ENDMAP
+
+NAME:   elwin_shoals_entry_rooms
+TAGS:   shoals_entry
+KFEAT:  O = enter_shoals
+NSUBST: 1 = 4:1 / *:W
+KFEAT:  1 = W
+KMONS:  1 = merfolk w:1 / mermaid w:1 / shark w:8
+validate {{ return has_exit_from_glyph('O') }}
+MAP
+@...xxxxxxx....
+.+xxxWWwWWxxxx.
+.xWwWxWwWxWWWx.
+.xW1WxW1Wxw1Wx.
+.xWWWxxxxxWWWx.
+.xxxxxWWW+xxxx.
+...xWW1O1WWx...
+.xxxx+WWWxxxxx.
+.xWWWxxxxxWWWx.
+.xW1wxW1WxW1Wx.
+.xWWWxWwWxWwWx.
+.xxxxWWwWWxxx+.
+....xxxxxxx...@
+ENDMAP
+
 ##############################################################################
 # Non-ending non-entry vaults
 ##############################################################################
