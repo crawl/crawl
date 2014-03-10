@@ -37,8 +37,8 @@
 /*
  * Apply the effect of a potion to the player.
  *
- * This is called when the player quaff a potion, but also for some cards,
- * beams, sparkling fountains, god effects and miscasts.
+ * This is called when the player quaffs a potion, but also for some cards,
+ * beams, god effects and miscasts.
  *
  * @param pot_eff       The potion type.
  * @param pow           The power of the effect. 40 for actual potions.
