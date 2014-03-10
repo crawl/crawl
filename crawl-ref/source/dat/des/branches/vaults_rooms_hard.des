@@ -958,3 +958,186 @@ x.x.xxx.x.x
 x...+0+...x
 xxxxx.xxxxx
 ENDMAP
+
+NAME: nicolae_vaults_good_morning_starshine
+TAGS: vaults_hard
+NSUBST: A = 3:+ / x, B = 2:+ / x, C = + / x
+SUBST: 0 = 0., Q = 9998., 9 = 9.., % = %%%$*, $ = $$.
+KMONS: 0 = 0 band
+KMONS: 9 = 9 band
+KMONS: 8 = 8 band
+KITEM: 8 = star_item / superb_item w:3
+MAP
+...........................
+.xx......0...x...0......xx.
+.xxxx.......xxx.......xxxx.
+..xxxxx....xx$xx....xxxxx..
+..xx$.xxx.xx...xx.xxx.$xx..
+...x....xAx..x..xAx....x...
+...xx.......xxx.......xx...
+....x..9...xx%xx...9..x....
+....xx....xx...xx....xx....
+.0...A....B..Q..B....A...0.
+....xx..xBx.xCx.xBx..xx....
+...xx..xx...x$x...xx..xx...
+..xx..xx..xxx%xxx..xx..xx..
+.xx$.xx%.QC$%8%$CQ.%xx.$xx.
+..xx..xx..xxx%xxx..xx..xx..
+...xx..xx...x$x...xx..xx...
+....xx..xBx.xCx.xBx..xx....
+.0...A....B..Q..B....A...0.
+....xx....xx...xx....xx....
+....x..9...xx%xx...9..x....
+...xx.......xxx.......xx...
+...x....xAx..x..xAx....x...
+..xx$.xxx.xx...xx.xxx.$xx..
+..xxxxx....xx$xx....xxxxx..
+.xxxx.......xxx.......xxxx.
+.xx......0...x...0......xx.
+...........................
+ENDMAP
+
+NAME: nicolae_vaults_lopsided_apartments
+TAGS: vaults_hard
+NSUBST: EPOD = 1:+, DNMH = 1:+, AKLH = 1:+, EIJA = 1:+, \
+        BFCG = 3:+, IJKLMNOP = 1:+, 0 = 9 / 0
+SUBST: ) = )0, 0 = 0009%$
+SUBST: ABCDEFGHIJKLMNOP = x
+KMONS: 9 = 9 band
+KITEM: 9 = star_item
+MAP
+            ...
+        ...x.).
+    ...x.).+...
+...x.).A...xx+x
+.).+...xxKxxx...
+...xxxJxx...x.).
+ x+xx...x.0.L...
+ ...x.0.B...xxHx
+ .).I...xxGxxx...
+ ...xxxFxx...M.).
+  xExx...C.0.x...
+  ...P.0.x...xx+x
+  .).x...xxNxxx...
+  ...xxxOxx...+.).
+   x+xx...D.).x...
+   ...+.).x...
+   .).x...
+   ...
+ENDMAP
+
+NAME: nicolae_vaults_know_your_exits
+TAGS: vaults_hard no_windows vaults_orient_s
+SHUFFLE: pqrstu/PQRSTU
+SUBST: pqRT = %, rsPU = x, tuQS = ., 0 = 0.
+KMONS: 0 = 0 band
+KMONS: 9 = 9 band
+KITEM: % = any / gold
+KMONS: % = nothing w:11 / 0 w:1
+MAP
+      .
+    ..9..
+  .........
+...xpxqxpx...
+...rxrsrxr...
+.0.xpxqxpx.0.
+ ..tut0tut..
+ ..xpxqxpx..
+ ..rxrsrxr..
+  .xpxqxpx.
+  .........
+  .........
+ENDMAP
+
+NAME: nicolae_vaults_halls_meeting
+TAGS: vaults_hard
+SUBST: 9 = 9998, 0 = 00.
+MAP
+xxxx..xxxx..xxxx
+x9.xx...0..xx.9x
+x...xx....xx...x
+xx...xx++xx...xx
+.xx...x..x...xx.
+..xx..+0.+..xx..
+x..xx+x..x+xx..x
+x0.+...xx.0.+..x
+x..+.0.xx...+.0x
+x..xx+x..x+xx..x
+..xx..+.0+..xx..
+.xx...x..x...xx.
+xx...xx++xx...xx
+x...xx....xx...x
+x9.xx..0...xx.9x
+xxxx..xxxx..xxxx
+ENDMAP
+
+NAME: nicolae_vaults_octagons
+TAGS: vaults_hard
+SHUFFLE: abcdefgh, ijklmnop
+SUBST: abcdefgijklmno = x, hp = ., 0 = 009.
+KMONS: 0 = 0 band
+KMONS: 9 = 9 band
+MAP
+      .....
+     ...0...
+    ..iiiii..
+   ..pp...jj..
+  ..pp..0..jj..
+ ..pp..aaa..jj..
+..op..hh.bb..jk..
+..o..gh...bc..k..
+.0o.0g..9..c0.k0.
+..o..gf...dc..k..
+..on..ff.dd..lk..
+ ..nn..eee..ll..
+  ..nn..0..ll..
+   ..nn...ll..
+    ..mmmmm..
+     ...0...
+      .....
+ENDMAP
+
+NAME: nicolae_vaults_fighting_squares
+TAGS: vaults_hard
+SHUFFLE: ABCDEFGHabcdefgh%/IJKLMNOPijklmnop!
+NSUBST: 0 = 9 / 0009., ABCDEFGH = x / +, abcdefgh = + / x, \
+        PI = + / x, JK = + / x, LM = + / x, NO = + / x, \
+        ij = + / x, kl = + / x, mn = + / x, op = + / x
+SUBST: ! = .
+KMONS: 9 = 9 band
+MAP
+xxxxxx..xxxxxx
+x!...x..x...!x
+x.0..B..C..0.x
+x..xbxxxxcx..x
+x..a......d..x
+xxAx.0..0.xDxx
+...x..%%..x...
+...x..%%..x...
+xxHx.0..0.xExx
+x..h......e..x
+x..xgxxxxfx..x
+x.0..G..F..0.x
+x!...x..x...!x
+xxxxxx..xxxxxx
+ENDMAP
+
+NAME: nicolae_vaults_an_arrangement
+TAGS: vaults_hard
+SUBST: 0 = 00.
+KMONS: 9 = 9 band
+MAP
+x.x.x.x.x.x.x
+.............
+x.0...0...0.x
+...x..x..x...
+x...........x
+.....x.x.....
+x.0x..9..x0.x
+.....x.x.....
+x...........x
+...x..x..x...
+x.0...0...0.x
+.............
+x.x.x.x.x.x.x
+ENDMAP
