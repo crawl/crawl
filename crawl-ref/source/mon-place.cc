@@ -443,6 +443,13 @@ static bool _is_incompatible_monster(monster_type mt)
         || player_will_anger_monster(mt);
 }
 
+static bool _is_banded_monster(monster_type mt)
+{
+    int idummy;
+    bool bdummy;
+    return _choose_band(mt, idummy, bdummy) != BAND_NO_BAND;
+}
+
 // Caller must use !invalid_monster_type to check if the return value
 // is a real monster.
 monster_type pick_random_monster(level_id place,
@@ -469,6 +476,8 @@ monster_type pick_random_monster(level_id place,
         return pick_monster(place, mons_class_is_stationary);
     else if (kind == RANDOM_COMPATIBLE_MONSTER)
         return pick_monster(place, _is_incompatible_monster);
+    else if (kind == RANDOM_BANDLESS_MONSTER)
+        return pick_monster(place, _is_banded_monster);
     else if (mons_class_is_zombified(kind))
         return pick_monster(place, _is_not_zombifiable);
     else if (crawl_state.game_is_sprint())
@@ -2784,6 +2793,14 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 3 + random2(3);
         break;
 
+    case MONS_RAKSHASA:
+        if (coinflip())
+        {
+            band = BAND_RANDOM_SINGLE;
+            band_size = 1;
+        }
+        break;
+
     default: ;
     }
 
@@ -3336,6 +3353,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_VASHNIA:
         return MONS_NAGA_SHARPSHOOTER;
+
+    case BAND_RANDOM_SINGLE:
+        return pick_random_monster(level_id::current(), RANDOM_BANDLESS_MONSTER);
 
     default:
         die("unhandled band type %d", band);
