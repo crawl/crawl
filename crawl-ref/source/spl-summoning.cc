@@ -3685,6 +3685,7 @@ static const summons_desc summonsdata[] =
     { SPELL_FORCEFUL_INVITATION,        3, 1 },
     { SPELL_PLANEREND,                  6, 1 },
     { SPELL_SUMMON_DRAGON,              4, 8 },
+    { SPELL_PHANTOM_MIRROR,             4, 1 },
     // Rod specials
     { SPELL_SUMMON_SWARM,              99, 2 },
     { SPELL_WEAVE_SHADOWS,              4, 2 },

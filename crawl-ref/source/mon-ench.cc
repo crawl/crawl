@@ -2180,7 +2180,7 @@ static const char *enchant_names[] =
 #endif
     "poison_vuln", "icemail", "agile",
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
-    "sap magic", "shroud", "buggy",
+    "sap magic", "shroud", "phantom_mirror", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

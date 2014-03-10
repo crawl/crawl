@@ -1797,6 +1797,7 @@ enum enchant_type
     ENCH_GRAND_AVATAR,
     ENCH_SAP_MAGIC,
     ENCH_SHROUD,
+    ENCH_PHANTOM_MIRROR,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -4056,6 +4057,7 @@ enum spell_type
     SPELL_SPELLFORGED_SERVITOR,
     SPELL_FORCEFUL_DISMISSAL,
     SPELL_SUMMON_MANA_VIPER,
+    SPELL_PHANTOM_MIRROR,
     NUM_SPELLS
 };
 
