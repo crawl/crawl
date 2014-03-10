@@ -1487,8 +1487,19 @@ static bool _water_adjacent(coord_def p)
     return false;
 }
 
+/**
+ * Cast summon forest.
+ *
+ * @param caster The caster.
+ * @param pow    The spell power.
+ * @param god    The god of the summoned dryad (usually the caster's).
+ * @param fail   Did this spell miscast? If true, abort the cast.
+ * @returns      SPRET_SUCCESS if the spell was succesfully cast, SPRET_FAIL on
+ *               miscast, or SPRET_ABORT if a summoning area couldn't be found.
+*/
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
+    fail_check();
     const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
 
     // Is this area open enough to summon a forest?
