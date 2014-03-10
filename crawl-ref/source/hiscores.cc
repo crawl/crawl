@@ -1522,7 +1522,6 @@ void scorefile_entry::init(time_t dt)
         DUR_PETRIFIED,
         DUR_PETRIFYING,
         DUR_RESISTANCE,
-        DUR_SLAYING,
         DUR_SLIMIFY,
         DUR_SLEEP,
         DUR_STONESKIN,

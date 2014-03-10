@@ -1819,18 +1819,13 @@ static void _elixir_card(int power, deck_rarity_type rarity)
 static void _battle_lust_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    if (power_level >= 2)
-    {
-        you.set_duration(DUR_SLAYING, random2(power/6) + 1,
-                         0, "You feel deadly.");
-    }
-    else if (power_level == 1)
-    {
+    if (power_level == 2)
+        potion_effect(POT_AGILITY, random2(power/4));
+    if (power_level >= 1)
+        potion_effect(POT_MIGHT, random2(power/4));
+    else
         you.set_duration(DUR_BUILDING_RAGE, 2,
                          0, "You feel your rage building.");
-    }
-    else if (power_level == 0)
-        potion_effect(POT_MIGHT, random2(power/4));
 }
 
 static void _metamorphosis_card(int power, deck_rarity_type rarity)
