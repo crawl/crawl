@@ -1234,7 +1234,7 @@ ENDMAP
 
 NAME: wheals_swamp_sinkhole
 DEPTH: Swamp, !Swamp:$
-TAGS: no_monster_gen
+TAGS: extra no_monster_gen
 KFEAT: t = mangrove
 KFEAT: ^ = known shaft trap
 SUBST: u = Ww
