@@ -5716,3 +5716,202 @@ cc--------cc"""""cc--------cc
              c+c
              .@.
 ENDMAP
+
+###############################################################################
+
+NAME:   kennysheep_kobold_lugonu_temple
+ORIENT: float
+TAGS:   transparent no_item_gen no_monster_gen no_trap_gen
+DEPTH:  D:10-
+KFEAT:  C = altar_lugonu
+KFEAT:  ' = floor
+KFEAT:  ~ = floor
+MONS:   kobold demonologist
+KMONS:  P = plant col:magenta name:demonic name_adjective \
+        tile:mons_demonic_plant
+KMONS:  p = plant
+NSUBST: p = 3=xcbtvmnw.' / 5:P
+NSUBST: . = 30=Pxcbtvmnw / 5:^ / 50:'
+NSUBST: x = 15=Pxcbtvmnw
+NSUBST: ` = 3:'
+MARKER: C = lua:fog_machine { \
+             pow_min = 2, pow_max = 4, delay = 15, \
+             size = 2, walk_dist = 20, spread_rate= 33, \
+             cloud_type= "purple smoke" }
+FTILE:  'P1vbtmn = floor_pebble_red
+MAP
+    .........
+  .............
+  ...xxxxxxx...
+ ....x.....x....
+ ....x.....x....
+..xxxx.....xxxx..
+..x..p..1..p..x..
+..x....1C1....x..
+..xp....`....px..
+..x..p..`..p..x..
+..xxxxx+++xxxxx..
+ ..pppp.`.pppp..
+ .......`.......
+  ......`......
+  ......`......
+    ....`....
+        @
+ENDMAP
+
+NAME:   kennysheep_orc_sif_temple
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+DEPTH:  D:6-10
+KFEAT:  C = altar_sif_muna
+MONS:   orc wizard / nothing, orc warrior
+MAP
+     xxxxx
+   xxxwwwxxx
+  xxwwwwwwwxx
+ xxww.vvv.wwxx
+ xww.nvCvn.wwx
+xxww.v111v.wwxx
+xwww.v1d1v.wwwx
+xxww.nv1vn.wwxx
+ xwwwwv+vwwwwx
+ xxwwwG.Gwwwxx
+  xxww.2.wwxx
+   xxxG.Gxxx
+     x...x
+     xG.Gx
+       @
+ENDMAP
+
+NAME:   kennysheep_demon_hangout
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+DEPTH:  D:12-
+MONS:   common demon, lesser demon
+MAP
+  lx@@@xl
+ lll...lll
+lll.....lll
+ll.......ll
+ll..1*2..ll
+ll...t...ll
+ll...2...ll
+ll.......ll
+lll.....lll
+ lll...lll
+  lx@@@xl
+ENDMAP
+
+NAME:   kennysheep_ogre_elephant_herders
+ORIENT: float
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+DEPTH:  Depths, !Depths:$
+MONS:   ogre mage band, dire elephant
+NSUBST: 2 = 2:2 / 3:2. / .
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                              pow_max = 100, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = 0 }
+MAP
+  xxxxxx
+  xtxxtx  xxxxxx
+  xt.22xxxx..**x
+  x.2.2.2.t..1*x
+  xt.2t.2......x
+xxx.2..2.......x
+xt...22........x
+x.......I..I...x
+xxt...I......I.x
+ xxxx....FF....x
+    x....FF....x
+    x.I......I.x
+    x...I..I...x
+     ...........
+     @@@@@@@@@@@
+ENDMAP
+
+NAME:   kennysheep_the_goblin_king
+ORIENT: float
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:2-4
+KMONS:  1 = Ijyb / hobgoblin, hobgoblin
+KMONS:  2 = goblin
+MAP
+xxxxxxxxx
+x..%1%..x
+xG2...2Gx
+x.2...2.x
+xG2...2Gx
+x.......x
+xG.....Gx
+x.......x
+xG.....Gx
+ @@@@@@@
+ENDMAP
+
+NAME:   kennysheep_steamy
+ORIENT: float
+TAGS:   no_monster_gen
+DEPTH:  D:5-10
+MONS:   steam dragon, fungus
+KFEAT:  ^ = known shaft trap
+SUBST:  p = .....^22222wwwww
+MAP
+   xxxxx
+ xxxpppxx
+ xpp1.ppxx
+xxp....ppx
+xpp...1ppx
+xpp....ppx
+xxpp.pppxx
+ xpp.ppxx
+ xxp.px
+  xp.px
+  xp.px
+  xp.px
+  xp.px
+  xp.px
+  xx.px
+   x.px
+   x.pxx
+   xp.px
+   xp.px
+   xp.px
+  xxp.px
+  xpp.px
+ xxpp.px
+ xppp.pxx
+ xppp.ppx
+ xppp.ppx
+xx@@@@@@xx
+ENDMAP
+
+NAME:   kennysheep_funnel
+ORIENT: float
+TAGS:   no_trap_gen no_monster_gen
+DEPTH:  D:12-, !D:$, Depths:2-, !Depths:$
+MAP
+    ccc
+   cc.cc
+   c.}.c
+   c...c
+   cG.Gc
+   cc8cc
+   cG.Gc
+   cc.cc
+   cG.Gc
+   cc.cc
+   cG.Gc
+   cc.cc
+   cG.Gc
+   cc.cc
+   cG.Gc
+   cc.cc
+   cG.Gc
+  cc...cc
+ ccG...Gcc
+cc.......cc
+cG...{...Gc
+cc.......cc
+ ccG...Gcc
+  ccccccc
+ENDMAP

@@ -1325,3 +1325,272 @@ xxx*0.....0*xxxxxxxxxxxxxxxxxx
 xxxx$.....$xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+###############################################################################
+NAME:   kennysheep_green_arena
+ORIENT: north
+TAGS:   no_trap_gen no_monster_gen
+MAP
+   bbbbbbbbbbb
+  bb9...8...9bb
+ bb...........bb
+bb..G.......G..bb
+b...*.......*...b
+b.......|.......b
+b9......G......9b
+b.......|.......b
+b...............b
+b0..*.......*..0b
+bb..G.......G..bb
+ bb...........bb
+  bb0.......0bb
+   bbbbb.bbbbb
+   bbb.....bbb
+  bb0.......0bb
+ bb...G...G...bb
+bb....%...%....bb
+b0.............0b
+b.G%.........%G.b
+b...............b
+b.......9.......b
+b...............b
+b.G%.........%G.b
+b0.............0b
+bb....%...%....bb
+ bb...G...G...bb
+  bb0.......0bb
+   bbb.....bbb
+     bbb+bbb
+ENDMAP
+
+NAME:   kennysheep_snake
+ORIENT: west
+TAGS:   no_trap_gen no_monster_gen
+DEPTH:  D:12-, !D:$, Depths, !Depths:$, Snake
+MAP
+     cccccccccc
+    cc........cc
+   cc0cccccccc0cc    cccc
+  cc.cc......cc.cc  cc..cc
+ cc.cc0cccccc0cc.cccc0...cc
+cc.cc.cc....cc.cc.cc0%....+
+c.cc.cc0cccc0cc.cc.c0%....+
+c.c.cc.cc88cc.cc.c.c.0...cc
+c.c.c.cc8||8cc.c.c.c.c..cc
+c0c0c0c..**..c0c0c0c.cccc
+c.c.c.c......c.c.c.c.c
+c.c.c.cc....cc.c.c.c.c
+c.c.cc.cc..cc.cc.c.c.c
+c.cc.cc0c.cc.cc.cc.c.c
+cc.cc.c.cc..cc.cc.cc.c
+ cc.c0cc.cccc0cc.cc0cc
+  c.cc.cc....ccc.cc.cc
+  cc0cc.ccccccccc0cc.cc
+   cc.cc........cc.cc.c
+    cc.ccc.cc....cc.c.c
+     cc..c.c......c.c.c
+      cc.c.c..%%..c.c.c
+       c.c.cc9**9cc.c.c
+       c.cc.cc99cc.cc.c
+       cc.cc0cccc0cc.cc
+        cc.cc....cc.cc
+         cc0cccccc0cc
+          cc......cc
+           cccccccc
+ENDMAP
+
+NAME:   kennysheep_large_vault
+ORIENT: south
+TAGS:   no_pool_fixup patrolling
+DEPTH:  Depths:2-, !Depths:$
+: if crawl.coinflip() then
+SUBST:  D : +
+SUBST:  E : .
+: else
+SUBST:  D : c
+SUBST:  E : w
+: end
+: if crawl.one_chance_in(3) then
+SUBST:  w : wW
+SUBST:  x : xcbt
+SUBST:  c : xc
+SUBST:  t : TG
+: elseif crawl.coinflip() then
+SUBST:  w : l
+SUBST:  t : ttGV
+SUBST:  x : xcv
+:else
+SUBST:  w : .
+SUBST:  x : xcvb
+SUBST:  t : tTG
+:end
+SUBST:  %=%$
+MAP
+    ccccDDDDcccc       cccc+++cccc       ccccDDDDcccc
+   ccwwwEEEEwwwcc     ccwww...wwwcc     ccwwwEEEEwwwcc
+ cccww........wwccc cccww...x...wwccc cccww........wwccc
+ccwww..........wwwcccwww...xxx...wwwcccwww..........wwwcc
+cwwwww...00...wwwwwcww...x0.x.0x...wwcwwwww...00...wwwwwc
+cwwwxxw......wxxwwwcw...xxx...xxx...wcwwwwxww....wwxwwwwc
+cwwwxxw......wxxwwwcw.x..x..x..x..x.wcwwxxxxx....xxxxxwwc
+cwwxxxtw....wtxxxwwcwxxx...xxx...xxxwcw.tx*xt....tx*xt.wc
+cwwxx*xw....wx*xxwwcw.x..x..x..x..x.wcw..*.*......*.*..wc
+cwwxx**w....w**xxwwcw...xxx...xxx...wcw................wc
+cwxxxxx.0..0.xxxxxwcw.x..x..x..x..x.wcw......0xx0......wc
+cwwxx**w.99.w**xxwwcwxxx...xxx...xxxwcw.....90xx09.....wc
+cwwxx*xw0..0wx*xxwwcw.x..x..x..x..x.wcw................wc
+cwwxxxtw....wtxxxwwcw...xxx.9.xxx...wcw..*.*......*.*..wc
+cwwwxxw......wxxwwwcw.t..x0...0x..t.wcwwtx*xt....tx*xtwwc
+cw.wxxw......wxxw.wcwxxx0.......0xxxwcwwxxxxx....xxxxxwwc
+cw..ww........ww..wcw.x..t.0.0.t..x.wcwwwwxww....wwxwwwwc
+cw................wcw...xxx...xxx...wcwwwww........wwwwwc
+cw................wcwwwwwww...wwwwwwwcwww............wwwc
+ccccccccc++cccccccccccccccc+++cccccccccccccccc++ccccccccc
+ccwwwwwww......0.........................0......wwwwwwwcc
+cccccccccwwwwwwt.....t....t...t....t.....twwwwwwccccccccc
+cwwwwwwwcccccccwwwwwwww...0.9.0...wwwwwwwwcccccccwwxwwwwc
+cwwwwwwwxwwwxwcccccccccwwwww.wwwwwcccccccccwwxwwwwwxwwwwc
+cw%%...x.....xwwwwxwwwcccccc+ccccccwwwwxwwwwwx.....xx%|%c
+cw|%.9..x.t.x....x...wcwwwww.wwwwwcwwwwx....txx..x..x%%|c
+cw||%8.x.....x....x..wcw.........wc....xx..x..x...x99x88c
+cw|%%8..x0..x..t.x..0wcw.xt0.0tx.wc..x..x..tx.0x.x..x%%|c
+cw%%.9.x..t..x....x...+..xx0%0xx..+...x..x.x..x....xx%|%c
+cwwwwwwwxwwwx....x....+..%%%%%%%..+..x..x...txxwwwwxwwwwc
+cwwwwwwxwwwwwxwwwwx...cwwwwwwwwwwwc....xxwwwwxwwwwwxwwwwc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+NAME:   kennysheep_scales
+ORIENT: northeast
+TAGS:   no_pool_fixup
+: if crawl.one_chance_in(4) then
+SUBST:  w : wW
+SUBST:  x : xcbt
+: elseif crawl.one_chance_in(3) then
+SUBST:  w : l
+SUBST:  x : xcv
+: elseif crawl.coinflip() then
+SUBST:  w : t
+SUBST:  x : xt
+: else
+SUBST:  w : .
+SUBST:  x : xcvb
+: end
+NSUBST: * = 5:0 / 1:8 / 1:|
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+................................x
+..xxx.....xxx.....xxx.....xxx...x
+.xxww....xxww....xxww....xxww...x
+.xw..wx..xw..wx..xw..wx..xw..wx.x
+.xw*.wx..xw*.wx..xw*.wx..xw*.wx.x
+.xxwwxx..xxwwxx..xxwwxx..xxwwxx.x
+..xxxx....xxxx....xxxx....xxxx..x
+ ...............................x
+    ............................x
+    ..xxx.....xxx.....xxx.....xxx
+    .xxww....xxww....xxww....xxxx
+    .xw..wx..xw..wx..xw..wx..xxxx
+    .xw*.wx..xw*.wx..xw*.wx..xxxx
+    .xxwwxx..xxwwxx..xxwwxx..xxxx
+    ..xxxx....xxxx....xxxx....xxx
+     ...........................x
+        ........................x
+        ..xxx.....xxx.....xxx...x
+        .xxww....xxww....xxww...x
+        .xw..wx..xw..wx..xw..wx.x
+        .xw*.wx..xw*.wx..xw*.wx.x
+        .xxwwxx..xxwwxx..xxwwxx.x
+        ..xxxx....xxxx....xxxx..x
+         .......................x
+            ....................x
+            ..xxx.....xxx.....xxx
+            .xxww....xxww....xxxx
+            .xw..wx..xw..wx..xxxx
+            .xw*.wx..xw*.wx..xxxx
+            .xxwwxx..xxwwxx..xxxx
+            ..xxxx....xxxx....xxx
+             ...................x
+ENDMAP
+
+NAME:   kennysheep_treasure_stockpile
+TAGS:   transparent
+ORIENT: north
+: if crawl.one_chance_in(3) then
+SUBST:  c : ccb
+: elseif crawl.coinflip() then
+SUBST:  w : l
+SUBST:  c : cv
+:else
+SUBST:  w : .
+SUBST:  c : ccvb
+:end
+MAP
+ cccccccccccccccccccccccccccccccccccccc
+ccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcc
+c........wwwwwwwwwwwwwwwwwwwwww........c
++...0..........wwwwwwwwww..........0...+
++..................00..................+
++...0.............0..0.............0...+
+c......................................c
+cc....wwwwwwwwwwwwwwwwwwwwwwwwwwww....cc
+ ccc++cccccccccccccnnccccccccccccc++ccc
+  cw.........cwwwwwwwwwwwwc.........wc
+  cw.........c...wwwwww...c.........wc
+  cw.........n....8||8....n.........wc
+  cww..0.....=...0%**%0...=.....0..wwc
+  cwww..9....=....%||%....=....9..wwwc
+  ccwww0.....=...0%**%0...=.....0wwwcc
+   cwwww.....n....8||8....n.....wwwwc
+   cwwwwwwwwwcwww......wwwcwwwwwwwwwc
+   cccccccccccccwwwwwwwwccccccccccccc
+               ccccwwcccc
+                  cccc
+ENDMAP
+
+NAME:   kennysheep_four_of_diamonds
+ORIENT: centre
+TAGS:   no_pool_fixup
+: if crawl.one_chance_in(3) then
+SUBST:  c : cxb
+SUBST:  t : tTG
+: elseif crawl.coinflip() then
+SUBST:  w : l
+SUBST:  c : cxv
+SUBST:  t : GV
+:else
+SUBST:  w : t
+KFEAT:  . = shallow_water
+SUBST:  c : cx
+:end
+MAP
+ccccccccccccccccccccccccccccc
+cwwwwww.wwwwwwcwwwwww.wwwwwwc
+cwwwww...wwwwwcwwwww...wwwwwc
+cwwww.....wwwwcwwww.....wwwwc
+cwww.......wwwcwww.......wwwc
+cww..t...t..wwcww..t...t..wwc
+cw....9*0....wcw....0*0....wc
++.....*t*.....+.....*t*.....c
+cw....'*0....wcw....0*9....wc
+cww..t...t..wwcww..t...t..wwc
+cwww.......wwwcwww.......wwwc
+cwwww.....wwwwcwwww.....wwwwc
+cwwwww...wwwwwcwwwww...wwwwwc
+cwwwwww.wwwwwwcwwwwww.wwwwwwc
+ccccccccccccccccccccc+ccccccc
+cwwwwww.wwwwwwcwwwwww.wwwwwwc
+cwwwww...wwwwwcwwwww...wwwwwc
+cwwww.....wwwwcwwww.....wwwwc
+cwww.......wwwcwww.......wwwc
+cww..t...t..wwcww..t...t..wwc
+cw....8|9....wcw....0*0....wc
+c.....|t|.....+.....*t*.....c
+cw....8|9....wcw....9*9....wc
+cww..t...t..wwcww..t...t..wwc
+cwww.......wwwcwww.......wwwc
+cwwww.....wwwwcwwww.....wwwwc
+cwwwww...wwwwwcwwwww...wwwwwc
+cwwwwww.wwwwwwcwwwwww.wwwwwwc
+ccccccccccccccccccccccccccccc
+ENDMAP

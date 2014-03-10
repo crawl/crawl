@@ -549,6 +549,49 @@ D..vvv.......vv.
   .vv.....
 ENDMAP
 
+NAME:   kennysheep_iron_temple
+ORIENT: centre
+TAGS:   transparent no_rotate no_vmirror no_monster_gen
+MONS:   hell sentinel, iron golem
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                              pow_max = 100, delay = 10, size = 1, \
+                              delay = 10, size = 1, walk_dist = 0, \
+                              excl_rad = 0 }
+SUBST:  } = }., ) = )., ] = ].
+KFEAT:  B = altar_makhleb
+MAP
+    .....             .....
+    .vvv...         ...vvv.
+    .v)vvv...     ...vvv}v.
+    .v...vvv.     .vvv...v.
+    .v.12..v... ...v..21.v.
+    .v.2..0vvv...vvv0..2.v.
+    .vv.....0vv.vv0.....vv.
+    ..v0......vvv......0v..
+     .v......vvvvv......v.
+     .vv0...vv...vv...0vv.
+     ..v...v+..0..+v...v..
+     ..vvvvv...F...vvvvv..
+    ..vvvv....0.0....vvvv..
+  ...vv.2v..0F.B.F0..v2.vv...
+ ..vvv0..+....0.0....+..0vvv..
+..vv0...2vv...F.F...vv2...0vv..
+.vv.......v....0....v.......vv.
+.+.......0v.........v0.......+.
+.vvvvvvvvvvvvvv+vvvvvvvvvvvvvv.
+..........v.........v..........
+         .vv0.....0vv.
+         ..v.......v..
+          .vv0...0vv.
+          ..v.....v..
+           .v.2.2.v.
+           .vv.1.vv.
+           ..v...v..
+            .vv]vv.
+            ..vvv..
+             .....
+ENDMAP
+
 default-depth:
 ##############################################################################
 # Dispater's castle - subvaulted, with three main versions
