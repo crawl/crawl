@@ -1494,12 +1494,12 @@ static bool _water_adjacent(coord_def p)
  * @param pow    The spell power.
  * @param god    The god of the summoned dryad (usually the caster's).
  * @param fail   Did this spell miscast? If true, abort the cast.
- * @returns      SPRET_SUCCESS if the spell was succesfully cast, SPRET_FAIL on
- *               miscast, or SPRET_ABORT if a summoning area couldn't be found.
+ * @returns      SPRET_ABORT if a summoning area couldn't be found,
+ *               SPRET_FAIL if one could be found but we miscast, and
+ *               SPRET_SUCCESS if the spell was succesfully cast.
 */
 spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 {
-    fail_check();
     const int duration = random_range(120 + pow, 200 + pow * 3 / 2);
 
     // Is this area open enough to summon a forest?
@@ -1515,6 +1515,7 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
 
     if (success)
     {
+        fail_check();
         // Replace some rock walls with trees, then scatter a smaller number
         // of trees on unoccupied floor (such that they do not break connectivity)
         for (distance_iterator di(caster->pos(), false, true, LOS_RADIUS); di; ++di)
