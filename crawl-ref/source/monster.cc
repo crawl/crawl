@@ -5864,6 +5864,24 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 break;
         }
     }
+    else if (type == MONS_RAKSHASA && !has_ench(ENCH_PHANTOM_MIRROR)
+             && hit_points < max_hit_points / 2
+             && hit_points - damage > 0)
+    {
+        if (!props.exists("emergency_clone"))
+        {
+            // Using SPELL_NO_SPELL to prevent overwriting normal clones
+            cast_phantom_mirror(this, this, SPELL_NO_SPELL);
+            cast_phantom_mirror(this, this, SPELL_NO_SPELL);
+            if (you.can_see(this))
+            {
+                mprf(MSGCH_MONSTER_SPELL,
+                     "The injured %s weaves a defensive illusion!",
+                     name(DESC_PLAIN).c_str());
+            }
+            props["emergency_clone"].get_bool() = true;
+        }
+    }
 }
 
 reach_type monster::reach_range() const

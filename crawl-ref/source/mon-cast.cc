@@ -2544,8 +2544,7 @@ static bool _wall_of_brambles(monster* mons)
 }
 
 // Returns the clone just created (null otherwise)
-static monster* _cast_phantom_mirror(monster* mons, monster* targ,
-                                     int summ_type = SPELL_PHANTOM_MIRROR)
+monster* cast_phantom_mirror(monster* mons, monster* targ, int summ_type)
 {
     // Create clone.
     monster *mirror = clone_mons(targ, true);
@@ -4863,7 +4862,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             return;
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
-            _cast_phantom_mirror(mons, mons, SPELL_FAKE_MARA_SUMMON);
+            cast_phantom_mirror(mons, mons, SPELL_FAKE_MARA_SUMMON);
 
         if (you.can_see(mons))
         {
@@ -5899,7 +5898,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         vector<monster*> targets;
         for (monster_near_iterator mi(mons); mi; ++mi)
         {
-            if (mons_aligned(*mi, mons) && !mi->is_stationary()
+            if (*mi != mons && mons_aligned(*mi, mons) && !mi->is_stationary()
                 && !mi->is_summoned())
             {
                 targets.push_back(*mi);
@@ -5910,7 +5909,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (targets.size())
         {
             monster* targ = targets[random2(targets.size())];
-            if (_cast_phantom_mirror(mons, targ))
+            if (cast_phantom_mirror(mons, targ))
                 simple_monster_message(targ, " shimmers and seems to become two!");
         }
         return;

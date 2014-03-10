@@ -2475,6 +2475,20 @@ static void _post_monster_move(monster* mons)
     if (mons->type == MONS_GUARDIAN_GOLEM)
         guardian_golem_bond(mons);
 
+    // A rakshasa that has regained full health dismisses its emergency clones
+    // (if they're somehow still alive) and regains the ability to summon new ones.
+    if (mons->type == MONS_RAKSHASA && mons->hit_points == mons->max_hit_points
+        && !mons->has_ench(ENCH_PHANTOM_MIRROR)
+        && mons->props.exists("emergency_clone"))
+    {
+        mons->props.erase("emergency_clone");
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->type == MONS_RAKSHASA && mi->summoner == mons->mid)
+                mi->del_ench(ENCH_ABJ);
+        }
+    }
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
 }

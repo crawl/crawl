@@ -492,6 +492,17 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         level = MAKE_GOOD_ITEM;
         break;
 
+    case MONS_RAKSHASA:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(3, WPN_WHIP,
+                                                3, WPN_LONG_SWORD,
+                                                3, WPN_TRIDENT,
+                                                1, WPN_DEMON_WHIP,
+                                                1, WPN_DEMON_BLADE,
+                                                1, WPN_DEMON_TRIDENT,
+                                                0);
+        break;
+
     case MONS_ELF:
     case MONS_DEEP_ELF_FIGHTER:
     case MONS_DEEP_ELF_HIGH_PRIEST:
@@ -2334,6 +2345,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_WIZARD:
     case MONS_ILSUIW:
     case MONS_MARA:
+    case MONS_RAKSHASA:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_AIR_MAGE:
