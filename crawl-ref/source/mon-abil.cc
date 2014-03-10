@@ -5124,7 +5124,7 @@ static bool _do_throw(actor *thrower, actor *victim, int radius, int pow)
         else
             continue;
 
-        while (ray.advance() && ray.pos() != *di);
+        while (ray.advance() && ray.pos() != *di)
         {
             if (!map_bounds(ray.pos()))
                 break;
