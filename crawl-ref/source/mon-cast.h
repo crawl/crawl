@@ -31,4 +31,7 @@ void mons_cast_haunt(monster* mons);
 unsigned short mons_word_of_recall(monster* mons, unsigned short recall_target);
 void mons_cast_spectral_orcs(monster* mons);
 void setup_breath_timeout(monster* mons);
+
+monster* cast_phantom_mirror(monster* mons, monster* targ,
+                             int summ_type = SPELL_PHANTOM_MIRROR);
 #endif
