@@ -1828,3 +1828,60 @@ ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
+
+###############################################################################
+
+NAME: lightli_unholy_cathedral
+TAGS: no_monster_gen
+PLACE: Crypt:$
+ORIENT: float
+MONS: ancient champion, lich / revenant, jiangshi / ghoul w:2
+MONS: profane servitor / bone dragon / curse toe / \
+      greater mummy w:2 / ancient lich w:2
+: if crawl.coinflip() then
+KMONS: S = skeletal warrior ; halberd | glaive | bardiche w:5 / nothing
+: else
+KMONS: S = freezing wraith w:20 / shadow wraith w:20 / flayed ghost / \
+           nothing w:50
+: end
+KMONS: Z = zombie w:20 / skeleton w:20 / simulacrum / nothing w:25
+: if crawl.coinflip() then
+KMONS: H = vampire knight
+KMONS: v = vampire w:6 / vampire mage w:4
+: else
+KMONS: H = mummy priest
+KMONS: v = mummy w:6 / guardian mummy w:4
+: end
+SUBST: v = vv.
+KFEAT: Y = altar_yredelemnul
+KFEAT: K = altar_kikubaaqudgha
+: crypt_loot_plus(_G)
+MAP
+        cccc
+       cc$$cc
+       c$$$$c
+      cc$$$$cc
+     cccc++cccc
+ ccccc........ccccc
+cc**c..........c**cc
+c||*+.4.K..Y.4.+*||c
+c||*+..........+*||c
+cc**c..........c**cc
+ ccccc........ccccc
+     cccc++cccc
+  cccccc....cccccc
+ ccv...+.33.+...vcc
+ccvHv..+.33.+..vHvcc
+c..v.ccc....ccc.v..c
+c......cc**cc......c
+c.....2.cccc.2.....c
+c.......cccc.......c
+cS..S..ccVVcc..S..Sc
+c.11.ccc....ccc.11.c
+cS..S..+.11.+..S..Sc
+c......+S..S+......c
+c.Z.cccc.SS.cccc.Z.c
+cZVZc  cc++cc  cZVZc
+c.Z.c  Gc..cG  c.Z.c
+ccccc  ..@@..  ccccc
+ENDMAP
