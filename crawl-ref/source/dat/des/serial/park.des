@@ -1,0 +1,397 @@
+# Park by coolio.
+#
+# Park is a new serial vault that generates wide open areas with lots of trees
+# and bushes.
+default-depth: D
+
+NAME:   serial_park
+TAGS:   allow_dup extra luniq_serial decor layout_open layout_caves
+CHANCE: 1%
+{{
+  local c = 5 + crawl.random2(3)*crawl.random2(2)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_park", count=c}
+  end)
+}}
+
+NAME:     serial_park_central
+TAGS:     transparent extra decor serial_park
+ORIENT:   centre
+KMONS:    1 = bush
+SUBST:    F : GGTTT
+FTILE:    DTG = floor_vault
+FTILE:    E1t = floor_grass
+SUBST:    E = .....11t
+SUBST:    < = ({[
+SUBVAULT: H : serial_park_minivault
+SUBVAULT: J : serial_park_minivault
+MAP
+    @       @@@
+ xxx+xxxxxxxx+xxxxxxxxxxxx
+ x.....x1111D.DtEEttEEEttx
+ x.....xDDDDD.DEEEtJJJJJtx
+ x..% .+......DtEEEJJJJJE+
+ x.....xDDDDD.DEEEEJJJJJEx
+ x.....xEEEED.DtEEEJJJJJEx
+ xxxxxxxEEEED.DEEEtJJJJJtx
+ x11111EEEEED.DtEEttEEEttx
+ xEEEEEEEEEED.DEEEEEEEEEEx
+ xEEEEEEEEEED.DtEEEEDDDEEx
+ xtEtEtEtEtD...DEEED.F.DEx
+@xDDDDDDDDD..D..DDDD...DDx@
+@+..........D<D..........+@
+@xDD...DDDD..D..DDDDDDDDDx@
+ xED.F.DEEED...DtEtEtEtEtx
+ xEEDDDEEEEtD.DEEEEEEEEEEx
+ xEEEEEEEEEED.DEEEEEEEEEEx
+ xttEEEttEEtD.DEEEEE11111x
+ xtHHHHHtEEED.DEEEExxxxxxx
+ xEHHHHHEEEtD.DEEEEx.....x
+ xEHHHHHEEEED.DDDDDx.....x
+ xEHHHHHEEEtD......+..%..x
+ xtHHHHHtEEED.DDDDDx.....x
+ xttEEEttEEtD.D1111x.....x
+ xxxxxxxxxxxx+xxxxxxxx+xxx
+            @@@       @
+ENDMAP
+
+NAME:     serial_park_gazebo
+TAGS:     transparent extra decor serial_park
+ORIENT:   float
+KMONS:    1 = bush
+FTILE:    D = floor_vault
+FTILE:    Et1 = floor_grass
+# Small chance of random altar.
+SUBST:    F : GGGGTTTTVC
+SUBST:    E = ...11t
+SUBVAULT: H : serial_park_minivault
+MAP
+   ....
+  .DDDD.
+ .D111D.
+.D11ccc.........
+.D1cc.ccDDDDDDDD.
+.D1c.F.cEEEEEEED.
+.D1cc.ccEHHHHHED.
+.DEEc+cEEHHHHHED.
+.DEtD.DtEHHHHHED.
+.DEED.DEEHHHHHED.
+.DEtD.DtEHHHHHED.
+.DDDD.DEEEEEEEED.
+ .....DDDDDDDDDD.
+      ..........
+ENDMAP
+
+NAME:     serial_park_square1
+TAGS:     allow_dup transparentextra decor serial_park
+ORIENT:   float
+KMONS:    1 = bush
+FTILE:    D = floor_vault
+FTILE:    Et = floor_grass
+SUBST:    E = ...11t
+SUBVAULT: H : serial_park_minivault
+MAP
+.............
+.DDDDDDDDDDD.
+.DEEEEEEEEED.
+.DEttEEEttED.
+.DEtHHHHHtED.
+.DEEHHHHHEED.
+.DEEHHHHHEED.
+.DEEHHHHHEED.
+.DEtHHHHHtED.
+.DEttEEEttED.
+.DEEEEEEEEED.
+.DDDDDDDDDDD.
+.............
+ENDMAP
+
+NAME:   serial_park_square2
+TAGS:   allow_dup transparent extra decor serial_park
+ORIENT: float
+KMONS:  1 = bush
+FTILE:  DF = floor_vault
+FTILE:  Et1 = floor_grass
+# Small chance of random altar.
+SUBST:  F : GGGGTTTTVC<>
+SUBST:  E = ...11t
+MAP
+ .............
+..DDDDD.DDDDD..
+.DD111D.D111DD.
+.D1EE1D.D1EE1D.
+.D1EE1D.D1EE1D.
+.D1111D.D1111D.
+.DDDDD...DDDDD.
+.......F.......
+.DDDDD...DDDDD.
+.D1111D.D1111D.
+.D1EE1D.D1EE1D.
+.D1EE1D.D1EE1D.
+.DD111D.D111DD.
+..DDDDD.DDDDD..
+ .............
+ENDMAP
+
+NAME:     serial_park_square3
+TAGS:     allow_dup transparent extra decor serial_park
+ORIENT:   float
+FTILE:    D = floor_vault
+FTILE:    E = floor_grass
+SUBST:    E  = ...11t
+SUBVAULT: H : serial_park_minivault
+MAP
+  ... ...
+ .DDD.DDD.
+.DEEDDDEED.
+.DEHHHHHED.
+.DDHHHHHDD.
+ .DHHHHHD.
+.DDHHHHHDD.
+.DEHHHHHED.
+.DEEDDDEED.
+ .DDD.DDD.
+  ... ...
+ENDMAP
+
+NAME:     serial_park_paths
+TAGS:     transparent extra decor serial_park
+ORIENT:   float
+KMONS:    1 = bush
+FTILE:    DF = floor_vault
+FTILE:    Et = floor_grass
+SUBST:    E  = ...11t
+SUBST:    t  : tt1
+SUBST:    F  = GT
+SUBVAULT: H : serial_park_minivault
+MAP
+            @
+ ............
+ .DDDDDDDDDD.........
+ .DttEEEEttD.DDDDDDD.
+ .DttEEEEttD.DHHHHHD.
+ .DEEEttEEED.DHHHHHD.
+ .DEEEttEEED.DHHHHHD.
+ .DDDDDDDDDD.DHHHHHD.
+@............DHHHHHD.
+ .DDDDD.DDDDDDEEEEED.
+ .DEEED.DEEEEEEEEEED.
+ .DEEED.DEEEEEEEEEED.
+ .DEED...DDDDDDDDDDD.
+ .DEED.F.............@
+ .DEED...DDDDDDD.DDD.
+ .DEEED.DEEEEEtD.DtD.
+ .DEEED.DEEEEEtD.DtD.
+ .DDDDDDDDDDDDtD.DtD.
+ .DWWWWWWWWWWDtD.DtD.
+ .DWFWWWWWWFWDtD.DtD.
+ .DWWWWWWWWWWDtD.DtD.
+ .DDDDDDDDDDDDDD.DtD.
+ ................DDD.
+               ......
+                @
+ENDMAP
+
+
+NAME:   serial_park_avenue1
+TAGS:   allow_dup transparent extra decor serial_park
+ORIENT: float
+KMONS:  1 = bush
+FTILE:  DGF = floor_vault
+SUBST:  F  : tt.
+FTILE:  Et = floor_grass
+SUBST:  t : tt1
+MAP
+   ..................................
+   .DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD.
+....DtEFEtEtEtEFEtEtEtEtEFEtEtEtEFEtD..
+@...DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD.@
+@.....................................@
+@.DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD...@
+..DtEFEtEtEtEFEtEtEtEtEFEtEtEtEFEtD....
+ .DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD.
+ ...................................
+ENDMAP
+
+NAME:    serial_park_fountain
+TAGS:    transparent extra decor serial_park
+ORIENT:  float
+FTILE:   DFGT = floor_vault
+FTILE:   Et = floor_grass
+MAP
+               ......
+               .DDDDD.
+@...............DtEtD.
+@.DDDDDDDDDDDDDDDEEED.
+@.DtEtEtEtEtEtEtEtEtD.
+@.DDDDDDDDDDDDDDDEDDD.
+@...............DtD...
+ ..DDDDDDDDDDD..DED.
+ .DGWWWWWWWWWGD.DtD.
+ .DWWWWWWWWWWWD.DED.
+ .DWWWWwwwWWWWD.DtD.
+ .DWWWwwwwwWWWD.DED.
+ .DWWwwGwGwwWWD.DtD.
+ .DWWwwwTwwwWWD.DED.
+ .DWWwwGwGwwWWD.DtD.
+ .DWWWwwwwwWWWD.DED.
+ .DWWWWwwwWWWWD.DtD.
+ .DWWWWWWWWWWWD.DED.
+ .DGWWWWWWWWWGD.DtD.
+ ..DDDDDDDDDDD..DDD.
+  ..................
+             @@@@@
+ENDMAP
+
+NAME:   serial_park_tiny_pond
+TAGS:   allow_dup transparent extra decor serial_park
+FTILE:  DG = floor_vault
+FTILE:  Et = floor_grass
+SUBST:  G = GGTV
+MAP
+  ......
+ .DDDDDD.
+.DDWWWWD.
+.DGWWWWD.
+.DDWWWWD.
+ .DDDDDD.
+  ......
+ENDMAP
+
+NAME:    serial_park_tiny_1
+TAGS:    allow_dup transparent extra decor serial_park
+KMONS:   1 = bush
+FTILE:   E = floor_grass
+SUBST:   E = .t1
+FTILE:   D = floor_vault
+MAP
+  ..
+ .DD.
+.DEED.
+.DEED.
+ .DD.
+  ..
+ENDMAP
+
+NAME:    serial_park_tiny_2
+TAGS:    allow_dup transparent extra decor serial_park
+KMONS:   1 = bush
+FTILE:   E = floor_grass
+SUBST:   E = .t1
+FTILE:   D = floor_vault
+MAP
+  ..
+ .DD.
+.DEED.
+.DEED.
+ .DEED.
+ .DEED.
+  .DD.
+   ..
+ENDMAP
+
+NAME:     serial_park_minivault_5x5_1
+TAGS:     serial_park_minivault allow_dup unrand
+FTILE:    DG = floor_vault
+SUBST:    G = TTTGGt
+FTILE:    Et = floor_grass
+MAP
+tEEEt
+EEDEE
+EDGDE
+EEDEE
+tEEEt
+ENDMAP
+
+NAME:     serial_park_minivault_5x5_2
+TAGS:     serial_park_minivault allow_dup unrand
+FTILE:    t = floor_grass
+FTILE:    DF = floor_vault
+SUBST:    F  = TTTTWWWGVw
+MAP
+tDWDt
+DWWWD
+WWFWW
+DWWWD
+tDWDt
+ENDMAP
+
+NAME:     serial_park_minivault_5x5_3
+TAGS:     serial_park_minivault allow_dup unrand
+FTILE:    t = floor_grass
+MAP
+tccct
+cc0cc
++0%0c
+cc0cc
+tccct
+ENDMAP
+
+NAME:     serial_park_minivault_5x5_4
+TAGS:     serial_park_minivault allow_dup unrand
+SUBST:    C : Ct
+FTILE:    Et = floor_grass
+FTILE:    CDT = floor_vault
+SUBST:    T : TTTTVVDG
+MAP
+tEEEt
+ETDTE
+EDCDE
+ETDTE
+tEEEt
+ENDMAP
+
+NAME:     serial_park_minivault_5x5_5
+TAGS:     serial_park_minivault allow_dup unrand
+KMONS:    1 = plant
+FTILE:    Et1 = floor_grass
+SUBST:    1 = 11.
+MAP
+tEEEt
+E111E
+E111E
+E111E
+tEEEt
+ENDMAP
+
+NAME:     serial_park_minivault_5x5_6
+TAGS:     serial_park_minivault allow_dup unrand
+KMONS:    1 = fungus
+SUBST:    D = ..1
+FTILE:    t. = floor_grass
+FTILE:    1 = floor_swamp
+SUBST:    1 = 111.
+MAP
+tDDDt
+DD1DD
+D111D
+DD1DD
+tDDDt
+ENDMAP
+
+NAME:     serial_park_minivault_5x5_7
+TAGS:     serial_park_minivault allow_dup unrand
+KMONS:    1 = bush
+FTILE:    E1 = floor_grass
+FTILE:    T = floor_vault
+SUBST:    1 = 111.
+MAP
+E111E
+1EEE1
+1ETE1
+1EEE1
+E111E
+ENDMAP
+
+NAME:     serial_park_minivault_5x5_8
+TAGS:     serial_park_minivault allow_dup unrand
+KMONS:    1 = bush
+FTILE:    E1 = floor_grass
+SUBST:    1 : 11t
+MAP
+11E11
+11E11
+EEEEE
+11E11
+11E11
+ENDMAP
