@@ -324,6 +324,36 @@ MAP
  xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME: lightli_bailey_entry_fortress
+WEIGHT: 1
+: local rnd = crawl.random2(2)
+: if rnd == 0 then
+MONS: orc ; tomahawk ego:returning . hand axe, \
+      gnoll ; hand axe / goblin ; hand axe
+:   bailey_portal_axe(_G)
+: elseif rnd == 1 then
+MONS: orc; spear, gnoll ; spear / goblin; spear
+:   bailey_portal_polearm(_G)
+: end
+KMASK: W = no_monster_gen
+MAP
+WWWWWWWWWWWWWWW
+Wccc.2.1.2.cccW
+WcccccccccccccW
+WcccccccccccccW
+W.ccccccccccc.W
+W2ccccccccccc2W
+W.ccccccccccc.W
+W1ccccccccccc1W
+W.ccccccccccc.W
+W2ccccccccccc2W
+W.ccccccccccc.W
+WcccccccccccccW
+WcccccvOvcccccW
+Wccc.2.1.2.cccW
+WWWWWWWWWWWWWWW
+ENDMAP
+
 # The actual portal vaults #####################################
 default-depth:
 

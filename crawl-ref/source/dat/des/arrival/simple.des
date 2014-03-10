@@ -1957,3 +1957,38 @@ x{.............@
 x..............@
 xxxxaaacccbbbvvv
 ENDMAP
+
+###############################################################################
+
+NAME: lightli_arrival_flooded_house
+ORIENT: float
+TAGS: arrival no_monster_gen no_rtele_into no_pool_fixup
+SUBST: 1 = 1WWw.
+MONS: plant
+MAP
+ccccccccc
+c1111111c
+c1111111c
+c1111111c
+c1....11c
+c.c111.1c
+c.c1111.c
+c(c11111+
+ccccccccc
+ENDMAP
+
+NAME: lightli_arrival_lavapool
+ORIENT: float
+TAGS: arrival no_monster_gen
+MAP
+   vvvv
+  vvvvvv
+ vv....vv
+vvv.ll.vvv
+v{+.ll.+.+
+v.+.ll.+.+
+vvv.ll.vvv
+ vv....vv
+  vvvvvv
+   vvvv
+ENDMAP

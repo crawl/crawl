@@ -244,6 +244,29 @@ MAP
 .........
 ENDMAP
 
+NAME: lightli_sewer_entry_pipes
+NSUBST: o = 1:O / *:W
+SUBST: W = WWWWW1
+MONS: green rat / adder / rat / worm
+: sewer_portal(_G)
+MAP
+vvvvvvvvvv
+vovWovWvvv
+vWvWvvWWWv
+vWvWvvWvWv
+vWvWWvWvWv
+vWvvWvWvWv
+vWWWWvWvWv
+vvvvWvWvWv
+vWWWWWWvov
+vWvvvvvvvv
+vWWWWWWWWW
+vvvvWvWvWW
+..WWWWW.W.
+....W.....
+..........
+ENDMAP
+
 # The actual portal vaults #####################################
 default-depth: Sewer
 

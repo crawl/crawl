@@ -263,6 +263,20 @@ MAP
 .......
 ENDMAP
 
+NAME: lightli_ossuary_entry_decrepit_ruins
+TAGS: ruin
+NSUBST: a = 1:' / *:c
+: ossuary_portal(_G)
+MAP
+GcccccG
+cc'O'cc
+caaaaac
+c'''''c
+c'''''c
+cc'''cc
+Gcc'ccG
+ENDMAP
+
 #### The portal vaults ####################################
 
 # Reset default depth to prevent random generation of portal vaults.
