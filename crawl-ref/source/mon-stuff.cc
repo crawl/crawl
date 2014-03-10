@@ -4722,6 +4722,10 @@ string summoned_poof_msg(const monster* mons, bool plural)
         msg = "fades away";
         break;
 
+    case SPELL_PHANTOM_MIRROR:
+        msg = "shimmers and vanishes";
+        break;
+
     }
 
     if (valid_mon)

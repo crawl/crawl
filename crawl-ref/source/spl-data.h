@@ -3736,6 +3736,19 @@ struct spell_desc
 },
 
 {
+    SPELL_PHANTOM_MIRROR, "Phantom Mirror",
+     SPTYP_CHARMS | SPTYP_HEXES,
+     SPFLAG_HELPFUL,
+     5,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false,
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

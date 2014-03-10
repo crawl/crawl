@@ -1280,6 +1280,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
     case SPELL_BLINK_ALLIES_AWAY:
     case SPELL_SHROUD_OF_GOLUBRIA:
+    case SPELL_PHANTOM_MIRROR:
         return true;
     default:
         if (check_validity)
@@ -1990,6 +1991,10 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+    // Don't let clones duplicate anything, to prevent exponential explosion
+    case SPELL_PHANTOM_MIRROR:
+        return (mon->has_ench(ENCH_PHANTOM_MIRROR));
+
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
     case SPELL_SHAFT_SELF:
@@ -2541,6 +2546,61 @@ static bool _wall_of_brambles(monster* mons)
         mpr("Thorny briars emerge from the ground!");
 
     return true;
+}
+
+static void _cast_phantom_mirror(monster* mons)
+{
+    // Find appropriate ally to clone.
+    vector<monster*> targets;
+    for (monster_near_iterator mi(mons); mi; ++mi)
+    {
+       if (mons_aligned(*mi, mons) && !mi->is_stationary() && !mi->is_summoned())
+       {
+           targets.push_back(*mi);
+       }
+    }
+
+    // Abort if no valid targets.
+    if (!targets.size())
+        return;
+
+    monster *targ = targets[random2(targets.size())];
+
+    // Create clone.
+    monster *mirror = clone_mons(targ, true);
+
+    // Abort if we failed to place the monster for some reason.
+    if (!mirror)
+        return;
+
+    mirror->mark_summoned(5, true, SPELL_PHANTOM_MIRROR);
+    mirror->add_ench(ENCH_PHANTOM_MIRROR);
+    mirror->summoner = mons->mid;
+    mirror->hit_points /= 2;
+    mirror->max_hit_points /= 2;
+
+    simple_monster_message(targ, " shimmers and seems to become two!");
+
+    // Sometimes swap the two monsters, so as to disguise the original and the copy.
+    if (coinflip())
+    {
+        // We can skip some habitability checks here, since the monsters are
+        // known to be identical.
+        coord_def p1 = targ->pos();
+        coord_def p2 = mirror->pos();
+
+        targ->set_position(p2);
+        mirror->set_position(p1);
+
+        mgrd(p1) = mirror->mindex();
+        mgrd(p2) = targ->mindex();
+
+        // Possibly constriction should be preserved so as to not sometimes leak
+        // info on whether the clone or the original is adjacent to you, but
+        // there's a fair amount of complication in this for very narrow benefit.
+        targ->clear_far_constrictions();
+        mirror->clear_far_constrictions();
+    }
 }
 
 static bool _should_tornado(monster* agent)
@@ -5906,8 +5966,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                         mons->get_foe()->pos());
         return;
     }
+
+    case SPELL_PHANTOM_MIRROR:
+    {
+        _cast_phantom_mirror(mons);
+        return;
     }
 
+    }
 
     // If a monster just came into view and immediately cast a spell,
     // we need to refresh the screen before drawing the beam.
