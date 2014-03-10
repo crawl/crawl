@@ -1372,7 +1372,7 @@ SHUFFLE: 456
 KMONS:   - = big fish / big fish zombie w:5 / nothing w:90
 KFEAT:   - = deep_water
 KPROP:   W- = no_tele_into
-KITEM:   e = star_item
+KITEM:   456 = star_item
 SUBST:   W = WWWw.
 COLOUR:  - = lightgreen
 SUBST:   - = wwwW-
