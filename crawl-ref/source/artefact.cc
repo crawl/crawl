@@ -1942,8 +1942,23 @@ struct _igni_artp_def
     bool overwrite;
 };
 
-static void _igni_add_prop(item_def& wpn, const _igni_artp_def& def)
+static void _igni_add_prop(item_def& wpn, _igni_artp_def def)
 {
+    CrawlVector &rap = wpn.props[ARTEFACT_PROPS_KEY].get_vector();
+
+    if (def.prop == ARTP_BRAND)
+    {
+        if (!is_weapon_brand_ok(wpn.sub_type, def.value, true))
+            def.value = SPWPN_PROTECTION;
+
+        if ((short)rap[ARTP_BRAND] == 0 ||
+            (short)rap[ARTP_BRAND] == SPWPN_NORMAL)
+        {
+            def.prop = ARTP_DAMAGE;
+            def.value = 3;
+        }
+    }
+
     if (def.prop == ARTP_DAMAGE)
     {
         if (wpn.sub_type != WPN_BLOWGUN)
@@ -1953,7 +1968,6 @@ static void _igni_add_prop(item_def& wpn, const _igni_artp_def& def)
     }
     else
     {
-        CrawlVector &rap = wpn.props[ARTEFACT_PROPS_KEY].get_vector();
         if (def.overwrite)
             rap[def.prop] = static_cast<short>(def.value);
         else
@@ -2009,13 +2023,27 @@ vector<igni_art> make_igni_randarts(const item_def& wpn)
         return choices; // Empty vector
     }
 
+    igni_art_cost cheap_costs[] =
+    {
+        { OBJ_POTIONS, POT_CURING, 5 },
+        { OBJ_POTIONS, POT_HEAL_WOUNDS, 2 },
+        { OBJ_POTIONS, POT_HASTE, 1 },
+        { OBJ_POTIONS, POT_RESISTANCE, 1 },
+        { OBJ_SCROLLS, SCR_TELEPORTATION, 2 },
+        { OBJ_SCROLLS, SCR_FEAR, 2 },
+        { OBJ_SCROLLS, SCR_FOG, 2 },
+        { OBJ_SCROLLS, SCR_BLINKING, 1 },
+        { OBJ_SCROLLS, SCR_RECHARGING, 1 },
+        { OBJ_FOOD,    FOOD_ROYAL_JELLY, 2 },
+    };
+
     igni_art_cost costs[] =
     {
         { OBJ_POTIONS, POT_CURE_MUTATION, 1 },
-        { OBJ_POTIONS, POT_HEAL_WOUNDS, 5 },
         { OBJ_SCROLLS, SCR_ACQUIREMENT, 1 },
         { OBJ_SCROLLS, SCR_BRAND_WEAPON, 1 },
-        { OBJ_SCROLLS, SCR_RECHARGING, 3 },
+        { OBJ_SCROLLS, SCR_RECHARGING, 4 },
+        { OBJ_SCROLLS, SCR_BLINKING, 3 },
         { OBJ_MISCELLANY, MISC_LAMP_OF_FIRE, 1 },
         { OBJ_MISCELLANY, MISC_STONE_OF_TREMORS, 1 },
         { OBJ_JEWELLERY, AMU_CONSERVATION, 1 },
@@ -2032,108 +2060,105 @@ vector<igni_art> make_igni_randarts(const item_def& wpn)
     // The intent of this system is to generate a set of artefacts that have
     // lots of variation, but also have approximately the same power level.
 
-    _igni_artp_def tier1[] =
+    _igni_artp_def good_tier[] =
     {
         { ARTP_FIRE, 1 },
         { ARTP_COLD, 1 },
-        { ARTP_NEGATIVE_ENERGY, 1 },
         { ARTP_ELECTRICITY, 1 },
-        { ARTP_AC, 4 },
-        { ARTP_EVASION, 4 },
         { ARTP_INVISIBLE, 1 },
         { ARTP_MAGIC, 100 },
+        { ARTP_BRAND, SPWPN_PENETRATION, true },
+        { ARTP_REGENERATION, 40 },
+        { ARTP_DAMAGE, 5 },
     };
 
-    _igni_artp_def tier2[] =
+    _igni_artp_def cheap_tier[] =
     {
-        { ARTP_STRENGTH, 3 },
-        { ARTP_INTELLIGENCE, 3 },
-        { ARTP_DEXTERITY, 3 },
+        { ARTP_STRENGTH, 4 },
+        { ARTP_INTELLIGENCE, 4 },
+        { ARTP_DEXTERITY, 4 },
         { ARTP_POISON, 1 },
         { ARTP_NEGATIVE_ENERGY, 1 },
-        { ARTP_FLY, 1 },
-        { ARTP_BLINK, 1 },
-        { ARTP_BERSERK, 1 },
-        { ARTP_STEALTH, 50 },
         { ARTP_MAGIC, 40 },
-        { ARTP_AC, 2 },
-        { ARTP_EVASION, 2 },
         { ARTP_EYESIGHT, 1 },
         { ARTP_DAMAGE, 3 },
-        { ARTP_BRAND, SPWPN_PROTECTION, true },
+        { ARTP_MAGICAL_POWER, 5 },
+        { ARTP_BRAND, SPWPN_EVASION, true },
     };
 
-    _igni_artp_def tier0[] =
+    _igni_artp_def great_tier[] =
     {
         { ARTP_FIRE, 2 },
         { ARTP_COLD, 2 },
-        { ARTP_AC, 6 },
-        { ARTP_EVASION, 6 },
         { ARTP_NEGATIVE_ENERGY, 2 },
-        { ARTP_REGENERATION, 40 },
-        { ARTP_STRENGTH, 6 },
-        { ARTP_INTELLIGENCE, 6 },
-        { ARTP_DEXTERITY, 6 },
-        { ARTP_DAMAGE, 6 },
+        { ARTP_RMSL, 1 },
+        { ARTP_DAMAGE, 8 },
         { ARTP_BRAND, SPWPN_SPEED, true },
+        { ARTP_BRAND, is_range_weapon(wpn) ? SPWPN_SPEED
+                                           : SPWPN_VAMPIRICISM, true },
+        { ARTP_BRAND, SPWPN_ELECTROCUTION, true },
     };
 
     _igni_artp_def bad_tier[] =
     {
         { ARTP_INTELLIGENCE, -6 },
         { ARTP_DEXTERITY, -6 },
-        { ARTP_AC, -4 },
-        { ARTP_EVASION, -4 },
+        { ARTP_AC, -5 },
+        { ARTP_EVASION, -3 },
         { ARTP_FIRE, -1 },
         { ARTP_COLD, -1 },
         { ARTP_MUTAGENIC, 1 },
         { ARTP_NOISES, 3 },
+        { ARTP_DAMAGE, -3 },
+        { ARTP_BRAND, SPWPN_VENOM, true },
+        { ARTP_BRAND, SPWPN_CHAOS, true },
+        { ARTP_BRAND, SPWPN_NORMAL, true },
     };
 
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(cheap_costs));
     ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(costs));
-    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier0));
-    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier1));
-    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(tier2));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(good_tier));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(cheap_tier));
+    ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(great_tier));
     ASSERT(MAX_IGNI_ARTEFACTS <= ARRAYSZ(bad_tier));
 
     reproducible_rng rng(you.birth_time);
+    std::random_shuffle(cheap_costs, cheap_costs + ARRAYSZ(cheap_costs), rng);
     std::random_shuffle(costs, costs + ARRAYSZ(costs), rng);
-    std::random_shuffle(tier1, tier1 + ARRAYSZ(tier1), rng);
-    std::random_shuffle(tier2, tier2 + ARRAYSZ(tier2), rng);
+    std::random_shuffle(good_tier, good_tier + ARRAYSZ(good_tier), rng);
+    std::random_shuffle(cheap_tier, cheap_tier + ARRAYSZ(cheap_tier), rng);
+    std::random_shuffle(great_tier, great_tier + ARRAYSZ(great_tier), rng);
     std::random_shuffle(bad_tier, bad_tier + ARRAYSZ(bad_tier), rng);
 
     for (int i = 0; i != MAX_IGNI_ARTEFACTS; ++i)
     {
         // Do the RNG now so that the results won't differ.
-        const int added_plus  = rng(3) - rng(2);
-        const int added_plus2 = rng(3) - rng(2);
-        const bool first_tiers = rng(2);
+        const int added_plus  = min(2, rng(5) - rng(2));
+        const int added_plus2 = min(2, rng(5) - rng(2));
 
         int flag = 1 << i;
         if (you.attribute[ATTR_IGNI_ARTEFACTS_MADE] & flag)
             continue;
 
         igni_art art = { costs[i], wpn };
-        choices.push_back(art);
-        item_def& choice = choices.back().itm;
 
         // This hack is used to pass the flag back to the caller.
-        choice.slot = flag;
+        art.itm.slot = flag;
 
-        choice.plus += added_plus;
-        if (choice.sub_type != WPN_BLOWGUN)
-            choice.plus2 += added_plus2;
+        art.itm.plus += added_plus;
+        if (art.itm.sub_type != WPN_BLOWGUN)
+            art.itm.plus2 += added_plus2;
 
-        _artefact_setup_prop_vectors(choice);
-        choice.flags |= ISFLAG_RANDART;
+        _artefact_setup_prop_vectors(art.itm);
+        art.itm.flags |= ISFLAG_RANDART;
 
-        CrawlVector &rap = choice.props[ARTEFACT_PROPS_KEY].get_vector();
+        CrawlVector &rap = art.itm.props[ARTEFACT_PROPS_KEY].get_vector();
         for (vec_size j = 0; j < ART_PROPERTIES; j++)
             rap[j] = static_cast<short>(0);
 
         if (wpn.special == SPWPN_NORMAL)
         {
-            if (choice.sub_type == WPN_BLOWGUN)
+            if (art.itm.sub_type == WPN_BLOWGUN)
                 rap[ARTP_BRAND] = static_cast<short>(SPWPN_NORMAL);
             else if (is_range_weapon(wpn))
                 rap[ARTP_BRAND] = static_cast<short>(SPWPN_FLAME);
@@ -2143,26 +2168,43 @@ vector<igni_art> make_igni_randarts(const item_def& wpn)
         else
             rap[ARTP_BRAND] = static_cast<short>(wpn.special);
 
-        if (first_tiers)
+        if (i < 2)
         {
-            _igni_add_prop(choice, tier1[i]);
-            _igni_add_prop(choice, tier2[i]);
+            art.cost = cheap_costs[i];
+            _igni_add_prop(art.itm, cheap_tier[i]);
         }
         else
         {
-            _igni_add_prop(choice, tier0[i]);
-            _igni_add_prop(choice, bad_tier[i]);
+            art.cost = costs[i];
+            if (i % 2 == 0)
+            {
+                if (is_stackable_item(art.cost.to_item()))
+                {
+                    art.cost.quantity *= 2;
+                    _igni_add_prop(art.itm, good_tier[i]);
+                    _igni_add_prop(art.itm, cheap_tier[i]);
+                }
+                _igni_add_prop(art.itm, great_tier[i]);
+                _igni_add_prop(art.itm, bad_tier[i]);
+            }
+            else
+            {
+                _igni_add_prop(art.itm, good_tier[i]);
+                _igni_add_prop(art.itm, cheap_tier[i]);
+            }
         }
 
         // get true artefact name
-        set_artefact_name(choice, item_base_name(choice));
+        set_artefact_name(art.itm, item_base_name(art.itm));
 
         // get artefact appearance
-        if (choice.props.exists(ARTEFACT_APPEAR_KEY))
-            ASSERT(choice.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
+        if (art.itm.props.exists(ARTEFACT_APPEAR_KEY))
+            ASSERT(art.itm.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
         else
-            choice.props[ARTEFACT_APPEAR_KEY].get_string() =
-                make_artefact_name(choice, true);
+            art.itm.props[ARTEFACT_APPEAR_KEY].get_string() =
+                make_artefact_name(art.itm, true);
+
+        choices.push_back(art);
     }
 
     return choices;

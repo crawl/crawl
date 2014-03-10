@@ -4930,12 +4930,9 @@ bool igni_artefactize_weapon()
 
     if (wpn_choices.empty())
     {
-        mpr("That's not a suitable weapon.");
+        mpr("That's not a suitable weapon for artefactizing.");
         return false;
     }
-
-    if (!yesno("Do you want Igni to artefactize your weapon?", true, 'n'))
-        return false;
 
     ToggleableMenu menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                         | MF_ALLOW_FORMATTING,
