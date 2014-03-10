@@ -199,16 +199,18 @@ WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe
-MONS:   goblin ; tomahawk ego:returning / hobgoblin ; tomahawk ego:returning /\
-        orc ; tomahawk ego:returning
+MONS:   goblin ; tomahawk ego:returning ident:type q:4 | \
+                 tomahawk ego:returning ident:type q:3 / \
+        hobgoblin ; tomahawk ego:returning ident:type q:4 | \
+                    tomahawk ego:returning ident:type q:3 / \
+        orc ; tomahawk ego:returning ident:type q:4 | \
+              tomahawk ego:returning ident:type q:3
+SUBST: 1 = 122
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS:   goblin ; spear / hobgoblin ; spear / orc ; spear
-MONS:   goblin ; spear / hobgoblin ; spear /\
-        orc ; spear
 :   bailey_portal_polearm(_G)
 : end
-SUBST: 1 = 122
 KMASK: wW = no_monster_gen
 MAP
 ...........
@@ -328,11 +330,12 @@ NAME: lightli_bailey_entry_fortress
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-MONS: orc ; tomahawk ego:returning . hand axe, \
-      gnoll ; hand axe / goblin ; hand axe
+MONS: orc ; tomahawk ego:returning ident:type q:3 | \
+            tomahawk ego:returning ident:type q:4 . hand axe
+MONS: gnoll ; hand axe / goblin ; hand axe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-MONS: orc; spear, gnoll ; spear / goblin; spear
+MONS: orc ; spear, gnoll ; spear / goblin ; spear
 :   bailey_portal_polearm(_G)
 : end
 KMASK: W = no_monster_gen
