@@ -4933,6 +4933,149 @@ cc.0.x0*0x...cc
       ccc
 ENDMAP
 
+NAME:   kennysheep_treasure_room
+TAGS:   no_monster_gen no_pool_fixup
+DEPTH:  D:12-, Depths
+KFEAT:  = = runed_door
+MAP
+ccccc
+c|||c
+c888c
+c=nnc
+ @@@
+ENDMAP
+
+NAME:   kennysheep_four_rooms
+ORIENT: float
+TAGS:   no_monster_gen
+DEPTH:  D:12-, Depths
+MAP
+ cccc cccc
+cc..ccc..cc
++....+...0c
++....+...0c
+cc..ccc..cc
+ cnncxc++c
+cc..ccc..cc
+c.**.+....c
+c8**.+....c
+cc..ccc00cc
+ cccc cccc
+ENDMAP
+
+#############################################################
+NAME:   kennysheep_opposing_triangles
+TAGS:   extra decor
+DEPTH:  D, Depths, !D:$, !Depths:$
+SUBST:  c:ccxxv
+SUBST:  w:wl
+MAP
+               ww
+ cccccccccccccwww
+ +.........ccwww
+ +........mcwwwc
+ c...0...mmwwwcc
+ c..0*..ccwwwccc
+ c.....mcwwwmm.c
+ c....mmwwwcm..c
+ c...ccwwwcc...c
+ c..mcwwwmm....c
+ c.mmwwwcm.....c
+ cccwwwcc..*0..c
+ ccwwwmm...0...c
+ cwwwcm........+
+ wwwcc.........+
+wwwccccccccccccc
+ww
+ENDMAP
+
+NAME:    kennysheep_island_fort
+TAGS:    no_pool_fixup
+DEPTH:   D:8-, Depths:2-, !D:$, !Depths:$
+SHUFFLE: {}'
+KFEAT:   ' = .
+: if crawl.coinflip() then
+SUBST:  w : l
+SUBST:  c : xxv
+: else
+SUBST:  c : ccb
+: end
+MAP
+   wwwwwwww
+  wwwwwwwwww
+ wwwccmmccwww
+wwwcc....ccwww
+wwcc..8...ccww
+wwc..cc+c..cww
+wwm.0c**c0.mww
+wwm..c|*c..mww
+wwc..cccc..cww
+wwcc......ccww
+wwwcc....ccwww
+ wwGcc++ccGww
+ www.G..G.www
+  www....www
+   www}{www
+    wwwwww
+     wwww
+ENDMAP
+
+NAME:   kennysheep_just_a_vault
+TAGS:   allow_dup
+DEPTH:  D:8-, Depths, !D:$, !Depths:$
+SUBST:  c : ccxxv
+SUBST:  x : ccxxvbm
+MAP
+ ccccc
+cc.8.cc
+c.x+x.c
+c.x|x.c
+c.xxx.c
+cc...cc
+ cc+cc
+ENDMAP
+
+NAME:   kennysheep_orc_chapel
+DEPTH:  D:3-4, Orc:2-
+SUBST:  $ = $.
+: if you.branch() == "Orc" then
+KMONS:  1 = orc high priest band
+:else
+KMONS:  1 = orc priest band
+:end
+KFEAT:  1 = altar_beogh
+TILE:   x = wall_zot_yellow
+MAP
+ xxxxx
+xx$1$xx
+x$I$I$x
+x$$$$$x
+x$I.I$x
+xx...xx
+ xx+xx
+ENDMAP
+
+NAME:   kennysheep_jessica_study
+TAGS:   transparent no_mons_gen
+DEPTH:  D:2-3
+KITEM:  d = any potion / randbook disc:conjuration slevels:2 \
+                         owner:Jessica w:3 / nothing w:20
+MONS:   jessica, green rat
+veto {{ return you.uniques("Jessica") }}
+MAP
+   .....
+  .......
+ ..xxxxx..
+..xx.12xx..
+..xd...dx..
+..xd...dx..
+..xd...dx..
+..xx...xx..
+ ..xx+xx..
+  .......
+   .....
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.

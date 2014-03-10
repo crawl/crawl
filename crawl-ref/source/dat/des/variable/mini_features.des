@@ -2257,6 +2257,50 @@ MAP
       .............
 ENDMAP
 
+####
+
+NAME:   kennysheep_boxes
+TAGS:   transparent decor no_pool_fixup
+DEPTH:  D, Depths, !D:$, !Depths:$
+: if crawl.coinflip() then
+SUBST:  w : wl.
+SUBST:  x : xcvb
+: else
+SUBST:  x : t
+:   if crawl.coinflip() then
+SUBST:  . = W.
+:   else
+KMONS:  w = plant w:50 / bush / nothing w:100
+:   end
+: end
+MAP
+.........................
+.wwwww.wwwww.wwwww.wwwww.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wwwww.wwwww.wwwww.wwwww.
+.........................
+.wwwww.wwwww.wwwww.wwwww.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wwwww.wwwww.wwwww.wwwww.
+.........................
+.wwwww.wwwww.wwwww.wwwww.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wwwww.wwwww.wwwww.wwwww.
+.........................
+.wwwww.wwwww.wwwww.wwwww.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wxxxw.wxxxw.wxxxw.wxxxw.
+.wwwww.wwwww.wwwww.wwwww.
+.........................
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items

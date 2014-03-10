@@ -1486,3 +1486,203 @@ x.xzx.....AAA'''XXX'''XXX'''AAA.....xzx.x
          .x..x.zx..xzx..xz.x..x.
           .xx.xx.xx.x.xx.xx.xx.
 ENDMAP
+
+###############################################################################
+
+NAME:   kennysheep_demon_jail
+ORIENT: north
+TAGS:   no_monster_gen
+DEPTH:  Depths:2-
+MONS:   common demon, greater demon, hell knight
+NSUBST: . = 7:1 / 7:3
+FTILE:  .|#+G23456- = floor_pebble_darkgray
+KPROP:  1 = no_rtele_into
+KFEAT:  # = iron_grate
+MAP
+           vvvvvvvv
+vvvvvvvvv  v||v.2.v
+v1v1v1v1v  v||+...v
+v#v#v#v#vvvvvvv...v
+v.........llllv...vvvvvvv
+v#v#v#v#vl..l.+...+.....v
+v1v1v1v1vl....vvvvv.GlG.v
+vvvvvvvvv.l.........lYl.v
+v1v1v1v1v.ll........GlG.v
+v#v#v#v#v.lll.v---v.....v
+v..........l..v   vvvvvvv
+v#v#v#v#vvvvvvv
+v1v1v1v1v
+vvvvvvvvv
+ENDMAP
+
+NAME:   kennysheep_seaside_town
+ORIENT: northeast
+TAGS:   no_monster_gen
+DEPTH:  D:7-14
+KFEAT:  W = open_sea
+MONS:   ogre, orc warrior, gnoll shaman, centaur, big kobold
+KMONS:  8 = orc warrior band
+KMONS:  9 = gnoll shaman band
+KMONS:  p = plant
+KMONS:  P = fungus
+FTILE: ' = floor_sand
+FTILE: .pt89 = floor_dirt
+NSUBST: H = 3:* / 7:1
+KFEAT:  H = floor
+NSUBST: . = 2:9
+SUBST:  p = p...
+NSUBST: . = 5:p
+SUBST:  1 = 12345
+NSUBST: q = 3:1 / 6:P / *:.
+KFEAT:  # = iron_grate
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
+                 delay = 10, size = 1, walk_dist = 0, excl_rad = -1 }
+MAP
+xxxxWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW
+xxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW
+xxxxwwwwwwwwww'wwwwwww''wwwww'wwwwwwW
+xxxxwww'wwwww'''w''''ww''''''''wwwwwW
+xxxxwwww'''''..'''.''''''..''''wwwwwW
+xxxxwwww'...cccc...cccc.......''wwwwW
+xxxxwwww''..cHHc...cHHc........'wwwwW
+xxxxw''''...cHHc...cHH+...cccc.''wwwW
+xxxx''cccc..cc+c...cccc...cHHc..'wwwW
+xxxx..cHHc................+HHc..''wwW
+xxxx..cHH+................cccc...'wwW
+xxxx..cccc.......ccccc...........'wwW
+xxxx.......8..ccccHHHc..........''wwW
+xxxxtp.p.pt..tc>zcHHH+..........'wwwW
+xxxxt.p.p.ptxxczz+HHH+..........'wwwW
+xxxxtpppptxxx!!!ccccccxxxppp....'wwwW
+xxxxttptpxx!!!!xxxxx xxxppppppp.''wwW
+xcccc+tptx!!!xxxxxqxxxx.pptptppp''wwW
+xcHHHctttx!!xxxxxxxqqqqqxtptptpc#cwwW
+xcHHHcxxxx!xxxxxxxqxxxxxxxttttccHccwW
+xcHHHcx!!!!!xxxxxxqxqxxxxxptpp#HFH#wW
+xccccc!!!x!xxxxxxqqxqqqqxxtpptc+HccwW
+xxxxx!!xxxxxxxxxxqxqqxxqxxpppppc#cwwW
+xxxxxx!!xxxxxxxxxxxxqxxqqqxxxxxxwwwwW
+xxxxxxx@@xxxxxxxxxxxxxxxxxx    xxxxxx
+ENDMAP
+
+NAME:   kennysheep_kobold_camp
+ORIENT: north
+TAGS:   no_monster_gen no_trap_gen
+DEPTH:  D:4-9
+MONS:   big kobold, kobold
+: dgn.delayed_decay(_G, 'C', 'human corpse')
+MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                               pow_max = 100, delay = 10, size = 1, \
+                               walk_dist = 0, excl_rad = 0 }
+KMONS:  p = plant
+SUBST:  t = tp.
+NSUBST: . = 15:2
+NSUBST: ' = 5:C / 5:2
+MAP
+                  xxxxxxxxxx
+                xxxttttttttxxxx
+          xxxxxxxtttttttttttttxx
+        xxxtttttttttttttttttttttx
+       xxtttttttttt*t..*t.ttttttxx
+     xxxtttttttttt.''1'......ttttxxx
+    xxtttttttt....''''''.....ttttttxx
+   xxtttttt.......''FF'''.....ttttttxx
+  xxtttttttt.....'''FF'''.....ttttttt@
+ xxttxxxxtttt.....''''''.....ttttxxxxx
+xxttxx  xxtttt.....''''.....tttxxx
+@txxx    xtttttt.........tttttxx
+xxx      xxxtttttttt....ttttttx
+           xtttttttttt.ttttxxxx
+           xxxxxxtttxt.ttxxx
+                xttxxtt.ttxx
+                xtttxxtt.ttxx
+                xxttxxxtt.ttx
+                 xtttxxxtt.txx
+                 xxttxxxxt.ttx
+                  xxxttxxtt.txx
+                    xttxxxxt.tx
+                     @@    @@@
+ENDMAP
+
+NAME:   kennysheep_goblin_castle
+TAGS:   no_monster_gen no_pool_fixup
+ORIENT: northwest
+DEPTH:  D:2-4
+KMONS:  O = Ijyb / hobgoblin w:1, hobgoblin
+MONS:   goblin, goblin ; sling . stone, jackal
+NSUBST: . = 1:6 / 3:3 / *:.
+MAP
+xxxxxxxxxxxxxxxxxxx
+x...+....1..x%%*xww
+x...+......O+%%%xww
+x...x....1..xxxxxww
+x...xxxxxxxxxx...ww
+x............x...ww
+x.....1.1....x.2.ww
+xx+xx.....xx+xx..ww
+x...x.....x...x..ww
+x...x.....x...x..ww
+x...x.....x...x..ww
+xx+xx.....xx+xx..ww
+x.2.x.....x.2....ww
+x...x.....x.....www
+xwwwx.....xwwwwwww
+xwwwxx+++xxwwwwww
+  wwww...wwww
+    ww@@@ww
+ENDMAP
+
+NAME:   kennysheep_tiny_hell
+TAGS:   no_monster_gen
+ORIENT: centre
+DEPTH:  D:13-15
+FTILE:  *|c.12${} = floor_infernal_blank
+TILE:   c = dngn_stone_dark
+SUBST:  *=*|
+MONS:   blue devil w:1 / hellwing w:3 / iron devil w:1 / orange demon w:1 /\
+        red devil w:1 / demonic crawler / sixfirhy w:1, \
+        lesser demon, green rat / giant cockroach
+NSUBST: . = 6:3 / 6:! / 56:' / .
+KPROP:  !' = bloody
+: dgn.delayed_decay(_G, '!', 'human corpse / human skeleton')
+MAP
+              cccccccccc
+              c...$$...c
+              c...**...c
+              c....1...c
+              c2..2..2.c
+              c........c
+              c........c
+              c........c
+              c........c
+              c....2...c
+             cc........cc
+            cc..........cc
+           cc............cc
+          cc..............cc
+ccccccccccc................ccccccccccc
+c................................2...c
+c...2................................c
+c....................................c
+c$*1.....2........{.........2....2.*$c
+c$*.2..............}..............1*$c
+c....................................c
+c................................2...c
+c...2................................c
+ccccccccccc................ccccccccccc
+          cc..............cc
+           cc............cc
+            cc..........cc
+             cc........cc
+              c...2....c
+              c........c
+              c........c
+              c........c
+              c........c
+              c.2..2..2c
+              c...1....c
+              c...**...c
+              c...$$...c
+              cccccccccc
+ENDMAP
