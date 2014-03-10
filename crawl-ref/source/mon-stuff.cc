@@ -4721,11 +4721,6 @@ string summoned_poof_msg(const monster* mons, bool plural)
     case SPELL_CALL_LOST_SOUL:
         msg = "fades away";
         break;
-
-    case SPELL_PHANTOM_MIRROR:
-        msg = "shimmers and vanishes";
-        break;
-
     }
 
     if (valid_mon)
@@ -4751,6 +4746,9 @@ string summoned_poof_msg(const monster* mons, bool plural)
 
         if (mons->type == MONS_DROWNED_SOUL)
             msg = "returns to the deep";
+
+        if (mons->has_ench(ENCH_PHANTOM_MIRROR))
+            msg = "shimmers and vanishes";
     }
 
     // Conjugate.

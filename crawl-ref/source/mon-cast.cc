@@ -1751,12 +1751,6 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
-    case SPELL_FAKE_MARA_SUMMON:
-        if (count_mara_fakes() == 2)
-            ret = true;
-
-        break;
-
     case SPELL_AWAKEN_FOREST:
         if (mon->has_ench(ENCH_AWAKEN_FOREST)
             || env.forest_awoken_until > you.elapsed_time
@@ -1993,6 +1987,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     // Don't let clones duplicate anything, to prevent exponential explosion
     case SPELL_PHANTOM_MIRROR:
+    case SPELL_FAKE_MARA_SUMMON:
         return (mon->has_ench(ENCH_PHANTOM_MIRROR));
 
 #if TAG_MAJOR_VERSION == 34
@@ -2548,38 +2543,30 @@ static bool _wall_of_brambles(monster* mons)
     return true;
 }
 
-static void _cast_phantom_mirror(monster* mons)
+// Returns the clone just created (null otherwise)
+static monster* _cast_phantom_mirror(monster* mons, monster* targ,
+                                     int summ_type = SPELL_PHANTOM_MIRROR)
 {
-    // Find appropriate ally to clone.
-    vector<monster*> targets;
-    for (monster_near_iterator mi(mons); mi; ++mi)
-    {
-       if (mons_aligned(*mi, mons) && !mi->is_stationary() && !mi->is_summoned())
-       {
-           targets.push_back(*mi);
-       }
-    }
-
-    // Abort if no valid targets.
-    if (!targets.size())
-        return;
-
-    monster *targ = targets[random2(targets.size())];
-
     // Create clone.
     monster *mirror = clone_mons(targ, true);
 
     // Abort if we failed to place the monster for some reason.
     if (!mirror)
-        return;
+        return NULL;
 
-    mirror->mark_summoned(5, true, SPELL_PHANTOM_MIRROR);
+    // Don't leak the real one with the targeting interface.
+    if (you.prev_targ == mons->mindex())
+    {
+        you.prev_targ = MHITNOT;
+        crawl_state.cancel_cmd_repeat();
+    }
+    mons->reset_client_id();
+
+    mirror->mark_summoned(5, true, summ_type);
     mirror->add_ench(ENCH_PHANTOM_MIRROR);
     mirror->summoner = mons->mid;
     mirror->hit_points /= 2;
     mirror->max_hit_points /= 2;
-
-    simple_monster_message(targ, " shimmers and seems to become two!");
 
     // Sometimes swap the two monsters, so as to disguise the original and the copy.
     if (coinflip())
@@ -2601,6 +2588,8 @@ static void _cast_phantom_mirror(monster* mons)
         targ->clear_far_constrictions();
         mirror->clear_far_constrictions();
     }
+
+    return mirror;
 }
 
 static bool _should_tornado(monster* agent)
@@ -4273,72 +4262,6 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     return false;
 }
 
-static void _clone_monster(monster* mons, monster_type clone_type,
-                           int summon_type, bool clone_hp = false)
-{
-    mgen_data summ_mon =
-        mgen_data(clone_type, SAME_ATTITUDE(mons),
-                  mons, 3, summon_type, mons->pos(),
-                  mons->foe, 0, mons->god);
-
-    monster *new_fake = create_monster(summ_mon);
-    if (!new_fake)
-        return;
-
-    // Reset client id so that no information about who the original monster
-    // is is leaked to the client
-    mons->reset_client_id();
-
-    // Don't leak the real one with the targeting interface.
-    if (you.prev_targ == mons->mindex())
-    {
-        you.prev_targ = MHITNOT;
-        crawl_state.cancel_cmd_repeat();
-    }
-
-    // Mara's clones are special; they have the same stats as him, and
-    // are exact clones, so they are created damaged if necessary.
-    if (clone_hp)
-    {
-        new_fake->hit_points = mons->hit_points;
-        new_fake->max_hit_points = mons->max_hit_points;
-    }
-    mon_enchant_list::iterator ei;
-    for (ei = mons->enchantments.begin();
-         ei != mons->enchantments.end(); ++ei)
-    {
-        new_fake->enchantments.insert(*ei);
-        new_fake->ench_cache.set(ei->second.ench);
-    }
-
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-    {
-        const int old_index = mons->inv[i];
-
-        if (old_index == NON_ITEM)
-            continue;
-
-        const int new_index = get_mitm_slot(0);
-        if (new_index == NON_ITEM)
-        {
-            new_fake->unequip(mitm[old_index], i, 0, true);
-            new_fake->inv[i] = NON_ITEM;
-            continue;
-        }
-
-        new_fake->inv[i] = new_index;
-        mitm[new_index]  = mitm[old_index];
-        mitm[new_index].set_holding_monster(new_fake->mindex());
-
-        // Mark items as summoned, so there's no way to get three nice
-        // weapons or such out of him.
-        mitm[new_index].flags |= ISFLAG_SUMMONED;
-    }
-
-    new_fake->summoner = mons->mid;
-    new_fake->props = mons->props;
-}
-
 struct branch_summon_pair
 {
     branch_type     origin;
@@ -4935,17 +4858,20 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         // We only want there to be two fakes, which, plus Mara, means
         // a total of three Maras; if we already have two, give up, otherwise
         // we want to summon either one more or two more.
-        sumcount2 = 2 - count_mara_fakes();
+        sumcount2 = 2 - count_summons(mons, SPELL_FAKE_MARA_SUMMON);
+        if (sumcount2 <= 0)
+            return;
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
-            _clone_monster(mons, MONS_MARA_FAKE, spell_cast, true);
-        return;
+            _cast_phantom_mirror(mons, mons, SPELL_FAKE_MARA_SUMMON);
 
-    case SPELL_FAKE_RAKSHASA_SUMMON:
-        sumcount2 = (coinflip() ? 2 : 3);
+        if (you.can_see(mons))
+        {
+            mprf("%s shimmers and seems to become %s!", mons->name(DESC_THE).c_str(),
+                                                        sumcount2 == 1 ? "two"
+                                                                       : "three");
+        }
 
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-            _clone_monster(mons, MONS_RAKSHASA_FAKE, spell_cast);
         return;
 
     case SPELL_SUMMON_DEMON: // class 2-4 demons
@@ -5969,7 +5895,24 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_PHANTOM_MIRROR:
     {
-        _cast_phantom_mirror(mons);
+        // Find appropriate ally to clone.
+        vector<monster*> targets;
+        for (monster_near_iterator mi(mons); mi; ++mi)
+        {
+            if (mons_aligned(*mi, mons) && !mi->is_stationary()
+                && !mi->is_summoned())
+            {
+                targets.push_back(*mi);
+            }
+        }
+
+        // If we've found something, mirror it.
+        if (targets.size())
+        {
+            monster* targ = targets[random2(targets.size())];
+            if (_cast_phantom_mirror(mons, targ))
+                simple_monster_message(targ, " shimmers and seems to become two!");
+        }
         return;
     }
 

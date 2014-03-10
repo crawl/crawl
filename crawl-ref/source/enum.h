@@ -2755,7 +2755,9 @@ enum monster_type                      // menv[].type
     // Spiritual beings ('R')
     MONS_EFREET,
     MONS_RAKSHASA,
+#if TAG_MAJOR_VERSION == 34
     MONS_RAKSHASA_FAKE,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_DRYAD,
     MONS_SNAPLASHER_VINE,
@@ -2930,7 +2932,9 @@ enum monster_type                      // menv[].type
     MONS_CRAZY_YIUF,
     MONS_MENNAS,
     MONS_MARA,
+#if TAG_MAJOR_VERSION == 34
     MONS_MARA_FAKE,
+#endif
     MONS_GRINDER,
     MONS_JORY,
     MONS_IGNACIO,
@@ -3882,7 +3886,9 @@ enum spell_type
     SPELL_VAMPIRE_SUMMON,
 #endif
     SPELL_BRAIN_FEED,
+#if TAG_MAJOR_VERSION == 34
     SPELL_FAKE_RAKSHASA_SUMMON,
+#endif
     SPELL_STEAM_BALL,
     SPELL_SUMMON_UFETUBUS,
     SPELL_SUMMON_HELL_BEAST,

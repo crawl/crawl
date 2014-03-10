@@ -1432,17 +1432,6 @@
       }
     },
 
-    {  MST_MARA_FAKE,
-      {
-       SPELL_NO_SPELL,
-       SPELL_BOLT_OF_FIRE,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_PAIN,
-       SPELL_TELEPORT_SELF
-      }
-    },
-
     {  MST_BORIS,
       {
        SPELL_IRON_SHOT,

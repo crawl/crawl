@@ -1220,9 +1220,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         if (mons_is_player_shadow(mons))
             death_source_name = "their own shadow"; // heh
 
-        if (death && mons->type == MONS_MARA_FAKE)
-            death_source_name = "an illusion of Mara";
-
         if (mons->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
@@ -1230,6 +1227,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
         if (mons->type == MONS_PANDEMONIUM_LORD)
             death_source_name += " the pandemonium lord";
+
+        if (mons->has_ench(ENCH_PHANTOM_MIRROR))
+            death_source_name += " (illusionary)";
 
         if (mons_is_unique(mons->type))
             death_source_flags.insert("unique");

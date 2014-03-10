@@ -197,8 +197,7 @@ void init_mon_name_cache()
         // breaks ?/M rakshasa.
         if (Mon_Name_Cache.count(name))
         {
-            if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE
-                || mon == MONS_PLAYER_SHADOW
+            if (mon == MONS_PLAYER_SHADOW
                 || mon != MONS_SERPENT_OF_HELL
                    && mons_species(mon) == MONS_SERPENT_OF_HELL)
             {
@@ -1467,14 +1466,7 @@ bool mons_class_can_display_wounds(monster_type mc)
     if (mons_class_is_zombified(mc) && mc != MONS_SPECTRAL_THING)
         return false;
 
-    switch (mc)
-    {
-    case MONS_RAKSHASA:
-    case MONS_RAKSHASA_FAKE:
-        return false;
-    default:
-        return true;
-    }
+    return true;
 }
 
 bool mons_can_display_wounds(const monster* mon)
@@ -3652,10 +3644,7 @@ static gender_type _mons_class_gender(monster_type mc)
     {
         gender = GENDER_FEMALE;
     }
-    // Mara's fakes aren't unique, but should still be classified as
-    // male.
-    else if (mc == MONS_MARA_FAKE
-             || mc == MONS_HELLBINDER
+    else if (mc == MONS_HELLBINDER
              || mc == MONS_CLOUD_MAGE)
     {
         gender = GENDER_MALE;
@@ -4757,18 +4746,6 @@ bool monster_nearby()
         if (monster_at(*ri))
             return true;
     return false;
-}
-
-int count_mara_fakes()
-{
-    int count = 0;
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->type == MONS_MARA_FAKE)
-            count++;
-    }
-
-    return count;
 }
 
 actor *actor_by_mid(mid_t m)

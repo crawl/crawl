@@ -3693,7 +3693,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_KILLER_KLOWN:
     case MONS_PRINCE_RIBBIT:
     case MONS_MARA:
-    case MONS_MARA_FAKE:
     case MONS_GOLDEN_EYE:
         if (mons->no_tele(true, false))
             break;
