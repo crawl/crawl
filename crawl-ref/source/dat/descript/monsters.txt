@@ -3011,6 +3011,12 @@ antique lich
 
 A lich who has grown expensive over countless years.
 %%%%
+apprentice kobold demonologist
+
+A kobold who is in league with demonic powers. It can call forth beings from
+the depths of Hell, but has not yet mastered the skill well enough to command
+anything but the most minor of demons.
+%%%%
 archer statue
 
 The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
