@@ -78,8 +78,6 @@ static duration_def duration_data[] =
       WHITE, "Pray", "jelly paralyse", "You are paralysing nearby jellies." },
     { DUR_RESISTANCE, true,
       LIGHTBLUE, "Resist", "resistant", "You resist elements." },
-    { DUR_SLAYING, false,
-      0, "", "deadly", "" },
     { DUR_SLIMIFY, true,
       GREEN, "Slime", "slimy", "" },
     { DUR_SLEEP, false,

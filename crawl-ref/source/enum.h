@@ -1586,7 +1586,9 @@ enum duration_type
     DUR_INSULATION,
 #endif
     DUR_RESISTANCE,
+#if TAG_MAJOR_VERSION == 34
     DUR_SLAYING,
+#endif
     DUR_STEALTH,
     DUR_MAGIC_SHIELD,
     DUR_SLEEP,

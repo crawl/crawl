@@ -2509,7 +2509,6 @@ static string _status_mut_abilities(int sw)
         DUR_DIVINE_STAMINA,
         DUR_BERSERK,
         STATUS_AIRBORNE,
-        DUR_SLAYING,
         STATUS_MANUAL,
         STATUS_SAGE,
         DUR_MAGIC_SHIELD,
