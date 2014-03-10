@@ -421,7 +421,7 @@ static const ability_def Ability_List[] =
     { ABIL_IGNI_FIRE_FORTRESS, "Fire Fortress",
       0, 0, 300, 3, 0, 0, ABFLAG_NONE },
     { ABIL_IGNI_ARTEFACTIZE_WEAPON, "Artefactize Weapon",
-      0, 0, 0, 10, 0, 0, ABFLAG_NONE },
+      0, 0, 0, 6, 0, 0, ABFLAG_NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, 0, ABFLAG_NONE},
 
