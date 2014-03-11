@@ -2624,7 +2624,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
-        if (!cast_selective_amnesia())
+        if (cast_selective_amnesia() <= 0)
             return false;
         break;
 
