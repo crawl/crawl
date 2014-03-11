@@ -287,7 +287,7 @@ ENDMAP
 # A bit similar to roguey but better architecture.
 NAME:   layout_gridlike
 DEPTH:  D:10-, Lair, Crypt, Snake, Elf, Pan
-WEIGHT: 20, 50(D), 50(Depths), 100(Elf), 50(Crypt)
+WEIGHT: 20, 50(D), 50(Depths), 100(Elf), 50(Crypt), 99999 (Lair)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
 TAGS: layout_type_rooms
@@ -515,8 +515,8 @@ TAGS: layout_type_rooms
     -- { outer = 'n', inner = 'G', weight = 1 }, -- Gas
     { outer = 'W', inner = 'w', weight = 2 },
     { outer = 'l', inner = 'l', weight = 1 },
-    { outer = 'P', inner = 'w', weight = 1 },
-    { outer = 'P', inner = 'W', weight = 1 },
+    { outer = '1', inner = 'w', weight = 1 },
+    { outer = '1', inner = 'W', weight = 1 },
     { outer = 't', inner = 'w', weight = 1 },
     { outer = 't', inner = 'W', weight = 1 },
     { outer = 'b', inner = 'b', weight = 1 },
@@ -534,7 +534,7 @@ TAGS: layout_type_rooms
     { outer = 't', inner = 'c', weight = 1 }
   }
 
-  kmons("P = plant")
+  mons("plant")
 
   local fills = {
     { weight = 10, name="two_materials", min_size = 3, func = function(space)
