@@ -434,6 +434,85 @@ ccccccccccccc.......2...2........
              TTTTTTT
 ENDMAP
 
+NAME:    tomb_1_centre_grunt_parallel
+TAGS:    tomb_1_centre unrand no_hmirror
+MONS:    mummy / skeletal warrior w:1 / nothing w:11
+MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
+         ancient champion / nothing w:250
+MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
+MONS:    greater mummy / ancient lich w:1 / nothing w:11
+MONS:    silver statue / orange crystal statue / ice statue
+TILE:    F  = dngn_sarcophagus_pedestal_left
+TILE:    M  = dngn_sarcophagus_pedestal_right
+COLOUR:  FM = yellow
+SUBST:   FM = G
+SUBST:   _  = V:70 5
+NSUBST:  >  = ) / | / * / _
+: set_feature_name("granite_statue", "sarcophagus")
+MAP
+>1..c..c.................c..c..1>
+1...c..c.4.............4.c..c...1
+....c..c..2...........2..c..c....
+....c..c...2.........2...c..c....
+c++cc.3c....4.......4....c3.cc++c
+....c..c..c...........c..c..c....
+....c..c.3c...........c3.c..c....
+F...c..c..c..F.....M..c..c..c...M
+.2.....c..c...........c..c.....2.
+..3..2.c..c...........c..c2...3..
+.2.....c..c..F.....M..c..c.....2.
+F...c..c..c.....3.....c..c..c...M
+....c..c..c...........c..c..c....
+....c..c..c..F.....M..c..c..c....
+c++cc.3c..c...2.2.2...c..c3.cc++c
+....c..c..c....2.2....c..c..c....
+....c..c3.c..F.....M..c.3c..c....
+1...c..2..c...........c..2..c...1
+>1..c.....c...........c.....c..1>
+             .......
+ENDMAP
+
+NAME:    tomb_1_centre_grunt_layered
+TAGS:    tomb_1_centre unrand no_hmirror
+MONS:    mummy / skeletal warrior w:1 / nothing w:11
+MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
+         ancient champion / nothing w:250
+MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
+MONS:    greater mummy / ancient lich w:1 / nothing w:11
+MONS:    silver statue / orange crystal statue / ice statue
+TILE:    F  = dngn_sarcophagus_pedestal_left
+TILE:    M  = dngn_sarcophagus_pedestal_right
+COLOUR:  FM = yellow
+SUBST:   FM = G
+SUBST:   _  = V:70 5
+SHUFFLE: ABCD, EHIJ, de, fg, hi, jk
+SHUFFLE: NOPQRSTU, WXYZ6789
+SUBST:   AEdfhjNW = c, egik = +, BCDHIJOPQRSTUXYZ6789 = .
+NSUBST:  >  = ) / | / * / _
+: set_feature_name("granite_statue", "sarcophagus")
+MAP
+...D............3............E...
+.F.D....2.....F...M.....2....E.M.
+...D............4............E...
+CCCccccceeccccc...cccccffcccccHHH
+...c...O..P...c...c...X..Y...c...
+...c.1.O..P.1.c...c.1.X..Y.1.c...
+...c...O23P...c...c...X32Y...c...
+.3.cNNNccccQQQc.3.cWWWccccZZZc.3.
+...c..3c>.c...c...c...c.>c3..c...
+.F.d...c>4i.M.c.2.c.F.j4>c...g.M.
+...c..3c..c...c...c...c..c3..c...
+.3.cRRRchhcUUUc.3.c666ckkc999c.3.
+...c...S32T...c...c...7238...c...
+...c.1.S..T.1.c...c.1.7..8.1.c...
+...c...S..T...c...c...7..8...c...
+BBBcccccccccccc...ccccccccccccIII
+...A............4............J...
+.F.A....2...3.F...M.3...2....J.M.
+...A...........2.2...........J...
+             .......
+ENDMAP
+
 ####
 
 NAME:    tomb_1_hall_stairs_old
@@ -455,6 +534,55 @@ MAP
 ''cccccccccc''           ''cccccccccc''
 ''''''''''''''           ''''''''''''''
 ''''''''''''''           ''''''''''''''
+ENDMAP
+
+NAME:    tomb_1_hall_stairs_grunt_patterns
+TAGS:    tomb_1_hall_stairs unrand
+SHUFFLE: <>
+SHUFFLE: ABCD / ACBD / ACDB / CABD / CADB / CDAB
+SHUFFLE: EFGH / EGFH / EGHF / GEFH / GEHF / GHEF
+SUBST:   ABEF = c, CDGH = '
+SUBST:   ' = 3 .:200
+NSUBST:  < = } / ., > = ] / .
+MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
+         ancient champion / nothing w:250
+MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
+MONS:    greater mummy
+MAP
+''                                   ''
+''c'''D''''c.<           >.c''''G'''c''
+''c'''D''''c..           ..c''''G'''c''
+cc+''''''''+cc           cc+''''''''+cc
+''''''A'''''''           '''''''E''''''
+'''''1A1''''''           ''''''1E1'''''
+CC''BB2BB'''CC           HH'''FF2FF''HH
+'''''1A1''''''           ''''''1E1'''''
+''''''A'''''''           '''''''E''''''
+cc+''''''''+cc           cc+''''''''+cc
+..c'''D''''c..           ..c''''G'''c..
+<.c'''D''''c.<           >.c''''G'''c.>
+ENDMAP
+
+NAME:    tomb_1_hall_stairs_grunt_snakey
+TAGS:    tomb_1_hall_stairs unrand
+SHUFFLE: ]}
+SUBST:   ' = 3 .:200
+MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
+         ancient champion / nothing w:250
+MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
+MAP
+''                                   ''
+''''''''''''''           ''''''''''''''
+''''''''''''''           ''''''''''''''
+cccccccccccc''           '''ccccccccccc
+''''''''''''''           ''''''''''''''
+''''''''''''''           ''''''''''''''
+''cccccccccccc           cccccccccccc''
+''''''''''''''           ''''''''''''''
+''''''''''''''           ''''''''''''''
+cccccccccccc''           ''cccccccccccc
+..211'''''''''           '''''''''112..
+]..11'''''''''           '''''''''11..}
 ENDMAP
 
 ###############################################################################
@@ -594,6 +722,70 @@ MAP
 .............................
 ENDMAP
 
+NAME:    tomb_2_ambush_grunt_patterns
+TAGS:    tomb_2_ambush unrand
+MONS:    mummy / skeletal warrior w:2
+MONS:    guardian mummy / ancient champion w:2
+MONS:    mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
+MONS:    greater mummy / ancient lich w:1
+SHUFFLE: AB / Ad / dA, CD / Ce / eC, EF / Ef / fE
+SUBST:   ABCDEF = x, def = .
+MAP
+.............................
+............DD.CC............
+....EE.....DD.3.CC.....EE....
+..FFEE.................EEFF..
+..FF4...................4FF..
+........BB.........BB........
+........BxA.......AxB........
+.........AA.......AA.........
+......C....2.....2....D......
+.....CC...............DD.....
+.....C.................D.....
+.......1......(......1.......
+.....D.................C.....
+.....DD...............CC.....
+......D....2.....2....C......
+.........AA.......AA.........
+........BxA.......AxB........
+........BB.........BB........
+..FF4...................4FF..
+..FFEE.....CC.3.DD.....EEFF..
+....EE......CC.DD......EE....
+.............................
+ENDMAP
+
+NAME: tomb_2_ambush_grunt_arcs
+TAGS: tomb_2_ambush unrand
+MONS: mummy / skeletal warrior w:2
+MONS: guardian mummy / ancient champion w:2
+MONS: mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
+MONS: greater mummy / ancient lich w:1
+MAP
+.............................
+.............................
+.....4xxxx.........xxxx4.....
+..........xxx...xxx..........
+.............xxx.............
+............xx1xx............
+..........xx.....xx..........
+........2x.........x2........
+........x...........x........
+.......x.............x.......
+.......x3.....(.....3x.......
+.......x.............x.......
+........x...........x........
+........2x.........x2........
+..........xx.....xx..........
+............xx1xx............
+.............xxx.............
+..........xxx...xxx..........
+.....4xxxx.........xxxx4.....
+.............................
+.............................
+.............................
+ENDMAP
+
 #############################################################################
 # Tomb:3
 #
@@ -712,5 +904,67 @@ ccc....1..........................1...ccc
 ccccc....1......................1....cccc
 ccccccc............................cccccc
 cccccccc+ccc..................ccc+ccccccc
+             ................
+ENDMAP
+
+NAME:  tomb_3_rune_grunt_curves
+TAGS:  tomb_3_rune unrand
+MONS:  guardian mummy / ancient champion w:2
+MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
+MONS:  greater mummy / ancient lich w:1
+KMASK: O = no_item_gen
+KITEM: O = golden rune of Zot
+KMONS: O = Khufu w:3 / greater mummy, greater mummy
+MAP
+ccccccccccccccccccccccccccccccccccccccccc
+cccccc............ccccccc...........ccccc
+cccc................ccc...............ccc
+ccc...............3..c..3..............cc
+ccc.....2........3.......3.......2.....cc
+cc.........ccccc..........ccccc.........c
+cc..2.....cc..ccccc.....cccc..cc.....2..c
+cc.....3.1......cccc...cccc.....1.3.....c
+cc..cc..1........ccccOcccc.......1..cc..c
+cc..cccc..........ccccccc.........cccc..c
+cc..ccccc.....1....ccccc...1.....ccccc..c
+cc..cccccc...2......ccc.....2...cccccc..c
+cc..cccccc..1.......ccc......1..cccccc..c
+cc..ccccccc..........c.........ccccccc..c
+cc..ccccccc......11..c..11.....ccccccc..c
+cc...ccccccc....3.........3...ccccccc...c
+ccc......ccc..11.....2.....11.ccc......cc
+cccc......cc.........2........cc......ccc
+cccccccc+cccc................cccc+ccccccc
+             ................
+ENDMAP
+
+NAME:  tomb_3_rune_grunt_snapback
+TAGS:  tomb_3_rune unrand
+MONS:  guardian mummy / ancient champion w:2
+MONS:  mummy priest w:20 / unborn w:2 / lich w:1 / revenant w:1
+MONS:  greater mummy / ancient lich w:1
+KMASK: O = no_item_gen
+KITEM: O = golden rune of Zot
+KMONS: K = Khufu w:3 / greater mummy, greater mummy
+MAP
+ccccccccccccccccccccccccccccccccccccccccc
+cccccc......ccccccc.KO.ccccccc......ccccc
+cccc.1......1.ccccc....ccccc.1......1.ccc
+ccc.....3......cccc....cccc.....3......cc
+ccc....1..1....ccc......ccc....1..1....cc
+cc......cc......cc......cc......cc......c
+cc......cc......cc......cc......cc......c
+cc......cc......cc.1..1.cc......cc......c
+cc..2...cc...2...c......c...2...cc...2..c
+cc......cc.......c......c.......cc......c
+cc.....1.cc......c......c......cc.1.....c
+cc....1...cc....1........1....cc...1....c
+cc...c.....cc...1..3..3..1...cc.....c...c
+cc...cc..3..cccccc......cccccc..3..cc...c
+cc...ccc........1cccccccc1........ccc...c
+cc....ccc......1..........1......ccc....c
+ccc....ccc....2....3..3....2....ccc....cc
+cccc.....c...1..............1...c.....ccc
+cccccccc+cccc................cccc+ccccccc
              ................
 ENDMAP
