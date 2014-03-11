@@ -332,6 +332,10 @@ static int _siren_water_score(coord_def p, bool& deep)
             near_floor = true;
     }
 
+    // Don't prefer any locations non-adjacent to either shallow water or land
+    if (!near_floor)
+        return 0;
+
     // Greatly prefer at least one tile of neighbouring deep water
     if (deep)
         score += 6;
