@@ -337,7 +337,7 @@ static bool _check_stairs(const dungeon_feature_type ftype, bool down = false)
 void up_stairs(dungeon_feature_type force_stair)
 {
     dungeon_feature_type stair_find = (force_stair ? force_stair
-                                       : grd(you.pos()));
+                                       : orig_terrain(you.pos()));
     const level_id old_level = level_id::current();
 
     // Up and down both work for portals.
@@ -482,7 +482,7 @@ void up_stairs(dungeon_feature_type force_stair)
 // than merely asking what is on the other side.
 level_id stair_destination(coord_def pos, bool for_real)
 {
-    return stair_destination(grd(pos),
+    return stair_destination(orig_terrain(pos),
                              env.markers.property_at(pos, MAT_ANY, "dst"),
                              for_real);
 }
@@ -645,7 +645,7 @@ static void _maybe_destroy_trap(const coord_def &p)
 void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
 {
     const level_id old_level = level_id::current();
-    const dungeon_feature_type old_feat = grd(you.pos());
+    const dungeon_feature_type old_feat = orig_terrain(you.pos());
     const dungeon_feature_type stair_find =
         force_stair ? force_stair : old_feat;
 
