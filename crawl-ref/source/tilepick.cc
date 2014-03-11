@@ -1410,6 +1410,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_CRAWLING_CORPSE;
     case MONS_MACABRE_MASS:
         return TILEP_MONS_MACABRE_MASS;
+    case MONS_OCTOPODE:
+        return TILEP_MONS_OCTOPODE;
+    case MONS_OCTOPODE_CRUSHER:
+        return TILEP_MONS_OCTOPODE_CRUSHER;
 
     // abyssal monsters
     case MONS_LURKING_HORROR:
@@ -1780,8 +1784,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TENTACLED_MONSTROSITY;
     case MONS_ORB_GUARDIAN:
         return TILEP_MONS_ORB_GUARDIAN;
-    case MONS_OCTOPODE:
-        return TILEP_MONS_OCTOPODE;
     case MONS_TEST_SPAWNER:
         return TILEP_MONS_TEST_SPAWNER;
 

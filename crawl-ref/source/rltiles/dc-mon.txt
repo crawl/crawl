@@ -417,8 +417,13 @@ unseen_horror MONS_UNSEEN_HORROR
 %sdir mon/demons
 abomination_small MONS_ABOMINATION_SMALL
 abomination_small1
+%sdir mon/aquatic
+%rim 0
+octopode MONS_OCTOPODE
+octopode_crusher MONS_OCTOPODE_CRUSHER
 
 ## Golems ('8')
+%rim 1
 %sdir mon/nonliving
 clay_golem MONS_CLAY_GOLEM
 %rim 0
@@ -832,10 +837,9 @@ eidolon MONS_EIDOLON
 %sdir mon
 %rim 0
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
-%rim 1
-../player/base/octopode1 MONS_OCTOPODE
 
 ## Centaurs ('c')
+%rim 1
 %sdir mon/unique
 nessos MONS_NESSOS
 %sdir mon
