@@ -3214,7 +3214,9 @@ bool item_def::is_greedy_sacrificeable() const
         || item_needs_autopickup(*this)
         || item_is_stationary(*this)
         || this->inscription.find("!p") != string::npos
-        || this->inscription.find("=p") != string::npos)
+        || this->inscription.find("=p") != string::npos
+        || this->inscription.find("!*") != string::npos
+        || this->inscription.find("!D") != string::npos)
     {
         return false;
     }
