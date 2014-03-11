@@ -3531,7 +3531,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     400, 18, MONS_KOBOLD, MONS_KOBOLD, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 3, 5, 0 },
+    { 6, 4, 5, 0 },
     2, 13, MST_KOBOLD_DEMONOLOGIST, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT,
     I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_SMALL
@@ -3910,7 +3910,7 @@ static monsterentry mondata[] =
     // Technically, efreet are a race of djinn, but sharing the genus
     // would confuse people who don't know the mythology.
     0, 12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, -3,
-    { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     10, 5, MST_EFREET, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
@@ -6666,7 +6666,7 @@ static monsterentry mondata[] =
     M_UNIQUE | M_SPELLCASTER | M_GLOWS_LIGHT | M_SPEAKS,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD | MR_VUL_WATER,
     0, 12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, -3,
-    { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 0, 0, 88 },
     10, 5, MST_DRAC_SCORCHER, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
