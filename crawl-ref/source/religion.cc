@@ -1610,6 +1610,9 @@ static bool _blessing_balms(monster* mon)
     if (mon->del_ench(ENCH_FATIGUE, true))
         success = true;
 
+    if (mon->del_ench(ENCH_WRETCHED, true))
+        success = true;
+
     return success;
 }
 
@@ -1760,6 +1763,7 @@ bool bless_follower(monster* follower,
 {
     int chance = (force ? coinflip() : random2(20));
     string result;
+    bool blessed = false;
 
     // If a follower was specified, and it's suitable, pick it.
     // Otherwise, pick a random follower.
@@ -1811,7 +1815,7 @@ bool bless_follower(monster* follower,
         if (_beogh_blessing_priesthood(follower))
         {
             result = "priesthood";
-            goto blessing_done;
+            blessed = true;
         }
         else if (force)
             mpr("Couldn't promote monster to priesthood.");
@@ -1820,7 +1824,7 @@ bool bless_follower(monster* follower,
     // Enchant a monster's weapon or armour/shield by one point, or at
     // least uncurse it, if possible (10% chance).
     // This will happen if the above blessing attempts are unsuccessful.
-    if (chance <= 1)
+    if (chance <= 1 && !blessed)
     {
         if (coinflip())
         {
@@ -1828,7 +1832,7 @@ bool bless_follower(monster* follower,
             {
                 result = "extra attack power";
                 give_monster_proper_name(follower);
-                goto blessing_done;
+                blessed = true;
             }
             else if (force)
                 mpr("Couldn't enchant monster's weapon.");
@@ -1839,7 +1843,7 @@ bool bless_follower(monster* follower,
             {
                 result = "extra defence";
                 give_monster_proper_name(follower);
-                goto blessing_done;
+                blessed = true;
             }
             else if (force)
                 mpr("Couldn't enchant monster's armour.");
@@ -1848,77 +1852,78 @@ bool bless_follower(monster* follower,
 
     // These effects happen if no other blessing was chosen (90%),
     // or if the above attempts were all unsuccessful.
-    switch (god)
+    if (!blessed)
     {
-        case GOD_SHINING_ONE:
+        switch (god)
         {
-            // Extend a monster's stay if it's abjurable, or extend charm
-            // duration. If neither is possible, deliberately fall through.
-            bool more_time = _tso_blessing_extend_stay(follower);
-            bool friendliness = false;
-
-            if (!more_time || coinflip())
-                friendliness = _tso_blessing_friendliness(follower);
-
-            result = "";
-
-            if (friendliness)
+            case GOD_SHINING_ONE:
             {
-                result += "friendliness";
+                // Extend a monster's stay if it's abjurable, or extend charm
+                // duration. If neither is possible, deliberately fall through.
+                bool more_time = _tso_blessing_extend_stay(follower);
+                bool friendliness = false;
+
+                if (!more_time || coinflip())
+                    friendliness = _tso_blessing_friendliness(follower);
+
+                result = "";
+
+                if (friendliness)
+                {
+                    result += "friendliness";
+                    if (more_time)
+                        result += " and ";
+                }
+
                 if (more_time)
-                    result += " and ";
+                    result += "more time in this world";
+
+                if (more_time || friendliness)
+                    break;
+
+                if (force)
+                    mpr("Couldn't increase monster's friendliness or time.");
             }
 
-            if (more_time)
-                result += "more time in this world";
-
-            if (more_time || friendliness)
-                break;
-
-            if (force)
-                mpr("Couldn't increase monster's friendliness or time.");
-        }
-
-        // Deliberate fallthrough for the healing effects.
-        case GOD_BEOGH:
-        {
-            // Remove harmful ailments from a monster, or heal it, if
-            // possible.
-            if (coinflip())
+            // Deliberate fallthrough for the healing effects.
+            case GOD_BEOGH:
             {
-                if (_blessing_balms(follower))
+                // Remove harmful ailments from a monster, or heal it, if
+                // possible.
+                if (coinflip())
                 {
-                    result = "divine balms";
-                    goto blessing_done;
+                    if (_blessing_balms(follower))
+                    {
+                        result = "divine balms";
+                        break;
+                    }
+                    else if (force)
+                        mpr("Couldn't apply balms.");
+                }
+
+                bool healing = _blessing_healing(follower);
+
+                if ((!healing || coinflip())
+                        && _blessing_healing(follower))
+                {
+                    healing = true;
+                }
+
+                if (healing)
+                {
+                    result += "healing";
+                    break;
                 }
                 else if (force)
-                    mpr("Couldn't apply balms.");
+                    mpr("Couldn't heal monster.");
+
+                return false;
             }
 
-            bool healing = _blessing_healing(follower);
-
-            if (!healing || coinflip())
-            {
-                if (_blessing_healing(follower))
-                    healing = true;
-            }
-
-            if (healing)
-            {
-                result += "healing";
+            default:
                 break;
-            }
-            else if (force)
-                mpr("Couldn't heal monster.");
-
-            return false;
         }
-
-        default:
-            break;
     }
-
-blessing_done:
 
     string whom = "";
     if (!follower)
