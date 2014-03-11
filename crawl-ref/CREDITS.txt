@@ -89,7 +89,7 @@
     Lothar Dierkes
     Mike Drinen
     Kieron Dunbar
-    John "Elwin" Edwards"
+    John "Elwin" Edwards
     elliott
     Micha Elsner
     Carl-Oscar Erneholm
