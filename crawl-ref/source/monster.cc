@@ -5871,8 +5871,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         if (!props.exists("emergency_clone"))
         {
             // Using SPELL_NO_SPELL to prevent overwriting normal clones
-            cast_phantom_mirror(this, this, SPELL_NO_SPELL);
-            cast_phantom_mirror(this, this, SPELL_NO_SPELL);
+            cast_phantom_mirror(this, this, 50, SPELL_NO_SPELL);
+            cast_phantom_mirror(this, this, 50, SPELL_NO_SPELL);
             if (you.can_see(this))
             {
                 mprf(MSGCH_MONSTER_SPELL,

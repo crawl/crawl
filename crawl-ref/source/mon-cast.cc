@@ -2558,7 +2558,7 @@ static bool _wall_of_brambles(monster* mons)
 }
 
 // Returns the clone just created (null otherwise)
-monster* cast_phantom_mirror(monster* mons, monster* targ, int summ_type)
+monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ_type)
 {
     // Create clone.
     monster *mirror = clone_mons(targ, true);
@@ -2578,8 +2578,8 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int summ_type)
     mirror->mark_summoned(5, true, summ_type);
     mirror->add_ench(ENCH_PHANTOM_MIRROR);
     mirror->summoner = mons->mid;
-    mirror->hit_points /= 2;
-    mirror->max_hit_points /= 2;
+    mirror->hit_points = mirror->hit_points * 100 / hp_perc;
+    mirror->max_hit_points = mirror->max_hit_points * 100 / hp_perc;
 
     // Sometimes swap the two monsters, so as to disguise the original and the copy.
     if (coinflip())
@@ -4876,7 +4876,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             return;
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
-            cast_phantom_mirror(mons, mons, SPELL_FAKE_MARA_SUMMON);
+            cast_phantom_mirror(mons, mons, 50, SPELL_FAKE_MARA_SUMMON);
 
         if (you.can_see(mons))
         {
