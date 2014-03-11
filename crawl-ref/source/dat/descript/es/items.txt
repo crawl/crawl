@@ -847,7 +847,7 @@ potion of slowing
 
 Una poción que vuelve más lentas tus acciones.
 %%%%
-potion of speed
+potion of haste
 
 Un brebaje encantado que hace más rápidas las acciones de quien lo beba.
 %%%%

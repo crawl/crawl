@@ -1777,7 +1777,7 @@ MONS:    crimson imp, white imp, shadow imp, iron imp
 MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
 KMONS:   0 = orc ; robe . wand of confusion | wand of slowing w:35 | \
                    wand of magic darts w:35 | wand of flame | wand of frost . \
-                   potion of invisibility | potion of speed | nothing w:980
+                   potion of invisibility | potion of haste | nothing w:980
 KMONS:   89 = deep elf mage
 KITEM:   8d = robe, hat w:40 / hat good_item, \
               hat w:20 / hat good_item

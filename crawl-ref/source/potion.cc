@@ -183,7 +183,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         did_god_conduct(DID_DRINK_BLOOD, 1 + random2(3), was_known);
         break;
 
-    case POT_SPEED:
+    case POT_HASTE:
         if (potion && was_known && you.stasis(false))
         {
             mpr("This potion can't work under stasis.");

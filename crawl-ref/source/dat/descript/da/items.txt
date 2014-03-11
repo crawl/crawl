@@ -1082,7 +1082,7 @@ potion of slowing
 
 En drik, som forsinker dine handlinger.
 %%%%
-potion of speed
+potion of haste
 
 En fortryllet drik, som gør alle, der drikker den, hurtigere.
 %%%%

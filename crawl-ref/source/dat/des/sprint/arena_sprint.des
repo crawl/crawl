@@ -1017,7 +1017,7 @@ KFEAT:  l = altar_jiyva
 KFEAT:  n = altar_fedhas
 KFEAT:  o = altar_dithmenos
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
-            potion of heal wounds q:3, potion of speed q:3, \
+            potion of heal wounds q:3, potion of haste q:3, \
             wand of fire charges:5 ident:all, \
             wand of cold charges:5 ident:all, \
             potion of resistance ident:all, gold q:200
@@ -1048,7 +1048,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon iii q:6 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
 KFEAT:  FS = distillery shop use_all count:17 greed:10 ; \
-             potion of speed q:3 | potion of speed q:4 | potion of speed q:5 |\
+             potion of haste q:3 | potion of haste q:4 | potion of haste q:5 |\
              potion of agility q:6 | potion of might q:6 | potion of brilliance q:6 |\
              potion of cure mutation | potion of cure mutation q:2 | potion of cure mutation q:3 |\
              potion of resistance q:3 | potion of resistance q:4 | potion of resistance q:5 |\

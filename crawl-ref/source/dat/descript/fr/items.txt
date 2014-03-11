@@ -1027,7 +1027,7 @@ potion of slowing
 
 Une potion qui ralentit vos actions.
 %%%%
-potion of speed
+potion of haste
 
 Un breuvage enchanté qui accélère les actions de celui qui la boit.
 %%%%

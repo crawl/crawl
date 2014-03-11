@@ -1053,7 +1053,7 @@ potion of slowing
 
 Ein Trank, der Ihre Taten verlangsamt.
 %%%%
-potion of speed
+potion of haste
 
 Ein verzaubertes Getränk, das die Taten von jedem beschleunigt, der es trinkt.
 %%%%

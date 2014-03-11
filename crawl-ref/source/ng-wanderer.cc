@@ -409,7 +409,7 @@ static void _good_potion_or_scroll(int & slot)
 
     case 3:
         you.inv[slot].base_type = OBJ_POTIONS;
-        you.inv[slot].sub_type  = POT_SPEED;
+        you.inv[slot].sub_type  = POT_HASTE;
         break;
 
     case 4:

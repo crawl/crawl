@@ -1525,11 +1525,11 @@ static void _velocity_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     if (power_level >= 2)
     {
-        potion_effect(POT_SPEED, random2(power / 4));
+        potion_effect(POT_HASTE, random2(power / 4));
         cast_swiftness(random2(power / 4));
     }
     else if (power_level == 1)
-        potion_effect(POT_SPEED, random2(power / 4));
+        potion_effect(POT_HASTE, random2(power / 4));
     else
         cast_swiftness(random2(power / 4));
 }
@@ -1981,9 +1981,9 @@ static void _potion_card(int power, deck_rarity_type rarity)
         pot = (coinflip() ? POT_MAGIC : POT_INVISIBILITY);
 
     if (power_level >= 2 && coinflip())
-        pot = (coinflip() ? POT_SPEED : POT_RESISTANCE);
+        pot = (coinflip() ? POT_HASTE : POT_RESISTANCE);
 
-    if (you_worship(GOD_CHEIBRIADOS) && pot == POT_SPEED)
+    if (you_worship(GOD_CHEIBRIADOS) && pot == POT_HASTE)
     {
         simple_god_message(" protects you from inadvertent hurry.");
         return;

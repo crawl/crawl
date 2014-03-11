@@ -669,7 +669,7 @@ NAME:    hangedman_illusive_loot
 TAGS:    patrolling
 WEIGHT:  5
 MONS:    rakshasa, guardian serpent / great orb of eyes
-ITEM:    potion of might / potion of speed / potion of heal wounds w:12 / \
+ITEM:    potion of might / potion of haste / potion of heal wounds w:12 / \
          wand of lightning / wand of draining / wand of slowing w:5 / \
          wand of confusion w:5 / wand of fire w:1 / wand of cold w:1 / \
          ring mail good_item / chain mail good_item w:12 / shield / \

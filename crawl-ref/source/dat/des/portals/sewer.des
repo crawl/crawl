@@ -510,7 +510,7 @@ MONS:    rat / green rat w:2
 MONS:    ball python / adder w:5 / giant newt w:2 / ooze w:1
 MONS:    giant frog
 ITEM:    potion of curing / potion of heal wounds / potion of might /\
-         potion of magic / potion of speed w:5 / potion of brilliance w:5
+         potion of magic / potion of haste w:5 / potion of brilliance w:5
 ITEM:    scroll of teleportation / scroll of blinking w:5 /\
          scroll of fear w:5 / scroll of magic mapping /\
          scroll of recharging / scroll of fog
@@ -565,7 +565,7 @@ ORIENT:   encompass
 SUBST:    2 = 23
 KMONS:    2 = crocodile
 KMONS:    3 = Purgy, crocodile
-ITEM:     potion of berserk rage / potion of speed w:5
+ITEM:     potion of berserk rage / potion of haste w:5
 MONS:     bat
 MAP
  ccccccc
@@ -674,7 +674,7 @@ KMONS:   1 = giant newt / ball python w:5 / \
 SUBST:   e = !!!!????%
 KITEM:   ? = potion of flight q:2 w:15 / potion of curing /\
          potion of heal wounds / potion of might / potion of magic /\
-         potion of speed w:5 / potion of brilliance w:5
+         potion of haste w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
          scroll of recharging w:2 / scroll of fog w:3
@@ -907,7 +907,7 @@ SUBST:   hVZzSsUuTgY = W
 SUBST:   e = !!!!?????
 KITEM:   ? = potion of flight w:5 / potion of flight q:2 w:5 /\
          potion of curing / potion of heal wounds / potion of might /\
-         potion of magic / potion of speed w:5 / potion of brilliance w:5
+         potion of magic / potion of haste w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
          scroll of recharging w:2 / scroll of fog w:3
@@ -970,7 +970,7 @@ SUBST:  - = WW...
 SUBST:  " = W...
 NSUBST: ? = 4=ef / *=112233
 KITEM:  e = potion of curing / potion of heal wounds / potion of might /\
-        potion of magic / potion of speed w:5 / potion of brilliance w:5
+        potion of magic / potion of haste w:5 / potion of brilliance w:5
 KITEM:  f = scroll of teleportation / scroll of fear w:5 /\
         scroll of blinking w:3 / scroll of magic mapping w:3 /\
         scroll of recharging w:2 / scroll of fog w:3
@@ -1082,7 +1082,7 @@ KPROP:   w = no_tele_into
 #      loot
 SUBST:   e = !!!!!?????%
 KITEM:   ? = potion of curing / potion of heal wounds / potion of might /\
-         potion of magic / potion of speed w:5 / potion of brilliance w:5
+         potion of magic / potion of haste w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
          scroll of recharging w:2 / scroll of fog w:3
@@ -1154,7 +1154,7 @@ SUBST:   e = !!!?????%WWW
 KFEAT:   !?% = W
 COLOUR:  !?% = lightgreen
 KITEM:   ? = potion of curing / potion of heal wounds / potion of might /\
-         potion of magic / potion of speed w:5 / potion of brilliance w:5
+         potion of magic / potion of haste w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
          scroll of recharging w:2 / scroll of fog w:3
@@ -1228,7 +1228,7 @@ KMONS:  23 = big kobold spells:animate_dead name:necromancer n_suf \
 :    'orange rat skeleton w:2 / orange rat corpse w:1 /' ..
 :    'rotting orange rat corpse w:1')
 KITEM:  ?  = potion of curing / potion of heal wounds / potion of might /\
-             potion of magic / potion of speed w:5 /\
+             potion of magic / potion of haste w:5 /\
              potion of brilliance w:5
 KFEAT:  1 = '
 KFEAT:  3 = ~
@@ -1285,7 +1285,7 @@ KMONS: bcd = giant newt w:40 / giant gecko w:1 / nothing w:59
 : end
 KITEM: $ = potion of might / potion of berserk rage /\
            potion of agility / potion of magic /\
-           potion of brilliance / potion of speed w:5
+           potion of brilliance / potion of haste w:5
 COLOUR: bcd = lightgreen
 SUBST: ^ = .:10 W:2, ! = .:5 W:5
 NSUBST: cbd = 5:$

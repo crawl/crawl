@@ -352,7 +352,7 @@ potion of slowing
 
 Lektvar, který zpomaluje vaše akce.
 %%%%
-potion of speed
+potion of haste
 
 Okouzlený nápoj, který urychluje činnost každého, kdo ho vypije.
 %%%%

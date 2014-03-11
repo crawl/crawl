@@ -205,7 +205,7 @@ static void _give_bonus_items()
 {
     _newgame_give_item(OBJ_POTIONS, POT_CURING);
     _newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
-    _newgame_give_item(OBJ_POTIONS, POT_SPEED);
+    _newgame_give_item(OBJ_POTIONS, POT_HASTE);
     _newgame_give_item(OBJ_POTIONS, POT_MAGIC, 2);
     _newgame_give_item(OBJ_POTIONS, POT_BERSERK_RAGE);
     _newgame_give_item(OBJ_SCROLLS, SCR_BLINKING);

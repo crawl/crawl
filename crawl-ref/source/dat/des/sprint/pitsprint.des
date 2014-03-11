@@ -172,7 +172,7 @@ function general_item_setup(e)
           scroll of recharging ident:all w:1 /\
           scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
           potion of might ident:all w:2 / potion of agility w:2 ident:all /\
-          potion of speed q:2 ident:all w:2 /\
+          potion of haste q:2 ident:all w:2 /\
           scroll of acquirement w:1 ident:all /\
           scroll of enchant weapon iii ident:all q:2 w:2 /\
           scroll of enchant armour ident:all q:4 w:2 /\
@@ -183,7 +183,7 @@ function general_item_setup(e)
   e.kitem("! = potion of heal wounds ident:all q:2 w:30 /\
           potion of curing ident:all w:20 /\
           potion of might ident:all / potion of agility ident:all /\
-          potion of speed ident:all /\
+          potion of haste ident:all /\
           potion of restore abilities ident:all w:5 /\
           potion of resistance ident:all w:5 / potion of brilliance ident:all /\
           potion of berserk rage ident:all /\

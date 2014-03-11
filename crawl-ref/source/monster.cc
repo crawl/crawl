@@ -5485,7 +5485,7 @@ bool monster::can_drink_potion(potion_type ptype) const
             return mons_species() == MONS_VAMPIRE;
         case POT_BERSERK_RAGE:
             return can_go_berserk();
-        case POT_SPEED:
+        case POT_HASTE:
         case POT_MIGHT:
         case POT_AGILITY:
         case POT_INVISIBILITY:
@@ -5520,7 +5520,7 @@ bool monster::should_drink_potion(potion_type ptype) const
         // this implies !berserk()
         return !has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
                && needs_berserk();
-    case POT_SPEED:
+    case POT_HASTE:
         return !has_ench(ENCH_HASTE);
     case POT_MIGHT:
         return !has_ench(ENCH_MIGHT) && foe_distance() <= 2;
@@ -5584,7 +5584,7 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
             ident = ID_KNOWN_TYPE;
         break;
 
-    case POT_SPEED:
+    case POT_HASTE:
         if (enchant_monster_with_flavour(this, this, BEAM_HASTE))
             ident = ID_KNOWN_TYPE;
         break;

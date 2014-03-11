@@ -1064,7 +1064,7 @@ static int _xom_do_potion(bool debug = false)
     potion_type pot = POT_CURING;
     while (true)
     {
-        pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC, POT_SPEED,
+        pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC, POT_HASTE,
                             POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
                             POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE,
                             -1);
@@ -1118,7 +1118,7 @@ static int _xom_do_potion(bool debug = false)
     case POT_CURING:        potion_msg += "(curing)"; break;
     case POT_HEAL_WOUNDS:   potion_msg += "(heal wounds)"; break;
     case POT_MAGIC:         potion_msg += "(magic)"; break;
-    case POT_SPEED:         potion_msg += "(speed)"; break;
+    case POT_HASTE:         potion_msg += "(haste)"; break;
     case POT_MIGHT:         potion_msg += "(might)"; break;
     case POT_AGILITY:       potion_msg += "(agility)"; break;
     case POT_BRILLIANCE:    potion_msg += "(brilliance)"; break;

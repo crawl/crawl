@@ -477,7 +477,7 @@ MONS:   gnoll ; mundane halberd | halberd ego:electrocution ident:type
 MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
 ITEM:   potion of curing / potion of heal wounds / potion of magic / nothing /\
-        potion of might w:5 / potion of speed w:2 / potion of berserk rage w:3
+        potion of might w:5 / potion of haste w:2 / potion of berserk rage w:3
 ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
         potion of beneficial mutation q:2 w:30
 : bailey_setup(_G)
@@ -639,7 +639,7 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # well... added the warlord in an attempt to make it more even.  --dpeg
 ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of might w:5 / potion of brilliance w:5 / potion of agility w:5 / \
-        potion of magic w:5 / potion of speed w:5 / \
+        potion of magic w:5 / potion of haste w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
         scroll of enchant weapon i w:2 / scroll of enchant weapon ii w:2 / \
         scroll of enchant weapon iii w:1 / scroll of enchant armour w:5
@@ -924,7 +924,7 @@ NAME:   bailey_polearm_5
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
 KITEM:  ! = potion of curing / potion of heal wounds / potion of might w:5 /\
-            potion of speed w:3 / potion of berserk rage w:2 /\
+            potion of haste w:3 / potion of berserk rage w:2 /\
             potion of invisibility w:3 / potion of experience w:1 /\
             potion of beneficial mutation w:1 / potion of resistance w:1
 KITEM:  ? = scroll of enchant weapon I / scroll of enchant weapon II /\
