@@ -1464,7 +1464,7 @@ ENDMAP
 ####
 NAME: nicolae_abyss_rune_more_like_crabyss
 TAGS: abyss_rune unrand transparent
-SHUFFLE: O1/01/Pw
+SHUFFLE: O1/O1/Pw
 KITEM: OP = abyssal rune of Zot
 KMONS: O = apocalypse crab / nothing
 KMONS: 1P = apocalypse crab
