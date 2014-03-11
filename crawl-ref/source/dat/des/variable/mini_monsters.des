@@ -5120,9 +5120,15 @@ ENDMAP
 NAME:   kennysheep_jessica_study
 TAGS:   transparent no_mons_gen
 DEPTH:  D:2-3
-KITEM:  d = any potion / randbook disc:conjuration slevels:2 \
-                         owner:Jessica w:3 / nothing w:20
-MONS:   jessica, green rat
+: if crawl.x_chance_in_y(3, 10) then
+NSUBST: d = 1:e / *:d
+: end
+KITEM:  d = any potion / any scroll / nothing w:30
+KITEM:  e = randbook disc:necromancy slevels:2 owner:Jessica / \
+            randbook disc:charms slevels:2 owner:Jessica / \
+            randbook disc:hexes slevels:2 owner:Jessica / \
+            randbook disc:translocation slevels:2 owner:Jessica
+MONS:   jessica, quokka
 veto {{ return you.uniques("Jessica") }}
 MAP
    .....
