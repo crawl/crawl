@@ -8042,13 +8042,13 @@ void player::sentinel_mark(bool trap)
     if (duration[DUR_SENTINEL_MARK])
     {
         mpr("The mark upon you grows brighter.");
-        increase_duration(DUR_SENTINEL_MARK, random_range(30, 50), 250);
+        increase_duration(DUR_SENTINEL_MARK, random_range(20, 40), 180);
     }
     else
     {
         mprf(MSGCH_WARN, "A sentinel's mark forms upon you.");
-        increase_duration(DUR_SENTINEL_MARK, trap ? random_range(35, 55)
-                                                  : random_range(50, 80),
+        increase_duration(DUR_SENTINEL_MARK, trap ? random_range(25, 40)
+                                                  : random_range(35, 60),
                           250);
     }
 }
