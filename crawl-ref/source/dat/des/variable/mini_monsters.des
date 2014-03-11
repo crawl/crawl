@@ -451,6 +451,24 @@ xpb..b..b.px
 xxxxxxxxxxxx
 ENDMAP
 
+##############################################################################
+# Anthole (zaba)
+#
+NAME:   zaba_anthole
+TAGS:   extra layout_rooms
+DEPTH:  D:5-9, Lair
+MONS:   worker ant / nothing w:5
+MAP
+   @
+ xx+xx
+xx...xx
+x.111.x
+x.111.x
+xx...xx
+ xx+xx
+   @
+ENDMAP
+
 ###############################################################################
 #
 # <<2>> Vertebrae
