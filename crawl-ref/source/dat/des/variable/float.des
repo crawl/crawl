@@ -1290,26 +1290,6 @@ xxxxx...........................xxxxxx
 ENDMAP
 
 ##############################################################################
-# Anthole (zaba)
-# Intentionally used ORIENT: float in order to enforce rooms+corridors.
-#
-NAME:   zaba_anthole
-TAGS:   extra
-ORIENT: float
-DEPTH:  D:5-9, Lair
-MONS:   worker ant / nothing w:5
-MAP
-   @
- xx+xx
-xx...xx
-x.111.x
-x.111.x
-xx...xx
- xx+xx
-   @
-ENDMAP
-
-##############################################################################
 # Lions and Tigers and Bears, oh my! (or at least bears)
 #
 NAME:   lemuel_bear_cage
