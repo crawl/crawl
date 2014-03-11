@@ -806,10 +806,10 @@ white
 %sdir item/potion
 %back i-label
 %rim 0
-# These must be in the same order as the enum in itemprop-enum.h!
+# These must be in the same order as the enum in enum.h!
 i-curing POT_CURING POT_ID_FIRST
 i-heal-wounds POT_HEAL_WOUNDS
-i-speed POT_SPEED
+i-haste POT_HASTE
 i-might POT_MIGHT
 i-brilliance POT_BRILLIANCE
 i-agility POT_AGILITY
