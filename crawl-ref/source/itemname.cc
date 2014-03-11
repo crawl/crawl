@@ -645,7 +645,7 @@ static const char* wand_primary_string(int p)
     }
 }
 
-static const char* potion_type_name(int potiontype)
+const char* potion_type_name(int potiontype)
 {
     switch (static_cast<potion_type>(potiontype))
     {
