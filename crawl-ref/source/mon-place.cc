@@ -2988,9 +2988,9 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_KOBOLD_DEMONOLOGIST:
         return random_choose_weighted(8, MONS_KOBOLD,
-                                          4, MONS_BIG_KOBOLD,
-                                          1, MONS_KOBOLD_DEMONOLOGIST,
-                                          0);
+                                      4, MONS_BIG_KOBOLD,
+                                      2, MONS_KOBOLD_DEMONOLOGIST,
+                                      0);
         break;
 
     case BAND_GUARDIAN_SERPENT:
