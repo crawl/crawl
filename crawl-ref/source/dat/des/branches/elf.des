@@ -1615,7 +1615,7 @@ ORIENT:  northwest
 : elf_monsters(_G)
 KMONS:   8 = crystal guardian
 SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77., 8=8.
-SHUFFLE: 12, 34, 67, 8b / 9C / 9C / 9C
+SHUFFLE: 12, 34, 67
 SUBST:   b : bc
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
