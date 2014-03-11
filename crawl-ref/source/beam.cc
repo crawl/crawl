@@ -3567,7 +3567,7 @@ void bolt::affect_player_enchantment()
         break;
 
     case BEAM_HASTE:
-        potion_effect(POT_SPEED, ench_power, nullptr, blame_player);
+        potion_effect(POT_HASTE, ench_power, nullptr, blame_player);
         contaminate_player(1000, blame_player);
         obvious_effect = true;
         nasty = false;

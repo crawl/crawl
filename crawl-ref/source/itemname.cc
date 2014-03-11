@@ -651,7 +651,7 @@ static const char* potion_type_name(int potiontype)
     {
     case POT_CURING:            return "curing";
     case POT_HEAL_WOUNDS:       return "heal wounds";
-    case POT_SPEED:             return "speed";
+    case POT_HASTE:             return "haste";
     case POT_MIGHT:             return "might";
     case POT_AGILITY:           return "agility";
     case POT_BRILLIANCE:        return "brilliance";
@@ -2943,7 +2943,7 @@ bool is_emergency_item(const item_def &item)
 
         switch (item.sub_type)
         {
-        case POT_SPEED:
+        case POT_HASTE:
             return !you_worship(GOD_CHEIBRIADOS) && you.species != SP_FORMICID;
         case POT_HEAL_WOUNDS:
             return !you.mutation[MUT_NO_DEVICE_HEAL];
@@ -3336,7 +3336,7 @@ bool is_useless_item(const item_def &item, bool temp)
                    || you.species == SP_DJINNI
 #endif
                    || you.species == SP_FORMICID;
-        case POT_SPEED:
+        case POT_HASTE:
             return you.species == SP_FORMICID;
 
         case POT_CURE_MUTATION:

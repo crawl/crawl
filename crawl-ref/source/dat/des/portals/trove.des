@@ -134,7 +134,7 @@ function trove.get_trove_item(e, value, base_item)
        {base="potion", type="heal wounds", quant=8+d(3)+d(3), weight=potion_weight},
 
        {base="wand", type="hasting", quant=7+d(2), weight=1},
-       {base="potion", type="speed", quant=3+d(3)+d(2), weight=potion_weight},
+       {base="potion", type="haste", quant=3+d(3)+d(2), weight=potion_weight},
        {base="scroll", type="blinking", quant=3+d(3), weight=1},
        {base="scroll", type="teleportation", quant=10+d(3)+d(4), weight=1},
 
@@ -873,9 +873,9 @@ ITEM:    potion of curing / potion of heal wounds / \
          potion of curing q:2 / potion of heal wounds q:2
 ITEM:    potion of experience / potion of beneficial mutation w:30
 ITEM:    potion of might / potion of resistance / \
-         potion of magic / potion of speed / \
+         potion of magic / potion of haste / \
          potion of might q:2 / potion of resistance q:2 / \
-         potion of magic q:2 / potion of speed q:2
+         potion of magic q:2 / potion of haste q:2
 ITEM:    potion of cure mutation
 SHUFFLE: df
 SHUFFLE: eg

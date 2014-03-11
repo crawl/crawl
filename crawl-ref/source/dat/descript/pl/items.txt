@@ -895,7 +895,7 @@ potion of slowing
 
 Eliksir który spowalnia szybkość ruchów.
 %%%%
-potion of speed
+potion of haste
 
 Eliksir który przyspiesza wszystkie ruchy pijącego. Uważaj, nadużywanie może
 spowodować magiczną skazę!

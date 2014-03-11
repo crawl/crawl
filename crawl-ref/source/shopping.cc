@@ -1659,7 +1659,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case POT_RESISTANCE:
-            case POT_SPEED:
+            case POT_HASTE:
                 valued += 70;
                 break;
 

@@ -1625,7 +1625,7 @@ KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              spells:shroud_of_golubria|passage_of_golubria
 KITEM:   g = ring of flight / potion of flight q:2 / \
              wand of digging w:5 / lantern of shadows / \
-             potion of speed w:5 / scroll of fog / potion of porridge / \
+             potion of haste w:5 / scroll of fog / potion of porridge / \
              any wand w:1 / any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
@@ -1788,7 +1788,7 @@ MARKER:     ! = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
                 colour = "white", name = "white fluffiness" \
             }
-ITEM:       w:20 potion of flight / potion of magic / potion of speed / \
+ITEM:       w:20 potion of flight / potion of magic / potion of haste / \
             potion of resistance / gold / potion of agility / potion of brilliance
 ITEM:       wand of lightning / staff of air / ring of flight /\
             gold / scroll of silence / ring of teleport control / \

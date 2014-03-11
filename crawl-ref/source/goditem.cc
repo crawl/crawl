@@ -351,7 +351,7 @@ bool is_hasty_item(const item_def& item)
         retval = (item.sub_type == AMU_RAGE);
         break;
     case OBJ_POTIONS:
-        retval = (item.sub_type == POT_SPEED
+        retval = (item.sub_type == POT_HASTE
                   || item.sub_type == POT_BERSERK_RAGE);
         break;
     case OBJ_BOOKS:

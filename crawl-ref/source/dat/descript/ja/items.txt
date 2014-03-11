@@ -908,7 +908,7 @@ potion of slowing
 
 これは水薬だ。これはあなたの動作を遅くする。
 %%%%
-potion of speed
+potion of haste
 
 これは魔力の込められた飲料だ。これは飲んだ者の動作を加速する。
 %%%%

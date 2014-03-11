@@ -1058,7 +1058,7 @@ potion of slowing
 
 짧은 시간동안 모든 동작을 느리게 만드는 물약이다.
 %%%%
-potion of speed
+potion of haste
 
 잠시동안 마신 사람의 모든 동작을 짧은 시간동안 가속시키는 마법의 물약이다.
 %%%%

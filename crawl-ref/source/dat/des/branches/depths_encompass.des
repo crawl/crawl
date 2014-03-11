@@ -1098,7 +1098,7 @@ KMONS:   C = rakshasa ; robe good_item . wand of cold | wand of fire | \
                       wand of lightning . \
                       glaive ego:freezing | glaive ego:flaming . \
                       potion of heal wounds | potion of might | \
-                      potion of speed | nothing w:20
+                      potion of haste | nothing w:20
 KMONS:   D = tengu reaver
 KMONS:   E = deep elf annihilator ; robe randart | mundane ice dragon armour | \
                                   mundane fire dragon armour | robe w:1 . \

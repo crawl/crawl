@@ -29,7 +29,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               scroll of fear ident:type q:3-6 /\
               disc of storms",
          Cheibriados="wand of hasting ident:type w:5 /\
-              potion of speed ident:type q:2-4 /\
+              potion of haste ident:type q:2-4 /\
               potion of berserk rage ident:type q:2-4 /\
               good_item quick blade",
          Elyvilon="lantern of shadows / book of Necromancy w:5 /\

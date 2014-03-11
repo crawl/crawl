@@ -191,7 +191,7 @@ MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
 KITEM:   1 = sausage / nothing / animal skin / potion of confusion /\
              potion of paralysis /\
-             potion of degeneration / w:2 potion of speed / w:2 potion of might
+             potion of degeneration / w:2 potion of haste / w:2 potion of might
 KFEAT:   1 = 1
 ITEM:    club, potion of confusion, slice of pizza, sausage / weight:40 nothing
 ITEM:    potion of confusion

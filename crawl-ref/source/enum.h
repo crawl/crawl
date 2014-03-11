@@ -3415,7 +3415,7 @@ enum potion_type
 {
     POT_CURING,
     POT_HEAL_WOUNDS,
-    POT_SPEED,
+    POT_HASTE,
     POT_MIGHT,
     POT_BRILLIANCE,
     POT_AGILITY,
