@@ -27,6 +27,7 @@
 #include "feature.h"
 #include "goditem.h"
 #include "item_use.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -1056,6 +1057,17 @@ static bool _player_is_dead(bool soon = true)
         || soon && (you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0);
 }
 
+static void _note_potion_effect(potion_type pot)
+{
+    string potion_name = potion_type_name(static_cast<int>(pot));
+
+    string potion_msg = "potion effect ";
+
+    potion_msg += ("(" + potion_name + ")");
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg.c_str()), true);
+}
+
 static int _xom_do_potion(bool debug = false)
 {
     if (debug)
@@ -1111,25 +1123,10 @@ static int _xom_do_potion(bool debug = false)
     if (pot == POT_INVISIBILITY)
         you.attribute[ATTR_INVIS_UNCANCELLABLE] = 1;
 
-    // Take a note.
-    string potion_msg = "potion effect ";
-    switch (pot)
-    {
-    case POT_CURING:        potion_msg += "(curing)"; break;
-    case POT_HEAL_WOUNDS:   potion_msg += "(heal wounds)"; break;
-    case POT_MAGIC:         potion_msg += "(magic)"; break;
-    case POT_HASTE:         potion_msg += "(haste)"; break;
-    case POT_MIGHT:         potion_msg += "(might)"; break;
-    case POT_AGILITY:       potion_msg += "(agility)"; break;
-    case POT_BRILLIANCE:    potion_msg += "(brilliance)"; break;
-    case POT_INVISIBILITY:  potion_msg += "(invisibility)"; break;
-    case POT_BERSERK_RAGE:  potion_msg += "(berserk)"; break;
-    case POT_EXPERIENCE:    potion_msg += "(experience)"; break;
-    default:                potion_msg += "(other)"; break;
-    }
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, potion_msg.c_str()), true);
+    _note_potion_effect(pot);
 
     potion_effect(pot, 150, nullptr, false);
+
     level_change(); // potion_effect() doesn't do this anymore
 
     return XOM_GOOD_POTION;
