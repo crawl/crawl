@@ -41,7 +41,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_forest
     lakes = false
     -- TODO: Graves instead of lakes
   end
-  kmons("1 = " .. plant_mons)
+  mons(plant_mons)
 
   local gxm,gym = dgn.max_bounds()
   extend_map { width = gxm, height = gym, fill = fill }
