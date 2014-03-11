@@ -1385,7 +1385,7 @@ TAGS:   temple_overflow_1 temple_overflow_trog uniq_altar_trog
 DEPTH:  D:2-9
 KFEAT:  _ = altar_trog
 KPROP:  1 = no_rtele_into
-MONS:   moth of wrath, rat / giant newt
+MONS:   moth of wrath, rat / worm w:5
 ITEM:   any weapon
 NSUBST: M = 4:d / *:.
 SUBST:  + = +....
