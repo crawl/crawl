@@ -84,7 +84,7 @@ identify through usage.
 death random 4
 
 If a particular encounter feels overwhelming don't forget to use emergency
-items early on. A scroll of teleportation or a potion of speed can really save
+items early on. A scroll of teleportation or a potion of haste can really save
 your bacon.
 %%%%
 death random 5

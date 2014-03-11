@@ -2738,7 +2738,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 ", keep moving, don't fight any of the monsters, and don't "
                 "bother picking up any items on the ground. If you're "
                 "encumbered or overburdened, then lighten up your load, and if "
-                "the monsters are closing in, try to use items of speed to get "
+                "the monsters are closing in, try to use items of hasting to get "
                 "away.";
         break;
 
