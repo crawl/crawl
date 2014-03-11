@@ -1658,17 +1658,17 @@ items, split your line after the comma, not before. For example:
 
 Wrong:
         ITEM: potion of healing \
-              , potion of speed
+              , potion of haste
 Right:
         ITEM: potion of healing, \
-              potion of speed
+              potion of haste
 
 But in general, it is preferable to use multiple ITEM or MONS lines if you're
 splitting comma-separated values:
 
 Preferred:
         ITEM: potion of healing
-        ITEM: potion of speed
+        ITEM: potion of haste
 
 Spaces before the \ of the continued line are significant, leading spaces of
 the next (continuing) line are not. In other words, given:
