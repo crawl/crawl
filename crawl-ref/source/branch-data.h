@@ -174,7 +174,7 @@ const Branch branches[NUM_BRANCHES] =
       false, MAGENTA, MAGENTA,
       'Y', true, 0 },
 
-    { BRANCH_ZOT, BRANCH_DEPTHS, 6, 6, 5, 27,
+    { BRANCH_ZOT, BRANCH_DEPTHS, 5, 5, 5, 27,
       0, 0,
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
       "Zot", "the Realm of Zot", "Zot",
@@ -287,7 +287,7 @@ const Branch branches[NUM_BRANCHES] =
       false, LIGHTGREY, BROWN, // set per-map
       '8', false, 0 },
 
-    { BRANCH_DEPTHS, BRANCH_DUNGEON, 16, 16, 6, 22,
+    { BRANCH_DEPTHS, BRANCH_DUNGEON, 16, 16, 5, 22,
       0, 0,
       DNGN_ENTER_DEPTHS, DNGN_RETURN_FROM_DEPTHS,
       "Depths", "the Depths", "Depths",
