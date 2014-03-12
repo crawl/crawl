@@ -1078,20 +1078,6 @@ Ettttttttt........ttttttttttE
 EEEEEEEEEE...@@...EEEEEEEEEEE
 ENDMAP
 
-# Place the Enchantress on Forest:$ if the ending doesn't.
-# XXX: this is only here because of how unique placement vaults are
-# handled normally; this placement behaves considerably differently.
-NAME:   uniq_enchantress
-DEPTH:  Forest:$
-CHANCE: 100%
-MONS:   the Enchantress band
-veto {{
-  return you.uniques("the Enchantress")
-}}
-MAP
-1
-ENDMAP
-
 ##############################################################################
 # Forest ends
 ##############################################################################

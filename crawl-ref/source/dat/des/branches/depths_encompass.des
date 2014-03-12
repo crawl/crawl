@@ -386,7 +386,8 @@ TILE:    C = wall_marble
 KFEAT:   _ = altar_trog
 : _G.set_random_mon_list("place:Forest:3")
 veto {{
-  return crawl.game_started() and dgn.br_exists("Forest")
+  return crawl.game_started()
+         and (dgn.br_exists("Forest") or you.uniques("the Enchantress"))
 }}
 MAP
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
