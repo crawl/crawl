@@ -4047,8 +4047,8 @@ void handle_god_time(int time_delta)
             // This should be guaranteed; otherwise the god wouldn't have
             // appeared in the angry_gods list.
             ASSERT(divine_retribution(angry_gods[random2(angry_gods.size())]));
-            you.attribute[ATTR_GOD_WRATH_COUNT]--;
         }
+        you.attribute[ATTR_GOD_WRATH_COUNT]--;
     }
 
     // Update the god's opinion of the player.
