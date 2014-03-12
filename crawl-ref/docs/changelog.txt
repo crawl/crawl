@@ -155,12 +155,12 @@ Monsters
 * Adjustments to other enemies:
     - Quokkas are speed 12 (making them effectively identical to grey rats).
     - Boggarts are more durable.
-    - Rakshasas and Mara gain a monster spell "Phantom Mirror", which summons
-      a clone of a nearby allied monster (this includes Mara in his case)
-      with half the hit points, with a 50% chance of swapping the clone for
-      the original; this replaces their previous self-cloning abilities.
-      Rakshasas can now also cast Iskenderun's Mystic Blast and will
-      summon two clones of themselves at 50% HP as a one-time effect.
+    - Rakshasas gain a monster spell "Phantom Mirror", which summons
+      a clone of a nearby allied monster with half the hit points, with
+      a 50% chance of swapping the clone for the original; this replaces
+      their previous self-cloning abilities.  They can now also cast
+      Iskenderun's Mystic Blast and will summon two clones of themselves
+      at 50% HP as a one-time effect.
     - Giant orange brains get Mass Confusion instead of Confusion.
     - Spriggans in general now merely have fast movement speed instead of
       fast speed in general, more damage and less EV.
