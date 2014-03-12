@@ -1412,8 +1412,8 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_EVOCATIONS,      1),
 
     // SP_FORMICID
-    APT(SP_FORMICID,        SK_FIGHTING,        0),
-    APT(SP_FORMICID,        SK_SHORT_BLADES,    1),
+    APT(SP_FORMICID,        SK_FIGHTING,        1),
+    APT(SP_FORMICID,        SK_SHORT_BLADES,    0),
     APT(SP_FORMICID,        SK_LONG_BLADES,     0),
     APT(SP_FORMICID,        SK_AXES,            0),
     APT(SP_FORMICID,        SK_MACES_FLAILS,    0),
@@ -1423,13 +1423,13 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_FORMICID,        SK_BOWS,           -2),
     APT(SP_FORMICID,        SK_CROSSBOWS,       0),
     APT(SP_FORMICID,        SK_THROWING,       -2),
-    APT(SP_FORMICID,        SK_ARMOUR,          2),
+    APT(SP_FORMICID,        SK_ARMOUR,          1),
     APT(SP_FORMICID,        SK_DODGING,        -1),
     APT(SP_FORMICID,        SK_STEALTH,         3),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_FORMICID,        SK_STABBING,      -99),
 #endif
-    APT(SP_FORMICID,        SK_SHIELDS,         0),
+    APT(SP_FORMICID,        SK_SHIELDS,         2),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_FORMICID,        SK_TRAPS,         -99),
 #endif

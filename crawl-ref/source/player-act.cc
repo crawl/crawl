@@ -299,12 +299,7 @@ item_def *player::weapon(int /* which_attack */) const
 hands_reqd_type player::hands_reqd(const item_def &item) const
 {
     if (species == SP_FORMICID)
-    {
-        if (weapon_size(item) >= SIZE_BIG)
-            return HANDS_TWO;
-        else
-            return HANDS_ONE;
-    }
+        return HANDS_ONE;
     else
         return actor::hands_reqd(item);
 }
@@ -334,8 +329,6 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 {
     if (species == SP_FELID)
         return false;
-    if (species == SP_FORMICID)
-        return true;
 
     if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
             && (item_mass(item) >= 500

@@ -2463,6 +2463,14 @@ static int _player_evasion_size_factor()
     return 2 * (SIZE_MEDIUM - size);
 }
 
+// Determines racial shield penalties (formicids get a bonus compared to
+// other medium-sized races)
+static int _player_shield_racial_factor()
+{
+    return max(1, 5 + (you.species == SP_FORMICID ? -2 // Same as trolls/centaurs/etc.
+                                                  : _player_evasion_size_factor()));
+}
+
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
@@ -6362,7 +6370,7 @@ int player::adjusted_shield_penalty(int scale) const
 
     const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
     return max(0, (base_shield_penalty * scale - skill(SK_SHIELDS, scale)
-                  / max(1, 5 + _player_evasion_size_factor())));
+                  / _player_shield_racial_factor()));
 }
 
 int player::armour_tohit_penalty(bool random_factor, int scale) const
