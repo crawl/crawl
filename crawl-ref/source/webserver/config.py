@@ -168,5 +168,7 @@ daemon = False # If true, the server will detach from the session after startup
 player_url = None
 
 # Only for development:
+# Disable caching of static files which are not part of game data.
+no_cache = False
 # Automatically log in all users with the username given here.
 autologin = None
