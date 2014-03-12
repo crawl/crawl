@@ -540,6 +540,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR,
                           you.body_size() >= SIZE_MEDIUM ? ARM_SHIELD
                                                          : ARM_BUCKLER);
+        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_MIGHT);
 
         // Skills.
         you.skills[SK_FIGHTING] = 3;
