@@ -26,7 +26,9 @@ class MainHandler(tornado.web.RequestHandler):
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
-        self.set_header("Cache-Control", "no-cache")
+        self.set_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        self.set_header("Pragma", "no-cache")
+        self.set_header("Expires", "0")
 
 def err_exit(errmsg):
     logging.error(errmsg)
