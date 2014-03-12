@@ -141,12 +141,11 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
-    // Only ogres, trolls, and formicids can wield giant clubs (>= 30 aum)
+    // Only ogres and trolls can wield giant clubs (>= 30 aum)
     // and large rocks (60 aum).
-    if ((you.body_size() < SIZE_LARGE && you.species != SP_FORMICID)
-        && (item_mass(*weapon) >= 500
-            || weapon->base_type == OBJ_WEAPONS
-               && item_mass(*weapon) >= 300))
+    if (you.body_size() < SIZE_LARGE && (item_mass(*weapon) >= 500
+                                         || weapon->base_type == OBJ_WEAPONS
+                                            && item_mass(*weapon) >= 300))
     {
         SAY(mpr("That's too large and heavy for you to wield."));
         return false;
@@ -166,7 +165,6 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     // Small species wielding large weapons...
     if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM
-        && you.species != SP_FORMICID
         && !check_weapon_wieldable_size(*weapon, you.body_size(PSIZE_BODY)))
     {
         SAY(mpr("That's too large for you to wield."));
@@ -862,8 +860,6 @@ bool do_wear_armour(int item, bool quiet)
         {
             if (you.species == SP_OCTOPODE)
                 mpr("You need the rest of your tentacles for walking.");
-            else if (you.species == SP_FORMICID)
-                mprf("You'd need six %s to do that!", you.hand_name(true).c_str());
             else
                 mprf("You'd need three %s to do that!", you.hand_name(true).c_str());
         }
