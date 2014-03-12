@@ -286,12 +286,6 @@ static bool _altar_prayer()
 
 void pray()
 {
-    if (you.cannot_speak())
-    {
-        mpr("You are unable to make a sound!");
-        return;
-    }
-
     // only successful prayer takes time
     you.turn_is_over = false;
 
@@ -330,7 +324,8 @@ void pray()
     }
 
     if (!something_happened) // If something happened, there already was a prayer
-        mprf(MSGCH_PRAY, "You offer a prayer to %s.",
+        mprf(MSGCH_PRAY, "You offer a %sprayer to %s.",
+            you.cannot_speak() ? "silent " : "",
             god_name(you.religion).c_str());
 
     if (you_worship(GOD_FEDHAS) && fedhas_fungal_bloom())
