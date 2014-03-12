@@ -38,6 +38,7 @@
 #include "mon-act.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
@@ -1572,6 +1573,10 @@ spret_type cast_summon_forest(actor* caster, int pow, god_type god, bool fail)
             mon_enchant abj = dryad->get_ench(ENCH_ABJ);
             abj.duration = duration - 10;
             dryad->update_ench(abj);
+
+            // Pre-awaken the forest just summoned.
+            bolt dummy;
+            mons_cast(dryad, dummy, SPELL_AWAKEN_FOREST);
         }
 
         you.duration[DUR_FORESTED] = duration;
