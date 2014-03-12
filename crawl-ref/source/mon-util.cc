@@ -1153,7 +1153,8 @@ bool mons_is_demon(monster_type mc)
 
     // Not every demonic monster is a demon (hell hog, hell hound, etc.)
     if (mons_class_holiness(mc) == MH_DEMONIC
-        && (isadigit(show_char) || show_char == '&'))
+        && (isadigit(show_char) || show_char == '&'
+            || mons_species(mc) == MONS_RAKSHASA))
     {
         return true;
     }
