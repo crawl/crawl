@@ -18,7 +18,10 @@ class GameDataHandler(tornado.web.StaticFileHandler):
 
     def set_extra_headers(self, path):
         if config.game_data_no_cache:
-            self.set_header("Cache-Control", "no-cache")
+            self.set_header("Cache-Control",
+                            "no-cache, no-store, must-revalidate")
+            self.set_header("Pragma", "no-cache")
+            self.set_header("Expires", "0")
 
     _client_paths = {}
 
