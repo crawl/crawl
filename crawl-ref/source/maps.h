@@ -24,6 +24,8 @@ map_section_type vault_main(vault_placement &vp, const map_def *vault,
 
 bool resolve_subvault(map_def &vault);
 
+coord_def find_portal_place(const vault_placement *place, bool check_place);
+
 const map_def *map_by_index(int index);
 void strip_all_maps();
 int map_count();

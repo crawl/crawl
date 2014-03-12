@@ -3559,7 +3559,16 @@ static void _place_branch_entrances(bool use_vaults)
                     continue;
             }
 
-            // Otherwise place a single stair feature
+            // Otherwise place a single stair feature.
+            // Try to use designated locations for entrances if possible.
+            const coord_def portal_pos = find_portal_place(NULL, false);
+            if (!portal_pos.origin())
+            {
+                env.grid(portal_pos) = b->entry_stairs;
+                env.level_map_mask(portal_pos) |= MMT_VAULT;
+                continue;
+            }
+
             const coord_def stair_pos = _place_specific_feature(b->entry_stairs);
             // Don't allow subsequent vaults to overwrite the branch stair
             env.level_map_mask(stair_pos) |= MMT_VAULT;
