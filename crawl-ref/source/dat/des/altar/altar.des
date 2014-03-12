@@ -375,11 +375,11 @@ ENDMAP
 NAME:   jiyva_altar_1
 DEPTH:  D:2-
 KFEAT:  _ = altar_jiyva
-: if you.depth() < 5 then
+: if you.depth() < 3 then
 SUBST:  1 = 2
-: elseif you.depth() < 7 then
+: elseif you.depth() < 6 then
 NSUBST: 1 = 1:1 / *:2
-: elseif you.depth() < 10 then
+: elseif you.depth() < 19 then
 NSUBST: 1 = 2:1 / *:2
 : elseif you.depth() < 13 then
 NSUBST: 1 = 3:1 / *:2
