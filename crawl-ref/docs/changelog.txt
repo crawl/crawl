@@ -30,7 +30,7 @@ Branches, environment
 * The layout of the last level of the Vaults has been changed, with all four
   subsections being open at each corner.
 * Gadget shops and wand shops have been merged; the resulting gadget shops
-  now also sell wands.
+  now also sell rods.
 * The price of items in shops has been recalibrated.
 
 Character
@@ -51,8 +51,6 @@ Character
   healing when enemies are in sight (half and no healing for those levels
   respectively). Stat regeneration and the third level of the mutation
   are unchanged.
-* Venom Mages and Assassins no longer start with knowledge of potions of
-  poison.
 * Fast/slow movement mutations no longer occur randomly.
 * Recommended backgrounds and species have been adjusted; in particular,
   backgrounds can recommend species that don't necessarily recommend that
@@ -62,8 +60,8 @@ Character
 * The antennae mutation gives invisible monster indicators for every invisible
   enemy in LOS.
 * Merfolk can now be mesmerised by mermaids and sirens.
-* Artificers and Wanderers no longer start with knowledge of potions and
-  scrolls they don't possess.
+* Artificers, Wanderers, Assassins, and Venom Mages no longer start with
+  knowledge of potions and scrolls they don't possess.
 
 Monsters
 --------
@@ -277,44 +275,45 @@ Items
 * The reaching brand for whips is no more.
 * Enchantment-like effects of chaos projectiles are now irresistible.
 * Spears, daggers, clubs, and hand axes are no longer good for throwing.
-    - The artefact "Lehudib's crystal spear" has been removed.
 * New "tomahawk" item: a throwing missile, usable by all non-felids, between
   darts and javelins in damage.
     - Small race hunters and arcane marksmen may select tomahawks.
 * New "potion of lignification" - induces tree form.
 * Small races can use throwing nets.
-* Piercer gets the penetration brand (was vorpal).
-* Boots of the Assassin return in a new form: they now detect monsters and
-  allow short-blade-quality stabbing with any weapon (or unarmed).
-* Hellfire now shoots hellfire bolts, dealing hellfire-branded damage and
-  exploding.
-* The Elemental Staff is reworked considerably - it grants rElec, rF++,
-  rC++, MR++, AC+5, and randomly deals elemental-branded attacks based
-  on the user's Evocations skill.
-* The skin of Zhor now grants rC+++.
-* Leech drains HP on all hits (instead of 3/5 for other vampiric weapons).
-* Sniper is now a +15 vorpal crossbow with a slower rate of fire.
-* Snakebite is now a +5 venom whip that applies a curare effect on two out of
-  five hits.
-* The Singing Sword is now a bastard sword.
-* The shield of the gong is now +27 with -5 EV.
-* The ring of Shadows now has an umbra instead of +4 EV and -4 Acc.
-* New unrand: "macabre finger necklace" - gives warding and an extra ring slot.
-* New unrand: "boots of the spider" - gives clinging, trample immunity, and
-  jump attack.
-* New unrand: "dark maul" - a very large, very slow two-handed weapon using
-  the Maces and Flails skill.
-* New unrand: "hat of the High Council" - spellpower at the expense of
-  spell success rates.
-* New unrand: "arc blade" - a cutlass which inflicts discharges of static
-  electricity on targets it hits.
-* New unrand: "Spellbinder" - an antimagic demon whip which inflicts miscasts
-  on magic-using targets.
-* New unrand: "lajatang of Order" - does silver damage (like the ammunition
-  brand) and grants resistance to mutation.
-* New unrand: "Firestarter" - a +7 great mace {flame, rF++} which protects
-  scrolls from fire damage and inner flames targets it hits.
-* The blowgun of the Assassin and Bullseye have been removed.
+* Multiple changes to unrandarts:
+    - Piercer gets the penetration brand (was vorpal).
+    - Boots of the Assassin return in a new form: they now detect monsters and
+      allow short-blade-quality stabbing with any weapon (or unarmed).
+    - Hellfire now shoots hellfire bolts, dealing hellfire-branded damage and
+      exploding.
+    - The Elemental Staff is reworked considerably - it grants rElec, rF++,
+      rC++, MR++, AC+5, and randomly deals elemental-branded attacks based
+      on the user's Evocations skill.
+    - The skin of Zhor now grants rC+++.
+    - Leech drains HP on all hits (instead of 3/5 for other vampiric weapons).
+    - Sniper is now a +15 vorpal crossbow with a slower rate of fire.
+    - Snakebite is now a +5 venom whip that applies a curare effect on two out of
+      five hits.
+    - The Singing Sword is now a bastard sword.
+    - The shield of the gong is now +27 with -5 EV.
+    - The ring of Shadows now has an umbra instead of +4 EV and -4 Acc.
+    - New unrand: "macabre finger necklace" - gives warding and an extra ring slot.
+    - New unrand: "boots of the spider" - gives clinging, trample immunity, and
+      jump attack.
+    - New unrand: "dark maul" - a very large, very slow two-handed weapon using
+      the Maces and Flails skill.
+    - New unrand: "hat of the High Council" - spellpower at the expense of
+      spell success rates.
+    - New unrand: "arc blade" - a cutlass which inflicts discharges of static
+      electricity on targets it hits.
+    - New unrand: "Spellbinder" - an antimagic demon whip which inflicts miscasts
+      on magic-using targets.
+    - New unrand: "lajatang of Order" - does silver damage (like the ammunition
+      brand) and grants resistance to mutation.
+    - New unrand: "Firestarter" - a +7 great mace {flame, rF++} which protects
+      scrolls from fire damage and inner flames targets it hits.
+    - The blowgun of the Assassin, Bullseye, and Lehudib's Crystal Spear (the
+      unrandart) are gone.
 * Potions with known type that would have no effect can no longer be quaffed
   at all.
 * Potions other than potions of porridge and blood no longer give nutrition.
