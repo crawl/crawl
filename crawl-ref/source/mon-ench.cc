@@ -656,7 +656,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         int net = get_trapping_net(pos());
         if (net != NON_ITEM)
         {
-            remove_item_stationary(mitm[net]);
+            free_stationary_net(net);
 
             if (!quiet)
                 simple_monster_message(this, " breaks free.");

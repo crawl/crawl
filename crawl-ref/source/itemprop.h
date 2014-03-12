@@ -20,7 +20,6 @@ void do_uncurse_item(item_def &item, bool inscribe = true, bool no_ash = false,
 
 // stationary:
 void set_item_stationary(item_def &item);
-void remove_item_stationary(item_def &item);
 bool item_is_stationary(const item_def &item) PURE;
 
 // ident:

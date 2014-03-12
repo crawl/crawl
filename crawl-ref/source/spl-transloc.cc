@@ -886,7 +886,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         && item.sub_type == MI_THROWING_NET
         && item_is_stationary(item))
     {
-        remove_item_stationary(item);
+        free_stationary_net(item_idx);
         if (monster* mons = monster_at(where))
             mons->del_ench(ENCH_HELD, true);
     }

@@ -1237,19 +1237,6 @@ string ego_type_string(const item_def &item, bool terse)
     }
 }
 
-// nets can go +0 .. -7 (-8 always destroys them)
-static const char* _torn_net(int plus)
-{
-    if (plus >= 0)
-        return "";
-    else if (plus >= -2)
-        return " [frayed]";
-    else if (plus >= -5)
-        return " [torn]";
-    else
-        return " [falling apart]";
-}
-
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 string item_def::name_aux(description_level_type desc, bool terse, bool ident,
@@ -1411,8 +1398,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 buff << " of " << _missile_brand_name(brand, MBN_NAME);
         }
 
-        if (item_typ == MI_THROWING_NET && !basename && !qualname && !dbname)
-            buff << _torn_net(it_plus);
         break;
     }
     case OBJ_ARMOUR:
