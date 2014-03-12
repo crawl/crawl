@@ -1,4 +1,4 @@
-Stone Soup 0.14 (up to 0.14-a0-3104-g4f99434)
+Stone Soup 0.14 (up to 0.14-a0-3250-g3700e31)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new races: Formicids and Vine Stalkers.
@@ -8,10 +8,10 @@ Stone Soup 0.14 (up to 0.14-a0-3104-g4f99434)
 
 Branches, environment
 ---------------------
-* The main Dungeon is now sixteen levels.
-* A new branch: the Depths; entered from the end of Dungeon, it is six levels
+* The main Dungeon is now fifteen levels.
+* A new branch: the Depths; entered from the end of Dungeon, it is five levels
   long and contains the entrance to the Realm of Zot.
-* The Vaults are now entered from D:14-15 and need a rune to enter.
+* The Vaults are now entered from D:13-14 and need a rune to enter.
 * Abyssal stairs appear more frequently, and are fixed with depth.
 * Ziggurats require only three runes to enter; an entrance is guaranteed
   in Depths, but still spawn as normal in Pan.
@@ -61,6 +61,9 @@ Character
 * Poison damage is now deterministic.
 * The antennae mutation gives invisible monster indicators for every invisible
   enemy in LOS.
+* Merfolk can now be mesmerised by mermaids and sirens.
+* Artificers and Wanderers no longer start with knowledge of potions and
+  scrolls they don't possess.
 
 Monsters
 --------
@@ -94,6 +97,8 @@ Monsters
       and strike down the player with said water.
     - Shambling mangroves, slow-moving, tough plants home to a nest of ravens
       or wasps.
+    - Formicid venom mages, who can dig out the level and attack the
+      player with poisonous conjurations and a single-target Ignite Poison;
     - Raiju, which can attack by transforming themselves into a bolt of
       lightning.
     - Worldbinders, abyssal enemies which summon low tier enemies from other
@@ -109,7 +114,6 @@ Monsters
       around the target.
     - Octopode crushers, who can throw both the victims they constrict as well
       as icicles.
-
 * A new set of enemies based on demonspawn, appearing in Pan.
     - Base types:
         - monstrous (auxiliary attacks and more HP);
@@ -122,8 +126,8 @@ Monsters
           conjurations, and Ephemeral Infusion, which temporarily heals
           nearby allies);
         - chaos champions (Chaotic Reflection, which inflicts a random hex-like
-          effect on itself and the target, and Rearrange the Pieces, which
-          shuffles the placement of nearby creatures);
+          effect on itself and the target, and Random Bolt as per the rod
+          of destruction);
         - warmongers (Grand Avatar, essentially a hybrid battlesphere and
           spectral weapon which triggers on sufficiently damaging attacks of
           nearby allies, and Sap Magic, a hex which hinders spellcasting success
@@ -135,6 +139,10 @@ Monsters
           draining attacks that heal on hit, and previously existing spells
           Bolt of Draining, Malign Offering, and Dispel Undead).
 * Adjustments to lair branch enemies:
+    - Spriggan druids' Druid's Call now calls 2-3 creatures out of LOS nearby
+      and does not invisibly might creatures; instead, nearby creatures
+      are healed and frenzied on their death. Stone Arrow also replaces
+      Sunray in their spell set.
     - Siren songs' pulling effects are now irresistible if the player is
       already mesmerised.
     - Siren songs call drowned souls, weak temporary enemies with a drowning
@@ -145,6 +153,18 @@ Monsters
     - Plain salamanders have been weakened, and all salamanders can slither
       around on land.
 * Adjustments to other enemies:
+    - Quokkas are speed 12 (making them effectively identical to grey rats).
+    - Boggarts are more durable.
+    - Rakshasas and Mara gain a monster spell "Phantom Mirror", which summons
+      a clone of a nearby allied monster (this includes Mara in his case)
+      with half the hit points, with a 50% chance of swapping the clone for
+      the original; this replaces their previous self-cloning abilities.
+      Rakshasas can now also cast Iskenderun's Mystic Blast and will
+      summon two clones of themselves at 50% HP as a one-time effect.
+    - Giant orange brains get Mass Confusion instead of Confusion.
+    - Spriggans in general now merely have fast movement speed instead of
+      fast speed in general, more damage and less EV.
+    - Spriggan air mages have Haste (replacing Shock).
     - Deep elf demonologists summon more greater demons instead of minor
       demons.
     - Draconian knights have fewer but distinct spell sets focusing on
@@ -173,9 +193,10 @@ Monsters
 * Geryon can fly once again.
 * Antaeus gains Flash Freeze, an ice conjuration which impedes the target's
   movement for three turns.
-* Lamia has been de-throned.
 * Player ghosts can retain and cast dazzling spray, which has a chance to cause
   a confusion effect against the player.
+* All pandemonium lords now see invisible.
+* Lamia has been de-throned.
 
 Spells
 ------
@@ -332,7 +353,8 @@ Items
     - Sabres are now cutlasses (and the captain's cutlass has been adjusted to
       match);
     - Double swords are now bastard swords;
-    - Triple swords are now claymores.
+    - Triple swords are now claymores;
+    - Potions of speed are now potions of haste.
 * Scrolls of vulnerability are now more common.
 * Curse scrolls and potions of blood no longer randomly generate.
 * All curse scrolls now accept targets (as though the player was worshipping
@@ -345,6 +367,8 @@ Cards
 * The Alchemist card is in decks of escape, but not wonders.
 * The Bargain card has been removed.
 * The Trowel card is in decks of wonder and only creates portals.
+* The Battlelust card now deals primarily in might and agility at high power,
+  with the delayed berserk effect now occurring at lower power.
 
 Gods
 ----
