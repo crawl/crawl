@@ -1994,6 +1994,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FAKE_RAKSHASA_SUMMON, "Rakshasa Summon",
      SPTYP_SUMMONING,
@@ -2006,6 +2007,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_NOXIOUS_CLOUD, "Noxious Cloud",
