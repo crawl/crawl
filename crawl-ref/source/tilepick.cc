@@ -4965,7 +4965,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_ENSNARE:                  return TILEG_ENSNARE;
     case SPELL_EPHEMERAL_INFUSION:       return TILEG_EPHEMERAL_INFUSION;
     case SPELL_FAKE_MARA_SUMMON:         return TILEG_FAKE_MARA_SUMMON;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_FAKE_RAKSHASA_SUMMON:     return TILEG_FAKE_RAKSHASA_SUMMON;
+#endif
     case SPELL_FIRE_BREATH:              return TILEG_FIRE_BREATH;
     case SPELL_FIRE_ELEMENTALS:          return TILEG_FIRE_ELEMENTALS;
     case SPELL_FIRE_SUMMON:              return TILEG_FIRE_SUMMON;

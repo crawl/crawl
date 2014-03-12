@@ -1174,7 +1174,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_WEAVE_SHADOWS:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_FAKE_RAKSHASA_SUMMON:
+#endif
     case SPELL_FAKE_MARA_SUMMON:
     case SPELL_SUMMON_ILLUSION:
     case SPELL_SUMMON_DEMON:
