@@ -760,14 +760,13 @@ bool player::can_jump(bool quiet) const
             mpr("You're too exhausted to jump.");
         return false;
     }
-
     if (in_water())
     {
         if (!quiet)
             mpr("You can't jump while in water.");
         return false;
     }
-    if (feat_is_lava(grd(pos())))
+    if (in_lava())
     {
         if (!quiet)
             mpr("You can't jump while standing in lava.");
@@ -785,6 +784,12 @@ bool player::can_jump(bool quiet) const
             mpr("You can't jump while being constricted.");
         return false;
     }
+    if (caught())
+    {
+        if (!quiet)
+            mprf("You can't jump while %s.", held_status());
+        return false;
+    }
     if (form == TRAN_TREE || form == TRAN_WISP)
     {
         if (!quiet)
@@ -798,6 +803,7 @@ bool player::can_jump() const
 {
     return can_jump(false);
 }
+
 bool player::berserk() const
 {
     return duration[DUR_BERSERK];
