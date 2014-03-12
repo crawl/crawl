@@ -1948,20 +1948,25 @@ static double _get_true_fail_rate(int raw_fail)
     return (double) (1020100 - _tetrahedral_number(300 - target)) / 1020100;
 }
 
-//Computes the chance of getting a miscast effect of a given severity (or
-//higher).
+/**
+ * Compute the chance of getting a miscast effect of a given severity or higher.
+ * @param spell     The spell to be checked.
+ * @param severity  Check the chance of getting a miscast this severe or higher.
+ * @returns         The chance of this kind of miscast.
+ */
 double get_miscast_chance(spell_type spell, int severity)
 {
     int raw_fail = spell_fail(spell);
     int level = spell_difficulty(spell);
     if (severity <= 0)
         return _get_true_fail_rate(raw_fail);
-    double C = 70000.0/(150*level*(10+level));
+    double C = 70000.0 / (150 * level * (10 + level));
     double chance = 0.0;
     int k = severity + 1;
-    while ((C*k) <= raw_fail)
+    while ((C * k) <= raw_fail)
     {
-        chance += _get_true_fail_rate((int)(raw_fail+1-(C*k)))*severity/(k*(k-1));
+        chance += _get_true_fail_rate((int) (raw_fail + 1 - (C * k)))
+            * severity / (k * (k - 1));
         k++;
     }
     return chance;

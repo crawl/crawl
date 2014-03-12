@@ -1159,6 +1159,13 @@ string desc_cannot_memorise_reason(bool form)
     return desc;
 }
 
+/**
+ * Can the player learn the given spell?
+ *
+ * @param   specspell  The spell to be learned.
+ * @returns            false if the player can't learn the spell for any
+ *                     reason, true otherwise.
+*/
 static bool _learn_spell_checks(spell_type specspell)
 {
     if (!can_learn_spell())
@@ -1198,15 +1205,16 @@ static bool _learn_spell_checks(spell_type specspell)
         return false;
     }
 
-    if (spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
-    {
-        mpr("This spell is too difficult to memorise!");
-        return false;
-    }
-
     return true;
 }
 
+/**
+ * Attempt to make the player learn the given spell.
+ *
+ * @param   specspell  The spell to be learned.
+ * @returns            true if the player learned the spell, false
+ *                     otherwise.
+*/
 bool learn_spell(spell_type specspell)
 {
     if (!_learn_spell_checks(specspell))
@@ -1214,12 +1222,14 @@ bool learn_spell(spell_type specspell)
 
     double chance = get_miscast_chance(specspell);
 
-    if (chance >= 0.025)
+    if (spell_fail(specspell) >= 100 && !vehumet_is_offering(specspell))
+        mprf(MSGCH_WARN, "This spell is impossible to cast!");
+    else if (chance >= 0.025)
         mprf(MSGCH_WARN, "This spell is very dangerous to cast!");
     else if (chance >= 0.005)
         mprf(MSGCH_WARN, "This spell is quite dangerous to cast!");
     else if (chance >= 0.001)
-        mpr("This spell is slightly dangerous to cast.");
+        mprf(MSGCH_WARN, "This spell is slightly dangerous to cast.");
 
     snprintf(info, INFO_SIZE,
              "Memorise %s, consuming %d spell level%s and leaving %d?",
