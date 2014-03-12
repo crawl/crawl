@@ -498,28 +498,42 @@ static bool _connected_minivault_place(const coord_def &c,
     return false;
 }
 
+coord_def find_portal_place(const vault_placement *place, bool check_place)
+{
+    vector<map_marker*> markers = env.markers.get_all(MAT_LUA_MARKER);
+    vector<coord_def> candidates;
+    for (vector<map_marker*>::iterator it = markers.begin();
+         it != markers.end(); it++)
+    {
+        if ((*it)->property("portal") != "")
+        {
+            coord_def v1((*it)->pos);
+            if ((!check_place
+                  || place && map_place_valid(place->map, v1, place->size))
+                && (!place || _connected_minivault_place(v1, *place))
+                && !feat_is_gate(grd(v1))
+                && !feat_is_branch_stairs(grd(v1)))
+            {
+                candidates.push_back(v1);
+            }
+        }
+    }
+
+    if (!candidates.empty())
+        return candidates[random2(candidates.size())];
+
+    return coord_def();
+}
+
 static coord_def _find_minivault_place(
     const vault_placement &place,
     bool check_place)
 {
     if (place.map.has_tag("replace_portal"))
     {
-        vector<map_marker*> markers = env.markers.get_all(MAT_LUA_MARKER);
-        vector<coord_def> candidates;
-        for (vector<map_marker*>::iterator it = markers.begin();
-             it != markers.end(); it++)
-        {
-            if ((*it)->property("portal") != "")
-            {
-                coord_def v1((*it)->pos);
-                if ((!check_place || map_place_valid(place.map, v1, place.size))
-                    && _connected_minivault_place(v1, place)
-                    && !feat_is_gate(grd(v1)))
-                    candidates.push_back(v1);
-            }
-        }
-        if (!candidates.empty())
-            return candidates[random2(candidates.size())];
+        coord_def portal_place = find_portal_place(&place, check_place);
+        if (!portal_place.origin())
+            return portal_place;
     }
 
     // [ds] The margin around the edges of the map where the minivault
