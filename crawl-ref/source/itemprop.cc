@@ -612,12 +612,6 @@ void set_item_stationary(item_def &item)
         item.plus2 = 1;
 }
 
-void remove_item_stationary(item_def &item)
-{
-    if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
-        item.plus2 = 0;
-}
-
 bool item_is_stationary(const item_def &item)
 {
     return item.base_type == OBJ_MISSILES

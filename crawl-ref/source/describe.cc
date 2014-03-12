@@ -1049,32 +1049,6 @@ static string _describe_ammo(const item_def &item)
 
     description.reserve(64);
 
-    if (item.sub_type == MI_THROWING_NET)
-    {
-        if (item.plus > 1 || item.plus < 0)
-        {
-            string how;
-
-            if (item.plus > 1)
-                how = "brand-new";
-            else if (item.plus < 0)
-            {
-                if (item.plus > -3)
-                    how = "a little worn";
-                else if (item.plus > -5)
-                    how = "slightly damaged";
-                else if (item.plus > -7)
-                    how = "damaged";
-                else
-                    how = "heavily frayed";
-            }
-
-            description += "\n\nIt looks ";
-            description += how;
-            description += ".";
-        }
-    }
-
     const bool can_launch = has_launcher(item);
     const bool can_throw  = is_throwable(&you, item, true);
     bool always_destroyed = false;
