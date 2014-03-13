@@ -708,9 +708,8 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
         else
         {
-            // Uppercase means add the item to the shopping list or
-            // remove it from the shopping list and mark for purchase
-            // without confirmation.
+            // Uppercase means toggle the item on the shopping list
+            // (unmarking for purchase if it was marked).
             bool to_shoplist = isaupper(key);
             key = toalower(key) - 'a';
             if (key >= static_cast<int>(stock.size()))
@@ -746,23 +745,19 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                                                           id_stock);
                 if (in_list[key])
                 {
-                    if (gp_value <= you.gold || to_shoplist)
+                    if (to_shoplist)
                     {
                         shopping_list.del_thing(item);
                         in_list[key] = false;
-                        // Will be toggled to true later
                         selected[key] = false;
+                        continue;
                     }
                     else
                     {
-                        if (_shop_yesno("Remove from shopping list? (y/N)",
-                                        'n'))
-                        {
-                            shopping_list.del_thing(item);
-                            in_list[key]  = false;
-                            selected[key] = false;
-                        }
-                        continue;
+                        shopping_list.del_thing(item);
+                        in_list[key]  = false;
+                        // Will be toggled to true later
+                        selected[key] = false;
                     }
                 }
                 else if (to_shoplist)
