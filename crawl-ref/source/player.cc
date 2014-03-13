@@ -5141,16 +5141,51 @@ int get_player_poisoning()
         return 0;
 }
 
+// The amount of aut needed for poison to end if
+// you.duration[DUR_POISONING] == dur, assuming no Chei/DD shenanigans.
+// This function gives the following behavior:
+// * 1/15 of current poison is removed every 10 aut normally
+// * but speed of poison is capped between 0.025 and 1.000 HP/aut
+static double _poison_dur_to_aut(double dur)
+{
+    // Poison already at minimum speed.
+    if (dur < 15.0 * 250.0)
+        return (dur / 25.0);
+    // Poison is not at maximum speed.
+    if (dur < 15.0 * 10000.0)
+        return (150.0 + 10.0 * log(dur / (15.0 * 250.0)) / log(15.0 / 14.0));
+    return (150.0 + (dur - 15.0 * 10000.0) / 1000.0
+                  + 10.0 * log(10000.0 / 250.0) / log(15.0 / 14.0));
+}
+
+// The inverse of the above function, i.e. the amount of poison needed
+// to last for aut time.
+static double _poison_aut_to_dur(double aut)
+{
+    // Amount of time that poison lasts at minimum speed.
+    if (aut < 150.0)
+        return (aut * 25.0);
+    // Amount of time that poison exactly at the maximum speed lasts.
+    const double aut_from_max_speed = 150.0 + 10.0 * log(40.0) / log(15.0 / 14.0);
+    if (aut < aut_from_max_speed)
+        return (15.0 * 250.0 * exp(log(15.0 / 14.0) / 10.0 * (aut - 150.0)));
+    return (15.0 * 10000.0 + 1000.0 * (aut - aut_from_max_speed));
+}
+
 void handle_player_poison(int delay)
 {
-    int decrease = min(10000, max(250, you.duration[DUR_POISONING] / 15
-                                       * delay / BASELINE_DELAY));
+    const double cur_dur = you.duration[DUR_POISONING];
+    const double cur_aut = _poison_dur_to_aut(cur_dur);
 
     // If Cheibriados has slowed your life processes, poison affects you less
     // quickly (you take the same total damage, but spread out over a longer
     // period of time).
-    if (GOD_CHEIBRIADOS == you.religion && you.piety >= piety_breakpoint(0))
-        decrease = decrease * 2 / 3;
+    const double delay_scaling = (GOD_CHEIBRIADOS == you.religion && you.piety >= piety_breakpoint(0)) ? 2.0 / 3.0 : 1.0;
+
+    const double new_aut = cur_aut - ((double) delay) * delay_scaling;
+    const double new_dur = _poison_aut_to_dur(new_aut);
+
+    const int decrease = you.duration[DUR_POISONING] - (int) new_dur;
 
     // Transforming into a form with no metabolism merely suspends the poison
     // but doesn't let your body get rid of it.
