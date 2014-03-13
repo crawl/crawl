@@ -549,7 +549,7 @@ SHUFFLE: 112/334
 MONS:    orc sorcerer, orc / orc wizard, ogre mage, ogre / nothing
 ITEM:    any book
 MAP
-  xxxx?xxxx
+  xxxx@xxxx
  xx2.....2xx
 xx.2xxxxx2.xx
 x..xxd1dxx..x
