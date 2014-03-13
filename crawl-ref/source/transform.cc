@@ -491,7 +491,7 @@ monster_type transform_mons()
     case TRAN_WISP:
         return MONS_INSUBSTANTIAL_WISP;
     case TRAN_SHADOW:
-        return MONS_SHADOW; // XXX: should get its own monster?
+        return MONS_PLAYER_SHADOW;
     case TRAN_BLADE_HANDS:
     case TRAN_APPENDAGE:
     case TRAN_NONE:

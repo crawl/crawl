@@ -1,0 +1,90 @@
+# Changes for 0.15 include glyph colour changes.
+
+###########################
+# monsters
+###########################
+
+mon_glyph += ancient champion : gold z
+mon_glyph += ballistomycete : magenta f
+mon_glyph += bear : lightgrey U
+mon_glyph += black bear : blue U
+mon_glyph += drake : white l
+mon_glyph += death drake : lightgrey l
+mon_glyph += drowned soul : lightcyan p
+mon_glyph += elephant slug : white j
+mon_glyph += felid : blue h
+mon_glyph += fire drake : red l
+mon_glyph += flayed ghost : red p
+mon_glyph += fungus : lightred f
+mon_glyph += ghost : lightgrey p
+mon_glyph += giant firefly : lightblue k
+mon_glyph += giant slug : green j
+mon_glyph += glowing shapeshifter : red @
+mon_glyph += grizzly bear : lightgrey U
+mon_glyph += hell knight : red @
+mon_glyph += hell hound : lightcyan h
+mon_glyph += hellion : fire
+mon_glyph += hog : red h
+mon_glyph += human : lightgrey @
+mon_glyph += hungry ghost : green p
+mon_glyph += hyperactive ballistomycete : lightred f
+mon_glyph += ice beast : white I
+mon_glyph += ironbrand convoker : yellow @
+mon_glyph += ironheart preserver : lightgreen @
+mon_glyph += large simulacrum : ice Z
+mon_glyph += large skeleton : lightgrey Z
+mon_glyph += large zombie : brown Z
+mon_glyph += lindwurm : lightcyan l
+mon_glyph += Killer Klown : black @
+mon_glyph += killer bee : brown k
+mon_glyph += necromancer : white @
+mon_glyph += player ghost : white p
+mon_glyph += polar bear : white U
+mon_glyph += profane servitor : blood
+mon_glyph += phantom : blue p
+mon_glyph += queen bee : yellow k
+mon_glyph += raiju : lightblue h
+mon_glyph += shadow : magenta p
+mon_glyph += shambling mangrove : lightred P
+mon_glyph += shapeshifter : lightred @
+mon_glyph += silent spectre : cyan p
+mon_glyph += simulacrum : ice z
+mon_glyph += skeleton : lightgrey z
+mon_glyph += sky beast : lightcyan I
+mon_glyph += slave : white @
+mon_glyph += small simulacrum : ice z
+mon_glyph += small skeleton : lightgrey z
+mon_glyph += small zombie : brown z
+mon_glyph += spectral thing : green W
+mon_glyph += swamp drake : brown l
+mon_glyph += tengu : lightblue H
+mon_glyph += tengu conjurer : blue H
+mon_glyph += tengu warrior : cyan H
+mon_glyph += tengu reaver : lightmagenta H
+mon_glyph += thorn hunter : white P
+mon_glyph += toadstool : black f
+mon_glyph += vampire mosquito : brown y
+mon_glyph += vault guard : cyan @
+mon_glyph += vault sentinel : lightblue @
+mon_glyph += vault warden : lightred @
+mon_glyph += vine stalker : magenta p
+mon_glyph += wind drake : white l
+mon_glyph += wizard : magenta @
+mon_glyph += zombie : brown z
+
+mon_glyph += Asmodeus : lightred
+mon_glyph += Asterion : fire
+mon_glyph += Eustachio : blue
+mon_glyph += Gastronok : lightred j
+mon_glyph += Kirke : lightgreen
+mon_glyph += Louise : lightmagenta
+mon_glyph += Mennas : silver
+mon_glyph += Natasha : blue h
+mon_glyph += Norris : brown
+mon_glyph += Sojobo : lightgreen H
+
+mon_glyph += sensed monster : lightred
+mon_glyph += trivial sensed monster : lightgray
+mon_glyph += easy sensed monster : gray
+mon_glyph += tough sensed monster : red
+mon_glyph += nasty sensed monster : lightred
