@@ -713,6 +713,7 @@ static bool _box_of_beasts(item_def &box)
         did_god_conduct(DID_CHAOS, random_range(5,10));
         // Decrease charges
         box.plus--;
+        box.plus2++;
         // Let each part announce itself
         for (int n = 0; n < NUM_CHIMERA_HEADS; ++n)
         {
@@ -781,6 +782,7 @@ static bool _sack_of_spiders(item_def &sack)
         xom_is_stimulated(10);
         // Decrease charges
         sack.plus--;
+        sack.plus2++;
     }
     else
         // Failed to create monster for some reason
