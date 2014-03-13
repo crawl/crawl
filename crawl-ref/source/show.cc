@@ -474,8 +474,9 @@ static void _update_monster(monster* mons)
     if (mons->submerged())
         return;
 
+    int range2 = dist_range(player_monster_detect_radius());
     if (mons->constricted_by == MID_PLAYER
-        || player_mutation_level(MUT_ANTENNAE))
+        || (range2 > 1 && (you.pos() - mons->pos()).abs() <= range2))
     {
         _mark_invisible_at(gp);
         return;

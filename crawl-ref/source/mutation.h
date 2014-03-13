@@ -95,7 +95,7 @@ bool temp_mutate(mutation_type which_mut, const string &reason);
 int how_mutated(bool all = false, bool levels = false);
 
 void check_demonic_guardian();
-void check_antennae_detect();
+void check_monster_detect();
 int handle_pbd_corpses();
 equipment_type beastly_slot(int mut);
 bool physiology_mutation_conflict(mutation_type mutat);

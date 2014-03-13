@@ -2596,18 +2596,15 @@ void check_demonic_guardian()
     }
 }
 
-void check_antennae_detect()
+/**
+ * Update the map knowledge based on any monster detection sources the player
+ * has.
+ */
+void check_monster_detect()
 {
-    int radius = player_mutation_level(MUT_ANTENNAE) * 2;
-
-    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
-        radius = max(radius, 4);
-    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
-        radius = max(radius, you.piety / 20);
+    int radius = player_monster_detect_radius();
     if (radius <= 0)
         return;
-    radius = min(radius, LOS_RADIUS);
-
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
         discover_mimic(*ri, false);
