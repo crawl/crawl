@@ -3397,7 +3397,10 @@ static void _player_reacts()
         xom_tick();
 }
 
-// Ran after monsters and clouds get to act.
+
+/**
+ * Player reactions after monster and cloud activities in the turn are finished.
+ */
 static void _player_reacts_to_monsters()
 {
     // In case Maurice managed to steal a needed item for example.
@@ -3407,13 +3410,7 @@ static void _player_reacts_to_monsters()
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
 
-    // penance checked there (as you can have antennae too)
-    if (player_mutation_level(MUT_ANTENNAE)
-        || you.religion == GOD_ASHENZARI
-        || player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
-    {
-        check_antennae_detect();
-    }
+    check_monster_detect();
 
     if ((you_worship(GOD_ASHENZARI) && !player_under_penance())
         || you.mutation[MUT_JELLY_GROWTH])

@@ -8171,3 +8171,18 @@ void count_action(caction_type type, int subtype)
         you.action_count[pair].init(0);
     you.action_count[pair][you.experience_level - 1]++;
 }
+
+/**
+ *   The player's radius of monster detection.
+ *   @returns  the radius in which a player can detect monsters.
+**/
+int player_monster_detect_radius()
+{
+    int radius = player_mutation_level(MUT_ANTENNAE) * 2;
+
+    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
+        radius = max(radius, 4);
+    if (you_worship(GOD_ASHENZARI) && !player_under_penance())
+        radius = max(radius, you.piety / 20);
+    return min(radius, LOS_RADIUS);
+}
