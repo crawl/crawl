@@ -265,6 +265,11 @@ enum zombie_size_type
     Z_BIG,
 };
 
+/**
+ * Monster body shapes. Set for each monster in the monster definitions of
+ * mon-data.h, the monster's shape affects various casting and melee attack
+ * messages.
+ */
 enum mon_body_shape
 {
     MON_SHAPE_HUMANOID,

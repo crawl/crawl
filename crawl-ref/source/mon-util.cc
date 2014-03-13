@@ -4435,6 +4435,11 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
     }
 }
 
+/**
+ * Get the monster body shape of the given monster.
+ * @param mon  The monster in question.
+ * @returns    The mon_body_shape type of this monster.
+ */
 mon_body_shape get_mon_shape(const monster* mon)
 {
     if (mons_is_pghost(mon->type))
@@ -4445,6 +4450,11 @@ mon_body_shape get_mon_shape(const monster* mon)
         return get_mon_shape(mon->type);
 }
 
+/**
+ * Get the monster body shape of the given monster type.
+ * @param mon  The monster type in question.
+ * @returns    The mon_body_shape type of this monster type.
+ */
 mon_body_shape get_mon_shape(const monster_type mc)
 {
     if (mc == MONS_CHAOS_SPAWN)
@@ -4454,6 +4464,11 @@ mon_body_shape get_mon_shape(const monster_type mc)
     return smc->shape;
 }
 
+/**
+ * Get a DB lookup string for the given monster body shape.
+ * @param mon  The monster body shape type in question.
+ * @returns    A DB lookup string for the monster body shape.
+ */
 string get_mon_shape_str(const mon_body_shape shape)
 {
     ASSERT_RANGE(shape, MON_SHAPE_HUMANOID, MON_SHAPE_MISC + 1);
