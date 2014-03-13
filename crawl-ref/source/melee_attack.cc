@@ -2852,20 +2852,6 @@ void melee_attack::chaos_affects_attacker()
         DID_AFFECT();
     }
 
-    // Dump attacker or items under attacker to another level.
-    if (is_valid_shaft_level()
-        && (attacker->will_trigger_shaft()
-            || igrd(attack_position) != NON_ITEM)
-        && one_chance_in(1000))
-    {
-        (void) attacker->do_shaft();
-#ifdef NOTE_DEBUG_CHAOS_EFFECTS
-        take_note(Note(NOTE_MESSAGE, 0, 0,
-                       "CHAOS affects attacker: shaft effect"), true);
-#endif
-        DID_AFFECT();
-    }
-
     // Create a colourful cloud.
     if (weapon && one_chance_in(1000))
     {
@@ -2909,27 +2895,6 @@ void melee_attack::chaos_affects_attacker()
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
             take_note(Note(NOTE_MESSAGE, 0, 0,
                            "CHAOS affects attacker: noise"), true);
-#endif
-            DID_AFFECT();
-        }
-    }
-
-    if (attacker->is_player() && !you.form && one_chance_in(500))
-    {
-        // Non-weapon using forms are uncool here: you'd need to run away
-        // instead of continuing the fight.
-        transformation_type form = coinflip() ? TRAN_TREE : TRAN_APPENDAGE;
-        // Waiting it off is boring.
-        if (form == TRAN_TREE && !there_are_monsters_nearby(true, false, false))
-            form = TRAN_APPENDAGE;
-        if (one_chance_in(5))
-            form = coinflip() ? TRAN_STATUE : TRAN_LICH;
-        if (transform(0, form, true))
-        {
-#ifdef NOTE_DEBUG_CHAOS_EFFECTS
-            take_note(Note(NOTE_MESSAGE, 0, 0,
-                           (string("CHAOS affects attacker: transform into ")
-                           + transform_name(form)).c_str()), true);
 #endif
             DID_AFFECT();
         }
