@@ -4901,7 +4901,7 @@ void activate_ballistomycetes(monster* mons, const coord_def& origin,
             // are moving from 0 to 1.
             if (spawner->number == 1)
             {
-                spawner->colour = RED;
+                spawner->colour = LIGHTMAGENTA;
                 // Reset the spore production timer.
                 spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
                 spawner->add_ench(ENCH_SPORE_PRODUCTION);
