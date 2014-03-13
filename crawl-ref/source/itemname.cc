@@ -1731,6 +1731,13 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
 
                 buff << "}";
             }
+            else if ((item_typ == MISC_BOX_OF_BEASTS
+                      || item_typ == MISC_SACK_OF_SPIDERS)
+                     && item_plus2 > 0
+                     && !dbname)
+            {
+                buff << " {used: " << item_plus2 << "}";
+            }
             else if (is_xp_evoker(*this) && !evoker_is_charged(*this)
                      && !dbname)
             {
