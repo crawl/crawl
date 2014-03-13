@@ -5102,7 +5102,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     if (player_res_poison() < 0)
         amount *= 2;
 
-    you.duration[DUR_POISONING] += amount * 100;
+    you.duration[DUR_POISONING] += amount * 1000;
 
     if (you.duration[DUR_POISONING] > old_value)
     {
@@ -5133,9 +5133,9 @@ int get_player_poisoning()
         // Approximate the effect of damage shaving by giving the first
         // 20 points of poison damage for 'free'
         if (you.species == SP_DEEP_DWARF)
-            return max(0, (you.duration[DUR_POISONING] / 100) - 20);
+            return max(0, (you.duration[DUR_POISONING] / 1000) - 20);
         else
-            return you.duration[DUR_POISONING] / 100;
+            return you.duration[DUR_POISONING] / 1000;
     }
     else
         return 0;
@@ -5143,8 +5143,8 @@ int get_player_poisoning()
 
 void handle_player_poison(int delay)
 {
-    int decrease = min(1000, max(25, you.duration[DUR_POISONING] / 15
-                                     * delay / BASELINE_DELAY));
+    int decrease = min(10000, max(250, you.duration[DUR_POISONING] / 15
+                                       * delay / BASELINE_DELAY));
 
     // If Cheibriados has slowed your life processes, poison affects you less
     // quickly (you take the same total damage, but spread out over a longer
@@ -5164,14 +5164,14 @@ void handle_player_poison(int delay)
     // Other sources of immunity (Zin, staff of Olgreb) let poison dissipate.
     bool do_dmg = (player_res_poison() >= 3 ? false : true);
 
-    int dmg = (you.duration[DUR_POISONING] / 100)
-               - ((you.duration[DUR_POISONING] - decrease) / 100);
+    int dmg = (you.duration[DUR_POISONING] / 1000)
+               - ((you.duration[DUR_POISONING] - decrease) / 1000);
 
     // Approximate damage shaving by pretending that we have less poison in
     // our system than we actually do (and downscaling damage proportionally)
     if (you.species == SP_DEEP_DWARF)
     {
-       dmg = div_rand_round((you.duration[DUR_POISONING] - 2000) * dmg,
+       dmg = div_rand_round((you.duration[DUR_POISONING] - 20000) * dmg,
                              you.duration[DUR_POISONING]);
 
        if (dmg < 1)
@@ -5212,7 +5212,7 @@ void reduce_player_poison(int amount)
     you.duration[DUR_POISONING] -= amount;
 
     // Less than 1 point of damage remaining, so just end the poison
-    if (you.duration[DUR_POISONING] < 100)
+    if (you.duration[DUR_POISONING] < 1000)
         you.duration[DUR_POISONING] = 0;
 
     if (you.duration[DUR_POISONING] <= 0)
