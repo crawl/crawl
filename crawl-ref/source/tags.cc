@@ -5099,6 +5099,9 @@ static void unmarshallSpells(reader &th, monster_spells &spells)
 
         if (spells[j] == SPELL_FAKE_RAKSHASA_SUMMON)
             spells[j] = SPELL_PHANTOM_MIRROR;
+
+        if (spells[j] == SPELL_SUNRAY)
+            spells[j] = SPELL_STONE_ARROW;
 #endif
     }
 }
