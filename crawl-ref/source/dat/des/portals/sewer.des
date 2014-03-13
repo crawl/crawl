@@ -245,6 +245,7 @@ MAP
 ENDMAP
 
 NAME: lightli_sewer_entry_pipes
+TAGS: mini_float
 NSUBST: o = 1:O / *:W
 SUBST: W = WWWWW1
 MONS: green rat / adder / rat / worm

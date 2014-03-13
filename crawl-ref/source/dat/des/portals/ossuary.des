@@ -264,7 +264,7 @@ MAP
 ENDMAP
 
 NAME: lightli_ossuary_entry_decrepit_ruins
-TAGS: ruin
+TAGS: transparent ruin
 NSUBST: a = 1:' / *:c
 : ossuary_portal(_G)
 MAP
@@ -275,6 +275,7 @@ c'''''c
 c'''''c
 cc'''cc
 Gcc'ccG
+   @
 ENDMAP
 
 #### The portal vaults ####################################

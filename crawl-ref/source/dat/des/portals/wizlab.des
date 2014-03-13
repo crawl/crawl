@@ -689,7 +689,7 @@ COLOUR: . = magenta
 FTILE: . = floor_rough_magenta
 : wizlab_portal(_G)
 MAP
-bmm...mmb
+bmm.@.mmb
 m.......m
 m.bmmmb.m
 m.bGOGb.m
