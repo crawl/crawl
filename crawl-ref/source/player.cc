@@ -1963,24 +1963,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     return rp;
 }
 
-static int _maybe_reduce_poison(int amount)
-{
-    int rp = player_res_poison(true, true, true);
-
-    if (rp <= 0)
-        return amount;
-
-    int reduction = binomial_generator(amount, 90);
-    int new_amount = amount - reduction;
-
-    if (amount != new_amount)
-        dprf("Poison reduced (%d -> %d)", amount, new_amount);
-    else
-        dprf("Poison not reduced (%d)", amount);
-
-    return new_amount;
-}
-
 int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
 {
     int rsf = 0;
@@ -5057,11 +5039,13 @@ bool curare_hits_player(int death_source, string name, string source_name)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_poison() >= 3)
+    if (player_res_poison() >= 3
+        || player_res_poison() > 0 && !one_chance_in(5))
+    {
         return false;
+    }
 
-    if (!poison_player(roll_dice(2, 11), source_name, name))
-        return false;
+    poison_player(roll_dice(2, 11), source_name, name);
 
     int hurted = 0;
 
@@ -5109,8 +5093,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         dprf("Cannot poison, you are immune!");
         return false;
     }
-
-    if (!force && !(amount = _maybe_reduce_poison(amount)))
+    else if (!force && player_res_poison() > 0 && !one_chance_in(10))
         return false;
 
     const int old_value = you.duration[DUR_POISONING];
