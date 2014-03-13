@@ -70,7 +70,7 @@
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
 static bool _slime_split_merge(monster* thing);
-static bool _do_throw(actor *thrower, actor *victim, int radius, int pow);
+static bool _do_throw(actor *thrower, actor *victim, int range, int pow);
 template<typename valid_T, typename connect_T>
 static void _search_dungeon(const coord_def & start,
                     valid_T & valid_target,
@@ -5052,17 +5052,29 @@ void guardian_golem_bond(monster* mons)
     }
 }
 
-static bool _do_throw(actor *thrower, actor *victim, int radius, int pow)
+/**
+ * The actor throws the victim to a habitable square within a given max range
+ * and at least as far as a range of 3 from the thrower, which deals AC-checking
+ * damage. This prefers to throw the victim into a hard feature for a 50% damage
+ * increase.
+ * @param thrower  The thrower.
+ * @param victim   The victim.
+ * @param range    The max range in which the victim can be thrown.
+ * @param pow      The throw power, which is the die size for damage.
+ * @returns        True if the victim was thrown, False otherwise.
+ */
+static bool _do_throw(actor *thrower, actor *victim, int range, int pow)
 {
 
     vector<coord_def> floor_sites;
     vector<coord_def> feat_floor_sites;
     vector<coord_def> feat_sites;
+    int min_range2 = dist_range(3);
 
-    ASSERT(radius <= LOS_RADIUS);
-    for (distance_iterator di(thrower->pos(), false, true, radius); di; ++di)
+    ASSERT(range <= LOS_RADIUS);
+    for (distance_iterator di(thrower->pos(), false, true, range); di; ++di)
     {
-        if (thrower->pos().distance_from(*di) < 3)
+        if ((thrower->pos() - *di).abs() < min_range2)
             continue;
         ray_def ray;
         if (victim->is_habitable(*di)
