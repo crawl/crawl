@@ -62,6 +62,8 @@ Character
 * Merfolk can now be mesmerised by mermaids and sirens.
 * Artificers, Wanderers, Assassins, and Venom Mages no longer start with
   knowledge of potions and scrolls they don't possess.
+* Fighters and Gladiators start with higher-tier weapons.
+* Fighers start with a potion of might.
 
 Monsters
 --------
@@ -280,6 +282,8 @@ Items
     - Small race hunters and arcane marksmen may select tomahawks.
 * New "potion of lignification" - induces tree form.
 * Small races can use throwing nets.
+* Throwing nets do not degrade: instead, they have a chance to be destroyed
+  like other projectiles.
 * Multiple changes to unrandarts:
     - Piercer gets the penetration brand (was vorpal).
     - Boots of the Assassin return in a new form: they now detect monsters and
@@ -441,6 +445,7 @@ Interface
   available outside of arena mode as view_delay.
 * Monsters get invisible monster indicators for one turn after they become
   invisible to the player.
+* The shop screen layout has been revised.
 
 Stone Soup 0.13 (20131011)
 --------------------------
