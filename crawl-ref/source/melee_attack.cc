@@ -5283,9 +5283,6 @@ bool melee_attack::do_knockback(bool trample)
 {
     do
     {
-        if (defender->is_player() && player_equip_unrand(UNRAND_SPIDER))
-            return false;
-
         if (defender->is_stationary())
             return false; // don't even print a message
 
