@@ -1594,3 +1594,36 @@ cwwwww...wwwwwcwwwww...wwwwwc
 cwwwwww.wwwwwwcwwwwww.wwwwwwc
 ccccccccccccccccccccccccccccc
 ENDMAP
+
+NAME:   kennysheep_large_spiral
+TAGS:   no_trap_gen no_item_gen
+ORIENT: northwest
+DEPTH:  D:15-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G, true)
+MAP
+ccccccccccccccccccccccccc
+cwwwwwwwwwwwwwwwwwwwwwwwc
+cwt9.................*twc
+cw*xxxxxxxxxxxxxxxxxxx9wc
+cw.xcccccccccccccccccx.wc
+cw.xcwwwwwwwwwwwwwwwcx.wc
+cw.xcwt9.........*twcx.wc
+cw.xcw*xxxxxxxxxxx9wcx.wc
+cw.xcw.xcccccccccx.wcx.wc
+cw.xcw.xcwwwwwwwcx.wcx.wc
+cw.xcw.xcwt888twcx.wcx.wc
+cw.xcw.xcw.xxx|wcx.wcx.wc
+cw.xcw.xcw.xcx|wcx.wcx.wc
+cw.xcw.xcw.xcx|wcx.wcx.wc
+cw.xcw.xcw.xcx|wcx.wcx.wc
+cw.xcw.xcw.xcxwwcx.wcx.wc
+cw.xcw.xcw.xcccccx.wcx.wc
+cw.xcw.xcw9xxxxxxx*wcx.wc
+cw.xcw.xcwt*.....9twcx.wc
+cw.xcw.xcwwwwwwwwwwwcx.wc
+cw.xcw.xcccccccccccccx.wc
+cw.xcw*xxxxxxxxxxxxxxx*wc
+cw.xcwt9.............9twc
+cw.xcwwwwwwwwwwwwwwwwwwwc
+cw@xccccccccccccccccccccc
+ENDMAP

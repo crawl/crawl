@@ -16,17 +16,9 @@
 # or very generic monsters, opt for <3>, otherwise use <2>.
 ###############################################################################
 
-# Functionality for some of HangedMan's decor vaults.
-{{
-function init_hm_decor_walldepth(e, variables)
-local a = you.absdepth() * 5
-  if a - 75 > 0 then
-    e.subst(variables .. " : x:50 c:" .. a .. " b:" .. a - 75)
-  else
-    e.subst(variables .. " : x:50 c:" .. a)
-  end
-end
+: require('dlua/vault.lua')
 
+{{
 function init_protected_by_tso(e)
   e.tags('uniq_protected_by_tso')
   e.colour('- : yellow')
@@ -5657,6 +5649,30 @@ ENDMAP
 
 ###############################################################################
 
+NAME:   cheibrodos_orc_bank
+TAGS:   no_item_gen no_monster_gen
+DEPTH:  Orc:1-3, D:10-14
+ORIENT: float
+MONS:   orc, orc warrior, orc knight, hobgoblin
+KITEM:  $ = $ no_pickup
+SUBST:  ? = $., " = .14
+MAP
+cccccccccccccccc
+cccccccccccc???c
+cc22+.....3+???c
+cc..cccccccc???c
+cc..cccccccc???c
+cc..c......c???c
+cc..+......c???c
+ccccc1.1.1.c???c
+cccccmmmmm+ccccc
+    c""""""c
+    c""""""c
+    c""""""c
+    cc+cc+cc
+    ...@....
+ENDMAP
+
 NAME:   cheibrodos_leafed_vault
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:14-16, Depths:1-5
@@ -5922,4 +5938,107 @@ x...%...x...%...x...%...x
 xx.....xxx.....xxx.....xx
  xx...xxxxx...xxxxx...xx
   xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   kennysheep_big_flooded_room
+ORIENT: float
+DEPTH:  D:2-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+     ccccFFcccc
+    ccwwwHHwwwcc
+   ccwwwwHHwwwwcc
+  ccwwwwwHHwwwwwcc
+ ccwwwwwwHHwwwwwwcc
+ccwwwwwwwHHwwwwwwwcc
+cwwwwwwwwHHwwwwwwwwc
+cwwwwwwwwHHwwwwwwwwc
+cwwwwwwwt.9twwwwwwwc
++........xx*EEEEEEED
++........xx*EEEEEEED
+cwwwwwwwt.9twwwwwwwc
+cwwwwwwwwHHwwwwwwwwc
+cwwwwwwwwHHwwwwwwwwc
+ccwwwwwwwHHwwwwwwwcc
+ ccwwwwwwHHwwwwwwcc
+  ccwwwwwHHwwwwwcc
+   ccwwwwHHwwwwcc
+    ccwwwHHwwwcc
+     ccccFFcccc
+ENDMAP
+
+NAME:   kennysheep_cluttered_fort
+ORIENT: float
+DEPTH:  D:15-, Depths, !D:$, !Depths:$
+NSUBST: % : 1:|
+SUBST:  % = *
+SUBST:  9 = 9900.
+: ks_random_setup(_G)
+MAP
+      cccFFFccc
+     ccwwHHHwwcc
+    ccwwx...xwwcc
+   ccwwx.x.x.xwwcc
+  ccwwx...x...xwwcc
+ ccwwx.x.xtx.x.xwwcc
+ccwwx...x...x...xwwcc
+cwwx.x.x.cFc.x.x.xwwc
+cwx...x.cc9cc.x...xwc
++..x.x.cc.%.cc.x.x.ED
++...xt.D9%%%9+.tx..ED
++..x.x.cc.%.cc.x.x.ED
+cwx...x.cc9cc.x...xwc
+cwwx.x.x.cFc.x.x.xwwc
+ccwwx...x...x...xwwcc
+ ccwwx.x.xtx.x.xwwcc
+  ccwwx...x...xwwcc
+   ccwwx.x.x.xwwcc
+    ccwwx...xwwcc
+     ccwwHHHwwcc
+      cccFFFccc
+ENDMAP
+
+NAME:   kennysheep_bubble_arena
+TAGS:   no_item_gen no_trap_gen
+ORIENT: float
+DEPTH:  D:15-, Depths, !D:$, !Depths:$
+NSUBST: % = 5:|
+SUBST:  % : %$
+: ks_random_setup(_G, true)
+MAP
+    ccccccccc
+   ccwwwwwwwcc
+  ccww.....wwcc
+ ccwwt.....twwcc
+ccww.........wwcc
+cww....xtx....wwc
+cwt....8x8....twc
+cw...x9x%x9x...wc
+cw...tx%%%xt...wc
+cw...x%x%x%x...wc
+cwt....%x%....twc
+cww....xtx....wwc
+ccww.........wwcc
+ ccwwt.....twwcc
+  ccww.....wwcc
+   ccw.....wcc
+    cc+++++cc
+   ccw.....wcc
+  ccww.9.9.wwcc
+  cww...x...wwc
+  cwt..%x%..twc
+  cw...xtx...wc
+  cwt..%x%..twc
+  cww...x...wwc
+  ccww.....wwcc
+   ccww...wwcc
+    ccc+++ccc
+     cc...cc
+    ccw.9.wcc
+    cww...wwc
+    cwt...twc
+    cww...wwc
+    ccw...wcc
+     cc...cc
+      c+++c
 ENDMAP
