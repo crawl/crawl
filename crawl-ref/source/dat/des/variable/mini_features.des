@@ -20,17 +20,7 @@
 # For serial vaults, read dat/des/serial/serial_guide.txt.
 ############################################################################
 
-# Functionality for some of HangedMan's decor vaults.
-{{
-function init_hm_decor_walldepth(e, variables)
-local a = you.absdepth() * 5
-  if a - 75 > 0 then
-    e.subst(variables .. " : x:50 c:" .. a .. " b:" .. a - 75)
-  else
-    e.subst(variables .. " : x:50 c:" .. a)
-  end
-end
-}}
+: require('dlua/vault.lua')
 
 default-depth: D, Depths, Elf, Crypt
 
@@ -2301,6 +2291,342 @@ MAP
 .........................
 ENDMAP
 
+####
+
+NAME:  kennysheep_path_1
+TAGS:  extra decor
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+cccccccFccccccc
+cwwwwwwHwwwwwwc
+cw...........wc
+cw...........wc
+cw..txxxxxt..wc
+cw..xxcccxx..wc
+cw..xcc ccx..wc
++...xc   cx..ED
+cw..xcc ccx..wc
+cw..xxcccxx..wc
+cw..txxxxxt..wc
+cw...........wc
+cw...........wc
+cwwwwwwHwwwwwwc
+cccccccFccccccc
+ENDMAP
+
+NAME:  kennysheep_flooded_box
+TAGS:  extra decor
+DEPTH: D, Depths
+SUBST: B : Bt
+: ks_random_setup(_G)
+MAP
+ cccDccc
+ccwwEwwcc
+cwwwEwwwc
+cwwwEwwwc
+FHHHBHHHF
+cwww.wwwc
+cwww.wwwc
+ccww.wwcc
+ ccc+ccc
+ENDMAP
+
+NAME:  kennysheep_pointless_box
+TAGS:  extra decor
+DEPTH: D, Depths
+: ks_random_setup(_G)
+MAP
+FccccccccccD
+cHwwwwwwwwEc
+cw........wc
+cw.txxxxt.wc
+cw.xxxxxx.wc
+cw.xxccxx.wc
+cw.xxccxx.wc
+cw.xxxxxx.wc
+cw.txxxxt.wc
+cw........wc
+c.wwwwwwwwHc
++ccccccccccF
+ENDMAP
+
+NAME:  kennysheep_minor_cross
+TAGS:  extra decor
+DEPTH: D, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+     cccDccc
+     cwwEwwc
+     cw...wc
+     cw...wc
+     cw...wc
+ccccccwx.xwcccccc
+cwwwwwwx.xwwwwwwc
+cw...xxt.txx...wc
+FH.............HF
+cw...xxt.txx...wc
+cwwwwwwx.xwwwwwwc
+ccccccwx.xwcccccc
+     cw...wc
+     cw...wc
+     cw...wc
+     cww.wwc
+     ccc+ccc
+ENDMAP
+
+NAME:  kennysheep_another_room
+TAGS:  extra decor
+DEPTH: D, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+ ccccDccc
+ccwwwEwwcc
+cww....wwc
+cw..xt..wc
+FH.txxx.wc
+cw.xxxt.HF
+cw..tx..wc
+cww....wwc
+ccww.wwwcc
+ ccc+cccc
+ENDMAP
+
+NAME:  kennysheep_nondescript
+TAGS:  extra decor
+DEPTH: D, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+  ccDc
+cFctEc
+c...wc
+c.wwwc
+c.wccc
+c+cc
+ENDMAP
+
+NAME:  kennysheep_big_empty_room
+TAGS:  extra decor
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+     ccccFFcccc
+    ccwwwHHwwwcc
+   ccww......wwcc
+  ccww........wwcc
+ ccww..........wwcc
+ccww............wwcc
+cww....wwwwww....wwc
+cw....wtxxxxtw....wc
+cw....wxxxxxxw....wc
++.....wxxxxxxw....ED
++.....wxxxxxxw....ED
+cw....wxxxxxxw....wc
+cw....wtxxxxtw....wc
+cww....wwwwww....wwc
+ccww............wwcc
+ ccww..........wwcc
+  ccww........wwcc
+   ccww......wwcc
+    ccwwwHHwwwcc
+     ccccFFcccc
+ENDMAP
+
+NAME:  kennysheep_cross_room
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+TAGS:  extra decor
+: ks_random_setup(_G)
+MAP
+     ccccFFcccc
+    ccwwwHHwwwcc
+   ccww......wwcc
+  ccww...xx...wwcc
+ ccww....xx....wwcc
+ccww.....xx.....wwcc
+cww......xx......wwc
+cw......xxxx......wc
+cw.....xtxxtx.....wc
++..xxxxxxxxxxxxxx.ED
++..xxxxxxxxxxxxxx.ED
+cw.....xtxxtx.....wc
+cw......xxxx......wc
+cww......xx......wwc
+ccww.....xx.....wwcc
+ ccww....xx....wwcc
+  ccww...xx...wwcc
+   ccww......wwcc
+    ccwwwHHwwwcc
+     ccccFFcccc
+ENDMAP
+
+NAME:  kennysheep_cluttered_room
+TAGS:  extra decor
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+      cccFFFccc
+     ccwwHHHwwcc
+    ccwwx...xwwcc
+   ccwwx.x.x.xwwcc
+  ccwwx...x...xwwcc
+ ccwwx.x.x.x.x.xwwcc
+ccwwx...x.t.x...xwwcc
+cwwx.x.x.x.x.x.x.xwwc
+cwx...x...x...x...xwc
++..x.x.x.x.x.x.x.x.ED
++...x.t.x.t.x.t.x..ED
++..x.x.x.x.x.x.x.x.ED
+cwx...x...x...x...xwc
+cwwx.x.x.x.x.x.x.xwwc
+ccwwx...x.t.x...xwwcc
+ ccwwx.x.x.x.x.xwwcc
+  ccwwx...x...xwwcc
+   ccwwx.x.x.xwwcc
+    ccwwx...xwwcc
+     ccwwHHHwwcc
+      cccFFFccc
+ENDMAP
+
+NAME:  kennysheep_cross_bottleneck
+TAGS:  extra decor
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+        cFFFc
+        cHHHc
+        cw.wc
+        cw.wc
+        cw.wc
+        cw.wc
+        cw.wc
+        cw.wc
+cccccccccx.xccccccccc
++.wwwwwwxx.xxwwwwwwED
++.........t........ED
++.wwwwwwxx.xxwwwwwwED
+cccccccccx.xccccccccc
+        cw.wc
+        cw.wc
+        cw.wc
+        cw.wc
+        cw.wc
+        cw.wc
+        cHHHc
+        cFFFc
+ENDMAP
+
+NAME:  kennysheep_donut
+TAGS:  extra decor
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+      cccFFFccc
+     cct.....tcc
+    cc.........cc
+   cc...........cc
+  cc...wwwxwww...cc
+ cc...wwxxxxxww...cc
+cc...wwxxcccxxww...cc
+ct..wwxxcc ccxxww..tc
+c...wxxcc   ccxxw...c
++...wxcc     ccxw...D
++...xxc       cxx...D
++...wxcc     ccxw...D
+c...wxxcc   ccxxw...c
+ct..wwxxcc ccxxww..tc
+cc...wwxxcccxxww...cc
+ cc...wwxxxxxww...cc
+  cc...wwwxwww...cc
+   cc...........cc
+    cc.........cc
+     cct.....tcc
+      cccFFFccc
+ENDMAP
+
+NAME:  kennysheep_nub
+TAGS:  extra decor
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G, true)
+MAP
+  ccccc
+ ccxxxcc
+ccwwtwwcc
+cww...wwc
+cw.....wc
+c@.....@c
+ENDMAP
+
+NAME:  kennysheep_crisscross
+TAGS:  extra decor
+DEPTH: D, Depths
+: ks_random_setup(_G, true)
+MAP
+ .x.x.x.x.x.x.
+.t...t...t...t.
+x.x.x.x.x.x.x.x
+...t...t...t...
+x.x.x.x.x.x.x.x
+.t...t...t...t.
+x.x.x.x.x.x.x.x
+...t...t...t...
+x.x.x.x.x.x.x.x
+.t...t...t...t.
+x.x.x.x.x.x.x.x
+...t...t...t...
+x.x.x.x.x.x.x.x
+.t...t...t...t.
+ .x.x.x.x.x.x.
+ENDMAP
+
+NAME:  kennysheep_doodads
+TAGS:  extra decor
+DEPTH: D, Depths
+: ks_random_setup(_G, true)
+MAP
+      .x.
+    ..xtx..
+   .x..x..x.
+ ..xtx...xtx..
+.x..x..x..x..x.
+xtx...xtx...xtx
+.x..x..x..x..x.
+...xtx...xtx...
+.x..x..x..x..x.
+xtx...xtx...xtx
+.x..x..x..x..x.
+ ..xtx...xtx..
+   .x..x..x.
+    ..xtx..
+      .x.
+ENDMAP
+
+NAME:  kennysheep_decorative_pillar
+TAGS:  extra decor transparent
+DEPTH: D, Depths, !D:$, !Depths:$
+: ks_random_setup(_G, true)
+MAP
+     ...xtx....
+    .....x......
+   ..............
+  ..x..........x..
+ ..xx..........xx..
+....................
+.......wwwwww.......
+......wwccccww......
+......wccccccw.....x
+x.....wccccccw....xt
+tx....wccccccw.....x
+x.....wccccccw......
+......wwccccww......
+.......wwwwww.......
+....................
+ ..xx..........xx..
+  ..x..........x..
+   ..............
+    ......x.....
+     ....xtx...
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -2941,6 +3267,72 @@ xxG.......Gxx
   xxG...Gxx
    xxG.Gxx
     xx+xx
+ENDMAP
+
+NAME:  kennysheep_small_spiral
+TAGS:  extra decor
+DEPTH: D, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+ccccccccccFcc
+cwwwwwwwwwHwc
++..........wc
+cwxxxxxxxx.wc
+cw.......x.wc
+cw.xxxxx.x.wc
+cw.x..*x.x.wc
+cw.x.xtx.x.wc
+cw.x.xxx.x.wc
+cw.x.....x.wc
+cw.xxxxxxx.wc
+cw.........ED
+cwHwwwwwwwwwc
+ccFcccccccccc
+ENDMAP
+
+####
+# These three vaults possibly place shops, so I consider them as having items.
+NAME:  kennysheep_mini
+TAGS:  extra decor
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+KFEAT: O = any shop
+SUBST: { = {}OCB
+MAP
+cDc
+F{F
+c+c
+ENDMAP
+
+NAME:  kennysheep_mini_moat
+TAGS:  extra decor
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+SUBST: . : @
+KFEAT: O = any shop
+SUBST: { = {}OCB
+MAP
+wwEww
+wcDcw
+HF{FH
+wc+cw
+ww@ww
+ENDMAP
+
+NAME:  kennysheep_little_box
+TAGS:  extra decor
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+KFEAT: O = any shop
+SUBST: { = {}OB....
+MAP
+cccDccc
+cwwEwwc
+cwt.twc
+FH.{.HF
+cwt.twc
+cww.wwc
+ccc+ccc
 ENDMAP
 
 ##########################################################################

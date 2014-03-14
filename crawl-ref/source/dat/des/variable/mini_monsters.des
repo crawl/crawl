@@ -22,17 +22,7 @@
 # best or else delegate to Random or Others. Be picky with Guardians, please.
 ###############################################################################
 
-# Functionality for some of HangedMan's decor vaults.
-{{
-function init_hm_decor_walldepth(e, variables)
-local a = you.absdepth() * 5
-  if a - 75 > 0 then
-    e.subst(variables .. " : x:50 c:" .. a .. " b:" .. a - 75)
-  else
-    e.subst(variables .. " : x:50 c:" .. a)
-  end
-end
-}}
+: require('dlua/vault.lua')
 
 # Functionality for some Grunt vaults.
 {{
@@ -2121,30 +2111,6 @@ MAP
 .x(..............Sx.
 .xxxxxxx..xxxxxxxxx.
 ....................
-ENDMAP
-
-NAME:   cheibrodos_orc_bank
-TAGS:   no_item_gen no_monster_gen
-DEPTH:  Orc:1-3, D:10-14
-ORIENT: float
-MONS:   orc, orc warrior, orc knight, hobgoblin
-KITEM:  $ = $ no_pickup
-SUBST:  ? = $., " = .14
-MAP
-cccccccccccccccc
-cccccccccccc???c
-cc22+.....3+???c
-cc..cccccccc???c
-cc..cccccccc???c
-cc..c......c???c
-cc..+......c???c
-ccccc1.1.1.c???c
-cccccmmmmm+ccccc
-    c""""""c
-    c""""""c
-    c""""""c
-    cc+cc+cc
-    ...@....
 ENDMAP
 
 NAME:  cheibrodos_gnoll_hut
@@ -5008,7 +4974,6 @@ c=nnc
 ENDMAP
 
 NAME:   kennysheep_four_rooms
-ORIENT: float
 TAGS:   no_monster_gen
 DEPTH:  D:12-, Depths
 MAP
@@ -5173,6 +5138,501 @@ x...........x
 xx.........xx
  xxxx...xxxx
     xx+xx
+ENDMAP
+
+NAME:  kennysheep_potato
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+  cccFcccc
+ ccwwHwwwccc
+ccww....wwwcc
+cww.......wwcc
+cw....t....wwc
++....x.xxx..wcc
+cw...x0%0x..wwc
+cw...x%t%x...wc
+cww..x0%0x...wc
+ccw..xxx.x...ED
+ cww....t....wc
+ ccww.......wwc
+  ccwww....wwcc
+   cccwwwHwwcc
+     ccccFccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_2
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+cccccccFccccccc
+cwwwwwwHwwwwwwc
+cwwww.....wwwwc
+cwww.......wwwc
+cww....t....wwc
+cw...xx.xx...wc
+cw...x0%0x...wc
++...t.%t%.t..ED
+cw...x0%0x...wc
+cw...xx.xx...wc
+cww....t....wwc
+cwww.......wwwc
+cwwww.....wwwwc
+cwwwwwwHwwwwwwc
+cccccccFccccccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_3
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+  ccFFcc
+ ccwHHwcc
+ccww..wwcc
+cwwxx.xwwc
++..x0t..ED
++...t0x.ED
+cwwx.xxwwc
+ccww..wwcc
+ ccwHHwcc
+  ccFFcc
+ENDMAP
+
+NAME:  kennysheep_generic_room_4
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+ccccFFcccc
+cwwwHHwwwc
+cwww..wwwc
+cwwxx.xwwc
++..x0t..ED
++...t0x.ED
+cwwx.xxwwc
+cwww..wwwc
+cwwwHHwwwc
+ccccFFcccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_5
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+ccccFFcccc
+cwwwHHwwwc
+cwxx..xxwc
+cwxt0.txwc
++...%%0.ED
++..0%%..ED
+cwxt.0txwc
+cwxx..xxwc
+cwwwHHwwwc
+ccccFFcccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_6
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+ccccFFcccc
+cwwwHHwwwc
+cw.%..0.wc
+cw0txxt%wc
++..xxxx.ED
++..xxxx.ED
+cw%txxt0wc
+cw.0..%.wc
+cwwwHHwwwc
+ccccFFcccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_7
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+ccccFFcccc
+cwwwHHwwwc
+cw....0.wc
+cw0txx..wc
++..x%%x.ED
++..x%%x.ED
+cw..xxt0wc
+cw.0....wc
+cwwwHHwwwc
+ccccFFcccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_8
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+ccccFcccc
+cwwwHwwwc
+cww...wwc
+cw.0x%.wc
++..xxx.ED
+cw.%x0.wc
+cww...wwc
+cwwwHwwwc
+ccccFcccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_9
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+ccccFcccc
+cwwwHwwwc
+cwxx.xxwc
+cwx0x%xwc
++..xtx.ED
+cwx%x0xwc
+cwxx.xxwc
+cwwwHwwwc
+ccccFcccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_10
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+ccccFcccc
+cwwwHwwwc
+cw..t..wc
+cw.x0x.wc
++.t%x%tED
+cw.x0x.wc
+cw..t..wc
+cwwwHwwwc
+ccccFcccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_11
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+ccccFcccc
+cwwwHwwwc
+cw..0..wc
+cw.xxx.wc
++..txt.ED
+cw.xxx.wc
+cw..0..wc
+cwwwHwwwc
+ccccFcccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_12
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+cccFFccc
+cwwHHwwc
+cwx.xxwc
++.x0t.ED
++..t0xED
+cwxx.xwc
+cwwHHwwc
+cccFFccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_13
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+cccFccc
+cww.wwc
+cw%x0wc
++.xtxED
+cw0x%wc
+cww.wwc
+cccFccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_14
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+cccFcc
+cwwHwc
++.t0wc
+cw0tED
+cwHwwc
+ccFccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_15
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+cccFFccc
+cwwHHwwc
+cwt.0twc
++..xx.ED
++..xx.ED
+cwt0.twc
+cwwHHwwc
+cccFFccc
+ENDMAP
+
+NAME:  kennysheep_generic_room_16
+DEPTH: D:2-, Depths, !D:$, !Depths:$
+SUBST: % = %.
+SUBST: 0 = 0.
+: ks_random_setup(_G)
+MAP
+cccccccFccccccc
+cwwwwwwHwwwwwwc
+cw...........wc
+cw...........wc
+cw...xxxxx...wc
+cw...0%x%0...wc
+cw.....x.....wc
++..xxxxtxxxx.ED
+cw...0%x%0...wc
+cw.....x.....wc
+cw...xxxxx...wc
+cw...........wc
+cw...........wc
+cwwwwwwHwwwwwwc
+cccccccFccccccc
+ENDMAP
+
+NAME:  kennysheep_small_circle
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+: if crawl.coinflip() then
+SUBST: * : %
+SUBST: % = %$..
+: else
+SUBST: * : .
+SUBST: % : {}OB
+KFEAT: O = any shop
+: end
+SUBST: 0 = 0.
+MAP
+  ccDcc
+ cwEwcc
+ccww0wwcc
+cwwt*twwc
+FH0*%*0HF
+cwwt*twwc
+ccww0wwcc
+ ccw.wcc
+  cc+cc
+ENDMAP
+
+NAME:  kennysheep_small_square
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+: if crawl.coinflip() then
+SUBST: * : %
+SUBST: % = %$..
+: else
+SUBST: * : .
+SUBST: % : {}O
+KFEAT: O = any shop
+: end
+SUBST: 0 = 0.
+MAP
+ccccDcccc
+cwwwEwwwc
+cwt.0.twc
+cw..*..wc
+FH0*%*0HF
+cw..*..wc
+cwt.0.twc
+cwww.wwwc
+cccc+cccc
+ENDMAP
+
+NAME:   kennysheep_inner_square
+DEPTH:  D:15-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+NSUBST: % : 1:|
+SUBST:  % = *
+SUBST:  9 = 9900.
+MAP
+   ccccDcccc
+  ccwwwEwwwcc
+ ccww..x..wwcc
+ccww..xtx..wwcc
+cww..x.x.x..wwc
+cw..xtx.xtx..wc
+cw.x.x9%9x.x.wc
+FHxtx.%%%.xtxHF
+cw.x.x9%9x.x.wc
+cw..xtx.xtx..wc
+cww..x.x.x..wwc
+ccww..xtx..wwcc
+ ccww..x..wwcc
+  ccwww.wwwcc
+   cccc+cccc
+ENDMAP
+
+NAME:   kennysheep_dice
+SUBST:  % = %$.
+SUBST:  0 = 0.
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+MAP
+ccccccccDDcccccccc
+cwwwwwwwEEwwwwwwwc
+cw..............wc
+cw.txxt....txxt.wc
+cw.xxxx....xxxx.wc
+cw.xxxx....xxxx.wc
+cw.txxt....txxt.wc
+cw.....0..0.....wc
+FH......%%......HF
+FH......%%......HF
+cw.....0..0.....wc
+cw.txxt....txxt.wc
+cw.xxxx....xxxx.wc
+cw.xxxx....xxxx.wc
+cw.txxt....txxt.wc
+cw..............wc
+cwwwwwww..wwwwwwwc
+cccccccc++cccccccc
+ENDMAP
+
+NAME:   kennysheep_two_boxes
+DEPTH:  D:15-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+NSUBST: % : 1:|
+SUBST:  % = *
+SUBST:  9 = 9900.
+MAP
+ccccccDcccccc
+ctwwwwEwwwwtc
+cw.........wc
+cw.xxx.xxx.wc
+cw.xtwEwtx.wc
+cw.xw9%9wx.wc
+FH..H%t%H..HF
+cw.xw9%9wx.wc
+cw.xtw.wtx.wc
+cw.xxx.xxx.wc
+cw.........wc
+ctwwww.wwwwtc
+cccccc+cccccc
+ENDMAP
+
+NAME:  kennysheep_diamond
+TAGS:  extra
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+: if crawl.coinflip() then
+SUBST: * : %
+SUBST: % = %$..
+: else
+SUBST: * : .
+SUBST: % : {}OCB
+KFEAT: O = any shop
+: end
+SUBST: 0 = 0.
+MAP
+       ccDcc
+      ccwEwcc
+     ccww.wwcc
+    ccww.t.wwcc
+   ccww.xxx.wwcc
+  ccww.xxtxx.wwcc
+ ccww.xxw.wxx.wwcc
+ccww.xxw.0.wxx.wwcc
+cww.xxw..*..wxx.wwc
+FH.....0*%*0.....HF
+cww.xxw..*..wxx.wwc
+ccww.xxw.0.wxx.wwcc
+ ccww.xxw.wxx.wwcc
+  ccww.xxtxx.wwcc
+   ccww.xxx.wwcc
+    ccww.t.wwcc
+     ccww.wwcc
+      ccw.wcc
+       cc+cc
+ENDMAP
+
+NAME:   kennysheep_windowed_goal
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
+: if crawl.coinflip() then
+SUBST:  O : 0
+: else
+KFEAT:  O = any shop
+SUBST:  } : 0
+: end
+: if crawl.coinflip() then
+SUBST:  w:.
+: else
+SUBST:  t:w
+: end
+: ks_random_setup(_G, true)
+MAP
+  ccccc
+ ccwwwcc
+ccw...wcc
++....}..m@
++..}O...m@
++....}..m@
+ccw...wcc
+ ccwwwcc
+  ccccc
+ENDMAP
+
+NAME:  kennysheep_nondecorative_pillar
+TAGS:  transparent
+DEPTH: Depths:2-, !D:$, !Depths:$
+: ks_random_setup(_G, true)
+MAP
+     ...xtx....
+    .....x......
+   ..............
+  ..x..........x..
+ ..xx..........xx..
+....................
+.......wwwwww.......
+......wwccccww......
+......wcc||ccw.....x
+x.....wc*88*cw....xt
+tx....wc*..*cw.....x
+x.....wcc..ccw......
+......wwc++cww......
+.......ww..ww.......
+....................
+ ..xx..........xx..
+  ..x..........x..
+   ..............
+    ......x.....
+     ....xtx...
 ENDMAP
 
 ################################################################
