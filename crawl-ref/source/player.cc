@@ -5131,9 +5131,9 @@ int get_player_poisoning()
     if (player_res_poison() < 3)
     {
         // Approximate the effect of damage shaving by giving the first
-        // 20 points of poison damage for 'free'
+        // 25 points of poison damage for 'free'
         if (you.species == SP_DEEP_DWARF)
-            return max(0, (you.duration[DUR_POISONING] / 1000) - 20);
+            return max(0, (you.duration[DUR_POISONING] / 1000) - 25);
         else
             return you.duration[DUR_POISONING] / 1000;
     }
@@ -5202,15 +5202,16 @@ void handle_player_poison(int delay)
     int dmg = (you.duration[DUR_POISONING] / 1000)
                - ((you.duration[DUR_POISONING] - decrease) / 1000);
 
-    // Approximate damage shaving by pretending that we have less poison in
-    // our system than we actually do (and downscaling damage proportionally)
-    if (you.species == SP_DEEP_DWARF)
+    // Approximate old damage shaving by giving immunity to small amounts
+    // of poison. Stronger poison will do the same damage as for non-DD
+    // until it goes below the threshold, which is a bit weird, but
+    // so is damage shaving.
+    if (you.species == SP_DEEP_DWARF && you.duration[DUR_POISONING] - decrease < 25000)
     {
-       dmg = div_rand_round((you.duration[DUR_POISONING] - 20000) * dmg,
-                             you.duration[DUR_POISONING]);
-
-       if (dmg < 1)
-           do_dmg = false;
+       dmg = (you.duration[DUR_POISONING] / 1000)
+              - (25000 / 1000);
+       if (dmg < 0)
+           dmg = 0;
     }
 
     msg_channel_type channel = MSGCH_PLAIN;
