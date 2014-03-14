@@ -1290,8 +1290,14 @@ enum dungeon_char_type
 //        array, if you want vault map Lua code to be able to use the
 //        feature, and/or you want to be able to create the feature
 //        using the "create feature by name" wizard command.
+// * Any: if its enumerator comes late in the list (as is likely for new
+//        feature types),_cell_feat_show_colour may need a special case to
+//        allow it to be recoloured.
 // Also take note of MINMOVE and MINSEE above.
 //
+// Various pieces of code depend on the relative order of these enumerators,
+// so there is even more reason (beyond the usual save-compatibility issues)
+// to be careful when moving them around.
 enum dungeon_feature_type
 {
     DNGN_UNSEEN,
@@ -1338,6 +1344,7 @@ enum dungeon_feature_type
     DNGN_FLOOR,
     DNGN_OPEN_DOOR,
 
+    // Nothing after this point will be recoloured in console.
     DNGN_TRAP_MECHANICAL,
     DNGN_TRAP_TELEPORT,
     DNGN_TRAP_SHAFT,
