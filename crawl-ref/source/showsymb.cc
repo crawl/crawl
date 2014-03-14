@@ -35,9 +35,8 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
 
     // These aren't shown mossy/bloody/slimy, nor obey vault recolouring.
     const bool norecolour = feat > DNGN_OPEN_DOOR
-                            && feat != DNGN_STONE_ARCH
                             && feat != DNGN_DRY_FOUNTAIN
-                            && feat != DNGN_EXPIRED_PORTAL
+                            || feat_is_door(feat)
                             // unknown traps won't get here
                             || feat == DNGN_MALIGN_GATEWAY;
 
