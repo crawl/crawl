@@ -2667,7 +2667,7 @@ PLACE:  Depths:$
      local littleweight = 27 - you.absdepth()
      kmons("1 = titan w:" .. bigweight
            .. " / spriggan air mage w:" .. littleweight)
-     kmons("2 = ettin w:" .. 2*bigweight
+     kmons("2 = ettin w:" .. bigweight
            .. " / spriggan berserker w:" .. littleweight)
      kmons("3 = nothing")
      kitem("1 = superb_item")
