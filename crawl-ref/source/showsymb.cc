@@ -33,9 +33,9 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     unsigned short colour = BLACK;
     const feature_def &fdef = get_feature_def(feat);
 
-    // These aren't shown mossy/bloody/slimy, nor obey vault recolouring.
+    // These aren't shown mossy/bloody/slimy in console, nor do they
+    // obey vault recolouring.
     const bool norecolour = feat > DNGN_OPEN_DOOR
-                            && feat != DNGN_DRY_FOUNTAIN
                             || feat_is_door(feat)
                             // unknown traps won't get here
                             || feat == DNGN_MALIGN_GATEWAY;
