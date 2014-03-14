@@ -494,13 +494,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     case MONS_RAKSHASA:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose_weighted(3, WPN_WHIP,
-                                                3, WPN_LONG_SWORD,
-                                                3, WPN_TRIDENT,
-                                                1, WPN_DEMON_WHIP,
-                                                1, WPN_DEMON_BLADE,
-                                                1, WPN_DEMON_TRIDENT,
-                                                0);
+        item.sub_type  = random_choose(WPN_WHIP, WPN_LONG_SWORD,
+                                       WPN_TRIDENT, -1);
         break;
 
     case MONS_ELF:
