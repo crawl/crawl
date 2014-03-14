@@ -224,7 +224,7 @@ end
 -- There are still a few uniques to echo the old set's intent, of course.
 --
 
-function fiery_guardians (e, village)
+function fiery_guardians (e, intelligent, village)
     local humanweight = 5
     if you.branch() == "Lair" then
         humanweight = 4
@@ -233,7 +233,7 @@ function fiery_guardians (e, village)
     local res = "ego:fire_resistance ident:type"
 
     -- Weighings back and forth with humanoids or not.
-    if crawl.x_chance_in_y(humanweight, "10") or village then
+    if crawl.x_chance_in_y(humanweight, "10") or village or intelligent then
         local warriorstuff = "scimitar " .. flame
                              .. " | war axe " .. flame
                              .. " | halberd " .. flame
@@ -1308,7 +1308,7 @@ NSUBST:     N = 2:1 / 1:2 / 1 = $def / *:.
 SUBST:      . = .:99 ':1
 KFEAT:      ' = known alarm trap
 KPROP:      ` = no_rtele_into
-:           fiery_guardians(_G, true)
+:           fiery_guardians(_G, true, true)
 :           volcano_setup(_G)
 :           place_chained_volcano(_G)
 MAP
@@ -1403,4 +1403,57 @@ xx3321llllllllllllllllllllllllllllllllllll11233321111ll123xx
      xxxx         xxx             xxx3xxx            xxxx
                                     xxx
 ENDMAP
+
 ###############################################################################
+# A temple-like volcano layout.
+NAME:   kennysheep_volcano_temple
+ORIENT: encompass
+TAGS:   no_item_gen no_monster_gen no_rotate no_vmirror
+SUBST:  * = $def
+KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
+KFEAT:  O = l
+KPROP:  O = no_cloud_gen
+: fiery_guardians(_G, true)
+: volcano_setup(_G)
+: place_chained_volcano(_G)
+MAP
+               xxx
+            xxxxlxxxx
+           xxlllllllxx
+         xxxlllllllllxx
+       xxxllllllllllllxxxx
+       xlllllccnnncclllllxx
+      xxlllcnc*****cncllllxx
+      xlllcn1c*****c1ncllllx
+     xxllVn1.+.*2*.+.1nVlllxx
+xxxxxxlllcc..+.._..+..ccllllxx
+ xlllllllc...c.....c...clllllxx
+ xxlllllln...cnnnnnc...nllllllx
+  xlllllln...+**.**+...nllllllx
+  xxllllln...c..O..c...nllllxxx
+   xxllllc...cGOOOGc...clllxx
+    xllllcc..+..O..+..ccllllx
+    xlllllc..+.....+..clllllx
+    xxllllcc.cG...Gc.ccllllxx
+     xxllllccc.....cccllllxx
+      xxllllll.....lllllxxx
+      xxllllllG...Gllllxx
+       xxlllll.....llxxx
+        xxxlll.....llx
+          xlllG...Glxx
+          xxxx.....xxx
+             x.....x
+             xG...Gx
+             x.....x
+             x.....x
+             xG...Gx
+             x.....x
+             x.....x
+             xG...Gx
+             x.....x
+             x.....x
+             xG.A.Gx
+             xx...xx
+              xx<xx
+               xxx
+ENDMAP
