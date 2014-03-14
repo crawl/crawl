@@ -1124,7 +1124,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             if (Options.hp_warning
                 && you.hp <= (you.hp_max * Options.hp_warning) / 100
-                && (death_type != KILLED_BY_POISON || get_player_poisoning() > you.hp))
+                && (death_type != KILLED_BY_POISON || poison_is_lethal()))
             {
                 mprf(MSGCH_DANGER, "* * * LOW HITPOINT WARNING * * *");
                 dungeon_events.fire_event(DET_HP_WARNING);
