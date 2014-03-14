@@ -895,7 +895,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 // Alert both monsters and player
                 check_monsters_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
-                check_player_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
             }
         }
         break;
@@ -2056,6 +2055,5 @@ bool ensnare(actor *fly)
         return true;
 
     check_monsters_sense(SENSE_WEB_VIBRATION, 100, fly->pos());
-    check_player_sense(SENSE_WEB_VIBRATION, 100, fly->pos());
     return true;
 }
