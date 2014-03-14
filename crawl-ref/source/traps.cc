@@ -893,7 +893,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 // If somehow already caught, make it worse.
                 m->add_ench(ENCH_HELD);
 
-                // Alert both monsters and player
+                // Alert monsters.
                 check_monsters_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
             }
         }
