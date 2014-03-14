@@ -1686,3 +1686,34 @@ ccccccccccc................ccccccccccc
               c...$$...c
               cccccccccc
 ENDMAP
+
+NAME:   kennysheep_housing_project
+ORIENT: north
+TAGS:   no_monster_gen
+DEPTH:  D:6-9
+MONS:   kobold / hound w:5 / gnoll / hobgoblin, \
+        big kobold / orc warrior w:5 / ogre / gnoll sergeant, \
+        orc priest / orc wizard / gnoll shaman / centaur
+NSUBST: . = 4:2 / 20:1 / 5:3
+NSUBST: . = 8:% / 2:* / 10:$
+FTILE: 'pt = floor_grass
+KMONS:  p = plant
+SUBST:  !':.
+MAP
+xxxxccccccccccccccccccccccccccccxxxxx
+''''m.......+..............+...m'''''
+''''m.......+..............+...m'''''
+'pptc.......cccc++cccccccc+c...cppt''
+'tptc.......c..........c...c...ctpp''
+ppptc.......c..........c...c...ctpt''
+'pttc.......c..........c.>.ccccctpp''
+'pptc.......c..........c...cptttpt'''
+'pttc.......ccccmmcccccc+++cppppp'''
+ 'ttccmmcccccttt''ptttt'!1!tppptp'''
+  ''tt''ttt'tptp''pptpp'!!!'ptp'''''
+  ptpt'''ptp'p'p''ptptp'!!!'p'p''''
+  ''p''''p'p''''''p'p'''!!!'''''''
+    ''''''''''''''''''''!!!'''
+         ''''  '  ''   '!!!'
+                        @@@
+ENDMAP

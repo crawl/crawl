@@ -5144,6 +5144,37 @@ MAP
    .....
 ENDMAP
 
+NAME:   kennysheep_underground_church
+TAGS:   no_pool_fixup
+DEPTH:  Depths, Elf, Zot
+: if you.branch() ~= "Zot" then
+MONS:   deep elf high priest, deep elf priest
+:else
+MONS:   draconian zealot, base draconian
+:end
+COLOUR: x = white
+TILE:   x = wall_church
+FTILE:  xmwFt12|*+. = floor_limestone
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                              pow_max = 100, delay = 10, size = 1, \
+                              walk_dist = 0, excl_rad = -1 }
+KPROP:  wF = no_rtele_into
+SUBST:  F = w
+MAP
+ xxxxxxxxxxx
+ xwwwwwwwwwx
+xxwwwmmmwwwxx
+xwwFmm|mmFwwx
+xwwmm*1*mmwwx
+xxxx*222*xxxx
+xtxx.....xxtx
+x2.xx+++xx.2x
+x...........x
+xx.........xx
+ xxxx...xxxx
+    xx+xx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
