@@ -5097,7 +5097,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
         return false;
 
     const int old_value = you.duration[DUR_POISONING];
-    const bool was_fatal = get_player_poisoning() >= you.hp;
+    const bool was_fatal = poison_is_lethal();
 
     if (player_res_poison() < 0)
         amount *= 2;
@@ -5106,7 +5106,7 @@ bool poison_player(int amount, string source, string source_aux, bool force)
 
     if (you.duration[DUR_POISONING] > old_value)
     {
-        if (get_player_poisoning() >= you.hp && !was_fatal)
+        if (poison_is_lethal() && !was_fatal)
             mprf(MSGCH_DANGER, "You are lethally poisoned!");
         else
         {
@@ -5260,6 +5260,57 @@ void reduce_player_poison(int amount)
     }
 
     you.redraw_hit_points = true;
+}
+
+// Takes *current* regeneration rate into account. Might sometimes be
+// incorrect, but hopefully if so then the player is surviving with 1 HP.
+bool poison_is_lethal()
+{
+    if (get_player_poisoning() < you.hp || !get_player_poisoning())
+        return false;
+    return (!poison_survival());
+}
+
+// Try to predict the minimum value of the player's health in the coming
+// turns given the current poison amount and regen rate.
+int poison_survival()
+{
+    if (!get_player_poisoning() || you.hp <= 0)
+        return you.hp;
+    const int rr = player_regen();
+    const bool chei = (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0));
+    const bool dd = (you.species == SP_DEEP_DWARF);
+    const int amount = you.duration[DUR_POISONING];
+    // Calculate the poison amount at which regen starts to beat poison.
+    double min_poison_rate = 0.25;
+    if (dd)
+        min_poison_rate = 25.0/15.0;
+    if (chei)
+        min_poison_rate /= 1.5;
+    int regen_beats_poison;
+    if (rr <= (int) (100.0 * min_poison_rate))
+        regen_beats_poison = dd ? 25000 : 0;
+    else
+    {
+        regen_beats_poison = 150 * rr;
+        if (chei)
+            regen_beats_poison = 3 * regen_beats_poison / 2;
+    }
+    // HP is already going up, but subtract 1 in case poison happens before
+    // regen
+    if (regen_beats_poison >= amount)
+        return (you.hp - 1);
+
+    // Calculate the amount of time until regen starts to beat poison.
+    double poison_duration = _poison_dur_to_aut(amount)
+                             - _poison_dur_to_aut(regen_beats_poison);
+    if (chei)
+        poison_duration *= 1.5;
+
+    return max(0, you.hp - amount / 1000
+                         + regen_beats_poison / 1000
+                         + (int) ((((double) you.hit_points_regeneration)
+                                   - 50.0 + rr * poison_duration / 10.0) / 100.0));
 }
 
 bool miasma_player(string source, string source_aux)

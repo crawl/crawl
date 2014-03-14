@@ -988,6 +988,8 @@ void paralyse_player(string source, int amount = 0, int factor = 1);
 void handle_player_poison(int delay);
 void reduce_player_poison(int amount);
 int get_player_poisoning();
+bool poison_is_lethal();
+int poison_survival();
 
 bool miasma_player(string source, string source_aux = "");
 

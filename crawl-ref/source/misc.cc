@@ -1592,7 +1592,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         if (is_sanctuary(you.pos()) && env.sanctuary_time >= 5)
             return true;
 
-        if (get_player_poisoning() >= you.hp)
+        if (poison_is_lethal())
         {
             if (announce)
                 mprf(MSGCH_WARN, "There is a lethal amount of poison in your body!");
