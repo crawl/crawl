@@ -5266,7 +5266,9 @@ void reduce_player_poison(int amount)
 // incorrect, but hopefully if so then the player is surviving with 1 HP.
 bool poison_is_lethal()
 {
-    if (get_player_poisoning() < you.hp || !get_player_poisoning())
+    if (you.hp <= 0)
+        return get_player_poisoning();
+    if (get_player_poisoning() < you.hp)
         return false;
     return (!poison_survival());
 }
