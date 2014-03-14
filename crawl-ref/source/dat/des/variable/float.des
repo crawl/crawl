@@ -5895,3 +5895,31 @@ cc.......cc
  ccG...Gcc
   ccccccc
 ENDMAP
+
+NAME:   kennysheep_six_static_rooms
+TAGS:   transparent
+ORIENT: float
+DEPTH:  D:2-, Depths, Elf, Zot, Snake, !D:$, !Depths:$
+MAP
+  xxxxx   xxxxx   xxxxx
+ xx...xx xx...xx xx...xx
+xx.....xxx.....xxx.....xx
+x...%...x...%...x...%...x
+x...0...x...0...x...0...x
+x.......x.......x.......x
+xx.....xxx.....xxx.....xx
+ xx...xxxxx...xxxxx...xx
+  xx+xxxxxxx+xxxxxxx+xx
+  @...................@
+  @...................@
+  @...................@
+  xx+xxxxxxx+xxxxxxx+xx
+ xx...xxxxx...xxxxx...xx
+xx.....xxx.....xxx.....xx
+x.......x.......x.......x
+x...0...x...0...x...0...x
+x...%...x...%...x...%...x
+xx.....xxx.....xxx.....xx
+ xx...xxxxx...xxxxx...xx
+  xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
