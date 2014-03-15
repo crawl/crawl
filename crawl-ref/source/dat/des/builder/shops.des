@@ -1,4 +1,6 @@
 lua {{
+require('dlua/vault.lua')
+
 MAX_RANDOM_SHOPS = 5
 
 -- If a level gets shops, how many there are.
@@ -9,6 +11,37 @@ function num_shops()
     else
         return crawl.random_range(2, MAX_RANDOM_SHOPS)
     end
+end
+
+function ks_shop_vault(e, glyphs)
+  if e.is_validating() then
+    e.subst('O = B')
+    return
+  end
+
+  local is_shop = false
+  local is_altar = false
+
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      if tag == "shop" then
+        is_shop = true
+      elseif string.find(tag, "temple_overflow_generic_") ~= nil then
+        is_altar = true
+      end
+    end
+  end
+
+  if is_shop then
+    e.kfeat('O = any shop')
+  elseif is_altar then
+    e.subst('O = B')
+  else
+    e.tags('extra decor')
+    e.subst('O = ' .. glyphs)
+  end
 end
 }}
 
@@ -195,6 +228,50 @@ MAP
 O.A
 ...
 A.A
+ENDMAP
+
+####
+# These three vaults were originally plain minivaults.
+# They can still place as plain minivaults, in which case they have no
+# shops.
+NAME:  kennysheep_mini
+TAGS:  shop temple_overflow_generic_1
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+: ks_shop_vault(_G, '{}CC')
+MAP
+cDc
+FOF
+c+c
+ENDMAP
+
+NAME:  kennysheep_mini_moat
+TAGS:  shop temple_overflow_generic_1
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+SUBST: . : @
+: ks_shop_vault(_G, '{}CC')
+MAP
+wwEww
+wcDcw
+HFOFH
+wc+cw
+ww@ww
+ENDMAP
+
+NAME:  kennysheep_little_box
+TAGS:  shop temple_overflow_generic_1
+DEPTH: D:4-, Depths, !D:$, !Depths:$
+: ks_random_setup(_G)
+: ks_shop_vault(_G, '{}C....')
+MAP
+cccDccc
+cwwEwwc
+cwt.twc
+FH.O.HF
+cwt.twc
+cww.wwc
+ccc+ccc
 ENDMAP
 
 #####################################################

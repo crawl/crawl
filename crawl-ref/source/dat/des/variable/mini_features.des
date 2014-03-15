@@ -3290,51 +3290,6 @@ cwHwwwwwwwwwc
 ccFcccccccccc
 ENDMAP
 
-####
-# These three vaults possibly place shops, so I consider them as having items.
-NAME:  kennysheep_mini
-TAGS:  extra decor
-DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
-KFEAT: O = any shop
-SUBST: { = {}OCB
-MAP
-cDc
-F{F
-c+c
-ENDMAP
-
-NAME:  kennysheep_mini_moat
-TAGS:  extra decor
-DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
-SUBST: . : @
-KFEAT: O = any shop
-SUBST: { = {}OCB
-MAP
-wwEww
-wcDcw
-HF{FH
-wc+cw
-ww@ww
-ENDMAP
-
-NAME:  kennysheep_little_box
-TAGS:  extra decor
-DEPTH: D:4-, Depths, !D:$, !Depths:$
-: ks_random_setup(_G)
-KFEAT: O = any shop
-SUBST: { = {}OB....
-MAP
-cccDccc
-cwwEwwc
-cwt.twc
-FH.{.HF
-cwt.twc
-cww.wwc
-ccc+ccc
-ENDMAP
-
 ##########################################################################
 #
 # <<4>> Fog generator vaults.
