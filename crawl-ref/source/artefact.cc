@@ -933,7 +933,7 @@ static void _get_randart_properties(const item_def &item,
         && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_PROTECTION_FROM_MAGIC))
     {
-        proprt[ARTP_MAGIC] = 35 + random2(65);
+        proprt[ARTP_MAGIC] = one_chance_in(3) ? 2 : 1;
         power_level++;
     }
 

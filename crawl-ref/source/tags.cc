@@ -3552,6 +3552,25 @@ void unmarshallItem(reader &th, item_def &item)
     {
         item.plus2 = 0;
     }
+
+    // Rescale old MR (range 35-99) to new discrete steps (40/80/120)
+    // Negative MR was only supposed to exist for Folly, but paranoia.
+    if (th.getMinorVersion() < TAG_MINOR_MR_ITEM_RESCALE
+        && is_artefact(item)
+        && artefact_wpn_property(item, ARTP_MAGIC))
+    {
+        int prop_mr = artefact_wpn_property(item, ARTP_MAGIC);
+        if (prop_mr > 99)
+            artefact_set_property(item, ARTP_MAGIC, 3);
+        else if (prop_mr > 79)
+            artefact_set_property(item, ARTP_MAGIC, 2);
+        else if (prop_mr < -40)
+            artefact_set_property(item, ARTP_MAGIC, -2);
+        else if (prop_mr < 0)
+            artefact_set_property(item, ARTP_MAGIC, -1);
+        else
+            artefact_set_property(item, ARTP_MAGIC, 1);
+    }
 #endif
 
     if (is_unrandom_artefact(item))

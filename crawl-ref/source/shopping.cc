@@ -867,6 +867,11 @@ int artefact_value(const item_def &item)
     else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
+    if (prop[ ARTP_MAGIC ] > 0)
+        ret += 4 + 4 * prop[ ARTP_MAGIC ];
+    else if (prop[ ARTP_MAGIC ] < 0)
+        ret -= 6;
+
     if (prop[ ARTP_NEGATIVE_ENERGY ] > 0)
         ret += 3 + 3 * (prop[ARTP_NEGATIVE_ENERGY] * prop[ARTP_NEGATIVE_ENERGY]);
 
@@ -877,12 +882,6 @@ int artefact_value(const item_def &item)
     // only one meaningful level (hard to get):
     if (prop[ ARTP_ELECTRICITY ])
         ret += 10;
-
-    // magic resistance is from 35-100
-    if (prop[ ARTP_MAGIC ] > 0)
-        ret += 5 + prop[ ARTP_MAGIC ] / 15;
-    else if (prop[ ARTP_MAGIC ] < 0)
-        ret -= 5;
 
     if (prop[ ARTP_EYESIGHT ])
         ret += 6;
