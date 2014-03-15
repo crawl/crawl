@@ -965,14 +965,15 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
-    const int how_many = min(8, 3 + random2avg(2 + pow / 50, 2));
+    const int how_many = min(5, 2 + pow / 100 + random2(pow / 50 + 1));
+
+    mgen_data cbl(MONS_BALL_LIGHTNING, BEH_FRIENDLY, &you, 0,
+                  SPELL_CONJURE_BALL_LIGHTNING, you.pos(), MHITNOT, 0, god);
+    cbl.hd = 5 + div_rand_round(pow, 20);
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (monster *ball = create_monster(
-                mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, &you,
-                          0, SPELL_CONJURE_BALL_LIGHTNING,
-                          you.pos(), MHITNOT, 0, god)))
+        if (monster *ball = create_monster(cbl))
         {
             success = true;
             ball->add_ench(ENCH_SHORT_LIVED);

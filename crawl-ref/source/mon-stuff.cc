@@ -1113,11 +1113,11 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour   = BEAM_ELECTRICITY;
-    beam.damage    = dice_def(3, 20);
+    beam.damage    = dice_def(3, 5 + origin.hit_dice * 5 / 4);
     beam.name      = "blast of lightning";
     beam.noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;
-    beam.ex_size   = coinflip() ? 3 : 2;
+    beam.ex_size   = x_chance_in_y(origin.hit_dice, 24) ? 3 : 2;
 }
 
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
