@@ -137,8 +137,7 @@ TAGS:   no_monster_gen zot_entry
 SUBST:  = = nnn+
 SUBST:  c: c:70 v:20 b:10
 SUBST:  v: vcxlmb, n: nnnnvbcx
-FTILE:  O-4G : floor_marble
-SUBST:  - = ^ .:90
+FTILE:  O.4G : floor_marble
 SUBST:  4 = 122223
 : zot_entry_setup(_G)
 MAP
@@ -148,17 +147,17 @@ xxxcccccc..0..ccccccxx
 xxcc......vvv......ccx
 xxc.v......1......v.cx
 xxc.2v...nn=nn...v..cx
-xxc...nnnn---nnnn...cx
-xxc...n----G----n..1cx
-xcc...n-G--4--G-n...cc
-xc.3.nn----v----nn...c
-xc.v.n----v-v----n.v.+
-xc.v.+-G-v-O-v-G-=.v.+
-xc.v.n----v-v----n.v.+
-xc.3.nn----v----nn...c
-xcc...n-G--4--G-n...cc
-xxc...n----G----n..1cx
-xxc...nnnn---nnnn...cx
+xxc...nnnn...nnnn...cx
+xxc...n....G....n..1cx
+xcc...n.G..4..G.n...cc
+xc.3.nn....v....nn...c
+xc.v.n....v.v....n.v.+
+xc.v.+.G.v.O.v.G.=.v.+
+xc.v.n....v.v....n.v.+
+xc.3.nn....v....nn...c
+xcc...n.G..4..G.n...cc
+xxc...n....G....n..1cx
+xxc...nnnn...nnnn...cx
 xxc.2v...nn=nn...v..cx
 xxc.v......1......v.cx
 xxcc......vvv......ccx
@@ -653,7 +652,7 @@ TAGS:   allow_dup extra luniq
 DEPTH:  Zot:1-4
 ORIENT: float
 SUBST:  . = .^
-KFEAT:  ^ = Zot trap
+KFEAT:  ^ = known Zot trap
 SUBST:  > = }])
 MAP
 xxxxxxx
@@ -666,7 +665,7 @@ TAGS:   allow_dup extra luniq
 DEPTH:  Zot:2-
 ORIENT: float
 SUBST:  . = .^
-KFEAT:  ^ = zot trap
+KFEAT:  ^ = known zot trap
 SUBST:  < = ([{
 MAP
 xxxxxxx

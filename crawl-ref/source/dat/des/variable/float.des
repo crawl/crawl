@@ -1486,7 +1486,7 @@ SHUFFLE: WX/ZY , 12/12/67
 SUBST:   W:ww. , X:. , Z:x , Y:+.
 SHUFFLE: *5/WW
 SUBST:   *=. , W=wW , !:$.
-SUBST:   5 = 5 6 + ^:5 I:5 F:5
+SUBST:   5 = 5 6 + .:5 I:5 F:5
 KFEAT:   A = >
 KITEM:   A = $
 MAP
@@ -5741,7 +5741,7 @@ KMONS:  P = plant col:magenta name:demonic name_adjective \
         tile:mons_demonic_plant
 KMONS:  p = plant
 NSUBST: p = 3=xcbtvmnw.' / 5:P
-NSUBST: . = 30=Pxcbtvmnw / 5:^ / 50:'
+NSUBST: . = 30=Pxcbtvmnw / 5:. / 50:'
 NSUBST: x = 15=Pxcbtvmnw
 NSUBST: ` = 3:'
 MARKER: C = lua:fog_machine { \

@@ -149,32 +149,32 @@ KFEAT:   0 = 0
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xcccccccccccccccccccccccccccccccc
-xccw......~......w......~......wc
+xccw.............w.............wc
 xcc.ccccccccccccc.ccccccccccccc.c
 xcc.c....c.c....c.c....c.c....c.c
 xcc.c.8..+.c....c.c....+.c..9.c.c
 xcc.c....c.+..9.c.c.9..c.+....c.c
 xcc.c....c.c....c.c....c.c....c.c
 xcc.cccccc.cccccc.cccccc.cccccc.c
-xcc~c....c.c....c.c....c.c....c.c
+xcc.c....c.c....c.c....c.c....c.c
 xcc.c....c.c....c.c....+.c....c.c
 xcc.c8...+.+..8.c.c.8..c.+....c.c
 xcc.c....c.c....c.c....c.c....c.c
 xcc.cccccc.cccccc.cccccc.cccccc.c
 xcc.c....c.c....c.c....c.c....c.c
 xcc.c....+.c....c.c.0..c.c....c.c
-xcc.c..9.c.+.8..c~c....+.+.0..c.c
+xcc.c..9.c.+.8..c.c....+.+.0..c.c
 xcc.c....c.c....c.c....c.c....c.c
 xcc.cccccc.cccccc.cccccc.cccccc.c
 xcc.c....c.c....c.c....c.c....c.c
 xcc.c.0..+.+.0..c.c....+.+....c.c
 xcc.c....c.c....c.c.0..c.c.8..c.c
 xcc.cccccc.c....c.c....c.cccccc.c
-xcc.c....c.cccccc.cccccc.c....c~c
+xcc.c....c.cccccc.cccccc.c....c.c
 xcc.c....c.c....c.c..9.+.+....c.c
 xcc.c.0..+.+....c.c9...c.c.0..c.c
 xcc.c....c.c.8..c.c....c.c....c.c
-xcc.cccccc~cccccc.cccccc~cccccc.c
+xcc.cccccc.cccccc.cccccc.cccccc.c
 xccw.......Twwwwc.cwwwwT.......wc
 xcccccccccccccccc.ccccccccccccccc
 xxxxxxxxxxxxxxxxc@cxxxxxxxxxxxxxx
@@ -224,12 +224,11 @@ NAME:   thingy_vault
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: southwest
 TAGS:   no_rotate
-NSUBST: ^ = 3:^ / *:.
 MAP
 xxxxxxxxxxxxx@xxxxxx
-xxxxxxxxxxxxx^xxxxxx
-xxxxxxxxxxxx^^^xxxxx
-xxxxxxxxxxx^^^^^xxxx
+xxxxxxxxxxxxx.xxxxxx
+xxxxxxxxxxxx...xxxxx
+xxxxxxxxxxx.....xxxx
 xxxxxxxxxxxx...xxxxx
 xxxxxxxxxxxx...xxxxx
 xxxxxxxxxxx.....xxxxxxxxxxxx
@@ -298,7 +297,6 @@ ENDMAP
 NAME:   Angbandy_vault
 ORIENT: northeast
 DEPTH:  Depths, !Depths:$
-SUBST:  ^ = ^.
 SUBST:  "=.", '=.', '=$, "=*, *=* |:1
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -310,19 +308,19 @@ c****cc9.cc..cc8.cc"c.c.c'c"c0ccx
 c***cc..cc..cc..cc.c.c"c.c.c.c'cx
 c**cc..cc8.cc..cc.c"c.c.c.c"c.ccx
 c+cc9.cc..cc..cc"c.c.c.c"c.c.c.cx
-c^c..cc..cc..cc.c'c.c.c.c.c"c"ccx
-c^^.cc..cc..cc.c.c.c9c'c"c.c.c9cx
+c.c..cc..cc..cc.c'c.c.c.c.c"c"ccx
+c...cc..cc..cc.c.c.c9c'c"c.c.c9cx
 c..cc..cc..cc'c.c.c"c.c.c.c9c9ccx
 c.cc..cc..cc.c.c"c.c.c.c.c'c"c9cx
 ccc..cc..cc.c.c.c.c.c"c.c.c.cc+cx
 cc..cc..cc'c"c'c.c.c.c.c'c.cc..cx
 c0.cc..cc.c.c.c.c8c.c"c.c.cc0.ccx
-c^cc..cc"c.c.c'c.c'c.c.c.cc..cccx
-c^c..cc.c.c9c.c.c.c'c.c.cc..cc.cx
+c.cc..cc"c.c.c'c.c'c.c.c.cc..cccx
+c.c..cc.c.c9c.c.c.c'c.c.cc..cc.cx
 c0..cc'c.c.c"c0c.c.c.c.cc..cc.0cx
 c..cc.c.c9c'c.c.c'c'c.cc.9cc...cx
-c.cc9c.c.c"c.c.c.c.c.cc..cc..c^cx
-ccc.c'c'c.c.c.c'c.c'cc..cc..cc^cx
+c.cc9c.c.c"c.c.c.c.c.cc..cc..c.cx
+ccc.c'c'c.c.c.c'c.c'cc..cc..cc.cx
 cc'c.c.c.c'c'c.c0c.cc..cc..cc..cx
 c.c.c"c.c.c.c.c'c.cc9.cc..cc..ccx
 cc.c8c.c.c'c.c'c.cc..cc..cc0.cccx
@@ -330,7 +328,7 @@ c.c'c.c'c0c.c.c"cc..cc..cc..cc$cx
 cc.c.c.c.c.c"c.cc..cc..cc..cc$$cx
 c"c.c.c.c'c.c.cc..cc0.cc..cc$$$cx
 cc.c.c.c.c"c'cc..cc..cc..cc$$$$cx
-c'c.c.c'c.c.cc.8.^^.cc...^+$$$$cx
+c'c.c.c'c.c.cc.8....cc....+$$$$cx
 cccc@cccccccccccccccccccccccccccx
 ENDMAP
 
@@ -342,7 +340,7 @@ DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: northwest
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxx.........^..^.........xxxxx
+xxxxxx......................xxxxx
 xxxxx...xxxxxxxx..xxxxxxxx...xxxx
 xxxx...xxxxxxxxx..xxxxxxxxx...xxx
 xxx...xx$*....xx..xx....$$xx...xx
@@ -351,14 +349,14 @@ xx..xx*$*$....xx..xx....*$$$xx..x
 xx..xx$$$.00..xx..xx..00.*$*xx..x
 xx..xx....09..xx..xx..90....xx..x
 xx..xx......+xx....xx+......xx..x
-xx..xx......x^......^x......xx..x
+xx..xx......x........x......xx..x
 xx..xxxxxxxxx........xxxxxxxxx..x
 xx..xxxxxxxx..........xxxxxxxx..x
 xx..............TT..............x
 xx..............TT..............x
 xx..xxxxxxxx..........xxxxxxxx..x
 xx..xxxxxxxxx........xxxxxxxxx..x
-xx..xx......x^......^x......xx..x
+xx..xx......x........x......xx..x
 xx..xx......+xx....xx+......xx..x
 xx..xx....09..xx..xx..90....xx..x
 xx..xx$$*.00..xx..xx..00.*$$xx..x
@@ -367,8 +365,8 @@ xx...xx*$*....xx..xx....$$$xx...x
 xxx...xx*$....xx..xx....*$xx...xx
 xxxx...xxxxxxxxx..xxxxxxxxx...xxx
 xxxxx...xxxxxxxx..xxxxxxxx...xxxx
-xxxxxx..^................^..xxxxx
-xxxxxxxxxxxxxxxx~~xxxxxxxxxxxxxxx
+xxxxxx......................xxxxx
+xxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx++xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 ENDMAP
@@ -379,15 +377,14 @@ ENDMAP
 NAME:   cross_vault
 DEPTH:  D:12-, !D:$, Depths, !Depths:$
 ORIENT: northwest
-SUBST:  ~=.~, ^=^.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx............xxxxxxxxxx
 xxxxxxxx..................xxxxxxx
 xxxxxx......................xxxxx
-xxxxx..........w^^w..........xxxx
+xxxxx..........w..w..........xxxx
 xxxx........wwww++wwww........xxx
-xxxx......wwwvvv^^vvvwww......xxx
+xxxx......wwwvvv..vvvwww......xxx
 xxx......wwwwv.9..9.vwwww......xx
 xxx.....wwwwwv......vwwwww.....xx
 xxx....wwwwwvv......vvwwwww....xx
@@ -396,7 +393,7 @@ xx....wwvvvv....vv....vvvvww....x
 xx...wwwv......vvvv......vwww...x
 xx...wwwv....vv8vv8vv....vwww...x
 xx..wwwwv...vvvv||vvvv...vwwww..x
-xx~~wwwwv...vvvv||vvvv...vwwww~~x
+xx..wwwwv...vvvv||vvvv...vwwww..x
 xx..wwwwv....vv8vv8vv....vwwww..x
 xx...wwwv......vvvv......vwww...x
 xx...wwwvvvv....vv....vvvvwww...x
@@ -407,8 +404,8 @@ xxx.....wwwwwv......vwwwww.....xx
 xxxx.....wwwwvvvvvvvvwwww.....xxx
 xxxx.......wwwwwwwwwwww.......xxx
 xxxxx.........wwwwww.........xxxx
-xxxxxx........^~~~~^........xxxxx
-xxxxxxxx......^x++x^......xxxxxxx
+xxxxxx......................xxxxx
+xxxxxxxx.......x++x.......xxxxxxx
 xxxxxxxxxxx...xx..xx...xxxxxxxxxx
 xxxxxxxxxxxxxxx..@.xxxxxxxxxxxxxx
 ENDMAP
@@ -423,7 +420,7 @@ KFEAT:  ' = alarm trap / floor w:190
 MONS:   orange crystal statue
 MAP
 xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx^xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
 xx.....''''''''.''''''''.....xxx
 x..bb..xxxxxxxxxxxxxxxxx..bb..xx
@@ -464,20 +461,20 @@ MAP
 ...............................x
 ...............................x
 .....cccccccccccccccc..........x
-.....c[^...........9cc.........x
-.....c^xxxxx+xxxxxx..cc........x
-.....c.x9..^^^...9xx..cc.......x
+.....c[............9cc.........x
+.....c.xxxxx+xxxxxx..cc........x
+.....c.x9........9xx..cc.......x
 .....c.x.xxx=xxxx..xx..cc......x
-.....c.x^x$$$$$$xx..xx.9c......x
-.....c.+^=$*|||*$xx..xx.c......x
-.....c.x^xx$*|||*$xx.9x.c......x
-.....c.x9.xx$*|||*$xx^x.c......x
-.....c.xx..xx$*|||*$=^+.c......x
-.....c9.xx..xx$$$$$$x^x.c......x
+.....c.x.x$$$$$$xx..xx.9c......x
+.....c.+.=$*|||*$xx..xx.c......x
+.....c.x.xx$*|||*$xx.9x.c......x
+.....c.x9.xx$*|||*$xx.x.c......x
+.....c.xx..xx$*|||*$=.+.c......x
+.....c9.xx..xx$$$$$$x.x.c......x
 .....cc..xx..xxxx=xxx.x.c......x
-......cc..xx9...^^^..9x.c......x
-.......cc..xxxxxx+xxxxx^c......x
-........cc9...........^]c......x
+......cc..xx9........9x.c......x
+.......cc..xxxxxx+xxxxx.c......x
+........cc9............]c......x
 .........cccccccccccccccc......x
 ...............................x
       .........................x

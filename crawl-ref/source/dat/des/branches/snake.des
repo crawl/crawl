@@ -532,6 +532,7 @@ TAGS:   transparent
 MONS:  plant
 SUBST:   . = . W:1 1:1, - = . W:3 0:1 ~:1 %:1
 SHUFFLE: 0~
+SUBST:   ~ = .
 MAP
 @.WWWWWWWW.@
 .WWW.....WW.

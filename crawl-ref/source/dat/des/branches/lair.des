@@ -1216,7 +1216,7 @@ ENDMAP
 NAME:   wad_woods_03
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "rock", 3, false, 0, 0, 0)
-FTILE:  '%~0+14 = floor_dirt
+FTILE:  '%0+14 = floor_dirt
 MAP
           .t t.tt'xx
    .''t...tt'''''t.1x
@@ -1479,14 +1479,14 @@ DEPTH:  Lair, Forest
 KMONS:  * = 9
 KITEM:  * = *
 : wad_woods_setup(_G, "small", 2, false, 0, 0, 0)
-FTILE:  @'~*+T = floor_dirt
+FTILE:  @'*+T = floor_dirt
 MAP
        .ttttt1.@.tt
      .1ttttt..'t1tt
     .tt..1t.''tttttt
    tt1tttt.'.t.tW1tt
 ttt.tt....'.t1t1WWtt
-tt.t.tt..~..tttttWWW
+tt.t.tt..'..tttttWWW
  tttt...'..t1tttxtWw
  t.1t.''tt1t1ttxxxtW
  ttt.'.t1tttt1x+*xxt
@@ -1497,7 +1497,7 @@ ENDMAP
 NAME:   wad_woods_road_06
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "decor", 1, false, 0, 0, 0)
-FTILE:  @'~*+T = floor_dirt
+FTILE:  @'*+T = floor_dirt
 MAP
    tt.'@@..tt1ttttt..@@@..ttt
   tttt.'..ttttt1t11..'...1t11t
@@ -1532,9 +1532,9 @@ ttt.t11.1t...MWW.1t.t1..tt...ttt
 tttt.1..aaaaaaa1Wt.t...t..tt1ttt
 t.t1.t1aa..a.6aaWWt1.1t.ttttttt
  tt.ttaaa.aba.aaaWW.t..ttttt1ttt
-  tt.aa.6a7a~a.6aaWtt1t...tt.tt
+  tt.aa.6a7a.a.6aaWtt1t...tt.tt
   t.aaaaaab|baaaaaa.t.......ttt
- t1.1aa66a~a.a..aa.t...t.t.ttttt
+ t1.1aa66a.a.a..aa.t...t.t.ttttt
 tt.1..aaa.aba6aaa.11.t..tttt%ttt
 t.t.1..aa..a6.aaWW.t.tt.tt11t
 tt.t.1.1aaaaaaaWWwW1.t..t.tt
@@ -1550,13 +1550,13 @@ DEPTH:  D:10-, Lair, Forest
 ORIENT: float
 : wad_woods_setup(_G, "other", 5, false, 0, 0, 0)
 FTILE:  "2T = floor_grass
-FTILE:  @'~0+ = floor_dirt
+FTILE:  @'0+ = floor_dirt
 MAP
    ttxcxxxxxxxxxxxxxxxxxxxxxxxcxxxxxct
- ttttxc''''+''0'xxxxxx'''+~'0'cx0'0'ctt
- t.ttxc''0'xxxx~x''00x'''x''''cx''~'ctt
+ ttttxc''''+''0'xxxxxx'''+''0'cx0'0'ctt
+ t.ttxc''0'xxxx'x''00x'''x''''cx''''ctt
  tt.txc'0''x''x'x''''x''0x''''cx''''ct1
-tt.t.xc'~''x''+'+'''0x'''x'''~cc+cc+ct1tt
+tt.t.xc''''x''+'+'''0x'''x''''cc+cc+ct1tt
 t.t.txccc++ccccccxcxcxcxcc++cccx'x2'2tt1tt
 tttt.t.tt''tttttttcttttttt''ttx''x"'"ttt1t
   ttt..tt''''''tttcttt''''''ttxxxx2'2tt1tt

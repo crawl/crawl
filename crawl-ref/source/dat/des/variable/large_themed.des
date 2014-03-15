@@ -181,13 +181,12 @@ SHUFFLE: w2/l3
 SUBST:   C = ?5
 SUBST:   a:. , e:. , b:x. , g:x. , d:x. , B:x. , G:x. , D:x. , ? = x.
 SUBST:   0 = 4 7 8:20 .:20
-SUBST:   T = .:50 ~
 SUBST:   | : |:30 Z
 SUBST:   ! = +x
 KFEAT:   Z = floor
 KMONS:   Z = hill giant zombie / stone giant zombie / cyclops zombie /\
              titan zombie
-KFEAT:   ( = . w:25 / ~
+KFEAT:   ( = .
 KITEM:   ( = any weapon good_item
 KMONS:   8 = plant
 KFEAT:   8 = floor
@@ -195,11 +194,11 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxccccccccccccx
 xxxx???xxxxxx?***??xxxxxxxxxxxxx.........7...c...444..cccc..........cx
-xx$$$$$$?xxxx?.6..?xxxxxxxxxeeee..7..........+........+TT+.........5cx
+xx$$$$$$?xxxx?.6..?xxxxxxxxxeeee..7..........+........+..+.........5cx
 x?$$$$$$.?xx?.666.xxxxxxee0eexxx7....7.......c........cccc.........1cx
 x.$$$$$$..?x...6..eeeeeeexxxxxxx............7ccccc+ccccccc.........5cx
-x....<.....+?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cx
-x?........?xxxx.xxxxxxxx<+$$$TT+.......+TTTTTTTTTTTc(((((c.......***cx
+x....<.....+?....xxxxxxxxx$$$..cccc+cccccccccccccc.c(((((+..........cx
+x?........?xxxx.xxxxxxxx<+$$$..+.......+...........c(((((c.......***cx
 xx........?xx...xxxxxxxxxxx!xxxc..4.4..ccccccccccccccccccc444....***cx
 xxxx?...?xxxx.xxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx+xxxx
 xxxxxx!xxxxxx.xxxxxxxbbb;''''''c..4.4..c'''''';ddddddddddxxxxxxxx||xxx
@@ -885,8 +884,6 @@ NAME:   evilmike_wizard_prison
 TAGS:   no_monster_gen
 DEPTH:  Depths, !Depths:$, Crypt:1-4
 ORIENT: southeast
-SUBST:  ~ = ~:2 .:3
-SUBST:  . = ~:1 .:9
 NSUBST: 3 = 3:. / *:3
 SUBST:  ^ : ^mmm
 KFEAT:  ^ = teleport trap
@@ -895,7 +892,7 @@ KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup
 KPROP:  -d|*$14567^ = no_rtele_into
 FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
-FTILE:  .@~+23 = FLOOR_HALL
+FTILE:  .@+23 = FLOOR_HALL
 TILE:   c = DNGN_STONE_WALL_DARKGRAY
 # This is to mark the wall clearly diggable.
 TILE:   y = WALL_NORMAL
@@ -915,12 +912,12 @@ ITEM:   acquire any
 SUBST:  - = .
 MAP
 xxxxxxxxxxxc.@.cxxxxxxxxxxxx
-xxxxxxxxxxxc~~~cxxxxxxxxxxxx
-xxxxxxxxxxxc~c.cxxxxxxxxxxxx
-xxxxxxxxxxxc~~~cxxxxxxxxxxxx
-xxxxcccccccc.c~ccccccccxxxxx
-xxxxc-4cc--c~~~c4-cc--cxxxxx
-xxxxc--cc4-c3~3c--cc-4cxxxxx
+xxxxxxxxxxxc...cxxxxxxxxxxxx
+xxxxxxxxxxxc.c.cxxxxxxxxxxxx
+xxxxxxxxxxxc...cxxxxxxxxxxxx
+xxxxcccccccc.c.ccccccccxxxxx
+xxxxc-4cc--c...c4-cc--cxxxxx
+xxxxc--cc4-c3.3c--cc-4cxxxxx
 xxxccmmccmmcc+ccmmccmmccxxxx
 xxxc3..................cxxxx
 xxxc3................3.cxxxx

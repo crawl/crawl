@@ -574,7 +574,7 @@ KFEAT: Z = w:5 alarm trap / w:8 zot trap / w:50 floor
 KMONS: Y = Boris / ancient lich, ancient lich
 MONS:  w:3 zombie / lich / w:3 skeleton / w:3 bone dragon
 MONS:  skeleton / zombie
-KFEAT: v = w:5 ~ / .
+KFEAT: v = .
 KITEM: v = $ / %
 SUBST: $ = $.*|
 MAP
@@ -1161,7 +1161,6 @@ MONS:   guardian mummy
 MONS:   flying skull
 MONS:   mummy / guardian mummy / w:5 nothing
 : end
-SUBST:  ; = .:7 ~:2 ^:1
 NSUBST: / = 1:| / 2:* / *:%
 NSUBST: . = 5:0 / *:.
 NSUBST: %*| = 1:d / 1:h
@@ -1174,9 +1173,9 @@ MAP
            xxv...WWb$$|*|$$bWW...vxx
      xxxxxxxxv...WW.$/|1|/$.WW...vxxxxxxxx
      xxccccccv...WWb$$|*|$$bWW...vccccccxx
-     xxc/;cccv...WWWb.b.b.bWWW...vccc;/cxx
-     xxc;;;ccvv..WWWWWWWWWWWWW..vvcc;;;cxx
-xxxxxxxc;;;/ccvv..WWWWWWWWWWW..vvcc/;;;cxxxxxxx
+     xxc/.cccv...WWWb.b.b.bWWW...vccc./cxx
+     xxc...ccvv..WWWWWWWWWWWWW..vvcc...cxx
+xxxxxxxc.../ccvv..WWWWWWWWWWW..vvcc/...cxxxxxxx
 xxccccccc+cccccv...............vccccc+cccccccxx
 xxcU......cxxxxvv....2...2....vvxxxxc......Ucxx
 xxc..3....cxxxxxvv.....6.....vvxxxxxc....3..cxx
@@ -1184,14 +1183,14 @@ xxc.......cxxxxxvvv.6.....6.vvvxxxxxc.......cxx
 xxc.......cxxxxxvvvvv.....vvvvvxxxxxc.......cxx
 xxc...5.5.cxxxxxvvvvvvv+vvvvvvvxxxxxc.5.5...cxx
 xxccccc+cccxxxxxvcccccU.Ucccccvxxxxxccc+cccccxx
-xxxxxxc;cxxxxxxxvc.U.cc+cc.U.cvxxxxxxxc;cxxxxxx
-    xxc.cxxxxxccccG..F;^;F..Gccccxxxxxc.cxx
-    xxc;cccccccG....45...54....Gccccccc;cxx
-    xxc.;;;;;;+.................+;;;;;;.cxx
-    xxc;cccccccG.......C.......Gccccccc;cxx
-    xxc.c;;;+;ccc56.........65cccxxxxcc.cxx
-  xxxxc;c/;;c;ccc5...........5cccxxxxcc;cxxxx
-xxxxccc+ccc/c;+7+.............+7ccccccc+cccxxxx
+xxxxxxc.cxxxxxxxvc.U.cc+cc.U.cvxxxxxxxc.cxxxxxx
+    xxc.cxxxxxccccG..F...F..Gccccxxxxxc.cxx
+    xxc.cccccccG....45...54....Gccccccc.cxx
+    xxc.......+.................+.......cxx
+    xxc.cccccccG.......C.......Gccccccc.cxx
+    xxc.c...+.ccc56.........65cccxxxxcc.cxx
+  xxxxc.c/..c.ccc5...........5cccxxxxcc.cxxxx
+xxxxccc+ccc/c.+7+.............+7ccccccc+cccxxxx
 xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
 xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.....ccccccc..c.......c..ccccccc.....cccxx
@@ -1201,17 +1200,17 @@ xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.....ccccccc..c6.6.6.6c..ccccccc.....cccxx
 xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
-xxxxccc+cccxxxc7+.............+7+;;cccc+cccxxxx
-   xxc...cxxxxccc..c.......c..ccc;/ccc...cxx
+xxxxccc+cccxxxc7+.............+7+..cccc+cccxxxx
+   xxc...cxxxxccc..c.......c..ccc./ccc...cxx
    xxc.4.cxxxxc7+.............+7cccccc.4.cxx
    xxc./.cxxxxccc..c.......c..cccxxxxc./.cxx
    xxcccccxxxxc7+.............+7cxxxxcccccxx
    xxxxxxxxxxxccc....c...c....cccxxxxxxxxxxx
             xxxxc5.Vcc...ccV.5cxxxx
               xxcccccc...ccccccxx
-              xxc..;;;...;;;..cxx
-              xxc;;vcccccccv;;cxx
-                c..;;;...;;;..c
+              xxc.............cxx
+              xxc..vcccccccv..cxx
+                c.............c
                 cccccc@c@cccccc
 ENDMAP
 
@@ -1671,7 +1670,6 @@ KFEAT:  YD = closed_door
 KFEAT:  ER = alarm trap
 KFEAT:  CSd = floor
 COLOUR: YsDdE = darkgrey
-SUBST:  - = ^.......
 NSUBST: . = 5:0 / *:.
 KMONS:  0 = lost soul / nothing
 : local brnd = crawl.random2(15)
@@ -1719,43 +1717,43 @@ MAP
                 cc$3$c|*....2....%|c..G.3.G..cc
                 cc...c|%|.......|%|c.........cc
                 ccc+cccccc.....ccccccc+cccBBBcc
-                cc...c---ccc+ccc---c-----c$$$cc
-                cc.4.c-G-4-RRR-4-G-+--G--c$$$cc
-cccccccccccccccccc...c-------------c-----c%%*cc
+                cc...c...ccc+ccc...c.....c$$$cc
+                cc.4.c.G.4.RRR.4.G.+..G..c$$$cc
+cccccccccccccccccc...c.............c.....c%%*cc
 ccccccccccccccccccc+ccccccc+++ccccccc+ccccccccc
-c$$A...c|...*c%.*cc...ccc-------ccc...cc%*|%*cc
-c$$A.3.c..3..c.3.c..G..---G---G---..G..c..3..cc
+c$$A...c|...*c%.*cc...ccc.......ccc...cc%*|%*cc
+c$$A.3.c..3..c.3.c..G.....G...G.....G..c..3..cc
 c$$A...c.....c...c..1...............1..c.....cc
 c$$Ac+cccc+cccc+cc..G..G..G...G..G..G..cc+++ccc
-ccccc-----------cc..1...............1..c-----cc
----cc--G4---4G--cc..G..G..G...G..G..G..c-4-4-cc
----ccc---------ccc..1...............1..c-----cc
-@--cccccc+++cccccc..G..G..G...G..G..G..c-----cc
----ccc.........cccc...................ccc---ccc
----cc..G1...1G..ccc+c+c+c+c...c+c+c+c+ccc+++cccc
+ccccc...........cc..1...............1..c.....cc
+...cc..G4...4G..cc..G..G..G...G..G..G..c.4.4.cc
+...ccc.........ccc..1...............1..c.....cc
+@..cccccc+++cccccc..G..G..G...G..G..G..c.....cc
+...ccc.........cccc...................ccc...ccc
+...cc..G1...1G..ccc+c+c+c+c...c+c+c+c+ccc+++cccc
 c..cc...........ccc5c5c5c5c+++c5c5c5c5ccc...c+Cc
-c..ccccc.....cccccc+ccccccc---cccccccccc.....ccc
-c..c...c.....c...cc.c.....-----.....ccC+.....+Cc
-c--c.............cc.c....1-----1....cccc.....ccc
-c---...G.....G...cc.cc....-----....+ccC+.....+Cc
-c---....1...1....cc.cccccc-----ccccc.ccc.....ccc
-c---...G.....G...cc+cc....-----....cc+C+.....+Cc
-c---....1...1....+..+....1-----1....cccc.....ccc
-c---...G.....G...cccc.....-----.....ccC+.....+Cc
+c..ccccc.....cccccc+ccccccc...cccccccccc.....ccc
+c..c...c.....c...cc.c...............ccC+.....+Cc
+c..c.............cc.c....1.....1....cccc.....ccc
+c......G.....G...cc.cc.............+ccC+.....+Cc
+c.......1...1....cc.cccccc.....ccccc.ccc.....ccc
+c......G.....G...cc+cc.............cc+C+.....+Cc
+c.......1...1....+..+....1.....1....cccc.....ccc
+c......G.....G...cccc...............ccC+.....+Cc
 c..c.............cccccccccc+++cccccccccc.....ccc
-c..c...c-----c...c.......--------............+Cc
-cccccccc-----ccccc...........................ccc
+c..c...c.....c...c...........................+Cc
+cccccccc.....ccccc...........................ccc
   cc.............c...........................+Cc
   cc.G.G.....G.G.c.cccccc.......ccccccc......ccc
-  cc..1.......1..cc+$$$$cc-----cc%....+c.....+Cc
-  cc.G.........G.cc$$$$$cc-----cc%1...cccccccccc
-  cc..1.......1..cc$$$$1cc-----cc*%%%%cc...----.
-  cc.G.........G.cccccccc.......ccccccc....----.
-  cc..1.......1..c.........................----@
-  cc.G.........G.c.........................----.
-  @-.......................................----.
-  cccccc-----ccccccccccccccccccccccccccccccccccc
-  cccccc-----ccccc
+  cc..1.......1..cc+$$$$cc.....cc%....+c.....+Cc
+  cc.G.........G.cc$$$$$cc.....cc%1...cccccccccc
+  cc..1.......1..cc$$$$1cc.....cc*%%%%cc........
+  cc.G.........G.cccccccc.......ccccccc.........
+  cc..1.......1..c.............................@
+  cc.G.........G.c..............................
+  @.............................................
+  cccccc.....ccccccccccccccccccccccccccccccccccc
+  cccccc.....ccccc
   cc.............c
     .............c
   ........@.......
