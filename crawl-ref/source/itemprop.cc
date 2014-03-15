@@ -2169,7 +2169,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
 
     // check for ego resistance
     if (get_armour_ego_type(arm) == SPARM_MAGIC_RESISTANCE)
-        res += 30;
+        res += 40;
 
     if (check_artp && is_artefact(arm))
         res += artefact_wpn_property(arm, ARTP_MAGIC);
