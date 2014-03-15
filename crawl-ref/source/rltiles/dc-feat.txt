@@ -151,11 +151,13 @@ statue_angel
 statue_elephant
 %syn DNGN_STATUE_ELEPHANT
 statue_wraith
+%syn DNGN_STATUE_WRAITH
 statue_imp
 %syn DNGN_STATUE_IMP
 statue_orb
 statue_cerebov
 statue_demonic_bust
+%syn DNGN_STATUE_DEMONIC_BUST
 statue_twins
 statue_orb_guardian
 statue_sword
