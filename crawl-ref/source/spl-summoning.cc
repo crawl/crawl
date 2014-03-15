@@ -965,43 +965,17 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
-    // XXX: for finding a nearby space
-    monster temp;
-    temp.type = MONS_BALL_LIGHTNING;
-    temp.position = you.pos();
-
-    // Restricted so that the situation doesn't get too gross.  Each of
-    // these will explode for 3d20 damage. -- bwr
     const int how_many = min(8, 3 + random2avg(2 + pow / 50, 2));
 
     for (int i = 0; i < how_many; ++i)
     {
-        coord_def target;
-        bool found = false;
-        for (int j = 0; j < 10; ++j)
-        {
-            if (random_near_space(&temp, you.pos(), target, true, false, false)
-                && distance2(you.pos(), target) <= 5)
-            {
-                found = true;
-                break;
-            }
-        }
-
-        // If we fail, we'll try the ol' summon next to player trick.
-        if (!found)
-            target = you.pos();
-
-        if (monster *ball = mons_place(
+        if (monster *ball = create_monster(
                 mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, &you,
                           0, SPELL_CONJURE_BALL_LIGHTNING,
-                          target, MHITNOT, 0, god)))
+                          you.pos(), MHITNOT, 0, god)))
         {
             success = true;
             ball->add_ench(ENCH_SHORT_LIVED);
-            ball->flags |= MF_ATT_CHANGE_ATTEMPT;
-            ball->foe = MHITNOT;
-            ball->behaviour = BEH_WANDER;
         }
     }
 
