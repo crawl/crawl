@@ -378,9 +378,15 @@ static void _mark_invisible_at(const coord_def &where,
         show_update_at(where);
 }
 
-// Monsters that transition from seen to unseen in the last turn get marked as
-// an invisible monster at their position if their current position isn't given
-// away by failing the stealth checks in _update_monster().
+/**
+ * Mark monsters that have transitioned from seen to unseen in the last turn get
+ * an invisible monster indicator.
+ * @param mons      The monster to check.
+ * @param hash_ind  The random hash index, combined with the mid to make a
+ *                  unique hash for this roll.  Needed for when we can't mark
+ *                  the monster's true position and instead mark an adjacent
+ *                  one.
+*/
 static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
 {
     // Monster didn't go unseen last turn.
@@ -426,8 +432,7 @@ static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
  * This function updates the map_knowledge grid with a monster_info if relevant.
  * If the monster is not currently visible to the player, the map knowledge will
  * be upated with a disturbance if necessary.
- *
- * @param mons        The monster at the relevant location.
+ * @param mons  The monster at the relevant location.
 **/
 static void _update_monster(monster* mons)
 {
@@ -482,50 +487,25 @@ static void _update_monster(monster* mons)
         return;
     }
 
-    // Only leave a marker at the position where the monster went unseen last
-    // turn if we don't otherwise mark their current position.
-    bool need_handle_unseen = true;
-    // Initial monster stealth check; if it fails this, it may get an invis
-    // trail.
-    if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
+    // Monsters at anything other than max stealth get a stealth check; if they
+    // fail this and are either very unstealthy or also fail a flat 1/4 chance,
+    // they leave an invis indicator at their position.
+    if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4
+        && (mons->stealth() <= -2 || !_hashed_rand(mons, 1, 4)))
     {
-        // Maybe mark monster's true square if the monster has less than max
-        // stealth.
-        if (mons->stealth() <= -2
-            || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
-        {
-            _mark_invisible_at(gp);
-            need_handle_unseen = false;
-        }
-        else if((mons->stealth() < 1
-                 // Exceptionally stealthy monsters have a higher chance of not
-                 // leaving any invis trail.
-                 || mons->stealth() == 1 && _hashed_rand(mons, 2, 3)
-                 || mons->stealth() == 2 && _hashed_rand(mons, 2, 2))
-                // final flat chance to leave an indicator in an adjacent
-                // square.
-                && _hashed_rand(mons, 3, 2))
-        {
-            // Otherwise just indicate that there's a monster nearby
-            vector <coord_def> adj_invis;
-            for (adjacent_iterator ai(gp); ai; ai++)
-            {
-                if (_valid_invisible_spot(*ai, mons))
-                    adj_invis.push_back(*ai);
-            }
-            if (adj_invis.size())
-            {
-                _mark_invisible_at(adj_invis[_hashed_rand(mons, 4,
-                                                          adj_invis.size())],
-                                   true);
-                need_handle_unseen = false;
-            }
-        }
+        _mark_invisible_at(gp);
     }
-    if (need_handle_unseen)
-        _handle_unseen_mons(mons, 5);
+    else
+    {
+        _handle_unseen_mons(mons, 2);
+    }
 }
 
+/**
+ * Update map knowledge and set the map tiles at a location.
+ * @param gp            The location to update.
+ * @param terrain_only  If True, only the feature information/tiles are updated.
+**/
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
     if (you.see_cell(gp))
