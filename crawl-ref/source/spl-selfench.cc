@@ -192,13 +192,6 @@ spret_type cast_swiftness(int power, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.in_water() || you.liquefied_ground())
-    {
-        mprf("The %s foams!", you.in_water() ? "water"
-                                             : "liquid ground");
-        return SPRET_ABORT;
-    }
-
     if (!you.duration[DUR_SWIFTNESS] && player_movement_speed() <= 6)
     {
         mpr("You can't move any more quickly.");
