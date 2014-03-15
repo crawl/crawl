@@ -268,7 +268,9 @@ induce a state of confusion in the monster.
 Conjure Ball Lightning spell
 
 This spell allows the conjurer to create ball lightning. Using the spell is not
-without risk — ball lightning can be difficult to control.
+without risk — ball lightning can be difficult to control. Note that the magic
+which keeps ball lightning cohesive has limited range, and they may dissipate
+harmlessly if allowed to drift too far away from their caster before exploding.
 %%%%
 Conjure Flame spell
 
