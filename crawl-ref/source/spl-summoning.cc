@@ -977,6 +977,9 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
         {
             success = true;
             ball->add_ench(ENCH_SHORT_LIVED);
+
+            // Avoid ball lightnings without targets always moving towards (0,0)
+            set_random_target(ball);
         }
     }
 
