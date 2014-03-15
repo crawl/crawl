@@ -1699,6 +1699,81 @@ xxx.xxbbbbbbWbbx.xxxx
    xxxxxxxxxxxx
 ENDMAP
 
+## A den of bears.
+NAME:   gammafunk_lair_bear_cave
+DEPTH:  Lair:1-7
+ORIENT: float
+TAGS:   patrolling no_monster_gen
+MONS:   grizzly bear / polar bear
+KFEAT:  " = W
+KMONS:  " = giant goldfish / shark / electric eel
+KITEM:  % = strawberry / grape / lychee / choko / rambutan / apple / pear \
+            / orange / w:1 meat ration
+SUBST:  % = %., * = *:40 |, B = 1., E = tE
+CLEAR:  E
+MAP
+EEEEEEEEEEEEEEEEEEEEEEEEE
+EtttttxxtttxxxxxxttxxtttE
+EttxxxxxxxxxxxxxxxxxxxxxE
+Etxxxxxxxxxxx..xxxxxxxxtE
+Etxxxxx"Wxx......x.xxxttE
+Exxx%...1.....x....xxxxtE
+Exxx%B.1...xxxxx.....xxtE
+Exxxx%%%*xxxxxxxxxxx..xtE
+Etxxx*xxxxxxxtxxxxxxx...@
+Etxxxxxxxxxxtttttttxxx..@
+EttxxxxxttttttttttttttttE
+EEEEEEEEEEEEEEEEEEEEEEEEE
+ENDMAP
+
+## A hidden river runs under a mountain, feeding into an enchanted lake.
+NAME:   gammafunk_lair_enchanted_lake
+DEPTH:  Lair:3-7
+ORIENT: north
+TAGS:   no_pool_fixup no_rotate patrolling
+SUBST:  1 = 1:30 ., 2 = 2:30 W, 3 = 3:30 W, 4 = 4w, R = tx, * = *|
+NSUBST: 0 = 2:9 / *:0
+MONS:   plant / bush / toadstool
+KMONS:  2 = plant / toadstool
+KMONS:  3 = w:1 giant goldfish / w:1 shark / plant / toadstool
+KMONS:  4 = w:5 giant goldfish / shark / electric eel
+KFEAT:  23 = W
+KFEAT:  4 = w
+KMONS:  5 =  lindwurm / dire elephant / catoblepas
+KMASK:  Ww = no_monster_gen
+FTILE:  _|*5 = floor_pebble_brown
+SUBST:  E = tE
+CLEAR:  E
+MAP
+EtccccccccccccccccccccccctE
+Etc*_WWWWWw4xxwWW4xxx4w4ctE
+Etc*5_WWxWWxxwWWwWWxxwwwctE
+Etc*5_wxxWWxWWWxxwwWWwWWctE
+Etc*_wwxxxWWW4xxxx4wWWWWctE
+EtccccccccccccccccccccW3xtE
+EtxxxxxxxxxxxxxxxxxxxxxWxtE
+EttttxRRRRRRRRRRRRRRtttWttE
+Ettttt.2W2WWtt3Wtwww3WWwttE
+Ettt...2WwwwWwWwWwwwWwwwttE
+Ett1..2Wwww3wWwwwWWWwwwtttE
+Ett1..Wwwwwttwwttt33tttttE
+Ett1..WwwwwttttttttttttttE
+Ett1..2WwwwwW222ttttttttE
+Ett.....Wwwww22...ttttttE
+Ettt.....2WwwwW2....ttttE
+Ettt..0....WwwWW....tttttE
+Ettt1.....WWwwWW..0..1tttE
+Etttt1...WWWwwwWW....1tttE
+Etttt....WWwwwwWW..0..1ttE
+Ettttt.0.WWwwwwWW....1tttE
+ Etttt1...WWwwWWW..0.1tttE
+  Etttt...WWWWWW....ttttE
+  Ettttt...WWWW....1ttttE
+   Etttt1.........1tttEE
+    Etttt........tttttE
+     EEEE...@@...EEEEE
+ENDMAP
+
 ###############################################################################
 # Lair endings
 ###############################################################################
