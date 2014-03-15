@@ -7088,14 +7088,13 @@ int player_res_magic(bool calc_unid, bool temp)
     rm += you.scan_artefacts(ARTP_MAGIC, calc_unid);
 
     // armour
-    rm += 30 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE,
-                                     calc_unid);
+    rm += 40 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE, calc_unid);
 
     // rings of magic resistance
     rm += 40 * you.wearing(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
 
     // Mutations
-    rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
+    rm += 40 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
     // transformations
     if (you.form == TRAN_LICH && temp)
