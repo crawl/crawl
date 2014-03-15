@@ -1433,9 +1433,9 @@ int acquirement_create_item(object_class_type class_wanted,
         }
         else if (is_deck(doodad))
         {
-            doodad.special = !one_chance_in(3) ? DECK_RARITY_LEGENDARY :
-                             !one_chance_in(5) ? DECK_RARITY_RARE :
-                                                 DECK_RARITY_COMMON;
+            // Non-legendary decks aren't very useful for non-nemelexites
+            // and nemelexites get plenty of lower-quality decks anyway.
+            doodad.special = DECK_RARITY_LEGENDARY;
         }
 
         // Last check: don't acquire items your god hates.
