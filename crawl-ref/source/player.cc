@@ -3512,7 +3512,11 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 #endif
             case SP_FORMICID:
                 if (!(you.experience_level % 4))
-                    modify_stat(STAT_STR, 1, false, "level gain");
+                {
+                    modify_stat((coinflip() ? STAT_STR
+                                            : STAT_INT), 1, false,
+                                "level gain");
+                }
                 break;
 
             case SP_GARGOYLE:
