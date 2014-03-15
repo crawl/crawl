@@ -2970,7 +2970,7 @@ ENDMAP
 
 NAME:    onia_ninara_cookie
 SHUFFLE: ABCDEF
-SUBST:   A : x, B : x, C : x, D : x, E : x, F : +, G : ~ l:50 w:50 I
+SUBST:   A : x, B : x, C : x, D : x, E : x, F : +, G : l:50 w:50 I
 SUBST:   x : xvcb
 SUBST:   H = 0 ., J = 1 0:100 $:20
 ITEM:    any jewellery
@@ -3717,7 +3717,7 @@ MAP
 .""".vvvvv1....
 .."..vvvvv.."0.
 .....vvvvv.""".
-.~G..vvvvv.....
+..G..vvvvv.....
 vvvvv.....vvvvv
 vvvvv."...xx*xv
 vvvvv."".G.x%8v
@@ -6171,21 +6171,20 @@ NAME: minivault_13
 TAGS: ruin_abyss
 DEPTH: D:9-, Elf, Abyss
 SHUFFLE: AB, CD, EH/FG
-KFEAT: ACEH = any trap
 KITEM: ABCD = gold / nothing
 SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
-.+.Ac.Cc.9x.
+.+..c..c.9x.
 .x.B+.D+..x.
 .xcccccc=cx.
 .x.8+|0c8.x.
 .x8$c.|c..x.
 .xc+cccc+cx.
-.x.9+EF+..x.
-.x..cGHc9.x.
+.x.9+.F+..x.
+.x..cG.c9.x.
 .xxxxxxxxxx.
 ............
 ENDMAP
