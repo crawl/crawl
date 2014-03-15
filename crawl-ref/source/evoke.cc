@@ -699,7 +699,7 @@ static bool _box_of_beasts(item_def &box)
                                  BEH_FRIENDLY, &you,
                                  3 + random2(3), 0,
                                  you.pos(),
-                                 MHITYOU);
+                                 MHITYOU, MG_AUTOFOE);
         mg.define_chimera(mon, mon2, mon3);
         mons = create_monster(mg);
         if (mons)
@@ -757,7 +757,7 @@ static bool _sack_of_spiders(item_def &sack)
                                      BEH_FRIENDLY, &you,
                                      3 + random2(4), 0,
                                      you.pos(),
-                                     MHITYOU);
+                                     MHITYOU, MG_AUTOFOE);
             if (create_monster(mg))
                 success = true;
         }
