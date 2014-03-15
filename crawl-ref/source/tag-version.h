@@ -85,6 +85,7 @@ enum tag_minor_version
     TAG_MINOR_HORN_GERYON_CHANGE,  // Horn of geryon changed to an xp-evoker
     TAG_MINOR_NEMELEX_WEIGHTS,     // Nemelex deck weighting removed
     TAG_MINOR_UNSEEN_MONSTER,      // Invis indicators for monsters going from seen to unseen
+    TAG_MINOR_MR_ITEM_RESCALE,     // Rescaled MR property on items.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

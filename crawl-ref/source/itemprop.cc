@@ -2172,7 +2172,7 @@ int get_armour_res_magic(const item_def &arm, bool check_artp)
         res += 40;
 
     if (check_artp && is_artefact(arm))
-        res += artefact_wpn_property(arm, ARTP_MAGIC);
+        res += 40 * artefact_wpn_property(arm, ARTP_MAGIC);
 
     return res;
 }
@@ -2311,7 +2311,7 @@ int get_jewellery_res_magic(const item_def &ring, bool check_artp)
         res += 40;
 
     if (check_artp && is_artefact(ring))
-        res += artefact_wpn_property(ring, ARTP_MAGIC);
+        res += 40 * artefact_wpn_property(ring, ARTP_MAGIC);
 
     return res;
 }

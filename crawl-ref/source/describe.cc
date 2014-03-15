@@ -238,7 +238,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "rF",     ARTP_FIRE,                  1 },
         { "rC",     ARTP_COLD,                  1 },
         { "rN",     ARTP_NEGATIVE_ENERGY,       1 },
-        { "MR",     ARTP_MAGIC,                 2 }, // handled specially
+        { "MR",     ARTP_MAGIC,                 1 },
 
         // Quantitative attributes
         { "HP",     ARTP_HP,                    0 },
@@ -348,8 +348,7 @@ static vector<string> _randart_propnames(const item_def& item,
                     work << "+";
                 else if (propanns[i].prop == ARTP_METABOLISM && val < 0)
                     work << "-";
-                else if (propanns[i].prop == ARTP_STEALTH
-                         || propanns[i].prop == ARTP_MAGIC)
+                else if (propanns[i].prop == ARTP_STEALTH)
                 {
                     if (val > 50)
                         work << "++";

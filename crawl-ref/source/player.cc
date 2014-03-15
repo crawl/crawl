@@ -7085,7 +7085,7 @@ int player_res_magic(bool calc_unid, bool temp)
     }
 
     // randarts
-    rm += you.scan_artefacts(ARTP_MAGIC, calc_unid);
+    rm += 40 * you.scan_artefacts(ARTP_MAGIC, calc_unid);
 
     // armour
     rm += 40 * you.wearing_ego(EQ_ALL_ARMOUR, SPARM_MAGIC_RESISTANCE, calc_unid);
