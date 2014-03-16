@@ -1282,6 +1282,12 @@ string get_ability_desc(const ability_type ability)
     if (lookup.empty()) // Nothing found?
         lookup = "No description found.\n";
 
+    if (god_hates_ability(ability, you.religion))
+    {
+        lookup += uppercase_first(god_name(you.religion))
+                  + " frowns upon the use of this ability.\n";
+    }
+
     ostringstream res;
     res << name << "\n\n" << lookup << "\n"
         << _detailed_cost_description(ability);
@@ -3121,6 +3127,9 @@ int choose_ability_menu(const vector<talent>& talents)
 #ifdef USE_TILE
             me->add_tile(tile_def(tileidx_ability(talents[i].which), TEX_GUI));
 #endif
+            // Only check this here, since your god can't hate its own abilities
+            if (god_hates_ability(talents[i].which, you.religion))
+                me->colour = COL_FORBIDDEN;
             abil_menu.add_entry(me);
         }
     }
