@@ -561,7 +561,7 @@ int player::halo_radius2() const
     }
 
     if (player_equip_unrand(UNRAND_BRILLIANCE))
-        size = max(size, 9);
+        size = max(size, 10);
 
     return size;
 }
@@ -572,7 +572,7 @@ int monster::halo_radius2() const
     int size = -1;
 
     if (weap && weap->special == UNRAND_BRILLIANCE)
-        size = 9;
+        size = 10;
 
     if (holiness() != MH_HOLY)
         return size;
@@ -590,15 +590,15 @@ int monster::halo_radius2() const
     case MONS_SERAPH:
         return 50;
     case MONS_OPHAN:
-        return 64; // highest rank among sentient ones
+        return 65; // highest rank among sentient ones
     case MONS_SHEDU:
         return 10;
     case MONS_SILVER_STAR:
         return 40; // dumb but with an immense power
     case MONS_HOLY_SWINE:
-        return 1;  // only notionally holy
+        return 2;  // only notionally holy
     case MONS_MENNAS:
-        return 4;  // ???  Low on grace or what?
+        return 5;  // ???  Low on grace or what?
     default:
         return -1;
     }
@@ -717,7 +717,7 @@ int player::umbra_radius2() const
     }
 
     if (player_equip_unrand(UNRAND_SHADOWS))
-        size = max(size, 9);
+        size = max(size, 10);
 
     return size;
 }
@@ -726,7 +726,7 @@ int monster::umbra_radius2() const
 {
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
     if (ring && ring->special == UNRAND_SHADOWS)
-        return 9;
+        return 10;
 
     if (holiness() != MH_UNDEAD)
         return -1;
