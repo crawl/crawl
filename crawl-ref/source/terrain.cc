@@ -763,12 +763,13 @@ bool feat_cannot_be_mimic(dungeon_feature_type feat)
 
 static bool _is_feature_shift_target(const coord_def &pos, void*)
 {
-    return grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos);
+    return grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos)
+                && !actor_at(pos);
 }
 
-// Moves everything at src to dst. This is not a swap operation: src
-// will be left with the same feature it started with, and should be
-// overwritten with something new.
+// Moves everything at src to dst. This is not a swap operation: src will be
+// left with the same feature it started with, and should be overwritten with
+// something new. Assumes there are no actors in the destination square.
 //
 // Things that are moved:
 // 1. Dungeon terrain (set to DNGN_UNSEEN)
@@ -822,6 +823,9 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     }
 
     grd(dst) = dfeat;
+
+    if (move_monster || move_player)
+        ASSERT(!actor_at(dst));
 
     if (move_monster)
     {
