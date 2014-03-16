@@ -1030,6 +1030,26 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                7, WPN_DEMON_BLADE,
                                                7, WPN_DEMON_TRIDENT,
                                                0);
+        if (x_chance_in_y(5, 9))
+            level = MAKE_GOOD_ITEM;
+        break;
+
+    case MONS_HELL_KNIGHT:
+        force_item = true;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_DEMON_WHIP,
+                                      WPN_DEMON_BLADE,
+                                      WPN_DEMON_TRIDENT,
+                                      WPN_HALBERD,
+                                      WPN_GLAIVE,
+                                      WPN_WAR_AXE,
+                                      WPN_GREAT_MACE,
+                                      WPN_BATTLEAXE,
+                                      WPN_LONG_SWORD,
+                                      WPN_SCIMITAR,
+                                      WPN_GREAT_SWORD,
+                                      WPN_BROAD_AXE,
+                                      -1);
 
         if (x_chance_in_y(5, 9))
         {
@@ -1046,16 +1066,10 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.plus2 += random2(6);
         break;
 
-    case MONS_HELL_KNIGHT:
-    case MONS_MAUD:
-    case MONS_FREDERICK:
     case MONS_MARGERY:
         force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(3, WPN_DEMON_WHIP,
-                                               4, WPN_DEMON_BLADE,
-                                               4, WPN_DEMON_TRIDENT,
-                                               5, WPN_HALBERD,
+        item.sub_type = random_choose_weighted(5, WPN_HALBERD,
                                                5, WPN_GLAIVE,
                                                6, WPN_WAR_AXE,
                                                6, WPN_GREAT_MACE,
@@ -1064,6 +1078,9 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                8, WPN_SCIMITAR,
                                                8, WPN_GREAT_SWORD,
                                                9, WPN_BROAD_AXE,
+                                               10, WPN_DEMON_WHIP,
+                                               13, WPN_DEMON_BLADE,
+                                               14, WPN_DEMON_TRIDENT,
                                                0);
 
         if (x_chance_in_y(5, 9))
@@ -1079,6 +1096,26 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
         item.plus  += random2(6);
         item.plus2 += random2(6);
+        break;
+
+    case MONS_FREDERICK:
+    case MONS_MAUD:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted(5, WPN_HALBERD,
+                                               5, WPN_GLAIVE,
+                                               6, WPN_WAR_AXE,
+                                               6, WPN_GREAT_MACE,
+                                               7, WPN_BATTLEAXE,
+                                               8, WPN_LONG_SWORD,
+                                               8, WPN_SCIMITAR,
+                                               8, WPN_GREAT_SWORD,
+                                               9, WPN_BROAD_AXE,
+                                               10, WPN_BASTARD_SWORD,
+                                               13, WPN_EVENINGSTAR,
+                                               14, WPN_DEMON_TRIDENT,
+                                               0);
+        if (x_chance_in_y(5, 9))
+            level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_FIRE_GIANT:
@@ -1498,6 +1535,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type = random_choose(WPN_DEMON_WHIP,
                                       WPN_DEMON_BLADE,
                                       WPN_DEMON_TRIDENT,
+                                      WPN_MORNINGSTAR,
+                                      WPN_BROAD_AXE,
                                       -1);
         level = MAKE_GOOD_ITEM;
         break;
