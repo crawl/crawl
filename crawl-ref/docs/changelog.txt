@@ -1,4 +1,4 @@
-Stone Soup 0.14 (up to 0.14-a0-3253-g714c6fd)
+Stone Soup 0.14 (up to 0.14-a0-3343-gf50c63c)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new races: Formicids and Vine Stalkers.
@@ -32,6 +32,8 @@ Branches, environment
 * Gadget shops and wand shops have been merged; the resulting gadget shops
   now also sell rods.
 * The price of items in shops has been recalibrated.
+* Pandemonium exits occur more frequently as the player obtains runes from
+  Pandemonium.
 
 Character
 ---------
@@ -296,22 +298,22 @@ Items
     - The skin of Zhor now grants rC+++.
     - Leech drains HP on all hits (instead of 3/5 for other vampiric weapons).
     - Sniper is now a +15 vorpal crossbow with a slower rate of fire.
-    - Snakebite is now a +5 venom whip that applies a curare effect on two out of
-      five hits.
+    - Snakebite is now a +5 venom whip that applies a curare effect on two out
+      of five hits.
     - The Singing Sword is now a bastard sword.
     - The shield of the gong is now +27 with -5 EV.
     - The ring of Shadows now has an umbra instead of +4 EV and -4 Acc.
-    - New unrand: "macabre finger necklace" - gives warding and an extra ring slot.
-    - New unrand: "boots of the spider" - gives clinging, trample immunity, and
-      jump attack.
+    - New unrand: "macabre finger necklace" - gives warding and an extra ring
+      slot.
+    - New unrand: "boots of the Spider" - gives clinging and jump attack.
     - New unrand: "dark maul" - a very large, very slow two-handed weapon using
       the Maces and Flails skill.
     - New unrand: "hat of the High Council" - spellpower at the expense of
       spell success rates.
     - New unrand: "arc blade" - a cutlass which inflicts discharges of static
       electricity on targets it hits.
-    - New unrand: "Spellbinder" - an antimagic demon whip which inflicts miscasts
-      on magic-using targets.
+    - New unrand: "Spellbinder" - an antimagic demon whip which inflicts
+      miscasts on magic-using targets.
     - New unrand: "lajatang of Order" - does silver damage (like the ammunition
       brand) and grants resistance to mutation.
     - New unrand: "Firestarter" - a +7 great mace {flame, rF++} which protects
@@ -421,6 +423,7 @@ Gods
   immediately on worshipping that god (Invocations for many gods, Evocations
   for Nemelex, Necromancy for Kiku, and Shields for TSO per Divine Shield).
 * Ashenzari now generate 1-3 curse scrolls per remove curse scroll.
+* Innate abilities hated by your god are now marked as such.
 
 Interface
 ---------
