@@ -1780,13 +1780,20 @@ static bool _is_sealed_square(const coord_def &c)
 
 static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 {
-    // To prevent the destruction of, say, branch entries.
-    bool preserve_feat = true;
+    // Ask dungeon_change_terrain to preserve things that are not altars.
+    // This only actually matters for malign gateways and features that happen
+    // to be on squares that happen to contain map markers (e.g. sealed doors,
+    // which come with their own markers). MAT_CORRUPTION_NEXUS is a marker,
+    // and some of those are certainly nearby, but they only appear on
+    // DNGN_FLOOR. preserve_features=true would ordinarily cause
+    // dungeon_terrain_changed to protect stairs/branch entries/portals as
+    // well, but _corrupt_square is not called on squares containing those
+    // features.
+    bool preserve_features = true;
     dungeon_feature_type feat = DNGN_UNSEEN;
     if (feat_altar_god(grd(c)) != GOD_NO_GOD)
     {
-        // altars may be safely overwritten, ha!
-        preserve_feat = false;
+        preserve_features = false;
         if (!one_chance_in(3))
             feat = DNGN_ALTAR_LUGONU;
     }
@@ -1833,7 +1840,7 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
             feat = DNGN_FLOOR;
     }
 
-    dungeon_terrain_changed(c, feat, true, preserve_feat, true);
+    dungeon_terrain_changed(c, feat, true, preserve_features, true);
     if (feat == DNGN_ROCK_WALL)
         env.grid_colours(c) = cenv.rock_colour;
     else if (feat == DNGN_FLOOR)
