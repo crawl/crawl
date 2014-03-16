@@ -31,8 +31,8 @@ unspeakable MONS_UNSPEAKABLE
 %sdir mon/animals
 
 ## Insects ('a')
-%rim 1
 giant_cockroach MONS_GIANT_COCKROACH
+%rim 1
 worker_ant MONS_WORKER_ANT
 soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
