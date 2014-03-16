@@ -2,6 +2,17 @@
 -- vault.lua: Vault helper functions from more than one file.
 --------------------------------------------------------------------------
 
+-- Counting Pan runes for Ignacio and for exits.
+function count_pan_runes()
+  local runes = 0
+  for _, r in ipairs({"demonic","glowing","magical","fiery","dark"}) do
+    if you.have_rune(r) then
+      runes = runes + 1
+    end
+  end
+  return runes
+end
+
 -- Functionality for some of HangedMan's decor vaults.
 function init_hm_decor_walldepth(e, variables)
 local a = you.absdepth() * 5

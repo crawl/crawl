@@ -15,6 +15,8 @@
 # Pan lua functions
 ###############################################################################
 
+: require('dlua/vault.lua')
+
 # The generic pan lord warning message.
 
 {{
@@ -442,15 +444,25 @@ default-depth: Pan
 
 NAME:   pan_exit
 TAGS:   extra allow_dup transparent no_dump
-CHANCE: 5%
-KFEAT:  O = exit_pandemonium
+CHANCE: 100%
+{{
+local exit_chance = 5 + 3*count_pan_runes()
+local floor_chance = 100 - exit_chance
+kfeat("O = exit_pandemonium w:" .. exit_chance .. " / floor w:" .. floor_chance)
+}}
 MAP
 O
 ENDMAP
 
 NAME:   pan_to_abyss
 TAGS:   extra allow_dup transparent no_dump
-CHANCE: 25%
+CHANCE: 100%
+{{
+local exit_chance = 25 + 10*count_pan_runes()
+local floor_chance = 100 - exit_chance
+kfeat("O = exit_through_abyss w:" .. exit_chance ..
+      " / floor w:" .. floor_chance)
+}}
 KFEAT:  O = exit_through_abyss
 MAP
 O
