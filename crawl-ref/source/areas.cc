@@ -556,10 +556,8 @@ int player::halo_radius2() const
     if (religion == GOD_SHINING_ONE && piety >= piety_breakpoint(0)
         && !penance[GOD_SHINING_ONE])
     {
-        // Preserve the middle of old radii.
-        const int r = piety - 10;
-        // The cap is 64, just less than the LOS of 65.
-        size = min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
+        // The cap is reached at piety 160 = ******.
+        size = min(LOS_RADIUS*LOS_RADIUS + 1, piety * piety / 393);
     }
 
     if (player_equip_unrand(UNRAND_BRILLIANCE))
@@ -714,10 +712,8 @@ int player::umbra_radius2() const
     if (religion == GOD_DITHMENOS && piety >= piety_breakpoint(0)
         && !penance[GOD_DITHMENOS])
     {
-        // Preserve the middle of old radii.
-        const int r = piety - 10;
-        // The cap is 64, just less than the LOS of 65.
-        size = min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
+        // The cap is reached at piety 160 = ******.
+        size = min(LOS_RADIUS*LOS_RADIUS + 1, piety * piety / 393);
     }
 
     if (player_equip_unrand(UNRAND_SHADOWS))
