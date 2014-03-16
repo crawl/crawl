@@ -1593,7 +1593,9 @@ LUAFN(_dgn_place_map)
         where = c;
     }
     {
-        dgn_map_parameters mp(luaL_checkstring(ls, 6));
+        dgn_map_parameters mp(lua_gettop(ls) >= 5
+                              ? luaL_checkstring(ls, 6)
+                              : "");
         if (dgn_place_map(map, check_collision, no_exits, where)
             && !env.level_vaults.empty())
         {
