@@ -1052,7 +1052,10 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_MARGERY:
         force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(5, WPN_HALBERD,
+        item.sub_type = random_choose_weighted(3, WPN_DEMON_WHIP,
+                                               4, WPN_DEMON_BLADE,
+                                               4, WPN_DEMON_TRIDENT,
+                                               5, WPN_HALBERD,
                                                5, WPN_GLAIVE,
                                                6, WPN_WAR_AXE,
                                                6, WPN_GREAT_MACE,
@@ -1061,9 +1064,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                8, WPN_SCIMITAR,
                                                8, WPN_GREAT_SWORD,
                                                9, WPN_BROAD_AXE,
-                                               10, WPN_DEMON_WHIP,
-                                               13, WPN_DEMON_BLADE,
-                                               14, WPN_DEMON_TRIDENT,
                                                0);
 
         if (x_chance_in_y(5, 9))
