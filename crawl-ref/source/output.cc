@@ -1272,6 +1272,13 @@ void print_stats(void)
     if (Temp_Bar.wants_redraw() && you.species == SP_LAVA_ORC)
         you.redraw_temperature = true;
 
+    // Poison display depends on regen rate, so should be redrawn every turn.
+    if (you.duration[DUR_POISONING])
+    {
+        you.redraw_hit_points = true;
+        you.redraw_status_flags |= REDRAW_POISONED;
+    }
+
 #ifdef USE_TILE_LOCAL
     bool has_changed = _need_stats_printed();
 #endif
