@@ -1019,69 +1019,45 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         break;
 
     case MONS_DONALD:
-        force_item = true;
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(12, WPN_SCIMITAR,
-                                               11, WPN_LONG_SWORD,
-                                               1, WPN_EVENINGSTAR,
+                                               10, WPN_LONG_SWORD,
                                                4, WPN_WAR_AXE,
-                                               5, WPN_BROAD_AXE,
-                                               6, WPN_DEMON_WHIP,
-                                               7, WPN_DEMON_BLADE,
+                                               7, WPN_BROAD_AXE,
+                                               7, WPN_EVENINGSTAR,
+                                               7, WPN_BASTARD_SWORD,
                                                7, WPN_DEMON_TRIDENT,
                                                0);
         if (x_chance_in_y(5, 9))
             level = MAKE_GOOD_ITEM;
         break;
 
+    case MONS_MARGERY:
     case MONS_HELL_KNIGHT:
         force_item = true;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose(WPN_DEMON_WHIP,
-                                      WPN_DEMON_BLADE,
-                                      WPN_DEMON_TRIDENT,
-                                      WPN_HALBERD,
-                                      WPN_GLAIVE,
-                                      WPN_WAR_AXE,
-                                      WPN_GREAT_MACE,
-                                      WPN_BATTLEAXE,
-                                      WPN_LONG_SWORD,
-                                      WPN_SCIMITAR,
-                                      WPN_GREAT_SWORD,
-                                      WPN_BROAD_AXE,
-                                      -1);
 
-        if (x_chance_in_y(5, 9))
+        if (mon->type == MONS_MARGERY && one_chance_in(5))
         {
-            set_item_ego_type(item, OBJ_WEAPONS,
-                              random_choose_weighted(13, SPWPN_FLAMING,
-                                                     4, SPWPN_DRAINING,
-                                                     4, SPWPN_VORPAL,
-                                                     2, SPWPN_DISTORTION,
-                                                     2, SPWPN_PAIN,
-                                                     0));
+            item.sub_type = random_choose(WPN_DEMON_WHIP, WPN_DEMON_BLADE,
+                                          WPN_DEMON_TRIDENT, -1);
         }
-
-        item.plus  += random2(6);
-        item.plus2 += random2(6);
-        break;
-
-    case MONS_MARGERY:
-        force_item = true;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(5, WPN_HALBERD,
-                                               5, WPN_GLAIVE,
-                                               6, WPN_WAR_AXE,
-                                               6, WPN_GREAT_MACE,
-                                               7, WPN_BATTLEAXE,
-                                               8, WPN_LONG_SWORD,
-                                               8, WPN_SCIMITAR,
-                                               8, WPN_GREAT_SWORD,
-                                               9, WPN_BROAD_AXE,
-                                               10, WPN_DEMON_WHIP,
-                                               13, WPN_DEMON_BLADE,
-                                               14, WPN_DEMON_TRIDENT,
-                                               0);
+        else
+        {
+            item.sub_type = random_choose(WPN_DEMON_WHIP,
+                                          WPN_DEMON_BLADE,
+                                          WPN_DEMON_TRIDENT,
+                                          WPN_HALBERD,
+                                          WPN_GLAIVE,
+                                          WPN_WAR_AXE,
+                                          WPN_GREAT_MACE,
+                                          WPN_BATTLEAXE,
+                                          WPN_LONG_SWORD,
+                                          WPN_SCIMITAR,
+                                          WPN_GREAT_SWORD,
+                                          WPN_BROAD_AXE,
+                                          -1);
+        }
 
         if (x_chance_in_y(5, 9))
         {
@@ -1116,6 +1092,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                0);
         if (x_chance_in_y(5, 9))
             level = MAKE_GOOD_ITEM;
+        else
+        {
+            item.plus  += random2(6);
+            item.plus2 += random2(6);
+            force_item = true;
+        }
         break;
 
     case MONS_FIRE_GIANT:
