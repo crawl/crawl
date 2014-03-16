@@ -586,7 +586,8 @@ function dgn.place_maps(parameters)
   for i = 1, n_times do
     local map = dgn.find_map(parameters)
     if map then
-      local map_placed_ok = dgn.place_map(map)
+      local map_placed_ok = dgn.place_map(map, true, false, nil, nil,
+                                          parameters.tag)
       if map_placed_ok then
         n_placed = n_placed + 1
       else
