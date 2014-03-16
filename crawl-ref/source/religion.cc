@@ -3978,6 +3978,26 @@ bool god_loathes_spell(spell_type spell, god_type god)
     return false;
 }
 
+bool god_hates_ability(ability_type ability, god_type god)
+{
+    switch (ability)
+    {
+        case ABIL_SPIT_POISON:
+        case ABIL_BREATHE_POISON:
+        case ABIL_BREATHE_MEPHITIC:
+            return (god == GOD_SHINING_ONE);
+        case ABIL_BREATHE_FIRE:
+        case ABIL_BREATHE_STICKY_FLAME:
+        case ABIL_BREATHE_STEAM:
+        case ABIL_DELAYED_FIREBALL:
+        case ABIL_HELLFIRE:
+            return (god == GOD_DITHMENOS);
+        default:
+            break;
+    }
+    return false;
+}
+
 bool god_can_protect_from_harm(god_type god)
 {
     switch (god)
