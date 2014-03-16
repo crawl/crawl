@@ -59,6 +59,8 @@
 ################################################################################
 
 {{
+require('dlua/vault.lua')
+
 function place_unique(e, monster)
    e.mons(monster)
    e.tags("place_unique")
@@ -394,12 +396,7 @@ veto {{
     return true -- don't spam the list of vaults
   end
   if not dgn.persist.ignacio_spawned then
-    local runes = 0;
-    for _, r in ipairs({"demonic","glowing","magical","fiery","dark"}) do
-      if you.have_rune(r) then
-        runes = runes + 1
-      end
-    end
+    local runes = count_pan_runes()
     if crawl.x_chance_in_y(runes * runes, 100) then
       dgn.persist.ignacio_spawned = true
       dgn.persist.ignacio_forbid = crawl.coinflip()
