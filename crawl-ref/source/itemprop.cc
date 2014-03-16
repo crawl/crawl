@@ -405,7 +405,7 @@ static const food_def Food_prop[NUM_FOODS] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
     { FOOD_SAUSAGE,      "sausage",      1200,   150,  -400,  40, 2, FFL_NONE },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500, 100, 3, FFL_NONE },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  50, 3, FFL_NONE },
     { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2, FFL_NONE },
 
     { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4, FFL_NONE },
