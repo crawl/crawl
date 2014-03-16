@@ -1250,6 +1250,222 @@ twuuuuuwt
 ttttttttt
 ENDMAP
 
+####
+
+NAME: nicolae_swamp_spriggan_camp
+DEPTH: Swamp
+SHUFFLE: Ff/Gg/Hh/Ii
+SUBST: ghi = .
+KMONS: D = patrolling spriggan rider
+KMONS: SGHI = spriggan / nothing
+KMONS: F = spriggan druid
+KITEM: f = potion of porridge / bread ration / apple / banana
+KFEAT: t = mangrove
+MAP
+       ttttt
+  ttttttgggt
+ @.ttt.t.G.t
+@......tt.tt
+t...D..S...t
+tttt.......tt
+ ttt.S..S...t
+ tt......tt.t
+tttt.tt.tt..t
+ti...t...tH.t
+tiI..t.F.thht
+ti...tffftttt
+tttttttttt
+ENDMAP
+
+NAME: nicolae_swamp_thorn_lake
+DEPTH: Swamp
+TAGS: transparent
+SUBST: b = W.
+NSUBST: W = 3:1 / *:W, . = 1:2 / *:.
+KMONS: 1 = thorn lotus
+KMONS: 2 = thorn hunter
+KFEAT: 1 = W
+KFEAT: t = mangrove
+MAP
+  t@@t
+  t..tt
+  tt..t    ttt
+   t..tt ttt.@
+   tt..ttt...@
+    t..t....tt
+   ttt....ttt
+ ttt....ttt
+tt....t..t
+@...ttt..tt
+@.tttttt..t
+tttttttt..tt
+  tt.......t
+ tt........t
+tt...bbb...tt
+t...bbWbb...t
+t..bbWWWbb..t
+t..bWWWWWb..t
+t..bbWWWbb..t
+t...bbWbb...t
+tt...bbb...tt
+ tt.......tt
+  tt.....tt
+   ttttttt
+ENDMAP
+
+NAME: nicolae_swamp_game_of_thorns
+DEPTH: Swamp
+TAGS: no_monster_gen transparent
+NSUBST: h = 2:h / *:.
+NSUBST: l = 3:l / *:W
+SUBST: T = t., W = WWWWw, q = W.
+KMONS: h = thorn hunter
+KMONS: l = thorn lotus
+KFEAT: l = W
+KFEAT: t = mangrove
+MAP
+      ttttt
+    TtTTTtttT
+   ....q.TTqTTTT
+  @..hWT.WWWl.qT
+ T.T..qWWqqWWTTT
+TT..WWWqT.TW.q.T
+t.TqWlq..T..W..tt
+t.TTWWWq.Wqh.W.Tt
+tqWW...WWqWWWq.Tt
+tWqh.WWq..WlWq..t
+tT..Wq.TT.qWWWWqt
+tT..W..h.WWq..qWt
+tTTTTWlWWTTTWlW.t
+tT...WWWWTTTWWT.T
+ T.q.h..qW..TT..
+ TT.qt.qWq.h..@
+  TT.tTTq....q
+   TTtttTTTtTT
+      ttttt
+ENDMAP
+
+NAME: nicolae_swamp_oklob_treasure_island
+DEPTH: Swamp
+TAGS: no_pool_fixup
+SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
+NSUBST: ' = 1:^ / 1:o / *:'
+SUBST: abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%, \
+       _ = .._, . = ......W
+KFEAT: ^ = teleport trap
+KMONS: o = oklob plant
+KFEAT: t = mangrove
+CLEAR: _
+MAP
+       _____
+     __.....__
+    _........._
+   _...GGFFF..._
+  _...GggfffF..._
+ _...GggGFFffF..._
+ _..GggG'''FeeE.._
+_..AaaA'''''EeeE.._
+_..AaA'''''''EeE.._
+_..AaA'''''''EeE.._
+_..AaA'''''''DdD.._
+_..BbbB'''''DddD.._
+ _..BbbB'''DddD.._
+ _...BbbCCCcdD..._
+  _...BbccccC..._
+   _...BCCCC..._
+    _........._
+     __.....__
+       _____
+ENDMAP
+
+NAME: nicolae_swamp_triple_paths
+DEPTH: Swamp
+TAGS: transparent extra decor
+SUBST: R = tr, T = t_
+KFEAT: r = tree
+KFEAT: t = mangrove
+CLEAR: _
+MAP
+         TR@RT
+         TR.RT
+     @TTTTR.RTTTT@
+    T..RRRR.RRRR..T
+    TT....r.r....TT
+     TRRR.r.r.RRRT
+    TTttR.r.r.RttTT
+TTTTTtttR.r.r.RtttTTTTT
+ttttttttR.r.r.Rtttttttt
+TTTTTtttR.r.r.RtttTTTTT
+    TTttR.r.r.RttTT
+     TRRR.r.r.RRRT
+    TT....r.r....TT
+    T..RRRR.RRRR..T
+     @TTTtR.RtTTT@
+        TTR.RTT
+         TR@RT
+ENDMAP
+
+NAME: nicolae_swamp_godswood
+DEPTH: Swamp
+TAGS: transparent extra decor
+KFEAT: t = mangrove
+MAP
+ttt     ttt
+..ttttttt..
+@...ttt...@
+.tt..t..tt.
+tttt...tttt
+ tt..t..tt
+ t.......t
+ tt..w..tt
+  t.www.t
+ tt..w..tt
+ t...C...t
+ tt..t..tt
+  tt...tt
+   ttttt
+ENDMAP
+
+NAME: nicolae_swamp_orc_logging_accident
+DEPTH: Swamp
+PLACE: Swamp:3
+TAGS: decor extra no_monster_gen no_trap_gen
+SUBST: F = 't, T = _t
+NSUBST: p = 4:p / *:., ' = o / '
+SUBST: . = ...b
+KPROP: bp = bloody
+SUBST: b = .
+{{
+dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'hand axe / broad axe, ' ..
+   'leather armour / pair of gloves, mundane quarterstaff')
+dgn.delayed_decay_extra(_G, 'p', 'orc corpse', 'hand axe / broad axe, ' ..
+   'leather armour / pair of gloves')
+}}
+KITEM: w = mundane quarterstaff
+KITEM: s = meat ration / bread ration
+KFEAT: t = mangrove
+KFEAT: 'o = W
+CLEAR:  _
+MAP
+       TTTTT
+     TTtttttTTT
+    TttttFFttttTT
+   TttttFF'FtttttT
+  TtttttF'''FtttttT
+ TtttttttF''FttttttT
+ Ttt.p........p.ttttT
+TTt..xxxx........tptT
+Tttp.xwwx...xxmx...tT
+Tt...xww+...xpsx...tT
+Tt.p.xwwxp..+.sm.p.tT
+Tt...xxxx...x.sx..ttT
+Tt..p.......xxmx..tTT
+Ttt.....p......p.ttT
+TTtttt..........ttTT
+ TTTTtttt@@ttttttTT
+    TTTT     TTTTT
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

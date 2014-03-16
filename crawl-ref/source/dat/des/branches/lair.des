@@ -1774,6 +1774,163 @@ Ettttt.0.WWwwwwWW....1tttE
      EEEE...@@...EEEEE
 ENDMAP
 
+####
+
+NAME: nicolae_quartered_pool_little
+DEPTH: Lair, D
+TAGS: transparent extra decor allow_dup luniq_qpool
+SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm, Nn, Oo, Pp, Qq
+SUBST: abcdefghijklmnopq = ., ABCDEFGHIJKLMNOPQ = W, 7 = t
+MAP
+    777777
+   7qolLOQ7
+  7pnkiIKNP7
+ 7pmjhfFHJMP7
+7qnjgedDEGJNQ7
+7okhecbBCEHKO7
+7lifdbaABDFIL7
+7LIFDBAabdfil7
+7OKHECBbcehko7
+7QNJGEDdegjnq7
+ 7PMJHFfhjmp7
+  7PNKIiknp7
+   7QOLloq7
+    777777
+ENDMAP
+
+NAME: nicolae_quartered_pool_medium
+DEPTH: Lair, D
+TAGS: transparent extra decor allow_dup luniq_qpool
+SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
+SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu
+SUBST: abcdefghijklmnopqrstu = ., ABCDEFGHIJKLMNOPQRSTU = W, 7 = t
+MAP
+      7777
+    77spPS77
+   7urolLORU7
+  7tqnkiIKNQT7
+ 7uqmjhfFHJMQU7
+ 7rnjgedDEGJNR7
+7sokhecbBCEHKOS7
+7plifdbaABDFILP7
+7PLIFDBAabdfilp7
+7SOKHECBbcehkos7
+ 7RNJGEDdegjnr7
+ 7UQMJHFfhjmqu7
+  7TQNKIiknqt7
+   7UROLloru7
+    77SPps77
+      7777
+ENDMAP
+
+NAME: nicolae_quartered_pool_super
+DEPTH: Lair, D
+TAGS: transparent extra decor allow_dup luniq_qpool
+SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
+SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu, Vv, Ww, Xx, Yy, Zz
+SHUFFLE: 12, 34, 56
+SUBST: abcdefghijklmnopqrstuvwxyz135 = ., ABCDEFGHIJKLMNOPQRSTUVWXYZ246 = W
+SUBST: 7 = t
+MAP
+      777777
+    771xtTX277
+   75zwspPSWZ67
+  73yvrolLORVY47
+ 75yuqnkiIKNQUY67
+ 7zvqmjhfFHJMQVZ7
+71wrnjgedDEGJNRW27
+7xsokhecbBCEHKOSX7
+7tplifdbaABDFILPT7
+7TPLIFDBAabdfilpt7
+7XSOKHECBbcehkosx7
+72WRNJGEDdegjnrw17
+ 7ZVQMJHFfhjmqvz7
+ 76YUQNKIiknquy57
+  74YVROLlorvy37
+   76ZWSPpswz57
+    772XTtx177
+      777777
+ENDMAP
+
+NAME: nicolae_lair_firefly_meadow
+DEPTH: Lair
+TAGS: transparent
+MONS: giant firefly
+NSUBST: . = 5:1
+MAP
+ .......
+.........
+.........
+.........
+.........
+.........
+.........
+.........
+ .......
+ENDMAP
+
+NAME: nicolae_lair_grove_arrangements
+DEPTH: Lair
+TAGS: allow_dup transparent decor extra luniq
+SHUFFLE: abcdefghi/''''T''''/T'''''''T/T'''T'''T/T'T'''T'T/T'T'T'T'T/\
+         TTT'''TTT/'T'T'T'T'/T'T''''T'/'T'TTT'T'/'T'''''T'/TTTT'TTTT/\
+         T'TTTTT'T/TT'TTT'TT/'''TTT'''/T'TT'TTTT/TT'T'T'TT/TT'''''TT/\
+         TT''T''TT/TT''TT'T'/T''''T'T'
+SUBST: abcdefghiT = ttttt., ' = ., _ = ._
+CLEAR: _
+MAP
+__________________
+_................_
+_..aa...bb...cc.._
+_.aaaa.bbbb.cccc._
+_.aaaa.bbbb.cccc._
+_..aa...bb...cc.._
+_................_
+_..dd...ee...ff.._
+_.dddd.eeee.ffff._
+_.dddd.eeee.ffff._
+_..dd...ee...ff.._
+_................_
+_..gg...hh...ii.._
+_.gggg.hhhh.iiii._
+_.gggg.hhhh.iiii._
+_..gg...hh...ii.._
+_................_
+__________________
+ENDMAP
+
+NAME: nicolae_lair_yak_garden
+DEPTH: Lair:6-
+TAGS: no_monster_gen no_item_gen no_trap_gen
+SUBST: P = P.
+NSUBST: D = 1:D / *:.
+KITEM: f = apple / orange / apricot / nothing
+KMONS: Y = yak
+KMONS: D = death yak
+KMONS: C = catoblepas
+KMONS: P = plant
+KMONS: k = giant goldfish
+KFEAT: k = w
+MAP
+        .@@@.
+      .........
+    tt...P.P....tt
+   tttttPPPPPPPtttt.
+  .ttDfPP.Y....tDtt...
+ .PPttP..P.P.PP.ftP...
+ .P....PPP...PPP.PP..@
+..PP..PPPwwwC.P..PPP.@
+......Y.wkwwww.Y.ttP.@
+.@.PP..Pwwwwkw...fttt.
+ @..P..PP.wwwPP.ttttt
+  @.PP.PPP..PP..PPttt
+  ...Ptt.P.PPPPPP....
+  ...ttfDttPP.......
+    .tttttt......@
+     ..tt.......
+        .....
+ENDMAP
+
 ###############################################################################
 # Lair endings
 ###############################################################################
