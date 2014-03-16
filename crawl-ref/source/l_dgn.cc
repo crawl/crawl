@@ -1592,14 +1592,17 @@ LUAFN(_dgn_place_map)
         COORDS(c, 4, 5);
         where = c;
     }
-    if (dgn_place_map(map, check_collision, no_exits, where)
-        && !env.level_vaults.empty())
     {
-        lua_pushlightuserdata(ls,
-                              env.level_vaults[env.level_vaults.size() - 1]);
+        dgn_map_parameters mp(luaL_checkstring(ls, 6));
+        if (dgn_place_map(map, check_collision, no_exits, where)
+            && !env.level_vaults.empty())
+        {
+            lua_pushlightuserdata(ls,
+                                  env.level_vaults[env.level_vaults.size() - 1]);
+        }
+        else
+            lua_pushnil(ls);
     }
-    else
-        lua_pushnil(ls);
     return 1;
 }
 
