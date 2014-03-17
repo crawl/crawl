@@ -1037,8 +1037,9 @@ A potion which hides you from the sight of others.
 potion of lignification
 
 A potion which temporarily transforms the imbiber into an animated tree with
-branches capable of holding weapons. Such a tree is quite resilient, although
-cannot retreat in any way.
+branches capable of holding weapons. Such a tree is very resilient, although
+it is rooted in place for the duration, and additionally cannot teleport or
+consume food or potions.
 %%%%
 potion of magic
 
