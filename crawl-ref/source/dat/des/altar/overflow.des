@@ -38,23 +38,26 @@ function interest_check(e)
   end
 end
 
+function get_altar_count(e)
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_overflow_generic_ is 24 characters
+      return string.sub(tag, 25)
+    end
+  end
+
+  return nil
+end
+
 function altar_check(e)
   if e.is_validating() then
     e.subst('C = B')
     return
   end
-  local params = dgn.map_parameters()
-  if params ~= nil then
-    local tag = unpack(params)
-    if tag ~= nil then
-      if string.find(tag, "temple_overflow_generic_") ~= nil then
-        e.subst('C = B')
-      else
-        e.tags('extra')
-      end
-    else
-      e.tags('extra')
-    end
+  if get_altar_count(e) ~= nil then
+    e.subst('C = B')
   else
     e.tags('extra')
   end
@@ -2766,14 +2769,8 @@ SHUFFLE: defghijk / efghijkd
   local altarcount = 1
   if is_validating() then
     altarcount = 8
-  end
-  local params = dgn.map_parameters()
-  if params ~= nil then
-    local tag = unpack(params)
-    if tag ~= nil then
-      -- temple_overflow_generic_ is 24 characters
-      altarcount = string.sub(tag, 25)
-    end
+  else
+    altarcount = get_altar_count(_G)
   end
   if altarcount == "1" then
     subst("d = B")
@@ -2827,14 +2824,8 @@ TAGS:  temple_overflow_generic_2
   local altarcount = 1
   if is_validating() then
     altarcount = 14
-  end
-  local params = dgn.map_parameters()
-  if params ~= nil then
-    local tag = unpack(params)
-    if tag ~= nil then
-      -- temple_overflow_generic_ is 24 characters
-      altarcount = string.sub(tag, 25)
-    end
+  else
+    altarcount = get_altar_count(_G)
   end
   nsubst("B : " .. altarcount .. ":B / *:x")
 }}
@@ -2857,14 +2848,8 @@ TAGS: temple_overflow_generic_5 temple_overflow_generic_4 temple_overflow_generi
   local altarcount = 1
   if is_validating() then
     altarcount = 5
-  end
-  local params = dgn.map_parameters()
-  if params ~= nil then
-    local tag = unpack(params)
-    if tag ~= nil then
-      -- temple_overflow_generic_ is 24 characters
-      altarcount = string.sub(tag, 25)
-    end
+  else
+    altarcount = get_altar_count(_G)
   end
   if altarcount == "1" then
     subst("c = B")
