@@ -1636,16 +1636,16 @@ void read_options(const string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
 {
-    lang = LANG_EN;
+    lang = LANG_GRUNT;
     lang_name = 0;
 #ifndef TARGET_OS_WINDOWS
-    set_lang(getenv("LC_ALL"))
-    || set_lang(getenv("LC_MESSAGES"))
-    || set_lang(getenv("LANG"));
+//    set_lang(getenv("LC_ALL"))
+//    || set_lang(getenv("LC_MESSAGES"))
+//    || set_lang(getenv("LANG"));
 #elif defined USE_TILE_LOCAL
-    char ln[30];
-    if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
-        set_lang(ln);
+//    char ln[30];
+//    if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
+//        set_lang(ln);
 #endif
     seed = 0;
     reset_options();
