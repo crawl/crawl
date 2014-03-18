@@ -47,7 +47,7 @@ struct player_info
 
     uint8_t form;
 
-    int hp, hp_max, real_hp_max;
+    int hp, hp_max, real_hp_max, poison_survival;
     int mp, mp_max;
     int contam;
     int heat;

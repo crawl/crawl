@@ -19,6 +19,12 @@ function ($, comm, enums, map_knowledge, messages, options) {
         "sh": "shielded",
     }
 
+    /**
+     * Update the stats area bar of the given type.
+     * @param name     The name of the bar.
+     * @param propname The player property name, if it is different from the
+     *                 name of the bar defined in game_data/template/game.html
+     */
     function update_bar(name, propname)
     {
         if (!propname) propname = name;
@@ -37,8 +43,27 @@ function ($, comm, enums, map_knowledge, messages, options) {
         var increase = old_value < value;
         var full_bar = Math.round(10000 * (increase ? old_value : value) / max);
         var change_bar = Math.round(10000 * Math.abs(old_value - value) / max);
-        if (full_bar + change_bar > 10000)
+        // Use poison_survival to display our remaining hp after poison expires.
+        if (name == "hp")
+        {
+            $("#stats_hp_bar_poison").css("width", 0);
+            var poison_survival = player["poison_survival"]
+            if (poison_survival < value)
+            {
+                var poison_bar = Math.round(10000 * (value - poison_survival)
+                                            / max);
+                full_bar = Math.round(10000 * poison_survival / max);
+                $("#stats_hp_bar_poison").css("width", (poison_bar / 100)
+                                              + "%");
+            }
+            if (full_bar + poison_bar + change_bar > 10000)
+                change_bar = 10000 - poison_bar - full_bar;
+        }
+        else if (full_bar + change_bar > 10000)
+        {
             change_bar = 10000 - full_bar;
+        }
+
         $("#stats_" + name + "_bar_full").css("width", (full_bar / 100) + "%");
         $("#stats_" + name + "_bar_" + (increase ? "increase" : "decrease"))
             .css("width", (change_bar / 100) + "%");
@@ -226,6 +251,9 @@ function ($, comm, enums, map_knowledge, messages, options) {
     }
 
     var simple_stats = ["hp", "hp_max", "mp", "mp_max", "xl", "progress", "gold"];
+    /**
+     * Update the stats pane area based on the player's current properties.
+     */
     function update_stats_pane()
     {
         $("#stats_titleline").text(player.name + " the " + player.title);
@@ -288,9 +316,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
         $("#stats_piety").toggleClass("monk", player.god == "");
 
         for (var i = 0; i < simple_stats.length; ++i)
-        {
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
-        }
 
         if (player.zp !== null)
         {
@@ -416,7 +442,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
         .on("game_init.player", function () {
             $.extend(player, {
                 name: "", god: "", title: "", species: "",
-                hp: 0, hp_max: 0, real_hp_max: 0,
+                hp: 0, hp_max: 0, real_hp_max: 0, poison_survival: 0,
                 mp: 0, mp_max: 0,
                 ac: 0, ev: 0, sh: 0,
                 xl: 0, progress: 0,
