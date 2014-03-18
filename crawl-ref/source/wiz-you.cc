@@ -1006,9 +1006,13 @@ static void debug_uptick_xl(int newxl, bool train)
     level_change(NON_MONSTER, NULL, true);
 }
 
+/**
+ * Set the player's XL to a new value.
+ * @param newxl  The new experience level.
+ */
 static void debug_downtick_xl(int newxl)
 {
-    you.hp = you.hp_max;
+    set_hp(you.hp_max);
     you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
     you.experience = exp_needed(newxl);
     level_change();
@@ -1025,7 +1029,7 @@ static void debug_downtick_xl(int newxl)
         calc_hp();
     }
 
-    you.hp       = max(1, you.hp);
+    set_hp(max(1, you.hp));
 }
 
 void wizard_set_xl()
