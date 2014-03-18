@@ -4034,7 +4034,7 @@ int monster::res_magic() const
         u = hit_dice * -u * 4 / 3;
 
     // Resistance from artefact properties.
-    u += scan_artefacts(ARTP_MAGIC);
+    u += 40 * scan_artefacts(ARTP_MAGIC);
 
     // Ego equipment resistance.
     const int armour    = inv[MSLOT_ARMOUR];
