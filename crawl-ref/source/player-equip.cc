@@ -39,6 +39,11 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
                             bool msg);
 static void _mark_unseen_monsters();
 
+/**
+ * Recalculate the player's max hp and set the current hp based on the %change
+ * of max hp.  This has resulted from our having equipped an artefact that
+ * changes max hp.
+ */
 static void _calc_hp_artefact()
 {
     // Rounding must be down or Deep Dwarves would abuse certain values.
@@ -50,7 +55,7 @@ static void _calc_hp_artefact()
     hp = hp * new_max / old_max;
     if (hp < 100)
         hp = 100;
-    you.hp = min(hp / 100, you.hp_max);
+    set_hp(min(hp / 100, you.hp_max));
     you.hit_points_regeneration = hp % 100;
     if (you.hp_max <= 0) // Borgnjor's abusers...
         ouch(0, NON_MONSTER, KILLED_BY_DRAINING);

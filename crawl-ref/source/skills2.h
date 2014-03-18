@@ -60,8 +60,6 @@ skill_type best_skill(skill_type min_skill, skill_type max_skill,
                       skill_type excl_skill = SK_NONE);
 void init_skill_order();
 
-void calc_mp();
-void calc_hp();
 bool is_useless_skill(skill_type skill);
 bool is_harmful_skill(skill_type skill);
 bool all_skills_maxed(bool inc_harmful = false);

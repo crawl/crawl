@@ -950,6 +950,9 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_zp(int minimum, bool suppress_msg);
 
+void calc_hp();
+void calc_mp();
+
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
 void dec_mp(int mp_loss, bool silent = false);
 void drain_mp(int mp_loss);

@@ -1859,7 +1859,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
     if (you.escaped_death_cause == KILLED_BY_WILD_MAGIC
         && you.escaped_death_aux == "Xom's lightning strike")
     {
-        you.hp = 1;
+        set_hp(1);
         you.reset_escaped_death();
     }
 
@@ -3647,7 +3647,7 @@ static void _handle_accidental_death(const int orig_hp,
     }
 
     if (pre_mut_hp <= 0)
-        you.hp = min(orig_hp, you.hp_max);
+        set_hp(min(orig_hp, you.hp_max));
 
     for (int i = 0; i < 3; ++i)
     {
@@ -3998,7 +3998,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
 
     // Give back some hp.
     if (you.hp < 1)
-        you.hp = 1 + random2(you.hp_max/4);
+        set_hp(1 + random2(you.hp_max/4));
 
     // Make sure all stats are at least 1.
     // XXX: This could lead to permanent stat gains.

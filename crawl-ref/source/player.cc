@@ -3101,6 +3101,13 @@ static void _felid_extra_life()
     }
 }
 
+/**
+ * Handle the effects from a player's change in XL.  
+ * @param aux                     A string describing the cause of the level
+ *                                change.
+ * @param skip_attribute_increase If true and XL has increased, don't process
+ *                                stat gains.
+ */
 void level_change(int source, const char* aux, bool skip_attribute_increase)
 {
     const bool wiz_cmd = crawl_state.prev_cmd == CMD_WIZARD
@@ -3630,9 +3637,9 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
         calc_hp();
         calc_mp();
 
-        you.hp = old_hp * you.hp_max / old_maxhp;
-        you.magic_points = old_maxmp > 0 ?
-          old_mp * you.max_magic_points / old_maxmp : you.max_magic_points;
+        set_hp(old_hp * you.hp_max / old_maxhp);
+        set_mp(old_maxmp > 0 ? old_mp * you.max_magic_points / old_maxmp
+               : you.max_magic_points);
 
         // Get "real" values for note-taking, i.e. ignore Berserk,
         // transformations or equipped items.
@@ -4500,6 +4507,20 @@ int player::scan_artefacts(artefact_prop_type which_property,
     return retval;
 }
 
+void calc_hp()
+{
+    int oldhp = you.hp, oldmax = you.hp_max;
+    you.hp_max = get_real_hp(true, false);
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_DJINNI)
+        you.hp_max += get_real_mp(true);
+#endif
+    deflate_hp(you.hp_max, false);
+    if (oldhp != you.hp || oldmax != you.hp_max)
+        dprf("HP changed: %d/%d -> %d/%d", oldhp, oldmax, you.hp, you.hp_max);
+    you.redraw_hit_points = true;
+}
+
 void dec_hp(int hp_loss, bool fatal, const char *aux)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -4522,6 +4543,21 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
         you.hp -= hp_loss;
 
     you.redraw_hit_points = true;
+}
+
+void calc_mp()
+{
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_DJINNI)
+    {
+        you.magic_points = you.max_magic_points = 0;
+        return calc_hp();
+    }
+#endif
+
+    you.max_magic_points = get_real_mp(true);
+    you.magic_points = min(you.magic_points, you.max_magic_points);
+    you.redraw_magic_points = true;
 }
 
 void flush_mp()

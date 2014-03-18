@@ -1306,6 +1306,15 @@ bool scramble(void)
     return you.burden < (max_carry / 2) + random2(max_carry / 2);
 }
 
+/**
+ * Make the player go berserk!
+ * @param intentional If true, this was initiated by the player, and additional
+ *                    messages can be printed if we can't berserk.
+ * @param potion      If true, this was caused by the player quaffing !berserk;
+ *                    and we get the same additional messages as when
+ *                    intentional is true.
+ * @returns           True if we went berserk, false otherwise.
+ */
 bool go_berserk(bool intentional, bool potion)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -1362,7 +1371,7 @@ bool go_berserk(bool intentional, bool potion)
     you.increase_duration(DUR_BERSERK, berserk_duration);
 
     calc_hp();
-    you.hp = you.hp * 3 / 2;
+    set_hp(you.hp * 3 / 2);
 
     deflate_hp(you.hp_max, false);
 

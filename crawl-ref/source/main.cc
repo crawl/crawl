@@ -2384,6 +2384,10 @@ static void _handle_recitation(int step)
 //  Perhaps we should write functions like: update_liquid_flames(), etc.
 //  Even better, we could have a vector of callback functions (or
 //  objects) which get installed at some point.
+
+/**
+ * Decrement player durations based on how long the player's turn lasted in aut.
+ */
 static void _decrement_durations()
 {
     int delay = you.time_taken;
@@ -2798,7 +2802,7 @@ static void _decrement_durations()
         you.hunger = max(HUNGER_STARVING - 100, you.hunger);
 
         // 1KB: No berserk healing.
-        you.hp = (you.hp + 1) * 2 / 3;
+        set_hp((you.hp + 1) * 2 / 3);
         calc_hp();
 
         learned_something_new(HINT_POSTBERSERK);
@@ -2922,7 +2926,7 @@ static void _decrement_durations()
     {
         if (you.hp > allowed_deaths_door_hp())
         {
-            you.hp = allowed_deaths_door_hp();
+            set_hp(allowed_deaths_door_hp());
             you.redraw_hit_points = true;
         }
 
