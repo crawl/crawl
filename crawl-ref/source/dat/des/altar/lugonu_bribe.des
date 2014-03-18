@@ -1,6 +1,8 @@
 # Lugonu's bribes, an altar by tgw.
 #
-# The altar will feature an item which your current god forbids to use.
+# The altar will feature an item which your current god forbids to use
+# but which would be useful otherwise (if possible), or an item that is
+# just useless/forbidden/redundant under your current god.
 
 {{
 function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
@@ -22,16 +24,17 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                  "long sword", "scimitar", "glaive", "bardiche",
                  "broad axe", "battleaxe", "quarterstaff",
                  "lajatang", "morningstar", "great mace"})
-  local item = {["No God"]="amulet of Faith ident:type",
+  local item = {["No God"]="amulet of faith ident:type",
          Ashenzari="amulet of clarity ident:type /\
               ring of see invisible ident:type",
-         Beogh="scroll of immolation ident:type q:3-6 /\
-              scroll of fear ident:type q:3-6 /\
+         Beogh="scroll of fear ident:type q:3-6 /\
               disc of storms",
          Cheibriados="wand of hasting ident:type w:5 /\
               potion of haste ident:type q:2-4 /\
-              potion of berserk rage ident:type q:2-4 /\
               good_item quick blade",
+         Dithmenos="wand of fire ident:type /\
+              lamp of fire w:5 / rod of fiery destruction w:5 /\
+              good_item " .. weapon .. " ego:flaming ident:type",
          Elyvilon="lantern of shadows / book of Necromancy w:5 /\
               book of Death w:5 / book of Unlife w:5",
          Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 /\
@@ -44,17 +47,16 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                        numspells:2 /\
               rat corpse w:5 / kobold corpse w:5 / ugly thing corpse",
          Lugonu="no",
-         Makhleb="tome of destruction / rod of shadows ident:type",
+         Makhleb="no",
          ["Nemelex Xobeh"]="scroll of random uselessness ident:type q:5-10",
-         Okawaru="randbook owner:Lugonu spells:summon_butterflies numspells:1 /\
-              book of Callings / scroll of summoning ident:type q:2-3",
-         ["Sif Muna"]="staff of channeling ident:type / good_item plate armour",
-         ["the Shining One"]="wand of invisibility ident:type w:20 /\
+         Okawaru="no",
+         ["Sif Muna"]="no",
+         ["the Shining One"]="wand of invisibility ident:type /\
               book of Envenomations / Young Poisoner's Handbook /\
               potion of invisibility ident:type q:3-6",
-         Trog="manual of Spellcasting / manual of Air Magic /\
-              manual of Earth Magic / manual of Fire Magic /\
-              manual of Ice Magic / manual of Poison Magic /\
+         Trog="manual of Spellcasting / manual of Air Magic w:5 /\
+              manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
+              manual of Ice Magic w:5 / manual of Poison Magic w:5 /\
               any magical staff ident:type /\
               ring of wizardry ident:type",
          Vehumet="randbook owner:Lugonu spells:magic_dart numspells:1",
@@ -64,8 +66,8 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Zin="good_item " .. weapon .. " ego:draining ident:type /\
               good_item " .. weapon .. " ego:pain ident:type /\
               good_item " .. weapon .. " ego:chaos ident:type /\
-              wand of draining ident:type w:7 /\
-              wand of polymorph ident:type w:14",
+              wand of draining ident:type /\
+              wand of polymorph ident:type",
        }
          data.triggered = true
          if item[you.god()] == "no" then return else
