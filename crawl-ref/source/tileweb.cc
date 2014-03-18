@@ -654,6 +654,14 @@ player_info::player_info()
     position = coord_def(-1, -1);
 }
 
+/**
+ * Send the player properties to the webserver.  Any player properties that
+ * must be available to the WebTiles client must be sent here through an
+ * _update_* function call of the correct data type.
+ * @param force_full  If true, all properties will be updated in the json
+ *                    regardless whether their values are the same as the
+ *                    current info in m_current_player_info.
+ */
 void TilesFramework::_send_player(bool force_full)
 {
     player_info& c = m_current_player_info;
@@ -725,6 +733,8 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.mp, you.magic_points, "mp");
     _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
 #endif
+    _update_int(force_full, c.poison_survival, poison_survival(),
+                "poison_survival");
 
     if (you.species == SP_LAVA_ORC)
         _update_int(force_full, c.heat, temperature(), "heat");

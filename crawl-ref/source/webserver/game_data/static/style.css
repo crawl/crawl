@@ -94,6 +94,9 @@ body {
 #stats_hp_bar_decrease {
     background-color: #a40000; /* red */
 }
+#stats_hp_bar_poison {
+    background-color: yellow;
+}
 #stats_hp_bar_increase {
     background-color: #4e9a06; /* green */
 }
