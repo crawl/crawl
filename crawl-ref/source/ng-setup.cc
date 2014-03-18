@@ -446,6 +446,12 @@ void newgame_make_item(int slot, equipment_type eqslot,
     if (item.base_type == OBJ_ARMOUR && !can_wear_armour(item, false, false))
         return;
 
+    if (is_shield(item) && you.weapon()
+        && is_shield_incompatible(*you.weapon(), &item))
+    {
+        return;
+    }
+
     if (eqslot == EQ_WEAPON && !can_wield(&item, false, false))
         return;
 
