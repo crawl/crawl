@@ -1798,6 +1798,14 @@ static int _xom_give_mutations(bool good, bool debug = false)
     return XOM_DID_NOTHING;
 }
 
+/**
+ * Have Xom throw divine lightning.  Only acts if hostiles are in LOS,
+ * but it may include the player as a victim.
+ * @param debug  If true, don't have Xom act, but return a value indicating
+ *               whether he would have acted.
+ * @returns      XOM_DID_NOTHING if Xom didn't act, XOM_GOOD_LIGHTNING
+ *               otherwise.
+ */
 static int _xom_throw_divine_lightning(bool debug = false)
 {
     if (!player_in_a_dangerous_place())
@@ -3964,9 +3972,15 @@ static string _get_death_type_keyword(const kill_method_type killed_by)
     }
 }
 
-bool xom_saves_your_life(const int dam, const int death_source,
-                         const kill_method_type death_type, const char *aux,
-                         bool see_source)
+/**
+ * Have Xom maybe act to save your life.  There is both a flat chance
+ * and an additional chance based on tension that he will refuse to
+ * save you.
+ * @param death_type  The type of death that occurred.
+ * @param aux         Additional string describing this death.
+ * @returns           True if Xom saves your life, false otherwise.
+ */
+bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
 {
     if (!you_worship(GOD_XOM) || _xom_feels_nasty())
         return false;

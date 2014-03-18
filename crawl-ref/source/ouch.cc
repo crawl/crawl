@@ -1196,8 +1196,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             death_type = KILLED_BY_XOM;
     }
     // Xom may still try to save your life.
-    else if (xom_saves_your_life(dam, death_source, death_type, aux,
-                                 see_source))
+    else if (xom_saves_your_life(death_type, aux))
     {
         return;
     }
