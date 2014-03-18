@@ -407,16 +407,37 @@ move_again:
 
         if (mons && iood && mons_is_projectile(victim->type))
         {
-            if (mon.observable())
+            // Weak orbs just fizzle instead of exploding.
+            if (mons->props["iood_distance"].get_int() < 2
+                || mon.props["iood_distance"].get_int() < 2)
             {
-                mpr("The orbs collide in a blinding explosion!");
-                noisy(40, pos);
+                if (mons->props["iood_distance"].get_int() < 2)
+                {
+                    if (you.see_cell(pos))
+                        mpr("The orb fizzles.");
+                    monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+                }
+
+                // Return, if the acting orb fizzled.
+                if (mon.props["iood_distance"].get_int() < 2)
+                {
+                    if (you.see_cell(pos))
+                        mpr("The orb fizzles.");
+                    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+                    return true;
+                }
             }
             else
-                noisy(40, pos, "You hear a loud magical explosion!");
-            monster_die(mons, KILL_DISMISSED, NON_MONSTER);
-            _iood_hit(mon, pos, true);
-            return true;
+            {
+                if (mon.observable())
+                    mpr("The orbs collide in a blinding explosion!");
+                else
+                    mpr("You hear a loud magical explosion!");
+                noisy(40, pos);
+                monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+                _iood_hit(mon, pos, true);
+                return true;
+            }
         }
 
         if (mons && mons_is_boulder(&mon) && mons_is_boulder(mons))
