@@ -5303,7 +5303,7 @@ _Natasha_death_common_
 @The_monster@ growls in agony!
 %%%%
 _Natasha_death_rare_
-Suddenly @the_monster@'s spirit rises from its lifeless body.
+Suddenly @the_monster@'s spirit rises from @possessive@ lifeless body.
 
 Moaning pathetically, @the_monster@'s spirit plunges in to the ground.
 
