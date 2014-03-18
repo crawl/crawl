@@ -359,8 +359,10 @@ ENDMAP
 
 ##############################################################################
 # A mockup of the Forest branch (1KB)
+# XXX: disabled pending a possible rework.
 #
 NAME:    spriggan_forest
+WEIGHT:  0
 ORIENT:  encompass
 TAGS:    no_pool_fixup uniq_d_encompass
 MONS:    spriggan, spriggan rider, spriggan druid, spriggan berserker
@@ -384,7 +386,6 @@ COLOUR:  C = white
 KFEAT:   C = stone_wall
 TILE:    C = wall_marble
 KFEAT:   _ = altar_trog
-: _G.set_random_mon_list("place:Forest:3")
 veto {{
   return crawl.game_started()
          and (dgn.br_exists("Forest") or you.uniques("the Enchantress"))
