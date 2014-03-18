@@ -118,6 +118,14 @@ struct message_item
         return text + rep;
     }
 
+    string pure_text_with_repeats() const
+    {
+        string rep = "";
+        if (repeats > 1)
+            rep = make_stringf(" x%d", repeats);
+        return pure_text() + rep;
+    }
+
     // Tries to condense the argument into this message.
     // Either *this needs to be an empty item, or it must be the
     // same as the argument.
@@ -1564,7 +1572,7 @@ string get_last_messages(int mcount, bool full)
         if (!msg)
             break;
         if (full || is_channel_dumpworthy(msg.channel))
-            text = msg.pure_text() + "\n" + text;
+            text = msg.pure_text_with_repeats() + "\n" + text;
         mcount--;
     }
 
