@@ -1822,8 +1822,13 @@ javelins.
 %%%%
 mermaid
 
-A young woman with a fish tail in place of legs. Mermaids love to sing and
-charm their audience.
+A young merfolk woman who has become an acolyte of the sunken god. As a
+consequence of her worship, she has begun the transformation into an avatar
+of the mystery and danger of the sea's depths. Her voice can instill the same
+single-minded fascination that grabs hold of sailors on a long voyage.
+
+Why only female merfolk are called to become avatars of the sunken god is a
+mystery understood only by the avatars themselves.
 %%%%
 microbat
 
@@ -2367,9 +2372,13 @@ An ice replica of a monster that is animated by the powers of necromancy.
 %%%%
 siren
 
-A young woman with a fish tail in place of legs. So entrancing is the spell she
-can weave with her song that even the souls of those who drowned in her waters
-will answer it.
+Once a merfolk woman, she has become an avatar of the sunken god. Her voice can
+instill the same single-minded fascination that grabs hold of sailors on a long
+voyage. Her song also can call up the souls of others who have drowned in her
+waters in order to bring you the same watery bliss.
+
+Why only female merfolk are called to become avatars of the sunken god is a
+mystery understood only by the avatars themselves.
 %%%%
 sixfirhy
 
@@ -3127,8 +3136,10 @@ It appears to be capable of moving the whip arm. Prepare for a flogging...
 %%%%
 malarious mermaid
 
-A young woman with a fish tail in place of legs. She looks quite sick, but
-still capable of bespelling her audience.
+Like other mermaids, this young merfolk woman who has become an acolyte of the
+sunken god, and is undergoing a transformation into an avatar. She looks deeply
+ill, but her voice still has the power to instill a powerful fascination in
+her victims.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -3223,7 +3234,7 @@ and has blood more on her mind than fun.
 %%%%
 water elementalist statue
 
-A smooth, charming statue of a beautiful mermaid bathing in a fountain,
+A smooth, charming statue of a beautiful merfolk bathing in a fountain,
 sculpted from creamy, faintly pinkish travertine. It glistens softly in the
 light, as if sprinkled in actual water.
 %%%%
