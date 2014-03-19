@@ -4571,6 +4571,18 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch = TILE_CLOUD_GHOSTLY_FLAME_0 + dur;
                 break;
 
+            case CLOUD_ACID:
+                ch = TILE_CLOUD_ACID_0 + dur;
+                break;
+
+            case CLOUD_STORM:
+                ch = TILE_CLOUD_STORM_0 + dur;
+                break;
+
+            case CLOUD_NEGATIVE_ENERGY:
+                ch = TILE_CLOUD_NEG_0 + dur;
+                break;
+
             default:
                 ch = TILE_CLOUD_GREY_SMOKE;
                 break;
