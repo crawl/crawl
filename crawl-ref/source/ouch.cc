@@ -1197,9 +1197,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
     // Xom may still try to save your life.
     else if (xom_saves_your_life(death_type, aux))
-    {
         return;
-    }
 
 #if defined(WIZARD) || defined(DEBUG)
     if (!non_death && crawl_state.disables[DIS_DEATH])

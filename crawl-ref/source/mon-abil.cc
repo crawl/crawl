@@ -5125,9 +5125,7 @@ static bool _do_throw(actor *thrower, actor *victim, int range, int pow)
     }
     // Found an empty space, so we can still throw
     else if (floor_sites.size())
-    {
         floor_pos = floor_sites[random2(floor_sites.size())];
-    }
     // Couldn't find a place to throw the victim
     else
         return false;

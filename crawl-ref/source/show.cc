@@ -496,9 +496,7 @@ static void _update_monster(monster* mons)
         _mark_invisible_at(gp);
     }
     else
-    {
         _handle_unseen_mons(mons, 2);
-    }
 }
 
 /**

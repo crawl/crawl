@@ -3102,7 +3102,7 @@ static void _felid_extra_life()
 }
 
 /**
- * Handle the effects from a player's change in XL.  
+ * Handle the effects from a player's change in XL.
  * @param aux                     A string describing the cause of the level
  *                                change.
  * @param skip_attribute_increase If true and XL has increased, don't process
@@ -5190,12 +5190,12 @@ static double _poison_dur_to_aut(double dur)
 {
     // Poison already at minimum speed.
     if (dur < 15.0 * 250.0)
-        return (dur / 25.0);
+        return dur / 25.0;
     // Poison is not at maximum speed.
     if (dur < 15.0 * 10000.0)
-        return (150.0 + 10.0 * log(dur / (15.0 * 250.0)) / log(15.0 / 14.0));
-    return (150.0 + (dur - 15.0 * 10000.0) / 1000.0
-                  + 10.0 * log(10000.0 / 250.0) / log(15.0 / 14.0));
+        return 150.0 + 10.0 * log(dur / (15.0 * 250.0)) / log(15.0 / 14.0);
+    return 150.0 + (dur - 15.0 * 10000.0) / 1000.0
+                 + 10.0 * log(10000.0 / 250.0) / log(15.0 / 14.0);
 }
 
 // The inverse of the above function, i.e. the amount of poison needed
@@ -5204,12 +5204,12 @@ static double _poison_aut_to_dur(double aut)
 {
     // Amount of time that poison lasts at minimum speed.
     if (aut < 150.0)
-        return (aut * 25.0);
+        return aut * 25.0;
     // Amount of time that poison exactly at the maximum speed lasts.
     const double aut_from_max_speed = 150.0 + 10.0 * log(40.0) / log(15.0 / 14.0);
     if (aut < aut_from_max_speed)
-        return (15.0 * 250.0 * exp(log(15.0 / 14.0) / 10.0 * (aut - 150.0)));
-    return (15.0 * 10000.0 + 1000.0 * (aut - aut_from_max_speed));
+        return 15.0 * 250.0 * exp(log(15.0 / 14.0) / 10.0 * (aut - 150.0));
+    return 15.0 * 10000.0 + 1000.0 * (aut - aut_from_max_speed);
 }
 
 void handle_player_poison(int delay)
@@ -5310,7 +5310,7 @@ bool poison_is_lethal()
         return get_player_poisoning();
     if (get_player_poisoning() < you.hp)
         return false;
-    return (!poison_survival());
+    return !poison_survival();
 }
 
 // Try to predict the minimum value of the player's health in the coming
@@ -5341,7 +5341,7 @@ int poison_survival()
     // HP is already going up, but subtract 1 in case poison happens before
     // regen
     if (regen_beats_poison >= amount)
-        return (you.hp - 1);
+        return you.hp - 1;
 
     // Calculate the amount of time until regen starts to beat poison.
     double poison_duration = _poison_dur_to_aut(amount)
