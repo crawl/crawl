@@ -4117,7 +4117,8 @@ bool monster::poison(actor *agent, int amount, bool force)
 
 int monster::skill(skill_type sk, int scale, bool real) const
 {
-    if (mons_intel(this) < I_NORMAL)
+    // Let spectral weapons have necromancy skill for pain brand.
+    if (mons_intel(this) < I_NORMAL && !mons_is_avatar(this->type))
         return 0;
 
     int hd = scale * hit_dice;
