@@ -1989,7 +1989,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     // Don't let clones duplicate anything, to prevent exponential explosion
     case SPELL_FAKE_MARA_SUMMON:
-        return (mon->has_ench(ENCH_PHANTOM_MIRROR));
+        return mon->has_ench(ENCH_PHANTOM_MIRROR);
 
     case SPELL_PHANTOM_MIRROR:
         if (!mon->has_ench(ENCH_PHANTOM_MIRROR))
@@ -2428,9 +2428,7 @@ static void _cast_druids_call(const monster* mon)
                                                                  : random_range(1, 2));
 
     for (int i = 0; i < num; ++i)
-    {
         _place_druids_call_beast(mon, mon_list[i], target);
-    }
 }
 
 static double _angle_between(coord_def origin, coord_def p1, coord_def p2)
