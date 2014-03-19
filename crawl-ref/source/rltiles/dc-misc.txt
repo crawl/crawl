@@ -187,6 +187,18 @@ cloud_ghostly_flame0 CLOUD_GHOSTLY_FLAME_0
 cloud_ghostly_flame1 CLOUD_GHOSTLY_FLAME_1
 cloud_ghostly_flame2 CLOUD_GHOSTLY_FLAME_2
 
+cloud_yellow_smoke CLOUD_ACID_0
+cloud_yellow_smoke CLOUD_ACID_1
+cloud_yellow_smoke CLOUD_ACID_2
+
+cloud_rain1 CLOUD_STORM_0
+cloud_rain2 CLOUD_STORM_1
+cloud_rain2 CLOUD_STORM_2
+
+cloud_black_smoke CLOUD_NEG_0
+cloud_black_smoke CLOUD_NEG_1
+cloud_black_smoke CLOUD_NEG_2
+
 %sdir mon
 fungi_plants/giant_spore SPORE_OVERLAY
 
