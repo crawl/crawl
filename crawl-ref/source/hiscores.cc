@@ -1126,6 +1126,31 @@ string scorefile_entry::short_kill_message() const
     return msg;
 }
 
+/**
+ * Remove from a string everything up to and including a given infix.
+ *
+ * @param[in,out] str   The string to modify.
+ * @param[in]     infix The infix to remove.
+ * @post If \c infix occured as a substring of <tt>str</tt>, \c str is updated
+ *       by removing all characters up to and including the last character
+ *       of the the first occurrence. Otherwise, \c str is unchanged.
+ * @return \c true if \c str was modified, \c false otherwise.
+ */
+static bool _strip_to(string &str, const char *infix)
+{
+    // Don't treat stripping the empty string as a change.
+    if (*infix == '\0')
+        return false;
+
+    size_t pos = str.find(infix);
+    if (pos != string::npos)
+    {
+        str.erase(0, pos + strlen(infix));
+        return true;
+    }
+    return false;
+}
+
 void scorefile_entry::init_death_cause(int dam, int dsrc,
                                        int dtype, const char *aux,
                                        const char *dsrc_name)
@@ -1226,9 +1251,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             const CrawlVector& blame = mons->props["blame"].get_vector();
 
             indirectkiller = blame[blame.size() - 1].get_string();
-
-            if (indirectkiller.find(" by ") != string::npos)
-                indirectkiller.erase(0, indirectkiller.find(" by ") + 4);
+            _strip_to(indirectkiller, " by ");
+            _strip_to(indirectkiller, "ed to "); // "attached to" and similar
 
             killerpath = "";
 
