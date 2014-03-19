@@ -2443,6 +2443,9 @@ void ShoppingList::item_type_identified(object_class_type base_type,
         thing[SHOPPING_THING_COST_KEY] =
             _shop_get_item_value(item, shop->greed, false);
     }
+
+    // Prices could have changed.
+    refresh();
 }
 
 int ShoppingList::size() const
@@ -2490,6 +2493,8 @@ void ShoppingList::forget_pos(const level_pos &pos)
             i--;
         }
     }
+
+    // Maybe we just forgot about a shop.
     refresh();
 }
 
@@ -2531,12 +2536,12 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
                                  ", or ");
         mpr("You can access your shopping list by pressing '$'.");
 
-        // Reset max_buyable and min_unbuyable info
+        // Our gold has changed, maybe we can buy different things now.
         refresh();
     }
     else if (new_amount < old_amount && new_amount < max_buyable_cost)
     {
-        // Reset max_buyable and min_unbuyable info
+        // As above.
         refresh();
     }
 }
@@ -2763,6 +2768,9 @@ static bool _compare_shopping_things(const CrawlStoreValue& a,
     return a_cost < b_cost;
 }
 
+// Reset max_buyable and min_unbuyable info. Call this anytime any of the
+// player's gold, the shopping list, and the prices of the items on it
+// change.
 void ShoppingList::refresh()
 {
     if (!you.props.exists(SHOPPING_LIST_KEY))

@@ -2056,11 +2056,17 @@ bool set_ident_type(object_class_type basetype, int subtype,
 
     you.type_ids[basetype][subtype] = setting;
     request_autoinscribe();
-    if (setting == ID_KNOWN_TYPE)
-    {
+
+    // Our item knowledge changed in a way that could possibly affect shop
+    // prices. ID_UNKNOWN_TYPE is wizmode only.
+    if (setting == ID_KNOWN_TYPE || setting == ID_UNKNOWN_TYPE)
         shopping_list.item_type_identified(basetype, subtype);
+
+    // We identified something, maybe we identified other things by process of
+    // elimination. This is a no-op if we call it when setting ==
+    // ID_UNKNOWN_TYPE.
+    if (setting == ID_KNOWN_TYPE)
         _maybe_identify_pack_item();
-    }
 
     return true;
 }
