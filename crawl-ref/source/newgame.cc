@@ -643,7 +643,7 @@ static void _construct_species_menu(const newgame_def* ng,
         tmp->set_id(M_VIABLE);
     else
         tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Picks a random viable species based on your current job choice.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -658,7 +658,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('#');
     tmp->set_id(M_VIABLE_CHAR);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Shuffles through random viable character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
@@ -675,7 +675,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->add_hotkey('%');
     tmp->set_id(M_APTITUDES);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races.");
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -689,7 +689,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Opens the help screen.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -704,7 +704,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Picks a random species.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -719,7 +719,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('!');
     tmp->set_id(M_RANDOM_CHAR);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Shuffles through random character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
@@ -745,7 +745,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(' ');
     tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -765,7 +765,7 @@ static void _construct_species_menu(const newgame_def* ng,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(DARKGRAY);
+        tmp->set_highlight_colour(BLUE);
         tmp->set_description_text("Play a new game with your previous choice.");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -1040,7 +1040,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         tmp->set_id(M_VIABLE);
     else
         tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Picks a random viable background based on your current species choice.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1055,7 +1055,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('#');
     tmp->set_id(M_VIABLE_CHAR);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Shuffles through random viable character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
@@ -1071,7 +1071,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
     tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1086,7 +1086,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Opens the help screen.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1101,7 +1101,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Picks a random background.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1116,7 +1116,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('!');
     tmp->set_id(M_RANDOM_CHAR);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Shuffles through random character combinations "
                               "until you accept one.");
     menu->attach_item(tmp);
@@ -1143,7 +1143,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(' ');
     tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -1161,7 +1161,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(DARKGRAY);
+        tmp->set_highlight_colour(BLUE);
         tmp->set_description_text("Play a new game with your previous choice.");
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -1411,7 +1411,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
     tmp->set_id(M_VIABLE);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Picks a random viable weapon");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1426,7 +1426,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
     tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1441,7 +1441,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1456,7 +1456,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_id(WPN_RANDOM);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     tmp->set_description_text("Picks a random weapon");
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1473,7 +1473,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(CK_BKSP);
     tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(DARKGRAY);
+    tmp->set_highlight_colour(BLUE);
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -1499,7 +1499,7 @@ static void _construct_weapon_menu(const newgame_def* ng,
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
         tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(DARKGRAY);
+        tmp->set_highlight_colour(BLUE);
         tmp->set_description_text("Select your old weapon");
         menu->attach_item(tmp);
         tmp->set_visible(true);
