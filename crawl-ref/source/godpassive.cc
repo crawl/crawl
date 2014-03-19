@@ -362,44 +362,6 @@ static bool _is_slot_cursed(equipment_type eq)
     return true;
 }
 
-static bool _jewel_auto_id(const item_def& item)
-{
-    if (item.base_type != OBJ_JEWELLERY)
-        return false;
-
-    // Yay, such lists tend to get out of sync very fast...
-    // Fortunately, this one doesn't have to be too accurate.
-    switch (item.sub_type)
-    {
-    case RING_REGENERATION:
-        return player_mutation_level(MUT_SLOW_HEALING) < 3;
-    case RING_PROTECTION:
-    case RING_EVASION:
-    case RING_STRENGTH:
-    case RING_DEXTERITY:
-    case RING_INTELLIGENCE:
-        return !!item.plus;
-    case AMU_FAITH:
-        return !you_worship(GOD_NO_GOD);
-    case AMU_THE_GOURMAND:
-        return you.species != SP_MUMMY
-               && player_mutation_level(MUT_HERBIVOROUS) < 3;
-    case RING_INVISIBILITY:
-    case RING_TELEPORTATION:
-    case RING_TELEPORT_CONTROL:
-    case RING_MAGICAL_POWER:
-    case RING_FLIGHT:
-    case RING_ICE:
-    case RING_FIRE:
-    case RING_WIZARDRY:
-    case AMU_RAGE:
-    case AMU_GUARDIAN_SPIRIT:
-        return true;
-    default:
-        return false;
-    }
-}
-
 bool god_id_item(item_def& item, bool silent)
 {
     iflags_t old_ided = item.flags & ISFLAG_IDENT_MASK;
@@ -423,7 +385,7 @@ bool god_id_item(item_def& item, bool silent)
         if (is_weapon(item) || item.base_type == OBJ_ARMOUR)
             ided |= ISFLAG_KNOW_PROPERTIES | ISFLAG_KNOW_TYPE;
 
-        if (_jewel_auto_id(item))
+        if (item.base_type == OBJ_JEWELLERY)
             ided |= ISFLAG_IDENT_MASK;
 
         if (item.base_type == OBJ_ARMOUR

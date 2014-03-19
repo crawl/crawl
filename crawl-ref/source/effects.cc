@@ -280,9 +280,6 @@ int torment_player(actor *attacker, int taux)
 
     ouch(hploss, attacker? attacker->mindex() : MHITNOT, type, aux);
 
-    if (!kiku_shielding_player)
-        maybe_id_resist(BEAM_NEG);
-
     return 1;
 }
 

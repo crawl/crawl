@@ -442,12 +442,6 @@ void artefact_desc_properties(const item_def &item,
     artefact_prop_type fake_rap  = ARTP_NUM_PROPERTIES;
     int               fake_plus = 1;
 
-    // The base jewellery type is one whose property is revealed by
-    // wearing it, but whose property isn't revealed by having
-    // ISFLAG_KNOW_PLUSES set.  For a randart with a base type of, for
-    // example, a ring of strength, wearing it sets
-    // ISFLAG_KNOW_PLUSES, which reveals the ring's strength plus.
-
     // XXX has to match player-equip.cc:_equip_jewelry_effect(), sort-of (SamB)
     switch (item.sub_type)
     {
@@ -472,13 +466,7 @@ void artefact_desc_properties(const item_def &item,
     if (fake_rap != ARTP_NUM_PROPERTIES)
     {
         proprt[fake_rap] += fake_plus;
-
-        if (item_ident(item, ISFLAG_KNOW_PROPERTIES)
-            || item_ident(item, ISFLAG_KNOW_TYPE))
-        {
-            known[fake_rap] = true;
-        }
-
+        known[fake_rap] = true;
         return;
     }
 

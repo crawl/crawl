@@ -386,9 +386,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }                           // end switch
 
-    if (doEffects)
-        maybe_id_resist(flavour);
-
     return hurted;
 }
 
@@ -434,11 +431,7 @@ void splash_with_acid(int acid_strength, int death_source, bool corrode_items,
         mpr(hurt_msg ? hurt_msg : "The acid burns!");
 
         if (post_res_dam < dam)
-        {
             canned_msg(MSG_YOU_RESIST);
-            if (!player_res_acid(false, true))
-                maybe_id_resist(BEAM_ACID);
-        }
 
         ouch(post_res_dam, death_source, KILLED_BY_ACID);
     }

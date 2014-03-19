@@ -713,12 +713,7 @@ bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
     if (!intentional && !potion && clarity())
     {
         if (verbose)
-        {
             mpr("You're too calm and focused to rage.");
-            if (!clarity(false))
-                maybe_id_clarity();
-        }
-
         return false;
     }
 
