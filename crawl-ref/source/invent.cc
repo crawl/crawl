@@ -66,7 +66,8 @@ string InvTitle::get_text(const bool) const
 }
 
 InvEntry::InvEntry(const item_def &i, bool show_bg)
-    : MenuEntry("", MEL_ITEM), show_background(show_bg), item(&i)
+    : MenuEntry("", MEL_ITEM), show_background(show_bg), item(&i),
+      show_weight(false)
 {
     data = const_cast<item_def *>(item);
 
