@@ -272,6 +272,7 @@ enum MenuFlag
     MF_START_AT_END     = 0x2000,
     MF_PRESELECTED      = 0x4000,   /// Has a preselected entry.
     MF_QUIET_SELECT     = 0x8000,   /// No selection box and no count.
+    MF_DROP_PICKUP      = 0x10000,  /// Show inventory weights by default
 };
 
 class MenuDisplay
