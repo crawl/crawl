@@ -1192,10 +1192,7 @@ int actor_apply_cloud(actor *act)
     const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (_actor_cloud_immune(act, cloud))
-    {
-        maybe_id_resist(cloud_flavour);
         return 0;
-    }
 
     const int resist = _actor_cloud_resist(act, cloud);
     const int cloud_max_base_damage =
@@ -1212,7 +1209,6 @@ int actor_apply_cloud(actor *act)
         && (cloud.type != CLOUD_STORM || final_damage > 0))
     {
         canned_msg(MSG_YOU_RESIST);
-        maybe_id_resist(cloud_flavour);
     }
 
     if (cloud_flavour != BEAM_NONE)

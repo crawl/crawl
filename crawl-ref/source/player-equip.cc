@@ -228,47 +228,13 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     artefact_known_props_t known;
     artefact_wpn_properties(item, proprt, known);
 
-    // Only give property messages for previously unknown properties.
-    if (proprt[ARTP_AC])
-    {
-        you.redraw_armour_class = true;
-        if (!known[ARTP_AC])
-        {
-            if (msg)
-            {
-                mprf("You feel %s.", proprt[ARTP_AC] > 0?
-                     "well-protected" : "more vulnerable");
-            }
-            artefact_wpn_learn_prop(item, ARTP_AC);
-        }
-    }
-
-    if (proprt[ARTP_EVASION])
-    {
-        you.redraw_evasion = true;
-        if (!known[ARTP_EVASION])
-        {
-            if (msg)
-            {
-                mprf("You feel somewhat %s.", proprt[ARTP_EVASION] > 0?
-                     "nimbler" : "more awkward");
-            }
-            artefact_wpn_learn_prop(item, ARTP_EVASION);
-        }
-    }
-
+    // Only give property messages for unknown properties.
     if (proprt[ARTP_EYESIGHT])
         autotoggle_autopickup(false);
 
-    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
-    {
-        if (msg)
-        {
-            canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
-                                                      : MSG_MANA_DECREASE);
-        }
-        artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
-    }
+    if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
+        canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
+                                                  : MSG_MANA_DECREASE);
 
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
@@ -277,13 +243,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
                        !(msg && unknown_proprt(ARTP_INTELLIGENCE)), item);
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
                        !(msg && unknown_proprt(ARTP_DEXTERITY)), item);
-
-    const artefact_prop_type stat_props[3] =
-        {ARTP_STRENGTH, ARTP_INTELLIGENCE, ARTP_DEXTERITY};
-
-    for (int i = 0; i < 3; i++)
-        if (unknown_proprt(stat_props[i]))
-            artefact_wpn_learn_prop(item, stat_props[i]);
 
     // For evokable stuff, check whether other equipped items yield
     // the same ability.  If not, and if the ability granted hasn't
@@ -297,42 +256,24 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
             else
                 mpr("You feel buoyant.");
         }
-        artefact_wpn_learn_prop(item, ARTP_FLY);
     }
 
-    if (unknown_proprt(ARTP_INVISIBLE) && !you.duration[DUR_INVIS])
-    {
-        if (msg)
-            mpr("You become transparent for a moment.");
-        artefact_wpn_learn_prop(item, ARTP_INVISIBLE);
-    }
+    if (unknown_proprt(ARTP_INVISIBLE) && !you.duration[DUR_INVIS] && msg)
+        mpr("You become transparent for a moment.");
 
-    if (unknown_proprt(ARTP_BERSERK))
-    {
-        if (msg && !items_give_ability(item.link, ARTP_BERSERK))
-            mpr("You feel a brief urge to hack something to bits.");
-        artefact_wpn_learn_prop(item, ARTP_BERSERK);
-    }
+    if (unknown_proprt(ARTP_BERSERK) && msg && !items_give_ability(item.link, ARTP_BERSERK))
+        mpr("You feel a brief urge to hack something to bits.");
 
-    if (unknown_proprt(ARTP_BLINK))
-    {
-        if (msg && !items_give_ability(item.link, ARTP_BLINK))
-            mpr("You feel jittery for a moment.");
-        artefact_wpn_learn_prop(item, ARTP_BLINK);
-    }
+    if (unknown_proprt(ARTP_BLINK) && msg && !items_give_ability(item.link, ARTP_BLINK))
+        mpr("You feel jittery for a moment.");
 
-    if (unknown_proprt(ARTP_MUTAGENIC))
-    {
-        if (msg)
-            mpr("You feel a build-up of mutagenic energy.");
-        artefact_wpn_learn_prop(item, ARTP_MUTAGENIC);
-    }
+    if (unknown_proprt(ARTP_MUTAGENIC) && msg)
+        mpr("You feel a build-up of mutagenic energy.");
 
     if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
          && one_chance_in(proprt[ARTP_CURSED]))
     {
         do_curse_item(item, !msg);
-        artefact_wpn_learn_prop(item, ARTP_CURSED);
     }
 
     if (!alreadyknown && dangerous)
@@ -348,6 +289,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     // Let's try this here instead of up there.
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
+
+    if (!fully_identified(item))
+    {
+        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
+    }
 #undef unknown_proprt
 }
 
@@ -1207,17 +1154,6 @@ static void _remove_amulet_of_faith(item_def &item)
 
 static void _equip_jewellery_effect(item_def &item, bool unmeld)
 {
-    item_type_id_state_type ident        = ID_TRIED_TYPE;
-    artefact_prop_type      fake_rap     = ARTP_NUM_PROPERTIES;
-    bool                    learn_pluses = false;
-
-    // FIXME:
-    // Randart jewellery shouldn't auto-ID just because the base type
-    // is known. Somehow the player should still be told, preferably
-    // by message. (jpeg)
-
-    // XXX has to match artefact.cc:_artefact_desc_properties(), sort-of (SamB)
-
     const bool artefact     = is_artefact(item);
     const bool known_cursed = item_known_cursed(item);
     const bool known_bad    = (item_type_known(item)
@@ -1225,103 +1161,42 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 
     switch (item.sub_type)
     {
-    case RING_HUNGER:
-    case RING_LIFE_PROTECTION:
-    case RING_POISON_RESISTANCE:
-    case RING_PROTECTION_FROM_COLD:
-    case RING_PROTECTION_FROM_FIRE:
-    case RING_PROTECTION_FROM_MAGIC:
-    case RING_SUSTAIN_ABILITIES:
-    case RING_SUSTENANCE:
-    case RING_SLAYING:
-        break;
-
     case RING_FIRE:
         mpr("You feel more attuned to fire.");
-        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_ICE:
         mpr("You feel more attuned to ice.");
-        ident = ID_KNOWN_TYPE;
-        break;
-
-    case RING_WIZARDRY:
-        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_SEE_INVISIBLE:
-        // We might have to turn autopickup back on again.
-        // TODO: Check all monsters in LOS. If any of them are invisible
-        //       (and thus become visible once the ring is worn), the ring
-        //       should be autoidentified.
         if (item_type_known(item))
             autotoggle_autopickup(false);
         break;
 
     case RING_PROTECTION:
         you.redraw_armour_class = true;
-        if (item.plus != 0)
-        {
-            fake_rap = ARTP_AC;
-            ident = ID_KNOWN_TYPE;
-
-            learn_pluses = true;
-        }
         break;
 
     case RING_INVISIBILITY:
         mprf("You become %stransparent for a moment.",
              you.duration[DUR_INVIS] ? "more " : "");
-        fake_rap = ARTP_INVISIBLE;
-        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_EVASION:
         you.redraw_evasion = true;
-        if (item.plus != 0)
-        {
-            fake_rap = ARTP_EVASION;
-            ident = ID_KNOWN_TYPE;
-
-            learn_pluses = true;
-        }
         break;
 
     case RING_STRENGTH:
-        if (item.plus)
-        {
-            notify_stat_change(STAT_STR, item.plus, false, item);
-
-            fake_rap = ARTP_STRENGTH;
-            ident = ID_KNOWN_TYPE;
-
-           learn_pluses = true;
-        }
+        notify_stat_change(STAT_STR, item.plus, false, item);
         break;
 
     case RING_DEXTERITY:
-        if (item.plus)
-        {
-            notify_stat_change(STAT_DEX, item.plus, false, item);
-
-            fake_rap = ARTP_DEXTERITY;
-            ident = ID_KNOWN_TYPE;
-
-           learn_pluses = true;
-        }
+        notify_stat_change(STAT_DEX, item.plus, false, item);
         break;
 
     case RING_INTELLIGENCE:
-        if (item.plus)
-        {
-            notify_stat_change(STAT_INT, item.plus, false, item);
-
-            fake_rap = ARTP_INTELLIGENCE;
-            ident = ID_KNOWN_TYPE;
-
-           learn_pluses = true;
-        }
+        notify_stat_change(STAT_INT, item.plus, false, item);
         break;
 
     case RING_MAGICAL_POWER:
@@ -1335,14 +1210,10 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 
         calc_mp();
 
-        fake_rap = ARTP_MAGICAL_POWER;
-        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_FLIGHT:
         mprf("You feel %sbuoyant.", you.airborne() ? "more " : "");
-        fake_rap = ARTP_FLY;
-        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_TELEPORTATION:
@@ -1352,58 +1223,31 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             // keep in sync with player_teleport
             mprf("You feel slightly %sjumpy.",
                  (player_teleport(false) > 8) ? "more " : "");
-        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_TELEPORT_CONTROL:
         mprf("You feel %scontrolled for a moment.",
               you.duration[DUR_CONTROL_TELEPORT] ? "more " : "");
-        ident = ID_KNOWN_TYPE;
         break;
 
     case AMU_RAGE:
-        mpr("You feel a brief urge to hack something to bits.");
-        fake_rap = ARTP_BERSERK;
-        ident = ID_KNOWN_TYPE;
+        mprf("You feel a %sbrief urge to hack something to bits.",
+              you.can_go_berserk() ? "" : "very ");
         break;
 
     case AMU_FAITH:
-        if (!you_worship(GOD_NO_GOD))
-        {
-            mprf(MSGCH_GOD, "You feel a surge of divine interest.");
-            ident = ID_KNOWN_TYPE;
-        }
+        mprf(MSGCH_GOD, "You feel a %ssurge of divine interest."
+              you_worship(GOD_NO_GOD) ? "strange " : "");
         break;
 
     case AMU_THE_GOURMAND:
         // What's this supposed to achieve? (jpeg)
         you.duration[DUR_GOURMAND] = 0;
-
-        if (you.species != SP_MUMMY
-            && you.species != SP_VAMPIRE
-            && player_mutation_level(MUT_HERBIVOROUS) < 3)
-        {
-            mpr("You feel a craving for the dungeon's cuisine.");
-            ident = ID_KNOWN_TYPE;
-        }
+        mpr("You feel a craving for the dungeon's cuisine.");
         break;
-
-#if TAG_MAJOR_VERSION == 34
-    case AMU_CONTROLLED_FLIGHT:
-        ident = ID_KNOWN_TYPE;
-        break;
-#endif
 
     case AMU_GUARDIAN_SPIRIT:
         _spirit_shield_message(unmeld);
-        ident = ID_KNOWN_TYPE;
-        break;
-
-    case RING_REGENERATION:
-        // To be exact, bloodless vampires should get the id only after they
-        // drink anything.  Not worth complicating the code, IMHO. [1KB]
-        if (player_mutation_level(MUT_SLOW_HEALING) < 3)
-            ident = ID_KNOWN_TYPE;
         break;
 
     case AMU_STASIS:
@@ -1419,8 +1263,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
                  (amount > 250) ? " massive" :
                  (amount >  50) ? " violent" :
                                   "");
-            ident = ID_KNOWN_TYPE;
-
             // XXX: This can probably be improved.
             contaminate_player(pow(amount, 0.333) * 1000, item_type_known(item));
 
@@ -1446,10 +1288,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             you.duration[DUR_BERSERK] = 0;
             you.duration[DUR_FINESSE] = 0;
         }
-        break;
-
-    // When making a jewel type auto-id, please update Ashenzari's list
-    // in godpassive.cc as well.
     }
 
     // Artefacts have completely different appearance than base types
@@ -1459,23 +1297,12 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         bool show_msgs = true;
         _equip_artefact_effect(item, &show_msgs, unmeld);
 
-        if (ident == ID_KNOWN_TYPE)
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
-
-        if (learn_pluses)
-            set_ident_flags(item, ISFLAG_KNOW_PLUSES);
-
-        if (fake_rap != ARTP_NUM_PROPERTIES)
-            artefact_wpn_learn_prop(item, fake_rap);
-
-        item.flags |= ISFLAG_TRIED;
+        set_ident_flags(item, ISFLAG_KNOW_PROPERTIES);
     }
     else
     {
-        set_ident_type(item, ident);
-
-        if (ident == ID_KNOWN_TYPE)
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
+        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 
     if (item.cursed())

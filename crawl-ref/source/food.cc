@@ -833,8 +833,6 @@ bool food_change(bool initial)
         state_changed = true;
         if (newstate > you.hunger_state)
             less_hungry = true;
-        else if (!initial)
-            maybe_id_ring_hunger();
 
         you.hunger_state = newstate;
         set_redraw_status(REDRAW_HUNGER);

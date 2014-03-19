@@ -294,7 +294,6 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             poison_player(amount, "", msg);
             xom_is_stimulated(100 / xom_factor);
         }
-        maybe_id_resist(BEAM_POISON);
         break;
 
     case POT_SLOWING:

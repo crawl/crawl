@@ -1530,7 +1530,6 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             {
                 if (failMsg)
                     mprf(MSGCH_MUTATION, "You feel odd for a moment.");
-                maybe_id_resist(BEAM_MALMUTATE);
                 return false;
             }
         }
