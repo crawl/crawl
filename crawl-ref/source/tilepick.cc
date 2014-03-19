@@ -4576,7 +4576,8 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 break;
 
             case CLOUD_STORM:
-                ch = TILE_CLOUD_STORM_0 + dur;
+                ch = TILE_CLOUD_STORM
+                     + ui_random(tile_main_count(TILE_CLOUD_STORM));
                 break;
 
             case CLOUD_NEGATIVE_ENERGY:
