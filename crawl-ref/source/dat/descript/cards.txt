@@ -132,7 +132,7 @@ in decks of changes and wonders.
 the Alchemist card
 
 This card transmutes some of your gold into health and magical energy. It is
-usually found in decks of changes and wonders.
+usually found in decks of defence, escape and war.
 %%%%
 # deck of dungeons -> also changes
 Water card
@@ -155,7 +155,7 @@ the Trowel card
 
 This card may create an altar, a statue, a golem or even a portal, but works
 best only in the main dungeon and its branches. It is usually found in decks of
-changes and dungeons.
+changes, dungeons and wonders.
 %%%%
 the Minefield card
 
