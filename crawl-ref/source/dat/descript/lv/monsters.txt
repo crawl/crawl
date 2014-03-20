@@ -250,10 +250,6 @@ deep elf knight
 
 Kaujās rūdīts dzīļu elfu karotājs.
 %%%%
-deep dwarf berserker
-
-Negants un asinskārs pazemes rūķis, kas alkst cīņas neprāta.
-%%%%
 Executioner
 
 Briesmīgi varens un spējš dēmons, ap kura tēlu šķind izkaptveidīgu asmeņu
