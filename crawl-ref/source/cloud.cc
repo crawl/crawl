@@ -995,7 +995,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         if (player)
         {
             const actor* agent = find_agent(cloud.source, cloud.whose);
-            poison_player(random_range(2, 9), agent ? agent->name(DESC_A) : "",
+            poison_player(roll_dice(3, 7), agent ? agent->name(DESC_A) : "",
                           cloud.cloud_name());
         }
         else

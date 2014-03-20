@@ -5085,7 +5085,7 @@ bool curare_hits_player(int death_source, string name, string source_name)
         return false;
     }
 
-    poison_player(roll_dice(2, 11), source_name, name);
+    poison_player(roll_dice(2, 12) + 1, source_name, name);
 
     int hurted = 0;
 
@@ -5368,7 +5368,7 @@ bool miasma_player(string source, string source_aux)
         return false;
     }
 
-    bool success = poison_player(roll_dice(2, 11), source, source_aux);
+    bool success = poison_player(roll_dice(3, 11), source, source_aux);
 
     if (you.hp_max > 4 && coinflip())
     {
