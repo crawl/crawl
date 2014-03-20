@@ -904,7 +904,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SIREN_SONG:
-        props.erase("song_count");
+        props.erase("siren_call");
         break;
 
     case ENCH_POISON_VULN:
