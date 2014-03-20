@@ -5710,7 +5710,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // continuously shocking when poisoned or sticky flamed)
     if (type == MONS_SHOCK_SERPENT && damage > 4)
     {
-        int pow = div_rand_round(damage, 8);
+        int pow = div_rand_round(min(damage, hit_points + damage), 9);
         if (pow)
             (new shock_serpent_discharge_fineff(this, pos(), pow))->schedule();
     }
