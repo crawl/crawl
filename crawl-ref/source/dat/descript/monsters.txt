@@ -26,10 +26,9 @@ It has been enchanted to dance through the air and attack under its own power.
 # Uniques
 Agnes
 
-This somewhat older looking spriggan carries a bladed staff (almost as large as
-she is). The pockets of her threadbare robe bulge with jangling coins. The
-coins and lajatang do not seem to slow her, though, as she darts to and fro,
-her pockets streaming behind her and trembling as if about to burst.
+This spriggan is aged and weathered from years of travel in distant lands. Her
+exotic weapon and astonishing speed both speak to the training she received
+there. Underestimate her at your peril!
 %%%%
 Aizul
 

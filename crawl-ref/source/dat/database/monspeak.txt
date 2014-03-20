@@ -1731,7 +1731,7 @@ VISUAL:@The_monster@ coils and then uncoils.
 
 VISUAL:@The_monster@ winks several times @at_foe@.
 %%%%
-############ AGNES ### She is trying to get money and treasure
+############ AGNES ### She is an honourable warrior from a far-away land.
 Agnes
 
 @_Agnes_common_@
@@ -1741,29 +1741,28 @@ w:5
 %%%%
 _Agnes_common_
 
-VISUAL:@The_monster@ grins evilly.
+VISUAL:@The_monster@ bows.
 
-@The_monster@ says @to_foe@, "I need a new robe. I'll buy it with your money."
+@The_monster@ says @to_foe@, "You dishonour your ancestors."
 
-@The_monster@ says @to_foe@, "How can you wear that ugly dress?"
+@The_monster@ says @to_foe@, "I despise a dishonourable opponent."
 
-@The_monster@ screams @at_foe@, "Give me all your money!"
+@The_monster@ says @to_foe@, "It is my duty to kill you, but also my pleasure."
 
-@The_monster@ screams @at_foe@, "All treasure is mine! Mine!"
+@The_monster@ mutters, "I never trained for this."
 
-@The_monster@ screams @at_foe@, "Die, beast!"
+@The_monster@ says @to_foe@, "You will find the Path of Peace easy to follow, in death."
 %%%%
 _Agnes_rare_
 
-@The_monster@ screams @at_foe@, "You'll never get my money!"
+@The_monster@ says, "The ORB is mine by right."
 
-@The_monster@ screams @at_foe@, "Give me everything and get away!"
+#sepaktakraw reference
+@The_monster@ shouts @at_foe@, "I will kick you around like a rattan ball!"
 
-@The_monster@ screams @at_foe@, "If you give me all your money I'll let you live. Maybe."
+@The_monster@ asks, "Have you seen my kris anywhere?"
 
-@The_monster@ screams @at_foe@, "I want your rings! And amulets! And... EVERYTHING!"
-
-@The_monster@ screams, "I hate dirty adventurers like you!" @player_only@
+@The_monster@ mutters, "I could really go for a good breadfruit right now."
 ## END Agnes ##
 %%%%
 ############ ANTAEUS ### A titan demonically corrupted into a hell lord.
