@@ -1993,7 +1993,7 @@ static monsterentry mondata[] =
     M_NO_SKELETON | M_WEB_SENSE,
     MR_VUL_POISON,
     900, 4, MONS_SPIDER, MONS_WOLF_SPIDER, MH_NATURAL, -2,
-    { {AT_HIT, AF_PLAIN, 25}, {AT_BITE, AF_POISON, 10}, AT_NO_ATK,
+    { {AT_HIT, AF_PLAIN, 25}, {AT_BITE, AF_POISON, 15}, AT_NO_ATK,
        AT_NO_ATK },
     { 11, 3, 4, 0 },
     3, 10, MST_NO_SPELLS, CE_POISON_CONTAM, Z_SMALL, S_HISS,
