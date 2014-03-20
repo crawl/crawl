@@ -875,13 +875,12 @@ void handle_behaviour(monster* mon)
                 }
                 // Hold position if we've reached our ideal range
                 else if (mon->type == MONS_SPELLFORGED_SERVITOR
-                         && mon->pos().distance_from(target->pos())
-                            <= mon->props["ideal_range"].get_int()
+                         && (mon->pos() - target->pos()).abs()
+                         <= dist_range(mon->props["ideal_range"].get_int())
                          && !one_chance_in(8))
                 {
                     mon->firing_pos = mon->pos();
                 }
-
             }
 
             break;
