@@ -2511,7 +2511,7 @@ cloud_type bolt::get_cloud_type()
 
 int bolt::get_cloud_pow()
 {
-    if (name == "freezing blast")
+    if (name == "freezing blast" || name == "blast of poison")
         return random_range(10, 15);
 
     if (origin_spell == SPELL_GHOSTLY_FLAMES)
@@ -2864,7 +2864,7 @@ void bolt::affect_place_clouds()
     const dungeon_feature_type feat = grd(p);
 
     if (name == "blast of poison")
-        place_cloud(CLOUD_POISON, p, random2(4) + 2, agent());
+        place_cloud(CLOUD_POISON, p, random2(5) + 3, agent());
 
     if (origin_spell == SPELL_HOLY_BREATH)
         place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, agent());
