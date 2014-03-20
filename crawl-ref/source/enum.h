@@ -2414,7 +2414,9 @@ enum monster_type                      // menv[].type
     MONS_DEMONIC_CRAWLER,
     MONS_SNAPPING_TURTLE,
     MONS_ALLIGATOR_SNAPPING_TURTLE,
-    MONS_GNOME,                 // single vault
+#if TAG_MAJOR_VERSION == 34
+    MONS_GNOME,
+#endif
     MONS_HALFLING,              // recolouring + single vault.
     MONS_FELID,                 // recolouring + single vault.  Miaow!
     MONS_VAMPIRE_BAT,           // recolouring + vaults

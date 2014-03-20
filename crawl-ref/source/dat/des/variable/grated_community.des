@@ -37,8 +37,8 @@ KMONS:  e = vampire / yaktaur / w:5 frost giant / w:5 fire giant /\
 KMONS:  i = titan
   : end
 KMONS:  P = plant
-KMONS:  h = generate_awake human / generate_awake elf / generate_awake gnome
-: dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 gnome chunk')
+KMONS:  h = generate_awake human / generate_awake elf / generate_awake halfling
+: dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 halfling chunk')
 KFEAT:  = = floor
 FTILE:  =E79 = floor_grass
 COLOUR: =E7 = green
@@ -169,7 +169,7 @@ KFEAT:  ~ = closed_door
 SUBST: * = *:35 -:1
 KITEM: - = animal skin
 : dgn.delayed_decay_extra(_G, '*', 'human skeleton / yak skeleton /\
-:                            elf skeleton / gnome skeleton /\
+:                            elf skeleton / halfling skeleton /\
 :                            elephant skeleton / sheep skeleton /\
 :                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\
