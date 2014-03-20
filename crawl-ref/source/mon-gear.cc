@@ -1661,7 +1661,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
                                     brand);
 
             }
-            if (mon->type == MONS_SPRIGGAN_RIDER)
+            else if (mon->type == MONS_SPRIGGAN_RIDER)
             {
                 set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                                   SPMSL_CURARE);
