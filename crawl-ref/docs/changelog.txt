@@ -482,7 +482,6 @@ Branches, environment
 * Zot trap effects are now only a subset of the full set of miscasts, and
   have some new unique effects - draining of wand charges and Word of Recall
   (as per ironbrand convokers).
-* Hell effects no longer paralyse the player.
 
 Character
 ---------
