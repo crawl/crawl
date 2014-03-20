@@ -8051,8 +8051,6 @@ bool player::do_shaft_ability()
     {
         mpr("A shaft appears beneath you!");
         down_stairs(DNGN_TRAP_SHAFT, true);
-        mpr("The earth vibrates loudly upon landing!");
-        fake_noisy(20, pos());
         return true;
     }
     else
