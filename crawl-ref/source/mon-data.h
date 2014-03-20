@@ -232,6 +232,8 @@ static monsterentry mondata[] =
     AXED_MON(MONS_DJINNI)
     AXED_MON(MONS_RAKSHASA_FAKE)
     AXED_MON(MONS_MARA_FAKE)
+    // GNOME_NO_MORE
+    AXED_MON(MONS_GNOME)
 #endif
 
 // Real monsters begin here {dlb}:
@@ -974,18 +976,6 @@ static monsterentry mondata[] =
     0, 12, MST_BOGGART, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
     I_NORMAL, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LITTLE
-},
-
-{ // one vault.  Polymorph disabled.
-    MONS_GNOME, 'g', LIGHTBLUE, "gnome",
-    M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
-    MR_NO_FLAGS,
-    400, 10, MONS_GNOME, MONS_GNOME, MH_NATURAL, -3,
-    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 3, 5, 0 },
-    2, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
-    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_SMALL
 },
 
 // hounds and hogs ('h')
