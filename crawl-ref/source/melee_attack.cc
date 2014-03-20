@@ -4337,8 +4337,8 @@ bool melee_attack::mons_do_poison()
 
     if (attk_flavour == AF_POISON_STRONG)
     {
-        amount = random_range(attacker->get_experience_level() * 5 / 2 + 1,
-                                attacker->get_experience_level() * 4 + 4);
+        amount = random_range(attacker->get_experience_level() * 7 / 2,
+                              attacker->get_experience_level() * 11 / 2);
 
         if (defender->res_poison() > 0 && defender->has_lifeforce())
         {
@@ -4348,8 +4348,8 @@ bool melee_attack::mons_do_poison()
     }
     else
     {
-        amount = random_range(attacker->get_experience_level() * 2 + 1,
-                                attacker->get_experience_level() * 3 + 4);
+        amount = random_range(attacker->get_experience_level() * 2,
+                              attacker->get_experience_level() * 4);
     }
 
     if (!defender->poison(attacker, amount, force))
