@@ -3357,7 +3357,19 @@ void siren_song(monster* mons)
         }
     }
     if (ally_hd > mons->hit_dice)
+    {
+        if (mons->props.exists("siren_call"))
+        {
+            // Normally can only happen if allies of the siren show up during
+            // a song that has already summoned drowned souls (though is
+            // technically possible if some existing ally gains HD instead)
+            if (you.see_cell(mons->pos()))
+                mpr("The shadowy forms in the deep grow still as others approach.");
+            mons->props.erase("siren_call");
+        }
+
         return;
+    }
 
     // Can only call up drowned souls if there's free deep water nearby
     vector<coord_def> deep_water;
@@ -3367,17 +3379,19 @@ void siren_song(monster* mons)
 
     if (deep_water.size())
     {
-        mons->props["song_count"].get_int()++;
-
-        int song_count = mons->props["song_count"].get_int();
-        if (song_count == 4 && you.see_cell(mons->pos()))
+        if (!mons->props.exists("siren_call"))
         {
-            mprf("Shadowy forms rise from the deep at %s song!",
-                 mons->name(DESC_ITS).c_str());
+            if (you.see_cell(mons->pos()))
+            {
+                mprf("Shadowy forms rise from the deep at %s song!",
+                     mons->name(DESC_ITS).c_str());
+            }
+            mons->props["siren_call"].get_bool() = true;
         }
-        else if (song_count > 4 && x_chance_in_y(2, 3))
+
+        if (coinflip())
         {
-            int num = 1 + x_chance_in_y(song_count, song_count + 25);
+            int num = 1 + one_chance_in(4);
             shuffle_array(deep_water);
 
             int existing = 0;
@@ -3386,8 +3400,7 @@ void siren_song(monster* mons)
                 if (mi->type == MONS_DROWNED_SOUL)
                     existing++;
             }
-            num = min(num, min(5, song_count / 7 + 1) - existing);
-            num = min(num, int(deep_water.size()));
+            num = min(min(num, 5 - existing), int(deep_water.size()));
 
             for (int i = 0; i < num; ++i)
             {
