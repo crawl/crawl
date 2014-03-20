@@ -595,7 +595,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
                 "sphinx / place:Tomb:$",
-                "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue tile:mons_orb_of_ice /\
+                "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:glaciate col:lightblue tile:mons_orb_of_ice /\
                   orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity /\
                   w:5 silver star",
                 "hellion / w:5 efreet"
@@ -667,7 +667,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
-                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue tile:mons_orb_of_ice /\
+                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate col:lightblue tile:mons_orb_of_ice /\
                   orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity /\
                   w:20 silver star",
                 "hellion"
@@ -784,7 +784,7 @@ function arena_sprint_init_boss_table()
     -- Final (and tenth) boss
     bs[10] = {"pandemonium lord",
               "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 col:lightmagenta \
-              spells:fire_storm;fire_storm;ice_storm;miasma_breath;teleport_self", "demonic rune of zot"}
+              spells:fire_storm;fire_storm;glaciate;miasma_breath;teleport_self", "demonic rune of zot"}
     return bs
 end
 
