@@ -2787,19 +2787,11 @@ spret_type cast_toxic_radiance(actor *agent, int pow, bool fail, bool mon_tracer
     else
     {
         monster* mon_agent = agent->as_monster();
-        if (!mon_agent->has_ench(ENCH_TOXIC_RADIANCE))
-        {
-            simple_monster_message(mon_agent,
-                                   " begins to radiate toxic energy.");
-        }
-        else if (you.can_see(mon_agent))
-        {
-            mprf("%s toxic radiance grows in intensity.",
-                 mon_agent->name(DESC_ITS).c_str());
-        }
+        simple_monster_message(mon_agent,
+                               " begins to radiate toxic energy.");
 
         mon_agent->add_ench(mon_enchant(ENCH_TOXIC_RADIANCE, 1, mon_agent,
-                                        (3 + random2(pow/20)) * BASELINE_DELAY));
+                                        (5 + random2avg(pow/15, 2)) * BASELINE_DELAY));
 
         targetter_los hitfunc(mon_agent, LOS_NO_TRANS);
         flash_view_delay(GREEN, 300, &hitfunc);
@@ -2853,7 +2845,7 @@ void toxic_radiance_effect(actor* agent, int mult)
                     "by Olgreb's Toxic Radiance", true,
                     agent->as_monster()->name(DESC_A).c_str());
 
-                poison_player(dam * 2 / 3, agent->name(DESC_A), "toxic radiance",
+                poison_player(dam * 4 / 3, agent->name(DESC_A), "toxic radiance",
                               false);
             }
             else
