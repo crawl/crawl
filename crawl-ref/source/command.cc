@@ -1212,6 +1212,14 @@ static int _do_description(string key, string type, const string &suffix,
                     }
                 }
             }
+            else if (type == "card")
+            {
+                // 5 - " card"
+                card_type which_card =
+                     name_to_card(key.substr(0, key.length() - 5));
+                if (which_card != NUM_CARDS)
+                    desc += which_decks(which_card) + "\n";
+            }
 
             // Now we don't need the item anymore.
             if (thing_created != NON_ITEM)

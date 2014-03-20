@@ -367,42 +367,108 @@ const char* card_name(card_type card)
     return "a very buggy card";
 }
 
-static const deck_archetype* _random_sub_deck(uint8_t deck_type)
+card_type name_to_card(string name)
 {
-    const deck_archetype *pdeck = NULL;
+    for (int i = 0; i < NUM_CARDS; i++)
+    {
+        if (card_name(static_cast<card_type>(i)) == name)
+            return static_cast<card_type>(i);
+    }
+    return NUM_CARDS;
+}
+
+static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
+{
+    vector<const deck_archetype *> subdecks;
+
     switch (deck_type)
     {
     case MISC_DECK_OF_ESCAPE:
-        pdeck = (coinflip() ? deck_of_transport : deck_of_emergency);
+        subdecks.push_back(deck_of_transport);
+        subdecks.push_back(deck_of_emergency);
         break;
-    case MISC_DECK_OF_DESTRUCTION: pdeck = deck_of_destruction; break;
-    case MISC_DECK_OF_DUNGEONS:    pdeck = deck_of_dungeons;    break;
-    case MISC_DECK_OF_SUMMONING:   pdeck = deck_of_summoning;   break;
-    case MISC_DECK_OF_WONDERS:     pdeck = deck_of_wonders;     break;
-    case MISC_DECK_OF_PUNISHMENT:  pdeck = deck_of_punishment;  break;
+    case MISC_DECK_OF_DESTRUCTION:
+        subdecks.push_back(deck_of_destruction);
+        break;
+    case MISC_DECK_OF_DUNGEONS:
+        subdecks.push_back(deck_of_dungeons);
+        break;
+    case MISC_DECK_OF_SUMMONING:
+        subdecks.push_back(deck_of_summoning);
+        break;
+    case MISC_DECK_OF_WONDERS:
+        subdecks.push_back(deck_of_wonders);
+        break;
+    case MISC_DECK_OF_PUNISHMENT:
+        subdecks.push_back(deck_of_punishment);
+        break;
     case MISC_DECK_OF_WAR:
-        switch (random2(6))
-        {
-        case 0: pdeck = deck_of_destruction;  break;
-        case 1: pdeck = deck_of_enchantments; break;
-        case 2: pdeck = deck_of_battle;       break;
-        case 3: pdeck = deck_of_summoning;    break;
-        case 4: pdeck = deck_of_transport;    break;
-        case 5: pdeck = deck_of_emergency;    break;
-        }
+        subdecks.push_back(deck_of_destruction);
+        subdecks.push_back(deck_of_enchantments);
+        subdecks.push_back(deck_of_battle);
+        subdecks.push_back(deck_of_summoning);
+        subdecks.push_back(deck_of_transport);
+        subdecks.push_back(deck_of_emergency);
         break;
     case MISC_DECK_OF_CHANGES:
-        switch (random2(3))
-        {
-        case 0: pdeck = deck_of_battle;       break;
-        case 1: pdeck = deck_of_dungeons;     break;
-        case 2: pdeck = deck_of_wonders;      break;
-        }
+        subdecks.push_back(deck_of_battle);
+        subdecks.push_back(deck_of_dungeons);
+        subdecks.push_back(deck_of_wonders);
         break;
     case MISC_DECK_OF_DEFENCE:
-        pdeck = (coinflip() ? deck_of_emergency : deck_of_battle);
+        subdecks.push_back(deck_of_emergency);
+        subdecks.push_back(deck_of_battle);
         break;
     }
+
+    ASSERT(subdecks.size() > 0);
+    return subdecks;
+}
+
+const string deck_contents(uint8_t deck_type)
+{
+    string output = "It may contain the following cards: ";
+    bool first = true;
+
+    // XXX: This awkward way of doing things is intended to prevent a card
+    // that appears in multiple subdecks from showing up twice in the
+    // output. Currently this should only happen with decks of war, which
+    // have Elixir in both battle and enchantments, and changes, which have
+    // Trowel in both Dungeons and Wonders.
+    FixedVector<bool, NUM_CARDS> cards;
+    cards.init(false);
+    const vector<const deck_archetype *> subdecks = _subdecks(deck_type);
+    for (unsigned int i = 0; i < subdecks.size(); i++)
+    {
+        const deck_archetype *pdeck = subdecks[i];
+        for (int j = 0; pdeck[j].card != NUM_CARDS; ++j)
+            cards[pdeck[j].card] = true;
+    }
+
+    for (int i = 0; i < NUM_CARDS; i++)
+    {
+        if (!cards[i])
+            continue;
+
+        if (!first)
+            output += ", ";
+        else
+            first = false;
+
+        output += card_name(static_cast<card_type>(i));
+    }
+
+    if (first)
+        output += "BUGGY cards";
+    output += ".";
+
+    return output;
+}
+
+static const deck_archetype* _random_sub_deck(uint8_t deck_type)
+{
+    const vector<const deck_archetype *> subdecks = _subdecks(deck_type);
+    const deck_archetype *pdeck = subdecks[random2(subdecks.size())];
 
     ASSERT(pdeck);
 
@@ -976,6 +1042,63 @@ static void _redraw_stacked_cards(const vector<card_type>& draws,
     }
 }
 
+static bool _card_in_deck(card_type card, const deck_archetype *pdeck)
+{
+    for (int i = 0; pdeck[i].card != NUM_CARDS; ++i)
+    {
+        if (pdeck[i].card == card)
+            return true;
+    }
+
+    return false;
+}
+
+string which_decks(card_type card)
+{
+    vector<string> decks;
+    string output = "";
+    bool punishment = false;
+    for (uint8_t deck = MISC_FIRST_DECK; deck <= MISC_LAST_DECK; deck++)
+    {
+        vector<const deck_archetype *> subdecks = _subdecks(deck);
+        for (unsigned int i = 0; i < subdecks.size(); i++)
+        {
+            if (_card_in_deck(card, subdecks[i]))
+            {
+                if (deck == MISC_DECK_OF_PUNISHMENT)
+                    punishment = true;
+                else
+                {
+                    item_def tmp;
+                    tmp.base_type = OBJ_MISCELLANY;
+                    tmp.sub_type = deck;
+                    // 8 - "deck of "
+                    decks.push_back(sub_type_string(tmp, true).substr(8));
+                }
+                break;
+            }
+        }
+    }
+
+    if (decks.size())
+    {
+        output += "It is usually found in decks of "
+               +  comma_separated_line(decks.begin(), decks.end());
+        if (punishment)
+            output += ", or in Nemelex Xobeh's deck of punishment";
+        output += ".";
+    }
+    else if (punishment)
+    {
+        output += "It is usually only found in Nemelex Xobeh's deck of "
+                  "punishment.";
+    }
+    else
+        output += " It is normally not part of any deck.";
+
+    return output;
+}
+
 static void _describe_cards(vector<card_type> cards)
 {
     ASSERT(!cards.empty());
@@ -995,7 +1118,7 @@ static void _describe_cards(vector<card_type> cards)
         name = uppercase_first(name);
         data << "<w>" << name << "</w>\n"
              << get_linebreak_string(desc, get_number_of_cols() - 1)
-             << "\n";
+             << "\n" << which_decks(cards[i]) << "\n";
     }
     formatted_string fs = formatted_string::parse_string(data.str());
     clrscr();

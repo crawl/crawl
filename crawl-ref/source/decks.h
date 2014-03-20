@@ -119,10 +119,13 @@ enum card_type
 };
 
 const char* card_name(card_type card);
+card_type name_to_card(string name);
+const string deck_contents(uint8_t deck_type);
 void evoke_deck(item_def& deck);
 bool deck_triple_draw();
 bool deck_peek();
 bool deck_deal();
+string which_decks(card_type card);
 bool deck_stack();
 bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
