@@ -57,6 +57,10 @@ s-z.org (located in North America) (CSZO)
   :tiles: ``https://crawl.s-z.org``
   :ssh: ``crawl@crawl.s-z.org (ssh key or password crawlingtotheusa)``
 
+berotato.org (located in North America) (CBRO)
+  :tiles: ``http://crawl.berotato.org``
+  :ssh: ``crawler@crawl.berotato.org (ssh key required)``
+
 develz.org (located in Europe) (CDO)
   :http: ``http://crawl.develz.org``
   :telnet: ``crawl.develz.org:345``
@@ -66,16 +70,13 @@ lantea.net (located in Europe) (CLAN)
   :tiles: ``https://crawl.lantea.net:8080``
   :ssh: ``terminal@crawl.lantea.net (ssh key or password terminal)``
 
-heh.fi (located in Europe) (RHF)
-  :tiles: ``rl.heh.fi:8080``
-  :ssh: ``rl@rl.heh.fi (no password, or use ssh key)``
-
 An ssh key can be obtained at:
 
-  http://crawl.develz.org/cao_key (PuTTY: http://crawl.develz.org/cao_key.ppk) (for CAO, CDO, CLAN, RHF)
+  http://crawl.develz.org/cao_key (PuTTY: http://crawl.develz.org/cao_key.ppk) (for CAO, CDO, CLAN)
 
   http://dobrazupa.org/cszo_key (PuTTY: http://dobrazupa.org/cszo_key.ppk) (for CSZO)
 
+  http://crawl.berotato.org/crawl/keys/ (PuTTY: cbro_key.ppk, unix: cbro_key) (for CBRO)
 
 The servers carry no guarantees, though they are generally always running and no
 one has lost their save file yet. :) More information is available at the URLs
@@ -963,30 +964,6 @@ Whenever you pick up gold, your total wealth is shown as well. Should you want
 to have a glance at your finances at some other opportunity, pressing '$' (or
 '%') allows you to do so.
 
-Racial Items
-========================================
-
-Some items have been crafted by members of a gifted species, and have special
-properties.
-
-Dwarven weapons and armours are very durable, and do not rust or corrode easily.
-All species get a bonus when wearing Dwarven armours at the expense that these
-mails make spellcasting slightly more difficult. Dwarves get a larger bonus
-without the magical hampering.
-
-In general, Orcs do better with gear from their own kin; this applies to
-weapons, as well as to armours.
-
-Elven body armour does not hamper spellcasting as much as other armours of the
-same type would. Elven cloaks and boots are particularly useful to those who
-wish to be stealthy. An Elf does a bit better when wearing armour or weapons of
-his own kind.
-
-Demonspawn receive bonuses when using demonic weapons.
-
-Centaurs and Nagas have uniquely shaped bodies. With luck, however, a character
-of these species might find a Centaur or Naga barding.
-
 Artefacts
 ========================================
 
@@ -1504,6 +1481,21 @@ Humans
   players. Humans advance quickly in levels and have equal abilities in most
   skills.
 
+Hill Orcs
+  Hill Orcs are Orcs from the upper world who, jealous of the riches which their
+  cousins (the Cave Orcs) possess below the ground, descend in search of plunder
+  and adventure.
+
+  Hill Orcs are as robust as the Minotaurs, yet they have human-like reserves of
+  magical energy. Their forte is brute-force fighting, and they are skilled at
+  using most hand weapons (particularly axes, with which they are experts),
+  though they are not particularly good at using missile weapons. Hill Orcs are
+  passable users of most types of magic and are particularly skilled with Fire.
+
+  Many Orcs feel superior to all other species and beings, and they have formed
+  a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
+  can join Beogh whenever an orc priest is in sight.
+
 Merfolk
   The Merfolk are a hybrid species of half-human, half-fish that typically live
   in the oceans and rivers, seldom venturing toward land. However, Merfolk
@@ -1703,11 +1695,9 @@ Felids
   case, eviscerated their former masters and gone out into the world.
 
   While fully capable of using speech and most forms of magic, Felids are at a
-  serious disadvantage due to their inability to use armour or weapons, or even
-  grasping items well enough to throw a dart or point a wand. They can use their
-  mouths and paws for simple manipulation like uncorking a bottle or unrolling a
-  scroll. Like all cats, Felids are incapable of thriving on vegetable food, and
-  need meat to survive.
+  serious disadvantage due to their inability to use armour or weapons. Like all
+  cats, Felids are incapable of thriving on vegetable food, and need meat to
+  survive.
 
   Their agility and stealth are legendary, as is their ability to get to hard to
   reach places. They move faster than most races, but don't run as fast as
@@ -1733,26 +1723,17 @@ Octopodes
   knowledge of poisons as well. They are also able to use their tentacles to
   constrict enemies - potentially several at a time!
 
-Djinn
-  Of the same stock as angels or demons, these spirits have been created from
-  smokeless fire by some deranged god. Unlike regular living beings, they draw
-  their sustenance from magic rather than eating or drinking, although for some
-  reason they can still do the latter - probably due to being unintelligently
-  designed by a creator with no knowledge of evolution.
+Gargoyles
+  A cross between ordinary stone gargoyles and living beings, Gargoyles are
+  hideous humanoids with an affinity to rock. They have low health, but large
+  amounts of innate armour which increases further as they gain levels. They
+  eventually gain the ability to fly continuously.
 
-  Magic is literally their life, to the point of their health and magical
-  powers' being one force, called "essence". The Djinn are hampered by magical
-  contamination more than most, but can slowly recover from its long-term effects.
-
-  Being spirits of fire, they obviously suffer no harm from any kind of fire,
-  but the same cannot be said of their equipment. Accordingly, cold and water
-  cause them great harm. Fortunately, they float above the ground permanently
-  and can cross lava or water that way.
-
-  Djinn make great fire mages. They are competent with air magic, enchantments,
-  magic items and weapons with long reaches that don't require high dexterity.
-  They are terrible with ice, earth, necromancy and poison.
-
+  Gargoyles' partially living form grants them immunity to poison, as well as
+  resistance to electricity, and protection from some effects of necromancy.
+  Their natural armour makes them strong melee fighters, and they are naturally
+  skilled with blunt weapons and in unarmed combat. They can also be exceptional
+  earth-based conjurers.
 
 Formicids
   The Formicids are a species of humanoid ants. Just like their tiny insect
@@ -1769,37 +1750,24 @@ Formicids
   With the ability to lift ten times their own weight, the Formicids have
   strength rivaling that of ogres. This, along with the fact that they have four
   arms, allows Formicid warriors to equip both a shield and a two-handed weapon
-  at the same time, or to wield a giant club using all four arms.
+  at the same time.
 
   Formicids make good earth and venom mages, but are quite capable at both melee
-  and ranged combat too, albeit a bit flimsy. They are naturally bad at air magic
-  and conjurations. They advance in levels faster than any other race.
-
-Gargoyles
-  A cross between ordinary stone gargoyles and living beings, Gargoyles are
-  hideous humanoids with an affinity to rock. They have low health, but large
-  amounts of innate armour which increases further as they gain levels. They
-  eventually gain the ability to fly continuously.
-
-  Gargoyles' partially living form grants them immunity to poison, as well as
-  resistance to electricity, and protection from some effects of necromancy.
-  Their natural armour makes them strong melee fighters, and they are naturally
-  skilled with blunt weapons and in unarmed combat. They can also be exceptional
-  earth-based conjurers.
+  and ranged combat too. They are naturally bad at air magic and conjurations.
 
 Vine Stalkers
   Limber in shape, Vine Stalkers are anthropomorphic masses of thick vines.
-  They possess a once-humanoid core, parasitized moments before death by the
+  They possess a once-humanoid core, parasitised moments before death by the
   magical vines. Lacking any other discernible features, their faces are
   dominated by their disproportionate, vicious maw with which they disrupt and
   devour the magical energies of their foes.
- 
+
   Magic courses freely through their bodies, and they can not only share any
   damage taken with their magical reserves, but in fact physically regenerate
   at an alarming rate. However these traits come at a price: the dual nature of
   their bodies makes them frail to the extreme and they cannot benefit from
   potions or wands to heal their wounds.
- 
+
   Living examples of adaptation, Vine Stalkers level up quickly and lend well
   to an all-out offensive style; trusting their stealth to choose their prey
   and then their regenerating capabilities to power through the wounds they may
@@ -1809,53 +1777,9 @@ Vine Stalkers
   spells' fuel with each voracious bite.
 
   Their great offensive capabilities and intrinsic regeneration lead some Vine
-  Stalkers to eschew more traditional defenses such as armour and dodging,
+  Stalkers to eschew more traditional defences such as armour and dodging,
   although this proves fatally unwise often times when their judgement of their
   prey fails and they bite more than they can possibly chew.
-
-Orcs
-========================================
-
-Many Orcs feel superior to all other species and beings, and they have formed
-a religion around that idea. Only Orcs can worship Beogh, the Orc god. They
-can join Beogh whenever an orc priest is in sight.
-
-Orcs are mostly resilient creatures, with above-average health, and thus make
-very good melee fighters. Although they are not so skilled in the magical arts
-in general, they have good basic knowledge of destructive magic. Orcs generally
-are not very picky about what they eat.
-
-Hill Orcs
-  Hill Orcs are Orcs from the upper world who, jealous of the riches which their
-  cousins (the Cave Orcs) possess below the ground, descend in search of plunder
-  and adventure.
-
-  Hill Orcs are as robust as the Minotaurs, yet they have human-like reserves of
-  magical energy. Their forte is brute-force fighting, and they are skilled at
-  using most hand weapons (particularly axes, with which they are experts),
-  though they are not particularly good at using missile weapons. Hill Orcs are
-  passable users of most types of magic and are particularly skilled with Fire.
-
-Lava Orcs
-  These strange humanoids are made of living stone, with a unique heat-based
-  metabolism. Ordinarily stony, when anything puts some stress on them, they
-  literally fire up, turning into fast-moving lava.
-
-  They are unique in their ability to swim in lava: even the Djinn, while immune
-  to fire, can't swim through a treacle of molten rock. In order to be able to
-  use regular equipment, Lava Orcs have invented special fire-proof backpacks;
-  scrolls are not accessible when their owner is too hot.
-
-  Many things can fire up their metabolism: facing multiple and/or dangerous
-  enemies, being badly hurt, suffering fire damage, berserking, and obviously
-  being submerged in lava. As their heat grows, Lava Orcs become more accustomed
-  to fire, have their stony skin soften, gain extra power when casting fire
-  magic, become vulnerable to cold, and finally cause fire damage to all
-  creatures next to them.
-
-  Lava Orcs make good melee fighters, preferring axes (though not to the extent
-  that Hill Orcs do). They're pretty bad spellcasters, except for transmutations,
-  fire and earth magic.
 
 Elves
 ========================================
@@ -2219,7 +2143,7 @@ additional melee attack. Unarmed combat is particularly difficult to use in
 combination with heavy armour or shields. The Unarmed Combat skill continues to
 increase your attack speed while unarmed until it can be raised no more.
 
-Note that auxiliary attacks (such as a centaur's kick or a minotuar's headbutt)
+Note that auxiliary attacks (such as a Centaur's kick or a Minotaur's headbutt)
 are totally unaffected by the Unarmed Combat skill!
 
 Ranged combat skills
@@ -2995,7 +2919,9 @@ Near Starving
   You are in desperate need of food.
 
 Starving
-  You should really eat something; death is not far away.
+  You should really eat something; death is not far away. While starving, your
+  combat abilities are impaired and you are unable to cast spells or use many
+  evoked or divine abilities.
 
 Retch
   Something is causing you to feel rather ill. You cannot eat anything or quaff
@@ -3007,21 +2933,21 @@ Pois
 
 Drain
   Your skills have been drained by negative energy, and are less effective.
-  This status will not wear off by waiting; gain more experience to remove
-  it; or, alternatively, quaff a potion of restore abilities. This status
-  has multiple levels, and you can see just how much you have been drained
-  by looking at the skills screen.
+  This status will not wear off by waiting, but will expire as you gain
+  experience. This status has multiple levels, and you can see just how much you
+  have been drained by looking at the skills screen.
 
 Encumbered
   Your load is heavy enough to slow you down. You also need more food when
-  walking around encumbered. Try to avoid this!
+  walking around encumbered, and your stealth is reduced. Try to avoid this!
 
 Overloaded
-  You carry too much to do anything sensible. Drop stuff!
+  You are carrying too much to do anything sensible. In addition to the effects
+  of Encumbered being worsened, you are unable to climb stairs. Drop something!
 
 Conf
-  You are confused. Actions may not work properly. Wait it out or drink a potion
-  of curing for immediate cure.
+  You are confused. Actions may not work properly, or may be targeted in a
+  random direction. Wait it out or drink a potion of curing for immediate cure.
 
 Breath
   Some abilities (like breath weapons or Zin's recite invocation) require you to
@@ -3040,8 +2966,9 @@ Held
 
 Constr
   You are being constricted by an enemy and will take an increasing amount of
-  damage every turn. Also, movement away from the enemy is restricted (although
-  you can struggle to escape).
+  damage every turn. Also, movement (including blinking) away from the enemy is
+  restricted, although you can struggle to escape and will become increasingly
+  more likely to succeed when doing so multiple times.
 
 Mesm
   You are mesmerised and cannot move away from the monster(s) mesmerising you.
@@ -3054,7 +2981,7 @@ Fear
   You may not gain the cTele status if you have this status.
 
 -Tele
-  A monster is preventing you from teleporting, at all.
+  A monster is preventing you from teleporting at all.
 
 Mark
   Due to the effects of a trap or a spell, monsters will now hunt you down more
@@ -3074,9 +3001,10 @@ Corona
   You are surrounded by light; this ruins your stealth and makes you easier to
   hit.
 
-Umbra
-  You are shrouded in unholy darkness. This helps with stealth and evading
-  attacks from everyone except for the undead and worshippers of Yredelemnul.
+Barbs
+  There are dangerous barbs embedded in your skin, and moving around will cause
+  you to take damage. They will go away after standing in place for a few turns
+  or moving around.
 
 Sick
   You have been sickened by some hostile effect. Hit points don't regenerate
@@ -3189,10 +3117,6 @@ commands:
 
 =g
   Pick this item up automatically if autopickup is on.
-
-=k
-  Ignore this item in all listings on the ground (it can still be picked up if
-  all items on the ground have this inscription).
 
 =f
   Exclude this item from automatic quivering.
