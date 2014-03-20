@@ -2799,12 +2799,8 @@ orcs.
 %%%%
 war gargoyle
 
-When standard gargoyles are created, they're animated from intimidating,
-carved stone figures and serve as immensely armoured and resilient, if
-structurally fragile, guardians for their positions. Rarely, gargoyles
-are prepared for their animation, smithed from impressively lightweight
-metal into solid winged statues with nasty speed, strength, and
-weaponized breath. These gargoyles ruthlessly crush intruders.
+A rare type of gargoyle, constructed from a solid steel statue and imbued with
+vicious strength, speed, and weaponized breath.
 %%%%
 warmonger
 
