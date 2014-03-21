@@ -634,12 +634,12 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_MMISSILE;
         break;
 
-    case SPELL_DAZZLING_SPRAY: // dazzlingspray
+    case SPELL_DAZZLING_SPRAY:
         beam.colour     = LIGHTMAGENTA;
         beam.name       = "spray of energy";
         beam.short_name = "energy";
-        beam.damage     = dice_def(3, 5 + (power / 10));
-        beam.hit        = 20 + (power / 20);
+        beam.damage     = dice_def(3, 5 + (power / 17));
+        beam.hit        = 16 + (power / 22);
         beam.flavour    = BEAM_MMISSILE;
         break;
 
