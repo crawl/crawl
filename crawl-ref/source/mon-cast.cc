@@ -2762,12 +2762,10 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
     return mons_should_fire(tracer);
 }
 
-static bool _spray_tracer(monster *caster, int pow, coord_def aim,
-                          spell_type spell)
+static bool _spray_tracer(monster *caster, int pow, bolt parent_beam, spell_type spell)
 {
-    vector<bolt> beams = get_spray_rays(caster, aim, spell_range(spell, pow), 3,
-                                        spell == SPELL_DAZZLING_SPRAY
-                                        ? ZAP_DAZZLING_SPRAY : NUM_ZAPS);
+    vector<bolt> beams = get_spray_rays(caster, parent_beam.target,
+                                        spell_range(spell, pow), 3);
     if (beams.size() == 0)
         return false;
 
@@ -2775,6 +2773,7 @@ static bool _spray_tracer(monster *caster, int pow, coord_def aim,
 
     for (unsigned int i = 0; i < beams.size(); ++i)
     {
+        bolt_parent_init(&parent_beam, &(beams[i]));
         fire_tracer(caster, beams[i]);
         beam.friend_info += beams[i].friend_info;
         beam.foe_info    += beams[i].foe_info;
@@ -3354,7 +3353,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         {
             if (!foe
                 || !_spray_tracer(mons, 12 * mons->spell_hd(spell_cast),
-                                  foe->pos(), spell_cast))
+                                  beem, spell_cast))
             {
                 return false;
             }

@@ -2645,8 +2645,7 @@ vector<bolt> get_spray_rays(const actor *caster, coord_def aim, int range,
             coord_def delta = caster->pos() - *di;
 
             //Don't aim secondary rays at friendlies
-            if ((caster->is_player() ? monster_at(*di)->attitude != ATT_HOSTILE
-                    : monster_at(*di)->attitude != ATT_FRIENDLY))
+            if (mons_aligned(caster, monster_at(*di)))
                 continue;
 
             if (!caster->can_see(monster_at(*di)))
