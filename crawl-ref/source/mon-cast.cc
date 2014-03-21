@@ -2846,9 +2846,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
     {
         return false;
     }
-    else if (random2(200) > mons->hit_dice + 50
-                            + ((mons_class_flag(mons->type, M_STABBER)
-                                && mons->pos() == mons->firing_pos) ? 75 : 0))
+    // Servitors never fail to (try) to cast a spell
+    else if (mons->type != MONS_SPELLFORGED_SERVITOR
+             && random2(200) > mons->hit_dice + 50
+                               + ((mons_class_flag(mons->type, M_STABBER)
+                                  && mons->pos() == mons->firing_pos) ? 75 : 0))
     {
         return false;
     }
