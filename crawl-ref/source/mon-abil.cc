@@ -2092,6 +2092,8 @@ void treant_release_fauna(monster* mons)
     monster_type base_t = (one_chance_in(3) ? MONS_YELLOW_WASP
                                             : MONS_RAVEN);
 
+    mon_enchant abj = mons->get_ench(ENCH_ABJ);
+
     for (int i = 0; i < count; ++i)
     {
         monster_type fauna_t = (base_t == MONS_YELLOW_WASP && one_chance_in(3)
@@ -2107,6 +2109,11 @@ void treant_release_fauna(monster* mons)
         if (fauna)
         {
             fauna->props["band_leader"].get_int() = mons->mid;
+
+            // Give released fauna the same summon duration as their 'parent'
+            if (abj.ench != ENCH_NONE)
+                fauna->add_ench(abj);
+
             created = true;
             mons->number--;
         }
