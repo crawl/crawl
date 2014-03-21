@@ -1060,6 +1060,7 @@ static spell_type servitor_spells_primary[] =
     SPELL_BOLT_OF_DRAINING,
     SPELL_VENOM_BOLT,
     SPELL_THROW_ICICLE,
+    SPELL_STONE_ARROW,
     SPELL_ISKENDERUNS_MYSTIC_BLAST,
     SPELL_NO_SPELL,                        // end search
 };
@@ -1073,13 +1074,13 @@ static spell_type servitor_spells_secondary[] =
     SPELL_FREEZING_CLOUD,
     SPELL_POISONOUS_CLOUD,
     SPELL_FORCE_LANCE,
+    SPELL_DAZZLING_SPRAY,
     SPELL_MEPHITIC_CLOUD,
     SPELL_NO_SPELL,                        // end search
 };
 
 static spell_type servitor_spells_fallback[] =
 {
-    SPELL_STONE_ARROW,
     SPELL_STICKY_FLAME,
     SPELL_THROW_FLAME,
     SPELL_THROW_FROST,
@@ -1164,14 +1165,19 @@ void ghost_demon::init_spellforged_servitor()
     speed = 10;
     ev = 10;
     ac = 10;
-    xl = 9 + (pow/16);
+    xl = 9 + div_rand_round(pow, 14);
     max_hp = 80;
     spellcaster = true;
     damage = 0;
     att_type = AT_NONE;
 
     // Give the servitor its spells
-    if (!populate_servitor_spells(servitor_spells_primary, true, best_magic_skill))
+    bool primary   = populate_servitor_spells(servitor_spells_primary, true,
+                                              best_magic_skill);
+    bool secondary = populate_servitor_spells(servitor_spells_secondary, false,
+                                              best_magic_skill);
+
+    if (!primary && !secondary)
         populate_servitor_spells(servitor_spells_fallback, true, best_magic_skill);
-    populate_servitor_spells(servitor_spells_secondary, false, best_magic_skill);
+
 }
