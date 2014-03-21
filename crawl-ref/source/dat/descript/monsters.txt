@@ -1694,8 +1694,7 @@ kraken
 
 A gargantuan sea monster, capable of devouring entire ships. It embraces them
 with its tentacles and draws them into the depths. Fortunately, the tentacles
-are too big to embrace a small creature like you. Wait, did I say
-“fortunately”?
+are too big to embrace a small creature like you.
 %%%%
 large abomination
 
@@ -2510,7 +2509,7 @@ statue
 
 At first glance, this piece of sculpted granite appears inert. The red glow
 from its eyes, however, suggests it is no mere stone. Although it is rooted to
-its base, you are certain that it can still move parts of itself.
+its base, it can still move parts of itself.
 %%%%
 steam dragon
 
@@ -2877,38 +2876,37 @@ Oh wait, wrong game.
 %%%%
 sensed monster
 
-Thanks to your antennae, you know there is some creature there, and that it is
-not one of your allies.
+You know there is some creature here, and that it is not one of your allies.
 %%%%
 trivial sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that it
+By the power of Ashenzari, you know there is some creature here, and that it
 shouldn't give you the slightest concern.
 %%%%
 easy sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that you
+By the power of Ashenzari, you know there is some creature here, and that you
 should be able to defeat it without much risk.
 %%%%
 tough sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that it
+By the power of Ashenzari, you know there is some creature here, and that it
 is somewhat dangerous.
 %%%%
 nasty sensed monster
 
-By the power of Ashenzari, you know there is some creature there, and that you
+By the power of Ashenzari, you know there is some creature here, and that you
 should be afraid. Very afraid.
 %%%%
 friendly sensed monster
 
 {{
     if you.god() == "Ashenzari" then
-        return "By the power of Ashenzari,"
+        return "By the power of Ashenzari, you"
     else
-        return "Thanks to your antennae,"
+        return "You"
     end
-}} you know there is some creature there, and that it is one of your allies.
+}} know there is some creature here, and that it is one of your allies.
 %%%%
 ##############################################################################
 ### Vault-defined monsters
@@ -2960,15 +2958,11 @@ archer statue
 The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
 bow aloft, and appears to be magically animated, letting it use the bow to
 riddle you with arrows.
-
-Being a statue, it doesn't appear to have a means of salvaging shot arrows or
-fletching new ones, but you guess the statue's creators gave it enough of a
-supply to kill you before someone comes to replenish the quiver.
 %%%%
 captured wizard
 
-With wild eyes, the wizard frantically mumbles something and waves his arms,
-but is unable to cast a single spell. His tongue has been cut off!
+With wild eyes, this wizard frantically mumbles and waves his arms, but is
+unable to cast a single spell. His tongue has been cut off!
 %%%%
 charred statue
 
@@ -2981,16 +2975,10 @@ Cigotuvi's Monster
 This terrifying creation looks to have been constructed from the body parts of
 every monstrous creature imaginable, and sprouts some writhing tentacles.
 %%%%
-# In the first umpteen pages of googling, the only use of "Iskenderun" for a
-# living being is the first Turkish Van cat brought to Britain. With
-# Crawl's felids being sentient, it'd be hard to not make a connection with
-# the wizard.
 conjurer statue
 
 This statue seems to harness the mightiest pure conjurations ever devised by
-Iskenderun. It is not made in her likeness, as legends describe her as a female
-felid, but, if I were you, I'd pay more heed to the orbs of magic flying your
-way than the statue's appearance.
+Iskenderun.
 %%%%
 decayed bog body
 
@@ -3003,10 +2991,9 @@ This poor creature looks hideously deformed.
 %%%%
 demonic plant
 
-Just as demons are shaped in a mockery of living beings, this... thing... here
-is a mockery of a plant. The colours don't match, and normal plants don't have
-mysterious appendages and tentacles writhing around. Fortunately, this one
-appears to be harmless, but with demons, you can never be sure.
+Just as demons are shaped in a mockery of living beings, this thing is a
+mockery of a plant, with mysterious appendages and tentacles writhing around.
+Fortunately it appears to be harmless, but with demons you can never be sure.
 %%%%
 drunken dwarf
 
@@ -3076,7 +3063,6 @@ enchanted to explode in a blaze of fire. You'd better keep your distance!
 lasher statue
 
 This statue depicts a savage-looking slave driver with a vicious barbed whip.
-It appears to be capable of moving the whip arm. Prepare for a flogging...
 %%%%
 mad acolyte of Lugonu
 
@@ -3151,9 +3137,6 @@ A globe of primordial ice, floating in the air. You don't know whether the
 tales about the world's once being a void bracketed by realms of endless fire
 and cold are true, but if they are, this orb may be a relic of that ancient
 time.
-
-Ordinary ice seems to form on the surface, but it is easy to distinguish from
-the perfect ball inside. You'd better stay far away, or you may end up frozen.
 %%%%
 orb slug
 
@@ -3163,9 +3146,7 @@ like Xom's handiwork...
 %%%%
 petrified plant
 
-Something has turned these ordinary plants into stone. Better not tarry here.
-If whatever petrified these plants gets you as well, we'll be stuck with a
-statue as ugly as you standing here for ages.
+Something has turned this ordinary plant into stone.
 %%%%
 phase bat
 
@@ -3194,9 +3175,8 @@ still capable of bespelling her audience.
 %%%%
 skeletal archer
 
-Since when is having flesh a requirement to be a master archer? These skeletal
-fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
-only good for a supply of sinew for bowstrings anyway.
+The vicious and heavily armed skeleton of a humanoid creature, animated by
+unholy power. It wields a bow, and fires with deadly accuracy.
 %%%%
 skeletal bat
 
@@ -3224,13 +3204,6 @@ young spriggan druid
 A junior member of the order of spriggans sworn to protect nature. While less
 dangerous than the elders, this one is perfectly capable of dealing with
 trespassers like you.
-
-{{
-    if you.god() == "Fedhas" then
-        return "Those foul druids care mostly for animals, instead of " ..
-               "taking proper care of plants as Fedhas commands.";
-    end
-}}
 %%%%
 vine covered earth elemental
 
@@ -3242,9 +3215,6 @@ witch
 
 An old and unnaturally ugly human, wearing robes stained with what appears to
 be swamp ooze, cauldron soot and brew ingredients.
-
-A magician with such stellar sanity and manners probably has great pets as
-well. You might not have to wait long to find out for certain.
 %%%%
 withered plant
 
