@@ -783,7 +783,7 @@
 
   {"Your teeth lengthen and sharpen.",
    "Your teeth lengthen and sharpen some more.",
-   "Your teeth are very long and razor-sharp."},
+   "Your teeth grow very long and razor-sharp."},
 
   {"Your teeth shrink to normal size.",
    "Your teeth shrink and become duller.",
