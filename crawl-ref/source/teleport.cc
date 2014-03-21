@@ -114,8 +114,6 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     return true;
 }
 
-typedef pair<coord_def, int> coord_weight;
-
 // Try to find a "safe" place for moved close or far from the target.
 // keep_los indicates that the destination should be in LOS of the target.
 //
