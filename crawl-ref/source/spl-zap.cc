@@ -45,15 +45,6 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_VENOM_BOLT;
     case SPELL_BOLT_OF_DRAINING:
         return ZAP_BOLT_OF_DRAINING;
-    case SPELL_RANDOM_BOLT:
-        return random_choose(ZAP_BOLT_OF_FIRE,
-                             ZAP_BOLT_OF_COLD,
-                             ZAP_VENOM_BOLT,
-                             ZAP_BOLT_OF_DRAINING,
-                             ZAP_QUICKSILVER_BOLT,
-                             ZAP_CRYSTAL_BOLT,
-                             ZAP_LIGHTNING_BOLT,
-                             -1);
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
         return ZAP_LEHUDIBS_CRYSTAL_SPEAR;
     case SPELL_FIREBALL:

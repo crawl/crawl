@@ -3029,3 +3029,27 @@ spret_type cast_glaciate(actor *caster, int pow, coord_def aim, bool fail)
 
     return SPRET_SUCCESS;
 }
+
+spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
+{
+    // Need to use a 'generic' tracer regardless of the actual beam type,
+    // to account for the possibility of both bouncing and irresistable damage
+    // (even though only one of these two ever occurs on the same bolt type).
+    bolt tracer = beam;
+    if (!player_tracer(ZAP_RANDOM_BOLT_TRACER, 200, tracer))
+        return SPRET_ABORT;
+
+    fail_check();
+
+    zap_type zap = random_choose(ZAP_BOLT_OF_FIRE,
+                                 ZAP_BOLT_OF_COLD,
+                                 ZAP_VENOM_BOLT,
+                                 ZAP_BOLT_OF_DRAINING,
+                                 ZAP_QUICKSILVER_BOLT,
+                                 ZAP_CRYSTAL_BOLT,
+                                 ZAP_LIGHTNING_BOLT,
+                                 -1);
+    zapping(zap, pow, beam, false);
+
+    return SPRET_SUCCESS;
+}

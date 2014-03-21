@@ -436,6 +436,8 @@ enum beam_type                  // bolt::flavour
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
+    BEAM_BOUNCY_TRACER,           // Used for random bolt tracer (bounces as
+                                  // crystal bolt, but irresistable).
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
@@ -4240,6 +4242,7 @@ enum zap_type
     ZAP_EXPLOSIVE_BOLT,
     ZAP_CRYSTAL_BOLT,
     ZAP_QUICKSILVER_BOLT,
+    ZAP_RANDOM_BOLT_TRACER,
 
     NUM_ZAPS
 };

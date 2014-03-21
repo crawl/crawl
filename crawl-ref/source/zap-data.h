@@ -1161,3 +1161,19 @@ struct zap_info
     false,
     6
 },
+
+{
+    ZAP_RANDOM_BOLT_TRACER,
+    "random bolt tracer",
+    200,
+    new dicedef_calculator<AUTOMATIC_HIT, 1, 0, 1>,
+    new tohit_calculator<AUTOMATIC_HIT>,
+    WHITE,
+    false,
+    BEAM_BOUNCY_TRACER,
+    DCHAR_FIRED_DEBUG,
+    true,
+    true,
+    false,
+    0
+},
