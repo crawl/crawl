@@ -496,19 +496,20 @@ the very essence of Gehenna and its eternal fire.
 %%%%
 the Serpent of Hell cocytus
 
-A massive white dragon, covered with shards of gleaming ice, wholly possessed by
-the nightmarish cold of Cocytus.
+A massive white dragon, covered with shards of gleaming ice, wholly possessed
+by the nightmarish cold of Cocytus.
 %%%%
 the Serpent of Hell dis
 
 A towering beast with an army's worth of swords for teeth. Each scale is a
-shield with a razored edge. It watches through a pair of featureless chrome
+shield with a razored edge. It watches you through a pair of featureless chrome
 spheres.
 %%%%
 the Serpent of Hell tartarus
 
-Seemingly a pair of lurid magenta eyes hanging in the darkness, the outline of a
-vast, sinuous dragon is just barely perceptible behind. Its malice is palpable.
+Seemingly a pair of lurid magenta eyes hanging in the darkness, the outline of
+a vast, sinuous dragon is just barely perceptible behind. Its malice is
+palpable.
 %%%%
 # Non-unique monsters
 acid blob
@@ -810,9 +811,9 @@ An aggressive crocodilian with great crunching jaws full of sharp teeth.
 %%%%
 crystal guardian
 
-An intricate animated statue made of heavily ensorcelled, tough crystal.
-They are immune to most forms of magic, and are magically charged
-to toss great bolts of fire and cold that are reflected by any surface.
+An intricate animated statue made of heavily ensorcelled, tough crystal. They
+are immune to most forms of magic, and are magically charged to toss great
+bolts of fire and cold that are reflected by any surface.
 %%%%
 curse skull
 
@@ -1011,8 +1012,8 @@ draconians, these knights have specialized in ice magic and necromancy.
 draconian monk
 
 A draconian who has eschewed the study of weaponry and magic in order to train
-in the art of unarmed combat. Its scaly fists, well-thewed legs, and mighty tail
-rain down blows upon its opponents.
+in the art of unarmed combat. Its scaly fists, well-thewed legs, and mighty
+tail rain down blows upon its opponents.
 %%%%
 draconian scorcher
 
@@ -1112,8 +1113,8 @@ dangerous, this freakish relative puts it to shame.
 %%%%
 ettin
 
-A two-headed giant, stronger than most, and able to land devastating blows
-left and right with its two huge weapons.
+A two-headed giant, stronger than most, and able to land devastating blows left
+and right with its two huge weapons.
 %%%%
 Executioner
 
@@ -1360,7 +1361,8 @@ physical attacks and conjurations from its creator and their allies.
 great orb of eyes
 
 A levitating ball, covered in malignant eyes and humming with eldritch
-energies. Many is the adventurer ripped limb-from-limb by its dreadful eyeteeth.
+energies. Many is the adventurer ripped limb-from-limb by its dreadful
+eyeteeth.
 %%%%
 greater mummy
 
@@ -1905,8 +1907,8 @@ at them. Even experienced adventurers give oklob plants a wide berth.
 %%%%
 oklob sapling
 
-A young oklob plant. It's more fragile than the mature specimen, but the acid it
-sprays is just as deadly.
+A young oklob plant. It's more fragile than the mature specimen, but the acid
+it sprays is just as deadly.
 %%%%
 ooze
 
@@ -2420,10 +2422,10 @@ A spirit drawn from a weapon — it never strikes on its own.
 %%%%
 spellforged servitor
 
-A magical construct, woven with a portion of a conjurer's magic, and bonded with
-a primitive elemental intelligence summoned from an outer plane. The magic it
-is forged with gives it the capacity to wield some of its creator's destructive
-spells.
+A magical construct, woven with a portion of a conjurer's magic, and bonded
+with a primitive elemental intelligence summoned from an outer plane. The magic
+it is forged with gives it the capacity to wield some of its creator's
+destructive spells.
 %%%%
 sphinx
 
@@ -2789,8 +2791,8 @@ A strong wild canine, with sharp teeth and a healthy appetite.
 %%%%
 wolf spider
 
-A hairy fast-moving hunting spider, with vicious mandibles. It roams the dungeon
-in search of prey, which it kills with its deadly venom.
+A hairy fast-moving hunting spider, with vicious mandibles. It roams the
+dungeon in search of prey, which it kills with its deadly venom.
 %%%%
 worker ant
 
@@ -2800,10 +2802,10 @@ it encounters is a potential meal.
 %%%%
 worldbinder
 
-A cloud of thick fog, with faint, feeble claws constantly reaching
-out and grasping futilely before being pulled back in by the fog.
-When threatened, it can call forth creatures banished to the void between
-realities, using them to defend itself.
+A cloud of thick fog, with faint, feeble claws constantly reaching out and
+grasping futilely before being pulled back in by the fog. When threatened, it
+can call forth creatures banished to the void between realities, using them to
+defend itself.
 %%%%
 worm
 
@@ -2853,8 +2855,8 @@ venom can render most beings unable to move.
 %%%%
 ynoxinul
 
-A winged demon covered in shiny metallic scales. It has a legion of minor demons
-under its command.
+A winged demon covered in shiny metallic scales. It has a legion of minor
+demons under its command.
 %%%%
 zombie
 
