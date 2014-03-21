@@ -41,9 +41,7 @@ Antaeus
 
 Once a mighty and renowned titan, his arrogance was his undoing. Now he is
 corrupt and tainted, a powerful demon who lords over the frozen wastes of
-Cocytus. His gigantic body seems as though it would be easily struck by your
-attacks; unfortunately, it also seems as though it would remain unscathed by
-all but the strongest of them.
+Cocytus. His strength is legendary.
 %%%%
 Arachne
 
@@ -498,21 +496,19 @@ the very essence of Gehenna and its eternal fire.
 %%%%
 the Serpent of Hell cocytus
 
-You can barely move through the hellish cold that's freezing your soul. It
-emanates from this massive white dragon. Your eyes hurt from the temperature,
-and from the gleam of shards of ice covering the demonic beast.
+A massive white dragon, covered with shards of gleaming ice, wholly possessed by
+the nightmarish cold of Cocytus.
 %%%%
 the Serpent of Hell dis
 
 A towering beast with an army's worth of swords for teeth. Each scale is a
-shield with a razored edge. It watches you through a pair of featureless chrome
+shield with a razored edge. It watches through a pair of featureless chrome
 spheres.
 %%%%
 the Serpent of Hell tartarus
 
-A pair of lurid magenta eyes hang in the darkness before you. You can just
-barely trace the outline of a vast, sinuous dragon. Its malice for you is
-palpable.
+Seemingly a pair of lurid magenta eyes hanging in the darkness, the outline of a
+vast, sinuous dragon is just barely perceptible behind. Its malice is palpable.
 %%%%
 # Non-unique monsters
 acid blob
@@ -571,7 +567,7 @@ apocalypse crab
 
 An opalescent crab with jet black eyes. A distant relative of the fire crab,
 the rumours claim that this species is waiting for the end of time. The chaotic
-mists effusing from its mandible are hardly suggestive of waiting.
+mists effusing from its mandibles are hardly suggestive of waiting.
 %%%%
 azure jelly
 
@@ -688,20 +684,19 @@ decaying.
 %%%%
 boggart
 
-A malevolent and dangerous little sprite. Although physically unprepossessing,
-boggarts can rapidly summon large numbers of creatures, including more
-boggarts, to do their perverse bidding. These troublesome pests can also cloud
-one's mind and render themselves unseen.
+A malevolent and dangerous little sprite. The shadowy illusions it summons may
+not be real, but they'll kill you all the same, if you don't get their master
+first.
 %%%%
 bone dragon
 
 A huge undead abomination, pieced together from the broken bones of many
-dragons by powerful necromantic magic. This creature is unique among dragons in
-that it lacks a typical dragon's fearsome breath.
+dragons by powerful necromantic magic. Fortunately for you, whatever organ
+produces a dragon's fearsome breath was lost in the process.
 %%%%
 boring beetle
 
-An umber beetle with large, powerful mandibles which enable it to bore through
+An umber beetle with large, powerful mandibles that enable it to bore through
 solid rock.
 %%%%
 boulder beetle
@@ -718,7 +713,7 @@ briar patch
 
 A tangled cluster of thorny briars, sharp enough to pierce thick hide and
 armour. Though the gaps in the copse are plentiful enough to fire missiles
-through, walking into it looks like a painful prospect.
+through, walking through it looks like a painful prospect.
 %%%%
 Brimstone Fiend
 
@@ -816,9 +811,7 @@ An aggressive crocodilian with great crunching jaws full of sharp teeth.
 crystal guardian
 
 An intricate animated statue made of heavily ensorcelled, tough crystal.
-Though these magical defense structures are delicately sculpted to the
-point of lacking structural integrity and have little capability for
-dodging, they are immune to most forms of magic, and are magically charged
+They are immune to most forms of magic, and are magically charged
 to toss great bolts of fire and cold that are reflected by any surface.
 %%%%
 curse skull
@@ -956,8 +949,8 @@ packs.
 %%%%
 deep troll earth mage
 
-A particularly intelligent deep troll, it wields earth magic to tunnel through
-the earth to allow it and its kin to ambush its foes.
+A particularly intelligent deep troll, its use of magic to tunnel through the
+earth allows it and its kin to ambush their foes.
 %%%%
 deep troll shaman
 
@@ -986,7 +979,7 @@ might even provide one.
 %%%%
 dire elephant
 
-A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
+A huge pachyderm, wilder and fiercer than normal elephants. It has a very thick
 hide, powerful legs, and a memory to die for.
 %%%%
 draconian
@@ -1018,8 +1011,8 @@ draconians, these knights have specialized in ice magic and necromancy.
 draconian monk
 
 A draconian who has eschewed the study of weaponry and magic in order to train
-in the art of unarmed combat. Its scaly fists, well-thewed leg, and mighty tail
-rain blows upon its opponents.
+in the art of unarmed combat. Its scaly fists, well-thewed legs, and mighty tail
+rain down blows upon its opponents.
 %%%%
 draconian scorcher
 
@@ -1053,7 +1046,7 @@ A sentient ant that walks upright and is competent at digging.
 %%%%
 formicid venom mage
 
-A practitioner of its greatest fear, adept with poison magic.
+An adept of poison magic.
 %%%%
 dwarf
 
@@ -1119,8 +1112,8 @@ dangerous, this freakish relative puts it to shame.
 %%%%
 ettin
 
-A two-headed giant, stronger than most giants, able to land devastating blows
-left and right with its two huge weapons. Though powerful, the ettin is clumsy.
+A two-headed giant, stronger than most, and able to land devastating blows
+left and right with its two huge weapons.
 %%%%
 Executioner
 
@@ -1242,16 +1235,12 @@ The few who have seen one and lived recall that it resembles an enormous, spiny
 moth. Its bizarre lifecycle involves the production of ambrosia, much valued by
 gods and wizards.
 %%%%
-ghost-faced bat
-
-Does this bat merely possess the visage of a ghost, or is it a ghost itself?
-%%%%
 ghoul
 
 A truly horrible undead creature, a ghoul is a decayed cadaver, reanimated and
 accursed with a terrible hunger. It desires nothing but to feed on the flesh of
 the living, and will fell its victims with its vicious claws or with one of the
-diseases it is host to.
+many diseases it is host to.
 %%%%
 goliath beetle
 
@@ -1322,10 +1311,6 @@ giant spore
 A deceptively fast, floating ball filled with gas and spores, prone to burst at
 the slightest disturbance.
 %%%%
-giga bat
-
-A huge, bloated bat.
-%%%%
 glowing shapeshifter
 
 A shapeshifter which has lost control over its transformations, and is
@@ -1375,7 +1360,7 @@ physical attacks and conjurations from its creator and their allies.
 great orb of eyes
 
 A levitating ball, covered in malignant eyes and humming with eldritch
-energies.
+energies. Many is the adventurer ripped limb-from-limb by its dreadful eyeteeth.
 %%%%
 greater mummy
 
@@ -1543,10 +1528,6 @@ ultimately going to die to its own spores.
 
 Be sure to keep your distance!
 %%%%
-ice bat
-
-An undead creature in the shape of a bat, made of ice.
-%%%%
 ice beast
 
 A terrible creature, formed of snow and crystalline ice. Its feet leave puddles
@@ -1630,8 +1611,8 @@ lightly rusted iron, especially in their hardness.
 ironbrand convoker
 
 Guardian mages clad in pattern-etched armour, convokers can recite a word of
-recall to summon distant allies to their location and then imbue them with
-unnatural might.
+recall to summon distant allies to their location, or imbue them with unnatural
+might.
 %%%%
 ironheart preserver
 
@@ -1656,7 +1637,7 @@ jiangshi
 
 A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
 limbs give it an awkward gait, it moves with surprising speed, leaping upon its
-victims and drinking their life essence with its vicious claws.
+victims and draining their life essence with its vicious claws.
 %%%%
 jumping spider
 
@@ -1729,8 +1710,8 @@ hearts, and their inner temperature is closely linked to their emotions.
 %%%%
 lava snake
 
-A burning red snake which dwells in pools of lava. It will spit gobs of molten
-rock at passers-by.
+A burning red snake which dwells in pools of lava. It spits gobs of molten rock
+at passers-by.
 %%%%
 lava worm
 
@@ -1770,31 +1751,17 @@ A fused and twisted collection of body parts, weakly animated by necromancy. It
 is easily destroyed, but capable of merging with others to form more potent
 horrors.
 %%%%
-mad acolyte of Lugonu
-
-An insane follower of Lugonu. Years of living in the abyss have clearly taken
-their toll on this one's feeble mind.
-%%%%
 mana viper
 
-A violet-scaled serpent with faintly glowing eyes. They are prized as pets by
-naga mystics, and some say their peculiar nature is even a result of their
-esoteric rituals. It thirsts for magic as well as flesh, and its bite can drink
-dry the magical reserves of even a powerful mage in little time.
+A violet-scaled serpent with faintly glowing eyes, prized pet of naga mystics.
+It thirsts for magic as well as flesh, and its bite can drink dry the magical
+reservoirs of even a powerful mage in no time.
 %%%%
 manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great
 bat-like wings. Its tail bristles with spikes that can be loosed at potential
 prey.
-%%%%
-master elementalist
-
-The primal forces of the universe dance at this demented wizard's fingertips.
-%%%%
-megabat
-
-A huge black bat.
 %%%%
 merfolk
 
@@ -1824,10 +1791,6 @@ single-minded fascination that grabs hold of sailors on a long voyage.
 
 Why only female merfolk are called to become avatars of the sunken god is a
 mystery understood only by the avatars themselves.
-%%%%
-microbat
-
-A bat that, despite its name, is not any smaller than a megabat.
 %%%%
 minotaur
 
@@ -1864,7 +1827,7 @@ strange liquid flame.
 mummy
 
 An undead figure covered in bandages and embalming fluids, compelled to walk by
-an ancient curse. It radiates a malign aura to those who intrude on its domain.
+an ancient curse. It radiates a malign aura.
 %%%%
 mummy priest
 
@@ -1943,7 +1906,8 @@ at them. Even experienced adventurers give oklob plants a wide berth.
 %%%%
 oklob sapling
 
-A young oklob plant, but already dangerous.
+A young oklob plant. It's more fragile than the mature specimen, but the acid it
+sprays is just as deadly.
 %%%%
 ooze
 
@@ -2049,11 +2013,11 @@ is different, with its own set of strengths and weaknesses.
 pearl dragon
 
 A dragon consecrated to the holy divine powers. Its breath is blessed fire, and
-its claws burn with the sear of holy wrath.
+its claws sear its victims with divine wrath.
 %%%%
 phantasmal warrior
 
-A hideous translucent green spirit of a warrior fallen in battle and recalled
+A hideous translucent green spirit of a warrior fallen in battle, and recalled
 to this plane by unholy magic. The blade it wields is ethereal, passing easily
 through shields and armour, and rendering those it strikes more susceptible to
 magic.
@@ -2063,11 +2027,6 @@ phantom
 A nearly-transparent undead spirit, suspected by some sages to be a degenerate
 form of ghost, with no memories of its former life. It rarely stays in one
 place for long.
-%%%%
-phase bat
-
-A strange, glowing bat that seems to flutter through more dimensions than the
-average bat.
 %%%%
 phoenix
 
@@ -2170,9 +2129,9 @@ A dirty rodent that has grown large and aggressive in the dungeon environment.
 %%%%
 raiju
 
-An profoundly unnatural hound, crackling with electricity. It is distinct in
-how it can transform into living lightning and bolt forth, both harmlessly
-passing by pack mates and painfully piercing prey.
+An profoundly unnatural hound, crackling with electricity. Remarkably, it can
+transform into living lightning and bolt forth, harmlessly passing pack mates
+while painfully piercing prey.
 %%%%
 raven
 
@@ -2221,19 +2180,16 @@ revenant
 A skeletal form wreathed in cold blue fire, standing astride this life and the
 next. Echoes of the lingering dead flicker within its ghostly flames.
 %%%%
-rotten bat
-
-I guess this bat is well past its sell-by date.
-%%%%
 the royal jelly
 
-A particularly rich and golden gelatinous thing.
+A particularly rich and golden gelatinous thing. Smaller jellies swim and pulse
+just below its surface, ready to burst forth at the slightest touch.
 %%%%
 salamander
 
 Not the common harmless amphibian, but the far more dangerous mythological
 beast with which that amphibian shares its name. A red, flaming half-human
-half-snake creature, whose affinity for fire is legendary.
+half-snake creature, with a legendary affinity for fire.
 %%%%
 salamander firebrand
 
@@ -2281,14 +2237,12 @@ unerringly from the blind spots of those who cannot see it.
 %%%%
 shadow demon
 
-A mysterious demonic figure, constantly blurring into multiple shadows of
-itself. It weaves creatures into existence from the very shadows surrounding
-it.
+A mysterious demonic figure, difficult to distinguish from the darkness around
+it. It weaves the shadows into powerful minions.
 %%%%
 shadow dragon
 
-A great shadowy dragon, radiating evil and death. Its very mouth and breath
-stink of the grave.
+A great umbral dragon, radiating evil and death. Its breath reeks of the grave.
 %%%%
 Shadow Fiend
 
@@ -2298,11 +2252,11 @@ denizens of the many Hells.
 %%%%
 shadow imp
 
-A small and shadowy minor demon.
+A shadowy minor demon, with an affinity for the necromantic arts.
 %%%%
 shadow wraith
 
-A mist-wreathed skeletal shadow hanging in mid-air that leeches away the
+A mist-wreathed skeletal shadow, hanging in mid-air. It leeches away the
 lifeforce of living beings.
 %%%%
 shambling mangrove
@@ -2326,7 +2280,7 @@ millions of years into an almost perfect killing machine.
 shedu
 
 These boviform divine beings are always found in pairs, often protecting some
-sacred shrine, and can heal and even resurrect each other, doubling their
+sacred shrine. They can heal and even resurrect each other, doubling their
 effectiveness as guardians.
 %%%%
 sheep
@@ -2358,12 +2312,12 @@ An orb of divine energy pulsating with blinding light.
 %%%%
 silver statue
 
-A beautiful statue of an unknown malignant creature, glistening with a silvery
-hue. Its eyes glow with an otherworldly radiance.
+A beautiful statue of an unknown creature, glistening with a silvery hue. Its
+eyes glow with an otherworldly, malignant radiance.
 %%%%
 simulacrum
 
-An ice replica of a monster that is animated by the powers of necromancy.
+An ice replica of a monster, animated by the powers of necromancy.
 %%%%
 siren
 
@@ -2382,17 +2336,6 @@ lightning speed. It seems to throw sparks all around.
 
 It can heal from electrical damage, although being hit by more than it can
 handle will have rather violent results.
-%%%%
-skeletal archer
-
-Since when is having flesh a requirement to be a master archer? These skeletal
-fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
-only good for a supply of sinew for bowstrings anyway.
-%%%%
-skeletal bat
-
-A bat skeleton without the decency to lie unmoving like dead bats are supposed
-to.
 %%%%
 skeletal warrior
 
@@ -2450,8 +2393,8 @@ retreat inside its shell.
 %%%%
 soldier ant
 
-A tough ant with a disproportionately large head with strong mandibles and a
-vicious sting capable of injecting a painful venom. It is a soldier, and thus
+A tough ant with a disproportionately large head, strong mandibles, and a
+vicious sting capable of injecting painful venom. It is a soldier, and thus
 tasked with protecting the colony from invaders.
 %%%%
 soul eater
@@ -2462,7 +2405,7 @@ radiates an intense aura of negative force.
 spatial maelstrom
 
 A malevolent rift in reality, dissolving all terrain it passes by into swirling
-vortexes with an intent of reducing existence to an empty, writhing void.
+vortices.
 %%%%
 spatial vortex
 
@@ -2478,7 +2421,7 @@ A spirit drawn from a weapon — it never strikes on its own.
 %%%%
 spellforged servitor
 
-A magical construct woven with a portion of a conjurer's magic and bonded with
+A magical construct, woven with a portion of a conjurer's magic, and bonded with
 a primitive elemental intelligence summoned from an outer plane. The magic it
 is forged with gives it the capacity to wield some of its creator's destructive
 spells.
@@ -2510,10 +2453,9 @@ A magically adept spriggan blessed with the secrets of the winds.
 %%%%
 spriggan assassin
 
-A deft and surreptitious spriggan that stabs in secret.
-
-These masters of stealth have mastered the art of delivering a quick blade
-right under your fifth rib as well.
+A deft and surreptitious spriggan. It's ready to deliver a flurry of
+incapacitating poison needles, followed by a quick blade right under your fifth
+rib.
 %%%%
 spriggan baker
 
@@ -2592,7 +2534,7 @@ crackling.
 %%%%
 sun demon
 
-A demonic figure shining with the light and fury of a fallen star.
+A demonic figure shining with the heat and fury of a fallen star.
 %%%%
 swamp dragon
 
@@ -2763,7 +2705,7 @@ A heavily armed and armoured guardian of the Vaults.
 vault sentinel
 
 Vigilant scouts of the Vaults, sentinels are quick to alert their fellows to
-the presence of intruders and can mark these same intruders with magic such
+the presence of intruders. They can mark these same intruders with magic such
 that they will be unable to hide from pursuit, no matter where they flee.
 %%%%
 vault warden
@@ -2840,7 +2782,7 @@ the currents of air that surround it. It can exhale powerful blasts of wind.
 %%%%
 wizard
 
-A rather eccentric person, dabbling in all sorts of arcanities.
+A rather eccentric person, dabbling in all sorts of arcane oddities.
 %%%%
 wolf
 
@@ -2848,7 +2790,7 @@ A strong wild canine, with sharp teeth and a healthy appetite.
 %%%%
 wolf spider
 
-A hairy fast-moving hunting spider with vicious mandibles, roaming the dungeon
+A hairy fast-moving hunting spider, with vicious mandibles. It roams the dungeon
 in search of prey, which it kills with its deadly venom.
 %%%%
 worker ant
@@ -2861,9 +2803,8 @@ worldbinder
 
 A cloud of thick fog, with faint, feeble claws constantly reaching
 out and grasping futilely before being pulled back in by the fog.
-Worldbinders tie themselves to specific locations and absorb part of
-the weaker natives banished to the Abyss, enabling them to summon
-echoes from one of many locations against perceived threats.
+When threatened, it can call forth creatures banished to the void between
+realities, using them to defend itself.
 %%%%
 worm
 
@@ -2913,7 +2854,7 @@ venom can render most beings unable to move.
 %%%%
 ynoxinul
 
-A winged demon covered in shiny metallic scales. It has a legion of imp minions
+A winged demon covered in shiny metallic scales. It has a legion of minor demons
 under its command.
 %%%%
 zombie
@@ -3111,9 +3052,21 @@ frost-covered statue
 An ineptly made statue of a mage. Its magic keeps leaking, letting you know
 what kind of spells you can expect: cold-based ones.
 %%%%
+ghost-faced bat
+
+Does this bat merely possess the visage of a ghost, or is it a ghost itself?
+%%%%
+giga bat
+
+A huge, bloated bat.
+%%%%
 greater air elemental
 
 <air elemental>
+%%%%
+ice bat
+
+An undead creature in the shape of a bat, made of ice.
 %%%%
 kamikaze kobold
 
@@ -3125,12 +3078,29 @@ lasher statue
 This statue depicts a savage-looking slave driver with a vicious barbed whip.
 It appears to be capable of moving the whip arm. Prepare for a flogging...
 %%%%
+mad acolyte of Lugonu
+
+An insane follower of Lugonu. Years of living in the abyss have clearly taken
+their toll on this one's feeble mind.
+%%%%
 malarious mermaid
 
 Like other mermaids, this young merfolk woman who has become an acolyte of the
 sunken god, and is undergoing a transformation into an avatar. She looks deeply
 ill, but her voice still has the power to instill a powerful fascination in
 her victims.
+%%%%
+master elementalist
+
+The primal forces of the universe dance at this demented wizard's fingertips.
+%%%%
+megabat
+
+A huge black bat.
+%%%%
+microbat
+
+A bat that, despite its name, is not any smaller than a megabat.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -3197,6 +3167,11 @@ Something has turned these ordinary plants into stone. Better not tarry here.
 If whatever petrified these plants gets you as well, we'll be stuck with a
 statue as ugly as you standing here for ages.
 %%%%
+phase bat
+
+A strange, glowing bat that seems to flutter through more dimensions than the
+average bat.
+%%%%
 phase spider
 
 An otherworldly spider that can move short and medium distances by briefly
@@ -3208,10 +3183,25 @@ An immaculately sculpted porphyry statue of an archer poised to release an
 arrow, with a full quiver at the hip. The individually sculpted arrows look
 almost as if they could be removed one by one and used in a real bow.
 %%%%
+rotten bat
+
+This bat is well past its sell-by date.
+%%%%
 sickly siren
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
+%%%%
+skeletal archer
+
+Since when is having flesh a requirement to be a master archer? These skeletal
+fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
+only good for a supply of sinew for bowstrings anyway.
+%%%%
+skeletal bat
+
+A bat skeleton without the decency to lie unmoving like dead bats are supposed
+to.
 %%%%
 strange machine
 
