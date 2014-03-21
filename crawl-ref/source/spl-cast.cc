@@ -1904,6 +1904,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_GLACIATE:
         return cast_glaciate(&you, powc, target, fail);
 
+    case SPELL_RANDOM_BOLT:
+        return cast_random_bolt(powc, beam, fail);
+
     default:
         return SPRET_NONE;
     }

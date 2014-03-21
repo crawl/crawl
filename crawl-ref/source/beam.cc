@@ -2451,7 +2451,8 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return true;
     }
 
-    if ((flavour == BEAM_CRYSTAL || real_flavour == BEAM_CRYSTAL)
+    if ((flavour == BEAM_CRYSTAL || real_flavour == BEAM_CRYSTAL
+         || flavour == BEAM_BOUNCY_TRACER)
         && feat_is_solid(feat)
         && !feat_is_tree(feat))
     {
@@ -6572,6 +6573,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_CORRUPT_BODY:          return "corrupt body";
     case BEAM_CHAOTIC_REFLECTION:    return "chaotic reflection";
     case BEAM_CRYSTAL:               return "crystal bolt";
+    case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
 
     case NUM_BEAMS:                  die("invalid beam type");
     }
