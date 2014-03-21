@@ -1754,9 +1754,9 @@ horrors.
 %%%%
 mana viper
 
-A violet-scaled serpent with faintly glowing eyes, prized pet of naga mystics.
-It thirsts for magic as well as flesh, and its bite can drink dry the magical
-reservoirs of even a powerful mage in no time.
+A violet-scaled serpent with faintly glowing eyes. It thirsts for magic as well
+as flesh, and its bite can drink dry the magical reservoirs of even a powerful
+mage in no time.
 %%%%
 manticore
 
