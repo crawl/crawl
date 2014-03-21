@@ -92,6 +92,8 @@ class monster;
 class KillMaster;
 class ghost_demon;
 
+typedef pair<coord_def, int> coord_weight;
+
 template <typename Z> static inline Z sgn(Z x)
 {
     return x < 0 ? -1 : (x > 0 ? 1 : 0);
