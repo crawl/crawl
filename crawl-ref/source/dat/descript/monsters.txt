@@ -980,7 +980,7 @@ might even provide one.
 %%%%
 dire elephant
 
-A huge pachyderm, wilder and fiercer than normal elephants. It has a very thick
+A huge pachyderm, wilder and fiercer than normal elephants, with a very thick
 hide, powerful legs, and a memory to die for.
 %%%%
 draconian
@@ -1639,7 +1639,7 @@ jiangshi
 
 A vampiric thrall bound into servitude by esoteric rituals. Though its rigid
 limbs give it an awkward gait, it moves with surprising speed, leaping upon its
-victims and draining their life essence with its vicious claws.
+victims and leeching away their life essence with its vicious claws.
 %%%%
 jumping spider
 
@@ -2018,7 +2018,7 @@ its claws sear its victims with divine wrath.
 %%%%
 phantasmal warrior
 
-A hideous translucent green spirit of a warrior fallen in battle, and recalled
+A hideous translucent green spirit of a warrior fallen in battle but recalled
 to this plane by unholy magic. The blade it wields is ethereal, passing easily
 through shields and armour, and rendering those it strikes more susceptible to
 magic.
@@ -2190,7 +2190,7 @@ salamander
 
 Not the common harmless amphibian, but the far more dangerous mythological
 beast with which that amphibian shares its name. A red, flaming half-human
-half-snake creature, with a legendary affinity for fire.
+half-snake creature with a legendary affinity for fire.
 %%%%
 salamander firebrand
 
@@ -2257,7 +2257,7 @@ A shadowy minor demon, with an affinity for the necromantic arts.
 %%%%
 shadow wraith
 
-A mist-wreathed skeletal shadow, hanging in mid-air. It leeches away the
+A mist-wreathed skeletal shadow, hanging in mid-air. It drains away the
 lifeforce of living beings.
 %%%%
 shambling mangrove
@@ -2422,9 +2422,9 @@ A spirit drawn from a weapon — it never strikes on its own.
 %%%%
 spellforged servitor
 
-A magical construct, woven with a portion of a conjurer's magic, and bonded
-with a primitive elemental intelligence summoned from an outer plane. The magic
-it is forged with gives it the capacity to wield some of its creator's
+A magical construct woven with a portion of a conjurer's magic and bonded
+with a primitive elemental intelligence, summoned from an outer plane. The
+magic it is forged with gives it the capacity to wield some of its creator's
 destructive spells.
 %%%%
 sphinx
@@ -2791,7 +2791,7 @@ A strong wild canine, with sharp teeth and a healthy appetite.
 %%%%
 wolf spider
 
-A hairy fast-moving hunting spider, with vicious mandibles. It roams the
+A hairy fast-moving hunting spider with vicious mandibles. It roams the
 dungeon in search of prey, which it kills with its deadly venom.
 %%%%
 worker ant
