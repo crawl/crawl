@@ -130,17 +130,16 @@ xxxxx.xxxxx
      @
 ENDMAP
 
-NAME:  cheibrodos_chained_mummies
+NAME:  cheibrodos_ashenzari_chains
 TAGS:  temple_overflow_1
 TAGS:  temple_overflow_ashenzari uniq_altar_ashenzari
 DEPTH: D:3-9
-MONS:  mummy
 KFEAT: _ = altar_ashenzari
 KFEAT: m = iron_grate
 MAP
 .............
 .mmm.....mmm.
-.m1mmc_cmm1m.
+.mcmmc_cmmcm.
 .mmm.....mmm.
 .............
 ENDMAP
