@@ -318,7 +318,6 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     if (pbolt.beam_cancelled)
     {
         dprf(DIAG_BEAM, "Beam cancelled.");
-        canned_msg(MSG_OK);
         you.turn_is_over = false;
         return false;
     }
@@ -1125,6 +1124,7 @@ bool bolt::hit_wall()
 
         if (!yesno(prompt.c_str(), false, 'n'))
         {
+            canned_msg(MSG_OK);
             beam_cancelled = true;
             finish_beam();
             return false;
@@ -3279,6 +3279,7 @@ void bolt::tracer_affect_player()
             }
             else
             {
+                canned_msg(MSG_OK);
                 beam_cancelled = true;
                 finish_beam();
             }
