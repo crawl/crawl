@@ -42,6 +42,7 @@ enum spflag_type
     SPFLAG_UTILITY             = 0x1000000,      // usable no matter what foe is
     SPFLAG_NO_GHOST            = 0x2000000,      // ghosts can't get this spell
     SPFLAG_CLOUD               = 0x4000000,      // makes a cloud
+    SPFLAG_MR_CHECK            = 0x8000000,      // spell that checks monster MR
 };
 
 enum spret_type
