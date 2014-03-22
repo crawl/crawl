@@ -11,6 +11,7 @@
 --  any potion
 --  any wand
 --  runes and the horn of Geryon
+--  your piety!
 ------------------------------------------------------------------------------
 
 require('dlua/lm_1way.lua')
@@ -31,7 +32,7 @@ function TroveMarker:new(props)
     error("Need a toll.")
   end
 
-  if props.toll.item == nil then
+  if props.toll.item == nil and props.toll.nopiety == nil then
     error("Toll doesn't have any contents!")
   end
 
@@ -82,15 +83,21 @@ function TroveMarker:fdesc_long (marker)
 
   if toll.item then
     if toll.item.base_type == "miscellaneous" then
-      state = "\nThis portal requires the presence of " ..
-              self:item_name() .. " to function.\n"
+      state = "This portal requires the presence of " ..
+              self:item_name() .. " to function."
     else
-      state = "\nThis portal needs " ..
-              self:item_name() .. " to function.\n"
+      state = "This portal needs " ..
+              self:item_name() .. " to function."
     end
+  elseif toll.nopiety then
+    state = "The portal is engraved with runes symbolizing the primacy of the "
+            .. "material over the divine. Those who enter it may find riches, "
+            .. "but when they return, they will find that whatever gods they "
+            .. "held dear have forgotten them in their absence."
   else
     error("\nThis portal is very buggy.")
   end
+  state = "\n" .. state .. "\n"
   return state
 end
 
@@ -102,6 +109,8 @@ function TroveMarker:overview_note (marker)
     else
       return "give " .. self:item_name(false)
     end
+  elseif toll.nopiety then
+    return "lose all piety"
   else
     return "be buggy"
   end
@@ -202,6 +211,8 @@ function TroveMarker:describe(marker)
   local toll = get_toll(self)
   if toll.item then
     return "The portal requires " .. self.item_name() .. " for entry.\n"
+  elseif toll.nopiety then
+    return "Entrants to this portal lose all standing with their god.\n"
   else
     return "This portal is very buggy."
   end
@@ -234,6 +245,10 @@ end
 -- all the important information about what the toll item should be.
 function TroveMarker:item_name(do_grammar)
   local item = get_toll(self).item
+  if item == nil then
+    error("item_name called on a toll without an item")
+  end
+
   local s = ""
   if item.quantity > 1 then
     s = s .. item.quantity
@@ -463,6 +478,10 @@ end
 
 function TroveMarker:plural ()
   item = get_toll(self.props).item
+  if get_toll(self).item == nil then
+    error("Called plural() on toll without item")
+  end
+
   if item.quantity > 1 then
     return "s"
   else
@@ -565,9 +584,28 @@ function TroveMarker:check_veto(marker, pname)
   local toll = get_toll(self.props)
   if toll.item then
     return self:check_item_veto(marker, pname)
+  elseif toll.nopiety then
+    local yesno_message = (
+      "This portal proclaims the superiority of the material over the divine; "
+      .. "those who enter it will find they have lost all favor with their "
+      .. "chosen deity. Enter anyway?")
+    if crawl.yesno(yesno_message, true, "n") then
+      self:accept_nopiety()
+    else
+      return "veto"
+    end
   else
     crawl.mpr("This trove is too buggy to enter!")
     return "veto"
+  end
+end
+
+function TroveMarker:accept_nopiety ()
+  if you.god() ~= "No God" then
+    local piety_loss = you.piety() - 15
+    if piety_loss > 0 then
+      you.dock_piety(piety_loss, 0)
+    end
   end
 end
 
