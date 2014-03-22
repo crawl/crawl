@@ -689,6 +689,14 @@ static int _you_piety(lua_State *ls)
     PLUARET(number, you.piety);
 }
 
+static int you_dock_piety(lua_State *ls)
+{
+    const int piety_loss = luaL_checkint(ls, 1);
+    const int penance = luaL_checkint(ls, 2);
+    dock_piety(piety_loss, penance);
+    return 0;
+}
+
 LUAFN(you_in_branch)
 {
     const char* name = luaL_checkstring(ls, 1);
@@ -805,6 +813,7 @@ static const struct luaL_reg you_dlib[] =
 { "uniques",            _you_uniques },
 { "die",                _you_die },
 { "piety",              _you_piety },
+{ "dock_piety",         you_dock_piety },
 { "in_branch",          you_in_branch },
 { "shopping_list_has",  _you_shopping_list_has },
 { "shopping_list_add",  _you_shopping_list_add },
