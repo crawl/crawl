@@ -118,14 +118,38 @@ end
 
 function TroveMarker:debug_portal (marker)
   local _x, _y = marker:pos()
-  if #dgn.items_at(_x, _y) ~= 0 then
-    new_item = dgn.items_at(_x, _y)[1]
-    if crawl.yesno("Switch Trove to " .. new_item.name() .. " instead?", true, "n") then
-      get_toll(self).item = trove.get_trove_item(nil, 0, new_item)
-      crawl.mpr("Switched to a new item.")
+  local toll = get_toll(self)
+  if crawl.yesno("Try making this Trove use an item (or a different item)?", true, "n") then
+    local _x, _y = marker:pos()
+    if #dgn.items_at(_x, _y) ~= 0 then
+      new_item = dgn.items_at(_x, _y)[1]
+      if crawl.yesno("Switch Trove to " .. new_item.name() .. " instead?",
+                     true, "n") then
+        self.toll = trove.get_trove_toll_with_item(
+            trove.get_trove_item(nil, 0, new_item))
+        init_item(self.toll.item)
+        self.props.toll = self.toll
+        crawl.mpr("Switched to a new item.")
+      else
+        crawl.mpr("Ignoring " .. new_item.name())
+      end
     else
-      crawl.mpr("Ignoring " .. new_item.name())
+      crawl.mpr("To change the item the trove wants, first drop it "
+                .. "on the trove tile.")
     end
+  elseif crawl.yesno("Make this portal take your piety?", true, "n") then
+    self.toll = trove.get_toll_nopiety()
+    self.props.toll = self.toll
+  else
+    self:debug_diag(marker)
+  end
+end
+
+function TroveMarker:debug_diag (marker)
+  local toll = get_toll(self)
+  if toll.nopiety then
+    crawl.mpr("It's a nopiety trove.")
+    return
   end
 
   if crawl.yesno("Run diagnostic on inventory?", true, "n") then
@@ -138,7 +162,7 @@ function TroveMarker:debug_portal (marker)
     self:search_for_item(marker, nil, dgn.items_at(_x, _y), true)
   end
 
-  local item = get_toll(self).item
+  local item = toll.item
   if item == nil then
     return "Failed to get item???"
   end
@@ -210,7 +234,7 @@ end
 function TroveMarker:describe(marker)
   local toll = get_toll(self)
   if toll.item then
-    return "The portal requires " .. self.item_name() .. " for entry.\n"
+    return "The portal requires " .. self:item_name() .. " for entry.\n"
   elseif toll.nopiety then
     return "Entrants to this portal lose all standing with their god.\n"
   else
@@ -246,7 +270,7 @@ end
 function TroveMarker:item_name(do_grammar)
   local item = get_toll(self).item
   if item == nil then
-    error("item_name called on a toll without an item")
+    error("item_name called on a toll without an item", 2)
   end
 
   local s = ""
