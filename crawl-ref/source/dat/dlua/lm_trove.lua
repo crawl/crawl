@@ -27,11 +27,26 @@ function TroveMarker:new(props)
     error("Bad feature name: " .. feat)
   end
 
-  if not props.toll_item or props.toll_item == nil then
-    error("Need a toll item.")
+  if not props.toll or props.toll == nil then
+    error("Need a toll.")
   end
 
-  item = props.toll_item
+  if props.toll.item == nil then
+    error("Toll doesn't have any contents!")
+  end
+
+  init_item(props.toll.item)
+
+  tmarker.toll = props.toll
+
+  return tmarker
+end
+
+function init_item(item)
+  if item == nil then
+    return
+  end
+
   if item.quantity == nil then
     error("Item needs a quantity.")
   end
@@ -63,21 +78,32 @@ end
 
 function TroveMarker:fdesc_long (marker)
   local state
-  if self.props.toll_item.base_type == "miscellaneous" then
-    state = "\nThis portal requires the presence of " ..
-            self:item_name() .. " to function.\n"
+  local toll = get_toll(self.props)
+
+  if toll.item then
+    if toll.item.base_type == "miscellaneous" then
+      state = "\nThis portal requires the presence of " ..
+              self:item_name() .. " to function.\n"
+    else
+      state = "\nThis portal needs " ..
+              self:item_name() .. " to function.\n"
+    end
   else
-    state = "\nThis portal needs " ..
-            self:item_name() .. " to function.\n"
+    error("\nThis portal is very buggy.")
   end
   return state
 end
 
 function TroveMarker:overview_note (marker)
-  if self.props.toll_item.base_type == "miscellaneous" then
-    return "show " .. self:item_name(false)
+  local toll = get_toll(self.props)
+  if toll.item then
+    if toll.item.base_type == "miscellaneous" then
+      return "show " .. self:item_name(false)
+    else
+      return "give " .. self:item_name(false)
+    end
   else
-    return "give " .. self:item_name(false)
+    return "be buggy"
   end
 end
 
@@ -86,7 +112,7 @@ function TroveMarker:debug_portal (marker)
   if #dgn.items_at(_x, _y) ~= 0 then
     new_item = dgn.items_at(_x, _y)[1]
     if crawl.yesno("Switch Trove to " .. new_item.name() .. " instead?", true, "n") then
-      self.props.toll_item = trove.get_trove_item(nil, 0, new_item)
+      get_toll(self).item = trove.get_trove_item(nil, 0, new_item)
       crawl.mpr("Switched to a new item.")
     else
       crawl.mpr("Ignoring " .. new_item.name())
@@ -103,7 +129,7 @@ function TroveMarker:debug_portal (marker)
     self:search_for_item(marker, nil, dgn.items_at(_x, _y), true)
   end
 
-  local item = self.props.toll_item
+  local item = get_toll(self).item
   if item == nil then
     return "Failed to get item???"
   end
@@ -173,14 +199,26 @@ function TroveMarker:property(marker, pname)
 end
 
 function TroveMarker:describe(marker)
-  return "The portal requires " .. self.item:name() .. " for entry.\n"
+  local toll = get_toll(self)
+  if toll.item then
+    return "The portal requires " .. self.item_name() .. " for entry.\n"
+  else
+    return "This portal is very buggy."
+  end
 end
 
 function TroveMarker:read(marker, th)
   TroveMarker.super.read(self, marker, th)
   -- self.toll_item never used, but I'm not messing with this marshalling code.
   -- blackcustard May 26 2013.
-  self.toll_item = lmark.unmarshall_table(th)
+  toll = lmark.unmarshall_table(th)
+  if toll.base_type then
+    -- It's a toll_item!
+    -- TODO(nrook): Remove when > major version 34
+    self.toll = {item = toll}
+  else
+    self.toll = toll
+  end
 
   setmetatable(self, TroveMarker)
   return self
@@ -188,15 +226,14 @@ end
 
 function TroveMarker:write(marker, th)
   TroveMarker.super.write(self, marker, th)
-  self.toll_item = self.props.toll_item
-  lmark.marshall_table(th, self.toll_item)
+  lmark.marshall_table(th, self.toll)
 end
 
 -- We need to implement our own version of item_name because
 -- self.props.toll_item is not really an item. It is a table that contains
 -- all the important information about what the toll item should be.
 function TroveMarker:item_name(do_grammar)
-  local item = self.props.toll_item
+  local item = get_toll(self).item
   local s = ""
   if item.quantity > 1 then
     s = s .. item.quantity
@@ -289,16 +326,15 @@ function TroveMarker:item_name(do_grammar)
 end
 
 function TroveMarker:search_for_rune(marker, pname, dry_run)
-  if (self.props.toll_item.base_type ~= "miscellaneous"
-      or self.props.toll_item.sub_type ~= "rune of Zot") then
+  item = get_toll(self).item
+  if (item.base_type ~= "miscellaneous"
+      or item.sub_type ~= "rune of Zot") then
     return false
-  elseif you.have_rune(self.props.toll_item.plus1) then
-    if dry_run ~= nil then crawl.mpr("Accepting " ..
-                                     self.props.toll_item.ego_type .. ".") end
+  elseif you.have_rune(item.plus1) then
+    if dry_run ~= nil then crawl.mpr("Accepting " .. item.ego_type .. ".") end
     return true
   else
-    if dry_run ~= nil then crawl.mpr("No " ..
-                                     self.props.toll_item.ego_type .. ".") end
+    if dry_run ~= nil then crawl.mpr("No " .. item.ego_type .. ".") end
     return false
   end
 end
@@ -314,7 +350,7 @@ function TroveMarker:search_for_item(marker, pname, iter_table, dry_run)
 
   local acceptable_items = {}
 
-  local item = self.props.toll_item
+  local item = get_toll(self).item
 
   for it in iter.invent_iterator:new(iter_table) do
     local iplus1 = it.pluses()
@@ -403,7 +439,7 @@ function TroveMarker:item_with_lowest_pluses(marker, pname, dry_run, items)
   --crawl.mpr("Picking " .. titem.name() .. " to start with.")
   --crawl.mpr("This item p1: " .. titem_p1 .. ")
 
-  item = self.props.toll_item
+  item = get_toll(self).item
 
   for _, it in ipairs(items) do
     local this_p1 = it.pluses()
@@ -426,20 +462,22 @@ function TroveMarker:item_with_lowest_pluses(marker, pname, dry_run, items)
 end
 
 function TroveMarker:plural ()
-  if self.props.toll_item.quantity > 1 then
+  item = get_toll(self.props).item
+  if item.quantity > 1 then
     return "s"
   else
     return ""
   end
 end
 
-function TroveMarker:check_veto(marker, pname)
+function TroveMarker:check_item_veto(marker, pname)
   local quantity = false
   local plus = 0
 
+  local item = get_toll(self.props).item
   -- The message is slightly different for items that aren't actually taken by
   -- the trove (currently the horn of Geryon and the runes).
-  if self.props.toll_item.base_type == "miscellaneous" then
+  if item.base_type == "miscellaneous" then
     if not crawl.yesno("This trove requires the presence of "
                        .. self:item_name() .. " to function. Show it the item"
                        .. self:plural() .. "?", true, "n") then
@@ -455,12 +493,12 @@ function TroveMarker:check_veto(marker, pname)
     end
   end
 
-  if self.props.toll_item.sub_type == "rune of Zot" then
+  if item.sub_type == "rune of Zot" then
     -- Begin by checking for runes.
     if self:search_for_rune() then
       crawl.mpr("The portal draws power from the presence of the item"
                 .. self:plural() .. " and buzzes to life!")
-      self:note_payed("rune", false, self.props.toll_item.ego_type)
+      self:note_payed("rune", false, item.ego_type)
       return
     else
       crawl.mpr("You don't have " .. self:item_name() .. " with you.")
@@ -473,7 +511,7 @@ function TroveMarker:check_veto(marker, pname)
 
   if #acceptable_items == 0 then
     -- Give a different message for the horn of Geryon here, too.
-    if self.props.toll_item.base_type == "miscellaneous" then
+    if item.base_type == "miscellaneous" then
       crawl.mpr("You don't have " .. self:item_name() .. " with you.")
     else
       crawl.mpr("You don't have the item" .. self:plural() ..
@@ -488,14 +526,14 @@ function TroveMarker:check_veto(marker, pname)
   -- acceptable item, take the first in the list.
   local titem = nil
   if #acceptable_items == 1 or
-      (self.props.toll_item.plus1 == false) then
+      (item.plus1 == false) then
     titem = acceptable_items[1]
   else
     titem = self:item_with_lowest_pluses(marker, pname, false, acceptable_items)
   end
 
   -- Open the portal and maybe consume the item.
-  if self.props.toll_item.base_type == "miscellaneous" then
+  if item.base_type == "miscellaneous" then
     crawl.mpr("The portal draws power from the presence of the item" ..
               self:plural() .. " and buzzes to life!")
     self:note_payed(titem, false)
@@ -506,15 +544,31 @@ function TroveMarker:check_veto(marker, pname)
       crawl.mpr("You must unequip the item" .. self:plural() .. " first!")
       return "veto"
     end
-    -- NOTE: Not "self:note_payed(self.props.toll_item, true)". The player
-    -- might have paid a toll with a higher than necessary enchantment, and
-    -- we want to make note of that.
     self:note_payed(titem, true)
     crawl.mpr("The portal accepts the item" .. self:plural() ..
               " and buzzes to life!")
-    titem.dec_quantity(self.props.toll_item.quantity)
+    titem.dec_quantity(item.quantity)
   end
   return
+end
+
+function get_toll(obj)
+  -- TODO(nrook): Replace get_toll(self) with self.toll when major version > 34
+  if obj.toll then
+    return obj.toll
+  else
+    return {item = obj.toll_item}
+  end
+end
+
+function TroveMarker:check_veto(marker, pname)
+  local toll = get_toll(self.props)
+  if toll.item then
+    return self:check_item_veto(marker, pname)
+  else
+    crawl.mpr("This trove is too buggy to enter!")
+    return "veto"
+  end
 end
 
 function TroveMarker:note_payed(toll_item, item_taken, rune_name)
@@ -544,13 +598,14 @@ function TroveMarker:note_payed(toll_item, item_taken, rune_name)
   -- player gave us--is also wrong, because the quantity might be wrong! So we
   -- need to use a little of both.
 
-  local target_plus1 = self.props.toll_item.plus1
+  local requested_item = get_toll(self).item
+  local target_plus1 = requested_item.plus1
   local real_plus1 = toll_item.pluses()
-  self.props.toll_item.plus1 = real_plus1
+  requested_item.plus1 = real_plus1
 
   crawl.take_note(prefix .. self:item_name() .. " " .. toll_desc)
 
-  self.props.toll_item.plus1 = target_plus1
+  requested_item.plus1 = target_plus1
 end
 
 function trove_marker(pars)
