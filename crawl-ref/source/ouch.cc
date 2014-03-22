@@ -314,43 +314,6 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         break;
     }
 
-    case BEAM_BOLT_OF_ZIN:
-    {
-        // Damage to chaos and mutations.
-
-        // For mutation damage, we want to count innate mutations for
-        // the demonspawn, but not for other species.
-        int mutated = how_mutated(you.species == SP_DEMONSPAWN, true);
-        int multiplier = min(mutated * 3, 60);
-        if (you.is_chaotic() || player_is_shapechanged())
-            multiplier = 60; // full damage
-        else if (you.is_undead || is_chaotic_god(you.religion))
-            multiplier = max(multiplier, 20);
-
-        hurted = hurted * multiplier / 60;
-
-        if (doEffects)
-        {
-            if (hurted <= 0)
-                canned_msg(MSG_YOU_RESIST);
-            else if (multiplier > 30)
-                mpr("The blast sears you terribly!");
-            else
-                mpr("The blast sears you!");
-
-            if (one_chance_in(3)
-                // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
-                && (!you.rmut_from_item()
-                    || one_chance_in(10)))
-            {
-                // silver stars only, if this ever changes we may want to give
-                // aux as well
-                delete_mutation(RANDOM_GOOD_MUTATION, source);
-            }
-        }
-        break;
-    }
-
     case BEAM_AIR:
     {
         // Airstrike.

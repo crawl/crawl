@@ -246,7 +246,6 @@ hellfire_burst HELLFIRE_BURST
 %sdir misc
 error HOLY_BREATH
 error HOLY_FLAMES
-error HOLY_LIGHT
 error IGNITE_POISON_SINGLE
 error INJURY_BOND
 error INK_CLOUD
@@ -283,7 +282,6 @@ error SAP_MAGIC
 error SENTINEL_MARK
 error SHADOW_BOLT
 error SHADOW_SHARD
-error SILVER_BLAST
 error SLEEP
 %sdir gui/spells/monster
 spit_acid SPIT_ACID

@@ -2126,7 +2126,7 @@ KMONS:  c = fire dragon / ice dragon / shadow dragon / iron dragon w:5 /\
         hydra
 KMONS:  C = quicksilver dragon
 KMONS:  d = angel / daeva / cherub
-KMONS:  D = silver star
+KMONS:  D = pearl dragon
 NSUBST: + = 1:& / *:v
 SUBST:  1 : a, 2 : A
 SHUFFLE: aA / bB / cC / dD

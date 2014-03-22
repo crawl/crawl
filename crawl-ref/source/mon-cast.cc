@@ -912,6 +912,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_HOLY_LIGHT:
         beam.name     = "beam of golden light";
         beam.damage   = dice_def(3, 8 + power / 11);
@@ -930,6 +931,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.foe_ratio = 80;
         beam.is_explosion = true;
         break;
+#endif
 
     case SPELL_ENSNARE:
         beam.name     = "stream of webbing";
@@ -2129,7 +2131,6 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_IOOD:
     case SPELL_ENSNARE:
     case SPELL_THROW_FLAME:
-    case SPELL_SILVER_BLAST:
     case SPELL_MEPHITIC_CLOUD:
         return !targ_friendly && !targ_sanct;
     case SPELL_BLINK:

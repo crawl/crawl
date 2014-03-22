@@ -437,7 +437,9 @@ enum beam_type                  // bolt::flavour
 #endif
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
+#if TAG_MAJOR_VERSION == 34
     BEAM_BOLT_OF_ZIN,
+#endif
     BEAM_ENSNARE,
     BEAM_CRYSTAL,
     BEAM_LAST_REAL = BEAM_CRYSTAL,
@@ -2872,8 +2874,8 @@ enum monster_type                      // menv[].type
     MONS_CHERUB,
     MONS_SERAPH,
     MONS_PHOENIX,
-    MONS_SILVER_STAR,
 #if TAG_MAJOR_VERSION == 34
+    MONS_SILVER_STAR,
     MONS_BLESSED_TOE,
 #endif
     MONS_SHEDU,
@@ -3971,9 +3973,7 @@ enum spell_type
     SPELL_SUMMON_SPECTRAL_ORCS,
 #if TAG_MAJOR_VERSION == 34
     SPELL_RESURRECT,
-#endif
     SPELL_HOLY_LIGHT,
-#if TAG_MAJOR_VERSION == 34
     SPELL_HOLY_WORD,
     SPELL_SUMMON_HOLIES,
 #endif
@@ -4011,7 +4011,9 @@ enum spell_type
     SPELL_PETRIFYING_CLOUD,
     SPELL_AURA_OF_ABJURATION,
     SPELL_BEASTLY_APPENDAGE,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SILVER_BLAST,
+#endif
     SPELL_ENSNARE,
     SPELL_THUNDERBOLT,
     SPELL_SUMMON_MINOR_DEMON,

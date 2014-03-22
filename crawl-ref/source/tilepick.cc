@@ -2010,8 +2010,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BATTLESPHERE;
     case MONS_FULMINANT_PRISM:
         return _mon_random(TILEP_MONS_FULMINANT_PRISM);
-    case MONS_SILVER_STAR:
-        return TILEP_MONS_SILVER_STAR;
 
     // other symbols
     case MONS_SHADOW:
@@ -4945,7 +4943,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_HELLFIRE_BURST:           return TILEG_HELLFIRE_BURST;
     case SPELL_HOLY_BREATH:              return TILEG_HOLY_BREATH;
     case SPELL_HOLY_FLAMES:              return TILEG_HOLY_FLAMES;
-    case SPELL_HOLY_LIGHT:               return TILEG_HOLY_LIGHT;
     case SPELL_IGNITE_POISON_SINGLE:     return TILEG_IGNITE_POISON_SINGLE;
     case SPELL_INJURY_BOND:              return TILEG_INJURY_BOND;
     case SPELL_INK_CLOUD:                return TILEG_INK_CLOUD;
@@ -4975,7 +4972,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SENTINEL_MARK:            return TILEG_SENTINEL_MARK;
     case SPELL_SHADOW_BOLT:              return TILEG_SHADOW_BOLT;
     case SPELL_SHADOW_SHARD:             return TILEG_SHADOW_SHARD;
-    case SPELL_SILVER_BLAST:             return TILEG_SILVER_BLAST;
     case SPELL_SLEEP:                    return TILEG_SLEEP;
     case SPELL_SPIT_ACID:                return TILEG_SPIT_ACID;
     case SPELL_SPIT_POISON:              return TILEG_SPIT_POISON;

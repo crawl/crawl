@@ -1672,6 +1672,7 @@
       }
     },
 
+#if TAG_MAJOR_VERSION == 34
     {  MST_SILVER_STAR,
       {
        SPELL_HOLY_LIGHT,
@@ -1682,6 +1683,7 @@
        SPELL_SILVER_BLAST
       }
     },
+#endif
 
     {  MST_GNOLL_SHAMAN,
       {

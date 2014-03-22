@@ -139,10 +139,6 @@ unseen Holy Flames cast
 
 Blessed flames are called forth!
 %%%%
-Silver Blast cast
-
-@The_monster@ shoots forth a bolt of silver!
-%%%%
 Word of Recall cast
 
 @The_monster@ begins to recite a word of recall!
@@ -350,10 +346,6 @@ orb of fire cast
 @The_monster@ glows red.
 
 @The_monster@ emits a lurid red light.
-%%%%
-silver star cast
-
-@The_monster@ shines brightly.
 %%%%
 # Sphinxes can't gesture or point.
 sphinx cast
