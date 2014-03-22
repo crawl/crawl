@@ -4790,8 +4790,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_WEAVE_SHADOWS:
     {
-        if (_mons_abjured(mons, monsterNearby))
+        if (spell_cast == SPELL_SHADOW_CREATURES
+            && _mons_abjured(mons, monsterNearby))
+        {
             return;
+        }
 
         level_id place = (spell_cast == SPELL_SHADOW_CREATURES)
                          ? level_id::current()
