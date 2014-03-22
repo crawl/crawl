@@ -107,9 +107,6 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_OLD_ENSLAVED_SOULS_POOF:
         return mons_enslaved_soul(mon);
 
-    case DACT_HOLY_NEW_ATTEMPT:
-        return mon->is_holy();
-
     case DACT_SLIME_NEW_ATTEMPT:
         return mons_is_slime(mon);
 
@@ -202,7 +199,6 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             monster_die(mon, KILL_DISMISSED, NON_MONSTER);
             break;
 
-        case DACT_HOLY_NEW_ATTEMPT:
         case DACT_SLIME_NEW_ATTEMPT:
             mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
             break;
@@ -251,7 +247,6 @@ static void _apply_daction(daction_type act)
     case DACT_ALLY_PLANT:
     case DACT_ALLY_TROG:
     case DACT_OLD_ENSLAVED_SOULS_POOF:
-    case DACT_HOLY_NEW_ATTEMPT:
     case DACT_SLIME_NEW_ATTEMPT:
     case DACT_HOLY_PETS_GO_NEUTRAL:
     case DACT_PIKEL_SLAVES:
@@ -287,6 +282,7 @@ static void _apply_daction(daction_type act)
         break;
 #if TAG_MAJOR_VERSION == 34
     case DACT_END_SPIRIT_HOWL:
+    case DACT_HOLY_NEW_ATTEMPT:
 #endif
     case NUM_DA_COUNTERS:
     case NUM_DACTIONS:

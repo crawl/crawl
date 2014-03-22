@@ -13,6 +13,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "database.h"
 #include "decks.h"
 #include "env.h"
 #include "godconduct.h"
@@ -145,6 +146,23 @@ int identify(int power, int item_slot, bool alreadyknown, string *pre_msg)
     }
     while (id_used > identified);
     return identified;
+}
+
+static void _print_holy_pacification_speech(const string key,
+                                            monster* mon,
+                                            msg_channel_type channel)
+{
+    string full_key = "holy_being_";
+    full_key += key;
+
+    string msg = getSpeakString(full_key);
+
+    if (!msg.empty())
+    {
+        msg = do_mon_str_replacements(msg, mon);
+        strip_channel_prefix(msg, channel);
+        mprf(channel, "%s", msg.c_str());
+    }
 }
 
 static bool _mons_hostile(const monster* mon)
@@ -365,16 +383,31 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
             mpr("Elyvilon supports your offer of peace.");
 
         if (is_holy)
-            good_god_holy_attitude_change(mons);
-        else
         {
-            simple_monster_message(mons, " turns neutral.");
-            record_monster_defeat(mons, KILL_PACIFIED);
-            mons_pacify(mons, ATT_NEUTRAL);
+            string key = "pacification";
 
-            // Give a small piety return.
-            gain_piety(pgain);
+            // Quadrupeds can't salute, etc.
+            mon_body_shape shape = get_mon_shape(mons);
+            if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+                key += "_humanoid";
+
+            _print_holy_pacification_speech(key, mons, MSGCH_FRIEND_ENCHANT);
+
+            if (!one_chance_in(3)
+                && mons->can_speak()
+                && mons->type != MONS_MENNAS) // Mennas is mute and only has visual speech
+            {
+                _print_holy_pacification_speech("speech", mons, MSGCH_TALK);
+            }
         }
+        else
+            simple_monster_message(mons, " turns neutral.");
+
+        record_monster_defeat(mons, KILL_PACIFIED);
+        mons_pacify(mons, ATT_NEUTRAL);
+
+        // Give a small piety return.
+        gain_piety(pgain);
     }
 
     if (mons->heal(healed))

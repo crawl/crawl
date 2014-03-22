@@ -140,7 +140,6 @@ void seen_monsters_react()
         if (!mi->visible_to(&you))
             continue;
 
-        good_god_follower_attitude_change(*mi);
         beogh_follower_convert(*mi);
         slime_convert(*mi);
 
