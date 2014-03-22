@@ -155,14 +155,19 @@ end
 
 function trove.get_trove_toll(e)
   if crawl.one_chance_in(20) then
-    return {
-        nopiety = true
-    }
+    return trove.get_toll_nopiety()
   else
-    return {
-        item = trove.get_trove_item(e, 1000)
-    }
+    return trove.get_trove_toll_with_item(
+        trove.get_trove_item(e, 10000))
   end
+end
+
+function trove.get_trove_toll_with_item(item)
+  return { item = item }
+end
+
+function trove.get_toll_nopiety()
+  return { nopiety = true }
 end
 
 function trove.portal(e)
