@@ -153,12 +153,18 @@ function trove.get_trove_item(e, value, base_item)
   return item
 end
 
+function trove.get_trove_toll(e)
+    return {
+        item = trove.get_trove_item(e, 1000)
+    }
+end
+
 function trove.portal(e)
-    local item = trove.get_trove_item(e, 1000)
+    local toll = trove.get_trove_toll(e, 1000)
 
     local function stair ()
         return trove_marker  {
-            toll_item = item,
+            toll = toll,
             entity = "portal",
             toll_desc = "to enter a treasure trove",
             floor = "expired_portal",
