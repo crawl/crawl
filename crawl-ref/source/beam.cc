@@ -695,6 +695,9 @@ void bolt::apply_beam_conducts()
             did_god_conduct(DID_ILLUMINATE, 2 + random2(3), god_cares());
             break;
         default:
+            // Fire comes from a side-effect of the beam, not the beam itself.
+            if (name == "explosive bolt")
+                did_god_conduct(DID_FIRE, 6 + random2(3), god_cares());
             break;
         }
     }
