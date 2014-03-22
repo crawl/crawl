@@ -2910,7 +2910,7 @@ void read_scroll(int slot)
     case SCR_IMMOLATION:
     {
         // Dithmenos hates trying to play with fire, even if it does nothing.
-        did_god_conduct(DID_FIRE, 3 + random2(4), item_type_known(scroll));
+        did_god_conduct(DID_FIRE, 2 + random2(3), item_type_known(scroll));
 
         bool had_effect = false;
         for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)

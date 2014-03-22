@@ -679,15 +679,14 @@ void bolt::apply_beam_conducts()
         {
         case BEAM_HELLFIRE:
             did_god_conduct(DID_UNHOLY, 2 + random2(3), god_cares());
-            did_god_conduct(DID_FIRE,
-                            max(div_rand_round(damage.roll(), 4), 1),
-                            god_cares());
+            did_god_conduct(DID_FIRE, 10 + random2(5), god_cares());
             break;
         case BEAM_FIRE:
         case BEAM_HOLY_FLAME:
         case BEAM_NAPALM:
             did_god_conduct(DID_FIRE,
-                            max(div_rand_round(damage.roll(), 4), 1),
+                            is_beam || is_explosion ? 6 + random2(3)
+                                                    : 2 + random2(3),
                             god_cares());
             break;
         case BEAM_CORONA:
