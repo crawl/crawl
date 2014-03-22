@@ -3582,9 +3582,10 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
                                   spell_type spell_cast,
                                   monster_type (*mpicker)(), int nsummons,
                                   god_type god, coord_def *target = NULL,
-                                  void (*post_hook)(monster*, coord_def) = NULL)
+                                  void (*post_hook)(monster*, coord_def) = NULL,
+                                  bool allow_abjure = true)
 {
-    if (_mons_abjured(mons, monsterNearby))
+    if (allow_abjure && _mons_abjured(mons, monsterNearby))
         return;
 
     const int duration = min(2 + mons->spell_hd(spell_cast) / 5, 6);
@@ -4960,7 +4961,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SUMMON_SWARM:
         _do_high_level_summon(mons, monsterNearby, spell_cast,
-                              _pick_swarmer, random_range(3, 6), god);
+                              _pick_swarmer, random_range(3, 6), god,
+                              NULL, NULL, false);
         return;
 
     case SPELL_SUMMON_UFETUBUS:
