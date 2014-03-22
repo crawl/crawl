@@ -114,7 +114,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     perceived_attack(false), obvious_effect(false), attack_number(attack_num),
     effective_attack_number(effective_attack_num),
-    skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
+    fake_chaos_attack(false), special_damage_flavour(BEAM_NONE),
     stab_attempt(false), stab_bonus(0), cleaving(is_cleaving),
     jumping_attack(is_jump_attack), jump_blocked(is_jump_blocked),
     miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL),
@@ -2610,7 +2610,7 @@ void melee_attack::chaos_affects_defender()
         miscast_chance *= 2;
 
         // Inform player that something is up.
-        if (!skip_chaos_message && you.see_cell(defender->pos()))
+        if (!fake_chaos_attack && you.see_cell(defender->pos()))
         {
             if (defender->is_player())
                 mpr("You give off a flash of multicoloured light!");
@@ -2794,7 +2794,9 @@ void melee_attack::chaos_affects_defender()
         beam.range        = 0;
         beam.colour       = BLACK;
         beam.effect_known = false;
-        beam.effect_wanton = true; // Wielded brand is always known.
+        // Wielded brand is always known, but maybe this was from a call
+        // to chaos_affect_actor.
+        beam.effect_wanton = !fake_chaos_attack;
 
         if (weapon && you.can_see(attacker))
         {
@@ -5378,7 +5380,7 @@ void melee_attack::chaos_affect_actor(actor *victim)
 {
     melee_attack attk(victim, victim);
     attk.weapon = NULL;
-    attk.skip_chaos_message = true;
+    attk.fake_chaos_attack = true;
     attk.chaos_affects_defender();
     attk.do_miscast();
     if (!attk.special_damage_message.empty()

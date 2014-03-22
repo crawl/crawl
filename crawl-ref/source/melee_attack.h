@@ -35,7 +35,7 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
-    bool      skip_chaos_message;
+    bool      fake_chaos_attack;
 
     beam_type special_damage_flavour;
 
