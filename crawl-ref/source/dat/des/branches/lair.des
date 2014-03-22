@@ -555,12 +555,13 @@ MONS:   plant, fungus
 KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
 : if crawl.one_chance_in(5) then
 SUBST:  '"~ = . 1
-SUBST:  `-. = .:90 a:10 2:1
+SUBST:  0`-. = .:90 a:10 2:1
 SUBST:  _ = .:90 a:4
 : else
 CLEAR:  '-_
 SUBST:  `" = . a 2:1
 SUBST:  ~. = .:90 a:10 2:1
+SUBST:  0 = 1
 : end
 MAP
    ________
