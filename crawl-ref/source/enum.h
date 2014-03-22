@@ -426,7 +426,9 @@ enum beam_type                  // bolt::flavour
 #endif
     BEAM_INK,
     BEAM_HOLY_FLAME,
+#if TAG_MAJOR_VERSION == 34
     BEAM_HOLY_LIGHT,
+#endif
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
     BEAM_BOLT_OF_ZIN,
@@ -4231,7 +4233,9 @@ enum zap_type
     ZAP_SLEEP,
     ZAP_PRIMAL_WAVE,
     ZAP_IOOD,
+#if TAG_MAJOR_VERSION == 34
     ZAP_HOLY_LIGHT,
+#endif
     ZAP_BREATHE_MEPHITIC,
     ZAP_INNER_FLAME,
     ZAP_DAZZLING_SPRAY,

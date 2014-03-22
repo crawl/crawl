@@ -970,6 +970,7 @@ struct zap_info
     0
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     ZAP_HOLY_LIGHT,
     "beam of light",
@@ -985,6 +986,7 @@ struct zap_info
     false,
     6
 },
+#endif
 
 {
     ZAP_BREATHE_STICKY_FLAME,

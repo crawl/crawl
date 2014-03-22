@@ -691,7 +691,6 @@ void bolt::apply_beam_conducts()
                             god_cares());
             break;
         case BEAM_CORONA:
-        case BEAM_HOLY_LIGHT:
             did_god_conduct(DID_ILLUMINATE, 2 + random2(3), god_cares());
             break;
         default:
@@ -6559,7 +6558,9 @@ static string _beam_type_name(beam_type type)
 #endif
     case BEAM_INK:                   return "ink";
     case BEAM_HOLY_FLAME:            return "cleansing flame";
+#if TAG_MAJOR_VERSION == 34
     case BEAM_HOLY_LIGHT:            return "holy light";
+#endif
     case BEAM_AIR:                   return "air";
     case BEAM_INNER_FLAME:           return "inner flame";
     case BEAM_PETRIFYING_CLOUD:      return "calcifying dust";

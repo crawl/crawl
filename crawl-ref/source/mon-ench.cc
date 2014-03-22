@@ -1859,22 +1859,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SILVER_CORONA:
         if (is_chaotic())
         {
-            bolt beam;
-            beam.flavour = BEAM_HOLY_LIGHT;
             int dam = roll_dice(2, 4) - 1;
-
-            int newdam = mons_adjust_flavoured(this, beam, dam, false);
-
-            if (newdam > 0)
-            {
-                string msg = mons_has_flesh(this) ? "'s flesh" : "";
-                msg += (dam < newdam) ? " is horribly charred!"
-                                      : " is seared.";
-                simple_monster_message(this, msg.c_str());
-            }
-
+            simple_monster_message(this, " is seared!");
             dprf("Zin's Corona damage: %d", dam);
-            hurt(me.agent(), dam, BEAM_HOLY_LIGHT);
+            hurt(me.agent(), dam);
         }
 
         decay_enchantment(en, true);
