@@ -1122,7 +1122,7 @@ struct zap_info
     new tohit_calculator<17, 1, 25>,
     RED,
     false,
-    BEAM_FIRE,
+    BEAM_MISSILE,  // To avoid printing needless messages for non-damaging hits
     DCHAR_FIRED_ZAP,
     true,
     true,
