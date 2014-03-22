@@ -1301,13 +1301,13 @@ tt....t..t
 tttttttt..tt
   tt.......t
  tt........t
-tt...bbb...tt
-t...bbWbb...t
+tt..%bbb%..tt
+t..%bbWbb%..t
 t..bbWWWbb..t
 t..bWWWWWb..t
 t..bbWWWbb..t
-t...bbWbb...t
-tt...bbb...tt
+t..%bbWbb%..t
+tt..%bbb%..tt
  tt.......tt
   tt.....tt
    ttttttt
@@ -1318,6 +1318,7 @@ DEPTH: Swamp
 TAGS: no_monster_gen transparent
 NSUBST: h = 2:h / *:.
 NSUBST: l = 3:l / *:W
+NSUBST: . = 3:* / *:.
 SUBST: T = t., W = WWWWw, q = W.
 KMONS: h = thorn hunter
 KMONS: l = thorn lotus
@@ -1427,9 +1428,8 @@ tttt...tttt
 ENDMAP
 
 NAME: nicolae_swamp_orc_logging_accident
-DEPTH: Swamp
-PLACE: Swamp:3
 TAGS: decor extra no_monster_gen no_trap_gen
+DEPTH: Swamp
 SUBST: F = 't, T = _t
 NSUBST: p = 4:p / *:., ' = o / '
 SUBST: . = ...b

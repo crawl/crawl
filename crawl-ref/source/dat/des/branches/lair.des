@@ -1777,8 +1777,8 @@ ENDMAP
 ####
 
 NAME: nicolae_quartered_pool_little
-DEPTH: Lair, D
-TAGS: transparent extra decor allow_dup luniq_qpool
+DEPTH: Lair
+TAGS: transparent extra decor luniq_qpool
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm, Nn, Oo, Pp, Qq
 SUBST: abcdefghijklmnopq = ., ABCDEFGHIJKLMNOPQ = W, 7 = t
 MAP
@@ -1799,8 +1799,8 @@ MAP
 ENDMAP
 
 NAME: nicolae_quartered_pool_medium
-DEPTH: Lair, D
-TAGS: transparent extra decor allow_dup luniq_qpool
+DEPTH: Lair
+TAGS: transparent extra decor luniq_qpool
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
 SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu
 SUBST: abcdefghijklmnopqrstu = ., ABCDEFGHIJKLMNOPQRSTU = W, 7 = t
@@ -1824,8 +1824,8 @@ MAP
 ENDMAP
 
 NAME: nicolae_quartered_pool_super
-DEPTH: Lair, D
-TAGS: transparent extra decor allow_dup luniq_qpool
+DEPTH: Lair
+TAGS: transparent extra decor luniq_qpool
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
 SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu, Vv, Ww, Xx, Yy, Zz
 SHUFFLE: 12, 34, 56
@@ -1870,8 +1870,8 @@ MAP
 ENDMAP
 
 NAME: nicolae_lair_grove_arrangements
+TAGS: transparent decor extra luniq
 DEPTH: Lair
-TAGS: allow_dup transparent decor extra luniq
 SHUFFLE: abcdefghi/''''T''''/T'''''''T/T'''T'''T/T'T'''T'T/T'T'T'T'T/\
          TTT'''TTT/'T'T'T'T'/T'T''''T'/'T'TTT'T'/'T'''''T'/TTTT'TTTT/\
          T'TTTTT'T/TT'TTT'TT/'''TTT'''/T'TT'TTTT/TT'T'T'TT/TT'''''TT/\
@@ -1929,6 +1929,210 @@ MAP
     .tttttt......@
      ..tt.......
         .....
+ENDMAP
+
+#####
+NAME:   grunt_forest_stairs_basic
+TAGS:   transparent extra luniq_staircase decor
+DEPTH:  Lair
+MONS:   plant
+SUBST:  1 = 1.
+: if you.depth() == dgn.br_depth(you.branch()) then
+SUBST:  ) = (
+: end
+MAP
+.........
+..t...t..
+.t11.11t.
+..1t.t1..
+....)....
+..1t.t1..
+.t11.11t.
+..t...t..
+.........
+ENDMAP
+
+NAME:   grunt_forest_stairs_clearing
+DEPTH:  Lair:2-, !Lair:$
+MONS:   plant / bush, wolf, black bear, grizzly bear, spriggan
+SUBST:  t = t.
+NSUBST: Q = 3:2 / 1:3 / 1:4 / 1:5 / *:.
+MAP
+.tt...tt.
+t..Q.Q..t
+t.t.Q.t.t
+.Q.1.1.Q.
+..Q.).Q..
+.Q.1.1.Q.
+t.t.Q.t.t
+t..Q.Q..t
+.tt...tt.
+ENDMAP
+
+# A secluded grove.
+NAME:   forest_entry_grove
+DEPTH:  Lair:2-, !Lair:$
+MONS:   centaur w:4 / spriggan
+MONS:   wolf / giant firefly w:2, black bear, grizzly bear
+KMONS:  P = plant / bush
+NSUBST: Q = 2:1 / *:.
+NSUBST: R = 3:2 / 1:3 / 1:4 / *:.
+MAP
+   xxxxxxxxx
+  xxxttttxxxx
+ xxxttttttttxx
+xxtttt...tttxxx
+xttt..Q.Q..ttxx
+xttt.Q.R.Q.tttx
+xtt.........ttx
+xtt.R..)..R.ttx
+xtt..R...R..ttx
+xttt..R.R..tttx
+xttt.......tttx
+xxtttt...ttttxx
+ xxxtt..ttxxxx
+  xxxtt..ttxx
+   xxtt..ttx
+ENDMAP
+
+NAME:    bh_autumn_forest_stairs
+TAGS:    extra luniq_staircase decor
+ORIENT:  float
+DEPTH:   Lair
+COLOUR:  t = lightred / red w:3
+SHUFFLE: Aaq / Bbr / Ccs
+SUBST:   q = @
+SUBST:   A = ., bBcCdDrs = t
+COLOUR:  t = lightred / red w:3 / green w:3 / lightgreen w:1
+TILE:    t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
+COLOUR:  a = lightred / red / green / lightgreen
+TILE:    a = dngn_tree_lightred / dngn_tree_red / dngn_tree_yellow / dngn_tree
+SUBST:   a = t
+MAP
+  aaaa qqq aaaa
+ caaaaaAAAaaaaab
+cccaaaaAAAaaaabbb
+ccc...........bbb
+ccc...........bbb
+ cc..xxxxxxx..bb
+sCC..x.....x..BBr
+sCC..x..{..x..BBr
+sCC..x.....x..BBr
+ cc..xV...Vx..bb
+ccc..xx+++xx..bbb
+ccc...........bbb
+ccc...........bbb
+ccctttttttttttbbb
+ cctttttttttttbb
+  ctttt    tttb
+ENDMAP
+
+NAME: grunt_forest_small_clearings
+TAGS: transparent extra decor
+DEPTH: Lair
+MONS: plant / bush
+KITEM: d = strawberry q:3 / grape q:3 / lychee / choko / \
+           rambutan / apple / pear / orange
+KMASK: G = no_monster_gen
+SHUFFLE: Ww. / ''` / ''`
+SUBST: t = t.., '` = 1:49 d:36 .:405
+SUBST: G = w., W = WW., w = wwW
+MAP
+ tt...tt
+t.......t
+t..WWW..t
+..WwwwW..
+..WwGwW..
+..WwwwW..
+t..WWW..t
+t.......t
+ tt...tt
+ENDMAP
+
+NAME: grunt_forest_small_clearing_treed
+TAGS: transparent patrolling
+DEPTH: Lair
+MONS: plant / bush, spriggan
+SUBST: t = t..
+KPROP: * = no_rtele_into
+MAP
+ tt...tt
+t.......t
+t.1...1.t
+...ttt...
+...t*t...
+...ttt...
+t.1...1.t
+t.......t
+ tt...tt
+ENDMAP
+
+# Prviously large_clearing_fruit, _statues, _slash, _guards
+NAME:    grunt_forest_large_clearings
+TAGS:    transparent
+DEPTH:   Lair
+WEIGHT:  20
+MONS:    plant / bush, wolf / giant firefly w:2
+MONS:    black bear / grizzly bear, spriggan / centaur w:4
+KMONS:   9 = 9
+KMONS:   * = spriggan rider / faun w:4
+ITEM:    strawberry q:3 / grape q:3 / lychee / choko / \
+         rambutan / apple / pear / orange
+KITEM:   9* = *
+KFEAT:   9 = W
+SHUFFLE: wW'"^~-_9 / ''GG''''* / '''0''''% / ``````22G
+SUBST:   t = t.., '. = 1:49 d:36 .:405, W = WW., "w = wwW
+NSUBST:  2 = 3:2 / 2:3 / 1:4 / *:.
+MAP
+      tt...tt
+    ttt.....ttt
+  ttt.........ttt
+  tww...........t
+ ttwww..........tt
+ t..www..'.......t
+tt...w"w....'....tt
+t.....ww-._.......t
+.......-~W^_.......
+.....'..W9W..'.....
+......._^W~-.......
+t.....'._.-ww.....t
+tt.........w"w...tt
+ t.......'..www..t
+ tt..........wwwtt
+  t...........wwt
+  ttt.........ttt
+    ttt.....ttt
+      tt...tt
+ENDMAP
+
+NAME:  grunt_forest_large_clearing_hut
+TAGS:  transparent
+DEPTH: Lair
+MONS:  plant / bush, spriggan / centaur w:2
+SUBST: t = t..
+SUBST: . = 1 .:90
+COLOUR: -*29 = lightgrey
+FTILE:  -*29 = floor_normal
+MAP
+      tt...tt
+    ttt.....ttt
+  ttt.........ttt
+  t.............t
+ tt.............tt
+ t...............t
+tt...............tt
+t......ccccc......t
+.......c-9*c.......
+.......+-*2c.......
+.......c-9*c.......
+t......ccccc......t
+tt...............tt
+ t...............t
+ tt.............tt
+  t.............t
+  ttt.........ttt
+    ttt.....ttt
+      tt...tt
 ENDMAP
 
 ###############################################################################
