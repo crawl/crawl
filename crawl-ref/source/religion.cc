@@ -239,7 +239,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "receive cadavers from Kikubaaqudgha",
-      "Kikubaaqudgha is protecting you from miscast death magic.",
+      "Kikubaaqudgha is protecting you from necromantic miscasts and death curses.",
       "",
       "Kikubaaqudgha is protecting you from unholy torment.",
       "invoke torment by sacrificing a corpse" },
@@ -273,7 +273,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "tap ambient magical fields",
       "freely open your mind to new spells",
       "",
-      "Sif Muna is protecting you from miscast magic.",
+      "Sif Muna is protecting you from the effects of miscast magic.",
       "" },
     // Trog
     { "go berserk at will",
@@ -363,7 +363,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "receive cadavers from Kikubaaqudgha",
-      "Kikubaaqudgha is no longer protecting you from miscast death magic.",
+      "Kikubaaqudgha no longer protects you from necromantic miscasts or death curses.",
       "",
       "Kikubaaqudgha will no longer protect you from unholy torment.",
       "invoke torment by sacrificing a corpse" },
@@ -397,7 +397,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "tap ambient magical fields",
       "forget spells at will",
       "",
-      "Sif Muna will no longer protect you from miscast magic.",
+      "Sif Muna no longer protects you from the effects of miscast magic.",
       "" },
     // Trog
     { "go berserk at will",

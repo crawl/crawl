@@ -1642,7 +1642,8 @@ void MiscastEffect::_necromancy(int severity)
             // An actual necromancy miscast.
             if (x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
-                canned_msg(MSG_NOTHING_HAPPENS);
+                simple_god_message(" protects you from your miscast "
+                                   "necromantic spell!");
                 return;
             }
         }
