@@ -2651,6 +2651,7 @@ struct spell_desc
      false,
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_HOLY_LIGHT, "Holy Light",
      SPTYP_CONJURATION,
@@ -2663,6 +2664,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_HEAL_OTHER, "Heal Other",
@@ -2859,6 +2861,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SILVER_BLAST, "Silver Blast",
      SPTYP_CONJURATION,
@@ -2871,6 +2874,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_ENSNARE, "Ensnare",

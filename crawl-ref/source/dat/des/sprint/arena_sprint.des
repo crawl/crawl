@@ -485,8 +485,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
                     unborn w:5 / place:Tar:$ w:40",
-                "daeva / angel / cherub / w:5 pearl dragon / ophan / \
-                    w:5 silver star / apis",
+                "daeva / angel / cherub / pearl dragon / ophan / apis",
                 -- Misc
                 "centaur warrior",
                 "yaktaur / yaktaur captain",
@@ -560,8 +559,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     unborn w:5 / place:Tar:$ w:40",
-                "daeva / angel / cherub / pearl dragon / ophan / \
-                    silver star / apis",
+                "daeva / angel / cherub / pearl dragon w:20 / ophan / apis",
                 -- Misc
                 "yaktaur captain",
                 "lich / ancient lich",
@@ -594,9 +592,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
                 "sphinx / place:Tomb:$",
-                "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:glaciate col:lightblue tile:mons_orb_of_ice /\
-                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity /\
-                  w:5 silver star",
+                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate col:lightblue tile:mons_orb_of_ice /\
+                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity",
                 "hellion / w:5 efreet"
             }
         else -- Because somehow, the above stuff was too easy.
@@ -633,8 +630,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     unborn w:5",
-                "daeva / angel / cherub / pearl dragon w:20 / ophan /\
-                    silver star w:20 / apis",
+                "daeva w:20 / angel / cherub / pearl dragon w:20 / ophan / apis",
                 -- Misc
                 "deep elf master archer",
                 "ancient lich",
@@ -667,8 +663,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
                 "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:glaciate col:lightblue tile:mons_orb_of_ice /\
-                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity /\
-                  w:20 silver star",
+                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow tile:mons_orb_of_electricity",
                 "hellion"
             }
         end

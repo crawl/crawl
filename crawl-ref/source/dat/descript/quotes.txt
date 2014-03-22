@@ -2559,12 +2559,6 @@ silent spectre
  Or in the wide desert where no life is found.”
     -Thomas Hood, “Silence”. Early 19th cent.
 %%%%
-silver star
-
-“Ah star of evil! star of pain!
- Highhearted youth comes not again”
-    -James Joyce, “Bahnhofstrasse”, _Pomes Penyeach_. 1927.
-%%%%
 simulacrum
 
 “The simulacrum now hides, not the truth, but the fact that there is none, that

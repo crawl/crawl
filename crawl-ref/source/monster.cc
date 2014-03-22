@@ -4985,10 +4985,6 @@ bool monster::can_mutate() const
     if (mons_is_tentacle_or_tentacle_segment(type))
         return false;
 
-    // embodiment of Zinniness
-    if (type == MONS_SILVER_STAR)
-        return false;
-
     const mon_holy_type holi = holiness();
 
     return holi != MH_UNDEAD && holi != MH_NONLIVING;

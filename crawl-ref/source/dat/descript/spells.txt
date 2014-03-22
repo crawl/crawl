@@ -640,12 +640,6 @@ This spell allows one to trap an enemy in a ring of blessed flame. If such a
 foe decides to step through it, it does extra damage especially to evil and
 unholy beings. Holy creatures can step through it without any ill effects.
 %%%%
-Holy Light spell
-
-This spell allows the caster to shoot out a beam of holy energy. It does damage
-to anyone hit not holy themselves, and those evil and unholy suffer far more
-damage.
-%%%%
 Ice Form spell
 
 This spell temporarily transforms the caster's body into a frozen ice-creature,
@@ -1109,16 +1103,6 @@ eventually covering only the caster, before the effect times out. Some
 creatures, such as demons, cast magic without speaking and so will be
 unaffected, and those with innate magical abilities will also still be able to
 use them.
-%%%%
-Silver Blast spell
-
-# Yes, Zin's hatreds are about as arbitrary as those of religions he's based
-# on.
-This ability sends a ball of pure power of Zin. When it explodes, it severely
-damages anyone chaotic or unclean who gets caught in the blast. Those merely
-guilty of chaotic or unclean acts get hurt somewhat less, while those evil or
-unholy suffer less yet. Mutated beings draw the ire of Zin as well, even if
-they became mutated against their will.
 %%%%
 Simulacrum spell
 

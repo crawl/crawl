@@ -1685,33 +1685,6 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
     }
 
-    case BEAM_BOLT_OF_ZIN:
-    {
-        int dam = 0;
-        // Those naturally chaotic/unclean get hit fully, those who merely
-        // dabble in things Zin hates get partial resistance.
-        if (mons->is_chaotic() || mons->is_unclean(false))
-            dam = 60;
-        else if (mons->is_unclean(true))
-            dam = 40;
-        // a bit of damage to those you can recite against
-        else if (mons->is_unholy() || mons->is_evil())
-            dam = 20;
-        else if (mons->has_ench(ENCH_WRETCHED))
-            dam = 3 * mons->get_ench(ENCH_WRETCHED).degree;
-        // if non-abstract monster mutations get added, let's handle them too
-
-        hurted = hurted * dam / 60;
-        if (doFlavouredEffects)
-        {
-            simple_monster_message(mons,
-                                   hurted == 0 ? " appears unharmed." :
-                                   dam > 30    ? " is terribly seared!"
-                                               : " is seared!");
-        }
-        break;
-    }
-
     case BEAM_ICE:
         // ice - about 50% of damage is cold, other 50% is impact and
         // can't be resisted (except by AC, of course)
@@ -5917,6 +5890,7 @@ void bolt::refine_for_explosion()
             name = "stinking cloud";
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (name == "silver bolt")
     {
         seeMsg  = "The silver bolt explodes into a blast of light!";
@@ -5926,6 +5900,7 @@ void bolt::refine_for_explosion()
         flavour = BEAM_BOLT_OF_ZIN;
         ex_size = 1;
     }
+#endif
 
     if (name == "ghostly fireball")
     {
@@ -6567,7 +6542,9 @@ static string _beam_type_name(beam_type type)
     case BEAM_AIR:                   return "air";
     case BEAM_INNER_FLAME:           return "inner flame";
     case BEAM_PETRIFYING_CLOUD:      return "calcifying dust";
+#if TAG_MAJOR_VERSION == 34
     case BEAM_BOLT_OF_ZIN:           return "silver light";
+#endif
     case BEAM_ENSNARE:               return "magic web";
     case BEAM_SENTINEL_MARK:         return "sentinel's mark";
     case BEAM_DIMENSION_ANCHOR:      return "dimension anchor";

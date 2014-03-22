@@ -439,12 +439,6 @@ S'il décide de le traverser, il subira des dommages supplémentaires, notamment
 si ce dernier est infernal ou maudit. Les créatures bénies peuvent le traverser
 sans subir plus de maux.
 %%%%
-Holy Light spell
-
-Ce sort permet à son lanceur de tirer un faisceau d'énergie sacrée. Tous les
-personnages non bénis subissent des dégâts, avec un bonus conséquent contre les
-impies.
-%%%%
 Ice Form spell
 
 Ce sort transforme temporairement le corps du sorcier en une créature de glace
@@ -746,15 +740,6 @@ protégeant en redirigeant la force des coups dans l'air environnant. Les
 attaques à distance frappent trop rapidement pour être affectées de cette
 manière. Le voile est très instable et peut s'effondrer de lui-même sous les
 coups.
-%%%%
-Silver Blast spell
-
-Ce pouvoir envoie une boule de la pureté divine de Zin. Quand elle explose,
-elle endommage sévèrement quiconque étant chaotique ou impur et se faisant
-prendre dans l'explosion. Ceux simplement coupables d'actes chaotiques ou impur
-seront blessés un peu moins, tandis que ceux qui sont infernaux ou maudits
-souffriront encore moins. Les êtres mutants attirent eux aussi la colère de
-Zin, même s'ils ont muté contre leur gré.
 %%%%
 Simulacrum spell
 

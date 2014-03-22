@@ -2244,10 +2244,6 @@ The bane of wizards, these terrible spirits bring an unearthly silence to the
 area around them, making it impossible to recite the magical incantations
 involved with casting spells or reading scrolls.
 %%%%
-silver star
-
-An orb of divine energy pulsating with blinding light.
-%%%%
 silver statue
 
 A beautiful statue of an unknown creature, glistening with a silvery hue. Its

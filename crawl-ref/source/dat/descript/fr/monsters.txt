@@ -1787,10 +1787,6 @@ Le fléau des magiciens, ces esprits épouvantables apportent un silence
 surnaturel sur la zone qui les entourent, rendant impossible les sorts
 impliquant des incantations magiques ou la lecture de parchemins.
 %%%%
-silver star
-
-Une orbe d'énergie divine, pulsant d'une lumière aveuglante.
-%%%%
 sixfirhy
 
 Une petite créature vile qui bouge par saccades, s'arrêtant puis dardant à une

@@ -2365,7 +2365,7 @@ DEPTH:  Depths, !Depths:$
 ORIENT: float
 MONS:   daeva god:Zin, angel god:Zin dbname:zin_angel, cherub god:Zin
 : if you.depth() > 3 then
-MONS:   silver star
+MONS:   pearl dragon
 : else
 KMONS:  4 = Mennas, angel god:Zin dbname:zin_angel
 : end
