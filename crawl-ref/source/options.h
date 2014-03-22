@@ -276,6 +276,7 @@ public:
 
     unsigned    evil_colour; // Colour for things player's god dissapproves
 
+    unsigned    remembered_monster_colour;  // Colour of remembered monsters
     unsigned    detected_monster_colour;    // Colour of detected monsters
     unsigned    detected_item_colour;       // Colour of detected items
     unsigned    status_caption_colour;      // Colour of captions in HUD.

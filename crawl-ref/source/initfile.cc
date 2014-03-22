@@ -874,7 +874,8 @@ void game_options::reset_options()
     background_colour      = BLACK;
     // [ds] Default to jazzy colours.
     detected_item_colour   = GREEN;
-    detected_monster_colour= LIGHTRED;
+    detected_monster_colour = LIGHTRED;
+    remembered_monster_colour = DARKGREY;
     status_caption_colour  = BROWN;
 
     easy_exit_menu         = false;
@@ -2521,6 +2522,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else COLOUR_OPTION(background_colour);
     else COLOUR_OPTION(detected_item_colour);
     else COLOUR_OPTION(detected_monster_colour);
+    else COLOUR_OPTION(remembered_monster_colour);
     else if (key.find(interrupt_prefix) == 0)
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()),

@@ -383,7 +383,7 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
                 g.col = Options.detected_monster_colour;
         }
         else if (!coloured)
-            g.col = DARKGRAY;
+            g.col = Options.remembered_monster_colour;
         else
             g.col = _get_mons_colour(*mi);
 
