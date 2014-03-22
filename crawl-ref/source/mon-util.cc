@@ -706,6 +706,9 @@ bool mons_is_illuminating(const monster* mon)
     if (mon->halo_radius2() >= 0)
         return true;
 
+    if (!mon->can_use_spells())
+        return false;
+
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
     {
         if (is_illuminating_spell(mon->spells[i]))
