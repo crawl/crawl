@@ -2431,7 +2431,7 @@ static void _explosive_bolt_explode(bolt *parent, coord_def pos)
     bolt_parent_init(parent, &beam);
     beam.name         = "fiery explosion";
     beam.aux_source   = "explosive bolt";
-    beam.damage       = dice_def(3, 9 + parent->ench_power / 10);
+    beam.damage       = dice_def(3, 9 + parent->ench_power / 6);
     beam.colour       = RED;
     beam.flavour      = BEAM_FIRE;
     beam.is_explosion = true;

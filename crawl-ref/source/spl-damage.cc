@@ -3049,7 +3049,7 @@ spret_type cast_random_bolt(int pow, bolt& beam, bool fail)
                                  ZAP_CRYSTAL_BOLT,
                                  ZAP_LIGHTNING_BOLT,
                                  -1);
-    zapping(zap, pow, beam, false);
+    zapping(zap, pow * 7 / 6 + 15, beam, false);
 
     return SPRET_SUCCESS;
 }

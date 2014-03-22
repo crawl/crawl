@@ -3637,7 +3637,7 @@ struct spell_desc
     SPELL_RANDOM_BOLT, "Random Bolt",
     SPTYP_CONJURATION,
     SPFLAG_DIR_OR_TARGET,
-    5,
+    4,
     200,
     6, 6,
     0,
