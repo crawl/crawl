@@ -6,6 +6,9 @@ Stone Soup 0.13.2 (2014????)
 * Inscriptions can show unicode.
 * Branch entrances can no longer be blocked by traps.
 * Autoexplore no longer mysteriously gets stuck.
+* Explore horizon no longer hides detected items.
+* Wanderers cannot start with both a shield and two-handed weapon equipped.
+* Avoid giving double piety for some collateral kills.
 
 Stone Soup 0.13.1 (20131128)
 ----------------------------
