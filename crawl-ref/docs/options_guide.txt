@@ -75,10 +75,12 @@ The contents of this text are:
                 fire_items_start, fire_order
 3-k     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
-                recovery, talk, talk_visual, intrinsic_gain, mutation,
-                monster_spell, monster_enchant, friend_spell, friend_enchant,
-                monster_damage, rotten_meat, equipment, floor, multiturn,
-                examine, examine_filter, diagnostics, error, tutorial
+                recovery, talk, talk_visual, timed_portal, sound,
+                intrinsic_gain, mutation, monster_spell, monster_enchant,
+                friend_spell, friend_enchant, friend_action, monster_damage,
+                monster_target, banishment, rotten_meat, equipment, floor,
+                multiturn, examine, examine_filter, diagnostics, error,
+                tutorial, orb, hell_effect
 3-l     Inscriptions.
                 autoinscribe, autoinscribe_cursed
 3-m     Macro related Options.
