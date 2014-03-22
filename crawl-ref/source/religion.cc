@@ -1074,11 +1074,6 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
-
-            // When you've worked through all your penance, you get
-            // another chance to make hostile holy beings good neutral.
-            if (is_good_god(god))
-                add_daction(DACT_HOLY_NEW_ATTEMPT);
             // When you've worked through all your penance, you get
             // another chance to make hostile slimes strict neutral.
             else if (god == GOD_JIYVA)
@@ -2771,11 +2766,6 @@ static void _gain_piety_point()
 
             if (you_worship(GOD_DITHMENOS) && i == 0)
                 mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
-
-            // When you gain a piety level, you get another chance to
-            // make hostile holy beings good neutral.
-            if (is_good_god(you.religion))
-                add_daction(DACT_HOLY_NEW_ATTEMPT);
         }
     }
 
@@ -2839,11 +2829,6 @@ static void _gain_piety_point()
                     break;
             }
         }
-
-        // When you gain piety of more than 160, you get another chance
-        // to make hostile holy beings good neutral.
-        if (is_good_god(you.religion))
-            add_daction(DACT_HOLY_NEW_ATTEMPT);
     }
 
     do_god_gift();

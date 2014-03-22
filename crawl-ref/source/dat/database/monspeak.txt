@@ -6726,47 +6726,26 @@ default 'cap-A'
 
 __NONE
 %%%%
-good_god_neutral_holy_being_reaction
+holy_being_pacification
 
 VISUAL:@The_monster@ is calmed by your holy aura.
 %%%%
-good_god_neutral_holy_being_reaction_humanoid
+holy_being_pacification_humanoid
 
 w:5
-@good_god_neutral_holy_being_reaction@
+@holy_being_pacification@
 
 VISUAL:@The_monster@ relaxes @possessive@ fighting stance.
 
 VISUAL:@The_monster@ salutes you.
 %%%%
-good_god_neutral_holy_being_speech
+holy_being_speech
 
 @The_monster@ shouts @at_foe@, "Continue thy quest, mortal!"
 
 @The_monster@ says @to_foe@, "Forge ahead, servant of @foe_god@!"
 
 @The_monster@ says @to_foe@, "Carry on, mortal."
-%%%%
-good_god_nonneutral_holy_being_reaction
-
-VISUAL:@The_monster@ ignores your imperfect holy aura.
-%%%%
-good_god_nonneutral_holy_being_reaction_humanoid
-
-w:5
-@good_god_nonneutral_holy_being_reaction@
-
-VISUAL:@The_monster@ frowns, and retains @possessive@ fighting stance.
-
-VISUAL:@The_monster@ refuses to salute you.
-%%%%
-good_god_nonneutral_holy_being_speech
-
-@The_monster@ shouts @at_foe@, "Seek the light more diligently, mortal!"
-
-@The_monster@ says @to_foe@, "Thou art not yet worthy, servant of @player_god@."
-
-@The_monster@ says @to_foe@, "I sense wickedness within thee, mortal!"
 %%%%
 #############################################################
 # evil monsters may also have some choice things to say...
