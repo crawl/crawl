@@ -553,7 +553,7 @@ DEPTH:  Lair, Snake
 ORIENT: float
 MONS:   plant, fungus
 KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
-: if crawl.x_chance_in_y(1, 5) then
+: if crawl.one_chance_in(5) then
 SUBST:  '"~ = . 1
 SUBST:  `-. = .:90 a:10 2:1
 SUBST:  _ = .:90 a:4

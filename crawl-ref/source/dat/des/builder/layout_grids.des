@@ -159,7 +159,7 @@ TAGS: no_hmirror no_vmirror layout_type_corridors layout_type_small_grid
 {{
   if is_validating() then return; end
 
-  local edge = crawl.x_chance_in_y(1,4)
+  local edge = crawl.one_chance_in(4)
 
   render_grid(_G, "Small Grid",
     {
