@@ -503,15 +503,15 @@ TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   D, Depths, Abyss
 MONS:    butterfly, plant, unseen horror, shadow wraith, vapour
 SHUFFLE: 34GT, GTt
-: if you.branch() == "D" then
-TAGS:    extra transparent mini_float
-WEIGHT:  1
-SUBST:   M = m, 34'" = ., ABCD = W
-: else
+: if you.branch() == "Abyss" then
 SHUFFLE: 345", ABCD / ACBD / ADCB
 SUBST:   + = M, ' = x:5 c:2 v:1 b:1, " = ., % = %%***|
 SUBST:   AB : wwl, CD : wll
 NSUBST:  M : 1:+ / 2 = mmm+ / * = m:19 +:1
+: else
+TAGS:    extra transparent mini_float
+WEIGHT:  1
+SUBST:   M = m, 34'" = ., ABCD = W
 : end
 MAP
    ''' '''
