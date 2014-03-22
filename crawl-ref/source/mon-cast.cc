@@ -3503,7 +3503,7 @@ static int _monster_abjuration(const monster* caster, bool actual)
 static bool _mons_abjured(monster* mons, bool nearby)
 {
     if (nearby && _monster_abjuration(mons, false) > 0
-        && coinflip())
+        && one_chance_in(3))
     {
         _monster_abjuration(mons, true);
         return true;
