@@ -1379,7 +1379,7 @@ spret_type your_spells(spell_type spell, int powc,
             && you.piety >= piety_breakpoint(3)
             && x_chance_in_y(you.piety, piety_breakpoint(5)))
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
+            simple_god_message(" protects you from the effects of your miscast!");
             return SPRET_FAIL;
         }
 
