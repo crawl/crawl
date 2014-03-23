@@ -26,6 +26,17 @@ function callback.grunt_lady_of_the_lake_trigger(data, triggerable, triggerer,
 end
 }}
 
+{{
+function swamp_ruins(e)
+    e.tags('serial_swamp_ruin extra transparent unrand')
+    e.depth('Swamp')
+    e.weight('6')
+    e.tile('x = wall_brick_vines')
+    e.ftile('- = floor_sandstone')
+    e.subst('- = .')
+end
+}}
+
 ###############################################################################
 # Swamp entries
 ###############################################################################
@@ -184,12 +195,12 @@ ENDMAP
 # Swamp non-entry and non-ending vaults
 ###############################################################################
 
+default-depth: Swamp
+
 ###############################################################################
 # A series of pools by Jude.
-###############################################################################
 NAME:   swamp_pool1
 TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
-DEPTH:  Swamp
 WEIGHT: 1000
 {{ smear_map({iterations=5, smear='w', onto='wwt"', boxy=false}) }}
 SUBST:  "=ttw
@@ -206,7 +217,6 @@ ENDMAP
 
 NAME:   swamp_pool2
 TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
-DEPTH:  Swamp
 WEIGHT: 500
 SUBST:  "=ttttw
 KFEAT:  t = mangrove
@@ -222,7 +232,6 @@ ENDMAP
 
 NAME:   swamp_pool3
 TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
-DEPTH:  Swamp
 WEIGHT: 500
 SUBST:  '=Wt, "=wwt
 KFEAT:  t = mangrove
@@ -237,7 +246,6 @@ ENDMAP
 
 NAME:   swamp_pool4
 TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
-DEPTH:  Swamp
 WEIGHT: 500
 SUBST:  "=ttttw
 KFEAT:  t = mangrove
@@ -253,7 +261,6 @@ ENDMAP
 
 NAME:   swamp_pool5
 TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
-DEPTH:  Swamp
 KMONS:  1 = patrolling swamp drake
 KFEAT:  1 = deep_water
 WEIGHT: 500
@@ -270,8 +277,619 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Other Swamp vaults
+# Other Swamp decorative vaults
+
+# Swamp's layout is chaotic and samey; fill it with decorative vaults.
+NAME:   swamp_ruins_default
+TAGS:   luniq_extradecor chance_extradecor allow_dup extra no_dump
+PLACE:  Swamp:1-4
+{{
+  local n = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_swamp_ruin", count=n}
+  end)
+}}
+
+NAME:   serial_swamp_ruin
+TAGS:   luniq_serial luniq_extradecor chance_extradecor extra
+PLACE:  Swamp:1-4
+WEIGHT: 2
+{{
+  local n = 2 + crawl.random2(2)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_swamp_ruin", count=n}
+  end)
+}}
+
+NAME:   swamp_other_decor
+TAGS:   luniq_extradecor chance_extradecor allow_dup extra no_dump
+PLACE:  Swamp:1-4
+WEIGHT: 8
+{{
+  local n = 1
+  hook("post_place", function()
+    dgn.place_maps{tag="decor", count=n}
+  end)
+}}
+
+#####
+NAME: nicolae_swamp_fairy_circle
+TAGS: transparent extra decor
+SUBST: W = .W, w = wwwW, q = w
+MONS: fungus / nothing w:7
+MAP
+    ...
+  ..111..
+ .11WWW11.
+ .1WWwWW1.
+.1WWwwwWW1.
+.1WwwqwwW1.
+.1WWwwwWW1.
+ .1WWwWW1.
+ .11WWW11.
+  ..111..
+    ...
+ENDMAP
+
+NAME: nicolae_swamp_treefoil
+TAGS: transparent mini_float extra decor
+SUBST: T = t.
+KFEAT: t = tree w:8 / mangrove
+KFEAT: . = . w:30 / W
+MAP
+tt       @     tt
+ ttt....T.T...Tttt
+  TtttT.TT..TtttT
+  ..TttT...tttT.
+   T..ttttttT..
+    T..TTtT..T.
+     @..TtT.T..
+      T.TtT.TT.@
+      ..TtT.TT
+       .TtT.
+        Tt.
+        ttT
+         t
+ENDMAP
+
+NAME: nicolae_swamp_feature_on_the_river_bank
+TAGS: transparent no_pool_fixup decor
+SUBST: T = t., W = .Ww t:5, Q = tw, f = .GTV U:5 C:5
+KFEAT: t = mangrove
+MAP
+     tttQ..@..Qttt
+    ttQQQ.....QQQtt
+tttttQQWW.....WWQQttttt
+  ttQQwWW.....WWwQQtt
+  ttQwwWW..f..WWwwQtt
+   ttwwWW.....WWwwtt
+   @TwwwWW...WWwwwT@
+   ..WwwwWWWWWwwwW..
+   T..WwwwwwwwwwW..T
+   tT..WwwwwwwwW..Tt
+   ttT..WWWwWWW..Ttt
+    ttT...WWW...Ttt
+     ttT.......Ttt
+      ttTTTTTTTtt
+ENDMAP
+
+NAME: nicolae_swamp_stair_fork
+TAGS: extra decor
+DEPTH: Swamp:2-4
+SHUFFLE: {}[]()
+SUBST: W = w., T = t.
+KFEAT: t = mangrove
+MAP
+tttttt
+t...TTtt
+t.{...TTtt
+t.......TTtt
+tT..WWW...Ttt
+tT..WwwW...Ttt
+ tT.WwwwWW..Tt
+ tT..WwwwwW..@
+  tT..WwwwwW.
+  tT..Wwwwww
+   tT..Wwwww
+   ttT..Www
+    ttT..
+     tt@
+ENDMAP
+
+NAME: nicolae_swamp_round_clearing
+TAGS: transparent luniq_swclearing extra decor
+SUBST: T = ttt.., E = .e, e = W.., t = ttttt.
+KFEAT: t = mangrove
+MAP
+    eeeee
+   eEEEEEee
+  eE.....EEe
+ eE........Ee
+eE..........Ee
+eE...TTT.....Ee
+eE...TtTT....Ee
+eE...TTtT....Ee
+eE....TTT...Ee
+ eE........Ee
+ eE........Ee
+ eE.......Ee
+  eE.....Ee
+   eEEEEEe
+    eeeee
+ENDMAP
+
+NAME: nicolae_swamp_rocky_clearing
+TAGS: transparent luniq_swclearing extra decor
+WEIGHT: 3
+SUBST: X = xxxtt.., E = .e, e = W..
+KFEAT: t = mangrove
+MAP
+       eeeee
+  eeeeeEEEEEeeeee
+ eEEEEE....XEEEEEe
+ eE.......XXX....Ee
+eE...XXX...X......Ee
+eE..XxxxX.....XX...Ee
+eE..XxxxX....XxxX..Ee
+eE...XXX......XX...Ee
+ eE..............EEe
+  eEEE...XX..EEEEee
+   eeeEEEEEEEeeee
+      eeeeeee
+ENDMAP
+
+NAME: nicolae_swamp_trees_clearing
+TAGS: transparent luniq_swclearing extra decor
+SUBST: w = Te, T = ttt.., E = .e, e = W..
+KFEAT: t = mangrove
+MAP
+      tttweeee
+    wtttTwEEEEeee
+  eeTtttT.....EEEe
+eeEE.TttT........Ee
+eE....TtT....T...Ee
+eE....TtT...TtT...Ee
+eE.....T....TtT...Ee
+ eE........TttTT.Ee
+  eE........TtttTEe
+  eeEEE.....Ttttww
+    eeeEEEEEwtttt
+       eeeeewttt
+ENDMAP
+
+NAME:    hangedman_swamp_blocks
+TAGS:    transparent extra no_pool_fixup decor
+KFEAT:   t = mangrove
+SHUFFLE: BC, DEF
+SUBST:   A : ttw, B : tttww, D : w., E : w..., C = t, F = .
+KMASK:   wW = no_monster_gen
+MAP
+  ...   ..    ..
+ .WWW....WW....w.
+.Wtttt..ttt.D.tAw
+.WttttW.ttt.D.tt.
+.WttttW.tBt......
+ .ttttW.....ttt..
+ ..WWW..FE..CttW.
+ ......FE...tttW.
+.Wttt.FE.WWW....
+.WttB.E.Wtttt..
+ .ttt...WttttW.
+ .......WttttW.
+ .DD.tCt.ttttW.
+ ....ttt..WWW..
+..tt.ttt......
+.WAt..WW.
+ .W.....
+ENDMAP
+
+NAME:    hangedman_swamp_diagram
+TAGS:    transparent extra no_pool_fixup decor
+MONS:    bush
+KFEAT:   t = mangrove
+SHUFFLE: AB, CD, EF, GH, IJ / IJ / JI
+SUBST:   A : tww.., C : tww.., E : t., G = t.
+SUBST:   I = wt1GT., BDF = t, H = .
+KMASK:   wW = no_monster_gen
+MAP
+   tt.tt@tt@tt.tt
+   tt.tt.tt.tt.tt
+   tttWWttttWWttt
+ttttttWWttttWWttt
+tttttttA.tt.Btttt
+..ttttttCWWDttttt
+ttWWtttttWWtttttt
+ttWWAttG.ttEtt
+@.tt.Ct.I.Fttt
+tttttWWt.JWttt
+tttttWWtFWWttt
+@.tt.DtEtttHtt
+ttWWBttttttttt
+ttWWtttttttttt
+..ttttt
+ttttttt
+ttttttt
+ENDMAP
+
+NAME: wheals_swamp_sinkhole
+TAGS: extra no_monster_gen decor
+DEPTH: Swamp, !Swamp:$
+WEIGHT: 5
+KFEAT: t = mangrove
+KFEAT: ^ = known shaft trap
+SUBST: u = Ww
+KPROP: wW^ = no_rtele_into
+MAP
+ttttttttt
+twwwwwwwt
+twuuuuuwt
+twuWWWuwt
+twuW^Wuwt
+twuWWWuwt
+twuuuuuwt
+@wwwwwwwt
+ttttttttt
+ENDMAP
+
+NAME: nicolae_swamp_triple_paths
+TAGS: transparent extra decor
+SUBST: R = tr, T = t_
+KFEAT: r = tree
+KFEAT: t = mangrove
+CLEAR: _
+MAP
+         TR@RT
+         TR.RT
+     @TTTTR.RTTTT@
+    T..RRRR.RRRR..T
+    TT....r.r....TT
+     TRRR.r.r.RRRT
+    TTttR.r.r.RttTT
+TTTTTtttR.r.r.RtttTTTTT
+ttttttttR.r.r.Rtttttttt
+TTTTTtttR.r.r.RtttTTTTT
+    TTttR.r.r.RttTT
+     TRRR.r.r.RRRT
+    TT....r.r....TT
+    T..RRRR.RRRR..T
+     @TTTtR.RtTTT@
+        TTR.RTT
+         TR@RT
+ENDMAP
+
+NAME: nicolae_swamp_godswood
+TAGS: transparent extra decor
+KFEAT: t = mangrove
+MAP
+ttt     ttt
+..ttttttt..
+@...ttt...@
+.tt..t..tt.
+tttt...tttt
+ tt..t..tt
+ t.......t
+ tt..w..tt
+  t.www.t
+ tt..w..tt
+ t...C...t
+ tt..t..tt
+  tt...tt
+   ttttt
+ENDMAP
+
+NAME: nicolae_swamp_orc_logging_accident
+TAGS: decor extra no_monster_gen no_trap_gen
+SUBST: F = 't, T = _t
+NSUBST: p = 4:p / *:., ' = o / '
+SUBST: . = ...b
+KPROP: bp = bloody
+SUBST: b = .
+{{
+dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'hand axe / broad axe, ' ..
+   'leather armour / pair of gloves, mundane quarterstaff')
+dgn.delayed_decay_extra(_G, 'p', 'orc corpse', 'hand axe / broad axe, ' ..
+   'leather armour / pair of gloves')
+}}
+KITEM: w = mundane quarterstaff
+KITEM: s = meat ration / bread ration
+KFEAT: t = mangrove
+KFEAT: 'o = W
+CLEAR:  _
+MAP
+       TTTTT
+     TTtttttTTT
+    TttttFFttttTT
+   TttttFF'FtttttT
+  TtttttF'''FtttttT
+ TtttttttF''FttttttT
+ Ttt.p........p.ttttT
+TTt..xxxx........tptT
+Tttp.xwwx...xxmx...tT
+Tt...xww+...xpsx...tT
+Tt.p.xwwxp..+.sm.p.tT
+Tt...xxxx...x.sx..ttT
+Tt..p.......xxmx..tTT
+Ttt.....p......p.ttT
+TTtttt..........ttTT
+ TTTTtttt@@ttttttTT
+    TTTT     TTTTT
+ENDMAP
+
+NAME:    hangedman_swamp_cone
+TAGS:    transparent extra no_pool_fixup decor
+KFEAT:   t = mangrove
+SHUFFLE: ABCDEF
+SUBST:   AB : w, C : ww., D : w.., EF = ., G : ttw., H : wtt``, I : wtt``
+CLEAR:   `
+KMASK:   wW = no_monster_gen
+MAP
+t@......
+t.ttttG.H
+t.A.........
+t....BttttG.H
+t.tttttC.........
+t.A.......DttttG.H
+t....BttttttE.........
+t.tttttC.......FttttG@
+t.A.......Dtttttt.....
+t....Btttttt......I
+t.ttttt......I
+t@......I
+ENDMAP
+
+NAME:    hangedman_swamp_lotus
+TAGS:    transparent extra no_pool_fixup decor
+MONS:    plant
+KFEAT:   t = mangrove
+SHUFFLE: ABCDE
+SUBST:   AB : w, C : wwW1, D : wWW1, E : W1
+KMASK:   wW = no_monster_gen
+MAP
+        ... ...
+     .............
+    ..ttttAAAtttt..
+  .......ttttt.......
+ ..ttttB.......Btttt..
+@.....tttt.t.tttt.....@
+.tttC....t...t....Cttt.
+ ..ttttD.......Dtttt..
+   ...tttttEttttt...
+      ....ttt....
+         .ttt.
+         .ttt.
+         .ttt.
+          .t.
+          .t.
+           @
+ENDMAP
+
+#####
+# The ruins of a town... all that is left are a few buildings
+# and skeletons. These vaults are just to give swamp some variety...
+# There are no monsters or loot placed here.
+NAME:   evilmike_swamp_ruin_house_1
+NSUBST: x = 1:+ / *:x
+SUBST:  yx = xxxxx-, - = ----.
+NSUBST: - = 1:d / *:-
+: dgn.delayed_decay(_G, 'd', 'human skeleton')
+: swamp_ruins(_G)
+MAP
+  ........
+ ..........
+..yxxyxxxy..
+..x--y---x..
+..x------x..
+..yy-y---x..
+..x--yy-yy..
+..x--y---x..
+..x--y---x..
+..yxxyxxxy..
+ ..........
+  ........
+ENDMAP
+
+NAME:   evilmike_swamp_ruin_house_2
+SUBST:  x = xxxxx-, - = ----.
+: swamp_ruins(_G)
+MAP
+ ..
+ .xxx
+ .x----
+..x-----
+..x---
+..x--- ---x
+ .x-------x
+ .xxxxxxxxx.
+ ...........
+     ...
+ENDMAP
+
+NAME:   evilmike_swamp_ruin_house_3
+NSUBST: x = 1:+ / *:x
+SUBST:  y = x, x = xxxxx-, - = ----.
+NSUBST: - = 1:d / *:-
+: dgn.delayed_decay(_G, 'd', 'human skeleton')
+: swamp_ruins(_G)
+MAP
+    .....
+   .......
+  ..yxxxy..
+ ..yy---yy..
+..yy-----yy..
+..x---y---x..
+..x--yyy--x..
+..x---y---x..
+..yy-----yy..
+ ..yy---yy..
+  ..yxxxy..
+   .......
+    .....
+ENDMAP
+
+NAME:   evilmike_swamp_ruin_house_4
+SUBST:  x = xxxxx-, - = ----.
+: swamp_ruins(_G)
+MAP
+  .......
+ ..xxxxx..
+..xx---xx..
+.xx-----x
+.x--   --
+.x---
+.xx----
+..xx--
+ ..xx
+  ...
+ENDMAP
+
+NAME:   evilmike_swamp_ruin_house_5
+NSUBST: x = 1:+ / *:x
+SUBST:  yx = xxxxx-, - = ----.
+NSUBST: - = 2:d / *:-
+: dgn.delayed_decay(_G, 'd', 'human skeleton')
+: swamp_ruins(_G)
+MAP
+  ............
+ ..............
+..yxxxxxyxxxxy..
+..x-----y----x..
+..x-----y----x..
+..x-----y----x..
+..yyyyyyy---
+..x---y----
+..x---yxxxxx
+..x---x...
+..x---x...
+..yxxxy..
+ .......
+  .....
+ENDMAP
+
+NAME:   evilmike_swamp_ruin_house_6
+SUBST:  x = xxxxx-, - = ----.
+: swamp_ruins(_G)
+MAP
+.....
+.xxxxxxx x
+.x-----
+.x----   -     x
+ x----
+ xxxx  x      -x
+  ...        --x
+          x----x.
+         .x----x.
+         .x----x.
+         .xxxxxx
+         ...
+ENDMAP
+
+NAME:   evilmike_swamp_ruin_rubble_1
+SUBST:  x = xxxx-, - = -----.
+: swamp_ruins(_G)
+MAP
+   .......
+  ......x..
+ ..xx.......
+...xx...xxx..
+........x--..
+...xx...xxx..
+.............
+.x-x..xx.....
+.x-x..xx...x.
+.xxx.........
+ .....xxxx..
+  ....xxxx.
+   .......
+ENDMAP
+
+NAME:   evilmike_swamp_ruin_rubble_2
+SUBST:  x = xxxx-, - = -----.
+: swamp_ruins(_G)
+MAP
+   .........
+  ..xx..xxx..
+ ...xx..x--...
+..x.....xxx....
+.....x......
+.........
+.xxx...
+.--x..
+.x-x...
+.xxx.....
+.....xx.....
+..x..xx..xxx...
+ ....xx..--x..
+  .......xxx.
+   .........
+ENDMAP
+
+NAME:   evilmike_swamp_ruin_wall
+SUBST:  x = xxxx-, - = -----.
+: swamp_ruins(_G)
+WEIGHT: 4
+MAP
+        x
+       xx
+       xx
+      .xx.
+     .-xx-.
+    .--xx--.
+   .---xx---.
+xxxxxxxxxxxxxxx
+ xxxxxxxxxxxxxxx
+   .---xx---.
+    .--xx--.
+     .-xx-.
+      .xx.
+       xx
+       xx
+       x
+ENDMAP
+
+NAME:   hangedman_swamp_ruin_wall
+SUBST:  x = xxxx-, - = -----.
+: swamp_ruins(_G)
+WEIGHT: 4
+MAP
+  x
+.-xx-....
+.-xx-----.
+ -xxxxxx-.
+.-xxxxxx-.
+.-----xx-....
+ ....-xx-----.
+    .-xxxxxx-.
+    .-xxxxxx-
+    .-----xx-.
+     ....-xx-.
+           x
+ENDMAP
+
+NAME:    hangedman_swamp_ruin_hall
+SHUFFLE: yYzZ / yYzZ / zZyY
+NSUBST:  - = 2:d- / *:-, z = 1:+ / *:X, Z = 1:. / *:X
+SUBST:   XyY = xxxx-, - = -----.
+: swamp_ruins(_G)
+WEIGHT:  2
+MAP
+  ....  ....
+ ..XZZZZZZX..
+ ..y------Y..
+  .y-x--x-Y.
+ ..y------Y..
+ ..XzzzzzzX..
+  ..........
+  XXXX--XXXX
+.XxxxX--XxxxX.
+.XxxxX--XxxxX.
+.XxxxX--XxxxX.
+  XXXX--XXXX
+  ..........
+ENDMAP
+
 ###############################################################################
+# Other Swamp vaults
+
 NAME:    hangedman_swamp_phenomena
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
@@ -570,7 +1188,6 @@ y..c...c...0...c...c..y
 ENDMAP
 
 NAME: grunt_hermit_hut
-DEPTH: Swamp
 MONS: orc high priest / orc sorcerer / wizard / necromancer band
 SHUFFLE: +d / +d / d+
 SUBST: w = w t:5 T:5
@@ -594,7 +1211,6 @@ www.cc+c.www
 ENDMAP
 
 NAME: grunt_witch_cave
-DEPTH: Swamp
 MONS: wizard
 MONS: hydra
 {{
@@ -635,7 +1251,6 @@ wwxxx:.:xxww
 ENDMAP
 
 NAME: grunt_lady_of_the_lake
-DEPTH: Swamp
 SUBST: w = w:50 t:5 T:5
 SUBST: W = w
 KITEM: O = great sword good_item w:20 / \
@@ -671,7 +1286,6 @@ wwwww.wwwwwww
 ENDMAP
 
 NAME: grunt_ruined_hall
-DEPTH: Swamp
 MONS: swamp dragon, hydra, patrolling bog body
 NSUBST: : = 1:1 / 2:2 / 3:3 / 6:0 / *:-
 SUBST: - = .W
@@ -698,10 +1312,9 @@ MAP
 ENDMAP
 
 NAME: nicolae_swamp_necromancer_hut
-DEPTH: Swamp
 SUBST: q = tW., r = W., W = zWW
 # Necromancer gets the spell set without bolt of fire so he doesn't torch the place.
-MONS: necromancer actual_spells spells:bolt_of_cold;bolt_of_draining;animate_dead;simulacrum
+MONS: necromancer actual_spells spells:bolt_of_cold;agony;.;animate_dead;simulacrum;.
 KMONS: z = big fish zombie / swamp drake zombie / swamp worm zombie / \
         water moccasin zombie / swamp dragon zombie / \
         komodo dragon zombie / red wasp zombie / alligator zombie / \
@@ -722,27 +1335,8 @@ qqrx...xrqq
     @@@
 ENDMAP
 
-NAME: nicolae_swamp_fairy_circle
-DEPTH: Swamp
-SUBST: W = .W, w = wwwW, q = w
-MONS: fungus / nothing w:7
-MAP
-    ...
-  ..111..
- .11WWW11.
- .1WWwWW1.
-.1WWwwwWW1.
-.1WwwqwwW1.
-.1WWwwwWW1.
- .1WWwWW1.
- .11WWW11.
-  ..111..
-    ...
-ENDMAP
-
 NAME: nicolae_swamp_alligator_family
 TAGS: layout_swamp
-DEPTH: Swamp
 NSUBST: T = 2:W / *:t
 KMONS: 1 = alligator
 KMONS: 2 = baby alligator
@@ -759,7 +1353,6 @@ tWTTWWTTWt
 ENDMAP
 
 NAME: nicolae_swamp_snake_nest
-DEPTH: Swamp
 TAGS: transparent no_monster_gen mini_float
 KMONS: 1 = anaconda
 KMONS: 2 = adder / ball python / water moccasin / black mamba
@@ -785,7 +1378,6 @@ ttTTTTtttTT...t
 ENDMAP
 
 NAME: nicolae_swamp_baby_hydras
-DEPTH: Swamp
 SHUFFLE: abcd
 SUBST: a:@, bcd:t, T = .Wt, . = ...W
 KMONS: 1 = 1-headed hydra
@@ -809,7 +1401,6 @@ ttT..TttTTTTT..Tt
 ENDMAP
 
 NAME: lightli_tree_ring
-DEPTH: Swamp
 KPROP: *w = no_rtele_into
 KFEAT: T = mangrove
 SUBST: T = Tt
@@ -826,139 +1417,7 @@ TTTT..TTTT
 TTTT@@TTTT
 ENDMAP
 
-NAME: nicolae_swamp_treefoil
-DEPTH: Swamp
-TAGS: transparent mini_float extra
-SUBST: T = t.
-KFEAT: t = tree w:8 / mangrove
-KFEAT: . = . w:30 / W
-MAP
-tt       @     tt
- ttt....T.T...Tttt
-  TtttT.TT..TtttT
-  ..TttT...tttT.
-   T..ttttttT..
-    T..TTtT..T.
-     @..TtT.T..
-      T.TtT.TT.@
-      ..TtT.TT
-       .TtT.
-        Tt.
-        ttT
-         t
-ENDMAP
-
-NAME: nicolae_swamp_feature_on_the_river_bank
-TAGS: transparent no_pool_fixup
-DEPTH: Swamp
-SUBST: T = t., W = .Ww t:5, Q = tw, f = .GTV U:5 C:5 S:3
-KFEAT: S = any shop / .
-KFEAT: t = mangrove
-MAP
-     tttQ..@..Qttt
-    ttQQQ.....QQQtt
-tttttQQWW.....WWQQttttt
-  ttQQwWW.....WWwQQtt
-  ttQwwWW..f..WWwwQtt
-   ttwwWW.....WWwwtt
-   @TwwwWW...WWwwwT@
-   ..WwwwWWWWWwwwW..
-   T..WwwwwwwwwwW..T
-   tT..WwwwwwwwW..Tt
-   ttT..WWWwWWW..Ttt
-    ttT...WWW...Ttt
-     ttT.......Ttt
-      ttTTTTTTTtt
-ENDMAP
-
-NAME: nicolae_swamp_stair_fork
-DEPTH: Swamp:2-4
-SHUFFLE: {}[]()
-SUBST: W = w., T = t.
-KFEAT: t = mangrove
-MAP
-tttttt
-t...TTtt
-t.{...TTtt
-t.......TTtt
-tT..WWW...Ttt
-tT..WwwW...Ttt
- tT.WwwwWW..Tt
- tT..WwwwwW..@
-  tT..WwwwwW.
-  tT..Wwwwww
-   tT..Wwwww
-   ttT..Www
-    ttT..
-     tt@
-ENDMAP
-
-NAME: nicolae_swamp_round_clearing
-DEPTH: Swamp
-TAGS: transparent allow_dup luniq_swclearing extra
-SUBST: T = ttt.., E = .e, e = W.., t = ttttt.
-KFEAT: t = mangrove
-MAP
-    eeeee
-   eEEEEEee
-  eE.....EEe
- eE........Ee
-eE..........Ee
-eE...TTT.....Ee
-eE...TtTT....Ee
-eE...TTtT....Ee
-eE....TTT...Ee
- eE........Ee
- eE........Ee
- eE.......Ee
-  eE.....Ee
-   eEEEEEe
-    eeeee
-ENDMAP
-
-NAME: nicolae_swamp_rocky_clearing
-TAGS: transparent allow_dup luniq_swclearing extra
-DEPTH: Swamp
-WEIGHT: 3
-SUBST: X = xxxtt.., E = .e, e = W..
-KFEAT: t = mangrove
-MAP
-       eeeee
-  eeeeeEEEEEeeeee
- eEEEEE....XEEEEEe
- eE.......XXX....Ee
-eE...XXX...X......Ee
-eE..XxxxX.....XX...Ee
-eE..XxxxX....XxxX..Ee
-eE...XXX......XX...Ee
- eE..............EEe
-  eEEE...XX..EEEEee
-   eeeEEEEEEEeeee
-      eeeeeee
-ENDMAP
-
-NAME: nicolae_swamp_trees_clearing
-TAGS: transparent allow_dup luniq_swclearing extra
-DEPTH: Swamp
-SUBST: w = Te, T = ttt.., E = .e, e = W..
-KFEAT: t = mangrove
-MAP
-      tttweeee
-    wtttTwEEEEeee
-  eeTtttT.....EEEe
-eeEE.TttT........Ee
-eE....TtT....T...Ee
-eE....TtT...TtT...Ee
-eE.....T....TtT...Ee
- eE........TttTT.Ee
-  eE........TtttTEe
-  eeEEE.....Ttttww
-    eeeEEEEEwtttt
-       eeeeewttt
-ENDMAP
-
 NAME: nicolae_swamp_dragon_and_kin
-DEPTH: Swamp
 TAGS: patrolling transparent mini_float
 SUBST: T = t., B = tt_
 NSUBST: d = D / d
@@ -984,9 +1443,7 @@ BBttTTTTTTTtttBB
   BBBBBBBBBBB
 ENDMAP
 
-
 NAME: nicolae_swamp_hydra_murder_den
-DEPTH: Swamp
 TAGS: no_monster_gen mini_float
 : local heads = crawl.roll_dice(2, 3) + 7
 KPROP: ' = no_rtele_into
@@ -1019,7 +1476,7 @@ ENDMAP
 
 NAME:    hangedman_swamp_double_dragon
 TAGS:    no_monster_gen patrolling
-DEPTH:   Swamp:2-
+DEPTH:   Swamp:2-, !Swamp:$
 MONS:    fire dragon, lindwurm / mottled dragon w:8
 MONS:    ice dragon, bog body / hydra simulacrum w:8
 MONS:    swamp dragon, alligator / hydra w:8
@@ -1042,62 +1499,6 @@ tttt....t.Wt     t.WtW...tttt
  ttttt2t.t.W     ..tWt4ttttt
     ttttW2@       @.4tttt
         tW         .t
-ENDMAP
-
-NAME:    hangedman_swamp_blocks
-TAGS:    transparent extra no_pool_fixup decor
-DEPTH:   Swamp
-KFEAT:   t = mangrove
-SHUFFLE: BC, DEF
-SUBST:   A : ttw, B : tttww, D : w., E : w..., C = t, F = .
-KMASK:   wW = no_monster_gen
-MAP
-  ...   ..    ..
- .WWW....WW....w.
-.Wtttt..ttt.D.tAw
-.WttttW.ttt.D.tt.
-.WttttW.tBt......
- .ttttW.....ttt..
- ..WWW..FE..CttW.
- ......FE...tttW.
-.Wttt.FE.WWW....
-.WttB.E.Wtttt..
- .ttt...WttttW.
- .......WttttW.
- .DD.tCt.ttttW.
- ....ttt..WWW..
-..tt.ttt......
-.WAt..WW.
- .W.....
-ENDMAP
-
-NAME:    hangedman_swamp_diagram
-TAGS:    transparent extra no_pool_fixup decor
-DEPTH:   Swamp
-MONS:    bush
-KFEAT:   t = mangrove
-SHUFFLE: AB, CD, EF, GH, IJ / IJ / JI
-SUBST:   A : tww.., C : tww.., E : t., G = t.
-SUBST:   I = wt1GT., BDF = t, H = .
-KMASK:   wW = no_monster_gen
-MAP
-   tt.tt@tt@tt.tt
-   tt.tt.tt.tt.tt
-   tttWWttttWWttt
-ttttttWWttttWWttt
-tttttttA.tt.Btttt
-..ttttttCWWDttttt
-ttWWtttttWWtttttt
-ttWWAttG.ttEtt
-@.tt.Ct.I.Fttt
-tttttWWt.JWttt
-tttttWWtFWWttt
-@.tt.DtEtttHtt
-ttWWBttttttttt
-ttWWtttttttttt
-..ttttt
-ttttttt
-ttttttt
 ENDMAP
 
 NAME:    cheibrodos_swamp_mausoleum
@@ -1179,7 +1580,7 @@ ENDMAP
 
 NAME:  cheibrodos_swamp_pet_leeches
 TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp:1-4
+DEPTH: Swamp, !Swamp:$
 MONS:  vampire ; potion of blood . long sword . robe, giant leech
 KFEAT: t = mangrove
 KPROP: e' = no_rtele_into
@@ -1199,7 +1600,7 @@ ENDMAP
 
 NAME:  cheibrodos_swamp_minitomb
 TAGS:  no_item_gen no_monster_gen mini_float
-DEPTH: Swamp
+DEPTH: Swamp, !Swamp:$
 KFEAT: t = mangrove
 KMONS: - = bog body w:20 / troll zombie / troll skeleton / shadow w:5
 KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing
@@ -1221,7 +1622,7 @@ ENDMAP
 
 NAME:  cheibrodos_swamp_slimy
 TAGS:  no_item_gen no_monster_gen
-DEPTH: Swamp
+DEPTH: Swamp, !Swamp:$
 KFEAT: t = mangrove
 MONS:  slime creature
 MAP
@@ -1232,28 +1633,8 @@ tttc111cttt
    tcGct
 ENDMAP
 
-NAME: wheals_swamp_sinkhole
-DEPTH: Swamp, !Swamp:$
-TAGS: extra no_monster_gen
-KFEAT: t = mangrove
-KFEAT: ^ = known shaft trap
-SUBST: u = Ww
-MAP
-ttttttttt
-twwwwwwwt
-twuuuuuwt
-twuWWWuwt
-twuW^Wuwt
-twuWWWuwt
-twuuuuuwt
-@wwwwwwwt
-ttttttttt
-ENDMAP
-
 ####
-
 NAME: nicolae_swamp_spriggan_camp
-DEPTH: Swamp
 SHUFFLE: Ff/Gg/Hh/Ii
 SUBST: ghi = .
 KMONS: D = patrolling spriggan rider
@@ -1278,7 +1659,6 @@ tttttttttt
 ENDMAP
 
 NAME: nicolae_swamp_thorn_lake
-DEPTH: Swamp
 TAGS: transparent
 SUBST: b = W.
 NSUBST: W = 3:1 / *:W, . = 1:2 / *:.
@@ -1314,7 +1694,6 @@ tt..%bbb%..tt
 ENDMAP
 
 NAME: nicolae_swamp_game_of_thorns
-DEPTH: Swamp
 TAGS: no_monster_gen transparent
 NSUBST: h = 2:h / *:.
 NSUBST: l = 3:l / *:W
@@ -1347,8 +1726,8 @@ tT...WWWWTTTWWT.T
 ENDMAP
 
 NAME: nicolae_swamp_oklob_treasure_island
-DEPTH: Swamp
 TAGS: no_pool_fixup
+DEPTH: Swamp, !Swamp:$
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
 NSUBST: ' = 1:^ / 1:o / *:'
 SUBST: abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%, \
@@ -1379,100 +1758,15 @@ _..BbbB'''''DddD.._
        _____
 ENDMAP
 
-NAME: nicolae_swamp_triple_paths
-DEPTH: Swamp
-TAGS: transparent extra decor
-SUBST: R = tr, T = t_
-KFEAT: r = tree
-KFEAT: t = mangrove
-CLEAR: _
-MAP
-         TR@RT
-         TR.RT
-     @TTTTR.RTTTT@
-    T..RRRR.RRRR..T
-    TT....r.r....TT
-     TRRR.r.r.RRRT
-    TTttR.r.r.RttTT
-TTTTTtttR.r.r.RtttTTTTT
-ttttttttR.r.r.Rtttttttt
-TTTTTtttR.r.r.RtttTTTTT
-    TTttR.r.r.RttTT
-     TRRR.r.r.RRRT
-    TT....r.r....TT
-    T..RRRR.RRRR..T
-     @TTTtR.RtTTT@
-        TTR.RTT
-         TR@RT
-ENDMAP
-
-NAME: nicolae_swamp_godswood
-DEPTH: Swamp
-TAGS: transparent extra decor
-KFEAT: t = mangrove
-MAP
-ttt     ttt
-..ttttttt..
-@...ttt...@
-.tt..t..tt.
-tttt...tttt
- tt..t..tt
- t.......t
- tt..w..tt
-  t.www.t
- tt..w..tt
- t...C...t
- tt..t..tt
-  tt...tt
-   ttttt
-ENDMAP
-
-NAME: nicolae_swamp_orc_logging_accident
-TAGS: decor extra no_monster_gen no_trap_gen
-DEPTH: Swamp
-SUBST: F = 't, T = _t
-NSUBST: p = 4:p / *:., ' = o / '
-SUBST: . = ...b
-KPROP: bp = bloody
-SUBST: b = .
-{{
-dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'hand axe / broad axe, ' ..
-   'leather armour / pair of gloves, mundane quarterstaff')
-dgn.delayed_decay_extra(_G, 'p', 'orc corpse', 'hand axe / broad axe, ' ..
-   'leather armour / pair of gloves')
-}}
-KITEM: w = mundane quarterstaff
-KITEM: s = meat ration / bread ration
-KFEAT: t = mangrove
-KFEAT: 'o = W
-CLEAR:  _
-MAP
-       TTTTT
-     TTtttttTTT
-    TttttFFttttTT
-   TttttFF'FtttttT
-  TtttttF'''FtttttT
- TtttttttF''FttttttT
- Ttt.p........p.ttttT
-TTt..xxxx........tptT
-Tttp.xwwx...xxmx...tT
-Tt...xww+...xpsx...tT
-Tt.p.xwwxp..+.sm.p.tT
-Tt...xxxx...x.sx..ttT
-Tt..p.......xxmx..tTT
-Ttt.....p......p.ttT
-TTtttt..........ttTT
- TTTTtttt@@ttttttTT
-    TTTT     TTTTT
-ENDMAP
-
 ###############################################################################
 # Swamp ending vaults
 #
 # They come in two flavours: normal and themed. The first three are normal and
-# use regular swamp monsters. The other four have special themes, and are less
+# use regular swamp monsters. The other five have special themes, and are less
 # common.
 ###############################################################################
+
+default-depth:
 
 ###############################################################################
 # Swamp:5 standard
