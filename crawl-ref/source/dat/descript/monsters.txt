@@ -15,10 +15,6 @@ __cap-T_suffix
 
 You feel a lump in the pit of your stomach.
 %%%%
-__cap-U_suffix
-
-If made afraid, it may become angry!
-%%%%
 __(_suffix_examine
 
 It has been enchanted to dance through the air and attack under its own power.
@@ -49,8 +45,6 @@ Once a talented human weaver, Arachne was cursed by being transformed into her
 present form: half-human, half-spider.
 
 Now thousands of years old, she has learned magic and quite a few other tricks.
-Expect to be ensnared by webs and magic while her pets digest and then drink
-you dry.
 %%%%
 Asmodeus
 
@@ -287,11 +281,6 @@ of magic. Rumoured to be the most learned being in the halls of Pandemonium, he
 is at times sought out by mortal wizards who offer their souls in exchange for
 the secrets of the arcane. Lacking the terrible wrath present in most demons,
 Lom Lobon's single eye instead hides a cold, impartial cruelty.
-%%%%
-lorocyproca
-
-A tall and gaunt figure, draped in long robes which flow as if alive. It
-thirsts for magical energies.
 %%%%
 Louise
 
@@ -630,12 +619,6 @@ big kobold
 
 A kobold that is bigger and tougher than the ordinary kobold, and often armed.
 %%%%
-big kobold necromancer
-
-A kobold that is not only bigger and smarter than most, but also a good deal
-more evil. Fortunately, from the looks of this place, it's unlikely it could
-put its grubby hands onto a corpse of something dangerous.
-%%%%
 black bear
 
 A small black bear. Like all ursines, the black bear will become enraged if
@@ -778,7 +761,7 @@ cherub
 
 Behold! A throne-bearer of the Gods, whose head is beset by four faces: one of
 a man, one of an ox, one of a lion, one of an eagle. It is one of the three
-angelic beings who stand before the Good Gods, singing eternal hymns of praise
+angelic beings who stand before the good gods, singing eternal hymns of praise
 to their Glory and Goodness. Indeed, these hymns have the power to rouse
 greatness in hearts pure and true.
 %%%%
@@ -935,8 +918,7 @@ A deep elf skilled at summoning plagues of insidious vermin.
 deep dwarf
 
 Pale and unnaturally tough-skinned, deep dwarves dwell far below ground and
-almost never emerge into the sunlit upper world. They are more inclined towards
-the occult arts than their mountainous cousins.
+almost never emerge into the sunlit upper world.
 %%%%
 deep dwarf death knight
 
@@ -1167,11 +1149,10 @@ a brilliant column of raging flames.
 %%%%
 fire giant
 
-A blistering heat rages beneath the obsidian-like skin of this giant, and its
-wild mane of red hair glows and smoulders. It holds aloft a fiery sword, and
-its body erupts with searing flames, seemingly at will. Fire giants believe
-that they are destined to unite and burn the entire world to cinders, but, in
-the meantime, they'll settle for adventurers foolish enough to approach them.
+A giant with obsidian skin and a wild mane of glowing red hair, holding aloft
+a fiery sword. Fire giants believe that they are destined to unite and burn the
+entire world to cinders, but, in the meantime, they'll settle for any
+adventurers foolish enough to approach them.
 %%%%
 fire vortex
 
@@ -1379,8 +1360,8 @@ A muscular green-scaled humanoid with a reptilian tail and small wings.
 %%%%
 green rat
 
-A rodent with hair of a most peculiar green colour, and an infectious bite. It
-tends to form great swarms of its kin.
+A rodent with hair of a most peculiar green colour, and a powerful bite. It
+tends to form great swarms with its kin.
 %%%%
 grey draconian
 
@@ -1398,9 +1379,9 @@ enraged if badly hurt or frightened.
 %%%%
 guardian golem
 
-A large construct, designed to protect. It can take the blows
-dealt to others upon itself, though it is prone to becoming unstable
-and overheating after heavy punishment.
+A large construct, designed to protect. It can take the blows dealt to others
+upon itself, though it is prone to becoming unstable and overheating after
+heavy punishment.
 %%%%
 guardian mummy
 
@@ -1416,10 +1397,7 @@ an intruder.
 %%%%
 halfling
 
-A humanoid of diminutive stature, member of a race given to domesticity and the
-simple pleasures of the flesh. Halflings excel at moving silently.
-
-It definitely deserves an axe to the head.
+A humanoid of diminutive stature.
 %%%%
 harpy
 
@@ -1643,24 +1621,6 @@ A large venomous spider, which weaves webs between its front legs and leaps at
 its prey, ensnaring it. Those who see it in action and live to tell the tale
 say the speed with which it leaps is almost supernatural.
 %%%%
-tengu
-
-A humanoid figure with the head and talons of a bird. Its ferociously combative
-nature belies its fragile appearance.
-%%%%
-tengu conjurer
-
-One of many tengu with a talent for the destructive magical arts.
-%%%%
-tengu reaver
-
-An elite, ferocious tengu highly skilled with both steel and spells.
-%%%%
-tengu warrior
-
-A particularly bloodthirsty tengu who has opted to hone their skill in fighting
-and weaponry instead of spellcasting.
-%%%%
 killer bee
 
 A giant bee, bearing a deadly barb which can sting repeatedly.
@@ -1730,6 +1690,11 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie green glow.
 %%%%
+lorocyproca
+
+A tall and gaunt figure, draped in long robes which flow as if alive. It
+thirsts for magical energies.
+%%%%
 lost soul
 
 The echo of a unmourned soul, flickering in and out of the mortal world. Though
@@ -1740,7 +1705,8 @@ being in the memories of another's life.
 %%%%
 lurking horror
 
-A formless mass of energy. It seems to stop moving when you look at it.
+A formless mass of negative energy. It seems to stop moving when you look at
+it.
 %%%%
 macabre mass
 
@@ -1921,7 +1887,8 @@ orange crystal statue
 
 An intricately carved idol of some nameless godling, hewn of translucent orange
 crystal. Its lifeless eyes seem to glitter uncannily with a wicked
-intelligence.
+intelligence. It is capable of unleashing a powerful psychic assault upon the
+minds of any who approach it.
 %%%%
 orange demon
 
@@ -2223,7 +2190,7 @@ potent venomous bite.
 seraph
 
 The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts,
-the mightiest servants of the Good Gods. They have six wings and but one face,
+the mightiest servants of the good gods. They have six wings and but one face,
 and are said to sometimes take the forms of fiery serpents.
 %%%%
 shadow
@@ -2284,7 +2251,7 @@ sheep
 
 A dim-witted, fluffy ovine, better known for its woolly hide than its
 ferociousness. Dungeon sheep are nevertheless far more murderous than their
-surface brethren. This one looks quite flammable.
+surface brethren. It looks quite flammable.
 %%%%
 shining eye
 
@@ -2310,7 +2277,8 @@ An orb of divine energy pulsating with blinding light.
 silver statue
 
 A beautiful statue of an unknown creature, glistening with a silvery hue. Its
-eyes glow with an otherworldly, malignant radiance.
+eyes glow with an otherworldly, malignant radiance. If approached, it may call
+forth demons to defend itself.
 %%%%
 simulacrum
 
@@ -2426,7 +2394,7 @@ destructive spells.
 sphinx
 
 A large creature with a woman's head, a lion's body and the wings of a huge
-bird, able to cloud the minds of men and wield fell magics.
+bird, able to cloud the minds of its foes and wield fell magics.
 %%%%
 spider
 
@@ -2437,7 +2405,7 @@ environment, it is still as big as a small cat.
 spiny frog
 
 These frogs are the size of a wolf, and are covered in small spines and spurs,
-dripping with venom. Toad licking anyone?
+dripping with venom.
 %%%%
 spriggan
 
@@ -2453,10 +2421,6 @@ spriggan assassin
 A deft and surreptitious spriggan. It's ready to deliver a flurry of
 incapacitating poison needles, followed by a quick blade right under your fifth
 rib.
-%%%%
-spriggan baker
-
-A spriggan that has mastered the culinary arts.
 %%%%
 spriggan berserker
 
@@ -2554,8 +2518,26 @@ A large slimy worm, adept at swimming through the muck of this foul swamp.
 %%%%
 tarantella
 
-A small but greatly-feared spider whose attacks causes victims to break into a
+A small but greatly-feared spider whose attacks cause victims to break into a
 frenzied dance.
+%%%%
+tengu
+
+A humanoid figure with the head and talons of a bird. Its ferociously combative
+nature belies its fragile appearance.
+%%%%
+tengu conjurer
+
+One of many tengu with a talent for the destructive magical arts.
+%%%%
+tengu reaver
+
+An elite, ferocious tengu highly skilled with both steel and spells.
+%%%%
+tengu warrior
+
+A particularly bloodthirsty tengu who has opted to hone their skill in fighting
+and weaponry instead of spellcasting.
 %%%%
 tentacle
 
@@ -2665,8 +2647,7 @@ hadn't.
 vampire
 
 A human cursed with vampirism, drifting in a state between life and undeath,
-perpetually hungry for the blood of the living. It has power over beasts and
-the minds of lesser men, and can appear in the form of a bat.
+perpetually hungry for the blood of the living.
 %%%%
 vampire bat
 
@@ -2872,6 +2853,11 @@ can add another rocket while jumping down.
 
 Oh wait, wrong game.
 %%%%
+ghost
+
+The remains of a monster that existed in an older version, but has since been
+removed.
+%%%%
 sensed monster
 
 You know there is some creature here, and that it is not one of your allies.
@@ -2956,6 +2942,12 @@ archer statue
 The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
 bow aloft, and appears to be magically animated, letting it use the bow to
 riddle you with arrows.
+%%%%
+big kobold necromancer
+
+A kobold that is not only bigger and smarter than most, but also a good deal
+more evil. Fortunately, from the looks of this place, it's unlikely it could
+get its grubby hands onto the corpse of anything dangerous.
 %%%%
 captured wizard
 
@@ -3180,6 +3172,10 @@ skeletal bat
 
 A bat skeleton without the decency to lie unmoving like dead bats are supposed
 to.
+%%%%
+spriggan baker
+
+A spriggan that has mastered the culinary arts.
 %%%%
 strange machine
 
