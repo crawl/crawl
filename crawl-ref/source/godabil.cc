@@ -1635,7 +1635,7 @@ void jiyva_paralyse_jellies()
         else
             mprf(MSGCH_PRAY, "A nearby slime joins your prayer.");
 
-        lose_piety(5);
+        lose_piety(max(5, min(jelly_count, 20)));
     }
 }
 
