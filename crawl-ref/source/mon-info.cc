@@ -1686,21 +1686,20 @@ int monster_info::res_magic() const
     if (mr < 0)
         mr = mons_class_hit_dice(type) * (-mr) * 4 / 3;
 
-    // Randarts have a multiplicative effect.
-    mr *= (randarts(ARTP_MAGIC) + 100);
-    mr /= 100;
+    // Randarts
+    mr += 40 * randarts(ARTP_MAGIC);
 
     // ego armour resistance
     if (inv[MSLOT_ARMOUR].get()
         && get_armour_ego_type(*inv[MSLOT_ARMOUR]) == SPARM_MAGIC_RESISTANCE)
     {
-        mr += 30;
+        mr += 40;
     }
 
     if (inv[MSLOT_SHIELD].get()
         && get_armour_ego_type(*inv[MSLOT_SHIELD]) == SPARM_MAGIC_RESISTANCE)
     {
-        mr += 30;
+        mr += 40;
     }
 
     item_def *jewellery = inv[MSLOT_JEWELLERY].get();
