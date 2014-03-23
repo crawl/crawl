@@ -55,11 +55,9 @@ the entrance is located between Lair:3 and Lair:6.
 %%%%
 Shoals
 
-From afar you hear the steady sounds of waves and smell the salty spray. Upon
-reaching the Shoals, you are impressed by exotic underground beaches, making up
-a few islands in a vast sea. All of a sudden, a bloodcurdling scream fills the
-air, followed by a gurgle. Anxiously, you look around and wonder: Who is the
-predator? And who is the prey?
+The exotic underground beaches of the Shoals make up a few small islands in a
+seemingly endless sea. The merfolk have made it their home, alongside many
+dreaded sea creatures.
 
 The Shoals are five levels deep and contain the barnacled rune. A dungeon
 features only one of the Shoals and Swamp branches. If the Shoals are present,
@@ -67,7 +65,8 @@ the entrance is located between Lair:3 and Lair:6.
 %%%%
 Snake Pit
 
-Home of the serpent, lair of the naga.
+The corridors of the Snake Pit are home to all varieties of serpent, and are
+inhabited by a society of powerful nagas and salamanders.
 
 The Snake Pit is five levels deep and contains the serpentine rune. A dungeon
 features only one of the Snake Pit and Spider Nest branches. If the Snake Pit
@@ -75,10 +74,8 @@ is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
 Spider Nest
 
-On the surface a spider could be despatched with the swing of a shoe. Down here
-it is different. If you don't have arachnophobia already, this place, with its
-crumbling, web-choked caverns, poisonous arthropods and assorted
-creepy-crawlies, will give it to you.
+The crumbling, web-choked caverns of the Spider Nest are packed with poisonous
+arthropods and assorted creepy-crawlies.
 
 The Spider Nest is five levels deep and contains the gossamer rune. A dungeon
 features only one of the Spider Nest and Snake Pit branches. If the Spider Nest
@@ -136,9 +133,8 @@ on Crypt:2 or Crypt:3.
 %%%%
 Hell
 
-The hallway to the four hells is guarded by Geryon. Heroes who prove their
-worth in the vestibule and blow Geryon's horn may explore the different regions
-of Hell: Dis, Gehenna, Cocytus and Tartarus.
+The hallway to the four hells is guarded by Geryon. The Vestibule of Hell
+contains portals to Dis, Gehenna, Cocytus and Tartarus.
 
 Portals to the Vestibule of Hell are found abundantly in the deeper parts of
 the main dungeon.
@@ -270,7 +266,7 @@ caverns.
 %%%%
 Ossuary
 
-The Ossuary is a smallish tomb containing the remains and grave goods of some
+The Ossuary is a small tomb containing the remains and grave goods of some
 distant relatives of the pharaohs, along with the corpses of their retainers
 and household animals. It is undoubtedly riddled with many traps, and its
 undead denizens are unlikely to take kindly to looting.
@@ -278,8 +274,8 @@ undead denizens are unlikely to take kindly to looting.
 Bailey
 
 The Bailey is the still-occupied and well-guarded fortress of an orcish lord.
-In it his private treasures are protected by both physical barriers and large
-numbers of well armed humanoid warriors.
+The treasures within are protected by both physical barriers and large numbers
+of well armed humanoid warriors.
 %%%%
 Ice Cave
 
