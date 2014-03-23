@@ -75,6 +75,7 @@
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
 # * fog:      Lets wearer use the evoke fog ability.
+# * unholy:   Is treated as an unholy item.
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * fly:      Lets wearer evoke flight ability.
@@ -281,7 +282,7 @@ TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    tilerim, evil, nogen
+BOOL:    tilerim, unholy, nogen
 
 NAME:    Staff of Dispater
 APPEAR:  golden staff
@@ -291,7 +292,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
-BOOL:    special, evil, nogen
+BOOL:    special, unholy, nogen
 
 NAME:    Sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -301,7 +302,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
-BOOL:    special, evil, nogen
+BOOL:    special, unholy, nogen
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
@@ -454,7 +455,7 @@ TILE_EQ: crossbow_fire
 FIRE:    2
 COLD:    -1
 MAGIC:   1
-BOOL:    evil
+BOOL:    unholy
 
 NAME:    sword of the Doom Knight
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
@@ -981,7 +982,7 @@ TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:   1
 STR:      +3
-BOOL:     evil, seeinv, fly, special
+BOOL:     unholy, seeinv, fly, special
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -1134,7 +1135,6 @@ COLOUR:   ETC_ENCHANT
 TILE:     urand_spellbinder
 TILE_EQ:  spellbinder
 MAGIC:    1
-BOOL:     evil
 
 NAME:    lajatang of Order
 INSCRIP: silver, rMut
