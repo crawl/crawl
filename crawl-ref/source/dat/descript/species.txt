@@ -122,12 +122,11 @@ They're always hungry.
 %%%%
 Vampire
 
-Shifting between the states of life and undeath, they're accomplished stabbers
-and casters.
+Shifting between the states of life and undeath, Vampires are accomplished
+stabbers and casters.
 %%%%
 Vine Stalker
 
-Frail symbionts, vine stalkers regenerate quickly but cannot regain health
-from devices or potions. They are protected by their magical reserves, and
-pack a mean bite that replenishes them.
+Frail symbionts, Vine Stalkers cannot regain health from devices or potions.
+Their magical reserves absorb damage, and they pack a magic-restoring bite.
 %%%%
