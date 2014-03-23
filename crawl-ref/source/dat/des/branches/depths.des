@@ -16,7 +16,9 @@
 function depths_entry(e)
    e.tags("depths_entry uniq_depths_entry chance_depths_entry no_monster_gen")
    e.place("D:$")
+   e.weight("20")
    e.kfeat("O = enter_depths")
+   e.orient("float")
 end
 }}
 
@@ -129,7 +131,7 @@ KMONS: t = w:2 col:darkgrey plant name:withered name_adjective \
 MONS: place:Depths:1 skeleton / place:Depths:1 zombie w:20, necromancer
 MONS: skeletal warrior / guardian mummy w:2 / plague shambler w:2
 KMONS: O = vampire mage w:15 / flayed ghost / phantasmal warrior
-NSUBST: . = 4:1 / 1:2 / 2:3 /*:.
+NSUBST: . = 4:1 / 1:2 / 2:3 / *:.
 SUBST: . = .....--__tG
 TILE: G = dngn_gravestone
 FTILE: - = floor_pebble_brown
@@ -154,11 +156,10 @@ ENDMAP
 
 NAME:    hangedman_depths_entry_try_elsewhere_first
 TAGS:    no_pool_fixup
-# Strictly speaking, of these, only harpies don't spawn in Depths.
-MONS:    hydra / very ugly thing w:2, naga / naga mage w:2
-MONS:    wolf spider / redback w:2, octopode / harpy w:2
+MONS:    hydra / very ugly thing w:2, salamander / naga mage w:2
+MONS:    wolf spider / emperor scorpion w:2, manticore / octopode w:2
 MONS:    large slime creature / giant eyeball w:2
-KMONS:   O = tengu conjurer / glowing shapeshifter w:4
+KMONS:   O = dire elephant / glowing shapeshifter w:4
 SHUFFLE: 12345, +'X / XX'
 SUBST:   XY = x, '" = .
 : depths_entry(_G)
@@ -177,11 +178,10 @@ xxx'Xxx+xXx
 ENDMAP
 
 NAME:    hangedman_depths_entry_civil_slaughter
-MONS:    orc knight / yaktaur w:4 / hill giant w:4 / tengu warrior w:8 / \
-         deep elf priest w:2
-MONS:    ogre mage w:14 / naga mage w:6 / deep elf knight / centaur warrior
-MONS:    deep troll w:14 / hell knight w:8 / orc sorcerer / minotaur w:4
-KMONS:   O = ettin w:14 / yaktaur captain w:2 / orc warlord w:2
+MONS:    hill giant w:14 / yaktaur w:4 / tengu warrior w:8 / deep elf priest w:2
+MONS:    ogre mage w:14 / tengu conjurer w:6 / deep elf knight / centaur warrior
+MONS:    deep troll w:14 / hell knight w:8 / orc sorcerer / shapeshifter w:4
+KMONS:   O = ettin w:14 / yaktaur captain w:2 / glowing shapeshifter w:2
 SUBST:   c : c:9 v:2 b:1
 SHUFFLE: 12 / 12 / 21
 : depths_entry(_G)

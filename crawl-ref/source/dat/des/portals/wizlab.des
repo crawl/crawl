@@ -105,7 +105,7 @@ function wizlab_portal (e)
         msg = messager })
     e.kfeat("O = enter_wizlab")
     e.tags("uniq_wizlab no_item_gen no_monster_gen chance_wizlab")
-    e.chance("250 (D:$), 500")
+    e.chance("500")
 end
 
 -- Destinations:
@@ -437,7 +437,7 @@ end
 
 }}
 
-default-depth: D:$, Depths, Elf, Crypt, Vaults:1-4
+default-depth: Depths, Elf, Crypt, Vaults:1-4
 
 ###############################################################################
 # Portal entrances.
