@@ -2879,32 +2879,34 @@ void lose_piety(int pgn)
     if (!player_under_penance() && you.piety != old_piety)
     {
         if (you.piety < piety_breakpoint(5)
-            && old_piety >= piety_breakpoint(5)
-            && !you.one_time_ability_used[you.religion])
+            && old_piety >= piety_breakpoint(5))
         {
             // In case the best skill is Invocations, redraw the god
             // title.
             you.redraw_title = true;
 
-            if (you_worship(GOD_ZIN))
+            if (!you.one_time_ability_used[you.religion])
             {
-                simple_god_message(
-                    " is no longer ready to cure all your mutations.");
-            }
-            else if (you_worship(GOD_SHINING_ONE) && you.species != SP_FELID)
-            {
-                simple_god_message(
-                    " is no longer ready to bless your weapon.");
-            }
-            else if (you_worship(GOD_KIKUBAAQUDGHA))
-            {
-                simple_god_message(
-                    " is no longer ready to enhance your necromancy.");
-            }
-            else if (you_worship(GOD_LUGONU) && you.species != SP_FELID)
-            {
-                simple_god_message(
-                    " is no longer ready to corrupt your weapon.");
+                if (you_worship(GOD_ZIN))
+                {
+                    simple_god_message(
+                        " is no longer ready to cure all your mutations.");
+                }
+                else if (you_worship(GOD_SHINING_ONE) && you.species != SP_FELID)
+                {
+                    simple_god_message(
+                        " is no longer ready to bless your weapon.");
+                }
+                else if (you_worship(GOD_KIKUBAAQUDGHA))
+                {
+                    simple_god_message(
+                        " is no longer ready to enhance your necromancy.");
+                }
+                else if (you_worship(GOD_LUGONU) && you.species != SP_FELID)
+                {
+                    simple_god_message(
+                        " is no longer ready to corrupt your weapon.");
+                }
             }
         }
 
