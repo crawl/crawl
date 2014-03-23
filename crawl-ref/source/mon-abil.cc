@@ -5220,7 +5220,7 @@ static int _throw_site_score(actor *thrower, actor *victim, coord_def site)
 
         monster *mons = monster_at(*ai);
         if (mons && !mons->friendly() && mons != tmons)
-            score += sqr(mons_threat_level(mons));
+            score += sqr(mons_threat_level(mons) + 2);
     }
     return score;
 }
