@@ -4720,7 +4720,6 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // Fire
     case SPELL_FLAME_TONGUE:             return TILEG_FLAME_TONGUE;
-    case SPELL_FIRE_BRAND:               return TILEG_FIRE_BRAND;
     case SPELL_THROW_FLAME:              return TILEG_THROW_FLAME;
     case SPELL_CONJURE_FLAME:            return TILEG_CONJURE_FLAME;
     case SPELL_INNER_FLAME:              return TILEG_INNER_FLAME;
@@ -4735,7 +4734,6 @@ tileidx_t tileidx_spell(spell_type spell)
     // Ice
     case SPELL_FREEZE:                   return TILEG_FREEZE;
     case SPELL_THROW_FROST:              return TILEG_THROW_FROST;
-    case SPELL_FREEZING_AURA:            return TILEG_FREEZING_AURA;
     case SPELL_HIBERNATION:              return TILEG_ENSORCELLED_HIBERNATION;
     case SPELL_OZOCUBUS_ARMOUR:          return TILEG_OZOCUBUS_ARMOUR;
     case SPELL_THROW_ICICLE:             return TILEG_THROW_ICICLE;
@@ -4750,7 +4748,6 @@ tileidx_t tileidx_spell(spell_type spell)
     // Poison
     case SPELL_STING:                    return TILEG_STING;
     case SPELL_CURE_POISON:              return TILEG_CURE_POISON;
-    case SPELL_POISON_WEAPON:            return TILEG_POISON_BRAND;
     case SPELL_INTOXICATE:               return TILEG_ALISTAIRS_INTOXICATION;
     case SPELL_OLGREBS_TOXIC_RADIANCE:   return TILEG_OLGREBS_TOXIC_RADIANCE;
     case SPELL_VENOM_BOLT:               return TILEG_VENOM_BOLT;
@@ -4821,7 +4818,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_ANIMATE_SKELETON:         return TILEG_ANIMATE_SKELETON;
     case SPELL_PAIN:                     return TILEG_PAIN;
     case SPELL_CORPSE_ROT:               return TILEG_CORPSE_ROT;
-    case SPELL_LETHAL_INFUSION:          return TILEG_LETHAL_INFUSION;
     case SPELL_SUBLIMATION_OF_BLOOD:     return TILEG_SUBLIMATION_OF_BLOOD;
     case SPELL_VAMPIRIC_DRAINING:        return TILEG_VAMPIRIC_DRAINING;
     case SPELL_REGENERATION:             return TILEG_REGENERATION;

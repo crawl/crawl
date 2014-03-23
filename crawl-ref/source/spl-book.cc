@@ -558,12 +558,8 @@ bool you_cannot_memorise(spell_type spell, bool &form)
     if (you.species == SP_FELID
         && (spell == SPELL_PORTAL_PROJECTILE
          // weapon branding is useless
-         || spell == SPELL_FIRE_BRAND
-         || spell == SPELL_FREEZING_AURA
-         || spell == SPELL_LETHAL_INFUSION
          || spell == SPELL_WARP_BRAND
          || spell == SPELL_EXCRUCIATING_WOUNDS
-         || spell == SPELL_POISON_WEAPON
          || spell == SPELL_SURE_BLADE
          // could be useful if it didn't require wielding
          || spell == SPELL_TUKIMAS_DANCE
@@ -2468,16 +2464,8 @@ void make_book_Kiku_gift(item_def &book, bool first)
     if (first)
     {
         chosen_spells[0] = coinflip() ? SPELL_PAIN : SPELL_ANIMATE_SKELETON;
-        if (you.species == SP_FELID || one_chance_in(3))
-        {
-            chosen_spells[1] = SPELL_CORPSE_ROT;
-            chosen_spells[2] = SPELL_SUBLIMATION_OF_BLOOD;
-        }
-        else
-        {
-            chosen_spells[1] = coinflip() ? SPELL_CORPSE_ROT : SPELL_SUBLIMATION_OF_BLOOD;
-            chosen_spells[2] = SPELL_LETHAL_INFUSION;
-        }
+        chosen_spells[1] = SPELL_CORPSE_ROT;
+        chosen_spells[2] = SPELL_SUBLIMATION_OF_BLOOD;
         chosen_spells[3] = (you.species == SP_DEEP_DWARF
                             || you.species == SP_MUMMY
                             || coinflip())
