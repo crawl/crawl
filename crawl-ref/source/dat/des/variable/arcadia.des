@@ -199,7 +199,7 @@ MONS:   satyr w:15 / spriggan berserker w:15 / spriggan air mage, faun
 MONS:   tengu conjurer ; quarterstaff . robe . longbow . arrow / \
         tengu conjurer ; quarterstaff . robe . crossbow . bolt / \
         centaur warrior / rakshasa / ogre mage ; giant club . \
-        robe . potion of berserk rage q:1 ident:type 
+        robe . potion of berserk rage q:1 ident:type
 KMONS:  L = thorn lotus
 KMONS:  P = plant
 ITEM:   grape q:1 / grape q:2 / nothing w:180
@@ -312,7 +312,7 @@ KFEAT:    PELNS = shallow_water
 SUBST:    X = tx
 SHUFFLE:  PS
 NSUBST:   1 = 4:1 / 4:2 / * = 1122., 6 = 1:7 / 2 = 66677 / *:6
-NSUBST:   N = 2:NL / 2:PS 
+NSUBST:   N = 2:NL / 2:PS
 FTILE:    |*1234567GTU+. = floor_pebble_cyan
 : old_forest_ends(_G)
 veto {{
