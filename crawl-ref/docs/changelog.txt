@@ -1,4 +1,4 @@
-Stone Soup 0.14 (up to 0.14-a0-3343-gf50c63c)
+Stone Soup 0.14 (up to 0.14-a0-3447-g819affa)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new races: Formicids and Vine Stalkers.
@@ -199,6 +199,8 @@ Monsters
   a confusion effect against the player.
 * All pandemonium lords now see invisible.
 * The Enchantress now appears as a normal unique in the Depths.
+* Josephine has a new spell set - Ghostly Fireball, Dispel Undead, Vampiric
+  Draining, and Animate Dead - and rN+++.
 * Lamia has been de-throned.
 
 Spells
@@ -262,6 +264,8 @@ Spells
   projectiles.
 * All clouds caused by the player will dissipate much faster outside of your
   line of sight.
+* Orbs of destruction don't explode if they collide with another orb of
+  destruction before travelling more than a short distance.
 * Removed spells: Dig, Summon Scorpions, Song of Shielding, Polymorph, Ice
   Storm, Demonic Horde, Summon Ugly Thing, Summon Dragon, Mass Abjuration.
 
@@ -365,6 +369,8 @@ Items
 * Curse scrolls and potions of blood no longer randomly generate.
 * All curse scrolls now accept targets (as though the player was worshipping
   Ashenzari in previous versions).
+* Magic resistance-granting items now grant fixed increments of magic
+  resistance (indicated on the % screen).
 * Removed potions of slowing.
 
 Cards
