@@ -2850,15 +2850,15 @@ static string _describe_draconian(const monster_info& mi)
 
         switch (subsp)
         {
-        case MONS_BLACK_DRACONIAN:      description += "black";   break;
-        case MONS_MOTTLED_DRACONIAN:    description += "mottled"; break;
-        case MONS_YELLOW_DRACONIAN:     description += "yellow";  break;
-        case MONS_GREEN_DRACONIAN:      description += "green";   break;
-        case MONS_PURPLE_DRACONIAN:     description += "purple";  break;
-        case MONS_RED_DRACONIAN:        description += "red";     break;
-        case MONS_WHITE_DRACONIAN:      description += "white";   break;
-        case MONS_GREY_DRACONIAN:       description += "grey";    break;
-        case MONS_PALE_DRACONIAN:       description += "pale";    break;
+        case MONS_BLACK_DRACONIAN:      description += "black ";   break;
+        case MONS_MOTTLED_DRACONIAN:    description += "mottled "; break;
+        case MONS_YELLOW_DRACONIAN:     description += "yellow ";  break;
+        case MONS_GREEN_DRACONIAN:      description += "green ";   break;
+        case MONS_PURPLE_DRACONIAN:     description += "purple ";  break;
+        case MONS_RED_DRACONIAN:        description += "red ";     break;
+        case MONS_WHITE_DRACONIAN:      description += "white ";   break;
+        case MONS_GREY_DRACONIAN:       description += "grey ";    break;
+        case MONS_PALE_DRACONIAN:       description += "pale ";    break;
         default:
             break;
         }
