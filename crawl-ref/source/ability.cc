@@ -796,12 +796,17 @@ static const string _detailed_cost_description(ability_type ability)
         ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
     }
 
-    if (abil.piety_cost)
+    if (abil.piety_cost || abil.flags & ABFLAG_PIETY)
     {
         have_cost = true;
         ret << "\nPiety  : ";
-        int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
-        ret << _get_piety_amount_str(avgcost);
+        if (abil.flags & ABFLAG_PIETY)
+            ret << "variable";
+        else
+        {
+            int avgcost = abil.piety_cost.base + abil.piety_cost.add / 2;
+            ret << _get_piety_amount_str(avgcost);
+        }
     }
 
     if (!have_cost)
@@ -815,9 +820,6 @@ static const string _detailed_cost_description(ability_type ability)
 
     if (abil.flags & ABFLAG_PAIN)
         ret << "\nUsing this ability will hurt you.";
-
-    if (abil.flags & ABFLAG_PIETY)
-        ret << "\nIt will drain your piety while it is active.";
 
     if (abil.flags & ABFLAG_EXHAUSTION)
         ret << "\nIt cannot be used when exhausted.";
