@@ -6,97 +6,81 @@ also increases your maximum hit points.
 %%%%
 Short Blades
 
-Being skilled with a particular type of weapon will allow you to attack more
-quickly with all weapons of this type, as well as increasing your accuracy and
-damage with them. It is generally recommended to concentrate your efforts on
-one or two weapon types to become more powerful in them.
+Short Blades are more effective than any other weapon type at stabbing helpless
+foes.
 
-Short Blades have a reputation for producing rather little damage in the late
-game, but, on the other hand, they are the best implements for stabbing.
+Being skilled with Short Blades will allow you to attack more quickly with all
+weapons of this type, as well as increasing your accuracy and damage with them.
 
 Being skilled with Short Blades makes it easier to become more skilled with
 Long Blades, and vice versa.
 %%%%
 Long Blades
 
-Being skilled with a particular type of weapon will allow you to attack more
-quickly with all weapons of this type, as well as increasing your accuracy and
-damage with them. It is generally recommended to concentrate your efforts on
-one or two weapon types to become more powerful in them.
+Being skilled with Long Blades will allow you to attack more quickly with all
+weapons of this type, as well as increasing your accuracy and damage with them.
 
 Being skilled with Long Blades makes it easier to become more skilled with
 Short Blades, and vice versa.
 %%%%
 Axes
 
-Being skilled with a particular type of weapon will allow you to attack more
-quickly with all weapons of this type, as well as increasing your accuracy and
-damage with them. It is generally recommended to concentrate your efforts on
-one or two weapon types to become more powerful in them.
-
 Axes cleave through multiple enemies with a single swing, hitting foes in an
 arc around the wielder.
+
+Being skilled with Axes will allow you to attack more quickly with all weapons
+of this type, as well as increasing your accuracy and damage with them.
 
 Being skilled with Axes makes it easier to become more skilled with Maces &
 Flails or Polearms, and vice versa.
 %%%%
 Maces & Flails
 
-Being skilled with a particular type of weapon will allow you to attack more
-quickly with all weapons of this type, as well as increasing your accuracy and
-damage with them. It is generally recommended to concentrate your efforts on
-one or two weapon types to become more powerful in them.
+Being skilled with Maces & Flails will allow you to attack more quickly with
+all weapons of this type, as well as increasing your accuracy and damage with
+them.
 
 Being skilled with Maces & Flails makes it easier to become more skilled with
 Axes or Staves, and vice versa.
 %%%%
 Polearms
 
-Being skilled with a particular type of weapon will allow you to attack more
-quickly with all weapons of this type, as well as increasing your accuracy and
-damage with them. It is generally recommended to concentrate your efforts on
-one or two weapon types to become more powerful in them.
-
 Polearms can be evoked with ‘v’ to attack enemies from two spaces away.
+
+Being skilled with Polearms will allow you to attack more quickly with all
+weapons of this type, as well as increasing your accuracy and damage with them.
 
 Being skilled with Polearms makes it easier to become more skilled with Axes or
 Staves, and vice versa.
 %%%%
 Staves
 
-Being skilled with a particular type of weapon will allow you to attack more
-quickly with all weapons of this type, as well as increasing your accuracy and
-damage with them. It is generally recommended to concentrate your efforts on
-one or two weapon types to become more powerful in them.
-
 Staves require a relatively low amount of skill to be used most effectively,
 although they lack the high damage potential of some other weapon classes.
+
+Being skilled with Staves will allow you to attack more quickly with all
+weapons of this type, as well as increasing your accuracy and damage with them.
 
 Being skilled with Staves makes it easier to become more skilled with Maces &
 Flails or Polearms, and vice versa.
 %%%%
 Slings
 
-Being skilled in a particular type of ranged attack will let you deal more
-damage when using the appropriate launcher and ammunition.
+Being skilled with Slings will let you deal more damage when using the
+appropriate launcher and ammunition.
 
 Being skilled with Slings makes it easier to become more skilled in Throwing,
 and vice versa.
 %%%%
 Bows
 
-Being skilled in a particular type of ranged attack will let you deal more
-damage when using the appropriate launcher and ammunition.
+Being skilled with Bows will let you deal more damage when using the
+appropriate launcher and ammunition.
 %%%%
 Crossbows
 
-Being skilled in a particular type of ranged attack will let you deal more
-damage when using the appropriate launcher and ammunition.
-%%%%
-Darts
-
-Being skilled in a particular type of ranged attack will let you deal more
-damage when using the appropriate launcher and ammunition.
+Being skilled with Crossbows will let you deal more damage when using the
+appropriate launcher and ammunition.
 %%%%
 Throwing
 
@@ -125,6 +109,10 @@ By training Stealth, you can make it less likely that monsters will notice you
 if they are asleep or otherwise unalert, and increase your chances of monsters
 losing track of you after you leave their vision. Note that monsters become
 more suspicious and observant as you descend.
+
+Stealth skill, along with the weapon skill for your equipped weapon, also
+governs the likelihood of doing a great amount of damage when attacking a
+distracted or helpless creature, as well as the amount of extra damage dealt.
 %%%%
 # TAG_MAJOR_VERSION == 34
 Stabbing
@@ -155,52 +143,49 @@ do so.
 %%%%
 Spellcasting
 
-Training Spellcasting makes it easier to learn and cast spells, along with
-increasing your magical reserves. Gaining a level in Spellcasting gives you
-more “spell slots” to spend on new spells. Spellcasting skill and your
-intelligence are the only factors countering spell hunger.
+Being skilled in Spellcasting slightly increases the success rate and spell
+power of all spells, along with increasing your magical reserves and reducing
+the effects of spell hunger.
+
+Training Spellcasting also gives you more spell slots to spend on new spells.
 %%%%
 Conjurations
 
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-
 Conjurations are battle oriented spells, which often work by conjuring up a
 chunk of short-lived matter and propelling it towards the victim to deal direct
-damage. Being skilled in Conjurations usually increases the damage of such
-spells, and sometimes affects their range or the size of the area affected.
+damage. Being skilled in Conjurations usually increases the damage and accuracy
+of such spells, and sometimes affects their range or the size of the area
+affected.
+
+Being skilled in Conjurations increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
 %%%%
 Hexes
-
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
 
 Hexes try to bestow various enchantments on nearby things. While none do direct
 damage, being ensorcelled can effectively take an opponent out of combat,
 although they often require overcoming an opponent's resistance to hostile
 enchantments to have an effect. Being skilled in Hexes will help overcome this
 resistance.
+
+Being skilled in Hexes increases the success rate and spell power of spells in
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 %%%%
 Charms
 
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-
 Charms provide you with a number of self-enhancing auras. Training Charms skill
 will often increase the duration or effectiveness of these auras.
-%%%%
-Summonings
 
-Being skilled in a magical “school” makes it easier to learn and cast spells of
+Being skilled in Charms increases the success rate and spell power of spells in
 this school. Many spells belong to a combination of several schools, in which
 case spellcasting success and power will depend on the average skill in these
 schools.
+%%%%
+Summonings
 
 Summonings deals with summoning creatures from another plane of reality to join
 your army or distract your foes. Increasing Summonings skill may have a number
@@ -208,117 +193,124 @@ of effects depending on the spell, such as longer duration, more powerful
 allies, or lower chances of creating hostile creatures. Note that summoned
 beings don't leave corpses and don't give experience when killed, and their
 equipment is as ephemeral as they are.
+
+Being skilled in Summonings increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
 %%%%
 Necromancy
-
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
 
 Necromancy is the art of draining and gaining life, although most often
 associated with zombies and other undead. As such, Necromancy spells have a
 wide range of effects, ranging from spells to create or control the undead to
 spells granting unholy healing in various forms.
+
+Being skilled in Necromancy increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
 %%%%
 Translocations
-
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
 
 Translocations focus on the spatial movement of beings or objects, including
 useful spells to translocate yourself over short distances quickly or to
 transport your enemies away from you.
+
+Being skilled in Translocations increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
 %%%%
 Transmutations
 
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-
 Transmutations deal with changing shapes. Many Transmutations involve changing
-your own form, but the school also contains spells to change the shape of
+your own form, but the school also contains spells to cause changes in your
 enemies, or to transform objects around you.
+
+Being skilled in Transmutations increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
 %%%%
 Fire Magic
 
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-
 Fire Magic focuses mainly on dealing fire damage over long distances, with many
 effective Conjurations.
+
+Being skilled in Fire Magic increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
 
 Being skilled in Fire Magic makes Ice Magic harder to learn, and vice versa.
 %%%%
 Ice Magic
 
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-
 Ice Magic contains a range of direct damage spells, as well as some defensive
 effects such as spells to craft temporary shields and armour from ice.
+
+Being skilled in Ice Magic increases the success rate and spell power of spells
+in this school. Many spells belong to a combination of several schools, in
+which case spellcasting success and power will depend on the average skill in
+these schools.
 
 Being skilled in Ice Magic makes Fire Magic harder to learn, and vice versa.
 %%%%
 Air Magic
-
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
 
 Air Magic provides spells to deal damage directly with the wind, as well as
 noisy but powerful lightning conjurations. It also provides some utility
 spells, such as Charms to call the wind to assist your movement or protect you
 from projectile attacks.
 
+Being skilled in Air Magic increases the success rate and spell power of spells
+in this school. Many spells belong to a combination of several schools, in
+which case spellcasting success and power will depend on the average skill in
+these schools.
+
 Being skilled in Air Magic makes Earth Magic harder to learn, and vice versa.
 %%%%
 Earth Magic
-
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
 
 Earth Magic contains spells able to deal large amounts of direct physical
 damage, which cannot be resisted like fire, cold and lightning damage can. It
 is also linked with some Transmutations, with spells to liquefy the earth
 around you, or to turn your enemies to stone.
 
+Being skilled in Earth Magic increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
+
 Being skilled in Earth Magic makes Air Magic harder to learn, and vice versa.
 %%%%
 Poison Magic
 
-Being skilled in a magical “school” makes it easier to learn and cast spells of
-this school. Many spells belong to a combination of several schools, in which
-case spellcasting success and power will depend on the average skill in these
-schools.
-
-Poison magic is at its most useful early on, as many monsters are resistant to
+Poison Magic is at its most useful early on, as many monsters are resistant to
 poison in the later game. There are poison spells of high utility throughout
 the game, though.
+
+Being skilled in Poison Magic increases the success rate and spell power of
+spells in this school. Many spells belong to a combination of several schools,
+in which case spellcasting success and power will depend on the average skill
+in these schools.
 %%%%
 Invocations
 
 Your Invocations skill affects the likelihood that an attempt to use a divine
-ability will be successful, and often the power of such abilities. The
-Invocations skill also affects your magical reserve, but to a lesser degree
-than the Spellcasting skill, and only the highest contribution is used.
+ability will be successful, and often the power of such abilities.
+
+The Invocations skill also affects your magical reserves, but to a lesser
+degree than the Spellcasting skill, and only the highest contribution is used.
 %%%%
 Evocations
 
 Evocations is all about using magical items like wands, decks or other uncommon
 objects. The higher your skill, the more likely a positive outcome is when
-evoking items. Also, high skill may let you determine the amount of charges a
-zapped wand has left. The Evocations skill also affects your magical reserve,
-but to a lesser degree than the Spellcasting skill, and only the highest
-contribution is used.
+evoking items. High skill may also let you determine the amount of charges a
+zapped wand has left.
+
+The Evocations skill also affects your magical reserves, but to a lesser degree
+than the Spellcasting skill, and only the highest contribution is used.
 %%%%
