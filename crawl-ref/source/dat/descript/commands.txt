@@ -39,8 +39,8 @@ Pray to your god
 CMD_PRAY verbose
 
 If your god likes sacrifices, this will offer a corpse or other item. Also, if
-you're standing on an altar this allows you to join the corresponding god. For
-some gods, praying also has other special effects.
+you're standing on an altar this allows you to join the corresponding god. A
+few gods grant unique gifts when praying at an altar with high piety.
 %%%%
 CMD_SEARCH_STASHES
 
@@ -132,7 +132,7 @@ Dump character progress
 CMD_CHARACTER_DUMP verbose
 
 Dump a huge amount of information about your character into a file
-‘playername.txt’ in the morgue directory, to peruse at your leasure. This
+‘playername.txt’ in the morgue directory, to peruse at your leisure. This
 includes main stats, equipment, spells, skills, notes, etc.
 %%%%
 CMD_AUTOFIGHT
