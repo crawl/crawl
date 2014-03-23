@@ -643,7 +643,7 @@ badly hurt or frightened.
 %%%%
 black draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular black-scaled humanoid with a reptilian tail and powerful wings.
 %%%%
 black mamba
 
@@ -970,7 +970,7 @@ of short jointed legs and topped with an almost human head.
 %%%%
 demonspawn
 
-The offspring of mortals and demons, with its hellish heritage asserting
+A half-mortal, half-demonic creature, with its hellish heritage asserting
 itself through a certain devilish cast to its features.
 %%%%
 diamond obelisk
@@ -985,13 +985,8 @@ hide, powerful legs, and a memory to die for.
 %%%%
 draconian
 
-A bipedal reptilian creature slightly larger than a human. Draconians have
-fearsome dragonish heads, rudimentary wings, tails, and a covering of tough
-scales. In their mature form, their scales take on a distinct colouring, and
-they acquire a destructive breath whose nature is signified by their colour.
-Whether draconians arose naturally, or are the product of twisted
-experimentation by mad wizards on the crossbreeding of dragons and humans, is a
-matter of much doubt.
+A brown-scaled humanoid with a reptilian tail and small wings. It is yet to
+develop the distinct colouring and powerful breath weapon of its mature form.
 %%%%
 draconian annihilator
 
@@ -1006,8 +1001,8 @@ drakes.
 draconian knight
 
 Protected by thick scales, skillful weapon use, and complementary magic,
-this draconian is a dangerous opponent. To round out the threats of other
-draconians, these knights have specialized in ice magic and necromancy.
+this draconian is a dangerous opponent. Draconian knights specialize in ice
+magic and necromancy.
 %%%%
 draconian monk
 
@@ -1018,6 +1013,7 @@ tail rain down blows upon its opponents.
 draconian scorcher
 
 A cunning draconian who has mastered the inner secrets of the element of fire.
+Its scales are sooty from years of magical pyrotechnics.
 %%%%
 draconian shifter
 
@@ -1027,7 +1023,7 @@ to any place, either on this world or outside of it.
 draconian zealot
 
 This draconian derives its hellish powers and demonic allies from the worship
-of dark gods unknown to men, dwarves, elves or orcs.
+of some unknown dark god.
 %%%%
 drowned soul
 
@@ -1379,7 +1375,7 @@ A bloated form covered in oozing sores and exhaling clouds of lethal poison.
 %%%%
 green draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular green-scaled humanoid with a reptilian tail and small wings.
 %%%%
 green rat
 
@@ -1388,7 +1384,7 @@ tends to form great swarms of its kin.
 %%%%
 grey draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular grey-scaled humanoid with a reptilian tail and small wings.
 %%%%
 griffon
 
@@ -1818,7 +1814,7 @@ ability to drive those who look upon it insane with rage.
 %%%%
 mottled draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular humanoid with mottled scales, a reptilian tail and small wings.
 %%%%
 mottled dragon
 
@@ -2004,7 +2000,7 @@ proficiency in the occult arts — though still for martial purposes.
 %%%%
 pale draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular humanoid with pale scales, a reptilian tail and small wings.
 %%%%
 pandemonium lord
 
@@ -2085,7 +2081,7 @@ parts, it lacks the coordination needed to move quickly.
 %%%%
 purple draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular purple-scaled humanoid with a reptilian tail and small wings.
 %%%%
 putrid demonspawn
 
@@ -2164,7 +2160,7 @@ victims as they prod them from afar then nimbly retreat from pursuit.
 %%%%
 red draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular red-scaled humanoid with a reptilian tail and small wings.
 %%%%
 red wasp
 
@@ -2765,7 +2761,7 @@ their final resting place.
 %%%%
 white draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular white-scaled humanoid with a reptilian tail and small wings.
 %%%%
 white imp
 
@@ -2846,7 +2842,7 @@ brethren around to do its bidding.
 %%%%
 yellow draconian
 
-A scale-covered humanoid with a reptilian tail and small wings.
+A muscular yellow-scaled humanoid with a reptilian tail and small wings.
 %%%%
 yellow wasp
 

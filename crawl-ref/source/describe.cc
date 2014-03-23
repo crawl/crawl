@@ -2839,97 +2839,64 @@ void describe_spell(spell_type spelled, const item_def* item)
     }
 }
 
-static string _describe_draconian_role(monster_type type)
-{
-    switch (type)
-    {
-    case MONS_DRACONIAN_SHIFTER:
-        return "It darts around disconcertingly without taking a step.";
-    case MONS_DRACONIAN_SCORCHER:
-        return "Its scales are sooty from years of magical pyrotechnics.";
-    case MONS_DRACONIAN_ZEALOT:
-        return "In its gaze you see all the malefic power of its "
-               "terrible god.";
-    case MONS_DRACONIAN_ANNIHILATOR:
-        return "Crackling balls of pure energy hum and spark up and down its "
-               "scaled fists and arms.";
-    case MONS_DRACONIAN_CALLER:
-        return "It looks especially reptilian, and eager for company.";
-    case MONS_DRACONIAN_MONK:
-        return "It looks unnaturally strong and dangerous with its fists.";
-    case MONS_DRACONIAN_KNIGHT:
-        return "It wields a deadly weapon with menacing efficiency.";
-    default:
-        return "";
-    }
-}
-
-static string _describe_draconian_colour(int species)
-{
-    switch (species)
-    {
-    case MONS_BLACK_DRACONIAN:
-        return "Sparks crackle and flare out of its mouth and nostrils.";
-    case MONS_MOTTLED_DRACONIAN:
-        return "Liquid flames drip from its mouth.";
-    case MONS_YELLOW_DRACONIAN:
-        return "Acid fumes swirl around it.";
-    case MONS_GREEN_DRACONIAN:
-        return "Venom steams and drips from its jaws.";
-    case MONS_PURPLE_DRACONIAN:
-        return "Its outline shimmers with wild energies.";
-    case MONS_RED_DRACONIAN:
-        return "Smoke pours from its nostrils.";
-    case MONS_WHITE_DRACONIAN:
-        return "Frost pours from its nostrils.";
-    case MONS_GREY_DRACONIAN:
-        return "Its scales and tail are adapted to the water.";
-    case MONS_PALE_DRACONIAN:
-        return "It is cloaked in a pall of superheated steam.";
-    }
-    return "";
-}
-
 static string _describe_draconian(const monster_info& mi)
 {
     string description;
     const int subsp = mi.draco_or_demonspawn_subspecies();
 
-    if (subsp == MONS_DRACONIAN)
-        description += "A ";
-    else
-        description += "A muscular ";
+    if (subsp != mi.type)
+    {
+        description += "It has ";
+
+        switch (subsp)
+        {
+        case MONS_BLACK_DRACONIAN:      description += "black";   break;
+        case MONS_MOTTLED_DRACONIAN:    description += "mottled"; break;
+        case MONS_YELLOW_DRACONIAN:     description += "yellow";  break;
+        case MONS_GREEN_DRACONIAN:      description += "green";   break;
+        case MONS_PURPLE_DRACONIAN:     description += "purple";  break;
+        case MONS_RED_DRACONIAN:        description += "red";     break;
+        case MONS_WHITE_DRACONIAN:      description += "white";   break;
+        case MONS_GREY_DRACONIAN:       description += "grey";    break;
+        case MONS_PALE_DRACONIAN:       description += "pale";    break;
+        default:
+            break;
+        }
+
+        description += "scales. ";
+    }
 
     switch (subsp)
     {
-    case MONS_DRACONIAN:            description += "brown-";   break;
-    case MONS_BLACK_DRACONIAN:      description += "black-";   break;
-    case MONS_MOTTLED_DRACONIAN:    description += "mottled-"; break;
-    case MONS_YELLOW_DRACONIAN:     description += "yellow-";  break;
-    case MONS_GREEN_DRACONIAN:      description += "green-";   break;
-    case MONS_PURPLE_DRACONIAN:     description += "purple-";  break;
-    case MONS_RED_DRACONIAN:        description += "red-";     break;
-    case MONS_WHITE_DRACONIAN:      description += "white-";   break;
-    case MONS_GREY_DRACONIAN:       description += "grey-";    break;
-    case MONS_PALE_DRACONIAN:       description += "pale-";    break;
+    case MONS_BLACK_DRACONIAN:
+        description += "Sparks flare out of its mouth and nostrils.";
+        break;
+    case MONS_MOTTLED_DRACONIAN:
+        description += "Liquid flames drip from its mouth.";
+        break;
+    case MONS_YELLOW_DRACONIAN:
+        description += "Acidic fumes swirl around it.";
+        break;
+    case MONS_GREEN_DRACONIAN:
+        description += "Venom drips from its jaws.";
+        break;
+    case MONS_PURPLE_DRACONIAN:
+        description += "Its outline shimmers with magical energy.";
+        break;
+    case MONS_RED_DRACONIAN:
+        description += "Smoke pours from its nostrils.";
+        break;
+    case MONS_WHITE_DRACONIAN:
+        description += "Frost pours from its nostrils.";
+        break;
+    case MONS_GREY_DRACONIAN:
+        description += "Its scales and tail are adapted to the water.";
+        break;
+    case MONS_PALE_DRACONIAN:
+        description += "It is cloaked in a pall of superheated steam.";
+        break;
     default:
         break;
-    }
-
-    description += "scaled humanoid with wings.";
-
-    if (subsp != MONS_DRACONIAN)
-    {
-        const string drac_col = _describe_draconian_colour(subsp);
-        if (!drac_col.empty())
-            description += " " + drac_col;
-    }
-
-    if (subsp != mi.type)
-    {
-        const string drac_role = _describe_draconian_role(mi.type);
-        if (!drac_role.empty())
-            description += " " + drac_role;
     }
 
     return description;
@@ -3014,20 +2981,18 @@ static string _describe_demonspawn_role(monster_type type)
     switch (type)
     {
     case MONS_BLOOD_SAINT:
-        return "It is caked in blood and dusty residue from the wake of the "
-               "devastation it weaves, wreaking divinely-inspired destruction.";
+        return "It weaves powerful and unpredictable spells of devastation.";
     case MONS_CHAOS_CHAMPION:
-        return "Even other demonspawn fear its wild, maddened gaze, as well "
-               "as its reality-warping powers from the chaos gods.";
+        return "It possesses chaotic, reality-warping powers.";
     case MONS_WARMONGER:
-        return "It is ever-ready for eternal conflict untainted by magic, "
-               "and fights as easily as it breathes for the gods of battle.";
+        return "It is devoted to combat, disrupting the magic of its foes as "
+               "it battles endlessly.";
     case MONS_CORRUPTER:
-        return "Space and flesh shimmer and twist in its vicinity, as if "
-               "afraid of this unwavering servant of celestial corruption.";
+        return "It corrupts space around itself, and can twist even the very "
+               "flesh of its opponents.";
     case MONS_BLACK_SUN:
-        return "Its endless devotion to deities of death have left it with "
-               "an unholy radiance, shining a brilliant darkness.";
+        return "It shines with an unholy radiance, and wields powers of "
+               "darkness from its devotion to the deities of death.";
     default:
         return "";
     }
@@ -3038,15 +3003,15 @@ static string _describe_demonspawn_base(int species)
     switch (species)
     {
     case MONS_MONSTROUS_DEMONSPAWN:
-        return "more beast now than whatever species it is descended from";
+        return "It is more beast now than whatever species it is descended from.";
     case MONS_GELID_DEMONSPAWN:
-        return "softly glowing with an icy aura";
+        return "It is covered in icy armour.";
     case MONS_INFERNAL_DEMONSPAWN:
-        return "giving off an intense heat";
+        return "It gives off an intense heat.";
     case MONS_PUTRID_DEMONSPAWN:
-        return "surrounded with sickly fumes and gases";
+        return "It is surrounded by sickly fumes and gases.";
     case MONS_TORTUROUS_DEMONSPAWN:
-        return "menacing with bony spines";
+        return "It menaces with bony spines.";
     }
     return "";
 }
@@ -3056,17 +3021,7 @@ static string _describe_demonspawn(const monster_info& mi)
     string description;
     const int subsp = mi.draco_or_demonspawn_subspecies();
 
-
-    if (subsp != MONS_DEMONSPAWN)
-    {
-        description += "A demonic-looking humanoid";
-        const string demonspawn_base = _describe_demonspawn_base(subsp);
-        if (!demonspawn_base.empty())
-            description += ", " + demonspawn_base;
-        description += ".";
-    }
-    else
-        description += "A vaguely demonic-looking humanoid.";
+    description += _describe_demonspawn_base(subsp);
 
     if (subsp != mi.type)
     {
@@ -3593,7 +3548,6 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
             inf.body <<  "\nIt has come for your soul!\n";
         break;
 
-    case MONS_DRACONIAN:
     case MONS_RED_DRACONIAN:
     case MONS_WHITE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
