@@ -1113,6 +1113,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FIRE_BRAND, "Fire Brand",
      SPTYP_CHARMS | SPTYP_FIRE,
@@ -1152,6 +1153,7 @@ struct spell_desc
      true
 },
 
+#endif
 {
     SPELL_IRON_SHOT, "Iron Shot",
      SPTYP_CONJURATION | SPTYP_EARTH,
@@ -1258,6 +1260,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_POISON_WEAPON, "Poison Weapon",
      SPTYP_CHARMS | SPTYP_POISON,
@@ -1271,6 +1274,7 @@ struct spell_desc
      true
 },
 
+#endif
 {
     SPELL_DEBUGGING_RAY, "Debugging Ray",
      SPTYP_CONJURATION,

@@ -1739,20 +1739,17 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SURE_BLADE:
         return cast_sure_blade(powc, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_FIRE_BRAND:
-        return brand_weapon(SPWPN_FLAMING, powc, fail);
-
     case SPELL_FREEZING_AURA:
-        return brand_weapon(SPWPN_FREEZING, powc, fail);
-
     case SPELL_POISON_WEAPON:
-        return brand_weapon(SPWPN_VENOM, powc, fail);
+    case SPELL_LETHAL_INFUSION:
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_EXCRUCIATING_WOUNDS:
         return brand_weapon(SPWPN_PAIN, powc, fail);
-
-    case SPELL_LETHAL_INFUSION:
-        return brand_weapon(SPWPN_DRAINING, powc, fail);
 
     case SPELL_WARP_BRAND:
         return brand_weapon(SPWPN_DISTORTION, powc, fail);
