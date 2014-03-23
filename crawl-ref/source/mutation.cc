@@ -555,12 +555,12 @@ string describe_mutations(bool center_title)
         if (temperature_effect(LORC_LAVA_BOOST))
         {
             col = "white";
-            result += "<" + col + ">Your lava-based spells are more powerful.<" + col + ">\n";
+            result += "<" + col + ">Your lava-based spells are more powerful.</" + col + ">\n";
         }
         else if (temperature_effect(LORC_FIRE_BOOST))
         {
             col = "lightred";
-            result += "<" + col + ">Your fire spells are more powerful.<" + col + ">\n";
+            result += "<" + col + ">Your fire spells are more powerful.</" + col + ">\n";
         }
 
         // Cold vulnerability
