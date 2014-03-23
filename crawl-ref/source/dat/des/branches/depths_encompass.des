@@ -6,13 +6,13 @@
 {{
     function grunt_profane_halls_setup(e)
         if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
-            e.kmons('1 = base draconian / nothing w:20')
+            e.kmons('1 = base draconian / nothing w:25')
             e.kmons('2 = nonbase draconian / base draconian w:20')
-            e.kmons('3 = draconian zealot')
+            e.kmons('3 = draconian zealot / draconian monk w:2')
         else
             e.kmons('1 = deep elf fighter / deep elf conjurer / '
                     .. 'deep elf summoner / deep elf knight w:5 / '
-                    .. 'deep elf annihilator w:5 / '
+                    .. 'deep elf mage w:5 / '
                     .. 'deep elf demonologist w:5 /'
                     .. 'nothing w:68')
             e.kmons('2 = deep elf knight / deep elf fighter w:20')
@@ -363,11 +363,16 @@ ENDMAP
 NAME:    hangedman_slaughterboxes
 TAGS:    no_pool_fixup no_monster_gen no_item_gen patrolling uniq_d_encompass
 ORIENT:  encompass
+DEPTH:   Depths:2-
+PLACE:   D:$, Depths:$
+WEIGHT:  1 (D:$), 2 (Depths:$), 10
 MONS:    butterfly, plant
 KMONS:   S = 0 band
 KMONS:   # = 9 band
+KMONS:   = = draconian annihilator / draconian knight / draconian monk
 KFEAT:   ^ = stone_arch
-KFEAT:   - = enter_vaults
+KFEAT:   - = enter_depths
+KFEAT:   = = enter_zot
 SHUFFLE: :;, `~, 34, 67, !?, XZ / yz
 SUBST:   % = %:40 $:20 ., * = *:30 %, | = |:30 *
 SHUFFLE: ABCDE / BADCE / AGHIC / ACGHE, BDF
@@ -381,15 +386,18 @@ SUBST:   nps = ., oqtuv = x, r : .x
 SUBST:   X = xx', y= x'', Z = xx., z = x..
 SUBST:   ;` = ., :~ = x, T = TTV, U = TUU
 SUBST:   7? = ., 36! = 0, Y : 09, 5 = 09, 4 = 9
-SUBST:   = : ttx2, " : WW', _  = C, @ = G
+SUBST:   " : WW', _  = C, @ = G
 NSUBST:  ' = 7:S / 2:# / 6 = S:2 #:1 .:2 / *:.
 : if you.absdepth() > 20 then
 SUBST:   & : a:45 c:8 vb x:2, a : c:15 vb
 MARKER:  ^ = lua:props_marker { portal=1 }
+:    if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+SUBST:   ) = =, >]} = .
+:    end
 : else
 SUBST:   & : a:80 x:15 c:3 v:1 b:1, a : c:38 v:2 b:2
-:    if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
-NSUBST:  ^ = 1:- / *:^
+:    if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
+SUBST:   }] = ., ) = -, > = <
 :    end
 : end
 MAP
@@ -440,14 +448,14 @@ xxxZ.......aaaaaaa....9.&.....0aal%&&......+m.&&%%%%%%llaa
   xxZ'fgd'.+W....._..2..1waE.BEB..&..KNK.Na..;x:x;x:x;x.Zxx
  xxxZ.efc..aww..........2waa.CDA.&+&.LMJ.aa.;x........;.Zxx
 xxxxZ......aawWWWwwwwwwwwwaa9.....&.....9aa.x..:xxx;x.x.Zxx
-xxxX'''='..aaa++aaaaaaaaaaaaaaEaaaaaaaNaaaa.:.:x'''';.:.Zxx
+xxxX'''2'..aaa++aaaaaaaaaaaaaaEaaaaaaaNaaaa.:.:x'''';.:.Zxx
 xxX''''''........aaaaaaaaaaaaaaaaaaaaaaaaa..x.x';:;'x.x.Zxx
-xxX''''''=....''''''''''''''''''''''''''....;.x':0:'x.;.Zxx
-xxX'='^'''''.cde''efc''''''''''''LMJ''BAD...x.x';:;'x.x.Zxx
-xxX'''""'''=.fgd''dgd''pqn''CDA''KNK''CEA...:.;''''x:.x.Zxx
+xxX''''''2....''''''''''''''''''''''''''....;.x':0:'x.;.Zxx
+xxX'2'^'''''.cde''efc''''''''''''LMJ''BAD...x.x';:;'x.x.Zxx
+xxX'''""'''2.fgd''dgd''pqn''CDA''KNK''CEA...:.;''''x:.x.Zxx
 xxX'''""^'''.efc''cfe''oro''BEB''JML''DCB...x.x;xxx:..x.Zxx
 xxX''^''''''..'''''''''nqp''ADC'''''''''....;........x;.Zxx
-xxX'''''='''ZZZXXXXXXX''''''''''XXXXXXXXZZ..x;x:x;x:x;..Zxx
+xxX'''''2'''ZZZXXXXXXX''''''''''XXXXXXXXZZ..x;x:x;x:x;..Zxx
 xxxX'''''''XxxxxxxxxxxXXXXXXXXXXxxxxxxxxxxZ............Zxxx
  xxxXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxZZZZZZZZZZZZxxx
   xxxxxxxxxxx        xxxxxxxxxxxxx       xxxxxxxxxxxxxxxx
@@ -463,7 +471,7 @@ NAME: grunt_profane_halls
 TAGS: no_monster_gen uniq_d_encompass
 PLACE: Depths:$
 DEPTH: Depths:2-
-WEIGHT: 2 (Depths:$), 10
+WEIGHT: 1 (Depths:$), 10
 ORIENT: encompass
 SHUFFLE: {[(<
 : if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
@@ -486,8 +494,8 @@ KMONS: L = shadow dragon
 KMONS: M = quicksilver dragon
 KMONS: N = golden dragon
 : else
-KMONS: K = deep elf blademaster
-KMONS: L = deep elf master archer
+KMONS: K = deep elf blademaster / deep elf master archer
+KMONS: L = deep elf annihilator
 KMONS: M = deep elf death mage
 KMONS: N = deep elf sorcerer
 : end
@@ -527,9 +535,9 @@ ccccccccc....cccccc.......++c......ccdddddcc......c++.......cccccc....ccccccccc
 ccccccccG....Gcccc...9...c+.........ccccccc.........+c...9...ccccG....Gcccccccc
 ccccccccc....cccc.......cc........1....:....1........cc.......cccc....ccccccccc
 cccccccccc++ccccc......cc..............1..............cc......ccccc++cccccccccc
-cccceeeeeeeeeeecc++...cc.....G....1..G...G..1....G.....cc...++ccfffffffffffcccc
-cccceeeeeeeeeeeeee++ccc%...........G...D...G...........%ccc++ffffffffffffffcccc
-cccceeeeeeeeeeeeeeeeccc%.....1..1.2.........2.1..1.....%cccffffffffffffffffcccc
+cccceeeeeeeeeeecc++...cc.....G.......G...G.......G.....cc...++ccfffffffffffcccc
+cccceeeeeeeeeeeeee++ccc%.........1.G...D...G.1.........%ccc++ffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeccc%.....1....2.........2....1.....%cccffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeecc.........G.:%HHHHH%:.G.........ccffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeecc..........%HHHHHHH%..........ccfffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeeec.......G..HHHHHHHHH..G.......cffffffffffffffffffffcccc
@@ -539,9 +547,9 @@ cccceeeeeeeeeeeeeeeeeeeec..........HHHHHHHHH..........cffffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeeec.......G..HHHHHHHHH..G.......cffffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeeecc..........%HHHHHHH%..........ccfffffffffffffffffffcccc
 cccceeeeeeeeeeeeeeeeeecc.........G.:%HHHHH%:.G.........ccffffffffffffffffffcccc
-cccceeeeeeeeeeeeeeeeccc%.....1..1.2.........2.1..1.....%cccffffffffffffffffcccc
-cccceeeeeeeeeeeeee++ccc%...........G...D...G...........%ccc++ffffffffffffffcccc
-cccceeeeeeeeeeecc++...cc.....G....1..G...G..1....G.....cc...++ccfffffffffffcccc
+cccceeeeeeeeeeeeeeeeccc%.....1....2.........2....1.....%cccffffffffffffffffcccc
+cccceeeeeeeeeeeeee++ccc%.........1.G...D...G.1.........%ccc++ffffffffffffffcccc
+cccceeeeeeeeeeecc++...cc.....G.......G...G.......G.....cc...++ccfffffffffffcccc
 cccccccccc++ccccc......cc..............1..............cc......ccccc++cccccccccc
 ccccccccc....cccc.......cc........1....:....1........cc.......cccc....ccccccccc
 ccccccccG....Gcccc...9...c+.........ccccccc.........+c...9...ccccG....Gcccccccc
@@ -605,10 +613,10 @@ ENDMAP
 NAME: grunt_profane_temple_geh
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-NSUBST: 5 = 1:6 / *:5
-KMONS: 4 = red devil / hell hound / flaming corpse w:5
+NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
+KMONS: 4 = red devil / hell hound / efreet w:5
 KMONS: 5 = sun demon
-KMONS: 6 = hellion / balrug
+KMONS: 6 = salamander firebrand / balrug
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 KMASK: 12345 = !no_monster_gen
@@ -638,7 +646,7 @@ ENDMAP
 NAME: grunt_profane_temple_coc
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-NSUBST: 5 = 1:6 / *:5
+NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMONS: 4 = blue devil / simulacrum w:20 / freezing wraith
 KMONS: 5 = ice devil
 KMONS: 6 = blizzard demon / ice dragon
@@ -672,10 +680,10 @@ ENDMAP
 NAME: grunt_profane_temple_tar
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-NSUBST: 5 = 1:6 / *:5
-KMONS: 4 = skeletal warrior w:5 / skeleton w:20 / zombie w:20 / flying skull band
+NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
+KMONS: 4 = shadow / wraith / flying skull
 KMONS: 5 = soul eater
-KMONS: 6 = tormentor / reaper / lich w:5 / bone dragon w:2
+KMONS: 6 = reaper w:18 / lich w:5 / bone dragon w:4
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 KMASK: 12345 = !no_monster_gen
@@ -705,10 +713,10 @@ ENDMAP
 NAME: grunt_profane_temple_dis
 TAGS: grunt_profane_temple no_monster_gen
 : grunt_profane_halls_setup(_G)
-NSUBST: 5 = 1:6 / *:5
+NSUBST: 4 = 8:4 / *:., 5 = 1:6 / *:5
 KMONS: 4 = iron devil
-KMONS: 5 = skeletal warrior
-KMONS: 6 = iron dragon / iron troll / war gargoyle
+KMONS: 5 = skeletal warrior / iron troll w:1
+KMONS: 6 = iron dragon / war gargoyle
 KFEAT: A = stone_arch
 MARKER: A = lua:props_marker { portal=1 }
 COLOUR: G = cyan
@@ -743,17 +751,10 @@ TAGS: grunt_profane_loot no_monster_gen
 : grunt_profane_halls_setup(_G)
 SHUFFLE: }])>
 SHUFFLE: KLMN
-: if you.absdepth() >= 24 then
 KMONS: K = storm dragon
 KMONS: L = shadow dragon
 KMONS: M = quicksilver dragon
 KMONS: N = golden dragon
-: else
-KMONS: K = deep elf blademaster
-KMONS: L = deep elf master archer
-KMONS: M = deep elf death mage
-KMONS: N = deep elf sorcerer
-: end
 KITEM: KLMN> = acquire any
 KITEM: 12 = any
 MAP
@@ -775,7 +776,7 @@ TILE: c = wall_zot_magenta
 COLOUR: JO.1+ = magenta
 FTILE: JO.1+ = floor_hall
 KFEAT: O = enter_zot
-KMONS: 1 = place:Zot:1 band
+KMONS: 1 = place:Zot:1
 MARKER: J = lua:fog_machine { cloud_type = "magical condensation", \
                               pow_min = 3, pow_max = 5, \
                               delay_min = 5, delay_max = 15, \
@@ -804,30 +805,35 @@ default-depth: Depths:2-, !Depths:$
 NAME:    hangedman_spin_cycle
 TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling uniq_d_encompass
 ORIENT:  encompass
+DEPTH:   Depths:2-
+PLACE:   D:$, Depths:$
+WEIGHT:  1 (D:$), 2 (Depths:$), 10
 KMONS:   - = plant
 KMONS:   _ = plant col:random name:demonic name_adjective tile:mons_demonic_plant
-KMONS:   no = vault sentinel
+KMONS:   no = vault guard
 KMONS:   p = giant eyeball
 KMONS:   q : great orb of eyes w:7 / guardian serpent w:3
-KMONS:   r = vault guard
+KMONS:   r = ettin / deep troll shaman / yaktaur captain / frost giant
+KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 : local bands = {
-:     [42 - you.absdepth() * 2] =
-:         { "cyclops", "kobold demonologist", "naga", "Azrael", "Kirke" },
 :     [65 - you.absdepth() * 3] =
-:         { "boggart", "deep elf fighter", "necromancer", "centaur warrior", },
-:     [29 - you.absdepth()] =
-:         { "orc knight", "ogre mage", "skeletal warrior",
-:           "yaktaur", "spriggan rider" },
+:         { "cyclops", "tengu warrior", "centaur warrior", },
+:     [42 - you.absdepth() * 2] =
+:         { "kobold demonologist", "tengu conjurer", "deep elf fighter",
+:           "necromancer", "yaktaur", "Azrael", "Kirke", },
+:     [26 - you.absdepth()] =
+:         { "boggart", "orc knight", "ogre mage", "skeletal warrior",
+:           "spriggan rider", "naga mage", "rakshasa", },
 :     [you.absdepth() * 2 - 37] =
-:         { "deep elf knight", "orc high priest", "deep troll shaman" },
-:     [you.absdepth() * 2 - 40] =
-:         { "harpy", "hell knight", "naga mage", "vampire mage",
+:         { "deep elf knight", "orc high priest", "deep troll shaman", },
+:     [you.absdepth() * 2 - 42] =
+:         { "harpy", "hell knight", "naga sharpshooter", "vampire mage",
 :           "orc warlord", "vampire knight", "yaktaur captain",
-:           "deep elf high priest", "ancient champion" },
-:     [you.absdepth() - 20] =
-:         { "deep dwarf death knight", "spriggan defender", "satyr",
-:           "merfolk aquamancer", "merfolk javelineer",
-:           "Margery", "Saint Roka", "Sojobo" },
+:           "deep elf high priest", "spriggan defender", },
+:     [you.absdepth() - 18] =
+:         { "deep dwarf death knight", "ancient champion",
+:           "merfolk aquamancer", "salamander firebrand",
+:           "Margery", "Saint Roka", "Sojobo", },
 : }
 : local kmonsters = {}
 : for weight, monsters in pairs(bands) do
@@ -851,10 +857,11 @@ KFEAT:   aD = stone_arch
 KFEAT:   A = enter_hell
 KFEAT:   & = enter_pandemonium
 KFEAT:   @ = enter_abyss
-KFEAT:   B = enter_vaults
+KFEAT:   B = enter_depths
 KFEAT:   C : C / any shop
+KFEAT:   Z = enter_zot
 SHUFFLE: <d` / {e1 / (f2 / [g3, >h4 / }i5 / )j6 / ]k7, (f2 / )j6, 15
-: if you.absdepth() > 20 then
+: if you.absdepth() > 17 then
 SUBST:   ( = D
 MARKER:  D = lua:props_marker { portal=1 }
 :     if crawl.random2(you.depth()-15) > (you.depth()-18) then
@@ -862,11 +869,15 @@ SUBST:   A&@ = a, _ = -, l = W
 :     else
 SHUFFLE: aA&@
 :     end
+:     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+NSUBST:  ( = 1:Z / *:(
+SUBST:   f = ', 2 = t
+:     end
 : else
 SUBST:   A&@ = a, _ = -, l = W
-:     if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+:     if you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
 NSUBST:  ( = 1:B / *:(
-SUBST:   f = r, 2 = '
+SUBST:   f = ', 2 = r
 :     end
 : end
 SUBST:   {} = **|||, ( = T, ) : TTCCC, [ = !, ] = ?
@@ -878,15 +889,14 @@ SHUFFLE: LM / LM / LM / LM / LM / LM / LM / ML / ML / MM
 SHUFFLE: NO / NO / NO / NO / NO / NO / NO / ON / ON / OO
 SHUFFLE: PQ / PQ / PQ / PQ / PQ / QP, RS / RS / RS / RS / SR
 SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
-NSUBST:  ~ = 2:~ / 1:~. / 75:H / 225:I / *:.
-SUBST:   H = ~ .:4490, I = ~ .:9990
+NSUBST:  ~ = 2:~ / 1:~. / 75 = ~ .:4490 / 225 = ~ .:9990 / *:.
 COLOUR:  "-_ = green
 COLOUR:  '`089rs%*|!? = white
 FTILE:   ^"aA@&-_U = floor_grass
 : if crawl.coinflip() then
-FTILE:   '`<{([>})]089rs%*|!?BCTDEF = floor_vault
+FTILE:   '`<{([>})]089rst%*|!?BCTDEFZ = floor_vault
 : else
-FTILE:   '`<{([>})]089rs%*|!?BCTDEF = floor_pebble_darkgray
+FTILE:   '`<{([>})]089rst%*|!?BCTDEFZ = floor_pebble_darkgray
 : end
 MAP
                           vvvvvvv
@@ -964,10 +974,10 @@ MONS:    deep elf conjurer / deep elf knight w:7 / wizard / ogre mage / \
          centaur warrior w:8 ; bow ego:flame | bow ego:frost . arrow / \
          two-headed ogre w:5 ; great mace ego:freezing ident:type . \
          great mace ego:flaming ident:type / efreet w:5 / \
-         rakshasa w:5 ; wand of flame | wand of frost | nothing
-MONS:    very ugly thing w:20 / shapeshifter / unseen horror w:15 / \
+         rakshasa w:5 ; wand of flame | wand of frost . whip . robe
+MONS:    very ugly thing w:15 / shapeshifter / unseen horror w:15 / \
          chaos spawn / fire elemental / water elemental w:5 / \
-         air elemental / earth elemental w:5 / \
+         air elemental / earth elemental w:5 / mana viper w:5 / \
          insubstantial wisp / gargoyle w:5 / wolf spider simulacrum w:3 / \
          elephant simulacrum w:3 / deep troll simulacrum w:3 / \
          lindwurm perm_ench:shapeshifter w:7 / lindwurm w:3 / \
@@ -975,10 +985,10 @@ MONS:    very ugly thing w:20 / shapeshifter / unseen horror w:15 / \
          war axe ego:flaming | war axe w:15 ego:freezing |  \
          scimitar w:15 ego:freezing | scimitar ego:flaming | \
          dire flail w:5 ego:flaming | dire flail w:5 ego:freezing
-MONS:    frost giant w:5 / fire giant w:5 / naga mage / hell knight / \
-         base draconian w:20 / spriggan air mage / deep troll earth mage / \
+MONS:    frost giant w:5 / fire giant w:5 / naga mage w:15 / hell knight w:5 / \
+         salamander mystic w:5 / spriggan air mage / deep troll earth mage / \
          yaktaur captain ; crossbow ego:flame | crossbow ego:frost . bolt / \
-         rakshasa w:5 ; wand of fire | wand of cold | \
+         rakshasa w:5 ; robe . wand of fire | wand of cold . \
          glaive w:2 ego:flaming | glaive w:2 ego:freezing
 MONS:    lorocyproca w:5 / fire dragon perm_ench:shapeshifter w:12 / fire dragon w:3 / \
          ice dragon perm_ench:shapeshifter w:12 / ice dragon w:3 / \
@@ -996,12 +1006,12 @@ KMONS:   C = rakshasa ; robe good_item . wand of cold | wand of fire | \
                       glaive ego:freezing | glaive ego:flaming . \
                       potion of heal wounds | potion of might | \
                       potion of haste | nothing w:20
-KMONS:   D = tengu reaver
+KMONS:   D = ettin ; great mace ego:flaming ident:type . \
+                     great mace ego:freezing ident:type
 KMONS:   E = deep elf annihilator ; robe randart | mundane ice dragon armour | \
                                   mundane fire dragon armour | robe w:1 . \
                                   scimitar ego:flaming | scimitar ego:freezing
-KMONS:   F = ettin ; great mace ego:flaming ident:type . \
-                     great mace ego:freezing ident:type
+KMONS:   F = tengu reaver
 KMONS:   G = deep elf blademaster ; mundane crystal plate armour . \
                                   cutlass ego:flaming ident:type . \
                                   cutlass ego:freezing ident:type
@@ -1012,27 +1022,10 @@ KMONS:   J = golden dragon w:19 / golden dragon perm_ench:shapeshifter w:1 / \
              quicksilver dragon perm_ench:shapeshifter w:1
 KMONS:   K = glowing shapeshifter hd:16 / glowing shapeshifter hd:15
 KMONS:   L = crystal guardian
-KFEAT:   V = enter_vaults
 SHUFFLE: ABCD
 NSUBST:  "~ = 1:{ / 1:[ / 1:( / 1:} / 1:] / 1:) / 1:<<. / 1:>>. / 3:T
-:  if you.absdepth() > 20 then
 NSUBST:  A = 1:A / 1:F / *:1, B = 1:B / 1:G / *:1
 NSUBST:  C = 1:CC1 / 1:H / *:1, D = 1:D / 1:II1 / *:1
-MARKER:  T = lua:props_marker { portal=1 }
-: _G.set_random_mon_list("place:" .. you.where() .. " w:150 / " ..
-:   "fire giant / frost giant / base draconian w:5 / rakshasa w:5 / " ..
-:   "glowing shapeshifter w:8 / simulacrum w:5 / dancing weapon w:2 / " ..
-:   "fire crab w:5 / boulder beetle / chaos spawn w:5 / very ugly thing band w:5")
-:  else
-NSUBST:  A = 1:A / *:1, B = 1:B / *:1, C = 1:C / *:1, D = 1:DD3 / *:1
-: _G.set_random_mon_list("place:" .. you.where() .. " w:130 / " ..
-:   "deep elf conjurer / deep elf knight w:5 / rakshasa w:5 / " ..
-:   "shapeshifter w:5 / simulacrum w:5 / air elemental w:5 / " ..
-:   "lindwurm w:5 / boulder beetle w:5 / chaos spawn / ugly thing band")
-:    if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
-NSUBST:  T = 1:V / *:T
-:    end
-:  end
 SHUFFLE: ABCDEF, GHIJKL, "X / ~Y / ^Z, +-=
 SUBST:   "X = bX..., ~Y = bbY.., ^Z = b., v : v:3 b:2, c : c:3 b:2, d = c
 SUBST:   + = +:14 .:1, - = +:4 .:1, = = +:2 .:3, * = *:9 |:1, % = %:14 *:5 .:1
@@ -1052,6 +1045,11 @@ KPROP:   l = no_cloud_gen
 :             " 2:" .. math.max(52 - Z * 2, 3) ..
 :             " 3:" .. Z * 4 - 74 .. " 4:" .. Z * 4 - 78)
 :  end
+MARKER:  T = lua:props_marker { portal=1 }
+: _G.set_random_mon_list("place:" .. you.where() .. " w:150 / " ..
+:   "fire giant / frost giant / rakshasa w:5 / deep elf knight w:5 / " ..
+:   "glowing shapeshifter w:8 / simulacrum w:5 / dancing weapon w:2 / " ..
+:   "fire crab w:5 / boulder beetle / mana viper w:5 / very ugly thing band w:5")
 TILE:    b = wall_emerald
 TILE:    c = wall_crystal_squares
 TILE:    v = dngn_metal_wall_darkgray
@@ -1466,20 +1464,20 @@ TAGS:    no_monster_gen no_item_gen uniq_d_encompass
 ORIENT:  encompass
 PLACE:   Depths:$
 DEPTH:   Depths:2-
-WEIGHT:  2 (Depths:$), 10
+WEIGHT:  1 (Depths:$), 10
 MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
          mottled dragon w:8 / giant firefly w:3 / boulder beetle w:5 / \
-         red wasp / tarantella w:2 / redback w:3 / wolf spider / \
+         red wasp / mana viper w:5 / wolf spider / \
          sea snake w:5 / alligator / hell hound w:2
 MONS:    swamp dragon w:5 / fire crab w:4 / catoblepas w:4 / \
          fire dragon w:16 / ice dragon w:16 / orb spider w:1 / \
          dire elephant w:9 / anaconda / hydra w:15 / snapping turtle / harpy w:4
 MONS:    ghost moth w:4 / death drake w:2 / golden dragon / iron dragon / \
          quicksilver dragon w:15 / shadow dragon w:20 / storm dragon w:20 / \
-         hell beast w:4 / hellephant w:4 / apis w:1 / \
+         hell beast w:4 / hellephant w:5 / \
          alligator snapping turtle w:5 / emperor scorpion w:5
 MONS:    very ugly thing / very large slime creature / great orb of eyes / \
-         shapeshifter hd:4 w:5 / unseen horror / large abomination w:1 / \
+         shapeshifter hd:4 w:5 / unseen horror / \
          eye of draining / shadow wraith w:5 / shadow / \
          air elemental / dancing weapon w:4 ; short sword good_item
 MONS:    giant orange brain / eye of devastation / golden eye w:5 / \
@@ -1488,7 +1486,7 @@ MONS:    giant orange brain / eye of devastation / golden eye w:5 / \
          anaconda simulacrum w:3 / harpy simulacrum w:3 / eidolon w:5 / \
          dire elephant simulacrum w:1 / dancing weapon w:5 ; long sword good_item
 MONS:    giant eyeball w:45 / bone dragon w:15 / tentacled monstrosity w:15 / \
-         glowing shapeshifter hd:11 w:30 / glowing shapeshifter hd:12 w:15 / \
+         glowing shapeshifter hd:12 w:30 / glowing shapeshifter hd:13 w:15 / \
          azure jelly / thorn hunter w:5 / flayed ghost / \
          dancing weapon w:5 ; glaive good_item / war gargoyle
 MONS:    centaur warrior / yaktaur w:5 / orc knight / \
@@ -1499,22 +1497,20 @@ MONS:    centaur warrior / yaktaur w:5 / orc knight / \
 KMONS:   8 = orc high priest / orc sorcerer / naga warrior w:5 / naga mage / \
          yaktaur captain w:5 / ogre mage / deep elf knight w:15 / \
          hell knight / efreet w:1 / deep elf conjurer / \
-         guardian serpent w:5 / phantasmal warrior w:5 / vampire mage w:4
+         guardian serpent w:5 / phantasmal warrior w:5 / salamander mystic w:4
 KMONS:   9 = fire giant / frost giant w:11 / stone giant w:11 / ettin w:11 / \
-         orc warlord / ironbrand convoker w:2 / spriggan berserker w:1 / \
+         orc warlord / spriggan berserker w:3 / minotaur w:5 / \
          deep troll shaman w:5 / deep troll earth mage w:8 / \
-         minotaur w:5 ; any armour good_item . any weapon good_item / \
-         vampire knight / tengu reaver w:4 / base draconian w:5 / \
+         vampire knight / tengu reaver w:4 / salamander firebrand w:5 / \
          spriggan air mage w:6 / deep elf death mage w:6 / \
-         satyr w:2 / ancient champion w:6
+         ancient champion w:6 / deep elf demonologist w:5 / vampire mage w:5
 KMONS:   0 = titan w:15 / lich / sphinx / deep elf annihilator / \
          deep elf sorcerer / deep elf high priest w:5 / greater naga w:5 / \
          spriggan defender w:5 / shadow demon w:5 / reaper w:5
 KMONS:   & = draconian knight / draconian monk w:15 / \
-         draconian annihilator / deep elf demonologist / \
-         deep elf blademaster w:15 / deep elf master archer w:15 / \
-         daeva w:5 / angel w:5 / lich w:15 / ancient lich w:15 / \
-         mummy priest w:5 / balrug w:5 / executioner w:5
+         draconian annihilator / deep elf blademaster w:15 / \
+         deep elf master archer w:15 / lich w:15 / ancient lich w:15 / \
+         balrug w:5 / executioner w:5
 KMONS:   Z = base draconian
 KFEAT:   z = known zot trap w:499 / floor w:1
 KFEAT:   Z = enter_zot
@@ -1524,30 +1520,16 @@ NSUBST:  ] = 1:) / 1:]
 SUBST:   B : b.., C : cb., D : x.., E : xx., F : xx.
 SUBST:   HJOQRm = x, IKNPSl = ., L : xx., M : xx., j : x.., k : x.., n : x.
 SUBST:   b : b:6 v:1 c:1, @ = 114777, ^ = 224999
+SUBST:   y = Y, & = &:26 0:1
 : local Z = you.depth()
-: if Z <= 3 then
-:   subst("2 = !:" .. 6 - Z .. " 2:20")
-:   subst("3 = 2:" .. 8 - Z .. " 3:" .. Z + 21)
-:   subst("5 = $:" .. 6 - Z .. " 5:20")
-:   subst("6 = 5:" .. 8 - Z .. " 6:" .. Z + 21)
-:   subst("8 = ?:" .. 6 - Z .. " 8:20")
-:   subst("9 = 8:" .. 7 - Z .. " 9:" .. Z + 22)
-SUBST:  & = 3:2 6:1 0:4 9:2
-:     if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
-SUBST: y = V
-:     end
-SUBST:  yY = T
-: else
-SUBST:  y = Y, & = &:26 0:1
 :   subst("9 = 9:90 0:" .. Z + 5)
 :   subst("8 = 9:" .. Z + 2 .. " 8:20")
 :   subst("5 = 6:" .. Z + 2 .. " 5:20")
 :   subst("2 = 3:" .. Z + 2 .. " 2:20")
 :     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  )]} = ., > = <, " = `
-NSUBST: ' = 1:Z / 2 : Z:1 `:4 / *:`
+NSUBST: ' = 1:Z / 2:` / *:`
 :     end
-: end
 SUBST:  '" = .
 : subst("1 = 1:" .. math.max(26 - Z * 2, 16) .. " 2:" .. Z + 1)
 : subst("4 = 4:" .. math.max(26 - Z * 2, 16) .. " 5:" .. Z + 1)
