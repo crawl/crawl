@@ -3784,7 +3784,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        if (!mons->has_ench(ENCH_ROLLING))
+        if (!mons->has_ench(ENCH_ROLLING)
+            && !feat_is_water(grd(mons->pos())))
         {
             // Fleeing check
             if (mons_is_fleeing(mons))
@@ -3798,8 +3799,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 }
             }
             // Normal check - don't roll at adjacent targets
-            else if (one_chance_in(3) &&
-                     !adjacent(mons->pos(), beem.target))
+            else if (one_chance_in(3)
+                     && !adjacent(mons->pos(), beem.target))
             {
                 simple_monster_message(mons, " curls into a ball and starts rolling!");
                 boulder_start(mons, &beem);
