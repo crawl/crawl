@@ -1019,7 +1019,6 @@ static const char* _book_type_name(int booktype)
     case BOOK_HINDERANCE:             return "Hinderance";
     case BOOK_CHANGES:                return "Changes";
     case BOOK_TRANSFIGURATIONS:       return "Transfigurations";
-    case BOOK_WAR_CHANTS:             return "War Chants";
     case BOOK_BATTLE:                 return "Battle";
     case BOOK_CLOUDS:                 return "Clouds";
     case BOOK_NECROMANCY:             return "Necromancy";
@@ -1040,6 +1039,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
 #if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:               return "Stalking";
+    case BOOK_WAR_CHANTS:             return "War Chants";
 #endif
     case BOOK_DEBILITATION:           return "Debilitation";
     case BOOK_DRAGON:                 return "the Dragon";
@@ -2336,7 +2336,7 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_STAVES && j == STAFF_CHANNELING)
                 continue;
 
-            if (i == OBJ_BOOKS && j == BOOK_STALKING)
+            if (i == OBJ_BOOKS && (j == BOOK_STALKING || j == BOOK_WAR_CHANTS))
                 continue;
 #endif
 
