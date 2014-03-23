@@ -2839,58 +2839,6 @@ static bool _monster_eat_corpse(monster* mons, bool do_heal, bool nearby)
     return eaten > 0;
 }
 
-static bool _monster_eat_food(monster* mons, bool nearby)
-{
-    if (!mons_eats_food(mons))
-        return false;
-
-    if (mons_is_fleeing(mons))
-        return false;
-
-    int eaten = 0;
-
-    for (stack_iterator si(mons->pos()); si; ++si)
-    {
-        const bool is_food = (si->base_type == OBJ_FOOD);
-        const bool is_corpse = (si->base_type == OBJ_CORPSES
-                                   && si->sub_type == CORPSE_BODY);
-        const bool free_to_eat = (mons->wont_attack()
-                                  || grid_distance(mons->pos(), you.pos()) > 1);
-
-        if (!is_food && !is_corpse)
-            continue;
-
-        if (free_to_eat && coinflip())
-        {
-            if (is_food)
-            {
-                if (nearby)
-                {
-                    mprf("%s eats %s.", mons->name(DESC_THE).c_str(),
-                         quant_name(*si, 1, DESC_THE).c_str());
-                }
-
-                dec_mitm_item_quantity(si.link(), 1);
-
-                eaten++;
-                break;
-            }
-            else
-            {
-                // Assume that only undead can heal from eating corpses.
-                if (_monster_eat_single_corpse(mons, *si,
-                                               mons->holiness() == MH_UNDEAD,
-                                               nearby))
-                {
-                    eaten++;
-                    break;
-                }
-            }
-        }
-    }
-
-    return eaten > 0;
-}
 
 //---------------------------------------------------------------
 //
@@ -2930,11 +2878,6 @@ static bool _handle_pickup(monster* mons)
             {
                 return false;
             }
-        }
-        else if (mons_eats_food(mons))
-        {
-            if (_monster_eat_food(mons, nearby))
-                return false;
         }
     }
 

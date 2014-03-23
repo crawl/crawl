@@ -365,7 +365,6 @@ bool mons_class_is_plant(monster_type mc);
 bool mons_is_plant(const monster* mon);
 bool mons_eats_items(const monster* mon);
 bool mons_eats_corpses(const monster* mon);
-bool mons_eats_food(const monster* mon);
 monster_type mons_genus(monster_type mc);
 monster_type mons_species(monster_type mc);
 monster_type draco_or_demonspawn_subspecies(const monster* mon);

@@ -957,11 +957,6 @@ bool mons_eats_corpses(const monster* mon)
     return mons_itemeat(mon) == MONEAT_CORPSES;
 }
 
-bool mons_eats_food(const monster* mon)
-{
-    return mons_itemeat(mon) == MONEAT_FOOD;
-}
-
 bool invalid_monster(const monster* mon)
 {
     return !mon || invalid_monster_type(mon->type);
