@@ -56,7 +56,7 @@ and are equipped with a dagger and some darts.
 Fighter
 
 Fighters are equipped with armour and shield, as well as a weapon of their
-choice.
+choice and a potion of might.
 %%%%
 Fire Elementalist
 
