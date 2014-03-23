@@ -8,7 +8,7 @@ its origin, this deep cavern is filled with riches unheard of as well as with
 ample dangers to any intruder. Few have escaped alive, and even fewer have kept
 some sliver of sanity sufficient to tell the tale.
 
-The dungeon is 16 levels deep, but, honestly, this is only the beginning.
+The dungeon is 15 levels deep, but, honestly, this is only the beginning.
 %%%%
 Temple
 
@@ -51,7 +51,7 @@ carnivorous monsters.
 
 The Swamp is five levels deep and contains the decaying rune. A dungeon
 features only two of the Snake Pit, Swamp, Shoals and Spider Nest branches. If
-the Swamp is present, the entrance is located between Lair:2 and Lair:5.
+the Swamp is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
 Shoals
 
@@ -103,7 +103,7 @@ that there is a certain amount of violence, too.
 
 The Vaults are five levels deep and contain the silver rune, as well as the
 entrances to two more branches. They can be entered while carrying at least one
-rune of Zot. The entrance can be found between levels 14 and 15 of the main
+rune of Zot. The entrance can be found on either level 13 or 14 of the main
 dungeon.
 %%%%
 Hall of Blades
@@ -112,7 +112,7 @@ Once upon a time, all the daggers and axes and polearms would gather at the
 time of night and dance the waltz, dreaming of battlefields void of man and
 beast. That time is no more, yet the weapons are still there.
 
-The Hall of Blades is a single level and can be found between Vaults:3 and
+The Hall of Blades is a single level and can be found on either Vaults:3 or
 Vaults:4.
 %%%%
 Crypt
@@ -310,6 +310,6 @@ Depths
 The Depths are the deepest part of the dungeon proper, subject to the
 corrupting influence of the Realm of Zot without being considered a part of it.
 
-The Depths are six levels deep and can be entered from the lowest floor of the
+The Depths are five levels deep and can be entered from the lowest floor of the
 Dungeon.
 %%%%
