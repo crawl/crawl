@@ -3,7 +3,7 @@
 the Portal card
 
 This card teleports you to a random location, allowing control of the
-translocation at high power.
+translocation and sometimes additionally causing a random blink at high power.
 %%%%
 the Warp card
 
@@ -39,21 +39,23 @@ This card randomly teleports creatures that are adjacent to you.
 %%%%
 Warpwright card
 
-This card may create teleportation traps.
+This card creates a teleportation trap in an adjacent square, with a chance of
+its position being revealed at high power.
 %%%%
 Flight card
 
-This card helps you run away by transforming you, speeding you up or creating
-other avenues of escape.
-war.
+This card helps you run away by transforming you or granting flight and swift
+movement. At high power it will additionally create a shaft beneath you, and
+may even provide temporary invisibility.
 %%%%
 the Elixir card
 
-This card restores your health or magic, or both at high power levels.
+This card rapidly restores your health or magic, or both at high power levels.
 %%%%
 Battlelust card
 
-This card makes you more powerful in physical combat.
+This card makes you more powerful in physical combat, causing berserk rage at
+low power, or providing great might and agility with higher power.
 %%%%
 Metamorphosis card
 
@@ -61,7 +63,8 @@ This card temporarily transforms you.
 %%%%
 the Helm card
 
-This card increases your defences.
+This card increases your defences. It may provide boosts to armour, evasion,
+shielding and resistances.
 %%%%
 the Blade card
 
@@ -69,16 +72,17 @@ This card temporarily enchants or even animates your weapon.
 %%%%
 the Shadow card
 
-This card lets you blend into the shadows, making you less perceptible.
+This card lets you blend into the shadows, granting invisibility. It may
+additionally provide substantial bonuses to stealth with high power.
 %%%%
 the Mercenary card
 
-This card summons mercenaries to fight by your side... for a price.
+This card summons a mercenary to fight by your side... for a price.
 %%%%
 the Potion card
 
 This card has the same effect, positive or negative, as drinking a random
-magical potion.
+magical potion. It is more likely to have positive effects at high power.
 %%%%
 Focus card
 
@@ -104,7 +108,8 @@ likely to be beneficial.
 the Sage card
 
 This card will funnel some of your earned experience towards training a
-specific skill and train it faster than it normally would.
+specific skill and train it faster than it normally would. It is more likely
+to affect a skill that you are already knowledgeable in at high power levels.
 %%%%
 the Alchemist card
 
@@ -120,13 +125,14 @@ This card turns walls translucent.
 %%%%
 Dowsing card
 
-This card lets you detect traps, reveals your surroundings, makes you
+This card lets you detect traps and items, reveals your surroundings, makes you
 telepathic for a short time, or some combination thereof.
 %%%%
 the Trowel card
 
-This card may create an altar, a statue, a golem or even a portal, but works
-best only in the main dungeon and its branches.
+This card creates a mystic portal to somewhere. It has a limited range of
+possible destinations, and will no longer have any effect once those are
+exhausted.
 %%%%
 the Minefield card
 
@@ -135,7 +141,8 @@ This card makes your immediate surroundings more dangerous.
 # deck of summonings
 the Crusade card
 
-This card tries to convert nearby creatures to your cause.
+This card tries to convert nearby creatures to your cause, and abjures hostile
+summons.
 %%%%
 the Herd card
 
@@ -163,11 +170,11 @@ This card summons an ugly or very ugly thing.
 %%%%
 Vitriol card
 
-This card unleashes a corrosive or degenerating attack spell.
+This card unleashes a corrosive attack spell.
 %%%%
 Flame card
 
-This card unleashes a fiery attack spell.
+This card unleashes a fiery attack spell, which may be explosive.
 %%%%
 Frost card
 
@@ -179,7 +186,8 @@ This card unleashes a poisonous attack spell.
 %%%%
 the Spark card
 
-This card unleashes an electrical attack spell.
+This card unleashes an electrical attack spell, which may affect a large area
+at high power.
 %%%%
 the Hammer card
 
@@ -213,7 +221,7 @@ This card places curses on your possessions.
 %%%%
 Xom card
 
-This card draws the attention of Xom on yourself.
+This card draws Xom's attention to you.
 %%%%
 Famine card
 
