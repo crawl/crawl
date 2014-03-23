@@ -5298,7 +5298,7 @@ mon_resist_type bolt::try_enchant_monster(monster* mon, int &res_margin)
             if (mon->check_res_magic(ench_power) > 0)
             {
                 // Note only actually used by messages in this case.
-                res_margin = mon->res_magic() - ench_power;
+                res_margin = mon->res_magic() - stepdown_value(ench_power, 30, 40, 100, 120);
                 return MON_RESIST;
             }
         }
