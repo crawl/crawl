@@ -149,9 +149,9 @@ attributes and mutations shift around under Jiyva's influence.
 %%%%
 Dithmenos
 
-Dithmenos the Shadowed desires all to be darkness. In exchange for their life
-essence and that of the inhabitants of the dungeon, followers of Dithmenos
-gain a strange and otherwordly affinity to the shadows of their environment.
+Dithmenos the Shadowed desires all to be darkness. In exchange for releasing
+the life-essence of the inhabitants of the dungeon, followers of Dithmenos gain
+a strange and otherwordly affinity to the shadows of their environment.
 Dithmenos despises fire, the ancient enemy of the shadows, and forbids its use
 by worshippers; Dithmenos favours those who would instead destroy sources of
 light.
