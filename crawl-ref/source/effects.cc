@@ -904,36 +904,17 @@ void yell(bool force)
     const string shout_verb = you.shout_verb();
     string cap_shout = shout_verb;
     cap_shout[0] = toupper(cap_shout[0]);
-
-    int noise_level = 12; // "shout"
-
-    // Tweak volume for different kinds of vocalisation.
-    if (shout_verb == "roar")
-        noise_level = 18;
-    else if (shout_verb == "hiss")
-        noise_level = 8;
-    else if (shout_verb == "squeak")
-        noise_level = 4;
-    else if (shout_verb == "__NONE")
-        noise_level = 0;
-    else if (shout_verb == "yell")
-        noise_level = 14;
-    else if (shout_verb == "scream")
-        noise_level = 16;
+    const int noise_level = you.shout_volume();
 
     if (you.cannot_speak())
-        noise_level = 0;
-
-    if (noise_level == 0)
     {
         if (force)
         {
-            if (shout_verb == "__NONE" || you.paralysed())
+            if (you.paralysed())
             {
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
-                     shout_verb == "__NONE" ? "scream"
-                                            : shout_verb.c_str());
+                     shout_verb.c_str());
             }
             else
             {
