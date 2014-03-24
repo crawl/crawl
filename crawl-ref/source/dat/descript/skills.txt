@@ -260,7 +260,7 @@ Being skilled in Ice Magic makes Fire Magic harder to learn, and vice versa.
 Air Magic
 
 Air Magic provides spells to deal damage directly with the wind, as well as
-noisy but powerful lightning conjurations. It also provides some utility
+noisy but powerful lightning Conjurations. It also provides some utility
 spells, such as Charms to call the wind to assist your movement or protect you
 from projectile attacks.
 
@@ -287,9 +287,8 @@ Being skilled in Earth Magic makes Air Magic harder to learn, and vice versa.
 %%%%
 Poison Magic
 
-Poison Magic is at its most useful early on, as many monsters are resistant to
-poison in the later game. There are poison spells of high utility throughout
-the game, though.
+Poison Magic provides spells which are highly effective against many natural
+creatures.
 
 Being skilled in Poison Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
