@@ -131,14 +131,6 @@ bool form_likes_water(transformation_type form)
     return form_can_swim(form);
 }
 
-bool form_has_mouth(transformation_type form)
-{
-    return form != TRAN_TREE
-        && form != TRAN_WISP
-        && form != TRAN_JELLY
-        && form != TRAN_FUNGUS;
-}
-
 bool form_likes_lava(transformation_type form)
 {
     // Lava orcs can only swim in non-phys-change forms.
