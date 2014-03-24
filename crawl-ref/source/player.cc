@@ -6231,8 +6231,7 @@ int player::visible_igrd(const coord_def &where) const
 
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
-            && species != SP_MERFOLK && species != SP_GREY_DRACONIAN
-            && species != SP_OCTOPODE))
+            && !species_likes_water(species)))
     {
         return NON_ITEM;
     }
