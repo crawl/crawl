@@ -6,10 +6,7 @@ of unknown provenance.
 %%%%
 book
 
-An arcane textbook containing magical spells of unknown origin. Written for
-true adepts, an initiatory knowledge in the occult art of casting spells is
-required to make any use of the tome. Beware, for some of the more powerful
-grimoires are not to be toyed with!
+An arcane textbook containing magical spells of unknown origin.
 %%%%
 deck of cards
 
@@ -27,9 +24,9 @@ jewellery on a finger.
 %%%%
 rod
 
-A magical rod, which can be held in the hand and evoked to cast one of several
-spells, drawing on a self-recharging reservoir of power. It is also robust
-enough to be used as a simple blunt weapon.
+A magical rod which can wielded and evoked to cast a spell, drawing on a
+self-recharging reservoir of power. It is also robust enough to be used as a
+simple blunt weapon.
 %%%%
 scroll
 
