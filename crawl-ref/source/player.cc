@@ -6300,6 +6300,35 @@ string player::shout_verb() const
     }
 }
 
+int player::shout_volume() const
+{
+    int noise = 12;
+
+    switch (form)
+    {
+    case TRAN_DRAGON:
+        noise = 18;
+        break;
+    case TRAN_SPIDER:
+        noise = 8;
+        break;
+    case TRAN_BAT:
+    case TRAN_PORCUPINE:
+    case TRAN_FUNGUS:
+    case TRAN_WISP:
+        noise = 4;
+        break;
+
+    default:
+        break;
+    }
+
+    if (player_mutation_level(MUT_SCREAM))
+        noise += 2 * (player_mutation_level(MUT_SCREAM) - 1);
+
+    return noise;
+}
+
 void player::god_conduct(conduct_type thing_done, int level)
 {
     ::did_god_conduct(thing_done, level);

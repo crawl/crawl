@@ -478,6 +478,7 @@ public:
     size_type transform_size(transformation_type tform,
                              int psize = PSIZE_TORSO) const;
     string shout_verb() const;
+    int shout_volume() const;
 
     item_def *slot_item(equipment_type eq, bool include_melded=false) const;
 

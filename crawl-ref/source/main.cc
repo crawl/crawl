@@ -2340,26 +2340,7 @@ static void _handle_recitation(int step)
     // turns.
     practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
 
-    const string shout_verb = you.shout_verb();
-
-    int noise_level = 12; // "shout"
-
-    // Tweak volume for different kinds of vocalisation.
-    if (shout_verb == "roar")
-        noise_level = 18;
-
-    else if (shout_verb == "hiss")
-        noise_level = 8;
-    else if (shout_verb == "squeak")
-        noise_level = 4;
-    else if (shout_verb == "__NONE")
-        noise_level = 0;
-    else if (shout_verb == "yell")
-        noise_level = 14;
-    else if (shout_verb == "scream")
-        noise_level = 16;
-
-    noisy(noise_level, you.pos());
+    noisy(you.shout_volume(), you.pos());
 
     if (step == 0)
     {
