@@ -2723,6 +2723,8 @@ static string _status_mut_abilities(int sw)
         break;
 
     case SP_GARGOYLE:
+        if (you.experience_level >= 14)
+            mutations.push_back("able to fly continuously");
         AC_change += 2 + you.experience_level * 2 / 5
                        + max(0, you.experience_level - 7) * 2 / 5;
         break;
