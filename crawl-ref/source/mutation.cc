@@ -660,18 +660,6 @@ string describe_mutations(bool center_title)
 
     result += "</lightblue>";
 
-    if (beogh_water_walk())
-    {
-        result += "<green>You can walk on water.</green>\n";
-        have_any = true;
-    }
-
-    if (you.duration[DUR_FIRE_SHIELD])
-    {
-        result += "<green>You are immune to clouds of flame.</green>\n";
-        have_any = true;
-    }
-
     textcolor(LIGHTGREY);
 
     // First add (non-removable) inborn abilities and demon powers.
@@ -684,6 +672,18 @@ string describe_mutations(bool center_title)
             result += "\n";
             have_any = true;
         }
+    }
+
+    if (beogh_water_walk())
+    {
+        result += "<green>You can walk on water.</green>\n";
+        have_any = true;
+    }
+
+    if (you.duration[DUR_FIRE_SHIELD])
+    {
+        result += "<green>You are immune to clouds of flame.</green>\n";
+        have_any = true;
     }
 
     // Now add removable mutations.
