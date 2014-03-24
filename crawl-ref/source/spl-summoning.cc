@@ -1909,7 +1909,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
     int motions = 0;
 
     // Search all the items on the ground for a corpse.
-    for (stack_iterator si(a); si; ++si)
+    for (stack_iterator si(a, true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES
             && (class_allowed == CORPSE_BODY
@@ -1998,7 +1998,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
 {
     bool found = false;
 
-    for (stack_iterator si(you.pos()); si; ++si)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES
             && mons_class_can_be_zombified(si->mon_type)
