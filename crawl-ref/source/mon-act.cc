@@ -1262,21 +1262,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
                              SPELL_LIGHTNING_BOLT,
                              -1);
     case SPELL_BOLT_OF_INACCURACY:
-    case SPELL_POISON_ARROW:
-    case SPELL_THROW_FLAME:
-    case SPELL_THROW_FROST:
     case SPELL_CLOUD_CONE:
-        break;
-
-    case SPELL_FIREBALL:
-        if (mons->foe_distance() < 2)
-            return false;
-        break;
-
-    case SPELL_FREEZING_CLOUD:
-    case SPELL_POISONOUS_CLOUD:
-        if (mons->foe_distance() <= 2)
-            return false;
         break;
 
     case SPELL_THUNDERBOLT:
@@ -1288,9 +1274,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
         }
         break;
 
-    case SPELL_CAUSE_FEAR:
     case SPELL_SUMMON_SWARM:
-    case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_WEAVE_SHADOWS:
         _rod_fired_pre(mons);
         mons_cast(mons, beem, mzap, false);
