@@ -920,7 +920,7 @@ for a short period.
 plate armour
 
 # Historical note: fully articulated plates came only in the last days of
-# plate armour popularity.  Before then, it had gaps on and under joints,
+# plate armour popularity. Before then, it had gaps on and under joints,
 # often filled with mail.
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
 and greaves. Chainmail covers gaps, allowing movement.

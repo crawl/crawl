@@ -193,19 +193,15 @@ Preach to monsters about Zin's laws, which can lead to various results. The
 recitation will continue for a short while, but will be interrupted by actions
 such as spellcasting, reading scrolls or quaffing potions. There are four books
 you can preach from:
-
-* Book of Abominations: This book deals with the thing most abhorrent to Zin —
+ • Book of Abominations: This book deals with the thing most abhorrent to Zin —
 chaos in all its forms. These recitations will invoke Zin's most powerful
 smiting.
-
-* Book of Ablutions: The impure are nearly as loathed by the Law-Giver.
+ • Book of Ablutions: The impure are nearly as loathed by the Law-Giver.
 Recitations from this book will deal damage to such creatures.
-
-* Book of Apostates: Recitations from this book will sow confusion amongst
+ • Book of Apostates: Recitations from this book will sow confusion amongst
 intelligent creatures. Those who dare to worship a god other than Zin may be
 permanently deprived of means to spread their foul faith.
-
-* Book of Anathema: Demons and the undead are hated by Zin. This book gives you
+ • Book of Anathema: Demons and the undead are hated by Zin. This book gives you
 means to rebuke them.
 %%%%
 Vitalisation ability
