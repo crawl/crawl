@@ -1168,7 +1168,7 @@ static bool _get_rod_spell_and_cost(const item_def& rod, spell_type& spell,
     for (int i = 0; i < SPELLBOOK_SIZE; ++i)
     {
         spell_type s = which_spell_in_book(rod, i);
-        int c = spell_difficulty(spell) * ROD_CHARGE_MULT;
+        int c = spell_difficulty(s) * ROD_CHARGE_MULT;
 
         if (s == SPELL_NO_SPELL || rod.plus < c)
             continue;
