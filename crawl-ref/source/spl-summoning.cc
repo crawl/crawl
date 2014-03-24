@@ -3644,7 +3644,7 @@ static const summons_desc summonsdata[] =
     { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
     // General monsters
     { SPELL_SUMMON_ELEMENTAL,           3, 2 },
-    { SPELL_MONSTROUS_MENAGERIE,           4, 2 },
+    { SPELL_MONSTROUS_MENAGERIE,        4, 2 },
     { SPELL_SUMMON_HORRIBLE_THINGS,     8, 8 },
     { SPELL_SHADOW_CREATURES,           4, 2 },
     { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
@@ -3673,7 +3673,7 @@ static const summons_desc summonsdata[] =
     { SPELL_PHANTOM_MIRROR,             4, 1 },
     { SPELL_FAKE_MARA_SUMMON,           2, 1 },
     // Rod specials
-    { SPELL_SUMMON_SWARM,              99, 2 },
+    { SPELL_SUMMON_SWARM,              12, 2 },
     { SPELL_WEAVE_SHADOWS,              4, 2 },
     { SPELL_NO_SPELL,                   0, 0 }
 };
