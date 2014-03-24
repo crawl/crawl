@@ -6278,8 +6278,6 @@ string player::shout_verb() const
         return "squeak";
     case TRAN_PIG:
         return coinflip() ? "squeal" : "oink";
-
-    // These forms can't shout.
     case TRAN_FUNGUS:
         return "sporulate";
     case TRAN_TREE:

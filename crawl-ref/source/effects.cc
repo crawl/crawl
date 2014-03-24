@@ -921,16 +921,14 @@ void yell(bool force)
     else if (shout_verb == "scream")
         noise_level = 16;
 
-    if (you.cannot_speak() || !form_has_mouth())
+    if (you.cannot_speak())
         noise_level = 0;
 
     if (noise_level == 0)
     {
         if (force)
         {
-            if (!form_has_mouth())
-                mpr("You have no mouth, and you must scream!");
-            else if (shout_verb == "__NONE" || you.paralysed())
+            if (shout_verb == "__NONE" || you.paralysed())
             {
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
@@ -944,8 +942,6 @@ void yell(bool force)
                      shout_verb.c_str());
             }
         }
-        else if (!form_has_mouth())
-            mpr("You have no mouth!");
         else
             mpr("You are unable to make a sound!");
 
