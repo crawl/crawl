@@ -467,6 +467,7 @@ Stone Soup 0.13.2 (2014????)
 * Explore horizon no longer hides detected items.
 * Wanderers cannot start with both a shield and two-handed weapon equipped.
 * Avoid giving double piety for some collateral kills.
+* Monsters now use the correct number of charges when zapping rods.
 
 Stone Soup 0.13.1 (20131128)
 ----------------------------
