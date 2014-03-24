@@ -163,8 +163,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         {
             monster_type mon;
 
-            if (get_ammo_brand(wpn) == SPMSL_POISONED
-                || one_chance_in(5 - min(4, div_rand_round(pow * 2, 25))))
+            if (one_chance_in(5 - min(4, div_rand_round(pow * 2, 25))))
             {
                 mon = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
                                                   : MONS_ADDER;
