@@ -2733,11 +2733,11 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_LUGONU_ABYSS_ENTER:
     {
         // Deflate HP.
-        dec_hp(random2(you.hp), false);
+        dec_hp(random2avg(you.hp, 2), false);
 
         // Deflate MP.
         if (you.magic_points)
-            dec_mp(random2(you.magic_points));
+            dec_mp(random2avg(you.magic_points, 2));
 
         bool note_status = notes_are_active();
         activate_notes(false);  // This banishment shouldn't be noted.
