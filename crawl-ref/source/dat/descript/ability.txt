@@ -201,8 +201,8 @@ Recitations from this book will deal damage to such creatures.
  • Book of Apostates: Recitations from this book will sow confusion amongst
 intelligent creatures. Those who dare to worship a god other than Zin may be
 permanently deprived of means to spread their foul faith.
- • Book of Anathema: Demons and the undead are hated by Zin. This book gives you
-means to rebuke them.
+ • Book of Anathema: Demons and the undead are hated by Zin. This book gives
+you means to rebuke them.
 %%%%
 Vitalisation ability
 
@@ -610,7 +610,6 @@ torment, and hostile enchantments. All incoming damage will be halved, and you
 will bleed smoke on any incoming attack. However, your ability to deal damage
 in melee will be halved, your spellcasting power will be greatly hampered, and
 your skills will be further drained when taking damage.
-
 %%%%
 Renounce Religion ability
 

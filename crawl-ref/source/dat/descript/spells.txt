@@ -229,16 +229,16 @@ chaos.
 %%%%
 Chaotic Mirror spell
 
-This spell mirrors a wild and unpredictable effect onto both the target and
-the caster.
+This spell mirrors a wild and unpredictable effect onto both the target and the
+caster.
 %%%%
 Cloud Cone spell
 
-This spell blasts the area near the caster with various destructive clouds.
-At low power, the most lethal clouds the spell can create are noxious fumes;
-as power increases, this gives way to roaring flames, freezing vapours,
-and poisonous gas, and at the highest tiers of power even stronger clouds
-become available.
+This spell blasts the area near the caster with various destructive clouds. At
+low power, the most lethal clouds the spell can create are noxious fumes; as
+power increases, this gives way to roaring flames, freezing vapours, and
+poisonous gas, and at the highest tiers of power even stronger clouds become
+available.
 %%%%
 Cold Breath spell
 
@@ -464,8 +464,8 @@ After awakening, the target will be unable to be slept again for some time.
 %%%%
 Ephemeral Infusion spell
 
-This spell temporarily heals the caster and nearby allies; its expiry may
-leave the recipients on the brink of death but never outright kills them.
+This spell temporarily heals the caster and nearby allies; its expiry may leave
+the recipients on the brink of death but never outright kills them.
 %%%%
 Excruciating Wounds spell
 
@@ -476,8 +476,8 @@ permanent by reading a scroll of brand weapon.
 %%%%
 Explosive Bolt spell
 
-This spell hurls a bolt containing fiery energy; on piercing a target, it
-lets loose an explosion that harms nearby creatures as well.
+This spell hurls a bolt containing fiery energy; on piercing a target, it lets
+loose an explosion that harms nearby creatures as well.
 %%%%
 Fire Brand spell
 
@@ -510,8 +510,8 @@ This spell creates a short burst of flame.
 Flash Freeze spell
 
 This spell freezes the air around a target rapidly enough to both cause
-significant harm and cause a thick sheet of ice to form, hindering the
-target's movement.
+significant harm and cause a thick sheet of ice to form, hindering the target's
+movement.
 %%%%
 Flight spell
 
@@ -531,10 +531,10 @@ backlash will be.
 %%%%
 Forceful Invitation spell
 
-This ability summons some of the lesser threats from one of the Lair of
-Beasts, the Snake Pit, the Spider Nest, the Swamp, the Shoals, the Orcish
-Mines, the Elven Halls, the Vaults, or the Crypt; the specific branch
-varies with the caster.
+This ability summons some of the lesser threats from one of the Lair of Beasts,
+the Snake Pit, the Spider Nest, the Swamp, the Shoals, the Orcish Mines, the
+Elven Halls, the Vaults, or the Crypt; the specific branch varies with the
+caster.
 %%%%
 Freeze spell
 
@@ -580,11 +580,11 @@ undead creatures on its own.
 %%%%
 Glaciate spell
 
-This spell conjures forth a mighty blast of ice; targets within its
-cone-shaped area of effect take progressively more ice damage the closer they
-are to the caster. Targets hit by the blast are encased in ice, slowing their
-movement for a few turns; targets killed by the blast may be frozen into solid
-blocks of ice.
+This spell conjures forth a mighty blast of ice; targets within its cone-shaped
+area of effect take progressively more ice damage the closer they are to the
+caster. Targets hit by the blast are encased in ice, slowing their movement for
+a few turns; targets killed by the blast may be frozen into solid blocks of
+ice.
 %%%%
 Grand Avatar spell
 
@@ -737,8 +737,8 @@ destroyed at any power level.
 Legendary Destruction spell
 
 At the expense of the caster's life force, this spell randomly conjures forth
-one of several powerful magical effects - Orb of Electricity, Lehudib's
-Crystal Spear, Orb of Destruction, Ghostly Fireball, Fireball, or Flash Freeze.
+one of several powerful magical effects - Orb of Electricity, Lehudib's Crystal
+Spear, Orb of Destruction, Ghostly Fireball, Fireball, or Flash Freeze.
 %%%%
 Lehudib's Crystal Spear spell
 
@@ -851,9 +851,9 @@ species.
 %%%%
 Necromutation spell
 
-This spell transforms the caster into a lich — a powerful skeletal figure.
-The caster gains some powers of death, and becomes more resistant to cold
-and hostile enchantments and completely immune to poison, rotting, and negative
+This spell transforms the caster into a lich — a powerful skeletal figure. The
+caster gains some powers of death, and becomes more resistant to cold and
+hostile enchantments and completely immune to poison, rotting, and negative
 energy, and requires no food at all for the duration of the spell.
 
 The caster also gains some of the more dubious benefits of having an undead
@@ -948,8 +948,8 @@ Plane Rend spell
 This ability summons some of the greater threats from one of the Lair of
 Beasts, the Snake Pit, the Spider Nest, the Swamp, the Shoals, the Pits of
 Slime, the Orcish Mines, the Elven Halls, the Vaults, the Crypt, the Tomb of
-Ancients, or the Realm of Zot; the specific branch varies with each cast of
-the spell.
+Ancients, or the Realm of Zot; the specific branch varies with each cast of the
+spell.
 %%%%
 Poison Arrow spell
 
@@ -1242,8 +1242,8 @@ Sublimation of Blood spell
 
 This spell converts flesh, blood and other bodily fluids into magical energy.
 Casters may focus this spell on their own bodies (which can be dangerous but
-never directly lethal), or can wield freshly butchered flesh in order to draw
-a smaller amount of power into themselves.
+never directly lethal), or can wield freshly butchered flesh in order to draw a
+smaller amount of power into themselves.
 %%%%
 Summon Air Elementals spell
 
@@ -1293,9 +1293,9 @@ This spell summons one or more fire elementals.
 %%%%
 Summon Forest spell
 
-This spell finds a forested plane and forcefully intersects it with this
-world; however, it requires open space to succeed. While the spell holds,
-some of its terrain and spirit inhabitants may be trapped here.
+This spell finds a forested plane and forcefully intersects it with this world;
+however, it requires open space to succeed. While the spell holds, some of its
+terrain and spirit inhabitants may be trapped here.
 %%%%
 Summon Greater Demon spell
 
@@ -1306,9 +1306,9 @@ regardless!
 %%%%
 Summon Guardian Golem spell
 
-This spell summons a protective golem. It redirects the injuries of its
-allies to itself, though it risks overheating after absorbing significant
-amounts of damage. It will gain more health at high power.
+This spell summons a protective golem. It redirects the injuries of its allies
+to itself, though it risks overheating after absorbing significant amounts of
+damage. It will gain more health at high power.
 %%%%
 Summon Hell Beast spell
 
@@ -1505,9 +1505,9 @@ dealing damage. It can affect targets standing in or flying above water.
 Weave Shadows spell
 
 This spell weaves a creature from shadows and threads of ethereal matter. The
-creatures thus brought into existence increase in power with spellpower.
-The spell even creates appropriate equipment for the creature, which are given
-a lasting substance by their firm contact with reality.
+creatures thus brought into existence increase in power with spellpower. The
+spell even creates appropriate equipment for the creature, which are given a
+lasting substance by their firm contact with reality.
 %%%%
 Wind Blast spell
 

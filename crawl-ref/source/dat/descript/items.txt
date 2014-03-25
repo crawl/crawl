@@ -923,8 +923,8 @@ plate armour
 # plate armour popularity. Before then, it had gaps on and under joints,
 # often filled with mail.
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate
-and greaves. Chainmail covers gaps, allowing movement.
-It provides excellent protection, yet donning it takes forever.
+and greaves. Chainmail covers gaps, allowing movement. It provides excellent
+protection, yet donning it takes forever.
 %%%%
 potion of agility
 
@@ -1003,8 +1003,8 @@ A potion which hides you from the sight of others.
 potion of lignification
 
 A potion which temporarily transforms the imbiber into an animated tree with
-branches capable of holding weapons. Such a tree is very resilient, although
-it is rooted in place for the duration, and additionally cannot teleport or
+branches capable of holding weapons. Such a tree is very resilient, although it
+is rooted in place for the duration, and additionally cannot teleport or
 consume food or potions.
 %%%%
 potion of magic
@@ -1217,8 +1217,8 @@ ability of the wielder.
 %%%%
 rod of destruction
 
-This rod can be evoked to release a damaging spell picked at random from a small
-set, all able to pierce through monsters to damage the ones behind them.
+This rod can be evoked to release a damaging spell picked at random from a
+small set, all able to pierce through monsters to damage the ones behind them.
 %%%%
 rod of fiery destruction
 
@@ -1340,9 +1340,9 @@ Magical artefacts cannot be enchanted at all.
 scroll of enchant weapon ii
 
 This scroll places an enchantment on a weapon chosen by the reader, making it
-inflict greater damage in combat. It becomes increasingly less likely to succeed
-when used on highly enchanted weapons, and can only ever enchant them up to +9.
-Magical artefacts cannot be enchanted at all.
+inflict greater damage in combat. It becomes increasingly less likely to
+succeed when used on highly enchanted weapons, and can only ever enchant them
+up to +9. Magical artefacts cannot be enchanted at all.
 %%%%
 scroll of enchant weapon iii
 

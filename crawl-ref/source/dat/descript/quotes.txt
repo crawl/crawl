@@ -478,11 +478,11 @@ Murray
 Natasha
 
 “It dooth appéere that there is in Cats as in all other kindes of beasts, a
-certaine reason and language wherby they vnderstand one another. But as touching
-this Grimmalkin: I take rather to be an Hagat or a VVitch then a Cat. For
-witches haue gone often in that likenes, And therof hath come the prouerb as
-trew as common, that a Cat hath nine liues, that is to say, a witch may take on
-her a Cats body nine times.”
+certaine reason and language wherby they vnderstand one another. But as
+touching this Grimmalkin: I take rather to be an Hagat or a VVitch then a Cat.
+For witches haue gone often in that likenes, And therof hath come the prouerb
+as trew as common, that a Cat hath nine liues, that is to say, a witch may take
+on her a Cats body nine times.”
     -William Baldwin, “Beware the Cat”, 1584
 %%%%
 Nikola
@@ -1275,9 +1275,9 @@ and when they did so, the flail crashed through brazen helmet, skull and all.”
 %%%%
 Flight spell
 
-“What surprised him the most, however, was the logic of his wings. They
-seemed so natural on that completely human organism that he couldn’t
-understand why other men didn’t have them too.”
+“What surprised him the most, however, was the logic of his wings. They seemed
+so natural on that completely human organism that he couldn’t understand why
+other men didn’t have them too.”
     -Gabriel Garcia Marquez, _A Very Old Man with Enormous Wings_. 1955.
      trans. Gregory Rabassa. 1972
 %%%%
