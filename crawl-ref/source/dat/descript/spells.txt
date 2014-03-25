@@ -1404,9 +1404,9 @@ time after the speed ends.
 %%%%
 Symbol of Torment spell
 
-This spell calls on the powers of Hell to cause agonising injury to any living
-thing in the caster's vicinity. Despite its ominous power, this spell is never
-lethal.
+This spell calls on the powers of darkness to cause agonising injury to any
+living thing in the caster's vicinity. Despite its ominous power, this spell is
+never directly lethal.
 %%%%
 Teleport Other spell
 
