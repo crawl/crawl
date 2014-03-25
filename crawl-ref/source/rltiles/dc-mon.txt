@@ -961,6 +961,7 @@ rotting_hulk MONS_ROTTING_HULK
 
 %sdir mon/unique
 blork_the_orc MONS_BLORK_THE_ORC
+%rim 0
 urug MONS_URUG
 nergalle MONS_NERGALLE
 saint_roka MONS_SAINT_ROKA
@@ -973,6 +974,7 @@ orc_knight MONS_ORC_KNIGHT
 orc_warlord MONS_ORC_WARLORD
 orc_sorcerer MONS_ORC_SORCERER
 orc_high_priest MONS_ORC_HIGH_PRIEST
+%rim 1
 vault/deformed_orc MONS_DEFORMED_ORC
 
 ## Ghosts ('p')
