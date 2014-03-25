@@ -10,6 +10,7 @@
 
 #include "act-iter.h"
 #include "art-enum.h"
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
@@ -571,7 +572,7 @@ int monster::halo_radius2() const
     item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
-    if (weap && weap->special == UNRAND_BRILLIANCE)
+    if (weap && is_unrandom_artefact(*weap) && weap->special == UNRAND_BRILLIANCE)
         size = 10;
 
     if (holiness() != MH_HOLY)
@@ -725,7 +726,7 @@ int player::umbra_radius2() const
 int monster::umbra_radius2() const
 {
     item_def* ring = mslot_item(MSLOT_JEWELLERY);
-    if (ring && ring->special == UNRAND_SHADOWS)
+    if (ring && is_unrandom_artefact(*ring) && ring->special == UNRAND_SHADOWS)
         return 10;
 
     if (holiness() != MH_UNDEAD)
