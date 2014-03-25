@@ -41,7 +41,7 @@ ENDMAP
 
 ##############################################################
 # 46 x 14
-NAME:    elethiomel_arrival_Infinity_Welcomes_Careful_Drivers
+NAME:    elethiomel_arrival_infinity_welcomes_careful_drivers
 TAGS:    arrival no_rotate
 ORIENT:  northwest
 SUBST:   ' : . x ':40, '=x.

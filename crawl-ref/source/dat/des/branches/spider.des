@@ -746,7 +746,7 @@ xxxxXXXXXXXXXXXxxxxxxxx
 ENDMAP
 
 # Misc minivaults
-NAME:   Guppyfry_Spider_Mini_1
+NAME:   guppyfry_spider_mini_1
 DEPTH:  Spider
 MONS:   spider / jumping spider, trapdoor spider / redback
 MAP
@@ -764,7 +764,7 @@ xxxx..xxxxx.
 xxx.@xxxxxxx
 ENDMAP
 
-NAME:   Guppyfry_Spider_Mini_2
+NAME:   guppyfry_spider_mini_2
 DEPTH:  Spider
 MONS:   spider / jumping spider / trapdoor spider / redback
 MAP
@@ -781,7 +781,7 @@ x....xx....x
 xx..xxxx..xx
 ENDMAP
 
-NAME:   Guppyfry_Spider_Mini_3
+NAME:   guppyfry_spider_mini_3
 DEPTH:  Spider
 MONS:   spider / jumping spider / trapdoor spider / redback
 MAP
@@ -964,7 +964,7 @@ MAP
          .1.
 ENDMAP
 
-NAME:    lemuel_Spider_Zombies
+NAME:    lemuel_spider_zombies
 DEPTH:   Spider:1-4
 ORIENT:  float
 TAGS:    no_monster_gen

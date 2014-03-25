@@ -294,7 +294,7 @@ ENDMAP
 ##########################################################################
 # A more Angbandy vault
 #
-NAME:   Angbandy_vault
+NAME:   angbandy_vault
 ORIENT: northeast
 DEPTH:  Depths, !Depths:$
 SUBST:  "=.", '=.', '=$, "=*, *=* |:1

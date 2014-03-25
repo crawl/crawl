@@ -1091,7 +1091,7 @@ MAP
    xcxcxcxcx
 ENDMAP
 
-NAME:  roderic_Roman_lattice
+NAME:  roderic_roman_lattice
 TAGS:  transparent extra decor
 DEPTH: D, Depths, Elf
 MAP
@@ -1108,7 +1108,7 @@ ccccccccccccccccccccccccc
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   roderic_Aztec_sauvastika
+NAME:   roderic_aztec_sauvastika
 TAGS:   transparent extra decor
 WEIGHT: 1
 DEPTH:  D, Depths
@@ -1130,7 +1130,7 @@ MAP
    ..@......
 ENDMAP
 
-NAME:   roderic_Bali_sauvastika
+NAME:   roderic_bali_sauvastika
 TAGS:   transparent extra decor
 DEPTH:  D, Depths
 WEIGHT: 1
@@ -1153,7 +1153,7 @@ MAP
 .......@...
 ENDMAP
 
-NAME:   roderic_Chinese_pattern_swastika
+NAME:   roderic_chinese_pattern_swastika
 TAGS:   transparent mini_float extra decor
 DEPTH:  D, Depths
 WEIGHT: 1
@@ -1171,7 +1171,7 @@ MAP
 ...............
 ENDMAP
 
-NAME:   roderic_Hopi_sauvastika
+NAME:   roderic_hopi_sauvastika
 TAGS:   transparent extra decor
 DEPTH:  D, Depths
 WEIGHT: 1
@@ -1189,7 +1189,7 @@ MAP
 .....@.....
 ENDMAP
 
-NAME:   roderic_Greek_sauvastika
+NAME:   roderic_greek_sauvastika
 TAGS:   transparent extra decor
 DEPTH:  D, Depths
 WEIGHT: 1

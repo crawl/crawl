@@ -1214,7 +1214,7 @@ ENDMAP
 ##############################################################################
 # Beware the mummy's curse (Lemuel)
 #
-NAME:    lemuel_MiniTomb
+NAME:    lemuel_minitomb
 ORIENT:  float
 DEPTH:   Depths, !Depths:$, Crypt
 MONS:    zombie / nothing
@@ -1965,7 +1965,7 @@ ENDMAP
 ##############################################################################
 # Flame loot (Lemuel)
 #
-NAME:   lemuel_Flame_loot_2
+NAME:   lemuel_flame_loot_2
 DEPTH:  D:9-, Depths
 ORIENT: float
 ITEM:   nothing

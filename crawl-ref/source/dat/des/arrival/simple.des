@@ -1545,7 +1545,7 @@ ENDMAP
 ##############################################################################
 # Saegor's simple entries
 
-NAME:   saegor_arrival_simple_A
+NAME:   saegor_arrival_simple_a
 TAGS:   arrival
 ORIENT: float
 MAP
@@ -1554,7 +1554,7 @@ c{c
 .@.
 ENDMAP
 
-NAME:   saegor_arrival_simple_B
+NAME:   saegor_arrival_simple_b
 TAGS:   arrival
 ORIENT: float
 MAP
@@ -1565,7 +1565,7 @@ xG.Gx
 xx+xx
 ENDMAP
 
-NAME:   saegor_arrival_simple_C
+NAME:   saegor_arrival_simple_c
 TAGS:   arrival no_monster_gen
 ORIENT: float
 SHUFFLE: {([
@@ -1578,7 +1578,7 @@ xG+++Gx
 xxv@vxx
 ENDMAP
 
-NAME:   saegor_arrival_simple_D
+NAME:   saegor_arrival_simple_d
 TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
@@ -1593,7 +1593,7 @@ xxwt.twxx
 xxxx+xxxx
 ENDMAP
 
-NAME:   saegor_arrival_simple_E
+NAME:   saegor_arrival_simple_e
 TAGS:   arrival no_monster_gen
 ORIENT: float
 MAP
@@ -1607,7 +1607,7 @@ xxx.{.xx.x
   xxx++xxx
 ENDMAP
 
-NAME:   saegor_arrival_simple_F
+NAME:   saegor_arrival_simple_f
 TAGS:   arrival
 ORIENT: float
 MAP
