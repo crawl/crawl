@@ -2392,7 +2392,7 @@ static void _decrement_durations()
             you.duration[DUR_ICEMAIL_DEPLETED] -= delay;
 
         if (!you.duration[DUR_ICEMAIL_DEPLETED])
-            mprf(MSGCH_DURATION, "Your icy envelope is fully restored.");
+            mprf(MSGCH_DURATION, "Your icy envelope is restored.");
 
         you.redraw_armour_class = true;
     }

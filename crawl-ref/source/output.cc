@@ -748,10 +748,8 @@ static void _print_stats_ac(int x, int y)
 {
     // AC:
     CGOTOXY(x+4, y, GOTO_STAT);
-    if (you.duration[DUR_ICY_ARMOUR] || player_stoneskin())
+    if (you.duration[DUR_ICY_ARMOUR] || player_stoneskin() || player_icemail_armour_class())
         textcolor(LIGHTBLUE);
-    else if (you.duration[DUR_ICEMAIL_DEPLETED] > ICEMAIL_TIME / ICEMAIL_MAX)
-        textcolor(RED);
     else
         textcolor(HUD_VALUE_COLOUR);
     string ac = make_stringf("%2d ", you.armour_class());
