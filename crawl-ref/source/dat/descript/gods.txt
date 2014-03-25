@@ -2,8 +2,8 @@
 Zin
 
 Zin is a God for those focused on inner strength. Followers must remain pure of
-body and soul, refraining from unholy, evil, unclean or chaotic magic; the use
-of mutations and the consumption of intelligent beings' flesh. They may preach
+body and soul, refraining from unholy, evil, unclean or chaotic magic, avoiding
+mutation, and never consuming the flesh of intelligent beings. They may preach
 to or imprison the unenlightened, and can ultimately gain a divine refuge. Zin
 values selflessness, demanding a tithe (one tenth) of all gold gained,
 preferably followed by donations of more. Zin's followers can convert to
@@ -39,7 +39,7 @@ Xom
 Xom is a wild and unpredictable God of chaos, who seeks not worshippers but
 playthings with which to toy. Many choose to follow Xom in the hope of
 receiving fabulous rewards and mighty powers, but Xom is nothing if not
-capricious. Also, there is nothing a follower can do to influence Xom's mood.
+capricious. There is nothing a follower can do to influence Xom's mood.
 %%%%
 Vehumet
 
@@ -82,12 +82,12 @@ burn. Followers are forbidden the use of spell magic.
 %%%%
 Nemelex Xobeh
 
-Nemelex is a strange and unpredictable trickster God, whose powers can be
-invoked through the magical packs of cards painted in the ichor of demons.
-Followers are expected to sedulously sacrifice valuable items, the type of
-which will influence the gifts. Followers are also advised to trust in the
-cards and use them as much as possible. However, the Trickster can ensure that
-fortune favours the bold.
+Nemelex is a strange and unpredictable trickster God, whose powers are
+invoked through magical packs of cards painted in the ichor of demons.
+Followers are expected to sedulously sacrifice valuable items, and will recieve
+decks of cards in return. Followers encouraged to trust in the cards and use
+them as much as possible. However, the Trickster can ensure that fortune
+favours the bold.
 %%%%
 Elyvilon
 
@@ -107,11 +107,11 @@ earn this evil God's favour.
 %%%%
 Beogh
 
-Beogh is the deity worshipped by the cave orcs native to parts of the dungeon.
-Only orcs may devote their service to Beogh, and must prove their devotion by
-bloodshed and the blessing of dead orcs. Devout followers of Beogh can smite
-their foes, and especially fervent devotees of Beogh may even gain followers of
-their own, for the orcs still look for their Messiah.
+Beogh is the evil deity worshipped by the cave orcs native to parts of the
+dungeon. Only orcs may devote their service to Beogh, and they must prove their
+devotion with bloodshed and by blessing dead orcs. Devout followers of Beogh
+can smite their foes, and especially fervent devotees of Beogh may even gain
+followers of their own, for the orcs still look for their Messiah.
 %%%%
 Fedhas
 
@@ -168,31 +168,34 @@ intervene to save a follower's life.
 %%%%
 the Shining One powers
 
-Followers of the Shining One are surrounded by a halo that reveals their
-enemies to them. They gain power by killing evil beings. The Shining One will
-keep summoned and charmed allies on their side longer, should the allies prove
-worthy of the crusade. Followers will gain use of a divine shield to protect
-them in battle. Later, they can channel blasts of cleansing flame that are
-particularly damaging to unholy beings. Eventually, they can ask the Shining
-One to send them powerful divine beings as allies. The Shining One may
-occasionally directly intervene to save a follower's life. With growing piety
-the Shining One will protect a follower's life force.
+Followers of the Shining One are surrounded by a halo that reveals their enemies
+to them. Followers will gain power by killing evil beings, and with growing
+piety their life force will be protected. The Shining One will keep summoned and
+charmed allies on their side longer, should the allies prove worthy of the
+crusade. Followers will gain use of a divine shield to protect them in battle.
+Later, they can channel blasts of cleansing flame that are particularly damaging
+to unholy beings, and can call upon powerful divine beings as temporary allies.
+Highly pious followers may request the Shining One's blessing upon a weapon. The
+Shining One may occasionally directly intervene to save a follower's life.
 %%%%
 Kikubaaqudgha powers
 
-Kikubaaqudgha will send corpses to followers, enhance servants' necromantic
-prowess with gifts of spellbooks, and imbue their weapons with pain. Especially
-fervent followers can protect themselves from torment, or even invoke it
-themselves by offering a cadaver to Kikubaaqudgha.
+Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
+prowess with gifts of spellbooks. Kikubaaqudgha will protect followers from the
+effects of necromantic miscasts, and may even shield them from unholy torment.
+Especially fervent followers may invoke torment themselves by sacrificing a
+cadaver, and Kikubaaqudgha will eventually allow followers to either recieve the
+Necronomicon, or to have their weapon imbued with pain.
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives you the power to raise skeletons and corpses to fight on your
-side, to recall your undead followers to your vicinity, and to heal hit points
-by draining the life force of living creatures. Eventually, you'll gain the
-power to bind a monster's soul, and make it fight for you instead. Yredelemnul
-will sporadically gift you with stronger undead servants. Also, with sufficient
-piety, Yredelemnul will mirror any injury you have to suffer onto the attacker.
+Yredelemnul gives followers the power to raise skeletons and corpses, to recall
+undead followers to their vicinity, and to heal hit points by draining the life
+force of living creatures. With sufficient piety, Yredelemnul can be called upon
+to mirror a follower's injuries onto attackers. Eventually, followers will gain
+the power to bind a monster's soul, and make it fight for them instead.
+Yredelemnul will sporadically gift followers increasingly powerful undead
+servants.
 %%%%
 Xom powers
 
@@ -211,32 +214,30 @@ increasingly powerful destructive spells as they gain piety.
 %%%%
 Okawaru powers
 
-Followers will soon gain the ability to temporarily increase their skills in
-combat, and, much later, to deal much faster blows. Okawaru will eventually
+Followers of Okawaru will gain the ability to temporarily increase their skills
+in combat, and, much later, to deal much faster blows. Okawaru will eventually
 gift followers with weapons and armour.
 %%%%
 Makhleb powers
 
-Makhleb offers followers various means to inflict immense damage, and to call
-in help from powerful demons, although these powers come with a price in blood.
-However, Makhleb will grant followers renewed health in return for killing
-beings of all kinds.
+Makhleb offers followers means to inflict immense damage through chaotic,
+destructive attacks. Followers will also be able to call in help from powerful
+demons. Makhleb's powers come with a price in blood. However, Makhleb will grant
+followers renewed health in return for killing beings of all kinds.
 %%%%
 Sif Muna powers
 
 Followers of Sif Muna can channel magical energy when they need it the most,
 and they gain a power to forget any spell at will, so as to learn new ones. Sif
 Muna protects spellcasters against the negative effects of miscasting a spell.
-Over time, followers will get spellbooks containing all spells to be found in
-the realm.
+Over time, followers will recieve spellbooks containing a vast range of spells.
 %%%%
 Trog powers
 
-Trog offers various powers to help you in battle, namely the ability to go
-berserk at will, and the ability to make wounds heal more quickly while
-increasing resistance to magical effects. Later, followers may call in powerful
-raging allies. Eventually, Trog will gift followers with weapons focused on
-damage.
+Trog offers various powers to help followers in battle. Followers will gain the
+ability to go berserk at will, and to rapidly heal their wounds while increasing
+resistance to hostile enchantments. Later, followers may call in powerful raging
+allies. Eventually, Trog will gift followers with weapons focused on damage.
 %%%%
 Nemelex Xobeh powers
 
@@ -269,11 +270,10 @@ worshippers while they remain in the Abyss itself.
 %%%%
 Beogh powers
 
-Beogh encourages followers to make use of orcish gear found in the dungeon.
-Followers can smite their foes, and will even gain orcish followers of their
-own, who may be blessed by Beogh in battle and can be recalled to your vicinity
-as needed. Eventually, they'll gain the power to walk on water. Beogh will
-sometimes directly intervene to save a follower's life. {{
+Followers of Beogh can smite their foes, and will even gain orcish followers of
+their own, who may be blessed by Beogh in battle and can be recalled as needed.
+Eventually, followers will gain the power to walk on water. Beogh will sometimes
+directly intervene to save a follower's life. {{
     if you.race() == "Lava Orc" then
         return "Beogh suppresses the heat aura of Lava Orc followers."
     end
@@ -301,29 +301,29 @@ they do, and, finally, the ability to step out of the flow of time entirely.
 Jiyva powers
 
 Jiyva's followers can request jellies, turn monsters to slime, and eventually
-remove their harmful mutations. As their piety grows, Jiyva will, with
-increasing frequency, drop jellies into the dungeon; rearrange followers'
-attributes based on their skills, armour, and burden; and grant mutation gifts.
-Slimes will never harm a follower of Jiyva, and Jiyva demands the same conduct
-in return. Eventually, all visible slimes will join in on prayers, preventing
-them from moving for awhile.
+remove their harmful mutations. Followers of Jiyva may also pray alongside
+visible slimes, preventing items from being eaten for a while. As their piety
+grows, Jiyva will, with increasing frequency, drop jellies into the dungeon;
+rearrange followers' attributes based on their skills, armour, and burden; and
+grant mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva
+demands the same conduct in return.
 %%%%
 Ashenzari powers
 
 Ashenzari exhorts followers to garb themselves with curses, and provides
-rewards for time spent using cursed armour, jewelry or weapons. Ashenzari's
-ultimate desire, however, is not for devotion but the knowledge of all things.
-Pious worshippers willing to part with a portion of their knowledge will
-receive a great portion of Ashenzari's in return.
+rewards for time spent using cursed armour, jewellery or weapons. Ashenzari
+will increase followers' skills depending on how cursed they are, and grants
+clear sight and clarity of mind. Followers will later gain the ability to
+scry through walls, and eventually will be able to transfer a portion of their
+knowledge from one skill to another.
 %%%%
 Dithmenos powers
 
 Followers of Dithmenos are constantly surrounded in an aura of shadow, the
 extent of which is reflective of their level of devotion. Dithmenos grants
 followers the ability to instantly step into the shadow of nearby creatures,
-provided their shadow is still enough to do so. Dithmenos protects followers
-by occasionally shrouding those struck by attacks in dark smoke. Sufficiently
-pious followers of Dithmenos will find their own shadow will begin to attack
-on its own, and eventually gain the ability to assume the form of a shadow
-themself.
+provided the shadow is still enough to do so. Dithmenos protects followers by
+occasionally shrouding those struck by attacks in dark smoke. Sufficiently pious
+followers of Dithmenos will find their own shadow will begin to attack on its
+own, and eventually gain the ability to assume the form of a shadow themself.
 %%%%
