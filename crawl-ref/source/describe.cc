@@ -4365,10 +4365,25 @@ static void _detailed_god_description(god_type which_god)
         broken = "";
         switch (which_god)
         {
+        case GOD_ASHENZARI:
+        case GOD_JIYVA:
         case GOD_TROG:
-            broken = "Note that Trog does not demand training of the "
-                     "Invocations skill. All abilities are purely based on "
-                     "piety.";
+            broken = "Note that " + god_name(which_god) + " does not demand "
+                     "training of the Invocations skill. All abilities are "
+                     "purely based on piety.";
+
+            if (which_god == GOD_ASHENZARI
+                && which_god == you.religion
+                && piety_rank() > 1)
+            {
+                broken += "\n\n";
+                broken += _describe_ash_skill_boost();
+            }
+            break;
+
+        case GOD_KIKUBAAQUDGHA:
+            broken = "The power of Kikubaaqudgha's abilities is governed by "
+                     "Necromancy skill instead of Invocations.";
             break;
 
         case GOD_ELYVILON:
@@ -4397,10 +4412,8 @@ static void _detailed_god_description(god_type which_god)
                          "cards' effects is governed by Evocations skill "
                          "instead of Invocations.";
             }
-        break;
-        case GOD_ASHENZARI:
-            if (which_god == you.religion && piety_rank() > 1)
-                broken = _describe_ash_skill_boost();
+            break;
+
         default:
             break;
         }
