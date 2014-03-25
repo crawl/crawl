@@ -978,7 +978,18 @@ static void _ARC_BLADE_melee_effects(item_def* weapon, actor* attacker,
                                      int dam)
 {
     if (!mondied && one_chance_in(3))
-        cast_discharge(75 + random2avg(75, 2), false);
+    {
+        if (discharge_monsters(defender->pos(),
+                               75 + random2avg(75, 2),
+                               0,
+                               attacker) == 0)
+        {
+            if (you.can_see(attacker))
+                mpr("The arc blade crackles.");
+            else
+                mpr("You hear the crackle of electricity.");
+        }
+    }
 }
 
 ///////////////////////////////////////////////////
