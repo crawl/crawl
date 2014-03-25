@@ -211,14 +211,6 @@ A gateway to an intricate maze designed by subtle and malicious minds, its exit
 guarded by a fearsome monster. Many a hapless adventurer has lost his way in
 the twisted, shifting passages, and starved to death.
 %%%%
-A mangrove
-
-This tree is specially adapted for growing in swampy conditions. Its vines are
-too thick to see through.
-
-While too large to be felled with an axe, it is susceptible to bolts of
-lightning and to sufficiently intense sources of fire.
-%%%%
 A mechanical trap
 
 A mechanical contraption designed to harm trespassers. A skilled adventurer can

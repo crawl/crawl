@@ -813,7 +813,7 @@ KFEAT:   3456 : W
 SUBST:   . = W
 SUBST:   ' = W.
 SUBST:   G : 2:15 G:10 H:5 1:5 A:1 B:1 C:1
-SUBST:   c : M:60 x:30 c:10
+SUBST:   c : t:60 x:30 c:10
 : else
 :   if crawl.one_chance_in(4) then
 SUBST:   . = W
@@ -827,7 +827,6 @@ SUBST:   G : G:40 H:30 2:10 1:5 A:3 B:2
 KFEAT:   A = abandoned_shop
 KFEAT:   B = stone_arch
 NSUBST:  C = AB / c
-KFEAT:   M = mangrove
 SUBST:   H : G:60 T:5
 SUBST:   '" = .
 MAP

@@ -255,7 +255,6 @@ NAME:   layout_falls_marsh
 DEPTH:  Swamp:1-4
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_caverns no_pool_fixup
-KFEAT: t = mangrove
 {{
   if is_validating() then return end
 

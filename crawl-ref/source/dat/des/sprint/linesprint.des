@@ -458,7 +458,6 @@ NAME:     swamp_1
 TAGS:     swamp_1
 KMONS:    1 = place:Swamp:1
 KMONS:    2 = place:Swamp:4
-KFEAT:    t = mangrove
 : line_setup(_G)
 : general_item_setup(_G)
 : lua_marker('~', props_marker {
@@ -641,7 +640,6 @@ NAME:     swamp_end
 TAGS:     swamp_end
 KMONS:    1 = hydra / swamp dragon / swamp drake w:2
 KMONS:    2 = place:Swamp:$
-KFEAT:    t = mangrove
 KITEM:    2 = decaying rune of zot
 : line_setup(_G)
 : general_item_setup(_G)
@@ -960,7 +958,6 @@ ENDMAP
 NAME:     forest_end
 TAGS:     forest_end
 KMONS:    1 = spriggan col:white name:baker n_suf ; robe . dagger
-KFEAT:    t = mangrove
 COLOUR:   t = green / lightgreen w:5
 COLOUR:   1 = brown
 : line_setup(_G)

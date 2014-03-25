@@ -181,11 +181,6 @@ furchteinflößenden Monster bewacht wird. Viele Abenteurer starben bereits in
 diesen verzweigten, sich ständig veränderten Passagen einen grausamen
 Hungertod.
 %%%%
-A mangrove
-
-Dieser Baum ist speziell für das Wachsen unter sumpfigen Bedingungen angepasst.
-Seine Reben(?) sind zu dick, um hindurchzusehen.
-%%%%
 A mechanical trap
 
 Eine mechanische Vorrichtung, hergestellt, um Vorbeikommende zu verletzen. Ein
