@@ -1,4 +1,32 @@
 %%%%
+welcome
+
+<white>Velkommen til Dungeon Crawl!</white>
+
+Dit mål er at føre en <w>{{ return you.race() }} {{ return you.class()
+}}</w> sikkert gennem de underjordiske gange, få fat i den sagnomspundne Sfære
+fra Zot og vende tilbage til overfladen. Til at begynde med bør du dog lade
+udforskningen være dit vigtigste mål. Prøv at nå så dybt som muligt, men tag
+dig i agt: Døden lurer om hvert et hjørne.
+
+Indtil videre skal du bare huske følgende taster og deres funktioner:
+<input>$cmd[CMD_DISPLAY_COMMANDS]?</input> – viser genstandene og kommandoerne
+<input>$cmd[CMD_SAVE_GAME]</input> – gemmer spillet, så du kan genoptage det
+senere (men døden er permanent)
+<input>$cmd[CMD_LOOK_AROUND]</input> – undersøger ting i nærheden af dig
+
+Tip-tilstanden hjælper dig med at spille Crawl uden at skulle læse nogen
+dokumentation. Hvis du ikke har gjort det endnu, bør du prøve
+introduktionsspillet. Og hvis du er nysgerrig, kan du finde flere oplysninger i
+følgende filer fra mappen docs/ (som alle kan læses inde i spillet):
+<lightblue>quickstart.txt</lightblue> – En meget kort vejledning til Crawl.
+<lightblue>crawl_manual.txt</lightblue> – Indeholder alle oplysninger om arter,
+magi, evner osv.
+<lightblue>options_guide.txt</lightblue> – Crawls brugerflade kan tilpasses på
+mange måder. Dette dokument forklarer mulighederne.
+
+God fornøjelse med Crawl!
+%%%%
 death
 
 Vi kondolerer! Din karakters alt for tidlige død er bedrøvelig, men en ganske
@@ -11,6 +39,18 @@ death conjurer melee
 
 Som fremmaner bør dit vigtigste våben være angrebsmagi. Kast besværgelser
 oftere! Husk at hvile når din magi er lav.
+%%%%
+death berserker unberserked
+
+Glem ikke at gå bersærk, når du kæmper mod særligt vanskelige fjender. Det er
+risikabelt, men det gør dig hurtigere og stærkere.
+{{
+if you.hunger() < 3 then
+return "Du kan ikke gå bersærk, mens du er meget sulten eller værre, så " ..
+"sørg for at spise dig mæt hele tiden, hvis du nu skulle få brug for " ..
+"at gå bersærk."
+end
+}}
 %%%%
 death ranger melee
 
@@ -42,12 +82,6 @@ Husk nu at bruge de skriftruller, eliksirer og vånde du har fundet. Du kan
 oftest ikke forvente at få identificeret alt med skriftruller. Lær at
 improvisere: Identificér gennem brug.
 %%%%
-death random 4
-
-Glem ikke at bruge nødforsyninger tidligt hvis et særligt sammenstød synes
-overvældende. En skriftrulle med teleportation eller en hurtighedseliksir kan
-virkeligt redde dit skind.
-%%%%
 death random 5
 
 Kæmp aldrig mod mere end et monster hvis du kan undgå det. Bak altid ind i en
@@ -75,6 +109,14 @@ Der er en praktisk måde at rejse mellem fjerne steder på: Tryk på
 <input>$cmd[CMD_INTERLEVEL_TRAVEL]</input>, og vælg den ønskede destination.
 Hvis din rejse bliver afbrudt, kan du trykke <input>$cmd[CMD_INTERLEVEL_TRAVEL]
 og enter</input> for at fortsætte den.
+%%%%
+finished stashes
+
+Du kan søge i alle de genstande, der findes i de underjordiske gange, med
+<input>$cmd[CMD_SEARCH_STASHES]</input>-kommandoen. For eksempel vil
+<input>$cmd[CMD_SEARCH_STASHES]</input> <w>"dolk"</w> vise en liste med alle
+dolke. Så kan du rejse hen til et af de steder. Du kan endda indtaste ord som
+<w>"butik"</w> eller <w>"alter"</w>.
 %%%%
 finished random 0
 
@@ -106,6 +148,14 @@ finished random 3
 Du kan spørge andre Crawl-spillere til råds i IRC-kanalen (Internet Relay Chat)
 <w>##crawl</w> på freenode-serveren (<w>irc.freenode.net</w>).
 %%%%
+dissection reminder
+
+Hvis du ikke vil spise dette lig, kan du overveje at ofre det med en bøn
+(<input>$cmd[CMD_PRAY]</input>) til {{ return you.god() }}. <localtiles>Du kan
+også hugge et lig, der vises på gulvdelen af dine oppakningsfelter, i stykker
+med <input>venstre museknap</input>. </localtiles>Når du ser på et lig, mens du
+er i tip-tilstand, kan du genlæse disse oplysninger.
+%%%%
 HINT_CONVERT Xom
 
 Du er netop konverteret til <w>Xom</w>. Du kan glæde Xom ved at fornøje ham, og
@@ -114,4 +164,34 @@ du ønsker virkelig ikke, at den her gud synes, at du er kedelig!
 Hvis du fornøjer Xom, behandler han dig som legetøj og skader og hjælper dig
 tilfældigt, alt efter hvad han synes er sjovest. Ellers behandler han dig som
 legetøj, han ikke bryder sig om.
+%%%%
+HINT_CONVERT
+
+Du er netop konverteret til at tilbede <w>{{ return you.god() }}</w>. Din
+fromhed (din gunst hos guden) vil gradvist aftage med tiden, og hvis den løber
+ud, ekskommunikerer og straffer {{ return you.god() }} dig. Det kan du dog
+undgå, og endda få fromhed nok til at få evner og guddommelige gaver, ved at
+gøre ting, som glæder {{ return you.god() }}. Men ingen panik: du starter med
+en anstændig mængde fromhed, så faren for at blive ekskommunikeret er lille.
+
+Du kan se, hvad din gud kan og ikke kan lide, sammen med din nuværende stand og
+dine guddommelige evner, ved at trykke <input>^</input><localtiles> (eller ved
+at <input>shift-højreklikke</input> på din avatar)</localtiles>.
+%%%%
+HINT_SEEN_FIRST_OBJECT
+
+<console>$1 </console> er en genstand. Hvis du går herhen og trykker på
+<input>$cmd[CMD_PICKUP]</input>, kan du samle den op.<console> Generelt vises
+genstande med tegn, der ikke er bogstaver, som <w>%?!"=()[</w>.</console>
+<tiles> Du kan også samle en genstand op ved at trykke på <input>venstre
+museknap</input>, mens du står på dens felt.</tiles> Forskellige typer
+genstande bliver automatisk samlet op. <tiles>De er markeret med en grøn
+ramme.</tiles>
+
+Når du har genstanden i din oppakning, kan du smide den med <tiles>et
+<input>shift-venstreklik</input>. Når du <input>højre-klikker</input> på en
+genstand</tiles><console><input>$cmd[CMD_DROP]</input>. Når du ser på en
+genstand i din oppakning
+(<input>$cmd[CMD_DISPLAY_INVENTORY]</input>)</console>, kan du læse om dens
+egenskaber og en beskrivelse af den.
 %%%%

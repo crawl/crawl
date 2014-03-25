@@ -27,11 +27,6 @@ Draconian
 
 Drakonere er alsidige hybrider. De modnes og får en farve, når de når niveau 7.
 %%%%
-Formicid
-
-Formicider er humanoide myrer, som er dygtige til at grave. Deres lemmer er
-exceptionelt stærke og de lever i naturlig stase.
-%%%%
 Felid
 
 Disse katte besidder ikke bare flere liv, men også en bevidsthed. Til gengæld
@@ -120,9 +115,4 @@ Troll
 
 Store, brutale og klar til at lemlæste hvad som helst med deres kløer uden at
 tøve. De er altid sultne.
-%%%%
-Vampire
-
-De skifter mellem at være levende og udøde, og de er dygtige dolkere og
-troldmænd.
 %%%%

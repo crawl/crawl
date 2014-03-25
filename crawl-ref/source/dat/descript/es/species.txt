@@ -106,8 +106,3 @@ Troll
 Grandes brutos, listos para descuartizar cualquier cosa con sus garras, nunca
 pensándoselo dos veces. Siempre están hambrientos.
 %%%%
-Vampire
-
-Moviéndose entre los estados de vida y no-muerte, son expertos apuñalando y con
-los hechizos.
-%%%%

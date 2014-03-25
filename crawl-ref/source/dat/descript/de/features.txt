@@ -10,7 +10,7 @@ jeden Fall vermeiden solltest.
 %%%%
 A basalt altar of Yredelemnul
 
-Ein Altar für Yredelemnul, den Dunklen, hergestellt aus stängligem Basalt.
+Ein Altar für Yredelemnul, den Dunklen, hergestellt aus Säulenbasalt.
 %%%%
 A blade trap
 
@@ -85,20 +85,6 @@ A dry fountain
 
 Ein ausgetrockneter Brunnen, der schon bessere Tage gesehen hat.
 %%%%
-A fountain of clear blue water
-
-Drücke „q“, um aus diesem Springbrunnen zu trinken. Nicht, dass es irgendeinen
-Effekt hätte...
-%%%%
-A fountain of blood
-
-Drücke „q“, um aus diesem Springbrunnen zu trinken, wenn du unbedingt willst.
-%%%%
-A fountain of sparkling water
-
-Drücke „q“, um aus diesem magischen Springbrunnen zu trinken. Erwarte magische
-Effekte, solange der Brunnen noch magisch ist.
-%%%%
 A gate leading back out of here
 
 Dieses Tor scheint dich wieder dorthin zurückzuführen, wo du herkamst.
@@ -123,15 +109,6 @@ erfolgreiche Plünderungen dieser Unterwelten sind selten, denn selbst die
 stärksten und erfahrensten Abenteurer können hier sterben. Allerdings enthalten
 diese Hallen einige Runen und viele wertvolle Items. Es ist deutlich leichter,
 hineinzukommen, als wieder herauszukommen.
-%%%%
-A gate to the Realm of Zot
-
-Dieses Tor führt zum Zot-Reich, der letzten Etappe deiner Suche, denn seine
-unterste Ebene birgt die berüchtigte Kugel des Zot. Sowohl die Kugel, als auch
-das Reich haben einen furchterregenden, zweifelhaften Ruf, doch eine einzige
-Information scheint sicher zu sein: Die Monster, die dieses Gebiet bewohnen und
-die Kugel beschützen, sind seltsam und stark – manche von ihnen findet man
-nirgendwo außer hier.
 %%%%
 A gateway back into the Dungeon
 
@@ -219,11 +196,6 @@ A metal wall
 Eine Wand aus blau-grauem Metall. Wie jeder Verlieselektriker weiß, stellt sie
 eine elektrische Verbindung zur Erde her.
 %%%%
-A needle trap
-
-Es ist verdammt sicher, dass die Nadeln aus dieser Falle mit irgendeinem
-scheußlichen Gift übergossen wurden.
-%%%%
 A net trap
 
 Ein großes, verstecktes Netz hängt an der Verliesdecke, mit einem Strick daran;
@@ -289,6 +261,16 @@ A sealed door
 
 Eine Tür dicht versiegelt durch geheimnisvolle Runen. Es weigert sich, sich für
 jedes durch seine Magie nicht erkannte Wesen zu öffnen.
+%%%%
+A sealed passage leading down
+
+Ein herabführender Durchgang, der durch eine magische Barrikade verschlossen
+ist. So lange der Zauber besteht, scheint es unmöglich hindurch zu gelangen.
+%%%%
+A sealed passage leading up
+
+Ein hinaufführender Durchgang, der durch eine magische Barrikade verschlossen
+ist. So lange der Zauber besteht, scheint es unmöglich hindurch zu gelangen.
 %%%%
 A shaft
 
@@ -364,6 +346,10 @@ weggelaufen bist.
 Wenn du diese Treppen hochsteigst, wird deine Suche nach der Kugel beendet sein
 — egal, ob du sie gefunden hast, oder nicht.
 %%%%
+A staircase out of the Tomb
+
+Diese Treppe führt aus diesem verfluchten Ort heraus.
+%%%%
 A staircase to the Crypt
 
 Diese Treppen führen in eine antike Grabkammer. Unglücklicherweise war nicht
@@ -394,11 +380,6 @@ A staircase to the Orcish Mines
 Ein Eingang zu den Minen der Orks, gefüllt mit ihrem Gold, aber heimtückisch
 und voller Fallen.
 %%%%
-A staircase to the Enchanted Forest
-
-Am anderen Ende dieser Treppe liegt die bewaldete Heimat der Spriggans, Tengu,
-Faunen und allerlei schrecklichen Flüchen.
-%%%%
 A staircase to the Shoals
 
 Hier sind die Sandbänke: exotische Untergrundstrände, salzige Gischt und
@@ -423,11 +404,6 @@ Ein Weg, der in die Grabkammer der Alten führt; ein Platz der Verdammung, voll
 schrecklicher Gestalten, die durch die abscheulichste Nekromantie zum Leben
 erweckt wurden.
 %%%%
-A gate to the Vaults
-
-Diese Treppen führen hinunter zur Gruft, bekannt als die Heimat riesiger
-Schätze. Sie sind mit Blutflecken bespritzt.
-%%%%
 A stone staircase leading down
 
 Diese Treppe führt weiter nach unten.
@@ -444,6 +420,12 @@ zerschmettern.
 A short-range portal
 
 Dieser Teleporter wird dich in einen anderen Raum bringen.
+%%%%
+A teleport trap
+
+Diese magische Falle kann jede Person, unglückselig genug ist, hineinzutreten,
+zu einem beliebigen anderen Ort auf der selben Dungeon-Ebene versetzen - sogar
+wenn sie nur darüber fliegt!
 %%%%
 A translucent rock wall
 
@@ -502,12 +484,6 @@ gemacht.
 An abandoned shop
 
 Dieser Laden wurde verlassen.
-%%%%
-An alarm trap
-
-Während diese Falle selbst keinen Schaden verursacht, könnte ihr lautes
-Alarmsignal jemanden herbeirufen, der dir schadet. Natürlich hast du die
-Möglichkeit, diesem Jemand selbst Schaden zuzufügen.
 %%%%
 An ancient bone altar of Kikubaaqudgha
 

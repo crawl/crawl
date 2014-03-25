@@ -1,4 +1,8 @@
 %%%%
+CMD_REST
+
+Descansar y curarse
+%%%%
 CMD_REST verbose
 
 Pasas hasta 100 turnos para recuperar salud, recargar magia y/o buscar. El
@@ -32,13 +36,6 @@ Usar habilidades divinas o innatas
 CMD_PRAY
 
 Rezar a tu dios
-%%%%
-CMD_PRAY verbose
-
-Si a tu dios le gustan los sacrificios, este comando te permitirá  ofrecerle un
-cadáver u otro objeto. Si estás en un altar, te permitirá seguir al dios
-correspondiente. En el caso de algunos dioses, rezar también puede ocasionar
-otros efectos especiales.
 %%%%
 CMD_SEARCH_STASHES
 
@@ -129,13 +126,6 @@ CMD_CHARACTER_DUMP
 
 Crear un listado con información sobre el personaje en curso
 %%%%
-CMD_CHARACTER_DUMP verbose
-
-Guarda una amplia cantidad de información sobre tu personaje en un archivo
-llamado “nombredeljugador.txt” en la carpeta morgue, para leerla con
-detenimiento cuando quieras. Esto incluye las principales estadísticas, equipo,
-hechizos, capacidades, notas, etc.
-%%%%
 CMD_AUTOFIGHT
 
 Atacar al monstruo más cercano
@@ -156,6 +146,10 @@ Atacas a un monstruo adyacente a ti con el arma que empuñes.
 CMD_WAIT
 
 Esperar un turno
+%%%%
+CMD_WAIT verbose
+
+Gastar un único turno esperando y descansando
 %%%%
 CMD_DISPLAY_INVENTORY
 
@@ -205,4 +199,148 @@ Entrar modo mapa
 CMD_DISPLAY_MAP verbose
 
 Navegas el mapa de lo que ya ha sido explorado.
+%%%%
+CMD_MAP_GOTO_TARGET
+
+Viajar a la posición del cursor
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+Comenzar a viajar hacia la posición actual del cursor
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Añadir marcador en el mapa
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Establecer el marcador en la posición actual
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+Zona de exclusión de paso
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+Crear una zona de exclusión de paso, cambiar su radio o borrarla
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+Borrar todas las zonas de exclusión de paso
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+Borrar las zonas de exclusión de paso del nivel
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Bajar un nivel
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Examinar el siguiente nivel
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Subir un nivel
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Examinar el nivel anterior
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Ir al nivel
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+Viajar a otro nivel por rama o profundidad
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Encontrar escaleras de subida
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+Viajar a través de las escaleras de subida
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Encontrar escaleras de bajada
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Viajar a través de las escaleras de bajada
+%%%%
+CMD_MAP_FIND_YOU
+
+Encontrarme
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+Devolver el cursor del mapa de vuelta a tu posición
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Encontrar tiendas y portales
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+Viajar a través de las tiendas y los portales del nivel actual
+%%%%
+CMD_MAP_FIND_TRAP
+
+Encontrar trampas
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+Viajar a través de las trampas del nivel actual
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Encontrar altares
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+Viajar por los altalres del nivel actual
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+Encontrar zonas de exclusión de paso
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+Viajar a través de las zonas de exclusión de paso del nivel actual
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Encontrar marcadores
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+Viajar a través de los marcadores del nivel actual
+%%%%
+CMD_MAP_FIND_STASH
+
+Encontrar alijos
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+Viajar a través de los alijos del nivel actual
+%%%%
+CMD_ZOOM_IN
+
+Acercar zoom
+%%%%
+CMD_ZOOM_IN verbose
+
+Acercar el zoom a la zona de la mazmorra
+%%%%
+CMD_ZOOM_OUT
+
+Alejar el zoom
+%%%%
+CMD_ZOOM_OUT verbose
+
+Alejar el zoom de la zona de la mazmorra
 %%%%

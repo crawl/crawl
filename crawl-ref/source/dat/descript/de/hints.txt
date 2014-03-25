@@ -89,12 +89,6 @@ Denke daran von dir gefundene Schriftrollen, Tränke und Stäbe zu benutzen. Du
 wirst sehr häufig nicht alles mit der Schriftrolle identifizieren können. Lerne
 zu improvisieren : finde es durch ausprobieren heraus.
 %%%%
-death random 4
-
-Vergiss nicht frühzeitig deine Notfallausrüstung zu benutzen falls spezielle
-Begegnungen zu übermächtig werden. Eine Teleport-Schriftrolle oder ein Trank
-der Eile können dir wirklich den Hintern retten.
-%%%%
 death random 5
 
 Bekämpfe nie mehr als ein Monster wenn du es verhindern kannst. Ziehe dich

@@ -13,10 +13,6 @@ __cap-T_suffix
 
 Sientes algo en la boca de tu estomago.
 %%%%
-__cap-U_suffix
-
-En el caso de que huya, ¡podría enfadarse!.
-%%%%
 __(_suffix_examine
 
 Ha sido encantada para que dance en el aire y pueda atacar por su cuenta.
@@ -28,25 +24,6 @@ pero cayó en desgracia al saquear unos ladrones el tesoro mientras que dormía.
 Ahora se desliza por el calabozo buscando venganza contra cualquier aspirante a
 saqueador.  Es un consumado hechicero, pero en el combate cuerpo a cuerpo no es
 más peligroso que otros de su misma especie.
-%%%%
-Antaeus
-
-En una ocasión un poderoso y afamado Titán, su arrogancia fue su perdición.
-Ahora está corrompido y contaminado. Ahora es un poderoso demonio que reina
-sobre las heladas ruinas de Cocito. Su gigantesco torso parece un blanco fácil
-para tus ataques, pero desgraciadamente saldrá indemne de todos tus ataques,
-excepto los poderosos.
-%%%%
-Arachne
-
-En una ocasión la mejor tejedora de raza humana, Arachne sufrió una maldición
-que le dejo en su forma actual: mitad humana, mitad araña. Incapaz de
-envejecer, posee la belleza y lozanía de una mujer humana, junto con las patas
-y abdomen de una monstruosa araña gigante.
-
-Siendo varios miles de años de vieja, ha aprendido magia y algunos otros
-trucos. Es de esperar que te intente enredar con telarañas y magia, mientras
-sus mascotas te digieren para después beberte y dejarte seco.
 %%%%
 Asmodeus
 
@@ -135,10 +112,6 @@ Ereshkigal
 
 Un terrible archi-demonio que domina el mortal inframundo del Tártaro.
 %%%%
-Erica
-
-Una atractiva tejedora de hechizos.
-%%%%
 Erolcha
 
 Una maga ogresa especialmente astuta.
@@ -167,12 +140,6 @@ todo aquél que se encuentre a su paso, con un sombrero puntiagudo que lleva
 desenfadadamente encima de su cabeza. Consiguió el sombrero de la misma forma
 que consiguió su inteligencia y su conocimiento de la magia: consumiendo a su
 antiguo propietario, un poderoso mago.
-%%%%
-Geryon
-
-Un enorme archi-demonio de tres cabezas, el guardián del Vestíbulo del
-Infierno. Las leyendas dicen que su cuerno de plata se usa para abrir las
-puertas del Infierno.
 %%%%
 Gloorx Vloq
 
@@ -209,11 +176,6 @@ Ijyb
 
 Un pequeño y retorcido goblin que viste harapos azules.
 %%%%
-Ilsuiw
-
-Un astuta sirena bruja del mar, que usa su belleza y hechizos para conducir a
-aventureros poco espabilados a su muerte.
-%%%%
 Jessica
 
 Una malvada aprendiz de hechicera. Entró en el calabozo esperando encontrar un
@@ -231,17 +193,9 @@ Joseph
 
 Parece un mercenario.
 %%%%
-Josephine
-
-Una fea y anciana figura, vestida con ropas de druida.
-%%%%
 Khufu
 
 Un emperador increíblemente poderoso en pos de conseguir la divinidad.
-%%%%
-Kirke
-
-Una hermosa encantadora.
 %%%%
 Lom Lobon
 
@@ -268,6 +222,13 @@ Maurice
 
 Un astuto y conspirador ladrón.
 %%%%
+Menkaure
+
+Un justo y noble soberano de un antiguo y poderoso reino, momificado tras su
+temprana muerte. Sus fieles sacerdotes le infundieron gran y poderosa magia,
+pretendiendo concederle la vida eterna. Ahora ha quedado olvidado y reducido a
+vendajes enmohecidos y huesos secos y quebradizos.
+%%%%
 Mennas
 
 Hubo una vez un sacerdote humano llamado Mennas. Viajó a lo largo y a lo ancho
@@ -279,13 +240,6 @@ le cortaron la lengua.
 
 Tanto si este ángel es o no el mismo Mennas es un misterio, pero parece que le
 cueste hablar.
-%%%%
-Menkaure
-
-Un justo y noble soberano de un antiguo y poderoso reino, momificado tras su
-temprana muerte. Sus fieles sacerdotes le infundieron gran y poderosa magia,
-pretendiendo concederle la vida eterna. Ahora ha quedado olvidado y reducido a
-vendajes enmohecidos y huesos secos y quebradizos.
 %%%%
 Mnoleg
 
@@ -301,11 +255,6 @@ Nellie
 Una elefante muy inteligente que viajaba formando parte de un circo. Una noche
 oscura se escapó de su cadena y desapareció en el Pandemonio, para no ser vista
 nunca más.
-%%%%
-Nergalle
-
-Una hechicera arrugada, excepcionalmente fea incluso para los estándares de los
-orcos.
 %%%%
 Nessos
 
@@ -353,11 +302,6 @@ Purgy
 Un troll inusualmente delgado.
 
 Sientes algo en la boca de tu estómago.
-%%%%
-Roxanne
-
-Un bella estatua de zafiro de una famosa maga de la tierra que desapareció
-después de un desastroso fallo al conjurar un hechizo. Está sujetando un libro.
 %%%%
 Rupert
 
@@ -486,6 +430,11 @@ Una enorme serpiente que se desplaza con una velocidad asombrosa tanto por
 tierra como por agua. No mata a sus victimas mediante venenos sino que las
 asfixia.
 %%%%
+ancient lich
+
+Un liche el cual, habiendo existido por incontables siglos, ha alcanzado un
+nivel casi inimaginable en el estudio de la magia negra
+%%%%
 angel
 
 Un guerrero divino de El Resplandeciente. Su imponente figura alada, de una
@@ -569,9 +518,4 @@ ancient champion
 
 Un antiguo e insondable esqueleto. Tiene cientos de sellos dorados grabados en
 sus huesos y palpita con una terrible energía impía.
-%%%%
-Cigotuvi's Monster
-
-Este terrorífico engendro parece haber sido creado usando las partes de
-cualquier criatura imaginable.
 %%%%

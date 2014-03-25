@@ -125,8 +125,3 @@ Troll
 I troll sono grandi energumeni pronti a lacerare qualsiasi cosa con i loro
 temibili artigli, senza pensarci due volte. Hanno sempre fame.
 %%%%
-Vampire
-
-I vampiri sono perennemente in bilico tra la vita e la non morte, sono
-assassini e maghi competenti.
-%%%%

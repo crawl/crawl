@@ -1,10 +1,19 @@
 %%%%
-Flight spell
+A gateway to Hell
 
-«Lo que más le asombró, sin embargo, fue la lógica de sus alas. Resultaban
-tan naturales en aquel organismo completamente humano, que no podía entender
-por qué no las tenían también los otros hombres.»
-    -Gabriel Garcia Marquez, Un señor muy viejo con unas alas enormes. 1955.
+"Soy el camino que lleva a la ciudad de desgracias.
+Soy el camino hacia los abandonados.
+Soy el camino que lleva al lamento eterno.
+
+Justicia sagrada fue lo que motivó a mi arquitecto.
+La divina omnipotencia fue quien me crió.
+Amor supremo e inteligencia venida de lo alto.
+
+Son esos elementos los que el tiempo no puede usar.
+Estos fueron creados antes que yo, y yo provengo de más allá del tiempo.
+Desabrigue cualquier esperanza, quien entre aquí."
+-Dante Alighieri,_La Divina Comedia_, “El Infierno”, Canto III. aprox. 1315. De
+la versión en inglés hecha por John Ciardi en 1954.
 %%%%
 arrow
 

@@ -84,45 +84,23 @@ uheldige tidspunkter og lade dig styrte i døden.
 %%%%
 Jump Attack ability
 
-Denne evne lader dig låne et væsens kinetiske energi til at udløse et
-lynhurtigt nærkampsspringangreb, hvorefter du lander sikkert i nærheden. Du kan
-ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpestore fjender,
-som er nedsænket i lava eller dybt vand. Du kan heller ikke bruge evnen, hvis
-du står eller svømmer i vand, lave eller flydende jord. Katte er naturlige
-springere og bliver endnu bedre til at springe til angreb når de når
-erfaringsniveau 6 og 12.
+Du springer efter en fjende, udfører et nærkampsangreb og lander i nærheden af
+målet. Du kan ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpe
+fjender, der er nedsunket i lava eller dybt vand. Du kan heller ikke bruge
+denne evne, hvis du står eller svømmer i vand, lava eller flydende jord. Katte
+er naturlige springere og bliver endnu bedre, når de når niveau 6 og 12.
 %%%%
 Hellfire ability
 
 Hærger dine fjender med helvedesild.
 %%%%
-Release Delayed Fireball ability
-
-Udløser øjeblikkeligt en tidligere memoriseret (forsinket) ildkugle uden
-yderligere omkostninger i magi eller sult.
-%%%%
 Stop Singing ability
 
 Hold op med at synge dit slagskvad.
 %%%%
-Self-Restoration ability
-
-På permanent bekostning af et magipoint kan du genoprette din styrke,
-behændighed eller intelligens og helbrede en stor mængde rådnede livspoint.
-%%%%
 Device Recharging ability
 
 Du kan genoplade en vånd eller stok på bekostning af et permanent magipoint.
-%%%%
-Dig ability
-
-Graver gennem stenvægge i en lige linje. Larmer.
-%%%%
-Shaft Self ability
-
-Sender dig til en tilfældig placering en til tre niveauer nede, ligesom hvis du
-var faldet gennem en skaktfælde. Det tager tid at grave skakten, og landingen
-larmer.
 %%%%
 Evoke Teleportation ability
 
@@ -149,11 +127,10 @@ Bliv synlig igen.
 %%%%
 Evoke Jump Attack ability
 
-Denne evne lader dig låne et væsens kinetiske energi til at udløse et
-lynhurtigt nærkampsspringangreb, hvorefter du lander sikkert i nærheden. Du kan
-ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpestore fjender,
-som er nedsænket i lava eller dybt vand. Du kan heller ikke bruge evnen, hvis
-du står eller svømmer i vand, lave eller flydende jord.
+Du springer efter en fjende, udfører et nærkampsangreb og lander i nærheden af
+målet. Du kan ikke hoppe over flyvende fjender, og du kan kun hoppe over kæmpe
+fjender, der er nedsunket i lava eller dybt vand. Du kan heller ikke bruge
+denne evne, hvis du står eller svømmer i vand, lava eller flydende jord.
 %%%%
 Stop Flying ability
 
@@ -174,26 +151,6 @@ ukontrollerede.
 End Transformation ability
 
 Vend tilbage til din normale form med en kort forsinkelse.
-%%%%
-Recite ability
-
-Prædiker Zins bud for dine fjender, hvilket kan føre til forskellige
-resultater. Der er fire bøger, du kan prædike fra:
-
-* Afskyens Bog: Denne bog behandler det mest afskyvækkende, Zin kender til:
-kaos i alle dets former. Disse recitationer påkalder Zins mest voldsomme vrede.
-
-* Afsoningens Bog: De urene er næsten lige så hadet af Lovgiveren. Recitationer
-fra denne bog vil forvolde sådanne væsener skade.
-
-* Apostatens Bog: Intelligente væsener, som ikke tilbeder Zin, men som ikke
-bedriver anden ondskab vil blive behandlet mindst hårdt. Recitation fra denne
-bog sår blot forvirring. Men de, som vover at tilbede en gud, Zin finder
-fremmed, kan permanent blive berøvet muligheden for at sprede deres modbydelige
-tro.
-
-* Anatemaets Bog: Dæmoner og udøde er hadet af Zin. Denne bog giver dig
-midlerne til at irettesætte dem.
 %%%%
 Vitalisation ability
 
@@ -257,11 +214,6 @@ Recall Undead Slaves ability
 Kalder dine udøde følgesvende tilbage fra hvor som helst i de underjordiske
 gange til din umiddelbare nærhed.
 %%%%
-Injury Mirror ability
-
-Beskadiger angribende uhyrer ved at reflektere den skade, de forvolder, tilbage
-på dem.
-%%%%
 Animate Dead ability
 
 Genopliver alle kadavere og skeletter i nærheden af dig som følgesvende. Bemærk
@@ -302,19 +254,9 @@ Minor Destruction ability
 
 Skyder et tilfældigt, skadeligt skud efter det valgte uhyre.
 %%%%
-Lesser Servant of Makhleb ability
-
-Hidkalder en smådæmon med en risiko for at være fjendtlig, hvis din
-påkaldelsesfærdighed er lav.
-%%%%
 Major Destruction ability
 
 Skyder en tilfældig, skadelig stråle eller eksplosion efter målet.
-%%%%
-Greater Servant of Makhleb ability
-
-Hidkalder en større dæmon, med en chance for at være fjendtlig, der afhænger af
-din påkaldelsesfærdighed.
 %%%%
 Channel Energy ability
 
@@ -344,12 +286,6 @@ besværgelser. Et sådant raseri følges som regel af en dyb udmattelse, en tid
 hvor du er langsom og ikke kan gå bersærk igen. I modsætning til andre kilder
 til raseri, kan din fromhed hos Trog sommetider forhindre dig i at besvime.
 %%%%
-Trog's Hand ability
-
-Påkalder dig en kraftig regenerationsevne, som samarbejder med alle andre
-kilder til regeneration og oven i købet lader ikke-helenede arter at
-regenerere. Dette øger også din beskyttelse mod magiske effekter.
-%%%%
 Brothers in Arms ability
 
 Hidkalder enorme, arrige allierede til at lave ravage.
@@ -363,23 +299,6 @@ blot at bede om indgriben, hvilket altid er gratis).
 
 Bemærk: Det er en stor synd at dræbe andre, mens du selv beder om at blive
 skånet!
-%%%%
-Lesser Healing ability
-
-Helbreder et andet væsen end dig en smule, afhængigt af dine færdigheder med
-påkaldelser. Hvis du bruger denne evne på fjendtligtsindede uhyrer forsøger den
-at gøre dem neutrale. Det virker bedst på dyr, dårligere på humanoider fra din
-egen race, endnu dårligere på andre humanoider og værst på dæmoner og udøde.
-Tanketomme væsener kan ikke pacificeres og intet uhyre kan pacificeres mens det
-sover. Chancen for en vellykket pacificering afhænger af helbredelsens
-virkning.
-
-Uanset om pacificeringen lykkes eller ej, så er den investerede mad og
-magipointet gået tabt. Hvis den lykkes, bliver uhyret helbredt og du får
-halvdelen af den erfaring, det er værd, og muligvis noget fromhed. Ellers er
-uhyret upåvirket og du får ingenting.
-
-Du kan også helbrede allierede og neutrale uhyrer.
 %%%%
 Lesser Self-Healing ability
 
@@ -414,21 +333,9 @@ Helbreder en moderat mængde livspoint, afhængigt af dine færdigheder med
 påkaldelser. Større helbredelse lader dig helbrede omtrent tre gange så meget
 som med mindre helbredelse, på bekostning af lidt mere fromhed.
 %%%%
-Divine Vigour ability
-
-Giver dig en stor mængde livs- og magipoint tilbage og øger midlertidigt
-maksimum for begge dele. Begge effekter afhænger af dine færdigheder inden for
-påkaldelser.
-%%%%
 Depart the Abyss ability
 
 Forlader Afgrunden til fordel for der, hvor du kom fra.
-%%%%
-Bend Space ability
-
-Du kan bøje materiens struktur omkring dig så du øjeblikkeligt translokerer en
-kort distance. Du translokerer og beskadiger somme tider også uhyrer i nærheden
-af dig.
 %%%%
 Banish ability
 
@@ -449,13 +356,6 @@ tappe dit helbred og din energi.
 Draw One ability
 
 Vælg et hvilket som helst spil kort i din oppakning, og træk et kort fra det.
-%%%%
-Peek at Two ability
-
-Kasserer et kort fra en valgfri stak i din oppakning for at lade dig trække to
-kort fra stakken, se på dem og blande dem ind i stakken igen. Stakken bliver
-indskrevet som indeholdende de to kort, og hvis de er forskellige identificerer
-det stakken.
 %%%%
 Triple Draw ability
 
@@ -496,13 +396,6 @@ bliver lettere at ramme. Vand som påvirkes af sollyset fordamper. Mere
 specifikt bliver dybt vand til lavt vand og lavt vand tørrer helt ud og
 afslører gangenes gulv.
 %%%%
-Growth ability
-
-Brug frugt til at dyrke en ring af planter rundt om dig selv. Hvis der ikke kan
-dannes en hel ring (fordi du ikke har frugt nok), vokser planterne frem på de
-felter ved siden af dig som er tættest på uhyrer. De planter du skaber får
-ekstra LP i proportion til din færdighed med påkaldelser.
-%%%%
 Rain ability
 
 Får regn til at falde omkring dig, hvilket forvandler gulvet til lavt vand og
@@ -518,7 +411,7 @@ Evolution ability
 
 Forvandler planter og svampe til stærkere arter. Det koster fromhed at
 opgradere svampe, og det koster frugt at opgradere planter. Opgraderede planter
-får en bonus til deres angribs præcision som er proportionel med din
+får en bonus til deres angrebs præcision som er proportionel med din
 påkaldelsesfærdighed, og oklobplanter bliver mere tilbøjelige til at spytte
 syre med højere påkaldelse.
 %%%%
@@ -532,11 +425,6 @@ Temporal Distortion ability
 Forvrænger tidens strøm omkring dig, så uhyrer hopper fremad i tid i forhold
 til dig.
 %%%%
-Slouch ability
-
-Skader alle i syne som bevæger sig hurtigere end dig. De der er magisk
-forhastede, kommer særligt slemt til skade.
-%%%%
 Step From Time ability
 
 Fjerner dig fra tidens strøm. Ting omkring sker med deres sædvanlige tempo,
@@ -547,10 +435,6 @@ af sted.
 Request Jelly ability
 
 Skaber en naturlig gele, som vandrer rundt på niveauet og fordøjer genstande.
-%%%%
-Jelly Paralyse ability
-
-Bed for midlertidigt at stoppe dine slims genstandsfortæring.
 %%%%
 Slimify ability
 
@@ -573,6 +457,12 @@ Ofrer en del af en af dine færdigheder for at forbedre en anden.
 End Transfer Knowledge ability
 
 Annullér en igangværende færdighedsoverførsel.
+%%%%
+Shadow Step ability
+
+Hvis et væsen i din umbra står stille nok til, at du kan fokusere på dets
+skygge, så lader denne evne dig træde igennem skyggen, så du øjeblikkeligt
+placeres ved siden af det.
 %%%%
 Renounce Religion ability
 

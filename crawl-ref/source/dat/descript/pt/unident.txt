@@ -4,13 +4,6 @@ amulet
 Um talismã para ser usado como joia em volta do pescoço, carregado com poderes
 arcanos de origem desconhecida.
 %%%%
-book
-
-Um livro arcano contendo poderes mágicos de origem desconhecida. Escrito para
-adeptos verdadeiros, um conhecimento inicial na arte oculta de lançar magias é
-necessário para fazer qualquer uso do tomo. Cuidado, pois não se deve brincar
-com alguns dos grimórios mais poderosos!
-%%%%
 deck of cards
 
 Um baralho de poderosas cartas mágicas, pintadas com o sangue de demônios. Elas
@@ -25,11 +18,6 @@ ring
 
 Um talismã carregado com forças arcanas de origem desconhecida a ser vestido
 como uma joia em um dedo.
-%%%%
-rod
-
-Uma barra mágica, que pode ser tida em mãos e evocada para o lançamento de
-vários feitiços, alimentando-se de um reservatório de poder autorrecarregável.
 %%%%
 scroll
 

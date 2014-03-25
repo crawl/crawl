@@ -3,7 +3,23 @@ Hellfire ability
 
 Düşmanlarını cehennem ateşiyle kavur.
 %%%%
+Turn Visible ability
+
+Tekrar görünür ol
+%%%%
+Stop Flying ability
+
+Uçmayı bırak
+%%%%
 Animate Remains or Dead ability
 
 Bu tanımla karşılaşıyorsanız bu bir bug tur.
+%%%%
+Depart the Abyss ability
+
+Geldiğin yere dönmek için Abyss ten ayrıl
+%%%%
+Remove Curse ability
+
+Ekipmanlarının lanetini kaldır
 %%%%

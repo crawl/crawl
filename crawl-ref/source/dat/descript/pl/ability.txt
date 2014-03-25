@@ -96,11 +96,6 @@ kilkukrotnie zadając obrażenia nieumarłym i demonom. Wszystkie inne wrogie
 stwory także otrzymują obrażenia lecz nie tak silne. Nie wpływa na
 sprzymierzeńców.
 %%%%
-Injury Mirror ability
-
-Rani atakujące cię stworzenia poprzez obijanie części obrażeń które Ci one
-zadają.
-%%%%
 Animate Dead ability
 
 Zamienia wszystkie zwłoki i szkielety w twoim otoczeniu w kwiaty. Pamiętaj
@@ -140,11 +135,6 @@ Silnie zwiększa twoją prędkość walki,bez straty celności. Ten nienaturalny
 efekt może powodować małe zanieczyszczenie magią m  wydłużone trwanie tego
 efektu jest złe dla twojego zdrowia.
 %%%%
-Greater Servant of Makhleb ability
-
-Przyzywa większego demona, może się zdarzyć że nie będzie on posłużny jeśli nie
-jesteś obeznany w wywoływaniu.
-%%%%
 Channel Energy ability
 
 Uzupełnia twój magiczny rezerwuar o określoną wielkość zależną od twoich
@@ -178,17 +168,6 @@ humanoidach z twojego gatunku, jeszcze gorzej na humanoidach z innego gatunku
 oraz bardzo słabo na demonach i nieumarłych. Bezmózgie kreatury nie mogą zostać
 zneutralizowane oraz każda śpiąca kreatura także. Szansa na neutralizację
 zależy od umiejętności leczenia.
-%%%%
-Divine Vigour ability
-
-Zależnie od twoich umiejętności wywoływania, przywraca duże ilości punktów
-życia i magii, oraz czasowo zwiększa ich zasób.
-%%%%
-Bend Space ability
-
-Zagina poszycie przestrzeni dookoła ciebie, natychmiastowo przemieszczając cię
-na małą odległość, jednocześnie może przenieść i zadać obrażenia potworkom w
-twoim sąsiedztwie.
 %%%%
 Banish ability
 

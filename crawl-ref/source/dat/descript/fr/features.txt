@@ -87,20 +87,6 @@ A dry fountain
 
 Une fontaine asséchée qui a connu des jours meilleurs.
 %%%%
-A fountain of clear blue water
-
-Appuyez sur “q” pour boire à cette fontaine. Pas que cela soit d'une grande
-utilité...
-%%%%
-A fountain of blood
-
-Appuyez sur “q” si vous souhaitez absolument boire à cette fontaine.
-%%%%
-A fountain of sparkling water
-
-Appuyez sur “q” pour boire à cette fontaine magique. Attendez vous à des
-réactions magiques tant qu'elle restera magique.
-%%%%
 A gate leading back out of here
 
 Ce portail semble pouvoir vous ramener d'où vous venez.
@@ -130,14 +116,6 @@ A staircase to the Depths
 
 Ces escaliers mènent aux Profondeurs — la partie la plus reculée du donjon,
 sujette à l'influence corruptrice du royaume de Zot et de ses habitants.
-%%%%
-A gate to the Realm of Zot
-
-Cette porte mène au Royaume de Zot, la dernière épreuve de votre quête. Son
-dernier niveau contient la fameuse Orbe de Zot. L'Orbe et ce Royaume ont une
-terrible et peu recommandable réputation, mais une chose semble certaine : les
-monstres qui y hantent ses couloirs et protège l'Orbe sont puissants et
-étranges — certains ne pouvant être rencontrés qu'en ces lieux.
 %%%%
 A gateway back into the Dungeon
 
@@ -232,11 +210,6 @@ A metal wall
 
 Un mur de métal bleu-gris. Comme n'importe quel électricien de donjon pourrait
 vous le dire, ce truc est certainement à la masse.
-%%%%
-A needle trap
-
-Il est plus que certain que les aiguilles de ce piège soient recouvertes d'une
-substance innommable.
 %%%%
 A net trap
 
@@ -421,11 +394,6 @@ A staircase to the Orcish Mines
 Une entrée pour les mines orcs, remplies de leur or mais traitresses, où on
 peut se faire piéger facilement.
 %%%%
-A staircase to the Enchanted Forest
-
-De l'autre coté de ces escaliers se trouve les bois qui abritent les spriggans,
-tengu, faunes et toutes sortes de malédictions effrayantes.
-%%%%
 A staircase to the Shoals
 
 Et voici les Côtes : plages exotiques souterraines, embruns salés et créatures
@@ -448,11 +416,6 @@ A staircase to the Tomb
 
 Un passage vers la Tombe des Anciens, un lieu de damnation, d'horreurs animées
 par la plus vile des nécromancies.
-%%%%
-A gate to the Vaults
-
-Ces escaliers descendent dans les Chambres Fortes, réputées pour leurs trésors.
-Ils sont tâchés de sang...
 %%%%
 A stone staircase leading down
 
@@ -533,12 +496,6 @@ faite pour piéger des {{ return you.genus(true) }} plutôt que des mouches.
 An abandoned shop
 
 Cet établissement a été abandonné.
-%%%%
-An alarm trap
-
-Même si ce piège ne vous blessera pas, sa bruyante sonnerie devrait attirer
-quelqu'un pour vous frapper. Bien sûr, vous pouvez attaquer le quelqu'un en
-question vous même.
 %%%%
 An ancient bone altar of Kikubaaqudgha
 

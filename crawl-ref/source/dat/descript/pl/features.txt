@@ -18,20 +18,6 @@ A dry fountain
 
 Wysuszona fontanna, która najlepsze dni ma już za sobą.
 %%%%
-A fountain of clear blue water
-
-Wciśnij »q« by napić się z tego źródła. Nie, żeby to miało jakikolwiek efekt...
-%%%%
-A fountain of blood
-
-Wciśnij »q« jeśli chcesz napić się z tego źródła, jeśli tak bardzo tego
-pragniesz.
-%%%%
-A fountain of sparkling water
-
-Wciśnij »q« aby napić się z tego magicznego źródła. Spodziewaj się magicznych
-efektów.
-%%%%
 A gate leading back out of here
 
 Ta brama zdaje się odprowadzić cię do miejsca, z którego przybyłeś.
@@ -86,11 +72,6 @@ stworzoną do łapania {{ return you.genus(true) }} niż zwykłych much.
 An abandoned shop
 
 Ten sklep został opuszczony
-%%%%
-An alarm trap
-
-Ta pułapka nie zadaje obrażeń, lecz jej silne odgłosy mogą sprowadzić kogoś,
-kto te obrażenia może zadać. Oczywiście ty tego kogoś także możesz zranić.
 %%%%
 An ancient bone altar of Kikubaaqudgha
 

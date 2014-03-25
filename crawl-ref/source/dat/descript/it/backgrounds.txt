@@ -56,11 +56,6 @@ Enchanter
 Gli incantatori usano incantesimi per aumentare le loro capacità in battaglia o
 mettere in difficoltà i nemici. Cominciano anche con dei buoni dardi.
 %%%%
-Fighter
-
-I guerrieri combattono con armatura e scudo oltre che un'arma a scelta. Hanno
-più punti ferita di qualunque altro profilo.
-%%%%
 Fire Elementalist
 
 Gli elementalisti del fuoco cominciano con il Libro delle Fiamme e conoscono

@@ -88,12 +88,6 @@ Pensez à utiliser les parchemins, potions et baguettes que vous avez trouvé.
 Très souvent, vous ne pourrez tout identifier uniquement avec des parchemins
 d'identification. Apprenez à improviser : identifiez en utilisant.
 %%%%
-death random 4
-
-Si une rencontre particulière vous semble dangereuse, n'oubliez pas d'utiliser
-des objets d'urgence rapidement. Un parchemin de téléportation ou une potion de
-vitesse peuvent réellement vous sauver la mise.
-%%%%
 death random 5
 
 Ne combattez jamais plus d'un monstre à la fois, si vous le pouvez.

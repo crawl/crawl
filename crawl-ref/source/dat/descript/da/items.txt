@@ -88,6 +88,12 @@ bardiche
 
 En lang stage med et enormt, kløvende blad i den ene ende.
 %%%%
+bastard sword
+
+Et stort og langt sværd. Det er faktisk et af de tungeste og farligste våben,
+de fleste racer kan bruge sammen med et skjold, og et møde med så lang en
+klinge er dårligt nyt for enhver modstander.
+%%%%
 battleaxe
 
 En stor, tohåndet krigsøkse med et formidabelt, tveægget hoved, som er lavet
@@ -527,80 +533,6 @@ decaying skeleton
 
 Et rådnende skelet.
 %%%%
-deck of changes
-
-En stak magiske kort, som forårsager forandringer i brugeren eller dennes
-omgivelser.
-
-Den kan indeholde følgende kort: eliksiren, blodtørst, metamorfose, hjelmen,
-sværdet, skyggen, lejesoldaten, trylledrikken, fokus, bland, erfaring, vild
-magi, spiralen, vismanden, alkymisten, vand, forvitring, ønskekvisten,
-murskeen, minefeltet.
-%%%%
-deck of defence
-
-Et spil magiske kort, hvoraf de fleste beskytter brugeren på forskellige måder.
-
-Det kan indeholde følgende kort: graven, skriget, fortabelse, ensomhed,
-portalbygger, fugleflugt, eliksiren, blodtørst, metamorfose, hjelmen, sværdet,
-skyggen, lejesoldaten.
-%%%%
-deck of destruction
-
-En stak magiske kort, hvoraf de fleste slynger død og ødelæggelse efter dine
-fjender (eller dig selv, hvis du er uheldig).
-
-Den kan indeholde følgende kort: vitriol, flamme, frost, gift, gnisten,
-hammeren, smerte, kuglen.
-%%%%
-deck of dungeons
-
-En stak magiske kort, der kan forme de underjordiske gange.
-
-Den kan indeholde følgende kort: vand, forvitring, ønskekvisten, murskeen,
-minefeltet.
-%%%%
-deck of escape
-
-En stak magiske kort, som hovedsageligt beskæftiger sig med forskellige former
-for flugt. Halsløs brug kan resultere i, at du bliver smidt fra asken og i
-ilden!
-
-Den kan indeholde følgende kort: portalen, rejsen, byt, fart, graven, skriget,
-fortabelse, ensomhed, portalbygger, fugleflugt.
-%%%%
-deck of punishment
-
-En stak magiske kort, som skaber problemer for brugeren.
-
-Den kan indeholde følgende kort: genfærdet, vild magi, vrede, Xom, hunger,
-forbandelsen, graven, fortabelse, portalen, minefeltet, svinet, pinsel.
-%%%%
-deck of summonings
-
-En stak magiske kort, som afbilder en lang række sære og underfulde væsener.
-
-Den kan indeholde følgende kort: korstoget, hjorden, marekorset, dansen,
-honningsvamp, knoglerne, afskyelighed.
-%%%%
-deck of war
-
-En stak magiske kort, som er nyttige før og efter kamp.
-
-Den kan indeholde følgende kort: portalen, rejsen, byt, fart, graven, skriget,
-fortabelse, ensomhed, portalbygger, fugleflugt, eliksiren, blodtørst,
-metamorfose, hjelmen, sværdet, skyggen, lejesoldaten, korstoget, hjorden,
-marekorset, dansen, honningsvamp, knoglerne, afskyelighed, vitriol, flamme,
-frost, gift, gnisten, hammeren, smerte, pinsel.
-%%%%
-deck of wonders
-
-En stak særdeles mystiske og magiske kort, som kan ændre din fysiske og mentale
-tilstand til det bedre eller det værre.
-
-Den kan indeholde følgende kort: trylledrikken, fokus, blanding, erfaring, vild
-magi, spiralen, vismanden, alkymisten.
-%%%%
 demon blade
 
 Et grufuldt våben, som er smedet i Helvedes ild. Det bliver endnu mere
@@ -746,6 +678,10 @@ Et værktøj der kan adskille fibrene i træ eller kød. Det er måske
 tilstrækkeligt, hvis du primært er interesseret i våbnets vægt, men hvis du vil
 løbe ordentlig grassat, får du brug for noget større.
 %%%%
+hat
+
+En hat af stof eller læder.
+%%%%
 helmet
 
 En hovedbeklædning af metal.
@@ -753,12 +689,6 @@ En hovedbeklædning af metal.
 honeycomb
 
 En klump lækker bikage, som er lavet af kæmpebier.
-%%%%
-horn of Geryon
-
-Dette horn tilhører Geryon, som vogter Helvedes forhal. Legenderne vil vide, at
-en dødelig, som ønsker at besøge et af helvederne, må bruge det for at få
-adgang.
 %%%%
 ice dragon armour
 
@@ -957,14 +887,6 @@ En del af en sælsom substans, som spøgelsesmøl producerer. Man får både mag
 energi og næring, når man spiser den, på bekostning af at miste sit mentale
 fokus i en kort periode.
 %%%%
-plate armour
-
-En hel dragt af solide metalplader: kyras, skulderstykker, armskinner,
-taljeplade og benskinner. Mellemrummene er dækket af ringbrynje, så du kan
-bevæge dig.
-
-Den giver fremragende beskyttelse, men tager en evighed at tage på.
-%%%%
 potion of agility
 
 En trylledrik, som øger din behændighed og din evne til at undvige
@@ -1037,12 +959,6 @@ potion of invisibility
 
 En eliksir, som skjuler dig for andres øjne.
 %%%%
-potion of lignification
-
-En eliksir, som forvandler den, der drikker den, til et levende træ med grene,
-der kan holde våben. Sådan et træ er ganske robust, selvom det overhovedet ikke
-kan stikke af.
-%%%%
 potion of magic
 
 En værdifuld trylledrik, som giver en person en infusion af magisk energi.
@@ -1073,18 +989,9 @@ potion of resistance
 En trylledrik, som gør dig midlertidigt modstandsdygtig mod elementerne og
 gift.
 %%%%
-potion of restore abilities
-
-En eliksir, som giver brugeren sine evner tilbage og kurerer dræning. Det lader
-også brugeren bruge et åndevåben igen med det samme.
-%%%%
 potion of slowing
 
 En drik, som forsinker dine handlinger.
-%%%%
-potion of haste
-
-En fortryllet drik, som gør alle, der drikker den, hurtigere.
 %%%%
 potion of strong poison
 
@@ -1201,8 +1108,9 @@ Denne ring lader bæreren se de ting, der er skjult af magi.
 %%%%
 ring of slaying
 
-Denne ring øger eller forringer bærerens evner inden for både nær- og
-distancekamp.
+Denne ring øger eller mindsker brugerens effektivitet med skydevåben og
+nærkampsangreb. Den har to fortryllelser, som påvirker henholdsvis præcision og
+skade.
 %%%%
 ring of strength
 
@@ -1243,16 +1151,6 @@ stof. Kåber tilpasser sig nemt til at passe humanoide kroppe af enhver
 størrelse. Klædedragter af denne art yder kun en smule beskyttelse mod fysiske
 men, men deres gavmilde snit hæmmer ikke evnen til at undvige angreb eller
 udføre trolddom ordentligt.
-%%%%
-rod of destruction
-
-Denne stok indeholder et varieret udvalg af besværgelser, der forårsager død og
-ødelæggelse.
-%%%%
-rod of fiery destruction
-
-Denne stok indeholder besværgelser, der kan slynge altødelæggende ild efter
-dine fjender.
 %%%%
 rod of inaccuracy
 
@@ -1355,27 +1253,6 @@ visse former for krops- og dyrerustning, som kan fortrylles til samme værdi som
 deres basis-RK.
 
 Den kan også bruges til at fortrylle visse eksotiske væseners skind.
-%%%%
-scroll of enchant weapon i
-
-Denne skriftrulle fortryller det våben, du har i hånden, og gør det mere
-præcist i kamp. Det bliver sværere og sværere at få den til at virke på stærkt
-fortryllede våben og kan aldrig fortrylle dem højere end +9. Magiske artefakter
-kan slet ikke fortrylles.
-%%%%
-scroll of enchant weapon ii
-
-Denne skriftrulle fortryller det våben, du har i hånden, og får det til at
-forvolde større skade i kamp. Det bliver sværere og sværere at få den til at
-virke på stærkt fortryllede våben og kan aldrig fortrylle dem højere end +9.
-Magiske artefakter kan slet ikke fortrylles.
-%%%%
-scroll of enchant weapon iii
-
-Denne skriftrulle fortryller det våben, du har i hånden, og gør det langt mere
-effektivt i kamp ved at øge både præcision og skade. Det bliver sværere og
-sværere at få den til at virke på stærkt fortryllede våben og kan aldrig
-fortrylle dem højere end +9. Magiske artefakter kan slet ikke fortrylles.
 %%%%
 scroll of fear
 
@@ -1567,10 +1444,6 @@ Denne stav øger brugerens hidkaldelsers kraft og beskytter mod hidkaldte
 væseners angreb. Hvis du er kyndig i vækkelser, kan du forsøge at bortvise
 hidkaldte væsener, når du slår dem.
 %%%%
-staff of wizardry
-
-Denne stav øger brugerens evne til at bruge magiske besværgelser betragteligt.
-%%%%
 steam dragon armour
 
 En rustning, som er lavet af skællene fra en drage, der ånder damp. Selvom den
@@ -1592,8 +1465,8 @@ stone of tremors
 En poleret sten, som er beboet af venligtsindede jordånder. Når man løfter den
 over hovedet, sender den voldsomme trykbølger gennem de underjordiske gange,
 mens ånderne søger fast form i klipperne. De, der står tæt på murene, vil blive
-ramt af faldende sten, mens den klippevæggen bølger og smuldrer, og andre
-opsluges af revner i selve jorden.
+ramt af faldende sten, mens klippevæggen bølger og smuldrer, og andre opsluges
+af revner i selve jorden.
 %%%%
 storm dragon armour
 

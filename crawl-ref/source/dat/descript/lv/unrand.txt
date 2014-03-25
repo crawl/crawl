@@ -7,20 +7,9 @@ scythe "Finisher"
 
 Gara un asa izkapts, kas īpaši pielāgota kaujai.
 %%%%
-bow of Krishna "Sharnga"
-
-Brīnumains zelta loks.
-
-Tas reiz piederēja citzemju dievam. Loks vislabāk der kopā ar īpašām bultām,
-kuras ir grūti pieejamas.
-%%%%
 mithril axe "Arga"
 
 Skaists mitrila cirvis, ko visdrīzāk pazaudējis kāds rūķu varonis.
-%%%%
-crossbow "Sniper"
-
-No kāda melna materiāla izgatavots stops.
 %%%%
 knife of Accuracy
 
@@ -41,10 +30,6 @@ Dīvaina paskata bruņas.
 fencer's gloves
 
 No balta zīda izgatavots cimdu pāris.
-%%%%
-ring of Shadows
-
-Melns gredzens, kas padara tā nēsātāju par vienu no ēnām.
 %%%%
 ring of Robustness
 

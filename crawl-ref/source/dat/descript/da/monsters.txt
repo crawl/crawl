@@ -1,7 +1,17 @@
 %%%%
-__cap-U_suffix
+__cap-N_suffix
 
-Hvis den bliver bange, bliver den vred!
+{{
+if you.race() == "Naga" then
+return "Den er særligt attråværdig."
+else
+return "Den er sær og frastødende."
+end
+}}
+%%%%
+__cap-T_suffix
+
+Du får helt ondt i maven.
 %%%%
 __(_suffix_examine
 
@@ -13,25 +23,6 @@ En gang var denne slange den fremmeste vogter af en legendarisk skat, men han
 faldt i unåde da skatten blev stjålet, mens han sov. Han snor sig nu rundt i de
 underjordiske gange og søger at hævne sig på alle vordende røvere. Han er en
 talentfuld troldkarl, men ikke mere farlig i nærkamp end andre af sin slags.
-%%%%
-Antaeus
-
-Denne forhenværende mægtige og navnkundige titans arrogance blev hans
-undergang. Nu er han korrumperet og fordærvet, en mægtig dæmon som hersker over
-Kokytus' frosne sletter. Hans gigantiske krop lader til at være let at ramme;
-uheldigvis lader det også til at alt andet end de stærkeste angreb ville prelle
-harmløst af.
-%%%%
-Arachne
-
-Arachne var som menneske den dygtigste væverske, men er i sin nuværende form
-forbandet: halvt menneske, halvt edderkop. Hun ældes ikke længere og har en
-menneskekvindes ungdom og skønhed samt en uhyrlig kæmpeedderkops ben og
-underkrop.
-
-Gennem sin tusindårige levetid har hun lært magi og en del andre kneb. Forvent
-at blive besnæret af edderkoppespind og magi, mens hendes kæledyr fordøjer og
-fortærer dig.
 %%%%
 Asmodeus
 
@@ -75,6 +66,23 @@ kun Nedbryderen da han som den eneste rettroende søgte hjælp hos slimguden.
 Nedbryderen blev en kolossal masse af slimsyre, men beholdt sit intellekt. Han
 er fyldt med had mod alt der kan opretholde en fast form.
 %%%%
+Donald
+
+{{
+    local descript = "En eventyrer som dig, der prøver at finde sfæren."
+
+    if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
+        descript = descript .. " I modsætning til dig, og p"
+    else
+        descript = descript .. " p"
+    end
+
+    descript = descript .. "å trods af hans had til det, så klarer han sig " ..
+                           "som fjerkræ i vandet."
+
+    return descript
+}}
+%%%%
 Dowan
 
 En smuk, men forfængelig elver med talent for magi og ikke meget andet. Hans
@@ -97,10 +105,6 @@ Ereshkigal
 
 En frygtindgydende ærkedæmon som hersker i det dødsensfarlige, underjordiske
 rige Tartarus.
-%%%%
-Erica
-
-En indtagende trolddomsvæverske.
 %%%%
 Erolcha
 
@@ -129,12 +133,6 @@ En glubsk og overraskende kløgtig snegl som er opsat på at æde alt og alle, h
 møder. På hovedet har en spids hat spændstigt på sned. Han anskaffede sig
 hatten på samme måde som han fik sin intelligens og sin viden om besværgelser:
 ved at fortære deres tidligere ejer, en mægtig troldmand.
-%%%%
-Geryon
-
-En enorm, trehovedet, bevinget ærkedæmon, som vogter de fire helveder.
-Legenderne vil vide at hans sølvhorn bruges til at slå selve helvedernes porte
-på vid gab.
 %%%%
 Gloorx Vloq
 
@@ -172,11 +170,6 @@ Ijyb
 En lille, forskruet goblin iklædt grimme, blå laser. Han har herredømmet over
 dette niveau af de underjordiske gange; indtrængende straffes med døden.
 %%%%
-Ilsuiw
-
-En snu vandheks af nøkkeracen som bruger sin skønhed og besværgelser til at
-lokke intetanende eventyrere i døden.
-%%%%
 Jessica
 
 En ondsindet troldkvindelærling. Hun er kommet til de underjordiske gange i
@@ -193,21 +186,9 @@ Joseph
 
 Ligner en lejesvend.
 %%%%
-Josephine
-
-En fæl, gammel kælling hvis ansigt er dækket af vorter, modersmærker og hår her
-og der. Josephines udseende kan narre en til at tro at hun er en svagelig,
-gammel kone, men hun er faktisk en formidabel nekromantiker. Brugen af sort
-magi har sat sine spor på den engang så smukke Josephine som nu er blevet til
-en hæslig heks.
-%%%%
 Khufu
 
 En utroligt magtfuld kejser på vej til at blive en guddom.
-%%%%
-Kirke
-
-En smuk fortryllerske.
 %%%%
 Lom Lobon
 
@@ -224,25 +205,269 @@ Afgrunden var hun blevet ganske mægtig, men også fuldstændig vanvittig. Hun
 vandrer nu hvileløst rundt i de underjordiske gange og leder efter andre
 eventyrere der kan dele hendes skæbne.
 %%%%
+Mara
+
+Denne høje og kraftfulde dæmon er Mara, illusionernes herre, mægtig blandt
+drømmere. Han kan skabe sirligt detaljerede illusioner der er så mægtige, at de
+kan gøre det meste af hvad det afbildede væsen kunne.
+%%%%
+Margery
+
+En smidig troldkvinde, som tjener helvedes kræfter. Det er hendes pligt at
+sikre sig, at de underjordiske ganges beboere aldrig glemmer deres plads. Hun
+dræbte selv den ældgamle drage, hvis skind blev til hendes sære rustning.
+%%%%
+Maurice
+
+En snu, bedragerisk tyv. Blandt sine kolleger er Maurice en legende – i hvert
+fald, hvis han selv skal sige det. Han er dog ubetinget dygtig, og blandt alle
+de tyve og stratenrøvere, som Sfæren har lokket til sig, er Maurice uden tvivl
+den mest durkdrevne.
+%%%%
+Menkaure
+
+En retfærdig og ædel hersker over et ældgammelt og mægtigt kongerige, som blev
+mumificeret efter en tidlig død. Hans trofaste præster har siden tilført ham
+stor og kraftfuld magi i et forsøg på at skænke ham evigt liv. Nu er han glemt
+og reduceret til smuldrende bandager og tørre, skøre knogler.
+%%%%
+Mennas
+
+Der var engang en menneskelig præst ved navn Mennas. Han rejste vidt og bredt
+for at prædike Zin for alle, der ville lytter. Han gik endda så vidt, at han
+rejste til orkernes lande for at belære dem love og nåde. Efter alt at dømme
+var orkerne ikke glade for Mennas. De forlangte, at han svor, at Beogh var den
+eneste sande gud, og da Mennas forblev tavs, skar de hans tunge ud.
+
+Om denne engel er den samme Mennas forbliver noget af et mysterium, da han
+lader til at have problemer med at tale.
+%%%%
+Mnoleg
+
+En underligt lysende skikkelse, som danser gennem Pandæmoniums forvredne luft.
+%%%%
+Murray
+
+Et dæmonisk kranium, som ruller hen over gulvet i de underjordiske gange.
+%%%%
+Nellie
+
+En overordentligt intelligent elefant, som engang var med i et cirkus. En sen
+nattetime smuttede hun ud af sin lænke, forsvandt ind i Pandæmonium og blev
+aldrig set igen.
+%%%%
+Nessos
+
+En sort kentaurkriger med et ondskabsfuldt blik i øjnene.
+%%%%
 Nikola
 
 En genial videnskabsmand besat af elektricitet. I forsøget på at fuldende sin
 elektriske golem kom han ud for en forfærdelig ulykke, og nu faser han ind og
 ud af virkeligheden.
 %%%%
+Norris
+
+En afsluttet fred i døden-kultist med en sund kulør og en mild røst. Han er ret
+ligeglad med, om det bliver dig eller ham, der dør. "Begge" ville nok være det
+allerbedste.
+%%%%
+Pikel
+
+Selvom kobolder som regel er slaver, så har Pikels hårde liv, hans egoistiske
+ambitioner og legemlige størrelse ladet ham stige i graderne og selv blive
+slavepisker. Han er på vej til orkernes miner for at sælge sine varer, et
+udvalg af frygtsomme mennesker, der skælver ved hvert smæld fra hans pisk.
+%%%%
+Polyphemus
+
+En kyklophyrde. Han er særdeles beskyttende over for sin hjord, som han vogter
+med udødelig iver med sit ene enorme øje.
+%%%%
+Prince Ribbit
+
+Han var en flot prins før han blev forbandet, så nu søger han efter en kur. På
+toppen af sit hoved bærer han en krone kækt på sned. Hvordan den bliver på sin
+plads selv efter forvandlingen er et mysterium.
+%%%%
+Psyche
+
+En lyshåret troldkvinde, der vandrer omkring, tilsyneladende drevet halvt til
+vanvid af sorg og skyld.
+%%%%
+Purgy
+
+En usædvanligt tynd trold.
+
+Du kan mærke en klump i halsen.
+%%%%
+Rupert
+
+En mand med utroligt dårlige manerer, hvis brøl kan gøre en rise jaloux.
+%%%%
+Saint Roka
+
+En mægtig krigsherre. Der er endda visse orker, som siger, at han er Beoghs
+udvalgte.
+%%%%
+Sigmund
+
+Den ældste af et par brødre, der er kommet efter Sfæren. Ingen ved, hvad
+Sigmund så i de underjordiske gange, som drev ham fra forstanden, men hans
+durkdrevne magiske taktikker og nådesløse le giver nu heller ikke hans ofre
+meget tid til at tænke over det. På trods af hans omdømme som en blodtørstig
+morder, så har hans grandiose og dramatiske stil vundet ham mange af de
+underjordiske ganges indbyggeres beundring.
+%%%%
+Sonja
+
+En elegant koboldsnigmorder. Du kommer til at beundre hendes yndefulde
+pirouetter, du vil begejstres over hendes vovefulde spring! Men pas på hendes
+knive!
+%%%%
+Terence
+
+Terence er en voldelig morder, som dræber både for fornøjelsens og pengenes
+skyld. Han er tvunget i skjul efter et mislykket job, og han har ikke råd til
+at lade nogen, der har set ham, undslippe de underjordiske gange i live – der
+er trods alt en pris på hans hoved.
+%%%%
 Tiamat
 
 En mægtig drage med enorme vinger. Hendes skæl synes at glitre og skifte farve,
 mens du kigger.
 %%%%
-the Serpent of Hell tartarus
+Urug
 
-Foran dig i mørket hænger et par glødende, magenta øjne. Du kan skimte omridset
-af en svimlende gigantisk, senet drage. Den vil dig det ondt.
+En grov og ranglet ork. Urug mistede et øje i en kamp med en harpy og svor, at
+han ville dræbe hver eneste af dem. Uheldigvis er synet på hans sidste øje ikke
+synderligt godt, så han har forvekslet dig med en harpy.
+{{
+if you.can_smell() then
+return "Han lufter forfærdeligt."
+end
+}}
+%%%%
+Wiglaf
+
+En fed dværg med en tåbeligt udseende hat.{{
+if you.can_smell() then
+return "Han stinker af sprit."
+end
+}}
+%%%%
+Xtahua
+
+En ældgammel og mægtig drage.
 %%%%
 acid blob
 
 En klump sygelig, pusdryppende kød hvorfra dødelig syre siver.
+%%%%
+adder
+
+Den gennemsnitlige tunnelslange. En art hulereptil, som man ofte finder under
+jorden.
+%%%%
+air elemental
+
+En ånd fra vindens elementarplan. I denne verden eksisterer den som en susende
+hvirvelvind, der opløses og gendannes.
+%%%%
+alligator
+
+En listig krokodille der skjuler sig i vandet og venter tålmodigt på at byttet
+kommer for tæt på hvorefter den med pludselig fart og vildskab griber ofret og
+knuser det mellem sine mægtige kæber.
+%%%%
+alligator snapping turtle
+
+En særligt stor og fæl snapskildpadde. Den kan ligesom sine mindre slægtninge
+strække sig og bide på lang afstand, og når den føler sig truet, trækker den
+sig ind i sit skjold.
+%%%%
+anaconda
+
+En meget stor slange som bevæger sig uhyggeligt hurtigt både på land og til
+vands. Den dræber ikke med gift, men ved at kværke sit bytte.
+%%%%
+ancient lich
+
+En dødning som efter at have eksisteret i utallige århundreder har opnået en
+næsten ufattelig kraft gennem sine studier af sort magi.
+%%%%
+angel
+
+Den Strålendes hellige krigere er tårnhøje, bevingede skikkelser der besidder
+en unaturlig skønhed og er omgivet af en aura af blændende hvidt lys. De virker
+vægtløse og smidige når de flyver på trods af deres tunge rustninger.
+%%%%
+apis
+
+Elyvilons fredelige, hellige tyr. Tag jer i agt, misdædere, for den vil vende
+sig mod jer!
+%%%%
+azure jelly
+
+En voldsomt kold klat af funklende blå cytoplasma der danner frostpartikler i
+luften omkring sig.
+%%%%
+baby alligator
+
+En mindreårig alligator. Selvom den hverken har knusende kæber eller styrken
+til voldsomme spurter, så er den mere behændig end den voksne udgave og dens
+mælketænder er stadig meget skarpe.
+%%%%
+ball lightning
+
+En kæmpe, hurtig sfære af gnistrende, elektrisk energi. Den mindste
+forstyrrelse vil få den til at eksplodere.
+%%%%
+ball python
+
+En lille slange som supplerer sit bid med at kvæle små væsener.
+%%%%
+balrug
+
+En enorm og mægtig dæmon som er indhyllet i ild og skygger.
+%%%%
+basilisk
+
+Et toppet krybdyr i mellemstørrelsen med et frygteligt forstenende blik.
+%%%%
+bat
+
+En stor, grå flagermus der er meget agressiv selvom den er planteæder. Den er
+nærsynet og bruger ekkolokalisering til at navigere.
+%%%%
+big fish
+
+En korpulent fisk med et bredt tandsmil.
+%%%%
+big kobold
+
+En kobold som er større og barskere end den almindelige kobold og ofte
+bevæbnet.
+%%%%
+black bear
+
+En lille, sort bjørn. Som alle bjørne bliver den rasende eller forskrækket hvis
+den kommer slemt til skade.
+%%%%
+black mamba
+
+En stor og forskrækkeligt hurtig slange hvis bid overfører en dødbringende
+gift.
+%%%%
+blink frog
+
+En art kæmpefræ som kan blinke når som helst. Den kan blinke sig tættere på sit
+bytte eller blinke i sikkerhed i en snæver vending. Den optræder som regel i
+flok.
+%%%%
+blizzard demon
+
+En større dæmon som er indhyllet i sne og lyn.
 %%%%
 Brimstone Fiend
 
@@ -275,8 +500,24 @@ En komisk figur fuld af liv og latter. Den synes at være meget glad for at se
 dig ... men kan en vis skadefryd spores i dens ansigtstræk? Er det der rød
 ansigtsmaling eller noget langt mindre behageligt?
 %%%%
-Cigotuvi's Monster
+Orb Guardian
 
-Denne skrækindjagende skabning synes at være fremstillet af kropsdele fra
-ethvert tænkeligt uhyre.
+Et enormt, glødende, firelemmet, lilla væsen med unaturligt skarpe sanser, som
+Sfæren har skabt til at vogte over den. Den bevogter Sfæren med voldsom
+pertentlighed og brutalitet.
+%%%%
+Shadow Fiend
+
+Et vederstyggeligt væsen, der fremtræder som en stor masse af forvredne
+skygger, som ind i mellem afslører et enormt skelet med horn. Det er en af de
+mest forfærdelige indbyggere i de mange helveder.
+%%%%
+ancient champion
+
+Et ufatteligt gammelt skelet. Der er hundredevis af gyldne symboler skåret ind
+i knoglerne og det pulserer med rædselsfuld, uhellig kraft.
+%%%%
+antique lich
+
+En dødning som er blevet bekostelig efter utallige år.
 %%%%

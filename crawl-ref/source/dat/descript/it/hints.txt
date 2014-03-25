@@ -82,12 +82,6 @@ Ricorda di usare quelle pergamene, pozioni o bacchette che hai trovato. Molto
 spesso, non puoi aspettarti di identificare tutto solo con le pergamene. Impara
 a improvvisare: identifica con l'uso.
 %%%%
-death random 4
-
-Se una battaglia in particolare ti metter particolarmente in difficoltà, non
-dimenticarti di usare il prima possibile gli oggetti d'emergenza. Una pergamena
-del teletrasporto o una pozione della velocità può davvero salvarti la pelle.
-%%%%
 death random 5
 
 Non combatter mai più di un mostro alla volta, se puoi evitare. Ritirati in un

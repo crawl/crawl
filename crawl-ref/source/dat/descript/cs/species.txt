@@ -28,11 +28,6 @@ Draconian
 Drakoni jsou všeumělové, kteří dospívají na sedmé úrovni, kdy získavají
 charakteristický odstín.
 %%%%
-Formicid
-
-Formicidové jsou humanoidní mravenci, kteří jsou velmi zruční v kopání. Jejich
-končetiny jsou vyjímečně silné, a žijí v přirozeném stavu stáze.
-%%%%
 Felid
 
 Myslící plemeno koček s mnoha života, které zato nejsou schopny jemné
@@ -121,9 +116,4 @@ Troll
 
 Velcí surovci, kteří neváhají svými drápy rozsápat, co jim pod ruku přijde.
 Neustále mají hlad.
-%%%%
-Vampire
-
-Uznávaní v umění špicování a magie, a neustále se nacházejí mezi životem a
-neživotem.
 %%%%

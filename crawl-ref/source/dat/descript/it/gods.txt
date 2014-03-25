@@ -236,11 +236,6 @@ incrementando la resistenza agli effetti magici. Più in là, i seguaci possono
 chiamare alcuni potenti e furiosi alleati. Infine, Trog regalerà ai fedeli armi
 che puntano tutto sul danno.
 %%%%
-Nemelex Xobeh powers
-
-I seguaci del Burlone ottengono diversi metodi per influenzare il fato quando
-giocano con le carte.
-%%%%
 Elyvilon powers
 
 Il Curatore offre ai seguaci i mezzi per curarsi dai danni e da altri effetti

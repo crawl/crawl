@@ -513,10 +513,6 @@ staff of power
 
 Este cajado dá ao usuário uma reserva de poder mágico.
 %%%%
-staff of wizardry
-
-Este cajado aumenta significativamente a habilidade mágica do usuário.
-%%%%
 stone
 
 Uma pedra. Pode ser arremessada à mão ou com uma funda.

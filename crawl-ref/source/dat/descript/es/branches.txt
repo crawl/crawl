@@ -1,17 +1,4 @@
 %%%%
-Dungeon
-
-Es todavía un misterio cómo fue creado este extraño lugar. Algunos dicen que es
-el campo de juegos de dioses aburridos, otros mantienen que fue moldeado por
-toda índole de especies que abandonaron la superficie y rechazaron la luz. No
-importando cual es el origen de esta cueva, está repleta con riquezas apenas
-conocidas así como de enromes peligros para cualquier intruso. Pocos han
-escapado con vida, e incluso menos han conservado algo de cordura para contar
-la historia.
-
-El calabozo tiene 16 niveles de profundidad pero, honestamente, eso es
-solamente el principio.
-%%%%
 Temple
 
 Un Templo a los Dioses, un lugar de paz y refugio lejos de la locura del
@@ -42,57 +29,6 @@ devorado antes que cortado, quemado o apuñalado.
 
 La Guarida tiene ocho niveles y contiene las escaleras hacia tres ramas más.
 %%%%
-Swamp
-
-Un erial pantanoso, lleno de cieno, materia putrefacta, moscas y grandes
-monstruos carnívoros.
-
-El Pantano tiene cinco niveles y contiene la Runa Podrida. Un calabozo solo
-contiene dos ramas de entre el Foso de las Serpientes, el Pantano, los Bancos
-de Arena y el Nido de las Arañas. Si el pantano está presente, su entrada se
-encuentra entre la Guarida:2 y Guarida:5
-%%%%
-Shoals
-
-Desde lejos oyes el sonido de olas y hueles el aire salado. Una vez llegues a
-los Bancos de Arena estarás impresionado por las exóticas playas subterráneas,
-constituyendo unas pocas islas en un vasto mar. De repente, un grito
-espeluznante llena el aire, seguido de un ruido de ahogo. Ansiosamente, buscas
-y te preguntas: ¿quién es el depredador?¿y quién la presa?
-
-Los Bancos de Arena tienen cinco niveles y contienen la Runa Percebe. Un
-calabozo solo contiene dos ramas de entre el Foso de las Serpientes, el
-Pantano, los Bancos de Arena y el Nido de las Arañas. Si los Bancos de Arena
-están presentes, su entrada se encuentra entre la Guarida:3 y la Guarida:6
-%%%%
-Snake Pit
-
-El hogar de la serpiente, la guarida de los naga.
-
-El Foso de las Serpientes tiene cinco niveles y contiene la Runa Serpentina. Un
-calabozo solo contiene dos ramas de entre el Foso de las Serpientes, el
-Pantano, los Bancos de Arena y el Nido de las Arañas. Si el Foso está presente,
-su entrada se encuentra entre la Guarida:3 y Guarida:6
-%%%%
-Spider Nest
-
-Y tú pensaste que solo con un zapato ya estaría hecho? Si no tienes aracnofobia
-todavía, pronto la tendrás.
-
-El Nido de las Arañas tiene cinco niveles y contiene la Runa Telaraña. Un
-calabozo solo contiene dos ramas de entre el Foso de las Serpientes, el
-Pantano, los Bancos de Arena y el Nido de las Arañas. Si el Nido está presente,
-su entrada se encuentra entre la Guarida:3 y Guarida:6
-%%%%
-Hall of Blades
-
-Hace mucho tiempo todas las dagas, hachas y armas de asta se reunían durante la
-noche y bailaban el vals, soñando con campos de batalla sin hombres ni bestias.
-Ese tiempo ya pasó pero las armas todavía están ahí.
-
-La Sala de los Filos es un solo nivel y puede encontrarse entre Cámaras:3 y
-Cámaras:4.
-%%%%
 Tomb
 
 La Tumba de los Antiguos, un lugar de condenación, de horrores animados por la
@@ -100,15 +36,6 @@ más vil necromancia.
 
 La Tumba tiene tres niveles y contiene la Runa Dorada. Su entrada está bien en
 Cripta:2 o Cripta:3.
-%%%%
-Hell
-
-El vestíbulo hacia los cuatro infiernos está guardado por Geryon. Los héroes
-que prueban su aptitud en el vestíbulo y soplan el Cuerno de Geryon pueden
-explorar las diferentes regiones del Infierno: Dis, Gehena, Cocito y Tártaro.
-
-Los portales hacia el Vestíbulo del Infierno se pueden encontrar en abundancia
-en las regiones más profundas del calabozo principal.
 %%%%
 Dis
 
@@ -228,17 +155,6 @@ hablan de peligrosas criaturas, bañándose en aguas verdosas de desagradable
 olor, cazándose los unos a los otros sin piedad. Las historias también aluden a
 valiosos objetos dejados por temerarios y desafortunados visitantes, criando
 moho en las húmedas cuevas.
-%%%%
-Ossuary
-
-Una pequeña tumba, que contiene los restos de algunos parientes lejanos de los
-faraones. Es sin duda alguna un lugar de muchas trampas, y es poco probable que
-sus habitantes gentilmente se dejen saquear.
-%%%%
-Bailey
-
-El castillo de algún señor. Está, sin duda alguna, protegido por barreras
-físicas y por soldados bien entrenados.
 %%%%
 Ice Cave
 

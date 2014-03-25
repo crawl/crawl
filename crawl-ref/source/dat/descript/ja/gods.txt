@@ -224,29 +224,12 @@ Trog powers
 信徒は強力な激昂した手下を呼べるようになる。
 最終的にトログは信徒に殺傷力に重点を置いた武器を下賜する。
 %%%%
-Nemelex Xobeh powers
-
-トリックスターの信徒はカードを使用する際、
-運命に影響を及ぼすための様々な手段を得る。
-%%%%
 Elyvilon powers
 
 癒し手は信徒に自身の損傷やその他の悪い効果を癒す方法を提示する。
 エリヴィロンは敵対する怪物を中立に変えるために癒すことを許可する。
 エリヴィロンは信徒の生命を守るために直接介在するかもしれない。
 特に要求がある場合や、非常に敬虔な信徒はへの援助は確実なものとなるだろう。
-%%%%
-Lugonu powers
-
-Lugonu の信徒はアビスから力を得ており、
-モンスターをアビスの中に追放することができます。 Later they will be able to
-corrupt the ordered world, opening a gate for creatures of the Abyss to pass
-through, and to gate themselves directly into this realm of chaos. Lugonu will
-eventually offer to corrupt a follower's weapon, imbuing it with the distorting
-energies of the Abyss, and will protect the follower from the normally harmful
-effects of unwielding such a weapon.. Lugonu expects followers to spread
-unceasing chaos in the overworld, and as such does not grant piety to
-worshippers while they remain in the Abyss itself.
 %%%%
 Beogh powers
 

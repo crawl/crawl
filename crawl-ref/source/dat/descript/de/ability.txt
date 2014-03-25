@@ -70,34 +70,13 @@ Fliege los. Während des Fluges kannst du Wasser und ähnliche Hindernisse siche
 überqueren. Sei gewarnt, der Flug kann in einem ungünstigen Moment zu Ende sein
 und du kannst dadurch in den Tod stürzen.
 %%%%
-Jump Attack ability
-
-Eine Fähigkeit, die die kinetische Energie einer Kreatur nutzt, um eine
-Hochgeschwindigkeitssprungattacke durchzuführen. Du kannst nicht über fliegende
-und nur über riesige Feinde, wenn diese in Lava oder tiefem Wasser stehen
-springen. In Wasser, Lava oder verflüssigtem Boden zu stehen oder zu schwimmen,
-verhindert ebenfalls die Anwendung dieser Fähigkeit. Katzen sind von Natur aus
-Springer und werden talentierter beim Springen, wenn sie die Erfahrungsstufen 6
-und 12 erreichen.
-%%%%
 Hellfire ability
 
 Beschießt deine Gegner mit Höllenfeuer.
 %%%%
-Release Delayed Fireball ability
-
-Entfessele augenblicklich einen vorher eingeprägten (verzögerten) Feuerball
-ohne zusätzliche Kosten an Magie und Hunger.
-%%%%
 Stop Singing ability
 
 Höre auf das Lied des Mordens zu singen.
-%%%%
-Self-Restoration ability
-
-Stelle deine Stärke, Geschicklichkeit und Intelligenz, beim permanenten Verlust
-eines Magiepunktes, wieder her und heile eine große Menge an verfaulten
-Lebenspunkten.
 %%%%
 Device Recharging ability
 
@@ -148,26 +127,6 @@ nehmen, um auszulösen, als nicht kontrollierte.
 End Transformation ability
 
 Beende deine Verwandlung mit einer kurzen Verzögerung.
-%%%%
-Recite ability
-
-Predige einem Monster die Gesetze von Zin, was zu verschiedenen Resultaten
-führen kann. Es gibt vier Bücher von welchen du predigen kannst:
-
- * Buch der Abscheulichkeit: Dieses Buch handelt von den Dingen die Zin zuwider
-sind — Chaos in all seinen Formen. Der Vortrag wird Zin´s mächtigste Schläge
-herbeirufen.
-
- * Buch der Reinigung: Die Unreinen werden genauso von dem Gesetzgeber
-verachtet. Der Vortrag wird sochen Kreaturen Schaden zufügen.
-
- * Buch der Abtrünnigen: Intelligente Kreaturen welche Zin nicht anbeten aber
-nichts böses tun werden nicht so hart behandelt. Der Vortrag von diesem Buch
-sät nur leichte Verwirrung. Doch welche die einen gegensätzlichen Gott anbeten
-werden permanent von der Verbreitung ihres faulen Glaubens beraubt.
-
- * Buch der Gräuel: Dämonen und Untote werden von Zin gehasst. Dieses Buch gibt
-dir die Mittel um sie zu maßregeln.
 %%%%
 Vitalisation ability
 
@@ -234,11 +193,6 @@ Recall Undead Slaves ability
 Rufen Sie Ihre untoten Anhänger von überall her im Kerker zu Ihren
 unmittelbaren Umgebungen zurück.
 %%%%
-Injury Mirror ability
-
-Verletzt angreifende Monster indem es den Schaden, welche diese dir zufügen,
-zurückwirft.
-%%%%
 Animate Dead ability
 
 Belebe alle Leichen und Skelette in deiner Nähe als deine Anhänger wieder. Denk
@@ -283,20 +237,10 @@ Minor Destruction ability
 
 Schieße eine zufällige verletzende Explosion auf ein anvisiertes Monster.
 %%%%
-Lesser Servant of Makhleb ability
-
-Beschwöre einen niederen Dämonen. Es besteht eine Chance das er bei einer
-niedrigen Anrufungs-Fähigkeit, feindselig ist
-%%%%
 Major Destruction ability
 
 Schießt eine zufälligen schadhaften und explosiven Strahl auf ein anvisiertes
 Monster.
-%%%%
-Greater Servant of Makhleb ability
-
-Beschwöre einen Hauptdämon. Erfahrung mit Beten verringert die Chance, dass er
-feindlich ist.
 %%%%
 Channel Energy ability
 
@@ -319,13 +263,6 @@ Erschöpfung, eine Zeit in der du verlangsamt wirst und nicht nochmal in Raserei
 verfallen kannst. Im Gegensatz zu anderen Quellen der Raserei, abhängig von
 deiner Frömmigkeit, kann Trog diese Erschöpfung gelegentlich verhindern.
 %%%%
-Trog's Hand ability
-
-Beschwöre eine mächtige Regenerations-Fähigkeit herauf welche mit anderen
-Fähigkeiten kombinierbar ist und sogar Species die sich normalerweise nicht
-heilen können regeneriert. Dieses erhöht auch den Schutz vor magischen
-Effekten.
-%%%%
 Brothers in Arms ability
 
 Beschwöre riesige, wütende Verbündete, um Zerstörung zu verursachen.
@@ -340,25 +277,6 @@ ist hingegen jederzeit frei).
 
 Vorsicht! Andere zu töten während man nach Verschonung bittet ist eine große
 Sünde!
-%%%%
-Lesser Healing ability
-
-Abhängig von deiner Anrufungs-Fähigkeit kannst du einer andere Kreatur einen
-mäßigen Teil seiner Lebensenergie heilen. Benutzt man diese Fähigkeit auf
-feindselige Monster, kann ihr Verhalten neutral werden. Dieses funktioniert am
-besten bei Tieren, schlechter bei Humanoiden deiner Art, noch schlechter auf
-andere Humanoiden und am schlechtesten von allen auf Dämonen und Untoten.
-Hirnlose Kreaturen können nicht befriedet werden, und kein Monster das schläft
-kann befriedet werden. Die Chance einer erfolgreichen Befriedung hängt von der
-Heilkraft ab, so ist es bedeutend besser als leichte Heilung zu benutzen.
-
-Unabhängig davon, ob die Befriedung funktioniert hat oder nicht, die
-investierte Nahrung, Frömmigkeit und Magie-Punkte sind verbraucht. Wenn es
-gelingt, ist das Monster geheilt und du erhältst die hälfte seines
-Erfahrungswertes und möglicherweise etwas Frömmigkeit. Anderenfalls bleibt das
-Monster unbetroffen und du bekommst nichts.
-
-Du kannst auch Verbündete und neutrale Monster heilen.
 %%%%
 Lesser Self-Healing ability
 
@@ -396,20 +314,9 @@ Abhängig von deiner Anrufungs-Fähigkeit kannst du einen mäßigen Teil deiner
 Lebenspunkte heilen. Grob gesagt heilt die Größere Heilung dreimal so viel wie
 die Geringere Heilung bei etwas höheren Kosten an Frömmigkeit.
 %%%%
-Divine Vigour ability
-
-Abhängig von deiner Anrufungs-Fähigkeit, stelle eine große Menge Lebenspunkte
-und Magiepunkte wieder her und erhöhe diese kurzzeitig.
-%%%%
 Depart the Abyss ability
 
 Verlasse den Abgrund, um an den Ort zurückzukehren, von dem du kamst.
-%%%%
-Bend Space ability
-
-Krümme das Raumgefüge um dich herum, um dich sofort über eine kleine Distanz zu
-teleportieren und möglicherweise auch Monstern in deiner Umgebung durch
-Teleportation Schaden zuzufügen.
 %%%%
 Banish ability
 
@@ -433,13 +340,6 @@ Draw One ability
 
 Wähle einen beliebigen Kartenstapel in deinem Inventar und ziehe eine Karte
 davon.
-%%%%
-Peek at Two ability
-
-Wirf eine Karte von einem Deck in deinem Inventar ab um zwei Karten davon zu
-ziehen, schaue sie dir an und mische sie zurück in das Deck. Das Deck bekommt
-einen Entrag das es diese beiden Karten enthält, und wenn sie verschieden sind
-wird das Deck identifiziert.
 %%%%
 Triple Draw ability
 
@@ -482,14 +382,6 @@ Sonnenlicht getroffenes Wasser verdampft. Im speziellen wird tiefes Wasser in
 flaches Wasser verwandelt, und flaches Wasser wird komplett austrocknen und den
 Verliesboden zum Vorschein bringen.
 %%%%
-Growth ability
-
-Benutze Früchte um einen Ring aus Pflanzen um dich herum wachsen zu lassen.
-Wenn ein kompletter Ring nicht gebildet werden konnte (weil du nicht genug
-Früchte hast), wachsen die Pflanzen auf den Feldern neben dir in deren Nähe
-Monster sind. Pflanzen, welche du erschaffen hast, erhalten proportional zu
-deiner Anrufungs-Fähigkeit einen Bonus auf Trefferpunkte.
-%%%%
 Rain ability
 
 Lasse Regen um dich herum fallen, was den Verliesboden in seichtes Wasser
@@ -519,10 +411,6 @@ Temporal Distortion ability
 Verzerre den Fluss der Zeit um dich herum, wodurch Monster relativ zu dir in
 der Zeit anhalten.
 %%%%
-Slouch ability
-
-Verursache bei jedem in Sicht, der sich schneller bewegt wie du, Schaden.
-%%%%
 Step From Time ability
 
 Entferne dich selbst aus dem Fluss der Zeit. Dinge um dich herum nehmen ihren
@@ -534,10 +422,6 @@ Request Jelly ability
 
 Erschafft einen Schleim der durch die Gänge kriecht und alle Gegenstände
 einsaugt.
-%%%%
-Jelly Paralyse ability
-
-Bete um deinen Schleim kurzzeitig aufzuhalten Gegenstände zu verschlucken.
 %%%%
 Slimify ability
 

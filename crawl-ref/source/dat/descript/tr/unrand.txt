@@ -3,3 +3,44 @@ scimitar of Flaming Death
 
 Smokin'!
 %%%%
+scythe "Finisher"
+
+Uzun ve keskin tırpan. Savaşlar için özel olarak modifiye edilmiş
+%%%%
+sling "Punk"
+
+Garip mavi deriden yapılmış sapan.
+%%%%
+crossbow "Hellfire"
+
+Cehennem ateşinde dövülmüş ateşten bir arbelat; adı gibi güçlü ateşten oklar
+fırlatır
+%%%%
+robe of Augmentation
+
+En iyi ipekten yapılmış cübbe
+%%%%
+cloak of Flash
+
+Titreyen bir pelerin
+%%%%
+skin of Zhor
+
+Garip bir hayvanın kokan derisi
+%%%%
+salamander hide armour
+
+Salamander derisinden yapılma zırh
+%%%%
+shield of Resistance
+
+Bronz bir kalkan
+%%%%
+Maxwell's patent armour
+
+Garip görünüşlü zırh
+%%%%
+ring of Robustness
+
+Sade çelik bir yüzük
+%%%%

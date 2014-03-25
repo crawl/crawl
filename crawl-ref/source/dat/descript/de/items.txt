@@ -510,85 +510,6 @@ decaying skeleton
 
 Ein zerfallendes Skelett.
 %%%%
-deck of changes
-
-Ein Deck von magischen Karten, die Änderungen im Benutzer oder seiner Umgebung
-veranlassen.
-  Es kann die folgenden Karten enthalten: das Elixier, Battlelust, die
-Metamorphose, das Ruder, die Klinge, der Schatten, der Söldner, der
-Arzneitrank, der Fokus, das Schlurfen, die Erfahrung, die Wilde Magie, die
-Spirale, der Weise, der Alchimist, das Wasser, Vitrification, die Kelle, das
-Minenfeld Mit der Wünschelrute zu suchen.
-%%%%
-deck of defence
-
-Ein Deck von magischen Karten, von denen die meisten den Benutzer vor Schaden
-in vielfältiger Weise verteidigen.
-
-Es kann die folgenden Karten enthalten: das Grab, die Banshee, Verdammung,
-Abgeschiedenheit, Warpwright, Flug, das Elixier, Kampfeswut, Metamorphosis, den
-Helm, die Klinge, die Schatten, die Söldner.
-%%%%
-deck of destruction
-
-Ein Deck von magischen Karten, von denen die meisten Tod und Zerstörung an
-einem Feind scleudern (oder, wenn Pech, auf sich selbst).
-
-Es kann die folgenden Karten enthalten: Vitriol, Flamme, Frost, Venom, der
-Funke, der Hammer, Schmerz, der Orb.
-%%%%
-deck of dungeons
-
-Ein Deck von magischen Karten, die sich mit dem Formen des Kerkers befassen.
-
-Es kann die folgenden Karten enthalten: Wasser, Vitrification, Kelle, das
-Minenfeld Mit der Wünschelrute zu suchen.
-%%%%
-deck of escape
-
-Ein Deck der magischen Karten, vor allem den Umgang mit verschiedenen Formen
-der Flucht. Unvorsichtige Verwendung kann zu aus der Pfanne ins Feuer geworfen
-zu führen!
-
-Es kann die folgenden Karten: das Portal, das Warp, Swap, Velocity, das Grab,
-die Banshee, Damnation, Abgeschiedenheit, Warpwright, Flug.
-%%%%
-deck of punishment
-
-Ein Deck von magischen Karten, die den Benutzer Verwüstungen anrichten.
-
-Es kann die folgenden Karten enthalten: die Erscheinung, die Wilde Magie, der
-Zorn, Xom, die Hungersnot, der Fluch, die Grabstätte, die Verdammung, das
-Portal, das Minenfeld, das Schwein, die Qual.
-%%%%
-deck of summonings
-
-Ein Deck der magischen Karten, zeigt eine Reihe von seltsamen und wundersamen
-Kreaturen.
-
-Es kann die folgenden Karten enthalten: der Kreuzzug, der Herd, das Pentagramm,
-der Tanz, Foxfire, die Knochen, Widerwärtigkeit.
-%%%%
-deck of war
-
-Deck der magischen Karten, die nützlich sind vor und während des Kampfes.
-
-Es kann die folgenden Karten enthalten: das Portal, das Warp, Swap, Velocity,
-das Grab, die Banshee, Damnation, Abgeschiedenheit, Warpwright, Flug, das
-Elixier, Kampfeswut, Metamorphosis, den Helm, die Klinge, die Schatten, die
-Söldner, der Kreuzzug, der Herd, das Pentagramm, der Tanz, Foxfire, die
-Knochen, Widerwärtigkeit, Vitriol, Flamme, Frost, Venom, der Funke, der Hammer,
-Schmerz, Qual.
-%%%%
-deck of wonders
-
-Ein Deck von hoch geheimnisvollen und magischen Karten, die die Schublade
-physischen und psychischen Zustand zu ändern, zum Besseren oder Schlechteren
-können.
-
-Es kann die folgenden Karten enthalten: Der Trank, den Schwerpunkt, Shuffle,
-Erfahrung, wilde Magie, die Spirale, die Legende, der Alchemist.
-%%%%
 demon blade
 
 Eine schreckliche Waffe, geschmiedet in den Feuern der Hölle. Geführt von jenen
@@ -737,12 +658,6 @@ honeycomb
 
 Ein Klumpen von einer köstlichen Honigwabe, von riesigen Bienen geschaffen.
 %%%%
-horn of Geryon
-
-Das Horn, das Geryon, Wächter des Flurs der Hölle gehört. Legenden sagen, dass
-ein Sterblicher, der Zugang in eine der Höllen wünscht, es verwenden muss, um
-Zugang zu gewinnen.
-%%%%
 ice dragon armour
 
 Rüstung von den Skalen eines Kälte atmenden Drachen gemacht. Es stellt großen
@@ -786,34 +701,6 @@ lantern of shadows
 
 Ein unheiliger Apparat welcher die Kräfte der Dunkelheit zu deiner Hilfe
 herbeiruft, verbunden mit leichten Kosten.
-%%%%
-large rock
-
-Ein sehr großer und sehr schwerer Stein. {{
-    if you.race() == "Ogre"
-       or you.race() == "Troll"
-       or you.race() == "Formicid"
-   then
-       return ""
-   else
-       return "Außergewöhnliche Kraft ist sogar erforderlich, um ein zu " ..
-              "tragen, und nur große Wesen sind zum Werfen davon fähig"
-   end
-}}
-%%%%
-large shield
-
-großes Stück Holz und Metall, auf einen Arm zur Abwehr geschnallt werden. {{
-    if you.race() == "Ogre"
-       or you.race() == "Troll"
-    then
-        return "Es sieht aus wie es Ihnen gut passen würde."
-    else
-        return "Es ist sehr umständlich zu tragen, und ohne große Maß an " ..
-               "Ausbildung, stark verlangsamt die Geschwindigkeit, mit der " ..
-               "ein Krieger-Attacken."
-    end
-}}
 %%%%
 leather armour
 
@@ -935,14 +822,6 @@ Ein Teil von Geistesnachtfaltern produzierter fremder Substanz. Es zu
 konsumieren, liefert magische sowohl Energie als auch Ernährung zu den Kosten,
 Ihren geistigen Fokus zu verlieren, für eine kurze Periode
 %%%%
-plate armour
-
-Ein voller Anzug von fester Metallplatte: Kürass, Schulterplatten, Armschienen,
-Taillenplatte und Beinschienen. Kettenhemd bedeckt Lücken, wenn es Bewegung
-ermöglicht.
-
-Es gewährleistet ausgezeichneten Schutz, doch, es anzuziehen, dauert immer.
-%%%%
 potion of agility
 
 Ein zauberhafter Trank, der das Geschick und Ausweichen von eins sehr steigert,
@@ -1053,10 +932,6 @@ potion of slowing
 
 Ein Trank, der Ihre Taten verlangsamt.
 %%%%
-potion of haste
-
-Ein verzaubertes Getränk, das die Taten von jedem beschleunigt, der es trinkt.
-%%%%
 potion of strong poison
 
 Ein schrecklich giftiger Trank.
@@ -1160,11 +1035,6 @@ ring of see invisible
 Dieser Ring erlaubt seinem Träger, jene Dinge zu sehen, die vor der Ansicht
 durch die Magie verborgen sind.
 %%%%
-ring of slaying
-
-Dieser Ring vergrößert oder vermindert das Handgemenge und hat
-Kampfsachkenntnisse seines Trägers angeordnet.
-%%%%
 ring of strength
 
 Dieser Ring vergrößert oder vermindert die physische Kraft seines Trägers einem
@@ -1197,16 +1067,6 @@ Stoff gemacht. Roben passen sich leicht an, um humanoid Körper jeder Größe zu
 passen. Kleidungsstücke dieser Sorte bieten nur einen kleinen Schutz gegen den
 physischen Schaden an, aber ihre großzügige Kürzung hindert Vermeidung am
 Angriff oder der richtigen Leistung von thaumaturgical Gesten nicht.
-%%%%
-rod of destruction
-
-Diese Rute enthält eine abwechslungsreiche Auswahl von Zaubern von Chaos und
-Zerstörung.
-%%%%
-rod of fiery destruction
-
-Diese Rute enthält Zaubersprüche, die zerstörerische Feuer gegen deine Feinde
-abschießen.
 %%%%
 rod of inaccuracy
 
@@ -1299,29 +1159,6 @@ demselben Wert wie ihr Grund-AC verzaubert werden kann.
 
 Es kann auch verwendet werden, um das Verbergen von bestimmten exotischen Wesen
 zu verzaubern.
-%%%%
-scroll of enchant weapon i
-
-Diese Schriftrolle legt ein Entzücken auf der ausgeübten Waffe, es genauer im
-Kampf machend. Es wird zunehmend weniger wahrscheinlich, wenn verwendet, auf
-hoch verzauberten Waffen erfolgreich zu sein, und kann sie nur jemals bis zu +9
-verzaubern. Magische Artefakte können überhaupt nicht verzaubert werden.
-%%%%
-scroll of enchant weapon ii
-
-Diese Schriftrolle legt ein Entzücken auf der ausgeübten Waffe, es lassend,
-größeren Schaden im Kampf zufügen. Es wird zunehmend weniger wahrscheinlich,
-wenn verwendet, auf hoch verzauberten Waffen erfolgreich zu sein, und kann sie
-nur jemals bis zu +9 verzaubern. Magische Artefakte können überhaupt nicht
-verzaubert werden.
-%%%%
-scroll of enchant weapon iii
-
-Diese Schriftrolle verzaubert die ausgeübte Waffe, um im Kampf viel wirksamer
-zu sein, sowohl Genauigkeit als auch Schaden zunehmend. Es wird zunehmend
-weniger wahrscheinlich, wenn verwendet, auf hoch verzauberten Waffen
-erfolgreich zu sein, und kann sie nur jemals bis zu +9 verzaubern. Magische
-Artefakte können überhaupt nicht verzaubert werden.
 %%%%
 scroll of fear
 
@@ -1480,11 +1317,6 @@ Besitzer und Bezirke er oder sie von den Angriffen von aufgeforderten Wesen
 geworfen ist. Wenn der Besitzer in Anrufungen erfahren ist, können sie
 versuchen, aufgeforderte Wesen zu entlassen, die sie schlagen.
 %%%%
-staff of wizardry
-
-Dieser Personal vergrößert bedeutsam die Fähigkeit seines Besitzers, magische
-Perioden zu verwenden.
-%%%%
 steam dragon armour
 
 Rüstung von den Skalen eines dampfatmenden Drachen gemacht. Obwohl, verschieden
@@ -1537,14 +1369,6 @@ Das schleimige{{
 }} Haut eines in Sumpf wohnenden Drachen. Es teilt Widerstand zu, um auf seinem
 Träger zu vergiften, und es kann in die richtige Rüstung durch magische Mittel
 verwandelt werden.
-%%%%
-throwing net
-
-Ein Ineinandergreifen von Tauen verknotet zusammen mit Gewichten um den Rand.
-Ursprünglich verwendet von Jägern, um Beute zu verfangen und zu verführen, hat
-es bald offensichtliche Anwendung im Kampf und den Gladiatorarenen gefunden.
-Kämpfende Opfer können schließlich das Netz zerstören und sich freimachen, wenn
-sie genug lange leben.
 %%%%
 tome of destruction
 

@@ -71,16 +71,9 @@ Hellfire ability
 
 Quema a tus enemigos con fuego infernal.
 %%%%
-Release Delayed Fireball ability
+Stop Singing ability
 
-Instantáneamente liberas una bola de fuego previamente memorizada (retardada)
-sin coste adicional de magia o hambre.
-%%%%
-Self-Restoration ability
-
-A costa de perder un punto de magia permanentemente, recuperas tu Fuerza,
-Destreza e Inteligencia, y sanas una gran cantidad de puntos de vida en
-descomposición.
+Detener el canto de tu Canción de Guerra
 %%%%
 Device Recharging ability
 
@@ -112,6 +105,14 @@ Turn Visible ability
 
 Te vuelves visible de nuevo.
 %%%%
+Evoke Jump Attack ability
+
+Salta hacia un enemigo cercano y realizas un ataque cuerpo-a-cuerpo,
+aterrizando en algún sitio adyacente al objetivo. No puedes saltar por encima
+de enemigo voladores y solo puedes saltar hacia enemigos gigantes sumergidos en
+lava o agua profunda. Estar parado o nadando en agua, lava o tierra licuada
+prevendrá el uso de esta abilidad
+%%%%
 Stop Flying ability
 
 Paras de volar.
@@ -120,30 +121,17 @@ Evoke Fog ability
 
 Expulsa una densa nube de humo para dificultar la visión.
 %%%%
+Evoke Teleport Control ability
+
+Obtienes la habilidad de controlar tu siguiente translocación - o bien
+seleccionas un objetivo próximo para teleportarte, o seleccionando una
+dirección para el salto. Ten en cuenta que controlar translocaciones causará
+que el sujeto quede contaminado con energía mágica y las teleportaciones
+controladas llevan más tiempo que las que no se controlan
+%%%%
 End Transformation ability
 
 Recuperas tu forma normal, tras un leve retardo.
-%%%%
-Recite ability
-
-Predicas a monstruos sobre las Leyes de Zin, lo que puede causar varios
-efectos. Hay cuatro libros sobre los que puedes predicar:
-
-* Libro de las Abominaciones: Este libro trata sobre las cosas más abobinables
-para Zin — el caos en todas sus formas. Estas recitaciones invocarán el castigo
-más poderoso de Zin.
-
-* Libro de las Abluciones: Los impuros son igualmente aborrecidos por «Quien
-dio las Leyes». Las recitaciones de este libro causarán daño a tales criaturas.
-
-* Libro de los Apóstatas: Las criaturas inteligentes que no adoran a Zin pero
-que no son de origen maligno son castigadas con menos severidad. Las
-recitaciones de este libro simplemente acarrean estados de confusión, aunque
-aquellos que se atrevan a seguir a un dios ajeno a Zin pueden verse
-permanentemente desprovistos de la capacidad para difundir su perversa fe.
-
-* Libro del Anatema: Los demonios y los no-muertos son odiados por Zin. Este
-libro te permite combatirlos.
 %%%%
 Vitalisation ability
 
@@ -151,6 +139,11 @@ Zin te aporta una resistencia divina y sustento. La resistencia divina te
 protege de la enfermedad, de envenenamientos, petrificación, confusión y
 descomposición, además de incrementar y mantener temporalmente tu Fuerza,
 Inteligencia y Destreza.
+%%%%
+Imprison ability
+
+Encierra temporalmente a un enemigo en paredes de plata. La duración de la
+prisión aumenta con las habilidades del invocador
 %%%%
 Sanctuary ability
 
@@ -200,10 +193,9 @@ Reanimas a un cadáver o esqueleto y lo conviertes en tu seguidor. Date cuenta
 de que los zombies y los esqueletos no pueden dejar el nivel donde fueron
 creados.
 %%%%
-Injury Mirror ability
+Recall Undead Slaves ability
 
-Daña a los monstruos que te ataquen, reflejando hacia ellos el daño que ellos
-te hagan a ti.
+Llama a tus seguidores no muertos desde cualquier lugar de la mazmorra hasta ti
 %%%%
 Animate Dead ability
 
@@ -248,19 +240,9 @@ Minor Destruction ability
 
 Disparas un destructivo rayo al monstruo que apuntes
 %%%%
-Lesser Servant of Makhleb ability
-
-Convoca a un demonio menor, con una probabilidad de ser hostil si tienes un
-nivel bajo de Invocaciones.
-%%%%
 Major Destruction ability
 
 Lanza un rayo destructivo o una explosión al monstruo que apuntes.
-%%%%
-Greater Servant of Makhleb ability
-
-Convocas a un demonio mayor, con una probabilidad de que sea hostil con un
-nivel bajo en Invocaciones.
 %%%%
 Channel Energy ability
 
@@ -284,12 +266,6 @@ uno queda profundamente exhausto, un periodo durante el que quedas ralentizado,
 no puedes volverte berserk nuevamente y, ocasionalmente, incluso podrías
 desmayarte.
 %%%%
-Trog's Hand ability
-
-Invoca una poderosa regeneración que se añade junto con otras fuentes e incluso
-permite que especies sin capacidad de curación se regeneren. También aumenta la
-protección ante efectos mágicos.
-%%%%
 Brothers in Arms ability
 
 Convocas a aliados enormes y furiosos para causar estragos.
@@ -304,23 +280,6 @@ siempre es gratis).
 
 Cuidado: ¡matar a otros mientras pides que se te salve a ti mismo es un pecado
 capital!
-%%%%
-Lesser Healing ability
-
-En función de tu nivel de Invocaciones, sanas a una criatura que no seas tú por
-una pequeña cantidad. Usar esta habilidad en monstruos hostiles los intentará
-volver neutrales. Esto funciona mejor con animales, algo peor con humanoides de
-tu especie, peor con otros humanoides y mucho peor con demonios y no-muertos.
-Las criaturas sin mente no pueden ser pacificadas, así como los monstruos que
-estén durmiendo. La probabilidad para una pacificación exitosa depende del
-poder de sanación.
-
-Tanto si la pacificación ocurre como si no, la inversión en alimento y puntos
-mágicos se pierden. Si la pacificación tiene éxito, el monstruo es sanado y tu
-ganas la mitad de lo que vale la experiencia del monstruo y posiblemente algo
-de piedad. Si no, el monstruo no se ve afectado y no ganas nada.
-
-Puedes sanar a aliados y a monstruos neutrales.
 %%%%
 Lesser Self-Healing ability
 
@@ -356,20 +315,9 @@ En función de tu nivel de Invocaciones, sanas una cantidad moderada de puntos
 de vida. Grosso modo, la Sanación Mayor te permitirá sanar tres veces la
 cantidad de la Sanación Menor a un coste de piedad un poco mayor.
 %%%%
-Divine Vigour ability
-
-Dependiendo de tu capacidad en Invocaciones, se restauran una gran cantidad de
-puntos de vida y mágicos, además de aumentarlos temporalmente.
-%%%%
 Depart the Abyss ability
 
 Dejas el Abismo para regresar al lugar de donde viniste.
-%%%%
-Bend Space ability
-
-Pliegas la estructura del espacio a tu alrededor, de modo que te trasladas
-instantáneamente a una corta distancia, y posiblemente también trasladando y
-dañando a monstruos cercanos.
 %%%%
 Banish ability
 
@@ -391,12 +339,6 @@ habilidad te vaciará de vida y magia.
 Draw One ability
 
 Elige cualquier mazo de tu inventario y saca una carta de él.
-%%%%
-Peek at Two ability
-
-Descartas una carta de un mazo de tu inventario para sacar dos cartas del mazo,
-mirarlas y mezclarlas de nuevo en el mazo. El mazo será inscrito conteniendo
-dichas dos cartas y, si fueran diferentes, eso identificaría al mazo.
 %%%%
 Triple Draw ability
 
@@ -421,20 +363,20 @@ Smiting ability
 Golpea a un enemigo dentro de tu campo de visión. Esto no requiere un camino
 directo, simplemente viendo al enemigo es suficiente.
 %%%%
+Recall Orcish Followers ability
+
+Llama a tus seguidores orcos desde cualquier lugar de la mazmorra hasta ti
+%%%%
+Stop Recall ability
+
+Cancela la llamada a tus seguidores
+%%%%
 Sunlight ability
 
 Iluminas con luz solar un área pequeña. Los monstruos iluminados por la luz
 serán más fáciles de dar. El agua afectada por la luz se evaporará. En
 particular, el agua profunda se volverá superficial, y el agua superficial se
 secará completamente, revelando el suelo.
-%%%%
-Growth ability
-
-Usa fruta para hacer crecer un anillo de plantas a tu alrededor. Si no se puede
-formar el anillo completo (porque no hay suficiente fruta), las plantas
-crecerán en casillas adyacentes a ti y cercanas a los monstruos. Las plantas
-así creadas ganan un bonus sobre sus puntos de vida, que es proporcional a tu
-nivel de Invocaciones.
 %%%%
 Rain ability
 
@@ -464,11 +406,6 @@ Temporal Distortion ability
 Distorsionas el flujo del tiempo a tu alrededor, causando que los monstruos
 avancen en el tiempo relativo a ti.
 %%%%
-Slouch ability
-
-Causas daño a todo el que esté en tu campo de visión moviéndose más rápido que
-tu. Aquellos mágicamente acelerados serán agredidos especialmente.
-%%%%
 Step From Time ability
 
 Te excluyes del flujo del tiempo. Las cosas a tu alrededor sucederán a su
@@ -479,11 +416,6 @@ estado que tenías en el mismo segundo en que partiste.
 Request Jelly ability
 
 Creas una gelatina neutral que vagará por el suelo digiriendo objetos.
-%%%%
-Jelly Paralyse ability
-
-Rezas para detener temporalmente la consumición de objetos por parte de tus
-limos.
 %%%%
 Slimify ability
 
@@ -512,6 +444,16 @@ Renounce Religion ability
 
 Renuncias a tu fe. Esto hará a tu personaje abandonar a su dios (y normalmente
 enfadar a dicho dios).
+%%%%
+Convert to Beogh ability
+
+Juras lealtad a Beogh, el dios de la cueva de los orcos. Este dios exige que
+todos los no-creyentes deben moriro, pero los nuevos creyentes deben ser
+perdonados y aceptados en la grieta. Cuidado, aquellos orcos que no te hayan
+visto convertirte pueden seguir sindo hostiles hasta que te hayas hecho una
+reputación.
+
+Todos los demás dios odian a Beogh, y no se tomarán la deserción a la ligera.
 %%%%
 Make dart trap ability
 

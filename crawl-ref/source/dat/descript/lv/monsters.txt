@@ -9,10 +9,6 @@ __cap-N_suffix
     end
 }}
 %%%%
-__cap-U_suffix
-
-To sabiedējot, tas var sadusmoties!
-%%%%
 Asmodeus
 
 Viens no arhidēmoniem, kas mīt liesmu apvītajās pekles dzīlēs.
@@ -81,11 +77,6 @@ Pusmūža atlīdzības mednieks, kas nevar vien sagaidīt, kad varēs doties pen
 pēc viena pēdējā darbiņa paveikšanas. Viņš cer kaut kur apmesties un dzīvot
 mierīgu dzīvi kopā ar savu ģimeni, pārtiekot no naudas, ko saņems par pēdējo
 nogalināšanas pasūtījumu: jūs.
-%%%%
-Ilsuiw
-
-Viltīga ūdenieku ragana, kura izmanto savu daili un zintis nevilšu dēkaiņu
-nonāvēšanai.
 %%%%
 Jessica
 
@@ -224,10 +215,6 @@ black bear
 Mazs melns lācis. Kā jau visi lāčveidīgie, melnais lācis satrakosies, ja tiks
 smagi savainots vai nobiedēts.
 %%%%
-black draconian
-
-Zvīņām klāts cilvēkveidīgais ar rāpuļa asti un maziem spārniņiem.
-%%%%
 blizzard demon
 
 Lieldēmons, kas tīts sniegā un zibeņos.
@@ -255,10 +242,6 @@ Executioner
 Briesmīgi varens un spējš dēmons, ap kura tēlu šķind izkaptveidīgu asmeņu
 mākonis.
 %%%%
-megabat
-
-Milzīgs melns sikspārnis.
-%%%%
 hellion
 
 Šaušalīgs dēmons, kuru sedz dārdošas pekles liesmas.
@@ -272,8 +255,7 @@ ancient champion
 Neaptverami sens ģindenis. Tā kaulos iegravētas simtiem zeltītas zīmes, kuras
 pulsē ar šaušalīgu un nešķīstu spēku.
 %%%%
-Cigotuvi's Monster
+megabat
 
-Izskatās it kā šis šausminošais radījums būtu izveidots no ikkatra briesmīgāka
-iedomājamākā radījuma.
+Milzīgs melns sikspārnis.
 %%%%

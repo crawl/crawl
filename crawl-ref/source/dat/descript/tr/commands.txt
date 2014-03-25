@@ -1,4 +1,8 @@
 %%%%
+CMD_REST
+
+Dinlen ve iyileş
+%%%%
 CMD_REPLAY_MESSAGES
 
 Son mesajları tekrar oku
@@ -47,6 +51,10 @@ CMD_AUTOFIGHT
 
 En yakın yaratığa vur
 %%%%
+CMD_WAIT
+
+Bir tur bekle
+%%%%
 CMD_DROP
 
 Eşyaları bırak
@@ -82,6 +90,18 @@ Basamaklardan aşağıya doğru pedal çevir
 CMD_MAP_FIND_YOU
 
 Beni bul
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Satıcıları ve portalı bul
+%%%%
+CMD_MAP_FIND_TRAP
+
+Tuzakları bul
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Adak taşını bul
 %%%%
 CMD_ZOOM_IN
 

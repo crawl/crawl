@@ -1,4 +1,13 @@
 %%%%
+CMD_REST
+
+Hvil og hel
+%%%%
+CMD_REST verbose
+
+Brug op til 100 ture på at genvinde helbred og/eller magi. Dit hvil vil blive
+afbrudt, så snart du får øje på et fjendtligt uhyre.
+%%%%
 CMD_EXPLORE
 
 Autoudforsker det nuværende niveau
@@ -19,9 +28,33 @@ CMD_INTERLEVEL_TRAVEL verbose
 Rejs automatisk til fjerne niveauer. Rejsen bliver afbrudt, hvis uhyrer kommer
 til syne.
 %%%%
+CMD_USE_ABILITY
+
+Brug guddommelige eller iboende evner
+%%%%
 CMD_PRAY
 
 Bed til din gud
+%%%%
+CMD_SEARCH_STASHES
+
+Led efter genstande/elementer
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Søger efter genstande eller områder, du har set andetsteds, og rejser derhen.
+%%%%
+CMD_REPLAY_MESSAGES
+
+Læs de nyeste beskeder igen
+%%%%
+CMD_RESISTS_SCREEN
+
+Viser et overblik over karakteren
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Viser oplysninger om kendte modstandsdygtigheder, evner, udstyrsstatistik osv.
 %%%%
 CMD_DISPLAY_OVERMAP
 
@@ -61,6 +94,15 @@ CMD_DISPLAY_KNOWN_OBJECTS
 
 Viser en liste over typer af genstande, du har mødt
 %%%%
+CMD_SAVE_GAME_NOW
+
+Gem og afslut
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Gemmer spillet til senere og afslutter. Når du genoptager spillet, vil de gemte
+data blive slettet.
+%%%%
 CMD_EDIT_PLAYER_TILE
 
 Lav om på spillergrafikken
@@ -81,12 +123,6 @@ CMD_CHARACTER_DUMP
 
 Gem karakterfremskridt
 %%%%
-CMD_CHARACTER_DUMP verbose
-
-Gemmer en masse oplysninger om din karakter i en fil ved navn „spillernavn.txt“
-i morgue-mappen, så du kan læse den, når du lyster. Dette inkluderer den
-vigtigste statistik, udstyr, besværgelser, færdigheder, noter osv.
-%%%%
 CMD_AUTOFIGHT
 
 Slå det nærmeste uhyre
@@ -103,4 +139,204 @@ Slå et uhyre ved siden af dig
 CMD_AUTOFIGHT_NOMOVE verbose
 
 Angriber et uhyre ved siden af dig med dit våben.
+%%%%
+CMD_WAIT
+
+Vent en enkelt tur
+%%%%
+CMD_WAIT verbose
+
+Bruger en enkelt tur på at vente og hvile.
+%%%%
+CMD_DISPLAY_INVENTORY
+
+Vis indholdet af din oppakning
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Viser indoholdet af din oppakning.
+%%%%
+CMD_CAST_SPELL
+
+Kast en besværgelse
+%%%%
+CMD_CAST_SPELL verbose
+
+Kaster en besværgelse.
+%%%%
+CMD_BUTCHER
+
+Slagt lig
+%%%%
+CMD_BUTCHER verbose
+
+Slagter et lig til lunser.
+%%%%
+CMD_MEMORISE_SPELL
+
+Lær besværgelse
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+Læser en besværgelse fra en bog, du holder eller står på, og husker den.
+%%%%
+CMD_DROP
+
+Smid genstande
+%%%%
+CMD_DROP verbose
+
+Smid en eller flere af de genstande, du bærer på.
+%%%%
+CMD_DISPLAY_MAP
+
+Gå i korttilstand
+%%%%
+CMD_DISPLAY_MAP verbose
+
+Lader dig navigere rundt på det af kortet, du tidligere har udforsket.
+%%%%
+CMD_MAP_GOTO_TARGET
+
+Rejs til markør
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+Begynd at rejse mod markørens nuværende placering.
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Tilføj pejlemærke
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Placerer et pejlemærke på din nuværende position.
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+Rejseundtagelse
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+Skaber en rejseundtagelse, ændrer dens radius eller fjerner den.
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+Fjern alle rejseundtagelser
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+Fjerner alle rejseundtagelser på dette niveau.
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Et niveau ned
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Gå videre til det næste, dybere niveau.
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Et niveau op
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Gå videre til et niveau, der er højere oppe.
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Gå til niveau
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+Gå til et andet niveau, som vælges efter forgrening og dybde.
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Find trapperne op
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+Skifter mellem de trapper, der fører op.
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Find trapperne ned
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Skifter mellem de trapper, der fører ned.
+%%%%
+CMD_MAP_FIND_YOU
+
+Find mig
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+Flytter kortmarkøren tilbage til din nuværende placering.
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Find butikker og portaler
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+Skifter mellem butikker og portaler på dette niveau.
+%%%%
+CMD_MAP_FIND_TRAP
+
+Find fælder
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+Skifter mellem fælderne på dette niveau.
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Find altre
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+Skifter mellem altrene på dette niveau.
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+Find rejseundtagelse
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+Skifter mellem rejseundtagelserne på dette niveau.
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Find pejlemærke
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+Skifter mellem alle pejlemærkerne på dette nivaeu.
+%%%%
+CMD_MAP_FIND_STASH
+
+Find gemmested
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+Skifter mellem alle gemmestederne på dette niveau.
+%%%%
+CMD_ZOOM_IN
+
+Zoom ind
+%%%%
+CMD_ZOOM_IN verbose
+
+Zoomer ind på et område af de underjordiske gange
+%%%%
+CMD_ZOOM_OUT
+
+Zoom ud
+%%%%
+CMD_ZOOM_OUT verbose
+
+Zoomer ud fra et område af de underjordiske gange
 %%%%

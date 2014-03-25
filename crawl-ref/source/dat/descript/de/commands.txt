@@ -37,12 +37,6 @@ CMD_PRAY
 
 Bete deinen Gott an
 %%%%
-CMD_PRAY verbose
-
-Wenn dein Gott Opfer mag, wird dies eine Leiche oder andere Gegenstände opfern.
-Und wenn du an einem Altar stehst, erlaubt es dir dem dazugehörigen Gott
-beizutreten. Bei manchen Göttern hat beten auch andere spezielle Effekte.
-%%%%
 CMD_SEARCH_STASHES
 
 Suche nach Gegenständen/Besonderheiten
@@ -131,13 +125,6 @@ Liste von Kommandos, Optionen, etc.
 CMD_CHARACTER_DUMP
 
 Speichere den Charakter Fortschritt
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-Speichere eine riesige Menge an Informationen über deinen Charakter in die
-‚Spielername.txt‘ Datei in das Archiv Verzeichnis, um es dir bei Zeiten
-durchzulesen. Diese beinhaltet Haupteigenschaften, Ausrüstung, Sprüche,
-Fähigkeiten, Notizen, usw.
 %%%%
 CMD_AUTOFIGHT
 

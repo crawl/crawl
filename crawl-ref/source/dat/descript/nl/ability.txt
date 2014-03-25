@@ -14,12 +14,6 @@ Animate Remains or Dead ability
 
 Als je deze omschrijving ziet, is dat een bug.
 %%%%
-Bend Space ability
-
-Buigt het ruimteweefsel rondom je, waardoor je ogenblikkelijk een kleine
-afstand aflegt. Mogelijk worden monsters rondom je ook getransloceerd en
-beschadigd.
-%%%%
 Banish ability
 
 Probeert een monster naar de Diepte te verbannen.

@@ -122,8 +122,3 @@ Troll
 Große Wüstlinge, bereit, alles mit ihren Klauen zu zermalmen, nie zweimal
 nachdenkend. Sie haben stets Hunger.
 %%%%
-Vampire
-
-Ständig zwischen Leben und Tod wechselnd, sind sie gekonnte Messerstecher und
-Zauberer(?).
-%%%%

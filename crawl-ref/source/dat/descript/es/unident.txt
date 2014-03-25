@@ -4,11 +4,6 @@ amulet
 Un talismán para llevar puesto al cuello, cargado con poderes arcanos de origen
 desconocido.
 %%%%
-book
-
-Un libro con hechizos mágicos. Ten cuidado, ya que los grimorios más poderosos
-deben ser manipulados con cuidado.
-%%%%
 deck of cards
 
 Un mazo de poderosas cartas mágicas dibujadas con icor de demonios. Echar estas
@@ -22,13 +17,6 @@ ring
 
 Un talismán cargado con fuerzas arcanas de origen desconocido, pensado para
 llevarlo puesto como anillo en un dedo.
-%%%%
-rod
-
-Una barra mágica que puede ser sostenida con una mano y evocada para lanzar uno
-de los hechizos que contiene, usando para ello unas reservas propias de magia
-que se regeneran de forma autónoma.  Es los suficientemente robusta como para
-ser simplemente usada como arma de contusión.
 %%%%
 scroll
 

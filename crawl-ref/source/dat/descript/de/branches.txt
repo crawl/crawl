@@ -1,17 +1,4 @@
 %%%%
-Dungeon
-
-Es ist noch immer ein Geheimnis wie dieser bizarre Ort geschaffen wurde. Manche
-behaupten das er der Spielplatz gelangweilter Götter sei, wohingegen andere der
-Meinung sind das er von allen möglichen Arten geformt wurde die von der
-Oberfläche vor dem Licht flohen.Unabhängig davon was sein Ursprung war, diese
-tiefe Höhle ist mit einmaligen Reichtümern und ebenso Gefahren im Überfluss für
-seine Eindringlinge gefüllt. Wenige konnten lebend entkommen, und noch weniger
-behielten etwas Verstand über um die Geschichte zu erzählen.
-
-Das Höhlensystem ist 16 Ebenen tief, aber ehrlich gesagt, das ist erst der
-Anfang.
-%%%%
 Temple
 
 Ein Tempel der Götter, ein Ort des Friedens und der Erholung vom Wahnsinn des
@@ -48,52 +35,6 @@ und gefressen als aufgeschlitzt, verbrannt oder erstochen.
 
 Diese Höhle ist acht Ebenen tief und enthält Stufen zu drei weiteren Gebieten.
 %%%%
-Swamp
-
-Ein sumpfiges, mit Schleim, Dreck und Fliegen überzogenes, Ödland und
-sabbernden fleischfressenden Monstern.
-
-Der Sumpf ist fünf Ebenen tief und enthält die Faulende Rune. Ein Verlies ist
-nur mit zwei der Schlangengruben, Sümpfe, Untiefen und Spinnennestern
-ausgestattet. Ist der Sumpf vorhanden dann findet man den Eingang zwischen der
-Höhle 2 und Höhle 5.
-%%%%
-Shoals
-
-Aus der Ferne hörst du das gleichmäßige Geräusch von Wellen und riechst das
-Salzwasser. Beim erreichen der Untiefen beeindrucken dich exotische
-Untergrund-Strände, welche ein paar Inseln in dem riesigen Meer bilden. Ganz
-plötzlich erfüllt ein markerschütternder Schrei die Luft, gefolgt von einem
-Gurgeln. Angstvoll schaust du dich verwundert um: Wo ist das Raubtier? Und wer
-ist die Beute?
-
-Die Untiefen sind fünf Ebenen tief und enthält die Muschelbesetzte Rune. Ein
-Verlies ist nur mit zwei der Schlangengruben, Sümpfe, Untiefen und
-Spinnennestern ausgestattet. Ist der Sumpf vorhanden dann findet man den
-Eingang zwischen der Höhle 3 und Höhle 6.
-%%%%
-Snake Pit
-
-Heimat der Schlange, Höhle der Naga.
-
-Die Schlangengrube ist fünf Ebenen tief und enthält die Schlangenartige Rune.
-Ein Verlies ist nur mit zwei der Schlangengruben, Sümpfe, Untiefen und
-Spinnennestern ausgestattet. Ist die Schlangengrube vorhanden dann findet man
-den Eingang zwischen der Höhle 3 und Höhle 6.
-%%%%
-Spider Nest
-
-Auf der Oberfläche könnte eine Spinne mit einem einfachen Tritt entfernt
-werden. Hier unten ist es anders. Wenn du bis jetzt noch keine Spinnenphobie
-hattest, wirst du sie durch diesen Ort mit seinen zerbröckelnden, mit
-Spinnennetzen durchzogenen Höhlen, giftigen Gliedfüßern und den verschiedensten
-gruseligen Krabbeltieren bekommen.
-
-Das Spinnennest ist fünf Ebenen tief und enthält die Gespinst Rune. Ein Verlies
-ist nur mit zwei der Schlangengruben, Sümpfe, Untiefen und Spinnennestern
-ausgestattet. Ist das Spinnennest vorhanden dann findet man den Eingang
-zwischen der Höhle 3 und Höhle 6.
-%%%%
 Slime Pits
 
 Der amorphe Bereich von Säuren, Gelees und Schlämmen. Jede Spur von
@@ -106,26 +47,6 @@ kaustisch wachsend, wie Sie hinuntersteigen.
 Die Schlamm-Gruben sind sechs Niveaus tief und enthalten die schleimige Rune.
 Der Zugang ist zwischen Höhle:6 und Höhle:8.
 %%%%
-Hall of Blades
-
-Irgendwann einmal, in den Nachtstunden, wollten alle Dolche, Äxte und
-Stangenwaffen zusammen Walzer tanzen und von Schlachtfeldern frei von Mann und
-Bestie. Diese Zeit ist vorüber, nur die Waffen sind noch dort.
-
-Die Halle der Klingen hat eine einzige Ebene und kann zwischen Gewölbe 3 und
-Gewölbe 4 gefunden werden.
-%%%%
-Crypt
-
-Eine riesige Lagerstätte für die alten Toten. Die Luft ist frostig und
-übelriechend, die Wände kalt und feucht. Knochen sind großzügig überall
-verstreut und der ganze Ort erhallt mit dem Wehklagen der gequälten Seelen der
-unruhigen Toten.
-
-Die Krypta ist fünf Ebenen tief. Das Verlies beinhaltet entweder die Krypta
-oder den Wald; wenn die Krypta vorhanden ist, kann sie zwischen Gewölbe:2 und
-Gewölbe:3 gefunden werden, und enthält den Eingang zum Grab.
-%%%%
 Tomb
 
 Das Grabmal der Antike ist ein Ort der Verdammnis und von niederträchtigster
@@ -135,15 +56,6 @@ die con diesem Ort zurückkehrten ist überaus kurz.
 
 Das Grabmal ist drei Ebenen tief und beinhaltet die Goldene Rune. Sein Eingang
 befindet sich entweder in der Krypta Ebene 2 oder 3.
-%%%%
-Hell
-
-Das Vorhaus zu den vier Höllen wird von Geyron bewacht. Helden die sich im
-Vorhof bewähren und Geyron's Horn blasen können die verschiedenen Regionen der
-Hölle erkunden: Dis, Gehenna, Cocytus und Tartarus.
-
-Portale zum Vorhof der Hölle findet man in den tieferen Bereichen der Höhlen
-reichlich.
 %%%%
 Dis
 
@@ -186,18 +98,6 @@ andere gesehen hat.
 
 Das Reich von Zot ist fünf Ebenen tief und kann nur betreten werden wenn man
 mindestens drei Runen bei sich trägt.
-%%%%
-Forest
-
-Unter diesem dunklen und unheimlichen Wald liegen die Höhlen der Spriggans,
-Faune, Tengu und andere Kreaturen die bereit sind den Verstand der
-Eindringlinge, die nicht bereit sind, ihren Willen aufzuzwingen.
-Leistungsstarke illusorische und behindernde Magier sind die Norm, nicht die
-Ausnahme.
-
-Der verzauberte Wald ist fünf Ebenen tief. Das Verlies verfügt entweder über
-eine Krypta oder den Wald, wenn der Wald vorhanden ist, kann er zwischen
-Gewölbe:2 und Gewölbe:3 gefunden werden, und enthält den Eingang zum Grab.
 %%%%
 Abyss
 
@@ -277,19 +177,6 @@ die durch das faule, stinkende grüne Wasser pirschen und jedem ohne Gnade
 auflauern. Die Legenden erwähnen auch die wertvollen Gegenstände, die in die
 Abflusskanälen gespült wurden, vergessen und zum Verschimmeln in den feuchten
 Höhlen liegen gelassen.
-%%%%
-Ossuary
-
-Das Beinhaus ist eine eher kleine Grabstätte welches die Grabbeilagen von
-entfernten Verwandten des Pharaos, sowie die Leichen ihrer Gefolgschaft und
-Haustieren enthalten. Es ist zweifelsohne mit zahlreichen Fallen gespickt und
-seine untoten Bewohner sind nicht grade freundlich auf Plünderung gestimmt.
-%%%%
-Bailey
-
-Noch immer ist der Burghof eine gut bewachte Festung und im Besitz eines
-Orkischen Herrschers. Im inneren werde die persönlichen Schätze von materiellen
-Barrieren und sehr gut bewaffneten menschlichen Kriegern beschützt.
 %%%%
 Ice Cave
 

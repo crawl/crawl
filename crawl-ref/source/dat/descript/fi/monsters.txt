@@ -23,10 +23,6 @@ Dispater
 
 Disin Iron Cityn valtias.
 %%%%
-Erica
-
-Kaunis loitsija.
-%%%%
 Erolcha
 
 Erityisen ovela ogre-maagi.
@@ -55,10 +51,6 @@ Näyttää aivan palkkasotilaalta.
 Khufu
 
 Ällistyttävän voimakas hallitsija matkalla jumaluuteen.
-%%%%
-Kirke
-
-Kaunis lumoojatar.
 %%%%
 Louise
 

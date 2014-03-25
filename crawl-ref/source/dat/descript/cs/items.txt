@@ -141,54 +141,6 @@ decaying skeleton
 
 Rozpadající se kostra.
 %%%%
-deck of defence
-
-Balíček kouzelných karet, z nichž většina chrání uživatele určitým způsobem
-před újmou.
-
-Může obsahovat následující karty: Hrobka, Smrtka, Zatracení, Osamocení,
-Křivitel, Útěk, Elixír, Bojechtivost, Přeměna, Přílba, Čepel, Stín, Námezdník.
-%%%%
-deck of destruction
-
-Balíček kouzelných karet, z nichž většina sesílá smrt a destrukci na nepřátele
-(nebo na uživatele, pokud má smůlu).
-
-Může obsahovat následující karty: Jed, Plamen, Mráz, Jiskra, Kladivo, Bolest,
-Kotouč.
-%%%%
-deck of escape
-
-Balíček kouzelných karet, povětšinou umožňující různé formy útěku. Neopatrností
-se lze však dostat takříkajíc z deště pod okap!
-
-Může obsahovat následující karty: Portál, Pokřivení, Výměna, Rychlost, Hrobka,
-Smrtka, Zatracení, Osamocení, Křivitel, Útěk.
-%%%%
-deck of summonings
-
-Balíček kouzelných karet, zobrazující řadu roztodivných a úžasných bytostí.
-
-Může obsahovat následující karty: Křížová výprava, Stádo, Pentagram, Tanec,
-Vílí oheň, Kosti, Odpudivost.
-%%%%
-deck of war
-
-Balíček kouzelných karet, které jsou užitečné v průběhu bitvy i před ní.
-
-Může obsahovat následující karty: Portál, Pokřivení, Výměna, Rychlost, Hrobka,
-Smrtka, Zatracení, Osamocení, Křivitel, Útěk, Elixír, Bojechtivost, Proměna,
-Přílba, Čepel, Stín, Námezdník, Křížová výprava, Stádo, Pentagram, Tanec, Vílí
-oheň, Kosti, Odpudivost, Jed, Plamen, Mráz, Jiskra, Kladivo, Bolest, Muka.
-%%%%
-deck of wonders
-
-Balíček velmi záhadných kouzelných karet, které mohou pozměnit uživatelův
-fyzický či mentální stav k lepšímu, ale i k horšímu.
-
-Může obsahovat následující karty: Nápoj, Usměrnit, Promíchat, Zkušenost,
-Nespoutaná magie, Spirála, Mudrc, Alchemista.
-%%%%
 demon blade
 
 Strašná zbraň, kovaná v ohni pekla.
@@ -309,13 +261,6 @@ piece of ambrosia
 Kousek podivné hmoty vytvářené přízračnými motýli. Konzumací dojde k doplnění
 živin i magické energie, avšak za cenu dočasné ztráty mentálního soustředění.
 %%%%
-plate armour
-
-Kompletní plátová zbroj: kyrys, nárameníky, nátepníky, pásová zbroj a holenice.
-Kroužková zbroj vyplňuje prázdná místa a umožňuje tak pohyb.
-
-Poskytuje výtečnou ochranu, ale navléci se do něj trvá věčnost.
-%%%%
 potion of agility
 
 Kouzelný lektvar, jehož vypití náramně zvyšuje obratnost a schopnost uhýbat.
@@ -351,10 +296,6 @@ Hnusná jedovatá kapalina.
 potion of slowing
 
 Lektvar, který zpomaluje vaše akce.
-%%%%
-potion of haste
-
-Okouzlený nápoj, který urychluje činnost každého, kdo ho vypije.
 %%%%
 potion of strong poison
 

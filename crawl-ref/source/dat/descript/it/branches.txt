@@ -1,16 +1,4 @@
 %%%%
-Dungeon
-
-Risulta ancora misterioso come questo bizzarro posto sia stato creato. Alcuni
-sostengono che questo sia il parco giochi delle divinità annoiate, altri che
-sia stato plasmato da ogni tipo di specie che ha deciso di fuggire dal mondo
-superiore e di rinnegare la luce. La sua origine ha poca importanza, questa
-profonda caverna è piena di immense ricchezze ma anche di grandi pericoli per
-qualunque intruso. Pochi sono fuggiti vivi da qui, e pochissimi hanno mantenuto
-la lucidità mentale per poterlo raccontare.
-
-Il Dungeon è profondo 16 livelli, ma, francamente, questo è solo l'inizio.
-%%%%
 Temple
 
 Un tempio degli Dei, un luogo di pace e rifugio dalla pazzia del Dungeon.
@@ -46,50 +34,6 @@ affettati, arsi vivi o pugnalati al farsi sventrare, azzannare e mangiati vivi.
 
 L'Antro è profondo otto livelli e contiene le scale ad altre tre ramificazioni.
 %%%%
-Swamp
-
-Una desolata palude, completa di melma, liquami, mosche e giganti mostri
-carnivori.
-
-La Palude è profonda cinque livelli e contiene la runa decadente. Un dungeon
-può avere solo due ramificazioni del gruppo del Fosso dei Serpenti, Palude,
-Secche e il Nido dei Ragni. Se la Palude è presente, l'entrata è locata fra
-Antro:2 e Antro:5
-%%%%
-Shoals
-
-Da lontano senti l'incessante suono delle onde e l'odore della spuma marina.
-Raggiungendo le Secche, sei impressionato dalle esotiche spiagge sotterranee,
-che costituiscono alcune isole nel vasto mare. Improvvisamente, un urlo
-terrificante riempe l'aria, seguito da un gorgoglio. Ansiosamente ti guardi
-attorno e pensi: chi è il predatore? E chi la preda?
-
-Le Secche sono profonde cinque livelli e contengono la runa dei molluschi. Un
-dungeon può avere solo due ramificazioni del gruppo del Fosso dei Serpenti,
-Palude, Secche e il Nido dei Ragni. Se le Secche sono presenti, l'entrata è
-locata fra Antro:3 e Antro:6.
-%%%%
-Snake Pit
-
-Casa del serpente, antro del naga.
-
-Il Fosso dei Serpenti è profondo cinque livelli e contiene la runa serpentina.
-Un dungeon può avere solo due ramificazioni del gruppo del Fosso dei Serpenti,
-Palude, Secche e il Nido dei Ragni. Se il Fosso dei Serpenti è presente,
-l'entrata è locata fra Antro:3 e Antro:6.
-%%%%
-Spider Nest
-
-In superficie, un ragno può essere facilmente scacciato con un semplice calcio.
-Quaggiù è diverso. Se non soffri già di aracnofobia, questo posto, con le sue
-crollanti caverne strozzate da ragnatele, i suoi artropodi velenosi e altre
-inquietanti e striscianti bestie assortite, te la farà venire.
-
-Il Nido dei Ragni è profondo cinque livelli e contiene la runa di ragnatela. Un
-dungeon può avere solo due ramificazioni del gruppo del Fosso dei Serpenti,
-Palude, Secche e il Nido dei Ragni. Se il Nido dei Ragni è presente, l'entrata
-è locata tra Antro:3 e Antro:6.
-%%%%
 Slime Pits
 
 Il regno amorfo di acidi, gelatine e protoplasmi. Ogni traccia di forme di vita
@@ -102,25 +46,6 @@ va in profondità.
 I Fossi dei Protoplasmi sono profondi sei livelli e contengono la runa melmosa.
 L'entrata è fra Antro:6 e Antro:8
 %%%%
-Hall of Blades
-
-Una volta, tutti i pugnali, asce e lance si riunivano allo stesso tempo per
-danzare un walzer, sognando campi di battaglia svuotati da uomini e bestie.
-Quel tempo è passato, ma le armi sono ancora qui.
-
-La Sala delle Lame è un singolo livello e può essere trovato tra Sotteranei:3 e
-Sotterranei:4.
-%%%%
-Crypt
-
-Un enorme deposito per i morti antichi. L'aria è gelida e fetida, le mura
-fredde e umide. Le ossa sono sparse liberamente in ogni dove e tutto il posto
-risuona con l'acuto soffrire delle anime torturate e dei morti inquieti
-
-La Cripta è profonda cinque livelli. Il Dungeon può avere o la Cripta o la
-Foresta; se è presente la Cripta, può essere trovata tra Sotteranei:2 e
-Sotterranei:3, e contiene l'entrata alla Tomba.
-%%%%
 Tomb
 
 La Tomba degli Antichi è un luogo di dannazione, di orrori e della più vile
@@ -130,15 +55,6 @@ riusciti a tornare da questo posto di pura morte è incredibilmente breve.
 
 La Tomba è profonda tre livelli e contiene la runa d'oro. La sua entrata è o su
 Cripta:2 o Cripta:3
-%%%%
-Hell
-
-Il corridoio ai quattro inferni è sorvegliato da Gerione. Gli eroi che provano
-il loro valore nel vestibolo e soffiano il corno di Gerione possono esplorare
-le differenti regione dell'Inferno: Dite, Geenna, Cocito e Tartaro.
-
-I portali al Vestibolo dell'Inferno sono trovati nelle profondità più recondite
-del dungeon.
 %%%%
 Dis
 
@@ -180,16 +96,6 @@ trovare un artefatto favoloso su cui nessuno ha mai posato gli occhi.
 
 Il Regno di Zot è profondo tre livelli e vi si può entrare portando solo tre
 rune.
-%%%%
-Forest
-
-Fra questi alberi oscuri e sinistri vi sono gli antri di spiriggano, fauni,
-tengu e altre creature capaci di far piegare la mente degli intrusi a loro
-volontà. Potenti magie illusorie e dannose sono la norma, non l'eccezione.
-
-La Foresta Incantata è profonda cinque livelli. Il Dungeon può avere o la
-Cripta o la Foresta; se è presente la Foresta, può essere trovata tra
-Sotteranei:2 e Sotterranei:3, e contiene l'entrata alla Tomba.
 %%%%
 Abyss
 
@@ -271,19 +177,6 @@ rifugio. Vecchi miti raccontano di creature pericolose che si aggirano nella
 lurida acqua verde, facendo preda l'una dell'altra senza pietà alcuna. I
 racconti alludono anche a oggetti preziosi accidentalmente lavati via dalle
 condutture di scarico, dimenticati e abbandonati a marcire nelle umide caverne.
-%%%%
-Ossuary
-
-L'Ossuario è una piccola tomba contenente i resti e il corredo funerario di
-alcuni lontani parenti dei faraoni con le spoglie dei loro servi e degli
-animali domestici. Non vi è ombra di dubbio che è pieno zeppo trappole, e che i
-suoi residenti nonmorti non prenderanno di buon grado il suo saccheggio.
-%%%%
-Bailey
-
-L'Avamposto è la vecchia fortezza ancora occupata e difesa appartenente a un
-signore degli orchi. I suoi tesori sono protetti sia da barriere fisiche che da
-un grande numero di guerrieri ben armati.
 %%%%
 Ice Cave
 

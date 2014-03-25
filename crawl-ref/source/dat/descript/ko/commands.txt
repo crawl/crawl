@@ -36,12 +36,6 @@ CMD_PRAY
 
 신에게 기도
 %%%%
-CMD_PRAY verbose
-
-제단 위에서 기도를 올리면 해당 제단이 모시고 있는 신을 믿을 수 있다. 공물을
-좋아하는 신을 믿고 있다면 기도를 통하여 시체나 물건을 바칠 수 있으며, 몇몇
-신들의 경우 기도를 통해 특별한 효과를 얻을 수도 있다.
-%%%%
 CMD_SEARCH_STASHES
 
 아이템 및 지형지물 검색
@@ -127,12 +121,6 @@ CMD_DISPLAY_COMMANDS verbose
 CMD_CHARACTER_DUMP
 
 캐릭터의 기록 저장
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-morgue 폴더의 ‘(플레이어명).txt’ 파일에, 캐릭터에 대한 자세한 정보를
-저장한다. 이 파일에는 주요 능력치와 장비, 주문, 기술, 주요사항, 해치운 적 등의
-자세한 정보가 포함된다.
 %%%%
 CMD_AUTOFIGHT
 

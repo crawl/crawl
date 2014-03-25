@@ -63,29 +63,10 @@ Blink spell
 
 Ten czar przemieszcza rzucającego na krótki dystans, w niekontrolowany sposób.
 %%%%
-Bolt of Cold spell
-
-Ten czar emituje wielką wiązkę przejmującego zimna.
-%%%%
-Bolt of Draining spell
-
-Ten czar emituje wielką wiązkę nekromantycznej energii, wysysając życie z
-wszelkich trafionych żywych istot. Demony, nieumarli i animowane przedmioty nie
-ucierpią w żaden sposób.
-%%%%
-Bolt of Fire spell
-
-Ten czar emituje wielką wiązkę płomieni.
-%%%%
 Bolt of Inaccuracy spell
 
 Ten czar strzela magicznym pociskiem który zadaje ogromne obrażenia — o ile
 cokolwiek trafi. Celowanie nim jest niewiarygodnie trudne.
-%%%%
-Bolt of Magma spell
-
-Ten czar ciska pocisk z gorącej roztopionej skały, zadając spore obrażenia
-nawet istotom odpornym na ogień.
 %%%%
 Borgnjor's Revivification spell
 
@@ -128,11 +109,6 @@ Confusing Touch spell
 Ten czar rzuca urok na dłonie rzucającego. Po dotknięciu kogoś taką dłonią,
 jeśli czar nie zostanie odparty, powoduje on zmieszanie umysłu.
 %%%%
-Conjure Ball Lightning spell
-
-Ten czar tworzy pioruny kuliste, które poruszają się bez jakiejkolwiek
-kontroli, po czym wybuchają w sporym wyładowaniu.
-%%%%
 Conjure Flame spell
 
 Ten czar tworzy kolumnę ognia w dowolnej wolnej przestrzeni. Stanowi ona
@@ -148,14 +124,6 @@ Uwaga: kontrolowane przemieszczenia mogą spowodować magiczne skażenie.
 Control Undead spell
 
 Ten czar próbuje zniewolić nieumarłych na których zostanie rzucony.
-%%%%
-Controlled Blink spell
-
-Ten czar pozwala na przemieszczenie się na krótki dystans, z pełną precyzją.
- Jest na tyle potężny że nawet w miejscach gdzie magiczna aura uniemożliwia
-jakakolwiek inną kontrolę teleportów, precyzja jest tylko zmniejszona.
-
-Kontrolowane przemieszczenia mogą spowodować magiczne skażenie.
 %%%%
 Corona spell
 
@@ -200,12 +168,6 @@ Debugging Ray spell
 Czar który powoduje 1500 obrażeń i zawsze trafia. I nie jest dostępny w
 normalnej grze.
 %%%%
-Deflect Missiles spell
-
-Ten czar chroni rzucającego przed wszelkimi typami pocisków, tak zwykłych jak i
-magicznych. Uniknięcie ich nadal wymaga przytomnej decyzji (robisz to odruchowo
-według wskaźnika EV), ale niemal zawsze jest śmiesznie łatwe.
-%%%%
 Delayed Fireball spell
 
 Rzucenie tego czaru nie ma natychmiastowego efektu. Zgromadzoną w nim energię
@@ -226,11 +188,6 @@ Dispel Undead spell
 Ten czar częściowo animuje wskazaną nieumarłą istotę, w sposób sprzeczny z
 czarami za pomocą których się ona porusza. Powoduje to ogromne obrażenia.
 %%%%
-Dispersal spell
-
-Ten czar próbuje przeteleportować wszystkich znajdujących się bezpośrednio obok
-rzucającego.
-%%%%
 Dragon Form spell
 
 Ten czar tymczasowo nadaje rzucającemu postać wielkiego ognistego smoka, dając
@@ -242,11 +199,6 @@ Enslavement spell
 
 Ten czar, jeśli nie zostanie odparty, tymczasowo przejmuje kontrolę nad wybraną
 istotą.
-%%%%
-Ensorcelled Hibernation spell
-
-Ten czar próbuje oziębić metabolizm wybranej istoty, co skutkuje zapadnięciem w
-stan przypominający sen.
 %%%%
 Fire Brand spell
 
@@ -292,11 +244,6 @@ Haste spell
 
 Ten czar znacznie przyspiesza wszystkie ruchy jakiegoś stworzenia. Zwykle rzuca
 się ten czar na siebie samego, jednak nadużywanie grozi skażeniem magią.
-%%%%
-Haunt spell
-
-Ten czar przyzywa duchy i upiory wokół wskazanej istoty. Użycie tego czaru
-często powoduje że rzucającemu robi się niedobrze.
 %%%%
 Ice Form spell
 
@@ -351,12 +298,6 @@ Lethal Infusion spell
 Ten czar tymczasowo nadaje trzymanej broni magiczną markę wyssania. Nie
 zadziała to na bronie już posiadające jakąś markę oraz na artefakty.
 %%%%
-Lightning Bolt spell
-
-Ten czar ciska potężny grom. Jakkolwiek ten czar zadaje trochę mniejsze
-obrażenia niż podobne czary Magii Ognia i Lodu, odbija się on od większości
-ścian, pozwalając uderzyć kogoś dwukrotnie.
-%%%%
 Magic Dart spell
 
 Ten czar ciska mały pocisk czystej magicznej energii. Zawsze trafia.
@@ -375,30 +316,12 @@ Mass Confusion spell
 Ten czar powoduje zaćmienie umysłu we wszystkich w zasięgu wzroku którzy nie
 odeprą tego czaru.
 %%%%
-Mephitic Cloud spell
-
-Ten czar tworzy sporą lecz krótkotrwałą chmurę obrzydliwych oparów.
-%%%%
 Metabolic Englaciation spell
 
 Ten czar powoduje wychłodzenie metabolizmu wszystkich pobliskich istot,
 spowalniając wszystkie które nie są odporne na zimno. Nie można tego czaru w
 inny sposób odeprzeć, jednak mocniejsze stworzenia zwykle szybciej wracają do
 normy.
-%%%%
-Necromutation spell
-
-Ten czar tymczasowo zmienia rzucającego w licza — potężny magiczny szkielet.
-Daje to moce śmierci (nekromancki dotyk, wzmocnienie czarów nekromancji),
-zapewnia zwiększoną odporność na zimno i wrogie uroki, i czyni rzucającego
-całkowicie odpornym na truciznę, zgniliznę i nekromancję działającą na istoty
-żywe, a także eliminuje wszelką potrzebę jedzenia przez okres trwania czaru.
-
-Są także i negatywne skutki, takie jak wrażliwość na poświęconą broń i
-niemożność picia eliksirów.
-
-Z niezrozumiałych powodów ten czar może być użyty przez czarodziejów będących
-mięczakami, jednak jaka tkanka pełni wówczas rolę kości pozostaje tajemnicą.
 %%%%
 Olgreb's Toxic Radiance spell
 
@@ -479,12 +402,6 @@ aniołami.
 
 Zmiennokształtne istoty nie mają możliwości odparcia tego czaru.
 %%%%
-Portal Projectile spell
-
-Ten czar przemieszcza wystrzelony lub rzucony pocisk wprost z twego łuki/ręki
-na piędź przed cel, wielce poprawiając celność. Nie ma to jednak wpływu na
-zadane obrażenia.
-%%%%
 Recall spell
 
 Ten czar przemieszcza wszelkie przyjazne istoty w dużym zasięgu wprost koło
@@ -495,19 +412,6 @@ Regeneration spell
 Ten czar używa nekromancji aby animować świeżo martwe tkanki na brzegach ran
 rzucającego. Pozwala to zasklepić rany, wielce wzmagając naturalne leczenie.
 Ten czar także znacznie zwiększa zużycie pokarmu przez czas działania.
-%%%%
-Repel Missiles spell
-
-Ten czar znacznie ułatwia uskakiwanie przed pociskami, tak zwykłymi jak i
-magicznymi.
-%%%%
-Ring of Flames spell
-
-Ten czar otacza rzucającego ruchomym pierścieniem płomieni, co także powoduje
-odrzucenie wszelkiego innego ognia. Oprócz palenia kogokolwiek w pobliżu,
-zapewnia to dużą odporność na ogień jak i wzmocnienie Magii Ognia, lecz
-niestety także daje wrażliwość na zimno i zmniejsza moc rzucanych czarów Magii
-Lodu.
 %%%%
 Sandblast spell
 
@@ -542,17 +446,6 @@ zatrzymując ciosy. Nie daje to żadnej ochrony przed pociskami, jako że
 poruszają się one zbyt szybko aby ten czar mógł je odchylić. Ta osłona jest
 bardzo niestabilna, i ma tendencję do zawodzenia, zwłaszcza wobec mocniejszych
 ataków.
-%%%%
-Silence spell
-
-Ten czar całkowicie eliminuje wszelkie dźwięki w pobliżu czytającego. Póki ten
-efekt trwa, nikt, łącznie z rzucającym, nie może czytać zwojów, rzucać czarów,
-modlić się, rozmawiać ani krzyczeć. Zakres tej magicznej ciszy jest kulą w
-pewnym promieniu wokół czytającego, która powoli kurczy się po czym znika. Taka
-nienaturalna cisza jest tak alarmująca jak krzyk, większość istot będzie w
-stanie zauważyć że coś jest nie tak. Demony, jak i magiczne istoty (w
-przeciwieństwie do tych tylko posługujących się magią) nie potrzebują dźwięku
-do rzucania czarów.
 %%%%
 Simulacrum spell
 
@@ -610,24 +503,9 @@ umiejętności w Magii Ziemi. Działa to tylko na mniej więcej normalne żywe
 ciało, i koliduje z większością przemian. Z jednym wyjątkiem: w formie statuy,
 ten czar jest bardziej efektywny.
 %%%%
-Sublimation of Blood spell
-
-Ten czar zmienia świeże mięso lub krew w magiczną moc. Można tego czaru użyć na
-sobie samym, kosztem własnego zdrowia (co może być niebezpieczne lecz nigdy nie
-bezpośrednio zabójcze), lub na trzymanym w dłoni kawałku świeżego mięsa.
-%%%%
 Summon Butterflies spell
 
 Ten czar przyzywa rój kolorowych motyli. Piękne, ale czy przydatne?
-%%%%
-Summon Demon spell
-
-Ten czar przyzywa jakiegoś mieszkańca Pandemonium, i próbuje nakłonić do
-służby. Przyzwanie jest gwarantowane, służba nie.
-%%%%
-Summon Dragon spell
-
-Ten czar przyzywa potężnego przyjaznego smoka.
 %%%%
 Summon Elemental spell
 
@@ -635,13 +513,6 @@ Ten czar przyzywa ducha żywiołu, dając mu we władanie odpowiedni materiał,
 którego spora ilość musi być dostępna. To rzadko jest problemem w przypadku
 ziemi (skała) i powietrza, lecz może być dla ognia lub wody. To czy przyzwany
 żywiołak będzie przyjazny zależy od umiejętności z danej szkoły magii.
-%%%%
-Summon Greater Demon spell
-
-Ten czar przyzywa któregoś z większych demonów z Pandemonium, nakładając na
-niego urok zmuszający do posłuszeństwa. Demony te zwykle są wystarczająco
-potężne aby dość szybko przełamać ten urok, często nawet zanim upłynie czas
-przywołania.
 %%%%
 Summon Horrible Things spell
 
@@ -665,65 +536,14 @@ Summon Swarm spell
 
 Ten czar przyzywa rój wściekle jadowitych owadów.
 %%%%
-Sure Blade spell
-
-Ten czar tworzy więź pomiędzy rzucającym a krótkim ostrzem trzymanym w dłoni,
-czyniąc to ostrze znacznie łatwiejszym w obsłudze. Wzmaga to celność lecz nie
-zadawane obrażenia.
-%%%%
 Teleport Other spell
 
 Ten czar przemieszcza inną istotę w przypadkowe, zwykle odległe, miejsce. Nie
 działa na siebie samego.
-%%%%
-Throw Flame spell
-
-Ten czar ciska małą porcją płomienia.
-%%%%
-Throw Frost spell
-
-ten czar ciska małą porcją szronu.
-%%%%
-Throw Icicle spell
-
-Ten czar tworzy i ciska ostry sopel lodu. Jakkolwiek ten czar jest szczególnie
-skuteczny wobec istot wrażliwych na zimno, większość obrażeń jest zadawanych
-wskutek uderzenia i ostrych krawędzi, tak więc odporność na zimno nie za wiele
-pomaga.
-%%%%
-Tornado spell
-
-Ten czar tworzy ogromny wir powietrza wokół rzucającego, zadając wielkie
-obrażenia wszystkim wokół. Tylko oko tego cyklonu jest bezpieczne, a przenosi
-się ono wraz z czarodziejem w jego środku. Wszystko inne co nie jest trwale
-przytwierdzone do ziemi zostanie uniesione wiatrem i zwyobracane.
-
-Efektywność tego czaru gwałtownie spada w zamkniętych pomieszczeniach.
-%%%%
-Tukima's Dance spell
-
-Ten czar animuje broń trzymaną w dłoni rzucającego, i pozwala jej tańczyć w
-powietrzu i uderzać wrogów. Solidna dawka obrażeń zakończy ten urok, jednak bez
-czynienia zauważalnej krzywdy tej broni.
-
-Ten czar nie zadziała na niektóre artefakty obdarzone własną wolą, broń pod
-wpływem tego uroku nie posiada też żadnych umiejętności i zdolności, choć
-walczy całkiem nieźle.
 %%%%
 Twisted Resurrection spell
 
 Ten czar pozwala pobliskim zwłokom pełzać o własnych siłach, łącząc się w
 potworne sterty ciała i kończyn. Więcej i większe zwłoki pozwalają utworzyć
 potężniejsze stwory.
-%%%%
-Vampiric Draining spell
-
-Ten czar kradnie życie dotkniętej żywej istoty i daje je rzucającemu. Nie
-zabierze to więcej życia niż rzucający jest w stanie przyswoić.
-
-Użycie tego czaru na demony i nieumarłych jest wysoce niewskazane.
-%%%%
-Venom Bolt spell
-
-Ten czar ciska pocisk zrobiony z jadu.
 %%%%

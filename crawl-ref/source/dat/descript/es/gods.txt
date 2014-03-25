@@ -236,11 +236,6 @@ rápidamente a la vez que se incrementa la resistencia a efectos mágicos. Luego
 sus seguidores pueden llamar a poderosos y furiosos aliados. Con el tiempo Trog
 dará a sus seguidores armas diseñadas para ejercer daño.
 %%%%
-Nemelex Xobeh powers
-
-Los seguidores de Nemelex ganan varias formas de influir en su destino cuando
-juegan sus cartas.
-%%%%
 Elyvilon powers
 
 Elyvilon ofrece a sus seguidores maneras de sanarse a sí mismos de heridas y de
