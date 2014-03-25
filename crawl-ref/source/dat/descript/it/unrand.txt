@@ -30,14 +30,6 @@ Può essere evocata per ripristinare una grande quantità di energia magica, ma
 al rischio di danneggiare la mente di chi la usa. Il suo dipende dall'abilità
 di evocazione dell'utilizzatore.
 %%%%
-Vampire's Tooth
-
-Questo pugnale di simil-avorio sembra che potrebbe essere stato davvero fatto
-da un dente di un'enorme creatura predatoria, anche se ovviamente non si tratta
-di normalissimo succhia sangue di dimesioni umane.
-
-È letalmente vampirica.
-%%%%
 Scythe of Curses
 
 Quest'arma porta con sé una terribile e fastidiosissima maledizione.
@@ -45,22 +37,6 @@ Quest'arma porta con sé una terribile e fastidiosissima maledizione.
 Sceptre of Torment
 
 Quest'arma maledetta è davvero uno strumento degno dell'Inferno.
-%%%%
-Sword of Zonguldrok
-
-Questa disgraziata arma mette a rischio colui che la usa.
-%%%%
-Staff of Dispater
-
-Questo leggendario oggetto può sguinzagliare la furia dell'Inferno. Le fiamme
-blasfeme che evoca possono costare una parte della tua anima e vita, ma quando
-queste inezie hanno fermato qualcuno di darsi all'avventura?
-%%%%
-Sceptre of Asmodeus
-
-Porta alcuni dei poteri dell'arcidemonio Asmodeo. Sventagliare questo scettro
-può strappare i demoni dalle loro case infernali per schiavizzarli al tuo
-servizio. Ovviamente, alla fine dell'incantesimo non saranno felici.
 %%%%
 faerie dragon armour
 
@@ -83,21 +59,9 @@ Questa mazza ti permetterà di far splendere della luce nel Dungeon, e di certo
 farà ai tuoi nemici della tua presenza. La sua luce è odiata dai nonmorti, e
 può rivelare ogni macchina che prova ad essere invisibile.
 %%%%
-demon blade "Leech"
-
-Instilla nella mente di chi la possiede un solo proposito: abbuffarsi di
-energia vitale rubata.
-%%%%
 dagger of Chilly Death
 
 Un pugnale fatto di un enorme pezzo di zaffiro.
-%%%%
-dagger "Morg"
-
-Un orrendo pugnale arruginito.
-
-Tanti anni fa apparteneva a un potente stregone chiamato Boris. Si perse nel
-Dungeon cercando la Sfera.
 %%%%
 scythe "Finisher"
 
@@ -106,13 +70,6 @@ Una lunga e affilata falce, modificata apposta per il combattimento.
 sling "Punk"
 
 Una fionda fatta di uno strano cuoio blu.
-%%%%
-bow of Krishna "Sharnga"
-
-Un meraviglioso arco d'oro.
-
-Una volta apparteneva a una divinità straniera. Funziona meglio con delle
-frecce speciali che non sono comunemente reperibili.
 %%%%
 giant club "Skullcrusher"
 
@@ -137,23 +94,9 @@ spear of the Botono
 Un artefatto oscuro e maligno. Aumenta il potere delle malie lanciate da
 chiunque sia così sciocco da rischiare ad usarlo.
 %%%%
-trident of the Octopus King
-
-Il tridente fu rubato tanti anni fa dal giardino del Re Polpo da un uomo
-davvero insignificante e già morto. Ma bada della furia del Re Polpo!
-%%%%
 mithril axe "Arga"
 
 Una splendida ascia di mithril, probabilmente perduta da qualche eroe nano.
-%%%%
-Elemental Staff
-
-Questa potente staffa apparteneva una volta al capo della Gilda dei Cinque
-Elementi.
-%%%%
-crossbow "Sniper"
-
-Una balestra fatta di un qualche materiale nero.
 %%%%
 longbow "Piercer"
 
@@ -168,19 +111,6 @@ lance "Wyrmbane"
 
 Una lancia incantata che diventa più forte ogni volta che uccide un potente
 drago. Più diventa forte, più sarà difficile trovarle un degno sfidante.
-%%%%
-Spriggan's Knife
-
-Un fine, piccolo coltello.
-
-Questo coltello è stato fatto da Spiriggan, o per gli Spiriggan, o
-possibilmente di Spiriggan. In ogni modo, è in qualche modo collegato a questa
-soprannaturale gente.
-%%%%
-whip "Snakebite"
-
-Una frusta a due teste fatta dalle pelli delle mortali mamba nere dell'Antro
-delle Bestie.
 %%%%
 knife of Accuracy
 
@@ -275,14 +205,6 @@ mask of the Dragon
 Uno strano elmo blu fatto di un duro cuoio flessibile che rende la faccia
 dell'indossatore simile al muso di un drago.
 %%%%
-robe of Night
-
-Una lunga tunica nera fatta di un materiale patinato. Sembra ammantare il suo
-indossatore nelle tenebre.
-
-Secondo la legenda, era il regalo di Ratri la Dea della Notte ad uno dei suoi
-fedeli.
-%%%%
 armour of the Dragon King
 
 Tanto tempo fa, un possente drago d'oro si impose re di tutti i draghi nella
@@ -312,22 +234,11 @@ mantello dalle pellicce di centinaia di ratti, la maggior parte di queste di
 color arancio. È decisamente imbarazzante da indossare, ma provvede
 un'eccellente protezione da ratti di tutti i tipi.
 %%%%
-shield of the gong
-
-Questo è un grande gong di bronzo che può essere usato a mo' di scudo. Secondo
-certi mistici, colpire questo gong ti darà protezione spirituale.
-
-E questo scudo sarà sicuramente sentito!
-%%%%
 amulet of the Air
 
 Questo amuleto blu cielo deve aver ricevuto le sue tante proprietà protettive
 da un potente mago dell'aria. Sembra che una delle cose che gli mancava era la
 mano ferma.
-%%%%
-ring of Shadows
-
-Un anello nero che rende il suo indossatore un tutt'uno con le ombre.
 %%%%
 amulet of Cekugob
 
@@ -369,15 +280,6 @@ robe of Clouds
 
 Una tunica di un materiale così leggero che potrebbe quasi essere fatta di
 nuvole.
-%%%%
-hat of Pondering
-
-Un melmoso cappello da stregone.
-
-Il cappello preferito dalla lumaca stregone Gastronok, macchiato con melma
-rossastra e incantato per aiutarlo nel suo ragionare arcano. In particolare, è
-stato incantato per proteggere contro gli effetti del sale, ma probabilmente
-non ti importa.
 %%%%
 obsidian axe
 

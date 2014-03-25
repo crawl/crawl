@@ -474,79 +474,6 @@ decaying skeleton
 
 肉が朽ちた骨だ。
 %%%%
-deck of changes
-
-魔法のカードの一組だ。使用者もしくはその環境の変化を引き起こす。
-
-デッキに含まれうるカードは以下の通り：the Elixir, Battlelust, Metamorphosis,
-the Helm, the Blade, the Shadow, the Mercenary, the Potion, Focus, Shuffle,
-Experience, Wild Magic, the Helix, the Sage, the Alchemist, Water,
-Vitrification, Dowsing, Trowel, the Minefield.
-%%%%
-deck of defence
-
-魔法のカードの一組だ。様々な方法で使用者を損害から防御する。
-
-デッキに含まれうるカードは以下の通り：the Tomb, the Banshee, Damnation,
-Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
-the Blade, the Shadow, the Mercenary.
-%%%%
-deck of destruction
-
-魔法のカードの一組だ。その大半が死と破壊を敵に向かって解き放つ。(あるいは、
-不幸にも使用者に向かって解き放たれる。)
-
-デッキに含まれうるカードは以下の通り：Vitriol, Flame, Frost, Venom, the Spark,
-the Hammer, Pain, the Orb.
-%%%%
-deck of dungeons
-
-魔法のカードの一組だ。ダンジョンの姿形を取り扱う。
-
-デッキに含まれうるカードは以下の通り：Water, Vitrification, Dowsing, Trowel,
-the Minefield.
-%%%%
-deck of escape
-
-魔法のカードの一組だ。主に様々な方法での逃走を取り扱う。不用意に使用すれば、
-フライパンの上に居る者を火に焼べる結果となるだろう！
-
-デッキに含まれうるカードは以下の通り：the Portal, the Warp, Swap, Velocity, the
-Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
-%%%%
-deck of punishment
-
-魔法のカードのデッキで、使用者に大惨事を引き起こす。
-
-デッキに含まれうるカードは以下の通り：the Wraith, Wild Magic, Wrath, Xom,
-Famine, the Curse, the Tomb, Damnation, the Portal, the Minefield, the Swine,
-Torment.
-%%%%
-deck of summonings
-
-魔法のカードの一組だ。奇怪で驚くべき生物が描かれている。
-
-デッキに含まれうるカードは以下の通り：he Crusade, the Herd, the Pentagram, the
-Dance, Foxfire, the Bones, Repulsiveness.
-%%%%
-deck of war
-
-魔法のカードの一組だ。戦闘中または戦闘前に有用だ。
-
-デッキに含まれうるカードは以下の通り：the Portal, the Warp, Swap, Velocity, the
-Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir,
-Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Mercenary, the
-Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
-Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain.
-%%%%
-deck of wonders
-
-魔法のカードの一組だ。このデッキに含まれるカードは非常に神秘的で、
-使用者の肉体と精神を良くも悪くも変化させうる。
-
-デッキに含まれうるカードは以下の通り：the Potion, Focus, Shuffle, Experience,
-Wild Magic, the Helix, the Sage, the Alchemist.
-%%%%
 demon blade
 
 地獄の火で鍛えられた恐るべき武器だ。
@@ -666,11 +593,6 @@ helmet
 honeycomb
 
 一塊の巨大なミツバチによって作られた、美味しい蜂の巣だ。
-%%%%
-horn of Geryon
-
-地獄の入り口の番人であるゲリュオンの角笛だ。伝説によると、
-いずれかの地獄に訪れることを欲する定命の者は中に入るためにこれを使わなければならないという。
 %%%%
 ice dragon armour
 
@@ -797,14 +719,6 @@ piece of ambrosia
 これを食すると魔法のエネルギーだけでなく栄養を与えるが、代償として少しの間、
 精神集中力が失われる。
 %%%%
-plate armour
-
-堅固な金属プレートでできた胸甲や背甲、肩甲、腕甲、
-腰プレート及びすね当ての全身鎧だ。
-これに対して鎖かたびらは移動しやすくすることで差を補う。
-
-これは素晴らしい保護を与えるが、やはり着用には非常に長い時間がかかる。
-%%%%
 potion of agility
 
 これは魔法の水薬だ。これは飲んだ者の器用さと回避力を著しく増加させる。
@@ -908,10 +822,6 @@ potion of slowing
 
 これは水薬だ。これはあなたの動作を遅くする。
 %%%%
-potion of haste
-
-これは魔力の込められた飲料だ。これは飲んだ者の動作を加速する。
-%%%%
 potion of strong poison
 
 これは恐ろしい猛毒の水薬だ。
@@ -1012,10 +922,6 @@ ring of see invisible
 
 この指輪は装着者に、魔法によって視界から隠れているものを視ることを可能にする。
 %%%%
-ring of slaying
-
-この指輪は装着者の白兵戦と射撃に関する能力を増大させる。
-%%%%
 ring of strength
 
 この指輪は装着者の腕力を増加させるか、あるいは減退させる。
@@ -1038,14 +944,6 @@ ring of teleportation
 ring of wizardry
 
 この指輪は装着者が魔法の呪文を使う能力を増強する。
-%%%%
-rod of destruction
-
-このロッドは破壊と騒乱を引き起こす呪文一式を収めている。
-%%%%
-rod of fiery destruction
-
-このロッドは敵対者に破壊的な炎を発射する呪文を収めている。
 %%%%
 rod of inaccuracy
 
@@ -1114,20 +1012,6 @@ scroll of enchant armour
 まで強化でき、そして鎧や具装はそのベースACと同じ値まで強化できる。
 
 これはある種の珍しい怪物の皮を強化するためにも使われる。
-%%%%
-scroll of enchant weapon i
-
-この巻き物は手にしている武器に魔法をかけて、戦闘でより正確であるようにする。 It
-becomes increasingly less likely to succeed when used on highly enchanted
-weapons, and can only ever enchant them up to +9. Magical artefacts cannot be
-enchanted at all.
-%%%%
-scroll of enchant weapon ii
-
-この巻物は手にしている武器に魔法をかけて、
-戦闘でより高いダメージをもたらすようにする。 It becomes increasingly less
-likely to succeed when used on highly enchanted weapons, and can only ever
-enchant them up to +9. Magical artefacts cannot be enchanted at all.
 %%%%
 scroll of fear
 
@@ -1285,10 +1169,6 @@ staff of summoning
 更には召喚された怪物からの攻撃から保護する。
 もし手にしている者が発動の技能に長けていれば、
 召喚された怪物に打撃を与えることで解放を試みることができる。
-%%%%
-staff of wizardry
-
-この杖は手にしている者の魔法の呪文を使う能力を著しく増加する。
 %%%%
 steam dragon armour
 

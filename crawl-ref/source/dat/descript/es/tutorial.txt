@@ -231,6 +231,12 @@ Para ponerse una pieza de joyería usa <input>$cmd[CMD_WEAR_JEWELLERY]</input>
 inventario</localtiles>. La identidad de algunas joyas se desvelará al
 ponérserlas, pero otras requerirán ser identificadas de otra manera.
 %%%%
+tutorial3 drop
+
+El amuleto es inútil; quizás quieras tirarlo <input>$cmd[CMD_DROP]</input>
+<localtiles> o mediante <input>Shift-click izquierdo</input> en el
+inventario</localtiles>
+%%%%
 tutorial3 gold
 
 Puedes gastar el oro en las tiendas. El oro no pesa y no puede ser depositado.
@@ -238,6 +244,21 @@ Puedes gastar el oro en las tiendas. El oro no pesa y no puede ser depositado.
 tutorial3 shop
 
 Las tiendas venden objetos diversos, pero no comprarán objetos de nadie.
+%%%%
+tutorial3 enter_shop
+
+Para entrar en esta tienda, presiona <input>$cmd[CMD_GO_UPSTAIRS]</input>
+<localtiles> o <input>Shift Click izquierdo</input> en tu personaje
+</localtiles>. Para comprar objetos, selecciónalos con su atajo, pulsa
+<input>Enter</input> y confirma con <input>y</input>s. Puedes cambiar al modo
+descripción pulsando <input>!</input>.
+%%%%
+tutorial3 autoexplore_reminder
+
+Recuerda, puedes explorar automáticamente el nivel con
+<input>$cmd[CMD_EXPLORE]</input><localtiles> o haciendo <input>click</input>
+en el botón de comando "autoexplorar" en el <w>panel de comandos</w>
+</localtiles>
 %%%%
 tutorial3 optional_battle
 

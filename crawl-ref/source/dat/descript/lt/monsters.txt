@@ -6,23 +6,6 @@ užsitraukė gėdą, kai jam bemiegant, ją išplėšė vagys. Dabar jis šliau�
 požemį, kerštaudamas visiems galimiems plėšikams. Jis yra prityręs burtininkas,
 tačiau artimoje kovoje pavojingas tiek pat, kiek ir jo giminaičiai.
 %%%%
-Antaeus
-
-Kadaise jis buvo galingas ir garsus Titanas, tačiau jo išdidumas jį pražudė.
-Dabar jis pagedęs ir suteptas, galingas demonas, valdantis užšalusias Kokito
-dykynes. Atrodo, jūsų atakos gali lengvai kliudyti jo gigantišką kūną; deja,
-bet taip pat atrodo, kad tik pačios stipriausios iš jų gali jį sužeisti.
-%%%%
-Arachne
-
-Kadaise geriausia verpėja tarp žmonių, Arachnė buvo prakeikta ir permainyta į
-dabartinę pusiau žmogaus, pusiau voro formą. Nustojusi senti, ji turi moterišką
-grožį ir jaunystę o taip pat ir didžiulio, bjauraus voro liemenį ir kojas.
-
-Per tūkstančius metų ji pramoko magijos bei gana nemažai kitų gudrybių.
-Tikėkitės būti supančiotas voratinklių ir magijos pagalba, kol jos gyvūnėliai
-jus virškins ir gers iki paskutinio kraujo lašo.
-%%%%
 Asmodeus
 
 Vienas archdemonų, gyvenantis Pragaro gelmėse. Jį siaučia liepsnų kamuolys.
@@ -108,10 +91,6 @@ Ereshkigal
 
 Bauginanti išperų išpera, valdanti mirtiną požeminį Tartaro pasaulį.
 %%%%
-Erica
-
-Žavi užkalbėtoja.
-%%%%
 Erolcha
 
 Itin sukta žmogėdra-burtininkė.
@@ -130,10 +109,6 @@ Frederick
 Manieringas karys-magas su monokliu auksiniais apvadais, ieškantis tinkamo ir
 prideramo priešininko. Jūs greičiausiai netinkate.
 %%%%
-Geryon
-
-Milžiniškas, sparnuotas trigalvis demonas, Pragaro vartų sargas.
-%%%%
 Gloorx Vloq
 
 Miglota figūra apsupta glūdžios tamsos
@@ -143,11 +118,6 @@ Ijyb
 Mažas ir suktas goblinas, dėvintis keletą mėlynų skudurų. Šį požemio lygį jis
 laiko savo valdomis, į kurias įžengus baudžiama mirtimi.
 %%%%
-Ilsuiw
-
-Sukta undinė vandens ragana, kuri naudoja savo grožį ir apžavus įtraukti nieko
-neįtariančius nuotykių ieškotojus į mirtį.
-%%%%
 Joseph
 
 Atrodo kaip samdomas karys.
@@ -155,10 +125,6 @@ Atrodo kaip samdomas karys.
 Khufu
 
 Neapsakomai galingas imperatorius kelyje į dievastį.
-%%%%
-Kirke
-
-Graži žavėtoja.
 %%%%
 Xtahua
 
@@ -173,9 +139,4 @@ Executioner
 
 Siaubingai galingas ir greitas demonas. Jo figūrą temdo sūkuriuojančių panašių
 į dalgio ašmenų debesis.
-%%%%
-Cigotuvi's Monster
-
-Šis bauginantis padaras atrodo lyg sukonstruotas iš visų siaubingų būtybių,
-kokias tik galima įsivaizduoti, kūno dalių.
 %%%%

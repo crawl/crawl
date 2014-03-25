@@ -362,83 +362,6 @@ decaying skeleton
 
 Un esqueleto en descomposición.
 %%%%
-deck of changes
-
-Un mazo de cartas mágicas que pueden inducir cambios en su usuario o su
-entorno. Puede contener las siguientes cartas: el Elixir, Sed de Sangre,
-Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el Mercenario, la Poción, Foco,
-Barajar, Experiencia, Magia Salvaje, la Hélice, el Sabio, Agua, el Mapa, el
-Zahorí, la Pala, el Campo Minado.
-%%%%
-deck of defence
-
-Un mazo de cartas mágicas, la mayoría de las cuales protegen a su usuario de
-distintas formas.
-
-Puede contener las siguientes cartas: la Tumba, la Banshee, Condenación,
-Soledad, el Urdidor, Vuelo, Sed de Sangre, Metamorfosis, el Yelmo, la Cuchilla,
-la Sombra, el Mercenario.
-%%%%
-deck of destruction
-
-Un mazo de cartas mágicas, la mayoría de las cuales sirven para sembrar la
-muerte y destrucción de los adversarios de uno (o de uno mismo, si hay mala
-suerte).
-
-Puede contener las siguientes cartas: Vitriolo, Llama, Escarcha, Veneno, la
-Centella, el Martillo, Dolor, el Orbe.
-%%%%
-deck of dungeons
-
-Un mazo de cartas mágicas que versan sobre la forma del calabozo.
-
-Puede contener las siguientes cartas: Agua, Vitrificación, el Mapa, el Zahorí,
-la Pala, Mortero, el Campo Minado.
-%%%%
-deck of escape
-
-Un mazo de cartas mágicas que principalmente versan sobre diversos mecanismos
-de escape. Ten cuidado, ya que el uso incauto de esta baraja puede hacer que
-una situación mala se vuelva aún peor.
-
-Puede contener las siguientes cartas: el Portal, la Urdimbre, Intercambio,
-Velocidad, la Tumba, la Banshee, Condenación, Soledad, el Urdidor, Vuelo.
-%%%%
-deck of punishment
-
-Un mazo de cartas mágicas que causan estragos sobre su usuario.
-
-Puede contener las siguientes cartas: Furia, el Espectro, la Maldición, Xom,
-Hambruna, Magia Salvaje, el Portal, la Tumba, Condenación, el Campo Minado,
-Tormento.
-%%%%
-deck of summonings
-
-Un mazo de cartas mágicas que retratan un extraño y maravilloso elenco de
-criaturas.
-
-Puede contener las siguientes cartas: la Cruzada, la Manada, el Pentagrama, la
-Danza, Foxfire, los Huesos, Repelencia.
-%%%%
-deck of war
-
-Un mazo de cartas mágicas útiles antes, y durante, el combate.
-
-Puede contener las siguientes cartas: el Portal, la Urdimbre, Intercambio,
-Velocidad, la Tumba, la Banshee, Condenación, Soledad, el Urdidor, Vuelo, el
-Elixir, Sed de Sangre, Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el
-Mercenario, la Cruzada, la Manada, el Pentagrama, la Danza, Foxfire, los
-Huesos, Repelencia, Vitriolo, Llama, Escarcha, Veneno, la Centella, el
-Martillo, Dolor, Tormento.
-%%%%
-deck of wonders
-
-Un mazo de cartas mágicas y misteriosas, que pueden alterar, para mejor o peor,
-las condiciones físicas o psíquicas de su usuario.
-
-Puede contener las siguientes cartas: la Poción, Foco, Intercambio,
-Experiencia, Magia Salvaje, la Hélice, el Sabio, el Alquimista.
-%%%%
 demon blade
 
 Un arma terrible, forjada en las llamas del Infierno.
@@ -571,12 +494,6 @@ Una protección metálica para la cabeza.
 honeycomb
 
 Un trozo de un panal de miel, creado por abejas gigantes.
-%%%%
-horn of Geryon
-
-La trompa que pertenecía a Geryon, guardián del Vestíbulo del Infierno. Las
-leyendas cuentan que si un mortal desea acceder a uno del Infiernos, primero
-debe usar esta trompa para poder entrar.
 %%%%
 ice dragon armour
 
@@ -738,15 +655,6 @@ Un poco una extraña sustancia producida por la polillas fantasma. Su consumo
 proporciona tanto energía mágica como sustento, pero perderás tu concentración
 mental durante un corto periodo de tiempo.
 %%%%
-plate armour
-
-Una armadura completa, hecha de sólidas placas de metal. Consta de peto,
-hombreras, guardabrazos, escarcelas y musleras. Una cota de malla cubre los
-huecos que permiten el movimiento.
-
-Proporciona una protección excelente, pero se tarda una eternidad en ponersela
-o quitarsela.
-%%%%
 potion of agility
 
 Una poción mágica que incrementa muy considerablemente la destreza y elusividad
@@ -847,10 +755,6 @@ potion of slowing
 
 Una poción que vuelve más lentas tus acciones.
 %%%%
-potion of haste
-
-Un brebaje encantado que hace más rápidas las acciones de quien lo beba.
-%%%%
 potion of strong poison
 
 Una poción muy venenosa.
@@ -938,11 +842,6 @@ ring of see invisible
 
 Este anillo le permita a su portador ver aquellas cosas que la magia ha
 ocultado.
-%%%%
-ring of slaying
-
-Este anillo aumenta o disminuye la habilidad en el combate cuerpo a cuerpo o a
-distancia de su portador.
 %%%%
 ring of strength
 
@@ -1134,11 +1033,6 @@ son naturalmente resistentes.
 staff of power
 
 Este bastón provee una reserva de poder mágico a su portador.
-%%%%
-staff of wizardry
-
-Este bastón incrementa significativamente la habilidad de lanzar hechizos
-mágicos del portador.
 %%%%
 strawberry
 

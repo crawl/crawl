@@ -464,81 +464,6 @@ decaying skeleton
 
 Un squelette en décomposition.
 %%%%
-deck of changes
-
-Un paquet de cartes magiques qui provoque des changement sur l'utilisateur ou
-son environnement.
-
-Il peux contenir les cartes suivantes : the Elixir, Battlelust, Metamorphosis,
-the Helm, the Blade, the Shadow, the Mercenary, the Potion, Focus, Shuffle,
-Experience, Wild Magic, the Helix, the Sage, Water, Vitrification, the Map,
-Dowsing, the Spade, Trowel, the Minefield.
-%%%%
-deck of defence
-
-Un paquet de cartes magiques, dont la plupart défendent l'utilisateur des
-dangers par divers moyens.
-
-Il peux contenir les cartes suivantes : the Tomb, the Banshee, Damnation,
-Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
-the Blade, the Shadow, the Mercenary.
-%%%%
-deck of destruction
-
-Un paquet de cartes magiques, dont la plupart provoque la mort et la
-destruction des ennemis (ou, par malchance, à soi-même).
-
-Il peux contenir les cartes suivantes : Vitriol, Flame, Frost, Venom, the
-Spark, the Hammer, Pain, the Orb.
-%%%%
-deck of dungeons
-
-Un paquet de cartes magiques traitant de la modification du donjon.
-
-Il peux contenir les cartes suivantes : Water, Vitrification, the Map, Dowsing,
-the Spade, Trowel, the Minefield.
-%%%%
-deck of escape
-
-Un paquet de cartes magiques, qui proposent différentes formes de fuite. Une
-utilisation imprudente peut conduire l'utilisateur tel une poele sur le feu.
-
-Il peux contenir les cartes suivantes : the Portal, the Warp, Swap, Velocity,
-the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
-%%%%
-deck of punishment
-
-Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.
-
-Il peux contenir les cartes suivantes : Wrath, the Wraith, the Curse, Xom,
-Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
-%%%%
-deck of summonings
-
-Un paquet de cartes magiques, représentant un éventail de créatures étranges et
-merveilleux.
-
-Il peux contenir les cartes suivantes : the Crusade, the Herd, the Pentagram,
-the Dance, Foxfire, the Bones, Repulsiveness.
-%%%%
-deck of war
-
-Un paquet de cartes magiques, utile avant et pendant la bataille.
-
-Il peux contenir les cartes suivantes : the Portal, the Warp, Swap, Velocity,
-the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir,
-Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Mercenary, the
-Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
-Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment.
-%%%%
-deck of wonders
-
-Un paquet de cartes à la fois magiques et très mystérieuses, qui peut altérer
-l'état physique et mental de l'utilisateur, pour le meilleur ou pour le pire.
-
-Il peux contenir les cartes suivantes : the Potion, Focus, Shuffle, Experience,
-Wild Magic, the Helix, the Sage, the Alchemist.
-%%%%
 demon blade
 
 Une arme terrible, forgée dans les flammes de l'Enfer.
@@ -685,6 +610,10 @@ Un outil pour trancher des bûches de bois, ou de la chair. Il peut être
 suffisant si vous êtes concerné principalement par le poids de l'arme, mais
 pour massacrer convenablement, il vous faut quelque chose de plus gros.
 %%%%
+hat
+
+Un chapeau fait de cuir ou de tissu.
+%%%%
 helmet
 
 Un couvre-chef en métal.
@@ -692,12 +621,6 @@ Un couvre-chef en métal.
 honeycomb
 
 Un morceau de ruche d'abeilles géantes, gorgé de succulent miel.
-%%%%
-horn of Geryon
-
-La corne de Geryon, le gardien du Vestibule des Enfers. Les légendes racontent
-qu'un mortel qui désire entrer dans l'un des enfers doit obtenir une
-autorisation en l'utilisant.
 %%%%
 ice dragon armour
 
@@ -900,14 +823,6 @@ Une partie de l'étrange substance produite par les papillons de nuits fantômes
 Le consommer fournit de l'énergie magique ainsi que la nutrition, au prix de
 perdre sa concentration mentale pour une courte période.
 %%%%
-plate armour
-
-Une tenue complète composé de solide plaque en métal : cuirasse, spalières,
-brassards, ceinture et jambières. Une cotte de mailles bouche les trous, ceci
-permettant les mouvements.
-
-Elle offre une excellente protection, mais prend une éternité pour être équipé.
-%%%%
 potion of agility
 
 Une potion magique qui augmente considérablement la dextérité et l'esquive de
@@ -982,12 +897,6 @@ potion of invisibility
 
 Une potion qui vous cache de la vue des autres.
 %%%%
-potion of lignification
-
-Une potion qui transforme temporairement le buveur en un arbre animé dont les
-branches peuvent manipuler des armes. Un tel arbre est plutôt résistant, mais
-il lui est impossible de se déplacer.
-%%%%
 potion of magic
 
 Une potion précieuse qui accorde à une personne une infusion d'énergie magique.
@@ -1017,19 +926,9 @@ potion of resistance
 
 Une potion qui vous donne une résistance temporaire aux éléments et au poison.
 %%%%
-potion of restore abilities
-
-Une potion qui restaure les caractéristiques et une partie des compétences
-drainées de celui qui la boit. Elle permet aussi d'utiliser à nouveau un
-souffle en annulant son délai d'utilisation.
-%%%%
 potion of slowing
 
 Une potion qui ralentit vos actions.
-%%%%
-potion of haste
-
-Un breuvage enchanté qui accélère les actions de celui qui la boit.
 %%%%
 potion of strong poison
 
@@ -1151,8 +1050,9 @@ magiquement.
 %%%%
 ring of slaying
 
-Cet anneau augmente ou réduit les compétences de combat (autant au contact qu'a
-distance) de son porteur.
+Cet anneau augmente ou diminue les compétences de combat avec les armes de
+mélées et de distances de son porteur. Il dispose de deux niveaux
+d'enchantement, affectant respectivement la précision et les dommages.
 %%%%
 ring of strength
 
@@ -1193,16 +1093,6 @@ facilement ajuster une robe au corps d'un humanoïde de n'importe quelle taille.
 Les habits de cette sorte offrent une faible protection contre les dégâts
 physiques, mais n'entravent pas les mouvements lorsqu'il s'agit d'esquiver une
 attaque, ou d'exécuter précisément des gestes thaumaturgiques.
-%%%%
-rod of destruction
-
-Ce sceptre contient un ensemble varié de sorts de destruction et
-d'extermination.
-%%%%
-rod of fiery destruction
-
-Ce sceptre contient des sorts qui lancent un feu destructeur contre vos
-ennemis.
 %%%%
 rod of inaccuracy
 
@@ -1307,27 +1197,6 @@ qui peuvent être enchantées jusqu'à leur CA de base.
 
 Il peut aussi être utilisé pour enchanter le cuir de certaines créatures
 exotiques.
-%%%%
-scroll of enchant weapon i
-
-Ce parchemin place un enchantement sur l'arme équipée, la rendant plus précise
-en combat. Les chances de succès de l'enchantement diminuent suivant le nombre
-d'enchantement déjà réalisé, et ne peut jamais aller au delà de +9. Les
-artefacts ne peuvent pas être enchanté.
-%%%%
-scroll of enchant weapon ii
-
-Ce parchemin place un enchantement sur l'arme équipée, augmentant ses dégâts en
-combat. Les chances de succès de l'enchantement diminuent suivant le nombre
-d'enchantement déjà réalisé, et ne peut jamais aller au delà de +9. Les
-artefacts ne peuvent pas être enchanté.
-%%%%
-scroll of enchant weapon iii
-
-Ce parchemin place un enchantement sur l'arme équipée,  la rendant plus précise
-et augmentant ses dégâts en combat. Les chances de succès de l'enchantement
-diminuent suivant le nombre d'enchantement déjà réalisé, et ne peut jamais
-aller au delà de +9. Les artefacts ne peuvent pas être enchanté.
 %%%%
 scroll of fear
 
@@ -1525,11 +1394,6 @@ Ce bâton accroit le pouvoir des convocations lancées par le porteur et, le
 protège des attaques des créatures convoquées. Si le possesseur est compétent
 en Évocations, il peut même tenter de renvoyer les créatures convoquées quand
 il les frappe.
-%%%%
-staff of wizardry
-
-Ce bâton accroit significativement l'aptitude de son porteur à lancer des
-sorts.
 %%%%
 steam dragon armour
 

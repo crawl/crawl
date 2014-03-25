@@ -90,6 +90,12 @@ bardiche
 적을 베기 위한 거대한 칼날이 끝부분에 달린 장창이다. 다루기는 어렵지만, 그만큼
 강력하다.
 %%%%
+bastard sword
+
+길고 커다란 검이다. 실제로, 대부분의 종족이 방패와 같이 쓸 수 있는 제일
+무거우며 강한 무기 중 하나이다. 이토록 날카롭고 긴 검은 어떠한 적에게도 파멸을
+선사한다.
+%%%%
 battleaxe
 
 무시무시하게 생긴 양날도끼로, 그 크기 때문에 한 손으로는 도저히 들 수가 없다.
@@ -505,78 +511,6 @@ decaying skeleton
 
 썩어가는 해골이다.
 %%%%
-deck of changes
-
-사용자나 사용자 주변을 변화시킬 수 있는 마법 카드로 구성된 덱이다.
-
-들어갈 수 있는 카드 목록은 다음과 같다 : the Elixir, Battlelust, Metamorphosis,
-the Helm, the Blade, the Shadow, the Mercenary, the Potion, Focus, Shuffle,
-Experience, Wild Magic, the Helix, the Sage, Water, Vitrification, the Map,
-Dowsing, the Spade, Trowel, the Minefield.
-%%%%
-deck of defence
-
-다양한 방법으로 사용자를 위험으로부터 지켜내는 마법 카드로 구성된 덱이다.
-
-들어갈 수 있는 카드 목록은 다음과 같다 : the Tomb, the Banshee, Damnation,
-Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
-the Blade, the Shadow, the Mercenary.
-%%%%
-deck of destruction
-
-적에게 죽음과 파괴를 선사하는 마법 카드로 구성된 덱이다. (운이 없다면, 당신에게
-선사 될지도.)
-
-들어갈 수 있는 카드 목록은 다음과 같다 : Vitriol, Flame, Frost, Venom, the
-Spark, the Hammer, Pain, the Orb.
-%%%%
-deck of dungeons
-
-던전의 구성과 생김새를 바꾸는 마법 카드로 구성된 덱이다.
-
-들어갈 수 있는 카드 목록은 다음과 같다 : Water, Vitrification, the Map,
-Dowsing, the Spade, Trowel, the Minefield.
-%%%%
-deck of escape
-
-다양한 방법으로 도주할 수 있는 마법 카드로 구성된 덱이다. 하지만, 부주의한
-카드의 사용은 설상가상의 상황을 만들 수도 있다!
-
-들어갈 수 있는 카드 목록은 다음과 같다 : the Portal, the Warp, Swap, Velocity,
-the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
-%%%%
-deck of punishment
-
-사용자에게 엄청난 재앙을 불러일으킬 수 있는 마법 카드로 구성된 덱이다.
-
-들어갈 수 있는 카드 목록은 다음과 같다 : Wrath, the Wraith, the Curse, Xom,
-Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
-%%%%
-deck of summonings
-
-불가사의하고 기묘한 존재들이 그려진 마법 카드로 구성된 덱이다.
-
-들어갈 수 있는 카드 목록은 다음과 같다 : the Crusade, the Herd, the Pentagram,
-the Dance, Foxfire, the Bones, Repulsiveness.
-%%%%
-deck of war
-
-전투 전 또는 전투 중에 유용한 마법 카드로 구성된 덱이다.
-
-들어갈 수 있는 카드 목록은 다음과 같다 : the Portal, the Warp, Swap, Velocity,
-the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir,
-Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Mercenary, the
-Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
-Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment.
-%%%%
-deck of wonders
-
-사용자의 육체적, 정신적 상태를 좋게도 나쁘게도 만들 수 있는, 굉장히 신비로운
-마법 카드로 구성된 덱이다.
-
-들어갈 수 있는 카드 목록은 다음과 같다 : the Potion, Focus, Shuffle,
-Experience, Wild Magic, the Helix, the Sage, the Alchemist.
-%%%%
 demon blade
 
 지옥의 불로 벼려진, 소름 끼치지만 그만큼 강력한 무기다. 이 무기는 데몬스폰같은
@@ -723,6 +657,10 @@ hand axe
 쓴다면 이걸로 충분할 수도 있겠지만, 제대로 된 전투를 위해서는 좀 더 큰 것이
 필요할 것 같다.
 %%%%
+hat
+
+천 혹은 가죽으로 만든 평범한 모자다.
+%%%%
 helmet
 
 평범한 금속제 투구다.
@@ -730,11 +668,6 @@ helmet
 honeycomb
 
 거대한 벌들이 만든, 꿀이 가득한 맛있는 벌집이다.
-%%%%
-horn of Geryon
-
-지옥의 수문장인 게리욘이 가지고 있던 뿔나팔이다. 전설에 따르면, 지옥에 들어가길
-원하는 자는 이것을 불어 입구를 만들었다고 한다.
 %%%%
 ice dragon armour
 
@@ -931,14 +864,6 @@ piece of ambrosia
 유령 나방이 만들어내는 수상한 물질. 섭취하면 배고픔을 해결할 수 있을 뿐만
 아니라, 마력을 회복할 수도 있다. 다만 그 대가로, 잠깐 정신을 차릴 수 없게 된다.
 %%%%
-plate armour
-
-단단한 금속 철판 갑옷으로, 흉갑, 견갑, 완갑, 허리 갑옷, 다리 갑옷의 각 이음새가
-쇠사슬로 연결되어 있어 움직이는 것을 가능하게 해 준다.
-
-뛰어난 방어력을 제공하지만, 철판끼리 부딪히는 소리가 대단히 시끄럽고 무겁기까지
-해서 암살자나 마법사와는 어울리지 않는다.
-%%%%
 potion of agility
 
 이 마법의 물약은, 마신 사람의 민첩성과 회피력을 짧은 시간동안 엄청나게
@@ -1014,12 +939,6 @@ potion of invisibility
 
 다른 자들의 시야로부터 짧은 시간동안 당신을 숨기는 물약이다.
 %%%%
-potion of lignification
-
-이 물약을 마시면 잠시 동안 무기를 쥘 수 있는 가지가 달린 움직이는 나무로
-변한다.  나무가 되면 공격을 좀 더 잘 견뎌낼 수 있지만, 뿌리가 땅에 박혀 도망칠
-수 없게 된다.
-%%%%
 potion of magic
 
 마신 사람에게 마력을 주입해주는, 귀중한 물약이다.
@@ -1048,19 +967,9 @@ potion of resistance
 
 짧은 시간동안, 여러 종류의 원소와 독에 대한 저항력을 제공해주는 물약이다.
 %%%%
-potion of restore abilities
-
-마신 사람의 능력치를 회복시켜주는 물약이다. 흡수된 생명력으로 떨어져 버린 스킬
-레벨도 복구시킬 수 있으며, 호흡을 정상으로 되돌려, 입김 능력을 바로 사용할 수
-있게 하는 효과도 있다.
-%%%%
 potion of slowing
 
 짧은 시간동안 모든 동작을 느리게 만드는 물약이다.
-%%%%
-potion of haste
-
-잠시동안 마신 사람의 모든 동작을 짧은 시간동안 가속시키는 마법의 물약이다.
 %%%%
 potion of strong poison
 
@@ -1178,9 +1087,8 @@ ring of see invisible
 %%%%
 ring of slaying
 
-이 반지는 착용자의 명중률과 공격력에 영향을 준다. 반지의 품질에 따라 명중률과
-공격력이 올라갈 수도, 내려갈 수도 있다. 마법의 명중률과 공격력에는 영향을 주지
-않는다.
+이 반지는 착용자의 원거리 공격이나 근접 공격의 효율을 늘려주거나 감소시킨다.
+최대 2회의 인챈트가 가능하며, 횟수에 따라 정확도와 데미지가 상승한다.
 %%%%
 ring of strength
 
@@ -1220,15 +1128,6 @@ robe
 종족이라도 쉽게 입을 수 있다. 이런 종류의 의복은 물리적 피해를 거의 막아주지
 못하지만, 마법 시전에 거슬리거나 조용한 움직임을 방해하지 않기 때문에 마법사와
 암살자들에게 사랑받는 옷이다.
-%%%%
-rod of destruction
-
-이 마법 막대에는 다양한 혼돈과 파괴의 주문들이 담겨있다.
-%%%%
-rod of fiery destruction
-
-이 마법 막대에는 당신의 적들에게 파괴적인 화염을 쏘아낼 수 있는 마법이
-담겨있다.
 %%%%
 rod of inaccuracy
 
@@ -1327,24 +1226,6 @@ scroll of enchant armour
 그것들의 기본 방어력만큼 강화할 수 있다.
 
 특정 생명체의 가죽을 강화하여 갑옷으로 만들 수도 있다.
-%%%%
-scroll of enchant weapon i
-
-이 두루마리는 착용 중인 무기를 강화하여 전투에서 더 정확한 공격을 가능하게
-한다. 이미 많이 강화된 대상에는 강화가 실패하여 강화수치가 올라가지 않을 수도
-있으며, +9까지 강화할 수 있다. 아티팩트는 강화할 수 없다.
-%%%%
-scroll of enchant weapon ii
-
-이 두루마리는 착용 중인 무기를 강화하여 전투에서 더 강력한 공격을 가능하게
-한다. 이미 많이 강화된 대상에는 강화가 실패하여 강화수치가 올라가지 않을 수도
-있으며, +9까지 강화할 수 있다. 아티팩트는 강화할 수 없다.
-%%%%
-scroll of enchant weapon iii
-
-이 두루마리는 착용 중인 무기를 강화하여 전투에서 *훨씬* 더 정확하고 강력한
-공격을 가능하게 한다. 이미 많이 강화된 대상에는 강화가 실패하여 강화수치가
-올라가지 않을 수도 있으며, +9까지 강화할 수 있다. 아티팩트는 강화할 수 없다.
 %%%%
 scroll of fear
 
@@ -1531,11 +1412,6 @@ staff of summoning
 
 이 지팡이는 사용자를 소환물의 공격으로부터 보호하며, 소환 마법의 위력 또한
 높여준다. 사용자가 발동술에 능숙하다면, 타격을 통해 소환물을 추방할 수 있다.
-%%%%
-staff of wizardry
-
-이 지팡이는 사용자의 마법에 대한 이해도를 크게 상승시켜, 마법 성공률을 크게
-향상시킨다.
 %%%%
 steam dragon armour
 

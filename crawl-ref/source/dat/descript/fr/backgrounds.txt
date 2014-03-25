@@ -57,11 +57,6 @@ Enchanter
 Les Enchanteurs utilisent des sorts pour neutraliser leurs adversaires. Ils
 commencent aussi avec des fléchettes de bonne qualité.
 %%%%
-Fighter
-
-Les Guerriers commencent avec une armure et un bouclier, ainsi qu'une arme de
-leur choix. Ils ont une meilleure santé que les autres professions.
-%%%%
 Fire Elementalist
 
 Les Élémentalistes du Feu commence avec le livre des Flammes et connaisse le

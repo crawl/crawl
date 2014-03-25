@@ -56,11 +56,6 @@ Enchanter
 Verzauberer benutzen Zaubersprüche, um sich selbst im Kampf zu stärken oder
 Gegner kampfunfähig zu machen. Sie starten zusätzlich mit guten Wurfpfeilen.
 %%%%
-Fighter
-
-Kämpfer kommen mit Rüstung und Schild, sowie einer Waffe ihrer Wahl. Sie haben
-mehr Lebenspunkte als jeder andere Hintergrund.
-%%%%
 Fire Elementalist
 
 Feuer-Elementalisten starten mit dem Buch der Flammen und kennen den

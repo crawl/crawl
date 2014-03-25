@@ -23,7 +23,7 @@ lilla hudfarve og nogle rynker.
 %%%%
 Sword of Power
 
-Det belønner de magtfulde med magt og de svage med svaghed.
+Det belønner de stærke med styrke og de svage med svaghed.
 %%%%
 Staff of Olgreb
 
@@ -41,14 +41,6 @@ Den kan vækkes for at genoprette store mængder magisk energi, men risikerer
 også at beskadige brugerens sind. Dens kraft afhænger af brugerens
 vækkelsesevne.
 %%%%
-Vampire's Tooth
-
-Denne elfenbensagtige dolk kunne faktisk godt være udskåret af et eller andet
-enormt rovdyrs tand, selvom den selvfølgelig ikke kunne komme fra en blodsuger
-i menneskestørrelse.
-
-Den er dødbringende vampyrisk.
-%%%%
 Scythe of Curses
 
 Dette våben bærer en frygtelig og overordentligt irriterende forbandelse.
@@ -57,22 +49,10 @@ Sceptre of Torment
 
 Dette overordentligt forbandede våben er et af Helvedes instrumenter.
 %%%%
-Sword of Zonguldrok
-
-Dette skrækkelige våben anvendes på brugerens eget ansvar.
-%%%%
 Sword of Cerebov
 
 Sælsomme flammer dækker dets forvredne klinge. Dets dæmoniske kraft brænder
 noget af forsvarerens modstandskraft over for ild bort.
-%%%%
-Staff of Dispater
-
-Denne legendariske genstand kan slippe Helvedes vrede løs.
-%%%%
-Sceptre of Asmodeus
-
-Det bærer en del af ærkedjævelen Asmodeus' kræfter.
 %%%%
 faerie dragon armour
 
@@ -96,21 +76,9 @@ også for, at fjender bliver grundigt varskoet om din tilstedeværelse. De udød
 hader dens lys, og det kan afsløre de lumske personager, der forsøger at holde
 sig usynlige.
 %%%%
-demon blade "Leech"
-
-Den forblænder ejerens sind over for alt andet en et enkelt, snævert formål: at
-mæske sig i drænet livskraft.
-%%%%
 dagger of Chilly Death
 
 En dolk, som er lavet af et kæmpe stykke safir.
-%%%%
-dagger "Morg"
-
-En grim, rusten dolk.
-
-For mange år siden tilhørte den en magtfuld troldmand ved navn Boris. Han for
-vild i de underjordiske gange, mens han søgte Sfæren.
 %%%%
 scythe "Finisher"
 
@@ -119,13 +87,6 @@ En lang og skarp le, som er særligt modificeret til brug i kamp.
 sling "Punk"
 
 En slynge, som er lavet af noget underligt, blåt læder.
-%%%%
-bow of Krishna "Sharnga"
-
-En underfuld, gylden bue.
-
-Den har engang tilhørt en fremmed gud. Den virker bedst med særlige pile, som
-ikke er lette at opdrive.
 %%%%
 giant club "Skullcrusher"
 
@@ -162,23 +123,9 @@ spear of the Botono
 Et mørkt og ildesindet artefakt. Hos de, der er ubesindige nok til at bære den,
 øger den effekten af de forbandelser, de kaster.
 %%%%
-trident of the Octopus King
-
-Denne trefork blev stjålet fra blækspruttekongens have for mange år siden af en
-virkeligt ubetydelig og allerede død mand. Men vogt dig for blækspruttekongens
-vrede!
-%%%%
 mithril axe "Arga"
 
 En smuk økse af mitril, som en eller anden dværghelt nok har tabt.
-%%%%
-Elemental Staff
-
-Denne magtfulde stav tilhørte engang lederen af De Fem Elementers Laug.
-%%%%
-crossbow "Sniper"
-
-En armbrøst, som er lavet af et sort materiale.
 %%%%
 longbow "Piercer"
 
@@ -193,14 +140,6 @@ lance "Wyrmbane"
 En fortryllet lanse, som vokser sig mere og mere mægtig for hver gang, den
 nedlægger en stærk drage. Jo mere mægtig den bliver, jo sværere bliver det at
 finde en værdig modstander.
-%%%%
-Spriggan's Knife
-
-En yndig, lille kniv.
-
-Denne kniv er lavet af sprigger, eller til sprigger, eller måske ud af
-sprigger. Den er i hvert fald på en eller anden måde forbundet til dette
-huldrefolk.
 %%%%
 plutonium sword
 
@@ -217,11 +156,6 @@ modvirke den, der holdt udøde sammen, og dermed forvolde dem stor skade.
 Selvom dødningen for længst er gået til grunde, så siges hans våben at have
 været meget populære på grund af den ravage, de forvolder blandt udøde. Denne
 stridskølle er muligvis det eneste af våbnene, der findes endnu.
-%%%%
-whip "Snakebite"
-
-En kløvet pisk, som er lavet af garvede huder fra Bæsternes Hules dødbringende
-sorte mambaer.
 %%%%
 knife of Accuracy
 
@@ -321,14 +255,6 @@ mask of the Dragon
 En sær, blå hjelm, som er lavet af hårdt, men fleksibelt læder, der får
 bærerens ansigt til at ligne en drages åsyn.
 %%%%
-robe of Night
-
-En lang, sort kåbe af et besynderligt, blankt materiale. Det lader til at
-indhylle bæreren i mørke.
-
-I følge legenderne var det en gave fra Ratri, nattens gudinde, til en af hendes
-tilbedere.
-%%%%
 armour of the Dragon King
 
 Engang for længe siden tog en mægtig gulddrage magten over alle dragerne i hans
@@ -358,21 +284,10 @@ skindet fra hundredvis af rotter, hovedsagligt de orange af slagsen. Den er
 lidt akavet at have på og ser tåbelig ud, men den yder fremragende beskyttelse
 mod alle slags rotter.
 %%%%
-shield of the gong
-
-Dette er en stor bronzegongong, som man kan bære som et skjold. I følge visse
-mystikere vil det yde dig åndelig beskyttelse at slå på den.
-
-Og det her skjold vil med garanti blive hørt!
-%%%%
 amulet of the Air
 
 Mange af denne himmelblå amulets beskyttende egenskaber må stamme fra en
 magtfuld lufttroldmand. Det eneste, han manglede, var åbenbart en rolig hånd.
-%%%%
-ring of Shadows
-
-En sort ring, som lader sin bærer smelte sammen med skyggerne.
 %%%%
 amulet of Cekugob
 
@@ -412,14 +327,6 @@ Sådan en og en pony.
 robe of Clouds
 
 En kåbe af et så skrøbeligt materiale, at det næsten kunne være skyer.
-%%%%
-hat of Pondering
-
-En slimet troldmandshat.
-
-Snegletroldmanden Gastronoks yndlingshat, som er plettet af rødligt slim og
-fortryllet til at bistå ham i hans okkulte grublen. Den er særligt fortryllet
-til at beskytte mod virkningerne af salt, men det er du nok ligeglad med.
 %%%%
 obsidian axe
 
@@ -487,17 +394,6 @@ Denne dinglende finger ville tage sig bedre ud med en ring på.
 boots of the spider
 
 Et opfindsomt par støvler, som en af Arachnes bejlere hittede på.
-%%%%
-dark maul
-
-Denne store, jernklædte mukkert er lige det værktøj, du skal bruge, hvis du
-skal have banket nogle bronagler i. Den er lavet til at uddele kolossale slag,
-og her taler vi ikke bare om hjernerystelser, men om rester af en hjelm, som
-hviler på et par sko, eller måske bare en våd plet. Den slags kraft er desværre
-ikke uden omkostning: Mukkertens hoved er så tungt, at det tager en evighed at
-løfte den til endnu et sving. Hammeren er i menneskestørrelse, så jætter vil
-måske hellere bruge deres gammelkendte køller i stedet, for de er lidt mere
-håndterlige i deres store hænder.
 %%%%
 hat of the High Council
 

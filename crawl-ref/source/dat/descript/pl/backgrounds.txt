@@ -34,11 +34,6 @@ Death Knight
 Rycerze Śmierci walczą i prowadzą armie nieumarłych w imię swego mrocznego
 boga, Yredelemnula.
 %%%%
-Fighter
-
-Wojownicy są wyposażeni w zbroję i tarczę, jak i oczywiście swą wybraną broń.
-Są najodporniejsi ze wszystkich postaci.
-%%%%
 Gladiator
 
 Gladiatorzy są wyposażeni w lekką zbroję, tarczę, sieć i broń wedle upodobania.

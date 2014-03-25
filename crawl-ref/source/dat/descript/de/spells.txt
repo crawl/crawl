@@ -49,19 +49,6 @@ Blink spell
 
 Dieser Zauber teleportiert den Zuaberer über eine kurze zufällige Distanz.
 %%%%
-Bolt of Cold spell
-
-Dieser Zauber verschießt einen großen Strahl aus Eis und Frost.
-%%%%
-Bolt of Draining spell
-
-Dieser Zauber verschießt einen tödlichen Strahl negativer Energie, der die
-Lebenskraft aller Lebewesen entzieht die er trifft.
-%%%%
-Bolt of Fire spell
-
-Dieser Zauber verschießt einen großen Strahl aus reinem Feuer.
-%%%%
 Call Imp spell
 
 Dieser Zauber beschwört einen niederen Dämon aus den Tiefen der Hölle.

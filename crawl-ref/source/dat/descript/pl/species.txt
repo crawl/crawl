@@ -104,8 +104,3 @@ Troll
 Wielkie i brutalne, zdolne rozszarpać kogokolwiek swymi szponami, rzadko kiedy
 myślące, zawsze głodne potwory.
 %%%%
-Vampire
-
-Wampiry są częściowo żywe, częściowo nieumarłe. Są dobre w skradaniu się jak i
-w niektórych rodzajach magii.
-%%%%

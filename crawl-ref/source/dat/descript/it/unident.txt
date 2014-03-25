@@ -4,13 +4,6 @@ amulet
 Un talismano che può essere indossato come un comune gioiello attorno al collo,
 caricato con poteri arcani di provenienza sconosciuta.
 %%%%
-book
-
-Un libro arcano contenente incantesimi magici di origine ignota. Scritto per
-veri adepti, una conoscenza di base nell'occulta arte di lanciare incantesimi è
-necessaria per fare uso del tomo. Ma badate, poiché alcuni dei libri più
-potenti non sono fatti per  giocarci!
-%%%%
 deck of cards
 
 Un mazzo di potenti carte magiche dipinte con l'icore dei demoni. Quando
@@ -24,12 +17,6 @@ ring
 
 Un talismano che può essere indossato come un comune gioiello su un dito,
 caricp con poteri arcani di provenienza sconosciuta.
-%%%%
-rod
-
-Un'asta magica, che può essere tenuta in mano ed evocata per lanciare uno o
-diversi incantesimi, traendo potere una riserva magica auto-caricante. È anche
-sufficientemente robusta per essere usata come una semplice arma contundente.
 %%%%
 scroll
 

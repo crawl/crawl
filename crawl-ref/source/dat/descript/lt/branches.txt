@@ -1,16 +1,4 @@
 %%%%
-Dungeon
-
-Kaip atsirado ši keista vieta, tebėra paslaptis. Kai kurie tvirtina, kad tai
-nuobodžiaujančių dievų žaidimų aikštelė, tuo tarpu kiti teigia, kad ji buvo
-suformuota visokiausių rūšių būtybių, kurios pabėgo nuo žemės paviršiaus ir
-šalinosi saulės. Nepaisant to kokia yra šio urvo kilmė, jis pilnas negirdėtų
-lobių ir didžiulių pavojų bet kuriam įsibrovėliui. Mažai kas iš čia ištrūko
-gyvi, ir dar mažiau tokių, kurie išsaugojo sveiko proto likučius, kad galėtų
-apie tai papasakoti.
-
-Požemis yra 16 lygių gylio, bet, tiesą sakant, tai tik pradžia.
-%%%%
 Temple
 
 Dievų Šventykla, ramybės ir užuovėjos nuo požemio beprotybės vieta. Ji būna
@@ -38,44 +26,6 @@ papjautam, sudegintam ar nudurtam.
 
 Irštva yra aštuonių lygių gylio ir turi laiptus į dar tris atšakas.
 %%%%
-Swamp
-
-Pelkėta dykvietė, pilna dumblo, purvo, musių ir didžiulių besiseilėjančių
-mėsėdžių pabaisų.
-
-Pelkė yra penkių lygių gylio. Joje galima rasti pūvančią runą. Požemyje galima
-rasti tik du įėjimus į Gyvačių Irštvos, Pelkės, Seklumų ir Vorų Lizdo atšakas.
-Jei Pelkė yra, įėjimą į ją rasite tarp Irštva:2 ir Irštva:5.
-%%%%
-Shoals
-
-Jau iš tolo galima išgirsti nuolatinę bangų mūšą ir užuosti sūrius purslus.
-Pasiekus Seklumas, jums įspūdį padaro egzotiški požeminiai pliažai, sudarantys
-kelias salas neaprėpiamoje jūroje. Staiga orą perveria kraują stingdantis
-klyksmas, palydimas kliuksėjimo. Neramiai žvalgotės aplinkui ir galvojate: Kas
-tas plėšrūnas? Ir kas auka?
-
-Seklumos yra penkių lygių gylio ir turi kriauklių runą. Požemyje galima rasti
-tik du įėjimus į Gyvačių Irštvos, Pelkės, Seklumų arba Vorų Lizdo atšakas. Jei
-Seklumos yra, įėjimą į jas rasite tarp Irštva:3 ir Irštva:6.
-%%%%
-Snake Pit
-
-Gyvačių namai, nagų irštva.
-
-Gyvačių Irštva yra penkių lygių gylio ir turi gyvatišką runą. Požemyje galima
-rasti tik du įėjimus į Gyvačių Irštvos, Pelkės, Seklumų arba Vorų Lizdo
-atšakas. Jei Gyvačių irštva yra, įėjimą į ją rasite tarp Irštva:3 ir Irštva:6.
-%%%%
-Spider Nest
-
-Ir jūs manėte, kad paimsite šlepetę į ranką ir viskas bus baigta? Jei dar
-neturite arachnofobijos, greit turėsite.
-
-Vorų Lizdas yra penkių lygių gylio ir turi voratinklių runą. Požemyje galima
-rasti tik du įėjimus į Gyvačių Irštvos, Pelkės, Seklumų arba Vorų Lizdo
-atšakas. Jei yra Vorų Lizdas, įėjimą į jį rasite tarp Irštva:3 ir Irštva:6.
-%%%%
 Tomb
 
 Protėvių Mauzoliejus, prakeikimų ir šlykščiausios mirties magijos pabudintų
@@ -83,15 +33,6 @@ baisybių vieta.
 
 Mauzoliejus yra trijų lygių gylio ir turi auksinę runą. Įėjimas į jį yra
 Kripta:2 arba Kripta:3.
-%%%%
-Hell
-
-Keturių pragarų prieškambarį saugo Geryon. Herojai, įrodę savo vertę
-prieškambaryje ir papūtę į Geryono ragą, gali tyrinėti įvairias Pragaro sritis:
-Dis, Geheną, Kokitą ir Tartarą.
-
-Vartai į Pragaro Prieškambarį gausiai randami gilesniuose pagrindinio požemio
-lygiuose.
 %%%%
 Dis
 
@@ -206,17 +147,6 @@ pavojingus gyvius, besimaudančius šlykščiai smirdančiame žaliame vandenyje
 negailestingai vienas kitą medžiojančius. Pasakojimai taip pat užsimena apie
 vertingus daiktus, paliktus bebaimių ir nesėkmingų lankytojų, pelijančius
 drėgnuose urvuose.
-%%%%
-Ossuary
-
-Mažas laidojimo rūsys su keleto tolimų faraonų giminaičių palaikais.
-Neabejotina, kad čia daug spastų, o jo gyventojai vargu ar būtų patenkinti
-plėšimu.
-%%%%
-Bailey
-
-Vieno valdovo pilis. Ji neabejotinai saugoma fizinių užkardų ir gerai parengtų
-karių.
 %%%%
 Ice Cave
 

@@ -13,10 +13,6 @@ __cap-T_suffix
 
 Du spürst einen Klumpen im inneren deines Magens.
 %%%%
-__cap-U_suffix
-
-Wenn man ihm Angst macht wird es zornig.
-%%%%
 Aizul
 
 Einst der wichtigste Schlangen-Wächter eines legendären Schatzhortes fiel er in
@@ -24,25 +20,6 @@ Ungnade nachdem Diebe ihn plünderten während er schlief. Nun kriecht er im
 Verlies herum und sucht Rache an allen möchtegern Plünderern. Er ist ein
 versierter Hexer, jedoch nicht weniger tödlich im Nahkampf als andere seiner
 Art.
-%%%%
-Antaeus
-
-Einmal ein mächtiger und berühmter Koloss, seine Arroganz war sein Aufmachen.
-Jetzt ist er korrupt und, ein mächtiger Dämon wer Herren über die eingefrorene
-Verschwendung von Cocytus verdorben. Sein riesiger Körper scheint, als ob er
-durch Ihre Angriffe leicht geschlagen würde; leider scheint es auch, als ob es
-unversehrt durch alle außer dem stärksten von ihnen bleiben würde.
-%%%%
-Arachne
-
-Einmal der beste menschliche Weber, Arachne wurde verflucht, indem er in ihre
-gegenwärtige Form umgestaltet worden ist: Halbmensch, Halbspinne. Nicht mehr
-Altern, sie hat die Jugend und Schönheit einer menschlichen Frau, zusammen mit
-den Beinen und dem Abdomen einer monströsen riesigen Spinne.
-
-Tausende von Jahren, sie hat Magie und ziemlich viele andere Tricks erfahren.
-Nehmen Sie an, durch das Web und die Magie während ihre Lieblingsauswahl
-berückt zu werden und dann Sie trocken zu trinken.
 %%%%
 Asmodeus
 
@@ -132,10 +109,6 @@ Ereshkigal
 Ein furchterregender Erzfeind welcher die tödliche Unterwelt von Tartarus
 beherrscht.
 %%%%
-Erica
-
-ein hübscher Spruchweber.
-%%%%
 Erolcha
 
 Ein besonders listiger Oger-Magier.
@@ -167,10 +140,6 @@ Khufu
 
 Ein unglaublich mächtiger Imperator auf dem Weg zur Gottheit.
 %%%%
-Kirke
-
-Eine wunderschöne Zauberin.
-%%%%
 Lom Lobon
 
 Stoisch und unergründlich ist Lom Lobon ein alter für seine Beherrschung der
@@ -195,11 +164,6 @@ ihr Schicksal zu teilen.
 Murray
 
 Ein dämonischer Totenschädel, der auf dem Verliesboden herumrollt.
-%%%%
-Nergalle
-
-Eine vertrocknete Zauberin, die selbst für Ork-Standards ungewöhnlich hässlich
-ist.
 %%%%
 Nessos
 
@@ -261,9 +225,4 @@ Executioner
 
 Ein schrecklich mächtiger und schneller Dämon dessen Form durch eine Wolke von
 herumwirbelnden Sensen-ähnlichen Klingen verzerrt wird.
-%%%%
-Cigotuvi's Monster
-
-This terrifying creation looks to have been constructed from the body parts of
-every monstrous creature imaginable.
 %%%%

@@ -4,13 +4,6 @@ amulet
 Ein Talisman der als Schmuck um den Hals getragen wird, durchströmt von Magie
 unbekannten Ursprungs.
 %%%%
-book
-
-Ein Buch mit Zaubersprüchen unbekannten Ursprungs. Geschrieben für wahre
-Meister, sind einleitende Kenntnisse in der okkulten Kunst des Zauberns
-erforderlich um Gebrauch von diesem Wälzer zu machen. Nimm dich in Acht, denn
-mit einigen der mächtigeren Zauberbücher ist nicht zu spaßen!
-%%%%
 deck of cards
 
 Ein Satz mächtiger magischer Karten, getuscht in Dämonenblut. Das Ziehen von
@@ -25,13 +18,6 @@ ring
 
 Ein Talisman welcher als Schmuck an einem Finger getragen wird, durchströmt von
 Magie unbekannten Ursprungs.
-%%%%
-rod
-
-Ein magischer Stab, der in der Hand gehalten und evoziert werden kann, um einen
-von mehreren Zaubern hervorzurufen, die ihre Energie aus einem
-selbstaufladenden Reservoir beziehen. Der Stab ist robust genug, um als eine
-einfache Schlagwaffe zu dienen.
 %%%%
 scroll
 

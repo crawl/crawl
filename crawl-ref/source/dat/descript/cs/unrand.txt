@@ -30,14 +30,6 @@ Pomocí evokace tato hůl dokáže doplnit velké množství magické energie, j
 však riziko poškození nositelovi mysli. Její moc závisí na tom, jak obratně
 dovede uživatel používat evokace.
 %%%%
-Vampire's Tooth
-
-Tato dýka z materiálu podobného slonovině byla ve skutečnosti vyrobena ze zubu
-nějakého obrovitého predátora, výškou očividně značně převyšující běžně
-vysokého krvepijce.
-
-Dokáže vysávat život se smrtící účinností.
-%%%%
 Scythe of Curses
 
 Tato zbraň nese strašlivé a vysoce znepokojivé prokletí.
@@ -45,18 +37,6 @@ Tato zbraň nese strašlivé a vysoce znepokojivé prokletí.
 Sceptre of Torment
 
 Tato skrz naskrz prokletá zbraň je pekelným nástrojem.
-%%%%
-Sword of Zonguldrok
-
-Tuto strašlivou zbraň lze použít pouze na vlastní nebezpečí nositele.
-%%%%
-Staff of Dispater
-
-Tento legendární předmět je schopen rozpoutat hněv samotných pekel.
-%%%%
-Sceptre of Asmodeus
-
-Nachází se v něm trochu z moji arciďábla Asmodea.
 %%%%
 faerie dragon armour
 
@@ -80,21 +60,9 @@ nepřátelé budou na tvou přítomnost spolehlivě upozorněni. Nemrtví jeho s
 nesnáší, a také dokáže odkrýt jakékoliv nekalé úmysly těch, kdož chtějí zůstat
 neviditelnými.
 %%%%
-demon blade "Leech"
-
-Mysl svého vlastníka žene za jediným cílem: aby hltal životní sílu, vysávanou z
-ostatních.
-%%%%
 dagger of Chilly Death
 
 Dýka z jednoho velkého kusu safíru.
-%%%%
-dagger "Morg"
-
-Odpudivá, rezavá dýka.
-
-Před mnoha lety patřila mocnému mágovi jménem Boris, který se v žaláři ztratil
-na cestě za Zotovým kotoučem.
 %%%%
 scythe "Finisher"
 
@@ -103,13 +71,6 @@ Dlouhá a ostrá kosa, speciálně upravená pro bojové účely.
 sling "Punk"
 
 Závěs z podivné modré kůže.
-%%%%
-bow of Krishna "Sharnga"
-
-Výtečný luk, vyrobený ze zlata.
-
-Kdysi patřil cizímu božstvu. Nejlépe funguje v kombinaci se speciálními šípy,
-které nejsou běžně k dostání.
 %%%%
 giant club "Skullcrusher"
 
@@ -134,23 +95,9 @@ spear of the Botono
 Černokněžný, zlovolný artefakt, který zvyšuje účinnost zaklínadel čarovaných
 kýmkoliv, kdo je natolik pošetilý, aby si dovolil jej použít.
 %%%%
-trident of the Octopus King
-
-Tento trojzubec byl před mnoha lety odcizen ze zahrad Krále chobotnic zcela
-nedůležitým mužem, který byl již jednou nohou v hrobě. Pozor však na králův
-hněv!
-%%%%
 mithril axe "Arga"
 
 Překrásná Mithril sekera, pravděpodobně ji ztratil nějaký trpasličí hrdina.
-%%%%
-Elemental Staff
-
-Tato mocná hůl patřila vůdci Cechu pěti elementů.
-%%%%
-crossbow "Sniper"
-
-Kuše z nějakého černého materiálu.
 %%%%
 longbow "Piercer"
 
@@ -160,18 +107,6 @@ blowgun of the Assassin
 
 Tato foukačka byla navržena tak, aby se dala snadno skrýt, i přesto však dovede
 uštědřit značnou ránu.
-%%%%
-Spriggan's Knife
-
-Roztomile malý nožík.
-
-Tento nůž byl vyroben sprigany, nebo pro sprigany, nebo možná také ze spriganů.
-V každém případě nějaký vztah mezi ním a těmi nepraktickými podivíny existuje.
-%%%%
-whip "Snakebite"
-
-Bič s rozeklaným koncem, vyrobený z vypreparovaných kůží černých mamb z Doupěte
-šelem.
 %%%%
 knife of Accuracy
 
@@ -262,13 +197,6 @@ mask of the Dragon
 
 Modrá maska.
 %%%%
-robe of Night
-
-Dlouhá, černá robá, vyrobená ze zvláštního lesklého materiálu. Zdá se, že
-dokáže svého nositele zahalit do temnoty.
-
-Podle legendy tuto róbu darovala jednomu ze svých stoupenců Bohyně noci Ratri.
-%%%%
 armour of the Dragon King
 
 Kdysi dávno jistý mocný, zlatý drak vzal věci do svých pařátů a vládl všem
@@ -297,20 +225,11 @@ Jistý kouzelnice s magickým kolovrátkem a spostou času tento plášť vyrobi
 kůží stovek krys, povětšinou oranžových. Nosí se trochu divně a vypadá docela
 hloupě, ale poskytuje výtečnou ochranu před krysami všeho druhu.
 %%%%
-shield of the gong
-
-To to je velký Bronzový gong, který je možné nosit jako štít. Podle některých
-mystiků, může takový gong udělit duchovní ochranu.
-%%%%
 amulet of the Air
 
 Mnoho ze svých ochranných vlastností tento nebesky modrý amulet pravděpodobně
 dostal od nějaké mocného vzdušného mága.  Zdá se, že jediné, co mu chybělo,
 byla pevná ruka.
-%%%%
-ring of Shadows
-
-Černý kroužek, který umožňuje svému nositeli splynout se stíny.
 %%%%
 amulet of Cekugob
 
@@ -351,14 +270,6 @@ Tu a ještě poníka.
 robe of Clouds
 
 Róba z tak jemného materiálu, že by jeden až řekl, že je z obláčků.
-%%%%
-hat of Pondering
-
-Slizký kouzelnický klobouk.
-
-Oblíbený klobouk slimáčího kouzelníka Gastronoka, který je pokryt načervenalým
-slizem a očarován, aby mu sloužil v jeho magickém ploužení se. Také poskytuje
-zvláštní ochranu před účinky soli, ale to tě asi nezajímá.
 %%%%
 obsidian axe
 

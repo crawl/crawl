@@ -1,15 +1,4 @@
 %%%%
-Dungeon
-
-Comment cet endroit étrange a été créé reste un mystère. Certains disent que
-c'est le terrain de jeux des dieux qui s'ennuyaient, alors que d'autres
-prétendent qu'il a été façonné par toutes sortes d'espèces fuyant la lumière et
-l'outre-monde. Peu importe en vérité l'origine de cette caverne, elle est
-remplie de richesse autant que de terribles dangers. Peu en sont ressortis
-vivants et encore moins ont gardé suffisamment de santé mentale pour en parler.
-
-Le donjon est profond de 16 niveaux mais honnêtement, c'est seulement le début.
-%%%%
 Temple
 
 Le Temple des Dieux, un lieu de paix et de refuge loin des insanités du donjon.
@@ -46,48 +35,6 @@ que de trancher, bruler ou poignarder.
 L'Antre fait huit niveaux de profondeur et contient des escaliers menant à
 trois autre branches.
 %%%%
-Swamp
-
-Un marécage inhospitalier, plein de limons, de mouches, de sangsues et de grand
-monstres carnivores affamés.
-
-Le Marais est profond de cinq niveaux et contient la rune en décomposition. Le
-donjon ne propose que deux des branches suivantes : la Fosse aux Serpents, le
-Marais, les Côtes et le Nid des Araignées. Si le Marais est présent, son entrée
-est située entre le Repaire 2 et 5.
-%%%%
-Shoals
-
-De loin, vous entendez le bruit des vagues et sentez les embruns salés. En
-atteignant les Côtes, vous êtes impressionné par les plages exotiques dans ses
-souterrains, créant quelques îles dans une vaste mer. Soudainement, un cri
-effroyable déchire l'air suivi de gargouillis. Avec impatience, vous observez
-les alentours et vous demandez : Qui est le prédateur ? Et qui est la proie ?
-
-Les Côtes sont profondes de cinq niveaux et contiennent la rune écaillée. Deux
-des branches suivantes sont présentes dans le donjon : la Fosse aux Serpents,
-le Marais, les Côtes et le Nid des Araignées. Si les Côtes sont présentes, leur
-entrée est située entre Repaire 3 et 6.
-%%%%
-Snake Pit
-
-Habitat des serpent, repaire des nagas.
-
-La Fosse aux Serpents est profonde de cinq niveaux et contient la rune en
-serpentine. Deux des branches suivantes sont présentes dans le donjon : la
-Fosse aux Serpents, le Marais, les Côtes et le Nid des Araignées. Si la Fosse
-aux Serpents est présente, son entrée est située entre Repaire 3 et 6.
-%%%%
-Spider Nest
-
-Vous pensiez qu'il suffirait de soulever une botte pour les écraser ? Si vous
-n'êtes pas encore arachnophobe, c'est pour bientôt.
-
-Le Nid des Araignées est profond de cinq niveaux et contient la rune
-arachnéenne. Deux des branches suivantes sont présentes dans le donjon : la
-Fosse aux Serpents, le Marais, les Côtes et le Nid des Araignées. Si le Nid des
-Araignées est présente, son entrée est située entre Repaire 3 et 6.
-%%%%
 Slime Pits
 
 La royaume amorphe des acides, gelées et slimes. Toute trace d'intelligence a
@@ -100,37 +47,6 @@ en plus caustique à mesure que vous descendez.
 Les Fosses gluantes sont profondes de six niveaux  et contient la rune
 visqueuse. Son entrée est entre Repaire 6 et 8.
 %%%%
-Vaults
-
-Probablement construite par un puissant fou, les Chambres Fortes sont réputées
-pour garder de grands trésors. Les éclaboussures sanglantes autour de l'entrée
-indiquent que l'on y trouve aussi un certain niveau de violence.
-
-Les Chambres Fortes sont profondes de cinq niveaux et contiennent la rune
-argentée ainsi que les entrées de deux autres branches. Pour y pénétrer, il
-faut posséder au moins une rune de Zot. Son entrée peut être trouvée entre les
-niveaux 14 et 15 du donjon principal.
-%%%%
-Hall of Blades
-
-Il y a fort longtemps, toutes les dagues, haches et armes d'hast se
-réunissaient la nuit pour danser la valse, rêvant de champs de bataille sans
-homme ni bête. Ce temps est révolu mais, ces armes sont toujours en sommeil
-ici.
-
-Le Hall des Lames est un unique niveau et peut être trouvé entre Chambres
-Fortes:3 et Chambres Fortes:4.
-%%%%
-Crypt
-
-Un gigantesque dépôt pour les anciens morts. L'air est glacé et fétide, les
-murs froids et humides. Des os sont éparpillés partout et l'endroit résonne des
-lamentations des âmes torturées des morts sans repos.
-
-La Crypte est profonde de cinq niveaux. Le donjon contient soit la Crypte, soit
-la Forêt ; si la Crypte est présente, elle peut être trouvée entre Chambres
-Fortes:2 et Chambres Fortes:3 et elle contient l'entrée de la Tombe.
-%%%%
 Tomb
 
 La Tombe des Anciens est un lieu de damnation, peuplé d'horreurs animées par
@@ -138,16 +54,6 @@ une nécromancie abjecte.
 
 La Tombe est profonde de trois niveaux et contient la rune dorée. Son entrée se
 trouve en Crypte 2 ou 3.
-%%%%
-Hell
-
-L'antichambre des quatre enfers est gardé par Geryon. Les héros qui prouvent
-leur valeur dans le vestibule et soufflent dans la corne de Geryon peuvent
-explorer les différentes régions des enfers : Dis, Gehenna, Cocytus et
-Tartarus.
-
-Des portails menant au Vestibule des Enfers peuvent être trouvés en abondance
-dans les parties les plus profondes du donjon principal.
 %%%%
 Dis
 
@@ -189,17 +95,6 @@ légendaire artéfact.
 
 Le Royaume de Zot est profond de cinq niveaux et est uniquement accessible en
 transportant au moins trois runes.
-%%%%
-Forest
-
-Parmi ces bois sombres et sinistres se trouve le repaire des spriggans, faunes,
-tengu et d'autres créatures capables de faire plier la volonté des intrus. Les
-puissantes illusions et la magie d’entrave sont la norme plutôt que
-l'exception.
-
-La Forêt Enchantée fait cinq niveau de profondeur. Le donjon contient soit la
-Crypte, soit la Forêt ; si la Forêt est présente, elle peut être trouvée entre
-Chambres Fortes:2 et Chambres Fortes:3 et elle contient l'entrée de la Tombe.
 %%%%
 Abyss
 
@@ -290,18 +185,6 @@ verte et malodorante, dévorant quiconque s'approche de leur territoire. Les
 histoires racontent aussi la présence d'objets précieux laissés par des
 visiteurs audacieux mais malchanceux.
 %%%%
-Ossuary
-
-Une petite tombe contenant les restes de quelques parents éloignés des
-pharaons. C'est sans nul doute un site largement piégé, et ses habitants ni
-apprécient guère le pillage.
-%%%%
-Bailey
-
-Le Bailey est la forteresse toujours occupée et bien gardée d'un orc seigneur.
-Dans celle-ci, ses trésors privés sont protégés par des barrières physiques et
-un grand nombre de guerriers humanoïdes bien armés.
-%%%%
 Ice Cave
 
 Une grotte désolée taillée dans la glace. Les sculptures complexes et les
@@ -326,9 +209,4 @@ leurs laboratoires obscurs existent toujours, grouillant des résultats de leurs
 expériences. Ceux prêts à explorer ces laboratoires pourront y trouver de
 puissant objets magiques, mais attention : les sorciers qui ont bâtis ces
 laboratoires méritaient leurs réputations.
-%%%%
-Depths
-
-Les Profondeurs sont la partie la plus reculée du donjon même, sujettes à
-l'influence corruptrice du Royaume de Zot sans vraiment en faire partie.
 %%%%

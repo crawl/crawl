@@ -32,14 +32,6 @@ wiederherzustellen, jedoch mit dem Risiko, den Verstand des Nutzers zu
 beschädigen. Seine Kraft hängt von der Elementbeschwörungs-Fähigkeit des
 Trägers ab.
 %%%%
-Vampire's Tooth
-
-Dieser elfenbeinartige Dolch sieht aus, als ob er von einem Zahn eines
-gewaltigen Raubtieres geschaffen wurde, wenngleich offensichtlich kein
-Blutsauger in durchschnittlicher Menschengröße.
-
-Er ist tödlich und vampirhaft.
-%%%%
 Scythe of Curses
 
 Diese Waffe beinhaltet einen schrecklichen und sehr beängstigenden Fluch.
@@ -47,18 +39,6 @@ Diese Waffe beinhaltet einen schrecklichen und sehr beängstigenden Fluch.
 Sceptre of Torment
 
 Diese wahrlich verfluchte Waffe ist ein Instrument der Hölle.
-%%%%
-Sword of Zonguldrok
-
-Diese entsetzliche Waffe sollte auf eigene Gefahr eingesetzt werden.
-%%%%
-Staff of Dispater
-
-Dieser legendäre Gegenstand kann den Zorn der Hölle entfesseln.
-%%%%
-Sceptre of Asmodeus
-
-Es trägt ein paar Kräfte des Erzfeindes Asmodeus.
 %%%%
 faerie dragon armour
 
@@ -76,21 +56,9 @@ scimitar of Flaming Death
 
 Heißes Teil !
 %%%%
-demon blade "Leech"
-
-Es treibt des Besitzers Verstand zu einem einzigen Vorhaben: Fressen und
-Lebenskraft aussaugen.
-%%%%
 dagger of Chilly Death
 
 Ein aus einem riesigen Saphir hergestellter Dolch.
-%%%%
-dagger "Morg"
-
-Ein alter, rostiger Dolch.
-
-Vor langen Jahren war er im Besitz einen mächtigen Magiers, genannt Boris. Bei
-der Suche nach der Kugel von Zot ging er im Verlies verloren.
 %%%%
 scythe "Finisher"
 
@@ -99,13 +67,6 @@ Eine lange und scharfe Sense, speziell für Kampfzwecke modifiziert.
 sling "Punk"
 
 Eine Schleuder, gemacht aus sonderbarem blauen Leder.
-%%%%
-bow of Krishna "Sharnga"
-
-Ein wundervoller goldener Bogen.
-
-Er gehörte einst einem fremden Gott, und funktioniert am besten mit speziellen
-Pfeilen, welche nicht leicht zu bekommen sind.
 %%%%
 giant club "Skullcrusher"
 
@@ -130,25 +91,10 @@ spear of the Botono
 Ein dunkles und unheilvolles Artefakt. Es erhöht, von jedem der so unklug ist
 es zu benutzen, die Kraft von gewirkten Flüchen.
 %%%%
-trident of the Octopus King
-
-Dieser Dreizack wurde vor langen Jahren aus dem Garten des Kraken Königs, von
-einem unwichtigem und schon längst totem Mann, gestohlen. Nehme dich vor dem
-Zorn des Kranken Königs vor.
-%%%%
 mithril axe "Arga"
 
 Eine wunderschöne Mithrilaxt. Warscheinlich hat ein zwergischer Held sie
 verloren.
-%%%%
-Elemental Staff
-
-Dieser mächtige Zauberstab gehörte einst dem Anführer der Gilde der fünf
-Elemente.
-%%%%
-crossbow "Sniper"
-
-Eine aus schwarzem Material hergestellte Armbrust.
 %%%%
 longbow "Piercer"
 
@@ -157,19 +103,6 @@ Ein außergewöhnlicher großer Langbogen aus Metall.
 blowgun of the Assassin
 
 Geschaffen für die leichte Tarnung, hält aber trotzdem fiese Schläge ab.
-%%%%
-Spriggan's Knife
-
-Ein elegantes kleines Messer.
-
-Diese Messer wurde von den Spriggans, oder für Spriggans, oder sogar aus
-Spriggans gemacht. In jedem Fall ist es mit diesem magischen Volk irgendwie
-verbunden.
-%%%%
-whip "Snakebite"
-
-Eine doppelschwänzige Peitsch, geschaffen aus den geräucherten Häuten tödlicher
-schwarzer Mambas vom der Höhle der Bestien.
 %%%%
 knife of Accuracy
 
@@ -277,18 +210,6 @@ cloak of Starlight
 
 Ein phosphoreszierender Umhang, aus puren Lichtstrahlen gewebt.
 %%%%
-shield of the gong
-
-Dies ist ein großer bronzener Gong, welcher als Schild getragen werden kann.
-Nach Aussagen verschiedener Mystiker soll das Schlagen dieses Gongs geistigen
-Schutz gewähren.
-
-Und dieser Schild wird sicherlich gehört!
-%%%%
-ring of Shadows
-
-Ein schwarzer Ring, der seinen Träger eins mit den Schatten machen kann.
-%%%%
 ring of Shaolin
 
 Ein schmuckloser Jade Ring welcher seinem Träger ein unglaubliches Wissen über
@@ -312,15 +233,6 @@ Geräte. Das, und ein Pony.
 robe of Clouds
 
 Eine Robe, aus einem so hauchdünnen Material, das es eine Wolke sein könnte.
-%%%%
-hat of Pondering
-
-Ein einfacher Zaubererhut.
-
-Der Lieblingshut des Schneckenzauberers Gastronok, bedeckt mit rötlichem
-Schleim und verzaubert um ihm bei seinen arkanen Gedanken zu helfen. Er wurde
-mit einer speziellen Verzauberung versehen um ihn vor Salz zu schützen, was
-dich aber sicher nicht interessieren wird.
 %%%%
 Black Knight's horse barding
 

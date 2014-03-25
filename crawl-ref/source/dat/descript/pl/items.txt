@@ -377,70 +377,6 @@ decaying skeleton
 
 Kupa kości w trakcie rozkładu.
 %%%%
-deck of changes
-
-Talia magicznych kart które powodują przeróżne zmiany w swym użytkowniku lub
-jego otoczeniu. Może zawierać następujące karty: Lek, Żądza Walki, Przemiana,
-Okrycie, Ostrze, Cień, Eliksir, Skupienie, Przetasowanie, Doświadczenie, Dzika
-Magia, Helisa, Mędrzec, Woda, Zeszklenie, Mapa, Wieszczenie, Kilof, Kielnia,
-Pole Minowe.
-%%%%
-deck of defence
-
-Talia magicznych kart, zwykle broniących użytkownika przed krzywdą.
- TODO: It may contain the following cards: the Tomb, the Banshee, Damnation,
-Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
-the Blade, the Shadow.
-%%%%
-deck of destruction
-
-Talia magicznych kart, ciskających śmierć i zniszczenie we wrogów (lub, czasem,
-w twarz użytkownika).
- TODO: It may contain the following cards: Vitriol, Flame, Frost, Venom, the
-Spark, the Hammer, Pain, the Orb.
-%%%%
-deck of dungeons
-
-Talia magicznych kart które wprowadzają zmiany w lochach naokoło ciebie.
- TODO: It may contain the following cards: Water, Vitrification, the Map,
-Dowsing, the Spade, Trowel, the Minefield.
-%%%%
-deck of escape
-
-Talia magicznych kart, oparta na różnych formach ucieczki. Czasem potrafią one
-jednak pogorszyć sytuację!
- TODO: It may contain the following cards: the Portal, the Warp, Swap,
-Velocity, the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
-%%%%
-deck of punishment
-
-Talia magicznych kart które potrafią przetrzepać użytkownikowi skórę.
- TODO: It may contain the following cards: Wrath, the Wraith, the Curse, Xom,
-Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
-%%%%
-deck of summonings
-
-Talia magicznych kart, z rysunkami przedziwnych istot. Oczywiście, rysunki te
-wchodzą w życie.
- TODO: It may contain the following cards: the Crusade, the Herd, the
-Pentagram, the Dance, Foxfire, the Bones, Repulsiveness.
-%%%%
-deck of war
-
-Talia magicznych kart, pożytecznych przed jak i w trakcie walki.
- TODO: It may contain the following cards: the Portal, the Warp, Swap,
-Velocity, the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the
-Elixir, Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the
-Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
-Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment.
-%%%%
-deck of wonders
-
-Talia magicznych kart, zmieniających użytkownika fizycznie lub mentalnie, na
-lepsze lub gorsze.
- TODO: It may contain the following cards: the Potion, Focus, Shuffle,
-Experience, Wild Magic, the Helix, the Sage, the Alchemist.
-%%%%
 demon blade
 
 Straszliwa broń, wykuta w ogniach piekieł.
@@ -579,12 +515,6 @@ honeycomb
 
 Jakkolwiek pszczoły spotykane w tych lochach osiągają ogromne rozmiary, miód
 przez nie produkowany w niczym nie ustępuje temu z powierzchni.
-%%%%
-horn of Geryon
-
-Ten róg należy do Geryona, strażnika Przedsionka Piekła. Legendy mówią że
-śmiertelnik który zapragnie dostać się do piekieł żywy, musiałby zadąć w ten
-róg.
 %%%%
 ice dragon armour
 
@@ -778,12 +708,6 @@ naprawdę będąca wydzieliną mrocznych ciem. Ma spore wartości odżywcze, a t
 daje przypływ magicznych energii, niestety kosztem krótkotrwałego zamroczenia
 umysłu.
 %%%%
-plate armour
-
-Jest to pełna zbroja składająca się z segmentów litej stali połączonymi
-kolczugą. W jej skład wchodzi kirys, naramienniki, osłona łokcia, fartuch,
-nabiodrniki i nagolenniki. Zapewnia wspaniałą ochronę, kosztem mobilności.
-%%%%
 potion of agility
 
 Eliksir który wielce zwiększa zręczność i zwinność pijącego, na krótki czas.
@@ -854,13 +778,6 @@ potion of invisibility
 
 Eliksir który daje tymczasową niewidzialność.
 %%%%
-potion of lignification
-
-Eliksir który zmienia pijącego w ożywione drzewo na krótki czas. Okazuje się że
-gałęzie nadają się całkiem nieźle do uchwycenia broni, kora jest całkiem
-twarda, jednak opowieści o drzewach wyciągających swe korzenie aby się poruszać
-należy włożyć między bajki.
-%%%%
 potion of magic
 
 Eliksir który jednorazowo odnawia część zasobów magicznej energii.
@@ -894,11 +811,6 @@ Eliksir który zapewnia tymczasową odporność na ogień, zimno, prąd i truciz
 potion of slowing
 
 Eliksir który spowalnia szybkość ruchów.
-%%%%
-potion of haste
-
-Eliksir który przyspiesza wszystkie ruchy pijącego. Uważaj, nadużywanie może
-spowodować magiczną skazę!
 %%%%
 potion of strong poison
 
@@ -1012,12 +924,6 @@ ring of see invisible
 
 Ten pierścień pozwala swemu nosicielowi ujrzeć niewidzialne istoty.
 %%%%
-ring of slaying
-
-Ten pierścień zwiększa (lub zmniejsza) celność i zadawane obrażenia w walce
-wręcz i w strzelaniu. Pierwsza liczba określa bonus do celności, druga do
-obrażeń.
-%%%%
 ring of strength
 
 Ten pierścień zwiększa lub zmniejsza fizyczną siłę nosiciela, w zależności od
@@ -1053,14 +959,6 @@ rzucenia, nie zwiększa jednak w żaden sposób mocy.
 robe
 
 Szata z tkaniny.
-%%%%
-rod of destruction
-
-Ten pręt zawiera czary siejące zniszczenie.
-%%%%
-rod of fiery destruction
-
-Ten pręt zwiera niszczycielskie czary ognia.
 %%%%
 rod of inaccuracy
 
@@ -1157,27 +1055,6 @@ Ten zwój pozwala na poprawienie jakości zbroi. Większość części zbroi mo�
 poprawić do +2, tarcze do +3, zbroje noszone na korpusie oraz kropierze zaś do
 ich bazowego wskaźnika ochrony. Zwój ten także można użyć aby stworzyć zbroję
 ze skóry niektórych stworzeń — zwykle trolli i smoków.
-%%%%
-scroll of enchant weapon i
-
-Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w chwili
-odczytania zwoju. Zwiększa on celność. Broń która już jest wysokiej jakości
-może nie poddać się działaniu tego zwoju — szansa porażki jest coraz większa.
-Bezwzględny limit to +9.
-%%%%
-scroll of enchant weapon ii
-
-Ten zwój pozwala na poprawienie jakości broni trzymanej w dłoni w cewili
-odczytania zwoju. Zwiększa on zadawane obrażenia. Broń która już jest wysokiej
-jakości może nie poddać się działaniu tego zwoju — szansa porażki jest coraz
-większa. Bezwzględny limit to +9.
-%%%%
-scroll of enchant weapon iii
-
-Ten zwój pozwala na znaczne poprawienie jakości broni trzymanej w dłoni w zwili
-odczytania zwoju. Zwiększa on zarówno celność jak i zadawane obrażenia. Broń
-która już jest wysokiej jakości może nie poddać się działaniu tego zwoju —
-szansa porażki jest coraz większa. Bezwzględny limit to +9.
 %%%%
 scroll of fear
 
@@ -1367,10 +1244,6 @@ Ten kij zwiększa moc czarów Magii Przywołań, a także zapewnia ochronę prze
 atakami przywołanych istot. W rękach kogoś kto potrafi posługiwać się
 magicznymi przedmiotami, uderzone przywołane istoty zostaną odesłane (lub
 przynajmniej pozostały czas przywołania ulegnie znacznemu skróceniu).
-%%%%
-staff of wizardry
-
-Ten kij znacznie ułatwia rzucanie czarów, jednakże bez zwiększenia ich mocy.
 %%%%
 steam dragon armour
 

@@ -13,11 +13,3 @@ Blink spell
 
 Toto kouzlo přenese kouzelníka na krátkou náhodnou vzdálenost .
 %%%%
-Bolt of Cold spell
-
-Toto kouzlo vrhne velký úder ledu a mrazu.
-%%%%
-Venom Bolt spell
-
-Toto kouzlo vyvolá úder jedem.
-%%%%

@@ -1,0 +1,128 @@
+%%%%
+Dispater
+
+Il Signore della Città di Ferro di Dis
+%%%%
+Gloorx Vloq
+
+Un'oscura figura avvolta in una profonda oscurità.
+%%%%
+Joseph
+
+Sembrerebbe un mercenario.
+%%%%
+Nessos
+
+Un guerriero centauro nero con uno sguardo maligno negli occhi.
+%%%%
+Xtahua
+
+Un antico e potete drago.
+%%%%
+balrug
+
+Un grande e molto potente demone, circondato da fiamme e ombra.
+%%%%
+big fish
+
+Un robusto pesce con una larga bocca e grossi denti.
+%%%%
+fire drake
+
+Un piccolo ma pericoloso drago, che sbuffa nuvole di fumo.
+%%%%
+fire vortex
+
+Una vorticosa nuvola di fiamme.
+%%%%
+giant leech
+
+Un aggressivo anellide succhia-sangue che prospera nelle paludi.
+%%%%
+glowing shapeshifter
+
+Un mutaforma che ha perso il controllo sulle sue trasformazioni, e cambia
+costantemente forma.
+%%%%
+gnoll
+
+Un parente di goblin e orchi, più alto e meglio equipaggiato, in qualche modo
+somigliante a un cane.
+%%%%
+greater naga
+
+Un naga formidabile in entrambe le arti marziali e magiche.
+%%%%
+hellion
+
+Uno spaventoso demone, ricoperto da fiamme infernali.
+%%%%
+hellwing
+
+Un ripugnante demone scheletrico, con ali di antica pelle secca.
+%%%%
+ice devil
+
+Un demone dalle dimensioni di un uomo, ricoperto da ghiaccio scintillante.
+%%%%
+killer bee
+
+Un'ape gigante, con un aculeo mortale in grado di pungere ripetutamente.
+%%%%
+lava worm
+
+Un feroce verme rosso che nuota tra le rocce fuse.
+%%%%
+mottled dragon
+
+Un piccolo drago viola con delle curiose squame maculate, e una strana fiamma
+liquida che sgocciola dalla sua bocca.
+%%%%
+naga warrior
+
+Un terribile guerriero naga rivestito da una robusta armatura brandendo una
+potente arma.
+%%%%
+phoenix
+
+Un uccelo di miti e leggende, si dice che muoia nelle fiamme e rinasca dalle
+ceneri.
+%%%%
+pillar of salt
+
+Un grosso pilastro di sale che si sta sgretolando velocemente.
+%%%%
+plant
+
+Poche piante posso crescere negli ambienti sgradevoli delle segrete, ma alcune
+sono riuscite ad adattarsi e addirittura prosperare in assenza del sole.
+%%%%
+porcupine
+
+Un feroce roditore con un mantello di aculei affilati e un morso doloroso.
+%%%%
+quasit
+
+Un piccolo demone codardo, con una lunga coda appuntita. I suoi artigli
+affilati sono ricoperti da un veleno che irrigidisce i muscoli.
+%%%%
+reaper
+
+Una forma scheletrica che brandisce una grossa falce.
+%%%%
+silver star
+
+Una sfera di energia pulsante di luce accecante.
+%%%%
+giga bat
+
+Un enorme, gonfio pipistrello.
+%%%%
+ice bat
+
+Una creatura non morta, dalla forma di un pipistrello di ghiaccio.
+%%%%
+megabat
+
+Un enorme pipistrello nero.
+%%%%

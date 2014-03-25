@@ -36,13 +36,6 @@ CMD_PRAY
 
 Prie votre dieu
 %%%%
-CMD_PRAY verbose
-
-Si votre dieu apprécie les sacrifices, vous pourrez lui offrir un cadavre ou
-d'autres objets. De plus si vous vous trouvez sur un autel, vous pourrez vous
-convertir à la religion du dieu correspondant. Pour certain dieux, prier
-déclenche aussi d'autres effets particuliers.
-%%%%
 CMD_SEARCH_STASHES
 
 Recherche d'objets ou de points d'intérêt.
@@ -132,12 +125,6 @@ Liste des commandes, options,etc.
 CMD_CHARACTER_DUMP
 
 Génère un état d'avancement du personnage
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-Génère un fichier “nomdupersonnage.txt” dans le dossier morgue. Vous y
-trouverez une énorme quantité d'information (caractéristiques, inventaire,
-compétences, notes, etc...) et vous pourrez les consulter à loisir.
 %%%%
 CMD_AUTOFIGHT
 

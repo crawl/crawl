@@ -46,11 +46,6 @@ Enchanter
 Kerėtojai naudojasi burtažodžiais, kad sustiprėtų kovai patys arba išvestų iš
 rikiuotės kitus. Taip pat jie pradeda su geros kokybės strėlytėmis.
 %%%%
-Fighter
-
-Kovotojai atvyksta su šarvais, skydu ir pačių pasirinktu ginklu. Jie turi
-daugiau sveikatos nei bet kuri kita profesija.
-%%%%
 Fire Elementalist
 
 Ugnies burtininkai pradeda su Liepsnų knyga ir moka Ugnies Liežuvio burtažodį.

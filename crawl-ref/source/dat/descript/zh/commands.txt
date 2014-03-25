@@ -34,11 +34,6 @@ CMD_PRAY
 
 向神祈祷
 %%%%
-CMD_PRAY verbose
-
-如果你信仰的神接受献祭，祈祷会献祭尸体或其他物品。另外，如果你站在祭坛上，
-祈祷会让你加入相应的教会。对某些神来说，祈祷有其他特殊效果。
-%%%%
 CMD_SEARCH_STASHES
 
 查找物品/特殊设施
@@ -122,11 +117,6 @@ CMD_DISPLAY_COMMANDS verbose
 CMD_CHARACTER_DUMP
 
 输出角色进度
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-将游戏角色的资料输出到morgue文件夹下的“玩家名.txt”，以便空闲时查看。
-文件记录内容包括主要属性、装备、魔法、技能、笔记等。
 %%%%
 CMD_AUTOFIGHT
 

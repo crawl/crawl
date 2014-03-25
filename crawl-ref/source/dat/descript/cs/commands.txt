@@ -36,13 +36,6 @@ CMD_PRAY
 
 Modlit se k zvolenému bohu
 %%%%
-CMD_PRAY verbose
-
-Pokud si tvé božstvo přeje oběti, pomocí tohoto příkazu mu bude nabídnuta
-mrtvola či jiný předmět. Pokud zrovna stojíš na oltáři, bude tímto příkazem
-nabídnuto připojit se k danému božstvu. U některých bohů může mít modlitba i
-další zvláštní účinky.
-%%%%
 CMD_SEARCH_STASHES
 
 Vyhledat předmět/místo
@@ -131,12 +124,6 @@ Seznam příkazů, předvoleb atd.
 CMD_CHARACTER_DUMP
 
 Export informací do souboru
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-Exportuje velké množství informací o postavě do souboru ‚jmenohrace.txt‘ ve
-složce ‚morgue‘ k pohodlnému prohlédnutí. Exportováno je vše včetně atributů
-postavy, kouzel, dovedností, poznámek atd.
 %%%%
 CMD_AUTOFIGHT
 

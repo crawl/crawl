@@ -82,12 +82,6 @@ et de toutes les modes nouvelles de France. En un mot, je m’appelle Asmodée,
 surnommé Le Diable Boiteux. »
     -Alain-René Lesage, _Le Diable Boiteux_. 1707.
 %%%%
-black sun
-
-« Le ciel est triste et beau comme un grand reposoir ;
- Le soleil s'est noyé dans son sang qui se fige. »
-    -Charles Baudelaire, _Les Fleurs du Mal_, 43: Harmonie du soir. 1857.
-%%%%
 Fire Storm spell
 
 « Certains disent qu'il n'y a pas de finesse dans la destruction. Vous savez
@@ -130,18 +124,6 @@ une amulette ; tu ferais mal au charme, ou le charme à toi.” »
     -Victor Marie Hugo, _Notre Dame de Paris_, Livre II, chapitre VII « Une
 Nuit de Noces ». 1831
 %%%%
-war gargoyle
-
-« Leurs innombrables sculptures de diables et de dragons prenaient un aspect
-lugubre. La clarté inquiète de la flamme les faisait remuer à l’œil. Il y avait
-des guivres qui avaient l’air de rire, des gargouilles qu’on croyait entendre
-japper, des salamandres qui soufflaient dans le feu, des tarasques qui
-éternuaient dans la fumée. Et parmi ces monstres ainsi réveillés de leur
-sommeil de pierre par cette flamme, par ce bruit, il y en avait un qui marchait
-et qu’on voyait de temps en temps passer sur le front ardent du bûcher comme
-une chauve-souris devant une chandelle.»
-    -Victor Hugo, _Notre-Dame de Paris_, Livre 10, ch. IV. 1831
-%%%%
 potion
 
 « Alors, sur la foi de mon art, je lui ai remis un narcotique qui a agi, comme
@@ -162,7 +144,7 @@ ring of see invisible
 
 « Voici mon secret. Il est très simple : on ne voit bien qu'avec le coeur.
 L'essentiel est invisible pour les yeux. »
-    -Antoine de Saint-Exupéry, _Le Petit Prince_. 1943.
+    -Antoine de Sain Exupéry, _Le Petit Prince_. 1943.
 %%%%
 simulacrum
 

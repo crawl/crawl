@@ -73,11 +73,6 @@ Brothers in Arms ability
 
 Conjura aliados grandes e nervosos para causar estragos.
 %%%%
-Bend Space ability
-
-Dobra o espaço a sua volta, teleportando você a uma distância curta e,
-possivelmente, também teleportando e causando dano a monstros a sua volta.
-%%%%
 Banish ability
 
 Tenta banir um monstro para o Abismo.

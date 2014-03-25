@@ -29,12 +29,6 @@ Draconian
 Les Draconiens sont des hybrides polyvalents. Ils arrivent à maturité au niveau
 7 et prennent une couleur.
 %%%%
-Formicid
-
-Les Formicids sont des fourmis humanoïdes adepte à creuser. Leurs membres sont
-exceptionnellement fort et ils vivent dans un envoronement où l'evolution
-naturel a cessé.
-%%%%
 Felid
 
 Ces chats sont dotés de conscience, mais sont incapables de manipuler des
@@ -124,9 +118,4 @@ Troll
 
 Grandes brutes prêtes à estropier n'importe quoi avec leurs griffes, sans
 jamais y réfléchir à deux fois. Ils ont toujours faim.
-%%%%
-Vampire
-
-Naviguant entre la vie et la non-vie, les vampires sont des mages accomplis, et
-maîtres dans l'art d'attaquer leurs ennemis par surprise.
 %%%%

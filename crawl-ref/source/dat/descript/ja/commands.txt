@@ -33,12 +33,6 @@ CMD_PRAY
 
 神に祈る
 %%%%
-CMD_PRAY verbose
-
-あなたの神が生贄を好む場合、死体かアイテムを捧げる。
-またあなたが祭壇の上に立っている場合、祭壇に対応する神を信仰することができる。
-いくつかの神々は祈ることでも特別な効力をもたらす。
-%%%%
 CMD_SEARCH_STASHES
 
 アイテム、施設の検索
@@ -124,11 +118,6 @@ CMD_DISPLAY_COMMANDS verbose
 CMD_CHARACTER_DUMP
 
 進行状態をダンプに出力
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-自由時間に熟読するためmorgueディレクトリ内のファイル『playername.txt』にあなたのキャラクターに関する膨大な量の情報を出力します。
-これはメインステータス、装備、呪文、スキル、注意事項などが含まれます。
 %%%%
 CMD_AUTOFIGHT
 

@@ -1,12 +1,4 @@
 %%%%
-Bolt of Cold spell
-
-Šī burvestība sviež lielu. sasalušu ledus šautru.
-%%%%
-Bolt of Fire spell
-
-Šī burvestība sviež lielu uguns šautru.
-%%%%
 Call Imp spell
 
 Šī burvestība no Elles dzīlēm atsauc šurp kādu dēmoniņu.

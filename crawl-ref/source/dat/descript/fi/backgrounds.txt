@@ -50,11 +50,6 @@ Enchanter
 Vahventajat käyttävät loitsuja itsensä tehostamiseksi taistelussa, tai tekevät
 muut toimintakyvyttömiksi. He myös aloittavat hyvillä tikoilla.
 %%%%
-Fighter
-
-Taistelijoilla on panssari ja kilpi, sekä valitsemansa ase. He kestävät enemmän
-kuritusta kuin mikään muu hahmoluokka.
-%%%%
 Fire Elementalist
 
 Tulielementalistit aloittavat Liekkien kirjalla ja osaavat Liekkikieli-taian.

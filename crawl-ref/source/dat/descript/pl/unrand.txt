@@ -30,12 +30,6 @@ Jego wartość bojowa zmienia się proporcjonalnie do inteligencji swego
 posiadacza. Można go użyć aby odzyskać spore ilości magicznej mocy, ryzykując
 tymczasowe porażenie umysłu.
 %%%%
-Vampire's Tooth
-
-Ten sztylet wygląda jakby naprawdę mógł zostać zrobiony z kła jakiegoś
-wielkiego drapieżnika — lecz oczywiście nie mógł być to zwykły krwiopijca
-rozmiaru człowieka.
-%%%%
 Scythe of Curses
 
 Ta broń niesie w sobie straszną i irytującą klątwę.
@@ -43,18 +37,6 @@ Ta broń niesie w sobie straszną i irytującą klątwę.
 Sceptre of Torment
 
 Jest to prawdziwie przeklęte narzędzie piekieł.
-%%%%
-Sword of Zonguldrok
-
-Tą przerażającą broń używasz na własne ryzyko.
-%%%%
-Staff of Dispater
-
-Ten legendarny przedmiot może rozpętać szał piekieł.
-%%%%
-Sceptre of Asmodeus
-
-Niesie część mocy arcy-diabła Asmodeusza.
 %%%%
 faerie dragon armour
 
@@ -77,20 +59,9 @@ Z tą buławą w ręku możesz nieść światło w te lochy, co też zapewnia ż
 przybycie będzie dobrze widoczne. Nieumarli bardzo tego nie lubią, podobnie jak
 ci którzy ukrywają swe niecne sprawki za zasłoną niewidzialności.
 %%%%
-demon blade "Leech"
-
-Ta broń wywołuje nieodparte pragnienie nasycenia się cudzą siłą życiową.
-%%%%
 dagger of Chilly Death
 
 Sztylet zrobiony z jednego wielkiego odłamka szafiru.
-%%%%
-dagger "Morg"
-
-Brzydki, stary zardzewiały sztylet.
-
-Przed wielu laty był własnością potężnego maga o imieniu Borys. Ostatnie co o
-nim wiadomo, to że wyruszył w te lochy poszukując Kuli Zot.
 %%%%
 scythe "Finisher"
 
@@ -99,13 +70,6 @@ Długa ostra kosa osadzona na sztorc.
 sling "Punk"
 
 Proca zrobiona z kawałka dziwnej niebieskiej skóry.
-%%%%
-bow of Krishna "Sharnga"
-
-Cudowny złoty łuk.
-
-Podobno należał kiedyś do zamorskiego boga. Najlepiej pasują do niego specjalne
-strzały, lecz o nie tutaj raczej trudno.
 %%%%
 giant club "Skullcrusher"
 
@@ -130,22 +94,9 @@ spear of the Botono
 Mroczny i złowrogi artefakt, zwiększający moc uroków rzucanych przez kogoś kto
 nierozsądnie weźmie ją w rękę.
 %%%%
-trident of the Octopus King
-
-Ten trójząb został skradziony z ogrodu króla ośmiornic przez nic nieznaczącego
-i już martwego człowieka. Ale uwaga na zemstę króla!
-%%%%
 mithril axe "Arga"
 
 Przepiękny topór z mithrilu, zapewne niegdyś należał do krasnoludzkiego herosa.
-%%%%
-Elemental Staff
-
-Ten potężny kij kiedyś należał do przywódcy Gildii Pięciu Żywiołów.
-%%%%
-crossbow "Sniper"
-
-Kusza zrobiona z jakiegoś czarnego materiału.
 %%%%
 longbow "Piercer"
 
@@ -159,15 +110,6 @@ lance "Wyrmbane"
 
 Zaczarowana lanca która staje się coraz mocniejsza z każdym smokiem którego
 zabija.
-%%%%
-Spriggan's Knife
-
-Niepozorny mały nożyk, zrobiony przez spriggan, dla spriggan albo może nawet ze
-spriggan. W każdym razie, jest jakoś związany z tym ludkiem.
-%%%%
-whip "Snakebite"
-
-Podwójny bicz zrobiony ze skóry czarnej mamby.
 %%%%
 knife of Accuracy
 
@@ -252,11 +194,6 @@ mask of the Dragon
 
 Niebieska maska.
 %%%%
-robe of Night
-
-Długa czarna szata z jakiegoś połyskliwego materiału. Według legendy, była
-darem Ratri, bogini nocy, dla jednego z jej wyznawców.
-%%%%
 armour of the Dragon King
 
 Dawno temu, możny złoty smok objął władanie nad wszystkimi smokami z tej części
@@ -284,21 +221,10 @@ Jakaś czarodziejka z czarodziejskim krosnem i zbyt dużą ilością czasu zszy�
 ten płaszcz ze skórek setek szczurów, w większości pomarańczowych. Wygląda dość
 głupio, ale zapewne zapewnia jakąś ochronę przed szczurami.
 %%%%
-shield of the gong
-
-To jest wielki gong z brązu z paskami które pozwalają założyć go jako tarczę.
-Jak pewni mędrcy twierdzą, przynosi to duchową ochronę.
-
-A jedno jest pewne: przyniesie to też donośny dźwięk!
-%%%%
 amulet of the Air
 
 Jakiś mag powietrza zaczarował ten błękitny amulet, zaklinając weń większość
 ochronnych uroków swej szkoły magii.
-%%%%
-ring of Shadows
-
-Niepozorny czarny pierścień który pomaga skryć się w cieniu.
 %%%%
 amulet of Cekugob
 
@@ -335,14 +261,6 @@ W dawnych czasach, każdy obieżyświat miał taką. No i kucyka.
 robe of Clouds
 
 Szata z materiału tak delikatnego, jakby to były chmury.
-%%%%
-hat of Pondering
-
-Spiczasty kapelusz, umazany w jakimś śluzie.
-
-Jest to ulubiony kapelusz ślimaczego czarodzieja Brzuchonoka, z czarami
-pomagającymi mu myśleć. Jest także zaklęty aby chronić przed wpływem solą, ale
-podejrzewam że tobie akurat się to zbytnio nie przyda.
 %%%%
 obsidian axe
 

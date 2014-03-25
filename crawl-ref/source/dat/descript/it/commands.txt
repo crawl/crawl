@@ -32,13 +32,6 @@ CMD_PRAY
 
 Prega la tua divinità
 %%%%
-CMD_PRAY verbose
-
-Se la tua divinità apprezza sacrifici, questo offrirà un cadavere o un altro
-oggetto. In più, se stai su un altare, questo ti permette di iniziare a
-venerare la divinità corrispondente. Per alcune divinità, pregare ha altri
-effetti speciali.
-%%%%
 CMD_SEARCH_STASHES
 
 Cerca oggetti o peculiarità
@@ -126,12 +119,6 @@ Lista di comandi, opzioni, ecc.
 CMD_CHARACTER_DUMP
 
 Copia il progresso del personaggio.
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-Copia una grande quantità di informazioni nel file “playername.txt” nella
-cartella morgue, da usare a tuo puro piacimento. Tutto ciò include statistiche
-principali, incantesimi, abilità, note, ecc.
 %%%%
 CMD_AUTOFIGHT
 

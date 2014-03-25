@@ -32,13 +32,6 @@ CMD_PRAY
 
 Melstis savo dievybei
 %%%%
-CMD_PRAY verbose
-
-Jei jūsų dievybė mėgsta aukas, lavonas ar koks kitas daiktas bus pasiūlyti kaip
-auka. Be to, jei stovite ant altoriaus, galite pradėti garbinti atitinkamą
-dievybę. Kai kurių dievybių atveju, malda taip pat turi tam tikrų kitų
-padarinių.
-%%%%
 CMD_SEARCH_STASHES
 
 Ieškoti daiktų/ypatybių.
@@ -124,12 +117,6 @@ Komandų, pasirinkimų ir t.t. sąrašas
 CMD_CHARACTER_DUMP
 
 Įrašyti veikėjo pažangą
-%%%%
-CMD_CHARACTER_DUMP verbose
-
-Įrašyti didelį informacijos apie veikėją kiekį į bylą „žaidėjovardas.txt” morgo
-kataloge, vėlesnei peržiūrai. Įrašoma pagrindinė statistika, apranga, burtai,
-įgūdžiai, užrašai ir t.t.
 %%%%
 CMD_AUTOFIGHT
 

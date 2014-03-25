@@ -19,6 +19,12 @@ Artificer
 Los Artificieros comienzan con unos pocos instrumentos mágicos y son
 competentes usando dichas herramientas.
 %%%%
+Assassin
+
+Los Asesinos se centran en el sigilo, listos para apuñalar a los enemigos
+desprevenidos. No llevan sólo una capa y dagas, también llevan horribles agujas
+para su cerbatana.
+%%%%
 Berserker
 
 Los Berserkers creen en Trog, el dios del delirio y enemigo de la magia. No hay
@@ -50,11 +56,6 @@ Enchanter
 
 Los Encantadores usan hechizos para potenciarse en batalla o bien para
 incapacitar a otros. También comienzan con buenos dardos.
-%%%%
-Fighter
-
-Los Guerreros comienzan con armadura y escudo, además de un arma de su
-elección. Tienen más salud que cualquier otro rol.
 %%%%
 Fire Elementalist
 
@@ -92,6 +93,11 @@ Necromancer
 
 Los Nigromantes son magos especializados en la práctica de la magia de la
 muerte. Empiezan con el hechizo del Dolor.
+%%%%
+Skald
+
+Los Skald son luchadores cuerpo a cuerpo que pueden mejorar sus habilidades de
+combate con hechizos del Libro de Batallas.
 %%%%
 Summoner
 

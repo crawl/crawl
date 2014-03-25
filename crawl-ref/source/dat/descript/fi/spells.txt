@@ -24,14 +24,6 @@ Blink spell
 
 Tämä loitsu satunnaisesti teleporttaa loitsijaansa vähän matkaa.
 %%%%
-Bolt of Cold spell
-
-Tämä taika viskaa suuren jääammuksen.
-%%%%
-Bolt of Fire spell
-
-Tämä taika viskaa suuren liekkiammuksen.
-%%%%
 Call Imp spell
 
 Tällä taialla voi kutsua pienen demonin Helvetin syövereistä.
@@ -61,18 +53,9 @@ Debugging Ray spell
 
 Säde joka tekee massiivista vahinkoa (1500 hp) ja osuu aina.
 %%%%
-Dispersal spell
-
-Tämä taika yrittää teleportata läheisen hirviön jonnekin muualle.
-%%%%
 Enslavement spell
 
 Tämä taika saa vaarallisen olennon taistelemaan puolellasi hetkeksi aikaa.
-%%%%
-Ensorcelled Hibernation spell
-
-Tämä taika yrittää hidastaa kohteen aineenvaihduntaa, johtaen alilämpöön ja
-horrosuneen. Kylmäverisiin olentoihin sillä saattaa olla sivuvaikutuksia.
 %%%%
 Fire Brand spell
 

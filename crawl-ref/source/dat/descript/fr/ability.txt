@@ -81,49 +81,18 @@ Commencer à voler. En vol, vous pouvez traverser en toute sécurité les eaux
 profondes et les obstacles similaires. Soyez conscient que le vol peut
 s'achever à un moment inopportun et vous faire chuter vers votre mort.
 %%%%
-Jump Attack ability
-
-Un talent qui utilise l'énergie cinétique d'une créature pour déclencher une
-attaque sautée très rapide, qui vous fait atterrir à proximité en toute
-sécurité. Vous ne pouvez pas sauter sur les ennemis volants et ne pouvez sauter
-sur des ennemis géants que s'ils sont plongés dans la lave ou de l'eau
-profonde. Être dans l'eau profonde, la lave, ou sur un sol liquéfié vous
-empêcher également d'utiliser ce talent. Les Felids sont des sauteurs naturels
-et bondiront encore mieux après avoir atteint les niveaux d'expérience 6 et 12.
-%%%%
 Hellfire ability
 
 Frappe vos ennemis avec des flammes infernales.
-%%%%
-Release Delayed Fireball ability
-
-Relâche instantanément une boule de feu (retardée) sans coût additionnel de
-magie ou de faim.
 %%%%
 Stop Singing ability
 
 Vous cessez de chanter votre chanson du tueur.
 %%%%
-Self-Restoration ability
-
-Au prix d'une perte permanente d'un point de magie, restaurez votre Force,
-Dextérité et Intelligence et, soignez une grande quantité de points de vie
-perdus par la décomposition.
-%%%%
 Device Recharging ability
 
 Au prix de la perte permanente d'un point de magie, recharge une baguette ou un
 sceptre.
-%%%%
-Dig ability
-
-Creuse des tunnels à travers la pierre en ligne droite. Bruyant.
-%%%%
-Shaft Self ability
-
-Vous envoie à une position aléatoire entre un et trois niveaux plus bas, comme
-si vous étiez tombé à travers une trappe piégée. Cela prend du temps de creuser
-le passage et l'atterrissage est bruyant.
 %%%%
 Evoke Teleportation ability
 
@@ -150,15 +119,6 @@ Turn Visible ability
 
 Redevenir à nouveau visible.
 %%%%
-Evoke Jump Attack ability
-
-Un talent qui utilise l'énergie cinétique d'une créature pour déclencher une
-attaque sautée très rapide, qui vous fait atterrir à proximité en toute
-sécurité. Vous ne pouvez pas sauter sur les ennemis volants et ne pouvez sauter
-sur des ennemis géants que s'ils sont plongés dans la lave ou de l'eau
-profonde. Être dans l'eau profonde, la lave, ou sur un sol liquéfié vous
-empêcher également d'utiliser ce talent.
-%%%%
 Stop Flying ability
 
 Atterrir.
@@ -179,27 +139,6 @@ incanter que les non-contrôlées.
 End Transformation ability
 
 Revenir à votre forme normale, avec un léger delai.
-%%%%
-Recite ability
-
-Prêchez aux monstres les lois de Zin, ce qui peut amener à différents
-résultats. Il existe quatre livres dont vous pouvez prêcher le contenu :
-
-* Livre des Abominations : Ce livre aborde ce qui existe de plus odieux pour
-Zin – le chaos sous toutes ses formes. La récitation de ces versets invoquera
-le plus puissant des chocs de Zin.
-
-* Livre des Ablutions : Les impurs tiennent une place presque aussi élevée aux
-yeux du Donneur de Lois. La récitation des versets de ce livre blessera de
-telles créatures.
-
-* Livres des Apostats : Les créatures intelligentes qui ne suivent pas Zin mais
-n'ont pas succombé au mal sont traitées avec moins de véhémence. Les versets de
-ce livre provoque la confusion. Mais ceux qui adore un dieu ennemi de Zin
-pourraient être privés de la possibilité de répandre leur foi impie.
-
-* Livre de l'Anathème : Démons et morts-vivants sont haïs de Zin. Ce livre
-donne les moyens de le leur faire comprendre.
 %%%%
 Vitalisation ability
 
@@ -267,11 +206,6 @@ Recall Undead Slaves ability
 Rappelle autour de vous vos serviteurs morts-vivants, où qu'ils soient
 actuellement dans le donjon.
 %%%%
-Injury Mirror ability
-
-Blesse les monstres attaquants en leur réfléchissant les dégâts qu'ils vous
-infligent.
-%%%%
 Animate Dead ability
 
 Réanime tous les corps et squelettes qui vous entourent comme suivants. Notez
@@ -316,19 +250,9 @@ Minor Destruction ability
 
 Tire une salve dévastatrice aléatoire sur un monstre ciblé.
 %%%%
-Lesser Servant of Makhleb ability
-
-Convoque un démon mineur, qui a des chances de vous être hostile si votre
-niveau d'Invocations est faible.
-%%%%
 Major Destruction ability
 
 Tire aléatoirement une explosion ou un faisceau dangereux sur un monstre ciblé.
-%%%%
-Greater Servant of Makhleb ability
-
-Convoquer un démon majeur, qui a une chance de vous être hostile si vos
-compétences en Invocations sont faibles.
 %%%%
 Channel Energy ability
 
@@ -359,13 +283,6 @@ d'une grande fatigue pendant laquelle vous êtes ralenti et ne pouvez pas
 redevenir berserk. Contrairement à d'autres sources de rage, en fonction de
 votre piété, Trog peut occasionnellement vous empêcher de vous évanouir.
 %%%%
-Trog's Hand ability
-
-Invoquez une aptitude de régénération puissante, qui se cumulera avec toutes
-autres sources, et pourra même régénérer des espèces que ne peuvent pas se
-soigner en temps normal. Cela augmentera aussi votre protection contre les
-effets magiques.
-%%%%
 Brothers in Arms ability
 
 Convoque d'énormes alliés enragés pour faire des ravages.
@@ -380,24 +297,6 @@ qui sont toujours gratuites)
 
 Attention : tuer les autres alors que vous demandez à être sauver est un pêché
 majeur !
-%%%%
-Lesser Healing ability
-
-En fonction de votre compétence d'Invocations, guérissez une autre créature
-d'un faible montant de points de vie. Utilisez cette aptitude sur des monstres
-hostiles pourra éventuellement les pacifier. Cela marche mieux sur les animaux,
-moins bien sur les humanoïdes de votre propre race, encore moins bien sur les
-autres humanoïdes, et encore pire sur les démons et morts-vivants. Les
-créatures sans intelligence ne peuvent être pacifiée et, aucun monstre ne peut
-être pacifier quand il est endormi. Les chances de pacifier dépend de vos
-pouvoirs de soins.
-
-Que la pacification réussisse ou pas, la nourriture et les points de magie
-investis sont perdus. Si vous échouez, le monstre est soigné et vous gagnez la
-moitié de la valeur de l'expérience du monstres et probablement de la piété.
-Cependant, le monstre est non affecté et vous ne gagnez rien.
-
-Vous ne pouvez que guérir les alliés et les monstres neutres.
 %%%%
 Lesser Self-Healing ability
 
@@ -435,19 +334,9 @@ points de vie. Grossièrement, une Guérison Majeure vous permettra de soigner
 trois fois plus de points de vie que Guérison Mineure, pour un coût global de
 piété légèrement supérieur.
 %%%%
-Divine Vigour ability
-
-En fonction de votre compétence d'Invocations, restaure une large quantité, et
-accroit temporairement, vos points de vie et vos points de magie.
-%%%%
 Depart the Abyss ability
 
 Quittez les Abysses pour retourner à l'endroit d'où vous venez.
-%%%%
-Bend Space ability
-
-Plie la trame de l'espace autour de vous, vous téléportant instantanément à une
-courte distance et, peut transporter et blesser les montres à proximité.
 %%%%
 Banish ability
 
@@ -469,13 +358,6 @@ Draw One ability
 
 Choisissez n'importe quel paquet de votre inventaire et tirez une carte de
 celui-ci.
-%%%%
-Peek at Two ability
-
-Défaussez une carte de n'importe quel paquet de votre inventaire et tirer deux
-cartes de votre paquet, regardez-les, et mélangez les dans le paquet. Le paquet
-sera alors marqué comme contenant ces deux cartes. Si elles sont différentes,
-cela identifiera le paquet.
 %%%%
 Triple Draw ability
 
@@ -517,14 +399,6 @@ lumière du soleil s'évaporera. En particulier, l'eau profond deviendra de l'ea
 peu profonde et, l'eau peu profonde sèchera complètement, révélant le sol du
 donjon.
 %%%%
-Growth ability
-
-Utilise des fruits pour faire pousser un cercle de plantes autour de vous. Si
-un cercle complet ne peut être formé (car vous n'avez pas assez de fruits), les
-plantes pousseront sur les cases adjacentes les plus proches de monstres. Les
-plantes que vous créez obtiennent un bonus de points de vie en fonction de
-votre compétence en Invocations.
-%%%%
 Rain ability
 
 Amène la pluie à tomber sur vous, transformant le sol du donjon en eau peu
@@ -554,12 +428,6 @@ Temporal Distortion ability
 Perturbe l'écoulement du temps autour de vous, déplaçant les monstres plus
 avant dans le temps par rapport à vous.
 %%%%
-Slouch ability
-
-Provoquez des dégâts à tout ce qui, dans votre champ de vision, se déplace plus
-vite que vous. Ceux magiquement accélérés seront frappé particulièrement
-douloureusement.
-%%%%
 Step From Time ability
 
 Extirpe votre personne du flux temporel. Les choses autour de vous continueront
@@ -570,10 +438,6 @@ tel que vous l'aviez quitté.
 Request Jelly ability
 
 Crée une gelée neutre qui nettoiera le sol et digèrera les objets
-%%%%
-Jelly Paralyse ability
-
-Priez pour empêcher temporairement vos slimes d'absorber des objets.
 %%%%
 Slimify ability
 

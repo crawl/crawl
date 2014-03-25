@@ -4,11 +4,6 @@ amulet
 En talisman, der kan bæres om halsen som et smykke og er ladet med mystiske
 kræfter af ukendt herkomst.
 %%%%
-book
-
-En bog med magiske besværgelser. Tag dig i agt, for nogle af de mere magtfulde
-manuskripter kan være særdeles farlige.
-%%%%
 deck of cards
 
 Et spil magtfulde, magiske kort, som er malet med dæmoners blod. De kan have en
@@ -22,13 +17,6 @@ ring
 
 En talisman, ladet med mystiske kræfter af ukendt herkomst, som kan bæres som
 smykke på en finger.
-%%%%
-rod
-
-En magisk stok, som kan holdes i hånden og påkaldes for at kaste en række
-besværgelser, som drives af dens eget, tilbagevendende reservoir af magiske
-kræfter. Den er også robust nok til at blive brugt som et simpelt, stumpt
-våben.
 %%%%
 scroll
 
