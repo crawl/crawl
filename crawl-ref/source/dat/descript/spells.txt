@@ -1093,10 +1093,10 @@ may fall apart unexpectedly under stress.
 %%%%
 Silence spell
 
-This spell eliminates all sound near the caster. This makes reading scrolls,
-casting spells, praying or yelling in the caster's vicinity impossible. The
-spell's oppressive, unnatural effect will greatly hamper any attempt to be
-stealthy.
+This spell eliminates all sound near the caster. This makes actions such as
+reading scrolls, casting spells or shouting impossible in the caster's
+vicinity. The spell's oppressive, unnatural effect will greatly hamper any
+attempt to be stealthy.
 
 Silence starts out with a radius depending on power, which will then shrink,
 eventually covering only the caster, before the effect times out. Some
