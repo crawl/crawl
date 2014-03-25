@@ -62,8 +62,8 @@ sep_re = re.compile('[, ]+') # basic separator for user input
 txt_sep_re = re.compile('%{4,}') # txt file entry separator
 cmd_re = re.compile('<(\w)>') # used to find the key in menu command strings
 # Those languages have special wrapping with fullwidth character support
-east_asian_languages = {'ja', 'ko', 'zh'}
-no_space_languages = {'ja', 'zh'}
+east_asian_languages = {'ja_JP', 'ko_KR', 'zh_CN'}
+no_space_languages = {'ja_JP', 'zh_CN'}
 east_asian_punctuation = u'、。，！：；）'
 
 # This object serves as an intermediate step between txt and ini files.
@@ -186,7 +186,7 @@ def wrap(text, eac, no_space):
     lines[:] = [line.replace(">\f<", "><") for line in lines]
 
 # Languages which have no spaces are split on punctuation which make them
-# sometimes wrapped to the bebinning of the next line. Since it's quite ugly,
+# sometimes wrapped to the beginning of the next line. Since it's quite ugly,
 # we manually move them back to the end of the previous line.
     if eac or no_space:
         fixed_lines = []
@@ -345,6 +345,7 @@ class ResourceIndex():
         self.en_src = True # When True, the english language maps to the source
                            # files. When False, it maps to the fake translations
         self.changes = []
+        lang_re = re.compile("[a-z]{2}_[A-Z]{2}")
 
         # Initialize languages with directories in the descript dir
         # and resource with txt files
@@ -352,7 +353,7 @@ class ResourceIndex():
             (basename, ext) = os.path.splitext(f)
             if ext.lower() == '.txt':
                 self.default_resources.append(basename)
-            elif os.path.isdir(f) and f != 'en' and len(f) == 2:
+            elif os.path.isdir(f) and lang_re.match(f):
                 self.default_languages.append(f)
 
         if options.source:
@@ -363,29 +364,6 @@ class ResourceIndex():
             self.languages = self.default_languages[1:]
         else:
             self.languages = self.default_languages[:]
-
-        self.lang_region = dict()
-        for lang in self.default_languages:
-            if lang == 'cs':
-                region = 'CZ'
-            elif lang == 'da':
-                region = 'DK'
-            elif lang == 'el':
-                region = 'GR'
-            elif lang == 'hi':
-                region = 'IN'
-            elif lang == 'ja':
-                region = 'JP'
-            elif lang == 'ko':
-                region = 'KR'
-            elif lang == 'zh':
-                region = 'CN'
-            else:
-                region = lang.upper()
-            if lang == 'en':
-                self.lang_region[lang] = lang
-            else:
-                self.lang_region[lang] = lang + "_" + region
 
         if options.resource:
             self.set_resources(options.resource)
@@ -729,7 +707,7 @@ class TxtFile(ResourceFile):
         if lang:
             self.entries = dict()
             self.source_res = txt_files[('', res)]
-            self.lang_dir = lang
+            self.lang_dir = 'en' if lang == 'en' else lang[:2]
         else:
             self.entries = OrderedDict()
             self.source_res = self
@@ -853,7 +831,7 @@ class IniFile(ResourceFile):
         self.entries = dict()
         self.source_res = txt_files[('', res)]
         self.ext = 'ini'
-        self.lang_dir = res_index.lang_region[lang]
+        self.lang_dir = lang
         ResourceFile.__init__(self, lang, res)
 
     def __setitem__(self, key, e):
@@ -1097,13 +1075,13 @@ class IniCollection(ResourceCollection):
             call_tx(tx_cmd + ['-a'])
         elif all_res:
             for lang in res_index.languages:
-                call_tx(tx_cmd + ['-l', res_index.lang_region[lang]])
+                call_tx(tx_cmd + ['-l', lang])
         elif all_lang:
             for res in res_index.resources:
                 call_tx(tx_cmd + ['-r', 'dcss.' + res])
         else:
             for res in self:
-                call_tx(tx_cmd + ['-l', res_index.lang_region[res.lang()], '-r', 'dcss.' + res.resource])
+                call_tx(tx_cmd + ['-l', res.lang(), '-r', 'dcss.' + res.resource])
 
     def tx_push(self):
         tx_push = ['push']
@@ -1112,7 +1090,7 @@ class IniCollection(ResourceCollection):
         for res in self:
             if not res.modified: continue
             resource = ['-r', 'dcss.' + res.resource]
-            language = ['-l', res_index.lang_region[res.lang()]]
+            language = ['-l', res.lang()]
             if not res.language:
                 # We push the source then reset the fake translation resource
                 ret = call_tx(tx_push + ['-s'] + resource)
