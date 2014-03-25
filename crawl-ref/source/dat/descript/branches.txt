@@ -118,8 +118,8 @@ A huge repository for the ancient dead. The air is chill and fetid, the walls
 cold and damp. Bones are strewn liberally everywhere and the whole place
 resounds with the keening of the tortured souls of the unquiet dead.
 
-The Crypt is five levels deep, and contains the entrance to the Tomb. Its
-entry is either on Vaults:2 or Vaults:3.
+The Crypt is five levels deep, and contains the entrance to the Tomb. Its entry
+is either on Vaults:2 or Vaults:3.
 %%%%
 Tomb
 

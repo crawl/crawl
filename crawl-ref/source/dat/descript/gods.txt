@@ -82,12 +82,12 @@ burn. Followers are forbidden the use of spell magic.
 %%%%
 Nemelex Xobeh
 
-Nemelex is a strange and unpredictable trickster God, whose powers are
-invoked through magical packs of cards painted in the ichor of demons.
-Followers are expected to sedulously sacrifice valuable items, and will recieve
-decks of cards in return. Followers encouraged to trust in the cards and use
-them as much as possible. However, the Trickster can ensure that fortune
-favours the bold.
+Nemelex is a strange and unpredictable trickster God, whose powers are invoked
+through magical packs of cards painted in the ichor of demons. Followers are
+expected to sedulously sacrifice valuable items, and will recieve decks of
+cards in return. Followers encouraged to trust in the cards and use them as
+much as possible. However, the Trickster can ensure that fortune favours the
+bold.
 %%%%
 Elyvilon
 
@@ -168,15 +168,16 @@ intervene to save a follower's life.
 %%%%
 the Shining One powers
 
-Followers of the Shining One are surrounded by a halo that reveals their enemies
-to them. Followers will gain power by killing evil beings, and with growing
-piety their life force will be protected. The Shining One will keep summoned and
-charmed allies on their side longer, should the allies prove worthy of the
-crusade. Followers will gain use of a divine shield to protect them in battle.
-Later, they can channel blasts of cleansing flame that are particularly damaging
-to unholy beings, and can call upon powerful divine beings as temporary allies.
-Highly pious followers may request the Shining One's blessing upon a weapon. The
-Shining One may occasionally directly intervene to save a follower's life.
+Followers of the Shining One are surrounded by a halo that reveals their
+enemies to them. Followers will gain power by killing evil beings, and with
+growing piety their life force will be protected. The Shining One will keep
+summoned and charmed allies on their side longer, should the allies prove
+worthy of the crusade. Followers will gain use of a divine shield to protect
+them in battle. Later, they can channel blasts of cleansing flame that are
+particularly damaging to unholy beings, and can call upon powerful divine
+beings as temporary allies. Highly pious followers may request the Shining
+One's blessing upon a weapon. The Shining One may occasionally directly
+intervene to save a follower's life.
 %%%%
 Kikubaaqudgha powers
 
@@ -184,16 +185,16 @@ Kikubaaqudgha will send corpses to followers, and enhance servants' necromantic
 prowess with gifts of spellbooks. Kikubaaqudgha will protect followers from the
 effects of necromantic miscasts, and may even shield them from unholy torment.
 Especially fervent followers may invoke torment themselves by sacrificing a
-cadaver, and Kikubaaqudgha will eventually allow followers to either recieve the
-Necronomicon, or to have their weapon imbued with pain.
+cadaver, and Kikubaaqudgha will eventually allow followers to either recieve
+the Necronomicon, or to have their weapon imbued with pain.
 %%%%
 Yredelemnul powers
 
 Yredelemnul gives followers the power to raise skeletons and corpses, to recall
 undead followers to their vicinity, and to heal hit points by draining the life
-force of living creatures. With sufficient piety, Yredelemnul can be called upon
-to mirror a follower's injuries onto attackers. Eventually, followers will gain
-the power to bind a monster's soul, and make it fight for them instead.
+force of living creatures. With sufficient piety, Yredelemnul can be called
+upon to mirror a follower's injuries onto attackers. Eventually, followers will
+gain the power to bind a monster's soul, and make it fight for them instead.
 Yredelemnul will sporadically gift followers increasingly powerful undead
 servants.
 %%%%
@@ -222,8 +223,8 @@ Makhleb powers
 
 Makhleb offers followers means to inflict immense damage through chaotic,
 destructive attacks. Followers will also be able to call in help from powerful
-demons. Makhleb's powers come with a price in blood. However, Makhleb will grant
-followers renewed health in return for killing beings of all kinds.
+demons. Makhleb's powers come with a price in blood. However, Makhleb will
+grant followers renewed health in return for killing beings of all kinds.
 %%%%
 Sif Muna powers
 
@@ -235,19 +236,19 @@ Over time, followers will recieve spellbooks containing a vast range of spells.
 Trog powers
 
 Trog offers various powers to help followers in battle. Followers will gain the
-ability to go berserk at will, and to rapidly heal their wounds while increasing
-resistance to hostile enchantments. Later, followers may call in powerful raging
-allies. Eventually, Trog will gift followers with weapons focused on damage.
+ability to go berserk at will, and to rapidly heal their wounds while
+increasing resistance to hostile enchantments. Later, followers may call in
+powerful raging allies. Eventually, Trog will gift followers with weapons
+focused on damage.
 %%%%
 Nemelex Xobeh powers
 
 The Trickster's followers gain various ways to influence fate when playing
-cards. They will quickly gain the ability to draw from decks without needing
-to wield them, and to peek at the contents of decks in order to identify them.
+cards. They will quickly gain the ability to draw from decks without needing to
+wield them, and to peek at the contents of decks in order to identify them.
 Later, followers will gain much more powerful abilities to manipulate the
-cards, allowing them to choose one of three drawn cards, to gain the effects
-of multiple cards at once, and finally to stack decks and re-order their
-contents.
+cards, allowing them to choose one of three drawn cards, to gain the effects of
+multiple cards at once, and finally to stack decks and re-order their contents.
 %%%%
 Elyvilon powers
 
@@ -272,8 +273,8 @@ Beogh powers
 
 Followers of Beogh can smite their foes, and will even gain orcish followers of
 their own, who may be blessed by Beogh in battle and can be recalled as needed.
-Eventually, followers will gain the power to walk on water. Beogh will sometimes
-directly intervene to save a follower's life. {{
+Eventually, followers will gain the power to walk on water. Beogh will
+sometimes directly intervene to save a follower's life. {{
     if you.race() == "Lava Orc" then
         return "Beogh suppresses the heat aura of Lava Orc followers."
     end
@@ -313,8 +314,8 @@ Ashenzari powers
 Ashenzari exhorts followers to garb themselves with curses, and provides
 rewards for time spent using cursed armour, jewellery or weapons. Ashenzari
 will increase followers' skills depending on how cursed they are, and grants
-clear sight and clarity of mind. Followers will later gain the ability to
-scry through walls, and eventually will be able to transfer a portion of their
+clear sight and clarity of mind. Followers will later gain the ability to scry
+through walls, and eventually will be able to transfer a portion of their
 knowledge from one skill to another.
 %%%%
 Dithmenos powers
@@ -323,7 +324,8 @@ Followers of Dithmenos are constantly surrounded in an aura of shadow, the
 extent of which is reflective of their level of devotion. Dithmenos grants
 followers the ability to instantly step into the shadow of nearby creatures,
 provided the shadow is still enough to do so. Dithmenos protects followers by
-occasionally shrouding those struck by attacks in dark smoke. Sufficiently pious
-followers of Dithmenos will find their own shadow will begin to attack on its
-own, and eventually gain the ability to assume the form of a shadow themself.
+occasionally shrouding those struck by attacks in dark smoke. Sufficiently
+pious followers of Dithmenos will find their own shadow will begin to attack on
+its own, and eventually gain the ability to assume the form of a shadow
+themself.
 %%%%

@@ -82,8 +82,8 @@ stopped anyone in their quest for power?
 Sceptre of Asmodeus
 
 It carries some of the powers of the arch-fiend Asmodeus. Evoking the sceptre
-can summon fiery demons from their infernal home and enslave them to do
-your bidding, although they may not remain enslaved for long.
+can summon fiery demons from their infernal home and enslave them to do your
+bidding, although they may not remain enslaved for long.
 %%%%
 faerie dragon armour
 
@@ -377,8 +377,8 @@ powerful air mage. It seems the one thing they lacked was a steady hand.
 ring of Shadows
 
 A black ring that can make its wearer one with the shadows. It creates a dark
-umbra that surrounds the wearer and increases stealth greatly, and it makes
-you and your enemies alike harder to hit.
+umbra that surrounds the wearer and increases stealth greatly, and it makes you
+and your enemies alike harder to hit.
 %%%%
 amulet of Cekugob
 
@@ -512,8 +512,8 @@ occasionally unleashes a static discharge.
 %%%%
 demon whip "Spellbinder"
 
-A weapon said to have once been used to keep unruly imprisoned wizards in
-line; it violently disrupts their ability to use magic, inflicting wild and
+A weapon said to have once been used to keep unruly imprisoned wizards in line;
+it violently disrupts their ability to use magic, inflicting wild and
 unpredictable residual magical effects on those it strikes.
 %%%%
 lajatang of Order

@@ -190,8 +190,8 @@ spells: by consuming their former owner, a powerful wizard.
 %%%%
 Geryon
 
-A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends say
-that his silver horn can summon terrible beasts to aid him in battle.
+A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends
+say that his silver horn can summon terrible beasts to aid him in battle.
 %%%%
 Gloorx Vloq
 
@@ -982,9 +982,9 @@ drakes.
 %%%%
 draconian knight
 
-Protected by thick scales, skillful weapon use, and complementary magic,
-this draconian is a dangerous opponent. Draconian knights specialize in ice
-magic and necromancy.
+Protected by thick scales, skillful weapon use, and complementary magic, this
+draconian is a dangerous opponent. Draconian knights specialize in ice magic
+and necromancy.
 %%%%
 draconian monk
 
@@ -1149,8 +1149,8 @@ a brilliant column of raging flames.
 %%%%
 fire giant
 
-A giant with obsidian skin and a wild mane of glowing red hair, holding aloft
-a fiery sword. Fire giants believe that they are destined to unite and burn the
+A giant with obsidian skin and a wild mane of glowing red hair, holding aloft a
+fiery sword. Fire giants believe that they are destined to unite and burn the
 entire world to cinders, but, in the meantime, they'll settle for any
 adventurers foolish enough to approach them.
 %%%%
@@ -1748,8 +1748,8 @@ javelins.
 mermaid
 
 A young merfolk woman who has become an acolyte of the sunken god. As a
-consequence of her worship, she has begun the transformation into an avatar
-of the mystery and danger of the sea's depths. Her voice can instill the same
+consequence of her worship, she has begun the transformation into an avatar of
+the mystery and danger of the sea's depths. Her voice can instill the same
 single-minded fascination that grabs hold of sailors on a long voyage.
 
 Why only female merfolk are called to become avatars of the sunken god is a
@@ -1762,7 +1762,8 @@ labyrinths.
 %%%%
 molten gargoyle
 
-A hideous molten stone statue come to life, with flames licking across its body.
+A hideous molten stone statue come to life, with flames licking across its
+body.
 %%%%
 monstrous demonspawn
 
@@ -2227,8 +2228,8 @@ shambling mangrove
 
 A large and gnarled mangrove, possessed of sapience and a cantankerous
 disposition. Its roots run deep through the water and soil of its marshy home
-and can make footing very difficult for those who provoke its ire. Despite their
-kind's sour countenance, marsh fauna are often found nesting within their
+and can make footing very difficult for those who provoke its ire. Despite
+their kind's sour countenance, marsh fauna are often found nesting within their
 branches; beware, for they may not take kindly to being disturbed.
 %%%%
 shapeshifter
@@ -2386,10 +2387,10 @@ A spirit drawn from a weapon — it never strikes on its own.
 %%%%
 spellforged servitor
 
-A magical construct woven with a portion of a conjurer's magic and bonded
-with a primitive elemental intelligence, summoned from an outer plane. The
-magic it is forged with gives it the capacity to wield some of its creator's
-destructive spells.
+A magical construct woven with a portion of a conjurer's magic and bonded with
+a primitive elemental intelligence, summoned from an outer plane. The magic it
+is forged with gives it the capacity to wield some of its creator's destructive
+spells.
 %%%%
 sphinx
 
@@ -2698,8 +2699,8 @@ otherworldly spawn of a wizard's breeding experiment. Double yuck!
 %%%%
 vine stalker
 
-A bizarre symbiotic creature, made up of a carnivorous vine magically
-combined with a humanoid.
+A bizarre symbiotic creature, made up of a carnivorous vine magically combined
+with a humanoid.
 %%%%
 wandering mushroom
 
@@ -2768,8 +2769,8 @@ A strong wild canine, with sharp teeth and a healthy appetite.
 %%%%
 wolf spider
 
-A hairy fast-moving hunting spider with vicious mandibles. It roams the
-dungeon in search of prey, which it kills with its deadly venom.
+A hairy fast-moving hunting spider with vicious mandibles. It roams the dungeon
+in search of prey, which it kills with its deadly venom.
 %%%%
 worker ant
 
@@ -2874,8 +2875,8 @@ should be able to defeat it without much risk.
 %%%%
 tough sensed monster
 
-By the power of Ashenzari, you know there is some creature here, and that it
-is somewhat dangerous.
+By the power of Ashenzari, you know there is some creature here, and that it is
+somewhat dangerous.
 %%%%
 nasty sensed monster
 
@@ -3001,8 +3002,8 @@ memory, yet still ready to fight.
 %%%%
 faint demonspawn monk
 
-A flimsy representation of a monstrous demonspawn monk; little more than
-a half-formed memory, yet still ready to fight.
+A flimsy representation of a monstrous demonspawn monk; little more than a
+half-formed memory, yet still ready to fight.
 %%%%
 faint grey draconian monk
 
@@ -3063,8 +3064,8 @@ malarious mermaid
 
 Like other mermaids, this young merfolk woman who has become an acolyte of the
 sunken god, and is undergoing a transformation into an avatar. She looks deeply
-ill, but her voice still has the power to instill a powerful fascination in
-her victims.
+ill, but her voice still has the power to instill a powerful fascination in her
+victims.
 %%%%
 master elementalist
 
@@ -3201,9 +3202,9 @@ trespassers like you.
 %%%%
 vine covered earth elemental
 
-While formed from ordinary old weathered stone, covered with moss and vines, this
-earth elemental still demands respect. It is still hard as stone, after all,
-and its weight spells massive damage if it connects a blow.
+While formed from ordinary old weathered stone, covered with moss and vines,
+this earth elemental still demands respect. It is still hard as stone, after
+all, and its weight spells massive damage if it connects a blow.
 %%%%
 witch
 
