@@ -1046,7 +1046,6 @@ ENDMAP
 NAME:   wad_woods_pond
 DEPTH:  D:2-, Lair, Forest
 ORIENT: float
-KFEAT:  M = mangrove
 : wad_woods_setup(_G, "large", 1, true, 21, 2, 36)
 FTILE:  ' = floor_dirt
 MAP
@@ -1057,13 +1056,13 @@ MAP
      ttttttt..tt.t1...t.1t...t...t...tttt..t.tt
    ttt.tt.ttt1t1t.t.....tt.........t....ttt....
   ttt....tttt.t.........Wt.t............t..t.t
- ttttt..ttt.t...t.W.OWMWM1t....1........t....tt
- tt11.tttt1.t..t...W1MWWMW1MWM....1....'.''..tt
-ttt1.t.1t.t......WMWWWwWWMWWMWMW.W......''...t
- tt...t........MWMWWww.w..WWWWWWWM.1......'..t
-  tttt...t...t....MMWWMwwMWWWMWW1W......11t1.tt
-  ttt...11t1t.t...W.W.WWWWMW1MW.tM.......t.tttt
- tt.t.t.tt.t1tttt....W.MWMW1WO.M....1...t1.t...
+ ttttt..ttt.t...t.W.OWtWt1t....1........t....tt
+ tt11.tttt1.t..t...W1tWWtW1tWt....1....'.''..tt
+ttt1.t.1t.t......WtWWWwWWtWWtWtW.W......''...t
+ tt...t........tWtWWww.w..WWWWWWWt.1......'..t
+  tttt...t...t....ttWWtwwtWWWtWW1W......11t1.tt
+  ttt...11t1t.t...W.W.WWWWtW1tW.tt.......t.tttt
+ tt.t.t.tt.t1tttt....W.tWtW1WO.t....1...t1.t...
 ttt..tttttt.tt.t.t.1.........1.........ttt..1t
  tt.t...tttt.t1.11................t.t.t.ttttt
  tt...t..t.tt1t11..1t..........t1t.t.t1t.tt1.
@@ -1516,7 +1515,6 @@ NAME:   wad_woods_minihive
 TAGS:   uniq_beehive
 DEPTH:  D:8-16, Lair, Forest
 ORIENT: float
-KFEAT:  M = mangrove
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
@@ -1529,7 +1527,7 @@ MAP
     ttt.tt..tt.1t.t.1t.1.t...
  t.t1ttt.1..1WW.1t....t1...t...
 t.1t..t.1..tWWW.t.1.1..t.tt..tt.
-ttt.t11.1t...MWW.1t.t1..tt...ttt
+ttt.t11.1t...tWW.1t.t1..tt...ttt
 tttt.1..aaaaaaa1Wt.t...t..tt1ttt
 t.t1.t1aa6.a66aaWWt1.1t.ttttttt
  tt.ttaaa.aba.aaaWW.t..ttttt1ttt

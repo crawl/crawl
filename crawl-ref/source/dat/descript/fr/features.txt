@@ -193,14 +193,6 @@ sortie est gardée par un monstre terrifiant. Beaucoup d'aventuriers
 inconscients se sont perdus dans ces enchevêtrements de couloirs changeants,
 pour y mourir de faim.
 %%%%
-A mangrove
-
-Cet arbre est spécialement adapté pour pousser dans des conditions
-marécageuses. Ses branches sont trop entrelacées pour voir au travers.
-
-Bien trop grand pour être abattus à la hache, il est sensible à la foudre et à
-des sources de feux suffisamment intenses.
-%%%%
 A mechanical trap
 
 Un engin mécanique conçu pour nuire à des intrus. Un aventurier habile peut

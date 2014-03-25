@@ -26,7 +26,7 @@ static bool _airtight(coord_def c)
     // simplicistic check allows moving people through trees which is no good
     // either.
 
-    // return grd(c) <= DNGN_MAXWALL && grd(c) != DNGN_MANGROVE;
+    // return grd(c) <= DNGN_MAXWALL && grd(c);
     return grd(c) <= DNGN_GRATE;
 }
 

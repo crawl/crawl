@@ -818,7 +818,6 @@ KITEM:    1 = any jewellery / nothing
 SHUFFLE:  t / x
 : end
 : if you.branch() == "Swamp" then
-KFEAT:  t = mangrove
 TAGS:   extra
 : end
 : kmons("% = nothing w:10 / raven w:" .. you.absdepth())
@@ -1579,7 +1578,6 @@ DEPTH:   D:12-, Shoals, Swamp
 WEIGHT:  5
 TAGS:    no_pool_fixup
 MONS:    raven, tengu warrior, tengu conjurer
-KFEAT:   t = mangrove
 MAP
  .........
 ..wwwww.1..
