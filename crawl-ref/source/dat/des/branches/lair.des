@@ -812,7 +812,7 @@ ENDMAP
 ##############################################################################
 # Stranded yaks
 # consolidated vault for _a and _b of
-NAME:   Lemuel_yak_island
+NAME:   lemuel_yak_island
 TAGS:   no_pool_fixup
 DEPTH:  Lair, Swamp, Shoals
 WEIGHT: 5

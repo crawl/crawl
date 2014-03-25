@@ -112,7 +112,7 @@ ENDMAP
 ##############################################################################
 # The Dragons of Dis
 # There is an 8/27 chance all three downstairs will be here.
-NAME:    Lemuel_Dis_Dragons
+NAME:    lemuel_dis_dragons
 DEPTH:   Dis:2-6
 ORIENT:  float
 TAGS:    no_rotate
