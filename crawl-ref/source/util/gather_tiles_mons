@@ -29,7 +29,7 @@ ___
 my @tent = qw(E N S W NE NW SE SW);
 for my $i (0..7)
 {
-    for my $mon (qw(MONS_ELDRITCH_TENTACLE MONS_STARSPAWN_TENTACLE))
+    for my $mon (qw(MONS_ELDRITCH_TENTACLE MONS_STARSPAWN_TENTACLE MONS_VINE))
     {
         $ptile{"${mon}_$tent[$i]"}=1;
         $ptile{"${mon}_SEGMENT_$tent[$i]_$tent[$_]"}=1 for ($i+1..7);
