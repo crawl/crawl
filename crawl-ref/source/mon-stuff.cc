@@ -4333,6 +4333,9 @@ void seen_monster(monster* mons)
     // First time we've seen this particular monster.
     mons->flags |= MF_SEEN;
 
+    if (mons_is_unique(mons->type))
+        mark_milestone("uniq.seen", mons->name(DESC_A, true));
+
     if (!mons_is_mimic(mons->type))
     {
         if (crawl_state.game_is_hints())
