@@ -1613,7 +1613,7 @@ enum duration_type
     DUR_COLOUR_SMOKE_TRAIL,
     DUR_SLIMIFY,
     DUR_TIME_STEP,
-    DUR_ICEMAIL_DEPLETED,       // Wait this many turns for full Icemail
+    DUR_ICEMAIL_DEPLETED,       // Wait this many turns for Icemail to return
 #if TAG_MAJOR_VERSION == 34
     DUR_MISLED,
 #endif

@@ -6555,9 +6555,7 @@ int player_icemail_armour_class()
     if (!you.mutation[MUT_ICEMAIL])
         return 0;
 
-    return ICEMAIL_MAX
-           - you.duration[DUR_ICEMAIL_DEPLETED]
-             * ICEMAIL_MAX / ICEMAIL_TIME;
+    return you.duration[DUR_ICEMAIL_DEPLETED] ? 0 : ICEMAIL_MAX;
 }
 
 bool player_stoneskin()
