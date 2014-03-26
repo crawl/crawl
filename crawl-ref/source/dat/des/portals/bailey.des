@@ -935,9 +935,8 @@ SUBST:  2 = 2   3:1
 SUBST:  3 = 2   3
 SUBST:  4 = 2:5 3   4:5
 SUBST:  5 = 3:5 4
-SUBST:  ! : ddde, ? : fffg
-NSUBST: d = 1:d / *:e
-NSUBST: f = 1:f / *:g
+NSUBST: ! = 1:ddde / *:e
+NSUBST: ? = 1:fffg / *:g
 MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
         orc w:110   ; spear w:5 | trident w:5 | halberd | hand axe | war axe
 : orc_with_polearm(_G)
