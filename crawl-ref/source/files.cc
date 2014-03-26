@@ -1215,7 +1215,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             _grab_followers();
 
             if (env.level_state & LSTATE_DELETED)
-                delete_level(old_level), dprf("<lightmagenta>Deleting level.");
+                delete_level(old_level), dprf("<lightmagenta>Deleting level.</lightmagenta>");
             else
                 _save_level(old_level);
         }
