@@ -41,10 +41,11 @@ enum deck_type
 
 enum card_flags_type
 {
-    CFLAG_ODDITY = (1 << 0),
-    CFLAG_SEEN   = (1 << 1),
-    CFLAG_MARKED = (1 << 2),
-    CFLAG_DEALT  = (1 << 4),
+    CFLAG_ODDITY     = (1 << 0),
+    CFLAG_SEEN       = (1 << 1),
+    CFLAG_MARKED     = (1 << 2),
+    CFLAG_PUNISHMENT = (1 << 3),
+    CFLAG_DEALT      = (1 << 4),
 };
 
 enum card_type

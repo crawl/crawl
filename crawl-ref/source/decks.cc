@@ -1409,16 +1409,19 @@ bool draw_three(int slot)
     return true;
 }
 
-// This is Nemelex retribution.  If deal is true, use the word "deal"
+// This is Nemelex retribution. If deal is true, use the word "deal"
 // rather than "draw" (for the Deal Four out-of-cards situation).
 void draw_from_deck_of_punishment(bool deal)
 {
     bool oddity;
+    uint8_t flags = CFLAG_PUNISHMENT;
+    if (deal)
+        flags |= CFLAG_DEALT;
     card_type card = _random_card(MISC_DECK_OF_PUNISHMENT, DECK_RARITY_COMMON,
                                   oddity);
 
     mprf("You %s a card...", deal ? "deal" : "draw");
-    card_effect(card, DECK_RARITY_COMMON, deal ? CFLAG_DEALT : 0);
+    card_effect(card, DECK_RARITY_COMMON, flags);
 }
 
 static int _xom_check_card(item_def &deck, card_type card,
@@ -1426,7 +1429,9 @@ static int _xom_check_card(item_def &deck, card_type card,
 {
     int amusement = 64;
 
-    if (!item_type_known(deck))
+    if (flags & CFLAG_PUNISHMENT)
+        amusement = 200;
+    else if (!item_type_known(deck))
         amusement *= 2;
     // Expecting one type of card but got another, real funny.
     else if (flags & CFLAG_ODDITY)
@@ -1476,10 +1481,6 @@ void evoke_deck(item_def& deck)
     uint8_t flags = 0;
     card_type card = _draw_top_card(deck, true, flags);
 
-    // Oddity cards don't give any information about the deck.
-    if (flags & CFLAG_ODDITY)
-        allow_id = false;
-
     // Passive Nemelex retribution: sometimes a card gets swapped out.
     // More likely to happen with marked decks.
     if (player_under_penance(GOD_NEMELEX_XOBEH))
@@ -1497,7 +1498,7 @@ void evoke_deck(item_def& deck)
             card = _choose_from_archetype(deck_of_punishment, rarity);
             if (card != old_card)
             {
-                allow_id = false;
+                flags |= CFLAG_PUNISHMENT;
                 simple_god_message(" seems to have exchanged this card "
                                    "behind your back!", GOD_NEMELEX_XOBEH);
                 mprf("It's actually %s.", card_name(card));
@@ -1510,6 +1511,10 @@ void evoke_deck(item_def& deck)
     }
 
     const int amusement   = _xom_check_card(deck, card, flags);
+
+    // Oddity and punishment cards don't give any information about the deck.
+    if (flags & (CFLAG_ODDITY | CFLAG_PUNISHMENT))
+        allow_id = false;
 
     // Do these before the deck item_def object is gone.
     if (flags & CFLAG_MARKED)
@@ -2961,20 +2966,28 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-static int _card_power(deck_rarity_type rarity)
+// Punishment cards don't have their power adjusted depending on Nemelex piety
+// or penance, and are based on experience level instead of evocations skill
+// for more appropriate scaling.
+static int _card_power(deck_rarity_type rarity, bool punishment)
 {
     int result = 0;
 
-    if (player_under_penance(GOD_NEMELEX_XOBEH))
-        result -= you.penance[GOD_NEMELEX_XOBEH];
-    else if (you_worship(GOD_NEMELEX_XOBEH))
+    if (!punishment)
     {
-        result = you.piety;
-        result *= (you.skill(SK_EVOCATIONS, 100) + 2500);
-        result /= 2700;
+        if (player_under_penance(GOD_NEMELEX_XOBEH))
+            result -= you.penance[GOD_NEMELEX_XOBEH];
+        else if (you_worship(GOD_NEMELEX_XOBEH))
+        {
+            result = you.piety;
+            result *= (you.skill(SK_EVOCATIONS, 100) + 2500);
+            result /= 2700;
+        }
     }
 
-    result += you.skill(SK_EVOCATIONS, 9);
+    result += (punishment) ? you.experience_level * 18
+                           : you.skill(SK_EVOCATIONS, 9);
+
     if (rarity == DECK_RARITY_RARE)
         result += 150;
     else if (rarity == DECK_RARITY_LEGENDARY)
@@ -2992,7 +3005,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     ASSERT(!_card_forbidden(which_card));
 
     const char *participle = (flags & CFLAG_DEALT) ? "dealt" : "drawn";
-    const int power = _card_power(rarity);
+    const int power = _card_power(rarity, flags & CFLAG_PUNISHMENT);
 
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
