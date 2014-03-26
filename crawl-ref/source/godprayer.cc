@@ -479,7 +479,7 @@ static bool _zin_donate_gold()
 static void _ashenzari_sac_scroll(const item_def& item)
 {
     int scr = SCR_CURSE_JEWELLERY;
-    int num = 1 + random2(3);
+    int num = 3;
 
     int wpn = 3;
     int arm = 0;
