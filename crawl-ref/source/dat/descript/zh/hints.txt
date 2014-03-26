@@ -105,9 +105,9 @@ finished travel
 finished stashes
 
 按下 <input>$cmd[CMD_SEARCH_STASHES]</input> 命令可以搜索地城中所有存在的物品。
-例如：搜索 <input>$cmd[CMD_SEARCH_STASHES] “小刀”</input>
-会显示出所有的小刀。 你可以选择其中的一个，然后自动移动至那里。你也可以搜索诸如
-<w>“商店”</w> 或 <w>“祭坛”</w> 这样的关键词。
+例如：搜索 <input>$cmd[CMD_SEARCH_STASHES] “小刀”</input> 会显示出所有的小刀。
+你可以选择其中的一个，然后自动移动至那里。你也可以搜索诸如 <w>“商店”</w> 或
+<w>“祭坛”</w> 这样的关键词。
 %%%%
 finished random 0
 

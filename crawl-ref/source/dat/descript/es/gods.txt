@@ -1,16 +1,4 @@
 %%%%
-Zin
-
-Zin es un dios para aquellos que usan su fuerza interior. Los seguidores deben
-permanecer puros de cuerpo y alma, absteniéndose de usar magia maligna, impía,
-impura o caótica; tampoco deben recurrir a mutaciones ni alimentarse de la
-carne de seres dotados de inteligencia. Sus seguidores pueden predicar a los no
-iluminados o bien aprisionarlos, y al final ganan un refugio divino. Zin valora
-el altruismo, pidiendo una limosna (un diezmo) de todo el oro ganado,
-preferiblemente seguida de donaciones de más. Los seguidores de Zin pueden
-convertirse en seguidores de Elyvilon o de El Resplandeciente conservando algo
-de piedad.
-%%%%
 the Shining One
 
 El Resplandeciente es una poderosa deidad en una cruzada contra todo mal. A sus
@@ -36,14 +24,6 @@ varios poderes útiles (si bien desagradables). Yredelemnul aprecia las muertes,
 pero prefiere que los cadáveres sean usados en lugar de sacrificados. Destruir
 seres artificiales también se ve favorecido, ya que no son seres vivos ni
 sujetos a la muerte o a la no-muerte.
-%%%%
-Xom
-
-Xom es una deidad del caos, salvaje e impredecible, que no busca adoradores
-sino juguetes con los que divertirse. Muchos eligen seguir a Xom con la
-esperanza de recibir fabulosas recompensas y grandes poderes, pero Xom es
-completamente caprichoso. Además no hay nada que un seguidor pueda hacer para
-influir en el humor de Xom.
 %%%%
 Vehumet
 
@@ -84,15 +64,6 @@ batallas y ocasionalmente alguna recompensa. Trog odia a todos los magos y le
 encanta ver sus libros arder. Sus seguidores tienen prohibido el uso de
 hechizos.
 %%%%
-Nemelex Xobeh
-
-Nemelex es un extraño e impredecible dios tramposo, cuyos poderes pueden ser
-invocados a través de mazos de cartas pintadas con icor de demonios. Sus
-seguidores deben sacrificar diligentemente objetos valiosos, el tipo de los
-cuales influirá en los regalos recibidos. A sus seguidores se les aconseja
-confiar en las cartas y usarlas tanto como sea posible. Nemelex puede asegurar
-que la fortuna favorece a los atrevidos.
-%%%%
 Elyvilon
 
 Elyvilon, «quien sana», acoge a todas las buenas almas que estén preparadas
@@ -109,14 +80,6 @@ Lugonu
 Lugonu, «informe», se revela en el caos del Abismo. Sus seguidores son enviados
 para causar masacres y corromper al mundo de arriba, y deben hacerlo sin
 descanso para ganar el favor de Lugonu.
-%%%%
-Beogh
-
-Beogh es la deidad adorada por los orcos de las cuevas, nativos de algunas
-regiones del calabozo. Solamente los orcos pueden dedicar su servicio a Beogh y
-deben probar su devoción mediante masacres y la bendición de orcos fallecidos.
-Devotos seguidores de Beogh pueden ganar seguidores propios, ya que los orcos
-todavían buscan a su mesías.
 %%%%
 Fedhas
 
@@ -164,33 +127,6 @@ algo de tiempo. A medida que la piedad crece, sus seguidores se verán
 protegidos de mutaciones, y Zin puede incluso ocasionalmente intervenir de
 forma directa para salvarle la vida a un seguidor.
 %%%%
-the Shining One powers
-
-Los seguidores de El Resplandeciente están envueltos por un halo que revela su
-presencia. Ganan poder matando a seres malignos. Si los seguidores son dignos
-de su cruzada, El Resplandeciente mantendrá por más tiempo a los aliados
-convocados y encantados. Sus seguidores obtendrán un escudo divino para
-protegerles en las batallas. Más tarde, podrán canalizar llamas purificadoras
-que son particularmente dañinas contra seres impíos. Al final, podrán pedir a
-El Resplandeciente que les envíe poderosos seres divinos como aliados. El
-Resplandeciente puede ocasionalmente intervenir de forma directa para salvarle
-la vida a un seguidor. A medida que crece la piedad El Resplandeciente
-protegerá la fuerza vital de sus seguidores.
-%%%%
-Kikubaaqudgha powers
-
-Kikubaaqudgha mandará cadáveres a sus seguidores, mejorará las habilidades
-necrománticas de sus sirvientes obsequiando libros de hechizos, e imbuirá a sus
-armas con dolor. Seguidores especialmente fervientes pueden protegerse del
-tormento, o incluso invocarlo ellos mismos ofreciendo un cadáver a
-Kikubaaqudgha.
-%%%%
-Yredelemnul powers
-
-Yredelemnul otorga el poder de alzar esqueletos y cadáveres para luchar de tu
-lado, traer a tus seguidores cerca de ti, y sanar puntos de vida absorbiendo la
-fuerza vital de criaturas vivas. Al final, podrás ganar el poder de
-%%%%
 Xom powers
 
 Adorar a Xom es vivir con riesgo. De buen humor, Xom puede obsequiarte con una
@@ -206,35 +142,6 @@ hechizos destructivos — en primer lugar, asistencia a la hora de recitar tales
 hechizos; luego se incrementará la distancia de sus conjuros; y finalmente un
 coste menor para lanzar hechizos destructivos de alto nivel.Con el tiempo,
 Vehumet otorgará a sus seguidores raros libros de magia destructiva.
-%%%%
-Okawaru powers
-
-Los seguidores pronto ganarán la habilidad de incrementar su capacidad de
-combate de forma temporal, y, mucho después, inflingir golpes mucho más
-rápidamente. Okawaru con el tiempo dará a sus seguidores armas y armaduras.
-%%%%
-Makhleb powers
-
-Makhleb ofrece a sus seguidores varios métodos de inflingir un daño inmenso, y
-poder pedir auxilio a poderosos demonios, aunque estos poderes conllevan un
-precio en sangre. Sin embargo, Makhleb garantiza una salud renovada en
-compensación por matar seres de toda clase.
-%%%%
-Sif Muna powers
-
-Los seguidores de Sif Muna pueden canalizar mana cuando más lo necesiten, y
-ganan el poder olvidar cualquier hechizo a voluntad para aprender otros nuevos.
-Sif Muna protege a los hechiceros contra los efectos negativos de recitar mal
-un hechizo. Con el tiempo sus seguidores conseguirán libros que contienen todos
-los hechizos existentes en el reino.
-%%%%
-Trog powers
-
-Trog ofrece varios poderes para ayudarte en batalla, en concreto la habilidad
-de volverse berserk a voluntad y la habilidad de curar las heridas mucho más
-rápidamente a la vez que se incrementa la resistencia a efectos mágicos. Luego
-sus seguidores pueden llamar a poderosos y furiosos aliados. Con el tiempo Trog
-dará a sus seguidores armas diseñadas para ejercer daño.
 %%%%
 Elyvilon powers
 
@@ -264,22 +171,4 @@ visto. Cheibriados recompensa a los fieles con un metabolismo lento, el poder
 de enlentecer a otras criaturas, el poder de distorsionar el flujo del tiempo,
 el poder de dañar a aquellos que se muevan más deprisa que ellos y, finalmente,
 la habilidad de abandonar el flujo del tiempo por completo.
-%%%%
-Jiyva powers
-
-Los seguidores de Jiyva pueden solicitar gelatinas, convertir monstruos en
-mucosa y con el tiempo, eliminar sus mutaciones dañinas. A medida que se gana
-piedad, aumentando la frecuencia, Jiyva irá dejando gelatinas por el calabozo;
-reordenará atributos en función de las capacidades, armadura y carga; y
-concederá mutaciones. Las mucosas nunca dañarán a un seguidor de Jiyva y Jiyva
-demanda la misma conducta. Al final todas las mucosas visibles se unirán en
-oración, evitando que se muevan durante un rato.
-%%%%
-Ashenzari powers
-
-Ashenzari exhorta a sus seguidores que se carguen con maldiciones y recompensa
-por el tiempo transcurrido usando armaduras, joyas o armas malditas. El mayor
-deseo de Ashenzari no es la devoción sino el conocimiento de todas las cosas.
-Los seguidores piadosos que quieran compartir una parte de su conocimiento
-recibirán una gran parte del de Ashenzari.
 %%%%

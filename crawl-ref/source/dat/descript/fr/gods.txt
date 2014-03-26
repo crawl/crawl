@@ -1,15 +1,4 @@
 %%%%
-Zin
-
-Zin est un Dieu pour ceux qui se concentre sur la force intérieure. Ses fidèles
-doivent rester purs de corps et d'âme, s'abstenant de magie impie, démoniaque,
-souillée ou chaotique autant que de l'usage des mutations et la consommation de
-la chair d'êtres intelligents. Ils peuvent prêcher à ou emprisonner les
-hérétiques et, ultimement peuvent obtenir un refuge divin. Zin valorise
-l'altruisme, exigent une dîme (un dixième) de tout l'or gagné, préférant les
-dons plus élevés. Les disciples de Zin peuvent se convertir à Elyvilon ou à
-L’Étincelant tout en gardant une partie de leur Piété.
-%%%%
 the Shining One
 
 L’Étincelant est une divinité puissante en croisade contre le mal. Ses fidèles
@@ -36,14 +25,6 @@ obtenir un certain nombre de pouvoirs utiles (sinon déplaisants pour les
 autres). Yredelemnul apprécie les tueries,  mais préfère que les cadavres
 soient asservis plutôt que sacrifiés. Détruire des êtres artificiels est aussi
 apprécié, car ils n'ont jamais été réellement ni vivants, ni morts.
-%%%%
-Xom
-
-Xom est un Dieu du chaos sauvage et imprévisible qui ne cherche aucun fidèle
-mais des jouets pour s'amuser. Beaucoup suivent Xom dans l'espoir de recevoir
-de fabuleuses récompense et de puissants pouvoirs, mais Xom n'est rien sinon
-capricieux. De plus, il n'est rien qu'un fidèle puisse faire pour influencer
-l'humeur de Xom.
 %%%%
 Vehumet
 
@@ -86,15 +67,6 @@ puissance en bataille et occasionnellement des récompenses. Trog hait tous les
 magiciens et, adore voir bruler les livres de sorts. Ses fidèles sont interdits
 de tout usage de magie.
 %%%%
-Nemelex Xobeh
-
-Nemelex est un Dieu fourbe, étrange et imprévisible. Ses pouvoirs peuvent être
-invoqués au travers de paquets de cartes magiques peints à l'effigie de démons.
-Ses fidèles sont censés sacrifier des objets de grande valeur, dont le type
-affectera la qualité des récompenses. Ses fidèles doivent aussi utiliser le
-plus souvent possible les cartes et prouver ainsi leur confiance en elles. Le
-Fourbe accorde la bonne fortune au audacieux.
-%%%%
 Elyvilon
 
 Elyvilon le Guérisseur accueille toutes les bonnes âmes prêtes à aider les
@@ -110,15 +82,6 @@ Lugonu
 Lugonu l'Informe se révèle dans le chaos des Abysses. Ses fidèles sont envoyés
 dans le monde pour provoquer effusions de sang et corruption. Et ils se doivent
 de le faire sans relâche pour gagner les faveurs de leur Dieu maléfique.
-%%%%
-Beogh
-
-Beogh est la divinité adorée par les orcs des cavernes originaires du donjon.
-Seuls les orcs peuvent se mettre au service de Beogh, et doivent prouver leur
-dévotion via les effusions de sang et la bénédiction des orcs décédés. Les
-fidèles dévoués de Beogh peuvent ébranler leurs ennemis, et les plus fervents
-de Beogh peuvent même gagner des suivants puisque les orcs attendent toujours
-leur Messie.
 %%%%
 Fedhas
 
@@ -165,38 +128,6 @@ peuvent finalement trouver une sécurité temporaire au travers un refuge divin.
 Alors que leur piété grandit, les disciples sont protégés des mutations et, Zin
 peut même intervenir pour sauver directement la vie de ses disciples.
 %%%%
-the Shining One powers
-
-Les disciples de L’Étincelant sont entourés par un halo qui révèle leurs
-ennemis. Ils gagnent du pouvoir en tuant les êtres maléfiques. L’Étincelant
-gardera plus longtemps les alliés convoqués aux côtés du disciple, si les
-alliés s'avèrent dignes en croisade. Les disciples gagneront l'utilisation d'un
-bouclier divin pour les protéger au combat. Plus tard, ils pourront canaliser
-des explosions de flammes purificatrices, particulièrement mortelles pour les
-créatures impies. Éventuellement, ils pourront demander a L’Étincelant de leur
-envoyer de puissants êtres divins comme alliés. L’Étincelant pourra
-occasionnellement directement intervenir pour sauver la vie de ses fidèles.
-Avec une piété grandissante, L’Étincelant protègera la force vitale de ses
-fidèles.
-%%%%
-Kikubaaqudgha powers
-
-Kikubaaqudgha enverra des corps à ses disciples, améliorera les prouesses
-nécromantiques de ses fidèles en leur offrant des livres de magie et,
-insufflera dans leurs armes la souffrance. Les disciples les plus fervents
-pourront se protéger eux-mêmes du tourment, voir même l'invoquer eux-mêmes en
-offrant un cadavre à Kikubaaqudgha.
-%%%%
-Yredelemnul powers
-
-Yredelemnul vous accorde le pouvoir de lever les squelettes et les cadavres
-afin de combattre avec vous, le pouvoir de rappeler vos serviteurs
-morts-vivants à vos côtés, et de drainer la force vitale des créatures vivantes
-pour vous guérir. Par la suite, vous pourrez lier l'âme d'un monstre et, le
-faire combattre pour vous. Yredelemnul vous fera cadeau de temps à autre de
-serviteurs morts-vivants puissants. De plus, avec une piété suffisante,
-Yredelemnul retourner tous dommages reçus vers votre bourreau.
-%%%%
 Xom powers
 
 Adorer Xom est une entreprise risquée. Si Xom est de bonne humeur, il pourra
@@ -214,36 +145,6 @@ lancer de tel sort ; puis un accroissement de la portée ; et enfin, une
 diminution du coût pour lancer les plus hauts sorts de destruction. Plus tard,
 Vehumet vous offrir de rares grimoires de magie destructive.
 %%%%
-Okawaru powers
-
-Rapidement, les fidèles gagnent la possibilité d'accroitre leurs compétence en
-combat et, bien plus tard, de délivrer des coups plus rapidement. Okawaru
-offrir éventuellement des armes et des armures à ses disciples.
-%%%%
-Makhleb powers
-
-Makhleb offre à ses fidèles différents moyens d'infliger des dégâts immenses
-et, convoquer l'aide de puissants démons, bien que ces pouvoirs se payent dans
-le sang. Toutefois, Makhleb renouvellera la vitalité de ses disciples pour
-chaque créature tuée en son nom.
-%%%%
-Sif Muna powers
-
-Les fidèles de Sif Muna peuvent canaliser l'énergie magique quand ils en ont le
-plus besoin et, ils gagnent le pouvoir d'oublier des sorts à volonté afin d'en
-apprendre des nouveaux. Sif Muna protègent les jeteurs de sorts contre les
-effets négatifs des incantations ratées. Au fil du temps, les disciples
-obtiendront des livres de sorts contenant tous les sortilèges existant dans le
-royaume.
-%%%%
-Trog powers
-
-Trog offre différents pouvoirs pour vous aider en combat, à savoir l'aptitude à
-devenir enragé à volonté, et le pouvoir de régénérer plus rapidement tout en
-améliorant votre résistance à la magie. Plus tard, les disciples peuvent
-convoquer de puissants alliés enragés. Par la suite, Trog accorde des
-récompenses sous forme d'armes focalisées sur l'affliction de dégâts.
-%%%%
 Elyvilon powers
 
 Le Guérisseur offre à ses fidèles le moyen de se guérir des dégâts reçus comme
@@ -251,19 +152,6 @@ des effets de la maladie. Elyvilon permet aussi la guérison des créatures
 hostiles, afin de les rendre neutre. Elyvilon pourra directement intervenir
 pour sauver la vie de son disciple, spécialement quand il est invoqué ; les
 plus pieux de ses fidèles sont assurés de son aide.
-%%%%
-Beogh powers
-
-Beogh encourage ses disciples à faire usage des équipement orcs trouvé dans le
-donjon. Ils peuvent abattre leurs ennemis, et même gagner leurs propres adeptes
-orcs, qui peuvent être bénis par Beogh dans la bataille ainsi qu'être rappelés
-à votre voisinage si nécessaire. Finalement, ils vont acquérir le pouvoir de
-marcher sur l'eau. Beogh interviendra même parfois directement pour sauver la
-vie d'un adepte. {{
-    if you.race () == "Lava Orc" then
-        return "Beogh suppresses the heat aura of Lava Orc followers."
-    end
-}}
 %%%%
 Fedhas powers
 
@@ -286,23 +174,4 @@ vitesse est très mal vue. Cheibriados récompense ses disciples avec un
 métabolisme ralenti, le pouvoir de ralentir les autres créatures, le pouvoir de
 tordre le flux temporel, le pouvoir de blesser ceux qui se déplace plus vite
 qu'eux, et finalement, la capacité à sortir entièrement du flux temporel.
-%%%%
-Jiyva powers
-
-Les fidèles de Jiyva peuvent demander des gelées, transformer des monstres en
-slimes, plus tard, supprimer leurs mutations néfastes. Alors que leur piété
-grandit, Jiyva fera apparaitre des gelées, avec une fréquence grandissante,
-dans le donjon ; réorganisera les attributs de ses disciples en fonction de
-leurs compétences, armure et équipement ; accordera des mutations comme
-récompense. Les slimes n'attaqueront jamais un fidèle de Jiyva, et Jiyva
-demande la même conduite en retour. Éventuellement, touts les slimes visibles
-se joindront à la prières, les empêchant de se déplacer pour un moment.
-%%%%
-Ashenzari powers
-
-Ashenzari exhorte ses fidèles a se barder de malédictions et, offre des
-récompenses en fonction du temps passé à porter armures, bijoux ou armes
-maudites. Le désir ultime d'Ashenzari n'est pas la dévotion mais la
-connaissance de toutes choses. Les fidèles pieux qui feront dont d'une partie
-de leurs connaissances à Ashenzari recevront en retour une partie de la sienne.
 %%%%

@@ -888,12 +888,6 @@ Ce sort permet au sorcier de se déplacer à grande vitesse. Mais cela à un
 prix : la vitesse de déplacement de l'incantateur sera très lente pendant un
 moment après l'expiration du sort.
 %%%%
-Symbol of Torment spell
-
-Ce sort appelle les puissances de l'enfer pour causer de torturants dommages à
-toutes chose vivantes dans le voisinage du lanceur. Malgré sa sinistre
-puissance, ce sort n'est jamais mortelle.
-%%%%
 Teleport Other spell
 
 Ce sort téléporte aléatoirement une autre créature.
