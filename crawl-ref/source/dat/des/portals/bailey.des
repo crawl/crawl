@@ -713,7 +713,7 @@ ENDMAP
 #
 # Loot consists of three items, among them one piece of good heavy body
 # armour and another piece of good additional armour. Apart from what the
-# orcs leave lying around. You can also see the three pieces from afar.
+# orcs leave lying around.
 #
 NAME:   bailey_polearm_1
 ORIENT: encompass
@@ -917,24 +917,27 @@ ENDMAP
 #
 # You will have to battle some battalions where the monsters in the back
 # will generally have polearms.
-# Loot comes in three stages: money; potions useful in battle; scrolls
-# useful in battle. No special weapons and armours.
+# Loot comes in three stages: money, potions, scrolls. No special weapons and
+# armours.
 #
 NAME:   bailey_polearm_5
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
-KITEM:  ! = potion of curing / potion of heal wounds / potion of might w:5 /\
-            potion of haste w:3 / potion of berserk rage w:2 /\
-            potion of invisibility w:3 / potion of experience w:1 /\
-            potion of beneficial mutation w:1 / potion of resistance w:1
-KITEM:  ? = scroll of enchant weapon I / scroll of enchant weapon II /\
-            scroll of enchant weapon III w:5 / scroll of brand weapon w:1 /\
-            scroll of enchant armour / scroll of acquirement w:1 /\
-            scroll of summoning w:2
+ITEM:   potion of beneficial mutation / potion of experience
+ITEM:   potion of curing / potion of heal wounds / potion of might w:5 /\
+        potion of berserk rage w:3 / potion of haste w:2 /\
+        potion of invisibility w:3 / potion of resistance w:2
+ITEM:   scroll of brand weapon w:5 / scroll of acquirement w:5 /\
+        scroll of enchant weapon III
+ITEM:   scroll of enchant weapon I / scroll of enchant weapon II /\
+        scroll of enchant armour / scroll of summoning
 SUBST:  2 = 2   3:1
 SUBST:  3 = 2   3
 SUBST:  4 = 2:5 3   4:5
 SUBST:  5 = 3:5 4
+SUBST:  ! : ddde, ? : fffg
+NSUBST: d = 1:d / *:e
+NSUBST: f = 1:f / *:g
 MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
         orc w:110   ; spear w:5 | trident w:5 | halberd | hand axe | war axe
 : orc_with_polearm(_G)
