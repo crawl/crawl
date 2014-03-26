@@ -1497,6 +1497,7 @@ void evoke_deck(item_def& deck)
             card = _choose_from_archetype(deck_of_punishment, rarity);
             if (card != old_card)
             {
+                allow_id = false;
                 simple_god_message(" seems to have exchanged this card "
                                    "behind your back!", GOD_NEMELEX_XOBEH);
                 mprf("It's actually %s.", card_name(card));
@@ -1543,17 +1544,6 @@ void evoke_deck(item_def& deck)
         brownie_points++;
         if (one_chance_in(3))
             brownie_points++;
-
-        // You can't ID off a marked card
-        allow_id = false;
-    }
-
-    if (!deck_gone && allow_id
-        && you.skill(SK_EVOCATIONS) > 5 + random2(35))
-    {
-        mpr("Your skill with magical items lets you identify the deck.");
-        set_ident_flags(deck, ISFLAG_KNOW_TYPE);
-        msg::streams(MSGCH_EQUIPMENT) << deck.name(DESC_INVENTORY) << endl;
     }
 
     // No piety from Deal Four.
