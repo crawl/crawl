@@ -1,15 +1,4 @@
 %%%%
-Zin
-
-Zin è una divinità che si focalizza sulla forza interiore. I seguaci devono
-rimanere puri nel corpo e nell'anima, evitando incantesimi blasfemi, malvagi,
-sporchi o caotici; l'uso di mutazioni e il consumo delle carni di esseri
-intelligenti. Possono predicare o imprigionare coloro che non sono stati
-illuminati e possono infine ottenere protezione divina. Zin valorizza la
-generosità e richiede una decima di tutto l'oro guadagnato (ma apprezzerà
-ulteriori donazioni). I seguaci di Zin possono convertirsi Elyvilon o al
-Lucente mantenendo parte della propria devozione.
-%%%%
 the Shining One
 
 Il Lucente è una divinità potente che è dedicata alla crociata contro ogni
@@ -35,13 +24,6 @@ utili (anche se non sempre piacevoli). Yredelemnul apprezza le uccisioni ma
 preferisce che i cadaveri siano utilizzati piuttosto che sacrificati. Apprezza
 anche la distruzione di esseri artificiali visto che non sono veramente morti o
 soggetti alla morte o alla non morte.
-%%%%
-Xom
-
-Xom è una divinità selvaggia del caos che non cerca seguaci ma burattini con
-cui dilettarsi. Molti scelgono Xom nella speranza di ottenere fantastiche
-ricompense e poteri eccezionali, ma Xom non è altro che capriccioso. Inoltre
-non c'è niente che un seguace possa fare per influenzare l'umore di Xom.
 %%%%
 Vehumet
 
@@ -81,15 +63,6 @@ nome di Trog e sacrificare i morti, in cambio ottengono poteri in battaglia e
 altre ricompense. Trog odia tutti i maghi e ama vedere i loro libri degli
 incantesimi bruciare, per cui i suoi seguaci non possono far uso della magia.
 %%%%
-Nemelex Xobeh
-
-Nemelex è una strana e imprevedibile divinità burlona, i cui poteri possono
-essere evocati tramite l'uso di mazzi di carte magiche disegnate con inchiostro
-ricavato dall'icore dei demoni. I seguaci devono sacrificare oggetti di valore,
-il cui tipo influenza il tipo dei mazzi magici ottenuti come regali, e vengono
-istruiti nella fiducia nelle carte e consigliati di usarle spesso. Comunque
-Nemelex si assicura che la fortuna aiuti gli audaci.
-%%%%
 Elyvilon
 
 Elyvilon il Curatore accetta tutte le buone anime che sono pronte ad aiutare
@@ -105,15 +78,6 @@ Lugonu
 Lugonu l'Informe gozzoviglia nell'Abisso. I seguaci sono mandati a provocare
 spargimenti di sangue e corruzione nel mondo superiore e devono farlo senza
 sosta per ottenere il favore di questa malvagia divinità.
-%%%%
-Beogh
-
-Beogh è la divinità adorata dagli orchi delle caverne che sono indigeni di
-alcune parti del dungeon. Solo gli orchi possono rendere servizio a Beogh, e
-devono provare la loro devozine attraverso lo spargimento di sangue e la
-benedizione degli orchi defunti. I seguaci devoti possono colpire i propri
-nemici con energia divina e possono ottenere seguaci orchi a loro volta, poiché
-gli orchi ancora cercano il proprio Messia.
 %%%%
 Fedhas
 
@@ -160,36 +124,6 @@ divino. Con l'aumento della devozione i seguaci saranno preservati dalle
 mutazioni e Zin potrebbe occasionalmente intervenire direttamente per salvare
 la vita di un seguace.
 %%%%
-the Shining One powers
-
-I seguaci del Lucente irraggiano un'aura che rivela i nemici nelle vicinanze, e
-guadagnano potere uccidendo esseri malvagi. Se gli alleati, richiamati e
-attratti, si dimostreranno degni della crociata, Il Lucente li farà rimanere
-più a lungo al fianco dei suoi fedeli. I seguaci guadagneranno la possibilità
-di usare uno scudo divino per proteggersi durante la battaglia. In seguito
-potranno anche convogliare esplosioni di fiamme purificatrici, particolarmente
-efficaci contro nemici blasfemi. Infine, potranno chiedere al Lucente di
-mandargli dei potenti alleati divini come alleati. Il Lucente alle volte potrà
-salvare in modo diretto la vita di un seguace. Aumentando la devozione, il
-Lucente proteggerà la forza vitale di un suo fedele.
-%%%%
-Kikubaaqudgha powers
-
-Kikubaaqudgha manderà cadaveri ai suoi seguaci, potenzierà le abilità
-negromantiche dei suoi sudditi con doni di libri magici e incanterà le loro
-armi con il dolore. I seguaci più ferventi possono proteggersi dal tormento, o
-addirittura invocarlo loro stessi offrendo un cadavere a Kikubaaqudgha.
-%%%%
-Yredelemnul powers
-
-Yredelemnul ti concede il potere di far alzari scheletri e cadaveri per
-combattere al tuo fianco, di poter far tornare i tuoi seguaci nonmorti vicino a
-te, e di curare punti ferita assorbendo la forza vitale degli esseri viventi.
-Alla fine, riceverai il potere di legare a te l'anima di un mostro per farla
-combattere per te. Yredelemnul ti donerà sporadicamente dei servi nonmorti più
-forti. In aggiunta, con abbastanza favore divino, Yredelemnul renderà a
-chiunque ti abbia attaccato la stessa ferita che hai dovuto subire.
-%%%%
 Xom powers
 
 Venerare Xom vuol dire vivere perennemente a rischio. Se di buon umore Xom può
@@ -207,35 +141,6 @@ un raggio di tiro più grande per gli incantesimi di comparizione. Vehumet
 offrirà anche il sapere di incantesimi sempre più potenti più si conquista il
 suo favore.
 %%%%
-Okawaru powers
-
-I seguaci riceveranno presto l'abilità di incrementare le loro capacità in
-combattimento, e, molto dopo, di infliggere colpi molto più velocemente. In
-aggiunta, Okawaru donerà ai suoi fedeli armi e corazze.
-%%%%
-Makhleb powers
-
-Makhleb offre ai seguaci diversi metodi per infliggere immensi danni, e per
-chiedere l'aiuto di potenti demoni, anche se tutto questo potere ha un prezzo
-da pagatare col sangue. In ogni caso, Makhleb rigenererà la salute dei seguaci
-in cambio dell'uccisione di esseri di tutti i tipi.
-%%%%
-Sif Muna powers
-
-I seguaci si SIf Muna possono canalizzare l'energia magica quando è più
-necessario, e ottengono il potere per dimenticare incantesimi a volontà,
-cosicché possano impararne dei nuovi. SIf Muna protegge gli incantatori dagli
-effetti negativi causati dal lanciare male un incantesimo. Col tempo, i fedeli
-riceveranno libri magici contenenti tutte gli incantesimi del reame.
-%%%%
-Trog powers
-
-Trog offre diversi poteri per aiutarti in battaglia, più precisamente l'abilità
-di infuriarti a volontà, e l'abilità di far curare le ferite più velocemente
-incrementando la resistenza agli effetti magici. Più in là, i seguaci possono
-chiamare alcuni potenti e furiosi alleati. Infine, Trog regalerà ai fedeli armi
-che puntano tutto sul danno.
-%%%%
 Elyvilon powers
 
 Il Curatore offre ai seguaci i mezzi per curarsi dai danni e da altri effetti
@@ -243,19 +148,6 @@ negativi. Elyvilon permette anche il curare mostri ostili,  provando a farli
 diventare neutrali. Elyvilon può intervenire direttamente per salvare la vita
 di un fedele, soprattutto quando gli è chiesto; i seguaci più pii possono
 essere certi di tale aiuto.
-%%%%
-Beogh powers
-
-Beogh incoraggia i seguaci a far uso dell'equipaggiamento orchesco trovato nel
-Dungeon. I seguaci possono abbattere i loro nemici sfruttando il potere divino
-di Beogh, e avranno addirittura dei seguaci orchi, che possono essere benedetti
-da Beogh e fatti riapparire in prossimità quando necessario. Infine, avranno il
-potere di camminare sull'acqua. Alle volte, Beogh interverrà direttamente per
-salvare la vita di un suo fedele. {{
-    if you.race() == "Lava Orc" then
-        return "Beogh sopprime l'aura di calore dei seguaci Orchi di Lava."
-    end
-}}
 %%%%
 Fedhas powers
 
@@ -276,23 +168,4 @@ disapprovato. Cheibriados ricompensa i fedeli con un metabolismo rallentato, il
 potere di rallentare le altre creature, di distorcere il flusso del tempo e la
 possibilità di ferire chiunque sia più veloce dei suoi seguaci, e, infine, di
 uscire per intero dal flusso del tempo.
-%%%%
-Jiyva powers
-
-I seguaci di Jiyva possono richiedere gelatine, far diventare i mostri
-protoplasmi, e infine potranno rimuovere le loro mutazione dannose. Aumentando
-il favore di Jiyva nei loro confronti, la divinità farà apparire sempre più
-frequentemente gelatine; cambiare i loro attributi in base alle loro abilità,
-armatura e carico; e da doni sotto forma di mutazioni. I protoplasmi non
-attaccheranno mai un seguace di Jiyva, e Jiyva richiede la stessa condotta in
-cambio. Alla fine, tutti i protoplasmi visibili si uniranno in preghiera,
-bloccando il loro movimento.
-%%%%
-Ashenzari powers
-
-Ashenzari esorta i seguaci a vestirsi con maledizioni, e provvede ricompense
-per il tempo passato con armature, gioielleria e armi maledette. Il desidero
-ultimo di Ashenzari, ciononostante, non è la devozione ma la conoscenza di
-tutte le cose. I seguaci più pii possono decidere di liberarsi di una porzione
-per del loro sapere per riceverne in cambio una più grande da Ashenzari.
 %%%%

@@ -2,11 +2,11 @@
 __cap-N_suffix
 
 {{
-if you.race() == "Naga" then
-return "Den er særligt attråværdig."
-else
-return "Den er sær og frastødende."
-end
+    if you.race() == "Naga" then
+        return "Den er særligt attråværdig."
+    else
+        return "Den er sær og frastødende."
+    end
 }}
 %%%%
 __cap-T_suffix
@@ -343,17 +343,17 @@ En grov og ranglet ork. Urug mistede et øje i en kamp med en harpy og svor, at
 han ville dræbe hver eneste af dem. Uheldigvis er synet på hans sidste øje ikke
 synderligt godt, så han har forvekslet dig med en harpy.
 {{
-if you.can_smell() then
-return "Han lufter forfærdeligt."
-end
+    if you.can_smell() then
+        return "Han lufter forfærdeligt."
+    end
 }}
 %%%%
 Wiglaf
 
-En fed dværg med en tåbeligt udseende hat.{{
-if you.can_smell() then
-return "Han stinker af sprit."
-end
+En fed dværg med en tåbeligt udseende hat. {{
+    if you.can_smell() then
+        return "Han stinker af sprit."
+    end
 }}
 %%%%
 Xtahua

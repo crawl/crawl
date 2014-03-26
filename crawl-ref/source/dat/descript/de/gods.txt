@@ -1,15 +1,4 @@
 %%%%
-Zin
-
-Zin ist ein Gott für die, die sich auf innere Stärke konzentrieren möchten.
-Anhänger von Zin müssen körperlich und seelisch rein bleiben und unheilige,
-böse oder chaotische Magie genauso unterlassen wie die Nutzung von Mutationen
-und den Verzehr des Fleisches intelligenter Wesen. Sie können predigen und die
-Unerleuchteten einsperren, und letztendlich göttlichen Schutz erhalten. Zin
-schätzt Selbstlosigkeit und verlangt ein Zehntel des gesamten verdienten
-Goldes, bevorzugt gefolgt von noch mehr Spenden. Zins Anhänger können ohne
-großen Frömmigkeitsverlust(?) zu Elyvilon oder dem Glänzenden konvertieren.
-%%%%
 the Shining One
 
 Der Glänzende ist eine mächtige Gottheit im Kreuzzug gegen alles Böse. Seine
@@ -37,13 +26,6 @@ eine Reihe nützlicher (wenn auch unangenehmer) Kräfte. Yredelemnul schätzt da
 Töten, aber er bevorzugt die Nutzung der toten Körper statt deren Opferung.
 Auch das Zerstören künstlicher Wesen gefällt dem Dunklen, denn diese sind weder
 wirklich lebendig, noch tot oder untot.
-%%%%
-Xom
-
-Xom ist ein wilder, unberechenbarer Gott des Chaos, der keine Anhänger, sondern
-Spielzeuge sucht. Viele folgen Xom, weil sie märchenhafte Belohnungen und
-mächtige Kräfte erwarten, doch Xom ist extrem launisch. Außerdem können die
-Anhänger Xoms nichts tun, um sein Gemüt zu beeinflussen.
 %%%%
 Vehumet
 
@@ -86,16 +68,6 @@ seinem Namen töten und die Leichen opfern, um im Gegenzug Kraft im Kampf und
 einige Belohnungen zu erhalten. Trog hasst alle Zauberer und liebt es, ihre
 Bücher brennen zu sehen. Seine Anhänger dürfen keine Zaubermagie verwenden.
 %%%%
-Nemelex Xobeh
-
-Nemelex ist der fremdartige und unberechenbare Gott des Tricksens, dessen
-Kräfte durch die magischen, mit Dämonenblut bemalten Kartendecks, eingesetzt
-werden können. Von seinen Anhängern wird das unermüdliche Opfern wertvoller
-Gegenstände gefordert; die Art der Gegenstände beeinflusst die Art der
-Belohnungen. Außerdem sollen seine Anhänger den Karten vertrauen und sie so oft
-wie möglich benutzen. Trotzdem kann der Trickser versichern, dass das Glück oft
-mit den Mutigen ist.
-%%%%
 Elyvilon
 
 Elyvilon, der Heiler, heißt alle guten Seelen, die bereit sind, anderen zu
@@ -111,14 +83,6 @@ Lugonu
 Lugonu, die Unförmige, feiert im Chaos des Abgrunds. Ihre Anhänger werden
 ausgesandt, um Blutvergießen und Zerstörung in der Oberwelt zu verbreiten, und
 müssen das unermüdlich tun, um die Anerkennung der bösen Göttin zu erlangen.
-%%%%
-Beogh
-
-Beogh ist die von den im Verlies lebenden Höhlenorks angebetete Gottheit. Nur
-Orks dürfen Beogh dienen, und sie müssen ihre Zuwendung durch Blutvergießen und
-das Segnen toter Orks beweisen. Strenggläubige Anhänger Beoghs können ihre
-Gegner peinigen, und besonders eifrige Anhänger werden vielleicht eigene
-Anhänger erhalten – Orks, die noch immer nach ihrem Messias suchen.
 %%%%
 Fedhas
 
@@ -167,37 +131,6 @@ einzusperren. Außerdem können sie irgendwann kurzzeitigen Schutz bei ihrem Got
 suchen, und wenn ihre Frömmigkeit wächst, wird Zin sie vor Mutationen und
 eventuell sogar vor dem Tod schützen.
 %%%%
-the Shining One powers
-
-Die Anhänger des Glänzenden werden von einem Heiligenschein umgeben, der ihnen
-ihre Gegner zeigt. Sie erhalten Kraft durch das Töten böser Wesen. Der
-Glänzende wird beschworene und bezauberte Verbündete länger an deiner Seite
-halten, wenn sich diese im Kreuzzug würdig erweisen. Seine Anhänger werden
-außerdem ein göttliches Schild zum Schutz im Kampf benutzen können. Später
-können sie Druckwellen reinigender Flammen leiten, die besonders schädlich
-gegenüber Untoten sind. Irgendwann können sie den Glänzenden darum bitten,
-ihnen göttliche Wesen als starke Verbündete zu senden. Der Glänzende wird an
-und zu direkt eingreifen, um das Leben eines Anhängers zu schützen. Mit
-steigender Frömmigkeit wird der Glänzende deine Lebenskraft schützen.
-%%%%
-Kikubaaqudgha powers
-
-Kikubaaqudgha wird seinen Anhängern Leichen schicken, ihr nekromantisches
-Können durch geschenkte Zauberbücher verbessern und ihre Waffen mit Schmerz
-durchtränken. Besonders eifrige Anhänger können sich selbst vor Qualen
-schützen, oder diese sogar selbst verursachen, indem sie Kikubaaqudgha eine
-Leiche opfern.
-%%%%
-Yredelemnul powers
-
-Yredelemnul gibt dir die Macht, Skelette und Leichen als Krieger an deiner
-Seite wiederzubeleben, deine untoten Anhänger in deine Nähe zu rufen, und deine
-Lebenspunkte durch Lebensentzug von lebenden Wesen zu erhalten. Irgendwann
-wirst du die Kraft bekommen, die Seele eines Monsters zu binden und an deiner
-Seite kämpfen zu lassen. Yredelemnul wird dir ab und zu stärkere untote Diener
-schenken. Mit genügend Frömmigkeit wird Yredelemnul jeden Schaden auf deine
-Gegner zurückspiegeln.
-%%%%
 Xom powers
 
 Xom anzubeten bedeutet, riskant zu leben. In guter Laune wird Xom dich mit
@@ -216,35 +149,6 @@ Elementbeschwörungen, und zuletzt geringere Kosten für die Benutzung von
 Hochlevelzaubern. Irgendwann wird Vehumet seinen Anhängern Zauberbücher für
 zerstörerische Magie schenken.
 %%%%
-Okawaru powers
-
-Seine Anhänger werden bald die Fähigkeit erhalten, ihre Fähigkeiten im Kampf
-kurzzeitig zu verbessern, und viel später, noch schneller zu schlagen. Okawaru
-wird seinen Anhängern irgendwann Waffen und Rüstungen schenken.
-%%%%
-Makhleb powers
-
-Makhleb bietet seinen Anhängern verschiedene Möglichkeiten, großen Schaden
-anzurichten, und Hilfe von mächtigen Dämonen zu erhalten, doch diese Kräfte
-haben einen Preis: Blut. Allerdings wird Makhleb die Lebenskraft seiner
-Anhänger erneuern, wenn sie dafür Wesen aller Art töten.
-%%%%
-Sif Muna powers
-
-Anhänger von Sif Muna können magische Energie einschleusen, wenn sie sie am
-meisten brauchen, und sie erhalten die Fähigkeit, jeden beliebigen Zauberspruch
-zu vergessen, um dafür neue zu lernen. Sif Muna schützt Zauberer vor den
-negativen Auswirkungen des Fehlzauberns. Später werden ihre Anhänger
-Zauberbücher erhalten, die alle existierenden Zauber enthalten.
-%%%%
-Trog powers
-
-Trog bietet verschiedene Kräfte, die im Kampf helfen, und zwar die Fähigkeit,
-nach Belieben zu berserken, und die Fähigkeit, Wunden schneller heilen zu
-lassen sowie die Resistenz gegen magische Effekte zu erhöhen. Später können
-Trogs Anhänger mächtige, wütende Verbündete rufen. Irgendwann wird Trog seinen
-Anhängern starke Waffen schenken.
-%%%%
 Elyvilon powers
 
 Der Heiler bietet seinen Anhängern Möglichkeiten, sich selbst von Schaden und
@@ -253,19 +157,6 @@ von Gegnern, was dazu führen kann, dass diese neutral werden. Elyvilon kann
 direkt eingreifen, um das Leben eines Anhängers zu retten, besonders dann, wenn
 er darum gebeten wurde. Besonders fromme Anhänger können sich einer solchen
 Rettung sicher sein.
-%%%%
-Beogh powers
-
-Beogh ermuntert seine Anhänger dazu, orkische Ausrüstung aus dem Verlies zu
-benutzen. Seine Anhänger können ihre Feinde peinigen und werden sogar eigene
-orkische Anhänger erhalten, die von Beogh im Kampf gesegnet und auf der selben
-Ebene zurückgerufen werden können. Schließlich werden sie die Kraft erhalten,
-auf Wasser zu gehen. Beogh wird manchmal direkt eingreifen, um das Leben eines
-Anhängers zu schützen. {{
-    if you.race() == "Lava Orc" then
-        return "Beogh unterdrückt die Hitzeaura von Lava Orc Anhängern."
-    end
-}}
 %%%%
 Fedhas powers
 
@@ -287,24 +178,4 @@ einem verlangsamten Metabolismus, der Fähigkeit, andere Wesen zu verlangsamen,
 der Kraft, den Fluss der Zeit durcheinander zu bringen, denen zu schaden, die
 sich schneller als sie selbst bewegen und, letztendlich, die Fähigkeit, die
 Zeit komplett anzuhalten.
-%%%%
-Jiyva powers
-
-Jiyvas Anhänger können Gelee(?) beschwören, Monster in Schleim verwandeln und
-ihre schädlichen Mutationen entfernen. Während ihre Frömmigkeit steigt, wird
-Jiyva in immer kleineren Abständen Gelee in das Verlies fallen lassen, die
-Attribute ihrer Anhänger abhängig von ihren Fähigkeiten, ihrer Rüstung und
-ihrer Last verändern, und Mutationen schenken. Schleime(?) werden einem
-Anhänger Jiyvas niemals Schaden zufügen, und Jiyva verlangt im Gegenzug das
-selbe Verhalten. Letztendlich werden alle sichtbaren Schleime an Gebeten
-teilnehmen, sodass sie sich einige Zeit nicht bewegen.
-%%%%
-Ashenzari powers
-
-Ashenzari mahnt seine Anhänger dazu, sich selbst mit Flüchen zu beladen, und
-gibt Belohnungen für Zeit, die mit dem Tragen verfluchter Ausrüstung verbracht
-wird. Asnehzaris ultimativer Wunsch ist allerdings nicht die Unterwerfung,
-sondern das Wissen über alle Dinge. Gläubige Anhänger, die bereit sind, einen
-Teil ihres Wissens abzugeben, erhalten im Gegenzug einen großen Teil des
-Wissens von Ashenzari.
 %%%%

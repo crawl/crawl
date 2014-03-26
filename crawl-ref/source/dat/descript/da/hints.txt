@@ -10,20 +10,21 @@ udforskningen være dit vigtigste mål. Prøv at nå så dybt som muligt, men ta
 dig i agt: Døden lurer om hvert et hjørne.
 
 Indtil videre skal du bare huske følgende taster og deres funktioner:
-<input>$cmd[CMD_DISPLAY_COMMANDS]?</input> – viser genstandene og kommandoerne
-<input>$cmd[CMD_SAVE_GAME]</input> – gemmer spillet, så du kan genoptage det
+  <input>$cmd[CMD_DISPLAY_COMMANDS]?</input> – viser genstandene og
+kommandoerne
+  <input>$cmd[CMD_SAVE_GAME]</input> – gemmer spillet, så du kan genoptage det
 senere (men døden er permanent)
-<input>$cmd[CMD_LOOK_AROUND]</input> – undersøger ting i nærheden af dig
+  <input>$cmd[CMD_LOOK_AROUND]</input> – undersøger ting i nærheden af dig
 
 Tip-tilstanden hjælper dig med at spille Crawl uden at skulle læse nogen
 dokumentation. Hvis du ikke har gjort det endnu, bør du prøve
 introduktionsspillet. Og hvis du er nysgerrig, kan du finde flere oplysninger i
 følgende filer fra mappen docs/ (som alle kan læses inde i spillet):
-<lightblue>quickstart.txt</lightblue> – En meget kort vejledning til Crawl.
-<lightblue>crawl_manual.txt</lightblue> – Indeholder alle oplysninger om arter,
-magi, evner osv.
-<lightblue>options_guide.txt</lightblue> – Crawls brugerflade kan tilpasses på
-mange måder. Dette dokument forklarer mulighederne.
+  <lightblue>quickstart.txt</lightblue> – En meget kort vejledning til Crawl.
+  <lightblue>crawl_manual.txt</lightblue> – Indeholder alle oplysninger om
+arter, magi, evner osv.
+  <lightblue>options_guide.txt</lightblue> – Crawls brugerflade kan tilpasses
+på mange måder. Dette dokument forklarer mulighederne.
 
 God fornøjelse med Crawl!
 %%%%
@@ -45,11 +46,11 @@ death berserker unberserked
 Glem ikke at gå bersærk, når du kæmper mod særligt vanskelige fjender. Det er
 risikabelt, men det gør dig hurtigere og stærkere.
 {{
-if you.hunger() < 3 then
-return "Du kan ikke gå bersærk, mens du er meget sulten eller værre, så " ..
-"sørg for at spise dig mæt hele tiden, hvis du nu skulle få brug for " ..
-"at gå bersærk."
-end
+    if you.hunger() < 3 then
+        return "Du kan ikke gå bersærk, mens du er meget sulten eller " ..
+               "værre, så sørg for at spise dig mæt hele tiden, hvis du nu " ..
+               "skulle få brug for at gå bersærk."
+    end
 }}
 %%%%
 death ranger melee

@@ -1,15 +1,4 @@
 %%%%
-Zin
-
-Zin é o deus daqueles mais interessados na força interior. Seus seguidores
-devem permanecer puros de corpo e alma, abstendo-se de magias malignas,
-maculadas ou caóticas; do uso de mutações e do consumo da carne de seres
-inteligentes. Eles pregam ou aprisionam os não seguidores. No fim, receberão
-refúgio divino. Zin preza por valores como o altruísmo, cobrando um dízimo
-(10%) de todo ouro ganho, preferencialmente seguido de doações de mais ouro. Os
-seguidores de Zin podem converter-se para Elyvilon ou para O Reluzente sem
-perder toda a sua fé.
-%%%%
 the Shining One
 
 O Reluzente é uma deidade poderosa em uma cruzada contra o mal. Seus seguidores
@@ -35,13 +24,6 @@ poderes úteis (e desagradáveis). Yredelemnul aprecia a morte, mas prefere que
 cadáveres sejam utilizados ao invés de sacrificados. A destruição de seres
 artificiais também é favorecida, pois estes não estão nem realmente vivos nem
 sujeitos à morte ou à não-morte.
-%%%%
-Xom
-
-Xom é um deus louco e imprevisível, deus do caos, que busca não por seguidores,
-mas por brinquedos para manipular. Muitos escolhem seguir Xom na esperança de
-receber grandes recompensas e poderes, mas Xom é caprichoso. Além do mais, não
-há nada que um seguidor possa fazer para influenciar o humor de Xom.
 %%%%
 Vehumet
 

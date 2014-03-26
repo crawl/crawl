@@ -1,19 +1,20 @@
 %%%%
 A gateway to Hell
 
-"Soy el camino que lleva a la ciudad de desgracias.
-Soy el camino hacia los abandonados.
-Soy el camino que lleva al lamento eterno.
+«Soy el camino que lleva a la ciudad de desgracias.
+ Soy el camino hacia los abandonados.
+ Soy el camino que lleva al lamento eterno.
 
-Justicia sagrada fue lo que motivó a mi arquitecto.
-La divina omnipotencia fue quien me crió.
-Amor supremo e inteligencia venida de lo alto.
+ Justicia sagrada fue lo que motivó a mi arquitecto.
+ La divina omnipotencia fue quien me crió.
+ Amor supremo e inteligencia venida de lo alto.
 
-Son esos elementos los que el tiempo no puede usar.
-Estos fueron creados antes que yo, y yo provengo de más allá del tiempo.
-Desabrigue cualquier esperanza, quien entre aquí."
--Dante Alighieri,_La Divina Comedia_, “El Infierno”, Canto III. aprox. 1315. De
-la versión en inglés hecha por John Ciardi en 1954.
+ Son esos elementos los que el tiempo no puede usar.
+ Estos fueron creados antes que yo, y yo provengo de más allá del tiempo.
+ Desabrigue cualquier esperanza, quien entre aquí.»
+    -Dante Alighieri,_La Divina Comedia_, «El Infierno», Canto III. aprox.
+1315.
+     De la versión en inglés hecha por John Ciardi en 1954.
 %%%%
 arrow
 
