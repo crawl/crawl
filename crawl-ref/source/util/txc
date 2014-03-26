@@ -870,7 +870,7 @@ class IniFile(ResourceFile):
         for line in ResourceFile.read_file(self):
             if not line or line[0] == '#' or line.find('=') == -1: continue
             (key, value) = line.split('=', 1)
-            self.entries[key] = value.replace('&quot;', '"')
+            self.entries[key] = value.replace('&quot;', '"').replace('\\\\', '\\')
 
         return len(self.entries)
 
