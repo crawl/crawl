@@ -203,8 +203,7 @@ const deck_archetype deck_of_punishment[] =
     { CARD_FAMINE,     {5, 5, 5} },
     { CARD_CURSE,      {5, 5, 5} },
     { CARD_TOMB,       {5, 5, 5} },
-    { CARD_DAMNATION,  {5, 5, 5} },
-    { CARD_PORTAL,     {5, 5, 5} },
+    { CARD_DAMNATION,  {3, 3, 3} },
     { CARD_MINEFIELD,  {5, 5, 5} },
     { CARD_SWINE,      {5, 5, 5} },
     { CARD_TORMENT,    {5, 5, 5} },
@@ -3069,7 +3068,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
     case CARD_FLIGHT:           _flight_card(power, rarity); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
-    case CARD_WRAITH:           adjust_level(-1); break;
+    case CARD_WRAITH:           drain_exp(false, power / 4); break;
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_CRUSADE:          _crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;
@@ -3124,7 +3123,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
     case CARD_SWINE:
-        if (!transform(1 + power/2 + random2(power/2), TRAN_PIG, true))
+        if (!transform(5 + power/10 + random2(power/10), TRAN_PIG, true))
         {
             mpr("You feel like a pig.");
             break;
