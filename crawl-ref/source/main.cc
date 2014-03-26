@@ -2205,46 +2205,65 @@ static void _prep_input()
     }
 }
 
-// Decrement a single duration. Print the message if the duration runs out.
-// Returns true if the duration ended.
-// At midpoint (defined by get_expiration_threshold() in player.cc)
-// print midmsg and decrease duration by midloss (a randomised amount so as
-// to make it impossible to know the exact remaining duration for sure).
-// NOTE: The maximum possible midloss should be smaller than midpoint,
-//       otherwise the duration may end in the same turn the warning
-//       message is printed which would be a bit late.
+/**
+ * Decrement a duration by the given delay.
+
+ * The midloss value should be either 0 or a number of turns where the delay
+ * from those turns at normal speed is less than the duration's midpoint. The
+ * use of midloss prevents the player from knowing the exact remaining duration
+ * when the midpoint message is displayed.
+ *
+ * @param dur The duration type to be decremented.
+ * @param delay The delay aut amount by which to decrement the duration.
+ * @param endmsg The message to be displayed when the duration ends.
+ * @param midloss A number of normal-speed turns by which to further decrement
+ *                the duration if we cross the duration's midpoint.
+ * @param endmsg The message to be displayed when the duration is decremented
+ *               to a value under its midpoint.
+ * @param chan The channel where the endmsg will be printed if the duration
+ *             ends.
+ *
+ * @returns True if the duration ended, false otherwise.
+ */
 static bool _decrement_a_duration(duration_type dur, int delay,
-                                  const char* endmsg = NULL, int midloss = 0,
-                                  const char* midmsg = NULL,
+                                  const char* endmsg = nullptr,
+                                  int midloss = 0,
+                                  const char* midmsg = nullptr,
                                   msg_channel_type chan = MSGCH_DURATION)
 {
-    if (you.duration[dur] < 1)
+    ASSERT(you.duration[dur] >= 0);
+    if (you.duration[dur] == 0)
         return false;
 
+    ASSERT(!midloss || midmsg != nullptr);
     const int midpoint = get_expiration_threshold(dur);
+    ASSERTM(!midloss || midloss * BASELINE_DELAY < midpoint,
+            "midpoint delay loss %d not less than duration midpoint %d",
+            midloss * BASELINE_DELAY, midpoint);
 
     int old_dur = you.duration[dur];
-
     you.duration[dur] -= delay;
-    if (you.duration[dur] < 0)
-        you.duration[dur] = 0;
 
-    // Did we cross the mid point? (No longer likely to hit it exactly) -cao
+    // If we cross the midpoint, handle midloss and print the midpoint message.
     if (you.duration[dur] <= midpoint && old_dur > midpoint)
     {
+        you.duration[dur] -= midloss * BASELINE_DELAY;
         if (midmsg)
         {
+            // Make sure the player has a turn to react to the midpoint
+            // message.
+            if (you.duration[dur] <= 0)
+                you.duration[dur] = 1;
             if (need_expiration_warning(dur))
                 mprf(MSGCH_DANGER, "Careful! %s", midmsg);
             else
                 mprf(chan, "%s", midmsg);
         }
-        you.duration[dur] -= midloss * BASELINE_DELAY;
     }
 
-    // allow fall-through in case midloss ended the duration (it shouldn't)
-    if (you.duration[dur] == 0)
+    if (you.duration[dur] <= 0)
     {
+        you.duration[dur] = 0;
         if (endmsg)
             mprf(chan, "%s", endmsg);
         return true;
