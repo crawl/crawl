@@ -416,7 +416,8 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     if (!form_can_butcher(you.form))
     {
-        mpr("You can't butcher in your present form.");
+        mprf("You can't %s in your present form.",
+             bottle_blood ? "bottle blood" : "butcher");
         return false;
     }
 
