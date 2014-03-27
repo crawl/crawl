@@ -214,12 +214,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
                 break;
             }
 
-        const string butcher_verb =
-                (delay.type == DELAY_BUTCHER      ? "butchering" :
-                 delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
-                                                  : "sacrificing");
-
-        mprf("You stop %s the corpse%s.", butcher_verb.c_str(),
+        mprf("You stop %s the corpse%s.",
+             delay.type == DELAY_BUTCHER ? "butchering" : "bottling blood from",
              multiple_corpses ? "s" : "");
 
         _pop_delay();
