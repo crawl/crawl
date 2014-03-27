@@ -2504,7 +2504,7 @@ bool fedhas_plant_ring_from_fruit()
     vector<coord_def> adjacent;
     for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
     {
-        if (mons_class_can_pass(MONS_PLANT, env.grid(*adj_it))
+        if (monster_habitable_grid(MONS_PLANT, env.grid(*adj_it))
             && !actor_at(*adj_it))
         {
             adjacent.push_back(*adj_it);
@@ -2587,7 +2587,10 @@ bool fedhas_plant_ring_from_fruit()
         scaled_delay(200);
     }
 
-    _decrease_amount(collected_fruit, created_count);
+    if (created_count)
+        _decrease_amount(collected_fruit, created_count);
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return created_count;
 }
