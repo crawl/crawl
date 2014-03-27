@@ -3139,7 +3139,10 @@ void excommunication(god_type new_god)
 
     case GOD_SHINING_ONE:
         if (was_haloed)
+        {
             mprf(MSGCH_GOD, old_god, "Your divine halo fades away.");
+            invalidate_agrid(true);
+        }
 
         if (you.duration[DUR_DIVINE_SHIELD])
             tso_remove_divine_shield();
@@ -3220,7 +3223,10 @@ void excommunication(god_type new_god)
 
     case GOD_DITHMENOS:
         if (was_umbraed)
+        {
             mprf(MSGCH_GOD, old_god, "Your aura of darkness fades away.");
+            invalidate_agrid(true);
+        }
         _set_penance(old_god, 25);
         break;
 

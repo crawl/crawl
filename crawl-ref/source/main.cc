@@ -2961,7 +2961,7 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_DARKNESS, delay,
                           "The ambient light returns to normal.")
-        || you.haloed())
+        || (you.duration[DUR_DARKNESS] && you.haloed()))
     {
         if (you.duration[DUR_DARKNESS])
         {
