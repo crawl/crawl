@@ -742,9 +742,11 @@ ENDMAP
 
 ##############################################################################
 # Asmodeus (Gehenna) by Lightli
+# XXX: Disabled pending rebalancing.
 ##############################################################################
 
 NAME: lightli_geh_unto_the_cruel
+WEIGHT: 0
 TAGS: no_vmirror
 ORIENT: encompass
 MONS: patrolling Asmodeus
