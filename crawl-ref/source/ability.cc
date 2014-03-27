@@ -696,7 +696,7 @@ const string make_cost_description(ability_type ability)
             ret += ", Glow";
         else
 #endif
-            ret += ", Food"; // randomised and exact amount hidden from player
+            ret += ", Hunger"; // randomised and exact amount hidden from player
     }
 
     if (abil.piety_cost || abil.flags & ABFLAG_PIETY)
@@ -3072,9 +3072,9 @@ int choose_ability_menu(const vector<talent>& talents)
         // Hack like the one in spl-cast.cc:list_spells() to align the title.
         ToggleableMenuEntry* me =
             new ToggleableMenuEntry("  Ability - do what?                 "
-                                    "Cost                       Failure",
+                                    "Cost                         Failure",
                                     "  Ability - describe what?           "
-                                    "Cost                       Failure",
+                                    "Cost                         Failure",
                                     MEL_ITEM);
         me->colour = BLUE;
         abil_menu.add_entry(me);
@@ -3082,9 +3082,9 @@ int choose_ability_menu(const vector<talent>& talents)
 #else
     abil_menu.set_title(
         new ToggleableMenuEntry("  Ability - do what?                 "
-                                "Cost                       Failure",
+                                "Cost                         Failure",
                                 "  Ability - describe what?           "
-                                "Cost                       Failure",
+                                "Cost                         Failure",
                                 MEL_TITLE));
 #endif
     abil_menu.set_tag("ability");
@@ -3226,8 +3226,8 @@ string describe_talent(const talent& tal)
     ostringstream desc;
     desc << left
          << chop_string(ability_name(tal.which), 32)
-         << chop_string(make_cost_description(tal.which), 27)
-         << chop_string(failure, 10);
+         << chop_string(make_cost_description(tal.which), 29)
+         << chop_string(failure, 8);
     free(failure);
     return desc.str();
 }
