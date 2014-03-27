@@ -979,7 +979,7 @@ struct tile_ray
     coord_def ep;
     aff_type in_range;
 };
-FixedVector<tile_ray, 40> tile_ray_vec;
+FixedVector<tile_ray, LOS_RADIUS_SQ> tile_ray_vec;
 
 void tile_place_ray(const coord_def &gc, aff_type in_range)
 {
@@ -987,11 +987,9 @@ void tile_place_ray(const coord_def &gc, aff_type in_range)
     // rays directly to the screen.  The tiles version doesn't have
     // (nor want) such direct access.  So, it batches up all of the
     // rays and applies them in viewwindow(...).
-    if (num_tile_rays < tile_ray_vec.size() - 1)
-    {
-        tile_ray_vec[num_tile_rays].in_range = in_range;
-        tile_ray_vec[num_tile_rays++].ep = grid2show(gc);
-    }
+    ASSERT(num_tile_rays < tile_ray_vec.size() - 1);
+    tile_ray_vec[num_tile_rays].in_range = in_range;
+    tile_ray_vec[num_tile_rays++].ep = grid2show(gc);
 }
 
 void tile_draw_rays(bool reset_count)
