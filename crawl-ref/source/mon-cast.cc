@@ -2123,6 +2123,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_ENSNARE:
     case SPELL_THROW_FLAME:
     case SPELL_SILVER_BLAST:
+    case SPELL_MEPHITIC_CLOUD:
         return !targ_friendly && !targ_sanct;
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
