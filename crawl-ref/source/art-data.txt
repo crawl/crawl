@@ -588,6 +588,7 @@ BOOL:    mutate
 STEALTH: -20
 
 NAME:     great mace "Undeadhunter"
+INSCRIP:  disrupt,
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:     +7/+7
 COLOUR:   LIGHTGREY
@@ -1152,7 +1153,7 @@ TILE:     urand_firestarter
 TILE_EQ:  firestarter
 PLUS:     +7/+7
 BRAND:    SPWPN_FLAMING
-FIRE:    2
+FIRE:     2
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
