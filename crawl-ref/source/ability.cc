@@ -3238,6 +3238,17 @@ static void _add_talent(vector<talent>& vec, const ability_type ability,
         vec.push_back(t);
 }
 
+/**
+ * Return all relevant talents that the player has.
+ *
+ * Currently the only abilities that are affected by include_unusable are god
+ * abilities (affect by e.g. penance or silence).
+ * @param check_confused If true, abilities that don't work when confused will
+ *                       be excluded.
+ * @param include_unusable If true, abilities that are currently unusable will
+ *                         be excluded.
+ * @returns A vector of talent structs.
+ */
 vector<talent> your_talents(bool check_confused, bool include_unusable)
 {
     vector<talent> talents;
@@ -3279,7 +3290,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_MAKE_OCS, check_confused);
         if (you.experience_level >= 15)
             _add_talent(talents, ABIL_MAKE_NEEDLE_TRAP, check_confused);
-        if (you.experience_level >= 16 && you.char_direction != GDT_ASCENDING)
+        if (you.experience_level >= 16 && !player_has_orb())
             _add_talent(talents, ABIL_MAKE_TELEPORT, check_confused);
         if (you.experience_level >= 17)
             _add_talent(talents, ABIL_MAKE_WATER, check_confused);

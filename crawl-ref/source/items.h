@@ -94,7 +94,6 @@ void drop(void);
 
 int inv_count(void);
 int runes_in_pack();
-bool player_has_orb();
 
 bool pickup_single_item(int link, int qty);
 

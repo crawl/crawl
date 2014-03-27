@@ -641,6 +641,13 @@ void debug_mons_scan()
 }
 #endif
 
+/**
+ * Check the map for validity, generating a crash if not.
+ *
+ * This checks the loaded map to make sure all dungeon features and shops are
+ * valid, all branch exits are generated, and all portals generated at fixed
+ * levels in the Depths are actually present.
+ */
 void check_map_validity()
 {
 #ifdef ASSERTS
@@ -692,12 +699,9 @@ void check_map_validity()
             portal = DNGN_UNSEEN;
         if (feat == exit || orig == exit)
             exit = DNGN_UNSEEN;
-
-
-
     }
 
-    if (portal && you.char_direction != GDT_ASCENDING)
+    if (portal)
     {
 #ifdef DEBUG_DIAGNOSTICS
         dump_map("missing_portal.map", true);

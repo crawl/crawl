@@ -333,10 +333,13 @@ static int _vestibule_spawn_rate()
 
 //#define DEBUG_MON_CREATION
 
-// This function is now only called about once every 5 turns. (Used to be
-// every turn independent of how much time an action took, which was not ideal.)
-// To arrive at spawning rates close to how they used to be, replace the
-// one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
+/**
+ * Spawn random monsters.
+
+ * The spawn rate defaults to the current env.spawn_random_rate for the branch,
+ * but is modified by whether the player is in the abyss and on what level, as
+ * well as whether the player has the orb.
+ */
 void spawn_random_monsters()
 {
     if (crawl_state.disables[DIS_SPAWNS])
@@ -365,9 +368,10 @@ void spawn_random_monsters()
     if (player_in_branch(BRANCH_VESTIBULE))
         rate = _vestibule_spawn_rate();
 
-    rate = (you.char_direction == GDT_DESCENDING) ?
-            _scale_spawn_parameter(rate, 6 * rate, 0)
-            : (you_worship(GOD_CHEIBRIADOS)) ? 16 : 8;
+    if (player_has_orb())
+        rate = you_worship(GOD_CHEIBRIADOS) ? 16 : 8;
+    else if (you.char_direction != GDT_GAME_START)
+        rate = _scale_spawn_parameter(rate, 6 * rate, 0);
 
     if (rate == 0)
     {
@@ -387,8 +391,11 @@ void spawn_random_monsters()
     if (!x_chance_in_y(5, rate))
         return;
 
-    // Place normal dungeon monsters, but not in player LOS.
-    if (player_in_connected_branch())
+    // Place normal dungeon monsters, but not in player LOS. Don't generate orb
+    // spawns in Abyss to show some mercy to players that get banished there on
+    // the orb run.
+    if (player_in_connected_branch()
+        || (player_has_orb() && !player_in_branch(BRANCH_ABYSS)))
     {
         dprf("Placing monster, rate: %d, turns here: %d",
              rate, env.turns_on_level);
@@ -396,12 +403,12 @@ void spawn_random_monsters()
                                                  : PROX_AWAY_FROM_PLAYER);
 
         // The rules change once the player has picked up the Orb...
-        if (you.char_direction == GDT_ASCENDING)
+        if (player_has_orb())
             prox = (one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = prox;
-        mg.foe = (you.char_direction == GDT_ASCENDING) ? MHITYOU : MHITNOT;
+        mg.foe = (player_has_orb()) ? MHITYOU : MHITNOT;
         mons_place(mg);
         viewwindow();
         return;
@@ -3457,8 +3464,8 @@ monster* mons_place(mgen_data mg)
 
     // This gives a slight challenge to the player as they ascend the
     // dungeon with the Orb.
-    if (you.char_direction == GDT_ASCENDING && _is_random_monster(mg.cls)
-        && player_in_connected_branch() && !mg.summoned())
+    if (_is_random_monster(mg.cls) && player_has_orb()
+        && !player_in_branch(BRANCH_ABYSS) && !mg.summoned())
     {
 #ifdef DEBUG_MON_CREATION
         mprf(MSGCH_DIAGNOSTICS, "Call _pick_zot_exit_defender()");
