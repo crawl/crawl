@@ -4758,6 +4758,7 @@ void monster::calc_speed()
         break;
     case MONS_HELL_BEAST:
         speed = 10 + random2(8);
+        break;
     case MONS_BOULDER_BEETLE:
         // Boost boulder beetle speed when rolling
         if (has_ench(ENCH_ROLLING))
