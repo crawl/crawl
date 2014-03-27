@@ -418,8 +418,11 @@ void item_noise(const item_def &item, string msg, int loudness)
     msg = replace_all(msg, "@player_god@",
                       you_worship(GOD_NO_GOD) ? "atheism"
                       : god_name(you.religion, coinflip()));
+    msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
     msg = replace_all(msg, "@a_player_genus@",
                           article_a(species_name(you.species, true)));
+    msg = replace_all(msg, "@player_genus_plural@",
+                      pluralise(species_name(you.species, true)));
 
     mprf(channel, "%s", msg.c_str());
 
