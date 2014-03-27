@@ -663,13 +663,6 @@ void handle_delay()
     }
     else if (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD)
     {
-        if (delay.type == DELAY_BOTTLE_BLOOD && you.experience_level < 6)
-        {
-            mpr("You cannot bottle blood anymore!");
-            stop_delay();
-            return;
-        }
-
         // A monster may have raised the corpse you're chopping up! -- bwr
         // Note that a monster could have raised the corpse and another
         // monster could die and create a corpse with the same ID number...
