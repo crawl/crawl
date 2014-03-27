@@ -1195,19 +1195,8 @@ void melee_attack::adjust_noise()
             break;
         }
 
-        switch (attk_flavour)
-        {
-        case AF_FIRE:
-            noise_factor += 50;
-            break;
-
-        case AF_ELEC:
+        if (attk_flavour == AF_ELEC)
             noise_factor += 100;
-            break;
-
-        default:
-            break;
-        }
     }
     else if (weapon == NULL)
         noise_factor = 150;
@@ -3132,7 +3121,6 @@ bool melee_attack::apply_damage_brand()
         calc_elemental_brand_damage(BEAM_FIRE, defender->res_fire(),
                                     defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
-        noise_factor += 400 / max(1, damage_done);
         attacker->god_conduct(DID_FIRE, 1);
         break;
 
@@ -3157,7 +3145,6 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ELECTROCUTION:
-        noise_factor += 800 / max(1, damage_done);
         if (defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
