@@ -240,10 +240,15 @@ static bool _abyss_place_rune_vault(const map_bitmask &abyss_genlevel_mask)
     // Make sure we're not about to link bad items.
     debug_item_scan();
 
-    const bool result = _abyss_place_vault_tagged(abyss_genlevel_mask,
-                                                  "abyss_rune");
+    bool result = false;
+    int tries = 10;
+    do
+        result = _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_rune");
+    while (!result && --tries);
 
     // Make sure the rune is linked.
+    // XXX: I'm fairly sure this does nothing if result == false,
+    //      but leaving it alone for now. -- Grunt
     _abyss_postvault_fixup();
     return result;
 }
