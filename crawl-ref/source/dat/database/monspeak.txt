@@ -6577,6 +6577,13 @@ VISUAL WARN:The ground rattles!
 
 VISUAL:@The_monster@ tries to bite you, but has no teeth.
 %%%%
+################## Profane servitor ########################
+# Empty, to prevent falling back to holy-specific cap-A
+# speech.
+default profane servitor
+
+__NONE
+%%%%
 ################## Statues ##################
 default orange crystal statue
 
@@ -6693,10 +6700,10 @@ w:1
 @The_monster@ says @to_foe@, "Thou must remain pure in the battle against evil."
 
 w:1
-@The_monster@ says @to_foe@, "May @player_god@ always shine on thee, @foe_name@!"
+@The_monster@ says @to_foe@, "May @foe_god@ always shine on thee, @foe_name@!"
 
 w:1
-@The_monster@ says @to_foe@, "@player_god@ be with thee, mortal!"
+@The_monster@ says @to_foe@, "@foe_god@ be with thee, mortal!" @player_only@
 
 # The good gods are assumed to work closely together, so a daeva praising
 # Elyvilon is actually flavour.
@@ -6740,7 +6747,7 @@ good_god_neutral_holy_being_speech
 
 @The_monster@ shouts @at_foe@, "Continue thy quest, mortal!"
 
-@The_monster@ says @to_foe@, "Forge ahead, servant of @player_god@!"
+@The_monster@ says @to_foe@, "Forge ahead, servant of @foe_god@!"
 
 @The_monster@ says @to_foe@, "Carry on, mortal."
 %%%%
