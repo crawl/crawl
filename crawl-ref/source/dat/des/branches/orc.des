@@ -1189,7 +1189,7 @@ xxxxxxXXXX''''Exxx
 ENDMAP
 
 NAME: nicolae_orc_flooded_monolith
-TAGS: extra decor transparent
+TAGS: extra decor mini_float transparent
 DEPTH: Orc
 SUBST: W = w., c : ccccbv
 MAP
@@ -1275,7 +1275,7 @@ xxxxXXxxxxxX....@
 ENDMAP
 
 NAME: nicolae_orc_rockfall
-TAGS: transparent extra decor no_item_gen
+TAGS: transparent extra decor mini_float no_item_gen
 DEPTH: Orc
 : dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'stone q:1 / nothing, large rock q:1')
 KITEM: r = stone q:1 / nothing w:5 / large rock q:1 w:3
@@ -1291,7 +1291,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_orc_sculptors_studio
-TAGS: extra decor no_item_gen
+TAGS: extra decor mini_float no_item_gen
 DEPTH: Orc
 NSUBST: r = 1:H / 1:C / *:r
 SUBST: G = GGGI
