@@ -343,10 +343,10 @@ A demonic skull rolling along the dungeon floor.
 %%%%
 Natasha
 
-A cute little cat. But wait! There's an intelligence behind those eyes, and a
-sorrow that speaks to a lost loved one. Perhaps she was a familiar to a
-powerful mage who entered the Dungeon to seek the Orb, and is trying to find
-her master?
+A magical cat. Once a powerful wizard's familiar, Natasha was abandoned after
+he was consumed by the necromantic forces he sought to control. Now she patrols
+the dungeon, taking a bloody vengeance with spell and claw upon any adventurer
+that crosses her path.
 %%%%
 Nellie
 
