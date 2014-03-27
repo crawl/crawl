@@ -916,6 +916,8 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
         && you.confused()
         && !feat_is_escape_hatch(stair_find)
         && force_stair != DNGN_ENTER_ABYSS
+        && force_stair != DNGN_ABYSSAL_STAIR
+        && force_stair != DNGN_EXIT_ABYSS
         && coinflip())
     {
         const char* fall_where = "down the stairs";
