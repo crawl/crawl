@@ -2091,6 +2091,10 @@ static bool _is_known_branch_id(branch_type branch)
     if (branch == BRANCH_VESTIBULE)
         return overview_knows_portal(branch);
 
+    // Guaranteed portal vault, don't show in interlevel travel.
+    if (branch == BRANCH_ZIGGURAT)
+        return false;
+
     // If the overview knows the stairs to this branch, we know the branch.
     return stair_level.find(static_cast<branch_type>(branch))
            != stair_level.end();
