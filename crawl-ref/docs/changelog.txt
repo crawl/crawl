@@ -1,4 +1,4 @@
-Stone Soup 0.14 (up to 0.14-a0-3447-g819affa)
+Stone Soup 0.14 (up to 0.14-a0-3540-gg0496ee7)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new races: Formicids and Vine Stalkers.
@@ -66,6 +66,8 @@ Character
   knowledge of potions and scrolls they don't possess.
 * Fighters and Gladiators start with higher-tier weapons.
 * Fighers start with a potion of might.
+* Demonspawn icemail now restores all at once, instead of gradually, and is
+  not disrupted by casting fire spells.
 
 Monsters
 --------
@@ -151,7 +153,7 @@ Monsters
       attack.
     - Manticores' spines now embed themselves in targets, causing damage while
       moving until a few turns is spent doing nothing to remove them.
-    - Harpies no longer steal food.
+    - Harpies no longer steal food or eat food off of the ground.
     - Plain salamanders have been weakened, and all salamanders can slither
       around on land.
 * Adjustments to other enemies:
@@ -178,6 +180,7 @@ Monsters
     - Crystal golems are now crystal guardians - less health, but with the
       ability to fire crystal bolts that bounce off of all walls and deal
       either fire or cold damage on a per-bolt basis.
+    - Ravens and eldritch tentacles no longer eat corpses.
 * New uniques:
     - Asterion, a minotaur of Makhleb who flings Major Destruction and
       can employ Spectral Weapon with his demon weapon;
