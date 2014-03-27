@@ -1271,13 +1271,14 @@ void dgn_reset_level(bool enable_random_maps)
     // Set default random monster generation rate (smaller is more often,
     // except that 0 == no random monsters).
     if (player_in_branch(BRANCH_TEMPLE)
-        && you.char_direction == GDT_DESCENDING // except for the Orb run
+        && !player_has_orb() // except for the Orb run
         || crawl_state.game_is_tutorial())
     {
         // No random monsters in tutorial or ecu temple
         env.spawn_random_rate = 0;
     }
-    else if (player_in_connected_branch())
+    else if (player_in_connected_branch()
+             || (player_has_orb() && !player_in_branch(BRANCH_ABYSS)))
         env.spawn_random_rate = 240;
     else if (player_in_branch(BRANCH_ABYSS)
              || player_in_branch(BRANCH_PANDEMONIUM))
@@ -1287,7 +1288,8 @@ void dgn_reset_level(bool enable_random_maps)
         env.spawn_random_rate = 50;
     }
     else
-        // No random monsters in Labyrinths and portal vaults.
+        // No random monsters in Labyrinths and portal vaults if we don't have
+        // the orb.
         env.spawn_random_rate = 0;
     env.density = 0;
     env.forest_awoken_until = 0;

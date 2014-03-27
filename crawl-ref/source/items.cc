@@ -4031,11 +4031,6 @@ int runes_in_pack()
     return num_runes;
 }
 
-bool player_has_orb()
-{
-    return you.char_direction == GDT_ASCENDING;
-}
-
 static const object_class_type _mimic_item_classes[] =
 {
     OBJ_GOLD,

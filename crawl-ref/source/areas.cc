@@ -151,6 +151,12 @@ static void _actor_areas(actor *a)
     }
 }
 
+/**
+ * Update the area grid cache.
+ *
+ * Updates the _agrid FixedArray of grid information flags using the
+ * areaprop_flag types.
+ */
 static void _update_agrid()
 {
     if (no_areas)
@@ -168,7 +174,7 @@ static void _update_agrid()
     for (monster_iterator mi; mi; ++mi)
         _actor_areas(*mi);
 
-    if (you.char_direction == GDT_ASCENDING && !you.pos().origin())
+    if (player_has_orb() && !you.pos().origin())
     {
         const int r = 5;
         _agrid_centres.push_back(area_centre(AREA_ORB, you.pos(), r));

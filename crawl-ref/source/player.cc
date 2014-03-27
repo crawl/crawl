@@ -2744,7 +2744,7 @@ int burden_change(void)
 
     // XXX: the 600 here is the weight of the Orb.
     // TODO: make this use a dummy item or similar?
-    you.burden = (you.char_direction == GDT_ASCENDING) ? 600 : 0;
+    you.burden = player_has_orb() ? 600 : 0;
 
     for (int bu = 0; bu < ENDOFPACK; bu++)
     {
@@ -8334,4 +8334,13 @@ int player_monster_detect_radius()
     if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         radius = max(radius, you.piety / 20);
     return min(radius, LOS_RADIUS);
+}
+
+/**
+ * Return true if the player has the Orb of Zot.
+ * @returns True if the player has the Orb, false otherwise.
+ */
+bool player_has_orb()
+{
+    return you.char_direction == GDT_ASCENDING;
 }
