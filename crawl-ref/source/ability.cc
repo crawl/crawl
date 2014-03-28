@@ -1075,25 +1075,7 @@ talent get_talent(ability_type ability, bool check_confused)
         // end item abilities - some possibly mutagenic {dlb}
 
         // begin invocations {dlb}
-    case ABIL_ELYVILON_PURIFICATION:
-        invoc = true;
-        failure = 20 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
-        break;
-
-    case ABIL_ZIN_RECITE:
-    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-    case ABIL_OKAWARU_HEROISM:
-    case ABIL_ELYVILON_LESSER_HEALING_SELF:
-    case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
-    case ABIL_LUGONU_ABYSS_EXIT:
-    case ABIL_FEDHAS_SUNLIGHT:
-    case ABIL_FEDHAS_EVOLUTION:
-    case ABIL_DITHMENOS_SHADOW_STEP:
-        invoc = true;
-        failure = 30 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 6);
-        break;
-
-    // These don't train anything.
+    // Abilities with no fail rate.
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_ELYVILON_LIFESAVING:
     case ABIL_TROG_BURN_SPELLBOOKS:
@@ -1108,7 +1090,11 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 0;
         break;
 
-    // These three are Trog abilities... Invocations means nothing -- bwr
+    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
+        invoc = true;
+        break;
+
+    // Trog and Jiyva abilities, only based on piety.
     case ABIL_TROG_BERSERK:    // piety >= 30
         invoc = true;
         failure = 0;
@@ -1129,8 +1115,23 @@ talent get_talent(ability_type ability, bool check_confused)
         failure = 90 - you.piety / 2;
         break;
 
-    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
+    // Other invocations, based on piety and Invocations skill.
+    case ABIL_ELYVILON_PURIFICATION:
         invoc = true;
+        failure = 20 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
+        break;
+
+    case ABIL_ZIN_RECITE:
+    case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
+    case ABIL_OKAWARU_HEROISM:
+    case ABIL_ELYVILON_LESSER_HEALING_SELF:
+    case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
+    case ABIL_LUGONU_ABYSS_EXIT:
+    case ABIL_FEDHAS_SUNLIGHT:
+    case ABIL_FEDHAS_EVOLUTION:
+    case ABIL_DITHMENOS_SHADOW_STEP:
+        invoc = true;
+        failure = 30 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 6);
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
@@ -1143,8 +1144,8 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_BEOGH_SMITING:
-    case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_SIF_MUNA_FORGET_SPELL:
+    case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_ELYVILON_GREATER_HEALING_SELF:
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
