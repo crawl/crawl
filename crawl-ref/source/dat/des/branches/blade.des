@@ -223,15 +223,15 @@ TAGS:    no_dump no_monster_gen
 PLACE:   Blade
 ORIENT:  encompass
 : hall_of_blades_weapon(_G)
-SHUFFLE: CD / CD / DC, {([
-SUBST:   C : cc., D = ., E : c.., F : c.., c : cv, ([ = .
-NSUBST:  { : 1:{ / 1:( / 1:[ / 1:<, . : 6:0 / 6 = 0. / 6 = 0... / *:.
+SHUFFLE: C{D[ / C{D[ / D{C[ / D[C{ / D{D[
+SUBST:   C = c, D[ = ., E : c.., F : c.., c : cv
+NSUBST:  { : 1:{ / *:., . : 6:0 / 6 = 0. / 6 = 0... / *:.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
-xxxcccc....cccc.cccc{cccc.cccc.F.cccc.F.cccc.cccc{cccc.cccc.....cccxxx
-xxxccc......cc...cc...cc...cc....(cc(....cc...cc...cc...cc.......ccxxx
-xxxcc.............................................................cxxx
+xxxcccc....cccc.cccc.cccc{cccc.F.cccc.F.cccc.cccc.cccc.cccc....ccccxxx
+xxxccF......cc...cc...cc...cc....{cc.....cc...cc...cc...cc......Fccxxx
+xxxcc............................................................ccxxx
 xxxc......c..............c..................c..............c......cxxx
 xxxc.....ccc............ccc................ccc............ccc.....cxxx
 xxxcE...ccccc..........ccccc..............ccccc..........ccccc...Ecxxx
@@ -239,11 +239,11 @@ xxxcE...ccccc...........ccc................ccc...........ccccc...Ecxxx
 xxxc....0ccc.............c..................c.............ccc0....cxxx
 xxxcE....ccc..............................................ccc....Ecxxx
 xxxcE.....c................................................c.....Ecxxx
-xxxc.............................[CC[.............................cxxx
-xxxc.............DD..............CCCC..............DD.............cxxx
-xxxcE1...0......DDDD.............CCCC.............DDDD......0...2Ecxxx
-xxxc.............DD..............CCCC..............DD.............cxxx
-xxxc.............................[CC[.............................cxxx
+xxxc.............................[DD..............................cxxx
+xxxc.............CC..............DDDD..............CC.............cxxx
+xxxcE1...0......CCCC.............DDDD.............CCCC......0...2Ecxxx
+xxxc.............CC..............DDDD..............CC.............cxxx
+xxxc..............................DD..............................cxxx
 xxxcE.....c................................................c.....Ecxxx
 xxxcE....ccc..............................................ccc....Ecxxx
 xxxc....0ccc.............c..................c.............ccc0....cxxx
@@ -251,9 +251,9 @@ xxxc....ccccc...........ccc................ccc...........ccccc....cxxx
 xxxcE...ccccc..........ccccc..............ccccc..........ccccc...Ecxxx
 xxxcE....ccc............ccc................ccc............ccc....Ecxxx
 xxxc......c..............c..................c..............c......cxxx
-xxxc..............................................................cxxx
-xxxcc.......cc...cc...cc...cc....(cc(....cc...cc...cc...cc.......ccxxx
-xxxccc.....cccc.cccc{cccc.cccc.F.cccc.F.cccc.cccc{cccc.cccc.....cccxxx
+xxxcc............................................................ccxxx
+xxxccF......cc...cc...cc...cc.....cc.....cc...cc...cc...cc......Fccxxx
+xxxcccc....cccc.cccc.cccc.cccc.F.cccc.F.cccc.cccc.cccc.cccc....ccccxxx
 xxxcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
