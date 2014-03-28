@@ -1052,7 +1052,7 @@ static monsterentry mondata[] =
     MONS_RAIJU, 'h', LIGHTBLUE, "raiju",
     M_SENSE_INVIS | M_BLOOD_SCENT | M_SPELLCASTER | M_FAKE_SPELLS,
     mrd(MR_RES_ELEC, 3),
-    450, 12, MONS_HOUND, MONS_RAIJU, MH_DEMONIC, -3,
+    450, 12, MONS_HOUND, MONS_RAIJU, MH_NATURAL, -3,
     { {AT_BITE, AF_ELEC, 11}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     4, 14, MST_RAIJU, CE_CLEAN, Z_SMALL, S_BARK,
