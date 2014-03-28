@@ -192,7 +192,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     {
         if (say_reason)
         {
-            mpr("As you grasp it, you feel a great hunger. Being not satiated, you stop.");
+            mpr("This weapon is vampiric, and you must be Full or above to equip it.");
             id_brand = true;
         }
     }
