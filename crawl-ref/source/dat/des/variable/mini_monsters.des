@@ -2588,12 +2588,9 @@ ENDMAP
 ################################################################################
 
 NAME:  minmay_statue_bubble
-DEPTH: D:9-, Depths, !Depths:$
+DEPTH: D:9-
 MONS:  silver statue / orange crystal statue / ice statue w:5
 SUBST: ? = bbb.
-: if you.branch() == "Depths" then
-TAGS:  extra
-: end
 MAP
  .......
 ..bG?Gb..
@@ -2622,11 +2619,8 @@ MAP
 ENDMAP
 
 NAME:   minmay_statue_crystal_thing
-DEPTH:  D:9-, Depths, !Depths:$
+DEPTH:  D:9-
 MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
-: if you.branch() == "Depths" then
-TAGS:  extra
-: end
 MAP
       .....
     ...b=b...
@@ -2648,13 +2642,10 @@ MAP
 ENDMAP
 
 NAME:  minmay_dual_archer_statues
-DEPTH: D:10-, Depths:2-, !Depths:$
+DEPTH: D:10-,
 MONS:  statue tile:mons_statue_archer name:archer name_adjective; \
        longbow . arrow q:30
 MONS:  bush
-: if you.branch() == "Depths" then
-TAGS:  extra
-: end
 MAP
 .........
 ...ccc...
@@ -2710,16 +2701,13 @@ ENDMAP
 
 # Oklob assault; statistically, three oklobs
 NAME:    dpeg_oklob_1
-DEPTH:   Depths, Lair:4-
+DEPTH:   Lair:4-
 MONS:    plant, oklob plant, bush
 SUBST:   ? = 1 2:5 '
 SHUFFLE: '"
 SUBST:   ' : w .:5
 SUBST:   " = .
-: if you.branch() == "Depths" then
-TAGS:    extra
 SUBST:   1 = 113
-: end
 MAP
    ...........
   .............
@@ -2747,14 +2735,11 @@ ENDMAP
 
 # Greed's colour
 NAME:    david_greed
-DEPTH:   D:10-, Depths, !Depths:$, Elf
+DEPTH:   D:10-, Elf
 WEIGHT:  4
 MONS:    silver statue / orange crystal statue / ice statue
 ITEM:    nothing / any good_item
 SHUFFLE: d|
-: if you.branch() == "Depths" then
-TAGS:  extra
-: end
 MAP
 xxxxxxxxxxxx
 xxxxxxbbbbbx
@@ -2794,11 +2779,8 @@ WWWWWWWWWWWWWW
 ENDMAP
 
 NAME:  minmay_more_statues
-DEPTH: D:12-, Depths, !Depths:$
+DEPTH: D:12-
 MONS:  ice statue w:5 / silver statue / orange crystal statue
-: if you.branch() == "Depths" then
-TAGS:  extra
-: end
 MAP
 cccbcccccbcccccbccc
 c.....c%*|*%c.....c
@@ -2810,15 +2792,12 @@ cccbcccc.@.ccccbccc
 ENDMAP
 
 NAME:   evilmike_surprise_oklob
-DEPTH:  D:9-, Depths, Elf
+DEPTH:  D:9-, Elf
 WEIGHT: 5
 KMASK:  x = no_wall_fixup
 KMONS:  1 = oklob plant
 KITEM:  1 = star_item / nothing
 KITEM:  | = gold, superb_item
-: if you.branch() == "Depths" then
-TAGS:  extra
-: end
 MAP
 ccccccccccc
 c1x|mmm...c
@@ -5480,7 +5459,7 @@ cccc+cccc
 ENDMAP
 
 NAME:   kennysheep_inner_square
-DEPTH:  D:15-, Depths, !D:$, !Depths:$
+DEPTH:  D:15-, Depths, !Depths:$
 : ks_random_setup(_G)
 NSUBST: % : 1:|
 SUBST:  % = *
@@ -5530,7 +5509,7 @@ cccccccc++cccccccc
 ENDMAP
 
 NAME:   kennysheep_two_boxes
-DEPTH:  D:15-, Depths, !D:$, !Depths:$
+DEPTH:  D:15-, Depths, !Depths:$
 : ks_random_setup(_G)
 NSUBST: % : 1:|
 SUBST:  % = *
