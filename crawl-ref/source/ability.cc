@@ -1137,6 +1137,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_INJURY_MIRROR:
+    case ABIL_CHEIBRIADOS_TIME_BEND:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 4);
         break;
@@ -1166,7 +1167,6 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
-    case ABIL_CHEIBRIADOS_TIME_BEND:
         invoc = true;
         failure = 50 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 4);
         break;
