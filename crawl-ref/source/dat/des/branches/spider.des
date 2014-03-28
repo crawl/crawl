@@ -1285,7 +1285,7 @@ COLOUR: c = white
 COLOUR: 18O+' = lightgrey
 FTILE:  18cO+' = floor_pebble_lightgray
 NSUBST: ' = 3:3 / 4:2 / 4=32'' / *:'
-TILE:   c = wall_vines
+TILE:   c = wall_brick_gray
 SUBST:  x : cccx
 SUBST:  X = x
 : if crawl.coinflip() then
@@ -1339,7 +1339,7 @@ NSUBST: 7 = 3:1 / 1:2
 SUBST:  W = W..
 SUBST:  - = ....WWW^
 KFEAT:  ^ = known web trap
-TILE:   c = wall_vines
+TILE:   c = wall_brick_gray
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxcx
@@ -1384,15 +1384,17 @@ KITEM:  *d = piece of ambrosia
 KMONS:  * = emperor scorpion
 MONS:   ghost moth, ghost moth / moth of wrath
 MONS:   yellow wasp / red wasp / w:5 nothing
-MONS:   w:2 demonic crawler / w:3 emperor scorpion / w:1 nothing
-MONS:   tarantella / w:20 wolf spider / jumping spider / w:5 demonic crawler / \
-        w:5 brain worm / w:7 nothing
+MONS:   w:2 demonic crawler / w:4 emperor scorpion
+MONS:   tarantella / w:22 wolf spider / jumping spider / w:8 demonic crawler / \
+        w:7 nothing
 MONS:   trapdoor spider / nothing
 MONS:   orb spider
-NSUBST: 8 = 2:c / *:7, C = 1:. / 1:c. / *:c
+NSUBST: 8 = 2:c / *:7, " = 1:. / 1:c. / *:c
 SUBST:  - = .....WWW^
 KFEAT:  ^ = known web trap
 SHUFFLE: O12*
+TILE:   C = wall_brick_gray
+SUBST:  C = c
 MAP
 xxxxxxxxxxxxxxxxxxx@@@@@@@@@@xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx......xxxxxxxxxxxxxxx
@@ -1400,10 +1402,10 @@ xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxx
 xxxxxxxxxxccccccccccccc..cccccccccccccxxxxxx
 xxxxxxxxxxcccccccccccc-..-ccccccccccccxxxxxxx
 xxxxxxxxxxc6Wccccccccc-x.-cccccccccW6cxxxxxxxx
-xxxxxxxxxxc6..c...ccccx..xccccc..c..6cxxxxxxxx
+xxxxxxxxxxc6..c...CCCcx..xcCCC...c..6cxxxxxxxx
 xxxxxxxxxxcW.-..c.45Oc6..6c154.c..-.Wcxxxxxxxx
-xxxxxxxxxxcc..-cCc55ccx..xcc55cCc-..ccxxxxxxxx
-xxxxxxxxxxcccW.-cccccc-..-cccccc-.Wcccxxxxxxxx
+xxxxxxxxxxcc..-c"c55Ccx..xcC55c"c-..ccxxxxxxxx
+xxxxxxxxxxcccW.-ccCCCc-..-cCCCcc-.Wcccxxxxxxxx
 xxxxxxxxxxcccc..-cccccx.-xccccc-..ccccxxxxxxxx
 xxxxxxxxxxccccxW.-c8cc--.-cc8c-.Wxccccxxxxxxxx
 xxxxxxxxxxcccc-.-xx--x-xx.x--xx-.-ccccxxxxxxxx
@@ -1413,10 +1415,10 @@ xxxxxxxxxxccc--3-x--.--55--.--x-3--cccxxxxxxxx
 xxxxxxxxxxcccc-.-xx--x.xx-x--xx-.-ccccxxxxxxxx
 xxxxxxxxxxccccxW.-c8cc-.--cc8c-.Wxccccxxxxxxxx
 xxxxxxxxxxcccc..-cccccx-.xccccc-..ccccxxxxxxxx
-xxxxxxxxxxcccW.-cccccc-...cccccc-.Wcccxxxxxxxx
-xxxxxxxxxxcc..-cCc55ccx-.xcc55cCc-..ccxxxxxxxx
+xxxxxxxxxxcccW.-ccCCCc-...cCCCcc-.Wcccxxxxxxxx
+xxxxxxxxxxcc..-c"c55Ccx-.xcC55c"c-..ccxxxxxxxx
 xxxxxxxxxxcW.-..c.45*c7--7c254.c..-.Wcxxxxxxxx
-xxxxxxxxxxc6..c..ccccccddcccccc..c..6cxxxxxxxx
+xxxxxxxxxxc6..c...CCCccddccCCC...c..6cxxxxxxxx
 xxxxxxxxxxc6WccccccccccccccccccccccW6cxxxxxxxx
 xxxxxxxxxxccccccccccccccccccccccccccccxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1431,11 +1433,11 @@ KITEM:  P = piece of ambrosia
 MONS:   ghost moth, moth of wrath, emperor scorpion
 MONS:   wolf spider w:11 / redback / tarantella / jumping spider
 MONS:   orb spider / red wasp, trapdoor spider
-NSUBST: 1 = 2:1 / 1:1.. / *:4, 4 = 20:4 / 16:. / * = 4..
+NSUBST: 1 = 2:1 / 1:1.. / *:4, 4 = 20:4 / 16:. / * = 44...
 SUBST:  2 = 12, " = ^^...6, - = .....w^^
 KFEAT:  ^ = known web trap
 SUBST:  C : cx
-TILE:   c = wall_vines
+TILE:   c = wall_brick_gray
 KMASK:  w = no_monster_gen
 MAP
                       xxxxxxxxxxx
@@ -1494,7 +1496,7 @@ SUBST:   - = ...cWW^^^
 KFEAT:   ^ = known web trap
 SUBST:   c : cx
 SUBST:   C : c
-TILE:    c = wall_vines
+TILE:    c = wall_brick_gray
 MAP
                xxxxxxxxxxx
              xxxxxxxxxxxxxxxxxx
