@@ -7,7 +7,7 @@
 function shoals_finale_setup(e, qualifier, decoy_count)
   qualifier = "_" .. qualifier
   if not decoy_count then
-    decoy_count = crawl.random_range(6, 8)
+    decoy_count = crawl.random_range(6, 7)
   end
   e.hook('post_place', function ()
     dgn.place_maps{tag=("shoal_rune" .. qualifier), count=1, die_on_error=true}
@@ -1012,7 +1012,7 @@ PLACE: Shoals:$
 NAME: shoals_end_hangedman
 PLACE: Shoals:$
 WEIGHT: 8
-: shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,7))
+: shoals_finale_setup(_G, 'hangedman', crawl.random_range(5,6))
 
 ################################################################################
 # Shoal huts.
@@ -1023,9 +1023,9 @@ NSUBST:    A = 1:+ / 1 = x:19 +:1 / *:x
 SUBST:     0 = 0.
 SUBST:     e = e.
 KMONS:     ge = merfolk impaler / merfolk javelineer / merfolk aquamancer
-LROCKTILE: wall_vines
 KITEM:     O = barnacled rune of Zot
 KPROP:     O = no_tide
+LROCKTILE: wall_vines
 MAP
  xxAxx
 xx.0.xx
@@ -1039,8 +1039,8 @@ ENDMAP
 # Shoal decoy hut
 NAME:      shoalhut
 TAGS:      shoal_hut_simple water_ok no_dump allow_dup mini_float transparent
-NSUBST:    A = 1 = x:9 +:1 / *:x
-SUBST:     0 = 0.
+NSUBST:    A = 1 = x:14 +:1 / *:x
+NSUBST:    0 = 2:. / 2:0 / * = 0.
 MAP
  xxAxx
 xx.0.xx
@@ -1055,11 +1055,13 @@ ENDMAP
 # The hut itself may not contain Ilsuiw if she had other engagements.
 NAME:    shoal_ilsuiw
 TAGS:    shoal_guardian
-KMONS:   1 = Ilsuiw band, siren
+KMONS:   1 = Ilsuiw, siren
 KMONS:   2 = merfolk impaler / merfolk javelineer
-SUBST:   3 = 33w
 KMONS:   3 = merfolk aquamancer / merfolk impaler / merfolk javelineer
-KFEAT:   123 = w
+KMONS:   A = Ilsuiw band
+KMONS:   B = merfolk aquamancer / merfolk javelineer
+KFEAT:   123ABC = w
+SHUFFLE: 123 / 123 / 123 / ABC / ABC
 MAP
  wxwxw
 wxw2wxw
@@ -1077,12 +1079,12 @@ NAME:    shoals_rune_alternative
 TAGS:    shoal_rune_hangedman water_ok allow_dup transparent mini_float no_dump
 KMONS:   12 = merfolk impaler / merfolk javelineer / merfolk aquamancer
 KMONS:   3 = kraken / harpy band w:5
-KMONS:   d = siren / mermaid w:5
+KMONS:   d = siren / water nymph w:5
 KITEM:   d = barnacled rune of zot
 KFEAT:   123 = w
 KPROP:   d = no_tide
 SHUFFLE: AB / AB / BA, CD / CD / DC
-NSUBST:  2 = 2 = 22w / * = 22www, 0 = 2:0 / * = 00...
+NSUBST:  2 = 2 = 22w / * = 22www, 0 = 2:0 / 1:. / * = 00...
 SUBST:   AC = x, B = w, D = .
 LROCKTILE: wall_vines
 FHEIGHT: .d0@ = 15
@@ -1102,9 +1104,8 @@ ENDMAP
 
 NAME:    shoals_rune_alternative_decoy
 TAGS:    shoal_hut_hangedman water_ok allow_dup transparent mini_float no_dump
-KMONS:   0 = 0
 SHUFFLE: AB / AB / BA, CD / CD / DC
-NSUBST:  0 = 3:0 / * = 00...
+NSUBST:  0 = 2:0 / 2:. / * = 00...
 SUBST:   AC = x, B = w, D = .
 FHEIGHT: .d0@ = 15
 MAP
@@ -1126,12 +1127,15 @@ ENDMAP
 NAME:    shoals_ilsuiw_alternative
 TAGS:    shoal_guardian water_ok
 WEIGHT:  8
-KMONS:   1 = Ilsuiw band, siren
+KMONS:   1 = Ilsuiw, siren
 KMONS:   2 = merfolk impaler / merfolk javelineer
 KMONS:   3 = merfolk aquamancer / merfolk impaler / merfolk javelineer
-KFEAT:   123 = w
+KMONS:   4 = Ilsuiw band
+KMONS:   5 = merfolk aquamancer / merfolk javelineer
+KFEAT:   123456 = w
+SHUFFLE: 123 / 123 / 123 / 456 / 456
 SHUFFLE: AB / AB / BA, CD / CD / DC
-SUBST:   AC = x, B = w, D = ., 3 = 33w
+SUBST:   AC = x, B = w, D = .
 LROCKTILE: wall_vines
 MAP
   .@xxxx

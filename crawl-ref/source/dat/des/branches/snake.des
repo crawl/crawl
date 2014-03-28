@@ -993,7 +993,7 @@ ENDMAP
 ################################################################################
 # Snake Pit: Coiled (minmay)
 #
-NAME:    minmay_snake_end_coiled_edited
+NAME:    minmay_snake_end_coiled
 PLACE:   Snake:$
 TAGS:    no_rotate
 ORIENT:  southwest
@@ -1068,12 +1068,12 @@ MONS:   naga
 MONS:   naga mage w:40 / naga ritualist / naga sharpshooter
 MONS:   naga warrior / naga sharpshooter w:5
 MONS:   greater naga, guardian serpent
-MONS:   w:21 anaconda / black mamba / shock serpent / mana viper / \
+MONS:   w:21 anaconda / black mamba / shock serpent w:7 / mana viper w:13 / \
         nothing w:30
 KITEM:  O = serpentine rune of Zot
 KMONS:  OS = guardian serpent
 KFEAT:  7 = lava
-KMONS:  7 = salamander
+KMONS:  7 = salamander mystic
 KMONS:  8 = lindwurm
 SUBST:  5 = 5.
 NSUBST: 7 = 4:8 / * = l, l = 3:7 / 3 = 7l / *:l, . = 6:1 / *:.

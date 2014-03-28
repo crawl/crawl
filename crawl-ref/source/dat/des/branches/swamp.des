@@ -1779,13 +1779,17 @@ ORIENT:  float
 TAGS:    no_rotate
 MONS:    swamp dragon, swamp drake, hydra
 MONS:    thorn hunter / shambling mangrove / spriggan druid
-KMONS:   O = the lernaean hydra w:2 / fire dragon w:1 / ice dragon w:1 / hydra w:18
-SHUFFLE: 12
-KITEM:   O = decaying rune of Zot
+KMONS:   O = fire dragon w:1 / ice dragon w:1 / hydra w:18
+KMONS:   & = the lernaean hydra
+KITEM:   O& = decaying rune of Zot
 KFEAT:   t = mangrove
+SHUFFLE: 12
 SUBST:   - = WW.
 NSUBST:  13 = 5:., 1 = 5:1 / 2:. / * = 1..
 NSUBST:  2 = 5:2 / 2:. / * = 2.., 3 = 7:3 / 3:. / * = 3..
+: if crawl.one_chance_in(11) then
+SUBST:   4 = .:999 4:1, O = &
+: end
 MAP
       - - -
      2-2-2-2
@@ -1817,15 +1821,19 @@ TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, fire drake, bog body
 MONS:    thorn hunter / shambling mangrove / spriggan druid
-KMONS:   O = the lernaean hydra w:2 / fire dragon w:1 / hydra w:19
-KMONS:   P = the lernaean hydra w:2 / ice dragon w:1 / hydra w:19
-SHUFFLE: Od, 123, lLO4 / wWP5
+KMONS:   O = fire dragon w:2 / hydra w:18
+KMONS:   P = ice dragon w:2 / hydra w:18
+KMONS:   & = the lernaean hydra
+KITEM:   OP& = decaying rune of Zot
+SHUFFLE: Od, 123,  lLO4 / wWP5
 SUBST:   1 = 111., 2 = 2., 3 = 333.
-SUBST:   l = l `:2, L = ., ' = .t, " = tc
+SUBST:   l = l `:2, L~ = ., ' = .t, " = tc
 SUBST:   - = WW.
-KITEM:   OP = decaying rune of Zot
 KFEAT:   t = mangrove
 KPROP:   ` = no_rtele_into
+: if crawl.one_chance_in(11) then
+SUBST:   6 = .:999 6:1, OP = &
+: end
 MAP
     1- -1---
    2.3.2''3-2--
