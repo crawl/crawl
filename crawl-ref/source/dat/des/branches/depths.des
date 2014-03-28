@@ -47,11 +47,11 @@ ENDMAP
 # ready to deal with it, and therefore proceed to the Depths.
 # XXX: Fire giant doesn't run out of ammo and thus encourage scumming.
 NAME: grunt_enter_depths_giant_problem
-WEIGHT: 6
 SHUFFLE: JKLMN
 SUBST: J = l, K : ll., L : l., M : l.., N = .
 KMONS: O = patrolling fire giant
 : depths_entry(_G)
+WEIGHT: 12
 MAP
   ....@....
  ..LJLJLJL..
