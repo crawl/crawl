@@ -1898,6 +1898,7 @@ SHUFFLE: 56, 89 / 0A
 SUBST:   5 = 5., 6 = 6., 9 = 99., A = AA.
 KFEAT:   Y = altar_yredelemnul
 KFEAT:   K = altar_kikubaaqudgha
+NSUBST:  *| = 1:d / 1:h
 : crypt_loot_plus(_G)
 MAP
           cccc
