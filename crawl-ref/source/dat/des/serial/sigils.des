@@ -7,9 +7,6 @@
 {{
 function init_sigils(e)
   e.tags('transparent extra decor serial_sigils')
--- Crazy colors be crazy
---  e.colour('c = lightred')
---  e.colour('. = magenta')
   e.tile('c = wall_stone_dark')
   e.ftile('. = floor_volcanic')
   e.ftile('c = floor_pebble_darkgray w:99 / floor_rough_red w:1')
@@ -20,7 +17,7 @@ default-depth: Depths, Elf, Crypt
 
 NAME:   serial_sigils
 TAGS:   luniq_serial decor nolayout_encompass
-CHANCE: 0.5% (D:16-18, Elf:1, Crypt), 1%
+CHANCE: 0.5% (Depths:1, Elf:1, Crypt), 1%
 {{
   local c = 4 + crawl.random2(3)
   hook("post_place", function()
