@@ -1469,9 +1469,9 @@
 { MUT_THIN_SKELETAL_STRUCTURE,        2,  3, false,  true, false,
   "thin skeletal structure",
 
-  {"You have a somewhat thin skeletal structure (Dex +2, Stlth).",
-   "You have a moderately thin skeletal structure (Dex +4, Str -1, Stlth).",
-   "You have an unnaturally thin skeletal structure (Dex +6, Str -2, Stlth)."},
+  {"You have a somewhat thin skeletal structure (Dex +2, Stealth).",
+   "You have a moderately thin skeletal structure (Dex +4, Stealth+).",
+   "You have an unnaturally thin skeletal structure (Dex +6, Stealth++)."},
 
   {"Your bones become slightly less dense.",
    "Your bones become somewhat less dense.",
