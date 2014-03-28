@@ -1854,8 +1854,11 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
     int modified_wpn_skill = wpn_skill;
 
-    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN))
+    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
+        && (!weapon || weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon)))
+    {
         modified_wpn_skill = SK_SHORT_BLADES;
+    }
     else if (weapon && weapon->base_type == OBJ_WEAPONS
              && (weapon->sub_type == WPN_CLUB
                  || weapon->sub_type == WPN_SPEAR
