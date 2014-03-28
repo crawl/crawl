@@ -145,7 +145,7 @@ function TimedMessaging:range_adjective(cm, thing)
 end
 
 function TimedMessaging:say_message(cm, dur)
-  if dur <= 0 then
+  if dur <= 100 then
     self:emit_message(nil, self.finalmsg)
     return
   end
@@ -167,7 +167,7 @@ function TimedMessaging:say_message(cm, dur)
 end
 
 function TimedMessaging:event(luamark, cmarker, event)
-  if luamark.dur < self.check or luamark.dur <= 0 then
+  if luamark.dur < self.check or luamark.dur <= 100 and self.check > -150 then
     self.check = luamark.dur - 250
     if luamark.dur > 900 then
       self.check = self.check - 250
