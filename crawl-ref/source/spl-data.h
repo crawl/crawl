@@ -877,7 +877,7 @@ struct spell_desc
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY | SPFLAG_BATTLE,
      2,
-     200,
+     100,
      -1, -1,
      0,
      NULL,
