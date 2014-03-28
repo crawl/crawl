@@ -613,8 +613,10 @@ int TilesFramework::handle_mouse(MouseEvent &event)
     return 0;
 }
 
-static unsigned int _timer_callback(unsigned int ticks)
+static unsigned int _timer_callback(unsigned int ticks, void *param)
 {
+    UNUSED(param);
+
     // force the event loop to break
     wm->raise_custom_event();
 
@@ -639,7 +641,7 @@ int TilesFramework::getch_ck()
     const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
 
     unsigned int res = Options.tile_tooltip_ms;
-    wm->set_timer(res, &_timer_callback);
+    unsigned int timer_id = wm->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
     string prev_alt = m_region_msg->alt_text();
@@ -877,7 +879,7 @@ int TilesFramework::getch_ck()
     // We got some input, so we'll probably have to redraw something.
     set_need_redraw();
 
-    wm->set_timer(0, NULL);
+    wm->remove_timer(timer_id);
 
     return key;
 }

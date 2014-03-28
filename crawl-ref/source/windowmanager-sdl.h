@@ -7,7 +7,8 @@
 #include "windowmanager.h"
 
 struct SDL_Surface;
-struct SDL_VideoInfo;
+struct SDL_Window;
+typedef void* SDL_GLContext;
 
 class SDLWrapper : public WindowManager
 {
@@ -28,8 +29,9 @@ public:
     virtual void set_mod_state(key_mod mod);
 
     // System time functions
-    virtual void set_timer(unsigned int interval,
-                           wm_timer_callback callback);
+    virtual unsigned int set_timer(unsigned int interval,
+                                   wm_timer_callback callback);
+    virtual void remove_timer(unsigned int timer_id);
     virtual unsigned int get_ticks() const;
     virtual void delay(unsigned int ms);
 
@@ -63,8 +65,8 @@ protected:
     // Helper functions
     SDL_Surface *load_image(const char *file) const;
 
-    SDL_Surface *m_context;
-    const SDL_VideoInfo* video_info;
+    SDL_Window *m_window;
+    SDL_GLContext m_context;
     int _desktop_width;
     int _desktop_height;
 

@@ -81,7 +81,7 @@ struct wm_event
 };
 
 // custom timer callback function
-typedef unsigned int (*wm_timer_callback)(unsigned int interval);
+typedef unsigned int (*wm_timer_callback)(unsigned int interval, void* param);
 
 class WindowManager
 {
@@ -105,8 +105,9 @@ public:
     virtual void set_mod_state(key_mod mod) = 0;
 
     // System time functions
-    virtual void set_timer(unsigned int interval,
-                           wm_timer_callback callback) = 0;
+    virtual unsigned int set_timer(unsigned int interval,
+                                   wm_timer_callback callback) = 0;
+    virtual void remove_timer(unsigned int timer_id) = 0;
     virtual unsigned int get_ticks() const = 0;
     virtual void delay(unsigned int ms) = 0;
 
