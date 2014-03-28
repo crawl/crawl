@@ -8,9 +8,9 @@
 #ifdef TARGET_COMPILER_VC
 # include <SDL.h>
 #else
-# include <SDL/SDL.h>
+# include <SDL2/SDL.h>
 #endif
-#include <SDL_image.h>
+#include <SDL2/SDL_image.h>
 
 #include "cio.h"
 #include "files.h"
@@ -54,11 +54,8 @@ void WindowManager::shutdown()
 #endif
 }
 
-static unsigned char _get_modifiers(SDL_keysym &keysym)
+static unsigned char _get_modifiers(SDL_Keysym &keysym)
 {
-    // keysym.mod can't be used to keep track of the modifier state.
-    // If shift is hit by itself, this will not include KMOD_SHIFT.
-    // Instead, look for the key itself as a separate event.
     switch (keysym.sym)
     {
     case SDLK_LSHIFT:
@@ -74,11 +71,38 @@ static unsigned char _get_modifiers(SDL_keysym &keysym)
         return MOD_ALT;
         break;
     default:
-        return 0;
+        return keysym.mod;
     }
 }
 
-static int _translate_keysym(SDL_keysym &keysym)
+static void _translate_window_event(const SDL_WindowEvent &sdl_event,
+                                    wm_event &tile_event)
+{
+    switch (sdl_event.event)
+    {
+        case SDL_WINDOWEVENT_SHOWN:
+            tile_event.type = WME_ACTIVEEVENT;
+            tile_event.active.gain = 1;
+            break;
+        case SDL_WINDOWEVENT_HIDDEN:
+            tile_event.type = WME_ACTIVEEVENT;
+            tile_event.active.gain = 0;
+            break;
+        case SDL_WINDOWEVENT_EXPOSED:
+            tile_event.type = WME_EXPOSE;
+            break;
+        case SDL_WINDOWEVENT_RESIZED:
+            tile_event.type = WME_RESIZE;
+            tile_event.resize.w = sdl_event.data1;
+            tile_event.resize.h = sdl_event.data2;
+            break;
+        default:
+            tile_event.type = WME_NOEVENT;
+            break;
+    }
+}
+
+static int _translate_keysym(SDL_Keysym &keysym)
 {
     // This function returns the key that was hit.  Returning zero implies that
     // the keypress (e.g. hitting shift on its own) should be eaten and not
@@ -122,25 +146,18 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_DELETE:
         return CK_DELETE + offset;
 
-#ifdef __ANDROID__
-    // i think android's SDL port treats these differently? they certainly
-    // shouldn't be interpreted as unicode characters!
     case SDLK_LSHIFT:
     case SDLK_RSHIFT:
-    case SDLK_LALT:
-    case SDLK_RALT:
     case SDLK_LCTRL:
     case SDLK_RCTRL:
-#endif
-    case SDLK_NUMLOCK:
+    case SDLK_LALT:
+    case SDLK_RALT:
+    case SDLK_LGUI:
+    case SDLK_RGUI:
+    case SDLK_NUMLOCKCLEAR:
     case SDLK_CAPSLOCK:
-    case SDLK_SCROLLOCK:
-    case SDLK_RMETA:
-    case SDLK_LMETA:
-    case SDLK_LSUPER:
-    case SDLK_RSUPER:
+    case SDLK_SCROLLLOCK:
     case SDLK_MODE:
-    case SDLK_COMPOSE:
         // Don't handle these.
         return 0;
 
@@ -160,47 +177,46 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_F14:
     case SDLK_F15:
     case SDLK_HELP:
-    case SDLK_PRINT:
+    case SDLK_PRINTSCREEN:
     case SDLK_SYSREQ:
-    case SDLK_BREAK:
+    case SDLK_PAUSE:
     case SDLK_MENU:
     case SDLK_POWER:
-    case SDLK_EURO:
     case SDLK_UNDO:
         ASSERT_RANGE(keysym.sym, SDLK_F1, SDLK_UNDO + 1);
         return -(keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
 
         // Hack.  libw32c overloads clear with '5' too.
-    case SDLK_KP5:
+    case SDLK_KP_5:
         return CK_CLEAR + numpad_offset;
 
-    case SDLK_KP8:
+    case SDLK_KP_8:
     case SDLK_UP:
         return CK_UP + numpad_offset;
-    case SDLK_KP2:
+    case SDLK_KP_2:
     case SDLK_DOWN:
         return CK_DOWN + numpad_offset;
-    case SDLK_KP4:
+    case SDLK_KP_4:
     case SDLK_LEFT:
         return CK_LEFT + numpad_offset;
-    case SDLK_KP6:
+    case SDLK_KP_6:
     case SDLK_RIGHT:
         return CK_RIGHT + numpad_offset;
-    case SDLK_KP0:
+    case SDLK_KP_0:
     case SDLK_INSERT:
         return CK_INSERT + numpad_offset;
-    case SDLK_KP7:
+    case SDLK_KP_7:
     case SDLK_HOME:
         return CK_HOME + numpad_offset;
-    case SDLK_KP1:
+    case SDLK_KP_1:
     case SDLK_END:
         return CK_END + numpad_offset;
     case SDLK_CLEAR:
         return CK_CLEAR + numpad_offset;
-    case SDLK_KP9:
+    case SDLK_KP_9:
     case SDLK_PAGEUP:
         return CK_PGUP + numpad_offset;
-    case SDLK_KP3:
+    case SDLK_KP_3:
     case SDLK_PAGEDOWN:
         return CK_PGDN + numpad_offset;
     case SDLK_TAB:
@@ -218,11 +234,40 @@ static int _translate_keysym(SDL_keysym &keysym)
         break;
     }
 
-    // Alt does not get baked into keycodes like shift and ctrl, so handle it.
-    const int key_offset = (mod & MOD_ALT) ? -3000 : 0;
+    // Aaaarggghhhh! -- Grunt
+    int ret = keysym.sym;
+    if (mod & MOD_ALT && keysym.sym >= 128)
+        ret -= 3000; // ???
 
-    const bool is_ascii = keysym.unicode < 127;
-    return is_ascii ? (keysym.unicode & 0x7F) + key_offset : keysym.unicode;
+    if (keysym.sym >= SDLK_a && keysym.sym <= SDLK_z)
+    {
+        if (mod & MOD_CTRL)
+            ret -= SDLK_a - 1;
+        else if (mod & MOD_SHIFT)
+            ret -= 'a' - 'A';
+
+        return ret;
+    }
+    else if (keysym.sym >= SDLK_0 && keysym.sym <= SDLK_9)
+    {
+        switch (keysym.sym)
+        {
+            case SDLK_1: ret -= '1' - '!'; break;
+            case SDLK_2: ret -= '2' - '@'; break;
+            case SDLK_3: ret -= '3' - '#'; break;
+            case SDLK_4: ret -= '4' - '$'; break;
+            case SDLK_5: ret -= '5' - '%'; break;
+            case SDLK_6: ret -= '6' - '^'; break;
+            case SDLK_7: ret -= '7' - '&'; break;
+            case SDLK_8: ret -= '8' - '*'; break;
+            case SDLK_9: ret -= '9' - '('; break;
+            case SDLK_0: ret -= '0' - ')'; break;
+        }
+        return ret;
+    }
+
+
+    return keysym.sym;
 }
 
 static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
@@ -254,12 +299,6 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
     case SDL_BUTTON_MIDDLE:
         tile_event.button = MouseEvent::MIDDLE;
         break;
-    case SDL_BUTTON_WHEELUP:
-        tile_event.button = MouseEvent::SCROLL_UP;
-        break;
-    case SDL_BUTTON_WHEELDOWN:
-        tile_event.button = MouseEvent::SCROLL_DOWN;
-        break;
     default:
         // Unhandled button.
         tile_event.button = MouseEvent::NONE;
@@ -269,13 +308,28 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
     tile_event.py = sdl_event.y;
 }
 
+static void _translate_wheel_event(const SDL_MouseWheelEvent &sdl_event,
+                                   MouseEvent &tile_event)
+{
+    tile_event.held  = MouseEvent::NONE;
+    tile_event.event = MouseEvent::PRESS; // XXX
+    tile_event.button = (sdl_event.y > 0) ? MouseEvent::SCROLL_DOWN
+                                          : MouseEvent::SCROLL_UP;
+    tile_event.px = sdl_event.x;
+    tile_event.py = sdl_event.y;
+}
+
 SDLWrapper::SDLWrapper():
-    m_context(NULL)
+    m_window(NULL), m_context(NULL)
 {
 }
 
 SDLWrapper::~SDLWrapper()
 {
+    if (m_context)
+        SDL_GL_DeleteContext(m_context);
+    if (m_window)
+        SDL_DestroyWindow(m_window);
     SDL_Quit();
 }
 
@@ -301,7 +355,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
     SDL_ANDROID_SetApplicationPutToBackgroundCallback(
             &SDLWrapper::appPutToBackground, &SDLWrapper::appPutToForeground);
     // Do SDL initialization
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER
+                 | SDL_INIT_NOPARACHUTE) != 0)
 #else
     // Do SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
@@ -311,14 +366,11 @@ int SDLWrapper::init(coord_def *m_windowsz)
         return false;
     }
 
-    video_info = SDL_GetVideoInfo();
+    SDL_DisplayMode display_mode;
+    SDL_GetDesktopDisplayMode(0, &display_mode);
 
-    _desktop_width = video_info->current_w;
-    _desktop_height = video_info->current_h;
-
-#if !SDL_VERSION_ATLEAST(2,0,0)
-    SDL_EnableUNICODE(true);
-#endif
+    _desktop_width = display_mode.w;
+    _desktop_height = display_mode.h;
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     glDebug("SDL_GL_DOUBLEBUFFER");
@@ -351,33 +403,33 @@ int SDLWrapper::init(coord_def *m_windowsz)
 
 #ifdef USE_GLES
 #ifdef __ANDROID__
-    unsigned int flags = SDL_OPENGL | SDL_FULLSCREEN | SDL_INIT_NOPARACHUTE;
+    unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN;
 #else
-    unsigned int flags = SDL_SWSURFACE;
+    unsigned int flags = 0;
 #endif
 #else
-    unsigned int flags = SDL_OPENGL;
+    unsigned int flags = SDL_WINDOW_OPENGL;
 #endif
 
-    bool too_small = (video_info->current_w < 1024 || video_info->current_h < 800);
+    bool too_small = (_desktop_width < 1024 || _desktop_height < 800);
     if (Options.tile_full_screen == SCREENMODE_FULL
         || too_small && Options.tile_full_screen == SCREENMODE_AUTO)
     {
-        flags |= SDL_FULLSCREEN;
+        flags |= SDL_WINDOW_FULLSCREEN;
     }
 
-    if (flags & SDL_FULLSCREEN)
+    if (flags & SDL_WINDOW_FULLSCREEN)
     {
         // By default, fill the whole screen.
-        m_windowsz->x = video_info->current_w;
-        m_windowsz->y = video_info->current_h;
+        m_windowsz->x = _desktop_width;
+        m_windowsz->y = _desktop_height;
     }
     else
     {
         int x = Options.tile_window_width;
         int y = Options.tile_window_height;
-        x = (x > 0) ? x : video_info->current_w + x;
-        y = (y > 0) ? y : video_info->current_h + y;
+        x = (x > 0) ? x : _desktop_width + x;
+        y = (y > 0) ? y : _desktop_height + y;
 #ifdef TOUCH_UI
         // allow *much* smaller windows than default, primarily for testing
         // touch_ui features in an x86 build
@@ -393,15 +445,31 @@ int SDLWrapper::init(coord_def *m_windowsz)
 #endif
     }
 
-    m_context = SDL_SetVideoMode(m_windowsz->x, m_windowsz->y, 0, flags);
-glDebug("SDL_SetVideoMode");
+    string title = string(CRAWL " ") + Version::Long;
+    m_window = SDL_CreateWindow(title.c_str(),
+                                SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_UNDEFINED,
+                                m_windowsz->x, m_windowsz->y, flags);
+    glDebug("SDL_CreateWindow");
+    if (!m_window)
+    {
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO, "Crawl",
+                            "Failed to create window: %s", SDL_GetError());
+#endif
+        printf("Failed to create window: %s\n", SDL_GetError());
+        return false;
+    }
+
+    m_context = SDL_GL_CreateContext(m_window);
+    glDebug("SDL_GL_CreateContext");
     if (!m_context)
     {
 #ifdef __ANDROID__
         __android_log_print(ANDROID_LOG_INFO, "Crawl",
-                            "Failed to set video mode: %s", SDL_GetError());
+                            "Failed to create GL context: %s", SDL_GetError());
 #endif
-        printf("Failed to set video mode: %s\n", SDL_GetError());
+        printf("Failed to create GL context: %s\n", SDL_GetError());
         return false;
     }
 
@@ -413,12 +481,16 @@ glDebug("SDL_SetVideoMode");
 
 int SDLWrapper::screen_width() const
 {
-    return video_info->current_w;
+    int w, dummy;
+    SDL_GetWindowSize(m_window, &w, &dummy);
+    return w;
 }
 
 int SDLWrapper::screen_height() const
 {
-    return video_info->current_h;
+    int dummy, h;
+    SDL_GetWindowSize(m_window, &dummy, &h);
+    return h;
 }
 
 int SDLWrapper::desktop_width() const
@@ -433,7 +505,7 @@ int SDLWrapper::desktop_height() const
 
 void SDLWrapper::set_window_title(const char *title)
 {
-    SDL_WM_SetCaption(title, CRAWL);
+    SDL_SetWindowTitle(m_window, title);
 }
 
 bool SDLWrapper::set_window_icon(const char* icon_name)
@@ -448,7 +520,7 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
         printf("Failed to load icon: %s\n", SDL_GetError());
         return false;
     }
-    SDL_WM_SetIcon(surf, NULL);
+    SDL_SetWindowIcon(m_window, surf);
     SDL_FreeSurface(surf);
     return true;
 }
@@ -517,7 +589,7 @@ unsigned int SDLWrapper::get_ticks() const
 
 key_mod SDLWrapper::get_mod_state() const
 {
-    SDLMod mod = SDL_GetModState();
+    SDL_Keymod mod = SDL_GetModState();
 
     switch (mod)
     {
@@ -541,7 +613,7 @@ key_mod SDLWrapper::get_mod_state() const
 
 void SDLWrapper::set_mod_state(key_mod mod)
 {
-    SDLMod set_to;
+    SDL_Keymod set_to;
     switch (mod)
     {
     case MOD_NONE:
@@ -578,18 +650,16 @@ int SDLWrapper::wait_event(wm_event *event)
     // translate the SDL_Event into the almost-analogous wm_event
     switch (sdlevent.type)
     {
-    case SDL_ACTIVEEVENT:
+    case SDL_WINDOWEVENT:
         SDL_SetModState(KMOD_NONE);
-        event->type = WME_ACTIVEEVENT;
-        event->active.gain = sdlevent.active.gain;
-        event->active.state = sdlevent.active.state;
+        _translate_window_event(sdlevent.window, *event);
         break;
     case SDL_KEYDOWN:
         event->type = WME_KEYDOWN;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
-        event->key.keysym.unicode = sdlevent.key.keysym.unicode;
+        event->key.keysym.unicode = sdlevent.key.keysym.sym; // ???
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
 
         if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
@@ -606,7 +676,7 @@ int SDLWrapper::wait_event(wm_event *event)
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
-        event->key.keysym.unicode = sdlevent.key.keysym.unicode;
+        event->key.keysym.unicode = sdlevent.key.keysym.sym; // ???
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
 
         break;
@@ -622,13 +692,9 @@ int SDLWrapper::wait_event(wm_event *event)
         event->type = WME_MOUSEBUTTONDOWN;
         _translate_event(sdlevent.button, event->mouse_event);
         break;
-    case SDL_VIDEORESIZE:
-        event->type = WME_RESIZE;
-        event->resize.w = sdlevent.resize.w;
-        event->resize.h = sdlevent.resize.h;
-        break;
-    case SDL_VIDEOEXPOSE:
-        event->type = WME_EXPOSE;
+    case SDL_MOUSEWHEEL:
+        event->type = WME_MOUSEBUTTONDOWN; // XXX
+        _translate_wheel_event(sdlevent.wheel, event->mouse_event);
         break;
     case SDL_QUIT:
         event->type = WME_QUIT;
@@ -647,9 +713,15 @@ int SDLWrapper::wait_event(wm_event *event)
     return 1;
 }
 
-void SDLWrapper::set_timer(unsigned int interval, wm_timer_callback callback)
+unsigned int SDLWrapper::set_timer(unsigned int interval,
+                                   wm_timer_callback callback)
 {
-    SDL_SetTimer(interval, callback);
+    return SDL_AddTimer(interval, callback, NULL);
+}
+
+void SDLWrapper::remove_timer(unsigned int timer_id)
+{
+    SDL_RemoveTimer(timer_id);
 }
 
 int SDLWrapper::raise_custom_event()
@@ -661,7 +733,7 @@ int SDLWrapper::raise_custom_event()
 
 void SDLWrapper::swap_buffers()
 {
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(m_window);
 }
 
 void SDLWrapper::delay(unsigned int ms)
@@ -672,47 +744,41 @@ void SDLWrapper::delay(unsigned int ms)
 unsigned int SDLWrapper::get_event_count(wm_event_type type)
 {
     // Look for the presence of any keyboard events in the queue.
-    Uint32 eventmask;
+    Uint32 event;
     switch (type)
     {
     case WME_ACTIVEEVENT:
-        eventmask = SDL_EVENTMASK(SDL_ACTIVEEVENT);
+    case WME_RESIZE: // XXX
+    case WME_EXPOSE: // XXX
+        event = SDL_WINDOWEVENT;
         break;
 
     case WME_KEYDOWN:
-        eventmask = SDL_EVENTMASK(SDL_KEYDOWN);
+        event = SDL_KEYDOWN;
         break;
 
     case WME_KEYUP:
-        eventmask = SDL_EVENTMASK(SDL_KEYUP);
+        event = SDL_KEYUP;
         break;
 
     case WME_MOUSEMOTION:
-        eventmask = SDL_EVENTMASK(SDL_MOUSEMOTION);
+        event = SDL_MOUSEMOTION;
         break;
 
     case WME_MOUSEBUTTONUP:
-        eventmask = SDL_EVENTMASK(SDL_MOUSEBUTTONUP);
+        event = SDL_MOUSEBUTTONUP;
         break;
 
     case WME_MOUSEBUTTONDOWN:
-        eventmask = SDL_EVENTMASK(SDL_MOUSEBUTTONDOWN);
+        event = SDL_MOUSEBUTTONDOWN;
         break;
 
     case WME_QUIT:
-        eventmask = SDL_EVENTMASK(SDL_QUIT);
+        event = SDL_QUIT;
         break;
 
     case WME_CUSTOMEVENT:
-        eventmask = SDL_EVENTMASK(SDL_USEREVENT);
-        break;
-
-    case WME_RESIZE:
-        eventmask = SDL_EVENTMASK(SDL_VIDEORESIZE);
-        break;
-
-    case WME_EXPOSE:
-        eventmask = SDL_EVENTMASK(SDL_VIDEOEXPOSE);
+        event = SDL_USEREVENT;
         break;
 
     default:
@@ -724,7 +790,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     SDL_PumpEvents();
 
     // Note: this returns -1 for error.
-    int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, eventmask);
+    int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, event, event);
     ASSERT(count >= 0);
 
     return max(count, 0);
@@ -857,7 +923,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
                 pixels[dest*4    ] = pal->colors[index].r;
                 pixels[dest*4 + 1] = pal->colors[index].g;
                 pixels[dest*4 + 2] = pal->colors[index].b;
-                pixels[dest*4 + 3] = (index != img->format->colorkey ? 255 : 0);
+                pixels[dest*4 + 3] = pal->colors[index].a;
                 dest++;
             }
             while (x++ < new_width)
@@ -911,7 +977,7 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
     FILE *imgfile = fopen_u(file, "rb");
     if (imgfile)
     {
-        SDL_RWops *rw = SDL_RWFromFP(imgfile, 0);
+        SDL_RWops *rw = SDL_RWFromFP(imgfile, SDL_FALSE);
         if (rw)
         {
             surf = IMG_Load_RW(rw, 0);

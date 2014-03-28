@@ -695,19 +695,15 @@ FREETYPE_INCLUDE := $(shell $(PKGCONFIG) freetype2 --cflags-only-I | sed -e 's/-
 FREETYPE_CFLAGS  := $(shell $(PKGCONFIG) freetype2 --cflags-only-other)
 FREETYPE_LDFLAGS := $(shell $(PKGCONFIG) freetype2 --libs-only-L) $(shell $(PKGCONFIG) freetype2 --libs-only-l)
 
-SDL_INCLUDE := $(shell $(PKGCONFIG) sdl --cflags-only-I | sed -e 's/-I/-isystem /')
-SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl --cflags-only-other)
-SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl --libs-only-L) $(shell $(PKGCONFIG) sdl --libs-only-l)
+SDL_INCLUDE := $(shell $(PKGCONFIG) sdl2 --cflags-only-I | sed -e 's/-I/-isystem /')
+SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl2 --cflags-only-other)
+SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl2 --libs-only-L) $(shell $(PKGCONFIG) sdl2 --libs-only-l)
 
-LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -lSDL2_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
-ifdef GLES
-ifndef ANDROID
-LIBS += -lSDL_gles -lEGL -lGLES_CM
-endif
-else
+ifndef GLES
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
 LIBS += -lGL -lGLU
@@ -1613,7 +1609,7 @@ source: removeold prebuildyacc
 	(cd ../..;git ls-files| \
 		grep -v -f crawl-ref/source/misc/src-pkg-excludes.lst| \
 		tar cf - -T -)|tar xf - -C build
-	for x in lua pcre sqlite libpng freetype sdl sdl-image zlib fonts; \
+	for x in lua pcre sqlite libpng freetype sdl2 sdl2-image zlib fonts; \
 	  do \
 	   mkdir -p $(BSRC)contrib/$$x; \
 	   (cd contrib/$$x;git ls-files|tar cf - -T -)| \
