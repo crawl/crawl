@@ -64,6 +64,7 @@ bool is_resting(void);
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool feat_is_traversable_now(dungeon_feature_type feat, bool try_fallback = false);
 bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback = false);
+bool is_known_branch_id(branch_type branch);
 bool is_unknown_stair(const coord_def &p);
 
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,

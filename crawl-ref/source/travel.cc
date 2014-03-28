@@ -2076,7 +2076,7 @@ static int _get_nearest_level_depth(uint8_t branch)
 
 // Returns true if the player character knows of the existence of the given
 // branch (which would make the branch a valid target for interlevel travel).
-static bool _is_known_branch_id(branch_type branch)
+bool is_known_branch_id(branch_type branch)
 {
     // The main dungeon is always known
     if (branch == root_branch)
@@ -2102,7 +2102,7 @@ static bool _is_known_branch_id(branch_type branch)
 
 static bool _is_known_branch(const Branch &br)
 {
-    return _is_known_branch_id(br.id);
+    return is_known_branch_id(br.id);
 }
 
 // Returns a list of the branches that the player knows the location of the

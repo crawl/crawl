@@ -56,6 +56,8 @@ LUAFN(l_find_deepest_explored)
     const level_id lid(str_to_branch(branch), 1);
     if (lid.branch == NUM_BRANCHES)
         luaL_error(ls, "Bad branch name: '%s'", branch.c_str());
+    if (!is_known_branch_id(lid.branch))
+        PLUARET(number, 0);
     PLUARET(number, find_deepest_explored(lid).depth);
 }
 
