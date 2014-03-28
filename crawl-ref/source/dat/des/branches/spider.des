@@ -1160,6 +1160,7 @@ xxX.X...X.XXXxx
 ENDMAP
 
 NAME: nicolae_spider_ant_collections
+TAGS: uniq_anthill
 DEPTH: Spider
 NSUBST: % = 1:* / 5:% / 3:$ / *:1
 SUBST: X = xxxx., 1 = 11102.
