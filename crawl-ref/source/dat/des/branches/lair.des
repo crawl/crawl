@@ -1278,7 +1278,7 @@ t1tt1ttt21tt
 ENDMAP
 
 NAME:   wad_woods_antlair
-TAGS:   mini_float
+TAGS:   mini_float uniq_anthill
 DEPTH:  Lair, Forest
 : wad_woods_setup(_G, "rock", 5, false, 0, 0, 0)
 MONS:   worker ant, soldier ant
@@ -1513,6 +1513,7 @@ MAP
 ENDMAP
 
 NAME:   wad_woods_minihive
+TAGS:   uniq_beehive
 DEPTH:  D:8-16, Lair, Forest
 ORIENT: float
 KFEAT:  M = mangrove
@@ -1530,13 +1531,13 @@ MAP
 t.1t..t.1..tWWW.t.1.1..t.tt..tt.
 ttt.t11.1t...MWW.1t.t1..tt...ttt
 tttt.1..aaaaaaa1Wt.t...t..tt1ttt
-t.t1.t1aa..a.6aaWWt1.1t.ttttttt
+t.t1.t1aa6.a66aaWWt1.1t.ttttttt
  tt.ttaaa.aba.aaaWW.t..ttttt1ttt
-  tt.aa.6a7a.a.6aaWtt1t...tt.tt
+  tt.aa66a7a.a.6aaWtt1t...tt.tt
   t.aaaaaab|baaaaaa.t.......ttt
- t1.1aa66a.a.a..aa.t...t.t.ttttt
+ t1.1aa66a.a.a.6aa.t...t.t.ttttt
 tt.1..aaa.aba6aaa.11.t..tttt%ttt
-t.t.1..aa..a6.aaWW.t.tt.tt11t
+t.t.1..aa.6a6.aaWW.t.tt.tt11t
 tt.t.1.1aaaaaaaWWwW1.t..t.tt
  tt.t111....t1WWwW.....1ttt
   11.t.tt1.tt.tWWt1.1tt...

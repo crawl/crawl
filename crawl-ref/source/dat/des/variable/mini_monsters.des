@@ -123,6 +123,7 @@ ENDMAP
 # Closed beehive
 # Should work without explicit floor margin (dp)
 NAME:   hive_lemuel
+TAGS:   uniq_beehive
 DEPTH:  D:9-, Spider
 MONS:   killer bee, yellow wasp, red wasp
 KMONS:  *R = worm
@@ -150,6 +151,7 @@ ENDMAP
 
 # Beehive minivault
 NAME:   minivault_7
+TAGS:   uniq_beehive
 DEPTH:  D:9-
 MONS:   patrolling queen bee, patrolling killer bee
 KITEM:  R = honeycomb w:20 / royal jelly
@@ -195,7 +197,7 @@ ENDMAP
 
 # Anthill
 NAME:  minivault_29
-TAGS:  patrolling
+TAGS:  patrolling uniq_anthill
 DEPTH: D:8-13, Lair, Spider
 MONS:  queen ant, soldier ant, worker ant
 SUBST: 0 = 3.
@@ -218,7 +220,7 @@ MAP
 ENDMAP
 
 NAME:   zaba_anthell
-TAGS:   no_rotate
+TAGS:   no_rotate uniq_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
 MONS:   queen ant, soldier ant, worker ant
 SUBST:  0 = 233, ? = . x
@@ -244,8 +246,8 @@ MAP
 ENDMAP
 
 NAME:  zaba_antful_of_joy
+TAGS:  no_rotate uniq_anthill
 DEPTH: D:8-13, Lair, Spider
-TAGS:  no_rotate
 MONS:  queen ant, soldier ant, worker ant
 KFEAT: ^ = known alarm trap / .
 : if you.branch() == "Spider" then
@@ -298,6 +300,7 @@ WWWxxxxxxxWWW
 ENDMAP
 
 NAME:   minmay_another_anthill
+TAGS:   uniq_anthill
 DEPTH:  D:8-13, Lair:2-, Spider
 MONS:   patrolling worker ant / nothing, worker ant, soldier ant, patrolling queen ant
 SUBST:  a = 1223........x
@@ -388,6 +391,7 @@ MAP
 ENDMAP
 
 NAME:  pubby_dwanthill
+TAGS:  uniq_anthill
 DEPTH: D:13-, Spider:2-
 MONS:  patrolling formicid venom mage, patrolling soldier ant
 SUBST: 2 = 2., 3 = 2:3 .
@@ -417,7 +421,7 @@ MAP
 ENDMAP
 
 NAME:   nicolae_looking_at_the_future
-TAGS:   no_monster_gen no_trap_gen
+TAGS:   no_monster_gen no_trap_gen uniq_beehive
 DEPTH:  D:8-, Spider
 KMONS:  B = patrolling queen bee
 KMONS:  b = patrolling killer bee
