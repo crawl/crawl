@@ -523,10 +523,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
     case POT_LIGNIFY:
         if (potion && was_known && !transform(0, TRAN_TREE, false, true))
-        {
-            mpr("You can't become a tree right now.");
             return false;
-        }
 
         if (transform(30, TRAN_TREE, !was_known))
         {

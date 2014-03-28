@@ -758,16 +758,13 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
 
     if (you.transform_uncancellable)
     {
-        // Jiyva's wrath-induced transformation is blocking the attempt.
-        // May need to be updated if transform_uncancellable is used for
-        // other uses.
-        if (!just_check)
+        if (!involuntary)
             mpr("You are stuck in your current form!");
         return false;
     }
 
     if (!_transformation_is_safe(which_trans, env.grid(you.pos()),
-        involuntary || just_check))
+        involuntary))
     {
         return false;
     }
