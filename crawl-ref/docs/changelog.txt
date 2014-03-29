@@ -1,5 +1,5 @@
-Stone Soup 0.14 (up to 0.14-a0-3586-gdd10857)
----------------------------------------------
+Stone Soup 0.14 (201404??)
+--------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new races: Formicids and Vine Stalkers.
 * A new deity: Dithmenos the Shadowed.
@@ -101,8 +101,6 @@ Monsters
       and strike down the player with said water.
     - Shambling mangroves, slow-moving, tough plants home to a nest of ravens
       or wasps.
-    - Formicid venom mages, who can dig out the level and attack the
-      player with poisonous conjurations and a single-target Ignite Poison;
     - Raiju, which can attack by transforming themselves into a bolt of
       lightning.
     - Worldbinders, abyssal enemies which summon low tier enemies from other
@@ -352,14 +350,15 @@ Items
 * Many changes to rods:
     - The rod of destruction now fires random bolts instead of having a pre-set
       selection.
-    - The rod of fiery destruction has only one spell, Explosive Bolt, which
-      explodes a fireball on every target hit in a line.
+    - New rod: rod of ignition, which fires a bolt that explodes a fireball on
+      every target hit in a line.
     - New rod: rod of shadows, which summons Shadow Creatures from a depth in
       the dungeon roughly equivalent to the user's skill with Evocations,
       drawing out-of-depth spawns after 16.
     - New rod: rod of clouds, which creates various clouds based on power,
       with high skill giving several new types of clouds.
-    - The rod of warding, venom, demonology, and frigid destruction are gone.
+    - The rods of warding, venom, demonology, fiery destruction, and frigid
+      destruction are gone.
 * The Horn of Geryon has been reworked into an XP-charged evokable, summoning
   1-4 hell beasts whose friendliness depends on evocations power.
 * Renamed items:
