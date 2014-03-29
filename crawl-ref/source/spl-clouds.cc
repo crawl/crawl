@@ -501,15 +501,15 @@ void apply_control_winds(const monster* mon)
 
 random_pick_entry<cloud_type> cloud_cone_clouds[] =
 {
-  { 0,   50, 100, DOWN, CLOUD_RAIN },
+  { 0,   50,  80, DOWN, CLOUD_RAIN },
   { 0,   50, 100, DOWN, CLOUD_MIST },
-  { 0,   50, 100, DOWN, CLOUD_MEPHITIC },
+  { 0,   50, 150, DOWN, CLOUD_MEPHITIC },
   { 0,  100, 100, PEAK, CLOUD_FIRE },
   { 0,  100, 100, PEAK, CLOUD_COLD },
   { 0,  100, 100, PEAK, CLOUD_POISON },
-  { 50, 100, 100, UP,   CLOUD_ACID },
-  { 50, 100, 100, UP,   CLOUD_STORM },
-  { 50, 100, 100, UP,   CLOUD_NEGATIVE_ENERGY },
+  { 30, 100, 125, UP,   CLOUD_NEGATIVE_ENERGY },
+  { 40, 100, 135, UP,   CLOUD_ACID },
+  { 50, 100, 175, UP,   CLOUD_STORM },
   { 0,0,0,FLAT,CLOUD_NONE }
 };
 
