@@ -32,7 +32,7 @@ end
 
 function lab_intruders(e)
   e.tags("patrolling")
-  e.mons("catoblepas never_corpse / minotaur skeleton")
+  e.mons("earth elemental / minotaur skeleton")
   e.mons("trapdoor spider never_corpse")
   e.mons("shadow")
   e.mons("unseen horror")
