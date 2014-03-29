@@ -2159,7 +2159,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
             if (!name.empty())
             {
                 sim->mname = name;
-                sim->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                sim->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR | MF_NAME_SPECIES;
                 sim->props["dbname"].get_string() = mons_class_name(MONS_SIMULACRUM);
             }
 
