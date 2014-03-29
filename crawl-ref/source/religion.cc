@@ -3602,7 +3602,7 @@ void join_religion(god_type which_god, bool immediate)
         // We don't want you get max piety at start just because you're filthy
         // rich.  In that case, you have to donate again more...  That the poor
         // widow is not spared doesn't mean the rich can't be milked for more.
-        lucre.props["acquired"] = 0;
+        lucre.props[ACQUIRE_KEY] = 0;
         you.gold -= zin_tithe(lucre, lucre.quantity, false, true);
     }
 
