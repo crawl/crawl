@@ -542,7 +542,7 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
         if (p->second <= 0)
             continue;
         place_cloud(cloud, p->first,
-                    random2avg(p->second * div_rand_round(pow, 3), 2),
+                    5 + random2avg(12 + div_rand_round(pow * 3, 4), 3),
                     caster);
     }
 
