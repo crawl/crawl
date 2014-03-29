@@ -246,24 +246,25 @@ function sroom_mythical_zoo(e)
     local mons = {}
     mons[1] = "fire drake w:" .. math.max(38 - Z * 2, 1)
     mons[2] = "basilisk w:" .. math.max(38 - Z * 2, 1)
-    mons[3] = "manticore w:" .. math.max(42 - Z * 2, 1)
-    mons[4] = "hippogriff w:" .. math.max(Z * 2 - 26, 1)
+    mons[3] = "wyvern w:" .. math.max(42 - Z * 2, 1)
+    mons[4] = "hippogriff w:" .. math.max(42 - Z * 2, 1)
     mons[5] = "hell hound w:" .. math.max(Z - 11, 1)
     mons[6] = "griffon w:" .. math.max(Z * 2 - 28, 1)
     mons[7] = "hydra w:" .. math.max(Z * 2 - 26, 1)
+    mons[8] = "manticore w:" .. math.max(Z * 2 - 26, 1)
 
     if Z >= 16 then
-        mons[8] = "harpy w:" .. (Z - 15)
+        mons[9] = "harpy w:" .. (Z - 15)
     end
     if Z >= 19 then
-        mons[9] = "fire dragon w:" .. (Z * 2 - 37)
-        mons[10] = "sphinx w:" .. (Z - 18)
+        mons[10] = "fire dragon w:" .. (Z * 2 - 37)
+        mons[11] = "sphinx w:" .. (Z - 18)
     end
 
     if Z >= 21 then
-       lord_mon = "catoblepas / sphinx w:40 / hell beast w:20 / phoenix w:20"
+       lord_mon = "catoblepas / sphinx w:40 / hell beast w:20 / apis w:20"
     elseif Z >= 16 then
-       lord_mon = "catoblepas / hydra w:40 / fire dragon w:35 / phoenix w:5"
+       lord_mon = "catoblepas / hydra w:40 / fire dragon w:35 / apis w:5"
     else
        lord_mon = "catoblepas / griffon w:40 / hydra w:40"
     end
