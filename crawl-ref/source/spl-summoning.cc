@@ -2809,6 +2809,7 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
     for (unsigned int i = 0; i < explode.size(); ++i)
     {
         bolt explosion;
+        explosion.thrower = KILL_YOU;
         explosion.source = explode[i].first;
         explosion.target = explode[i].first;
         explosion.name = "magical backlash";
