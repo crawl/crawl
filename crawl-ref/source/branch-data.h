@@ -44,7 +44,7 @@ const Branch branches[NUM_BRANCHES] =
       true, WHITE, ETC_ELVEN_BRICK,
       'E', true, 0 },
 
-    { BRANCH_HIVE, BRANCH_DUNGEON, 11, 16, 4, 15,
+    { BRANCH_HIVE, BRANCH_DUNGEON, 11, 15, 4, 15,
       0, 0,
       DNGN_ENTER_HIVE, DNGN_RETURN_FROM_HIVE,
       "Hive", "the Hive", "Hive",
