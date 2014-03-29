@@ -1351,14 +1351,11 @@ static bool _puton_item(int item_slot)
         if (need_swap)
             return _swap_rings(item_slot);
     }
-    else if (item_def* amulet = you.slot_item(EQ_AMULET, true))
+    else if (you.slot_item(EQ_AMULET, true))
     {
         // Remove the previous one.
-        if (!check_warning_inscriptions(*amulet, OPER_REMOVE)
-            || !remove_ring(you.equip[EQ_AMULET], true))
-        {
+        if (!remove_ring(you.equip[EQ_AMULET], true))
             return false;
-        }
 
         // Check for stat loss.
         if (!_safe_to_remove_or_wear(item, false))
@@ -1496,7 +1493,8 @@ bool remove_ring(int slot, bool announce)
             (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
                                              MT_INVLIST,
                                              OBJ_JEWELLERY, true, true, true,
-                                             0, -1, NULL, OPER_REMOVE)
+                                             0, -1, NULL, OPER_REMOVE,
+                                             false, false)
                         : slot;
 
         if (prompt_failed(equipn))
@@ -3409,10 +3407,7 @@ void tile_item_use(int idx)
 
         case OBJ_JEWELLERY:
             if (equipped && !equipped_weapon)
-            {
-                if (check_warning_inscriptions(item, OPER_REMOVE))
-                    remove_ring(idx);
-            }
+                remove_ring(idx);
             else if (check_warning_inscriptions(item, OPER_PUTON))
                 puton_ring(idx);
             return;

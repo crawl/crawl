@@ -190,7 +190,8 @@ int prompt_invent_item(const char *prompt,
                        int excluded_slot = -1,
                        int *const count = NULL,
                        operation_types oper = OPER_ANY,
-                       bool allow_list_known = false);
+                       bool allow_list_known = false,
+                       bool do_warning = true);
 
 vector<SelItem> select_items(
                         const vector<const item_def*> &items,
