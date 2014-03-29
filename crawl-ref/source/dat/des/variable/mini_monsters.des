@@ -4975,8 +4975,7 @@ ENDMAP
 
 #############################################################
 NAME:   kennysheep_opposing_triangles
-TAGS:   extra decor
-DEPTH:  D, Depths, !D:$, !Depths:$
+DEPTH:  D:4-, Depths, !D:$, !Depths:$
 SUBST:  c:ccxxv
 SUBST:  w:wl
 MAP
@@ -5031,7 +5030,6 @@ wwwcc....ccwww
 ENDMAP
 
 NAME:   kennysheep_just_a_vault
-TAGS:   allow_dup
 DEPTH:  D:8-, Depths, !D:$, !Depths:$
 SUBST:  c : ccxxv
 SUBST:  x : ccxxvbm
