@@ -4917,8 +4917,8 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_FIREBRAND:
-        base_damage = attacker->get_experience_level() * 2 / 3
-                      + random2(attacker->get_experience_level() * 2 / 3);
+        base_damage = attacker->get_experience_level()
+                      + random2(attacker->get_experience_level());
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_FIRE,
