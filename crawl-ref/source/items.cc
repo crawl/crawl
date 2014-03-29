@@ -4695,8 +4695,8 @@ item_info get_item_info(const item_def& item)
                     info_card_flags.push_back((char)flags);
                 }
             }
-            ii.props["cards"] = info_cards;
-            ii.props["card_flags"] = info_card_flags;
+            ii.props[CARD_KEY] = info_cards;
+            ii.props[CARD_FLAG_KEY] = info_card_flags;
         }
         break;
     case OBJ_GOLD:
@@ -4725,9 +4725,9 @@ item_info get_item_info(const item_def& item)
     static const char* copy_props[] =
     {
         ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY,
-        CORPSE_NAME_TYPE_KEY, "drawn_cards", "item_tile", "item_tile_name",
+        CORPSE_NAME_TYPE_KEY, DRAWN_CARD_KEY, "item_tile", "item_tile_name",
         "worn_tile", "worn_tile_name", "needs_autopickup",
-        FORCED_ITEM_COLOUR_KEY, MANGLED_CORPSE_KEY
+        FORCED_ITEM_COLOUR_KEY, MANGLED_CORPSE_KEY,
     };
     for (const char *prop : copy_props)
         if (item.props.exists(prop))
