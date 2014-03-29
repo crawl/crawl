@@ -872,20 +872,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = one_chance_in(3) ? WPN_TRIDENT : WPN_SPEAR;
         break;
 
-    case MONS_OCTOPODE:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random_choose_weighted(100, WPN_TRIDENT,
-                                               50, WPN_SPEAR,
-                                               30, WPN_FALCHION,
-                                               80, WPN_LONG_SWORD,
-                                               30, WPN_SCIMITAR,
-                                               20, WPN_FLAIL,
-                                               20, WPN_MORNINGSTAR,
-                                               0);
-        if (one_chance_in(3))
-            level = MAKE_GOOD_ITEM;
-        break;
-
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
         item.base_type = OBJ_WEAPONS;
@@ -1911,9 +1897,6 @@ static void _give_shield(monster* mon, int level)
     case MONS_OCTOPODE_CRUSHER:
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
-        // Deliberate fall-through.
-
-    case MONS_OCTOPODE:
         if (coinflip())
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD, level);
         break;
@@ -2253,9 +2236,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_OCTOPODE_CRUSHER:
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
-        // Deliberate fall-through.
-
-    case MONS_OCTOPODE:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_HAT;
         break;
