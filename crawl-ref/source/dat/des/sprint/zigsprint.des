@@ -251,7 +251,7 @@ function choose_mset_2(e)
     e.kmons("1 = insubstantial wisp / air elemental / vapour w:5")
 -- Earth
   elseif rnd < 90 then
-    e.kmons("1 = toenail golem w:30 / clay golem / stone golem / earth elemental")
+    e.kmons("1 = toenail golem / earth elemental / gargoyle w:2")
 -- Dragon
   elseif rnd < 92 then
     e.kmons("1 = swamp drake / fire drake / mottled dragon / steam dragon / wyvern")
@@ -364,7 +364,7 @@ function choose_mset_3(e)
                storm dragon / titan w:2")
 -- Earth
   elseif rnd < 79 then
-    e.kmons("1 = clay golem / stone golem / earth elemental / iron golem /\
+    e.kmons("1 = earth elemental w:15 / gargoyle w:5 / iron golem w:20 /\
                crystal guardian / stone giant w:5 / iron dragon w:5 /\
                quicksilver dragon w:5")
 -- Dragon
@@ -498,7 +498,7 @@ local rnd = crawl.random2(142)
                storm dragon / titan / electric golem")
 -- Earth
   elseif rnd < 87 then
-    e.kmons("1 = clay golem / stone golem / earth elemental / iron golem /\
+    e.kmons("1 = earth elemental w:15 / gargoyle w:5 / iron golem /\
                crystal guardian / stone giant / iron dragon /\
                quicksilver dragon")
 -- Dragon

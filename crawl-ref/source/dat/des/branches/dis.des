@@ -202,9 +202,9 @@ KMONS:   23 = reaper
 KMONS:   45 = hellion
 KMONS:   67 = quicksilver dragon
 KMONS:   89 = iron golem
-KMONS:   ABC = dancing weapon ; great sword good_item | battleaxe good_item | \
+KMONS:   AB = dancing weapon ; great sword good_item | battleaxe good_item | \
                                glaive good_item | great mace good_item
-KMONS:   D = iron elemental
+KMONS:   CD = war gargoyle
 KMONS:   E = lich
 KMONS:   F = executioner
 KMONS:   ! = iron devil / skeletal warrior / hell knight / place:Zot:1 skeleton w:15

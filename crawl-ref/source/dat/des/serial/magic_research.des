@@ -116,7 +116,7 @@ ENDMAP
 
 NAME:    hangedman_research_geology
 MONS:    basilisk, earth elemental, boulder beetle / catoblepas
-KMONS:   D = iron elemental
+KMONS:   D = iron dragon
 COLOUR:  .x012345D = brown
 FTILE:   .+x012345D = floor_pebble_brown
 TILE:    x = wall_pebble_brown

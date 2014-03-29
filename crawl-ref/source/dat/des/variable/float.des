@@ -1066,7 +1066,8 @@ ENDMAP
 NAME:   minmay_stone_box
 DEPTH:  D:10-
 ORIENT: float
-KMONS:  " = stone golem
+WEIGHT: 5
+KMONS:  " = earth elemental
 KITEM:  " = any scroll / any potion
 MAP
 cccccccccc
@@ -1799,8 +1800,8 @@ NSUBST: ; = 3:2 / *=.ll
 KMONS:  2 = molten gargoyle
 KMONS:  e = earth elemental
 SUBST:  E = exxx....
-NSUBST: ' = 3:3 / 3:W / *:.
-KMONS:  3 = clay golem
+NSUBST: ' = 2:3 / 3:W / *:.
+KMONS:  3 = thorn hunter
 NSUBST: w = 3:4 / *:w
 KMONS:  4 = water elemental
 KFEAT:  4 = deep_water
@@ -2280,63 +2281,53 @@ ENDMAP
 NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
-DEPTH:   Depths, !Depths:$
-MONS:    spriggan rider ; wand of frost . crossbow ego:flame . bolt q:25 / \
-         spriggan rider ; wand of flame . crossbow ego:frost . bolt q:25
-MONS:    two-headed ogre ; giant club ego:holy_wrath . \
-         great mace ego:draining . wand of confusion | wand of slowing
-MONS:    rakshasa ; scythe ego:anti-magic | trident ego:anti-magic . \
-         dart ego:exploding q:25 / mermaid ; chain mail . javelin ego:poisoned q:6
-MONS:    fire giant ; battleaxe ego:freezing
-MONS:    frost giant ; great sword ego:flaming
-MONS:    ettin ; giant club ego:holy_wrath . great mace ego:draining . \
-         wand of confusion | wand of slowing / golden dragon
-MONS:    vampire knight ; wand of lightning | wand of draining / \
-         greater naga ; chain mail . halberd ego:anti-magic | glaive ego:anti-magic
-KMONS:   A = fire drake / flaming corpse / fire elemental
-KMONS:   B = lindwurm / mottled dragon / efreet w:5
-KMONS:   C = fire crab / hell knight
-KMONS:   D = simulacrum w:5 / polar bear
-KMONS:   E = harpy simulacrum w:5 / snapping turtle simulacrum w:5 / ice dragon
-KMONS:   F = hydra simulacrum w:5 / golden dragon simulacrum w:5 / azure jelly
-KMONS:   G = insubstantial wisp / air elemental w:5
-KMONS:   H = air elemental / sixfirhy / vapour w:5
+DEPTH:   D:14-15, Depths, !Depths:$
+MONS:    orc knight ; wand of frost . crossbow ego:flame . bolt ego:none . chain mail / \
+         orc knight ; wand of flame . crossbow ego:frost . bolt ego:none . chain mail
+MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
+MONS:    rakshasa ; scythe ego:anti-magic | trident ego:anti-magic / \
+         mermaid ; chain mail . javelin ego:poisoned
+MONS:    fire giant ; battleaxe ego:freezing ident:type
+MONS:    frost giant ; great sword ego:flaming ident:type
+MONS:    golden dragon / crystal guardian w:8
+MONS:    vampire knight ; wand of lightning | wand of draining . \
+         great sword . chain mail / tengu reaver ; chain mail . \
+         halberd ego:anti-magic ident:type | glaive ego:anti-magic ident:type
+KMONS:   A = fire drake / salamander / fire elemental
+KMONS:   B = lindwurm / fire crab / efreet w:5
+KMONS:   C = salamander firebrand / ophan w:5 / balrug w:5
+KMONS:   D = hydra simulacrum / bog body / polar bear
+KMONS:   E = freezing wraith / ice devil / harpy simulacrum
+KMONS:   F = blizzard demon / azure jelly
+KMONS:   G = air elemental / harpy / sixfirhy w:5
+KMONS:   H = raiju / shock serpent / vapour w:5
 KMONS:   I = spriggan air mage / storm dragon
-KMONS:   J = stone golem w:5 / earth elemental w:5 / basilisk
-KMONS:   K = catoblepas / iron golem w:5 / boulder beetle
-KMONS:   L = iron dragon / crystal guardian
-KMONS:   M = orc warrior ; long sword ego:holy_wrath / holy swine / \
-             merfolk ; trident ego:holy_wrath
-KMONS:   N = apis / phoenix w:5
-KMONS:   O = angel / cherub
-KMONS:   P = hellwing / red devil / hell hound
-KMONS:   Q = hell beast / smoke demon / ynoxinul
-KMONS:   R = shadow demon / reaper / cacodemon w:5
-KMONS:   S = eidolon / skeletal warrior / zombie w:5
-KMONS:   T = flayed ghost / guardian mummy / plague shambler
-KMONS:   U = death ooze / bone dragon / profane servitor w:5
-KMONS:   V = elephant / very ugly thing / wolf spider
-KMONS:   W = dire elephant / alligator / emperor scorpion
-KMONS:   Y = anaconda / alligator snapping turtle
-KMONS:   X = deep troll / orc knight / hill giant
-KMONS:   Z = iron troll / naga warrior / minotaur
-KMONS:   a = spriggan defender w:5 / merfolk impaler w:5 / orc warlord
-KMONS:   d = deep elf mage / wizard / boggart
-KMONS:   e = deep elf conjurer / ogre mage / great orb of eyes
-KMONS:   f = deep elf annihilator / sphinx w:5 / lich w:5
-KMONS:   g = centaur / yaktaur
-KMONS:   h = centaur warrior / yaktaur captain / cyclops
-KMONS:   i = stone giant / merfolk javelineer w:5
-KFEAT:   ! = granite_statue
+KMONS:   J = gargoyle / earth elemental w:5 / basilisk
+KMONS:   K = catoblepas / boulder beetle
+KMONS:   L = iron dragon / deep troll earth mage / war gargoyle w:5
+KMONS:   M = elephant / hydra / wolf spider
+KMONS:   N = dire elephant / alligator / anaconda
+KMONS:   O = bone dragon w:20 / emperor scorpion / alligator snapping turtle
+KMONS:   P = deep troll / skeletal warrior / spriggan rider w:5
+KMONS:   Q = naga warrior / orc warlord / minotaur
+KMONS:   R = spriggan defender / reaper / merfolk impaler w:5
+KMONS:   S = deep elf mage / wizard / boggart
+KMONS:   T = deep elf conjurer / orc sorcerer / giant orange brain
+KMONS:   U = deep elf annihilator / sphinx w:5 / lich w:5
+KMONS:   V = cyclops / centaur warrior / naga sharpshooter
+KMONS:   W = manticore / yaktaur captain / stone giant
+KMONS:   X = deep elf master archer / merfolk javelineer / thorn hunter w:20
+KFEAT:   g = granite_statue
 KFEAT:   u = fountain_sparkling
 KMASK:   @' = !no_monster_gen
 KITEM:   | = superb_item, star_item / any w:20
+SHUFFLE: AB / DE, GH / JK, MN / ST
 : if you.absdepth() < 20 then
-SHUFFLE: ABDE / GHJK / MNPQ / VWde, PQ / ST, VW / XZ, de / gh
+SHUFFLE: ABDE / GHJK / MNST / PQVW, MN / PQ, ST / VW
 : else
 SUBST: B = C, A = B, E = F, D = E, H = I, G = H, K = L, J = K
-SUBST: N = O, M = N, Q = R, P = Q, 2 = 6, 3 = 7
-SHUFFLE: BCEF / HIKL / NOQR / WYef, QR / TU, WY / Za, ef / hi
+SUBST: N = O, M = N, T = U, S = T, 2 = 6, 3 = 7
+SHUFFLE: BCEF / HIKL / NOTU / QRWX, NO / QR, TU / WX
 NSUBST:  1 = 1:4 / 1:5
 : end
 MAP
@@ -2347,8 +2338,8 @@ MAP
  vv...bb+c+vv...bb
 vv...bb.....vv...bb
 v|3bbb.......vvv3|b
-v|bbM.........Pvv|b
-bbbNMvvv...bbbPQvvv
+v|bbM.........Svv|b
+bbbNMvvv...bbbSTvvv
 vvvvvvvv+c+bbbbbbbb
 bbbHGvvv...bbbJKvvv
 b*bbG.........Jvv*v
@@ -2358,9 +2349,9 @@ vvv...bb+c+vv...bbb
 b$vv...b...v...bb$v
 b$$vv.........bb$$v
 bb$.vvv.....bbb.$vv
- bb..!v++c++b!..vv
+ bb..gv++c++bg..vv
   bb...........vv
-   bbb.u.}.u.vvv
+   bbb.u(.)u.vvv
      bnbbnvvnv
      '@'''''@'
 ENDMAP

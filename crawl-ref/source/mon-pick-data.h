@@ -579,14 +579,12 @@ static const pop_entry pop_hell[] =
 
 static const pop_entry pop_dis[] =
 { // Dis
-  {  1,  7,   25, DOWN, MONS_CLAY_GOLEM },
   {  1,  2,    8, DOWN, MONS_CRIMSON_IMP },
   {  1,  7,  539, DOWN, MONS_RED_DEVIL },
   {  1,  7,  136, DOWN, MONS_NECROPHAGE },
   {  1, 12,  514, DOWN, MONS_SKELETAL_WARRIOR },
   {  1,  7, 1998, FLAT, MONS_ZOMBIE },
   {  1, 12,  438, DOWN, MONS_HELL_HOUND },
-  {  1,  7,   25, DOWN, MONS_STONE_GOLEM },
   {  1,  7,   25, DOWN, MONS_HELL_KNIGHT },
   {  1,  7,  776, FLAT, MONS_TORMENTOR },
   {  1,  7,   66, DOWN, MONS_PHANTOM },
@@ -594,7 +592,7 @@ static const pop_entry pop_dis[] =
   {  1,  6,  420, DOWN, MONS_WIGHT },
   {  1, 12,  272, DOWN, MONS_SKELETON },
   {  1,  7,   89, DOWN, MONS_HELL_HOG },
-  {  1, 12,   25, DOWN, MONS_IRON_GOLEM },
+  {  1, 12,   60, DOWN, MONS_IRON_GOLEM },
   {  1,  7,  300, FLAT, MONS_HELLION },
   {  1,  7,   25, FLAT, MONS_EFREET },
   {  1,  7,  420, DOWN, MONS_MUMMY },
@@ -622,17 +620,15 @@ static const pop_entry pop_dis[] =
 
 static const pop_entry pop_geh[] =
 { // Gehenna
-  {  1,  7,   25, DOWN, MONS_CLAY_GOLEM },
   {  1, 12,  690, DOWN, MONS_RED_DEVIL },
   {  1,  7, 1998, FLAT, MONS_SKELETON },
   {  1,  7, 1998, FLAT, MONS_ZOMBIE },
   {  1,  7,  350, FLAT, MONS_HELL_HOUND },
   {  1,  7,  192, FLAT, MONS_HELL_HOG },
   {  1,  7,   46, DOWN, MONS_FIRE_BAT },
-  {  1,  7,   17, FLAT, MONS_STONE_GOLEM },
+  {  1,  7,   30, FLAT, MONS_IRON_GOLEM },
   {  1,  7,  192, DOWN, MONS_CRIMSON_IMP },
   {  1,  7,  514, DOWN, MONS_NECROPHAGE },
-  {  0,  4,    8, PEAK, MONS_IRON_GOLEM },
   {  1,  7,  217, DOWN, MONS_PHANTOM },
   {  1,  7,  705, DOWN, MONS_SHADOW },
   {  1,  7,  690, DOWN, MONS_WIGHT },
@@ -1069,16 +1065,16 @@ static const pop_entry pop_icecv[] =
 static const pop_entry pop_volcano[] =
 { // Volcano
   {  1,  1,  514, FLAT, MONS_HELL_HOUND },
-  {  1,  1,  514, FLAT, MONS_HELL_HOG },
+  {  1,  1,  386, FLAT, MONS_HELL_HOG },
   {  1,  1,  514, FLAT, MONS_MANTICORE },
   {  1,  1,  514, FLAT, MONS_LINDWURM },
   {  1,  1,  514, FLAT, MONS_FIRE_DRAKE },
-  {  1,  1,  514, FLAT, MONS_TOENAIL_GOLEM },
+  {  1,  1,  386, FLAT, MONS_TOENAIL_GOLEM },
   {  1,  1,  514, FLAT, MONS_FIRE_ELEMENTAL },
-  {  1,  1,  514, FLAT, MONS_FIRE_VORTEX },
-  {  1,  1,  514, FLAT, MONS_CRIMSON_IMP },
+  {  1,  1,  386, FLAT, MONS_GARGOYLE },
+  {  1,  1,  386, FLAT, MONS_RED_DEVIL },
   {  1,  1,  514, FLAT, MONS_EFREET },
-  {  1,  1,  514, FLAT, MONS_FLAYED_GHOST },
+  {  1,  1,  514, FLAT, MONS_SALAMANDER },
   { 0,0,0,FLAT,MONS_0 }
 };
 

@@ -155,21 +155,16 @@ MONS:    smoke demon
 MONS:    hell knight / nothing w:5
 KMONS:   7 = molten gargoyle
 KFEAT:   7 = l
-KMONS:   8 = iron golem
+KMONS:   8 = iron devil ; mundane plate armour . great sword ego:flaming ident:type
 KMONS:   9 = Xtahua, hellephant
 KMONS:   $ = 0 / nothing w:90
 KITEM:   $ = $
-NSUBST:  = = 1:= / *:v
-SUBST:   = = +v
+NSUBST:  = = 1 = +v / *:v
 SUBST:   ' : l.
-: _G.set_random_mon_list("fire bat w:30 / fire drake / fire dragon / " ..
-:     "hell hound / efreet / fire crab / fire giant w:3 / mottled dragon / " ..
-:     "fire elemental / crimson imp / fire vortex / molten gargoyle")
-: if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
-KFEAT:   V = enter_vaults
-: else
-KFEAT:   V = floor
-: end
+: _G.set_random_mon_list("place:" .. you.where() .. " w:75 / fire drake / " ..
+:     "fire dragon / hell hound / efreet / fire crab / fire giant w:4 / " ..
+:     "mottled dragon / fire elemental / red devil / hell knight w:3 / " ..
+:     "molten gargoyle w:3 / salamander mystic band w:15")
 MARKER:  % = lua:props_marker { portal=1 }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
@@ -212,7 +207,7 @@ xllllllllllllllxxxxlllllll.xxx.xll......xx....llllllllvv.......v...v.......vvlxx
 xllllllxxllllllxxvvvvllll.lxxxl...lll..xx...0..lllllll7v..............v..v.v7lxx
 xxlllllxxxlllllllv00v.l..llllllllllll...0......lllllllvv.......v...v.......vvlxx
 xxlllllllllllllllv00v..lllllllllllllll.........lllllllvv......vv...vv......vvlxx
-xxxllllllllllllllvvvVvvvlllllllllllllll..x....llllllllvv1vvvv1v3...3v.v..v.vvlxx
+xxxllllllllllllllvvv.vvvlllllllllllllll..x....llllllllvv1vvvv1v3...3v.v..v.vvlxx
 xxx...lllllllllllv**v00vlllllllllllllll..0..xlllllllll7v1v**v1v.....v......v7lxx
 xxx1....lllllllllv**v00vllllllllllllllll.....lllllllllvv1....1v.....v4....4vvlxx
 xxxx.x.1.llllllllvvvvvvvllllllllllllllxx...0..lllllllxvvvvvvvvv.....vvvvvvvvvllx
