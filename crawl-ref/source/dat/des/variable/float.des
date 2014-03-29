@@ -2853,6 +2853,69 @@ cc..e....................e2.cc
               @@
 ENDMAP
 
+NAME:   ragdoll_tomb_raider
+TAGS:   no_item_gen no_monster_gen patrolling
+DEPTH:  D:14-, Depths, Crypt:1-4
+ORIENT: float
+KITEM:  $ = ring of regeneration unrand:ring_of_vitality / acquire any
+KITEM:  1234 = gold / any / nothing
+KITEM:  M4 = superb_item / any
+KFEAT:  ~ = known zot trap
+: if you.absdepth() <= 17 then
+KMONS: 1 = mummy / guardian mummy / nothing
+KMONS: 2 = mummy / guardian mummy / nothing
+KMONS: 3 = mummy / guardian mummy / mummy priest
+KMONS: 4 = mummy priest
+SUBST: H = .
+: else
+KMONS: 1 = mummy / guardian mummy
+KMONS: 2 = guardian mummy / mummy priest / nothing
+KMONS: 3 = guardian mummy / mummy priest / greater mummy
+KMONS: 4 = mummy priest / greater mummy
+KMONS: H = sphinx / nothing
+: end
+: if you.branch() == "Crypt" then
+KMONS: M = Khufu, greater mummy
+: elseif you.absdepth() <= 17 then
+KMONS: M = Menkaure, mummy priest
+: else
+KMONS: M = mummy priest
+: end
+SUBST:  C = c
+NSUBST: ~ = 2:~ / 1:~. / *:.
+COLOUR: G = yellow
+TILE:   G = dngn_sarcophagus_sealed
+COLOUR: c = yellow
+TILE:   c = wall_tomb
+COLOUR: C = white
+TILE:   C = wall_lab_stone
+FTILE:  .~cCG1234M$ = floor_sandstone
+: set_feature_name("granite_statue", "sealed sarcophagus")
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccx
+xc3cccGcccMcccGccc3cx
+xc.c.....c.c.....c.cx
+xcc...c...c...c...ccx
+xccc.ccc.....ccc.cccx
+xcc...ccc...ccc...ccx
+xcGc...cc...cc...cGcx
+xccc....cC.Cc....cccx
+xc2.c...c.$.c...c.2cx
+xccccc.ccC4Ccc.cccccx
+xc2.c...ccGcc...c.2cx
+xccc.....ccc.....cccx
+xccG..C.......C..Gccx
+xccc.....c.c.....cccx
+xcc.c...cc3cc...c.ccx
+xc1ccc...ccc...ccc1cx
+xccccGc...c...cGccccx
+xccccccc.....cccccccx
+xccHHHcccC.CcccHHHccx
+xc,,,,,cc,,,cc,,,,,cx
+x,,,,,,,,,@,,,,,,,,,x
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.
