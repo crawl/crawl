@@ -830,8 +830,8 @@ static void _describe_regen(status_info* inf)
 
 static void _describe_poison(status_info* inf)
 {
-    int pois_perc = (get_player_poisoning() >= you.hp ? 100
-                       : (you.hp - poison_survival()) * 100 / you.hp);
+    int pois_perc = (you.hp <= 0) ? 100
+                                  : ((you.hp - poison_survival()) * 100 / you.hp);
     inf->light_colour = (player_res_poison(false) >= 3
                          ? DARKGREY : _bad_ench_colour(pois_perc, 35, 100));
     inf->light_text   = "Pois";
