@@ -7,7 +7,7 @@
 #
 # Digging, disintegration or teleportation is required to enter the vault.
 # A wand of disintegration and scroll of teleportation is guaranteed in the
-# home of a local deep dwarf to ensure random teleporters can escape. If
+# home of a local kobold to ensure random teleporters can escape. If
 # all else fails there is an escape hatch in the mall's washroom.
 
 default-depth:  Depths, !Depths:$
@@ -28,12 +28,12 @@ KMONS:  d = orc warlord
   : if you.absdepth() < 23 then
 KMONS:  e = vampire / yaktaur /\
             ettin / orc / wolf / gargoyle / iron troll /\
-            deep troll / cyclops / deep dwarf / centaur / warg / wizard
+            deep troll / cyclops / kobold / centaur / warg / wizard
 KMONS:  i = frost giant / fire giant
   : else
 KMONS:  e = vampire / yaktaur / w:5 frost giant / w:5 fire giant /\
             ettin / orc / wolf / gargoyle / iron troll /\
-            deep troll / cyclops / deep dwarf / centaur / warg / wizard
+            deep troll / cyclops / kobold / centaur / warg / wizard
 KMONS:  i = titan
   : end
 KMONS:  P = plant
