@@ -548,8 +548,7 @@ MONS:    shapeshifter / very ugly thing / large abomination w:2, wretched star
 MONS:    large abomination / plague shambler / death ooze w:2, ancient zyme
 MONS:    large slime creature w:12 / very large slime creature w:8 / rakshasa w:2
 KMONS:   8 = starcursed mass
-KMONS:   9 = octopode ; trident | halberd | glaive / chaos spawn / \
-         anaconda perm_ench:shapeshifter w:2
+KMONS:   9 = giant eyeball / chaos spawn / anaconda perm_ench:shapeshifter w:2
 KMONS:   0 = tentacled starspawn
 KMONS:   A = patrolling shadow demon
 KMONS:   B = boggart
@@ -898,7 +897,7 @@ NAME:    hangedman_abyss_town
 TAGS:    no_monster_gen patrolling allow_dup
 WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / wizard / base draconian w:5 / \
-         guardian serpent w:1 / vampire w:3 / octopode w:3
+         guardian serpent w:1 / vampire w:3 / necromancer w:3
 MONS:    thrashing horror / blink frog / very ugly thing / \
          large abomination / unseen horror / vapour w:5 / shapeshifter / \
          wretched star w:5 / air elemental / raiju / worldbinder

@@ -165,7 +165,7 @@ MONS: patrolling ooze / patrolling rat
 MONS: patrolling giant mite / patrolling rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
-MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
+MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of cure mutation ident:all q:2 / potion of cure mutation q:1 / any potion, \
  meat ration / bread ration / royal jelly / honeycomb / choko, \
@@ -198,7 +198,7 @@ MONS: patrolling ooze / patrolling rat
 MONS: patrolling giant mite / patrolling rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
-MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
+MONS: patrolling human hd:2 hp:35
 KITEM: * = potion of flight ident:all q:2 / potion of flight q:1 / any potion, \
  potion of cure mutation ident:all q:2 / potion of cure mutation q:1 / any potion, \
  meat ration / bread ration / royal jelly / honeycomb / choko, \
@@ -263,7 +263,7 @@ KFEAT: M = altar_makhleb
 KFEAT: D = altar_dithmenos
 KMONS: l = patrolling spatial vortex
 KFEAT: ? = altar_jiyva / w:5 altar_lugonu / w:25 floor
-KMONS: m = demigod
+KMONS: m = shadow
 KMONS: j = patrolling jelly
 KITEM: * = royal jelly
 COLOUR: # = yellow

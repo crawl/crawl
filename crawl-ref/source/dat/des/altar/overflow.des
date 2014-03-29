@@ -1230,12 +1230,12 @@ MAP
    .....
 ENDMAP
 
-NAME:    okawaru_dwarf
+NAME:    okawaru_humans
 TAGS:    uniq_altar_okawaru temple_overflow_1 temple_overflow_okawaru
 TAGS:    no_monster_gen no_wall_fixup
-DEPTH:   7-12
+DEPTH:   D:7-12
 COLOUR:  1 = yellow, ' = yellow, x = white
-MONS:    dwarf
+MONS:    human ; long sword . ring mail
 FTILE:   1'xO = floor_sandstone
 RTILE:   x = wall_tomb
 KFEAT:   _ = altar_okawaru
@@ -1827,13 +1827,7 @@ TAGS:   temple_overflow_1 temple_overflow_yredelemnul no_monster_gen no_item_gen
 DEPTH:  D:2-9
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  . = known web trap / .
-: if you.absdepth() <= 4 then
 KMONS:  _ = spectral orc
-: elseif you.absdepth() <= 7 then
-KMONS:  _ = spectral human hd:3
-: else
-KMONS:  _ = spectral elf hd:5
-: end
 MAP
 xxxxxxxxx
 xcccccccx

@@ -352,16 +352,16 @@ ENDMAP
 NAME:   hangedman_shoal_octodias
 DEPTH:  Shoals
 TAGS:   mini_float
-KMONS:  1 = octopode
+KMONS:  1 = octopode crusher
 KFEAT:  1 = deep_water
 MAP
  xWxwxWx
 xwwwxwwwx
-Wwxw1wxwW
-xww1x1wwx
-wx1xwx1xw
-xww1x1wwx
-Wwxw1wxwW
+WwxwwwxwW
+xwwwxwwwx
+wxwx1xwxw
+xwwwxwwwx
+WwxwwwxwW
 xwwwxwwwx
  xWxwxWx
 ENDMAP
