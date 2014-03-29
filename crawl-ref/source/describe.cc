@@ -1532,9 +1532,9 @@ static bool _check_buggy_deck(const item_def &deck, string &desc)
 
     const CrawlHashTable &props = deck.props;
 
-    if (!props.exists("cards")
-        || props["cards"].get_type() != SV_VEC
-        || props["cards"].get_vector().get_type() != SV_BYTE
+    if (!props.exists(CARD_KEY)
+        || props[CARD_KEY].get_type() != SV_VEC
+        || props[CARD_KEY].get_vector().get_type() != SV_BYTE
         || cards_in_deck(deck) == 0)
     {
         return true;
