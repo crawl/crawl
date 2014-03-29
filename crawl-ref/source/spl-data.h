@@ -3652,7 +3652,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_NOT_SELF,
      9,
      200,
-     3, LOS_RADIUS,
+     7, 7,
      0,
      NULL,
      false,

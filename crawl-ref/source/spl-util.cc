@@ -948,6 +948,7 @@ int spell_range(spell_type spell, int pow, bool player_spell)
         && spell != SPELL_STICKY_FLAME
         && spell != SPELL_FREEZE
         && spell != SPELL_DISCHARGE
+        && spell != SPELL_GLACIATE
         && !player_under_penance()
         && you.piety >= piety_breakpoint(3))
     {
