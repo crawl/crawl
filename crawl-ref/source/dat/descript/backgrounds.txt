@@ -119,8 +119,8 @@ victims.
 %%%%
 Summoner
 
-Summoners start with the book of Callings and are able to cast Summon Small
-Mammal from the start.
+Summoners start with the book of Callings and are able to Summon Small Mammals
+from the start.
 %%%%
 Thief
 

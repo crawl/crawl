@@ -96,19 +96,56 @@ spret_type cast_summon_small_mammal(int pow, god_type god, bool fail)
 
     monster_type mon = MONS_PROGRAM_BUG;
 
-    if (x_chance_in_y(10, pow + 1))
-        mon = coinflip() ? MONS_BAT : MONS_RAT;
-    else
-        mon = MONS_QUOKKA;
+    bool success = false;
+    int count = 0;
+    const int count_max = max(1, min(5, pow / 16));
 
-    if (!create_monster(
-            mgen_data(mon, BEH_FRIENDLY, &you,
-                      3, SPELL_SUMMON_SMALL_MAMMAL,
-                      you.pos(), MHITYOU,
-                      MG_AUTOFOE, god)))
+    int pow_left = pow + 1;
+
+    while (pow_left > 0 && count < count_max)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        const int pow_spent = random2(pow_left) + 1;
+
+        switch (pow_spent)
+        {
+        case 75: case 74: case 38:
+            mon = MONS_ORANGE_RAT;
+            break;
+
+        case 65: case 64: case 63: case 27: case 26: case 25:
+            mon = MONS_GREEN_RAT;
+            break;
+
+        case 57: case 56: case 55: case 54: case 53: case 52:
+        case 20: case 18: case 16: case 14: case 12: case 10:
+            mon = MONS_QUOKKA;
+            break;
+
+        default:
+            mon = (coinflip()) ? MONS_BAT : MONS_RAT;
+            break;
+        }
+
+        // If you worship a good god, don't summon an evil small mammal
+        // (in this case, the orange rat).
+        if (player_will_anger_monster(mon))
+            continue;
+
+        pow_left -= pow_spent;
+        count++;
+
+        if (create_monster(
+                mgen_data(mon, BEH_FRIENDLY, &you,
+                          3, SPELL_SUMMON_SMALL_MAMMAL,
+                          you.pos(), MHITYOU,
+                          MG_AUTOFOE | MG_DONT_CAP, god)))
+        {
+            success = true;
+        }
     }
+
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
 }

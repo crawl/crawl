@@ -1358,9 +1358,9 @@ Summon Mushrooms spell
 
 This spell summons wandering mushrooms and deathcaps next to a chosen foe.
 %%%%
-Summon Small Mammal spell
+Summon Small Mammals spell
 
-This spell summons a small creature to the caster's aid.
+This spell summons one or two small creatures to the caster's aid.
 %%%%
 Summon Spectral Orcs spell
 

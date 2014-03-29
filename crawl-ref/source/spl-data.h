@@ -440,11 +440,11 @@ struct spell_desc
 },
 
 {
-    SPELL_SUMMON_SMALL_MAMMAL, "Summon Small Mammal",
+    SPELL_SUMMON_SMALL_MAMMAL, "Summon Small Mammals",
      SPTYP_SUMMONING,
      SPFLAG_BATTLE,
      1,
-     25,
+     80,
      -1, -1,
      0,
      NULL,
