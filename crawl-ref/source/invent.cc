@@ -1882,7 +1882,8 @@ int prompt_invent_item(const char *prompt,
                        int excluded_slot,
                        int *const count,
                        operation_types oper,
-                       bool allow_list_known)
+                       bool allow_list_known,
+                       bool do_warning)
 {
     if (!any_items_to_select(type_expect, false, excluded_slot)
         && type_expect == OSEL_THROWABLE
@@ -2005,7 +2006,7 @@ int prompt_invent_item(const char *prompt,
             if (res != -1)
             {
                 ret = res;
-                if (check_warning_inscriptions(you.inv[ret], oper))
+                if (!do_warning || check_warning_inscriptions(you.inv[ret], oper))
                     break;
             }
         }
@@ -2028,7 +2029,7 @@ int prompt_invent_item(const char *prompt,
 
             if (must_exist && !you.inv[ret].defined())
                 mpr("You don't have any such object.");
-            else if (check_warning_inscriptions(you.inv[ret], oper))
+            else if (!do_warning || check_warning_inscriptions(you.inv[ret], oper))
                 break;
         }
         else if (!isspace(keyin))
