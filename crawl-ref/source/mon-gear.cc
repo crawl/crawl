@@ -1908,10 +1908,17 @@ static void _give_shield(monster* mon, int level)
                                   level);
         }
         break;
+
+    case MONS_OCTOPODE_CRUSHER:
+        if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        // Deliberate fall-through.
+
     case MONS_OCTOPODE:
         if (coinflip())
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD, level);
         break;
+
     case MONS_DRACONIAN_KNIGHT:
     case MONS_IRONHEART_PRESERVER:
         if (coinflip())
@@ -2244,6 +2251,11 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_LEATHER_ARMOUR;
         break;
+
+    case MONS_OCTOPODE_CRUSHER:
+        if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+        // Deliberate fall-through.
 
     case MONS_OCTOPODE:
         item.base_type = OBJ_ARMOUR;
