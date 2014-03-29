@@ -39,7 +39,6 @@ queen_ant MONS_QUEEN_ANT
 %sdir mon
 %rim 0
 formicid MONS_FORMICID
-formicid_venom_mage MONS_FORMICID_VENOM_MAGE
 %sdir mon/animals
 %rim 1
 

@@ -2382,7 +2382,6 @@ enum monster_type                      // menv[].type
     MONS_QUEEN_ANT,
 #if TAG_MAJOR_VERSION > 34
     MONS_FORMICID,
-    MONS_FORMICID_VENOM_MAGE,
 #endif
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
