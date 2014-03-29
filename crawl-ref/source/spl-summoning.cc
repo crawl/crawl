@@ -2814,8 +2814,8 @@ spret_type cast_forceful_dismissal(int pow, bool fail)
         explosion.name = "magical backlash";
         explosion.is_explosion = true;
         explosion.auto_hit = true;
-        explosion.damage = dice_def(max(1, div_rand_round(explode[i].second, 4)),
-                                    10 + pow / 8);
+        explosion.damage = dice_def(1 + div_rand_round(explode[i].second, 4),
+                                    7 + pow / 8);
         explosion.flavour = BEAM_MMISSILE;
         explosion.colour  = ETC_MAGIC;
         explosion.ex_size = 1;
