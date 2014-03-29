@@ -27,18 +27,18 @@ KMONS:  k = patrolling vampire mage / patrolling boggart
 KMONS:  d = orc warlord
   : if you.absdepth() < 23 then
 KMONS:  e = vampire / yaktaur /\
-            ettin / orc / wolf / draconian / iron troll /\
+            ettin / orc / wolf / gargoyle / iron troll /\
             deep troll / cyclops / deep dwarf / centaur / warg / wizard
 KMONS:  i = frost giant / fire giant
   : else
 KMONS:  e = vampire / yaktaur / w:5 frost giant / w:5 fire giant /\
-            ettin / orc / wolf / draconian / iron troll /\
+            ettin / orc / wolf / gargoyle / iron troll /\
             deep troll / cyclops / deep dwarf / centaur / warg / wizard
 KMONS:  i = titan
   : end
 KMONS:  P = plant
-KMONS:  h = generate_awake human / generate_awake elf / generate_awake halfling
-: dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 halfling chunk')
+KMONS:  h = generate_awake human / generate_awake elf / generate_awake kobold
+: dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 kobold chunk')
 KFEAT:  = = floor
 FTILE:  =E79 = floor_grass
 COLOUR: =E7 = green
@@ -169,7 +169,7 @@ KFEAT:  ~ = closed_door
 SUBST: * = *:35 -:1
 KITEM: - = animal skin
 : dgn.delayed_decay_extra(_G, '*', 'human skeleton / yak skeleton /\
-:                            elf skeleton / halfling skeleton /\
+:                            elf skeleton / kobold skeleton /\
 :                            elephant skeleton / sheep skeleton /\
 :                            manticore skeleton', 'animal skin')
 KFEAT:  8 = granite_statue / orcish_idol / w:5 altar_trog /\

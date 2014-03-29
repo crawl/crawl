@@ -35,7 +35,7 @@ MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie, \
         goblin skeleton / kobold skeleton / human skeleton / jackal skeleton
 # Uses a neutral human to make the player feel extra evil. Neutral also means
 # good gods will get mad if you choose to obey Yred.
-KMONS:  h = generate_awake human hd:2 att:neutral
+KMONS:  h = generate_awake human att:neutral
 MARKER: h = lua:portal_desc {slave_name="victim"}
 MARKER: h = lua:MonPropsMarker:new{yslave="yslave"}
 KFEAT:  h = .

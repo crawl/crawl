@@ -2418,7 +2418,7 @@ ORIENT:  float
 MONS:    centaur warrior / yaktaur w:5 / orc knight w:15 / \
          deep elf conjurer / deep troll / boggart w:5 / efreet w:5 / \
          rakshasa w:5 / wizard / necromancer / spriggan rider w:5 / \
-         vampire / octopode w:5 ; trident good_item
+         vampire / deep elf mage w:5
 MONS:    orc high priest / orc sorcerer / naga warrior / naga mage / \
          skeletal warrior / yaktaur captain w:5 / ogre mage / \
          deep elf knight / phantasmal warrior / spriggan berserker / \
