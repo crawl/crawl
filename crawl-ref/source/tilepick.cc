@@ -5010,6 +5010,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MIGHT_OTHER:              return TILEG_MIGHT_OTHER;
     case SPELL_NOXIOUS_CLOUD:            return TILEG_NOXIOUS_CLOUD;
     case SPELL_ORB_OF_ELECTRICITY:       return TILEG_ORB_OF_ELECTRICITY;
+    case SPELL_PHANTOM_MIRROR:           return TILEG_PHANTOM_MIRROR;
     case SPELL_PETRIFYING_CLOUD:         return TILEG_PETRIFYING_CLOUD;
     case SPELL_PLANEREND:                return TILEG_PLANEREND;
     case SPELL_POLYMORPH:                return TILEG_POLYMORPH;
