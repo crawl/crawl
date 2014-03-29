@@ -75,9 +75,9 @@ int identify(int power, int item_slot, bool alreadyknown, string *pre_msg)
                 || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
-                return identified > 0                        ? identified :
-                       alreadyknown || crawl_state.seen_hups ? 0
-                                                             : -1;
+                return identified > 0 ? identified :
+                       alreadyknown   ? 0
+                                      : -1;
             }
             else
             {

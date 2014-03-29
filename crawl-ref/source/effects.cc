@@ -699,7 +699,7 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
         }
 
         if (item_slot == PROMPT_NOTHING)
-            return known || crawl_state.seen_hups ? -1 : 0;
+            return known ? -1 : 0;
 
         if (item_slot == PROMPT_ABORT)
         {
@@ -708,7 +708,7 @@ int recharge_wand(int item_slot, bool known, string *pre_msg)
                 || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
-                return known || crawl_state.seen_hups ? -1 : 0;
+                return known ? -1 : 0;
             }
             else
             {

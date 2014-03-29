@@ -2297,7 +2297,6 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scrol
 
         if (item_slot == PROMPT_ABORT)
         {
-            // FIXME: when aborted by a HUP, the scroll shouldn't get lost.
             if (alreadyknown
                 || crawl_state.seen_hups
                 || yesno("Really abort (and waste the scroll)?", false, 0))
@@ -2506,7 +2505,7 @@ static int _handle_enchant_armour(int item_slot, bool alreadyknown,
         }
 
         if (item_slot == PROMPT_NOTHING)
-            return alreadyknown || crawl_state.seen_hups ? -1 : 0;
+            return alreadyknown ? -1 : 0;
 
         if (item_slot == PROMPT_ABORT)
         {
@@ -2515,7 +2514,7 @@ static int _handle_enchant_armour(int item_slot, bool alreadyknown,
                 || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
-                return (alreadyknown || crawl_state.seen_hups) ? -1 : 0;
+                return alreadyknown ? -1 : 0;
             }
             else
             {
