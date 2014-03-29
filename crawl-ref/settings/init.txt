@@ -162,7 +162,7 @@
 # tc_exclude_circle = red
 
 # Interrupting run and rest compound commands:
-# runrest_ignore_poison  = 2:30
+# runrest_safe_poison  = 80:100
 # runrest_ignore_monster ^= butterfly:1
 # runrest_ignore_monster ^= swamp worm:3
 # runrest_stop_message += You hear a.* slurping noise
