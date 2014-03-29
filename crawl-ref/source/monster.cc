@@ -376,9 +376,6 @@ int monster::body_weight(bool /*base*/) const
             weight += 550;
             break;
 
-#if TAG_MAJOR_VERSION == 34
-        case MONS_STONE_GOLEM:
-#endif
         case MONS_EARTH_ELEMENTAL:
         case MONS_CRYSTAL_GUARDIAN:
             weight *= 2;
@@ -3984,12 +3981,7 @@ int monster::res_petrify(bool temp) const
     if (is_insubstantial())
         return 1;
 
-    if (
-#if TAG_MAJOR_VERSION == 34
-        type == MONS_STONE_GOLEM
-        ||
-#endif
-           type == MONS_CATOBLEPAS
+    if (type == MONS_CATOBLEPAS
         || type == MONS_EARTH_ELEMENTAL
         || type == MONS_LIGHTNING_SPIRE
         || mons_is_statue(type))
