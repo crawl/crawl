@@ -421,7 +421,7 @@ bool actor_slime_wall_immune(const actor *act)
  */
 bool actor::is_wall_clinging() const
 {
-    return props.exists("clinging") && props["clinging"].get_bool();
+    return props.exists(CLING_KEY) && props[CLING_KEY].get_bool();
 }
 
 /**
@@ -455,9 +455,9 @@ bool actor::check_clinging(bool stepped, bool door)
                     && !airborne();
 
     if (can_cling_to_walls())
-        props["clinging"] = clinging;
-    else if (props.exists("clinging"))
-        props.erase("clinging");
+        props[CLING_KEY] = clinging;
+    else if (props.exists(CLING_KEY))
+        props.erase(CLING_KEY);
 
     if (!stepped && was_clinging && !clinging)
     {
@@ -474,8 +474,8 @@ bool actor::check_clinging(bool stepped, bool door)
 
 void actor::clear_clinging()
 {
-    if (props.exists("clinging"))
-        props["clinging"] = false;
+    if (props.exists(CLING_KEY))
+        props[CLING_KEY] = false;
 }
 
 void actor::clear_constricted()
