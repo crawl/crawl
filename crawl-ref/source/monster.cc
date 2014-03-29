@@ -376,7 +376,9 @@ int monster::body_weight(bool /*base*/) const
             weight += 550;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case MONS_STONE_GOLEM:
+#endif
         case MONS_EARTH_ELEMENTAL:
         case MONS_CRYSTAL_GUARDIAN:
             weight *= 2;
@@ -728,10 +730,13 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 bool monster::can_throw_large_rocks() const
 {
     monster_type species = mons_species(false); // zombies can't
-    return species == MONS_STONE_GIANT
-           || species == MONS_CYCLOPS
+    return species == MONS_CYCLOPS
            || species == MONS_OGRE
-           || species == MONS_FORMICID;
+           || species == MONS_FORMICID
+#if TAG_MAJOR_VERSION == 34
+           || species == MONS_STONE_GOLEM
+#endif
+           ;
 }
 
 bool monster::can_speak()
@@ -3982,8 +3987,12 @@ int monster::res_petrify(bool temp) const
     if (is_insubstantial())
         return 1;
 
-    if (type == MONS_STONE_GOLEM
-        || type == MONS_CATOBLEPAS
+    if (
+#if TAG_MAJOR_VERSION == 34
+        type == MONS_STONE_GOLEM
+        ||
+#endif
+           type == MONS_CATOBLEPAS
         || type == MONS_EARTH_ELEMENTAL
         || type == MONS_LIGHTNING_SPIRE
         || mons_is_statue(type))

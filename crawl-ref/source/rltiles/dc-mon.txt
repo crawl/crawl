@@ -423,16 +423,13 @@ octopode MONS_OCTOPODE
 octopode_crusher MONS_OCTOPODE_CRUSHER
 
 ## Golems ('8')
-%rim 1
-%sdir mon/nonliving
-clay_golem MONS_CLAY_GOLEM
 %rim 0
+%sdir mon/nonliving
 crystal_guardian MONS_CRYSTAL_GUARDIAN
 electric_golem MONS_ELECTRIC_GOLEM
 guardian_golem MONS_GUARDIAN_GOLEM
 %rim 1
 iron_golem MONS_IRON_GOLEM
-stone_golem MONS_STONE_GOLEM
 toenail_golem MONS_TOENAIL_GOLEM
 # For the Cigotuvi WizLab
 flesh_golem MONS_FLESH_GOLEM

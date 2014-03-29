@@ -969,25 +969,6 @@ marrow; one seed covers a wall with its ramifications.”
 Narrative of the Excursion of Mr. Vanderbilt’s Party to England, Russia,
 Denmark, France, Spain, Malta, Turkey, Madeira, Etc_. 1854.
 %%%%
-clay golem
-
-“Once upon a time a great Cabbalist lived in Prague called the Rabbi Löw. He
-made a human figure of clay, and left a small aperture in the lesser brain in
-which he laid a parchment with the unutterable name of God written on it. The
-clod immediately arose and was a man; he performed all the duties of a servant
-for his creator, he fetched water, and hewed wood. All through the Jews quarter
-he was known as the Golem of the great Rabbi Löw. Every Friday evening the
-Rabbi took the parchment out of his head, and he was clay until Sunday morning.
-Once the Rabbi forgot this duty, all were in the Synagogue, the Sabbath hymn
-was begun, when all the women and children in the assembly started and screamed
-out, ‘the Golem! the Golem is destroying everything!’ The Rabbi ordered the
-precentor to pause at the end of the prayer: it was yet possible to save all,
-but later nought would avail, the whole world would be destroyed. He hastened
-home, and saw the Golem already seizing the joists of his house to tear down
-the building: he sprang forward, took the parchment out, and dead clay again
-lay at his feet.”
-    -Berthold Auerbach, _Spinoza_. 1882.
-%%%%
 claymore
 
 <demon blade>
@@ -2877,13 +2858,6 @@ rills of water, along the field.”
     -Miguel de Cervantes Saavedra, _The Ingenious Gentleman Don Quixote of La
      Mancha_, IV, 10. 1605.
      trans. Carlos Fuentes, 1997.
-%%%%
-stone golem
-
-“I see him there
- Bringing a stone grasped firmly by the top
- In each hand, like an old-stone savage armed.”
-    -Robert Frost, “Mending Wall”, _North of Boston_. 1914.
 %%%%
 storm dragon armour
 
