@@ -2431,10 +2431,12 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
 
+    const bool melted = you.props.exists("melt_armour");
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
-                              "Your icy armour evaporates.", coinflip(),
-                              you.props.exists("melt_armour") ? NULL
-                                  : "Your icy armour starts to melt."))
+                              "Your icy armour evaporates.",
+                              melted ? 0 : coinflip(),
+                              melted ? nullptr
+                                     : "Your icy armour starts to melt."))
     {
         you.redraw_armour_class = true;
     }
