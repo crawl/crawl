@@ -177,6 +177,10 @@ function ($, comm, client, util, options) {
                 if (historyPosition >= history.length)
                     historyPosition = 0;
                 input.val(history[historyPosition]);
+                if (input[0].setSelectionRange)
+                    input[0].setSelectionRange(input.val().length, input.val().length);
+                ev.preventDefault();
+                return false;
             }
         });
         input.keypress(function (ev) {
