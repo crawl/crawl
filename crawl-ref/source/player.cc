@@ -5367,7 +5367,7 @@ bool miasma_player(string source, string source_aux)
         return false;
     }
 
-    bool success = poison_player(roll_dice(3, 11), source, source_aux);
+    bool success = poison_player(5 + roll_dice(3, 12), source, source_aux);
 
     if (you.hp_max > 4 && coinflip())
     {

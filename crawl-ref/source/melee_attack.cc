@@ -3191,9 +3191,7 @@ bool melee_attack::apply_damage_brand()
                     (defender->as_monster()->get_ench(ENCH_POISON)).degree;
             }
 
-            // Weapons of venom do two levels of poisoning to the player,
-            // but only one level to monsters.
-            defender->poison(attacker, 1 + random2(5) + random2(damage_done * 3 / 2));
+            defender->poison(attacker, 6 + random2(8) + random2(damage_done * 3 / 2));
 
             if (defender->is_player()
                    && old_poison < you.duration[DUR_POISONING]
@@ -4329,8 +4327,8 @@ bool melee_attack::mons_do_poison()
 
     if (attk_flavour == AF_POISON_STRONG)
     {
-        amount = random_range(attacker->get_experience_level() * 7 / 2,
-                              attacker->get_experience_level() * 11 / 2);
+        amount = random_range(attacker->get_experience_level() * 11 / 3,
+                              attacker->get_experience_level() * 13 / 2);
 
         if (defender->res_poison() > 0 && defender->has_lifeforce())
         {
