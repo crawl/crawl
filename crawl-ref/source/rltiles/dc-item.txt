@@ -941,10 +941,10 @@ rod09
 # These must be in the same order as the enum in itemprop-enum.h!
 i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
-i-rod_destruction_fire ROD_DESTRUCTION_FIRE
+i-rod_ignition ROD_IGNITION
 i-rod_clouds ROD_CLOUDS
-i-rod_iron ROD_DESTRUCTION_IRON
-i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
+i-rod_destruction ROD_DESTRUCTION
+i-rod_inaccuracy ROD_INACCURACY
 # Remove when TAG_MAJOR_VERSION > 34
 i-rod_warding ROD_WARDING
 i-rod_shadows ROD_SHADOWS
