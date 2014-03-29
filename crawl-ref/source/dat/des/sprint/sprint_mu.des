@@ -299,7 +299,7 @@ MONS: Erica / Josephine / Snorg
 MONS: centaur
 MONS: centaur warrior
 MONS: unseen horror
-KMONS: 6 = patrolling stone golem hd:8 hp:100
+KMONS: 6 = patrolling earth elemental hp:60
 SUBST: 5 = 4...
 COLOUR: # = yellow
 KFEAT: # = closed_door

@@ -607,7 +607,9 @@ ENDMAP
 # Each room is progressively more challenging; both the golems, and their
 # creators.
 #
-NAME:   golem_gauntlet_mu
+# (With the drop-off of golems, this vault has been revamped into general
+#  "constructs". hangedman sends his regards.)
+NAME:   constructs_gauntlet_mu_hangedman
 DEPTH:  Depths, !Depths:$
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: east
@@ -621,12 +623,13 @@ MARKER: z = lua:fog_machine { \
                 size = 2, size_buildup_amnt = 1, \
                 size_buildup_time = 25, cloud_type = "freezing vapour" \
             }
-MONS:   clay golem, toenail golem, stone golem, iron golem, crystal guardian
+MONS:   gargoyle, earth elemental, air elemental
+MONS:   dancing weapon ; long sword good_item, crystal guardian, war gargoyle
 KFEAT:  o = granite_statue
 KFEAT:  m = .
 KFEAT:  z = .
-KMONS:  A = orc sorcerer / Nergalle, orc sorcerer
-KMONS:  B = wizard
+KMONS:  A = wizard / Erica, wizard
+KMONS:  B = orc sorcerer / Nergalle, orc sorcerer
 KMONS:  C = ogre mage / Erolcha, ogre mage
 KMONS:  D = deep elf sorcerer
 KMONS:  E = lich / Boris, lich
@@ -635,23 +638,23 @@ MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
  cc......+.....cc......+....$cc
- ccmcccccc..4..cczcccccc.5.5$cc
- cc.....cc*4E4.cc.....cc..F.$cc
- ccccccmcc|.4..cccccczcc.5.5$cc
+ ccmcccccc.....cczcccccc...6$cc
+ cc.....cc*.E5.cc.....cc..F.$cc
+ ccccccmcc|.5..cccccczcc.6..$cc
  cc.....cc*$$..+......cc|||||cc
  cc.ccccccccccccccccccccccccccc
  cc+ccccccccccccccccccccccccccc
  cc.....cllllllcc%$$..cwwwwwwcc
- cc.3.3.clcccclcc$.2..cwccccwcc
- cc..D..+.cllllcc$2C2.+.cwwwwcc
- cc%3.3.ccclccccc..2..cccwccccc
+ cc...4.clcccclcc$..3.cwccccwcc
+ cc..D..+.cllllcc$3C..+.cwwwwcc
+ cc%4...ccclccccc..3..cccwccccc
  cc$$$%%ccclllll+.....cccwwwwcc
  cccccccccccccccccccccccccccwcc
  ccccccccccccccccccccccccccc+cc
 .cc......+...$$ccWWWWWW+.....cc
-.cc.cccccc..1.$ccWcccccc.1.1.cc
+.cc.cccccc..1.$ccWcccccc...2.cc
 .cc.....cc..A..ccWWWWWWc..B..cc
-occcccc.cc..1..cccccccWc.1.1$cc
+occcccc.cc..1..cccccccWc.2.1$cc
 @+......cc.....+WWWWWWWc...$%cc
 occcccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc

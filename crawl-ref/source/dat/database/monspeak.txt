@@ -6395,8 +6395,8 @@ VISUAL:@The_monster@ wanders slowly into a prime firing position.
 w:1
 VISUAL:@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand. @player_only@
 %%%%
-################## Crystal golem ###########################
-crystal golem
+################## Crystal guardian ###########################
+crystal guardian
 
 VISUAL:@The_monster@ glitters, brittle, in the dim dungeon light.
 %%%%

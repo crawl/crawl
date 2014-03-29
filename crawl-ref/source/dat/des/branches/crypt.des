@@ -1229,7 +1229,7 @@ KMONS:  D = bone dragon
 KMONS:  V = vampire knight
 KMONS:  X = dancing weapon
 KMONS:  L = lich
-KMONS:  I = iron golem
+KMONS:  I = war gargoyle
 KMONS:  G = crystal guardian
 KMONS:  z = skeletal warrior
 KMONS:  N = necromancer
@@ -1389,11 +1389,11 @@ SUBST:  B = b %
 KITEM:  b = any book
 SUBST:  ? = $ % * |:1
 SUBST:  u = U Y
-KMONS:  8 = iron golem
+KMONS:  8 = gargoyle
 ####### NW monsters (chapel).
 KMONS:  A = ancient lich / w:2 mummy priest
 KMONS:  D = lich / w:5 ancient lich
-KMONS:  E = iron golem
+KMONS:  E = war gargoyle
 KMONS:  G = shadow / hungry ghost / wraith
 ####### NE monsters (hoard). On a coinflip, either vampires or mummies.
 : if crawl.coinflip() then
