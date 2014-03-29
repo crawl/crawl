@@ -2431,7 +2431,7 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
 
-    const bool melted = you.props.exists("melt_armour");
+    const bool melted = you.props.exists(MELT_ARMOUR_KEY);
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
                               "Your icy armour evaporates.",
                               melted ? 0 : coinflip(),
@@ -3432,10 +3432,10 @@ static void _player_reacts_to_monsters()
     // call _maybe_melt_player_enchantments twice. It also avoid duplicate
     // messages when melting because of several heating sources.
     string what;
-    if (you.props.exists("melt_armour"))
+    if (you.props.exists(MELT_ARMOUR_KEY))
     {
         what = "armour";
-        you.props.erase("melt_armour");
+        you.props.erase(MELT_ARMOUR_KEY);
     }
 
     if (you.props.exists("melt_shield"))

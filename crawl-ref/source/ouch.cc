@@ -101,7 +101,7 @@ static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
             if (you.duration[DUR_ICY_ARMOUR] <= 0)
                 remove_ice_armour();
             else
-                you.props["melt_armour"] = true;
+                you.props[MELT_ARMOUR_KEY] = true;
         }
     }
 }
