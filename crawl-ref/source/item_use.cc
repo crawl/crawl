@@ -2506,7 +2506,7 @@ static int _handle_enchant_armour(int item_slot, bool alreadyknown,
         }
 
         if (item_slot == PROMPT_NOTHING)
-            return -1;
+            return alreadyknown || crawl_state.seen_hups ? -1 : 0;
 
         if (item_slot == PROMPT_ABORT)
         {
