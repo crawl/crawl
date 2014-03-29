@@ -1969,12 +1969,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // non-living creatures
     // golems ('8')
-    case MONS_CLAY_GOLEM:
-        return TILEP_MONS_CLAY_GOLEM;
     case MONS_IRON_GOLEM:
         return TILEP_MONS_IRON_GOLEM;
-    case MONS_STONE_GOLEM:
-        return TILEP_MONS_STONE_GOLEM;
     case MONS_CRYSTAL_GUARDIAN:
         return TILEP_MONS_CRYSTAL_GUARDIAN;
     case MONS_TOENAIL_GOLEM:

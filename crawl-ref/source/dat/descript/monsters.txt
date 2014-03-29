@@ -770,10 +770,6 @@ chimera
 A grotesque parody of nature, this fantastical creature consists of three
 individual beasts combined into one.
 %%%%
-clay golem
-
-A huge clay statue that has been animated by occult means.
-%%%%
 corrupter
 
 <demonspawn>
@@ -2483,10 +2479,6 @@ stone giant
 
 A gigantic humanoid with grey skin almost as hard as rock. It carries several
 boulders, and is perfectly capable of flinging them a great distance.
-%%%%
-stone golem
-
-A huge, magically animated statue made of incredibly hard basalt.
 %%%%
 storm dragon
 
