@@ -893,10 +893,10 @@ MONS:     (list of monsters)
           Is exactly the same as:
               MONS: kobold name:goblin name_replace name_descriptor name_definite
 
-          name_species will make use the name for corpses as-is, without
-          prefixing it with "kobold corpse of X" for name_replace; it will
-          also prevent turning articles into definite unless where forced by
-          name_definite or grammar.
+          name_species uses the name for corpses as-is, without prefixing it
+          with "kobold corpse of X" for name_replace. It also avoids the usual
+          name tag that displays above unique and renamed monsters in local
+          tiles.
 
           name_zombie can be used to redefine already zombified monsters
           (including skeletons, simulacra and spectrals).
