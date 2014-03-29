@@ -81,8 +81,9 @@ function rr_handle_hploss(hplost, source)
     -- If the the poison in your system is less than the given percentages
     -- of both current and maximum hp, ignore
     local hp, mhp = you.hp()
-    if (you.poisoning() * 100 / hp) <= g_rr_pois_curhp_ratio
-       and (you.poisoning() * 100 / mhp) <= g_rr_pois_maxhp_ratio then
+    local poison_damage_prediction = hp - you.poison_survival()
+    if (poison_damage_prediction * 100 / hp) <= g_rr_pois_curhp_ratio
+       and (poison_damage_prediction * 100 / mhp) <= g_rr_pois_maxhp_ratio then
         return nil
     end
 
