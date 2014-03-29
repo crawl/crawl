@@ -497,7 +497,7 @@ string pluralise(const string &name, const char *qualifiers[],
              || ends_with(name, "tengu") || ends_with(name, "shedu")
              || ends_with(name, "swine") || ends_with(name, "efreet")
              || ends_with(name, "jiangshi") || ends_with(name, "unborn")
-             || name == "gold")
+             || ends_with(name, "raiju") || name == "gold")
     {
         return name;
     }
@@ -527,8 +527,6 @@ string pluralise(const string &name, const char *qualifiers[],
         // pluralisation.
         return name + "im";
     }
-    else if (name == "raiju")
-        return name;
 
     return name + "s";
 }
