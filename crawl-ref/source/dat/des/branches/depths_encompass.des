@@ -243,55 +243,49 @@ ENDMAP
 # The New Box Level (dp)
 #
 NAME:    box_level_dp
-ORIENT:  encompass
 TAGS:    no_pool_fixup no_rotate uniq_d_encompass
-NSUBST:  A = 1:+ / *:b
-NSUBST:  B = 1:+ / *:b
-NSUBST:  C = 1:+ / *:b
-NSUBST:  D = 1:+ / *:b
-NSUBST:  E = 1:+ / *:x
-NSUBST:  N = 1:= / *:n
-KFEAT:   ^ = known teleport trap / known Zot trap
-SUBST:   ':''l. , '=l.
-SUBST:   ":""W. , "=Ww..
+ORIENT:  encompass
+: local brnd = crawl.random2(2)
+: if brnd == 0 then
+MONS:   orc priest / orc high priest / orc sorcerer / orc knight / \
+        deep elf priest / deep elf conjurer / deep elf knight / nothing
+MONS:   orc warlord / deep elf annihilator
+: elseif brnd == 1 then
+MONS:   spriggan rider w:12 / spriggan berserker w:12 / boggart / \
+        ogre mage w:8 / ettin / stone giant / frost giant w:8 / nothing
+MONS:   spriggan air mage / fire giant
+: else
+MONS:   salamander w:8 / salamander mystic w:12 / \
+        tengu conjurer / tengu warrior / nothing w:5
+MONS:   salamander firebrand / tengu reaver
+: end
+KMONS:   L = fire dragon
+KMONS:   ~ = ice dragon
+KMONS:   z = killer bee
+KMONS:   Z = queen bee
 ITEM:    ring of teleportation
-ITEM:    royal jelly / honeycomb w:20 / nothing w:30
 ITEM:    scroll of teleportation
 ITEM:    amulet of stasis
-NSUBST:  T = 1:. / *:T
+KITEM:   gzZ = royal jelly / honeycomb w:20 / nothing w:120
+KFEAT:   L = l
+KFEAT:   ~ = w
+KFEAT:   ^ = known teleport trap / known Zot trap
 KFEAT:   T = known teleport trap
-KMONS:   w = water elemental / \
-             merfolk javelineer w:2 / merfolk impaler w:2 / \
-             octopode crusher w:3 / nothing w:300
-KFEAT:   w = w
-KMONS:   l = fire vortex / lava snake / lava worm / fire elemental w:1 /\
-             nothing w:50
-KFEAT:   l = l
-KMONS:   z = killer bee
-KITEM:   z = royal jelly / honeycomb w:20 / nothing w:120
-: if crawl.one_chance_in(3) then
-KMONS:   ! = orc / orc warrior / orc knight / nothing w:30
-KMONS:   & = orc warlord / orc knight / nothing w:20
-: elseif crawl.coinflip() then
-KMONS:   ! = yaktaur / nothing
-KMONS:   & = yaktaur captain / nothing
-: else
-KMONS:   ! = naga / nothing
-KMONS:   & = naga warrior / greater naga
-: end
-NSUBST:  * = 1:g / *:*
-SUBST:   * = * % % $ $ f
+NSUBST:  T = 1:. / *:T
+NSUBST:  w = 1:~ / *:w, l = 1:L / *:l
+NSUBST:  A = 1:+ / *:b, B = 1:+ / *:b
+NSUBST:  C = 1:+ / *:b, D = 1:+ / *:b
+NSUBST:  E = 1:+ / *:x, N = 1:= / *:n
+SUBST:   ' : ''l. , ' = l.
+SUBST:   " : ""W. , " = Ww..
+NSUBST:  * = 1:f / *:*
+SUBST:   * = * % % $ $ e
 SUBST:   ; = 9 0
-SUBST:   !=%$, &=*%
+SUBST:   ! = %$, & = *%
 KITEM:   V = *
 COLOUR:  a = yellow
 TILE:    a = wall_wax
 SUBST:   a = x
-: if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
-KFEAT:   V = enter_vaults
-: else
-KFEAT:   V = floor
-: end
 MARKER:  P = lua:props_marker { portal=1 }
 KFEAT:   P = stone_arch
 MAP
@@ -302,7 +296,7 @@ x.......++.U..++.].++.....'''....'l'....xxx................."ww"..)..x
 x...[...xc....cbbbbbxx...'''..''lllll'....xx...vvEvvEv......"ww"....xx
 x.......xcccccccxxxxxx.......'llllllll.....x...vd...9v...."www".....xx
 xxxxxxxxxxxxxxxxxxxxxx.......'lllllll'.....x...E.....E.."ww.w".....xxx
-x.............................'lllll'.....xx...v9...Vv.www..w".....xxx
+x.............................'lllll'.....xx...v9....v.www..w".....xxx
 x....""w.............".xxx......'ll'......x....vvEEEEvwww.www.....xxxx
 x.."wwwww"..........w....xxxx............xx....."wwwwwwww.ww"....xxxxx
 x.wwwwwwww"........w........xxxxxxx....xxx........"www"...ww"...xxxxxx
@@ -346,9 +340,9 @@ x....xx..xxx..xxx...............................................xx..xx
 x....xx.......xxx.........................................z..z..x....x
 xx............xxx<.............................................zxa...x
 xx..x......xx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxazzxx
-xxx........xx.....xxx...xx.x..xx...xxaaaaaaaeaaea.a..aaaaaaaaaaaaazzxx
+xxx........xx.....xxx...xx.x..xx...xxaaaaaaagaaga.a..aaaaaaaaaaaaazzxx
 xxxx..xx..............x...x...xx.xx.xaaazazzaaza.a.aa.za.z.aaaa.a.aazx
-xxxxxxxxxxx....x..xx.x.xx.x..x..xx}..xaeazaazzazzaa..aa..aa....z.aeaxx
+xxxxxxxxxxx....x..xx.x.xx.x..x..xx}..xagazaaZzazzaa..aa..aa....z.agaxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

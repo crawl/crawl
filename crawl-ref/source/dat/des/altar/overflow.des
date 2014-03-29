@@ -792,7 +792,6 @@ DEPTH:  D:2-9
 MONS:   vampire bat / nothing w:7, bat skeleton / bat zombie
 KFEAT:  A = altar_kikubaaqudgha
 NSUBST: . = 4:2 / 3 = 2. / *:.
-NSUBST:
 MAP
   xxxxxxxxx
   xx.V1V.xx
