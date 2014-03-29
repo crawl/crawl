@@ -842,6 +842,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case SP_GREY_ELF:
     case SP_GNOME:
     case SP_MOUNTAIN_DWARF:
+    case SP_SLUDGE_ELF:
         return CC_RESTRICTED;
     default:
         return CC_BANNED;
