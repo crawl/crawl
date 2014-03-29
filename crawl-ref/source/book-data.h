@@ -510,7 +510,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Rod of fiery destruction
+{   // Rod of ignition
     SPELL_EXPLOSIVE_BOLT,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,

@@ -1810,7 +1810,7 @@ TAGS:    transparent patrolling
 DEPTH:   Depths
 MONS:    necromancer ; wand of cold | wand of frost w:5 . \
          staff of fire ident:type w:15 | quarterstaff ego:flaming ident:type w:14 | \
-         rod of fiery destruction w:1 ident:type . \
+         rod of ignition w:1 ident:type . \
          robe ego:fire_resistance w:15 | robe ego:cold_resistance w:14 | \
          robe ego:resistance w:1
 MONS:    necromancer ; wand of fire | wand of flame w:5 . \
