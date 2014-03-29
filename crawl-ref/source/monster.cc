@@ -1860,6 +1860,16 @@ static int _get_monster_armour_value(const monster *mon,
     return value;
 }
 
+/**
+ * Attempt to have a monster pick up and wear the given armour item.
+ * @params item The item in question.
+ * @params near If -1, print an equip message if the the monster picks up the
+ *              item and is visible to the player. If 0, never print a pickup
+ *              message, and for any other value print the message regardless
+ *              of visibility.
+ * @params force If true, force the monster to pick up and wear the item.
+ * @returns True if the monster picks up and wears the item, false otherwise.
+ */
 bool monster::pickup_armour(item_def &item, int near, bool force)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -1873,26 +1883,26 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
     switch (item.sub_type)
     {
     case ARM_NAGA_BARDING:
-        if (::mons_genus(type) == MONS_NAGA)
+        if (mons_genus(type) == MONS_NAGA)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CENTAUR_BARDING:
-        if (::mons_species(type) == MONS_CENTAUR
-            || ::mons_species(type) == MONS_YAKTAUR)
+        if (mons_species(type) == MONS_CENTAUR
+            || mons_species(type) == MONS_YAKTAUR)
         {
             eq = EQ_BODY_ARMOUR;
         }
         break;
     // And another hack or two...
     case ARM_HAT:
-        if (type == MONS_GASTRONOK || type == MONS_OCTOPODE)
+        if (type == MONS_GASTRONOK || mons_genus(type) == MONS_OCTOPODE)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CLOAK:
         if (type == MONS_MAURICE
             || type == MONS_NIKOLA
             || type == MONS_CRAZY_YIUF
-            || ::mons_genus(type) == MONS_DRACONIAN)
+            || mons_genus(type) == MONS_DRACONIAN)
         {
             eq = EQ_BODY_ARMOUR;
         }
@@ -1907,7 +1917,11 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
         if (eq == EQ_BODY_ARMOUR && mons_genus(type) == MONS_DRACONIAN)
             return false;
 
-        if (eq != EQ_HELMET && (type == MONS_OCTOPODE || type == MONS_GASTRONOK))
+        if (eq != EQ_HELMET && type == MONS_GASTRONOK)
+            return false;
+
+        if (eq != EQ_HELMET && eq != EQ_SHIELD
+            && mons_genus(type) == MONS_OCTOPODE)
             return false;
     }
 
@@ -6152,9 +6166,14 @@ bool monster::attempt_escape(int attempts)
         return false;
 }
 
+/**
+ * Does the monster have a free tentacle to constrict something?
+ * Currently only used by octopode monsters.
+ * @returns True if it can constrict an additional monster, false otherwise.
+ */
 bool monster::has_usable_tentacle() const
 {
-    if (mons_species() != MONS_OCTOPODE)
+    if (mons_genus(type) != MONS_OCTOPODE)
         return false;
 
     // ignoring monster octopodes with weapons, for now
