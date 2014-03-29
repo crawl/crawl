@@ -5064,7 +5064,9 @@ void bolt::affect_monster(monster* mon)
         if (mon->mindex() == beam_source && source_name.empty())
             source_name = mon->name(DESC_A, true);
 
-        if (name == "great icy blast" && x_chance_in_y(3, 5))
+        if (name == "great icy blast"
+            && !mon->is_insubstantial()
+            && x_chance_in_y(3, 5))
         {
             // Includes monster_die as part of converting to block of ice.
             _glaciate_freeze(mon, thrower, beam_source);
