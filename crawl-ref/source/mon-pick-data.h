@@ -331,7 +331,6 @@ static const pop_entry pop_shoals[] =
   {  1,  7,  170, SEMI, MONS_SIREN },
   {  1,  7,  110, SEMI, MONS_CYCLOPS },
   {  1,  7,  375, FLAT, MONS_SHARK },
-  {  1,  7,  145, FLAT, MONS_OCTOPODE },
   {  1,  7,   73, SEMI, MONS_KRAKEN },
   {  2,  8,   85, PEAK, MONS_ALLIGATOR_SNAPPING_TURTLE },
   {  1,  8,  265, SEMI, MONS_MERFOLK_IMPALER },
@@ -929,7 +928,6 @@ static const pop_entry pop_abyss[] =
   {  1,  4,   21, DOWN, MONS_SKY_BEAST },
   {  1,  5,   14, DOWN, MONS_KOBOLD_DEMONOLOGIST },
   {  1,  5,    8, FLAT, MONS_DEEP_DWARF_DEATH_KNIGHT },
-  {  1,  5,   16, FLAT, MONS_OCTOPODE },
   {  1,  5,    4, FLAT, MONS_HELL_KNIGHT },
   {  1,  5,    4, FLAT, MONS_NECROMANCER },
   {  1,  5,    8, FLAT, MONS_WIZARD },
@@ -1332,7 +1330,6 @@ static const pop_entry pop_water_d[] =
   {  5,  24,  100, FLAT, MONS_GIANT_GOLDFISH },
   {  5,  16,   60, FLAT, MONS_ELECTRIC_EEL },
   {  7,  16,  185, PEAK, MONS_ELECTRIC_EEL },
-  {  9,  27,  300,   UP, MONS_OCTOPODE },
   {  9,  32,  200, SEMI, MONS_SHARK },
   {  11, 27,  600,   UP, MONS_WATER_ELEMENTAL },
   { 0,0,0,FLAT,MONS_0 }
