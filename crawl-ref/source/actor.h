@@ -5,6 +5,8 @@
 #include "random-var.h"
 #include "ouch.h"
 
+#define CLING_KEY "clinging" // 'is creature clinging' property key
+
 enum ev_ignore_type
 {
     EV_IGNORE_NONE       = 0,
