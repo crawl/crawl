@@ -3681,9 +3681,9 @@ static int _place_uniques()
 static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
                               int level, bool allow_zombies)
 {
-    if (places.size() < 50)
+    if (places.size() < 35)
         return;
-    int num = min(random2avg(9, 2) + random2(places.size()) / 10, 15);
+    int num = min(random_range(places.size() / 35, places.size() / 18), 15);
     shuffle_array(places);
 
     for (int i = 0; i < num; i++)
