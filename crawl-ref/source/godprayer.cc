@@ -409,7 +409,7 @@ int zin_tithe(const item_def& item, int quant, bool quiet, bool converting)
         // be simpler, yet when a monster combines a number of gold piles
         // you shouldn't be penalized.
         int denom = 2;
-        if (item.props.exists("acquired")) // including "acquire any" in vaults
+        if (item.props.exists(ACQUIRE_KEY)) // including "acquire any" in vaults
         {
             tithe = stepdown_value(tithe, 10, 10, 50, 50);
             dprf("Gold was acquired, reducing gains to %d.", tithe);
