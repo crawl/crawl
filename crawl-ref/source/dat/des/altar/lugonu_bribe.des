@@ -33,7 +33,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               potion of haste ident:type q:2-4 /\
               good_item quick blade",
          Dithmenos="wand of fire ident:type /\
-              lamp of fire w:5 / rod of fiery destruction w:5 /\
+              lamp of fire w:5 / rod of ignition w:5 /\
               good_item " .. weapon .. " ego:flaming ident:type",
          Elyvilon="lantern of shadows / book of Necromancy w:5 /\
               book of Death w:5 / book of Unlife w:5",
