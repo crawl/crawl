@@ -998,6 +998,73 @@ c...c.................WWWWWWuwwwc
 c...c.................WWWWWWuwwwc
 ccccccccccccccccccccccccccccccccc
 ENDMAP
+
+##############################################################################
+# Shoals: ranged attackers
+#
+NAME:   Shoal_1
+DEPTH:  Shoals
+MONS:   cyclops, yaktaur, yaktaur captain, ice statue
+KPROP:  .wW123O = no_tide
+KFEAT:  ^ = known alarm trap
+MAP
+   wwccccccwwww
+ wwwcc....ccccwwww
+wwccc.w......ccccww
+wcc..www........ccw
+cc.wwwwww2.2.2.2.cc
+c.wwwwwwc.2.2.2.2.c
+c.wwwwwwcc.2.3.3.2c
+c.wwwwwwwcc.2.3.2|c
+c..www.wwwcc.3.3|.c
+c%.ww.1^wwwcccccccc
+cO.WW.1.WWWWWWWWWW@
+c%.ww.1^wwwcccccccc
+c..www.wwwcc.3.3|2c
+c.wwwwwwwcc.2.3.2|c
+c.wwwwwwcc.2.3.3.2c
+c.wwwwwwc.2.2.2.2.c
+cc.wwwwww2.2.2.2.cc
+wcc..www........ccw
+wwccc.w......ccccww
+ wwwcc....ccccwww
+   wwccccccwwww
+ENDMAP
+
+##############################################################################
+# Shoals: fish
+#
+NAME:   Shoal_2
+DEPTH:  Shoals
+MONS:   cyclops, stone giant
+SUBST:  1 = 1.
+SUBST:  W = W:2 w
+SUBST:  . = . w:3
+KMONS:  W = giant goldfish / big fish / electric eel
+KMONS:  | = ice_statue
+KITEM:  | = |
+KFEAT:  W = w
+MAP
+ wwww...11...wwww
+www..1WWWWWW1..www
+ww%..WWWWWWWW..%ww
+w..1WWWWWWWWWW1..w
+w..WWWWWWWWWWWW..w
+..WWWWWWWWWWWWWW..
+.1WWWWWWWWWWWWWW1.
+.WWWWWWWWWWWWWWWW.
+1WWWWWWW2|WWWWWWW1
+1WWWWWWW22WWWWWWW1
+.WWWWWWWWWWWWWWWW.
+.1WWWWWWWWWWWWWW1.
+..WWWWWWWWWWWWWW..
+w..WWWWWWWWWWWW..w
+w..1WWWWWWWWWW1..w
+ww%..WWWWWWWW..%ww
+www..1WWWWW1...www
+ wwww...11...wwww
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps
