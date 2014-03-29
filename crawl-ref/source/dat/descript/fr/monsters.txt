@@ -653,10 +653,6 @@ chimera
 Une grotesque parodie de la nature, cette créature fantastique se compose de
 trois bêtes individuels combinés en une seul.
 %%%%
-clay golem
-
-Une énorme statue d'argile qui été animée par quelques moyens occultes.
-%%%%
 crawling corpse
 
 Un cadavre faiblement animé par nécromancie. Il est facilement destructible,
@@ -1113,13 +1109,6 @@ gnoll shaman
 
 Un vieux gnoll blême, sage et mauvais. Ses chants étranges et ses youyous font
 entrer les autres gnolls dans une frénésie sauvage.
-%%%%
-gnome
-
-Un humanoïde petit mais solide, connu pour réussir à trouver son chemin dans
-les passages souterrains. Auparavant courant dans tous les donjons du monde
-entier, les gnomes sont maintenant en voie d'extinction. Celui-là est
-probablement le dernier de son espèce.
 %%%%
 goblin
 
@@ -2016,10 +2005,6 @@ stone giant
 Un humanoïde gigantesque avec une peau grise aussi dure que la pierre. Il porte
 des rochers et il est parfaitement capable de les lancer sur de longues
 distances.
-%%%%
-stone golem
-
-Une énorme statue animée par magie et faite d'un basalte incroyablement dur.
 %%%%
 storm dragon
 

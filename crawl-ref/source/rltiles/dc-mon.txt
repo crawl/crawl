@@ -108,8 +108,6 @@ komodo_dragon MONS_KOMODO_DRAGON
 gastronok MONS_GASTRONOK
 %sdir mon/animals
 giant_slug MONS_GIANT_SLUG
-agate_snail MONS_AGATE_SNAIL
-agate_snail_shell MONS_AGATE_SNAIL_SHELL
 elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')
@@ -157,7 +155,6 @@ lava_worm MONS_LAVA_WORM
 %rim 1
 %sdir mon/animals
 worm MONS_WORM
-spiny_worm MONS_SPINY_WORM
 brain_worm MONS_BRAIN_WORM
 giant_leech MONS_GIANT_LEECH
 
@@ -1000,7 +997,6 @@ deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
 jorgrun MONS_JORGRUN
 # an entry vault
 %sdir mon
-gnome MONS_GNOME
 
 ## Small zombified monsters ('z')
 %sdir mon/undead

@@ -55,19 +55,6 @@
       }
     },
 
-#if TAG_MAJOR_VERSION == 34
-    {  MST_DEEP_DWARF_NECROMANCER,
-      {
-       SPELL_PAIN,
-       SPELL_DISPEL_UNDEAD,
-       SPELL_SIMULACRUM,
-       SPELL_VAMPIRIC_DRAINING,
-       SPELL_AGONY,
-       SPELL_VAMPIRIC_DRAINING
-      }
-    },
-#endif
-
     {  MST_UNBORN,
       {
        SPELL_AGONY,

@@ -229,10 +229,6 @@ centaur warrior
 Neskaitāmas kaujas piedzīvojis muskuļots kentaurs, kurš apbruņots ar labiem
 ieročiem, kurus prot arī prasmīgi likt lietā.
 %%%%
-clay golem
-
-Milzīga māla statuja, kas pārdabiskiem līdzekļiem tikusi atdzīvināta.
-%%%%
 deep elf knight
 
 Kaujās rūdīts dzīļu elfu karotājs.

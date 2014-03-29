@@ -339,7 +339,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
 
     case DNGN_ORCISH_IDOL:
         f.dchar   = DCHAR_STATUE;
-        f.colour  = BROWN; // same as clay golem, I hope that's okay
+        f.colour  = BROWN;
         f.minimap = MF_WALL;
         break;
 
