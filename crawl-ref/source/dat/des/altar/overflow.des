@@ -788,10 +788,11 @@ ENDMAP
 
 NAME:   kennysheep_vampire_church
 TAGS:   no_monster_gen temple_overflow_1 temple_overflow_kikubaaqudgha
-MONS:   vampire bat / nothing w:7, bat skeleton / bat zombie
-KMONS:  . = bat skeleton / bat zombie / nothing w:200
-KFEAT:  A = altar_kikubaaqudgha
 DEPTH:  D:2-9
+MONS:   vampire bat / nothing w:7, bat skeleton / bat zombie
+KFEAT:  A = altar_kikubaaqudgha
+NSUBST: . = 4:2 / 3 = 2. / *:.
+NSUBST:
 MAP
   xxxxxxxxx
   xx.V1V.xx

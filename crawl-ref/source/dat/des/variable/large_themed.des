@@ -1494,16 +1494,19 @@ NAME:   kennysheep_demon_jail
 ORIENT: north
 TAGS:   no_monster_gen
 DEPTH:  Depths:2-
-MONS:   common demon, greater demon, hell knight
-NSUBST: . = 7:1 / 7:3
-FTILE:  .|#+G23456- = floor_pebble_darkgray
-KPROP:  1 = no_rtele_into
+MONS:   common demon, hell knight
+MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
+        hell beast / hellion / reaper / lorocyproca / tormentor
+NSUBST: . = 7:1 / 7:2
+FTILE:  .|#+G123- = floor_pebble_darkgray
+KPROP:  1Y = no_rtele_into
 KFEAT:  # = iron_grate
 MAP
-           vvvvvvvv
-vvvvvvvvv  v||v.2.v
-v1v1v1v1v  v||+...v
-v#v#v#v#vvvvvvv...v
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxvvvvvvvvxxxxxx
+vvvvvvvvvxxv||v.3.vxxxxxx
+v1v1v1v1vxxv||+...vxxxxxx
+v#v#v#v#vvvvvvv...vxxxxxx
 v.........llllv...vvvvvvv
 v#v#v#v#vl..l.+...+.....v
 v1v1v1v1vl....vvvvv.GlG.v
@@ -1535,7 +1538,6 @@ SUBST:  p = p...
 NSUBST: . = 5:p
 SUBST:  1 = 12345
 NSUBST: q = 3:1 / 6:P / *:.
-KFEAT:  # = iron_grate
 MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
                  delay = 10, size = 1, walk_dist = 0, excl_rad = -1 }
 MAP
@@ -1558,11 +1560,11 @@ xxxxt.p.p.ptxxczz+HHH+..........'wwwW
 xxxxtpppptxxx!!!ccccccxxxppp....'wwwW
 xxxxttptpxx!!!!xxxxx xxxppppppp.''wwW
 xcccc+tptx!!!xxxxxqxxxx.pptptppp''wwW
-xcHHHctttx!!xxxxxxxqqqqqxtptptpc#cwwW
+xcHHHctttx!!xxxxxxxqqqqqxtptptpcmcwwW
 xcHHHcxxxx!xxxxxxxqxxxxxxxttttccHccwW
-xcHHHcx!!!!!xxxxxxqxqxxxxxptpp#HFH#wW
+xcHHHcx!!!!!xxxxxxqxqxxxxxptppmHFHmwW
 xccccc!!!x!xxxxxxqqxqqqqxxtpptc+HccwW
-xxxxx!!xxxxxxxxxxqxqqxxqxxpppppc#cwwW
+xxxxx!!xxxxxxxxxxqxqqxxqxxpppppcmcwwW
 xxxxxx!!xxxxxxxxxxxxqxxqqqxxxxxxwwwwW
 xxxxxxx@@xxxxxxxxxxxxxxxxxx    xxxxxx
 ENDMAP
@@ -1577,14 +1579,15 @@ MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
                                pow_max = 100, delay = 10, size = 1, \
                                walk_dist = 0, excl_rad = 0 }
 KMONS:  p = plant
-SUBST:  t = tp.
-NSUBST: . = 15:2
+NSUBST: . = 15:2 / *:.
+SUBST:  t = tp`
 NSUBST: ' = 5:C / 5:2
+KPROP:  ` = no_rtele_into
 MAP
-                  xxxxxxxxxx
-                xxxttttttttxxxx
-          xxxxxxxtttttttttttttxx
-        xxxtttttttttttttttttttttx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxttttttttxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxtttttttttttttxxxxxxxxx
+       xxxxtttttttttttttttttttttxx
        xxtttttttttt*t..*t.ttttttxx
      xxxtttttttttt.''1'......ttttxxx
     xxtttttttt....''''''.....ttttttxx
@@ -1637,13 +1640,14 @@ ENDMAP
 NAME:   kennysheep_tiny_hell
 TAGS:   no_monster_gen
 ORIENT: centre
-DEPTH:  D:13-15
+DEPTH:  D:13-14
+WEIGHT: 5
 FTILE:  *|c.12${} = floor_infernal_blank
 TILE:   c = dngn_stone_dark
 SUBST:  *=*|
 MONS:   blue devil w:1 / hellwing w:3 / iron devil w:1 / orange demon w:1 /\
-        red devil w:1 / demonic crawler / sixfirhy w:1, \
-        lesser demon, green rat / giant cockroach
+        red devil w:1 / demonic crawler / sixfirhy w:1
+MONS:   lesser demon, green rat / giant cockroach
 NSUBST: . = 6:3 / 6:! / 56:' / .
 KPROP:  !' = bloody
 : dgn.delayed_decay(_G, '!', 'human corpse / human skeleton')
