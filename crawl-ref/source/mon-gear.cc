@@ -451,7 +451,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         // deliberate fall through {gdl}
     case MONS_DRACONIAN:
     case MONS_DRACONIAN_ZEALOT:
-    case MONS_FORMICID_VENOM_MAGE:
         if (!one_chance_in(5))
         {
             item.base_type = OBJ_WEAPONS;
@@ -2222,7 +2221,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
             level = MAKE_GOOD_ITEM;
 
     // deliberate fall through
-    case MONS_FORMICID_VENOM_MAGE:
     case MONS_HELLBINDER:
     case MONS_SALAMANDER_MYSTIC:
         item.base_type = OBJ_ARMOUR;

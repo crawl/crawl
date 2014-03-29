@@ -2090,17 +2090,6 @@
       }
     },
 
-    {  MST_FORMICID_VENOM_MAGE,
-      {
-       SPELL_VENOM_BOLT,
-       SPELL_POISON_ARROW,
-       SPELL_NO_SPELL,
-       SPELL_IGNITE_POISON_SINGLE,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-      }
-    },
-
     {  MST_THORN_HUNTER,
       {
        SPELL_THORN_VOLLEY,

@@ -1019,10 +1019,6 @@ formicid
 
 A sentient ant that walks upright and is competent at digging.
 %%%%
-formicid venom mage
-
-An adept of poison magic.
-%%%%
 dwarf
 
 A member of a short, sturdy mountain-dwelling folk. More robust than their deep
