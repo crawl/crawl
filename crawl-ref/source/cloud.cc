@@ -1123,7 +1123,7 @@ static int _actor_cloud_damage(actor *act,
         break;
     case CLOUD_STORM:
     {
-        if (you.turn_is_over && you.time_taken > 0)
+        if (maximum_damage || you.turn_is_over && you.time_taken > 0)
         {
             if (!maximum_damage)
                 cloud.announce_actor_engulfed(act);
@@ -1151,6 +1151,15 @@ static int _actor_cloud_damage(actor *act,
                     return _cloud_damage_output(act, _cloud2beam(cloud.type),
                                             resist, cloud_base_damage,
                                             maximum_damage);
+                }
+                else
+                {
+                    // Average maximum damage over time.
+                    int dam = _cloud_damage_output(act, _cloud2beam(cloud.type),
+                                                   resist, cloud_base_damage,
+                                                   maximum_damage) / 4;
+                    if (dam > 0)
+                        return dam;
                 }
             }
         }
