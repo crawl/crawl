@@ -1,4 +1,4 @@
-Stone Soup 0.14 (up to 0.14-a0-3540-gg0496ee7)
+Stone Soup 0.14 (up to 0.14-a0-3586-gdd10857)
 ---------------------------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new races: Formicids and Vine Stalkers.
@@ -189,7 +189,7 @@ Monsters
       ability to match.
 * Moths of suppression, rock worms, lava fish, lemures, jellyfish, grey rats,
   spiny worms, giant amoebae, deep dwarf berserkers, agate snails, giant
-  centipedes, and rotting devils are no more.
+  centipedes, rotting devils, clay golems, and stone golems are no more.
 * Ball lightnings are no longer permanently confused, instead seeking out
   targets like giant spores.
 * Killer Klowns have a different set of possible damage brands: strong
