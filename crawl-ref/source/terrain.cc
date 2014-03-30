@@ -1665,7 +1665,6 @@ static const char *dngn_feature_names[] =
 "enter_volcano",
 "enter_wizlab",
 "enter_shrine",
-"enter_unused",
 "exit_ziggurat",
 "exit_bazaar",
 "exit_trove",
@@ -1677,7 +1676,6 @@ static const char *dngn_feature_names[] =
 "exit_wizlab",
 "exit_labyrinth",
 "exit_shrine",
-"exit_unused",
 };
 
 dungeon_feature_type dungeon_feature_by_name(const string &name)
