@@ -3,8 +3,11 @@ use Encode;
 use Text::Tabs;
 use Getopt::Std;
 
-getopt('t'); # this removes -t from @ARGV;
+our ($opt_n, $opt_t);
+getopts('t:n'); # this removes -t and -n from @ARGV;
 $tabstop = $opt_t if ($opt_t);
+my $dry_run = $opt_n;
+my $any_bad = 0;
 
 my @files = @ARGV;
 unless (@files)
@@ -56,8 +59,14 @@ for (@files)
 
     if ($_ ne $cont)
     {
-        open F, ">$file" or die;
-        print F;
-        close F;
+        $any_bad = 1;
+        if (!$dry_run)
+        {
+            open F, ">$file" or die;
+            print F;
+            close F;
+        }
     }
 }
+
+exit 1 if ($dry_run and $any_bad);

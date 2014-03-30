@@ -1,7 +1,19 @@
 #!/usr/bin/perl -w
+use Getopt::Std;
 
+our ($opt_n);
+getopts('n');
+my $dry_run = $opt_n;
+my $any_bad = 0;
+
+my @files = @ARGV;
 undef $/;
-for $f (grep /\.(cc|h)$/, split /\n/, `git ls-files`)
+unless (@files)
+{
+    @files = (grep /\.(cc|h)$/, split /\n/, `git ls-files`);
+}
+
+for $f (@files)
 {
     open F, "<", $f or die "Can't read $f\n";
     my $old = $_ = <F>;
@@ -47,8 +59,14 @@ for $f (grep /\.(cc|h)$/, split /\n/, `git ls-files`)
     if ($old ne $_)
     {
         print "$f\n";
-        open F, ">", $f or die "Can't write $f\n";
-        print F;
-        close F;
+        $any_bad = 1;
+        if (!$dry_run)
+        {
+            open F, ">", $f or die "Can't write $f\n";
+            print F;
+            close F;
+        }
     }
 }
+
+exit 1 if ($dry_run and $any_bad);
