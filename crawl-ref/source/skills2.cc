@@ -74,44 +74,44 @@ typedef skill_title_key_t stk;
 static const char *skills[NUM_SKILLS][6] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
-    {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},
-    {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Cutthroat",      "Politician"},
-    {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster"},
-    {"Axes",           "Chopper",       "Cleaver",         "Severer",         "Executioner",    "Axe Maniac"},
-    {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},
-    {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine"},
-    {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff"},
-    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult"},
-    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@"},
-    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest"},
-    {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista"},
+    {"Fighting",       "Skirmisher",    "Grunt",           "Veteran",         "Warrior",        "Slayer"},
+    {"Short Blades",   "Stabber",       "Cutter",          "Knifefighter",    "Eviscerator",    "Politician"},
+    {"Long Blades",    "Slasher",       "Slicer",          "Fencer",          "Swordfighter",   "Swordmaster"},
+    {"Axes",           "Chopper",       "Cleaver",         "Hacker",          "Severer",        "Axe Maniac"},
+    {"Maces & Flails", "Basher",        "Cudgeler",        "Shatterer",       "Bludgeoner",     "Skullcrusher"},
+    {"Polearms",       "Spear-Bearer",  "Pike-@Genus@",    "Phalangite",      "Lancer",         "Halberdier"},
+    {"Staves",         "Twirler",       "Cruncher",        "Smasher",         "Stickfighter",   "Skullbreaker"},
+    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Crazy @Genus@",  "Very Crazy @Genus@"},
+    {"Bows",           "Shooter",       "Yeoman",          "Archer",          "Merry @Genus@",  "Merry @Genus@"},
+    {"Crossbows",      "Shooter",       "Sharpshooter",    "Archer",          "@Adj@ Ballista", "@Adj@ Ballista"},
+    {"Throwing",       "Dart Thrower",  "Hurler",          "Hurler, First Class", "@Genus@ Darts Champion",  "Universal Darts Champion"},
     {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable"},
-    {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible"},
-    {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja"},
+    {"Dodging",        "Ducker",        "Dodger",          "Nimble",          "Spry",           "Acrobat"},
+    {"Stealth",        "Footpad",       "Sneak",           "Covert",          "Unseen",         "Imperceptible"},
 #if TAG_MAJOR_VERSION == 34
     {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
 #endif
-    {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Adj@ Barricade"},
+    {"Shields",        "Shield-Bearer", "Blocker",         "@Adj@ Barricade", "Peltast",        "Hoplite",},
 #if TAG_MAJOR_VERSION == 34
     {"Traps",          "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
 #endif
     // STR based fighters, for DEX/martial arts titles see below.  Felids get their own category, too.
-    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
+    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "Boxer"},
 
     {"Spellcasting",   "Magician",      "Thaumaturge",     "Eclecticist",     "Sorcerer",       "Archmage"},
     {"Conjurations",   "Ruinous",       "Conjurer",        "Destroyer",       "Devastator",     "Annihilator"},
-    {"Hexes",          "Vexing",        "Jinx",            "Bewitcher",       "Maledictor",     "Spellbinder"},
-    {"Charms",         "Charmwright",   "Infuser",         "Anointer",        "Gracecrafter",   "Miracle Worker"},
+    {"Hexes",          "Charm-Maker",   "Infuser",         "Bewitcher",       "Enchanter",      "Spellbinder"},
+    {"Charms",         "Charm-Maker",   "Infuser",         "Bewitcher",       "Enchanter",      "Spellbinder"},
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
-    {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},
-    {"Transmutations", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
+    {"Translocations", "Jumper",        "Blinker",         "Shifter",         "Portalist",      "Plane @Walker@"},
+    {"Transmutations", "Changer",       "Transmogrifier",  "Transformer",     "Alchemist",      "Transmuter"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist"},
-    {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator"},
-    {"Air Magic",      "Gusty",         "Cloud Mage",      "Aerator",         "Anemomancer",    "Meteorologist"},
+    {"Ice Magic",      "Chiller",       "Frost Mage",      "Ice Mage",        "Cryomancer",     "Englaciator"},
+    {"Air Magic",      "Wind Mage",     "Cloud Mage",      "Air Mage",        "Sky Mage",       "Storm Mage"},
     {"Earth Magic",    "Digger",        "Geomancer",       "Earth Mage",      "Metallomancer",  "Petrodigitator"},
-    {"Poison Magic",   "Stinger",       "Tainter",         "Polluter",        "Contaminator",   "Envenomancer"},
+    {"Poison Magic",   "Stinger",       "Tainter",         "Polluter",        "Poisoner",       "Envenomancer"},
 
     // These titles apply to atheists only, worshippers of the various gods
     // use the god titles instead, depending on piety or, in Xom's case, mood.
@@ -120,7 +120,7 @@ static const char *skills[NUM_SKILLS][6] =
 };
 
 static const char *martial_arts_titles[6] =
-    {"Unarmed Combat", "Insei", "Martial Artist", "Black Belt", "Sensei", "Grand Master"};
+    {"Unarmed Combat", "Martial Artist", "Black Belt", "Sensei", "Master", "Grand Master"};
 static const char *claw_and_tooth_titles[6] =
     {"Unarmed Combat", "Scratcher", "Gouger", "Ripper", "Eviscerator", "Sabretooth"};
 
