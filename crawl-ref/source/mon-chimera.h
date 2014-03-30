@@ -8,6 +8,12 @@
 
 #define NUM_CHIMERA_HEADS 3
 
+#define CHIMERA_BATTY_KEY "chimera_batty"
+#define CHIMERA_WING_KEY "chimera_wings"
+#define CHIMERA_LEGS_KEY "chimera_legs"
+#define CHIMERA_PT2_KEY "chimera_part_2"
+#define CHIMERA_PT3_KEY "chimera_part_3"
+
 #define ASSERTPART(partnum)                                       \
     ASSERTM(is_valid_chimera_part(parts[partnum]),                \
             "Invalid chimera part %d: %s",                        \

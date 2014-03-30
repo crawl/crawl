@@ -245,11 +245,11 @@ static bool _is_public_key(string key)
      || key == TILE_NUM_KEY
 #endif
      || key == "tile_idx"
-     || key == "chimera_part_2"
-     || key == "chimera_part_3"
-     || key == "chimera_batty"
-     || key == "chimera_wings"
-     || key == "chimera_legs"
+     || key == CHIMERA_PT2_KEY
+     || key == CHIMERA_PT3_KEY
+     || key == CHIMERA_BATTY_KEY
+     || key == CHIMERA_WING_KEY
+     || key == CHIMERA_LEGS_KEY
      || key == "custom_spells"
      || key == ELVEN_IS_ENERGIZED_KEY)
     {
