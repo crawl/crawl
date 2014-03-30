@@ -160,7 +160,7 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
     if (!hploss || !mons->alive())
         return;
-    // Holy word won't annoy, slow, or frighten its user.
+    // Holy word won't annoy or stun its user.
     if (attacker != mons)
     {
         // Currently, holy word annoys the monsters it affects
@@ -177,8 +177,6 @@ void holy_word_monsters(coord_def where, int pow, holy_word_source_type source,
 
         if (mons->speed_increment >= 25)
             mons->speed_increment -= 20;
-
-        mons->add_ench(ENCH_FEAR);
     }
 }
 
