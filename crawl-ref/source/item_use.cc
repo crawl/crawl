@@ -3023,15 +3023,7 @@ void read_scroll(int slot)
 
     case SCR_HOLY_WORD:
     {
-        int pow = 100;
-
-        if (is_good_god(you.religion))
-        {
-            pow += (you_worship(GOD_SHINING_ONE)) ? you.piety
-                                                  : you.piety / 2;
-        }
-
-        holy_word(pow, HOLY_WORD_SCROLL, you.pos(), false, &you);
+        holy_word(100, HOLY_WORD_SCROLL, you.pos(), false, &you);
 
         // This is always naughty, even if you didn't affect anyone.
         // Don't speak those foul holy words even in jest!
