@@ -458,10 +458,7 @@ An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
 cutlass
 
-A broad curved short sword, akin to a sabre but smaller. It excels at
-close-quarters combat, having decent power yet being wieldy enough to still be
-a good fit for sneak attacks. You feel an urge to swash a buckler, and to grab
-some loot.
+A broad curved short sword.
 %%%%
 dagger
 
@@ -539,8 +536,8 @@ devices.
 %%%%
 eggplant
 
-A rotten eggplant which you can throw at the Crawl developers. (It's a bug if
-you ever see this message).
+A rotten eggplant which you can throw at the Crawl developers. It's a bug if
+you ever see this message.
 %%%%
 eudemon blade
 
@@ -699,8 +696,9 @@ the spirits free to dance about in a blaze upon the bearer's enemies.
 %%%%
 lantern of shadows
 
-An unholy device which calls on the powers of darkness to assist its user, with
-a small cost attached.
+An unholy device which calls forth flickering shadows to assist its wielder. It
+shrouds the wielder in unnatural darkness, making them unstealthy and
+significantly reducing the power of their spells.
 %%%%
 large rock
 
@@ -769,7 +767,8 @@ A short club with a metal head.
 %%%%
 manual
 
-A valuable book which allows one to practise a certain skill more efficiently.
+A valuable book which allows one to practise a certain skill more efficiently
+when carried.
 %%%%
 meat ration
 
@@ -899,9 +898,8 @@ you.
 %%%%
 potion of curing
 
-A blessed fluid which heals some wounds, clears the mind and cures diseases. If
-it is used when one is at or near full health, it can also slightly repair
-rotting.
+A potion which heals some wounds, clears the mind and cures diseases. If it is
+used when one is at or near full health, it can also slightly repair rotting.
 %%%%
 potion of decay
 
@@ -1020,7 +1018,7 @@ depending on its degree of enchantment.
 %%%%
 ring of fire
 
-This ring brings its wearer more in contact with the powers of fire. He or she
+This ring brings its wearer more in contact with the powers of fire. The wearer
 gains resistance to heat and can use fire magic more effectively, but becomes
 less effective at the use of ice magic and more vulnerable to the effects of
 cold.
@@ -1036,8 +1034,8 @@ This ring causes its wearer to hunger considerably more quickly.
 %%%%
 ring of ice
 
-This ring brings its wearer more in contact with the powers of cold and ice. He
-or she gains resistance to cold and can use ice magic more effectively, but
+This ring brings its wearer more in contact with the powers of cold and ice.
+The wearer gains resistance to cold and can use ice magic more effectively, but
 becomes less effective at the use of fire magic and more vulnerable to the
 effects of fire.
 %%%%
@@ -1178,10 +1176,8 @@ A talisman which allows entry into Zot's domain.
 %%%%
 sack of spiders
 
-A woven silk bag. Something appears to be moving inside...
-
-Opening this bag will release a number of spiders friendly to your cause. You
-might need to dust off the cobwebs after, however.
+A woven silk bag. Opening this bag will release a number of spiders friendly to
+your cause. You might need to dust off the cobwebs afterwards, however.
 %%%%
 sacred scourge
 
@@ -1249,7 +1245,7 @@ scroll of enchant armour
 This scroll places an enchantment on a piece of armour. Most armour can only be
 enchanted to +2, except for shields which can be enchanted to +3, and body
 armour and bardings which can be enchanted up to the same value as their base
-AC.
+AC. Magical artefacts cannot be enchanted at all.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
@@ -1284,8 +1280,9 @@ This scroll surrounds the reader with a dense cloud of fog.
 %%%%
 scroll of holy word
 
-This scroll calls on the powers of Heaven to cause great damage to any nearby
-unholy creature — including you!
+This scroll calls on the good gods to cause great damage to any nearby
+undead or demonic creature — possibly including you! It will briefly stun
+monsters that are affected.
 %%%%
 scroll of identify
 
@@ -1306,7 +1303,7 @@ This scroll reveals the surroundings of the one who reads it.
 scroll of noise
 
 This prank scroll, often slipped into a wizard's backpack by a devious
-apprentice, causes a loud noise. It is not otherwise noted for its usefulness.
+apprentice, causes a loud noise.
 %%%%
 scroll of random uselessness
 
