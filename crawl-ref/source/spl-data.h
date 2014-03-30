@@ -839,7 +839,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
-     1, 1,
+     5, 5,
      0,
      NULL,
      true,
@@ -2218,6 +2218,7 @@ struct spell_desc
 },
 
 // Monster version of the spell (with full range)
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_STICKY_FLAME_RANGE, "Sticky Flame Range",
      SPTYP_CONJURATION | SPTYP_FIRE,
@@ -2230,6 +2231,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_STICKY_FLAME_SPLASH, "Sticky Flame Splash",

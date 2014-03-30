@@ -785,7 +785,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 :       fiery_guardians(_G)
 KMONS:  G = statue name:firespitter name_adjective \
         tile:mons_firespitter_statue generate_awake \
-        spells:throw_flame;sticky_flame_range;.;bolt_of_magma;bolt_of_fire;.
+        spells:throw_flame;sticky_flame;.;bolt_of_magma;bolt_of_fire;.
 #       Loot: 12 items, 6 gold.
 :       volcano_setup(_G)
 MAP
@@ -811,7 +811,7 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 KITEM:  | = potion of resistance ident:type q:1
 KMONS:  F = statue name:firespitter name_adjective \
         tile:mons_firespitter_statue generate_awake \
-        spells:throw_flame;sticky_flame_range;.;bolt_of_magma;bolt_of_fire;.
+        spells:throw_flame;sticky_flame;.;bolt_of_magma;bolt_of_fire;.
 #       Loot: 10 items.
 :       volcano_setup(_G)
 MAP

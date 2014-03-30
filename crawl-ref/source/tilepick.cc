@@ -5016,7 +5016,9 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SPIT_ACID:                return TILEG_SPIT_ACID;
     case SPELL_SPIT_POISON:              return TILEG_SPIT_POISON;
     case SPELL_STEAM_BALL:               return TILEG_STEAM_BALL;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_STICKY_FLAME_RANGE:       return TILEG_STICKY_FLAME_RANGE;
+#endif
     case SPELL_STICKY_FLAME_SPLASH:      return TILEG_STICKY_FLAME_SPLASH;
     case SPELL_STRIP_RESISTANCE:         return TILEG_STRIP_RESISTANCE;
     case SPELL_SUMMON_DRAKES:            return TILEG_SUMMON_DRAKES;

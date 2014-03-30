@@ -53,8 +53,10 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_BOLT_OF_INACCURACY;
     case SPELL_STICKY_FLAME:
         return ZAP_STICKY_FLAME;
+#if TAG_MAJOR_VERSION == 34
     case SPELL_STICKY_FLAME_RANGE:
         return ZAP_STICKY_FLAME_RANGE;
+#endif
     case SPELL_DISPEL_UNDEAD:
         return ZAP_DISPEL_UNDEAD;
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:

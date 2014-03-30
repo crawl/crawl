@@ -667,7 +667,6 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_STICKY_FLAME:
         beam.hit = AUTOMATIC_HIT;
     case SPELL_STICKY_FLAME_SPLASH:
-    case SPELL_STICKY_FLAME_RANGE:
         if (real_spell != SPELL_STICKY_FLAME)
             beam.hit      = 18 + power / 15;
         beam.colour   = RED;

@@ -422,6 +422,7 @@ struct zap_info
     1
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     ZAP_STICKY_FLAME_RANGE,
     "sticky flame",
@@ -437,6 +438,7 @@ struct zap_info
     false,
     1
 },
+#endif
 
 {
     ZAP_DISPEL_UNDEAD,
