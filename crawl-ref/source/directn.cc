@@ -3155,6 +3155,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "dark tunnel";
     case DNGN_ENTER_WIZLAB:
         return "magical portal";
+    case DNGN_ENTER_SHRINE:
+        return "gate leading to a distant shrine";
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_PORTAL_VAULT:
         return "gate leading to a distant place";
@@ -3200,6 +3202,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_EXIT_BAZAAR:
     case DNGN_EXIT_TROVE:
     case DNGN_EXIT_SEWER:
+    case DNGN_EXIT_SHRINE:
     case DNGN_EXIT_OSSUARY:
     case DNGN_EXIT_BAILEY:
 #if TAG_MAJOR_VERSION == 34

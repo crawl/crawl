@@ -1664,6 +1664,7 @@ static const char *dngn_feature_names[] =
 "enter_ice_cave",
 "enter_volcano",
 "enter_wizlab",
+"enter_shrine",
 "enter_unused",
 "exit_ziggurat",
 "exit_bazaar",
@@ -1675,6 +1676,7 @@ static const char *dngn_feature_names[] =
 "exit_volcano",
 "exit_wizlab",
 "exit_labyrinth",
+"exit_shrine",
 "exit_unused",
 };
 

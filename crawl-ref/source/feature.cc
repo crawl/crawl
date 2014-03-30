@@ -115,6 +115,8 @@ static colour_t _feat_colour(dungeon_feature_type feat)
     case DNGN_EXIT_OSSUARY:             return BROWN;
     case DNGN_EXIT_ICE_CAVE:            return WHITE;
     case DNGN_EXIT_VOLCANO:             return RED;
+    case DNGN_ENTER_SHRINE:             return WHITE;
+    case DNGN_EXIT_SHRINE:              return WHITE;
 
     case DNGN_ALTAR_ZIN:                return LIGHTGREY;
     case DNGN_ALTAR_SHINING_ONE:        return YELLOW;

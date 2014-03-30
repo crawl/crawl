@@ -1,0 +1,442 @@
+#
+# What used to be around before overflow altars.
+# 
+#
+{{
+function shrine_portal(e)
+  local timeout_turns = crawl.random_range(800, 1000)
+
+  local messager =
+    timed_msg {
+       initmsg = { "You hear reverent chanting.",
+                   "There is an entrance to a shrine on this level. "
+                   .. "Hurry and find it before the portal closes forever!" },
+      finalmsg = "You hear the chant come to an end.",
+
+      verb = 'chanting',
+      noisemaker = 'portal',
+      ranges = {
+        { 5000, 'loud ' },  { 4000, 'steady ' },
+        { 2500, '' }, { 1500, 'quiet ' },
+        { 0, 'weak ' }
+      }
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        disappear = "The shrine gate closes.",
+        entity = 'shrine gate',
+        turns = timeout_turns,
+        single_timed = true,
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_expired",
+        msg = messager })
+  e.tags("uniq_shrine no_monster_gen chance_shrine extra")
+  e.chance(500)
+  e.kfeat("O = enter_shrine")
+end
+
+function shrine_setup(e)
+  e.tags("no_item_gen no_monster_gen no_pool_fixup")
+  e.orient("encompass")
+  e.place("Shrine")
+  e.kfeat("< = exit_shrine")
+end
+
+}}
+
+###############################################################################
+# Shrines.des:
+#   The shrines are thematic portal vaults which offer early religion in
+#   exchange for one's safety.
+###############################################################################
+
+###############################################################################
+# Entry vaults:
+default-depth: D:3-6
+
+NAME:       shrine_entry_a
+ORIENT:     float
+:           shrine_portal(_G)
+MAP
+c   c
+c.T.c
+c...c
+@.O.@
+c...c
+c.T.c
+c   c
+ENDMAP
+
+NAME:       shrine_entry_b
+ORIENT:     float
+:           shrine_portal(_G)
+MAP
+  c c
+ cc.cc
+cc...cc
+ .TOT.@
+cc...cc
+ cc.cc
+  c c
+ENDMAP
+
+NAME:       shrine_entry_c
+ORIENT:     float
+:           shrine_portal(_G)
+MAP
+.......
+.c.T.c.
+......@
+...O..@
+......@
+.c.T.c.
+.......
+ENDMAP
+
+###############################################################################
+# The portals themselves.
+default-depth: Shrine
+
+NAME:       shrine_yred_kiku_a
+WEIGHT:     5
+SHUFFLE:    XY
+KFEAT:      X = altar_yredelemnul
+KFEAT:      Y = altar_kikubaaqudgha
+NSUBST:     M = 2:. / *:M
+SUBST:      M = 1 2 3:5 4:5
+NSUBST:     N = 4:. / *:N
+SUBST:      N = 1 2 3:15 4:15
+SUBST:      . = ZZ.
+COLOUR:     Z = darkgrey
+SUBST:      Z = .
+COLOUR:     x = darkgrey
+TILE:       x = wall_hall_darkgray
+MONS:       place:D:4 zombie, place:D:5 skeleton
+MONS:       place:D:6 zombie, place:D:7 skeleton
+ITEM:       any wand w:5 / wand of enslavement ident:type / \
+            any scroll w:2 / scroll of torment w:2 ident:type
+ITEM:       amulet of warding ident:type
+: shrine_setup(_G)
+MAP
+                                      xxxxxxx
+                                     xx..e..xx
+                                     x..NYN..x
+                                     x..NNN..x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..T..xxxxx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW...Wwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.d.Wwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW...Wwwwwx
+xwwww.......................................wwwwx
+xwwww..A.<.G.M.G.M.G.M.G.M.G.M.G.M.G.M.M....wwwwx
+xwwww.......................................wwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW...Wwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.d.Wwwwwx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW...Wwwwwx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..T..xxxxx
+                                     x..NNN..x
+                                     x..NXN..x
+                                     xx..e..xx
+                                      xxxxxxx
+ENDMAP
+
+NAME:       shrine_yred_kiku_b
+WEIGHT:     5
+SHUFFLE:    XY
+SHUFFLE:    A<
+KFEAT:      X = altar_yredelemnul
+KFEAT:      Y = altar_kikubaaqudgha
+NSUBST:     . = 8:M / *:.
+SUBST:      M = 12
+NSUBST:     H = 2:N / 3:M / *:.
+SUBST:      N = 34
+MONS:       place:D:4 zombie, place:D:5 skeleton
+MONS:       place:D:6 zombie, place:D:7 skeleton
+SUBST:      S = .
+SUBST:      . = .ZZ
+COLOUR:     Z = darkgrey
+SUBST:      Z = .
+COLOUR:     x = darkgrey
+TILE:       x = wall_hall_darkgray
+ITEM:       any wand w:5 / wand of enslavement ident:type / \
+            any scroll w:2 / scroll of torment w:2 ident:type
+ITEM:       amulet of warding ident:type
+: shrine_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.............SSSx............x
+x............SSSSx............x
+x...........SSSSSx............x
+x...xxxxxxxxxxSSSx...xxxxxx...x
+x...xHHH.....xS<Sx.....HHHx...x
+x...xHXH.d...xSSSx...d.HYHx...x
+x...xHHH.....xSASx.....HHHx...x
+x...xxxxxx...xSSSxxxxxxxxxx...x
+x............xSSSSS...........x
+x............xSSSS............x
+x............xSSS.............x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:       shrine_makh_vehu_a
+WEIGHT:     5
+SHUFFLE:    YZ
+KFEAT:      Y = altar_vehumet
+KFEAT:      Z = altar_makhleb
+MONS:       crimson imp / shadow imp / white imp
+NSUBST:     M = 5:1 / *:.
+ITEM:       tome of destruction / scroll of summoning / \
+            scroll of immolation / any scroll good_item / wand of flame w:5 / \
+            wand of frost w:5 / wand of lightning w:5 / any wand w:3
+ITEM:       wand of magic darts ident:type
+TILE:       x = wall_hall_red
+: shrine_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.........www.........www...x
+x........Mwww..M......www.Z.x
+x...www...www...www...www...x
+x...www...www...www...wwwMY.x
+x...www...www...www...www...x
+x...www...www...wwwM..www.d.x
+x.A.www...www...www...www...x
+x...www...www.M.www...www.e.x
+x.<.www...M.....www....M....x
+x...www.........www.........x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:       shrine_makh_vehu_b
+WEIGHT:     5
+SHUFFLE:    XY
+KFEAT:      X = altar_makhleb
+KFEAT:      Y = altar_vehumet
+MONS:       kobold demonologist name:apprentice n_adj n_noc \
+            spells:summon_minor_demon;cantrip;summon_minor_demon;\
+            cantrip;cantrip;cantrip
+ITEM:       tome of destruction / scroll of summoning / \
+            scroll of immolation / any scroll good_item / wand of flame w:5 / \
+            wand of frost w:5 / wand of lightning w:5 / any wand w:3
+ITEM:       wand of magic darts ident:type
+KFEAT:      m = iron_grate
+TILE:       x = wall_hall_red
+: shrine_setup(_G)
+MAP
+    xxxxx
+   xx...xx
+  xx.....xx
+ xx...w...xx
+xx.Y.www.A.xx
+x...wmmmw...x
+xdewwm1mww..x
+x...wmmmw...x
+xx.X.www.<.xx
+ xx...w...xx
+  xx.....xx
+   xx...xx
+    xxxxx
+ENDMAP
+
+NAME:       shrine_good
+SHUFFLE:    XYZ
+KFEAT:      X = altar_the_shining_one
+KFEAT:      Y = altar_elyvilon
+KFEAT:      Z = altar_zin
+COLOUR:     a = darkgrey / red / blue w:3 / lightred w:2
+COLOUR:     b = darkgrey / red w:5 / lightgrey w:1 / blue w:3 / cyan w:1 / \
+            lightred w:1
+COLOUR:     c = darkgrey w:7 / red w:2 / lightgrey w:4 / blue w:4 / cyan w:2
+COLOUR:     d = darkgrey w:4 / lightgrey w:4 / blue / cyan w:4
+COLOUR:     e = blue / cyan w:4
+COLOUR:     f = blue / cyan w:7
+SUBST:      abcdef = w
+SUBST:      G = ...BBC
+NSUBST:     H = 2:C / *:H
+SUBST:      H = .BBCCC
+COLOUR:     B = white
+COLOUR:     C = yellow
+SUBST:      B = .
+NSUBST:     C = 3:M / 3:d / 3:e / *:.
+ITEM:       any scroll / scroll of holy word w:4
+ITEM:       potion of curing ident:type q:1
+MONS:       human ; falchion | falchion ego:holy_wrath w:1 | \
+                    quarterstaff | quarterstaff ego:holy_wrath w:1 . robe
+MONS:       gnoll ; falchion | falchion ego:holy_wrath w:1 | \
+                    quarterstaff | quarterstaff ego:holy_wrath w:1 . robe
+MONS:       orc ; falchion | falchion ego:holy_wrath w:1 | \
+                  quarterstaff | quarterstaff ego:holy_wrath w:1 . robe
+SUBST:      M = 1222333
+TILE:       x = wall_hall_yellow
+: shrine_setup(_G)
+MAP
+                xxxxxxxxxxxxx
+               xxaaaaaaaaaaaxx
+              xxbbbbbbbbbbbbbxx
+             xxcccccccccccccccxx
+            xxdddddddddddddddddxx
+           xxeeeeeeeeeeeeeeeeeeexx
+xxxxxxxxxxxxfffffffffffffffffffffxx
+x..........GGGGGGHHHHHHHHHHHGGGGGGxx
+x.<.A.....GGGGGGHHHXHHYHHZHHHGGGGGGx
+x..........GGGGGGHHHHHHHHHHHGGGGGGxx
+xxxxxxxxxxxxfffffffffffffffffffffxx
+           xxeeeeeeeeeeeeeeeeeeexx
+            xxdddddddddddddddddxx
+             xxcccccccccccccccxx
+              xxbbbbbbbbbbbbbxx
+               xxaaaaaaaaaaaxx
+                xxxxxxxxxxxxx
+ENDMAP
+
+NAME:       shrine_trog_oka
+SHUFFLE:    YZ
+KFEAT:      Y = altar_okawaru
+KFEAT:      Z = altar_trog
+MONS:       moth of wrath
+MONS:       orc warrior / ogre / orc, rat
+ITEM:       any weapon, any missile
+KFEAT:      m = iron_grate
+NSUBST:     M = 10:d / 2:e / *:.
+TILE:       x = wall_hall
+: shrine_setup(_G)
+MAP
+      xxxxxxx
+     xxxMMMxxx
+    xxMMM2MMMxx
+   xxMMY3.3ZMMxx
+   xxM.......Mxx
+   x....mmm....x
+   x...mm1mm...x
+   x....mmm....x
+   x...........x
+   xx...A.<...xx
+    xx.......xx
+     xxx...xxx
+       xxxxx
+ENDMAP
+
+NAME:       shrine_xom_nemelex
+SHUFFLE:    XY
+KFEAT:      X = altar_xom
+KFEAT:      Y = altar_nemelex_xobeh
+KITEM:      XY = any, any, any, any / nothing, any / nothing, any / nothing
+MONS:       orc ; club ego:chaos ident:type | dagger ego:chaos ident:type | \
+                  spear ego:chaos ident:type
+MONS:       gnoll ; club ego:chaos ident:type | dagger ego:chaos ident:type | \
+                    spear ego:chaos ident:type
+MONS:       place:D:3
+KFEAT:      ~ = known dart trap w:20 / known teleport trap
+NSUBST:     . = 1:X / 1:Y / *:.
+SUBST:      . = ....................~~~~~~~WWWWWWwwwwwwxxxxxxxxvnnnnnnnnbvZTUMM
+SUBST:      Z = **%%%|C
+SUBST:      M = 123333.
+SUBST:      S = ...W
+SUBST:      R = ....................~~~~~~~WWWWWWwwwwwwxxxxxxxxvnnnnnnnnbvTU
+COLOUR:     . = random
+TILE:       x = wall_abyss
+: shrine_setup(_G)
+MAP
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  xx...........................xx
+ xx.............................xx
+xx...............................xx
+x.................................x
+x.................................x
+x.................................x
+x...............RRR...............x
+x..............RRARR..............x
+x..............RRSRR..............x
+x...............RSR...............x
+x..............RRSRR..............x
+x..............RR<RR..............x
+x...............RRR...............x
+x.................................x
+x.................................x
+x.................................x
+xx...............................xx
+ xx.............................xx
+  xx...........................xx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:       shrine_sif
+KFEAT:      X = altar_sif_muna
+KMONS:      1 = orc wizard w:15 / Jessica / Blork the orc, orc wizard
+NSUBST:     M = 2:1 / *:.
+SUBST:      . = ..Z
+COLOUR:     Z = blue
+SUBST:      Z = .
+ITEM:       potion of brilliance w:15 / potion of magic / \
+            randbook owner:Sif_Muna numspells:2 slevels:1 w:2
+ITEM:       ring of intelligence plus:1 ident:all
+TILE:       x = wall_hall_blue
+: shrine_setup(_G)
+MAP
+        xxxxx
+        x...x
+        x.A.x
+      xxx...xxx
+     xx...<...xx
+    xx.........xx
+    x....www....x
+   xx...wwwww...xx
+   x...wwM.Mww...x
+   x...WWMMMWW...x
+   x...wwMMMww...x
+   xx...wwwww...xx
+    x....www....x
+    xx.........xx
+     xx..ded..xx
+      xxx...xxx
+        x.X.x
+        x...x
+        xxxxx
+ENDMAP
+
+NAME:       shrine_fedhas
+KFEAT:      X = altar_fedhas
+MONS:       plant, fungus, oklob plant, wandering mushroom
+SUBST:      . = .F
+COLOUR:     F = green
+SUBST:      F = .
+NSUBST:     w = 2:Z / *:w
+KFEAT:      Z = w
+KMONS:      Z = big fish
+SUBST:      x = xxxV
+COLOUR:     V = green
+SUBST:      V = x
+SUBST:      x = xx11122.
+SUBST:      y = x
+SUBST:      d = dd.
+SHUFFLE:    A<
+SUBST:      6 = 112
+ITEM:       apple / apricot / orange / pear / grape q:1 / sultana q:1 / \
+            strawberry q:1 / nothing w:15
+ITEM:       ring of sustenance ident:type
+TILE:       x = wall_hall_green
+: shrine_setup(_G)
+MAP
+yyyyyyyyyyyyyyyyyyyyyyy
+yxxxxxxxxxxxxxxxxxxxxxy
+yxxxxxxxxxxxxxx6xxd3xxy
+yxxxxxxxxxxxxxx6ddddxxy
+yxxxxxxxxxx4xxx666x.dxy
+yxxxxxxx...e...xx66xxxy
+yxxxxxx..wwdww..xx66xxy
+yxxxxx..wwwdwww..xxx6xy
+yxxxx..wwwwdwwww..xxxxy
+yxxxx.wwwwwdwwwww.xxxxy
+yxxxx.wwwwFFFwwww.xxxxy
+yxxxx.wwwwFXFwwww.xxxxy
+yxxxx.wwwwFFFwwww.xxxxy
+yxxxx.wwwwwwwwwww.xxxxy
+yxxxx..wwwwwwwww..xxxxy
+yxxxxx..wwwwwww..xxxxxy
+yxxxxxx..wwwww..xxxxxxy
+yxxxxxxx..A.<..xxxxxxxy
+yxxxxxxxxxxxxxxxxxxxxxy
+yxxxxxxxxxxxxxxxxxxxxxy
+yxxxxxxxxxxxxxxxxxxxxxy
+yxxxxxxxxxxxxxxxxxxxxxy
+yyyyyyyyyyyyyyyyyyyyyyy
+ENDMAP

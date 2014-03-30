@@ -292,4 +292,15 @@ const Branch branches[NUM_BRANCHES] =
       NULL,
       true, LIGHTGREY, BROWN,
       'U', false, 0 },
+
+#if TAG_MAJOR_VERSION == 34
+    { BRANCH_SHRINE, NUM_BRANCHES, -1, -1, 1, 4,
+      BFLAG_NO_XLEV_TRAVEL | BFLAG_NO_ITEMS, 0,
+      DNGN_ENTER_SHRINE, DNGN_EXIT_SHRINE,
+      "Shrine", "a shrine", "Shrine",
+      NULL,
+      false, LIGHTGREY, BLUE,
+      '9', false, 0 },
+#endif
+
 };

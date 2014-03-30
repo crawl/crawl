@@ -1043,6 +1043,11 @@ This portal has been left open by a careless wizard. It might lead to a secret
 laboratory, but beware! Surely it will be guarded by magical traps and terrible
 monsters. It seems to be slowly fading away.
 %%%%
+A gate leading to a distant shrine
+
+This shrine contains some congregation of followers of the more popular gods.
+They most likely will not be friendly, and they will soon close the portal.
+%%%%
 ###########
 ### Sprint
 ###########

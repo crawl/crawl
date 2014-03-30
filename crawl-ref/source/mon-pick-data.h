@@ -1136,6 +1136,11 @@ static const pop_entry pop_depths[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
+static const pop_entry pop_shrine[] =
+{ // Shrine
+  { 0,0,0,FLAT,MONS_0 }
+};
+
 // In C++ prior to C++11, we can't have an array of pointers to initialized
 // arrays of different sizes without declaring individual arrays as
 // standalone symbols first.  Thus this fugly list.
@@ -1185,6 +1190,7 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(wizlab),
 #if TAG_MAJOR_VERSION == 34
     POP(depths),
+    POP(shrine),
 #endif
 };
 
@@ -1291,6 +1297,7 @@ static const struct { const pop_entry *pop; int count; } population_zombie[] =
     POP(wizlab),
 #if TAG_MAJOR_VERSION == 34
     POP(depths),
+    POP(shrine),
 #endif
 };
 
@@ -1407,6 +1414,7 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
     POP(water_generic),
 #if TAG_MAJOR_VERSION == 34
     POP(water_depths),
+    POP(water_generic),
 #endif
 };
 
@@ -1509,5 +1517,6 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
     POP(lava_generic),
 #if TAG_MAJOR_VERSION == 34
     POP(lava_depths),
+    POP(lava_generic),
 #endif
 };

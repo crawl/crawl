@@ -309,3 +309,8 @@ corrupting influence of the Realm of Zot without being considered a part of it.
 The Depths are five levels deep and can be entered from the lowest floor of the
 Dungeon.
 %%%%
+Shrine
+
+The hide-out of some worshippers of the more populat gods, possibly long-gone.
+Much may be left in their wake, both in treasure and danger.
+%%%%

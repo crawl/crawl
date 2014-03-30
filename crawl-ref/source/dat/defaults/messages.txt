@@ -58,6 +58,7 @@ msc += $warning:falling.*rocks
 msc += $warning:rumble.*avalanche of rocks
 msc += $warning:crackle.*arcane power
 msc += $warning:crackle.*magical portal
+msc += $warning:reverent chanting
 msc += lightcyan:LOW MAGIC WARNING
 msc += $warning:fails to return
 msc += $warning:no longer ripe
@@ -97,6 +98,7 @@ force_more_message += hiss of flowing sand
 force_more_message += sound of rushing water
 force_more_message += oppressive heat about you
 force_more_message += crackle of arcane power
+force_more_message += reverent chanting
 
 # Abyss exits and rune
 force_more_message += Found a gateway leading out of the Abyss

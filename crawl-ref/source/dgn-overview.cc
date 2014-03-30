@@ -709,6 +709,7 @@ static void _seen_portal(dungeon_feature_type which_thing, const coord_def& pos)
     case DNGN_ENTER_ICE_CAVE:
     case DNGN_ENTER_VOLCANO:
     case DNGN_ENTER_WIZLAB:
+    case DNGN_ENTER_SHRINE:
     {
         level_pos where(level_id::current(), pos);
         portals_present[where] = stair_destination(pos).branch;
