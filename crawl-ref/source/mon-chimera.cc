@@ -41,8 +41,8 @@ void ghost_demon::init_chimera(monster* mon, monster_type parts[])
     mon->type         = MONS_CHIMERA;
     colour = mons_class_colour(MONS_CHIMERA);
     mon->base_monster = parts[0];
-    mon->props["chimera_part_2"] = parts[1];
-    mon->props["chimera_part_3"] = parts[2];
+    mon->props[CHIMERA_PT2_KEY] = parts[1];
+    mon->props[CHIMERA_PT3_KEY] = parts[2];
 
     resists = 0;
     size_t spellcount = 0;
@@ -150,17 +150,17 @@ bool ghost_demon::_apply_chimera_part(monster* mon, monster_type part,
     define_monster(&dummy);
 
     if (mons_is_batty(&dummy))
-        mon->props["chimera_batty"].get_int() = partnum;
+        mon->props[CHIMERA_BATTY_KEY].get_int() = partnum;
     else if (mons_flies(&dummy))
-        mon->props["chimera_wings"].get_int() = partnum;
+        mon->props[CHIMERA_WING_KEY].get_int() = partnum;
 
     // Check for a legs part. Jumpy behaviour (jumping spiders) should
     // override normal clinging.
     if (dummy.is_jumpy()
-        || (dummy.can_cling_to_walls() && !mon->props.exists("chimera_legs")))
+        || (dummy.can_cling_to_walls() && !mon->props.exists(CHIMERA_LEGS_KEY)))
     {
         ev = dummy.evasion();
-        mon->props["chimera_legs"].get_int() = partnum;
+        mon->props[CHIMERA_LEGS_KEY].get_int() = partnum;
     }
 
     if (dummy.can_see_invisible())
@@ -212,10 +212,10 @@ monster_type get_chimera_part(const monster* mon, int partnum)
 {
     ASSERT_RANGE(partnum,1,4);
     if (partnum == 1) return mon->base_monster;
-    if (partnum == 2 && mon->props.exists("chimera_part_2"))
-        return static_cast<monster_type>(mon->props["chimera_part_2"].get_int());
-    if (partnum == 3 && mon->props.exists("chimera_part_3"))
-        return static_cast<monster_type>(mon->props["chimera_part_3"].get_int());
+    if (partnum == 2 && mon->props.exists(CHIMERA_PT2_KEY))
+        return static_cast<monster_type>(mon->props[CHIMERA_PT2_KEY].get_int());
+    if (partnum == 3 && mon->props.exists(CHIMERA_PT3_KEY))
+        return static_cast<monster_type>(mon->props[CHIMERA_PT3_KEY].get_int());
     return MONS_PROGRAM_BUG;
 }
 
@@ -223,10 +223,10 @@ monster_type get_chimera_part(const monster_info* mi, int partnum)
 {
     ASSERT_RANGE(partnum,1,4);
     if (partnum == 1) return mi->base_type;
-    if (partnum == 2 && mi->props.exists("chimera_part_2"))
-        return static_cast<monster_type>(mi->props["chimera_part_2"].get_int());
-    if (partnum == 3 && mi->props.exists("chimera_part_3"))
-        return static_cast<monster_type>(mi->props["chimera_part_3"].get_int());
+    if (partnum == 2 && mi->props.exists(CHIMERA_PT2_KEY))
+        return static_cast<monster_type>(mi->props[CHIMERA_PT2_KEY].get_int());
+    if (partnum == 3 && mi->props.exists(CHIMERA_PT3_KEY))
+        return static_cast<monster_type>(mi->props[CHIMERA_PT3_KEY].get_int());
     return MONS_PROGRAM_BUG;
 }
 
@@ -238,32 +238,32 @@ monster_type random_chimera_part(const monster* mon)
 
 bool chimera_is_batty(const monster* mon)
 {
-    return mon->props.exists("chimera_batty");
+    return mon->props.exists(CHIMERA_BATTY_KEY);
 }
 
 monster_type get_chimera_wings(const monster* mon)
 {
     if (chimera_is_batty(mon))
-        return get_chimera_part(mon, mon->props["chimera_batty"].get_int());
-    if (mon->props.exists("chimera_wings"))
-        return get_chimera_part(mon, mon->props["chimera_wings"].get_int());
+        return get_chimera_part(mon, mon->props[CHIMERA_BATTY_KEY].get_int());
+    if (mon->props.exists(CHIMERA_WING_KEY))
+        return get_chimera_part(mon, mon->props[CHIMERA_WING_KEY].get_int());
     return MONS_NO_MONSTER;
 }
 
 monster_type get_chimera_legs(const monster* mon)
 {
-    if (mon->props.exists("chimera_legs"))
-        return get_chimera_part(mon, mon->props["chimera_legs"].get_int());
+    if (mon->props.exists(CHIMERA_LEGS_KEY))
+        return get_chimera_part(mon, mon->props[CHIMERA_LEGS_KEY].get_int());
     return get_chimera_part(mon, 1);
 }
 
 string monster_info::chimera_part_names() const
 {
-    if (!props.exists("chimera_part_2") || !props.exists("chimera_part_3"))
+    if (!props.exists(CHIMERA_PT2_KEY) || !props.exists(CHIMERA_PT3_KEY))
         return "";
 
-    monster_type chimtype2 = static_cast<monster_type>(props["chimera_part_2"].get_int());
-    monster_type chimtype3 = static_cast<monster_type>(props["chimera_part_3"].get_int());
+    monster_type chimtype2 = static_cast<monster_type>(props[CHIMERA_PT2_KEY].get_int());
+    monster_type chimtype3 = static_cast<monster_type>(props[CHIMERA_PT3_KEY].get_int());
     ASSERT_RANGE(chimtype2, MONS_PROGRAM_BUG + 1, NUM_MONSTERS);
     ASSERT_RANGE(chimtype3, MONS_PROGRAM_BUG + 1, NUM_MONSTERS);
 
