@@ -220,6 +220,9 @@ Xom noise
 Xom makes a sudden noise! You hear @weapon_noise@
 
 w:1
+"Boo!"
+
+w:1
 Xom does a drum roll.
 %%%%
 Xom blink monsters
