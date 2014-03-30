@@ -1821,19 +1821,23 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     }
 }
 
+/**
+ * Get a number of traps to place on the current level.
+ *
+ * No traps are placed in either Temple or disconnected branches other than
+ * Pandemonium. For other branches, we place 0-8 traps a level, averaged over
+ * two dice.
+ * @returns A number of traps to be placed.
+*/
 int num_traps_for_place()
 {
-    switch (you.where_are_you)
+    if (you.where_are_you == BRANCH_TEMPLE
+        || (!player_in_connected_branch()
+            && you.where_are_you != BRANCH_PANDEMONIUM))
     {
-    case BRANCH_TEMPLE:
         return 0;
-    default:
-        if (!player_in_connected_branch())
-            return 0;
-        // Intentional fall-through.
-    case BRANCH_PANDEMONIUM:
-        return random2avg(9, 2);
     }
+    return random2avg(9, 2);
 }
 
 static trap_type _random_trap_slime(int level_number)
