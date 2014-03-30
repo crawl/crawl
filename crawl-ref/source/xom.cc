@@ -3365,17 +3365,15 @@ static int _xom_do_banishment(bool debug = false)
 
 static int _xom_noise(bool debug = false)
 {
-    if (silenced(you.pos()))
-        return XOM_DID_NOTHING;
-
     if (debug)
         return XOM_BAD_NOISE;
 
-    // Ranges from shout to shatter volume, roughly.
-    const int noisiness = 15 + random2(26);
+    // Ranges from shout to shatter volume.
+    const int noisiness = 12 + random2(19);
 
     god_speaks(GOD_XOM, _get_xom_speech("noise").c_str());
-    noisy(noisiness, you.pos());
+    // Xom isn't subject to silence.
+    fake_noisy(noisiness, you.pos());
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "noise"), true);
     return XOM_BAD_NOISE;
