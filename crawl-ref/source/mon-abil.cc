@@ -5119,9 +5119,7 @@ static bool _do_throw(actor *thrower, actor *victim, int pow)
             best_sites.push_back(*di);
         }
         else if (site_score == best_site_score)
-        {
             best_sites.push_back(*di);
-        }
     }
 
     // No valid landing site found.

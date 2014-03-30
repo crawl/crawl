@@ -4516,7 +4516,7 @@ int dgn_place_item(const item_spec &spec,
 
     int useless_tries = 0;
 
-while (true)
+    while (true)
     {
         const int item_made =
             (acquire ?

@@ -2007,7 +2007,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         return true;
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return (mon->has_ench(ENCH_TOXIC_RADIANCE));
+        return mon->has_ench(ENCH_TOXIC_RADIANCE);
 
 #if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_TWISTER:
