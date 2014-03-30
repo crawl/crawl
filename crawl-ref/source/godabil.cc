@@ -828,8 +828,32 @@ bool zin_recite_to_single_monster(const coord_def& where,
             simple_monster_message(mon, " sneers at your recitation.");
     }
 
-    if (check <= 0)
-        return false;
+    if (check <= 0) // Uh oh...
+    {
+        if (one_chance_in(resist + 1))
+            return false;  // nothing happens, whew!
+
+        if (!one_chance_in(4)
+             && mon->add_ench(mon_enchant(ENCH_HASTE, 0, &you,
+                                          (16 + random2avg(13, 2))
+                                          * BASELINE_DELAY)))
+        {
+            simple_monster_message(mon, " speeds up in annoyance!");
+        }
+        else if (!one_chance_in(3)
+                 && mon->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, &you,
+                                              (16 + random2avg(13, 2))
+                                              * BASELINE_DELAY)))
+        {
+            simple_monster_message(mon, " goes into a battle-frenzy!");
+        }
+        else if (mon->can_go_berserk())
+            mon->go_berserk(true);
+        else
+            return false; // nothing happens
+
+        return true;
+    }
 
     // To what degree are they eligible for this prayertype?
     const int degree = eligibility[prayertype];
