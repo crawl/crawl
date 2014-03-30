@@ -5319,7 +5319,7 @@ bool item_list::parse_single_spec(item_spec& result, string s)
 
         vector<string> spell_list = split_string("|", spells);
         CrawlVector &incl_spells
-            = result.props["randbook_spells"].new_vector(SV_INT);
+            = result.props[RANDBK_SPELLS_KEY].new_vector(SV_INT);
 
         for (const string &spnam : spell_list)
         {
@@ -5337,12 +5337,12 @@ bool item_list::parse_single_spec(item_spec& result, string s)
                                             "_", " ");
 
         COMPILE_CHECK(SPTYP_LAST_SCHOOL < SHRT_MAX);
-        result.props["randbook_disc1"].get_short() = disc1;
-        result.props["randbook_disc2"].get_short() = disc2;
-        result.props["randbook_num_spells"] = num_spells;
-        result.props["randbook_slevels"] = slevels;
-        result.props["randbook_title"] = title;
-        result.props["randbook_owner"] = owner;
+        result.props[RANDBK_DISC1_KEY].get_short() = disc1;
+        result.props[RANDBK_DISC2_KEY].get_short() = disc2;
+        result.props[RANDBK_NSPELLS_KEY] = num_spells;
+        result.props[RANDBK_SLVLS_KEY] = slevels;
+        result.props[RANDBK_TITLE_KEY] = title;
+        result.props[RANDBK_OWNER_KEY] = owner;
 
         result.base_type = OBJ_BOOKS;
         // This is changed in make_book_theme_randart.
