@@ -86,7 +86,7 @@ Items
  $ - gold
  % - normal item
  * - higher level item (good)
- | - acquirement-level item (almost guaranteed excellent)
+ | - superb item (almost guaranteed excellent)
  d-k - item array item. See section below on ITEM: arrays for more info.
 
 NOTE: The P (place a rune here with 1/3 chance) and R (place a honeycomb with
