@@ -4515,38 +4515,42 @@ int dgn_place_item(const item_spec &spec,
     }
 
     int useless_tries = 0;
-retry:
 
-    const int item_made =
-        (acquire ?
-         acquirement_create_item(base_type, spec.acquirement_source,
-                                 true, where)
-         : spec.corpselike() ? _dgn_item_corpse(spec, where)
-         : items(spec.allow_uniques, base_type,
-                 spec.sub_type, true, level, 0, 0, spec.ego, -1,
-                 spec.level == ISPEC_MUNDANE));
-
-    if (item_made != NON_ITEM && item_made != -1)
+while (true)
     {
-        item_def &item(mitm[item_made]);
-        item.pos = where;
+        const int item_made =
+            (acquire ?
+             acquirement_create_item(base_type, spec.acquirement_source,
+                                     true, where)
+             : spec.corpselike() ? _dgn_item_corpse(spec, where)
+             : items(spec.allow_uniques, base_type,
+                     spec.sub_type, true, level, 0, 0, spec.ego, -1,
+                     spec.level == ISPEC_MUNDANE));
 
-        if (!_apply_item_props(item, spec, (useless_tries >= 10), false))
+        if (item_made == NON_ITEM || item_made == -1)
+            return NON_ITEM;
+        else
         {
-            if (base_type == OBJ_MISCELLANY
-                && spec.sub_type == MISC_RUNE_OF_ZOT)
+            item_def &item(mitm[item_made]);
+            item.pos = where;
+
+            if (_apply_item_props(item, spec, (useless_tries >= 10), false))
+                return item_made;
+            else
             {
-                return NON_ITEM;
+                if (base_type == OBJ_MISCELLANY
+                    && spec.sub_type == MISC_RUNE_OF_ZOT)
+                {
+                    return NON_ITEM;
+                }
+
+                useless_tries++;
             }
 
-            useless_tries++;
-            goto retry;
         }
 
-        return item_made;
     }
 
-    return NON_ITEM;
 }
 
 void dgn_place_multiple_items(item_list &list, const coord_def& where)
