@@ -3191,7 +3191,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_RETURN_FROM_ELF:
         return "staircase back to the Mines";
     case DNGN_RETURN_FROM_TOMB:
-        return "staircase out of the Tomb";
+        return "staircase back to the Crypt";
     case DNGN_RETURN_FROM_ZOT:
         return "gate leading back out of this place";
     case DNGN_EXIT_ICE_CAVE:
