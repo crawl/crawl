@@ -1981,10 +1981,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
     case ENCH_DEATHS_DOOR:
         if (decay_enchantment(en))
-        {
-            add_ench(mon_enchant(ENCH_FATIGUE, 0, 0,
-                                 (1 + random2(3)) * BASELINE_DELAY));
-        }
+            monster_die(this, KILL_MISC, NON_MONSTER);
         break;
 
     case ENCH_SIREN_SONG:

@@ -65,6 +65,7 @@ enum kill_method_type
     KILLED_BY_FRAILTY,
     KILLED_BY_BARBS,
     KILLED_BY_BEING_THROWN,
+    KILLED_BY_DEATHS_DOOR,
     NUM_KILLBY
 };
 

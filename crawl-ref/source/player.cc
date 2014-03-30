@@ -8390,3 +8390,18 @@ bool player_has_orb()
 {
     return you.char_direction == GDT_ASCENDING;
 }
+
+void abort_ddoor()
+{
+    if (you.duration[DUR_DEATHS_DOOR])
+    {
+        mprf(MSGCH_DURATION, "Your life is in your own hands once again.");
+        // XXX: better cause name?
+        paralyse_player("Death's Door abortion", 5 + random2(5));
+        confuse_player(10 + random2(10));
+        dec_max_hp(1);
+        if (you.hp > you.hp_max)
+            set_hp(you.hp_max);
+        you.duration[DUR_DEATHS_DOOR] = 0;
+    }
+}

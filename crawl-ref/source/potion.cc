@@ -66,17 +66,6 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     switch (pot_eff)
     {
     case POT_CURING:
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            if (potion && was_known)
-            {
-                mpr("You can't heal while in Death's door!");
-                return false;
-            }
-            mpr("You feel queasy.");
-            break;
-        }
-
         if (you.mutation[MUT_NO_DEVICE_HEAL]
             && potion && was_known
             && you.duration[DUR_CONF] == 0
@@ -104,20 +93,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         you.rotting = 0;
         you.disease = 0;
         you.duration[DUR_CONF] = 0;
+
+        abort_ddoor();
         break;
 
     case POT_HEAL_WOUNDS:
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            if (potion && was_known)
-            {
-                mpr("You can't heal while in Death's door!");
-                return false;
-            }
-            mpr("You feel queasy.");
-            break;
-        }
-
         if (you.mutation[MUT_NO_DEVICE_HEAL])
         {
             if (potion && was_known)
@@ -138,6 +118,8 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             unrot_hp((2 + random2avg(5, 2)) / factor);
             set_hp(you.hp_max);
         }
+
+        abort_ddoor();
         break;
 
     case POT_BLOOD:

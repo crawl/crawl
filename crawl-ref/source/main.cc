@@ -2935,11 +2935,11 @@ static void _decrement_durations()
         }
 
         if (_decrement_a_duration(DUR_DEATHS_DOOR, delay,
-                              "Your life is in your own hands again!",
+                              "Your time has expired!",
                               random2(6),
                               "Your time is quickly running out!"))
         {
-            you.increase_duration(DUR_EXHAUSTED, roll_dice(1,3));
+            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DEATHS_DOOR);
         }
     }
 
