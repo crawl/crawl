@@ -566,8 +566,8 @@ enum branch_type                // you.where_are_you
     BRANCH_WIZLAB,
 #if TAG_MAJOR_VERSION == 34
     BRANCH_DEPTHS,
-    BRANCH_SHRINE,
 #endif
+    BRANCH_SHRINE,
     NUM_BRANCHES
 };
 
@@ -1515,7 +1515,6 @@ enum dungeon_feature_type
     DNGN_ENTER_WIZLAB,
     DNGN_ENTER_SHRINE,
         DNGN_ENTER_LAST_PORTAL = DNGN_ENTER_SHRINE,
-    DNGN_UNUSED_ENTER_PORTAL_1,
 
     DNGN_EXIT_ZIGGURAT,
         DNGN_EXIT_FIRST_PORTAL = DNGN_EXIT_ZIGGURAT,
@@ -1530,7 +1529,6 @@ enum dungeon_feature_type
     DNGN_EXIT_LABYRINTH,
     DNGN_EXIT_SHRINE,
         DNGN_EXIT_LAST_PORTAL = DNGN_EXIT_SHRINE,
-    DNGN_UNUSED_EXIT_PORTAL_1,
 
     NUM_FEATURES
 };
