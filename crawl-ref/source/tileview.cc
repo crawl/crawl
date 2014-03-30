@@ -979,7 +979,10 @@ struct tile_ray
     coord_def ep;
     aff_type in_range;
 };
-FixedVector<tile_ray, LOS_RADIUS_SQ> tile_ray_vec;
+// Allow the rays to fill the whole visible area if necessary. The size is
+// about 4/pi times larger than it needs to be, but this way supports squarelos
+// as well.
+FixedVector<tile_ray, ENV_SHOW_DIAMETER * ENV_SHOW_DIAMETER> tile_ray_vec;
 
 void tile_place_ray(const coord_def &gc, aff_type in_range)
 {
