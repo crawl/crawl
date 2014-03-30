@@ -1830,6 +1830,7 @@ int num_traps_for_place()
     default:
         if (!player_in_connected_branch())
             return 0;
+        // Intentional fall-through.
     case BRANCH_PANDEMONIUM:
         return random2avg(9, 2);
     }
