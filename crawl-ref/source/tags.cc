@@ -961,7 +961,11 @@ static dungeon_feature_type unmarshallFeatureType(reader &th)
     // turn mangroves into trees
     else if (th.getMinorVersion() < TAG_MINOR_MANGROVES && x == DNGN_OPEN_SEA)
         x = DNGN_TREE;
-
+    else if (th.getMinorVersion() < TAG_MINOR_FIX_FEAT_SHIFT
+             && x > DNGN_OPEN_SEA && x < DNGN_LAVA)
+    {
+        x = static_cast<dungeon_feature_type>(x - 1);
+    }
 
     if (x >= DNGN_DRY_FOUNTAIN_BLUE && x <= DNGN_DRY_FOUNTAIN_BLOOD)
         x = DNGN_DRY_FOUNTAIN;
