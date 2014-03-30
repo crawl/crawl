@@ -70,7 +70,7 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
-    const int how_many = min(8, 3 + random2(3) + random2(pow) / 10);
+    const int how_many = max(15, 4 + random2(3) + random2(pow) / 10);
 
     for (int i = 0; i < how_many; ++i)
     {
@@ -1451,19 +1451,28 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
         lose_stat(STAT_INT, 1 + random2(3), false, "summoning horrible things");
     }
 
-    int num_abominations = random_range(2, 4) + x_chance_in_y(pow, 200);
-    int num_tmons = random2(pow) > 120 ? 2 : random2(pow) > 50 ? 1 : 0;
+    int num_abom = stepdown_value(2 + (random2(pow) / 10)
+                                  + (random2(pow) / 10),
+                                  2, 2, 6, -1);
+    int num_tmons = 0;
 
-    if (num_tmons == 0)
-        num_abominations++;
+    // No more than 2 tentacled monstrosities.
+    while (num_abom > 2 && num_tmons < 2 && one_chance_in(3))
+    {
+        num_abom -= 2;
+        num_tmons++;
+    }
+
+    // No more than 8 summons.
+    num_abom = min(8, num_abom);
 
     int count = 0;
 
-    while (num_abominations-- > 0)
+    while (num_tmons-- > 0)
     {
         if (monster *mons = create_monster(
-               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
-                         3, SPELL_SUMMON_HORRIBLE_THINGS,
+               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
+                         6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH | MG_AUTOFOE, god)))
         {
@@ -1472,11 +1481,11 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
         }
     }
 
-    while (num_tmons-- > 0)
+    while (num_abom-- > 0)
     {
         if (monster *mons = create_monster(
-               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, &you,
-                         3, SPELL_SUMMON_HORRIBLE_THINGS,
+               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, &you,
+                         6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), MHITYOU,
                          MG_FORCE_BEH | MG_AUTOFOE, god)))
         {
@@ -3669,49 +3678,49 @@ spell_type summons_index::map(const summons_desc* val)
 static const summons_desc summonsdata[] =
 {
     // Beasts
-    { SPELL_SUMMON_BUTTERFLIES,         8, 5 },
-    { SPELL_SUMMON_SMALL_MAMMAL,        4, 2 },
-    { SPELL_CALL_CANINE_FAMILIAR,       1, 2 },
-    { SPELL_SUMMON_ICE_BEAST,           3, 3 },
-    { SPELL_SUMMON_HYDRA,               3, 2 },
-    { SPELL_SUMMON_MANA_VIPER,          2, 2 },
+    { SPELL_SUMMON_BUTTERFLIES,         27, 5 },
+    { SPELL_SUMMON_SMALL_MAMMAL,        27, 2 },
+    { SPELL_CALL_CANINE_FAMILIAR,       27, 2 },
+    { SPELL_SUMMON_ICE_BEAST,           27, 3 },
+    { SPELL_SUMMON_HYDRA,               27, 2 },
+    { SPELL_SUMMON_MANA_VIPER,          27, 2 },
     // Demons
-    { SPELL_CALL_IMP,                   3, 3 },
-    { SPELL_SUMMON_DEMON,               3, 2 },
-    { SPELL_SUMMON_GREATER_DEMON,       3, 2 },
+    { SPELL_CALL_IMP,                   27, 3 },
+    { SPELL_SUMMON_DEMON,               27, 2 },
+    { SPELL_SUMMON_GREATER_DEMON,       27, 2 },
     // General monsters
-    { SPELL_SUMMON_ELEMENTAL,           3, 2 },
-    { SPELL_MONSTROUS_MENAGERIE,        4, 2 },
-    { SPELL_SUMMON_HORRIBLE_THINGS,     8, 8 },
-    { SPELL_SHADOW_CREATURES,           4, 2 },
-    { SPELL_SUMMON_LIGHTNING_SPIRE,     1, 2 },
-    { SPELL_SUMMON_GUARDIAN_GOLEM,      1, 2 },
-    { SPELL_SPELLFORGED_SERVITOR,       1, 2 },
+    { SPELL_SUMMON_ELEMENTAL,           27, 2 },
+    { SPELL_MONSTROUS_MENAGERIE,        27, 2 },
+    { SPELL_SUMMON_HORRIBLE_THINGS,     27, 8 },
+    { SPELL_SHADOW_CREATURES,           27, 2 },
+    { SPELL_SUMMON_LIGHTNING_SPIRE,      1, 2 },
+    { SPELL_SUMMON_GUARDIAN_GOLEM,      27, 2 },
+    { SPELL_SPELLFORGED_SERVITOR,        1, 2 },
     // Monster spells
-    { SPELL_SUMMON_UFETUBUS,            8, 2 },
-    { SPELL_SUMMON_HELL_BEAST,          8, 2 },
-    { SPELL_SUMMON_UNDEAD,              8, 2 },
-    { SPELL_SUMMON_DRAKES,              4, 2 },
-    { SPELL_SUMMON_MUSHROOMS,           8, 2 },
-    { SPELL_SUMMON_EYEBALLS,            4, 2 },
-    { SPELL_WATER_ELEMENTALS,           3, 2 },
-    { SPELL_FIRE_ELEMENTALS,            3, 2 },
-    { SPELL_EARTH_ELEMENTALS,           3, 2 },
-    { SPELL_AIR_ELEMENTALS,             3, 2 },
-    { SPELL_IRON_ELEMENTALS,            3, 2 },
-    { SPELL_SUMMON_SPECTRAL_ORCS,       3, 2 },
-    { SPELL_FIRE_SUMMON,                4, 2 },
-    { SPELL_SUMMON_MINOR_DEMON,         3, 3 },
-    { SPELL_CALL_LOST_SOUL,             3, 2 },
-    { SPELL_SUMMON_VERMIN,              5, 2 },
-    { SPELL_FORCEFUL_INVITATION,        3, 1 },
-    { SPELL_PLANEREND,                  6, 1 },
-    { SPELL_SUMMON_DRAGON,              4, 8 },
-    { SPELL_PHANTOM_MIRROR,             4, 1 },
+    { SPELL_SUMMON_UFETUBUS,            27, 2 },
+    { SPELL_SUMMON_HELL_BEAST,          27, 2 },
+    { SPELL_SUMMON_UNDEAD,              27, 2 },
+    { SPELL_SUMMON_DRAKES,              27, 2 },
+    { SPELL_SUMMON_MUSHROOMS,           27, 2 },
+    { SPELL_SUMMON_EYEBALLS,            27, 2 },
+    { SPELL_WATER_ELEMENTALS,           27, 2 },
+    { SPELL_FIRE_ELEMENTALS,            27, 2 },
+    { SPELL_EARTH_ELEMENTALS,           27, 2 },
+    { SPELL_AIR_ELEMENTALS,             27, 2 },
+    { SPELL_IRON_ELEMENTALS,            27, 2 },
+    { SPELL_SUMMON_SPECTRAL_ORCS,       27, 2 },
+    { SPELL_FIRE_SUMMON,                27, 2 },
+    { SPELL_SUMMON_MINOR_DEMON,         27, 3 },
+    { SPELL_CALL_LOST_SOUL,             27, 2 },
+    { SPELL_SUMMON_VERMIN,              27, 2 },
+    { SPELL_FORCEFUL_INVITATION,        27, 1 },
+    { SPELL_PLANEREND,                  27, 1 },
+    { SPELL_SUMMON_DRAGON,              27, 8 },
+    { SPELL_PHANTOM_MIRROR,             27, 1 },
     { SPELL_FAKE_MARA_SUMMON,           2, 1 },
     // Rod specials
-    { SPELL_SUMMON_SWARM,              12, 2 },
-    { SPELL_WEAVE_SHADOWS,              4, 2 },
+    { SPELL_SUMMON_SWARM,               27, 2 },
+    { SPELL_WEAVE_SHADOWS,              27, 2 },
     { SPELL_NO_SPELL,                   0, 0 }
 };
 
