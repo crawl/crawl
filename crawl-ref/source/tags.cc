@@ -5578,7 +5578,7 @@ void unmarshallMonster(reader &th, monster& m)
     }
 
     if (m.props.exists("iood_mid"))
-        m.summoner = m.props["iood_mid"].get_int(), m.props.erase("iood_mid");
+        m.summoner = m.props[IOOD_MID].get_int(), m.props.erase("iood_mid");
 
     if (m.props.exists("siren_call"))
     {

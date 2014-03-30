@@ -68,10 +68,10 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
             beam->ray.r.start.x - 0.5, beam->ray.r.start.y - 0.5,
             beam->ray.r.dir.x, beam->ray.r.dir.y);
 #endif
-        mon->props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
-        mon->props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
-        mon->props["iood_vx"].get_float() = beam->ray.r.dir.x;
-        mon->props["iood_vy"].get_float() = beam->ray.r.dir.y;
+        mon->props[IOOD_X].get_float() = beam->ray.r.start.x - 0.5;
+        mon->props[IOOD_Y].get_float() = beam->ray.r.start.y - 0.5;
+        mon->props[IOOD_VX].get_float() = beam->ray.r.dir.x;
+        mon->props[IOOD_VY].get_float() = beam->ray.r.dir.y;
         _fuzz_direction(caster, *mon, pow);
     }
     else
@@ -79,17 +79,17 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
         // Multi-orb: spread the orbs a bit, otherwise diagonal ones might
         // fail to leave the cardinal direction: orb A moves -0.4,+0.9 and
         // orb B +0.4,+0.9, both rounded to 0,1.
-        mon->props["iood_x"].get_float() = caster->pos().x + 0.4 * vx;
-        mon->props["iood_y"].get_float() = caster->pos().y + 0.4 * vy;
-        mon->props["iood_vx"].get_float() = vx;
-        mon->props["iood_vy"].get_float() = vy;
+        mon->props[IOOD_X].get_float() = caster->pos().x + 0.4 * vx;
+        mon->props[IOOD_Y].get_float() = caster->pos().y + 0.4 * vy;
+        mon->props[IOOD_VX].get_float() = vx;
+        mon->props[IOOD_VY].get_float() = vy;
     }
 
-    mon->props["iood_kc"].get_byte() = (is_player) ? KC_YOU :
+    mon->props[IOOD_KC].get_byte() = (is_player) ? KC_YOU :
         ((monster*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
-    mon->props["iood_pow"].get_short() = pow;
+    mon->props[IOOD_POW].get_short() = pow;
     mon->flags &= ~MF_JUST_SUMMONED;
-    mon->props["iood_caster"].get_string() = caster->as_monster()
+    mon->props[IOOD_CASTER].get_string() = caster->as_monster()
         ? caster->name(DESC_A, true)
         : (caster->is_player()) ? "you" : "";
     mon->summoner = caster->mid;
@@ -97,7 +97,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     if (caster->is_player() || caster->type == MONS_PLAYER_GHOST
         || caster->type == MONS_PLAYER_ILLUSION)
     {
-        mon->props["iood_flawed"].get_byte() = true;
+        mon->props[IOOD_FLAWED].get_byte() = true;
     }
 
     // Move away from the caster's square.
@@ -252,10 +252,10 @@ static void _iood_stop(monster& mon, bool msg = true)
 
 static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 {
-    const float x = mon.props["iood_x"];
-    const float y = mon.props["iood_y"];
-    float vx = mon.props["iood_vx"];
-    float vy = mon.props["iood_vy"];
+    const float x = mon.props[IOOD_X];
+    const float y = mon.props[IOOD_Y];
+    float vx = mon.props[IOOD_VX];
+    float vy = mon.props[IOOD_VY];
 
     _normalize(vx, vy);
 
@@ -268,11 +268,11 @@ static void _fuzz_direction(const actor *caster, monster& mon, int pow)
         tan *= 2;
 
     // Cast either from left or right hand.
-    mon.props["iood_x"] = x + vy*off;
-    mon.props["iood_y"] = y - vx*off;
+    mon.props[IOOD_X] = x + vy*off;
+    mon.props[IOOD_Y] = y - vx*off;
     // And off the direction a bit.
-    mon.props["iood_vx"] = vx + vy*tan;
-    mon.props["iood_vy"] = vy - vx*tan;
+    mon.props[IOOD_VX] = vx + vy*tan;
+    mon.props[IOOD_VY] = vy - vx*tan;
 }
 
 // Alas, too much differs to reuse beam shield blocks :(
@@ -282,7 +282,7 @@ static bool _iood_shielded(monster& mon, actor &victim)
         return false;
 
     const int to_hit = 15 + (mons_is_projectile(mon.type) ?
-        mon.props["iood_pow"].get_short()/12 : mon.get_hit_dice()/2);
+        mon.props[IOOD_POW].get_short()/12 : mon.get_hit_dice()/2);
     const int con_block = random2(to_hit + victim.shield_block_penalty());
     const int pro_block = victim.shield_bonus();
     dprf("iood shield: pro %d, con %d", pro_block, con_block);
@@ -319,11 +319,11 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     if (!caster)        // caster is dead/gone, blame the orb itself (as its
         caster = &mon;  // friendliness is correct)
     beam.set_agent(caster);
-    if (mon.props.exists("iood_reflector"))
+    if (mon.props.exists(IOOD_REFLECTOR))
     {
         beam.reflections = 1;
 
-        const mid_t refl_mid = mon.props["iood_reflector"].get_int64();
+        const mid_t refl_mid = mon.props[IOOD_REFLECTOR].get_int64();
 
         if (refl_mid == MID_PLAYER)
             beam.reflector = MID_PLAYER;
@@ -340,11 +340,11 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
-    beam.source_name = mon.props["iood_caster"].get_string();
+    beam.source_name = mon.props[IOOD_CASTER].get_string();
 
-    int pow = mon.props["iood_pow"].get_short();
+    int pow = mon.props[IOOD_POW].get_short();
     pow = stepdown_value(pow, 30, 30, 200, -1);
-    const int dist = mon.props["iood_distance"].get_int();
+    const int dist = mon.props[IOOD_DIST].get_int();
     ASSERT(dist >= 0);
     if (dist < 4)
         pow = pow * (dist*2+3) / 10;
@@ -373,10 +373,10 @@ bool iood_act(monster& mon, bool no_trail)
     bool iood = mons_is_projectile(mon.type);
     ASSERT(iood || mons_is_boulder(&mon));
 
-    float x = mon.props["iood_x"];
-    float y = mon.props["iood_y"];
-    float vx = mon.props["iood_vx"];
-    float vy = mon.props["iood_vy"];
+    float x = mon.props[IOOD_X];
+    float y = mon.props[IOOD_Y];
+    float vx = mon.props[IOOD_VX];
+    float vy = mon.props[IOOD_VY];
 
     dprf("iood_act: pos=(%d,%d) rpos=(%f,%f) v=(%f,%f) foe=%d",
          mon.pos().x, mon.pos().y,
@@ -436,8 +436,8 @@ bool iood_act(monster& mon, bool no_trail)
             dprf("iood: keeping course");
 
         _normalize(vx, vy);
-        mon.props["iood_vx"] = vx;
-        mon.props["iood_vy"] = vy;
+        mon.props[IOOD_VX] = vx;
+        mon.props[IOOD_VY] = vy;
     }
 
 move_again:
@@ -445,9 +445,9 @@ move_again:
     x += vx;
     y += vy;
 
-    mon.props["iood_x"] = x;
-    mon.props["iood_y"] = y;
-    mon.props["iood_distance"].get_int()++;
+    mon.props[IOOD_X] = x;
+    mon.props[IOOD_Y] = y;
+    mon.props[IOOD_DIST].get_int()++;
 
     const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
     if (!in_bounds(pos))
@@ -505,10 +505,10 @@ move_again:
         if (mons && iood && mons_is_projectile(victim->type))
         {
             // Weak orbs just fizzle instead of exploding.
-            if (mons->props["iood_distance"].get_int() < 2
-                || mon.props["iood_distance"].get_int() < 2)
+            if (mons->props[IOOD_DIST].get_int() < 2
+                || mon.props[IOOD_DIST].get_int() < 2)
             {
-                if (mons->props["iood_distance"].get_int() < 2)
+                if (mons->props[IOOD_DIST].get_int() < 2)
                 {
                     if (you.see_cell(pos))
                         mpr("The orb fizzles.");
@@ -516,7 +516,7 @@ move_again:
                 }
 
                 // Return, if the acting orb fizzled.
-                if (mon.props["iood_distance"].get_int() < 2)
+                if (mon.props[IOOD_DIST].get_int() < 2)
                 {
                     if (you.see_cell(pos))
                         mpr("The orb fizzles.");
@@ -617,9 +617,9 @@ move_again:
             victim->shield_block_succeeded(&mon);
 
             // mid_t is unsigned so won't fit in a plain int
-            mon.props["iood_reflector"] = (int64_t) victim->mid;
-            mon.props["iood_vx"] = vx = -vx;
-            mon.props["iood_vy"] = vy = -vy;
+            mon.props[IOOD_REFLECTOR] = (int64_t) victim->mid;
+            mon.props[IOOD_VX] = vx = -vx;
+            mon.props[IOOD_VY] = vy = -vy;
 
             // Need to get out of the victim's square.
 
@@ -655,8 +655,8 @@ move_again:
     }
 
     // move_to_pos() just trashed the coords, set them again
-    mon.props["iood_x"] = x;
-    mon.props["iood_y"] = y;
+    mon.props[IOOD_X] = x;
+    mon.props[IOOD_Y] = y;
 
     return false;
 }
@@ -666,10 +666,10 @@ move_again:
 // hitting anything.
 static bool _iood_catchup_move(monster& mon)
 {
-    float x = mon.props["iood_x"];
-    float y = mon.props["iood_y"];
-    float vx = mon.props["iood_vx"];
-    float vy = mon.props["iood_vy"];
+    float x = mon.props[IOOD_X];
+    float y = mon.props[IOOD_Y];
+    float vx = mon.props[IOOD_VX];
+    float vy = mon.props[IOOD_VY];
 
     if (!vx && !vy) // not initialized
     {
@@ -682,9 +682,9 @@ static bool _iood_catchup_move(monster& mon)
     x += vx;
     y += vy;
 
-    mon.props["iood_x"] = x;
-    mon.props["iood_y"] = y;
-    mon.props["iood_distance"].get_int()++;
+    mon.props[IOOD_X] = x;
+    mon.props[IOOD_Y] = y;
+    mon.props[IOOD_DIST].get_int()++;
 
     const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
     if (!in_bounds(pos))
@@ -718,8 +718,8 @@ static bool _iood_catchup_move(monster& mon)
     }
 
     // move_to_pos() just trashed the coords, set them again
-    mon.props["iood_x"] = x;
-    mon.props["iood_y"] = y;
+    mon.props[IOOD_X] = x;
+    mon.props[IOOD_Y] = y;
 
     return false;
 }
@@ -740,7 +740,7 @@ void iood_catchup(monster* mons, int pturns)
             return;
         }
 
-        if (mon.props["iood_kc"].get_byte() == KC_YOU)
+        if (mon.props[IOOD_KC].get_byte() == KC_YOU)
         {
             // Left player's vision.
             _iood_stop(mon, false);
@@ -758,11 +758,11 @@ void boulder_start(monster *mon, bolt *beam)
     mon->add_ench(ENCH_ROLLING);
     // Work out x/y/vx/vy from beam
     beam->choose_ray();
-    mon->props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
-    mon->props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
-    mon->props["iood_vx"].get_float() = mons_is_fleeing(mon) ?
+    mon->props[IOOD_X].get_float() = beam->ray.r.start.x - 0.5;
+    mon->props[IOOD_Y].get_float() = beam->ray.r.start.y - 0.5;
+    mon->props[IOOD_VX].get_float() = mons_is_fleeing(mon) ?
         -beam->ray.r.dir.x : beam->ray.r.dir.x;
-    mon->props["iood_vy"].get_float() = mons_is_fleeing(mon) ?
+    mon->props[IOOD_VY].get_float() = mons_is_fleeing(mon) ?
         -beam->ray.r.dir.y : beam->ray.r.dir.y;
     iood_act(*mon);
 }
