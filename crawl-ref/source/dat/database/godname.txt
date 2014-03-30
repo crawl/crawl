@@ -47,6 +47,14 @@ Ashenzari lastname
 
 Ashenzari the Shackled
 %%%%
+Dithmenos lastname
+
+Dithmenos the Shadowed
+%%%%
+Nemelex Xobeh lastname
+
+Nemelex Xobeh the Trickster
+%%%%
 Xom lastname
 
 w:280
