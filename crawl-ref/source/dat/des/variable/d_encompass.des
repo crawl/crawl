@@ -13,7 +13,7 @@ KMONS:  4 = orc / hound / kobold / goblin / hobgoblin / gnoll
 KMONS:  5 = yak / hog / sheep w:50
 KMONS:  6 = wyvern w:5 / manticore w:2 / hippogriff w:2 / black bear w:19
 KITEM:  o5 = strawberry q:1 / nothing w:400
-SUBST:  M = Mww.!, p = pP!!!!!
+SUBST:  M = tww.!, p = pP!!!!!
 NSUBST: 1 = 1:1 / *:., H = 20:H / 5:% / 160:. / * = .:25 %:1 4
 NSUBST: F = 5:5 / 5 = 55o / * = o:100 R:57
 NSUBST: ' = 2:6 / 3 = 66... / *:., " = 2:6 / 3 = 66... / *:.
@@ -74,22 +74,22 @@ cccctttpp!.............................................................tt!!!tttx
  xttttp!!!!!c}Hc!!!c+cc!!!c}Hc!!cHHc!!!wwwwww!!!wwwwww!!!cc...cc!!!!!ttt!ttt!ttx
 xxxttpp!!!!!cccc!!!cHHc!!!cccc!!cH}c!!wwwwwww!!wwwwwww!!cc.....cc!!!!ttt!ttt!ttx
 xxxxpp!!!!!!!!!!!!!c}Hc!!!!!!!!!cccc!!wwwwwwwwwwwwwwww!!c...{...c!!!tttt!!tt!ttx
-xxxx!!!!!!!!!!!!!!!cccc!!!!!!!!!!!!!twwwwwwwwwwwwwwwwt!!c.......c!!tttttt!t!!ttx
-xxxx!!xxx!!!!!!!!!!!!!!!!!!!!!!!!!!!twwwwwwwwwwwwwwwtt!!c..(.[..c!!tttttt!t!tttx
-xxxx``xxxx!!!!!!!!!!!!!!!!!!!!!!!!!twwwwwwwwwwwwwwwtt!!!cc.....cc!!ttttttt!ttttx
-xxxxx`xxxx!!!!!!!!!!!!!!!!!!!!!!tt!twwwwwwwwwwwwwwtt!ttt!cc...cc!!ttttttt!!!tttx
-xxxxx``xxx!!x!!!!!!!t!t!!!!!!!tttwttwwwwwwwwwwwwwtt!twwtt!ccccc!!ttttttt!!t!ttxx
-xxxxxx`xxx``xxxttttttwt!!!!!!!twwwtttwwwwwwwwwwwtt..twwwt!!!!!!!!ttttttt!tt!txxx
-xxxxxx`xx```xxxxwwwwwwtttttt!!twwt.!twwwwwwwwwttt....tttt!!!!!!!!tttttt!!tt!txxx
-xxxxxx``````.xxxwwwwttttwwwwt!tttt.twwwwwwwwttt..tttt...!!!!!!!!!tt!!!!!ttt!txxx
-xxxxxxx```xx.`xxxxxtt!.!ttwtw!!....twwwwwwwtt..ttwwwt..ttt!tt!!!!!!!!!ttttt!txxx
-xxxxxxx``xxxx``xxxx..ttt!....!wwtt.twcccccwt.wwwwwwwt.wwww!wtt!!!!!tttttttt!!xxx
-xxxxxx``xxxxxx`xxxxx.twwttwt!wwwwwt.ccwwwcct.twwwwttt.wwwt!twtt!tttttttttxx!!xxx
-xxxxxx`xxxxxxxx`xxxxx.twwwt.....ww.ccwwwwwcc.tttttt..tt....twwttttttttttxxx!!-xx
-xxxxx``xxxxxxx```xxxxx.tww.ttttt..tcww*1..wct......ttwwwwt..!wwtttttttttxxx!--xx
-xxxxx`xxx`````xx`xxxxx..tt!twwwwtt.+W.*}*.W+.t.ttwwwwwwwwtt!!!ttttttttttxxx---xx
-xx```````xxxxxxx`xxxxxxxwwt.twwwww.cw.1*1wwcwt.twwwwwwxxwwt!!xxxxxxxxxxxxx----xx
-x````xxxxxxxxxxx``xxxxxxwwt...twwttccwwwwwccwtttwxxxxxxxwwtxxxxxxxxxxxxxxx-----x
+xxxx!!!!!!!!!!!!!!!cccc!!!!!!!!!!!!!MwwwwwwwwwwwwwwwwM!!c.......c!!tttttt!t!!ttx
+xxxx!!xxx!!!!!!!!!!!!!!!!!!!!!!!!!!!MwwwwwwwwwwwwwwwMM!!c..(.[..c!!tttttt!t!tttx
+xxxx``xxxx!!!!!!!!!!!!!!!!!!!!!!!!!MwwwwwwwwwwwwwwwMM!!!cc.....cc!!ttttttt!ttttx
+xxxxx`xxxx!!!!!!!!!!!!!!!!!!!!!!MM!MwwwwwwwwwwwwwwMM!MMM!cc...cc!!ttttttt!!!tttx
+xxxxx``xxx!!x!!!!!!!M!M!!!!!!!MMMwMMwwwwwwwwwwwwwMM!MwwMM!ccccc!!ttttttt!!t!ttxx
+xxxxxx`xxx``xxxMMMMMMwM!!!!!!!MwwwMMMwwwwwwwwwwwMM..MwwwM!!!!!!!!ttttttt!tt!txxx
+xxxxxx`xx```xxxxwwwwwwMMMMMM!!MwwM.!MwwwwwwwwwMMM....MMMM!!!!!!!!tttttt!!tt!txxx
+xxxxxx``````.xxxwwwwMMMMwwwwM!MMMM.MwwwwwwwwMMM..MMMM...!!!!!!!!!tt!!!!!ttt!txxx
+xxxxxxx```xx.`xxxxxMM!.!MMwMw!!....MwwwwwwwMM..MMwwwM..MMM!MM!!!!!!!!!ttttt!txxx
+xxxxxxx``xxxx``xxxx..MMM!....!wwMM.MwcccccwM.wwwwwwwM.wwww!wMM!!!!!tttttttt!!xxx
+xxxxxx``xxxxxx`xxxxx.MwwMMwM!wwwwwM.ccwwwccM.MwwwwMMM.wwwM!MwMM!tttttttttxx!!xxx
+xxxxxx`xxxxxxxx`xxxxx.MwwwM.....ww.ccwwwwwcc.MMMMMM..MM....MwwMMttttttttxxx!!-xx
+xxxxx``xxxxxxx```xxxxx.Mww.MMMMM..Mcww*1..wcM......MMwwwwM..!wwMttttttttxxx!--xx
+xxxxx`xxx`````xx`xxxxx..MM!MwwwwMM.+W.*}*.W+.M.MMwwwwwwwwMM!!!MMttttttttxxx---xx
+xx```````xxxxxxx`xxxxxxxwwM.Mwwwww.cw.1*1wwcwM.MwwwwwwxxwwM!!xxxxxxxxxxxxx----xx
+x````xxxxxxxxxxx``xxxxxxwwM...MwwMMccwwwwwccwMMMwxxxxxxxwwMxxxxxxxxxxxxxxx-----x
 x```xxxxxxxxxxxx`````xxxxxxxxxxxxxxxccwwwccwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxx---}-x
 x`}`xxxxxxxxxxxxx```}`xxxxxxxxxxxxxxxcccccwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxx----x
 x*``xxxxxxxxxxxxxx```*xxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
