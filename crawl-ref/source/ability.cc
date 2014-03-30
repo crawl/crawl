@@ -2352,7 +2352,7 @@ static bool _do_ability(const ability_def& abil)
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
             you.attribute[ATTR_RECITE_HP]   = you.hp;
             you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
-            mprf(MSGCH_PLAIN, "You clear your throat and prepare to recite %s.",
+            mprf("You clear your throat and prepare to recite %s.",
                  zin_recite_text(you.attribute[ATTR_RECITE_SEED],
                                  prayertype, -1).c_str());
         }

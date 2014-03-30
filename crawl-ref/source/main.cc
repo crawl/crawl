@@ -2346,7 +2346,7 @@ static bool _check_recite()
 
 static void _handle_recitation(int step)
 {
-    mprf(MSGCH_MULTITURN_ACTION, "\"%s\"",
+    mprf("\"%s\"",
          zin_recite_text(you.attribute[ATTR_RECITE_SEED],
                          you.attribute[ATTR_RECITE_TYPE], step).c_str());
 
