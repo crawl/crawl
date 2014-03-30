@@ -379,6 +379,12 @@ Xom bad enchant monster
 
 @Xom good enchant monster@
 %%%%
+Xom stealth player
+
+Xom shushes you conspicuously.
+
+Xom whispers "Shhh!"
+%%%%
 Xom life saving general
 
 "What? Wait, NO!"

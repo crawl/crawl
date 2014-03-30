@@ -95,6 +95,7 @@
 #include "version.h"
 #include "view.h"
 #include "viewgeom.h"
+#include "xom.h"
 
 #ifdef __ANDROID__
 #include <android/log.h>
@@ -1492,6 +1493,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
 
         ash_detect_portals(is_map_persistent());
+
+        if (just_created_level)
+            xom_new_level_noise_or_stealth();
     }
     // Initialize halos, etc.
     invalidate_agrid(true);

@@ -4036,6 +4036,30 @@ bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
     return true;
 }
 
+// Xom might have something to say when you enter a new level.
+void xom_new_level_noise_or_stealth()
+{
+    if (!you_worship(GOD_XOM) && !player_under_penance(GOD_XOM))
+        return;
+
+    // But only occasionally.
+    if (one_chance_in(30))
+    {
+        if (!player_under_penance(GOD_XOM) && coinflip())
+        {
+            god_speaks(GOD_XOM, _get_xom_speech("stealth player").c_str());
+            mpr(you.duration[DUR_STEALTH] ? "You feel more catlike."
+                                          : "You feel stealthy.");
+            you.increase_duration(DUR_STEALTH, 10 + random2(80));
+            take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                           "stealth player"), true);
+        }
+        else
+            _xom_noise();
+    }
+    return;
+}
+
 #ifdef WIZARD
 struct xom_effect_count
 {
