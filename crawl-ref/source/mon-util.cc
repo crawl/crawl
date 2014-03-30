@@ -1675,16 +1675,16 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
             mc = mon->base_monster;
             break;
         case 1:
-            if (mon->props.exists("chimera_part_2"))
+            if (mon->props.exists(CHIMERA_PT2_KEY))
             {
-                mc = static_cast<monster_type>(mon->props["chimera_part_2"].get_int());
+                mc = static_cast<monster_type>(mon->props[CHIMERA_PT2_KEY].get_int());
                 attk_number = 0;
             }
             break;
         case 2:
-            if (mon->props.exists("chimera_part_3"))
+            if (mon->props.exists(CHIMERA_PT3_KEY))
             {
-                mc = static_cast<monster_type>(mon->props["chimera_part_3"].get_int());
+                mc = static_cast<monster_type>(mon->props[CHIMERA_PT3_KEY].get_int());
                 attk_number = 0;
             }
             break;
