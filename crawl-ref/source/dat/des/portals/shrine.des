@@ -1,6 +1,6 @@
 #
 # What used to be around before overflow altars.
-# 
+#
 #
 {{
 function shrine_portal(e)
