@@ -86,7 +86,8 @@ enum tag_minor_version
     TAG_MINOR_NEMELEX_WEIGHTS,     // Nemelex deck weighting removed
     TAG_MINOR_UNSEEN_MONSTER,      // Invis indicators for monsters going from seen to unseen
     TAG_MINOR_MR_ITEM_RESCALE,     // Rescaled MR property on items.
-    TAG_MINOR_MANGROVES,           // Turn all mangroves into trees
+    TAG_MINOR_MANGROVES,           // Turn all mangroves into trees.
+    TAG_MINOR_FIX_FEAT_SHIFT,      // Fix feature shifts from the last tag.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
