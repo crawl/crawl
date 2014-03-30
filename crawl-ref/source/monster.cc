@@ -2798,8 +2798,8 @@ void monster::moveto(const coord_def& c, bool clear_net)
     if (is_projectile())
     {
         // Assume some means of displacement, normal moves will overwrite this.
-        props["iood_x"].get_float() += c.x - pos().x;
-        props["iood_y"].get_float() += c.y - pos().y;
+        props[IOOD_X].get_float() += c.x - pos().x;
+        props[IOOD_Y].get_float() += c.y - pos().y;
     }
 
     set_position(c);
