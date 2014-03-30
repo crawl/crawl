@@ -21,6 +21,7 @@
 
 #include "ability.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cio.h"
 #include "clua.h"
 #include "command.h"
@@ -2109,6 +2110,20 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     // suppress this if the feature changed out of view
     if (!marker_desc.empty() && grd(pos) == feat)
         long_desc += marker_desc;
+
+    // Display branch descriptions on the entries to those branches.
+    if (feat_is_stair(feat))
+    {
+        for (int i = 0; i < NUM_BRANCHES; ++i)
+        {
+            if (branches[i].entry_stairs == feat)
+            {
+                long_desc += "\n";
+                long_desc += getLongDescription(branches[i].shortname);
+                break;
+            }
+        }
+    }
 
     inf.body << long_desc;
 
