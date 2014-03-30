@@ -151,7 +151,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     you.redraw_evasion = true;      // or evasion
     string desc  = old_name + " ";
             desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
-                     god == GOD_LUGONU        ? "corrupted by Lugonu" :
+                     god == GOD_LUGONU        ? "corrupted by Lucy" :
                      god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
                                               : "touched by the gods");
 

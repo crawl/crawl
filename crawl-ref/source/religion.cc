@@ -2406,7 +2406,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_TROG:          return "Trog";
     case GOD_NEMELEX_XOBEH: return "Nemelex Xobeh";
     case GOD_ELYVILON:      return "Elyvilon";
-    case GOD_LUGONU:        return "Lugonu";
+    case GOD_LUGONU:        return "Lucy";
     case GOD_BEOGH:         return "Beogh";
     case GOD_FEDHAS:        return "Fedhas";
     case GOD_CHEIBRIADOS:   return "Cheibriados";

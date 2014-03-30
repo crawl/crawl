@@ -1667,7 +1667,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         monster_type mons = pick_monster(level_id(BRANCH_ABYSS), _incorruptible);
         ASSERT(mons);
         mgen_data mg(mons, beh, 0, 5, 0, p);
-        mg.non_actor_summoner = "Lugonu's corruption";
+        mg.non_actor_summoner = "Lucy's corruption";
         mg.place = BRANCH_ABYSS;
         return create_monster(mg);
     }

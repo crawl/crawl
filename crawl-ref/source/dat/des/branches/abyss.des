@@ -1105,7 +1105,7 @@ NAME:   evilmike_abyss_rune_acolytes_1
 TAGS:   abyss_rune unrand no_monster_gen
 WEIGHT: 6
 KMONS:  O = tentacled monstrosity / thrashing horror / tentacled starspawn
-KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
+KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lucy n_rpl n_des col:lightgreen \
             tile:mons_hell_wizard priest_spells \
             spells:smiting;blink_other;invisibility;malign_gateway;blink ; \
             robe good_item . quarterstaff ego:distortion ident:type | \
@@ -1133,7 +1133,7 @@ NAME:   evilmike_abyss_rune_acolytes_2
 TAGS:   abyss_rune unrand no_monster_gen
 WEIGHT: 4
 KMONS:  O : tentacled monstrosity / thrashing horror / tentacled starspawn
-KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
+KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lucy n_rpl n_des col:lightgreen \
             tile:mons_hell_wizard priest_spells \
             spells:smiting;blink_other;invisibility;malign_gateway;blink ; \
             robe good_item . quarterstaff ego:distortion ident:type | \

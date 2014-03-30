@@ -835,7 +835,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                     if (you_worship(GOD_LUGONU))
                     {
                         god_speaks(GOD_LUGONU,
-                                   "Lugonu absorbs the residual spatial "
+                                   "Lucy absorbs the residual spatial "
                                    "distortion as you unwield your weapon.");
                         break;
                     }

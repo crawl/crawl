@@ -478,7 +478,7 @@ map_marker *map_corruption_marker::clone() const
 
 string map_corruption_marker::debug_describe() const
 {
-    return make_stringf("Lugonu corrupt (%d)", duration);
+    return make_stringf("Lucy corrupt (%d)", duration);
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -3236,7 +3236,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_ALTAR_ELYVILON:
         return "white marble altar of Elyvilon";
     case DNGN_ALTAR_LUGONU:
-        return "corrupted altar of Lugonu";
+        return "corrupted altar of Lucy";
     case DNGN_ALTAR_BEOGH:
         return "roughly hewn altar of Beogh";
     case DNGN_ALTAR_JIYVA:

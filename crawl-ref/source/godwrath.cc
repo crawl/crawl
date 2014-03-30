@@ -950,7 +950,7 @@ static bool _lugonu_retribution()
     if (coinflip())
     {
         simple_god_message("'s wrath finds you!", god);
-        MiscastEffect(&you, -god, SPTYP_TRANSLOCATION, 9, 90, "Lugonu's touch");
+        MiscastEffect(&you, -god, SPTYP_TRANSLOCATION, 9, 90, "Lucy's touch");
         // No return - Lugonu's touch is independent of other effects.
     }
     else if (coinflip())
@@ -981,7 +981,7 @@ static bool _lugonu_retribution()
                     6,                              MONS_THRASHING_HORROR,
                     3,                              MONS_ANCIENT_ZYME,
                     0),
-                "the touch of Lugonu",
+                "the touch of Lucy",
                 true, 0, 0, you.pos(), 0, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
@@ -998,7 +998,7 @@ static bool _lugonu_retribution()
                                 MONS_WRETCHED_STAR,
                                 MONS_STARCURSED_MASS,
                                 -1),
-                                "the touch of Lugonu",
+                                "the touch of Lucy",
                                 true, 0, 0, you.pos(), 0, god);
 
         temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
