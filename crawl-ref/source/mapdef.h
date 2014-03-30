@@ -29,6 +29,14 @@
 
 #define NEVER_CORPSE_KEY "never_corpse"
 
+#define RANDBK_OWNER_KEY "randbook_owner"
+#define RANDBK_TITLE_KEY "randbook_title"
+#define RANDBK_DISC1_KEY "randbook_disc1"
+#define RANDBK_DISC2_KEY "randbook_disc2"
+#define RANDBK_SPELLS_KEY "randbook_spells"
+#define RANDBK_SLVLS_KEY "randbook_slevels"
+#define RANDBK_NSPELLS_KEY "randbook_num_spells"
+
 class mon_enchant;
 extern const char *traversable_glyphs;
 

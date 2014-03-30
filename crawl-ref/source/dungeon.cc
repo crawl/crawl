@@ -4421,23 +4421,23 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 
     if (props.exists("make_book_theme_randart"))
     {
-        string owner = props["randbook_owner"].get_string();
+        string owner = props[RANDBK_OWNER_KEY].get_string();
         if (owner == "player")
             owner = you.your_name;
 
         vector<spell_type> spells;
-        CrawlVector spell_list = props["randbook_spells"].get_vector();
+        CrawlVector spell_list = props[RANDBK_SPELLS_KEY].get_vector();
         for (unsigned int i = 0; i < spell_list.size(); ++i)
             spells.push_back((spell_type) spell_list[i].get_int());
 
         make_book_theme_randart(item,
             spells,
-            static_cast<spschool_flag_type>(props["randbook_disc1"].get_short()),
-            static_cast<spschool_flag_type>(props["randbook_disc2"].get_short()),
-            props["randbook_num_spells"].get_short(),
-            props["randbook_slevels"].get_short(),
+            static_cast<spschool_flag_type>(props[RANDBK_DISC1_KEY].get_short()),
+            static_cast<spschool_flag_type>(props[RANDBK_DISC2_KEY].get_short()),
+            props[RANDBK_NSPELLS_KEY].get_short(),
+            props[RANDBK_SLVLS_KEY].get_short(),
             owner,
-            props["randbook_title"].get_string());
+            props[RANDBK_TITLE_KEY].get_string());
     }
 
     // Wipe item origin to remove "this is a god gift!" from there,
