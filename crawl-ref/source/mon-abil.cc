@@ -3683,6 +3683,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_QUEEN_BEE:
+        if (mons->has_ench(ENCH_CONFUSION))
+            break;
+
         if (one_chance_in(4)
             || mons->hit_points < mons->max_hit_points / 3 && one_chance_in(2))
         {
