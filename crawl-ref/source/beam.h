@@ -143,7 +143,6 @@ struct bolt
     bool        nightvision;     // tracer firer has nightvision?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
-    map<mid_t, int> hit_count;   // how many times targets were affected
 
     tracer_info foe_info;
     tracer_info friend_info;
