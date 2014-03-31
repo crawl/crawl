@@ -3108,12 +3108,6 @@ bool stasis_blocks_effect(bool calc_unid,
 {
     if (you.stasis(calc_unid))
     {
-        item_def *amulet = you.slot_item(EQ_AMULET, false);
-
-        // For non-amulet sources of stasis.
-        if (amulet && amulet->sub_type != AMU_STASIS)
-            amulet = 0;
-
         if (msg)
         {
             // Override message for formicids
@@ -3121,7 +3115,7 @@ bool stasis_blocks_effect(bool calc_unid,
                 mpr("Your stasis keeps you stable.");
             else
             {
-                const string name(amulet? amulet->name(DESC_YOUR) : "Something");
+                const string name("Something");
                 const string message = make_stringf(msg, name.c_str());
 
                 if (noise)
@@ -3135,13 +3129,6 @@ bool stasis_blocks_effect(bool calc_unid,
                 else
                     mpr(message.c_str());
             }
-        }
-
-        // The amulet auto-ids if requested.
-        if (you.species != SP_FORMICID
-            && amulet && identify && !item_type_known(*amulet))
-        {
-            wear_id_type(*amulet);
         }
         return true;
     }

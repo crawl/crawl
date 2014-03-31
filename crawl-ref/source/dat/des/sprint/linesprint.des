@@ -769,7 +769,7 @@ KITEM:    a = amulet of conservation randart not_cursed ident:all /\
     amulet of resist corrosion randart not_cursed ident:all /\
     amulet of resist mutation randart not_cursed ident:all /\
     amulet of rage randart not_cursed ident:all /\
-    amulet of stasis randart not_cursed ident:all /\
+    amulet of resist slowing randart not_cursed ident:all /\
     amulet of the gourmand randart not_cursed ident:all /\
     amulet of warding randart not_cursed ident:all /\
     ring of slaying plus:0 plus2:5 ident:all not_cursed w:5 /\

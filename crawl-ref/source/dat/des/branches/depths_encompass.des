@@ -265,7 +265,7 @@ KMONS:   z = killer bee
 KMONS:   Z = queen bee
 ITEM:    ring of teleportation
 ITEM:    scroll of teleportation
-ITEM:    amulet of stasis
+ITEM:    amulet of resist slowing
 KITEM:   gzZ = royal jelly / honeycomb w:20 / nothing w:120
 KFEAT:   L = l
 KFEAT:   ~ = w

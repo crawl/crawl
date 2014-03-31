@@ -760,7 +760,7 @@ static const char* jewellery_type_name(int jeweltype)
     case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
     case AMU_GUARDIAN_SPIRIT:   return "amulet of guardian spirit";
     case AMU_FAITH:             return "amulet of faith";
-    case AMU_STASIS:            return "amulet of stasis";
+    case AMU_RESIST_SLOW:       return "amulet of resist slowing";
     default: return "buggy jewellery";
     }
 }
@@ -3416,9 +3416,6 @@ bool is_useless_item(const item_def &item, bool temp)
                    || you.species == SP_DJINNI
 #endif
                    || you.species == SP_FORMICID;
-
-        case AMU_STASIS:
-            return you.stasis(false, false);
 
         case AMU_CLARITY:
             return you.clarity(false, false);

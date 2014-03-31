@@ -2309,8 +2309,8 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("Conserve", cwidth, rcons) + "\n";
     const int rcorr = you.res_corr(calc_unid);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
-    const int rrott = you.res_rotting();
-    out += _resist_composer("rRot", cwidth, rrott) + "\n";
+    const int rslow = you.wearing(EQ_AMULET, AMU_RESIST_SLOW, calc_unid);
+    out += _resist_composer("rSlow", cwidth, rslow) + "\n";
     const int rspir = you.spirit_shield(calc_unid);
     out += _resist_composer("Spirit", cwidth, rspir) + "\n";
     const int rward = you.warding(calc_unid);

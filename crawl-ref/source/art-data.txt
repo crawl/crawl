@@ -1165,7 +1165,7 @@ FIRE:     2
 # Obviously, because it contains every positive property in the game,
 # this should never be randomly generated!
 NAME:    milk chocolate
-OBJ:     OBJ_JEWELLERY/AMU_STASIS
+OBJ:     OBJ_JEWELLERY/AMU_RESIST_SLOW
 COLOUR:  BROWN
 TILE:    urand_air
 ACC:     60

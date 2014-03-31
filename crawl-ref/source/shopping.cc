@@ -1703,7 +1703,7 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_SUSTENANCE:
                 case RING_TELEPORTATION:
                 case RING_FLIGHT:
-                case AMU_STASIS:
+                case AMU_RESIST_SLOW:
                     valued += 175;
                     break;
 

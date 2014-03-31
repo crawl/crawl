@@ -351,7 +351,7 @@ bool is_hasty_item(const item_def& item)
         retval = (item.sub_type == WAND_HASTING);
         break;
     case OBJ_JEWELLERY:
-        retval = (item.sub_type == AMU_RAGE);
+        retval = (item.sub_type == AMU_RAGE || item.sub_type == AMU_RESIST_SLOW);
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_HASTE

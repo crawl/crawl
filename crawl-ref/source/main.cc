@@ -2800,7 +2800,17 @@ static void _decrement_durations()
         const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
         Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 
-        slow_player(dur);
+        if (you.wearing(EQ_AMULET, AMU_RESIST_SLOW))
+        {
+            if (you.duration[DUR_HASTE] < 3 * BASELINE_DELAY)
+            {
+                you.set_duration(DUR_HASTE, div_rand_round(2 + coinflip(), 2));
+                mprf(MSGCH_DURATION, "Your extra speed is starting to run out.");
+            }
+            did_god_conduct(DID_HASTY, 3, true);
+        }
+        else
+            slow_player(dur);
 
         make_hungry(BERSERK_NUTRITION, true);
         you.hunger = max(HUNGER_STARVING - 100, you.hunger);

@@ -199,7 +199,7 @@ enum jewellery_type
     AMU_RESIST_MUTATION,
     AMU_GUARDIAN_SPIRIT,
     AMU_FAITH,
-    AMU_STASIS,
+    AMU_RESIST_SLOW,
 
     NUM_JEWELLERY
 };

@@ -785,7 +785,7 @@ i-inaccuracy AMU_INACCURACY
 i-r-mutation AMU_RESIST_MUTATION
 i-spirit AMU_SPIRIT_SHIELD
 i-faith AMU_FAITH
-i-stasis AMU_STASIS AMU_ID_LAST
+i-stasis AMU_RESIST_SLOW AMU_ID_LAST
 %rim 1
 
 ####################OBJ_POTIONS

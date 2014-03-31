@@ -977,20 +977,6 @@ void monster::equip_jewellery(item_def &item, int near)
         simple_monster_message(this, info);
     }
 
-    if (item.sub_type == AMU_STASIS)
-    {
-        if (has_ench(ENCH_TP))
-            del_ench(ENCH_TP);
-        if (has_ench(ENCH_SLOW))
-            del_ench(ENCH_SLOW);
-        if (has_ench(ENCH_HASTE))
-            del_ench(ENCH_HASTE);
-        if (has_ench(ENCH_PARALYSIS))
-            del_ench(ENCH_PARALYSIS);
-        if (has_ench(ENCH_BERSERK))
-            del_ench(ENCH_BERSERK);
-    }
-
     if (item.sub_type == AMU_CLARITY)
     {
         if (has_ench(ENCH_CONFUSION))
@@ -6236,12 +6222,6 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
 
     if (!stasis())
         return false;
-
-    if (!silent && you.can_see(this) && !mons_is_lurking(this))
-    {
-        simple_monster_message(this, " looks uneasy for a moment.");
-        id_if_worn(MSLOT_JEWELLERY, OBJ_JEWELLERY, AMU_STASIS);
-    }
 
     return true;
 }

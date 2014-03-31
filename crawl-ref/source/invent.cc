@@ -1718,14 +1718,7 @@ static bool _is_known_no_tele_item(const item_def &item)
 
 static bool _nasty_stasis(const item_def &item, operation_types oper)
 {
-    return (oper == OPER_PUTON
-           && (item.base_type == OBJ_JEWELLERY
-               && item.sub_type == AMU_STASIS
-               && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW]
-                   || you.duration[DUR_TELEPORT] || you.duration[DUR_FINESSE])))
-            || (oper == OPER_PUTON || oper == OPER_WEAR
-                || oper == OPER_WIELD && !_is_wielded(item))
-                && (_is_known_no_tele_item(item) && you.duration[DUR_TELEPORT]);
+    return false;
 }
 
 bool needs_handle_warning(const item_def &item, operation_types oper)

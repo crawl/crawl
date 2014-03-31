@@ -1429,48 +1429,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             ident = ID_KNOWN_TYPE;
         break;
 
-    case AMU_STASIS:
-        // Berserk is possible with a Battlelust card or with a moth of wrath
-        // that affects you while donning the amulet.
-        int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW]
-                     + you.duration[DUR_BERSERK] + you.duration[DUR_FINESSE];
-        if (you.duration[DUR_TELEPORT])
-            amount += 30 + random2(150);
-        if (amount)
-        {
-            mprf("The amulet engulfs you in a%s magical discharge!",
-                 (amount > 250) ? " massive" :
-                 (amount >  50) ? " violent" :
-                                  "");
-            ident = ID_KNOWN_TYPE;
-
-            // XXX: This can probably be improved.
-            contaminate_player(pow(amount, 0.333) * 1000, item_type_known(item));
-
-            int dir = 0;
-            if (you.duration[DUR_HASTE])
-                dir++;
-            if (you.duration[DUR_SLOW])
-                dir--;
-            if (dir > 0)
-                mprf(MSGCH_DURATION, "You abruptly slow down.");
-            else if (dir < 0)
-                mprf(MSGCH_DURATION, "Your slowness suddenly goes away.");
-            if (you.duration[DUR_TELEPORT])
-                mprf(MSGCH_DURATION, "You feel strangely stable.");
-            if (you.duration[DUR_BERSERK])
-                mprf(MSGCH_DURATION, "You violently calm down.");
-            // my thesaurus says this usage is correct
-            if (you.duration[DUR_FINESSE])
-                mprf(MSGCH_DURATION, "Your hands get arrested.");
-            you.duration[DUR_HASTE] = 0;
-            you.duration[DUR_SLOW] = 0;
-            you.duration[DUR_TELEPORT] = 0;
-            you.duration[DUR_BERSERK] = 0;
-            you.duration[DUR_FINESSE] = 0;
-        }
-        break;
-
     // When making a jewel type auto-id, please update Ashenzari's list
     // in godpassive.cc as well.
     }

@@ -5515,7 +5515,19 @@ bool slow_player(int turns)
     turns = haste_mul(turns);
     int threshold = haste_mul(100);
 
-    if (you.duration[DUR_SLOW] >= threshold * BASELINE_DELAY)
+    if (you.wearing(EQ_AMULET, AMU_RESIST_SLOW))
+    {
+        mpr("You feel momentarily lethargic.");
+
+        // Identify amulet.
+        item_def *amulet = you.slot_item(EQ_AMULET);
+        did_god_conduct(DID_HASTY, 5, !amulet || item_type_known(*amulet));
+        if (amulet && !item_type_known(*amulet))
+            set_ident_type(*amulet, ID_KNOWN_TYPE);
+
+        return (false);
+    }
+    else if (you.duration[DUR_SLOW] >= threshold * BASELINE_DELAY)
         mpr("You already are as slow as you could be.");
     else
     {
@@ -5541,6 +5553,12 @@ void dec_slow_player(int delay)
         // Make slowing and hasting effects last as long.
         you.duration[DUR_SLOW] -= you.duration[DUR_HASTE]
             ? haste_mul(delay) : delay;
+        // BCR - Amulet of resist slow affects slow counter.
+        if (you.wearing(EQ_AMULET, AMU_RESIST_SLOW))
+        {
+            you.duration[DUR_SLOW] -= 4 * (you.duration[DUR_HASTE]
+                                           ? haste_mul(delay) : delay);
+        }
     }
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
@@ -5580,10 +5598,20 @@ bool haste_player(int turns, bool rageext)
         return false;
     }
 
+    bool amu_eff = you.wearing(EQ_AMULET, AMU_RESIST_SLOW);
+
+    if (amu_eff)
+    {
+        mpr("Your amulet glows brightly.");
+        item_def *amulet = you.slot_item(EQ_AMULET);
+        if (amulet && !item_type_known(*amulet))
+            set_ident_type(*amulet, ID_KNOWN_TYPE);
+    }
+
     // Cutting the nominal turns in half since hasted actions take half the
     // usual delay.
     turns = haste_div(turns);
-    const int threshold = 40;
+    const int threshold = (80 + 20 * amu_eff) / 2;
 
     if (!you.duration[DUR_HASTE])
         mpr("You feel yourself speed up.");
@@ -5609,7 +5637,9 @@ void dec_haste_player(int delay)
     {
         int old_dur = you.duration[DUR_HASTE];
 
-        you.duration[DUR_HASTE] -= delay;
+        // BCR - Amulet of resist slow affects haste counter
+        if (!you.wearing(EQ_AMULET, AMU_RESIST_SLOW) || coinflip())
+            you.duration[DUR_HASTE] -= delay;
 
         int threshold = 6 * BASELINE_DELAY;
         // message if we cross the threshold

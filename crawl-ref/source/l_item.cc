@@ -303,7 +303,7 @@ static const char *amulet_types[] =
     "controlled flight",
 #endif
     "inaccuracy",
-    "resist mutation", "guardian spirit", "faith", "stasis",
+    "resist mutation", "guardian spirit", "faith", "resist slowing",
 };
 
 static int l_item_do_subtype(lua_State *ls)

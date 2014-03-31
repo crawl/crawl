@@ -287,7 +287,7 @@ bool actor::has_notele_item(bool calc_unid) const
 
 bool actor::stasis(bool calc_unid, bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_STASIS, calc_unid);
+    return false;
 }
 
 // permaswift effects like boots of running and lightning scales

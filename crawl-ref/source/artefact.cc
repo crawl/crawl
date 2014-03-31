@@ -98,8 +98,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_WEAPONS && item.sub_type == WPN_QUICK_BLADE)
             type_bad = true;
 
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
+        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == AMU_RAGE
+            || item.sub_type == AMU_RESIST_SLOW))
+        {
             type_bad = true;
+        }
         break;
 
     default:
@@ -1763,10 +1766,6 @@ static bool _randart_is_redundant(const item_def &item,
     case AMU_INACCURACY:
         provides = ARTP_ACCURACY;
         break;
-
-    case AMU_STASIS:
-        provides = ARTP_PREVENT_TELEPORTATION;
-        break;
     }
 
     if (provides == ARTP_NUM_PROPERTIES)
@@ -1797,15 +1796,6 @@ static bool _randart_is_conflicting(const item_def &item,
 
     if (item.base_type != OBJ_JEWELLERY)
         return false;
-
-    if (item.sub_type == AMU_STASIS
-        && (proprt[ARTP_BLINK] != 0
-            || proprt[ARTP_CAUSE_TELEPORTATION] != 0
-            || proprt[ARTP_ANGRY] != 0
-            || proprt[ARTP_BERSERK] != 0))
-    {
-        return true;
-    }
 
     if (item.sub_type == RING_WIZARDRY && proprt[ARTP_INTELLIGENCE] < 0)
         return true;

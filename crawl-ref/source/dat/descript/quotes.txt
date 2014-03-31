@@ -673,7 +673,7 @@ amulet of resist mutation
 
 <amulet>
 %%%%
-amulet of stasis
+amulet of resist slowing
 
 <amulet>
 %%%%
