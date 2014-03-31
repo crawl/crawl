@@ -5954,9 +5954,7 @@ void player::init()
     burden          = 0;
     burden_state    = BS_UNENCUMBERED;
     spells.init(SPELL_NO_SPELL);
-    old_vehumet_gifts.clear();
     spell_no        = 0;
-    vehumet_gifts.clear();
     char_direction  = GDT_DESCENDING;
     opened_zot      = false;
     royal_jelly_dead = false;

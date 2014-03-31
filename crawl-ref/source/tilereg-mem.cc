@@ -149,9 +149,6 @@ void MemoriseRegion::update()
             desc.flag |= TILEI_FLAG_INVALID;
         }
 
-        if (vehumet_is_offering(spell))
-            desc.flag |= TILEI_FLAG_EQUIP;
-
         m_items.push_back(desc);
     }
 }

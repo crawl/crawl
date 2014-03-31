@@ -253,9 +253,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Vehumet
     { "gain magical power from killing",
-      "",
       "Vehumet is aiding your destructive magics.",
       "Vehumet is extending the range of your destructive magics.",
+      "Vehumet is reducing the cost of your expensive destructive magics.",
       "" },
     // Okawaru
     { "give your body great but temporary strength",
@@ -377,9 +377,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "", "", "", "", "" },
     // Vehumet
     { "gain magical power from killing",
-      "",
       "Vehumet will no longer aid your destructive magics.",
       "Vehumet will no longer extend the range of your destructive magics.",
+      "Vehumet will no longer reduce the cost of your expensive destructive magics.",
       "" },
     // Okawaru
     { "give your body great but temporary strength",
@@ -657,8 +657,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_MAKHLEB:
-    case GOD_LUGONU:
+    case GOD_VEHUMET: case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill living beings");
         break;
 
@@ -676,7 +675,6 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
-    case GOD_VEHUMET:
     case GOD_DITHMENOS:
         likes.push_back("you kill living beings");
         break;
@@ -701,8 +699,7 @@ string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE:
-    case GOD_MAKHLEB:
+    case GOD_SHINING_ONE: case GOD_VEHUMET: case GOD_MAKHLEB:
     case GOD_LUGONU:
         likes.push_back("you or your allies kill the undead");
         break;
@@ -712,7 +709,6 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
-    case GOD_VEHUMET:
     case GOD_DITHMENOS:
         likes.push_back("you kill the undead");
         break;
@@ -725,6 +721,7 @@ string get_god_likes(god_type which_god, bool verbose)
     {
     case GOD_SHINING_ONE:
     case GOD_MAKHLEB:
+    case GOD_VEHUMET:
     case GOD_LUGONU:
         likes.push_back("you or your allies kill demons");
         break;
@@ -742,7 +739,6 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
-    case GOD_VEHUMET:
     case GOD_DITHMENOS:
         likes.push_back("you kill demons");
         break;
@@ -764,6 +760,7 @@ string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_MAKHLEB:
+    case GOD_VEHUMET:
     case GOD_LUGONU:
         likes.push_back("you or your allies kill holy beings");
         break;
@@ -785,7 +782,6 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_OKAWARU:
-    case GOD_VEHUMET:
     case GOD_DITHMENOS:
         likes.push_back("you kill holy beings");
         break;
@@ -1981,128 +1977,6 @@ static bool _jiyva_mutate()
         return mutate(RANDOM_GOOD_MUTATION, "Jiyva's grace", true, false, true);
 }
 
-bool vehumet_is_offering(spell_type spell)
-{
-    return you.vehumet_gifts.count(spell);
-}
-
-void vehumet_accept_gift(spell_type spell)
-{
-    if (vehumet_is_offering(spell))
-    {
-        you.vehumet_gifts.erase(spell);
-        you.seen_spell.set(spell);
-        you.duration[DUR_VEHUMET_GIFT] = 0;
-    }
-}
-
-static void _add_to_old_gifts(spell_type spell)
-{
-    you.old_vehumet_gifts.insert(spell);
-}
-
-static bool _is_old_gift(spell_type spell)
-{
-    return you.old_vehumet_gifts.count(spell);
-}
-
-static set<spell_type> _vehumet_eligible_gift_spells(set<spell_type> excluded_spells)
-{
-    set<spell_type> eligible_spells;
-
-    const int gifts = you.num_total_gifts[you.religion];
-    if (gifts >= NUM_VEHUMET_GIFTS)
-        return eligible_spells;
-
-    const int min_lev[] = {1,1,2,3,3,4,4,5,5,6,6,6,8};
-    const int max_lev[] = {1,2,3,4,5,7,7,7,7,7,7,7,9};
-    COMPILE_CHECK(ARRAYSZ(min_lev) == NUM_VEHUMET_GIFTS);
-    COMPILE_CHECK(ARRAYSZ(max_lev) == NUM_VEHUMET_GIFTS);
-    int min_level = min_lev[gifts];
-    int max_level = max_lev[gifts];
-
-    if (min_level > you.experience_level)
-        return eligible_spells;
-
-    set<spell_type> backup_spells;
-    for (int i = 0; i < NUM_SPELLS; ++i)
-    {
-        spell_type spell = static_cast<spell_type>(i);
-        if (!is_valid_spell(spell))
-            continue;
-
-        if (excluded_spells.count(spell))
-            continue;
-
-        if (vehumet_supports_spell(spell)
-            && !you.has_spell(spell)
-            && is_player_spell(spell)
-            && spell_difficulty(spell) <= max_level
-            && spell_difficulty(spell) >= min_level)
-        {
-            if (!you.seen_spell[spell] && !_is_old_gift(spell))
-                eligible_spells.insert(spell);
-            else
-                backup_spells.insert(spell);
-        }
-    }
-    // Don't get stuck just because all spells have been seen/offered.
-    if (eligible_spells.empty())
-    {
-        if (backup_spells.empty())
-        {
-            // This is quite improbable to happen, but in this case just
-            // skip the gift and increment the gift counter.
-            if (gifts <= 12)
-            {
-                you.num_current_gifts[you.religion]++;
-                you.num_total_gifts[you.religion]++;
-            }
-        }
-        return backup_spells;
-    }
-    return eligible_spells;
-}
-
-static int _vehumet_weighting(spell_type spell)
-{
-    int bias = 100 + elemental_preference(spell, 10);
-    bias = min(max(bias, 10), 190);
-    return bias;
-}
-
-static spell_type _vehumet_find_spell_gift(set<spell_type> excluded_spells)
-{
-    set<spell_type> eligible_spells = _vehumet_eligible_gift_spells(excluded_spells);
-    spell_type spell = SPELL_NO_SPELL;
-    int total_weight = 0;
-    int this_weight = 0;
-    for (set<spell_type>::iterator it = eligible_spells.begin();
-         it != eligible_spells.end(); ++it)
-    {
-        this_weight = _vehumet_weighting(*it);
-        total_weight += this_weight;
-        if (x_chance_in_y(this_weight, total_weight))
-            spell = *it;
-    }
-    return spell;
-}
-
-static set<spell_type> _vehumet_get_spell_gifts()
-{
-    set<spell_type> offers;
-    unsigned int num_offers = you.num_total_gifts[you.religion] == 12 ? 3 : 1;
-    while (offers.size() < num_offers)
-    {
-        spell_type offer = _vehumet_find_spell_gift(offers);
-        if (offer == SPELL_NO_SPELL)
-            break;
-        offers.insert(offer);
-    }
-    return offers;
-}
-
-///////////////////////////////
 bool do_god_gift(bool forced)
 {
     ASSERT(!you_worship(GOD_NO_GOD));
@@ -2228,11 +2102,12 @@ bool do_god_gift(bool forced)
 
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
-            int gift;
-            gift = NUM_BOOKS;
+        case GOD_VEHUMET:
             // Break early if giving a gift now means it would be lost.
             if (!feat_has_solid_floor(grd(you.pos())))
                 break;
+
+            unsigned int gift = NUM_BOOKS;
 
             // Kikubaaqudgha gives the lesser Necromancy books in a quick
             // succession.
@@ -2254,6 +2129,26 @@ bool do_god_gift(bool forced)
             {
                 if (you_worship(GOD_SIF_MUNA))
                     gift = OBJ_RANDOM;
+                else if (you.religion == GOD_VEHUMET)
+                {
+                    if (!you.had_book[BOOK_CONJURATIONS])
+                        gift = BOOK_CONJURATIONS;
+                    else if (!you.had_book[BOOK_POWER])
+                        gift = BOOK_POWER;
+                    else if (!you.had_book[BOOK_ANNIHILATIONS])
+                        gift = BOOK_ANNIHILATIONS;  // Conjuration books.
+
+                    if (you.skills[SK_CONJURATIONS] < you.skills[SK_SUMMONINGS]
+                        || gift == NUM_BOOKS)
+                    {
+                        if (!you.had_book[BOOK_CALLINGS])
+                            gift = BOOK_CALLINGS;
+                        else if (!you.had_book[BOOK_SUMMONINGS])
+                            gift = BOOK_SUMMONINGS;
+                        else if (!you.had_book[BOOK_GRAND_GRIMOIRE])
+                            gift = BOOK_GRAND_GRIMOIRE; // Summoning books.
+                    }
+                }
             }
 
             if (gift != NUM_BOOKS)
@@ -2297,64 +2192,16 @@ bool do_god_gift(bool forced)
                     you.num_total_gifts[you.religion]++;
                     // Timeouts are meaningless for Kiku.
                     if (!you_worship(GOD_KIKUBAAQUDGHA))
+                    {
+                        // Vehumet gives books less readily.
+                        if (you.religion == GOD_VEHUMET)
+                            _inc_gift_timeout(10 + random2(10));
                         _inc_gift_timeout(40 + random2avg(19, 2));
+                    }
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
             }                   // End of giving books.
             break;              // End of book gods.
-
-        case GOD_VEHUMET:
-            const int gifts = you.num_total_gifts[you.religion];
-            if (forced || !you.duration[DUR_VEHUMET_GIFT]
-                          && (you.piety >= piety_breakpoint(0) && gifts == 0
-                              || you.piety >= piety_breakpoint(0) + random2(6) + 18 * gifts && gifts <= 5
-                              || you.piety >= piety_breakpoint(4) && gifts <= 11 && one_chance_in(20)
-                              || you.piety >= piety_breakpoint(5) && gifts <= 12 && one_chance_in(20)))
-            {
-                set<spell_type> offers = _vehumet_get_spell_gifts();
-                if (!offers.empty())
-                {
-                    you.vehumet_gifts = offers;
-                    string prompt = " offers you knowledge of ";
-                    for (set<spell_type>::iterator it = offers.begin();
-                         it != offers.end(); ++it)
-                    {
-                        if (it != offers.begin())
-                        {
-                            if (offers.size() > 2)
-                                prompt += ",";
-                            prompt += " ";
-                            set<spell_type>::iterator next = it;
-                            next++;
-                            if (next == offers.end())
-                                prompt += "and ";
-                        }
-                        prompt += spell_title(*it);
-                        _add_to_old_gifts(*it);
-                        take_note(Note(NOTE_OFFERED_SPELL, *it));
-                    }
-                    prompt += ".";
-                    if (gifts >= NUM_VEHUMET_GIFTS - 1)
-                    {
-                        prompt += " These spells will remain available"
-                                  " as long as you worship Vehumet.";
-                    }
-
-                    you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
-                    if (gifts >= 5)
-                        _inc_gift_timeout(30 + random2avg(30, 2));
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-
-                    simple_god_message(prompt.c_str());
-                    more();
-
-                    success = true;
-                }
-                else
-                    success = false;
-            }
-            break;
         }                       // switch (you.religion)
     }                           // End of gift giving.
 
@@ -2379,8 +2226,10 @@ bool do_god_gift(bool forced)
 string god_name(god_type which_god, bool long_name)
 {
     if (which_god == GOD_JIYVA)
+    {
         return god_name_jiyva(long_name) +
                (long_name? " the Shapeless" : "");
+    }
 
     if (long_name)
     {
@@ -3087,8 +2936,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_VEHUMET:
-        you.vehumet_gifts.clear();
-        you.duration[DUR_VEHUMET_GIFT] = 0;
         _set_penance(old_god, 25);
         break;
 

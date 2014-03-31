@@ -399,8 +399,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
-            case GOD_VEHUMET:
             case GOD_MAKHLEB:
+            case GOD_VEHUMET:
             case GOD_TROG:
             case GOD_KIKUBAAQUDGHA:
             case GOD_BEOGH:
@@ -575,6 +575,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA:
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -611,6 +612,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
 
             case GOD_TROG:
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -633,6 +635,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
             case GOD_YREDELEMNUL:
             case GOD_KIKUBAAQUDGHA:
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -651,6 +654,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_LIVING_KILLED_BY_SERVANT:
             switch (you.religion)
             {
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_BEOGH:
@@ -670,6 +674,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
             {
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -689,6 +694,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -709,6 +715,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_KIKUBAAQUDGHA:
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
@@ -728,6 +735,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+            case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_BEOGH:

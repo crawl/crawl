@@ -1357,20 +1357,6 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < 52; i++)
         marshallShort(th, you.ability_letter_table[i]);
 
-    marshallUByte(th, you.old_vehumet_gifts.size());
-    for (set<spell_type>::iterator it = you.old_vehumet_gifts.begin();
-         it != you.old_vehumet_gifts.end(); ++it)
-    {
-        marshallShort(th, *it);
-    }
-
-    marshallUByte(th, you.vehumet_gifts.size());
-    for (set<spell_type>::iterator it = you.vehumet_gifts.begin();
-         it != you.vehumet_gifts.end(); ++it)
-    {
-        marshallShort(th, *it);
-    }
-
     CANARY;
 
     // how many skills?
@@ -2304,28 +2290,6 @@ static void tag_read_you(reader &th)
         you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
 
-#if TAG_MAJOR_VERSION == 34
-    if (th.getMinorVersion() >= TAG_MINOR_VEHUMET_SPELL_GIFT
-        && th.getMinorVersion() != TAG_MINOR_0_11)
-    {
-#endif
-        count = unmarshallUByte(th);
-        for (i = 0; i < count; ++i)
-            you.old_vehumet_gifts.insert(unmarshallSpellType(th));
-
-#if TAG_MAJOR_VERSION == 34
-        if (th.getMinorVersion() < TAG_MINOR_VEHUMET_MULTI_GIFTS)
-            you.vehumet_gifts.insert(unmarshallSpellType(th));
-        else
-        {
-#endif
-            count = unmarshallUByte(th);
-            for (i = 0; i < count; ++i)
-                you.vehumet_gifts.insert(unmarshallSpellType(th));
-#if TAG_MAJOR_VERSION == 34
-        }
-    }
-#endif
     EAT_CANARY;
 
     // how many skills?

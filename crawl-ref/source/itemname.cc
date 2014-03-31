@@ -2303,9 +2303,6 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_JEWELLERY && j >= NUM_RINGS && j < AMU_FIRST_AMULET)
                 continue;
 
-            if (i == OBJ_BOOKS && j > MAX_RARE_BOOK)
-                continue;
-
             // Only created by Ashenzari.
             if (i == OBJ_SCROLLS &&
                 (j == SCR_CURSE_WEAPON

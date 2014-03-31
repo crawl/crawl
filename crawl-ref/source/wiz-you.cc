@@ -834,7 +834,6 @@ static const char* dur_names[] =
     "temporary mutations",
 #endif
     "disjunction",
-    "vehumet gift",
 #if TAG_MAJOR_VERSION == 34
     "battlesphere",
 #endif

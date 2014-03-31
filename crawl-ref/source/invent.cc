@@ -1702,20 +1702,6 @@ static bool _is_wielded(const item_def &item)
     return equip != -1 && item.link == equip;
 }
 
-static bool _is_known_no_tele_item(const item_def &item)
-{
-    if (!is_artefact(item))
-        return false;
-
-    bool known;
-    int val = artefact_wpn_property(item, ARTP_PREVENT_TELEPORTATION, known);
-
-    if (known && val)
-        return true;
-    else
-        return false;
-}
-
 static bool _nasty_stasis(const item_def &item, operation_types oper)
 {
     return false;

@@ -119,8 +119,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_PARALYSIS
         || note.type == NOTE_NAMED_ALLY
         || note.type == NOTE_ALLY_DEATH
-        || note.type == NOTE_FEAT_MIMIC
-        || note.type == NOTE_OFFERED_SPELL)
+        || note.type == NOTE_FEAT_MIMIC)
     {
         return true;
     }
@@ -372,11 +371,6 @@ string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_ALLY_DEATH:
             result << "Your ally " << name << " died";
-            break;
-        case NOTE_OFFERED_SPELL:
-            result << "Offered knowledge of "
-                   << spell_title(static_cast<spell_type>(first))
-                   << " by Vehumet.";
             break;
         default:
             result << "Buggy note description: unknown note type";

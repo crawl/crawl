@@ -4118,6 +4118,14 @@ static string _religion_help(god_type god)
                   "them accidentally.";
         break;
 
+    case GOD_VEHUMET:
+        if (you.piety >= piety_breakpoint(1))
+        {
+            result += uppercase_first(god_name(god)) + " assists you in "
+                      "casting Conjurations and Summonings.";
+        }
+        break;
+
     case GOD_FEDHAS:
         if (you.piety >= piety_breakpoint(0))
         {
@@ -4687,23 +4695,6 @@ void describe_god(god_type which_god, bool give_title)
                 _print_final_god_abil_desc(which_god,
                                            "You can provide lesser healing for others.",
                                            ABIL_ELYVILON_LESSER_HEALING_OTHERS);
-            }
-        }
-        else if (which_god == GOD_VEHUMET)
-        {
-            set<spell_type>::iterator it = you.vehumet_gifts.begin();
-            if (it != you.vehumet_gifts.end())
-            {
-                have_any = true;
-
-                string offer = spell_title(*it);
-                // If we have multiple offers, just summarise.
-                if (++it != you.vehumet_gifts.end())
-                    offer = "some of Vehumet's most lethal spells";
-
-                _print_final_god_abil_desc(which_god,
-                                           "You can memorise " + offer + ".",
-                                           ABIL_NON_ABILITY);
             }
         }
 
