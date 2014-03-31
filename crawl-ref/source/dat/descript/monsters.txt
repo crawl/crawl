@@ -1787,6 +1787,13 @@ monstrous demonspawn
 
 <demonspawn>
 %%%%
+# Orb of Zot special
+monstrous item mimic
+
+This mimic chose nothing else to masquerade as but the fabled Orb of Zot. Since
+it was able to successfully assume its appearance and stay here, saying it
+might be deadly is an understatement.
+%%%%
 moth
 
 Although this moth is unusually large and aggressive, it is quite mundane
