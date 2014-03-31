@@ -438,6 +438,24 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
             return CC_RESTRICTED;
         }
 
+    case JOB_PRIEST:
+        switch (speci)
+        {
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+            return CC_BANNED;
+        case SP_MINOTAUR:
+        case SP_GARGOYLE:
+        case SP_HILL_ORC:
+        case SP_NAGA:
+        case SP_FORMICID:
+            return CC_UNRESTRICTED;
+        default:
+            return CC_RESTRICTED;
+        }
 
     case JOB_THIEF:
         switch (speci)
@@ -585,6 +603,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (job)
         {
             case JOB_HEALER:
+            case JOB_PALADIN:
+            case JOB_PRIEST:
             case JOB_TRANSMUTER:
                 return CC_BANNED;
             case JOB_WIZARD:
@@ -674,6 +694,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_CHAOS_KNIGHT:
             case JOB_DEATH_KNIGHT:
             case JOB_HEALER:
+            case JOB_PALADIN:
+            case JOB_PRIEST:
                 return CC_BANNED;
             case JOB_TRANSMUTER:
             case JOB_CONJURER:
@@ -717,6 +739,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (job)
         {
             case JOB_HEALER:
+            case JOB_PALADIN:
+            case JOB_PRIEST:
                 return CC_BANNED;
             case JOB_GLADIATOR:
             case JOB_BERSERKER:
@@ -734,6 +758,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (job)
         {
             case JOB_HEALER:
+            case JOB_PALADIN:
+            case JOB_PRIEST:
             case JOB_TRANSMUTER:
                 return CC_BANNED;
             case JOB_WARPER:
@@ -779,6 +805,8 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (job)
         {
             case JOB_HEALER:
+            case JOB_PALADIN:
+            case JOB_PRIEST:
                 return CC_BANNED;
             case JOB_MONK:
             case JOB_ASSASSIN:
