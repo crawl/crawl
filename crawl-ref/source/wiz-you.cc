@@ -795,7 +795,9 @@ static const char* dur_names[] =
     "insulation",
 #endif
     "resistance",
+#if TAG_MAJOR_VERSION == 34
     "slaying",
+#endif
     "stealth",
     "magic shield",
     "sleep",

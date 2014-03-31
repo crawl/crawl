@@ -3516,6 +3516,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_REARRANGE_PIECES, "Rearrange the Pieces",
      SPTYP_HEXES,
@@ -3528,6 +3529,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_MAJOR_DESTRUCTION, "Major Destruction",
