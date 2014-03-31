@@ -536,7 +536,7 @@ struct spell_desc
     SPELL_TORNADO, "Tornado",
      SPTYP_AIR,
      SPFLAG_AREA,
-     9,
+     8,
      200,
      TORNADO_RADIUS, TORNADO_RADIUS,
      0,
