@@ -3304,9 +3304,13 @@ void bolt::tracer_affect_player()
 }
 
 // Magical penetrating projectiles should pass through shields.
+// Natural ones (large rocks) shouldn't.
 static bool _shield_piercing(bolt *pbolt)
 {
-    return pbolt->range_used_on_hit() == 0;
+    return pbolt->range_used_on_hit() == 0
+           && (!pbolt->item
+               || pbolt->item->base_type != OBJ_MISSILES
+               || pbolt->item->sub_type  != MI_LARGE_ROCK);
 }
 
 bool bolt::misses_player()
