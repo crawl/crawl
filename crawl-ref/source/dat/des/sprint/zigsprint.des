@@ -724,7 +724,7 @@ KITEM:    D = broad axe mundane not_cursed ident:all plus:5 plus2:5, \
               battleaxe mundane not_cursed ident:all plus:5 plus2:5, \
               executioner's axe mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    E = demon trident mundane not_cursed ident:all plus:5 plus2:5, \
-              bardiche mundane not_cursed ident:all plus:5 plus2:5
+              lochaber axe mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    F = demon whip mundane not_cursed ident:all plus:5 plus2:5, \
               great mace mundane not_cursed ident:all plus:5 plus2:5, \
               giant club mundane not_cursed ident:all plus:5 plus2:5, \

@@ -315,7 +315,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_GLAIVE,            "glaive",             15, -3, 17, 200,  6,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CHOPPING, 10 },
-    { WPN_BARDICHE,          "bardiche",           18, -6, 20, 200,  8,
+    { WPN_BARDICHE,          "lochaber axe",       18, -6, 20, 200,  8,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE,
         DAMV_CHOPPING, 2 },
 

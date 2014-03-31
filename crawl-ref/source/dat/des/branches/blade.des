@@ -9,7 +9,7 @@ function hall_of_blades_weapon(e)
   local long_blade_type = crawl.one_chance_in(2) and "double sword"
                                                   or "triple sword"
   local types = {"quick blade", long_blade_type,
-                 "executioner's axe", "eveningstar", "bardiche",
+                 "executioner's axe", "eveningstar", "lochaber axe",
                  "lajatang"}
   local egos = {"flaming", "freezing", "electrocution", "venom",
               "holy_wrath", "pain", "vampiricism", "draining",
@@ -42,7 +42,7 @@ SUBST:    2 = .''
 SUBST:    3 = .'''
 KPROP:    ' = bloody
 SUBST:    ' = ...'
-KITEM:    ' = short sword / long sword / morningstar / mace / scimitar / dagger / bardiche / battleaxe / war axe
+KITEM:    ' = short sword / long sword / morningstar / mace / scimitar / dagger / lochaber axe / battleaxe / war axe
 MAP
 xx...xxx1..xx
 x.1...x11...x

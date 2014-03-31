@@ -397,7 +397,7 @@ KITEM:    b = any weapon level:27 ident:all /\
           battleaxe plus:1 plus2:1 not_cursed ident:all /\
           executioner's axe plus:0 plus2:0 not_cursed ident:all w:3 /\
           glaive plus:1 plus2:1 not_cursed ident:all /\
-          bardiche plus:0 plus2:0 not_cursed ident:all w:3 /\
+          lochaber axe plus:0 plus2:0 not_cursed ident:all w:3 /\
           dire flail plus:3 plus2:3 not_cursed ident:all /\
           great mace plus:1 plus2:1 not_cursed ident:all /\
           demon whip plus:1 plus2:1 not_cursed ident:all w:5 /\
@@ -580,8 +580,8 @@ KITEM:    b = battleaxe plus:4 plus2:4 ego:none not_cursed ident:all /\
     glaive plus:2 plus2:2 good_item not_cursed ident:all /\
     scythe plus:9 plus2:9 ego:none not_cursed ident:all /\
     scythe plus:6 plus2:6 good_item not_cursed ident:all /\
-    bardiche plus:2 plus2:2 ego:none not_cursed ident:all /\
-    bardiche plus:0 plus2:0 good_item not_cursed ident:all /\
+    lochaber axe plus:2 plus2:2 ego:none not_cursed ident:all /\
+    lochaber axe plus:0 plus2:0 good_item not_cursed ident:all /\
     demon trident plus:4 plus2:4 ego:none not_cursed ident:all /\
     demon trident plus:1 plus2:1 good_item not_cursed ident:all /\
     great mace plus:4 plus2:4 ego:none not_cursed ident:all /\
@@ -808,9 +808,9 @@ KITEM:    b = battleaxe plus:5 plus2:5 good_item not_cursed ident:all /\
     scythe plus:11 plus2:11 good_item not_cursed ident:all /\
     scythe plus:9 plus2:9 randart not_cursed ident:all w:3 /\
     scythe plus:5 plus2:15 randart not_cursed ident:all w:3 /\
-    bardiche plus:5 plus2:5 good_item not_cursed ident:all /\
-    bardiche plus:5 plus2:5 randart not_cursed ident:all w:3 /\
-    bardiche plus:0 plus2:7 randart not_cursed ident:all w:3 /\
+    lochaber axe plus:5 plus2:5 good_item not_cursed ident:all /\
+    lochaber axe plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    lochaber axe plus:0 plus2:7 randart not_cursed ident:all w:3 /\
     demon trident plus:5 plus2:5 good_item not_cursed ident:all /\
     demon trident plus:5 plus2:5 randart not_cursed ident:all w:3 /\
     demon trident plus:0 plus2:9 randart not_cursed ident:all w:3 /\

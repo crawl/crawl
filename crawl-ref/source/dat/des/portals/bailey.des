@@ -104,14 +104,14 @@ end
 
 function orc_warrior_with_polearm(e)
   e.mons("orc warrior ; \
-          spear w:5 | trident w:5 | halberd | glaive | bardiche w:1 . \
+          spear w:5 | trident w:5 | halberd | glaive | lochaber axe w:1 . \
           ring mail | scale mail | chain mail | plate armour |\
           crystal plate armour w:1")
 end
 
 function orc_knight_with_polearm(e)
   e.mons("orc knight ; \
-          trident w:5 | halberd | glaive | bardiche w:1 . \
+          trident w:5 | halberd | glaive | lochaber axe w:1 . \
           ring mail | scale mail | chain mail | plate armour | \
           crystal plate armour w:1")
 end
@@ -119,7 +119,7 @@ end
 -- defined but not used, since the depth for the current entry vaults is 7-14
 function orc_warlord_with_polearm(e)
   e.mons("orc warlord ; \
-          halberd | glaive | bardiche w:1 . \
+          halberd | glaive | lochaber axe w:1 . \
           chain mail w:20 | plate armour | crystal plate armour w:1")
 end
 
@@ -256,7 +256,7 @@ KPROP:  d = no_rtele_into
 KITEM:  d = unobtainable war axe / unobtainable battleaxe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-KITEM:  d = unobtainable glaive / unobtainable bardiche
+KITEM:  d = unobtainable glaive / unobtainable lochaber axe
 :   bailey_portal_polearm(_G)
 : end
 MAP
@@ -311,7 +311,7 @@ KPROP:  d = no_rtele_into
 KITEM:  d = unobtainable war axe / unobtainable battleaxe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-KITEM:  d = unobtainable glaive / unobtainable bardiche
+KITEM:  d = unobtainable glaive / unobtainable lochaber axe
 :   bailey_portal_polearm(_G)
 : end
 MAP
@@ -783,7 +783,7 @@ KFEAT:  T = known teleport trap
 SUBST:  X = I G C
 KFEAT:  C = altar_beogh
 ITEM:   manual of armour / manual of fighting / manual of shields /\
-        good_item bardiche / good_item executioner's axe
+        good_item lochaber axe / good_item executioner's axe
 ITEM:   potion of experience / scroll of acquirement /\
         scroll of enchant armour q:2 / scroll of enchant weapon III q:2 /\
         legendary deck of wonders ident:type

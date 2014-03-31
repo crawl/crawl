@@ -21,7 +21,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
     end
 
   local weapon = util.random_from({"short sword", "cutlass",
-                 "long sword", "scimitar", "glaive", "bardiche",
+                 "long sword", "scimitar", "glaive", "lochaber axe",
                  "broad axe", "battleaxe", "quarterstaff",
                  "lajatang", "morningstar", "great mace"})
   local item = {["No God"]="amulet of faith ident:type",

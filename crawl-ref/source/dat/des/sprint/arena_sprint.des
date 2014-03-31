@@ -542,7 +542,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Snake:$ w:2 / w:40 greater naga / guardian serpent / w:5 anaconda",
                 "place:Slime:$ / w:30 acid blob / azure jelly / giant eyeball /\
                     eye of draining",
-                "dancing weapon ; bardiche",
+                "dancing weapon ; lochaber axe",
                 "spriggan defender / spriggan air mage / spriggan druid /\
                     spriggan berserker / spriggan rider",
                 "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
@@ -617,7 +617,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "orb spider / emperor scorpion / ghost moth / moth of wrath",
                 "w:40 greater naga / guardian serpent / w:5 anaconda",
                 "w:30 acid blob / azure jelly / giant eyeball / eye of draining",
-                "dancing weapon ; bardiche ego:speed",
+                "dancing weapon ; lochaber axe ego:speed",
                 "spriggan air mage",
                 "w:15 ancient lich / w:6 curse toe",
                 "greater demon / pandemonium lord",
@@ -1088,7 +1088,7 @@ KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane not_cursed triple sword | mundane not_cursed broad axe |\
             mundane not_cursed executioner's axe | mundane not_cursed demon whip |\
             mundane not_cursed great mace | mundane not_cursed giant spiked club |\
-            mundane not_cursed demon trident | mundane not_cursed bardiche |\
+            mundane not_cursed demon trident | mundane not_cursed lochaber axe |\
             mundane not_cursed lajatang | mundane not_cursed longbow |\
             mundane not_cursed sling | mundane not_cursed crossbow |\
             mundane bolt q:50 | mundane sling bullet q:50 |\

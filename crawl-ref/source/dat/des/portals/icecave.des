@@ -743,7 +743,7 @@ SHUFFLE: dg, efh
 SUBST:   e = ed
 SUBST:   ` = .
 : item("battleaxe " .. freezeweap .. " / executioner's axe " .. freezeweap ..
-:   " / glaive " .. freezeweap .. " / bardiche " .. freezeweap ..
+:   " / glaive " .. freezeweap .. " / lochaber axe " .. freezeweap ..
 :   " / quick blade " .. freezeweap .. " / great sword " .. freezeweap ..
 :   " / triple sword " .. freezeweap .. " / giant spiked club " .. freezeweap ..
 :   " / demon trident " .. freezeweap)

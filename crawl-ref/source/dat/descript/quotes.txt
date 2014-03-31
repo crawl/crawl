@@ -749,7 +749,7 @@ baby alligator
 
 <alligator>
 %%%%
-bardiche
+lochaber axe
 
 “The republic always maintains seven or eight thousand regular troops on the
 frontiers, to prevent the incursions of the Tartars. The King does not maintain
