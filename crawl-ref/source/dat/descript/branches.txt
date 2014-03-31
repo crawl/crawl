@@ -136,8 +136,7 @@ Hell
 The hallway to the four hells is guarded by Geryon. The Vestibule of Hell
 contains portals to Dis, Gehenna, Cocytus and Tartarus.
 
-Portals to the Vestibule of Hell are found abundantly in the deeper parts of
-the main dungeon.
+Portals to the Vestibule of Hell are found abundantly in the Depths.
 %%%%
 Dis
 
@@ -190,9 +189,9 @@ schemes around this place and its denizens.
 
 The Abyss consists of five infinite levels. The abyssal rune can be found from
 the third level onwards, and is more common at greater depths. The Abyss can be
-purposefully reached through portals in the deeper levels of the main dungeon,
-Portals back to the dungeon are scattered throughout the Abyss, and are found
-more commonly at greater depths or while carrying the abyssal rune.
+purposefully reached through portals in the Depths. Portals back to the dungeon
+are scattered throughout the Abyss, and are found more commonly at greater
+depths or while carrying the abyssal rune.
 %%%%
 Pandemonium
 
@@ -200,8 +199,8 @@ Pandemonium is an infinite realm of pain and suffering. While there are many
 treasures to be found within, they are guarded by cruel demons and even
 crueller demon lords.
 
-Pandemonium is endless. Portals there are found abundantly in the deeper parts
-of the main dungeon. Note that getting back might be more difficult.
+Pandemonium is endless. Portals there are found abundantly in the Depths. Note
+that getting back might be more difficult.
 
 No fewer than five runes can be found in Pandemonium:
  • a fiery rune in the well-heated realm of Cerebov
