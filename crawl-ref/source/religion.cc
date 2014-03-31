@@ -258,11 +258,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Vehumet is extending the range of your destructive magics.",
       "" },
     // Okawaru
-    { "gain great but temporary skills",
+    { "give your body great but temporary strength",
       "",
       "",
       "",
-      "speed up your combat" },
+      "haste yourself" },
     // Makhleb
     { "gain health from killing",
       "harness Makhleb's destructive might",
@@ -382,11 +382,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Vehumet will no longer extend the range of your destructive magics.",
       "" },
     // Okawaru
-    { "gain great but temporary skills",
+    { "give your body great but temporary strength",
       "",
       "",
       "",
-      "speed up your combat" },
+      "haste yourself" },
     // Makhleb
     { "gain health from killing",
       "harness Makhleb's destructive might",

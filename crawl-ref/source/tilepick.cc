@@ -5356,9 +5356,9 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_YRED_ANIMATE_DEAD;
     // Xom, Vehumet = 90
     // Okawaru
-    case ABIL_OKAWARU_HEROISM:
+    case ABIL_OKAWARU_MIGHT:
         return TILEG_ABILITY_OKAWARU_HEROISM;
-    case ABIL_OKAWARU_FINESSE:
+    case ABIL_OKAWARU_HASTE:
         return TILEG_ABILITY_OKAWARU_FINESSE;
     // Makhleb
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:

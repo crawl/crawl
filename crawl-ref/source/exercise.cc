@@ -44,7 +44,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
     case ABIL_ZIN_RECITE:
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-    case ABIL_OKAWARU_HEROISM:
+    case ABIL_OKAWARU_MIGHT:
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_BEOGH_SMITING:
@@ -67,7 +67,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BANISH:
     case ABIL_TSO_CLEANSING_FLAME:
-    case ABIL_OKAWARU_FINESSE:
+    case ABIL_OKAWARU_HASTE:
     case ABIL_CHEIBRIADOS_SLOUCH:
     case ABIL_LUGONU_CORRUPT:
     case ABIL_CHEIBRIADOS_TIME_STEP:
@@ -123,7 +123,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
         return 1;
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
-    case ABIL_OKAWARU_HEROISM:
+    case ABIL_OKAWARU_MIGHT:
     case ABIL_DITHMENOS_SHADOW_STEP:
         return 1 + random2(3);
 
@@ -157,7 +157,7 @@ static int _abil_degree(ability_type abil)
         return 3 + random2(5);
     case ABIL_TSO_CLEANSING_FLAME:
         return 3 + random2(6);
-    case ABIL_OKAWARU_FINESSE:
+    case ABIL_OKAWARU_HASTE:
         return 3 + random2(7);
 
     case ABIL_CHEIBRIADOS_SLOUCH:

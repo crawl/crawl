@@ -155,8 +155,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY },
     // Okawaru
-    { ABIL_OKAWARU_HEROISM, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_OKAWARU_FINESSE },
+    { ABIL_OKAWARU_MIGHT, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_OKAWARU_HASTE },
     // Makhleb
     { ABIL_NON_ABILITY, ABIL_MAKHLEB_MINOR_DESTRUCTION,
       ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, ABIL_MAKHLEB_MAJOR_DESTRUCTION,
@@ -306,8 +306,8 @@ static const ability_def Ability_List[] =
       2, 0, 100, 0, 0, ABFLAG_NONE},
 
     // Okawaru
-    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 1, 0, ABFLAG_NONE},
-    { ABIL_OKAWARU_FINESSE, "Finesse", 5, 0, 100, 4, 0, ABFLAG_NONE},
+    { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, 0, ABFLAG_NONE},
+    { ABIL_OKAWARU_HASTE, "Haste", 5, 0, 100, 4, 0, ABFLAG_NONE},
 
     // Makhleb
     { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
@@ -876,7 +876,7 @@ static ability_type _fixup_ability(ability_type ability)
             return ability;
         }
 
-    case ABIL_OKAWARU_FINESSE:
+    case ABIL_OKAWARU_HASTE:
     case ABIL_BLINK:
     case ABIL_WISP_BLINK:
     case ABIL_EVOKE_BLINK:
@@ -1129,7 +1129,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_RECITE:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-    case ABIL_OKAWARU_HEROISM:
+    case ABIL_OKAWARU_MIGHT:
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_LUGONU_ABYSS_EXIT:
@@ -1193,12 +1193,12 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_FEDHAS_SPAWN_SPORES:
     case ABIL_YRED_DRAIN_LIFE:
     case ABIL_CHEIBRIADOS_SLOUCH:
-    case ABIL_OKAWARU_FINESSE:
         invoc = true;
         failure = 60 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
+    case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
     case ABIL_FEDHAS_RAIN:
@@ -1590,7 +1590,7 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
-    case ABIL_OKAWARU_FINESSE:
+    case ABIL_OKAWARU_HASTE:
         if (stasis_blocks_effect(false, false,
                                  quiet ? NULL : "%s makes your neck tingle."))
         {
@@ -2615,34 +2615,12 @@ static bool _do_ability(const ability_def& abil)
         inc_mp(1 + random2(you.skill_rdiv(SK_INVOCATIONS, 1, 4) + 2));
         break;
 
-    case ABIL_OKAWARU_HEROISM:
-        mprf(MSGCH_DURATION, you.duration[DUR_HEROISM]
-             ? "You feel more confident with your borrowed prowess."
-             : "You gain the combat prowess of a mighty hero.");
-
-        you.increase_duration(DUR_HEROISM,
-            35 + random2(you.skill(SK_INVOCATIONS, 8)), 80);
-        you.redraw_evasion      = true;
-        you.redraw_armour_class = true;
+    case ABIL_OKAWARU_MIGHT:
+        potion_effect(POT_MIGHT, you.skills[SK_INVOCATIONS] * 8);
         break;
 
-    case ABIL_OKAWARU_FINESSE:
-        if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.",
-                                 20, "%s makes your neck tingle."))
-        {
-            // Identify the amulet and spend costs - finesse will be aborted
-            // for free with an identified amulet.
-            break;
-        }
-
-        mprf(MSGCH_DURATION, you.duration[DUR_FINESSE]
-             ? "Your hands get new energy."
-             : "You can now deal lightning-fast blows.");
-
-        you.increase_duration(DUR_FINESSE,
-            40 + random2(you.skill(SK_INVOCATIONS, 8)), 80);
-
-        did_god_conduct(DID_HASTY, 8); // Currently irrelevant.
+    case ABIL_OKAWARU_HASTE:
+        potion_effect(POT_HASTE, you.skills[SK_INVOCATIONS] * 8);
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
