@@ -82,9 +82,8 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, sub_type);
     you.inv[slot].quantity  = 1;
     you.inv[slot].special   = 0;
-    int offset = plus ? 1 : 0;
-    you.inv[slot].plus  = random2(plus) + offset;
-    you.inv[slot].plus2 = random2(plus) + offset;
+    you.inv[slot].plus  = plus;
+    you.inv[slot].plus2 = plus;
 
     return true;
 }
@@ -375,6 +374,25 @@ static void _give_wanderer_book(skill_type skill, int & slot)
     newgame_make_item(slot, EQ_NONE, OBJ_BOOKS, book_type);
 }
 
+static void _give_wanderer_item(object_class_type base, int sub, int & slot)
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (you.inv[i].defined() && you.inv[i].base_type == base
+            && you.inv[i].sub_type == sub)
+        {
+            you.inv[i].quantity++;
+            return;
+        }
+    }
+    you.inv[slot].quantity  = 1;
+    you.inv[slot].plus      = 0;
+    you.inv[slot].plus2     = 0;
+    you.inv[slot].base_type = base;
+    you.inv[slot].sub_type  = sub;
+    slot++;
+}
+
 // Players can get some consumables as a "good item".
 static void _good_potion_or_scroll(int & slot)
 {
@@ -386,39 +404,52 @@ static void _good_potion_or_scroll(int & slot)
     else if (you.is_undead && you.is_undead != US_SEMI_UNDEAD)
         base_rand--;
 
-    you.inv[slot].quantity = 1;
-    you.inv[slot].plus     = 0;
-    you.inv[slot].plus2    = 0;
+    switch (random2(base_rand))
+    {
+    case 0:
+        _give_wanderer_item(OBJ_SCROLLS, SCR_FEAR, slot);
+        break;
+
+    case 1:
+        _give_wanderer_item(OBJ_SCROLLS, SCR_BLINKING, slot);
+        break;
+
+    case 2:
+        _give_wanderer_item(OBJ_POTIONS, POT_HEAL_WOUNDS, slot);
+        break;
+
+    case 3:
+        _give_wanderer_item(OBJ_POTIONS, POT_HASTE, slot);
+        break;
+
+    case 4:
+        _give_wanderer_item(OBJ_POTIONS, POT_BERSERK_RAGE, slot);
+        break;
+    }
+}
+
+// Players can get some other consumables as a "decent item".
+static void _decent_potion_or_scroll(int & slot)
+{
+    int base_rand = 3;
+    // No lignification for undead
+    if (you.is_undead)
+        base_rand--;
 
     switch (random2(base_rand))
     {
     case 0:
-        you.inv[slot].base_type = OBJ_SCROLLS;
-        you.inv[slot].sub_type  = SCR_FEAR;
+        _give_wanderer_item(OBJ_SCROLLS, SCR_TELEPORTATION, slot);
         break;
 
     case 1:
-        you.inv[slot].base_type = OBJ_SCROLLS;
-        you.inv[slot].sub_type  = SCR_BLINKING;
+        _give_wanderer_item(OBJ_POTIONS, POT_CURING, slot);
         break;
 
     case 2:
-        you.inv[slot].base_type = OBJ_POTIONS;
-        you.inv[slot].sub_type  = POT_HEAL_WOUNDS;
-        break;
-
-    case 3:
-        you.inv[slot].base_type = OBJ_POTIONS;
-        you.inv[slot].sub_type  = POT_HASTE;
-        break;
-
-    case 4:
-        you.inv[slot].base_type = OBJ_POTIONS;
-        you.inv[slot].sub_type  = POT_BERSERK_RAGE;
+        _give_wanderer_item(OBJ_POTIONS, POT_LIGNIFY, slot);
         break;
     }
-
-    slot++;
 }
 
 // Create a random wand in the inventory.
@@ -457,8 +488,10 @@ static void _wanderer_random_evokable(int & slot)
     slot++;
 }
 
-static void _wanderer_good_equipment(skill_type & skill, int & slot)
+static void _wanderer_good_equipment(skill_type & skill,
+                                     int & slot)
 {
+
     const skill_type combined_weapon_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
@@ -488,13 +521,13 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_MACES_FLAILS:
     case SK_AXES:
     case SK_POLEARMS:
-    case SK_BOWS:
-    case SK_CROSSBOWS:
     case SK_THROWING:
-    case SK_STAVES:
     case SK_SHORT_BLADES:
     case SK_LONG_BLADES:
-        _give_wanderer_weapon(slot, skill, 3);
+    case SK_BOWS:
+    case SK_STAVES:
+    case SK_CROSSBOWS:
+        _give_wanderer_weapon(slot, skill, 2);
         slot++;
         break;
 
@@ -502,8 +535,36 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
         // Deformed species aren't given armour skill, so there's no need
         // to worry about scale mail's not fitting.
         newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL);
+        you.inv[slot].plus  = 2;
         slot++;
         break;
+
+    case SK_DODGING:
+        // +2 leather armour or +0 leather armour and also nets
+        if (random2(2))
+        {
+            newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
+            you.inv[slot].plus  = 2;
+        }
+        else
+        {
+            newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
+            slot++;
+            newgame_make_item(slot, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                          2 + random2(3));
+        }
+        slot++;
+        break;
+
+    case SK_STEALTH:
+        // +2 dagger and a good consumable
+        newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
+        you.inv[slot].plus  = 2;
+        you.inv[slot].plus2 = 2;
+        slot++;
+        _good_potion_or_scroll(slot);
+        break;
+
 
     case SK_SHIELDS:
         newgame_make_item(slot, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
@@ -528,10 +589,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
         slot++;
         break;
 
-    case SK_DODGING:
-    case SK_STEALTH:
     case SK_UNARMED_COMBAT:
-    case SK_INVOCATIONS:
     {
         // 2 random good potions/scrolls
         _good_potion_or_scroll(slot);
@@ -619,14 +677,6 @@ static void _wanderer_decent_equipment(skill_type & skill,
 
     int total_weapons = ARRAYSZ(combined_weapon_skills);
 
-    // If we already gave an item for this type, just give the player
-    // a consumable.
-    if ((skill == SK_DODGING || skill == SK_STEALTH)
-        && gift_skills.count(SK_ARMOUR))
-    {
-        skill = SK_NONE;
-    }
-
     // Give the player knowledge of only one spell.
     if (skill >= SK_SPELLCASTING && skill <= SK_LAST_MAGIC)
     {
@@ -660,7 +710,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     }
 
     // Don't give a gift from the same skill twice; just default to
-    // a curing potion/teleportation scroll.
+    // a decent consumable
     if (gift_skills.count(skill))
         skill = SK_NONE;
 
@@ -690,12 +740,6 @@ static void _wanderer_decent_equipment(skill_type & skill,
         slot++;
         break;
 
-    case SK_DODGING:
-    case SK_STEALTH:
-        newgame_make_item(slot, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        slot++;
-        break;
-
     case SK_SPELLCASTING:
     case SK_CONJURATIONS:
     case SK_SUMMONINGS:
@@ -710,10 +754,17 @@ static void _wanderer_decent_equipment(skill_type & skill,
         _give_wanderer_spell(skill);
         break;
 
-    case SK_UNARMED_COMBAT:
-    case SK_INVOCATIONS:
     case SK_EVOCATIONS:
+        newgame_make_item(slot, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS, -1, 1,
+                       15);
+        slot++;
+        break;
+
+    case SK_DODGING:
+    case SK_STEALTH:
+    case SK_UNARMED_COMBAT:
     case SK_NONE:
+        _decent_potion_or_scroll(slot);
         break;
     }
 }
@@ -816,13 +867,9 @@ void create_wanderer(void)
 
     // Regardless of roles, players get a couple levels in these skills.
     const skill_type util_skills[] =
-    { SK_THROWING, SK_STEALTH, SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
+    { SK_THROWING, SK_STEALTH, SK_SHIELDS, SK_EVOCATIONS };
 
     int util_size = ARRAYSZ(util_skills);
-
-    // No Invocations for demigods.
-    if (you.species == SP_DEMIGOD)
-        util_size--;
 
     // Maybe too many skill levels, given the level 1 floor on skill
     // levels for wanderers?
