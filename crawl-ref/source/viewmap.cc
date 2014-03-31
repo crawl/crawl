@@ -229,6 +229,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_TELEPORT:
         case DNGN_TRAP_ALARM:
+        case DNGN_TRAP_AMNESIA:
         case DNGN_TRAP_ZOT:
         case DNGN_TRAP_SHAFT:
         case DNGN_TRAP_WEB:

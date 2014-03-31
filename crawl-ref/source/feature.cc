@@ -402,6 +402,12 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         f.minimap    = MF_TRAP;
         break;
 
+    case DNGN_TRAP_AMNESIA:
+        f.colour = f.map_colour = MAGENTA;
+        f.dchar      = DCHAR_TRAP;
+        f.minimap    = MF_TRAP;
+        break;
+
     case DNGN_TRAP_ZOT:
         f.colour = f.map_colour = LIGHTMAGENTA;
         f.dchar      = DCHAR_TRAP;

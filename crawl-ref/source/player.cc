@@ -2792,12 +2792,12 @@ int burden_change(void)
     return you.burden;
 }
 
-void forget_map(bool rot)
+void forget_map(bool rot, int chance_forgotten)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     // If forgetting was intentional, clear the travel trail.
-    if (!rot)
+    if (!rot && !chance_forgotten)
         clear_travel_trail();
 
     // Labyrinth and the Abyss use special rotting rules.
@@ -2815,6 +2815,11 @@ void forget_map(bool rot)
         if (!env.map_knowledge(p).known() || you.see_cell(p))
             continue;
 
+        if (chance_forgotten > 0
+            && x_chance_in_y(chance_forgotten, 100))
+        {
+            continue;
+        }
         if (rot)
         {
             const int dist = distance2(you.pos(), p);

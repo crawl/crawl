@@ -353,6 +353,7 @@ bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too)
 {
     return feat == DNGN_TRAP_MECHANICAL || feat == DNGN_TRAP_TELEPORT
            || feat == DNGN_TRAP_ALARM   || feat == DNGN_TRAP_ZOT
+           || feat == DNGN_TRAP_AMNESIA
            || feat == DNGN_PASSAGE_OF_GOLUBRIA // FIXME
            || feat == DNGN_TRAP_SHAFT || feat == DNGN_TRAP_WEB
            || undiscovered_too && feat == DNGN_UNDISCOVERED_TRAP;
@@ -1652,6 +1653,7 @@ static const char *dngn_feature_names[] =
 "sealed_stair_down",
 
 "trap_alarm",
+"trap_amnesia",
 "trap_zot",
 "passage_of_golubria",
 

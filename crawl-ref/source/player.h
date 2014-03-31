@@ -921,7 +921,7 @@ int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
 void display_char_status(void);
 
-void forget_map(bool rot = false);
+void forget_map(bool rot = false, int chance_forgotten = 0);
 
 int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);

@@ -2959,6 +2959,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 #endif
         case TRAP_ALARM:
             return "alarm trap";
+        case TRAP_AMNESIA:
+            return "amnesia trap";
         case TRAP_SHAFT:
             return "shaft";
         case TRAP_TELEPORT:

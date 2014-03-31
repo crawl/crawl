@@ -622,6 +622,21 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             triggerer.teleport(true);
         break;
 
+    case TRAP_AMNESIA:
+        if (you_trigger)
+        {
+            mpr("You feel momentarily disoriented.");
+            if (!you.clarity())
+                forget_map(false, 1 + random2avg(100, 2));
+        }
+        else if (mons_intel(m) > I_ANIMAL)
+        {
+            simple_monster_message(m, " seems momentarily disoriented.");
+            if (!you_know)
+                hide();
+        }
+        break;
+
     case TRAP_ALARM:
         // In ZotDef, alarm traps don't go away after use.
         if (!crawl_state.game_is_zotdef())
@@ -1156,6 +1171,7 @@ void disarm_trap(const coord_def& where)
         // Zotdef - allow alarm traps to be disarmed
         if (crawl_state.game_is_zotdef())
             break;
+    case DNGN_TRAP_AMNESIA:
     case DNGN_TRAP_TELEPORT:
     case DNGN_TRAP_ZOT:
     case DNGN_PASSAGE_OF_GOLUBRIA: // not a trap, FIXME
@@ -1630,6 +1646,8 @@ dungeon_feature_type trap_category(trap_type type)
 
     case TRAP_TELEPORT:
         return DNGN_TRAP_TELEPORT;
+    case TRAP_AMNESIA:
+        return DNGN_TRAP_AMNESIA;
     case TRAP_ALARM:
         return DNGN_TRAP_ALARM;
     case TRAP_ZOT:
@@ -1889,6 +1907,8 @@ static trap_type _random_trap_default(int level_number)
         type = TRAP_ZOT;
     if (one_chance_in(40) && level_number > 3)
         type = TRAP_ALARM;
+    if (one_chance_in(40))
+        type = TRAP_AMNESIA;
 
     return type;
 }

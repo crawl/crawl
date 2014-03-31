@@ -529,6 +529,10 @@ While this trap does no damage by itself, its loud sound may bring someone to
 do damage to you. In addition to the noise it creates, it will apply an
 enchantment making monsters all over the level aware of your location.
 %%%%
+An amnesia trap
+
+An amnesia trap.
+%%%%
 An ancient bone altar of Kikubaaqudgha
 
 Ancient bones were piled here to form an altar to the terrible Demon-God
