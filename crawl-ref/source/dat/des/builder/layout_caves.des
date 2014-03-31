@@ -253,6 +253,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns
 # should widen the occasional thin corridor at the end of each drip.
 NAME:   layout_falls_marsh
 DEPTH:  Swamp:1-4
+WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_caverns no_pool_fixup
 KFEAT: t = mangrove

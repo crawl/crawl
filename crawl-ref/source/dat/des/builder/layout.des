@@ -1544,7 +1544,7 @@ ENDMAP
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot
+DEPTH: D, Depths, Lair, Swamp, Snake, Elf, Crypt, Zot
 WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_basic
@@ -1592,7 +1592,7 @@ ENDMAP
 
 NAME: layout_swamp
 DEPTH: Swamp
-WEIGHT: 25
+WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_swamp
 {{

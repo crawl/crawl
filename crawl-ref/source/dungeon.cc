@@ -1346,6 +1346,42 @@ static int _num_mons_wanted()
     return mon_wanted;
 }
 
+static void _dgn_prepare_swamp()
+{
+    env.level_build_method += " swamp";
+    env.level_layout_types.insert("swamp");
+
+    const int margin = 5;
+
+    for (int i = margin; i < (GXM - margin); i++)
+        for (int j = margin; j < (GYM - margin); j++)
+        {
+            // Don't apply Swamp prep in vaults.
+            if (map_masked(coord_def(i, j), MMT_VAULT))
+                continue;
+
+            // doors -> floors {dlb}
+            if (grd[i][j] == DNGN_CLOSED_DOOR)
+                grd[i][j] = DNGN_FLOOR;
+
+            // floors -> shallow water 1 in 3 times {dlb}
+            if (grd[i][j] == DNGN_FLOOR && one_chance_in(3))
+                grd[i][j] = DNGN_SHALLOW_WATER;
+
+            // walls -> deep/shallow water or remain unchanged {dlb}
+            if (grd[i][j] == DNGN_ROCK_WALL)
+            {
+                const int temp_rand = random2(6);
+
+                if (temp_rand > 0)      // 17% chance unchanged {dlb}
+                {
+                    grd[i][j] = ((temp_rand > 2) ? DNGN_SHALLOW_WATER // 50%
+                                                 : DNGN_DEEP_WATER);  // 33%
+                }
+            }
+        }
+}
+
 static void _fixup_walls()
 {
     // If level part of Dis -> all walls metal.
@@ -1382,6 +1418,10 @@ static void _fixup_walls()
     case BRANCH_SLIME:
         wall_type = DNGN_SLIMY_WALL;
         break;
+
+    case BRANCH_SWAMP:
+        _dgn_prepare_swamp();
+        return;
 
     default:
         return;
