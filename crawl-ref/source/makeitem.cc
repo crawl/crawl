@@ -2946,7 +2946,9 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_STAVES:
-        _generate_staff_item(item, allow_uniques, force_type, item_level);
+        // Don't generate unrand staves this way except through acquirement,
+        // since they also generate as OBJ_WEAPONS.
+        _generate_staff_item(item, (agent != -1), force_type, item_level);
         break;
 
     case OBJ_RODS:
