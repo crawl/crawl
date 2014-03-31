@@ -1,3 +1,33 @@
+Stone Soup Nostalgia
+--------------------
+* Many species and backgrounds make their triumphant returns.
+* Several branches are restored to their original lengths.
+* Hand crossbows are back.
+* Hive is back.
+* Jozef, Duane, Francis, Norbert, and Michael return.
+* Many restrictions on summoning have been lifted.
+* Summon Small Mammals is now properly spammable again.
+* Haste is restored to its former glory; many monsters have been unnerfed
+  again as a consequence.
+* The Shrine portal vault returns.
+* Sticky Flame can be used at range again.
+* Recite can berserk or otherwise annoy monsters.
+* Multizapping more than twice is once again possible.
+* Death's Door is restored to its original implementation - healable out of
+  at any time (subject to confusion and paralysis) but letting time expire
+  kills you instantly.
+* Randarts can have +AC and +EV again.
+* The orb chamber can be subvaulted again.
+* Hydras are speed 15.
+* Zot traps can appear anywhere.
+* Old skill titles have returned.
+* Lugonu is once again Lucy, and Trog is Lugafu the Hairy.
+* Okawaru gets Might and Haste back.
+* Double swords, triple swords, and lochaber axes are back.
+* Poison Arrow and Tornado are un-nerfed.
+* Vehumet has been returned to Vehumet's former glory.
+* The removal of amnesia traps has been forgotten.
+
 Stone Soup 0.14 (201404??)
 --------------------------
 * The lower half of D is now a new branch, the Depths.
