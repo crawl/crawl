@@ -12,11 +12,11 @@ Screaming Sword
 
 <Singing Sword>
 %%%%
-Wrath of Trog
+Wrath of Lugafu
 
-This was the favourite weapon of the old god Trog, before it was lost one day.
+This was the favourite weapon of the old god Lugafu, before it was lost one day.
 It induces a bloodthirsty berserker rage in anyone who uses it to strike
-another.
+another. +5 to hair.
 %%%%
 Mace of Variability
 

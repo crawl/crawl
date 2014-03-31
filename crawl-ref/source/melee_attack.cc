@@ -3054,7 +3054,7 @@ brand_type melee_attack::random_chaos_brand()
     case SPWPN_DISTORTION:      brand_name += "distortion"; break;
     case SPWPN_VAMPIRICISM:     brand_name += "vampiricism"; break;
     case SPWPN_VORPAL:          brand_name += "vorpal"; break;
-    case SPWPN_ANTIMAGIC:       brand_name += "anti-magic"; break;
+    case SPWPN_ANTIMAGIC:       brand_name += "hairy"; break;
     // ranged weapon brands
     case SPWPN_FLAME:           brand_name += "flame"; break;
     case SPWPN_FROST:           brand_name += "frost"; break;

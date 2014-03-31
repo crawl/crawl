@@ -341,12 +341,12 @@ Forget Spell ability
 Forget any spell out of the ones you've currently memorised, so as to free
 memory to learn others.
 %%%%
-# Trog
+# Lugafu
 Burn Spellbooks ability
 
 Set all spellbooks within your field of vision on fire. The fire is fuelled by
-Trog's hatred, and it burns hotter than mere parchment would — which can be
-useful if you throw the book under someone's feet first. Obviously, Trog
+Lugafu's hatred, and it burns hotter than mere parchment would — which can be
+useful if you throw the book under someone's feet first. Obviously, Lugafu
 greatly appreciates using this ability.
 %%%%
 Berserk ability
@@ -358,13 +358,13 @@ perform a number of actions such as, for example, (un)wield a weapon, quaff
 something, evoke wands or items, or cast spells. Such a rage is usually
 followed by deep exhaustion, a time during which you are slowed down, and
 cannot berserk again. Unlike other sources of rage, depending on your piety
-Trog may occasionally prevent you from passing out.
+Lugafu may occasionally prevent you from passing out.
 %%%%
-Trog's Hand ability
+Lugafu's Hairy Hand ability
 
 Invoke a powerful regeneration ability which stacks with all other sources and
 even allows otherwise non-healing species to regenerate. While active, you will
-also be granted powerful protection from hostile enchantments.
+also be granted powerful protection from hostile enchantments. And awesome hair.
 %%%%
 Brothers in Arms ability
 

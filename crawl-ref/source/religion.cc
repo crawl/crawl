@@ -401,7 +401,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Trog
     { "go berserk at will",
-      "call upon Trog for regeneration and protection from hostile enchantments",
+      "call upon Lugafu for regeneration and awesome hair",
       "",
       "call in reinforcements",
       "" },
@@ -2403,7 +2403,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_OKAWARU:       return "Okawaru";
     case GOD_MAKHLEB:       return "Makhleb";
     case GOD_SIF_MUNA:      return "Sif Muna";
-    case GOD_TROG:          return "Trog";
+    case GOD_TROG:          return "Lugafu";
     case GOD_NEMELEX_XOBEH: return "Nemelex Xobeh";
     case GOD_ELYVILON:      return "Elyvilon";
     case GOD_LUGONU:        return "Lucy";
@@ -3721,7 +3721,7 @@ void god_pitch(god_type which_god)
     }
     else if (you_worship(GOD_TROG))
     {
-        mprf(MSGCH_GOD, "You can now call upon Trog to burn spellbooks in your "
+        mprf(MSGCH_GOD, "You can now call upon Lugafu to burn spellbooks in your "
             "surroundings.");
     }
     else if (you_worship(GOD_FEDHAS))

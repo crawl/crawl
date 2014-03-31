@@ -73,12 +73,12 @@ Sif Muna the Loreminder is a contemplative but powerful deity, served by those
 who seek magical knowledge. The Loreminder appreciates the training of spell
 casting skills.
 %%%%
-Trog
+Lugafu
 
-Trog is an ancient God of anger and violence. Followers are expected to kill in
-Trog's name and sacrifice the dead, and in return gain power in battle and also
-occasional rewards. Trog hates all wizards, and loves to see their spellbooks
-burn. Followers are forbidden the use of spell magic.
+Lugafu is an ancient God of fabulous hair. Followers are expected to kill in
+Lugafu's name and sacrifice the dead, and in return gain fabulous hair and also
+occasional rewards. Lugafu hates all wizards--they're often bald--and loves to
+see their spellbooks burn. Followers are forbidden the use of spell magic.
 %%%%
 Nemelex Xobeh
 
@@ -233,12 +233,12 @@ and they gain a power to forget any spell at will, so as to learn new ones. Sif
 Muna protects spellcasters against the negative effects of miscasting a spell.
 Over time, followers will recieve spellbooks containing a vast range of spells.
 %%%%
-Trog powers
+Lugafu powers
 
-Trog offers various powers to help followers in battle. Followers will gain the
-ability to go berserk at will, and to rapidly heal their wounds while
+Lugafu offers various powers to help followers in battle. Followers will gain the
+ability to go berserk at will, and to rapidly regrow their hair while
 increasing resistance to hostile enchantments. Later, followers may call in
-powerful raging allies. Eventually, Trog will gift followers with weapons
+powerful raging allies. Eventually, Lugafu will gift followers with weapons
 focused on damage.
 %%%%
 Nemelex Xobeh powers

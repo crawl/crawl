@@ -770,6 +770,9 @@ static bool _has_hair(actor* target)
     if (target->is_monster())
         return false;
 
+    if (you.religion == GOD_TROG)
+        return true;
+
     return !form_changed_physiology() && you.species != SP_GHOUL
            && you.species != SP_OCTOPODE
            && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN)
@@ -788,7 +791,7 @@ static string _hair_str(actor* target, bool &plural)
     else
     {
         plural = false;
-        return "hair";
+        return "hairy";
     }
 }
 

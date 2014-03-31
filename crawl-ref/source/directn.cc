@@ -3230,7 +3230,7 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_ALTAR_SIF_MUNA:
         return "deep blue altar of Sif Muna";
     case DNGN_ALTAR_TROG:
-        return "bloodstained altar of Trog";
+        return "distressingly hairy altar of Lugafu";
     case DNGN_ALTAR_NEMELEX_XOBEH:
         return "sparkling altar of Nemelex Xobeh";
     case DNGN_ALTAR_ELYVILON:

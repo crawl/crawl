@@ -717,7 +717,7 @@ static bool _trog_retribution()
         case 1:
         case 2:
             lose_stat(STAT_STR, 1 + random2(you.strength() / 5), false,
-                      "divine retribution from Trog");
+                      "hairy retribution from Lugafu");
             break;
 
         case 3:
@@ -748,9 +748,9 @@ static bool _trog_retribution()
         //    we'll leave this effect in, but we'll remove the wild
         //    fire magic. -- bwr
         dec_penance(god, 2);
-        mprf(MSGCH_WARN, "You feel Trog's fiery rage upon you!");
+        mprf(MSGCH_WARN, "You feel Lugafu's hairy rage upon you!");
         MiscastEffect(&you, -god, SPTYP_FIRE, 8 + you.experience_level,
-                      random2avg(98, 3), "the fiery rage of Trog");
+                      random2avg(98, 3), "the hairy rage of Lugafu");
     }
 
     return true;

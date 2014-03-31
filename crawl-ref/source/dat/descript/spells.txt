@@ -1447,9 +1447,9 @@ air and tossed around. Only the eye of the storm is a safe place, and it
 follows the caster. The spell's effectiveness is greatly diminished in closed
 areas.
 %%%%
-Trog's Hand spell
+Lugafu's Hairy Hand spell
 
-<Trog's Hand ability>
+<Lugafu's Hairy Hand ability>
 %%%%
 Tukima's Dance spell
 

@@ -1812,7 +1812,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         if (you_worship(GOD_TROG))
         {
             text << " Also, kills of demons and living creatures grant you "
-                    "favour in the eyes of Trog.";
+                    "favour in the eyes of Lugafu.";
         }
         break;
 

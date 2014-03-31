@@ -1739,7 +1739,7 @@ int monster_die(monster* mons, killer_type killer,
             you.increase_duration(DUR_BERSERK, bonus);
 
             mprf(MSGCH_GOD, GOD_TROG,
-                 "You feel the power of Trog in you as your rage grows.");
+                 "You feel the power of Lugafu in you as your rage grows.");
         }
         else if (player_equip_unrand(UNRAND_BLOODLUST))
         {

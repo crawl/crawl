@@ -634,7 +634,7 @@ In this lesson you're going to learn about gods and how to use their powers.
 %%%%
 tutorial5 dungeon_overview
 
-Up ahead is an altar to Trog the Wrathful! Trog is just one of many gods. In a
+Up ahead is an altar to Lugafu the Hairy! Lugafu is just one of many gods. In a
 real game, you check <input>$cmd[CMD_DISPLAY_OVERMAP]</input><localtiles> or
 <input>click the dungeon overmap button</input> in the command
 panel</localtiles> for a list of all altars and other interesting features
@@ -668,11 +668,11 @@ begin!
 tutorial5 sacrificing
 
 Praying on corpses with <input>$cmd[CMD_PRAY]</input><localtiles> or via the
-<w>command panel</w></localtiles> will sacrifice them to Trog. Try it!
+<w>command panel</w></localtiles> will sacrifice them to Lugafu. Try it!
 %%%%
 tutorial5 burn_book
 
-Trog will like it if you burn that book (with
+Lugafu will like it if you burn that book (with
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> or via the <w>command
 panel</w></localtiles>). Sometimes, you might want to wait (with
 <input>$cmd[CMD_MOVE_NOWHERE]</input>) for a monster to step on it before doing
@@ -680,7 +680,7 @@ so.
 %%%%
 tutorial5 berserk
 
-Against particularly tough foes, you may want to use Trog's Berserk power with
+Against particularly tough foes, you may want to use Lugafu's Berserk power with
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> or via the <w>command
 panel</w></localtiles>.
 %%%%
@@ -695,7 +695,7 @@ tutorial5 hunger
 
 You cannot berserk while very hungry, so you should always carry some food with
 you. This means that sometimes you'll have to decide between butchering a
-corpse or sacrificing it to Trog.
+corpse or sacrificing it to Lugafu.
 %%%%
 tutorial5 berserk2
 

@@ -4186,9 +4186,9 @@ static const char *divine_title[NUM_GODS][8] =
     {"Ignorant",           "Disciple",              "Student",                  "Adept",
      "Scribe",             "Scholar",               "Sage",                     "Genius of the Arcane"},
 
-    // Trog -- anger theme.
-    {"Puny",               "Troglodyte",            "Angry Troglodyte",         "Frenzied",
-     "%s of Prey",         "Rampant",               "Wild %s",                  "Bane of Scribes"},
+    // Lugafu -- hair themed.
+    {"Hairless %s",        "Balding %s",            "Downy %s",                 "Scruffy %s",
+     "Bearded %s",         "Hairy %s",              "Shaggy %s",                "Hirsute %s"},
 
     // Nemelex Xobeh -- alluding to Tarot and cards.
     {"Unlucky %s",         "Pannier",               "Jester",                   "Fortune-Teller",
@@ -4774,7 +4774,7 @@ string get_skill_description(skill_type skill, bool need_title)
         else if (you_worship(GOD_TROG))
         {
             result += "\n";
-            result += "Note that Trog doesn't use Invocations, due to its "
+            result += "Note that Lugafu doesn't use Invocations, due to its "
                       "close connection to magic.";
         }
         else if (you_worship(GOD_NEMELEX_XOBEH))
@@ -4797,7 +4797,7 @@ string get_skill_description(skill_type skill, bool need_title)
         if (you_worship(GOD_TROG))
         {
             result += "\n";
-            result += "Keep in mind, though, that Trog will greatly disapprove "
+            result += "Keep in mind, though, that Lugafu will greatly disapprove "
                       "of this.";
         }
         break;

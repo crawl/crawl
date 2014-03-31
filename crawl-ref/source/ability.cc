@@ -328,9 +328,9 @@ static const ability_def Ability_List[] =
     { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks",
       0, 0, 10, 0, 0, ABFLAG_NONE},
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, 0, ABFLAG_NONE},
-    { ABIL_TROG_REGEN_MR, "Trog's Hand",
+    { ABIL_TROG_REGEN_MR, "Lugafu's Hairy Hand",
       0, 0, 50, generic_cost::range(2, 3), 0, ABFLAG_NONE},
-    { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
+    { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Hairy Arms",
       0, 0, 100, generic_cost::range(5, 6), 0, ABFLAG_NONE},
 
     // Elyvilon

@@ -2452,7 +2452,7 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_TROGS_HAND, delay,
                               NULL, coinflip(),
-                              "You feel the effects of Trog's Hand fading."))
+                              "You feel the effects of Lugafu's Hairy Hand fading."))
     {
         trog_remove_trogs_hand();
     }
@@ -2770,7 +2770,7 @@ static void _decrement_durations()
                 && !player_under_penance()
                 && x_chance_in_y(you.piety, piety_breakpoint(5)))
             {
-                mpr("Trog's vigour flows through your veins.");
+                mpr("Lugafu's vigour flows through your locks.");
             }
             else
             {

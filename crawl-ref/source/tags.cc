@@ -2027,7 +2027,7 @@ static const char* old_species[]=
 static const char* old_gods[]=
 {
     "", "Zin", "The Shining One", "Kikubaaqudgha", "Yredelemnul", "Xom",
-    "Vehumet", "Okawaru", "Makhleb", "Sif Muna", "Trog", "Nemelex Xobeh",
+    "Vehumet", "Okawaru", "Makhleb", "Sif Muna", "Lugafu", "Nemelex Xobeh",
     "Elyvilon", "Lucy", "Beogh", "Jiyva", "Fedhas", "Cheibriados",
     "Ashenzari",
 };

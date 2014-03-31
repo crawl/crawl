@@ -45,7 +45,7 @@ static const char *daction_names[] =
     "slimes allow another conversion attempt",
 #endif
     "holy beings go neutral",
-    "Trog's gifts go hostile",
+    "Lugafu's gifts go hair-brained",
     "shuffle decks",
     "reapply passive mapping",
     "remove Jiyva altars",
