@@ -99,15 +99,15 @@ Some shortcuts:
 <w>@(pattern)</w>    lists everything matching (pattern) on your current level.
 
 You can also examine shops and items in the search results by pressing <w>?</w> and
-then hitting the hotkey for the search result. This will give a description
+then selecting the hotkey for the search result. This will give a description
 of the item or the contents of the shop.
 
 The stash search string is case-insensitive.
 
 <h>Searching by item properties:</h>
 
-You can search for spell names (such as <w>Ignite Poison</w>) to find spellbooks or
-rods that contain the spell.
+You can search for spell names (such as <w>Ignite Poison</w>) to find spellbooks
+that contain the spell.
 
 You can search for artefact item properties (such as <w>prevents.*teleport</w>)
 to find artefacts that have the property.
@@ -122,7 +122,7 @@ Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapon
 train that skill. You can also look for <w>melee weapon</w> and <w>ranged weapon</w>.
 
 You can also search by item types such as <w>book</w> or <w>manual</w> or <w>jewellery</w>.
-For armour slots, use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shield</w>, and <w>body</w>.
+For armour slots, use <w>helmet</w> (all headgear), <w>gloves</w>, <w>shield</w>, and <w>body</w>.
 Use <w>armour && !!body</w> to list all armour pieces except for body armour.
 
 <h>Finding Dungeon Features:</h>
@@ -200,7 +200,7 @@ interlevel-travel.branch.prompt
 interlevel-travel.depth.prompt
 
 <h>Interlevel Travel (go to a specific level in the selected branch)
- Type in the level number you want to go to and hit Enter, or use:
+ Type in the level number you want to go to and press Enter, or use:
  <w>Enter</w>  : Go to the default level.
  <w><<</w>      : Change the default to one level above the current.
  <w>></w>      : Change default to one level below the current.
@@ -230,22 +230,20 @@ skill-menu
                                <h>Skill management</h>
 You gain experience for killing monsters (and very few other activities).
 This experience is used to train skills. The skill screen allows you to
-select which skills to train. Note that you train all activated skills at
-once whenever you gain some experience. It is not a bug if you gain a skill
-level in Axes after killing a monster with a spell.
+select which skills to train.
 A skill can only be trained if there's some available means of exercising it;
 see "Training restrictions" below for details.
 
 By pressing its letter, you can cycle if and how a skill is trained:
-<darkgrey>- deselected</darkgrey>    Skill will not train at all.
+<darkgrey>- deselected</darkgrey>    Skill will not be trained.
 + selected
-<w>* focused</w>       Skill will train faster than others.
+<w>* focused</w>       Skill will be weighted higher for training.
 
 Pressing a capital letter selects that skill and deselects all the others.
 This shortcut is useful when you want to train only one skill.
 
 Training can be done in two modes, which are toggled with the <w>/</w> key.
-* automatic:    Skills are trained based on your use of them.
+* automatic:    Skills are weighted based on your use of them.
 * manual:       Experience is spread evenly across all activated skills.
 
 How fast you train a skill is governed by the following factors:
