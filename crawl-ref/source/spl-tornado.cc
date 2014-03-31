@@ -102,7 +102,7 @@ bool WindSystem::has_wind(coord_def c)
 
 static void _set_tornado_durations(int powc)
 {
-    int dur = 60;
+    int dur = 50 + powc / 5;
     you.duration[DUR_TORNADO] = dur;
     if (you.form != TRAN_TREE)
     {
@@ -144,7 +144,6 @@ spret_type cast_tornado(int powc, bool fail)
     if (you.fishtail)
         merfolk_stop_swimming();
 
-    you.props["tornado_since"].get_int() = you.elapsed_time;
     _set_tornado_durations(powc);
     if (you.species == SP_TENGU)
         you.redraw_evasion = true;
@@ -197,34 +196,6 @@ static coord_def _rotate(coord_def org, coord_def from,
     return best;
 }
 
-static int _rdam(int rage)
-{
-    // integral of damage done until given age-radius
-    if (rage <= 0)
-        return 0;
-    else if (rage < 10)
-        return sqr(rage) / 2;
-    else
-        return rage * 10 - 50;
-}
-
-static int _tornado_age(const actor *caster)
-{
-    if (caster->props.exists("tornado_since"))
-        return you.elapsed_time - caster->props["tornado_since"].get_int();
-    return 100; // for permanent tornadoes
-}
-
-// time needed to reach the given radius
-static int _age_needed(int r)
-{
-    if (r <= 0)
-        return 0;
-    if (r > TORNADO_RADIUS)
-        return INT_MAX;
-    return sqr(r) * 5 / 4;
-}
-
 void tornado_damage(actor *caster, int dur)
 {
     if (!dur)
@@ -236,18 +207,16 @@ void tornado_damage(actor *caster, int dur)
         pow = calc_spell_power(SPELL_TORNADO, true);
     else
         pow = caster->as_monster()->hit_dice * 4;
+    if (dur > 0)
+        pow = div_rand_round(pow * dur, 10);
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
     int noise = 0;
     WindSystem winds(org);
 
-    int age = _tornado_age(caster);
-    ASSERT(age >= 0);
-
     vector<actor*>        move_act;   // victims to move
     vector<coord_def>     move_avail; // legal destinations
     map<mid_t, coord_def> move_dest;  // chosen destination
-    int rdurs[TORNADO_RADIUS+1];           // durations at radii
     int cnt_open = 0;
     int cnt_all  = 0;
 
@@ -262,32 +231,18 @@ void tornado_damage(actor *caster, int dur)
             ++cnt_all;
             ++count_i;
         }
-        // effective age at radius r
-        int rage = age - _age_needed(r);
-        /* Not just "portion of time affected":
-                          **
-                        **
-                  ----++----
-                    **......
-                  **........
-           here, damage done is 3/4, not 1/2.
-        */
-        // effective duration at the radius
-        int rdur = _rdam(rage + abs(dur)) - _rdam(rage);
-        rdurs[r] = rdur;
-        // power at the radius
-        int rpow = div_rand_round(pow * cnt_open * rdur, cnt_all * 100);
-        dprf("at dist %d dur is %d%%, pow is %d", r, rdur, rpow);
+        int rpow = pow * cnt_open / cnt_all;
+        dprf("at dist %d pow is %d", r, rpow);
         if (!rpow)
             break;
 
-        noise = max(div_rand_round(r * rdur * 3, 100), noise);
+        noise = max(r * 3, noise);
 
         vector<coord_def> clouds;
         for (; dam_i && dam_i.radius() == r; ++dam_i)
         {
             if (feat_is_tree(grd(*dam_i)) && dur > 0
-                && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
+                && bernoulli(1, 0.05)) // 5% chance per 10 aut
             {
                 grd(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
@@ -349,20 +304,20 @@ void tornado_damage(actor *caster, int dur)
                             float_player();
                     }
 
+                    int dmg = roll_dice(6, rpow) / 10;
                     if (dur > 0)
-                    {
-                        int dmg = victim->apply_ac(
-                                    div_rand_round(roll_dice(9, rpow), 15),
-                                    0, AC_PROPORTIONAL);
-                        dprf("damage done: %d", dmg);
-                        if (victim->is_player())
-                            ouch(dmg, caster->mindex(), KILLED_BY_BEAM, "tornado");
-                        else
-                            victim->hurt(caster, dmg);
-                    }
+                        dmg = div_rand_round(dmg * dur, 10);
+                    else if (dur < 0)
+                        dmg = 0;
+                    dprf("damage done: %d", dmg);
+                    if (victim->atype() == ACT_PLAYER)
+                        ouch(dmg, caster->mindex(), KILLED_BY_BEAM,
+                             "tornado");
+                    else
+                        victim->hurt(caster, dmg);
                 }
 
-                if (victim->alive() && !leda && dur > 0)
+                if (victim->alive() && !leda)
                     move_act.push_back(victim);
             }
 
@@ -411,8 +366,7 @@ void tornado_damage(actor *caster, int dur)
     for (unsigned int i = 0; i < move_act.size(); i++)
     {
         coord_def pos = move_dest[move_act[i]->mid];
-        int r = pos.range(org);
-        coord_def dest = _rotate(org, pos, move_avail, rdurs[r]);
+        coord_def dest = _rotate(org, pos, move_avail, 100);
         for (unsigned int j = 0; j < move_avail.size(); j++)
             if (move_avail[j] == dest)
             {
@@ -467,47 +421,4 @@ void cancel_tornado(bool tloc)
     }
     you.duration[DUR_TORNADO] = 0;
     you.duration[DUR_TORNADO_COOLDOWN] = 0;
-}
-
-void tornado_move(const coord_def &p)
-{
-    if (!you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN])
-        return;
-
-    int age = _tornado_age(&you);
-    int dist2 = (you.pos() - p).abs();
-    if (dist2 <= 2)
-        return;
-
-    int dist = 0;
-    while (dist * dist + 1 < dist2)
-        dist++;
-
-    if (!you.duration[DUR_TORNADO])
-    {
-        if (age < _age_needed(dist - TORNADO_RADIUS))
-            you.duration[DUR_TORNADO_COOLDOWN] = 0;
-        return;
-    }
-
-    if (age > _age_needed(dist))
-    {
-        // check for actual wind too, not just the radius
-        WindSystem winds(you.pos());
-        if (winds.has_wind(p))
-        {
-            // blinking/cTele inside an already windy area
-            dprf("Tloc penalty: reducing tornado by %d turns", dist - 1);
-            you.duration[DUR_TORNADO] = max(1,
-                         you.duration[DUR_TORNADO] - (dist - 1) * 10);
-            return;
-        }
-    }
-
-    cancel_tornado(true);
-
-    // there's an intersection between the area of the old tornado, and what
-    // a new one could possibly grow into
-    if (age > _age_needed(dist - TORNADO_RADIUS))
-        you.duration[DUR_TORNADO_COOLDOWN] = random_range(25, 35);
 }

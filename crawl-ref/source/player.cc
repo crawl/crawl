@@ -462,10 +462,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT_IN_BOUNDS(p);
 
     if (!stepped)
-    {
         you.clear_clinging();
-        tornado_move(p);
-    }
 
     // assuming that entering the same square means coming from above (flight)
     const coord_def old_pos = you.pos();
