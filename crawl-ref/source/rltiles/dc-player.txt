@@ -554,9 +554,9 @@ long_sword_slant2
 blessed_blade BLESSED_BLADE
 great_sword_slant GREAT_SWORD_SLANT
 great_sword_slant2
-claymore CLAYMORE
-claymore2
-claymore_blessed CLAYMORE_BLESSED
+triple sword CLAYMORE
+triple sword2
+triple sword_blessed CLAYMORE_BLESSED
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
 scimitar2

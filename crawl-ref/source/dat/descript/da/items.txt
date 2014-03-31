@@ -88,7 +88,7 @@ bardiche
 
 En lang stage med et enormt, kløvende blad i den ene ende.
 %%%%
-bastard sword
+double sword
 
 Et stort og langt sværd. Det er faktisk et af de tungeste og farligste våben,
 de fleste racer kan bruge sammen med et skjold, og et møde med så lang en
@@ -103,11 +103,11 @@ beef jerky
 
 Et stykke konserveret, død ko.
 %%%%
-blessed bastard sword
+blessed double sword
 
 Et langt, stort sværd, som er bestyrket af Den Strålendes kraft.
 %%%%
-blessed claymore
+blessed triple sword
 
 Et enormt sværd, som er bestyrket af Den Strålendes kraft.
 %%%%
@@ -475,7 +475,7 @@ chunk of flesh
 
 En klump kød, du har fundet i de underjordiske gange.
 %%%%
-claymore
+triple sword
 
 Et kolossalt sværd, som man skal bruge to hænder bare for at holde, og stor
 styrke og dygtighed for at bruge effektivt. Det siger sig selv, at når en

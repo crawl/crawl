@@ -1254,8 +1254,8 @@ NAME: grunt_lady_of_the_lake
 SUBST: w = w:50 t:5 T:5
 SUBST: W = w
 KITEM: O = great sword good_item w:20 / \
-           bastard sword good_item w:2 / \
-           claymore good_item w:1
+           double sword good_item w:2 / \
+           triple sword good_item w:1
 KFEAT: K = deep_water
 KFEAT: T = mangrove
 KPROP: wK = no_rtele_into

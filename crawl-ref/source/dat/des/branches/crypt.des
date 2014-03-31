@@ -73,7 +73,7 @@ function crypt_loot_plus(e)
   local ring = "ring of positive energy randart good_item"
   local amulet = "amulet of warding randart good_item ident:all"
   -- One drop-off of these,
-  e.kitem("d = bastard sword w:5 " .. drain .." / claymore w:5 " .. drain ..
+  e.kitem("d = double sword w:5 " .. drain .." / triple sword w:5 " .. drain ..
           " / quick blade " .. drain .. " / executioner's axe " .. drain ..
           " / eveningstar " .. drain .. " / bardiche " .. drain ..
           " / lajatang " .. drain)
@@ -89,7 +89,7 @@ function crypt_loot_plus(e)
   e.kitem("h = dagger unrand:vampires_tooth / dagger unrand:morg / " ..
           "great sword ego:pain unrand:sword_of_the_doom_knight / " ..
           "demon blade unrand:bloodbane / demon blade unrand:leech / " ..
-          "bastard sword unrand:sword_of_zonguldrok / " ..
+          "double sword unrand:sword_of_zonguldrok / " ..
           "scythe unrand:finisher / scythe unrand:scythe_of_curses / " ..
           "spear unrand:spear_of_the_botono / " ..
           "mace unrand:sceptre_of_torment / great mace unrand:undeadhunter")

@@ -95,7 +95,7 @@ bardiche
 
 Une longue perche avec une énorme lame tranchante au bout.
 %%%%
-bastard sword
+double sword
 
 Une longue et large épée. En fait, c'est l'arme la plus lourde et la plus
 meurtrière que la plupart des espèces peuvent manier avec un bouclier. Tâter
@@ -110,11 +110,11 @@ beef jerky
 
 Une tranche séchée de vache ou de bœuf mort.
 %%%%
-blessed bastard sword
+blessed double sword
 
 Une épée longue et large, améliorée par l'Étincelant.
 %%%%
-blessed claymore
+blessed triple sword
 
 Une épée massive, améliorée par l'Étincelant.
 %%%%
@@ -400,7 +400,7 @@ chunk of flesh
 Un morceau de viande crue trouvé dans le donjon. Il ne va pas rester frais bien
 longtemps.
 %%%%
-claymore
+triple sword
 
 Une épée massive, qui nécessite l'utilisation des deux mains rien que pour la
 tenir, et beaucoup de force et d'entraînement pour l'utiliser efficacement. Il

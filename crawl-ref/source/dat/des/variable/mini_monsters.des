@@ -5637,7 +5637,7 @@ MONS:   place:Depths:$ zombie / place:Depths:$ skeleton, bone dragon
 : else
 MONS:   place:D:$ zombie / place:D:$ skeleton, bone dragon
 : end
-ITEM:   bastard sword unrand:sword_of_zonguldrok no_pickup
+ITEM:   double sword unrand:sword_of_zonguldrok no_pickup
 MAP
 ...............
 .cc+cccccccccc.
@@ -5835,7 +5835,7 @@ KMONS:   W = gnoll sergeant ; trident . scale mail | chain mail . shield
 KMONS:   X = deep elf fighter ; cutlass | long sword . robe | leather armour . buckler | nothing
 KMONS:   Y = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
 KITEM:   S = good_item long sword / good_item great sword / good_item demon blade /\
-             good_item claymore / good_item bastard sword
+             good_item triple sword / good_item double sword
 KFEAT:   S = known teleport trap
 NSUBST:  k = 4=k / * = .:19 k:1
 SHUFFLE: bm

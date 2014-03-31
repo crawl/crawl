@@ -209,8 +209,9 @@ from Spriggans. Anyway, it's in some way associated with those fey folk.
 %%%%
 plutonium sword
 
-A claymore made of weird glowing metal. You wonder whether its radiation will
-make you grow an extra head.
+A triple razor made of weird glowing metal. You wonder whether it grew its two
+side blades due to its radiation, and whether you'll grow two extra heads as
+well.
 %%%%
 great mace "Undeadhunter"
 
