@@ -2860,6 +2860,8 @@ static void tag_read_you(reader &th)
         abyssal_state.level.branch = BRANCH_DEPTHS;
         abyssal_state.level.depth = 1;
     }
+#else
+    abyssal_state.level = unmarshall_level_id(th);
 #endif
 
     _unmarshall_constriction(th, &you);
