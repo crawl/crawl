@@ -1,7 +1,7 @@
 Stone Soup 0.14 (201404??)
 --------------------------
 * The lower half of D is now a new branch, the Depths.
-* Two new races: Formicids and Vine Stalkers.
+* Two new species: Formicids and Vine Stalkers.
 * A new deity: Dithmenos the Shadowed.
 * Greatly revised monster sets in the Lair branches.
 * Greatly revised summoning spell sets.
@@ -37,7 +37,7 @@ Branches, environment
 
 Character
 ---------
-* New races:
+* New species:
     - Formicids possess four strong arms to use large weapons together with
       shields, in addition to strong natural digging abilities and a permanent
       stasis effect.
@@ -288,7 +288,7 @@ Items
   darts and javelins in damage.
     - Small race hunters and arcane marksmen may select tomahawks.
 * New "potion of lignification" - induces tree form.
-* Small races can use throwing nets.
+* Small species can use throwing nets.
 * Throwing nets do not degrade: instead, they have a chance to be destroyed
   like other projectiles.
 * Multiple changes to unrandarts:
@@ -430,7 +430,7 @@ Gods
 * All skills eventually trainable by divine abilities can be trained
   immediately on worshipping that god (Invocations for many gods, Evocations
   for Nemelex, Necromancy for Kiku, and Shields for TSO per Divine Shield).
-* Ashenzari now generate 1-3 curse scrolls per remove curse scroll.
+* Ashenzari now generates 1-3 curse scrolls per remove curse scroll.
 * Innate abilities hated by your god are now marked as such.
 
 Interface
@@ -438,7 +438,7 @@ Interface
 * "Automagic" functionality similar to autofight has been added through the
   options automagic_enable, automagic_stop, and automagic_fight; it can be
   used to automatically cast spells in a specified slot in combat.
-* Different types of magical trap are coloured differently.
+* Different types of magical traps are coloured differently.
 * Unnaturally hard rock walls have a new default glyph.
 * The % screen has a new layout.
 * You are prompted to continue wearing/unwearing armour when a monster comes
