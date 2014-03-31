@@ -2,7 +2,7 @@
 A Zot trap
 
 This trap inflicts dangerously unpredictable magical effects on those unlucky
-enough to trigger it. You may find yourself thrown into the Abyss, contaminated
+enough to step on it. You may find yourself thrown into the Abyss, contaminated
 with enormous amounts of wild magic, have mighty fiends summoned against you,
 or the like — it is something to avoid at all costs. The monsters of the
 dungeon may even trigger it themselves to invoke its effects against you.
@@ -941,12 +941,12 @@ This portal leads to an ice cave. The archway is gradually melting away.
 %%%%
 A sand-covered staircase
 
-This portal leads to an ossuary. Sand surrounds the staircase and is
+This staircase leads to an ossuary. Sand surrounds the staircase and is
 continuously pouring onto it. Before long, the staircase will be gone.
 %%%%
 A glowing drain
 
-This portal leads to a sewer. It seems to be rusting and clogging up fairly
+This passage leads to a sewer. It seems to be rusting and clogging up fairly
 rapidly.
 %%%%
 A portal to a secret trove of treasure
@@ -955,8 +955,8 @@ This portal leads to a treasure trove.
 %%%%
 A dark tunnel
 
-This portal leads to a volcano. Rocks are falling from the roof and sides of
-the tunnel, filling the entry.
+This portal leads to the heart of a volcano. Rocks are falling from the roof
+and sides of the tunnel, filling the entry.
 %%%%
 A magical portal
 
