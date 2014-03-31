@@ -29,6 +29,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_MINOTAUR:
         case SP_GARGOYLE:
         case SP_CENTAUR:
+        case SP_MOUNTAIN_DWARF:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -77,6 +78,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_MINOTAUR:
         case SP_GARGOYLE:
         case SP_DEMONSPAWN:
+        case SP_HILL_DWARF:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -263,6 +265,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
         case SP_TROLL:
+        case SP_SLUDGE_ELF:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -307,6 +310,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_BASE_DRACONIAN:
         case SP_NAGA:
         case SP_VINE_STALKER:
+        case SP_GREY_ELF:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -416,6 +420,65 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_BASE_DRACONIAN:
         case SP_HUMAN:
         case SP_DEMONSPAWN:
+            return CC_UNRESTRICTED;
+        default:
+            return CC_RESTRICTED;
+        }
+
+    case JOB_STALKER:
+        switch (speci)
+        {
+        case SP_SPRIGGAN:
+        case SP_KOBOLD:
+        case SP_NAGA:
+        case SP_DEMONSPAWN:
+        case SP_SLUDGE_ELF:
+            return CC_UNRESTRICTED;
+        default:
+            return CC_RESTRICTED;
+        }
+
+
+    case JOB_THIEF:
+        switch (speci)
+        {
+        case SP_MERFOLK:
+        case SP_SPRIGGAN:
+        case SP_GNOME:
+        case SP_KOBOLD:
+        case SP_HALFLING:
+            return CC_UNRESTRICTED;
+        default:
+            return CC_RESTRICTED;
+        }
+
+    case JOB_PALADIN:
+        switch (speci)
+        {
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+            return CC_BANNED;
+        case SP_HILL_DWARF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_MINOTAUR:
+        case SP_HILL_ORC:
+        case SP_GARGOYLE:
+            return CC_UNRESTRICTED;
+        default:
+            return CC_RESTRICTED;
+        }
+
+    case JOB_REAVER:
+        switch (speci)
+        {
+        case SP_HIGH_ELF:
+        case SP_DEMIGOD:
+        case SP_MERFOLK:
+        case SP_TENGU:
+        case SP_GARGOYLE:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -552,11 +615,10 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case SP_OGRE:
         switch (job)
         {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
             case JOB_HUNTER:
             case JOB_BERSERKER:
-            case JOB_ARCANE_MARKSMAN:
-            case JOB_WIZARD:
-            case JOB_FIRE_ELEMENTALIST:
             case JOB_DEATH_KNIGHT:
                 return CC_UNRESTRICTED;
             default:
@@ -837,12 +899,93 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
                 return CC_RESTRICTED;
         }
     case SP_ELF:
+        switch (job)
+        {
+            case JOB_HUNTER:
+            case JOB_SKALD:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
     case SP_HILL_DWARF:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_BERSERKER:
+            case JOB_PALADIN:
+            case JOB_ARTIFICER:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
     case SP_OGRE_MAGE:
+        switch (job)
+        {
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_NECROMANCER:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
     case SP_GREY_ELF:
+        switch (job)
+        {
+            case JOB_ARCANE_MARKSMAN:
+            case JOB_WIZARD:
+            case JOB_CONJURER:
+            case JOB_FIRE_ELEMENTALIST:
+            case JOB_ICE_ELEMENTALIST:
+            case JOB_AIR_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
     case SP_GNOME:
+        switch (job)
+        {
+            case JOB_GLADIATOR:
+            case JOB_HUNTER:
+            case JOB_ASSASSIN:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_ARTIFICER:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
     case SP_MOUNTAIN_DWARF:
+        switch (job)
+        {
+            case JOB_FIGHTER:
+            case JOB_GLADIATOR:
+            case JOB_HUNTER:
+            case JOB_BERSERKER:
+            case JOB_PALADIN:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
     case SP_SLUDGE_ELF:
+        switch (job)
+        {
+            case JOB_MONK:
+            case JOB_TRANSMUTER:
+            case JOB_STALKER:
+            case JOB_SUMMONER:
+            case JOB_NECROMANCER:
+            case JOB_EARTH_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
         return CC_RESTRICTED;
     default:
         return CC_BANNED;
@@ -893,6 +1036,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_FORMICID:
+        case SP_ELF:
             return CC_UNRESTRICTED;
 
         default:
@@ -904,6 +1048,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     case WPN_FLAIL:
         if (ng.species == SP_TROLL
             || ng.species == SP_OGRE
+            || ng.species == SP_OGRE_MAGE
             || ng.species == SP_GARGOYLE)
         {
             return CC_UNRESTRICTED;
@@ -931,6 +1076,8 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_FORMICID:
         case SP_VINE_STALKER:
+        case SP_HILL_DWARF:
+        case SP_MOUNTAIN_DWARF:
             return CC_UNRESTRICTED;
 
         default:
@@ -988,6 +1135,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_FORMICID:
         case SP_VINE_STALKER:
+        case SP_GREY_ELF:
             return CC_UNRESTRICTED;
 
         default:
@@ -1014,6 +1162,8 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_FORMICID:
         case SP_GARGOYLE:
         case SP_VINE_STALKER:
+        case SP_ELF:
+        case SP_GREY_ELF:
             return CC_UNRESTRICTED;
 
         default:
@@ -1032,6 +1182,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_LAVA_ORC:
         case SP_SPRIGGAN:
         case SP_TROLL:
+        case SP_ELF:
+        case SP_GREY_ELF:
+        case SP_OGRE_MAGE:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
@@ -1051,6 +1204,9 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_LAVA_ORC:
         case SP_FORMICID:
         case SP_SPRIGGAN:
+        case SP_HILL_DWARF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_OGRE_MAGE:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
@@ -1070,6 +1226,11 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_LAVA_ORC:
         case SP_TROLL:
         case SP_GARGOYLE:
+        case SP_ELF:
+        case SP_GREY_ELF:
+        case SP_HILL_DWARF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_OGRE_MAGE:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;
