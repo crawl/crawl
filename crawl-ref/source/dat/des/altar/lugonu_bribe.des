@@ -54,7 +54,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          ["the Shining One"]="wand of invisibility ident:type /\
               book of Envenomations / Young Poisoner's Handbook /\
               potion of invisibility ident:type q:3-6",
-         Trog="manual of Spellcasting / manual of Air Magic w:5 /\
+         Lugafu="manual of Spellcasting / manual of Air Magic w:5 /\
               manual of Earth Magic w:5 / manual of Fire Magic w:5 /\
               manual of Ice Magic w:5 / manual of Poison Magic w:5 /\
               any magical staff ident:type /\

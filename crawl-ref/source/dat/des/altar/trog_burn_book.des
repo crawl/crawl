@@ -1,4 +1,4 @@
-# Trog burns a book at his altar.
+# Lugafu burns a book at his altar.
 #
 # He only does so if both the altar and the book are in sight of the player.
 # This should give sneaky players an opportunity to apport the book, but
@@ -32,8 +32,8 @@ function callback.trog_book_convert_book(data, triggerable,
       if string.find(book.name(), 'book') then
         book.destroy()
         dgn.place_cloud(_x, _y, "flame", 15)
-        crawl.god_speaks("Trog", "The spellbook bursts into flames! "
-                              .. "Trog roars with delight!")
+        crawl.god_speaks("Lugafu", "The spellbook bursts into flames! "
+                              .. "Lugafu roars with delight!")
       end
     end
     data.triggered = true

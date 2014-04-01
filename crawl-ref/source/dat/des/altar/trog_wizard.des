@@ -31,8 +31,8 @@ function callback.trog_wizard_convert_wizard(data, triggerable,
     end
 
     dgn.place_cloud(_x, _y, "flame", 15)
-    crawl.god_speaks("Trog", "Flames erupt from the bowels of the wizard! "
-                          .. "Trog roars with satisfaction!")
+    crawl.god_speaks("Lugafu", "Flames erupt from the bowels of the wizard! "
+                          .. "Lugafu roars with satisfaction!")
     data.triggered = true
   end
 end
