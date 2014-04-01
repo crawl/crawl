@@ -1099,16 +1099,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         }
         break;
 
-    case TRAN_FUNGUS:
-        // ignore hunger_state (but don't reset hunger)
-        you.hunger_state = HS_SATIATED;
-        set_redraw_status(REDRAW_HUNGER);
-        break;
-
     case TRAN_TREE:
-        // ignore hunger_state (but don't reset hunger)
-        you.hunger_state = HS_SATIATED;
-        set_redraw_status(REDRAW_HUNGER);
         mpr("Your roots penetrate the ground.");
         if (you.duration[DUR_TELEPORT])
         {
@@ -1158,12 +1149,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             ASSERT(beastly_slot(app) != EQ_NONE);
             you.mutation[app] = app == MUT_HORNS ? 2 : 3;
         }
-        break;
-
-    case TRAN_WISP:
-        // ignore hunger_state (but don't reset hunger)
-        you.hunger_state = HS_SATIATED;
-        set_redraw_status(REDRAW_HUNGER);
         break;
 
     case TRAN_SHADOW:

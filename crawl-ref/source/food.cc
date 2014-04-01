@@ -153,9 +153,7 @@ bool you_foodless(bool can_eat)
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI && !can_eat
 #endif
-        || you.form == TRAN_FUNGUS
-        || you.form == TRAN_TREE
-        || you.form == TRAN_WISP;
+        ;
 }
 
 bool you_foodless_normally()
@@ -698,12 +696,7 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     {
         if (!silent)
         {
-            if (you.form == TRAN_TREE)
-                mpr("Just photosynthesize.");
-            else if (you.form == TRAN_FUNGUS)
-                mpr("You decompose your surroundings.");
-            else
-                mpr("You can't eat.");
+            mpr("You can't eat.");
             crawl_state.zero_turns_taken();
         }
         return false;
@@ -2104,7 +2097,7 @@ bool is_inedible(const item_def &item)
     if (you.form == TRAN_JELLY)
         return !can_ingest(item, true, false);
 
-    // Mummies, liches, trees and wisps don't eat.
+    // Mummies and liches don't eat.
     if (you_foodless(true))
         return true;
 
@@ -2135,7 +2128,7 @@ bool is_inedible(const item_def &item)
 // still be edible or even delicious.
 bool is_preferred_food(const item_def &food)
 {
-    // Mummies/etc don't eat.
+    // Mummies and liches don't eat.
     if (you_foodless(true))
         return false;
 
