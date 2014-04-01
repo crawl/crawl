@@ -4318,7 +4318,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
             continue;
         mon->position = where;
         if (mons_class_can_leave_corpse(mon->type))
-            corpse_index = place_monster_corpse(mon, true, true);
+            corpse_index = place_monster_corpse(mon, false, true, true);
         // Dismiss the monster we used to place the corpse.
         mon->flags |= MF_HARD_RESET;
         monster_die(mon, KILL_DISMISSED, NON_MONSTER, false, true);
