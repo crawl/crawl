@@ -2616,6 +2616,9 @@ string monster::conj_verb(const string &verb) const
     if (verb == "are")
         return "is";
 
+    if (verb == "release spores at")
+        return "releases spores at";
+
     if (verb == "snap closed at")
         return "snaps closed at";
 

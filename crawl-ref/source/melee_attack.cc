@@ -97,7 +97,7 @@ static bool _form_uses_xl()
     // users of one particular [non-]weapon be effective for this
     // unintentional form while others can just run or die.  I believe this
     // should apply to more forms, too.  [1KB]
-    return you.form == TRAN_WISP;
+    return you.form == TRAN_WISP || you.form == TRAN_FUNGUS;
 }
 
 /*
@@ -2112,6 +2112,8 @@ void melee_attack::set_attack_verb()
             else
                 attack_verb = "engulf";
             break;
+        case TRAN_FUNGUS:
+            attack_verb = "release spores at";
             break;
         case TRAN_STATUE:
         case TRAN_LICH:
@@ -2142,7 +2144,6 @@ void melee_attack::set_attack_verb()
             // or fall-through
         case TRAN_NONE:
         case TRAN_APPENDAGE:
-        case TRAN_FUNGUS:
         case TRAN_ICE_BEAST:
         case TRAN_SHADOW:
         case TRAN_JELLY: // ?
@@ -3271,6 +3272,15 @@ bool melee_attack::apply_damage_brand()
         if (defender->is_player())
             break;
 
+        // Also used for players in fungus form.
+        if (attacker->is_player()
+            && you.form == TRAN_FUNGUS
+            && !you.duration[DUR_CONFUSING_TOUCH]
+            && defender->is_unbreathing())
+        {
+            break;
+        }
+
         const int hdcheck =
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
@@ -4240,7 +4250,7 @@ string melee_attack::mons_attack_verb()
         "sting",
 
         // spore
-        "hit",
+        "release spores at",
 
         "touch",
         "engulf",
