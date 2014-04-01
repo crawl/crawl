@@ -269,8 +269,43 @@ static bool _altar_prayer()
 
         return true;
     }
-  // None of above are true, nothing happens.
-  return false;
+
+    else if (you_worship(GOD_GOZAG) && !player_under_penance()
+        && !you.one_time_ability_used[GOD_GOZAG])
+    {
+        bool prompted = false;
+        for (stack_iterator j(you.pos()); j; ++j)
+        {
+            if (is_artefact(*j))
+                continue;
+
+            prompted = true;
+
+            string prompt =
+                make_stringf("Do you wish to duplicate %s?",
+                             j->name(DESC_THE).c_str());
+
+            if (!yesno(prompt.c_str(), true, 'n'))
+                continue;
+
+            string message = " duplicates " + j->name(DESC_YOUR) + "!";
+            if (!copy_item_to_grid(*j, you.pos()))
+            {
+                mprf("Something went wrong!");
+                return false;
+            }
+
+            simple_god_message(message.c_str());
+            you.one_time_ability_used.set(you.religion);
+            return true;
+        }
+        if (prompted)
+            canned_msg(MSG_OK);
+        return false;
+    }
+
+    // None of above are true, nothing happens.
+    return false;
 }
 
 void pray()
