@@ -5569,8 +5569,6 @@ int melee_attack::calc_base_unarmed_damage()
 
     if (attacker->is_player())
     {
-        damage = you.duration[DUR_CONFUSING_TOUCH] ? 0 : 3;
-
         switch (you.form)
         {
         case TRAN_SPIDER:
@@ -5601,9 +5599,9 @@ int melee_attack::calc_base_unarmed_damage()
         case TRAN_PORCUPINE:
         case TRAN_JELLY:
         case TRAN_SHADOW:
-            break;
         case TRAN_NONE:
         case TRAN_APPENDAGE:
+            damage = 3;
             break;
         }
 
@@ -5623,6 +5621,12 @@ int melee_attack::calc_base_unarmed_damage()
         }
         else
             damage += you.skill_rdiv(SK_UNARMED_COMBAT);
+
+        if (you.duration[DUR_CONFUSING_TOUCH])
+            damage -= 3;
+
+        if (damage < 0)
+            damage = 0;
     }
 
     return damage;
