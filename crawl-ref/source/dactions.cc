@@ -12,6 +12,7 @@
 #include "decks.h"
 #include "dungeon.h"
 #include "env.h"
+#include "items.h"
 #include "libutil.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -60,6 +61,7 @@ static const char *daction_names[] =
 #if TAG_MAJOR_VERSION == 34
     "end spirit howl",
 #endif
+    "gold to top of piles",
 };
 #endif
 
@@ -279,6 +281,21 @@ static void _apply_daction(daction_type act)
     case DACT_TOMB_CTELE:
         if (player_in_branch(BRANCH_TOMB))
             unset_level_flags(LFLAG_NO_TELE_CONTROL, you.depth != 3);
+        break;
+    case DACT_GOLD_ON_TOP:
+        for (rectangle_iterator ri(0); ri; ++ri)
+        {
+            for (stack_iterator j(*ri); j; ++j)
+            {
+                if (j->base_type == OBJ_GOLD)
+                {
+                    int dummy = j->link;
+                    unlink_item(dummy);
+                    move_item_to_grid(&dummy, *ri, true);
+                    break;
+                }
+            }
+        }
         break;
 #if TAG_MAJOR_VERSION == 34
     case DACT_END_SPIRIT_HOWL:

@@ -3722,6 +3722,10 @@ void god_pitch(god_type which_god)
                 you.train[sk] = 0;
     }
 
+    // Move gold to top of piles with Gozag.
+    if (you_worship(GOD_GOZAG))
+        add_daction(DACT_GOLD_ON_TOP);
+
     // Allow training all divine ability skills immediately.
     vector<ability_type> abilities = get_god_abilities(true, true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
