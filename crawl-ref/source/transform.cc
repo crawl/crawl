@@ -960,13 +960,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     case TRAN_FUNGUS:
         tran_name = "fungus";
         msg      += "a fleshy mushroom.";
-        if (!just_check)
-        {
-            you.set_duration(DUR_CONFUSING_TOUCH,
-                             you.duration[DUR_TRANSFORMATION]
-                                 ? you.duration[DUR_TRANSFORMATION]
-                                 : INFINITE_DURATION);
-        }
         break;
 
     case TRAN_JELLY:
@@ -1350,8 +1343,8 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_FUNGUS:
         mprf(MSGCH_DURATION, "You stop sporulating.");
-        you.set_duration(DUR_CONFUSING_TOUCH, 0);
         break;
+
     case TRAN_TREE:
         mprf(MSGCH_DURATION, "You feel less woody.");
         if (grd(you.pos()) == DNGN_DEEP_WATER)

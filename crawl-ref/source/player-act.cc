@@ -239,7 +239,7 @@ brand_type player::damage_brand(int)
         if (!is_range_weapon(inv[wpn]))
             ret = get_weapon_brand(inv[wpn]);
     }
-    else if (duration[DUR_CONFUSING_TOUCH])
+    else if (duration[DUR_CONFUSING_TOUCH] || form == TRAN_FUNGUS)
         ret = SPWPN_CONFUSE;
     else
     {
