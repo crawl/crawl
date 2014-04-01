@@ -476,8 +476,12 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
         if (is_unavailable_god(god))
             colour = "darkgrey";
 
+        string disp_name = uppercase_first(god_name(god, false));
+        if (god == GOD_GOZAG && !you_worship(GOD_GOZAG))
+            disp_name += make_stringf(" ($%d)", gozag_service_fee());
+
         snprintf(buffer, sizeof buffer, "<%s>%s</%s>",
-                 colour, uppercase_first(god_name(god, false)).c_str(), colour);
+                 colour, disp_name.c_str(), colour);
         disp += buffer;
         num_printed++;
 
@@ -487,11 +491,11 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
             // manually aligning the god columns: ten spaces between columns
             switch (num_printed % columns)
             {
-            case 1: disp += string(19 - strwidth(god_name(god, false)), ' ');
+            case 1: disp += string(19 - strwidth(disp_name), ' ');
                     break;
-            case 2: disp += string(23 - strwidth(god_name(god, false)), ' ');
+            case 2: disp += string(23 - strwidth(disp_name), ' ');
                     break;
-            case 3: disp += string(20 - strwidth(god_name(god, false)), ' ');
+            case 3: disp += string(20 - strwidth(disp_name), ' ');
                     break;
             }
     }
