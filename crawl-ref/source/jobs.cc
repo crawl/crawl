@@ -11,7 +11,7 @@ static const char * Job_Abbrev_List[] =
 #endif
       "Gl", "Ne",
       "As", "Be", "Hu",
-      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Sk",
+      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr",
       "VM",
       "CK", "Tm", "He", "St",
       "Mo", "Wr", "Wn", "Ar", "AM",
@@ -30,7 +30,7 @@ static const char * Job_Name_List[] =
       "Gladiator", "Necromancer",
       "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
-      "Earth Elementalist", "Skald",
+      "Earth Elementalist", "Crusader",
       "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer",
       "Stalker",

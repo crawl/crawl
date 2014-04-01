@@ -154,7 +154,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
             return CC_RESTRICTED;
         }
 
-    case JOB_SKALD:
+    case JOB_CRUSADER:
         switch (speci)
         {
         case SP_HIGH_ELF:

@@ -38,6 +38,11 @@ Conjurer
 
 Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
+Crusader
+
+Crusaders are melee fighters who can boost themselves in battle with spells from
+the book of Battle.
+%%%%
 Death Knight
 
 Death Knights are melee fighters who command the undead in the name of
@@ -102,11 +107,6 @@ Priest
 
 Priests are followers of Zin, spreading the god's word to the Dungeon's
 inhabitants. Hill Orcs instead follow the orc god Beogh.
-%%%%
-Skald
-
-Skalds are melee fighters who can boost themselves in battle with spells from
-the book of Battle.
 %%%%
 Reaver
 

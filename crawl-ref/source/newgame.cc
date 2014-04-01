@@ -1010,7 +1010,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         {
             "Warrior-mage",
             coord_def(35, 0), 21,
-            {JOB_SKALD, JOB_REAVER, JOB_TRANSMUTER, JOB_WARPER,
+            {JOB_CRUSADER, JOB_REAVER, JOB_TRANSMUTER, JOB_WARPER,
              JOB_ARCANE_MARKSMAN, JOB_ENCHANTER, JOB_STALKER, JOB_UNKNOWN,
              JOB_UNKNOWN}
         },
@@ -1762,7 +1762,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_CHAOS_KNIGHT:
     case JOB_DEATH_KNIGHT:
     case JOB_ABYSSAL_KNIGHT:
-    case JOB_SKALD:
+    case JOB_CRUSADER:
     case JOB_WARPER:
     case JOB_HUNTER:
     case JOB_ARCANE_MARKSMAN:
