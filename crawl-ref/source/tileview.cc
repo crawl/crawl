@@ -1407,6 +1407,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_DISJUNCT)
         cell.disjunct = get_disjunct_phase(gc);
 
+    if (mc.flags & MAP_GOLDEN)
+        cell.gold_aura = 1 + random2(3);
+
     if (Options.show_travel_trail)
     {
         int tt_idx = travel_trail_index(gc);

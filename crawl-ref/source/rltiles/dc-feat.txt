@@ -771,6 +771,9 @@ landing LANDING
 effect/heataura0 HEAT_AURA
 effect/heataura1
 effect/heataura2
+effect/goldaura0 GOLD_AURA
+effect/goldaura1
+effect/goldaura2
 ray RAY
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG

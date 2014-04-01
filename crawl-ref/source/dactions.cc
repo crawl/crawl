@@ -290,6 +290,7 @@ static void _apply_daction(daction_type act)
                 if (j->base_type == OBJ_GOLD)
                 {
                     int dummy = j->link;
+                    j->special = 0;
                     unlink_item(dummy);
                     move_item_to_grid(&dummy, *ri, true);
                     break;
