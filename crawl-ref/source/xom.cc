@@ -1135,7 +1135,7 @@ static int _xom_do_potion(bool debug = false)
 static int _xom_confuse_monsters(int sever, bool debug = false)
 {
     bool rc = false;
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack()
             || !mons_class_is_confusable(mi->type)
@@ -1620,7 +1620,7 @@ static int _xom_random_stickable(const int HD)
 static int _xom_snakes_to_sticks(int sever, bool debug = false)
 {
     bool action = false;
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->attitude != ATT_HOSTILE)
             continue;
@@ -2117,7 +2117,7 @@ static int _xom_change_scenery(bool debug = false)
 static int _xom_inner_flame(int sever, bool debug = false)
 {
     bool rc = false;
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (mi->wont_attack()
             || mons_immune_magic(*mi)
@@ -2839,7 +2839,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         bool mons_too = false;
         if (coinflip())
         {
-            for (monster_near_iterator mi(you.pos()); mi; ++mi)
+            for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
             {
                 if (!mons_class_is_confusable(mi->type)
                     || one_chance_in(20))
@@ -3385,7 +3385,7 @@ static int _xom_blink_monsters(bool debug = false)
     // Sometimes blink towards the player, sometimes randomly. It might
     // end up being helpful instead of dangerous, but Xom doesn't mind.
     const bool blink_to_player = _xom_feels_nasty() || coinflip();
-    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (blinks >= 5)
             break;
