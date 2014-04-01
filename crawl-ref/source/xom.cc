@@ -57,6 +57,7 @@
 #include "spl-cast.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
+#include "spl-monench.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
@@ -2114,40 +2115,69 @@ static int _xom_change_scenery(bool debug = false)
     return XOM_GOOD_SCENERY;
 }
 
-static int _xom_inner_flame(int sever, bool debug = false)
+static int _xom_destruction(int sever, bool debug = false)
 {
     bool rc = false;
+    bool fake_destruction = one_chance_in(3);
+
     for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
-        if (mi->wont_attack()
-            || mons_immune_magic(*mi)
-            || one_chance_in(4))
+        if (mons_is_projectile(*mi)
+            || mons_is_tentacle_or_tentacle_segment(mi->type)
+            || one_chance_in(3))
+        {
+            continue;
+        }
+
+        // Skip adjacent monsters, and skip non-hostile monsters if not feeling nasty.
+        if (!fake_destruction
+            && (adjacent(you.pos(), mi->pos())
+                || mi->wont_attack() && !_xom_feels_nasty()))
         {
             continue;
         }
 
         if (debug)
-            return XOM_GOOD_INNER_FLAME;
+            return XOM_GOOD_DESTRUCTION;
 
-        if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0,
-              &menv[ANON_FRIENDLY_MONSTER], random2(sever) * 10)))
+        if (!fake_destruction)
         {
+            bolt beam;
+
+            beam.flavour      = BEAM_FIRE;
+            beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage       = dice_def(2, 4 + sever / 10);
+            beam.target       = mi->pos();
+            beam.name         = "fireball";
+            beam.colour       = RED;
+            beam.thrower      = KILL_MISC;
+            beam.beam_source  = NON_MONSTER;
+            beam.aux_source   = "Xom's destruction";
+            beam.ex_size      = 1;
+            beam.is_explosion = true;
+
             // Only give this message once.
             if (!rc)
-                god_speaks(GOD_XOM, _get_xom_speech("inner flame").c_str());
-
-            simple_monster_message(*mi, (mi->body_size(PSIZE_BODY) > SIZE_BIG)
-                                   ? " is filled with an intense inner flame!"
-                                   : " is filled with an inner flame.");
+                god_speaks(GOD_XOM, _get_xom_speech("destruction").c_str());
             rc = true;
+
+            beam.explode();
+        }
+        else
+        {
+            if (!rc)
+                god_speaks(GOD_XOM, _get_xom_speech("fake destruction").c_str());
+            rc = true;
+            backlight_monsters(mi->pos(), 0, 0);
         }
     }
 
     if (rc)
     {
-        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "inner flame monster(s)"),
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                       fake_destruction ? "fake destruction" : "destruction"),
                   true);
-        return XOM_GOOD_INNER_FLAME;
+        return XOM_GOOD_DESTRUCTION;
     }
     return XOM_DID_NOTHING;
 }
@@ -2246,8 +2276,8 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         done = _xom_animate_monster_weapon(sever, debug);
     else if (x_chance_in_y(12, sever))
         done = _xom_polymorph_nearby_monster(true, debug);
-    else if (x_chance_in_y(13, sever))
-        done = _xom_inner_flame(sever, debug);
+    else if (tension > 0 && x_chance_in_y(13, sever))
+        done = _xom_destruction(sever, debug);
     else if (tension > 0 && x_chance_in_y(14, sever))
         done = _xom_rearrange_pieces(sever, debug);
     else if (random2(tension) < 15 && x_chance_in_y(15, sever))

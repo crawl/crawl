@@ -330,11 +330,23 @@ Xom touches your surroundings.
 
 @Xom good monster polymorph@
 %%%%
-Xom inner flame
+Xom destruction
 
 "Burn, baby, burn!"
 
-Xom turns up the heat.
+"Ka-boom!"
+
+Xom calls forth mighty explosions.
+
+Xom rains down devastation!
+
+@Xom fake destruction@
+%%%%
+Xom fake destruction
+
+"Feel my power!"
+
+Xom gives a demonstration of destructive might.
 
 w:1
 "Let it end in hellfire!"
