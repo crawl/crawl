@@ -4137,6 +4137,29 @@ static bool _print_god_abil_desc(int god, int numpower)
     return true;
 }
 
+static int _piety_level(int piety)
+{
+    return (piety >= piety_breakpoint(5)) ? 7 :
+           (piety >= piety_breakpoint(4)) ? 6 :
+           (piety >= piety_breakpoint(3)) ? 5 :
+           (piety >= piety_breakpoint(2)) ? 4 :
+           (piety >= piety_breakpoint(1)) ? 3 :
+           (piety >= piety_breakpoint(0)) ? 2 :
+           (piety >                    0) ? 1
+                                          : 0;
+}
+
+static int _gold_level()
+{
+    return (you.gold >= 50000) ? 7 :
+           (you.gold >= 10000) ? 6 :
+           (you.gold >=  5000) ? 5 :
+           (you.gold >=  1000) ? 4 :
+           (you.gold >=   500) ? 3 :
+           (you.gold >=   100) ? 2
+                               : 1;
+}
+
 //---------------------------------------------------------------
 //
 // describe_god
@@ -4159,14 +4182,20 @@ static string _describe_favour(god_type which_god)
     if (which_god == GOD_XOM)
         return uppercase_first(describe_xom_favour());
 
+    const int rank = which_god == GOD_GOZAG ? _gold_level()
+                                            : _piety_level(you.piety);
+
     const string godname = god_name(which_god);
-    return (you.piety >= piety_breakpoint(5)) ? "A prized avatar of " + godname + ".":
-           (you.piety >= piety_breakpoint(4)) ? "A favoured servant of " + godname + ".":
-           (you.piety >= piety_breakpoint(3)) ? "A shining star in the eyes of " + godname + "." :
-           (you.piety >= piety_breakpoint(2)) ? "A rising star in the eyes of " + godname + "." :
-           (you.piety >= piety_breakpoint(1)) ? uppercase_first(godname) + " is most pleased with you." :
-           (you.piety >= piety_breakpoint(0)) ? uppercase_first(godname) + " is pleased with you."
-                                              : uppercase_first(godname) + " is noncommittal.";
+    switch (rank)
+    {
+        case 7:  return "A prized avatar of " + godname;
+        case 6:  return "A favoured servant of " + godname + ".";
+        case 5:  return "A shining star in the eyes of " + godname + ".";
+        case 4:  return "A rising star in the eyes of " + godname + ".";
+        case 3:  return uppercase_first(godname) + " is most pleased with you.";
+        case 2:  return uppercase_first(godname) + " is pleased with you.";
+        default: return uppercase_first(godname) + " is noncommittal.";
+    }
 }
 
 static string _religion_help(god_type god)
@@ -4366,25 +4395,19 @@ static const char *divine_title[NUM_GODS][8] =
     // Dithmenos -- darkness theme
     {"Illuminated",        "Gloomy",                "Aphotic",                  "Caliginous",
      "Darkened",           "Shadowed",              "Eclipsing",                "Eternal Night"},
-};
 
-static int _piety_level(int piety)
-{
-    return (piety >= piety_breakpoint(5)) ? 7 :
-           (piety >= piety_breakpoint(4)) ? 6 :
-           (piety >= piety_breakpoint(3)) ? 5 :
-           (piety >= piety_breakpoint(2)) ? 4 :
-           (piety >= piety_breakpoint(1)) ? 3 :
-           (piety >= piety_breakpoint(0)) ? 2 :
-           (piety >                    0) ? 1
-                                          : 0;
-}
+    // Gozag -- enterprenur theme
+    {"Profligate",         "Pauper",                "Materialist",              "Vendee",
+     "Enterpreneur",       "Mogul",                 "Magnate",                  "Tycoon"},
+};
 
 string god_title(god_type which_god, species_type which_species, int piety)
 {
     string title;
     if (player_under_penance(which_god))
         title = divine_title[which_god][0];
+    else if (which_god == GOD_GOZAG)
+        title = divine_title[which_god][_gold_level()];
     else
         title = divine_title[which_god][_piety_level(piety)];
 

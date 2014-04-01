@@ -2010,7 +2010,7 @@ static string _god_powers(bool simple)
     {
         if (player_under_penance())
             return simple ? "*" : colour_string("*" + godpowers, RED);
-        else
+        else if (!you_worship(GOD_GOZAG))
         {
             // piety rankings
             int prank = piety_rank() - 1;

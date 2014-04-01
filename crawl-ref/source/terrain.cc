@@ -383,6 +383,10 @@ bool feat_is_lava(dungeon_feature_type feat)
 // GOD_* type.
 god_type feat_altar_god(dungeon_feature_type feat)
 {
+#if TAG_MAJOR_VERSION == 34
+    if (feat == DNGN_ALTAR_GOZAG)
+        return GOD_GOZAG;
+#endif
     if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
         return static_cast<god_type>(feat - DNGN_ALTAR_FIRST_GOD + 1);
 
@@ -395,6 +399,11 @@ dungeon_feature_type altar_for_god(god_type god)
 {
     if (god == GOD_NO_GOD || god >= NUM_GODS)
         return DNGN_FLOOR;  // Yeah, lame. Tell me about it.
+
+#if TAG_MAJOR_VERSION == 34
+    if (god == GOD_GOZAG)
+        return DNGN_ALTAR_GOZAG;
+#endif
 
     return static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
 }
@@ -1561,7 +1570,7 @@ static const char *dngn_feature_names[] =
 "altar_beogh", "altar_jiyva", "altar_fedhas", "altar_cheibriados",
 "altar_ashenzari", "altar_dithmenos",
 #if TAG_MAJOR_VERSION > 34
-"", "", "", "", "", "", "", "",
+"altar_gozag", "", "", "", "", "", "", "",
 #endif
 
 "fountain_blue", "fountain_sparkling", "fountain_blood",
@@ -1606,6 +1615,10 @@ static const char *dngn_feature_names[] =
 "exit_wizlab",
 "exit_labyrinth",
 "exit_unused",
+
+#if TAG_MAJOR_VERSION == 34
+"altar_gozag",
+#endif
 };
 
 dungeon_feature_type dungeon_feature_by_name(const string &name)

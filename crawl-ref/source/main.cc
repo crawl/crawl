@@ -3975,5 +3975,10 @@ static void _compile_time_asserts()
     // needs to match the enum, but it currently does.
     for (int i = 0; i < NUM_BRANCHES; ++i)
         ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
+#if TAG_MAJOR_VERSION > 34
     ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 1 == DNGN_ALTAR_LAST_GOD + 1);
+#else
+    // This needs to be updated if more gods are added at the end.
+    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 2 == DNGN_ALTAR_LAST_GOD + 1);
+#endif
 }

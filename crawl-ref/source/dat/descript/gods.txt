@@ -155,6 +155,13 @@ Shadowed despises fire, the ancient enemy of the shadows, and forbids its use
 by worshippers; Dithmenos favours those who would instead destroy sources of
 light.
 %%%%
+Gozag
+
+Gozag Ym Sagoz the Greedy believes that the world belongs to the rich. Those
+accepting this decree perform noticeably better when they see gold glint around
+them. Followers don't earn piety in a traditional way; the only way to
+impress Gozag is by amassing a fortune.
+%%%%
 Zin powers
 
 Zin grants followers the ability to preach to the unenlightened masses, and
@@ -327,4 +334,12 @@ occasionally shrouding those struck by attacks in dark smoke. Sufficiently
 pious followers of Dithmenos will find their own shadow will begin to attack on
 its own, and eventually gain the ability to assume the form of a shadow
 themself.
+%%%%
+Gozag powers
+
+For Gozag, both flesh and food are inferior to wealth, and therefore all
+corpses are turned into gold piles. Stalwarts can order immediate help in the
+form of potions, with prices being dictated by the Greedy. Particularly
+well-off adherers can pay their god to duplicate items, to attract shopkeepers
+into the dungeon, and even to bribe entire branches of the dungeon.
 %%%%

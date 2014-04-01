@@ -541,6 +541,11 @@ A wooden door. You can close it by standing next to it and {{
     end
 }}
 %%%%
+An opulent altar of Gozag
+
+This glittering golden and bejewelled altar to Gozag Ym Sagoz the Greedy
+gleams brightly, even in the dim dungeon light.
+%%%%
 An orcish idol
 
 An idol of the orc god Beogh. Destroying it is likely to incur Beogh's wrath.

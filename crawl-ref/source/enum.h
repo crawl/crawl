@@ -186,6 +186,7 @@ enum ability_type
     // Dithmenos
     ABIL_DITHMENOS_SHADOW_STEP = 1170,
     ABIL_DITHMENOS_SHADOW_FORM,
+    // Gozag
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -1476,9 +1477,11 @@ enum dungeon_feature_type
     DNGN_ALTAR_CHEIBRIADOS,
     DNGN_ALTAR_ASHENZARI,
     DNGN_ALTAR_DITHMENOS,
+#if TAG_MAJOR_VERSION == 34
         DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENOS,
-#if TAG_MAJOR_VERSION > 34
-    DNGN_ALTAR_UNUSED_1,
+#else
+    DNGN_ALTAR_GOZAG,
+        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_GOZAG,
     DNGN_ALTAR_UNUSED_2,
     DNGN_ALTAR_UNUSED_3,
     DNGN_ALTAR_UNUSED_4,
@@ -1541,6 +1544,10 @@ enum dungeon_feature_type
     DNGN_EXIT_LABYRINTH,
         DNGN_EXIT_LAST_PORTAL = DNGN_EXIT_LABYRINTH,
     DNGN_UNUSED_EXIT_PORTAL_1,
+
+#if TAG_MAJOR_VERSION == 34
+    DNGN_ALTAR_GOZAG,
+#endif
 
     NUM_FEATURES
 };
@@ -1951,6 +1958,7 @@ enum god_type
     GOD_CHEIBRIADOS,
     GOD_ASHENZARI,
     GOD_DITHMENOS,
+    GOD_GOZAG,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
