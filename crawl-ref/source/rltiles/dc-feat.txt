@@ -615,6 +615,7 @@ ashenzari DNGN_ALTAR_ASHENZARI
 dithmenos DNGN_ALTAR_DITHMENOS
 dithmenos2
 dithmenos3
+generic DNGN_ALTAR_GOZAG
 unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn

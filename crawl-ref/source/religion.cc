@@ -216,6 +216,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " dissolves into the shadows.",
         " rapidly dissolves into the shadows.",
     },
+    // Gozag
+    {
+        " softly glitters and disappears.",
+        " glitters and disappears.",
+        " brightly glitters and disappears.",
+    },
 };
 
 /**
@@ -340,6 +346,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "Your shadow now sometimes tangibly mimics your actions.",
       "transform into a swirling mass of shadows"
     },
+    // Gozag
+    { "",
+      "",
+      "",
+      "",
+      ""
+    },
 };
 
 /**
@@ -463,7 +476,14 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "You no longer bleed smoke.",
       "Your shadow no longer tangibly mimics your actions.",
       "transform into a swirling mass of shadows"
-    }
+    },
+    // Gozag
+    { "",
+      "",
+      "",
+      "",
+      ""
+    },
 };
 
 typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
@@ -616,6 +636,10 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_LUGONU:
         likes.push_back("you banish creatures to the Abyss");
+        break;
+
+    case GOD_GOZAG:
+        likes.push_back("you collect gold");
         break;
 
     default:
@@ -2408,6 +2432,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_XOM:           return "Xom";
     case GOD_ASHENZARI:     return "Ashenzari";
     case GOD_DITHMENOS:     return "Dithmenos";
+    case GOD_GOZAG:         return "Gozag";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -4141,6 +4166,9 @@ void handle_god_time(int time_delta)
                 lose_piety(1);
             break;
 
+        case GOD_GOZAG:
+            return;
+
         default:
             die("Bad god, no bishop!");
             return;
@@ -4180,6 +4208,7 @@ int god_colour(god_type god) // mv - added
     case GOD_ASHENZARI:
         return LIGHTRED;
 
+    case GOD_GOZAG:
     case GOD_XOM:
         return YELLOW;
 
@@ -4274,6 +4303,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_DITHMENOS:
         return MAGENTA;
+
+    case GOD_GOZAG:
+        return coinflip() ? YELLOW : BROWN;
 
     default:
         return YELLOW;

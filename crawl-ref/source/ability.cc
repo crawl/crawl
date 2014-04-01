@@ -194,6 +194,9 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     // Dithmenos
     { ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_STEP, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_FORM },
+    // Gozag
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -405,6 +408,8 @@ static const ability_def Ability_List[] =
       4, 0, 0, 4, 0, ABFLAG_NONE },
     { ABIL_DITHMENOS_SHADOW_FORM, "Shadow Form",
       9, 0, 0, 10, 0, ABFLAG_SKILL_DRAIN },
+
+    // Gozag
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
