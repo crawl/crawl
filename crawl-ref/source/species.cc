@@ -282,6 +282,7 @@ bool species_likes_lava(species_type species)
 bool species_can_throw_large_rocks(species_type species)
 {
     return species == SP_OGRE
+           || species == SP_OGRE_MAGE
            || species == SP_TROLL
            || species == SP_FORMICID;
 }
