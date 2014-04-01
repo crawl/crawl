@@ -1254,7 +1254,7 @@ static void _give_basic_spells(job_type which_job)
     case JOB_EARTH_ELEMENTALIST:
         which_spell = SPELL_SANDBLAST;
         break;
-    case JOB_SKALD:
+    case JOB_CRUSADER:
         which_spell = SPELL_INFUSION;
         break;
     case JOB_TRANSMUTER:

@@ -531,7 +531,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (job)
         {
             case JOB_HUNTER:
-            case JOB_SKALD:
+            case JOB_CRUSADER:
             case JOB_WIZARD:
             case JOB_CONJURER:
             case JOB_FIRE_ELEMENTALIST:
@@ -792,7 +792,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_GLADIATOR:
             case JOB_BERSERKER:
             case JOB_DEATH_KNIGHT:
-            case JOB_SKALD:
+            case JOB_CRUSADER:
             case JOB_TRANSMUTER:
             case JOB_SUMMONER:
             case JOB_ICE_ELEMENTALIST:
@@ -930,7 +930,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (job)
         {
             case JOB_HUNTER:
-            case JOB_SKALD:
+            case JOB_CRUSADER:
             case JOB_WIZARD:
             case JOB_CONJURER:
             case JOB_FIRE_ELEMENTALIST:
