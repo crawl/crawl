@@ -4295,6 +4295,15 @@ static string _religion_help(god_type god)
                       "fungi requires piety.";
         }
 
+    case GOD_GOZAG:
+        if (!player_under_penance()
+            && !you.one_time_ability_used[god])
+        {
+            result += "You can place an item on an altar and pray to duplicate "
+                      "that item.";
+        }
+        break;
+
     default:
         break;
     }
