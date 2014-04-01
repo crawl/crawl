@@ -254,6 +254,18 @@ static unique_ptr<dungeon_colour_grid> dgn_colour_grid;
 
 static string branch_epilogues[NUM_BRANCHES];
 
+static void _count_gold()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        for (stack_iterator j(*ri); j; ++j)
+        {
+            if (j->base_type == OBJ_GOLD)
+                you.attribute[ATTR_GOLD_GENERATED] += j->quantity;
+        }
+    }
+}
+
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
@@ -395,6 +407,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     strip_all_maps();
 
     check_map_validity();
+    _count_gold();
 
     if (!_you_vault_list.empty())
     {

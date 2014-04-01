@@ -3463,6 +3463,15 @@ static bool _transformed_player_can_join_god(god_type which_god)
     return true;
 }
 
+static int _gozag_service_fee()
+{
+    const int gold = you.attribute[ATTR_GOLD_GENERATED];
+    const int fee =
+        100 + (int)((double)gold - (double)gold / log10((double)(gold + 10)))/2;
+    dprf("found %d gold, fee %d", gold, fee);
+    return fee;
+}
+
 bool player_can_join_god(god_type which_god)
 {
     if (you.species == SP_DEMIGOD)
@@ -3494,6 +3503,9 @@ bool player_can_join_god(god_type which_god)
     {
         return false;
     }
+
+    if (which_god == GOD_GOZAG && you.gold < _gozag_service_fee())
+        return false;
 
     return _transformed_player_can_join_god(which_god);
 }
@@ -3578,6 +3590,11 @@ void god_pitch(god_type which_god)
         if (which_god == GOD_SIF_MUNA)
         {
             simple_god_message(" does not accept worship from the ignorant!",
+                               which_god);
+        }
+        else if (which_god == GOD_GOZAG)
+        {
+            simple_god_message(" does not accept service from beggars like you!",
                                which_god);
         }
         else if (!_transformed_player_can_join_god(which_god))
@@ -3842,6 +3859,13 @@ void god_pitch(god_type which_god)
         // widow is not spared doesn't mean the rich can't be milked for more.
         lucre.props["acquired"] = 0;
         you.gold -= zin_tithe(lucre, lucre.quantity, false, true);
+    }
+
+    if (you_worship(GOD_GOZAG))
+    {
+        const int fee = _gozag_service_fee();
+        mprf("You pay a service fee of %d gold.", fee);
+        you.gold -= fee;
     }
 
     // Refresh wielded/quivered weapons in case we have a new conduct
