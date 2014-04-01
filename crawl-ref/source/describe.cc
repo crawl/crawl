@@ -4870,6 +4870,15 @@ void describe_god(god_type which_god, bool give_title)
                                            ABIL_NON_ABILITY);
             }
         }
+        else if (which_god == GOD_GOZAG)
+        {
+            have_any = true;
+            _print_final_god_abil_desc(which_god,
+                                       uppercase_first(god_name(which_god))
+                                       + " turns your defeated foes' bodies"
+                                       + " to gold.",
+                                       ABIL_NON_ABILITY);
+        }
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
