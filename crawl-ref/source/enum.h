@@ -187,6 +187,7 @@ enum ability_type
     ABIL_DITHMENOS_SHADOW_STEP = 1170,
     ABIL_DITHMENOS_SHADOW_FORM,
     // Gozag
+    ABIL_GOZAG_POTION_PETITION = 1180,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

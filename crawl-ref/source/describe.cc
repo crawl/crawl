@@ -4884,7 +4884,7 @@ void describe_god(god_type which_god, bool give_title)
         if (!player_under_penance())
         {
             for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
-                if (you.piety >= piety_breakpoint(i)
+                if ((you_worship(GOD_GOZAG) || you.piety >= piety_breakpoint(i))
                     && _print_god_abil_desc(which_god, i))
                 {
                     have_any = true;

@@ -45,6 +45,7 @@
 #include "ouch.h"
 #include "place.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "random.h"
 #include "religion.h"
 #include "skill_menu.h"
@@ -3772,4 +3773,193 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     mons_cast(mon, beem, shadow_spell, false, false);
 
     shadow_monster_reset(mon);
+}
+
+static potion_type _gozag_potion_pairs[][2] =
+{
+    { POT_HEAL_WOUNDS, POT_CURING },
+    { POT_HEAL_WOUNDS, POT_HEAL_WOUNDS },
+    { POT_HEAL_WOUNDS, POT_MAGIC },
+    { POT_CURING, POT_MAGIC },
+    { POT_HEAL_WOUNDS, POT_BERSERK_RAGE },
+    { POT_HASTE, POT_HEAL_WOUNDS },
+    { POT_HASTE, POT_MIGHT },
+    { POT_HASTE, POT_BRILLIANCE },
+    { POT_HASTE, POT_AGILITY },
+    { POT_MIGHT, POT_AGILITY },
+    { POT_HASTE, POT_FLIGHT },
+    { POT_HASTE, POT_RESISTANCE },
+    { POT_RESISTANCE, POT_AGILITY },
+    { POT_RESISTANCE, POT_FLIGHT },
+    { POT_INVISIBILITY, POT_AGILITY },
+    { POT_CURE_MUTATION, POT_CURE_MUTATION },
+    { POT_CURE_MUTATION, POT_MUTATION },
+    { POT_MUTATION, POT_MUTATION },
+};
+
+static potion_type _gozag_potion_triples[][3] =
+{
+    { POT_HEAL_WOUNDS, POT_HEAL_WOUNDS, POT_HEAL_WOUNDS },
+    { POT_HEAL_WOUNDS, POT_HEAL_WOUNDS, POT_CURING },
+    { POT_HEAL_WOUNDS, POT_CURING, POT_MAGIC },
+    { POT_HEAL_WOUNDS, POT_CURING, POT_BERSERK_RAGE },
+    { POT_HEAL_WOUNDS, POT_HASTE, POT_MIGHT },
+    { POT_HEAL_WOUNDS, POT_HASTE, POT_AGILITY },
+    { POT_HASTE, POT_MIGHT, POT_AGILITY },
+    { POT_MIGHT, POT_AGILITY, POT_BRILLIANCE },
+    { POT_HASTE, POT_AGILITY, POT_FLIGHT },
+    { POT_FLIGHT, POT_AGILITY, POT_INVISIBILITY },
+    { POT_RESISTANCE, POT_MIGHT, POT_AGILITY },
+    { POT_RESISTANCE, POT_MIGHT, POT_HASTE },
+    { POT_RESISTANCE, POT_INVISIBILITY, POT_AGILITY },
+    { POT_MUTATION, POT_MUTATION, POT_MUTATION },
+};
+
+static potion_type _gozag_bad_potions[] =
+{
+    POT_POISON,
+    POT_DEGENERATION,
+    POT_DECAY,
+    POT_STRONG_POISON,
+    POT_LIGNIFY,
+    POT_PARALYSIS,
+    POT_CONFUSION,
+};
+
+#define GOZAG_POTIONS_KEY "gozag_potions%d"
+#define GOZAG_PRICE_KEY "gozag_price%d"
+
+static void _gozag_add_potion_pair(CrawlVector &vec)
+{
+    potion_type *which =
+        _gozag_potion_pairs[random2(ARRAYSZ(_gozag_potion_pairs))];
+    vec.push_back(which[0]);
+    vec.push_back(which[1]);
+}
+
+static void _gozag_add_potion_triple(CrawlVector &vec)
+{
+    potion_type *which =
+        _gozag_potion_triples[random2(ARRAYSZ(_gozag_potion_triples))];
+    vec.push_back(which[0]);
+    vec.push_back(which[1]);
+    vec.push_back(which[2]);
+}
+
+static void _gozag_add_bad_potion(CrawlVector &vec)
+{
+    vec.push_back(_gozag_bad_potions[random2(ARRAYSZ(_gozag_bad_potions))]);
+}
+
+bool gozag_potion_petition()
+{
+    CrawlVector *pots[4];
+    int prices[4];
+
+    item_def dummy;
+    dummy.base_type = OBJ_POTIONS;
+    dummy.quantity = 1;
+
+    if (you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)))
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            string key = make_stringf(GOZAG_POTIONS_KEY, i);
+            pots[i] = &you.props[key].get_vector();
+            key = make_stringf(GOZAG_PRICE_KEY, i);
+            prices[i] = you.props[key].get_int();
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            prices[i] = 0;
+            int multiplier = 25;
+            string key = make_stringf(GOZAG_POTIONS_KEY, i);
+            you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
+            pots[i] = &you.props[key].get_vector();
+            if (i == 3)
+                pots[i]->push_back(POT_PORRIDGE);
+            else switch (random2(4))
+            {
+                case 0:
+                default:
+                    _gozag_add_potion_pair(*pots[i]);
+                    break;
+                case 1:
+                    _gozag_add_potion_triple(*pots[i]);
+                    break;
+                case 2:
+                    _gozag_add_potion_pair(*pots[i]);
+                    _gozag_add_potion_pair(*pots[i]);
+                    break;
+                case 3:
+                    _gozag_add_potion_pair(*pots[i]);
+                    _gozag_add_potion_triple(*pots[i]);
+                    break;
+            }
+            if (i < 3 && coinflip())
+            {
+                _gozag_add_bad_potion(*pots[i]);
+                multiplier = 20;
+            }
+            else if (i == 3)
+                multiplier = 500; // ouch
+
+            for (int j = 0; j < pots[i]->size(); j++)
+            {
+                dummy.sub_type = (*pots[i])[j].get_int();
+                prices[i] += item_value(dummy, true);
+                dprf("%d", item_value(dummy, true));
+            }
+            dprf("pre: %d", prices[i]);
+            prices[i] *= multiplier;
+            dprf("mid: %d", prices[i]);
+            prices[i] /= 10;
+            dprf("post: %d", prices[i]);
+            key = make_stringf(GOZAG_PRICE_KEY, i);
+            you.props[key].get_int() = prices[i];
+        }
+    }
+
+    mesclr();
+    for (int i = 0; i < 4; i++)
+    {
+        string line = make_stringf("  [%c] - %d gold - ", i + 'a', prices[i]);
+        vector<string> pot_names;
+        for (int j = 0; j < pots[i]->size(); j++)
+            pot_names.push_back(potion_type_name((*pots[i])[j].get_int()));
+        line += comma_separated_line(pot_names.begin(), pot_names.end());
+        mpr_nojoin(MSGCH_PLAIN, line.c_str());
+    }
+    mprf(MSGCH_PROMPT, "Purchase which effect? (any other key to cancel)");
+    const int keyin = toalower(get_ch()) - 'a';
+    if (keyin >= 0 && keyin <= 3)
+    {
+        if (you.gold < prices[keyin])
+        {
+            mpr("You don't have enough gold for that!");
+            return false;
+        }
+        you.gold -= prices[keyin];
+        for (int j = 0; j < pots[keyin]->size(); j++)
+        {
+            potion_effect(static_cast<potion_type>((*pots[keyin])[j].get_int()),
+                          40);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            string key = make_stringf(GOZAG_POTIONS_KEY, i);
+            you.props.erase(key);
+            key = make_stringf(GOZAG_PRICE_KEY, i);
+            you.props.erase(key);
+        }
+
+        return true;
+    }
+
+    canned_msg(MSG_OK);
+    return false;
 }

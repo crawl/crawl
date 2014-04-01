@@ -347,7 +347,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "transform into a swirling mass of shadows"
     },
     // Gozag
-    { "",
+    { "petition Gozag for potion effects",
       "",
       "",
       "",
@@ -478,7 +478,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "transform into a swirling mass of shadows"
     },
     // Gozag
-    { "",
+    { "petition Gozag for potion effects",
       "",
       "",
       "",
