@@ -2406,7 +2406,7 @@ static void _post_vault_build()
 {
     if (player_in_branch(BRANCH_LAIR))
     {
-        int depth = you.depth + 1;
+        int depth = min(you.depth + 1, 9);
         _ruin_level(rectangle_iterator(1), MMT_VAULT,
                     20 - depth, depth / 2 + 4, 1 + (depth / 3));
         do
