@@ -1913,6 +1913,21 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     if (item_is_orb(item))
         env.orb_pos = p;
 
+    // Gozag: make sure gold stays on top of piles.
+    if (you_worship(GOD_GOZAG) && item.base_type != OBJ_GOLD)
+    {
+        for (int gold = mitm[igrd(p)].link; gold != NON_ITEM;
+             gold = mitm[gold].link)
+        {
+            if (mitm[gold].base_type == OBJ_GOLD)
+            {
+                unlink_item(gold);
+                move_item_to_grid(&gold, p, true);
+                break;
+            }
+        }
+    }
+
     return true;
 }
 
