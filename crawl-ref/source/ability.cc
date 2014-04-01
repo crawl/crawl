@@ -105,6 +105,7 @@ enum ability_flag_type
     ABFLAG_STAT_DRAIN     = 0x00020000, // stat drain
     ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
     ABFLAG_SKILL_DRAIN    = 0x00080000, // drains skill levels
+    ABFLAG_GOLD           = 0x00100000, // costs gold
 };
 
 static int  _find_ability_slot(const ability_def& abil);
@@ -195,8 +196,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_STEP, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_FORM },
     // Gozag
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY },
+    { ABIL_GOZAG_POTION_PETITION, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -410,6 +411,8 @@ static const ability_def Ability_List[] =
       9, 0, 0, 10, 0, ABFLAG_SKILL_DRAIN },
 
     // Gozag
+    { ABIL_GOZAG_POTION_PETITION, "Potion Petition",
+      0, 0, 0, 0, 0, ABFLAG_GOLD },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -708,6 +711,9 @@ const string make_cost_description(ability_type ability)
 
     if (abil.flags & ABFLAG_SKILL_DRAIN)
         ret += ", Skill drain";
+
+    if (abil.flags & ABFLAG_GOLD)
+        ret += ", Gold";
 
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
@@ -1052,6 +1058,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
+    case ABIL_GOZAG_POTION_PETITION:
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
@@ -2899,6 +2906,12 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
 
+    case ABIL_GOZAG_POTION_PETITION:
+        if (!gozag_potion_petition())
+            return false;
+
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
                   false, 'n')
@@ -3678,8 +3691,11 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
-        if (you.piety < piety_breakpoint(i) && !ignore_piety)
+        if (!you_worship(GOD_GOZAG) && you.piety < piety_breakpoint(i)
+            && !ignore_piety)
+        {
             continue;
+        }
 
         const ability_type abil =
             _fixup_ability(god_abilities[you.religion][i]);

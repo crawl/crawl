@@ -612,6 +612,13 @@ will bleed smoke on any incoming attack. However, your ability to deal damage
 in melee will be halved, your spellcasting power will be greatly hampered, and
 your skills will be further drained when taking damage.
 %%%%
+# Gozag
+Potion Petition ability
+
+Petition Gozag to sell you the effects of a set of potions. Gozag will offer
+four lists at a time, one of which always solely consists of a potion of
+porridge, and the lists will remain fixed until you purchase one of them.
+%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually
