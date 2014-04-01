@@ -54,6 +54,7 @@ void lose_piety(int pgn);
 void handle_god_time(int time_delta);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);
+int gozag_service_fee();
 bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 
