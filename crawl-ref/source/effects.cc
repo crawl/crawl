@@ -3053,6 +3053,15 @@ static void _update_corpses(int elapsedTime)
     {
         item_def &it = mitm[c];
 
+        if (you_worship(GOD_GOZAG) && it.base_type == OBJ_GOLD)
+        {
+            bool old_aura = it.special > 0;
+            it.special = max(0, it.special - rot_time);
+            if (old_aura && !it.special)
+                invalidate_agrid(true);
+            continue;
+        }
+
         if (!_food_item_needs_time_check(it))
             continue;
 

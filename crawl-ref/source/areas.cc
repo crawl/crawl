@@ -45,6 +45,7 @@ enum areaprop_flag
     APROP_DISJUNCTION   = (1 << 9),
     APROP_SOUL_AURA     = (1 << 10),
     APROP_HOT           = (1 << 11),
+    APROP_GOLD          = (1 << 12),
 };
 
 struct area_centre
@@ -173,6 +174,26 @@ static void _update_agrid()
     _actor_areas(&you);
     for (monster_iterator mi; mi; ++mi)
         _actor_areas(*mi);
+
+    if (you_worship(GOD_GOZAG))
+    {
+        const int r = 2;
+        for (rectangle_iterator ri(0); ri; ++ri)
+        {
+            // ASSUMPTION: gold will always be on the top of the pile.
+            if (igrd(*ri) != NON_ITEM && mitm[igrd(*ri)].base_type == OBJ_GOLD
+                && mitm[igrd(*ri)].special > 0)
+            {
+                no_areas = false;
+                _agrid_centres.push_back(area_centre(AREA_GOLD, *ri, r));
+                for (radius_iterator rdi(*ri, r, C_CIRCLE, LOS_NO_TRANS);
+                     rdi; ++rdi)
+                {
+                    _set_agrid_flag(*rdi, APROP_GOLD);
+                }
+            }
+        }
+    }
 
     if (player_has_orb() && !you.pos().origin())
     {
@@ -780,4 +801,18 @@ bool heated(const coord_def& p)
 bool actor::heated() const
 {
     return ::heated(pos());
+}
+
+/////////////
+// Gold aura (Gozag).
+
+bool golden(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return _check_agrid_flag(p, APROP_GOLD);
 }

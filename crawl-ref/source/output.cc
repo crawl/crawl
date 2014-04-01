@@ -1044,6 +1044,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_BRILLIANCE,
         DUR_MIGHT,
         DUR_NO_POTIONS,
+        STATUS_GOLDEN,
     };
 
     status_info inf;
@@ -2524,6 +2525,7 @@ static string _status_mut_abilities(int sw)
         DUR_DRAGON_CALL,
         DUR_ABJURATION_AURA,
         DUR_NO_POTIONS,
+        STATUS_GOLDEN,
     };
 
     status_info inf;

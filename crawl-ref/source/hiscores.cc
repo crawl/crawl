@@ -1605,6 +1605,7 @@ void scorefile_entry::init(time_t dt)
         STATUS_MAGIC_SAPPED,
         DUR_PORTAL_PROJECTILE,
         DUR_NO_POTIONS,
+        STATUS_GOLDEN,
     };
 
     status_info inf;

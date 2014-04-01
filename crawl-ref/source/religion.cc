@@ -3237,6 +3237,11 @@ void excommunication(god_type new_god)
         _set_penance(old_god, 25);
         break;
 
+    case GOD_GOZAG:
+        invalidate_agrid(true); // gold auras
+        _set_penance(old_god, 25);
+        break;
+
     case GOD_CHEIBRIADOS:
     default:
         _set_penance(old_god, 25);

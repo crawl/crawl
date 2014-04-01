@@ -1411,6 +1411,8 @@ void merge_item_stacks(item_def &source, item_def &dest, int quant)
 
     if (is_blood_potion(source) && is_blood_potion(dest))
        merge_blood_potion_stacks(source, dest, quant);
+    if (source.base_type == OBJ_GOLD) // Gozag
+        dest.special = max(source.special, dest.special);
 }
 
 static int _userdef_find_free_slot(const item_def &i)
@@ -1508,6 +1510,12 @@ static void _got_item(item_def& item, int quant)
 
 static void _got_gold(item_def& item, int quant, bool quiet)
 {
+    if (item.special > 0) // Gozag
+    {
+        item.special = 0;
+        invalidate_agrid(true);
+    }
+
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
     if (you_worship(GOD_ZIN) && !(item.flags & ISFLAG_THROWN))

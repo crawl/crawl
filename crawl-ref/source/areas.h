@@ -13,6 +13,7 @@ enum area_centre_type
     AREA_QUAD,
     AREA_DISJUNCTION,
     AREA_HOT,
+    AREA_GOLD,
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -48,5 +49,8 @@ bool umbraed(const coord_def& p);
 
 // ...or is the area hot?
 bool heated(const coord_def& p);
+
+// ...or glowing with fresh gold (Gozag)?
+bool golden(const coord_def& p);
 
 #endif

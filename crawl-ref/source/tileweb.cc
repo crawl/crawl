@@ -1164,6 +1164,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.heat_aura != current_pc.heat_aura)
             json_write_int("heat_aura", next_pc.heat_aura);
 
+        if (next_pc.gold_aura != current_pc.gold_aura)
+            json_write_int("gold_aura", next_pc.gold_aura);
+
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor
              || next_pc.flv.special != current_pc.flv.special
