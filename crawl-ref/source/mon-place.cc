@@ -24,6 +24,7 @@
 #include "externs.h"
 #include "options.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "lev-pand.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -1796,6 +1797,51 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // done after come in view ones.
     if (mon->type == MONS_TWISTER && !dont_place)
         _place_twister_clouds(mon);
+
+    if (!(mg.flags & MG_FORCE_BEH) && !crawl_state.game_is_arena())
+    {
+        // Try to bribe the monster.
+        const int bribability = gozag_type_bribable(mon->type);
+        if (bribability > 0 && x_chance_in_y(bribability, 16))
+        {
+            bool minion = mg.flags & MG_BAND_MINION;
+            const branch_type br = gozag_bribable_branch(mon->type);
+            int cost = max(1, exper_value(mon) / 20);
+
+            if (minion)
+            {
+                const monster* sum = mg.summoner->as_monster();
+                if (sum && sum->has_ench(ENCH_PERMA_BRIBED))
+                {
+                    gozag_deduct_bribe(br, 2*cost);
+                    mon->add_ench(ENCH_PERMA_BRIBED);
+                }
+                else if (sum && sum->has_ench(ENCH_BRIBED))
+                {
+                    gozag_deduct_bribe(br, cost);
+                    // Don't continue if we exhausted our funds.
+                    if (branch_bribe[br] > 0)
+                        mon->add_ench(ENCH_BRIBED);
+                }
+            }
+            else
+            {
+                // Sometimes get permanent followers at twice the cost.
+                if (branch_bribe[br] > 2*cost && one_chance_in(3))
+                {
+                    gozag_deduct_bribe(br, 2*cost);
+                    mon->add_ench(ENCH_PERMA_BRIBED);
+                }
+                else
+                {
+                    gozag_deduct_bribe(br, cost);
+                    // Don't continue if we exhausted our funds.
+                    if (branch_bribe[br] > 0)
+                        mon->add_ench(ENCH_BRIBED);
+                }
+            }
+        }
+    }
 
     return mon;
 }

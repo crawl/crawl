@@ -228,8 +228,10 @@ void monster::ensure_has_client_id()
 
 mon_attitude_type monster::temp_attitude() const
 {
-    if (has_ench(ENCH_CHARM))
+    if (has_ench(ENCH_CHARM) || has_ench(ENCH_PERMA_BRIBED))
         return ATT_FRIENDLY;
+    else if (has_ench(ENCH_BRIBED))
+        return ATT_GOOD_NEUTRAL; // ???
     else
         return attitude;
 }
@@ -3337,23 +3339,24 @@ bool monster::liquefied_ground() const
 
 bool monster::friendly() const
 {
-    return attitude == ATT_FRIENDLY || has_ench(ENCH_CHARM);
+    return temp_attitude() == ATT_FRIENDLY;
 }
 
 bool monster::neutral() const
 {
-    return attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL
-           || attitude == ATT_STRICT_NEUTRAL;
+    mon_attitude_type att = temp_attitude();
+    return att == ATT_NEUTRAL || att == ATT_GOOD_NEUTRAL
+           || att == ATT_STRICT_NEUTRAL;
 }
 
 bool monster::good_neutral() const
 {
-    return attitude == ATT_GOOD_NEUTRAL;
+    return temp_attitude() == ATT_GOOD_NEUTRAL;
 }
 
 bool monster::strict_neutral() const
 {
-    return attitude == ATT_STRICT_NEUTRAL;
+    return temp_attitude() == ATT_STRICT_NEUTRAL;
 }
 
 bool monster::wont_attack() const

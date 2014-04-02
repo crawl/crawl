@@ -2275,6 +2275,21 @@ static void _evolve(int time_delta)
         }
 }
 
+static void _bribe_timeout(int time_delta)
+{
+    if (!you_worship(GOD_GOZAG))
+        return;
+
+    int reduction = time_delta / BASELINE_DELAY;
+
+    for (int i = 0; i < NUM_BRANCHES; i++)
+    {
+        if (branch_bribe[i] <= 0)
+            continue;
+
+        gozag_deduct_bribe(static_cast<branch_type>(i), reduction);
+    }
+}
 
 // Get around C++ dividing integers towards 0.
 static int _div(int num, int denom)
@@ -2307,6 +2322,7 @@ static struct timed_effect timed_effects[] =
     { TIMER_ABYSS_SPEED,   _abyss_speed,                  100,   300, false },
     { TIMER_JIYVA,         _jiyva_effects,                100,   300, false },
     { TIMER_EVOLUTION,     _evolve,                      5000, 15000, false },
+    { TIMER_BRIBE_TIMEOUT, _bribe_timeout,                100,   300, false },
 };
 
 // Do various time related actions...

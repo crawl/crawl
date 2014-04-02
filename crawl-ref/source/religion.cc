@@ -349,7 +349,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Gozag
     { "petition Gozag for potion effects",
       "fund merchants seeking to open stores in the dungeon",
-      "",
+      "bribe branches to halt enemies' attacks and recruit followers",
       "",
       ""
     },
@@ -480,7 +480,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Gozag
     { "petition Gozag for potion effects",
       "fund merchants seeking to open stores in the dungeon",
-      "",
+      "bribe branches to halt enemies' attacks and recruit followers",
       "",
       ""
     },
@@ -3239,6 +3239,7 @@ void excommunication(god_type new_god)
 
     case GOD_GOZAG:
         invalidate_agrid(true); // gold auras
+        add_daction(DACT_BRIBE_TIMEOUT);
         _set_penance(old_god, 25);
         break;
 

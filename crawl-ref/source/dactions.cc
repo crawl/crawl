@@ -62,6 +62,7 @@ static const char *daction_names[] =
     "end spirit howl",
 #endif
     "gold to top of piles",
+    "bribe timeout",
 };
 #endif
 
@@ -121,6 +122,10 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                // *or* another monster that got porkalated
                && (mon->props.exists("kirke_band")
                    || mon->props.exists(ORIG_MONSTER_KEY));
+
+    case DACT_BRIBE_TIMEOUT:
+        return mon->has_ench(ENCH_BRIBED)
+               || !you_worship(GOD_GOZAG) && mon->has_ench(ENCH_PERMA_BRIBED);
 
     default:
         return false;
@@ -226,6 +231,12 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             _daction_hog_to_human(mon, in_transit);
             break;
 
+        case DACT_BRIBE_TIMEOUT:
+            mon->del_ench(ENCH_BRIBED);
+            if (!you_worship(GOD_GOZAG))
+                mon->del_ench(ENCH_PERMA_BRIBED);
+            break;
+
         // The other dactions do not affect monsters directly.
         default:
             break;
@@ -253,6 +264,7 @@ static void _apply_daction(daction_type act)
     case DACT_HOLY_PETS_GO_NEUTRAL:
     case DACT_PIKEL_SLAVES:
     case DACT_KIRKE_HOGS:
+    case DACT_BRIBE_TIMEOUT:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))

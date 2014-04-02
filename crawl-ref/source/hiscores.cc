@@ -1606,6 +1606,7 @@ void scorefile_entry::init(time_t dt)
         DUR_PORTAL_PROJECTILE,
         DUR_NO_POTIONS,
         STATUS_GOLDEN,
+        STATUS_BRIBE,
     };
 
     status_info inf;
