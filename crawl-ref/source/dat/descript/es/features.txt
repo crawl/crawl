@@ -3,11 +3,6 @@ A basalt altar of Yredelemnul
 
 Un altar a Yredelemnul el Oscuro, labrado a partir de columnatas basálticas
 %%%%
-A blade trap
-
-Puedes ver el filo de una enorme hoja en forma de guadaña en una ranura;
-probablemente tiene un contrapeso que actúa como péndulo.
-%%%%
 A bloodstained altar of Trog
 
 Un altar a Trog el Colérico, burdamente hecho por lo que parecen ser manos de
@@ -44,17 +39,9 @@ A dry fountain
 
 Una fuente reseca que ha visto días mejores.
 %%%%
-A gate leading back out of here
-
-Esta puerta parece que te permite regresar de donde viniste.
-%%%%
 A gate leading back out of this place
 
 Esta puerta te conduce de vuelta al calabozo.
-%%%%
-A gate leading out of Pandemonium
-
-Finalmente, una puerta que te conduce de vuelta al calabozo.
 %%%%
 A gate leading to another region of Pandemonium
 
@@ -65,26 +52,9 @@ A gateway leading out of the Abyss
 Un portal para salir de este maldito sitio, que palpita y se desliza en un
 escenario siempre cambiante.
 %%%%
-A gateway to the ashen valley of Gehenna
-
-Puedes notar el calor. Gehena parece que solamente esté hecho de llamas, lava y
-fuego infernal.
-%%%%
 A gateway to Hell
 
 Este portal lleva al Vestíbulo del Infierno. Pocos irían allí voluntariamente.
-%%%%
-A gateway to the Iron City of Dis
-
-¿Quién pasará la prueba del hierro?
-%%%%
-A gateway to the decaying netherworld of Tartarus
-
-Este lugar parede que radíe energía negativa.
-%%%%
-A gateway to the freezing wastes of Cocytus
-
-Proveniente de las tierras azotadas por el frío, un escalofrío cruza tu alma.
 %%%%
 A glowing golden altar of the Shining One
 
@@ -101,82 +71,23 @@ A granite statue
 A pesar de la dureza de la piedra, los rasgos de esta estatua han desaparecido
 hace tiempo.
 %%%%
-A hole to the Spider Nest
-
-Parece más bien un precipicio con algo de inclinación que una escalera, pero te
-servirá. Para morir a manos de los más potentes venenos del mundo, claro está.
-%%%%
-A labyrinth entrance
-
-Un portal a un intrincado laberinto diseñado por sutiles y maliciosas mentes,
-cuya salida esta guardada por un temible monstruo. Muchos desafortunados
-aventureros se han extraviado en los retorcidos y cambiantes corredores y
-muerto de inanición.
-%%%%
 A mechanical trap
 
 Un dispositivo mecánico diseñado para causar daño a los invasores. No obstante,
 un aventurero habilidoso puede intentar desarmarlo.
 %%%%
-A metal wall
-
-Un muro de un metal azul grisáceo. Como cualquier electricista del calabozo
-bien sabe, esta pared actúa como un punto de tierra.
-%%%%
-A crumbled stone wall
-
-Estos muros, aunque están faltos de reparación, parecen como congelados en el
-tiempo, y al igual que los árboles, a punto de colapsar, pero absolutamente
-incapaces de ello.
-%%%%
 A crystal clear mirror
 
 Un espejo reluciente, que refleja todo a su alrededor.
-%%%%
-A glistening fountain
-
-Lo único que le falta es agua.
 %%%%
 A black marble wall
 
 El mármol reluce y brilla. ¡En verdad es precioso!
 %%%%
-A marble floor
-
-Mientras que las paredes están echas de mármol negro, el suelo es de mármol
-blanco y plateado, con algunas trazas rosáceas dispersas.
-%%%%
-A crumbling stone wall
-
-Parece antiguo.
-%%%%
-A highly decorated stone wall
-
-Está recubierto con imágenes horribles y perturbadoras.
-%%%%
-A gravestone
-
-Una lápida anónima. La cuestión es, ¿es la lápida la que no tiene nombre o lo
-es la persona que yace en la tumba ?
-%%%%
 A damp floor
 
 Quizás sea la humedad o el constante flujo de nubes, pero el suelo de este
 lugar siempre está mojado.
-%%%%
-A hot floor
-
-A gran profundidad bajo la tierra arde el más abrasador fuego que existe: el
-fuego del infierno. Al tocar el suelo notas que está caliente.
-%%%%
-A black wall
-
-Quizás piedra, o carbón, o una sustancia que se encuentra solamente en los
-infiernos más profundos.
-%%%%
-A carved rock wall
-
-Está decorado con imágenes de muerte y destrucción.
 %%%%
 A dead tree
 
@@ -211,63 +122,4 @@ observar el flujo del agua en su interior.
 A glass window
 
 Un ventana picada y con cristales extremadamente duros.
-%%%%
-A flagged portal
-
-Este portal lleva al calabozo prohibido del caballero demente. Lo sabrás por el
-pendón negro mostrando armas en aspa. Parece que sería mejor que entraras antes
-de que estandarte sea descendido.
-%%%%
-A flickering gateway to a bazaar
-
-Además de los vendedores que han instalado sus tiendas en diversos lugares del
-calabozo, hay otros que intentan salir adelante viajando de un sitio a otro. En
-los bazares  podrás encontrar un tiendas muy variadas que a menudo tienen mejor
-mercancía que las sedentarias, y a veces a precio de ganga. Cuando oigas el
-tintineo de las monedas, ¡apurate e intenta encontrar el improvisado mercado
-antes de que la caravana se marche!
-
-Debes estar advertido de que el estilo de vida nómada de estos comerciantes,
-les ha enseñado a apropiarse de cualquier objeto de dejes atrás y después
-marcharse rápidamente a otro sitio para venderlos.
-%%%%
-A gateway to a bazaar
-
-Además de los vendedores que han instalado sus tiendas en diversos lugares del
-calabozo, hay otros que intentan salir adelante viajando de un sitio a otro. En
-los bazares  podrás encontrar un tiendas muy variadas que a menudo tienen mejor
-mercancía que las sedentarias, y a veces a precio de ganga.
-
-Debes estar advertido de que el estilo de vida nómada de estos comerciantes,
-les ha enseñado a apropiarse de cualquier objeto de dejes atrás y después
-marcharse rápidamente a otro sitio para venderlos.
-%%%%
-A frozen archway
-
-Un frente permanentemente frío parece que rodea a este portal. Lo que quiera
-que viva al otro lado estará lleno de crueldad y furia ártica. Te percatas que
-el arco se está derritiendo.
-%%%%
-A glowing drain
-
-En todo asentamiento figuran las desagradables cloacas y desagües, ignoradas
-por la mayoría, pero lugar de refugio para algunos. Viejas historias hablan de
-peligrosas criaturas bañadas por una asquerosa agua verdosa alimentándose las
-unas de las otras sin ninguna piedad. Las historias también relatan de valiosos
-objetos dejados en el lugar por atrevidos visitantes, aunque desafortunados,
-que se cubren de polvo en húmedas cavernas. Tienes la extraña sensación de que
-el desagüe se desmoronará muy pronto.
-%%%%
-A dark tunnel
-
-Conduciendo directamente al interior de la roca hay un túnel oscuro y
-amenazador. Demasiado a menudo de su interior salen oleadas de aire tan
-caliente como para chamuscar tu cara y, como activadas por el aire, rocas caen
-del techo y de los lados del túnel, tapando lentamente la entrada.
-%%%%
-A magical portal
-
-Este portal lo ha dejado abierto un mago despistado. Puede conducir a un
-laboratorio secreto, ¡pero cuidado! Seguramente estará protegido por trampas
-mágicas y terribles monstruos. Parece que está apagándose lentamente.
 %%%%

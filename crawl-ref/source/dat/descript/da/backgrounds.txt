@@ -55,6 +55,11 @@ Enchanter
 Fortryllere bruger besværgelser fra Bogen om onde tunger til at gøre deres
 fjender ukampdygtige og er udstyret med en dolk og nogle kastepile.
 %%%%
+Fighter
+
+Krigere er udstyret med rustning og skjold, et valgfrit våben og en
+krafteliksir.
+%%%%
 Fire Elementalist
 
 Ildtroldmænd starter med Bogen om flammer og kender besværgelsen Flammetunge.

@@ -6,8 +6,8 @@ veuille ou non.
 %%%%
 Wrath of Trog
 
-C'était l'arme préférée de l'antique dieuTrog, avant qu'elle ne soit perdu un
-jour. Elle induit une rage berserk à quiconque l'utilise pour frapper avec.
+C'était l'arme préférée de l'antique dieu Trog, avant qu'elle ne soit perdu un
+jour. Elle entraine une rage berserk chez ceux qui s'en servent en combat.
 %%%%
 Mace of Variability
 
@@ -40,6 +40,13 @@ Son pouvoir varie en fonction de l'intelligence de son porteur. Il peut être
 évoqué pour restaurer de grandes quantités de magie mais, au risque
 d'endommager l'esprit de son utilisateur.
 %%%%
+Vampire's Tooth
+
+Cette dague d'ivoire pourrait avoir été taillée à partir de la dent d'un énorme
+prédateur, et bien évidement pas celle d'un suceur de sang de taille humaine.
+
+C'est mortellement vampirique.
+%%%%
 Scythe of Curses
 
 Cette arme porte une malédiction terrible et très agaçante.
@@ -48,10 +55,28 @@ Sceptre of Torment
 
 Cette arme indéniablement maudite est un instrument des Enfers.
 %%%%
+Sword of Zonguldrok
+
+Cette arme terrible est utilisée par son porteur à ses risques et périls. Ceux
+qui périssent sous ses coups sont rappelés à la vie et forcés de combattre.
+%%%%
 Sword of Cerebov
 
 Des flammes étranges courent sur cette lame sinueuse. Son pouvoir démoniaque
 fait s'évaporer une partie de la résistance au feu du défenseur.
+%%%%
+Staff of Dispater
+
+Cet objet légendaire peut déclencher la fureur des Enfers. Les flammes impies
+qu'il évoque peuvent vous coûter une partie de votre vie et de votre âme, mais
+depuis quand ces détails empêchent quiconque de poursuivre leur quête de
+pouvoir ?
+%%%%
+Sceptre of Asmodeus
+
+Il porte certains pouvoirs de l'archi-démon Asmodeus. Brandir ce puissant
+sceptre peut convoquer des rejetons infernaux de leur domicile et les asservir
+à votre volonté. Evidemment, ils ne vont pas vous aimer quand le sort expirera.
 %%%%
 faerie dragon armour
 
@@ -75,9 +100,20 @@ donc, fera en sorte de bien vous faire repérer par vos ennemis. Cette lumière
 est crainte par les morts-vivants et, peut révéler les machinations des
 créatures qui sont invisibles.
 %%%%
+demon blade "Leech"
+
+Cette arme vampirique pousse l'esprit de son porteur à assouvir un but unique :
+se gaver de force vitale drainée.
+%%%%
 dagger of Chilly Death
 
 Une dague taillée dans un énorme morceau de saphir.
+%%%%
+dagger "Morg"
+
+Un poignard rouillé d'une rare laideur. Il y a de nombreuses années, il était
+la propriété d'un puissant mage nommé Boris. Il l'a perdu dans le donjon alors
+qu'il cherchait l'Orbe.
 %%%%
 scythe "Finisher"
 
@@ -87,6 +123,11 @@ sling "Punk"
 
 Une fronde faite à partir d'un cuir bleu étrange.
 %%%%
+bow of Krishna "Sharnga"
+
+Un merveilleux arc en or qui appartenu un dieu étranger. Il fonctionne mieux
+avec des flèches spéciales, qui ne sont pas toujours à disposition.
+%%%%
 giant club "Skullcrusher"
 
 Cette belle massue pourrait rendre n'importe quel ogre ultra-joyeux – que ce
@@ -94,7 +135,7 @@ soit pour une bagarre, un génocide ou, un peu des deux.
 %%%%
 glaive of the Guard
 
-Cette arme a appartenu à Gar Dogh, le gardien du trésor du roi. D'après la
+Cette arme a appartenu à Gar Dogh, le gardien du trésor d'un roi. D'après la
 légende, elle avait été perdue quelque part dans le donjon.
 %%%%
 sword of Jihad
@@ -119,11 +160,29 @@ Les doigts roses de l'Aube...
 %%%%
 spear of the Botono
 
-Un artéfact réellement sombre et mauvais, qu'aucun sage n'oserait toucher.
+Un artéfact réellement sombre et mauvais, qu'aucun sage n'oserait toucher. Les
+autres verront leurs malédictions renforcées.
+%%%%
+trident of the Octopus King
+
+Ce trident a été volé il y a plusieurs années dans le jardin du Roi Octopus par
+un homme sans importance et déjà mort. Mais prenez garde à la colère du Roi
+Octopus !
 %%%%
 mithril axe "Arga"
 
-Une belle hache en mithrill, probablement perdue par un héros nain.
+Une belle hache en mithril, probablement perdue par un héros nain.
+%%%%
+Elemental Staff
+
+Ce puissant bâton a appartenu au chef de la Guilde des Cinq Éléments. En plus
+de la protection qu'il apporte, ses cous peuvent parfois déclencher de
+puissantes décharges d’énergie élémentaire.
+%%%%
+crossbow "Sniper"
+
+Une arbalète fabriquée dans un matériau noir. Elle est dévastatrice, mais
+particulièrement difficile à recharger.
 %%%%
 longbow "Piercer"
 
@@ -139,6 +198,14 @@ lance "Wyrmbane"
 Une lance enchantée qui devient plus puissante à chaque fois qu'elle inflige
 une frappe mortelle à un puissant dragon. Plus elle deviens puissante, plus il
 sera difficile de trouver un adversaire digne d'elle.
+%%%%
+Spriggan's Knife
+
+Un gracieux petit couteau.
+
+Ce couteau a été fabriqué par les Spriggans, ou pour les Spriggans, ou peut
+être à partir de Spriggans. Enfin, il est associé d'une façon ou d'une autre à
+ce peuple féérique.
 %%%%
 plutonium sword
 
@@ -156,6 +223,11 @@ terribles dégâts.
 Bien que la liche fut exterminée il y a longtemps, ses armes, qui répandirent
 la destruction au sein des morts-vivants, ont été très populaires. Toutefois,
 cette masse pourrait bien en être la dernière.
+%%%%
+whip "Snakebite"
+
+Un fouet amphidromique confectionné à partir de la peau durcie des mortels
+mambas noirs séjournant dans le Repaire des Bêtes.
 %%%%
 knife of Accuracy
 
@@ -175,8 +247,8 @@ jamais mais ce n'est pas le cas puisque vous le tenez dans vos mains.
 %%%%
 storm bow
 
-Cet arc a la couleur des nuages noirs chargés de pluie et l'odeur humide de
-l'ozone.
+Cet arc a la couleur des nuages noirs chargés de pluie et l'odeur de l'ozone
+humide.
 %%%%
 large shield of Ignorance
 
@@ -189,7 +261,8 @@ Une robe faite de la plus belle soie.
 %%%%
 cloak of the Thief
 
-Elle permet à son porteur d'exceller dans l'art du vol.
+Elle permet à son porteur d'exceller dans l'art du vol, et peut être évoqué
+pour libérer d’épais nuages de fumée, fort utiles en cas de fuite.
 %%%%
 large shield "Bullseye"
 
@@ -221,7 +294,7 @@ plus à même de trouver les points faibles de ses victimes.
 Lear's hauberk
 
 Un haubert d'or de bonne facture qui couvre toutes les parties du corps de son
-porteur. Il comprend une cotte , des chausses et des gantelets en maille.
+porteur. Il comprend une cotte, des chausses et des gantelets en maille.
 %%%%
 skin of Zhor
 
@@ -242,7 +315,8 @@ Un bouclier de bronze.
 %%%%
 robe of Folly
 
-Une robe grise terne.
+Une robe grise terne. Elle est enchantée et donne à son porteur des pouvoir et
+une sagesse incommensurable.
 %%%%
 Maxwell's patent armour
 
@@ -253,9 +327,14 @@ mask of the Dragon
 Un étrange casque bleu en cuir rigide qui rend le visage du porteur semblable à
 celui d'un dragon.
 %%%%
+robe of Night
+
+Une longue robe noire faite d'un étrange matériau brillant. Selon la légende,
+elle fut le don de Ratri la déesse de la Nuit à un de ses fidèles.
+%%%%
 armour of the Dragon King
 
-Il y a plusieurs siècles, un puissant dragon dorée prit la tête de tous les
+Il y a plusieurs siècles, un puissant dragon doré prit la tête de tous les
 dragons de sa région. Cependant, son règne ne dura pas longtemps, abrégé par un
 homme chétif qui fit ensuite une armure de ses écailles.
 %%%%
@@ -273,19 +352,32 @@ Une paire de gants en soie blanche.
 %%%%
 cloak of Starlight
 
-Une cape phosphorescente, tissé en faisceaux de pure lumière.
+Une cape phosphorescente, tissé de pure lumière.
 %%%%
 ratskin cloak
 
 Un enchanteresse grâce à un métier à tisser magique et, beaucoup trop de temps,
 a cousu de ses mains cette cape avec la peau de centaines de rats, la plupart
-oranges. C'est assez fragile et plutôt ridicule mais, il offre une excellente
+oranges. C'est assez fragile et plutôt ridicule mais offre une excellente
 protection contre les rats de toutes sortes.
+%%%%
+shield of the gong
+
+C'est un grand gong en bronze qui peut être utilisé comme bouclier. D'après
+certains mystiques, frapper un tel gong accorde une protection spirituelle.
+
+Ce qui est sur, c'est que ce bouclier va se faire entendre !
 %%%%
 amulet of the Air
 
 Il semble qu'un puissant mage de l'air ait enchanté cette amulette bleu ciel
 avec une bonne dose de charmes protecteurs de son école de magie.
+%%%%
+ring of Shadows
+
+Un anneau noir qui permet à son porteur de se fondre dans les ombres. Il créé
+une umbra qui enveloppe son porteur, et augmente sa discrétion. Toute créature
+se trouvant dans l'umbra devient plus difficile à toucher.
 %%%%
 amulet of Cekugob
 
@@ -314,7 +406,7 @@ Un anneau d'acier.
 %%%%
 ring of the Mage
 
-Un saphir enchanté, serti dans un anneau. Il facilite le lancement de sort à
+Un saphir enchanté, serti dans un anneau. Il facilite le lancement de sort de
 son porteur.
 %%%%
 brooch of Shielding
@@ -324,7 +416,15 @@ et un poney.
 %%%%
 robe of Clouds
 
-Une robe faite d'un matériau très fragile, qui pourrait être du nuage.
+Une robe faite d'un matériau si fragile qu'on pourrait croire qu'elle est faite
+de nuages.
+%%%%
+hat of Pondering
+
+Le chapeau préféré de la limace magicienne Gastronok, coloré de slimes
+rougeâtre et enchanté pour favoriser ses incantations. Il a été aussi
+spécialement ensorcelé pour protéger contre les effets du sel, bien que vous
+vous en fichiez probablement.
 %%%%
 obsidian axe
 
@@ -337,7 +437,7 @@ lightning scales
 
 Ces écailles ont été façonnées en une armure pour la partie inférieure du corps
 d'un naga. Crépitant légèrement d'électricité, elles ont été enchantées pour
-permettre leur porteur de glisser presque aussi rapidement qu'un humain.
+permettre leur porteur de rivaliser avec les vitesses de déplacement humaines..
 %%%%
 Black Knight's horse barding
 
@@ -358,7 +458,7 @@ Cette épée exotique est une arme pour des utilisateurs éclairés.
 %%%%
 shillelagh "Devastator"
 
-Vous imaginez que ce bâton est chargé avec autre chose que juste du plomb.
+Vous supposez que ce bâton est chargé avec autre chose que juste du plomb.
 %%%%
 dragonskin cloak
 
@@ -397,13 +497,46 @@ boots of the spider
 
 Une paire de bottes originale, inventée par un soupirant d'Arachne.
 %%%%
+dark maul
+
+Ce grand marteau ferré est l'outil dont vous avez besoin, si vous aviez de
+lourds enjeux à entretenir. Il est fait pour porter des coups massifs — et nous
+ne parlons pas d'une simple commotion cérébrale, mais des restes d'un casque
+debout sur des chaussures , ou peut-être simplement d'une tache humide. Hélas,
+un tel pouvoir a un prix : la tête du marteau est si lourd qu'il faut une
+éternité pour la soulever et frapper a nouveau. Ce marteau est dimensionné pour
+un humain, donc les ogres peuvent vouloir utiliser leurs matraques coutumières
+à la place, celles-ci étant moins lourd dans leurs grandes mains.
+%%%%
 hat of the High Council
 
 Une relique de certaines anciennes guerre de sorciers. Des siècles plus tard,
 il crépite encore des effets résiduelles des malédictions et des énergies
 magiques auquel il a pendant un temps été soumis sur une base quotidienne ; les
-lanceurs de sorts capables d'obtenir une poignée sur son pouvoir, cependant,
-obtiendront un renforcement de leur puissance de sorts.
+lanceurs de sorts capables d'obtenir une poignée sur son pouvoir obtiendront un
+renforcement de leur puissance de sorts.
+%%%%
+arc blade
+
+Une lame vraisemblablement composée de pure électricité. Frapper un adversaire
+libérera de temps en temps une décharge statique.
+%%%%
+demon whip "Spellbinder"
+
+Comment mener au doigt et à l’œil des prisonniers magiciens récalcitrants? Avec
+cette arme qui court-circuite les pouvoirs magiques, et les soumet à
+d’irrésistibles et imprévisibles effets magiques résiduels à chaque frappe.
+%%%%
+lajatang of Order
+
+Les légendes racontent que ce bâton fut l’arme privilégiée de nombreux prêtres
+de Zin, qui l'avait offert il y a longtemps à l'un des serviteur favori.
+%%%%
+great mace "Firestarter"
+
+En plus de ses pouvoirs évidents, cette arme protège les possessions de son
+porteur du feu, et allume une flamme intérieure chez les monstres qu'elle
+blesse.
 %%%%
 milk chocolate
 

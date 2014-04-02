@@ -1,21 +1,16 @@
 %%%%
-Temple
+Dungeon
 
-Et gudernes tempel, hvor man kan søge ly for de underjordiske ganges galskab.
-Det indeholder som regel altre dedikeret til de fleste af de kendte guder. Det
-er placeret mellem niveau 4 og 7 af de centrale gange.
-%%%%
-Orcish Mines
+Det er stadig et mysterium, hvordan dette bizarre sted blev skabt. Der er
+nogen, der hævder, at det er en legeplads for lunefulde guder, mens andre
+fastholder, at det blev formet af alle mulige arter, der er flygtet fra
+overfladen og skyer lyset. Uanset oprindelsen, så er denne dybe hule fyldt med
+uhørte rigdomme og alle hånde farer for enhver indtrænger. Få er sluppet ud med
+livet i behold, og endnu færre havde så meget forstand tilbage, at de kunne
+fortælle om det.
 
-Orkernes stammers hårdt udpinte guldminer. Disse bugtende huler er fyldt med
-orker, deres humanoide arbejdskraft og bunker af deres nys udgravede guld.
-Driftige handelsfolk har åbnet butikker, der kan lette orkerne for deres gyldne
-byrde. Orkernes noget skødelsløse ingeniørarbejde har resulteret i et indviklet
-og forræderisk virvar af kamre og mineskakter, hvor det er let at komme til at
-sidde fast.
-
-Orkernes miner er fire niveauer dybe og gemmer på indgangen til elverfolkets
-haller.
+De underjordiske gange er 15 niveauer dybe, men for at være helt ærlig, så er
+det blot begyndelsen.
 %%%%
 Elven Halls
 
@@ -33,146 +28,35 @@ og spist frem for at blive snittet, brændt eller dolket.
 
 Hulen er otte niveauer dyb og indeholder trapper til tre andre forgreninger.
 %%%%
-Slime Pits
+Shoals
 
-Det formløse rige, hvor syrerne, geléerne og slimen regerer. Ethvert spor af
-intelligente væsener er for længst opløst. Der er dog stadig rygter om store
-skatte dybt ned, som er gemt sikkert af vejen i hemmelige kamre uden døre eller
-vinduer, som syren kan trænge ind gennem. Det er velkendt, at selv væggene i
-dette rædselsfulde sted dryppe af smertefuld syre, der bliver mere og mere
-kaustisk, desto dybere ned du bevæger dig.
+Sandbankernes eksotiske, underjordiske strande udgør en håndfuld små øer i et
+tilsyneladende endeløst hav. Nøkkerne har hjemme her sammen med mange
+skrækindjagende havvæsener.
 
-Slimbrøndene er seks niveauer dybe og gemmer på den slimede rune. Indgangen er
-mellem niveau 6 og 8 af Hulen.
+Sandbankerne er fem niveauer dybe og gemmer på den andeskællede rune. Ethvert
+underjordisk kompleks af gange indeholder sandbankerne eller sumpen. Hvis
+sandbankerne er der, er indgangen mellem niveau 3 og 6 af bæsternes hule.
 %%%%
-Tomb
+Snake Pit
 
-De Ældstes Gravkammer er et forbandet sted, fyldt med rædsler, der er vækket
-til live af den fæleste nekromantik. Alle anstændige væsener på overfladen
-blegner, blot stedet nævnes. Listen over dem, der er vendt tilbage fra dette
-dødens domæne er fortvivlende kort.
+Ormegårdens gange huser alle mulige typer slanger og bebos af et samfund af
+magtfulde nagaer og salamandere.
 
-Gravkammeret er tre niveauer dybt og gemmer på den gyldne rune. Indgangen er på
-niveau 2 eller 3 af Krypten.
+Ormegården er fem niveauer dyb og gemmer på den slangebugtede rune. Ethvert
+underjordisk kompleks af gange indeholder enten ormegården eller
+edderkoppereden. Hvis ormegården er der er indgangen mellem niveau 3 og 6 af
+bæsternes hule.
 %%%%
-Dis
+Spider Nest
 
-Jernbyen Dis. Hvem kan tåle jernets prøvelser?
+De smuldrende, spindelvævsindhyllede grotter i edderkoppereden er fyldt med
+giftige leddyr og assorterede kriblekrabler.
 
-Dis er syv niveauer dybt og gemmer på jernrunen. Den kan nås gennem helvedes
-forhal.
-%%%%
-Gehenna
-
-Gehennas ild har svedet mangen en selvsikker helt, og den vil brænde for evigt.
-
-Gehenna er syv niveauer dyb og gemmer på obsidianrunen. Man kommer hertil
-gennem helvedes forhal.
-%%%%
-Cocytus
-
-En grum og frostbidt ødemark.
-
-Kokytus er syv niveauer dybt og gemmer på den frosne rune. Det kan nås gennem
-helvedes vestibule.
-%%%%
-Tartarus
-
-En rådnende underverden. Stedets udøde, dæmoner og djævle suger med tiden alt
-liv ud af skattejagende besøgende.
-
-Tartarus er syv niveauer dybt og gemmer på knoglerunen. Det kan nås gennem
-helvedes forhal.
-%%%%
-Zot
-
-Et område af de underjordiske gange, som er så rædselsvækkende, så spækket med
-galskab og afsindigt vanvid, at det er blevet eftertrykkeligt aflåst for
-tilfældige forbipasserende. Kun de mest forrykte eventyrere ville vove at samle
-de nødvendige nøgler, bryde seglet og trænge dybere ind – alt sammen i det
-spinkle håb om at finde et artefakt, som ingen nogensinde har set.
-
-Zots Rige er fem niveauer dybt, og man kan kun træde ind i det, hvis man har
-mindst tre runer.
-%%%%
-Abyss
-
-Afgrunden er i sandhed et bizart sted, evigt foranderligt og forskruet. Det er
-fyldt med alle hånde uhyrer, hovedsagligt dæmoniske af natur, som er forenet af
-et ønske om at mæske sig i eventuelle besøgende. Den fungerer også som
-losseplads for mange troldmænd, som ynder at sende potentielle helte som dig
-til denne galskabens valplads. Der skulle efter sigende være en mening med
-galskab, for det virker, som om Lugonu har planer for stedet og dets
-indbyggere.
-
-Afgrunden består af fem uendelige niveauer. Afgrundsrunen kan findes fra niveau
-tre og nedefter, og bliver mere sandsynlig, jo dybere man kommer. Hvis du
-ønsker at nå Afgrunden med vilje, så er der portaler i de dybere dele af de
-underjordiske gange.
-%%%%
-Pandemonium
-
-Pandæmonium er et endeløst rige af smerte og lidelse. Selvom der er rigeligt
-med skatte, så er de bevogtet af dæmoner og endnu mere ondskabsfulde
-dæmonherrer. Mangen en helt, som har forvekslet selvtillid med storhedsvanvid,
-har mødt et skrigende endeligt i en regn af pinsel og helvedesild.
-
-Pandæmonium er uendeligt. Der er masser af portaler dertil i de dybere liggende
-underjordiske gange. Bemærk, at det måske bliver væsentligt mere vanskeligt at
-komme tilbage.
-
-Pandæmonium gemmer på intet mindre end fem runer:
- • en flammende rune i Cerebovs velopvarmede rige
- • en glødende rune i Mnolegs besmittede domæne
- • en magisk rune, som er vogtet af Lom Lobon og hans håndlangeres troldkunster
- • en mørk rune i Gloorx Vloqs dunkle domicil
- • der er flere eksemplarer af dæmoniske runer, som er ejet af mindre berømte
-dæmonherrer
-%%%%
-Ziggurat
-
-En ziggurat er et sært tårn, som er bygget af 27 niveau af stadigt større
-kamparenaer, som hver især indeholder større rigdomme og endnu større farer end
-det foregående. Tag dig i agt, for en ziggurat er ikke et sted for svage sjæle.
-Selv de modigste og dygtigste eventyrere er gået til grunde her, og det kræver
-tre af Zots runer bare at åbne indgangen. Der er godt nok en portal til
-trygheden på hvert niveauer, men når du først har forladt en ziggurat, kan du
-aldrig komme ind i den igen.
-%%%%
-Labyrinth
-
-Labyrinten er et stort, kompliceret kompleks, som er bygget af listige og
-ondskabsfulde bagmænd af grunde, der for længst er gået tabt. De gamle skrøner
-fortæller, at labyrinten blev bygget som et fængsel for en frygtindgydende
-minotaur. Nyere historier angiver, at bæstet stadig er der, hvor det bevogter
-labyrintens eneste udgang og en kæmpe skat, som er taget fra ligene af tåbelige
-eventyrere, som for vild og sultede ihjel. Tag dig i agt i de bevægelige,
-snoede passager i labyrinten, ellers ender dine egne ejendele snart i
-minotaurens bunke.
-%%%%
-Bazaar
-
-Selvom nogle handlende har åbnet butikker i de underjordiske gange, så rejser
-andre i karavaner fra sted til sted. Disse vejfarende handlendes basarer har
-mange forskellige butikker og ofte et bedre udvalg end de stillestående. Somme
-tider giver de endda rabat!
-
-Du skal dog bemærke, at deres nomadiske livsstil har lært dem at tilegne sig
-enhver egnet genstand, som en eventyrer efterlader, og derefter hastigt at
-drage videre, sikkert for at sælge rovet et andet sted.
-%%%%
-Trove
-
-Der var engang en driftig tyv og troldmand, som var skrækslagen for at blive
-taget på fersk gerning under et indbrud. Han skabte derfor et system af
-portaler, som førte til rigmændenes hemmelige skatkamre og guldgruber. Fordi
-han var for bange til selv at plyndre dem, opkrævede han ublu summer for adgang
-fra alle, som havde lyst til at benytte dem. Han var en snedig artefaktmager,
-så han konstruerede portalerne således, at de sendte brugeren hen til de mest
-passende skatte.
-
-Genstandene i skatten er sandsynligvis nyttige, men tag dig i agt: Troldmanden
-er for længst død, og selv da han levede, gav han aldrig penge tilbage.
+Edderkoppereden er fem niveauer dyb og gemmer på den florlette rune. Ethvert
+underjordisk kompleks af gange indeholder enten edderkoppereden eller
+ormegården. Hvis edderkoppereden er der er indgangen mellem niveau 3 og 6 af
+bæsternes hule.
 %%%%
 Sewer
 
@@ -184,13 +68,6 @@ ildelugtende, grønne vand og dræber uden nåde. Fortællingerne antyder også,
 værdifulde genstande til tider skylles ned i de klamme grotter, hvor de glemte
 ligger og mugner.
 %%%%
-Ice Cave
-
-En trøstesløs grotte, som er formet af massiv is og fyldt med ekkoerne af
-bestialske hyl. De sirlige udskæringer og statuer, som engang dekorerede dens
-vægge er blevet forvredet og udvisket af århundreders langsom tøen og
-genfrysning.
-%%%%
 Volcano
 
 Dette ulideligt varme kammer er bygget af enorme obsidiansten, og har måske
@@ -198,14 +75,11 @@ engang tjent som tempel til en fremmed guddom eller huset en mægtig ildkæmpe.
 Luften flimrer af den trykkende hede, og det dumpe brøl af vulkanens hjerte
 tier aldrig.
 %%%%
-Wizlab
+Depths
 
-I fordums tid ville de mest mægtige troldmænd – du har sikkert hørt om mange af
-dem – ofte finde eller bygge små riger, som var afskåret fra resten af verden,
-hvor de kunne afsondre sig selv i deres søgen efter stadigt større magisk viden
-og magt. Troldmændene er for længst væk, men mange af deres okkulte
-laboratorier findes stadig og er fyldt med resultaterne af deres eksperimenter.
-De der er villige til at udforske disse laboratorier kan finde magtfulde,
-magiske skatte, men tag dig i agt: de troldmænd, laboratorierne tilhørte,
-levede op til deres omdømme.
+Dybet er den dybeste del af de centrale underjordiske gange og er underkastet
+Zots Riges forkvaklende indflydelse uden at være en del af det.
+
+Dybet er fem niveauer dybt og indgangen findes på de underjordiske ganges
+dybeste niveau.
 %%%%

@@ -1,9 +1,4 @@
 %%%%
-amulet of clarity
-
-Este amuleto protege seu usuário de algumas formas de confusão mental,
-incluindo de ficar enfurecido contra sua vontade.
-%%%%
 amulet of conservation
 
 Este amuleto protege algumas das posses do usuário de serem destruídas,  mas
@@ -18,11 +13,6 @@ amulet of rage
 
 Este amuleto permite que o usuário tente iniciar um estado de fúria berserk.
 %%%%
-amulet of resist corrosion
-
-Este amuleto protege o usuário e seu equipamento contra corrosão causada por
-ácidos, mas não é infalível.
-%%%%
 amulet of resist mutation
 
 Este amuleto protege o usuário contra mutações, mas não é infalível.
@@ -30,10 +20,6 @@ Este amuleto protege o usuário contra mutações, mas não é infalível.
 animal skin
 
 Pele de um animal.
-%%%%
-apple
-
-Uma fruta vermelha, firme e deliciosa.
 %%%%
 apricot
 
@@ -43,27 +29,13 @@ arrow
 
 Uma flecha, a ser usada com um arco.
 %%%%
-banana
-
-Uma deliciosa fruta amarela, provavelmente plantada e importada por alguma
-multinacional sem escrúpulos como o resultado de um tratado de comércio
-corrupto.
-%%%%
 bardiche
 
 Uma haste longa com uma enorme lâmina cortante em uma ponta.
 %%%%
-battleaxe
-
-Um machado grande com uma lâmina de duas cabeças.
-%%%%
 beef jerky
 
 Uma tira de carne de vaca, ou boi, seca.
-%%%%
-blessed falchion
-
-Uma espada de lâmina lacerante que foi aprimorada com o pode Shining One.
 %%%%
 blowgun
 
@@ -74,50 +46,17 @@ bolt
 
 Um virote de besta.
 %%%%
-book of air
-
-Um livro de magia. Você sente uma brisa suave quando o abre.
-%%%%
 book of alchemy
 
 Um livro levemente chamuscado, com um buraco queimado na capa.
 %%%%
-book of beasts
-
-Um livro de magia. Cuidado, ele pode morder!
-%%%%
-book of burglary
-
-Um livro de aparência desgastada, com uma pequena chave escondida entre duas
-páginas.
-%%%%
-book of callings
-
-Um livro de magia.
-%%%%
 book of cantrips
-
-Um livro de magia.
-%%%%
-book of changes
-
-Um livro de magia.
-%%%%
-book of clouds
 
 Um livro de magia.
 %%%%
 book of conjurations
 
 Um livro de magia.
-%%%%
-book of control
-
-Um livro de magia.
-%%%%
-book of death
-
-Um livro negro contendo magias escritas com uma caligrafia apressada.
 %%%%
 book of debilitation
 
@@ -131,14 +70,6 @@ book of enchantments
 
 Um livro de magia.
 %%%%
-book of envenomations
-
-Um livro de magia.
-%%%%
-book of fire
-
-Um livro de magia todo queimado.
-%%%%
 book of fixed level
 
 Um livro de magias.
@@ -147,42 +78,13 @@ book of fixed theme
 
 Um livro de magias.
 %%%%
-book of flames
-
-Um livro de magia levemente chamuscado.
-%%%%
-book of frost
-
-Um livro de magia gelado ao toque.
-%%%%
-book of geomancy
-
-Um livro de magia.
-%%%%
-book of hinderance
-
-Um livro de magia.
-%%%%
-book of ice
-
-Um livro de magia. Um vento gélido passa por você por um segundo quando você o
-abre.
-%%%%
 book of maledictions
-
-Um livro de magia.
-%%%%
-book of minor magic
 
 Um livro de magia.
 %%%%
 book of necromancy
 
 Um tomo empoeirado de magia proibida.
-%%%%
-book of party tricks
-
-Um livro de magia.
 %%%%
 book of power
 
@@ -196,27 +98,7 @@ book of summonings
 
 Um livro de magia.
 %%%%
-book of the dragon
-
-Um livro de magia quente ao toque.
-%%%%
-book of the earth
-
-Um livro de magia.
-%%%%
-book of the sky
-
-Um livro de magia. Faíscas saltam das páginas.
-%%%%
-book of the tempests
-
-Um livro de magia.
-%%%%
 book of the warp
-
-Um livro de magia.
-%%%%
-book of transfigurations
 
 Um livro de magia.
 %%%%
@@ -268,10 +150,6 @@ crystal plate armour
 
 Uma armadura de cristal inacreditavelmente pesada, mas extremamente eficiente.
 %%%%
-dart
-
-Uma pequena arma de arremesso.
-%%%%
 decaying skeleton
 
 Um esqueleto em decomposição.
@@ -288,26 +166,9 @@ demon whip
 
 Uma arma terrível, tramada nas profundezas do Inferno.
 %%%%
-eggplant
-
-Uma berinjela podre pra você jogar nos desenvolvedores do Crawl. (Se você ver
-esta mensagem, é um bug.)
-%%%%
 eveningstar
 
 O oposto de uma maça-estrela.
-%%%%
-falchion
-
-Um espada com uma longa lâmina lacerante.
-%%%%
-flail
-
-Parece uma maça, mas tem uma corrente entre a haste e a bola de metal.
-%%%%
-giant club
-
-Um pedaço de madeira gigante, moldado para as mãos de um ogro.
 %%%%
 giant spiked club
 
@@ -328,14 +189,6 @@ Uma frutinha.
 great mace
 
 Uma maça grande e pesada.
-%%%%
-great sword
-
-Uma espada com uma lâmina longa e pesada e com uma empunhadura longa.
-%%%%
-hammer
-
-O tipo de coisa que se usa para martelar pregos, adaptado para combate.
 %%%%
 helmet
 
@@ -382,30 +235,9 @@ lemon
 
 Uma fruta muito amarela.
 %%%%
-long sword
-
-Uma espada com uma lâmina longa e lacerante.
-%%%%
 lychee
 
 Uma fruta tropical.
-%%%%
-mace
-
-Uma haste com uma bola de metal em uma ponta.
-%%%%
-manual
-
-Um livro valioso que permite que uma habilidade seja treinada com maior
-eficiência.
-%%%%
-morningstar
-
-Uma maça coberta de espinhos.
-%%%%
-needle
-
-Uma agulha. Pode ser arremessada com uma zarabatana.
 %%%%
 orange
 
@@ -435,19 +267,6 @@ quarterstaff
 
 Uma haste de madeira robusta feita para combate.
 %%%%
-quick blade
-
-Uma espada pequena e magicamente rápida.
-%%%%
-ring mail
-
-Uma armadura de couro coberta de pequenos anéis.
-%%%%
-ring of hunger
-
-Este anel amaldiçoado faz com que aquele que o veste sinta fome com maior
-frequência.
-%%%%
 ring of magical power
 
 Este anel aumenta as reservas de poder mágico daquele que o veste.
@@ -456,10 +275,6 @@ ring of protection from cold
 
 Este anel oferece proteção contra o frio.
 %%%%
-ring of protection from fire
-
-Este anel oferece proteção contra o calor e o fogo.
-%%%%
 ring of protection from magic
 
 Este anel aumenta a resistência a encantamentos hostis do usuário.
@@ -467,10 +282,6 @@ Este anel aumenta a resistência a encantamentos hostis do usuário.
 ring of see invisible
 
 Este anel permite ao usuário ver aquelas coisas ocultadas magicamente.
-%%%%
-robe
-
-Um manto de tecido.
 %%%%
 rune of zot
 
@@ -484,17 +295,9 @@ scale mail
 
 Uma armadura de couro coberta de pequenas placas de metal.
 %%%%
-scimitar
-
-Uma espada longa com uma lâmina curva.
-%%%%
 scythe
 
 Uma ferramenta do campo, normalmente inútil em combate.
-%%%%
-short sword
-
-Uma espada com uma lâmina curta e lacerante.
 %%%%
 slice of pizza
 
@@ -508,10 +311,6 @@ Um vegetal repulsivo no formato de um pepino.
 staff of conjuration
 
 Este cajado aumenta o poder das magias de conjuração lançadas pelo seu usuário.
-%%%%
-staff of power
-
-Este cajado dá ao usuário uma reserva de poder mágico.
 %%%%
 stone
 
@@ -530,10 +329,6 @@ swamp dragon armour
 Uma armadura mágica feita das escamas de um dragão do pântano, que confere
 resistência a veneno ao usuário.
 %%%%
-wand of frost
-
-Um dispositivo mágico que arremessa pequenos pedaços de gelo.
-%%%%
 wand of heal wounds
 
 Um dispositivo mágico capaz de curar as feridas de uma criatura.
@@ -546,15 +341,7 @@ wand of lightning
 
 Um dispositivo mágico que arremessa grandes rajadas de raios.
 %%%%
-wand of paralysis
-
-Um dispositivo mágico capaz de imobilizar uma criatura.
-%%%%
 whip
 
 Um chicote.
-%%%%
-young poisoner's handbook
-
-Um livro de magia.
 %%%%

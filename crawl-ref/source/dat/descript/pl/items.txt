@@ -1,9 +1,4 @@
 %%%%
-amulet of clarity
-
-Ten amulet pozwala nosicielowi zachować trzeźwy umysł. Dotyczy do także prób
-wzbudzenia szału wbrew twej woli.
-%%%%
 amulet of conservation
 
 Ten amulet ochrania zwoje i eliksiry przed zniszczeniem, niestety nie jest
@@ -16,11 +11,6 @@ zauważonym przez bogów. Zapewnia to większe dary, ale także zwiększa karę 
 grzechy jakich się dopuszczasz. Zdjęcie tego amuletu powoduje utratę sporej
 części bożej łaski.
 %%%%
-amulet of guardian spirit
-
-Ten amulet chroni swego nosiciela przed obrażeniami. Odniesione rany zamiast
-zdrowia częściowo zmniejszają zasoby magicznej mocy.
-%%%%
 amulet of inaccuracy
 
 Ten amulet mocno utrudnia swemu nosicielowi celowanie — tak w walce wręcz,
@@ -30,11 +20,6 @@ amulet of rage
 
 Ten amulet pozwala swemu nosicielowi wprowadzić się w bitewny szał — osławioną
 furię berserkerów.
-%%%%
-amulet of resist corrosion
-
-Ten amulet zmniejsza obrażenia zadane swemu nosicielowi przez kwasy, jak i w
-dużym stopniu chroni sprzęt przed korozją spowodowaną kwasami.
 %%%%
 amulet of resist mutation
 
@@ -49,12 +34,6 @@ jednak na środki nie manipulujące czasoprzestrzenią — jak na przykład prze
 w kamień. Nie działa on także na przejścia do innych światów, włącznie z
 rzuceniem w Otchłań.
 %%%%
-amulet of the gourmand
-
-Ten amulet chroni swego nosiciela przed zatruciem surowym mięsem, a także
-pozwala spożyć takie mięso nawet gdy nie jesteś głodny. Założenie tego amuletu
-nie przynosi tych efektów natychmiastowo, musisz ponosić go przez jakiś czas.
-%%%%
 amulet of warding
 
 Ten amulet odrzuca część ataków magicznie przywołanych istot, a także daje
@@ -64,10 +43,6 @@ animal skin
 
 Prymitywne okrycie ze zwierzęcej skóry.
 %%%%
-apple
-
-Jadalny, okrągły czerwony owoc, z ogryzkiem w środku.
-%%%%
 apricot
 
 Soczysty żółto-pomarańczowy owoc z gatunku Prunus Armeniaca.
@@ -76,26 +51,13 @@ arrow
 
 To czym strzelasz z łuku.
 %%%%
-banana
-
-Smakowity żółty owoc, zapewne przywieziony przez jakąś bezduszną korporację
-wykorzystującą biednych rolników w odległych krajach.
-%%%%
 bardiche
 
 Broń z ogromnym ostrzem topora sięgającym do połowy długiego drzewca.
 %%%%
-battleaxe
-
-Wielka siekiera z obustronnym ostrzem.
-%%%%
 beef jerky
 
 Suszony i solony pasek wycięty z wnętrza ciała martwej krowy lub byka.
-%%%%
-blessed falchion
-
-Krótki szeroki miecz, pobłogosławiony przez moc Świetlistego.
 %%%%
 blessed great sword
 
@@ -104,10 +66,6 @@ Wielki dwuręczny miecz, pobłogosławiony przez moc Świetlistego.
 blessed long sword
 
 Długi prosty miecz, pobłogosławiony przez moc Świetlistego.
-%%%%
-blessed scimitar
-
-Długi zakrzywiony miecz, pobłogosławiony przez moc Świetlistego.
 %%%%
 blowgun
 
@@ -118,10 +76,6 @@ wyjątkowo cicha metoda niesienia śmierci.
 bolt
 
 Bełt do kuszy.
-%%%%
-book of air
-
-Księga czarów. Wydaje ci się że czujesz lekki powiew od jej stron.
 %%%%
 book of alchemy
 
@@ -140,41 +94,13 @@ book of battle
 
 Księga magicznych pieśni skaldów, będących czarami w muzycznej formie.
 %%%%
-book of beasts
-
-Księga czarów. Uważaj na kły i pazury!
-%%%%
-book of burglary
-
-Niepozorna książka, z małym wytrychem wciśniętym między strony.
-%%%%
-book of callings
-
-Księga czarów.
-%%%%
 book of cantrips
 
 Księga czarów. Z tych mocy mogą korzystać nawet dzieci.
 %%%%
-book of changes
-
-Księga czarów.
-%%%%
-book of clouds
-
-Księga czarów.
-%%%%
 book of conjurations
 
 Księga czarów.
-%%%%
-book of control
-
-Księga czarów.
-%%%%
-book of death
-
-Księga czarów w czarnej okładce, zapisana pośpiesznymi gryzmołami.
 %%%%
 book of debilitation
 
@@ -188,14 +114,6 @@ book of enchantments
 
 Księga czarów.
 %%%%
-book of envenomations
-
-Księga czarów.
-%%%%
-book of fire
-
-Poważnie nadpalona księga czarów.
-%%%%
 book of fixed level
 
 Księga czarów.
@@ -204,41 +122,13 @@ book of fixed theme
 
 Księga czarów.
 %%%%
-book of flames
-
-Lekko nadpalona księga czarów.
-%%%%
-book of frost
-
-Księga czarów, zimna w dotyku.
-%%%%
-book of geomancy
-
-Księga czarów.
-%%%%
-book of hinderance
-
-Księga czarów.
-%%%%
-book of ice
-
-Księga czarów. Wionie od niej zimnem które przenika cię do szpiku kości.
-%%%%
 book of maledictions
-
-Księga czarów.
-%%%%
-book of minor magic
 
 Księga czarów.
 %%%%
 book of necromancy
 
 Zakurzony tom zabronionej magii.
-%%%%
-book of party tricks
-
-Księga czarów.
 %%%%
 book of power
 
@@ -252,30 +142,7 @@ book of summonings
 
 Księga czarów.
 %%%%
-book of the dragon
-
-Księga czarów, ciepła w dotyku.
-%%%%
-book of the earth
-
-Księga czarów.
-%%%%
-book of the sky
-
-Księga zawierająca potężniejsze czary Magii Powietrza. Przyjęte jest, aby
-skrybowie tworzący jej kopie robili to z wyższych komnat wysokich wież na
-otwartym terenie, aby lepiej przyjąć siłę wiatrów. Błyszczące runy którymi
-księga ta jest napisana to w istocie zaklęte pioruny.
-%%%%
-book of the tempests
-
-Księga czarów.
-%%%%
 book of the warp
-
-Księga czarów.
-%%%%
-book of transfigurations
 
 Księga czarów.
 %%%%
@@ -307,10 +174,6 @@ bread ration
 
 Solidna porcja czerstwego ale wciąż dobrego chleba.
 %%%%
-broad axe
-
-Siekiera o wielkim ostrzu.
-%%%%
 buckler
 
 Mała tarcza.
@@ -339,39 +202,14 @@ cloak
 
 Wierzchnie okrycie z tkaniny.
 %%%%
-club
-
-Twardy kawał drewna którym można kogoś uderzyć. W szczególności, czujesz chęć
-aby zakraść się za kogoś i zdzielić go w łeb.
-%%%%
 corpse
 
 Trup. Możesz oprawić go aby uzyskać jadalne mięso.
-%%%%
-crossbow
-
-Ustrojstwo które potrafi strzelać bełtami. Kusze nie są szybką bronią, jednak
-zadają naprawdę dobre obrażenia.
-%%%%
-crystal ball of energy
-
-Magiczny przedmiot za pomocą którego można odzyskać magiczną moc. Użycie tej
-kuli niesie ze sobą ryzyko zupełnego wydrenowania aktualnie posiadanej mocy —
-tym większe im mniej mocy masz w danej chwili.
 %%%%
 crystal plate armour
 
 Niewiarygodnie ciężka ale też i nieziemsko efektywna zbroja z litego kawału
 wytrzymałego kryształu.
-%%%%
-dagger
-
-Długi ostry nóż, przydatny do walki w zwarciu. Powoduje ogromne obrażenia w
-czasie ataku znienacka.
-%%%%
-dart
-
-Mała broń do rzucania.
 %%%%
 decaying skeleton
 
@@ -399,11 +237,6 @@ Ten potężny przedmiot potrafi wypuścić niszczące elektryczne wyładowanie,
 zwłaszcza w rękach kogoś kto potrafi dobrze posługiwać się magicznymi
 przedmiotami.
 %%%%
-eggplant
-
-Zgniły bakłażan którym możesz rzucić w autorów Crawla. (To błąd jeśli
-kiedykolwiek zobaczysz ten tekst.)
-%%%%
 eudemon blade
 
 Wspaniałe ostrze wykute w kuźniach Niebios, opętane przez dobrego ducha. Jest
@@ -412,17 +245,6 @@ to ulubiona broń sług Świetlistego.
 eveningstar
 
 Wariant morgenszterna.
-%%%%
-executioner's axe
-
-Ten słodki toporasek jest pokryty zakrzepłą krwią i wyprutymi flakami ludzi,
-zwierząt i demonów, z odłamkami mózgu zaschłymi w runami wyrytymi w ostrzu.
-Rozmiar wyklucza jakąkolwiek finezję, jednak broń tego typu finezji nie wymaga
-— jeden trafiony cios jest wszystkim czego potrzeba.
-%%%%
-falchion
-
-Miecz z szerokim tnącym ostrzem.
 %%%%
 fan of gales
 
@@ -440,14 +262,6 @@ fire dragon hide
 To jest surowa skóra smoka właściwego (zionącego ogniem). Można z niej zrobić
 dobrą zbroję, ale nawet w tej postaci zapewnia ona ochronę przed ogniem, jak i
 czyni nosiciela wrażliwym na zimno.
-%%%%
-flail
-
-Uchwyt, łańcuch, kawał żelaza. Zakręć, walnij. Efekt? Dobrze ubici wrogowie.
-%%%%
-giant club
-
-Ogromny kawał drewna, w sam raz dla łap ogra.
 %%%%
 giant spiked club
 
@@ -474,14 +288,6 @@ gold piece
 
 Kupka pięknie połyskujących krążków z naszego ukochanego metalu.
 %%%%
-grand grimoire
-
-Ta przeklęta księga, pisana demonicznymi runami, zawiera najpotężniejsze czary
-przywołujące potwory z poza światów. Tylko naiwni mogą wierzyć że będą w stanie
-zachować kontrolę nad takimi istotami. Na ogół, ci nieostrożni czarodzieje giną
-wraz z duszą i ciałem, rozerwani przez moce których nikt rozsądny nie powinien
-budzić.
-%%%%
 grape
 
 Mały owoc.
@@ -489,23 +295,6 @@ Mały owoc.
 great mace
 
 Wielka i ciężka buława.
-%%%%
-great sword
-
-Oburęczny miecz z długim, ciężkim ostrzem i długą rękojeścią.
-%%%%
-halberd
-
-Długie drzewce z ostrzem, hakiem i ostrzem topora na końcu.
-%%%%
-hammer
-
-Coś czym przybijasz gwoździe, zaadaptowane do walki.
-%%%%
-hand axe
-
-Mała siekiera, zdatna bardziej do rąbania gałęzi niż do walki. Niezbyt dużych
-gałęzi.
 %%%%
 helmet
 
@@ -515,12 +304,6 @@ honeycomb
 
 Jakkolwiek pszczoły spotykane w tych lochach osiągają ogromne rozmiary, miód
 przez nie produkowany w niczym nie ustępuje temu z powierzchni.
-%%%%
-ice dragon armour
-
-Zbroja zrobiona ze skóry zionącego mrozem smoka. Zapewnia ona wspaniałą ochronę
-przed zimnem, ale niestety czyni nosiciela wrażliwym na ogień. Jej walory jako
-zbroi są także całkiem niezłe.
 %%%%
 ice dragon hide
 
@@ -554,11 +337,6 @@ Magiczna lampa zamieszkała przez przyjazne duchy ognia. Otwarcie pokrywy
 wyzwoli te duchy, pozwalając im spowić twych wrogów w ogniu, po czym dobrać się
 tym wrogom do skóry.
 %%%%
-lantern of shadows
-
-Przeklęty przedmiot który skrywa w ciemnościach kogoś kto odważy się otwarcie
-nieść ją w wyciągniętej ręce.
-%%%%
 large rock
 
 Wielki głaz, używany przez gigantów jako pocisk. {{
@@ -572,20 +350,6 @@ Wielki głaz, używany przez gigantów jako pocisk. {{
     end
 }}
 %%%%
-large shield
-
-Tarcza jak każda inna, tylko większych rozmiarów. {{
-    if you.race() == "Ogre"
-       or you.race() == "Troll"
-    then
-        return "W sam raz dla ciebie."
-    else
-        return "Jakkolwiek stanowi świetną osłonę. jest bardzo " ..
-               "niewygodna do noszenia i utrudnia sprawne posługiwanie " ..
-               "się bronią."
-    end
-}}
-%%%%
 leather armour
 
 Ochronny ubiór z grubej, utwardzonej skóry.
@@ -593,19 +357,6 @@ Ochronny ubiór z grubej, utwardzonej skóry.
 lemon
 
 Żółty, kwaśny owoc.
-%%%%
-lightning rod
-
-Ten pręt strzela ciągłym wyładowaniem elektrycznym. Podtrzymać to wyładowanie
-można używając piorunogromu w kolejnych turach (jakakolwiek przerwa wyłączy
-go). Potrzebuje on chwili czasu aby się porządnie rozgrzać, tak więc moc
-podczas pierwszej tury nie jest zbyt potężna. Ponadto, zgromadzony w powietrzu
-ładunek lekko osłabia działanie piorunogromu, tak więc dla lepszego efektu
-dobrze jest machać nim pomiędzy pobliskimi celami.
-%%%%
-long sword
-
-Miecz o długim prostym ostrzu.
 %%%%
 longbow
 
@@ -616,22 +367,9 @@ lychee
 
 Tropikalny owoc.
 %%%%
-mace
-
-Ciężka metalowa głowica osadzona na długiej rękojeści.
-%%%%
-manual
-
-Pożyteczna książka która pozwala opanować umiejętność kosztem znacznie
-mniejszego wysiłku.
-%%%%
 meat ration
 
 Duża pożywna porcja suszonego i zakonserwowanego mięsa.
-%%%%
-morningstar
-
-Kolczasta głowica osadzona na długiej rękojeści.
 %%%%
 mottled dragon armour
 
@@ -640,29 +378,6 @@ wykonanych ze skór większych gatunków smoków nie zapewnia ona wielkiej ochro
 to jednak nie krępuje ruchów w znacznym stopniu. Gładka powierzchnia tej zbroi
 powoduje że płynny ogień którym plują nakrapiane smoki nie może się przylepić i
 ścieka jak woda, nie powodując nawet osmaleń.
-%%%%
-mottled dragon hide
-
-To jest surowa skóra nakrapianego smoka, pokryta łuskami w ubarwionymi w dziwne
-wzory naturalnego umaszczenia tych smoków. Da się z niej zrobić przyzwoitą
-zbroję.
-%%%%
-naga barding
-
-Specjalna zbroja noszona przez naga na wężowej dolnej części ich ciała.
-%%%%
-necronomicon
-
-Najmroczniejsza księga jaka kiedykolwiek powstała, potężna i przeklęta. To
-wydanie które masz w ręku jest oprawione w ludzką (lub może elfią?) skórę,
-pisane jest krwią i zawiera diagramy które nawet laik rozpozna jako
-najczarniejszą z czarnych rodzajów magii. Próba okiełznania mocy opisanych w
-tej księdze rzadko kończy się czymkolwiek lepszym niż totalną zagładą
-czarodzieja wystarczająco głupiego aby tego spróbować.
-%%%%
-needle
-
-Igła z rowkiem na truciznę, pasująca do dmuchawek.
 %%%%
 orange
 
@@ -734,10 +449,6 @@ potion of brilliance
 Eliksir który wielce zwiększa inteligencję i magiczne zdolności pijącego, na
 krótki czas.
 %%%%
-potion of coagulated blood
-
-Krew która wkrótce nie będzie już zdatna do spożycia.
-%%%%
 potion of confusion
 
 Eliksir który powoduje zaćmienie umysłu jak i utratę koordynacji ruchów.
@@ -746,19 +457,9 @@ potion of cure mutation
 
 Eliksir który usuwa mutacje będące skutkiem skażenia magią.
 %%%%
-potion of curing
-
-Dobroczynny płyn który leczy rany, przejaśnia umysł i leczy choroby. Użyty
-przez osobę w pełni lub niemal pełni sił, może nawet w niewielkim stopniu
-uleczyć skutki trwałej zgnilizny.
-%%%%
 potion of decay
 
 Wstrętna i cuchnąca ciecz która powoduje rozkład ciała.
-%%%%
-potion of degeneration
-
-Szkodliwy środek który niszczy mięśnie, mózg i refleks.
 %%%%
 potion of experience
 
@@ -768,19 +469,9 @@ potion of flight
 
 Eliksir który daje zdolność lotu.
 %%%%
-potion of heal wounds
-
-Eliksir który w sporym stopniu leczy rany, nie potrafi jednak uleczyć innych
-objawów. Użyty przez osobę w pełni lub niemal pełni sił, potrafi w pewnym
-stopniu usunąć skutki trwałej zgnilizny.
-%%%%
 potion of invisibility
 
 Eliksir który daje tymczasową niewidzialność.
-%%%%
-potion of magic
-
-Eliksir który jednorazowo odnawia część zasobów magicznej energii.
 %%%%
 potion of might
 
@@ -790,10 +481,6 @@ na krótki czas.
 potion of mutation
 
 Eliksir który powoduje trwałe nieprzewidywalne zmiany w ciele pijącego.
-%%%%
-potion of paralysis
-
-Eliksir który powoduje krótkotrwały totalny bezwład ciała.
 %%%%
 potion of poison
 
@@ -826,19 +513,9 @@ quarterstaff
 
 Solidny dębowy kij, dobrze nadający się do walki.
 %%%%
-quick blade
-
-Malutki mieczyk, który mimo niepozornego wyglądu, w magiczny sposób uderza w
-nieprawdopodobnie szybki sposób.
-%%%%
 rambutan
 
 Mały ale smaczny tropikalny owoc. Jak się tu znalazł, nikt nie ma pojęcia.
-%%%%
-ring mail
-
-Skórzana kurtka pokryta naszytymi metalowymi kółkami. Nie są one przeplecione
-między sobą, co czyni tą zbroję słabą lecz lekką i giętką.
 %%%%
 ring of dexterity
 
@@ -850,40 +527,10 @@ ring of evasion
 Ten pierścień ułatwia lub utrudnia nosicielowi na unikanie ataków, w zależności
 od mocy i kierunku czaru nań rzuconego.
 %%%%
-ring of fire
-
-Ten pierścień daje swemu nosicielowi moc ognia. Wzmacnia to wszelkie czary
-Magii Ognia jak i zapewnia odporność na ogień, jednakże czary Magii Lodu są
-osłabione, a nosiciel jest bardziej wrażliwy na zimno.
-%%%%
-ring of flight
-
-Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
-Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania. To
-może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
-%%%%
-ring of hunger
-
-Ten pierścień pomaga zrzucić nadwagę, wielce zwiększając zużycie pokarmu.
-%%%%
-ring of ice
-
-Ten pierścień daje swemu nosicielowi moc zimna. Wzmacnia to wszelkie czary
-Magii Lodu jak i zapewnia odporność na chłód, jednakże czary Magii Ognia są
-osłabione, a nosiciel jest bardziej wrażliwy na wysoką temperaturę.
-%%%%
 ring of intelligence
 
 Ten pierścień zwiększa lub zmniejsza inteligencję nosiciela, w zależności od
 mocy i kierunku czaru nań rzuconego.
-%%%%
-ring of invisibility
-
-Ten pierścień pozwala stać się niewidzialnym. Samo nałożenie go nie uruchamia
-tego efektu — trzeba go aktywować, do czego potrzebna jest umiejętność
-posługiwania się magicznymi przedmiotami. Bycie niewidzialnym znacznie wzmaga
-zużycie metabolizm, a także powoduje magiczne skażenie. Zbyt częste użycie tego
-pierścienia nie jest więc wskazane.
 %%%%
 ring of magical power
 
@@ -894,10 +541,6 @@ ring of poison resistance
 
 Ten pierścień zapewnia znaczną odporność na trucizny i jady.
 %%%%
-ring of positive energy
-
-Ten pierścień zapewnia częściową odporność na zagrożenia ze strony nekromancji.
-%%%%
 ring of protection
 
 Ten pierścień zwiększa lub zmniejsza wytrzymałość nosiciela na obrażenia, w
@@ -907,18 +550,9 @@ ring of protection from cold
 
 Ten pierścień zapewnia ochronę przed zimnem.
 %%%%
-ring of protection from fire
-
-Ten pierścień zapewnia ochronę przed ogniem i gorącem.
-%%%%
 ring of protection from magic
 
 Ten pierścień zwiększa odporność na uroki.
-%%%%
-ring of regeneration
-
-Ten pierścień w ogromnym stopniu zwiększa szybkość naturalnego zdrowienia swego
-nosiciela, kosztem znacznego przyspieszenia metabolizmu.
 %%%%
 ring of see invisible
 
@@ -937,15 +571,6 @@ ring of sustenance
 
 Ten pierścień znacznie spowalnia zużycie pokarmu przez swego właściciela.
 %%%%
-ring of teleport control
-
-Ten pierścień, po użyciu jego mocy, pozwala nosicielowi wybrać miejsce docelowe
-jakiegoś teleportu (średniego lub bliskiego zasięgu). Ta kontrola nie jest zbyt
-dokładna, a jeśli po uwzględnieniu błędu teleportacji wylądowałbyś wewnątrz
-litego obiektu, skutkiem będzie zupełnie niekontrolowany teleport. Na dodatek,
-kontrolowana teleportacja powoduje skażenie magią, a teleporty trwają dłużej
-niż zwykle.
-%%%%
 ring of teleportation
 
 Ten pierścień od czasu do czasu przenosi swego nosiciela w przypadkowe miejsce.
@@ -956,20 +581,11 @@ ring of wizardry
 Ten pierścień znacznie ułatwia rzucanie czarów. Poprawia to szanse poprawnego
 rzucenia, nie zwiększa jednak w żaden sposób mocy.
 %%%%
-robe
-
-Szata z tkaniny.
-%%%%
 rod of inaccuracy
 
 Ten pręt strzela potężną strugą czystej magii. Jest on bardzo trudny do
 wycelowania, a jego efekt łatwy do uniknięcia, jednak jak już w coś trafi,
 skutki są dość brutalne.
-%%%%
-rod of striking
-
-Tym prętem spuszcza się lanie osobiście. Przełożenie kogoś wpierw przez kolano
-nie jest obowiązkowe, jednak należy do dobrego tonu.
 %%%%
 rod of the swarm
 
@@ -984,14 +600,6 @@ rune of zot
 
 Talizman który pozwala otworzyć bramę do krainy Zot.
 %%%%
-sack of spiders
-
-Torba utkana z czegoś co wygląda jak białawy jedwab. Coś się chyba w środku
-rusza.
-
-Otwarcie tej torby wypuści grupę przyjaźnie nastawionych pająków. Możliwe
-jednak że będziesz musiał posprzątać pajęczyny.
-%%%%
 sacred scourge
 
 Ten bicz został upleciony przez świętych w Niebiosach i pobłogosławiony przez
@@ -1005,10 +613,6 @@ chrząstką. Jesteś głodny?
 scale mail
 
 Skórzany ubiór pokryty metalowymi płytkami.
-%%%%
-scimitar
-
-Długi miecz o zakrzywionym ostrzu.
 %%%%
 scroll of acquirement
 
@@ -1049,13 +653,6 @@ scroll of curse weapon
 
 Ten zwój przeklina trzymaną w dłoni broń.
 %%%%
-scroll of enchant armour
-
-Ten zwój pozwala na poprawienie jakości zbroi. Większość części zbroi można
-poprawić do +2, tarcze do +3, zbroje noszone na korpusie oraz kropierze zaś do
-ich bazowego wskaźnika ochrony. Zwój ten także można użyć aby stworzyć zbroję
-ze skóry niektórych stworzeń — zwykle trolli i smoków.
-%%%%
 scroll of fear
 
 Ten zwój tworzy chwilową iluzję wokół czytającego — wszystkim którzy go widzą
@@ -1065,11 +662,6 @@ boi. Zwykle powoduje to paniczny strach.
 scroll of fog
 
 Ten zwój kryje czytającego za zasłoną gęstej mgły.
-%%%%
-scroll of holy word
-
-Ten zwój wzywa moce Niebios, czyniąc wielkie szkody wszystkim pobliskim
-przeklętym stworzeniom — łącznie z czytającym jeśli jego to dotyczy!
 %%%%
 scroll of identify
 
@@ -1084,40 +676,16 @@ scroll of magic mapping
 
 Ten zwój tworzy mapę poziomu lochów wokół czytającego.
 %%%%
-scroll of noise
-
-Ten zwój to głupi żart, często robiony przez złośliwych uczniów w szkołach
-czarodziei. Po odczytaniu wywołuje on głośny hałas. Nie ma to żadnego innego
-zastosowania — chyba że akurat chcesz aby wszyscy w zasięgu słuchu się
-zlecieli.
-%%%%
 scroll of random uselessness
 
 Kolejny głupi żart nudzących się czarodziei — ten zwój może mieć jeden z wielu
 różnych efektów, ale zawsze jest to coś niemal zupełnie bez żadnego
 zastosowania.
 %%%%
-scroll of recharging
-
-Ten zwój służy do ładowania mocy różdżek. Użyty na magicznym pręcie, zwiększa
-zarówno pojemność jego baterii (max. do +17), jak i jakość pręta (max. do +9)
-która poprawia zarówno szybkość regeneracji baterii jak i przydatność pręta w
-walce wręcz.
-%%%%
 scroll of remove curse
 
 Odczytanie tego zwoju usuwa wszystkie przekleństwa rzucone na przedmioty
 przylegające do twego ciała.
-%%%%
-scroll of silence
-
-Ten zwój całkowicie eliminuje wszelkie dźwięki w pobliżu czytającego. Póki ten
-efekt trwa, niemożliwe jest czytanie zwojów, rzucanie czarów, modlitwa, rozmowa
-lub krzyczenie. Zakres tej magicznej ciszy jest kulą w pewnym promieniu wokół
-czytającego, która powoli kurczy się po czym znika. Taka nienaturalna cisza
-jest tak alarmująca jak krzyk, większość istot będzie w stanie zauważyć że coś
-jest nie tak. Demony, jak i magiczne istoty (w przeciwieństwie do tych tylko
-posługujących się magią) nie potrzebują dźwięku do rzucania czarów.
 %%%%
 scroll of summoning
 
@@ -1128,18 +696,6 @@ scroll of teleportation
 
 Odczytanie tego zwoju przeniesie cię w przypadkowe miejsce.
 %%%%
-scroll of torment
-
-Ten zwój używa mocy sił ciemności aby zesłać straszliwe cierpienie na wszystkie
-żywe istoty w pobliżu — łącznie z tobą! Powoduje to znaczną utratę zdrowia,
-jednakże nigdy samo z siebie nie powoduje śmierci.
-%%%%
-scroll of vulnerability
-
-Ten zwój przerywa działanie wszelkich czarów rzuconych na czytającego i na
-istoty w pobliżu. Także, odporność na uroki, zarówno czytającego i tych w
-pobliżu, zostaje znacznie obniżona na krótki czas.
-%%%%
 scythe
 
 Narzędzie rolnicze, niezbyt przydatne do walki.
@@ -1149,10 +705,6 @@ shield
 Kawał metalu, z uchwytem i paskami umożliwiającymi przyczepienie do ramienia.
 Pozwala blokować ciosy, jednak utrudnia ruchy co spowalnia szybkość ataków oraz
 przeszkadza w rzucaniu czarów.
-%%%%
-short sword
-
-Miecz z krótkim ostrzem, przydatny do kłucia i cięcia, zwłaszcza w zwarciu.
 %%%%
 slice of pizza
 
@@ -1178,78 +730,14 @@ spear
 
 Broń myśliwych, składająca się z długiego patyka i prymitywnego grotu na końcu.
 %%%%
-staff of air
-
-Ten kij zwiększa moc czarów Magii Powietrza, a także zapewnia ochronę przed
-porażeniem elektrycznością.  Jeśli użytkownik ma wystarczające umiejętności
-zarówno w Magii Powietrza jak i użyciu przedmiotów magicznych, wrogowie
-uderzeni tym kijem zostaną porażeni prądem. Niestety, moc czarów Magii Ziemi
-ulega osłabieniu.
-%%%%
-staff of cold
-
-Ten kij zwiększa moc czarów Magii Lodu, a także zapewnia ochronę przed efektami
-zimna. Jeśli użytkownik potrafi posługiwać się magicznymi przedmiotami,
-wrogowie uderzeni tym kijem zostaną przymrożeni — mocniej jeśli użytkownik
-posiada umiejętności w Magii Lodu. Niestety, czary Magii Ognia ulegają
-osłabieniu.
-%%%%
 staff of conjuration
 
 Ten kij zwiększa moc czarów Magii Niszczenia.
-%%%%
-staff of death
-
-Ten kij zwiększa moc czarów Nekromancji, a także zapewnia przed nekromancją
-ochronę. Jeśli użytkownik posiada umiejętności zarówno w Nekromancji jak i
-użyciu przedmiotów magicznym, żywe istoty uderzone tym kijem ucierpią dodatkowe
-obrażenia.
-%%%%
-staff of earth
-
-Ten kij zwiększa moc czarów Magii Ziemi. Jeśli użytkownik potrafi posługiwać
-się magicznymi przedmiotami, wrogowie uderzeni tym kijem zostaną zmiażdżeni —
-mocniej jeśli użytkownik posiada umiejętności w Magii Ziemi. Niestety, moc
-czasów Magii Powietrza ulega osłabieniu.
 %%%%
 staff of energy
 
 Ten kij eliminuje głód będący skutkiem rzucania czarów, można także użyć go w
 celu uzupełnienia magicznej energii.
-%%%%
-staff of fire
-
-Ten kij zwiększa moc czarów Magii Ognia, a także zapewnia ochronę przed
-efektami gorąca. Jeśli użytkownik potrafi posługiwać się magicznymi
-przedmiotami, wrogowie uderzeni tym kijem zostaną przypaleni — mocniej jeśli
-użytkownik posiada umiejętności w Magii Ognia. Niestety, moc czarów Magii Lodu
-ulega osłabieniu.
-%%%%
-staff of poison
-
-Ten kij zwiększa moc czarów Magii Trucizn, a także zapewnia ochronę przed
-truciznami i jadami. Jeśli użytkownik posiada umiejętności zarówno w użyciu
-przedmiotów magicznych jak i w Magii Trucizn, wrogowie uderzeni tym kijem
-zostaną zatruci — nawet ci którzy zwykle są na trucizny odporni. Oczywiście nie
-działa to na duchy, umarlaków, i tym podobnych.
-%%%%
-staff of power
-
-Ten kij zwiększa pulę magicznej mocy swego użytkownika, oraz zwiększa przypływ
-tejże mocy.
-%%%%
-staff of summoning
-
-Ten kij zwiększa moc czarów Magii Przywołań, a także zapewnia ochronę przed
-atakami przywołanych istot. W rękach kogoś kto potrafi posługiwać się
-magicznymi przedmiotami, uderzone przywołane istoty zostaną odesłane (lub
-przynajmniej pozostały czas przywołania ulegnie znacznemu skróceniu).
-%%%%
-steam dragon armour
-
-Zbroja ze skóry smoka parowego. Jakkolwiek w przeciwieństwie do skór większych
-smoków daje tylko marną obronę, jednak w żaden sposób nie krępuje ruchów.
-Zapewnia ochronę przed parą.
 %%%%
 steam dragon hide
 
@@ -1301,24 +789,6 @@ Oślizgła{{
 }} surowa skóra bagiennego smoka. Zapewnia odporność na trucizny i jady, i
 można z niej wykonać zbroję.
 %%%%
-throwing net
-
-Sieć do rzucania, często używana przez gladiatorów.
-%%%%
-tomahawk
-
-Przedmiot podobny do małej siekierki, świetnie wyważony do rzucania. Ten model
-tomahawka wygląda na zupełnie nieprzydatny w walce wręcz.
-%%%%
-tome of destruction
-
-Bardzo potężna ale zupełnie nieprzewidywalna księga dzikiej magii. Jest
-zupełnie odmienna od zwykłego rzucania czarów: jest to bardziej magiczny
-przedmiot niż księga, i wymaga umiejętności używania magicznych przedmiotów.
-Nie można nauczyć się wpisów tej księgi na pamięć, lecz sama próba odczytania
-powoduje efekt. Co więcej, nawet Trog nie uznaje jej za prawdziwą księgę
-czarów.
-%%%%
 trident
 
 Broń drzewcowa z trzema szpikulcami.
@@ -1328,12 +798,6 @@ trishula
 Błogosławiony trójząb uformowany w świętym ogniu, z trzema zębami
 symbolizującymi połączoną potęgę trójcy dobrych bogów. Jest to ulubiona broń
 sług Świetlistego.
-%%%%
-troll hide
-
-Sztywna i guzowata skóra trolla. Daje nosicielowi część zdolności regeneracji
-właściwej trollom (chyba że nosiciel sam jest trollem), a także można z niej
-zrobić zbroję.
 %%%%
 troll leather armour
 
@@ -1359,11 +823,6 @@ Magiczny przedmiot który potrafi rozbić strukturę przedmiotów na kawałki.
 Działa zarówno na istoty (żywe czy martwe), jak i na statuy, ściany, itp.
 Wzmocniony kamień jest zbyt mocny aby dać się rozbić w ten sposób.
 %%%%
-wand of draining
-
-Magiczny przedmiot który strzela strugami nekromantycznych energii które
-wysysają życie żywych istot, ale są bezużyteczne wobec nieumarłych i demonów.
-%%%%
 wand of enslavement
 
 Magiczny przedmiot który powoduje ślepe posłuszeństwo wśród żywych istot.
@@ -1376,14 +835,6 @@ wand of fireball
 
 Magiczny przedmiot który strzela kulami ognia które wybuchają w żądanym
 miejscu.
-%%%%
-wand of flame
-
-Magiczny przedmiot który strzela małymi płomykami.
-%%%%
-wand of frost
-
-Magiczny przedmiot który strzela małymi dawkami zimna.
 %%%%
 wand of hasting
 
@@ -1410,12 +861,6 @@ wand of magic darts
 Magiczny przedmiot który strzela małymi pociskami surowej magii, które zawsze
 trafiają.
 %%%%
-wand of paralysis
-
-Magiczny przedmiot który potrafi uczynić stworzenie na które został skierowany
-niezdolnym do ruchu. W szczególności, nagła utrata zdolności machania
-skrzydłami może się skończyć kąpielą w lawie.
-%%%%
 wand of polymorph
 
 Magiczny przedmiot który potrafi przemienić stworzenie w coś innego. Jest
@@ -1437,17 +882,7 @@ wand of teleportation
 Magiczny przedmiot który przemieszcza stworzenie na które został skierowane w
 przypadkowe miejsce. Nie działa to natychmiastowo.
 %%%%
-war axe
-
-Średniej wielkości bojowa siekiera, przeznaczona wyłącznie do walki wręcz. Dla
-humanoidów wielkości człowieka, to największy rozmiar który nie utrudnia w
-znaczący sposób posługiwania się tarczą.
-%%%%
 whip
 
 Bat z byczej skóry.
-%%%%
-young poisoner's handbook
-
-Księga czarów.
 %%%%

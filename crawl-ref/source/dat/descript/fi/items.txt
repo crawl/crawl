@@ -1,9 +1,4 @@
 %%%%
-amulet of clarity
-
-Tämä amuletti suojaa käyttäjäänsä joiltakin mielen sekaannuksen muodoilta,
-mukaan lukien vastoin tahtoa raivostumiselta.
-%%%%
 amulet of conservation
 
 Tämä amuletti suojaa joitakin käyttäjän omistamia tavaroita tuhoutumiselta,
@@ -16,12 +11,6 @@ helpottaa jumalten miellyttämistä, mutta jumalasi on myös vähemmän
 anteeksiantava syntejäsi kohtaan, ja amuletin poisottaminen aiheuttaa myös
 suosion laskua.
 %%%%
-amulet of guardian spirit
-
-Tämä amuletti vähentää käyttäjänsä herkkyyttä ulkoiselle vahingolle, kuluttaen
-taikavoimia elämän sijasta. Jos taikavarannot ehtyvät, amuletin henki ei
-suojele ennen kuin enemmän voimia on saatavilla.
-%%%%
 amulet of inaccuracy
 
 Tämä amuletti laskee kantajansa tarkkuutta lähi- ja kaukotaistelussa sekä
@@ -30,11 +19,6 @@ loitsiessa.
 amulet of rage
 
 Tämä amuletti antaa haltijalleen kyvyn siirtyä berserkkiraivon tilaan.
-%%%%
-amulet of resist corrosion
-
-Tämä amuletti suojaa kantajaansa ja heidän varusteitaan happojen aiheuttamalta
-syöpymiseltä, mutta ei pettämättömästi.
 %%%%
 amulet of resist mutation
 
@@ -60,10 +44,6 @@ Suuri kappale tanakkaa, turkin peittämää ihoa. Leikattu eläimen ruumiista ja
 käytetään alkukantaisena vaatekappaleena. Se tarjoaa alkeellista puolustusta,
 mutta koska sitä ei ole parkittu, siinä on lievä mätänevän lihan löyhkä.
 %%%%
-apple
-
-Herkullinen ja hapan jämäkkä punainen hedelmä.
-%%%%
 apricot
 
 Mehukas keltaoranssi hedelmä, prunus armeniaca.
@@ -73,27 +53,13 @@ arrow
 Pitkä, varrekas, jousipyssyllä ammuttava ammus, tasapainotettuna sulilla ja
 terävällä kärjellä.
 %%%%
-banana
-
-Maukas keltainen hedelmä, todennäköisesti jonkun moraalittoman monikansallisen
-kasvattama ja maahantuoma korruptoituneen kauppasopimuksen seurauksena.
-%%%%
 bardiche
 
 Pitkä paalu, jonka toisessa päässä on valtava, halkova terä.
 %%%%
-battleaxe
-
-Suuri kahden käden sotakirves mahtavalla kaksipuolisella terällä. Suunniteltu
-taitavien taistelijoiden aseeksi.
-%%%%
 beef jerky
 
 Suikale säilöttyä lehmää tai sonnia.
-%%%%
-blessed falchion
-
-Leveäteräinen miekka. Se on Hohtavan vahvistama.
 %%%%
 blessed great sword
 
@@ -104,10 +70,6 @@ blessed long sword
 
 Pitkäteräinen miekka. Se on Hohtavan vahvistama.
 %%%%
-blessed scimitar
-
-Kaartuvateräinen, pitkä miekka. Se on Hohtavan vahvistama.
-%%%%
 blowgun
 
 Pitkä, molemmista päistä aukinainen kevyt putki, jonka läpi voi ampua
@@ -116,12 +78,6 @@ erityyppisiä neuloja voimakkailla puhalluksilla. Se on erittäin hiljainen.
 bolt
 
 Nuolta lyhyempi metallinen ammus, jonka voi ampua varsijousella.
-%%%%
-book of air
-
-Alkeiskirja Ilman elementaalimagiaan. Sivut usein käänytvät itsestään, kuin
-kovan tuulen puhaltaminen. Joskus ne ovat staattisen sähkön jumittamia, ja
-kipinöivät erotettaessa toisistaan.
 %%%%
 book of alchemy
 
@@ -139,25 +95,6 @@ Heikot maagit kuitenkin saattavat kohdata tuomionsa tästä teoksesta.
 VAROITUS: Jos epäonnistut opetellessasi loitsua tästä kirjasta, kirja hyökkää
 päällesi.
 %%%%
-book of beasts
-
-Petoeläinten luomiseen keskittyvä loitsukirja. Sen sivut on tehty eläinten
-nahoista ja kannet on reunustettu hampailla. Se lemuaa eläintarhalta, ja
-silloin tällöin näykkäisee varomattomien lukijoiden sormia.
-%%%%
-book of burglary
-
-Monipuolisia varkauteen, hajottamiseen, murtautumiseen ja muuhun rötöstelyyn
-sopivia taikoja sisältävä kirja. Velhot, jotka antavat keskittymisensä kaikota
-tätä nidettä lukiessaan, saattavat huomata joidenkin pienten asioiden kadonneen
-taskuistaan, ja siirtyneen sivujen väliin.
-%%%%
-book of callings
-
-Alustava johdanto petojen ja toismaailmallisten olentojen maagiseen
-Kutsumiseen. Pieniä kärpäsiä ja sääskiä ilmestyy tyhjästä kirjan avautuessa, ja
-sitten katoavat, kun kirja suljetaan.
-%%%%
 book of cantrips
 
 Pienen määrän aloittelijatason magiikkaa sisältävä kirja. Se on suunniteltu
@@ -165,43 +102,12 @@ aloittelijoille, jotka haluavat oppia jonkin mukana olevan taikuuskoulukunnan
 alkeet. Siitä huolimatta jopa kokeneet maagit saattavat keksiä sen sisältä
 löytyville loitsuille käyttöä.
 %%%%
-book of changes
-
-Oppilaan alkeiskirja Muodonmuutosten taikuustaiteeseen. Siinä on paljon
-ylellistä kuvitusta koulukunnan aikaiselta, kokeelliselta historialta:
-Puoli-velho-puoli-hämähäkkejä, miekkanenäisiä velhoja, tai nokallisia
-lonkeroita jalkojen paikalla. Teksti on täynnä vakuuttelua, että tällaista ei
-enää tapahdu, mutta silti jotkut mahdolliset Muodonmuuttajat opiskelevat
-mieluummin Lumouksia.
-%%%%
-book of clouds
-
-Loitsukirja erilaisten pilvien luomiseen, verhottuna kauniiseen sumuun jonka
-takia sanat ovat joskus hieman sumeita. Syvällinen kirja, joskin välillä
-kirjoittaja ajautuu sivupoluille tylsiin keskusteluihin siitä, miltä esineiltä
-pilvien kaaviot näyttävät.
-%%%%
 book of conjurations
 
 Oppikirja tuhovoimaiseen taikuuteen, Konjuraatioihin. Se vavisee juuri ja juuri
 sisällä pysyvästä voimasta avautuessaan. Erittäin suosittu kirja, sitä
 jatkuvasti muutetaan ja päivitetään: tämän vuoden painos keskittyy Jään ja
 Ilman elementteihin.
-%%%%
-book of control
-
-Tämän kirjan loitsuilla voi kontrolloida mieliä, kehoja ja jopa avaruutta.
-Kirjan nähdessään velhot saattavat tuntea pakon selailla sen sivuja, ja niin
-tekevillä on joskus ongelmia saada sen sisältämät riimut ja symbolit
-mielestään.
-%%%%
-book of death
-
-Aavemainen käsikirjoitus, joka sisältää synkkiä Nekromantia-taikoja. Se on
-kirjoitettu ruumiista tislatuilla musteilla. Jokainen sivu on täytetty
-groteskilla taiteella, kuvaten iljettävän mädäntymisen ja karmean kuoleman
-kohtauksia. Suuri osa tekstistä on osana kuvia, sisälmysten vyyhteinä tai
-luumuodostelmina.
 %%%%
 book of debilitation
 
@@ -227,22 +133,6 @@ kimaltelevat ja hohtavat käännettäessä. Epätavallisen aikaan sopimaton otsi
 kuvastaa aikaisempaa, epätäydellisempää ymmärrystä näistä kahdesta magian
 koulukunnasta.
 %%%%
-book of envenomations
-
-Heikolla vihreällä valolla hehkuva taikakirja. Kirja oli alunperin Olgrebin,
-pahamaineisen Myrkkyvelhon, kirjoittama. Hän murhasi monet kilpailijansa
-lähettämällä heille vahvasti myrkytetyn kirjan lahjana. Nykyiset painokset ovat
-turvallisia, vaikka sivujen välistä löytyykin usein kuolleita kirja- ja
-sokeritoukkia.
-%%%%
-book of fire
-
-Edistyneitä Tulitaikoja sisältävä kirja. Monet Tulielementalistit ovat
-polttaneet kulmakarvansa ja partansa hetkellisen tulen takia, joka syntyy, kun
-kirja avataan ensimmäistä kertaa. Jotkut ovat jopa huomanneet kovemman kautta,
-että kun kirja jätetään huomiotta kuukausiksi, se voi yhtäkkiä syttyä tuleen,
-toisinaan polttaen maan tasalle kokonaisia kirjastoja kamalissa suurpaloissa.
-%%%%
 book of fixed level
 
 Taikoja sisältävä kirja.
@@ -250,38 +140,6 @@ Taikoja sisältävä kirja.
 book of fixed theme
 
 Taikoja sisältävä kirja.
-%%%%
-book of flames
-
-Perusteksti Tulimagian akatemia-opiskelijoille. Se on melko lämmin
-kosketukselle ja sen reunat ovat korventuneet. Sivut on merkitty
-tulisymboleilla, jotka hohtavat välkehtivää valoa lukemisen helpottamiseksi.
-%%%%
-book of frost
-
-Loitsukirja, jota usein käytetään aloittelijan oppaana Jäämagiaan. Sen kansi on
-kylmä, ja sen mystiset riimut on kirjoitettu sujuvalla, rosoisella tyylillä,
-muistuttaen ikkunaa peittävää huurretta.
-%%%%
-book of geomancy
-
-Maa-elementtiin liittyviä perusloitsuja sisältävä kirja. Se tuntuu varsin
-tiiviiltä, vaikka se ei ole muita kirjoja raskaampi. Luettaessa siitä roiskuu
-pienenpieniä kiviä. Kirjan sivut on valmistettu ohuista kiillelevyistä.
-%%%%
-book of hinderance
-
-Mystinen käsikirja, joka omistautuu vihollisten mielien ja kehojen hidastamisen
-taiteeseen. Se on kirjoitettu kramppaavalla, lähes lukukelvottomalla
-käsialalla, todella kankeille sivuille. Jotkut velhot sanovat sormiensa
-jäykistyvän lukemisen aikana, mutta se loppuu kirjan sulkeuduttua.
-%%%%
-book of ice
-
-Kehittyneiden Jäätaikojen kirja. Se on jäätävän kylmä, ja sen sivut ovat
-murenevan kuuran peitossa. Vaikka he käyttävät lämmintä vaatetusta, tästä
-kirjasta kopioita kirjoittavat kirjurit usein kärsivät paleltumista ja
-hypotermiasta.
 %%%%
 book of maledictions
 
@@ -292,26 +150,10 @@ seikkailijoista jotka ovat kohdanneet huonon lopun kannettuaan tämän kirjan
 Luolastoon. Toisaalta, kuten skeptikot sanovat, melkein jokainen Luolastoon
 astuva kohtaa huonon lopun.
 %%%%
-book of minor magic
-
-Monia yksinkertaisia mutta hyödyllisiä maagisia taikoja sisältävä kirja. Monet
-merkittävät velhot ovat aloittaneet magian opiskelunsa tällä kirjalla.
-Ensimmäistä kertaa se julkaistiin kolme vuosisataa sitten, ja se on yksi
-tunnetuimmista loitsukirjoista maailmassa. Kädessäsi pitämä kirja on sen
-kahdeksaskymmeneskahdeksas painos.
-%%%%
 book of necromancy
 
 Makaaberi opus, joka on aloittelevien Nekromantikoiden ensimmäinen kirja hyvin
 usein. Ottaen huomioon Nekromantian vaarat, se on joskus myös viimeinen.
-%%%%
-book of party tricks
-
-Tässä kirjassa on monta hauskaa loitsua, jotka takuuvarmasti elävöittävät minkä
-tahansa velhojen juhlan. Lisäksi siinä on myös maljapuheita, vitsejä ja
-seurapelejä, kaikki kirjoitettuna kirkkailla väreillä ja hauskoilla
-käsialoilla. Kirjan loitsuja on muuteltu hieman, jotta niitä voi laulaa
-tunnettujen ryyppylaulujen tahdissa.
 %%%%
 book of power
 
@@ -333,30 +175,6 @@ olentoja kaikenlaisilta kamalilta alueilta. Siinä on julmia varoituksia, kuvien
 kera, tällaisten hirviöiden kutsumisen vaaroista, sillä kaikki ne eivät ole
 ystävällisiä.
 %%%%
-book of the dragon
-
-Tämän kirjan loitsuilla voi yrittää hallita lohikäärmeitä ja niiden
-ominaisuuksia. Se on lämmin, sidottuna suomuiseen nahkaan, ja jokainen sivu on
-ylellinen piirros jonkin sortin lohikäärmeestä, joko oikeasta tai kuvitellusta.
-%%%%
-book of the earth
-
-Tekstikirja kokeneille Maaelementalisteille. Sillä on mahtava tiheyden aura, ja
-sitä katsoessa tuntuu kuin seisoisi satojen kivitonnien alla, vaikka oikeasti
-olisikin taivasalla.
-%%%%
-book of the sky
-
-Taikakirja, jossa on voimakkaita Ilmaloitsuja. Tätä kirjaa kopioivat kirjurit
-on eristetty korkeisiin torneihin tasangoille, jotta he paremmin sopeutuvat
-Ilman voimiin. Kirkkaat riimut on kirjoitettu välkehtivässä salamoinnissa.
-%%%%
-book of the tempests
-
-Tämä kirja sisältää luonnon tuhovoimaisimpia voimia hallitsevia loitsuja.
-Avauksen yhteydessä salamat iskevät sivujen välissä, tuulenpuuskat osuvat
-lukijan kasvoihin ja koko kirja tärisee intensiivisessä värähtelyssä.
-%%%%
 book of the warp
 
 Kirja kokeneille Varppaajille. Sen hohtavat sivut ovat olemassa useissa
@@ -365,13 +183,6 @@ sääntöjä. Jotkin sivut katoavat kääntäessä, kun taas osa ilmestyy tyhjä
 toiset menevät toisten sivujen tai itsensä läpi. Joillakin sivuilla on kolme
 puolta, tai pelkästään yksi, tai epänormaali määrä kulmia. Tämä saattaa olla
 hämmentävää.
-%%%%
-book of transfigurations
-
-Edistynyt Muodonmuutoksien kirja, kirjoitettuna jatkuvasti muuttuvalle
-materiaalille. Velhon lukiessa kirjaa sivut saattavat olla paperia, silkkiä,
-kiveä, pergamenttia, etsattua lasia, villaa, metallifoliota, käärmeennahkaa,
-samettia tai tuhatta muuta asiaa.
 %%%%
 book of unlife
 
@@ -437,25 +248,9 @@ corpse
 
 Ruumis. Voit teurastaa sen tuottaaksesi syömäkelpoisia lihakimpaleita.
 %%%%
-crossbow
-
-Laite vasamien ampumiseen. Sen lataaminen ja ampuminen kestää hetken, mutta se
-tekee erittäin paljon vahinkoa taistelussa.
-%%%%
-crystal ball of energy
-
-Maaginen väline, jota voi käyttää taikaenergiavarastojen palauttamiseen, mutta
-jonka käytössä on varastojen tyhjenemisen riski. Riski on kääntäen
-verrannollinen siihen osaan, mikä käyttäjällä on maksimienergiastaan; lähellä
-maksimipotentiaalia esine on hyödyllisin.
-%%%%
 crystal plate armour
 
 Uskomattoman raskas mutta äärimmäisen tehokas kristallipanssari.
-%%%%
-dart
-
-Pieni, tasapainotettu, teräväkärkinen ammus, suunniteltu kädellä heitettäväksi.
 %%%%
 gold piece
 

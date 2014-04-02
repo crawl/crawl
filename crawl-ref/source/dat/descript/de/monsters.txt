@@ -32,9 +32,9 @@ Ein mächtiger, angriffslustiger Efreet. (Gibt es noch eine andere Art?)
 %%%%
 Boris
 
-Ein alter und starker Leiche. Wie der ganze wahre Leiche ist Boris unsterblich,
-und wird sich regenerieren sein ausgetrockneter Skelett-bleibt selbst wenn
-völlig aufgelöst.
+Ein alter und starker Lich. Wie alle wahren Liche ist Boris unsterblich, und
+wird seine ausgetrockneten Knochenreste regenerieren, selbst wenn diese völlig
+aufgelöst werden.
 %%%%
 Cerebov
 
@@ -44,9 +44,9 @@ gedrehten Schwertes bedeckt ist.
 %%%%
 Chuck
 
-Chuck der Steinriese liebt Felsen, das größere besser! Im Laufe der Jahre hat
-er geschafft, ganz die Sammlung einschließlich einiger seltener, verzauberter
-anzuhäufen.
+Chuck der Steinriese liebt Felsen, je größer desto besser! Im Laufe der Jahre
+hat er es geschafft eine ganze Sammlung einschließlich einiger seltener,
+verzauberter Steine anzuhäufen.
 %%%%
 Crazy Yiuf
 

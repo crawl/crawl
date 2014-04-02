@@ -1,9 +1,4 @@
 %%%%
-amulet of clarity
-
-Tento amulet chrání nositele před některými druhy pomatení mysli včetně těch,
-které způsobují nedobrovolné rozzuření.
-%%%%
 amulet of conservation
 
 Tento amulet chrání některé předměty nositele před úplným zničením, ale ne
@@ -15,20 +10,9 @@ Toto je amulet vyrobený k upoutání božské pozornosti k nositeli, následkem
 je snazší božstvo potěšit, ale zároveň snižuje toleranci božstva k prohřeškům,
 a při sundání odejme část božské přízně.
 %%%%
-amulet of guardian spirit
-
-Tento amulet snižuje nositelovu náchylnost ke zraněním a namísto toho vysává
-magickou sílu. V případě, že zásoby magie jsou na nule, duch nedokáže nositele
-ochránit dokud nebude k dispozici více energie.
-%%%%
 amulet of rage
 
 Tento amulet umožňuje jeho nositeli pokusit se rozzuřit.
-%%%%
-amulet of resist corrosion
-
-Tento amulet chrání nositele a jeho vybavení před korozí způsobenou kyselinou,
-ale ne zcela spolehlivě.
 %%%%
 amulet of resist mutation
 
@@ -45,18 +29,9 @@ amulet of warding
 Tento amulet odráží některé z útoků bytostí, které byly vyvolány pomocí magie,
 a rovněž činí nositele více odolným proti útokům, které vysávají životní sílu.
 %%%%
-apple
-
-Nadherně červené ovoce, které lahodí jazyku.
-%%%%
 apricot
 
 Dužnaté žlutooranžové ovoce, prunus armeniaca.
-%%%%
-banana
-
-Lahodné žluté ovoce, pravděpodobně vypěstované a importované nějakou amorální
-nadnárodní společností v důsledku zkorumpované obchodní dohody.
 %%%%
 bardiche
 
@@ -66,10 +41,6 @@ beef jerky
 
 Proužek konzervované, mrtvé krávy či býka.
 %%%%
-blessed falchion
-
-Meč s širokou čepelí určenou k sekání. Byl vylepšen silou Zářícího.
-%%%%
 blessed great sword
 
 Meč s velmi dlouhou a těžkou čepelí, a dlouhou rukojetí. Byl vylepšen silou
@@ -78,10 +49,6 @@ Zářícího.
 blessed long sword
 
 Meč s dlouhou čepelí určenou k sekání. Byl vylepšen silou Zářícího.
-%%%%
-blessed scimitar
-
-Dlouhý meč se zakřivenou čepelí. Byl vylepšen silou Zářícího.
 %%%%
 book of fixed level
 
@@ -126,13 +93,6 @@ corpse
 
 Mrtvola. Je možno ji nasekat na poživatelné kousky.
 %%%%
-crystal ball of energy
-
-Magické zařízení, které je možné použít k doplnění magické energie – nese s
-sebou však riziko, že energii naopak vysaje. Toto riziko je nepřímo úměrné
-zbývající úrovni magické energie; nejpříznivější výsledek mohou očekávat
-uživatelé, jejichž zásoby magické energie jsou téměř plné.
-%%%%
 crystal plate armour
 
 Neuvěřitelně těžká, ale extrémně efektivní zbroj z křišťálu.
@@ -148,22 +108,6 @@ Strašná zbraň, kovaná v ohni pekla.
 demon whip
 
 Hrozivá zbraň, spletená v hloubi pekelného ohně.
-%%%%
-eggplant
-
-Shnilý lilek, který můžeš hodit po vývojářích této hry. (Pokud toto čteš, jedná
-se chybu ve hře.)
-%%%%
-executioner's axe
-
-Tato hrozivá zbraň je pokryta zaschlou krví a primitivními rytinami
-symbolizujícími mučení a smrt, a honosí se dobře nabroušeným ostřím, jehož obří
-velikost naznačuje, že je velmi schopné oddělit končetiny od těla leckterému
-nešťastníkovi. Jsi si jistý, že by stačil jediný švih.
-%%%%
-giant club
-
-Obrovský kus dřeva, tvarovaný pro zlobří ruce.
 %%%%
 giant spiked club
 
@@ -194,11 +138,6 @@ lajatang
 Velmi vzácná a velmi efektivní dovážená zbraň. Představuje jí tyč s
 půlměsícovým ostřím na obou koncích.
 %%%%
-lantern of shadows
-
-Bezbožné zařízení, které povolává síly temnoty, aby uživateli za malou úplatu
-podaly pomocnou ruku.
-%%%%
 lemon
 
 Žluté ovoce.
@@ -212,28 +151,9 @@ lychee
 
 Tropické ovoce.
 %%%%
-manual
-
-Cenná kniha, která vám umožní praktikovat určité dovednosti efektivněji.
-%%%%
 meat ration
 
 Sytá porce sušené konzervovaného masa různého druhu.
-%%%%
-mottled dragon hide
-
-Šupinatá kůže skvrnitého draka s podivnými vzory. Pomocí magie lze z ní
-vytvořit řádnou zbroj. Díky hladkému povrchu se na ní neudrží lepkavý oheň.
-%%%%
-naga barding
-
-Speciální brnění vyrobené pro Nagy, které nosí přes ocasy.
-%%%%
-necronomicon
-
-Extrémně vzácná, mocná a zlovolná kniha. Její vazba je vyhotovena z jemné kůže
-neznámého původu. Mnoho pošetilých mágů se ji pokusilo studovat a zapletlo se
-tak s nekromantickými silami, které nemohli zvládnout.
 %%%%
 orange
 
@@ -277,17 +197,9 @@ potion of invisibility
 
 Lektvar, který vás skrývá před zraky ostatních.
 %%%%
-potion of magic
-
-Cenný lektvar, který poskytuje infuzi magické energie.
-%%%%
 potion of might
 
 Magický nápoj, výrazně zvyšující fyzickou sílu člověka, který jej vypije.
-%%%%
-potion of paralysis
-
-Lektvar, který eliminuje kontrolu nad vaším vlastním tělem.
 %%%%
 potion of poison
 
@@ -324,18 +236,9 @@ ring of protection from cold
 
 Tento prsten zajišťuje ochranu před chladem.
 %%%%
-ring of protection from fire
-
-Tento prsten poskytuje ochranu před teplem a ohněm.
-%%%%
 ring of protection from magic
 
 Tento prsten zvyšuje nositeli odolnost proti nepřátelským kouzlom.
-%%%%
-ring of regeneration
-
-Tento nádherný prsten výrazně zvyšuje regenerační schopnosti svého nositele,
-ale značně urychluje metabolismus.
 %%%%
 ring of see invisible
 
@@ -390,10 +293,6 @@ wand of magic darts
 
 Magický přístroj, který vrhá malé údery destruktivní energie. Nikdy se nemine.
 %%%%
-wand of paralysis
-
-Magické zařízení, které může způsobit nehybnost.
-%%%%
 wand of polymorph
 
 Magické zařízení, které způsobí, že se bytost promění do jiné formy. To je
@@ -411,8 +310,4 @@ namířeno.
 wand of teleportation
 
 Magické zařízení, které způsobí, že bytost bude náhodně přemístěna.
-%%%%
-war axe
-
-Jednoruční vojenská sekera s dlouhou rukojetí a čepelí s jednou hlavicí.
 %%%%

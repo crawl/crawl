@@ -1,9 +1,4 @@
 %%%%
-amulet of clarity
-
-Este amuleto protege a su portador de algunas formas de confusión mental,
-incluyendo la furia involuntaria.
-%%%%
 amulet of conservation
 
 Este amuleto protege de la destrucción algunas de las pertenencias de su
@@ -16,13 +11,6 @@ forma, será más fácil agradar a tu dios, pero al mismo tiempo, también será
 difícil que tu dios perdone tus transgresiones. Al quitarte este amuleto,
 perderás una parte del favor divino logrado.
 %%%%
-amulet of guardian spirit
-
-Este amuleto hace que su portador sea un poco menos vulnerable al daño externo.
-Cuando el portador reciba algún daño, una parte de este se descontará de los
-puntos de magia, en lugar de los puntos de vida. Si las reservas mágicas están
-agotadas, este amuleto no tendrá ningún efecto.
-%%%%
 amulet of inaccuracy
 
 Este amuleto hace que su portador sea menos preciso en el combate cuerpo a
@@ -31,11 +19,6 @@ cuerpo, y cuando ataque monstruos mediante ataques a distancia o hechizos.
 amulet of rage
 
 Este amuleto permite a su portador entrar en un estado de furia.
-%%%%
-amulet of resist corrosion
-
-Este amuleto protege a su portador y su equipamiento de la corrosión causada
-por ácidos, aunque no de forma infalible.
 %%%%
 amulet of resist mutation
 
@@ -61,10 +44,6 @@ animal skin
 
 La piel de un animal.
 %%%%
-apple
-
-Una deliciosa, y tersa fruta roja, ácida al paladar.
-%%%%
 apricot
 
 Prunus armeniaca, una suculenta fruta amarillenta o anaranjada.
@@ -73,27 +52,13 @@ arrow
 
 Una flecha, hecha para ser disparada con un arco.
 %%%%
-banana
-
-Una deliciosa fruta amarillenta, probablemente cultivada e importada por alguna
-multinacional inmoral, para llevar a cabo un corrupto acuerdo comercial.
-%%%%
 bardiche
 
 Una larga garrocha con una enorme cuchilla en uno de sus extremos.
 %%%%
-battleaxe
-
-Una gran hacha con una cuchilla de doble filo.
-%%%%
 beef jerky
 
 Una tira de carne seca de vaca o toro.
-%%%%
-blessed falchion
-
-Una espada con una amplia cuchilla cortante. Ha sido mejorada con el poder de
-El Resplandeciente.
 %%%%
 blessed great sword
 
@@ -105,11 +70,6 @@ blessed long sword
 Una espada con una larga cuchilla. Ha sido mejorada con el poder de El
 Resplandeciente.
 %%%%
-blessed scimitar
-
-Una espada con una cuchilla curvada. Ha sido mejorada con el poder de El
-Resplandeciente.
-%%%%
 blowgun
 
 Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un gran
@@ -119,11 +79,6 @@ silencioso.
 bolt
 
 Un virote para ballesta.
-%%%%
-book of air
-
-Un libro que contiene hechizos mágicos. Sientes una suave brisa al hojear sus
-páginas.
 %%%%
 book of alchemy
 
@@ -140,41 +95,13 @@ endebles podrían encontrar su perdición al intentar leer este opus.
 ADVERTENCIA: Si fallas al intentar memorizar un hechizo de este libro,
 recibirás un castigo.
 %%%%
-book of beasts
-
-Un libro con hechizos mágicos. ¡Ten cuidado, no vaya a ser que te muerda!
-%%%%
-book of burglary
-
-Un libro desgastado, con una pequeña llave entre dos de sus hojas.
-%%%%
-book of callings
-
-Un libro con hechizos mágicos.
-%%%%
 book of cantrips
-
-Un libro con hechizos mágicos.
-%%%%
-book of changes
-
-Un libro con hechizos mágicos.
-%%%%
-book of clouds
 
 Un libro con hechizos mágicos.
 %%%%
 book of conjurations
 
 Un libro con hechizos mágicos.
-%%%%
-book of control
-
-Un libro con hechizos mágicos.
-%%%%
-book of death
-
-Un libro negro que contiene hechizos escritos con presura.
 %%%%
 book of debilitation
 
@@ -189,14 +116,6 @@ book of enchantments
 
 Un libro con hechizos mágicos.
 %%%%
-book of envenomations
-
-Un libro con hechizos mágicos.
-%%%%
-book of fire
-
-Un libro completamente abrasado que contiene hechizos mágicos.
-%%%%
 book of fixed level
 
 Un libro con hechizos mágicos.
@@ -205,42 +124,13 @@ book of fixed theme
 
 Un libro con hechizos mágicos.
 %%%%
-book of flames
-
-Un libro, algo chamuscado, que contiene hechizos mágicos.
-%%%%
-book of frost
-
-Un libro con hechizos mágicos. Esta helado.
-%%%%
-book of geomancy
-
-Un libro con hechizos mágicos.
-%%%%
-book of hinderance
-
-Un libro con hechizos mágicos.
-%%%%
-book of ice
-
-Un libro con hechizos mágicos. Por un instante, un viento glacial te hiela al
-abrirlo.
-%%%%
 book of maledictions
-
-Un libro con hechizos mágicos.
-%%%%
-book of minor magic
 
 Un libro con hechizos mágicos.
 %%%%
 book of necromancy
 
 Un polvoriento tomo de magia prohibida.
-%%%%
-book of party tricks
-
-Un libro con hechizos mágicos.
 %%%%
 book of power
 
@@ -254,27 +144,7 @@ book of summonings
 
 Un libro con hechizos mágicos.
 %%%%
-book of the dragon
-
-Un libro con hechizos mágicos. Es cálido al tacto.
-%%%%
-book of the earth
-
-Un libro con hechizos mágicos.
-%%%%
-book of the sky
-
-Un libro con hechizos mágicos. Saltan chispas desde las páginas.
-%%%%
-book of the tempests
-
-Un libro con hechizos mágicos.
-%%%%
 book of the warp
-
-Un libro con hechizos mágicos.
-%%%%
-book of transfigurations
 
 Un libro con hechizos mágicos.
 %%%%
@@ -336,27 +206,9 @@ corpse
 
 Un cadáver. Puedes descuartizarlo para conseguir trozos de carne comestible.
 %%%%
-crossbow
-
-Un artilugio usado para disparar pernos, que requiere un cierto tiempo para
-recargar y disparar. Es capaz de hacer un gran daño en combate.
-%%%%
-crystal ball of energy
-
-Un dispositivo mágico que sirve para recuperar energía mágica, pero su uso
-también conlleva el riesgo de vaciar completamente las reservas mágicas de su
-usuario en algunas ocasiones. Este riesgo es inversamente proporcional al
-porcentaje de energía mágica que actualmente posea el usuario. Por tanto, será
-más útil para aquellos que se encuentren cerca de tener llenas las reservas
-mágicas.
-%%%%
 crystal plate armour
 
 Una armadura de cristal, increíblemente pesada, pero extremadamente efectiva.
-%%%%
-dart
-
-Una pequeña arma arrojadiza.
 %%%%
 decaying skeleton
 
@@ -381,11 +233,6 @@ tormenta eléctrica. Su efectividad mejora considerablemente cuando está en las
 manos de alguien habilidoso en el uso de dispositivos mágicos, pero es
 imposible su uso por parte de alguien que no sea conductivo.
 %%%%
-eggplant
-
-Una berenjena podrida que puedes arrojar a los desarrolladores de Crawl. (Si
-ves este mensaje, se trata de un error del programa.)
-%%%%
 eudemon blade
 
 Una gloriosa cuchilla creada en los forjas del Cielo, y poseída por un espíritu
@@ -395,17 +242,6 @@ Resplandeciente.
 eveningstar
 
 Lo contrario del lucero del alba.
-%%%%
-executioner's axe
-
-Esta terrorífica arma, aunque cubierta de sangre seca y unos bastos grabados
-sobre la tortura y la muerte, aún conserva una cuchilla bien afilada. Su enorme
-cabeza parece muy capaz de desmembrar cualquiera que se haga el loco, y tienes
-la certeza de que un solo golpe bastaría.
-%%%%
-falchion
-
-Una espada con una amplia cuchilla cortante.
 %%%%
 fire dragon armour
 
@@ -419,15 +255,6 @@ La escamosa piel de un auténtico dragón. Puede usarse para elaborar una
 armadura, pero incluso en su actual estado proporciona gran protección contra
 los efectos del fuego, aunque a costa de hacerte más vulnerable a los efectos
 del frío.
-%%%%
-flail
-
-Parecido a una maza, pero el mango y la masa de metal están unidos por una
-cadena.
-%%%%
-giant club
-
-Un gigantesco trozo de madera, del tamaño ideal para las manos de un ogro.
 %%%%
 giant spiked club
 
@@ -454,19 +281,6 @@ gold piece
 
 Una montón de brillantes monedas de oro.
 %%%%
-grand grimoire
-
-Un desolador silencio parece rodear a este libro al abrirlo. Incluso el mismo
-aire parece retroceder ante las monstruosidades aquí representadas. Las
-páginas, cubiertas con abominables runas, describen como los más poderosos
-convocadores pueden hacer que se plieguen a su voluntad las cosas más terribles
-halladas en cualquiera de los planos. Sin embargo, han sido muchas las almas
-incautas que han jugado con este tomo y han caído en la locura a causa de
-horrores eldritch que están fuera del alcance de la imaginación.
-
-ADVERTENCIA: Si fallas al intentar memorizar un hechizo de este libro,
-recibirás un castigo.
-%%%%
 grape
 
 Una pequeña fruta.
@@ -475,18 +289,6 @@ great mace
 
 Una enorme y pesada maza.
 %%%%
-great sword
-
-Una espada con una larguísima y pesada cuchilla y un gran mango.
-%%%%
-halberd
-
-Una larga garrocha con una prominente hacha en su extremo.
-%%%%
-hammer
-
-La cosa con la que clavas puntillas, modificada para el combate.
-%%%%
 helmet
 
 Una protección metálica para la cabeza.
@@ -494,12 +296,6 @@ Una protección metálica para la cabeza.
 honeycomb
 
 Un trozo de un panal de miel, creado por abejas gigantes.
-%%%%
-ice dragon armour
-
-Una armadura mágica confeccionada a partir de las escamas de un dragón que
-exhalaba escarcha. Proporciona gran protección contra los efectos del frío,
-pero hace a su usuario más vulnerable a los efectos del fuego.
 %%%%
 ice dragon hide
 
@@ -526,11 +322,6 @@ lajatang
 Una exótica y muy efectiva arma de importación. Consiste en una garrocha, con
 cuchillas en forma de media luna en ambos extremos.
 %%%%
-lantern of shadows
-
-Un utensilio profano que sirve para solicitar los servicios de los poderes de
-la oscuridad, aunque con un pequeño coste.
-%%%%
 large rock
 
 Un piedra, usada por los gigantes como proyectil. {{
@@ -545,19 +336,6 @@ eres incapaz de usarla."
     end
 }}
 %%%%
-large shield
-
-Parecido a un escudo convencional, pero un poco más grande. {{
-    if you.race() == "Ogre"
-       or you.race() == "Troll"
-    then
-        return "Parece que es de tu talla."
-    else
-        return "Es bastante aparatoso de llevar, y ralentiza la velocidad " ..
-               "a la que puedes atacar."
-    end
-}}
-%%%%
 leather armour
 
 Una armadura de cuero endurecido.
@@ -565,10 +343,6 @@ Una armadura de cuero endurecido.
 lemon
 
 Una fruta amarillenta.
-%%%%
-long sword
-
-Una espada con una larga cuchilla.
 %%%%
 longbow
 
@@ -579,43 +353,9 @@ lychee
 
 Una fruta tropical.
 %%%%
-mace
-
-Un largo mango, con una pesada masa de metal en su extremo.
-%%%%
-manual
-
-Un valioso libro que permite entrenar una capacidad más eficientemente.
-%%%%
 meat ration
 
 Una ración nutritiva de carne seca y en conserva.
-%%%%
-morningstar
-
-Una maza cubierta de pinchos.
-%%%%
-mottled dragon hide
-
-La escamosa piel de un dragón moteado. Puede ser transformada en una armadura
-mediante procedimientos mágicos. Su suave superficie no permite el fuego
-adherente se fije.
-%%%%
-naga barding
-
-Una armadura especial para Nagas, que les sirve para cubrir la cola de
-serpiente.
-%%%%
-necronomicon
-
-Un libro extremadamente raro, poderoso y siniestro. Su envoltorio está hecho de
-fina piel de origen desconocido. Muchos magos inconscientes han tratado de
-estudiar este tomo solo para acabar atrapados bajo fuerzas necrománticas de las
-que no podían esperar su control.
-%%%%
-needle
-
-Un dardo envenenado. Puede ser lanzado con una cerbatana.
 %%%%
 orange
 
@@ -675,13 +415,6 @@ potion of brilliance
 Una poción mágica que aumenta en gran cantidad la inteligencia y el mana de
 aquél que la beba.
 %%%%
-potion of coagulated blood
-
-Una poción que contiene la esencia de la vida. Es vital para todos los seres
-vivos, al igual que para algunos no-muertos. Puede proporcionar nutrición para
-los que puedan alimentarse de carne. La sangre contenida no será degustable por
-mucho más tiempo.
-%%%%
 potion of confusion
 
 Una poción que confunde tus percepciones y reduce el control de las propias
@@ -692,39 +425,18 @@ potion of cure mutation
 Una poción que elimina alguna o todas las mutaciones que puedan estar
 afectándote.
 %%%%
-potion of curing
-
-Un fluido bendito que cura algunas heridas, aclara la mente y cura
-enfermedades. Si se usa cuando se está casi o con plena salud, puede restaurar
-ligeramente heridas permanentes.
-%%%%
 potion of decay
 
 Un líquido maldito, vil y pútrido que provoca que tu carne se pudra ante tus
 ojos.
 %%%%
-potion of degeneration
-
-Una pócima tóxica que puede causar cosas terribles en tu cuerpo, cerebro y
-reflejos.
-%%%%
 potion of experience
 
 Una bebida rarísima y verdaderamente maravillosa.
 %%%%
-potion of heal wounds
-
-Un elixir de curación mágica que hace que las heridas se cierren y sanen casi
-instantáneamente. Si se usa cuando se está casi o con plena salud, puede
-restaurar heridas permanentes.
-%%%%
 potion of invisibility
 
 Una poción que te oculta de la vista de los demás.
-%%%%
-potion of magic
-
-Una valiosa poción que infunde energía mágica.
 %%%%
 potion of might
 
@@ -734,10 +446,6 @@ física de quien la beba.
 potion of mutation
 
 Una poción que te provoca cosas muy extrañas.
-%%%%
-potion of paralysis
-
-Una poción que elimina el control sobre tu propio cuerpo.
 %%%%
 potion of poison
 
@@ -769,18 +477,10 @@ quarterstaff
 
 Un robusto palo de madera, empleado para el combate.
 %%%%
-quick blade
-
-Una pequeña y mágicamente ágil espada
-%%%%
 rambutan
 
 Una pequeña pero deliciosa fruta. Como llegó a este calabozo se lo pregunta
 todo el mundo.
-%%%%
-ring mail
-
-Una armadura de cuero cubierta por pequeñas anillas.
 %%%%
 ring of dexterity
 
@@ -792,21 +492,10 @@ ring of evasion
 Este anillo hace que su portador sea más o menos capaz de evitar ataques, en
 función de su grado de encantamiento.
 %%%%
-ring of hunger
-
-Este anillo maldito hace que su portador tenga hambre considerablemente más
-deprisa.
-%%%%
 ring of intelligence
 
 Este anillo aumenta o reduce la habilidad mental de su portador, en función de
 su grado de encantamiento.
-%%%%
-ring of invisibility
-
-Este poderoso anillo puede ser activado para ocultar a su portador de la vista
-de los demás, pero incrementa la velocidad de su metabolismo en gran medida
-mientras lo hace.
 %%%%
 ring of magical power
 
@@ -825,18 +514,9 @@ ring of protection from cold
 
 Este anillo protege del frío.
 %%%%
-ring of protection from fire
-
-Este anillo proporciona protección contra el calor y el fuego.
-%%%%
 ring of protection from magic
 
 Este anillo incrementa la resistencia de su portador contra embrujos adversos.
-%%%%
-ring of regeneration
-
-Este maravilloso anillo incrementa muy considerablemente los poderes
-recuperativos de su portador, pero también acelera su metabolismo al hacerlo.
 %%%%
 ring of see invisible
 
@@ -868,14 +548,6 @@ ring of wizardry
 
 Este anillo incrementa la habilidad de su portador para usar hechizos mágicos.
 %%%%
-robe
-
-Una prenda holgada, con mangas anchas y hecha de un tejido ligero. Las túnicas
-se pueden ajustar fácilmente a cualquier humanoide, sea cual sea su tamaño.
-Esta vestimenta ofrece poca protección ante el daño físico, pero no obstaculiza
-la capacidad para evadir ataques, o la adecuada realización de los gestos
-taumatúrgicos.
-%%%%
 royal jelly
 
 Una cosa gelatinosa dorada bastante nutritiva. Consumirla restaurará tus
@@ -895,11 +567,6 @@ scale mail
 Un traje de cuero cubierto con placas de metal unidas y superpuestas entre sí
 para proveer protección total, pero a costa de una reducida libertad de
 movimiento.
-%%%%
-scimitar
-
-Un sable largo. Su ancha y curvada hoja incrementa el daño que inflige, pero
-también hace un poco más difícil manipularla precisamente.
 %%%%
 scroll of acquirement
 
@@ -929,13 +596,6 @@ scroll of curse weapon
 
 Este pergamino impone una maldición a un arma empuñada.
 %%%%
-scroll of enchant armour
-
-Este pergamino le echa un encantamiento a una pieza de una armadura. La mayoría
-de ellas solo pueden ser encantadas hasta +2, excepto los escudos que pueden
-llegar a +3, y las corazas y bardas que pueden encantarse hasta un valor igual
-a su CA básico.
-%%%%
 scroll of fear
 
 Este pergamino causa un gran temor a aquellos que están viendo al lector.
@@ -943,11 +603,6 @@ Este pergamino causa un gran temor a aquellos que están viendo al lector.
 scroll of fog
 
 Este pergamino rodea al lector con una densa nube de niebla.
-%%%%
-scroll of holy word
-
-Este pergamino invoca los poderes del Cielo a causar un gran daño a todas las
-criaturas impías... incluyéndote!
 %%%%
 scroll of identify
 
@@ -972,13 +627,6 @@ scroll of teleportation
 Cuando leas este pergamino seras transportado a un lugar aleatorio tras esperar
 un poco.
 %%%%
-scroll of torment
-
-Este pergamino llama a los poderes de la oscuridad para infligir gran dolor en
-las criaturas cercanas... incluyéndote!. Este dolor divide en dos la
-resistencia de todas las criaturas vivientes, aunque nunca es directamente
-fatal.
-%%%%
 scythe
 
 Un ápero de granja, normalmente no apto para el combate.
@@ -987,10 +635,6 @@ shield
 
 Una pieza de metal diseñada para llevarse atada en un brazo. Es pesada de
 llevar y hace algo más lenta la velocidad a la que se puede atacar.
-%%%%
-short sword
-
-Una espada de hoja corta y cortante.
 %%%%
 slice of pizza
 
@@ -1015,24 +659,6 @@ Un vegetal repulsivo en forma de pepino.
 staff of conjuration
 
 Este bastón aumenta el poder de los conjuros lanzados por su portador.
-%%%%
-staff of death
-
-Este bastón aumenta el poder de los conjuros necromántico del portador, además
-de protegerlo de energía negativa. Si el portador tiene la habilidad
-evocaciones además de la de necromancia, pueden causar mucho dolor a las almas
-vivientes que golpee.
-%%%%
-staff of poison
-
-Este bastón aumenta el poder de los conjuros venenosos del portador mientras lo
-protege del veneno. Si el portador es hábil en evocaciones y en magia venenosa,
-puede envenenar a quien es golpeado por este bastón, incluso si las víctimas
-son naturalmente resistentes.
-%%%%
-staff of power
-
-Este bastón provee una reserva de poder mágico a su portador.
 %%%%
 strawberry
 

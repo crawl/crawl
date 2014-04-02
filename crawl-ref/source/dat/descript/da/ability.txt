@@ -94,13 +94,35 @@ Hellfire ability
 
 Hærger dine fjender med helvedesild.
 %%%%
+Release Delayed Fireball ability
+
+Udløser øjeblikkeligt en tidligere forberedt (forsinket) ildkugle, uden
+yderligere omkostninger i form af magi eller sult.
+%%%%
 Stop Singing ability
 
 Hold op med at synge dit slagskvad.
 %%%%
+Self-Restoration ability
+
+Genopretter din styrke, behændighed og intelligens samt eventuelle rådnede
+livspoint på permanent bekostning af et magipoint.
+%%%%
 Device Recharging ability
 
 Du kan genoplade en vånd eller stok på bekostning af et permanent magipoint.
+%%%%
+Dig ability
+
+Lader dig grave tunneller gennem bløde klipper og rustne porte. Du bekendtgør
+kun din intention om at grave ved at bruge evnen, for rent faktisk at gøre det
+må du bevæge dig ind i en mur. Det er naturligvis langsommere end at gå, larmer
+en del og gør dig sulten.
+%%%%
+Shaft Self ability
+
+Sender dig til en tilfældig placering en til tre niveauer nede, ligesom hvis du
+var hoppet gennem en skaktfælde. Det tager tid at grave skakten.
 %%%%
 Evoke Teleportation ability
 
@@ -151,6 +173,22 @@ ukontrollerede.
 End Transformation ability
 
 Vend tilbage til din normale form med en kort forsinkelse.
+%%%%
+Recite ability
+
+Prædiker Zins bud for uhyrer, hvilket kan føre til forskellige resultater.
+Recitationen fortsætter et kort stykke tid, men afbrydes af handlinger som at
+kaste besværgelser, læse skriftruller eller drikke eliksirer. Der er fire
+bøger, du kan prædike fra:
+ • Afskyens Bog: Denne bog behandler det mest afskyvækkende, Zin kender til:
+kaos i alle dets former. Disse recitationer påkalder Zins mest voldsomme vrede.
+ • Afsoningens Bog: De urene er næsten lige så hadet af Lovgiveren.
+Recitationer fra denne bog vil forvolde sådanne væsener skade.
+ • Apostatens Bog: Recitation fra denne bog sår forvirring blandt intelligente
+væsener. Men de som vover at tilbede andre guder end Zin, kan permanent blive
+berøvet muligheden for at sprede deres modbydelige tro.
+ • Anatemaets Bog: Dæmoner og de udøde er hadet af Zin. Denne bog giver dig
+midlerne til at irettesætte dem.
 %%%%
 Vitalisation ability
 
@@ -214,6 +252,12 @@ Recall Undead Slaves ability
 Kalder dine udøde følgesvende tilbage fra hvor som helst i de underjordiske
 gange til din umiddelbare nærhed.
 %%%%
+Injury Mirror ability
+
+Beskadiger angribende uhyrer ved at reflektere den skade de forvolder dig,
+tilbage på dem. Din fromhed reduceres afhængigt af hvor meget skade der
+reflekteres.
+%%%%
 Animate Dead ability
 
 Genopliver alle kadavere og skeletter i nærheden af dig som følgesvende. Bemærk
@@ -254,9 +298,19 @@ Minor Destruction ability
 
 Skyder et tilfældigt, skadeligt skud efter det valgte uhyre.
 %%%%
+Lesser Servant of Makhleb ability
+
+Hidkalder en smådæmon. Høj færdighed inden for påkaldelser mindsker risikoen
+for at den er fjendtlig.
+%%%%
 Major Destruction ability
 
 Skyder en tilfældig, skadelig stråle eller eksplosion efter målet.
+%%%%
+Greater Servant of Makhleb ability
+
+Hidkalder en større dæmon. Højere færdighed inden for påkaldelser mindsker
+risikoen for at den er fjendtlig.
 %%%%
 Channel Energy ability
 
@@ -286,6 +340,12 @@ besværgelser. Et sådant raseri følges som regel af en dyb udmattelse, en tid
 hvor du er langsom og ikke kan gå bersærk igen. I modsætning til andre kilder
 til raseri, kan din fromhed hos Trog sommetider forhindre dig i at besvime.
 %%%%
+Trog's Hand ability
+
+Påkalder dig en kraftig regenerationsevne som samarbejder med alle andre kilder
+til regeneration og oven i købet lader ikke-helenede arter regenerere. Dette
+øger også din beskyttelse mod fjendtlige fortryllelser.
+%%%%
 Brothers in Arms ability
 
 Hidkalder enorme, arrige allierede til at lave ravage.
@@ -299,6 +359,23 @@ blot at bede om indgriben, hvilket altid er gratis).
 
 Bemærk: Det er en stor synd at dræbe andre, mens du selv beder om at blive
 skånet!
+%%%%
+Lesser Healing ability
+
+Helbreder et andet væsen end dig en smule afhængigt af dine færdigheder med
+påkaldelser. Hvis du bruger denne evne på fjendtligtsindede uhyrer forsøger den
+at gøre dem neutrale. Det virker bedst på dyr, dårligere på humanoider fra din
+egen art, endnu dårligere på andre humanoider og værst på dæmoner og udøde.
+Tanketomme væsener kan ikke pacificeres, og intet uhyre kan pacificeres mens
+det sover. Chancen for en vellykket pacificering afhænger af helbredelsens
+virkning.
+
+Uanset om pacificeringen lykkes eller ej, så er den investerede mad og
+magipointet gået tabt. Hvis den lykkes bliver uhyret helbredt, og du får
+halvdelen af den erfaring det er værd, og muligvis noget fromhed. Ellers er
+uhyret upåvirket og du får ingenting.
+
+Du kan også helbrede allierede og neutrale uhyrer.
 %%%%
 Lesser Self-Healing ability
 
@@ -333,9 +410,22 @@ Helbreder en moderat mængde livspoint, afhængigt af dine færdigheder med
 påkaldelser. Større helbredelse lader dig helbrede omtrent tre gange så meget
 som med mindre helbredelse, på bekostning af lidt mere fromhed.
 %%%%
+Divine Vigour ability
+
+Dine maksimale livs- og magipoint bliver voldsomt forøget (den præcise
+forøgelse afhænger af din færdighed med påkaldelser). Dine nuværende livs- og
+magipoint øges proportionelt.
+%%%%
 Depart the Abyss ability
 
 Forlader Afgrunden til fordel for der, hvor du kom fra.
+%%%%
+Bend Space ability
+
+Du kan bøje materiens struktur omkring dig så du øjeblikkeligt translokerer en
+kort distance. Du translokerer og beskadiger somme tider også uhyrer i nærheden
+af dig. Når du bøjer materiens struktur ignorerer du effekter som normalt ville
+forhindre translokationer.
 %%%%
 Banish ability
 
@@ -356,6 +446,12 @@ tappe dit helbred og din energi.
 Draw One ability
 
 Vælg et hvilket som helst spil kort i din oppakning, og træk et kort fra det.
+%%%%
+Peek at Two ability
+
+Kasserer et kort fra et valgfrit spil i din oppakning for at trække to kort fra
+spillet, se på dem og blande dem ind i spillet igen. Spillet bliver indskrevet
+med de to kort, og hvis de er forskellige identificerer det spil.
 %%%%
 Triple Draw ability
 
@@ -396,6 +492,13 @@ bliver lettere at ramme. Vand som påvirkes af sollyset fordamper. Mere
 specifikt bliver dybt vand til lavt vand og lavt vand tørrer helt ud og
 afslører gangenes gulv.
 %%%%
+Growth ability
+
+Brug frugt til at dyrke en ring af planter rundt om dig selv. Hvis der ikke kan
+dannes en hel ring (fordi du ikke har frugt nok), vokser planterne frem på de
+felter ved siden af dig som er tættest på uhyrer. De planter du skaber får
+ekstra livspoint proportionelt med din færdighed for påkaldelser.
+%%%%
 Rain ability
 
 Får regn til at falde omkring dig, hvilket forvandler gulvet til lavt vand og
@@ -425,6 +528,11 @@ Temporal Distortion ability
 Forvrænger tidens strøm omkring dig, så uhyrer hopper fremad i tid i forhold
 til dig.
 %%%%
+Slouch ability
+
+Skader alle i syne som bevæger sig hurtigere end dig. De der er magisk
+forhastede, kommer særligt slemt til skade.
+%%%%
 Step From Time ability
 
 Fjerner dig fra tidens strøm. Ting omkring sker med deres sædvanlige tempo,
@@ -435,6 +543,11 @@ af sted.
 Request Jelly ability
 
 Skaber en naturlig gele, som vandrer rundt på niveauet og fordøjer genstande.
+%%%%
+Jelly Paralyse ability
+
+Du kan midlertidigt forhindre synligt slim i at fortære genstande ved at bede.
+Denne evne koster fromhed efter hvor meget slim, der skal påvirkes.
 %%%%
 Slimify ability
 
@@ -463,6 +576,15 @@ Shadow Step ability
 Hvis et væsen i din umbra står stille nok til, at du kan fokusere på dets
 skygge, så lader denne evne dig træde igennem skyggen, så du øjeblikkeligt
 placeres ved siden af det.
+%%%%
+Shadow Form ability
+
+Denne påkaldelse forvandler dig til et hvirvlende virvar af mørke skygger. Mens
+du er i denne form, er du permanent usynlig og immun over for gift, dræn,
+uhellig pinsel og fjendtlige fortryllelser. Al den skade du forvoldes halveres,
+og du bløder røg hver gang du bliver ramt. Til gængæld forvolder du selv kun
+halv skade, dine besværgelser kraft er alvorligt svækket og dine færdigheder
+bliver yderligere drænet, når du tager skade.
 %%%%
 Renounce Religion ability
 

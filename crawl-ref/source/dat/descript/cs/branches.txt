@@ -1,20 +1,4 @@
 %%%%
-Temple
-
-Chrám bohů, místo klidu a útočiště před šílenstvím žaláře. Obvykle obsahuje
-oltáře pro většinu známých bohů. Nachází se mezi úrovní žaláře 4 a 7 .
-%%%%
-Orcish Mines
-
-Dobře pracovali ve zlatých dolech pokolení Orkských kmenů. Tyto klikaté jeskyně
-jsou plné skřetů, jejich humanoidních dělníků a hromad jejich právě vytěženého
-zlata. Podnikaví obchodníci zavedli obchodní stanice v pomoci zmírnit orkům
-jejich aurické břemeno. Nahodilý způsob, jakým mají orkové tendenci kopat v
-jejich důlních šachtách má za následek složitou a zrádnou změť komor, ve které
-je snadné se dostat do pasti.
-
-Skřetí doly mají čtyři úrovně a obsahují vstup do Elfích síní.
-%%%%
 Elven Halls
 
 Zatímco většina elfích lidí  se nikdy nepřesunula do temného podzemního
@@ -32,133 +16,6 @@ rozsekat, zapálit nebo probodat opravdu něco bude.
 
 Doupě má osm podlaží a lze v něm nalézt vstup do dalších tří částí žaláře.
 %%%%
-Slime Pits
-
-Beztvará říše kyseliny, rosolu a slizu. Jakýkoliv pozůstatek inteligentních
-bytostí už se dávno rozpustil. Přesto však existují zkazky o velkém bohatství
-nadcházejícím se hluboko dole, skryto v tajných místnostech bez dveří či oken,
-kterými by mohla dovnitř proniknout kyselina. Je dobře známo, že i stěny na
-tomto hrozném místě jsou pokryté nebezpečnou kyselinou, která je silnější, čím
-hlouběji se nacházíte.
-
-Slizká jáma má pět pater a nachází se zde slizká runa. Vstup lze nalézt mezi
-Doupětem:6 a Doupětem:8.
-%%%%
-Tomb
-
-Hrobka Prastarých je místo prokletí a hrůz oživených nejodpornějšími
-nekromanty. Čestné bytosti zblednou při pouhé zmínce tohoto jména, seznam těch,
-kteří se vrátili z tohoto místa čisté smrti je mimořádně krátký.
-
-Hrobka má tři úrovně a obsahuje zlatou runu.  Její vstup je buď v  kryptě: 2
-nebo kryptě: 3.
-%%%%
-Dis
-
-Železné město Dis. Kdo obstojí ve zkoušce železem?
-
-Dis má sedm podlaží a nalézá se zde želená runa. Lze se do něj dostat přes
-Předsíň pekel.
-%%%%
-Gehenna
-
-Ohně Gehenny spálily mnoho sebevědomých hrdinů, a budou hořet navěky.
-
-Ohně Gehenny jsou sedm úrovní hluboké a obsahují Obsidianovou runu. Jsou
-přístupné přes předsálí pekla.
-%%%%
-Cocytus
-
-Ponurá a mrazem spálená pustina.
-
-Kokýtos je sedm úrovní hluboká a obsahuje ledovou runu. Je přístupná přes
-předsálí pekla.
-%%%%
-Tartarus
-
-Podsvětí plné úpadku a hniloby. Místní nemrtví, démoni a ďáblové z dobrodruhů,
-kteří se ženou za poklady, postupně vysávají všechen život.
-
-Tartaros má sedm podlaží a nalézá se zde kostěná runa. Lze se do něj dostat
-přes Předsíň pekel.
-%%%%
-Zot
-
-Část žaláře tak hrozivá, plna šílenství, zuřivosti a bláznovství, že byla
-bezpečně uzamčena před vstupem náhodných vetřelců. Jen ti nepomatenější
-dobrodruzi by se opovážili shromáždit požadované klíče, porušit pečeť a
-vstoupit hlouběji — a to vše jen kvůli marnivé naději, že získají bájný
-artefakt, který nikdo nikdy neviděl.
-
-Zotova říše má pět pater a lze vejít pouze když má vstupující u sebe alespoň
-tři runy.
-%%%%
-Abyss
-
-Bezedná hlubina je opravdu bizarní místo, které se neustále mění a křiví. Je
-plné řady růných monster, povětšinou démonické povahy, jejichž společným zájmem
-je pochutnat si na vetřelcích. Zároveň je to také odpadní skládka pro mnohé
-kouzelníky, kteří si libují v posílání rádoby šampiónů jako jsi ty na toto
-šílené místo, kde mají dokázat, že za něco stojí.  Podle všeho i chaos má
-nějakou strukturu, a Lugonu údajně kuje pikle prostřednictvím zdejších obyvatel
-i místa samotného.
-
-Hlubina má pět nekonečných pater. Počínaje třetím podlažím zde lze nalézt
-hlubinnou runu, a její výskyt je pravděpodobnější čím hlouběji se vydáte. Do
-Bezedné hlubiny se lze záměrně dostat pomocí portálů, nacházejících se v
-nižších patrech žaláře.
-%%%%
-Pandemonium
-
-Pandemonium je nekonečná říše bolesti a utrpení. Ačkoliv zde lze nalézt mnoho
-pokladů, všechny jsou střeženy démony a ještě krutějšími pány démonů. Mnohý z
-hrdinů který si spletl sebedůvěru s megalomanstvím, byl sprovozen ze světa pod
-přívalem muk a pekelného ohně.
-
-Pandemonium nemá konce. Portály lze v hojném počtu nalézt v hlubších patrech
-žaláře, ale dostat se zpět už však nemusí být stejně jednoduché.
-
-V Pandemoniu se nachází ne méně než pět run:
- • ohnivá runa v příjemně vyhřáté říši Cerebově
- • zářná runa v zamořeném panství Mnolega
- • magická runa, střežena tajemnými silami Lom Lobona a jeho pohůnků
- • temná runa v stínovém příbytku Gloorxe Vloqa
- • démonické runy, které vlastní méně slavní pánové démonů
-%%%%
-Labyrinth
-
-Labyrint je obrovské, složité bludiště, navržené nějakou záludnou, zlovolnou
-duší, z důvodů, které jsou již dávno ztraceny v čase. Staré příběhy říkají, že
-labyrint byl postaven coby vězení pro hrozivého minotaura. Novější historky
-tvrdí, že tam stále je a stráží jediný východ ven — a také kupu pokladů, které
-vzal bláznivým dobrodruhům, kteří se v bludišti ztratili a zemřeli tam hlady.
-Dávejte si v oněch měnících a klikatících se chodbách pozor, nebo i vaše věci
-skončí na minotaurově hromadě.
-%%%%
-Bazaar
-
-Zatímco někteří obchodníci si zřídili obchod přímo v žaláři, jiní cestují v
-karavanech z místa na místo. Bazary těchto potulných obchodníků mají řadu
-různých obchodů a často mají lepší zboží než usedlíci, někdy dokonce i
-výhodněji.
-
-Buďte varováni, že jejich kočovný životní styl naučil tyto prodejce, aby si
-přivlastnili všechny položky, které jim může dobrodruh zanechat a pak rychle
-odejdou, zřejmě prodávat jinam.
-%%%%
-Trove
-
-Kdysi dávno podnikavý zloděj-mág, sužovaný strachem z toho, že bude dopaden při
-loupení, vytvořil systém portálů vedoucích do tajných pokladnic a místností
-plných bohatství. Byl ale příliš bojácný než aby je vykradl sám, a tak namísto
-toho za nehoráznou cenu nabízel vstup komukoliv, kdo je chtěl vydrancovat. Byl
-to chytrý vynálezce a portály navrhl tak, aby vstupující nasměroval tam, kde se
-nacházely poklady, které nejvíce vyhovovaly jejich potřebám.
-
-Je pravděpodobné, že předměty v pokladnici budou užitečné, avšak varování: onen
-kouzelní je již dávno mrtev, a i za života nikdy nenabízel záruku vrácení
-peněz.
-%%%%
 Sewer
 
 Každé obydlené místo, se musí zbavit svých odpadních produktů. Žalář má také
@@ -168,26 +25,10 @@ oběť přes páchnoucí zelenou vodou, lovících bez slitování. Příběhy s
 zmiňují o cenných předmětech omylem spláchnutých do odvodňovacích tunelů,
 zapomenutých a časem zplesnivělých ve vlhkých jeskyních.
 %%%%
-Ice Cave
-
-Pusté jeskyně vytvarované z masivního ledu, plné ozvěn bestiálního vytí.
-Složité řezby soch, které kdysi lemovaly její stěny byly pokřiveny a zkresleny
-staletími pomalého tání a zmrazování.
-%%%%
 Volcano
 
 Postaveno z obrovských bloků obsidiánu, může to být horká komora, která kdysi
 sloužila jako chrám pro nějaké podivné božstvo, nebo možná obydlí mohutného
 ohnivého obra. Vzduch se třpytí tíhou tepla a nudný řev srdce sopky nikdy
 nepřestane.
-%%%%
-Wizlab
-
-V minulosti věků, nejsilnější mágové – o mnohých z nich jste možná slyšeli –
-často našli nebo vybudovali malé říše uzavřené od zbytku světa, kde by se mohli
-izolovat ve snaze o stále větší magické znalosti a moc. Mágové jsou dávno pryč,
-ale mnoho z jejich tajemných laboratoří stále existuje, plné výsledků jejich
-experimentů. Ti, kteří chtějí prozkoumat tyto laboratoře mohou najít mocný
-magický poklad, ale pozor: mágové, kterým tyto laboratoře patřily si zaslouží
-svou pověst.
 %%%%
