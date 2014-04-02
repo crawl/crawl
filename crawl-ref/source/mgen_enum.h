@@ -118,6 +118,7 @@ enum band_type
     BAND_BLACK_SUN,
     BAND_VASHNIA,
     BAND_RANDOM_SINGLE,
+    BAND_TERPSICHORE,
     NUM_BANDS                   // always last
 };
 

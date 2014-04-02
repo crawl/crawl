@@ -3141,6 +3141,7 @@ enum monster_type                      // menv[].type
     MONS_FRANCIS,
     MONS_DUANE,
     MONS_MICHAEL,
+    MONS_TERPSICHORE,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4088,6 +4089,7 @@ enum spell_type
     SPELL_FORCEFUL_DISMISSAL,
     SPELL_SUMMON_MANA_VIPER,
     SPELL_PHANTOM_MIRROR,
+    SPELL_TUKIMAS_BALL,
     NUM_SPELLS
 };
 

@@ -1060,6 +1060,19 @@ struct spell_desc
 },
 
 {
+    SPELL_TUKIMAS_BALL, "Tukima's Ball",
+     SPTYP_HEXES,
+     SPFLAG_NONE,
+     9,
+     200,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
     SPELL_SUMMON_DEMON, "Summon Demon",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY | SPFLAG_BATTLE,

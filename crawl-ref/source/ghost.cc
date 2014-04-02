@@ -86,6 +86,7 @@ static spell_type search_order_third[] =
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_DRAGON_CALL,
     SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_TUKIMAS_BALL,
     SPELL_HAUNT,
     SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,
@@ -266,7 +267,11 @@ void ghost_demon::init_random_demon()
             spells[1] = RANDOM_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
+        {
             spells[2] = RANDOM_ELEMENT(search_order_third);
+            if (spells[2] == SPELL_TUKIMAS_BALL)
+                spells[2] = SPELL_NO_SPELL;
+        }
 
         if (coinflip())
         {

@@ -2500,6 +2500,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 3;
         break;
 
+    case MONS_TERPSICHORE:
+        natural_leader = true;
+        band = BAND_TERPSICHORE;
+        band_size = 1 + random_range(1, 3);
+        break;
+
     case MONS_GOLDEN_EYE:
         band = BAND_GOLDEN_EYE;
         band_size = 1 + random2(5);
@@ -3361,6 +3367,12 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_RANDOM_SINGLE:
         return pick_random_monster(level_id::current(), RANDOM_BANDLESS_MONSTER);
+
+    case BAND_TERPSICHORE:
+        if (one_chance_in(4))
+            return MONS_PHANTOM;
+        else
+            return MONS_DANCING_WEAPON;
 
     default:
         die("unhandled band type %d", band);

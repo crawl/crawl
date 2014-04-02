@@ -1176,6 +1176,17 @@
       }
     },
 
+    {  MST_TERPSICHORE,
+      {
+       SPELL_TUKIMAS_BALL,
+       SPELL_CORONA,
+       SPELL_HASTE,
+       SPELL_BLINK,
+       SPELL_TUKIMAS_BALL,
+       SPELL_HASTE,
+      }
+    },
+
     {  MST_KIRKE,
       {
        SPELL_PORKALATOR,

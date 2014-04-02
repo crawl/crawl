@@ -184,8 +184,20 @@ Legendary Destruction cast
 @The_monster@ offers @possessive@ life energy for powerful magic!
 %%%%
 Ephemeral Infusion cast
-
 @The_monster@ gestures around itself.
+%%%%
+Tukima's Ball
+
+@The_monster@ hums a lilting melody.
+
+@The_monster@ sings a lively tune!
+
+%%%%
+unseen Tukima's Ball
+
+You hear someone hum a lilting melody!
+
+You hear someone hum a lively tune!
 %%%%
 Phantom Mirror cast
 
@@ -318,6 +330,34 @@ You hear an invocation said in the dwarven tongue.
 You see a slight glow in a spot of thin air.
 
 Someone prays in loud words.
+%%%%
+Terpsichore cast targeted
+
+@The_monster@ looks at @target@ while chanting.
+
+@The_monster@ looks at @target@ and waves @possessive@ arms gracefully.
+
+@The_monster@ casts a spell at @target@.
+%%%%
+Terpsichore cast
+
+@The_monster@ weaves a pattern with her spectral knives.
+
+@The_monster@ jumps to perform a pas de chat.
+
+@The_monster@ leaps into a pas de poisson!
+
+@The_monster@ performs a soubresaut!
+%%%%
+unseen Terpsichore cast
+
+You hear spectral shoes clatter against the floor.
+%%%%
+Mennas cast
+
+@The_monster@ casts a spell.
+
+@The_monster@ gestures silently.
 %%%%
 # Roxanne can't gesture or point either.
 Roxanne cast

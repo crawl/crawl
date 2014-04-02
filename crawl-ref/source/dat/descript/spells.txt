@@ -1475,6 +1475,10 @@ Venom Bolt spell
 
 This spell throws a penetrating bolt of poison.
 %%%%
+Tukima's Ball spell
+
+This spell causes weapons on the ground near the caster to all leap into the air and dance together.
+%%%%
 Virulence spell
 
 This spell makes a target more vulnerable to poison, and enhances any poison

@@ -48,6 +48,8 @@ bool summon_berserker(int pow, actor *caster,
                       monster_type override_mons = MONS_PROGRAM_BUG);
 bool summon_holy_warrior(int pow, bool punish);
 
+spret_type cast_tukimas_ball(actor *caster, int pow, god_type god = GOD_NO_GOD,
+                             bool force_hostile = false, bool fail = false);
 spret_type cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
                               bool force_hostile = false, bool fail = false);
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail);

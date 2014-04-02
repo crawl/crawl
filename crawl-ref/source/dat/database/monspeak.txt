@@ -6330,6 +6330,82 @@ _Terence_rare_
 
 ## END Terence ###
 %%%%
+############ TERPSICHORE ### A spectral dancer
+# Cantrip messages
+Terpsichore_self_buff
+
+@_Terpsichore_self_buff_@
+%%%%
+Terpsichore_other_buff
+
+@_Terpsichore_other_buff@
+%%%%
+Terpsichore_debuff
+
+@_Terpsichore_debuff_@
+%%%%
+_Terpsichore_self_buff_
+
+@The_monster@ performs a graceful pirouette.
+
+@The_monster@ cartwheels!
+
+@The_monster@ extends @possessive@ arms.
+%%%%
+_Terpsichore_other_buff_
+
+@The_monster@ beats @possessive@ extended leg.
+
+A look of regret passes over @the_monster@'s face.
+
+@The_monster@ twirls.
+%%%%
+_Terpsichore_debuff_
+
+You feel light on your feet.
+
+You feel strangely compelled to dance the "Siva Afi."
+
+You feel compelled to twirl your non-existent dancing partner!
+
+Some annoying song lyrics get stuck in your head!
+%%%%
+Terpsichore
+
+@_terpsichore_common_@
+
+w:4
+@_terpsichore_rare_@
+%%%%
+_terpsichore_common_
+
+@The_monster@ exclaims, "I never get tired of watching this."
+
+@The_monster@ asks, "Have you ever felt haunted by the need to dance?"
+
+@The_monster@ chuckles, "Your body is so clumsy! Shall I rid you of it?"
+
+@The_monster@ calls, "Will you, won't you, will you join the dance?"
+
+@The_monster@ asks, "Would you care for a dance?"
+%%%%
+_terpsichore_rare_
+
+@The_monster@ wistfully exclaims, "I've searched so long for a dance partner..."
+
+@The_monster@ pleads, "Your soul could dance with me forever!"
+
+@The_monster@ whispers, "Love my way..."
+
+@The_monster@ explains, "If I could tell you what I felt, there would be no point in dancing it..."
+
+@The_monster@ smiles, "If you only knew what your memories absorbed to me would do for us, love."
+%%%%
+Terpsichore killed
+
+@The_monster@ whispers, "I'll be waiting for you..."
+## END Terpsichore ##
+%%%%
 ##################### A coarse and lanky orc. Urug lost his eye in a fight with a harpy,
 ############ URUG ### and has sworn to slay every last one of them. Unfortunately, the
 ##################### vision in his remaining eye is not very good, and he has mistaken you for one.

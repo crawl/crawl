@@ -3659,6 +3659,7 @@ static gender_type _mons_class_gender(monster_type mc)
             mc = MONS_SERPENT_OF_HELL;
         switch (mc)
         {
+        case MONS_TERPSICHORE:
         case MONS_JESSICA:
         case MONS_PSYCHE:
         case MONS_JOSEPHINE:

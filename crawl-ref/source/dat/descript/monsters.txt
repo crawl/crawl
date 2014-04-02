@@ -465,6 +465,10 @@ forced into hiding after a botched job, and can't really afford to risk letting
 anyone who has seen him leave the dungeon alive — there is a price on his head,
 after all.
 %%%%
+Terpsichore
+
+A spectre of unearthly beauty, dancing through the air without stopping to rest or take a bow.
+%%%%
 Tiamat
 
 A powerful dragon with mighty wings. Her scales seem to shimmer and change
