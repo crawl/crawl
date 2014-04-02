@@ -1472,14 +1472,7 @@ int prompt_eat_chunks(bool only_auto)
         chunks.push_back(item);
     }
 
-    // Exempt undead from auto-eating since:
-    //  * Mummies don't eat.
-    //  * Vampire feeding takes a lot more time than eating a chunk
-    //    and may have unintended consequences.
-    //  * Ghouls may want to wait until chunks become rotten
-    //    or until they have some hp rot to heal.
-    const bool easy_eat = (Options.easy_eat_chunks || only_auto)
-        && !you.is_undead;
+    const bool easy_eat = Options.easy_eat_chunks || only_auto;
 
     if (found_valid)
     {
@@ -1492,7 +1485,10 @@ int prompt_eat_chunks(bool only_auto)
 
             const bool bad = is_bad_food(*item);
 
-            if (easy_eat && !bad && i_feel_safe())
+            // Allow undead to use easy_eat, but not auto_eat, since the player
+            // might not want to drink blood as a vampire and might want to save
+            // chunks as a ghoul.
+            if (easy_eat && !bad && i_feel_safe() && !(only_auto && you.is_undead))
             {
                 // If this chunk is safe to eat, just do so without prompting.
                 autoeat = true;
