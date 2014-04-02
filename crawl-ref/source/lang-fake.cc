@@ -458,6 +458,7 @@ static void _grunt(string &txt)
         {"appreciates your killing of a holy being",
          "smash puny angel"},
         {"appreciates your kill", "screams: ANNIHILATED"},
+        {"You pass out from exhaustion.", "POWER NAP!!!"},
         {"You die...", "rip"},
         {0}
     };
