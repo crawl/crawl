@@ -1,15 +1,4 @@
 %%%%
-Temple
-
-Dievų Šventykla, ramybės ir užuovėjos nuo požemio beprotybės vieta. Ji būna
-tarp 4 ir 7 pagrindinio požemio lygių.
-%%%%
-Orcish Mines
-
-Orkų kasyklos, pilnos jų aukso, bet klastingos ir jose lengva pasiklysti.
-
-Orkų kasyklos yra keturių lygių gylio ir turi įėjimą į Elfų Menes.
-%%%%
 Elven Halls
 
 Nors dauguma elfų niekados nesikeltų į tokias niūrias požemines sales, kaip
@@ -26,119 +15,6 @@ papjautam, sudegintam ar nudurtam.
 
 Irštva yra aštuonių lygių gylio ir turi laiptus į dar tris atšakas.
 %%%%
-Tomb
-
-Protėvių Mauzoliejus, prakeikimų ir šlykščiausios mirties magijos pabudintų
-baisybių vieta.
-
-Mauzoliejus yra trijų lygių gylio ir turi auksinę runą. Įėjimas į jį yra
-Kripta:2 arba Kripta:3.
-%%%%
-Dis
-
-Dis, Geležinis Miestas. Kas atlaikys išbandymą geležimi?
-
-Dis yra septynių lygių gylio ir turi geležinę runą. Jį galima pasiekti per
-Pragaro Prieškambarį.
-%%%%
-Gehenna
-
-Gehenos liepsnos sudegino ne vieną savim pasitikintį herojų, ir jos degs
-amžinai.
-
-Gehena yra septynių lygių gylio ir turi obsidiano runą. Ją galima pasiekti per
-Pragaro Prieškambarį.
-%%%%
-Cocytus
-
-Niūri ir pakąsta šalnų dykvietė.
-
-Kokitas yra septynių lygių gylio ir turi ledinę runą. Jį galima pasiekti per
-Pragaro Prieškambarį.
-%%%%
-Tartarus
-
-Pūvantis pragaras. Laikui bėgant šios vietos nemirėliai, demonai ir velniai
-iščiulpia visų lobių ištroškusių lankytojų gyvybę.
-
-Tartaras yra septynių lygių gylio ir turi kaulo runą. Jį galima pasiekti per
-Pragaro Prieškambarį.
-%%%%
-Zot
-
-Saugiai užrakintą požemių komplekso dalis, paprastai minima kaip beprotybė,
-siautulys, pamišimas. Tik labiausiai pakvaišę nuotykių ieškotojai drįstų
-sulaužyti antspaudą ir skverbtis gylyn — tuščiai tikintis rasti legendinį
-artefaktą, kurio dar niekas niekada nėra matęs.
-
-Zot Karalystė yra penkių lygių gylio. Į ją galima patekti tik turint bent tris
-runas.
-%%%%
-Abyss
-
-Pragarmė yra išties keista vieta, nuolat besikeičianti ir iškreipta. Ji pilna
-visokių pabaisų, daugiausiai demoniškos prigimties, kurių bendras tikslas yra
-pasivaišinti įsibrovėliais. Tai taip pat yra šiukšlių pylimo vieta daugybei
-burtininkų, kurie mėgaujasi pasiųsdami būsimuosius nugalėtojus į šiuos
-bandomuosius beprotybės laukus. Kalbama, kad šis chaosas turi šiokią tokią
-struktūrą, nes atrodo, kad Lugonu rezga pinkles šiai vietai ir jos gyventojams.
-
-Čia galima rasti pragarmės runą. Sąmoningai Pragarmę galima pasiekti per
-vartus, randamus gilesniuose pagrindinio požemio lygiuose.
-%%%%
-Pandemonium
-
-Pandemoniumas yra begalinis skausmo ir kančių kraštas. Nors čia galite rasti
-nemažai lobių, visi tie turtai saugomi demonų ir dar žiauresnių už juos demonų
-valdovų. Daug herojų, supainioję pasitikėjimą savimi su megalomanija, netikėtai
-žuvo kankynės ir pragaro ugnies krušoje.
-
-Pandemoniumas yra nesibaigiantis. Vartai į jį gausiai randami gilesniuose
-pagrindinio požemio lygiuose. Turėkite omenyje, kad ištrūkti atgal gali būti
-sunkiau.
-
-Čia galite rasti ne mažiau kaip penkias runas:
- • ugninė — gerai įkaitintoje Cerebovo karalystėje
- • šviečianti — radioaktyvioje Mnolego valdoje
- • magiška saugoma paslaptingų Lom Lobono ir jo pakalikų jėgų
- • tamsioji guli miglotoje Gloorx Vloq buveinėje
- • mažiau žinomi valdovai turi ne vieną demoniškos runos kopiją
-%%%%
-Labyrinth
-
-Labirintas yra didelis ir sudėtingas raizginys, sumanytas rafinuotų ir
-piktavalių protų, vedinų jau niekam nebeatmenamų kėslų. Seni padavimai byloja,
-kad labirintas buvo sukonstruotas kaip kalėjimas bauginančiam minotaurui. Kiek
-naujesni pasakojimai sako, kad pabaisa ten vis dar tebegyvena, saugodamas
-vienintelį labirinto išėjimą — kartu su daugybe brangenybių, surinktų nuo
-pasiklydusių ir mirusių iš bado nuotykių ieškotojų kūnų. Būkite atsargūs
-nepastoviuose ir vingiuojančiuose šio labirinto praėjimuose, nes jūsų pačių
-nuosavybė irgi gali atsidurti minotauro lobių krūvoje.
-%%%%
-Bazaar
-
-Be prekiautojų, kurie įkūrė parduotuves įvairiose požemio vietose, yra ir kiti,
-kurie stengiasi užsidirbti, keliaudami iš vienos vietos į kitą. Mugėse būna tam
-tikras skaičius skirtingų parduotuvių, kuriose prekės dažnai yra geresnės, nei
-sėsliose, o kartais netgi su nuolaida.
-
-Taip pat turėkite minty, kad klajokliškas gyvenimo būdas išmokė pardavėjus
-pasisavinti bet kokius nuotykių ieškotojų paliktus daiktus ir greit išvykti,
-greičiausiai tam, kad juos parduotų kitur.
-%%%%
-Trove
-
-Kartą gyveno sumanus vagis ir burtininkas, kuris baiminosi būti sučiuptas
-nusikaltimo vietoje ir sukūrė vartų sistemą, vedančią į lobių slėptuves ir
-turtuolių patalpas. Kadangi pats pernelyg bijojo jas plėšti, vietoje to jis
-rinko lupikišką mokestį už įėjimą iš kiekvieno, norinčio jas ištuštinti. Jis
-buvo gabus amatininkas ir vartus suprojektavo taip, kad kiekvienas įeinantis
-pakliūtų į labiausiai jų poreikius atitinkančią slaptavietę.
-
-Daiktai šioje slėptuvėje greičiausiai bus naudingi, tačiau atminkite:
-burtininkas jau seniai miręs, bet net ir būdamas gyvas, jis niekad neteikė
-pinigų gražinimo garantijos.
-%%%%
 Sewer
 
 Kiekvienoje gyvenvietėje atsiranda ir kanalizacijos vamzdžiai ir drenažai,
@@ -148,21 +24,9 @@ negailestingai vienas kitą medžiojančius. Pasakojimai taip pat užsimena apie
 vertingus daiktus, paliktus bebaimių ir nesėkmingų lankytojų, pelijančius
 drėgnuose urvuose.
 %%%%
-Ice Cave
-
-Apleistas, kupinas aidų urvas tvirtame lede. Įmantrūs raižiniai ir statulos,
-kažkada vagoję jo sienas, dabar iškraipyti ir nublankę nuo amžiais
-besitęsiančių lėtų atitirpimų ir užšalimų.
-%%%%
 Volcano
 
 Ši patalpa, pastatyta iš milžiniškų obsidiano luitų, kadaise galėjo būti
 šventykla kokiai nors keistai dievybei, arba, galbūt, galingo ugnies milžino
 buveinė.
-%%%%
-Wizlab
-
-Vieno burtininko laboratorija, į kurią nerūpestingai palikti atviri vartai.
-Atsargiai, nes burtininkai mėgsta saugoti savo nuosavybę spąstais ir pačių
-sukurtomis pabaisomis!
 %%%%

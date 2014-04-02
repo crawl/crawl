@@ -3670,6 +3670,8 @@ bool game_options::set_lang(const char *lc)
         lang = LANG_PT, lang_name = "pt";
     else if (l == "ru" || l == "russian" || l == "русский" || l == "русскии")
         lang = LANG_RU, lang_name = "ru";
+    else if (l == "sv" || l == "swedish" || l == "svenska")
+        lang = LANG_SV, lang_name = "sv";
     else if (l == "zh" || l == "chinese" || l == "中国的" || l == "中國的")
         lang = LANG_ZH, lang_name = "zh";
     // Fake languages do not reset lang_name, allowing a translated

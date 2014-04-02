@@ -36,6 +36,12 @@ CMD_PRAY
 
 Bed til din gud
 %%%%
+CMD_PRAY verbose
+
+Hvis din gud holder af ofre, så vil dette ofre et lig eller en anden genstand.
+Hvis du står på et alter lader dette dig tilbede den tilhørende gud. Nogle få
+guder giver unikke gaver hvis du beder ved et alter, mens du har høj fromhed.
+%%%%
 CMD_SEARCH_STASHES
 
 Led efter genstande/elementer
@@ -122,6 +128,12 @@ Liste med kommandoer, indstillinger osv.
 CMD_CHARACTER_DUMP
 
 Gem karakterfremskridt
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Gemmer en masse oplysninger om din karakter i en fil ved navn 'spillernavn.txt'
+i morgue-mappen, så du kan læse den, når du lyster. Dette inkluderer de
+vigtigste statistikker, dit udstyr, dine besværgelser, færdigheder, noter osv.
 %%%%
 CMD_AUTOFIGHT
 

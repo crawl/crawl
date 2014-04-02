@@ -1,22 +1,4 @@
 %%%%
-Temple
-
-Un tempio degli Dei, un luogo di pace e rifugio dalla pazzia del Dungeon.
-Tipicamente contiene la maggior parte degli altari degli dei conosciuti. È
-locato tra il 4° e il 7° livello del Dungeon
-%%%%
-Orcish Mines
-
-Le ben lavorate miniere d'oro delle tribù degli orchi. Queste tortuose cave
-sono piene d'orchi, dei loro lavoratori umanoidi, e dell'oro appena estratto.
-Alcuni mercanti ambulanti hanno aperto dei negozi per aiutare gli orchi ad
-alleviarsi del loro peso d'oro. La maniera puramente casuale con cui gli orchi
-tendono a scavare le loro miniere ha portato alla creazione di un complesso e
-pericoloso groviglio di sale in cui è facile essere intrappolati.
-
-Le Miniere Orchesche sono profonde sette livelli e contengono l'entrata alle
-Sale degli Elfi.
-%%%%
 Elven Halls
 
 Laddove la maggior parte degli elfi non entrerebbe mai in complessi sotterranei
@@ -34,140 +16,6 @@ affettati, arsi vivi o pugnalati al farsi sventrare, azzannare e mangiati vivi.
 
 L'Antro è profondo otto livelli e contiene le scale ad altre tre ramificazioni.
 %%%%
-Slime Pits
-
-Il regno amorfo di acidi, gelatine e protoplasmi. Ogni traccia di forme di vita
-intelligenti è stata dissolta. Eppure, ci sono ancora voci che raccontano di
-grandi tesori in profondità, nascosti al sicuro in camere segrete senza porta o
-finestra che faccia trapelare l'acido. È ben saputo che addirittura le pareti
-di questo orrendo posto colano di acido, diventando sempre più caustico più si
-va in profondità.
-
-I Fossi dei Protoplasmi sono profondi sei livelli e contengono la runa melmosa.
-L'entrata è fra Antro:6 e Antro:8
-%%%%
-Tomb
-
-La Tomba degli Antichi è un luogo di dannazione, di orrori e della più vile
-negromanzia. Le creature oneste della superficie diventano pallide
-semplicemente a sentire il nome di questo posto. La lista di coloro che sono
-riusciti a tornare da questo posto di pura morte è incredibilmente breve.
-
-La Tomba è profonda tre livelli e contiene la runa d'oro. La sua entrata è o su
-Cripta:2 o Cripta:3
-%%%%
-Dis
-
-La Ferrea Città di DIte. Chi supererà la prova del ferro?
-
-Dite è profonda 7 livelli e contiene la runa di ferro. Vi ci si può accedere
-tramite il Vestibolo dell'Inferno.
-%%%%
-Gehenna
-
-I fuochi della Geenna hanno bruciato tanti confidenti eroi, e continueranno a
-farlo in eterno
-
-Gehenna è profonda sette livelli e contiene la runa di ossidiana. Vi ci si può
-accedere tramite il Vestibolo dell'Inferno.
-%%%%
-Cocytus
-
-Una deserto cupo e gelido.
-
-Il Cocito è profondo sette livelli e contiene la runa gelida. Vi ci si può
-accedere tramite il Vestibolo dell'Inferno.
-%%%%
-Tartarus
-
-Un mondo inferiore che decade. Col tempo, i nonmorti, demoni e diavoli di
-questo posto hanno assorbito tutta la vita dai visitatori a caccia di tesori.
-
-Il Tartaro è profondo sette livelli e contiene la runa d'ossa. Vi ci si può
-accedere tramite il Vestibolo dell'Inferno
-%%%%
-Zot
-
-Una regione del Dungeon che è così terrificante, piene di pazzia, furia e
-follia da essere stata chiusa a chiave per evitare intrusioni. Solo il più
-demente degli avventurieri oserebbe raccogliere le chiavi necessarie, rompere
-il sigillo e irrompere più in profondità — tutto per la vana speranza di
-trovare un artefatto favoloso su cui nessuno ha mai posato gli occhi.
-
-Il Regno di Zot è profondo tre livelli e vi si può entrare portando solo tre
-rune.
-%%%%
-Abyss
-
-L'Abisso è davvero un posto bizzarro, sempre in cambiamento e corrotto. È pieno
-di qualunque sorta di mostro, principalmente di natura demoniaca, il cui
-principale intento è quello di fare banchetto degli intrusi. È anche una
-discarica di molti stregoni, che si deliziano nel mandare gli aspiranti
-campioni come te in questi terreni di prova della pazzia. A quanto si dice, c'è
-una qualche struttura a tutto questo caos, in quanto Lugonu sembra essere avere
-conoscenza di questo posto e dei suoi abitanti.
-
-L'abisso consiste di cinque livelli infiniti. La runa abissale può essere
-trovata dal terzo livello in poi, ed è più comune in profondità. L'abisso può
-essere raggiunto da portali appositi nei livelli più profondi del Dungeon.
-%%%%
-Pandemonium
-
-Il Pandemonio è un reame infinito di dolore e sofferenza. Anche se qui puoi
-trovare un grande bottino, tutti questi tesori sono protetti da demoni e dai
-crudeli signori dei demoni. Tanti eroi, confondendo confidenza e megalomania,
-sono morti urlando in una pioggia di tormento e fiamme infernali.
-
-Il Pandemonio è senza fine. I suoi portali sono trovati con abbondanza nelle
-parti più profonde del Dungeon. Nota che uscirne potrebbe essere più difficile
-che entrarci.
-
-Nel Pandemonio vi sono cinque rune:
- • una runa fiammeggiante nel bollente regno di Cerebov
- • una runa raggiante nel contaminato dominio di Mnoleg
- • una runa magica sorvegliata dai poteri arcani di Lom Lobon e dai suoi
-sottoposti
- • una runa oscura nella dimora ombrosa di Gloorx Vloq
- • le rune demoniche che esistono in multiple copie, possedute da alcuni
-signori meno famosi.
-%%%%
-Labyrinth
-
-Il Labirinto è un largo, complesso dedalo progettato da menti subdole e
-maliziose oramai dimenticate dalla storia. Vecchi miti dicono che il Labirinto
-è stato costruito come prigione per un minotauro. Altre versioni più recenti
-sostengono che questa bestia abita ancora qui, sorvegliando l'unica uscita del
-Labirinto — e anche l'ammasso di tesori presi dai corpi degli sciocchi
-avventurieri morti di fame che si sono persi all'interno. Fa attenzione
-all'interno dei serpeggianti e variabili cunicoli del Labirinto, o anche i tuoi
-beni potrebbero entrare a far parte della pila del minotauro.
-%%%%
-Bazaar
-
-Quando alcuni mercanti decidono di aprire un negozio nel Dungeon, gli altri
-vagano in carovane da posto a posto. I bazaar di questi mercanti itineranti
-vantano una vasta quantità di diversi negozi e spesso hanno una scelta migliore
-di quelli sedentari, spesso anche a prezzi da affare.
-
-Ma ricordati che la loro natura di nomadi ha insegnato a questi mercanti ad
-appropriarsi di tutti gli oggetti che gli avventurieri si lasciano alle spalle
-per poi andarsene subito dopo, probabilmente con l'idea di rivenderli da
-qualche altra parte.
-%%%%
-Trove
-
-C'erano una volta un avventuroso ladro e uno stregone che, terrorizzati
-dall'essere colti ad intrufolarsi nelle case altrui, crearono un sistema di
-portali che porta a tesorerie e a camere da letto di ricchi. Non avendo il
-coraggio di saccheggiarle loro stessi, hanno invece scelto di far pagare un
-tassa salatissima a chiunque volesse fare uso di questi portali. Un furbo
-artificiere li ha programmati affinché portino alle entrate delle tesorerie più
-adatte ai bisogni della clientela.
-
-È probabile che gli oggetti trovati in questa tesoreria siano utili, ma bada:
-lo stregone è morto da tanto tempo, e anche da vivo non ha mai lontanamente
-pensato di fornire rimborsi ai clienti insoddisfatti.
-%%%%
 Sewer
 
 Ogni posto abitato necessita di un posto in cui gettare i suoi rifiuti. Anche
@@ -178,13 +26,6 @@ lurida acqua verde, facendo preda l'una dell'altra senza pietà alcuna. I
 racconti alludono anche a oggetti preziosi accidentalmente lavati via dalle
 condutture di scarico, dimenticati e abbandonati a marcire nelle umide caverne.
 %%%%
-Ice Cave
-
-Una desolata caverna scolpita nel ghiaccio solido e riempito dagli urli
-riecheggianti delle bestie. Gli intricati bassorilievi e statue che una volta
-ornavano queste mura sono state del tutto cancellate e oscurate dal lento
-scogliere ricongelarsi.
-%%%%
 Volcano
 
 Costruita da enormi blocchi di ossidiana, questa soffocante sala  potrebbe
@@ -192,15 +33,4 @@ essere stata una volta un tempio per qualche strana divinità, o magari
 l'abitazione di un potente gigante di fuoco. L'aria scintilla con un calore
 opprimente, mentre il ruggire sordo del cuore del vulcano non cessa mai di
 farsi sentire.
-%%%%
-Wizlab
-
-In tempi passati i più potenti maghi — probabilmente avrai sentito parlare di
-alcuni di loro — erano soliti trovare o costruire dei piccoli regni sigillati
-dal resto del mondo, dove potevano isolarsi alla ricerca di un sapere magico
-sempre più grande. I maghi non esistono più da tanto tempo, ma tanti dei loro
-arcani laboratori esistono ancora, colmi con i risultati dei loro esperimenti.
-Coloro che sono disposti a esplorare questi laboratori possono trovare dei
-potenti artefatti magici, ma attenzione: gli stregoni a cui appartenevano
-questi laboratori si meritavano la reputazione che avevano.
 %%%%

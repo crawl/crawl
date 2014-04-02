@@ -1,43 +1,12 @@
 %%%%
-A gate leading back out of here
-
-:name Portti pois täältä
-Tämä portti näyttää antavan sinun palata sinne mistä tulit.
-%%%%
 A gate leading back out of this place
 
 :name Portti ulos tästä paikasta
 Tämä portti johtaa takaisin luolastoon.
 %%%%
-A gate leading out of Pandemonium
-
-:name Portti ulos Sekasorrosta
-Vihdoinkin, portti takaisin luolastoon.
-%%%%
 A gateway to Hell
 
 Tämä portti vie Helvetin eteiseen. Harvat menisivät sinne vapaaehtoisesti.
-%%%%
-A gateway to the Iron City of Dis
-
-:name Porttikäytävä Disiin, Rautakaupunkiin
-Kuka kestää raudan testin?
-%%%%
-A gateway to the decaying netherworld of Tartarus
-
-Tämä paikka tuntuu säteilevän negatiivista energiaa.
-%%%%
-A gateway to the freezing wastes of Cocytus
-
-Palelluttavilta mailta tuleva kylmyys koskettaa sieluasi.
-%%%%
-A glistening fountain
-
-Ainoa asia mikä siitä puuttuu on vesi.
-%%%%
-A crumbling stone wall
-
-Se näyttää muinaiselta.
 %%%%
 A dead tree
 

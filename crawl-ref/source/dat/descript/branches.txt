@@ -22,8 +22,8 @@ The well-worked goldmines of the orcish tribes are filled with orcs, their
 humanoid labourers, and piles of their freshly mined gold. Enterprising
 merchants have set up trading posts to help relieve the orcs of their auric
 burden. The haphazard manner in which orcs tend to dig their mineshafts has
-resulted in a complex and treacherous tangle of chambers in which it is easy
-to get trapped.
+resulted in a complex and treacherous tangle of chambers in which it is easy to
+get trapped.
 
 The Orcish Mines are four levels deep and contain the entrance to the Elven
 Halls.
@@ -125,8 +125,8 @@ is either on Vaults:2 or Vaults:3.
 Tomb
 
 The Tomb of the Ancients is a place of damnation, of horrors animated by the
-vilest necromancy. The list of those who have returned from this place of
-pure death is exceedingly short.
+vilest necromancy. The list of those who have returned from this place of pure
+death is exceedingly short.
 
 The Tomb is three levels deep and contains the golden rune. Its entry is either
 on Crypt:2 or Crypt:3.

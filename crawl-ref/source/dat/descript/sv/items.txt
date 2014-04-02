@@ -1,0 +1,17 @@
+%%%%
+banana
+
+En läcker gul frukt.
+%%%%
+grape
+
+En liten frukt.
+%%%%
+lemon
+
+En gul frukt.
+%%%%
+lychee
+
+En tropisk frukt.
+%%%%

@@ -1,7 +1,18 @@
 %%%%
+Zin
+
+Zin est le Dieu de ceux qui se concentre sur la force intérieure. Ses fidèles
+doivent rester purs de corps et d'âme, s'abstenant de magie impie, démoniaque,
+souillée ou chaotique, évitant les mutations, et ne doivent jamais consommer de
+la chair d'êtres intelligents. Ils peuvent prêcher aux hérétiques ou les
+emprisonner, et ultimement peuvent obtenir un refuge divin. Zin valorise
+l'altruisme, exige une dîme (un dixième) de tout l'or gagné, préférant les dons
+plus élevés. Les disciples de Zin peuvent se convertir à Elyvilon ou à
+L’Étincelant tout en gardant une partie de leur Piété.
+%%%%
 the Shining One
 
-L’Étincelant est une divinité puissante en croisade contre le mal. Ses fidèles
+L’Étincelant est une puissante divinité en croisade contre le mal. Ses fidèles
 et leurs alliés peuvent recevoir diverses bénédictions quand ils éradiquent
 sans pitié les êtres démoniaques ou maudits. Les fidèles ne doivent jamais
 utiliser la magie démoniaque ou impie et, doivent prouver leur supériorité
@@ -20,19 +31,27 @@ Yredelemnul
 
 Yredelemnul le Sombre est un Dieu maléfique adoré par ceux qui recherche à
 dominer la mort et les morts-vivants. Ses fidèles, qui doivent combattre tout
-ce qui est saint, peuvent soulever des légions de morts-vivants serviles, et
+ce qui est saint, peuvent lever des légions de morts-vivants serviles, et
 obtenir un certain nombre de pouvoirs utiles (sinon déplaisants pour les
 autres). Yredelemnul apprécie les tueries,  mais préfère que les cadavres
 soient asservis plutôt que sacrifiés. Détruire des êtres artificiels est aussi
 apprécié, car ils n'ont jamais été réellement ni vivants, ni morts.
 %%%%
+Xom
+
+Xom est un Dieu du chaos. Sauvage et imprévisible, il ne cherche aucun
+adorateur mais des jouets pour s'amuser. Beaucoup suivent Xom dans l'espoir de
+recevoir de fabuleuses récompense et de puissants pouvoirs, mais Xom n'est rien
+sinon capricieux. De plus, il n'est rien qu'un fidèle puisse faire pour
+influencer l'humeur de Xom.
+%%%%
 Vehumet
 
-Vehumet est le Dieu des pouvoirs magiques destructeurs. Ses fidèles obtiennent
-plusieurs pouvoirs utiles pour améliorer leur pratique des arts hermétiques et,
-le plus convoité est celui d'avoir accès à des sortilèges effroyables issus de
-la bibliothèque de Vehumet. Sa dévotion à Vehumet peut être prouvé en
-provoquant autant de carnage et de destruction que possible.
+Vehumet est le Dieu des pouvoirs magiques destructeurs. Ses disciples
+obtiennent plusieurs pouvoirs utiles pour améliorer leur pratique des arts
+hermétiques et, le plus convoité est celui d'avoir accès à des sortilèges
+effroyables issus de la bibliothèque de Vehumet. Sa dévotion à Vehumet peut
+être prouvé en provoquant autant de carnage et de destruction que possible.
 %%%%
 Okawaru
 
@@ -50,7 +69,7 @@ Makhleb le Destructeur est une divinité terrifiante de l'effusion de sang et de
 la mortification de la chaire. Ses fidèles doivent purifier les autres en leur
 infligeant souffrances et mort au nom de Makhleb, et en ravageant les corps
 fraichement morts. Les fidèles dévoués pourront accéder à des énergies brutes
-et à des serviteurs démoniaques du chaos, de sorte qu'ils puissent mieux brise
+et à des serviteurs démoniaques du chaos, de sorte qu'ils puissent mieux briser
 le monde impure et ses fausses lois pour la gloire de ce Dieu mauvais.
 %%%%
 Sif Muna
@@ -61,11 +80,20 @@ apprécie l'apprentissage de toutes les compétences magiques.
 %%%%
 Trog
 
-Trog est un ancien Dieu de la violence et de la colère. Ses fidèles doivent
+Trog est un ancien Dieu de la violence et de la colère. Ses disciples doivent
 tuer au nom de Trog et sacrifier les morts pour obtenir en retour de la
 puissance en bataille et occasionnellement des récompenses. Trog hait tous les
-magiciens et, adore voir bruler les livres de sorts. Ses fidèles sont interdits
-de tout usage de magie.
+magiciens et, adore voir bruler les livres de sorts, et interdit à ses
+disciples de lancer des sorts ou d'apprendre quoi que ce soit à ce sujet.
+%%%%
+Nemelex Xobeh
+
+Nemelex est un Dieu fourbe, étrange et imprévisible. Ses pouvoirs peuvent être
+invoqués au travers de paquets de cartes magiques peints à l'effigie de démons.
+Ses fidèles sont censés sacrifier des objets de grande valeur, et recevront des
+paquets de carte en récompenses. Ses fidèles doivent aussi utiliser le plus
+souvent possible les cartes et prouver ainsi leur confiance en elles. Le Fourbe
+accorde la bonne fortune aux audacieux.
 %%%%
 Elyvilon
 
@@ -79,15 +107,25 @@ tout en conservant une partie de leur Piété.
 %%%%
 Lugonu
 
-Lugonu l'Informe se révèle dans le chaos des Abysses. Ses fidèles sont envoyés
-dans le monde pour provoquer effusions de sang et corruption. Et ils se doivent
-de le faire sans relâche pour gagner les faveurs de leur Dieu maléfique.
+Lugonu l'Informe se révèle dans le chaos des Abysses. Ses adorateurs sont
+envoyés dans le monde pour provoquer effusions de sang et corruption. Et ils se
+doivent de le faire sans relâche pour gagner les faveurs de leur Dieu
+maléfique.
+%%%%
+Beogh
+
+Beogh est la divinité adorée par les orcs des cavernes originaires du donjon.
+Seuls les orcs peuvent entrer au service de Beogh, et doivent prouver leur
+dévotion via les effusions de sang et la bénédiction des orcs décédés. Les
+fidèles dévoués de Beogh peuvent ébranler leurs ennemis, et les plus fervents
+peuvent même gagner des suivants puisque les orcs attendent toujours leur
+Messie.
 %%%%
 Fedhas
 
 Fedhas Madash est le dieu des plantes et de la vie fongique. Fedhas demande a
 ses fidèles d'encourager la décomposition des corps. Fedhas interdit à ses
-disciples de nuire aux espèces sous sa protection et, d'utiliser n'importe
+disciples de nuire aux espèces sous sa protection et d'utiliser n'importe
 quelle forme de nécromancie sur les corps. En retour, Fedhas accorde un certain
 nombre de capacités qui favorise la croissance des plantes et des champignons.
 Ces aptitudes peuvent s'avérer d'ailleurs très utiles aux aventuriers.
@@ -102,10 +140,10 @@ s'extirper du flux temporel et de ses perturbations inutiles.
 %%%%
 Ashenzari
 
-Bien qu'il semble inconcevable que le divin pouvait être enchainé, Ashenzari
-est tout simplement cloué définitivement au ciel pour l'éternité. Le dieu
-immobile voit tout et sait tout. Ses fidèles dévoués sont autorisés à saisir
-des parcelles de sa connaissance et de sa clairvoyance mais, attention : pour
+Bien qu'il semble inconcevable que le divin puisse être enchainé, Ashenzari est
+tout simplement cloué définitivement au ciel pour l'éternité. Le dieu immobile
+voit tout et sait tout. Ses fidèles dévoués sont autorisés à saisir des
+parcelles de sa connaissance et de sa clairvoyance mais attention : pour
 Ashenzari, pouvoir, bénédiction et malédiction sont une seule et même chose.
 %%%%
 Jiyva
@@ -118,6 +156,15 @@ Donjon par ses suivants. Ses disciples les plus appréciés deviendront comme
 leur dieu sans forme, alors que leurs attributs et mutations se transformeront
 sous l'influence de Jiyva.
 %%%%
+Dithmenos
+
+Dithmenos l'Enténébré désire que tout soit plongé dans les ténèbres. En échange
+de la libération de l'essence de la vie des habitants du donjon, les adeptes de
+Dithmenos obtiendront  une affinité étrange et d'un autre monde envers les
+ombres de leur environnement. Dithmenos méprise feu, l'ancien ennemi de
+l'ombre, et interdit son utilisation par ses fidèles; Dithmenos favorise ceux
+qui à la place, détruisent les sources de lumière.
+%%%%
 Zin powers
 
 Zin accorde à ses fidèles la possibilité de prêcher aux masses hérétiques et,
@@ -128,50 +175,182 @@ peuvent finalement trouver une sécurité temporaire au travers un refuge divin.
 Alors que leur piété grandit, les disciples sont protégés des mutations et, Zin
 peut même intervenir pour sauver directement la vie de ses disciples.
 %%%%
+the Shining One powers
+
+Les disciples de L’Étincelant sont entourés par un halo qui révèle leurs
+ennemis. Ils gagnent du pouvoir en tuant les êtres maléfiques, et la piété
+grandissante leurs force vital est protégé. L’Étincelant gardera plus longtemps
+les alliés convoqués aux côtés du disciple si ces alliés s'avèrent dignes en
+croisade. Les disciples gagneront l'utilisation d'un bouclier divin pour les
+protéger au combat. Plus tard, ils pourront canaliser des explosions de flammes
+purificatrices, particulièrement mortelles pour les créatures impies, ainsi que
+demander l'envoie de puissants êtres divins comme alliés. Les plus fervents
+disciples peuvent demander à L’Étincelant de bénir leur arme. L’Étincelant
+pourra occasionnellement directement intervenir pour sauver la vie de ses
+fidèles.
+%%%%
+Kikubaaqudgha powers
+
+Kikubaaqudgha enverra des corps à ses disciples, et améliorera les prouesses
+nécromantiques de ses fidèles en leur offrant des livres de sorts.
+Kikubaaqudgha protégera ses disciples des effets des sortilèges ratés, et
+pourra même les protéger du tourment. Ses plus dévoué disciples pourront
+évoquer le tourment en sacrifiant un cadavre, et Kikubaaqudgha pourra
+finalement leur offrir le Necronomicon ou bien imprégner leur arme pour qu'elle
+inflige plus de souffrance.
+%%%%
+Yredelemnul powers
+
+Yredelemnul donne a ses disciples le pouvoir de lever les squelettes et les
+cadavres, de rappeler les morts vivants à proximité, et de se guérir en
+drainant la force vitale des créatures vivantes. Par la suite, Yredelemnul
+pourra être appelés pour réfléchir les blessures d'un disciple sur ses
+agresseurs. Finalement, les disciples acquerront le pouvoir de lier l'âme d'un
+monstre, et le faire se battre a leur place. Yredelemnul fera sporadiquement
+cadeaux a ses suivants de puissants serviteurs morts-vivants.
+%%%%
 Xom powers
 
 Adorer Xom est une entreprise risquée. Si Xom est de bonne humeur, il pourra
 vous envoyer des cadeaux, alors qu'à d'autres moments, où il sera d'humeur plus
 capricieuse, il pourra décider de « pimenter un peu les choses » et vous
-envoyer à votre mort. Si vous réussissez à vous en sortir tant mieux ; si non,
+envoyer à votre perte. Si vous réussissez à vous en sortir tant mieux ; si non,
 et bien, il y aura d'autres jouets...
 %%%%
 Vehumet powers
 
 Adorer Vehumet vous permettra rapidement de convertir chaque mort en énergie
-magique. Alors que vous gagnerez en faveur, vous obtiendrez divers
-améliorations de vos sortilèges destructeurs – tout d'abord, une aide pour
-lancer de tel sort ; puis un accroissement de la portée ; et enfin, une
-diminution du coût pour lancer les plus hauts sorts de destruction. Plus tard,
-Vehumet vous offrir de rares grimoires de magie destructive.
+magique. Alors que vous gagnerez en faveur, vous obtiendrez diverses
+augmentations de vos sortilèges destructeurs – tout d'abord, une aide pour
+lancer de tels sorts ; puis un accroissement de la portée ; et enfin, une
+diminution du coût pour lancer les plus hauts sorts de destruction. A mesure
+que vous gagnerez de la piété, Vehumet vous proposera de vous enseigner des
+sorts de destructions de plus en plus puissants.
+%%%%
+Okawaru powers
+
+Les disciples d'Okawaru gagneront la possibilité d'accroitre leurs compétence
+en combat et, bien plus tard, de délivrer des coups plus rapidement. Okawaru
+pourra aussi offrir des armes et des armures à ses disciples.
+%%%%
+Makhleb powers
+
+Makhleb offre à ses fidèles différents moyens d'infliger des dégâts immenses a
+travers le chaos, et des attaques destructrices. Ils peuvent aussi convoquer
+l'aide de puissants démons. Les pouvoirs de Makhleb se payent dans le sang.
+Toutefois, Makhleb renouvellera la vitalité de ses fidèles pour chaque créature
+tuée en son nom.
+%%%%
+Sif Muna powers
+
+Les fidèles de Sif Muna peuvent canaliser l'énergie magique quand ils en ont le
+plus besoin et, ils gagnent le pouvoir d'oublier des sorts à volonté afin d'en
+apprendre de nouveaux. Sif Muna protègent les jeteurs de sorts contre les
+effets négatifs des incantations ratées. Au fil du temps, les fidèles
+obtiendront des livres de sorts contenant une vaste gamme de sortilèges.
+%%%%
+Trog powers
+
+Trog offre différents pouvoirs pour aider ses disciples en combat. Les
+Disciples gagnent l'aptitude à devenir enragé à volonté, et le pouvoir de
+régénérer plus rapidement tout en améliorant leur résistance à la magie. Plus
+tard, les disciples peuvent convoquer de puissants alliés enragés. Enfin, Trog
+accorde des récompenses sous forme d'armes focalisées sur l'affliction de
+dégâts.
+%%%%
+Nemelex Xobeh powers
+
+Les disciples du Fourbe obtiennent différents moyens pour influence leur
+destinée en jouant aux cartes. Ils obtiennent rapidement l’habilité de piocher
+dans des decks sans les avoir en mains, et les identifier d'un coup d’œil. Plus
+tard, ses disciples gagneront de plus grandes possibilité de manipuler les
+cartes, leurs accordant de choisir une à trois cartes piochées a la fois, afin
+de déclencher plusieurs effets en même temps, et finalement empiler les decks
+et réorganiser leurs contenus.
 %%%%
 Elyvilon powers
 
 Le Guérisseur offre à ses fidèles le moyen de se guérir des dégâts reçus comme
 des effets de la maladie. Elyvilon permet aussi la guérison des créatures
 hostiles, afin de les rendre neutre. Elyvilon pourra directement intervenir
-pour sauver la vie de son disciple, spécialement quand il est invoqué ; les
+pour sauver la vie de son disciple, en particulier quand il est invoqué ; les
 plus pieux de ses fidèles sont assurés de son aide.
+%%%%
+Lugonu powers
+
+Les adorateurs de Lugonu ont le pouvoir de repartir des Abysses à volonté, de
+courber l'espace autour d'eux et de bannir les monstres. Plus tard, ils seront
+capable de corrompre l'ordre du monde tout en ouvrant un portail pour le
+passage des créatures des Abysses, et aussi de se rendre directement dans le
+royaume du chaos. Lugonu offrira finalement la possibilité de corrompre l'arme
+de l'adorateur, et de l'imprégner de l'énergie de distorsion des Abysses tout
+en le protégeant des habituels effets néfastes de relâcher un telle arme.
+Lugonu attend de ses adorateurs qu'ils répandent un incessant chaos dans le
+monde, c'est pourquoi aucune piété ne leur est accordée tant qu'ils restent
+dans les Abysses.
+%%%%
+Beogh powers
+
+Les fidèles de Beogh peuvent ébranler leurs ennemis, et même gagner leurs
+propres adeptes orcs, qui peuvent être bénis par Beogh dans la bataille ainsi
+qu'être rappelés à votre voisinage si nécessaire. Finalement, ils vont acquérir
+le pouvoir de marcher sur l'eau. Beogh interviendra même parfois directement
+pour sauver la vie d'un fidèle. {{
+    if you.race () == "Lava Orc" then
+        return "Beogh supprime l'aura de chaleur de ses fidèles Orcs de lave."
+    end
+}}
 %%%%
 Fedhas powers
 
 Les plantes et les champignons n'attaqueront pas les fidèles de Fedhas sans
-provocation. Les disciples de Fedhas pourront marcher au travers les plantes et
-les champignons, et même tirer des projectiles ou des sorts au travers eux sans
-les blesser. Fedhas accorde le pouvoir de faire évoluer les plantes et
-champignons en des espèces plus puissantes. Les disciples pourront
-éventuellement faire pousser un mur de plantes ou créer des explosions de
-spores depuis des cadavres. Ils ont aussi un certain contrôle sur la météo,
-étant capable d'appeler la lumière du jour et plus tard, des pluies
-torrentielles.
+provocation. Les adorateurs de Fedhas pourront marcher au travers les plantes
+et les champignons, et même tirer des projectiles ou des sorts au travers eux
+sans les blesser. Fedhas accorde le pouvoir de faire évoluer les plantes et
+champignons en des espèces plus puissantes. Les fidèles pourront éventuellement
+faire pousser un mur de plantes ou créer des explosions de spores depuis des
+cadavres. Ils ont aussi un certain contrôle sur la météo, étant capable
+d'appeler la lumière du jour et plus tard, des pluies torrentielles.
 %%%%
 Cheibriados powers
 
 Les fidèles de Cheibriados bougent plus lentement alors qu'ils gagnent les
 faveurs de leur dieu et, sont récompensés lorsqu'ils tuent des créatures plus
 rapides qu'eux. Bouger trop rapidement ou utiliser des armes magiques de
-vitesse est très mal vue. Cheibriados récompense ses disciples avec un
+vitesse est très mal vue. Cheibriados récompense ses fidèles avec un
 métabolisme ralenti, le pouvoir de ralentir les autres créatures, le pouvoir de
 tordre le flux temporel, le pouvoir de blesser ceux qui se déplace plus vite
 qu'eux, et finalement, la capacité à sortir entièrement du flux temporel.
+%%%%
+Jiyva powers
+
+Les serviteurs de Jiyva peuvent demander des gelées, transformer des monstres
+en slimes, plus tard, supprimer leurs mutations néfastes. Éventuellement, touts
+les slimes visibles se joindront à la prières, les empêchant de manger les
+équipements pour un moment. Alors que leur piété grandit, Jiyva fera apparaitre
+des gelées, avec une fréquence grandissante, dans le donjon ; réorganisera les
+attributs de ses serviteurs en fonction de leurs compétences, armure et
+équipement ; accordera des mutations comme récompense. Les slimes n'attaqueront
+jamais un fidèle de Jiyva, et Jiyva demande la même conduite en retour.
+%%%%
+Ashenzari powers
+
+Ashenzari exhorte ses fidèles a se barder de malédictions et, offre des
+récompenses en fonction du temps passé à porter armures, bijoux ou armes
+maudites. Ashenzari augmentera les talents de ses disciples suivant l'étendue
+de leur malédictions, et leur fera bénéficier de la vue de l’invisible ainsi
+que la clarté de l'esprit. Plus tard ils gagnerons le talent de voir a travers
+les murs, puis finalement seront capable de transférer une partie de leurs
+connaissances d'un talent a un autre.
+%%%%
+Dithmenos powers
+
+Les adeptes de Dithmenos sont constamment entourés d'une aura d'ombre, dans la
+mesure de ce qui est le reflet de leur niveau de dévotion. Dithmenos offre à
+ses disciples la capacité à marcher instantanément dans l'ombre des créatures à
+proximité, à condition que leur ombre soit suffisante pour le faire. Dithmenos
+protège ses disciples à l'occasion en enveloppant ceux qui sont frappés dans de
+la fumée sombre. Les adeptes suffisamment pieux de Dithmenos verront leur
+propre ombre attaquer d'elle même, et éventuellement gagneront la capacité de
+prendre eux même la forme une ombre.
 %%%%
