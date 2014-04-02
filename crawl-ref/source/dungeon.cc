@@ -27,6 +27,7 @@
 #include "dgn-height.h"
 #include "dgn-shoals.h"
 #include "dgn-labyrinth.h"
+#include "dgn-overview.h"
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
@@ -107,6 +108,7 @@ static void _place_extra_vaults();
 static void _place_chance_vaults();
 static void _place_minivaults(void);
 static int _place_uniques();
+static void _place_gozag_shop();
 static void _place_traps();
 static void _prepare_water();
 static void _check_doors();
@@ -120,9 +122,6 @@ static bool _feat_is_wall_floor_liquid(dungeon_feature_type);
 static bool _connect_spotty(const coord_def& from,
                             bool (*overwriteable)(dungeon_feature_type) = NULL);
 static bool _connect_vault_exit(const coord_def& exit);
-
-// ITEM & SHOP FUNCTIONS
-static object_class_type _item_in_shop(shop_type shop_type);
 
 // VAULT FUNCTIONS
 static const vault_placement *
@@ -2450,6 +2449,8 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         if (_mimic_at_level())
             _place_feature_mimics(dest_stairs_type);
 
+        _place_gozag_shop();
+
         _place_traps();
 
         // Any vault-placement activity must happen before this check.
@@ -3245,6 +3246,68 @@ static bool _shaft_is_in_corridor(const coord_def& c)
             return true;
     }
     return false;
+}
+
+static void _place_gozag_shop()
+{
+    coord_def shop_place;
+    string key = make_stringf(GOZAG_SHOP_KEY,
+                              level_id::current().describe().c_str());
+
+    if (!you.props.exists(key))
+        return;
+
+    bool encompass = false;
+    for (string_set::const_iterator i = env.level_layout_types.begin();
+         i != env.level_layout_types.end(); ++i)
+    {
+        if (*i == "encompass")
+        {
+            encompass = true;
+            break;
+        }
+    }
+
+    int tries = 1000;
+    do
+    {
+        shop_place = random_in_bounds();
+    } while ((grd(shop_place) != DNGN_FLOOR
+              || !(encompass || !map_masked(shop_place, MMT_VAULT)))
+              && --tries > 0);
+
+    if (tries == 0)
+        throw dgn_veto_exception("Cannot find place Gozag shop.");
+
+    keyed_mapspec kmspec;
+    kmspec.set_feat(you.props[key].get_string(), false);
+    if (!kmspec.get_feat().shop.get())
+        die("Invalid shop spec?");
+    _place_spec_shop(shop_place, kmspec.get_feat().shop.get());
+
+    unmark_offlevel_shop(level_id::current());
+
+    // Player may have abandoned Gozag before arriving here; only show them
+    // the shop if they're still a follower.
+    if (you_worship(GOD_GOZAG))
+    {
+        shop_struct *shop = get_shop(shop_place);
+        ASSERT(shop);
+
+        env.map_knowledge(shop_place).set_feature(grd(shop_place));
+        env.map_knowledge(shop_place).flags |= MAP_MAGIC_MAPPED_FLAG;
+        env.pgrid(shop_place) |= FPROP_SEEN_OR_NOEXP;
+        seen_notable_thing(grd(shop_place), shop_place);
+
+        string announce = make_stringf(
+            "%s invites you to visit their %s%s%s.",
+            shop->shop_name.c_str(),
+            shop_type_name(shop->type).c_str(),
+            !shop->shop_suffix_name.empty() ? " " : "",
+            shop->shop_suffix_name.c_str());
+
+        you.props[GOZAG_ANNOUNCE_SHOP_KEY] = announce;
+    }
 }
 
 static void _place_traps()
@@ -5450,6 +5513,19 @@ void place_spec_shop(const coord_def& where,
     _place_spec_shop(where, &spec, representative);
 }
 
+int greed_for_shop_type(shop_type shop, int level_number)
+{
+    if (shop == SHOP_FOOD)
+        return 10 + random2(5);
+    if (shop == SHOP_WEAPON_ANTIQUE
+        || shop == SHOP_ARMOUR_ANTIQUE
+        || shop == SHOP_GENERAL_ANTIQUE)
+    {
+        return 15 + random2avg(19, 2) + random2(level_number);
+    }
+    return 10 + random2(5) + random2(level_number / 2);
+}
+
 static void _place_spec_shop(const coord_def& where,
                              shop_spec* spec, bool representative)
 {
@@ -5483,16 +5559,7 @@ static void _place_spec_shop(const coord_def& where,
         (force_s_type != SHOP_RANDOM) ? force_s_type
                                       : random2(NUM_SHOPS));
 
-    if (env.shop[i].type == SHOP_FOOD)
-        env.shop[i].greed = 10 + random2(5);
-    else if (env.shop[i].type != SHOP_WEAPON_ANTIQUE
-             && env.shop[i].type != SHOP_ARMOUR_ANTIQUE
-             && env.shop[i].type != SHOP_GENERAL_ANTIQUE)
-    {
-        env.shop[i].greed = 10 + random2(5) + random2(level_number / 2);
-    }
-    else
-        env.shop[i].greed = 15 + random2avg(19, 2) + random2(level_number);
+    env.shop[i].greed = greed_for_shop_type(env.shop[i].type, level_number);
 
     // Allow bargains in bazaars, prices randomly between 60% and 95%.
     if (player_in_branch(BRANCH_BAZAAR))
@@ -5571,7 +5638,7 @@ static void _place_spec_shop(const coord_def& where,
             const object_class_type basetype =
                 (representative && env.shop[i].type == SHOP_EVOKABLES)
                 ? OBJ_WANDS
-                : _item_in_shop(env.shop[i].type);
+                : item_in_shop(env.shop[i].type);
             const int subtype = representative? j : OBJ_RANDOM;
 
             if (!spec->items.empty() && !spec->use_all)
@@ -5645,7 +5712,7 @@ static void _place_spec_shop(const coord_def& where,
     activate_notes(note_status);
 }
 
-static object_class_type _item_in_shop(shop_type shop_type)
+object_class_type item_in_shop(shop_type shop_type)
 {
     switch (shop_type)
     {

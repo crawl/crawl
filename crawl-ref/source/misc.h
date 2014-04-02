@@ -98,6 +98,7 @@ void setup_environment_effects();
 void run_environment_effects();
 
 int str_to_shoptype(const string &s);
+const char *shoptype_to_str(shop_type type);
 void list_shop_types();
 
 bool player_in_a_dangerous_place(bool *invis = NULL);

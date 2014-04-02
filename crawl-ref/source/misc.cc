@@ -1663,6 +1663,11 @@ int str_to_shoptype(const string &s)
     return -1;
 }
 
+const char *shoptype_to_str(shop_type type)
+{
+    return shop_types[type];
+}
+
 void list_shop_types()
 {
     mpr_nojoin(MSGCH_PLAIN, "Available shop types: ");

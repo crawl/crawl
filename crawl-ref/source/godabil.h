@@ -86,4 +86,5 @@ void dithmenos_shadow_throw(coord_def target);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
 bool gozag_potion_petition();
+bool gozag_call_merchant();
 #endif

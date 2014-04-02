@@ -619,6 +619,14 @@ Petition Gozag to sell you the effects of a set of potions. Gozag will offer
 four lists at a time, one of which always solely consists of a potion of
 porridge, and the lists will remain fixed until you purchase one of them.
 %%%%
+Call Merchant ability
+
+Through Gozag, send funds to a merchant to help them set up shop in the
+dungeon. The shop will appear in a branch where shops can normally be found
+on a level that you haven't visited yet, assuming no other merchant has
+claimed that location; if you have visited all possible levels where shops
+can be found, this ability does nothing.
+%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually

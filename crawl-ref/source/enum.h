@@ -188,6 +188,7 @@ enum ability_type
     ABIL_DITHMENOS_SHADOW_FORM,
     // Gozag
     ABIL_GOZAG_POTION_PETITION = 1180,
+    ABIL_GOZAG_CALL_MERCHANT,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -4640,6 +4641,14 @@ enum timed_effect_type
     TIMER_JIYVA,
     TIMER_EVOLUTION,
     NUM_TIMERS,
+};
+
+enum deck_rarity_type
+{
+    DECK_RARITY_RANDOM,
+    DECK_RARITY_COMMON,
+    DECK_RARITY_RARE,
+    DECK_RARITY_LEGENDARY,
 };
 
 #endif // ENUM_H

@@ -26,6 +26,7 @@ void destroy_shop_at(coord_def p);
 
 string shop_name(const coord_def& where);
 string shop_name(const coord_def& where, bool add_stop);
+string shop_type_name(shop_type type);
 
 bool shoptype_identifies_stock(shop_type type);
 

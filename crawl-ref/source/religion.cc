@@ -348,7 +348,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Gozag
     { "petition Gozag for potion effects",
-      "",
+      "fund merchants seeking to open stores in the dungeon",
       "",
       "",
       ""
@@ -479,7 +479,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
     // Gozag
     { "petition Gozag for potion effects",
-      "",
+      "fund merchants seeking to open stores in the dungeon",
       "",
       "",
       ""

@@ -534,6 +534,7 @@ static string _get_shops(bool display)
     {
         if (ci_shops->first.id != last_id)
         {
+            const bool existing = is_existing_level(ci_shops->first.id);
             if (column_count > maxcolumn)
             {
                 disp += "\n";
@@ -544,14 +545,14 @@ static string _get_shops(bool display)
                 disp += "   ";
                 column_count += 3;
             }
-            disp += "<lightgrey>";
+            disp += existing ? "<lightgrey>" : "<darkgrey>";
 
             const string loc = ci_shops->first.id.describe(false, true);
             disp += loc;
             column_count += strwidth(loc);
 
             disp += " ";
-            disp += "</lightgrey>";
+            disp += existing ? "</lightgrey>" : "</darkgrey>";
             column_count += 1;
 
             last_id = ci_shops->first.id;
@@ -736,6 +737,21 @@ void enter_branch(branch_type branch, level_id from)
         stair_level[branch].clear();
         stair_level[branch].insert(from);
     }
+}
+
+// Mark a shop guaranteed on this level if we haven't been there yet.
+// Used by Gozag's call merchant ability.
+// Only one per level!
+void mark_offlevel_shop(level_id lid, shop_type type)
+{
+    ASSERT(!shops_present.count(level_pos(lid, coord_def())));
+    shops_present[level_pos(lid, coord_def())] = type;
+}
+
+void unmark_offlevel_shop(level_id lid)
+{
+    ASSERT(shops_present.count(level_pos(lid, coord_def())));
+    shops_present.erase(level_pos(lid, coord_def()));
 }
 
 ////////////////////////////////////////////////////////////////////////
