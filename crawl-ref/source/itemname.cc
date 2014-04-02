@@ -1384,7 +1384,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         special_missile_type brand  = get_ammo_brand(*this);
 
-        if (!terse)
+        if (!terse && !dbname)
         {
             if (props.exists(HELLFIRE_BOLT_KEY))
                 buff << "hellfire ";
