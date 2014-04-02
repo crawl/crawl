@@ -1194,7 +1194,7 @@ bool learn_spell(spell_type specspell)
 
     double chance = get_miscast_chance(specspell);
 
-    if (spell_fail(specspell))
+    if (spell_fail(specspell) >= 100)
         mprf(MSGCH_WARN, "This spell is impossible to cast!");
     else if (chance >= 0.025)
         mprf(MSGCH_WARN, "This spell is very dangerous to cast!");
