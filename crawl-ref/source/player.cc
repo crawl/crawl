@@ -3346,6 +3346,14 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
+            case SP_OGRE_MAGE:
+                if (!(you.experience_level % 5))
+                {
+                    modify_stat(coinflip() ? STAT_STR
+                                           : STAT_INT, 1, false, "level gain");
+                }
+                break;
+
             case SP_BASE_DRACONIAN:
                 if (you.experience_level >= 7)
                 {
