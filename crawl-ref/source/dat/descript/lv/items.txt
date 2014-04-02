@@ -1,18 +1,4 @@
 %%%%
-amulet of clarity
-
-Šis amulets pasargā tā nēsātāju no dažāda veida garīgajiem apjukumiem, tostarp
-arī pret paša gribu tiekot satracinātam.
-%%%%
-amulet of resist corrosion
-
-Šis amulets pasargā tā nēsātāju no skābes izraisītās korozijas ietekmes uz viņa
-apbruņojumu, lai arī tas nav vienmēr garantēts.
-%%%%
-apple
-
-Tvirts un gards, lai arī paskābs, sarkanas krāsas auglis.
-%%%%
 apricot
 
 Sulīgs dzeltenīgi oranžs auglis, prunus armeniaca.
@@ -56,10 +42,6 @@ Līķis. Varat to apstrādāt, izgriežot ēdamos gaļas gabalus.
 crystal plate armour
 
 Šausmīgi smags, taču ārkārtīgi iedarbīgs kristāla bruņutērps.
-%%%%
-dart
-
-Mazs, izgrebts un noasināts šāviņš, kas paredzēts mešanai ar roku.
 %%%%
 decaying skeleton
 
@@ -140,10 +122,6 @@ Izturīga koka nūja, kas paredzēta cīņai.
 ring of protection from cold
 
 Šis gredzens nodrošina aizsardzību pret aukstumu.
-%%%%
-ring of protection from fire
-
-Šis gredzens aizsargā pret karstumu un uguni.
 %%%%
 scroll of curse weapon
 

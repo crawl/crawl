@@ -1,8 +1,8 @@
 %%%%
 amulet of clarity
 
-Cette amulette protège le porteur contre certaines formes de confusion mentale,
-dont celle d'être enragé contre sa volonté.
+Cette amulette protège son porteur contre certaines formes de confusion
+mentale, dont celle d'être enragé contre sa volonté.
 %%%%
 amulet of conservation
 
@@ -16,13 +16,6 @@ Cette attention divine facilite le contentement de votre dieu, mais celui-ci
 sera aussi moins amène à tolérer vos transgressions, et l'amulette drainera une
 part de vos faveurs divines lorsqu'elle sera retirée.
 %%%%
-amulet of guardian spirit
-
-Cette amulette rend son porteur moins sensible aux attaques physiques, drainant
-sa puissance magique à la place. Si les réserves magiques viennent à être
-vidées, l'esprit ne pourra apporter sa protection jusqu'à ce que davantage de
-pouvoir soit disponible.
-%%%%
 amulet of inaccuracy
 
 Cette amulette rend le porteur moins précis dans ses attaques de mêlée et
@@ -32,11 +25,6 @@ amulet of rage
 
 Cette amulette permet au porteur de tenter d'entrer dans un état de folie
 furieuse.
-%%%%
-amulet of resist corrosion
-
-Cette amulette protège le porteur et son équipement des effets de la corrosion
-causée par des acides, mais pas de manière infaillible.
 %%%%
 amulet of resist mutation
 
@@ -53,13 +41,6 @@ Bien que l'amulette soit efficace contre la plupart des magies translocatives,
 les changements de plan tels que le bannissement sont au delà des ses capacités
 bloquantes.
 %%%%
-amulet of the gourmand
-
-Cette amulette permet à son porteur de digérer la viande fraîche crue même s'il
-n'a pas faim et en augmente significativement l'apport nutritionnel. Ces effets
-sur la digestion du porteur s'accumulent avec le temps et sont initialement
-faibles.
-%%%%
 amulet of warding
 
 Cette amulette repousse une partie des attaques des créatures qui ont été
@@ -71,11 +52,7 @@ animal skin
 Une grande pièce de peau épaisse couverte de fourrure, découpée du corps d'un
 animal et porté comme un vêtement primitif. Elle offre une protection
 rudimentaire, mais, n'ayant jamais été tannée, elle dégage une légère odeur de
-chaire pourrie.
-%%%%
-apple
-
-Un fruit rouge, ferme et délicieux, acide en bouche.
+chair pourrie.
 %%%%
 apricot
 
@@ -86,25 +63,9 @@ arrow
 Un long projectile, destiné à être tiré à l'aide d'un arc ou d'un arc long,
 avec un empennage en plume à une extrémité et une pointe à l'autre.
 %%%%
-banana
-
-Un délicieux fruit jaune, sans doute cultivé et importé par une multi-nationale
-corrompue suite à un accord commercial verreux.
-%%%%
 bardiche
 
 Une longue perche avec une énorme lame tranchante au bout.
-%%%%
-bastard sword
-
-Une longue et large épée. En fait, c'est l'arme la plus lourde et la plus
-meurtrière que la plupart des espèces peuvent manier avec un bouclier. Tâter
-d'une lame aussi longue causera la perte de n'importe quel adversaire.
-%%%%
-battleaxe
-
-Une large hache de guerre à deux main munie d'un redoutable double tranchant,
-destinée à être utilisée au combat par des guerriers entraînés.
 %%%%
 beef jerky
 
@@ -118,10 +79,6 @@ blessed claymore
 
 Une épée massive, améliorée par l'Étincelant.
 %%%%
-blessed falchion
-
-Une épée à large tranchant. Elle a été améliorée par L'Étincelant.
-%%%%
 blessed great sword
 
 Une épée avec une une très longue et lourde lame, et une longue garde. Elle a
@@ -130,10 +87,6 @@ Une épée avec une une très longue et lourde lame, et une longue garde. Elle a
 blessed long sword
 
 Une épée à la lame longue et tranchante. Elle a été améliorée par L'Étincelant.
-%%%%
-blessed scimitar
-
-Une épée longue à lame courbée. Elle a été améliorée par L'Étincelant.
 %%%%
 blowgun
 
@@ -144,13 +97,6 @@ très peu de bruit.
 bolt
 
 Un carreau d'arbalète.
-%%%%
-book of air
-
-Une introduction à la magie élémentaire de l'Air. Les pages se tournent souvent
-d'elles-mêmes, comme si elles étaient soufflées par une forte brise ; à
-d'autres moments, les pages sont collées entre elles par de l'électricité
-statique et projettent de brèves étincelles lorsqu'elles sont séparées.
 %%%%
 book of alchemy
 
@@ -171,53 +117,26 @@ book of battle
 Un livre de sorts utilisés par les skalds, dont les chansons de batailles leur
 accorde une aide magique.
 %%%%
-book of beasts
-
-Un livre de sortilèges magiques. Prenez garde à ne pas vous faire mordre !
-%%%%
-book of burglary
-
-Un livre contenant de nombreux sorts utiles pour voler, entrer par effraction,
-et divers autres larcins. Les sorciers qui se laissent distraire en lisant ce
-volume peuvent occasionnellement tourner une page et y trouver un petit objet
-qui leur aurait été dérobé et placé entre les pages.
-%%%%
-book of callings
-
-Un livre de sortilèges magiques.
-%%%%
 book of cantrips
 
-Un livre de sortilèges magiques.
-%%%%
-book of changes
-
-Un livre de sortilèges magiques.
-%%%%
-book of clouds
-
-Un livre de sortilèges magiques.
+Un livre qui contient une petite sélection des sorts de base, spécialement
+sélectionné pour les débutants qui veulent apprendre les rudiments d'une des
+école de magie présentée. Néanmoins, même les mages les plus expérimentés
+peuvent trouver une utilité aux sorts contenus dans ce recueil.
 %%%%
 book of conjurations
 
 Un livre contenant une introduction aux arts magiques destructeurs de la
-conjuration. Il frissonne d'une puissance à peine contenue quand il est ouvert.
-%%%%
-book of control
-
-Un livre de sortilèges magiques.
-%%%%
-book of death
-
-Un manuscrit a la pâleur cadavérique contenant de sombres sorts de nécromancie,
-écrit avec de l'encre distillée a partir de cadavres. Chaque page est couverte
-d'art grotesque représentant des scènes de décomposition et de mort horrible,
-avec la majeure partie du texte incorporée dans les dessins en rouleaux
-d'entrailles ou arrangements d'os.
+Conjuration. Il frissonne d'une puissance à peine contenue quand il est ouvert.
 %%%%
 book of debilitation
 
-Un livre de sortilèges magiques.
+Un livre contenant les Malédictions utiles à un Archer des Arcanes. De
+nombreuses pages sont remplies de trous comme si elles avaient servi de cible
+de tir avant d’être remplies et reliées. Cette technique occulte est sensée
+donner aux sorts une affinité particulière avec les armes de jet, bien qu'en
+pratique, ils ne fonctionne pas de manière différente de ceux trouvés dans des
+textes moins perforés.
 %%%%
 book of dreams
 
@@ -229,20 +148,10 @@ imagerie et pour ses digressions cryptiques.
 %%%%
 book of enchantments
 
-Un livre de sortilèges magiques.
-%%%%
-book of envenomations
-
-Un livre de sortilèges magiques.
-%%%%
-book of fire
-
-Un livre, contenant des sorts avancés de l'école élémentaire du Feu. Beaucoup
-d'Élémentalistes de Feu ont eu leurs sourcils et leurs barbes roussis par le
-jaillissement d'une flamme lors de la première ouverture du livre, et certains
-ont même constaté, que lorsqu'il est laissé sans surveillance pendant des mois,
-il peut alors s'enflammer spontanément, parfois réduisant en cendres des
-bibliothèques entières dans de terribles incendies.
+Un livre contenant un assortiment de Malédictions et de Charmes magiques qui
+crépitent et chatoient lorsque les pages sont tournées; Le titre quelque peu
+anachronique reflète une plus ancienne et incomplète compréhension de ces deux
+écoles de magie.
 %%%%
 book of fixed level
 
@@ -252,86 +161,52 @@ book of fixed theme
 
 Un livre de sortilèges magiques.
 %%%%
-book of flames
-
-Le texte standard utilisé dans les académies ésotériques par les étudiants de
-la magie élémentaire du Feu. Il est tiède au toucher, et ses bords sont
-roussis. Sur les pages sont inscrits des sigils de flamme qui brillent d'une
-lumière vacillante pour pouvoir lire.
-%%%%
-book of frost
-
-Un livre de sortilèges magiques, froid au toucher.
-%%%%
-book of geomancy
-
-Un livre de sortilèges magiques.
-%%%%
-book of hinderance
-
-Un livre de sortilèges magiques.
-%%%%
-book of ice
-
-Un livre de sorts magiques avancés utilisant l'élément de la Glace. Le livre
-est d'un froid glacial, et les pages sont couvertes de légères couches de
-givre. Même en portant des vêtements chauds, les scribes faisant des copies de
-ce tome souffrent souvent d'engelures ou d'hypothermie.
-%%%%
 book of maledictions
 
-Un livre de sortilèges magiques.
-%%%%
-book of minor magic
-
-Un livre de sortilèges magiques.
+Ce livre enseigne aux enchanteurs comment affaiblir et subjuguer leur ennemis
+avec des Malédictions avant de les achever. La couverture contient une
+représentation d'un œil démoniaque, un ancien symbole maudit; ceci occasionna
+de nombreux contes à propos d'aventuriers qui connurent une fin atroce en
+emportant ce livre avec eux dans le Donjon. Bien que les septiques pointent le
+fait que pratiquement tous ceux qui entrent dans le donjon connaissent une
+funeste fin.
 %%%%
 book of necromancy
 
-Un livre macabre de sorts magiques, souvent le tout premier grimoire de
-l'apprenti Nécromancien. Considérant les dangers auxquels s'exposent ceux qui
-s'essaient à cette magie, c'est aussi parfois le tout *dernier* grimoire qu'un
-apprenti Nécromancien étudiera.
-%%%%
-book of party tricks
-
-Un livre de sortilèges magiques.
+Un macabre livre  de sorts, souvent le tout premier grimoire de l'apprenti
+Nécromancien. Considérant les dangers auxquels s'exposent ceux qui s'essaient à
+cette magie, c'est aussi parfois le tout *dernier* grimoire qu'un apprenti
+Nécromancien étudiera.
 %%%%
 book of power
 
-Un livre de sortilèges magiques.
+Un livre de puissants sortilèges, convoité par les magiciens ambitieux qui
+souhaite gagner l'ascendant sur leurs rivaux. Il craque et tremble d'énergies à
+peine contenues.
 %%%%
 book of spatial translocations
 
-Un livre de sortilèges magiques.
+Le texte classique du champ d'étude des Translocations, écrit il y a deux
+siècles par l'archimage et Translocateur accompli Golubria. Ce livre peut
+encore être trouvé dans des bibliothèques magiques tout autour du monde, bien
+que parfois pas sur l’étagère sur laquelle le bibliothécaire l'a laissé.
 %%%%
 book of summonings
 
-Un livre de sortilèges magiques.
-%%%%
-book of the dragon
-
-Un livre de sortilèges magiques, il est chaud au toucher.
-%%%%
-book of the earth
-
-Un livre de sortilèges magiques.
-%%%%
-book of the sky
-
-Un livre de sortilèges magiques. Des étincelles s'échappent des pages.
-%%%%
-book of the tempests
-
-Un livre de sortilèges magiques.
+Un traité avancé sur la magie de Convocation, détaillant les manières de
+convoquer et lier les créatures de toutes les sortes de royaumes horribles. Il
+y a de nombreux et sinistres avertissement avec des illustrations graphiques
+sur les danger de convoquer de tels monstres, puisque tous ne seront pas
+amicaux.
 %%%%
 book of the warp
 
-Un livre de sortilèges magiques.
-%%%%
-book of transfigurations
-
-Un livre de sortilèges magiques.
+Un livre de sorts de Translocation pour Translocateurs expérimentés. Ses pages
+chatoyantes existent dans de multiples dimensions en même temps, dont certaines
+ne respectent pas les règles de la géométrie Euclidienne. Certaines pages
+disparaissent lorsque l'on les tourne, alors que d'autres passent directement
+au travers des autres ou d'elles mêmes. Certaines pages ont trois faces, ou
+seulement une, ou bien une fraction de coins. L'effet peut etre déconcertant.
 %%%%
 book of unlife
 
@@ -344,38 +219,37 @@ book of war chants
 
 Un livre de sorts utile pour un guerrier. Les versions présentées ici ont une
 forme musicale, suivant les traditions des skalds guerriers. Fonctionnellement,
-cependant, ils sont identiques aux sorts dont les mots sont simplement parlée.
+cependant, ils sont identiques aux sorts dont les mots sont simplement parlés.
 %%%%
 book of wizardry
 
-Un livre de sortilèges magiques.
+Un livre contenant divers sorts utiles aux laceurs de sorts suffisamment
+talentueux. Les mages d'obédience universitaires considèrent que c'est un
+honneur d'avoir participé un tant soit peu à cet ouvrage bien que qu'une bonne
+partie d'entre eux périrent de leurs propres sortilèges utilisés par leurs
+rivaux.
 %%%%
 bow
 
 Une branche de bois courbée avec une corde pour tirer des flèches. Cela fait de
-gros dégâts en combat, et un utilisateur expérimenté peut en faire un très bon
+bon dégâts en combat, et un utilisateur expérimenté peut en faire un très bon
 usage.
 %%%%
 box of beasts
 
 Une boîte remplie avec les étranges restes d'expérimentations magiques d'un
-sorcier dépravé. En l'ouvrant peut lâcher une chimère amicale : hybride
-créature mythique composé des parties de trois bêtes séparés.
+sorcier dépravé. En l'ouvrant peut lâcher une chimère amicale : créature
+mythique hybridant des parties de trois bêtes séparés.
 %%%%
 bread ration
 
 Un pain peut être un peu rassis, mais très nourrissant.
 %%%%
-broad axe
-
-Une hache de guerre améliorée avec des renforts métalliques, des pointes, un
-manche allongé et une tête en croissant à simple tranchant. Elle peut infliger
-de graves blessures, mais elle est difficile à manier sans pratique en raison
-de sa longueur et de son poids.
-%%%%
 buckler
 
-Un petit bouclier.
+Une petite pièce de bois et de métal faite pour se défendre en l'attachant à un
+bras. C'est un petit peu encombrant, et sans un peu d'entrainement, il réduit
+la vitesse d'attaque du combattant qui l’arbore.
 %%%%
 centaur barding
 
@@ -400,69 +274,54 @@ chunk of flesh
 Un morceau de viande crue trouvé dans le donjon. Il ne va pas rester frais bien
 longtemps.
 %%%%
-claymore
-
-Une épée massive, qui nécessite l'utilisation des deux mains rien que pour la
-tenir, et beaucoup de force et d'entraînement pour l'utiliser efficacement. Il
-va sans dire qu'une fois qu'un combattant est suffisamment fort pour la manier
-confortablement, c'est une arme sans pareil.
-%%%%
 cloak
 
 Une cape en tissu.
-%%%%
-club
-
-Un lourd morceau de bois, avec la place pour le saisir d'un coté et la plus
-grande partie de son poids de l'autre, ce qui conviens pour frapper un ennemi.
-Alors que les massues sont des armes assez primitive, frapper le crâne de
-quelqu'un avec reste un moyen très populaire et efficace de régler des
-différends.
 %%%%
 corpse
 
 Un cadavre. Vous pouvez le découper pour produire des morceaux de viande
 comestibles.
 %%%%
-crossbow
-
-Une machine, utilisée pour tirer des carreaux, qui nécessite un certain temps
-pour être chargée et pour tirer. Elle inflige de sérieux dégâts en combat.
-%%%%
-crystal ball of energy
-
-Un instrument magique qui peut être utilisé pour restaurer les réserves
-magiques du porteur, mais son utilisation comporte le risque d'être vidé de
-toute son énergie magique à la place. Le risque est inversement proportionnel à
-la quantité d'énergie restante du porteur. Un utilisateur ayant un niveau
-proche de son potentiel maximum tirera tous les bénéfices de cet objet.
-%%%%
 crystal plate armour
 
 Une armure cristalline incroyablement lourde mais extrêmement protectrice.
 %%%%
-cutlass
-
-Une large épée courte incurvée, qui s'apparente à un sabre, mais en plus petit.
-Elle excelle dans les combats rapprochés, ayant une puissance décente, tout en
-étant suffisamment maniable pour être encore un bon choix pour les attaques
-sournoises. Vous avez une soudaine envie de partir à l'aventure et de voler des
-trésors.
-%%%%
-dagger
-
-Un couteau de combat à double tranchant, et à la pointe acérée. Considérée par
-certains comme une arme faible qu'ils n'utiliseront qu'en dernier recours,
-d'autres l’apprécient tout particulièrement en tant que parfaite arme
-d'assassinat.
-%%%%
-dart
-
-Une petite arme de jet.
-%%%%
 decaying skeleton
 
 Un squelette en décomposition.
+%%%%
+deck of defence
+
+Un paquet de cartes magiques, dont la plupart défendent l'utilisateur des
+dangers par divers moyens.
+%%%%
+deck of destruction
+
+Un paquet de cartes magiques, dont la plupart provoque la mort et la
+destruction des ennemis (ou, par malchance, à soi-même).
+%%%%
+deck of dungeons
+
+Un paquet de cartes magiques traitant de la modification du donjon.
+%%%%
+deck of punishment
+
+Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.
+%%%%
+deck of summonings
+
+Un paquet de cartes magiques, représentant un éventail de créatures étranges et
+merveilleux.
+%%%%
+deck of war
+
+Un paquet de cartes magiques, utile avant et pendant la bataille.
+%%%%
+deck of wonders
+
+Un paquet de cartes à la fois magiques et très mystérieuses, qui peut altérer
+l'état physique et mental de l'utilisateur, pour le meilleur ou pour le pire.
 %%%%
 demon blade
 
@@ -483,13 +342,8 @@ Un fléau d'arme avec des pointes plus longues, et une tête plus lourde.
 disc of storms
 
 Cet objet, extrêmement puissant, peut déchaîner des tempêtes d'électricité
-destructrices. Son efficacité est prouvée entre les main d'une personne
-habituée à manipuler les dispositifs magiques.
-%%%%
-eggplant
-
-Une aubergine pourrie que vous pouvez jeter aux développeurs de Crawl. (Il
-s'agit d'un bug si jamais vous voyez ce message.)
+destructrices. Son efficacité augmente entre les main d'une personne habituée à
+manipuler les dispositifs magiques.
 %%%%
 eudemon blade
 
@@ -500,19 +354,6 @@ et elle ne peut être manipulée par les forces du mal.
 eveningstar
 
 L'opposé d'une étoile du matin.
-%%%%
-executioner's axe
-
-Cette arme redoutable, à la lame bien aiguisée, est couverte de sang séché et
-de gravures de tortures et de morts. La tête de cette hache est tellement
-énorme qu'elle exclut tout forme de subtilité. En même temps avec une arme de
-cette taille, la précision n'est pas nécessaire, un seul coup suffit pour
-démembrer tout ce qui se présente.
-%%%%
-falchion
-
-Une épée longue à un seul tranchant, dont la lame légèrement courbée concentre
-le poid au point de frappe, augmentant sa pénétration.
 %%%%
 fan of gales
 
@@ -532,16 +373,6 @@ La peau écailleuse d'un dragon commun. Elle peut être façonnée pour en faire
 une véritable armure, mais même sous cette forme brute elle offre une grande
 protection contre le feu et rend son porteur plus sensibles aux effets du
 froid.
-%%%%
-flail
-
-Une masse avec une courte chaîne qui relie la tête au manche. Cette
-particularité augmente la force des coups portés au prix d'une utilisation un
-peu plus complexe.
-%%%%
-giant club
-
-Une bûche de bois géante, façonnée pour tenir dans les mains d'un ogre.
 %%%%
 giant spiked club
 
@@ -567,15 +398,6 @@ gold piece
 
 Un tas de pièces d'or scintillantes.
 %%%%
-grand grimoire
-
-Un silence de mort semble entourer ce livre lorsqu'il est ouvert, même l'air
-très semble reculer devant les monstruosités que l'on y voit. Les pages,
-couvert de runes abominables, décrivent comment les plus puissant invocateurs
-peuvent plier à leur volonté les terribles choses d'entre les plans. Nombreuses
-été les âmes imprudentes, cependant, qui ont joué avec ce tome et ont été rendu
-folles par les étranges horreurs d'au delà l'imagination.
-%%%%
 grape
 
 Un petit fruit.
@@ -583,32 +405,6 @@ Un petit fruit.
 great mace
 
 Une énorme et très encombrante masse de guerre.
-%%%%
-great sword
-
-Une épée massive, droite, à double tranchant avec une longue poignée et un
-lourd pommeau. Elle a le potentiel pour infliger des blessures dévastatrices,
-mais doit être maniée avec les deux mains.
-%%%%
-halberd
-
-Une arme d’hast militaire, à deux mains, comprenant une lame de hache monté sur
-un grand arbre renforcé par des jantes métalliques afin de bloquer d'autres
-armes tel que des épées. Surmonté d'un pic et ayant une épine sur le côté
-opposé à la lame, cette arme peut être très dangereuse dans des mains
-entraînées.
-%%%%
-hammer
-
-Composé d'un marteau à pointes sur un manche de taille moyenne renforcée par
-des bandes de métal, cette arme contondante peut réaliser d'importants dégâts
-et même percer l'armure.
-%%%%
-hand axe
-
-Un outil pour trancher des bûches de bois, ou de la chair. Il peut être
-suffisant si vous êtes concerné principalement par le poids de l'arme, mais
-pour massacrer convenablement, il vous faut quelque chose de plus gros.
 %%%%
 hat
 
@@ -622,11 +418,11 @@ honeycomb
 
 Un morceau de ruche d'abeilles géantes, gorgé de succulent miel.
 %%%%
-ice dragon armour
+horn of Geryon
 
-Une armure magique faite des écailles d'un dragon cracheur de froid. Elle offre
-une grande protection contre le froid, mais rend son porteur plus sensibles aux
-effets du feu.
+La corne de Geryon, le gardien du Vestibule des Enfers. Les légendes racontent
+que cet objet maudit à le pouvoir d’appeler à la rescousses des monstres
+démoniaques. Il est dit que le support de telles créatures n'est pas garanti.
 %%%%
 ice dragon hide
 
@@ -661,11 +457,6 @@ lamp of fire
 Une lampe magique habité par des esprits du feu bienveillants. Ouvrir la porte
 libère les esprits et fait danser les flammes sur les ennemies du porteur.
 %%%%
-lantern of shadows
-
-Un appareil impie qui appelle les puissances des ténèbres pour aider son
-utilisateur, et ce à faible coût.
-%%%%
 large rock
 
 Un rocher très lourd et imposant. {{
@@ -680,20 +471,6 @@ Un rocher très lourd et imposant. {{
     end
 }}
 %%%%
-large shield
-
-Une planche de bois avec du métal que l'on attache au bras pour se défendre. {{
-    if string.find(you.race(), "Ogre")
-       or string.find(you.race(), "Draconian")
-       or you.race() == "Troll"
-    then
-        return "il semblerait qu'il vous aille très bien."
-    else
-        return "Il est un peu encombrant à porter, et il peut réduire la " ..
-               "vitesse de frappe des guerriers inexpérimentés."
-    end
-}}
-%%%%
 leather armour
 
 Une combinaison fabriqué à partir de couches de peau d'animal tannée. Cette
@@ -704,22 +481,6 @@ lemon
 
 Un fruit jaune.
 %%%%
-lightning rod
-
-Ce sceptre tire un éclair continu : la décharge est entretenue et, peut être
-redirigée vers une nouvelle cible en évoquant le sceptre les tours suivants
-(échouer à le faire revient à relâcher la gâchette). Il prend un moment pour
-chauffer, crachant quelques étincelles inoffensives. Quand l'éclair est actif,
-il est possible de manipuler le sceptre, créant d'impressionnants et
-dévastateurs arcs électriques.
-%%%%
-long sword
-
-Une épée droite, avec une lame à double-tranchant de taille moyenne, ainsi
-qu'une poignée et un pommeau robuste. Cette arme noble combine la maniabilité
-et la précision avec une force meurtrière, et est dévastatrice dans une main
-entrainée à son utilisation.
-%%%%
 longbow
 
 Un long et grand arc en bois d'if. Il fait d'excellents dégâts au combat et un
@@ -729,23 +490,9 @@ lychee
 
 Un fruit tropical.
 %%%%
-mace
-
-Un masse clouté militaire, courte et métallique. Cet instrument efficace
-cabosse les armures et casse les os par la force brute.
-%%%%
-manual
-
-Un livre précieux qui permet d'apprendre une certaine compétence de manière
-plus efficace.
-%%%%
 meat ration
 
 Une ration de viande séchée.
-%%%%
-morningstar
-
-Une masse couverte de pointes.
 %%%%
 mottled dragon armour
 
@@ -760,24 +507,6 @@ mottled dragon hide
 La peau écailleuse aux étranges motifs d'un dragon marbré. Elle peut être
 transformé en armure par des moyens magiques. Sa surface lisse ne laisse pas le
 feu gluant s'y déposer.
-%%%%
-naga barding
-
-Une armure spécialement conçue pour les Nagas, à porter sur leur queue.
-%%%%
-necronomicon
-
-Un livre extrêmement rare, puissant, et sinistre. Sa couverture est composée
-d'une peau délicate d'origine inconnue. De nombreux magiciens intrépides ont
-essayé d'étudier cet ouvrage, et se sont retrouvés écrasés par des forces
-nécromantiques qu'ils ne pouvaient espérer controller.
-%%%%
-needle
-
-Une fine pièce de métal, habituellement trempée dans quelques substances
-nuisible. Elle font peu de dégâts si jeté à la main, mais lancé a partir d'une
-sarbacane elles peuvent devenir mortelles, libérant leurs toxines dans le
-système sanguin des créatures vivantes ou démoniaques.
 %%%%
 orange
 
@@ -847,13 +576,6 @@ potion of brilliance
 Une potion magique qui augmente considérablement l'intelligence et la puissance
 magique de celui qui la boit.
 %%%%
-potion of coagulated blood
-
-Une potion contenant l'essence de la vie. Ce fluide est vital pour toutes les
-créatures vivantes, ainsi que quelques morts-vivants. Il peut également nourrir
-ceux qui sont capables de manger de la viande. Ce sang ne sera bientôt plus
-consomable.
-%%%%
 potion of confusion
 
 Une potion qui brouille vos perceptions et réduit votre contrôle sur vos
@@ -863,21 +585,10 @@ potion of cure mutation
 
 Une potion qui annule tout ou partie de vos mutations.
 %%%%
-potion of curing
-
-Un fluide béni qui peut guérir quelques blessures, les maladies, et éclaircir
-l'esprit. Si elle est utilisée par quelqu'un en pleine santé ou presque, elle
-peut même restaurer des lésions permanentes.
-%%%%
 potion of decay
 
 Un liquide maudit, vil et putride, qui provoque le pourrissement de votre chair
 devant vos yeux.
-%%%%
-potion of degeneration
-
-Une concoction nocive qui peut faire des choses terribles sur votre corps,
-votre cerveau et vos réflexes.
 %%%%
 potion of experience
 
@@ -887,19 +598,16 @@ potion of flight
 
 Une potion qui confère une grande flottabilité à celui qui la boit.
 %%%%
-potion of heal wounds
-
-Un élixir de guérison magique qui permet aux blessures de se refermer et guérir
-presque instantanément. S'il est utilisée par quelqu'un en pleine santé ou
-presque, il peut même restaurer des lésions permanentes.
-%%%%
 potion of invisibility
 
 Une potion qui vous cache de la vue des autres.
 %%%%
-potion of magic
+potion of lignification
 
-Une potion précieuse qui accorde à une personne une infusion d'énergie magique.
+Une potion qui transforme temporairement le buveur en un arbre animé dont les
+branches peuvent manipuler des armes. Un tel arbre est plutôt résistant, mais
+il lui est impossible de se déplacer, de se téléporter, ni de consommer de la
+nourriture ou des potions.
 %%%%
 potion of might
 
@@ -909,10 +617,6 @@ physique de celui qui la boit.
 potion of mutation
 
 Une potion qui vous fait des choses vraiment étranges.
-%%%%
-potion of paralysis
-
-Un potion qui vous prive du contrôle de votre propre corps.
 %%%%
 potion of poison
 
@@ -930,6 +634,10 @@ potion of slowing
 
 Une potion qui ralentit vos actions.
 %%%%
+potion of haste
+
+Un breuvage enchanté qui accélère les actions de celui qui le boit.
+%%%%
 potion of strong poison
 
 Une épouvantable potion empoisonnée.
@@ -944,23 +652,10 @@ quarterstaff
 
 Une robuste perche en bois, conçue pour le combat.
 %%%%
-quick blade
-
-Cette épée courte soigneusement forgé est surnaturellement bien équilibré, ce
-qui rend les attaques rapides bien plus simple a réaliser, y comprit pour les
-utilisateurs inexpérimentés. Peu de forgerons ont les compétences requises pour
-en forger, de sorte qu'elles ne sont produites qu'en faible nombre, et sont
-difficiles à trouver.
-%%%%
 rambutan
 
 Un petit mais délicieux fruit tropical. Comment il est entré dans ce donjon est
 un mystère.
-%%%%
-ring mail
-
-Une combinaison de cuir léger renforcé par un revêtement d'anneaux métalliques.
-Protectrice en combat, mais peu confortable en raison de son poids.
 %%%%
 ring of dexterity
 
@@ -972,40 +667,10 @@ ring of evasion
 Cet anneau fait que son porteur est plus ou moins capables d'éviter les
 attaques, en fonction de son degré d'enchantement.
 %%%%
-ring of fire
-
-Cet anneau permet à son porteur d'avoir une plus grande affinité avec les
-pouvoirs du feu. Il ou elle gagne de la résistance à la chaleur et peut
-utiliser la magie du feu plus efficacement, mais devient moins efficace avec la
-magie de la glace et plus vulnérable aux effets du froid.
-%%%%
-ring of flight
-
-Cet anneau permet son porteur de voler. Le pouvoir de l'anneau ne peut pas être
-utilisé en vol, donc il est peu conseillé pour les longs trajets au-dessus d'un
-liquide mortel.
-%%%%
-ring of hunger
-
-Cet anneau maudit affame son porteur rapidement.
-%%%%
-ring of ice
-
-Cet anneau permet à son porteur d'avoir une plus grande affinité avec les
-pouvoirs de la glace. Il ou elle gagne de la résistance au froid et peut
-utiliser la magie de la glace plus efficacement, mais devient moins efficace
-avec la magie du feu et plus vulnérable aux effets du feu.
-%%%%
 ring of intelligence
 
 Cet anneau augmente ou diminue la capacité mentale de son porteur, selon le
 degré auquel il a été enchanté.
-%%%%
-ring of invisibility
-
-Ce puissant anneau peut être activé pour cacher son porteur de la vue des
-autres, mais augmente grandement la vitesse de son métabolisme en faisant
-ainsi.
 %%%%
 ring of magical power
 
@@ -1014,12 +679,6 @@ Cet anneau augmente les réserves de pouvoir magique de son porteur.
 ring of poison resistance
 
 Cet anneau donne une protection contre les poisons et venins.
-%%%%
-ring of positive energy
-
-Cet anneau béni protège la vie de son porteur contre l'énergie négative, le
-rendant partiellement à l'abri des effets drainants de le magie des
-morts-vivants et de la nécromancie.
 %%%%
 ring of protection
 
@@ -1030,18 +689,9 @@ ring of protection from cold
 
 Cet anneau apporte une protection contre le froid.
 %%%%
-ring of protection from fire
-
-Cet anneau apporte une protection contre la chaleur et le feu.
-%%%%
 ring of protection from magic
 
 Cet anneau augmente la résistance de son porteur aux enchantement hostiles.
-%%%%
-ring of regeneration
-
-Ce puissant anneau augmente considérablement les capacités de récupération de
-son porteur, mais accélère d'autant son métabolisme.
 %%%%
 ring of see invisible
 
@@ -1068,15 +718,6 @@ ring of sustenance
 Cet anneau délivre de l'énergie à son porteur, lui permettant de manger moins
 souvent.
 %%%%
-ring of teleport control
-
-Cette bague permet à son porteur de contrôler la destination de toute
-téléportation, mais sans avoir une précision parfaite. Essayer de se téléporter
-dans un objet solide se traduira par une téléportation aléatoire, du moins dans
-le cas d'une téléportation normale. Méfiez-vous également car une translocation
-contrôlée contamine le sujet avec de l'énergie magique résiduelle, et une
-teleportation contrôlée met plus de temps à se déclencher qu'une non-contrôlée.
-%%%%
 ring of teleportation
 
 Cet anneau exerce son pouvoir de temps en temps en téléportant son porteur à un
@@ -1086,25 +727,25 @@ ring of wizardry
 
 Cet anneau améliore la capacité du lanceur à lancer des sorts.
 %%%%
-robe
+rod of clouds
 
-Un ample vêtement d'extérieur à larges manches en tissu léger. On peut
-facilement ajuster une robe au corps d'un humanoïde de n'importe quelle taille.
-Les habits de cette sorte offrent une faible protection contre les dégâts
-physiques, mais n'entravent pas les mouvements lorsqu'il s'agit d'esquiver une
-attaque, ou d'exécuter précisément des gestes thaumaturgiques.
+Ce sceptre permet à son utilisateur de libérer un cône de différents gaz
+destructeurs. Leur dangerosité augmente avec les capacités d’évocation de
+l'utilisateur.
+%%%%
+rod of destruction
+
+Ce sceptre contient un ensemble varié de sorts de destruction et
+d'extermination.
 %%%%
 rod of inaccuracy
 
 Ce sceptre permet à son possesseur de lancer une puissante boule d’énergie,
 mais de façon très imprécise.
 %%%%
-rod of striking
+rod of shadows
 
-Ce sceptre est conçu pour le combat au corps à corps, libérant ses charges
-lorsque vous frappez un ennemi, et inflige des dégâts supplémentaires en
-fonction de votre compétence en évocations. La compétence Masses et Fléaux aide
-à améliorer l'efficacité de base de cette arme.
+Ce sceptre tire des créatures des ombres et de l’éther.
 %%%%
 rod of the swarm
 
@@ -1118,13 +759,6 @@ caractéristiques en plus de la satiété qu'elle apporte.
 rune of zot
 
 Un talisman qui permet d'entrer dans de domaine de Zot.
-%%%%
-sack of spiders
-
-Un sac de soie tissée. Quelque chose semble se déplacer à l'intérieur ...
-
-Ouvrir ce sac va libérer un certain nombre d'araignées amicales à votre cause.
-Vous pourriez cependant avoir besoin d'enlever ensuite les toiles d'araignée.
 %%%%
 sacred scourge
 
@@ -1141,11 +775,6 @@ scale mail
 Une combinaison de cuir couverte de petites plaques de métal alignées et
 superposées pour une protection complète, mais au coût d'une réduction de la
 liberté de mouvement.
-%%%%
-scimitar
-
-Un long sabre. Sa large lame courbée augmente les dégâts qu'il inflige mais le
-rend aussi un peu plus dur à manier avec précision.
 %%%%
 scroll of acquirement
 
@@ -1188,15 +817,26 @@ scroll of curse weapon
 
 Ce parchemin place une malédiction sur une arme équipé.
 %%%%
-scroll of enchant armour
+scroll of enchant weapon i
 
-Ce parchemin place un enchantement sur une protection. La plupart des
-protections ne peuvent être enchantées que jusqu'à +2, à l'exception des
-boucliers qui peuvent être enchantés jusqu'à +3, et les armures et les bardes
-qui peuvent être enchantées jusqu'à leur CA de base.
+Ce parchemin place un enchantement sur l'arme équipée, la rendant plus précise
+en combat. Les chances de succès de l'enchantement diminuent suivant le nombre
+d'enchantement déjà réalisé, et ne peut jamais aller au delà de +9. Les
+artefacts ne peuvent pas être enchanté.
+%%%%
+scroll of enchant weapon ii
 
-Il peut aussi être utilisé pour enchanter le cuir de certaines créatures
-exotiques.
+Ce parchemin place un enchantement sur l'arme équipée, augmentant ses dégâts en
+combat. Les chances de succès de l'enchantement diminuent suivant le nombre
+d'enchantement déjà réalisé, et ne peut jamais aller au delà de +9. Les
+artefacts ne peuvent pas être enchanté.
+%%%%
+scroll of enchant weapon iii
+
+Ce parchemin place un enchantement sur l'arme équipée,  la rendant plus précise
+et augmentant ses dégâts en combat. Les chances de succès de l'enchantement
+diminuent suivant le nombre d'enchantement déjà réalisé, et ne peut jamais
+aller au delà de +9. Les artefacts ne peuvent pas être enchanté.
 %%%%
 scroll of fear
 
@@ -1205,11 +845,6 @@ Ce parchemin provoque une grande peur à ceux voyant le lecteur l'utiliser.
 scroll of fog
 
 Ce parchemin plonge le lecteur au sein d'un épais brouillard.
-%%%%
-scroll of holy word
-
-Ce parchemin demande aux puissances des cieux de causer de grands dégâts à
-toute les créatures impie à proximité – y compris vous !
 %%%%
 scroll of identify
 
@@ -1228,44 +863,15 @@ scroll of magic mapping
 
 Ce parchemin révèle les environs de celui qui le lit.
 %%%%
-scroll of noise
-
-Ce parchemin farceur, souvent glissé dans sac à dos d'un magicien par un
-apprenti retors, provoque un grand bruit. Il n'est pas dit utile pour autre
-chose.
-%%%%
 scroll of random uselessness
 
 Il est facile d'être aveuglé à l'inutilité essentielle de ce parchemin, par le
 sentiment d'accomplissement que l'on a à le faire marcher.
 %%%%
-scroll of recharging
-
-Ce parchemin restaure les charges de toutes baguettes magique ou d'un sceptre
-choisie par son lecteur. Lorsqu'il est utilisé sur un sceptre, il augmente
-également la taille du stockage de son énergie, augmente la vitesse à laquelle
-son pouvoir se régénère, et améliore même ses qualités de combat au corps à
-corps.
-%%%%
 scroll of remove curse
 
 Lire ce parchemin permet de libérer les objets que vous utilisez de leurs
 malédictions.
-%%%%
-scroll of silence
-
-Ce parchemin élimine tous les sons à proximité du lecteur. Ceci rend la
-lecture, le lancer des sorts, la prière ou les cries dans les environs du
-lecteur impossible. (Elle s'applique pour le lecteur, aussi, bien sûr.)
-
-Ce silence ne masquera pas votre présence, sa présence est étouffante, et son
-effet surnaturel alertera presque certainement toute les créature vivante que
-quelque chose n'est pas normal. Le silence commence avec un rayon couvrant la
-moitié du champ de vision normale, diminuera ensuite, et à terme ne couvrira
-que le lecteur, avant que l'effet disparaisse.
-
-Notez que les démons n'ont pas besoin de son pour lancer des sorts. Certains
-objets nécromantiques ont aussi cette propriété.
 %%%%
 scroll of summoning
 
@@ -1277,20 +883,6 @@ scroll of teleportation
 Lire les mots inscrits sur ce parchemin vous translocalise dans un lieu
 aléatoire.
 %%%%
-scroll of torment
-
-Ce parchemin appelle les puissances des ténèbres pour infliger une grande
-douleur sur toute les créatures à proximité – y compris vous ! Ceci traverse la
-moitié de la résistance de toutes les créatures vivantes, bien que ce ne soit
-jamais directement fatale.
-%%%%
-scroll of vulnerability
-
-Ce parchemin annule tous les enchantements magiques du lecteur et des êtres
-dans le voisinage. En outre, les résistances magiques du lecteur et des êtres
-proches sont réduits de moitié pour une courte durée. Ce dernier effet ne
-s'applique pas aux êtres totalement immunisé à la magie.
-%%%%
 scythe
 
 Un outil agricole, généralement utilisée par créatures inexpérimentées au
@@ -1301,12 +893,6 @@ shield
 Une planche de bois avec du métal que l'on attache au bras pour se défendre. Il
 est un peu encombrant à porter, et il peut réduire la vitesse de frappe des
 guerriers inexpérimentés.
-%%%%
-short sword
-
-Une petit épée à double tranchant avec une poignée courte. Robuste et facile à
-manipuler, cette arme se trouve souvent entre les mains de ceux qui souhaitent
-poignarder leurs ennemis inattentifs.
 %%%%
 slice of pizza
 
@@ -1332,75 +918,19 @@ spear
 Une arme de chasse composée d'un manche en bois avec une tête métallique
 pointue fixée au bout.
 %%%%
-staff of air
-
-Ce bâton augmente la puissance des sorts d'air lancés par son porteur, mais
-réduit celle des sorts de terre. Il l'isole électriquement. Si le porteur est
-compétent en évocations, il peut électrifier ceux qu'il frappe avec, leur
-causant d'autant plus de dégâts qu'il est compétent en magie de l'air.
-%%%%
-staff of cold
-
-Ce bâton augmente la puissance des sorts de glace de son porteur, mais diminue
-celle des sorts de feu. Il le protège contre les effets du froid. Si le porteur
-est compétent en évocations, il peut geler ceux qu'il frappe avec, leur causant
-d'autant plus de dégâts qu'il est compétent en magie de la glace.
-%%%%
 staff of conjuration
 
 Ce bâton accroit la puissance des conjurations de son porteur.
-%%%%
-staff of death
-
-Ce bâton accroit le pouvoir des sorts de nécromancie lancés par son porteur et,
-le protège de l'énergie négative. Si son possesseur est compétence en
-Évocations et Nécromancie, il peut infliger de terribles douleurs aux âmes
-vivantes qu'il frappe avec.
-%%%%
-staff of earth
-
-Ce bâton augmente la puissance des sorts de terre lancés par son porteur mais
-diminue celle des sorts d'air. Si le porteur est compétent en évocations, il
-peut écraser ceux qu'il frappe avec, leur causant d'autant plus de dégâts qu'il
-est compétent en magie de la terre.
 %%%%
 staff of energy
 
 Ce bâton permet à son porteur de contrôler l'énergie magique : jeter des sorts
 ne donne plus faim et il peut canaliser la magie ambiante.
 %%%%
-staff of fire
+staff of wizardry
 
-Ce bâton augmente la puissance des sorts de feu lancés par le porteur, mais
-diminue celle des sorts de glace. Il le protège des effets de la chaleur et du
-feu. Si le porteur est compétent en évocations, il peut brûler ceux qu'il
-frappe avec, leur causant d'autant plus de dégâts qu'il est compétent en magie
-du feu.
-%%%%
-staff of poison
-
-Ce bâton accroit le pouvoir des sorts empoisonnés lancés par son porteur et, le
-protège contre les effets du poison. Si son possesseur est compétent en
-Évocations et en Magie du Poison, il pourra empoisonner les créatures qu'il
-frappe avec et ce, même si elles sont normalement résistantes au poison.
-%%%%
-staff of power
-
-Ce bâton accorde à son porteur une réserve de puissance magique.
-%%%%
-staff of summoning
-
-Ce bâton accroit le pouvoir des convocations lancées par le porteur et, le
-protège des attaques des créatures convoquées. Si le possesseur est compétent
-en Évocations, il peut même tenter de renvoyer les créatures convoquées quand
-il les frappe.
-%%%%
-steam dragon armour
-
-Un armure magique, faite d'écailles d'un dragon cracheur de vapeurs.
-Contrairement aux autres armures faites d'écailles de grands dragons, elle
-n'octroie pas à son porteur autant de protection magique, mais elle est
-extrêmement légère et aussi souple qu'un habit.
+Ce bâton accroit significativement l'aptitude de son porteur à lancer des
+sorts.
 %%%%
 steam dragon hide
 
@@ -1450,43 +980,12 @@ swamp dragon hide
 
 La peau gluante{{
     if you.can_smell() then
-        return ", odorante"
+        return "et odorante"
     else
         return ""
     end
 }} d'un dragon des marais. Elle confère la résistance aux poisons à son porteur
 et, peut-être transformée en une véritable armure grâce à la magie.
-%%%%
-throwing net
-
-Un ensemble de cordes reliées entre elles par des nœuds. Ordinairement utilisé
-par les chasseurs pour immobiliser et attraper leur proie, son application, en
-combat et dans les arènes des gladiateurs, est vite devenue évidente. Les
-victimes se débattant peuvent détruire le filet et se libérer, si elles vivent
-suffisamment longtemps.
-{{
-    if you.race() == "Halfling"
-       or you.race() == "Kobold"
-       or you.race() == "Spriggan"
-    then
-        return "Malheureusement, c'est trop volumineux pour que vous ne " ..
-               "puissiez l'utiliser."
-    else
-        return ""
-    end
-}}
-%%%%
-tomahawk
-
-Un objet ressemblant à une hache, conçu pour être lancé. Alors que d'autres
-tomahawks plus gros pourraient convenir au combat au corps à corps, celui-ci
-est plus petit et plus maniable afin d'optimiser ses propriétés balistiques.
-%%%%
-tome of destruction
-
-Un livre de magie sauvage extrêmement puissant mais, extrêmement imprévisible.
-Attention : lire ce livre peut s'avérer hasardeux pour vous ou votre
-entourages !
 %%%%
 trident
 
@@ -1501,8 +1000,8 @@ L’Étincelant.
 %%%%
 troll hide
 
-La peau raide et noueuse d'un troll. Tout comme les autres peaux de bêtes, il
-est possible de l'enchanter.
+La peau raide et noueuse d'un troll doté de propriété régénératrice. Il existe
+des méthodes magiques pour la transformer en armure.
 %%%%
 troll leather armour
 
@@ -1528,13 +1027,6 @@ Un instrument magique qui désagrège la structure physique de n'importe quoi,
 sauf des murs les plus durs – cela inclue les statues rigides, bref tout ce qui
 n'est pas de chair.
 %%%%
-wand of draining
-
-Un instrument magique qui tire des missiles d'énergie négative drainant
-l'essence vitale des créatures vivantes. Cependant, c'est totalement inefficace
-contre les morts-vivants, les démons, les créatures artificielles et les
-plantes.
-%%%%
 wand of enslavement
 
 Un instrument magique qui provoque une servitude aveugle chez une créature.
@@ -1546,14 +1038,6 @@ Un instrument magique qui tire de grands missiles de feu.
 wand of fireball
 
 Un instrument magique qui tire des salves de flammes explosives.
-%%%%
-wand of flame
-
-Un instrument magique qui tire des dards de feu.
-%%%%
-wand of frost
-
-Un instrument magique qui tire des dards de froid.
 %%%%
 wand of hasting
 
@@ -1577,13 +1061,6 @@ wand of magic darts
 Un instrument magique qui tire de petits missiles d'énergie destructrice. Ils
 ne ratent jamais.
 %%%%
-wand of paralysis
-
-Un outil magique qui peut immobiliser une créature, le rendant incapable de
-bouger n'importe lequel de ses membres. Une créature paralysée peut juste
-respirer, réfléchir, et observer d'un air impuissant lorsqu'il tombe dans la
-lave en dessous ou que vous le sortez de sa misère avec votre dague.
-%%%%
 wand of polymorph
 
 Un instrument magique qui transforme la forme d'une créature ciblée en la forme
@@ -1603,15 +1080,7 @@ wand of teleportation
 
 Un instrument magique qui téléporte aléatoirement une créature ciblée.
 %%%%
-war axe
-
-Une hache prévue pour le combat au corps à corps.
-%%%%
 whip
 
 Un fouet.
-%%%%
-young poisoner's handbook
-
-Un livre de sortilèges magiques.
 %%%%

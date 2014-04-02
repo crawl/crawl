@@ -71,14 +71,13 @@ long forgotten scripts, devoted to Sif Muna the Loreminder.
 %%%%
 A detected altar
 
-An altar of some kind. You can't tell what deity it is consecrated to
-without approaching it.
+An altar of some kind. You can't tell what deity it is consecrated to without
+approaching it.
 %%%%
 # mmap/antennae/etc
 A detected shop or portal
 
-A gateway of some kind. You can't tell where it leads without approaching
-it.
+A gateway of some kind. You can't tell where it leads without approaching it.
 %%%%
 A dry fountain
 
@@ -644,8 +643,8 @@ A huge sealed gate
 # wizlabs
 A portal leading out of here
 
-This shimmering magical gate leads back to the place you came from. You will
-be unable to return here once you pass through it.
+This shimmering magical gate leads back to the place you came from. You will be
+unable to return here once you pass through it.
 %%%%
 # wizlab: Wucad Mu
 An autumnal tree

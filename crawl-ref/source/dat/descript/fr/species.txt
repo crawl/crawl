@@ -27,7 +27,13 @@ mutations démoniaques à mesure qu'ils grandissent.
 Draconian
 
 Les Draconiens sont des hybrides polyvalents. Ils arrivent à maturité au niveau
-7 et prennent une couleur.
+7 et révèlent leur couleur.
+%%%%
+Formicid
+
+Les Formicids sont des fourmis humanoïdes adepte de l'excavation. Leurs membres
+sont exceptionnellement fort et ils vivent dans un environnement où l’évolution
+naturel a cessé.
 %%%%
 Felid
 
@@ -82,7 +88,8 @@ deçà du Donjon. Leurs capacités changent avec leur température corporelle.
 Merfolk
 
 Moitié poisson, moitié humain, les ondins habitent à la fois sur terre et dans
-l'eau. Ce sont de bons combatant et expert en utilisation de magie de support.
+l'eau. Ce sont de bons combattants et expert en utilisation de magie de
+support.
 %%%%
 Minotaur
 
@@ -97,7 +104,8 @@ condamnés à la non-vie par une ancienne malédiction.
 Naga
 
 Un hybride ; humain jusqu'à la poitrine, le torse se prolonge par une longue
-queue écailleuse et musclée, comme celle d'un serpent.
+queue écailleuse et musclée, comme celle d'un serpent. Ils se déplacent
+lentement mais sont naturellement résistants.
 %%%%
 Octopode
 
@@ -118,4 +126,15 @@ Troll
 
 Grandes brutes prêtes à estropier n'importe quoi avec leurs griffes, sans
 jamais y réfléchir à deux fois. Ils ont toujours faim.
+%%%%
+Vampire
+
+Naviguant entre la vie et la non-vie, les vampires sont des mages accomplis, et
+maîtres dans l'art d'attaquer leurs ennemis par surprise.
+%%%%
+Vine Stalker
+
+Fragiles symbiotes, les Vine Stalkers ne peuvent pas regagner leur santé à
+partir d'objets ou de potions. Leurs réserves magiques absorbent les dégâts, et
+ils possèdent une morsure restaurant leur magie.
 %%%%

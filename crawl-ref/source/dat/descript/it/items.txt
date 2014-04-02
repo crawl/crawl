@@ -1,9 +1,4 @@
 %%%%
-amulet of clarity
-
-Questo amuleto protegge il portatore da alcune forme di confusione mentale,
-incluso l'essere infuriati contro la propria volontà
-%%%%
 amulet of faith
 
 Questo è un talismano realizzato per richiamare l'attenzione degli dei su chi

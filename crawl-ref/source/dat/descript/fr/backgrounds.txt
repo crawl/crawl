@@ -57,6 +57,11 @@ Enchanter
 Les Enchanteurs utilisent des sorts pour neutraliser leurs adversaires. Ils
 commencent aussi avec des fléchettes de bonne qualité.
 %%%%
+Fighter
+
+Les Guerriers commencent avec une armure et un bouclier, une arme de leur
+choix, et une potion de force.
+%%%%
 Fire Elementalist
 
 Les Élémentalistes du Feu commence avec le livre des Flammes et connaisse le
@@ -106,8 +111,8 @@ Convoquer un Petit Mammifère dès le début.
 %%%%
 Transmuter
 
-Les Transmuteurs changent leur forme pour combatre avec des attributs bestiaux.
-Ils sont aussi capables de transformer des bâtons en serpent.
+Les Transmuteurs changent leur forme pour combattre avec des attributs
+bestiaux. Ils sont aussi capables de transformer des bâtons en serpent.
 %%%%
 Venom Mage
 

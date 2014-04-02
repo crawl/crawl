@@ -513,9 +513,8 @@ se développe bien dans les souterrains humides du donjon.{{
         return "Fedhas a stoppé sa production de spores géantes " ..
                "pour vous protéger des explosions."
     else
-        return "Il va occasionnellement produire des spores géantes, desquelles
-" ..
-               "germerons d'autres ballistomycètes."
+        return "Il va occasionnellement produire des spores géantes, "..
+        "desquelles germeront d'autres ballistomycètes."
     end
 }}
 %%%%

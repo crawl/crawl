@@ -83,6 +83,12 @@ Husk nu at bruge de skriftruller, eliksirer og vånde du har fundet. Du kan
 oftest ikke forvente at få identificeret alt med skriftruller. Lær at
 improvisere: Identificér gennem brug.
 %%%%
+death random 4
+
+Glem ikke at bruge nødforsyninger tidligt hvis et særligt sammenstød synes
+overvældende. En skriftrulle med teleportation eller en hurtighedseliksir kan
+virkeligt redde dit skind.
+%%%%
 death random 5
 
 Kæmp aldrig mod mere end et monster hvis du kan undgå det. Bak altid ind i en

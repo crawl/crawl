@@ -476,7 +476,7 @@ tutorial3 exit
 %%%%
 tutorial4 start
 
-Au cours de cette leçon vous allez apprendre commment mémoriser et jeter des
+Au cours de cette leçon vous allez apprendre comment mémoriser et jeter des
 sorts.
 %%%%
 tutorial4 spellbook
@@ -669,7 +669,7 @@ Prier sur des corps avec <input>$cmd[CMD_PRAY]</input><localtiles> ou via le
 %%%%
 tutorial5 burn_book
 
-Trog appreciérait si vous brûliez ce grimoire (avec
+Trog apprécierait si vous brûliez ce grimoire (avec
 <input>$cmd[CMD_USE_ABILITY]</input><localtiles> ou via le <w>panneau de
 commandes</w></localtiles>). Parfois, vous préférerez attendre (avec
 <input>$cmd[CMD_MOVE_NOWHERE]</input>) qu'un monstre passe dessus avant de le

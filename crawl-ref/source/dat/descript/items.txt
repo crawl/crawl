@@ -199,9 +199,9 @@ Conjurations. It shudders with barely-contained power when it is opened.
 %%%%
 book of control
 
-A book of magic spells for controlling minds, bodies, and even space. Those
-who browse it sometimes find it hard to take their minds off the sigils and
-runes inside.
+A book of magic spells for controlling minds, bodies, and even space. Those who
+browse it sometimes find it hard to take their minds off the sigils and runes
+inside.
 %%%%
 book of death
 
@@ -1280,9 +1280,9 @@ This scroll surrounds the reader with a dense cloud of fog.
 %%%%
 scroll of holy word
 
-This scroll calls on the good gods to cause great damage to any nearby
-undead or demonic creature — possibly including you! It will briefly stun
-monsters that are affected.
+This scroll calls on the good gods to cause great damage to any nearby undead
+or demonic creature — possibly including you! It will briefly stun monsters
+that are affected.
 %%%%
 scroll of identify
 
@@ -1547,8 +1547,8 @@ One's servants.
 %%%%
 troll hide
 
-The stiff and knobbly hide of a troll, with magical regenerative properties.
-It may be turned into armour by magical means.
+The stiff and knobbly hide of a troll, with magical regenerative properties. It
+may be turned into armour by magical means.
 %%%%
 troll leather armour
 
