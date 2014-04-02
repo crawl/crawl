@@ -91,6 +91,7 @@ enum tag_minor_version
     TAG_MINOR_FUNGUS_FORM,         // Removed confusing touch duration from fungus form.
     TAG_MINOR_STEALTH_RESCALE,     // Item properties: rescaled Stealth, removed Hunger.
     TAG_MINOR_ATTACK_DESCS,        // Added attacks to monster_info.
+    TAG_MINOR_BRIBE_BRANCH,        // Bribe branch tracking
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

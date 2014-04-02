@@ -55,6 +55,9 @@ void initialise_branch_depths()
 {
     root_branch = BRANCH_DUNGEON;
 
+    // XXX: Should this go elsewhere?
+    branch_bribe.init(0);
+
     for (int br = 0; br < NUM_BRANCHES; ++br)
         brentry[br].clear();
 

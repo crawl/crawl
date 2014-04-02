@@ -8,6 +8,7 @@
 
 FixedVector<level_id, NUM_BRANCHES> brentry;
 FixedVector<int, NUM_BRANCHES> brdepth;
+FixedVector<int, NUM_BRANCHES> branch_bribe;
 branch_type root_branch;
 
 const Branch& your_branch()

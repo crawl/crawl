@@ -3,6 +3,7 @@
 #include "status.h"
 
 #include "areas.h"
+#include "branch.h"
 #include "env.h"
 #include "evoke.h"
 #include "godabil.h"
@@ -704,6 +705,39 @@ bool fill_status_info(int status, status_info* inf)
             make_stringf("Your skills are %senhanced by your lust for gold.",
                          gold_bonus >= 5 ? "greatly" :
                          gold_bonus <  3 ? "slightly" : "");
+        break;
+    }
+
+    case STATUS_BRIBE:
+    {
+        int bribe = 0;
+        vector<string> places;
+        for (int i = 0; i < NUM_BRANCHES; i++)
+        {
+            if (bribe < branch_bribe[i])
+                bribe = branch_bribe[i];
+            if (branch_bribe[i] > 0)
+            {
+                places.push_back(branches[static_cast<branch_type>(i)]
+                                 .longname);
+            }
+        }
+
+        if (bribe == 0)
+            break;
+
+        inf->light_colour = (bribe >= 2000) ? WHITE :
+                            (bribe >= 1000) ? LIGHTBLUE
+                                            : BLUE;
+
+        inf->light_text = "Bribe";
+        inf->short_text = make_stringf("bribing [%s]",
+                                       comma_separated_line(places.begin(),
+                                                            places.end(),
+                                                            ", ", ", ")
+                                                            .c_str());
+        inf->long_text = "You are bribing "
+                         + comma_separated_line(places.begin(), places.end());
         break;
     }
 

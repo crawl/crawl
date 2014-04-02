@@ -189,6 +189,7 @@ enum ability_type
     // Gozag
     ABIL_GOZAG_POTION_PETITION = 1180,
     ABIL_GOZAG_CALL_MERCHANT,
+    ABIL_GOZAG_BRIBE_BRANCH,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -1831,6 +1832,8 @@ enum enchant_type
     ENCH_SAP_MAGIC,
     ENCH_SHROUD,
     ENCH_PHANTOM_MIRROR,
+    ENCH_BRIBED,
+    ENCH_PERMA_BRIBED,
     // Update enchantment names in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -4356,6 +4359,7 @@ enum daction_type
     DACT_END_SPIRIT_HOWL,
 #endif
     DACT_GOLD_ON_TOP,
+    DACT_BRIBE_TIMEOUT,
     NUM_DACTIONS,
 };
 
@@ -4640,6 +4644,7 @@ enum timed_effect_type
     TIMER_ABYSS_SPEED,
     TIMER_JIYVA,
     TIMER_EVOLUTION,
+    TIMER_BRIBE_TIMEOUT,
     NUM_TIMERS,
 };
 
