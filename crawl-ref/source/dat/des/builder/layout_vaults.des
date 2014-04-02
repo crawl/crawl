@@ -99,7 +99,7 @@ WEIGHT: 30
 ORIENT: encompass
 CHANCE: 100%
 TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS: no_hmirror no_vmirror chance_vaults uniq_vaults_box layout_type_vaults
+TAGS: no_hmirror no_vmirror chance_vaults layout_type_vaults
 {{
   local gxm,gym = dgn.max_bounds()
   local min_size = 6
