@@ -213,6 +213,8 @@ bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charge
 struct shop_spec;
 void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative = false);
+int greed_for_shop_type(shop_type shop, int level_number);
+object_class_type item_in_shop(shop_type shop_type);
 bool seen_replace_feat(dungeon_feature_type replace,
                        dungeon_feature_type feature);
 bool map_masked(const coord_def &c, unsigned mask);

@@ -330,6 +330,9 @@ const char * const MONSTER_NUMBER = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
 const char * const MONSTER_MID = "monster-mid";
 
+const char * const GOZAG_SHOP_KEY = "gozag_shop_%s";
+const char * const GOZAG_ANNOUNCE_SHOP_KEY = "gozag_announce_shop";
+
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10
 #define KEY_MACRO_DISABLE_MORE -1

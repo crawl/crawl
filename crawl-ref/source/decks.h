@@ -21,14 +21,6 @@
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
 
-enum deck_rarity_type
-{
-    DECK_RARITY_RANDOM,
-    DECK_RARITY_COMMON,
-    DECK_RARITY_RARE,
-    DECK_RARITY_LEGENDARY,
-};
-
 enum deck_type
 {
     // pure decks

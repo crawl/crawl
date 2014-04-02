@@ -196,7 +196,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_STEP, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_DITHMENOS_SHADOW_FORM },
     // Gozag
-    { ABIL_GOZAG_POTION_PETITION, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+    { ABIL_GOZAG_POTION_PETITION, ABIL_GOZAG_CALL_MERCHANT, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
 };
 
@@ -412,6 +412,8 @@ static const ability_def Ability_List[] =
 
     // Gozag
     { ABIL_GOZAG_POTION_PETITION, "Potion Petition",
+      0, 0, 0, 0, 0, ABFLAG_GOLD },
+    { ABIL_GOZAG_CALL_MERCHANT, "Call Merchant",
       0, 0, 0, 0, 0, ABFLAG_GOLD },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
@@ -1059,6 +1061,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
     case ABIL_GOZAG_POTION_PETITION:
+    case ABIL_GOZAG_CALL_MERCHANT:
     case ABIL_STOP_RECALL:
         invoc = true;
         failure = 0;
@@ -2908,6 +2911,12 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_GOZAG_POTION_PETITION:
         if (!gozag_potion_petition())
+            return false;
+
+        break;
+
+    case ABIL_GOZAG_CALL_MERCHANT:
+        if (!gozag_call_merchant())
             return false;
 
         break;

@@ -911,7 +911,7 @@ const char* rune_type_name(int p)
     }
 }
 
-static const char* deck_rarity_name(deck_rarity_type rarity)
+const char* deck_rarity_name(deck_rarity_type rarity)
 {
     switch (rarity)
     {
