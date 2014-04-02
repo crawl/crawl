@@ -451,7 +451,14 @@ static void _grunt(string &txt)
         {"Battlelust", "BATTLELUST"},
         {"Kill them all", "RIP AND TEAR"},
         {"accepts your kill", "roars: ANNIHILATED"},
+        {"appreciates your killing of a heretic priest",
+         "smash puny heretic"},
+        {"appreciates your killing of a magic user",
+         "smash puny caster"},
+        {"appreciates your killing of a holy being",
+         "smash puny angel"},
         {"appreciates your kill", "screams: ANNIHILATED"},
+        {"You die...", "rip"},
         {0}
     };
 
