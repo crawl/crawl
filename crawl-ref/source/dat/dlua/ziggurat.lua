@@ -210,8 +210,6 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "orb spider",
      "place:Crypt:$ w:260 / curse skull w:5 / profane servitor w:5 / " ..
                 "bone dragon / ancient lich / revenant",
-     "place:Forest:$ w:180 / satyr / tengu reaver w:5 / " ..
-                "spriggan defender w:5",
      "place:Abyss:$ w:1990 / corrupter",
      with_props("place:Slime:$", { jelly_protect = true }),
      with_props("place:Coc:$ w:460 / Ice Fiend / " ..
