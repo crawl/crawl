@@ -494,6 +494,10 @@ void artefact_desc_properties(const item_def &item,
 
     switch (item.sub_type)
     {
+    case AMU_WARDING:
+        fake_rap = ARTP_NEGATIVE_ENERGY;
+        break;
+
     case RING_PROTECTION:
         fake_rap  = ARTP_AC;
         fake_plus = item.plus;
@@ -524,6 +528,15 @@ void artefact_desc_properties(const item_def &item,
 
     case RING_HUNGER:
         fake_rap = ARTP_METABOLISM;
+        break;
+
+    case RING_SUSTENANCE:
+        fake_rap = ARTP_METABOLISM;
+        fake_plus = -1;
+        break;
+
+    case RING_REGENERATION:
+        fake_rap = ARTP_REGENERATION;
         break;
 
     case RING_EVASION:

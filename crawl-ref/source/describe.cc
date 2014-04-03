@@ -170,9 +170,7 @@ static const char* _jewellery_base_ability_string(int subtype)
 {
     switch (subtype)
     {
-    case RING_REGENERATION:      return "Regen";
     case RING_SUSTAIN_ABILITIES: return "SustAb";
-    case RING_SUSTENANCE:        return "Hunger-";
     case RING_WIZARDRY:          return "Wiz";
     case RING_FIRE:              return "Fire";
     case RING_ICE:               return "Ice";
@@ -396,6 +394,49 @@ void add_inscription(item_def &item, string inscrip)
     item.inscription += inscrip;
 }
 
+static const char* _jewellery_base_ability_description(int subtype)
+{
+    switch (subtype)
+    {
+    case RING_SUSTAIN_ABILITIES:
+        return "It sustains your strength, intelligence and dexterity.";
+    case RING_WIZARDRY:
+        return "It improves your spell success rate.";
+    case RING_FIRE:
+        return "It enhances your fire magic, and weakens your ice magic.";
+    case RING_ICE:
+        return "It enhances your ice magic, and weakens your fire magic.";
+    case RING_TELEPORTATION:
+        return "It causes random teleportation, and can be evoked to teleport "
+               "at will.";
+    case RING_TELEPORT_CONTROL:
+        return "It can be evoked for teleport control.";
+    case AMU_CLARITY:
+        return "It provides mental clarity.";
+    case AMU_WARDING:
+        return "It may prevent the melee attacks of summoned creatures.";
+    case AMU_RESIST_CORROSION:
+        return "It protects you from acid and corrosion.";
+    case AMU_THE_GOURMAND:
+        return "It allows you to eat raw meat even when not hungry.";
+    case AMU_CONSERVATION:
+        return "It protects your inventory from destruction.";
+    case AMU_RESIST_MUTATION:
+        return "It protects you from mutation.";
+    case AMU_GUARDIAN_SPIRIT:
+        return "It causes incoming damage to be split between your health and "
+               "magic.";
+    case AMU_FAITH:
+        return "It allows you to gain divine favour quickly.";
+    case AMU_STASIS:
+        return "It prevents you from being teleported, slowed, hasted or "
+               "paralysed.";
+    case AMU_INACCURACY:
+        return "It reduces the accuracy of all your attacks.";
+    }
+    return "";
+}
+
 struct property_descriptor
 {
     artefact_prop_type property;
@@ -409,7 +450,7 @@ static string _randart_descrip(const item_def &item)
 
     artefact_properties_t  proprt;
     artefact_known_props_t known;
-    artefact_desc_properties(item, proprt, known);
+    artefact_desc_properties(item, proprt, known, true);
 
     const property_descriptor propdescs[] =
     {
@@ -448,6 +489,19 @@ static string _randart_descrip(const item_def &item)
         { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
         { ARTP_REGENERATION, "It increases your rate of regeneration.", false},
     };
+
+    // Give a short description of the base type, for base types with no
+    // corresponding ARTP.
+    if (item.base_type == OBJ_JEWELLERY
+        && (item_ident(item, ISFLAG_KNOW_TYPE)))
+    {
+        const char* type = _jewellery_base_ability_description(item.sub_type);
+        if (*type)
+        {
+            description += "\n";
+            description += type;
+        }
+    }
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
     {
@@ -1352,15 +1406,12 @@ static string _describe_jewellery(const item_def &item, bool verbose)
 
     description.reserve(200);
 
-    if ((verbose || is_artefact(item))
+    if (verbose && !is_artefact(item)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
-        // Explicit description of ring power (useful for randarts)
-        // Note that for randarts we'll print out the pluses even
-        // in the case that its zero, just to avoid confusion. -- bwr
+        // Explicit description of ring power.
         if (item.plus != 0
-            || item.sub_type == RING_SLAYING && item.plus2 != 0
-            || is_artefact(item))
+            || item.sub_type == RING_SLAYING && item.plus2 != 0)
         {
             switch (item.sub_type)
             {
@@ -1410,13 +1461,6 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                     _append_value(description, item.plus2, true);
                     description += ").";
                 }
-
-                if (item.plus == 0 && item.plus2 == 0)
-                {
-                    description += "This buggy ring affects neither your "
-                                   "accuracy nor your damage-dealing "
-                                   "abilities.";
-                }
                 break;
 
             default:
@@ -1430,7 +1474,10 @@ static string _describe_jewellery(const item_def &item, bool verbose)
     {
         string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
+        {
+            description += "\n";
             description += rand_desc;
+        }
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) ||
             !item_ident(item, ISFLAG_KNOW_TYPE))
         {
@@ -1695,11 +1742,18 @@ string get_item_description(const item_def &item, bool verbose,
             if (!desc.empty())
             {
                 description << desc;
-                if (item.base_type == OBJ_JEWELLERY)
-                    description << "\n";
-                else
-                    need_base_desc = false;
+                need_base_desc = false;
+                description.seekp((streamoff)-1, ios_base::cur);
+                description << " ";
             }
+        }
+        // Randart jewellery properties will be listed later,
+        // just describe artefact status here.
+        else if (is_artefact(item) && item_type_known(item)
+                 && item.base_type == OBJ_JEWELLERY)
+        {
+            description << "It is an ancient artefact.";
+            need_base_desc = false;
         }
 
         if (need_base_desc)
@@ -2019,11 +2073,15 @@ string get_item_description(const item_def &item, bool verbose,
                 if (item.base_type == OBJ_ARMOUR
                     || item.base_type == OBJ_WEAPONS)
                 {
-                    description << "\n\nThis ancient artefact cannot be changed "
+                    description << "\nThis ancient artefact cannot be changed "
                         "by magic or mundane means.";
                 }
-                else
-                    description << "\n\nIt is an ancient artefact.";
+                // Randart jewellery has already displayed this line.
+                else if (item.base_type != OBJ_JEWELLERY
+                         || (item_type_known(item) && is_unrandom_artefact(item)))
+                {
+                    description << "\nIt is an ancient artefact.";
+                }
             }
         }
     }
