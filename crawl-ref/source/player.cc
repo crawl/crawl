@@ -1309,7 +1309,7 @@ static int _slow_heal_rate()
     if (player_mutation_level(MUT_SLOW_HEALING) == 3)
         return 0;
 
-    for (monster_near_iterator mi(&you); mi; ++mi)
+    for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
     {
         if (!mons_is_firewood(*mi)
             && !mi->wont_attack()
