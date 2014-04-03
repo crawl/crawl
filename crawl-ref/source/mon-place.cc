@@ -3205,7 +3205,7 @@ static monster_type _band_member(band_type band, int which)
         return MONS_SPRIGGAN;
     case BAND_SPRIGGAN_ELITES:
         if (which == 1 && coinflip())
-            return coinflip() ? MONS_SPRIGGAN_ENCHANTER : MONS_SPRIGGAN_ASSASSIN;
+            return MONS_SPRIGGAN_ENCHANTER;
     case BAND_SPRIGGANS:
         return random_choose_weighted( 4, MONS_SPRIGGAN_AIR_MAGE,
                                        3, MONS_SPRIGGAN_BERSERKER,

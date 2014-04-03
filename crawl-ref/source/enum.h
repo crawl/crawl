@@ -2572,7 +2572,9 @@ enum monster_type                      // menv[].type
     MONS_DEEP_ELF_MASTER_ARCHER,
     MONS_SPRIGGAN,
     MONS_SPRIGGAN_DRUID,
+#if TAG_MAJOR_VERSION == 34
     MONS_SPRIGGAN_ASSASSIN,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_SPRIGGAN_ENCHANTER,
 #endif

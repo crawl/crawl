@@ -2403,12 +2403,6 @@ spriggan air mage
 
 A magically adept spriggan blessed with the secrets of the winds.
 %%%%
-spriggan assassin
-
-A deft and surreptitious spriggan. It's ready to deliver a flurry of
-incapacitating poison needles, followed by a quick blade right under your fifth
-rib.
-%%%%
 spriggan berserker
 
 A relatively mighty spriggan that plunges recklessly into combat.

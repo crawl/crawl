@@ -1295,15 +1295,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                        WPN_CUTLASS, -1);
         break;
 
-    case MONS_SPRIGGAN_ASSASSIN:
-        force_uncursed = true;
-        if (!melee_only)
-        {
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = WPN_BLOWGUN;
-            break;
-        }
-        // deliberate fall-through
     case MONS_SPRIGGAN_ENCHANTER:
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
@@ -1620,32 +1611,6 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
 
                 mitm[thing_created].quantity = random_range(4, 10);
             }
-            else if (mon->type == MONS_SPRIGGAN_ASSASSIN)
-            {
-                special_missile_type brand = random_choose_weighted(5, SPMSL_SLEEP,
-                                                              3, SPMSL_CONFUSION,
-                                                              2, SPMSL_PARALYSIS,
-                                                              2, SPMSL_CURARE,
-                                                              1, SPMSL_FRENZY,
-                                                              0);
-                switch (brand)
-                {
-                    case SPMSL_CONFUSION:
-                    case SPMSL_PARALYSIS:
-                    case SPMSL_FRENZY:
-                        mitm[thing_created].quantity = random_range(3, 7);
-                        break;
-                    case SPMSL_CURARE:
-                        mitm[thing_created].quantity = random_range(2, 5);
-                        break;
-                    case SPMSL_SLEEP: default:
-                        mitm[thing_created].quantity = random_range(4, 9);
-                        break;
-                }
-                set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
-                                    brand);
-
-            }
             else if (mon->type == MONS_SPRIGGAN_RIDER)
             {
                 set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
@@ -1935,7 +1900,6 @@ static void _give_shield(monster* mon, int level)
         break;
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_RIDER:
-    case MONS_SPRIGGAN_ASSASSIN:
     case MONS_SPRIGGAN_ENCHANTER:
         if (!one_chance_in(4))
             break;
@@ -2355,7 +2319,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_AIR_MAGE:
-    case MONS_SPRIGGAN_ASSASSIN:
     case MONS_SPRIGGAN_ENCHANTER:
     case MONS_SPRIGGAN_DEFENDER:
         item.base_type = OBJ_ARMOUR;

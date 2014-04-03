@@ -316,7 +316,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MENNAS:
     case TILEP_MONS_PROFANE_SERVITOR:
     case TILEP_MONS_SPRIGGAN:
-    case TILEP_MONS_SPRIGGAN_ASSASSIN:
     case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
@@ -681,7 +680,6 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_SPRIGGAN:
     case TILEP_MONS_SPRIGGAN_DEFENDER:
     case TILEP_MONS_SPRIGGAN_BERSERKER:
-    case TILEP_MONS_SPRIGGAN_ASSASSIN:
     case TILEP_MONS_SPRIGGAN_ENCHANTER:
         *ofs_x = 2;
         *ofs_y = 3;
