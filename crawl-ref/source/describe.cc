@@ -1697,10 +1697,6 @@ string get_item_description(const item_def &item, bool verbose,
                     description << "\n";
                 else
                     need_base_desc = false;
-
-                const string quote = getQuoteString(get_artefact_name(item));
-                if (!quote.empty())
-                    description << "\n" << quote;
             }
         }
 
@@ -1708,21 +1704,6 @@ string get_item_description(const item_def &item, bool verbose,
         {
             string db_name = item.name(DESC_DBNAME, true, false, false);
             string db_desc = getLongDescription(db_name);
-            if (!noquote && !is_known_artefact(item))
-            {
-                const unsigned int lineWidth = get_number_of_cols();
-                const          int height    = get_number_of_lines();
-
-                string quote = getQuoteString(db_name);
-
-                if (count_desc_lines(db_desc, lineWidth)
-                    + count_desc_lines(quote, lineWidth) <= height)
-                {
-                    if (!db_desc.empty() && !quote.empty())
-                        db_desc += "\n";
-                    db_desc += quote;
-                }
-            }
 
             if (db_desc.empty())
             {
@@ -2076,6 +2057,24 @@ string get_item_description(const item_def &item, bool verbose,
         string menu_prefix = item_prefix(item, false);
         if (!menu_prefix.empty())
             description << "\nMenu/colouring prefixes: " << menu_prefix;
+    }
+
+    if (verbose && !noquote && (!item_type_known(item) || !is_random_artefact(item)))
+    {
+        const unsigned int lineWidth = get_number_of_cols();
+        const          int height    = get_number_of_lines();
+        string quote;
+        if (is_unrandom_artefact(item) && item_type_known(item))
+            quote = getQuoteString(get_artefact_name(item));
+        else
+            quote = getQuoteString(item.name(DESC_DBNAME, true, false, false));
+
+        if (count_desc_lines(description.str(), lineWidth)
+            + count_desc_lines(quote, lineWidth) < height)
+        {
+            if (!quote.empty())
+                description << "\n\n" << quote;
+        }
     }
 
     return description.str();
