@@ -12,8 +12,8 @@ destruction, but not infallibly so.
 amulet of faith
 
 This is a talisman crafted to call the attention of the gods to its wearer.
-This divine attention makes it easier to please your god, but your god is also
-less likely to forgive your transgressions, and the amulet will drain some of
+This divine attention makes it easier to please your god, but your god will
+also take more notice of your transgressions. The amulet will drain some of
 your divine favour when removed.
 %%%%
 amulet of guardian spirit
