@@ -1661,6 +1661,47 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
 
+    if (player_under_penance(GOD_GOZAG)
+        && (it.base_type == OBJ_POTIONS
+            || it.base_type == OBJ_SCROLLS
+            || it.base_type == OBJ_FOOD))
+    {
+        int val = item_value(it, true) / it.quantity;
+        double prob = (double)(val - 20) / 100.0;
+        if (prob > 1.0)
+            prob = 1.0;
+
+        int goldify = 0;
+        for (int i = 0; i < it.quantity; i++)
+            if (bernoulli(1.0, prob))
+                goldify++;
+
+        if (goldify > 0)
+        {
+            int gold_count = max(goldify, goldify * val / 10);
+            string msg = get_desc_quantity(goldify, quant_got, "the")
+                         + " " + it.name(DESC_PLAIN);
+            if (goldify > 1)
+                msg += " turn";
+            else
+                msg += " turns";
+            msg += " to gold as you touch ";
+            if (quant_got > 1)
+                msg += "them.";
+            else
+                msg += "it.";
+
+            mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+            _got_gold(it, gold_count, quiet);
+            dec_penance(GOD_GOZAG, goldify);
+
+            if (dec_mitm_item_quantity(obj, goldify))
+                return gold_count;
+
+            quant_got -= goldify;
+        }
+    }
+
     int imass = unit_mass * quant_got;
     if (!ignore_burden && (you.burden + imass > carrying_capacity()))
     {
