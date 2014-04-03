@@ -1482,6 +1482,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
 
     case GOD_ASHENZARI:
+    case GOD_GOZAG:
         // No reduction with time.
         return false;
 

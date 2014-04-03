@@ -493,18 +493,18 @@ void maybe_coagulate_blood_potions_floor(int obj)
     _compare_blood_quantity(blood, timer.size());
 }
 
-static string _get_desc_quantity(const int quant, const int total)
+string get_desc_quantity(const int quant, const int total, string whose)
 {
     if (total == quant)
-        return "Your";
+        return uppercase_first(whose);
     else if (quant == 1)
-        return "One of your";
+        return "One of " + whose;
     else if (quant == 2)
-        return "Two of your";
+        return "Two of " + whose;
     else if (quant >= total * 3 / 4)
-        return "Most of your";
+        return "Most of " + whose;
     else
-        return "Some of your";
+        return "Some of " + whose;
 }
 
 // Prints messages for blood potions coagulating or rotting in inventory.
@@ -515,7 +515,7 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
 
     verb = replace_all(verb, "%s", num_changed == 1 ? "s" : "");
     mprf(MSGCH_ROTTEN_MEAT, "%s %s %s.",
-         _get_desc_quantity(num_changed, potion.quantity).c_str(),
+         get_desc_quantity(num_changed, potion.quantity).c_str(),
          potion.name(DESC_PLAIN, false).c_str(),
          verb.c_str());
 }
