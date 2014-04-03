@@ -1518,6 +1518,35 @@ static void _got_gold(item_def& item, int quant, bool quiet)
 
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
+    if (player_under_penance(GOD_GOZAG)
+        && item.base_type == OBJ_GOLD) // no taxing Curse of Gozag gold
+    {
+        int tax = div_rand_round(quant, 10);
+        if (tax)
+        {
+            if (!quiet)
+            {
+                if (tax >= quant)
+                {
+                    simple_god_message(" claims this gold.",
+                                       GOD_GOZAG);
+                }
+                else
+                {
+                    simple_god_message(" claims a portion of the gold.",
+                                       GOD_GOZAG);
+                }
+            }
+            int penance = div_rand_round(tax, 10);
+            if (penance)
+                dec_penance(GOD_GOZAG, penance);
+
+            quant -= tax;
+            if (quant <= 0)
+                return;
+        }
+    }
+
     if (you_worship(GOD_ZIN) && !(item.flags & ISFLAG_THROWN))
         quant -= zin_tithe(item, quant, quiet);
     if (quant <= 0)
