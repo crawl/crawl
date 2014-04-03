@@ -1360,6 +1360,14 @@ void _end_game(scorefile_entry &se)
             // No message if you're not undead and your corpse is lost.
             break;
 
+        case GOD_GOZAG:
+            if (se.get_death_type() != KILLED_BY_DISINT
+                 && se.get_death_type() != KILLED_BY_LAVA)
+            {
+                mprf(MSGCH_GOD, "Your body crumbles into a pile of gold.");
+            }
+            break;
+
         default:
             break;
         }
