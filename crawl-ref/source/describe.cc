@@ -1397,14 +1397,16 @@ static string _describe_jewellery(const item_def &item, bool verbose)
             case RING_SLAYING:
                 if (item.plus != 0)
                 {
-                    description += "\nIt affects your accuracy (";
+                    description += "\nIt affects your accuracy with ranged "
+                                   "weapons and melee attacks (";
                     _append_value(description, item.plus, true);
                     description += ").";
                 }
 
                 if (item.plus2 != 0)
                 {
-                    description += "\nIt affects your damage-dealing abilities (";
+                    description += "\nIt affects your damage with ranged "
+                                   "weapons and melee attacks (";
                     _append_value(description, item.plus2, true);
                     description += ").";
                 }
