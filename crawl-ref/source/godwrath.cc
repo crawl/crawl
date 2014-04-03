@@ -24,6 +24,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-util.h"
 #include "mon-pick.h"
@@ -47,6 +48,7 @@
 #include "state.h"
 #include "transform.h"
 #include "shout.h"
+#include "view.h"
 #include "xom.h"
 
 #include <sstream>
@@ -1748,4 +1750,51 @@ void ash_reduce_penance(int amount)
                 / you.exp_docked_total;
     if (new_pen < you.penance[GOD_ASHENZARI])
         dec_penance(GOD_ASHENZARI, you.penance[GOD_ASHENZARI] - new_pen);
+}
+
+void gozag_incite(monster *mon)
+{
+    ASSERT(!mon->wont_attack());
+
+    behaviour_event(mon, ME_ALERT, &you);
+
+    bool success = false;
+
+    if (coinflip() && mon->needs_berserk(false))
+    {
+        mon->go_berserk(false);
+        success = true;
+    }
+    else
+    {
+        int tries = 3;
+        do
+        {
+            switch(random2(3))
+            {
+                case 0:
+                    if (mon->has_ench(ENCH_MIGHT))
+                        break;
+                    enchant_monster_with_flavour(mon, mon, BEAM_MIGHT);
+                    success = true;
+                    break;
+                case 1:
+                    if (mon->has_ench(ENCH_HASTE))
+                        break;
+                    enchant_monster_with_flavour(mon, mon, BEAM_HASTE);
+                    success = true;
+                    break;
+                case 2:
+                    if (mon->invisible() || you.can_see_invisible())
+                        break;
+                    enchant_monster_with_flavour(mon, mon, BEAM_INVISIBILITY);
+                    success = true;
+                    break;
+            }
+        }
+        while (!success && --tries > 0);
+    }
+
+    if (success)
+        view_update_at(mon->pos());
 }
