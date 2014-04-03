@@ -27,8 +27,10 @@
 #include "fprop.h"
 #include "exclude.h"
 #include "food.h"
+#include "godabil.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "godwrath.h"
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
@@ -1661,6 +1663,18 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             if (zin_id)
                 update_monster_pane();
 #endif
+            if (player_under_penance(GOD_GOZAG) && !mon->wont_attack())
+            {
+                int bribability = gozag_type_bribable(mon->type, true);
+                if (bribability
+                    && x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+                {
+                    mprf(MSGCH_GOD, GOD_GOZAG, "Gozag incites %s against you.",
+                         mon->name(DESC_THE).c_str());
+                    gozag_incite(const_cast<monster *>(mon));
+                    dec_penance(GOD_GOZAG, 1);
+                }
+            }
         }
         const_cast<monster* >(mon)->seen_context = SC_JUST_SEEN;
     }

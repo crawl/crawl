@@ -1802,7 +1802,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     {
         // Try to bribe the monster.
         const int bribability = gozag_type_bribable(mon->type);
-        if (bribability > 0 && x_chance_in_y(bribability, 16))
+        if (bribability > 0 && x_chance_in_y(bribability,
+                                             GOZAG_MAX_BRIBABILITY))
         {
             bool minion = mg.flags & MG_BAND_MINION;
             const branch_type br = gozag_bribable_branch(mon->type);

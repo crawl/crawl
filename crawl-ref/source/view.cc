@@ -31,8 +31,10 @@
 #include "feature.h"
 #include "files.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "godconduct.h"
 #include "godpassive.h"
+#include "godwrath.h"
 #include "hints.h"
 #include "libutil.h"
 #include "message.h"
@@ -360,6 +362,38 @@ void update_monsters_in_view()
             if (you_worship(GOD_ZIN))
                 update_monster_pane();
 #endif
+        }
+
+        if (player_under_penance(GOD_GOZAG))
+        {
+            counted_monster_list mon_count;
+            vector<monster *> mons;
+            for (unsigned int i = 0; i < monsters.size(); i++)
+            {
+                monster *mon = monsters[i];
+                if (mon->wont_attack())
+                    continue;
+
+                int bribability = gozag_type_bribable(mon->type, true);
+                if (bribability
+                    && x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
+                {
+                    mon_count.add(mon);
+                    mons.push_back(mon);
+                }
+            }
+            if (mons.size() > 0)
+            {
+                string msg = make_stringf("Gozag incites %s against you.",
+                                          mon_count.describe().c_str());
+                if (strwidth(msg) >= get_number_of_cols() - 2)
+                    msg = "Gozag incites your enemies against you.";
+                mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
+                for (unsigned int i = 0; i < mons.size(); i++)
+                    gozag_incite(mons[i]);
+
+                dec_penance(GOD_GOZAG, mons.size());
+            }
         }
     }
 
