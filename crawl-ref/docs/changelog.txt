@@ -458,7 +458,7 @@ Interface
   invisible to the player.
 * The shop screen layout has been revised.
 
-Stone Soup 0.13.2 (2014????)
+Stone Soup 0.13.2 (20140404)
 ----------------------------
 * More crash fixes.
 * More message improvements.
@@ -470,6 +470,7 @@ Stone Soup 0.13.2 (2014????)
 * Wanderers cannot start with both a shield and two-handed weapon equipped.
 * Avoid giving double piety for some collateral kills.
 * Monsters now use the correct number of charges when zapping rods.
+* Fixed various issues with inspecting unknown squares.
 
 Stone Soup 0.13.1 (20131128)
 ----------------------------
