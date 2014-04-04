@@ -4360,6 +4360,7 @@ enum daction_type
 #endif
     DACT_GOLD_ON_TOP,
     DACT_BRIBE_TIMEOUT,
+    DACT_REMOVE_GOZAG_SHOPS,
     NUM_DACTIONS,
 };
 

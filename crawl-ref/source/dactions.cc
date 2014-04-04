@@ -14,6 +14,7 @@
 #include "env.h"
 #include "items.h"
 #include "libutil.h"
+#include "mapmark.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-stuff.h"
@@ -63,6 +64,7 @@ static const char *daction_names[] =
 #endif
     "gold to top of piles",
     "bribe timeout",
+    "remove Gozag shops",
 };
 #endif
 
@@ -310,6 +312,24 @@ static void _apply_daction(daction_type act)
             }
         }
         break;
+    case DACT_REMOVE_GOZAG_SHOPS:
+    {
+        vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);
+        for (unsigned int i = 0; i < markers.size(); i++)
+        {
+            map_feature_marker *feat =
+                dynamic_cast<map_feature_marker *>(markers[i]);
+            ASSERT(feat);
+            if (feat->feat == DNGN_ABANDONED_SHOP)
+            {
+                // TODO: clear shop data out?
+                grd(feat->pos) = DNGN_ABANDONED_SHOP;
+                view_update_at(feat->pos);
+                env.markers.remove(feat);
+            }
+        }
+        break;
+    }
 #if TAG_MAJOR_VERSION == 34
     case DACT_END_SPIRIT_HOWL:
     case DACT_HOLY_NEW_ATTEMPT:

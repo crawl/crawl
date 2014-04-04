@@ -3279,18 +3279,18 @@ static void _place_gozag_shop()
     if (tries == 0)
         throw dgn_veto_exception("Cannot find place Gozag shop.");
 
-    keyed_mapspec kmspec;
-    kmspec.set_feat(you.props[key].get_string(), false);
-    if (!kmspec.get_feat().shop.get())
-        die("Invalid shop spec?");
-    _place_spec_shop(shop_place, kmspec.get_feat().shop.get());
-
     unmark_offlevel_shop(level_id::current());
 
-    // Player may have abandoned Gozag before arriving here; only show them
+    // Player may have abandoned Gozag before arriving here; only generate
     // the shop if they're still a follower.
     if (you_worship(GOD_GOZAG))
     {
+        keyed_mapspec kmspec;
+        kmspec.set_feat(you.props[key].get_string(), false);
+        if (!kmspec.get_feat().shop.get())
+            die("Invalid shop spec?");
+        _place_spec_shop(shop_place, kmspec.get_feat().shop.get());
+
         shop_struct *shop = get_shop(shop_place);
         ASSERT(shop);
 
@@ -3307,7 +3307,12 @@ static void _place_gozag_shop()
             shop->shop_suffix_name.c_str());
 
         you.props[GOZAG_ANNOUNCE_SHOP_KEY] = announce;
+
+        env.markers.add(new map_feature_marker(shop_place,
+                                               DNGN_ABANDONED_SHOP));
     }
+    else
+        grd(shop_place) = DNGN_ABANDONED_SHOP;
 }
 
 static void _place_traps()
