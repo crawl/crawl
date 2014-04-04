@@ -333,7 +333,22 @@ const char * const MONSTER_MID = "monster-mid";
 const char * const GOZAG_SHOP_KEY = "gozag_shop_%s";
 const char * const GOZAG_ANNOUNCE_SHOP_KEY = "gozag_announce_shop";
 
+const char * const GOZAG_POTIONS_KEY = "gozag_potions%d";
+const char * const GOZAG_PRICE_KEY = "gozag_price%d";
+
+const char * const GOZAG_SHOPKEEPER_NAME_KEY = "gozag_shopkeeper_%d";
+const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
+const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
+const char * const GOZAG_SHOP_GREED_KEY      = "gozag_shop_greed_%d";
+const char * const GOZAG_SHOP_ITEMS_KEY      = "gozag_shop_items_%d";
+const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
+
+#define GOZAG_POTION_BASE_MULTIPLIER 25
+#define GOZAG_SHOP_BASE_MULTIPLIER 50
+#define GOZAG_SHOP_MOD_MULTIPLIER 4
 #define GOZAG_MAX_BRIBABILITY 16
+#define GOZAG_MAX_POTIONS 4
+#define GOZAG_MAX_SHOPS 3
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

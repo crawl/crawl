@@ -3831,9 +3831,6 @@ static potion_type _gozag_bad_potions[] =
     POT_CONFUSION,
 };
 
-#define GOZAG_POTIONS_KEY "gozag_potions%d"
-#define GOZAG_PRICE_KEY "gozag_price%d"
-
 static void _gozag_add_potion_pair(CrawlVector &vec)
 {
     potion_type *which =
@@ -3867,7 +3864,7 @@ bool gozag_potion_petition()
 
     if (you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)))
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
             string key = make_stringf(GOZAG_POTIONS_KEY, i);
             pots[i] = &you.props[key].get_vector();
@@ -3877,10 +3874,11 @@ bool gozag_potion_petition()
     }
     else
     {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
             prices[i] = 0;
-            int multiplier = 25 + you.attribute[ATTR_GOZAG_POTIONS];
+            int multiplier = GOZAG_POTION_BASE_MULTIPLIER
+                             + you.attribute[ATTR_GOZAG_POTIONS];
             string key = make_stringf(GOZAG_POTIONS_KEY, i);
             you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
             pots[i] = &you.props[key].get_vector();
@@ -3910,12 +3908,12 @@ bool gozag_potion_petition()
                     _gozag_add_potion_triple(*pots[i]);
                     break;
             }
-            if (i < 3 && coinflip())
+            if (i < GOZAG_MAX_POTIONS - 1 && coinflip())
             {
                 _gozag_add_bad_potion(*pots[i]);
                 multiplier -= 5;
             }
-            else if (i == 3)
+            else if (i == GOZAG_MAX_POTIONS - 1)
                 multiplier *= 20; // ouch
 
             for (int j = 0; j < pots[i]->size(); j++)
@@ -3937,7 +3935,10 @@ bool gozag_potion_petition()
     mesclr();
     for (int i = 0; i < 4; i++)
     {
-        string line = make_stringf("  [%c] - %d gold - ", i + 'a', prices[i]);
+        const int faith_price = you.faith() ? prices[i] * 2 / 3
+                                            : prices[i];
+        string line = make_stringf("  [%c] - %d gold - ", i + 'a',
+                                   faith_price);
         vector<string> pot_names;
         for (int j = 0; j < pots[i]->size(); j++)
             pot_names.push_back(potion_type_name((*pots[i])[j].get_int()));
@@ -3946,14 +3947,16 @@ bool gozag_potion_petition()
     }
     mprf(MSGCH_PROMPT, "Purchase which effect? (any other key to cancel)");
     const int keyin = toalower(get_ch()) - 'a';
-    if (keyin >= 0 && keyin <= 3)
+    if (keyin >= 0 && keyin <= GOZAG_MAX_POTIONS - 1)
     {
-        if (you.gold < prices[keyin])
+        const int faith_price = you.faith() ? prices[keyin] * 2 / 3
+                                            : prices[keyin];
+        if (you.gold < faith_price)
         {
             mpr("You don't have enough gold for that!");
             return false;
         }
-        you.gold -= prices[keyin];
+        you.gold -= faith_price;
         for (int j = 0; j < pots[keyin]->size(); j++)
         {
             potion_effect(static_cast<potion_type>((*pots[keyin])[j].get_int()),
@@ -3976,13 +3979,6 @@ bool gozag_potion_petition()
     canned_msg(MSG_OK);
     return false;
 }
-
-#define GOZAG_SHOPKEEPER_NAME_KEY "gozag_shopkeeper_%d"
-#define GOZAG_SHOP_TYPE_KEY       "gozag_shop_type_%d"
-#define GOZAG_SHOP_SUFFIX_KEY     "gozag_shop_suffix_%d"
-#define GOZAG_SHOP_GREED_KEY      "gozag_shop_greed_%d"
-#define GOZAG_SHOP_ITEMS_KEY      "gozag_shop_items_%d"
-#define GOZAG_SHOP_COST_KEY       "gozag_shop_cost_%d"
 
 bool gozag_call_merchant()
 {
@@ -4036,7 +4032,7 @@ bool gozag_call_merchant()
     // Generate some shop inventory and store it as a store spec.
     if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, 0)))
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
             const shop_type type = static_cast<shop_type>(random2(NUM_SHOPS));
             const bool antique = (type == SHOP_GENERAL_ANTIQUE
@@ -4097,7 +4093,9 @@ bool gozag_call_merchant()
             // TODO: figure out if this is reasonable
             const int cost = min(price,
                                  price
-                                 * (50 + 4*you.attribute[ATTR_GOZAG_SHOPS])
+                                 * (GOZAG_SHOP_BASE_MULTIPLIER
+                                    + GOZAG_SHOP_MOD_MULTIPLIER
+                                      * you.attribute[ATTR_GOZAG_SHOPS])
                                  / 100);
 
             you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int()
@@ -4105,13 +4103,16 @@ bool gozag_call_merchant()
         }
     }
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
     {
+        const int &cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)]
+                             .get_int();
+        const int faith_cost = you.faith() ? cost * 2 / 3
+                                           : cost;
         string line =
             make_stringf("  [%c] %5d gold - %s %s %s",
                          'a' + i,
-                         you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)]
-                             .get_int(),
+                         faith_cost,
                          apostrophise(
                              you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY,
                                        i)].get_string()).c_str(),
@@ -4127,20 +4128,22 @@ bool gozag_call_merchant()
 
     mprf(MSGCH_PROMPT, "Fund which merchant? (any other key to cancel)");
     const int i = toalower(get_ch()) - 'a';
-    if (i >= 0 && i <= 2)
+    if (i >= 0 && i <= GOZAG_MAX_SHOPS - 1)
     {
         const int cost =
             you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
-        const shop_type type =
-            static_cast<shop_type>(
-                you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int());
-        if (you.gold < cost)
+        const int faith_cost = you.faith() ? cost * 2 / 3
+                                           : cost;
+        if (you.gold < faith_cost)
         {
             mpr("You don't have enough gold to fund that merchant!");
             return false;
         }
-        you.gold -= cost;
+        you.gold -= faith_cost;
 
+        const shop_type type =
+            static_cast<shop_type>(
+                you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int());
         const string name =
             you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)];
 
