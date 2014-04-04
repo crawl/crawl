@@ -249,6 +249,9 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
     for (vector<level_id>::const_iterator i = places.begin();
          i != places.end(); ++i)
     {
+        // The watchdog has already been activated by mg_do_build_level.
+        // Reporting all the vaults could take a while.
+        watchdog();
         fprintf(outf, "\n%s -------------\n", i->describe().c_str());
         mesclr();
         mprf("Examining random maps at %s", i->describe().c_str());
