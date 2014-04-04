@@ -1100,6 +1100,56 @@ static void _remove_amulet_of_faith(item_def &item)
     {
         simple_god_message(" seems less interested in you.");
 
+        if (you_worship(GOD_GOZAG))
+        {
+            const int potion_increment = 2;
+            const int shop_increment =
+                GOZAG_SHOP_BASE_MULTIPLIER
+                + GOZAG_SHOP_MOD_MULTIPLIER*you.attribute[ATTR_GOZAG_SHOPS]
+                    >= 100
+                ? 0
+                : min(2, (100
+                          - GOZAG_SHOP_BASE_MULTIPLIER
+                          - GOZAG_SHOP_MOD_MULTIPLIER
+                            *you.attribute[ATTR_GOZAG_SHOPS])
+                          / GOZAG_SHOP_MOD_MULTIPLIER);
+
+            // XXX: this isn't a 100% match for the list generation; in
+            // particular it does not take into account the presence/absence
+            // of bad potions.
+            if (you.props.exists(make_stringf(GOZAG_PRICE_KEY, 0)))
+            {
+                const int denom = GOZAG_POTION_BASE_MULTIPLIER
+                                  + you.attribute[ATTR_GOZAG_POTIONS];
+                const int num = denom + potion_increment;
+                for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
+                {
+                    int &price =
+                        you.props[make_stringf(GOZAG_PRICE_KEY, i)].get_int();
+                    price *= num;
+                    price /= denom;
+                }
+            }
+            if (you.props.exists(make_stringf(GOZAG_SHOP_COST_KEY, 0))
+                && shop_increment > 0)
+            {
+                const int denom = GOZAG_SHOP_BASE_MULTIPLIER
+                                  + GOZAG_SHOP_MOD_MULTIPLIER
+                                    * you.attribute[ATTR_GOZAG_SHOPS];
+                const int num = denom + shop_increment;
+                for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
+                {
+                    int &price =
+                        you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)]
+                        .get_int();
+                    price *= num;
+                    price /= denom;
+                }
+            }
+            simple_god_message(" adjusts your offered prices.");
+            return;
+        }
+
         const int piety_loss = div_rand_round(you.piety, 3);
         // Piety penalty for removing the Amulet of Faith.
         if (you.piety - piety_loss > 10)
