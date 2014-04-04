@@ -3885,7 +3885,13 @@ bool gozag_potion_petition()
             you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
             pots[i] = &you.props[key].get_vector();
             if (i == 3)
-                pots[i]->push_back(POT_PORRIDGE);
+            {
+                pots[i]->push_back(
+                    you.species == SP_VAMPIRE
+                    || player_mutation_level(MUT_CARNIVOROUS) == 3
+                    ? POT_BLOOD
+                    : POT_PORRIDGE);
+            }
             else switch (random2(4))
             {
                 case 0:
