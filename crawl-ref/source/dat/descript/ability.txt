@@ -618,6 +618,7 @@ Potion Petition ability
 Petition Gozag to sell you the effects of a set of potions. Gozag will offer
 four lists at a time, one of which always solely consists of a potion of
 porridge, and the lists will remain fixed until you purchase one of them.
+Prices will slowly increase as you purchase potions.
 %%%%
 Call Merchant ability
 
@@ -625,7 +626,8 @@ Through Gozag, send funds to a merchant to help them set up shop in the
 dungeon. The shop will appear in a branch where shops can normally be found
 on a level that you haven't visited yet, assuming no other merchant has
 claimed that location; if you have visited all possible levels where shops
-can be found, this ability does nothing.
+can be found, this ability does nothing. The cost of funding a shop increases
+with the number of shops funded.
 %%%%
 Bribe Branch ability
 

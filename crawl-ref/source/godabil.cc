@@ -3880,7 +3880,7 @@ bool gozag_potion_petition()
         for (int i = 0; i < 4; i++)
         {
             prices[i] = 0;
-            int multiplier = 25;
+            int multiplier = 25 + you.attribute[ATTR_GOZAG_POTIONS];
             string key = make_stringf(GOZAG_POTIONS_KEY, i);
             you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
             pots[i] = &you.props[key].get_vector();
@@ -3913,10 +3913,10 @@ bool gozag_potion_petition()
             if (i < 3 && coinflip())
             {
                 _gozag_add_bad_potion(*pots[i]);
-                multiplier = 20;
+                multiplier -= 5;
             }
             else if (i == 3)
-                multiplier = 500; // ouch
+                multiplier *= 20; // ouch
 
             for (int j = 0; j < pots[i]->size(); j++)
             {
@@ -3959,6 +3959,8 @@ bool gozag_potion_petition()
             potion_effect(static_cast<potion_type>((*pots[keyin])[j].get_int()),
                           40);
         }
+
+        you.attribute[ATTR_GOZAG_POTIONS]++;
 
         for (int i = 0; i < 4; i++)
         {
@@ -4092,8 +4094,14 @@ bool gozag_call_merchant()
                 = comma_separated_line(shop_items.begin(), shop_items.end(),
                                        " | ", " | ");
 
+            // TODO: figure out if this is reasonable
+            const int cost = min(price,
+                                 price
+                                 * (50 + 4*you.attribute[ATTR_GOZAG_SHOPS])
+                                 / 100);
+
             you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int()
-                = price / 2; // TODO: figure out if this is reasonable
+                = cost;
         }
     }
 
@@ -4162,6 +4170,9 @@ bool gozag_call_merchant()
         dprf("%s", lid.describe().c_str());
 
         mark_offlevel_shop(lid, type);
+
+        you.attribute[ATTR_GOZAG_SHOPS]++;
+        you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
 
         for (int j = 0; j < 3; j++)
         {
