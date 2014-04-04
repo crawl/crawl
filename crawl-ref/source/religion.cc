@@ -3240,6 +3240,7 @@ void excommunication(god_type new_god)
     case GOD_GOZAG:
         invalidate_agrid(true); // gold auras
         add_daction(DACT_BRIBE_TIMEOUT);
+        add_daction(DACT_REMOVE_GOZAG_SHOPS);
         _set_penance(old_god, 25);
         break;
 
