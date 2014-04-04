@@ -2671,9 +2671,13 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
     if (original_gain <= 0)
         return;
 
-    // Xom uses piety differently...
-    if (you_worship(GOD_NO_GOD) || you_worship(GOD_XOM))
+    // Xom uses piety differently; Gozag doesn't at all.
+    if (you_worship(GOD_NO_GOD)
+        || you_worship(GOD_XOM)
+        || you_worship(GOD_GOZAG))
+    {
         return;
+    }
 
     int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
 
@@ -3897,8 +3901,33 @@ void god_pitch(god_type which_god)
 
     if (you_worship(GOD_GOZAG))
     {
+        bool needs_redraw = false;
         mprf("You pay a service fee of %d gold.", fee);
         you.gold -= fee;
+        for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
+        {
+            if (_abil_chg_message(god_gain_power_messages[you.religion][i],
+                                  "You can now %s.", i))
+            {
+                needs_redraw = true;
+            }
+        }
+
+        if (!you.one_time_ability_used[you.religion])
+        {
+            simple_god_message(" will now duplicate a non-artefact item for"
+                               " you... once.");
+        }
+
+        if (needs_redraw)
+        {
+#ifdef USE_TILE_LOCAL
+            tiles.layout_statcol();
+            redraw_screen();
+#else
+            ;
+#endif
+        }
     }
 
     // Refresh wielded/quivered weapons in case we have a new conduct
