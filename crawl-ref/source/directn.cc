@@ -1844,6 +1844,8 @@ void direction_chooser::move_to_you()
 
 void direction_chooser::describe_target()
 {
+    if (!map_bounds(target()) || !env.map_knowledge(target()).known())
+        return;
     full_describe_square(target());
     need_all_redraw = true;
 }
