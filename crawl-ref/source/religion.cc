@@ -3238,6 +3238,12 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_GOZAG:
+        if (you.attribute[ATTR_GOZAG_SHOPS_CURRENT])
+        {
+            mprf(MSGCH_GOD, old_god, "Your funded stores close, unable to pay "
+                                     "their debts without your funds.");
+            you.attribute[ATTR_GOZAG_SHOPS_CURRENT] = 0;
+        }
         invalidate_agrid(true); // gold auras
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
