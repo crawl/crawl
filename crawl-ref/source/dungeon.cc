@@ -255,13 +255,34 @@ static string branch_epilogues[NUM_BRANCHES];
 
 static void _count_gold()
 {
+    vector<item_def *> gold_piles;
+    int gold = 0;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)
         {
             if (j->base_type == OBJ_GOLD)
-                you.attribute[ATTR_GOLD_GENERATED] += j->quantity;
+            {
+                gold += j->quantity;
+                gold_piles.push_back(&(*j));
+            }
         }
+    }
+
+    you.attribute[ATTR_GOLD_GENERATED] += gold;
+
+    if (player_under_penance(GOD_GOZAG) && x_chance_in_y(gold - 500, 500))
+    {
+        for (unsigned int i = 0; i < gold_piles.size(); i++)
+        {
+            gold_piles[i]->clear();
+            gold_piles[i]->base_type = OBJ_MISSILES;
+            gold_piles[i]->sub_type  = MI_STONE;
+            gold_piles[i]->quantity  = 1;
+            item_colour(*gold_piles[i]);
+        }
+        mprf(MSGCH_GOD, GOD_GOZAG, "You feel a great sense of loss.");
+        dec_penance(GOD_GOZAG, gold / 200);
     }
 }
 
