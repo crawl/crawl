@@ -459,7 +459,7 @@ static string _print_altars_for_gods(const vector<god_type>& gods,
             && (god == GOD_ASHENZARI || active_penance(god)))
         {
             // Active Nemelex penance starts at 101, not 1.
-	    colour = (you.penance[god] > (god == GOD_NEMELEX_XOBEH ? 110 : 10))
+            colour = (you.penance[god] > (god == GOD_NEMELEX_XOBEH ? 110 : 10))
                       ? "red" : "lightred";
         }
         // Indicate good gods that you've abandoned, though.
