@@ -3933,17 +3933,25 @@ bool gozag_potion_petition()
     }
 
     mesclr();
+    bool afford_any = false;
     for (int i = 0; i < 4; i++)
     {
         const int faith_price = you.faith() ? prices[i] * 2 / 3
                                             : prices[i];
         string line = make_stringf("  [%c] - %d gold - ", i + 'a',
                                    faith_price);
+        if (you.gold >= faith_price)
+            afford_any = true;
         vector<string> pot_names;
         for (int j = 0; j < pots[i]->size(); j++)
             pot_names.push_back(potion_type_name((*pots[i])[j].get_int()));
         line += comma_separated_line(pot_names.begin(), pot_names.end());
         mpr_nojoin(MSGCH_PLAIN, line.c_str());
+    }
+    if (!afford_any)
+    {
+        mpr("You can't afford to purchase any of these!");
+        return false;
     }
     mprf(MSGCH_PROMPT, "Purchase which effect? (any other key to cancel)");
     const int keyin = toalower(get_ch()) - 'a';
@@ -4103,12 +4111,15 @@ bool gozag_call_merchant()
         }
     }
 
+    bool afford_any = false;
     for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
     {
         const int &cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)]
                              .get_int();
         const int faith_cost = you.faith() ? cost * 2 / 3
                                            : cost;
+        if (you.gold >= faith_cost)
+            afford_any = true;
         string line =
             make_stringf("  [%c] %5d gold - %s %s %s",
                          'a' + i,
@@ -4124,6 +4135,12 @@ bool gozag_call_merchant()
                          you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, i)]
                              .get_string().c_str());
         mpr_nojoin(MSGCH_PLAIN, line.c_str());
+    }
+
+    if (!afford_any)
+    {
+        mpr("You can't afford to fund any of these merchants!");
+        return false;
     }
 
     mprf(MSGCH_PROMPT, "Fund which merchant? (any other key to cancel)");
