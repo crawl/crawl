@@ -351,60 +351,62 @@ distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
 
 bool distance_iterator::advance()
 {
-again:
-    if (++icur >= vcur->size())
-        icur = 0;
-    if (icur == iend)
+    while (true)
     {
-        // Advance to the next radius.
-        vector<coord_def> *tmp = vcur;
-        vcur = vnear;
-        vnear = vfar;
-        vfar = tmp;
-        tmp->clear();
-
-        if (!vcur->size())
-            return false;
-        // Randomize the order various directions are returned.
-        // Just the initial angle is enough.
-        if (fair)
-            icur = iend = random2(vcur->size());
-        else
-            icur = iend = 0; // randomness is costly
-
-        if (r++ >= max_radius)
+        if (++icur >= vcur->size())
+            icur = 0;
+        if (icur == iend)
         {
-            vcur->clear();
-            return false;
+            // Advance to the next radius.
+            vector<coord_def> *tmp = vcur;
+            vcur = vnear;
+            vnear = vfar;
+            vfar = tmp;
+            tmp->clear();
+
+            if (!vcur->size())
+                return false;
+            // Randomize the order various directions are returned.
+            // Just the initial angle is enough.
+            if (fair)
+                icur = iend = random2(vcur->size());
+            else
+                icur = iend = 0; // randomness is costly
+
+            if (r++ >= max_radius)
+            {
+                vcur->clear();
+                return false;
+            }
+            threshold = (r+1) * (r+1) + 1;
         }
-        threshold = (r+1) * (r+1) + 1;
-    }
 
-    coord_def d = (*vcur)[icur];
-    if (!in_bounds(current = center + d))
-        goto again;
+        coord_def d = (*vcur)[icur];
+        if (in_bounds(current = center + d))
+        {
+            ASSERT(d.x || d.y);
+            if (!d.y)
+                push_neigh(d, sgn(d.x), 0);
+            if (!d.x)
+                push_neigh(d, 0, sgn(d.y));
+            if (d.x <= 0)
+            {
+                if (d.y <= 0)
+                    push_neigh(d, -1, -1);
+                if (d.y >= 0)
+                    push_neigh(d, -1, +1);
+            }
+            if (d.x >= 0)
+            {
+                if (d.y <= 0)
+                    push_neigh(d, +1, -1);
+                if (d.y >= 0)
+                    push_neigh(d, +1, +1);
+            }
 
-    ASSERT(d.x || d.y);
-    if (!d.y)
-        push_neigh(d, sgn(d.x), 0);
-    if (!d.x)
-        push_neigh(d, 0, sgn(d.y));
-    if (d.x <= 0)
-    {
-        if (d.y <= 0)
-            push_neigh(d, -1, -1);
-        if (d.y >= 0)
-            push_neigh(d, -1, +1);
+            return true;
+        }
     }
-    if (d.x >= 0)
-    {
-        if (d.y <= 0)
-            push_neigh(d, +1, -1);
-        if (d.y >= 0)
-            push_neigh(d, +1, +1);
-    }
-
-    return true;
 }
 
 void distance_iterator::push_neigh(coord_def d, int dx, int dy)
