@@ -353,6 +353,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
     {
         if (player_likes_lava(false))
         {
+            //code for going into (not on top of) lava
             if (feat_is_lava(new_grid) && !feat_is_lava(old_feat))
             {
                 if (!stepped)
@@ -488,7 +489,8 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently)
     if (you.permanent_flight() || you.airborne() && !permanently)
         return false;
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
-             || grid == DNGN_LAVA && !player_likes_lava(permanently))
+             || grid == DNGN_LAVA && !player_likes_lava(permanently)
+                                  && !you.attribute[ATTR_LAVAWALK])
     {
         return true;
     }
@@ -521,7 +523,7 @@ bool player_likes_water(bool permanently)
 bool player_likes_lava(bool permanently)
 {
     return (species_likes_lava(you.species) || !permanently)
-           && form_likes_lava();
+            && form_likes_lava();
 }
 
 bool player_can_open_doors()

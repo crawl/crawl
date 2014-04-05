@@ -886,6 +886,9 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_EYESIGHT ])
         ret += 6;
 
+    if (prop[ ARTP_LAVAWALK ])
+        ret += 3;
+
     // abilities:
     if (prop[ ARTP_FLY ])
         ret += 3;

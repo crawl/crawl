@@ -355,6 +355,14 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     // Let's try this here instead of up there.
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
+
+    if (proprt[ARTP_LAVAWALK])
+    {
+        you.attribute[ATTR_LAVAWALK] = 1;
+        if (msg && !player_likes_lava())
+            mpr("You feel lavaproof.");
+
+    }
 #undef unknown_proprt
 }
 
@@ -367,6 +375,14 @@ static void _unequip_artefact_effect(item_def &item,
     artefact_known_props_t known;
     artefact_wpn_properties(item, proprt, known);
     const bool msg = !show_msgs || *show_msgs;
+
+    if (proprt[ARTP_LAVAWALK])
+    {
+        you.attribute[ATTR_LAVAWALK] = 0;
+        if (msg && !player_likes_lava())
+            mpr("You feel less lavaproof.");
+        move_player_to_grid(you.pos(), false); //may cause you to burn
+    }
 
     if (proprt[ARTP_AC])
     {

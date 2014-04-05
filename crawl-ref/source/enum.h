@@ -292,6 +292,7 @@ enum attribute_type
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
     ATTR_PERM_FLIGHT,          // Tengu flight or boots of flying are on.
+    ATTR_LAVAWALK,             // Boots of the Firewalker are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
@@ -3506,6 +3507,7 @@ enum artefact_prop_type
     ARTP_FLY,
 #if TAG_MAJOR_VERSION != 34
     ARTP_FOG,
+    ARTP_LAVAWALK,
 #endif
     ARTP_BLINK,
     ARTP_BERSERK,
@@ -3529,6 +3531,7 @@ enum artefact_prop_type
     ARTP_RMSL,
 #if TAG_MAJOR_VERSION == 34
     ARTP_FOG,
+    ARTP_LAVAWALK,
 #endif
     ARTP_REGENERATION,
     ARTP_NO_UPGRADE,

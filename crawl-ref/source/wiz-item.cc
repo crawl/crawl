@@ -259,6 +259,7 @@ static const char* _prop_name[] =
     "+Fly",
 #if TAG_MAJOR_VERSION > 34
     "+Fog",
+    "Lava",
 #endif
     "+Blnk",
     "+Rage",
@@ -282,6 +283,7 @@ static const char* _prop_name[] =
     "RMsl",
 #if TAG_MAJOR_VERSION == 34
     "+Fog",
+    "Lava",
 #endif
     "Regen",
     "noupg",
@@ -310,6 +312,7 @@ static int8_t _prop_type[] =
     ARTP_VAL_BOOL, //FLIGHT
 #if TAG_MAJOR_VERSION > 34
     ARTP_VAL_BOOL, //FOG
+    ARTP_VAL_BOOL, //LAVAWALK
 #endif
     ARTP_VAL_BOOL, //BLINK
     ARTP_VAL_BOOL, //BERSERK
@@ -333,6 +336,7 @@ static int8_t _prop_type[] =
     ARTP_VAL_BOOL, //RMSL
 #if TAG_MAJOR_VERSION == 34
     ARTP_VAL_BOOL, //FOG
+    ARTP_VAL_BOOL, //LAVAWALK
 #endif
     ARTP_VAL_ANY,  //REGENERATION
     ARTP_VAL_BOOL, //NO_UPGRADE
@@ -1362,6 +1366,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_FLY
 #if TAG_MAJOR_VERSION != 34
          1, //ARTP_FOG,
+         1, //ARTP_LAVAWALK
 #endif
          1, //ARTP_BLINK
          1, //ARTP_BERSERK
@@ -1385,6 +1390,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_RMSL
 #if TAG_MAJOR_VERSION == 34
          1, //ARTP_FOG
+         1, //ARTP_LAVAWALK
 #endif
          1, //ARTP_REGENERATION
          0, //ARTP_NO_UPGRADE
@@ -1517,6 +1523,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_FLY",
 #if TAG_MAJOR_VERSION != 34
         "ARTP_FOG",
+        "ARTP_LAVAWALK",
 #endif
         "ARTP_BLINK",
         "ARTP_BERSERK",
@@ -1540,6 +1547,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_RMSL",
 #if TAG_MAJOR_VERSION == 34
         "ARTP_FOG",
+        "ARTP_LAVAWALK",
 #endif
         "ARTP_REGENERATION",
         "ARTP_NO_UPGRADE",

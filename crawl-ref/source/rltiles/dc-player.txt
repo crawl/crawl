@@ -224,6 +224,7 @@ mesh_black MESH_BLACK
 mesh_white MESH_WHITE
 mesh_blue MESH_BLUE LAST_NORM
 spider SPIDER
+firewalker FIREWALKER
 
 ## Mutations
 hooves HOOVES

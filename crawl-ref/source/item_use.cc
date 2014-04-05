@@ -1196,6 +1196,18 @@ bool safe_to_remove(const item_def &item, bool quiet)
         return false;
     }
 
+    const bool grants_lavawalking = is_artefact(inf) &&
+    artefact_known_wpn_property(inf,
+                                ARTP_LAVAWALK);
+
+    if (grants_lavawalking && feat == DNGN_LAVA  //assume only 1 lavawalk src
+        && !form_likes_lava() && !you.airborne())
+    {
+        if (!quiet)
+            mpr("You'd sink into the lava and die!");
+        return false;
+    }
+
     return true;
 }
 

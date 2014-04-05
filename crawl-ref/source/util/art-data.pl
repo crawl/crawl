@@ -43,6 +43,7 @@ my %field_type = (
     INT      => "num",
     INV      => "bool",
     FLY      => "bool",
+    LAVAWALK => "bool",
     LIFE     => "bool",
     MAGIC    => "num",
     METAB    => "num",
@@ -486,7 +487,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "NO_UPGRADE", "\n",
+    "RMSL", "FOG", "LAVAWALK", "REGEN", "NO_UPGRADE", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",

@@ -291,6 +291,11 @@ Some soft boots, specially designed by the Assassin's Guild. They make the
 wearer more perceptive of potential victims, and more able to find
 vulnerabilities when attacking unaware opponents.
 %%%%
+boots of the Firewalker
+
+Boots made of a black volcanic rock, padded inside with salamander leather.
+They seem completely impervious to all heat, from dragonfire to a magma sea.
+%%%%
 Lear's hauberk
 
 A well-made golden hauberk that covers all of its wearer's body parts. It

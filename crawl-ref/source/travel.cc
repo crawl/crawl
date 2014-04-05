@@ -240,8 +240,9 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         if (grid == DNGN_DEEP_WATER && player_likes_water(true))
             return true;
 
-        // Likewise for lava
-        if (grid == DNGN_LAVA && player_likes_lava(true))
+        // Likewise for lava & lava orcs (or lavawalkers)
+        if (grid == DNGN_LAVA && (player_likes_lava(true)
+                                  || you.attribute[ATTR_LAVAWALK]))
             return true;
 
         // Permanently flying players can cross most hostile terrain.
@@ -250,6 +251,10 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
         {
             return you.permanent_flight();
         }
+
+        // Lavawalkers can only walk across lava.
+        if (grid == DNGN_LAVA && you.attribute[ATTR_LAVAWALK])
+            return true;
 
         // You can't open doors in bat form.
         if (grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)

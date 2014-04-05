@@ -79,6 +79,7 @@
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * fly:      Lets wearer evoke flight ability.
+# * lavawalk: Lets wearer walk on lava.
 # * life:     Grants negative energy resistance.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
@@ -1154,6 +1155,15 @@ TILE_EQ:  firestarter
 PLUS:     +7/+7
 BRAND:    SPWPN_FLAMING
 FIRE:     2
+
+NAME:     boots of the Firewalker
+OBJ:      OBJ_ARMOUR/ARM_BOOTS
+PLUS:     +3
+COLOUR:   RED
+TILE:     urand_firewalker
+TILE_EQ:  firewalker
+FIRE:     1
+BOOL:     lavawalk
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
