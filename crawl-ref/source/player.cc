@@ -7170,11 +7170,11 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // transformations
     if (you.form == TRAN_LICH && temp)
-        rm += 50;
+        rm += 40;
 
     // Trog's Hand
     if (you.duration[DUR_TROGS_HAND] && temp)
-        rm += 70;
+        rm += 80;
 
     // Enchantment effect
     if (you.duration[DUR_LOWERED_MR] && temp)
