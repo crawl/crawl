@@ -10,4 +10,5 @@ bool beogh_followers_abandon_you();
 bool make_god_gifts_disappear();
 void beogh_convert_orc(monster* orc, bool emergency,
                        bool converted_by_follower = false);
+void gozag_check_bribe(monster* traitor);
 #endif

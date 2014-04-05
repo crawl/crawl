@@ -367,3 +367,34 @@ static void _jiyva_convert_slime(monster* slime)
 
     mons_att_changed(slime);
 }
+
+void gozag_check_bribe(monster* traitor)
+{
+    string msg;
+    if (traitor->props.exists(GOZAG_PERMABRIBE_KEY))
+    {
+        traitor->props.erase(GOZAG_PERMABRIBE_KEY);
+        traitor->add_ench(ENCH_PERMA_BRIBED);
+        msg = getSpeakString(traitor->name(DESC_DBNAME, true)
+                             + " Gozag permabribe");
+        if (msg.empty())
+            msg = getSpeakString("Gozag permabribe");
+    }
+    else if (traitor->props.exists(GOZAG_BRIBE_KEY))
+    {
+        traitor->props.erase(GOZAG_BRIBE_KEY);
+        traitor->add_ench(ENCH_BRIBED);
+        msg = getSpeakString(traitor->name(DESC_DBNAME, true)
+                             + " Gozag bribe");
+        if (msg.empty())
+            msg = getSpeakString("Gozag bribe");
+    }
+
+    if (!msg.empty())
+    {
+        msg_channel_type channel = MSGCH_FRIEND_ENCHANT;
+        msg = do_mon_str_replacements(msg, traitor);
+        strip_channel_prefix(msg, channel);
+        mprf(channel, "%s", msg.c_str());
+    }
+}

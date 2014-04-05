@@ -7264,3 +7264,16 @@ VISUAL:@The_monster@ looks at @possessive@ body and cries without tears.
 # Pungent Stench
 @The_monster@ screams, "I am only a sick, bizarre, defaced creation."
 %%%%
+#############################################################
+# Gozag bribery keys
+# Prefix this with a specific monster name to give speech
+# for a specific monster type.
+#############################################################
+Gozag bribe
+
+@The_monster@ stares @at_foe@, then turns away, jangling a coin purse.
+%%%%
+Gozag permabribe
+
+@The_monster@ grins @at_foe@ greedily, jangling a coin purse.
+%%%%
