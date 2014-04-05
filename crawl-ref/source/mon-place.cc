@@ -1812,17 +1812,21 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             if (minion)
             {
                 const monster* sum = mg.summoner->as_monster();
-                if (sum && sum->has_ench(ENCH_PERMA_BRIBED))
+                if (sum
+                    && (sum->has_ench(ENCH_PERMA_BRIBED)
+                        || sum->props.exists(GOZAG_PERMABRIBE_KEY)))
                 {
                     gozag_deduct_bribe(br, 2*cost);
-                    mon->add_ench(ENCH_PERMA_BRIBED);
+                    mon->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
                 }
-                else if (sum && sum->has_ench(ENCH_BRIBED))
+                else if (sum
+                    && (sum->has_ench(ENCH_BRIBED)
+                        || sum->props.exists(GOZAG_BRIBE_KEY)))
                 {
                     gozag_deduct_bribe(br, cost);
                     // Don't continue if we exhausted our funds.
                     if (branch_bribe[br] > 0)
-                        mon->add_ench(ENCH_BRIBED);
+                        mon->props[GOZAG_BRIBE_KEY].get_bool() = true;
                 }
             }
             else
@@ -1831,14 +1835,14 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                 if (branch_bribe[br] > 2*cost && one_chance_in(3))
                 {
                     gozag_deduct_bribe(br, 2*cost);
-                    mon->add_ench(ENCH_PERMA_BRIBED);
+                    mon->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
                 }
                 else
                 {
                     gozag_deduct_bribe(br, cost);
                     // Don't continue if we exhausted our funds.
                     if (branch_bribe[br] > 0)
-                        mon->add_ench(ENCH_BRIBED);
+                        mon->props[GOZAG_BRIBE_KEY].get_bool() = true;
                 }
             }
         }
