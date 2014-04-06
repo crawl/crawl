@@ -964,7 +964,7 @@ static void _dgn_check_terrain_player(const coord_def pos)
         return;
 
     if (you.can_pass_through(pos))
-        move_player_to_grid(pos, false, true);
+        move_player_to_grid(pos, false);
     else
         you_teleport_now(true);
 }
@@ -1330,13 +1330,9 @@ bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
 }
 
 // Returns true if we manage to scramble free.
-bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
+bool fall_into_a_pool(const coord_def& entry,
                       dungeon_feature_type terrain)
 {
-    bool escape = false;
-    bool clinging = false;
-    coord_def empty;
-
     if (terrain == DNGN_DEEP_WATER)
     {
         if (beogh_water_walk() || form_likes_water())
@@ -1356,104 +1352,27 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
 
     more();
     mesclr();
-
     if (terrain == DNGN_LAVA)
     {
-        const int resist = player_res_fire();
-
-        if (resist <= 0)
-        {
-            mpr("The lava burns you to a cinder!");
-            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
-
-            if (you.dead) // felids
-                return false;
-        }
-        else
-        {
-            int damage = 10 + roll_dice(2, 50) / resist;
-
-            if (damage > 100)
-                mpr("The lava roasts you!!");
-            else if (damage > 70)
-                mpr("The lava burns you!!");
-            else if (damage > 40)
-                mpr("The lava sears you!!");
-            else if (damage > 20)
-                mpr("The lava scorches you!");
-            else
-                mpr("The lava scalds you!");
-
-            ouch(damage, NON_MONSTER, KILLED_BY_LAVA);
-
-            if (you.dead) // felids
-                return false;
-        }
-
-        expose_player_to_element(BEAM_LAVA, 14);
-    }
-
-    // A distinction between stepping and falling from
-    // you.duration[DUR_FLIGHT] prevents stepping into a thin stream
-    // of lava to get to the other side.
-    if (scramble())
-    {
-        if (allow_shift)
-        {
-            escape = find_habitable_spot_near(you.pos(), MONS_HUMAN, 1, false, empty)
-                     || you.check_clinging(false);
-            clinging = you.is_wall_clinging();
-        }
-        else
-        {
-            // Back out the way we came in, if possible.
-            if (grid_distance(you.pos(), entry) == 1
-                && !monster_at(entry))
-            {
-                escape = true;
-                empty = entry;
-            }
-            else  // Zero or two or more squares away, with no way back.
-                escape = false;
-        }
-    }
-    else
-    {
-        if (you.form == TRAN_STATUE)
-            mpr("You sink like a stone!");
-        else
-            mpr("You try to escape, but your burden drags you down!");
-    }
-
-    if (escape)
-    {
-        if (in_bounds(empty) && !is_feat_dangerous(grd(empty)) || clinging)
-        {
-            mpr("You manage to scramble free!");
-            if (!clinging)
-                move_player_to_grid(empty, false, false);
-
-            if (terrain == DNGN_LAVA)
-                expose_player_to_element(BEAM_LAVA, 14);
-
-            return true;
-        }
-    }
-
-    if (you.species == SP_MUMMY)
-    {
-        if (terrain == DNGN_LAVA)
-            mpr("You burn to ash...");
-        else if (terrain == DNGN_DEEP_WATER)
-            mpr("You fall apart...");
-    }
-    else
-        mpr("You drown...");
-
-    if (terrain == DNGN_LAVA)
+        mpr("The lava burns you to a cinder!");
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
+    }
     else if (terrain == DNGN_DEEP_WATER)
+    {
+        mpr("You sink like a stone!");
+
+        if (you.species == SP_MUMMY)
+        {
+            if (terrain == DNGN_LAVA)
+                mpr("You burn to ash...");
+            else if (terrain == DNGN_DEEP_WATER)
+                 mpr("You fall apart...");
+        }
+        else
+            mpr("You drown...");
+
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WATER);
+    }
 
     return false;
 }

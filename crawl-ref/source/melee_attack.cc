@@ -275,7 +275,7 @@ bool melee_attack::handle_phase_attempted()
                 mpr("There is nothing there, so you fail to move!");
                 return false;
             }
-            move_player_to_grid(attack_position, false, true);
+            move_player_to_grid(attack_position, false);
         }
 
         // Set delay now that we know the attack won't be cancelled.
@@ -5318,7 +5318,7 @@ bool melee_attack::do_knockback(bool trample)
             (new trample_follow_fineff(attacker, old_pos))->schedule();
 
         if (defender->as_player())
-            move_player_to_grid(new_pos, false, true);
+            move_player_to_grid(new_pos, false);
         else
             defender->move_to_pos(new_pos);
 

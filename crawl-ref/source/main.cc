@@ -4766,7 +4766,7 @@ static void _move_player(coord_def move)
         you.stop_constricting_all(true);
         you.stop_being_constricted();
 
-        move_player_to_grid(targ, true, false);
+        move_player_to_grid(targ, true);
 
         if (you.duration[DUR_BARBS])
         {

@@ -1074,7 +1074,7 @@ static bool _siren_movement_effect(const monster* mons)
                     mprf("You swap places with %s.",
                          mon->name(DESC_THE).c_str());
                 }
-                move_player_to_grid(newpos, true, true);
+                move_player_to_grid(newpos, true);
 
                 if (swapping)
                     mon->apply_location_effects(newpos);
@@ -3104,7 +3104,7 @@ void move_solo_tentacle(monster* tentacle)
         }
 
         if (constrictee->as_player())
-            move_player_to_grid(shift_pos, false, true);
+            move_player_to_grid(shift_pos, false);
         else
             constrictee->move_to_pos(shift_pos);
 
@@ -3306,7 +3306,7 @@ void move_child_tentacles(monster* mons)
             }
 
             if (constrictee->as_player())
-                move_player_to_grid(old_pos, false, true);
+                move_player_to_grid(old_pos, false);
             else
                 constrictee->move_to_pos(old_pos);
 
@@ -5161,7 +5161,7 @@ static bool _do_throw(actor *thrower, actor *victim, int pow)
         monster *tmon = thrower->as_monster();
         mprf("%s throws you!",
              (thrower_seen ? thrower_name.c_str() : "Something"));
-        move_player_to_grid(chosen_dest, false, true);
+        move_player_to_grid(chosen_dest, false);
         ouch(dam, tmon->mindex(), KILLED_BY_BEING_THROWN);
     }
     else

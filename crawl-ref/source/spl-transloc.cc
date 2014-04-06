@@ -276,7 +276,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             if (!wizard_blink)
                 place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
-            move_player_to_grid(beam.target, false, true);
+            move_player_to_grid(beam.target, false);
 
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
@@ -331,7 +331,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
     {
         canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
-        move_player_to_grid(target, false, true);
+        move_player_to_grid(target, false);
 
         // Leave a purple cloud.
         if (!cell_is_solid(origin))
@@ -616,7 +616,7 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
                 if (!wizard_tele && !cell_is_solid(old_pos))
                     place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
-                move_player_to_grid(pos, false, true);
+                move_player_to_grid(pos, false);
 
                 // Controlling teleport contaminates the player. - bwr
                 if (!wizard_tele)
@@ -691,7 +691,7 @@ static bool _teleport_player(bool allow_control, bool wizard_tele,
         if (!cell_is_solid(old_pos))
             place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
-        move_player_to_grid(newpos, false, true);
+        move_player_to_grid(newpos, false);
     }
 
     _handle_teleport_update(large_change, old_pos);
@@ -761,7 +761,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     bool large_change = you.see_cell(where);
 
-    move_player_to_grid(where, false, true);
+    move_player_to_grid(where, false);
 
     _handle_teleport_update(large_change, old_pos);
     return true;
@@ -1007,7 +1007,7 @@ static bool _quadrant_blink(coord_def dir, int pow)
     }
 
     coord_def origin = you.pos();
-    move_player_to_grid(target, false, true);
+    move_player_to_grid(target, false);
 
     // Leave a purple cloud.
     if (!cell_is_solid(origin))

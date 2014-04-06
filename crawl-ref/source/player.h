@@ -789,8 +789,7 @@ struct item_def;
 
 // Helper. Use move_player_to_grid or player::apply_location_effects instead.
 void moveto_location_effects(dungeon_feature_type old_feat,
-                             bool stepped=false, bool allow_shift=true,
-                             const coord_def& old_pos=coord_def());
+                             bool stepped=false, const coord_def& old_pos=coord_def());
 
 bool check_moveto(const coord_def& p, const string &move_verb = "step",
                   const string &msg = "");
@@ -804,7 +803,7 @@ bool check_moveto_exclusion(const coord_def& p,
 bool check_moveto_trap(const coord_def& p, const string &move_verb = "step",
         bool *prompted = nullptr);
 
-void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
+void move_player_to_grid(const coord_def& p, bool stepped);
 
 bool is_map_persistent(void);
 bool player_in_mappable_area(void);

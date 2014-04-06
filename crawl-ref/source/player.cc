@@ -336,8 +336,7 @@ static void _splash()
 }
 
 void moveto_location_effects(dungeon_feature_type old_feat,
-                             bool stepped, bool allow_shift,
-                             const coord_def& old_pos)
+                             bool stepped, const coord_def& old_pos)
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
 
@@ -349,7 +348,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         const coord_def& entry = (stepped) ? old_pos : you.pos();
 
         // If true, we were shifted and so we're done.
-        if (fall_into_a_pool(entry, allow_shift, new_grid))
+        if (fall_into_a_pool(entry, new_grid))
             return;
     }
 
@@ -455,8 +454,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 // a grid.
 //
 // stepped     - normal walking moves
-// allow_shift - allowed to scramble in any direction out of lava/water
-void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
+void move_player_to_grid(const coord_def& p, bool stepped)
 {
     ASSERT(!crawl_state.game_is_arena());
     ASSERT_IN_BOUNDS(p);
@@ -485,7 +483,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     you.moveto(p, true);
     viewwindow();
 
-    moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
+    moveto_location_effects(old_grid, stepped, old_pos);
 }
 
 bool is_feat_dangerous(dungeon_feature_type grid, bool permanently)
@@ -5721,7 +5719,7 @@ bool land_player(bool quiet)
         you.redraw_evasion = true;
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     // Re-enter the terrain.
-    move_player_to_grid(you.pos(), false, true);
+    move_player_to_grid(you.pos(), false);
     return true;
 }
 

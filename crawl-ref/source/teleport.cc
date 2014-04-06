@@ -45,7 +45,7 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     stop_delay(true);
 
     const coord_def origin = pos();
-    move_player_to_grid(dest, false, true);
+    move_player_to_grid(dest, false);
 
     if (!cell_is_solid(origin))
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), this);
