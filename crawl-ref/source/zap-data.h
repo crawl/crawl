@@ -811,7 +811,7 @@ struct zap_info
 
 {
     ZAP_FLAME_TONGUE,
-    "flame",
+    "flame tongue",
     25,
     new dicedef_calculator<1, 8, 1, 4>,
     new tohit_calculator<11, 1, 6>,
