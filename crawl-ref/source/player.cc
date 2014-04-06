@@ -7085,8 +7085,10 @@ int player::res_petrify(bool temp) const
 
 int player::res_constrict() const
 {
+    if (is_insubstantial())
+        return 3;
     if (form == TRAN_PORCUPINE
-        || form == TRAN_WISP)
+        || player_mutation_level(MUT_SPINY))
     {
         return 3;
     }
