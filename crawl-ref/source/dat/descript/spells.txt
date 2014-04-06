@@ -938,6 +938,11 @@ Petrifying Cloud spell
 Catoblepae can exhale calcifying dust, which turns anyone affected for longer
 than a brief moment into a statue.
 %%%%
+Phantom Mirror spell
+
+This ability creates a phantom copy of a monster. The copy will be somewhat
+fragile, but otherwise almost indistinguishable from the original.
+%%%%
 Phase Shift spell
 
 This spell allows the caster to phase in and out of the material plane,
