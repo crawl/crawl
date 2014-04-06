@@ -341,7 +341,9 @@ enum transformation_type
     TRAN_TREE,
     TRAN_PORCUPINE,
     TRAN_WISP,
+#if TAG_MAJOR_VERSION == 34
     TRAN_JELLY,
+#endif
     TRAN_FUNGUS,
     TRAN_SHADOW,
     // no NUM_TRANSFORMS due to too many switch statements

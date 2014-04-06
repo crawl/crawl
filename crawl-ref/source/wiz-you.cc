@@ -1113,6 +1113,10 @@ void wizard_transform()
         string line;
         for (int i = 0; i <= LAST_FORM; i++)
         {
+#if TAG_MAJOR_VERSION == 34
+            if (i == TRAN_JELLY)
+                continue;
+#endif
             line += make_stringf("[%c] %-10s ", i + 'a',
                                  transform_name((transformation_type)i));
             if (i % 5 == 4 || i == LAST_FORM)
@@ -1134,6 +1138,11 @@ void wizard_transform()
 
         if (keyin < 'a' || keyin > 'a' + LAST_FORM)
             continue;
+
+#if TAG_MAJOR_VERSION == 34
+        if ((transformation_type)(keyin - 'a') == TRAN_JELLY)
+            continue;
+#endif
 
         form = (transformation_type)(keyin - 'a');
 

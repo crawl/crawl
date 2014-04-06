@@ -253,7 +253,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid, bool try_fallback)
 
         // You can't open doors in bat form.
         if (grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
-            return player_can_open_doors() || you.form == TRAN_JELLY;
+            return player_can_open_doors();
     }
 
     return feat_is_traversable(grid, try_fallback);

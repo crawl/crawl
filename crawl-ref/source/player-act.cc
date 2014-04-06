@@ -262,10 +262,6 @@ brand_type player::damage_brand(int)
                 ret = SPWPN_VAMPIRICISM;
             break;
 
-        case TRAN_JELLY:
-            ret = SPWPN_ACID;
-            break;
-
         default:
             break;
         }
@@ -428,8 +424,6 @@ string player::hand_name(bool plural, bool *can_plural) const
         str = "branch";
     else if (form == TRAN_WISP)
         str = "misty tendril";
-    else if (form == TRAN_JELLY)
-        str = "bump"; // not even pseudopods...
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || form == TRAN_SHADOW
              || !form_changed_physiology())
@@ -466,8 +460,6 @@ string player::foot_name(bool plural, bool *can_plural) const
         str = "root";
     else if (form == TRAN_WISP)
         str = "strand";
-    else if (form == TRAN_JELLY)
-        str = "underside", *can_plural = false;
     else if (form == TRAN_LICH || form == TRAN_STATUE
              || form == TRAN_SHADOW
              || !form_changed_physiology())

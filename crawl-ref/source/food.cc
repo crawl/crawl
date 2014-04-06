@@ -639,7 +639,6 @@ bool prompt_eat_inventory_item(int slot)
                 prompt_invent_item(you.species == SP_VAMPIRE ? "Drain what?"
                                                              : "Eat which item?",
                                    MT_INVLIST,
-                                   you.form == TRAN_JELLY ? OSEL_ANY :
                                    you.species == SP_VAMPIRE ? (int)OSEL_VAMP_EAT
                                                              : OBJ_FOOD,
                                    true, true, true, 0, -1, NULL,
@@ -652,17 +651,7 @@ bool prompt_eat_inventory_item(int slot)
     // This conditional can later be merged into food::can_ingest() when
     // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
     item_def &item(you.inv[which_inventory_slot]);
-    if (you.form == TRAN_JELLY)
-    {
-        if (item_is_melded(item))
-        {
-            // Allowing eating it would be natural, but we don't want to
-            // let folks get rid of curses or distortion a scummy way.
-            mpr("It's melded into your body!");
-            return false;
-        }
-    }
-    else if (you.species != SP_VAMPIRE)
+    if (you.species != SP_VAMPIRE)
     {
         if (item.base_type != OBJ_FOOD)
         {
@@ -984,9 +973,6 @@ static void _describe_food_change(int food_increment)
 
 static bool _player_can_eat_rotten_meat(bool need_msg = false)
 {
-    if (you.form == TRAN_JELLY) // gelatin from mad cow carcasses anyone?
-        return true;
-
     if (player_mutation_level(MUT_SAPROVOROUS))
         return true;
 
@@ -1009,9 +995,7 @@ bool eat_item(item_def &food)
             return false;
     }
 
-    if (you.form == TRAN_JELLY)
-        _eating(food);
-    else if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
+    if (food.base_type == OBJ_CORPSES && food.sub_type == CORPSE_BODY)
     {
         if (you.species != SP_VAMPIRE)
             return false;
@@ -1050,6 +1034,10 @@ class compare_by_freshness
 public:
     bool operator()(const item_def *food1, const item_def *food2)
     {
+        ASSERT(food1->base_type == OBJ_CORPSES || food1->base_type == OBJ_FOOD);
+        ASSERT(food2->base_type == OBJ_CORPSES || food2->base_type == OBJ_FOOD);
+        ASSERT(food1->base_type == food2->base_type);
+
         if (is_inedible(*food1))
             return false;
 
@@ -1061,13 +1049,6 @@ public:
             return false;
         if (food2->base_type == OBJ_FOOD && food2->sub_type != FOOD_CHUNK)
             return true;
-
-        // If we can eat non-food (jelly), use it up first: when the transform
-        // expires, chunks may be usable, that chainmail won't.
-        if (food1->base_type != OBJ_CORPSES && food1->base_type != OBJ_FOOD)
-            return true;
-        if (food2->base_type != OBJ_CORPSES && food2->base_type != OBJ_FOOD)
-            return false;
 
         // At this point, we know both are corpses or chunks, edible
         // (not rotten, or player is saprovore).
@@ -1107,9 +1088,7 @@ int eat_from_floor(bool skip_chunks)
     vector<item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        if (you.form == TRAN_JELLY)
-            /*burp*/; // scuse me
-        else if (you.species == SP_VAMPIRE)
+        if (you.species == SP_VAMPIRE)
         {
             if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
                 continue;
@@ -1778,13 +1757,10 @@ static void _eating(item_def& food)
     ASSERT(food_value > 0);
 
     int duration = food_turns(food) - 1;
-    if (you.form == TRAN_JELLY) // remarkably fast eaters, monsters even get
-        duration = 0;           // to eat multiple things per turn
 
     // use delay.parm3 to figure out whether to output "finish eating"
     zin_recite_interrupt();
-    start_delay(DELAY_EAT, duration, 0, food.base_type == OBJ_FOOD ?
-        food.sub_type : -2, duration);
+    start_delay(DELAY_EAT, duration, 0, food.sub_type, duration);
 
     lessen_hunger(food_value, true);
 }
@@ -1793,12 +1769,6 @@ static void _eating(item_def& food)
 // Some food types may not get a message.
 void finished_eating_message(int food_type)
 {
-    if (food_type == -2) // non-food, unyay magic cookie
-    {
-        mpr("You finish eating.");
-        return;
-    }
-
     bool herbivorous = player_mutation_level(MUT_HERBIVOROUS) > 0;
     bool carnivorous = player_mutation_level(MUT_CARNIVOROUS) > 0;
 
@@ -2094,9 +2064,6 @@ bool causes_rot(const item_def &food)
 // be eaten (respecting species and mutations set).
 bool is_inedible(const item_def &item)
 {
-    if (you.form == TRAN_JELLY)
-        return !can_ingest(item, true, false);
-
     // Mummies and liches don't eat.
     if (you_foodless(true))
         return true;
@@ -2204,13 +2171,6 @@ bool is_forbidden_food(const item_def &food)
 
 bool can_ingest(const item_def &food, bool suppress_msg, bool check_hunger)
 {
-    if (food.is_critical())
-    {
-        if (!suppress_msg)
-            mpr("Eating this would be a bad idea.");
-        return false;
-    }
-
     if (check_hunger)
     {
         if (is_poisonous(food))
@@ -2241,13 +2201,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
     // [ds] These redundant checks are now necessary - Lua might be calling us.
     if (!_eat_check(check_hunger, suppress_msg))
         return false;
-
-    if (you.form == TRAN_JELLY)
-    {
-        // a rather indiscriminating diet
-        return what_isit != OBJ_MISSILES
-               || kindof_thing != MI_STONE && kindof_thing != MI_LARGE_ROCK;
-    }
 
     if (you.species == SP_VAMPIRE)
     {

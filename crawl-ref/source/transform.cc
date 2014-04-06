@@ -57,7 +57,9 @@ static const char* form_names[] =
     "tree",
     "porcupine",
     "wisp",
+#if TAG_MAJOR_VERSION == 34
     "jelly",
+#endif
     "fungus",
     "shadow",
 };
@@ -92,8 +94,8 @@ bool form_can_fly(transformation_type form)
 
 bool form_can_swim(transformation_type form)
 {
-    // Ice floats, scum goes to the top.
-    if (form == TRAN_ICE_BEAST || form == TRAN_JELLY)
+    // Ice floats.
+    if (form == TRAN_ICE_BEAST)
         return true;
 
     if ((you.species == SP_MERFOLK || you.species == SP_OCTOPODE)
@@ -144,7 +146,6 @@ bool form_likes_lava(transformation_type form)
 bool form_can_butcher(transformation_type form)
 {
     return form != TRAN_WISP
-        && form != TRAN_JELLY
         && form != TRAN_FUNGUS;
 }
 
@@ -162,12 +163,18 @@ bool form_can_use_wand(transformation_type form)
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
 {
-    if (form == TRAN_JELLY || form == TRAN_PORCUPINE || form == TRAN_WISP)
+    if (form == TRAN_PORCUPINE
+#if TAG_MAJOR_VERSION == 34
+        || form == TRAN_JELLY
+#endif
+        || form == TRAN_WISP)
+    {
         return false;
+    }
 
     if (item.base_type == OBJ_JEWELLERY)
     {
-        // Everyone but jellies, porcupines and wisps can wear amulets.
+        // Everyone but porcupines and wisps can wear amulets.
         if (jewellery_is_amulet(item))
             return true;
         // Bats and pigs can't wear rings.
@@ -438,7 +445,6 @@ size_type player::transform_size(transformation_type tform, int psize) const
     case TRAN_FUNGUS:
         return SIZE_TINY;
     case TRAN_PIG:
-    case TRAN_JELLY:
         return SIZE_SMALL;
     case TRAN_ICE_BEAST:
         return SIZE_LARGE;
@@ -481,8 +487,10 @@ monster_type transform_mons()
         return you.species == SP_VAMPIRE ? MONS_VAMPIRE_BAT : MONS_BAT;
     case TRAN_PIG:
         return MONS_HOG;
+#if TAG_MAJOR_VERSION == 34
     case TRAN_JELLY:
         return MONS_JELLY;
+#endif
     case TRAN_PORCUPINE:
         return MONS_PORCUPINE;
     case TRAN_TREE:
@@ -544,7 +552,6 @@ int form_hp_mod()
         return 13;
     case TRAN_ICE_BEAST:
         return 12;
-    case TRAN_JELLY:
     case TRAN_DRAGON:
     case TRAN_TREE:
         return 15;
@@ -726,7 +733,9 @@ static int _transform_duration(transformation_type which_trans, int pow)
     case TRAN_FUNGUS:
     case TRAN_PIG:
     case TRAN_PORCUPINE:
+#if TAG_MAJOR_VERSION == 34
     case TRAN_JELLY:
+#endif
     case TRAN_TREE:
     case TRAN_WISP:
         return min(15 + random2(pow) + random2(pow / 2), 100);
@@ -960,11 +969,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     case TRAN_FUNGUS:
         tran_name = "fungus";
         msg      += "a fleshy mushroom.";
-        break;
-
-    case TRAN_JELLY:
-        tran_name = "jelly";
-        msg      += "a lump of acidic jelly.";
         break;
 
     case TRAN_PORCUPINE:
@@ -1316,7 +1320,6 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_PIG:
-    case TRAN_JELLY:
     case TRAN_PORCUPINE:
     case TRAN_WISP:
         break;
