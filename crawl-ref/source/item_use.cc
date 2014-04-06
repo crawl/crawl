@@ -1188,17 +1188,12 @@ bool safe_to_remove(const item_def &item, bool quiet)
     const dungeon_feature_type feat = grd(you.pos());
 
     if (grants_flight && removing_ends_flight
-        && (feat == DNGN_LAVA
+        && (feat == DNGN_LAVA && !player_likes_lava()
             || feat == DNGN_DEEP_WATER && !player_likes_water()))
     {
-        if (quiet)
-            return false;
-        else
-        {
-            string fname = (feat == DNGN_LAVA ? "lava" : "deep water");
-            string prompt = "Really remove this item over " + fname + "?";
-            return yesno(prompt.c_str(), false, 'n');
-        }
+        if (!quiet)
+            mpr("Losing flight right now would be fatal!");
+        return false;
     }
 
     return true;

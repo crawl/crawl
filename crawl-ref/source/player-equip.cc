@@ -1131,10 +1131,10 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         // since a permflight item can keep tempflight evocations going
         // we should check tempflight here too
         if (you.cancellable_flight() && !you.evokable_flight())
-        {
             you.duration[DUR_FLIGHT] = 0;
-            land_player();
-        }
+
+        land_player(); // land_player() has a check for airborne()
+
         break;
 
     case SPARM_JUMPING:
