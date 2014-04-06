@@ -1295,19 +1295,6 @@ string weird_sound()
     return getMiscString("sound_name");
 }
 
-bool scramble(void)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    // Statues are too stiff and heavy to scramble out of the water.
-    if (you.form == TRAN_STATUE || you.cannot_move())
-        return false;
-
-    const int max_carry = carrying_capacity();
-    // When highly encumbered, scrambling out is hard to do.
-    return you.burden < (max_carry / 2) + random2(max_carry / 2);
-}
-
 /**
  * Make the player go berserk!
  * @param intentional If true, this was initiated by the player, and additional
@@ -2503,7 +2490,7 @@ void swap_with_monster(monster* mon_to_swap)
     }
 
     // Move you to its previous location.
-    move_player_to_grid(newpos, false, true);
+    move_player_to_grid(newpos, false);
 
     if (mon_caught)
     {

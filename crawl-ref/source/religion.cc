@@ -1167,7 +1167,7 @@ static void _inc_penance(god_type god, int val)
             you.redraw_armour_class = true;
 
             if (_need_water_walking() && !beogh_water_walk())
-                fall_into_a_pool(you.pos(), true, grd(you.pos()));
+                fall_into_a_pool(you.pos(), grd(you.pos()));
         }
         // Neither does Trog's regeneration or magic resistance.
         else if (god == GOD_TROG)
@@ -2923,7 +2923,7 @@ void lose_piety(int pgn)
                                   "You can no longer %s.", i);
 
                 if (_need_water_walking() && !beogh_water_walk())
-                    fall_into_a_pool(you.pos(), true, grd(you.pos()));
+                    fall_into_a_pool(you.pos(), grd(you.pos()));
             }
         }
 
@@ -3108,7 +3108,7 @@ void excommunication(god_type new_god)
     case GOD_BEOGH:
         // You might have lost water walking at a bad time...
         if (_need_water_walking())
-            fall_into_a_pool(you.pos(), true, grd(you.pos()));
+            fall_into_a_pool(you.pos(), grd(you.pos()));
 
         if (query_da_counter(DACT_ALLY_BEOGH))
         {

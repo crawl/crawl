@@ -108,8 +108,6 @@ coord_def pick_adjacent_free_square(const coord_def& p);
 
 int speed_to_duration(int speed);
 
-bool scramble(void);
-
 bool interrupt_cmd_repeat(activity_interrupt_type ai,
                           const activity_interrupt_data &at);
 

@@ -402,7 +402,7 @@ bool player_caught_in_net()
         if (you.flight_mode() == FL_WINGED)
         {
             mpr("You fall like a stone!");
-            fall_into_a_pool(you.pos(), false, grd(you.pos()));
+            fall_into_a_pool(you.pos(), grd(you.pos()));
         }
 
         stop_delay(true); // even stair delays
@@ -1197,7 +1197,7 @@ void disarm_trap(const coord_def& where)
                 if (coinflip())
                 {
                     mpr("You stumble into the trap!");
-                    move_player_to_grid(trap.pos, true, false);
+                    move_player_to_grid(trap.pos, true);
                 }
             }
             else

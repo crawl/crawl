@@ -984,14 +984,14 @@ static void _finish_delay(const delay_queue_item &delay)
                     goto passwall_aborted;
                 }
 
-                move_player_to_grid(pass, false, true);
+                move_player_to_grid(pass, false);
 
                 // Wake the monster if it's asleep.
                 if (m)
                     behaviour_event(m, ME_ALERT, &you);
             }
             else
-                move_player_to_grid(pass, false, true);
+                move_player_to_grid(pass, false);
 
         passwall_aborted:
             redraw_screen();

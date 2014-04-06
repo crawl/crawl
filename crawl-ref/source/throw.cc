@@ -705,7 +705,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
             place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
         canned_msg(MSG_YOU_BLINK);
-        move_player_to_grid(pos, false, true);
+        move_player_to_grid(pos, false);
     }
     else
     {

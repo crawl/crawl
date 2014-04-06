@@ -452,7 +452,7 @@ static bool _abort_or_fizzle(bool just_check)
     if (!just_check && you.turn_is_over)
     {
         canned_msg(MSG_SPELL_FIZZLES);
-        move_player_to_grid(you.pos(), false, true);
+        move_player_to_grid(you.pos(), false);
         return true; // pay the necessary costs
     }
     return false; // SPRET_ABORT
@@ -1223,7 +1223,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
                           || which_trans == TRAN_APPENDAGE)
                       && you.species == SP_MERFOLK)
     {
-        move_player_to_grid(you.pos(), false, true);
+        move_player_to_grid(you.pos(), false);
     }
 
     if (you.hp <= 0)
@@ -1383,7 +1383,7 @@ void untransform(bool skip_wielding, bool skip_move)
                 mpr("You frantically fly out of the water.");
             }
             else
-                fall_into_a_pool(you.pos(), true, DNGN_DEEP_WATER);
+                fall_into_a_pool(you.pos(), DNGN_DEEP_WATER);
         }
         notify_stat_change(STAT_STR, -10, true,
                      "losing the tree transformation");
@@ -1410,7 +1410,7 @@ void untransform(bool skip_wielding, bool skip_move)
                            && (old_form == TRAN_ICE_BEAST
                                || you.species == SP_MERFOLK))))
     {
-        move_player_to_grid(you.pos(), false, true);
+        move_player_to_grid(you.pos(), false);
     }
 
 #ifdef USE_TILE
