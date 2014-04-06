@@ -1997,7 +1997,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             for (monster_near_iterator mi(mon); mi; ++mi)
             {
                 if (*mi != mon && mons_aligned(*mi, mon) && !mi->is_stationary()
-                    && !mi->is_summoned())
+                    && !mi->is_summoned() && !mi->is_conjured())
                 {
                     // A single valid target is enough.
                     return false;
