@@ -654,6 +654,41 @@ Gozag says: Wasting time is wasting money!
 
 Gozag says: I'm waiting for your next payment.
 
+Gozag says: All you need is greed!
+
+Gozag says: A full purse beats having friends.
+
+Gozag says: The world belongs to the rich.
+
+w:4
+Gozag says: Eat the poor!
+
+w:3
+Gozag says: Kill the poor!
+
+w:3
+Gozag says: Defeat the poor!
+
+Gozag says: No better sound than the ting-a-ling of coins.
+
+Gozag says: Be generous to yourself!
+
+Gozag says: The golden calf was only the first half.
+
+Gozag says: Gold is the grease of nations.
+
+Gozag says: Pecunia non olet.
+
+Gozag says: Take care of the pence!
+
+Gozag says: I promise an afterlife to those who can afford it!
+
+Gozag says: The indulgence fee is not free!
+
+Gozag says: Money talks!
+
+Gozag says: Cash is king!
+
 w:5
 Gozag says: Gold! Gold! Gold!
 
