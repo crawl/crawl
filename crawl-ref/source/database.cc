@@ -316,7 +316,7 @@ void TextDB::_regenerate_db()
 // DB system
 // ----------------------------------------------------------------------
 
-#ifndef DGAMELAUNCH
+#if !defined(DGAMELAUNCH) && !defined(TARGET_OS_WINDOWS)
 static void* init_db(void *arg)
 {
     AllDBs[(intptr_t)arg].init();
@@ -335,7 +335,10 @@ void databaseSystemInit()
 
     thread_t th[NUM_DB];
     for (unsigned int i = 0; i < NUM_DB; i++)
-#ifndef DGAMELAUNCH
+// Using threads for loading on Windows at the moment seems to cause
+// random failures to find files (#5854); thus disabling it here until
+// we can identify what's going on.
+#if !defined(DGAMELAUNCH) && !defined(TARGET_OS_WINDOWS)
         if (thread_create_joinable(&th[i], init_db, (void*)(intptr_t)i))
 #endif
         {
