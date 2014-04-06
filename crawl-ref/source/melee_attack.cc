@@ -2146,7 +2146,9 @@ void melee_attack::set_attack_verb()
         case TRAN_APPENDAGE:
         case TRAN_ICE_BEAST:
         case TRAN_SHADOW:
+#if TAG_MAJOR_VERSION == 34
         case TRAN_JELLY: // ?
+#endif
             if (you.damage_type() == DVORP_CLAWING)
             {
                 if (damage_to_display < HIT_WEAK)
@@ -3531,8 +3533,7 @@ void melee_attack::attacker_sustain_passive_damage()
     if (defender->type == MONS_PROGRAM_BUG)
         return;
 
-    if (mons_class_flag(defender->type, M_ACID_SPLASH)
-        || defender->is_player() && you.form == TRAN_JELLY)
+    if (mons_class_flag(defender->type, M_ACID_SPLASH))
     {
         int rA = attacker->res_acid();
         if (rA < 3)
@@ -3859,7 +3860,9 @@ int melee_attack::calc_to_hit(bool random)
             case TRAN_PORCUPINE:
             case TRAN_PIG:
             case TRAN_APPENDAGE:
+#if TAG_MAJOR_VERSION == 34
             case TRAN_JELLY:
+#endif
             case TRAN_SHADOW:
             case TRAN_NONE:
                 break;
@@ -5600,7 +5603,9 @@ int melee_attack::calc_base_unarmed_damage()
             break;
         case TRAN_PIG:
         case TRAN_PORCUPINE:
+#if TAG_MAJOR_VERSION == 34
         case TRAN_JELLY:
+#endif
         case TRAN_SHADOW:
         case TRAN_NONE:
         case TRAN_APPENDAGE:

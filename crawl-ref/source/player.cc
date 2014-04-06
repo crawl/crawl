@@ -530,7 +530,7 @@ bool player_likes_lava(bool permanently)
 
 bool player_can_open_doors()
 {
-    return you.form != TRAN_BAT && you.form != TRAN_JELLY;
+    return you.form != TRAN_BAT;
 }
 
 // TODO: get rid of this.
@@ -576,8 +576,10 @@ bool is_player_same_genus(const monster_type mon, bool transform)
             return mons_genus(mon) == MONS_DRAGON;
         case TRAN_PIG:
             return mons_genus(mon) == MONS_HOG;
+#if TAG_MAJOR_VERSION == 34
         case TRAN_JELLY:
             return mons_genus(mon) == MONS_JELLY;
+#endif
         case TRAN_STATUE:
         case TRAN_BLADE_HANDS:
         case TRAN_NONE:
@@ -842,8 +844,10 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     if (eq == EQ_NONE)
         return true;
 
-    if (you.form == TRAN_JELLY
-        || you.form == TRAN_PORCUPINE
+    if (you.form == TRAN_PORCUPINE
+#if TAG_MAJOR_VERSION == 34
+        || you.form == TRAN_JELLY
+#endif
         || you.form == TRAN_WISP)
     {
         return false;
@@ -854,7 +858,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
         eq = EQ_RINGS;
 
-    // Everybody but jellies and porcupines can wear at least some type of armour.
+    // Everybody but porcupines and wisps can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
         return true;
 
@@ -1750,7 +1754,7 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (religion == GOD_JIYVA && piety >= piety_breakpoint(2))
         return true;
 
-    if (form == TRAN_JELLY || form == TRAN_WISP)
+    if (form == TRAN_WISP)
         return 1;
 
     if (items)
@@ -1780,7 +1784,7 @@ bool player::res_corr(bool calc_unid, bool items) const
 
 int player_res_acid(bool calc_unid, bool items)
 {
-    if (you.form == TRAN_JELLY || you.form == TRAN_WISP)
+    if (you.form == TRAN_WISP)
         return 3;
 
     return you.res_corr(calc_unid, items) ? 1 : 0;
@@ -1933,7 +1937,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         case TRAN_DRAGON:
         case TRAN_FUNGUS:
         case TRAN_TREE:
-        case TRAN_JELLY:
         case TRAN_WISP:
             rp++;
             break;
@@ -3794,7 +3797,9 @@ int check_stealth(void)
         race_mod = 27; // masquerading as scenery
         break;
     case TRAN_SPIDER:
+#if TAG_MAJOR_VERSION == 34
     case TRAN_JELLY:
+#endif
     case TRAN_WISP:
         race_mod = 21;
         break;
@@ -6304,8 +6309,6 @@ string player::shout_verb() const
         return "sporulate";
     case TRAN_TREE:
         return "creak";
-    case TRAN_JELLY:
-        return "gurgle";
     case TRAN_WISP:
         return "whoosh"; // any wonder why?
 
@@ -6719,11 +6722,13 @@ int player::armour_class() const
         case TRAN_LICH:  // can wear normal body armour (no bonus)
             break;
 
-        case TRAN_JELLY:  // no bonus
+#if TAG_MAJOR_VERSION == 34
+        case TRAN_JELLY:
+#endif
         case TRAN_BAT:
         case TRAN_PIG:
         case TRAN_PORCUPINE:
-        case TRAN_SHADOW:
+        case TRAN_SHADOW: // no bonus
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
@@ -6910,7 +6915,6 @@ bool player::is_unbreathing() const
     case TRAN_STATUE:
     case TRAN_FUNGUS:
     case TRAN_TREE:
-    case TRAN_JELLY:
     case TRAN_WISP:
         return true;
     default:
@@ -7081,7 +7085,7 @@ int player::res_petrify(bool temp) const
 
 int player::res_constrict() const
 {
-    if (form == TRAN_JELLY || form == TRAN_PORCUPINE
+    if (form == TRAN_PORCUPINE
         || form == TRAN_WISP)
     {
         return 3;

@@ -4547,7 +4547,7 @@ static void _move_player(coord_def move)
         return;
     }
 
-    dungeon_feature_type targ_grid = grd(targ);
+    const dungeon_feature_type targ_grid = grd(targ);
 
     const string walkverb = you.flight_mode()           ? "fly"
                           : you.form == TRAN_SPIDER     ? "crawl"
@@ -4676,14 +4676,6 @@ static void _move_player(coord_def move)
             you.turn_is_over = false;
             return;
         }
-    }
-
-    if (you.form == TRAN_JELLY && feat_is_closed_door(targ_grid))
-    {
-        mpr("You eat the door.");
-        nuke_wall(targ);
-        targ_pass = true;
-        targ_grid = grd(targ);
     }
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)

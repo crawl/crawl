@@ -1847,10 +1847,7 @@ bool food_is_veggie(const item_def &item)
 
 int food_value(const item_def &item)
 {
-    ASSERT(item.defined());
-
-    if (item.base_type != OBJ_FOOD) // TRAN_JELLY
-        return max(1, item_mass(item) * 5);
+    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
     const int carn = player_mutation_level(MUT_CARNIVOROUS);
@@ -1867,10 +1864,8 @@ int food_value(const item_def &item)
 
 int food_turns(const item_def &item)
 {
-    ASSERT(item.defined());
-    if (item.base_type == OBJ_FOOD)
-        return Food_prop[Food_index[item.sub_type]].turns;
-    return max(1, item_mass(item) / 100); // TRAN_JELLY
+    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
+    return Food_prop[Food_index[item.sub_type]].turns;
 }
 
 bool can_cut_meat(const item_def &item)

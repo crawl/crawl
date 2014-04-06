@@ -555,7 +555,7 @@ void inspect_spells()
 
 static bool _can_cast()
 {
-    if (you.form == TRAN_BAT || you.form == TRAN_PIG || you.form == TRAN_JELLY
+    if (you.form == TRAN_BAT || you.form == TRAN_PIG
         || you.form == TRAN_PORCUPINE || you.form == TRAN_WISP
         || you.form == TRAN_FUNGUS)
     {

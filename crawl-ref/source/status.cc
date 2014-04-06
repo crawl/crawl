@@ -1038,11 +1038,13 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "tree-form";
         inf->long_text  = "You are an animated tree.";
         break;
+#if TAG_MAJOR_VERSION == 34
     case TRAN_JELLY:
         inf->light_text = "Jelly";
         inf->short_text = "jelly-form";
         inf->long_text  = "You are a lump of jelly.";
         break;
+#endif
     case TRAN_PORCUPINE:
         inf->light_text = "Porc";
         inf->short_text = "porcupine-form";

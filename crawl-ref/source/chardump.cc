@@ -300,9 +300,11 @@ static void _sdump_transform(dump_params &par)
         case TRAN_TREE:
             text += "You " + verb + " an animated tree.";
             break;
+#if TAG_MAJOR_VERSION == 34
         case TRAN_JELLY:
             text += "You " + verb + " an acidic jelly.";
             break;
+#endif
         case TRAN_PORCUPINE:
             text += "You " + verb + " a porcupine.";
             break;
