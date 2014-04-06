@@ -431,7 +431,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_FLAME_TONGUE:
-        beam.name     = "flame";
+        beam.name     = "flame tongue";
         beam.damage   = dice_def(3, 3 + power / 12);
         beam.colour   = RED;
         beam.flavour  = BEAM_FIRE;
@@ -931,7 +931,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_ENSNARE:
-        beam.name     = "ensnaring beam";
+        beam.name     = "stream of webbing";
         beam.colour   = WHITE;
         beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_ENSNARE;

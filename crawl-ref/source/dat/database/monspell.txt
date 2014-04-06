@@ -73,14 +73,6 @@ branch summon cast prefix
 
 @The_monster@ calls forth creatures from
 %%%%
-Flame Tongue cast
-
-@The_monster@ issues a gush of flame.
-
-@The_monster@ emits a jet of flame.
-
-@The_monster@ lets out a tongue of flame.
-%%%%
 Lesser Healing cast real
 
 __NEXT
@@ -122,14 +114,6 @@ Symbol of Torment cast
 unseen Symbol of Torment cast
 
 @The_something@ calls on the powers of darkness!
-%%%%
-Holy Word cast
-
-@The_monster@ calls on the powers of Heaven!
-%%%%
-unseen Holy Word cast
-
-@The_something@ calls on the powers of Heaven!
 %%%%
 Orb of Destruction orb spider cast
 
@@ -267,7 +251,7 @@ Frances cast
 
 @The_monster@ whispers indecipherable words.
 
-@The_monster@ chants phrases taken from a Devil's mouth.
+@The_monster@ chants phrases taken from a devil's mouth.
 
 @The_monster@ screams a word of power!
 %%%%
@@ -328,24 +312,21 @@ Berserker Rage Rupert cast
 
 @The_monster@ roars madly and goes into a rage!
 %%%%
-Paralyse Rupert cast
+Rupert cast targeted
 
-@The_monster@ roars, making @target@ freeze in fear.
-%%%%
-Confuse Rupert cast
+@The_monster@ roars wildly @at@ @target@.
 
-# Hrm, this could use more variables to sound acceptable.
-@The_monster@ yells loudly, causing @target@ to lose all wits.
+@The_monster@ yells loudly @at@ @target@.
 %%%%
 Ensnare Arachne cast
 
-@The_monster@ points her staff @at@ @target@, shooting a whitish beam.
+@The_monster@ points her staff @at@ @target@, shooting a stream of webbing.
 
-@The_monster@'s staff shoots out a whitish beam.
+@The_monster@'s staff shoots out a stream of webbing.
 %%%%
 unseen Ensnare Arachne cast
 
-A whitish beam shoots out from seemingly nowhere.
+A stream of webbing shoots out from thin air.
 %%%%
 ########################################################################
 # Individual monsters
