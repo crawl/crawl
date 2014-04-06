@@ -1205,13 +1205,11 @@ bool mons_is_demonspawn(monster_type mc)
 bool mons_is_conjured(monster_type mc)
 {
     return mons_is_projectile(mc)
+           || mons_is_avatar(mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_BALL_LIGHTNING
-           || mc == MONS_BATTLESPHERE
-           || mc == MONS_SPECTRAL_WEAPON
-           || mc == MONS_FULMINANT_PRISM
-           || mc == MONS_GRAND_AVATAR;
+           || mc == MONS_FULMINANT_PRISM;
 }
 
 // Returns true if the given monster's foe is also a monster.
