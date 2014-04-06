@@ -65,7 +65,9 @@ enum ability_type
     ABIL_HELLFIRE,
     // Tengu, Draconians
     ABIL_FLY,
+#if TAG_MAJOR_VERSION == 34
     ABIL_WISP_BLINK,
+#endif
     ABIL_STOP_FLYING,
     // Mummies
     ABIL_MUMMY_RESTORATION,

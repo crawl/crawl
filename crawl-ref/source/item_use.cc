@@ -2690,12 +2690,6 @@ void read_scroll(int slot)
         return;
     }
 
-    if (you.form == TRAN_WISP)
-    {
-        crawl_state.zero_turns_taken();
-        return mpr("You have no means to unroll scrolls.");
-    }
-
     if (silenced(you.pos()))
     {
         mpr("Magic scrolls do not work when you're silenced!");
