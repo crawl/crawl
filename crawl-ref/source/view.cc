@@ -191,6 +191,11 @@ static string _desc_mons_type_map(map<monster_type, int> types)
     return make_stringf("%s come into view.", message.c_str());
 }
 
+static monster_type _mons_genus_keep_uniques(monster_type mc)
+{
+    return mons_is_unique(mc) ? mc : mons_genus(mc);
+}
+
 /*
  * Monster list simplification
  *
@@ -226,7 +231,7 @@ static void _genus_factoring(map<monster_type, int> &types,
     it = types.begin();
     do
     {
-        if (mons_genus(it->first) != genus)
+        if (_mons_genus_keep_uniques(it->first) != genus)
         {
             ++it;
             continue;
@@ -292,7 +297,7 @@ void update_monsters_in_view()
         {
             const monster_type type = monsters[i]->type;
             types[type]++;
-            genera[mons_genus(type)]++;
+            genera[_mons_genus_keep_uniques(type)]++;
         }
 
         if (size == 1)
