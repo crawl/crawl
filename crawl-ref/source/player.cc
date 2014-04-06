@@ -523,8 +523,8 @@ bool player_likes_water(bool permanently)
 
 bool player_likes_lava(bool permanently)
 {
-    return species_likes_lava(you.species)
-           || (!permanently && form_likes_lava());
+    return (species_likes_lava(you.species) || !permanently)
+           && form_likes_lava();
 }
 
 bool player_can_open_doors()

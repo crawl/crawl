@@ -134,8 +134,11 @@ bool form_likes_water(transformation_type form)
 bool form_likes_lava(transformation_type form)
 {
     // Lava orcs can only swim in non-phys-change forms.
+    // However, ice beast & statue form will melt back to lava, so they're OK
     return you.species == SP_LAVA_ORC
-           && !form_changed_physiology(form);
+           && (!form_changed_physiology(form)
+               || form == TRAN_ICE_BEAST
+               || form == TRAN_STATUE);
 }
 
 bool form_can_butcher(transformation_type form)
