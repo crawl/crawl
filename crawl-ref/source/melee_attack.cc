@@ -2109,7 +2109,7 @@ void melee_attack::set_attack_verb()
             else if (damage_done < HIT_STRONG)
                 attack_verb = "bite";
             else
-                attack_verb = coinflip() ? "maul" : "trample";
+                attack_verb = "maul";
             break;
         case TRAN_WISP:
             if (damage_done < HIT_WEAK)
