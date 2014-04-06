@@ -143,12 +143,6 @@ bool form_likes_lava(transformation_type form)
                || form == TRAN_STATUE);
 }
 
-bool form_can_butcher(transformation_type form)
-{
-    return form != TRAN_WISP
-        && form != TRAN_FUNGUS;
-}
-
 // Used to mark transformations which override species intrinsics.
 bool form_changed_physiology(transformation_type form)
 {

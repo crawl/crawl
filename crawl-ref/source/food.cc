@@ -412,13 +412,6 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
-    if (!form_can_butcher(you.form))
-    {
-        mprf("You can't %s in your present form.",
-             bottle_blood ? "bottle blood" : "butcher");
-        return false;
-    }
-
     bool wants_any = you.has_spell(SPELL_SIMULACRUM)
                   || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
 
