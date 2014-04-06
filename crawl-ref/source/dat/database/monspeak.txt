@@ -1811,8 +1811,6 @@ sword." @player_only@
 
 @The_monster@ says, "No maze can contain me."
 
-@The_monster@ screams @at_foe@, "That wizard's curse has only increased my power!"
-
 @The_monster@ chants a prayer to Makhleb.
 
 @The_monster@ says @to_foe@, "Your valuables will do nicely in my
@@ -1828,9 +1826,7 @@ WARN:@The_monster@ chants and is briefly shrouded in fire.
 WARN:@The_monster@'s eyes glow. You hear demonic laughter.
 
 @The_monster@ says, "{{
-    if you.skill("Hexes") >= 5 then
-      return "Your hexes are useless. I'm stronger than any curse."
-    elseif you.skill("Spellcasting") >= 5 then
+    if you.skill("Spellcasting") >= 5 then
       return "Ah, a wizard! I'll enjoy hearing you beg for your life."
     else
       return "You're no warrior. You fight like a peasant!"

@@ -42,9 +42,9 @@ Cocytus. His strength is legendary.
 Arachne
 
 Once a talented human weaver, Arachne was cursed by being transformed into her
-present form: half-human, half-spider.
-
-Now thousands of years old, she has learned magic and quite a few other tricks.
+present form: half-human, half-spider. Her sympathies now lie with the inhuman
+residents of her new home, and she's eager to dispose of any who would threaten
+them.
 %%%%
 Asmodeus
 
@@ -52,14 +52,11 @@ One of the arch-demons who dwell in the depths of Hell, wreathed in fire.
 %%%%
 Asterion
 
-Once a king infamous for waging bloodthirsty campaigns, Asterion was
-transformed into a horrible minotaur by the curse of a clever wizard-for-hire.
-Shunned and exiled from his land, he now wanders the dungeon clothed in
-tattered finery, hoping to establish a new kingdom in its depths by any means
-necessary.
-
-These aspirations are appreciated by Makhleb, who has granted the minotaur
-destructive magic and the aid of demonic weaponry.
+Once a king infamous for waging bloodthirsty campaigns, Asterion was exiled to
+the depths of the dungeon for his crimes. Here he lurks in his tattered finery,
+dreaming of a new kingdom. In his lust for power, the minotaur king turned to
+the worship of Makhleb, and Makhleb has rewarded him with horrifying
+destructive might.
 %%%%
 Azrael
 
@@ -140,11 +137,9 @@ killing hapless adventurers with his expensive flail and quick wit.
 %%%%
 the Enchantress
 
-A beautiful spriggan woman, the ruler of spriggans who live here. She wears an
-opalescent outfit made of dragon skin that shimmers with all colours.
-
-The air around her shows hints of many powerful enchantment spells she cast on
-herself.
+First and most fearful of her kind, the Enchantress rules over the spriggans of
+the dungeon. She wears an opalescent outfit made of dragon skin that shimmers
+with many colours.
 %%%%
 Ereshkigal
 
@@ -260,7 +255,8 @@ decaying, and half-undead herself.
 %%%%
 Khufu
 
-An incredibly powerful emperor on the way to godhood.
+An incredibly powerful emperor on the way to godhood. He died quite some time
+ago, but he sees no reason why that should stop him.
 %%%%
 Kirke
 
@@ -269,10 +265,10 @@ to join her herd!
 %%%%
 the Lernaean hydra
 
-An ancient, outsized serpent-like water beast that possesses numerous heads.
-The poets mention more heads than vase-painters can paint, poisonous venom
-coming out of its eyes, and that this hydra is a guardian of an entrance to the
-Underworld. What of this is true, you do not know.
+A huge beast, mightiest of hydras, infamous in myth and legend. It flows
+through the water faster than a human can run, swatting aside trees as though
+they were matchsticks. Its many heads slaver and gnash constantly as it hunts
+for prey to slake its bottomless appetite.
 %%%%
 Lom Lobon
 
@@ -294,8 +290,8 @@ wanders the halls of the dungeon, seeking other adventurers to share her fate.
 Mara
 
 This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers.
-He is capable of creating intricately detailed illusions, so real they can do a
-good part of what the creature depicted could.
+He is capable of creating intricately detailed illusions, so real that they are
+almost as deadly as the creatures they impersonate.
 %%%%
 Margery
 
@@ -339,7 +335,7 @@ A weirdly glowing figure, dancing through the twisted air of Pandemonium.
 %%%%
 Murray
 
-A demonic skull rolling along the dungeon floor.
+A demonic skull rolling along the ground.
 %%%%
 Natasha
 
@@ -356,11 +352,13 @@ be seen again.
 %%%%
 Nergalle
 
-A withered sorceress, exceptionally cruel even by orc standards.
+A withered sorceress, exceptionally cruel even by orc standards. The living
+fear her; the dead obey her every command. She has a soft spot for the latter.
 %%%%
 Nessos
 
-A black centaur warrior with a malicious look in his eyes.
+A centaur warrior, skilled at warfare and deceit. He slew a mighty hydra, and
+now its deadly blood drips, still-fuming, from his arrows.
 %%%%
 Nikola
 
@@ -378,7 +376,7 @@ Pikel
 
 While kobolds are normally slaves, Pikel's rough life, selfish ambition and
 large stature have caused him to rise up and become a slaver himself. He is on
-his way to the Orcish Mines to sell his wares, a selection of timid humans that
+his way to the Orcish Mines to sell his wares, a selection of timid humans who
 cower with every crack of his whip.
 %%%%
 Polyphemus
@@ -388,9 +386,7 @@ an undying fervor through his single massive eye.
 %%%%
 Prince Ribbit
 
-A handsome prince before he was cursed, he now adventures for a cure. On the
-top of his head he wears a crown tilted jauntily to one side. How it still
-stays in place even after his transformation is a mystery.
+A frog of unusual size, with a tiny crown perched incongruously atop his head.
 %%%%
 Psyche
 
@@ -404,7 +400,7 @@ You feel a lump in the pit of your stomach.
 %%%%
 Roxanne
 
-A strikingly realistic sapphire statue of a famous earth mage, who disappeared
+A strikingly realistic sapphire statue of a famous earth mage who disappeared
 after a catastrophic spell failure. She is clutching a book.
 %%%%
 Rupert
@@ -447,8 +443,8 @@ after all.
 %%%%
 Tiamat
 
-A powerful dragon with mighty wings. Her scales seem to shimmer and change
-colour as you watch.
+The earthly avatar of Tiamat, deity of dragonkind, here incarnated as a mighty
+draconian warrior. Her scales seem to shimmer and change colour as you watch.
 %%%%
 Urug
 
@@ -490,9 +486,8 @@ by the nightmarish cold of Cocytus.
 %%%%
 the Serpent of Hell dis
 
-A towering beast with an army's worth of swords for teeth. Each scale is a
-shield with a razored edge. It watches you through a pair of featureless chrome
-spheres.
+A towering beast with an army's worth of swords for teeth. Each of its scales is
+a shield with a razored edge.
 %%%%
 the Serpent of Hell tartarus
 
