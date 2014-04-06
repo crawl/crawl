@@ -263,12 +263,10 @@ xxxy.%...yxxxxx
 ENDMAP
 
 ##############################################################################
-# Otherwise known as grunt_what_the_hellephant.
 NAME: grunt_hell_horde
 TAGS: nolayout_encompass mini_float uniq_hell_entry_high
 : hell_entry_feature(_G, 'O')
 NSUBST: + = 1:+ / 1:+x / *:x
-KMONS: O = hellephant
 MONS: hell hog / hell hound, hell hound / nothing
 : hell_entry_tier(_G, "high")
 MAP
