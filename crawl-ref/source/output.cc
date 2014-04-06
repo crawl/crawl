@@ -2041,15 +2041,9 @@ static vector<formatted_string> _get_overview_stats()
                                 || you.berserk();
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
     const bool boosted_ac  = you.duration[DUR_ICY_ARMOUR]
-                                || player_stoneskin();
+                                || player_stoneskin()
+                                || player_icemail_armour_class();
     const bool boosted_ev  = you.duration[DUR_PHASE_SHIFT]
-                                || you.duration[DUR_AGILITY];
-    const bool boosted_str = you.duration[DUR_DIVINE_STAMINA]
-                                || you.duration[DUR_MIGHT]
-                                || you.duration[DUR_BERSERK];
-    const bool boosted_int = you.duration[DUR_DIVINE_STAMINA]
-                                || you.duration[DUR_BRILLIANCE];
-    const bool boosted_dex = you.duration[DUR_DIVINE_STAMINA]
                                 || you.duration[DUR_AGILITY];
 
     if (!player_rotted())
@@ -2113,72 +2107,42 @@ static vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
     cols1.add_formatted(1, buf, false);
 
+    const char* str_col = colour_to_str(_get_stat_colour(STAT_STR)).c_str();
     if (you.strength(false) == you.max_strength())
     {
-        if (boosted_str)
-        {
-            snprintf(buf, sizeof buf, "Str <lightblue>%2d</lightblue>",
-                     you.strength(false));
-        }
-        else
-            snprintf(buf, sizeof buf, "Str %2d", you.strength(false));
+        snprintf(buf, sizeof buf, "Str <%s>%2d</%s>",
+                 str_col, you.strength(false), str_col);
     }
     else
     {
-        if (boosted_str)
-        {
-            snprintf(buf, sizeof buf, "Str <lightblue>%2d (%d)</lightblue>",
-                     you.strength(false), you.max_strength());
-        }
-        else
-            snprintf(buf, sizeof buf, "Str <yellow>%2d</yellow> (%d)",
-                     you.strength(false), you.max_strength());
+        snprintf(buf, sizeof buf, "Str <%s>%2d (%d)</%s>",
+                 str_col, you.strength(false), you.max_strength(), str_col);
     }
     cols1.add_formatted(2, buf, false);
 
+    const char* int_col = colour_to_str(_get_stat_colour(STAT_INT)).c_str();
     if (you.intel(false) == you.max_intel())
     {
-        if (boosted_int)
-        {
-            snprintf(buf, sizeof buf, "Int <lightblue>%2d</lightblue>",
-                     you.intel(false));
-        }
-        else
-            snprintf(buf, sizeof buf, "Int %2d", you.intel(false));
+        snprintf(buf, sizeof buf, "Int <%s>%2d</%s>",
+                 int_col, you.intel(false), int_col);
     }
     else
     {
-        if (boosted_int)
-        {
-            snprintf(buf, sizeof buf, "Int <lightblue>%2d (%d)</lightblue>",
-                     you.intel(false), you.max_intel());
-        }
-        else
-            snprintf(buf, sizeof buf, "Int <yellow>%2d</yellow> (%d)",
-                     you.intel(false), you.max_intel());
+        snprintf(buf, sizeof buf, "Int <%s>%2d (%d)</%s>",
+                 int_col, you.intel(false), you.max_intel(), int_col);
     }
     cols1.add_formatted(2, buf, false);
 
+    const char* dex_col = colour_to_str(_get_stat_colour(STAT_DEX)).c_str();
     if (you.dex(false) == you.max_dex())
     {
-        if (boosted_dex)
-        {
-            snprintf(buf, sizeof buf, "Dex <lightblue>%2d</lightblue>",
-                     you.dex(false));
-        }
-        else
-            snprintf(buf, sizeof buf, "Dex %2d", you.dex(false));
+        snprintf(buf, sizeof buf, "Dex <%s>%2d</%s>",
+                 dex_col, you.dex(false), dex_col);
     }
     else
     {
-        if (boosted_dex)
-        {
-            snprintf(buf, sizeof buf, "Dex <lightblue>%2d (%d)</lightblue>",
-                     you.dex(false), you.max_dex());
-        }
-        else
-            snprintf(buf, sizeof buf, "Dex <yellow>%2d</yellow> (%d)",
-                     you.dex(false), you.max_dex());
+        snprintf(buf, sizeof buf, "Dex <%s>%2d (%d)</%s>",
+                 dex_col, you.dex(false), you.max_dex(), dex_col);
     }
     cols1.add_formatted(2, buf, false);
 
