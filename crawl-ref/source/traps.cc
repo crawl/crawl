@@ -2023,12 +2023,7 @@ bool ensnare(actor *fly)
     if (fly->body_size() >= SIZE_GIANT)
     {
         if (you.can_see(fly))
-        {
-            if (fly->is_player())
-                mpr("A web splats on you, sticky and dirtying but otherwise harmless.");
-            else
-                mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
-        }
+            mprf("A web harmlessly splats on %s.", fly->name(DESC_THE).c_str());
         return false;
     }
 
