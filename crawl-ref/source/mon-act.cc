@@ -3649,7 +3649,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     _escape_water_hold(mons);
 
     if (grd(mons->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
-        && !monster_habitable_grid(mons, DNGN_DEEP_WATER))
+        && !monster_habitable_grid(mons, DNGN_DEEP_WATER)
+        && !mons->is_wall_clinging())
     {
         // er, what?  Seems impossible.
         mons->seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
