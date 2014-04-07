@@ -337,7 +337,8 @@ description screens.
 tutorial3 battle
 
 Once you've successfully managed to poison a monster, it is sometimes best to
-retreat and let the poison do the work. Also retreat to heal, if necessary.
+retreat and let the poison do the work. Don't forget to retreat to heal too, if
+necessary.
 %%%%
 tutorial3 downstairs
 
@@ -377,7 +378,7 @@ You can evoke a wand with <input>$cmd[CMD_EVOKE]</input><localtiles> or with
 %%%%
 tutorial3 wand_digging
 
-A wand of digging can destroy certain kinds of walls. Use
+A wand of digging can destroy rock walls. Use
 <input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input> <localtiles>or
 <input>mouseover</input>/<input>right click</input> </localtiles>to check wall
 types.
@@ -485,7 +486,7 @@ In this lesson you're going to learn how to memorize and cast spells.
 %%%%
 tutorial4 spellbook
 
-You can memorise a spell from carried spellbooks with
+You can memorise a spell from a carried spellbook with
 <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> or by
 <input>clicking</input> on the memorisation tab and selecting the spell
 tile</localtiles>. At experience level 1, only level 1 spells are available to
