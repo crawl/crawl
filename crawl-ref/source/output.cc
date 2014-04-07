@@ -701,7 +701,7 @@ static void _print_stats_hp(int x, int y)
         EP_Bar.draw(19, y, you.hp, you.hp_max);
     else
 #endif
-        HP_Bar.draw(19, y, you.hp, you.hp_max, false, you.hp - poison_survival());
+        HP_Bar.draw(19, y, you.hp, you.hp_max, false, you.hp - max(0, poison_survival()));
 }
 
 static short _get_stat_colour(stat_type stat)
