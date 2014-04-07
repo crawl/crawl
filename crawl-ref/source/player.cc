@@ -239,13 +239,10 @@ static bool _check_moveto_dangerous(const coord_def& p, const string& msg,
 
     if (msg != "")
         mpr(msg.c_str());
-    else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
-        mpr("You cannot swim in your current form.");
-    else if (you.species == SP_LAVA_ORC && feat_is_lava(env.grid(p))
-             && is_feat_dangerous(env.grid(p)))
-    {
+    else if (species_likes_water(you.species) && feat_is_water(env.grid(p)))
+        mpr("You cannot enter water in your current form.");
+    else if (species_likes_lava(you.species) && feat_is_lava(env.grid(p)))
         mpr("You cannot enter lava in your current form.");
-    }
     else
         canned_msg(MSG_UNTHINKING_ACT);
     return false;
