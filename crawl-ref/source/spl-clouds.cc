@@ -544,6 +544,10 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
                     5 + random2avg(12 + div_rand_round(pow * 3, 4), 3),
                     caster);
     }
+    mprf("%s %s a blast of %s!",
+         caster->name(DESC_THE).c_str(),
+         caster->conj_verb("create").c_str(),
+         cloud_type_name(cloud).c_str());
 
     return SPRET_SUCCESS;
 }
