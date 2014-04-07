@@ -5308,14 +5308,14 @@ bool poison_is_lethal()
         return get_player_poisoning();
     if (get_player_poisoning() < you.hp)
         return false;
-    return !poison_survival();
+    return (poison_survival() <= 0);
 }
 
 // Try to predict the minimum value of the player's health in the coming
 // turns given the current poison amount and regen rate.
 int poison_survival()
 {
-    if (!get_player_poisoning() || you.hp <= 0)
+    if (!get_player_poisoning())
         return you.hp;
     const int rr = player_regen();
     const bool chei = (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0));
@@ -5340,7 +5340,7 @@ int poison_survival()
 
     if (rr == 0)
     {
-        return max(0, min(you.hp, you.hp - amount / 1000 + regen_beats_poison / 1000));
+        return min(you.hp, you.hp - amount / 1000 + regen_beats_poison / 1000);
     }
 
     // Calculate the amount of time until regen starts to beat poison.
@@ -5374,7 +5374,7 @@ int poison_survival()
         prediction1 -= (amount / 1000 - test_amount1 / 1000 - (predicted_regen - 1));
     prediction2 -= (amount / 1000 - test_amount2 / 1000 - predicted_regen);
 
-    return max(0, min(prediction1, prediction2));
+    return min(prediction1, prediction2);
 }
 
 bool miasma_player(string source, string source_aux)
