@@ -1907,7 +1907,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<w>Intelligence</w> makes it easier to cast spells and "
                 "reduces the amount by which you hunger when you do so. "
                 "<w>Dexterity</w> increases your evasion "
-                "and makes it easier to dodge attacks or traps.\n";
+                "and stealth.\n";
         break;
 
     case HINT_YOU_ENCHANTED:
@@ -2004,14 +2004,13 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_MULTI_PICKUP:
-        text << "There are a lot of items here. You can pick them up one by one, "
-                "but you can also choose them from a menu: type <w>%</w><w>%</w> "
+        text << "There are a lot of items here. You choose what to pick up "
+                "from a menu: type <w>%</w> "
 #ifdef USE_TILE
                 "or <w>click</w> on the player doll "
 #endif
                 "to enter the pickup menu. To leave the menu, confirm your "
                 "selection with <w>Enter</w>.";
-        cmd.push_back(CMD_PICKUP);
         cmd.push_back(CMD_PICKUP);
         break;
 
@@ -3018,10 +3017,10 @@ string hints_skills_info()
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
     string broken = "This screen shows the skill set of your character. "
         "The number next to the skill is your current level, the higher the "
-        "better. The <brown>brown percent value</brows> shows how much "
+        "better. The <brown>brown percent value</brown> shows how much "
         "experience is allocated to go towards that skill. "
         "You can toggle which skills to train by "
-        "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
+        "pressing their slot letters. A <darkgrey>grey</darkgrey> skill "
         "will not be trained and ease the training of others. "
         "Press <w>!</w> to learn about skill training and <w>?</w> to read "
         "your skills' descriptions.";
