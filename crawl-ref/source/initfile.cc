@@ -1639,13 +1639,19 @@ game_options::game_options()
     lang = LANG_EN;
     lang_name = 0;
 #ifndef TARGET_OS_WINDOWS
-    set_lang(getenv("LC_ALL"))
-    || set_lang(getenv("LC_MESSAGES"))
-    || set_lang(getenv("LANG"));
+    if (Version::ReleaseType == VER_ALPHA)
+    {
+        set_lang(getenv("LC_ALL"))
+        || set_lang(getenv("LC_MESSAGES"))
+        || set_lang(getenv("LANG"));
+    }
 #elif defined USE_TILE_LOCAL
-    char ln[30];
-    if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
-        set_lang(ln);
+    if (Version::ReleaseType == VER_ALPHA)
+    {
+        char ln[30];
+        if (GetLocaleInfoA(LOCALE_USER_DEFAULT, LOCALE_SENGLANGUAGE, ln, sizeof(ln)))
+            set_lang(ln);
+    }
 #endif
     seed = 0;
     reset_options();
