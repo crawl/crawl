@@ -5322,6 +5322,7 @@ int poison_survival()
     const bool chei = (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0));
     const bool dd = (you.species == SP_DEEP_DWARF);
     const int amount = you.duration[DUR_POISONING];
+    const double full_aut = _poison_dur_to_aut(amount);
     // Calculate the poison amount at which regen starts to beat poison.
     double min_poison_rate = 0.25;
     if (dd)
@@ -5337,21 +5338,44 @@ int poison_survival()
         if (chei)
             regen_beats_poison = 3 * regen_beats_poison / 2;
     }
-    // HP is already going up, but subtract 1 in case poison happens before
-    // regen
-    if (regen_beats_poison >= amount)
-        return you.hp - 1;
+
+    if (rr == 0)
+    {
+        return max(0, min(you.hp, you.hp - amount / 1000 + regen_beats_poison / 1000));
+    }
 
     // Calculate the amount of time until regen starts to beat poison.
-    double poison_duration = _poison_dur_to_aut(amount)
-                             - _poison_dur_to_aut(regen_beats_poison);
+    double poison_duration = full_aut - _poison_dur_to_aut(regen_beats_poison);
+
+    if (poison_duration < 0)
+        poison_duration = 0;
     if (chei)
         poison_duration *= 1.5;
 
-    return max(0, you.hp - amount / 1000
-                         + regen_beats_poison / 1000
-                         + (int) ((((double) you.hit_points_regeneration)
-                                   - 50.0 + rr * poison_duration / 10.0) / 100.0));
+    // Worst case scenario is right before natural regen gives you a point of
+    // HP, so consider the nearest two such points.
+    const int predicted_regen = (int) ((((double) you.hit_points_regeneration) + rr * poison_duration / 10.0) / 100.0);
+    double test_aut1 = (100.0 * predicted_regen - 1.0 - ((double) you.hit_points_regeneration)) / (rr / 10.0);
+    double test_aut2 = (100.0 * predicted_regen + 99.0 - ((double) you.hit_points_regeneration)) / (rr / 10.0);
+
+    if (chei)
+    {
+        test_aut1 /= 1.5;
+        test_aut2 /= 1.5;
+    }
+
+    const int test_amount1 = _poison_aut_to_dur(full_aut - test_aut1);
+    const int test_amount2 = _poison_aut_to_dur(full_aut - test_aut2);
+
+    int prediction1 = you.hp;
+    int prediction2 = you.hp;
+
+    // Don't look backwards in time.
+    if (test_aut1 > 0)
+        prediction1 -= (amount / 1000 - test_amount1 / 1000 - (predicted_regen - 1));
+    prediction2 -= (amount / 1000 - test_amount2 / 1000 - predicted_regen);
+
+    return max(0, min(prediction1, prediction2));
 }
 
 bool miasma_player(string source, string source_aux)
