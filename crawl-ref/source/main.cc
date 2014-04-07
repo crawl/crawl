@@ -2919,11 +2919,6 @@ static void _decrement_durations()
         }
     }
 
-    dec_disease_player(delay);
-
-    if (you.duration[DUR_POISONING])
-        handle_player_poison(delay);
-
     if (you.duration[DUR_DEATHS_DOOR])
     {
         if (you.hp > allowed_deaths_door_hp())
@@ -3387,6 +3382,9 @@ static void _player_reacts()
     }
 
     _regenerate_hp_and_mp(capped_time);
+    dec_disease_player(capped_time);
+    if (you.duration[DUR_POISONING])
+        handle_player_poison(capped_time);
     recharge_rods(you.time_taken, false);
 
     // Reveal adjacent mimics.
