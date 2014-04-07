@@ -1188,8 +1188,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
     const dungeon_feature_type feat = grd(you.pos());
 
     if (grants_flight && removing_ends_flight
-        && (feat == DNGN_LAVA && !player_likes_lava()
-            || feat == DNGN_DEEP_WATER && !player_likes_water()))
+        && is_feat_dangerous(feat, false, true))
     {
         if (!quiet)
             mpr("Losing flight right now would be fatal!");
