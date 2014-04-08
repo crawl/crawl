@@ -92,7 +92,7 @@ NAME:   shop_statue
 TAGS:   allow_dup extra shop no_rtele_into
 KFEAT:  O = any shop
 MAP
-.G..O..G.
+@G..O..G@
 ENDMAP
 
 NAME:   shop_coins
@@ -139,13 +139,13 @@ NAME: nicolae_shop_statue_plus
 TAGS: allow_dup extra shop no_rtele_into
 KFEAT: O = any shop
 MAP
-   .
+   @
    G
    .
-.G.O.G.
+@G.O.G@
    .
    G
-   .
+   @
 ENDMAP
 
 NAME: nicolae_shop_stone
