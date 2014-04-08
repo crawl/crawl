@@ -355,6 +355,8 @@ class ResourceIndex():
                 self.default_resources.append(basename)
             elif os.path.isdir(f) and lang_re.match(f):
                 self.default_languages.append(f)
+                if not os.path.exists(f[:2]):
+                    os.makedirs(f[:2])
 
         if options.source:
             self.languages = ['en']
@@ -707,7 +709,7 @@ class TxtFile(ResourceFile):
         if lang:
             self.entries = dict()
             self.source_res = txt_files[('', res)]
-            self.lang_dir = 'en' if lang == 'en' else lang[:2]
+            self.lang_dir = lang[:2]
         else:
             self.entries = OrderedDict()
             self.source_res = self
