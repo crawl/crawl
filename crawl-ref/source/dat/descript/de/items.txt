@@ -4,13 +4,6 @@ amulet of conservation
 Dieses Amulett bewahrt manche Besitztümer seines Trägers vor vollständiger
 Zerstörung, ist aber nicht unfehlbar.
 %%%%
-amulet of faith
-
-Ein Talisman, der die Aufmerksamkeit der Götter auf seinen Träger zu lenken
-vermag. Dies erleichtert es, deiner momentanen Gottheit gefällig zu sein, aber
-Fehltritte wird sie seltener verzeihen. Das Ablegen des Amulett wird deine
-göttliche Gunst deutlich verringern.
-%%%%
 amulet of inaccuracy
 
 Dieses Amulett macht seinen Träger weniger Zielgenau im Nahkampf und wenn
@@ -446,10 +439,6 @@ Ein Paar Stiefel.
 pair of gloves
 
 Ein Paar Handschuhe
-%%%%
-pear
-
-Eine köstliche und saftige Frucht.
 %%%%
 pearl dragon armour
 

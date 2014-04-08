@@ -115,10 +115,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 コマンド、オプション、その他の一覧表を表示する。
 %%%%
-CMD_CHARACTER_DUMP
-
-進行状態をダンプに出力
-%%%%
 CMD_AUTOFIGHT
 
 近くの敵モンスターとの自動戦闘

@@ -80,11 +80,6 @@ tutorial2 newlevel
 Pamiętaj: Możesz przeczytać stare wiadomości używając
 <input>$cmd[CMD_REPLAY_MESSAGES]</input>.
 %%%%
-tutorial3 battle
-
-Kiedy już uda ci się zatruć przeciwnika, lepiej jest czasami oddalić się i
-pozwolić truciźnie działać. Oddal się także, by się uleczyć jeśli to potrzebne
-%%%%
 tutorial4 start
 
 Na tej lekcji dowiesz się jak nauczyć się zaklęć i jak ich używać.

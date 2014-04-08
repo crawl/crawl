@@ -331,12 +331,6 @@ sélectionnez-la dans votre inventaire
 dans le panneau d'inventaire.</localtiles> Notez que toutes les commandes
 d'objet fonctionnent également à partir de leur écran de description.
 %%%%
-tutorial3 battle
-
-Une fois que vous avez réussi à empoisonner un adversaire, il est parfois
-préférable de se replier et de laisser le poison agir. Pensez aussi à vous
-replier lorsque vous avez besoin de vous soigner.
-%%%%
 tutorial3 downstairs
 
 Bien joué ! Si nécessaire, reposez vous avec <input>$cmd[CMD_REST]</input>,
@@ -372,13 +366,6 @@ tutorial3 wand_fire
 Vous pouvez évoquer une baguette avec <input>$cmd[CMD_EVOKE]</input>
 <localtiles> ou avec <input>un clic de souris</input> dans le panneau
 d'inventaire</localtiles>.
-%%%%
-tutorial3 wand_digging
-
-Une baguette de forage peut détruire certains types de murs. Utilisez
-<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input> <localtiles>ou
-<input>passez la souris dessus</input>/<input>clic droit</input></localtiles>
-pour vérifier le type de murs.
 %%%%
 tutorial3 amulet
 
@@ -478,15 +465,6 @@ tutorial4 start
 
 Au cours de cette leçon vous allez apprendre comment mémoriser et jeter des
 sorts.
-%%%%
-tutorial4 spellbook
-
-Vous pouvez mémoriser un sort figurant dans un des grimoires que vous possédez
-avec <input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> ou en
-<input>cliquant</input> sur l'onglet de mémorisation et en sélectionnant
-l'icône du sort</localtiles>. Au niveau 1 d'expérience, vous n'avez accès
-qu'aux sorts de niveau 1. Cela évoluera à mesure que vous gagnerez de
-l'expérience.
 %%%%
 tutorial4 spellcasting
 

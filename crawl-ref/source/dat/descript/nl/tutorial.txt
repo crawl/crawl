@@ -81,12 +81,6 @@ tutorial3 autopickup
 Sommige voorwerpen<tiles>, aangeduid met een groen kadertje,</tiles> worden
 automatisch opgepakt als je erop stapt.
 %%%%
-tutorial3 battle
-
-Wanneer je erin slaagt een monster te vergiftigen, is het vaak een goed idee om
-terug te trekken en het vergif te laten inwerken. Trek ook terug om te genezen,
-wanneer nodig.
-%%%%
 tutorial3 gold
 
 Goud kan je besteden in winkels. Het is gewichtloos, en je kan het niet

@@ -4,13 +4,6 @@ amulet of conservation
 Ten amulet ochrania zwoje i eliksiry przed zniszczeniem, niestety nie jest
 niezawodny.
 %%%%
-amulet of faith
-
-Ten amulet jest potężnym talizmanem pozwalającym swemu nosicielowi być łatwiej
-zauważonym przez bogów. Zapewnia to większe dary, ale także zwiększa karę za
-grzechy jakich się dopuszczasz. Zdjęcie tego amuletu powoduje utratę sporej
-części bożej łaski.
-%%%%
 amulet of inaccuracy
 
 Ten amulet mocno utrudnia swemu nosicielowi celowanie — tak w walce wręcz,
@@ -395,10 +388,6 @@ Para butów — nic dodać, nic ująć.
 pair of gloves
 
 Para skórzanych rękawic.
-%%%%
-pear
-
-Smakowity, soczysty owoc.
 %%%%
 pearl dragon armour
 

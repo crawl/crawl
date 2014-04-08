@@ -4,12 +4,6 @@ amulet of conservation
 Tento amulet chrání některé předměty nositele před úplným zničením, ale ne
 zcela spolehlivě.
 %%%%
-amulet of faith
-
-Toto je amulet vyrobený k upoutání božské pozornosti k nositeli, následkem níž
-je snazší božstvo potěšit, ale zároveň snižuje toleranci božstva k prohřeškům,
-a při sundání odejme část božské přízně.
-%%%%
 amulet of rage
 
 Tento amulet umožňuje jeho nositeli pokusit se rozzuřit.
@@ -171,10 +165,6 @@ Pár bot.
 pair of gloves
 
 Pár rukavic.
-%%%%
-pear
-
-Chutné šťavnaté ovoce.
 %%%%
 piece of ambrosia
 

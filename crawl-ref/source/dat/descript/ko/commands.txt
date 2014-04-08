@@ -118,10 +118,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 명령어 목록과 옵션, 기타 등등을 열람한다.
 %%%%
-CMD_CHARACTER_DUMP
-
-캐릭터의 기록 저장
-%%%%
 CMD_AUTOFIGHT
 
 가장 가까이에 있는 적을 공격

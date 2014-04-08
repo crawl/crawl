@@ -31,10 +31,6 @@ pair of gloves
 
 Bir çift eldiven.
 %%%%
-pear
-
-Lezzetli bir sulu meyve.
-%%%%
 strawberry
 
 Küçük ama lezzetli bir kırmızı meyve.

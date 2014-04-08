@@ -329,13 +329,6 @@ tutorial3 wand_fire
 你可以按<input>$cmd[CMD_EVOKE]</input>来使用魔杖<localtiles>，
 也可以在物品栏中<input>鼠标点击</input></localtiles>。
 %%%%
-tutorial3 wand_digging
-
-挖掘魔杖可以破坏某些种类的墙壁。
-使用<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input>
-<localtiles>或<input>鼠标悬停</input>在墙上<input>右击</input></localtiles>
-来检视墙壁的种类。
-%%%%
 tutorial3 amulet
 
 你可以按<input>$cmd[CMD_WEAR_JEWELLERY]</input>

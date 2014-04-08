@@ -114,10 +114,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Komandų, pasirinkimų ir t.t. sąrašas
 %%%%
-CMD_CHARACTER_DUMP
-
-Įrašyti veikėjo pažangą
-%%%%
 CMD_AUTOFIGHT
 
 Smogti artimiausiam monstrui
