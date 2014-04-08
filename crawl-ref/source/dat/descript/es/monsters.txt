@@ -193,10 +193,6 @@ Joseph
 
 Parece un mercenario.
 %%%%
-Khufu
-
-Un emperador increíblemente poderoso en pos de conseguir la divinidad.
-%%%%
 Lom Lobon
 
 Un antiguo y extrañamente sereno demonio. Te mira fríamente con el enorme y
@@ -246,19 +242,11 @@ Mnoleg
 Una figura extrañamente luminosa, danzando en los remolinos de aire del
 Pandemonio.
 %%%%
-Murray
-
-Un cráneo demoníaco rodando por el suelo.
-%%%%
 Nellie
 
 Una elefante muy inteligente que viajaba formando parte de un circo. Una noche
 oscura se escapó de su cadena y desapareció en el Pandemonio, para no ser vista
 nunca más.
-%%%%
-Nessos
-
-Un guerrero centauro negro con una mirada malintencionada en sus ojos.
 %%%%
 Nikola
 
@@ -272,26 +260,10 @@ Un relajado cultista en paz con la muerte, con un saludable bronceado y una voz
 sosegada. No le importa si eres tú o él quien muera — ambos posiblemente sería
 la mejor opción.
 %%%%
-Pikel
-
-Mientras que los kobolds son normalmente esclavos, la dura vida de Pikel, su
-ambición y su gran tamaño hizo que se rebelara y se convirtiera en un tratante
-de esclavos. Va de camino a las Minas Orcas para vender su mercancía, una
-selección de humanos temerosos que se acobardad a cada chasquido de su látigo.
-%%%%
 Polyphemus
 
 Un pastor cíclope, celoso guardián de su rebaño al que vigila con incansable
 fervor mediante su único ojo masivo.
-%%%%
-Prince Ribbit
-
-Un apuesto príncipe antes de que fuera maldecido, ahora, en busca de un remedio
-para su mal. Atravesando las salas a gran velocidad, frecuentemente desaparece
-de donde estaba y sale de la nada en otro sitio, normalmente para desgracia de
-algún aventurero que pase por allí. Sobre su cabeza puedes ver una corona que
-se inclina hacia uno de los lados como si estuviera dándose un paseo por la
-zona. El como se mantiene sobre la cabeza sin caerse es todo un misterio.
 %%%%
 Psyche
 
@@ -341,11 +313,6 @@ Un violento asesino que mata tanto por placer como por interés, Terence se vio
 obligado a esconderse después de que uno de sus trabajos le saliera torcido, y
 no puede permitir que alguien que le haya visto salga vivo del calabazo — hay
 una recompensa por su cabeza, después de todo.
-%%%%
-Tiamat
-
-Un poderoso dragón con unas potentes alas. Sus escamas parecen relucir y
-cambiar de color mientras las miras.
 %%%%
 Urug
 

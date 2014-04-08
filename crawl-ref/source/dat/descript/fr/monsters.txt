@@ -19,10 +19,18 @@ __(_suffix_examine
 %%%%
 Aizul
 
-Il fut le serpent gardien d'un trésor légendaire, déshonoré après que des
-voleurs l’eurent pillé pendant son sommeil. Maintenant il serpente dans le
-donjon, cherchant sa revanche contre tout apprenti pilleur. C'est un sorcier
+Il était le serpent gardien d'un trésor légendaire, mais fut déshonoré après
+que des voleurs l’eurent pillé pendant son sommeil. Maintenant il serpente dans
+le donjon, cherchant sa revanche contre tout apprenti pilleur. C'est un sorcier
 chevronné, mais il ne brille pas plus au corps-à-corps que ceux de son espèce.
+%%%%
+Antaeus
+
+Autrefois un Titan puissant et célèbre, son arrogance fut sa perte. Désormais
+mauvais et corrompu, il est devenu un puissant démon, qui règne sur les
+étendues gelés du Cocyte. Son gigantesque corps semble facile à atteindre ;
+malheureusement il semble aussi que toute attaque, sauf peut-être une très
+forte, le laisserait indemne.
 %%%%
 Asmodeus
 
@@ -109,15 +117,6 @@ Un frère jaloux de Sigmund (le plus jeune de neuf frères). Il n'a pas les
 facilités de Sigmund en magie mais compense grâce à un talent pour le combat et
 l'argent. Il meurt d'envie de prouver sa supériorité en tuant de malheureux
 aventuriers a l'aide de son coûteux fléau et de son esprit vif.
-%%%%
-the Enchantress
-
-Une belle femme spriggan, qui règne sur les spriggans vivant ici. Elle porte
-des vêtements opalescents fait de peau de dragon qui brillent de toute les
-couleurs
-
-L'air autour d'elle indiquent ses nombreux sorts d'enchantements puissants
-qu'elle se lance sur elle-même.
 %%%%
 Ereshkigal
 
@@ -215,18 +214,6 @@ Joseph
 
 Ressemble à un mercenaire.
 %%%%
-Khufu
-
-Un empereur incroyablement puissant sur le chemin de la divinisation.
-%%%%
-the Lernaean hydra
-
-Un ancien monstre, ressemblant a un serpent colossal et qui possède un certain
-nombre de têtes. Les poètes parlent de bien plus de têtes que les potiers
-peuvent peindre sur leur vases, du venin empoisonné giclant de ses yeux, et que
-cette hydre est la gardienne de l'entrée du monde souterrain. Ce qui est vrai
-de tout cela en revanche, vous l'ignorez.
-%%%%
 Lom Lobon
 
 Stoïque et impénétrable, Lom Lobon est un vieux démon tristement célèbre pour
@@ -246,13 +233,6 @@ décade. Lorsqu'elle a finalement émergée des Abysses, Louise est effectivemen
 devenue très puissante mais elle a aussi perdu la raison. Maintenant elle
 vagabonde dans le donjon, cherchant d'autres aventuriers afin qu'ils vivent sa
 destinée.
-%%%%
-Mara
-
-Ce démon grand et puissant est Mara, Seigneur des illusions, majestueux parmi
-les rêveurs. Il est capable de créer des illusions complexes et détaillées, si
-réelles qu'elles ont presque autant de capacités que les créatures qu'elles
-imitent.
 %%%%
 Margery
 
@@ -295,19 +275,11 @@ Mnoleg
 
 Une étrange figure brillante, dansant a travers l'air distordu du Pandémonium.
 %%%%
-Murray
-
-Un crane démoniaque qui roule sur le sol du donjon.
-%%%%
 Nellie
 
 Une éléphante très intelligente qui a voyagé avec une troupe de cirque. Lors
 d'une sombre nuit, elle s'est défaite de ses chaines et a disparue dans le
 Pandémonium, personne ne l'a revue depuis.
-%%%%
-Nessos
-
-Un guerrier centaure à la robe noire et au regard sournois.
 %%%%
 Nikola
 
@@ -321,25 +293,10 @@ Un cultiste détendu avec une voix saine et douce, cherchant la paix dans la
 mort. Il s'en fiche un peu que ça soit vous ou lui qui meure — « les deux »
 serait probablement la meilleure option.
 %%%%
-Pikel
-
-Alors que les kobolds sont normalement des esclaves, la rude vie de Pikel, son
-ambition égoïste et sa haute stature l'ont poussé à se relever et de devenir un
-esclavagiste. Il est sur le chemin des Mines Orques pour aller y vendre sa
-marchandise, une sélection d'humains craintifs qui se blottissent au moindre
-claquement de fouet.
-%%%%
 Polyphemus
 
 Un berger cyclope, il protège énormément son troupeau, qu'il regarde d'une
 ferveur impérissable a travers son unique œil massif.
-%%%%
-Prince Ribbit
-
-Un prince qui fut beau avant sa malédiction, maintenant il cherche un remède.
-Sur sa tête il porte une couronne coquètement inclinée sur un coté. La façon
-par laquelle elle reste en place même après la transformation de son
-propriétaire est un mystère.
 %%%%
 Psyche
 
@@ -390,11 +347,6 @@ Un meurtrier violent qui tue à la fois pour le plaisir et le profit, Terence a
 permettre le risque de laisser quiconque l'ayant vu quitter le donjon vivant —
 sa tête est mise à prix après tout.
 %%%%
-Tiamat
-
-Un puissant dragon avec de larges ailes. Ses écailles sont chatoyantes et
-changent de couleur alors que vous les regardez.
-%%%%
 Urug
 
 Un orc vulgaire et dégingandé. Urug à perdu un œil durant un combat avec une
@@ -423,12 +375,6 @@ the Serpent of Hell gehenna
 
 Un gros dragon rouge brillant, brulant des flammes de l'enfer. Il semble être
 possédé par l'essence même de Gehenna et ses feux éternels.
-%%%%
-the Serpent of Hell dis
-
-Une bête imposante avec une armurerie de lames en guise de dents. Chaque
-écaille est un bouclier avec un rebord tranchant. Elle vous regarde avec une
-paire de sphères chromées sans traits.
 %%%%
 acid blob
 

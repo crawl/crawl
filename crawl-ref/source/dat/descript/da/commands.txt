@@ -125,10 +125,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Liste med kommandoer, indstillinger osv.
 %%%%
-CMD_CHARACTER_DUMP
-
-Gem karakterfremskridt
-%%%%
 CMD_CHARACTER_DUMP verbose
 
 Gemmer en masse oplysninger om din karakter i en fil ved navn 'spillernavn.txt'

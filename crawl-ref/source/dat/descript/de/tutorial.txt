@@ -332,12 +332,6 @@ Das kannst auch mit<input>Mausdrüber</input> und <input>Rechts-Klick</input> in
 deinem Inventar Feld machen.</localtiles> Merke dir, das alle
 Gegenstands-Befehle auch in der Gegenstands-Beschreibung funktionieren.
 %%%%
-tutorial3 battle
-
-Sobald du erfolgreich ein Monster vergiftet hast, ist es manchmal besser sich
-zurückzuziehen und das Gift die Arbeit machen zu lassen. Genauso solltest du
-dich zum Rasten, wenn nötig, zurückziehen.
-%%%%
 tutorial3 downstairs
 
 Gut gekämpft! Wenn nötig, raste nun mit <input>$cmd[CMD_REST]</input>, dann
@@ -372,13 +366,6 @@ tutorial3 wand_fire
 Du kannst die Macht eines Zauberstabes hervorrufen wenn du
 <input>$cmd[CMD_EVOKE]</input> drückst<localtiles>, oder mit einem
 <input>Mausklick</input> im Inventar-Feld</localtiles>.
-%%%%
-tutorial3 wand_digging
-
-Ein Zauberstag des Grabens kann bestimmte Wände zerstören. Benutze
-<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input><localtiles>
-oder <input>Maus-Drüber</input>/<input>Rechts-Klick</input></localtiles> um
-Typ einer Wand zu untersuchen.
 %%%%
 tutorial3 amulet
 
@@ -475,15 +462,6 @@ tutorial3 exit
 tutorial4 start
 
 In dieser Lehre sind Sie dabei zu erfahren, wie man erlernt und Zauber wirft.
-%%%%
-tutorial4 spellbook
-
-Sie können sich einen Zauber von getragenem Zauberbuch mit
-<input>$cmd[CMD_MEMORISE_SPELL]</input><localtiles> oder durch
-<input>klicken</input> auf dem memorisation Etikett und Auswählen des
-Zauber-Ziegels einprägen</localtiles>. Am Erfahrungsniveau 1 sind nur Zaubern
-des Niveaus 1 für Sie verfügbar. Das wird sich ändern, wie Sie Erfahrung
-sammeln.
 %%%%
 tutorial4 spellcasting
 

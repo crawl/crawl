@@ -4,13 +4,6 @@ amulet of conservation
 Este amuleto protege de la destrucción algunas de las pertenencias de su
 portador, aunque no de forma infalible.
 %%%%
-amulet of faith
-
-Este es un talismán creado para reclamar la atención de los dioses. De esta
-forma, será más fácil agradar a tu dios, pero al mismo tiempo, también será más
-difícil que tu dios perdone tus transgresiones. Al quitarte este amuleto,
-perderás una parte del favor divino logrado.
-%%%%
 amulet of inaccuracy
 
 Este amuleto hace que su portador sea menos preciso en el combate cuerpo a
@@ -373,10 +366,6 @@ Un par de botas.
 pair of gloves
 
 Un par de guantes.
-%%%%
-pear
-
-Una fruta deliciosa y jugosa.
 %%%%
 pearl dragon armour
 

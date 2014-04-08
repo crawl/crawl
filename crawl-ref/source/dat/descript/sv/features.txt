@@ -1,0 +1,37 @@
+%%%%
+A rock wall
+
+Denna vägg består av enkel rock.
+%%%%
+The floor
+
+Golvet.
+%%%%
+A crystal clear mirror
+
+En glittrande spegel som reflekterar allt omkring den.
+%%%%
+A rose-covered archway
+
+Rosorna är vacker!
+%%%%
+A crumbling stone wall
+
+Denna vägg ser forntida.
+%%%%
+A rough-hewn floor
+
+Detta golv är grov och ojämn på sina ställen.
+%%%%
+A gravestone
+
+En namnlös grav.
+%%%%
+A tempered metal wall
+
+Denna metallvägg avger värme.
+%%%%
+A silver wall
+
+Denna vägg är gjord av rent silver.
+%%%%

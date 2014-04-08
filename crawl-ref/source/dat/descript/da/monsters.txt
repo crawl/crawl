@@ -186,10 +186,6 @@ Joseph
 
 Ligner en lejesvend.
 %%%%
-Khufu
-
-En utroligt magtfuld kejser på vej til at blive en guddom.
-%%%%
 Lom Lobon
 
 En ældgammel og besynderligt fredfyldt dæmon. Den har et enormt, lysende øje
@@ -204,12 +200,6 @@ et årti, mens de højere magter legede med hende. Da hun endelig undslap
 Afgrunden var hun blevet ganske mægtig, men også fuldstændig vanvittig. Hun
 vandrer nu hvileløst rundt i de underjordiske gange og leder efter andre
 eventyrere der kan dele hendes skæbne.
-%%%%
-Mara
-
-Denne høje og kraftfulde dæmon er Mara, illusionernes herre, mægtig blandt
-drømmere. Han kan skabe sirligt detaljerede illusioner der er så mægtige, at de
-kan gøre det meste af hvad det afbildede væsen kunne.
 %%%%
 Margery
 
@@ -246,19 +236,11 @@ Mnoleg
 
 En underligt lysende skikkelse, som danser gennem Pandæmoniums forvredne luft.
 %%%%
-Murray
-
-Et dæmonisk kranium, som ruller hen over gulvet i de underjordiske gange.
-%%%%
 Nellie
 
 En overordentligt intelligent elefant, som engang var med i et cirkus. En sen
 nattetime smuttede hun ud af sin lænke, forsvandt ind i Pandæmonium og blev
 aldrig set igen.
-%%%%
-Nessos
-
-En sort kentaurkriger med et ondskabsfuldt blik i øjnene.
 %%%%
 Nikola
 
@@ -272,23 +254,10 @@ En afsluttet fred i døden-kultist med en sund kulør og en mild røst. Han er r
 ligeglad med, om det bliver dig eller ham, der dør. "Begge" ville nok være det
 allerbedste.
 %%%%
-Pikel
-
-Selvom kobolder som regel er slaver, så har Pikels hårde liv, hans egoistiske
-ambitioner og legemlige størrelse ladet ham stige i graderne og selv blive
-slavepisker. Han er på vej til orkernes miner for at sælge sine varer, et
-udvalg af frygtsomme mennesker, der skælver ved hvert smæld fra hans pisk.
-%%%%
 Polyphemus
 
 En kyklophyrde. Han er særdeles beskyttende over for sin hjord, som han vogter
 med udødelig iver med sit ene enorme øje.
-%%%%
-Prince Ribbit
-
-Han var en flot prins før han blev forbandet, så nu søger han efter en kur. På
-toppen af sit hoved bærer han en krone kækt på sned. Hvordan den bliver på sin
-plads selv efter forvandlingen er et mysterium.
 %%%%
 Psyche
 
@@ -331,11 +300,6 @@ Terence er en voldelig morder, som dræber både for fornøjelsens og pengenes
 skyld. Han er tvunget i skjul efter et mislykket job, og han har ikke råd til
 at lade nogen, der har set ham, undslippe de underjordiske gange i live – der
 er trods alt en pris på hans hoved.
-%%%%
-Tiamat
-
-En mægtig drage med enorme vinger. Hendes skæl synes at glitre og skifte farve,
-mens du kigger.
 %%%%
 Urug
 

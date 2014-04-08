@@ -122,10 +122,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Liste von Kommandos, Optionen, etc.
 %%%%
-CMD_CHARACTER_DUMP
-
-Speichere den Charakter Fortschritt
-%%%%
 CMD_AUTOFIGHT
 
 Bekämpfe das nächst stehende Monster

@@ -217,13 +217,6 @@ Puedes evocar varas mediante <input>$cmd[CMD_EVOKE]</input><localtiles> o
 haciendo <input>clic con el ratón</input> en el panel de
 inventario</localtiles>.
 %%%%
-tutorial3 wand_digging
-
-Una vara de excavación es capaz de destruir ciertos tipos de paredes. Usa
-<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input> <localtiles>o
-<input>pasa por encima el ratón</input>/<input>haz clic con el botón
-derecho</input> </localtiles>para comprobar el tipo de pared.
-%%%%
 tutorial3 amulet
 
 Para ponerse una pieza de joyería usa <input>$cmd[CMD_WEAR_JEWELLERY]</input>

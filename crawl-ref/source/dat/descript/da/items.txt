@@ -4,13 +4,6 @@ amulet of conservation
 Denne amulet beskytter bærerens ejendele mod ødelæggelse, men er ikke
 ufejlbarlig.
 %%%%
-amulet of faith
-
-Denne talisman er lavet til gøre guderne opmærksomme på den, der bærer den.
-Denne guddommelige opmærksomhed gør det lettere at glæde din gud, men det
-bliver også sværere at blive tilgivet for dine synder. Amuletten dræner noget
-af din guddommelige gunst, når du tager den af.
-%%%%
 amulet of inaccuracy
 
 Denne amulet gør bæreren mindre præcis, hvad end det gælder nærkamp eller om at
@@ -499,10 +492,6 @@ pair of gloves
 
 Et par handsker.
 %%%%
-pear
-
-En lækker, saftig frugt.
-%%%%
 pearl dragon armour
 
 En rustning, som er lavet af de perlemorsfarvede skæl fra en perledrage. Den
@@ -688,9 +677,22 @@ ring of wizardry
 
 Denne ring øger bærerens evne til at bruge magiske besværgelser.
 %%%%
+rod of destruction
+
+Denne stok kan vækkes til at udløse en skadelig besværgelse der udvalgt
+tilfældigt fra et lille sæt, som alle kan gennembore uhyrer og skade dem, der
+står bag dem.
+%%%%
 rod of inaccuracy
 
 Denne stok lader brugeren affyre en kraftfuld, men utroligt upræcis kraftkile.
+%%%%
+rod of striking
+
+Denne stok er beregnet til nærkamp, hvor den udløser sine ladninger for at
+forvolde yderligere skade, som afhænger af dine færdigheder med vækkelser, når
+den rammer en fjende. Køller og plejle-færdigheden hjælper med at forbedre din
+grundlæggende effektivitet med våbnet.
 %%%%
 rod of the swarm
 
@@ -720,6 +722,10 @@ scale mail
 Denne læderdragt er dækket af metalplader, som er sammenføjet i overlappende
 rækker for at yde fuld beskyttelse, men på bekostning af reduceret
 bevægelsesfrihed.
+%%%%
+scimitar
+
+Et langt sværd med en bred, buet klinge.
 %%%%
 scroll of acquirement
 
@@ -762,6 +768,36 @@ scroll of curse weapon
 
 Denne skriftrulle kaster en forbandelse på dit våben.
 %%%%
+scroll of enchant armour
+
+Denne skriftrulle fortryller et stykke rustning. De fleste former for rustning
+kan kun fortrylles til +2, bortset fra skjolde, som kan fortrylles til +3, og
+visse former for krops- og dyrerustning, som kan fortrylles til samme værdi som
+deres basis-RK. Magiske artefakter kan slet ikke fortrylles.
+
+Den kan også bruges til at fortrylle visse eksotiske væseners skind.
+%%%%
+scroll of enchant weapon i
+
+Denne skriftrulle fortryller et våben af eget valg og gør det mere præcist i
+kamp. Det bliver sværere og sværere at få den til at virke på stærkt
+fortryllede våben og kan aldrig fortrylle dem højere end +9. Magiske artefakter
+kan slet ikke fortrylles.
+%%%%
+scroll of enchant weapon ii
+
+Denne skriftrulle fortryller et våben efter eget valg og får det til at
+forvolde større skade i kamp. Det bliver sværere og sværere at få den til at
+virke på stærkt fortryllede våben og kan aldrig fortrylle dem højere end +9.
+Magiske artefakter kan slet ikke fortrylles.
+%%%%
+scroll of enchant weapon iii
+
+Denne skriftrulle fortryller et våben efter eget valg og gør det langt mere
+effektivt i kamp ved at øge både præcision og skade. Det bliver sværere og
+sværere at få den til at virke på stærkt fortryllede våben og kan aldrig
+fortrylle dem højere end +9. Magiske artefakter kan slet ikke fortrylles.
+%%%%
 scroll of fear
 
 Denne skriftrulle indgyder de, der ser den blive læst, med en afgrundsdyb
@@ -770,6 +806,12 @@ rædsel.
 scroll of fog
 
 Denne skriftrulle indhyller læseren i en tæt sky af tåge.
+%%%%
+scroll of holy word
+
+Denne skriftrulle påkalder sig de gode guder for at forvolde stor skade på
+udøde eller dæmoniske væsener i nærheden – hvilket kunne inkludere dig! Den
+lammer de ramte uhyrer et kort øjeblik.
 %%%%
 scroll of identify
 
@@ -787,15 +829,38 @@ scroll of magic mapping
 
 Denne skriftrulle afslører læserens omgivelser.
 %%%%
+scroll of noise
+
+Denne drilske skriftrulle som ofte sniges ned i en troldmands rygsæk af en
+lusket lærling, laver et værre spektakel.
+%%%%
 scroll of random uselessness
 
 Det er let at glemme denne skriftrulles essentielle ubrugelighed, når det
 lykkes overhovedet at få den til at virke.
 %%%%
+scroll of recharging
+
+Denne skriftrulle genopfylder en valgfri, magisk vånd eller stoks ladninger.
+Når den bruges på en stok, øger den også stokkens kraftlager og den fart, den
+genvinder kraft med.
+%%%%
 scroll of remove curse
 
 Denne skriftrulle fjerner forbandelserne fra de ting, du bruger, når du læser
 den.
+%%%%
+scroll of silence
+
+Denne skriftrulle får alle lyde i nærheden af læseren til at forstumme. Det gør
+det umuligt at læse skriftruller, kaste besværgelser eller råbe i nærheden af
+læseren. Den trykkende, unaturlige stilhed vil gøre det aldeles svært at snige
+sig.
+
+Stilheden starter med en radius afhængig af kraft indtil den kun dækker
+læseren, hvorefter effekten ophører. Visse væsener, for eksempel dæmoner,
+kaster besværgelser uden at tale og påvirkes derfor ikke. De, der har iboende
+magiske effekter, vil også stadig kunne bruge dem.
 %%%%
 scroll of summoning
 
@@ -807,6 +872,19 @@ scroll of teleportation
 Kort tid efter at have læst ordene på denne skriftrulle, vil du blive
 translokeret til en tilfældig position.
 %%%%
+scroll of torment
+
+Denne skriftrulle påkalder sig mørkets kræfter for at påføre væsener i nærheden
+store smerter – inklusive dig! Dette halverer alle levende væseners livskraft,
+men er aldrig decideret dødbringende.
+%%%%
+scroll of vulnerability
+
+Denne skriftrulle fjerner alle magiske fortryllelser fra læseren og fra væsener
+i nærheden. Magisk modstandskraft hos læseren og andre væsener i nærheden vil
+også blive halveret i en kort periode. Sidstnævnte effekt påvirker dog ikke
+væsener som er komplet immune over for magi.
+%%%%
 scythe
 
 Et landbrugsredskab, der som regel bruges af utrænet bærme i kamp.
@@ -816,6 +894,10 @@ shield
 Et stykke træ og metal, som spændes på den ene arm til beskyttelse. Det er
 uhåndterligt at gå med, og uden træning vil det få dig til at angribe
 langsommere.
+%%%%
+short sword
+
+En lille, tveægget klinge med et kort greb.
 %%%%
 slice of pizza
 
@@ -841,15 +923,73 @@ spear
 Et jagtvåben, som består af et træskaft med et spidst metalhoved, som er
 fæstnet i den ene ende.
 %%%%
+staff of air
+
+Denne stav øger brugerens luftbesværgelsers kraft, men mindsker den for
+jordbesværgelser. Den isolerer brugeren mod elektricitet. Hvis brugeren er
+dygtig til vækkelser og luftmagi, vil staven give dem, der rammes af den, stød.
+%%%%
+staff of cold
+
+Denne stav øger brugerens isbesværgelsers kraft, men nedsætter den for
+ildbesværgelser. Den beskytter brugeren mod virkningerne af kulde. Hvis
+brugeren er kyndig i vækkelser og ismagi kan staven fryse de fjender, den
+rammer.
+%%%%
 staff of conjuration
 
 Denne stav øger brugerens fremmaningers kraft.
+%%%%
+staff of death
+
+Denne stav øger brugerens nekromantiske besværgelsers kraft og beskytter mod
+negativ energi. Hvis brugeren er kyndig i både vækkelser og nekromantik vil
+staven forårsage store smerter, når den rammer levende sjæle.
+%%%%
+staff of earth
+
+Den stav øger brugerens jordbesværgelsers kraft, men mindsker den for
+luftbesværgelser. Hvis brugeren er kyndig i vækkelser og jordmagi kan den knuse
+dem, den rammer.
 %%%%
 staff of energy
 
 Denne stav lader sin bærer kontrollere magisk energi: Man bliver ikke længere
 sulten af at kaste besværgelser, og naturlig baggrundsmagi kan kanaliseres til
 bærerens formål.
+%%%%
+staff of fire
+
+Denne stav øger brugerens ildbesværgelsers kraft, men nedsætter den for
+isbesværgelser. Den beskytter brugeren mod virkningerne af ild. Hvis brugeren
+er kyndig i vækkelser og ildmagi kan staven fryse de fjender, den rammer.
+%%%%
+staff of poison
+
+Denne stav øger brugerens giftige besværgelsers kraft og beskytter ham eller
+hende mod konsekvenserne af gift. Hvis brugeren er kyndig i både vækkelser og
+giftmagi, vil staven også forgifte dem, den rammer – selv hvis ofrene
+sædvanligvis er modstandsdygtige.
+%%%%
+staff of power
+
+Denne stav øger brugerens reservoir af magisk energi.
+%%%%
+staff of summoning
+
+Denne stav øger brugerens hidkaldelsers kraft og beskytter mod hidkaldte
+væseners angreb. Hvis du er kyndig i vækkelser, kan du forsøge at bortvise
+hidkaldte væsener, når du slår dem.
+%%%%
+staff of wizardry
+
+Denne stav øger brugerens evne til at bruge magiske besværgelser.
+%%%%
+steam dragon armour
+
+En rustning, som er lavet af skællene fra en drage, der ånder damp. Selvom den
+i modsætning til rustninger, der er lavet af skællene fra visse større drager,
+ikke yder den store beskyttelse, så er den ekstremt let og smidig.
 %%%%
 steam dragon hide
 
@@ -903,6 +1043,18 @@ Det slimede{{
     end
 }} skind fra en sumpdrage. Det giver modstandskraft over for gift og kan med
 magiske midler forvandles til rigtig rustning.
+%%%%
+throwing net
+
+Et net af reb, som er bundet sammen og har vægte i kanten, som bruges til at
+besnære og indfange bytte. Sprællende ofre vil til sidst ødelægge nettet og
+bryde fri hvis de lever længe nok.
+%%%%
+tome of destruction
+
+En ekstremt kraftfuld, men uforudsigelig bog med vild magi. Den er mere
+effektiv hvis man er dygtig til vækkelser, men den kan stadig have
+uhensigtsmæssige konsekvenser.
 %%%%
 trident
 

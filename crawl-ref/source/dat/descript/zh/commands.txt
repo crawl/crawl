@@ -114,10 +114,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 命令及选项等的列表
 %%%%
-CMD_CHARACTER_DUMP
-
-输出角色进度
-%%%%
 CMD_AUTOFIGHT
 
 打击最近的怪物

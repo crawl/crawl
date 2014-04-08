@@ -116,10 +116,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Lista di comandi, opzioni, ecc.
 %%%%
-CMD_CHARACTER_DUMP
-
-Copia il progresso del personaggio.
-%%%%
 CMD_AUTOFIGHT
 
 Attacca il nemico più vicino

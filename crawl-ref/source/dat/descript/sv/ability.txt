@@ -1,4 +1,8 @@
 %%%%
+Stop Flying ability
+
+Sluta flyga.
+%%%%
 Animate Dead ability
 
 Väcka till liv alla lik och skelett i din närhet som dina anhängare. Notera att
