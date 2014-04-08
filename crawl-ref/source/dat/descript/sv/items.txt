@@ -1,11 +1,63 @@
 %%%%
+apple
+
+En läcker frukt, syrlig på tungan.
+%%%%
+apricot
+
+En saftig gul-orange frukt, Prunus armeniaca.
+%%%%
 banana
 
 En läcker gul frukt.
 %%%%
+bastard sword
+
+En lång, stort svärd.
+%%%%
+book of fixed level
+
+En bok av trollformler.
+%%%%
+book of fixed theme
+
+En bok av trollformler.
+%%%%
+cheese
+
+En klump av ost.
+%%%%
+cloak
+
+En tyg slängkappa.
+%%%%
+decaying skeleton
+
+En ruttnande skelett.
+%%%%
+giant club
+
+En jätte klump av trä.
+%%%%
+giant spiked club
+
+En jätte klump av trä med vassa spikar på ena änden.
+%%%%
+gold piece
+
+En hög med glittrande guldmynt.
+%%%%
 grape
 
 En liten frukt.
+%%%%
+hand axe
+
+En liten yxa.
+%%%%
+hat
+
+Ett tyg eller läder hatt.
 %%%%
 lemon
 
@@ -14,4 +66,24 @@ En gul frukt.
 lychee
 
 En tropisk frukt.
+%%%%
+orange
+
+En läcker saftig orange frukt.
+%%%%
+pair of boots
+
+Ett par kängor.
+%%%%
+pair of gloves
+
+Ett par handskar.
+%%%%
+strawberry
+
+En liten men läcker röd frukt.
+%%%%
+sultana
+
+En ödmjuk russin.
 %%%%

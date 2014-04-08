@@ -346,11 +346,6 @@ tutorial3 inventory
 있습니다</localtiles>. 아이템 설명 창에서도 아이템 명령어들을 사용할 수
 있습니다.
 %%%%
-tutorial3 battle
-
-만약 당신이 성공적으로 적을 독에 중독시켰다면, 독의 효과를 극대화 하기 위해
-후퇴하십시오. 만약 필요하다면 회복을 위해서 후퇴하는 것도 좋은 선택입니다.
-%%%%
 tutorial3 downstairs
 
 잘 싸우셨습니다! 만약 필요하다면, <input>$cmd[CMD_REST]</input>키로 쉬거나,
@@ -384,13 +379,6 @@ tutorial3 wand_fire
 
 <input>$cmd[CMD_EVOKE]</input><localtiles> 키를 누르거나 인벤토리 패널을
 <input>mouseclick</input> 함으로써 마법봉을 사용할 수 있습니다.</localtiles>.
-%%%%
-tutorial3 wand_digging
-
-굴착의 마법봉은 몇몇 종류의 벽을 뚫을 수 있습니다.
-<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input> <localtiles>나
-<input>mouseover</input>/<input>right click</input> </localtiles>으로 벽의
-종류를 확인하여 보십시오.
 %%%%
 tutorial3 amulet
 
@@ -486,14 +474,6 @@ tutorial3 exit
 tutorial4 start
 
 이번 시간에는 주문을 배우고, 시전하는 법에 대해 배워보도록 하겠습니다.
-%%%%
-tutorial4 spellbook
-
-소지하고 있는 마법서로부터 주문을 익히는 방법은,
-<input>$cmd[CMD_MEMORISE_SPELL]</input>키를 누르거나, 우측 소지품창의 마법서
-아이콘을 <input>마우스 왼쪽 클릭</input>한 후, 원하는 주문을 선택하면 됩니다.
-캐릭터의 레벨이 1일때는, 오직 1레벨의 주문만 익힐 수 있습니다. 레벨이
-올라갈수록, 더 높은 레벨의 주문을 익히는 것이 가능해지죠.
 %%%%
 tutorial4 spellcasting
 

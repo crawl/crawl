@@ -122,10 +122,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Lista de comandos y opciones, etc.
 %%%%
-CMD_CHARACTER_DUMP
-
-Crear un listado con información sobre el personaje en curso
-%%%%
 CMD_AUTOFIGHT
 
 Atacar al monstruo más cercano

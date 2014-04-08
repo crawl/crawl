@@ -121,10 +121,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Список команд, настроек и т.д.
 %%%%
-CMD_CHARACTER_DUMP
-
-Отображает прогресс игрока
-%%%%
 CMD_AUTOFIGHT
 
 Атака ближайшего врага

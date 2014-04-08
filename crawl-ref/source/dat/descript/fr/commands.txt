@@ -129,10 +129,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Liste des commandes, options,etc.
 %%%%
-CMD_CHARACTER_DUMP
-
-Génère un état d'avancement du personnage
-%%%%
 CMD_CHARACTER_DUMP verbose
 
 Génère un fichier “nomdupersonnage.txt” dans le dossier morgue. Vous y

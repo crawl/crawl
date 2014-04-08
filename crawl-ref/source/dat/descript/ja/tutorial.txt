@@ -321,12 +321,6 @@ tutorial3 inventory
 </localtiles>
 全てのアイテムコマンドは説明文画面からでも実行できる点に注目して下さい。
 %%%%
-tutorial3 battle
-
-モンスターを毒に冒すことに成功した場合、
-退却して毒のダメージを活用することが最善の手段に成り得ます。必要であれば、
-回復のために退却することも良い手です。
-%%%%
 tutorial3 downstairs
 
 良い戦いでした! 必要であれば <input>$cmd[CMD_REST]</input> で休息を取り、
@@ -360,13 +354,6 @@ tutorial3 wand_fire
 
 <input>$cmd[CMD_EVOKE]</input>
 <localtiles>またはインベントリ内を<input>mouseclick</input>すること</localtiles>でワンドを発動させることが出来ます。
-%%%%
-tutorial3 wand_digging
-
-掘削のワンドは特定の種類の壁を破壊することができます。
-<input>$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]</input>
-<localtiles>または <input>マウスオーバー</input>/<input>右クリック</input>
-</localtiles>を使って壁の種類を調べてみましょう。
 %%%%
 tutorial3 amulet
 
@@ -461,14 +448,6 @@ tutorial3 exit
 tutorial4 start
 
 このレッスンでは魔法の記憶と詠唱の方法を学んでいきます。
-%%%%
-tutorial4 spellbook
-
-<input>$cmd[CMD_MEMORISE_SPELL]</input>
-<localtiles>または呪文の記憶タブ上の記憶したい魔法を<input>クリック</input>
-</localtiles>で手持ちの魔法書から呪文を記憶することができます。
-経験レベルが1の場合、レベル1の呪文のみ使うことができます。
-これはあなたの経験レベルが上がることで解消されます。
 %%%%
 tutorial4 spellcasting
 

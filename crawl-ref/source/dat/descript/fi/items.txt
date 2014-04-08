@@ -4,13 +4,6 @@ amulet of conservation
 Tämä amuletti suojaa joitakin käyttäjän omistamia tavaroita tuhoutumiselta,
 mutta ei pettämättömästi.
 %%%%
-amulet of faith
-
-Tämä talismaani on luotu kutsumaan jumalten huomiota. Tämä pyhä huomio
-helpottaa jumalten miellyttämistä, mutta jumalasi on myös vähemmän
-anteeksiantava syntejäsi kohtaan, ja amuletin poisottaminen aiheuttaa myös
-suosion laskua.
-%%%%
 amulet of inaccuracy
 
 Tämä amuletti laskee kantajansa tarkkuutta lähi- ja kaukotaistelussa sekä

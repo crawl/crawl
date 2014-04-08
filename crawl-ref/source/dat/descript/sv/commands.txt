@@ -1,0 +1,105 @@
+%%%%
+CMD_REST
+
+Vila och läka
+%%%%
+CMD_PRAY
+
+Be till din gud
+%%%%
+CMD_REPLAY_MESSAGES
+
+Visa meddelandelogg
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Visa mutationer
+%%%%
+CMD_DISPLAY_SKILLS
+
+Hantera färdigheter
+%%%%
+CMD_SAVE_GAME_NOW
+
+Spara och avsluta
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Spelhjälp
+%%%%
+CMD_WAIT
+
+Vänta ett enda tur
+%%%%
+CMD_CAST_SPELL
+
+Kasta en trollformel
+%%%%
+CMD_CAST_SPELL verbose
+
+Kasta en trollformel
+%%%%
+CMD_BUTCHER
+
+Slakta ett lik
+%%%%
+CMD_MEMORISE_SPELL
+
+Memorera en trollformel
+%%%%
+CMD_DROP
+
+Släppa objekt
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Lägg en vägpunkt
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Ner en våning
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Upp en våning
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Gå till våning
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Hitta trappa upp
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Hitta trappa ner
+%%%%
+CMD_MAP_FIND_YOU
+
+Hitta mig
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Hitta affärer och portaler
+%%%%
+CMD_MAP_FIND_TRAP
+
+Hitta fällor
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Hitta altaren
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Hitta vägpunkt
+%%%%
+CMD_ZOOM_IN
+
+Zooma in
+%%%%
+CMD_ZOOM_OUT
+
+Zooma ut
+%%%%

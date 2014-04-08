@@ -121,10 +121,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Seznam příkazů, předvoleb atd.
 %%%%
-CMD_CHARACTER_DUMP
-
-Export informací do souboru
-%%%%
 CMD_AUTOFIGHT
 
 Zasáhnout nejbližší monstrum

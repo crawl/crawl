@@ -114,10 +114,6 @@ CMD_DISPLAY_COMMANDS verbose
 
 Lista komennoista, asetuksista jne.
 %%%%
-CMD_CHARACTER_DUMP
-
-Ota vedos hahmon etenemisestä
-%%%%
 CMD_AUTOFIGHT
 
 Hyökkää lähimmän hirviön kimppuun

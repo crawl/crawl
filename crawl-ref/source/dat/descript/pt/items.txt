@@ -251,10 +251,6 @@ pair of gloves
 
 Um par de luvas.
 %%%%
-pear
-
-Uma deliciosa e suculenta fruta.
-%%%%
 potion of slowing
 
 Uma poção que retarda as suas ações.
