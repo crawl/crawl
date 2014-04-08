@@ -826,7 +826,7 @@ A pair of gloves.
 %%%%
 pear
 
-A delicious juicy fruit.
+A delicious, juicy fruit.
 %%%%
 pearl dragon armour
 

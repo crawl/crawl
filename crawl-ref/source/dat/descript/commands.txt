@@ -127,7 +127,7 @@ List of commands, options, etc.
 %%%%
 CMD_CHARACTER_DUMP
 
-Dump character progress
+Dump character's progress
 %%%%
 CMD_CHARACTER_DUMP verbose
 
