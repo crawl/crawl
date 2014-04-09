@@ -1521,10 +1521,6 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         return;
     }
 
-    // Record position now, in case it's a monster and dies (thus
-    // resetting its position) before the ammo can be dropped.
-    const coord_def apos = act.pos();
-
     item_def shot = generate_trap_item();
 
     int trap_hit = (20 + (difficulty()*2)) * random2(200) / 100;
