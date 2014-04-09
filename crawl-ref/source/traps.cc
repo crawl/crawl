@@ -1156,12 +1156,14 @@ void disarm_trap(const coord_def& where)
             break;
     case DNGN_TRAP_TELEPORT:
     case DNGN_TRAP_ZOT:
-    case DNGN_PASSAGE_OF_GOLUBRIA: // not a trap, FIXME
-        mpr("You can't disarm that trap.");
+        mpr("You can't disarm magical traps.");
+        return;
+    case DNGN_PASSAGE_OF_GOLUBRIA:
+        mpr("You can't disarm passages of Golubria.");
         return;
     case DNGN_TRAP_SHAFT:
         // Only shafts for now.
-        mpr("You can't disarm a shaft.");
+        mpr("You can't disarm shafts.");
         return;
     default:
         break;
@@ -1189,7 +1191,7 @@ void disarm_trap(const coord_def& where)
         mpr("You failed to disarm the trap.");
         if (random2(you.dex()) <= 5 + random2(5 + trap.difficulty()))
         {
-            if ((trap.type == TRAP_NET || trap.type==TRAP_WEB)
+            if ((trap.type == TRAP_NET || trap.type == TRAP_WEB)
                 && trap.pos != you.pos())
             {
                 if (coinflip())
