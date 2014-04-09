@@ -519,10 +519,8 @@ void artefact_desc_properties(const item_def &item,
         break;
 
     case RING_SLAYING:
-        fake_rap   = ARTP_ACCURACY;
-        fake_plus  = item.plus;
-        fake_rap2  = ARTP_DAMAGE;
-        fake_plus2 = item.plus2;
+        fake_rap  = ARTP_SLAYING;
+        fake_plus = item.plus;
         break;
 
     case RING_SEE_INVISIBLE:
@@ -665,7 +663,7 @@ static int _randart_add_one_property(const item_def &item,
 }
 
 // An artefact will pass this check if it has any non-stat properties, and
-// also if it has enough stat (Str, Dex, Int, Acc, Dam) properties.
+// also if it has enough stat properties (Str, Dex, Int, Slay).
 // Returns how many (more) stat properties we need to add.
 static int _need_bonus_stat_props(const artefact_properties_t &proprt)
 {
@@ -682,7 +680,7 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
 
         if (i >= ARTP_AC && i <= ARTP_DEXTERITY)
             num_stats++;
-        else if (i >= ARTP_ACCURACY && i <= ARTP_DAMAGE)
+        else if (i == ARTP_SLAYING)
             num_acc_dam++;
         else
             return 0;
@@ -840,25 +838,13 @@ static void _get_randart_properties(const item_def &item,
         && (aclass != OBJ_JEWELLERY || atype != RING_SLAYING))
     {
         // Weapons and rings of slaying can't get these.
-        if (one_chance_in(4 + power_level))  // to-hit
-        {
-            proprt[ARTP_ACCURACY] = 2 + random2(3) + random2(3);
-            power_level++;
-            if (one_chance_in(4))
-            {
-                proprt[ARTP_ACCURACY] -= 2 + random2(4) + random2(4)
-                                           + random2(3);
-                power_level--;
-            }
-        }
-
         if (one_chance_in(4 + power_level))  // to-dam
         {
-            proprt[ARTP_DAMAGE] = 2 + random2(3) + random2(3);
+            proprt[ARTP_SLAYING] = 2 + random2(3) + random2(3);
             power_level++;
             if (one_chance_in(4))
             {
-                proprt[ARTP_DAMAGE] -= 2 + random2(4) + random2(4)
+                proprt[ARTP_SLAYING] -= 2 + random2(4) + random2(4)
                                          + random2(3);
                 power_level--;
             }
@@ -1673,8 +1659,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case RING_SLAYING:
-        provides  = ARTP_DAMAGE;
-        provides2 = ARTP_ACCURACY;
+        provides  = ARTP_SLAYING;
         break;
 
     case RING_SEE_INVISIBLE:
@@ -1726,7 +1711,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case AMU_INACCURACY:
-        provides = ARTP_ACCURACY;
+        provides = ARTP_SLAYING;
         break;
 
     case AMU_STASIS:

@@ -3940,7 +3940,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
     else if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         your_to_hit -= 3;
 
-    your_to_hit += slaying_bonus(PWPN_HIT);
+    your_to_hit += slaying_bonus();
 
     return your_to_hit;
 }

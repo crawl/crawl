@@ -4230,24 +4230,14 @@ unsigned int exp_needed(int lev, int exp_apt)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(weapon_property_type which_affected, bool ranged)
+int slaying_bonus(bool ranged)
 {
     int ret = 0;
 
-    if (which_affected == PWPN_HIT)
-    {
-        ret += you.wearing(EQ_RINGS_PLUS, RING_SLAYING);
-        ret += you.scan_artefacts(ARTP_ACCURACY);
-        if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
-            ret += 5;
-    }
-    else if (which_affected == PWPN_DAMAGE)
-    {
-        ret += you.wearing(EQ_RINGS_PLUS2, RING_SLAYING);
-        ret += you.scan_artefacts(ARTP_DAMAGE);
-        if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
-            ret += 3;
-    }
+    ret += you.wearing(EQ_RINGS_PLUS, RING_SLAYING);
+    ret += you.scan_artefacts(ARTP_SLAYING);
+    if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
+        ret += 4;
 
     ret += 4 * augmentation_amount();
 

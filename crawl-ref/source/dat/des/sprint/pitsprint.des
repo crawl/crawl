@@ -398,8 +398,7 @@ function steel_vault_setup(e)
   e.subst("5 = 5:290 N:1 P:1 R:1 T:1 V:1 X:1 Z:1 K:1")
   e.kitem("a = any weapon randart level:17 ident:all")
   e.kitem("b = any armour randart level:17 ident:all")
-  e.kitem("c = ring of slaying plus:0 plus2:5 ident:all not_cursed w:5 /\
-          ring of slaying plus:5 plus2:0 ident:all not_cursed w:5 /\
+  e.kitem("c = ring of slaying plus:3 ident:all not_cursed /\
           ring of regeneration ident:all not_cursed /\
           ring of invisibility ident:all not_cursed /\
           ring of protection plus:6 ident:all not_cursed /\
@@ -522,9 +521,7 @@ function coven_setup(e)
           amulet of stasis randart not_cursed ident:all /\
           amulet of the gourmand randart not_cursed ident:all /\
           amulet of warding randart not_cursed ident:all /\
-          ring of slaying plus:0 plus2:8 ident:all not_cursed w:5 /\
-          ring of slaying plus:8 plus2:0 ident:all not_cursed w:5 /\
-          ring of slaying plus:5 plus2:5 randart ident:all not_cursed w:5 /\
+          ring of slaying plus:5 randart ident:all not_cursed /\
           any jewellery randart level:27 not_cursed ident:all w:40")
   e.kitem("c = ring of protection from fire randart ident:all not_cursed /\
           ring of protection from cold randart ident:all not_cursed /\
@@ -534,8 +531,7 @@ function coven_setup(e)
           ring of ice randart ident:all not_cursed /\
           ring of see invisible randart ident:all not_cursed /\
           ring of poison resistance randart ident:all not_cursed /\
-          ring of slaying plus:5 plus2:5 ident:all not_cursed w:5 /\
-          ring of slaying plus:5 plus2:5 ident:all not_cursed w:5 /\
+          ring of slaying plus:5 ident:all not_cursed /\
           ring of regeneration randart ident:all not_cursed /\
           ring of invisibility randart ident:all not_cursed /\
           ring of protection plus:6 randart ident:all not_cursed /\
