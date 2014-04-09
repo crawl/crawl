@@ -1080,9 +1080,7 @@ bool melee_attack::attack()
         && (defender->is_player() || defender->as_monster()->friendly())
         && !attacker->is_player()
         && !crawl_state.game_is_arena()
-        && !attacker->as_monster()->wont_attack()
-        && you.pet_target == MHITNOT
-        && env.sanctuary_time <= 0)
+        && !attacker->as_monster()->wont_attack())
     {
         if (defender->is_player())
         {
@@ -1095,8 +1093,8 @@ bool melee_attack::attack()
                     if (is_melee_weapon(you.inv[i]) && wield_weapon(true, i))
                         return false;
         }
-
-        you.pet_target = attacker->mindex();
+        if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
+            you.pet_target = attacker->mindex();
     }
 
     if (!defender->alive())
