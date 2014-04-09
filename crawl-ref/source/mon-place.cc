@@ -2893,9 +2893,7 @@ static monster_type _band_member(band_type band, int which)
         return MONS_YAKTAUR;
 
     case BAND_INSUBSTANTIAL_WISPS:
-        return random_choose_weighted(8, MONS_INSUBSTANTIAL_WISP,
-                                      1, MONS_VAPOUR,
-                                      0);
+        return MONS_INSUBSTANTIAL_WISP;
 
     case BAND_POLYPHEMUS:
         if (which == 1)

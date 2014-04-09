@@ -2116,12 +2116,6 @@ Un moustique qui s'est nourri d'un sang impur et qui s'est transformé en un
 insecte mort-vivant répugnant et pestilentiel, cherchant à drainer ses victimes
 jusqu'à la dernière goutte.
 %%%%
-vapour
-
-Un nuage d'une vapeur bizarre, seulement visible par ceux qui ont une vision
-surnaturelle. Tant qu'il flotte sans but dans le donjon, il se remplit de
-charge électrique, qui parfois se décharge dans votre direction.
-%%%%
 vault guard
 
 Un gardien des Chambres Fortes, en armure et lourdement armé.

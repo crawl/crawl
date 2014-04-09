@@ -4411,7 +4411,6 @@ static const pop_entry _planerend_swamp[] =
 { // Swamp enemies
   {  1,   1,   80, FLAT, MONS_SWAMP_DRAGON },
   {  1,   1,   80, FLAT, MONS_HYDRA },
-  {  1,   1,   80, FLAT, MONS_VAPOUR },
   {  1,   1,  100, FLAT, MONS_SHAMBLING_MANGROVE },
   {  1,   1,   40, FLAT, MONS_THORN_HUNTER },
   { 0,0,0,FLAT,MONS_0 }

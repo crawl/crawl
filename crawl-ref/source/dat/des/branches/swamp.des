@@ -872,7 +872,7 @@ TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 KMONS:   1 = insubstantial wisp
 KMONS:   2 = ball lightning
-KMONS:   3 = vapour
+KMONS:   3 = lightning spire
 KFEAT:   123 = deep_water
 SHUFFLE: })
 SUBST:   T = w:3 t, M = ~:4 t, W = W:3 w, . = .:3 W, } = }:20 >, ) = ):25 <>

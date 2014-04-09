@@ -1805,7 +1805,7 @@ NSUBST: w = 3:4 / *:w
 KMONS:  4 = water elemental
 KFEAT:  4 = deep_water
 NSUBST: " = 3:5 / *:.
-KMONS:  5 = vapour
+KMONS:  5 = wind drake
 KMONS:  6 = air elemental
 KMONS:  7 = fire vortex
 #
@@ -2299,7 +2299,7 @@ KMONS:   D = hydra simulacrum / bog body / polar bear
 KMONS:   E = freezing wraith / ice devil / harpy simulacrum
 KMONS:   F = blizzard demon / azure jelly
 KMONS:   G = air elemental / harpy / sixfirhy w:5
-KMONS:   H = raiju / shock serpent / vapour w:5
+KMONS:   H = raiju / shock serpent / wind drake w:5
 KMONS:   I = spriggan air mage / storm dragon
 KMONS:   J = gargoyle / earth elemental w:5 / basilisk
 KMONS:   K = catoblepas / boulder beetle
@@ -2542,13 +2542,14 @@ KMONS: P = green death / green draconian / greater naga w:5 / swamp dragon / \
 KMONS: F = fire giant w:5 / fire dragon / fire elemental / red draconian / sun demon
 KMONS: I = frost giant w:5 / ice dragon / blizzard demon / white draconian / \
            ice dragon
-KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning / vapour
+KMONS: E = titan w:5 / storm dragon / black draconian / ball lightning
 KMONS: O = orc knight / orc sorcerer / orc warlord w:5 / orc high priest / \
            orc warrior
 KMONS: N = deep elf knight / deep elf annihilator w:5 / deep elf death mage / \
            deep elf summoner / deep elf sorcerer
 KMONS: L = death yak / catoblepas w:5 / basilisk / lindwurm / blink frog
-KMONS: S = swamp dragon / hydra w:5 / vapour / large slime creature / alligator
+KMONS: S = swamp dragon / hydra w:5 / thorn hunter / large slime creature / \
+           alligator
 KMONS: A = alligator snapping turtle w:5 / siren / merfolk aquamancer / \
            merfolk impaler / harpy
 KMONS: K = greater naga w:5 / naga mage / anaconda / naga warrior / \

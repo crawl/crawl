@@ -3228,8 +3228,9 @@ int monster::constriction_damage() const
     return -1;
 }
 
-// Whether the monster is temporarily confused.
-// False for butterflies, vapours etc.
+/** Return true if the monster temporarily confused. False for butterflies, or
+    other permanently confused monsters.
+*/
 bool monster::confused() const
 {
     return mons_is_confused(this);
