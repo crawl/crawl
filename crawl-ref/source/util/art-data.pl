@@ -16,7 +16,6 @@ my %found_funcs   = ();
 
 my %field_type = (
     AC       => "num",
-    ACC      => "num",
     ANGRY    => "num",
     APPEAR   => "str",
     BASE_ACC => "num",
@@ -31,7 +30,6 @@ my %field_type = (
     COLOUR   => "enum",
     CORPSE_VIOLATING => "bool",
     CURSED   => "num",
-    DAM      => "num",
     DEX      => "num",
     ELEC     => "bool",
     EV       => "num",
@@ -60,6 +58,7 @@ my %field_type = (
     RMSL     => "bool",
     RND_TELE => "bool",
     SEEINV   => "bool",
+    SLAY     => "num",
     SPECIAL  => "bool",
     STEALTH  => "num",
     STR      => "num",
@@ -486,7 +485,7 @@ my @art_order = (
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
-    "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
+    "MUTATE", "unused", "SLAY", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "FOG", "REGEN", "SUSTAB", "NO_UPGRADE", "\n",
     "}",

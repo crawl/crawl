@@ -124,7 +124,6 @@
 # Explanation of normal fields:
 
 # AC:       Armour class modifier (for non-armour artefacts).
-# ACC:      Accuracy modifier (for non-weapon artefacts).
 # ANGRY     Each time the wielder of the weapon strikes a victim there's
 #           a num-in-100 chance of the wielder going berserk.
 # APPEAR:   Unidentified appearance of artifact.
@@ -134,7 +133,7 @@
 #           (e.g., ETC_FIRE)
 # CURSED:   The artefact has a one-in-num chance of becoming cursed each
 #           time it's equipped (and is generated cursed).
-# DAM:      Damage modifier (for non-weapon artefacts).
+# SLAY:     Slaying modifier (for non-weapon artefacts).
 # DEX:      Dexterity modifier.
 # EV:       Evasion modifier.
 # FIRE:     Fire resistance/vulnerability.
@@ -671,7 +670,7 @@ PLUS:     +2
 COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
-DAM:      -3
+SLAY:     -2
 STEALTH:  1
 BOOL:     seeinv, fog
 
@@ -769,8 +768,7 @@ PLUS:    +3
 COLOUR:  BROWN
 TILE:    urand_war
 TILE_EQ: glove_black
-ACC:     5
-DAM:     5
+SLAY:    5
 
 NAME:    shield of Resistance
 OBJ:     OBJ_ARMOUR/ARM_SHIELD
@@ -811,8 +809,7 @@ COLOUR:  ETC_SHIMMER_BLUE
 TILE:    urand_dragonmask
 TILE_EQ: art_dragonhelm
 MAGIC:   1
-ACC:     3
-DAM:     3
+SLAY:    3
 BOOL:    seeinv
 
 NAME:     robe of Night
@@ -852,7 +849,7 @@ TILE:    urand_fencer
 TILE_EQ: glove_white
 EV:      3
 DEX:     3
-ACC:     8
+SLAY:    3
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -921,7 +918,7 @@ STR:     2
 INT:     -2
 MAGIC:   1
 ANGRY:   9
-DAM:     5
+SLAY:    3
 CURSED:  3
 
 NAME:    ring of Shaolin
@@ -1189,10 +1186,9 @@ NAME:    milk chocolate
 OBJ:     OBJ_JEWELLERY/AMU_STASIS
 COLOUR:  BROWN
 TILE:    urand_air
-ACC:     60
 ANGRY:   100
 COLD:    3
-DAM:     60
+SLAY:    60
 DEX:     3
 EV:      3
 FIRE:    3
@@ -1209,9 +1205,8 @@ NAME:    dark chocolate
 OBJ:     OBJ_JEWELLERY/AMU_RESIST_CORROSION
 COLOUR:  DARKGREY
 TILE:    urand_bloodlust
-ACC:     -60
 COLD:    -3
-DAM:     -60
+SLAY:    -60
 DEX:     -3
 EV:      -3
 FIRE:    -3
