@@ -310,13 +310,6 @@ static void _check_inventory_skills()
     }
 }
 
-static void _check_equipment_skills()
-{
-    skill_set_iter it = you.stop_train.find(SK_SHIELDS);
-    if (it != you.stop_train.end() && you.slot_item(EQ_SHIELD, true))
-        you.stop_train.erase(it);
-}
-
 static void _check_spell_skills()
 {
     for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
@@ -407,7 +400,6 @@ static void _check_start_train()
 static void _check_stop_train()
 {
     _check_inventory_skills();
-    _check_equipment_skills();
     _check_spell_skills();
     _check_abil_skills();
 

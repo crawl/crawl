@@ -105,7 +105,6 @@ skill_type range_skill(const item_def &item) PURE;
 skill_type range_skill(object_class_type wclass, int wtype) IMMUTABLE;
 
 bool item_skills(const item_def &item, set<skill_type> &skills);
-void maybe_change_train(const item_def &item, bool start);
 
 // launcher and ammo functions:
 bool is_range_weapon(const item_def &item) PURE;
