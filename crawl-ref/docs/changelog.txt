@@ -1,4 +1,4 @@
-Stone Soup 0.14 (201404??)
+Stone Soup 0.14 (20140409)
 --------------------------
 * The lower half of D is now a new branch, the Depths.
 * Two new species: Formicids and Vine Stalkers.
