@@ -1015,8 +1015,7 @@ This ring allows its wearer to see those things hidden from view by magic.
 ring of slaying
 
 This ring increases or decreases the wearer's effectiveness with ranged weapons
-and melee attacks. It has two enchantment levels, affecting accuracy and damage
-respectively.
+and melee attacks.
 %%%%
 ring of stealth
 

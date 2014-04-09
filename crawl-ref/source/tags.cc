@@ -3822,6 +3822,32 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+    // Combine old rings of slaying (Acc/Dam) to new (Dam).
+    // Also handle the changes to the respective ARTP_.
+    if (th.getMinorVersion() < TAG_MINOR_SLAYRING_PLUSES)
+    {
+        int acc, dam, slay = 0;
+
+        if (is_artefact(item))
+        {
+            acc = artefact_wpn_property(item, ARTP_ACCURACY);
+            dam = artefact_wpn_property(item, ARTP_SLAYING);
+            slay = dam < 0 ? dam : max(acc, dam);
+
+            artefact_set_property(item, ARTP_SLAYING, slay);
+        }
+
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_SLAYING)
+        {
+             acc = item.plus;
+             dam = item.plus2;
+             slay = dam < 0 ? dam : max(acc, dam);
+
+            item.plus = slay;
+            item.plus2 = 0;
+        }
+    }
+
 #endif
 
     if (is_unrandom_artefact(item))

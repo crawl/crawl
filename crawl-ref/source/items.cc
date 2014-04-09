@@ -3760,8 +3760,6 @@ bool get_item_by_name(item_def *item, char* specs,
         switch (item->sub_type)
         {
         case RING_SLAYING:
-            item->plus2 = 5;
-            // intentional fall-through
         case RING_PROTECTION:
         case RING_EVASION:
         case RING_STRENGTH:

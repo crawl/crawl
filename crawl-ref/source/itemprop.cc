@@ -1848,8 +1848,6 @@ int ring_has_pluses(const item_def &item)
     switch (item.sub_type)
     {
     case RING_SLAYING:
-        return 2;
-
     case RING_PROTECTION:
     case RING_EVASION:
     case RING_STRENGTH:

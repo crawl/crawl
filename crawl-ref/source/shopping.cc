@@ -852,7 +852,7 @@ int artefact_value(const item_def &item)
 
     // This should probably be more complex... but this isn't so bad:
     ret += 6 * prop[ ARTP_AC ] + 6 * prop[ ARTP_EVASION ]
-            + 3 * prop[ ARTP_ACCURACY ] + 6 * prop[ ARTP_DAMAGE ]
+            + 6 * prop[ ARTP_SLAYING ]
             + 3 * prop[ ARTP_STRENGTH ] + 3 * prop[ ARTP_INTELLIGENCE ]
             + 3 * prop[ ARTP_DEXTERITY ];
 
@@ -1597,15 +1597,13 @@ unsigned int item_value(item_def item, bool ident)
                 int base = 0;
                 int coefficient = 0;
                 if (item.sub_type == RING_SLAYING)
-                    base = item.plus + 2 * item.plus2;
+                    base = 3 * item.plus;
                 else
                     base = 2 * item.plus;
 
                 switch (item.sub_type)
                 {
                 case RING_SLAYING:
-                    coefficient = 50;
-                    break;
                 case RING_PROTECTION:
                 case RING_EVASION:
                     coefficient = 40;

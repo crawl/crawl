@@ -3095,10 +3095,8 @@ bool is_bad_item(const item_def &item, bool temp)
         case RING_STRENGTH:
         case RING_DEXTERITY:
         case RING_INTELLIGENCE:
-            return item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus <= 0;
         case RING_SLAYING:
-            return item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus <= 0
-                   && item.plus2 <= 0;
+            return item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus <= 0;
         default:
             return false;
         }

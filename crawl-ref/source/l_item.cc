@@ -682,13 +682,8 @@ IDEF(plus2)
     if (!item || !item->defined())
         return 0;
 
-    if (item_ident(*item, ISFLAG_KNOW_PLUSES)
-        && (item->base_type == OBJ_WEAPONS
-            || item->base_type == OBJ_JEWELLERY
-               && item->sub_type == RING_SLAYING))
-    {
+    if (item_ident(*item, ISFLAG_KNOW_PLUSES) && item->base_type == OBJ_WEAPONS)
         lua_pushnumber(ls, item->plus2);
-    }
     else
         lua_pushnil(ls);
 

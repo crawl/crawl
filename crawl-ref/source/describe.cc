@@ -247,8 +247,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Str",    ARTP_STRENGTH,              0 },
         { "Dex",    ARTP_DEXTERITY,             0 },
         { "Int",    ARTP_INTELLIGENCE,          0 },
-        { "Acc",    ARTP_ACCURACY,              0 },
-        { "Dam",    ARTP_DAMAGE,                0 },
+        { "Slay",   ARTP_SLAYING,               0 },
 
         // Qualitative attributes (and Stealth)
         { "SInv",   ARTP_EYESIGHT,              2 },
@@ -445,10 +444,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_STRENGTH, "It affects your strength (%d).", false},
         { ARTP_INTELLIGENCE, "It affects your intelligence (%d).", false},
         { ARTP_DEXTERITY, "It affects your dexterity (%d).", false},
-        { ARTP_ACCURACY, "It affects your accuracy with ranged weapons and "
-                         "melee attacks (%d).", false},
-        { ARTP_DAMAGE, "It affects your damage with ranged weapons and melee "
-                       "attacks (%d).", false},
+        { ARTP_SLAYING, "It affects your accuracy and damage with non-spells.",
+                        false},
         { ARTP_FIRE, "fire", true},
         { ARTP_COLD, "cold", true},
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
@@ -1375,8 +1372,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
         // Explicit description of ring power.
-        if (item.plus != 0
-            || item.sub_type == RING_SLAYING && item.plus2 != 0)
+        if (item.plus != 0)
         {
             switch (item.sub_type)
             {
@@ -1411,21 +1407,10 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                 break;
 
             case RING_SLAYING:
-                if (item.plus != 0)
-                {
-                    description += "\nIt affects your accuracy with ranged "
-                                   "weapons and melee attacks (";
-                    _append_value(description, item.plus, true);
-                    description += ").";
-                }
-
-                if (item.plus2 != 0)
-                {
-                    description += "\nIt affects your damage with ranged "
-                                   "weapons and melee attacks (";
-                    _append_value(description, item.plus2, true);
-                    description += ").";
-                }
+                description += "\nIt affects your accuracy and damage "
+                               "with non-spells (";
+                _append_value(description, item.plus, true);
+                description += ").";
                 break;
 
             default:

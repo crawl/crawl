@@ -217,8 +217,7 @@ int attack::calc_to_hit(bool random)
         }
 
         // slaying bonus
-        mhit += slaying_bonus(PWPN_HIT,
-                              wpn_skill == SK_THROWING
+        mhit += slaying_bonus(wpn_skill == SK_THROWING
                               || (weapon && is_range_weapon(*weapon)
                                          && using_weapon()));
 
@@ -258,7 +257,7 @@ int attack::calc_to_hit(bool random)
             mhit += mitm[jewellery].plus;
         }
 
-        mhit += attacker->scan_artefacts(ARTP_ACCURACY);
+        mhit += attacker->scan_artefacts(ARTP_SLAYING);
 
         if (using_weapon() && weapon->base_type == OBJ_RODS)
             mhit += weapon->special;
@@ -1325,8 +1324,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
         if (you.duration[DUR_CORROSION])
             damage_plus -= 3 * you.props["corrosion_amount"].get_int();
     }
-    damage_plus += slaying_bonus(PWPN_DAMAGE,
-                                 !weapon && wpn_skill == SK_THROWING
+    damage_plus += slaying_bonus(!weapon && wpn_skill == SK_THROWING
                                  || (weapon && is_range_weapon(*weapon)
                                             && using_weapon()));
 
@@ -1467,10 +1465,10 @@ int attack::calc_damage()
                 && mitm[jewellery].base_type == OBJ_JEWELLERY
                 && mitm[jewellery].sub_type == RING_SLAYING)
             {
-                wpn_damage_plus += mitm[jewellery].plus2;
+                wpn_damage_plus += mitm[jewellery].plus;
             }
 
-            wpn_damage_plus += attacker->scan_artefacts(ARTP_DAMAGE);
+            wpn_damage_plus += attacker->scan_artefacts(ARTP_SLAYING);
 
             if (wpn_damage_plus >= 0)
                 damage += random2(wpn_damage_plus);

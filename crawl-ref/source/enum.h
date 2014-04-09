@@ -3614,8 +3614,10 @@ enum artefact_prop_type
     ARTP_METABOLISM,
 #endif
     ARTP_MUTAGENIC,
+#if TAG_MAJOR_VERSION == 34
     ARTP_ACCURACY,
-    ARTP_DAMAGE,
+#endif
+    ARTP_SLAYING,
     ARTP_CURSED,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,

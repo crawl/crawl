@@ -1929,9 +1929,6 @@ static int _get_monster_jewellery_value(const monster *mon,
         value += item.plus;
     }
 
-    if (item.sub_type == RING_SLAYING)
-        value += item.plus2;
-
     if (item.sub_type == AMU_INACCURACY)
         value -= 5;
 
