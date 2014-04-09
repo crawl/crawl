@@ -41,7 +41,7 @@ int       num_traps_for_place();
 trap_type random_trap_for_place();
 
 int count_traps(trap_type ttyp);
-void place_webs(int num, bool is_second_phase = false);
+void place_webs(int num);
 bool maybe_destroy_web(actor *oaf);
 bool ensnare(actor *fly);
 #endif
