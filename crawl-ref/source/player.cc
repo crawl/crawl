@@ -834,8 +834,6 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
-    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
-        eq = EQ_RINGS;
 
     // Everybody but porcupines and wisps can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
@@ -1029,22 +1027,6 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         }
         break;
 
-    case EQ_RINGS_PLUS2:
-        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
-        {
-            if (slots == EQ_AMULET)
-                continue;
-
-            if ((item = slot_item(static_cast<equipment_type>(slots)))
-                && item->sub_type == sub_type
-                && (calc_unid
-                    || item_type_known(*item)))
-            {
-                ret += item->plus2;
-            }
-        }
-        break;
-
     case EQ_ALL_ARMOUR:
         // Doesn't make much sense here... be specific. -- bwr
         die("EQ_ALL_ARMOUR is not a proper slot");
@@ -1092,7 +1074,6 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_STAFF:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
-    case EQ_RINGS_PLUS2:
         // no ego types for these slots
         break;
 
@@ -1169,7 +1150,6 @@ bool player_equip_unrand(int unrand_index)
     case EQ_LEFT_RING:
     case EQ_RIGHT_RING:
     case EQ_RINGS_PLUS:
-    case EQ_RINGS_PLUS2:
     case EQ_ALL_ARMOUR:
         // no unrandarts for these slots.
         break;

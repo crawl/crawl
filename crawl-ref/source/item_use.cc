@@ -1186,7 +1186,6 @@ static bool _swap_rings(int ring_slot)
             {
                 if (ring->sub_type != first_ring->sub_type
                     || ring->plus  != first_ring->plus
-                    || ring->plus2 != first_ring->plus2
                     || is_artefact(*ring) || is_artefact(*first_ring))
                 {
                     all_same = false;

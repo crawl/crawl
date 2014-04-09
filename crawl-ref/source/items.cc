@@ -3928,10 +3928,7 @@ item_info get_item_info(const item_def& item)
         else
             ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-        {
             ii.plus = item.plus;   // str/dex/int/ac/ev ring plus
-            ii.plus2 = item.plus2; // slaying damage bonus
-        }
         ii.special = item.special; // appearance
         ii.rnd = item.rnd; // randart appearance
         break;

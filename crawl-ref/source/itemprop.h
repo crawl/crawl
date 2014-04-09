@@ -135,7 +135,7 @@ bool is_xp_evoker(const item_def &item);
 bool evoker_is_charged(const item_def &item);
 
 // ring functions:
-int  ring_has_pluses(const item_def &item) PURE;
+bool ring_has_pluses(const item_def &item) PURE;
 bool ring_has_stackable_effect(const item_def &item) PURE;
 
 // food functions:

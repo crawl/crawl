@@ -1352,14 +1352,9 @@ int acquirement_create_item(object_class_type class_wanted,
             case RING_INTELLIGENCE:
             case RING_DEXTERITY:
             case RING_EVASION:
+            case RING_SLAYING:
                 // Make sure plus is >= 1.
                 acq_item.plus = max(abs((int) acq_item.plus), 1);
-                break;
-
-            case RING_SLAYING:
-                // Two plusses to handle here, and accuracy can be +0.
-                acq_item.plus = abs(acq_item.plus);
-                acq_item.plus2 = max(abs((int) acq_item.plus2), 2);
                 break;
 
             case RING_LOUDNESS:
