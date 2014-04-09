@@ -35,6 +35,7 @@
 #include "maps.h"
 #include "misc.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "place.h"

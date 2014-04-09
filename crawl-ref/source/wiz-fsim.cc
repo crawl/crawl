@@ -26,6 +26,7 @@
 #include "mgen_data.h"
 #include "monster.h"
 #include "mon-clone.h"
+#include "mon-death.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"

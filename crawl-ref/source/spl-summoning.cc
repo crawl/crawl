@@ -39,6 +39,7 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"

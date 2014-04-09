@@ -26,6 +26,7 @@
 #include "item_use.h"
 #include "libutil.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "notes.h"
@@ -469,6 +470,62 @@ bool item_known_cursed(const item_def &item)
 {
     return _full_ident_mask(item) & ISFLAG_KNOW_CURSE
            && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
+}
+
+static bool _item_known_uncursed(const item_def &item)
+{
+    return !(_full_ident_mask(item) & ISFLAG_KNOW_CURSE)
+           || (item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed());
+}
+
+// Curses a random player inventory item.
+bool curse_an_item(bool ignore_holy_wrath)
+{
+    // allowing these would enable mummy scumming
+    if (you_worship(GOD_ASHENZARI))
+    {
+        mprf(MSGCH_GOD, "The curse is absorbed by %s.",
+             god_name(GOD_ASHENZARI).c_str());
+        return false;
+    }
+
+    int count = 0;
+    int item  = ENDOFPACK;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (!you.inv[i].defined())
+            continue;
+
+        if (is_weapon(you.inv[i])
+            || you.inv[i].base_type == OBJ_ARMOUR
+            || you.inv[i].base_type == OBJ_JEWELLERY)
+        {
+            if (you.inv[i].cursed())
+                continue;
+
+            // Melded items cannot be cursed.
+            if (item_is_melded(you.inv[i]))
+                continue;
+
+            if (ignore_holy_wrath && you.inv[i].base_type == OBJ_WEAPONS
+                && get_weapon_brand(you.inv[i]) == SPWPN_HOLY_WRATH)
+                continue;
+
+            // Item is valid for cursing, so we'll give it a chance.
+            count++;
+            if (one_chance_in(count))
+                item = i;
+        }
+    }
+
+    // Any item to curse?
+    if (item == ENDOFPACK)
+        return false;
+
+    do_curse_item(you.inv[item], false);
+
+    return true;
 }
 
 void do_curse_item(item_def &item, bool quiet)

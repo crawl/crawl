@@ -38,6 +38,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-chimera.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-transit.h"

@@ -23,6 +23,7 @@
 #include "maps.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "mon-place.h"

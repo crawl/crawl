@@ -34,6 +34,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-chimera.h"
+#include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-project.h"

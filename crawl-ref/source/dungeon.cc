@@ -52,6 +52,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-chimera.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "mon-pick.h"
 #include "mon-place.h"

@@ -19,20 +19,6 @@ enum mon_dam_level_type
     MDAM_DEAD,
 };
 
-struct level_exit
-{
-    coord_def target;
-    bool unreachable;
-
-    level_exit(coord_def t = coord_def(-1, -1), bool u = true)
-        : target(t), unreachable(u)
-    {
-    }
-};
-
-#define FRESHEST_CORPSE 210
-#define ROTTING_CORPSE   99
-
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)
@@ -68,43 +54,14 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME,
                        bool force_beh = false);
 
-int monster_die(monster* mons, const actor *killer, bool silent = false,
-                bool wizard = false, bool fake = false);
-
-int monster_die(monster* mons, killer_type killer,
-                int killer_index, bool silent = false, bool wizard = false,
-                bool fake = false);
-
-int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
-                int killer_index);
-
-monster_type fill_out_corpse(const monster* mons,
-                             monster_type mtype,
-                             item_def& corpse,
-                             bool force_corpse = false);
-
-bool explode_corpse(item_def& corpse, const coord_def& where);
-
-int place_monster_corpse(const monster* mons, bool silent,
-                         bool force = false);
-
 void slimify_monster(monster* mons, bool hostile = false);
 
 bool mon_can_be_slimified(monster* mons);
 
 void corrode_monster(monster* mons, const actor* evildoer);
 
-void mons_check_pool(monster* mons, const coord_def &oldpos,
-                     killer_type killer = KILL_NONE, int killnum = -1);
-
-void monster_cleanup(monster* mons);
-
-void unawaken_vines(const monster* mons, bool quiet);
-
 int dismiss_monsters(string pattern);
 void zap_los_monsters(bool items_also);
-
-bool curse_an_item(bool ignore_holy_wrath = false);
 
 bool is_any_item(const item_def& item);
 void monster_drop_things(
@@ -136,6 +93,7 @@ bool swap_places(monster* mons, const coord_def &loc);
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
 void print_wounds(const monster* mons);
+bool wounded_damaged(mon_holy_type holi);
 
 // Return your target, if it still exists and is visible to you.
 monster *get_current_target();
@@ -169,20 +127,12 @@ bool monster_space_valid(const monster* mons, coord_def target,
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monster* mon);
 
-string summoned_poof_msg(const monster* mons, bool plural = false);
-string summoned_poof_msg(const int midx, const item_def &item);
-string summoned_poof_msg(const monster* mons, const item_def &item);
-
 struct bolt;
-
-void setup_spore_explosion(bolt & beam, const monster& origin);
 
 bool mons_avoids_cloud(const monster* mons, int cloud_num,
                        bool placement = false);
 
 void debuff_monster(monster* mons);
-int exp_rate(int killer);
 int count_monsters(monster_type mtyp, bool friendlyOnly);
 int count_allies();
-void record_monster_defeat(monster* mons, killer_type killer);
 #endif

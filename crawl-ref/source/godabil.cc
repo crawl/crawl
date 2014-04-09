@@ -36,6 +36,7 @@
 #include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"

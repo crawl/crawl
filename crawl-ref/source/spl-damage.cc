@@ -33,6 +33,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-stuff.h"
 #include "options.h"
 #include "ouch.h"

@@ -34,6 +34,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
+#include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-pick.h"
 #include "mon-place.h"
