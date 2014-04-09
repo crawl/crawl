@@ -186,6 +186,19 @@ public:
 
     void fire();
 };
+
+class rakshasa_clone_fineff : public final_effect
+{
+public:
+    rakshasa_clone_fineff(const actor *defend, const coord_def &pos)
+        : final_effect(0, defend, pos)
+    {
+    }
+    bool mergeable(const final_effect &a) const;
+    void fire();
+protected:
+    int damage;
+};
 void fire_final_effects();
 
 #endif
