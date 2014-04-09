@@ -2803,9 +2803,7 @@ void read_scroll(int slot)
     if (player_mutation_level(MUT_BLURRY_VISION)
         && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5))
     {
-        mpr((player_mutation_level(MUT_BLURRY_VISION) == 3 && one_chance_in(3))
-                        ? "This scroll appears to be blank."
-                        : "The writing blurs in front of your eyes.");
+        mpr("The writing blurs in front of your eyes.");
         return;
     }
 
