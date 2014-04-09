@@ -1668,7 +1668,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GNOME,           SK_TRAPS,         -99),
 #endif
     APT(SP_GNOME,           SK_UNARMED_COMBAT,  0),
-    APT(SP_GNOME,           SK_SPELLCASTING,   -1),
+    APT(SP_GNOME,           SK_SPELLCASTING,   -2),
     APT(SP_GNOME,           SK_CONJURATIONS,    0),
     APT(SP_GNOME,           SK_HEXES,           0),
     APT(SP_GNOME,           SK_CHARMS,          0),
