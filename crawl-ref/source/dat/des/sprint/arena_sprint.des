@@ -251,8 +251,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:20 merfolk / w:5 mermaid / hippogriff / centaur / w:5 griffon /\
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
                 "w:5 bog body / w:5 giant leech / insubstantial wisp / w:5 swamp drake /\
-                    w:1 vapour / giant frog / w:2 spiny frog / w:2 hydra /\
-                    w:2 vampire mosquito",
+                    giant frog / w:2 spiny frog / w:2 hydra / w:2 vampire mosquito",
                 "w:30 spider / goliath beetle / w:2 boulder beetle / w:2 jumping spider /\
                     scorpion / w:2 tarantella / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
@@ -267,7 +266,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Fire, Air, Earth, Water, Death
                 "w:20 fire bat / fire elemental / w:5 fire drake / w:5 mottled dragon /\
                     w:1 flaming corpse",
-                "steam dragon / w:5 air elemental / w:1 vapour / w:5 lightning spire /\
+                "steam dragon / w:5 air elemental / w:1 wind drake / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
                 "w:15 earth elemental / w:5 gargoyle / w:5 boulder beetle /\
                     w:15 iron devil / w:15 iron imp",
@@ -309,7 +308,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Fire, Air, Earth, Water, Death
                 "fire bat / fire elemental / fire drake / mottled dragon /\
                     flaming corpse / w:5 sun demon / w:2 efreet / hell hound",
-                "steam dragon / air elemental / w:3 vapour / lightning spire /\
+                "steam dragon / air elemental / w:3 wind drake / lightning spire /\
                     w:20 sky beast / insubstantial wisp",
                 "earth elemental w:15 / gargoyle w:5 / boulder beetle /\
                     iron devil / iron imp / w:5 iron troll",
@@ -354,7 +353,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:5 fire bat / fire elemental / fire drake / mottled dragon /\
                     flaming corpse / sun demon / efreet / hell hound /\
                     hell hog / w:5 fire crab",
-                "w:1 storm dragon / air elemental / w:5 vapour / w:17 sky beast /\
+                "w:1 storm dragon / air elemental / w:5 wind drake / w:17 sky beast /\
                     insubstantial wisp",
                 "earth elemental w:20 / boulder beetle /\
                     iron devil / w:5 iron troll / w:1 roxanne /\
@@ -407,7 +406,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "fire elemental / fire dragon / sun demon / efreet / hell hound /\
                     hell hog / fire crab / fire giant / w:5 balrug / w:1 margery /\
                     w:2 azrael",
-                "storm dragon / air elemental / w:5 vapour / spriggan air mage /\
+                "storm dragon / air elemental / w:5 wind drake / spriggan air mage /\
                     insubstantial wisp / w:3 titan / w:1 nikola",
                 "earth elemental / w:5 iron golem / stone giant /\
                     iron devil / w:5 iron troll / w:1 the iron giant /\
@@ -481,7 +480,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:5 orb of fire / brimstone fiend / balrug / hellion /\
                     fire giant / sun demon / fire vortex",
                 "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil",
-                "spriggan air mage / w:5 titan / w:5 electric golem / vapour /\
+                "spriggan air mage / w:5 titan / w:5 electric golem / wind drake /\
                     air elemental / ball lightning / storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
@@ -556,8 +555,8 @@ function arena_sprint_get_monster_set(round, boss)
                     fire giant / sun demon",
                 "place:Coc:$ w:20 / ice fiend / blizzard demon / ice devil /\
                     white draconian",
-                "spriggan air mage / titan / electric golem / vapour /\
-                    ball lightning / storm dragon",
+                "spriggan air mage / titan / electric golem / ball lightning /\
+                    storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / ancient lich /\
                     unborn w:5 / place:Tar:$ w:40",

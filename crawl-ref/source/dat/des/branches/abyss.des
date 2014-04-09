@@ -489,8 +489,8 @@ ENDMAP
 
 NAME:    hangedman_abyss_batty_box
 MONS:    bat / fire bat / vampire bat, butterfly, raven
-MONS:    spatial vortex, vapour, harpy, unseen horror
-KMONS:   8 = vapour w:9 / harpy w:1
+MONS:    spatial vortex, wind drake, harpy, unseen horror
+KMONS:   8 = wind drake w:9 / harpy w:1
 KITEM:   8 = acquire any / any good_item / stone q:1 w:5
 NSUBST:  A = 2:2 / 1:2 / 2 = 1122., B = 1:3 / 1:4 / 1:1334. / 1:12334.
 NSUBST:  C = 1:556 / 1:6 / 1:7 / 1:66777. / 1:1234567.
@@ -513,7 +513,7 @@ ENDMAP
 NAME:    hangedman_glass_garden
 TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   D, Depths, Abyss
-MONS:    butterfly, plant, unseen horror, shadow wraith, vapour
+MONS:    butterfly, plant, unseen horror, shadow wraith, wind drake
 SHUFFLE: 34GT, GTt
 : if you.branch() == "Abyss" then
 SHUFFLE: 345", ABCD / ACBD / ADCB
@@ -899,7 +899,7 @@ WEIGHT:  5
 MONS:    rakshasa / efreet / smoke demon / wizard / base draconian w:5 / \
          guardian serpent w:1 / vampire w:3 / necromancer w:3
 MONS:    thrashing horror / blink frog / very ugly thing / \
-         large abomination / unseen horror / vapour w:5 / shapeshifter / \
+         large abomination / unseen horror / shapeshifter / \
          wretched star w:5 / air elemental / raiju / worldbinder
 MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
          profane servitor w:5 / lorocyproca / deep elf demonologist / \

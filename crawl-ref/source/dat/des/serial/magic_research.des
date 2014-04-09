@@ -97,7 +97,7 @@ ENDMAP
 
 NAME:   hangedman_research_electronics
 MONS:   air elemental / raiju / shock serpent
-MONS:   sky beast, ball lightning / vapour
+MONS:   sky beast, ball lightning / lightning spire
 COLOUR: .v0123D = cyan
 FTILE:  .+v0123D = floor_rough_cyan
 TILE:   v = dngn_metal_wall_cyan

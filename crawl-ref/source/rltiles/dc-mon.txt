@@ -253,7 +253,6 @@ twister1 MONS_TWISTER /*'v'*/
 twister2
 twister3
 twister4
-vapour MONS_VAPOUR /*'#'*/
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
 orb_of_destruction2

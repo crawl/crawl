@@ -49,7 +49,7 @@ function pan_lord_setup(_G, name)
                  "smoke demon w:300 / blizzard demon w:100 / " ..
                  "green death w:200 / giant orange brain / rakshasa / " ..
                  "wizard / draconian annihilator / deep elf annihilator / " ..
-                 "titan w:5 / vapour / lich w:5 / gelid blood saint",
+                 "titan w:5 / lich w:5 / gelid blood saint",
         Cerebov = "efreet / orange demon / sun demon / ynoxinul / balrug / " ..
                   "brimstone fiend w:1 / infernal warmonger w:1",
         ['Gloorx Vloq'] = "skeleton w:400 / soul eater w:200 / " ..
@@ -804,7 +804,7 @@ NAME:      lom_lobon_spiral_st
 TAGS:      lom_lobon no_pool_fixup patrolling uniq_lom_lobon
 ORIENT:    northeast
 : pan_lord_setup(_G, 'Lom Lobon')
-MONS:      patrolling Lom Lobon, titan, vapour, wizard
+MONS:      patrolling Lom Lobon, titan, lightning spire, wizard
 KMONS:     S = storm dragon
 KMONS:     d = draconian annihilator
 KMONS:     e = deep elf annihilator
@@ -853,7 +853,7 @@ cwwbbb..............ww..............wwDc
 cwbb..3...........wwwwww.....2.....wwwwc
 cwb$.........ww..wwwwwwwww.......wwwwwwc
 cwb$..3.....wwww..wwwwwwwww....wwwwwwwwc
-cwbb3...3.bbwwww...wwwwwwwwwwwwwwwwwwwcc
+cwbb....3.bbwwww...wwwwwwwwwwwwwwwwwwwcc
 cwwbbb$$bbbwwwwww....wwwwwwwwwwwwwwwwccc
 ccwwwbbbbwwwww...w....wwwwwwwwwwwwwwcccc
 cccwwwwwwwwww..4.....4.wwwwwwwwwwwcccccc

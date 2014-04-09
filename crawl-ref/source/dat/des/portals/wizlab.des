@@ -28,7 +28,7 @@
 #          |Abyss monsters          |abyss-escape aides      |
 #--------------------------------------------------------------------
 #Cloud Mage|air elementals,         |potions, robe of clouds,|16000
-#          |vapours, Cloud Mage     |speed/air-related misc  |
+#          |wind drakes, Cloud Mage |speed/air-related misc  |
 #--------------------------------------------------------------------
 #Hellbinder|demons, summoners,      |fire/summoning/         |17000
 #          |Hellbinder              |demonic items           |
@@ -1604,7 +1604,7 @@ KMONS:   04 = large abomination w:15 / small abomination w:15 / unseen horror w:
 KMONS:   95 = ynoxinul / smoke demon / sixfirhy / sun demon w:5 / efreet w:5 / \
               soul eater w:5 / hell knight w:5 / demonic crawler / raiju / \
               ancient zyme w:20 / lurking horror / tentacled starspawn w:30 / \
-              vapour w:5 / earth elemental w:5 / water elemental / \
+              wind drake w:5 / earth elemental w:5 / water elemental / \
               very ugly thing / base draconian / guardian serpent / brain worm / \
               eidolon w:5 / shadow wraith / anaconda skeleton w:5 / \
               flaming corpse / great orb of eyes w:5 / giant orange brain
@@ -1771,7 +1771,7 @@ ENDMAP
 # TODO: Needs an "ocean of clouds" tiles, and fluffy "cotton wool" cloud tiles.
 NAME:       wizlab_cloud
 TAGS:       no_rotate
-MONS:       vapour, air elemental, insubstantial wisp
+MONS:       wind drake, air elemental, insubstantial wisp
 KMONS:      4 = twister
 {{
 wizname = crawl.make_name()
@@ -1781,7 +1781,7 @@ kmons ("    5 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wi
          .. " quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution"
          .. " | dagger ego:freezing")
 }}
-NSUBST:     . = 3:1 / * = .:120 1:2 2:6 3:1
+NSUBST:     . = 3:1 / * = .:120 1:1 2:8 3:2
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 4, \
@@ -1805,7 +1805,7 @@ TILE:       o = dngn_transparent_stone_white
 TILE:       b = dngn_crystal_white
 COLOUR:     wWv#4 = silver
 :           set_border_fill_type('open_sea')
-:           set_random_mon_list("vapour / air elemental")
+:           set_random_mon_list("insubstantial wisp / air elemental / wind drake")
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
 :           set_feature_name("floor", "damp floor")
 :           set_feature_name("green_crystal_wall", "wall of white crystal")

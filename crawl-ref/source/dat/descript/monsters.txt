@@ -2642,12 +2642,6 @@ A mosquito that has fed upon tainted blood and been transformed into a
 revolting and pestilent undead insect, seeking to drain its victims to the last
 drop.
 %%%%
-vapour
-
-A cloud of weird vapour, only visible to those with supernaturally enhanced
-eyesight. As it floats aimlessly through the dungeon, it builds up an electric
-charge, which it will occasionally discharge in your direction.
-%%%%
 vault guard
 
 A heavily armed and armoured guardian of the Vaults.

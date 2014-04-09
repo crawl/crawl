@@ -2840,7 +2840,7 @@ ENDMAP
 # This is probably a get-off-the-level vault. -LP
 NAME:  aerie_lemuel
 DEPTH: D:12-, Depths, !Depths:$
-MONS:  insubstantial wisp, ball lightning, vapour, air elemental
+MONS:  insubstantial wisp, ball lightning, wind drake, air elemental
 TAGS:  no_monster_gen
 SUBST: .:..w
 SUBST: 1 = 1 w:3, 2= 2 w:3, 3 = 3 w:3, 4 = 4 |:3

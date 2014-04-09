@@ -2016,8 +2016,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SILVER_STAR;
 
     // other symbols
-    case MONS_VAPOUR:
-        return TILEP_MONS_VAPOUR;
     case MONS_SHADOW:
         return TILEP_MONS_SHADOW;
     case MONS_DEATH_COB:
