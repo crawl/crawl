@@ -663,12 +663,11 @@ static int _randart_add_one_property(const item_def &item,
 }
 
 // An artefact will pass this check if it has any non-stat properties, and
-// also if it has enough stat properties (Str, Dex, Int, Slay).
+// also if it has enough stat properties (AC, EV, Str, Dex, Int).
 // Returns how many (more) stat properties we need to add.
 static int _need_bonus_stat_props(const artefact_properties_t &proprt)
 {
     int num_stats   = 0;
-    int num_acc_dam = 0;
 
     for (int i = 0; i < ARTP_NUM_PROPERTIES; i++)
     {
@@ -680,13 +679,9 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
 
         if (i >= ARTP_AC && i <= ARTP_DEXTERITY)
             num_stats++;
-        else if (i == ARTP_SLAYING)
-            num_acc_dam++;
         else
             return 0;
     }
-
-    num_stats += num_acc_dam;
 
     // If an artefact has no properties at all, something is wrong.
     if (num_stats == 0)
@@ -697,10 +692,7 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
         return 0;
 
     // If an artefact has exactly one stat property, we might want to add
-    // some more. (66% chance if it's Acc/Dam, else always.)
-    if (num_acc_dam > 0)
-        return random2(3);
-
+    // some more.
     return 1 + random2(2);
 }
 
