@@ -73,11 +73,9 @@ bool trap_def::type_has_ammo() const
 
 void trap_def::disarm()
 {
-    if (type_has_ammo() && ammo_qty > 0 || type == TRAP_NET)
+    if (type == TRAP_NET)
     {
         item_def trap_item = generate_trap_item();
-        if (type != TRAP_NET)
-            trap_item.quantity = ammo_qty;
         copy_item_to_grid(trap_item, pos);
     }
     destroy();
@@ -1605,11 +1603,6 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             act.hurt(NULL, damage_taken);
         }
     }
-
-    // Drop the item (sometimes.)
-    if (coinflip())
-        copy_item_to_grid(shot, apos);
-
     ammo_qty--;
 }
 
