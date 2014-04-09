@@ -1083,16 +1083,7 @@ bool melee_attack::attack()
         && !attacker->as_monster()->wont_attack())
     {
         if (defender->is_player())
-        {
             interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
-
-            // Try to switch to a melee weapon in a/b slot if we don't have one
-            // wielded and end the turn.
-            if (Options.auto_switch && !wielded_weapon_check(weapon, true))
-                for (int i = 0; i <= 1; ++i)
-                    if (is_melee_weapon(you.inv[i]) && wield_weapon(true, i))
-                        return false;
-        }
         if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
             you.pet_target = attacker->mindex();
     }
