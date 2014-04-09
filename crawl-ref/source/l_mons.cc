@@ -8,6 +8,7 @@
 #include "libutil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "monster.h"

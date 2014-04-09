@@ -14,10 +14,12 @@
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
+#include "dgn-overview.h"
 #include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
 #include "mon-act.h"
@@ -1648,5 +1650,51 @@ void shake_off_monsters(const actor* target)
                     m->mindex(), target->mindex(), m->foe_memory);
             m->foe_memory = min(m->foe_memory, 7);
         }
+    }
+}
+
+// If _mons_find_level_exits() is ever expanded to handle more grid
+// types, this should be expanded along with it.
+static void _mons_indicate_level_exit(const monster* mon)
+{
+    const dungeon_feature_type feat = grd(mon->pos());
+    const bool is_shaft = (get_trap_type(mon->pos()) == TRAP_SHAFT);
+
+    if (feat_is_gate(feat))
+        simple_monster_message(mon, " passes through the gate.");
+    else if (feat_is_travelable_stair(feat))
+    {
+        command_type dir = feat_stair_direction(feat);
+        simple_monster_message(mon,
+            make_stringf(" %s the %s.",
+                dir == CMD_GO_UPSTAIRS     ? "goes up" :
+                dir == CMD_GO_DOWNSTAIRS   ? "goes down"
+                                           : "takes",
+                feat_is_escape_hatch(feat) ? "escape hatch"
+                                           : "stairs").c_str());
+    }
+    else if (is_shaft)
+    {
+        simple_monster_message(mon,
+            make_stringf(" %s the shaft.",
+                mons_flies(mon) ? "goes down"
+                                : "jumps into").c_str());
+    }
+}
+
+void make_mons_leave_level(monster* mon)
+{
+    if (mon->pacified())
+    {
+        if (you.can_see(mon))
+        {
+            _mons_indicate_level_exit(mon);
+            remove_unique_annotation(mon);
+        }
+
+        // Pacified monsters leaving the level take their stuff with
+        // them.
+        mon->flags |= MF_HARD_RESET;
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
     }
 }

@@ -41,6 +41,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "mon-stuff.h"
 #include "mon-info.h"
 #include "output.h"

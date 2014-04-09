@@ -24,6 +24,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"

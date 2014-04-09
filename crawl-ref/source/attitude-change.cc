@@ -18,6 +18,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "mon-stuff.h"

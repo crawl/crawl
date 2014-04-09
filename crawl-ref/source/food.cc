@@ -35,6 +35,7 @@
 #include "mgen_data.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "mutation.h"

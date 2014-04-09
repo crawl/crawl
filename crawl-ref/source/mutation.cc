@@ -35,6 +35,7 @@
 #include "menu.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"

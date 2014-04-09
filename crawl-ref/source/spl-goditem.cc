@@ -28,6 +28,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"

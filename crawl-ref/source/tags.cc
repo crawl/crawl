@@ -51,6 +51,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "mon-info.h"
 #if TAG_MAJOR_VERSION == 34
  #include "mon-chimera.h"

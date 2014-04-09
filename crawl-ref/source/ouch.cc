@@ -48,6 +48,7 @@
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
