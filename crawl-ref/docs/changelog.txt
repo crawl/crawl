@@ -354,7 +354,7 @@ Items
       every target hit in a line.
     - New rod: rod of shadows, which summons Shadow Creatures from a depth in
       the dungeon roughly equivalent to the user's skill with Evocations,
-      drawing out-of-depth spawns after 16.
+      drawing out-of-depth spawns after 15.
     - New rod: rod of clouds, which creates various clouds based on power,
       with high skill giving several new types of clouds.
     - The rods of warding, venom, demonology, fiery destruction, and frigid
@@ -408,8 +408,7 @@ Gods
 * Cheibriados' Bend Time is available to all followers (was 1* ability).
 * Zin and Okawaru no longer care about the deaths of allies.
 * Okawaru no longer suppresses the demonic guardian Ds mutation.
-* Xom effects respect clarity and sustain abilities (as long as Xom is not
-  feeling nasty).
+* Xom effects respect clarity and sustain abilities.
 * Xom's confusion now caps at 20 turns.
 * Zin's Recite shows what will be affected by all of the relevant recitations.
 * Lugonu followers no longer suffer distortion unwield effects.
