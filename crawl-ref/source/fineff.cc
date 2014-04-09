@@ -14,6 +14,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
+#include "mon-cast.h"
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
@@ -97,6 +98,13 @@ bool shock_serpent_discharge_fineff::mergeable(const final_effect &fe) const
 bool delayed_action_fineff::mergeable(const final_effect &fe) const
 {
     return false;
+}
+
+bool rakshasa_clone_fineff::mergeable(const final_effect &fe) const
+{
+    const rakshasa_clone_fineff *o =
+        dynamic_cast<const rakshasa_clone_fineff *>(&fe);
+    return o && att == o->att && def == o->def && posn == o->posn;
 }
 
 void mirror_damage_fineff::merge(const final_effect &fe)
@@ -326,6 +334,28 @@ void kirke_death_fineff::fire()
     // Revert the player last
     if (you.form == TRAN_PIG)
         untransform();
+}
+
+void rakshasa_clone_fineff::fire()
+{
+    actor *defend = defender();
+    if (!defend)
+        return;
+
+    monster *rakshasa = defend->as_monster();
+    ASSERT(rakshasa);
+
+    // Using SPELL_NO_SPELL to prevent overwriting normal clones
+    cast_phantom_mirror(rakshasa, rakshasa, 50, SPELL_NO_SPELL);
+    cast_phantom_mirror(rakshasa, rakshasa, 50, SPELL_NO_SPELL);
+    rakshasa->lose_energy(EUT_SPELL);
+
+    if (you.can_see(rakshasa))
+    {
+        mprf(MSGCH_MONSTER_SPELL,
+             "The injured %s weaves a defensive illusion!",
+             rakshasa->name(DESC_PLAIN).c_str());
+    }
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
