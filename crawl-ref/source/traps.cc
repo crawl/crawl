@@ -1908,7 +1908,7 @@ int count_traps(trap_type ttyp)
     return num;
 }
 
-void place_webs(int num, bool is_second_phase)
+void place_webs(int num)
 {
     int slot = 0;
     for (int j = 0; j < num; j++)
@@ -1931,35 +1931,26 @@ void place_webs(int num, bool is_second_phase)
             ts.pos.y = random2(GYM);
             if (in_bounds(ts.pos)
                 && grd(ts.pos) == DNGN_FLOOR
-                && !map_masked(ts.pos, MMT_NO_TRAP)
-                               // During play, only generate out of LOS
-                               && (!is_second_phase || !you.see_cell(ts.pos)))
+                && !map_masked(ts.pos, MMT_NO_TRAP))
             {
-                // Calculate weight
-                float weight = 0;
+                // Calculate weight.
+                int weight = 0;
                 for (adjacent_iterator ai(ts.pos); ai; ++ai)
                 {
                     // Solid wall?
-                    float solid_weight = 0;
+                    int solid_weight = 0;
+                    // Orthogonals weight three, diagonals 1.
                     if (cell_is_solid(*ai))
-                        solid_weight = 1;
-                    // During play, adjacent webs also count slightly
-                    else if (is_second_phase
-                             && feat_is_trap(grd(*ai))
-                             && (get_trap_type(*ai) == TRAP_WEB))
                     {
-                        // Adjacent webs
-                        solid_weight = 0.5;
+                        solid_weight = (ai->x == ts.pos.x || ai->y == ts.pos.y)
+                                        ? 3 : 1;
                     }
-                    // Orthogonals weight three, diagonals 1
-                    int orth_weight = (ai->x == ts.pos.x || ai->y == ts.pos.y)
-                                      ? 3 : 1;
-                    weight = weight + solid_weight * orth_weight;
+                    weight += solid_weight;
                 }
 
                 // Maximum weight is 4*3+4*1 = 16
                 // *But* that would imply completely surrounded by rock (no point there)
-                if (weight <= 16 && x_chance_in_y(floor(weight) + 2, 34))
+                if (weight <= 16 && x_chance_in_y(weight + 2, 34))
                     break;
             }
         }
