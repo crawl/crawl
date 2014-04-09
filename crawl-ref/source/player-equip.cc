@@ -68,10 +68,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     ASSERT(you.equip[slot] == -1);
     ASSERT(!you.melded[slot]);
 
-    // Maybe this prevent a carried item from allowing training.
-    maybe_change_train(you.inv[item_slot], false);
     you.equip[slot] = item_slot;
-    item_skills(you.inv[item_slot], you.start_train);
 
     _equip_effect(slot, item_slot, false, msg);
     ash_check_bondage();
@@ -90,10 +87,7 @@ bool unequip_item(equipment_type slot, bool msg)
         return false;
     else
     {
-        item_skills(you.inv[item_slot], you.stop_train);
         you.equip[slot] = -1;
-        // Maybe this allows training for a carried item.
-        maybe_change_train(you.inv[item_slot], true);
 
         if (!you.melded[slot])
             _unequip_effect(slot, item_slot, false, msg);
@@ -198,9 +192,6 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
         _unequip_armour_effect(item, meld);
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
         _unequip_jewellery_effect(item, msg, meld);
-
-    if (slot == EQ_SHIELD && !meld)
-        you.stop_train.insert(SK_SHIELDS);
 }
 
 ///////////////////////////////////////////////////////////

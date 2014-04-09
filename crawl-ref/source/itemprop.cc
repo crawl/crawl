@@ -23,6 +23,7 @@
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -520,13 +521,6 @@ void do_curse_item(item_def &item, bool quiet)
         item.flags |= ISFLAG_SEEN_CURSED;
     }
 
-    // This might prevent a carried item from allowing training.
-    maybe_change_train(item, false);
-
-    // If the item isn't equipped, you might not be able to use it for training.
-    if (!item_is_equipped(item))
-        item_skills(item, you.stop_train);
-
     item.flags |= ISFLAG_CURSED;
 
     // Xom is amused by the player's items being cursed, especially if
@@ -597,9 +591,6 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
-
-    // This might allow training for a carried item.
-    maybe_change_train(item, true);
 
     if (check_bondage)
         ash_check_bondage();
@@ -1520,7 +1511,7 @@ skill_type range_skill(object_class_type wclass, int wtype)
     return range_skill(wpn);
 }
 
-//True if item is a staff that deals extra damage based on Evocations skill.
+// True if item is a staff that deals extra damage based on Evocations skill.
 static bool _staff_uses_evocations(const item_def &item)
 {
     if (is_unrandom_artefact(item) && item.special == UNRAND_ELEMENTAL_STAFF)
@@ -1544,97 +1535,8 @@ static bool _staff_uses_evocations(const item_def &item)
     }
 }
 
-// Check whether an item can be easily and quickly equipped. This needs to
-// know which slot we're considering for cases like where we're already
-// wielding a cursed non-weapon.
-static bool _item_is_swappable(const item_def &item, equipment_type slot, bool swap_in)
-{
-    if (get_item_slot(item) != slot)
-        return true;
-
-    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES
-        || item.base_type == OBJ_RODS)
-    {
-        return true;
-    }
-
-    if (item.base_type == OBJ_ARMOUR || !_item_known_uncursed(item))
-        return false;
-
-    if (item.base_type == OBJ_JEWELLERY)
-    {
-        if (item.sub_type == AMU_FAITH && !you_worship(GOD_NO_GOD))
-            return false;
-        return !((item.sub_type == AMU_THE_GOURMAND && !swap_in)
-                || item.sub_type == AMU_GUARDIAN_SPIRIT
-                || (item.sub_type == RING_MAGICAL_POWER && !swap_in));
-    }
-    return true;
-}
-
-static bool _item_is_swappable(const item_def &item, bool swap_in)
-{
-    return _item_is_swappable(item, get_item_slot(item), swap_in);
-}
-
-// Check whether the equipment slot of an item is occupied by an item which
-// cannot be quickly removed.
-static bool _slot_blocked(const item_def &item)
-{
-    const equipment_type eq = get_item_slot(item);
-    if (eq == EQ_NONE)
-        return false;
-
-    if (eq == EQ_RINGS)
-    {
-        if (you.equip[EQ_GLOVES] >= 0 && you.inv[you.equip[EQ_GLOVES]].cursed())
-            return true;
-
-        equipment_type eq_from = EQ_LEFT_RING;
-        equipment_type eq_to = EQ_RIGHT_RING;
-        if (you.species == SP_OCTOPODE)
-        {
-            eq_from = EQ_RING_ONE;
-            eq_to = EQ_RING_EIGHT;
-        }
-
-        for (int i = eq_from; i <= eq_to; ++i)
-        {
-            if (you.equip[i] == -1
-                || _item_is_swappable(you.inv[you.equip[i]], false))
-            {
-                return false;
-            }
-        }
-
-        if (player_equip_unrand(UNRAND_FINGER_AMULET))
-        {
-            if (you.equip[EQ_RING_AMULET] == -1
-                || _item_is_swappable(you.inv[you.equip[EQ_RING_AMULET]], false))
-            {
-                return false;
-            }
-        }
-
-        // No free slot found.
-        return true;
-    }
-
-    if (eq == EQ_WEAPON && you.equip[EQ_SHIELD] >= 0
-        && you.inv[you.equip[EQ_SHIELD]].cursed()
-        && is_shield_incompatible(item, &you.inv[you.equip[EQ_SHIELD]]))
-    {
-        return true;
-    }
-
-    return you.equip[eq] != -1
-           && !_item_is_swappable(you.inv[you.equip[eq]], eq, false);
-}
-
 bool item_skills(const item_def &item, set<skill_type> &skills)
 {
-    const bool equipped = item_is_equipped(item);
-
     if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
     {
         const skill_type skill = static_cast<skill_type>(item.plus);
@@ -1642,27 +1544,33 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
             skills.insert(skill);
     }
 
-    // Evokables that don't need to be equipped.
+    // Jewellery with evokable abilities, wands and similar unwielded
+    // evokers allow training.
     if (item_is_evokable(item, false, false, false, false, true)
-        || _staff_uses_evocations(item))
+        || item.base_type == OBJ_JEWELLERY && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
 
-    // Item doesn't have to be equipped, but if it isn't, it needs to be easy
-    // and quick to equip. This means:
-    // - known to be uncursed
-    // - quick to equip (no armour)
-    // - no effect that suffer from swapping (distortion, vampirism, faith,...)
-    // - slot easily accessible (item in slot needs to meet the same conditions)
-    if (!equipped && (!_item_is_swappable(item, true) || _slot_blocked(item)))
+    // Shields and abilities on armours allow training as long as your species
+    // can wear them.
+    if (item.base_type == OBJ_ARMOUR && can_wear_armour(item, false, true))
+    {
+        if (is_shield(item))
+            skills.insert(SK_SHIELDS);
+
+        if (gives_ability(item))
+            skills.insert(SK_EVOCATIONS);
+    }
+
+    // Weapons, staves and rods allow training as long as your species can
+    // wield them.
+    if (!you.could_wield(item, true, true))
         return !skills.empty();
 
-    // Evokables that need to be equipped to be evoked. They can train
-    // evocations just by being carried, but they need to pass the equippable
-    // check first.
-    if (gives_ability(item)
-        || item_is_evokable(item, false, false, false, false, false))
+    if (item_is_evokable(item, false, false, false, false, false)
+        || _staff_uses_evocations(item)
+        || item.base_type == OBJ_WEAPONS && gives_ability(item))
     {
         skills.insert(SK_EVOCATIONS);
     }
@@ -1676,25 +1584,6 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
         skills.insert(sk);
 
     return !skills.empty();
-}
-
-void maybe_change_train(const item_def& item, bool start)
-{
-    const equipment_type eq = get_item_slot(item);
-    if (eq == EQ_NONE)
-        return;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-        if (item.link != i && you.inv[i].defined())
-        {
-            equipment_type islot = get_item_slot(you.inv[i]);
-            if (islot == eq
-                || (eq == EQ_GLOVES && islot == EQ_RINGS)
-                || (eq == EQ_SHIELD && islot == EQ_WEAPON))
-            {
-                item_skills(you.inv[i], start ? you.start_train : you.stop_train);
-            }
-        }
 }
 
 // Returns number of sizes away from being a usable weapon.
