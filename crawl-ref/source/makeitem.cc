@@ -2592,11 +2592,8 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
                && --tries > 0);
     }
 
-    // Everything begins as uncursed, unenchanted jewellery {dlb}:
-    item.plus  = 0;
-    item.plus2 = 0;
-
     item.plus = _determine_ring_plus(item.sub_type);
+
     if (item.plus < 0)
         do_curse_item(item);
 

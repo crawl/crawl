@@ -1624,7 +1624,6 @@ static bool _randart_is_redundant(const item_def &item,
         return false;
 
     artefact_prop_type provides  = ARTP_NUM_PROPERTIES;
-    artefact_prop_type provides2 = ARTP_NUM_PROPERTIES;
 
     switch (item.sub_type)
     {
@@ -1715,12 +1714,6 @@ static bool _randart_is_redundant(const item_def &item,
         return false;
 
     if (proprt[provides] != 0)
-        return true;
-
-    if (provides2 == ARTP_NUM_PROPERTIES)
-        return false;
-
-    if (proprt[provides2] != 0)
         return true;
 
     return false;

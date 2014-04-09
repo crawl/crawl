@@ -1662,12 +1662,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_type)
         {
             if (know_pluses && ring_has_pluses(*this))
-            {
-                if (ring_has_pluses(*this) == 2)
-                    buff << make_stringf("%+d,%+d ", it_plus, item_plus2);
-                else
-                    buff << make_stringf("%+d ", it_plus);
-            }
+                buff << make_stringf("%+d ", it_plus);
 
             buff << jewellery_type_name(item_typ);
         }

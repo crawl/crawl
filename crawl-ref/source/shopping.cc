@@ -2234,14 +2234,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     // Ignore stat-modification rings which reduce a stat, since they're
     // worthless.
-    if (item.base_type == OBJ_JEWELLERY)
-    {
-        if (item.sub_type == RING_SLAYING && item.plus < 0 && item.plus2 < 0)
-            return 0;
-
-        if (item.plus < 0)
-            return 0;
-    }
+    if (item.base_type == OBJ_JEWELLERY && item.plus < 0)
+        return 0;
 
     // Manuals are consumable, and interesting enough to keep on list.
     if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
@@ -2283,14 +2277,12 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         // known pluses when the new ring's pluses are unknown.
         if (item.base_type == OBJ_JEWELLERY)
         {
-            const int nplus = ring_has_pluses(item);
+            const bool has_plus = ring_has_pluses(item);
             const int delta_p = item.plus - list_item.plus;
-            const int delta_p2 = nplus >= 2 ? item.plus2 - list_item.plus2 : 0;
-            if (nplus
+            if (has_plus
                 && item_ident(list_item, ISFLAG_KNOW_PLUSES)
                 && (!item_ident(item, ISFLAG_KNOW_PLUSES)
-                     || delta_p <= 0 && delta_p2 <= 0
-                        && (delta_p < 0 || delta_p2 < 0)))
+                     || delta_p < 0))
             {
                 continue;
             }

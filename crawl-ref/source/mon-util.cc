@@ -473,7 +473,6 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_AMULET:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
-    case EQ_RINGS_PLUS2:
         item = mslot_item(MSLOT_JEWELLERY);
         if (item && item->base_type == OBJ_JEWELLERY
             && item->sub_type == sub_type
@@ -481,8 +480,6 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         {
             if (slot == EQ_RINGS_PLUS)
                 ret += item->plus;
-            else if (slot == EQ_RINGS_PLUS2)
-                ret += item->plus2;
             else
                 ret++;
         }
@@ -549,7 +546,6 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_STAFF:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
-    case EQ_RINGS_PLUS2:
         // No egos.
         break;
 

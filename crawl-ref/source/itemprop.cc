@@ -1836,14 +1836,14 @@ bool item_is_spellbook(const item_def &item)
 //
 // Ring functions:
 
-// Returns number of pluses on jewellery (always none for amulets yet).
-int ring_has_pluses(const item_def &item)
+// Returns whether jewellery has plusses.
+bool ring_has_pluses(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    // not known -> no pluses
+    // not known -> no plusses
     if (!item_type_known(item))
-        return 0;
+        return false;
 
     switch (item.sub_type)
     {
@@ -1853,13 +1853,13 @@ int ring_has_pluses(const item_def &item)
     case RING_STRENGTH:
     case RING_INTELLIGENCE:
     case RING_DEXTERITY:
-        return 1;
+        return true;
 
     default:
         break;
     }
 
-    return 0;
+    return false;
 }
 
 // Returns true if having two rings of the same type on at the same
