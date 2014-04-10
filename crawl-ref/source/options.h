@@ -330,8 +330,6 @@ public:
     // Order of sections in the character dump.
     vector<string> dump_order;
 
-    bool        level_map_title;    // Show title in level map
-
     bool        pickup_menu;        // false for single, true for menu
     int         pickup_menu_limit;  // Over this number of items, menu for
                                     // pickup
