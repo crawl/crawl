@@ -1936,12 +1936,9 @@ void melee_attack::set_attack_verb()
         weap_type = weapon->sub_type;
     }
 
-    // All weak hits look the same, except for when the attacker
-    // has a non-weapon in hand. - bwr
-    // Exception: vampire bats only bite to allow for drawing blood.
+    // All weak hits with weapons look the same.
     if (damage_to_display < HIT_WEAK
-        && (you.species != SP_VAMPIRE || you.form != TRAN_BAT)
-        && you.species != SP_FELID)
+        && weap_type != WPN_UNARMED)
     {
         if (weap_type != WPN_UNKNOWN)
             attack_verb = "hit";
