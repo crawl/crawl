@@ -369,8 +369,7 @@ void direction_chooser::print_key_hints() const
         switch (restricts)
         {
         case DIR_NONE:
-            if (!target_unshifted)
-                prompt += ", Shift-Dir - straight line";
+            prompt += ", Shift-Dir - straight line";
             prompt += hint_string;
             break;
         case DIR_TARGET:
@@ -514,7 +513,6 @@ direction_chooser::direction_chooser(dist& moves_,
     need_all_redraw = false;
 
     show_items_once = false;
-    target_unshifted = Options.target_unshifted_dirs;
 }
 
 class view_desc_proc
@@ -1252,7 +1250,6 @@ void direction_chooser::object_cycle(int dir)
     {
         set_target(objfind_pos);
         show_items_once = true;
-        target_unshifted = false;
     }
     else
         flush_input_buffer(FLUSH_ON_FAILURE);
@@ -1264,7 +1261,6 @@ void direction_chooser::monster_cycle(int dir)
                              needs_path, mode, range, hitfunc, true))
     {
         set_target(monsfind_pos);
-        target_unshifted = false;
     }
     else
         flush_input_buffer(FLUSH_ON_FAILURE);
@@ -1822,14 +1818,6 @@ bool direction_chooser::tiles_update_target()
     return false;
 }
 
-command_type direction_chooser::massage_command(command_type key_command) const
-{
-    if (target_unshifted && looking_at_you() && restricts != DIR_TARGET)
-        key_command = shift_direction(key_command);
-
-    return key_command;
-}
-
 void direction_chooser::handle_mlist_cycle_command(command_type key_command)
 {
 #ifndef USE_TILE_LOCAL
@@ -1885,7 +1873,7 @@ bool direction_chooser::do_main_loop()
     reinitialize_move_flags();
 
     const coord_def old_target = target();
-    const command_type key_command = massage_command(behaviour->get_command());
+    const command_type key_command = behaviour->get_command();
     behaviour->update_top_prompt(&top_prompt);
     bool loop_done = false;
 
@@ -2062,8 +2050,8 @@ bool direction_chooser::choose_direction()
     moves.delta.reset();
 
     // Find a default target.
-    set_target(!default_place.origin()  ? default_place
-               : Options.default_target ? find_default_target() : you.pos());
+    set_target(!default_place.origin() ? default_place
+                                       : find_default_target());
 
     objfind_pos = monsfind_pos = target();
 

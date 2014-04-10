@@ -40,7 +40,6 @@
 # get back parts of it by uncommenting the following options:
 
 # include                 = 034_command_keys.txt
-# target_unshifted_dirs   = true
 # clear_messages          = true
 #
 # And to revert monster glyph and colouring changes:
@@ -94,8 +93,6 @@
 
 ##### 3-b       Targeting ############################
 #
-# default_target = false
-# target_unshifted_dirs = true
 # darken_beyond_range = false
 
 ##### 3-c       Passive Sightings #####################
