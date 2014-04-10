@@ -344,10 +344,6 @@ ENDMAP
 NAME:    blue_anna_dwarven_crypt
 MONS:    deep dwarf death knight / unborn w:5
 MONS:    shadow wraith / wraith / wight w:5
-FTILE:   12O.+ = floor_sandstone
-FTILE:   +12O. = floor_limestone
-FTILE:   @ = floor_sandstone
-COLOUR:  12 = yellow
 : crypt_entry(_G)
 MAP
 cccc@cccc
