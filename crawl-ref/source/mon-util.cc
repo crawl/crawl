@@ -723,7 +723,7 @@ bool mons_is_fiery(const monster* mon)
 {
     // This chain of checks is for fire breath weapons and special
     // abilities.
-    if (mons_genus(mon->type) == MONS_FIRE_DRAGON
+    if (mons_species(mon->type) == MONS_FIRE_DRAGON
         || mon->type == MONS_BURNING_BUSH
         || mon->type == MONS_PHOENIX
         || (mons_genus(mon->type) == MONS_DRACONIAN
