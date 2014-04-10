@@ -179,7 +179,6 @@ public:
     chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
-    bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
     skill_focus_mode skill_focus; // is the focus skills available
 
@@ -333,8 +332,6 @@ public:
     vector<string> dump_order;
 
     bool        level_map_title;    // Show title in level map
-    bool        target_unshifted_dirs; // Unshifted keys target if cursor is
-                                       // on player.
 
     bool        pickup_menu;        // false for single, true for menu
     int         pickup_menu_limit;  // Over this number of items, menu for

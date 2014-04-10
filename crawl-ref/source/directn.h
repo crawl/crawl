@@ -216,7 +216,6 @@ private:
     void toggle_beam();
 
     void finalize_moves();
-    command_type massage_command(command_type key_command) const;
     void draw_beam_if_needed();
     void do_redraws();
 
@@ -261,7 +260,6 @@ private:
     bool need_all_redraw;       // All of the above.
 
     bool show_items_once;       // Should we show items this time?
-    bool target_unshifted;      // Do unshifted direction keys fire?
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
 };

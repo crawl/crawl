@@ -27,7 +27,7 @@ The contents of this text are:
                 assign_item_slot, pickup_menu, pickup_menu_limit,
                 drop_filter, default_friendly_pickup
 3-b     Targeting.
-                default_target, target_unshifted_dirs, darken_beyond_range
+                darken_beyond_range
 3-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour, clean_map
@@ -556,30 +556,6 @@ default_friendly_pickup = (friend | player | none | all)
 
 3-b     Targeting.
 -------------------
-
-default_target = true
-        If set to true (the default), targeting will start on either
-        your previous target (if it is still visible) or the closest
-        monster (if not) rather than on the character. If no monsters
-        are in view, targeting will start on the character regardless.
-
-        If default_target = false, the targeting cursor will always
-        start aimed at the character.
-
-        default_target is mutually exclusive with
-        target_unshifted_dirs. Using default_target will automatically
-        disable target_unshifted_dirs.
-
-target_unshifted_dirs = false
-        If set to true, targeting will use the old Stone Soup 0.1 /
-        Crawl 4.0 targeting keymap where unshifted direction keys fire
-        in that direction immediately. The default is to use the new
-        targeting keymap where unshifted direction keys move the
-        targeting cursor (and shifted directions fire in the given
-        direction immediately).
-
-        If you use target_unshifted_dirs, default_target will be
-        automatically disabled.
 
 darken_beyond_range = true
         If set to true, everything beyond range when targeting will be

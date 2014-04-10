@@ -817,7 +817,6 @@ void game_options::reset_options()
     allow_self_target      = CONFIRM_PROMPT;
     hp_warning             = 30;
     magic_point_warning    = 0;
-    default_target         = true;
     autopickup_no_burden   = true;
     skill_focus            = SKM_FOCUS_ON;
 
@@ -916,7 +915,6 @@ void game_options::reset_options()
     travel_key_stop        = true;
     auto_sacrifice         = AS_NO;
 
-    target_unshifted_dirs  = false;
     darken_beyond_range    = true;
 
     dump_on_save           = true;
@@ -2665,12 +2663,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         macro_dir = field;
 #endif
 #endif
-    else if (key == "default_target")
-    {
-        default_target = _read_bool(field, default_target);
-        if (default_target)
-            target_unshifted_dirs = false;
-    }
     else BOOL_OPTION(autopickup_no_burden);
 #ifdef DGL_SIMPLE_MESSAGING
     else BOOL_OPTION(messaging);
@@ -3437,12 +3429,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else BOOL_OPTION(dump_book_spells);
     else BOOL_OPTION(level_map_title);
-    else if (key == "target_unshifted_dirs")
-    {
-        target_unshifted_dirs = _read_bool(field, target_unshifted_dirs);
-        if (target_unshifted_dirs)
-            default_target = false;
-    }
     else if (key == "darken_beyond_range")
         darken_beyond_range = _read_bool(field, darken_beyond_range);
     else BOOL_OPTION(pickup_menu);
