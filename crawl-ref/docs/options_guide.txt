@@ -168,8 +168,8 @@ External option files have several uses: They allow quick customisation
 of Crawl's general appearance (colouring/suppression of messages, and
 the inventory style). More elaborate option magic (usually containing
 lua) can also be conveniently hidden this way. Finally, there are some
-additional option files coming with this release; these allow to set
-many options to old defaults, i.e. those of Crawl 0.3.4 and before.
+additional option files in the settings/ directory; these allow setting
+some options and monster glyphs to their defaults from older versions.
 See the header of the default init.txt for more details.
 
 0-b     Options on the command line.
@@ -221,13 +221,12 @@ expressions (regexes): here you can simply use ordinary strings, adapt
 the suggested regexes to your needs or search the internet for regex
 syntax.
 
-Note that, in the tutorial, some of your options settings may get
-overwritten to facilitate the explanations. This concerns the
-following options, and their enforced setting for tutorial games
-are as follows:
+Note that in the tutorial and hints modes, some of your options settings may
+get overwritten to facilitate the explanations. This concerns the following
+options, and their enforced setting for tutorial games are as follows:
    clear_messages      = true
    auto_list           = true
-   weapon              = hand axe, for Berserkers
+   weapon              = hand axe, for Berserkers in hints mode
 and, for Tiles,
    tile_tag_pref       = tutorial
 
@@ -286,7 +285,7 @@ To prevent a variable from being changed you can make it a constant:
 This is useful if you wish to prevent an included file from altering
 a variable.
 
-See settings/standard_colours.txt and settings/food_colouring.txt
+See dat/defaults/standard_colours.txt and dat/defaults/food_colouring.txt
 for usage of aliases and variables. Note that changing the variables defined
 in these files will only affect your own configuration file, as the default
 options will have already been loaded. If you want to change them, you will
@@ -387,10 +386,6 @@ sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
         Plays the sound file if a message contains regex. The regex
         should not include commas or colons. For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
-        Getting appropriate sound files may be difficult. Check other
-        roguelikes or old computer RPGs. Alternatively, ask for help
-        in the newsgroup rec.games.roguelike.misc.
-
 
 3-  Interface.
 ==============
@@ -463,7 +458,7 @@ default_autopickup = true
 autopickup_no_burden = true
         When set, autopickup will not pick up items which would increase
         your burden status (from unencumbered to burdened, or from
-        encumbered to overloaded.)
+        encumbered to overloaded).
 
 pickup_thrown = true
         pickup_thrown = true causes autopickup to pick up thrown/fired
@@ -473,8 +468,7 @@ pickup_thrown = true
 
 chunks_autopickup = true
         If true then butchered flesh will be automatically picked up
-        right after they're generated (and after switching back from
-        the butchering weapon to the usual weapon, if necessary).
+        right after they're generated.
         Respects all of the autopickup options. Requires '%' to be
         in the autopickup line.
         Does not apply to Vampires who will pick up bottled potions
@@ -532,7 +526,6 @@ default_friendly_pickup = (friend | player | none | all)
         Using an in-game toggle, you can control what types of items
         your allies will pick up:
              none   = They won't pick up anything at all.
-                      (This is the old friendly pick up behaviour.)
              friend = They may pick up anything they or another ally
                       dropped, e.g. if another ally dies.
                       (This is the default setting.)
@@ -545,12 +538,11 @@ default_friendly_pickup = (friend | player | none | all)
         when you start a new game, or when you enter a level for the first
         time.
 
-        Note that this only works for intelligent allies (such as you
-        can get when worshipping Beogh or when summoning intelligent
-        monsters), and that monsters have their own reasonings for which
-        items they may need, and when they feel safe enough to pick them
-        up. Except for "none", these options won't let you override these
-        requirements.
+        Note that this only works for intelligent allies (such as those you can
+        get when worshipping Beogh), and that monsters have their own
+        reasonings for which items they may need, and when they feel safe
+        enough to pick them up. Except for "none", these options won't let you
+        override these requirements.
         Also, friendly jellies won't ever eat any items, regardless of
         this option.
 
@@ -591,10 +583,10 @@ darken_beyond_range = true
 ------------------------------------------------------------
 
 detected_monster_colour = lightred
-        Monsters found by detect creatures will be coloured this colour.
+        Detected monsters will be given this colour.
 
 detected_item_colour = green
-        Items found by detect items will be given this colour.
+        Detected items will be given this colour.
 
 remembered_monster_colour = darkgrey
         The colour for monsters you have seen before. Note that the
@@ -924,7 +916,6 @@ runrest_stop_message += <regex>, <regex>, ...
              runrest_stop_message += Your transformation is almost over
              runrest_stop_message += You are starting to lose your buoyancy
         Or you can explicitly ignore some messages:
-             runrest_ignore_message += offer a prayer,prayer is over
              runrest_ignore_message += pleased with you,exalted
 
         Note that monster talk and dungeon noises already do not
@@ -957,10 +948,9 @@ runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
         activity if the distance between you and the monster is less than the
         specified number. E.g. with
              runrest_ignore_monster ^= fish:3
-        all of big fish, jellyfish, giant goldfish and lava fish will be
-        considered safe for travel, explore and resting as long as the
-        distance is at least 3. If a monster matches multiple expressions,
-        its distance is compared with the first match.
+        big fish and giant goldfish will be considered safe for travel, explore
+        and resting as long as the distance is at least 3. If a monster matches
+        multiple expressions, its distance is compared with the first match.
 
 trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         Any square containing one of the listed trap types will be
@@ -983,11 +973,10 @@ rest_wait_both = false
 auto_exclude += <monster name>, <monster name>, ...
         (List option)
         Whenever you encounter a sleeping or stationary monster during
-        exploration that is included in this list, automatically a
-        travel exclusion is set centered on this monster, meaning
-        autoexplore won't ever bring you in its line of sight. If the
-        monster dies or wakes up while you are in sight, this exclusion
-        is automatically removed again.
+        exploration that is included in this list, a travel exclusion is
+        automatically set centered on this monster, meaning autoexplore won't
+        ever bring you into its line of sight. If the monster dies or wakes up
+        while you are in sight, this exclusion is automatically removed again.
 
 3-h     Command Enhancements.
 -----------------------------
@@ -1041,7 +1030,6 @@ easy_eat_chunks = false
         game will automatically determine the oldest chunk that is safe
         to eat, and eat it without prompting.
         You will always be prompted to eat harmful chunks.
-        Note that this option is ignored for each of the undead species.
 
 auto_eat_chunks = false
         Setting this option to true will allow you to automatically eat a chunk
@@ -1057,10 +1045,9 @@ auto_drop_chunks = (never | rotten | yes)
         would need them will be dropped as well, ordered by quality and age.
 
 prompt_for_swap = true
-        If true, then if an auto-switch butchery is interrupted by a
-        hostile monster, the game will ask if you wish to switch back to
-        your weapon. It will also prompt you if after butchery is interrupted
-        you teleport or change levels and find yourself near hostile monsters.
+        If true then you will be prompted to rewield your weapon when
+        untransforming in sight of a monster, if your transformation caused
+        your weapon to fall away.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing
@@ -1233,9 +1220,8 @@ autofight_throw = false
         launcher (a bow, crossbow, sling or blowgun) will be considered.
 
 autofight_throw_nomove = true
-        This works same as above, except that only for
-        ===hit_closest_nomove rather than ===hit_closest; this is usually
-        bound to shift-Tab.
+        This works same as above, except only for ===hit_closest_nomove rather
+        than ===hit_closest; this is usually bound to shift-Tab.
 
 autofight_fire_stop = false
         When firing missiles or throwing objects using autofight, if this
@@ -1336,7 +1322,7 @@ show_inventory_weights = sometimes|true|false
               tile_menu_icons = false.
 
 show_newturn_mark = true
-        When set to false, this option disable the underscore (_) displayed in
+        When set to false, this option disables the underscore (_) displayed in
         front of the first line of a turn.
 
 show_gold_turns = true
@@ -1395,10 +1381,10 @@ mlist_allow_alternate_layout = false
         This option is not supported in the tiles build.
 
 mlist_targeting = false
-        Using the monster list you can directly target monsters in
-        targeting mode. There's a toggle that allows you to turn this
-        feature on and off. This option controls the initial setting
-        at game start or reload.
+        Using the monster list you can directly target monsters in targeting
+        mode. This can be toggled during a game with Ctrl-L while in targeting
+        mode, and this option controls the initial setting at game start or
+        reload.
 
 menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         (Ordered list option)
@@ -1445,10 +1431,9 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
            inedible        (You cannot eat this, or get no nutrition from it.)
            preferred       (The food type your character prefers, for example
                             for herbivores/carnivores.)
-           poisonous       (Chunks/corpses that are poisonous)
-           mutagenic       (Chunks/corpses that are mutagenic)
-           contaminated    (Chunks/corpses that may cause sickness, but
-                            ignored for Kobolds, Ogres, Trolls, and Ghouls.)
+           poisonous       (Chunks/corpses that are poisonous.)
+           mutagenic       (Chunks/corpses that are mutagenic.)
+           contaminated    (Chunks/corpses that give reduced nutrition.)
            rot-inducing    (Chunks/corpses that cause rotting.)
 
            equipped        (Equipped items.)
@@ -1519,7 +1504,7 @@ msg_condense_short = true
         If set, short messages on the same channel don't all start a new
         line.
 
-show_travel_trail = false
+show_travel_trail = false (defaults to true for online servers)
         When set to true, the path taken during autoexplore or travel
         will be highlighted. If a travel trail is currently being displayed,
         the Clear Map command (Ctrl-C) clears the trail instead of the map
@@ -1605,7 +1590,7 @@ CHANNEL_NAME can currently be one of these:
    plain           = regular text (and things "uncoloured")
    prompt          = input prompts to the player
    god             = messages from the gods
-   pray            = standard praying messages (start/end of prayer)
+   pray            = standard praying messages
    duration        = messages about character spells/effects wearing off
    danger          = serious threats to the character's existence
    food            = warnings about food
@@ -2178,13 +2163,13 @@ cset = <dungeon_character_name : symbol>
         a list of these is allowed, as well.
 
         The possible entries for dungeon_character_name are:
-           wall, wall_magic, floor, floor_magic, door_open, door_closed,
-           trap, stairs_down, stairs_up, grate, altar, arch, fountain, wavy,
-           statue, invis_exposed, item_detected, item_orb, item_rune,
-           item_weapon, item_armour, item_wand, item_food, item_scroll,
-           item_ring, item_potion, item_missile, item_book, item_stave,
-           item_miscellany, item_corpse, item_gold, item_amulet, cloud,
-           tree, fired_flask, fired_bolt, fired_chunk, fired_book,
+           wall, permawall, wall_magic, floor, floor_magic, door_open,
+           door_closed, trap, stairs_down, stairs_up, grate, altar, arch,
+           fountain, wavy, statue, invis_exposed, item_detected, item_orb,
+           item_rune, item_weapon, item_armour, item_wand, item_food,
+           item_scroll, item_ring, item_potion, item_missile, item_book,
+           item_stave, item_miscellany, item_corpse, item_gold, item_amulet,
+           cloud, tree, fired_flask, fired_bolt, fired_chunk, fired_book,
            fired_weapon, fired_zap, fired_burst, fired_stick, fired_trinket,
            fired_scroll, fired_debug, fired_armour, fired_missile,
            explosion
@@ -2288,10 +2273,9 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
              {trivial,easy,tough,nasty,friendly} sensed monster
              merged slime creature
              vampire bat
-             tengu
-             demonspawn
-             demigod
-             halfling
+
+        Playable species that normally have no monster of the same name can
+        also be redefined, for use with show_player_species = true.
 
 item_glyph = <regexp> : <colour> <glyph>
         Customizes the symbol and/or colour of all items matching the regexp.

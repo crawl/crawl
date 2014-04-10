@@ -50,6 +50,8 @@
 # include                 = 071_monster_glyphs.txt
 # include                 = 080_monster_glyphs.txt
 # include                 = 0.9_monster_glyphs.txt
+# include                 = 0.12_monster_glyphs.txt
+# include                 = 0.13_monster_glyphs.txt
 
 ##### 1- Starting Screen ############################################
 #
