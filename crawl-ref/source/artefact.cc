@@ -1015,7 +1015,7 @@ static void _get_randart_properties(const item_def &item,
         switch (random2(9))
         {
         case 0:                     // makes noise
-            if (aclass != OBJ_WEAPONS)
+            if (!is_melee_weapon(item))
                 break;
             proprt[ARTP_NOISES] = 1 + random2(4);
             break;
