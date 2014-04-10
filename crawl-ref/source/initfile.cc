@@ -801,7 +801,6 @@ void game_options::reset_options()
     suppress_startup_errors = false;
 
     show_inventory_weights = MB_MAYBE;
-    clean_map              = false;
     show_uncursed          = true;
     easy_open              = true;
     easy_unequip           = true;
@@ -2433,7 +2432,6 @@ void game_options::read_option_line(const string &str, bool runscript)
 #endif
     else BOOL_OPTION(auto_switch);
     else BOOL_OPTION(suppress_startup_errors);
-    else BOOL_OPTION(clean_map);
     else if (key == "easy_confirm")
     {
         // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts

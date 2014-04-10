@@ -30,7 +30,7 @@ The contents of this text are:
                 darken_beyond_range
 3-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
-                remembered_monster_colour, clean_map
+                remembered_monster_colour
 3-d     Branding (Item and Monster Highlighting).
                 friend_brand, neutral_brand, stab_brand, may_stab_brand,
                 heap_brand, feature_item_brand, trap_item_brand
@@ -564,14 +564,7 @@ detected_item_colour = green
         Detected items will be given this colour.
 
 remembered_monster_colour = darkgrey
-        The colour for monsters you have seen before. Note that the
-        value of this option is meaningless if you set clean_map.
-
-clean_map = false
-        Cleans up out of sight monsters and clouds on the map. This is
-        like pressing Ctrl-C (clearing both main screen and level map)
-        all the time.
-        Setting this to true can be disconcerting for summoners.
+        The colour for monsters you have seen before.
 
 3-d     Branding (Item and monster highlighting).
 -------------------------------------------------
@@ -2247,7 +2240,6 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
              sensed monster
              {trivial,easy,tough,nasty,friendly} sensed monster
              merged slime creature
-             vampire bat
 
         Playable species that normally have no monster of the same name can
         also be redefined, for use with show_player_species = true.

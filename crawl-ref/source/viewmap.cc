@@ -77,10 +77,8 @@ static bool _travel_colour_override(const coord_def& p)
         return true;
 #endif
 
-    // [ds] Elaborate dance to get map colouring right if
-    // Options.clean_map is set.
     const map_cell& cell = env.map_knowledge(p);
-    show_class cls = get_cell_show_class(cell, Options.clean_map);
+    show_class cls = get_cell_show_class(cell);
     if (cls == SH_FEATURE)
     {
         switch (cell.feat())
@@ -426,12 +424,11 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                cglyph_t g = get_cell_glyph(c, Options.clean_map, -1);
+                cglyph_t g = get_cell_glyph(c, false, -1);
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
-                const show_class show = get_cell_show_class(
-                        env.map_knowledge(c), Options.clean_map);
+                const show_class show = get_cell_show_class(env.map_knowledge(c));
 
                 if (show == SH_NOTHING && _is_explore_horizon(c))
                 {
