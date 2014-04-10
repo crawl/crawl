@@ -802,7 +802,7 @@ void game_options::reset_options()
 
     show_inventory_weights = MB_MAYBE;
     show_uncursed          = true;
-    easy_open              = true;
+    travel_open_doors      = true;
     easy_unequip           = true;
     equip_unequip          = false;
     confirm_butcher        = CONFIRM_AUTO;
@@ -2451,7 +2451,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else BOOL_OPTION(easy_quit_item_prompts);
     else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
-    else BOOL_OPTION(easy_open);
+    else BOOL_OPTION(travel_open_doors);
     else BOOL_OPTION(easy_unequip);
     else BOOL_OPTION(equip_unequip);
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
