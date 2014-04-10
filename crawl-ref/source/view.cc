@@ -861,10 +861,7 @@ static int player_view_update_at(const coord_def &gc)
 
     // We remove any references to mcache when
     // writing to the background.
-    if (Options.clean_map)
-        env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_fg(ep));
-    else
-        env.tile_bk_fg(gc) = env.tile_fg(ep);
+    env.tile_bk_fg(gc) = env.tile_fg(ep);
     env.tile_bk_bg(gc) = env.tile_bg(ep);
     env.tile_bk_cloud(gc) = env.tile_cloud(ep);
 #endif
@@ -913,7 +910,7 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
-    cglyph_t g = get_cell_glyph(gc, Options.clean_map);
+    cglyph_t g = get_cell_glyph(gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 

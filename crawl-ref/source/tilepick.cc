@@ -5614,22 +5614,6 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     return 0;
 }
 
-// FIXME: Needs to be updated whenever the order of clouds or monsters changes.
-tileidx_t get_clean_map_idx(tileidx_t tile_idx, bool mon_only)
-{
-    tileidx_t idx = tile_idx & TILE_FLAG_MASK;
-    if (!mon_only && idx >= TILE_CLOUD_FIRE_0 && idx <= TILE_CLOUD_TLOC_ENERGY)
-        return 0;
-
-    if (idx >= TILEP_MONS_PANDEMONIUM_LORD && idx <= TILEP_MONS_TEST_SPAWNER
-        || idx >= TILEP_MCACHE_START)
-    {
-        return 0;
-    }
-
-    return tile_idx;
-}
-
 tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))

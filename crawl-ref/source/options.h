@@ -167,7 +167,6 @@ public:
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     maybe_bool  show_inventory_weights; // show weights in inventory listings
-    bool        clean_map;       // remove unseen clouds/monsters
     bool        show_uncursed;   // label known uncursed items as "uncursed"
     bool        easy_open;       // open doors with movement
     bool        easy_unequip;    // allow auto-removing of armour / jewellery

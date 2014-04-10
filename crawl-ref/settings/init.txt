@@ -102,7 +102,6 @@
 # detected_monster_colour = lightred
 # detected_item_colour = green
 # remembered_monster_colour = darkgrey
-# clean_map = true
 
 ##### 3-d       Branding ##############################
 #

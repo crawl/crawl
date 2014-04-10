@@ -46,7 +46,6 @@ tileidx_t tileidx_ability(const ability_type ability);
 tileidx_t tileidx_known_brand(const item_def &item);
 tileidx_t tileidx_corpse_brand(const item_def &item);
 
-tileidx_t get_clean_map_idx(tileidx_t tile_idx, bool mon_only = false);
 tileidx_t tileidx_unseen_flag(const coord_def &gc);
 
 // Return the level of enchantment as an int.  None is 0, Randart is 4.
