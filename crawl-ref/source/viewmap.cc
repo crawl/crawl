@@ -394,7 +394,7 @@ static int _find_feature(const vector<coord_def>& features,
 
 static int _get_number_of_lines_levelmap()
 {
-    return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
+    return get_number_of_lines() - 1;
 }
 
 #ifndef USE_TILE_LOCAL
@@ -410,7 +410,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 
     cursor_control cs(false);
 
-    int top = 1 + Options.level_map_title;
+    int top = 2;
     cgotoxy(1, top);
     for (int screen_y = 0; screen_y < num_lines; screen_y++)
         for (int screen_x = 0; screen_x < num_cols; screen_x++)
@@ -574,9 +574,6 @@ public:
 #ifndef USE_TILE_LOCAL
 static void _draw_title(const coord_def& cpos, const feature_list& feats)
 {
-    if (!Options.level_map_title)
-        return;
-
     const int columns = get_number_of_cols();
     const formatted_string help =
         formatted_string::parse_string("(Press <w>?</w> for help)");
@@ -759,7 +756,7 @@ bool show_map(level_pos &lpos,
         bool redraw_map = true;
 
 #ifndef USE_TILE_LOCAL
-        const int top = 1 + Options.level_map_title;
+        const int top = 2;
         clrscr();
 #endif
         textcolor(DARKGREY);

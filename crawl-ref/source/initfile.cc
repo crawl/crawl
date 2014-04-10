@@ -879,8 +879,6 @@ void game_options::reset_options()
     easy_exit_menu         = false;
     dos_use_background_intensity = true;
 
-    level_map_title        = true;
-
     assign_item_slot       = SS_FORWARD;
     show_god_gift          = MB_MAYBE;
 
@@ -3422,7 +3420,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             dump_item_origin_price = -1;
     }
     else BOOL_OPTION(dump_book_spells);
-    else BOOL_OPTION(level_map_title);
     else if (key == "darken_beyond_range")
         darken_beyond_range = _read_bool(field, darken_beyond_range);
     else BOOL_OPTION(pickup_menu);
