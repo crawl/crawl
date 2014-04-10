@@ -951,10 +951,9 @@ auto_switch = false
         automatically switch to the appropriate weapon when firing or
         attacking in melee.
 
-easy_open = true
-        Open doors by moving on to them. Highly convenient. Note that
-        travel and exploration will automatically open doors depending
-        on this option.
+travel_open_doors = true
+        If this is set to false, autoexplore/travel will not open doors,
+        instead stopping in front of them.
 
 easy_unequip = true
         Allows auto removal of armour and jewellery when dropping it.

@@ -44,7 +44,7 @@ static option_handler handlers[] =
     // Boolean options come first
     { "autoswitch",    &Options.auto_switch, option_hboolean },
     { "show_uncursed", &Options.show_uncursed, option_hboolean },
-    { "easy_open",     &Options.easy_open, option_hboolean },
+    { "travel_open_doors",    &Options.travel_open_doors, option_hboolean },
     { "easy_armour",   &Options.easy_unequip, option_hboolean },
     { "easy_unequip",  &Options.easy_unequip, option_hboolean },
     { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },

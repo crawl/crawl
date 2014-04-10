@@ -175,7 +175,7 @@
 ##### 3-h       Command Enhancements ##################
 #
 # auto_switch   = true
-# easy_open     = false
+# travel_open_doors      = false
 # easy_unequip  = false
 # equip_unequip = true
 # easy_confirm  = (none | safe | all)

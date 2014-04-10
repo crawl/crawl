@@ -3627,7 +3627,7 @@ static void _move_player(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if (Options.easy_open && !attacking && feat_is_closed_door(targ_grid))
+    if ((Options.travel_open_doors || !you.running) && !attacking && feat_is_closed_door(targ_grid))
     {
         _open_door(move.x, move.y, false);
         you.prev_move = move;
