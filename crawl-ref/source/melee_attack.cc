@@ -3149,7 +3149,7 @@ bool melee_attack::apply_damage_brand()
                 defender->is_player()?
                    "You are electrocuted!"
                 :  "There is a sudden explosion of sparks!";
-            special_damage = 10 + random2(15);
+            special_damage = 8 + random2(13);
             special_damage_flavour = BEAM_ELECTRICITY;
         }
 
