@@ -303,14 +303,14 @@ static const ability_def Ability_List[] =
       2, 0, 100, 0, 0, ABFLAG_NONE},
 
     // Okawaru
-    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 1, 0, ABFLAG_NONE},
+    { ABIL_OKAWARU_HEROISM, "Heroism", 2, 0, 50, 2, 0, ABFLAG_NONE},
     { ABIL_OKAWARU_FINESSE, "Finesse", 5, 0, 100, 4, 0, ABFLAG_NONE},
 
     // Makhleb
     { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
       0, scaling_cost::fixed(1), 20, 0, 0, ABFLAG_NONE},
     { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
-      0, scaling_cost::fixed(4), 50, 1, 0, ABFLAG_NONE},
+      0, scaling_cost::fixed(4), 50, 2, 0, ABFLAG_NONE},
     { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
       0, scaling_cost::fixed(6), 100, generic_cost::range(0, 1), 0, ABFLAG_NONE},
     { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
@@ -340,7 +340,7 @@ static const ability_def Ability_List[] =
     { ABIL_ELYVILON_PURIFICATION, "Purification", 3, 0, 300, 3, 0,
       ABFLAG_CONF_OK},
     { ABIL_ELYVILON_GREATER_HEALING_SELF, "Greater Self-Healing",
-      2, 0, 250, 2, 0, ABFLAG_CONF_OK},
+      2, 0, 250, 3, 0, ABFLAG_CONF_OK},
     { ABIL_ELYVILON_GREATER_HEALING_OTHERS, "Greater Healing",
       2, 0, 250, 2, 0, ABFLAG_NONE},
     { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour", 0, 0, 600, 6, 0,
@@ -381,7 +381,7 @@ static const ability_def Ability_List[] =
     { ABIL_FEDHAS_EVOLUTION, "Evolution", 2, 0, 0, 0, 0, ABFLAG_VARIABLE_FRUIT},
     { ABIL_FEDHAS_SUNLIGHT, "Sunlight", 2, 0, 50, 0, 0, ABFLAG_NONE},
     { ABIL_FEDHAS_PLANT_RING, "Growth", 2, 0, 0, 0, 0, ABFLAG_FRUIT},
-    { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 100, 0, 0, ABFLAG_NONE},
+    { ABIL_FEDHAS_SPAWN_SPORES, "Reproduction", 4, 0, 100, 1, 0, ABFLAG_NONE},
     { ABIL_FEDHAS_RAIN, "Rain", 4, 0, 150, 4, 0, ABFLAG_NONE},
 
     // Cheibriados
