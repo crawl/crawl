@@ -2395,6 +2395,8 @@ static void tag_read_you(reader &th)
 
     if (th.getMinorVersion() < TAG_MINOR_FUNGUS_FORM && you.form == TRAN_FUNGUS)
         you.duration[DUR_CONFUSING_TOUCH] = 0;
+
+    you.duration[DUR_JELLY_PRAYER] = 0;
 #endif
 
     // how many attributes?

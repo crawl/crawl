@@ -4210,7 +4210,6 @@ void display_char_status()
         DUR_ICY_ARMOUR,
         DUR_ANTIMAGIC,
         STATUS_MISSILES,
-        DUR_JELLY_PRAYER,
         STATUS_REGENERATION,
         DUR_SWIFTNESS,
         DUR_RESISTANCE,
