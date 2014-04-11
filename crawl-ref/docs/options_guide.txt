@@ -51,7 +51,7 @@ The contents of this text are:
                 runrest_safe_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
 3-h     Command Enhancements.
-                auto_list, auto_switch, easy_open, easy_unequip,
+                auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
@@ -225,7 +225,6 @@ Note that in the tutorial and hints modes, some of your options settings may
 get overwritten to facilitate the explanations. This concerns the following
 options, and their enforced setting for tutorial games are as follows:
    clear_messages      = true
-   auto_list           = true
    weapon              = hand axe, for Berserkers in hints mode
 and, for Tiles,
    tile_tag_pref       = tutorial
