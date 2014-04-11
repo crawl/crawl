@@ -3874,7 +3874,12 @@ void bolt::affect_player()
     // Trigger an interrupt, so travel will stop on misses which
     // generate smoke.
     if (!YOU_KILL(thrower))
-        interrupt_activity(AI_MONSTER_ATTACKS);
+    {
+        if (agent() && agent()->is_monster())
+            interrupt_activity(AI_MONSTER_ATTACKS, agent()->as_monster());
+        else
+            interrupt_activity(AI_MONSTER_ATTACKS);
+    }
 
     const bool engulfs = is_explosion || is_big_cloud;
 
