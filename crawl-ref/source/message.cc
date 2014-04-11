@@ -897,6 +897,7 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             break;
 
         case MSGCH_MUTATION:
+        case MSGCH_MONSTER_WARNING:
             ret = MSGCOL_LIGHTRED;
             break;
 
