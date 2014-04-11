@@ -779,52 +779,29 @@ static bool _know_spell(spell_type spell)
     return you.has_spell(spell) && spell_fail(spell) < 50;
 }
 
-static spell_type search_first_list(int ignore_spell)
+/**
+ * Searches a list of ghost spells for the first one that
+ * the player can cast.
+ * @param spells The list of spells; it must be terminated by SPELL_NO_SPELL.
+ * @param ignore_up_to_spell Ignore entries in the list up to and
+ *                           including this one.
+ * @returns The first spell the player knows.
+ */
+static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_spell)
 {
-    for (unsigned i = 0; i < ARRAYSZ(search_order_conj); ++i)
+    unsigned i = 0;
+    while (ignore_up_to_spell != SPELL_NO_SPELL
+            && spells[i] != SPELL_NO_SPELL)
     {
-        if (search_order_conj[i] == SPELL_NO_SPELL)
-            return SPELL_NO_SPELL;
-
-        if (search_order_conj[i] == ignore_spell)
-            continue;
-
-        if (_know_spell(search_order_conj[i]))
-            return search_order_conj[i];
+        if (spells[i++] == ignore_up_to_spell)
+            break;
     }
 
-    return SPELL_NO_SPELL;
-}
-
-static spell_type search_second_list(int ignore_spell)
-{
-    for (unsigned i = 0; i < ARRAYSZ(search_order_third); ++i)
+    while(spells[i] != SPELL_NO_SPELL)
     {
-        if (search_order_third[i] == SPELL_NO_SPELL)
-            return SPELL_NO_SPELL;
-
-        if (search_order_third[i] == ignore_spell)
-            continue;
-
-        if (_know_spell(search_order_third[i]))
-            return search_order_third[i];
-    }
-
-    return SPELL_NO_SPELL;
-}
-
-static spell_type search_third_list(int ignore_spell)
-{
-    for (unsigned i = 0; i < ARRAYSZ(search_order_misc); ++i)
-    {
-        if (search_order_misc[i] == SPELL_NO_SPELL)
-            return SPELL_NO_SPELL;
-
-        if (search_order_misc[i] == ignore_spell)
-            continue;
-
-        if (_know_spell(search_order_misc[i]))
-            return search_order_misc[i];
+        if (_know_spell(spells[i]))
+            return spells[i];
+        ++i;
     }
 
     return SPELL_NO_SPELL;
@@ -837,18 +814,20 @@ void ghost_demon::add_spells()
 {
     spells.init(SPELL_NO_SPELL);
 
-    spells[0] = search_first_list(SPELL_NO_SPELL);
-    spells[1] = search_first_list(spells[0]);
-    spells[2] = search_second_list(SPELL_NO_SPELL);
-    spells[3] = search_third_list(SPELL_NO_SPELL);
+    spells[0] = search_spell_list(search_order_conj, SPELL_NO_SPELL);
+    spells[1] = search_spell_list(search_order_conj, spells[0]);
+    spells[2] = search_spell_list(search_order_third, SPELL_NO_SPELL);
+    spells[3] = search_spell_list(search_order_misc, SPELL_NO_SPELL);
+    spells[4] = search_spell_list(search_order_misc, spells[3]);
 
     if (spells[3] == SPELL_NO_SPELL)
-        spells[3] = search_first_list(SPELL_NO_SPELL);
-
-    spells[4] = search_third_list(spells[3]);
-
-    if (spells[4] == SPELL_NO_SPELL)
-        spells[4] = search_first_list(spells[3]);
+    {
+        spells[3] = search_spell_list(search_order_conj, spells[1]);
+        if (spells[4] == SPELL_NO_SPELL)
+            spells[4] = search_spell_list(search_order_conj, spells[3]);
+    }
+    else if (spells[4] == SPELL_NO_SPELL)
+         spells[4] = search_spell_list(search_order_conj, spells[1]);
 
     // Look for Blink or Teleport Self for the emergency slot.
     if (_know_spell(SPELL_CONTROLLED_BLINK)
@@ -856,9 +835,6 @@ void ghost_demon::add_spells()
     {
         spells[5] = SPELL_CONTROLLED_BLINK;
     }
-
-    if (_know_spell(SPELL_TELEPORT_SELF))
-        spells[5] = SPELL_TELEPORT_SELF;
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         spells[i] = translate_spell(spells[i]);
