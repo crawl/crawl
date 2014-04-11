@@ -1319,11 +1319,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_pluses)
         {
             if (is_unrandom_artefact(*this) && special == UNRAND_WOE)
-                buff << (terse ? "+∞ " : "+∞,+∞ ");
-            else if ((terse && it_plus == item_plus2) || sub_type == WPN_BLOWGUN)
-                buff << make_stringf("%+d ", it_plus);
+                buff << "+∞ ";
             else
-                buff << make_stringf("%+d,%+d ", it_plus, item_plus2);
+                buff << make_stringf("%+d ", it_plus);
         }
 
         if (is_artefact(*this) && !dbname)

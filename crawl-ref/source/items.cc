@@ -177,7 +177,7 @@ static bool _item_preferred_to_clean(int item)
 {
     // Preferably clean "normal" weapons and ammo
     if (mitm[item].base_type == OBJ_WEAPONS
-        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
+        && mitm[item].plus <= 0
         && !is_artefact(mitm[item]))
     {
         return true;
@@ -3862,14 +3862,14 @@ item_info get_item_info(const item_def& item)
 
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
     case OBJ_MISSILES:
+        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            ii.plus2 = item.plus2;
+        // intentional fall-through
+    case OBJ_WEAPONS:
         ii.sub_type = item.sub_type;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-        {
             ii.plus = item.plus;
-            ii.plus2 = item.plus2;
-        }
         if (item_type_known(item))
             ii.special = item.special; // brand
         break;

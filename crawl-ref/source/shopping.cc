@@ -1100,13 +1100,7 @@ unsigned int item_value(item_def item, bool ident)
         }
 
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
-        {
-            // Blowguns have only plus, no plus2
-            if (item.sub_type == WPN_BLOWGUN)
-                valued += 50 * item.plus;
-            else
-                valued += 10 * item.plus + 50 * item.plus2;
-        }
+            valued += 50 * item.plus;
 
         if (is_artefact(item))
         {
