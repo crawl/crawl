@@ -1381,22 +1381,12 @@ int acquirement_create_item(object_class_type class_wanted,
                     make_item_randart(acq_item, true);
             }
 
-            int plusmod = random2(4);
-            if (agent == GOD_TROG)
+            if (agent == GOD_TROG || agent == GOD_OKAWARU)
             {
-                // More damage, less accuracy.
-                acq_item.plus  -= plusmod;
-                acq_item.plus2 += plusmod;
+                if (agent == GOD_TROG)
+                    acq_item.plus += random2(3);
                 if (!is_artefact(acq_item))
-                    acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
-            }
-            else if (agent == GOD_OKAWARU)
-            {
-                // More accuracy, less damage.
-                acq_item.plus  += plusmod;
-                acq_item.plus2 -= plusmod;
-                if (!is_artefact(acq_item))
-                    acq_item.plus2 = max(static_cast<int>(acq_item.plus2), 0);
+                    acq_item.plus = max(static_cast<int>(acq_item.plus), 1);
             }
         }
         else if (is_deck(acq_item))
