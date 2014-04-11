@@ -2724,7 +2724,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
             // Wimpy, negative-enchantment weapon.
             wpn.plus  = -random2(4);
             wpn.plus2 = -random2(4);
-            wpn.sub_type = (coinflip() ? WPN_SHORT_SWORD : WPN_HAMMER);
+            wpn.sub_type = (coinflip() ? WPN_SHORT_SWORD : WPN_HAND_AXE);
 
             set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
         }
