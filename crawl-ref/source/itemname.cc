@@ -3079,9 +3079,6 @@ bool is_bad_item(const item_def &item, bool temp)
         case RING_HUNGER:
             // Even Vampires can use this ring.
             if (you.species == SP_MUMMY
-#if TAG_MAJOR_VERSION == 34
-                || you.species == SP_DJINNI
-#endif
                 || you.species == SP_VAMPIRE)
             {
                 return false;
@@ -3220,11 +3217,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return true;
         }
 
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI && get_weapon_brand(item) == SPWPN_ANTIMAGIC)
-            return true;
-#endif
-
         return false;
 
     case OBJ_MISSILES:
@@ -3339,9 +3331,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.is_undead
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED)
-#if TAG_MAJOR_VERSION == 34
-                   || you.species == SP_DJINNI
-#endif
                    || you.species == SP_FORMICID;
         case POT_HASTE:
             return you.species == SP_FORMICID;
@@ -3372,11 +3361,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_PORRIDGE:
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return !can_ingest(item, true, false)
-#if TAG_MAJOR_VERSION == 34
-                || you.species == SP_DJINNI
-#endif
-                ;
+            return !can_ingest(item, true, false);
         case POT_POISON:
             // If you're poison resistant, poison is only useless.
             // Spriggans could argue, but it's too small of a gain for
@@ -3412,9 +3397,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.is_undead
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED)
-#if TAG_MAJOR_VERSION == 34
-                   || you.species == SP_DJINNI
-#endif
                    || you.species == SP_FORMICID;
 
         case AMU_STASIS:
@@ -3433,20 +3415,13 @@ bool is_useless_item(const item_def &item, bool temp)
                                                 // contaminated
                    || player_mutation_level(MUT_GOURMAND) > 0
                    || player_mutation_level(MUT_HERBIVOROUS) == 3
-#if TAG_MAJOR_VERSION == 34
-                   || you.species == SP_DJINNI
-#endif
                    || you.is_undead && you.species != SP_GHOUL;
 
         case AMU_FAITH:
             return you.species == SP_DEMIGOD && !you.religion;
 
         case AMU_GUARDIAN_SPIRIT:
-            return
-#if TAG_MAJOR_VERSION == 34
-                you.species == SP_DJINNI ||
-#endif
-                you.spirit_shield(false, false);
+            return you.spirit_shield(false, false);
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
@@ -3454,9 +3429,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_HUNGER:
         case RING_SUSTENANCE:
             return you.species == SP_MUMMY
-#if TAG_MAJOR_VERSION == 34
-                   || you.species == SP_DJINNI
-#endif
                    || temp && you_foodless()
                    || temp && you.species == SP_VAMPIRE
                        && you.hunger_state == HS_STARVING;
@@ -3472,15 +3444,6 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_POISON_RESISTANCE:
             return player_res_poison(false, temp, false) > 0
                    && (temp || you.species != SP_VAMPIRE);
-
-#if TAG_MAJOR_VERSION == 34
-        case RING_PROTECTION_FROM_FIRE:
-            return you.species == SP_DJINNI;
-
-        case AMU_CONTROLLED_FLIGHT:
-            return player_genus(GENPC_DRACONIAN)
-                   || (you.species == SP_TENGU && you.experience_level >= 5);
-#endif
 
         case RING_WIZARDRY:
             return you_worship(GOD_TROG);
@@ -3521,20 +3484,6 @@ bool is_useless_item(const item_def &item, bool temp)
         if (item.sub_type == NUM_FOODS)
             break;
 
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-        {
-            // Only comestibles with effects beyond nutrition have an use.
-            if (item.sub_type == FOOD_AMBROSIA
-                || item.sub_type == FOOD_ROYAL_JELLY
-                || item.sub_type == FOOD_CHUNK
-                   && mons_corpse_effect(item.mon_type) == CE_MUTAGEN)
-            {
-                return false;
-            }
-        }
-        else
-#endif
         if (!is_inedible(item))
             return false;
 
@@ -3556,15 +3505,6 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_CORPSES:
         if (item.sub_type != CORPSE_SKELETON && !you_foodless())
             return false;
-
-#if TAG_MAJOR_VERSION == 34
-        if (item.sub_type == CORPSE_BODY && you.species == SP_DJINNI
-            && mons_corpse_effect(item.mon_type) == CE_MUTAGEN
-            && !is_inedible(item))
-        {
-            return false;
-        }
-#endif
 
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)

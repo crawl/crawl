@@ -214,9 +214,6 @@ static string _stk_walker()
 {
     return Skill_Species == SP_NAGA         ? "Slider"   :
            Skill_Species == SP_TENGU        ? "Glider"   :
-#if TAG_MAJOR_VERSION == 34
-           Skill_Species == SP_DJINNI       ? "Floater"  :
-#endif
            Skill_Species == SP_OCTOPODE     ? "Wriggler" :
            Skill_Species == SP_VINE_STALKER ? "Stalker"
                                             : "Walker";

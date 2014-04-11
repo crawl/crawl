@@ -992,11 +992,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             if (!unmeld && you.spirit_shield() < 2)
             {
                 dec_mp(you.magic_points);
-                if (
-#if TAG_MAJOR_VERSION == 34
-                        you.species == SP_DJINNI ||
-#endif
-                        you.species == SP_VINE_STALKER)
+                if (you.species == SP_VINE_STALKER)
                     mpr("You feel the presence of a powerless spirit.");
                 else
                     mpr("You feel your power drawn to a protective spirit.");
@@ -1397,11 +1393,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (you.spirit_shield() < 2 && !unmeld)
         {
             dec_mp(you.magic_points);
-            if (
-#if TAG_MAJOR_VERSION == 34
-                    you.species == SP_DJINNI ||
-#endif
-                    you.species == SP_VINE_STALKER)
+            if (you.species == SP_VINE_STALKER)
                 mpr("You feel the presence of a powerless spirit.");
             else
                 mpr("You feel your power drawn to a protective spirit.");
