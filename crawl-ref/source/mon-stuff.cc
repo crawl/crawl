@@ -1964,10 +1964,12 @@ int monster_die(monster* mons, killer_type killer,
             const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
             // killing friendlies is good, more bloodshed!
             // Undead feel no pain though, tormenting them is not as satisfying.
-            const bool good_kill   = !created_friendly && gives_xp
-                || (is_evil_god(you.religion) && !mons->is_summoned()
-                    && !fake_abjuration
-                    && (targ_holy == MH_NATURAL || targ_holy == MH_HOLY));
+            const bool good_kill =
+                gives_xp && (!created_friendly
+                             || is_evil_god(you.religion)
+                                && !mons->is_summoned() && !fake_abjuration
+                                && (targ_holy == MH_NATURAL
+                                    || targ_holy == MH_HOLY));
 
             if (death_message)
             {
