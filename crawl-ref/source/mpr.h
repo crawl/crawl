@@ -45,6 +45,7 @@ enum msg_channel_type
     MSGCH_ORB,              // messages for the orb
     MSGCH_TIMED_PORTAL,     // timed portal entry "tick tick tick" sounds
     MSGCH_HELL_EFFECT,      // hell effects
+    MSGCH_MONSTER_WARNING,  // "Foo comes into view", et al
 
     NUM_MESSAGE_CHANNELS    // always last
 };

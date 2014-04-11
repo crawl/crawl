@@ -1654,7 +1654,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             msgs_buf->push_back(text);
         else
         {
-            mprf(MSGCH_WARN, "%s", text.c_str());
+            mprf(MSGCH_MONSTER_WARNING, "%s", text.c_str());
             if (ash_id || zin_id)
                 mprf(MSGCH_GOD, "%s", god_warning.c_str());
 #ifndef USE_TILE_LOCAL

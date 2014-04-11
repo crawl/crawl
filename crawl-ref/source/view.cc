@@ -297,12 +297,13 @@ void update_monsters_in_view()
         }
 
         if (size == 1)
-            mprf(MSGCH_WARN, "%s", msgs[0].c_str());
+            mprf(MSGCH_MONSTER_WARNING, "%s", msgs[0].c_str());
         else
         {
             while (types.size() > max_msgs && !genera.empty())
                 _genus_factoring(types, genera);
-            mprf(MSGCH_WARN, "%s", _desc_mons_type_map(types).c_str());
+            mprf(MSGCH_MONSTER_WARNING, "%s",
+                 _desc_mons_type_map(types).c_str());
         }
 
         bool warning = false;
