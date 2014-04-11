@@ -1139,3 +1139,20 @@ static void _FLAMING_DEATH_melee_effects(item_def* weapon, actor* attacker,
         }
     }
 }
+
+///////////////////////////////////////////////////
+
+static void _MAJIN_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (you.max_magic_points)
+        _equip_mpr(show_msgs, "You feel a darkness envelop your magic.");
+}
+
+static void _MAJIN_unequip(item_def *item, bool *show_msgs)
+{
+    if (you.max_magic_points)
+    {
+        _equip_mpr(show_msgs,
+                   "The darkness slowly releases its grasp on your magic.");
+    }
+}

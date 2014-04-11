@@ -7175,6 +7175,35 @@ bool player::tengu_flight() const
     return species == SP_TENGU && flight_mode();
 }
 
+/**
+ * Returns the HP cost (per MP) of casting a spell.
+ *
+ * Checks to see if the player is wielding the Majin-Bo.
+ *
+ * @return        The HP cost (per MP) of casting a spell.
+ **/
+int player::spell_hp_cost() const
+{
+    int cost = 0;
+
+    if (player_equip_unrand(UNRAND_MAJIN))
+        cost += 1;
+
+    return cost;
+}
+
+/**
+ * Returns true if player spellcasting is considered unholy.
+ *
+ * Checks to see if the player is wielding the Majin-Bo.
+ *
+ * @return          Whether player spellcasting is an unholy act.
+ */
+bool player::spellcasting_unholy() const
+{
+    return player_equip_unrand(UNRAND_MAJIN);
+}
+
 bool player::nightvision() const
 {
     return is_undead
