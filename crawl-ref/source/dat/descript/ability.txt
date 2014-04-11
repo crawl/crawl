@@ -569,8 +569,9 @@ Create a neutral jelly that will wander the floor and digest items.
 %%%%
 Jelly Paralyse ability
 
-Pray to temporarily halt the item consumption of any visible slimes. This
-ability costs piety depending on the number of jellies that are affected.
+Call on any nearby jellies to cease their item consumption and pray to Jiyva
+for a short duration. This ability costs piety depending on the number of
+jellies that are affected.
 %%%%
 Slimify ability
 

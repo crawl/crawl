@@ -1569,8 +1569,8 @@ enum duration_type
     DUR_ICY_ARMOUR,
 #if TAG_MAJOR_VERSION == 34
     DUR_REPEL_MISSILES,
-#endif
     DUR_JELLY_PRAYER,
+#endif
     DUR_PIETY_POOL,             // distribute piety over time
     DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
     DUR_DIVINE_STAMINA,         // duration of Zin's Divine Stamina

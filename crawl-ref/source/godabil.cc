@@ -1610,21 +1610,18 @@ bool beogh_water_walk()
 
 void jiyva_paralyse_jellies()
 {
-    mprf(MSGCH_PRAY, "You %s prayer to %s.",
-         you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
+    mprf("You call upon nearby slimes to pray to %s.",
          god_name(you.religion).c_str());
-
-    you.duration[DUR_JELLY_PRAYER] = 200;
 
     int jelly_count = 0;
     for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
     {
         monster* mon = monster_at(*ri);
-
+        const int dur = 16 + random2(9);
         if (mon != NULL && mons_is_slime(mon) && !mon->is_shapeshifter())
         {
             mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
-                                      &you, 200));
+                                      &you, dur * BASELINE_DELAY));
             jelly_count++;
         }
     }
@@ -1632,9 +1629,9 @@ void jiyva_paralyse_jellies()
     if (jelly_count > 0)
     {
         if (jelly_count > 1)
-            mprf(MSGCH_PRAY, "The nearby slimes join your prayer.");
+            mpr("The nearby slimes join the prayer.");
         else
-            mprf(MSGCH_PRAY, "A nearby slime joins your prayer.");
+            mpr("A nearby slime joins the prayer.");
 
         lose_piety(max(5, min(jelly_count, 20)));
     }
