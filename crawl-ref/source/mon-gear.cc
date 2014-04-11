@@ -58,9 +58,7 @@ static void _give_monster_item(monster* mon, int thing,
          || mthing.base_type == OBJ_ARMOUR
          || mthing.base_type == OBJ_MISSILES))
     {
-        bool enchanted = mthing.plus
-                      || mthing.base_type == OBJ_WEAPONS && !mthing.plus2;
-
+        bool enchanted = mthing.plus;
         // The item could either lose or gain brand after being generated,
         // adjust the glowing flag.
         if (!mthing.special && !enchanted)
@@ -321,9 +319,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
         if (coinflip())
         {
-            force_item  = true;
-            item.plus  += 1 + random2(3);
-            item.plus2 += 1 + random2(3);
+            force_item = true;
+            item.plus += 1 + random2(3);
 
             if (one_chance_in(5))
                 set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
@@ -350,9 +347,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                15, WPN_BATTLEAXE, 0);
         if (coinflip())
         {
-            force_item  = true;
-            item.plus  += 1 + random2(4);
-            item.plus2 += 1 + random2(4);
+            force_item = true;
+            item.plus += 1 + random2(4);
         }
         break;
 
@@ -383,9 +379,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
         if (coinflip())
         {
-            force_item  = true;
-            item.plus  += 1 + random2(4);
-            item.plus2 += 1 + random2(4);
+            force_item = true;
+            item.plus += 1 + random2(4);
         }
         break;
 
@@ -422,8 +417,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                  2, SPWPN_FREEZING,
                                                  1, SPWPN_ELECTROCUTION,
                                                  0));
-        item.plus  += random2(3);
-        item.plus2 += random2(3);
+        item.plus += random2(3);
         break;
 
     case MONS_GRUM:
@@ -433,8 +427,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                 1, WPN_HALBERD,
                                                 1, WPN_GLAIVE,
                                                 0);
-        item.plus  += -2 + random2(4);
-        item.plus2 += -1 + random2(2);
+        item.plus += -2 + random2(4);
         break;
 
     case MONS_CRAZY_YIUF:
@@ -443,7 +436,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type     = WPN_QUARTERSTAFF;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
         item.plus        += 2 + random2(3);
-        item.plus2       += 2 + random2(3);
         item.flags       |= ISFLAG_KNOW_TYPE;
         break;
 
@@ -635,10 +627,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VENOM);
         item.flags |= ISFLAG_KNOW_TYPE;
         if (coinflip())
-        {
-            item.plus  = 1 + random2(4);
-            item.plus2 = 1 + random2(4);
-        }
+            item.plus = 1 + random2(4);
         break;
 
     case MONS_TIAMAT:
@@ -833,7 +822,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_TRIDENT;
         item.plus      = random_range(-1, 6, 2);
-        item.plus2     = random_range(-1, 6, 2);
         item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
         break;
@@ -912,7 +900,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_LONGBOW;
         item.plus     += 1 + random2(3);
-        item.plus2    += 1 + random2(3);
         item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
@@ -930,7 +917,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_SCIMITAR;
         item.plus      = random2(5);
-        item.plus2     = random2(5);
         item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
@@ -944,8 +930,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
         set_equip_desc(item, ISFLAG_GLOWING);
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-        item.plus  = 1 + random2(3);
-        item.plus2 = 1 + random2(3);
+        item.plus   = 1 + random2(3);
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
@@ -966,8 +951,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                        WPN_SCIMITAR,
                                        WPN_FALCHION,
                                        -1);
-        item.plus  = random2(5);
-        item.plus2 = random2(5);
+        item.plus   = random2(5);
         // flaming instead of holy wrath
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         item.flags |= ISFLAG_KNOW_TYPE;
@@ -979,8 +963,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = WPN_GREAT_SWORD;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         // highly enchanted, we're top rank
-        item.plus  = 3 + random2(6);
-        item.plus2 = 3 + random2(6);
+        item.plus   = 3 + random2(6);
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
@@ -997,8 +980,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
         set_equip_desc(item, ISFLAG_GLOWING);
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-        item.plus  = 1 + random2(3);
-        item.plus2 = 1 + random2(3);
+        item.plus   = 1 + random2(3);
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
@@ -1010,8 +992,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                            : WPN_WHIP);
 
         set_equip_desc(item, ISFLAG_GLOWING);
-        item.plus  = 1 + random2(3);
-        item.plus2 = 1 + random2(3);
+        item.plus   = 1 + random2(3);
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
@@ -1067,8 +1048,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                      0));
         }
 
-        item.plus  += random2(6);
-        item.plus2 += random2(6);
+        item.plus += random2(6);
         break;
 
     case MONS_FREDERICK:
@@ -1091,8 +1071,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             level = MAKE_GOOD_ITEM;
         else
         {
-            item.plus  += random2(6);
-            item.plus2 += random2(6);
+            item.plus += random2(6);
             force_item = true;
         }
         break;
@@ -1164,8 +1143,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                               random_choose_weighted(3, SPWPN_CHAOS,
                                                      1, SPWPN_DISTORTION,
                                                      0));
-            item.plus  = random2(5);
-            item.plus2 = random2(5);
+            item.plus = random2(5);
         }
         break;
 
@@ -1210,7 +1188,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = WPN_CUTLASS;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
         item.plus      = random2(5);
-        item.plus2     = random2(5);
         item.flags    |= ISFLAG_KNOW_TYPE;
         if (one_chance_in(100) && !get_unique_item_status(UNRAND_ARC_BLADE))
             make_item_unrandart(item, UNRAND_ARC_BLADE);
@@ -1270,10 +1247,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         }
 
         if (one_chance_in(4))
-        {
-            item.plus   = random2(5);
-            item.plus2  = random2(5);
-        }
+            item.plus = random2(5);
     }
     break;
 
@@ -1285,10 +1259,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         item.flags |= ISFLAG_KNOW_TYPE;
         if (one_chance_in(3))
-        {
-            item.plus   = 2 + random2(4);
-            item.plus2  = 2 + random2(4);
-        }
+            item.plus = 2 + random2(4);
 
         break;
 
@@ -1354,8 +1325,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         {
             force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_DISTORTION);
-            item.plus      = random2(5);
-            item.plus2     = random2(5);
+            item.plus  = random2(5);
         }
         break;
 
@@ -1365,7 +1335,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = WPN_EXECUTIONERS_AXE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PAIN);
         item.plus      = 2 + random2(7);
-        item.plus2     = 2 + random2(7);
         item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
@@ -1393,8 +1362,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                       0));
         }
 
-        item.plus  += random2(4);
-        item.plus2 += random2(4);
+        item.plus += random2(4);
         break;
 
     case MONS_SOJOBO:
@@ -1465,7 +1433,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             force_item = true;
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
             item.plus  = random2(9) - 2;
-            item.plus2 = random2(9) - 2;
         }
         else
             level = random2(300);

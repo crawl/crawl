@@ -836,25 +836,15 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         // The rest are normal randarts.
         make_item_randart(item);
         // Mean enchantment +6.
-        item.plus  = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
-        item.plus2 = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
+        item.plus = 12 - biased_random2(7,2) - biased_random2(7,2) - biased_random2(7,2);
 
         if (one_chance_in(5))
         {
             do_curse_item(item);
-            item.plus  = 3 - random2(6);
-            item.plus2 = 3 - random2(6);
+            item.plus = 3 - random2(6);
         }
-        else if ((item.plus < 0
-                  || item.plus2 < 0 && item.sub_type != WPN_BLOWGUN)
-                 && !one_chance_in(3))
-        {
+        else if (item.plus < 0 && !one_chance_in(3))
             do_curse_item(item);
-        }
-
-        // No to-dam enchantment on blowguns.
-        if (item.sub_type == WPN_BLOWGUN)
-            item.plus2 = 0;
 
         if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
             item.flags &= (~ISFLAG_CURSED);
@@ -1386,8 +1376,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         _roll_weapon_type(item, item_level);
     }
 
-    item.plus  = 0;
-    item.plus2 = 0;
+    item.plus = 0;
 
     if (item_level < 0)
     {
@@ -1398,8 +1387,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
             set_item_ego_type(item, OBJ_WEAPONS,
                 _determine_weapon_brand(item, 2 + 2 * env.absdepth0));
         }
-        item.plus  -= 1 + random2(3);
-        item.plus2 -= 1 + random2(3);
+        item.plus -= 1 + random2(3);
 
         if (item_level == ISPEC_BAD)
             do_curse_item(item);
@@ -1417,10 +1405,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
 
         // if acquired item still not ego... enchant it up a bit.
         if (force_good && item.special == SPWPN_NORMAL)
-        {
-            item.plus  += 2 + random2(3);
-            item.plus2 += 2 + random2(3);
-        }
+            item.plus += 2 + random2(3);
 
         const int chance = (force_good ? 200 : item_level);
 
@@ -1429,16 +1414,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         {
             item.plus += random2(3);
 
-            if (random2(350) > 20 + chance)
-                break;
-        }
-
-        // Odd-looking, but this is how the algorithm compacts {dlb}.
-        for (int i = 0; i < 4; ++i)
-        {
-            item.plus2 += random2(3);
-
-            if (random2(500) > 50 + chance)
+            if (random2(425) > 35 + chance)
                 break;
         }
     }
@@ -1449,14 +1425,9 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
             // Make a cursed item.
             do_curse_item(item);
             item.plus  -= random2(4);
-            item.plus2 -= random2(4);
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         }
     }
-
-    // No to-dam enchantment on blowguns.
-    if (item.sub_type == WPN_BLOWGUN)
-        item.plus2 = 0;
 }
 
 // Current list is based on dpeg's original post to the Wiki, found at the

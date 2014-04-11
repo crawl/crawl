@@ -83,7 +83,6 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     you.inv[slot].quantity  = 1;
     you.inv[slot].special   = 0;
     you.inv[slot].plus  = plus;
-    you.inv[slot].plus2 = plus;
 
     return true;
 }
@@ -560,7 +559,6 @@ static void _wanderer_good_equipment(skill_type & skill,
         // +2 dagger and a good consumable
         newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
         you.inv[slot].plus  = 2;
-        you.inv[slot].plus2 = 2;
         slot++;
         _good_potion_or_scroll(slot);
         break;

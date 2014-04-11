@@ -722,29 +722,29 @@ KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
 KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
               shield mundane not_cursed ident:all plus:3, \
               large shield mundane not_cursed ident:all plus:3
-KITEM:    D = broad axe mundane not_cursed ident:all plus:5 plus2:5, \
-              battleaxe mundane not_cursed ident:all plus:5 plus2:5, \
-              executioner's axe mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    E = demon trident mundane not_cursed ident:all plus:5 plus2:5, \
-              bardiche mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    F = demon whip mundane not_cursed ident:all plus:5 plus2:5, \
-              great mace mundane not_cursed ident:all plus:5 plus2:5, \
-              giant club mundane not_cursed ident:all plus:5 plus2:5, \
-              giant spiked club mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    G = dagger mundane not_cursed ident:all plus:5 plus2:5, \
-              cutlass mundane not_cursed ident:all plus:5 plus2:5, \
-              quick blade mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    H = demon blade mundane not_cursed ident:all plus:5 plus2:5, \
-              bastard sword mundane not_cursed ident:all plus:5 plus2:5, \
-              great sword mundane not_cursed ident:all plus:5 plus2:5, \
-              claymore mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    I = lajatang mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    J = crossbow mundane not_cursed ident:all plus:5 plus2:5, \
+KITEM:    D = broad axe mundane not_cursed ident:all plus:5, \
+              battleaxe mundane not_cursed ident:all plus:5, \
+              executioner's axe mundane not_cursed ident:all plus:5
+KITEM:    E = demon trident mundane not_cursed ident:all plus:5, \
+              bardiche mundane not_cursed ident:all plus:5
+KITEM:    F = demon whip mundane not_cursed ident:all plus:5, \
+              great mace mundane not_cursed ident:all plus:5, \
+              giant club mundane not_cursed ident:all plus:5, \
+              giant spiked club mundane not_cursed ident:all plus:5
+KITEM:    G = dagger mundane not_cursed ident:all plus:5, \
+              cutlass mundane not_cursed ident:all plus:5, \
+              quick blade mundane not_cursed ident:all plus:5
+KITEM:    H = demon blade mundane not_cursed ident:all plus:5, \
+              bastard sword mundane not_cursed ident:all plus:5, \
+              great sword mundane not_cursed ident:all plus:5, \
+              claymore mundane not_cursed ident:all plus:5
+KITEM:    I = lajatang mundane not_cursed ident:all plus:5
+KITEM:    J = crossbow mundane not_cursed ident:all plus:5, \
               bolt q:1000 mundane ident:all, \
-              shortbow mundane not_cursed ident:all plus:5 plus2:5, \
+              shortbow mundane not_cursed ident:all plus:5, \
               arrow q:1000 mundane ident:all, \
-              longbow mundane not_cursed ident:all plus:5 plus2:5, \
-              sling mundane not_cursed ident:all plus:5 plus2:5, \
+              longbow mundane not_cursed ident:all plus:5, \
+              sling mundane not_cursed ident:all plus:5, \
               sling bullet q:1000 mundane ident:all
 KITEM:    K = potion of curing q:9 ident:all, \
               potion of heal wounds q:9 ident:all, \

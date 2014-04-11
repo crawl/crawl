@@ -294,12 +294,9 @@ static void _ely_dull_inventory_weapons()
 
         if (you.inv[i].base_type == OBJ_WEAPONS)
         {
-            // Don't dull artefacts at all, or weapons below -1/-1.
-            if (is_artefact(you.inv[i])
-                || you.inv[i].plus <= -1 && you.inv[i].plus2 <= -1)
-            {
+            // Don't dull artefacts at all, or weapons below -1.
+            if (is_artefact(you.inv[i]) || you.inv[i].plus <= -1)
                 continue;
-            }
 
             // 2/3 of the time, don't do anything.
             if (!one_chance_in(3))
@@ -313,8 +310,6 @@ static void _ely_dull_inventory_weapons()
             // Dull the weapon.
             if (you.inv[i].plus > -1)
                 you.inv[i].plus--;
-            if (you.inv[i].plus2 > -1)
-                you.inv[i].plus2--;
 
             // Update the weapon display, if necessary.
             if (wielded)
@@ -797,7 +792,6 @@ static bool _beogh_retribution()
                 set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
 
                 wpn.plus  = random2(3);
-                wpn.plus2 = random2(3);
                 wpn.sub_type = wpn_type;
 
                 set_ident_flags(wpn, ISFLAG_KNOW_TYPE);

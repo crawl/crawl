@@ -9,14 +9,14 @@
   local bag_of_meat =
     "orc hp:400 hd:30 name:bag_of_meat n_rpl n_des n_spe n_zom \
     col:red generate_awake ; ring of slaying plus:30 \
-    not_cursed ident:all no_pickup . war axe plus:9 plus2:9 \
+    not_cursed ident:all no_pickup . war axe plus:9 \
     not_cursed ego:none ident:all no_pickup"
 
   local meat_berserker =
     "ogre hp:500 hd:50 name:meat_berserker n_rpl n_des n_spe n_zom \
     always_corpse col:red perm_ench:berserk generate_awake \
     ; ring of slaying plus:30 not_cursed ident:all \
-    no_pickup . battleaxe plus:9 plus2:9 not_cursed ego:none \
+    no_pickup . battleaxe plus:9 not_cursed ego:none \
     ident:all no_pickup"
 
   local tyrant =
@@ -39,7 +39,7 @@
     n_spe n_zom  col:red generate_awake perm_ench:inner_flame \
     ; ring of slaying plus:100 not_cursed ident:all \
     no_pickup . \
-    giant spiked club plus:9 plus2:9 not_cursed ego:none \
+    giant spiked club plus:9 not_cursed ego:none \
     ident:all no_pickup"
 
   local destroyer =
@@ -47,7 +47,7 @@
     never_corpse col:red generate_awake \
     spells:blink_close;blink_close;blink_close;blink_close;blink_close \
     ; ring of slaying plus:200 not_cursed ident:all \
-    no_pickup . great sword plus:9 plus2:9 ego:vorpal ident:all no_pickup"
+    no_pickup . great sword plus:9 ego:vorpal ident:all no_pickup"
 
   local plague =
     "sea snake hp:500 hd:30 name:scourge n_rpl n_des n_spe \
@@ -59,7 +59,7 @@
     n_des n_spe n_zom never_corpse col:red generate_awake \
     spells:twisted_resurrection;twisted_resurrection;twisted_resurrection \
     ; ring of slaying plus:250 not_cursed ident:all \
-    no_pickup . great sword plus:9 plus2:9 not_cursed ego:none \
+    no_pickup . great sword plus:9 not_cursed ego:none \
     ident:all no_pickup"
 
   local observer =
@@ -88,7 +88,7 @@
     col:lightmagenta generate_awake \
     spells:slow;haste \
     ; ring of slaying plus:400 not_cursed ident:all \
-    no_pickup . great mace plus:9 plus2:9 not_cursed ego:none \
+    no_pickup . great mace plus:9 not_cursed ego:none \
     ident:all no_pickup"
 
   local vile =
@@ -101,7 +101,7 @@
     "harold hp:650 hd:40 name:The_Servant n_rpl col:yellow \
     generate_awake never_corpse spells:.;.;.;. \
     ; ring of slaying plus:130 not_cursed ident:all \
-    no_pickup . glaive plus:9 plus2:9 not_cursed ego:flaming \
+    no_pickup . glaive plus:9 not_cursed ego:flaming \
     ident:all no_pickup"
 
   local captor =
@@ -109,7 +109,7 @@
     generate_awake never_corpse \
     spells:sentinel's_mark;haste;ensnare \
     ; ring of slaying plus:200 not_cursed ident:all \
-    no_pickup . claymore plus:9 plus2:9 not_cursed ego:vorpal \
+    no_pickup . claymore plus:9 not_cursed ego:vorpal \
     ident:all no_pickup"
 
   local defiler =
@@ -117,7 +117,7 @@
     generate_awake never_corpse \
     spells:fireball;fireball;fireball;poisonous_cloud \
     ; ring of slaying plus:250 not_cursed ident:all \
-    no_pickup . demon whip plus:9 plus2:9 not_cursed ego:vorpal \
+    no_pickup . demon whip plus:9 not_cursed ego:vorpal \
     ident:all no_pickup \
     . large shield plus:12 not_cursed ego:none \
     ident:all no_pickup"
@@ -156,10 +156,10 @@
     elseif you.race() == "Spriggan" or
            you.race() == "Kobold"   or
            you.race() == "Halfling" then
-      e.kitem("{ = broad axe plus:27000 plus2:27000 ident:all no_pickup \
+      e.kitem("{ = broad axe plus:27000 ident:all no_pickup \
                not_cursed ego:vorpal unrand:axe_of_woe")
     else
-      e.kitem("{ = executioner's axe plus:27000 plus2:27000 ident:all no_pickup \
+      e.kitem("{ = executioner's axe plus:27000 ident:all no_pickup \
                not_cursed ego:vorpal unrand:axe_of_woe")
     end
   end
