@@ -261,8 +261,7 @@
 # These lines will suppress extra feedback messages from travel/shift-running.
 #
 # message_colour ^= mute:monster_warning:
-# message_colour ^= mute:You start (searching|resting)
-# message_colour ^= mute:Done searching
+# message_colour ^= mute:You start resting
 # message_colour ^= mute:(HP|Magic) restored
 # message_colour ^= mute:warning:Not with.*(in view|monsters around)
 
