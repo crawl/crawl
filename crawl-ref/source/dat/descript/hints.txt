@@ -136,7 +136,7 @@ finished random 1
 
 Crawl has a macro function built in: press <input>~m</input> to define a macro
 by first specifying a trigger key (say, <input>F1</input>) and a command
-sequence, for example <input>za+.</input>. The latter will make the
+sequence, for example <input>za.</input>. The latter will make the
 <input>F1</input> key always zap the spell in slot a at the nearest monster.
 For more information on macros, type
 <input>$cmd[CMD_DISPLAY_COMMANDS]~</input>.
