@@ -480,10 +480,6 @@ string player::foot_name(bool plural, bool *can_plural) const
         }
         else if (species == SP_FELID)
             str = "paw";
-#if TAG_MAJOR_VERSION == 34
-        else if (species == SP_DJINNI)
-            str = "underside", *can_plural = false;
-#endif
         else if (fishtail)
         {
             str         = "tail";

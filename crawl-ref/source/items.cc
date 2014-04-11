@@ -1534,18 +1534,6 @@ void note_inscribe_item(item_def &item)
     _origin_freeze(item, you.pos());
     _check_note_item(item);
 }
-#if TAG_MAJOR_VERSION == 34
-
-static void _fish(item_def &item, short quant = 0)
-{
-    if (you.species != SP_DJINNI || !feat_is_watery(grd(you.pos())))
-        return;
-
-    unwind_var<short> partial(item.quantity, quant ? quant : item.quantity);
-    mprf("You fish the %s out of the water.", item.name(DESC_PLAIN).c_str());
-    you.time_taken += 5;
-}
-#endif
 
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
@@ -1576,9 +1564,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     // Gold has no mass, so we handle it first.
     if (it.base_type == OBJ_GOLD)
     {
-#if TAG_MAJOR_VERSION == 34
-        _fish(it);
-#endif
         _got_gold(it, quant_got, quiet);
         dec_mitm_item_quantity(obj, quant_got);
 
@@ -1596,9 +1581,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         if (!quiet)
         {
-#if TAG_MAJOR_VERSION == 34
-            _fish(it);
-#endif
             flash_view_delay(rune_colour(it.plus), 300);
             mprf("You pick up the %s rune and feel its power.",
                  rune_type_name(it.plus));
@@ -1703,10 +1685,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
-#if TAG_MAJOR_VERSION == 34
-                if (!quiet)
-                    _fish(it, quant_got);
-#endif
 
                 _check_note_item(it);
 
@@ -1750,10 +1728,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     if (!quiet && partial_pickup)
         mpr("You can only carry some of what is here.");
-#if TAG_MAJOR_VERSION == 34
-    if (!quiet)
-        _fish(it, quant_got);
-#endif
 
     int freeslot = find_free_slot(it);
     ASSERT_RANGE(freeslot, 0, ENDOFPACK);

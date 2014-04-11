@@ -654,27 +654,6 @@ const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
     string ret;
-#if TAG_MAJOR_VERSION == 34
-    int ep = 0;
-    if (abil.mp_cost)
-        if (you.species == SP_DJINNI)
-        {
-            ep += abil.mp_cost * DJ_MP_RATE;
-            ASSERT(!(abil.flags & ABFLAG_PERMANENT_MP));
-        }
-        else
-        {
-            ret += make_stringf(", %d %sMP", abil.mp_cost,
-                abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
-        }
-
-    if (abil.hp_cost || ep)
-    {
-        ret += make_stringf(", %d %s%s", ep + abil.hp_cost.cost(you.hp_max),
-            abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "",
-            you.species == SP_DJINNI ? "EP" : "HP");
-    }
-#else
     if (abil.mp_cost)
         ret += make_stringf(", %d %sMP", abil.mp_cost,
             abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
@@ -682,7 +661,6 @@ const string make_cost_description(ability_type ability)
     if (abil.hp_cost)
         ret += make_stringf(", %d %sHP", abil.hp_cost.cost(you.hp_max),
             abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "");
-#endif
 
     if (abil.zp_cost)
         ret += make_stringf(", %d ZP", (int)_zp_cost(abil));
@@ -690,12 +668,7 @@ const string make_cost_description(ability_type ability)
     if (abil.food_cost && !you_foodless(true)
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-            ret += ", Glow";
-        else
-#endif
-            ret += ", Hunger"; // randomised and exact amount hidden from player
+        ret += ", Hunger"; // randomised and exact amount hidden from player
     }
 
     if (abil.piety_cost || abil.flags & ABFLAG_PIETY)
@@ -786,12 +759,7 @@ static const string _detailed_cost_description(ability_type ability)
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
         have_cost = true;
-#if TAG_MAJOR_VERSION == 34
-        if (you.species == SP_DJINNI)
-            ret << "\nGlow   : ";
-        else
-#endif
-            ret << "\nHunger : ";
+        ret << "\nHunger : ";
         ret << hunger_cost_string(abil.food_cost + abil.food_cost / 2);
     }
 
