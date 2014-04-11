@@ -62,7 +62,9 @@ enum hints_event_type
     // other 'first events'
     HINT_SEEN_MONSTER,
     HINT_SEEN_ZERO_EXP_MON,
+#if TAG_MAJOR_VERSION == 34
     HINT_SEEN_TOADSTOOL,
+#endif
     HINT_MONSTER_BRAND,
     HINT_MONSTER_FRIENDLY,
     HINT_MONSTER_SHOUT,
