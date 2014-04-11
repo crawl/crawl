@@ -515,6 +515,7 @@ static int _spell_enhancement(unsigned int typeflags)
         enhanced -= 2;
 
     enhanced += you.archmagi();
+    enhanced += player_equip_unrand(UNRAND_MAJIN);
 
 #if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
@@ -607,7 +608,15 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-// Returns false if spell failed, and true otherwise.
+/**
+ * Cast a spell.
+ *
+ * Handles general preconditions & costs.
+ *
+ * @param check_range   If true, abort if no targets are in range. (z vs Z)
+ * @param spell         The type of spell to be cast.
+ * @return              Whether the spell was successfully cast.
+ **/
 bool cast_a_spell(bool check_range, spell_type spell)
 {
     if (!_can_cast())
@@ -716,7 +725,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (!enough_mp(spell_mana(spell), true))
+    const int cost = spell_mana(spell);
+    if (!enough_mp(cost, true))
     {
         mpr("You don't have enough magic to cast that spell.");
         crawl_state.zero_turns_taken();
@@ -774,8 +784,8 @@ bool cast_a_spell(bool check_range, spell_type spell)
     const bool staff_energy = player_energy();
     you.last_cast_spell = spell;
     // Silently take MP before the spell.
-    const int cost = spell_mana(spell);
     dec_mp(cost, true);
+
     const spret_type cast_result = your_spells(spell, 0, true, check_range);
     if (cast_result == SPRET_ABORT)
     {
@@ -840,7 +850,7 @@ static void _spellcasting_god_conduct(spell_type spell)
 
     const int conduct_level = 10 + spell_difficulty(spell);
 
-    if (is_unholy_spell(spell))
+    if (is_unholy_spell(spell) || you.spellcasting_unholy())
         did_god_conduct(DID_UNHOLY, conduct_level);
 
     if (is_unclean_spell(spell))
@@ -1202,12 +1212,38 @@ static double _chance_miscast_prot()
     return min(1.0, miscast_prot);
 }
 
-// Returns SPRET_SUCCESS if spell is successfully cast for purposes of
-// exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
-// the casting.
-// Not all of these are actually real spells; invocations, decks, rods or misc.
-// effects might also land us here.
-// Others are currently unused or unimplemented.
+/**
+ * Handles damage from corrupted magic effects.
+ *
+ * Currently only from the Majin-Bo.
+ *
+ * @param spell         The type of spell that was just cast.
+ **/
+static void _spellcasting_corruption(spell_type spell)
+{
+    // never kill the player (directly)
+    int hp_cost = min(you.spell_hp_cost() * spell_mana(spell), you.hp - 1);
+    const char * source = NULL;
+    if (player_equip_unrand(UNRAND_MAJIN))
+        source = "the Majin-Bo"; // for debugging
+    ouch(hp_cost, NON_MONSTER, KILLED_BY_SOMETHING, source);
+}
+
+/**
+ * Targets and fires player-cast spells & spell-like effects.
+ *
+ * Not all of these are actually real spells; invocations, decks, rods or misc.
+ * effects might also land us here.
+ * Others are currently unused or unimplemented.
+ *
+ * @param spell         The type of spell being cast.
+ * @param powc          Spellpower.
+ * @param allow_fail    Whether spell-fail chance applies.
+ * @param check_range   ...I'm not sure this actually does anything
+ * @return SPRET_SUCCESS if spell is successfully cast for purposes of
+ * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
+ * the casting.
+ **/
 spret_type your_spells(spell_type spell, int powc,
                        bool allow_fail, bool check_range)
 {
@@ -1385,7 +1421,13 @@ spret_type your_spells(spell_type spell, int powc,
 
     const bool old_target = actor_at(beam.target);
 
-    switch (_do_cast(spell, powc, spd, beam, god, potion, check_range, fail))
+    spret_type cast_result = _do_cast(spell, powc, spd, beam, god,
+                                      potion, check_range, fail);
+
+    if (cast_result != SPRET_ABORT && you.spell_hp_cost() && allow_fail)
+        _spellcasting_corruption(spell);
+
+    switch (cast_result)
     {
     case SPRET_SUCCESS:
     {
@@ -1465,7 +1507,14 @@ spret_type your_spells(spell_type spell, int powc,
     return SPRET_SUCCESS;
 }
 
-// Special-cased after-effects.
+/**
+ * Handles special-cased aftereffects of spellcasting.
+ *
+ * Currently handles damage from casting Pain, since that occurs before the
+ * spellcast, whether or not it's successful, as long as it's not aborted.
+ *
+ * @param spell         The type of spell that was just cast.
+ **/
 static void _spell_zap_effect(spell_type spell)
 {
     // Casting pain costs 1 hp.

@@ -1902,6 +1902,12 @@ static bool _species_is_undead(int sp)
     return sp == SP_MUMMY || sp == SP_GHOUL || sp == SP_VAMPIRE;
 }
 
+/**
+ * Describes the cause of the player's death.
+ *
+ * @param verbosity     The verbosity of the description.
+ * @return              A description of the cause of death.
+ */
 string scorefile_entry::death_description(death_desc_verbosity verbosity) const
 {
     bool needs_beam_cause_line = false;
@@ -2429,6 +2435,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
             desc += "Thrown by " + death_source_desc();
         needs_damage = true;
         break;
+
 
     default:
         desc += terse? "program bug" : "Nibbled to death by software bugs";

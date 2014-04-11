@@ -1163,6 +1163,17 @@ INT:      3
 BRAND:    SPARM_ARCHMAGI
 BOOL:     clarity, sustab
 
+ENUM:    MAJIN
+NAME:    Majin-Bo
+OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+PLUS:    +6/+6
+COLOUR:  ETC_UNHOLY
+TILE:    spwpn_majin
+TILE_EQ: majin
+MP:      6
+INT:     6
+BRAND:   SPWPN_VAMPIRICISM
+
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
 # determined explicitly by checking whether a certain amulet is worn

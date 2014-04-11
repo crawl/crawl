@@ -444,6 +444,9 @@ public:
 
     bool tengu_flight() const;
 
+    int spell_hp_cost() const;
+    bool spellcasting_unholy() const;
+
     // Dealing with beholders. Implemented in behold.cc.
     void add_beholder(const monster* mon, bool axe = false);
     bool beheld() const;

@@ -1190,16 +1190,25 @@ bool spell_is_useless(spell_type spell, bool transient)
     return false;
 }
 
-// This function takes a spell, and determines what color it should be
-// highlighted with. You shouldn't have to touch this unless you want
-// to add new highlighting options.
+/**
+ * Determines what color a spell should be highlighted with.
+ *
+ * @param spell           The type of spell to be colored.
+ * @param default_color   Color to be used if the spell is unremarkable.
+ * @param transient       If true, check if spell is temporarily useless.
+ * @param rod_spell       If the spell being evoked from a rod.
+ * @return                The color to highlight the spell.
+ */
 int spell_highlight_by_utility(spell_type spell, int default_color,
                                bool transient, bool rod_spell)
 {
     // If your god hates the spell, that
     // overrides all other concerns
-    if (god_hates_spell(spell, you.religion, rod_spell))
+    if (god_hates_spell(spell, you.religion, rod_spell)
+        || is_good_god(you.religion) && you.spellcasting_unholy())
+    {
         return COL_FORBIDDEN;
+    }
 
     if (_spell_is_empowered(spell) && !rod_spell)
         default_color = COL_EMPOWERED;
