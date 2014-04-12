@@ -1287,9 +1287,9 @@ small_more = false
         small_more = true, it is just the bottom left character if
         clear_messages is not set.
 
-show_inventory_weights = sometimes|true|false
+show_inventory_weights = drop_pickup|true|false
         When this is set to true, inventory listings will mention the
-        weight of each item.  When set to "sometimes" (the default), or
+        weight of each item.  When set to "drop_pickup" (the default), or
         indeed any value other than true/false/yes/no, the menus for
         picking up and dropping items will list item weights, but other
         inventory menus will not.
