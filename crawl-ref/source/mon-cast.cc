@@ -1553,7 +1553,6 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     // fall through
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_AGONY:
-    case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_MALIGN_OFFERING:
         if (!foe || _foe_should_res_negative_energy(foe))
             ret = true;
@@ -2609,16 +2608,13 @@ monster* cast_phantom_mirror(monster* mons, monster* targ, int hp_perc, int summ
     return mirror;
 }
 
-static bool _should_tornado(monster* agent)
+static bool _trace_los(monster* agent, bool (*vulnerable)(actor*))
 {
-    if (agent->has_ench(ENCH_TORNADO) || agent->has_ench(ENCH_TORNADO_COOLDOWN))
-        return false;
-
     bolt tracer;
     tracer.foe_ratio = 80;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
-        if (agent == *ai || ai->res_wind() || !ai->visible_to(agent))
+        if (agent == *ai || !agent->can_see(*ai) || !vulnerable(*ai))
             continue;
 
         if (mons_aligned(agent, *ai))
@@ -2637,6 +2633,37 @@ static bool _should_tornado(monster* agent)
         }
     }
     return mons_should_fire(tracer);
+}
+
+static bool _tornado_vulnerable(actor* victim)
+{
+    return !victim->res_wind();
+}
+
+static bool _should_tornado(monster* agent)
+{
+    if (agent->has_ench(ENCH_TORNADO) || agent->has_ench(ENCH_TORNADO_COOLDOWN))
+        return false;
+
+    return _trace_los(agent, _tornado_vulnerable);
+}
+
+static bool _torment_vulnerable(actor* victim)
+{
+    if (victim->is_player())
+        return !player_res_torment(true, false);
+
+    return !victim->res_torment();
+}
+
+static bool _elec_vulnerable(actor* victim)
+{
+    return (victim->res_elec() < 3);
+}
+
+static bool _dummy_vulnerable(actor* victim)
+{
+    return true;
 }
 
 static bool _should_ephemeral_infusion(monster* agent)
@@ -3360,6 +3387,21 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 return false;
             }
+        }
+        else if (spell_cast == SPELL_SYMBOL_OF_TORMENT)
+        {
+            if (!_trace_los(mons, _torment_vulnerable))
+                return false;
+        }
+        else if (spell_cast == SPELL_CHAIN_LIGHTNING)
+        {
+            if (!_trace_los(mons, _elec_vulnerable))
+                return false;
+        }
+        else if (spell_cast == SPELL_CHAIN_OF_CHAOS)
+        {
+            if (!_trace_los(mons, _dummy_vulnerable))
+                return false;
         }
 
         if (mons->type == MONS_BALL_LIGHTNING)
@@ -4249,28 +4291,12 @@ static void _mons_create_tentacles(monster* head)
 
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 {
-    // single calculation permissible {dlb}
-    bool monsterNearby = mons_near(mons);
-
     switch (spell_cast)
     {
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SIMULACRUM:
         if (mons->friendly() && !_animate_dead_okay(spell_cast))
-            return true;
-        break;
-
-    case SPELL_CHAIN_LIGHTNING:
-    case SPELL_SYMBOL_OF_TORMENT:
-    case SPELL_OZOCUBUS_REFRIGERATION:
-    case SPELL_SHATTER:
-    case SPELL_TORNADO:
-    case SPELL_CHAIN_OF_CHAOS:
-#if TAG_MAJOR_VERSION == 34
-    case SPELL_REARRANGE_PIECES:
-#endif
-        if (!monsterNearby)
             return true;
         break;
 
