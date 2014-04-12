@@ -1643,7 +1643,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                  defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
                  spell_user ? "magic" : "power");
 
-            if (!defender->as_monster()->is_summoned()
+            if (you.magic_points != you.max_magic_points
+                && !defender->as_monster()->is_summoned()
                 && !mons_is_firewood(defender->as_monster()))
             {
                 int drain = random2(damage_done) + 1;
@@ -1651,7 +1652,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                 //.25 at mana == max_mana
                 drain = (int)((1.25 - you.magic_points / you.max_magic_points)
                               * drain);
-                if (drain && you.magic_points != you.max_magic_points)
+                if (drain)
                 {
                     mpr("You feel invigorated.");
                     inc_mp(drain);
