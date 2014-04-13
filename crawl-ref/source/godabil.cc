@@ -4095,6 +4095,7 @@ bool gozag_call_merchant()
                 if (dummy != NON_ITEM)
                 {
                     if (!is_artefact(mitm[dummy])
+                        && (one_chance_in(10) || !is_useless_item(mitm[dummy]))
                         && mitm[dummy].base_type != OBJ_GOLD
                         && (type != SHOP_GENERAL_ANTIQUE
                             || (mitm[dummy].base_type != OBJ_MISSILES
