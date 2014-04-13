@@ -222,6 +222,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " glitters and disappears.",
         " brightly glitters and disappears.",
     },
+    // Qazlal
+    {
+        " slowly dissolves into the earth.",
+        " is consumed by the earth.",
+        " is consumed by a violent tear in the earth.",
+    },
 };
 
 /**
@@ -353,6 +359,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       ""
     },
+    // Qazlal
+    { "",
+      "",
+      "",
+      "",
+      ""
+    },
 };
 
 /**
@@ -481,6 +494,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "petition Gozag for potion effects",
       "fund merchants seeking to open stores in the dungeon",
       "bribe branches to halt enemies' attacks and recruit followers",
+      "",
+      ""
+    },
+    // Qazlal
+    { "",
+      "",
+      "",
       "",
       ""
     },
@@ -640,6 +660,10 @@ string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_GOZAG:
         likes.push_back("you collect gold");
+        break;
+
+    case GOD_QAZLAL:
+        likes.push_back("you use the elements to defeat enemies");
         break;
 
     default:
@@ -2433,6 +2457,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_ASHENZARI:     return "Ashenzari";
     case GOD_DITHMENOS:     return "Dithmenos";
     case GOD_GOZAG:         return "Gozag";
+    case GOD_QAZLAL:        return "Qazlal";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -4223,6 +4248,7 @@ void handle_god_time(int time_delta)
         case GOD_BEOGH:
         case GOD_LUGONU:
         case GOD_DITHMENOS:
+        case GOD_QAZLAL:
             if (one_chance_in(16))
                 lose_piety(1);
             break;
@@ -4313,6 +4339,9 @@ int god_colour(god_type god) // mv - added
     case GOD_DITHMENOS:
         return MAGENTA;
 
+    case GOD_QAZLAL:
+        return BROWN;
+
     case GOD_NO_GOD:
     case NUM_GODS:
     case GOD_RANDOM:
@@ -4392,6 +4421,9 @@ colour_t god_message_altar_colour(god_type god)
 
     case GOD_GOZAG:
         return coinflip() ? YELLOW : BROWN;
+
+    case GOD_QAZLAL:
+        return BROWN;
 
     default:
         return YELLOW;

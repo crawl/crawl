@@ -408,6 +408,11 @@ A stone wall
 A harder obstacle than rock walls. Only the mightiest magic can shatter stone
 walls.
 %%%%
+A stormy altar of Qazlal
+
+Fierce winds, electrical discharges, puffs of fire and magma, and the
+occasional tremor surround this altar to Qazlal Stormbringer.
+%%%%
 A short-range portal
 
 Stepping on this portal will send you to another room nearby.

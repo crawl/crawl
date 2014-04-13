@@ -171,6 +171,27 @@ static int _etc_waves(int, const coord_def& loc)
         return CYAN;
 }
 
+static int _etc_elemental(int, const coord_def& loc)
+{
+    int cycle = (you.elapsed_time / 200) % 4;
+    switch (cycle)
+    {
+        default:
+        case 0:
+            return element_colour(ETC_EARTH, false, loc);
+        case 1:
+            return element_colour(coinflip() ? ETC_AIR : ETC_ELECTRICITY,
+                                  false, loc);
+        case 2:
+            // Not ETC_FIRE, which is Makhleb; instead do magma-y colours.
+            if (coinflip())
+                return RED;
+            return coinflip() ? BROWN : LIGHTRED;
+        case 3:
+            return element_colour(ETC_ICE, false, loc);
+    }
+}
+
 int get_disjunct_phase(const coord_def& loc)
 {
     static int turns = you.num_turns;
@@ -626,6 +647,9 @@ void init_element_colours()
                             40,  MAGENTA,
                             40,  BLUE,
                         0));
+    add_element_colour(new element_colour_calc(
+                            ETC_ELEMENTAL, "elemental", _etc_elemental
+                       ));
     // redefined by Lua later
     add_element_colour(new element_colour_calc(
                             ETC_DISCO, "disco", _etc_random

@@ -58,6 +58,7 @@ enum element_type
     ETC_ORB_GLOW,       // halo coming from the Orb of Zot
     ETC_DISJUNCTION,    // halo from Disjunction
     ETC_DITHMENOS,      // Dithmenos altar colours
+    ETC_ELEMENTAL,      // Cycling elemental colours
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
