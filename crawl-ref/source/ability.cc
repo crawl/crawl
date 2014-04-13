@@ -200,7 +200,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_GOZAG_BRIBE_BRANCH, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Qazlal
     { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_QAZLAL_ELEMENTAL_FORCE,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+      ABIL_NON_ABILITY, ABIL_QAZLAL_DISASTER_AREA },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -425,6 +425,8 @@ static const ability_def Ability_List[] =
     { ABIL_QAZLAL_UPHEAVAL, "Upheaval", 4, 0, 0, 3, 0, ABFLAG_NONE },
     { ABIL_QAZLAL_ELEMENTAL_FORCE, "Elemental Force",
       6, 0, 0, 6, 0, ABFLAG_NONE },
+    { ABIL_QAZLAL_DISASTER_AREA, "Disaster Area", 7, 0, 0,
+      generic_cost::range(10, 14), 0, ABFLAG_NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -1186,6 +1188,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
     case ABIL_FEDHAS_RAIN:
+    case ABIL_QAZLAL_DISASTER_AREA:
         invoc = true;
         failure = 70 - (you.piety / 25) - you.skill(SK_INVOCATIONS, 4);
         break;
@@ -2949,6 +2952,11 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
         qazlal_elemental_force();
+	break;
+
+    case ABIL_QAZLAL_DISASTER_AREA:
+        if (!qazlal_disaster_area())
+            return false;
         break;
 
     case ABIL_RENOUNCE_RELIGION:

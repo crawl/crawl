@@ -82,6 +82,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_DITHMENOS_SHADOW_FORM:
     case ABIL_QAZLAL_UPHEAVAL:
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
+    case ABIL_QAZLAL_DISASTER_AREA:
         return SK_INVOCATIONS;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
@@ -172,6 +173,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_LUGONU_CORRUPT:
     case ABIL_CHEIBRIADOS_TIME_STEP:
     case ABIL_KIKU_TORMENT:
+    case ABIL_QAZLAL_DISASTER_AREA:
         return 5 + random2(5);
     case ABIL_ZIN_SANCTUARY:
         return 5 + random2(8);

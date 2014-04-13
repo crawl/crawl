@@ -651,6 +651,10 @@ Causes elemental clouds around you to coalesce into elementals. Your own
 clouds create friendly elementals; hostile clouds create hostile elementals;
 natural clouds create neutral elementals.
 %%%%
+Disaster Area ability
+
+Blasts the entire area around you with powerful natural forces.
+%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually

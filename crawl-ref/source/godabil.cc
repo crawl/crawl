@@ -4520,13 +4520,16 @@ bool qazlal_upheaval(coord_def target, bool quiet)
     for (unsigned int i = 0; i < affected.size(); i++)
     {
         beam.draw(affected[i]);
-        scaled_delay(25);
+        if (!quiet)
+            scaled_delay(25);
     }
     if (!quiet)
     {
         scaled_delay(100);
         mprf(MSGCH_GOD, "%s", message.c_str());
     }
+    else
+        scaled_delay(25);
 
     int wall_count = 0;
 
@@ -4670,4 +4673,48 @@ void qazlal_elemental_force()
         mprf(MSGCH_GOD, "Clouds arounds you coalesce and take form!");
     else
         canned_msg(MSG_NOTHING_HAPPENS); // can this ever happen?
+}
+
+bool qazlal_disaster_area()
+{
+    bool friendlies = false;
+    vector<coord_def> targets;
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, true); ri; ++ri)
+    {
+        const monster_info* m = env.map_knowledge(*ri).monsterinfo();
+        if (m && mons_att_wont_attack(m->attitude)
+            && !mons_is_projectile(m->type))
+        {
+            friendlies = true;
+        }
+        if (distance2(you.pos(), *ri) <= 8)
+            continue;
+
+        targets.push_back(*ri);
+    }
+
+    if (targets.empty())
+    {
+        mpr("There isn't enough space here!");
+        return false;
+    }
+
+    if (friendlies
+        && !yesno("There are friendlies around; are you sure you want to hurt "
+                  "them?", true, 'n'))
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    mprf(MSGCH_GOD, "Nature churns violently around you!");
+
+    int count = max(1, min((int)targets.size(),
+                           random2avg(you.skill(SK_INVOCATIONS), 2)));
+    shuffle_array(targets);
+    for (int i = 0; i < count; i++)
+        qazlal_upheaval(targets[i], true);
+    scaled_delay(100);
+
+    return true;
 }

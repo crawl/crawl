@@ -193,6 +193,7 @@ enum ability_type
     // Qazlal
     ABIL_QAZLAL_UPHEAVAL = 1190,
     ABIL_QAZLAL_ELEMENTAL_FORCE,
+    ABIL_QAZLAL_DISASTER_AREA,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
