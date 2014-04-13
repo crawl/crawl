@@ -347,7 +347,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
         SK_CROSSBOWS,    HANDS_TWO,    SIZE_MEDIUM, MI_BOLT,
         DAMV_NON_MELEE, 10 },
-    { WPN_BOW,               "bow",                 3,  1, 11,  90,  2,
+    { WPN_SHORTBOW,          "shortbow",            3,  1, 11,  90,  2,
         SK_BOWS,         HANDS_TWO,    SIZE_MEDIUM, MI_ARROW,
         DAMV_NON_MELEE, 10 },
     { WPN_LONGBOW,           "longbow",             6,  0, 12, 120,  3,
@@ -1195,7 +1195,7 @@ int weapon_rarity(int w_type)
     case WPN_MACE:
         return 9;
 
-    case WPN_BOW:
+    case WPN_SHORTBOW:
     case WPN_FLAIL:
     case WPN_CUTLASS:
     case WPN_SHORT_SWORD:

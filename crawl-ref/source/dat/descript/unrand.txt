@@ -258,12 +258,16 @@ cutlass was thought to be lost with him.
 %%%%
 storm bow
 
+<<<<<<< HEAD
 This bow has the colour of dark rain clouds.
 {{
     if you.can_smell() then
         return "It smells like a storm just past, or one about to begin."
     end
 }}
+=======
+This longbow has the colour of dark rain clouds, and the smell of wet ozone.
+>>>>>>> Rename "bow" to "shortbow"
 %%%%
 large shield of Ignorance
 

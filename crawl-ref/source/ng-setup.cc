@@ -487,8 +487,8 @@ static void _update_weapon(const newgame_def& ng)
             autopickup_starting_ammo(MI_THROWING_NET);
         }
         break;
-    case WPN_BOW:
-        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW, -1, 1, plus, plus);
+    case WPN_SHORTBOW:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SHORTBOW, -1, 1, plus, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 20);
         autopickup_starting_ammo(MI_ARROW);
 

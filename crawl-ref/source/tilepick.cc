@@ -987,7 +987,7 @@ static int _bow_offset(const monster_info& mon)
 
     switch (mon.inv[MSLOT_WEAPON]->sub_type)
     {
-    case WPN_BOW:
+    case WPN_SHORTBOW:
     case WPN_LONGBOW:
     case WPN_CROSSBOW:
         return 0;
@@ -3097,7 +3097,7 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_EXECUTIONERS_AXE:      return TILE_WPN_EXECUTIONERS_AXE;
     case WPN_BLOWGUN:               return TILE_WPN_BLOWGUN;
     case WPN_SLING:                 return TILE_WPN_SLING;
-    case WPN_BOW:                   return TILE_WPN_BOW;
+    case WPN_SHORTBOW:              return TILE_WPN_SHORTBOW;
     case WPN_CROSSBOW:              return TILE_WPN_CROSSBOW;
     case WPN_SPEAR:                 return TILE_WPN_SPEAR;
     case WPN_TRIDENT:               return TILE_WPN_TRIDENT;

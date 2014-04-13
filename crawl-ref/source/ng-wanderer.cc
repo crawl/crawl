@@ -71,7 +71,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         break;
 
     case SK_BOWS:
-        sub_type = WPN_BOW;
+        sub_type = WPN_SHORTBOW;
         break;
 
     case SK_CROSSBOWS:
@@ -841,7 +841,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     for (int i = 0; i < slot; ++i)
     {
         if (you.inv[i].base_type == OBJ_WEAPONS
-            && you.inv[i].sub_type == WPN_BOW)
+            && you.inv[i].sub_type == WPN_SHORTBOW)
         {
             needs_arrows = true;
             break;

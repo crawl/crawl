@@ -739,8 +739,8 @@ KITEM:    H = demon blade mundane not_cursed ident:all plus:5 plus2:5, \
 KITEM:    I = lajatang mundane not_cursed ident:all plus:5 plus2:5
 KITEM:    J = crossbow mundane not_cursed ident:all plus:5 plus2:5, \
               bolt q:1000 mundane ident:all, \
-              bow mundane not_cursed ident:all plus:5 plus2:5, \
-          arrow q:1000 mundane ident:all, \
+              shortbow mundane not_cursed ident:all plus:5 plus2:5, \
+              arrow q:1000 mundane ident:all, \
               longbow mundane not_cursed ident:all plus:5 plus2:5, \
               sling mundane not_cursed ident:all plus:5 plus2:5, \
               sling bullet q:1000 mundane ident:all

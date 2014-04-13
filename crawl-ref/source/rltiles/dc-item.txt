@@ -164,9 +164,9 @@ sling1 WPN_SLING
 sling2
 
 %rim 0
-bow1 WPN_BOW
-bow2
-bow3
+shortbow1 WPN_SHORTBOW
+shortbow2
+shortbow3
 crossbow1 WPN_CROSSBOW
 crossbow2
 crossbow3

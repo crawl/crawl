@@ -207,8 +207,9 @@ void pick_hints(newgame_def* choice)
             Hints.hints_type = keyn - 'a';
             choice->species  = _get_hints_species(Hints.hints_type);
             choice->job = _get_hints_job(Hints.hints_type);
-            choice->weapon = choice->job == JOB_HUNTER ? WPN_BOW
-                                                       : WPN_HAND_AXE; // easiest choice for fighters
+            // easiest choice for fighters
+            choice->weapon = choice->job == JOB_HUNTER ? WPN_SHORTBOW
+                                                       : WPN_HAND_AXE;
 
             return;
         }
@@ -948,23 +949,23 @@ void hints_monster_seen(const monster& mon)
     if (Hints.hints_type == HINT_RANGER_CHAR)
     {
         text =  "However, as a hunter you will want to deal with it using your "
-                "bow. If you have a look at your bow from your "
+                "bow. If you have a look at your shortbow from your "
                 "<w>i</w>nventory, you'll find an explanation of how to do "
                 "this. ";
 
         if (!you.weapon()
             || you.weapon()->base_type != OBJ_WEAPONS
-            || you.weapon()->sub_type != WPN_BOW)
+            || you.weapon()->sub_type != WPN_SHORTBOW)
         {
             text += "First <w>w</w>ield it, then follow the instructions."
                 "<tiles>\nAs a short-cut you can also <w>right-click</w> on your "
-                "bow to read its description, and <w>left-click</w> to wield "
+                "shortbow to read its description, and <w>left-click</w> to wield "
                 "it.</tiles>";
         }
         else
         {
-            text += "<tiles>Clicking with your <w>right mouse button</w> on your bow "
-                    "will also let you read its description.</tiles>";
+            text += "<tiles>Clicking with your <w>right mouse button</w> on your "
+                    "shortbow will also let you read its description.</tiles>";
         }
 
         mprf(MSGCH_TUTORIAL, "%s", untag_tiles_console(text).c_str());
@@ -2534,7 +2535,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         if (Hints.hints_type == HINT_RANGER_CHAR && wpn != -1
             && you.inv[wpn].base_type == OBJ_WEAPONS
-            && you.inv[wpn].sub_type == WPN_BOW)
+            && you.inv[wpn].sub_type == WPN_SHORTBOW)
         {
             text << "You can easily switch between weapons in slots a and "
                     "b by pressing <w>%</w>.";

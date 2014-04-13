@@ -224,8 +224,8 @@ weapon_type str_to_weapon(const string &str)
         return WPN_UNARMED;
     else if (str == "sling")
         return WPN_SLING;
-    else if (str == "bow")
-        return WPN_BOW;
+    else if (str == "shortbow" || str == "short bow")
+        return WPN_SHORTBOW;
     else if (str == "crossbow")
         return WPN_CROSSBOW;
     else if (str == "thrown"
@@ -273,8 +273,8 @@ static string _weapon_to_str(int weapon)
         return "claws";
     case WPN_SLING:
         return "sling";
-    case WPN_BOW:
-        return "bow";
+    case WPN_SHORTBOW:
+        return "shortbow";
     case WPN_CROSSBOW:
         return "crossbow";
     case WPN_THROWN:

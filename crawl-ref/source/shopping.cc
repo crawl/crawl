@@ -982,7 +982,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 25;
             break;
 
-        case WPN_BOW:
+        case WPN_SHORTBOW:
         case WPN_HAND_AXE:
         case WPN_FALCHION:
         case WPN_MACE:

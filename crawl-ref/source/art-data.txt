@@ -638,7 +638,7 @@ OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8/+8
 COLOUR:   BLUE
 TILE:     urand_storm_bow
-TILE_EQ:  bow_blue
+TILE_EQ:  storm_bow
 BRAND:    SPWPN_ELECTROCUTION
 
 NAME:    large shield of Ignorance

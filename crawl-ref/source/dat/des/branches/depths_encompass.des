@@ -960,7 +960,7 @@ NAME:    hangedman_crystal_crosses_colossus
 TAGS:    no_monster_gen no_item_gen no_pool_fixup uniq_d_encompass
 ORIENT:  encompass
 MONS:    deep elf conjurer / deep elf knight w:7 / wizard / ogre mage / \
-         centaur warrior w:8 ; bow ego:flame | bow ego:frost . arrow / \
+         centaur warrior w:8 ; shortbow ego:flame | shortbow ego:frost . arrow / \
          two-headed ogre w:5 ; great mace ego:freezing ident:type . \
          great mace ego:flaming ident:type / efreet w:5 / \
          rakshasa w:5 ; wand of flame | wand of frost . whip . robe

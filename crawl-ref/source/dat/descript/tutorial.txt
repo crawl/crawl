@@ -227,13 +227,13 @@ panel</localtiles>. To confirm the auto-targeted monster, press
 %%%%
 tutorial2 wield_bow
 
-Pick up this bow and wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>
+Pick up this shortbow and wield it with <input>$cmd[CMD_WIELD_WEAPON]</input>
 <localtiles> or by <input>mouseclick</input></localtiles>.
 %%%%
 tutorial2 firing
 
 # FIXME: Lengthy because of the hint for choosing target.
-Firing arrows from your wielded bow works exactly the same as throwing darts:
+Firing arrows from your wielded shortbow works exactly the same as throwing darts:
 via <input>$cmd[CMD_FIRE]</input><localtiles> or <input>mouseclick</input>
 </localtiles>. You can change the targeted monster by pressing
 <input>$cmd[CMD_TARGET_CYCLE_FORWARD]</input> while in target mode. The worm is

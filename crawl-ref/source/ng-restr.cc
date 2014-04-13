@@ -1029,7 +1029,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return CC_UNRESTRICTED;
         }
 
-    case WPN_BOW:
+    case WPN_SHORTBOW:
         switch (ng.species)
         {
         case SP_DEEP_DWARF:
