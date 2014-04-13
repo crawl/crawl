@@ -116,6 +116,7 @@ static spell_type search_order_third[] =
 // (5th) position to work.
 static spell_type search_order_misc[] =
 {
+    SPELL_TORNADO,
     SPELL_SHATTER,
     SPELL_AGONY,
     SPELL_BANISHMENT,
@@ -291,7 +292,8 @@ void ghost_demon::init_random_demon()
             if (spells[i] == SPELL_AGONY)
                 spells[i] = SPELL_SYMBOL_OF_TORMENT;
             if (spells[i] == SPELL_CONJURE_BALL_LIGHTNING
-                || SPELL_OZOCUBUS_REFRIGERATION)
+                || spells[i] == SPELL_OZOCUBUS_REFRIGERATION
+                || spells[i] == SPELL_TORNADO)
             {
                 spells[i] = SPELL_NO_SPELL;
             }
