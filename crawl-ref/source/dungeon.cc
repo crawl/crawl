@@ -65,6 +65,7 @@
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
+#include "show.h"
 #include "spl-book.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
@@ -257,6 +258,7 @@ static string branch_epilogues[NUM_BRANCHES];
 static void _count_gold()
 {
     vector<item_def *> gold_piles;
+    vector<coord_def> gold_places;
     int gold = 0;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
@@ -266,6 +268,7 @@ static void _count_gold()
             {
                 gold += j->quantity;
                 gold_piles.push_back(&(*j));
+                gold_places.push_back(*ri);
             }
         }
     }
@@ -284,6 +287,26 @@ static void _count_gold()
         }
         mprf(MSGCH_GOD, GOD_GOZAG, "You feel a great sense of loss.");
         dec_penance(GOD_GOZAG, gold / 200);
+    }
+    else if (you_worship(GOD_GOZAG))
+    {
+        int detected_count = 0;
+        for (unsigned int i = 0; i < gold_places.size(); i++)
+        {
+            bool detected = false;
+            coord_def &pos = gold_places[i];
+            if (!env.map_knowledge(pos).item()
+                || env.map_knowledge(pos).item()->base_type != OBJ_GOLD)
+            {
+                detected_count++;
+                detected = true;
+            }
+            update_item_at(pos, true);
+            if (detected)
+                env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
+        }
+        if (detected_count)
+            mprf(MSGCH_GOD, "You feel very greedy and sense gold!");
     }
 }
 

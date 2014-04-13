@@ -4883,6 +4883,9 @@ void describe_god(god_type which_god, bool give_title)
         {
             have_any = true;
             _print_final_god_abil_desc(which_god,
+                                       "You passively detect gold.",
+                                       ABIL_NON_ABILITY);
+            _print_final_god_abil_desc(which_god,
                                        uppercase_first(god_name(which_god))
                                        + " turns your defeated foes' bodies"
                                        + " to gold.",

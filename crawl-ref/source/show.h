@@ -66,6 +66,7 @@ struct show_info
 class monster;
 
 void show_init(bool terrain_only = false);
+void update_item_at(const coord_def &gp, bool detected = false);
 void show_update_at(const coord_def &gp, bool terrain_only = false);
 void show_update_emphasis();
 
