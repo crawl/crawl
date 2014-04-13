@@ -325,6 +325,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     beam.thrower = KILL_MON_MISSILE;
     beam.origin_spell = real_spell;
     beam.beam_source = mons->mindex();
+    beam.source_name = mons->name(DESC_A, true);
 
     // FIXME: this should use the zap_data[] struct from beam.cc!
     switch (real_spell)

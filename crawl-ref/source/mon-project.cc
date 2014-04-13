@@ -91,7 +91,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     mon->props["iood_pow"].get_short() = pow;
     mon->flags &= ~MF_JUST_SUMMONED;
     mon->props["iood_caster"].get_string() = caster->as_monster()
-        ? caster->name(DESC_PLAIN, true)
+        ? caster->name(DESC_A, true)
         : (caster->is_player()) ? "you" : "";
     mon->summoner = caster->mid;
 
