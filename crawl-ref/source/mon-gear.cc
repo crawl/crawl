@@ -97,6 +97,12 @@ void give_specific_item(monster* mon, const item_def& tpl)
     _give_monster_item(mon, thing, true, NULL);
 }
 
+static bool _should_give_unique_item(monster* mon)
+{
+    // Don't give Natasha an item for dying.
+    return mon->type != MONS_NATASHA || !mon->props.exists("felid_revives");
+}
+
 static void _give_scroll(monster* mon, int level)
 {
     int thing_created = NON_ITEM;
@@ -118,7 +124,8 @@ static void _give_scroll(monster* mon, int level)
             return;
         }
     }
-    else if (mons_is_unique(mon->type) && one_chance_in(3))
+    else if (mons_is_unique(mon->type) && one_chance_in(3)
+                && _should_give_unique_item(mon))
         thing_created = items(0, OBJ_SCROLLS, OBJ_RANDOM, true, level, 0);
 
     if (thing_created == NON_ITEM)
@@ -130,7 +137,8 @@ static void _give_scroll(monster* mon, int level)
 
 static void _give_wand(monster* mon, int level)
 {
-    if (!mons_is_unique(mon->type) || mons_class_flag(mon->type, M_NO_WAND))
+    if (!mons_is_unique(mon->type) || mons_class_flag(mon->type, M_NO_WAND)
+                || !_should_give_unique_item(mon))
         return;
 
     if (!one_chance_in(5) && (mon->type != MONS_MAURICE || !one_chance_in(3)))
@@ -194,7 +202,8 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-    else if (mons_is_unique(mon->type) && one_chance_in(3))
+    else if (mons_is_unique(mon->type) && one_chance_in(3)
+                && _should_give_unique_item(mon))
     {
         const int thing_created =
             items(0, OBJ_POTIONS, OBJ_RANDOM, true, level, 0);
