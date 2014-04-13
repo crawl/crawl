@@ -366,6 +366,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\place-info.cc" />
     <ClCompile Include="..\player-act.cc" />
     <ClCompile Include="..\player-equip.cc" />
+    <ClCompile Include="..\player-reacts.cc" />
     <ClCompile Include="..\player-stats.cc" />
     <ClCompile Include="..\potion.cc" />
     <ClCompile Include="..\prebuilt\levcomp.lex.cc">
@@ -734,6 +735,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\place-info.h" />
     <ClInclude Include="..\platform.h" />
     <ClInclude Include="..\player-equip.h" />
+    <ClInclude Include="..\player-reacts.h" />
     <ClInclude Include="..\player-stats.h" />
     <ClInclude Include="..\potion.h" />
     <ClInclude Include="..\prebuilt\levcomp.tab.h" />
