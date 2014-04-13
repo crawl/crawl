@@ -7203,7 +7203,7 @@ bool player::permanent_flight() const
 
 bool player::racial_permanent_flight() const
 {
-    return species == SP_TENGU && experience_level >= 15
+    return species == SP_TENGU && experience_level >= 14
 #if TAG_MAJOR_VERSION == 34
         || species == SP_DJINNI
 #endif
