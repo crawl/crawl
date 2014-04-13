@@ -347,6 +347,9 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         }
     }
 
+    if (you.props.exists(GOZAG_ANNOUNCE_SHOP_KEY))
+        unmark_offlevel_shop(level_id::current());
+
     env.level_layout_types.clear();
     return false;
 }
@@ -3300,7 +3303,6 @@ static void _place_gozag_shop()
     if (tries == 0)
         throw dgn_veto_exception("Cannot find place Gozag shop.");
 
-    unmark_offlevel_shop(level_id::current());
 
     // Player may have abandoned Gozag before arriving here; only generate
     // the shop if they're still a follower.
