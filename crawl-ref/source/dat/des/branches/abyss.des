@@ -1994,7 +1994,7 @@ ENDMAP
 NAME:  evilmike_abyss_exit_disperse
 TAGS:  abyss_exit
 SUBST: . = .:100 2
-MONS:  centaur; bow . arrow ego:dispersal, plant
+MONS:  centaur; shortbow . arrow ego:dispersal, plant
 : init_abyss_exit(_G, "O")
 MAP
      xxx xxx xxx

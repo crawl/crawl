@@ -101,7 +101,7 @@ MONS:    training dummy hp:2 ; stone q:10
 MONS:    rat always_corpse
 MONS:    worm
 ITEM:    dart mundane q:30
-ITEM:    bow mundane not_cursed
+ITEM:    shortbow mundane not_cursed
 ITEM:    arrow mundane q:30
 MARKER:  d = lua:tutorial2.msg("darts")
 MARKER:  A = lua:tutorial2.msg("throwing")

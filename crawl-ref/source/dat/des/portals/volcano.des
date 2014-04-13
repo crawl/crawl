@@ -248,9 +248,9 @@ function fiery_guardians (e, intelligent, village)
                           .. " | whip " .. flame
                           .. " . robe " .. res
         local ogrestuff = "great mace " .. flame .. " | giant club " .. flame
-        local centaur = "centaur ; bow ego:none . arrow ego:flame"
+        local centaur = "centaur ; shortbow ego:none . arrow ego:flame"
         local centaurstuff = "robe " .. res
-                             .. " . bow ego:flame ident:type . arrow"
+                             .. " . shortbow ego:flame ident:type . arrow"
         local elfstuff = "long sword " .. flame
                          .. " | short sword " .. flame
                          .. " . leather armour " .. res

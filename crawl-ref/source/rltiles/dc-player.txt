@@ -716,11 +716,11 @@ axe_short AXE_SHORT
 
 ## launchers
 sling SLING
-bow BOW
-bow_two BOW2
-bow_three BOW3
+shortbow SHORTBOW
+shortbow_two SHORTBOW2
+shortbow_three SHORTBOW3
 great_bow GREAT_BOW
-bow_blue BOW_BLUE
+storm_bow STORM_BOW
 crossbow CROSSBOW
 crossbow_two CROSSBOW2
 crossbow_three CROSSBOW3

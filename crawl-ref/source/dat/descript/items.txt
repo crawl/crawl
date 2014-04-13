@@ -75,7 +75,7 @@ A succulent yellow-orange fruit, prunus armeniaca.
 %%%%
 arrow
 
-A long shafted projectile intended to be shot with a bow or longbow, fletched
+A long shafted projectile intended to be shot with a short- or longbow, fletched
 with feathers at one end and a point at the other.
 %%%%
 banana
@@ -374,11 +374,6 @@ A book of various magic spells, useful for any sufficiently-talented
 spellcaster. Mages of a scholarly nature consider it a point of pride to have
 contributed in some way to this work, though more than a few of them have been
 slain by jealous rivals using their own spells against them.
-%%%%
-bow
-
-A curved piece of wood and string, for shooting arrows. It does good damage in
-combat, and a skilled user can use it to great effect.
 %%%%
 box of beasts
 
@@ -1361,6 +1356,11 @@ shield
 A piece of wood and metal, to be strapped on one arm for defence. It is
 cumbersome to wear, and, without training, slows the rate at which a warrior
 attacks.
+%%%%
+shortbow
+
+A curved piece of wood and string, for shooting arrows. It does good damage in
+combat, and a skilled user can use it to great effect.
 %%%%
 short sword
 

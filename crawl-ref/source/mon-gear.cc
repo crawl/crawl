@@ -514,7 +514,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(
             22, WPN_LONG_SWORD, 22, WPN_SHORT_SWORD, 17, WPN_SCIMITAR,
-            17, WPN_BOW,        5,  WPN_LONGBOW,
+            17, WPN_SHORTBOW,   5,  WPN_LONGBOW,
             0);
         break;
 
@@ -582,7 +582,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             else
             {
                 item.sub_type = random_choose_weighted(3, WPN_CROSSBOW,
-                                                       2, WPN_BOW,
+                                                       2, WPN_SHORTBOW,
                                                        1, WPN_LONGBOW,
                                                        0);
             }
@@ -884,7 +884,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_BOW;
+        item.sub_type  = WPN_SHORTBOW;
         if (mon->type == MONS_CENTAUR_WARRIOR && one_chance_in(3))
             item.sub_type = WPN_LONGBOW;
         break;
@@ -951,7 +951,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         {
             item.base_type  = OBJ_WEAPONS;
             item.sub_type  = random_choose(WPN_SLING,
-                                           WPN_BOW,
+                                           WPN_SHORTBOW,
                                            WPN_LONGBOW,
                                            -1);
             break;
@@ -1257,7 +1257,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                 5, WPN_TRIDENT,
                                                 3, WPN_SPEAR,
                                                 2, WPN_GLAIVE,
-                                                5, WPN_BOW,
+                                                5, WPN_SHORTBOW,
                                                 0);
 
         if (is_range_weapon(item))
@@ -1449,7 +1449,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.sub_type = random2(NUM_WEAPONS);
         while ((melee_only && (item.sub_type == WPN_BLOWGUN
                                || item.sub_type == WPN_CROSSBOW
-                               || item.sub_type == WPN_BOW
+                               || item.sub_type == WPN_SHORTBOW
                                || item.sub_type == WPN_LONGBOW))
                || item.sub_type == WPN_STAFF
                || item.sub_type == WPN_ROD

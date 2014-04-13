@@ -872,11 +872,6 @@ book
  And lo! the Press was found at last!”
     -John Greenleaf Whittier, _The Library_, st. 4.
 %%%%
-bow
-
-“You are the bows from which your children as living arrows are sent forth.”
-    -Khalil Ghibran, _The Prophet_, “On Children”. 1923.
-%%%%
 bread ration
 
 “It is further reported that in the provinces [Caesar] gave banquets constantly
@@ -2543,6 +2538,11 @@ shedu
 shield
 
 <buckler>
+%%%%
+shortbow
+
+“You are the bows from which your children as living arrows are sent forth.”
+    -Khalil Ghibran, _The Prophet_, “On Children”. 1923.
 %%%%
 short sword
 

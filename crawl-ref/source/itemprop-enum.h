@@ -476,7 +476,7 @@ enum weapon_type
 
     WPN_BLOWGUN,
     WPN_CROSSBOW,
-    WPN_BOW,
+    WPN_SHORTBOW,
     WPN_LONGBOW,
 
     WPN_DEMON_WHIP,

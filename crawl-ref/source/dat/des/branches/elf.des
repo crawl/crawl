@@ -569,7 +569,7 @@ ENDMAP
 NAME:   minmay_elf_archery
 DEPTH:  Elf:2-
 ORIENT: float
-MONS:   deep elf fighter; bow | longbow . arrow / nothing w:15
+MONS:   deep elf fighter; shortbow | longbow . arrow / nothing w:15
 MONS:   deep elf master archer
 MONS:   training dummy tile:mons_training_dummy
 MAP
@@ -765,7 +765,7 @@ MONS:  deep elf conjurer / deep elf mage / deep elf summoner
 MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
 KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
        w:10 ring of fire | w:5 scroll of immolation | w:10 ring of protection from fire | \
-       w:4 any weapon ego:flaming | w:4 bow ego:flame | w:12 arrow ego:flame | \
+       w:4 any weapon ego:flaming | w:4 shortbow ego:flame | w:12 arrow ego:flame | \
        w:7 wand of flame | w:5 wand of fire | w:3 wand of fireball | \
        w:4 staff of fire | w:17 randbook disc:fire | w:6 robe ego:fire_resistance | \
        w:9 any armour ego:fire_resistance

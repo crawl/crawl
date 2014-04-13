@@ -719,7 +719,7 @@ DEPTH: Crypt, Tar
 KMONS: 1 = skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta \
            spells:. ; longbow . arrow q:30
 KMONS: 2 = skeletal warrior name:skeletal_archer n_rpl n_des n_spe col:magenta \
-           spells:. ; bow . arrow q:30
+           spells:. ; shortbow . arrow q:30
 KITEM: 2 = |
 MAP
 xxxxxxxxxxxxxxx
