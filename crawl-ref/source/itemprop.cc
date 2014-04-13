@@ -472,12 +472,6 @@ bool item_known_cursed(const item_def &item)
            && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed();
 }
 
-static bool _item_known_uncursed(const item_def &item)
-{
-    return !(_full_ident_mask(item) & ISFLAG_KNOW_CURSE)
-           || (item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed());
-}
-
 // Curses a random player inventory item.
 bool curse_an_item(bool ignore_holy_wrath)
 {
