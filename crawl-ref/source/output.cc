@@ -27,6 +27,7 @@
 #include "files.h"
 #include "format.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "items.h"
@@ -765,7 +766,8 @@ static void _print_stats_ac(int x, int y)
         textcolor(RED);
     else if (you.duration[DUR_CONDENSATION_SHIELD]
              || you.duration[DUR_MAGIC_SHIELD]
-             || you.duration[DUR_DIVINE_SHIELD])
+             || you.duration[DUR_DIVINE_SHIELD]
+             || qazlal_sh_boost() > 0)
     {
         textcolor(LIGHTBLUE);
     }
@@ -2047,6 +2049,10 @@ static vector<formatted_string> _get_overview_stats()
                                 || player_icemail_armour_class();
     const bool boosted_ev  = you.duration[DUR_PHASE_SHIFT]
                                 || you.duration[DUR_AGILITY];
+    const bool boosted_sh  = you.duration[DUR_CONDENSATION_SHIELD]
+                                || you.duration[DUR_MAGIC_SHIELD]
+                                || you.duration[DUR_DIVINE_SHIELD]
+                                || qazlal_sh_boost() > 0;
 
     if (!player_rotted())
     {
@@ -2106,7 +2112,14 @@ static vector<formatted_string> _get_overview_stats()
         snprintf(buf, sizeof buf, "EV %2d", player_evasion());
     cols1.add_formatted(1, buf, false);
 
-    snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
+
+    if (boosted_sh)
+    {
+        snprintf(buf, sizeof buf, "SH <lightblue>%2d</lightblue>",
+                 player_shield_class());
+    }
+    else
+        snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
     cols1.add_formatted(1, buf, false);
 
     const char* str_col = colour_to_str(_get_stat_colour(STAT_STR)).c_str();

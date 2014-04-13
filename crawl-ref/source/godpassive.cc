@@ -6,6 +6,7 @@
 #include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
+#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "defines.h"
@@ -24,6 +25,8 @@
 #include "religion.h"
 #include "skills2.h"
 #include "state.h"
+#include "terrain.h"
+#include "travel.h"
 
 int chei_stat_boost(int piety)
 {
@@ -676,4 +679,79 @@ int gozag_gold_bonus()
     }
 
     return gold_count;
+}
+
+int qazlal_sh_boost(int piety)
+{
+    if (!you_worship(GOD_QAZLAL)
+        || player_under_penance(GOD_QAZLAL)
+        || piety < piety_breakpoint(0))
+    {
+        return 0;
+    }
+
+    return min(piety, piety_breakpoint(5)) / 5;
+}
+
+void qazlal_storm_clouds()
+{
+    if (!you_worship(GOD_QAZLAL)
+        || player_under_penance(GOD_QAZLAL)
+        || you.piety < piety_breakpoint(0))
+    {
+        return;
+    }
+
+    const int radius =
+        min(LOS_RADIUS,
+            LOS_RADIUS * (you.piety - piety_breakpoint(0))
+            / (piety_breakpoint(5) - piety_breakpoint(0)));
+
+    vector<coord_def> candidates;
+    for (radius_iterator ri(you.pos(), radius, C_ROUND, LOS_SOLID, true);
+         ri; ++ri)
+    {
+        if (cell_is_solid(*ri) || env.cgrid(*ri) != EMPTY_CLOUD)
+            continue;
+
+        int neighbours = 0;
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+            if (feat_is_traversable(grd(*ai)))
+                neighbours++;
+
+        if (neighbours == 0 || neighbours > 6)
+            candidates.push_back(*ri);
+    }
+    const int count =
+        div_rand_round(radius * candidates.size() * you.time_taken,
+                       LOS_RADIUS * BASELINE_DELAY * 10);
+    if (count < 0)
+        return;
+    shuffle_array(candidates);
+    int placed = 0;
+    for (unsigned int i = 0; placed < count && i < candidates.size(); i++)
+    {
+        bool one = false, skip = false;
+        for (adjacent_iterator ai(candidates[i]); ai; ++ai)
+        {
+            if (env.cgrid(*ai) != EMPTY_CLOUD)
+            {
+                if (one)
+                {
+                    skip = true;
+                    break;
+                }
+                else
+                    one = true;
+            }
+        }
+        if (skip)
+            continue;
+
+        place_cloud(
+            random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
+                          CLOUD_DUST_TRAIL, -1),
+            candidates[i], random_range(3, 5), &you);
+        placed++;
+    }
 }
