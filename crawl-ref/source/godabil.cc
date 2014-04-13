@@ -4007,6 +4007,15 @@ bool gozag_potion_petition()
     return false;
 }
 
+static bool _duplicate_shop_type(int cur, shop_type type)
+{
+    for (int i = 0; i < cur; i++)
+        if (you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int() == type)
+            return true;
+
+    return false;
+}
+
 bool gozag_call_merchant()
 {
     int max_absdepth = 0;
@@ -4061,7 +4070,12 @@ bool gozag_call_merchant()
     {
         for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
-            const shop_type type = static_cast<shop_type>(random2(NUM_SHOPS));
+            shop_type type = NUM_SHOPS;
+            do
+            {
+                type = static_cast<shop_type>(random2(NUM_SHOPS));
+            }
+            while (_duplicate_shop_type(i, type));
             const bool antique = (type == SHOP_GENERAL_ANTIQUE
                                   || type == SHOP_WEAPON_ANTIQUE
                                   || type == SHOP_ARMOUR_ANTIQUE);
