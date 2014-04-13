@@ -360,7 +360,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       ""
     },
     // Qazlal
-    { "",
+    { "You are surrounded by a storm which can block enemy attacks.",
       "",
       "",
       "",
@@ -498,7 +498,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       ""
     },
     // Qazlal
-    { "",
+    { "Your storm dissipates completely.",
       "",
       "",
       "",
@@ -1122,6 +1122,12 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
+            else if (god == GOD_QAZLAL
+                     && you.piety >= piety_breakpoint(0))
+            {
+                mprf(MSGCH_GOD, "A storm instantly forms around you!");
+                you.redraw_armour_class = true; // also handles shields
+            }
             // When you've worked through all your penance, you get
             // another chance to make hostile slimes strict neutral.
             else if (god == GOD_JIYVA)
@@ -1259,6 +1265,14 @@ static void _inc_penance(god_type god, int val)
             if (you.umbraed())
                 mprf(MSGCH_GOD, god, "Your aura of darkness fades away.");
             invalidate_agrid();
+        }
+        else if (god == GOD_QAZLAL)
+        {
+            if (you.piety >= piety_breakpoint(0))
+            {
+                mprf(MSGCH_GOD, god, "The storm surrounding you dissipates.");
+                you.redraw_armour_class = true;
+            }
         }
 
         if (you_worship(god))
@@ -2820,6 +2834,13 @@ static void _gain_piety_point()
 
             if (you_worship(GOD_DITHMENOS) && i == 0)
                 mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
+
+            if (you_worship(GOD_QAZLAL) && (i == 2 || i == 4))
+            {
+                mprf(MSGCH_GOD, "The storm surrounding you grows powerful "
+                                "enough to %s missiles.",
+                                i == 4 ? "deflect" : "repel");
+            }
         }
     }
 
@@ -2836,6 +2857,14 @@ static void _gain_piety_point()
     {
         simple_god_message(" raises the support of your attributes as your movement slows.");
         notify_stat_change("Cheibriados piety gain");
+    }
+
+    if (you_worship(GOD_QAZLAL)
+        && qazlal_sh_boost(old_piety) < qazlal_sh_boost()
+        && qazlal_sh_boost(old_piety) > 0)
+    {
+        mprf(MSGCH_GOD, "The storm around you strengthens.");
+        you.redraw_armour_class = true;
     }
 
     if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENOS))
@@ -2963,6 +2992,13 @@ void lose_piety(int pgn)
 
                 if (_need_water_walking() && !beogh_water_walk())
                     fall_into_a_pool(you.pos(), grd(you.pos()));
+
+                if (you_worship(GOD_QAZLAL) && (i == 2 || i == 4))
+                {
+                    mprf(MSGCH_GOD, "The storm surrounding you is now too weak "
+                                    "to %s missiles.",
+                                    i == 4 ? "deflect" : "repel");
+                }
             }
         }
 
@@ -2989,6 +3025,14 @@ void lose_piety(int pgn)
     {
         simple_god_message(" reduces the support of your attributes as your movement quickens.");
         notify_stat_change("Cheibriados piety loss");
+    }
+
+    if (you_worship(GOD_QAZLAL)
+        && qazlal_sh_boost(old_piety) > qazlal_sh_boost()
+        && qazlal_sh_boost() > 0)
+    {
+        mprf(MSGCH_GOD, "The storm around you weakens.");
+        you.redraw_armour_class = true;
     }
 
     if (you_worship(GOD_SHINING_ONE) || you_worship(GOD_DITHMENOS))
@@ -3276,6 +3320,15 @@ void excommunication(god_type new_god)
         invalidate_agrid(true); // gold auras
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
+        _set_penance(old_god, 25);
+        break;
+
+    case GOD_QAZLAL:
+        if (old_piety >= piety_breakpoint(0))
+        {
+            mprf(MSGCH_GOD, old_god, "Your storm instantly dissipates.");
+            you.redraw_armour_class = true;
+        }
         _set_penance(old_god, 25);
         break;
 

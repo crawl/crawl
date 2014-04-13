@@ -2697,6 +2697,8 @@ int player_shield_class(void)
                ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 200
                : 0);
 
+    stat += qazlal_sh_boost() * 100;
+
     return (shield + stat + 50) / 100;
 }
 
@@ -6408,11 +6410,19 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::missile_deflection() const
 {
-    if (attribute[ATTR_DEFLECT_MISSILES])
+    if (attribute[ATTR_DEFLECT_MISSILES]
+        || you_worship(GOD_QAZLAL)
+           && !player_under_penance(GOD_QAZLAL)
+           && you.piety >= piety_breakpoint(4))
+    {
         return 2;
+    }
     if (attribute[ATTR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
-        || scan_artefacts(ARTP_RMSL, true))
+        || scan_artefacts(ARTP_RMSL, true)
+        || you_worship(GOD_QAZLAL)
+           && !player_under_penance(GOD_QAZLAL)
+           && you.piety >= piety_breakpoint(2))
     {
         return 1;
     }

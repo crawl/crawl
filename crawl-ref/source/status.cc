@@ -13,6 +13,7 @@
 #include "mutation.h"
 #include "player.h"
 #include "player-stats.h"
+#include "religion.h"
 #include "skills2.h"
 #include "terrain.h"
 #include "transform.h"
@@ -1168,7 +1169,10 @@ static void _describe_missiles(status_info* inf)
 
     if (level > 1)
     {
-        inf->light_colour = LIGHTMAGENTA;
+        bool perm = you_worship(GOD_QAZLAL)
+                    && !player_under_penance(GOD_QAZLAL)
+                    && you.piety >= piety_breakpoint(4);
+        inf->light_colour = perm ? WHITE : LIGHTMAGENTA;
         inf->light_text   = "DMsl";
         inf->short_text   = "deflect missiles";
         inf->long_text    = "You deflect missiles.";
@@ -1176,7 +1180,10 @@ static void _describe_missiles(status_info* inf)
     else
     {
         bool perm = player_mutation_level(MUT_DISTORTION_FIELD) == 3
-                    || you.scan_artefacts(ARTP_RMSL);
+                    || you.scan_artefacts(ARTP_RMSL)
+                    || you_worship(GOD_QAZLAL)
+                       && !player_under_penance(GOD_QAZLAL)
+                       && you.piety >= piety_breakpoint(4);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";
