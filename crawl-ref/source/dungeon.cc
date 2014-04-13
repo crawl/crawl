@@ -63,6 +63,7 @@
 #include "place.h"
 #include "player.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "spl-book.h"
 #include "spl-transloc.h"
@@ -108,7 +109,7 @@ static void _place_extra_vaults();
 static void _place_chance_vaults();
 static void _place_minivaults(void);
 static int _place_uniques();
-static void _place_gozag_shop();
+static void _place_gozag_shop(dungeon_feature_type stair);
 static void _place_traps();
 static void _prepare_water();
 static void _check_doors();
@@ -2473,8 +2474,6 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
         if (_mimic_at_level())
             _place_feature_mimics(dest_stairs_type);
 
-        _place_gozag_shop();
-
         _place_traps();
 
         // Any vault-placement activity must happen before this check.
@@ -2502,6 +2501,9 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
 
     _fixup_branch_stairs();
     fixup_misplaced_items();
+
+    if (crawl_state.game_standard_levelgen())
+        _place_gozag_shop(dest_stairs_type);
 
     link_items();
     if (_mimic_at_level())
@@ -3272,9 +3274,8 @@ static bool _shaft_is_in_corridor(const coord_def& c)
     return false;
 }
 
-static void _place_gozag_shop()
+static void _place_gozag_shop(dungeon_feature_type stair)
 {
-    coord_def shop_place;
     string key = make_stringf(GOZAG_SHOP_KEY,
                               level_id::current().describe().c_str());
 
@@ -3292,15 +3293,23 @@ static void _place_gozag_shop()
         }
     }
 
-    int tries = 1000;
-    do
+    vector<coord_weight> places;
+    const int dist_max = distance2(coord_def(0, 0), coord_def(20, 20));
+    const coord_def start_pos = dgn_find_nearby_stair(stair, you.pos(), true);
+    for (rectangle_iterator ri(0); ri; ++ri)
     {
-        shop_place = random_in_bounds();
-    } while ((grd(shop_place) != DNGN_FLOOR
-              || !(encompass || !map_masked(shop_place, MMT_VAULT)))
-              && --tries > 0);
-
-    if (tries == 0)
+        if (grd(*ri) != DNGN_FLOOR
+            || !(encompass || !map_masked(*ri, MMT_VAULT)))
+        {
+            continue;
+        }
+        const int dist2 = distance2(start_pos, *ri);
+        if (dist2 > dist_max)
+            continue;
+        places.push_back(coord_weight(*ri, dist_max - dist2));
+    }
+    coord_def *shop_place = random_choose_weighted(places);
+    if (!shop_place)
         throw dgn_veto_exception("Cannot find place Gozag shop.");
 
 
@@ -3312,15 +3321,15 @@ static void _place_gozag_shop()
         kmspec.set_feat(you.props[key].get_string(), false);
         if (!kmspec.get_feat().shop.get())
             die("Invalid shop spec?");
-        _place_spec_shop(shop_place, kmspec.get_feat().shop.get());
+        _place_spec_shop(*shop_place, kmspec.get_feat().shop.get());
 
-        shop_struct *shop = get_shop(shop_place);
+        shop_struct *shop = get_shop(*shop_place);
         ASSERT(shop);
 
-        env.map_knowledge(shop_place).set_feature(grd(shop_place));
-        env.map_knowledge(shop_place).flags |= MAP_MAGIC_MAPPED_FLAG;
-        env.pgrid(shop_place) |= FPROP_SEEN_OR_NOEXP;
-        seen_notable_thing(grd(shop_place), shop_place);
+        env.map_knowledge(*shop_place).set_feature(grd(*shop_place));
+        env.map_knowledge(*shop_place).flags |= MAP_MAGIC_MAPPED_FLAG;
+        env.pgrid(*shop_place) |= FPROP_SEEN_OR_NOEXP;
+        seen_notable_thing(grd(*shop_place), *shop_place);
 
         string announce = make_stringf(
             "%s invites you to visit their %s%s%s.",
@@ -3331,11 +3340,11 @@ static void _place_gozag_shop()
 
         you.props[GOZAG_ANNOUNCE_SHOP_KEY] = announce;
 
-        env.markers.add(new map_feature_marker(shop_place,
+        env.markers.add(new map_feature_marker(*shop_place,
                                                DNGN_ABANDONED_SHOP));
     }
     else
-        grd(shop_place) = DNGN_ABANDONED_SHOP;
+        grd(*shop_place) = DNGN_ABANDONED_SHOP;
 }
 
 static void _place_traps()
