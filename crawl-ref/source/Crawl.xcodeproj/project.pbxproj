@@ -376,11 +376,13 @@
 		7B5165AE11859D5A005B23ED /* ng-wanderer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165A611859D5A005B23ED /* ng-wanderer.cc */; };
 		7B5165AF11859D5A005B23ED /* place-info.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165A811859D5A005B23ED /* place-info.cc */; };
 		7B5165B011859D5A005B23ED /* player-act.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165AA11859D5A005B23ED /* player-act.cc */; };
+		7B5165BA11859D5A005B23ED /* player-reacts.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165B711859D5A005B23ED /* player-reacts.cc */; };
 		7B5165B111859D5A005B23ED /* player-stats.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165AB11859D5A005B23ED /* player-stats.cc */; };
 		7B5165B211859D5A005B23ED /* ng-setup.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165A411859D5A005B23ED /* ng-setup.cc */; };
 		7B5165B311859D5A005B23ED /* ng-wanderer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165A611859D5A005B23ED /* ng-wanderer.cc */; };
 		7B5165B411859D5A005B23ED /* place-info.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165A811859D5A005B23ED /* place-info.cc */; };
 		7B5165B511859D5A005B23ED /* player-act.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165AA11859D5A005B23ED /* player-act.cc */; };
+		7B5165B911859D5A005B23ED /* player-reacts.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165B711859D5A005B23ED /* player-reacts.cc */; };
 		7B5165B611859D5A005B23ED /* player-stats.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165AB11859D5A005B23ED /* player-stats.cc */; };
 		7B5165C611859D82005B23ED /* random-var.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165B711859D82005B23ED /* random-var.cc */; };
 		7B5165C711859D82005B23ED /* spl-zap.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B5165BA11859D82005B23ED /* spl-zap.cc */; };
@@ -1167,6 +1169,8 @@
 		7B5165A811859D5A005B23ED /* place-info.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "place-info.cc"; sourceTree = "<group>"; };
 		7B5165A911859D5A005B23ED /* place-info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "place-info.h"; sourceTree = "<group>"; };
 		7B5165AA11859D5A005B23ED /* player-act.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "player-act.cc"; sourceTree = "<group>"; };
+		7B5165B711859D5A005B23ED /* player-reacts.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "player-reacts.cc"; sourceTree = "<group>"; };
+		7B5165B811859D5A005B23ED /* player-reacts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "player-reacts.h"; sourceTree = "<group>"; };
 		7B5165AB11859D5A005B23ED /* player-stats.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "player-stats.cc"; sourceTree = "<group>"; };
 		7B5165AC11859D5A005B23ED /* player-stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "player-stats.h"; sourceTree = "<group>"; };
 		7B5165B711859D82005B23ED /* random-var.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "random-var.cc"; sourceTree = "<group>"; };
@@ -2099,6 +2103,8 @@
 				7B5165AA11859D5A005B23ED /* player-act.cc */,
 				7BDE8442116D247D00974D63 /* player-equip.cc */,
 				7BDE8443116D247D00974D63 /* player-equip.h */,
+				7B5165B711859D5A005B23ED /* player-reacts.cc */,
+				7B5165B811859D5A005B23ED /* player-reacts.h */,
 				7B5165AB11859D5A005B23ED /* player-stats.cc */,
 				7B5165AC11859D5A005B23ED /* player-stats.h */,
 				E5D6406210BD494500A99626 /* player.cc */,
@@ -3088,6 +3094,7 @@
 				7B09F5F01133D6AB004F149D /* place.cc in Sources */,
 				7B5165B511859D5A005B23ED /* player-act.cc in Sources */,
 				7BDE8444116D247D00974D63 /* player-equip.cc in Sources */,
+				7B5165B911859D5A005B23ED /* player-reacts.cc in Sources */,
 				7B5165B611859D5A005B23ED /* player-stats.cc in Sources */,
 				7B09F5F11133D6AB004F149D /* player.cc in Sources */,
 				1F909C4D148B47AA00084E83 /* potion.cc in Sources */,

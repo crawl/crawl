@@ -171,6 +171,7 @@ place-info.o \
 place.o \
 player-act.o \
 player-equip.o \
+player-reacts.o \
 player-stats.o \
 player.o \
 potion.o \

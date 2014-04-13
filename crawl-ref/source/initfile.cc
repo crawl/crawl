@@ -2493,9 +2493,7 @@ void game_options::read_option_line(const string &str, bool runscript)
 #endif
     }
     else if (key == "terp_file" && runscript)
-    {
         terp_files.push_back(field);
-    }
     else if (key == "colour" || key == "color")
     {
         const int orig_col   = str_to_colour(subkey);
