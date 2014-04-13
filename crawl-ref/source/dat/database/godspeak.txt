@@ -788,6 +788,14 @@ Okawaru welcome
 
 Okawaru says: Bring me glory in combat!
 %%%%
+Qazlal penance
+
+Qazlal thunders: Do not interfere with the natural order!
+%%%%
+Qazlal welcome
+
+Qazlal says: Let the forces of nature tear it all down!
+%%%%
 Sif Muna penance
 
 Sif Muna says: Seek out more knowledge and wisdom.

@@ -448,6 +448,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_ALTAR_DITHMENOS;
     case DNGN_ALTAR_GOZAG:
         return TILE_DNGN_ALTAR_GOZAG;
+    case DNGN_ALTAR_QAZLAL:
+        return TILE_DNGN_ALTAR_QAZLAL;
     case DNGN_FOUNTAIN_BLUE:
         return TILE_DNGN_BLUE_FOUNTAIN;
     case DNGN_FOUNTAIN_SPARKLING:
@@ -5418,6 +5420,7 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_GOZAG_CALL_MERCHANT;
     case ABIL_GOZAG_BRIBE_BRANCH:
         return TILEG_ABILITY_GOZAG_BRIBE_BRANCH;
+    // Qazlal
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:

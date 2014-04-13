@@ -4027,6 +4027,6 @@ static void _compile_time_asserts()
     ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 1 == DNGN_ALTAR_LAST_GOD + 1);
 #else
     // This needs to be updated if more gods are added at the end.
-    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 2 == DNGN_ALTAR_LAST_GOD + 1);
+    ASSERT(DNGN_ALTAR_FIRST_GOD + NUM_GODS - 3 == DNGN_ALTAR_LAST_GOD + 1);
 #endif
 }

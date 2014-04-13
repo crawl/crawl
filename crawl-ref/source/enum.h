@@ -190,6 +190,7 @@ enum ability_type
     ABIL_GOZAG_POTION_PETITION = 1180,
     ABIL_GOZAG_CALL_MERCHANT,
     ABIL_GOZAG_BRIBE_BRANCH,
+    // Qazlal
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,
@@ -1488,8 +1489,8 @@ enum dungeon_feature_type
         DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_DITHMENOS,
 #else
     DNGN_ALTAR_GOZAG,
-        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_GOZAG,
-    DNGN_ALTAR_UNUSED_2,
+    DNGN_ALTAR_QAZLAL,
+        DNGN_ALTAR_LAST_GOD = DNGN_ALTAR_QAZLAL,
     DNGN_ALTAR_UNUSED_3,
     DNGN_ALTAR_UNUSED_4,
     DNGN_ALTAR_UNUSED_5,
@@ -1554,6 +1555,7 @@ enum dungeon_feature_type
 
 #if TAG_MAJOR_VERSION == 34
     DNGN_ALTAR_GOZAG,
+    DNGN_ALTAR_QAZLAL,
 #endif
 
     NUM_FEATURES
@@ -1968,6 +1970,7 @@ enum god_type
     GOD_ASHENZARI,
     GOD_DITHMENOS,
     GOD_GOZAG,
+    GOD_QAZLAL,
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,

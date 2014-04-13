@@ -4408,6 +4408,10 @@ static const char *divine_title[NUM_GODS][8] =
     // Gozag -- enterprenur theme
     {"Profligate",         "Pauper",                "Materialist",              "Vendee",
      "Enterpreneur",       "Mogul",                 "Magnate",                  "Tycoon"},
+
+    // Qazlal -- natural disaster theme
+    {"Unspoiled",          "%s Mishap",             "Lightning Rod",            "%s Disaster",
+     "Eye of the Storm",   "%s Catastrophe",        "%s Cataclysm",             "End of an Era"},
 };
 
 string god_title(god_type which_god, species_type which_species, int piety)
@@ -4421,7 +4425,9 @@ string god_title(god_type which_god, species_type which_species, int piety)
         title = divine_title[which_god][_piety_level(piety)];
 
     title = replace_all(title, "%s",
-                        species_name(which_species, true, false));
+                        which_god == GOD_QAZLAL
+                        ? species_name(which_species, false, true)
+                        : species_name(which_species, true, false));
 
     return title;
 }

@@ -162,6 +162,12 @@ accepting this decree perform noticeably better when they see gold glint around
 them. Followers don't earn piety in a traditional way; the only way to
 impress Gozag is by amassing a fortune.
 %%%%
+Qazlal
+
+Qazlal Stormbringer is a violent god of nature, who takes joy in unleashing
+the forces of nature against the unsuspecting. Followers must employ the
+elements to defeat their foes to gain the favour of this god.
+%%%%
 Zin powers
 
 Zin grants followers the ability to preach to the unenlightened masses, and
@@ -342,4 +348,16 @@ corpses are turned into gold piles. Stalwarts can order immediate help in the
 form of potions, with prices being dictated by the Greedy. Particularly
 well-off adherers can pay their god to duplicate items, to attract shopkeepers
 into the dungeon, and even to bribe entire branches of the dungeon.
+%%%%
+Qazlal powers
+
+As a follower of Qazlal gains divine favour, they are slowly surrounded by a
+storm, causing elemental clouds to appear near them, blocking attacks, and
+(for the particularly devout) deflecting incoming projectiles. Qazlal allows
+followers to incite nature against their foes, causing a localised natural
+disturbance or, for particularly devout followers, a more widespread disaster.
+Followers of Qazlal can retaliate against incoming attacks with elemental
+discharges, and can gain temporary resistances against the elements on taking
+damage from that element. Qazlal will eventually offer more permanent
+protection against an element of the devotee's choosing.
 %%%%
