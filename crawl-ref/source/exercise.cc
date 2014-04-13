@@ -80,6 +80,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_CHEIBRIADOS_DISTORTION:
     case ABIL_DITHMENOS_SHADOW_STEP:
     case ABIL_DITHMENOS_SHADOW_FORM:
+    case ABIL_QAZLAL_UPHEAVAL:
         return SK_INVOCATIONS;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
@@ -142,6 +143,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_FEDHAS_SPAWN_SPORES:
     case ABIL_FEDHAS_EVOLUTION:
     case ABIL_CHEIBRIADOS_TIME_BEND:
+    case ABIL_QAZLAL_UPHEAVAL:
         return 2 + random2(3);
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:

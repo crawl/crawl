@@ -4141,6 +4141,7 @@ void bolt::affect_player()
     else if (name == "explosive bolt")
         _explosive_bolt_explode(this, you.pos());
     else if (name == "flash freeze"
+             || name == "blast of ice"
              || name == "great icy blast" && !is_explosion)
     {
         if (you.duration[DUR_FROZEN])
@@ -4657,6 +4658,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     if (name == "spray of energy")
         _dazzle_monster(mon, agent());
     else if (name == "flash freeze"
+             || name == "blast of ice"
              || name == "great icy blast" && !is_explosion)
     {
         if (mon->has_ench(ENCH_FROZEN))

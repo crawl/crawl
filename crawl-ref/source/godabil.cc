@@ -70,6 +70,7 @@
 #include "traps.h"
 #include "unwind.h"
 #include "view.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 
 #ifdef USE_TILE
@@ -4429,6 +4430,155 @@ bool gozag_bribe_branch()
     string msg = make_stringf(" spreads your bribe to %s!",
                               branches[branch].longname);
     simple_god_message(msg.c_str());
+
+    return true;
+}
+
+bool qazlal_upheaval(coord_def target, bool quiet)
+{
+    int pow = you.skill(SK_INVOCATIONS, 6);
+    const int max_radius = pow >= 100 ? 2 : 1;
+
+    bolt beam;
+    beam.name        = "****";
+    beam.beam_source = you.mindex();
+    beam.source_name = "you";
+    beam.source      = you.pos();
+    beam.thrower     = KILL_YOU;
+    beam.range       = LOS_RADIUS;
+    beam.damage      = calc_dice(3, 10 + pow / 2);
+    beam.hit         = 10 + you.skill(SK_INVOCATIONS);
+    beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
+    beam.loudness    = 10;
+    beam.draw_delay  = 0;
+
+    if (target.origin())
+    {
+        dist spd;
+        targetter_smite tgt(&you, LOS_RADIUS, 0, max_radius);
+        if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE,
+                             LOS_RADIUS, false, true, false, NULL,
+                             "Aiming: <white>Upheaval</white>", true,
+                             &tgt))
+        {
+            return false;
+        }
+    }
+    else
+        beam.target = target;
+
+    string message = "";
+
+    switch(random2(4))
+    {
+        case 0:
+            beam.name     = "blast of magma";
+            beam.flavour  = BEAM_LAVA;
+            beam.colour   = RED;
+            beam.hit_verb = "engulfs";
+            message       = "Magma suddenly erupts from the ground!";
+            break;
+        case 1:
+            beam.name    = "blast of ice";
+            beam.flavour = BEAM_ICE;
+            beam.colour  = WHITE;
+            message      = "A blizzard blasts the area with ice!";
+            break;
+        case 2:
+            beam.name    = "cutting wind";
+            beam.flavour = BEAM_AIR;
+            beam.colour  = LIGHTGRAY;
+            message      = "A storm cloud blasts the area with cutting wind!";
+            break;
+        case 3:
+            beam.name    = "blast of rubble";
+            beam.flavour = BEAM_FRAG;
+            beam.colour  = BROWN;
+            message      = "The ground shakes violently, spewing rubble!";
+            break;
+        default:
+            break;
+    }
+
+    vector<coord_def> affected;
+    affected.push_back(beam.target);
+    for (radius_iterator ri(beam.target, max_radius, C_ROUND, LOS_SOLID, true);
+         ri; ++ri)
+    {
+        int chance = pow;
+
+        bool adj = adjacent(beam.target, *ri);
+        if (!adj && max_radius > 1)
+            chance -= 100;
+        if (adj && max_radius == 1 || x_chance_in_y(pow, 100))
+        {
+            if (beam.flavour == BEAM_FRAG || !cell_is_solid(*ri))
+                affected.push_back(*ri);
+        }
+    }
+
+    for (unsigned int i = 0; i < affected.size(); i++)
+    {
+        beam.draw(affected[i]);
+        scaled_delay(25);
+    }
+    if (!quiet)
+    {
+        scaled_delay(100);
+        mprf(MSGCH_GOD, "%s", message.c_str());
+    }
+
+    int wall_count = 0;
+
+    for (unsigned int i = 0; i < affected.size(); i++)
+    {
+        coord_def pos = affected[i];
+        beam.target = pos;
+        beam.fire();
+
+        switch (beam.flavour)
+        {
+            case BEAM_LAVA:
+                if (!actor_at(pos) && coinflip())
+                {
+                    temp_change_terrain(
+                        pos, DNGN_LAVA,
+                        random2(you.skill(SK_INVOCATIONS, BASELINE_DELAY)),
+                        TERRAIN_CHANGE_FLOOD);
+                }
+                break;
+            case BEAM_AIR:
+                if (!cell_is_solid(pos) && env.cgrid(pos) == EMPTY_CLOUD
+                    && coinflip())
+                {
+                    place_cloud(CLOUD_STORM, pos,
+                                random2(you.skill_rdiv(SK_INVOCATIONS, 1, 4)),
+                                &you);
+                }
+                break;
+            case BEAM_FRAG:
+                if (((grd(pos) == DNGN_ROCK_WALL
+                     || grd(pos) == DNGN_CLEAR_ROCK_WALL
+                     || grd(pos) == DNGN_SLIMY_WALL)
+                     && x_chance_in_y(pow / 4, 100)
+                    || grd(pos) == DNGN_CLOSED_DOOR
+                    || grd(pos) == DNGN_RUNED_DOOR
+                    || grd(pos) == DNGN_OPEN_DOOR
+                    || grd(pos) == DNGN_SEALED_DOOR
+                    || grd(pos) == DNGN_GRATE))
+                {
+                    noisy(30, pos);
+                    nuke_wall(pos);
+                    wall_count++;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (wall_count && !quiet)
+        mpr("Ka-crash!");
 
     return true;
 }
