@@ -22,6 +22,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
+#include "show.h"
 #include "state.h"
 #include "travel.h"
 #include "view.h"
@@ -306,21 +307,36 @@ static void _apply_daction(daction_type act)
             unset_level_flags(LFLAG_NO_TELE_CONTROL, you.depth != 3);
         break;
     case DACT_GOLD_ON_TOP:
+    {
+        int count = 0;
         for (rectangle_iterator ri(0); ri; ++ri)
         {
             for (stack_iterator j(*ri); j; ++j)
             {
                 if (j->base_type == OBJ_GOLD)
                 {
+                    bool detected = false;
                     int dummy = j->link;
                     j->special = 0;
                     unlink_item(dummy);
                     move_item_to_grid(&dummy, *ri, true);
+                    if (!env.map_knowledge(*ri).item()
+                        || env.map_knowledge(*ri).item()->base_type != OBJ_GOLD)
+                    {
+                        count++;
+                        detected = true;
+                    }
+                    update_item_at(*ri, true);
+                    if (detected)
+                        env.map_knowledge(*ri).flags |= MAP_DETECTED_ITEM;
                     break;
                 }
             }
         }
+        if (count)
+            mprf(MSGCH_GOD, "You feel very greedy and sense gold!");
         break;
+    }
     case DACT_REMOVE_GOZAG_SHOPS:
     {
         vector<map_marker *> markers = env.markers.get_all(MAT_FEATURE);

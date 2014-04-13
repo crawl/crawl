@@ -25,6 +25,7 @@
 #include "monster.h"
 #include "options.h"
 #include "random.h"
+#include "stash.h"
 #include "state.h"
 #include "areas.h"
 #include "terrain.h"
@@ -231,7 +232,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     }
 }
 
-static void _update_item_at(const coord_def &gp)
+void update_item_at(const coord_def &gp, bool detected)
 {
     if (!in_bounds(gp))
         return;
@@ -254,12 +255,15 @@ static void _update_item_at(const coord_def &gp)
     }
     else
     {
+        if (detected)
+            StashTrack.add_stash(gp.x, gp.y);
+
         const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
             return;
 
         eitem = stash[0];
-        if (stash.size() > 1)
+        if (!detected && stash.size() > 1)
             more_items = true;
     }
     env.map_knowledge(gp).set_item(get_item_info(eitem), more_items);
@@ -535,7 +539,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
             _update_cloud(cloud);
         }
 
-        _update_item_at(gp);
+        update_item_at(gp);
     }
 
 #ifdef USE_TILE
