@@ -191,6 +191,7 @@ enum ability_type
     ABIL_GOZAG_CALL_MERCHANT,
     ABIL_GOZAG_BRIBE_BRANCH,
     // Qazlal
+    ABIL_QAZLAL_UPHEAVAL = 1190,
 
     // For both Yred and Beogh
     ABIL_STOP_RECALL = 1500,

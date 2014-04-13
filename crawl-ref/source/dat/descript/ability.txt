@@ -639,6 +639,12 @@ and more rarely will join your ranks subject to continued payment. Upon
 exhaustion of the bribe fund, bribed enemies who have not joined you will
 resume hostilities.
 %%%%
+# Qazlal
+Upheaval ability
+
+Calls on the forces of nature to blast a small area with magma, ice, wind,
+or rubble.
+%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually

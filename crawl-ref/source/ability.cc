@@ -199,8 +199,8 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_GOZAG_POTION_PETITION, ABIL_GOZAG_CALL_MERCHANT,
       ABIL_GOZAG_BRIBE_BRANCH, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Qazlal
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY },
+    { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
 };
 
 // The description screen was way out of date with the actual costs.
@@ -422,6 +422,7 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_GOLD },
 
     // Qazlal
+    { ABIL_QAZLAL_UPHEAVAL, "Upheaval", 4, 0, 0, 3, 0, ABFLAG_NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -1137,6 +1138,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_PLANT_RING:
+    case ABIL_QAZLAL_UPHEAVAL:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
         break;
@@ -2932,7 +2934,14 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_GOZAG_BRIBE_BRANCH:
         if (!gozag_bribe_branch())
             return false;
+        break;
 
+    case ABIL_QAZLAL_UPHEAVAL:
+        if (!qazlal_upheaval(coord_def()))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
         break;
 
     case ABIL_RENOUNCE_RELIGION:
