@@ -21,8 +21,6 @@
 #include "message.h"
 #include "options.h"
 
-#ifdef WIZARD
-
 static int _incomplete(lua_State *ls, int status)
 {
     if (status == LUA_ERRSYNTAX)
@@ -157,5 +155,3 @@ void debug_terp_dlua(CLua &vm)
     }
     _run_dlua_interpreter(vm);
 }
-
-#endif

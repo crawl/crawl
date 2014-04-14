@@ -974,9 +974,9 @@ void game_options::reset_options()
 #else
     wiz_mode             = WIZ_NO;
 #endif
+#endif
     terp_files.clear();
     no_save              = false;
-#endif
 
 #ifdef USE_TILE
     tile_show_items      = "!?/%=([)x}:|\\";
@@ -2496,9 +2496,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "terp_file" && runscript)
     {
-#ifdef WIZARD
         terp_files.push_back(field);
-#endif
     }
     else if (key == "colour" || key == "color")
     {
@@ -4710,10 +4708,8 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_NO_SAVE:
-#ifdef WIZARD
             if (!rc_only)
                 Options.no_save = true;
-#endif
             break;
 
 #ifdef USE_TILE_WEB
