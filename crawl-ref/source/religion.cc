@@ -1122,11 +1122,24 @@ void dec_penance(god_type god, int val)
                 mprf(MSGCH_GOD, "Your aura of darkness returns!");
                 invalidate_agrid(true);
             }
-            else if (god == GOD_QAZLAL
-                     && you.piety >= piety_breakpoint(0))
+            else if (god == GOD_QAZLAL)
             {
-                mprf(MSGCH_GOD, "A storm instantly forms around you!");
-                you.redraw_armour_class = true; // also handles shields
+                if (you.piety >= piety_breakpoint(0))
+                {
+                    mprf(MSGCH_GOD, "A storm instantly forms around you!");
+                    you.redraw_armour_class = true; // also handles shields
+                }
+                if (you.attribute[ATTR_DIVINE_FIRE_RES])
+                    mprf(MSGCH_GOD, "You feel cold.");
+                if (you.attribute[ATTR_DIVINE_COLD_RES])
+                    mprf(MSGCH_GOD, "You feel hot.");
+                if (you.attribute[ATTR_DIVINE_ELEC_RES])
+                    mprf(MSGCH_GOD, "You feel insulated.");
+                if (you.attribute[ATTR_DIVINE_AC])
+                {
+                    mprf(MSGCH_GOD, "You feel tough.");
+                    you.redraw_armour_class = true;
+                }
             }
             // When you've worked through all your penance, you get
             // another chance to make hostile slimes strict neutral.
@@ -1294,6 +1307,17 @@ static void _inc_penance(god_type god, int val)
                 mprf(MSGCH_DURATION,
                      "Your resistance to physical damage fades away.");
                 you.duration[DUR_QAZLAL_AC] = 0;
+                you.redraw_armour_class = true;
+            }
+            if (you.attribute[ATTR_DIVINE_FIRE_RES])
+                mprf(MSGCH_GOD, "You feel hot.");
+            if (you.attribute[ATTR_DIVINE_COLD_RES])
+                mprf(MSGCH_GOD, "You feel cold.");
+            if (you.attribute[ATTR_DIVINE_ELEC_RES])
+                mprf(MSGCH_GOD, "You feel conductive.");
+            if (you.attribute[ATTR_DIVINE_AC])
+            {
+                mprf(MSGCH_GOD, "You feel puny.");
                 you.redraw_armour_class = true;
             }
         }
@@ -2931,6 +2955,10 @@ static void _gain_piety_point()
 
                     you.one_time_ability_used.set(you.religion);
                     break;
+                case GOD_QAZLAL:
+                    simple_god_message(" will now grant you protection from "
+                                       "an element of your choosing.");
+                    break;
                 default:
                     break;
             }
@@ -2997,6 +3025,11 @@ void lose_piety(int pgn)
                 {
                     simple_god_message(
                         " is no longer ready to corrupt your weapon.");
+                }
+                else if (you_worship(GOD_QAZLAL))
+                {
+                    simple_god_message(
+                        " is no longer ready to protect you from an element.");
                 }
             }
         }
@@ -3373,6 +3406,27 @@ void excommunication(god_type new_god)
             mprf(MSGCH_DURATION,
                  "Your resistance to physical damage fades away.");
             you.duration[DUR_QAZLAL_AC] = 0;
+            you.redraw_armour_class = true;
+        }
+        if (you.attribute[ATTR_DIVINE_FIRE_RES])
+        {
+            you.attribute[ATTR_DIVINE_FIRE_RES] = 0;
+            mprf(MSGCH_GOD, old_god, "You feel hot.");
+        }
+        if (you.attribute[ATTR_DIVINE_COLD_RES])
+        {
+            you.attribute[ATTR_DIVINE_COLD_RES] = 0;
+            mprf(MSGCH_GOD, old_god, "You feel cold.");
+        }
+        if (you.attribute[ATTR_DIVINE_ELEC_RES])
+        {
+            you.attribute[ATTR_DIVINE_ELEC_RES] = 0;
+            mprf(MSGCH_GOD, old_god, "You feel conductive.");
+        }
+        if (you.attribute[ATTR_DIVINE_AC])
+        {
+            you.attribute[ATTR_DIVINE_AC] = 0;
+            mprf(MSGCH_GOD, old_god, "You feel puny.");
             you.redraw_armour_class = true;
         }
         _set_penance(old_god, 25);

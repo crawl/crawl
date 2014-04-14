@@ -304,6 +304,52 @@ static bool _altar_prayer()
         return false;
     }
 
+    // Qazlal offers you an elemental resistance (rF++, rC++, rElec, AC+5).
+    else if (you_worship(GOD_QAZLAL) && !player_under_penance()
+        && you.piety >= piety_breakpoint(5)
+        && !you.one_time_ability_used[GOD_QAZLAL])
+    {
+        simple_god_message(
+            " will protect you from an element of your choice.");
+        more();
+        mesclr();
+        mpr_nojoin(MSGCH_PLAIN, "[a] Fire  (rF++)");
+        mpr_nojoin(MSGCH_PLAIN, "[b] Ice   (rC++)");
+        mpr_nojoin(MSGCH_PLAIN, "[c] Air   (rElec)");
+        mpr_nojoin(MSGCH_PLAIN, "[d] Earth (AC+5)");
+        mprf(MSGCH_PROMPT, "Request which resistance (ESC to cancel)?");
+        int keyin = toalower(get_ch()) - 'a';
+        if (keyin < 0 || keyin > 3)
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        you.one_time_ability_used.set(you.religion);
+        switch (keyin)
+        {
+            default:
+            case 0:
+                you.attribute[ATTR_DIVINE_FIRE_RES] = 1;
+                mprf(MSGCH_GOD, "You feel cold.");
+                break;
+            case 1:
+                you.attribute[ATTR_DIVINE_COLD_RES] = 1;
+                mprf(MSGCH_GOD, "You feel hot.");
+                break;
+            case 2:
+                you.attribute[ATTR_DIVINE_ELEC_RES] = 1;
+                mprf(MSGCH_GOD, "You feel insulated.");
+                break;
+            case 3:
+                you.attribute[ATTR_DIVINE_AC] = 1;
+                mprf(MSGCH_GOD, "You feel tough.");
+                you.redraw_armour_class = true;
+                break;
+        }
+        return true;
+    }
+
     // None of above are true, nothing happens.
     return false;
 }
