@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "artefact.h"
 #include "attitude-change.h"
+#include "coordit.h"
 #include "database.h"
 #include "decks.h"
 #include "effects.h"
@@ -37,6 +38,7 @@
 #include "ouch.h"
 #include "player-stats.h"
 #include "potion.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "shopping.h"
 #include "spl-clouds.h"
@@ -1440,6 +1442,115 @@ static bool _dithmenos_retribution()
     return true;
 }
 
+static bool _qazlal_retribution()
+{
+    // disaster/elemental theme
+    const god_type god = GOD_QAZLAL;
+
+    switch(random2(3))
+    {
+    case 0:
+    {
+        mgen_data temp =
+            mgen_data::hostile_at(MONS_NO_MONSTER,
+                                  "the adversity of Qazlal",
+                                  true, 0, 0, you.pos(), 0, god);
+
+        temp.hd = you.experience_level;
+        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+        int how_many = 1 + (you.experience_level / 5);
+        bool success = false;
+
+        for (; how_many > 0; how_many--)
+        {
+            temp.cls = random_choose(MONS_FIRE_ELEMENTAL,
+                                     MONS_WATER_ELEMENTAL,
+                                     MONS_AIR_ELEMENTAL,
+                                     MONS_EARTH_ELEMENTAL,
+                                     -1);
+            if (create_monster(temp, false))
+                success = true;
+        }
+        if (success)
+            simple_god_message(" incites the elements against you!", god);
+        else
+        {
+            simple_god_message(" fails to incite the elements against you.",
+                               god);
+        }
+        break;
+    }
+    case 1:
+    {
+        // TODO: think of terrain-ish effects for the other elements
+        bool success = false;
+        vector<coord_weight> candidates;
+        for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+        {
+            if (grd(*ri) != DNGN_FLOOR
+                || actor_at(*ri)
+                || igrd(*ri) != NON_ITEM)
+            {
+                continue;
+            }
+
+            const int weight = LOS_RADIUS*LOS_RADIUS
+                               - distance2(you.pos(), *ri);
+            candidates.push_back(coord_weight(*ri, weight));
+        }
+        int how_many = min((int)candidates.size(),
+                           3 + (you.experience_level / 2));
+        while (how_many > 0)
+        {
+            coord_def* pos = random_choose_weighted(candidates);
+            if (!pos)
+                break;
+            success = true;
+            how_many--;
+            temp_change_terrain(*pos, DNGN_LAVA,
+                                random2(you.experience_level * BASELINE_DELAY),
+                                TERRAIN_CHANGE_FLOOD);
+            for (vector<coord_weight>::iterator it = candidates.begin();
+                 it != candidates.end(); ++it)
+            {
+                if (it->first == *pos)
+                {
+                    candidates.erase(it);
+                    break;
+                }
+            }
+        }
+        if (success)
+        {
+            mprf(MSGCH_GOD, god,
+                 "The ground around you shudders, and lava spills forth!");
+        }
+        else
+        {
+            mprf(MSGCH_GOD, god,
+                 "The ground around you shudders for a moment.");
+        }
+        break;
+    }
+    case 2:
+        if (mutate(RANDOM_QAZLAL_MUTATION, "the adversity of Qazlal", false,
+                   false, true, false, false, false, true))
+        {
+            simple_god_message(" strips away your elemental protection.",
+                               god);
+        }
+        else
+        {
+            simple_god_message(" fails to strip away your elemental protection.",
+                               god);
+        }
+        break;
+    }
+
+    return true;
+}
+
 bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
@@ -1482,6 +1593,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
     case GOD_DITHMENOS:     do_more = _dithmenos_retribution(); break;
+    case GOD_QAZLAL:        do_more = _qazlal_retribution(); break;
 
     case GOD_ASHENZARI:
     case GOD_GOZAG:

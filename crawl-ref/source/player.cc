@@ -1837,6 +1837,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     // mutations:
     re += player_mutation_level(MUT_THIN_METALLIC_SCALES, temp) == 3 ? 1 : 0;
     re += player_mutation_level(MUT_SHOCK_RESISTANCE, temp);
+    re -= player_mutation_level(MUT_SHOCK_VULNERABILITY, temp);
 
     // divine intervention:
     if (you.attribute[ATTR_DIVINE_ELEC_RES]

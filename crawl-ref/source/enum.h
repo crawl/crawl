@@ -3364,6 +3364,9 @@ enum mutation_type
     MUT_SCREAM,
     MUT_SHAGGY_FUR,
     MUT_SHOCK_RESISTANCE,
+#if TAG_MAJOR_VERSION > 34
+    MUT_SHOCK_VULNERABILITY,
+#endif
     MUT_SLOW,
     MUT_SLOW_HEALING,
     MUT_SLOW_METABOLISM,
@@ -3414,6 +3417,9 @@ enum mutation_type
     MUT_HEAT_VULNERABILITY,
 #endif
     MUT_BLACK_MARK,
+#if TAG_MAJOR_VERSION == 34
+    MUT_SHOCK_VULNERABILITY,
+#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -3423,6 +3429,7 @@ enum mutation_type
     RANDOM_SLIME_MUTATION,
     RANDOM_NON_SLIME_MUTATION,
     RANDOM_CORRUPT_MUTATION,
+    RANDOM_QAZLAL_MUTATION,
 };
 
 enum object_class_type                 // mitm[].base_type

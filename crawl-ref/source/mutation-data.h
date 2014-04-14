@@ -208,6 +208,16 @@
   "shock resistance"
 },
 
+{ MUT_SHOCK_VULNERABILITY,            0,  1, true,  false,  true,
+  "electricity vulnerability",
+
+  {"You are vulnerable to electric shocks.", "", ""},
+  {"You feel vulnerable to electricity.", "", ""},
+  {"You feel less vulnerable to electricity.", "", ""},
+
+  "shock vulnerability"
+},
+
 { MUT_REGENERATION,                   3,  3, false, false, false,
   "regeneration",
 
