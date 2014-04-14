@@ -5313,7 +5313,7 @@ bool poison_is_lethal()
         return get_player_poisoning();
     if (get_player_poisoning() < you.hp)
         return false;
-    return (poison_survival() <= 0);
+    return poison_survival() <= 0;
 }
 
 // Try to predict the minimum value of the player's health in the coming
@@ -5344,9 +5344,7 @@ int poison_survival()
     }
 
     if (rr == 0)
-    {
         return min(you.hp, you.hp - amount / 1000 + regen_beats_poison / 1000);
-    }
 
     // Calculate the amount of time until regen starts to beat poison.
     double poison_duration = full_aut - _poison_dur_to_aut(regen_beats_poison);
