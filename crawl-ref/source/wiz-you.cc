@@ -878,7 +878,11 @@ static const char* dur_names[] =
     "dragon call cooldown",
     "aura of abjuration",
     "mesmerisation immunity",
-    "no potions"
+    "no potions",
+    "qazlal fire resistance",
+    "qazlal cold resistance",
+    "qazlal elec resistance",
+    "qazlal ac"
 };
 
 void wizard_edit_durations(void)

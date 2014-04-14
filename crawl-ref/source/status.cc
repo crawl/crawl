@@ -170,6 +170,14 @@ static duration_def duration_data[] =
       BLUE, "Abj", "aura of abjuration", "You are abjuring all hostile summons around you." },
     { DUR_NO_POTIONS, false,
       RED, "-Potion", "no potions", "You cannot drink potions." },
+    { DUR_QAZLAL_FIRE_RES, false,
+      LIGHTBLUE, "rF+", "protected from fire", "Qazlal is protecting you from fire." },
+    { DUR_QAZLAL_COLD_RES, false,
+      LIGHTBLUE, "rC+", "protected from cold", "Qazlal is protecting you from cold." },
+    { DUR_QAZLAL_ELEC_RES, false,
+      LIGHTBLUE, "rElec+", "protected from electricity", "Qazlal is protecting you from electricity." },
+    { DUR_QAZLAL_AC, false,
+      LIGHTBLUE, "", "protected from physical damage", "Qazlal is protecting you from physical damage." },
 };
 
 static int duration_index[NUM_DURATIONS];

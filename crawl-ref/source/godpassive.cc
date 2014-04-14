@@ -755,3 +755,82 @@ void qazlal_storm_clouds()
         placed++;
     }
 }
+
+void qazlal_element_adapt(beam_type flavour, int strength)
+{
+    if (strength <= 0
+        || !you_worship(GOD_QAZLAL)
+        || player_under_penance(GOD_QAZLAL)
+        || you.piety < piety_breakpoint(4)
+        || !x_chance_in_y(strength, 12 - piety_rank()))
+    {
+        return;
+    }
+
+    beam_type what = BEAM_NONE;
+    duration_type dur = NUM_DURATIONS;
+    string descript = "";
+    switch (flavour)
+    {
+        case BEAM_FIRE:
+        case BEAM_LAVA:
+        case BEAM_NAPALM:
+        case BEAM_STEAM:
+            what = BEAM_FIRE;
+            dur = DUR_QAZLAL_FIRE_RES;
+            descript = "fire";
+            break;
+        case BEAM_COLD:
+        case BEAM_ICE:
+            what = BEAM_COLD;
+            dur = DUR_QAZLAL_COLD_RES;
+            descript = "cold";
+            break;
+        case BEAM_ELECTRICITY:
+            what = BEAM_ELECTRICITY;
+            dur = DUR_QAZLAL_ELEC_RES;
+            descript = "electricity";
+            break;
+        case BEAM_MISSILE:
+        case BEAM_FRAG:
+            what = BEAM_MISSILE;
+            dur = DUR_QAZLAL_AC;
+            descript = "physical attacks";
+            break;
+        default:
+            return;
+    }
+
+    if (what != BEAM_FIRE && you.duration[DUR_QAZLAL_FIRE_RES])
+    {
+        mprf(MSGCH_DURATION, "Your resistance to fire fades away.");
+        you.duration[DUR_QAZLAL_FIRE_RES] = 0;
+    }
+
+    if (what != BEAM_COLD && you.duration[DUR_QAZLAL_COLD_RES])
+    {
+        mprf(MSGCH_DURATION, "Your resistance to cold fades away.");
+        you.duration[DUR_QAZLAL_COLD_RES] = 0;
+    }
+
+    if (what != BEAM_ELECTRICITY && you.duration[DUR_QAZLAL_ELEC_RES])
+    {
+        mprf(MSGCH_DURATION, "Your resistance to electricity fades away.");
+        you.duration[DUR_QAZLAL_ELEC_RES] = 0;
+    }
+
+    if (what != BEAM_MISSILE && you.duration[DUR_QAZLAL_AC])
+    {
+        mprf(MSGCH_DURATION, "Your resistance to physical damage fades away.");
+        you.duration[DUR_QAZLAL_AC] = 0;
+        you.redraw_armour_class = true;
+    }
+
+    mprf(MSGCH_GOD, "You feel %sprotected from %s.",
+         you.duration[dur] > 0 ? "more " : "", descript.c_str());
+
+    you.increase_duration(dur, 10 * strength, 80);
+
+    if (what == BEAM_MISSILE)
+        you.redraw_armour_class = true;
+}

@@ -1113,6 +1113,24 @@ static void _decrement_durations()
                               "Your aura of abjuration expires.");
     }
 
+    _decrement_a_duration(DUR_QAZLAL_FIRE_RES, delay,
+                          "You feel less protected from fire.",
+                          coinflip(), "Your protection from fire is fading.");
+    _decrement_a_duration(DUR_QAZLAL_COLD_RES, delay,
+                          "You feel less protected from cold.",
+                          coinflip(), "Your protection from cold is fading.");
+    _decrement_a_duration(DUR_QAZLAL_ELEC_RES, delay,
+                          "You feel less protected from electricity.",
+                          coinflip(),
+                          "Your protection from electricity is fading.");
+    if (_decrement_a_duration(DUR_QAZLAL_AC, delay,
+                              "You feel less protected from physical attacks.",
+                              coinflip(),
+                              "Your protection from physical attacks is fading."))
+    {
+        you.redraw_armour_class = true;
+    }
+
     dec_elixir_player(delay);
 
     if (!env.sunlight.empty())

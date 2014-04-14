@@ -363,7 +363,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "You are surrounded by a storm which can block enemy attacks.",
       "call upon nature to destroy your foes",
       "give life to nearby clouds",
-      "",
+      "You adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
     },
 };
@@ -501,7 +501,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "Your storm dissipates completely.",
       "call upon nature to destroy your foes",
       "give life to nearby clouds",
-      "",
+      "You no longer adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
     },
 };
@@ -1271,6 +1271,29 @@ static void _inc_penance(god_type god, int val)
             if (you.piety >= piety_breakpoint(0))
             {
                 mprf(MSGCH_GOD, god, "The storm surrounding you dissipates.");
+                you.redraw_armour_class = true;
+            }
+            if (you.duration[DUR_QAZLAL_FIRE_RES])
+            {
+                mprf(MSGCH_DURATION, "Your resistance to fire fades away.");
+                you.duration[DUR_QAZLAL_FIRE_RES] = 0;
+            }
+            if (you.duration[DUR_QAZLAL_COLD_RES])
+            {
+                mprf(MSGCH_DURATION, "Your resistance to cold fades away.");
+                you.duration[DUR_QAZLAL_COLD_RES] = 0;
+            }
+            if (you.duration[DUR_QAZLAL_ELEC_RES])
+            {
+                mprf(MSGCH_DURATION,
+                     "Your resistance to electricity fades away.");
+                you.duration[DUR_QAZLAL_ELEC_RES] = 0;
+            }
+            if (you.duration[DUR_QAZLAL_AC])
+            {
+                mprf(MSGCH_DURATION,
+                     "Your resistance to physical damage fades away.");
+                you.duration[DUR_QAZLAL_AC] = 0;
                 you.redraw_armour_class = true;
             }
         }
@@ -3327,6 +3350,29 @@ void excommunication(god_type new_god)
         if (old_piety >= piety_breakpoint(0))
         {
             mprf(MSGCH_GOD, old_god, "Your storm instantly dissipates.");
+            you.redraw_armour_class = true;
+        }
+        if (you.duration[DUR_QAZLAL_FIRE_RES])
+        {
+            mprf(MSGCH_DURATION, "Your resistance to fire fades away.");
+            you.duration[DUR_QAZLAL_FIRE_RES] = 0;
+        }
+        if (you.duration[DUR_QAZLAL_COLD_RES])
+        {
+            mprf(MSGCH_DURATION, "Your resistance to cold fades away.");
+            you.duration[DUR_QAZLAL_COLD_RES] = 0;
+        }
+        if (you.duration[DUR_QAZLAL_ELEC_RES])
+        {
+            mprf(MSGCH_DURATION,
+                 "Your resistance to electricity fades away.");
+            you.duration[DUR_QAZLAL_ELEC_RES] = 0;
+        }
+        if (you.duration[DUR_QAZLAL_AC])
+        {
+            mprf(MSGCH_DURATION,
+                 "Your resistance to physical damage fades away.");
+            you.duration[DUR_QAZLAL_AC] = 0;
             you.redraw_armour_class = true;
         }
         _set_penance(old_god, 25);

@@ -749,8 +749,13 @@ static void _print_stats_ac(int x, int y)
 {
     // AC:
     CGOTOXY(x+4, y, GOTO_STAT);
-    if (you.duration[DUR_ICY_ARMOUR] || player_stoneskin() || player_icemail_armour_class())
+    if (you.duration[DUR_ICY_ARMOUR]
+        || player_stoneskin()
+        || player_icemail_armour_class()
+        || you.duration[DUR_QAZLAL_AC])
+    {
         textcolor(LIGHTBLUE);
+    }
     else
         textcolor(HUD_VALUE_COLOUR);
     string ac = make_stringf("%2d ", you.armour_class());
@@ -1048,6 +1053,10 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_NO_POTIONS,
         STATUS_GOLDEN,
         STATUS_BRIBE,
+        DUR_QAZLAL_FIRE_RES,
+        DUR_QAZLAL_COLD_RES,
+        DUR_QAZLAL_ELEC_RES,
+        // DUR_QAZLAL_AC intentionally omitted - shows as AC bonus
     };
 
     status_info inf;
@@ -2046,7 +2055,8 @@ static vector<formatted_string> _get_overview_stats()
     const bool boosted_mp  = you.duration[DUR_DIVINE_VIGOUR];
     const bool boosted_ac  = you.duration[DUR_ICY_ARMOUR]
                                 || player_stoneskin()
-                                || player_icemail_armour_class();
+                                || player_icemail_armour_class()
+                                || you.duration[DUR_QAZLAL_AC];
     const bool boosted_ev  = you.duration[DUR_PHASE_SHIFT]
                                 || you.duration[DUR_AGILITY];
     const bool boosted_sh  = you.duration[DUR_CONDENSATION_SHIELD]
@@ -2541,6 +2551,10 @@ static string _status_mut_abilities(int sw)
         DUR_NO_POTIONS,
         STATUS_GOLDEN,
         STATUS_BRIBE,
+        DUR_QAZLAL_FIRE_RES,
+        DUR_QAZLAL_COLD_RES,
+        DUR_QAZLAL_ELEC_RES,
+        DUR_QAZLAL_AC,
     };
 
     status_info inf;

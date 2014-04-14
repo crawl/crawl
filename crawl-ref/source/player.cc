@@ -1584,6 +1584,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         if (you.duration[DUR_FIRE_SHIELD])
             rf += 2;
 
+        if (you.duration[DUR_QAZLAL_FIRE_RES])
+            rf++;
+
         // transformations:
         switch (you.form)
         {
@@ -1651,6 +1654,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         if (you.duration[DUR_FIRE_SHIELD])
             rc -= 2;
+
+        if (you.duration[DUR_QAZLAL_COLD_RES])
+            rc++;
 
         // transformations:
         switch (you.form)
@@ -1824,6 +1830,9 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
             return 3;
 
         if (you.duration[DUR_RESISTANCE])
+            re++;
+
+        if (you.duration[DUR_QAZLAL_ELEC_RES])
             re++;
 
         // transformations:
@@ -3960,6 +3969,10 @@ int get_expiration_threshold(duration_type dur)
     case DUR_INFUSION:
     case DUR_SONG_OF_SLAYING:
     case DUR_TROGS_HAND:
+    case DUR_QAZLAL_FIRE_RES:
+    case DUR_QAZLAL_COLD_RES:
+    case DUR_QAZLAL_ELEC_RES:
+    case DUR_QAZLAL_AC:
         return 6 * BASELINE_DELAY;
 
     case DUR_FLIGHT:
@@ -4274,6 +4287,10 @@ void display_char_status()
         DUR_NO_POTIONS,
         STATUS_GOLDEN,
         STATUS_BRIBE,
+        DUR_QAZLAL_FIRE_RES,
+        DUR_QAZLAL_COLD_RES,
+        DUR_QAZLAL_ELEC_RES,
+        DUR_QAZLAL_AC,
     };
 
     status_info inf;
@@ -6658,6 +6675,9 @@ int player::armour_class() const
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
+
+    if (duration[DUR_QAZLAL_AC])
+        AC += 300;
 
     if (!player_is_shapechanged()
         || (form == TRAN_DRAGON && player_genus(GENPC_DRACONIAN))

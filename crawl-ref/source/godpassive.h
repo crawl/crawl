@@ -35,5 +35,6 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
 int gozag_gold_bonus();
 int qazlal_sh_boost(int piety = you.piety);
 void qazlal_storm_clouds();
+void qazlal_element_adapt(beam_type flavour, int strength);
 
 #endif
