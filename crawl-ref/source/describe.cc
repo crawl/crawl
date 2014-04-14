@@ -4293,6 +4293,15 @@ static string _religion_help(god_type god)
         {
             result += "Evolving plants requires fruit, and evolving "
                       "fungi requires piety.";
+    case GOD_QAZLAL:
+        if (!player_under_penance()
+            && you.piety >= piety_breakpoint(5)
+            && !you.one_time_ability_used[god])
+        {
+            result += "You can pray at an altar to gain a choice of elemental "
+                      "resistances.";
+        }
+        break;
         }
 
     case GOD_GOZAG:
@@ -4907,7 +4916,45 @@ void describe_god(god_type which_god, bool give_title)
                 {
                     have_any = true;
                 }
+
+            // Print divine resistances at the end of the list.
+            if (which_god == GOD_QAZLAL)
+            {
+                if (you.attribute[ATTR_DIVINE_FIRE_RES])
+                {
+                    have_any = true;
+                    _print_final_god_abil_desc(
+                        which_god,
+                        "Qazlal greatly protects you from fire (rF++).",
+                        ABIL_NON_ABILITY);
+                }
+                if (you.attribute[ATTR_DIVINE_COLD_RES])
+                {
+                    have_any = true;
+                    _print_final_god_abil_desc(
+                        which_god,
+                        "Qazlal greatly protects you from cold (rC++).",
+                        ABIL_NON_ABILITY);
+                }
+                if (you.attribute[ATTR_DIVINE_ELEC_RES])
+                {
+                    have_any = true;
+                    _print_final_god_abil_desc(
+                        which_god,
+                        "Qazlal greatly protects you from electricity (rElec).",
+                        ABIL_NON_ABILITY);
+                }
+                if (you.attribute[ATTR_DIVINE_AC])
+                {
+                    have_any = true;
+                    _print_final_god_abil_desc(
+                        which_god,
+                        "Qazlal protects you from physical attacks (AC+5).",
+                        ABIL_NON_ABILITY);
+                }
+            }
         }
+
         if (!have_any)
             cprintf("None.\n");
     }
