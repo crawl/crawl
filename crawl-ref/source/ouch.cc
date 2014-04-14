@@ -197,6 +197,11 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
         if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
+        else if (hurted > original && doEffects)
+        {
+            mpr("You are shocked senseless!");
+            xom_is_stimulated(200);
+        }
         break;
 
     case BEAM_POISON:
