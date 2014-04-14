@@ -2659,7 +2659,7 @@ static bool _torment_vulnerable(actor* victim)
 
 static bool _elec_vulnerable(actor* victim)
 {
-    return (victim->res_elec() < 3);
+    return victim->res_elec() < 3;
 }
 
 static bool _dummy_vulnerable(actor* victim)
