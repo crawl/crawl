@@ -1141,6 +1141,19 @@ static mutation_type _get_random_corrupt_mutation()
     return RANDOM_ELEMENT(corrupt_muts);
 }
 
+static mutation_type _get_random_qazlal_mutation()
+{
+    const mutation_type qazlal_muts[] =
+    {
+        MUT_HEAT_VULNERABILITY,
+        MUT_COLD_VULNERABILITY,
+        MUT_SHOCK_VULNERABILITY,
+        MUT_DEFORMED // in lieu of other ways to nuke AC
+    };
+
+    return RANDOM_ELEMENT(qazlal_muts);
+}
+
 static mutation_type _get_random_mutation(mutation_type mutclass)
 {
     mut_total mt;
@@ -1215,6 +1228,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_ANTIMAGIC_BITE,      MUT_ACIDIC_BITE,     -1},
         { MUT_HEAT_RESISTANCE,     MUT_HEAT_VULNERABILITY, -1},
         { MUT_COLD_RESISTANCE,     MUT_COLD_VULNERABILITY, -1},
+        { MUT_SHOCK_RESISTANCE,    MUT_SHOCK_VULNERABILITY, -1},
         };
 
     // If we have one of the pair, delete all levels of the other,
@@ -1604,6 +1618,9 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_CORRUPT_MUTATION:
         mutat = _get_random_corrupt_mutation();
         break;
+    case RANDOM_QAZLAL_MUTATION:
+        mutat = _get_random_qazlal_mutation();
+        break;
     default:
         break;
     }
@@ -1648,7 +1665,8 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     const unsigned int old_talents = your_talents(false).size();
 
-    int count = (which_mutation == RANDOM_CORRUPT_MUTATION)
+    int count = (which_mutation == RANDOM_CORRUPT_MUTATION
+                 || which_mutation == RANDOM_QAZLAL_MUTATION)
                 ? min(2, mdef.levels - you.mutation[mutat])
                 : 1;
 
@@ -1925,7 +1943,8 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
         || which_mutation == RANDOM_GOOD_MUTATION
         || which_mutation == RANDOM_BAD_MUTATION
         || which_mutation == RANDOM_NON_SLIME_MUTATION
-        || which_mutation == RANDOM_CORRUPT_MUTATION)
+        || which_mutation == RANDOM_CORRUPT_MUTATION
+        || which_mutation == RANDOM_QAZLAL_MUTATION)
     {
         while (true)
         {
