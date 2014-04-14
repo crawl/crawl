@@ -1550,6 +1550,16 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                                                       : " appears unharmed.");
             }
         }
+        else if (original > hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(mons, " resists.");
+        }
+        else if (original < hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(mons, " is electrocuted!");
+        }
         break;
 
     case BEAM_ACID:
