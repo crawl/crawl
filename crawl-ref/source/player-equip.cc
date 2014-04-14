@@ -893,6 +893,21 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
     }
 }
 
+static void _spirit_shield_message(bool unmeld)
+{
+    if (!unmeld && you.spirit_shield() < 2)
+    {
+        dec_mp(you.magic_points);
+        mpr("You feel your power drawn to a protective spirit.");
+        if (you.species == SP_DEEP_DWARF)
+            mpr("Now linked to your health, your magic stops regenerating.");
+    }
+    else if (!unmeld && player_mutation_level(MUT_MANA_SHIELD))
+        mpr("You feel the presence of a powerless spirit.");
+    else // unmeld or already spirit-shielded
+        mpr("You feel spirits watching over you.");
+}
+
 static void _equip_armour_effect(item_def& arm, bool unmeld)
 {
     const bool known_cursed = item_known_cursed(arm);
@@ -989,18 +1004,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_SPIRIT_SHIELD:
-            if (!unmeld && you.spirit_shield() < 2)
-            {
-                dec_mp(you.magic_points);
-                if (you.species == SP_VINE_STALKER)
-                    mpr("You feel the presence of a powerless spirit.");
-                else
-                    mpr("You feel your power drawn to a protective spirit.");
-                if (you.species == SP_DEEP_DWARF)
-                    mpr("Now linked to your health, your magic stops regenerating.");
-            }
-            else
-                mpr("You feel spirits watching over you.");
+            _spirit_shield_message(unmeld);
             break;
 
         case SPARM_ARCHERY:
@@ -1390,18 +1394,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 #endif
 
     case AMU_GUARDIAN_SPIRIT:
-        if (you.spirit_shield() < 2 && !unmeld)
-        {
-            dec_mp(you.magic_points);
-            if (you.species == SP_VINE_STALKER)
-                mpr("You feel the presence of a powerless spirit.");
-            else
-                mpr("You feel your power drawn to a protective spirit.");
-            if (you.species == SP_DEEP_DWARF)
-                mpr("Now linked to your health, your magic stops regenerating.");
-        }
-        else
-            mpr("You feel spirits watching over you.");
+        _spirit_shield_message(unmeld);
         ident = ID_KNOWN_TYPE;
         break;
 
