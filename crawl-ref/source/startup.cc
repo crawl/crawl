@@ -241,9 +241,11 @@ static void _post_init(bool newc)
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.
     you.wizard = true;
 #endif
+#ifdef WIZARD
     // Save-less games are pointless except for tests.
     if (Options.no_save)
         you.wizard = true;
+#endif
 
     init_properties();
     burden_change();
