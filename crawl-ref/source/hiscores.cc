@@ -1607,6 +1607,10 @@ void scorefile_entry::init(time_t dt)
         DUR_NO_POTIONS,
         STATUS_GOLDEN,
         STATUS_BRIBE,
+        DUR_QAZLAL_FIRE_RES,
+        DUR_QAZLAL_COLD_RES,
+        DUR_QAZLAL_ELEC_RES,
+        DUR_QAZLAL_AC,
     };
 
     status_info inf;

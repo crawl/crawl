@@ -4088,6 +4088,12 @@ void bolt::affect_player()
         if (flavour == BEAM_COLD)
             expose_player_to_element(BEAM_COLD, burn_power, true, false);
 
+        if (flavour == BEAM_ELECTRICITY)
+            expose_player_to_element(BEAM_ELECTRICITY, burn_power, true, false);
+
+        if (flavour == BEAM_MISSILE || flavour == BEAM_FRAG)
+            expose_player_to_element(BEAM_FRAG, burn_power, true, false);
+
         // Spore pops.
         if (in_explosion_phase && flavour == BEAM_SPORE)
             expose_player_to_element(BEAM_SPORE, burn_power);
