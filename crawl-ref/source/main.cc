@@ -2157,7 +2157,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_LUA_CONSOLE:
-        debug_terp_dlua(clua); break;
+        debug_terp_dlua(clua);
         break;
 
     case CMD_NO_CMD:
