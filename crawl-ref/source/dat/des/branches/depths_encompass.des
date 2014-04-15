@@ -820,7 +820,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 :           "orc warlord", "vampire knight", "yaktaur captain",
 :           "deep elf high priest", "spriggan defender", },
 :     [you.absdepth() - 18] =
-:         { "deep dwarf death knight", "ancient champion",
+:         { "death knight", "ancient champion",
 :           "merfolk aquamancer", "salamander firebrand",
 :           "Margery", "Saint Roka", "Sojobo", },
 : }

@@ -233,7 +233,7 @@ mset(with_props("place:Lair:$ w:165 / dire elephant w:12 / " ..
                 "storm dragon / electric golem / spriggan air mage / " ..
                 "shock serpent", { weight = 2 }),
      with_props("spectral thing / shadow wraith / eidolon w:4 / shadow dragon / " ..
-                "deep elf death mage w:6 / deep dwarf death knight w:4 / " ..
+                "deep elf death mage w:6 / death knight w:4 / " ..
                 "revenant w:4 / profane servitor w:6 / soul eater / " ..
                 "shadow fiend / black sun", { weight = 2 }),
      with_props("swamp drake / fire drake / wind drake w:2 / death drake / " ..

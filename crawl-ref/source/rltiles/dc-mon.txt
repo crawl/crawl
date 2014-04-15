@@ -531,6 +531,7 @@ wiglaf MONS_WIGLAF
 %rim 0
 human MONS_HUMAN
 hell_knight MONS_HELL_KNIGHT
+death_knight MONS_DEATH_KNIGHT
 necromancer MONS_NECROMANCER
 wizard MONS_WIZARD
 vault_guard MONS_VAULT_GUARD
@@ -989,7 +990,6 @@ insubstantial_wisp MONS_INSUBSTANTIAL_WISP
 %sdir mon
 dwarf MONS_DWARF
 deep_dwarf MONS_DEEP_DWARF
-deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
 %sdir mon/unique
 jorgrun MONS_JORGRUN
 
