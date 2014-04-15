@@ -119,7 +119,7 @@ The Crypt is a huge repository for the ancient dead. The air is chill and
 fetid, the walls cold and damp. Bones are strewn liberally everywhere and the
 whole place resounds with the keening of the unquiet dead.
 
-The Crypt is five levels deep, and contains the entrance to the Tomb. Its entry
+The Crypt is three levels deep, and contains the entrance to the Tomb. Its entry
 is either on Vaults:2 or Vaults:3.
 %%%%
 Tomb
@@ -128,8 +128,8 @@ The Tomb of the Ancients is a place of damnation, of horrors animated by the
 vilest necromancy. The list of those who have returned from this place of pure
 death is exceedingly short.
 
-The Tomb is three levels deep and contains the golden rune. Its entry is either
-on Crypt:2 or Crypt:3.
+The Tomb is three levels deep and contains the golden rune. Its entry is on
+Crypt:3.
 %%%%
 Hell
 

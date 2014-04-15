@@ -1242,6 +1242,16 @@ SUBST:  r = c
 # emergency exits; most are closed
 NSUBST: ? = 3:+ / *:v
 NSUBST: . = 7:0 / *:.
+# Tomb entrance
+: if crawl.x_chance_in_y(5, 7) then
+SUBST:  O = *
+NSUBST: P = 1:> / *:|**
+: else
+NSUBST: O = 1:>
+SUBST:  P = |**
+: end
+KFEAT:  > = enter_tomb
+# Loot randomisation
 SUBST:  % = %$, * = *%, / = |**
 NSUBST: *| = 1:d / 1:h
 : crypt_loot_plus(_G)
@@ -1254,9 +1264,9 @@ vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv..........................vAwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAAAwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAAAwwwwwwwwv
-vwwwwwwvvvv?vvvv......rr=rr*/**rr=rr......v?v?v?v?vwwwwwwv
+vwwwwwwvvvv?vvvv......rr=rr*/O*rr=rr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwww?....H..v.....rrrr*r$$$$r*rrrr.....v.......?wwwwwwv
+vwwwwww?....H..v.....rrrrOr$$$$rOrrrr.....v.......?wwwwwwv
 vwwwwwwv....H..+........rrr$$$$rrr........+.h..H..vwwwwwwv
 vwwwwww?....H..v......L...r$$$$r...L......v....H..?wwwwwwv
 vwwwwwwv.h.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
@@ -1264,7 +1274,7 @@ vwwwwww?...v...vv....rr.rrrU..Urrr.rr....vvv+v....?wwwwwwv
 vwwwwwwv...v.X..vv....rrr........rrr....vv...vvvvvvwwwwwwv
 vwwwwwwv...+.....vv....r.U..BC..U.r....vvvv.....+Mvwwwwwwv
 vwwwwwwv...v..V.$vvv...rr........rr...vvvM+.....vvvwwwwwwv
-vwwwwwwv...v...$*v.vv...rrrU..Urrr...vv.vvv.....+Mvwwwwwwv
+vwwwwwwv...v...$Ov.vv...rrrU..Urrr...vv.vvv.....+Mvwwwwwwv
 vwwwwwwv...vvvvvvv..vv....rr..rr....vv..vM+.....vvvwwwwwwv
 vwwwwwwv...vvv...v...vv............vv...vvv.....+Mvwwwwwwv
 vwwwwwwv...vv....+....vv..........vv....+....N..vvvwwwwwwv
@@ -1276,7 +1286,7 @@ vwwwwwAv......vv....vv..............vv....vvMv..+Mvwwwwwwv
 vwwwwAA?.....vv....vv................vv....vvv..vvvwwwwwwv
 vwwwAAAv.....v....vv.......N..N.......vv....vv..+Mvwwwwwwv
 vwvvvvvvvvvvvvv+vvvvv+vv.Mzz..zzM.vv+vvvvv+vvvvvvvvvvvvvwv
-vwvv.........v..I.v....v..........v....v.........v..%*vvwv
+vwvv.........v..I.v....v..........v....v.........v..%Ovvwv
 vwvv.........v....v....v..........v....v.........v...$vvwv
 vwvv.........+....v....v..........v....v.....X..V+....vvwv
 vwvv....D....v....v..z.v..........v.z..v.........v....vvwv
@@ -1285,7 +1295,7 @@ vwwvv........v....v..z.vrr......rrv.z..v.............vvwwv
 vwwvvv.......+....v....vrrrr++rrrrv....v............vvvwwv
 vwwwvv.......v....v....vrrUz..zUrrv....v............vvwwwv
 vwwwvvvvvvvvvvvvvvvv+vvvrI......Irvvv+vvvvvvvvvvvvvvvvwwwv
-vwwwwvvv/**$$v.........vrrrr++rrrrv.........v$$**/vvvwwwwv
+vwwwwvvvP**$$v.........vrrrr++rrrrv.........v$$**Pvvvwwwwv
 vwwwwwvvv/*$$+.........vrrww..wwrrv.........+$$*/vvvwwwwwv
 vwwwwwwvvv*$$v...X.....vrwAw..wAwrv...X.....v$$*vvvAwwwwwv
 vwwwwwwwwvvv$v....G....vwwww..wwwwv..G......v$vvvAAwwwwwwv
@@ -1380,15 +1390,13 @@ KMONS:  p = w:2 col:darkgrey plant name:withered name_adjective               \
 KMONS:  ! = skeletal warrior ; w:2 dagger ego:pain | short sword ego:draining |\
                                w:2 cutlass ego:pain | w:1 quick blade ego:pain
 KFEAT:  o = granite_statue
-KFEAT:  _ = altar_kikubaaqudgha
 SUBST:  B = b %
 KITEM:  b = any book
-SUBST:  ? = $ % * |:1
 SUBST:  u = U Y
 KMONS:  8 = gargoyle
 ####### NW monsters (chapel).
 KMONS:  A = ancient lich / w:2 mummy priest
-KMONS:  D = lich / w:5 ancient lich
+KMONS:  DL = lich / w:5 ancient lich
 KMONS:  E = war gargoyle
 KMONS:  G = shadow / hungry ghost / wraith
 ####### NE monsters (hoard). On a coinflip, either vampires or mummies.
@@ -1430,15 +1438,29 @@ NSUBST: ' = 1:+ / *:v
 NSUBST: " = 1:+ / *:v
 NSUBST: . = 8:0 / *:.
 NSUBST: *| = 1:d / 1:h
+####### Tomb entrance
+: if crawl.one_chance_in(4) then
+KFEAT:  L = enter_tomb
+KFEAT:  _ = altar_kikubaaqudgha
+SUBST:  O = $
+: elseif crawl.one_chance_in(3) then
+KFEAT:  _ = enter_tomb
+SUBST:  O = $
+: else
+KFEAT:  _ = altar_kikubaaqudgha
+NSUBST: O = 1:> / *:$
+KFEAT:  > = enter_tomb
+: end
+SUBST:  ? = $ % * |:1
 : crypt_loot_plus(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vccccccccccccccccccccccccc......"...Bvvvvvvvvvvvvvvvvvvvvvv
-vc..D..c.....c....Bc..+..c.ffff.vvvBDvvvvvvvvvvvvvvvvvvvvvv
+vc..D..c.....c....Bc..+..c.ffff.vvvBLvvvvvvvvvvvvvvvvvvvvvv
 vc.c.c.+.....+....cc..+..c.ffFf.vvvv"vvvvvvvvvvvvvnP+.....v
-vc.._..+...D.c....Bc..c..m.ffFf.v????||$$$.vvvvv..nPn|????v
-vc.c.c.c.....c....cc..c..c.ffff.v$$$$$$$$$.vvvv...nPn$$$$$v
-vc.....ccc+ccc....Bc..cGGc.ffff.vnnnnnnnnn+vvv..H.nPn$$$$$v
+vc.._..+...D.c....Bc..c..m.ffFf.vO???||$$$.vvvvv..nPn|????v
+vc.c.c.c.....c....cc..c..c.ffff.v?$$$$$$$$.vvvv...nPn$$$$$v
+vc.....ccc+ccc....Bc..cGGc.ffff.vnnnnnnnnn+vvv..H.nPn$$O$$v
 vc.....c.....c....cc..c..c.ffff.v..........vv.....nPn$$$$$v
 vc.....c?....c..A.Bc..c..m..fff.v..........vv.uvu.nPn$$$$$v
 vc.....c|?...c....cc..c..c...ff.v..vvvvvvvvv..vvv.nPnnnnnnv
@@ -1525,6 +1547,7 @@ SUBST:  x: c, -'": ., ?: |
 SUBST:  D = +, d = cc+
 NSUBST: * = 12:* / 12:% / *:$
 KFEAT:  m = iron_grate
+KFEAT:  > = enter_tomb
 MONS:   w:3 patrolling lich / w:1 patrolling revenant
 MONS:   patrolling zombie / nothing
 MONS:   spider / jumping spider / wolf spider / redback / w:25 nothing
@@ -1603,7 +1626,7 @@ ttttttTt...cccdcccccccccc-xxx--'''--xxx-ccccccccccdccc...v%---4-v........Ttttttt
 tttttttT..............ccc-xxx--'''--xxx-ccc..............vvvvvvvv....T.t.tTttttt
 ttttttttTt....xxxxx....n-------'''-------n...555....T..............--v....Tttttt
 tttttttT......x*1*x....n---B---'''---B---n..555......ccccccccc....--Tv..t.Tttttt
-ttttttT.t..T..x*|*x...ccc-xxx--'''--xxx-ccc...T......c$$$$$$$c...--44vT...tTtttt
+ttttttT.t..T..x*|*x...ccc-xxx--'''--xxx-ccc...T......c$$$>$$$c...--44vT...tTtttt
 ttttttT.......x***x...ccc-xxx--'''--xxx-ccc.T........c$$$$$$$c..vvvvvvvvvv.Ttttt
 tttttttT.t.T..xx-xx....n-------'''-------n.......T...c$$$7$$$c..--4--vT..t.Ttttt
 ttttttttT......x+x.....n-------'''-------n.....t..t..c**666**c....---v..t...Tttt
@@ -1809,6 +1832,7 @@ KMONS:   S = ancient champion
 KMONS:   T = skeletal warrior
 : end
 
+KFEAT:   R = enter_tomb
 KFEAT:   _ = altar_yredelemnul / altar_kikubaaqudgha
 SHUFFLE: {[(<
 
