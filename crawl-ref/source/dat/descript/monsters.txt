@@ -831,6 +831,11 @@ death drake
 A dark and baleful minor dragon, the death drake breathes a lethally potent
 miasma from its pestilential maw.
 %%%%
+death knight
+
+A warrior-priest of Yredelemnul that chants unholy homages to the dark god
+and calls forth the dead.
+%%%%
 death ooze
 
 A putrid undead mass of decaying flesh that spurts pestilent slime.
@@ -910,11 +915,6 @@ deep dwarf
 
 Pale and unnaturally tough-skinned, deep dwarves dwell far below ground and
 almost never emerge into the sunlit upper world.
-%%%%
-deep dwarf death knight
-
-A deep dwarf warrior-priest of Yredelemnul that chants unholy homages to the
-dark god and calls forth the dead.
 %%%%
 deep troll
 

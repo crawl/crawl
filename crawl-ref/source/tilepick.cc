@@ -1826,6 +1826,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
+    case MONS_DEATH_KNIGHT:
+        return TILEP_MONS_DEATH_KNIGHT;
     case MONS_NECROMANCER:
         return TILEP_MONS_NECROMANCER;
     case MONS_WIZARD:
@@ -2109,8 +2111,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_DWARF;
     case MONS_DEEP_DWARF:
         return TILEP_MONS_DEEP_DWARF;
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
-        return TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT;
     case MONS_JORGRUN:
         return TILEP_MONS_JORGRUN;
 

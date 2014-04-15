@@ -339,7 +339,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
         break;
 
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+    case MONS_DEATH_KNIGHT:
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(5, WPN_MORNINGSTAR, 5, WPN_GREAT_MACE,
                                                5, WPN_HALBERD,     8, WPN_GLAIVE,
@@ -2185,7 +2185,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
 
     case MONS_DWARF:
     case MONS_DEEP_DWARF:
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
+    case MONS_DEATH_KNIGHT:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(7, ARM_CHAIN_MAIL,
                                                 1, ARM_PLATE_ARMOUR,

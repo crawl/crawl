@@ -316,7 +316,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MENNAS:
     case TILEP_MONS_PROFANE_SERVITOR:
     case TILEP_MONS_SPRIGGAN:
-    case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
     case TILEP_MONS_KOBOLD:
     case TILEP_MONS_OCTOPODE:
     case TILEP_MONS_ZOMBIE_OCTOPODE:
@@ -399,6 +398,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
     case TILEP_MONS_RUPERT:
     case TILEP_MONS_HELL_KNIGHT:
+    case TILEP_MONS_DEATH_KNIGHT:
     case TILEP_MONS_MUMMY:
     case TILEP_MONS_MUMMY_PRIEST:
     case TILEP_MONS_GUARDIAN_MUMMY:
@@ -715,6 +715,12 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
     case TILEP_MONS_SALAMANDER_FIREBRAND:
         *ofs_x = 1;
         *ofs_y = -1;
+        break;
+
+    case TILEP_MONS_HELL_KNIGHT:
+    case TILEP_MONS_DEATH_KNIGHT:
+        *ofs_x = -3;
+        *ofs_y = 2;
         break;
 
     case TILEP_MONS_SPRIGGAN_RIDER: // shield covered, out of picture

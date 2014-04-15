@@ -204,7 +204,7 @@ static const pop_entry pop_elf[] =
 static const pop_entry pop_dwarf[] =
 { // Dwarven Hall
   {  1,  1, 1000, FLAT, MONS_DEEP_DWARF },
-  {  1,  1,  690, FLAT, MONS_DEEP_DWARF_DEATH_KNIGHT },
+  {  1,  1,  690, FLAT, MONS_DEATH_KNIGHT },
   {  1,  1,  334, FLAT, MONS_UNBORN },
   {  1,  1,    3, FLAT, MONS_IRON_TROLL },
   {  1,  1,    3, FLAT, MONS_DEEP_TROLL },
@@ -518,7 +518,7 @@ static const pop_entry pop_crypt[] =
   {  3,  8,   40, SEMI, MONS_REAPER },
   {  2,  6,   55, SEMI, MONS_SOUL_EATER },
   {  2,  9,   70, UP,   MONS_BONE_DRAGON },
-  {  1,  7,   55, SEMI, MONS_DEEP_DWARF_DEATH_KNIGHT },
+  {  1,  7,   55, SEMI, MONS_DEATH_KNIGHT },
   {  2,  7,   80, SEMI, MONS_DEEP_ELF_DEATH_MAGE },
   {  3,  7,   40, SEMI, MONS_UNBORN },
   {  2,  8,   85, SEMI, MONS_REVENANT },
@@ -923,7 +923,7 @@ static const pop_entry pop_abyss[] =
   {  1,  4,   21, DOWN, MONS_ICE_BEAST },
   {  1,  4,   21, DOWN, MONS_SKY_BEAST },
   {  1,  5,   14, DOWN, MONS_KOBOLD_DEMONOLOGIST },
-  {  1,  5,    8, FLAT, MONS_DEEP_DWARF_DEATH_KNIGHT },
+  {  1,  5,    8, FLAT, MONS_DEATH_KNIGHT },
   {  1,  5,    4, FLAT, MONS_HELL_KNIGHT },
   {  1,  5,    4, FLAT, MONS_NECROMANCER },
   {  1,  5,    8, FLAT, MONS_WIZARD },

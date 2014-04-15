@@ -2556,9 +2556,9 @@ enum monster_type                      // menv[].type
     MONS_DEEP_DWARF_ARTIFICER,
     MONS_DEEP_DWARF_NECROMANCER,
     MONS_DEEP_DWARF_BERSERKER,
-#endif
-    MONS_DEEP_DWARF_DEATH_KNIGHT,
+    MONS_DEATH_KNIGHT,
     MONS_UNBORN,
+#endif
     MONS_ELF,
 #if TAG_MAJOR_VERSION == 34
     MONS_DEEP_ELF_SOLDIER,
@@ -2653,6 +2653,9 @@ enum monster_type                      // menv[].type
     MONS_HUMAN,
     MONS_SLAVE,
     MONS_HELL_KNIGHT,
+#if TAG_MAJOR_VERSION > 34
+    MONS_DEATH_KNIGHT,
+#endif
     MONS_NECROMANCER,
     MONS_WIZARD,
     MONS_VAULT_GUARD,
@@ -2851,6 +2854,7 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION > 34
     MONS_ANCIENT_CHAMPION,
     MONS_REVENANT,
+    MONS_UNBORN,
     MONS_LOST_SOUL,
     MONS_JIANGSHI,
 #endif

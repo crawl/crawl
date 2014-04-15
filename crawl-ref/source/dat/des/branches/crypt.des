@@ -342,7 +342,7 @@ ENDMAP
 
 ##############################################################################
 NAME:    blue_anna_dwarven_crypt
-MONS:    deep dwarf death knight / unborn w:5
+MONS:    death knight / unborn w:5
 MONS:    shadow wraith / wraith / wight w:5
 : crypt_entry(_G)
 MAP
@@ -1052,7 +1052,7 @@ NSUBST:  2 = 3:2 / *:3
 FTILE:   _567$*|+ = floor_tomb
 TILE:    t = dngn_tree_dead
 MONS:    flaming corpse / flayed ghost / phantasmal warrior
-MONS:    vampire mage / vampire knight / deep dwarf death knight
+MONS:    vampire mage / vampire knight / death knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
 MONS:    ancient champion / w:20 ghoul
 MONS:    w:20 unborn / w:20 bone dragon / revenant
@@ -1540,7 +1540,7 @@ KFEAT: _ = altar_yredelemnul
 KMONS:  9 = patrolling profane servitor
 KMONS:  H = w:20 patrolling unborn / patrolling profane servitor
 KMONS:  0 = patrolling ghoul
-KMONS:  A = patrolling deep dwarf death knight
+KMONS:  A = patrolling death knight
 KMONS:  B = skeletal warrior
 KMONS:  C = necrophage / plague shambler
 KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadow / nothing
@@ -1770,7 +1770,7 @@ KMONS:   4 = plague shambler / necrophage
 KMONS:   5 = necromancer
 KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
              hell knight w:5
-KMONS:   7 = deep dwarf death knight
+KMONS:   7 = death knight
 KMONS:   8 = death cob / skeletal warrior / flaming corpse
 KMONS:   9 = ancient champion
 KMONS:   0 = skeletal warrior
@@ -1782,7 +1782,7 @@ KMONS:   BD = freezing wraith / shadow wraith / wraith
 KMONS:   E = deep elf death mage
 KMONS:   F = lost soul / small abomination / large abomination w:2
 KMONS:   H = unborn
-KMONS:   I = deep dwarf death knight w:5 / nothing
+KMONS:   I = death knight w:5 / nothing
 KMONS:   J = profane servitor
 KMONS:   L = bone dragon
 KMONS:   KM = nothing
