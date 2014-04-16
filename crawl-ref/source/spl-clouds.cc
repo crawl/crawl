@@ -19,6 +19,7 @@
 #include "fprop.h"
 #include "godconduct.h"
 #include "items.h"
+#include "libutil.h"
 #include "losglobal.h"
 #include "message.h"
 #include "misc.h"
@@ -48,7 +49,8 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
 
     if (cell_is_solid(where))
     {
-        mpr("You can't place clouds on a wall.");
+        const char *feat = feat_type_name(grd(where));
+        mprf("You can't place the cloud on %s.", article_a(feat).c_str());
         return SPRET_ABORT;
     }
 
@@ -154,7 +156,8 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
 
     if (cell_is_solid(beam.target))
     {
-        mpr("You can't place clouds on a wall.");
+        const char *feat = feat_type_name(grd(beam.target));
+        mprf("You can't place clouds on %s.", article_a(feat).c_str());
         return SPRET_ABORT;
     }
 
