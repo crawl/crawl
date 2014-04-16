@@ -4147,10 +4147,11 @@ static void _display_attack_delay()
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     int avg;
-    const item_def* weapon = you.weapon();
+    // FIXME for new ranged combat
+/*    const item_def* weapon = you.weapon();
     if (weapon && is_range_weapon(*weapon))
         avg = launcher_final_speed(*weapon, you.shield(), false);
-    else
+    else */
         avg = 10 * delay;
 
     // Haste shouldn't be counted, but let's show finesse.
