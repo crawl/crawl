@@ -73,9 +73,9 @@ static duration_def duration_data[] =
     { DUR_PETRIFIED, false,
       RED, "Stone", "petrified", "You are petrified." },
     { DUR_PETRIFYING, true,
-      MAGENTA, "Petr", "petrifying", "You are turning to stone." },
+      LIGHTRED, "Petr", "petrifying", "You are turning to stone." },
     { DUR_RESISTANCE, true,
-      LIGHTBLUE, "Resist", "resistant", "You resist elements." },
+      BLUE, "Resist", "resistant", "You resist elements." },
     { DUR_SLIMIFY, true,
       GREEN, "Slime", "slimy", "" },
     { DUR_SLEEP, false,
@@ -95,7 +95,7 @@ static duration_def duration_data[] =
     { DUR_QUAD_DAMAGE, true,
       BLUE, "Quad", "quad damage", "" },
     { DUR_SILENCE, true,
-      BLUE, "Sil", "silence", "You radiate silence." },
+      MAGENTA, "Sil", "silence", "You radiate silence." },
     { DUR_STEALTH, false,
       BLUE, "Stlth", "especially stealthy", "" },
     { DUR_AFRAID, true,
@@ -103,7 +103,7 @@ static duration_def duration_data[] =
     { DUR_MIRROR_DAMAGE, false,
       WHITE, "Mirror", "injury mirror", "You mirror injuries." },
     { DUR_SCRYING, false,
-      LIGHTBLUE, "Scry", "scrying",
+      WHITE, "Scry", "scrying",
       "Your astral vision lets you see through walls." },
     { DUR_TORNADO, true,
       LIGHTGREY, "Tornado", "tornado",
@@ -116,7 +116,7 @@ static duration_def duration_data[] =
     { DUR_FINESSE, false,
       LIGHTBLUE, "Finesse", "finesse", "Your blows are lightning fast." },
     { DUR_LIFESAVING, true,
-      LIGHTGREY, "Prot", "protection", "You ask for being saved." },
+      LIGHTGREY, "Prot", "protection", "You are calling for your life to be saved." },
     { DUR_DARKNESS, true,
       BLUE, "Dark", "darkness", "You emit darkness." },
     { DUR_SHROUD_OF_GOLUBRIA, true,
@@ -158,11 +158,11 @@ static duration_def duration_data[] =
     { DUR_PORTAL_PROJECTILE, false,
       LIGHTBLUE, "PProj", "portal projectile", "You are teleporting projectiles to their destination." },
     { DUR_FORESTED, false,
-      YELLOW, "Forest", "", "" },
+      GREEN, "Forest", "", "" },
     { DUR_DRAGON_CALL, false,
       WHITE, "Dragoncall", "dragon's call", "You are beckoning forth a horde of dragons." },
     { DUR_DRAGON_CALL_COOLDOWN, false,
-      RED, "Dragoncall", "", "" },
+      YELLOW, "Dragoncall", "", "" },
     { DUR_ABJURATION_AURA, false,
       BLUE, "Abj", "aura of abjuration", "You are abjuring all hostile summons around you." },
 };
@@ -547,7 +547,7 @@ bool fill_status_info(int status, status_info* inf)
     case STATUS_SILENCE:
         if (silenced(you.pos()) && !you.duration[DUR_SILENCE])
         {
-            inf->light_colour = LIGHTMAGENTA;
+            inf->light_colour = LIGHTRED;
             inf->light_text   = "Sil";
             inf->short_text   = "silenced";
             inf->long_text    = "You are silenced.";
@@ -892,11 +892,12 @@ static void _describe_airborne(status_info* inf)
 
     const bool perm     = you.permanent_flight();
     const bool expiring = (!perm && dur_expiring(DUR_FLIGHT));
+    const string desc   = you.tengu_flight() ? " quickly and evasively" : "";
 
-    inf->light_colour = you.tengu_flight() ? BLUE : perm ? WHITE : MAGENTA;
+    inf->light_colour = perm ? WHITE : BLUE;
     inf->light_text   = "Fly";
-    inf->short_text   = "flying";
-    inf->long_text    = "You are flying.";
+    inf->short_text   = "flying" + desc;
+    inf->long_text    = "You are flying" + desc + ".";
     inf->light_colour = _dur_colour(inf->light_colour, expiring);
     _mark_expiring(inf, expiring);
 }
