@@ -407,8 +407,6 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
     case JOB_WANDERER:
         switch (speci)
         {
-        case SP_FELID:
-            return CC_BANNED;
         case SP_HILL_ORC:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
