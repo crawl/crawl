@@ -1039,6 +1039,8 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
 static void _ORDER_melee_effects(item_def* item, actor* attacker,
                                          actor* defender, bool mondied, int dam)
 {
+    // FIXME for new ranged combat
+/*
     if (!mondied)
     {
         int tempdam = dam;
@@ -1052,7 +1054,7 @@ static void _ORDER_melee_effects(item_def* item, actor* attacker,
                 mpr(msg.c_str());
             defender->hurt(attacker, tempdam);
         }
-    }
+    } */
 }
 
 ///////////////////////////////////////////////////

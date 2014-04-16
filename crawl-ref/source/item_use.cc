@@ -445,10 +445,11 @@ static const char *shield_impact_degree(int impact)
 
 static void _warn_launcher_shield_slowdown(const item_def &launcher)
 {
-    const int slowspeed =
-        launcher_final_speed(launcher, you.shield()) * player_speed() / 100;
-    const int normspeed =
-        launcher_final_speed(launcher, NULL) * player_speed() / 100;
+    // FIXME for new ranged combat
+    const int slowspeed = 100;
+        // launcher_final_speed(launcher, you.shield()) * player_speed() / 100;
+    const int normspeed = 100;
+        // launcher_final_speed(launcher, NULL) * player_speed() / 100;
 
     // Don't warn the player unless the slowdown is real.
     if (slowspeed > normspeed)
