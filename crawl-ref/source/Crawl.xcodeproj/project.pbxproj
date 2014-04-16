@@ -243,6 +243,7 @@
 		7B09F5F11133D6AB004F149D /* player.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406210BD494500A99626 /* player.cc */; };
 		7B09F5F21133D6AB004F149D /* quiver.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406410BD494500A99626 /* quiver.cc */; };
 		7B09F5F31133D6AB004F149D /* random.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406710BD494500A99626 /* random.cc */; };
+		7BDE8459116D24E600974D63 /* ranged_attack.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDE8457116D24E600974D63 /* ranged_attack.cc */; };
 		7B09F5F41133D6AB004F149D /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406910BD494500A99626 /* ray.cc */; };
 		7B09F5F51133D6AB004F149D /* religion.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406B10BD494500A99626 /* religion.cc */; };
 		7B09F5F61133D6AB004F149D /* rng.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406D10BD494500A99626 /* rng.cc */; };
@@ -597,6 +598,8 @@
 		E5D6414410BD494500A99626 /* player.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406210BD494500A99626 /* player.cc */; };
 		E5D6414510BD494500A99626 /* quiver.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406410BD494500A99626 /* quiver.cc */; };
 		E5D6414610BD494500A99626 /* random.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406710BD494500A99626 /* random.cc */; };
+		7BDE845A116D24E600974D63 /* ranged_attack.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDE8457116D24E600974D63 /* ranged_attack.cc */; };
+		E5D6414710BD494500A99626 /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406910BD494500A99626 /* ray.cc */; };
 		E5D6414710BD494500A99626 /* ray.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406910BD494500A99626 /* ray.cc */; };
 		E5D6414810BD494500A99626 /* religion.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406B10BD494500A99626 /* religion.cc */; };
 		E5D6414910BD494500A99626 /* rng.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6406D10BD494500A99626 /* rng.cc */; };
@@ -1506,6 +1509,8 @@
 		E5D6406610BD494500A99626 /* random-weight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "random-weight.h"; sourceTree = "<group>"; };
 		E5D6406710BD494500A99626 /* random.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = random.cc; sourceTree = "<group>"; };
 		E5D6406810BD494500A99626 /* random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = random.h; sourceTree = "<group>"; };
+		7BDE8457116D24E600974D63 /* ranged_attack.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ranged_attack.cc; sourceTree = "<group>"; };
+		7BDE8458116D24E600974D63 /* ranged_attack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ranged_attack.h; sourceTree = "<group>"; };
 		E5D6406910BD494500A99626 /* ray.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ray.cc; sourceTree = "<group>"; };
 		E5D6406A10BD494500A99626 /* ray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ray.h; sourceTree = "<group>"; };
 		E5D6406B10BD494500A99626 /* religion.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = religion.cc; sourceTree = "<group>"; };
@@ -2119,6 +2124,8 @@
 				E5D6406610BD494500A99626 /* random-weight.h */,
 				E5D6406710BD494500A99626 /* random.cc */,
 				E5D6406810BD494500A99626 /* random.h */,
+				7BDE8457116D24E600974D63 /* ranged_attack.cc */
+				7BDE8458116D24E600974D63 /* ranged_attack.h */
 				E5D6406910BD494500A99626 /* ray.cc */,
 				E5D6406A10BD494500A99626 /* ray.h */,
 				7B5165B911859D82005B23ED /* religion-enum.h */,
@@ -3101,6 +3108,7 @@
 				7B09F5F21133D6AB004F149D /* quiver.cc in Sources */,
 				7B5165CC11859D82005B23ED /* random-var.cc in Sources */,
 				7B09F5F31133D6AB004F149D /* random.cc in Sources */,
+				7BDE8459116D24E600974D63 /* ranged_attack.cc in Sources */,
 				7B09F5F41133D6AB004F149D /* ray.cc in Sources */,
 				7B09F5F51133D6AB004F149D /* religion.cc in Sources */,
 				7B09F5F61133D6AB004F149D /* rng.cc in Sources */,
@@ -3347,6 +3355,7 @@
 				E5D6414510BD494500A99626 /* quiver.cc in Sources */,
 				7B5165C611859D82005B23ED /* random-var.cc in Sources */,
 				E5D6414610BD494500A99626 /* random.cc in Sources */,
+				7BDE845A116D24E600974D63 /* ranged_attack.cc in Sources */,
 				E5D6414710BD494500A99626 /* ray.cc in Sources */,
 				E5D6414810BD494500A99626 /* religion.cc in Sources */,
 				E5D6414910BD494500A99626 /* rng.cc in Sources */,

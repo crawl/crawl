@@ -178,6 +178,7 @@ potion.o \
 quiver.o \
 random.o \
 random-var.o \
+ranged_attack.o \
 ray.o \
 religion.o \
 shopping.o \

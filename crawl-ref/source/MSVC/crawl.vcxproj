@@ -444,6 +444,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\quiver.cc" />
     <ClCompile Include="..\random-var.cc" />
     <ClCompile Include="..\random.cc" />
+    <ClCompile Include="..\ranged_attack.cc" />
     <ClCompile Include="..\ray.cc" />
     <ClCompile Include="..\religion.cc" />
     <ClCompile Include="..\rltiles\tiledef-feat.cc" />
@@ -799,6 +800,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\random-var.h" />
     <ClInclude Include="..\random-weight.h" />
     <ClInclude Include="..\random.h" />
+    <ClInclude Include="..\ranged_attack.h" />
     <ClInclude Include="..\ray.h" />
     <ClInclude Include="..\religion-enum.h" />
     <ClInclude Include="..\religion.h" />
