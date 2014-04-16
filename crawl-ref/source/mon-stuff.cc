@@ -2542,7 +2542,7 @@ int monster_die(monster* mons, killer_type killer,
         hogs_to_humans();
     }
     else if ((mons_is_natasha(mons) || mons_genus(mons->type) == MONS_FELID)
-             && !in_transit && mons_felid_can_revive(mons))
+             && !in_transit && !mons->pacified() && mons_felid_can_revive(mons))
     {
         drop_items = false;
 
