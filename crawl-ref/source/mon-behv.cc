@@ -1609,9 +1609,9 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
             {
                 ASSERT_RANGE(get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
                              'A', 'z' + 1);
-                mprf("(press <white>%s %c</white> to convert to Beogh)",
-                     command_to_string(CMD_USE_ABILITY).c_str(),
-                     get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey);
+                mprf("(press <w>%c</w> on the <w>%s</w>bility menu to convert to Beogh)",
+                     get_talent(ABIL_CONVERT_TO_BEOGH, false).hotkey,
+                     command_to_string(CMD_USE_ABILITY).c_str());
                 you.attribute[ATTR_SEEN_BEOGH] = 1;
             }
         }
