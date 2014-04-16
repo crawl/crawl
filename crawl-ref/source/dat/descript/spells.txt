@@ -272,7 +272,7 @@ harmlessly if allowed to drift too far away from their caster before exploding.
 %%%%
 Conjure Flame spell
 
-This spell creates a column of roaring flame.
+This spell creates a column of roaring flame in a targeted empty space.
 %%%%
 Control Teleport spell
 
