@@ -31,7 +31,7 @@ struct duration_def
 static duration_def duration_data[] =
 {
     { DUR_AGILITY, false,
-      0, "", "agile", "You are agile." },
+      LIGHTBLUE, "Agi", "agile", "You are agile." },
     { DUR_ANTIMAGIC, true,
       RED, "-Mag", "antimagic", "You have trouble accessing your magic." },
     { DUR_BERSERK, true,
@@ -39,7 +39,7 @@ static duration_def duration_data[] =
     { DUR_BREATH_WEAPON, false,
       YELLOW, "Breath", "short of breath", "You are short of breath." },
     { DUR_BRILLIANCE, false,
-      0, "", "brilliant", "You are brilliant." },
+      LIGHTBLUE, "Brill", "brilliant", "You are brilliant." },
     { DUR_CONF, false,
       RED, "Conf", "confused", "You are confused." },
     { DUR_CONFUSING_TOUCH, true,
@@ -67,7 +67,7 @@ static duration_def duration_data[] =
     { DUR_MAGIC_SHIELD, false,
       0, "", "shielded", "" },
     { DUR_MIGHT, false,
-      0, "", "mighty", "You are mighty." },
+      LIGHTBLUE, "Might", "mighty", "You are mighty." },
     { DUR_PARALYSIS, false,
       RED, "Para", "paralysed", "You are paralysed." },
     { DUR_PETRIFIED, false,
