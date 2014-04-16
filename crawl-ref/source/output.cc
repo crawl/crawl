@@ -1040,6 +1040,9 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_DRAGON_CALL,
         DUR_DRAGON_CALL_COOLDOWN,
         DUR_ABJURATION_AURA,
+        DUR_AGILITY,
+        DUR_BRILLIANCE,
+        DUR_MIGHT,
     };
 
     status_info inf;
