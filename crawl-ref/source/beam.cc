@@ -53,6 +53,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "potion.h"
+#include "ranged_attack.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "skills.h"
@@ -3881,6 +3882,14 @@ void bolt::affect_player()
             interrupt_activity(AI_MONSTER_ATTACKS);
     }
 
+    if (flavour == BEAM_MISSILE && item)
+    {
+        ranged_attack attk(agent(), &you, item);
+        attk.attack();
+        extra_range_used += attk.range_used;
+        return;
+    }
+
     const bool engulfs = is_explosion || is_big_cloud;
 
     if (is_enchantment())
@@ -4835,6 +4844,14 @@ void bolt::affect_monster(monster* mon)
     // here.
     if (handle_statue_disintegration(mon))
         return;
+
+    if (flavour == BEAM_MISSILE && item)
+    {
+        ranged_attack attk(agent(), mon, item);
+        attk.attack();
+        extra_range_used += attk.range_used;
+        return;
+    }
 
     // Explosions always 'hit'.
     const bool engulfs = (is_explosion || is_big_cloud);

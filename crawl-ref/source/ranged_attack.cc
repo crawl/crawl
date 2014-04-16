@@ -8,8 +8,14 @@
 #include "ranged_attack.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj) :
-                             attack(attk, defn), projectile(proj)
+                             ::attack(attk, defn), projectile(proj)
 {
+    range_used = 0;
+}
+
+bool ranged_attack::attack()
+{
+    return false;
 }
 
 int ranged_attack::calc_to_hit(bool)

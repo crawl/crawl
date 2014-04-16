@@ -5,9 +5,16 @@
 
 class ranged_attack : public attack
 {
+// Public Properties
+public:
+    int range_used;
+
 // Public Methods
 public:
     ranged_attack(actor *attacker, actor *defender, item_def *projectile);
+
+    // Applies attack damage and other effects.
+    bool attack();
 
     int calc_to_hit(bool);
 
