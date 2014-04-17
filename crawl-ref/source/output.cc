@@ -653,7 +653,7 @@ static void _print_stats_hp(int x, int y)
     else
     {
         const int hp_percent =
-            (you.hp * 100) / (max_max_hp ? max_max_hp : you.hp);
+            (you.hp * 100) / get_real_hp(true, false);
 
         for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
             if (hp_percent <= Options.hp_colour[i].first)
