@@ -15,6 +15,7 @@
 #include "coordit.h"
 #include "dgnevent.h"
 #include "env.h"
+#include "fight.h"
 #include "food.h"
 #include "goditem.h"
 #include "hints.h"
@@ -268,6 +269,99 @@ brand_type player::damage_brand(int)
     }
 
     return ret;
+}
+
+random_var player::attack_delay(item_def *weap, item_def *projectile,
+                                bool random, bool scaled) const
+{
+    random_var attk_delay = constant(15);
+    const int armour_penalty = adjusted_body_armour_penalty(20);
+    const int base_shield_penalty = adjusted_shield_penalty(20);
+
+    bool check_weapon = (!projectile && !!weap)
+                        || projectile
+                            && (is_launched(this, weap, *projectile)
+                                != LRET_THROWN);
+
+    if (!check_weapon)
+    {
+        if (form_uses_xl())
+        {
+            attk_delay =
+                constant(10)
+                - div_rand_round(constant(you.experience_level * 10), 54);
+        }
+        else
+        {
+            attk_delay =
+                rv::max(constant(10),
+                        (rv::roll_dice(1, 10) +
+                         div_rand_round(
+                             rv::roll_dice(2, armour_penalty),
+                             20)));
+
+            // Unarmed speed. Min delay is 10 - 270/54 = 5.
+            if (you.burden_state == BS_UNENCUMBERED)
+            {
+                skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
+                attk_delay -= div_rand_round(constant(you.skill(sk, 10)), 54);
+            }
+
+            // Bats are faster (for what good it does them).
+            if (you.form == TRAN_BAT && !projectile)
+                attk_delay = div_rand_round(attk_delay * constant(3), 5);
+        }
+    }
+    else
+    {
+        if (weap && is_weapon(*weap)
+            && (!projectile && !is_range_weapon(*weap)
+                || projectile
+                   && is_launched(this, weap, *projectile) == LRET_LAUNCHED))
+        {
+            const skill_type wpn_skill = is_range_weapon(*weap)
+                                         ? range_skill(*weap)
+                                         : weapon_skill(*weap);
+            attk_delay = constant(property(*weap, PWPN_SPEED));
+            attk_delay -=
+                div_rand_round(constant(you.skill(wpn_skill, 10)), 20);
+
+            // apply minimum to weapon skill modification
+            attk_delay = rv::max(attk_delay, weapon_min_delay(*weap));
+
+            if (weap->base_type == OBJ_WEAPONS
+                && get_weapon_brand(*weap) == SPWPN_SPEED)
+            {
+                attk_delay = div_rand_round(constant(2) * attk_delay, 3);
+            }
+        }
+    }
+
+    // At the moment it never gets this low anyway.
+    attk_delay = rv::max(attk_delay, constant(3));
+
+    // Calculate this separately to avoid overflowing the weights in
+    // the random_var.
+    random_var shield_penalty = constant(0);
+    if (base_shield_penalty)
+    {
+        shield_penalty =
+            div_rand_round(rv::min(rv::roll_dice(1, base_shield_penalty),
+                                   rv::roll_dice(1, base_shield_penalty)),
+                           20);
+    }
+    // Give unarmed shield-users a slight penalty always.
+    if (!weap && player_wearing_slot(EQ_SHIELD))
+        shield_penalty += rv::random2(2);
+
+    int final_delay = random ? attk_delay.roll() + shield_penalty.roll()
+                             : attk_delay.expected() + shield_penalty.expected();
+    // Stop here if we just want the unmodified value.
+    if (!scaled)
+        return final_delay;
+
+    const int scaling = finesse_adjust_delay(you.time_taken);
+    return max(2, div_rand_round(scaling * final_delay, 10));
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.

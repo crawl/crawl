@@ -848,6 +848,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             did_return = true;
     }
 
+    you.time_taken = finesse_adjust_delay(you.attack_delay(you.weapon(),
+                                                           &item));
+
     // Create message.
     mprf("%s %s%s %s.",
           teleport  ? "Magically, you" : "You",
@@ -987,8 +990,17 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
     ASSERT(slot != NUM_MONSTER_SLOTS);
 
     // Energy is already deducted for the spell cast, if using portal projectile
+    // FIXME: should it use this delay and not the spell delay?
     if (!teleport)
-        mons->lose_energy(EUT_MISSILE);
+    {
+        const int energy = mons->action_energy(EUT_MISSILE);
+        const int delay = mons->attack_delay(weapon != NON_ITEM ? &mitm[weapon]
+                                                                : NULL,
+                                             &mitm[msl]);
+        ASSERT(energy > 0);
+        ASSERT(delay > 0);
+        mons->speed_increment -= div_rand_round(energy * delay, 10);
+    }
 
     actor* victim = actor_at(beam.target);
     const int old_hp = (victim) ? victim->stat_hp() : 0;

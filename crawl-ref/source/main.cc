@@ -2650,8 +2650,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                     mpr("You swing at nothing.");
                 make_hungry(3, true);
                 // Take the usual attack delay.
-                melee_attack attk(&you, NULL);
-                you.time_taken = attk.calc_attack_delay();
+                you.time_taken = you.attack_delay(you.weapon());
             }
             you.turn_is_over = true;
             return true;

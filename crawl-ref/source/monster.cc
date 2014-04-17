@@ -467,6 +467,22 @@ int monster::damage_type(int which_attack)
     return get_vorpal_type(*mweap);
 }
 
+random_var monster::attack_delay(item_def *weap, item_def *projectile,
+                                 bool random, bool scaled) const
+{
+    const bool use_unarmed =
+        (projectile) ? is_launched(this, weap, *projectile) != LRET_LAUNCHED
+                     : !weap;
+
+    if (use_unarmed || !weap)
+        return 10;
+
+    int delay = property(*weap, PWPN_SPEED);
+    if (get_weapon_brand(*weap) == SPWPN_SPEED)
+        delay = random ? div_rand_round(2 * delay, 3) : (2 * delay)/3;
+    return random ? div_rand_round(10 + delay, 2) : (10 + delay) / 2;
+}
+
 int monster::has_claws(bool allow_tran) const
 {
     for (int i = 0; i < MAX_NUM_ATTACKS; i++)

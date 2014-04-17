@@ -178,7 +178,7 @@ int attack::calc_to_hit(bool random)
                                          random);
             }
         }
-        else if (form_uses_xl())
+        else if (you.form_uses_xl())
             mhit += maybe_random_div(you.experience_level * 100, 100, random);
         else
         {                       // ...you must be unarmed
@@ -379,8 +379,11 @@ void attack::init_attack(skill_type unarmed_skill, int attack_number)
     weapon          = attacker->weapon(attack_number);
     damage_brand    = attacker->damage_brand(attack_number);
 
-    wpn_skill       = weapon ? weapon_skill(*weapon) : unarmed_skill;
-    if (form_uses_xl())
+    wpn_skill       = weapon
+                      ?  (is_range_weapon(*weapon) ? range_skill(*weapon)
+                                                   : weapon_skill(*weapon))
+                      : unarmed_skill;
+    if (attacker->is_player() && you.form_uses_xl())
         wpn_skill = SK_FIGHTING; // for stabbing, mostly
 
     attacker_armour_tohit_penalty =
@@ -1129,15 +1132,4 @@ void attack::player_stab_check()
 
     if (stab_attempt)
         count_action(CACT_STAB, st);
-}
-
-bool attack::form_uses_xl()
-{
-    // No body parts that translate in any way to something fisticuffs could
-    // matter to, the attack mode is different.  Plus, it's weird to have
-    // users of one particular [non-]weapon be effective for this
-    // unintentional form while others can just run or die.  I believe this
-    // should apply to more forms, too.  [1KB]
-    return attacker->is_player()
-           && (you.form == TRAN_WISP || you.form == TRAN_FUNGUS);
 }

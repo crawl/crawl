@@ -4141,8 +4141,7 @@ static const char* _attack_delay_desc(int attack_delay)
 
 static void _display_attack_delay()
 {
-    melee_attack attk(&you, NULL);
-    const int delay = attk.calc_attack_delay(false, false);
+    const int delay = you.attack_delay(you.weapon(), NULL, false, false);
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
@@ -7479,6 +7478,7 @@ void player::slow_down(actor *foe, int str)
     ::slow_player(str);
 }
 
+
 int player::has_claws(bool allow_tran) const
 {
     if (allow_tran)
@@ -8391,6 +8391,16 @@ int player_monster_detect_radius()
 bool player_has_orb()
 {
     return you.char_direction == GDT_ASCENDING;
+}
+
+bool player::form_uses_xl() const
+{
+    // No body parts that translate in any way to something fisticuffs could
+    // matter to, the attack mode is different.  Plus, it's weird to have
+    // users of one particular [non-]weapon be effective for this
+    // unintentional form while others can just run or die.  I believe this
+    // should apply to more forms, too.  [1KB]
+    return you.form == TRAN_WISP || you.form == TRAN_FUNGUS;
 }
 
 // Lava orcs!
