@@ -1053,21 +1053,6 @@ bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 
     _throw_noise(mons, beam, item);
 
-    // [dshaligram] When changing bolt names here, you must edit
-    // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
-    if (projected == LRET_LAUNCHED)
-    {
-        beam.aux_source = make_stringf("Shot with a%s %s by %s",
-                 (is_vowel(beam.name[0]) ? "n" : ""), beam.name.c_str(),
-                 mons->name(DESC_A).c_str());
-    }
-    else
-    {
-        beam.aux_source = make_stringf("Hit by a%s %s thrown by %s",
-                 (is_vowel(beam.name[0]) ? "n" : ""), beam.name.c_str(),
-                 mons->name(DESC_A).c_str());
-    }
-
     // decrease inventory
     bool really_returns;
     if (returning && !one_chance_in(mons_power(mons->type) + 3))

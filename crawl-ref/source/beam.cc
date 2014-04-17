@@ -79,9 +79,6 @@
 #include "viewgeom.h"
 #include "xom.h"
 
-#define BEAM_STOP       1000        // all beams stopped by subtracting this
-                                    // from remaining range
-
 #define SAP_MAGIC_CHANCE() x_chance_in_y(7, 10)
 
 // Helper functions (some of these should probably be public).
@@ -3884,7 +3881,7 @@ void bolt::affect_player()
 
     if (flavour == BEAM_MISSILE && item)
     {
-        ranged_attack attk(agent(), &you, item);
+        ranged_attack attk(agent(), &you, item, use_target_as_pos);
         attk.attack();
         extra_range_used += attk.range_used;
         return;
@@ -4847,7 +4844,7 @@ void bolt::affect_monster(monster* mon)
 
     if (flavour == BEAM_MISSILE && item)
     {
-        ranged_attack attk(agent(), mon, item);
+        ranged_attack attk(agent(), mon, item, use_target_as_pos);
         attk.attack();
         extra_range_used += attk.range_used;
         return;

@@ -11,6 +11,9 @@
 #include "ray.h"
 #include "spl-cast.h"
 
+#define BEAM_STOP       1000        // all beams stopped by subtracting this
+                                    // from remaining range
+
 class monster;
 
 enum mon_resist_type

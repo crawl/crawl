@@ -29,18 +29,11 @@ enum unarmed_attack_type
 class melee_attack : public attack
 {
 public:
-    bool      perceived_attack, obvious_effect;
-
     // mon_attack_def stuff
     int       attack_number;
     int       effective_attack_number;
 
     bool      fake_chaos_attack;
-
-    beam_type special_damage_flavour;
-
-    bool    stab_attempt;
-    int     stab_bonus;
 
     bool         can_cleave;
     list<actor*> cleave_targets;
@@ -77,7 +70,6 @@ private:
     /* Attack phases */
     bool handle_phase_attempted();
     bool handle_phase_dodged();
-    bool handle_phase_blocked();
     bool handle_phase_hit();
     bool handle_phase_damaged();
     bool handle_phase_killed();
@@ -85,19 +77,17 @@ private:
     bool handle_phase_end();
 
     /* Combat Calculations */
-    int test_hit(int to_hit, int ev, bool randomise_ev);
+    bool using_weapon();
+    int weapon_damage();
     int calc_base_unarmed_damage();
-    int calc_base_weapon_damage();
+    int apply_damage_modifiers(int damage, int damage_max, bool &half_ac);
     int calc_damage();
-    int calc_stat_to_hit_base();
-    int calc_stat_to_dam_base();
-    int apply_defender_ac(int damage, int damage_max = 0, bool half_ac = false);
 
     /* Attack effects */
     void check_autoberserk();
     bool check_unrand_effects();
 
-    bool attack_shield_blocked(bool verbose);
+    bool attack_ignores_shield(bool verbose);
     bool apply_damage_brand();
 
     void rot_defender(int amount, int immediate = 0);
@@ -119,8 +109,6 @@ private:
     void tendril_disarm();
     /* Race Effects */
     void do_minotaur_retaliation();
-
-    int inflict_damage(int dam, beam_type flavour = NUM_BEAMS, bool clean = false);
 
     /* Brand / Attack Effects */
     // Returns true if the defender is banished.
@@ -144,6 +132,7 @@ private:
     void handle_noise(const coord_def & pos);
 private:
     // Monster-attack specific stuff
+    bool mons_attack_effects();
     void mons_apply_attack_flavour();
     string mons_attack_verb();
     string mons_attack_desc();
@@ -163,15 +152,9 @@ private:
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
 
-    int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
-    int  player_apply_weapon_skill(int damage);
-    int  player_apply_fighting_skill(int damage, bool aux);
     int  player_apply_misc_modifiers(int damage);
-    int  player_apply_slaying_bonuses(int damage, bool aux);
     int  player_apply_final_multipliers(int damage);
-    int  player_stab_weapon_bonus(int damage);
-    int  player_stab(int damage);
 
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects();
@@ -186,9 +169,6 @@ private:
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();
-
-    // Output methods
-    void stab_message();
 
     // Added in, were previously static methods of fight.cc
     bool _tran_forbid_aux_attack(unarmed_attack_type atk);
