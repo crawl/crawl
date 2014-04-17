@@ -4,6 +4,7 @@
 #include "artefact.h"
 #include "itemprop-enum.h"
 #include "mon-enum.h"
+#include "ouch.h"
 
 // Used throughout inheriting classes, define them here for universal access
 const int HIT_WEAK   = 7;
@@ -23,6 +24,8 @@ public:
     bool    did_hit;
     bool    needs_message;
     bool    attacker_visible, defender_visible;
+    bool    perceived_attack, obvious_effect;
+
 
     int     to_hit;
     int     damage_done;
@@ -31,6 +34,11 @@ public:
 
     int     min_delay;
     int     final_attack_delay;
+
+    beam_type special_damage_flavour;
+
+    bool    stab_attempt;
+    int     stab_bonus;
 
     bool    apply_bleeding;
 
@@ -85,7 +93,7 @@ public:
     attack(actor *attk, actor *defn);
 
     // To-hit is a function of attacker/defender, defined in sub-classes
-    virtual int calc_to_hit(bool) = 0;
+    virtual int calc_to_hit(bool random);
 
     // Exact copies of their melee_attack predecessors
     string actor_name(const actor *a, description_level_type desc,
@@ -94,22 +102,37 @@ public:
     string anon_name(description_level_type desc);
     string anon_pronoun(pronoun_type ptyp);
 
+// Private Properties
+    string aux_source;
+    kill_method_type kill_type;
+
 // Private Methods
 protected:
-    virtual void init_attack();
+    virtual void init_attack(skill_type unarmed_skill, int attack_number);
 
     /* Attack Phases */
     virtual bool handle_phase_attempted();
     virtual bool handle_phase_dodged() = 0;
-    virtual bool handle_phase_blocked() = 0;
+    virtual bool handle_phase_blocked();
     virtual bool handle_phase_hit() = 0;
-    virtual bool handle_phase_damaged() = 0;
-    virtual bool handle_phase_killed() = 0;
-    virtual bool handle_phase_end() = 0;
+    virtual bool handle_phase_damaged();
+    virtual bool handle_phase_killed();
+    virtual bool handle_phase_end();
 
     /* Combat Calculations */
+    virtual bool using_weapon() = 0;
+    virtual int weapon_damage() = 0;
+    virtual int calc_base_unarmed_damage();
+    int calc_stat_to_hit_base();
+    int calc_stat_to_dam_base();
+    virtual int apply_damage_modifiers(int damage, int damage_max,
+                                       bool &half_ac) = 0;
+    virtual int calc_damage();
+    int test_hit(int to_hit, int ev, bool randomise_ev);
+    int apply_defender_ac(int damage, int damage_max = 0, bool half_ac = false);
     // Determine if we're blocking (partially or entirely)
-    virtual bool attack_shield_blocked(bool verbose) = 0;
+    virtual bool attack_shield_blocked(bool verbose);
+    virtual bool attack_ignores_shield(bool verbose) = 0;
     virtual bool apply_damage_brand() = 0;
     void calc_elemental_brand_damage(beam_type flavour,
                                      int res,
@@ -118,12 +141,25 @@ protected:
     /* Weapon Effects */
     virtual bool check_unrand_effects() = 0;
 
+    /* Attack Effects */
+    virtual bool mons_attack_effects() = 0;
+    void alert_defender();
+
+    virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
+                               bool clean = false);
+
     /* Output */
     string debug_damage_number();
     string special_attack_punctuation();
     string attack_strength_punctuation();
     string get_exclams(int dmg);
     string evasion_margin_adverb();
+
+    virtual void adjust_noise() = 0;
+    virtual void set_attack_verb() = 0;
+    virtual void announce_hit() = 0;
+
+    void stab_message();
 
     string atk_name(description_level_type desc);
     string def_name(description_level_type desc);
@@ -137,6 +173,21 @@ protected:
     // usage from these lowly classes all the way up to monster/player (and
     // actor) classes.
     string defender_name();
+
+    virtual int  player_stat_modify_damage(int damage);
+    virtual int  player_apply_weapon_skill(int damage);
+    virtual int  player_apply_fighting_skill(int damage, bool aux);
+    virtual int  player_apply_misc_modifiers(int damage);
+    virtual int  player_apply_slaying_bonuses(int damage, bool aux);
+    virtual int  player_apply_final_multipliers(int damage);
+
+    virtual void player_exercise_combat_skills();
+
+    virtual int  player_stab_weapon_bonus(int damage);
+    virtual int  player_stab(int damage);
+    virtual void player_stab_check();
+
+    bool form_uses_xl();
 };
 
 #endif
