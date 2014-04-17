@@ -62,7 +62,6 @@ public:
 
     // To-hit is a function of attacker/defender, inherited from attack
     int calc_to_hit(bool random = true);
-    int calc_attack_delay(bool random = true, bool scaled = true);
 
     static void chaos_affect_actor(actor *victim);
 
@@ -162,8 +161,6 @@ private:
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
     void player_stab_check();
-    random_var player_weapon_speed();
-    random_var player_unarmed_speed();
     void player_announce_aux_hit();
     string player_why_missed();
     void player_warn_miss();

@@ -508,6 +508,8 @@ public:
     int         total_weight() const;
     brand_type  damage_brand(int which_attack = -1);
     int         damage_type(int which_attack = -1);
+    random_var  attack_delay(item_def *weapon, item_def *projectile = NULL,
+                             bool random = true, bool scaled = true) const;
     int         constriction_damage() const;
 
     int       has_claws(bool allow_tran = true) const;
@@ -744,6 +746,8 @@ public:
     bool attempt_escape(int attempts = 1);
     int usable_tentacles() const;
     bool has_usable_tentacle() const;
+
+    bool form_uses_xl() const;
 
 protected:
     void _removed_beholder(bool quiet = false);
