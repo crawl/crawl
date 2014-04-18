@@ -2524,7 +2524,7 @@ static int _handle_enchant_armour(int item_slot, bool alreadyknown,
         }
 
         // Okay, we may actually (attempt to) enchant something.
-        if (!alreadyknown && pre_msg)
+        if (pre_msg && alreadyknown)
             mpr(pre_msg->c_str());
 
         int ac_change;
