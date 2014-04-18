@@ -71,6 +71,7 @@ private:
     bool using_weapon();
     int weapon_damage();
     int calc_base_unarmed_damage();
+    int calc_mon_to_hit_base();
     int apply_damage_modifiers(int damage, int damage_max, bool &half_ac);
     int calc_damage();
 

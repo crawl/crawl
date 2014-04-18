@@ -4056,6 +4056,14 @@ int melee_attack::calc_base_unarmed_damage()
     return damage;
 }
 
+int melee_attack::calc_mon_to_hit_base()
+{
+    const bool fighter = attacker->is_monster()
+                         && attacker->as_monster()->is_fighter();
+    const int hd_mult = fighter ? 25 : 15;
+    return 18 + attacker->get_experience_level() * hd_mult / 10;
+}
+
 /**
  * Add modifiers to the base damage.
  * Currently only relevant for monsters.
