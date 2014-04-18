@@ -88,6 +88,14 @@ public:
 
     item_def        *defender_shield;
 
+    // Miscast to cause after special damage is done. If miscast_level == 0
+    // the miscast is discarded if special_damage_message isn't empty.
+    int    miscast_level;
+    int    miscast_type;
+    actor* miscast_target;
+
+    bool      fake_chaos_attack;
+
 // Public Methods
 public:
     attack(actor *attk, actor *defn);
@@ -133,10 +141,11 @@ protected:
     // Determine if we're blocking (partially or entirely)
     virtual bool attack_shield_blocked(bool verbose);
     virtual bool attack_ignores_shield(bool verbose) = 0;
-    virtual bool apply_damage_brand() = 0;
+    virtual bool apply_damage_brand(const char *what = NULL);
     void calc_elemental_brand_damage(beam_type flavour,
                                      int res,
-                                     const char *verb);
+                                     const char *verb,
+                                     const char *what = NULL);
 
     /* Weapon Effects */
     virtual bool check_unrand_effects() = 0;
@@ -144,6 +153,13 @@ protected:
     /* Attack Effects */
     virtual bool mons_attack_effects() = 0;
     void alert_defender();
+    bool distortion_affects_defender();
+    void antimagic_affects_defender(int pow);
+    void pain_affects_defender();
+    void chaos_affects_defender();
+    brand_type random_chaos_brand();
+    void do_miscast();
+    void drain_defender();
 
     virtual int inflict_damage(int dam, beam_type flavour = NUM_BEAMS,
                                bool clean = false);
@@ -173,6 +189,8 @@ protected:
     // usage from these lowly classes all the way up to monster/player (and
     // actor) classes.
     string defender_name();
+
+    attack_flavour random_chaos_attack_flavour();
 
     virtual int  player_stat_modify_damage(int damage);
     virtual int  player_apply_weapon_skill(int damage);

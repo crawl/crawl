@@ -33,20 +33,12 @@ public:
     int       attack_number;
     int       effective_attack_number;
 
-    bool      fake_chaos_attack;
-
     bool         can_cleave;
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
     bool jumping_attack;
     bool jump_blocked;
     coord_def attack_position;
-
-    // Miscast to cause after special damage is done. If miscast_level == 0
-    // the miscast is discarded if special_damage_message isn't empty.
-    int    miscast_level;
-    int    miscast_type;
-    actor* miscast_target;
 
     bool simu;
 
@@ -87,7 +79,6 @@ private:
     bool check_unrand_effects();
 
     bool attack_ignores_shield(bool verbose);
-    bool apply_damage_brand();
 
     void rot_defender(int amount, int immediate = 0);
     void splash_defender_with_acid(int strength);
@@ -110,17 +101,9 @@ private:
     void do_minotaur_retaliation();
 
     /* Brand / Attack Effects */
-    // Returns true if the defender is banished.
-    bool distortion_affects_defender();
-    void antimagic_affects_defender(int pow);
-    void pain_affects_defender();
-    void chaos_affects_defender();
     void chaos_affects_attacker();
-    brand_type random_chaos_brand();
-    void do_miscast();
     bool do_knockback(bool trample = true);
     bool attack_warded_off();
-    void drain_defender();
 
     /* Output methods */
     void adjust_noise();
@@ -140,8 +123,6 @@ private:
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
     void apply_black_mark_effects();
-
-    attack_flavour random_chaos_attack_flavour();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.

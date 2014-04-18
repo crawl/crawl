@@ -2176,6 +2176,35 @@ bool curare_actor(actor* source, actor* target, string name, string source_name)
         return _curare_hits_monster(source, target->as_monster(), 2);
 }
 
+// XXX: This is a terrible place for this, but it at least does go with
+// curare_actor().
+int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
+{
+    int ret = 0;
+    if (victim->is_chaotic()
+        || victim->is_player() && player_is_shapechanged())
+    {
+        ret = damage * 3 / 4;
+    }
+    else if (victim->is_player())
+    {
+        // For mutation damage, we want to count innate mutations for
+        // demonspawn but not other species.
+        int multiplier = 5 * how_mutated(you.species == SP_DEMONSPAWN, true);
+        if (multiplier == 0)
+            return 0;
+
+        if (multiplier > 75)
+            multiplier = 75;
+
+        ret = damage * multiplier / 100;
+    }
+    else
+        return 0;
+
+    dmg_msg = "The silver sears " + victim->name(DESC_THE) + "!";
+    return ret;
+}
 
 //  Used by monsters in "planning" which spell to cast. Fires off a "tracer"
 //  which tells the monster what it'll hit if it breathes/casts etc.
