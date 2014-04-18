@@ -431,6 +431,7 @@ static bool _is_random_monster(monster_type mt)
 {
     return mt == RANDOM_MONSTER || mt == RANDOM_MOBILE_MONSTER
            || mt == RANDOM_COMPATIBLE_MONSTER
+           || mt == RANDOM_BANDLESS_MONSTER
            || mt == WANDERING_MONSTER;
 }
 
@@ -663,9 +664,18 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 
         if (!vault_mon_types.empty())
         {
-            // XXX: not respecting RANDOM_MOBILE_MONSTER currently.
-            int i = choose_random_weighted(vault_mon_weights.begin(),
+            int i = 0;
+            do
+            {
+                i = choose_random_weighted(vault_mon_weights.begin(),
                                            vault_mon_weights.end());
+            }
+            while (mon_type == RANDOM_MOBILE_MONSTER
+                   && mons_class_is_stationary((monster_type)vault_mon_types[i])
+                   || mon_type == RANDOM_COMPATIBLE_MONSTER
+                      && _is_incompatible_monster((monster_type)vault_mon_types[i])
+                   || mon_type == RANDOM_BANDLESS_MONSTER
+                      && _is_banded_monster((monster_type)vault_mon_types[i]));
             int type = vault_mon_types[i];
             int base = vault_mon_bases[i];
             bool banded = vault_mon_bands[i];
@@ -2801,7 +2811,9 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_RAKSHASA:
-        if (branch_has_monsters(you.where_are_you) && coinflip())
+        if ((branch_has_monsters(you.where_are_you)
+             || !vault_mon_types.empty())
+            && coinflip())
         {
             band = BAND_RANDOM_SINGLE;
             band_size = 1;
@@ -3360,7 +3372,12 @@ static monster_type _band_member(band_type band, int which)
         return MONS_NAGA_SHARPSHOOTER;
 
     case BAND_RANDOM_SINGLE:
-        return pick_random_monster(level_id::current(), RANDOM_BANDLESS_MONSTER);
+    {
+        monster_type tmptype = MONS_PROGRAM_BUG;
+        coord_def tmppos;
+        return _resolve_monster_type(RANDOM_BANDLESS_MONSTER, PROX_ANYWHERE,
+                                     tmptype, tmppos, 0, NULL, NULL, NULL);
+    }
 
     default:
         die("unhandled band type %d", band);
