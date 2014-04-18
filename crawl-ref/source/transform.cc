@@ -592,6 +592,18 @@ static bool _flying_in_new_form(transformation_type which_trans)
     return sources > sources_removed;
 }
 
+/**
+ * Check if it'd be lethal for the player to enter a form in a given terrain.
+ *
+ * In addition to checking whether the feature is dangerous for the form
+ * itself (form_likes_*), the function checks to see if the player is safe
+ * due to flying or similar effects, and checks to see if they'll be killed
+ * when transforming back (treeform in deep water).
+ *
+ * @param which_trans       The form being checked.
+ * @param feat              The dungeon feature to be checked for danger.
+ * @return                  If the feat is lethal for the player in the form.
+ **/
 bool feat_dangerous_for_form(transformation_type which_trans,
                              dungeon_feature_type feat)
 {
@@ -608,12 +620,9 @@ bool feat_dangerous_for_form(transformation_type which_trans,
 
     if (feat == DNGN_DEEP_WATER)
     {
-        if (beogh_water_walk()
-            || species_likes_water(you.species)
-            || you.racial_permanent_flight())
-        {
+        if (beogh_water_walk())
             return false;
-        }
+
         // Trees are ok with deep water, but you need means of escaping
         // once the transformation expires.
         if (which_trans == TRAN_TREE)
