@@ -596,8 +596,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
  *
  * In addition to checking whether the feature is dangerous for the form
  * itself (form_likes_*), the function checks to see if the player is safe
- * due to flying or similar effects, and checks to see if they'll be killed
- * when transforming back (treeform in deep water).
+ * due to flying or similar effects.
  *
  * @param which_trans       The form being checked.
  * @param feat              The dungeon feature to be checked for danger.
