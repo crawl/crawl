@@ -2801,7 +2801,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_RAKSHASA:
-        if (coinflip())
+        if (branch_has_monsters(you.where_are_you) && coinflip())
         {
             band = BAND_RANDOM_SINGLE;
             band_size = 1;
