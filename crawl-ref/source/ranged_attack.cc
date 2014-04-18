@@ -318,9 +318,22 @@ int ranged_attack::weapon_damage()
     return dam;
 }
 
+int ranged_attack::calc_mon_to_hit_base()
+{
+    ASSERT(attacker->is_monster());
+    const int hd_mult = attacker->as_monster()->is_archer() ? 15 : 9;
+    return 18 + attacker->get_experience_level() * hd_mult / 6;
+}
+
 int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
                                           bool &half_ac)
 {
+    ASSERT(attacker->is_monster());
+    if (attacker->as_monster()->is_archer())
+    {
+        const int bonus = attacker->get_experience_level() * 4 / 3;
+        damage += random2avg(bonus, 2);
+    }
     half_ac = false;
     return damage;
 }

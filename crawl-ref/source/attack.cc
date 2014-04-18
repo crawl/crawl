@@ -153,12 +153,9 @@ bool attack::handle_phase_end()
  */
 int attack::calc_to_hit(bool random)
 {
-    const bool fighter = attacker->is_monster()
-                         && attacker->as_monster()->is_fighter();
-    const int hd_mult = fighter ? 25 : 15;
     int mhit = attacker->is_player() ?
                 15 + (calc_stat_to_hit_base() / 2)
-              : 18 + attacker->get_experience_level() * hd_mult / 10;
+              : calc_mon_to_hit_base();
 
 #ifdef DEBUG_DIAGNOSTICS
     const int base_hit = mhit;
