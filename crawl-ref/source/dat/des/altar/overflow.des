@@ -212,7 +212,7 @@ KMONS:   _ = goliath beetle
 KFEAT:   _ = altar_cheibriados
 SUBST:   x : xxxcccvb
 MAP
-x..G..x
+x@@G@@x
 x.....x
 x.....x
 xx+++xx
