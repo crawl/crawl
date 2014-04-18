@@ -443,7 +443,6 @@ size_type player::transform_size(transformation_type tform, int psize) const
     case TRAN_ICE_BEAST:
         return SIZE_LARGE;
     case TRAN_DRAGON:
-    case TRAN_TREE:
         return SIZE_HUGE;
     default:
         return SIZE_CHARACTER;
@@ -623,10 +622,6 @@ bool feat_dangerous_for_form(transformation_type which_trans,
         if (beogh_water_walk())
             return false;
 
-        // Trees are ok with deep water, but you need means of escaping
-        // once the transformation expires.
-        if (which_trans == TRAN_TREE)
-            return !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING);
         return !form_likes_water(which_trans);
     }
 
@@ -1353,25 +1348,6 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_TREE:
         mprf(MSGCH_DURATION, "You feel less woody.");
-        if (grd(you.pos()) == DNGN_DEEP_WATER)
-        {
-            if (beogh_water_walk() || species_likes_water(you.species))
-                ; // nothing to do
-            else if (you.racial_permanent_flight()
-                  || you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
-            {
-                you.attribute[ATTR_PERM_FLIGHT] = 1;
-                mpr("You fly out of the water.");
-            }
-            else if (you.species == SP_TENGU
-                     && you.experience_level >= 5)
-            {
-                you.increase_duration(DUR_FLIGHT, 50, 100);
-                mpr("You frantically fly out of the water.");
-            }
-            else
-                fall_into_a_pool(you.pos(), DNGN_DEEP_WATER);
-        }
         notify_stat_change(STAT_STR, -10, true,
                      "losing the tree transformation");
         break;
@@ -1381,15 +1357,6 @@ void untransform(bool skip_wielding, bool skip_move)
     }
 
     _unmeld_equipment(melded);
-
-    if (old_form == TRAN_TREE && grd(you.pos()) == DNGN_DEEP_WATER
-        && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
-        && !species_likes_water(you.species)
-        && !you.attribute[ATTR_PERM_FLIGHT]) // tengu may have both
-    {
-        you.attribute[ATTR_PERM_FLIGHT] = 1;
-        mpr("You frantically enable flight.");
-    }
 
     // Re-check terrain now that be may no longer be swimming or flying.
     if (!skip_move && (old_flight && !you.flight_mode()
