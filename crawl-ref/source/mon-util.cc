@@ -938,7 +938,8 @@ bool mons_class_is_plant(monster_type mc)
 {
     return mons_genus(mc) == MONS_PLANT
            || mons_genus(mc) == MONS_FUNGUS
-           || mons_species(mc) == MONS_BUSH;
+           || mons_species(mc) == MONS_BUSH
+           || mc == MONS_SHAMBLING_MANGROVE;
 }
 
 bool mons_is_plant(const monster* mon)
