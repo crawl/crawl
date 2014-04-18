@@ -333,6 +333,7 @@ bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
 bool curare_actor(actor* source, actor* target, string name,
                   string source_name);
+int silver_damages_victim(actor* victim, int damage, string &dmg_msg);
 void fire_tracer(const monster* mons, bolt &pbolt,
                   bool explode_only = false);
 bool imb_can_splash(coord_def origin, coord_def center,

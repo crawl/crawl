@@ -20,6 +20,7 @@
 
 #define ART_FUNC_H
 
+#include "beam.h"          // For Lajatang of Order's silver damage
 #include "cloud.h"         // For storm bow's and robe of clouds' rain
 #include "effects.h"       // For Sceptre of Torment tormenting
 #include "env.h"           // For storm bow env.cgrid
@@ -36,7 +37,6 @@
 #include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow
-#include "throw.h"         // For silver damage
 
 /*******************
  * Helper functions.
@@ -1039,22 +1039,17 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
 static void _ORDER_melee_effects(item_def* item, actor* attacker,
                                          actor* defender, bool mondied, int dam)
 {
-    // FIXME for new ranged combat
-/*
     if (!mondied)
     {
-        int tempdam = dam;
-        bolt tempbeam;
         string msg = "";
-        silver_damages_victim(tempbeam, defender, tempdam, msg);
-        if (tempdam > dam)
+        int silver_dam = silver_damages_victim(defender, dam, msg);
+        if (silver_dam)
         {
-            tempdam -= dam;
             if (you.can_see(defender))
                 mpr(msg.c_str());
-            defender->hurt(attacker, tempdam);
+            defender->hurt(attacker, silver_dam);
         }
-    } */
+    }
 }
 
 ///////////////////////////////////////////////////
