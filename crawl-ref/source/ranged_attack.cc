@@ -22,6 +22,7 @@
 #include "random.h"
 #include "stuff.h"
 #include "teleport.h"
+#include "traps.h"
 
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele) :
@@ -243,20 +244,33 @@ bool ranged_attack::handle_phase_hit()
     if (!attack_ignores_shield(false))
         range_used = BEAM_STOP;
 
-    damage_done = calc_damage();
-    if (damage_done > 0
-        || projectile->base_type == OBJ_MISSILES
-           && projectile->sub_type == MI_NEEDLE)
+    if (projectile->base_type == OBJ_MISSILES
+        && projectile->sub_type == MI_THROWING_NET)
     {
-        if (!handle_phase_damaged())
-            return false;
+        set_attack_verb();
+        announce_hit();
+        if (defender->is_player())
+            player_caught_in_net();
+        else
+            monster_caught_in_net(defender->as_monster(), attacker);
     }
-    else if (needs_message)
+    else
     {
-        mprf("%s %s %s but does no damage.",
-             projectile->name(DESC_THE).c_str(),
-             attack_verb.c_str(),
-             defender->name(DESC_THE).c_str());
+        damage_done = calc_damage();
+        if (damage_done > 0
+            || projectile->base_type == OBJ_MISSILES
+               && projectile->sub_type == MI_NEEDLE)
+        {
+            if (!handle_phase_damaged())
+                return false;
+        }
+        else if (needs_message)
+        {
+            mprf("%s %s %s but does no damage.",
+                 projectile->name(DESC_THE).c_str(),
+                 attack_verb.c_str(),
+                 defender->name(DESC_THE).c_str());
+        }
     }
 
     if (using_weapon())
@@ -732,7 +746,9 @@ void ranged_attack::announce_hit()
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
          defender_name().c_str(),
-         stab_attempt && stab_bonus > 0 ? " in a vulnerable spot" : "",
+         damage_done > 0 && stab_attempt && stab_bonus > 0
+             ? " in a vulnerable spot"
+             : "",
          debug_damage_number().c_str(),
          attack_strength_punctuation().c_str());
 }
