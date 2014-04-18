@@ -5062,14 +5062,6 @@ void bolt::affect_monster(monster* mon)
         mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
     }
 
-    // handling of missiles
-    if (item
-        && item->base_type == OBJ_MISSILES
-        && item->sub_type == MI_THROWING_NET)
-    {
-        monster_caught_in_net(mon, *this);
-    }
-
     if (final > 0)
     {
         for (unsigned int i = 0; i < messages.size(); ++i)
