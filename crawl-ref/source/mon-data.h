@@ -728,7 +728,7 @@ static monsterentry mondata[] =
     MR_NO_FLAGS,
     450, 30, MONS_ELF, MONS_ELF, MH_NATURAL, -5,
     // Attack damage gets rolled into their ranged attacks.
-    { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 15, 4, 2, 0 },
     0, 15, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
     I_HIGH, HT_LAND, FL_NONE, 10, MISSILE_ENERGY(6),
