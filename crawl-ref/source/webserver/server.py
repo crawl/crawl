@@ -109,6 +109,10 @@ def signal_handler(signum, frame):
     if len(sockets) == 0:
         ioloop.stop()
 
+def usr1_handler(signum, frame):
+    logging.info("Received USR1, reloading config.")
+    config.load()
+
 def bind_server():
     settings = {
         "static_path": config.static_path,
@@ -195,6 +199,7 @@ if __name__ == "__main__":
 
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
+    signal.signal(signal.SIGUSR1, usr1_handler)
 
     if config.get("umask") is not None:
         os.umask(config.umask)
