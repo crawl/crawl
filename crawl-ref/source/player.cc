@@ -2713,6 +2713,7 @@ int player_sust_abil(bool calc_unid)
     int sa = 0;
 
     sa += you.wearing(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
+    sa += you.scan_artefacts(ARTP_SUSTAB);
 
     if (sa > 2)
         sa = 2;

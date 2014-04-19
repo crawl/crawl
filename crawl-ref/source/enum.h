@@ -3594,6 +3594,7 @@ enum artefact_prop_type
     ARTP_FOG,
 #endif
     ARTP_REGENERATION,
+    ARTP_SUSTAB,
     ARTP_NO_UPGRADE,
     ARTP_NUM_PROPERTIES
 };
