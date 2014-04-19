@@ -576,7 +576,7 @@ jellies that are affected.
 Slimify ability
 
 Coat a wielded weapon or your fists with slime, turning the next living or
-undead monster hit into a neutral slime.
+corporeal undead monster hit into a neutral slime.
 %%%%
 Cure Bad Mutation ability
 
