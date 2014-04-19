@@ -256,6 +256,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Clar",   ARTP_CLARITY,               2 },
         { "RMsl",   ARTP_RMSL,                  2 },
         { "Regen",  ARTP_REGENERATION,          2 },
+        { "SustAb", ARTP_SUSTAB,                2 },
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -450,6 +451,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
         { ARTP_POISON, "It protects you from poison.", false},
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
+        { ARTP_SUSTAB, "It sustains your strength, intelligence and dexterity.", false},
         { ARTP_MAGIC, "It affects your resistance to hostile enchantments.", false},
         { ARTP_HP, "It affects your health (%d).", false},
         { ARTP_MAGICAL_POWER, "It affects your magic capacity (%d).", false},

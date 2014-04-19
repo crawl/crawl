@@ -63,6 +63,7 @@ my %field_type = (
     SPECIAL  => "bool",
     STEALTH  => "num",
     STR      => "num",
+    SUSTAB   => "bool",
     TYPE     => "str",
     UNHOLY   => "bool",
     UNIDED   => "bool",
@@ -487,7 +488,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "FOG", "REGEN", "NO_UPGRADE", "\n",
+    "RMSL", "FOG", "REGEN", "SUSTAB", "NO_UPGRADE", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "melee_effects_func",

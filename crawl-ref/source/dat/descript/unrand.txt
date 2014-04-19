@@ -563,6 +563,12 @@ great mace "Firestarter"
 Alongside its obvious effects, this weapon protects its owner's inventory from
 fire, and fills monsters that it hits with an inner flame.
 %%%%
+orange crystal plate armour
+
+Carved from transparent orange crystal, this armour provides remarkable
+protection for both mind and body. A skilled user can even channel psychic
+energies through the crystal itself. However, it's rather heavy...
+%%%%
 milk chocolate
 
 This item is a debugging aid, granting a vast array of mostly beneficial

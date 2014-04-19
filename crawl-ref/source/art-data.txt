@@ -71,6 +71,7 @@
 # * berserk:  Lets wearer evoke berserking ability.
 # * blink:    Lets wearer evoke the blink ability.
 # * chaotic:  Is treated as a chaotic item.
+# * clarity:  Provides clarity.
 # * cursed:   Item is generated cursed.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
@@ -96,6 +97,7 @@
 # * seeinv:   Lets wearer see invisible.
 # * special:  Artefact is "special": can't be picked up by monsters,
 #             can't be affected by Tukima's Dance.
+# * sustab:   Provides sustain abilities.
 # * tilerim:  Adds a black outline to the tile, see above section.
 # * unided:   Properties start unidentified.
 
@@ -1148,6 +1150,16 @@ TILE_EQ:  firestarter
 PLUS:     +7/+7
 BRAND:    SPWPN_FLAMING
 FIRE:     2
+
+NAME:     orange crystal plate armour
+OBJ:      OBJ_ARMOUR/ARM_CRYSTAL_PLATE_ARMOUR
+COLOUR:   LIGHTRED
+TILE:     urand_orange_crystal
+TILE_EQ:  orange_crystal
+PLUS:     8
+INT:      6
+BRAND:    SPARM_ARCHMAGI
+BOOL:     clarity, sustab
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
