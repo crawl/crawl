@@ -345,6 +345,7 @@ const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 const char * const GOZAG_BRIBE_KEY           = "gozag_bribed";
 const char * const GOZAG_PERMABRIBE_KEY      = "gozag_permabribed";
+const char * const GOZAG_BRIBE_BROKEN_KEY    = "gozag_bribe_broken";
 
 #define GOZAG_POTION_BASE_MULTIPLIER 25
 #define GOZAG_SHOP_BASE_MULTIPLIER 50

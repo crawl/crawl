@@ -11,6 +11,7 @@
 #include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "attitude-change.h"
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
@@ -1528,6 +1529,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (breakCharm)
     {
         mon->del_ench(ENCH_CHARM);
+        gozag_break_bribe(mon);
         mons_att_changed(mon);
     }
 
