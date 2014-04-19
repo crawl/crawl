@@ -625,7 +625,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_PERMA_BRIBED:
         // Only demand further payment if you can see the player.
-        if (you_worship(GOD_GOZAG))
+        if (you_worship(GOD_GOZAG) && !props.exists(GOZAG_BRIBE_BROKEN_KEY))
         {
             if (!you.can_see(this))
             {

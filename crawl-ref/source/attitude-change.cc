@@ -13,6 +13,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
+#include "godabil.h"
 #include "godcompanions.h"
 #include "goditem.h"
 #include "libutil.h"
@@ -397,4 +398,33 @@ void gozag_check_bribe(monster* traitor)
         strip_channel_prefix(msg, channel);
         mprf(channel, "%s", msg.c_str());
     }
+}
+
+void gozag_break_bribe(monster* victim)
+{
+    if (!victim->has_ench(ENCH_BRIBED)
+        && !victim->has_ench(ENCH_PERMA_BRIBED)
+        && !victim->props.exists(GOZAG_BRIBE_KEY)
+        && !victim->props.exists(GOZAG_PERMABRIBE_KEY))
+        return;
+
+    const branch_type br = gozag_bribable_branch(victim->type);
+    ASSERT(br != NUM_BRANCHES);
+
+    // Deduct a perma-bribe increment.
+    gozag_deduct_bribe(gozag_bribable_branch(victim->type),
+                       max(1, exper_value(victim) / 10));
+
+    // Un-bribe the victim.
+    victim->props[GOZAG_BRIBE_BROKEN_KEY].get_bool() = true;
+    victim->del_ench(ENCH_BRIBED);
+    victim->del_ench(ENCH_PERMA_BRIBED);
+    victim->props.erase(GOZAG_BRIBE_BROKEN_KEY);
+    victim->props.erase(GOZAG_BRIBE_KEY);
+    victim->props.erase(GOZAG_PERMABRIBE_KEY);
+
+    // Make other nearby bribed monsters un-bribed, too.
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->can_see(victim))
+            gozag_break_bribe(*mi);
 }
