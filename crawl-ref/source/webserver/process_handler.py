@@ -4,7 +4,7 @@ import datetime, time
 import hashlib
 import logging
 
-import config
+from conf import config
 
 from tornado.escape import json_decode, json_encode, xhtml_escape
 from tornado.ioloop import PeriodicCallback, IOLoop
@@ -25,7 +25,6 @@ def find_game_info(socket_dir, socket_file):
     game_id = socket_file[socket_file.index(":")+1:-5]
     if (game_id in config.games and
         os.path.abspath(config.games[game_id]["socket_path"]) == os.path.abspath(socket_dir)):
-        config.games[game_id]["id"] = game_id
         return config.games[game_id]
 
     game_info = None
@@ -34,7 +33,6 @@ def find_game_info(socket_dir, socket_file):
         if os.path.abspath(gi["socket_path"]) == os.path.abspath(socket_dir):
             game_info = gi
             break
-    game_info["id"] = game_id
     return game_info
 
 def handle_new_socket(path, event):
@@ -508,7 +506,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.process = TerminalRecorder(call, self.ttyrec_filename,
                                             self._ttyrec_id_header(),
                                             self.logger, self.io_loop,
-                                            config.recording_term_size)
+                                            tuple(config.recording_term_size))
             self.process.end_callback = self._on_process_end
             self.process.output_callback = self._on_process_output
             self.process.activity_callback = self.note_activity

@@ -1,7 +1,7 @@
 import tornado.web
 import os.path
 
-import config
+from conf import config
 
 class GameDataHandler(tornado.web.StaticFileHandler):
     def initialize(self):

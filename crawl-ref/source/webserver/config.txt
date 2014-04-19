@@ -1,0 +1,31 @@
+server_socket_path: Path for server-side unix sockets (to be used to communicate with crawl).
+server_id: Server name, so far only used in the ttyrec metadata.
+watch_socket_dirs: Watch socket dirs for games not started by the server.
+games: Game configs.
+  %n in paths and urls is replaced by the current username.
+  morgue_url is for a publicly available URL to access morgue_path.
+init_player_program:
+  Script to initialize a user, e.g. make sure the paths and the rc file
+  exist. This is not done by the server at the moment.
+http_connection_timeout: Seconds until stale HTTP connections are closed.
+  This needs a patch currently not in mainline tornado.
+kill_timeout: Seconds until crawl is killed after HUP is sent.
+crypt_algorithm:
+  crypt() algorithm, e.g. "1" for MD5 or "6" for SHA-512; see crypt(3). If
+  false, use traditional DES (but then only the first eight characters of the
+  password are significant). If set to "broken", use traditional DES with
+  the password itself as the salt; this is necessary for compatibility with
+  dgamelaunch, but should be avoided if possible because it leaks the first
+  two characters of the password's plaintext.
+crypt_salt_length:
+  The length of the salt string to use. If crypt_algorithm is false, this
+  setting is ignored and the salt is two characters.
+player_url:
+  Set to a URL with %s where lowercased player name should go in order to
+  hyperlink WebTiles spectator names to their player pages.
+  For example: "http://crawl.akrasiac.org/scoring/players/%s.html".
+  Set to null to disable player page hyperlinks.
+
+Only for development:
+no_cache: Disable caching of static files which are not part of game data.
+autologin: Automatically log in all users with the username given here.

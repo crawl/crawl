@@ -8,7 +8,7 @@ import tornado.template
 
 import logging, logging.handlers
 
-from config import *
+from conf import config
 from util import *
 from ws_handler import *
 from game_data_handler import GameDataHandler
@@ -57,6 +57,7 @@ def daemonize():
         os.dup2(f.fileno(), sys.stderr.fileno())
 
 def write_pidfile():
+    pidfile = config.get("pidfile")
     if not pidfile:
         return
     if os.path.exists(pidfile):
@@ -82,6 +83,7 @@ def write_pidfile():
         f.write(str(os.getpid()))
 
 def remove_pidfile():
+    pidfile = config.get("pidfile")
     if not pidfile:
         return
     try:
@@ -95,10 +97,10 @@ def remove_pidfile():
         logging.error("Failed to delete pidfile!")
 
 def shed_privileges():
-    if gid is not None:
-        os.setgid(gid)
-    if uid is not None:
-        os.setuid(uid)
+    if config.get("gid") is not None:
+        os.setgid(config.get("gid"))
+    if config.get("uid") is not None:
+        os.setuid(config.get("uid"))
 
 
 def signal_handler(signum, frame):
@@ -109,11 +111,11 @@ def signal_handler(signum, frame):
 
 def bind_server():
     settings = {
-        "static_path": static_path,
-        "template_loader": DynamicTemplateLoader.get(template_path)
+        "static_path": config.static_path,
+        "template_loader": DynamicTemplateLoader.get(config.template_path)
         }
 
-    if hasattr(config, "no_cache") and config.no_cache:
+    if config.get("no_cache"):
         settings["static_handler_class"] = NoCacheHandler
 
     application = tornado.web.Application([
@@ -123,30 +125,22 @@ def bind_server():
             ], gzip=True, **settings)
 
     kwargs = {}
-    if http_connection_timeout is not None:
-        kwargs["connection_timeout"] = http_connection_timeout
+    if config.get("http_connection_timeout") is not None:
+        kwargs["connection_timeout"] = config.get("http_connection_timeout")
 
     servers = []
 
-    if bind_nonsecure:
+    if config.binds:
         server = tornado.httpserver.HTTPServer(application, **kwargs)
-        try:
-            listens = bind_pairs
-        except NameError:
-            listens = ( (bind_address, bind_port), )
-        for (addr, port) in listens:
-            server.listen(port, addr)
+        for bind in config.binds:
+            server.listen(bind["port"], bind["address"])
         servers.append(server)
-    if ssl_options:
+    if config.get("ssl_options"):
         # TODO: allow different ssl_options per bind pair
         server = tornado.httpserver.HTTPServer(application,
-                                               ssl_options = ssl_options, **kwargs)
-        try:
-            listens = ssl_bind_pairs
-        except NameError:
-            listens = ( (ssl_address, ssl_port), )
-        for (addr, port) in listens:
-            server.listen(port, addr)
+                                               ssl_options = config.ssl_options, **kwargs)
+        for bind in config.ssl_binds:
+            server.listen(bind["port"], bind["address"])
         servers.append(server)
 
     return servers
@@ -175,7 +169,7 @@ def init_logging(logging_config):
 
 def check_config():
     success = True
-    for (game_id, game_data) in games.iteritems():
+    for game_data in config.get("games"):
         if not os.path.exists(game_data["crawl_binary"]):
             logging.warning("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
             success = False
@@ -188,22 +182,22 @@ def check_config():
 
 
 if __name__ == "__main__":
-    if chroot:
-        os.chroot(chroot)
+    if config.get("chroot"):
+        os.chroot(config.chroot)
 
-    init_logging(logging_config)
+    init_logging(config.logging_config)
 
     if not check_config():
         err_exit("Errors in config. Exiting.")
 
-    if daemon:
+    if config.get("daemon"):
         daemonize()
 
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
 
-    if umask is not None:
-        os.umask(umask)
+    if config.get("umask") is not None:
+        os.umask(config.umask)
 
     write_pidfile()
 
@@ -211,18 +205,18 @@ if __name__ == "__main__":
 
     shed_privileges()
 
-    if dgl_mode:
+    if config.dgl_mode:
         ensure_user_db_exists()
 
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.set_blocking_log_threshold(0.5)
 
-    if dgl_mode:
+    if config.dgl_mode:
         status_file_timeout()
         purge_login_tokens_timeout()
         start_reading_milestones()
 
-    if watch_socket_dirs:
+    if config.get("watch_socket_dirs"):
         process_handler.watch_socket_dirs()
 
     logging.info("Webtiles server started! (PID: %s)" % os.getpid())

@@ -1,0 +1,120 @@
+{
+    "binds": [
+        {"address": "", "port": 8080}
+    ],
+    "ssl_binds": [],
+    "ssl_options": null,
+
+    "daemon": false,
+    "uid": null,
+    "gid": null,
+    "umask": null,
+    "chroot": null,
+    "pidfile": null,
+
+    "logging_config": {
+        "format": "%(asctime)s %(levelname)s: %(message)s",
+        "level": 20
+    },
+
+    "http_connection_timeout": null,
+    "max_connections": 100,
+
+    "dgl_mode": true,
+    "dgl_status_file": "./rcs/status",
+    "server_id": "",
+
+    "init_player_program": "./util/webtiles-init-player.sh",
+
+    "password_db": "./webserver/passwd.db3",
+    "crypt_algorithm": "broken",
+    "crypt_salt_length": 16,
+    "nick_regex": "^[a-zA-Z0-9]{3,20}$",
+    "max_passwd_length": 20,
+    "login_token_lifetime": 7,
+
+    "static_path": "./webserver/static",
+    "template_path": "./webserver/templates/",
+    "server_socket_path": null,
+
+    "max_idle_time": 18000,
+    "connection_timeout": 600,
+    "kill_timeout": 10,
+
+    "recording_term_size": [
+        80,
+        24
+    ],
+    "watch_socket_dirs": false,
+    "status_file_update_rate": 5,
+    "player_url": null,
+    "milestone_files": [
+        "./milestones"
+    ],
+
+    "games": [
+        {
+            "inprogress_path": "./rcs/running",
+            "morgue_url": null,
+            "rcfile_path": "./rcs/",
+            "send_json_options": true,
+            "crawl_binary": "./crawl",
+            "socket_path": "./rcs",
+            "morgue_path": "./rcs/%n",
+            "client_path": "./webserver/game_data/",
+            "macro_path": "./rcs/",
+            "ttyrec_path": "./rcs/ttyrecs/%n",
+            "id": "dcss-web-trunk",
+            "name": "DCSS trunk"
+        },
+        {
+            "inprogress_path": "./rcs/running",
+            "morgue_url": null,
+            "rcfile_path": "./rcs/",
+            "crawl_binary": "./crawl",
+            "socket_path": "./rcs",
+            "options": ["-sprint"],
+            "morgue_path": "./rcs/%n",
+            "client_path": "./webserver/game_data/",
+            "id": "sprint-web-trunk",
+            "macro_path": "./rcs/",
+            "ttyrec_path": "./rcs/ttyrecs/%n",
+            "send_json_options": true,
+            "name": "Sprint trunk"
+        },
+        {
+            "inprogress_path": "./rcs/running",
+            "morgue_url": null,
+            "rcfile_path": "./rcs/",
+            "crawl_binary": "./crawl",
+            "socket_path": "./rcs",
+            "options": ["-zotdef"],
+            "morgue_path": "./rcs/%n",
+            "client_path": "./webserver/game_data/",
+            "id": "zd-web-trunk",
+            "macro_path": "./rcs/",
+            "ttyrec_path": "./rcs/ttyrecs/%n",
+            "send_json_options": true,
+            "name": "Zot Defense trunk"
+        },
+        {
+            "inprogress_path": "./rcs/running",
+            "morgue_url": null,
+            "rcfile_path": "./rcs/",
+            "crawl_binary": "./crawl",
+            "socket_path": "./rcs",
+            "options": ["-tutorial"],
+            "morgue_path": "./rcs/%n",
+            "client_path": "./webserver/game_data/",
+            "id": "tut-web-trunk",
+            "macro_path": "./rcs/",
+            "ttyrec_path": "./rcs/ttyrecs/%n",
+            "send_json_options": true,
+            "name": "Tutorial trunk"
+        }
+    ],
+
+    "no_cache": false,
+    "autologin": null,
+    "game_data_no_cache": true
+}

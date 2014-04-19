@@ -5,17 +5,16 @@ import os.path
 import logging
 import random
 
-from config import (max_passwd_length, nick_regex, password_db,
-                    crypt_algorithm, crypt_salt_length)
+from conf import config
 
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
     try:
-        passwd = passwd[0:max_passwd_length]
+        passwd = passwd[0:config.max_passwd_length]
     except:
         return None
 
     try:
-        conn = sqlite3.connect(password_db)
+        conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
         c.execute("select username,password from dglusers where username=? collate nocase",
                   (username,))
@@ -30,12 +29,12 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
         if conn: conn.close()
 
 def ensure_user_db_exists():
-    if os.path.exists(password_db): return
+    if os.path.exists(config.password_db): return
     logging.warn("User database didn't exist; creating it now.")
     c = None
     conn = None
     try:
-        conn = sqlite3.connect(password_db)
+        conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
         schema = ("CREATE TABLE dglusers (id integer primary key," +
                   " username text, email text, env text," +
@@ -53,21 +52,22 @@ def make_salt(saltlen):
 
 def register_user(username, passwd, email): # Returns an error message or None
     if passwd == "": return "The password can't be empty!"
-    passwd = passwd[0:max_passwd_length]
+    passwd = passwd[0:config.max_passwd_length]
     username = username.strip()
-    if not re.match(nick_regex, username): return "Invalid username!"
+    if not re.match(config.nick_regex, username): return "Invalid username!"
 
-    if crypt_algorithm == "broken":
+    if config.crypt_algorithm == "broken":
         salt = passwd
-    elif crypt_algorithm:
-        salt = "$%s$%s$" % (crypt_algorithm, make_salt(crypt_salt_length))
+    elif config.crypt_algorithm:
+        salt = "$%s$%s$" % (config.crypt_algorithm,
+                            make_salt(config.crypt_salt_length))
     else:
         salt = make_salt(2)
 
     crypted_pw = crypt.crypt(passwd, salt)
 
     try:
-        conn = sqlite3.connect(password_db)
+        conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
         c.execute("select username from dglusers where username=? collate nocase",
                   (username,))

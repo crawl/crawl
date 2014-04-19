@@ -7,7 +7,7 @@ import warnings
 from datetime import datetime, timedelta
 from tornado.escape import json_encode
 
-from config import server_socket_path
+from conf import config
 
 class WebtilesSocketConnection(object):
     def __init__(self, io_loop, socketpath, logger):
@@ -43,7 +43,7 @@ class WebtilesSocketConnection(object):
         # the bind call fails)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            self.socketpath = os.tempnam(server_socket_path, "crawl")
+            self.socketpath = os.tempnam(config.server_socket_path, "crawl")
         self.socket.bind(self.socketpath)
 
         # Install handler

@@ -1,19 +1,19 @@
 Play now:
 {% set rcs = set() %}
-{% for id in games %}
-{% if games[id]["rcfile_path"] not in rcs %}
-{% if "separator" in games[id] %}
-{% raw games[id]["separator"] %}
+{% for data in games %}
+{% if data["rcfile_path"] not in rcs %}
+{% if "separator" in data %}
+{% raw data["separator"] %}
 {% else %}<br>{% end %}
-<a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
-{% set rcs.add(games[id]["rcfile_path"]) %}
+<a href="#play-{{ data['id'] }}">{{ data["name"] }}</a>
+{% set rcs.add(data["rcfile_path"]) %}
 <a href="javascript:"
    class="edit_rc_link"
-   data-game_id="{{ id }}">(edit rc)</a>
+   data-game_id="{{ data['id'] }}">(edit rc)</a>
 {% else %}
-{% if "separator" in games[id] %}
-{% raw games[id]["separator"] %}
+{% if "separator" in data %}
+{% raw data["separator"] %}
 {% else %} | {% end %}
-<a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
+<a href="#play-{{ data['id'] }}">{{ data["name"] }}</a>
 {% end %}
 {% end %}

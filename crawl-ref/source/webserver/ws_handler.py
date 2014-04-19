@@ -12,7 +12,7 @@ import codecs
 import random
 import zlib
 
-import config
+from conf import config
 import checkoutput
 from userdb import *
 from util import *
@@ -91,12 +91,7 @@ def find_running_game(charname, start):
 
 milestone_file_tailers = []
 def start_reading_milestones():
-    if config.milestone_file is None: return
-
-    if isinstance(config.milestone_file, basestring):
-        files = [config.milestone_file]
-    else:
-        files = config.milestone_file
+    files = config.milestone_files
 
     for f in files:
         milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
@@ -202,7 +197,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
         else:
             if config.dgl_mode:
-                if hasattr(config, "autologin") and config.autologin:
+                if config.get("autologin"):
                     self.do_login(config.autologin)
                 self.send_lobby()
             else:
@@ -228,7 +223,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         # Rerender Banner
         banner_html = self.render_string("banner.html", username = self.username)
         self.queue_message("html", id = "banner", content = banner_html)
-        play_html = self.render_string("game_links.html", games = config.games)
+        play_html = self.render_string("game_links.html", games = config.get("games"))
         self.send_message("set_game_links", content = play_html)
 
     def reset_timeout(self):
