@@ -3481,7 +3481,7 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
 
                 if (you.experience_level == 5)
                     mprf(MSGCH_INTRINSIC_GAIN, "You have gained the ability to fly.");
-                else if (you.experience_level == 15)
+                else if (you.experience_level == 14)
                     mprf(MSGCH_INTRINSIC_GAIN, "You can now fly continuously.");
                 break;
 
