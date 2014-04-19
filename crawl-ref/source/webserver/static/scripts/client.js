@@ -390,9 +390,11 @@ function (exports, $, key_conversion, chat, comm) {
         $("#login_message").html("Logging in...");
         var username = $("#username").val();
         var password = $("#password").val();
+        var rememberme = !!$("#remember_me").attr("checked");
         send_message("login", {
             username: username,
-            password: password
+            password: password,
+            rememberme: rememberme
         });
         return false;
     }
@@ -418,11 +420,6 @@ function (exports, $, key_conversion, chat, comm) {
         $("#chat_input").show();
         $("#chat_login_text").hide();
 
-        if ($("#remember_me").attr("checked"))
-        {
-            send_message("set_login_cookie");
-        }
-
         if (!watching)
         {
             current_hash = null;
@@ -430,25 +427,14 @@ function (exports, $, key_conversion, chat, comm) {
         }
     }
 
-    function remember_me_click()
-    {
-        if ($("#remember_me").attr("checked"))
-        {
-            send_message("set_login_cookie");
-        }
-        else if (get_login_cookie())
-        {
-            send_message("forget_login_cookie", {
-                cookie: get_login_cookie()
-            });
-            set_login_cookie(null);
-        }
-    }
-
     function set_login_cookie(data)
     {
+        var secure = false;
+        if (location.protocol == "https:")
+            secure = true;
         if (data)
-            $.cookie("login", data.cookie, { expires: data.expires });
+            $.cookie("login", data.cookie, { expires: data.expires,
+                                             secure: secure });
         else
             $.cookie("login", null);
     }
@@ -1199,7 +1185,6 @@ function (exports, $, key_conversion, chat, comm) {
         $(".hide_dialog").click(hide_dialog);
 
         $("#login_form").bind("submit", login);
-        $("#remember_me").bind("click", remember_me_click);
         $("#logout_link").bind("click", logout);
         $("#chat_login_link").bind("click", chat_login);
 

@@ -12,7 +12,7 @@ from conf import config
 from util import *
 from ws_handler import *
 from game_data_handler import GameDataHandler
-import process_handler
+import process_handler, userdb
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -113,6 +113,12 @@ def usr1_handler(signum, frame):
     logging.info("Received USR1, reloading config.")
     config.load()
 
+def purge_login_tokens_timeout():
+    userdb.purge_login_tokens()
+    ioloop = tornado.ioloop.IOLoop.instance()
+    ioloop.add_timeout(time.time() + 60 * 60 * 1000,
+                       purge_login_tokens_timeout)
+
 def bind_server():
     settings = {
         "static_path": config.static_path,
@@ -211,7 +217,7 @@ if __name__ == "__main__":
     shed_privileges()
 
     if config.dgl_mode:
-        ensure_user_db_exists()
+        userdb.ensure_user_db_exists()
 
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.set_blocking_log_threshold(0.5)

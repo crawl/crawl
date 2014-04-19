@@ -13,15 +13,12 @@ import random
 import zlib
 
 from conf import config
-import checkoutput
-from userdb import *
+import checkoutput, userdb
 from util import *
 
 sockets = set()
 current_id = 0
 shutting_down = False
-login_tokens = {}
-rand = random.SystemRandom()
 
 def shutdown():
     global shutting_down
@@ -58,17 +55,6 @@ def write_dgl_status_file():
         logging.warning("Could not write dgl status file: %s", e)
     finally:
         if f: f.close()
-
-def purge_login_tokens():
-    for token in list(login_tokens):
-        if datetime.datetime.now() > login_tokens[token]:
-            del login_tokens[token]
-
-def purge_login_tokens_timeout():
-    purge_login_tokens()
-    ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.add_timeout(time.time() + 60 * 60 * 1000,
-                       purge_login_tokens_timeout)
 
 def status_file_timeout():
     write_dgl_status_file()
@@ -135,7 +121,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.message_handlers = {
             "login": self.login,
             "token_login": self.token_login,
-            "set_login_cookie": self.set_login_cookie,
             "forget_login_cookie": self.forget_login_cookie,
             "play": self.start_crawl,
             "pong": self.pong,
@@ -377,49 +362,30 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             self.send_game_links()
 
-    def login(self, username, password):
-        real_username = user_passwd_match(username, password)
+    def login(self, username, password, rememberme):
+        real_username = userdb.user_passwd_match(username, password)
         if real_username:
             self.logger.info("User %s logged in.", real_username)
             self.do_login(real_username)
+            if rememberme:
+                cookie = userdb.get_login_cookie(real_username)
+                self.send_message("login_cookie", cookie=cookie,
+                                  expires=config.login_token_lifetime)
         else:
             self.logger.warning("Failed login for user %s.", username)
             self.send_message("login_fail")
 
     def token_login(self, cookie):
-        username, _, token = cookie.partition(' ')
-        try:
-            token = long(token)
-        except ValueError:
-            token = None
-        if (token, username) in login_tokens:
-            del login_tokens[(token, username)]
-            self.logger.info("User %s logged in (via token).", username)
+        username, cookie = userdb.token_login(cookie, logger=self.logger)
+        if username:
             self.do_login(username)
+            self.send_message("login_cookie", cookie = cookie,
+                              expires = config.login_token_lifetime)
         else:
-            self.logger.warning("Wrong login token for user %s.", username)
             self.send_message("login_fail")
 
-    def set_login_cookie(self):
-        if self.username is None: return
-        token = rand.getrandbits(128)
-        expires = datetime.datetime.now() + datetime.timedelta(config.login_token_lifetime)
-        login_tokens[(token, self.username)] = expires
-        cookie = self.username + " " + str(token)
-        self.send_message("login_cookie", cookie = cookie,
-                          expires = config.login_token_lifetime)
-
     def forget_login_cookie(self, cookie):
-        try:
-            username, _, token = cookie.partition(' ')
-            try:
-                token = long(token)
-            except ValueError:
-                token = None
-            if (token, username) in login_tokens:
-                del login_tokens[(token, username)]
-        except ValueError:
-            return
+        userdb.forget_login_cookie(cookie)
 
     def pong(self):
         self.received_pong = True
@@ -501,7 +467,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):
-        error = register_user(username, password, email)
+        error = userdb.register_user(username, password, email)
         if error is None:
             self.logger.info("Registered user %s.", username)
             self.do_login(username)
