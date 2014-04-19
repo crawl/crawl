@@ -5421,6 +5421,10 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_GOZAG_BRIBE_BRANCH:
         return TILEG_ABILITY_GOZAG_BRIBE_BRANCH;
     // Qazlal
+    case ABIL_QAZLAL_UPHEAVAL:
+        return TILEG_ABILITY_QAZLAL_UPHEAVAL;
+    case ABIL_QAZLAL_DISASTER_AREA:
+        return TILEG_ABILITY_QAZLAL_DISASTER_AREA;
 
     // General divine (pseudo) abilities.
     case ABIL_RENOUNCE_RELIGION:
