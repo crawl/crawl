@@ -116,7 +116,7 @@ def usr1_handler(signum, frame):
 def purge_login_tokens_timeout():
     userdb.purge_login_tokens()
     ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.add_timeout(time.time() + 60 * 60 * 1000,
+    ioloop.add_timeout(time.time() + 60 * 60 * 24,
                        purge_login_tokens_timeout)
 
 def bind_server():

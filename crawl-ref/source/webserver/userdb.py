@@ -4,7 +4,7 @@ import re
 import os.path
 import logging
 import random
-import datetime
+import time
 
 from conf import config
 
@@ -30,21 +30,37 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
         if conn: conn.close()
 
 def ensure_user_db_exists():
-    if os.path.exists(config.password_db): return
-    logging.warn("User database didn't exist; creating it now.")
+    if not os.path.exists(config.password_db):
+        logging.warn("User database didn't exist; creating it now.")
+        c = None
+        conn = None
+        try:
+            conn = sqlite3.connect(config.password_db)
+            c = conn.cursor()
+            schema = ("CREATE TABLE dglusers (id integer primary key," +
+                      " username text, email text, env text," +
+                      " password text, flags integer);")
+            c.execute(schema)
+            conn.commit()
+        finally:
+            if c: c.close()
+            if conn: conn.close()
+
     c = None
     conn = None
     try:
         conn = sqlite3.connect(config.password_db)
         c = conn.cursor()
-        schema = ("CREATE TABLE dglusers (id integer primary key," +
-                  " username text, email text, env text," +
-                  " password text, flags integer);")
+        schema = ("CREATE TABLE IF NOT EXISTS login_tokens (" +
+                  "username text, seqid text," +
+                  "token text, expires integer," +
+                  "PRIMARY KEY (username, seqid));")
         c.execute(schema)
         conn.commit()
     finally:
         if c: c.close()
         if conn: conn.close()
+
 
 saltchars = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
@@ -86,30 +102,54 @@ def register_user(username, passwd, email): # Returns an error message or None
         if c: c.close()
         if conn: conn.close()
 
-login_tokens = {}
 rand = random.SystemRandom()
 
 def purge_login_tokens():
-    for k in list(login_tokens.keys()):
-        expires, token = login_tokens[k]
-        if datetime.datetime.now() > login_tokens[k]:
-            del login_tokens[k]
+    c = None
+    conn = None
+    try:
+        conn = sqlite3.connect(config.password_db)
+        c = conn.cursor()
+        c.execute("DELETE FROM login_tokens WHERE expires<?", (int(time.time()),))
+        conn.commit()
+    finally:
+        if c: c.close()
+        if conn: conn.close()
 
 def delete_logins(username):
-    for (seqid, un) in list(login_tokens.keys()):
-        if un == username:
-            del login_tokens[(seqid, un)]
+    c = None
+    conn = None
+    try:
+        conn = sqlite3.connect(config.password_db)
+        c = conn.cursor()
+        c.execute("DELETE FROM login_tokens WHERE username=?", (username,))
+        conn.commit()
+    finally:
+        if c: c.close()
+        if conn: conn.close()
 
 def token_login(cookie, logger=logging):
     username, token, seqid = cookie.split(":")
+    c = None
+    conn = None
     try:
-        token = long(token)
-        seqid = long(seqid)
-    except ValueError:
-        return None, None
-    if (seqid, username) in login_tokens:
-        expires, true_token = login_tokens[(seqid, username)]
-        del login_tokens[(seqid, username)]
+        conn = sqlite3.connect(config.password_db)
+        c = conn.cursor()
+        c.execute("SELECT token, expires FROM login_tokens WHERE username=? AND seqid=?",
+                  (username, seqid))
+        result = c.fetchone()
+        c.execute("DELETE FROM login_tokens WHERE username=? AND seqid=?",
+                  (username, seqid))
+        conn.commit()
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
+    if result:
+        true_token, expires = result
+        if expires < time.time():
+            return None, None
+
         if true_token == token:
             logger.info("User %s logged in (via token).", username)
             return username, get_login_cookie(username, seqid=seqid)
@@ -121,19 +161,34 @@ def token_login(cookie, logger=logging):
         return None, None
 
 def get_login_cookie(username, seqid=None):
-    token = rand.getrandbits(128)
-    if seqid is None: seqid = rand.getrandbits(128)
-    expires = datetime.datetime.now() + datetime.timedelta(config.login_token_lifetime)
-    login_tokens[(seqid, username)] = (expires, token)
+    token = str(rand.getrandbits(128))
+    if seqid is None: seqid = str(rand.getrandbits(128))
+    expires = int(time.time()) + config.login_token_lifetime*24*60*60
+    c = None
+    conn = None
+    try:
+        conn = sqlite3.connect(config.password_db)
+        c = conn.cursor()
+        c.execute("INSERT INTO login_tokens(username, seqid, token, expires)"
+                  + " VALUES (?,?,?,?)",
+                  (username, seqid, token, expires))
+        conn.commit()
+    finally:
+        if c: c.close()
+        if conn: conn.close()
     cookie = username + ":" + str(token) + ":" + str(seqid)
     return cookie
 
 def forget_login_cookie(cookie):
     username, token, seqid = cookie.split(":")
+    c = None
+    conn = None
     try:
-        token = long(token)
-        seqid = long(seqid)
-    except ValueError:
-        return
-    if (seqid, username) in login_tokens:
-        del login_tokens[(seqid, username)]
+        conn = sqlite3.connect(config.password_db)
+        c = conn.cursor()
+        c.execute("DELETE FROM login_tokens WHERE username=? AND seqid=?",
+                  (username, seqid))
+        conn.commit()
+    finally:
+        if c: c.close()
+        if conn: conn.close()
