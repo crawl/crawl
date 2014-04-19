@@ -1119,7 +1119,7 @@ NAME: grunt_runaround
 TAGS: no_monster_gen uniq_d_encompass
 PLACE: Depths:$
 DEPTH: Depths:2-
-WEIGHT: 2 (Depths), 10
+WEIGHT: 2 (Depths:$), 10
 ORIENT: encompass
 SUBVAULT: B : grunt_runaround_doors_1
 SUBVAULT: C : grunt_runaround_doors_2
