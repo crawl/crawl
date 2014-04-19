@@ -3375,8 +3375,11 @@ static monster_type _band_member(band_type band, int which)
     {
         monster_type tmptype = MONS_PROGRAM_BUG;
         coord_def tmppos;
+        dungeon_char_type tmpfeat;
+        level_id place = level_id::current();
         return _resolve_monster_type(RANDOM_BANDLESS_MONSTER, PROX_ANYWHERE,
-                                     tmptype, tmppos, 0, NULL, NULL, NULL);
+                                     tmptype, tmppos, 0, &tmpfeat, &place,
+                                     NULL);
     }
 
     default:
