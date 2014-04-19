@@ -760,8 +760,8 @@ static const char* dur_names[] =
     "icy armour",
 #if TAG_MAJOR_VERSION == 34
     "repel missiles",
-#endif
     "prayer",
+#endif
     "piety pool",
     "divine vigour",
     "divine stamina",
