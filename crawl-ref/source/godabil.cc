@@ -4411,14 +4411,16 @@ bool gozag_bribe_branch()
 {
     const int bribe_amount = 3000;
     branch_type branch = you.where_are_you;
+    string who = make_stringf("the denizens of %s",
+                              branches[you.where_are_you].longname);
     if (!_gozag_branch_bribable(branch))
     {
-        mprf("You can't bribe this branch.");
+        mprf("You can't bribe %s.", who.c_str());
         return false;
     }
     if (you.gold < bribe_amount)
     {
-        mprf("You don't have enough gold to bribe this branch.");
+        mprf("You don't have enough gold to bribe %s.", who.c_str());
         return false;
     }
 
