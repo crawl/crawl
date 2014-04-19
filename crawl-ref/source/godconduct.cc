@@ -337,6 +337,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
             case GOD_LUGONU:
             case GOD_DITHMENOS:
+            case GOD_QAZLAL:
                 if (you_worship(GOD_DITHMENOS)
                     && mons_class_flag(victim->type, M_SHADOW))
                 {
@@ -371,6 +372,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
             case GOD_LUGONU:
             case GOD_DITHMENOS:
+            case GOD_QAZLAL:
                 if (you_worship(GOD_DITHMENOS)
                     && mons_class_flag(victim->type, M_SHADOW))
                 {
@@ -406,6 +408,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
             case GOD_LUGONU:
             case GOD_DITHMENOS:
+            case GOD_QAZLAL:
                 if (you_worship(GOD_DITHMENOS)
                     && mons_class_flag(victim->type, M_SHADOW))
                 {
@@ -543,6 +546,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_BEOGH:
             case GOD_LUGONU:
             case GOD_DITHMENOS:
+            case GOD_QAZLAL:
                 if (you_worship(GOD_DITHMENOS)
                     && mons_class_flag(victim->type, M_SHADOW))
                 {
@@ -614,6 +618,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
+            case GOD_QAZLAL:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -655,6 +660,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_TROG:
             case GOD_BEOGH:
             case GOD_LUGONU:
+            case GOD_QAZLAL:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
                 piety_denom = level + 10 - you.experience_level/3;
@@ -692,6 +698,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
+            case GOD_QAZLAL:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
                 piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
@@ -732,6 +739,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_TROG:
             case GOD_BEOGH:
             case GOD_LUGONU:
+            case GOD_QAZLAL:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
                 piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
