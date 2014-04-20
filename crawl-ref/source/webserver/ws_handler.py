@@ -128,7 +128,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "watch": self.watch,
             "chat_msg": self.post_chat_message,
             "register": self.register,
-            "go_lobby": self.go_lobby,
+            "lobby": self.send_lobby,
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
             }
@@ -196,7 +196,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     self.token_login(url_unescape(self.get_cookie("login")))
                 elif config.get("autologin"):
                     self.do_login(config.autologin)
-                self.send_lobby()
             else:
                 self.start_crawl(None)
 
@@ -281,7 +280,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             self.process = process_handler.DGLLessCrawlProcessHandler(self.logger, self.ioloop)
 
-        self.process.end_callback = self._on_crawl_end
         self.process.add_watcher(self)
         try:
             self.process.start()
@@ -303,14 +301,20 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     update_all_lobbys(self.process)
                 update_global_status()
 
-    def _on_crawl_end(self):
-        if config.dgl_mode:
-            remove_in_lobbys(self.process)
+    def crawl_ended(self):
+        if self.is_running():
+            if config.dgl_mode:
+                remove_in_lobbys(self.process)
 
-        reason = self.process.exit_reason
-        message = self.process.exit_message
-        dump_url = self.process.exit_dump_url
-        self.process = None
+            reason = self.process.exit_reason
+            message = self.process.exit_message
+            dump_url = self.process.exit_dump_url
+            self.process = None
+        else:
+            reason = self.watched_game.exit_reason
+            message = self.watched_game.exit_message
+            dump_url = self.watched_game.exit_dump_url
+            self.watched_game = None
 
         if self.client_closed:
             sockets.remove(self)
@@ -321,11 +325,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # Go back to lobby
                 self.send_message("game_ended", reason = reason,
                                   message = message, dump = dump_url)
-                if config.dgl_mode:
-                    if not self.watched_game:
-                        self.send_message("go_lobby")
-                        self.send_lobby()
-                else:
+                if not config.dgl_mode:
                     self.start_crawl(None)
 
         if config.dgl_mode:
@@ -467,8 +467,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             process.add_watcher(self)
             self.send_message("watching_started", username = process.username)
         else:
-            if self.watched_game:
-                self.stop_watching()
             self.go_lobby()
 
     def post_chat_message(self, text):
@@ -501,10 +499,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process.stop()
         elif self.watched_game:
             self.stop_watching()
-            self.send_message("go_lobby")
-            self.send_lobby()
-        else:
-            self.send_message("go_lobby")
+        self.send_message("go", path="/")
 
     def get_rc(self, game_id):
         if game_id not in config.games: return

@@ -95,7 +95,6 @@ class CrawlProcessHandlerBase(object):
         self.formatted_time = now.strftime("%Y-%m-%d.%H:%M:%S")
         self.lock_basename = self.formatted_time + ".ttyrec"
 
-        self.end_callback = None
         self._receivers = set()
         self.last_activity_time = time.time()
         self.idle_checker = PeriodicCallback(self.check_idle, 10000,
@@ -154,15 +153,8 @@ class CrawlProcessHandlerBase(object):
 
         self.idle_checker.stop()
 
-        for watcher in list(self._receivers):
-            if watcher.watched_game == self:
-                watcher.send_message("game_ended", reason = self.exit_reason,
-                                     message = self.exit_message,
-                                     dump = self.exit_dump_url)
-                watcher.go_lobby()
-
-        if self.end_callback:
-            self.end_callback()
+        for receiver in list(self._receivers):
+            receiver.crawl_ended()
 
     def update_watcher_description(self):
         try:

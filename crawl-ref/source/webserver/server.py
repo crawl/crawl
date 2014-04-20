@@ -24,7 +24,7 @@ def scan_titles():
 scan_titles()
 
 class MainHandler(tornado.web.RequestHandler):
-    def get(self):
+    def get(self, arg=None):
         self.render("client.html", title_img=random.choice(title_imgs),
                     username=None, config=config)
 
@@ -135,6 +135,8 @@ def bind_server():
 
     application = tornado.web.Application([
             (r"/", MainHandler),
+            (r"/play/(.*)", MainHandler),
+            (r"/watch/(.*)", MainHandler),
             (r"/socket", CrawlWebSocket),
             (r"/gamedata/(.*)/(.*)", GameDataHandler)
             ], gzip=True, **settings)

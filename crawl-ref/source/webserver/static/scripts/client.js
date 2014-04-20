@@ -20,8 +20,6 @@ function (exports, $, key_conversion, chat, comm) {
     var playing = false;
     var logging_in = false;
     var showing_close_message = false;
-    var current_hash;
-    var exit_reason, exit_message, exit_dump;
     var normal_exit = ["saved", "cancel", "quit", "won", "bailed out", "dead"];
 
     var send_message = comm.send_message;
@@ -307,7 +305,7 @@ function (exports, $, key_conversion, chat, comm) {
                if (e.which == 27)
                 {
                     e.preventDefault();
-                    location.hash = "#lobby";
+                    document.location = "/";
                 }
                 else if (e.which == 123)
                 {
@@ -408,13 +406,10 @@ function (exports, $, key_conversion, chat, comm) {
         $("#chat_input").show();
         $("#chat_login_text").hide();
 
-        $.cookie("sid", data.sid, { secure: location.protocol == "https:" });
+        $.cookie("sid", data.sid, { secure: location.protocol == "https:",
+                                    path: "/" });
 
-        if (!watching)
-        {
-            current_hash = null;
-            hash_changed();
-        }
+        do_url_action(true);
     }
 
     function set_login_cookie(data)
@@ -424,9 +419,10 @@ function (exports, $, key_conversion, chat, comm) {
             secure = true;
         if (data)
             $.cookie("login", data.cookie, { expires: data.expires,
-                                             secure: secure });
+                                             secure: secure,
+                                             path: "/" });
         else
-            $.cookie("login", null);
+            $.cookie("login", null, { path: "/" });
     }
 
     function get_login_cookie()
@@ -440,7 +436,7 @@ function (exports, $, key_conversion, chat, comm) {
             cookie: get_login_cookie()
         });
         set_login_cookie(null);
-        $.cookie("sid", null);
+        $.cookie("sid", null, { path: "/" });
         location.reload();
     }
 
@@ -678,50 +674,17 @@ function (exports, $, key_conversion, chat, comm) {
         set_layer("loader");
     }
 
-    function cleanup()
+    function show_lobby()
     {
-        document.title = "WebTiles - Dungeon Crawl Stone Soup";
-
-        hide_dialog();
-
-        $(document).trigger("game_cleanup");
-        $("#game").html('<div id="crt" style="display: none;"></div>');
-
-        chat.clear();
-
-        watching = false;
-    }
-
-    function go_lobby()
-    {
-        var was_watching = watching;
-
-        cleanup();
-        current_hash = "#lobby";
-        location.hash = "#lobby";
         set_layer("lobby");
         $("#username").focus();
-
-        if (exit_reason)
-        {
-            if (was_watching || normal_exit.indexOf(exit_reason) === -1)
-            {
-                show_exit_dialog(exit_reason, exit_message, exit_dump,
-                                 was_watching ? watching_username : null);
-            }
-        }
-        exit_reason = null;
-        exit_message = null;
-        exit_dump = null;
     }
 
     function login_required(data)
     {
-        cleanup();
-        show_loading_screen();
         show_prompt("Login required to play <span id='prompt_game'>"
                     + data.game + "</span>:",
-                    "<a href='#lobby'>Back to lobby</a>");
+                    "<a href='/'>Back to lobby</a>");
     }
 
     function chat_login(data)
@@ -842,7 +805,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function make_watch_link(data)
     {
-        return "<a href='#watch-" + data.username + "'></a>";
+        return "<a href='/watch/" + data.username + "'></a>";
     }
 
     function format_idle_time(seconds)
@@ -964,37 +927,56 @@ function (exports, $, key_conversion, chat, comm) {
     {
         playing = false;
 
-        exit_reason = data.reason;
-        exit_message = data.message;
-        exit_dump = data.dump;
+        if (data.reason)
+        {
+            if (watching || normal_exit.indexOf(data.reason) === -1)
+            {
+                show_exit_dialog(data.reason, data.message, data.dump,
+                                 watching ? watching_username : null);
+            }
+            else
+                document.location = "/";
+        }
+        else
+            document.location = "/";
     }
 
-    function hash_changed()
+    function do_url_action(logged_in)
     {
-        if (location.hash === current_hash)
-            return;
-        current_hash = location.hash;
-
-        var watch = location.hash.match(/^#watch-(.+)/i);
-        var play = location.hash.match(/^#play-(.+)/i);
-        if (watch)
+        if (logged_in)
         {
-            var watch_user = watch[1];
-            send_message("watch", {
-                username: watch_user
-            });
-        }
-        else if (play)
-        {
-            var game_id = play[1];
-            send_message("play", {
-                game_id: game_id
-            });
+            var play = location.pathname.match(/^\/play\/(.+)/);
+            if (play)
+            {
+                var game_id = play[1];
+                send_message("play", {
+                    game_id: game_id
+                });
+                show_loading_screen();
+            }
         }
         else
         {
-            send_message("go_lobby");
+            var watch = location.pathname.match(/^\/watch\/(.+)/);
+            if (watch)
+            {
+                var watch_user = watch[1];
+                send_message("watch", {
+                    username: watch_user
+                });
+                show_loading_screen();
+            }
+            else if (location.pathname == "/")
+            {
+                send_message("lobby");
+                show_lobby();
+            }
         }
+    }
+
+    function go_to(data)
+    {
+        document.location = data.path;
     }
 
     function set_game_links(data)
@@ -1130,13 +1112,13 @@ function (exports, $, key_conversion, chat, comm) {
         "html": set_html,
         "show_dialog": handle_dialog,
         "hide_dialog": hide_dialog,
+        "go": go_to,
 
         "lobby_clear": lobby_clear,
         "lobby_entry": lobby_entry,
         "lobby_remove": lobby_remove,
         "lobby_complete": lobby_complete,
 
-        "go_lobby": go_lobby,
         "login_required": login_required,
         "game_started": crawl_started,
         "game_ended": crawl_ended,
@@ -1163,8 +1145,7 @@ function (exports, $, key_conversion, chat, comm) {
         });
 
         $(window).bind("beforeunload", function (ev) {
-            if (location.hash.match(/^#play-(.+)/i) &&
-                socket.readyState == 1)
+            if (playing && socket.readyState == 1)
             {
                 return "Really save and quit the game?";
             }
@@ -1220,12 +1201,9 @@ function (exports, $, key_conversion, chat, comm) {
 
             socket.onopen = function ()
             {
-                window.onhashchange = hash_changed;
-
                 start_login();
 
-                current_hash = null;
-                hash_changed();
+                do_url_action(false);
             };
 
             socket.onmessage = function (msg)
