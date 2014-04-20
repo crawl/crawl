@@ -2746,28 +2746,43 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         // Horrible hack for wizlab_wucad_mu.
         if (player_in_branch(BRANCH_WIZLAB))
             break;
-        band = BAND_MONSTROUS_DEMONSPAWN;
-        band_size = random2(4);
+        if (coinflip())
+        {
+            band = BAND_MONSTROUS_DEMONSPAWN;
+            band_size = random_range(1, 2);
+        }
         break;
 
     case MONS_GELID_DEMONSPAWN:
-        band = BAND_GELID_DEMONSPAWN;
-        band_size = random2(4);
+        if (coinflip())
+        {
+            band = BAND_GELID_DEMONSPAWN;
+            band_size = random_range(1, 2);
+        }
         break;
 
     case MONS_INFERNAL_DEMONSPAWN:
-        band = BAND_INFERNAL_DEMONSPAWN;
-        band_size = random2(4);
+        if (coinflip())
+        {
+            band = BAND_INFERNAL_DEMONSPAWN;
+            band_size = random_range(1, 2);
+        }
         break;
 
     case MONS_PUTRID_DEMONSPAWN:
-        band = BAND_PUTRID_DEMONSPAWN;
-        band_size = random2(4);
+        if (coinflip())
+        {
+            band = BAND_PUTRID_DEMONSPAWN;
+            band_size = random_range(1, 2);
+        }
         break;
 
     case MONS_TORTUROUS_DEMONSPAWN:
-        band = BAND_TORTUROUS_DEMONSPAWN;
-        band_size = random2(4);
+        if (coinflip())
+        {
+            band = BAND_TORTUROUS_DEMONSPAWN;
+            band_size = random_range(1, 2);
+        }
         break;
 
     case MONS_BLOOD_SAINT:
@@ -3244,7 +3259,7 @@ static monster_type _band_member(band_type band, int which)
             return MONS_SALAMANDER;
 
     case BAND_MONSTROUS_DEMONSPAWN:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || one_chance_in(5))
         {
             return random_choose_weighted( 2, MONS_DEMONIC_CRAWLER,
                                            2, MONS_SIXFIRHY,
@@ -3254,7 +3269,7 @@ static monster_type _band_member(band_type band, int which)
         return random_demonspawn_monster_species();
 
     case BAND_GELID_DEMONSPAWN:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || one_chance_in(5))
         {
             return random_choose_weighted( 2, MONS_BLUE_DEVIL,
                                            2, MONS_ICE_DEVIL,
@@ -3264,7 +3279,7 @@ static monster_type _band_member(band_type band, int which)
         return random_demonspawn_monster_species();
 
     case BAND_INFERNAL_DEMONSPAWN:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || one_chance_in(5))
         {
             return random_choose_weighted( 2, MONS_RED_DEVIL,
                                            2, MONS_SUN_DEMON,
@@ -3274,7 +3289,7 @@ static monster_type _band_member(band_type band, int which)
         return random_demonspawn_monster_species();
 
     case BAND_PUTRID_DEMONSPAWN:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || one_chance_in(5))
             return random_choose_weighted( 2, MONS_HELLWING,
                                            2, MONS_ORANGE_DEMON,
                                            3, MONS_PUTRID_DEMONSPAWN,
@@ -3282,7 +3297,7 @@ static monster_type _band_member(band_type band, int which)
         return random_demonspawn_monster_species();
 
     case BAND_TORTUROUS_DEMONSPAWN:
-        if (which == 1 || which == 2 && one_chance_in(5))
+        if (which == 1 || one_chance_in(5))
         {
             return random_choose_weighted( 2, MONS_ORANGE_DEMON,
                                            2, MONS_SIXFIRHY,
