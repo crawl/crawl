@@ -176,8 +176,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.reset_timeout()
 
         if config.max_connections < len(sockets):
-            self.write_message("connection_closed('The maximum number of connections "
-                               + "has been reached, sorry :(');")
+            self.send_message("close", reason="The maximum number of"
+                              + "connections has been reached, sorry :(")
             self.close()
         elif shutting_down:
             self.close()
