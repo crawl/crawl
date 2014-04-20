@@ -429,9 +429,11 @@ function ($, comm, enums, map_knowledge, messages, options) {
         }
 
         var family = options.get("tile_font_stat_family");
-        if (family !== "")
-            family += ", ";
-        $("#stats").css("font-family", family + "monospace");
+        if (family !== "" && family !== "monospace")
+        {
+            family += ", monospace";
+            $("#stats").css("font-family", family);
+        }
     });
 
     comm.register_handlers({

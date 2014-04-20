@@ -698,10 +698,12 @@ function ($, comm, client, enums, dungeon_renderer, cr, util, options) {
         }
 
         var family = options.get("tile_font_crt_family");
-        if (family !== "")
-            family += ", ";
-        $("#crt").css("font-family", family + "monospace");
-        $("#menu").css("font-family", family + "monospace");
+        if (family !== "" && family !== "monospace")
+        {
+            family += ", monospace";
+            $("#crt").css("font-family", family);
+            $("#menu").css("font-family", family);
+        }
 
         client.center_element($("#menu"));
     });

@@ -262,9 +262,11 @@ function ($, comm, client, util, options) {
         }
 
         var family = options.get("tile_font_msg_family");
-        if (family !== "")
-            family += ", ";
-        $("#message_pane").css("font-family", family + "monospace");
+        if (family !== "" && family !== "monospace")
+        {
+            family += ", monospace";
+            $("#message_pane").css("font-family", family);
+        }
     });
 
     comm.register_handlers({
