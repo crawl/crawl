@@ -18,7 +18,7 @@ function (exports, $, key_conversion, chat, comm) {
     var watching = false;
     var watching_username;
     var playing = false;
-    var logging_in = false;
+    var logging_in = false, username = null;
     var showing_close_message = false;
     var normal_exit = ["saved", "cancel", "quit", "won", "bailed out", "dead"];
 
@@ -394,7 +394,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function logged_in(data)
     {
-        var username = data.username;
+        username = data.username;
         hide_prompt();
         $("#login_message").html("Logged in as " + username);
         current_user = username;
@@ -432,6 +432,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function logout()
     {
+        username = null;
         send_message("logout", {
             cookie: get_login_cookie()
         });
@@ -805,7 +806,9 @@ function (exports, $, key_conversion, chat, comm) {
 
     function make_watch_link(data)
     {
-        return "<a href='/watch/" + data.username + "'></a>";
+        var link = $("<a href='/watch/" + data.username + "'></a>");
+        link.on("click", action_link_click);
+        return link;
     }
 
     function format_idle_time(seconds)
@@ -941,21 +944,18 @@ function (exports, $, key_conversion, chat, comm) {
             document.location = "/";
     }
 
-    function do_url_action(logged_in)
+    function do_url_action(just_logged_in)
     {
-        if (logged_in)
+        var play = location.pathname.match(/^\/play\/(.+)/);
+        if (play && username)
         {
-            var play = location.pathname.match(/^\/play\/(.+)/);
-            if (play)
-            {
-                var game_id = play[1];
-                send_message("play", {
-                    game_id: game_id
-                });
-                show_loading_screen();
-            }
+            var game_id = play[1];
+            send_message("play", {
+                game_id: game_id
+            });
+            show_loading_screen();
         }
-        else
+        if (!just_logged_in)
         {
             var watch = location.pathname.match(/^\/watch\/(.+)/);
             if (watch)
@@ -974,6 +974,21 @@ function (exports, $, key_conversion, chat, comm) {
         }
     }
 
+    window.onpopstate = function (ev) {
+        location.reload();
+    };
+
+    function action_link_click(ev)
+    {
+        var path = this.href;
+        if (history)
+        {
+            ev.preventDefault();
+            history.pushState(null, "", path);
+            do_url_action(false);
+        }
+    }
+
     function go_to(data)
     {
         document.location = data.path;
@@ -986,6 +1001,7 @@ function (exports, $, key_conversion, chat, comm) {
             var id = $(this).data("game_id");
             edit_rc(id);
         });
+        $("#play_now .game_link").click(action_link_click);
     }
 
     function set_html(data)
@@ -1092,6 +1108,7 @@ function (exports, $, key_conversion, chat, comm) {
         $(document).on("keydown.client", handle_keydown);
         $(document).on("game_keypress", stale_processes_keypress);
         $(document).on("game_keypress", force_terminate_keypress);
+        $(".game_link").on("click", action_link_click);
     }
 
     // Global functions for backwards compatibility (HACK)
