@@ -1,4 +1,4 @@
-from tornado.escape import json_encode, json_decode, utf8
+from tornado.escape import json_encode, json_decode, utf8, url_unescape
 import tornado.websocket
 import tornado.ioloop
 import tornado.template
@@ -92,6 +92,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
         self.username = None
+        self.sid = None
         self.timeout = None
         self.watched_game = None
         self.process = None
@@ -121,7 +122,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.message_handlers = {
             "login": self.login,
             "token_login": self.token_login,
-            "forget_login_cookie": self.forget_login_cookie,
+            "logout": self.logout,
             "play": self.start_crawl,
             "pong": self.pong,
             "watch": self.watch,
@@ -182,7 +183,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.close()
         else:
             if config.dgl_mode:
-                if config.get("autologin"):
+                if self.get_cookie("sid"):
+                    # short-lived session
+                    sid = url_unescape(self.get_cookie("sid"))
+                    session = userdb.session_info(sid)
+                    if session and session.get("username"):
+                        self.logger.info("Session user: %s.",
+                                         session["username"])
+                        self.do_login(session["username"], sid=sid)
+                if self.username is None and self.get_cookie("login"):
+                    # long-lived saved login
+                    self.token_login(url_unescape(self.get_cookie("login")))
+                elif config.get("autologin"):
                     self.do_login(config.autologin)
                 self.send_lobby()
             else:
@@ -343,7 +355,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.is_running():
             self.process.stop()
 
-    def do_login(self, username):
+    def do_login(self, username, sid=None):
+        if not sid:
+            sid, session = userdb.new_session()
+            session["username"] = username
+        self.sid = sid
+        userdb.renew_session(sid)
         self.username = username
         self.logger.extra["username"] = username
         if not self.init_user():
@@ -356,7 +373,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.username = None
             self.close()
             return
-        self.queue_message("login_success", username = username)
+        self.queue_message("login_success", username=username, sid=sid)
         if self.watched_game:
             self.watched_game.update_watcher_description()
         else:
@@ -384,8 +401,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             self.send_message("login_fail")
 
-    def forget_login_cookie(self, cookie):
-        userdb.forget_login_cookie(cookie)
+    def logout(self, cookie):
+        if cookie:
+            userdb.forget_login_cookie(cookie)
+        if self.sid:
+            userdb.delete_session(self.sid)
 
     def pong(self):
         self.received_pong = True
@@ -500,6 +520,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             f.write(contents.encode("utf8"))
 
     def on_message(self, message):
+        if self.sid:
+            userdb.renew_session(self.sid)
         if message.startswith("{"):
             try:
                 obj = json_decode(message)

@@ -367,19 +367,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function start_login()
     {
-        if (get_login_cookie())
-        {
-            $("#login_form").hide();
-            $("#reg_link").hide();
-            $("#login_message").html("Logging in...");
-            $("#remember_me").attr("checked", true);
-            send_message("token_login", {
-                cookie: get_login_cookie()
-            });
-            set_login_cookie(null);
-        }
-        else
-            $("#username").focus();
+        $("#username").focus();
     }
 
     var current_user;
@@ -420,6 +408,8 @@ function (exports, $, key_conversion, chat, comm) {
         $("#chat_input").show();
         $("#chat_login_text").hide();
 
+        $.cookie("sid", data.sid, { secure: location.protocol == "https:" });
+
         if (!watching)
         {
             current_hash = null;
@@ -446,13 +436,11 @@ function (exports, $, key_conversion, chat, comm) {
 
     function logout()
     {
-        if (get_login_cookie())
-        {
-            send_message("forget_login_cookie", {
-                cookie: get_login_cookie()
-            });
-            set_login_cookie(null);
-        }
+        send_message("logout", {
+            cookie: get_login_cookie()
+        });
+        set_login_cookie(null);
+        $.cookie("sid", null);
         location.reload();
     }
 

@@ -102,7 +102,33 @@ def register_user(username, passwd, email): # Returns an error message or None
         if c: c.close()
         if conn: conn.close()
 
+sessions = {}
 rand = random.SystemRandom()
+
+def pack_sid(sid):
+    return "%x" % sid
+
+def session_info(sid):
+    s = sessions.get(sid)
+    if (s is None or
+        s["expires"] < time.time() or
+        s["forceexpires"] < time.time()):
+        return None
+    return s
+
+def renew_session(sid):
+    sessions[sid]["expires"] = (time.time() + 5*60)
+
+def new_session():
+    sid = pack_sid(rand.getrandbits(128))
+    sessions[sid] = {"forceexpires": time.time() +
+                     config.get("session_lifetime", 24*60*60)}
+    renew_session(sid)
+    return sid, sessions[sid]
+
+def delete_session(sid):
+    if sid in sessions:
+        del sessions[sid]
 
 def purge_login_tokens():
     c = None
@@ -116,6 +142,11 @@ def purge_login_tokens():
         if c: c.close()
         if conn: conn.close()
 
+    for sid, session in list(sessions.items()):
+        if (session["expires"] < time.time() or
+            session["forceexpires"] < time.time()):
+            del sessions[sid]
+
 def delete_logins(username):
     c = None
     conn = None
@@ -128,8 +159,15 @@ def delete_logins(username):
         if c: c.close()
         if conn: conn.close()
 
+    for sid, session in list(sessions.items()):
+        if session.get("username") == username:
+            del sessions[sid]
+
 def token_login(cookie, logger=logging):
-    username, token, seqid = cookie.split(":")
+    try:
+        username, token, seqid = cookie.split(":")
+    except ValueError:
+        return None, None
     c = None
     conn = None
     try:
@@ -161,8 +199,8 @@ def token_login(cookie, logger=logging):
         return None, None
 
 def get_login_cookie(username, seqid=None):
-    token = str(rand.getrandbits(128))
-    if seqid is None: seqid = str(rand.getrandbits(128))
+    token = pack_sid(rand.getrandbits(128))
+    if seqid is None: seqid = pack_sid(rand.getrandbits(128))
     expires = int(time.time()) + config.login_token_lifetime*24*60*60
     c = None
     conn = None
