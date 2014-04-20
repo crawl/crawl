@@ -1180,6 +1180,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
 
     // assumes item can't grant flight twice
     const bool removing_ends_flight = you.flight_mode()
+          && !you.racial_permanent_flight()
           && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
           && (you.evokable_flight() == 1)
         || you.is_wall_clinging() && !you.flight_mode()
