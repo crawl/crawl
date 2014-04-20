@@ -232,9 +232,11 @@ function ($, map_knowledge, cr, dungeon_renderer, options) {
         }
 
         var family = options.get("tile_font_lbl_family");
-        if (family !== "")
-            family += ", ";
-        $("#monster_list").css("font-family", family + "monospace");
+        if (family !== "" && family !== "monospace")
+        {
+            family += ", monospace";
+            $("#monster_list").css("font-family", family);
+        }
     });
 
     return {
