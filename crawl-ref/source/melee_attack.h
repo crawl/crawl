@@ -143,6 +143,7 @@ private:
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
     void player_stab_check();
+    int  player_stab_tier();
     void player_announce_aux_hit();
     string player_why_missed();
     void player_warn_miss();

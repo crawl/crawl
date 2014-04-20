@@ -245,7 +245,16 @@ bool ranged_attack::handle_phase_hit()
         range_used = BEAM_STOP;
 
     if (projectile->base_type == OBJ_MISSILES
-        && projectile->sub_type == MI_THROWING_NET)
+        && projectile->sub_type == MI_NEEDLE)
+    {
+        int dur = blowgun_duration_roll(get_ammo_brand(*projectile));
+        set_attack_verb();
+        int stab = player_stab(dur);
+        damage_done = dur + (stab - dur) / 10;
+        announce_hit();
+    }
+    else if (projectile->base_type == OBJ_MISSILES
+             && projectile->sub_type == MI_THROWING_NET)
     {
         set_attack_verb();
         announce_hit();
@@ -508,6 +517,9 @@ bool ranged_attack::blowgun_check(special_missile_type type)
         return false;
     }
 
+    if (stab_attempt)
+        return true;
+
     const int enchantment = weapon && using_weapon() ? weapon->plus : 0;
 
     if (attacker->is_monster())
@@ -555,6 +567,12 @@ bool ranged_attack::blowgun_check(special_missile_type type)
 
 int ranged_attack::blowgun_duration_roll(special_missile_type type)
 {
+    if (type == SPMSL_POISONED)
+        return 6 + random2(8);
+
+    if (type == SPMSL_CURARE)
+        return 2;
+
     const int base_power = (attacker->is_monster())
                            ? attacker->get_experience_level()
                            : attacker->skill_rdiv(SK_THROWING);
@@ -621,7 +639,7 @@ bool ranged_attack::apply_missile_brand()
         defender->expose_to_element(BEAM_COLD, 2, false);
         break;
     case SPMSL_POISONED:
-        if (!one_chance_in(4))
+        if (stab_attempt || !one_chance_in(4))
         {
             int old_poison;
 
@@ -633,7 +651,11 @@ bool ranged_attack::apply_missile_brand()
                     (defender->as_monster()->get_ench(ENCH_POISON)).degree;
             }
 
-            defender->poison(attacker, 6 + random2(8) + random2(damage_done * 3 / 2));
+            defender->poison(attacker,
+                             projectile->base_type == OBJ_MISSILES
+                             && projectile->sub_type == MI_NEEDLE
+                             ? damage_done
+                             : 6 + random2(8) + random2(damage_done * 3 / 2));
 
             if (defender->is_player()
                    && old_poison < you.duration[DUR_POISONING]
@@ -648,6 +670,7 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_CURARE:
         obvious_effect = curare_actor(attacker, defender,
+                                      damage_done,
                                       projectile->name(DESC_PLAIN),
                                       atk_name(DESC_PLAIN));
         break;
@@ -690,22 +713,22 @@ bool ranged_attack::apply_missile_brand()
     case SPMSL_PARALYSIS:
         if (!blowgun_check(brand))
             break;
-        defender->paralyse(attacker, blowgun_duration_roll(brand));
+        defender->paralyse(attacker, damage_done);
         break;
     case SPMSL_SLOW:
         if (!blowgun_check(brand))
             break;
-        defender->slow_down(attacker, blowgun_duration_roll(brand));
+        defender->slow_down(attacker, damage_done);
         break;
     case SPMSL_SLEEP:
         if (!blowgun_check(brand))
             break;
-        defender->put_to_sleep(attacker, blowgun_duration_roll(brand));
+        defender->put_to_sleep(attacker, damage_done);
         break;
     case SPMSL_CONFUSION:
         if (!blowgun_check(brand))
             break;
-        defender->confuse(attacker, blowgun_duration_roll(brand));
+        defender->confuse(attacker, damage_done);
         break;
     case SPMSL_FRENZY:
         if (!blowgun_check(brand))
@@ -746,8 +769,27 @@ bool ranged_attack::mons_attack_effects()
 
 void ranged_attack::player_stab_check()
 {
-    stab_attempt = false;
-    stab_bonus = 0;
+    if (player_stab_tier() > 0)
+    {
+        attack::player_stab_check();
+    }
+    else
+    {
+        stab_attempt = false;
+        stab_bonus = 0;
+    }
+}
+
+int ranged_attack::player_stab_tier()
+{
+    if (using_weapon()
+        && projectile->base_type == OBJ_MISSILES
+        && projectile->sub_type == MI_NEEDLE)
+    {
+        return 2;
+    }
+
+    return 0;
 }
 
 void ranged_attack::adjust_noise()

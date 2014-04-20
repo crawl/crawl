@@ -202,6 +202,7 @@ protected:
 
     virtual void player_exercise_combat_skills();
 
+    virtual int  player_stab_tier() = 0;
     virtual int  player_stab_weapon_bonus(int damage);
     virtual int  player_stab(int damage);
     virtual void player_stab_check();

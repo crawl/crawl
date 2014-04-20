@@ -2495,6 +2495,31 @@ void melee_attack::player_stab_check()
     attack::player_stab_check();
 }
 
+/**
+ * How good of a stab can we get with this weapon?
+ */
+int melee_attack::player_stab_tier()
+{
+    if (wpn_skill == SK_SHORT_BLADES
+        || player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
+           && (!weapon || is_melee_weapon(*weapon)))
+    {
+        return 2;
+    }
+    if (wpn_skill == SK_LONG_BLADES
+        || weapon && weapon->base_type == OBJ_WEAPONS
+             && (weapon->sub_type == WPN_CLUB
+                 || weapon->sub_type == WPN_SPEAR
+                 || weapon->sub_type == WPN_TRIDENT
+                 || weapon->sub_type == WPN_DEMON_TRIDENT
+                 || weapon->sub_type == WPN_TRISHULA)
+        || !weapon && you.species == SP_FELID)
+    {
+        return 1;
+    }
+    return 0;
+}
+
 bool melee_attack::attack_warded_off()
 {
     const int WARDING_CHECK = 60;

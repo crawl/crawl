@@ -988,7 +988,8 @@ void contaminate_player(int change, bool controlled = false, bool msg = true);
 
 bool confuse_player(int amount, bool quiet = false);
 
-bool curare_hits_player(int death_source, string name, string source_name);
+bool curare_hits_player(int death_source, int levels, string name,
+                        string source_name);
 bool poison_player(int amount, string source, string source_aux = "",
                    bool force = false);
 void paralyse_player(string source, int amount = 0, int factor = 1);
