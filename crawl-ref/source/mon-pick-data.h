@@ -1466,7 +1466,7 @@ static const pop_entry pop_lava_hell[] =
 { // Hell branch lava monsters
   {  1,  6,    25, DOWN, MONS_MOLTEN_GARGOYLE },
   {  1,  8,   300, DOWN, MONS_FIRE_ELEMENTAL },
-  {  1,  7,   150, FLAT, MONS_SALAMANDER_FIREBRAND },
+  {  1,  7,    75, FLAT, MONS_SALAMANDER_FIREBRAND },
   {  1,  7,    25, FLAT, MONS_SMOKE_DEMON },
   {  1,  7,   100, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
