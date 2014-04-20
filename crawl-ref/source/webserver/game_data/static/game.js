@@ -33,6 +33,8 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
 
     function layout(params, force)
     {
+        $("#loader").hide();
+        $("#chat").show();
         var window_width = params.window_width = $(window).width();
         var window_height = params.window_height = $(window).height();
 
@@ -71,7 +73,8 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         layout_parameters.remaining_height = remaining_height;
 
         // Position controls
-        client.set_layer("normal");
+        $("#crt").hide();
+        $("#normal").show();
         $("#messages_container").css({
             "max-height": msg_height_px*msg_height/(msg_height+1),
             "width": remaining_width
@@ -142,13 +145,15 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         switch (ui_state)
         {
         case enums.ui.NORMAL:
-            client.set_layer("normal");
+            $("#crt").hide();
+            $("#normal").show();
             if (old_state == enums.ui.VIEW_MAP)
                 toggle_full_window_dungeon_view(false);
             break;
 
         case enums.ui.CRT:
-            client.set_layer("crt");
+            $("#crt").show();
+            $("#normal").hide();
             break;
 
         case enums.ui.VIEW_MAP:

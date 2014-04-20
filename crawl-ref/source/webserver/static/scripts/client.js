@@ -1,11 +1,7 @@
 define(["exports", "jquery", "key_conversion", "chat", "comm",
         "contrib/jquery.cookie", "contrib/jquery.tablesorter",
-        "contrib/jquery.waitforimages", "contrib/inflate"],
+        "contrib/inflate"],
 function (exports, $, key_conversion, chat, comm) {
-
-    // Need to keep this global for backwards compatibility :(
-    window.current_layer = "crt";
-
     window.debug_mode = false;
 
     window.log_messages = false;
@@ -24,9 +20,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     var send_message = comm.send_message;
 
-    var game_version = null;
-    var loaded_modules = null;
-
+    window.assert = function () {};
     window.log = function (text)
     {
         if (window.console && window.console.log)
@@ -144,6 +138,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#prompt_title").html(title);
         $("#prompt_footer").html(footer);
         $("#prompt .login_placeholder").append($("#login"));
+        $("#login").show();
         $("#login_form").show();
         $("#login .extra_links").hide();
         $("#username").focus();
@@ -153,44 +148,18 @@ function (exports, $, key_conversion, chat, comm) {
     function hide_prompt(game)
     {
         $("#prompt").hide();
-        $("#lobby .login_placeholder").append($("#login"));
         $("#login .extra_links").show();
         $("#loader_text").show();
     }
 
-    var layers = ["crt", "normal", "lobby", "loader"]
+    exports.hide_prompt = hide_prompt;
 
     function in_game()
     {
-        return current_layer != "lobby" && current_layer != "loader"
-               && !showing_close_message;
+        return (playing || watching) && !showing_close_message;
     }
 
-    function set_layer(layer)
-    {
-        if (showing_close_message) return;
-
-        hide_prompt();
-
-        $.each(layers, function (i, l) {
-            if (l == layer)
-                $("#" + l).show();
-            else
-                $("#" + l).hide();
-        });
-        current_layer = layer;
-
-        $("#chat").toggle(in_game());
-    }
-
-    function register_layer(name)
-    {
-        if (layers.indexOf(name) == -1)
-            layers.push(name);
-    }
-
-    exports.set_layer = set_layer;
-    exports.register_layer = register_layer;
+    exports.in_game = in_game;
 
     function do_layout()
     {
@@ -368,7 +337,6 @@ function (exports, $, key_conversion, chat, comm) {
         $("#username").focus();
     }
 
-    var current_user;
     function login()
     {
         $("#login_form").hide();
@@ -397,7 +365,6 @@ function (exports, $, key_conversion, chat, comm) {
         username = data.username;
         hide_prompt();
         $("#login_message").html("Logged in as " + username);
-        current_user = username;
         hide_dialog();
         $("#login_form").hide();
         $("#reg_link").hide();
@@ -649,36 +616,24 @@ function (exports, $, key_conversion, chat, comm) {
     function connection_closed(data)
     {
         var msg = data.reason;
-        set_layer("crt");
+        $("#game").show();
+        $("#loader").hide();
         hide_dialog();
         $("#chat").hide();
-        $("#crt").html(msg + "<br><br>");
+        $("#game").html(msg + "<br><br>");
         showing_close_message = true;
         return true;
     }
 
-    function play_now(id)
-    {
-        send_message("play", {
-            game_id: id
-        });
-    }
-
     function show_loading_screen()
     {
-        if (current_layer == "loader") return;
+        $("#login").hide();
         var imgs = $("#loader img");
         imgs.hide();
         var count = imgs.length;
         var rand_index = Math.floor(Math.random() * count);
         $(imgs[rand_index]).show();
-        set_layer("loader");
-    }
-
-    function show_lobby()
-    {
-        set_layer("lobby");
-        $("#username").focus();
+        $("#loader").show();
     }
 
     function login_required(data)
@@ -947,7 +902,7 @@ function (exports, $, key_conversion, chat, comm) {
     function do_url_action(just_logged_in)
     {
         var play = location.pathname.match(/^\/play\/(.+)/);
-        if (play && username)
+        if (play)
         {
             var game_id = play[1];
             send_message("play", {
@@ -969,7 +924,7 @@ function (exports, $, key_conversion, chat, comm) {
             else if (location.pathname == "/")
             {
                 send_message("lobby");
-                show_lobby();
+                start_login();
             }
         }
     }
@@ -1009,54 +964,28 @@ function (exports, $, key_conversion, chat, comm) {
         $("#" + data.id).html(data.content);
     }
 
-    requirejs.onResourceLoad = function (context, map, depArray) {
-        if (loaded_modules != null)
-            loaded_modules.push(map.id);
-    }
-
     function receive_game_client(data)
     {
-        if (game_version == null || data["version"] != game_version)
-        {
-            $(document).off();
-            bind_document_events();
-            for (var i in loaded_modules)
-                requirejs.undef(loaded_modules[i]);
-            loaded_modules = [];
-        }
-        game_version = data["version"];
-
         inhibit_messages();
         show_loading_screen();
-        delete window.game_loading;
-        $("#game").html(data.content);
-        if (data.content.indexOf("game_loading") === -1)
-        {
-            // old version, uninhibit can happen too early
-            $("#game").waitForImages(uninhibit_messages);
-        }
+        var version = data.content.match(/^<!-- +version: +(\d+) /);
+        if (version == null)
+            version = 0;
         else
+            version = parseInt(version[1]);
+
+        function do_load(compat)
         {
-            $("#game").waitForImages(function ()
-            {
-                var load_interval = setInterval(check_loading, 50);
+            $("#game").html(data.content);
+            if (compat)
+                compat(data.content);
 
-                function check_loading()
-                {
-                    if (window.game_loading)
-                    {
-                        delete window.game_loading;
-                        uninhibit_messages();
-                        clearInterval(load_interval);
-                    }
-                }
-            });
         }
-    }
 
-    function do_set_layer(data)
-    {
-        set_layer(data.layer);
+        if (version < 1)
+            require(["compat" + version], do_load);
+        else
+            do_load(null);
     }
 
     function handle_multi_message(data)
@@ -1102,21 +1031,6 @@ function (exports, $, key_conversion, chat, comm) {
         return true;
     }
 
-    function bind_document_events()
-    {
-        $(document).on("keypress.client", handle_keypress);
-        $(document).on("keydown.client", handle_keydown);
-        $(document).on("game_keypress", stale_processes_keypress);
-        $(document).on("game_keypress", force_terminate_keypress);
-        $(".game_link").on("click", action_link_click);
-    }
-
-    // Global functions for backwards compatibility (HACK)
-    window.log = log;
-    window.set_layer = set_layer;
-    window.assert = function () {};
-    window.abs = function (x) { if (x < 0) return -x; else return x; }
-
     comm.register_immediate_handlers({
         "ping": pong,
         "close": connection_closed,
@@ -1150,12 +1064,13 @@ function (exports, $, key_conversion, chat, comm) {
         "rcfile_contents": rcfile_contents,
 
         "game_client": receive_game_client,
-
-        "layer": do_set_layer,
     });
 
     $(document).ready(function () {
-        bind_document_events();
+        $(document).on("keypress.client", handle_keypress);
+        $(document).on("keydown.client", handle_keydown);
+        $(document).on("game_keypress", stale_processes_keypress);
+        $(document).on("game_keypress", force_terminate_keypress);
 
         $(window).resize(function (ev) {
             do_layout();
@@ -1182,6 +1097,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         $("#force_terminate_no").click(force_terminate_no);
         $("#force_terminate_yes").click(force_terminate_yes);
+
+        $(".game_link").on("click", action_link_click);
 
         do_layout();
 
@@ -1259,9 +1176,10 @@ function (exports, $, key_conversion, chat, comm) {
             {
                 if (!showing_close_message)
                 {
-                    set_layer("crt");
-                    $("#crt").html("");
-                    $("#crt").append("The WebSocket connection failed.<br>");
+                    $("#game").html("");
+                    $("#game").append("The WebSocket connection failed.<br>");
+                    $("#game").show();
+                    $("#loader").hide();
                     showing_close_message = true;
                 }
             };
@@ -1270,29 +1188,31 @@ function (exports, $, key_conversion, chat, comm) {
             {
                 if (!showing_close_message)
                 {
-                    set_layer("crt");
-                    $("#crt").html("");
-                    $("#crt").append("The Websocket connection was closed.<br>");
+                    $("#game").html("");
+                    $("#game").append("The Websocket connection was closed.<br>");
                     if (ev.reason)
                     {
-                        $("#crt").append("Reason:<br>" + ev.reason + "<br>");
+                        $("#game").append("Reason:<br>" + ev.reason + "<br>");
                     }
-                    $("#crt").append("Reload to try again.<br>");
+                    $("#game").append("Reload to try again.<br>");
+                    $("#game").show();
+                    $("#loader").hide();
                     showing_close_message = true;
                 }
             };
         }
         else
         {
-            set_layer("crt");
-            $("#crt").html("Sadly, your browser does not support WebSockets. <br><br>");
-            $("#crt").append("The following browsers can be used to run WebTiles: ");
-            $("#crt").append("<ul><li>Chrome 6 and greater</li>" +
+            $("#game").html("Sadly, your browser does not support WebSockets. <br><br>");
+            $("#game").append("The following browsers can be used to run WebTiles: ");
+            $("#game").append("<ul><li>Chrome 6 and greater</li>" +
                              "<li>Firefox 4 and 5, after enabling the " +
                              "network.websocket.override-security-block setting in " +
                              "about:config</li><li>Opera 11, after " +
                              " enabling WebSockets in opera:config#Enable%20WebSockets" +
                              "<li>Safari 5</li></ul>");
+            $("#game").show();
+            $("#loader").hide();
         }
     });
 

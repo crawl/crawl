@@ -1,14 +1,16 @@
+<!-- version: 1 (don't remove, this is used for compatibility hacks)-->
 <script>
   require.config({
     paths: { "game-{{ version }}": "/gamedata/{{ version }}" }
   });
-  require(['jquery', 'client'], function ($, client) {
-    client.inhibit_messages();
+  require(['jquery', 'client', 'contrib/jquery.waitforimages'], function ($, client) {
     window.game_loading = true;
     require(['game-{{ version }}/game'], function (game) {
-      $(document).trigger("game_preinit");
-      $(document).trigger("game_init");
-      client.uninhibit_messages();
+      $('#game').waitForImages(function () {
+        $(document).trigger("game_preinit");
+        $(document).trigger("game_init");
+        client.uninhibit_messages();
+      });
     });
   });
 </script>
