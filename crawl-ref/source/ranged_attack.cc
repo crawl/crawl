@@ -744,6 +744,12 @@ bool ranged_attack::mons_attack_effects()
     return true;
 }
 
+void ranged_attack::player_stab_check()
+{
+    stab_attempt = false;
+    stab_bonus = 0;
+}
+
 void ranged_attack::adjust_noise()
 {
 }
