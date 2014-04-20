@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os, os.path, errno, sys
+import os, os.path, errno, sys, re, random
 
 import tornado.httpserver
 import tornado.ioloop
@@ -14,15 +14,19 @@ from ws_handler import *
 from game_data_handler import GameDataHandler
 import process_handler, userdb
 
+title_imgs = []
+title_regex = re.compile(r"^title_.*\.png$")
+def scan_titles():
+    del title_imgs[:]
+    for f in os.listdir(config.static_path):
+        if title_regex.match(f):
+            title_imgs.append(f)
+scan_titles()
+
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        host = self.request.host
-        if self.request.protocol == "https":
-            protocol = "wss://"
-        else:
-            protocol = "ws://"
-        self.render("client.html", socket_server = protocol + host + "/socket",
-                    username = None, config = config)
+        self.render("client.html", title_img=random.choice(title_imgs),
+                    username=None, config=config)
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
@@ -112,6 +116,7 @@ def signal_handler(signum, frame):
 def usr1_handler(signum, frame):
     logging.info("Received USR1, reloading config.")
     config.load()
+    scan_titles()
 
 def purge_login_tokens_timeout():
     userdb.purge_login_tokens()

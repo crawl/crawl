@@ -3,9 +3,6 @@
   <head>
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
-    <script type="text/javascript">
-      var socket_server = "{{ socket_server }}";
-    </script>
     <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
   </head>
@@ -134,22 +131,7 @@
       <div id="loader_center">
         <span id="loader_text">Loading...</span><br>
 
-        <img style="display:none;" alt="" src="{{ static_url("title_baconkid_gastronok.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_baconkid_mnoleg.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_dragon.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_evil_mage.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_invasion.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_kitchen_duty.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_summoner.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_denzi_undead_warrior.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_firemage.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_omndra_zot_demon.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_pooryurik_knight.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_psiweapon_kiku.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_psiweapon_roxanne.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_shadyamish_octm.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_white_noise_entering_the_dungeon.png") }}">
-        <img style="display:none;" alt="" src="{{ static_url("title_white_noise_grabbing_the_orb.png") }}">
+        <img style="display:none;" alt="" src="{{ static_url(title_img) }}">
       </div>
 
       <div id="stale_processes_message" class="floating_dialog"

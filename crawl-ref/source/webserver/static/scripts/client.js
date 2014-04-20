@@ -1206,7 +1206,12 @@ function (exports, $, key_conversion, chat, comm) {
 
         if ("WebSocket" in window)
         {
-            // socket_server is set in the client.html template
+            var socket_server;
+            if (location.protocol == "https:")
+                socket_server = "wss://";
+            else
+                socket_server = "ws://"
+            socket_server += location.host + "/socket";
             if (inflater)
                 socket = new WebSocket(socket_server);
             else
