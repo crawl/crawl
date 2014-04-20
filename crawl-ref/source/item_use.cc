@@ -2157,23 +2157,10 @@ static void _brand_weapon(item_def &wpn)
 
     // If there's no brand, make it vorpal.
     if (get_weapon_brand(wpn) == SPWPN_NORMAL)
-    {
-        mprf("%s emits a brilliant flash of light!",
-             wpn.name(DESC_YOUR).c_str());
         set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_VORPAL);
-        flash_view_delay(YELLOW, 300);
-        return;
-    }
-
-    // If there's a permanent brand, try to rebrand it.
-    bool rebranded = false;
-    if (you.duration[DUR_WEAPON_BRAND] == 0)
-    {
-        rebranded = true;
+    else
         _rebrand_weapon(wpn);
-    }
 
-    // There's a temporary or new brand, attempt to make it permanent.
     const string itname = wpn.name(DESC_YOUR);
     bool success = true;
     colour_t flash_colour = BLACK;
@@ -2183,19 +2170,8 @@ static void _brand_weapon(item_def &wpn)
     case SPWPN_VORPAL:
     case SPWPN_PROTECTION:
     case SPWPN_EVASION:
-        if (rebranded)
-        {
-            flash_colour = YELLOW;
-            mprf("%s emits a brilliant flash of light!",itname.c_str());
-        }
-        else // should be VORPAL only
-        {
-            flash_colour = YELLOW;
-            if (get_vorpal_type(wpn) != DVORP_CRUSHING)
-                mprf("%s's sharpness seems more permanent.", itname.c_str());
-            else
-                mprf("%s's heaviness feels very stable.", itname.c_str());
-        }
+        flash_colour = YELLOW;
+        mprf("%s emits a brilliant flash of light!",itname.c_str());
         break;
 
     case SPWPN_FLAME:
@@ -2218,10 +2194,7 @@ static void _brand_weapon(item_def &wpn)
 
     case SPWPN_VENOM:
         flash_colour = GREEN;
-        if (rebranded)
-            mprf("%s drips with poison.", itname.c_str());
-        else
-            mprf("%s seems more permanently poisoned.", itname.c_str());
+        mprf("%s drips with poison.", itname.c_str());
         break;
 
     case SPWPN_ELECTROCUTION:
@@ -2234,16 +2207,6 @@ static void _brand_weapon(item_def &wpn)
         mprf("%s erupts in a glittering mayhem of colour.", itname.c_str());
         break;
 
-    // Un-affixable brands.
-    case SPWPN_PAIN:
-    case SPWPN_DISTORTION:
-    case SPWPN_ANTIMAGIC:
-    case SPWPN_HOLY_WRATH:
-        if (!rebranded)
-            mpr("This brand cannot be affixed.");
-        success = false;
-        break;
-
     default:
         success = false;
         break;
@@ -2251,7 +2214,6 @@ static void _brand_weapon(item_def &wpn)
 
     if (success)
     {
-        you.duration[DUR_WEAPON_BRAND] = 0;
         item_set_appearance(wpn);
         // Might be rebranding to/from protection or evasion.
         you.redraw_armour_class = true;

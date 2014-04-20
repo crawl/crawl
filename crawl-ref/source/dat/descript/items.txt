@@ -1219,14 +1219,9 @@ contaminated with magical energy.
 %%%%
 scroll of brand weapon
 
-This scroll enchants a chosen weapon so as to make it far more effective at
-inflicting harm on its wielder's enemies. The scroll can make permanent the
-temporary branding of weapons obtained from some spells, or can be used on a
+This scroll enchants an unbranded weapon so as to make it far more effective
+at inflicting harm on its wielder's enemies. The scroll can also be used on a
 weapon that is already permanently branded to randomly select a new brand.
-
-Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaqudgha,
-the Shining One) cannot be affixed this way. Xom, on the other hand, wouldn't
-let such an opportunity for fun go to waste.
 %%%%
 scroll of curse armour
 
