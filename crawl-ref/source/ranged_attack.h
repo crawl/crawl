@@ -44,6 +44,7 @@ private:
     /* Attack Effects */
     bool mons_attack_effects();
     void player_stab_check();
+    int  player_stab_tier();
 
     /* Output */
     void adjust_noise();

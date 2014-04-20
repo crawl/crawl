@@ -47,6 +47,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
+#include "mon-ench.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -2003,7 +2004,8 @@ void bolt::apply_bolt_paralysis(monster* mons)
         obvious_effect = true;
     }
 
-    mons->add_ench(ENCH_PARALYSIS);
+    mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, agent(),
+                               ench_power * BASELINE_DELAY));
     mons_check_pool(mons, mons->pos(), killer(), beam_source);
 }
 
@@ -2052,7 +2054,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
     if (!mons->res_asphyx())
     {
-        hurted = roll_dice(2, 6);
+        hurted = roll_dice(levels, 6);
 
         if (hurted)
         {
@@ -2064,7 +2066,18 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
     }
 
     if (mons->alive())
-        enchant_monster_with_flavour(mons, agent, BEAM_SLOW);
+    {
+        // FIXME: calculate the slow duration more cleanly
+        mon_enchant me(ENCH_SLOW, 0, agent);
+        levels -= 2;
+        while (levels > 0)
+        {
+            mon_enchant me2(ENCH_SLOW, 0, agent);
+            me.set_duration(mons, &me2);
+            levels -= 2;
+        }
+        mons->add_ench(me);
+    }
 
     // Deities take notice.
     if (agent->is_player())
@@ -2168,12 +2181,16 @@ bool napalm_monster(monster* mons, const actor *who, int levels, bool verbose)
     return new_flame.degree > old_flame.degree;
 }
 
-bool curare_actor(actor* source, actor* target, string name, string source_name)
+bool curare_actor(actor* source, actor* target, int levels, string name,
+                  string source_name)
 {
     if (target->is_player())
-        return curare_hits_player(actor_to_death_source(source), name, source_name);
+    {
+        return curare_hits_player(actor_to_death_source(source), levels, name,
+                                  source_name);
+    }
     else
-        return _curare_hits_monster(source, target->as_monster(), 2);
+        return _curare_hits_monster(source, target->as_monster(), levels);
 }
 
 // XXX: This is a terrible place for this, but it at least does go with
@@ -4021,7 +4038,7 @@ void bolt::affect_player()
         {
             if (x_chance_in_y(90 - 3 * you.armour_class(), 100))
             {
-                curare_actor(agent(), (actor*) &you, name, source_name);
+                curare_actor(agent(), (actor*) &you, 2, name, source_name);
                 was_affected = true;
             }
         }
@@ -4636,7 +4653,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         // SPMSL_POISONED handled via callback _poison_hit_victim() in
         // item_use.cc
         if (item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
-            curare_actor(agent(), mon, name, source_name);
+            curare_actor(agent(), mon, 2, name, source_name);
     }
 
     // purple draconian breath
@@ -5458,7 +5475,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_UNAFFECTED;
 
     case BEAM_SLOW:
-        obvious_effect = do_slow_monster(mon, agent());
+        obvious_effect = do_slow_monster(mon, agent(),
+                                         ench_power * BASELINE_DELAY);
         return MON_AFFECTED;
 
     case BEAM_HASTE:
@@ -5546,7 +5564,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             return MON_AFFECTED;
         }
 
-        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent())))
+        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, agent(),
+                                      ench_power * BASELINE_DELAY)))
         {
             // FIXME: Put in an exception for things you won't notice
             // becoming confused.
@@ -5559,7 +5578,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         if (mons_just_slept(mon))
             return MON_UNAFFECTED;
 
-        mon->put_to_sleep(agent(), 0);
+        mon->put_to_sleep(agent(), ench_power);
         if (simple_monster_message(mon, " falls asleep!"))
             obvious_effect = true;
 

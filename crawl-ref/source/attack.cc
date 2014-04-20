@@ -1935,27 +1935,11 @@ int attack::modify_blood_amount(const int damage, const int dam_type)
 int attack::player_stab_weapon_bonus(int damage)
 {
     int stab_skill = you.skill(wpn_skill, 50) + you.skill(SK_STEALTH, 50);
-    int modified_wpn_skill = wpn_skill;
+    const int tier = player_stab_tier();
 
-    if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
-        && (!weapon || is_melee_weapon(*weapon)))
+    switch (tier)
     {
-        modified_wpn_skill = SK_SHORT_BLADES;
-    }
-    else if (weapon && weapon->base_type == OBJ_WEAPONS
-             && (weapon->sub_type == WPN_CLUB
-                 || weapon->sub_type == WPN_SPEAR
-                 || weapon->sub_type == WPN_TRIDENT
-                 || weapon->sub_type == WPN_DEMON_TRIDENT
-                 || weapon->sub_type == WPN_TRISHULA)
-             || !weapon && you.species == SP_FELID)
-    {
-        modified_wpn_skill = SK_LONG_BLADES;
-    }
-
-    switch (modified_wpn_skill)
-    {
-    case SK_SHORT_BLADES:
+    case 2:
     {
         int bonus = (you.dex() * (stab_skill + 100)) / 500;
 
@@ -1967,9 +1951,9 @@ int attack::player_stab_weapon_bonus(int damage)
         damage += bonus;
     }
     // fall through
-    case SK_LONG_BLADES:
+    case 1:
         damage *= 10 + div_rand_round(stab_skill, 100 *
-                       (stab_bonus + (modified_wpn_skill == SK_SHORT_BLADES ? 0 : 2)));
+                       (stab_bonus + (tier == 2 ? 0 : 2)));
         damage /= 10;
         // fall through
     default:

@@ -5078,7 +5078,8 @@ bool confuse_player(int amount, bool quiet)
     return true;
 }
 
-bool curare_hits_player(int death_source, string name, string source_name)
+bool curare_hits_player(int death_source, int levels, string name,
+                        string source_name)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -5088,24 +5089,25 @@ bool curare_hits_player(int death_source, string name, string source_name)
         return false;
     }
 
-    poison_player(roll_dice(2, 12) + 1, source_name, name);
+    poison_player(roll_dice(levels, 12) + 1, source_name, name);
 
     int hurted = 0;
 
     if (you.res_asphyx() <= 0)
     {
-        hurted = roll_dice(2, 6);
+        hurted = roll_dice(levels, 6);
 
         if (hurted)
         {
-            you.increase_duration(DUR_BREATH_WEAPON, hurted, 20 + random2(20));
+            you.increase_duration(DUR_BREATH_WEAPON, hurted,
+                                  10*levels + random2(10*levels));
             mpr("You have difficulty breathing.");
             ouch(hurted, death_source, KILLED_BY_CURARE,
                  "curare-induced apnoea");
         }
     }
 
-    potion_effect(POT_SLOWING, 2 + random2(6));
+    potion_effect(POT_SLOWING, levels + random2(3*levels));
 
     return hurted > 0;
 }
