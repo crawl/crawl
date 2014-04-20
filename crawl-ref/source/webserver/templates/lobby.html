@@ -1,0 +1,106 @@
+<div id="lobby" style="display:none;">
+  <div class="login_placeholder">
+    <div id="login">
+      <span id="login_message"></span>
+      <form action="#" id="login_form">
+        <label for="username">User:</label>
+        <input class="text" type="text" name="username" id="username">
+        <label for="password">Pass:</label>
+        <input class="text" type="password" name="password" id="password">
+        <input type="checkbox" name="remember_me" id="remember_me">
+        <label for="remember_me">Stay logged in</label>
+        <input class="button" type="submit" name="submit" id="submit" value="Login">
+      </form>
+      <span class="extra_links">|
+        <a id="reg_link" href="javascript:">Register</a>
+        <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
+    </div>
+  </div>
+
+  <div id="register" class="floating_dialog" style="display: none;">
+    <span id="register_message"></span>
+    <form action="#" id="register_form">
+      <label for="username">Username:</label>
+      <input class="text" type="text" name="username" id="reg_username">
+      <br>
+      <label for="reg_password">Password:</label>
+      <input class="text" type="password" name="reg_password" id="reg_password">
+      <br>
+      <label for="reg_repeat_password">Repeat password:</label>
+      <input class="text" type="password" name="reg_repeat_password" id="reg_repeat_password">
+      <br>
+      <label for="reg_email">Email address:</label>
+      <input class="text" type="text" name="reg_email" id="reg_email">
+      <br>
+      <input class="button" type="button" name="cancel" id="reg_cancel"
+             value="Cancel">
+      <input class="button" type="submit" name="submit" id="reg_submit" value="Submit">
+    </form>
+  </div>
+
+  <div id="rc_edit" class="floating_dialog" style="display: none;">
+    <form action="#" id="rc_edit_form">
+      <textarea class="text" name="rc_file_contents" id="rc_file_contents"
+                cols="80" rows="25">
+      </textarea>
+      <br>
+      <input class="button" type="submit" name="submit" id="rc_submit" value="Save"
+             style="float: right;">
+    </form>
+  </div>
+
+  <div id="banner">{% include banner.html %}</div>
+
+  <div id="play_now"></div>
+
+  <br>
+
+  <div id="lobby_body">
+    <span>
+      Games currently running:
+    </span>
+    <table id="player_list">
+      <thead>
+        <tr>
+          <th class="username">User</th>
+          <th class="game_id">Game</th>
+          <th class="xl">XL</th>
+          <th class="char">Char</th>
+          <th class="place">Place</th>
+          <th class="god">God</th>
+          <th class="idle_time">Idle</th>
+          <th class="spectator_count">Specs</th>
+          {% if config.milestone_files %}
+          <th class="milestone_col">Milestone</th>
+          {% end %}
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <div style="display: none">
+      <table>
+        <tr id="game_entry_template">
+          <td class="username"></td>
+          <td class="game_id"></td>
+          <td class="xl"></td>
+          <td class="char"></td>
+          <td class="place"></td>
+          <td class="god"></td>
+          <td class="idle_time"></td>
+          <td class="spectator_count"></td>
+          {% if config.milestone_files %}
+          <td class="milestone_col">
+            <div class="milestone_container">
+              <div class="milestone">&nbsp;</div>
+              <div class="new_milestone"></div>
+            </div>
+          </td>
+          {% end %}
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div id="footer">{% include footer.html %}</div>
+</div>

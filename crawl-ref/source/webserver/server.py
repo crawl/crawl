@@ -24,9 +24,13 @@ def scan_titles():
 scan_titles()
 
 class MainHandler(tornado.web.RequestHandler):
+    def __init__(self, application, request, action):
+        super(MainHandler, self).__init__(application, request)
+        self.action = action
+
     def get(self, arg=None):
         self.render("client.html", title_img=random.choice(title_imgs),
-                    username=None, config=config)
+                    username=None, config=config, action=self.action)
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):
@@ -134,9 +138,9 @@ def bind_server():
         settings["static_handler_class"] = NoCacheHandler
 
     application = tornado.web.Application([
-            (r"/", MainHandler),
-            (r"/play/(.*)", MainHandler),
-            (r"/watch/(.*)", MainHandler),
+            (r"/", MainHandler, {"action": "lobby"}),
+            (r"/play/(.*)", MainHandler, {"action": "play"}),
+            (r"/watch/(.*)", MainHandler, {"action": "watch"}),
             (r"/socket", CrawlWebSocket),
             (r"/gamedata/(.*)/(.*)", GameDataHandler)
             ], gzip=True, **settings)
