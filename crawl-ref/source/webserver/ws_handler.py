@@ -88,6 +88,34 @@ def handle_new_milestone(line):
     game = find_running_game(data.get("name"), data.get("start"))
     if game: game.log_milestone(data)
 
+def find_player_savegames(username):
+    used_morgues = set()
+    for game in config.get("games"):
+        morgue_path = dgl_format_str(game["morgue_path"],
+                                     username, game)
+        if morgue_path in used_morgues:
+            continue
+        else:
+            used_morgues.add(morgue_path)
+        filename = os.path.join(morgue_path, username + ".where")
+        try:
+            with open(filename, "r") as f:
+                data = f.read()
+        except IOError:
+            continue
+        if data.strip() == "": continue
+
+        try:
+            info = parse_where_data(data)
+        except:
+            logging.warning("Exception while trying to parse where file!",
+                            exc_info=True)
+        else:
+            if info.get("status") in ("active", "saved"):
+                info["id"] = game["id"]
+                info["game"] = game
+                yield info
+
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
@@ -217,10 +245,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_game_links(self):
         # Rerender Banner
-        banner_html = self.render_string("banner.html", username = self.username)
-        self.queue_message("html", id = "banner", content = banner_html)
-        play_html = self.render_string("game_links.html", games = config.get("games"))
-        self.send_message("set_game_links", content = play_html)
+        if config.get("list_savegames"):
+            saved_games = list(find_player_savegames(self.username))
+        else:
+            saved_games = []
+        banner_html = self.render_string("banner.html", username=self.username)
+        self.queue_message("html", id="banner", content=banner_html)
+        play_html = self.render_string("game_links.html", games=config.get("games"), saved_games=saved_games)
+        self.send_message("set_game_links", content=play_html)
 
     def reset_timeout(self):
         if self.timeout:

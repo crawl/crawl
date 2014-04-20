@@ -51,6 +51,7 @@
     "milestone_files": [
         "./milestones"
     ],
+    "list_savegames": true,
 
     "games": [
         {

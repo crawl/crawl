@@ -1,3 +1,15 @@
+{% if saved_games %}
+Saved games:<br>
+{% for data in saved_games %}
+<a href="/play/{{ data['id'] }}" class="game_link">{{ data['name'] }},
+a level {{ data['lvl'] }} {{ data['race'] }}
+{% if data.get('god') %}
+of {{ data['god'] }}
+{% end %}
+({{ data['game']['name'] }})</a>
+<br>
+{% end %}
+{% end %}
 Play now:
 {% set rcs = set() %}
 {% for data in games %}
