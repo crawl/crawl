@@ -43,6 +43,7 @@ private:
 
     /* Attack Effects */
     bool mons_attack_effects();
+    void player_stab_check();
 
     /* Output */
     void adjust_noise();
