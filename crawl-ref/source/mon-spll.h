@@ -512,7 +512,7 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_TELEPORT_OTHER,
-       SPELL_ANIMATE_DEAD,
+       SPELL_NO_SPELL,
        SPELL_TELEPORT_SELF
       }
     },
