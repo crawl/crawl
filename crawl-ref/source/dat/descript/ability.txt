@@ -645,6 +645,12 @@ Upheaval ability
 Calls on the forces of nature to blast a small area with magma, ice, wind,
 or rubble.
 %%%%
+Elemental Force ability
+
+Causes elemental clouds around you to coalesce into elementals. Your own
+clouds create friendly elementals; hostile clouds create hostile elementals;
+natural clouds create neutral elementals.
+%%%%
 Renounce Religion ability
 
 Renounce your faith. This will make your character leave your god (and usually

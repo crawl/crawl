@@ -93,4 +93,5 @@ void gozag_deduct_bribe(branch_type br, int amount);
 bool gozag_bribe_branch();
 
 bool qazlal_upheaval(coord_def target, bool quiet = false);
+void qazlal_elemental_force();
 #endif

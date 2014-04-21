@@ -362,7 +362,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Qazlal
     { "You are surrounded by a storm which can block enemy attacks.",
       "call upon nature to destroy your foes",
-      "",
+      "give life to nearby clouds",
       "",
       ""
     },
@@ -500,7 +500,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Qazlal
     { "Your storm dissipates completely.",
       "call upon nature to destroy your foes",
-      "",
+      "give life to nearby clouds",
       "",
       ""
     },
