@@ -6550,7 +6550,27 @@ int player::skill(skill_type sk, int scale, bool real) const
     if (is_useless_skill(sk))
         return 0;
 
-    int level = skills[sk] * scale + get_skill_progress(sk, scale);
+    // skills[sk] might not be updated yet if this is in the middle of
+    // skill training, so make sure to use the correct value.
+    // This duplicates code in check_skill_level_change(), unfortunately.
+    int actual_skill = skills[sk];
+    while (1)
+    {
+        if (actual_skill < 27
+            && skill_points[sk] >= skill_exp_needed(actual_skill + 1, sk))
+        {
+            ++actual_skill;
+        }
+        else if (skill_points[sk] < skill_exp_needed(actual_skill, sk))
+        {
+            actual_skill--;
+            ASSERT(actual_skill >= 0);
+        }
+        else
+            break;
+    }
+
+    int level = actual_skill * scale + get_skill_progress(sk, actual_skill, skill_points[sk], scale);
     if (real)
         return level;
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
