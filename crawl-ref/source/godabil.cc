@@ -429,10 +429,20 @@ string zin_recite_text(const int seed, const int prayertype, int step)
 }
 
 typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
-// Check whether this monster might be influenced by Recite.
-// Returns 0, if no monster found.
-// Returns 1, if eligible monster found.
-// Returns -1, if monster already affected or too dumb to understand.
+/** Check whether this monster might be influenced by Recite.
+ *
+ * @param[in] mon The monster to check.
+ * @param[out] eligibility An vector, indexed by recite_type, that indicates
+ *             which recitation types the monster is affected by, if any:
+ *             eligibility[RECITE_FOO] is nonzero if the monster is affected
+ *             by RECITE_FOO. Only modified if the function returns 0 or 1.
+ * @returns -1 if the monster is already affected or of the wrong holiness.
+ *          The eligibility vector is unchanged.
+ * @returns 0 if the monster is otherwise ineligible for recite. The
+ *          eligibility vector is filled with zeros.
+ * @returns 1 if the monster is eligible for recite. The eligibility vector
+ *          indicates which types of recitation it is vulnerable to.
+ */
 static int _zin_check_recite_to_single_monster(const monster *mon,
                                                recite_counts &eligibility)
 {
@@ -640,13 +650,22 @@ static const char* zin_book_desc[NUM_RECITE_TYPES] =
     "Chaotic", "Impure", "Heretic", "Unholy",
 };
 
-// Check whether there are monsters who might be influenced by Recite.
-// If prayertype is 0, we're just checking whether we can.
-// Otherwise we're actually reciting and need to present a menu.
-
-// Returns 0, if no monsters found.
-// Returns 1, if eligible audience found.
-// Returns -1, if entire audience already affected or too dumb to understand.
+/**
+ * Check whether there are monsters who might be influenced by Recite.
+ * If prayertype is null, we're just checking whether we can.
+ * Otherwise we're actually reciting, and may need to present a menu.
+ *
+ * @param[out] prayertype If non-null, receives the type of recitation to
+ *             be used: either the only possible type, or the type chosen
+ *             by the player.  Only modified when we return 1.
+ * @returns 0 if no monsters were found, or if the player declined to choose
+ *          a type of recitation, or if all the found monsters returned
+ *          zero from _zin_check_recite_to_single_monster().
+ * @returns 1 if an eligible audience was found.
+ * @returns -1 if only an ineligible audience was found: no eligibile
+ *          monsters, and at least one returned -1 from
+ *          _zin_check_recite_to_single_monster().
+ */
 int zin_check_recite_to_monsters(recite_type *prayertype)
 {
     bool found_ineligible = false;
