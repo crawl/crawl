@@ -1494,6 +1494,15 @@ static bool _is_breath_caster(monster_type mtyp)
            || mons_genus(mtyp) == MONS_DRAKE && mtyp != MONS_WIND_DRAKE;
 }
 
+static bool _mirrorable(const monster* agent, const monster* mon)
+{
+    return mon != agent
+           && mons_aligned(mon, agent)
+           && !mon->is_stationary()
+           && !mon->is_summoned()
+           && !mons_is_conjured(mon->type);
+}
+
 // Checks to see if a particular spell is worth casting in the first place.
 static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 {
@@ -1996,12 +2005,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         {
             for (monster_near_iterator mi(mon); mi; ++mi)
             {
-                if (*mi != mon && mons_aligned(*mi, mon) && !mi->is_stationary()
-                    && !mi->is_summoned() && !mons_is_conjured(mi->type))
-                {
-                    // A single valid target is enough.
+                // A single valid target is enough.
+                if (_mirrorable(mon, *mi))
                     return false;
-                }
             }
         }
         return true;
@@ -5922,11 +5928,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         vector<monster*> targets;
         for (monster_near_iterator mi(mons); mi; ++mi)
         {
-            if (*mi != mons && mons_aligned(*mi, mons) && !mi->is_stationary()
-                && !mi->is_summoned())
-            {
+            if (_mirrorable(mons, *mi))
                 targets.push_back(*mi);
-            }
         }
 
         // If we've found something, mirror it.
