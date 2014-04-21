@@ -2996,7 +2996,7 @@ void MiscastEffect::_zot()
     case 3:    // other misc stuff
     reroll_2:
         // Cases at the end are for players only.
-        switch (random2(target->is_player() ? 15 : 10))
+        switch (random2(target->is_player() ? 14 : 9))
         {
         case 0:
             target->paralyse(act_source, 2 + random2(4), cause);
