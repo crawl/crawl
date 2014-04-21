@@ -840,14 +840,6 @@ void create_wanderer(void)
     you.skills[util_skill1]++;
     you.skills[util_skill2]++;
 
-    // Caster types maybe need more MP?
-    int mp_adjust = 0;
-    if (primary_role == STAT_INT)
-        mp_adjust++;
-    if (secondary_role == STAT_INT)
-        mp_adjust++;
-    you.mp_max_perm += mp_adjust;
-
     // Keep track of what skills we got items from, mostly to prevent
     // giving a good and then a normal version of the same weapon.
     set<skill_type> gift_skills;
