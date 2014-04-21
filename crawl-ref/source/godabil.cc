@@ -609,13 +609,6 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     return 0;
 }
 
-// Check whether there are monsters who might be influenced by Recite.
-// If 'recite' is false, we're just checking whether we can.
-// If it's true, we're actually reciting and need to present a menu.
-
-// Returns 0, if no monsters found.
-// Returns 1, if eligible audience found.
-// Returns -1, if entire audience already affected or too dumb to understand.
 bool zin_check_able_to_recite(bool quiet)
 {
     if (you.duration[DUR_RECITE])
@@ -632,6 +625,13 @@ bool zin_check_able_to_recite(bool quiet)
         return false;
     }
 
+    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    {
+        if (!quiet)
+            mpr("You cannot recite while unable to breathe!");
+        return false;
+    }
+
     return true;
 }
 
@@ -640,6 +640,13 @@ static const char* zin_book_desc[NUM_RECITE_TYPES] =
     "Chaotic", "Impure", "Heretic", "Unholy",
 };
 
+// Check whether there are monsters who might be influenced by Recite.
+// If prayertype is 0, we're just checking whether we can.
+// Otherwise we're actually reciting and need to present a menu.
+
+// Returns 0, if no monsters found.
+// Returns 1, if eligible audience found.
+// Returns -1, if entire audience already affected or too dumb to understand.
 int zin_check_recite_to_monsters(recite_type *prayertype)
 {
     bool found_ineligible = false;

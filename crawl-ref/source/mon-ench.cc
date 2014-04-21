@@ -1873,7 +1873,9 @@ void monster::apply_enchantment(const mon_enchant &me)
         // cancel the recitation
         if (silenced(pos()) || paralysed() || petrified()
             || confused() || asleep() || has_ench(ENCH_FEAR)
-            || has_ench(ENCH_BREATH_WEAPON))
+            || has_ench(ENCH_BREATH_WEAPON)
+            || has_ench(ENCH_WATER_HOLD) && !res_water_drowning()
+            || has_ench(ENCH_MUTE))
         {
             this->speed_increment += me.duration;
             del_ench(ENCH_WORD_OF_RECALL, true, false);
