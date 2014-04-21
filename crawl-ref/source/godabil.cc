@@ -4582,3 +4582,92 @@ bool qazlal_upheaval(coord_def target, bool quiet)
 
     return true;
 }
+
+void qazlal_elemental_force()
+{
+    vector<coord_def> targets;
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, true); ri; ++ri)
+    {
+        if (env.cgrid(*ri) != EMPTY_CLOUD)
+        {
+            switch(env.cloud[env.cgrid(*ri)].type)
+            {
+            case CLOUD_FIRE:
+            case CLOUD_COLD:
+            case CLOUD_BLACK_SMOKE:
+            case CLOUD_GREY_SMOKE:
+            case CLOUD_BLUE_SMOKE:
+            case CLOUD_PURPLE_SMOKE:
+            case CLOUD_FOREST_FIRE:
+            case CLOUD_PETRIFY:
+            case CLOUD_RAIN:
+            case CLOUD_DUST_TRAIL:
+            case CLOUD_STORM:
+                targets.push_back(*ri);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    if (targets.empty())
+    {
+        mpr("You can't see any clouds you can empower.");
+        return;
+    }
+
+    shuffle_array(targets);
+    const int count = max(1, min((int)targets.size(),
+                                 random2avg(you.skill(SK_INVOCATIONS), 2)));
+    mgen_data mg;
+    mg.summon_type = MON_SUMM_AID;
+    mg.abjuration_duration = 1;
+    mg.flags |= MG_FORCE_PLACE | MG_AUTOFOE;
+    int placed = 0;
+    for (unsigned int i = 0; placed < count && i < targets.size(); i++)
+    {
+        coord_def pos = targets[i];
+        const unsigned short cloud = env.cgrid(pos);
+        ASSERT(cloud != EMPTY_CLOUD);
+        cloud_struct &cl = env.cloud[cloud];
+        actor *agent = actor_by_mid(cl.source);
+        mg.behaviour = !agent             ? BEH_NEUTRAL :
+                       agent->is_player() ? BEH_FRIENDLY
+                                          : SAME_ATTITUDE(agent->as_monster());
+        mg.pos       = pos;
+        switch(cl.type)
+        {
+        case CLOUD_FIRE:
+        case CLOUD_FOREST_FIRE:
+            mg.cls = MONS_FIRE_ELEMENTAL;
+            break;
+        case CLOUD_COLD:
+        case CLOUD_RAIN:
+            mg.cls = MONS_WATER_ELEMENTAL; // maybe ice beasts for cold?
+            break;
+        case CLOUD_PETRIFY:
+        case CLOUD_DUST_TRAIL:
+            mg.cls = MONS_EARTH_ELEMENTAL;
+            break;
+        case CLOUD_BLACK_SMOKE:
+        case CLOUD_GREY_SMOKE:
+        case CLOUD_BLUE_SMOKE:
+        case CLOUD_PURPLE_SMOKE:
+        case CLOUD_STORM:
+            mg.cls = MONS_AIR_ELEMENTAL; // maybe sky beasts for storm?
+            break;
+        default:
+            continue;
+        }
+        if (!create_monster(mg))
+            continue;
+        delete_cloud(cloud);
+        placed++;
+    }
+
+    if (placed)
+        mprf(MSGCH_GOD, "Clouds arounds you coalesce and take form!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS); // can this ever happen?
+}

@@ -199,7 +199,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_GOZAG_POTION_PETITION, ABIL_GOZAG_CALL_MERCHANT,
       ABIL_GOZAG_BRIBE_BRANCH, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Qazlal
-    { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_NON_ABILITY,
+    { ABIL_NON_ABILITY, ABIL_QAZLAL_UPHEAVAL, ABIL_QAZLAL_ELEMENTAL_FORCE,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
 };
 
@@ -423,6 +423,8 @@ static const ability_def Ability_List[] =
 
     // Qazlal
     { ABIL_QAZLAL_UPHEAVAL, "Upheaval", 4, 0, 0, 3, 0, ABFLAG_NONE },
+    { ABIL_QAZLAL_ELEMENTAL_FORCE, "Elemental Force",
+      6, 0, 0, 6, 0, ABFLAG_NONE },
 
     { ABIL_STOP_RECALL, "Stop Recall", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -1161,6 +1163,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_IMPRISON:
     case ABIL_LUGONU_BANISH:
     case ABIL_CHEIBRIADOS_DISTORTION:
+    case ABIL_QAZLAL_ELEMENTAL_FORCE:
         invoc = true;
         failure = 60 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
         break;
@@ -2942,6 +2945,10 @@ static bool _do_ability(const ability_def& abil)
             canned_msg(MSG_OK);
             return false;
         }
+        break;
+
+    case ABIL_QAZLAL_ELEMENTAL_FORCE:
+        qazlal_elemental_force();
         break;
 
     case ABIL_RENOUNCE_RELIGION:
