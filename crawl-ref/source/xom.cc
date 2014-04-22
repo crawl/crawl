@@ -1265,7 +1265,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
             choose_random_nearby_monster(0, _choose_mutatable_monster);
         // [ds] Be less eager to polymorph plants, since there are now
         // locations with lots of plants (Lair and Shoals).
-        if (mon && (!mons_is_plant(mon) || one_chance_in(6)))
+        if (mon && !mons_is_firewood(mon))
         {
             if (debug)
                 return helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH;
