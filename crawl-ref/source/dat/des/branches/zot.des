@@ -647,32 +647,6 @@ MAP
 *
 ENDMAP
 
-NAME:   lemuel_zot_downstairs
-TAGS:   allow_dup extra luniq
-DEPTH:  Zot:1-4
-ORIENT: float
-SUBST:  . = .^
-KFEAT:  ^ = known Zot trap
-SUBST:  > = }])
-MAP
-xxxxxxx
-@....>x
-xxxxxxx
-ENDMAP
-
-NAME:   lemuel_zot_upstairs
-TAGS:   allow_dup extra luniq
-DEPTH:  Zot:2-
-ORIENT: float
-SUBST:  . = .^
-KFEAT:  ^ = known zot trap
-SUBST:  < = ([{
-MAP
-xxxxxxx
-@....<x
-xxxxxxx
-ENDMAP
-
 ###########################
 # Halls of Wrath
 #
