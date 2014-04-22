@@ -181,6 +181,7 @@
     Edgar Simo
     Alex Smith
     Keanan Smith
+    Richard Soderberg
     Solf
     Michael Spang
     Jan 'heftig' Steffens
