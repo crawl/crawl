@@ -207,8 +207,10 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
             break;
         case DNGN_SLIMY_WALL:
             feature = DNGN_GREEN_CRYSTAL_WALL;
+            break;
         case DNGN_UNSEEN:
             feature = DNGN_FLOOR;
+            break;
         default:
             // handle more terrain types.
             break;
