@@ -18,13 +18,13 @@ from util import *
 
 sockets = set()
 current_id = 0
-shutting_down = False
 
 def shutdown():
-    global shutting_down
-    shutting_down = True
     for socket in list(sockets):
         socket.shutdown()
+    import process_handler
+    for process in process_handler.processes.values():
+        process.stop()
 
 def update_global_status():
     write_dgl_status_file()
@@ -207,8 +207,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("close", reason="The maximum number of"
                               + "connections has been reached, sorry :(")
             self.close()
-        elif shutting_down:
-            self.close()
         else:
             if config.dgl_mode:
                 if self.get_cookie("sid"):
@@ -272,7 +270,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             if self.is_running() and self.process.idle_time() > config.max_idle_time:
                 self.logger.info("Stopping crawl after idle time limit.")
-                self.process.stop()
+                self.stop_playing()
 
         if not self.client_closed:
             self.reset_timeout()
@@ -301,8 +299,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         import process_handler
 
+        for process in process_handler.processes.values():
+            if (process.username == self.username and
+                process.game_params["id"] == game_id and
+                process.process):
+                self.process = process
+                self.process.add_watcher(self)
+                self.send_message("game_started")
+                return
+
         if config.dgl_mode:
-            game_params["id"] = game_id
             args = (game_params, self.username, self.logger, self.ioloop)
             if (game_params.get("compat_mode") or
                 "client_prefix" in game_params):
@@ -333,11 +339,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     update_all_lobbys(self.process)
                 update_global_status()
 
+    def stop_playing(self):
+        self.process.remove_watcher(self)
+        self.process = None
+
     def crawl_ended(self):
         if self.is_running():
-            if config.dgl_mode:
-                remove_in_lobbys(self.process)
-
             reason = self.process.exit_reason
             message = self.process.exit_message
             dump_url = self.process.exit_dump_url
@@ -351,21 +358,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.client_closed:
             sockets.remove(self)
         else:
-            if shutting_down:
-                self.close()
-            else:
-                # Go back to lobby
-                self.send_message("game_ended", reason = reason,
-                                  message = message, dump = dump_url)
-                if not config.dgl_mode:
-                    self.start_crawl(None)
+            # Go back to lobby
+            self.send_message("game_ended", reason = reason,
+                              message = message, dump = dump_url)
+            if not config.dgl_mode:
+                self.start_crawl(None)
 
         if config.dgl_mode:
             update_global_status()
-
-        if shutting_down and len(sockets) == 0:
-            # The last crawl process has ended, now we can go
-            self.ioloop.stop()
 
     def init_user(self):
         with open("/dev/null", "w") as f:
@@ -384,8 +384,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             msg = self.render_string("shutdown.html", game=self)
             self.send_message("close", reason = msg)
             self.close()
-        if self.is_running():
-            self.process.stop()
 
     def do_login(self, username, sid=None):
         if not sid:
@@ -482,7 +480,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def watch(self, username):
         if self.is_running():
-            self.process.stop()
+            self.stop_playing()
 
         from process_handler import processes
         procs = [process for process in processes.values()
@@ -528,7 +526,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def go_lobby(self):
         if self.is_running():
-            self.process.stop()
+            self.stop_playing()
         elif self.watched_game:
             self.stop_watching()
         self.send_message("go", path="/")
@@ -613,16 +611,14 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message(json_encode(data), False)
 
     def on_close(self):
-        if self.process is None and self in sockets:
+        if self in sockets:
             sockets.remove(self)
-            if shutting_down and len(sockets) == 0:
-                # The last socket has been closed, now we can go
-                self.ioloop.stop()
-        elif self.is_running():
-            self.process.stop()
 
-        if self.watched_game:
+        if self.is_running():
+            self.stop_playing()
+        elif self.watched_game:
             self.watched_game.remove_watcher(self)
+            self.watched_game = None
 
         if self.timeout:
             self.ioloop.remove_timeout(self.timeout)

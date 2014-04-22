@@ -250,7 +250,6 @@ if __name__ == "__main__":
         for server in servers: server.stop()
         shutdown()
         ioloop.add_timeout(time.time() + 2, ioloop.stop)
-        if len(sockets) > 0:
-            ioloop.start() # We'll wait until all crawl processes have ended.
+        ioloop.start() # We'll wait until all crawl processes have ended.
 
     remove_pidfile()

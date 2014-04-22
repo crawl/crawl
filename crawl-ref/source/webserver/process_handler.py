@@ -61,8 +61,6 @@ def handle_new_socket(path, event):
         process = processes[abspath]
         if process.process: return # Handled by us, will be removed later
         process.handle_process_end()
-        process.logger.info("Game ended.")
-        remove_in_lobbys(process)
         del processes[abspath]
 
 def watch_socket_dirs():
@@ -90,6 +88,7 @@ class CrawlProcessHandlerBase(object):
         self.wheretime = 0
         self.last_milestone = None
         self.kill_timeout = None
+        self.no_player_timeout = None
 
         now = datetime.datetime.utcnow()
         self.formatted_time = now.strftime("%Y-%m-%d.%H:%M:%S")
@@ -153,6 +152,9 @@ class CrawlProcessHandlerBase(object):
 
         self.idle_checker.stop()
 
+        self.logger.info("Game ended.")
+        remove_in_lobbys(self)
+
         for receiver in list(self._receivers):
             receiver.crawl_ended()
 
@@ -210,12 +212,27 @@ class CrawlProcessHandlerBase(object):
         self._receivers.add(watcher)
         self.update_watcher_description()
 
+        if self.player_count() > 0 and self.no_player_timeout is not None:
+            self.io_loop.remove_timeout(self.no_player_timeout)
+            self.no_player_timeout = None
+
     def remove_watcher(self, watcher):
         self._receivers.remove(watcher)
         self.update_watcher_description()
 
+        if self.player_count() == 0:
+            def check():
+                self.no_player_timeout = None
+                if self.player_count() == 0:
+                    self.stop()
+            t = time.time() + config.get("no_player_timeout", 10)
+            self.no_player_timeout = self.io_loop.add_timeout(t, check)
+
     def watcher_count(self):
         return len([w for w in self._receivers if w.watched_game])
+
+    def player_count(self):
+        return len([p for p in self._receivers if p.process])
 
     def send_client_to_all(self):
         for receiver in self._receivers:
@@ -239,6 +256,9 @@ class CrawlProcessHandlerBase(object):
         watcher.send_message("game_client", version = v, content = game_html)
 
     def stop(self):
+        if self.no_player_timeout is not None:
+            self.io_loop.remove_timeout(self.no_player_timeout)
+            self.no_player_timeout = None
         if self.process:
             self.process.send_signal(subprocess.signal.SIGHUP)
             t = time.time() + config.kill_timeout
