@@ -752,6 +752,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             break;
         case SP_NAGA:
             hair = TILEP_HAIR_PART2_RED;
+            break;
         case SP_VAMPIRE:
             hair = TILEP_HAIR_ARWEN;
             break;
