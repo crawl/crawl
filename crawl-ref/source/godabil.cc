@@ -3424,7 +3424,7 @@ void spare_beogh_convert()
          wit != witnesses.end(); ++wit)
     {
         monster *orc = monster_by_mid(*wit);
-        if (!orc && !orc->alive())
+        if (!orc || !orc->alive())
             continue;
 
         ++witc;
