@@ -46,7 +46,7 @@ spret_type cast_deaths_door(int pow, bool fail)
     else
     {
         fail_check();
-        mpr("You feel invincible!");
+        mpr("You stand defiantly in death's doorway!");
         mprf(MSGCH_SOUND, "You seem to hear sand running through an hourglass...");
 
         set_hp(allowed_deaths_door_hp());
