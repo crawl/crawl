@@ -2569,7 +2569,8 @@ void melee_attack::chaos_affects_defender()
     const bool can_clone  = mon && mons_clonable(defender->as_monster(), true);
     const bool can_poly   = is_shifter || (defender->can_safely_mutate()
                                            && !immune
-                                           && !mons_is_firewood(defender->as_monster()));
+                                           && !(mon
+                                                && mons_is_firewood(defender->as_monster())));
     const bool can_rage   = defender->can_go_berserk();
     const bool can_slow   = !mon || !mons_is_firewood(defender->as_monster());
     const bool can_petrify= mon && !defender->res_petrify();
