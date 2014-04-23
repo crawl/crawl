@@ -324,7 +324,7 @@ TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
 ANGRY:   9
 BOOL:    berserk
-STEALTH: -20
+STEALTH: -1
 
 NAME:    scimitar of Flaming Death
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
@@ -347,7 +347,7 @@ TILE_EQ: mace_of_brilliance
 BRAND:   SPWPN_HOLY_WRATH
 AC:      5
 INT:     5
-STEALTH: -20
+STEALTH: -1
 BOOL:    life, seeinv
 
 NAME:    demon blade "Leech"
@@ -442,7 +442,7 @@ TILE_EQ:  jihad
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 ANGRY:    3
-STEALTH:  -50
+STEALTH:  -1
 BOOL:     life
 
 NAME:    crossbow "Hellfire"
@@ -549,7 +549,7 @@ PLUS:    +6/+0
 COLOUR:  WHITE
 TILE:    urand_blowgun
 TILE_EQ: blowgun
-STEALTH: 60
+STEALTH: 2
 BOOL:    inv, tilerim, nogen
 
 NAME:    lance "Wyrmbane"
@@ -576,7 +576,7 @@ BOOL:     tilerim
 EV:       4
 DEX:      4
 MAGIC:    1
-STEALTH:  50
+STEALTH:  1
 
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_CLAYMORE
@@ -585,7 +585,7 @@ COLOUR:  ETC_RANDOM
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
 BOOL:    mutate
-STEALTH: -20
+STEALTH: -1
 
 NAME:     great mace "Undeadhunter"
 INSCRIP:  disrupt,
@@ -672,7 +672,7 @@ COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
 DAM:      -3
-STEALTH:  60
+STEALTH:  1
 BOOL:     seeinv, fog
 
 # TAG_MAJOR_VERSION == 34
@@ -716,7 +716,7 @@ STR:      -2
 INT:      -2
 DEX:      -2
 CURSED:   1
-STEALTH:  -80
+STEALTH:  -2
 BOOL:     nospell, rnd_tele, randapp, unided, mutate
 
 NAME:     cloak of Flash
@@ -735,7 +735,7 @@ PLUS:     +2
 COLOUR:   BROWN
 TILE:     urand_assassin
 TILE_EQ:  middle_gray
-STEALTH:  80
+STEALTH:  2
 
 ENUM:    LEAR
 NAME:    Lear's hauberk
@@ -823,7 +823,7 @@ COLOUR:   ETC_DARK
 TILE:     urand_night
 TILE_EQ:  robe_of_night
 MAGIC:    1
-STEALTH:  50
+STEALTH:  1
 BOOL:     seeinv, inv
 
 NAME:    armour of the Dragon King
@@ -862,7 +862,7 @@ TILE:     urand_starlight
 TILE_EQ:  white
 EV:       4
 COLD:     1
-STEALTH:  -30
+STEALTH:  -1
 BOOL:     elec
 
 NAME:     ratskin cloak
@@ -925,7 +925,6 @@ MAGIC:   1
 ANGRY:   9
 DAM:     5
 CURSED:  3
-STEALTH: -20
 
 NAME:    ring of Shaolin
 OBJ:     OBJ_JEWELLERY/RING_EVASION
@@ -1093,7 +1092,7 @@ TILE_EQ:  spider
 PLUS:     +3
 BRAND:    SPARM_JUMPING
 COLOUR:   LIGHTMAGENTA
-STEALTH:  50
+STEALTH:  1
 
 NAME:     dark maul
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
@@ -1116,7 +1115,7 @@ TILE:    urand_high_council
 TILE_EQ: wizard_lightgreen
 PLUS:    +2
 BRAND:   SPARM_ARCHMAGI
-STEALTH: -20
+STEALTH: -1
 
 NAME:     arc blade
 INSCRIP:  discharge,
@@ -1180,7 +1179,7 @@ MAGIC:   3
 METAB:   10
 HP:      10
 MP:      10
-STEALTH: 100
+STEALTH: 2
 STR:     3
 BOOL:    nogen, berserk, blink, clarity, elec, inv, fly, life, nospell, notelep, poison, seeinv, mutate
 
@@ -1199,7 +1198,7 @@ INT:     -3
 METAB:   -10
 HP:      -10
 MP:      -10
-STEALTH: -100
+STEALTH: -2
 STR:     -3
 BOOL:    nogen, rnd_tele
 
