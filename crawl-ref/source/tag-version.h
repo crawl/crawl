@@ -89,7 +89,7 @@ enum tag_minor_version
     TAG_MINOR_MANGROVES,           // Turn all mangroves into trees.
     TAG_MINOR_FIX_FEAT_SHIFT,      // Fix feature shifts from the last tag.
     TAG_MINOR_FUNGUS_FORM,         // Removed confusing touch duration from fungus form.
-    TAG_MINOR_STEALTH_RESCALE,     // Rescaled Stealth property on items.
+    TAG_MINOR_STEALTH_RESCALE,     // Item properties: rescaled Stealth, removed Hunger.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

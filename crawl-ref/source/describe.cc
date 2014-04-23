@@ -221,7 +221,6 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Contam", ARTP_MUTAGENIC,             2 },
         { "*Rage",  ARTP_ANGRY,                 2 },
         { "*Tele",  ARTP_CAUSE_TELEPORTATION,   2 },
-        { "Hunger", ARTP_METABOLISM,            2 }, // handled specially
         { "Noisy",  ARTP_NOISES,                2 },
 
         // Evokable abilities come second
@@ -341,12 +340,6 @@ static vector<string> _randart_propnames(const item_def& item,
                     continue;
 
                 work << propanns[i].name;
-
-                // these need special handling, so we don't give anything away
-                if (propanns[i].prop == ARTP_METABOLISM && val > 2)
-                    work << "+";
-                else if (propanns[i].prop == ARTP_METABOLISM && val < 0)
-                    work << "-";
                 break;
             }
             propnames.push_back(work.str());
@@ -532,19 +525,6 @@ static string _randart_descrip(const item_def &item)
             description += '\n';
             description += sdesc;
         }
-    }
-
-    // Some special cases which don't fit into the above.
-    if (known_proprt(ARTP_METABOLISM))
-    {
-        if (proprt[ARTP_METABOLISM] >= 3)
-            description += "\nIt greatly speeds your metabolism.";
-        else if (proprt[ARTP_METABOLISM] >= 1)
-            description += "\nIt speeds your metabolism. ";
-        if (proprt[ARTP_METABOLISM] <= -3)
-            description += "\nIt greatly slows your metabolism.";
-        else if (proprt[ARTP_METABOLISM] <= -1)
-            description += "\nIt slows your metabolism. ";
     }
 
     if (known_proprt(ARTP_STEALTH))

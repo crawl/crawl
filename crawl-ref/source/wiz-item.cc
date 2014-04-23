@@ -1371,7 +1371,9 @@ static void _debug_rap_stats(FILE *ostat)
         -1, //ARTP_CAUSE_TELEPORTATION
         -1, //ARTP_PREVENT_TELEPORTATION
         -1, //ARTP_ANGRY
+#if TAG_MAJOR_VERSION == 34
          0, //ARTP_METABOLISM
+#endif
         -1, //ARTP_MUTAGENIC
          0, //ARTP_ACCURACY
          0, //ARTP_DAMAGE
@@ -1526,7 +1528,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CAUSE_TELEPORTATION",
         "ARTP_PREVENT_TELEPORTATION",
         "ARTP_ANGRY",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_METABOLISM",
+#endif
         "ARTP_MUTAGENIC",
         "ARTP_ACCURACY",
         "ARTP_DAMAGE",
