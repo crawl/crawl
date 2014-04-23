@@ -125,7 +125,7 @@ void read_messages()
 static void _announce_messages()
 {
     // XXX: We could do a NetHack-like mail daemon here at some point.
-    mpr("Beep! Your pager goes off! Use _ to check your messages.", MSGCH_DGL_MESSAGE);
+    mprf(MSGCH_DGL_MESSAGE, "Beep! Your pager goes off! Use _ to check your messages.");
 }
 
 void check_messages()
