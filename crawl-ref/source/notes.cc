@@ -80,6 +80,10 @@ static bool _is_noteworthy_dlevel(unsigned short place)
     if (branch == BRANCH_ABYSS)
         return lev == _dungeon_branch_depth(branch);
 
+    // These get their note in the .des files.
+    if (branch == BRANCH_WIZLAB)
+        return false;
+
     // Other portal levels are always interesting.
     if (!is_connected_branch(static_cast<branch_type>(branch)))
         return true;
