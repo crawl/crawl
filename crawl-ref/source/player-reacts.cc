@@ -729,6 +729,10 @@ static void _decrement_durations()
                           "The ice encasing you melts away.",
                           0, NULL, MSGCH_RECOVERY);
 
+    _decrement_a_duration(DUR_NO_POTIONS, delay,
+                          "You can drink potions again.",
+                          0, NULL, MSGCH_RECOVERY);
+
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);

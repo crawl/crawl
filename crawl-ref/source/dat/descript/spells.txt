@@ -902,7 +902,8 @@ The effects of this spell are boosted if the caster is in ice form.
 Ozocubu's Refrigeration spell
 
 This spell drains the heat from the caster and his or her surroundings, causing
-harm to all creatures not resistant to cold.
+harm to all creatures not resistant to cold and preventing potion use for a
+brief duration.
 %%%%
 Pain spell
 

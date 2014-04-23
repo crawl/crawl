@@ -165,6 +165,8 @@ static duration_def duration_data[] =
       YELLOW, "Dragoncall", "", "" },
     { DUR_ABJURATION_AURA, false,
       BLUE, "Abj", "aura of abjuration", "You are abjuring all hostile summons around you." },
+    { DUR_NO_POTIONS, false,
+      RED, "-Potion", "no potions", "You cannot drink potions." },
 };
 
 static int duration_index[NUM_DURATIONS];
