@@ -1464,9 +1464,6 @@ int player_hunger_rate(bool temp)
 
     hunger += 4 * you.wearing(EQ_RINGS, RING_HUNGER);
 
-    // randarts
-    hunger += you.scan_artefacts(ARTP_METABOLISM);
-
     // sustenance affects things at the end, because it is multiplicative
     for (int s = you.wearing(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
         hunger = hunger * 3 / 5;

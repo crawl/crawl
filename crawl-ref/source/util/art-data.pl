@@ -45,7 +45,6 @@ my %field_type = (
     FLY      => "bool",
     LIFE     => "bool",
     MAGIC    => "num",
-    METAB    => "num",
     HP       => "num",
     MP       => "num",
     MUTATE   => "bool",
@@ -86,6 +85,8 @@ my %field_type = (
     plus2     => "num",
     base_type => "enum",
     sub_type  => "enum",
+
+    unused    => "unused",
 );
 
 my @field_list = keys(%field_type);
@@ -483,7 +484,7 @@ my @art_order = (
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
     "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
-    "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
+    "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "unused", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "RMSL", "FOG", "REGEN", "NO_UPGRADE", "\n",

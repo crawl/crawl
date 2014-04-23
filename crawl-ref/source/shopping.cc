@@ -923,10 +923,6 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_MUTAGENIC ])
         ret -= 8;
 
-    // ranges from 1-3
-    if (prop[ ARTP_METABOLISM ])
-        ret -= (2 * prop[ ARTP_METABOLISM ]);
-
     // extremely good
     if (prop[ ARTP_FOG ])
         ret += 50;

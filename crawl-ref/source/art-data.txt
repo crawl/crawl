@@ -138,7 +138,6 @@
 # FIRE:     Fire resistance/vulnerability.
 # INT:      Intelligence modifier.
 # MAGIC:    Magic resistance/vulnerability.
-# METAB:    Hunger modifier.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
 # REGEN:    Provides regeneration (40 = ring of regen, 100 = the spell).
@@ -692,7 +691,6 @@ COLOUR:  ETC_JEWEL
 TILE:    urand_dyrovepreva
 TILE_EQ: dyrovepreva
 INT:     2
-METAB:   1
 BOOL:    elec, seeinv
 
 NAME:     hat of the Bear Spirit
@@ -906,7 +904,6 @@ TILE:    urand_cekugob
 AC:      1
 EV:      1
 BOOL:    elec, poison, life, notelep
-METAB:   2
 
 NAME:    amulet of the Four Winds
 OBJ:     OBJ_JEWELLERY/AMU_CLARITY
@@ -1001,8 +998,7 @@ TILE:     urand_bk_barding
 TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
-METAB:    -2
-BOOL:     life, evil
+BOOL:     life, poison, evil
 
 NAME:     ring of Vitality
 OBJ:      OBJ_JEWELLERY/RING_REGENERATION
@@ -1176,7 +1172,6 @@ EV:      3
 FIRE:    3
 INT:     3
 MAGIC:   3
-METAB:   10
 HP:      10
 MP:      10
 STEALTH: 2
@@ -1195,7 +1190,6 @@ DEX:     -3
 EV:      -3
 FIRE:    -3
 INT:     -3
-METAB:   -10
 HP:      -10
 MP:      -10
 STEALTH: -2

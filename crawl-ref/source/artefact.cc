@@ -1067,12 +1067,8 @@ static void _get_randart_properties(const item_def &item,
             }
             proprt[ARTP_COLD] = -1;
             break;
-        case 7:                     // speed metabolism
-            if (aclass == OBJ_JEWELLERY && atype == RING_HUNGER)
-                break;              // already is a ring of hunger
-            if (aclass == OBJ_JEWELLERY && atype == RING_SUSTENANCE)
-                break;              // already is a ring of sustenance
-            proprt[ARTP_METABOLISM] = 1 + random2(3);
+        case 7:                     // less stealthy
+            proprt[ARTP_STEALTH] = -1 - random2(2);
             break;
         case 8:
             // emits mutagenic radiation - causes
