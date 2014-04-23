@@ -2330,7 +2330,6 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
 
     // Get item name now before changing enchantment.
     string iname = wpn.name(DESC_YOUR);
-    const char *s = wpn.quantity == 1 ? "s" : "";
 
     // Blowguns only have one stat.
     if (wpn.base_type == OBJ_WEAPONS && wpn.sub_type == WPN_BLOWGUN)
@@ -2354,7 +2353,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
                     wpn.plus2++, success = true;
             }
             if (success && colour)
-                mprf("%s glow%s %s for a moment.", iname.c_str(), s, colour);
+                mprf("%s glows %s for a moment.", iname.c_str(), colour);
         }
         if (wpn.cursed())
         {
@@ -2362,7 +2361,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
             {
                 if (const char *space = strchr(colour, ' '))
                     colour = space + 1;
-                mprf("%s glow%s silvery %s for a moment.", iname.c_str(), s, colour);
+                mprf("%s glows silvery %s for a moment.", iname.c_str(), colour);
             }
             success = true;
         }
@@ -2370,7 +2369,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     }
 
     if (!success && colour)
-        mprf("%s very briefly gain%s a %s sheen.", iname.c_str(), s, colour);
+        mprf("%s very briefly gain a %s sheen.", iname.c_str(), colour);
 
     if (success)
         you.wield_change = true;
