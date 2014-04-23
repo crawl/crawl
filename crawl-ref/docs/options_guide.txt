@@ -1451,6 +1451,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
            resists       (the % screen)
            spell         (the Z and I screens)
            stash         (the results from Ctrl-F)
+           stats         (the player stats panel)
 
         Crawl has a couple of prefixes defined to make inventory colouring
         easier. These are, in order of definition:
@@ -1480,6 +1481,8 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
            equipped        (Equipped items.)
            artefact        (For artefacts, whether identified or not.)
+           melee           (Melee weapons.)
+           ranged          (Ranged weapons.)
 
         When looking for menu_colour matches, these prefixes are prepended to
         the actual item name, e.g. in the form of
