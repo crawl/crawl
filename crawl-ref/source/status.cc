@@ -97,7 +97,7 @@ static duration_def duration_data[] =
     { DUR_SILENCE, true,
       MAGENTA, "Sil", "silence", "You radiate silence." },
     { DUR_STEALTH, false,
-      BLUE, "Stlth", "especially stealthy", "" },
+      BLUE, "Stealth", "especially stealthy", "" },
     { DUR_AFRAID, true,
       RED, "Fear", "afraid", "You are terrified." },
     { DUR_MIRROR_DAMAGE, false,
