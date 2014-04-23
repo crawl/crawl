@@ -2562,17 +2562,16 @@ enum chaos_type
 // AF_CHAOS.
 void melee_attack::chaos_affects_defender()
 {
-    const bool mon        = defender->is_monster();
-    const bool immune     = mon && mons_immune_magic(defender->as_monster());
+    monster * const mon   = defender->as_monster();
+    const bool firewood   = mon && mons_is_firewood(mon);
+    const bool immune     = mon && mons_immune_magic(mon);
     const bool is_natural = mon && defender->holiness() == MH_NATURAL;
-    const bool is_shifter = mon && defender->as_monster()->is_shapeshifter();
-    const bool can_clone  = mon && mons_clonable(defender->as_monster(), true);
+    const bool is_shifter = mon && mon->is_shapeshifter();
+    const bool can_clone  = mon && mons_clonable(mon, true);
     const bool can_poly   = is_shifter || (defender->can_safely_mutate()
-                                           && !immune
-                                           && !(mon
-                                                && mons_is_firewood(defender->as_monster())));
+                                           && !immune && !firewood);
     const bool can_rage   = defender->can_go_berserk();
-    const bool can_slow   = !mon || !mons_is_firewood(defender->as_monster());
+    const bool can_slow   = !firewood;
     const bool can_petrify= mon && !defender->res_petrify();
 
     int clone_chance   = can_clone                      ?  1 : 0;
@@ -2605,9 +2604,8 @@ void melee_attack::chaos_affects_defender()
                 mpr("You give off a flash of multicoloured light!");
             else if (you.can_see(defender))
             {
-                simple_monster_message(defender->as_monster(),
-                                       " gives off a flash of "
-                                       "multicoloured light!");
+                simple_monster_message(mon, " gives off a flash of"
+                                            " multicoloured light!");
             }
             else
                 mpr("There is a flash of multicoloured light!");
@@ -2667,8 +2665,7 @@ void melee_attack::chaos_affects_defender()
         ASSERT(clone_chance > 0);
         ASSERT(defender->is_monster());
 
-        if (monster *clone = clone_mons(defender->as_monster(), true,
-                                        &obvious_effect))
+        if (monster *clone = clone_mons(mon, true, &obvious_effect))
         {
             if (obvious_effect)
             {
@@ -2699,7 +2696,7 @@ void melee_attack::chaos_affects_defender()
         ASSERT(defender->is_monster());
 
         obvious_effect = you.can_see(defender);
-        monster_polymorph(defender->as_monster(), RANDOM_MONSTER, PPT_MORE);
+        monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
         break;
 
     case CHAOS_MAKE_SHIFTER:
@@ -2710,15 +2707,14 @@ void melee_attack::chaos_affects_defender()
         ASSERT(defender->is_monster());
 
         obvious_effect = you.can_see(defender);
-        defender->as_monster()->add_ench(one_chance_in(3) ?
-            ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
+        mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
+                                       : ENCH_SHAPESHIFTER);
         // Immediately polymorph monster, just to make the effect obvious.
-        monster_polymorph(defender->as_monster(), RANDOM_MONSTER);
+        monster_polymorph(mon, RANDOM_MONSTER);
 
         // Xom loves it if this happens!
-        const int friend_factor = defender->as_monster()->friendly() ? 1 : 2;
-        const int glow_factor   =
-            (defender->as_monster()->has_ench(ENCH_SHAPESHIFTER) ? 1 : 2);
+        const int friend_factor = mon->friendly() ? 1 : 2;
+        const int glow_factor   = mon->has_ench(ENCH_SHAPESHIFTER) ? 1 : 2;
         xom_is_stimulated(64 * friend_factor * glow_factor);
         break;
     }
