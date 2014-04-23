@@ -1846,7 +1846,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     int modified_wpn_skill = wpn_skill;
 
     if (player_equip_unrand(UNRAND_BOOTS_ASSASSIN)
-        && (!weapon || weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon)))
+        && (!weapon || is_melee_weapon(*weapon)))
     {
         modified_wpn_skill = SK_SHORT_BLADES;
     }
