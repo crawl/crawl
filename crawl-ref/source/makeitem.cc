@@ -159,7 +159,7 @@ static int _missile_colour(const item_def &item)
         item_colour = BROWN;
         break;
     case MI_LARGE_ROCK:
-        item_colour = YELLOW;
+        item_colour = LIGHTGREY;
         break;
     case MI_ARROW:
         item_colour = BLUE;
