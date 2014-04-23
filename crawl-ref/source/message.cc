@@ -936,6 +936,7 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         case MSGCH_EQUIPMENT:
         case MSGCH_EXAMINE:
         case MSGCH_EXAMINE_FILTER:
+        case MSGCH_DGL_MESSAGE:
         default:
             ret = param > 0 ? msg_colour(param) : MSGCOL_LIGHTGREY;
             break;
@@ -1370,7 +1371,7 @@ static void mpr_check_patterns(const string& message,
         if (channel == MSGCH_EQUIPMENT || channel == MSGCH_FLOOR_ITEMS
             || channel == MSGCH_MULTITURN_ACTION
             || channel == MSGCH_EXAMINE || channel == MSGCH_EXAMINE_FILTER
-            || channel == MSGCH_TUTORIAL)
+            || channel == MSGCH_TUTORIAL || channel == MSGCH_DGL_MESSAGE)
         {
             continue;
         }

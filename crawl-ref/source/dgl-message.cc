@@ -34,10 +34,10 @@ static void _show_message_line(string line)
         fs.cprintf("%s: ", sender.c_str());
         fs.textcolor(LIGHTGREY);
         fs.cprintf("%s", line.c_str());
-        formatted_mpr(fs, MSGCH_PLAIN, 0);
+        formatted_mpr(fs, MSGCH_DGL_MESSAGE, 0);
         if (Options.note_dgl_messages)
         {
-            take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0,
+            take_note(Note(NOTE_MESSAGE, MSGCH_DGL_MESSAGE, 0,
                            (sender + ": " + line).c_str()));
         }
     }
@@ -86,7 +86,7 @@ static void _read_each_message()
 
             if (say_got_msg)
             {
-                mprf(MSGCH_PROMPT, "Your messages:");
+                mprf(MSGCH_DGL_MESSAGE, "Your messages:");
                 say_got_msg = false;
             }
 
@@ -125,7 +125,7 @@ void read_messages()
 static void _announce_messages()
 {
     // XXX: We could do a NetHack-like mail daemon here at some point.
-    mpr("Beep! Your pager goes off! Use _ to check your messages.");
+    mpr("Beep! Your pager goes off! Use _ to check your messages.", MSGCH_DGL_MESSAGE);
 }
 
 void check_messages()
