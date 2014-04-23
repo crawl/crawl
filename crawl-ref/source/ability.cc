@@ -292,10 +292,10 @@ static const ability_def Ability_List[] =
     // Yredelemnul
     { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, 0, ABFLAG_PIETY},
     { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains",
-      2, 0, 100, 0, 0, ABFLAG_NONE},
+      2, 0, 50, 0, 0, ABFLAG_NONE},
     { ABIL_YRED_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves",
       2, 0, 50, 0, 0, ABFLAG_NONE},
-    { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 2, 0, 100, 0, 0, ABFLAG_NONE},
+    { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 2, 0, 50, 0, 0, ABFLAG_NONE},
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, 0, ABFLAG_NONE},
     { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul", 8, 0, 150, 4, 0, ABFLAG_NONE},
     // Placeholder for Animate Remains or Animate Dead.
