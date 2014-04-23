@@ -1229,8 +1229,8 @@
   "translucent skin",
 
   {"Your skin is partially translucent.",
-   "Your skin is mostly translucent (Stlth).",
-   "Your transparent skin reduces the accuracy of your foes (Stlth)."},
+   "Your skin is mostly translucent (Stealth).",
+   "Your transparent skin reduces the accuracy of your foes (Stealth)."},
 
   {"Your skin becomes partially translucent.",
    "Your skin becomes more translucent.",
@@ -1505,9 +1505,9 @@
 { MUT_CAMOUFLAGE,                     1,  3, false,  true,  true,
   "camouflage",
 
-  {"Your skin changes colour to match your surroundings (Stlth).",
-   "Your skin blends seamlessly with your surroundings (Stlth).",
-   "Your skin perfectly mimics your surroundings (Stlth)."},
+  {"Your skin changes colour to match your surroundings (Stealth).",
+   "Your skin blends seamlessly with your surroundings (Stealth).",
+   "Your skin perfectly mimics your surroundings (Stealth)."},
 
   {"Your skin functions as natural camouflage.",
    "Your natural camouflage becomes more effective.",
