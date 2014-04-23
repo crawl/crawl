@@ -1484,16 +1484,15 @@ TAGS:    abyss_rune unrand patrolling no_pool_fixup
 MONS:    shambling mangrove, thorn hunter, dire elephant, satyr, rakshasa
 KMONS:   6 = water elemental
 KMONS:   7 = water nymph
-KMONS:   8 = thorn lotus
 KFEAT:   6 = deep_water
-KFEAT:   78 = shallow_water
+KFEAT:   7 = shallow_water
 KITEM:   O = abyssal rune of Zot
 SHUFFLE: 1234
 SUBST:   T = t.
 SUBST:   E = ttWw
 NSUBST:  . = 2:5 /*:.
 NSUBST:  w = 2:6 / *:w
-NSUBST:  W = 2 = 78 / *:W
+NSUBST:  W = 2 = 7 / *:W
 FTILE:   .t123456789O = floor_grass
 MAP
     .......

@@ -4402,21 +4402,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     }
     break;
 
-    case MONS_THORN_LOTUS:
-        if (x_chance_in_y(2, 5))
-        {
-            setup_mons_cast(mons, beem, SPELL_THORN_VOLLEY);
-
-            fire_tracer(mons, beem);
-            if (mons_should_fire(beem))
-            {
-                make_mons_stop_fleeing(mons);
-                _mons_cast_abil(mons, beem, SPELL_THORN_VOLLEY);
-                used = true;
-            }
-        }
-        break;
-
     case MONS_FIREFLY:
         if (!one_chance_in(7) || mons->friendly() || mons->confused()
             || mons->has_ench(ENCH_INVIS))

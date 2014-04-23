@@ -2545,13 +2545,6 @@ It stalks its prey swiftly, creating sudden profusions of spiny brambles with
 which to ensnare them and then skewering the trapped creatures with accurate
 volleys of its own razor-sharp thorns.
 %%%%
-thorn lotus
-
-A large and vivid bloom drifting placidly upon the surface of the water.
-Beware, for its beauty is deceptive; cradled within its petals lies a stigma
-bristling with needle-like thorns, fully capable of impaling predators and
-unwitting adventurers alike before they can draw close enough to threaten it.
-%%%%
 toadstool
 
 A short-lived species of fungus typically found on or around decaying organic

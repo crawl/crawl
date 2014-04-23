@@ -2112,17 +2112,6 @@
       }
     },
 
-    {  MST_THORN_LOTUS,
-      {
-       SPELL_THORN_VOLLEY,
-       SPELL_THORN_VOLLEY,
-       SPELL_NO_SPELL,
-       SPELL_THORN_VOLLEY,
-       SPELL_THORN_VOLLEY,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_DRACONIAN_ZEALOT,
       {
        SPELL_SUMMON_DEMON,
