@@ -2099,8 +2099,6 @@ int monster_die(monster* mons, killer_type killer,
             if (!created_friendly && gives_xp && pet_kill
                 && (anon || !invalid_monster_index(killer_index)))
             {
-                bool notice = false;
-
                 monster* killer_mon = NULL;
                 if (!anon)
                 {
@@ -2137,44 +2135,44 @@ int monster_die(monster* mons, killer_type killer,
                         if (targ_holy == MH_DEMONIC
                             || mons_is_demonspawn(mons->type))
                         {
-                            notice |= did_god_conduct(
-                                          !confused ? DID_DEMON_KILLED_BY_UNDEAD_SLAVE :
-                                                      DID_DEMON_KILLED_BY_SERVANT,
-                                          mons->hit_dice);
+                            did_god_conduct(
+                                !confused ? DID_DEMON_KILLED_BY_UNDEAD_SLAVE :
+                                            DID_DEMON_KILLED_BY_SERVANT,
+                                mons->hit_dice);
                         }
                         else if (targ_holy == MH_NATURAL)
                         {
-                            notice |= did_god_conduct(
-                                          !confused ? DID_LIVING_KILLED_BY_UNDEAD_SLAVE :
-                                                      DID_LIVING_KILLED_BY_SERVANT,
-                                          mons->hit_dice);
+                            did_god_conduct(
+                                !confused ? DID_LIVING_KILLED_BY_UNDEAD_SLAVE :
+                                            DID_LIVING_KILLED_BY_SERVANT,
+                                mons->hit_dice);
                         }
                         else if (targ_holy == MH_UNDEAD)
                         {
-                            notice |= did_god_conduct(
-                                          !confused ? DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE :
-                                                      DID_UNDEAD_KILLED_BY_SERVANT,
-                                          mons->hit_dice);
+                            did_god_conduct(
+                                !confused ? DID_UNDEAD_KILLED_BY_UNDEAD_SLAVE :
+                                            DID_UNDEAD_KILLED_BY_SERVANT,
+                                mons->hit_dice);
                         }
 
                         if (mons->is_unclean())
                         {
-                            notice |= did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
-                                                      mons->hit_dice);
+                            did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
+                                            mons->hit_dice);
                         }
 
                         if (mons->is_chaotic())
                         {
-                            notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
-                                                      mons->hit_dice);
+                            did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
+                                            mons->hit_dice);
                         }
 
                         if (mons->is_artificial())
                         {
-                            notice |= did_god_conduct(
-                                          !confused ? DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE :
-                                                      DID_ARTIFICIAL_KILLED_BY_SERVANT,
-                                          mons->hit_dice);
+                            did_god_conduct(
+                                !confused ? DID_ARTIFICIAL_KILLED_BY_UNDEAD_SLAVE :
+                                            DID_ARTIFICIAL_KILLED_BY_SERVANT,
+                                mons->hit_dice);
                         }
                     }
                     // Yes, we are splitting undead pets from the others
@@ -2189,50 +2187,49 @@ int monster_die(monster* mons, killer_type killer,
                     else if (targ_holy == MH_DEMONIC
                              || mons_is_demonspawn(mons->type))
                     {
-                        notice |= did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
+                        did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
+                                        mons->hit_dice);
                     }
                     else if (targ_holy == MH_NATURAL)
                     {
-                        notice |= did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
+                        did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
+                                        mons->hit_dice);
 
                         // TSO hates natural evil and unholy beings.
                         if (mons->is_unholy())
                         {
-                            notice |= did_god_conduct(
-                                          DID_NATURAL_UNHOLY_KILLED_BY_SERVANT,
-                                          mons->hit_dice);
+                            did_god_conduct(
+                                DID_NATURAL_UNHOLY_KILLED_BY_SERVANT,
+                                mons->hit_dice);
                         }
                         else if (mons->is_evil())
                         {
-                            notice |= did_god_conduct(
-                                          DID_NATURAL_EVIL_KILLED_BY_SERVANT,
-                                          mons->hit_dice);
+                            did_god_conduct(DID_NATURAL_EVIL_KILLED_BY_SERVANT,
+                                mons->hit_dice);
                         }
                     }
                     else if (targ_holy == MH_UNDEAD)
                     {
-                        notice |= did_god_conduct(DID_UNDEAD_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
+                        did_god_conduct(DID_UNDEAD_KILLED_BY_SERVANT,
+                                        mons->hit_dice);
                     }
 
                     if (mons->is_unclean())
                     {
-                        notice |= did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
+                        did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
+                                        mons->hit_dice);
                     }
 
                     if (mons->is_chaotic())
                     {
-                        notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
+                        did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
+                                        mons->hit_dice);
                     }
 
                     if (mons->is_artificial())
                     {
-                        notice |= did_god_conduct(DID_ARTIFICIAL_KILLED_BY_SERVANT,
-                                                  mons->hit_dice);
+                        did_god_conduct(DID_ARTIFICIAL_KILLED_BY_SERVANT,
+                                        mons->hit_dice);
                     }
                 }
 
@@ -2250,14 +2247,16 @@ int monster_die(monster* mons, killer_type killer,
                         // okay that Yredelemnul ignores kills done by
                         // confused monsters as opposed to enslaved or
                         // friendly ones. (jpeg)
-                        notice |= did_god_conduct(
-                                      !confused ? DID_HOLY_KILLED_BY_UNDEAD_SLAVE :
-                                                  DID_HOLY_KILLED_BY_SERVANT,
-                                      mons->hit_dice, true, mons);
+                        did_god_conduct(
+                            !confused ? DID_HOLY_KILLED_BY_UNDEAD_SLAVE :
+                                        DID_HOLY_KILLED_BY_SERVANT,
+                            mons->hit_dice, true, mons);
                     }
                     else
-                        notice |= did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
-                                                  mons->hit_dice, true, mons);
+                    {
+                        did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
+                                        mons->hit_dice, true, mons);
+                    }
                 }
 
                 if (you_worship(GOD_SHINING_ONE)
