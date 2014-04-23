@@ -466,16 +466,21 @@ static int _refrigerate_player(actor* agent, int pow, int avg,
     {
         mpr("You feel very cold.");
         if (agent && !agent->is_player())
+        {
             ouch(hurted, agent->as_monster()->mindex(), KILLED_BY_BEAM,
                  "by Ozocubu's Refrigeration", true,
                  agent->as_monster()->name(DESC_A).c_str());
-        else
-            ouch(hurted, NON_MONSTER, KILLED_BY_FREEZING);
+            expose_player_to_element(BEAM_COLD, 5, added_effects);
 
-        // Note: this used to be 12!... and it was also applied even if
-        // the player didn't take damage from the cold, so we're being
-        // a lot nicer now.  -- bwr
-        expose_player_to_element(BEAM_COLD, 5, added_effects);
+            // Note: this used to be 12!... and it was also applied even if
+            // the player didn't take damage from the cold, so we're being
+            // a lot nicer now.  -- bwr
+        }
+        else
+        {
+            ouch(hurted, NON_MONSTER, KILLED_BY_FREEZING);
+            you.increase_duration(DUR_NO_POTIONS, 7 + random2(9), 15);
+        }
     }
 
     return hurted;

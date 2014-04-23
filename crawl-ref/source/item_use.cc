@@ -1967,6 +1967,12 @@ void drink(int slot)
         return;
     }
 
+    if (you.duration[DUR_NO_POTIONS])
+    {
+        mpr("You cannot drink potions in your current state!");
+        return;
+    }
+
     if (slot == -1)
     {
         slot = prompt_invent_item("Drink which item?",

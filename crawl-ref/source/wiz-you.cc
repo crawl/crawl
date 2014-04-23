@@ -878,6 +878,7 @@ static const char* dur_names[] =
     "dragon call cooldown",
     "aura of abjuration",
     "mesmerisation immunity",
+    "no potions"
 };
 
 void wizard_edit_durations(void)

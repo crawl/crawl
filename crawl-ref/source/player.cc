@@ -4273,6 +4273,7 @@ void display_char_status()
         DUR_SAP_MAGIC,
         STATUS_MAGIC_SAPPED,
         DUR_PORTAL_PROJECTILE,
+        DUR_NO_POTIONS,
     };
 
     status_info inf;
