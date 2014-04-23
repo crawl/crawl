@@ -3858,6 +3858,21 @@ void unmarshallItem(reader &th, item_def &item)
             item.sub_type = SCR_ENCHANT_WEAPON;
         }
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_WEAPON_PLUSES)
+    {
+        int acc, dam, slay = 0;
+
+        if (item.base_type == OBJ_WEAPONS)
+        {
+            acc = item.plus;
+            dam = item.plus2;
+            slay = dam < 0 ? dam : max(acc,dam);
+
+            item.plus = slay;
+            item.plus2 = 0;
+        }
+    }
 #endif
 
     if (is_unrandom_artefact(item))
