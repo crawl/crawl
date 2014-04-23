@@ -2519,7 +2519,6 @@ enum monster_type                      // menv[].type
     MONS_BUSH,
     MONS_BURNING_BUSH,
 #if TAG_MAJOR_VERSION > 34
-    MONS_THORN_LOTUS,
     MONS_THORN_HUNTER,
     MONS_BRIAR_PATCH,
     MONS_SHAMBLING_MANGROVE,

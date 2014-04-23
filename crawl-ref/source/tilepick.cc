@@ -1682,8 +1682,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_OKLOB_SAPLING;
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
-    case MONS_THORN_LOTUS:
-        return TILEP_MONS_THORN_LOTUS;
     case MONS_THORN_HUNTER:
         return TILEP_MONS_THORN_HUNTER;
     case MONS_BRIAR_PATCH:
@@ -2902,8 +2900,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if ((!mons.ground_level() && !_tentacle_tile_not_flying(ch))
-        || ch == TILEP_MONS_THORN_LOTUS)
+    if ((!mons.ground_level() && !_tentacle_tile_not_flying(ch)))
         ch |= TILE_FLAG_FLYING;
     if (mons.is(MB_CAUGHT))
         ch |= TILE_FLAG_NET;

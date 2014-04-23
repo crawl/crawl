@@ -1343,7 +1343,6 @@ static const pop_entry pop_water_swamp[] =
   {  1,  5,   600, FLAT, MONS_SWAMP_WORM },
   {  1,  5,    75, FLAT, MONS_BIG_FISH },
   {  1,  5,    75, FLAT, MONS_GIANT_GOLDFISH },
-  {  2,  6,   165, SEMI, MONS_THORN_LOTUS },
   {  1,  5,   900, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1360,7 +1359,6 @@ static const pop_entry pop_water_forest[] =
   {  1,   5,   35, FLAT, MONS_BIG_FISH },
   {  1,   5,  110, FLAT, MONS_GIANT_GOLDFISH },
   {  1,   5,  125, FLAT, MONS_WATER_ELEMENTAL },
-  {  1,   5,  135, FLAT, MONS_THORN_LOTUS },
   {  1,   9,  120, SEMI, MONS_WATER_NYMPH },
   { 0,0,0,FLAT,MONS_0 }
 };

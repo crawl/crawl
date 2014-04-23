@@ -2026,14 +2026,6 @@ titan
 Cet énorme humanoïde, portant des éclairs à la main, est inhabituellement grand
 et cela même pour des géants.
 %%%%
-thorn lotus
-
-Un grand et vif floraison dérive tranquillement à la surface de l'eau.
-Méfiez-vous, car sa beauté est trompeuse ; maintenu l'intérieur de ses pétales
-se trouve une stigmatisation hérissée d'épines aiguille, pleinement capables
-d'empaler les prédateurs et les aventuriers inconscients avant même qu'ils
-soient suffisamment proche pour la menacer.
-%%%%
 toadstool
 
 Une espèce de champignon à courte vie typiquement trouvable sur ou autour des

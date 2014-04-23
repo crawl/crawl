@@ -202,7 +202,7 @@ MONS:   tengu conjurer ; quarterstaff . robe . longbow . arrow / \
         tengu conjurer ; quarterstaff . robe . crossbow . bolt / \
         centaur warrior / rakshasa / ogre mage ; giant club . \
         robe . potion of berserk rage q:1 ident:type
-KMONS:  L = thorn lotus
+KMONS:  L = water nymph
 KMONS:  P = plant
 ITEM:   grape q:1 / grape q:2 / nothing w:180
 ITEM:   any potion / grape q:1 / nothing w:30
@@ -308,14 +308,13 @@ MONS:     dire elephant, spriggan defender
 MONS:     sphinx w:20 / tengu reaver w:15 / deep elf high priest
 KMONS:    E = water elemental
 KMONS:    P = thorn hunter
-KMONS:    L = thorn lotus
 KMONS:    N = water nymph
 KMONS:    S = shambling mangrove
-KFEAT:    PELNS = shallow_water
+KFEAT:    PENS = shallow_water
 SUBST:    X = tx
 SHUFFLE:  PS
 NSUBST:   1 = 4:1 / 4:2 / * = 1122., 6 = 1:7 / 2 = 66677 / *:6
-NSUBST:   N = 2:NL / 2:PS
+NSUBST:   N = 2:N / 2:PS
 FTILE:    |*1234567GTU+. = floor_pebble_cyan
 : old_forest_ends(_G)
 veto {{
