@@ -114,6 +114,8 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     int resist;
     int original = hurted;
 
+    ASSERT(beam || !doEffects);
+
     dprf("checking resistance: flavour=%d", flavour);
 
     string kaux = "";
