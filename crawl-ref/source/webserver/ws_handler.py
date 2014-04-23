@@ -208,6 +208,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                               + "connections has been reached, sorry :(")
             self.close()
         else:
+            host = self.request.protocol + "://" + self.request.host
+            # don't allow cookie authentication from cross-site requests
+            if self.request.headers.get("Origin") != host:
+                return
+
             if config.dgl_mode:
                 if self.get_cookie("sid"):
                     # short-lived session
