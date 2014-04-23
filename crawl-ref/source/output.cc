@@ -825,7 +825,7 @@ static void _print_stats_wp(int y)
         const item_def& wpn = *you.weapon();
 
         const string prefix = item_prefix(wpn);
-        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix);
+        const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
         if (prefcol != -1)
             col = prefcol;
         else
@@ -899,7 +899,7 @@ static void _print_stats_qv(int y)
         const item_def& quiver = you.inv[q];
         const string prefix = item_prefix(quiver);
         const int prefcol =
-            menu_colour(quiver.name(DESC_INVENTORY), prefix);
+            menu_colour(quiver.name(DESC_INVENTORY), prefix, "stats");
         if (prefcol != -1)
             col = prefcol;
         else
