@@ -1547,6 +1547,7 @@ int attack::test_hit(int to_land, int ev, bool randomise_ev)
 
 int attack::apply_defender_ac(int damage, int damage_max, bool half_ac)
 {
+    ASSERT(defender);
     int stab_bypass = 0;
     if (stab_bonus)
     {

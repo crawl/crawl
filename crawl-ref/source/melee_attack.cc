@@ -235,6 +235,7 @@ bool melee_attack::handle_phase_attempted()
     {
         if (jumping_attack)
         {
+            ASSERT(defender);
             mprf("%s jump-attacks %s!", attacker->name(DESC_THE).c_str(),
                  defender->name(DESC_THE).c_str());
             if (jump_blocked)
