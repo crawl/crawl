@@ -1014,8 +1014,8 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
             item.flags |= ISFLAG_GLOWING;
 
         // Make the pluses more like a randomly generated ego item.
-        item.plus  += random2(5);
-        item.plus2 += random2(5);
+        if (item.base_type == OBJ_WEAPONS)
+            item.plus  += random2(5);
     }
 }
 

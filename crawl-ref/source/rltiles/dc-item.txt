@@ -589,7 +589,7 @@ chunk_brands/i-rotten FOOD_INEDIBLE
 %sdir item/scroll
 scroll SCROLL UNSEEN_SCROLL
 
-#### These must be in the same order as the enum in item-prop.h!
+#### These must be in the same order as the enum in itemprop-enum.h!
 %sdir item/scroll
 %back scroll-yellow
 i-identify SCR_IDENTIFY SCR_ID_FIRST
@@ -604,7 +604,7 @@ i-remove_curse SCR_REMOVE_CURSE
 %back scroll-brown
 i-unholy_creation SCR_UNHOLY_CREATION
 %back scroll-green
-i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
+i-enchant-weapon SCR_ENCHANT_WEAPON
 i-enchant_armour SCR_ENCHANT_ARMOUR
 %back scroll-red
 i-torment SCR_TORMENT
@@ -623,10 +623,11 @@ i-fog SCR_FOG
 %back scroll-cyan
 i-acquirement SCR_ACQUIREMENT
 %back scroll-green
-i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
+#if TAG_MAJOR_VERSION == 34 # Remove the two i-enchant-weapon
+i-enchant-weapon SCR_ENCHANT_WEAPON_II
 i-brand-weapon SCR_BRAND_WEAPON
 i-recharging SCR_RECHARGING
-i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
+i-enchant-weapon SCR_ENCHANT_WEAPON_III
 %back scroll-red
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY

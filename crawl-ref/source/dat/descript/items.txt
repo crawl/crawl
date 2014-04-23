@@ -1161,26 +1161,12 @@ AC. Magical artefacts cannot be enchanted at all.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
-scroll of enchant weapon i
+scroll of enchant weapon
 
-This scroll places an enchantment on a weapon chosen by the reader, making it
-more accurate in combat. It becomes increasingly less likely to succeed when
+This scroll places an enchantment on a weapon chosen by the reader, increasing
+both accuracy and damage. It becomes increasingly less likely to succeed when
 used on highly enchanted weapons, and can only ever enchant them up to +9.
 Magical artefacts cannot be enchanted at all.
-%%%%
-scroll of enchant weapon ii
-
-This scroll places an enchantment on a weapon chosen by the reader, making it
-inflict greater damage in combat. It becomes increasingly less likely to
-succeed when used on highly enchanted weapons, and can only ever enchant them
-up to +9. Magical artefacts cannot be enchanted at all.
-%%%%
-scroll of enchant weapon iii
-
-This scroll enchants a chosen weapon to be far more effective in combat,
-increasing both accuracy and damage. It becomes increasingly less likely to
-succeed when used on highly enchanted weapons, and can only ever enchant them
-up to +9. Magical artefacts cannot be enchanted at all.
 %%%%
 scroll of fear
 

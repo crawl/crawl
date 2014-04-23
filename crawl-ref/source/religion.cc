@@ -1701,9 +1701,8 @@ static bool _blessing_wpn(monster* mon)
                                              || mon->type == MONS_ORC_WARLORD);
     }
 
-    // And enchant or uncurse it.
-    int which = random2(2);
-    if (!enchant_weapon(wpn, which, 1 - which, NULL))
+    // Enchant and uncurse it.
+    if (!enchant_weapon(wpn))
         return false;
 
     item_set_appearance(wpn);
