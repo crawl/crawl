@@ -2295,10 +2295,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scrol
                 return NULL;
             }
             else
-            {
-                item_slot = -1;
                 continue;
-            }
         }
 
         item_def* wpn = &you.inv[item_slot];
@@ -2309,7 +2306,6 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scrol
             mpr("Choose a valid weapon, or Esc to abort.");
             more();
 
-            item_slot = -1;
             continue;
         }
 
