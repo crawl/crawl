@@ -3855,7 +3855,7 @@ int check_stealth(void)
         stealth -= penalty;
     }
 
-    stealth += you.scan_artefacts(ARTP_STEALTH);
+    stealth += 50 * you.scan_artefacts(ARTP_STEALTH);
 
     if (you.duration[DUR_STEALTH])
         stealth += 80;

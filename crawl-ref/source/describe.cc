@@ -250,9 +250,9 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Acc",    ARTP_ACCURACY,              0 },
         { "Dam",    ARTP_DAMAGE,                0 },
 
-        // Qualitative attributes
+        // Qualitative attributes (and Stealth)
         { "SInv",   ARTP_EYESIGHT,              2 },
-        { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
+        { "Stlth",  ARTP_STEALTH,               1 },
         { "Curse",  ARTP_CURSED,                2 },
         { "Clar",   ARTP_CLARITY,               2 },
         { "RMsl",   ARTP_RMSL,                  2 },
@@ -347,17 +347,6 @@ static vector<string> _randart_propnames(const item_def& item,
                     work << "+";
                 else if (propanns[i].prop == ARTP_METABOLISM && val < 0)
                     work << "-";
-                else if (propanns[i].prop == ARTP_STEALTH)
-                {
-                    if (val > 50)
-                        work << "++";
-                    else if (val > 20)
-                        work << "+";
-                    else if (val < -50)
-                        work << "--";
-                    else if (val < 0)
-                        work << "-";
-                }
                 break;
             }
             propnames.push_back(work.str());
@@ -563,7 +552,7 @@ static string _randart_descrip(const item_def &item)
         const int stval = proprt[ARTP_STEALTH];
         char buf[80];
         snprintf(buf, sizeof buf, "\nIt makes you %s%s stealthy.",
-                 (stval < -20 || stval > 20) ? "much " : "",
+                 (stval < -1 || stval > 1) ? "much " : "",
                  (stval < 0) ? "less" : "more");
         description += buf;
     }

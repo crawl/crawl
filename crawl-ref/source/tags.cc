@@ -3591,6 +3591,22 @@ void unmarshallItem(reader &th, item_def &item)
         else
             artefact_set_property(item, ARTP_MAGIC, 1);
     }
+
+    // Rescale stealth (range 10..79 and -10..-98) to discrete steps (+-50/100)
+    if (th.getMinorVersion() < TAG_MINOR_STEALTH_RESCALE
+        && is_artefact(item)
+        && artefact_wpn_property(item, ARTP_STEALTH))
+    {
+        int prop_st = artefact_wpn_property(item, ARTP_STEALTH);
+        if (prop_st > 50)
+            artefact_set_property(item, ARTP_STEALTH, 2);
+        else if (prop_st < -50)
+            artefact_set_property(item, ARTP_STEALTH, -2);
+        else if (prop_st < 0)
+            artefact_set_property(item, ARTP_STEALTH, -1);
+        else
+            artefact_set_property(item, ARTP_STEALTH, 1);
+    }
 #endif
 
     if (is_unrandom_artefact(item))

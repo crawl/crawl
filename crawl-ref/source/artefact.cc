@@ -1086,11 +1086,11 @@ static void _get_randart_properties(const item_def &item,
         && get_armour_ego_type(item) != SPARM_STEALTH)
     {
         power_level++;
-        proprt[ARTP_STEALTH] = 10 + random2(70);
+        proprt[ARTP_STEALTH] = one_chance_in(4) ? 2 : 1;
 
         if (one_chance_in(4))
         {
-            proprt[ARTP_STEALTH] = -proprt[ARTP_STEALTH] - random2(20);
+            proprt[ARTP_STEALTH] = -proprt[ARTP_STEALTH] - random2(2);
             power_level--;
         }
     }
