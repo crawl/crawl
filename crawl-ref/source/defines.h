@@ -195,7 +195,6 @@ const int MAG_IMMUNE = 5000;
 const int INSTANT_DEATH = -9999;
 
 // Maximum enchantment on weapons/armour/secondary armours
-// This is the same as for ammunition.
 const int MAX_WPN_ENCHANT = 9;
 
 // Note: use armour_max_enchant(item) to get the correct limit for item
