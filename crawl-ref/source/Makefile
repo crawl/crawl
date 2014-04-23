@@ -384,10 +384,20 @@ ifndef NO_AUTO_SDK
 
 # The SDK locations were moved in 10.8; this snippet tries to find them
 # there first, then reverts to the original location.
-ifeq ($(shell test -e /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer || echo NOPE),)
-DEVELOPER_PATH := /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer
+XCODE_SDK_SUFFIX := Platforms/MacOSX.platform/Developer
+# Try to use xcode-select -p to find the current user-configured Xcode.app.
+XCODE_SELECT_PATH := $(shell xcode-select -p 2>/dev/null | sed 's/\/$$//')
+ifeq ($(shell test -e "$(XCODE_SELECT_PATH)/$(XCODE_SDK_SUFFIX)" || echo NOPE),)
+DEVELOPER_PATH := $(XCODE_SELECT_PATH)/$(XCODE_SDK_SUFFIX)
 else
+# Otherwise, try /Applications/Xcode.app.
+XCODE_DEFAULT_PATH := /Applications/Xcode.app/Contents/Developer
+ifeq ($(shell test -e "$(XCODE_DEFAULT_PATH)/$(XCODE_SDK_SUFFIX)" || echo NOPE),)
+DEVELOPER_PATH := $(XCODE_DEFAULT_PATH)/$(XCODE_SDK_SUFFIX)
+else
+# If all else fails, maybe it's in /Developer.
 DEVELOPER_PATH := /Developer
+endif
 endif
 
 # Find the oldest SDK available, in attempt to make this build as
