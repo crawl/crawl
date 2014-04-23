@@ -2268,15 +2268,7 @@ scroll of enchant armour
 
 <scroll>
 %%%%
-scroll of enchant weapon i
-
-<scroll>
-%%%%
-scroll of enchant weapon ii
-
-<scroll>
-%%%%
-scroll of enchant weapon iii
+scroll of enchant weapon
 
 <scroll>
 %%%%

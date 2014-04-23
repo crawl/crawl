@@ -174,7 +174,7 @@ function general_item_setup(e)
           potion of might ident:all w:2 / potion of agility w:2 ident:all /\
           potion of haste q:2 ident:all w:2 /\
           scroll of acquirement w:1 ident:all /\
-          scroll of enchant weapon iii ident:all q:2 w:2 /\
+          scroll of enchant weapon ident:all q:4 w:2 /\
           scroll of enchant armour ident:all q:4 w:2 /\
           scroll of brand weapon ident:all")
   e.kitem("| = superb_item ident:all w:66 / star_item ident:all w:33")
@@ -192,9 +192,7 @@ function general_item_setup(e)
           scroll of remove curse ident:all /\
           scroll of identify ident:all / scroll of recharging ident:all /\
           scroll of fog ident:all / scroll of fear ident:all /\
-          scroll of enchant weapon i ident:all q:2 /\
-          scroll of enchant weapon ii ident:all q:2 /\
-          scroll of enchant weapon iii ident:all /\
+          scroll of enchant weapon ident:all q:2 /\
           scroll of enchant armour ident:all q:2")
   e.kitem(") = battleaxe plus:9 good_item not_cursed ident:all /\
     battleaxe plus:7 randart not_cursed ident:all /\

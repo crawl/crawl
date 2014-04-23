@@ -2284,8 +2284,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  33, SCR_RECHARGING,
                  33, SCR_BLINKING,
                  33, SCR_ENCHANT_ARMOUR,
-                 33, SCR_ENCHANT_WEAPON_I,
-                 33, SCR_ENCHANT_WEAPON_II,
+                 // roughly similar to combined weights of old ew 1-3 scrolls
+                 66, SCR_ENCHANT_WEAPON,
                  33, SCR_AMNESIA,
                  // [Cha] don't generate noise scrolls if in sprint
                  33, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
@@ -2295,7 +2295,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  // Higher-level scrolls.
                  27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
                  14, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_ENCHANT_WEAPON_III),
                  14, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
                  14, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
                  14, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
@@ -2312,7 +2311,6 @@ static void _generate_scroll_item(item_def& item, int force_type,
 
     // determine quantity
     if (item.sub_type == SCR_BRAND_WEAPON
-        || item.sub_type == SCR_ENCHANT_WEAPON_III
         || item.sub_type == SCR_ACQUIREMENT
         || item.sub_type == SCR_TORMENT
         || item.sub_type == SCR_HOLY_WORD

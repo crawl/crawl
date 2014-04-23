@@ -34,9 +34,7 @@ function general_item_setup(e)
           scroll of remove curse ident:all /\
           scroll of identify ident:all / scroll of recharging ident:all /\
           scroll of fog ident:all / scroll of fear ident:all /\
-          scroll of enchant weapon i ident:all q:2 /\
-          scroll of enchant weapon ii ident:all q:2 /\
-          scroll of enchant weapon iii ident:all /\
+          scroll of enchant weapon ident:all q:2 /\
           scroll of enchant armour ident:all q:2")
 end
 

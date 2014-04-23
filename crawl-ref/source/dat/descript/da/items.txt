@@ -759,21 +759,7 @@ deres basis-RK. Magiske artefakter kan slet ikke fortrylles.
 
 Den kan også bruges til at fortrylle visse eksotiske væseners skind.
 %%%%
-scroll of enchant weapon i
-
-Denne skriftrulle fortryller et våben af eget valg og gør det mere præcist i
-kamp. Det bliver sværere og sværere at få den til at virke på stærkt
-fortryllede våben og kan aldrig fortrylle dem højere end +9. Magiske artefakter
-kan slet ikke fortrylles.
-%%%%
-scroll of enchant weapon ii
-
-Denne skriftrulle fortryller et våben efter eget valg og får det til at
-forvolde større skade i kamp. Det bliver sværere og sværere at få den til at
-virke på stærkt fortryllede våben og kan aldrig fortrylle dem højere end +9.
-Magiske artefakter kan slet ikke fortrylles.
-%%%%
-scroll of enchant weapon iii
+scroll of enchant weapon
 
 Denne skriftrulle fortryller et våben efter eget valg og gør det langt mere
 effektivt i kamp ved at øge både præcision og skade. Det bliver sværere og
