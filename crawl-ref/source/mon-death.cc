@@ -129,9 +129,6 @@ monster_type fill_out_corpse(const monster* mons,
     corpse.quantity    = 1;
     corpse.orig_monnum = mtype;
 
-    if (mtype == MONS_PLAGUE_SHAMBLER)
-        corpse.special = ROTTING_CORPSE;
-
     if (mons)
     {
         corpse.props[MONSTER_HIT_DICE] = short(mons->hit_dice);
