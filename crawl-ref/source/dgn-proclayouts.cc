@@ -186,7 +186,7 @@ NewAbyssLayout::operator()(const coord_def &p, const uint32_t offset) const
 
 dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
 {
-    if (feat_is_gate(feature))
+    if (feat_is_gate(feature) || feature == DNGN_TELEPORTER)
         feature = DNGN_STONE_ARCH;
     if (feat_is_stair(feature))
         feature = strict ? DNGN_FLOOR : DNGN_STONE_ARCH;
