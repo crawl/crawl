@@ -360,7 +360,6 @@ shirt_check SHIRT_CHECK
 jessica JESSICA
 
 slit_black SLIT_BLACK
-leather_armour LEATHER_ARMOUR
 leather_green LEATHER_GREEN
 shirt_black SHIRT_BLACK
 shirt_black_and_cloth SHIRT_BLACK_AND_CLOTH
@@ -369,8 +368,9 @@ leather2 LEATHER2
 coat_red COAT_RED
 coat_black COAT_BLACK
 
-leather_armour2 LEATHER_ARMOUR2
-leather_armour3 LEATHER_ARMOUR3
+leather_armour LEATHER_ARMOUR
+leather_armour2
+leather_armour3
 shirt_vest SHIRT_VEST
 karate KARATE
 karate2 KARATE2

@@ -828,7 +828,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
     else if (ac > 12)
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_SCALEMAIL;
     else if (ac > 5)
-        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_LEATHER_HEAVY;
+        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_LEATHER_ARMOUR;
     else
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_ROBE_BLUE;
 
