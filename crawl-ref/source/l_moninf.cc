@@ -52,6 +52,7 @@ MIRET1(number, type, type)
 MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
 MIRET1(number, colour, colour)
+MIRET1(boolean, has_known_ranged_attack, is(MB_RANGED_ATTACK))
 
 // const char* here would save a tiny bit of memory, but every map
 // for an unique pair of types costs 35KB of code.  We have
@@ -257,6 +258,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(damage_desc),
     MIREG(desc),
     MIREG(name),
+    MIREG(has_known_ranged_attack),
 
     { NULL, NULL }
 };
