@@ -275,8 +275,7 @@ NAME:   enter_trove_3
 TAGS:   uniq_trove no_monster_gen no_wall_fixup
 CHANCE: 5%
 : trove.portal(_G)
-COLOUR: .c = blue
-FTILE:  .cO = floor_marble
+COLOUR: c = blue
 MAP
 ccccc
 c...c
@@ -289,12 +288,16 @@ ENDMAP
 NAME:   enter_trove_5
 CHANCE: 5%
 : trove.portal(_G)
+COLOUR: e = blue
+FTILE:  e = floor_marble
 : if you.absdepth() <= 15 then
 # Got drafted in from Vaults:$, while the mages try and close the portal down.
 KMONS:  e = vault guard
 : else
 # And this time he brought some friends...
 KMONS:  el = vault guard
+COLOUR: l = blue
+FTILE:  l = floor_marble
 : end
 MAP
 ccccc
