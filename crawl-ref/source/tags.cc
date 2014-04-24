@@ -3614,6 +3614,14 @@ void unmarshallItem(reader &th, item_def &item)
             artefact_set_property(item, ARTP_METABOLISM, 0);
             artefact_set_property(item, ARTP_STEALTH, -1);
         }
+
+        // Make sure no weird fake-rap combinations are produced by the upgrade
+        // from rings of sustenance/hunger with {Stlth} to stealth/loudness
+        if (item.base_type == OBJ_JEWELLERY
+            && (item.sub_type == RING_STEALTH || item.sub_type == RING_LOUDNESS))
+        {
+            artefact_set_property(item, ARTP_STEALTH, 0);
+        }
     }
 #endif
 

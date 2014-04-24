@@ -59,15 +59,15 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             type_bad = true;
         break;
 
-    case GOD_OKAWARU:
-        // Precision fighter god: no inaccuracy.
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_INACCURACY)
+    case GOD_SHINING_ONE:
+        // Crusader god: holiness, honourable combat.
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_STEALTH)
             type_bad = true;
         break;
 
-    case GOD_ZIN:
-        // Lawful god: no increased hunger.
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_HUNGER)
+    case GOD_OKAWARU:
+        // Precision fighter god: no inaccuracy.
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_INACCURACY)
             type_bad = true;
         break;
 
@@ -99,6 +99,12 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             type_bad = true;
 
         if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
+            type_bad = true;
+        break;
+
+    case GOD_DITHMENOS:
+        // Shadow god: no reducing stealth.
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_LOUDNESS)
             type_bad = true;
         break;
 
@@ -222,6 +228,9 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         {
             return false;
         }
+        // No reducing stealth.
+        if (artefact_wpn_property(item, ARTP_STEALTH) < 0)
+            return false;
         break;
 
     default:
@@ -520,13 +529,13 @@ void artefact_desc_properties(const item_def &item,
         fake_rap = ARTP_EYESIGHT;
         break;
 
-    case RING_HUNGER:
-        fake_rap = ARTP_METABOLISM;
+    case RING_LOUDNESS:
+        fake_rap = ARTP_STEALTH;
+        fake_plus = -1;
         break;
 
-    case RING_SUSTENANCE:
-        fake_rap = ARTP_METABOLISM;
-        fake_plus = -1;
+    case RING_STEALTH:
+        fake_rap = ARTP_STEALTH;
         break;
 
     case RING_REGENERATION:
@@ -1068,6 +1077,11 @@ static void _get_randart_properties(const item_def &item,
             proprt[ARTP_COLD] = -1;
             break;
         case 7:                     // less stealthy
+            if (aclass == OBJ_JEWELLERY
+                && (atype == RING_LOUDNESS || atype == RING_STEALTH))
+            {
+                break;
+            }
             proprt[ARTP_STEALTH] = -1 - random2(2);
             break;
         case 8:
@@ -1671,8 +1685,8 @@ static bool _randart_is_redundant(const item_def &item,
         provides = ARTP_INVISIBLE;
         break;
 
-    case RING_HUNGER:
-        provides = ARTP_METABOLISM;
+    case RING_STEALTH:
+        provides = ARTP_STEALTH;
         break;
 
     case RING_TELEPORTATION:
@@ -1765,8 +1779,8 @@ static bool _randart_is_conflicting(const item_def &item,
 
     switch (item.sub_type)
     {
-    case RING_SUSTENANCE:
-        conflicts = ARTP_METABOLISM;
+    case RING_LOUDNESS:
+        conflicts = ARTP_STEALTH;
         break;
 
     case RING_FIRE:
@@ -1966,7 +1980,7 @@ static void _make_faerie_armour(item_def &item)
 static jewellery_type octoring_types[8] =
 {
     RING_REGENERATION, RING_PROTECTION_FROM_FIRE, RING_PROTECTION_FROM_COLD,
-    RING_SUSTAIN_ABILITIES, RING_SUSTENANCE, RING_WIZARDRY, RING_MAGICAL_POWER,
+    RING_SUSTAIN_ABILITIES, RING_STEALTH, RING_WIZARDRY, RING_MAGICAL_POWER,
     RING_LIFE_PROTECTION
 };
 

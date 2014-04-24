@@ -1841,7 +1841,8 @@ bool ring_has_stackable_effect(const item_def &item)
     case RING_PROTECTION_FROM_FIRE:
     case RING_PROTECTION_FROM_COLD:
     case RING_LIFE_PROTECTION:
-    case RING_SUSTENANCE:
+    case RING_STEALTH:
+    case RING_LOUDNESS:
     case RING_WIZARDRY:
     case RING_FIRE:
     case RING_ICE:

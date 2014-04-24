@@ -1701,7 +1701,7 @@ unsigned int item_value(item_def item, bool ident)
                     break;
 
                 case RING_SUSTAIN_ABILITIES:
-                case RING_SUSTENANCE:
+                case RING_STEALTH:
                 case RING_TELEPORTATION:
                 case RING_FLIGHT:
                 case AMU_STASIS:
@@ -1713,7 +1713,10 @@ unsigned int item_value(item_def item, bool ident)
                     valued += 150;
                     break;
 
-                case RING_HUNGER:
+                case RING_LOUDNESS:
+                    valued += 75;
+                    break;
+
                 case AMU_INACCURACY:
                     valued -= 300;
                     break;
