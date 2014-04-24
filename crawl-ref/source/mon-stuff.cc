@@ -413,6 +413,9 @@ void change_monster_type(monster* mons, monster_type targetc)
     // Forget various speech/shout Lua functions.
     mons->props.erase("speech_prefix");
 
+    // Don't allow polymorphing monsters for hides.
+    mons->props["no_hide"] = true;
+
     // Keep spells for named monsters, but don't override innate ones
     // for dragons and the like. This means that Sigmund polymorphed
     // into a goblin will still cast spells, but if he ends up as a
