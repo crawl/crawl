@@ -33,11 +33,11 @@ def update_all_lobbys(game):
     lobby_entry = game.lobby_entry()
     for socket in list(sockets):
         if socket.is_in_lobby():
-            socket.send_message("lobby_entry", **lobby_entry)
+            socket.send_message("lobby", entries=[lobby_entry])
 def remove_in_lobbys(process):
     for socket in list(sockets):
         if socket.is_in_lobby():
-            socket.send_message("lobby_remove", id=process.id)
+            socket.send_message("lobby", remove=process.id)
 
 
 def write_dgl_status_file():
@@ -240,20 +240,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return not self.is_running() and self.watched_game is None
 
     def send_lobby(self):
-        self.queue_message("lobby_clear")
         from process_handler import processes
-        for process in processes.values():
-            self.queue_message("lobby_entry", **process.lobby_entry())
-        self.send_message("lobby_complete")
+        data = [p.lobby_entry() for p in processes.values()]
+        banner_html = self.render_string("banner.html", username=self.username)
+        footer_html = self.render_string("footer.html", username=self.username)
+        self.queue_message("lobby_html", banner=banner_html, footer=footer_html)
+        self.send_message("lobby", entries=data)
 
     def send_game_links(self):
-        # Rerender Banner
         if config.get("list_savegames"):
             saved_games = list(find_player_savegames(self.username))
         else:
             saved_games = []
+        # Rerender Banner and Footer
         banner_html = self.render_string("banner.html", username=self.username)
-        self.queue_message("html", id="banner", content=banner_html)
+        footer_html = self.render_string("footer.html", username=self.username)
+        self.queue_message("lobby_html", banner=banner_html, footer=footer_html)
         play_html = self.render_string("game_links.html", games=config.get("games"), saved_games=saved_games)
         self.send_message("set_game_links", content=play_html)
 
@@ -420,19 +422,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("User %s logged in.", real_username)
             self.do_login(real_username)
             if rememberme:
-                cookie = userdb.get_login_cookie(real_username)
+                cookie, expires = userdb.get_login_cookie(real_username)
                 self.send_message("login_cookie", cookie=cookie,
-                                  expires=config.login_token_lifetime)
+                                  expires=expires+time.timezone)
         else:
             self.logger.warning("Failed login for user %s.", username)
             self.send_message("login_fail")
 
     def token_login(self, cookie):
-        username, cookie = userdb.token_login(cookie, logger=self.logger)
+        username, (new_cookie, expires) = userdb.token_login(cookie, logger=self.logger)
         if username:
             self.do_login(username)
-            self.send_message("login_cookie", cookie = cookie,
-                              expires = config.login_token_lifetime)
+            self.send_message("login_cookie", cookie=new_cookie,
+                              expires=expires+time.timezone)
         else:
             self.send_message("login_fail")
 
@@ -513,8 +515,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         if receiver:
             if self.username is None:
-                self.send_message("chat", content
-                                  = 'You need to log in to send messages!')
+                self.send_message("chat",
+                                  text='You need to log in to send messages!')
                 return
 
             receiver.handle_chat_message(self.username, text)

@@ -1,33 +1,26 @@
-define(["jquery", "contrib/ba-linkify.min"], function ($) {
+define(["react", "contrib/ba-linkify.min"], function (React) {
     "use strict";
 
-    var ALLOWED_PROTOCOLS = ["http", "https", "ftp", "irc"];
+    var ALLOWED_PROTOCOLS = /^http:|^https:|^ftp:|^irc:/;
 
     var ba_linkify = window.linkify;
     delete window.linkify;
 
-    function escape_html(str) {
-        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    }
-
-    function linkify(text)
+    function react_linkify(text)
     {
-        return ba_linkify(text,
+        var parts = [];
+        ba_linkify(text, {callback: callback});
+        function callback(text, href)
         {
-            callback: function (text, href)
-            {
-                if (!href)
-                    return escape_html(text);
-                if (!ALLOWED_PROTOCOLS.some(function (p) {
-                        return href.indexOf(p+ "://") === 0; }))
-                {
-                    return escape_html(text);
-                }
-                return $("<a>").attr("href", href).attr("target", "_blank")
-                    .text(text)[0].outerHTML;
-            }
-        });
+            if (href == null)
+                parts.push(text);
+            else if (href.match(ALLOWED_PROTOCOLS))
+                parts.push(React.DOM.a({target: "_blank", href: href}, text));
+            else
+                parts.push(text);
+        }
+        return parts;
     }
 
-    return linkify;
+    return react_linkify;
 });

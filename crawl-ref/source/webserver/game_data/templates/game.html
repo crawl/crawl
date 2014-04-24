@@ -3,13 +3,12 @@
   require.config({
     paths: { "game-{{ version }}": "/gamedata/{{ version }}" }
   });
-  require(['jquery', 'client', 'contrib/jquery.waitforimages'], function ($, client) {
-    window.game_loading = true;
+  require(['jquery', 'comm', 'contrib/jquery.waitforimages'], function ($, comm) {
     require(['game-{{ version }}/game'], function (game) {
       $('#game').waitForImages(function () {
         $(document).trigger("game_preinit");
         $(document).trigger("game_init");
-        client.uninhibit_messages();
+        comm.uninhibit_messages();
       });
     });
   });

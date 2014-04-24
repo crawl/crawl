@@ -17,8 +17,6 @@ function($, comm, client) {
                 $("#" + l).hide();
         });
         current_layer = layer;
-
-        $("#chat").toggle(client.in_game());
     }
 
     function register_layer(name)
@@ -35,12 +33,40 @@ function($, comm, client) {
         set_layer(data.layer);
     }
 
+    var delay_timeout = undefined;
+    function delay(ms)
+    {
+        clearTimeout(delay_timeout);
+        comm.inhibit_messages();
+        delay_timeout = setTimeout(delay_ended, ms);
+    }
+
+    function delay_ended()
+    {
+        delay_timeout = undefined;
+        comm.uninhibit_messages();
+    }
+
+    client.delay = delay;
+    client.inhibit_messages = comm.inhibit_messages;
+    client.uninhibit_messages = comm.uninhibit_messages;
+
     // Global functions
     window.set_layer = set_layer;
     window.abs = function (x) { if (x < 0) return -x; else return x; }
 
     comm.register_handlers({
         "layer": do_set_layer
+    });
+
+    $(document).ready(function () {
+        $(window).resize(function (ev) {
+            if (window.do_layout)
+                window.do_layout();
+        });
+
+        if (window.do_layout)
+            window.do_layout();
     });
 
     return function (content) {

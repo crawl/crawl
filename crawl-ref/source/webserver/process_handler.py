@@ -141,9 +141,7 @@ class CrawlProcessHandlerBase(object):
             receiver.send_message(msg, **data)
 
     def handle_chat_message(self, username, text):
-        chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
-                    (username, xhtml_escape(text)))
-        self.send_to_all("chat", content = chat_msg)
+        self.send_to_all("chat", sender=username, text=text)
 
     def handle_process_end(self):
         if self.kill_timeout:
@@ -180,25 +178,11 @@ class CrawlProcessHandlerBase(object):
         for w in self._receivers:
             if not w.username:
                 continue
-            if not w.watched_game:
-                player_name = w.username
-            else:
-                watchers.append(w.username)
-        watchers.sort(key=lambda s:s.lower())
-        watcher_names = []
-        if player_name is not None:
-            watcher_names.append(wrap_name(player_name, True))
-        watcher_names += [wrap_name(w) for w in watchers]
-
-        anon_count = len(self._receivers) - len(watcher_names)
-        s = ", ".join(watcher_names)
-        if len(watcher_names) > 0 and anon_count > 0:
-            s = s + " and %i Anon" % anon_count
-        elif anon_count > 0:
-            s = "%i Anon" % anon_count
-        self.send_to_all("update_spectators",
-                         count = self.watcher_count(),
-                         names = s)
+            watchers.append({"name": w.username,
+                             "player": w.process is not None})
+        anon_count = len(self._receivers) - len(watchers)
+        self.send_to_all("update_spectators", anon_count=anon_count,
+                         spectators=watchers)
 
         if config.dgl_mode:
             update_all_lobbys(self)

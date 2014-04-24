@@ -215,7 +215,7 @@ def get_login_cookie(username, seqid=None):
         if c: c.close()
         if conn: conn.close()
     cookie = username + ":" + str(token) + ":" + str(seqid)
-    return cookie
+    return cookie, expires
 
 def forget_login_cookie(cookie):
     username, token, seqid = cookie.split(":")

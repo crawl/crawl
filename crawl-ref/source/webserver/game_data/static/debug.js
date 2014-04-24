@@ -1,6 +1,5 @@
 define(["jquery", "client", "./dungeon_renderer", "./minimap",
-        "./monster_list", "./map_knowledge", "./enums", "./display", "exports",
-        "contrib/jquery.json"],
+        "./monster_list", "./map_knowledge", "./enums", "./display", "exports"],
 function ($, c, r, mm, ml, mk, enums, display, exports) {
     "use strict";
 
@@ -51,6 +50,6 @@ function ($, c, r, mm, ml, mk, enums, display, exports) {
 
     exports.obj_to_str = function (o)
     {
-        return $.toJSON(o);
+        return JSON.stringify(o);
     }
 });

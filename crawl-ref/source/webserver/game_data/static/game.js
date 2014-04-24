@@ -185,9 +185,23 @@ function ($, comm, client, dungeon_renderer, display, minimap, enums, messages,
         set_input_mode(data.mode);
     }
 
+    var delay_timeout = undefined;
+    function delay(ms)
+    {
+        clearTimeout(delay_timeout);
+        comm.inhibit_messages();
+        delay_timeout = setTimeout(delay_ended, ms);
+    }
+
+    function delay_ended()
+    {
+        delay_timeout = undefined;
+        comm.uninhibit_messages();
+    }
+
     function handle_delay(data)
     {
-        client.delay(data.t);
+        delay(data.t);
     }
 
     var game_version;

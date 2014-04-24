@@ -3,103 +3,15 @@
   <head>
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
-    <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
   </head>
   <body>
     <noscript>Please enable javascript!</noscript>
 
-    <div id="login">
-      <span id="login_message"></span>
-      <form action="#" id="login_form">
-        <label for="username">User:</label>
-        <input class="text" type="text" name="username" id="username">
-        <label for="password">Pass:</label>
-        <input class="text" type="password" name="password" id="password">
-        <input type="checkbox" name="remember_me" id="remember_me">
-        <label for="remember_me">Stay logged in</label>
-        <input class="button" type="submit" name="submit" id="submit" value="Login">
-      </form>
-      <span class="extra_links">|
-        <a id="reg_link" href="javascript:">Register</a>
-        <a id="logout_link" href="javascript:" style="display: none;">Logout</a></span>
-    </div>
+    <div id="root"></div>
 
-    <div id="game">
-      {% if action == "lobby" %}
-      {% include lobby.html %}
-      {% end %}
-    </div>
+    <img style="display:none;" id="loader_img" alt="" src="{{ static_url(title_img) }}">
 
-    <div id="loader" style="display:none;">
-      <div id="loader_center">
-        <span id="loader_text">Loading...</span><br>
-
-        <img style="display:none;" alt="" src="{{ static_url(title_img) }}">
-      </div>
-
-      <div id="stale_processes_message" class="floating_dialog"
-           style="display: none;" tabindex="1000">
-        There are some stale <span class="game_name"></span> processes.
-        They'll be stopped in <span class="recover_timeout"></span> seconds.
-        Press a key now if you don't want this to happen!
-      </div>
-
-      <div id="force_terminate" class="floating_dialog"
-           style="display: none;" tabindex="1001">
-        Couldn't stop one of your stale <span class="game_name"></span> processes
-        gracefully. Force its termination? [yn]
-        <br>
-        <input class="button" type="button" name="force_terminate_no"
-               id="force_terminate_no" value="No" style="float: right;">
-        <input class="button" type="button" name="force_terminate_yes"
-               id="force_terminate_yes" value="Yes" style="float: right;">
-      </div>
-    </div>
-
-    <div id="overlay"></div>
-
-    <div>
-      <div id="message_box" class="floating_dialog"
-           style="display: none;">
-      </div>
-      <div id="exit_game" class="floating_dialog" style="display: none;">
-        <p id="exit_game_reason"></p>
-        <pre id="exit_game_message"></pre>
-        <p id="exit_game_dump"></p>
-        <a class="hide_dialog" href="/">Close</a>
-      </div>
-    </div>
-
-    <div id="chat" style="display: none;">
-      <a href="javascript:" id="chat_caption">
-        <span id="spectator_count">0 spectators</span>
-        <span id="message_count">0 new messages</span>
-      </a>
-
-      <div id="chat_body" style="display: none;">
-        <span id="spectator_list">&nbsp;</span>
-
-        <div id="chat_history_container">
-          <span id="chat_history"></span>
-        </div>
-
-        <input class="text" type="text" name="chat_input"
-               id="chat_input" style="display: none">
-        <div id="chat_login_text">
-          <a id="chat_login_link" href="javascript:">Login</a> to chat
-        </div>
-      </div>
-    </div>
-
-    <div id="prompt" style="display: none;">
-      <div>
-          <div id="prompt_title"></div>
-
-          <div class="login_placeholder"></div>
-
-          <div id="prompt_footer"></div>
-       </div>
-    </div>
+    <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
   </body>
 </html>

@@ -1,6 +1,6 @@
 define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
         "./tileinfo-icons", "./tileinfo-dngn", "./enums", "./map_knowledge",
-        "./tileinfos", "./player", "./options", "contrib/jquery.json"],
+        "./tileinfos", "./player", "./options"],
 function ($, view_data, main, tileinfo_player, icons, dngn, enums,
           map_knowledge, tileinfos, player, options) {
     "use strict";
@@ -72,7 +72,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
 
     function obj_to_str(o)
     {
-        return $.toJSON(o);
+        return JSON.stringify(o);
     }
 
     $.extend(DungeonCellRenderer.prototype, {

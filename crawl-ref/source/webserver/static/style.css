@@ -4,64 +4,169 @@ body {
     font: 16px monospace;
 }
 
-#login {
-    text-align: right;
-    float: right;
+.login {
+    font-size: small;
 }
 
-#crt {
-    display: inline-block;
-}
-
-#lobby_body {
-    text-align: center;
-}
-
-#prompt {
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    z-index: 4000;
-}
-
-#prompt > div {
+/* controls --------------------------------------- */
+.text, input[type="text"], input[type="password"],
+input[type="email"], textarea {
     background-color: black;
-    width: 34em;
-    margin-left: -17em;
-    margin-top: -10ex;
-    padding: 1em 2ex;
+    color: white;
+    font: 13px monospace;
+
     border: 1px solid white;
+    padding: 1px 0px;
+    margin: 2px 2px;
+
+    box-sizing: content-box;
+    -moz-box-sizing: content-box;
+}
+input[type="text"], input[type="password"],
+input[type="email"] {
+    height: 16px;
+}
+.button, input[type="button"], input[type="submit"] {
+    background-color: #DDDDDD;
+    font: 13px monospace;
+
+    border: 1px solid white;
+    padding: 1px 6px;
+    margin: 2px 2px;
+
+    height: 16px;
+
+    box-sizing: content-box;
+    -moz-box-sizing: content-box;
+}
+.button:hover, input[type="button"]:hover,
+input[type="submit"]:hover {
+    background-color: #AAAAAA;
 }
 
-#prompt #login {
-    float: none;
-    text-align: left;
-    margin: 2ex 0;
-}
-
-#prompt_game {
+a:link, a:active, a:visited {
+    color: white;
     font-weight: bold;
 }
 
-#player_list {
+a:hover {
+    color: lightgrey;
+    font-weight: bold;
+}
+
+/* general dialog overlay ------------------------- */
+.overlay {
+    text-align: left;
+    color: white;
+    font: 16px monospace;
+
+    border: 1px solid lightgray;
+    padding: 10px;
+    background-color: black;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+
+    position: relative;
+    top: 50px;
+
+    margin-left: auto;
+    margin-right: auto;
+    width: 720px;
+}
+
+.overlay.noborder {
+    border: none;
+}
+
+@media (max-width: 720px) {
+    .overlay {
+        border: none;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        top: 0;
+    }
+}
+
+.overlay h3 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 4px;
+    border-bottom: 1px solid gray;
+}
+
+.server_dialog {
+    overflow: hidden;
+}
+
+/* registration form ------------------------------ */
+.register_form form {
+    width: 100%;
+}
+.register_form form div {
+    overflow: hidden;
+    margin: 4px 0;
+}
+.register_form label {
+    float: left;
+}
+.register_form input[type="text"],
+.register_form input[type="email"],
+.register_form input[type="password"] {
+    width: 50%;
+    float: right;
+}
+.register_form input[type="button"] {
+    float: left;
+}
+.register_form input[type="submit"] {
+    float: right;
+}
+
+.error {
+    color: red;
+}
+
+/* login form ------------------------------------- */
+.login_overlay form {
+    width: 100%;
+    overflow: hidden;
+}
+.login_overlay form div {
+    overflow: hidden;
+}
+.login_overlay label {
+    float: left;
+}
+.login_overlay input[type="text"],
+.login_overlay input[type="password"] {
+    width: calc(100% - 6px);
+    float: right;
+}
+.login_overlay input[type="submit"] {
+    float: right;
+}
+
+/* player list ------------------------------------ */
+.player_list {
     width: 100%;
     text-align: left;
     line-height: 1.1em;
 }
 
-#player_list th.header {
+.player_list th {
     cursor: pointer;
     padding-left: 1px;
     padding-right: 17px;
 }
-#player_list th.headerSortDown {
+.player_list th.headerSortDown {
     background-image: url("asc.gif");
     background-repeat: no-repeat;
     background-position: center left;
     padding-left: 17px;
     padding-right: 1px;
 }
-#player_list th.headerSortUp {
+.player_list th.headerSortUp {
     background-image: url("desc.gif");
     background-repeat: no-repeat;
     background-position: center left;
@@ -69,51 +174,135 @@ body {
     padding-right: 1px;
 }
 
-#player_list th.xl.header {
+.player_list th.xl {
     width: 2em;
     text-align: right;
     padding-left: 17px;
     padding-right: 5px;
 }
-#player_list th.xl.headerSortDown,
-#player_list th.xl.headerSortUp {
+.player_list th.xl.headerSortDown,
+.player_list th.xl.headerSortUp {
     padding-right: 5px;
 }
-#player_list td.xl {
+.player_list td.xl {
     text-align: right;
     padding-right: 5px;
 }
-#player_list th.char {
+.player_list th.char {
     width: 3em;
 }
-#player_list th.place {
+.player_list th.place {
     width: 3em;
 }
 
-#player_list th.idle_time {
+.player_list th.idle_time {
     width: 3em;
 }
-#player_list th.spectator_count {
+.player_list th.spectator_count {
     width: 1em;
 }
 
-#player_list th.milestone_col {
+.player_list th.milestone {
     width: 20em;
 }
 
-#player_list tr:hover {
+.player_list tr:hover {
     background-color: #101010;
 }
 
-#player_list .milestone_container {
-    overflow-y: hidden;
-    height: 1.1em;
+
+/* loader ----------------------------------------- */
+.loader {
+    text-align: center;
 }
-#player_list .milestone {
-    position: relative;
+
+
+/* chat ------------------------------------------- */
+.chat {
+    background: rgba(0, 0, 0, 0.75);
+    width: 400px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    color: #A2A2A2;
+
+    font-size: small;
+
+    padding: 5px;
+    border: 1px solid #626262;
+
+    z-index: 3000;
 }
-#player_list .new_milestone {
-    position: relative;
+
+.chat a {
+    color: inherit;
+    font-weight: inherit;
+}
+
+.chat .caption {
+    font-weight: normal;
+    text-decoration: none;
+}
+
+.chat .caption:hover {
+    background-color: #111111;
+}
+
+.chat_login_text {
+    border-top: 1px dashed #626262;
+}
+
+.chat_automated {
+    color: white;
+    font-style: italic;
+}
+
+.message_count {
+    float: right;
+}
+.message_count.has_new {
+    font-weight: bolder;
+    color: green;
+}
+
+.chat_container {
+    width: 100%;
+    max-height: 200px;
+    margin-bottom: 3px;
+}
+
+.chat_history {
+    width: 100%;
+}
+
+.chat_sender {
+    font-weight: bold;
+}
+
+.spectator_list .player {
+    font-weight: bold;
+}
+
+.spectator_list .watcher {
+    font-weight: normal;
+}
+
+.chat_body form {
+    display: flex;
+}
+.chat_body input[type="text"] {
+    font: small monospace;
+    flex: 1;
+}
+.chat_body input[type="submit"] {
+    font-size: 13px;
+    line-height: 16px;
+}
+
+/* stuff that actually belongs to the game -------- */
+#crt {
+    display: inline-block;
 }
 
 .floating_dialog {
@@ -132,137 +321,6 @@ body {
     text-align: center;
 }
 
-#register label {
-    width: 200px;
-    float: left;
-}
-
-#reg_cancel {
-    float: left;
-}
-
-#reg_submit {
-    float: right;
-}
-
-.text {
-    background-color: black;
-    color: white;
-    border: 1px solid white;
-}
-.button {
-    background-color: #DDDDDD;
-    border: 1px solid white;
-}
-
-#exit_game_dump {
-    text-align: right;
-}
-
-#chat {
-    background: rgba(0, 0, 0, 0.75);
-    width: 400px;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-
-    color: #A2A2A2;
-
-    font-size: small;
-
-    padding: 5px;
-    border: 1px solid #626262;
-
-    z-index: 3000;
-}
-
-#chat a {
-    color: inherit;
-    font-weight: inherit;
-}
-
-#chat_caption {
-    font-weight: normal;
-    text-decoration: none;
-}
-
-#chat_caption:hover {
-    background-color: #111111;
-}
-
-#chat_login_text {
-    border-top: 1px dashed #626262;
-}
-
-.chat_automated {
-    color: white;
-    font-style: italic;
-}
-
-#message_count {
-    float: right;
-}
-#message_count.has_new {
-    font-weight: bolder;
-    color: green;
-}
-
-#chat_history_container {
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    margin-bottom: 3px;
-}
-
-#chat_history {
-    width: 100%;
-}
-
-.chat_sender {
-    font-weight: bold;
-}
-
-#spectator_list .player {
-    font-weight: bold;
-}
-
-#spectator_list .watcher {
-    font-weight: normal;
-}
-
-#chat_input {
-    width: 394px;
-    font: small monospace;
-}
-
-a:link, a:active, a:visited {
-    color: white;
-    font-weight: bold;
-}
-
-a:hover {
-    color: lightgrey;
-    font-weight: bold;
-}
-
-#loader {
-    display: table;
-    text-align: center;
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    position: fixed;
-    top: 0;
-    left: 0;
-}
-#loader_center {
-    display: table-cell;
-    vertical-align: middle;
-}
-
 #overlay {
     display: none;
     position: fixed;
@@ -275,7 +333,7 @@ a:hover {
     z-index: 2000;
 }
 
-/* These are just here for compatibility with older versions */
+/* stuff for even older versions ------------------ */
 .fg0 { color: rgb(  0,   0,   0); }
 .fg1 { color: rgb(  0,  82, 255); }
 .fg2 { color: rgb(100, 185,  70); }
