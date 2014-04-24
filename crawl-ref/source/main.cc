@@ -953,7 +953,10 @@ static void _start_running(int dir, int mode)
         if (env.grid(*ai) == DNGN_SLIMY_WALL
             && (!you_worship(GOD_JIYVA) || you.penance[GOD_JIYVA]))
         {
-            mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
+            if (dir == RDIR_REST)
+                mprf(MSGCH_WARN, "You're standing next to a slime covered wall!");
+            else
+                mprf(MSGCH_WARN, "You're about to run into the slime covered wall!");
             return;
         }
     }
