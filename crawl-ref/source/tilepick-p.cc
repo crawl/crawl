@@ -316,7 +316,8 @@ tileidx_t tilep_equ_armour(const item_def &item)
         return _modrng(item.rnd, TILEP_BODY_ROBE_FIRST_NORM,
                        TILEP_BODY_ROBE_LAST_NORM);
 
-    case ARM_LEATHER_ARMOUR:     return TILEP_BODY_LEATHER_ARMOUR3;
+    case ARM_LEATHER_ARMOUR:
+        return tileidx_enchant_equ(item, TILEP_BODY_LEATHER_ARMOUR, true);
     case ARM_RING_MAIL:          return TILEP_BODY_RINGMAIL;
     case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
     case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
@@ -1012,7 +1013,7 @@ void tilep_job_default(int job, dolls_data *doll)
 
         case JOB_ARTIFICER:
             parts[TILEP_PART_HAND1] = TILEP_HAND1_SCEPTRE;
-            parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_ARMOUR3;
+            parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_ARMOUR;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BLACK;
             break;
     }
