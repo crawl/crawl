@@ -2391,16 +2391,16 @@ void print_overview_screen()
 string stealth_desc(int stealth)
 {
     string prefix =
-         (stealth <  10) ? "extremely un" :
-         (stealth <  30) ? "very un" :
-         (stealth <  60) ? "un" :
-         (stealth <  90) ? "fairly " :
-         (stealth < 120) ? "" :
-         (stealth < 160) ? "quite " :
-         (stealth < 220) ? "very " :
-         (stealth < 300) ? "extremely " :
+         (stealth ==  0) ? "extremely un" :
+         (stealth <  50) ? "very un" :
+         (stealth < 100) ? "un" :
+         (stealth < 150) ? "fairly " :
+         (stealth < 200) ? "" :
+         (stealth < 250) ? "quite " :
+         (stealth < 300) ? "very " :
+         (stealth < 350) ? "extremely " :
          (stealth < 400) ? "extraordinarily " :
-         (stealth < 520) ? "incredibly "
+         (stealth < 500) ? "incredibly "
                          : "uncannily ";
     return prefix + "stealthy";
 }
