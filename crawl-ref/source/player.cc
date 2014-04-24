@@ -1462,12 +1462,6 @@ int player_hunger_rate(bool temp)
         }
     }
 
-    hunger += 4 * you.wearing(EQ_RINGS, RING_HUNGER);
-
-    // sustenance affects things at the end, because it is multiplicative
-    for (int s = you.wearing(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
-        hunger = hunger * 3 / 5;
-
     // If Cheibriados has slowed your life processes, you will hunger less.
     if (you_worship(GOD_CHEIBRIADOS) && you.piety >= piety_breakpoint(0))
         hunger = hunger * 3 / 4;
@@ -3853,6 +3847,9 @@ int check_stealth(void)
     }
 
     stealth += 50 * you.scan_artefacts(ARTP_STEALTH);
+
+    stealth += 50 * you.wearing(EQ_RINGS, RING_STEALTH);
+    stealth -= 50 * you.wearing(EQ_RINGS, RING_LOUDNESS);
 
     if (you.duration[DUR_STEALTH])
         stealth += 80;

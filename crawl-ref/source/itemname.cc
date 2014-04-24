@@ -732,11 +732,11 @@ static const char* jewellery_type_name(int jeweltype)
     case RING_SLAYING:               return "ring of slaying";
     case RING_SEE_INVISIBLE:         return "ring of see invisible";
     case RING_INVISIBILITY:          return "ring of invisibility";
-    case RING_HUNGER:                return "ring of hunger";
+    case RING_LOUDNESS:              return "ring of loudness";
     case RING_TELEPORTATION:         return "ring of teleportation";
     case RING_EVASION:               return "ring of evasion";
     case RING_SUSTAIN_ABILITIES:     return "ring of sustain abilities";
-    case RING_SUSTENANCE:            return "ring of sustenance";
+    case RING_STEALTH:               return "ring of stealth";
     case RING_DEXTERITY:             return "ring of dexterity";
     case RING_INTELLIGENCE:          return "ring of intelligence";
     case RING_WIZARDRY:              return "ring of wizardry";
@@ -3075,15 +3075,8 @@ bool is_bad_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case AMU_INACCURACY:
+        case RING_LOUDNESS:
             return true;
-        case RING_HUNGER:
-            // Even Vampires can use this ring.
-            if (you.species == SP_MUMMY
-                || you.species == SP_VAMPIRE)
-            {
-                return false;
-            }
-            return !temp || !you_foodless();
         case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
@@ -3425,13 +3418,6 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case RING_LIFE_PROTECTION:
             return player_prot_life(false, temp, false) == 3;
-
-        case RING_HUNGER:
-        case RING_SUSTENANCE:
-            return you.species == SP_MUMMY
-                   || temp && you_foodless()
-                   || temp && you.species == SP_VAMPIRE
-                       && you.hunger_state == HS_STARVING;
 
         case RING_REGENERATION:
             return (player_mutation_level(MUT_SLOW_HEALING) == 3)

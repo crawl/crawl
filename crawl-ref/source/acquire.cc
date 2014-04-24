@@ -1396,7 +1396,7 @@ int acquirement_create_item(object_class_type class_wanted,
                 doodad.plus2 = max(abs((int) doodad.plus2), 2);
                 break;
 
-            case RING_HUNGER:
+            case RING_LOUDNESS:
             case AMU_INACCURACY:
                 // These are the only truly bad pieces of jewellery.
                 if (!one_chance_in(9))

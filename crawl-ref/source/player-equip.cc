@@ -1294,7 +1294,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
     switch (item.sub_type)
     {
     case RING_FIRE:
-    case RING_HUNGER:
+    case RING_LOUDNESS:
     case RING_ICE:
     case RING_LIFE_PROTECTION:
     case RING_POISON_RESISTANCE:
@@ -1304,7 +1304,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
     case RING_REGENERATION:
     case RING_SLAYING:
     case RING_SUSTAIN_ABILITIES:
-    case RING_SUSTENANCE:
+    case RING_STEALTH:
     case RING_TELEPORTATION:
     case RING_WIZARDRY:
     case RING_TELEPORT_CONTROL:
