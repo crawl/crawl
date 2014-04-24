@@ -2863,13 +2863,13 @@ TAGS: temple_overflow_generic_5 temple_overflow_generic_4 temple_overflow_generi
 }}
 SUBST: } = })]
 MAP
-xxxxxxxxxxxxx
-xxxxaxxxbxxxx
-xxG...G...Gxx
-xx.........xx
-x}.........cx
-xx.........xx
-xxG...G...Gxx
-xxxxexxxdxxxx
-xxxxxxxxxxxxx
+ xxxxxxxxxxxxx
+ xxxxaxxxbxxxx
+ xxG...G...Gxx
+ nn.........nn
+@n}.........cn@
+ nn.........nn
+ xxG...G...Gxx
+ xxxxexxxdxxxx
+ xxxxxxxxxxxxx
 ENDMAP
