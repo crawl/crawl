@@ -1501,7 +1501,8 @@ static bool _mirrorable(const monster* agent, const monster* mon)
            && mons_aligned(mon, agent)
            && !mon->is_stationary()
            && !mon->is_summoned()
-           && !mons_is_conjured(mon->type);
+           && !mons_is_conjured(mon->type)
+           && !mons_is_unique(mon->type);
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
