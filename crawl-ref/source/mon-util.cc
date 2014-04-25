@@ -1696,7 +1696,16 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
     return attk;
 }
 
-mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
+/** Get the attack type, attack flavour and damage for a monster attack.
+ *
+ * @param mon The monster to look at.
+ * @param attk_number Which attack number to get.
+ * @param base_flavour If true, attack flavours that are randomised on every attack
+ *                     will have their base flavour returned instead of one of the
+ *                     random flavours.
+ * @returns A mon_attack_def for the specified attack.
+ */
+mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_flavour)
 {
     monster_type mc = mon->type;
 
@@ -1793,21 +1802,24 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (attk.type == AT_CHERUB)
         attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1);
 
-    if (attk.flavour == AF_KLOWN)
+    if (!base_flavour)
     {
-        attack_flavour flavours[] =
-            {AF_POISON_STRONG, AF_PAIN, AF_DRAIN_SPEED, AF_FIRE,
-             AF_COLD, AF_ELEC, AF_ANTIMAGIC};
+        if (attk.flavour == AF_KLOWN)
+        {
+            attack_flavour flavours[] =
+                {AF_POISON_STRONG, AF_PAIN, AF_DRAIN_SPEED, AF_FIRE,
+                 AF_COLD, AF_ELEC, AF_ANTIMAGIC};
 
-        attk.flavour = RANDOM_ELEMENT(flavours);
-    }
+            attk.flavour = RANDOM_ELEMENT(flavours);
+        }
 
-    if (attk.flavour == AF_DRAIN_STAT)
-    {
-        attack_flavour flavours[] =
-            {AF_DRAIN_STR, AF_DRAIN_INT, AF_DRAIN_DEX};
+        if (attk.flavour == AF_DRAIN_STAT)
+        {
+            attack_flavour flavours[] =
+                {AF_DRAIN_STR, AF_DRAIN_INT, AF_DRAIN_DEX};
 
-        attk.flavour = RANDOM_ELEMENT(flavours);
+            attk.flavour = RANDOM_ELEMENT(flavours);
+        }
     }
 
     // Slime creature attacks are multiplied by the number merged.

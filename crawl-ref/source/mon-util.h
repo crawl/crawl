@@ -230,7 +230,7 @@ bool mons_immune_magic(const monster* mon);
 const char* mons_resist_string(const monster* mon, int res_margin);
 const char* resist_margin_phrase(int margin);
 
-mon_attack_def mons_attack_spec(const monster* mon, int attk_number);
+mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_flavour = false);
 
 corpse_effect_type mons_corpse_effect(monster_type mc);
 
