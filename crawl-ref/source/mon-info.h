@@ -146,6 +146,7 @@ struct monster_info_base
     string constrictor_name;
     vector<string> constricting_name;
     monster_spells spells;
+    mon_attack_def attack[MAX_NUM_ATTACKS];
 
     uint32_t client_id;
 };

@@ -414,6 +414,12 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         }
     }
 
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        attack[i] = get_monster_data(type)->attack[i];
+        attack[i].damage = 0;
+    }
+
     props.clear();
 
     client_id = 0;
@@ -702,6 +708,12 @@ monster_info::monster_info(const monster* m, int milev)
             this->props["priest"] = true;
         else if (m->is_actual_spellcaster())
             this->props["actual_spellcaster"] = true;
+    }
+
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        attack[i] = mons_attack_spec(m, i, true);
+        attack[i].damage = 0;
     }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)

@@ -3936,6 +3936,23 @@ void marshallMonster(writer &th, const monster& m)
     m.props.write(th);
 }
 
+static void _marshall_mi_attack(writer &th, const mon_attack_def &attk)
+{
+    marshallInt(th, attk.type);
+    marshallInt(th, attk.flavour);
+    marshallInt(th, attk.damage);
+}
+
+static mon_attack_def _unmarshall_mi_attack(reader &th)
+{
+    mon_attack_def attk;
+    attk.type = static_cast<attack_type>(unmarshallInt(th));
+    attk.flavour = static_cast<attack_flavour>(unmarshallInt(th));
+    attk.damage = unmarshallInt(th);
+
+    return attk;
+}
+
 void marshallMonsterInfo(writer &th, const monster_info& mi)
 {
     marshallFixedBitVector<NUM_MB_FLAGS>(th, mi.mb);
@@ -3979,6 +3996,8 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallByte(th, mi.menergy.item);
     marshallByte(th, mi.menergy.pickup_percent);
     marshallUnsigned(th, mi.fly);
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+        _marshall_mi_attack(th, mi.attack[i]);
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (mi.inv[i].get())
@@ -4175,6 +4194,19 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     // Some TAG_MAJOR_VERSION == 34 saves suffered data loss here, beware.
     // Should be harmless, hopefully.
     unmarshallUnsigned(th, mi.fly);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_ATTACK_DESCS)
+    {
+        for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+        {
+            mi.attack[i] = get_monster_data(mi.type)->attack[i];
+            mi.attack[i].damage = 0;
+        }
+    }
+    else
+#endif
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+        mi.attack[i] = _unmarshall_mi_attack(th);
 
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {

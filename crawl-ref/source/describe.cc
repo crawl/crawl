@@ -3114,6 +3114,104 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     }
 }
 
+static const char* _describe_attack_flavour(attack_flavour flavour)
+{
+    switch (flavour)
+    {
+    case AF_ACID:            return "deal extra acid damage";
+    case AF_BLINK:           return "blink self";
+    case AF_COLD:            return "deal extra cold damage";
+    case AF_CONFUSE:         return "cause confusion";
+    case AF_DISEASE:         return "cause sickness";
+    case AF_DRAIN_STR:       return "drain strength";
+    case AF_DRAIN_INT:       return "drain intelligence";
+    case AF_DRAIN_DEX:       return "drain dexterity";
+    case AF_DRAIN_STAT:      return "drain strength, intelligence or dexterity";
+    case AF_DRAIN_XP:        return "drain skills";
+    case AF_ELEC:            return "cause electrocution";
+    case AF_FIRE:            return "deal extra fire damage";
+    case AF_HUNGER:          return "cause hungering";
+    case AF_MUTATE:          return "cause mutations";
+    case AF_PARALYSE:        return "cause paralysis";
+    case AF_POISON:          return "cause poisoning";
+    case AF_POISON_STRONG:   return "cause strong poisoning through resistance";
+    case AF_ROT:             return "cause rotting";
+    case AF_VAMPIRIC:        return "drain health";
+    case AF_KLOWN:           return "cause random powerful effects";
+    case AF_DISTORT:         return "cause wild translocation effects";
+    case AF_RAGE:            return "cause berserking";
+    case AF_NAPALM:          return "apply sticky flame";
+    case AF_CHAOS:           return "cause unpredictable effects";
+    case AF_STEAL:           return "steal items";
+    case AF_CRUSH:           return "constrict";
+    case AF_REACH:           return "deal damage from a distance";
+    case AF_HOLY:            return "deal extra damage to undead and demons";
+    case AF_ANTIMAGIC:       return "drain magic";
+    case AF_PAIN:            return "cause pain to the living";
+    case AF_ENSNARE:         return "ensnare with webbing";
+    case AF_ENGULF:          return "engulf with water";
+    case AF_PURE_FIRE:       return "deal pure fire damage";
+    case AF_DRAIN_SPEED:     return "drain speed";
+    case AF_VULN:            return "reduce resistance to hostile enchantments";
+    case AF_PLAGUE:          return "cause sickness and retching";
+    case AF_WEAKNESS_POISON: return "cause poison and weakness";
+    case AF_SHADOWSTAB:      return "deal extra damage from the shadows";
+    case AF_DROWN:           return "deal drowning damage";
+    case AF_FIREBRAND:       return "deal extra fire damage and surround the defender with flames";
+    default:                 return "";
+    }
+}
+
+static string _monster_attacks_description(const monster_info& mi)
+{
+    ostringstream result;
+    vector<attack_flavour> attack_flavours;
+    vector<string> attack_descs;
+    // Weird attack types that act like attack flavours.
+    bool trample = false;
+    bool reach_sting = false;
+
+    for (int i = 0; i < MAX_NUM_ATTACKS; ++i)
+    {
+        attack_flavour af = mi.attack[i].flavour;
+
+        bool match = false;
+        for (unsigned int k = 0; k < attack_flavours.size(); ++k)
+            if (attack_flavours[k] == af)
+                match = true;
+
+        if (!match)
+        {
+            attack_flavours.push_back(af);
+            const char* desc = _describe_attack_flavour(af);
+            if (*desc)
+                attack_descs.push_back(desc);
+        }
+
+        if (mi.attack[i].type == AT_TRAMPLE)
+            trample = true;
+
+        if (mi.attack[i].type == AT_REACH_STING)
+            reach_sting = true;
+    }
+
+    if (trample)
+        attack_descs.push_back("knock back the defender");
+
+    // Assumes nothing has both AT_REACH_STING and AF_REACH.
+    if (reach_sting)
+        attack_descs.push_back(_describe_attack_flavour(AF_REACH));
+
+    if (!attack_descs.empty())
+    {
+        result << uppercase_first(mi.pronoun(PRONOUN_SUBJECTIVE));
+        result << " may attack to " << comma_separated_line(attack_descs.begin(), attack_descs.end());
+        result << ".\n";
+    }
+
+    return result.str();
+}
+
 // Is the spell worth listing for a monster?
 static bool _interesting_mons_spell(spell_type spell)
 {
@@ -3498,7 +3596,9 @@ static string _monster_stat_description(const monster_info& mi)
     else if (sizes[mi.body_size()])
         result << uppercase_first(pronoun) << " is " << sizes[mi.body_size()] << ".\n";
 
+    result << _monster_attacks_description(mi);
     result << _monster_spells_description(mi);
+
     return result.str();
 }
 

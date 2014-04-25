@@ -64,6 +64,8 @@ enum attack_type
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
 };
 
+// When adding an attack flavour, give it a short description in
+// _describe_attack_flavour() in describe.cc.
 enum attack_flavour
 {
     AF_PLAIN,
