@@ -271,10 +271,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     }
 
     // Modify ability scores.
-    // Output result even when identified (because of potential fatality).
-    notify_stat_change(STAT_STR,     proprt[ARTP_STRENGTH], !msg, item);
-    notify_stat_change(STAT_INT, proprt[ARTP_INTELLIGENCE], !msg, item);
-    notify_stat_change(STAT_DEX,    proprt[ARTP_DEXTERITY], !msg, item);
+    notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],
+                       !(msg && unknown_proprt(ARTP_STRENGTH)), item);
+    notify_stat_change(STAT_INT, proprt[ARTP_INTELLIGENCE],
+                       !(msg && unknown_proprt(ARTP_INTELLIGENCE)), item);
+    notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
+                       !(msg && unknown_proprt(ARTP_DEXTERITY)), item);
 
     const artefact_prop_type stat_props[3] =
         {ARTP_STRENGTH, ARTP_INTELLIGENCE, ARTP_DEXTERITY};
@@ -388,12 +390,11 @@ static void _unequip_artefact_effect(item_def &item,
                                                   : MSG_MANA_INCREASE);
     }
 
-    // Modify ability scores; always output messages.
-    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     !msg, item,
+    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     false, item,
                        true);
-    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], !msg, item,
+    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], false, item,
                        true);
-    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    !msg, item,
+    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    false, item,
                        true);
 
     if (proprt[ARTP_FLY] != 0 && you.cancellable_flight()
