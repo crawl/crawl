@@ -756,7 +756,7 @@ DEPTH: Shoals:2-
 TAGS: no_item_gen no_monster_gen
 KMONS: i = merfolk impaler band / merfolk javelineer band
 SUBST: : = .:3 h:1, W = .W
-: dgn.delayed_decay(_G, 'h', 'big fish corpse / giant goldfish corpse / snapping turtle corpse / shark corpse')
+: dgn.delayed_decay(_G, 'h', 'big fish corpse / snapping turtle corpse / shark corpse')
 MAP
 WWWWWWW
 WW:::WW

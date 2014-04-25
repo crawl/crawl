@@ -1705,7 +1705,7 @@ ORIENT: float
 TAGS:   patrolling no_monster_gen
 MONS:   grizzly bear / polar bear
 KFEAT:  " = W
-KMONS:  " = giant goldfish / shark / electric eel
+KMONS:  " = big fish / shark / electric eel
 KITEM:  % = strawberry / grape / lychee / choko / rambutan / apple / pear \
             / orange / w:1 meat ration
 SUBST:  % = %., * = *:40 |, B = 1., E = tE
@@ -1734,8 +1734,8 @@ SUBST:  1 = 1:30 ., 2 = 2:30 W, 3 = 3:30 W, 4 = 4w, R = tx, * = *|
 NSUBST: 0 = 2:9 / *:0
 MONS:   plant / bush / toadstool
 KMONS:  2 = plant / toadstool
-KMONS:  3 = w:1 giant goldfish / w:1 shark / plant / toadstool
-KMONS:  4 = w:5 giant goldfish / shark / electric eel
+KMONS:  3 = w:2 shark / plant / toadstool
+KMONS:  4 = w:5 big fish / shark / electric eel
 KFEAT:  23 = W
 KFEAT:  4 = w
 KMONS:  5 =  lindwurm / dire elephant / catoblepas
@@ -1908,7 +1908,7 @@ KMONS: Y = yak
 KMONS: D = death yak
 KMONS: C = catoblepas
 KMONS: P = plant
-KMONS: k = giant goldfish
+KMONS: k = big fish
 KFEAT: k = w
 MAP
         .@@@.

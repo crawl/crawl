@@ -10,8 +10,7 @@
 #  branch.  The contents are as follows:
 #   -> D:1-3   grass, bushes, butterfly
 #   -> D:4-6   some shallow water, fungus, bat
-#   -> D:7-9   deep water, giant goldfish, big fish
-#   -> D:10-12 deep water, giant goldfish, big fish
+#   -> D:7-12  deep water, shark, big fish
 #   -> D:13-15 deep water, electric eel, shark, sea snake, snapping turtle
 #   -> D:16-18 ice, polar bear, yak, death yak, wolf
 #   -> D:19-21 ice, ice beast, simulacrum, freezing clouds
@@ -118,7 +117,7 @@ function init_aquarium(e)
   elseif you.absdepth() <= 9 then
     e.kfeat('w = w')
     e.kmons('w = w:' .. nothing_weight .. [[ nothing /
-                 w:6  generate_awake giant goldfish /
+                 w:6  generate_awake shark /
                  w:6  generate_awake big fish /
                  w:3  generate_awake electric eel]] )
   elseif you.absdepth() <= 12 then

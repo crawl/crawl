@@ -1243,12 +1243,6 @@ A lizard with pads on its toes allowing it to cling to walls and ceilings, and
 huge, sharp teeth. It is many times larger than a normal gecko, yet its size
 belies its agility.
 %%%%
-giant goldfish
-
-A relative of the carp. Goldfish that escape into the dungeon often grow to
-prodigious sizes by feeding on the corpses of creatures unfortunate enough to
-fall into the water with them.
-%%%%
 giant leech
 
 An aggressive blood-sucking annelid that thrives in swamps and marshlands.
