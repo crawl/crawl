@@ -1072,7 +1072,7 @@ ENDMAP
 NAME:  guppyfry_early_lair_pool
 TAGS:  patrolling no_monster_gen transparent mini_float
 DEPTH: D:2-5
-KMONS: 1 = big fish / giant goldfish
+KMONS: 1 = big fish
 KMONS: 2 = giant slug / adder
 KMONS: 3 = plant
 ITEM:  apple / apricot / pear / orange / banana / strawberry

@@ -694,7 +694,7 @@ TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_1
 TAGS:   temple_overflow_kikubaaqudgha
 KFEAT:  _ = altar_kikubaaqudgha
 MONS:   rat zombie / bat zombie / nothing w:90
-MONS:   giant goldfish zombie / big fish zombie
+MONS:   big fish zombie
 NSUBST: w = 1 : 22w / *:w
 : interest_check(_G)
 MAP
@@ -1786,7 +1786,7 @@ KFEAT:  _ = altar_yredelemnul
 SUBST:  1 : 1Ww
 SUBST:  1 = WWw
 NSUBST: w = 2:1 / *:w
-KMONS:  1 = giant goldfish zombie / big fish zombie
+KMONS:  1 = big fish zombie
 MAP
 xxxxxxxxxxxxxxxx
 xxxxwwwwwwwwxxxx

@@ -1310,20 +1310,18 @@ static const struct { const pop_entry *pop; int count; } population_zombie[] =
 
 static const pop_entry pop_water_generic[] =
 { // Generic water monsters
-  {  1,  27,  150, FLAT, MONS_BIG_FISH },
-  {  1,  27,  150, FLAT, MONS_GIANT_GOLDFISH },
+  {  1,  27,  225, FLAT, MONS_BIG_FISH },
   {  1,  27,  150, FLAT, MONS_ELECTRIC_EEL },
-  {  1,  27,  200, FLAT, MONS_SHARK },
+  {  1,  27,  275, FLAT, MONS_SHARK },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_water_d[] =
 { // Dungeon water monsters
-  {  5,  22,   80, FLAT, MONS_BIG_FISH },
-  {  5,  24,  100, FLAT, MONS_GIANT_GOLDFISH },
+  {  5,  22,  130, FLAT, MONS_BIG_FISH },
   {  5,  16,   60, FLAT, MONS_ELECTRIC_EEL },
   {  7,  16,  185, PEAK, MONS_ELECTRIC_EEL },
-  {  9,  32,  200, SEMI, MONS_SHARK },
+  {  9,  32,  250, SEMI, MONS_SHARK },
   {  11, 27,  600,   UP, MONS_WATER_ELEMENTAL },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1341,8 +1339,7 @@ static const pop_entry pop_water_depths[] =
 static const pop_entry pop_water_swamp[] =
 { // Swamp water monsters
   {  1,  5,   600, FLAT, MONS_SWAMP_WORM },
-  {  1,  5,    75, FLAT, MONS_BIG_FISH },
-  {  1,  5,    75, FLAT, MONS_GIANT_GOLDFISH },
+  {  1,  5,   150, FLAT, MONS_BIG_FISH },
   {  1,  5,   900, FLAT, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
@@ -1357,7 +1354,6 @@ static const pop_entry pop_water_snake[] =
 static const pop_entry pop_water_forest[] =
 { // Forest water monsters
   {  1,   5,   35, FLAT, MONS_BIG_FISH },
-  {  1,   5,  110, FLAT, MONS_GIANT_GOLDFISH },
   {  1,   5,  125, FLAT, MONS_WATER_ELEMENTAL },
   {  1,   9,  120, SEMI, MONS_WATER_NYMPH },
   { 0,0,0,FLAT,MONS_0 }

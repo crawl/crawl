@@ -1001,12 +1001,6 @@ Un lézard avec des coussinets lui permettant de grimper aux murs et au plafond,
 et avec des grandes dents acérées. Il est bien plus grand qu'un gecko normal,
 alors que sa taille contredit son agilité.
 %%%%
-giant goldfish
-
-Parent de la carpe. Les poissons rouges qui s'échappent dans le donjon
-atteignent souvent des tailles prodigieuses en se nourrissant des cadavres des
-créatures assez malchanceuses pour tomber dans l'eau avec eux.
-%%%%
 giant leech
 
 Un annélide agressif, suceur de sang, qui prospère dans les marais et
