@@ -6331,7 +6331,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_SOJOBO, 'H', LIGHTGREEN, "Sojobo",
+    MONS_SOJOBO, 'Q', LIGHTGREEN, "Sojobo",
     M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_WARM_BLOOD
         | M_SPEAKS | M_DEFLECT_MISSILES | M_UNIQUE,
     MR_NO_FLAGS,
