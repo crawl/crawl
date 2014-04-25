@@ -930,7 +930,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_POISON_RESISTANCE:
-            mpr("You feel healthy.");
+            mpr("You feel resistant to poison.");
             break;
 
         case SPARM_SEE_INVISIBLE:
@@ -993,7 +993,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_POSITIVE_ENERGY:
-            mpr("Your life force is being protected.");
+            mpr("You feel more protected from negative energy.");
             break;
 
         case SPARM_ARCHMAGI:
@@ -1064,16 +1064,16 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_FIRE_RESISTANCE:
-        mpr("\"Was it this warm in here before?\"");
+        mpr("You feel less resistant to fire.");
         break;
 
     case SPARM_COLD_RESISTANCE:
-        mpr("You catch a bit of a chill.");
+        mpr("You feel less resistant to cold.");
         break;
 
     case SPARM_POISON_RESISTANCE:
         if (player_res_poison() <= 0)
-            mpr("You feel less healthy.");
+            mpr("You no longer feel resistant to poison.");
         break;
 
     case SPARM_SEE_INVISIBLE:
@@ -1150,7 +1150,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_POSITIVE_ENERGY:
-        mpr("You feel vulnerable.");
+        mpr("You feel less protected from negative energy.");
         break;
 
     case SPARM_ARCHMAGI:
