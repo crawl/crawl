@@ -157,6 +157,7 @@ struct monsterentry
     mon_itemuse_type gmon_use;
     mon_itemeat_type gmon_eat;
     size_type size;
+    mon_body_shape shape;
 };
 
 enum mon_threat_level_type
