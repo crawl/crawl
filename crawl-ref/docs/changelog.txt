@@ -37,7 +37,7 @@ Items
 
 Interface
 ---------
-* There are status lights for Might, Agility, and Haste.
+* There are status lights for Might, Agility, and Brilliance.
 
 Stone Soup 0.14 (20140409)
 --------------------------
