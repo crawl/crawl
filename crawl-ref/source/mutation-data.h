@@ -66,8 +66,8 @@
   "poison resistance",
 
   {"Your system is resistant to poisons.", "", ""},
-  {"You feel healthy.", "",  ""},
-  {"You feel a little less healthy.", "", ""},
+  {"You feel resistant to poisons.", "",  ""},
+  {"You feel less resistant to poisons.", "", ""},
 
   "poison resistance"
 },
@@ -115,13 +115,13 @@
    "Your flesh is very heat resistant.",
    "Your flesh is almost immune to the effects of heat."},
 
-  {"You feel a sudden chill.",
-   "You feel a sudden chill.",
-   "You feel a sudden chill."},
+  {"You feel resistant to heat.",
+   "You feel more resistant to heat.",
+   "You feel more resistant to heat."},
 
-  {"You feel hot for a moment.",
-   "You feel hot for a moment.",
-   "You feel hot for a moment."},
+  {"You no longer feel heat resistant.",
+   "You feel less heat resistant.",
+   "You feel less heat resistant."},
 
   "heat resistance"
 },
@@ -133,13 +133,13 @@
    "Your flesh is very cold resistant.",
    "Your flesh is almost immune to the effects of cold."},
 
-  {"You feel hot for a moment.",
-   "You feel hot for a moment.",
-   "You feel hot for a moment."},
+  {"You feel resistant to cold.",
+   "You feel more resistant to cold.",
+   "You feel more resistant to cold."},
 
-  {"You feel a sudden chill.",
-   "You feel a sudden chill.",
-   "You feel a sudden chill."},
+  {"You no longer feel cold resistant.",
+   "You feel less cold resistant.",
+   "You feel less cold resistant."},
 
   "cold resistance"
 },
@@ -151,13 +151,13 @@
    "You are very vulnerable to heat.",
    "You are extremely vulnerable to heat."},
 
-  {"You feel hot for a moment.",
-   "You feel hot for a moment.",
-   "You feel hot for a moment."},
+  {"You feel vulnerable to heat.",
+   "You feel vulnerable to heat.",
+   "You feel vulnerable to heat."},
 
-  {"You feel a sudden chill.",
-   "You feel a sudden chill.",
-   "You feel a sudden chill."},
+  {"You no longer feel vulnerable to heat.",
+   "You feel less vulnerable to heat.",
+   "You feel less vulnerable to heat."},
 
   "heat vulnerability"
 },
@@ -169,13 +169,13 @@
    "You are very vulnerable to cold.",
    "You are extremely vulnerable to cold."},
 
-  {"You feel a sudden chill.",
-   "You feel a sudden chill.",
-   "You feel a sudden chill."},
+  {"You feel vulnerable to cold.",
+   "You feel vulnerable to cold.",
+   "You feel vulnerable to cold."},
 
-  {"You feel hot for a moment.",
-   "You feel hot for a moment.",
-   "You feel hot for a moment."},
+  {"You no longer feel vulnerable to cold.",
+   "You feel less vulnerable to cold.",
+   "You feel less vulnerable to cold."},
 
   "cold vulnerability"
 },
