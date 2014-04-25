@@ -1,5 +1,43 @@
-Stone Soup 0.15 (up to 0.15-a0)
--------------------------------
+Stone Soup 0.15 (up to 0.15-a0-235-g6cf6886)
+--------------------------------------------
+
+Branches, environment
+---------------------
+* Mechanical traps no longer drop ammo.
+
+Character
+---------
+* Formicids can no longer throw large rocks.
+* Tengu now gain permaflight at XL14 (was 15).
+* All non-undead forms can eat and drink normally.
+* All forms can butcher.
+* Wisp form can read scrolls and cannot blink on demand.
+
+Monsters
+--------
+* Many enemy glyphs have been adjusted. See 0.14_monster_glyphs.txt.
+* Enemies are more intelligent about using area-of-attack spells such as
+  Symbol of Torment and Chain Lightning when you are not in sight.
+* Manticores now move as fast as the player.
+* Komodo dragons now bite harder but don't sicken the player.
+* Deep dwarf death knights are now just death knights.
+* Removed enemies: vapours, thorn lotuses, giant goldfish.
+
+Spells
+------
+* Dazzling Spray replaces Invisibility in the book of Maledictions (the
+  Enchanter starting spellbook). Invisibility in turn replaces Apportation
+  in the book of Burglary.
+* Casting Ozocubu's Refrigeration now prevents the player from using potions
+  for several turns instead of destroying potions.
+
+Items
+-----
+* Damage from the electrocution brand has been reduced slightly.
+
+Interface
+---------
+* There are status lights for Might, Agility, and Haste.
 
 Stone Soup 0.14 (20140409)
 --------------------------
