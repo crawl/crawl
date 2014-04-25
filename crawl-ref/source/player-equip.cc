@@ -390,11 +390,11 @@ static void _unequip_artefact_effect(item_def &item,
                                                   : MSG_MANA_INCREASE);
     }
 
-    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     false, item,
+    notify_stat_change(STAT_STR, -proprt[ARTP_STRENGTH],     true, item,
                        true);
-    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], false, item,
+    notify_stat_change(STAT_INT, -proprt[ARTP_INTELLIGENCE], true, item,
                        true);
-    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    false, item,
+    notify_stat_change(STAT_DEX, -proprt[ARTP_DEXTERITY],    true, item,
                        true);
 
     if (proprt[ARTP_FLY] != 0 && you.cancellable_flight()
