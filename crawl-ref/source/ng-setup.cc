@@ -61,7 +61,6 @@ static void _species_stat_init(species_type which_species)
 
     case SP_HIGH_ELF:           s =  7; i = 11; d = 10;      break;  // 28
     case SP_DEEP_ELF:           s =  5; i = 12; d = 10;      break;  // 27
-    case SP_SLUDGE_ELF:         s =  8; i =  9; d =  9;      break;  // 26
 
     case SP_DEEP_DWARF:         s = 11; i =  8; d =  8;      break;  // 27
 
