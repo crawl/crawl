@@ -1036,11 +1036,12 @@ static void _read_macros_from(const char* filename)
         }
         else if (s.length() >= 3 && s[0] == 'K' && s[2] == ':')
         {
-            keymc  = KeymapContext(KMC_DEFAULT + s[1] - '0');
-            if (keymc >= KMC_DEFAULT && keymc < KMC_CONTEXT_COUNT)
+            const KeymapContext ctx = KeymapContext(KMC_DEFAULT + s[1] - '0');
+            if (ctx >= KMC_DEFAULT && ctx < KMC_CONTEXT_COUNT)
             {
                 key    = parse_keyseq(s.substr(3));
                 keymap = true;
+                keymc  = ctx;
             }
         }
         else if (s.substr(0, 2) == "M:")
