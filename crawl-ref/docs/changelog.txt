@@ -1,8 +1,10 @@
-Stone Soup 0.15 (up to 0.15-a0-235-g6cf6886)
+Stone Soup 0.15 (up to 0.15-a0-257-g1312860)
 --------------------------------------------
 
 Branches, environment
 ---------------------
+* Crypt is now three levels (was five).
+* Some areas of the Tomb layout can now vary.
 * Mechanical traps no longer drop ammo.
 
 Character
