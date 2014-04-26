@@ -1023,7 +1023,7 @@ static bool _siren_movement_effect(const monster* mons)
         const coord_def newpos = tracer.path_taken[0];
 
         if (!in_bounds(newpos)
-            || (is_feat_dangerous(grd(newpos)) && !you.can_cling_to(newpos))
+            || is_feat_dangerous(grd(newpos))
             || !you.can_pass_through_feat(grd(newpos))
             || !cell_see_cell(mons->pos(), newpos, LOS_NO_TRANS))
         {

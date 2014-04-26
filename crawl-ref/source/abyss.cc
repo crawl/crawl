@@ -1173,9 +1173,7 @@ static void _nuke_all_terrain(bool vaults)
 static void _ensure_player_habitable(bool dig_instead)
 {
     dungeon_feature_type feat = grd(you.pos());
-    if (!you.can_pass_through_feat(feat)
-        || is_feat_dangerous(feat) && !(you.is_wall_clinging()
-                                        && cell_is_clingable(you.pos())))
+    if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
     {
         bool shoved = you.shove();
         if (!shoved)

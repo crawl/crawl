@@ -1646,7 +1646,6 @@ static void _take_stairs(bool down)
     if (!you.attempt_escape()) // false means constricted and don't escape
         return;
 
-    you.clear_clinging();
     you.stop_constricting_all(true);
     you.stop_being_constricted();
 
@@ -2007,7 +2006,6 @@ void process_command(command_type cmd)
 
     case CMD_MOVE_NOWHERE:
     case CMD_WAIT:
-        you.check_clinging(false);
         you.turn_is_over = true;
         extract_manticore_spikes("You carefully extract the manticore spikes "
                                  "from your body.");
@@ -3320,7 +3318,7 @@ static void _move_player(coord_def move)
         bool penance = false;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
-            if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
+            if (is_feat_dangerous(grd(*ai))
                 && (dangerous == DNGN_FLOOR || grd(*ai) == DNGN_LAVA))
             {
                 dangerous = grd(*ai);

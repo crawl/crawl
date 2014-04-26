@@ -4128,9 +4128,7 @@ bool gozag_setup_call_merchant()
         {
             shop_type type = NUM_SHOPS;
             do
-            {
                 type = static_cast<shop_type>(random2(NUM_SHOPS));
-            }
             while (_duplicate_shop_type(i, type));
             const int greed = greed_for_shop_type(type, level_number);
             int item_count = 5 + random2avg(12, 3);

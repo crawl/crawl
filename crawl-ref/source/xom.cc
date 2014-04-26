@@ -1049,7 +1049,7 @@ static monster_type _xom_random_demon(int sever)
 static bool _player_is_dead(bool soon = true)
 {
     return you.hp <= 0
-        || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
+        || is_feat_dangerous(grd(you.pos()))
         || you.did_escape_death()
         || soon && (you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0);
 }
@@ -2841,8 +2841,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
     {
         // Don't confuse the player if standing next to lava or deep water.
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
-            if (in_bounds(*ai) && is_feat_dangerous(grd(*ai))
-                && !you.can_cling_to(*ai))
+            if (in_bounds(*ai) && is_feat_dangerous(grd(*ai)))
                 return XOM_DID_NOTHING;
     }
 

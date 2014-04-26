@@ -834,7 +834,7 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
 
     // Don't move onto dangerous terrain.
-    if (is_feat_dangerous(grd(mons->pos())) && !you.can_cling_to(mons->pos()))
+    if (is_feat_dangerous(grd(mons->pos())))
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return false;
