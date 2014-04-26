@@ -681,9 +681,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         break;
     }
 
-    if (showMsgs)
-        warn_shield_penalties();
-
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
@@ -991,9 +988,6 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             xom_is_stimulated(amusement);
         }
     }
-
-    if (get_item_slot(arm) == EQ_SHIELD)
-        warn_shield_penalties();
 
     you.redraw_armour_class = true;
     you.redraw_evasion = true;

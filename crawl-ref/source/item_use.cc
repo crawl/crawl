@@ -429,59 +429,6 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     return true;
 }
 
-static const char *shield_base_name(const item_def *shield)
-{
-    return shield->sub_type == ARM_BUCKLER ? "buckler"
-                                           : "shield";
-}
-
-static const char *shield_impact_degree(int impact)
-{
-    return impact > 160 ? "severely "      :
-           impact > 130 ? "significantly " :
-           impact > 110 ? ""
-                        : NULL;
-}
-
-static void _warn_launcher_shield_slowdown(const item_def &launcher)
-{
-    // FIXME for new ranged combat
-    const int slowspeed = 100;
-        // launcher_final_speed(launcher, you.shield()) * player_speed() / 100;
-    const int normspeed = 100;
-        // launcher_final_speed(launcher, NULL) * player_speed() / 100;
-
-    // Don't warn the player unless the slowdown is real.
-    if (slowspeed > normspeed)
-    {
-        const char *slow_degree =
-            shield_impact_degree(slowspeed * 100 / normspeed);
-
-        if (slow_degree)
-        {
-            mprf(MSGCH_WARN,
-                    "Your %s %sslows your rate of fire.",
-                    shield_base_name(you.shield()),
-                    slow_degree);
-        }
-    }
-}
-
-// Warn if your shield is greatly impacting the effectiveness of your weapon?
-void warn_shield_penalties()
-{
-    if (!you.shield())
-        return;
-
-    // Warnings are limited to launchers at the moment.
-    const item_def *weapon = you.weapon();
-    if (!weapon)
-        return;
-
-    if (is_range_weapon(*weapon))
-        _warn_launcher_shield_slowdown(*weapon);
-}
-
 bool item_is_worn(int inv_slot)
 {
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
