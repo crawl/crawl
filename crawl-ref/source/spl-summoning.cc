@@ -449,6 +449,9 @@ spret_type cast_summon_elemental(int pow, god_type god,
     if (!friendly)
         mpr("It doesn't seem to appreciate being summoned.");
 
+    if (mon == MONS_FIRE_ELEMENTAL)
+        did_god_conduct(DID_FIRE, 6 + random2(3));
+
     return SPRET_SUCCESS;
 }
 
