@@ -2584,7 +2584,7 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
         return false;
 
     hands_reqd_type hand = you.hands_reqd(weapon);
-    return hand == HANDS_TWO && !is_range_weapon(weapon);
+    return hand == HANDS_TWO;
 }
 
 bool shield_reflects(const item_def &shield)
