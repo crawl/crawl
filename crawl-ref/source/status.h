@@ -19,7 +19,6 @@ enum status_type
     STATUS_DIG,
     STATUS_SICK,
     STATUS_SPEED,
-    STATUS_CLINGING,
     STATUS_SAGE,
     STATUS_STR_ZERO,
     STATUS_INT_ZERO,

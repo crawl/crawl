@@ -871,19 +871,6 @@ static void _WOE_melee_effects(item_def* weapon, actor* attacker,
 
 ///////////////////////////////////////////////////
 
-static void _SPIDER_equip(item_def *item, bool *show_msgs, bool unmeld)
-{
-    _equip_mpr(show_msgs, "The boots cling to your feet.");
-    you.check_clinging(false);
-}
-
-static void _SPIDER_unequip(item_def *item, bool *show_msgs)
-{
-    you.check_clinging(false);
-}
-
-///////////////////////////////////////////////////
-
 static void _HELLFIRE_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
     _equip_mpr(show_msgs, "Your hands smoulder for a moment.");

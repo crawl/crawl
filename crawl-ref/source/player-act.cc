@@ -881,7 +881,7 @@ bool player::berserk() const
 
 bool player::can_cling_to_walls() const
 {
-    return form == TRAN_SPIDER || player_equip_unrand(UNRAND_SPIDER);
+    return false;
 }
 
 bool player::is_web_immune() const
