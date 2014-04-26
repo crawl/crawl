@@ -1686,7 +1686,8 @@ bool yred_injury_mirror()
 {
     return you_worship(GOD_YREDELEMNUL) && !player_under_penance()
            && you.piety >= piety_breakpoint(1)
-           && you.duration[DUR_MIRROR_DAMAGE];
+           && you.duration[DUR_MIRROR_DAMAGE]
+           && crawl_state.which_god_acting() != GOD_YREDELEMNUL;
 }
 
 bool yred_can_animate_dead()

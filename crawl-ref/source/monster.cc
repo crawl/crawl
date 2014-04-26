@@ -4338,8 +4338,13 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         // the royal jelly).
         react_to_damage(agent, amount, flavour);
 
-        if (has_ench(ENCH_MIRROR_DAMAGE))
+        // Don't mirror Yredelemnul's effects (in particular don't mirror
+        // mirrored damage).
+        if (has_ench(ENCH_MIRROR_DAMAGE)
+            && crawl_state.which_god_acting() != GOD_YREDELEMNUL)
+        {
             (new mirror_damage_fineff(agent, this, amount * 2 / 3))->schedule();
+        }
 
         blame_damage(agent, amount);
         behaviour_event(this, ME_HURT);

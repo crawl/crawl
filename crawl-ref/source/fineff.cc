@@ -156,6 +156,8 @@ void mirror_damage_fineff::fire()
         return;
     // defender being dead is ok, if we killed them we still suffer
 
+    god_acting gdact(GOD_YREDELEMNUL);
+
     if (att == MID_PLAYER)
     {
         mpr("Your damage is reflected back at you!");
