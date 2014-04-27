@@ -1125,6 +1125,8 @@ function (exports, $, key_conversion, chat, comm) {
             return false; // buggy Blob builder
         if (b.safari)
             return false;
+        if (b.opera)
+            return false; // errors in inflate.js (?)
         return true;
     }
 
