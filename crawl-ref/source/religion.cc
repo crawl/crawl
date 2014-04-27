@@ -3654,6 +3654,21 @@ void god_pitch(god_type which_god)
     _god_welcome_identify_gear();
     ash_check_bondage();
 
+    // Give a reminder to remove any disallowed equipment.
+    for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
+    {
+        if (!player_wearing_slot(i))
+            continue;
+
+        const item_def& item = you.inv[you.equip[i]];
+        if (god_hates_item(item))
+        {
+            mprf(MSGCH_GOD, "%s warns you to remove %s.",
+                 uppercase_first(god_name(you.religion)).c_str(),
+                 item.name(DESC_YOUR, false, false, false).c_str());
+        }
+    }
+
     // Chei worshippers start their stat gain immediately.
     if (you_worship(GOD_CHEIBRIADOS))
     {
