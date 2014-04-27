@@ -3644,8 +3644,8 @@ void god_pitch(god_type which_god)
     more();
     if (crawl_state.game_is_tutorial())
     {
-        // Tutorial needs minor destruction usable.
-        gain_piety(35, 1, true, false);
+        // Tutorial needs berserk usable.
+        gain_piety(30, 1, true, false);
     }
 
     if (you_worship(GOD_BEOGH))
