@@ -1236,8 +1236,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case AMU_FAITH:
-        mprf(MSGCH_GOD, "You feel a %ssurge of divine interest."
-              you_worship(GOD_NO_GOD) ? "strange " : "");
+        mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
+             you_worship(GOD_NO_GOD) ? "strange " : "");
         break;
 
     case AMU_THE_GOURMAND:
