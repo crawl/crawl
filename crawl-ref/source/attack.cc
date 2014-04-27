@@ -214,7 +214,10 @@ int attack::calc_to_hit(bool random)
         }
 
         // slaying bonus
-        mhit += slaying_bonus(PWPN_HIT);
+        mhit += slaying_bonus(PWPN_HIT,
+                              !weapon && wpn_skill == SK_THROWING
+                              || (weapon && is_range_weapon(*weapon)
+                                         && using_weapon()));
 
         // hunger penalty
         if (you.hunger_state == HS_STARVING)
@@ -1356,7 +1359,10 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
         if (weapon->base_type == OBJ_RODS)
             damage_plus = weapon->special;
     }
-    damage_plus += slaying_bonus(PWPN_DAMAGE);
+    damage_plus += slaying_bonus(PWPN_DAMAGE,
+                                 !weapon && wpn_skill == SK_THROWING
+                                 || (weapon && is_range_weapon(*weapon)
+                                            && using_weapon()));
 
     damage += (damage_plus > -1) ? (random2(1 + damage_plus))
                                  : (-random2(1 - damage_plus));
