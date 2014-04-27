@@ -578,9 +578,10 @@ static monsterentry mondata[] =
         MON_SHAPE_HUMANOID_TAILED
 },
 
+// nonbase draconians ('q')
 // Nonbase draconian AC and EV is additive with the base type.
 {
-    MONS_DRACONIAN_CALLER, 'd', BROWN, "draconian caller",
+    MONS_DRACONIAN_CALLER, 'q', BROWN, "draconian caller",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -3,
@@ -593,7 +594,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_MONK, 'd', BLUE, "draconian monk",
+    MONS_DRACONIAN_MONK, 'q', BLUE, "draconian monk",
     M_FIGHTER | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -3,
@@ -607,7 +608,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_ZEALOT, 'd', LIGHTGREEN, "draconian zealot",
+    MONS_DRACONIAN_ZEALOT, 'q', LIGHTGREEN, "draconian zealot",
     M_SPELLCASTER | M_PRIEST | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -3,
@@ -620,7 +621,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_SHIFTER, 'd', LIGHTCYAN, "draconian shifter",
+    MONS_DRACONIAN_SHIFTER, 'q', LIGHTCYAN, "draconian shifter",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -4,
@@ -633,7 +634,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_ANNIHILATOR, 'd', LIGHTBLUE, "draconian annihilator",
+    MONS_DRACONIAN_ANNIHILATOR, 'q', LIGHTBLUE, "draconian annihilator",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -4,
@@ -646,7 +647,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_KNIGHT, 'd', CYAN, "draconian knight",
+    MONS_DRACONIAN_KNIGHT, 'q', CYAN, "draconian knight",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_FIGHTER | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -4,
@@ -659,7 +660,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_DRACONIAN_SCORCHER, 'd', LIGHTRED, "draconian scorcher",
+    MONS_DRACONIAN_SCORCHER, 'q', LIGHTRED, "draconian scorcher",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -4,
