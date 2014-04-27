@@ -3488,19 +3488,15 @@ bool player_can_join_god(god_type which_god)
     return _transformed_player_can_join_god(which_god);
 }
 
-// Identify any interesting equipment when the player signs up with a
-// new Service Pro^W^Wdeity.
-static void _god_welcome_identify_gear()
+// Handle messaging and identification for items/equipment on conversion.
+static void _god_welcome_handle_gear()
 {
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
     if (amulet && amulet->sub_type == AMU_FAITH)
     {
-        // The flash happens independent of item id.
         mprf(MSGCH_GOD, "Your amulet flashes!");
         flash_view_delay(god_colour(you.religion), 300);
-        set_ident_type(*amulet, ID_KNOWN_TYPE);
-        set_ident_flags(*amulet, ISFLAG_KNOW_TYPE);
     }
 
     if (you_worship(GOD_ASHENZARI))
@@ -3519,6 +3515,21 @@ static void _god_welcome_identify_gear()
     // detect evil weapons
     if (you_worship(GOD_ELYVILON))
         auto_id_inventory();
+
+    // Give a reminder to remove any disallowed equipment.
+    for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
+    {
+        if (!player_wearing_slot(i))
+            continue;
+
+        const item_def& item = you.inv[you.equip[i]];
+        if (god_hates_item(item))
+        {
+            mprf(MSGCH_GOD, "%s warns you to remove %s.",
+                 uppercase_first(god_name(you.religion)).c_str(),
+                 item.name(DESC_YOUR, false, false, false).c_str());
+        }
+    }
 }
 
 void god_pitch(god_type which_god)
@@ -3651,23 +3662,8 @@ void god_pitch(god_type which_god)
         update_player_symbol();
     }
 
-    _god_welcome_identify_gear();
+    _god_welcome_handle_gear();
     ash_check_bondage();
-
-    // Give a reminder to remove any disallowed equipment.
-    for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
-    {
-        if (!player_wearing_slot(i))
-            continue;
-
-        const item_def& item = you.inv[you.equip[i]];
-        if (god_hates_item(item))
-        {
-            mprf(MSGCH_GOD, "%s warns you to remove %s.",
-                 uppercase_first(god_name(you.religion)).c_str(),
-                 item.name(DESC_YOUR, false, false, false).c_str());
-        }
-    }
 
     // Chei worshippers start their stat gain immediately.
     if (you_worship(GOD_CHEIBRIADOS))
