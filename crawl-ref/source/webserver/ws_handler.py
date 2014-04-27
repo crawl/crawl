@@ -195,10 +195,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.deflate = False
                 compression = "deflate-frame extension"
 
-        self.logger.info("Socket opened from ip %s (fd%s, compression: %s).",
+        self.logger.info("Socket opened from ip %s (fd%s, compression: %s). UA: %s.",
                          self.request.remote_ip,
                          self.request.connection.stream.socket.fileno(),
-                         compression)
+                         compression, self.request.headers.get("User-Agent"))
         sockets.add(self)
 
         self.reset_timeout()
