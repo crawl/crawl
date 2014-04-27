@@ -3822,7 +3822,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
 
         // Will neither fire from melee range nor all the time
-        if (mons->foe_distance() < 2 || !coinflip())
+        if (mons->foe_distance() < 2 || coinflip())
             break;
 
         // Do the throwing right here, since the beam is so

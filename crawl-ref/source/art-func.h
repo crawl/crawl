@@ -430,7 +430,7 @@ static void _TORMENT_world_reacts(item_def *item)
 static void _TORMENT_melee_effects(item_def* weapon, actor* attacker,
                                    actor* defender, bool mondied, int dam)
 {
-    if (!coinflip())
+    if (coinflip())
         return;
     torment(attacker, TORMENT_SPWLD, attacker->pos());
     if (attacker->is_player())
