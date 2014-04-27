@@ -287,7 +287,6 @@ DEPTH:  Depths:3-, Vaults:2-, Crypt, Blade, Tomb
 
 NAME:   uniq_enchantress
 DEPTH:  Depths
-WEIGHT: 30
 MONS:   the Enchantress band
 : place_unique(_G, "the Enchantress band")
 
