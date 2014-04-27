@@ -2516,7 +2516,7 @@ MONS:    centaur / centaur warrior / yaktaur / yaktaur captain
 MONS:    rat / green rat / orange rat / quokka
 MONS:    worker ant / soldier ant / queen ant
 MONS:    brain worm / worm / giant leech
-MONS:    lindwurm / death drake / komodo dragon / basilisk / swamp drake
+MONS:    komodo dragon / iguana / basilisk
 MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 : else
 SHUFFLE: 1234567
