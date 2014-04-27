@@ -67,20 +67,20 @@ mon_glyph += vampire mosquito : brown y
 mon_glyph += vault guard : cyan @
 mon_glyph += vault sentinel : lightblue @
 mon_glyph += vault warden : lightred @
-mon_glyph += vine stalker : magenta p
+mon_glyph += vine stalker : magenta P
 mon_glyph += wind drake : white l
 mon_glyph += wizard : magenta @
 mon_glyph += zombie : brown z
 
-mon_glyph += Asmodeus : lightred
+mon_glyph += Asmodeus : lightmagenta
 mon_glyph += Asterion : fire
-mon_glyph += Eustachio : blue
+mon_glyph += Eustachio : green
 mon_glyph += Gastronok : lightred j
 mon_glyph += Kirke : lightgreen
-mon_glyph += Louise : lightmagenta
+mon_glyph += Louise : blue
 mon_glyph += Mennas : silver
 mon_glyph += Natasha : blue h
-mon_glyph += Norris : brown
+mon_glyph += Norris : lightred
 mon_glyph += Sojobo : lightgreen H
 
 mon_glyph += sensed monster : lightred
