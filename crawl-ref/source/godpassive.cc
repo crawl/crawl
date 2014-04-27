@@ -389,15 +389,12 @@ bool god_id_item(item_def& item, bool silent)
             ided |= ISFLAG_IDENT_MASK;
 
         if (item.base_type == OBJ_ARMOUR
-            && you.piety >= piety_breakpoint(0)
             && _is_slot_cursed(get_armour_slot(item)))
         {
-            // Armour would id the pluses when worn, unlike weapons.
             ided |= ISFLAG_KNOW_PLUSES;
         }
 
         if (is_weapon(item)
-            && you.piety >= piety_breakpoint(1)
             && _is_slot_cursed(EQ_WEAPON))
         {
             ided |= ISFLAG_KNOW_PLUSES;
