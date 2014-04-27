@@ -1192,6 +1192,11 @@ bool targetter_cone::valid_aim(coord_def a)
     return true;
 }
 
+static bool left_of_eq(coord_def a, coord_def b)
+{
+    return a.x * b.y >= a.y * b.x;
+}
+
 // Ripped off from targetter_thunderbolt::set_aim.
 bool targetter_cone::set_aim(coord_def a)
 {
@@ -1224,7 +1229,7 @@ bool targetter_cone::set_aim(coord_def a)
             if (sqr(x) + sqr(y) > range2)
                 continue;
             coord_def q(x, y);
-            if (left_of(a1, q) && left_of(q, a2))
+            if (left_of_eq(a1, q) && left_of_eq(q, a2))
             {
                 (p = q) += origin;
                 if (zapped[p] <= 0
