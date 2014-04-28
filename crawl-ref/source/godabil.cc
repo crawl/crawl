@@ -4443,7 +4443,6 @@ bool qazlal_upheaval(coord_def target, bool quiet)
     beam.name        = "****";
     beam.beam_source = you.mindex();
     beam.source_name = "you";
-    beam.source      = you.pos();
     beam.thrower     = KILL_YOU;
     beam.range       = LOS_RADIUS;
     beam.damage      = calc_dice(3, 37 + pow / 3);
@@ -4536,6 +4535,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
     for (unsigned int i = 0; i < affected.size(); i++)
     {
         coord_def pos = affected[i];
+        beam.source = pos;
         beam.target = pos;
         beam.fire();
 
