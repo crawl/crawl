@@ -420,7 +420,7 @@ VISUAL:@The_monster@ lashes @possessive@ tail.
 
 VISUAL:@The_monster@ grinds @possessive@ teeth.
 
-VISUAL:@The_monster@ breathes [smoke|steam|mist] at @foe@.
+VISUAL:@The_monster@ puffs mist at @foe@.
 %%%%
 _hostile_imp_rare_
 
