@@ -801,6 +801,14 @@ static const string _detailed_cost_description(ability_type ability)
         }
     }
 
+    if (abil.flags & ABFLAG_GOLD)
+    {
+        // TODO: make this more of a field so we can display "variable" or
+        // "3000" or similar?
+        have_cost = true;
+        ret << "\nGold";
+    }
+
     if (!have_cost)
         ret << "nothing.";
 
