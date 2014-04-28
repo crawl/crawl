@@ -841,6 +841,31 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                           : SPWPN_NORMAL;
     const int ammo_brand = get_ammo_brand(item);
 
+    switch (projected)
+    {
+    case LRET_LAUNCHED:
+    {
+        const item_def *launcher = you.weapon();
+        ASSERT(launcher);
+        practise(EX_WILL_LAUNCH, range_skill(*launcher));
+        if (is_unrandom_artefact(*launcher)
+            && get_unrand_entry(launcher->special)->type_name)
+        {
+            count_action(CACT_FIRE, launcher->special);
+        }
+        else
+            count_action(CACT_FIRE, launcher->sub_type);
+        break;
+    }
+    case LRET_THROWN:
+        practise(EX_WILL_THROW_MSL, wepType);
+        count_action(CACT_THROW, wepType | (OBJ_MISSILES << 16));
+        break;
+    case LRET_FUMBLED:
+        practise(EX_WILL_THROW_OTHER);
+        break;
+    }
+
     // check for returning ammo from launchers
     if (returning && projected == LRET_LAUNCHED)
     {

@@ -158,22 +158,6 @@ bool ranged_attack::handle_phase_attempted()
     attacker->attacking(defender);
     attack_occurred = true;
 
-    if (attacker->is_player())
-    {
-        switch (is_launched(attacker, weapon, *projectile))
-        {
-            case LRET_LAUNCHED:
-                practise(EX_WILL_LAUNCH, wpn_skill);
-                break;
-            case LRET_THROWN:
-                practise(EX_WILL_THROW_MSL);
-                break;
-            case LRET_FUMBLED:
-                practise(EX_WILL_THROW_OTHER);
-                break;
-        }
-    }
-
     return true;
 }
 
