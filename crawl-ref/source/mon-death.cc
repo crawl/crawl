@@ -2134,6 +2134,7 @@ int monster_die(monster* mons, killer_type killer,
                     || you_worship(GOD_KIKUBAAQUDGHA)
                     || you_worship(GOD_MAKHLEB)
                     || you_worship(GOD_LUGONU)
+                    || you_worship(GOD_QAZLAL)
                     || !anon && mons_is_god_gift(killer_mon))
                 {
                     if (killer_holy == MH_UNDEAD)
