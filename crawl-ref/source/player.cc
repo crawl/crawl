@@ -4434,51 +4434,6 @@ int slaying_bonus(weapon_property_type which_affected, bool ranged)
     return ret;
 }
 
-// Checks each equip slot for an evokable item (jewellery or randart).
-// Returns true if any of these has the same ability as the one handed in.
-bool items_give_ability(const int slot, artefact_prop_type abil)
-{
-    for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
-    {
-        if (!player_wearing_slot(i))
-            continue;
-
-        const int eq = you.equip[i];
-
-        // skip item to compare with
-        if (eq == slot)
-            continue;
-
-        // only weapons give their effects when in our hands
-        if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
-            continue;
-
-        if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP && eq != EQ_AMULET)
-        {
-            if (abil == ARTP_FLY && you.inv[eq].sub_type == RING_FLIGHT)
-                return true;
-            if (abil == ARTP_INVISIBLE && you.inv[eq].sub_type == RING_INVISIBILITY)
-                return true;
-        }
-
-        else if (eq == EQ_AMULET)
-        {
-            if (abil == ARTP_BERSERK && you.inv[eq].sub_type == AMU_RAGE)
-                return true;
-        }
-
-        // other items are not evokable
-        if (!is_artefact(you.inv[ eq ]))
-            continue;
-
-        if (artefact_wpn_property(you.inv[ eq ], abil))
-            return true;
-    }
-
-    // none of the equipped items possesses this ability
-    return false;
-}
-
 // Checks each equip slot for a randart, and adds up all of those with
 // a given property. Slow if any randarts are worn, so avoid where
 // possible.

@@ -228,7 +228,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     artefact_known_props_t known;
     artefact_wpn_properties(item, proprt, known);
 
-    // Only give property messages for unknown properties.
     if (proprt[ARTP_EYESIGHT])
         autotoggle_autopickup(false);
 
@@ -243,29 +242,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
                        !(msg && unknown_proprt(ARTP_INTELLIGENCE)), item);
     notify_stat_change(STAT_DEX, proprt[ARTP_DEXTERITY],
                        !(msg && unknown_proprt(ARTP_DEXTERITY)), item);
-
-    // For evokable stuff, check whether other equipped items yield
-    // the same ability.  If not, and if the ability granted hasn't
-    // already been discovered, give a message.
-    if (unknown_proprt(ARTP_FLY))
-    {
-        if (msg && !items_give_ability(item.link, ARTP_FLY))
-        {
-            if (you.airborne())
-                mpr("You feel vaguely more buoyant than before.");
-            else
-                mpr("You feel buoyant.");
-        }
-    }
-
-    if (unknown_proprt(ARTP_INVISIBLE) && !you.duration[DUR_INVIS] && msg)
-        mpr("You become transparent for a moment.");
-
-    if (unknown_proprt(ARTP_BERSERK) && msg && !items_give_ability(item.link, ARTP_BERSERK))
-        mpr("You feel a brief urge to hack something to bits.");
-
-    if (unknown_proprt(ARTP_BLINK) && msg && !items_give_ability(item.link, ARTP_BLINK))
-        mpr("You feel jittery for a moment.");
 
     if (unknown_proprt(ARTP_MUTAGENIC) && msg)
         mpr("You feel a build-up of mutagenic energy.");
@@ -307,26 +283,6 @@ static void _unequip_artefact_effect(item_def &item,
     artefact_known_props_t known;
     artefact_wpn_properties(item, proprt, known);
     const bool msg = !show_msgs || *show_msgs;
-
-    if (proprt[ARTP_AC])
-    {
-        you.redraw_armour_class = true;
-        if (!known[ARTP_AC] && msg)
-        {
-            mprf("You feel less %s.",
-                 proprt[ARTP_AC] > 0? "well-protected" : "vulnerable");
-        }
-    }
-
-    if (proprt[ARTP_EVASION])
-    {
-        you.redraw_evasion = true;
-        if (!known[ARTP_EVASION] && msg)
-        {
-            mprf("You feel less %s.",
-                 proprt[ARTP_EVASION] > 0? "nimble" : "awkward");
-        }
-    }
 
     if (proprt[ARTP_HP])
         _calc_hp_artefact();
@@ -1178,11 +1134,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         you.redraw_armour_class = true;
         break;
 
-    case RING_INVISIBILITY:
-        mprf("You become %stransparent for a moment.",
-             you.duration[DUR_INVIS] ? "more " : "");
-        break;
-
     case RING_EVASION:
         you.redraw_evasion = true;
         break;
@@ -1212,10 +1163,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 
         break;
 
-    case RING_FLIGHT:
-        mprf("You feel %sbuoyant.", you.airborne() ? "more " : "");
-        break;
-
     case RING_TELEPORTATION:
         if (crawl_state.game_is_sprint())
             mpr("You feel a slight, muted jump rush through you.");
@@ -1223,16 +1170,6 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             // keep in sync with player_teleport
             mprf("You feel slightly %sjumpy.",
                  (player_teleport(false) > 8) ? "more " : "");
-        break;
-
-    case RING_TELEPORT_CONTROL:
-        mprf("You feel %scontrolled for a moment.",
-              you.duration[DUR_CONTROL_TELEPORT] ? "more " : "");
-        break;
-
-    case AMU_RAGE:
-        mprf("You feel a %sbrief urge to hack something to bits.",
-              you.can_go_berserk() ? "" : "very ");
         break;
 
     case AMU_FAITH:
@@ -1288,6 +1225,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             you.duration[DUR_BERSERK] = 0;
             you.duration[DUR_FINESSE] = 0;
         }
+        else
+            mprf("You feel %s static.", you.species == SP_FORMICID ? "familiarly" : "strangely");
     }
 
     // Artefacts have completely different appearance than base types

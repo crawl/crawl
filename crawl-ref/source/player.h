@@ -911,8 +911,6 @@ int player_teleport(bool calc_unid = true);
 
 int player_monster_detect_radius();
 
-bool items_give_ability(const int slot, artefact_prop_type abil);
-
 int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 
 unsigned int exp_needed(int lev, int exp_apt = -99);
