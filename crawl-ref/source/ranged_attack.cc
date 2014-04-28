@@ -620,8 +620,9 @@ bool ranged_attack::apply_missile_brand()
     default:
         break;
     case SPMSL_FLAME:
-        if (get_weapon_brand(*weapon) == SPWPN_FROST
-            || get_weapon_brand(*weapon) == SPWPN_FREEZING)
+        if (weapon && using_weapon()
+            && (get_weapon_brand(*weapon) == SPWPN_FROST
+                || get_weapon_brand(*weapon) == SPWPN_FREEZING))
         {
             break;
         }
@@ -632,8 +633,9 @@ bool ranged_attack::apply_missile_brand()
         attacker->god_conduct(DID_FIRE, 1);
         break;
     case SPMSL_FROST:
-        if (get_weapon_brand(*weapon) == SPWPN_FLAME
-            || get_weapon_brand(*weapon) == SPWPN_FLAMING)
+        if (weapon && using_weapon()
+            && (get_weapon_brand(*weapon) == SPWPN_FLAME
+                || get_weapon_brand(*weapon) == SPWPN_FLAMING))
         {
             break;
         }
