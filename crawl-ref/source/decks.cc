@@ -165,11 +165,12 @@ const deck_archetype deck_of_wonders[] =
     { CARD_POTION,     {5, 5, 5} },
     { CARD_FOCUS,      {1, 1, 2} },
     { CARD_SHUFFLE,    {0, 1, 2} },
-    { CARD_EXPERIENCE, {3, 4, 5} },
     { CARD_WILD_MAGIC, {5, 5, 5} },
-    { CARD_HELIX,      {5, 5, 5} },
-    { CARD_SAGE,       {5, 5, 5} },
-    { CARD_TROWEL,     {0, 0, 2} },
+    { CARD_DOWSING,    {5, 5, 5} },
+    { CARD_BATTLELUST, {5, 5, 5} },
+    { CARD_HELM,       {5, 5, 5} },
+    { CARD_SHADOW,     {5, 5, 5} },
+
     END_OF_DECK
 };
 
