@@ -711,16 +711,13 @@ void qazlal_storm_clouds()
     for (radius_iterator ri(you.pos(), radius, C_ROUND, LOS_SOLID, true);
          ri; ++ri)
     {
-        if (cell_is_solid(*ri) || env.cgrid(*ri) != EMPTY_CLOUD)
+        if (cell_is_solid(*ri) || env.cgrid(*ri) != EMPTY_CLOUD
+            || monster_at(*ri) && mons_is_firewood(monster_at(*ri)))
+        {
             continue;
+        }
 
-        int neighbours = 0;
-        for (adjacent_iterator ai(*ri); ai; ++ai)
-            if (feat_is_traversable(grd(*ai)))
-                neighbours++;
-
-        if (neighbours == 0 || neighbours > 6)
-            candidates.push_back(*ri);
+        candidates.push_back(*ri);
     }
     const int count =
         div_rand_round(radius * candidates.size() * you.time_taken,
@@ -731,18 +728,13 @@ void qazlal_storm_clouds()
     int placed = 0;
     for (unsigned int i = 0; placed < count && i < candidates.size(); i++)
     {
-        bool one = false, skip = false;
+        bool skip = false;
         for (adjacent_iterator ai(candidates[i]); ai; ++ai)
         {
             if (env.cgrid(*ai) != EMPTY_CLOUD)
             {
-                if (one)
-                {
-                    skip = true;
-                    break;
-                }
-                else
-                    one = true;
+                skip = true;
+                break;
             }
         }
         if (skip)
