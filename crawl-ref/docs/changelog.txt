@@ -41,6 +41,18 @@ Interface
 ---------
 * There are status lights for Might, Agility, and Brilliance.
 
+Stone Soup 0.14.1 (20140428)
+----------------------------
+* Several crash fixes.
+* Fire dragons correctly grant bonus Dithmenos piety.
+* Ranged attacks from invisibile monsters correctly turn off autopickup.
+* Good gods punish the player properly for negative energy clouds.
+* Natasha no longer revives after being pacified, and does not get a new
+  item when reviving.
+* When playing a race with permanent flight ability, it is now possible to
+  remove an item granting flight over dangerous terrain.
+* Wanderers do not occasionally get more MP than other backgrounds.
+
 Stone Soup 0.14 (20140409)
 --------------------------
 * The lower half of D is now a new branch, the Depths.
