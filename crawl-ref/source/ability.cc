@@ -2960,7 +2960,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
         qazlal_elemental_force();
-	break;
+        break;
 
     case ABIL_QAZLAL_DISASTER_AREA:
         if (!qazlal_disaster_area())
