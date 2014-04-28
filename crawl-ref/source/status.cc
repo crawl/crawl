@@ -1191,7 +1191,7 @@ static void _describe_missiles(status_info* inf)
                     || you.scan_artefacts(ARTP_RMSL)
                     || you_worship(GOD_QAZLAL)
                        && !player_under_penance(GOD_QAZLAL)
-                       && you.piety >= piety_breakpoint(4);
+                       && you.piety >= piety_breakpoint(2);
         inf->light_colour = perm ? WHITE : LIGHTBLUE;
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";
