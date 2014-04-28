@@ -304,7 +304,8 @@ function ($, comm, enums, map_knowledge, messages, options) {
             else
                 $("#stats_piety").text("");
         }
-        else if (player.piety_rank > 0 || player.god != "")
+        else if ((player.piety_rank > 0 || player.god != "")
+                 && player.god != "Gozag")
         {
             $("#stats_piety").text(repeat_string("*", player.piety_rank)
                                    + repeat_string(".", 6-player.piety_rank));
