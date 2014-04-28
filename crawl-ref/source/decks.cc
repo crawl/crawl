@@ -192,6 +192,7 @@ const deck_archetype deck_of_oddities[] =
     { CARD_FEAST,   {5, 5, 5} },
     { CARD_FAMINE,  {5, 5, 5} },
     { CARD_CURSE,   {5, 5, 5} },
+    { CARD_HELIX,   {5, 5, 5} },
     END_OF_DECK
 };
 
