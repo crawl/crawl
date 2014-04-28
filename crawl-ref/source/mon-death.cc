@@ -189,22 +189,36 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
 
-    int nchunks = 1 + random2(max_chunks);
-    nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
+    int nchunks = 1;
+    if (corpse.base_type == OBJ_GOLD)
+    {
+        nchunks = corpse.quantity;
+        corpse.quantity = 1;
+        // Don't give a bonus from *all* the gold chunks...
+        corpse.special = 0;
+    }
+    else
+    {
+        nchunks += random2(max_chunks);
+        nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
+    }
 
     int ntries = 0;
 
-    corpse.base_type = OBJ_FOOD;
-    corpse.sub_type  = FOOD_CHUNK;
-    if (is_bad_food(corpse))
-        corpse.flags |= ISFLAG_DROPPED;
+    if (corpse.base_type != OBJ_GOLD)
+    {
+        corpse.base_type = OBJ_FOOD;
+        corpse.sub_type  = FOOD_CHUNK;
+        if (is_bad_food(corpse))
+            corpse.flags |= ISFLAG_DROPPED;
 
-    int blood = nchunks * 3;
+        int blood = nchunks * 3;
 
-    if (food_is_rotten(corpse))
-        blood /= 3;
+        if (food_is_rotten(corpse))
+            blood /= 3;
 
-    blood_spray(where, corpse.mon_type, blood);
+        blood_spray(where, corpse.mon_type, blood);
+    }
 
     while (nchunks > 0 && ntries < 10000)
     {
