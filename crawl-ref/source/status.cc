@@ -712,8 +712,8 @@ bool fill_status_info(int status, status_info* inf)
         inf->short_text = "gold lust";
         inf->long_text =
             make_stringf("Your skills are %senhanced by your lust for gold.",
-                         gold_bonus >= 5 ? "greatly" :
-                         gold_bonus <  3 ? "slightly" : "");
+                         gold_bonus >= 5 ? "greatly " :
+                         gold_bonus <  3 ? "slightly " : "");
         break;
     }
 
