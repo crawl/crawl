@@ -13,6 +13,7 @@
 #include "env.h"
 #include "libutil.h"
 #include "player.h"
+#include "religion.h"
 #include "terrain.h"
 #include "cloud.h"
 #include "travel.h"
@@ -35,7 +36,12 @@ LUAFN(view_is_safe_square)
     if (!map_bounds(p))
         return 1;
     cloud_type c = env.map_knowledge(p).cloud();
-    if (c != CLOUD_NONE && is_damaging_cloud(c, true))
+    if (c != CLOUD_NONE
+        && is_damaging_cloud(c, true)
+        && (!you_worship(GOD_QAZLAL)
+            || !YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)
+            || adjacent(p, you.pos())
+               && env.map_knowledge(you.pos()).cloud() != CLOUD_NONE))
     {
         PLUARET(boolean, false);
         return 1;
