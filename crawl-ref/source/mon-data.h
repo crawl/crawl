@@ -6019,7 +6019,7 @@ static monsterentry mondata[] =
 // non-human uniques
 // "A"ngels.
 {
-    MONS_MENNAS, 'A', ETC_HOLY, "Mennas",
+    MONS_MENNAS, 'A', LIGHTCYAN, "Mennas",
     M_FIGHTER | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS
         | M_GLOWS_LIGHT | M_UNIQUE,
     MR_RES_POISON | mrd(MR_RES_ELEC, 2),
