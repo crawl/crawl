@@ -142,6 +142,9 @@ bool ranged_attack::attack()
     if (!defender->alive())
         handle_phase_killed();
 
+    if (attacker->is_player() && defender->is_monster())
+        print_wounds(defender->as_monster());
+
     handle_phase_end();
 
     enable_attack_conducts(conducts);
