@@ -3710,6 +3710,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
         marshallUnsigned(th, ci->colour);
         marshallUnsigned(th, ci->duration);
         marshallShort(th, ci->tile);
+        marshallUByte(th, ci->killer);
     }
 
     if (flags & MAP_SERIALIZE_ITEM)
@@ -3781,6 +3782,10 @@ void unmarshallMapCell(reader &th, map_cell& cell)
         unmarshallUnsigned(th, ci.colour);
         unmarshallUnsigned(th, ci.duration);
         ci.tile = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() >= TAG_MINOR_CLOUD_OWNER)
+#endif
+        ci.killer = static_cast<killer_type>(unmarshallUByte(th));
         cell.set_cloud(ci);
     }
 

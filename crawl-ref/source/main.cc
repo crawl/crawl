@@ -3619,6 +3619,16 @@ static void _move_player(coord_def move)
 
         if (swap)
             swap_places(targ_monst, mon_swap_dest);
+        else if (env.cgrid(targ) != EMPTY_CLOUD
+                 && is_damaging_cloud(env.cloud[ env.cgrid(targ) ].type)
+                 && YOU_KILL(env.cloud[ env.cgrid(targ) ].killer)
+                 && you_worship(GOD_QAZLAL)
+                 && env.cgrid(you.pos()) == EMPTY_CLOUD)
+        {
+            mprf("You displace your cloud of %s.",
+                 cloud_type_name(env.cloud[ env.cgrid(targ) ].type).c_str());
+            swap_clouds(you.pos(), targ);
+        }
         else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
         {
             check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),
