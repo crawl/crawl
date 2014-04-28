@@ -466,7 +466,13 @@ void artefact_desc_properties(const item_def &item,
     if (fake_rap != ARTP_NUM_PROPERTIES)
     {
         proprt[fake_rap] += fake_plus;
-        known[fake_rap] = true;
+
+        if (item_ident(item, ISFLAG_KNOW_PROPERTIES)
+            || item_ident(item, ISFLAG_KNOW_TYPE))
+        {
+            known[fake_rap] = true;
+        }
+
         return;
     }
 
