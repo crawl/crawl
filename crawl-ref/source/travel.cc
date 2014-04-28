@@ -202,8 +202,13 @@ static inline bool _is_safe_cloud(const coord_def& c)
     if (ctype == CLOUD_NONE)
         return true;
 
-    // We can also safely run through smoke.
-    return !is_damaging_cloud(ctype, true);
+    // We can also safely run through smoke, or displace our own clouds if
+    // following Qazlal.
+    return !is_damaging_cloud(ctype, true)
+           || you_worship(GOD_QAZLAL)
+              && YOU_KILL(env.map_knowledge(c).cloudinfo()->killer)
+              && (!adjacent(c, you.pos())
+                  || env.map_knowledge(you.pos()).cloud() == CLOUD_NONE);
 }
 
 // Returns an estimate for the time needed to cross this feature.

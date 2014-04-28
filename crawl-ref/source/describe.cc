@@ -4906,6 +4906,13 @@ void describe_god(god_type which_god, bool give_title)
                                        + " to gold.",
                                        ABIL_NON_ABILITY);
         }
+        else if (which_god == GOD_QAZLAL)
+        {
+            have_any = true;
+            _print_final_god_abil_desc(which_god,
+                                       "You can displace your own clouds.",
+                                       ABIL_NON_ABILITY);
+        }
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
@@ -4922,7 +4929,6 @@ void describe_god(god_type which_god, bool give_title)
             {
                 if (you.attribute[ATTR_DIVINE_FIRE_RES])
                 {
-                    have_any = true;
                     _print_final_god_abil_desc(
                         which_god,
                         "Qazlal greatly protects you from fire (rF++).",
@@ -4930,7 +4936,6 @@ void describe_god(god_type which_god, bool give_title)
                 }
                 if (you.attribute[ATTR_DIVINE_COLD_RES])
                 {
-                    have_any = true;
                     _print_final_god_abil_desc(
                         which_god,
                         "Qazlal greatly protects you from cold (rC++).",
@@ -4938,7 +4943,6 @@ void describe_god(god_type which_god, bool give_title)
                 }
                 if (you.attribute[ATTR_DIVINE_ELEC_RES])
                 {
-                    have_any = true;
                     _print_final_god_abil_desc(
                         which_god,
                         "Qazlal greatly protects you from electricity (rElec).",
@@ -4946,7 +4950,6 @@ void describe_god(god_type which_god, bool give_title)
                 }
                 if (you.attribute[ATTR_DIVINE_AC])
                 {
-                    have_any = true;
                     _print_final_god_abil_desc(
                         which_god,
                         "Qazlal protects you from physical attacks (AC+5).",

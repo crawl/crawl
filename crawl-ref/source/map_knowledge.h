@@ -6,12 +6,14 @@
 
 struct cloud_info
 {
-    cloud_info() : type(CLOUD_NONE), colour(0), duration(3), tile(0), pos(0, 0)
+    cloud_info() : type(CLOUD_NONE), colour(0), duration(3), tile(0), pos(0, 0),
+                   killer(KILL_NONE)
     { }
 
     cloud_info(cloud_type t, colour_t c,
-               uint8_t dur, unsigned short til, coord_def gc)
-        : type(t), colour(c), duration(dur), tile(til), pos(gc)
+               uint8_t dur, unsigned short til, coord_def gc,
+               killer_type kill)
+        : type(t), colour(c), duration(dur), tile(til), pos(gc), killer(kill)
     { }
 
     cloud_type type:8;
@@ -19,6 +21,7 @@ struct cloud_info
     uint8_t duration; // decay/20, clamped to 0-3
     unsigned short tile;
     coord_def pos;
+    killer_type killer;
 };
 
 #define MAP_MAGIC_MAPPED_FLAG   0x01

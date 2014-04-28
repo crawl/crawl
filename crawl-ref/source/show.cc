@@ -297,7 +297,8 @@ static void _update_cloud(int cloudno)
     else if (dur > 3)
         dur = 3;
 
-    cloud_info ci(cloud.type, get_cloud_colour(cloudno), dur, ch, gp);
+    cloud_info ci(cloud.type, get_cloud_colour(cloudno), dur, ch, gp,
+                  cloud.killer);
     env.map_knowledge(gp).set_cloud(ci);
 }
 

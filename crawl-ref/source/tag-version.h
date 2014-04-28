@@ -92,6 +92,7 @@ enum tag_minor_version
     TAG_MINOR_STEALTH_RESCALE,     // Item properties: rescaled Stealth, removed Hunger.
     TAG_MINOR_ATTACK_DESCS,        // Added attacks to monster_info.
     TAG_MINOR_BRIBE_BRANCH,        // Bribe branch tracking
+    TAG_MINOR_CLOUD_OWNER,         // Track owners of clouds in map knowledge
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
