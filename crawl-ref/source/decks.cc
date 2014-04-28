@@ -2084,21 +2084,21 @@ static void _shadow_card(int power, deck_rarity_type rarity)
 static void _potion_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    potion_type pot_effects[] =
-    {
-        POT_AGILITY, POT_AGILITY, POT_BRILLIANCE,
-        POT_BRILLIANCE, POT_MIGHT, POT_MIGHT,
-        POT_CURING, POT_CURING, POT_CONFUSION,
-        POT_SLOWING, POT_PARALYSIS
-    };
 
-    potion_type pot = RANDOM_ELEMENT(pot_effects);
+    potion_type pot = random_choose_weighted(3, POT_CURING,
+                                             1, POT_AGILITY,
+                                             1, POT_BRILLIANCE,
+                                             1, POT_MIGHT,
+                                             1, POT_CONFUSION,
+                                             1, POT_SLOWING,
+                                             1, POT_DECAY,
+                                             0);
 
     if (power_level >= 1 && coinflip())
-        pot = (coinflip() ? POT_MAGIC : POT_INVISIBILITY);
+        pot = (coinflip() ? POT_RESISTANCE : POT_HASTE);
 
     if (power_level >= 2 && coinflip())
-        pot = (coinflip() ? POT_HASTE : POT_RESISTANCE);
+        pot = (coinflip() ? POT_HEAL_WOUNDS : POT_MAGIC);
 
     if (you_worship(GOD_CHEIBRIADOS) && pot == POT_HASTE)
     {
