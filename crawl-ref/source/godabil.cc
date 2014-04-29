@@ -4219,7 +4219,15 @@ bool gozag_call_merchant()
                              .get_string().c_str()
                          );
 
-        level_id lid = candidates[random2(candidates.size())];
+        vector<int> weights;
+        for (unsigned int j = 0; j < candidates.size(); j++)
+        {
+            const int diff = max_absdepth + 1 - candidates[i].absdepth();
+            weights.push_back(diff * diff * diff);
+        }
+        const int which =
+            choose_random_weighted(weights.begin(), weights.end());
+        level_id lid = candidates[which];
         you.props[make_stringf(GOZAG_SHOP_KEY, lid.describe().c_str())]
             .get_string() = spec;
 
