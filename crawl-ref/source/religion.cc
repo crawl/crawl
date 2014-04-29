@@ -662,10 +662,6 @@ string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you collect gold");
         break;
 
-    case GOD_QAZLAL:
-        likes.push_back("you use the elements to defeat enemies");
-        break;
-
     default:
         break;
     }
@@ -707,6 +703,7 @@ string get_god_likes(god_type which_god, bool verbose)
     {
     case GOD_MAKHLEB:
     case GOD_LUGONU:
+    case GOD_QAZLAL:
         likes.push_back("you or your allies kill living beings");
         break;
 
@@ -752,6 +749,7 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_SHINING_ONE:
     case GOD_MAKHLEB:
     case GOD_LUGONU:
+    case GOD_QAZLAL:
         likes.push_back("you or your allies kill the undead");
         break;
 
@@ -774,6 +772,7 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_SHINING_ONE:
     case GOD_MAKHLEB:
     case GOD_LUGONU:
+    case GOD_QAZLAL:
         likes.push_back("you or your allies kill demons");
         break;
 
@@ -813,6 +812,7 @@ string get_god_likes(god_type which_god, bool verbose)
     {
     case GOD_MAKHLEB:
     case GOD_LUGONU:
+    case GOD_QAZLAL:
         likes.push_back("you or your allies kill holy beings");
         break;
 
