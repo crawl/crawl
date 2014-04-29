@@ -165,8 +165,9 @@ impress Gozag is by amassing a fortune.
 Qazlal
 
 Qazlal Stormbringer is a violent god of nature, who takes joy in unleashing
-the forces of nature against the unsuspecting. Followers must employ the
-elements to defeat their foes to gain the favour of this god.
+the forces of nature against the unsuspecting. Qazlal will grant protection
+from the elements and abilities to spread elemental destruction as followers
+gain piety.
 %%%%
 Zin powers
 
