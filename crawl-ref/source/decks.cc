@@ -2022,7 +2022,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
 
     if (power_level >= 2)
     {
-        cast_tukimas_dance(random2(power/4));
+        cast_tukimas_dance(random2(power/4), &you);
         return;
     }
     else if (power_level == 1)

@@ -63,6 +63,7 @@
 #include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-transloc.h"
+#include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
@@ -3838,6 +3839,11 @@ void bolt::affect_player_enchantment(bool resistible)
         break;
     }
 
+    case BEAM_TUKIMAS_DANCE:
+        cast_tukimas_dance(ench_power, &you);
+        obvious_effect = true;
+        break;
+
     default:
         // _All_ enchantments should be enumerated here!
         mpr("Software bugs nibble your toes!");
@@ -5802,6 +5808,11 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         break;
     }
 
+    case BEAM_TUKIMAS_DANCE:
+        cast_tukimas_dance(ench_power, mon);
+        obvious_effect = true;
+        break;
+
     default:
         break;
     }
@@ -6379,6 +6390,9 @@ bool bolt::nasty_to(const monster* mon) const
     if (flavour == BEAM_GHOSTLY_FLAME)
         return mon->holiness() != MH_UNDEAD;
 
+    if (flavour == BEAM_TUKIMAS_DANCE)
+        return tukima_affects(mon);
+
     // everything else is considered nasty by everyone
     return true;
 }
@@ -6665,6 +6679,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_CHAOTIC_REFLECTION:    return "chaotic reflection";
     case BEAM_CRYSTAL:               return "crystal bolt";
     case BEAM_DRAIN_MAGIC:           return "drain magic";
+    case BEAM_TUKIMAS_DANCE:         return "tukima's dance";
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
 
     case NUM_BEAMS:                  die("invalid beam type");
