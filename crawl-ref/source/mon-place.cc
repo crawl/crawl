@@ -3182,7 +3182,7 @@ static monster_type _band_member(band_type band, int which)
             return random_choose_weighted(5, MONS_WRAITH,
                                           6, MONS_FREEZING_WRAITH,
                                           3, MONS_PHANTASMAL_WARRIOR,
-                                          2, MONS_FLAMING_CORPSE,
+                                          2, MONS_PLAGUE_SHAMBLER,
                                           3, MONS_SKELETAL_WARRIOR,
                                           0);
 

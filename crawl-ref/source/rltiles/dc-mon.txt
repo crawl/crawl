@@ -998,8 +998,6 @@ wight MONS_WIGHT
 %rim 1
 skeletal_warrior MONS_SKELETAL_WARRIOR
 ancient_champion MONS_ANCIENT_CHAMPION
-%rim 0
-flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
 %sdir mon/undead
 curse_skull MONS_CURSE_SKULL

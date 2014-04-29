@@ -914,12 +914,6 @@ fire vortex
 
 Un nuage de flammes entortillées.
 %%%%
-flaming corpse
-
-Un cadavre noirci, complètement carbonisé et recouvert d'un feu inextinguible,
-on dirait les reste d'un aventurier malchanceux. Il se précipite frénétiquement
-dans le donjon, voulant partager son destin avec les autres.
-%%%%
 flayed ghost
 
 Une affreuse créature mort-vivante qui flotte dans les airs ; l'esprit angoissé

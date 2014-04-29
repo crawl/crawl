@@ -5074,7 +5074,6 @@ static bool _mons_is_fiery(int mc)
 {
     return mc == MONS_FIRE_VORTEX
            || mc == MONS_FIRE_ELEMENTAL
-           || mc == MONS_FLAMING_CORPSE
            || mc == MONS_EFREET
            || mc == MONS_AZRAEL
            || mc == MONS_LAVA_WORM

@@ -131,7 +131,7 @@ function sroom_morgue(e)
     if you.branch() == "Geh" then
         mons[5] = "fire giant zombie w:3 / fire giant skeleton w:3 / "
                  .. "fire dragon zombie w:2 / fire dragon skeleton w:2"
-        mons[6] = "flaming corpse w:5 / flayed ghost w:5"
+        mons[6] = "flayed ghost"
         bodies = "fire giant corpse / fire giant skeleton / "
                  .. "fire dragon corpse / fire dragon skeleton"
         bodies_chance = 40
