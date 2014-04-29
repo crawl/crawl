@@ -329,7 +329,7 @@ function fiery_guardians (e, intelligent, village)
             -- Unliving themed pack.
             e.mons("gargoyle / fire elemental / toenail golem w:5"
                    .. " / red ugly thing / earth elemental / fire vortex")
-            e.mons("efreet / molten gargoyle / flaming corpse")
+            e.mons("efreet / molten gargoyle")
         else
             -- Let's go all out.
             e.mons("hell hound / fire drake / toenail golem / fire elemental"

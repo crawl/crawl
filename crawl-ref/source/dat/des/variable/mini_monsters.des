@@ -2976,7 +2976,7 @@ ENDMAP
 NAME:   hangedman_incinerator
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  D:8-14
-MONS:   fire bat, lava snake, fire vortex, flaming corpse
+MONS:   fire bat, lava snake, fire vortex, hell hound
 NSUBST: ' = 4:' / *:.
 MARKER: ' = lua:fog_machine { cloud_type = "flame", pow_min = 25, \
             pow_max = 75, delay = 50, size = 1, walk_dist = 0, excl_rad = 0 }
@@ -5915,7 +5915,7 @@ MONS:   death knight ; \
         plate armour w:1
 MONS:   profane servitor, bone dragon, ghoul, death cob, skeletal warrior
 MONS:   freezing wraith / phantasmal warrior / \
-        flaming corpse / flayed ghost / skeletal warrior
+        jiangshi / flayed ghost / skeletal warrior
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  - = open_door
 MAP

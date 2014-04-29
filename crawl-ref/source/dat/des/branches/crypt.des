@@ -1051,7 +1051,7 @@ SUBST:   HIJKL = t, M = ., F = 1:30 0
 NSUBST:  2 = 3:2 / *:3
 FTILE:   _567$*|+ = floor_tomb
 TILE:    t = dngn_tree_dead
-MONS:    flaming corpse / flayed ghost / phantasmal warrior
+MONS:    flayed ghost / phantasmal warrior
 MONS:    vampire mage / vampire knight / death knight
 MONS:    jiangshi / eidolon / shadow wraith / freezing wraith
 MONS:    ancient champion / w:20 ghoul
@@ -1425,7 +1425,7 @@ KMONS:  S = shadow / wraith / freezing wraith / shadow wraith / wight
 : end
 ####### SW monsters (crematory). Either fiery undead or hellish.
 : if crawl.coinflip() then
-KMONS:  t = w:20 flaming corpse / fire giant skeleton / fire dragon skeleton
+KMONS:  t = fire giant skeleton / fire dragon skeleton
 KMONS:  X = w:1 curse skull / w:19 revenant
 : else
 KMONS:  t = w:20 hell knight / smoke demon / red devil
@@ -1794,7 +1794,7 @@ KMONS:   5 = necromancer
 KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
              hell knight w:5
 KMONS:   7 = death knight
-KMONS:   8 = death cob / skeletal warrior / flaming corpse
+KMONS:   8 = death cob / skeletal warrior
 KMONS:   9 = ancient champion
 KMONS:   0 = skeletal warrior
 

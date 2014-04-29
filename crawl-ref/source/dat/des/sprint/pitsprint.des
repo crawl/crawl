@@ -40,7 +40,7 @@ function base_monster_setup(e)
            raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
            merfolk band w:5 / mermaid w:3 / sea snake / snapping turtle /\
            tarantella / jumping spider / demonic crawler / plague shambler /\
-           flaming corpse / small abomination / guardian mummy / spriggan /\
+           small abomination / guardian mummy / spriggan /\
            orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
            red devil / centaur band")
   e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
@@ -2075,7 +2075,7 @@ KMONS:  C = Frederick, Norris, Louise, Rupert
 KMONS:  d = zombie w:15 / skeleton w:15 / simulacrum w:15 /\
         vampire / vampire mage / vampire knight / ghoul w:5 / plague shambler /\
         skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
-        freezing wraith w:3 / flaming corpse / flayed ghost
+        freezing wraith w:3 / flayed ghost
 KMONS:  D = lich
 KMONS:  e = hydra w:20 / swamp dragon / mottled dragon / steam dragon /\
         catoblepas / dire elephant / fire drake / lindwurm / komodo dragon /\
