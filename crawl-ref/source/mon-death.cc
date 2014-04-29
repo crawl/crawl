@@ -421,8 +421,7 @@ static void _give_experience(int player_exp, int monster_exp,
 }
 
 // Returns the item slot of a generated corpse, or -1 if no corpse.
-int place_monster_corpse(const monster* mons, bool player_or_pet, bool silent,
-                         bool force)
+int place_monster_corpse(const monster* mons, bool silent, bool force)
 {
     // The game can attempt to place a corpse for an out-of-bounds monster
     // if a shifter turns into a giant spore and explodes.  In this
@@ -2575,8 +2574,7 @@ int monster_die(monster* mons, killer_type killer,
             corpse2 = mounted_kill(mons, MONS_FIREFLY, killer, killer_index);
             mons->type = MONS_SPRIGGAN;
         }
-        corpse = place_monster_corpse(mons, YOU_KILL(killer) || pet_kill,
-                                      silent);
+        corpse = place_monster_corpse(mons, silent);
         if (corpse == -1)
             corpse = corpse2;
     }
