@@ -1158,8 +1158,8 @@ ENDMAP
 #    Total weight: 40 = 10+5+2+2+3+3+10+5
 #    Trees, sometimes other plants.
 
-# 16 gods
-NAME:    kilobyte_greek_temple_16
+# 18 gods
+NAME:    kilobyte_greek_temple_18
 PLACE:   Temple
 WEIGHT:  10
 TAGS:    no_rotate
@@ -1177,11 +1177,11 @@ tttt.......................1tttttt.......t.........ttttttttt
 tt.........2........t..........''''''...............2222tttt
 tt.....{..21...t...............''ccccccccccccccccc...22.tttt
 ttt...........ttt.......t......''G'c"""""""""""""c..t..ttttt
-tttt......2....................''''c""B"B"B"B"B""ctt....tttt
+tttt......2....................''''c"B"B"B"B"B"B"ctt....tttt
 tttttt.....................t...''G'c"""""""""""""cttt...tttt
 ttttttttt..1.....2...t.........''''+"B"B"B"B"B"B"ctt..t...tt
 tttttttt.......................''G'c"""""""""""""c...tt..ttt
-ttttttttt...................1..''''c""B"B"B"B"B""c..ttt.tttt
+ttttttttt...................1..''''c"B"B"B"B"B"B"c..ttt.tttt
 ttttttttttttttt....2....t......''G'c"""""""""""""c...t..tttt
 ttttttttttttttttt..............''ccccccccccccccccc......2ttt
 tttttttttttttttttt..........t.........t......ttt......2ttttt
@@ -2783,17 +2783,16 @@ ENDMAP
 
 ##########################################################################
 # Crystal temples
-#   Total weight: 8 = 1+1+1+1+1+1+1+1
+#   Total weight: 9 = 1+1+1+1+1+1+1+1+1
 #   These are intentionally rare, just like crystal is.
 #   Crystal walls, so green colour.
 
-# 16 gods
-NAME:   dpeg_three_leaves_temple_16
+# 18 gods
+NAME:   dpeg_three_leaves_temple_18
 PLACE:  Temple
 TAGS:   no_rotate
 ORIENT: encompass
 WEIGHT: 1
-NSUBST: ' = 1:B / 1:A / 1:T
 MAP
        bbb               bbb
      bbb.bb             bb.bbb
@@ -2803,10 +2802,10 @@ MAP
  bb..B........bbb bbb........B..bb
  bb.........B...bbb...B.........bb
 bb....B..........b..........B....bb
-bb........B....'...'....B........bb
+bb........B....B...B....B........bb
  bbbbbbbb........{........bbbbbbbb
         bbbbbbbb...bbbbbbbb
-              bb.'.bb
+              bb.B.bb
              bb.....bb
             bb..B.B..bb
            bb.........bb
@@ -2957,8 +2956,8 @@ bbbbb.B....bb...bb....B.bbbbb
             bbbbb
 ENDMAP
 
-# 16 gods
-NAME:    eino_wide_crystal_templ_16
+# 15 gods
+NAME:    eino_wide_crystal_templ_15
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -2966,10 +2965,10 @@ WEIGHT:  1
 MAP
             bbbbb
             b...b
-            b.B.b
+            b.{.b
         bbbbb...bbbbb
         b...bb.bb...b
-        b.B...{...B.b
+        b.B.......B.b
     bbbbb...b...b...bbbbb
     b...bb.bb.B.bbbbb...b
 bbbbb.B.b...b...b.....B.bbbbb
@@ -2985,13 +2984,44 @@ bbbbb.B....bb...bb....B.bbbbb
             bbbbb
 ENDMAP
 
-# 16 gods
-NAME:    minmay_crystal_snake_temple_16
+# 18 gods
+# Very loosely based on gammafunk's edit to the above vault.
+NAME:    grunt_wide_crystal_templ_18
+PLACE:   Temple
+TAGS:    no_rotate
+ORIENT:  encompass
+WEIGHT:  1
+MAP
+                bbbbb
+                b...b
+            bbbbb.B.bbbbb
+            b... ... ...b
+        bbbbb.B.bb bb.B.bbbbb
+        b... ... ... ... ...b
+    bbbbb.B.bb bb.T.bb bb.B.bbbbb
+    b... ... ... ... ... ... ...b
+bbbbb.B.bb bb.T.bb bb.T.bb bb.B.bbbbb
+b... ... ... ... ... ... ... ... ...b
+b.B.bb bb.B.bb bb.{.bb bb.B.bb bb.B.b
+b... ... ... ... ... ... ... ... ...b
+bbbbb.B.bb bb.T.bb bb T.bb bb.B.bbbbb
+    b... ... ... ... ... ... ...b
+    bbbbb.B.bb bb.T.bb bb.B.bbbbb
+        b... ... ... ... ...b
+        bbbbb.B.bb bb.B.bbbbb
+            b... ... ...b
+            bbbbb.B.bbbbb
+                b...b
+                bbbbb
+ENDMAP
+
+# 18 gods
+NAME:    minmay_crystal_snake_temple_18
 TAGS:    no_rotate
 PLACE:   Temple
 WEIGHT:  1
 ORIENT:  encompass
-NSUBST:  T = 1:{ / *:T
+NSUBST:  T = 1:{ / 1:B / *:T
 MAP
         bbb   bbb   bbb
        bb.bb bb.bb bb.bb
@@ -3005,13 +3035,13 @@ bb...bbb...bb     bb...bb
 b..B.....B..b     b..B..b
 bb...bbb...bb     bb...bb
  bb.bb bb.bb       bb.bb        bbb
-  bbb   bbb   bbb   b.b        bb.bb
-             bb.bb bb.bb      bb...bb
-            bb...bbb...bb     b..B..b
-            b..B.....B..b     bb...bb
-            bb...bbb...bb      bb.bb
-             bb.bb bb.bb        b.b
-        bbb   b.b   bbb   bbb   b.b
+  b.b   bbb   bbb   b.b        bb.bb
+ bb.bb       bb.bb bb.bb      bb...bb
+bb...bb     bb...bbb...bb     b..B..b
+b..B..b     b..B.....B..b     bb...bb
+bb...bb     bb...bbb...bb      bb.bb
+ bb.bb       bb.bb bb.bb        b.b
+  bbb   bbb   b.b   bbb   bbb   b.b
        bb.bb bb.bb       bb.bb bb.bb
       bb...bbb...bb     bb...bbb...bb
       b..T.....B..b     b..B.....B..b
@@ -3026,7 +3056,7 @@ bb...bbb...bb     bb...bb
         b.b   bbb   b.b   bbb
        bb.bb bb.bb bb.bb
       bb...bbb...bbb...bb
-      b..B.....B.....B..b
+      b..T.....B.....B..b
       bb...bbb...bbb...bb
        bb.bb bb.bb bb.bb
         bbb   bbb   bbb
