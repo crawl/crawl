@@ -3298,6 +3298,8 @@ string item_def::to_spec() const
     string ego = replace_all(ego_type_string(*this, false), " ", "_");;
     if (base_type == OBJ_WEAPONS && get_weapon_brand(*this) == SPWPN_VORPAL)
         ego = "vorpal";
+    if (base_type == OBJ_MISSILES && get_ammo_brand(*this) == SPMSL_SLEEP)
+        ego = "sleep"; // ugh special cases
 
     ASSERT(!is_artefact(*this));
 
