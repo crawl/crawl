@@ -813,6 +813,7 @@ bool mons_allows_beogh_now(const monster* mon)
 {
     // Do the expensive LOS check last.
     return mon && mons_allows_beogh(mon)
+               && !mon->is_summoned() && !mon->friendly()
                && !silenced(mon->pos()) && !mon->has_ench(ENCH_MUTE)
                && !mons_is_confused(mon) && mons_is_seeking(mon)
                && mon->foe == MHITYOU && !mons_is_immotile(mon)
