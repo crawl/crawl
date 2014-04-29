@@ -1264,19 +1264,19 @@ NAME:    elves_outpost_lemuel
 DEPTH:   D:11-, Orc:3-, Elf
 MONS:    deep elf fighter
 MONS:    w:20 deep elf mage / deep elf conjurer / deep elf summoner
-SHUFFLE: ?:/bb, :'/ww
-SUBST:   ?:' = .
+SHUFFLE: ?_/bb, _'/ww
+SUBST:   ?_' = .
 MAP
 .?.....???..
-?.'''::'''?.
-?''::''''''.
-?''bbbbbb:'.
-.:'b1111b:'.
-.:'.1221>':.
-.':b1111b':.
-.':bbbbbb''?
-.''''''::''?
-.?'''::'''.?
+?.'''__'''?.
+?''__''''''.
+?''bbbbbb_'.
+._'b1111b_'.
+._'.1221>'_.
+.'_b1111b'_.
+.'_bbbbbb''?
+.''''''__''?
+.?'''__'''.?
 ..???.....?.
 ENDMAP
 
