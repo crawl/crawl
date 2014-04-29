@@ -212,7 +212,6 @@ mana_viper MONS_MANA_VIPER
 
 ## Bears ('U')
 black_bear MONS_BLACK_BEAR
-grizzly_bear MONS_GRIZZLY_BEAR
 polar_bear MONS_POLAR_BEAR
 
 ## Yaks, sheep and elephants ('Y')

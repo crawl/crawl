@@ -32,7 +32,6 @@ mon_glyph += ghost : lightgrey p
 mon_glyph += giant firefly : lightblue k
 mon_glyph += giant slug : green j
 mon_glyph += glowing shapeshifter : red @
-mon_glyph += grizzly bear : lightgrey U
 mon_glyph += hell knight : red @
 mon_glyph += hell hound : lightcyan h
 mon_glyph += hellion : fire

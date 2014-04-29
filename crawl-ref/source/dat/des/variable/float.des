@@ -1302,7 +1302,7 @@ ENDMAP
 NAME:   lemuel_bear_cage
 ORIENT: float
 DEPTH:  D:7-
-MONS:   black bear / grizzly bear / polar bear
+MONS:   black bear / polar bear
 MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
 MONS:   hound / wolf w:5 / hog

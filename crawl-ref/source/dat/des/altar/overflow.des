@@ -1368,7 +1368,7 @@ DEPTH:  D:6-
 : if you.absdepth() < 10 then
 MONS:   black bear
 : else
-MONS:   grizzly bear
+MONS:   polar bear
 : end
 MONS:   bush
 NSUBST: ' = 2:2 / 2=2. / *=.

@@ -253,7 +253,6 @@ static const pop_entry pop_lair[] =
   {  1,  9,  273, SEMI, MONS_SHEEP },
   {  1,  8,  514, FLAT, MONS_YAK },
   {  1,  9,  420, SEMI, MONS_BLINK_FROG },
-  {  2,  8,   52, SEMI, MONS_GRIZZLY_BEAR },
   {  2,  8,   25, PEAK, MONS_STEAM_DRAGON },
   {  4,  6,    3, SEMI, MONS_GIANT_SPORE },
   {  1, 11,  457, SEMI, MONS_BLACK_MAMBA },
@@ -760,7 +759,6 @@ static const pop_entry pop_zot[] =
 static const pop_entry pop_forest[] =
 { // Forest
   {  1,  5,  120, DOWN, MONS_WOLF },
-  {  1,  6,   75, DOWN, MONS_GRIZZLY_BEAR },
   {  1,  5,   35, DOWN, MONS_BLACK_BEAR },
   {  1,  5,   50, FLAT, MONS_YAK },
   {  1,  7,  145, SEMI, MONS_DIRE_ELEPHANT },

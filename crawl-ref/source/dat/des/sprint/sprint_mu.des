@@ -509,7 +509,7 @@ KMONS: j = patrolling spriggan ; blowgun . q:5 needle ego:sleep | \
 KMONS: k = patrolling spriggan druid
 KMONS: q = electric eel
 KFEAT: q = deep_water
-KMONS: r = hydra simulacrum / fire dragon simulacrum / grizzly bear simulacrum /\
+KMONS: r = hydra simulacrum / fire dragon simulacrum / polar bear simulacrum /\
  wolf simulacrum / black mamba simulacrum
 KITEM: r = any, any, any, any, any, superb_item / w:1 wand of fire /\
  w:1 wand of disintegration

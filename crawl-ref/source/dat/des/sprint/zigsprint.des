@@ -227,7 +227,7 @@ function choose_mset_2(e)
     e.kmons("1 = lesser demon / place:Abyss w:6")
 -- Forest
   elseif rnd < 64 then
-    e.kmons("1 = spriggan / wolf / black bear / grizzly bear / spriggan rider w:5 /\
+    e.kmons("1 = spriggan / wolf / black bear / spriggan rider w:5 /\
                spriggan druid w:2")
 -- Shoals
   elseif rnd < 74 then

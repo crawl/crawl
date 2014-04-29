@@ -146,7 +146,6 @@ mana_viper CORPSE_MANA_VIPER
 
 ## Bears ('U')
 black_bear CORPSE_BLACK_BEAR
-grizzly_bear CORPSE_GRIZZLY_BEAR
 polar_bear CORPSE_POLAR_BEAR
 
 ## Yaks, sheep and elephants ('Y')

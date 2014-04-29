@@ -806,7 +806,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
         if (pow <= 100)
         {
             // bears
-            mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_GRIZZLY_BEAR;
+            mon = (coinflip()) ? MONS_BLACK_BEAR : MONS_POLAR_BEAR;
         }
         else if (pow <= 140)
         {
