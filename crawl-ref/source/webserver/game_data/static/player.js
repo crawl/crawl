@@ -14,7 +14,7 @@ function ($, comm, enums, map_knowledge, messages, options) {
     };
 
     var defense_boosters = {
-        "ac": "icy armour|stone skin",
+        "ac": "icy armour|stone skin|protected from physical damage",
         "ev": "phasing|agile",
         "sh": "shielded",
     }
