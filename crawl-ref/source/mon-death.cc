@@ -469,7 +469,7 @@ int place_monster_corpse(const monster* mons, bool player_or_pet, bool silent,
         return -1;
     }
 
-    if (player_or_pet && you_worship(GOD_GOZAG) && !player_under_penance())
+    if (you_worship(GOD_GOZAG) && !player_under_penance())
     {
         const monsterentry* me = get_monster_data(corpse_class);
         const int base_gold = max(3, (me->weight - 200) / 27);
