@@ -60,7 +60,7 @@ attack::attack(actor *attk, actor *defn)
     attacker_body_armour_penalty(0), attacker_shield_penalty(0),
     attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
     defender_shield(NULL), miscast_level(-1), miscast_type(SPTYP_NONE),
-    miscast_target(NULL), fake_chaos_attack(false),
+    miscast_target(NULL), fake_chaos_attack(false), simu(false),
     aux_source(""), kill_type(KILLED_BY_MONSTER)
 {
     // No effective code should execute, we'll call init_attack again from
@@ -87,7 +87,8 @@ bool attack::handle_phase_damaged()
     if (defender->can_bleed()
         && !defender->is_summoned()
         && !defender->submerged()
-        && in_bounds(defender->pos()))
+        && in_bounds(defender->pos())
+        && !simu)
     {
         int blood = modify_blood_amount(damage_done, attacker->damage_type());
         if (blood > defender->stat_hp())
@@ -516,8 +517,8 @@ bool attack::distortion_affects_defender()
         return false;
     }
 
-//    if (simu)
-//        return false;
+    if (simu)
+        return false;
 
     if (one_chance_in(3))
     {

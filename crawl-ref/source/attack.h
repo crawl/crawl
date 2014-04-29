@@ -96,6 +96,8 @@ public:
 
     bool      fake_chaos_attack;
 
+    bool simu;
+
 // Public Methods
 public:
     attack(actor *attk, actor *defn);

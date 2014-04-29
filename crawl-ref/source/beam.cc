@@ -3928,7 +3928,13 @@ void bolt::affect_player()
     if (flavour == BEAM_MISSILE && item)
     {
         ranged_attack attk(agent(), &you, item, use_target_as_pos);
+        if (hit == DEBUG_COOKIE)
+            attk.simu = true;
         attk.attack();
+        // fsim purposes - throw_it detects if an attack connected through
+        // hit_verb
+        if (attk.ev_margin >= 0 && hit_verb.empty())
+            hit_verb = attk.attack_verb;
         extra_range_used += attk.range_used;
         return;
     }
@@ -4891,7 +4897,13 @@ void bolt::affect_monster(monster* mon)
     if (flavour == BEAM_MISSILE && item)
     {
         ranged_attack attk(agent(), mon, item, use_target_as_pos);
+        if (hit == DEBUG_COOKIE)
+            attk.simu = true;
         attk.attack();
+        // fsim purposes - throw_it detects if an attack connected through
+        // hit_verb
+        if (attk.ev_margin >= 0 && hit_verb.empty())
+            hit_verb = attk.attack_verb;
         extra_range_used += attk.range_used;
         return;
     }

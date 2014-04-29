@@ -105,7 +105,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
     attack_number(attack_num), effective_attack_number(effective_attack_num),
     cleaving(is_cleaving), jumping_attack(is_jump_attack),
-    jump_blocked(is_jump_blocked), simu(false)
+    jump_blocked(is_jump_blocked)
 {
     attack_occurred = false;
     init_attack(SK_UNARMED_COMBAT, attack_number);
