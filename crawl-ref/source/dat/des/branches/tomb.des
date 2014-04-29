@@ -570,6 +570,7 @@ SUBST:   ' = 3 .:200
 MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
          ancient champion / nothing w:250
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
+MONS:    greater mummy
 MAP
 ''                                   ''
 ''''''''''''''           ''''''''''''''
