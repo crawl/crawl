@@ -615,7 +615,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
                     if (cell.heat_aura)
                         this.draw_dngn(dngn.HEAT_AURA + cell.heat_aura - 1, x, y);
                     if (cell.gold_aura)
-                        this.draw_dngn(dngn.HEAT_AURA + cell.gold_aura - 1, x, y);
+                        this.draw_dngn(dngn.GOLD_AURA + cell.gold_aura - 1, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
