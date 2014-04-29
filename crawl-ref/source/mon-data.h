@@ -333,7 +333,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_FIRE_BAT, 'b', RED, "fire bat",
+    MONS_FIRE_BAT, 'b', LIGHTRED, "fire bat",
     M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY,
     MR_RES_HELLFIRE | MR_VUL_COLD | MR_VUL_WATER,
     0, 8, MONS_BAT, MONS_FIRE_BAT, MH_NATURAL, -1,
@@ -677,7 +677,7 @@ static monsterentry mondata[] =
 // elves ('e')
 //mv: have to exist because it's (and should be) a valid polymorph target.
 {
-    MONS_ELF, 'e', RED, "elf",
+    MONS_ELF, 'e', LIGHTRED, "elf",
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -3,
@@ -1291,7 +1291,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_FIRE_DRAKE, 'k', RED, "fire drake",
+    MONS_FIRE_DRAKE, 'k', LIGHTRED, "fire drake",
     M_WARM_BLOOD | M_FAKE_SPELLS,
     MR_RES_FIRE,
     1000, 20, MONS_DRAKE, MONS_FIRE_DRAKE, MH_NATURAL, -3,
@@ -1804,7 +1804,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_GLOWING_SHAPESHIFTER, 'p', RED, "glowing shapeshifter",
+    MONS_GLOWING_SHAPESHIFTER, 'p', LIGHTRED, "glowing shapeshifter",
     M_NO_SKELETON | M_NO_ZOMBIE | M_GLOWS_RADIATION,
     MR_NO_FLAGS,
     600, 10, MONS_SHAPESHIFTER, MONS_GLOWING_SHAPESHIFTER, MH_NATURAL, -6,
@@ -4775,7 +4775,7 @@ static monsterentry mondata[] =
 
 // lava monsters
 {
-    MONS_LAVA_WORM, 'w', RED, "lava worm",
+    MONS_LAVA_WORM, 'w', LIGHTRED, "lava worm",
     M_NO_SKELETON | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 6, MONS_LAVA_WORM, MONS_LAVA_WORM, MH_NATURAL, -3,
@@ -4787,7 +4787,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_LAVA_SNAKE, 'S', RED, "lava snake",
+    MONS_LAVA_SNAKE, 'S', LIGHTRED, "lava snake",
     M_WARM_BLOOD | M_SUBMERGES,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 17, MONS_SNAKE, MONS_LAVA_SNAKE, MH_NATURAL, -3,
