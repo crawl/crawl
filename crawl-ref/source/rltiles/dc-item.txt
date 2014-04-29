@@ -424,9 +424,9 @@ buckler3
 
 buckler_spriggan ARM_BUCKLER_SPRIGGAN
 
-shield1_elven ARM_SHIELD
-shield2_kite
-shield3_round
+shield1 ARM_SHIELD
+shield2
+shield3
 
 large_shield1 ARM_LARGE_SHIELD
 large_shield2
