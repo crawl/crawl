@@ -4223,7 +4223,7 @@ bool gozag_call_merchant()
         for (unsigned int j = 0; j < candidates.size(); j++)
         {
             const int diff = max_absdepth + 1 - candidates[i].absdepth();
-            weights.push_back(diff * diff * diff);
+            weights.push_back(diff * diff * diff * diff * diff);
         }
         const int which =
             choose_random_weighted(weights.begin(), weights.end());
