@@ -572,6 +572,16 @@ IDEF(can_cut_meat)
     return 1;
 }
 
+IDEF(is_preferred_food)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    lua_pushboolean(ls, is_preferred_food(*item));
+
+    return 1;
+}
+
 IDEF(is_bad_food)
 {
     if (!item || !item->defined())
@@ -1142,6 +1152,7 @@ static ItemAccessor item_attrs[] =
     { "dropped",           l_item_dropped },
     { "is_melded",         l_item_is_melded },
     { "can_cut_meat",      l_item_can_cut_meat },
+    { "is_preferred_food", l_item_is_preferred_food },
     { "is_bad_food",       l_item_is_bad_food },
     { "is_useless",        l_item_is_useless },
     { "pluses",            l_item_pluses },

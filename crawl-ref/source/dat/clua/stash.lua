@@ -60,6 +60,10 @@ function ch_stash_search_annotate_item(it)
       annot = annot .. "{" .. it.ego_type_terse .. "} "
   end
 
+  if it.class(true) == "potion" and it.is_preferred_food then
+    annot = annot .. "{food} "
+  end
+
   if it.class(true) == "armour" then
       annot = annot .. "{" .. it.subtype() .. " "
   elseif it.class(true) == "weapon" then
