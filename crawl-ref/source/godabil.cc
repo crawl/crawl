@@ -4449,6 +4449,9 @@ bool qazlal_upheaval(coord_def target, bool quiet)
     beam.hit         = 10 + you.skill(SK_INVOCATIONS);
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
+#ifdef USE_TILE
+    beam.tile_beam = -1;
+#endif
     beam.draw_delay  = 0;
 
     if (target.origin())
