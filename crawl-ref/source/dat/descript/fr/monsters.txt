@@ -1077,11 +1077,6 @@ griffon
 Une grande créature avec le postérieur d'un lion et les ailes, la tête et les
 serres d'un aigle.
 %%%%
-grizzly bear
-
-Un grand ours à la fourrure grise. Comme tout les ursidés, l'ours grizzli
-deviendra enragé s'il est grièvement blessé ou apeuré.
-%%%%
 guardian mummy
 
 Un ancien guerrier, déshonoré et maudit, forcé à errer dans la non-vie pour

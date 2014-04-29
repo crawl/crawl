@@ -351,7 +351,7 @@ static void _hell_beast_wave(int power)
     wave_name("HELL BEAST WAVE");
     monster_type bst[] = {MONS_HELL_BEAST, END};
     _zotdef_fill_from_list(bst, 0, power); // full
-    _zotdef_danger_msg("A hideous howling noise can be heard in the distance!");
+    _zotdef_danger_msg("A hideous barking noise can be heard in the distance!");
 }
 
 static void _frog_wave(int power)
@@ -367,9 +367,8 @@ static void _frog_wave(int power)
 static void _bear_wave(int power)
 {
     wave_name("BEAR WAVE");
-    monster_type bears[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR,
-                 MONS_BLACK_BEAR, END};
-    monster_type boss[] = {MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, END};
+    monster_type bears[] = {MONS_POLAR_BEAR, MONS_BLACK_BEAR, END};
+    monster_type boss[] = {MONS_POLAR_BEAR, END};
     _zotdef_fill_from_list(bears, 0, power); // full
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("Gravelly voices can be heard calling for porridge!");

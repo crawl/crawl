@@ -2526,7 +2526,7 @@ MONS:    giant cockroach / worker ant / butterfly / killer bee /\
          redback / giant mite
 MONS:    swamp worm / lindwurm / worm
 MONS:    swamp drake / hydra / wyvern / fire drake
-MONS:    polar bear / grizzly bear / black bear
+MONS:    polar bear / black bear
 MONS:    black mamba / water moccasin / anaconda / salamander
 : end
 MAP
@@ -2830,7 +2830,7 @@ SUBST:  " : +, ' : . , - : ccc.
 : else
 SUBST:  "'- : c
 : end
-MONS:   giant frog / spiny frog / yak / death yak w:1 / elephant / grizzly bear
+MONS:   giant frog / spiny frog / yak / death yak w:1 / elephant
 MAP
           ccccccccc
        cccctccccctcccc

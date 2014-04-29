@@ -323,7 +323,7 @@ function arena_sprint_get_monster_set(round, boss)
                  mottled dragon / komodo dragon",
                 "necrophage / plague shambler / w:2 ghoul / bog body",
                 "shapeshifter hd:7",
-                "polar bear / grizzly bear",
+                "polar bear",
                 -- Gimmicks
                 "brain worm", "giant spore hd:3", "deep elf priest always_corpse",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",

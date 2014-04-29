@@ -1341,11 +1341,6 @@ griffon
 A large creature with the hindquarters of a lion and the wings, head and talons
 of a great eagle.
 %%%%
-grizzly bear
-
-A large grey-furred bear. Like all ursines, the grizzly bear will become
-enraged if badly hurt or frightened.
-%%%%
 guardian golem
 
 A large construct, designed to protect. It can take the blows dealt to others
