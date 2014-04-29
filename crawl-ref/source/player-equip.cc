@@ -228,6 +228,12 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     artefact_known_props_t known;
     artefact_wpn_properties(item, proprt, known);
 
+    if (proprt[ARTP_AC])
+        you.redraw_armour_class = true;
+
+    if (proprt[ARTP_EVASION])
+        you.redraw_evasion = true;
+
     if (proprt[ARTP_EYESIGHT])
         autotoggle_autopickup(false);
 
@@ -283,6 +289,12 @@ static void _unequip_artefact_effect(item_def &item,
     artefact_known_props_t known;
     artefact_wpn_properties(item, proprt, known);
     const bool msg = !show_msgs || *show_msgs;
+
+    if (proprt[ARTP_AC])
+        you.redraw_armour_class = true;
+
+    if (proprt[ARTP_EVASION])
+        you.redraw_evasion = true;
 
     if (proprt[ARTP_HP])
         _calc_hp_artefact();
