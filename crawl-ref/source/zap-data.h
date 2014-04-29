@@ -202,6 +202,22 @@ static const zap_info zap_data[] =
 },
 
 {
+    ZAP_TUKIMAS_DANCE,
+    "",
+    200,
+    NULL,
+    NULL,
+    BLACK,
+    true,
+    BEAM_TUKIMAS_DANCE,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
+
+{
     ZAP_INVISIBILITY,
     "",
     100,

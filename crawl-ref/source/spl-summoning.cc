@@ -700,63 +700,159 @@ bool summon_holy_warrior(int pow, bool punish)
     return true;
 }
 
-// This function seems to have very little regard for encapsulation.
-spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
-                              bool fail)
+/**
+ * Essentially a macro to allow for a generic fail pattern to avoid leaking
+ * information about invisible enemies. (Not implmented as a macro because I
+ * find they create unreadable code.)
+ * @return SPRET_SUCCESS
+ **/
+bool _fail_tukimas()
 {
-    const int dur = min(2 + (random2(pow) / 5), 6);
-    item_def* wpn = you.weapon();
+    mprf("You can't see a target there!");
+    return false; // Waste the turn - no anti-invis tech
+}
+
+/**
+ * Gets an item description for use in Tukima's Dance messages.
+ **/
+string _get_item_desc(item_def* wpn, bool target_is_player)
+{
+    return wpn->name(target_is_player ? DESC_YOUR : DESC_THE);
+}
+
+/**
+ * Checks if Tukima's Dance can actually affect the target (and anger them)
+ *
+ * @param mon     The targeted monster
+ * @return        Whether the target can be affected by Tukima's Dance
+ **/
+bool tukima_affects(const monster *mon)
+{
+    ASSERT(mon);
+
+    item_def* wpn = mon->weapon();
+    return wpn
+           && is_weapon(*wpn)
+           && !is_range_weapon(*wpn)
+           && !is_special_unrandom_artefact(*wpn)
+           && !mons_class_is_animated_weapon(mon->type);
+}
+
+/**
+ * Checks if Tukima's Dance is being cast on a valid target.
+ *
+ * TODO: reduce redundancy with tukima_affects()
+ *
+ * @param target     The spell's target.
+ * @return           Whether the target is valid.
+ **/
+bool _check_tukima_validity(const actor *target)
+{
+    bool target_is_player = target == &you;
+    item_def* wpn = target->weapon();
+    bool can_see_target = target_is_player || target->visible_to(&you);
 
     // See if the wielded item is appropriate.
-    if (!wpn
-        || !is_weapon(*wpn)
-        || is_range_weapon(*wpn)
-        || is_special_unrandom_artefact(*wpn))
+    if (!wpn)
     {
-        if (wpn)
-        {
-            mprf("%s vibrate%s crazily for a second.",
-                 wpn->name(DESC_YOUR).c_str(),
-                 wpn->quantity > 1 ? "" : "s");
-        }
-        else
-            mprf("Your %s twitch.", you.hand_name(true).c_str());
+        if (!can_see_target)
+            return _fail_tukimas();
 
-        return SPRET_ABORT;
+        if (target_is_player)
+            mprf("Your %s twitch.", you.hand_name(true).c_str());
+        else
+        {
+            mprf("%s %s twitch.",
+                 apostrophise(target->name(DESC_THE)).c_str(),
+                 target->hand_name(true).c_str());
+        }
+        return false;
     }
 
-    fail_check();
+    if (!is_weapon(*wpn)
+        || is_range_weapon(*wpn)
+        || is_special_unrandom_artefact(*wpn)
+        || mons_class_is_animated_weapon(target->type))
+    {
+        if (!can_see_target)
+            return _fail_tukimas();
+
+        if (mons_class_is_animated_weapon(target->type))
+        {
+            simple_monster_message((monster*)target,
+                                   " is already dancing.");
+        }
+        else
+        {
+            mprf("%s vibrate%s crazily for a second.",
+                 _get_item_desc(wpn, target_is_player).c_str(),
+                 wpn->quantity > 1 ? "" : "s");
+        }
+        return false;
+    }
+
+    return true;
+}
+
+
+/**
+ * Actually animates the weapon of the target creature (no checks).
+ *
+ * @param pow               Spellpower.
+ * @param target            The spell's target (monster or player)
+ * @param force_hostile     Whether the weapon should always be anti-player.
+ **/
+void _animate_weapon(int pow, actor* target, bool force_hostile)
+{
+    bool target_is_player = target == &you;
+    item_def* wpn = target->weapon();
     item_def cp = *wpn;
-    // Clear temp branding so we don't brand permanently.
-    if (you.duration[DUR_WEAPON_BRAND])
-        set_item_ego_type(cp, OBJ_WEAPONS, SPWPN_NORMAL);
+    if (target_is_player)
+    {
+        // Clear temp branding so we don't brand permanently.
+        if (you.duration[DUR_WEAPON_BRAND])
+        {
+            set_item_ego_type(cp, OBJ_WEAPONS, SPWPN_NORMAL);
 
-    // Mark weapon as "thrown", so we'll autopickup it later.
-    cp.flags |= ISFLAG_THROWN;
-
+        // Mark weapon as "thrown", so we'll autopickup it later.
+        }
+        cp.flags |= ISFLAG_THROWN;
+    }
     // Cursed weapons become hostile.
-    const bool friendly = (!force_hostile && !wpn->cursed());
+    const bool friendly = !force_hostile && !wpn->cursed();
+    const int dur = min(2 + (random2(pow) / 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
                  friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                 force_hostile ? 0 : &you,
+                 force_hostile ? 0 : target,
                  dur, SPELL_TUKIMAS_DANCE,
-                 you.pos(),
+                 target->pos(),
                  MHITYOU,
-                 MG_AUTOFOE, god);
+                 MG_AUTOFOE);
     mg.props[TUKIMA_WEAPON] = cp;
     mg.props[TUKIMA_POWER] = pow;
 
-    if (force_hostile)
-        mg.non_actor_summoner = god_name(god, false);
-
     monster *mons = create_monster(mg);
 
-    // We are successful.  Unwield the weapon, removing any wield
-    // effects.
-    unwield_item();
+    // We are successful.  Unwield the weapon, removing any wield effects.
+    mprf("%s dances into the air!",
+         _get_item_desc(wpn, target_is_player).c_str());
+    if (target_is_player)
+        unwield_item();
+    else
+    {
+        monster* montarget = (monster*)target;
+        const int primary_weap = montarget->inv[MSLOT_WEAPON];
+        const mon_inv_type wp_slot = (primary_weap != NON_ITEM
+                                      && &mitm[primary_weap] == wpn) ?
+                                         MSLOT_WEAPON : MSLOT_ALT_WEAPON;
+        ASSERT(montarget->inv[wp_slot] != NON_ITEM);
+        ASSERT(&mitm[montarget->inv[wp_slot]] == wpn);
 
-    mprf("%s dances into the air!", wpn->name(DESC_YOUR).c_str());
+        montarget->unequip(*(montarget->mslot_item(wp_slot)),
+                           wp_slot, 0, true);
+        montarget->inv[wp_slot] = NON_ITEM;
+    }
 
     // Find out what our god thinks before killing the item.
     conduct_type why = good_god_hates_item_handling(*wpn);
@@ -770,8 +866,23 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
         simple_god_message(" booms: How dare you animate that foul thing!");
         did_god_conduct(why, 10, true, mons);
     }
+}
 
-    return SPRET_SUCCESS;
+/**
+ * Casts Tukima's Dance, animating the weapon of the target creature (if valid)
+ *
+ * @param pow               Spellpower.
+ * @param where             The target grid.
+ * @param force_hostile     Whether the weapon should always be anti-player.
+ **/
+void cast_tukimas_dance(int pow, actor* target, bool force_hostile)
+{
+    ASSERT(target);
+
+    if (!_check_tukima_validity(target))
+        return;
+
+    _animate_weapon(pow, target, force_hostile);
 }
 
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)

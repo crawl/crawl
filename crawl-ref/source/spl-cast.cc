@@ -1059,9 +1059,7 @@ static void _maybe_cancel_repeat(spell_type spell)
 {
     switch (spell)
     {
-    case SPELL_DELAYED_FIREBALL:
-    case SPELL_TUKIMAS_DANCE:
-        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
+    case SPELL_DELAYED_FIREBALL:        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
                                                  spell_title(spell)));
         break;
 
@@ -1182,6 +1180,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_POLYMORPH:
     case SPELL_DISPEL_UNDEAD:
     case SPELL_CRYSTAL_BOLT:
+    case SPELL_TUKIMAS_DANCE:
         return new targetter_beam(&you, range, spell_to_zap(spell), pow, 0, 0);
     case SPELL_RANDOM_BOLT:
         return new targetter_beam(&you, range, ZAP_CRYSTAL_BOLT, pow, 0, 0);
@@ -1682,10 +1681,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_SUMMON_MANA_VIPER:
         return cast_summon_mana_viper(powc, god, fail);
-
-    case SPELL_TUKIMAS_DANCE:
-        // Temporarily turns a wielded weapon into a dancing weapon.
-        return cast_tukimas_dance(powc, god, false, fail);
 
     case SPELL_CONJURE_BALL_LIGHTNING:
         return cast_conjure_ball_lightning(powc, god, fail);
