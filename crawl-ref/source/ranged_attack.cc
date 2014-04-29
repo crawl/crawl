@@ -628,7 +628,12 @@ bool ranged_attack::apply_missile_brand()
         defender->expose_to_element(BEAM_COLD, 2, false);
         break;
     case SPMSL_POISONED:
-        if (stab_attempt || !one_chance_in(4))
+        if (stab_attempt
+            || (projectile->base_type == OBJ_MISSILES
+                && projectile->sub_type == MI_NEEDLE
+                && using_weapon()
+                && damage_done > 0)
+            || !one_chance_in(4))
         {
             int old_poison;
 
