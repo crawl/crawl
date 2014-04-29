@@ -1130,14 +1130,24 @@ void dec_penance(god_type god, int val)
                     you.redraw_armour_class = true; // also handles shields
                 }
                 if (you.attribute[ATTR_DIVINE_FIRE_RES])
-                    mprf(MSGCH_GOD, "You feel cold.");
+                {
+                    simple_god_message(
+                        " reinstates your protection from fire.");
+                }
                 if (you.attribute[ATTR_DIVINE_COLD_RES])
-                    mprf(MSGCH_GOD, "You feel hot.");
+                {
+                    simple_god_message(
+                        " reinstates your protection from cold.");
+                }
                 if (you.attribute[ATTR_DIVINE_ELEC_RES])
-                    mprf(MSGCH_GOD, "You feel insulated.");
+                {
+                    simple_god_message(
+                        " reinstates your protection from electricity.");
+                }
                 if (you.attribute[ATTR_DIVINE_AC])
                 {
-                    mprf(MSGCH_GOD, "You feel tough.");
+                    simple_god_message(
+                        " reinstates your protection from physical attacks.");
                     you.redraw_armour_class = true;
                 }
             }
@@ -1310,14 +1320,18 @@ static void _inc_penance(god_type god, int val)
                 you.redraw_armour_class = true;
             }
             if (you.attribute[ATTR_DIVINE_FIRE_RES])
-                mprf(MSGCH_GOD, "You feel hot.");
+                simple_god_message(" revokes your protection from fire.", god);
             if (you.attribute[ATTR_DIVINE_COLD_RES])
-                mprf(MSGCH_GOD, "You feel cold.");
+                simple_god_message(" revokes your protection from cold.", god);
             if (you.attribute[ATTR_DIVINE_ELEC_RES])
-                mprf(MSGCH_GOD, "You feel conductive.");
+            {
+                simple_god_message(
+                    " revokes your protection from electricity.", god);
+            }
             if (you.attribute[ATTR_DIVINE_AC])
             {
-                mprf(MSGCH_GOD, "You feel puny.");
+                simple_god_message(
+                    " revokes your protection from physical attacks.", god);
                 you.redraw_armour_class = true;
             }
         }
@@ -3411,22 +3425,24 @@ void excommunication(god_type new_god)
         if (you.attribute[ATTR_DIVINE_FIRE_RES])
         {
             you.attribute[ATTR_DIVINE_FIRE_RES] = 0;
-            mprf(MSGCH_GOD, old_god, "You feel hot.");
+            simple_god_message(" revokes your protection from fire.", old_god);
         }
         if (you.attribute[ATTR_DIVINE_COLD_RES])
         {
             you.attribute[ATTR_DIVINE_COLD_RES] = 0;
-            mprf(MSGCH_GOD, old_god, "You feel cold.");
+            simple_god_message(" revokes your protection from cold.", old_god);
         }
         if (you.attribute[ATTR_DIVINE_ELEC_RES])
         {
             you.attribute[ATTR_DIVINE_ELEC_RES] = 0;
-            mprf(MSGCH_GOD, old_god, "You feel conductive.");
+            simple_god_message(" revokes your protection from electricity.",
+                               old_god);
         }
         if (you.attribute[ATTR_DIVINE_AC])
         {
             you.attribute[ATTR_DIVINE_AC] = 0;
-            mprf(MSGCH_GOD, old_god, "You feel puny.");
+            simple_god_message(
+                " revokes your protection from physical attacks.", old_god);
             you.redraw_armour_class = true;
         }
         _set_penance(old_god, 25);

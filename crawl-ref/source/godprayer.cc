@@ -331,19 +331,20 @@ static bool _altar_prayer()
             default:
             case 0:
                 you.attribute[ATTR_DIVINE_FIRE_RES] = 1;
-                mprf(MSGCH_GOD, "You feel cold.");
+                simple_god_message(" grants you protection from fire!");
                 break;
             case 1:
                 you.attribute[ATTR_DIVINE_COLD_RES] = 1;
-                mprf(MSGCH_GOD, "You feel hot.");
+                simple_god_message(" grants you protection from cold!");
                 break;
             case 2:
                 you.attribute[ATTR_DIVINE_ELEC_RES] = 1;
-                mprf(MSGCH_GOD, "You feel insulated.");
+                simple_god_message(" grants you protection from electricity!");
                 break;
             case 3:
                 you.attribute[ATTR_DIVINE_AC] = 1;
-                mprf(MSGCH_GOD, "You feel tough.");
+                simple_god_message(
+                    " grants you protection from physical attacks!");
                 you.redraw_armour_class = true;
                 break;
         }
