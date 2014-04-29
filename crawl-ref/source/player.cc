@@ -3913,10 +3913,12 @@ int check_stealth(void)
     // how to make use of it:
     if (you.umbra())
     {
+        int umbra_multiplier = 1;
         if (you_worship(GOD_DITHMENOS) || you_worship(GOD_YREDELEMNUL))
-            stealth = stealth * (you.piety + MAX_PIETY) / MAX_PIETY;
-        else if (player_equip_unrand(UNRAND_SHADOWS))
-            stealth = stealth * 3 / 2;
+            umbra_multiplier = (you.piety + MAX_PIETY) / MAX_PIETY;
+        if (player_equip_unrand(UNRAND_SHADOWS))
+            umbra_multiplier = max(umbra_multiplier, 3 / 2);
+        stealth *= umbra_multiplier;
     }
     // The shifting glow from the Orb, while too unstable to negate invis
     // or affect to-hit, affects stealth even more than regular glow.
