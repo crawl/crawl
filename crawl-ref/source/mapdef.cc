@@ -4791,6 +4791,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         break;
 
     case OBJ_MISSILES:
+        // HACK to get an old save to load; remove me soon?
+        if (ego_str == "sleeping")
+            return SPMSL_SLEEP;
         order = missile_order;
         break;
 
