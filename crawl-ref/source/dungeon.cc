@@ -3202,12 +3202,7 @@ static bool _builder_normal()
     if (use_random_maps)
         vault = random_map_in_depth(level_id::current(), false, MB_FALSE);
 
-    // We'll accept any kind of primary vault in the main dungeon, but only
-    // ORIENT: encompass primary vaults in other branches. Other kinds of vaults
-    // can still be placed in other branches as secondary vaults.
-    if (vault && (player_in_branch(BRANCH_DUNGEON)
-                  || player_in_branch(BRANCH_DEPTHS)
-                  || vault->orient == MAP_ENCOMPASS))
+    if (vault)
     {
         env.level_build_method += " random_map_in_depth";
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
