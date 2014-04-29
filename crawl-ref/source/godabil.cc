@@ -3934,7 +3934,7 @@ bool gozag_potion_petition()
                 multiplier -= 5;
             }
             else if (i == GOZAG_MAX_POTIONS - 1)
-                multiplier *= 20; // ouch
+                multiplier *= 4; // ouch
 
             for (int j = 0; j < pots[i]->size(); j++)
             {
