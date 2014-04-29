@@ -484,12 +484,14 @@ function TroveMarker:check_veto(marker, pname)
     if not crawl.yesno("This trove requires the presence of "
                        .. self:item_name() .. " to function. Show it the item"
                        .. self:plural() .. "?", true, "n") then
+      crawl.mpr("Okay, then.", "prompt")
       return "veto"
     end
   else
     if not crawl.yesno("This trove needs " .. self:item_name() ..
                        " to function. Give it the item" ..
                        self:plural() .. "?", true, "n") then
+      crawl.mpr("Okay, then.", "prompt")
       return "veto"
     end
   end
@@ -511,8 +513,13 @@ function TroveMarker:check_veto(marker, pname)
   local acceptable_items = self:search_for_item(marker, pname, items.inventory())
 
   if #acceptable_items == 0 then
-    crawl.mpr("You don't have the item" .. self:plural() ..
-              " to give! Perhaps you haven't completely identified the item yet?")
+    -- Give a different message for the horn of Geryon here, too.
+    if self.props.toll_item.base_type == "miscellaneous" then
+      crawl.mpr("You don't have " .. self:item_name() .. " with you.")
+    else
+      crawl.mpr("You don't have the item" .. self:plural() ..
+                " to give! Perhaps you haven't completely identified the item yet?")
+    end
     return "veto"
   end
 
@@ -570,7 +577,7 @@ function TroveMarker:note_payed(toll_item, item_taken, rune_name)
   -- Ugly special case. At this point in the code there is no rune item, so we
   -- can not rely on any of the normal item naming code.
   if toll_item == "rune" then
-    crawl.take_note(prefix .. rune_name .. " " .. toll_desc)
+    crawl.take_note(prefix .. "the " .. rune_name .. " " .. toll_desc)
     return
   end
 
