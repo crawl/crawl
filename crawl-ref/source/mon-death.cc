@@ -508,7 +508,7 @@ int place_monster_corpse(const monster* mons, bool player_or_pet, bool silent,
     }
 
     move_item_to_grid(&o, mons->pos(), !mons->swimming());
-    if (mitm[o].base_type == OBJ_GOLD)
+    if (o != NON_ITEM && mitm[o].base_type == OBJ_GOLD)
         invalidate_agrid(true);
 
     if (you.see_cell(mons->pos()))
