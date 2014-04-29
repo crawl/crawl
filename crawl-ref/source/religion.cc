@@ -1052,6 +1052,7 @@ bool active_penance(god_type god)
     return player_under_penance(god)
            && !is_unavailable_god(god)
            && god != GOD_ASHENZARI
+           && god != GOD_GOZAG
            && (god != GOD_NEMELEX_XOBEH || you.penance[god] > 100)
            && (god == you.religion && !is_good_god(god)
                || god_hates_your_god(god, you.religion));
