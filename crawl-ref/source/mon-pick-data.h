@@ -252,6 +252,7 @@ static const pop_entry pop_lair[] =
   {  2,  8,   25, PEAK, MONS_ORANGE_RAT },
   {  1,  9,  273, SEMI, MONS_SHEEP },
   {  1,  8,  514, FLAT, MONS_YAK },
+  {  2,  8,   52, SEMI, MONS_POLAR_BEAR },
   {  1,  9,  420, SEMI, MONS_BLINK_FROG },
   {  2,  8,   25, PEAK, MONS_STEAM_DRAGON },
   {  4,  6,    3, SEMI, MONS_GIANT_SPORE },
