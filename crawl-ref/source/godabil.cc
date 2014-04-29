@@ -4029,8 +4029,11 @@ bool gozag_call_merchant()
 
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
-        if (!brentry[static_cast<branch_type>(i)].is_valid())
+        if (i != root_branch
+            && !brentry[static_cast<branch_type>(i)].is_valid())
+        {
             continue;
+        }
 
         level_id lid(static_cast<branch_type>(i), brdepth[i]);
         // ASSUMPTION: the lower part of a branch has an equal chance of
