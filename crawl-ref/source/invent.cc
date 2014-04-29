@@ -110,6 +110,13 @@ const string &InvEntry::get_fullname() const
     return text;
 }
 
+const string &InvEntry::get_dbname() const
+{
+    if (dbname.empty())
+        dbname = item->name(DESC_DBNAME);
+    return dbname;
+}
+
 bool InvEntry::is_item_cursed() const
 {
     return item_ident(*item, ISFLAG_KNOW_CURSE) && item->cursed();
@@ -762,6 +769,7 @@ void init_item_sort_comparators(item_sort_comparators &list, const string &set)
           { "basename",  compare_item_str<&InvEntry::get_basename> },
           { "qualname",  compare_item_str<&InvEntry::get_qualname> },
           { "fullname",  compare_item_str<&InvEntry::get_fullname> },
+          { "dbname",    compare_item_str<&InvEntry::get_dbname> },
           { "curse",     compare_item<bool, &InvEntry::is_item_cursed> },
           { "glowing",   compare_item_rev<bool, &InvEntry::is_item_glowing> },
           { "ego",       compare_item_rev<bool, &InvEntry::is_item_ego> },

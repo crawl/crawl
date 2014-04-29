@@ -1075,6 +1075,11 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
           This is the name of the item as displayed in menus (including
           (quantities, curse-status, etc.)
 
+        * dbname:
+          Sorts based on an item's unqiue internal name which is linked
+          to its description. Items with the same description will be
+          grouped together.
+
         * curse:
           Curse-status of the item (if known). Uncursed items show up
           first.

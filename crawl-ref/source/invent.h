@@ -77,6 +77,7 @@ private:
 
     mutable string basename;
     mutable string qualname;
+    mutable string dbname;
 
 protected:
     static bool show_cursor;
@@ -94,6 +95,7 @@ public:
     const string &get_basename() const;
     const string &get_qualname() const;
     const string &get_fullname() const;
+    const string &get_dbname() const;
     bool         is_item_cursed() const;
     bool         is_item_glowing() const;
     bool         is_item_ego() const;
