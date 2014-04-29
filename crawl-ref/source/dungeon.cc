@@ -3340,10 +3340,22 @@ static void _place_gozag_shop(dungeon_feature_type stair)
     // the shop if they're still a follower.
     if (you_worship(GOD_GOZAG))
     {
+        string spec = you.props[key].get_string();
         keyed_mapspec kmspec;
         kmspec.set_feat(you.props[key].get_string(), false);
         if (!kmspec.get_feat().shop.get())
-            die("Invalid shop spec?");
+        {
+            mprf(MSGCH_ERROR, "Tried to place an invalid shop spec!");
+            mprf(MSGCH_ERROR, "Spec is, \"%s\"", spec.c_str());
+            mprf(MSGCH_ERROR, "Please show someone this spec so the underlying "
+                              "bug can be fixed!");
+            mprf(MSGCH_ERROR, "Falling back to just name and type...");
+            vector<string> parts = split_string(";", spec);
+            ASSERT(parts.size() > 0);
+            kmspec.set_feat(parts[0], false);
+            if (!kmspec.get_feat().shop.get())
+                die("Invalid shop spec?");
+        }
         _place_spec_shop(*shop_place, kmspec.get_feat().shop.get());
 
         shop_struct *shop = get_shop(*shop_place);
