@@ -40,8 +40,6 @@ public:
     bool jump_blocked;
     coord_def attack_position;
 
-    bool simu;
-
 public:
     melee_attack(actor *attacker, actor *defender,
                  int attack_num = -1, int effective_attack_num = -1,
