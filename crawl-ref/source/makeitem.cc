@@ -2742,6 +2742,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     else if (item.sub_type == RING_LOUDNESS
              || item.sub_type == RING_TELEPORTATION
              || item.sub_type == RING_STEALTH && coinflip()
+             || item.sub_type == AMU_INACCURACY
              || one_chance_in(50))
     {
         // Rings of hunger and teleportation are always cursed {dlb}:
