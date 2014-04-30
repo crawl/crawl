@@ -334,6 +334,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
         mon->flags & ~(MF_JUST_SUMMONED | MF_WAS_IN_VIEW);
     // Preserve enchantments.
     mon_enchant_list enchantments = mon->enchantments;
+    FixedBitVector<NUM_ENCHANTMENTS> ench_cache = mon->ench_cache;
 
     // Restore original monster.
     *mon = orig;
@@ -349,6 +350,7 @@ static void _daction_hog_to_human(monster *mon, bool in_transit)
     // "else {mon->position = pos}" is unnecessary because the transit code will
     // ignore the old position anyway.
     mon->enchantments = enchantments;
+    mon->ench_cache = ench_cache;
     mon->hit_points   = max(1, (int) (mon->max_hit_points * hp));
     mon->flags        = mon->flags | preserve_flags;
 
