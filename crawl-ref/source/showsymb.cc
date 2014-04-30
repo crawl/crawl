@@ -104,15 +104,13 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
     if (feat == DNGN_SHALLOW_WATER && player_in_branch(BRANCH_SHOALS))
         colour = ETC_WAVES;
 
-    if (feat_has_solid_floor(feat) && !feat_is_water(feat)
-        && cell.flags & MAP_LIQUEFIED)
-    {
-        colour = ETC_LIQUEFIED;
-    }
-
     if (feat == DNGN_FLOOR)
     {
-        if (cell.flags & MAP_HALOED)
+        if (cell.flags & MAP_LIQUEFIED)
+            colour = ETC_LIQUEFIED;
+        else if (cell.flags & MAP_DISJUNCT)
+            colour = ETC_DISJUNCTION;
+        else if (cell.flags & MAP_HALOED)
         {
             if (cell.flags & MAP_SILENCED && cell.flags & MAP_UMBRAED)
                 colour = CYAN; // Default for silence.
@@ -136,8 +134,6 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = ETC_ORB_GLOW;
         else if (cell.flags & MAP_QUAD_HALOED)
             colour = BLUE;
-        else if (cell.flags & MAP_DISJUNCT)
-            colour = ETC_DISJUNCTION;
         else if (cell.flags & MAP_HOT)
             colour = ETC_FIRE;
     }
