@@ -2745,7 +2745,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
              || item.sub_type == AMU_INACCURACY
              || one_chance_in(50))
     {
-        // Rings of hunger and teleportation are always cursed {dlb}:
+        // Bad jewellery is always cursed {dlb}:
         do_curse_item(item);
     }
 }

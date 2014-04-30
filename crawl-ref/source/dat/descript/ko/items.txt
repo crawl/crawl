@@ -631,10 +631,6 @@ ring of sustain abilities
 
 이 반지는 힘, 민첩, 지능의 손실로부터 착용자를 보호한다.
 %%%%
-ring of sustenance
-
-이 반지는 착용자에게 활력을 불어넣어, 음식을 조금만 먹어도 활동할 수 있게 한다.
-%%%%
 ring of teleportation
 
 이 반지는 가끔 착용자를 무작위한 곳으로 공간이동시킨다. 직접 발동시켜서 사용할

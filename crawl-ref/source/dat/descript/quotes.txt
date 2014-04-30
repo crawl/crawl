@@ -2195,7 +2195,7 @@ ring of flight
 
 <ring>
 %%%%
-ring of hunger
+ring of loudness
 
 <ring>
 %%%%
@@ -2275,7 +2275,7 @@ ring of sustain abilities
 
 <ring>
 %%%%
-ring of sustenance
+ring of stealth
 
 <ring>
 %%%%

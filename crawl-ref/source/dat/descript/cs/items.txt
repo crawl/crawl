@@ -239,10 +239,6 @@ ring of sustain abilities
 Tento prsten chrání svého nositele před ztrátou jeho síly, obratnosti a
 inteligence.
 %%%%
-ring of sustenance
-
-Tento prsten zajišťuje energii pro jeho uživatele,  je možno méně často jíst.
-%%%%
 ring of wizardry
 
 Tento prsten zvyšuje schopnost svého nositele k použití magických kouzel.

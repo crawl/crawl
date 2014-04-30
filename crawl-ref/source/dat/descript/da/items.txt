@@ -664,10 +664,6 @@ ring of sustain abilities
 
 Denne ring beskytter sin bærer mod tab af styrke, behændighed og intelligens.
 %%%%
-ring of sustenance
-
-Denne ring giver bæreren energi, så man ikke har brug for at spise så ofte.
-%%%%
 ring of teleportation
 
 Denne ring translokerer lejlighedsvis bæreren til et tilfældigt sted og kan

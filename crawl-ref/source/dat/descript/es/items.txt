@@ -522,11 +522,6 @@ ring of sustain abilities
 Este anillo protege a su portador ante la pérdida de su fuerza, destreza e
 inteligencia.
 %%%%
-ring of sustenance
-
-Este anillo proporciona sustento a su portador, de tal forma que necesita comer
-con menos frecuencia.
-%%%%
 ring of teleportation
 
 Este anillo ocasionalmente activará su poder para teletranspotar a su portador
