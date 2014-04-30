@@ -883,7 +883,7 @@ ENDMAP
 
 ##########################################################################
 # Circular temples
-#   Total weight: 70 = 40+10+5+5+5+5
+#   Total weight: 80 = 40+10+10+5+5+5+5
 #   The classical shape, so highest weight.
 #   Several versions, to accommodate differing numbers of gods.
 #   Stones walls, so grey colour. (The versions with a pool change colour.)
@@ -1151,6 +1151,39 @@ cc........d...d.dd.dd.d...d.dd.dd.d...d........cc
           cccc..........{..........cccc
              ccccc.............ccccc
                  ccccccccccccccc
+ENDMAP
+
+# 18 gods
+NAME:   grunt_circular_temple_18
+PLACE:  Temple
+TAGS:   no_rotate
+ORIENT: encompass
+MAP
+               ccccccccccccc
+           ccccc...........ccccc
+        cccc...................cccc
+      ccc.........................ccc
+    ccc..........B...B...B..........ccc
+   cc........B...............B........cc
+  cc...................................cc
+ cc.......B.....................B.......cc
+ c.......................................c
+cc.................T...T.................cc
+c.......B.........................B.......c
+c.........................................c
+c...............T....{....T...............c
+c.........................................c
+c.......B.........................B.......c
+cc.................T...T.................cc
+ c.......................................c
+ cc.......B.....................B.......cc
+  cc...................................cc
+   cc........B...............B........cc
+    ccc..........B...B...B..........ccc
+      ccc.........................ccc
+        cccc...................cccc
+           ccccc...........ccccc
+               ccccccccccccc
 ENDMAP
 
 ##########################################################################
