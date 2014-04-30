@@ -841,17 +841,21 @@ bool mons_is_native_in_branch(const monster* mons,
                || mons->type == MONS_HARPY;
 
     case BRANCH_SLIME:
-        return mons_genus(mons->type) == MONS_JELLY;
+        return mons_is_slime(mons);
 
     case BRANCH_SNAKE:
         return mons_genus(mons->type) == MONS_NAGA
-               || mons_genus(mons->type) == MONS_SNAKE;
+               || mons_genus(mons->type) == MONS_SNAKE
+               || mons_genus(mons->type) == MONS_SALAMANDER;
 
     case BRANCH_ZOT:
         return mons_genus(mons->type) == MONS_DRACONIAN
                || mons->type == MONS_ORB_GUARDIAN
                || mons->type == MONS_ORB_OF_FIRE
                || mons->type == MONS_DEATH_COB;
+
+    case BRANCH_VAULTS:
+        return mons_genus(mons->type) == MONS_HUMAN;
 
     case BRANCH_CRYPT:
         return mons->holiness() == MH_UNDEAD;
