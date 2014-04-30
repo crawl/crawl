@@ -814,12 +814,10 @@ static void _describe_glow(status_info* inf)
         inf->light_colour = DARKGREY;
         if (cont > 1)
             inf->light_colour = _bad_ench_colour(cont, 3, 4);
-        if (cont > 1
 #if TAG_MAJOR_VERSION == 34
-                || you.species != SP_DJINNI
+        if (cont > 1 || you.species != SP_DJINNI)
 #endif
-                )
-            inf->light_text = "Contam";
+        inf->light_text = "Contam";
     }
 
     if (cont > 0)
