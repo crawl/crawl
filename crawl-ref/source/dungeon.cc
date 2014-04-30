@@ -4231,6 +4231,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
 #if TAG_MAJOR_VERSION == 34
                             || player_in_branch(BRANCH_FOREST)
 #endif
+                            || player_in_branch(BRANCH_SWAMP)
                             || player_in_branch(BRANCH_SLIME);
         place.connect(spotty);
     }
@@ -5770,7 +5771,10 @@ static bool _connect_spotty(const coord_def& from,
         for (set<coord_def>::const_iterator it = spotty_path.begin();
              it != spotty_path.end(); ++it)
         {
-            grd(*it) = DNGN_FLOOR;
+            grd(*it) =
+                (player_in_branch(BRANCH_SWAMP) && one_chance_in(3))
+                ? DNGN_SHALLOW_WATER
+                : DNGN_FLOOR;
             dgn_height_set_at(*it);
         }
     }
