@@ -937,7 +937,7 @@ void game_options::reset_options()
                    "inscribed",
                    false, false);
 
-    item_stack_summary_minimum = 5;
+    item_stack_summary_minimum = 4;
 
 #ifdef WIZARD
     fsim_rounds = 4000L;
