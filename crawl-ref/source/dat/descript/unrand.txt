@@ -14,13 +14,14 @@ Screaming Sword
 %%%%
 Wrath of Trog
 
-This was the favourite weapon of the old god Trog, before it was lost one day.
-It induces a bloodthirsty berserker rage in anyone who uses it to strike
-another.
+This was the favourite weapon of the old god Trog, before it was lost. It
+induces a bloodthirsty berserker rage in warriors who use it in battle.
 %%%%
 Mace of Variability
 
-It is rather unreliable.
+A weapon with a peculiar reputation — said to be at times peerless in quality,
+and other times virtually useless. No one knows exactly who would have made
+such a weapon, or why, but Xom is probably to blame somehow.
 %%%%
 Glaive of Prune
 
@@ -35,13 +36,11 @@ It rewards the powerful with power and the meek with weakness.
 %%%%
 Staff of Olgreb
 
-This was the magical weapon wielded by the mighty wizard Olgreb before he met
-his fate somewhere within these dungeons. It increases the ability of its
-wielder to use venomous magic, and carries magical powers which can be evoked.
-The tales say that Olgreb researched rare venoms that may have some limited
-effect even on creatures immune to all commonly known poisons. For obvious
-reasons, Olgreb has made the staff grant total protection even against his own
-venoms.
+This was the weapon wielded by the mighty wizard Olgreb, before he met his fate
+somewhere within these dungeons. It increases the power of its wielder's
+venomous magic, and can be evoked to activate its own brand of poison magic.
+Its touch may poison even resistant creatures, and it grants protection from
+all venoms while wielded.
 %%%%
 Staff of Wucad Mu
 
@@ -57,7 +56,8 @@ portion of life to its user than other vampiric weapons.
 %%%%
 Scythe of Curses
 
-This weapon carries a terrible and highly irritating curse.
+This weapon carries a terrible and highly irritating curse, which it busily
+inflicts on both the wielder and their enemies.
 %%%%
 Sceptre of Torment
 
@@ -126,22 +126,29 @@ A long and sharp scythe, specially modified for combat purposes.
 %%%%
 sling "Punk"
 
-A sling made of weird blue leather.
+A sling made of weird blue leather. Originally the weapon of a notorious
+mischief-maker and general scamp, it's since fallen into less savoury hands.
 %%%%
 bow of Krishna "Sharnga"
 
-A wonderful golden bow that once belonged to a foreign god. It works best with
-special arrows which are not generally available.
+A wonderful golden bow that once belonged to a god of distant lands. It can
+fire as fast as thought and hurl divine arrows of terrible power — though,
+sadly, none seem to be available here.
 %%%%
 giant club "Skullcrusher"
 
-This lovely cudgel can make any ogre overjoyous — be it a bar brawl, genocide,
-or a mixture of both.
+This lovely cudgel can make any ogre overjoyed — be it at a bar brawl,
+genocide, or a mixture of both.
 %%%%
 glaive of the Guard
 
-This weapon once belonged to Gar Dogh, the guard of a king's treasures.
-According to legend he was lost somewhere in the Dungeon.
+This weapon was commissioned several years ago by a wealthy queen fearful for
+the safety of her vast treasury. No foe, the smith promised, could defeat a
+guard wielding this weapon!
+
+The glaive was stolen a few months later, along with the rest of the queen's
+treasury; the guard, it transpired, had been caught napping. Still, it should
+serve more than adequately in the hands of a waking user.
 %%%%
 sword of Jihad
 
@@ -152,11 +159,15 @@ rage in both the wielder and all of his or her mortal followers.
 crossbow "Hellfire"
 
 A flaming crossbow, forged in the fires of the Hells; it imbues bolts it fires
-with the raw power of its namesake.
+with the raw power of its namesake, irresistible by any mortal armour or
+fireproofing.
 %%%%
 sword of the Doom Knight
 
-An adamantine great sword.
+An adamantine great sword. Its first wielder was a worshipper of Yredelemnul
+who eschewed the use of magic in combat, preferring to destroy his enemies with
+brute force. Unfortunately for him, not all of his opponents shared his
+limitations.
 %%%%
 morningstar "Eos"
 
@@ -169,8 +180,8 @@ unwise enough to risk wielding it.
 %%%%
 trident of the Octopus King
 
-This trident was stolen many years ago from the Octopus King's garden. Beware
-the Octopus King's wrath!
+This trident was stolen many years ago from the Octopus King's garden. Luckily,
+he seems to be in no hurry to get it back.
 %%%%
 mithril axe "Arga"
 
@@ -209,24 +220,24 @@ from Spriggans. Anyway, it's in some way associated with those fey folk.
 %%%%
 plutonium sword
 
-A claymore made of weird glowing metal. You wonder whether its radiation will
-make you grow an extra head.
+A claymore made of weird glowing metal. Anyone hit with it stands a good chance
+of enjoying a variety of exciting new medical conditions... if they survive
+the impact of the blade itself, that is.
 %%%%
 great mace "Undeadhunter"
 
-Legends say that a long time ago, a lich lord experimented with creating
-sentient servants instead of mindless automatons. To ensure their loyalty, he
-made a number of weapons imbued with magic that could counteract the magic
-holding undead together, inflicting great damage.
+Legends say that, long ago, a lich lord experimented with creating sentient
+servants instead of mindless automatons. To ensure their loyalty, he made
+weapons specially designed to destroy the magic that holds undead together.
 
 Although the lich met his end long ago, his weapons, spreading disruption among
-the undead, are said to have been popular. However, this mace might be the only
-one remaining.
+the undead, found use long after his passing. Sadly, this mace might be the
+last one left.
 %%%%
 whip "Snakebite"
 
-A double-ended whip made from the cured hides of the Lair of Beasts' deadly
-black mambas, and enchanted with a range of deadly toxins.
+A double-ended whip made from the cured hides of black mambas, and enchanted
+with toxins ranging from ordinary venoms to asphyxiating curare.
 %%%%
 # TAG_MAJOR_VERSION == 34
 knife of Accuracy
@@ -242,26 +253,36 @@ other way around.
 captain's cutlass
 
 This infamous weapon was used by a vile pirate captain to slaughter countless
-innocents. Finally, he met his destiny when a kraken swallowed his ship with
-all the crew aboard. The cutlass was thought to be forever lost, but now you
-have proof to the contrary in your very hands.
+innocents. He finally met his destiny when a kraken swallowed his ship, and the
+cutlass was thought to be lost with him.
 %%%%
 storm bow
 
-This bow has the colour of dark rain clouds, and the smell of wet ozone.
+This bow has the colour of dark rain clouds.
+{{
+    if you.can_smell() then
+        return "It smells like a storm just past, or one about to begin."
+    end
+}}
 %%%%
 large shield of Ignorance
 
-“An open mind is like a fortress with its gates unbarred and unguarded.”
+This shield, unearthed from the remains of a ruined city, bears an inscription
+written in an ancient language. Scholars and wise men laboured for countless
+hours to decipher it, poring through ancient tomes and hurling theses and
+counter-theses back and forth. In time, interest faded, and a grudging
+consenus translation was settled on:
+
+"With a shield like this, who needs to think?"
 %%%%
 robe of Augmentation
 
-A robe made of the finest silk.
+"The clothes make the man."
 %%%%
 cloak of the Thief
 
 It allows its wearer to excel in the arts of thievery, and can be evoked to
-release thick clouds of smoke to allow for a hasty escape.
+release thick clouds of smoke for a hasty escape.
 %%%%
 # TAG_MAJOR_VERSION == 34
 large shield "Bullseye"
@@ -283,7 +304,7 @@ A splendid flowing robe of fur and silk.
 %%%%
 cloak of Flash
 
-A vibrating cloak.
+A cloak that twitches and jerks without any intervention.
 %%%%
 boots of the Assassin
 
@@ -298,7 +319,11 @@ includes a chainmail coif, chausses and maille gauntlets.
 %%%%
 skin of Zhor
 
-A smelly skin of some strange animal.
+The {{
+    if you.can_smell() then
+        return "smelly "
+    end
+}}skin of some strange animal, native to cold and distant lands.
 %%%%
 salamander hide armour
 
@@ -306,26 +331,32 @@ A leather armour made of a salamander's skin.
 %%%%
 gauntlets of War
 
-These thick steel gauntlets were Okawaru's reward for a mighty warlord. Do you
-deserve to own them?
+These thick steel gauntlets were Okawaru's reward for a mighty warlord. The
+owner is destined to die in battle, but what a death it will be!
 %%%%
 shield of Resistance
 
-A bronze shield.
+A bronze shield, looking almost exactly like a tortoise's shell. It was built
+by the adherents of an obscure minor faith, who imbued it with the power of
+their god. As the god is said to, this shield protects against sword and sling,
+frost and flame.
 %%%%
 robe of Folly
 
 A dull grey robe. It is enchanted to provide its wearer with immeasurable power
-and wisdom.
+and wisdom, but...
 %%%%
 Maxwell's patent armour
 
-A weird-looking armour.
+Created by the famous inventor, Maxwell's armour provides unparalleled
+protective qualities at a very affordable price. His unorthodox materials
+left the armour with certain shortcomings, but he's yet to have anyone come
+back for a refund.
 %%%%
 mask of the Dragon
 
-A strange blue helm made of hard flexible leather that makes the wearer's face
-resemble a dragon's visage.
+A strange blue mask made of hard flexible leather, resembling a dragon's
+visage.
 %%%%
 robe of Night
 
@@ -335,9 +366,10 @@ of the Night to one of her followers.
 %%%%
 armour of the Dragon King
 
-A long time ago, a mighty golden dragon seized the rulership of all dragons in
-his part of the world. Yet his reign didn't last long, stopped by a single puny
-human who then made this armour from the dragon's hide.
+A long time ago, a mighty golden dragon built a kingdom of fire and blood.
+Titans and lesser dragons struggled with him in vain — but as with all things,
+even he was eventually cast down and undone. Of his life and deeds, this is all
+that remains.
 %%%%
 hat of the Alchemist
 
@@ -387,13 +419,15 @@ selection of powers.
 %%%%
 amulet of the Four Winds
 
-This pendant made of purest jade grants its wearer an immense mystic strength
-to shrug off hostile magic.
+This pendant, made of purest jade, grants its wearer an immense mystic
+strength, sufficient to shrug off all but the most potent of hostile
+enchantments.
 %%%%
 necklace of Bloodlust
 
-You wonder what crude brute would wear a bloodstained necklace made of human
-and animal teeth, plus something that appears to be a ripped piece of spine.
+Only the crudest of brutes would wear a necklace like this one, made of
+bloodstained human and animal teeth, and something that appears to be a piece
+of spine.
 %%%%
 ring of Shaolin
 
@@ -416,7 +450,7 @@ That, and a pony.
 %%%%
 robe of Clouds
 
-A robe of a material so flimsy it could almost be clouds.
+A robe of a material as flimsy and insubstantial as the clouds.
 %%%%
 hat of Pondering
 
@@ -455,7 +489,7 @@ This exotic sword is a weapon for truly enlightened users.
 %%%%
 shillelagh "Devastator"
 
-You guess this stick is loaded with something more than just lead.
+This stick is loaded with more than just lead.
 %%%%
 dragonskin cloak
 
@@ -480,9 +514,10 @@ moon troll leather armour
 
 This armour was reportedly created by enchanting the hide of a now-extinct
 species of troll. Whether this armour is truly a remnant of the legendary
-unseen terrors of the wind or merely an appropriation of the name to add
-mystique is something of a mystery; its power of rapid regeneration at the
-occasional expense of the wearer's magic power, however, is hard to dispute.
+unseen terrors of the wind, or merely an appropriation of the name to add
+mystique, is itself something of a mystery; its power of rapid regeneration at
+the occasional expense of the wearer's magic power, however, is hard to
+dispute.
 %%%%
 macabre finger necklace
 
@@ -518,8 +553,10 @@ unpredictable residual magical effects on those it strikes.
 %%%%
 lajatang of Order
 
-Legend says that once the staff was the favoured weapon of the many priests of
-Zin. Long ago Zin bestowed this gift upon a favoured worshipper.
+Long ago Zin bestowed this gift upon a favoured worshipper. It became the
+most prized weapon of the many priests of Zin; but after their order was
+destroyed, it fell into disuse and vanished from history.
+
 %%%%
 great mace "Firestarter"
 
