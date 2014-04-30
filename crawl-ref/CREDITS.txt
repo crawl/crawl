@@ -164,7 +164,6 @@
     Lemuel Pitkin
     pubby
     Derek Ray
-    reaver
     Terence Reeves
     Remsleep
     Ryan Riegel
@@ -232,6 +231,7 @@ The Dungeon Crawl Stone Soup development team is:
     Charles Otto
     Aaron Pixton
     David Ploog
+    reaverb
     Sage
     Jason Van
     Chris West
