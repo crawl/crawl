@@ -445,7 +445,7 @@ void delete_cloud(int cloud)
     if (c.type != CLOUD_NONE)
     {
         cloud_type t = c.type;
-        if (c.type == CLOUD_RAIN || c.type == CLOUD_STORM)
+        if (c.type == CLOUD_RAIN)
             _maybe_leave_water(c);
 
         c.type        = CLOUD_NONE;
