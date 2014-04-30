@@ -698,6 +698,76 @@ xxxxx'xxxxx
    x2@2x
 ENDMAP
 
+### Gozag overflow altars #####################################################
+
+NAME:   grunt_gozag_statues
+DEPTH:  D:2-
+TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_gozag uniq_altar_gozag
+KFEAT:  _ = altar_gozag
+TILE:   G = dngn_golden_statue
+FTILE:  _-G = floor_limestone
+RTILE:  x = wall_sandstone
+COLOUR: xG = yellow
+: set_feature_name("granite_statue", "golden statue")
+: interest_check(_G)
+MAP
+     @
+  xxx-xxx
+ xx-----xx
+ x-G---G-x
+ x-------x
+@----_----@
+ x-------x
+ x-G---G-x
+ xx-----xx
+  xxx-xxx
+     @
+ENDMAP
+
+NAME:   grunt_gozag_breadcrumbs
+DEPTH:  D:2-
+TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_gozag uniq_altar_gozag
+KFEAT:  _ = altar_gozag
+ITEM:   gold q:1
+KITEM:  e = gold q:1
+TILE:   G = dngn_golden_statue
+FTILE:  _-Ge = floor_limestone
+RTILE:  x = wall_sandstone
+COLOUR: xG = yellow
+: set_feature_name("granite_statue", "golden statue")
+: interest_check(_G)
+MAP
+        xxxxx
+.@......x-eGx
+@d.d.d.d-e-_x
+.@......x-eGx
+        xxxxx
+ENDMAP
+
+NAME:   grunt_gozag_potion_petition
+DEPTH:  D:2-
+TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
+TAGS:   temple_overflow_gozag uniq_altar_gozag
+KFEAT:  _ = altar_gozag
+KFEAT:  O = general shop name:Gozag type:Nutrition suffix:Petition greed:100 \
+        use_all ; potion of blood | potion of porridge
+TILE:   G = dngn_golden_statue
+FTILE:  _-GO = floor_limestone
+RTILE:  x = wall_sandstone
+COLOUR: xG = yellow
+: set_feature_name("granite_statue", "golden statue")
+: interest_check(_G)
+MAP
+  xxxxxxx
+ xx--_--xx
+ x-G---G-x
+ x---O---x
+  @-----@
+   @ @ @
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
