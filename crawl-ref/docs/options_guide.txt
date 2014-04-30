@@ -1310,7 +1310,7 @@ show_game_turns = true
         is this turn count which is used for scoring (and this turn count is
         always visible on the % overview screen).
 
-item_stack_summary_minimum = 5
+item_stack_summary_minimum = 4
         If you step over a stack with this number or more of items in
         it, the first description line will contain a summary of all the
         items in the stack (up to 50 items), in a format which looks
