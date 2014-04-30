@@ -217,7 +217,7 @@
 # small_more                   = true
 # show_more                    = false
 # show_inventory_weights       = (drop_pickup | true | false)
-# item_stack_summary_minimum   = 5
+# item_stack_summary_minimum   = 4
 # msg_condense_repeats         = false
 # msg_condense_short           = false
 # skill_focus                  = false
