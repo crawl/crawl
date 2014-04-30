@@ -487,18 +487,19 @@ assign_item_slot = (forward | backward)
         more likely to get their old slot back.
 
 pickup_menu = true
-        When true (the default), makes a menu appear, where you can
-        choose which items to pick up. Note that no matter how many
-        items you choose, picking up will always take one turn.
-        Setting this to false invokes another behaviour: when picking up
-        items, if there are at least 4 items on your square, the menu will
-        appear, and you are prompted one by one otherwise.
-        This number can be adjusted with the pickup_menu_limit option.
+        When true (the default), displays a menu when picking up multiple
+        items. Note that no matter how many items you choose, picking up will
+        always take one turn.
+        When false, you will be prompted one by one when picking up multiple
+        items, unless there are at least 4 items on your square in which case
+        the menu will be used. This number can be adjusted with the
+        pickup_menu_limit option.
 
 pickup_menu_limit = 4
-        The number of items on your square that will activate menu for pickup
-        when pickup_menu is set to false.  If zero, never use the menu.
-        If negative, use the value of item_stack_summary_minimum instead.
+        If pickup_menu is false and there are at least this many items on your
+        square, a menu will be displayed when picking up multiple items instead
+        of prompting for each item. If zero, never use the menu. If negative,
+        use the value of item_stack_summary_minimum instead.
 
 drop_filter += <regex>, <regex>, ...
         (List option)
