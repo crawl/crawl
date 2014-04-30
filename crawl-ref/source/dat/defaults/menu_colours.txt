@@ -12,11 +12,6 @@ menu += lightred:.*bad_item.*
 # Useless items, comes here to override artefacts etc.
 menu += darkgrey:.*useless_item.*
 
-: if you.race() == "Spriggan" then
-menu += darkgrey:.*jewellery.*(sustenance)
-ae   += >ring.*(sustenance)
-:end
-
 # Items disliked by your god.
 menu += $forbidden:.*forbidden.*
 
