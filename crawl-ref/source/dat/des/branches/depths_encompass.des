@@ -835,7 +835,7 @@ KMONS:   t = draconian knight / draconian scorcher / draconian annihilator
 :     end
 : end
 : kmons("s = " .. table.concat(kmonsters, " / "))
-KITEM:   ? = any ring randart w:390 / ring of hunger unrand:ring_of_the_octopus_king
+KITEM:   ? = any ring randart w:390 / ring of loudness unrand:ring_of_the_octopus_king
 KITEM:   ! = ring of invisibility / ring of regeneration / \
              ring of teleport control / ring of slaying / \
              ring of wizardry / any good_item ring no_uniq w:75

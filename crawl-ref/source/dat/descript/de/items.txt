@@ -605,11 +605,6 @@ ring of sustain abilities
 Dieser Ring schützt seinen Träger vor dem Verlust ihrer Kraft, Flinkheit und
 Intelligenz.
 %%%%
-ring of sustenance
-
-Dieser Ring versorgt seinen Träger mit Energie, so das er nicht so oft essen
-muss.
-%%%%
 ring of teleportation
 
 Dieser Ring übt gelegentlich seine Macht aus, seinen Träger zu einem anderen

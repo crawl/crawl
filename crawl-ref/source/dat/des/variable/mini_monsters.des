@@ -2150,22 +2150,6 @@ ENDMAP
 #
 ################################################################################
 
-NAME:   minmay_hunger
-DEPTH:  D:10-
-WEIGHT: 5
-MONS:   hungry ghost
-ITEM:   ring of hunger / any ring
-SUBST:  2 : 1., 3 : 1., 4 : 1.
-MAP
-ccc+ccc
-c.3.4.c
-c2c1c1c
-+.1d1.+
-c1c1c2c
-c.4.3.c
-ccc+ccc
-ENDMAP
-
 NAME:  minmay_nine_imps
 DEPTH: D:7-14
 MONS:  crimson imp / white imp w:3 / shadow imp w:1

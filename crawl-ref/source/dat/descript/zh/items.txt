@@ -509,10 +509,6 @@ ring of sustain abilities
 
 这个戒指保护其佩戴者的力量、敏捷和智力不受伤害。
 %%%%
-ring of sustenance
-
-这个戒指会给其佩戴者输送营养，因此佩戴者不需要经常进食。
-%%%%
 ring of teleportation
 
 这个戒指不时会放出其中的魔力，将佩戴者传送到别的地方去。

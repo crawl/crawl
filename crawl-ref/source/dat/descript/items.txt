@@ -1028,10 +1028,6 @@ ring of flight
 This ring allows its wearer to fly. The ring's power cannot be evoked while
 already airborne, making it ill-suited for longer trips above deadly liquid.
 %%%%
-ring of hunger
-
-This ring causes its wearer to hunger considerably more quickly.
-%%%%
 ring of ice
 
 This ring brings its wearer more in contact with the powers of cold and ice.
@@ -1048,6 +1044,11 @@ ring of invisibility
 
 This powerful ring can be activated to hide its wearer from the view of others,
 but increases the speed of their metabolism greatly while doing so.
+%%%%
+ring of loudness
+
+This ring passively emits an aura of loud noise, causing the wearer to be
+considerably less stealthy.
 %%%%
 ring of magical power
 
@@ -1094,6 +1095,10 @@ This ring increases or decreases the wearer's effectiveness with ranged weapons
 and melee attacks. It has two enchantment levels, affecting accuracy and damage
 respectively.
 %%%%
+ring of stealth
+
+This ring dampens the noises of the wearer, making them more stealthy.
+%%%%
 ring of strength
 
 This ring increases or decreases the physical strength of its wearer, to a
@@ -1103,10 +1108,6 @@ ring of sustain abilities
 
 This ring protects its wearer from the loss of their strength, dexterity and
 intelligence.
-%%%%
-ring of sustenance
-
-This ring provides energy to its wearer, so that they need eat less often.
 %%%%
 ring of teleport control
 

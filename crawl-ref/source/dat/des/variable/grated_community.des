@@ -61,7 +61,7 @@ KFEAT:  ~ = closed_door
 KFEAT:  7 = tree
 KFEAT:  A = general shop type:Slaves suffix:and_Accessories count:10 ; \
             w:45 whip | wand of enslavement | w:1 wand of hasting | \
-            w:5 ring of sustenance
+            w:5 potion of porridge
 KFEAT:  B = food shop name:Stan type:Special suffix:Sausages count:10 ; \
             q:5 sausage
 KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \

@@ -847,11 +847,6 @@ ring of sustain abilities
 
 Cet anneau protège son porteur des pertes de force, dextérité, ou intelligence.
 %%%%
-ring of sustenance
-
-Cet anneau délivre de l'énergie à son porteur, lui permettant de manger moins
-souvent.
-%%%%
 ring of teleportation
 
 Cet anneau déclenche son pouvoir de temps en temps en téléportant son porteur à

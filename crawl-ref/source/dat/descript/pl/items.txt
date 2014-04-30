@@ -556,10 +556,6 @@ ring of sustain abilities
 
 Ten pierścień chroni przed tymczasową utratą siły, inteligencji i zręczności.
 %%%%
-ring of sustenance
-
-Ten pierścień znacznie spowalnia zużycie pokarmu przez swego właściciela.
-%%%%
 ring of teleportation
 
 Ten pierścień od czasu do czasu przenosi swego nosiciela w przypadkowe miejsce.
