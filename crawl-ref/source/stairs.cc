@@ -166,7 +166,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     return true;
 }
 
-static void _exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
+static void _exit_stair_message(dungeon_feature_type stair)
 {
     if (feat_is_escape_hatch(stair))
         mpr("The hatch slams shut behind you.");
@@ -433,7 +433,7 @@ void up_stairs(dungeon_feature_type force_stair)
     else
         _climb_message(stair_find, true, old_level.branch);
 
-    _exit_stair_message(stair_find, true);
+    _exit_stair_message(stair_find);
 
     if (old_level.branch != you.where_are_you)
     {
@@ -986,7 +986,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
     }
 
     if (!shaft)
-        _exit_stair_message(stair_find, false);
+        _exit_stair_message(stair_find);
 
     if (entered_branch)
     {
