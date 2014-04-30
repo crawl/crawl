@@ -470,9 +470,8 @@ the recipients on the brink of death but never outright kills them.
 Excruciating Wounds spell
 
 This spell temporarily infuses the weapon held by the caster with the essence
-of pain itself. It will not affect weapons which are otherwise subject to
-special enchantments. Note that unlike other brands, pain can not be made
-permanent by reading a scroll of brand weapon.
+of pain itself. It will not affect artefact weapons or weapons that are already
+branded.
 %%%%
 Explosive Bolt spell
 
@@ -1484,8 +1483,9 @@ through unhindered.
 Warp Weapon spell
 
 This spell temporarily binds a localized warp field to the caster's weapon.
-Note that unlike other brands, distortion can not be made permanent by reading
-a scroll of brand weapon.
+It will not affect artefact weapons or weapons that are already branded. Unlike
+a permanently distortion-branded weapon, the affected weapon may still be
+safely unwielded.
 %%%%
 Waterstrike spell
 
