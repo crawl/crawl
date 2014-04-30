@@ -621,10 +621,10 @@ static bool _dont_harm(const actor* attacker, const actor* defender)
            || attacker == &you && defender->wont_attack()
            || defender == &you && attacker->wont_attack();
 }
-// Put the potential cleave targets into a list. Up to 3, taken in order by
+// Put the potential cleave targets into a list. Up to 4, taken in order by
 // rotating from the def position and stopping at the first solid feature.
 void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
-                        list<actor*> &targets)
+                        list<actor*> &targets, bool behind)
 {
     // Prevent scanning invalid coordinates if the attacker dies partway through
     // a cleave (due to hitting explosive creatures, or perhaps other things)
@@ -633,8 +633,9 @@ void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
 
     const coord_def atk = attacker->pos();
     coord_def atk_vector = def - atk;
+    const int num = behind ? 4 : 3;
 
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < num; ++i)
     {
         atk_vector = rotate_adjacent(atk_vector, dir);
         if (cell_is_solid(atk + atk_vector))
@@ -653,11 +654,11 @@ void get_all_cleave_targets(const actor* attacker, const coord_def& def,
         return;
 
     int dir = coinflip() ? -1 : 1;
-    get_cleave_targets(attacker, def, dir, targets);
+    get_cleave_targets(attacker, def, dir, targets, true);
     targets.reverse();
     if (actor_at(def))
         targets.push_back(actor_at(def));
-    get_cleave_targets(attacker, def, -dir, targets);
+    get_cleave_targets(attacker, def, -dir, targets, false);
 }
 
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
