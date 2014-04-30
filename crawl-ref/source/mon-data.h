@@ -529,7 +529,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_RED_DRACONIAN, 'd', RED, "red draconian",
+    MONS_RED_DRACONIAN, 'd', LIGHTRED, "red draconian",
     M_COLD_BLOOD | M_SPEAKS,
     MR_RES_FIRE,
     900, 10, MONS_DRACONIAN, MONS_RED_DRACONIAN, MH_NATURAL, -2,
@@ -1068,7 +1068,7 @@ static monsterentry mondata[] =
 },
 
 {
-    MONS_HELL_HOUND, 'h', RED, "hell hound",
+    MONS_HELL_HOUND, 'h', CYAN, "hell hound",
     M_SENSE_INVIS | M_BLOOD_SCENT,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     450, 10, MONS_HOUND, MONS_HELL_HOUND, MH_DEMONIC, -3,
