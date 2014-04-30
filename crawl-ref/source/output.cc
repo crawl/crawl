@@ -2019,11 +2019,16 @@ static string _god_powers(bool simple)
         return simple ? godpowers
                       : colour_string(godpowers, god_colour(you.religion));
     }
+    else if (you_worship(GOD_GOZAG))
+    {
+        return simple ? godpowers
+                      : colour_string(godpowers, god_colour(you.religion));
+    }
     else if (!you_worship(GOD_NO_GOD))
     {
         if (player_under_penance())
             return simple ? "*" : colour_string("*" + godpowers, RED);
-        else if (!you_worship(GOD_GOZAG))
+        else
         {
             // piety rankings
             int prank = piety_rank() - 1;
