@@ -1044,9 +1044,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
         _setup_inner_flame_explosion(beam, *mons, agent);
         // This might need to change if monsters ever get the ability to cast
         // Inner Flame...
-        if (i_f.source == MID_ANON_FRIEND)
-            mons_add_blame(mons, "hexed by Xom");
-        else if (agent && agent->is_player())
+        if (agent && agent->is_player())
             mons_add_blame(mons, "hexed by the player character");
         else if (agent)
             mons_add_blame(mons, "hexed by " + agent->name(DESC_A, true));
