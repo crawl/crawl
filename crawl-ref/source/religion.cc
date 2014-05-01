@@ -1511,10 +1511,10 @@ static bool _give_nemelex_gift(bool forced = false)
            && !you.attribute[ATTR_CARD_COUNTDOWN])
     {
         misc_item_type gift_type = random_choose_weighted(
-                                       4, MISC_DECK_OF_DESTRUCTION,
-                                       3, MISC_DECK_OF_SUMMONING,
-                                       2, MISC_DECK_OF_ESCAPE,
-                                       1, MISC_DECK_OF_WONDERS,
+                                       8, MISC_DECK_OF_DESTRUCTION,
+                                       6, MISC_DECK_OF_SUMMONING,
+                                       3, MISC_DECK_OF_ESCAPE,
+                                       3, MISC_DECK_OF_WONDERS,
                                        0);
 
         int thing_created = items(1, OBJ_MISCELLANY, gift_type,
