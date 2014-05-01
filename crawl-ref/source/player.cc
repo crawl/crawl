@@ -6453,9 +6453,9 @@ void player::shield_block_succeeded(actor *foe)
 int player::missile_deflection() const
 {
     if (attribute[ATTR_DEFLECT_MISSILES]
-        || you_worship(GOD_QAZLAL)
+/*        || you_worship(GOD_QAZLAL)
            && !player_under_penance(GOD_QAZLAL)
-           && you.piety >= piety_breakpoint(4))
+           && you.piety >= piety_breakpoint(4)*/)
     {
         return 2;
     }
@@ -6464,7 +6464,7 @@ int player::missile_deflection() const
         || scan_artefacts(ARTP_RMSL, true)
         || you_worship(GOD_QAZLAL)
            && !player_under_penance(GOD_QAZLAL)
-           && you.piety >= piety_breakpoint(2))
+           && you.piety >= piety_breakpoint(3))
     {
         return 1;
     }
