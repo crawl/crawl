@@ -264,7 +264,6 @@ static void _describe_regen(status_info* inf);
 static void _describe_rotting(status_info* inf);
 static void _describe_sickness(status_info* inf);
 static void _describe_speed(status_info* inf);
-static void _describe_sage(status_info* inf);
 static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
 static void _describe_stat_zero(status_info* inf, stat_type st);
@@ -405,10 +404,6 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
     }
-
-    case STATUS_SAGE:
-        _describe_sage(inf);
-        break;
 
     case STATUS_AUGMENTED:
     {
@@ -893,23 +888,6 @@ static void _describe_speed(status_info* inf)
         inf->long_text = "Your actions are hasted.";
         _mark_expiring(inf, dur_expiring(DUR_HASTE));
     }
-}
-
-static void _describe_sage(status_info* inf)
-{
-    if (you.sage_skills.empty())
-        return;
-
-    vector<const char*> sages;
-    for (unsigned long i = 0; i < you.sage_skills.size(); ++i)
-        sages.push_back(skill_name(you.sage_skills[i]));
-
-    inf->light_colour = LIGHTBLUE;
-    inf->light_text   = "Sage";
-    inf->short_text   = "sage [" + comma_separated_line(sages.begin(),
-                        sages.end(), ", ") + "]";
-    inf->long_text    = "You feel studious about " + comma_separated_line(
-                        sages.begin(), sages.end()) + ".";
 }
 
 static void _describe_airborne(status_info* inf)
