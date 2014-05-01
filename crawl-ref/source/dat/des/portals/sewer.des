@@ -268,7 +268,7 @@ ENDMAP
 default-depth: Sewer
 
 ### KOBOLDS ################################################################
-# Sewers with kobold settlements. Combined weight 40.
+# Sewers with kobold settlements. Combined weight 50.
 
 ############################################################################
 # Sewer with a small kobold camp, potion treasure and Ely/Zin altar.
@@ -387,6 +387,60 @@ vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
 vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
 vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
 vvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvv
+ENDMAP
+
+NAME:    kennysheep_pipe_town
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+MONS:    kobold / big kobold w:2
+MONS:    bat / rat / ooze w:5 / ball python / giant newt w:5 / \
+         giant cockroach w:5 / giant mite w:5 / adder w:1
+KMONS:   . = plant w:1 / fungus w:1 / nothing w:80
+KMONS:   3 = big fish
+KMONS:   p = plant
+SUBST:   p = ppW
+ITEM:    potion of curing / potion of heal wounds / potion of might w:4 /\
+         potion of brilliance w:4 / potion of agility w:4 / \
+         potion of flight w:4 / any scroll w:7 / any armour w:2 / \
+         any weapon w:2
+SHUFFLE: DEFH
+NSUBST:  D = 5:1 / 4:d / *:!
+NSUBST:  F = 5:1 / 4:d / *:!
+NSUBST:  E = 2:1 / 3:d / *:!
+NSUBST:  H = 2:1 / 3:d / *:!
+NSUBST:  . = 10:2 / *:.
+NSUBST:  W = 3:3 / *:W
+KFEAT:   p3 = shallow_water
+COLOUR:  p3 = lightgreen
+KFEAT:   ! = floor
+: sewer_setup(_G)
+MAP
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxx..xxxx...xxxx..xxxxxxxxxxxxxxxxxxx
+    xxxxxxx.........xx..........x...xxxxxxxxxxxxxxx
+    xxxxxxx.....................x...xxxxxxxxxxxxxxx
+    cccccc...........................xx......cccccc
+    cDDDDc...................................cFFFFc
+    cDDDD+......p.............pWpW.......W.pW+FFFFc
+    cD<DD+.....WWWW..WWp..WWpWWWWWpWWW...WWWW+FF<Fc
+    cDDDDc....pWpWWpWWp...pWWWpWWWWpWp...pWpWcFFFFc
+cccccccccccccccccWWWccccccccccWWWWccccccccccWcccccc
+cwWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWc
+cwwWwwwwwWwwwwwWwwwwwWwwwwwWwwwwwWwwwwwWwwwwwWwc
+cwWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWc
+ccc+ccccccccWWccccccccccccWcWcccccccWcccccccccccccc
+c!!!cEEEEc.pWWpW........pWWpWWp..pWpWWpWp.WWWcHHHHc
+c!A!cE<EE+..WpWW.........WWWpW...WWWWWW....WW+HH<Hc
+c!<!cEEEE+................p.W.......WWp...WW.+HHHHc
+cccccEEEEc...................................cHHHHc
+ccccccccccxx................................xcccccc
+xxxxxxxxxxxx.xx.....xxxx....................xxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx.................xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx............xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ### FROGS ##################################################################
@@ -553,7 +607,7 @@ xxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxx
 ENDMAP
 
 ## BIG BADDIE (Purgy) ######################################################
-# Threat is mostly a single larger creature, often Purgy. Combined weight 30.
+# Threat is mostly a single larger creature, often Purgy. Combined weight 40.
 
 NAME:     sewer_big_baddie
 TAGS:     no_item_gen no_monster_gen no_pool_fixup
@@ -723,6 +777,41 @@ xxxxxxxxYxYwwwwwwYYwwwwwwwYYwYxxxxxxxxxxxxx
 xxxxxxxxxxxxYYYYxxxYYYxYYYxxYYxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   kennysheep_door_sewer
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+MONS:   kobold w:40 / bat / giant newt / giant cockroach / giant mite / \
+        adder w:5 / big kobold w:1
+KMONS:  2 = purgy, crocodile
+ITEM:   potion of flight / potion of agility / potion of heal wounds / \
+        potion of invisibility / potion of mutation / potion of degeneration / \
+        scroll of blinking / scroll of teleportation / scroll of fear / \
+        scroll of random uselessness / meat ration / royal jelly / \
+        potion of blood / nothing w:140
+NSUBST: e = 3:* / 9:d / *:.
+NSUBST: 0 = 5:1 / 1:2 / *:.
+KFEAT:  ' = deep_water
+COLOUR: ' = green
+KFEAT:  " = shallow_water
+COLOUR: " = lightgreen
+KPROP:  "' = no_rtele_into
+: sewer_setup(_G)
+MAP
+        ccccccccccccccccccccc
+        cecceccecceccecceccec
+        c0cc0cc0cc0cc0cc0cc0c
+        c+cc+cc+cc+cc+cc+cc+c
+ccccccccc...................ccccccccc
+c"""""""nWWWWWWWWW.WWWWWWWWWn"""""""c
+c'''''''nwwwwwwwwwAwwwwwwwwwn'''''''c
+c"""""""nWWWWWWWWW.WWWWWWWWWn"""""""c
+ccccccccc...................ccccccccc
+        c+cc+cc+cc.cc+cc+cc+c
+        c0cc0cc0cc.cc0cc0cc0c
+        cecceccecc<ccecceccec
+        ccccccccccccccccccccc
 ENDMAP
 
 ### OTHER #####################################################################
