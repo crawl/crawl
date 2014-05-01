@@ -107,7 +107,7 @@ const deck_archetype deck_of_transport[] =
 
 const deck_archetype deck_of_emergency[] =
 {
-    { CARD_TOMB,       {4, 4, 4} },
+    { CARD_TOMB,       {5, 5, 5} },
     { CARD_BANSHEE,    {5, 5, 5} },
     { CARD_DAMNATION,  {0, 1, 2} },
     { CARD_SOLITUDE,   {5, 5, 5} },
@@ -163,9 +163,9 @@ const deck_archetype deck_of_summoning[] =
 const deck_archetype deck_of_wonders[] =
 {
     { CARD_POTION,     {5, 5, 5} },
-    { CARD_FOCUS,      {1, 1, 2} },
-    { CARD_SHUFFLE,    {0, 1, 2} },
-    { CARD_WILD_MAGIC, {5, 5, 5} },
+    { CARD_FOCUS,      {1, 1, 1} },
+    { CARD_SHUFFLE,    {0, 0, 1} },
+    { CARD_WILD_MAGIC, {5, 3, 1} },
     { CARD_DOWSING,    {5, 5, 5} },
     { CARD_BATTLELUST, {5, 5, 5} },
     { CARD_HELM,       {5, 5, 5} },
