@@ -1483,9 +1483,6 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
     if (is_artefact(wpn))
         return false;
 
-    if (is_blessed(wpn))
-        return false;
-
     if (!allow_ranged && is_range_weapon(wpn)
         || wpn.sub_type == WPN_BLOWGUN)
     {

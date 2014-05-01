@@ -2131,6 +2131,7 @@ static void _rebrand_weapon(item_def& wpn)
     }
 
     set_item_ego_type(wpn, OBJ_WEAPONS, new_brand);
+    convert2bad(wpn);
 }
 
 static void _brand_weapon(item_def &wpn)
