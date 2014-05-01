@@ -16,7 +16,5 @@ VISUAL:@The_monster@ panics and turns to flee.
 
 VISUAL:A frightened @monster@ leaps away.
 
-VISUAL:@The_monster@ turns to a blind rush.
-
 VISUAL:@The_monster@ stampedes away.
 %%%%

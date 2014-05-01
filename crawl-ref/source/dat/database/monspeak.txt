@@ -166,7 +166,7 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ screams @at_foe@, "I'm going to kill you! Now!"
 
-@The_monster@ shouts, "You will never get the Orb!" @player_only@
+@The_monster@ shouts, "You will never get the ORB!" @player_only@
 
 @The_monster@ says @to_foe@, "No trespassing is allowed here."
 
@@ -593,13 +593,11 @@ _friendly_confused_medium_
 
 @The_monster@ smirks at the air and says, "Can't catch me!"
 
-@The_monster@ tries to explode, but succeeds only in making a *splort* sound.
-
 VISUAL:@The_monster@ grins madly.
 
 VISUAL:@The_monster@ ponders the situation.
 
-VISUAL:@The_monster@ stomps to and fro like a catoblepas.
+VISUAL:@The_monster@ stomps to and fro.
 %%%%
 _friendly_confused_rare_
 
@@ -608,8 +606,6 @@ _friendly_confused_rare_
 @The_monster@ shouts, "Yeah!"
 
 @The_monster@ sings.
-
-@The_monster@ says, "I'm a rizard!"
 
 @The_monster@ screams, "@player_name@! Help!"
 
@@ -862,8 +858,6 @@ VISUAL:@The_monster@ looks friendly.
 hound
 
 VISUAL:@The_monster@ [pauses|stops] to sniff the @surface@.
-
-VISUAL:@The_monster@ gazes forward, looking utterly alone.
 %%%%
 friendly hound
 
@@ -1038,14 +1032,9 @@ __NONE
 %%%%
 silenced player ghost
 
-w:15
-VISUAL SPELL:@The_monster@ stares at you.
-VISUAL WARN:You feel nameless woe.
+VISUAL SPELL:@The_monster@ stares at @foe@.
 
-w:15
-VISUAL SPELL:@The_monster@ stares at you.
-VISUAL WARN:You feel a chill.
-
+w:5
 VISUAL:@The_monster@ points at @foe@ threateningly.
 
 w:5
@@ -1064,7 +1053,7 @@ VISUAL:@The_monster@ takes a fighting stance.
 
 @The_monster@ sneers, "Do you call that fighting?"
 
-@The_monster@ laughs, "And you think you're capable of finding the legendary Orb of Zot. I had it, you know. Then I gave it away so I could steal it AGAIN."
+@The_monster@ laughs, "And you think you're capable of finding the ORB. I had it, you know. Then I gave it away so I could steal it AGAIN."
 %%%%
 Short Blades player ghost
 
@@ -1172,42 +1161,9 @@ VISUAL:For a moment, you lose track of @the_monster@.
 
 VISUAL:For a moment, @the_monster@ blends into the shadows.
 %%%%
-# TAG_MAJOR_VERSION == 34
-Stabbing player ghost
-
-@The_monster@ says @to_foe@, "Would you mind turning around for a second?"
-
-@The_monster@ points and says, "Look! Behind you!"
-
-@The_monster@ says, "They never saw it coming."
-
-@The_monster@ says @to_foe@, "This won't hurt a bit."
-
-@The_monster@ says, "I have assassinated emperors and kings... you are beneath me."
-
-@The_monster@ says @to_foe@, "You'd better not stain my armour with your blood."
-%%%%
 Shields player ghost
 
-@The_monster@ says, "What's that? Someone is blocking your path? And your attacks too?"
-
 @The_monster@ says, "You can hit me, but you can't hurt me."
-%%%%
-Traps player ghost
-
-@The_monster@ says @to_foe@, "I bet you don't even know how a teleportation trap works."
-
-VISUAL:@The_monster@ quickly assembles and disassembles an arrow trap before your eyes, then grins. @player_only@
-
-w:1
-VISUAL SPELL:@The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is its making that it comes to life and darts away before touching you.
-
-w:1
-@The_monster@ regards you luminously, comprehending your nature, and seems resigned. @Subjective@ shouts, "Do you know what I know, @foe@..."
-
-@The_monster@ rises to @possessive@ full height, drawing on the power of @possessive@ mind.
-
-@The_monster@ regards you with anger at your presumption in entering @possessive@ workshop - the Dungeon.
 %%%%
 Unarmed Combat player ghost
 
@@ -1238,8 +1194,6 @@ VISUAL SPELL:@The_monster@'s fingertips begin to glow.
 VISUAL:@The_monster@ frowns in concentration.
 
 @The_monster@ says, "I am smarter than you!"
-
-@The_monster@ says, "More power, less hunger, what more do I need?"
 %%%%
 Conjurations player ghost
 
@@ -1247,9 +1201,7 @@ VISUAL:@The_monster@ takes aim.
 
 @The_monster@ says, "I will blast you to bits."
 
-@The_monster@ adeptly chants a nearly unspeakable phrase.
-
-@The_monster@ tries to chant a nearly unspeakable phrase, but fails.
+@The_monster@ [adeptly chants|mispronounces] a nearly unspeakable incantation.
 
 VISUAL ENCHANT:@The_monster@ is bathed in the radiant lights of Iskenderun.
 
@@ -1276,8 +1228,6 @@ VISUAL SPELL:@The_monster@ pulls a quokka out of @possessive@ cap.
 @The_monster@ points @at_foe@ and yells, "Attack!"
 
 @The_monster@ says, "It's nice to have friends."
-
-@The_monster@ says, "You had a pet as a child? I had five."
 %%%%
 Necromancy player ghost
 
@@ -1306,8 +1256,6 @@ Transmutations player ghost
 VISUAL:@The_monster@ briefly looks inexplicably like a @_form_@.
 
 VISUAL:@The_monster@ briefly turns into a @_form_@ and back.
-
-VISUAL:One of @the_monster@'s potions boils over and spills out.
 %%%%
 Fire Magic player ghost
 
@@ -1334,8 +1282,6 @@ VISUAL:@The_monster@ is surrounded by a shower of sparks.
 @The_monster@ says, "I'm really charged up about this fight."
 
 @The_monster@ says, "Resistance is futile!"
-
-@The_monster@ says, "It's all a matter of fight versus flight."
 %%%%
 Earth Magic player ghost
 
@@ -1381,8 +1327,6 @@ Evocations player ghost
 @The_monster@ says @to_foe@, "How about a game of cards?"
 
 @The_monster@ says @to_foe@, "Sure you are pointing that wand in the right direction?"
-
-@The_monster@ taunts, "You'd probably drink from a bronze flask."
 
 @The_monster@ says, "I could kill you with a [stone|fan|lamp]."
 %%%%
@@ -1440,7 +1384,7 @@ Fedhas player ghost
 
 @The_monster@ says, "Life goes in cycles. In a little while, you'll be reborn as a tapeworm."
 
-@The_monster@ mutters, "Two more apples and I would have won."
+@The_monster@ mutters, "Two more apples and I would have lived."
 %%%%
 Jiyva player ghost
 
@@ -1497,8 +1441,6 @@ Sif Muna player ghost
 
 @The_monster@ says, "Death is but another step down the path of knowledge."
 
-@The_monster@ says, "Not worrying about food is rather nice, really."
-
 @The_monster@ says, "I have plenty of time to study, now."
 %%%%
 The Shining One player ghost
@@ -1543,10 +1485,6 @@ Xom player ghost
 
 @The_monster@ giggles, "Hey deadhead, what fun to see your head drop dead!"
 
-@The_monster@ says: "Tell me about yourself, by the way. We will soon be clo-o-ose friends, aren't we?"
-
-@The_monster@ suddenly cries: "I wanted that beard TOO! But look, there is no beard! Now, I WILL REVENGE!"
-
 @The_monster@ says: "I need scissors! I think I chipped a nail somewhere..."
 
 @The_monster@ tries to make a funny facial expression.
@@ -1581,9 +1519,6 @@ stone statue
 
 w:5
 dragon
-
-w:2
-lich
 %%%%
 _laughs_
 
@@ -1612,7 +1547,6 @@ w:2
 _player_ghost_common_
 
 VISUAL SPELL:@The_monster@ stares at @foe@.
-VISUAL WARN:You feel cold.
 
 @The_monster@ lets out a mournful wail.
 
@@ -1995,7 +1929,7 @@ _Boris_medium_
 
 @The_monster@ says @to_foe@, "You can't imagine my power."
 
-@The_monster@ says, "Orb? You want the Orb? You'll never get it." @player_only@
+@The_monster@ says, "You want the ORB? You'll never get it." @player_only@
 
 @The_monster@ says @to_foe@, "My power is unlimited."
 
@@ -4783,7 +4717,7 @@ VISUAL:@The_monster@ tries to grin evilly.
 
 @The_monster@ says @to_foe@, "It's nothing personal, but I have to kill you."
 
-@The_monster@ says, "You will never get the Orb, sorry." @player_only@
+@The_monster@ says, "You will never get the ORB, sorry." @player_only@
 
 @The_monster@ shouts @at_foe@, "I love to fight! I love killing!"
 
@@ -5490,7 +5424,7 @@ VISUAL:@The_monster@ looks very balanced.
 
 @The_monster@ @_Norris_verb_@ @to_foe@, "Don't resist. I'll do it for you."
 
-@The_monster@ says @to_foe@, "The Orb is only a myth. Forget about it." @player_only@
+@The_monster@ says @to_foe@, "The ORB is only a myth. Forget about it." @player_only@
 
 @The_monster@ sighs @at_foe@, "Enlightenment is such responsibility."
 
@@ -6358,43 +6292,15 @@ catoblepas
 
 @The_monster@ roars fiercely, eyes lowered.
 
-@The_monster@ stomps with a crash on the ground.
+@The_monster@ stomps with a crash on the @surface@.
 
-VISUAL:@The_monster@ smashes @possessive@ foot into the earth.
+VISUAL:@The_monster@ smashes @possessive@ foot into the @surface@.
 
-VISUAL:@The_monster@ rams the ground with @possessive@ head heavily.
-
-VISUAL:@The_monster@ carves a crescent into the ground, and seems achingly sad.
-
-VISUAL:@The_monster@ claws at the earth roughly with @possessive@ hoof, venting @possessive@ fury.
+VISUAL:@The_monster@ rams the @surface@ with @possessive@ head heavily.
 
 @The_monster@ breathes in.
 
-VISUAL:@The_monster@ stares balefully at the ground.
-
-@The_monster@ breathes heavily, in and out, plumes of crystalline dust staining @possessive@ snout.
-
-@The_monster@ snorts, and paws the ground, preparing.
-
-@The_monster@ lumbers forward and raises @possessive@ head, exhaling.
-
-VISUAL:@The_monster@ basks in @possessive@ own plume of deadly dust.
-
 @The_monster@ snuffles in challenge.
-
-@The_monster@ stomps on the ground.
-WARN:You hear tremors.
-
-VISUAL:@The_monster@ bares @possessive@ teeth, and the ground turns slowly to stone.
-
-VISUAL:@The_monster@ stomps toward @foe@, implacably.
-
-VISUAL:@The_monster@ prepares to charge at @foe@.
-
-VISUAL:@The_monster@ wanders slowly into a prime firing position.
-
-w:1
-VISUAL:@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand. @player_only@
 %%%%
 ################## Crystal guardian ###########################
 crystal guardian
@@ -7473,54 +7379,4 @@ VISUAL:@The_monster@ looks at @possessive@ body and cries without tears.
 
 # Pungent Stench
 @The_monster@ screams, "I am only a sick, bizarre, defaced creation."
-
-##### REMOVED #####
-############ FRANCIS ### A wizard looking for body-parts as spell components
-#Francis
-
-#@_Francis_common_@
-
-#w:4
-#@_Francis_rare_@
-#%%%%
-#_Francis_common_
-
-#SPELL:@The_monster@ casts a spell.
-#ENCHANT:@The_monster@'s hands start to glow with a soft light.
-
-#VISUAL:@The_monster@ ponders the situation.
-
-#VISUAL:@The_monster@ looks for a scalpel.
-
-#VISUAL:@The_monster@ throws something at @foe@.
-
-#@The_monster@ says @to_foe@, "You've got nice eyes. I could use them."
-
-#@The_monster@ says @to_foe@, "I only need a few of your organs!"
-
-#@The_monster@ says @to_foe@, "This won't hurt a bit."
-
-#@The_monster@ says @to_foe@, "I have something special for you."
-
-#@The_monster@ says @to_foe@, "Don't worry, I'll take only what I need."
-#%%%%
-#_Francis_rare_
-
-#@The_monster@ says @to_foe@, "Relax, I know what I'm doing!"
-
-#@The_monster@ asks @foe,@ "Did you know that corpses are an important natural resource?"
-
-#@The_monster@ asks @foe,@ "How about a little dissection?"
-
-#@The_monster@ says @to_foe@, "Excuse me, but I need your head."
-
-#@The_monster@ says @to_foe@, "I want you in my laboratory!"
-
-#@The_monster@ says @to_foe@, "What about your heart? Do you need it?"
-
-#@The_monster@ screams @at_foe@, "Don't move! I want to cut off your ear!"
-
-#@The_monster@ says @to_foe@, "Say, could I borrow your tongue for a while?"
-
-### END Francis ##
-#%%%%
+%%%%
