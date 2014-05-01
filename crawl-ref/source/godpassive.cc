@@ -690,7 +690,7 @@ int qazlal_sh_boost(int piety)
         return 0;
     }
 
-    return min(piety, piety_breakpoint(5)) / 5;
+    return min(piety, piety_breakpoint(5)) / 10;
 }
 
 void qazlal_storm_clouds()
