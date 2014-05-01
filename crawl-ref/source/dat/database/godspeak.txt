@@ -650,7 +650,7 @@ Ashenzari says: Partake of my vision. Partake of my curse.
 %%%%
 Beogh penance
 
-Beogh says: Show any more mercy to foul non-orcs and I'll have you killed.
+Beogh says: Do not betray your orcish brethren!
 %%%%
 Beogh welcome
 
@@ -658,7 +658,7 @@ Beogh says: Drown the unbelievers in a sea of blood!
 %%%%
 Cheibriados penance
 
-Cheibriados says: Don't be so hasty! Slow down!
+Cheibriados says: Don't be so hasty!
 %%%%
 Cheibriados welcome
 
@@ -674,7 +674,7 @@ Dithmenos says: Spread the eternal night.
 %%%%
 Elyvilon penance
 
-Elyvilon says: I plead of you, be more careful when helping others!
+Elyvilon says: Be more diligent in your ministrations.
 %%%%
 Elyvilon welcome
 
@@ -702,7 +702,8 @@ Lugonu says: Spread carnage and corruption!
 %%%%
 Lugonu newgame
 
-Lugonu says: Take this gate or call upon me to unleash you onto the world, my servant!
+Lugonu says: Depart the Abyss and spread corruption, my servant!
+<lightgrey>(use the <w>a</w>bility menu to exit the Abyss)</lightgrey>
 %%%%
 Makhleb welcome
 
@@ -714,7 +715,7 @@ Nemelex Xobeh says: It's all in the cards!
 %%%%
 Okawaru penance
 
-Okawaru says: Don't be a dastardly coward this time!
+Okawaru says: Regain your honour in battle!
 %%%%
 Okawaru welcome
 
@@ -722,7 +723,7 @@ Okawaru says: Bring me glory in combat!
 %%%%
 Sif Muna penance
 
-Sif Muna rages: Pay more attention this time!
+Sif Muna says: Seek out more knowledge and wisdom.
 %%%%
 Sif Muna welcome
 
@@ -738,7 +739,7 @@ The Shining One says: Lead the forces of light to victory!
 %%%%
 Trog penance
 
-Trog mutters: Ah, it's this puny scribbler again...
+Trog rages: Kill them all!
 %%%%
 Trog welcome
 
