@@ -128,6 +128,11 @@ bow of Krishna "Sharnga"
 Un merveilleux arc en or qui appartenu un dieu étranger. Il fonctionne mieux
 avec des flèches spéciales, qui ne sont pas toujours à disposition.
 %%%%
+longbow of Vishnu "Sharnga"
+
+Un merveilleux arc en or qui appartenu un dieu étranger. Il fonctionne mieux
+avec des flèches spéciales, qui ne sont pas toujours à disposition.
+%%%%
 giant club "Skullcrusher"
 
 Cette belle massue pourrait rendre n'importe quel ogre ultra-joyeux – que ce
