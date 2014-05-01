@@ -3413,7 +3413,6 @@ static void _deck_from_specs(const char* _specs, item_def &item)
     {
         MISC_DECK_OF_ESCAPE,
         MISC_DECK_OF_DESTRUCTION,
-        MISC_DECK_OF_DUNGEONS,
         MISC_DECK_OF_SUMMONING,
         MISC_DECK_OF_WONDERS,
         MISC_DECK_OF_PUNISHMENT,
@@ -3447,9 +3446,9 @@ static void _deck_from_specs(const char* _specs, item_def &item)
         while (true)
         {
             mprf(MSGCH_PROMPT,
-"[a] escape     [b] destruction [c] dungeons [d] summoning [e] wonders");
+"[a] escape     [b] destruction [c] summoning [d] wonders");
             mprf(MSGCH_PROMPT,
-"[f] punishment [g] war         [h] changes  [i] defence");
+"[e] punishment [f] war         [g] changes  [h] defence");
             mpr("Which deck (ESC to exit)? ");
 
             const int keyin = toalower(get_ch());
@@ -3462,7 +3461,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
                 return;
             }
 
-            if (keyin < 'a' || keyin > 'i')
+            if (keyin < 'a' || keyin > 'h')
                 continue;
 
             item.sub_type = types[keyin - 'a'];

@@ -934,7 +934,9 @@ static const char* misc_type_name(int type, bool known)
     {
     case MISC_DECK_OF_ESCAPE:      return "deck of escape";
     case MISC_DECK_OF_DESTRUCTION: return "deck of destruction";
+#if TAG_MAJOR_VERSION == 34
     case MISC_DECK_OF_DUNGEONS:    return "deck of dungeons";
+#endif
     case MISC_DECK_OF_SUMMONING:   return "deck of summonings";
     case MISC_DECK_OF_WONDERS:     return "deck of wonders";
     case MISC_DECK_OF_PUNISHMENT:  return "deck of punishment";

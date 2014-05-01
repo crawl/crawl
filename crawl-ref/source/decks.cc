@@ -174,6 +174,7 @@ const deck_archetype deck_of_wonders[] =
     END_OF_DECK
 };
 
+#if TAG_MAJOR_VERSION == 34
 const deck_archetype deck_of_dungeons[] =
 {
     { CARD_WATER,     {5, 5, 5} },
@@ -183,6 +184,7 @@ const deck_archetype deck_of_dungeons[] =
     { CARD_MINEFIELD, {5, 5, 5} },
     END_OF_DECK
 };
+#endif
 
 const deck_archetype deck_of_oddities[] =
 {
@@ -206,7 +208,6 @@ const deck_archetype deck_of_punishment[] =
     { CARD_CURSE,      {5, 5, 5} },
     { CARD_TOMB,       {5, 5, 5} },
     { CARD_DAMNATION,  {3, 3, 3} },
-    { CARD_MINEFIELD,  {5, 5, 5} },
     { CARD_SWINE,      {5, 5, 5} },
     { CARD_TORMENT,    {5, 5, 5} },
     END_OF_DECK
@@ -225,9 +226,6 @@ static bool _card_forbidden(card_type card)
         {
         case CARD_TOMB:
         case CARD_WARPWRIGHT:
-        case CARD_WATER:
-        case CARD_TROWEL:
-        case CARD_MINEFIELD: // with teleport taken away, might be acceptable
         case CARD_STAIRS:
             return true;
         default:
@@ -320,17 +318,25 @@ const char* card_name(card_type card)
     case CARD_POTION:          return "the Potion";
     case CARD_FOCUS:           return "Focus";
     case CARD_SHUFFLE:         return "Shuffle";
+#if TAG_MAJOR_VERSION == 34
     case CARD_EXPERIENCE:      return "Experience";
+#endif
     case CARD_HELIX:           return "the Helix";
+#if TAG_MAJOR_VERSION == 34
     case CARD_SAGE:            return "the Sage";
+#endif
     case CARD_DOWSING:         return "Dowsing";
+#if TAG_MAJOR_VERSION == 34
     case CARD_TROWEL:          return "the Trowel";
     case CARD_MINEFIELD:       return "the Minefield";
+#endif
     case CARD_STAIRS:          return "the Stairs";
     case CARD_GENIE:           return "the Genie";
     case CARD_TOMB:            return "the Tomb";
+#if TAG_MAJOR_VERSION == 34
     case CARD_WATER:           return "Water";
     case CARD_GLASS:           return "Vitrification";
+#endif
     case CARD_BANSHEE:         return "the Banshee";
     case CARD_WILD_MAGIC:      return "Wild Magic";
     case CARD_CRUSADE:         return "the Crusade";
@@ -391,9 +397,11 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
     case MISC_DECK_OF_DESTRUCTION:
         subdecks.push_back(deck_of_destruction);
         break;
+#if TAG_MAJOR_VERSION == 34
     case MISC_DECK_OF_DUNGEONS:
         subdecks.push_back(deck_of_dungeons);
         break;
+#endif
     case MISC_DECK_OF_SUMMONING:
         subdecks.push_back(deck_of_summoning);
         break;
@@ -413,7 +421,6 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
         break;
     case MISC_DECK_OF_CHANGES:
         subdecks.push_back(deck_of_battle);
-        subdecks.push_back(deck_of_dungeons);
         subdecks.push_back(deck_of_wonders);
         break;
     case MISC_DECK_OF_DEFENCE:
@@ -433,9 +440,7 @@ const string deck_contents(uint8_t deck_type)
 
     // XXX: This awkward way of doing things is intended to prevent a card
     // that appears in multiple subdecks from showing up twice in the
-    // output. Currently this should only happen with decks of war, which
-    // have Elixir in both battle and enchantments, and changes, which have
-    // Trowel in both Dungeons and Wonders.
+    // output.
     FixedVector<bool, NUM_CARDS> cards;
     cards.init(false);
     const vector<const deck_archetype *> subdecks = _subdecks(deck_type);
@@ -1454,7 +1459,6 @@ static int _xom_check_card(item_def &deck, card_type card,
             amusement = 0;
         break;
 
-    case CARD_MINEFIELD:
     case CARD_FAMINE:
     case CARD_CURSE:
     case CARD_SWINE:
@@ -1757,26 +1761,6 @@ static void _flight_card(int power, deck_rarity_type rarity)
         potion_effect(POT_INVISIBILITY, random2(power)/4);
     else if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
-}
-
-static void _minefield_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    const int radius = power_level * 2 + 2;
-    for (radius_iterator ri(you.pos(), radius, C_ROUND, LOS_SOLID); ri; ++ri)
-    {
-        if (*ri == you.pos())
-            continue;
-
-        if (grd(*ri) == DNGN_FLOOR && !find_trap(*ri)
-            && one_chance_in(4 - power_level))
-        {
-            if (player_in_branch(BRANCH_ABYSS))
-                grd(*ri) = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
-            else
-                place_specific_trap(*ri, TRAP_RANDOM);
-        }
-    }
 }
 
 static int stair_draw_count = 0;
@@ -2185,37 +2169,6 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     take_note(Note(NOTE_MESSAGE, 0, 0, buf));
 }
 
-static void _experience_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-
-    if (you.experience_level < 27)
-        mpr("You feel more experienced.");
-    else
-        mpr("You feel knowledgeable.");
-
-    more();
-    skill_menu(SKMF_EXPERIENCE_CARD, min(200 + power * 50, HIGH_EXP_POOL));
-
-    // After level 27, boosts you get don't get increased (matters for
-    // charging V:$ with no rN+++ and for felids).
-    const int xp_cap = exp_needed(1 + you.experience_level)
-                     - exp_needed(you.experience_level);
-
-    // power_level 2 means automatic level gain.
-    if (power_level == 2 && you.experience_level < 27)
-        adjust_level(1);
-    else
-    {
-        // Likely to give a level gain (power of ~500 is reasonable
-        // at high levels even for non-Nemelexites, so 50,000 XP.)
-        // But not guaranteed.
-        // Overrides archmagi effect, like potions of experience.
-        you.experience += min(xp_cap, power * 100);
-        level_change();
-    }
-}
-
 static void _remove_bad_mutation()
 {
     // Ensure that only bad mutations are removed.
@@ -2307,151 +2260,6 @@ static void _helix_card(int power, deck_rarity_type rarity)
     }
 }
 
-void sage_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    int c;                      // how much to weight your skills
-    if (power_level == 0)
-        c = 0;
-    else if (power_level == 1)
-        c = random2(10) + 1;
-    else
-        c = 10;
-
-    // FIXME: yet another reproduction of random_choose_weighted
-    // Ah for Python:
-    // skill = random_choice([x*(40-x)*c/10 for x in skill_levels])
-    int totalweight = 0;
-    skill_type result = SK_NONE;
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-    {
-        skill_type s = static_cast<skill_type>(i);
-        if (skill_name(s) == NULL || is_useless_skill(s))
-            continue;
-
-        if (you.skills[s] < MAX_SKILL_LEVEL)
-        {
-            // Choosing a skill is likelier if you are somewhat skilled in it.
-            const int curweight = 1 + you.skills[s] * (40 - you.skills[s]) * c;
-            totalweight += curweight;
-            if (x_chance_in_y(curweight, totalweight))
-                result = s;
-        }
-    }
-
-    if (result == SK_NONE)
-        mpr("You feel omnipotent.");  // All skills maxed.
-    else
-    {
-        int xp = exp_needed(min<int>(you.max_level, 27) + 1)
-               - exp_needed(min<int>(you.max_level, 27));
-        xp = xp / 10 + random2(xp / 4);
-
-        // There may be concurrent sages for the same skill, with different
-        // bonus multipliers.
-        you.sage_skills.push_back(result);
-        you.sage_xp.push_back(xp);
-        you.sage_bonus.push_back(power / 25);
-        mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
-        dprf("Will redirect %d xp, bonus = %d%%\n", xp, (power / 25) * 2);
-    }
-}
-
-void create_pond(const coord_def& center, int radius, bool allow_deep)
-{
-    for (radius_iterator ri(center, radius, C_ROUND, LOS_DEFAULT); ri; ++ri)
-    {
-        const coord_def p = *ri;
-        if (p != you.pos() && coinflip())
-        {
-            if (grd(p) == DNGN_FLOOR)
-            {
-                dungeon_feature_type feat;
-
-                if (allow_deep && coinflip())
-                    feat = DNGN_DEEP_WATER;
-                else
-                    feat = DNGN_SHALLOW_WATER;
-
-                dungeon_terrain_changed(p, feat);
-            }
-        }
-    }
-}
-
-static void _deepen_water(const coord_def& center, int radius)
-{
-    for (radius_iterator ri(center, radius, C_ROUND, LOS_DEFAULT); ri; ++ri)
-    {
-        // FIXME: The iteration shouldn't affect the later squares in the
-        // same iteration, i.e., a newly-flooded square shouldn't count
-        // in the decision as to whether to make the next square flooded.
-        const coord_def p = *ri;
-        if (grd(p) == DNGN_SHALLOW_WATER
-            && p != you.pos()
-            && x_chance_in_y(1+count_neighbours(p, DNGN_DEEP_WATER), 8))
-        {
-            dungeon_terrain_changed(p, DNGN_DEEP_WATER);
-        }
-        if (grd(p) == DNGN_FLOOR
-            && random2(3) < random2(count_neighbours(p, DNGN_DEEP_WATER)
-                                    + count_neighbours(p, DNGN_SHALLOW_WATER)))
-        {
-            dungeon_terrain_changed(p, DNGN_SHALLOW_WATER);
-        }
-    }
-}
-
-static void _water_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    if (power_level == 0)
-    {
-        mpr("You create a pond!");
-        create_pond(you.pos(), 4, false);
-    }
-    else if (power_level == 1)
-    {
-        mpr("You feel the tide rushing in!");
-        create_pond(you.pos(), 6, true);
-        for (int i = 0; i < 2; ++i)
-            _deepen_water(you.pos(), 6);
-    }
-    else
-    {
-        mpr("Water floods your area!");
-
-        // Flood all visible squares.
-        vector<coord_def> vis;
-        for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
-            vis.push_back(*ri);
-
-        // Killing a monster can trigger events that change visibility,
-        // so we need to pre-fetch the list of what's visible.
-        for (vector<coord_def>::const_iterator ri = vis.begin();
-             ri != vis.end(); ++ri)
-        {
-            coord_def p = *ri;
-            destroy_trap(p);
-            if (grd(p) == DNGN_FLOOR || grd(p) == DNGN_SHALLOW_WATER)
-            {
-                dungeon_feature_type new_feature = DNGN_SHALLOW_WATER;
-                if (p != you.pos() && coinflip())
-                    new_feature = DNGN_DEEP_WATER;
-                dungeon_terrain_changed(p, new_feature);
-            }
-        }
-    }
-}
-
-static void _glass_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    const int radius = (power_level == 2) ? 1000
-                                          : random2(power/40) + 2;
-    vitrify_area(radius);
-}
-
 static void _dowsing_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2483,52 +2291,6 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
         detect_creatures(1 + you.duration[DUR_TELEPATHY] / 2 / BASELINE_DELAY,
                          true);
     }
-}
-
-static void _trowel_card(int power, deck_rarity_type rarity)
-{
-    if (!crawl_state.game_standard_levelgen())
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return;
-    }
-
-    coord_def p;
-    for (distance_iterator di(you.pos(), true, false); di; ++di)
-    {
-        if (cell_is_solid(*di) || is_critical_feature(grd(*di)))
-            continue;
-        p = *di;
-        break;
-    }
-
-    if (p.origin()) // can't happen outside wizmode
-        return mpr("The dungeon trembles momentarily.");
-
-    // Vetoes are done too late, should not pass random_map_for_tag()
-    // at all.  Thus, allow retries.
-    int tries;
-    for (tries = 100; tries > 0; tries--)
-    {
-        // Generate a portal to something.
-        const map_def *map = random_map_for_tag("trowel_portal", true, true);
-
-        if (!map)
-            break;
-
-        {
-            no_messages n;
-            if (dgn_safe_place_map(map, true, true, p))
-            {
-                tries = -1; // hrm no_messages
-                break;
-            }
-        }
-    }
-    if (tries > -1)
-        mpr("A portal flickers into view, then vanishes.");
-    else
-        mpr("A mystic portal forms.");
 }
 
 static void _genie_card(int power, deck_rarity_type rarity)
@@ -3056,13 +2818,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_POTION:           _potion_card(power, rarity); break;
     case CARD_FOCUS:            _focus_card(power, rarity); break;
     case CARD_SHUFFLE:          _shuffle_card(power, rarity); break;
-    case CARD_EXPERIENCE:       _experience_card(power, rarity); break;
     case CARD_HELIX:            _helix_card(power, rarity); break;
-    case CARD_SAGE:             sage_card(power, rarity); break;
-    case CARD_WATER:            _water_card(power, rarity); break;
-    case CARD_GLASS:            _glass_card(power, rarity); break;
     case CARD_DOWSING:          _dowsing_card(power, rarity); break;
-    case CARD_MINEFIELD:        _minefield_card(power, rarity); break;
     case CARD_STAIRS:           _stairs_card(power, rarity); break;
     case CARD_GENIE:            _genie_card(power, rarity); break;
     case CARD_CURSE:            _curse_card(power, rarity); break;
@@ -3079,7 +2836,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_SKELETON:  _summon_skeleton(power, rarity); break;
     case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
     case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
-    case CARD_TROWEL:           _trowel_card(power, rarity); break;
     case CARD_BANSHEE:          mass_enchantment(ENCH_FEAR, power); break;
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
@@ -3130,6 +2886,17 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
             break;
         }
         break;
+
+#if TAG_MAJOR_VERSION == 34
+    case CARD_EXPERIENCE:
+    case CARD_SAGE:
+    case CARD_WATER:
+    case CARD_GLASS:
+    case CARD_TROWEL:
+    case CARD_MINEFIELD:
+        mpr("This type of card no longer exists!");
+        break;
+#endif
 
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.

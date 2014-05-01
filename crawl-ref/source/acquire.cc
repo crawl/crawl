@@ -663,10 +663,9 @@ static int _acquirement_misc_subtype()
 {
     // Total weight if none have been seen is 100.
     int result = random_choose_weighted(              // Decks given lowest weight.
-                                                      2, MISC_DECK_OF_DUNGEONS,
                                                       2, MISC_DECK_OF_WAR,
-                                                      2, MISC_DECK_OF_CHANGES,
-                                                      2, MISC_DECK_OF_DEFENCE,
+                                                      3, MISC_DECK_OF_CHANGES,
+                                                      3, MISC_DECK_OF_DEFENCE,
                                                       // The player might want
                                                       // multiple of these.
        (you.seen_misc[MISC_LAMP_OF_FIRE] ?       8 : 15), MISC_LAMP_OF_FIRE,

@@ -422,10 +422,6 @@ deck of destruction
 Un paquet de cartes magiques, dont la plupart provoque la mort et la
 destruction des ennemis (ou, par malchance, à soi-même).
 %%%%
-deck of dungeons
-
-Un paquet de cartes magiques traitant de la modification du donjon.
-%%%%
 deck of punishment
 
 Un paquet de cartes magiques qui cause des ravages sur l'utilisateur.

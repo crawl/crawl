@@ -479,10 +479,6 @@ deck of destruction
 A deck of magical cards, most of which hurl death and destruction at one's foes
 (or, if unlucky, at oneself).
 %%%%
-deck of dungeons
-
-A deck of magical cards which deal with shaping the dungeon.
-%%%%
 deck of escape
 
 A deck of magical cards, mainly dealing with various forms of escape.

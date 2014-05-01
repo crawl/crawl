@@ -455,15 +455,6 @@ cc..cc..ccc..cc..cc
     ccccccccccc
 ENDMAP
 
-NAME:   trove_entry_trowel
-TAGS:   transparent trowel_portal unrand can_overwrite uniq_trove
-DEPTH:  *, !Trove
-veto {{ return you.is_level_on_stack("Trove") }}
-: trove.portal(_G)
-MAP
-O
-ENDMAP
-
 ##############################################################################
 #
 # The portal vaults:

@@ -26,7 +26,9 @@ enum deck_type
     // pure decks
     DECK_OF_ESCAPE,
     DECK_OF_DESTRUCTION,
+#if TAG_MAJOR_VERSION == 34
     DECK_OF_DUNGEONS,
+#endif
     DECK_OF_SUMMONING,
     DECK_OF_WONDERS,
 };
@@ -83,17 +85,25 @@ enum card_type
     CARD_POTION,
     CARD_FOCUS,
     CARD_SHUFFLE,
+#if TAG_MAJOR_VERSION == 34
     CARD_EXPERIENCE,
+#endif
     CARD_WILD_MAGIC,
+#if TAG_MAJOR_VERSION == 34
     CARD_SAGE,                  // skill training
+#endif
     CARD_HELIX,                 // remove one *bad* mutation
     CARD_ALCHEMIST,
 
+#if TAG_MAJOR_VERSION == 34
     CARD_WATER,                 // flood squares
     CARD_GLASS,                 // make walls transparent
+#endif
     CARD_DOWSING,               // mapping/detect SD/traps/items/monsters
+#if TAG_MAJOR_VERSION == 34
     CARD_TROWEL,                // create feature/vault
     CARD_MINEFIELD,             // plant traps
+#endif
     CARD_STAIRS,                // moves stairs around
 
     CARD_GENIE,                 // acquirement OR rotting/deterioration
@@ -144,10 +154,6 @@ void init_deck(item_def &item);
 int cards_in_deck(const item_def &deck);
 card_type get_card_and_flags(const item_def& deck, int idx,
                              uint8_t& _flags);
-
-// Used elsewhere in ZotDef.
-void sage_card(int power, deck_rarity_type rarity);
-void create_pond(const coord_def& center, int radius, bool allow_deep);
 
 const vector<card_type> get_drawn_cards(const item_def& deck);
 // see and mark the first card with a scroll.

@@ -72,15 +72,6 @@ MAP
 O
 ENDMAP
 
-NAME:   lab_entry_trowel
-TAGS:   transparent trowel_portal unrand can_overwrite
-DEPTH:  *, !Lab
-veto {{ return you.is_level_on_stack("Lab") }}
-: lab_portal(_G)
-MAP
-O
-ENDMAP
-
 default-depth: Lab
 #############################################################################
 # Labyrinth exit minivaults
