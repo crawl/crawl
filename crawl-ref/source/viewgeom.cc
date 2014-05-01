@@ -26,6 +26,10 @@
 #define HUD_MIN_GUTTER 2
 #define HUD_MAX_GUTTER 4
 
+// HACK: hardcoded message window height for webtiles
+// needs to fit into 24 lines!
+#define WEBTILES_MSG_MIN_HEIGHT 6
+
 // Helper for layouts.  Tries to increment lvalue without overflowing it.
 static void _increment(int& lvalue, int delta, int max_value)
 {
@@ -36,7 +40,7 @@ static int _msg_min_height()
 {
 #ifdef USE_TILE_WEB
     if (tiles.is_controlled_from_web())
-        return MSG_MIN_HEIGHT;
+        return WEBTILES_MSG_MIN_HEIGHT;
     else
 #endif
         return Options.msg_min_height;
