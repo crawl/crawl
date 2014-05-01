@@ -13,7 +13,7 @@
 
 {{
 function ossuary_portal(e)
-  local timeout_turns = crawl.random_range(800, 1000)
+  local timeout_turns = crawl.random_range(600, 800)
 
   local messager =
     timed_msg {
