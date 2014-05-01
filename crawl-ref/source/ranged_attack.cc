@@ -303,8 +303,13 @@ int ranged_attack::weapon_damage()
     {
         dam = div_rand_round(dam * 13, 10);
     }
-    if (weapon)
-        dam += property(*weapon, PWPN_DAMAGE);
+    if (using_weapon())
+    {
+        if (weapon)
+            dam += property(*weapon, PWPN_DAMAGE);
+        else
+            dam += calc_base_unarmed_damage();
+    }
 
     return dam;
 }
