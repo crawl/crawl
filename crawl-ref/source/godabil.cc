@@ -4730,7 +4730,8 @@ bool qazlal_disaster_area()
     mprf(MSGCH_GOD, "Nature churns violently around you!");
 
     int count = max(1, min((int)targets.size(),
-                           random2avg(you.skill(SK_INVOCATIONS), 2)));
+                            max(you.skill_rdiv(SK_INVOCATIONS, 1, 2),
+                                random2avg(you.skill(SK_INVOCATIONS, 2), 2))));
     shuffle_array(targets);
     for (int i = 0; i < count; i++)
         qazlal_upheaval(targets[i], true);
