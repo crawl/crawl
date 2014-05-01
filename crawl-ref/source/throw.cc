@@ -873,8 +873,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             did_return = true;
     }
 
-    you.time_taken = finesse_adjust_delay(you.attack_delay(you.weapon(),
-                                                           &item));
+    you.time_taken = you.attack_delay(you.weapon(), &item);
 
     // Create message.
     mprf("%s %s%s %s.",
