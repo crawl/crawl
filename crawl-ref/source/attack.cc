@@ -199,9 +199,9 @@ int attack::calc_to_hit(bool random)
         }
 
         // weapon bonus contribution
-        if (weapon)
+        if (weapon && using_weapon())
         {
-            if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon))
+            if (weapon->base_type == OBJ_WEAPONS)
             {
                 mhit += weapon->plus;
                 mhit += property(*weapon, PWPN_HIT);
@@ -235,7 +235,8 @@ int attack::calc_to_hit(bool random)
         // hit roll
         mhit = maybe_random2(mhit, random);
 
-        if (weapon && wpn_skill == SK_SHORT_BLADES && you.duration[DUR_SURE_BLADE])
+        if (using_weapon() && wpn_skill == SK_SHORT_BLADES
+            && you.duration[DUR_SURE_BLADE])
         {
             int turn_duration = you.duration[DUR_SURE_BLADE] / BASELINE_DELAY;
             mhit += 5 +
@@ -245,7 +246,7 @@ int attack::calc_to_hit(bool random)
     }
     else    // Monster to-hit.
     {
-        if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
+        if (weapon && using_weapon())
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
         const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
@@ -258,7 +259,7 @@ int attack::calc_to_hit(bool random)
 
         mhit += attacker->scan_artefacts(ARTP_ACCURACY);
 
-        if (weapon && weapon->base_type == OBJ_RODS)
+        if (weapon && using_weapon() && weapon->base_type == OBJ_RODS)
             mhit += weapon->special;
     }
 
@@ -274,8 +275,11 @@ int attack::calc_to_hit(bool random)
     if (attacker->confused())
         mhit -= 5;
 
-    if (weapon && is_unrandom_artefact(*weapon) && weapon->special == UNRAND_WOE)
+    if (weapon && using_weapon() && is_unrandom_artefact(*weapon)
+        && weapon->special == UNRAND_WOE)
+    {
         return AUTOMATIC_HIT;
+    }
 
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
@@ -550,7 +554,8 @@ bool attack::distortion_affects_defender()
     if (!player_in_branch(BRANCH_ABYSS) && coinflip())
     {
         if (defender->is_player() && attacker_visible
-            && weapon != NULL && !is_unrandom_artefact(*weapon)
+            && weapon != NULL && using_weapon()
+            && !is_unrandom_artefact(*weapon)
             && !is_special_unrandom_artefact(*weapon))
         {
             // If the player is being sent to the Abyss by being attacked
@@ -863,7 +868,7 @@ void attack::chaos_affects_defender()
         // to chaos_affect_actor.
         beam.effect_wanton = !fake_chaos_attack;
 
-        if (weapon && you.can_see(attacker))
+        if (weapon && using_weapon() && you.can_see(attacker))
         {
             beam.name = wep_name(DESC_YOUR);
             beam.item = weapon;
@@ -1032,7 +1037,7 @@ void attack::do_miscast()
         return;
 
     const bool chaos_brand =
-        weapon && get_weapon_brand(*weapon) == SPWPN_CHAOS;
+        weapon && using_weapon() && get_weapon_brand(*weapon) == SPWPN_CHAOS;
 
     // If the miscast is happening on the attacker's side and is due to
     // a chaos weapon then make smoke/sand/etc pour out of the weapon
@@ -1587,7 +1592,7 @@ bool attack::apply_damage_brand(const char *what)
     int brand = 0;
     bool ret = false;
 
-    if (weapon)
+    if (weapon && using_weapon())
     {
         if (is_artefact(*weapon))
             brand_was_known = artefact_known_wpn_property(*weapon, ARTP_BRAND);
@@ -1865,7 +1870,7 @@ bool attack::apply_damage_brand(const char *what)
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
 
-    if (obvious_effect && attacker_visible && weapon != NULL)
+    if (obvious_effect && attacker_visible && weapon && using_weapon())
     {
         if (is_artefact(*weapon))
             artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
@@ -1952,7 +1957,7 @@ int attack::player_stab_weapon_bonus(int damage)
         int bonus = (you.dex() * (stab_skill + 100)) / 500;
 
         // We might be unarmed if we're using the boots of the Assassin.
-        if (!weapon || weapon->sub_type != WPN_DAGGER)
+        if (!weapon || !using_weapon() || weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
