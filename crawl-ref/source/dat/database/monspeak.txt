@@ -1386,6 +1386,14 @@ Fedhas player ghost
 
 @The_monster@ mutters, "Two more apples and I would have lived."
 %%%%
+Gozag player ghost
+
+VISUAL:@The_monster@ waves a bulging coin purse at you.
+
+@The_monster@ says, "You're as good as gold."
+
+@The_monster@ says, "I guess you can't buy your way into a good afterlife."
+%%%%
 Jiyva player ghost
 
 @The_monster@ says @to_foe@, "Still so attached to shiny items?"
@@ -3358,6 +3366,21 @@ w:50
 @The_monster@ says, "Careful; you might trip over your own shadow."
 
 @The_monster@ holds up a torch and says, "I bet you miss these."
+%%%%
+Gozag Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "Spare some coin?"
+
+@The_monster@ says, "I hate the rich."
+
+@The_monster@ says, "I bet you have to pay people to get friends."
+
+@The_monster@ says, "Couldn't find enough potions?"
+
+@The_monster@ says, "So the shops here weren't enough for you?"
 %%%%
 Qazlal Donald
 
