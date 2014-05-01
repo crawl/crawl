@@ -2897,11 +2897,10 @@ static void _gain_piety_point()
             if (you_worship(GOD_DITHMENOS) && i == 0)
                 mprf(MSGCH_GOD, "You are shrouded in an aura of darkness!");
 
-            if (you_worship(GOD_QAZLAL) && (i == 2 || i == 4))
+            if (you_worship(GOD_QAZLAL) && i == 3)
             {
                 mprf(MSGCH_GOD, "The storm surrounding you grows powerful "
-                                "enough to %s missiles.",
-                                i == 4 ? "deflect" : "repel");
+                                "enough to repel missiles.");
             }
         }
     }
@@ -3064,11 +3063,10 @@ void lose_piety(int pgn)
                 if (_need_water_walking() && !beogh_water_walk())
                     fall_into_a_pool(you.pos(), grd(you.pos()));
 
-                if (you_worship(GOD_QAZLAL) && (i == 2 || i == 4))
+                if (you_worship(GOD_QAZLAL) && i == 3)
                 {
                     mprf(MSGCH_GOD, "The storm surrounding you is now too weak "
-                                    "to %s missiles.",
-                                    i == 4 ? "deflect" : "repel");
+                                    "to repel missiles.");
                 }
             }
         }
