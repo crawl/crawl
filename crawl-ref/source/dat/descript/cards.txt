@@ -92,10 +92,6 @@ Shuffle card
 
 This card interchanges your three attributes. Use with caution!
 %%%%
-Experience card
-
-This card makes you more experienced.
-%%%%
 Wild Magic card
 
 This card causes wild magic, as if from miscasting a spell, to act upon you.
@@ -105,38 +101,14 @@ the Helix card
 This card changes your mutations. Higher power levels make the change more
 likely to be beneficial.
 %%%%
-the Sage card
-
-This card will funnel some of your earned experience towards training a
-specific skill and train it faster than it normally would. It is more likely to
-affect a skill that you are already knowledgeable in at high power levels.
-%%%%
 the Alchemist card
 
 This card transmutes some of your gold into health and magical energy.
-%%%%
-Water card
-
-This card changes the floor around you into water.
-%%%%
-Vitrification card
-
-This card turns walls translucent.
 %%%%
 Dowsing card
 
 This card lets you detect traps and items, reveals your surroundings, makes you
 telepathic for a short time, or some combination thereof.
-%%%%
-the Trowel card
-
-This card creates a mystic portal to somewhere. It has a limited range of
-possible destinations, and will no longer have any effect once those are
-exhausted.
-%%%%
-the Minefield card
-
-This card makes your immediate surroundings more dangerous.
 %%%%
 # deck of summonings
 the Crusade card

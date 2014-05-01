@@ -1479,7 +1479,7 @@ void SkillMenu::set_links()
 
 void skill_menu(int flag, int exp)
 {
-    // potion or card; you may elect to sin against Trog
+    // experience potion; you may elect to sin against Trog
     if (flag & SKMF_EXPERIENCE && all_skills_maxed(true))
     {
         mpr("You feel omnipotent.");
@@ -1500,7 +1500,7 @@ void skill_menu(int flag, int exp)
     int keyn;
 
     // Calling a user lua function here to let players automatically accept
-    // the given skill distribution for a potion or card of experience.
+    // the given skill distribution for a potion of experience.
     if (skm.is_set(SKMF_EXPERIENCE)
         && clua.callbooleanfn(false, "auto_experience", NULL)
         && skm.exit())

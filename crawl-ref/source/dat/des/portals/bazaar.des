@@ -15,10 +15,8 @@
 
 lua {{
 
-function place_bazaar_portal(e, perm, trowel)
-  if not trowel then
-    e.tags("bzr_entry")
-  end
+function place_bazaar_portal(e, perm)
+  e.tags("bzr_entry")
   e.kfeat("O = enter_bazaar")
   if perm then
      e.lua_marker('O', bazaar_portal(false))
@@ -103,15 +101,6 @@ NAME:   bzr_entry_dummy
 TAGS:   transparent zotdef_bazaar allow_dup
 veto {{ return you.is_level_on_stack("Bazaar") }}
 : place_bazaar_portal(_G)
-MAP
-O
-ENDMAP
-
-NAME:   bzr_entry_trowel
-TAGS:   transparent trowel_portal unrand can_overwrite
-DEPTH:  *, !Bazaar
-veto {{ return you.is_level_on_stack("Bazaar") }}
-: place_bazaar_portal(_G, false, true)
 MAP
 O
 ENDMAP

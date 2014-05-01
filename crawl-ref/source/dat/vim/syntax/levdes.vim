@@ -91,7 +91,7 @@ syn match desBranchname contained /bailey\|ice_cave\|volcano\|wizlab/
 " in abyss.cc
 syn keyword desOrientation abyss_exit
 " in decks.cc and dgn-labyrinth.cc (without `minotaur` because monster)
-syn keyword desOrientation trowel_portal lab generate_loot
+syn keyword desOrientation lab generate_loot
 " from dlua.ziggurat
 syn keyword desOrientation ziggurat_pillar centered
 " map building in dungeon.cc (`transparent` is handled later)

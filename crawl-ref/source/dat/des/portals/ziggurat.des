@@ -7,28 +7,10 @@
 
 : require("dlua/ziggurat.lua")
 
-### Entry vaults to ziggurats##########################################
+### Entry vaults to ziggurats ##########################################
 #
 # There is one Ziggurat in Depths.
-# You can get one more from a Trowel card.
 # Otherwise, you need to search Pan, with 8% chance per level.
-
-# Dummy for the trowel card
-NAME:   enter_the_ziggurat
-TAGS:   trowel_portal unrand can_overwrite
-DEPTH:  *, !Zig
-veto {{
-  for d = 1,27 do
-    if you.is_level_on_stack("Zig:" .. d) then
-      return true
-    end
-  end
-  return false
-}}
-KFEAT:  O = enter_ziggurat
-MAP
-O
-ENDMAP
 
 default-depth: Depths
 

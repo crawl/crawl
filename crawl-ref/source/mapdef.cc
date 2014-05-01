@@ -4947,7 +4947,6 @@ static misc_item_type _deck_type_string_to_subtype(const string& s)
 {
     if (s == "escape")      return MISC_DECK_OF_ESCAPE;
     if (s == "destruction") return MISC_DECK_OF_DESTRUCTION;
-    if (s == "dungeons")    return MISC_DECK_OF_DUNGEONS;
     if (s == "summoning")   return MISC_DECK_OF_SUMMONING;
     if (s == "summonings")  return MISC_DECK_OF_SUMMONING;
     if (s == "wonders")     return MISC_DECK_OF_WONDERS;
@@ -4973,9 +4972,13 @@ static misc_item_type _random_deck_subtype()
         if (dummy.sub_type == MISC_DECK_OF_PUNISHMENT)
             continue;
 
+#if TAG_MAJOR_VERSION == 34
+        if (dummy.sub_type == MISC_DECK_OF_DUNGEONS)
+            continue;
+#endif
+
         if ((dummy.sub_type == MISC_DECK_OF_ESCAPE
              || dummy.sub_type == MISC_DECK_OF_DESTRUCTION
-             || dummy.sub_type == MISC_DECK_OF_DUNGEONS
              || dummy.sub_type == MISC_DECK_OF_SUMMONING
              || dummy.sub_type == MISC_DECK_OF_WONDERS)
             && !one_chance_in(5))

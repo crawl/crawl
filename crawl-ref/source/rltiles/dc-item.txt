@@ -984,6 +984,7 @@ misc_deck MISC_DECK
 %compose misc_deck
 %compose i-deck_destruction
 %finish
+# Remove dungeons when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck
 %compose i-deck_dungeons
@@ -1021,6 +1022,7 @@ misc_deck_rare MISC_DECK_RARE
 %compose misc_deck_rare
 %compose i-deck_destruction
 %finish
+# Remove dungeons when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_rare
 %compose i-deck_dungeons
@@ -1058,6 +1060,7 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_destruction
 %finish
+# Remove dungeons when TAG_MAJOR_VERSION > 34
 %start
 %compose misc_deck_legendary
 %compose i-deck_dungeons

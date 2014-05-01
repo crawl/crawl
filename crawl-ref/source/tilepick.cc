@@ -4056,7 +4056,9 @@ static tileidx_t _tileidx_misc(const item_def &item)
 
     case MISC_DECK_OF_ESCAPE:
     case MISC_DECK_OF_DESTRUCTION:
+#if TAG_MAJOR_VERSION == 34
     case MISC_DECK_OF_DUNGEONS:
+#endif
     case MISC_DECK_OF_SUMMONING:
     case MISC_DECK_OF_WONDERS:
     case MISC_DECK_OF_PUNISHMENT:

@@ -281,10 +281,6 @@ deck of destruction
 Et spil magiske kort som for det meste slynger død og ødelæggelse efter dine
 fjender (eller dig selv hvis du er uheldig).
 %%%%
-deck of dungeons
-
-Et spil magiske kort som former de underjordiske gange på forskellige måder.
-%%%%
 deck of punishment
 
 Et spil magiske kort som hærger brugeren.

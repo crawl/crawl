@@ -12,7 +12,7 @@
 ##############################################################################
 
 {{
-function bailey_portal(e, ptype, trowel)
+function bailey_portal(e, ptype)
   local timeout_turns = crawl.random_range(600, 800)
 
   local messager =
@@ -43,21 +43,19 @@ function bailey_portal(e, ptype, trowel)
         floor = "stone_arch",
         feat_tile = "dngn_portal_bailey_gone",
         msg = messager })
-  if not trowel then
-    e.tags("uniq_bailey chance_bailey")
-    e.chance(500)
-  end
+  e.tags("uniq_bailey chance_bailey")
+  e.chance(500)
 
   e.kfeat("O = enter_bailey")
   e.tile("c = wall_stone_brick")
 end
 
-function bailey_portal_axe(e, trowel)
-  bailey_portal(e, 'axe', trowel)
+function bailey_portal_axe(e)
+  bailey_portal(e, 'axe')
 end
 
 function bailey_portal_polearm(e)
-  bailey_portal(e, 'polearm', trowel)
+  bailey_portal(e, 'polearm')
 end
 
 -- colours
@@ -127,20 +125,6 @@ end
 
 # Basic bailey entries ##########################################
 default-depth: D:7-14, Orc:1-3
-
-NAME:   bailey_entry_trowel
-TAGS:   transparent trowel_portal unrand can_overwrite
-DEPTH:  *, !Bailey
-veto {{ return you.is_level_on_stack("Bailey") }}
-: local rnd = crawl.random2(2)
-: if rnd == 0 then
-:   bailey_portal_axe(_G, true)
-: elseif rnd == 1 then
-:   bailey_portal_polearm(_G, true)
-: end
-MAP
-O
-ENDMAP
 
 NAME: enter_bailey_1
 TAGS: transparent
