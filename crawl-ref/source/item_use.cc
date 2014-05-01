@@ -2099,24 +2099,6 @@ static void _rebrand_weapon(item_def& wpn)
     int new_brand = old_brand;
     const string itname = wpn.name(DESC_YOUR);
 
-    // You can't rebrand blessed weapons.
-    switch (wpn.sub_type)
-    {
-        case WPN_BLESSED_FALCHION:
-        case WPN_BLESSED_LONG_SWORD:
-        case WPN_BLESSED_SCIMITAR:
-        case WPN_EUDEMON_BLADE:
-        case WPN_BLESSED_BASTARD_SWORD:
-        case WPN_BLESSED_GREAT_SWORD:
-        case WPN_BLESSED_CLAYMORE:
-        case WPN_SACRED_SCOURGE:
-        case WPN_TRISHULA:
-        {
-            mprf("%s cannot be rebranded.", itname.c_str());
-            return;
-        }
-    }
-
     // now try and find an appropriate brand
     while (old_brand == new_brand || _god_hates_brand(new_brand))
     {
