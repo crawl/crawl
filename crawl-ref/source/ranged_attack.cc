@@ -305,11 +305,6 @@ int ranged_attack::weapon_damage()
     }
     if (weapon)
         dam += property(*weapon, PWPN_DAMAGE);
-    else if (projectile->base_type == OBJ_MISSILES
-             && projectile->sub_type == MI_STONE)
-    {
-        dam /= 2; // Special cases should go die. -- Grunt
-    }
 
     return dam;
 }
