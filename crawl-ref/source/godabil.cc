@@ -4414,8 +4414,22 @@ bool gozag_bribe_branch()
 {
     const int bribe_amount = 3000;
     branch_type branch = you.where_are_you;
+    if (feat_is_branch_stairs(grd(you.pos())))
+    {
+        for (int i = 0; i < NUM_BRANCHES; ++i)
+            if (branches[i].entry_stairs == grd(you.pos())
+                && _gozag_branch_bribable(static_cast<branch_type>(i)))
+            {
+                string prompt =
+                    make_stringf("Do you want to bribe the denizens of %s?",
+                                 branches[i].longname);
+                if (yesno(prompt.c_str(), true, 'n'))
+                    branch = static_cast<branch_type>(i);
+                break;
+            }
+    }
     string who = make_stringf("the denizens of %s",
-                              branches[you.where_are_you].longname);
+                              branches[branch].longname);
     if (!_gozag_branch_bribable(branch))
     {
         mprf("You can't bribe %s.", who.c_str());
