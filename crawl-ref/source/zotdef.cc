@@ -1006,50 +1006,6 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
     return true;
 }
 
-void zotdef_sage(int power)
-{
-    // how much to weight your skills
-    const int c = random2(10) + 1;
-
-    // FIXME: yet another reproduction of random_choose_weighted
-    // Ah for Python:
-    // skill = random_choice([x*(40-x)*c/10 for x in skill_levels])
-    int totalweight = 0;
-    skill_type result = SK_NONE;
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-    {
-        skill_type s = static_cast<skill_type>(i);
-        if (skill_name(s) == NULL || is_useless_skill(s))
-            continue;
-
-        if (you.skills[s] < MAX_SKILL_LEVEL)
-        {
-            // Choosing a skill is likelier if you are somewhat skilled in it.
-            const int curweight = 1 + you.skills[s] * (40 - you.skills[s]) * c;
-            totalweight += curweight;
-            if (x_chance_in_y(curweight, totalweight))
-                result = s;
-        }
-    }
-
-    if (result == SK_NONE)
-        mpr("You feel omnipotent.");  // All skills maxed.
-    else
-    {
-        int xp = exp_needed(min<int>(you.max_level, 27) + 1)
-               - exp_needed(min<int>(you.max_level, 27));
-        xp = xp / 10 + random2(xp / 4);
-
-        // There may be concurrent sages for the same skill, with different
-        // bonus multipliers.
-        you.sage_skills.push_back(result);
-        you.sage_xp.push_back(xp);
-        you.sage_bonus.push_back(power / 25);
-        mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
-        dprf("Will redirect %d xp, bonus = %d%%\n", xp, (power / 25) * 2);
-    }
-}
-
 void zotdef_create_pond(const coord_def& center, int radius)
 {
     for (radius_iterator ri(center, radius, C_ROUND, LOS_DEFAULT); ri; ++ri)

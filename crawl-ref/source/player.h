@@ -149,10 +149,6 @@ public:
   unsigned int  transfer_skill_points;
   unsigned int  transfer_total_skill_points;
 
-  vector<skill_type> sage_skills; // skills with active Sage
-  vector<int> sage_xp;            // how much more XP to redirect
-  vector<int> sage_bonus;         // how much bonus XP to give in these skills
-
   int  skill_cost_level;
   int  exp_available;
   int  zot_points; // ZotDef currency

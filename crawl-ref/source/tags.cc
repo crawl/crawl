@@ -1304,15 +1304,6 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.form);
     CANARY;
 
-    j = min<int>(you.sage_skills.size(), 32767);
-    marshallShort(th, j);
-    for (i = 0; i < (int)j; ++i)
-    {
-        marshallByte(th, you.sage_skills[i]);
-        marshallInt(th, you.sage_xp[i]);
-        marshallInt(th, you.sage_bonus[i]);
-    }
-
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
     for (i = 0; i < NUM_EQUIP; ++i)
@@ -2159,23 +2150,19 @@ static void tag_read_you(reader &th)
 #endif
     EAT_CANARY;
 
-    count = unmarshallShort(th);
-    ASSERT_RANGE(count, 0, 32768);
-    you.sage_skills.resize(count, SK_NONE);
-    you.sage_xp.resize(count, 0);
-    you.sage_bonus.resize(count, 0);
-    for (i = 0; i < count; ++i)
-    {
-        you.sage_skills[i] = static_cast<skill_type>(unmarshallByte(th));
 #if TAG_MAJOR_VERSION == 34
-        if (you.sage_skills[i] == SK_STABBING || you.sage_skills[i] == SK_TRAPS)
-            you.sage_skills[i] = SK_STEALTH;
-#endif
-        ASSERT(!is_invalid_skill(you.sage_skills[i]));
-        ASSERT(!is_useless_skill(you.sage_skills[i]));
-        you.sage_xp[i] = unmarshallInt(th);
-        you.sage_bonus[i] = unmarshallInt(th);
+    if (th.getMinorVersion() < TAG_MINOR_SAGE_REMOVAL)
+    {
+        count = unmarshallShort(th);
+        ASSERT_RANGE(count, 0, 32768);
+        for (i = 0; i < count; ++i)
+        {
+            unmarshallByte(th);
+            unmarshallInt(th);
+            unmarshallInt(th);
+        }
     }
+#endif
 
     // How many you.equip?
     count = unmarshallByte(th);
