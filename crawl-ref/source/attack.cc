@@ -1385,9 +1385,87 @@ void attack::player_exercise_combat_skills()
 {
 }
 
+/* Returns attacker base unarmed damage
+ *
+ * Scales for current mutations and unarmed effects
+ * TODO: Complete symmetry for base_unarmed damage
+ * between monsters and players.
+ */
 int attack::calc_base_unarmed_damage()
 {
-    return 0;
+    int damage = 0;
+
+    // Should only get here if we're not wielding something that's a weapon.
+    // If there's a non-weapon in hand, it has no base damage.
+    // Throwing things with a weapon in hand is okay, however.
+    if (weapon && wpn_skill == SK_UNARMED_COMBAT)
+        return 0;
+
+    if (attacker->is_player())
+    {
+        switch (you.form)
+        {
+        case TRAN_SPIDER:
+            damage = 5;
+            break;
+        case TRAN_BAT:
+            damage = (you.species == SP_VAMPIRE ? 2 : 1);
+            break;
+        case TRAN_ICE_BEAST:
+        case TRAN_FUNGUS:
+        case TRAN_TREE:
+            damage = 12;
+            break;
+        case TRAN_BLADE_HANDS:
+            damage = 8 + div_rand_round(you.strength() + you.dex(), 3);
+            break;
+        case TRAN_STATUE: // multiplied by 1.5 later
+            damage = 6 + div_rand_round(you.strength(), 3);
+            break;
+        case TRAN_DRAGON: // +6 from claws
+            damage = 12 + div_rand_round(you.strength() * 2, 3);
+            break;
+        case TRAN_LICH:
+        case TRAN_WISP:
+            damage = 5;
+            break;
+        case TRAN_PIG:
+        case TRAN_PORCUPINE:
+#if TAG_MAJOR_VERSION == 34
+        case TRAN_JELLY:
+#endif
+        case TRAN_SHADOW:
+        case TRAN_NONE:
+        case TRAN_APPENDAGE:
+            damage = 3;
+            break;
+        }
+
+        if (you.has_usable_claws() && wpn_skill == SK_UNARMED_COMBAT)
+        {
+            // Claw damage only applies for bare hands.
+            damage += you.has_claws(false) * 2;
+            apply_bleeding = true;
+        }
+
+        if (you.form_uses_xl())
+            damage += you.experience_level;
+        else if (you.form == TRAN_BAT || you.form == TRAN_PORCUPINE)
+        {
+            // Bats really don't do a lot of damage.
+            damage += you.skill_rdiv(wpn_skill, 1, 5);
+        }
+        else
+            damage += you.skill_rdiv(wpn_skill);
+
+        if (you.duration[DUR_CONFUSING_TOUCH] && wpn_skill == SK_UNARMED_COMBAT)
+            damage -= 3;
+
+        if (damage < 0)
+            damage = 0;
+    }
+
+    return damage;
 }
 
 // TODO: Potentially remove, consider integrating with other to-hit or stat
