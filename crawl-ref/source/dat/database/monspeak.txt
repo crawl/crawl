@@ -883,6 +883,8 @@ VISUAL:@The_monster@ seems to be having trouble coordinating all six of @possess
 %%%%
 default confused winged insect
 
+VISUAL:@The_monster@ flutters around in erratic circles.
+
 VISUAL:@The_monster@ wildly waves @possessive@ antennae.
 
 VISUAL:@The_monster@ wobbles in @possessive@ flight.
@@ -924,21 +926,9 @@ default 'cap-J'
 
 VISUAL:@The_monster@ jiggles.
 %%%%
-default confused 'k'
-
-SOUND:@The_monster@ buzzes around in tight circles.
-%%%%
-default silenced confused 'k'
-
-VISUAL:@The_monster@ flies around in tight circles.
-%%%%
 'l'
 
 @The_monster@ hisses menacingly.
-%%%%
-'j'
-
-VISUAL:@The_monster@ briefly extends @possessive@ eye-stalks.
 %%%%
 'r'
 
@@ -948,16 +938,31 @@ default confused 'r'
 
 VISUAL:@The_monster@ runs around in a circle.
 %%%%
-# Excluding the moth of wrath, which being a moth doesn't buzz.
+# Bees and wasps - moths and giant fireflies have separate speech.
 default confused 'y'
 
 SOUND:@The_monster@ buzzes around in tight circles.
+%%%%
+default silenced confused 'y'
+
+VISUAL:@The_monster@ flies around in tight circles.
 %%%%
 # Statues and golems never speak unless assigned a message to their
 # specific species.
 default '8'
 
 __NONE
+#########################################
+# Speech strings by monster genus
+#########################################
+%%%%
+giant slug
+
+VISUAL:@The_monster@ briefly extends @possessive@ eye-stalks.
+%%%%
+default confused moth
+
+@default confused winged insect@
 ######################
 # Demon taunts
 ######################
@@ -6410,6 +6415,7 @@ death yak
 
 @yak@
 %%%%
+################## Deep elf high priest ####################
 deep elf high priest
 
 @_high_priest_@
@@ -6419,17 +6425,22 @@ deep elf sorcerer
 
 @_wizard_@
 %%%%
-################## #########################################
+################## Electric golem ##########################
 default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
 %%%%
-################## #########################################
+################## Giant firefly ###########################
+default confused giant firefly
+
+@default confused winged insect@
+%%%%
+################## Ice statue ##############################
 default ice statue
 
 VISUAL:@The_monster@ glitters chillingly in the dim dungeon light.
 %%%%
-################## #########################################
+################## Hell lords ##############################
 hell lord
 
 @_hell_lord_taunt_@
@@ -6488,13 +6499,6 @@ VISUAL:@The_monster@ draws a finger across @possessive@ throat.
 
 @The_monster@ shouts @at_foe@, "Die, @foe_name@!"
 %%%%
-################## Killer bees #############################
-# Too many killer bees in the hive to have them give messages, unless
-# they're confused or fleeing.
-killer bee
-
-__NONE
-%%%%
 ################## Killer Klown ############################
 # Welcome to the circus!
 Killer Klown
@@ -6546,32 +6550,6 @@ VISUAL:@The_monster@ skips for a moment.
 moth of wrath
 
 VISUAL:@The_monster@ angrily waves @possessive@ antennae.
-%%%%
-# The moth of wrath doesn't buzz like the other 'y' monsters, what
-# with it being a moth.
-default confused moth of wrath
-
-VISUAL:@The_monster@ salivates at the thought of eating you, but forgets you're only a short distance away.
-
-@The_monster@ scrapes @possessive@ wings on the ground slowly, weirdly suspended on a wingtip.
-
-VISUAL:@The_monster@ flutters around in erratic circles.
-
-VISUAL:@The_monster@ collides with @possessive@ own huge wings.
-
-VISUAL:Dropping a few feet, @the_monster@ flutters unhappily.
-
-VISUAL SPELL:@The_monster@ flaps @possessive@ wings at @foe@!
-VISUAL ENCHANT:@Foe@ looks confused.
-
-VISUAL:@The_monster@ slowly flaps @possessive@ antennae at @reflexive@.
-
-VISUAL:@The_monster@ stares wrathfully at the floor.
-
-VISUAL SPELL:@The_monster@ flicks @possessive@ antennae at the ground!
-VISUAL WARN:The ground rattles!
-
-VISUAL:@The_monster@ tries to bite you, but has no teeth.
 %%%%
 ################## Profane servitor ########################
 # Empty, to prevent falling back to holy-specific cap-A

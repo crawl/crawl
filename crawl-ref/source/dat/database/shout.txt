@@ -298,13 +298,16 @@ VISUAL:@The_monster@ twitches @possessive@ antennae in your direction.
 
 VISUAL:@The_monster@ turns @possessive@ gaze towards you.
 %%%%
-'j'
-
-VISUAL:@The_monster@ swivels @possessive@ eye-stalks towards you.
-%%%%
 'cap-J'
 
 VISUAL:@The_monster@ quivers.
+########################################
+# Shouts by monster genus
+########################################
+%%%%
+giant slug
+
+VISUAL:@The_monster@ swivels @possessive@ eye-stalks towards you.
 ########################################
 # Shouts for specific monsters
 ########################################
