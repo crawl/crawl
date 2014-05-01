@@ -768,6 +768,55 @@ MAP
    @ @ @
 ENDMAP
 
+NAME:  nicolae_gozag_cash_rules_everything_around_me
+TAGS:  temple_overflow_gozag temple_overflow_1 uniq_altar_gozag \
+       no_hmirror no_vmirror no_rotate no_item_gen transparent decor
+DEPTH: D:2-
+KFEAT: _ = altar_gozag
+: interest_check(_G)
+MAP
+bbb@bbb
+b....$b
+b.b.bbb
+b.._..b
+bbb.b.b
+b$....b
+bbb@bbb
+ENDMAP
+
+# No, you probably can't afford any of it.
+# You should have thought of that before being poor.
+NAME:  nicolae_gozag_zags_fifth_avenue
+TAGS:  temple_overflow_gozag temple_overflow_1 uniq_altar_gozag
+TAGS:  no_pool_fixup no_item_gen no_monster_gen decor transparent
+DEPTH: D:2-
+FTILE: '_TS = floor_limestone
+KFEAT: _ = altar_gozag
+KFEAT: S = general shop name:Gozag type:Platinum suffix:Reserve greed:100 ; \
+       any weapon randart | any armour randart | any jewellery randart
+: interest_check(_G)
+MAP
+wwwwwww....
+w'''''wwww.
+w'T'T''''w.
+w''S'''_''@
+w'T'T''''w.
+w'''''wwww.
+wwwwwww....
+ENDMAP
+
+NAME:  nicolae_gozag_seed_capital
+TAGS:  temple_overflow_gozag temple_overflow_1 uniq_altar_gozag decor
+TAGS:  transparent no_item_gen
+DEPTH: D:2-
+KFEAT: _ = altar_gozag
+: interest_check(_G)
+MAP
+$$$
+$_$
+$$$
+ENDMAP
+
 ### Kikubaaqudgha overflow altars #############################################
 
 NAME:   lemuel_zombie_altar_kikubaaqudgha
@@ -1403,6 +1452,64 @@ MAP
 -ccc-.-ccc-
 -ccc-.-ccc-
  ----@----
+ENDMAP
+
+NAME:  nicolae_qazlal_eye_of_the_storm
+TAGS:  temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
+TAGS:  no_trap_gen no_item_gen no_monster_gen
+DEPTH: D:2-
+KPROP: ' = no_rtele_into
+KMONS: d = diamond obelisk
+KFEAT: _ = altar_qazlal
+: interest_check(_G)
+MAP
+     ccccc
+   ccc'''ccc
+  cc'''''''cc
+ cc'''''''''cc
+ c'''''''''''c
+cc'''''''''''cc
+@nnnnnn'''''''c
+@...._nd''''''c
+@nnnnnn'''''''c
+cc'''''''''''cc
+ c'''''''''''c
+ cc'''''''''cc
+  cc'''''''cc
+   ccc'''ccc
+     ccccc
+ENDMAP
+
+NAME:    nicolae_qazlal_style_of_elements
+TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
+TAGS:    no_trap_gen no_item_gen no_monster_gen
+DEPTH:   D:2-
+SHUFFLE: faew
+KPROP:   faew = no_rtele_into
+KMONS:   f = fire elemental
+KMONS:   a = air elemental
+KMONS:   e = earth elemental
+KMONS:   w = water elemental
+KFEAT:   _ = altar_qazlal
+KFEAT:   f = lava
+KFEAT:   w = deep_water
+MARKER:  a = lua:fog_machine { cloud_type = "thin mist", \
+                               pow_min = 100, pow_max = 100, delay = 1, \
+                               size = 1, walk_dist = 0, start_clouds = 1 }
+MARKER:  e = lua:fog_machine { cloud_type = "sparse dust", \
+                               pow_min = 100, pow_max = 100, delay = 1, \
+                               size = 1, walk_dist = 0, start_clouds = 1 }
+: interest_check(_G)
+MAP
+ccc.@.ccc
+cfn...nac
+cnn...nnc
+.........
+...._....
+.........
+cnn...nnc
+cwn...nec
+ccc...ccc
 ENDMAP
 
 ### Sif Muna overflow altars ##################################################
