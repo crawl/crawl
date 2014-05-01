@@ -1745,15 +1745,13 @@ VISUAL:@The_monster@ slowly taps his weapon in his hand.
 
 @The_monster@ says, "Your corpse will decorate my castle walls." @player_only@
 
-@The_monster@ says, "In my kingdom, weaklings like you are put to the
-sword." @player_only@
+@The_monster@ says, "In my kingdom, weaklings like you are put to the sword." @player_only@
 
 @The_monster@ says, "No maze can contain me."
 
 @The_monster@ chants a prayer to Makhleb.
 
-@The_monster@ says @to_foe@, "Your valuables will do nicely in my
-coffers." @player_only@
+@The_monster@ says @to_foe@, "Your valuables will do nicely in my coffers." @player_only@
 
 %%%%
 _Asterion_rare_
@@ -2589,8 +2587,6 @@ w:50
 
 @The_monster@ says, "I like turtle soup. I hate turtles."
 
-@The_monster@ says, "Harpies stole my lunch. I hate harpies."
-
 @The_monster@ says, "I haven't seen any pirates yet. I hate pirates."
 
 @The_monster@ says, "At least this place doesn't smell as bad as the Swamp."
@@ -2632,12 +2628,6 @@ w:50
 
 @The_monster@ says, "There's a spider on your neck!"
 
-@The_monster@ says, "THEY are watching. It's a conspiracy, you know."
-
-@The_monster@ says, "Don't you hate surveillance?"
-
-@The_monster@ says, "Do you have a newspaper for those spiders?"
-
 @The_monster@ says, "I hate crawling things."
 
 @The_monster@ says, "Someone should clean these parts. I hate webs."
@@ -2651,10 +2641,6 @@ w:50
 @The_monster@ says, "Something's up my trousers! Aieee!"
 
 @The_monster@ says, "I hate venom. I hate getting bitten."
-
-@The_monster@ says, "I need some bug spray."
-
-@The_monster@ says, "Can you call pest control?"
 
 @The_monster@ says, "Red wasps, yellow wasps, why not green ones?"
 
@@ -2702,8 +2688,6 @@ w:50
 @The_monster@ says, "Acid blobs make me think of reflux. I hate reflux."
 
 @The_monster@ says, "What's up with all this goo? It's like a world of goo. I hate goo."
-
-@The_monster@ says, "Those amoebae are huge. I never liked protozoans."
 
 @The_monster@ says, "Someone said I could use acid to solve all my problems. It just made them worse."
 
@@ -2763,8 +2747,6 @@ Vaults Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "They never drop hides for me, either."
-
 @The_monster@ says, "The Vaults? They should've called it the Dumps."
 
 @The_monster@ says, "Don't bother, there's only junk at the bottom."
@@ -2787,8 +2769,6 @@ w:50
 @_generic_Donald_@
 
 @The_monster@ says, "A great mace doesn't even have a blade."
-
-@The_monster@ says, "They may as well put a portal to the Abyss at the bottom of the stairs."
 
 @The_monster@ says, "How can an animated sword scowl?"
 
@@ -2853,8 +2833,6 @@ w:50
 
 @The_monster@ says, "I hate vampires."
 
-@The_monster@ says, "How did they even end up in those cages?"
-
 @The_monster@ says, "That ghoul gave me heartburn."
 
 @The_monster@ says, "What sort of name is 'necrophage', anyway?"
@@ -2910,39 +2888,6 @@ w:50
 
 @The_monster@ says, "Mazes, puzzles. I hate puzzles."
 %%%%
-Forest Donald
-
-w:50
-@_generic_Donald_@
-
-@The_monster@ says, "I hate having to branch out like this."
-
-@The_monster@ says, "I asked some spriggans for directions; they got kind of evasive about it."
-
-@The_monster@ says, "I ran into some vines; they wouldn't let me leave."
-
-@The_monster@ says, "I was going to ask a faun for directions, but it got too confusing."
-
-@The_monster@ says, "Those wind drakes are really a blast. I still hate them."
-
-@The_monster@ says, "What kind of person lives in a tree, anyway?"
-
-@The_monster@ says, "What am I supposed to do with all this fruit? Make a salad?"
-
-@The_monster@ says, "Did that tree just move its branches?"
-
-@The_monster@ says, "Did that root just wiggle a little?"
-
-@The_monster@ says, "This place doesn't seem all that enchanting to me."
-
-@The_monster@ says, "I think I'm getting hay fever."
-
-@The_monster@ says, "Did you just hear a twig snapping?"
-
-@The_monster@ says, "I wish I was a lumberjack."
-
-@The_monster@ says, "How can such tiny little people be such huge pains in the neck?"
-%%%%
 Abyss Donald
 
 w:50
@@ -2957,8 +2902,6 @@ w:50
 @The_monster@ says, "I've never heard of a star cursing anything."
 
 @The_monster@ says, "I've never heard of a star spawning anything."
-
-@The_monster@ says, "That wasn't a gateway out; it was a stair. I hate that."
 %%%%
 ######################################################################## GODS #
 Zin Donald
@@ -2967,8 +2910,6 @@ w:50
 @_generic_Donald_@
 
 @The_monster@ says, "At least you won't get hungry."
-
-@The_monster@ says, "Zin? Why would you even bother?"
 
 @The_monster@ says, "So much for spreading the word; you get punched in the face instead."
 
@@ -2980,8 +2921,6 @@ w:50
 
 @The_monster@ says, "Something seems a little bit odd about a God who wants to be paid."
 
-@The_monster@ says, "Most gods give gifts. Zin asks you to give gifts. I hate that."
-
 @The_monster@ says, "That's really confusing. What's the point of divine satiation if you're not allowed to eat?"
 
 @The_monster@ says, "At least you'll get really skinny."
@@ -2991,10 +2930,6 @@ w:50
 @The_monster@ says, "I've got two hundred gold pieces. Is that enough to cure these mutations?"
 
 @The_monster@ says, "Didn't you like your horns?"
-
-@The_monster@ says, "Don't you hate it when everyone gets mad at you?"
-
-@The_monster@ says, "Damn, I left my potions of berserk rage outside."
 
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
 
@@ -3008,8 +2943,6 @@ w:50
 @The_monster@ says, "What's the point of being chivalric if nobody's going to be chivalric back?"
 
 @The_monster@ says, "I open the door for a goblin; he punches me in the face. I hate chivalry."
-
-@The_monster@ says, "I think I'll have a nap."
 
 @The_monster@ says, "Hah! I saw you coming a mile away."
 
@@ -3040,8 +2973,6 @@ w:50
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "You strike me as a masochist."
-
 @The_monster@ says, "I'm hungry. Can you summon some snacks?"
 
 @The_monster@ says, "Yuck, you smell of miasma!"
@@ -3063,10 +2994,6 @@ w:50
 
 @The_monster@ says, "I hate zombies."
 
-@The_monster@ says, "A freezing wraith just broke my potions. I hate that."
-
-@The_monster@ says, "A flaming corpse just burned my scrolls. I hate that."
-
 w:2
 @The_monster@ says, "Bone dragons? Death cobs? Does your god just put random words together and see what pops into existence?"
 
@@ -3085,19 +3012,13 @@ w:50
 
 @The_monster@ says, "Okawaru always makes me think of chokos."
 
-@The_monster@ says, "Okawaru? Yawn."
-
-@The_monster@ says, "Oh, hey! I could use a new animal skin. Have you got any spares?"
+@The_monster@ says, "Oh, hey! I could use a new shield. Have you got any spares?"
 
 @The_monster@ says, "Nice kit."
-
-VISUAL:@The_monster@ yawns.
 
 @The_monster@ asks, "How many innocent creatures did you kill for those shoes?"
 
 @The_monster@ says, "Okawaru's gifts are murder."
-
-@The_monster@ says, "Don't you get bored of animal skins after a while?"
 
 @The_monster@ says, "You can only wear one cloak at a time, you know?"
 %%%%
@@ -3114,7 +3035,7 @@ w:50
 
 @The_monster@ says, "Hey, watch where you throw those lightning balls!"
 
-@The_monster@ says, "Don't blow yourself up now."
+@The_monster@ says, "Don't blow yourself up, now."
 
 @The_monster@ says, "I hate demons."
 
@@ -3143,8 +3064,6 @@ w:50
 
 @The_monster@ says, "It's like an all you can read... something."
 
-@The_monster@ says, "What was that you just said? I forgot."
-
 @The_monster@ says, "I hate books."
 
 @The_monster@ says, "Surely there's a limit to the number of books you can carry. Right?"
@@ -3154,8 +3073,6 @@ w:50
 @The_monster@ says, "I hate spells."
 
 @The_monster@ says, "Don't you just hate miscasts?"
-
-@The_monster@ says, "You'll go blind if you keep casting by yourself."
 %%%%
 Trog Donald
 
@@ -3211,7 +3128,7 @@ w:50
 
 @The_monster@ says, "I've seen this trick before. You've got the ace up your sleeve, right?"
 
-@The_monster@ says, "You need to come to terms with your gambling problem, mate."
+@The_monster@ says, "You need to come to terms with your gambling problem."
 
 @The_monster@ says, "How about a game of 52 card pickup?"
 
@@ -3247,11 +3164,9 @@ w:50
 
 @The_monster@ says, "Nothing ever attacks me when I'm in the Abyss."
 
-@The_monster@ says, "You must be some kind of masochist."
+@The_monster@ says, "Are you going to banish me, too?"
 
-@The_monster@ says, "Why would a God hurt you out of love? I hate that."
-
-@The_monster@ says, "What's the point of distortion, anyway? I don't want my food blinking away from me."
+@The_monster@ says, "I hate it when my food blinks away from me."
 %%%%
 Beogh Donald
 
@@ -3330,34 +3245,24 @@ w:50
 
 @The_monster@ says, "So, how do you deal with the weeds?"
 
-@The_monster@ says, "I guess weed-killer is off the menu."
-
-@The_monster@ says, "I'm sure I've got some anti-fungal cream around here."
-
-@The_monster@ says, "Damn. I left my rain coat at home."
+@The_monster@ says, "A plant spat acid at me. I hate that."
 %%%%
 Cheibriados Donald
 
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "Slow down, man!"
+@The_monster@ says, "Slow down!"
 
 @The_monster@ says, "You're not very quick on the up-take, are you?"
 
 @The_monster@ says, "Am I talking too fast for you?"
 
-@The_monster@ says, "So, what's up with all the snails? I hate them."
-
 @The_monster@ says, "Look at me! I'm running, I'm running!"
 
-@The_monster@ says, "Cheibriados just sounds stupid, anyway."
+@The_monster@ says, "Quick, run away!"
 
-@The_monster@ says, "What kind of name is Cheibriados?"
-
-@The_monster@ says, "How do you spell that?"
-
-@The_monster@ says, "How do you pronounce that?"
+@The_monster@ says, "How about we settle this with a race?"
 %%%%
 Xom Donald
 
@@ -3380,8 +3285,6 @@ w:50
 
 @The_monster@ says, "Been surrounded by packs of demons recently? I hate that."
 
-@The_monster@ says, "Demons and angels working together? I hate that."
-
 @The_monster@ says, "Xom just doesn't make any sense. I hate that."
 
 @The_monster@ says, "What kind of name is 'Xom', anyway?"
@@ -3401,13 +3304,14 @@ w:50
 
 @The_monster@ says, "I hate Vehumet."
 
-@The_monster@ says, "I hate magic."
+@The_monster@ says, "I hate hellfire."
 
 @The_monster@ says, "What's the point of conjuring, anyway?"
 
 @The_monster@ says, "Do you find it easier to cast spells, now?"
 
 @The_monster@ says, "I hate explosions."
+
 %%%%
 Ashenzari Donald
 
@@ -3463,7 +3367,7 @@ w:5
 
 @The_monster@ says, "You must run out of gods to curse by."
 
-@The_monster@ says, "You missed the Ecumenical Temple, mate."
+@The_monster@ says, "Did you miss the Ecumenical Temple?"
 %%%%
 ##################################################################### GENERIC #
 _generic_Donald_
@@ -3925,7 +3829,7 @@ _Eustachio_common_
 
 @The_monster@ utters an oath, "I will die for my friends!"
 
-@The_monster@ growls, "To hell with you, honour-less miscreant!"
+@The_monster@ growls, "To hell with you, honourless miscreant!"
 
 @The_monster@ asks, "How can you live without manners, virtues and honour?"
 %%%%
@@ -3934,9 +3838,6 @@ _Eustachio_rare_
 @The_monster@ yells @at_foe@, "Perjured traitor, DIE!"
 
 VISUAL:@The_monster@ twirls @possessive@ moustache.
-
-# doesn't really work if there are no summons nearby
-#VISUAL:@The_monster@ strokes @possessive@ familiar.
 
 SPELL:@The_monster@ calls on the powers of shadow!
 
@@ -4022,7 +3923,7 @@ VISUAL:@The_monster@ pines for a worthy opponent.
 
 VISUAL:@The_monster@ yawns in an exaggerated manner.
 
-@The_monster@ offers a few words of tactical advice. You understand none of them.
+@The_monster@ offers a few words of tactical advice.
 
 @The_monster@ says, "Adventurers these days do not know how to walk, let alone fight."
 
@@ -4192,7 +4093,7 @@ VISUAL:@The_monster@ grins, showing sharp teeth.
 
 @The_monster@ says, "You look like you could use a good racking."
 
-@The_monster@ says, "I used to sell toe-nails on the black market."
+@The_monster@ says, "I used to sell toenails on the black market."
 
 @The_monster@ says, "There's only one good use for a tongue: cutting it out."
 
@@ -5897,9 +5798,6 @@ VISUAL:@The_monster@ looks at you with fury.
 SPELL:@The_monster@ casts a spell.
 ENCHANT:@The_monster@'s eyes start glowing with a red light.
 
-SPELL:@The_monster@ calls forth an indictment against all sane reality.
-ENCHANT:@The_monster@'s form glitters.
-
 SPELL:@The_monster@ breathes a few words.
 ENCHANT:@The_monster@'s hands start flickering wildly.
 
@@ -5908,14 +5806,6 @@ ENCHANT:@The_monster@ is suddenly surrounded by pale @_spell_colour_@ light.
 %%%%
 _Sigmund_rare_
 
-w:1
-VISUAL:@The_monster@ tries to bite @foe@.
-
-w:1
-VISUAL:@The_monster@ grinds @possessive@ teeth. @Possessive@ @_sigmund_speech_nouns_@ send tremors through the floor, unheard but felt.
-
-In the wake of @the_monster@'s scythe you hear the echo of oblivion.
-
 @The_monster@ asks @foe,@ "Do you like me?"
 
 @The_monster@ screams @at_foe@, "You will never... NEVER!!!"
@@ -5923,19 +5813,13 @@ In the wake of @the_monster@'s scythe you hear the echo of oblivion.
 @The_monster@ screams @at_foe@, "I am the angel of ZOT!!!"
 
 w:3
-VISUAL:Angered, @the_monster@ rams the haft of @possessive@ scythe on the dungeon floor.
+VISUAL:@The_monster@ rams the haft of @possessive@ scythe on the @surface@.
 
 @The_monster@ screams @at_foe@, "Only death can liberate you!"
 
 @The_monster@ whispers @to_foe@, "You'll know eternity soon."
 
 VISUAL:@The_monster@ smiles chillingly.
-%%%%
-_sigmund_speech_nouns_
-
-howls
-
-laughing cries
 ## END Sigmund ##
 %%%%
 ############ SOJOBO ### tengu king
