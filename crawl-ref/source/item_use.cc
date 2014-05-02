@@ -67,11 +67,6 @@
 #include "view.h"
 #include "xom.h"
 
-static int _handle_enchant_armour(int item_slot = -1,
-                                  bool alreadyknown = false,
-                                  string *pre_msg = NULL);
-
-static bool _is_cancellable_scroll(scroll_type scroll);
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
                                     bool quiet = false);
 
@@ -2418,9 +2413,9 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     return true;
 }
 
-static int _handle_enchant_armour(int item_slot, bool alreadyknown,
-                                  string *pre_msg)
+static int _handle_enchant_armour(bool alreadyknown, string *pre_msg)
 {
+    int item_slot = -1;
     do
     {
         if (item_slot == -1)
@@ -2557,7 +2552,7 @@ static void _vulnerability_scroll()
                      "Magic dampens, then quickly surges around you.");
 }
 
-bool _is_cancellable_scroll(scroll_type scroll)
+static bool _is_cancellable_scroll(scroll_type scroll)
 {
     return scroll == SCR_IDENTIFY
            || scroll == SCR_BLINKING
@@ -2907,7 +2902,7 @@ void read_scroll(int slot)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, ID_KNOWN_TYPE);
         }
-        cancel_scroll = (identify(-1, alreadyknown, &pre_succ_msg) == 0);
+        cancel_scroll = (identify(alreadyknown, &pre_succ_msg) == 0);
         break;
 
     case SCR_RECHARGING:
@@ -2917,7 +2912,7 @@ void read_scroll(int slot)
             mpr("It is a scroll of recharging.");
             more();
         }
-        cancel_scroll = (recharge_wand(-1, alreadyknown, &pre_succ_msg) == -1);
+        cancel_scroll = (recharge_wand(alreadyknown, &pre_succ_msg) == -1);
         break;
 
     case SCR_ENCHANT_ARMOUR:
@@ -2928,7 +2923,7 @@ void read_scroll(int slot)
             more();
         }
         cancel_scroll =
-            (_handle_enchant_armour(-1, alreadyknown, &pre_succ_msg) == -1);
+            (_handle_enchant_armour(alreadyknown, &pre_succ_msg) == -1);
         break;
 
     // Should always be identified by Ashenzari.
