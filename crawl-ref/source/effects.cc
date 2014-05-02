@@ -684,8 +684,9 @@ void random_uselessness(int scroll_slot)
     }
 }
 
-int recharge_wand(int item_slot, bool known, string *pre_msg)
+int recharge_wand(bool known, string *pre_msg)
 {
+    int item_slot = -1;
     do
     {
         if (item_slot == -1)

@@ -45,7 +45,7 @@
 #include "traps.h"
 #include "view.h"
 
-int identify(int item_slot, bool alreadyknown, string *pre_msg)
+int identify(bool alreadyknown, string *pre_msg)
 {
     int id_used = 1;
     int identified = 0;
@@ -54,6 +54,7 @@ int identify(int item_slot, bool alreadyknown, string *pre_msg)
     if (one_chance_in(5))
         id_used += (coinflip()? 1 : 2);
 
+    int item_slot = -1;
     do
     {
         if (item_slot == -1)

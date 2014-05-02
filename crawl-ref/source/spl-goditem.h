@@ -1,8 +1,7 @@
 #ifndef SPL_GODITEM_H
 #define SPL_GODITEM_H
 
-int identify(int item_slot = -1, bool alreadyknown = true,
-             string *pre_msg = NULL);
+int identify(bool alreadyknown = true, string *pre_msg = NULL);
 int cast_healing(int pow, int max_pow, bool divine_ability = false,
                  const coord_def& where = coord_def(0, 0),
                  bool not_self = false, targ_mode_type mode = TARG_NUM_MODES);
