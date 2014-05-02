@@ -380,12 +380,13 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
                         is_range_weapon(*iweap))
                 || (!iweap && missile != -1))
             {
-                ranged_attack attk(&you, &mon, &mitm[missile], false);
+                ranged_attack attk(&you, &mon, &you.inv[missile], false);
                 attk.simu = true;
                 attk.attack();
                 if (attk.ev_margin >= 0)
                     hits++;
-                you.time_taken = you.attack_delay(you.weapon(), &mitm[missile]);
+                you.time_taken = you.attack_delay(you.weapon(),
+                                                  &you.inv[missile]);
             }
             else // otherwise, melee combat
             {
