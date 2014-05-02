@@ -4413,6 +4413,7 @@ void gozag_deduct_bribe(branch_type br, int amount)
 bool gozag_bribe_branch()
 {
     const int bribe_amount = 3000;
+    bool prompted = false;
     branch_type branch = you.where_are_you;
     if (feat_is_branch_stairs(grd(you.pos())))
     {
@@ -4424,7 +4425,10 @@ bool gozag_bribe_branch()
                     make_stringf("Do you want to bribe the denizens of %s?",
                                  branches[i].longname);
                 if (yesno(prompt.c_str(), true, 'n'))
+                {
                     branch = static_cast<branch_type>(i);
+                    prompted = true;
+                }
                 break;
             }
     }
@@ -4441,13 +4445,22 @@ bool gozag_bribe_branch()
         return false;
     }
 
-    you.gold -= bribe_amount;
-    branch_bribe[branch] += bribe_amount;
-    string msg = make_stringf(" spreads your bribe to %s!",
-                              branches[branch].longname);
-    simple_god_message(msg.c_str());
+    string prompt =
+        make_stringf("Do you want to bribe the denizens of %s?",
+                     branches[branch].longname);
 
-    return true;
+    if (prompted || yesno(prompt.c_str(), true, 'n'))
+    {
+        you.gold -= bribe_amount;
+        branch_bribe[branch] += bribe_amount;
+        string msg = make_stringf(" spreads your bribe to %s!",
+                                  branches[branch].longname);
+        simple_god_message(msg.c_str());
+        return true;
+    }
+
+    canned_msg(MSG_OK);
+    return false;
 }
 
 bool qazlal_upheaval(coord_def target, bool quiet)
