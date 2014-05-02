@@ -1514,6 +1514,8 @@ static void _got_gold(item_def& item, int quant, bool quiet)
     {
         item.special = 0;
         invalidate_agrid(true);
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
     }
 
     you.attribute[ATTR_GOLD_FOUND] += quant;

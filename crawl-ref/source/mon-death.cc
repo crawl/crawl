@@ -508,7 +508,11 @@ int place_monster_corpse(const monster* mons, bool silent, bool force)
 
     move_item_to_grid(&o, mons->pos(), !mons->swimming());
     if (o != NON_ITEM && mitm[o].base_type == OBJ_GOLD)
+    {
         invalidate_agrid(true);
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
+    }
 
     if (you.see_cell(mons->pos()))
     {
