@@ -347,7 +347,7 @@ Gozag powers
 For Gozag, both flesh and food are inferior to wealth, and therefore all
 corpses are turned into gold piles. Stalwarts can order immediate help in the
 form of potions, with prices being dictated by the Greedy. Particularly
-well-off adherers to attract shopkeepers into the dungeon, and even to bribe
+well-off adherers may attract shopkeepers into the dungeon, and even bribe
 entire branches of the dungeon. Gozag will also duplicate any one non-artefact
 item for a servant.
 %%%%
