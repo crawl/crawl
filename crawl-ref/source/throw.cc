@@ -866,10 +866,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         break;
     }
 
-    // check for returning ammo from launchers
-    if (returning && projected == LRET_LAUNCHED)
+    // check for returning ammo
+    if (returning && projected != LRET_FUMBLED)
     {
-        if (!one_chance_in(1 + skill_bump(range_skill(*you.weapon()))))
+        const skill_type sk =
+            projected == LRET_THROWN ? SK_THROWING
+                                     : range_skill(*you.weapon());
+        if (!one_chance_in(1 + skill_bump(sk)))
             did_return = true;
     }
 
