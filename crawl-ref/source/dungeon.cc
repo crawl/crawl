@@ -3631,7 +3631,7 @@ static int _place_uniques()
         const mapref_vector uniques_available =
             find_maps_for_tag("place_unique", true, true);
 
-        if (random2(B) >= (int)uniques_available.size())
+        if (!x_chance_in_y((int)uniques_available.size(), B))
             break;
 
         const map_def *uniq_map = random_map_for_tag("place_unique", true);
