@@ -475,8 +475,6 @@ static string _no_selectables_message(int item_selector)
     {
     case OSEL_ANY:
         return "You aren't carrying anything.";
-    case OSEL_SCROLL_TARGET:
-        return "You aren't carrying anything you could use a scroll on.";
     case OSEL_WIELD:
     case OBJ_WEAPONS:
         return "You aren't carrying any weapons.";
@@ -514,8 +512,6 @@ static string _no_selectables_message(int item_selector)
         return "You aren't carrying any pieces of jewellery.";
     case OSEL_THROWABLE:
         return "You aren't carrying any items that might be thrown or fired.";
-    case OSEL_BUTCHERY:
-        return "You aren't carrying any sharp implements.";
     case OSEL_EVOKABLE:
         if (_has_hand_evokable())
             return "You aren't carrying any items that can be evoked without being wielded.";
@@ -1159,19 +1155,6 @@ static bool _item_class_selected(const item_def &i, int selector)
 
     switch (selector)
     {
-    // Combined filter for valid unided scroll targets
-    // TODO: If the player already ided one of the scrolls then we
-    // could filter the list further. That results in the final scroll
-    // being effectively auto-ided as soon as you hit the menu.
-    case OSEL_SCROLL_TARGET:
-        return !item_is_melded(i)
-            // Any unidentified
-            && (!fully_identified(i) || (is_deck(i) && !top_card_is_known(i))
-                // Rechargeable
-                || item_is_rechargeable(i, true)
-                // Armour
-                || is_enchantable_armour(i, true, true));
-
     case OBJ_ARMOUR:
         return itype == OBJ_ARMOUR && you_tran_can_wear(i);
 
@@ -1205,9 +1188,6 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OBJ_WEAPONS:
     case OSEL_WIELD:
         return item_is_wieldable(i);
-
-    case OSEL_BUTCHERY:
-        return itype == OBJ_WEAPONS && can_cut_meat(i);
 
     case OBJ_SCROLLS:
         return itype == OBJ_SCROLLS
@@ -1902,8 +1882,7 @@ int prompt_invent_item(const char *prompt,
     }
 
     if (!any_items_to_select(type_expect, false, excluded_slot)
-        && type_expect != OSEL_WIELD
-        && type_expect != OSEL_BUTCHERY && mtype == MT_INVLIST)
+        && type_expect != OSEL_WIELD)
     {
         mprf(MSGCH_PROMPT, "%s",
              _no_selectables_message(type_expect).c_str());
