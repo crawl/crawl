@@ -3074,7 +3074,11 @@ static void _update_corpses(int elapsedTime)
             bool old_aura = it.special > 0;
             it.special = max(0, it.special - rot_time);
             if (old_aura && !it.special)
+            {
                 invalidate_agrid(true);
+                you.redraw_armour_class = true;
+                you.redraw_evasion = true;
+            }
             continue;
         }
 
