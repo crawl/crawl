@@ -1514,7 +1514,7 @@ static bool _check_ability_possible(const ability_def& abil,
         if (!zin_check_able_to_recite(quiet))
             return false;
 
-        const int result = zin_check_recite_to_monsters(0);
+        const int result = zin_check_recite_to_monsters();
         if (result == -1)
         {
             if (!quiet)
@@ -2392,16 +2392,13 @@ static bool _do_ability(const ability_def& abil)
     // INVOCATIONS:
     case ABIL_ZIN_RECITE:
     {
-        recite_type prayertype;
-        if (zin_check_recite_to_monsters(&prayertype))
+        if (zin_check_recite_to_monsters())
         {
-            you.attribute[ATTR_RECITE_TYPE] = prayertype;
+            you.attribute[ATTR_RECITE_TYPE] = (recite_type) random2(NUM_RECITE_TYPES); // This is just flavor
             you.attribute[ATTR_RECITE_SEED] = random2(2187); // 3^7
             you.attribute[ATTR_RECITE_HP]   = you.hp;
             you.duration[DUR_RECITE] = 3 * BASELINE_DELAY;
-            mprf("You clear your throat and prepare to recite %s.",
-                 zin_recite_text(you.attribute[ATTR_RECITE_SEED],
-                                 prayertype, -1).c_str());
+            mprf("You clear your throat and prepare to recite.");
         }
         else
         {

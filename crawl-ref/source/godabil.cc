@@ -544,11 +544,6 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         eligibility[RECITE_IMPURE] = 0;
     }
 
-    // Don't allow against enemies that are already affected by an
-    // earlier recite type.
-    if (eligibility[RECITE_CHAOTIC] > 0)
-        eligibility[RECITE_IMPURE] = 0;
-
     // Anti-unholy prayer
 
     // Hits demons and incorporeal undead.
@@ -558,13 +553,6 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         eligibility[RECITE_UNHOLY]++;
     }
 
-    // Don't allow against enemies that are already affected by an
-    // earlier recite type.
-    if (eligibility[RECITE_CHAOTIC] > 0
-        || eligibility[RECITE_IMPURE] > 0)
-    {
-        eligibility[RECITE_UNHOLY] = 0;
-    }
 
     // Anti-heretic prayer
 
@@ -592,14 +580,6 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         // (The above mean that worshipers will be treated as
         // priests for reciting, even if they aren't actually.)
 
-        // Don't allow against enemies that are already affected by an
-        // earlier recite type.
-        if (eligibility[RECITE_CHAOTIC] > 0
-            || eligibility[RECITE_IMPURE] > 0
-            || eligibility[RECITE_UNHOLY] > 0)
-        {
-            eligibility[RECITE_HERETIC] = 0;
-        }
 
         // Sanity check: monsters that won't attack you, and aren't
         // priests/evil, don't get recited against.
@@ -653,11 +633,6 @@ bool zin_check_able_to_recite(bool quiet)
     return true;
 }
 
-static const char* zin_book_desc[NUM_RECITE_TYPES] =
-{
-    "Chaotic", "Impure", "Heretic", "Unholy",
-};
-
 /**
  * Check whether there are monsters who might be influenced by Recite.
  * If prayertype is null, we're just checking whether we can.
@@ -674,7 +649,7 @@ static const char* zin_book_desc[NUM_RECITE_TYPES] =
  *          monsters, and at least one returned -1 from
  *          _zin_check_recite_to_single_monster().
  */
-int zin_check_recite_to_monsters(recite_type *prayertype)
+int zin_check_recite_to_monsters()
 {
     bool found_ineligible = false;
     bool found_eligible = false;
@@ -717,84 +692,12 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
         return -1;
     }
 
-    if (!prayertype)
-        return 1;
-
     int eligible_types = 0;
     for (int i = 0; i < NUM_RECITE_TYPES; i++)
         if (count[i] > 0)
             eligible_types++;
 
-    // If there's only one eligible recitation, and we're actually reciting, then perform it.
-    if (eligible_types == 1)
-    {
-        for (int i = 0; i < NUM_RECITE_TYPES; i++)
-            if (count[i] > 0)
-                *prayertype = (recite_type)i;
-
-        return 1;
-    }
-
-    // But often, you'll have multiple options...
-    mesclr();
-
-    mprf(MSGCH_PROMPT, "Recite against which type of sinner?");
-
-    int menu_cnt = 0;
-    recite_type letters[NUM_RECITE_TYPES];
-
-    for (int i = 0; i < NUM_RECITE_TYPES; i++)
-    {
-        if (count[i] > 0)
-        {
-            string affected_str = make_stringf("%s (%d: ",
-                                               zin_book_desc[i], count[i]);
-
-            // TODO: merge with _desc_mons_type_map from view.cc?  But we
-            //       probably don't want genus factoring here.
-            // TODO: sort these by something other than name-with-article.
-            for (map<string, int>::iterator it = affected_by_type[i].begin();
-                 it != affected_by_type[i].end(); it++)
-            {
-                if (it != affected_by_type[i].begin())
-                    affected_str += ", ";
-
-                affected_str += it->first;
-                if (it->second > 1)
-                    affected_str += make_stringf(" x%d", it->second);
-            }
-            affected_str += ")";
-
-            int linect = 0;
-            while (!affected_str.empty())
-            {
-                // -8 for "  [a] - "
-                const string line = wordwrap_line(affected_str,
-                                                  msgwin_line_length() - 8);
-                if (linect++ == 0)
-                    mprf_nojoin("  [%c] - %s", 'a' + menu_cnt, line.c_str());
-                else
-                    mprf("%8s%s", "", line.c_str());
-            }
-            letters[menu_cnt++] = (recite_type)i;
-        }
-    }
-    flush_prev_message();
-
-    while (true)
-    {
-        int keyn = toalower(getch_ck());
-
-        if (keyn >= 'a' && keyn < 'a' + menu_cnt)
-        {
-            *prayertype = letters[keyn - 'a'];
-            break;
-        }
-        else
-            return 0;
-    }
-
-    return 1;
+    return 1; // We just recite against everything.
 }
 
 enum zin_eff
@@ -817,8 +720,7 @@ enum zin_eff
     ZIN_HOLY_WORD,
 };
 
-bool zin_recite_to_single_monster(const coord_def& where,
-                                  recite_type prayertype)
+bool zin_recite_to_single_monster(const coord_def& where)
 {
     // That's a pretty good sanity check, I guess.
     if (!you_worship(GOD_ZIN))
@@ -836,10 +738,12 @@ bool zin_recite_to_single_monster(const coord_def& where,
     if (_zin_check_recite_to_single_monster(mon, eligibility) < 1)
         return false;
 
-    // First check: are they even eligible for this kind of recitation?
-    // (Monsters that have been hurt by recitation aren't eligible.)
-    if (eligibility[prayertype] < 1)
-        return false;
+    recite_type prayertype = RECITE_CHAOTIC;
+    for(int i = RECITE_CHAOTIC; i != NUM_RECITE_TYPES; i++)
+    {
+            if(eligibility[i] > eligibility[prayertype])
+                    prayertype = static_cast <recite_type>(i);
+    }
 
     // Second check: because this affects the whole screen over several turns,
     // its effects are staggered. There's a 50% chance per monster, per turn,
