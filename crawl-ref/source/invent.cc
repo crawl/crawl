@@ -498,7 +498,7 @@ static string _no_selectables_message(int item_selector)
         return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
     case OSEL_VAMP_EAT:
-        return "You aren't carrying any corpses which you can drain.";
+        return "You don't have any corpses which you can drain.";
     case OSEL_DRAW_DECK:
         return "You aren't carrying any decks from which to draw.";
     case OBJ_FOOD:
