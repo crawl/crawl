@@ -3812,8 +3812,16 @@ void god_pitch(god_type which_god)
         {
             simple_god_message(" does not accept service from beggars like you!",
                                which_god);
-            mprf("The service fee for joining is currently %d gold; you only"
-                 " have %d.", fee, you.gold);
+            if (you.gold == 0)
+            {
+                mprf("The service fee for joining is currently %d gold; you have"
+                     " none.", fee);
+            }
+            else
+            {
+                mprf("The service fee for joining is currently %d gold; you only"
+                     " have %d.", fee, you.gold);
+            }
         }
         else if (!_transformed_player_can_join_god(which_god))
         {
