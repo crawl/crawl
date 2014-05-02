@@ -376,15 +376,16 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._stale_pid = None
         self._stale_lockfile = None
         self._purging_timer = None
-        self._process_hup_timeout = None
 
     def start(self):
         self._purge_locks_and_start(True)
 
     def stop(self):
         super(CrawlProcessHandler, self).stop()
-        self._stop_purging_stale_processes()
-        self._stale_pid = None
+        if self._stale_pid:
+            self._stale_pid = None
+            self._stale_lockfile = None
+            self._purging_timer = None
 
     def _purge_locks_and_start(self, firsttime=False):
         # Purge stale locks
@@ -396,15 +397,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 pid = int(pid)
                 self._stale_pid = pid
                 self._stale_lockfile = lockfile
-                if firsttime:
-                    hup_wait = 10
-                    self.send_to_all("stale_processes",
-                                     timeout=hup_wait, game=self.game_params["name"])
-                    to = self.io_loop.add_timeout(time.time() + hup_wait,
-                                                  self._kill_stale_process)
-                    self._process_hup_timeout = to
-                else:
-                    self._kill_stale_process()
+                self._kill_stale_process()
             except Exception:
                 self.logger.error("Error while handling lockfile %s.", lockfile,
                                   exc_info=True)
@@ -416,15 +409,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             # No more locks, can start
             self._start_process()
 
-    def _stop_purging_stale_processes(self):
-        if not self._process_hup_timeout: return
-        self.io_loop.remove_timeout(self._process_hup_timeout)
-        self._stale_pid = None
-        self._stale_lockfile = None
-        self._purging_timer = None
-        self._process_hup_timeout = None
-        self.handle_process_end()
-
     def _find_lock(self):
         for path in os.listdir(self.config_path("inprogress_path")):
             if (path.startswith(self.username + ":") and
@@ -434,7 +418,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         return None
 
     def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
-        self._process_hup_timeout = None
         if self._stale_pid == None: return
         if signal == subprocess.signal.SIGHUP:
             self.logger.info("Purging stale lock at %s, pid %s.",
@@ -634,9 +617,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         elif obj["msg"] == "force_terminate":
             self._do_force_terminate(obj["answer"])
-
-        elif obj["msg"] == "stop_stale_process_purge":
-            self._stop_purging_stale_processes()
 
         elif self.conn and self.conn.open:
             self.conn.send_message(msg.encode("utf8"))
