@@ -1,7 +1,7 @@
 #ifndef SPL_GODITEM_H
 #define SPL_GODITEM_H
 
-int identify(int power, int item_slot = -1, bool alreadyknown = true,
+int identify(int item_slot = -1, bool alreadyknown = true,
              string *pre_msg = NULL);
 int cast_healing(int pow, int max_pow, bool divine_ability = false,
                  const coord_def& where = coord_def(0, 0),

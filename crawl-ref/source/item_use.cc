@@ -2907,7 +2907,7 @@ void read_scroll(int slot)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, ID_KNOWN_TYPE);
         }
-        cancel_scroll = (identify(-1, -1, alreadyknown, &pre_succ_msg) == 0);
+        cancel_scroll = (identify(-1, alreadyknown, &pre_succ_msg) == 0);
         break;
 
     case SCR_RECHARGING:
