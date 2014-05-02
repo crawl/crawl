@@ -1175,6 +1175,9 @@ static bool _item_class_selected(const item_def &i, int selector)
         if (you_worship(GOD_TROG) && item_is_spellbook(i))
             return true;
 
+        if (you.has_spell(SPELL_CORPSE_ROT) && i.base_type == OBJ_CORPSES)
+            return true;
+
         if (i.base_type != OBJ_WEAPONS && i.base_type != OBJ_MISSILES)
             return false;
 
