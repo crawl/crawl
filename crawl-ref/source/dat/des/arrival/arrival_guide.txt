@@ -39,7 +39,7 @@
 # - Try to come up with small maps.
 # - Avoid placing guaranteed items.
 # - The same holds for any features which might trigger start-scumming,
-#   like fountains or altars.
+#   like altars.
 # - Also avoid ASCII art. It probably won't work in Tiles anyway.
 # - Note that at the start of the game, the dungeon builder removes all
 #   monsters in view of the player. Zero experience monsters like plants
