@@ -314,6 +314,20 @@ int ranged_attack::weapon_damage()
     return dam;
 }
 
+/**
+ * For ranged attacked, "unarmed" is throwing damage.
+ */
+int ranged_attack::calc_base_unarmed_damage()
+{
+    // No damage bonus for throwing non-throwing weapons.
+    if (!using_weapon())
+        return 0;
+
+    // The 20 is large rock base damage; they get the full bonus.
+    return div_rand_round(attack::calc_base_unarmed_damage()
+                          * property(*projectile, PWPN_DAMAGE), 20);
+}
+
 int ranged_attack::calc_mon_to_hit_base()
 {
     ASSERT(attacker->is_monster());
