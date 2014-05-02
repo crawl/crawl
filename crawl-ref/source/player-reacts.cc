@@ -356,7 +356,7 @@ static bool _check_recite()
 static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
 {
     ASSERT_RANGE(prayertype, 0, NUM_RECITE_TYPES);
-    return zin_recite_to_single_monster(where, (recite_type)prayertype);
+    return zin_recite_to_single_monster(where);
 }
 
 
