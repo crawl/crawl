@@ -1,9 +1,10 @@
 #!/usr/bin/perl -w
 use Getopt::Std;
 
-our ($opt_n);
-getopts('n');
+our ($opt_a, $opt_n);
+getopts('na');
 my $dry_run = $opt_n;
+my $add_braces = $opt_a;
 my $any_bad = 0;
 
 my @files = @ARGV;
@@ -58,7 +59,7 @@ for $f (@files)
         # And possibly more lines of higher indent than the keyword
         (?: \2 \s+ [^\n]* \n)*
       )
-    /rebrace($1,$2,$4)/egsmx;
+    /rebrace($1,$2,$4)/egsmx if $add_braces;
 
     # return is not a function, eliminate totally enclosing parentheses.
     # This part handles parenthese-less payloads.
