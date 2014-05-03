@@ -112,14 +112,16 @@ KFEAT: I = altar_trog
 KFEAT: J = altar_makhleb
 KFEAT: K = altar_vehumet
 KFEAT: L = altar_sif_muna
+KFEAT: M = altar_gozag
+KFEAT: N = altar_qazlal
 KFEAT: Y = any shop
 MAP
 xxxxx+xxxxx+x
 xxxx$$c$$$c*c
-xA.xxxc$$cc*c
+xAMxxxc$$cc*c
 xB...Jcc+c..+
 xC.Y..2+...Lc
-xD....ccK1x+x
+xD...NccK1x+x
 cEFGHIccx+x*x
 ccccccccx.xxx
 ENDMAP

@@ -991,7 +991,7 @@ LROCKTILE:  wall_hall
 # Both would be rather useless if you picked them, though. Positions are random,
 # and you don't have enough time to reach an altar before the game starts.
 NSUBST: B = 0 / 1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 / 9 / h / i / j / k / l / n / \
-            o / *:.
+            o / p / q / *:.
 KFEAT:  0 = altar_zin
 KFEAT:  1 = altar_the_shining_one
 KFEAT:  2 = altar_lugonu
@@ -1009,6 +1009,8 @@ KFEAT:  k = altar_cheibriados
 KFEAT:  l = altar_jiyva
 KFEAT:  n = altar_fedhas
 KFEAT:  o = altar_dithmenos
+KFEAT:  p = altar_gozag
+KFEAT:  q = altar_qazlal
 KITEM:  { = scroll of blinking q:3, scroll of fog q:3 ident:all, \
             potion of heal wounds q:3, potion of haste q:3, \
             wand of fire charges:5 ident:all, \
