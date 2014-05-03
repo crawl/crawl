@@ -1398,7 +1398,7 @@ int attack::calc_base_unarmed_damage()
     // Should only get here if we're not wielding something that's a weapon.
     // If there's a non-weapon in hand, it has no base damage.
     // Throwing things with a weapon in hand is okay, however.
-    if (weapon && wpn_skill == SK_UNARMED_COMBAT)
+    if (weapon && wpn_skill != SK_THROWING)
         return 0;
 
     if (attacker->is_player())
