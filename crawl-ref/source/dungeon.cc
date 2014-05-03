@@ -4597,7 +4597,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
     {
         item_spec spec = list.get_item(i);
 
-        if (spec.base_type == OBJ_UNASSIGNED)
+        if (spec.base_type == OBJ_UNASSIGNED
+            || (spec.base_type == OBJ_MISCELLANY && spec.sub_type == MISC_RUNE_OF_ZOT))
             continue;
 
         // Don't give monster a randart, and don't randomly give
@@ -4630,38 +4631,36 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             }
         }
 
-        int useless_tries = 0;
-    retry:
-
-        const int item_made = (spec.corpselike() ?
-                               _dgn_item_corpse(spec, mon->pos())
-                               : items(spec.allow_uniques, spec.base_type,
-                                       spec.sub_type, true, item_level,
-                                       0, 0, spec.ego, -1,
-                                       spec.level == ISPEC_MUNDANE));
-
-        if (item_made != NON_ITEM && item_made != -1)
+        for (int useless_tries = 0; true; useless_tries++)
         {
-            item_def &item(mitm[item_made]);
+            int item_made;
 
-            if (!_apply_item_props(item, spec, (useless_tries >= 10), true))
+            if (spec.corpselike())
+                item_made = _dgn_item_corpse(spec, mon->pos());
+            else
             {
-                if (spec.base_type == OBJ_MISCELLANY
-                    && spec.sub_type == MISC_RUNE_OF_ZOT)
-                {
-                    continue;
-                }
-
-                useless_tries++;
-                goto retry;
+                item_made = items(spec.allow_uniques, spec.base_type,
+                                  spec.sub_type, true, item_level,
+                                  0, 0, spec.ego, -1,
+                                  spec.level == ISPEC_MUNDANE);
             }
 
-            // Mark items on summoned monsters as such.
-            if (mspec.abjuration_duration != 0)
-                item.flags |= ISFLAG_SUMMONED;
 
-            if (!mon->pickup_item(item, 0, true))
-                destroy_item(item_made, true);
+            if (!(item_made == NON_ITEM || item_made == -1))
+            {
+                item_def &item(mitm[item_made]);
+
+                if (_apply_item_props(item, spec, (useless_tries >= 10), true))
+                {
+                    // Mark items on summoned monsters as such.
+                    if (mspec.abjuration_duration != 0)
+                        item.flags |= ISFLAG_SUMMONED;
+
+                    if (!mon->pickup_item(item, 0, true))
+                        destroy_item(item_made, true);
+                    break;
+                }
+            }
         }
     }
 
