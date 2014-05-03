@@ -13,6 +13,15 @@ unless (@files)
     @files = (grep /\.(cc|h)$/, split /\n/, `git ls-files`);
 }
 
+sub rebrace($$$)
+{
+    my ($condition, $indent, $body) = @_;
+    # Only add braces if the total is three lines or more.
+    return "$condition$body" =~ /\n.*\n.*\n/
+           ? "$condition$indent\{\n$body$indent\}\n"
+           : "$condition$body";
+}
+
 for $f (@files)
 {
     open F, "<", $f or die "Can't read $f\n";
@@ -22,26 +31,29 @@ for $f (@files)
     # Eliminate braces around one-line blocks.
     s&^( +(?:if|while|for|do|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
 
-    # Something like the following should match multi-line flow-control
-    # statements with missing braces, but:
-    #  1. it's slow (for example, on beam.cc);
-    #  2. it has false positives at the end of do-while loops; and
-    #  3. it's not clear how to determine where to put the braces.
-    #
-    # /( # Save multi-line statement with missing braces in \1.
-    #    # Save indent of first line in \2
-    #    ^(\s+)     (?:if|while|for|do|else)\b           .*\n
-    #
-    #     # Second line: not flow-control, greater indent.
-    #     \2 \s+    (?! \s | (?:if|while|for|do|else)\b) .*\n
-    #
-    #     # One or more lines of greater indent than the first.
-    #     (?: \2 \s+ .*\n)+
-    #  )
-    #  # Next line falls outside the indentation of the first line: it has
-    #  # either a smaller indent, or the same indent then a non-brace.
-    #  (?! \2 [\s{])
-    # /mgx; # No /s !
+    # Add braces in blocks that need them.
+    s/# $1 = the keyword and condition
+      (
+        # $2 = first-line indent
+        ^(\s+)   (?:if|while|for|do|else)\b \s*
+                 # $3 = nested parenthesised expression, possibly multi-line
+                 ( 
+                   \(
+                      (?: [^()]* (?3))*
+                      [^()]*
+                   \)
+                 ) \s*\n
+      )
+      # $4 = the body
+      (
+        # Higher indent than the keyword.
+        \2 \s++
+        # Not another flow control statement or braces
+        (?! { | (?:if|while|for|do|else)\b) [^\n]*\n
+        # And possibly more lines of higher indent than the keyword
+        (?: \2 \s+ [^\n]* \n)*
+      )
+    /rebrace($1,$2,$4)/egsmx;
 
     # return is not a function, eliminate totally enclosing parentheses.
     # This part handles parenthese-less payloads.
