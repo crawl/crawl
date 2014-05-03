@@ -19,15 +19,11 @@ for $f (@files)
     my $old = $_ = <F>;
     close F;
 
-    # Aaaw, due to the support code, this beautiful one-liner is one no longer :(
-    # Should have told you to:
-    # for x in *.cc *.h;do unbrace <"$x" >aa && mv aa "$x";done
-    # like I always did before...
     # Eliminate braces around one-line blocks.
     s&^( +(?:if|while|for|do|else)\b[^\n]*)\n +{\n( *[^/ }][^\n]*)\n +}$&$1\n$2&msg;
 
-    # Something like the following should match multi-line flow-control statements
-    # with missing braces, but:
+    # Something like the following should match multi-line flow-control
+    # statements with missing braces, but:
     #  1. it's slow (for example, on beam.cc);
     #  2. it has false positives at the end of do-while loops; and
     #  3. it's not clear how to determine where to put the braces.
