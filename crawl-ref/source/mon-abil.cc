@@ -1899,6 +1899,7 @@ static bool _lost_soul_affectable(const monster* mons)
              && mons->type != MONS_LOST_SOUL
              && !mons_is_zombified(mons))
             ||(mons->holiness() == MH_NATURAL
+               && !is_good_god(mons->god)
                && mons_can_be_zombified(mons)))
            && !mons->is_summoned()
            && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
@@ -2050,7 +2051,7 @@ bool lost_soul_spectralize(monster* mons)
             mi->flags |= MF_NO_REWARD | MF_SEEN;
             mi->flags |= mons->flags & (MF_MELEE_MASK | MF_SPELL_MASK);
             mi->spells = mons->spells;
-            mi->god = GOD_NAMELESS;
+            mi->god = mons->god;
 
             name_zombie(*mi, mons);
             invalidate_agrid();
