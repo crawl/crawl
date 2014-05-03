@@ -741,10 +741,15 @@ void qazlal_storm_clouds()
         if (skip)
             continue;
 
-        place_cloud(
-            random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
-                          CLOUD_DUST_TRAIL, -1),
-            candidates[i], random_range(3, 5), &you);
+        // No flame clouds over water to avoid steam generation.
+        cloud_type ctype;
+        do
+        {
+            ctype = random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
+                                       CLOUD_DUST_TRAIL, -1);
+        } while (feat_is_watery(grd(candidates[i])) && ctype == CLOUD_FIRE);
+
+        place_cloud(ctype, candidates[i], random_range(3, 5), &you);
         placed++;
     }
 }
