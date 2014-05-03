@@ -23,6 +23,7 @@
 #include "mon-stuff.h"
 #include "player.h"
 #include "religion.h"
+#include "shout.h"
 #include "skills2.h"
 #include "state.h"
 #include "terrain.h"
@@ -701,6 +702,9 @@ void qazlal_storm_clouds()
     {
         return;
     }
+
+    // You are a *storm*. You are pretty loud!
+    noisy(min((int)you.piety, piety_breakpoint(5)) / 10, you.pos());
 
     const int radius = you.piety >= piety_breakpoint(3) ? 2 : 1;
 
