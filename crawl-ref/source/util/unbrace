@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 use Getopt::Std;
+use strict;
 
 our ($opt_a, $opt_n);
 getopts('na');
@@ -28,7 +29,7 @@ sub rebrace($$$)
     return "$condition$indent\{\n$body$indent\}\n";
 }
 
-for $f (@files)
+for my $f (@files)
 {
     open F, "<", $f or die "Can't read $f\n";
     my $old = $_ = <F>;
