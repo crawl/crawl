@@ -2257,10 +2257,7 @@ static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
     item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_BRAND_WEAPON);
 
     if (!weapon)
-        if (alreadyknown)
-            return false;
-        else
-            return true;
+        return !alreadyknown;
 
     _brand_weapon(*weapon);
     return true;
@@ -2413,10 +2410,7 @@ static bool _handle_enchant_weapon(bool alreadyknown, string *pre_msg, scroll_ty
 {
     item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_ENCHANT_WEAPON_I);
     if (!weapon)
-        if (alreadyknown)
-            return false;
-        else
-            return true;
+        return !alreadyknown;
 
     int acc = (scr == SCR_ENCHANT_WEAPON_I ? 1 : scr == SCR_ENCHANT_WEAPON_II ? 0 : 1 + random2(2));
     int dam = (scr == SCR_ENCHANT_WEAPON_I ? 0 : scr == SCR_ENCHANT_WEAPON_II ? 1 : 1 + random2(2));
