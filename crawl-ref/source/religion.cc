@@ -2921,10 +2921,8 @@ static void _gain_piety_point()
     }
 
     if (you_worship(GOD_QAZLAL)
-        && qazlal_sh_boost(old_piety) < qazlal_sh_boost()
-        && qazlal_sh_boost(old_piety) > 0)
+        && qazlal_sh_boost(old_piety) != qazlal_sh_boost())
     {
-        mprf(MSGCH_GOD, "The storm around you strengthens.");
         you.redraw_armour_class = true;
     }
 
@@ -3097,10 +3095,8 @@ void lose_piety(int pgn)
     }
 
     if (you_worship(GOD_QAZLAL)
-        && qazlal_sh_boost(old_piety) > qazlal_sh_boost()
-        && qazlal_sh_boost() > 0)
+        && qazlal_sh_boost(old_piety) != qazlal_sh_boost())
     {
-        mprf(MSGCH_GOD, "The storm around you weakens.");
         you.redraw_armour_class = true;
     }
 
