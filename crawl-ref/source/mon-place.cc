@@ -670,8 +670,9 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 i = choose_random_weighted(vault_mon_weights.begin(),
                                            vault_mon_weights.end());
             }
-            while (mon_type == RANDOM_MOBILE_MONSTER
-                   && mons_class_is_stationary((monster_type)vault_mon_types[i])
+            while (mon_type == MONS_NO_MONSTER
+                   || mon_type == RANDOM_MOBILE_MONSTER
+                      && mons_class_is_stationary((monster_type)vault_mon_types[i])
                    || mon_type == RANDOM_COMPATIBLE_MONSTER
                       && _is_incompatible_monster((monster_type)vault_mon_types[i])
                    || mon_type == RANDOM_BANDLESS_MONSTER
