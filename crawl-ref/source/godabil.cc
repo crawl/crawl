@@ -3825,7 +3825,6 @@ static potion_type _gozag_bad_potions[] =
     POT_DECAY,
     POT_STRONG_POISON,
     POT_LIGNIFY,
-    POT_PARALYSIS,
     POT_CONFUSION,
 };
 
