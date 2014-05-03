@@ -665,19 +665,24 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         if (!vault_mon_types.empty())
         {
             int i = 0;
+            monster_type type;
             do
             {
                 i = choose_random_weighted(vault_mon_weights.begin(),
                                            vault_mon_weights.end());
+                type = (monster_type) vault_mon_types[i];
+
+                // If the monster list says not to place, accept that.
+                if (type == MONS_NO_MONSTER)
+                    break;
             }
-            while (mon_type == MONS_NO_MONSTER
-                   || mon_type == RANDOM_MOBILE_MONSTER
-                      && mons_class_is_stationary((monster_type)vault_mon_types[i])
+            while (mon_type == RANDOM_MOBILE_MONSTER
+                      && mons_class_is_stationary(type)
                    || mon_type == RANDOM_COMPATIBLE_MONSTER
-                      && _is_incompatible_monster((monster_type)vault_mon_types[i])
+                      && _is_incompatible_monster(type)
                    || mon_type == RANDOM_BANDLESS_MONSTER
-                      && _is_banded_monster((monster_type)vault_mon_types[i]));
-            int type = vault_mon_types[i];
+                      && _is_banded_monster(type));
+
             int base = vault_mon_bases[i];
             bool banded = vault_mon_bands[i];
 
@@ -686,7 +691,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             else
             {
                 base_type = (monster_type) base;
-                mon_type  = (monster_type) type;
+                mon_type  = type;
                 if (want_band)
                     *want_band = banded;
                 if (needs_resolution(mon_type))
