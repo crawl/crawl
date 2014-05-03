@@ -867,6 +867,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
 
     // check for returning ammo
+    if (teleport)
+        returning = false;
+
     if (returning && projected != LRET_FUMBLED)
     {
         const skill_type sk =
