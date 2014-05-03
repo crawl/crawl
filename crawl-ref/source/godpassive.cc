@@ -722,14 +722,14 @@ void qazlal_storm_clouds()
                         - piety_breakpoint(0))
                        * candidates.size() * you.time_taken
                        / (piety_breakpoint(5) - piety_breakpoint(0)),
-                       LOS_RADIUS * BASELINE_DELAY * 10);
+                       LOS_RADIUS * BASELINE_DELAY);
     if (count < 0)
         return;
     shuffle_array(candidates);
     int placed = 0;
     for (unsigned int i = 0; placed < count && i < candidates.size(); i++)
     {
-        bool skip = false;
+        bool skip = false, water = false;
         for (adjacent_iterator ai(candidates[i]); ai; ++ai)
         {
             if (env.cgrid(*ai) != EMPTY_CLOUD)
@@ -737,6 +737,8 @@ void qazlal_storm_clouds()
                 skip = true;
                 break;
             }
+            if (feat_is_watery(grd(*ai)))
+                water = true;
         }
         if (skip)
             continue;
@@ -747,7 +749,7 @@ void qazlal_storm_clouds()
         {
             ctype = random_choose(CLOUD_FIRE, CLOUD_COLD, CLOUD_STORM,
                                        CLOUD_DUST_TRAIL, -1);
-        } while (feat_is_watery(grd(candidates[i])) && ctype == CLOUD_FIRE);
+        } while (water && ctype == CLOUD_FIRE);
 
         place_cloud(ctype, candidates[i], random_range(3, 5), &you);
         placed++;
