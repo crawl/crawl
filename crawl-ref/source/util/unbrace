@@ -16,10 +16,15 @@ unless (@files)
 sub rebrace($$$)
 {
     my ($condition, $indent, $body) = @_;
-    # Only add braces if the total is three lines or more.
-    return "$condition$body" =~ /\n.*\n.*\n/
-           ? "$condition$indent\{\n$body$indent\}\n"
-           : "$condition$body";
+    my $orig = "$condition$body";
+
+    # Don't add braces if it's only two lines.
+    return $orig unless $orig =~ /\n.*\n.*\n/;
+
+    # Don't add braces if the "body" consists of only comments.
+    return $orig unless $body =~ m&^\s++(?!//)&s;
+
+    return "$condition$indent\{\n$body$indent\}\n";
 }
 
 for $f (@files)
@@ -37,7 +42,7 @@ for $f (@files)
         # $2 = first-line indent
         ^(\s+)   (?:if|while|for|do|else)\b \s*
                  # $3 = nested parenthesised expression, possibly multi-line
-                 ( 
+                 (
                    \(
                       (?: [^()]* (?3))*
                       [^()]*
