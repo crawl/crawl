@@ -3950,6 +3950,14 @@ int check_stealth(void)
             umbra_multiplier = max(umbra_multiplier, 3 / 2);
         stealth *= umbra_multiplier;
     }
+    // If you're surrounded by a storm, you're inherently pretty conspicuous.
+    if (you_worship(GOD_QAZLAL) && !player_under_penance()
+        && you.piety >= piety_breakpoint(0))
+    {
+        stealth = stealth
+                  * (MAX_PIETY - min((int)you.piety, piety_breakpoint(5)))
+                  / (MAX_PIETY - piety_breakpoint(0));
+    }
     // The shifting glow from the Orb, while too unstable to negate invis
     // or affect to-hit, affects stealth even more than regular glow.
     if (orb_haloed(you.pos()))
