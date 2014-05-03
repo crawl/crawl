@@ -3832,9 +3832,7 @@ static bool _gozag_allow_duplicate(potion_type which)
 {
     return which == POT_CURING // only for healing purposes
            || which == POT_HEAL_WOUNDS
-           || which == POT_MUTATION
-           || which == POT_CURE_MUTATION
-           || which == POT_BENEFICIAL_MUTATION;
+           || which == POT_CURE_MUTATION;
 }
 
 static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
