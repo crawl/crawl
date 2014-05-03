@@ -830,36 +830,57 @@ bool cast_a_spell(bool check_range, spell_type spell)
     return true;
 }
 
-static void _spellcasting_side_effects(spell_type spell, int pow, god_type god,
-                                       bool real_spell)
+/**
+ * Handles divine response to spellcasting.
+ *
+ * @param spell         The type of spell just cast.
+ */
+static void _spellcasting_god_conduct(spell_type spell)
 {
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
-    if (is_unholy_spell(spell) && !crawl_state.is_god_acting())
-        did_god_conduct(DID_UNHOLY, 10 + spell_difficulty(spell));
+    if (crawl_state.is_god_acting())
+        return;
 
-    if (is_unclean_spell(spell) && !crawl_state.is_god_acting())
-        did_god_conduct(DID_UNCLEAN, 10 + spell_difficulty(spell));
+    const int conduct_level = 10 + spell_difficulty(spell);
 
-    if (is_chaotic_spell(spell) && !crawl_state.is_god_acting())
-        did_god_conduct(DID_CHAOS, 10 + spell_difficulty(spell));
+    if (is_unholy_spell(spell))
+        did_god_conduct(DID_UNHOLY, conduct_level);
 
-    if (is_corpse_violating_spell(spell) && !crawl_state.is_god_acting())
-        did_god_conduct(DID_CORPSE_VIOLATION, 10 + spell_difficulty(spell));
+    if (is_unclean_spell(spell))
+        did_god_conduct(DID_UNCLEAN, conduct_level);
 
-    if (spell_typematch(spell, SPTYP_NECROMANCY)
-        && !crawl_state.is_god_acting())
+    if (is_chaotic_spell(spell))
+        did_god_conduct(DID_CHAOS, conduct_level);
+
+    if (is_corpse_violating_spell(spell))
+        did_god_conduct(DID_CORPSE_VIOLATION, conduct_level);
+
+    if (spell_typematch(spell, SPTYP_NECROMANCY))
     {
-        did_god_conduct(DID_NECROMANCY, 10 + spell_difficulty(spell));
+        did_god_conduct(DID_NECROMANCY, conduct_level);
 
         if (spell == SPELL_NECROMUTATION && is_good_god(you.religion))
             excommunication();
     }
-    if (spell == SPELL_STATUE_FORM && you_worship(GOD_YREDELEMNUL)
-        && !crawl_state.is_god_acting())
-    {
+    if (spell == SPELL_STATUE_FORM && you_worship(GOD_YREDELEMNUL))
         excommunication();
-    }
+}
+
+/**
+ * Handles side effects of successfully casting a spell.
+ *
+ * Spell noise, magic 'sap' effects, and god conducts.
+ *
+ * @param spell         The type of spell just cast.
+ * @param pow           The power of the spell. UNUSED.
+ * @param god           Which god is casting the spell; NO_GOD if it's you.
+ * @param real_spell    An actual spellcast, vs. spell-like effects (rods?)
+ */
+static void _spellcasting_side_effects(spell_type spell, int pow, god_type god,
+                                       bool real_spell)
+{
+    _spellcasting_god_conduct(spell);
 
     if (god == GOD_NO_GOD)
     {
