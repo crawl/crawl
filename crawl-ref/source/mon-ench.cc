@@ -636,7 +636,8 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             else
             {
                 string monname = name(DESC_THE);
-                const int cost = fuzz_value(exper_value(this), 15, 15) / 10;
+                const int cost =
+                    max(1, fuzz_value(exper_value(this), 15, 15) / 10);
                 mprf("%s demands further payment of %d gold.", monname.c_str(),
                      cost);
                 if (you.gold >= cost)
