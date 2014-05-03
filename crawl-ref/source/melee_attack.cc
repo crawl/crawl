@@ -109,6 +109,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 {
     attack_occurred = false;
     init_attack(SK_UNARMED_COMBAT, attack_number);
+    if (weapon && !using_weapon())
+        wpn_skill = SK_FIGHTING;
 
     can_cleave = !jumping_attack && wpn_skill == SK_AXES && attacker != defender
         && !attacker->confused();
