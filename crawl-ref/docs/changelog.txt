@@ -1,11 +1,13 @@
-Stone Soup 0.15 (up to 0.15-a0-257-g1312860)
+Stone Soup 0.15 (up to 0.15-a0-402-g0f93d02)
 --------------------------------------------
+* Ranged combat has been rewritten from the ground up.
 
 Branches, environment
 ---------------------
 * Crypt is now three levels (was five).
 * Some areas of the Tomb layout can now vary.
 * Mechanical traps no longer drop ammo.
+* Troves asking for items require that item to be unequipped.
 
 Character
 ---------
@@ -23,7 +25,8 @@ Monsters
 * Manticores now move as fast as the player.
 * Komodo dragons now bite harder but don't sicken the player.
 * Deep dwarf death knights are now just death knights.
-* Removed enemies: vapours, thorn lotuses, giant goldfish.
+* Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
+  flaming corpses, grizzly bears.
 
 Spells
 ------
@@ -32,10 +35,29 @@ Spells
   in the book of Burglary.
 * Casting Ozocubu's Refrigeration now prevents the player from using potions
   for several turns instead of destroying potions.
+* The Book of War Chants is no more.
+* Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon.
 
 Items
 -----
+* Ranged combat has been rewritten based on melee attacks - AC and EV
+  has more of an impact, attack delay is more predictable, and Throwing
+  should be more viable as a ranged option as compared to bows and crossbows,
+  among other changes.
+* Cleaving hits the full eight squares around a player.
+* Jewellery automatically identifies on equipping it.
 * Damage from the electrocution brand has been reduced slightly.
+* Rebranding a distortion weapon no longer causes a distortion effect.
+* Scrolls of brand weapon can no longer affix brands.
+* Blessed weapons can be rebranded.
+* Amulets of inaccuracy are always cursed.
+* New rings of stealth and loudness, which positively/negatively adjust
+  a player's stealth.
+* Removed items: rings of hunger and sustenance.
+
+Gods
+----
+* Followers of good gods no longer get a chance to turn holy enemies neutral.
 
 Interface
 ---------
