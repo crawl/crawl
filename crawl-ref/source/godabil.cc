@@ -4712,6 +4712,7 @@ bool qazlal_disaster_area()
 {
     bool friendlies = false;
     vector<coord_def> targets;
+    vector<int> weights;
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, true); ri; ++ri)
     {
         if (!in_bounds(*ri))
@@ -4723,10 +4724,12 @@ bool qazlal_disaster_area()
         {
             friendlies = true;
         }
-        if (distance2(you.pos(), *ri) <= 8)
+        const int dist = distance2(you.pos(), *ri);
+        if (dist <= 8)
             continue;
 
         targets.push_back(*ri);
+        weights.push_back(LOS_RADIUS_SQ - dist);
     }
 
     if (targets.empty())
@@ -4748,9 +4751,21 @@ bool qazlal_disaster_area()
     int count = max(1, min((int)targets.size(),
                             max(you.skill_rdiv(SK_INVOCATIONS, 1, 2),
                                 random2avg(you.skill(SK_INVOCATIONS, 2), 2))));
-    shuffle_array(targets);
+    vector<coord_def> victims;
     for (int i = 0; i < count; i++)
-        qazlal_upheaval(targets[i], true);
+    {
+        if (targets.size() == 0)
+            break;
+        int which = choose_random_weighted(weights.begin(), weights.end());
+        unsigned int j = 0;
+        for (; j < victims.size(); j++)
+            if (adjacent(targets[which], victims[j]))
+                break;
+        if (j == victims.size())
+            qazlal_upheaval(targets[which], true);
+        targets.erase(targets.begin() + which);
+        weights.erase(weights.begin() + which);
+    }
     scaled_delay(100);
 
     return true;
