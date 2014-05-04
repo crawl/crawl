@@ -311,7 +311,7 @@ bool ranged_attack::handle_phase_hit()
     }
 
     // XXX: unify this with melee_attack's code
-    if (attacker->is_player())
+    if (attacker->is_player() && defender->is_monster())
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def(), !stab_attempt);
