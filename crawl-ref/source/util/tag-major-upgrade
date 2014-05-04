@@ -1,0 +1,110 @@
+#!/usr/bin/perl -w
+use Getopt::Std;
+use strict;
+
+our ($opt_n, $opt_t);
+getopts('nt:');
+my $dry_run = $opt_n;
+my $tag = $opt_t;
+my $any_changed = 0;
+
+sub fix_tag($$$$$)
+{
+    my ($op, $ver, $body, $else, $full) = @_;
+    my $matches;
+
+    # Only obsolete tags
+    return $full unless $ver < $tag;
+
+    if ($op eq '==')
+    {
+        $matches = $tag == $ver;
+    }
+    elsif ($op eq '!=')
+    {
+        $matches = $tag != $ver;
+    }
+    elsif ($op eq '<=')
+    {
+        $matches = $tag <= $ver;
+    }
+    elsif ($op eq '<')
+    {
+        $matches = $tag < $ver;
+    }
+    elsif ($op eq '>=')
+    {
+        $matches = $tag >= $ver;
+    }
+    elsif ($op eq '>')
+    {
+        $matches = $tag > $ver;
+    }
+    die "Unknown operator '$op'" unless defined $matches;
+
+    return $matches      ? $body
+         : defined $else ? $else
+                         : "";
+}
+
+if (!defined $tag)
+{
+    my $tagf = `git ls-files '*tag-version.h'`;
+    chomp $tagf;
+    die "Too many matches for tag-version.h\n" if $tagf =~ /\n/;
+
+    open T, "<", $tagf or die "Could not open $tagf: $!\n";
+    while (<T>)
+    {
+        /^#define\s+TAG_MAJOR_VERSION\s+(\d+)/ and $tag = $1;
+    }
+}
+
+die "Could not determine version tag\n" unless defined $tag;
+
+my @files = @ARGV;
+undef $/;
+unless (@files)
+{
+    @files = (grep /\.(cc|h)$/ && !/^prebuilt\//, split /\n/, `git ls-files`);
+}
+
+for my $f (@files)
+{
+    open F, "<", $f or die "Can't read $f\n";
+    my $old = $_ = <F>;
+    close F;
+
+    s/# Full match in $1
+      (
+        # #if line. Comparison operator in $2, tag in $3
+        ^\s* \# \s* if \s+ TAG_MAJOR_VERSION \s* (!=|==|>=|>|<=|<) \s* (\d+) \n
+
+        # body of #if in $4.  We don't handle #if TAG_MAJOR_VERSION blocks
+        # that contain nested #ifs.
+        ((?: (?! \s* \# \s* (?:if|elif|else|endif)) .* \n)+)
+
+        # optional #else, body in $5
+        (?:
+            \s* \# \s* else \n
+            ((?: (?! \s* \# \s* (?:if|elif|else|endif)) .* \n)+)
+        )?
+
+        \s* \# \s* endif \n
+      )
+    /fix_tag($2, $3, $4, $5, $1)/gexm;
+
+    if ($old ne $_)
+    {
+        print "$f\n";
+        $any_changed = 1;
+        if (!$dry_run)
+        {
+            open F, ">", $f or die "Can't write $f\n";
+            print F;
+            close F;
+        }
+    }
+}
+
+exit 1 if ($dry_run and $any_changed);
