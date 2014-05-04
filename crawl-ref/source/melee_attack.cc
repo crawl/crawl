@@ -651,21 +651,6 @@ bool melee_attack::handle_phase_damaged()
     return true;
 }
 
-bool melee_attack::handle_phase_killed()
-{
-    // Wyrmbane needs to be notified of deaths, including ones due to its
-    // Dragon slaying brand, but other users of melee_effects() don't want
-    // to possibly be called twice. Adding another entry for a single
-    // artefact would be overkill, so here we call it by hand:
-    if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
-    {
-        unrand_entry->melee_effects(weapon, attacker, defender,
-                                               true, special_damage);
-    }
-
-    return attack::handle_phase_killed();
-}
-
 bool melee_attack::handle_phase_aux()
 {
     if (attacker->is_player())

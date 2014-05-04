@@ -61,7 +61,6 @@ private:
     bool handle_phase_dodged();
     bool handle_phase_hit();
     bool handle_phase_damaged();
-    bool handle_phase_killed();
     bool handle_phase_aux();
     bool handle_phase_end();
 
