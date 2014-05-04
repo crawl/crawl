@@ -173,6 +173,9 @@ passwd.db3
 *.ttyrec
 /source/rcs
 
+# Webtiles minified files
+*.min.js
+
 # junk when compiled with DGAMELAUNCH
 /source/cache*
 

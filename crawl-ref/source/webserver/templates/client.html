@@ -12,6 +12,9 @@
 
     <img style="display:none;" id="loader_img" alt="" src="{{ static_url(title_img) }}">
 
-    <script src="/static/scripts/contrib/require.js" data-main="/static/scripts/app"></script>
+    <script>
+      window.use_cdn = {{ "true" if use_cdn else "false" }};
+    </script>
+    <script src="{{'//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.11/require.min.js' if use_cdn else '/static/scripts/contrib/require.js'}}" data-main="{{ maybe_minified('scripts/app') }}"></script>
   </body>
 </html>

@@ -230,14 +230,18 @@ class CrawlProcessHandlerBase(object):
         if self.crawl_version:
             h.update(self.crawl_version)
         v = h.hexdigest()
-        GameDataHandler.add_version(v,
-                                    os.path.join(self.client_path, "static"))
-
+        static_path = os.path.join(self.client_path, "static")
+        GameDataHandler.add_version(v, static_path)
+        if (os.path.exists(os.path.join(static_path, "game.min.js")) and
+            config.get("use_minified", True)):
+            module = "/gamedata/%s/game.min" % v
+        else:
+            module = "/gamedata/%s/game" % v
         templ_path = os.path.join(self.client_path, "templates")
         loader = DynamicTemplateLoader.get(templ_path)
         templ = loader.load("game.html")
-        game_html = templ.generate(version = v)
-        watcher.send_message("game_client", version = v, content = game_html)
+        game_html = templ.generate(version=v, module=module)
+        watcher.send_message("game_client", version=v, content=game_html)
 
     def stop(self):
         if self.no_player_timeout is not None:

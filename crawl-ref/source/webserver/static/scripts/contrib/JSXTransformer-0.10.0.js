@@ -11802,7 +11802,7 @@ var supportsAccessors = Object.prototype.hasOwnProperty('__defineGetter__');
 
 function transformReact(source) {
   return transform(visitors.react, source, {
-    sourceMap: supportsAccessors
+    sourceMap: false
   });
 }
 

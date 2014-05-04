@@ -1,4 +1,4 @@
-define(function() {
+define(["jquery"], function($) {
     var val;
     // Key codes - from cio.h
     val = -255

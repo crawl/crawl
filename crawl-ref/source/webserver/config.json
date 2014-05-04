@@ -117,5 +117,7 @@
 
     "no_cache": false,
     "autologin": null,
-    "game_data_no_cache": true
+    "game_data_no_cache": true,
+    "use_minified": true,
+    "use_cdn": true
 }

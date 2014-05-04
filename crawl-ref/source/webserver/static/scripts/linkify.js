@@ -1,4 +1,4 @@
-define(["react", "contrib/ba-linkify.min"], function (React) {
+define(["react", "contrib/ba-linkify"], function (React) {
     "use strict";
 
     var ALLOWED_PROTOCOLS = /^http:|^https:|^ftp:|^irc:/;

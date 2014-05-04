@@ -23,6 +23,15 @@ def scan_titles():
             title_imgs.append(f)
 scan_titles()
 
+def maybe_minified(module):
+    if not config.get("use_minified", True):
+        return "/static/" + module
+    path = os.path.join(config.get("static_path"), module + ".min.js")
+    if os.path.exists(path):
+        return "/static/" + module + ".min"
+    else:
+        return "/static/" + module
+
 class MainHandler(tornado.web.RequestHandler):
     def __init__(self, application, request, action):
         super(MainHandler, self).__init__(application, request)
@@ -30,7 +39,9 @@ class MainHandler(tornado.web.RequestHandler):
 
     def get(self, arg=None):
         self.render("client.html", title_img=random.choice(title_imgs),
-                    username=None, config=config, action=self.action)
+                    username=None, config=config, action=self.action,
+                    maybe_minified=maybe_minified,
+                    use_cdn=config.get("use_cdn", True))
 
 class NoCacheHandler(tornado.web.StaticFileHandler):
     def set_extra_headers(self, path):

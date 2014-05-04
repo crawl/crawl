@@ -638,6 +638,14 @@ INCLUDES_L += -I$(RLTILES)
 ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_WEB
+
+ifneq ($(shell which nodejs 2> /dev/null),)
+  NODE = $(shell which nodejs)
+else
+  ifneq ($(shell which node 2> /dev/null),)
+    NODE = $(shell which node)
+  endif
+endif
 endif
 
 #
@@ -1153,14 +1161,28 @@ STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
 
-webserver/game_data/static/%.js: $(RLTILES)/%.js
+webserver/game_data/static/tileinfo-%.js: $(RLTILES)/tileinfo-%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
+
+CLIENT_JS_FILES = $(filter-out webserver/static/scripts/app.min.js, $(wildcard webserver/static/scripts/*.js webserver/static/scripts/*.jsx))
+GAME_JS_FILES = $(filter-out webserver/game_data/static/game.min.js, $(wildcard webserver/game_data/static/*.js webserver/game_data/static/*.jsx))
+
+webserver/static/scripts/app.min.js: $(CLIENT_JS_FILES)
+	$(NODE) util/r.js -o webserver/static/scripts/build.js
+webserver/game_data/static/game.min.js: $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js) $(GAME_JS_FILES)
+	$(NODE) util/r.js -o webserver/game_data/static/build.js
+
+ifdef NODE
+minify: webserver/static/scripts/app.min.js webserver/game_data/static/game.min.js
+else
+minify:
+endif
 
 clean-webserver:
 	$(RM) $(STATICFILES) webserver/*.pyc
 
 ifdef WEBTILES
-webserver: $(STATICFILES)
+webserver: $(STATICFILES) minify
 else
 webserver:
 endif
