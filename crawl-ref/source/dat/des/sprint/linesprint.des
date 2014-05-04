@@ -178,13 +178,31 @@ ENDMAP
 
 NAME:     line_temple
 TAGS:     line_temple
+KFEAT:    a = altar_zin
+KFEAT:    b = altar_the_shining_one
+KFEAT:    c = altar_kikubaaqudgha
+KFEAT:    d = altar_yredelemnul
+KFEAT:    e = altar_xom
+KFEAT:    f = altar_vehumet
+KFEAT:    g = altar_okawaru
+KFEAT:    h = altar_makhleb
+KFEAT:    i = altar_sif_muna
+KFEAT:    j = altar_trog
+KFEAT:    k = altar_nemelex_xobeh
+KFEAT:    l = altar_elyvilon
+KFEAT:    m = altar_beogh
+KFEAT:    n = altar_jiyva
+KFEAT:    o = altar_lugonu
+KFEAT:    p = altar_fedhas
+KFEAT:    q = altar_cheibriados
+KFEAT:    r = altar_dithmenos
 : line_setup(_G)
 : lua_marker('~', props_marker {
 :           door_description_suffix=" to the Temple",
 :           })
 MAP
 xxxxxxxxxxxxxxxxxxx
-~BBBBBBBBBBBBBBBBBB
+~abcdefghijklmnopqr
 xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
