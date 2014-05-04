@@ -4041,6 +4041,7 @@ bool gozag_call_merchant()
         {
             lid.depth = j;
             if (!is_existing_level(lid)
+                && shop_vault->depths.is_usable_in(lid)
                 && !you.props.exists(make_stringf(GOZAG_SHOP_KEY,
                                                   lid.describe().c_str())))
             {
