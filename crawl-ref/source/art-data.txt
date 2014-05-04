@@ -579,7 +579,7 @@ STEALTH:  1
 NAME:    plutonium sword
 OBJ:     OBJ_WEAPONS/WPN_CLAYMORE
 PLUS:    +12/+16
-COLOUR:  ETC_RANDOM
+COLOUR:  ETC_MUTAGENIC
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
 BOOL:    mutate
