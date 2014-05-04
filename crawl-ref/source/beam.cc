@@ -3908,6 +3908,8 @@ void bolt::affect_player()
         // hit_verb
         if (attk.ev_margin >= 0 && hit_verb.empty())
             hit_verb = attk.attack_verb;
+        if (attk.reflected)
+            reflect();
         extra_range_used += attk.range_used;
         return;
     }
@@ -4877,6 +4879,8 @@ void bolt::affect_monster(monster* mon)
         // hit_verb
         if (attk.ev_margin >= 0 && hit_verb.empty())
             hit_verb = attk.attack_verb;
+        if (attk.reflected)
+            reflect();
         extra_range_used += attk.range_used;
         return;
     }

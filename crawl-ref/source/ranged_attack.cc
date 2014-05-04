@@ -28,7 +28,8 @@
 ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele) :
                              ::attack(attk, defn), range_used(0),
-                             projectile(proj), teleport(tele), orig_to_hit(0)
+                             reflected(false), projectile(proj), teleport(tele),
+                             orig_to_hit(0)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
@@ -100,7 +101,7 @@ bool ranged_attack::attack()
 
     const int ev = defender->melee_evasion(attacker);
     ev_margin = test_hit(to_hit, ev, !attacker->is_player());
-    bool shield_blocked = attack_shield_blocked(true);
+    bool shield_blocked = attack_shield_blocked(false);
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
@@ -168,7 +169,35 @@ bool ranged_attack::handle_phase_attempted()
 bool ranged_attack::handle_phase_blocked()
 {
     ASSERT(!attack_ignores_shield(false));
-    range_used = BEAM_STOP;
+    string punctuation = ".";
+    string verb = "block";
+    if (defender_shield && is_shield(*defender_shield)
+        && shield_reflects(*defender_shield))
+    {
+        reflected = true;
+        verb = "reflect";
+        if (defender->observable())
+        {
+            punctuation = " off " + defender->pronoun(PRONOUN_POSSESSIVE)
+                          + " " + defender_shield->name(DESC_PLAIN).c_str()
+                          + "!";
+            ident_reflector(defender_shield);
+        }
+        else
+            punctuation = "!";
+    }
+    else
+        range_used = BEAM_STOP;
+
+    if (needs_message)
+    {
+        mprf("%s %s %s%s",
+             def_name(DESC_THE).c_str(),
+             defender->conj_verb(verb).c_str(),
+             projectile->name(DESC_THE).c_str(),
+             punctuation.c_str());
+    }
+
     return attack::handle_phase_blocked();
 }
 

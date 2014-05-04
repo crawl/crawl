@@ -8,6 +8,7 @@ class ranged_attack : public attack
 // Public Properties
 public:
     int range_used;
+    bool reflected;
 
 // Public Methods
 public:
