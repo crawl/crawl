@@ -1038,7 +1038,7 @@ KFEAT:   s = altar_dithmenos
 : base_monster_setup(_G)
 MAP
 hopnlfjida
-gqrmk.sebc
+gqrmks.ebc
 ENDMAP
 
 

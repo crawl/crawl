@@ -262,7 +262,8 @@ KFEAT: X = altar_xom
 KFEAT: M = altar_makhleb
 KFEAT: D = altar_dithmenos
 KMONS: l = patrolling spatial vortex
-KFEAT: ? = altar_jiyva / w:5 altar_lugonu / w:25 floor
+KFEAT: l = altar_lugonu
+KFEAT: J = altar_jiyva
 KMONS: m = shadow
 KMONS: j = patrolling jelly
 KITEM: * = royal jelly
@@ -284,7 +285,7 @@ x..........
 x...xxxxxx+
 x.f.x.lxm..
 x...xNDx...
-x+xxxX?x...
+x+xxxXJx...
 x.s5xM.x..*
 xVSKx..+..j
 ENDMAP
