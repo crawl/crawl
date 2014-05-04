@@ -4137,16 +4137,16 @@ static const char* _attack_delay_desc(int attack_delay)
 
 static void _display_attack_delay()
 {
-    melee_attack attk(&you, NULL);
-    const int delay = attk.calc_attack_delay(false, false);
+    const int delay = you.attack_delay(you.weapon(), NULL, false, false);
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
     int avg;
-    const item_def* weapon = you.weapon();
+    // FIXME for new ranged combat
+/*    const item_def* weapon = you.weapon();
     if (weapon && is_range_weapon(*weapon))
         avg = launcher_final_speed(*weapon, you.shield(), false);
-    else
+    else */
         avg = 10 * delay;
 
     // Haste shouldn't be counted, but let's show finesse.
@@ -5029,7 +5029,8 @@ bool confuse_player(int amount, bool quiet)
     return true;
 }
 
-bool curare_hits_player(int death_source, string name, string source_name)
+bool curare_hits_player(int death_source, int levels, string name,
+                        string source_name)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -5039,24 +5040,25 @@ bool curare_hits_player(int death_source, string name, string source_name)
         return false;
     }
 
-    poison_player(roll_dice(2, 12) + 1, source_name, name);
+    poison_player(roll_dice(levels, 12) + 1, source_name, name);
 
     int hurted = 0;
 
     if (you.res_asphyx() <= 0)
     {
-        hurted = roll_dice(2, 6);
+        hurted = roll_dice(levels, 6);
 
         if (hurted)
         {
-            you.increase_duration(DUR_BREATH_WEAPON, hurted, 20 + random2(20));
+            you.increase_duration(DUR_BREATH_WEAPON, hurted,
+                                  10*levels + random2(10*levels));
             mpr("You have difficulty breathing.");
             ouch(hurted, death_source, KILLED_BY_CURARE,
                  "curare-induced apnoea");
         }
     }
 
-    potion_effect(POT_SLOWING, 2 + random2(6));
+    potion_effect(POT_SLOWING, levels + random2(3*levels));
 
     return hurted > 0;
 }
@@ -7429,6 +7431,7 @@ void player::slow_down(actor *foe, int str)
     ::slow_player(str);
 }
 
+
 int player::has_claws(bool allow_tran) const
 {
     if (allow_tran)
@@ -8341,6 +8344,16 @@ int player_monster_detect_radius()
 bool player_has_orb()
 {
     return you.char_direction == GDT_ASCENDING;
+}
+
+bool player::form_uses_xl() const
+{
+    // No body parts that translate in any way to something fisticuffs could
+    // matter to, the attack mode is different.  Plus, it's weird to have
+    // users of one particular [non-]weapon be effective for this
+    // unintentional form while others can just run or die.  I believe this
+    // should apply to more forms, too.  [1KB]
+    return you.form == TRAN_WISP || you.form == TRAN_FUNGUS;
 }
 
 // Lava orcs!

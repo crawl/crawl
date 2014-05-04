@@ -316,7 +316,7 @@ static void _mark_net_trapping(const coord_def& where)
     }
 }
 
-void monster_caught_in_net(monster* mon, bolt &pbolt)
+void monster_caught_in_net(monster* mon, actor* agent)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
@@ -368,7 +368,11 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
         if (mon->flight_mode() == FL_WINGED)
         {
             simple_monster_message(mon, " falls like a stone!");
-            mons_check_pool(mon, mon->pos(), pbolt.killer(), pbolt.beam_source);
+            mons_check_pool(mon, mon->pos(),
+                            agent && agent->is_player()  ? KILL_YOU_MISSILE :
+                            agent && agent->is_monster() ? KILL_MON_MISSILE
+                                                         : KILL_MISC,
+                            agent ? agent->mindex() : -1);
         }
     }
 }
@@ -807,12 +811,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                         mpr("A large net falls down!");
                 }
 
-                // FIXME: Fake a beam for monster_caught_in_net().
-                bolt beam;
-                beam.flavour = BEAM_MISSILE;
-                beam.thrower = KILL_MISC;
-                beam.beam_source = NON_MONSTER;
-                monster_caught_in_net(m, beam);
+                monster_caught_in_net(m, NULL);
             }
 
             if (triggered)

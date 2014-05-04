@@ -29,18 +29,9 @@ enum unarmed_attack_type
 class melee_attack : public attack
 {
 public:
-    bool      perceived_attack, obvious_effect;
-
     // mon_attack_def stuff
     int       attack_number;
     int       effective_attack_number;
-
-    bool      fake_chaos_attack;
-
-    beam_type special_damage_flavour;
-
-    bool    stab_attempt;
-    int     stab_bonus;
 
     bool         can_cleave;
     list<actor*> cleave_targets;
@@ -48,14 +39,6 @@ public:
     bool jumping_attack;
     bool jump_blocked;
     coord_def attack_position;
-
-    // Miscast to cause after special damage is done. If miscast_level == 0
-    // the miscast is discarded if special_damage_message isn't empty.
-    int    miscast_level;
-    int    miscast_type;
-    actor* miscast_target;
-
-    bool simu;
 
 public:
     melee_attack(actor *attacker, actor *defender,
@@ -69,7 +52,6 @@ public:
 
     // To-hit is a function of attacker/defender, inherited from attack
     int calc_to_hit(bool random = true);
-    int calc_attack_delay(bool random = true, bool scaled = true);
 
     static void chaos_affect_actor(actor *victim);
 
@@ -77,7 +59,6 @@ private:
     /* Attack phases */
     bool handle_phase_attempted();
     bool handle_phase_dodged();
-    bool handle_phase_blocked();
     bool handle_phase_hit();
     bool handle_phase_damaged();
     bool handle_phase_killed();
@@ -85,20 +66,17 @@ private:
     bool handle_phase_end();
 
     /* Combat Calculations */
-    int test_hit(int to_hit, int ev, bool randomise_ev);
-    int calc_base_unarmed_damage();
-    int calc_base_weapon_damage();
+    bool using_weapon();
+    int weapon_damage();
+    int calc_mon_to_hit_base();
+    int apply_damage_modifiers(int damage, int damage_max, bool &half_ac);
     int calc_damage();
-    int calc_stat_to_hit_base();
-    int calc_stat_to_dam_base();
-    int apply_defender_ac(int damage, int damage_max = 0, bool half_ac = false);
 
     /* Attack effects */
     void check_autoberserk();
     bool check_unrand_effects();
 
-    bool attack_shield_blocked(bool verbose);
-    bool apply_damage_brand();
+    bool attack_ignores_shield(bool verbose);
 
     void rot_defender(int amount, int immediate = 0);
     void splash_defender_with_acid(int strength);
@@ -120,20 +98,10 @@ private:
     /* Race Effects */
     void do_minotaur_retaliation();
 
-    int inflict_damage(int dam, beam_type flavour = NUM_BEAMS, bool clean = false);
-
     /* Brand / Attack Effects */
-    // Returns true if the defender is banished.
-    bool distortion_affects_defender();
-    void antimagic_affects_defender(int pow);
-    void pain_affects_defender();
-    void chaos_affects_defender();
     void chaos_affects_attacker();
-    brand_type random_chaos_brand();
-    void do_miscast();
     bool do_knockback(bool trample = true);
     bool attack_warded_off();
-    void drain_defender();
 
     /* Output methods */
     void adjust_noise();
@@ -144,6 +112,7 @@ private:
     void handle_noise(const coord_def & pos);
 private:
     // Monster-attack specific stuff
+    bool mons_attack_effects();
     void mons_apply_attack_flavour();
     string mons_attack_verb();
     string mons_attack_desc();
@@ -152,8 +121,6 @@ private:
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
     void apply_black_mark_effects();
-
-    attack_flavour random_chaos_attack_flavour();
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
@@ -163,15 +130,9 @@ private:
     bool player_aux_test_hit();
     bool player_aux_apply(unarmed_attack_type atk);
 
-    int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
-    int  player_apply_weapon_skill(int damage);
-    int  player_apply_fighting_skill(int damage, bool aux);
     int  player_apply_misc_modifiers(int damage);
-    int  player_apply_slaying_bonuses(int damage, bool aux);
     int  player_apply_final_multipliers(int damage);
-    int  player_stab_weapon_bonus(int damage);
-    int  player_stab(int damage);
 
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects();
@@ -179,16 +140,12 @@ private:
     int  staff_damage(skill_type skill);
     void apply_staff_damage();
     void player_stab_check();
-    random_var player_weapon_speed();
-    random_var player_unarmed_speed();
+    int  player_stab_tier();
     void player_announce_aux_hit();
     string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();
-
-    // Output methods
-    void stab_message();
 
     // Added in, were previously static methods of fight.cc
     bool _tran_forbid_aux_attack(unarmed_attack_type atk);
