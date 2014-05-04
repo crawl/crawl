@@ -247,6 +247,19 @@ void item_colour(item_def &item)
     if (is_unrandom_artefact(item) && !is_randapp_artefact(item))
         return; // unrandarts have already been coloured
 
+    static const COLORS potion_colours[] =
+    {
+#if TAG_MAJOR_VERSION == 34
+        // clear
+        LIGHTGREY,
+#endif
+        // blue, black, silvery, cyan, purple, orange
+        BLUE, LIGHTGREY, WHITE, CYAN, MAGENTA, LIGHTRED,
+        // inky, red, yellow, green, brown, pink, white
+        BLUE, RED, YELLOW, GREEN, BROWN, LIGHTMAGENTA, WHITE
+    };
+    COMPILE_CHECK(ARRAYSZ(potion_colours) == NDSC_POT_PRI);
+
     int switchnum = 0;
     colour_t temp_value;
 
@@ -347,47 +360,7 @@ void item_colour(item_def &item)
 
     case OBJ_POTIONS:
         item.plus = you.item_description[IDESC_POTIONS][item.sub_type];
-
-        switch (item.plus % NDSC_POT_PRI)
-        {
-        case 0:         //"clear potion"
-        case 2:         //"black potion"
-        default:
-            item.colour = LIGHTGREY;
-            break;
-        case 1:         //"blue potion"
-        case 7:         //"inky potion"
-            item.colour = BLUE;
-            break;
-        case 3:         //"silvery potion"
-        case 13:        //"white potion"
-            item.colour = WHITE;
-            break;
-        case 4:         //"cyan potion"
-            item.colour = CYAN;
-            break;
-        case 5:         //"purple potion"
-            item.colour = MAGENTA;
-            break;
-        case 6:         //"orange potion"
-            item.colour = LIGHTRED;
-            break;
-        case 8:         //"red potion"
-            item.colour = RED;
-            break;
-        case 9:         //"yellow potion"
-            item.colour = YELLOW;
-            break;
-        case 10:        //"green potion"
-            item.colour = GREEN;
-            break;
-        case 11:        //"brown potion"
-            item.colour = BROWN;
-            break;
-        case 12:        //"pink potion"
-            item.colour = LIGHTMAGENTA;
-            break;
-        }
+        item.colour = potion_colours[item.plus % NDSC_POT_PRI];
         break;
 
     case OBJ_FOOD:
