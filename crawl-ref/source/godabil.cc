@@ -4210,7 +4210,7 @@ bool gozag_call_merchant()
         vector<int> weights;
         for (unsigned int j = 0; j < candidates.size(); j++)
         {
-            const int diff = max_absdepth + 1 - candidates[i].absdepth();
+            const int diff = max_absdepth + 1 - candidates[j].absdepth();
             weights.push_back(diff * diff * diff * diff * diff);
         }
         const int which =
