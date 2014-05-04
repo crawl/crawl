@@ -32,6 +32,7 @@
 #include "options.h"
 #include "player.h"
 #include "player-equip.h"
+#include "ranged_attack.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
@@ -379,17 +380,13 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
                         is_range_weapon(*iweap))
                 || (!iweap && missile != -1))
             {
-                bolt beam;
-                // throw_it() will decrease quantity by 1
-                inc_inv_item_quantity(missile, 1);
-                //Don't leave stacks of ammo
-                you.inv[missile].flags |= ISFLAG_SUMMONED;
-                beam.target = mon.pos();
-                beam.animate = false;
-                beam.dont_stop_player = true;
-                if (throw_it(beam, missile, false, DEBUG_COOKIE))
+                ranged_attack attk(&you, &mon, &you.inv[missile], false);
+                attk.simu = true;
+                attk.attack();
+                if (attk.ev_margin >= 0)
                     hits++;
-                you.inv[missile].flags &= ~ISFLAG_SUMMONED;
+                you.time_taken = you.attack_delay(you.weapon(),
+                                                  &you.inv[missile]);
             }
             else // otherwise, melee combat
             {

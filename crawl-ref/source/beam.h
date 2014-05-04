@@ -11,6 +11,9 @@
 #include "ray.h"
 #include "spl-cast.h"
 
+#define BEAM_STOP       1000        // all beams stopped by subtracting this
+                                    // from remaining range
+
 class monster;
 
 enum mon_resist_type
@@ -328,8 +331,9 @@ bool poison_monster(monster* mons, const actor* who, int levels = 1,
 bool miasma_monster(monster* mons, const actor* who);
 bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
-bool curare_actor(actor* source, actor* target, string name,
+bool curare_actor(actor* source, actor* target, int levels, string name,
                   string source_name);
+int silver_damages_victim(actor* victim, int damage, string &dmg_msg);
 void fire_tracer(const monster* mons, bolt &pbolt,
                   bool explode_only = false);
 bool imb_can_splash(coord_def origin, coord_def center,

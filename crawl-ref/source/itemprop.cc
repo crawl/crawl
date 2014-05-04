@@ -341,7 +341,7 @@ static const weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_BLOWGUN,           "blowgun",             0,  2, 10,  20,  0,
         SK_THROWING,     HANDS_ONE,    SIZE_LITTLE, MI_NEEDLE,
         DAMV_NON_MELEE, 0 },
-    { WPN_SLING,             "sling",               0,  2, 11,  20,  1,
+    { WPN_SLING,             "sling",               2,  2, 11,  20,  1,
         SK_SLINGS,       HANDS_ONE,    SIZE_LITTLE, MI_STONE,
         DAMV_NON_MELEE, 10 },
     { WPN_CROSSBOW,          "crossbow",            5,  4, 15, 150,  8,
@@ -368,12 +368,12 @@ static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[NUM_MISSILES] =
 {
     { MI_NEEDLE,        "needle",        0,    1, false },
-    { MI_STONE,         "stone",         4,    6, true  },
+    { MI_STONE,         "stone",         2,    6, true  },
     { MI_DART,          "dart",          2,    3, true  },
     { MI_ARROW,         "arrow",         7,    5, false },
     { MI_BOLT,          "bolt",          9,    5, false },
     { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
-    { MI_SLING_BULLET,  "sling bullet",  6,    4, false },
+    { MI_SLING_BULLET,  "sling bullet",  4,    4, false },
     { MI_JAVELIN,       "javelin",      10,   80, true  },
     { MI_THROWING_NET,  "throwing net",  0,   30, true  },
     { MI_TOMAHAWK,      "tomahawk",      6,   30, true  },
@@ -2589,7 +2589,7 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
         return false;
 
     hands_reqd_type hand = you.hands_reqd(weapon);
-    return hand == HANDS_TWO && !is_range_weapon(weapon);
+    return hand == HANDS_TWO;
 }
 
 bool shield_reflects(const item_def &shield)
