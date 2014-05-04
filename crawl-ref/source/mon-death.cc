@@ -1719,8 +1719,11 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->type == MONS_BATTLESPHERE)
     {
-        if (!wizard && !mons_reset && !was_banished)
+        if (!wizard && !mons_reset && !was_banished
+            && !cell_is_solid(mons->pos()))
+        {
             place_cloud(CLOUD_MAGIC_TRAIL, mons->pos(), 3 + random2(3), mons);
+        }
         end_battlesphere(mons, true);
     }
     else if (mons->type == MONS_BRIAR_PATCH)
