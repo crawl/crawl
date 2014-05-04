@@ -8,6 +8,7 @@
 #include "ranged_attack.h"
 
 #include "actor.h"
+#include "art-enum.h"
 #include "beam.h"
 #include "coord.h"
 #include "exercise.h"
@@ -783,6 +784,14 @@ void ranged_attack::player_stab_check()
     if (player_stab_tier() > 0)
     {
         attack::player_stab_check();
+        // Sometimes the blowgun of the Assassin lets you stab an aware target.
+        if (!stab_attempt && is_unrandom_artefact(*weapon)
+            && weapon->special == UNRAND_BLOWGUN_ASSASSIN
+            && one_chance_in(3))
+        {
+            stab_attempt = true;
+            stab_bonus = 1;
+        }
     }
     else
     {

@@ -202,10 +202,10 @@ longbow "Piercer"
 
 An exceptionally large metal longbow.
 %%%%
-# TAG_MAJOR_VERSION == 34
 blowgun of the Assassin
 
-It is designed for easy concealment, but still packs a nasty punch.
+This blowgun seems to guide the needle to seek the most lethal point to hit
+the target, packing a nasty punch.
 %%%%
 lance "Wyrmbane"
 
