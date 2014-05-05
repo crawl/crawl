@@ -17,7 +17,9 @@
 
 #include "abyss.h"
 #include "acquire.h"
+#include "act-iter.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
@@ -342,7 +344,15 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         try
         {
             if (_build_level_vetoable(enable_random_maps, dest_stairs_type))
+            {
+                for (monster_iterator mi; mi; ++mi)
+                    gozag_set_bribe(*mi);
+
+                if (you.props.exists(GOZAG_ANNOUNCE_SHOP_KEY))
+                    unmark_offlevel_shop(level_id::current());
+
                 return true;
+            }
         }
         catch (map_load_exception &mload)
         {
@@ -370,9 +380,6 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
                 level_id::current().describe().c_str());
         }
     }
-
-    if (you.props.exists(GOZAG_ANNOUNCE_SHOP_KEY))
-        unmark_offlevel_shop(level_id::current());
 
     env.level_layout_types.clear();
     return false;

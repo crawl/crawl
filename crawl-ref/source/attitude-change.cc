@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "act-iter.h"
+#include "branch.h"
 #include "coordit.h"
 #include "database.h"
 #include "env.h"
@@ -367,6 +368,56 @@ static void _jiyva_convert_slime(monster* slime)
     mons_make_god_gift(slime, GOD_JIYVA);
 
     mons_att_changed(slime);
+}
+
+void gozag_set_bribe(monster* traitor)
+{
+    // Try to bribe the monster.
+    const int bribability = gozag_type_bribable(traitor->type);
+    if (bribability > 0 && x_chance_in_y(bribability,
+                                         GOZAG_MAX_BRIBABILITY))
+    {
+        const monster* leader =
+            traitor->props.exists("band_leader")
+            ? monster_by_mid(traitor->props["band_leader"].get_int())
+            : NULL;
+        const branch_type br = gozag_bribable_branch(traitor->type);
+        int cost = max(1, exper_value(traitor) / 20);
+
+        if (leader)
+        {
+            if (leader->has_ench(ENCH_PERMA_BRIBED)
+                || leader ->props.exists(GOZAG_PERMABRIBE_KEY))
+            {
+                gozag_deduct_bribe(br, 2*cost);
+                traitor->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
+            }
+            else if (leader->has_ench(ENCH_BRIBED)
+                     || leader->props.exists(GOZAG_BRIBE_KEY))
+            {
+                gozag_deduct_bribe(br, cost);
+                // Don't continue if we exhausted our funds.
+                if (branch_bribe[br] > 0)
+                    traitor->props[GOZAG_BRIBE_KEY].get_bool() = true;
+            }
+        }
+        else
+        {
+            // Sometimes get permanent followers at twice the cost.
+            if (branch_bribe[br] > 2*cost && one_chance_in(3))
+            {
+                gozag_deduct_bribe(br, 2*cost);
+                traitor->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
+            }
+            else
+            {
+                gozag_deduct_bribe(br, cost);
+                // Don't continue if we exhausted our funds.
+                if (branch_bribe[br] > 0)
+                    traitor->props[GOZAG_BRIBE_KEY].get_bool() = true;
+            }
+        }
+    }
 }
 
 void gozag_check_bribe(monster* traitor)
