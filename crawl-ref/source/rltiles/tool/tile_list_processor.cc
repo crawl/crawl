@@ -1532,10 +1532,12 @@ bool tile_list_processor::write_data(bool image, bool code)
         if (m_abstract.size() == 0)
         {
             fprintf(fp, "define([");
+            fprintf(fp, "\"image!./%s.png!rel\",",
+                    lcname.c_str());
             if (m_start_value_module.size() > 0)
                 fprintf(fp, "\"./tileinfo-%s\"",
                         m_start_value_module.c_str());
-            fprintf(fp, "], function(m) {\n");
+            fprintf(fp, "], function(img, m) {\n");
         }
         else
         {
@@ -1667,7 +1669,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             fprintf(fp, "};\n\n");
 
             fprintf(fp, "exports.get_img = function (idx) {\n");
-            fprintf(fp, "    return \"%s\";\n", lcname.c_str());
+            fprintf(fp, "    return img;\n");
             fprintf(fp, "};\n\n");
         }
         else
@@ -1718,7 +1720,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             fprintf(fp, "};\n\n");
 
             fprintf(fp, "exports.get_img = function (idx) {\n");
-            add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum, true);
+            add_abstracts(fp, "return %s.get_img(idx);", lc_enum, uc_max_enum, true);
             fprintf(fp, "};\n\n");
         }
 

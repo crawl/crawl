@@ -5,6 +5,7 @@
         "react": "static/scripts/contrib/react-0.10.0",
         "text": "static/scripts/contrib/text",
         "jsx": "static/scripts/contrib/jsx",
+        "image": "static/scripts/contrib/image",
         "JSXTransformer": "static/scripts/contrib/JSXTransformer-0.10.0",
         "client": "empty:",
         "comm": "empty:"

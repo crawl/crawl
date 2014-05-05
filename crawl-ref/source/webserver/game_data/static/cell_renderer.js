@@ -65,11 +65,6 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         }
     }
 
-    function get_img(id)
-    {
-        return $("#" + id)[0];
-    }
-
     function obj_to_str(o)
     {
         return JSON.stringify(o);
@@ -910,7 +905,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         draw_tile: function(idx, x, y, mod, ofsx, ofsy, y_max)
         {
             var info = mod.get_tile_info(idx);
-            var img = get_img(mod.get_img(idx));
+            var img = mod.get_img(idx);
             if (!info)
             {
                 throw ("Tile not found: " + idx);

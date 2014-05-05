@@ -5,7 +5,8 @@
         'react': './contrib/react-0.10.0',
         'text': './contrib/text',
         'jsx': './contrib/jsx',
-        'JSXTransformer': './contrib/JSXTransformer-0.10.0'
+        'JSXTransformer': './contrib/JSXTransformer-0.10.0',
+        "image": "./contrib/image"
     },
     jsx: {
         fileExtension: '.jsx'
