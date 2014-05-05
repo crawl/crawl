@@ -305,8 +305,11 @@ bool ranged_attack::handle_phase_hit()
     if (using_weapon()
         || is_launched(attacker, weapon, *projectile) == LRET_THROWN)
     {
-        if (apply_damage_brand(projectile->name(DESC_THE).c_str()))
+        if (using_weapon()
+            && apply_damage_brand(projectile->name(DESC_THE).c_str()))
+        {
             return false;
+        }
         if (apply_missile_brand())
             return false;
     }
