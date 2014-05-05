@@ -99,6 +99,47 @@ a:hover {
     overflow: hidden;
 }
 
+/* game selector ---------------------------------- */
+.saved_games {
+    margin: 0.5em 0;
+}
+.saved_games ol {
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding-left: 1em;
+}
+.saved_games li {
+    display: block;
+    margin: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.saved_games li:hover {
+    color: lightgrey;
+}
+
+ol.select {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+ol.select li {
+    display: inline-block;
+    border: 1px solid gray;
+    padding: 3px;
+    margin: 3px;
+    cursor: pointer;
+}
+ol.select li.selected {
+    background-color: darkgray;
+}
+ol.select li:hover {
+    background-color: lightgray;
+    color: black;
+}
+
 /* registration form ------------------------------ */
 .register_form form {
     width: 100%;

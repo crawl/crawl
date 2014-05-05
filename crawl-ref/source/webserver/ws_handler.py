@@ -256,8 +256,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         banner_html = self.render_string("banner.html", username=self.username)
         footer_html = self.render_string("footer.html", username=self.username)
         self.queue_message("lobby_html", banner=banner_html, footer=footer_html)
-        play_html = self.render_string("game_links.html", games=config.get("games"), saved_games=saved_games)
-        self.send_message("set_game_links", content=play_html)
+        self.send_message("game_info", games=config.get("games"),
+                          saved_games=saved_games,
+                          settings=config.get("game_link_settings"))
 
     def reset_timeout(self):
         if self.timeout:

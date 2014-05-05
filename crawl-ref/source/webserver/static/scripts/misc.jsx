@@ -38,14 +38,16 @@ define(["react"], function (React) {
                 pointerEvents: "none"
             };
             var cls = "overlay " + (this.props.className || "");
-            return <div>
-                    <div style={bgstyle} onClick={this.cancel} />
-                    <div style={style} onKeyDown={this.keydown}>
-                      <div className={cls} style={{pointerEvents: "auto"}}>
-                        {this.props.children}
-                      </div>
-                    </div>
-                   </div>;
+            return (
+              <span>
+                <div style={bgstyle} onClick={this.cancel} />
+                <div style={style} onKeyDown={this.keydown}>
+                  <div className={cls} style={{pointerEvents: "auto"}}>
+                    {this.props.children}
+                  </div>
+                </div>
+              </span>
+            );
         }
     });
 
