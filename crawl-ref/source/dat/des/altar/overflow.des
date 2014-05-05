@@ -2637,6 +2637,73 @@ lccYcYccc
 llcccccc
 ENDMAP
 
+NAME:    grunt_temple_overflow_opulence
+DEPTH:   D:2-9
+TAGS:    temple_overflow_2 temple_overflow_gozag temple_overflow_nemelex_xobeh
+TAGS:    transparent
+SHUFFLE: GU, _O
+KFEAT:   _ = altar_gozag
+KFEAT:   O = altar_nemelex_xobeh
+TILE:    G = dngn_golden_statue
+FTILE:   ._GOU+ = floor_limestone
+RTILE:   x = wall_sandstone
+COLOUR:  xG = yellow
+: set_feature_name("granite_statue", "golden statue")
+MAP
+  xxxxxxx
+ xx.....xx
+xx...U...xx
+x.........x
+x.G._.O.G.x
+x.........x
+xx...U...xx
+ xx.....xx
+  xxx+xxx
+ENDMAP
+
+NAME:   grunt_temple_overflow_gold_and_silver
+DEPTH:  D:2-9
+TAGS:   temple_overflow_2 temple_overflow_gozag temple_overflow_zin
+TAGS:   transparent
+KITEM:  $ = gold q:1 / gold q:2
+KFEAT:  _ = altar_gozag
+KFEAT:  O = altar_zin
+TILE:   G = dngn_golden_statue
+COLOUR: G = yellow
+TILE:   v = dngn_metal_wall_white
+COLOUR: v = white
+FTILE:  +._O$ = floor_limestone
+: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_wall", "silver wall")
+MAP
+vvvvvvvvv
+v..$$$..v
+v._.$.O.v
+v.......v
+vv.....vv
+ vvv+vvv
+ENDMAP
+
+NAME:   grunt_temple_overflow_forces_of_nature
+DEPTH:  D:2-9
+TAGS:   temple_overflow_2 temple_overflow_fedhas temple_overflow_qazlal
+TAGS:   transparent
+MONS:   fungus / plant / bush
+SUBST:  2 = 1.
+KFEAT:  _ = altar_fedhas
+KFEAT:  O = altar_qazlal
+KPROP:  12Ll = no_rtele_into
+SUBST:  L = ll^.
+SUBST:  l = cll.
+KFEAT:  ^ = known shaft trap
+MAP
+ 222.@.LLL
+21112.LlllL
+21_.....OlL
+21112.LlllL
+ 222.@.LLL
+ENDMAP
+
 ### Variable overflow altars ##################################################
 
 # To make an overflow temple for N altars, give it the tag
