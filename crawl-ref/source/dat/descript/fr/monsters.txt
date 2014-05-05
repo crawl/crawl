@@ -1889,11 +1889,6 @@ Un spriggan dont la connexion avec les oiseaux et les bêtes est
 exceptionnellement forte. Dans la nature, ces protecteurs de la terre sont la
 perte des non-écologistes.
 %%%%
-spriggan enchanter
-
-Un Spriggan particulièrement habile dans l'art des maléfices et des charmes —
-et, apparemment, mortel avec une lame rapide.
-%%%%
 spriggan rider
 
 Montés sur des lucioles géantes, ces cavaliers font en sorte que personne n'ose

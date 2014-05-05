@@ -1735,7 +1735,7 @@ KMONS:    f = plant / fungus
 KMONS:    R = electric eel / shark / water elemental
 KMONS:    S = electric eel / shark / water elemental
 ## Main monster sets
-KMONS:    1 = spriggan enchanter / spriggan berserker / centaur warrior \
+KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
               / minotaur / satyr / merfolk impaler / deep elf knight
 KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
               / octopode crusher

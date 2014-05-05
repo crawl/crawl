@@ -2390,11 +2390,6 @@ A spriggan whose connection with the birds and the beasts is exceptionally
 strong. Revelling in nature, these protectors of forests are the doom of anyone
 who so much as snaps a twig.
 %%%%
-spriggan enchanter
-
-A spriggan particularly skilled in the arts of hexes and charms — and,
-apparently, lethal with a quick blade.
-%%%%
 spriggan rider
 
 Mounted on giant fireflies, these riders make sure no one who dares to intrude

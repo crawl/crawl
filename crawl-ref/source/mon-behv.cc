@@ -256,17 +256,6 @@ static void _set_curse_skull_lurk_pos(monster* mon)
     }
 }
 
-static bool _stabber_keep_distance(const monster* mon, const actor* foe)
-{
-    return mons_class_flag(mon->type, M_STABBER)
-           && !mon->berserk_or_insane()
-           && (mons_has_incapacitating_ranged_attack(mon, foe)
-               || mons_has_incapacitating_spell(mon, foe))
-           && !foe->incapacitated()
-           && !adjacent(mon->pos(), foe->pos())
-           && !mons_aligned(mon, foe);
-}
-
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -823,16 +812,6 @@ void handle_behaviour(monster* mon)
                         // Get to firing range even if we are close.
                         _set_firing_pos(mon, you.pos());
                 }
-                else if (_stabber_keep_distance(mon, &you))
-                {
-                    if (mon->pos().distance_from(you.pos()) < 4
-                        && !one_chance_in(7))
-                    {
-                        mon->firing_pos = mon->pos();
-                    }
-                    else
-                        _set_firing_pos(mon, you.pos());
-                }
                 else if (mon->type == MONS_SIREN)
                     find_siren_water_target(mon);
                 else if (!mon->firing_pos.zero()
@@ -864,16 +843,6 @@ void handle_behaviour(monster* mon)
                          && owner && mon->foe == owner->mindex()))
                 {
                     _set_firing_pos(mon, mon->target);
-                }
-                else if (target && _stabber_keep_distance(mon, target))
-                {
-                    if (mon->pos().distance_from(target->pos()) < 4
-                        && !one_chance_in(7))
-                    {
-                        mon->firing_pos = mon->pos();
-                    }
-                    else
-                        _set_firing_pos(mon, target->pos());
                 }
                 // Hold position if we've reached our ideal range
                 else if (mon->type == MONS_SPELLFORGED_SERVITOR

@@ -152,9 +152,6 @@ const uint64_t M_CANT_SPAWN        = (uint64_t)1<<46;
 // derived undead can't be randomly generated
 const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
 
-// tries to maintain range unless target is incapacitated
-const uint64_t M_STABBER           = (uint64_t)1<<48;
-
 // hybridized monster composed of other monster parts
 const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
