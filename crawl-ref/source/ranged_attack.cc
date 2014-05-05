@@ -302,7 +302,8 @@ bool ranged_attack::handle_phase_hit()
         }
     }
 
-    if (using_weapon())
+    if (using_weapon()
+        || is_launched(attacker, weapon, *projectile) == LRET_THROWN)
     {
         if (apply_damage_brand(projectile->name(DESC_THE).c_str()))
             return false;
@@ -322,12 +323,13 @@ bool ranged_attack::handle_phase_hit()
 
 bool ranged_attack::using_weapon()
 {
-    return is_launched(attacker, weapon, *projectile) != LRET_FUMBLED;
+    return weapon
+           && is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED;
 }
 
 int ranged_attack::weapon_damage()
 {
-    if (!using_weapon())
+    if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
         return 0;
 
     int dam = property(*projectile, PWPN_DAMAGE);
@@ -337,12 +339,9 @@ int ranged_attack::weapon_damage()
         dam = div_rand_round(dam * 13, 10);
     }
     if (using_weapon())
-    {
-        if (weapon)
-            dam += property(*weapon, PWPN_DAMAGE);
-        else
-            dam += calc_base_unarmed_damage();
-    }
+        dam += property(*weapon, PWPN_DAMAGE);
+    else
+        dam += calc_base_unarmed_damage();
 
     return dam;
 }
@@ -353,7 +352,7 @@ int ranged_attack::weapon_damage()
 int ranged_attack::calc_base_unarmed_damage()
 {
     // No damage bonus for throwing non-throwing weapons.
-    if (!using_weapon())
+    if (is_launched(attacker, weapon, *projectile) == LRET_FUMBLED)
         return 0;
 
     // The 20 is large rock base damage; they get the full bonus.
@@ -383,7 +382,7 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
 
 bool ranged_attack::attack_ignores_shield(bool verbose)
 {
-    if (using_weapon()
+    if (is_launched(attacker, weapon, *projectile) != LRET_FUMBLED
         && (weapon && get_weapon_brand(*weapon) == SPWPN_PENETRATION
             || projectile->base_type == OBJ_MISSILES
                && get_ammo_brand(*projectile) == SPMSL_PENETRATION))
@@ -554,7 +553,7 @@ bool ranged_attack::blowgun_check(special_missile_type type)
     if (stab_attempt)
         return true;
 
-    const int enchantment = weapon && using_weapon() ? weapon->plus : 0;
+    const int enchantment = using_weapon() ? weapon->plus : 0;
 
     if (attacker->is_monster())
     {
@@ -611,7 +610,7 @@ int ranged_attack::blowgun_duration_roll(special_missile_type type)
                            ? attacker->get_experience_level()
                            : attacker->skill_rdiv(SK_THROWING);
 
-    const int plus = weapon && using_weapon() ? weapon->plus : 0;
+    const int plus = using_weapon() ? weapon->plus : 0;
 
     // Scale down nastier needle effects against players.
     // Fixed duration regardless of power, since power already affects success
@@ -651,7 +650,7 @@ bool ranged_attack::apply_missile_brand()
     default:
         break;
     case SPMSL_FLAME:
-        if (weapon && using_weapon()
+        if (using_weapon()
             && (get_weapon_brand(*weapon) == SPWPN_FROST
                 || get_weapon_brand(*weapon) == SPWPN_FREEZING))
         {
@@ -664,7 +663,7 @@ bool ranged_attack::apply_missile_brand()
         attacker->god_conduct(DID_FIRE, 1);
         break;
     case SPMSL_FROST:
-        if (weapon && using_weapon()
+        if (using_weapon()
             && (get_weapon_brand(*weapon) == SPWPN_FLAME
                 || get_weapon_brand(*weapon) == SPWPN_FLAMING))
         {

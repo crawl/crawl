@@ -199,7 +199,7 @@ int attack::calc_to_hit(bool random)
         }
 
         // weapon bonus contribution
-        if (weapon && using_weapon())
+        if (using_weapon())
         {
             if (weapon->base_type == OBJ_WEAPONS)
             {
@@ -217,7 +217,7 @@ int attack::calc_to_hit(bool random)
 
         // slaying bonus
         mhit += slaying_bonus(PWPN_HIT,
-                              !weapon && wpn_skill == SK_THROWING
+                              wpn_skill == SK_THROWING
                               || (weapon && is_range_weapon(*weapon)
                                          && using_weapon()));
 
@@ -246,7 +246,7 @@ int attack::calc_to_hit(bool random)
     }
     else    // Monster to-hit.
     {
-        if (weapon && using_weapon())
+        if (using_weapon())
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
 
         const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
@@ -259,7 +259,7 @@ int attack::calc_to_hit(bool random)
 
         mhit += attacker->scan_artefacts(ARTP_ACCURACY);
 
-        if (weapon && using_weapon() && weapon->base_type == OBJ_RODS)
+        if (using_weapon() && weapon->base_type == OBJ_RODS)
             mhit += weapon->special;
     }
 
@@ -275,7 +275,7 @@ int attack::calc_to_hit(bool random)
     if (attacker->confused())
         mhit -= 5;
 
-    if (weapon && using_weapon() && is_unrandom_artefact(*weapon)
+    if (using_weapon() && is_unrandom_artefact(*weapon)
         && weapon->special == UNRAND_WOE)
     {
         return AUTOMATIC_HIT;
@@ -554,7 +554,7 @@ bool attack::distortion_affects_defender()
     if (!player_in_branch(BRANCH_ABYSS) && coinflip())
     {
         if (defender->is_player() && attacker_visible
-            && weapon != NULL && using_weapon()
+            && using_weapon()
             && !is_unrandom_artefact(*weapon)
             && !is_special_unrandom_artefact(*weapon))
         {
@@ -868,7 +868,7 @@ void attack::chaos_affects_defender()
         // to chaos_affect_actor.
         beam.effect_wanton = !fake_chaos_attack;
 
-        if (weapon && using_weapon() && you.can_see(attacker))
+        if (using_weapon() && you.can_see(attacker))
         {
             beam.name = wep_name(DESC_YOUR);
             beam.item = weapon;
@@ -1037,7 +1037,7 @@ void attack::do_miscast()
         return;
 
     const bool chaos_brand =
-        weapon && using_weapon() && get_weapon_brand(*weapon) == SPWPN_CHAOS;
+        using_weapon() && get_weapon_brand(*weapon) == SPWPN_CHAOS;
 
     // If the miscast is happening on the attacker's side and is due to
     // a chaos weapon then make smoke/sand/etc pour out of the weapon
@@ -1359,7 +1359,7 @@ int attack::player_apply_misc_modifiers(int damage)
 int attack::player_apply_slaying_bonuses(int damage, bool aux)
 {
     int damage_plus = 0;
-    if (!aux && weapon && using_weapon())
+    if (!aux && using_weapon())
     {
         damage_plus = weapon->plus2;
 
@@ -1490,10 +1490,10 @@ int attack::calc_stat_to_dam_base()
 int attack::calc_damage()
 {
     if (attacker->is_monster())
-   {
+    {
         int damage = 0;
         int damage_max = 0;
-        if (using_weapon())
+        if (using_weapon() || wpn_skill == SK_THROWING)
         {
             damage_max = weapon_damage();
             damage += random2(damage_max);
@@ -1538,8 +1538,9 @@ int attack::calc_damage()
         int potential_damage;
 
         potential_damage =
-            using_weapon() ? weapon_damage()
-                           : calc_base_unarmed_damage();
+            using_weapon() || wpn_skill == SK_THROWING
+            ? weapon_damage()
+            : calc_base_unarmed_damage();
 
         potential_damage = player_stat_modify_damage(potential_damage);
 
@@ -1670,7 +1671,7 @@ bool attack::apply_damage_brand(const char *what)
     int brand = 0;
     bool ret = false;
 
-    if (weapon && using_weapon())
+    if (using_weapon())
     {
         if (is_artefact(*weapon))
             brand_was_known = artefact_known_wpn_property(*weapon, ARTP_BRAND);
@@ -1948,7 +1949,7 @@ bool attack::apply_damage_brand(const char *what)
     if (special_damage > 0)
         inflict_damage(special_damage, special_damage_flavour);
 
-    if (obvious_effect && attacker_visible && weapon && using_weapon())
+    if (obvious_effect && attacker_visible && using_weapon())
     {
         if (is_artefact(*weapon))
             artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
@@ -2035,7 +2036,7 @@ int attack::player_stab_weapon_bonus(int damage)
         int bonus = (you.dex() * (stab_skill + 100)) / 500;
 
         // We might be unarmed if we're using the boots of the Assassin.
-        if (!weapon || !using_weapon() || weapon->sub_type != WPN_DAGGER)
+        if (!using_weapon() || weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
 
         bonus   = stepdown_value(bonus, 10, 10, 30, 30);
