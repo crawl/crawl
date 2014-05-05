@@ -2687,6 +2687,7 @@ enum monster_type                      // menv[].type
     MONS_WHITE_DRACONIAN,
     MONS_GREY_DRACONIAN,
     MONS_PALE_DRACONIAN,                //  Should always be last colour.
+    MONS_LAST_BASE_DRACONIAN = MONS_PALE_DRACONIAN,
 
     // Sync up with mon-place.cc's draconian selection if adding more.
     MONS_DRACONIAN_CALLER,

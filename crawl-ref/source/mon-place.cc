@@ -71,15 +71,6 @@ static vector<bool> vault_mon_bands;
 
 #define BIG_BAND        20
 
-static monster_type _resolve_monster_type(monster_type mon_type,
-                                          proximity_type proximity,
-                                          monster_type &base_type,
-                                          coord_def &pos,
-                                          unsigned mmask,
-                                          dungeon_char_type *stair_type,
-                                          level_id *place,
-                                          bool *want_band);
-
 static monster_type _band_member(band_type band, int which);
 static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool& natural_leader);
@@ -579,14 +570,14 @@ bool needs_resolution(monster_type mon_type)
            || _is_random_monster(mon_type);
 }
 
-static monster_type _resolve_monster_type(monster_type mon_type,
-                                          proximity_type proximity,
-                                          monster_type &base_type,
-                                          coord_def &pos,
-                                          unsigned mmask,
-                                          dungeon_char_type *stair_type,
-                                          level_id *place,
-                                          bool *want_band)
+monster_type resolve_monster_type(monster_type mon_type,
+                                  monster_type &base_type,
+                                  proximity_type proximity,
+                                  coord_def *pos,
+                                  unsigned mmask,
+                                  dungeon_char_type *stair_type,
+                                  level_id *place,
+                                  bool *want_band)
 {
     if (want_band)
         *want_band = false;
@@ -647,7 +638,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         {
             const level_id orig_place = *place;
 
-            if (_find_mon_place_near_stairs(pos, stair_type, *place))
+            if (_find_mon_place_near_stairs(*pos, stair_type, *place))
             {
                 // No monsters spawned in the Temple.
                 if (branches[place->branch].id == BRANCH_TEMPLE)
@@ -698,11 +689,11 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 if (needs_resolution(mon_type))
                 {
                     mon_type =
-                        _resolve_monster_type(mon_type, proximity,
-                                              base_type, pos, mmask,
-                                              stair_type,
-                                              place,
-                                              want_band);
+                        resolve_monster_type(mon_type, base_type,
+                                             proximity, pos, mmask,
+                                             stair_type,
+                                             place,
+                                             want_band);
                 }
                 return mon_type;
             }
@@ -849,11 +840,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 
     bool want_band = false;
     level_id place = mg.place;
-    mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
-                                   mg.pos, mg.map_mask,
-                                   &stair_type,
-                                   &place,
-                                   &want_band);
+    mg.cls = resolve_monster_type(mg.cls, mg.base_type, mg.proximity,
+                                  &mg.pos, mg.map_mask,
+                                  &stair_type,
+                                  &place,
+                                  &want_band);
     bool chose_ood_monster = place.absdepth() > mg.place.absdepth() + 5;
     if (want_band)
         mg.flags |= MG_PERMIT_BANDS;
@@ -3390,9 +3381,9 @@ static monster_type _band_member(band_type band, int which)
         coord_def tmppos;
         dungeon_char_type tmpfeat;
         level_id place = level_id::current();
-        return _resolve_monster_type(RANDOM_BANDLESS_MONSTER, PROX_ANYWHERE,
-                                     tmptype, tmppos, 0, &tmpfeat, &place,
-                                     NULL);
+        return resolve_monster_type(RANDOM_BANDLESS_MONSTER, tmptype,
+                                    PROX_ANYWHERE, &tmppos, 0, &tmpfeat,
+                                    &place, NULL);
     }
 
     default:
