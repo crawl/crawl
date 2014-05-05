@@ -3383,6 +3383,8 @@ void excommunication(god_type new_god)
             you.attribute[ATTR_GOZAG_SHOPS_CURRENT] = 0;
         }
         invalidate_agrid(true); // gold auras
+        for (int i = 0; i < NUM_BRANCHES; i++)
+            branch_bribe[i] = 0;
         add_daction(DACT_BRIBE_TIMEOUT);
         add_daction(DACT_REMOVE_GOZAG_SHOPS);
         _set_penance(old_god, 25);
