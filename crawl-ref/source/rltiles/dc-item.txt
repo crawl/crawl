@@ -317,12 +317,14 @@ effect/needle5 MI_NEEDLE5
 effect/needle6 MI_NEEDLE6
 effect/needle7 MI_NEEDLE7
 
+%rim 0
 javelin1 MI_JAVELIN
 javelin2
 steel_javelin1 MI_JAVELIN_STEEL
 steel_javelin2
 silver_javelin1 MI_JAVELIN_SILVER
 silver_javelin2
+%rim 1
 # flying javelins
 effect/javelin0 MI_JAVELIN0
 effect/javelin1 MI_JAVELIN1
