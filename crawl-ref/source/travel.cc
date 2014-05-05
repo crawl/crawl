@@ -4101,8 +4101,13 @@ bool runrest::run_should_stop() const
     const coord_def targ = you.pos() + pos;
     const map_cell& tcell = env.map_knowledge(targ);
 
-    if (tcell.cloud() != CLOUD_NONE)
+    if (tcell.cloud() != CLOUD_NONE
+        && (!you_worship(GOD_QAZLAL)
+            || !YOU_KILL(tcell.cloudinfo()->killer)
+            || env.map_knowledge(you.pos()).cloud() != CLOUD_NONE))
+    {
         return true;
+    }
 
     if (is_excluded(targ) && !is_stair_exclusion(targ))
     {
