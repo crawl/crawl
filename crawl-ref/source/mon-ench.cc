@@ -1277,7 +1277,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SCREAMED:
     case ENCH_WEAK:
     case ENCH_AWAKEN_VINES:
-    case ENCH_WIND_AIDED:
     case ENCH_FIRE_VULN:
     case ENCH_BARBS:
     case ENCH_POISON_VULN:

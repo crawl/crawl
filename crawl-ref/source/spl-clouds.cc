@@ -400,13 +400,6 @@ void apply_control_winds(const monster* mon)
     for (int i = cloud_list.size() - 1; i >= 0; --i)
     {
         cloud_struct* cl = &env.cloud[cloud_list[i]];
-        if (cl->type == CLOUD_FOREST_FIRE)
-        {
-            if (you.see_cell(cl->pos))
-                mpr("The forest fire is smothered by the winds.");
-            delete_cloud(cloud_list[i]);
-            continue;
-        }
 
         // Leave clouds engulfing hostiles alone
         if (actor_at(cl->pos) && !mons_aligned(actor_at(cl->pos), mon))
@@ -454,22 +447,6 @@ void apply_control_winds(const monster* mon)
                 env.cloud[cloud_list[i]].decay =
                         env.cloud[cloud_list[i]].decay / 2 - 20;
             }
-        }
-    }
-
-    // Now give a ranged accuracy boost to nearby allies
-    for (monster_near_iterator mi(mon, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (distance2(mon->pos(), mi->pos()) >= 33 || !mons_aligned(mon, *mi))
-            continue;
-
-        if (!mi->has_ench(ENCH_WIND_AIDED))
-            mi->add_ench(mon_enchant(ENCH_WIND_AIDED, 1, mon, 20));
-        else
-        {
-            mon_enchant aid = mi->get_ench(ENCH_WIND_AIDED);
-            aid.duration = 20;
-            mi->update_ench(aid);
         }
     }
 }
