@@ -3818,10 +3818,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 
-        // Cannot fire without any spikes left
-        if (mons->number == 0)
-            break;
-
         // Will neither fire from melee range nor all the time
         if (mons->foe_distance() < 2 || coinflip())
             break;
@@ -3853,8 +3849,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             simple_monster_message(mons, " flicks its tail!");
             beem.fire();
             used = true;
-            // Decrement # of volleys left.
-            mons->number--;
         }
         break;
 
