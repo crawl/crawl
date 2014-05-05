@@ -7,6 +7,8 @@ function (React, comm, pubsub, user, misc, login, $) {
 
     var Overlay = misc.Overlay;
     var LoginForm = login.LoginForm;
+    var PasswordChangeLink = login.PasswordChangeLink;
+    var LogoutLink = login.LogoutLink;
 
     // RC file editor form
     var RcEditor = React.createClass({
@@ -243,16 +245,6 @@ function (React, comm, pubsub, user, misc, login, $) {
     }
 
 
-    var LogoutLink = React.createClass({
-        handle_click: function (ev) {
-            user.logout();
-            ev.preventDefault();
-        },
-        render: function () {
-            return <a onClick={this.handle_click} href="javascript:">Logout</a>;
-        }
-    });
-
     // One line in the list of running games
     var RunningGameEntry = React.createClass({
         handle_click: function (ev) {
@@ -485,6 +477,8 @@ function (React, comm, pubsub, user, misc, login, $) {
                 login_line = <div style={{float: "right",
                                           textAlign: "right"}}
                                   className="login">
+                               Logged in as {this.state.username}{" | "}
+                               <PasswordChangeLink />{" | "}
                                <LogoutLink />
                              </div>;
             }

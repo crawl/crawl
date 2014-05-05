@@ -159,7 +159,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "lobby": self.send_lobby,
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
-            }
+            "change_password": self.change_password,
+        }
 
     client_closed = property(lambda self: (not self.ws_connection) or self.ws_connection.client_terminated)
 
@@ -551,6 +552,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
         with open(rcfile_path, 'w') as f:
             f.write(contents.encode("utf8"))
+
+    def change_password(self, old_password, new_password):
+        if self.username is None: return
+        if userdb.user_passwd_match(self.username, old_password):
+            self.logger.info("Changed password for user %s.", self.username)
+            success = userdb.set_password(self.username, new_password)
+        else:
+            self.logger.warning("Failed password change attempt for user %s.",
+                                self.username)
+            success = False
+        self.send_message("password_change", success=success)
 
     def on_message(self, message):
         if self.sid:

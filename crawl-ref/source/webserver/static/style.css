@@ -99,6 +99,10 @@ a:hover {
     overflow: hidden;
 }
 
+.error {
+    color: red;
+}
+
 /* game selector ---------------------------------- */
 .saved_games {
     margin: 0.5em 0;
@@ -140,6 +144,32 @@ ol.select li:hover {
     color: black;
 }
 
+/* password change form --------------------------- */
+.password_change {
+    overflow: hidden;
+}
+
+.password_change form {
+    width: 100%;
+}
+.password_change form div {
+    overflow: hidden;
+    margin: 4px 0;
+}
+.password_change label {
+    float: left;
+}
+.password_change input[type="password"] {
+    width: 50%;
+    float: right;
+}
+.password_change input[type="button"] {
+    float: left;
+}
+.password_change input[type="submit"] {
+    float: right;
+}
+
 /* registration form ------------------------------ */
 .register_form form {
     width: 100%;
@@ -162,10 +192,6 @@ ol.select li:hover {
 }
 .register_form input[type="submit"] {
     float: right;
-}
-
-.error {
-    color: red;
 }
 
 /* login form ------------------------------------- */

@@ -13,6 +13,167 @@ function (React, misc, comm, pubsub, user) {
         pubsub.publish("login_fail");
     });
 
+    // Password change form
+    var PasswordChangeForm = React.createClass({
+        getInitialState: function () {
+            return {
+                state: "input",
+                old_password: "",
+                new_password1: "",
+                new_password2: ""
+            };
+        },
+        componentDidMount: function () {
+            comm.register_handler("password_change", this.handle_reply);
+            this.refs.old_password.getDOMNode().focus();
+        },
+        componentWillUnmount: function () {
+            comm.unregister_handler("password_change", this.handle_reply);
+        },
+
+        handle_reply: function (data) {
+            if (data.success)
+                this.replaceState({state: "done"});
+            else
+            {
+                var msg = ("Could not change password. " +
+                           "Did you input your old one correctly?");
+                this.setState({state: "error",
+                               message: msg});
+            }
+        },
+
+        handle_change: function (ev) {
+            var s = {};
+            s[ev.target.name] = ev.target.value;
+            this.setState(s);
+        },
+        close: function () {
+            if (this.props.on_finished)
+                this.props.on_finished();
+        },
+        send: function (ev) {
+            ev.preventDefault();
+            if (this.state.new_password1 === this.state.new_password2)
+            {
+                comm.send_message("change_password", {
+                    old_password: this.state.old_password,
+                    new_password: this.state.new_password1
+                });
+                this.setState({state: "wait"});
+            }
+            else
+            {
+                var msg = "New passwords do not match!";
+                this.setState({state: "error", message: msg})
+            }
+        },
+
+        render: function () {
+            if (this.state.state === "done")
+            {
+                return (
+                  <div className="password_change done">
+                    <div>Password successfully changed!</div>
+                    <input type="button" onClick={this.close} value="Close" />
+                  </div>
+                );
+            }
+
+            var disabled = this.state.state === "wait";
+            var form = (
+              <form action="">
+                <div>
+                  <label htmlFor="old_password">Old password:</label>
+                  <input type="password" name="old_password" ref="old_password"
+                         onChange={this.handle_change}
+                         disabled={disabled}
+                         value={this.state.old_password} />
+                </div>
+                <div>
+                  <label htmlFor="new_password1">New password:</label>
+                  <input type="password" name="new_password1"
+                         onChange={this.handle_change}
+                         disabled={disabled}
+                         value={this.state.new_password1} />
+                </div>
+                <div>
+                  <label htmlFor="new_password2">Repeat new password:</label>
+                  <input type="password" name="new_password2"
+                         onChange={this.handle_change}
+                         disabled={disabled}
+                         value={this.state.new_password2} />
+                </div>
+                <input type="button" onClick={this.close} value="Cancel" />
+                <input type="submit" onClick={this.send} disabled={disabled}
+                       value="Send" />
+              </form>
+            );
+            var topline;
+            switch (this.state.state)
+            {
+            case "input":
+                topline = ("Please input your old password, " +
+                           "then your new password twice.");
+                break;
+            case "wait":
+                topline = "Waiting for reply...";
+                break;
+            case "error":
+                topline = <span className="error">{this.state.message}</span>;
+                break;
+            }
+            return (
+              <div className="password_change">
+                <div>{topline}</div>
+                {form}
+              </div>
+            );
+        }
+    });
+
+    // Password change link
+    var PasswordChangeLink = React.createClass({
+        getInitialState: function () {
+            return {changing_password: false};
+        },
+
+        close: function () {
+            this.setState({changing_password: false});
+        },
+        open: function () {
+            this.setState({changing_password: true});
+        },
+
+        render: function () {
+            var overlay = this.state.changing_password ? (
+              <Overlay on_cancel={this.close}>
+                <h3>Changing password</h3>
+                <PasswordChangeForm on_finished={this.close} />
+              </Overlay>
+            ) : null;
+
+            var link = (
+              <a href="javascript:" onClick={this.open}>
+                Change password
+              </a>
+            );
+
+            return <span>{link}{overlay}</span>;
+        }
+    });
+
+    // Logout link
+    var LogoutLink = React.createClass({
+        handle_click: function (ev) {
+            user.logout();
+            ev.preventDefault();
+        },
+        render: function () {
+            return <a onClick={this.handle_click} href="javascript:">Logout</a>;
+        }
+    });
+
     // Registration form
     var RegisterForm = React.createClass({
         getInitialState: function () {
@@ -228,6 +389,8 @@ function (React, misc, comm, pubsub, user) {
     });
 
     return {
+        PasswordChangeLink: PasswordChangeLink,
+        LogoutLink: LogoutLink,
         RegisterForm: RegisterForm,
         LoginForm: LoginForm
     };

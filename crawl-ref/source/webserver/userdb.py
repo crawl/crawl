@@ -102,6 +102,34 @@ def register_user(username, passwd, email): # Returns an error message or None
         if c: c.close()
         if conn: conn.close()
 
+def set_password(username, passwd): # Returns True or False
+    if passwd == "": return False
+    passwd = passwd[0:config.max_passwd_length]
+
+    if config.crypt_algorithm == "broken":
+        salt = passwd
+    elif config.crypt_algorithm:
+        salt = "$%s$%s$" % (config.crypt_algorithm,
+                            make_salt(config.crypt_salt_length))
+    else:
+        salt = make_salt(2)
+
+    crypted_pw = crypt.crypt(passwd, salt)
+
+    try:
+        conn = sqlite3.connect(config.password_db)
+        c = conn.cursor()
+
+        c.execute("update dglusers set password=? where username=?",
+                  (crypted_pw, username))
+
+        conn.commit()
+
+        return True
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
 sessions = {}
 rand = random.SystemRandom()
 
