@@ -1408,21 +1408,6 @@ int mons_natural_regen_rate(monster* mons)
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
     int divider = max(div_rand_round(15 - mons->hit_dice, 4), 1);
 
-    // The undead have a harder time regenerating.  Golems have it worse.
-    switch (mons->holiness())
-    {
-    case MH_UNDEAD:
-        divider *= (mons_enslaved_soul(mons)) ? 2 : 4;
-        break;
-
-    case MH_NONLIVING:
-        divider *= 5;
-        break;
-
-    default:
-        break;
-    }
-
     return max(div_rand_round(mons->hit_dice, divider), 1);
 }
 
