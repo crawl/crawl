@@ -2678,7 +2678,8 @@ enum monster_type                      // menv[].type
 
     // If adding more drac colours, sync up colour names in
     // mon-util.cc.
-    MONS_BLACK_DRACONIAN,               // Should always be first colour.
+    MONS_BLACK_DRACONIAN,
+    MONS_FIRST_BASE_DRACONIAN = MONS_BLACK_DRACONIAN,
     MONS_MOTTLED_DRACONIAN,
     MONS_YELLOW_DRACONIAN,
     MONS_GREEN_DRACONIAN,
@@ -2686,11 +2687,12 @@ enum monster_type                      // menv[].type
     MONS_RED_DRACONIAN,
     MONS_WHITE_DRACONIAN,
     MONS_GREY_DRACONIAN,
-    MONS_PALE_DRACONIAN,                //  Should always be last colour.
+    MONS_PALE_DRACONIAN,
     MONS_LAST_BASE_DRACONIAN = MONS_PALE_DRACONIAN,
 
     // Sync up with mon-place.cc's draconian selection if adding more.
     MONS_DRACONIAN_CALLER,
+    MONS_FIRST_NONBASE_DRACONIAN = MONS_DRACONIAN_CALLER,
     MONS_DRACONIAN_MONK,
     MONS_DRACONIAN_ZEALOT,
     MONS_DRACONIAN_SHIFTER,

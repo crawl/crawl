@@ -1165,10 +1165,9 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
     // Force plain but different coloured draconians to be treated like the
     // same sub-type.
-    if (!zombified && m1.type >= MONS_DRACONIAN
-        && m1.type <= MONS_PALE_DRACONIAN
-        && m2.type >= MONS_DRACONIAN
-        && m2.type <= MONS_PALE_DRACONIAN)
+    if (!zombified
+        && mons_is_base_draconian(m1.type)
+        && mons_is_base_draconian(m2.type))
     {
         return false;
     }

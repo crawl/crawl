@@ -4292,9 +4292,7 @@ mons_spec mons_list::drac_monspec(string name) const
     // We should have a non-base draconian here.
     if (spec.type == MONS_PROGRAM_BUG
         || mons_genus(static_cast<monster_type>(spec.type)) != MONS_DRACONIAN
-        || spec.type == MONS_DRACONIAN
-        || (spec.type >= MONS_BLACK_DRACONIAN
-            && spec.type <= MONS_PALE_DRACONIAN))
+        || mons_is_base_draconian(spec.type))
     {
         return MONS_PROGRAM_BUG;
     }

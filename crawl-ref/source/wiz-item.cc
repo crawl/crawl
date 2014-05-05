@@ -168,7 +168,7 @@ void wizard_create_spec_object()
             }
         }
 
-        if (mon >= MONS_DRACONIAN_CALLER && mon <= MONS_DRACONIAN_SCORCHER)
+        if (mon >= MONS_FIRST_NONBASE_DRACONIAN && mon <= MONS_LAST_DRACONIAN)
         {
             mpr("You can't make a draconian corpse by its background.");
             mon = MONS_DRACONIAN;

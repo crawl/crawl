@@ -2192,8 +2192,8 @@ int exper_value(const monster* mon, bool real)
 
 monster_type random_draconian_monster_species()
 {
-    const int num_drac = MONS_PALE_DRACONIAN - MONS_BLACK_DRACONIAN + 1;
-    return static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(num_drac));
+    const int num_drac = MONS_LAST_BASE_DRACONIAN - MONS_FIRST_BASE_DRACONIAN + 1;
+    return static_cast<monster_type>(MONS_FIRST_BASE_DRACONIAN + random2(num_drac));
 }
 
 monster_type random_demonspawn_monster_species()
@@ -2711,23 +2711,23 @@ static const char *drac_colour_names[] =
 string draconian_colour_name(monster_type mon_type)
 {
     COMPILE_CHECK(ARRAYSZ(drac_colour_names) ==
-                  MONS_PALE_DRACONIAN - MONS_DRACONIAN);
+                  MONS_LAST_BASE_DRACONIAN - MONS_DRACONIAN);
 
-    if (mon_type < MONS_BLACK_DRACONIAN || mon_type > MONS_PALE_DRACONIAN)
+    if (!mons_is_base_draconian(mon_type) || mon_type == MONS_DRACONIAN)
         return "buggy";
 
-    return drac_colour_names[mon_type - MONS_BLACK_DRACONIAN];
+    return drac_colour_names[mon_type - MONS_FIRST_BASE_DRACONIAN];
 }
 
 monster_type draconian_colour_by_name(const string &name)
 {
     COMPILE_CHECK(ARRAYSZ(drac_colour_names)
-                  == (MONS_PALE_DRACONIAN - MONS_DRACONIAN));
+                  == (MONS_LAST_BASE_DRACONIAN - MONS_DRACONIAN));
 
     for (unsigned i = 0; i < ARRAYSZ(drac_colour_names); ++i)
     {
         if (name == drac_colour_names[i])
-            return static_cast<monster_type>(i + MONS_BLACK_DRACONIAN);
+            return static_cast<monster_type>(i + MONS_FIRST_BASE_DRACONIAN);
     }
 
     return MONS_PROGRAM_BUG;
