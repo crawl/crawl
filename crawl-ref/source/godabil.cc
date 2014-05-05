@@ -4542,7 +4542,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
         bool adj = adjacent(beam.target, *ri);
         if (!adj && max_radius > 1)
             chance -= 100;
-        if (adj && max_radius == 1 || x_chance_in_y(pow, 100))
+        if (adj && max_radius > 1 || x_chance_in_y(chance, 100))
         {
             if (beam.flavour == BEAM_FRAG || !cell_is_solid(*ri))
                 affected.push_back(*ri);
