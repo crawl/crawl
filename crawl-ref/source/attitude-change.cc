@@ -374,8 +374,7 @@ void gozag_set_bribe(monster* traitor)
 {
     // Try to bribe the monster.
     const int bribability = gozag_type_bribable(traitor->type);
-    if (bribability > 0 && x_chance_in_y(bribability,
-                                         GOZAG_MAX_BRIBABILITY))
+    if (bribability > 0)
     {
         const monster* leader =
             traitor->props.exists("band_leader")
@@ -401,7 +400,7 @@ void gozag_set_bribe(monster* traitor)
                     traitor->props[GOZAG_BRIBE_KEY].get_bool() = true;
             }
         }
-        else
+        else if (x_chance_in_y(bribability, GOZAG_MAX_BRIBABILITY))
         {
             // Sometimes get permanent followers at twice the cost.
             if (branch_bribe[br] > 2*cost && one_chance_in(3))
