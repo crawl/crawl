@@ -1796,7 +1796,9 @@ enum enchant_type
     ENCH_DIMENSION_ANCHOR,
     ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
     ENCH_CONTROL_WINDS,
-    ENCH_WIND_AIDED,     // Ranged accuracy enhanced by nearby Control Winds
+#if TAG_MAJOR_VERSION == 34
+    ENCH_WIND_AIDED,
+#endif
     ENCH_SUMMON_CAPPED,  // Abjuring quickly because a summon cap was hit
     ENCH_TOXIC_RADIANCE,
     ENCH_GRASPING_ROOTS_SOURCE, // Not actually entangled, but entangling others
