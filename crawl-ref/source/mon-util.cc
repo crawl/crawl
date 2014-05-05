@@ -1193,6 +1193,11 @@ bool mons_is_draconian(monster_type mc)
     return mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN;
 }
 
+bool mons_is_base_draconian(monster_type mc)
+{
+    return mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_BASE_DRACONIAN;
+}
+
 bool mons_is_demonspawn(monster_type mc)
 {
     return
