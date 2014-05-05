@@ -4534,7 +4534,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
     for (radius_iterator ri(beam.target, max_radius, C_ROUND, LOS_SOLID, true);
          ri; ++ri)
     {
-        if (!in_bounds(*ri))
+        if (!in_bounds(*ri) || cell_is_solid(*ri))
             continue;
 
         int chance = pow;
@@ -4713,9 +4713,10 @@ bool qazlal_disaster_area()
     bool friendlies = false;
     vector<coord_def> targets;
     vector<int> weights;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, true); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, LOS_NO_TRANS, true);
+         ri; ++ri)
     {
-        if (!in_bounds(*ri))
+        if (!in_bounds(*ri) || cell_is_solid(*ri))
             continue;
 
         const monster_info* m = env.map_knowledge(*ri).monsterinfo();
