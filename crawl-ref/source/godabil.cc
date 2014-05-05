@@ -4575,7 +4575,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
         switch (beam.flavour)
         {
             case BEAM_LAVA:
-                if (!actor_at(pos) && coinflip())
+                if (!cell_is_solid(pos) && !actor_at(pos) && coinflip())
                 {
                     temp_change_terrain(
                         pos, DNGN_LAVA,
