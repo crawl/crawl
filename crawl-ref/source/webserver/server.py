@@ -130,7 +130,10 @@ def signal_handler(signum, frame):
 
 def usr1_handler(signum, frame):
     logging.info("Received USR1, reloading config.")
-    config.load()
+    try:
+        config.load()
+    except ValueError:
+        logging.error("Error in config file", exc_info=True)
     scan_titles()
 
 def purge_login_tokens_timeout():
