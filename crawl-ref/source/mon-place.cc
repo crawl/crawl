@@ -589,8 +589,8 @@ monster_type resolve_monster_type(monster_type mon_type,
         {
             mon_type =
                 static_cast<monster_type>(
-                    random_range(MONS_BLACK_DRACONIAN,
-                                 MONS_DRACONIAN_SCORCHER));
+                    random_range(MONS_FIRST_BASE_DRACONIAN,
+                                 MONS_LAST_DRACONIAN));
         }
         while (base_type != MONS_PROGRAM_BUG
                && mon_type != base_type
@@ -603,7 +603,7 @@ monster_type resolve_monster_type(monster_type mon_type,
     {
         mon_type =
             static_cast<monster_type>(
-                random_range(MONS_DRACONIAN_CALLER, MONS_DRACONIAN_SCORCHER));
+                random_range(MONS_FIRST_NONBASE_DRACONIAN, MONS_LAST_DRACONIAN));
     }
     else if (mon_type >= RANDOM_DEMON_LESSER && mon_type <= RANDOM_DEMON)
         mon_type = summon_any_demon(mon_type);
