@@ -4411,15 +4411,15 @@ int slaying_bonus(weapon_property_type which_affected, bool ranged)
     {
         ret += you.wearing(EQ_RINGS_PLUS, RING_SLAYING);
         ret += you.scan_artefacts(ARTP_ACCURACY);
-        if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY))
-            ret += ranged ? 5 : -1;
+        if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
+            ret += 5;
     }
     else if (which_affected == PWPN_DAMAGE)
     {
         ret += you.wearing(EQ_RINGS_PLUS2, RING_SLAYING);
         ret += you.scan_artefacts(ARTP_DAMAGE);
-        if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY))
-            ret += ranged ? 3 : -1;
+        if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
+            ret += 3;
     }
 
     ret += 4 * augmentation_amount();
