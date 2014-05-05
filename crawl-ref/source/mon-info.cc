@@ -471,8 +471,7 @@ monster_info::monster_info(const monster* m, int milev)
         base_type = type;
 
     // these use number for internal information
-    if (type == MONS_MANTICORE
-        || type == MONS_SIXFIRHY
+    if (type == MONS_SIXFIRHY
         || type == MONS_JIANGSHI
         || type == MONS_SHEDU
         || type == MONS_KRAKEN_TENTACLE

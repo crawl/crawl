@@ -2457,11 +2457,6 @@ void define_monster(monster* mons)
         ev = 7 + random2(5);
         break;
 
-    case MONS_MANTICORE:
-        // Manticores start off with 8 to 16 spike volleys.
-        monnumber = 8 + random2(9);
-        break;
-
     case MONS_SLIME_CREATURE:
         // Slime creatures start off as only single un-merged blobs.
         monnumber = 1;
