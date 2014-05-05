@@ -4295,15 +4295,15 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
     }
     else
     {
-        const char ch = mons_base_char(mi.type);
-        if (ch >= '1' && ch <= '5')
+        const int tier = mons_demon_tier(mi.type);
+        if (tier > 0)
         {
             ostr << "This monster is a demon of the "
-                 << (ch == '1' ? "highest" :
-                     ch == '2' ? "second-highest" :
-                     ch == '3' ? "middle" :
-                     ch == '4' ? "second-lowest" :
-                     ch == '5' ? "lowest"
+                 << (tier == 1 ? "highest" :
+                     tier == 2 ? "second-highest" :
+                     tier == 3 ? "middle" :
+                     tier == 4 ? "second-lowest" :
+                     tier == 5 ? "lowest"
                                : "buggy")
                  << " tier.\n\n";
         }
