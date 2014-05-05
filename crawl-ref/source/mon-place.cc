@@ -13,6 +13,7 @@
 #include "abyss.h"
 #include "areas.h"
 #include "arena.h"
+#include "attitude-change.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -1798,54 +1799,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mon->type == MONS_TWISTER && !dont_place)
         _place_twister_clouds(mon);
 
-    if (!(mg.flags & MG_FORCE_BEH) && !crawl_state.game_is_arena())
+    if (!(mg.flags & MG_FORCE_BEH)
+        && !crawl_state.game_is_arena()
+        && !crawl_state.generating_level)
     {
-        // Try to bribe the monster.
-        const int bribability = gozag_type_bribable(mon->type);
-        if (bribability > 0 && x_chance_in_y(bribability,
-                                             GOZAG_MAX_BRIBABILITY))
-        {
-            bool minion = mg.flags & MG_BAND_MINION;
-            const branch_type br = gozag_bribable_branch(mon->type);
-            int cost = max(1, exper_value(mon) / 20);
-
-            if (minion)
-            {
-                const monster* sum = mg.summoner->as_monster();
-                if (sum
-                    && (sum->has_ench(ENCH_PERMA_BRIBED)
-                        || sum->props.exists(GOZAG_PERMABRIBE_KEY)))
-                {
-                    gozag_deduct_bribe(br, 2*cost);
-                    mon->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
-                }
-                else if (sum
-                    && (sum->has_ench(ENCH_BRIBED)
-                        || sum->props.exists(GOZAG_BRIBE_KEY)))
-                {
-                    gozag_deduct_bribe(br, cost);
-                    // Don't continue if we exhausted our funds.
-                    if (branch_bribe[br] > 0)
-                        mon->props[GOZAG_BRIBE_KEY].get_bool() = true;
-                }
-            }
-            else
-            {
-                // Sometimes get permanent followers at twice the cost.
-                if (branch_bribe[br] > 2*cost && one_chance_in(3))
-                {
-                    gozag_deduct_bribe(br, 2*cost);
-                    mon->props[GOZAG_PERMABRIBE_KEY].get_bool() = true;
-                }
-                else
-                {
-                    gozag_deduct_bribe(br, cost);
-                    // Don't continue if we exhausted our funds.
-                    if (branch_bribe[br] > 0)
-                        mon->props[GOZAG_BRIBE_KEY].get_bool() = true;
-                }
-            }
-        }
+        gozag_set_bribe(mon);
     }
 
     return mon;
