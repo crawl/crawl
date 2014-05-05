@@ -672,8 +672,9 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                            vault_mon_weights.end());
                 type = (monster_type) vault_mon_types[i];
 
-                // If the monster list says not to place, accept that.
-                if (type == MONS_NO_MONSTER)
+                // If the monster list says not to place, or to place
+                // by level, accept that.
+                if (type == MONS_NO_MONSTER || type == -1)
                     break;
             }
             while (mon_type == RANDOM_MOBILE_MONSTER
