@@ -1513,6 +1513,34 @@ cwn...nec
 ccc...ccc
 ENDMAP
 
+# general_overflow_altar cannot contain the power of Qazlal
+NAME:    nicolae_qazlal_general_emergency
+TAGS:    temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
+TAGS:    no_monster_gen no_pool_fixup mini_float
+DEPTH:   D:2-
+SHUFFLE: xXY / xXY / xXY / abc
+SHUFFLE: XY
+SUBST:   z = w.., X = +++w., Y = xxxxw., x = wxxx, a = w, b = w, c = w
+SHUFFLE: ABCD
+SUBST:   A = >, C = .GTU, D = .
+KFEAT:   B = altar_qazlal
+SHUFFLE: wll
+: interest_check(_G)
+MAP
+...........z.
+.z...z.zzz...
+..zz.z.wwwz..
+..wxXYYxwwz..
+.zwwwwwwxwz..
+zwwxwABwxz...
+zwwxwCDwx..z.
+.zzxwwwwx.z..
+...xxxwxxwz..
+.z...zwwwz...
+...z..zzz....
+...........z.
+ENDMAP
+
 ### Sif Muna overflow altars ##################################################
 
 NAME:   lemuel_blue_sif_altar
