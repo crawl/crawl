@@ -1243,7 +1243,7 @@ static string _describe_armour(const item_def &item, bool verbose)
                 description += "It allows its wearer to run at a great speed.";
             break;
         case SPARM_FIRE_RESISTANCE:
-            description += "It protects its wearer from heat and fire.";
+            description += "It protects its wearer from heat.";
             break;
         case SPARM_COLD_RESISTANCE:
             description += "It protects its wearer from cold.";
@@ -1306,7 +1306,7 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         case SPARM_PRESERVATION:
             description += "It protects its wearer's possessions "
-                "from damage and destruction.";
+                "from corrosion and destruction.";
             break;
 
         case SPARM_REFLECTION:
@@ -1321,8 +1321,7 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "These improve your skills with ranged weaponry "
-                "but interfere slightly with melee combat.";
+            description += "These improve your skills with ranged weaponry.";
             break;
         }
     }
