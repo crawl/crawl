@@ -2059,17 +2059,6 @@
       }
     },
 
-    {  MST_SPRIGGAN_ENCHANTER,
-      {
-       SPELL_SLEEP,
-       SPELL_SLEEP,
-       SPELL_INVISIBILITY,
-       SPELL_HASTE,
-       SPELL_STRIP_RESISTANCE,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_SOJOBO,
       {
        SPELL_LIGHTNING_BOLT,

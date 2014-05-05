@@ -2072,8 +2072,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SPRIGGAN_BERSERKER;
     case MONS_SPRIGGAN_DEFENDER:
         return TILEP_MONS_SPRIGGAN_DEFENDER;
-    case MONS_SPRIGGAN_ENCHANTER:
-        return TILEP_MONS_SPRIGGAN_ENCHANTER;
     case MONS_THE_ENCHANTRESS:
         return TILEP_MONS_THE_ENCHANTRESS;
     case MONS_AGNES:

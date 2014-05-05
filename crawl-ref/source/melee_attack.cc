@@ -314,9 +314,7 @@ bool melee_attack::handle_phase_attempted()
         needs_message = false;
     }
     else if (attacker->is_monster()
-             && mons_class_flag(attacker->type, M_STABBER)
-             && defender && defender->asleep()
-             || attacker->type == MONS_DROWNED_SOUL)
+             && attacker->type == MONS_DROWNED_SOUL)
     {
         to_hit = AUTOMATIC_HIT;
     }
@@ -4045,13 +4043,6 @@ int melee_attack::apply_damage_modifiers(int damage, int damage_max,
                      || (attk_flavour == AF_SHADOWSTAB
                          &&!defender->can_see(attacker))))
     {
-        if (mons_class_flag(as_mon->type, M_STABBER))
-        {
-            half_ac = true;
-            if (damage * 2 < damage_max)
-                damage = damage_max / 2;
-        }
-
         damage = damage * 5 / 2;
         dprf(DIAG_COMBAT, "Stab damage vs %s: %d",
              defender->name(DESC_PLAIN).c_str(),

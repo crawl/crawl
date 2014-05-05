@@ -1304,13 +1304,6 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                        WPN_CUTLASS, -1);
         break;
 
-    case MONS_SPRIGGAN_ENCHANTER:
-        if (one_chance_in(3))
-            level = MAKE_GOOD_ITEM;
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type  = one_chance_in(12) ? WPN_QUICK_BLADE : WPN_DAGGER;
-        break;
-
     case MONS_SPRIGGAN_RIDER:
         if (!melee_only && one_chance_in(15))
         {
@@ -1909,7 +1902,6 @@ static void _give_shield(monster* mon, int level)
         break;
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_RIDER:
-    case MONS_SPRIGGAN_ENCHANTER:
         if (!one_chance_in(4))
             break;
     case MONS_SPRIGGAN_DEFENDER:
@@ -2328,7 +2320,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_AIR_MAGE:
-    case MONS_SPRIGGAN_ENCHANTER:
     case MONS_SPRIGGAN_DEFENDER:
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;

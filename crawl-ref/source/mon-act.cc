@@ -1532,18 +1532,6 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
         return false;
     }
 
-    if (mons_class_flag(mons->type, M_STABBER)
-        && mons->get_foe() != NULL)
-    {
-        // Stabbers going in for the kill don't use ranged attacks.
-        if (mons->get_foe()->incapacitated())
-            return false;
-        // But assassins WILL use their blowguns in melee range, if their foe is
-        // not already incapacitated and they have useful ammo left.
-        else if (mons_has_incapacitating_ranged_attack(mons, mons->get_foe()))
-            archer = true;
-    }
-
     // Don't allow offscreen throwing for now.
     if (mons->foe == MHITYOU && !mons_near(mons))
         return false;
