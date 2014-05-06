@@ -518,6 +518,8 @@ KITEM: % = strawberry q:6 / banana q:2 / apricot q:3
 KFEAT: _ = altar_fedhas
 KMONS: s = patrolling maud
 KMONS: u = death drake
+KFEAT: = = closed_door
+MARKER: = = lua:restrict_door()
 MARKER:  ? = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 5, \
@@ -536,7 +538,7 @@ X.7px"!!!!!"!"tt.wwww+tt+twwwwwwwwwwwwttP.
 X.ppx!"!!?"!!!"+...54x3Wttttttttttttttttpp
 X.6px!!"!"!!!!tttttttx23tttttttttttttttttt
 X.68x!!!"!!!!!tttttttxxx+ttttttttttttttttt
-Xxx+xxxx=xxxxxxxtttttttthxx..xxWWWWWw.icrr
+Xxx+xxxx+xxxxxxxtttttttthxx..xxWWWWWw.icrr
 X...........a...tttttg..xxhxx.xWWWWw..icrr
 Xx=mxxxxxxxxxxxx+ttttt.xxAxxhxx+WWqwwxxcc+
 X...xWp.b........ttttt..x.xx...xWw......*.
@@ -1212,15 +1214,15 @@ MARKER: # = lua:restrict_door()
 MAP
 vvvvvvvvvvvvvvvvv+vvvvvvvvvvvvv
 vtW....Wtvrrsvvv...vvevllllllvv
-vW..""..Wvrrrvv.....vv=v3llpln1
-v..".."..v=vvv..a.H..vvv...pln.
-v.."u."..=...+.......+.......2.
-v..".."..v=vvv..O.d..vvvvv.pln.
+vW..""..Wvrrrvv.....vv+v3llpln1
+v..".."..v+vvv..a.H..vvv...pln.
+v.."u."..+...+.......+.......2.
+v..".."..v+vvv..O.d..vvvvv.pln.
 vW..""..WvWWWvv.....vv^^.vvpln1
-vtW....Wtv=v=vvv...vvv^v..vv+vv
+vtW....Wtv+v+vvv...vvv^v..vv+vv
 vvvv++vvvvrvrvvvv+vvvv4vv.vv...
-v$$=.....v=vvvvv.www+v^vv.vvvv.
-vvvvvvvv.v$$=!!v.ww.v^^vv......
+v$$+.....v+vvvvv.www+v^vv.vvvv.
+vvvvvvvv.v$$+!!v.ww.v^^vv......
 vC.Fvvvv.vvvv!!v.ww.vvvcccc+ccc
 vD.Evvv...vvvzzv.6w.vgg+WT...J8
 #...+...y...+..+..WW+ggcWW.J.J7
@@ -1235,7 +1237,7 @@ v......vvv.v..L....X...o+AAAAX.
 v.bnb..v...v.......X....XAAAAX.
 v.b%n..+...+.......+....XAAAAX.
 v.bbb..v...v.....MMX....XAAAAX.
-v......vvv=v.....MNX....XAAAAX.
+v......vvv+v.....MNX....XAAAAX.
 vvvvvvvv$..vvvvvvvvXijkmXAAAA+.
 ENDMAP
 
@@ -1417,13 +1419,13 @@ MARKER: ! = lua:fog_machine { \
 MAP
 ccccccc#cccccc
 c!..c....c..!c
-c.&.=..!.=.&.c
+c.&.+..!.+.&.c
 c...c....c...c
 cc+cccccccc+cc
 cc.....!....cc
-cc=ccccccccccc
+cc+ccccccccccc
 c...c7443322%c
-c.!.=74!33!21c
+c.!.+74!33!21c
 c6..c7443322?c
 cccccccccccccc
 ENDMAP
