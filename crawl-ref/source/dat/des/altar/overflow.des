@@ -412,22 +412,21 @@ TAGS:   no_pool_fixup decor
 DEPTH:  D:2-
 KFEAT:  C = altar_elyvilon
 KMASK:  wW = no_monster_gen
-MONS:   butterfly
 : interest_check(_G)
 MAP
        xxxxxxxxxxxxxxx
       xxtttttttttttttxx
       xtttttttttttttttx
       tttttttt.tttttttt
-  .....ttttt..1..ttttt.....
+  .....ttttt.....ttttt.....
  .......ttt.......ttt.......
 ...wWw...t...wWw...t...wWw...
 ..wwWww.....wwWww.....wwWww..
-@.WWtWW.1.1.WWCWW.1.1.WWtWW.@
+@.WWtWW.....WWCWW.....WWtWW.@
 ..wwWww.....wwWww.....wwWww..
 ...wWw...t...wWw...t...wWw...
  .......ttt.......ttt.......
-  .....ttttt..1..ttttt.....
+  .....ttttt.....ttttt.....
       tttttttt.tttttttt
       xtttttttttttttttx
       xxtttttttttttttxx
@@ -1080,7 +1079,6 @@ NAME:   nemelex_lonely_heart_becter
 TAGS:   overflow_altar_nemelex_xobeh transparent mini_float
 TAGS:   no_rotate no_vmirror no_monster_gen no_item_gen
 DEPTH:  D:2-9
-MONS:   butterfly
 MONS:   nothing w:4 / jessica w:1
 KFEAT:  _ = altar_nemelex_xobeh
 COLOUR: x = lightred
@@ -1090,9 +1088,9 @@ MAP
  ..xx...xx..
 ..xxxx.xxxx..
 .xx..x+x..xx.
-.xx._.1.1.xx.
-..xx.1.1.xx..
- ..xx.2.xx..
+.xx.......xx.
+..xx.._..xx..
+ ..xx.1.xx..
   ..xx.xx..
    ..xxx..
     .....

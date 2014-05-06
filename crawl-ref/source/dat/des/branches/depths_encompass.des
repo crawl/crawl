@@ -251,7 +251,7 @@ ORIENT:  encompass
 DEPTH:   Depths:2-
 PLACE:   D:$, Depths:$
 WEIGHT:  1 (D:$), 2 (Depths:$), 10
-MONS:    butterfly, plant
+MONS:    fungus, plant
 KMONS:   S = 0 band
 KMONS:   # = 9 band
 KMONS:   = = draconian annihilator / draconian knight / draconian monk
