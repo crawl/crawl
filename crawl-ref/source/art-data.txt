@@ -402,13 +402,13 @@ TILE_EQ: punk
 BRAND:   SPWPN_FROST
 COLD:    1
 
-ENUM:     SHARNGA
-NAME:     longbow of Vishnu "Sharnga"
+ENUM:     KRISHNA
+NAME:     bow of Krishna "Sharnga"
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8/+8
 COLOUR:   ETC_GOLD
-TILE:     urand_sharnga
-TILE_EQ:  sharnga
+TILE:     urand_krishna
+TILE_EQ:  krishna
 BRAND:    SPWPN_SPEED
 DEX:      3
 BOOL:     seeinv
