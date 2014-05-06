@@ -341,6 +341,7 @@ enum attribute_type
     ATTR_DIVINE_COLD_RES,      // Divine cold resistance (Qazlal).
     ATTR_DIVINE_ELEC_RES,      // Divine electricity resistance (Qazlal).
     ATTR_DIVINE_AC,            // Divine AC bonus (Qazlal).
+    ATTR_GOZAG_GOLD_USED,      // Gold spent for Gozag abilities.
     NUM_ATTRIBUTES
 };
 
