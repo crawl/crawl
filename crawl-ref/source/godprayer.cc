@@ -32,6 +32,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "unwind.h"
 #include "view.h"
 
 static bool _offer_items();
@@ -279,17 +280,24 @@ static bool _altar_prayer()
             if (is_artefact(*j) || item_is_orb(*j) || item_is_rune(*j))
                 continue;
 
-            prompted = true;
+            string message = "";
+            {
+                unwind_var<short int> old_quant = j->quantity;
+                j->quantity = 1;
 
-            string prompt =
-                make_stringf("Do you wish to duplicate %s?",
-                             j->name(DESC_THE).c_str());
+                prompted = true;
 
-            if (!yesno(prompt.c_str(), true, 'n'))
-                continue;
+                string prompt =
+                    make_stringf("Do you wish to duplicate %s?",
+                                 j->name(old_quant.original_value() > 1
+                                         ? DESC_A : DESC_THE).c_str());
 
-            string message = " duplicates " + j->name(DESC_YOUR) + "!";
-            if (!copy_item_to_grid(*j, you.pos()))
+                if (!yesno(prompt.c_str(), true, 'n'))
+                    continue;
+
+                message = " duplicates " + j->name(DESC_YOUR) + "!";
+            }
+            if (!copy_item_to_grid(*j, you.pos(), 1))
             {
                 mprf("Something went wrong!");
                 return false;
