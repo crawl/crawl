@@ -1195,7 +1195,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_UFETUBUS:
     case SPELL_SUMMON_HELL_BEAST:  // Geryon
-    case SPELL_SUMMON_UNDEAD:      // summon undead around player
+    case SPELL_SUMMON_UNDEAD:
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_MUSHROOMS:
     case SPELL_CONJURE_BALL_LIGHTNING:
@@ -5095,7 +5095,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
     }
 
-    case SPELL_SUMMON_UNDEAD:      // Summon undead around player.
+    case SPELL_SUMMON_UNDEAD:
         _do_high_level_summon(mons, monsterNearby, spell_cast,
                               _pick_undead_summon,
                               2 + random2(mons->spell_hd(spell_cast) / 5 + 1), god);
