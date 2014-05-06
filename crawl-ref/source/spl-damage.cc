@@ -2045,12 +2045,8 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             beam.flavour    = BEAM_ICE;
             return true;
         }
-
-        goto do_terrain;
     }
-
-    // Set up the explosion if there's a visible monster.
-    if (mon && (caster->is_monster() || (you.can_see(mon))))
+    else if (mon && (caster->is_monster() || (you.can_see(mon))))
     {
         switch (mon->type)
         {
