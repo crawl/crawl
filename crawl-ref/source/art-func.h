@@ -896,14 +896,15 @@ static setup_missile_type _HELLFIRE_launch(item_def* item, bolt* beam,
            && beam->item->base_type == OBJ_MISSILES
            && !is_artefact(*(beam->item)));
     beam->item->special = SPMSL_EXPLODING; // so that it mulches
+    beam->item->props[HELLFIRE_BOLT_KEY].get_bool() = true;
 
-    beam->flavour = BEAM_HELLFIRE;
     beam->name    = "hellfire bolt";
     *ammo_name    = "a hellfire bolt";
     beam->colour  = LIGHTRED;
     beam->glyph   = DCHAR_FIRED_ZAP;
 
     bolt *expl   = new bolt(*beam);
+    expl->flavour = BEAM_HELLFIRE;
     expl->is_explosion = true;
     expl->damage = dice_def(2, 5);
     expl->name   = "hellfire";
