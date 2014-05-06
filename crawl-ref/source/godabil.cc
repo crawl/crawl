@@ -4017,8 +4017,14 @@ bool gozag_call_merchant()
 
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
+        /* The branch needs to exist in this game, and it can't be a
+         * Lair branch - allowing lair branches here leaks info about the
+         * dungeon structure if they are placed early, and results in the
+         * total effectiveness of this ability changing depending on which
+         * branches are rolled. */
         if (i != root_branch
-            && !brentry[static_cast<branch_type>(i)].is_valid())
+            && (!brentry[static_cast<branch_type>(i)].is_valid()
+                || brentry[static_cast<branch_type>(i)].branch == BRANCH_LAIR))
         {
             continue;
         }
