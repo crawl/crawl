@@ -1219,7 +1219,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_AIR_ELEMENTALS:
     case SPELL_EARTH_ELEMENTALS:
     case SPELL_IRON_ELEMENTALS:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_ELEMENTAL:
+#endif
     case SPELL_CREATE_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
@@ -2023,6 +2025,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_SHAFT_SELF:
     case SPELL_MISLEAD:
     case SPELL_SUMMON_SCORPIONS:
+    case SPELL_SUMMON_ELEMENTAL:
 #endif
     case SPELL_NO_SPELL:
         ret = true;
@@ -3655,6 +3658,27 @@ static void _do_high_level_summon(monster* mons, bool monsterNearby,
     }
 }
 
+static void _mons_summon_elemental(monster* mons,
+                                   bool monsterNearby,
+                                   spell_type spell_cast,
+                                   monster_type elemental,
+                                   god_type god)
+{
+    if (_mons_abjured(mons, monsterNearby))
+        return;
+
+    const int count = 1 + (mons->spell_hd(spell_cast) > 15)
+                      + random2(mons->spell_hd(spell_cast) / 7 + 1);
+
+    for (int i = 0; i < count; i++)
+    {
+        create_monster(
+            mgen_data(elemental, SAME_ATTITUDE(mons), mons,
+                      3, spell_cast, mons->pos(), mons->foe, 0, god));
+    }
+    return;
+}
+
 // Returns true if a message referring to the player's legs makes sense.
 static bool _legs_msg_applicable()
 {
@@ -4669,9 +4693,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     _mons_set_priest_wizard_god(mons, priest, wizard, god);
 
-    // Used for summon X elemental and nothing else. {bookofjude}
-    monster_type summon_type = MONS_NO_MONSTER;
-
     switch (spell_cast)
     {
     default:
@@ -4848,58 +4869,29 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     }
 
     case SPELL_WATER_ELEMENTALS:
-        if (summon_type == MONS_NO_MONSTER)
-            summon_type = MONS_WATER_ELEMENTAL;
-        // Deliberate fall through
-    case SPELL_EARTH_ELEMENTALS:
-        if (summon_type == MONS_NO_MONSTER)
-            summon_type = MONS_EARTH_ELEMENTAL;
-        // Deliberate fall through
-    case SPELL_IRON_ELEMENTALS:
-        if (summon_type == MONS_NO_MONSTER)
-            summon_type = MONS_IRON_ELEMENTAL;
-        // Deliberate fall through
-    case SPELL_AIR_ELEMENTALS:
-        if (summon_type == MONS_NO_MONSTER)
-            summon_type = MONS_AIR_ELEMENTAL;
-        // Deliberate fall through
-    case SPELL_FIRE_ELEMENTALS:
-        if (summon_type == MONS_NO_MONSTER)
-            summon_type = MONS_FIRE_ELEMENTAL;
-        // Deliberate fall through
-    case SPELL_SUMMON_ELEMENTAL:
-    {
-        if (summon_type == MONS_NO_MONSTER)
-            summon_type = random_choose(
-                              MONS_EARTH_ELEMENTAL, MONS_FIRE_ELEMENTAL,
-                              MONS_AIR_ELEMENTAL, MONS_WATER_ELEMENTAL,
-                              -1);
-
-        if (_mons_abjured(mons, monsterNearby))
-            return;
-
-        int dur;
-
-        if (spell_cast == SPELL_SUMMON_ELEMENTAL)
-        {
-            sumcount2 = 1;
-            dur = min(2 + mons->spell_hd(spell_cast) / 10, 6);
-        }
-        else
-        {
-            sumcount2 = 1 + (mons->spell_hd(spell_cast) > 15)
-                          + random2(mons->spell_hd(spell_cast) / 7 + 1);
-            dur = 3;
-        }
-
-        for (sumcount = 0; sumcount < sumcount2; sumcount++)
-        {
-            create_monster(
-                mgen_data(summon_type, SAME_ATTITUDE(mons), mons,
-                          dur, spell_cast, mons->pos(), mons->foe, 0, god));
-        }
+        _mons_summon_elemental(mons, monsterNearby, spell_cast,
+                               MONS_WATER_ELEMENTAL, god);
         return;
-    }
+
+    case SPELL_EARTH_ELEMENTALS:
+        _mons_summon_elemental(mons, monsterNearby, spell_cast,
+                               MONS_EARTH_ELEMENTAL, god);
+        return;
+
+    case SPELL_IRON_ELEMENTALS:
+        _mons_summon_elemental(mons, monsterNearby, spell_cast,
+                               MONS_IRON_ELEMENTAL, god);
+        return;
+
+    case SPELL_AIR_ELEMENTALS:
+        _mons_summon_elemental(mons, monsterNearby, spell_cast,
+                               MONS_AIR_ELEMENTAL, god);
+        return;
+
+    case SPELL_FIRE_ELEMENTALS:
+        _mons_summon_elemental(mons, monsterNearby, spell_cast,
+                               MONS_FIRE_ELEMENTAL, god);
+        return;
 
     case SPELL_SUMMON_ILLUSION:
         _mons_cast_summon_illusion(mons, spell_cast);

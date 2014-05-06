@@ -507,13 +507,6 @@ Summon Butterflies spell
 
 Ten czar przyzywa rój kolorowych motyli. Piękne, ale czy przydatne?
 %%%%
-Summon Elemental spell
-
-Ten czar przyzywa ducha żywiołu, dając mu we władanie odpowiedni materiał,
-którego spora ilość musi być dostępna. To rzadko jest problemem w przypadku
-ziemi (skała) i powietrza, lecz może być dla ognia lub wody. To czy przyzwany
-żywiołak będzie przyjazny zależy od umiejętności z danej szkoły magii.
-%%%%
 Summon Horrible Things spell
 
 Ten czar otwiera portal do Otchłani, przyzywając jedno lub więcej z

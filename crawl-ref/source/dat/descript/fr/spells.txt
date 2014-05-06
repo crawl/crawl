@@ -856,14 +856,6 @@ Summon Earth Elementals spell
 
 Ce sort invoque un ou plusieurs élémentaires de terre.
 %%%%
-Summon Elemental spell
-
-Ce sort convoque un esprit du plan élémentaire pour aider le sorcier. Une large
-quantité de l'élément désiré est nécessaire ; cela est rarement un problème
-pour la terre et l'air mais, peut l'être pour l'eau ou le feu. L'élémentaire
-sera généralement amical au sorcier – spécialement si le sorcier est compétent
-dans la magie élémentaire concernée.
-%%%%
 Summon Fire Elementals spell
 
 Ce sort invoque un ou plusieurs élémentaires de feu.

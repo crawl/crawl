@@ -4788,7 +4788,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_CALL_IMP:                 return TILEG_CALL_IMP;
     case SPELL_ABJURATION:               return TILEG_ABJURATION;
     case SPELL_AURA_OF_ABJURATION:       return TILEG_MASS_ABJURATION;
-    case SPELL_SUMMON_ELEMENTAL:         return TILEG_SUMMON_ELEMENTAL;
     case SPELL_SUMMON_DEMON:             return TILEG_SUMMON_DEMON;
     case SPELL_SHADOW_CREATURES:         return TILEG_SUMMON_SHADOW_CREATURES;
     case SPELL_SUMMON_ICE_BEAST:         return TILEG_SUMMON_ICE_BEAST;

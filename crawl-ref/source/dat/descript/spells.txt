@@ -1263,14 +1263,6 @@ Summon Earth Elementals spell
 
 This spell summons one or more earth elementals.
 %%%%
-Summon Elemental spell
-
-This spell calls forth a spirit from the elemental planes to aid the caster. A
-large quantity of the desired element must be available; this is rarely a
-problem for earth and air, but may be for fire or water. The elemental will
-usually be friendly to casters — especially those skilled in the appropriate
-form of elemental magic.
-%%%%
 Summon Eyeballs spell
 
 This spell summons floating eyeballs that may be able to paralyse, drain,
