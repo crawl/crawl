@@ -4107,6 +4107,7 @@ void god_pitch(god_type which_god)
         bool needs_redraw = false;
         mprf("You pay a service fee of %d gold.", fee);
         you.gold -= fee;
+        you.attribute[ATTR_GOZAG_GOLD_USED] += fee;
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
         {
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],

@@ -3973,6 +3973,7 @@ bool gozag_potion_petition()
             return false;
         }
         you.gold -= faith_price;
+        you.attribute[ATTR_GOZAG_GOLD_USED] += faith_price;
         for (int j = 0; j < pots[keyin]->size(); j++)
         {
             potion_effect(static_cast<potion_type>((*pots[keyin])[j].get_int()),
@@ -4190,6 +4191,7 @@ bool gozag_call_merchant()
             return false;
         }
         you.gold -= faith_cost;
+        you.attribute[ATTR_GOZAG_GOLD_USED] += faith_cost;
 
         const shop_type type =
             static_cast<shop_type>(
@@ -4456,6 +4458,7 @@ bool gozag_bribe_branch()
     if (prompted || yesno(prompt.c_str(), true, 'n'))
     {
         you.gold -= bribe_amount;
+        you.attribute[ATTR_GOZAG_GOLD_USED] += bribe_amount;
         branch_bribe[branch] += bribe_amount;
         string msg = make_stringf(" spreads your bribe to %s!",
                                   branches[branch].longname);
