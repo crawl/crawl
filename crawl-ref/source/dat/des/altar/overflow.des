@@ -792,8 +792,8 @@ TAGS:  no_pool_fixup no_item_gen no_monster_gen decor transparent
 DEPTH: D:2-
 FTILE: '_TS = floor_limestone
 KFEAT: _ = altar_gozag
-KFEAT: S = general shop name:Gozag type:Platinum suffix:Reserve greed:100 ; \
-       any weapon randart | any armour randart | any jewellery randart
+KFEAT: S = general shop name:Gozag type:Platinum suffix:Reserve count:4 \
+        greed:100 ; any weapon randart | any armour randart | any jewellery randart
 : interest_check(_G)
 MAP
 wwwwwww....
