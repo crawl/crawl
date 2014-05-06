@@ -2265,17 +2265,11 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     return success;
 }
 
-static int _identify(bool alreadyknown, string *pre_msg)
+// Returns true if the scroll is used up.
+static bool _identify(bool alreadyknown, string *pre_msg)
 {
-    int id_used = 1;
-    int identified = 0;
-
-    // Scrolls of identify *may* produce "extra" identifications.
-    if (one_chance_in(5))
-        id_used += (coinflip()? 1 : 2);
-
     int item_slot = -1;
-    do
+    while (true)
     {
         if (item_slot == -1)
         {
@@ -2286,10 +2280,7 @@ static int _identify(bool alreadyknown, string *pre_msg)
         }
 
         if (item_slot == PROMPT_NOTHING)
-        {
-            return identified > 0 ? identified :
-                   alreadyknown   ? 0 : -1;
-        }
+            return !alreadyknown;
 
         if (item_slot == PROMPT_ABORT)
         {
@@ -2298,9 +2289,7 @@ static int _identify(bool alreadyknown, string *pre_msg)
                 || yesno("Really abort (and waste the scroll)?", false, 0))
             {
                 canned_msg(MSG_OK);
-                return identified > 0 ? identified :
-                       alreadyknown   ? 0
-                                      : -1;
+                return !alreadyknown;
             }
             else
             {
@@ -2320,7 +2309,7 @@ static int _identify(bool alreadyknown, string *pre_msg)
             continue;
         }
 
-        if (alreadyknown && pre_msg && identified == 0)
+        if (alreadyknown && pre_msg)
             mpr(pre_msg->c_str());
 
         set_ident_type(item, ID_KNOWN_TYPE);
@@ -2334,8 +2323,6 @@ static int _identify(bool alreadyknown, string *pre_msg)
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        identified++;
-
         if (item.base_type == OBJ_JEWELLERY
             && item.sub_type == AMU_INACCURACY
             && item_slot == you.equip[EQ_AMULET]
@@ -2344,14 +2331,8 @@ static int _identify(bool alreadyknown, string *pre_msg)
             learned_something_new(HINT_INACCURACY);
         }
 
-        if (id_used > identified)
-            more();
-
-        // In case we get to try again.
-        item_slot = -1;
+        return true;
     }
-    while (id_used > identified);
-    return identified;
 }
 
 static bool _handle_enchant_weapon(bool alreadyknown, string *pre_msg, scroll_type scr)
@@ -2933,7 +2914,7 @@ void read_scroll(int slot)
             // Do this here so it doesn't turn up in the ID menu.
             set_ident_type(scroll, ID_KNOWN_TYPE);
         }
-        cancel_scroll = (_identify(alreadyknown, &pre_succ_msg) == 0);
+        cancel_scroll = !_identify(alreadyknown, &pre_succ_msg);
         break;
 
     case SCR_RECHARGING:

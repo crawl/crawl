@@ -1274,8 +1274,7 @@ that are affected.
 %%%%
 scroll of identify
 
-This useful magic scroll allows you to determine the properties of any object,
-and will occasionally allow multiple identifications.
+This useful magic scroll allows you to determine the properties of any object.
 
 If used on a deck of cards, this scroll will also give away the top card.
 %%%%
