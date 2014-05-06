@@ -35,6 +35,7 @@
 #include "losglobal.h"
 #include "libutil.h"
 #include "mapdef.h"
+#include "mapmark.h"
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
@@ -4016,6 +4017,19 @@ bool gozag_call_merchant()
     if (!shop_vault)
         die("Someone changed the shop vault name!");
 
+    if (!shop_vault->depths.is_usable_in(level_id::current()))
+    {
+        mprf("No merchant is willing to set up shop here.");
+        return false;
+    }
+
+    if (grd(you.pos()) != DNGN_FLOOR)
+    {
+        mprf("There's no room for a shop here.");
+        return false;
+    }
+
+    // Find the lowest place we can place a shop.
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
         /* The branch needs to exist in this game, and it can't be a
@@ -4042,24 +4056,6 @@ bool gozag_call_merchant()
         const int absdepth = branches[i].absdepth + brdepth[i] - 1;
         if (absdepth > max_absdepth)
             max_absdepth = absdepth;
-
-        // Don't place shops on the last level of a branch; it's too mean.
-        for (int j = 1; j < brdepth[i]; j++)
-        {
-            lid.depth = j;
-            if (!is_existing_level(lid)
-                && shop_vault->depths.is_usable_in(lid)
-                && !you.props.exists(make_stringf(GOZAG_SHOP_KEY,
-                                                  lid.describe().c_str())))
-            {
-                candidates.push_back(lid);
-            }
-        }
-    }
-    if (!candidates.size())
-    {
-        mpr("There are no new frontiers for merchants to set up shop!");
-        return false;
     }
 
     const int level_number = max_absdepth * 2;
@@ -4216,23 +4212,27 @@ bool gozag_call_merchant()
                              .get_string().c_str()
                          );
 
-        vector<int> weights;
-        for (unsigned int j = 0; j < candidates.size(); j++)
+        keyed_mapspec kmspec;
+        kmspec.set_feat(spec, false);
+        if (!kmspec.get_feat().shop.get())
         {
-            const int diff = max_absdepth + 1 - candidates[j].absdepth();
-            weights.push_back(diff * diff * diff);
+            mprf(MSGCH_ERROR, "Tried to place an invalid shop spec!");
+            mprf(MSGCH_ERROR, "Spec is, \"%s\"", spec.c_str());
+            mprf(MSGCH_ERROR, "Please show someone this spec so the underlying "
+                              "bug can be fixed!");
+            mprf(MSGCH_ERROR, "Falling back to just name and type...");
+            vector<string> parts = split_string(";", spec);
+            ASSERT(parts.size() > 0);
+            kmspec.set_feat(parts[0], false);
+            if (!kmspec.get_feat().shop.get())
+                die("Invalid shop spec?");
         }
-        const int which =
-            choose_random_weighted(weights.begin(), weights.end());
-        level_id lid = candidates[which];
-        you.props[make_stringf(GOZAG_SHOP_KEY, lid.describe().c_str())]
-            .get_string() = spec;
+        place_spec_shop(you.pos(), kmspec.get_feat().shop.get());
+        link_items();
+        env.markers.add(new map_feature_marker(you.pos(), DNGN_ABANDONED_SHOP));
+        env.markers.clear_need_activate();
 
-        mprf(MSGCH_GOD, "%s sets up shop in %s.", name.c_str(),
-             branches[lid.branch].longname);
-        dprf("%s", lid.describe().c_str());
-
-        mark_offlevel_shop(lid, type);
+        mprf(MSGCH_GOD, "A shop appears before you!");
 
         you.attribute[ATTR_GOZAG_SHOPS]++;
         you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
