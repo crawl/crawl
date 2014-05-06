@@ -26,7 +26,7 @@ const mons_experience_levels mexplevs;
 // No special cases are in place: make sure source and target forms are similar.
 // If the target form requires special handling of some sort, add the handling
 // to level_up_change().
-//
+
 static const monster_level_up mon_grow[] =
 {
     monster_level_up(MONS_ORC, MONS_ORC_WARRIOR),
@@ -97,19 +97,14 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
 {
     for (unsigned i = 0; i < ARRAYSZ(mon_grow); ++i)
     {
-        const monster_level_up *mlup = &mon_grow[i];
-        // XXX: A hack to let draconians level up wihout specifying every
-        // single possible combination.
-        bool upgrade_drac = mons_is_base_draconian(type);
-        if (mlup->before == type || upgrade_drac)
+        const monster_level_up &mlup(mon_grow[i]);
+        if (mlup.before == type)
         {
-            if (upgrade_drac)
-               mlup = new monster_level_up(type, resolve_monster_type(RANDOM_NONBASE_DRACONIAN, type));
-            const monsterentry *me = get_monster_data(mlup->after);
+            const monsterentry *me = get_monster_data(mlup.after);
             if (static_cast<int>(me->hpdice[0]) == hit_dice
-                && x_chance_in_y(mlup->chance, 1000))
+                && x_chance_in_y(mlup.chance, 1000))
             {
-                return mlup;
+                return &mlup;
             }
         }
     }
@@ -119,9 +114,6 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
 void monster::upgrade_type(monster_type after, bool adjust_hd,
                             bool adjust_hp)
 {
-    // Needed for draconians growing into non-base ones.
-    base_monster = type;
-
     const monsterentry *orig = get_monster_data(type);
     // Ta-da!
     type   = after;
@@ -172,6 +164,13 @@ bool monster::level_up_change()
     {
         upgrade_type(lup->after, false, lup->adjust_hp);
         return true;
+    }
+    else if (mons_is_base_draconian(type))
+    {
+        base_monster = type;
+        monster_type upgrade = resolve_monster_type(RANDOM_NONBASE_DRACONIAN, type);
+        if (static_cast<int>(get_monster_data(upgrade)->hpdice[0]) == hit_dice)
+            upgrade_type(upgrade, false, true);
     }
     return false;
 }
