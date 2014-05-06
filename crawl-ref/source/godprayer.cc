@@ -197,7 +197,13 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     return true;
 }
 
-// Prayer at your god's altar.
+static bool _god_will_brand_weapon(god_type god)
+{
+   return you_worship(god) && !player_under_penance()
+          && you.piety >= piety_breakpoint(5)
+          && !you.one_time_ability_used[god];
+}
+
 static bool _altar_prayer()
 {
     // Different message from when first joining a religion.
@@ -205,38 +211,29 @@ static bool _altar_prayer()
 
     god_acting gdact;
 
-    bool did_something = false;
-
     // donate gold to gain piety distributed over time
     if (you_worship(GOD_ZIN))
-        did_something = _zin_donate_gold();
+        return _zin_donate_gold();
 
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
-    if (you_worship(GOD_SHINING_ONE) && !player_under_penance()
-        && you.piety >= piety_breakpoint(5)
-        && !you.one_time_ability_used[GOD_SHINING_ONE])
+    else if (_god_will_brand_weapon(GOD_SHINING_ONE))
     {
         simple_god_message(" will bless one of your weapons.");
         more();
-        did_something = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
-                                      YELLOW);
+        return _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH, YELLOW);
     }
 
     // Lugonu blesses weapons with distortion.
-    if (you_worship(GOD_LUGONU) && !player_under_penance()
-        && you.piety >= piety_breakpoint(5)
-        && !you.one_time_ability_used[GOD_LUGONU])
+    else if (_god_will_brand_weapon(GOD_LUGONU))
     {
         simple_god_message(" will brand one of your weapons with the corruption of the Abyss.");
         more();
-        did_something = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
+        return _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
     }
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
-    if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance()
-        && you.piety >= piety_breakpoint(5)
-        && !you.one_time_ability_used[GOD_KIKUBAAQUDGHA])
+    else if (_god_will_brand_weapon(GOD_KIKUBAAQUDGHA))
     {
         if (you.species != SP_FELID)
         {
@@ -264,21 +261,16 @@ static bool _altar_prayer()
 
         move_item_to_grid(&thing_created, you.pos());
 
-        if (thing_created != NON_ITEM)
-        {
-            simple_god_message(" grants you a gift!");
-            more();
+        simple_god_message(" grants you a gift!");
+        more();
 
-            you.one_time_ability_used.set(you.religion);
-            did_something = true;
-            take_note(Note(NOTE_GOD_GIFT, you.religion));
-        }
+        you.one_time_ability_used.set(you.religion);
+        take_note(Note(NOTE_GOD_GIFT, you.religion));
 
-        // Return early so we don't offer our Necronomicon to Kiku.
         return true;
     }
-
-    return did_something;
+  // None of above are true, nothing happens.
+  return false;
 }
 
 void pray()
