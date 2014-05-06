@@ -30,7 +30,7 @@ end
 -- Stuff for st's various vaults.
 function st_zot_vaults_setup(e)
     e.tags("no_item_gen")
-    e.depth("Zot:1-4")
+    e.depth("Zot, !Zot:$")
     e.kmons("D = mottled dragon / fire dragon w:25 / ice dragon w:25 /\
                storm dragon w:20 / shadow dragon w:20 / golden dragon /\
                iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
@@ -651,7 +651,7 @@ ENDMAP
 # Halls of Wrath
 #
 NAME:   lemuel_halls_of_wrath
-DEPTH:  Zot:1-4
+DEPTH:  Zot, !Zot:$
 ORIENT: float
 NSUBST: 1 = 6:2 / *=1
 SUBST:  1 = 1 .:5
@@ -681,7 +681,7 @@ ENDMAP
 # Lich library
 #
 NAME:   lemuel_lich_library
-DEPTH:  Zot:1-4
+DEPTH:  Zot, !Zot:$
 TAGS:   no_monster_gen
 MONS:   flying skull, lich, ancient lich, necromancer, vampire mage
 ITEM:   any book mimic:10 w:20 / any scroll mimic:10
@@ -761,7 +761,7 @@ ENDMAP
 # There is an 70% chance all three downstairs will be here.
 #
 NAME:   lemuel_draconian_sentries
-DEPTH:  Zot:1-4
+DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
@@ -787,7 +787,7 @@ mmm.....www...]..www.....mmm
 ENDMAP
 
 NAME:   lemuel_draconian_sentries_small
-DEPTH:  Zot:1-4
+DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate uniq_draconian_sentries
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
@@ -814,7 +814,7 @@ ENDMAP
 # Acid trip
 # 70% chance of having all stairs.
 NAME:   lemuel_acid_trip
-DEPTH:  Zot:1-4
+DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   oklob plant, acid blob, jelly, yellow draconian
 MONS:   any nonbase yellow draconian
@@ -847,7 +847,7 @@ ENDMAP
 # Firehouse
 #
 NAME:   lemuel_firehouse
-DEPTH:  Zot:1-4
+DEPTH:  Zot, !Zot:$
 ORIENT: centre
 MONS:   orb of fire
 MONS:   fire elemental
@@ -885,7 +885,7 @@ ENDMAP
 # Circus (by mu)
 # full of klowns, caged animals outside
 NAME:   circus_mu
-DEPTH:  Zot:1-4
+DEPTH:  Zot, !Zot:$
 ORIENT: float
 TAGS:   no_rotate no_hmirror no_monster_gen
 MONS:   killer klown
@@ -959,7 +959,7 @@ ENDMAP
 # 50% electricity, 25% fire, 25% ice
 NAME:    minmay_elemental_castle
 ORIENT:  southwest
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 TAGS:    no_rotate
 : if crawl.coinflip() then
 MONS:    titan, storm dragon, electric golem
@@ -1032,7 +1032,7 @@ ENDMAP
 # Based on zotdef III. Idea from kilobyte.
 NAME:   evilmike_crystal_ball_defense
 TAGS:   no_rotate no_monster_gen
-DEPTH:  Zot:1-4
+DEPTH:  Zot, !Zot:$
 ORIENT: float
 MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
         w:6 lightning spire / nothing
@@ -1069,7 +1069,7 @@ ENDMAP
 # resembling his overflow altars and effects. Extremely nasty and annoying.
 NAME:    hangedman_xom_zot_hilarity
 TAGS:    no_monster_gen no_trap_gen no_pool_fixup patrolling transparent
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 WEIGHT:  3
 KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
         randart great mace ego:chaos | randart battleaxe ego:chaos| \
@@ -1455,7 +1455,7 @@ ENDMAP
 NAME:    zot_minivault_1
 TAGS:    transparent
 WEIGHT:  20
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 MAP
  xxxxxxxxxxx
 xxx...0...xxx
@@ -1472,7 +1472,7 @@ ENDMAP
 NAME:    zot_minivault_2
 TAGS:    transparent
 WEIGHT:  5
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 SUBST:   > = }]}
 MAP
  xxxxxxxxxxx
@@ -1495,7 +1495,7 @@ ENDMAP
 NAME:    zot_minivault_3
 TAGS:    transparent
 WEIGHT:  5
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 SUBST:   < = ([{000
 MAP
  xxxxxxxxxxx
@@ -1522,7 +1522,7 @@ ENDMAP
 # Based on orb_monky_within_orb
 NAME:    zot_minivault_4
 TAGS:    transparent
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 COLOUR:  n = magenta
 TILE:    n = dngn_transparent_stone_magenta
 MAP
@@ -1540,7 +1540,7 @@ ENDMAP
 # Based on orb_monky_twist
 NAME:    zot_minivault_5
 TAGS:    transparent
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 COLOUR:  n = magenta
 TILE:    n = dngn_transparent_stone_magenta
 MAP
@@ -1561,7 +1561,7 @@ ENDMAP
 # Stone is bordered by rock to make it stand out less and not look ugly.
 NAME:    zot_minivault_6
 TAGS:    transparent
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 SUBST:   < = ([{
 SUBST:   > = }]}
 COLOUR:  n = magenta
@@ -1594,7 +1594,7 @@ ENDMAP
 NAME:    zot_minivault_7
 TAGS:    transparent
 WEIGHT:  5
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 SUBST:   > = }]}
 MAP
  xxxxxxxxx
@@ -1624,7 +1624,7 @@ ENDMAP
 NAME:    zot_minivault_8
 TAGS:    transparent
 WEIGHT:  5
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 SUBST:   > = }]}
 MAP
  xxxxxxxxx
@@ -1652,7 +1652,7 @@ ENDMAP
 ##########################################################################
 
 NAME: nicolae_zot_draconian_monastery
-DEPTH: Zot:1-4
+DEPTH: Zot, !Zot:$
 ORIENT: float
 TAGS: no_trap_gen no_monster_gen no_item_gen
 MONS: draconian monk / base draconian w:15, patrolling draconian zealot, patrolling draconian knight
@@ -1702,7 +1702,7 @@ ENDMAP
 
 NAME:    hangedman_zot_spectrum
 TAGS:    no_monster_gen
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 KMONS:   A = red very ugly thing
 KMONS:   B = red draconian
 KMONS:   C = salamander firebrand / nonbase red draconian w:6
@@ -1755,7 +1755,7 @@ ENDMAP
 
 NAME:    hangedman_zot_vaults_quadrants
 TAGS:    no_monster_gen no_item_gen transparent
-DEPTH:   Zot:1-4
+DEPTH:   Zot, !Zot:$
 ORIENT:  centre
 # Humanoids, guardian beasts, the strongest; first V, then Zot.
 MONS:    ettin / stone giant w:5 / fire giant / frost giant
