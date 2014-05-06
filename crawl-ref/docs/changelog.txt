@@ -26,7 +26,7 @@ Monsters
 * Komodo dragons now bite harder but don't sicken the player.
 * Deep dwarf death knights are now just death knights.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
-  flaming corpses, grizzly bears.
+  flaming corpses, grizzly bears, phoenixes.
 
 Spells
 ------

@@ -138,6 +138,7 @@ public:
     int power;
 };
 
+#if TAG_MAJOR_VERSION == 34
 // A marker powered by phoenixes!
 class map_phoenix_marker : public map_marker
 {
@@ -164,7 +165,7 @@ public:
     coord_def corpse_pos;
 };
 
-#if TAG_MAJOR_VERSION == 34
+
 // A marker for sealed doors
 class map_door_seal_marker : public map_marker
 {

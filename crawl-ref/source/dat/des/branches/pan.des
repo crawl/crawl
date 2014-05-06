@@ -3088,7 +3088,7 @@ ENDMAP
 #
 # This level's main feature is a TSO fortress with a lot of loot. Smaller
 # features are a temple of Zin, a weird Ely pasture in a cave, and a river for
-# some reason. There's also a cave with a pearl dragon and phoenixes.
+# some reason. There's also a cave with a pearl dragon and apis.
 #
 # This level has a lot of open space where it mostly is up to the RNG to place
 # monsters.
@@ -3122,7 +3122,7 @@ MONS:   ophan
 MONS:   ophan
 MONS:   shedu band
 MONS:   daeva
-KMONS:  8 = phoenix
+#  8 was phoenix but they were removed.
 KMONS:  9 = pearl dragon
 KMONS:  0 = apis
 KMONS:  A = apis
@@ -3144,7 +3144,7 @@ FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
-: set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
+: set_random_mon_list("angel / cherub / ophan / daeva /" ..
 :                     "apis / shedu band / apis / shedu band / angel")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -3205,13 +3205,13 @@ xxxx...x..vvv-Bv-----vvBiv.vv...............H.......H......xxx........xxxxxxxxxx
 xxxxx.....vvi-----v-----iv........v.........6.......6......xxx.........xxxxxxxxx
 xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
 xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
-xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.8xx
+xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.Axx
 xxxxxx....vv---------vBv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
 xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx$$$xxxxx..xxxx...x
-xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx$.88xxxx8.xxxx..xxx
-xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx8...xxxxxxx....xx
+xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx$.AAxxxxA.xxxx..xxx
+xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxxA...xxxxxxx....xx
 xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$9$$$xxxxxx..x..xxx....x..x
-xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$..xxxxxxx........xxxx8x
+xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$..xxxxxxx........xxxxAx
 xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$.....xxxxxxx......xxxxxxx
 xxxxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....wwxxx....xxxxxxxxxxx
 xxxxxxxxxxxxx........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxxxxxxxx

@@ -2484,7 +2484,7 @@ MONS:    plant w:14 / fungus w:4 / bush w:2
 MONS:    fire dragon / ice dragon / lindwurm / hell hound
 MONS:    death yak / griffon / catoblepas / dire elephant
 MONS:    hydra / anaconda / red wasp w:2 / redback w:3 / wolf spider w:5 / harpy
-MONS:    spriggan druid, spriggan rider, sphinx / phoenix / hell beast
+MONS:    spriggan druid, spriggan rider, sphinx / hell beast
 ITEM:    pear q:1 / apple q:1 / choko q:1 / apricot q:1 / \
          orange q:1 / banana q:1 / rambutan q:1 / lychee q:1
 NSUBST:  ' : 1:2 / 1:3 / 1:4 / 2 = 233444. / *:.
