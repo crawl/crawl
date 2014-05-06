@@ -135,110 +135,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################
-# Sea of Fire
-#
-# By minmay.
-#
-# All arrivals from above (and one from below) bubbles just lead to downward
-# escape hatches.  The other two staircases from below lead to bubbles with
-# some loot.  For the main fight, you have to fly or teleport.
-# The opposition is nasty, but this map is deep enough.
-NAME:    minmay_sea_of_fire
-TAGS:    no_rotate uniq_d_encompass
-ORIENT:  encompass
-MONS:    hell hound / nothing
-MONS:    lindwurm
-MONS:    fire drake / steam dragon w:1
-MONS:    fire giant / fire dragon / mottled dragon w:5 / efreet w:2
-MONS:    smoke demon
-MONS:    hell knight / nothing w:5
-KMONS:   7 = molten gargoyle
-KFEAT:   7 = l
-KMONS:   8 = iron devil ; mundane plate armour . great sword ego:flaming ident:type
-KMONS:   9 = Xtahua, hellephant
-KMONS:   $ = 0 / nothing w:90
-KITEM:   $ = $
-NSUBST:  = = 1 = +v / *:v
-SUBST:   ' : l.
-: _G.set_random_mon_list("place:" .. you.where() .. " w:75 / fire drake / " ..
-:     "fire dragon / hell hound / efreet / fire crab / fire giant w:4 / " ..
-:     "mottled dragon / fire elemental / red devil / hell knight w:3 / " ..
-:     "molten gargoyle w:3 / salamander mystic band w:15")
-MARKER:  % = lua:props_marker { portal=1 }
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxllllxxxxxxxxxlllllxxxll.3..v$$$$$$$$v......0..vxxxxxx.....xxxxxxx
-xxxxxxxxxxxxxllllllllllxxxxllllllllllll...=$$$$$$$$+....0....vxxxx....0....xxxxx
-xxxxxxxxxxxlllllxxllllllllllllllllllllllllvv=$$$$$$v..vvvvv.0vxll0..>.......xxxx
-xxxxxxxxxlllllllllllllllllllllllllllllllllllv$$$$$$v4.v...v..vllll.....x..0..xxx
-xxxxxxxllxxxxxllllllllllllllllllllllllllllllvvv$$$$v..v.].v..vllllll.0.......xxx
-xxxxxxlxxx..1xxx..lllxx.0..llxxlllllllllllllllv$$$$v......v..vlllllllll.......xx
-xxxxxlxx..1.....x...........xx..llllllllllllllvvvvvvvvvvvvv++vllllllllxx.0.x..xx
-xxxxlxx..xxxx1..1.x........0......lllllllllllllxxxxxllxxxll.3llllllllllxxxxx..xx
-xxxxlx.1xx{.x.........x............llllllllllllllxxllllllll..llllllllllllxxxx.xx
-xxxxlx..xxx.xl1..1..............2>.lllllllllllllllllllll.......lllllllllllxxx..x
-xxxllxx..1.xxl.........0.....0.....lllllxllllllllllll...x..........lllllllxx...x
-xxxlllxx..xxlll1...x.............xlllllxxllllllllllx........x...xll.llllllx[...x
-xxlllllxxxxlllllll........0....llxxllxxxllllllllll.....x...xx6.6xlll.lllllxxx..x
-xllllllllllllllllllll....x.llll.llxxxxxxllllllllllx...xx6.6xxx..xxll.llllllxxxxx
-xllllllllllllllllllllllllllllll.llllxxlllllllllllxx6.6xx..xxxxxxxxlll.lllllllxxx
-xlllllllllllllllllllllllllllllll.llllllllllllllllxxxx.xxxxxxxxxxxxllll.lllllllxx
-xxllllllllllllllllllllllllllllll.lllllllllllllllxxxxxxxxxxxxxxxxxllllll..lllllxx
-xxxllllllllllxxllllllllllllllllxx.llllllllllllllxxxxxxxxxxxxxxxxllllllx..ll...xx
-xxxlllllllllxxxxllllllllllllllxxxx...llllllllllllxxxxxxxxxxxxxllllllll..3..lll<x
-xxlllllllll..>xxlllllllvvvvvvvvvvxxx3.xxxllllllllllxxxxxxlllllllllllllll..lllllx
-xlllllllll....xxllllllxv..0....*vxxxxxxvvvvvvvvlllllllllllllllllllllllllllllllxx
-xlllllllll..3..xllllllxv..0...4*vxxxxxxv.4v...vlllllllvvv7vvv7vvv7vvv7vvv7vvvlxx
-xxlllllllll....llllllxxv..vvvvvvvvvvvvvv..v.}.vxllllllvvvvvvvvvvvvvvvvvvvvvvvllx
-xxllllllllll..lllllllxxv...........0......v...vxllllllvv.4***||v...v9.**|||vvllx
-xxllllllllllllllllllllxv....0.0.....0.....v...vxxlllll7v4.***||v.>.v...***|v7llx
-xxxllllllllllllllllllllv.vv.....vvvvvvvv......vxxlllllvv..vvvvvv...vv....*vvvllx
-xxxllllllllllllllllllllv..v.0.0.vlxxxxxv......vxllllllvv4......vv+vv.......vvlxx
-xxxllllllllxxllllllllllv4<v.....vllllxxvvvvvvvvlllllllvv...4...v...v.......vvlxx
-xxxlllllllxxxxxllllllllvvvv..vvvvlllllxxxlllllllllllll7vvvvv..vv...vvvv++vvv7lxx
-xxllllllllxxxxllllllllllll..3.llllllllllllllllllllllllvv4.....v6...6v8....8vvlxx
-xllllllllllxxllllllllllllll..llllllllllllllllllllxxlllvv......v.....v......vvllx
-xllllllllllllllllllllllllllll.llllllllllllllllllxxxxllvv......v6...6v......vvllx
-xxlllllllllllllllllllllllllll.lllllllllllllllllxxxxxll7v......v.....v8....8v7llx
-xxllllllllllllllllllllllllllx.xllllll...lllllllxxxxlllvv.....4v6...6vvv++vvvvllx
-xlllllllllllllllxxlllllllll...xxllll..0....xlllllxxlllvv..vvvvvv...vv......vvlxx
-xllllllllllllllxxxxlllllll.xxx.xll......xx....llllllllvv.......v...v.......vvlxx
-xllllllxxllllllxxvvvvllll.lxxxl...lll..xx...0..lllllll7v..............v..v.v7lxx
-xxlllllxxxlllllllv00v.l..llllllllllll...0......lllllllvv.......v...v.......vvlxx
-xxlllllllllllllllv00v..lllllllllllllll.........lllllllvv......vv...vv......vvlxx
-xxxllllllllllllllvvv.vvvlllllllllllllll..x....llllllllvv1vvvv1v3...3v.v..v.vvlxx
-xxx...lllllllllllv**v00vlllllllllllllll..0..xlllllllll7v1v**v1v.....v......v7lxx
-xxx1....lllllllllv**v00vllllllllllllllll.....lllllllllvv1....1v.....v4....4vvlxx
-xxxx.x.1.llllllllvvvvvvvllllllllllllllxx...0..lllllllxvvvvvvvvv.....vvvvvvvvvllx
-xxxx1..xxxxxlllllllxxxxxllllllllllllllxxxx....llllllxxvvv7vvv7v+++++v7vvv7vvvllx
-xxxx..xxxxxxxxllllllxxllllllllxxxllllllxxxx..llllllxxxxxlllllll8...8lllllllllllx
-xxxx.3xxxxxxxxxxlllllllllllllxxxxxllllllxx.llllllllxxxxlllllllll8.8llllllllllllx
-xxx...xxxxxxxxxxxllllllllllllxxxxxlllllll.lllllllllllxxlllllllllllllllllllllllxx
-xxx..xxxxxxxxxxxxxlllllllllllllxxxlllllll.llllllllllllllllllllllllllllllllllllxx
-xx...xxx>%%xxxxxxxllllllllllllllllllllll.lllllllllllllllllllllllllllllllllllllxx
-xx...xxxx%%.xxxxxxlllllllllllllllllllllll.lllllllllllllllllxxlllllllxxxxxllllllx
-x.1..xxxxxx.xxxxxllllllllxxllllllllllllll.lllllllllllllllllxxxxllllxxxxxxxxllllx
-x.....xx...xxxxxlllllllllxxxlllllllllllll.llllll....lllllllxxxlllllxxx$$$xlxlllx
-x.x.1...xxxxxxxxlllllllll..xllllllllllll.lllllll.0....lllllllllllllxx$$$$$xxllxx
-x......xxxxxxxxlllllll...x......llllllll.llllll.x...0.llllllllllllxxx$>$$xxxllxx
-x.1..x..xxxxxxlllllll.ll.....lll.lllll...xlllll...>...llllllllllllxx$$$$xxxlllxx
-xx........llll''''ll'lll.v++vllll..l...3...ll...0...x.llllllllllllxxx$$xxxxlllxx
-xx.1..........llll''lllvvv..vvvllll....x.....xx....0..xxlllllllllllxxxxxxxlllxxx
-xxx........xllllllllllvv......vvllllxx...xxxxxxx..x..xxxxxllllllllllxxxllllllxxx
-xxxx..x.1..xxlllllllllv.0......vlllllxxxxxxxxxxxx....xxxxlllllllllllllllllllxxxx
-xxx.......1.xxlllllllvv...vv0..vvlllllxxxxllxxxxxx.xxxxllllllllllllllllllllxxxxx
-xxx.x..3....xxlllllllv...v%%v..0vllllllllllllllxxxxxxxlllllllllllllllllllxxxxxxx
-xx..x.......xlllllllxv0..v%%v...vllllllllllllllllxxxxlll..1.llll..1.llllxxx...xx
-xx.xx...x..llllllllxxvv...vv...vvllllllllllllllllllllll1llll.1...x....lxxx).x..x
-x.xxxx1...lllllllllxxxv..0.....vllllllllllll.xlllllll..llllllll.1....xxxxxxxxx1x
-x.xxxxxx..lllllllllllxvv.....0vvlllllllllll....lll..1lllllllllll..xx1....xxx1..x
-x.xxxxxxxllllllllllllllvvv..vvvllllllllllll..5....llllllllllllxxxxxxxx...1....xx
-xx(xxxxxxxxllllllllllllllv++v...lllllllllxxxx<..llllllllllllxxxxxxxxxxxxx..1.xxx
-xxxxxxxxxxxxxxxllllxxxlll........llllxxxxxxxxx...llllllllxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
 ##############################################################################
 # The New Box Level (dp)
 #
@@ -1444,12 +1340,12 @@ MONS:    giant orange brain / eye of devastation / golden eye w:5 / \
          dire elephant simulacrum w:1 / dancing weapon w:5 ; long sword good_item
 MONS:    giant eyeball w:45 / bone dragon w:15 / tentacled monstrosity w:15 / \
          glowing shapeshifter hd:12 w:30 / glowing shapeshifter hd:13 w:15 / \
-         azure jelly / thorn hunter w:5 / flayed ghost / \
+         azure jelly / flayed ghost / \
          dancing weapon w:5 ; glaive good_item / war gargoyle
 MONS:    centaur warrior / yaktaur w:5 / orc knight / \
          deep elf priest w:5 / deep troll / boggart w:5 / \
          rakshasa w:3 / wizard / necromancer / spriggan rider w:5 / \
-         vault sentinel w:2 / cyclops w:5 / kobold demonologist w:3 / \
+         cyclops w:5 / kobold demonologist w:3 / \
          skeletal warrior w:5 / vampire
 KMONS:   8 = orc high priest / orc sorcerer / naga warrior w:5 / naga mage / \
          yaktaur captain w:5 / ogre mage / deep elf knight w:15 / \
