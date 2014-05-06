@@ -1119,56 +1119,85 @@ static void _do_lost_items()
     }
 }
 
+/**
+ * Perform cleanup when leaving a level.
+ *
+ * If returning to the previous level on the level stack (e.g. when leaving the
+ * abyss), pop it off the stack. Delete non-permanent levels. Also check to be
+ * sure no loops have formed in the level stack.
+ *
+ * @param stair_taken   The means used to leave the last level.
+ * @param old_level     The ID of the previous level.
+ * @param return_pos    Set to the level entrance, if popping a stack level.
+ * @return Whether the level was popped onto the stack.
+ */
+bool _leave_level(dungeon_feature_type stair_taken, const level_id& old_level,
+                  coord_def *return_pos)
+{
+    bool popped = false;
+
+    if (!you.level_stack.empty()
+        && you.level_stack.back().id == level_id::current())
+    {
+        *return_pos = you.level_stack.back().pos;
+        you.level_stack.pop_back();
+        env.level_state |= LSTATE_DELETED;
+        popped = true;
+    }
+    else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
+             || stair_taken == DNGN_EXIT_THROUGH_ABYSS
+             || stair_taken == DNGN_STONE_STAIRS_DOWN_I
+             && old_level.branch == BRANCH_ZIGGURAT
+             || old_level.branch == BRANCH_ABYSS)
+    {
+        env.level_state |= LSTATE_DELETED;
+    }
+
+    if (is_level_on_stack(level_id::current())
+        && !player_in_branch(BRANCH_ABYSS))
+    {
+        vector<string> stack;
+        for (unsigned int i = 0; i < you.level_stack.size(); i++)
+            stack.push_back(you.level_stack[i].id.describe());
+        if (you.wizard)
+        {
+            // warn about breakage so testers know it's an abnormal situation.
+            mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
+                 "the same level (%s) twice! It will be trampled upon return.\n"
+                 "The stack has: %s.",
+                 level_id::current().describe().c_str(),
+                 comma_separated_line(stack.begin(), stack.end(),
+                                      ", ", ", ").c_str());
+        }
+        else
+        {
+            die("Attempt to enter a portal (%s) twice; stack: %s",
+                level_id::current().describe().c_str(),
+                comma_separated_line(stack.begin(), stack.end(),
+                                     ", ", ", ").c_str());
+        }
+    }
+
+    return popped;
+}
+
+
+/**
+ * Load the current level.
+ *
+ * @param stair_taken   The means used to enter the level.
+ * @param load_mode     Whether the level is being entered, examined, etc.
+ * @return Whether a new level was created.
+ */
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
     // Did we get here by popping the level stack?
     bool popped = false;
 
-    coord_def return_pos;
+    coord_def return_pos; //TODO: initialize to null
     if (load_mode != LOAD_VISITOR)
-    {
-        if (!you.level_stack.empty()
-            && you.level_stack.back().id == level_id::current())
-        {
-            return_pos = you.level_stack.back().pos;
-            you.level_stack.pop_back();
-            env.level_state |= LSTATE_DELETED;
-            popped = true;
-        }
-        else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
-              || stair_taken == DNGN_EXIT_THROUGH_ABYSS
-              || stair_taken == DNGN_STONE_STAIRS_DOWN_I
-                 && old_level.branch == BRANCH_ZIGGURAT
-              || old_level.branch == BRANCH_ABYSS)
-        {
-            env.level_state |= LSTATE_DELETED;
-        }
-
-        if (is_level_on_stack(level_id::current()) && !player_in_branch(BRANCH_ABYSS))
-        {
-            vector<string> stack;
-            for (unsigned int i = 0; i < you.level_stack.size(); i++)
-                stack.push_back(you.level_stack[i].id.describe());
-            if (you.wizard)
-            {
-                // warn about breakage so testers know it's an abnormal situation.
-                mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
-                        "the same level (%s) twice! It will be trampled upon return.\n"
-                        "The stack has: %s.",
-                        level_id::current().describe().c_str(),
-                        comma_separated_line(stack.begin(), stack.end(),
-                            ", ", ", ").c_str());
-            }
-            else
-            {
-                die("Attempt to enter a portal (%s) twice; stack: %s",
-                        level_id::current().describe().c_str(),
-                        comma_separated_line(stack.begin(), stack.end(),
-                            ", ", ", ").c_str());
-            }
-        }
-    }
+        popped = _leave_level(stair_taken, old_level, &return_pos);
 
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
