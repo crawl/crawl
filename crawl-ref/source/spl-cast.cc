@@ -1603,8 +1603,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CALL_CANINE_FAMILIAR:
         return cast_call_canine_familiar(powc, god, fail);
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_SUMMON_ELEMENTAL:
-        return cast_summon_elemental(powc, god, MONS_NO_MONSTER, 2, 0, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_SUMMON_ICE_BEAST:
         return cast_summon_ice_beast(powc, god, fail);

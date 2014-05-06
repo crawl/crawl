@@ -32,10 +32,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail);
 
 spret_type cast_summon_swarm(int pow, god_type god, bool fail);
 spret_type cast_call_canine_familiar(int pow, god_type god, bool fail);
-spret_type cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
-                                 monster_type restricted_type = MONS_NO_MONSTER,
-                                 int unfriendly = 2, int horde_penalty = 0,
-                                 bool fail = false);
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail);
 spret_type cast_monstrous_menagerie(actor* caster, int pow, god_type god,
                                  bool fail = false);
