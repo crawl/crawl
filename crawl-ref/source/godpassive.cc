@@ -712,13 +712,19 @@ void qazlal_storm_clouds()
     for (radius_iterator ri(you.pos(), radius, C_ROUND, LOS_SOLID, true);
          ri; ++ri)
     {
-        if (cell_is_solid(*ri) || env.cgrid(*ri) != EMPTY_CLOUD
-            || monster_at(*ri) && mons_is_firewood(monster_at(*ri)))
+        int count = 0;
+        if (cell_is_solid(*ri) || env.cgrid(*ri) != EMPTY_CLOUD)
         {
             continue;
         }
 
-        candidates.push_back(*ri);
+        // No clouds in corridors.
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+            if (!cell_is_solid(*ai))
+                count++;
+
+        if (count >= 3)
+            candidates.push_back(*ri);
     }
     const int count =
         div_rand_round(LOS_RADIUS *
@@ -726,26 +732,19 @@ void qazlal_storm_clouds()
                         - piety_breakpoint(0))
                        * candidates.size() * you.time_taken
                        / (piety_breakpoint(5) - piety_breakpoint(0)),
-                       LOS_RADIUS * BASELINE_DELAY);
+                       10 * LOS_RADIUS * BASELINE_DELAY);
     if (count < 0)
         return;
     shuffle_array(candidates);
     int placed = 0;
     for (unsigned int i = 0; placed < count && i < candidates.size(); i++)
     {
-        bool skip = false, water = false;
+        bool water = false;
         for (adjacent_iterator ai(candidates[i]); ai; ++ai)
         {
-            if (env.cgrid(*ai) != EMPTY_CLOUD)
-            {
-                skip = true;
-                break;
-            }
             if (feat_is_watery(grd(*ai)))
                 water = true;
         }
-        if (skip)
-            continue;
 
         // No flame clouds over water to avoid steam generation.
         cloud_type ctype;
