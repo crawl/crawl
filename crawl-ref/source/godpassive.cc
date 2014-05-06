@@ -727,12 +727,11 @@ void qazlal_storm_clouds()
             candidates.push_back(*ri);
     }
     const int count =
-        div_rand_round(LOS_RADIUS *
-                       (min((int)you.piety, piety_breakpoint(5))
+        div_rand_round((min((int)you.piety, piety_breakpoint(5))
                         - piety_breakpoint(0))
-                       * candidates.size() * you.time_taken
-                       / (piety_breakpoint(5) - piety_breakpoint(0)),
-                       10 * LOS_RADIUS * BASELINE_DELAY);
+                       * candidates.size() * you.time_taken,
+                       (piety_breakpoint(5) - piety_breakpoint(0))
+                       * 10 * BASELINE_DELAY);
     if (count < 0)
         return;
     shuffle_array(candidates);
