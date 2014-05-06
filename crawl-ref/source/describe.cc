@@ -4910,7 +4910,7 @@ void describe_god(god_type which_god, bool give_title)
         {
             have_any = true;
             _print_final_god_abil_desc(which_god,
-                                       "You can displace your own clouds.",
+                                       "You are immune to your own clouds.",
                                        ABIL_NON_ABILITY);
         }
 

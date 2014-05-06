@@ -818,6 +818,13 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return true;
     }
 
+    // Qazlalites get immunity to their own clouds.
+    if (player && cloud.whose == KC_YOU
+        && you_worship(GOD_QAZLAL) && !player_under_penance())
+    {
+        return true;
+    }
+
     switch (cloud.type)
     {
     case CLOUD_FIRE:

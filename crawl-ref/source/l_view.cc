@@ -39,9 +39,8 @@ LUAFN(view_is_safe_square)
     if (c != CLOUD_NONE
         && is_damaging_cloud(c, true)
         && (!you_worship(GOD_QAZLAL)
-            || !YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)
-            || adjacent(p, you.pos())
-               && env.map_knowledge(you.pos()).cloud() != CLOUD_NONE))
+            || player_under_penance()
+            || !YOU_KILL(env.map_knowledge(p).cloudinfo()->killer)))
     {
         PLUARET(boolean, false);
         return 1;
