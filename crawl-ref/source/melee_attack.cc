@@ -1933,7 +1933,7 @@ bool melee_attack::player_monattk_hit_effects()
 
         special_damage = inflict_damage(special_damage);
         if (special_damage > 0)
-            defender->expose_to_element(special_damage_flavour, 2);
+            defender->expose_to_element(special_damage_flavour, 2, false);
     }
 
     if (stab_attempt && stab_bonus > 0 && weapon
@@ -2808,7 +2808,7 @@ bool melee_attack::mons_attack_effects()
         if (special_damage > 0
             && inflict_damage(special_damage, special_damage_flavour))
         {
-            defender->expose_to_element(special_damage_flavour, 2);
+            defender->expose_to_element(special_damage_flavour, 2, false);
         }
     }
 
@@ -2951,7 +2951,7 @@ void melee_attack::mons_apply_attack_flavour()
             _print_resist_messages(defender, base_damage, BEAM_FIRE);
         }
 
-        defender->expose_to_element(BEAM_FIRE, 2);
+        defender->expose_to_element(BEAM_FIRE, 2, false);
         break;
 
     case AF_COLD:
@@ -2975,7 +2975,7 @@ void melee_attack::mons_apply_attack_flavour()
             _print_resist_messages(defender, base_damage, BEAM_COLD);
         }
 
-        defender->expose_to_element(BEAM_COLD, 2);
+        defender->expose_to_element(BEAM_COLD, 2, false);
         break;
 
     case AF_ELEC:
@@ -3284,7 +3284,7 @@ void melee_attack::mons_apply_attack_flavour()
             _print_resist_messages(defender, special_damage, BEAM_FIRE);
         }
 
-        defender->expose_to_element(BEAM_FIRE, 2);
+        defender->expose_to_element(BEAM_FIRE, 2, false);
         break;
 
     case AF_DRAIN_SPEED:
@@ -3421,7 +3421,7 @@ void melee_attack::mons_apply_attack_flavour()
             }
         }
 
-        defender->expose_to_element(BEAM_FIRE, 2);
+        defender->expose_to_element(BEAM_FIRE, 2, false);
         break;
     }
 }
