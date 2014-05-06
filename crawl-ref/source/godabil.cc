@@ -3782,35 +3782,25 @@ void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell)
     shadow_monster_reset(mon);
 }
 
-static potion_type _gozag_potion_pairs[][3] =
+static potion_type _gozag_potion_list[][4] =
 {
-    { POT_HEAL_WOUNDS, POT_CURING, NUM_POTIONS },
-    { POT_HEAL_WOUNDS, POT_HEAL_WOUNDS, NUM_POTIONS },
-    { POT_HEAL_WOUNDS, POT_MAGIC, NUM_POTIONS },
-    { POT_CURING, POT_MAGIC, NUM_POTIONS },
-    { POT_HEAL_WOUNDS, POT_BERSERK_RAGE, NUM_POTIONS },
-    { POT_HASTE, POT_HEAL_WOUNDS, NUM_POTIONS },
-    { POT_HASTE, POT_MIGHT, NUM_POTIONS },
-    { POT_HASTE, POT_BRILLIANCE, NUM_POTIONS },
-    { POT_HASTE, POT_AGILITY, NUM_POTIONS },
-    { POT_MIGHT, POT_AGILITY, NUM_POTIONS },
-    { POT_HASTE, POT_FLIGHT, NUM_POTIONS },
-    { POT_HASTE, POT_RESISTANCE, NUM_POTIONS },
-    { POT_RESISTANCE, POT_AGILITY, NUM_POTIONS },
-    { POT_RESISTANCE, POT_FLIGHT, NUM_POTIONS },
-    { POT_INVISIBILITY, POT_AGILITY, NUM_POTIONS },
-    { POT_CURE_MUTATION, POT_CURE_MUTATION, NUM_POTIONS },
-};
-
-static potion_type _gozag_potion_triples[][4] =
-{
-    { POT_HEAL_WOUNDS, POT_HEAL_WOUNDS, POT_HEAL_WOUNDS, NUM_POTIONS },
-    { POT_HEAL_WOUNDS, POT_HEAL_WOUNDS, POT_CURING, NUM_POTIONS },
+    { POT_HEAL_WOUNDS, NUM_POTIONS, NUM_POTIONS, NUM_POTIONS },
+    { POT_HEAL_WOUNDS, POT_CURING, NUM_POTIONS, NUM_POTIONS },
+    { POT_HEAL_WOUNDS, POT_MAGIC, NUM_POTIONS, NUM_POTIONS, },
+    { POT_CURING, POT_MAGIC, NUM_POTIONS, NUM_POTIONS },
+    { POT_HEAL_WOUNDS, POT_BERSERK_RAGE, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_HEAL_WOUNDS, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_BRILLIANCE, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_AGILITY, NUM_POTIONS, NUM_POTIONS },
+    { POT_MIGHT, POT_AGILITY, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_FLIGHT, NUM_POTIONS, NUM_POTIONS },
+    { POT_HASTE, POT_RESISTANCE, NUM_POTIONS, NUM_POTIONS },
+    { POT_RESISTANCE, POT_AGILITY, NUM_POTIONS, NUM_POTIONS },
+    { POT_RESISTANCE, POT_FLIGHT, NUM_POTIONS, NUM_POTIONS },
+    { POT_INVISIBILITY, POT_AGILITY, NUM_POTIONS , NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_CURING, POT_MAGIC, NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_CURING, POT_BERSERK_RAGE, NUM_POTIONS },
-    { POT_HEAL_WOUNDS, POT_HASTE, POT_MIGHT, NUM_POTIONS },
     { POT_HEAL_WOUNDS, POT_HASTE, POT_AGILITY, NUM_POTIONS },
-    { POT_HASTE, POT_MIGHT, POT_AGILITY, NUM_POTIONS },
     { POT_MIGHT, POT_AGILITY, POT_BRILLIANCE, NUM_POTIONS },
     { POT_HASTE, POT_AGILITY, POT_FLIGHT, NUM_POTIONS },
     { POT_FLIGHT, POT_AGILITY, POT_INVISIBILITY, NUM_POTIONS },
@@ -3819,37 +3809,17 @@ static potion_type _gozag_potion_triples[][4] =
     { POT_RESISTANCE, POT_INVISIBILITY, POT_AGILITY, NUM_POTIONS },
 };
 
-static potion_type _gozag_bad_potions[] =
-{
-    POT_POISON,
-    POT_DEGENERATION,
-    POT_DECAY,
-    POT_STRONG_POISON,
-    POT_LIGNIFY,
-    POT_CONFUSION,
-};
-
-static bool _gozag_allow_duplicate(potion_type which)
-{
-    return which == POT_CURING // only for healing purposes
-           || which == POT_HEAL_WOUNDS
-           || which == POT_CURE_MUTATION;
-}
-
 static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 {
     for (; *which != NUM_POTIONS; which++)
     {
         bool dup = false;
-        if (!_gozag_allow_duplicate(*which))
-        {
-            for (unsigned int i = 0; i < vec.size(); i++)
-                if (vec[i].get_int() == *which)
-                {
-                    dup = true;
-                    break;
-                }
-        }
+        for (unsigned int i = 0; i < vec.size(); i++)
+            if (vec[i].get_int() == *which)
+            {
+                dup = true;
+                break;
+            }
         if (!dup)
             vec.push_back(*which);
     }
@@ -3859,7 +3829,13 @@ static void _gozag_add_potions(CrawlVector &vec, potion_type *which)
 
 static void _gozag_add_bad_potion(CrawlVector &vec)
 {
-    vec.push_back(_gozag_bad_potions[random2(ARRAYSZ(_gozag_bad_potions))]);
+    const potion_type what = random_choose_weighted(20, POT_CONFUSION,
+                                                    10, POT_DECAY,
+                                                    10, POT_LIGNIFY,
+                                                     5, POT_DEGENERATION,
+                                                     2, POT_STRONG_POISON,
+                                                    -1);
+    vec.push_back(what);
 }
 
 bool gozag_potion_petition()
@@ -3899,23 +3875,11 @@ bool gozag_potion_petition()
                     ? POT_BLOOD
                     : POT_PORRIDGE);
             }
-            else switch (random2(4))
+            else
             {
-                case 0:
-                default:
-                    ADD_POTIONS(*pots[i], _gozag_potion_pairs);
-                    break;
-                case 1:
-                    ADD_POTIONS(*pots[i], _gozag_potion_triples);
-                    break;
-                case 2:
-                    ADD_POTIONS(*pots[i], _gozag_potion_pairs);
-                    ADD_POTIONS(*pots[i], _gozag_potion_pairs);
-                    break;
-                case 3:
-                    ADD_POTIONS(*pots[i], _gozag_potion_pairs);
-                    ADD_POTIONS(*pots[i], _gozag_potion_triples);
-                    break;
+                ADD_POTIONS(*pots[i], _gozag_potion_list);
+                if (coinflip())
+                    ADD_POTIONS(*pots[i], _gozag_potion_list);
             }
             if (i < GOZAG_MAX_POTIONS - 1 && coinflip())
             {
