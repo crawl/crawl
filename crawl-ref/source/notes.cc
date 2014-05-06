@@ -284,6 +284,8 @@ string Note::describe(bool when, bool where, bool what) const
         case NOTE_GOD_GIFT:
             result << "Received a gift from "
                    << god_name(static_cast<god_type>(first));
+            if (!name.empty())
+                result << " (" << name << ")";
             break;
         case NOTE_ID_ITEM:
             result << "Identified " << name;

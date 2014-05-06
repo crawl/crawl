@@ -297,6 +297,8 @@ static bool _altar_prayer()
 
             simple_god_message(message.c_str());
             you.one_time_ability_used.set(you.religion);
+            take_note(Note(NOTE_ID_ITEM, 0, 0,
+                      j->name(DESC_A).c_str(), "duplicated by Gozag"));
             return true;
         }
         if (prompted)
@@ -332,19 +334,23 @@ static bool _altar_prayer()
             case 0:
                 you.attribute[ATTR_DIVINE_FIRE_RES] = 1;
                 simple_god_message(" grants you protection from fire!");
+                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rF+"));
                 break;
             case 1:
                 you.attribute[ATTR_DIVINE_COLD_RES] = 1;
                 simple_god_message(" grants you protection from cold!");
+                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rC+"));
                 break;
             case 2:
                 you.attribute[ATTR_DIVINE_ELEC_RES] = 1;
                 simple_god_message(" grants you protection from electricity!");
+                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "rElec"));
                 break;
             case 3:
                 you.attribute[ATTR_DIVINE_AC] = 1;
                 simple_god_message(
                     " grants you protection from physical attacks!");
+                take_note(Note(NOTE_GOD_GIFT, you.religion, 0, "AC+3"));
                 you.redraw_armour_class = true;
                 break;
         }
