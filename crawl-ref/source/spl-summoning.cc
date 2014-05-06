@@ -268,67 +268,6 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _count_summons(monster_type type)
-{
-    int cnt = 0;
-
-    for (monster_iterator mi; mi; ++mi)
-        if (mi->type == type
-            && mi->attitude == ATT_FRIENDLY // friendly() would count charmed
-            && mi->is_summoned())
-        {
-            cnt++;
-        }
-
-    return cnt;
-}
-
-static monster_type _feature_to_elemental(const coord_def& where,
-                                          monster_type strict_elem)
-{
-    if (!in_bounds(where))
-        return MONS_NO_MONSTER;
-
-    if (strict_elem != MONS_NO_MONSTER
-        && strict_elem != MONS_EARTH_ELEMENTAL
-        && strict_elem != MONS_FIRE_ELEMENTAL
-        && strict_elem != MONS_WATER_ELEMENTAL
-        && strict_elem != MONS_AIR_ELEMENTAL)
-    {
-        return MONS_NO_MONSTER;
-    }
-
-    const bool any_elem = strict_elem == MONS_NO_MONSTER;
-
-    if ((any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
-        && (grd(where) == DNGN_ROCK_WALL || grd(where) == DNGN_CLEAR_ROCK_WALL))
-    {
-        return MONS_EARTH_ELEMENTAL;
-    }
-
-    if ((any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
-        && (env.cgrid(where) != EMPTY_CLOUD
-            && env.cloud[env.cgrid(where)].type == CLOUD_FIRE
-            || grd(where) == DNGN_LAVA))
-    {
-        return MONS_FIRE_ELEMENTAL;
-    }
-
-    if ((any_elem || strict_elem == MONS_WATER_ELEMENTAL)
-        && feat_is_watery(grd(where)))
-    {
-        return MONS_WATER_ELEMENTAL;
-    }
-
-    if ((any_elem || strict_elem == MONS_AIR_ELEMENTAL)
-        && feat_has_dry_floor(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
-    {
-        return MONS_AIR_ELEMENTAL;
-    }
-
-    return MONS_NO_MONSTER;
-}
-
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
     fail_check();
