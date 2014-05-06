@@ -276,7 +276,7 @@ static bool _altar_prayer()
         bool prompted = false;
         for (stack_iterator j(you.pos()); j; ++j)
         {
-            if (is_artefact(*j))
+            if (is_artefact(*j) || item_is_orb(*j) || item_is_rune(*j))
                 continue;
 
             prompted = true;
