@@ -292,23 +292,22 @@ static void _count_gold()
     }
     else if (you_worship(GOD_GOZAG))
     {
-        int detected_count = 0;
         for (unsigned int i = 0; i < gold_places.size(); i++)
         {
             bool detected = false;
+            int dummy = gold_piles[i]->link;
             coord_def &pos = gold_places[i];
+            unlink_item(dummy);
+            move_item_to_grid(&dummy, pos, true);
             if (!env.map_knowledge(pos).item()
                 || env.map_knowledge(pos).item()->base_type != OBJ_GOLD)
             {
-                detected_count++;
                 detected = true;
             }
             update_item_at(pos, true);
             if (detected)
                 env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
         }
-        if (detected_count)
-            mprf(MSGCH_GOD, "You feel very greedy and sense gold!");
     }
 }
 

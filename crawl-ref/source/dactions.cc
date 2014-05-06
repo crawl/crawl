@@ -308,7 +308,6 @@ static void _apply_daction(daction_type act)
         break;
     case DACT_GOLD_ON_TOP:
     {
-        int count = 0;
         for (rectangle_iterator ri(0); ri; ++ri)
         {
             for (stack_iterator j(*ri); j; ++j)
@@ -323,7 +322,6 @@ static void _apply_daction(daction_type act)
                     if (!env.map_knowledge(*ri).item()
                         || env.map_knowledge(*ri).item()->base_type != OBJ_GOLD)
                     {
-                        count++;
                         detected = true;
                     }
                     update_item_at(*ri, true);
@@ -333,8 +331,6 @@ static void _apply_daction(daction_type act)
                 }
             }
         }
-        if (count)
-            mprf(MSGCH_GOD, "You feel very greedy and sense gold!");
         break;
     }
     case DACT_REMOVE_GOZAG_SHOPS:
