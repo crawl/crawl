@@ -103,8 +103,6 @@ static bool _builder_normal();
 static void _builder_items();
 static void _builder_monsters();
 static coord_def _place_specific_feature(dungeon_feature_type feat);
-static void _place_spec_shop(const coord_def& where,
-                             shop_spec* spec, bool representative = false);
 static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
                                  int charges = 0);
 static void _place_branch_entrances(bool use_vaults);
@@ -3362,7 +3360,7 @@ static void _place_gozag_shop(dungeon_feature_type stair)
             if (!kmspec.get_feat().shop.get())
                 die("Invalid shop spec?");
         }
-        _place_spec_shop(*shop_place, kmspec.get_feat().shop.get());
+        place_spec_shop(*shop_place, kmspec.get_feat().shop.get());
 
         shop_struct *shop = get_shop(*shop_place);
         ASSERT(shop);
@@ -5150,7 +5148,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     else if (f.glyph >= 0)
         _vault_grid_glyph(place, where, f.glyph);
     else if (f.shop.get())
-        _place_spec_shop(where, f.shop.get());
+        place_spec_shop(where, f.shop.get());
     else
         grd(where) = DNGN_FLOOR;
 
@@ -5588,7 +5586,7 @@ void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative)
 {
     shop_spec spec(static_cast<shop_type>(force_s_type));
-    _place_spec_shop(where, &spec, representative);
+    place_spec_shop(where, &spec, representative);
 }
 
 int greed_for_shop_type(shop_type shop, int level_number)
@@ -5604,8 +5602,8 @@ int greed_for_shop_type(shop_type shop, int level_number)
     return 10 + random2(5) + random2(level_number / 2);
 }
 
-static void _place_spec_shop(const coord_def& where,
-                             shop_spec* spec, bool representative)
+void place_spec_shop(const coord_def& where,
+                     shop_spec* spec, bool representative)
 {
     int level_number = env.absdepth0;
     int force_s_type = static_cast<int>(spec->sh_type);
