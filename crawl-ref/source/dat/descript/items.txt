@@ -345,12 +345,9 @@ forces of nature.
 %%%%
 book of the warp
 
-A book of Translocations spells for experienced Warpers. Its shimmering pages
-exist in multiple dimensions at once, not all of which obey the usual rules of
-geometry. Some pages disappear when they're turned, while others appear out of
-nowhere, and others pass directly through the other pages or themselves. Some
-of the pages have three sides, or only one, or have fractional numbers of
-corners. The effect can be disconcerting.
+A book of Translocations spells for experienced Warpers. Some of its pages seem
+to have three sides, or only one, or have fractional numbers of corners. The
+effect can be disconcerting.
 %%%%
 book of transfigurations
 
