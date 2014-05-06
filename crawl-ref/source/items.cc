@@ -3302,6 +3302,8 @@ string item_def::to_spec() const
         ego = "vorpal";
     if (base_type == OBJ_MISSILES && get_ammo_brand(*this) == SPMSL_SLEEP)
         ego = "sleep"; // ugh special cases
+    if (base_type == OBJ_MISSILES && get_ammo_brand(*this) == SPMSL_POISONED)
+        ego = "poisoned"; // ditto
 
     ASSERT(!is_artefact(*this));
 
