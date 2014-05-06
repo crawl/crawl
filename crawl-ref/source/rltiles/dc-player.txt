@@ -716,9 +716,9 @@ axe_short AXE_SHORT
 
 ## launchers
 sling SLING
-shortbow SHORTBOW
-shortbow_two SHORTBOW2
-shortbow_three SHORTBOW3
+bow BOW
+bow_two BOW2
+bow_three BOW3
 great_bow GREAT_BOW
 storm_bow STORM_BOW
 crossbow CROSSBOW
