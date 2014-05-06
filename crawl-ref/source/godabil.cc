@@ -4007,6 +4007,64 @@ static bool _duplicate_shop_type(int cur, shop_type type)
     return false;
 }
 
+/**
+ * Calculate some expected price of the contents of the shop, without
+ * exact reference to shop contents.
+ * This probably could use tweaking.
+ */
+static int _gozag_price_for_shop_type(shop_type type, int greed)
+{
+    item_def dummy;
+    dummy.quantity = 1;
+    switch (type)
+    {
+        case SHOP_WEAPON:
+        case SHOP_WEAPON_ANTIQUE:
+            dummy.base_type = OBJ_WEAPONS;
+            dummy.sub_type = WPN_LONG_SWORD;
+            break;
+        case SHOP_ARMOUR:
+        case SHOP_ARMOUR_ANTIQUE:
+            dummy.base_type = OBJ_ARMOUR;
+            dummy.sub_type = ARM_SCALE_MAIL;
+            break;
+        case SHOP_GENERAL:
+        case SHOP_GENERAL_ANTIQUE:
+            dummy.base_type = OBJ_WEAPONS;
+            dummy.sub_type = WPN_CLUB; // go floor trash
+            break;
+        case SHOP_JEWELLERY:
+            dummy.base_type = OBJ_JEWELLERY;
+            dummy.sub_type = AMU_INACCURACY;
+            break;
+        case SHOP_EVOKABLES:
+            dummy.base_type = OBJ_WANDS;
+            dummy.sub_type = WAND_MAGIC_DARTS;
+            break;
+        case SHOP_BOOK:
+            dummy.base_type = OBJ_BOOKS;
+            dummy.sub_type = BOOK_MINOR_MAGIC;
+            break;
+        case SHOP_FOOD:
+            dummy.base_type = OBJ_FOOD;
+            dummy.sub_type = FOOD_BREAD_RATION;
+            break;
+        case SHOP_DISTILLERY:
+            dummy.base_type = OBJ_POTIONS;
+            dummy.sub_type = POT_PORRIDGE;
+            break;
+        case SHOP_SCROLL:
+            dummy.base_type = OBJ_SCROLLS;
+            dummy.sub_type = SCR_RANDOM_USELESSNESS;
+            break;
+        default:
+            die("bad shop type %d", type);
+    }
+
+    const int value = item_value(dummy, false) * greed / 10;
+    return 5 * value + random2avg(11 * value + 1, 3);
+}
+
 bool gozag_call_merchant()
 {
     int max_absdepth = 0;
@@ -4072,9 +4130,6 @@ bool gozag_call_merchant()
                 type = static_cast<shop_type>(random2(NUM_SHOPS));
             }
             while (_duplicate_shop_type(i, type));
-            const bool antique = (type == SHOP_GENERAL_ANTIQUE
-                                  || type == SHOP_WEAPON_ANTIQUE
-                                  || type == SHOP_ARMOUR_ANTIQUE);
             const int greed = greed_for_shop_type(type, level_number);
             int item_count = 5 + random2avg(12, 3);
             you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)].get_string()
@@ -4092,7 +4147,7 @@ bool gozag_call_merchant()
                 = greed;
             vector<string> shop_items;
             int dummy;
-            int price = 0;
+            int price = _gozag_price_for_shop_type(type, greed);
             const int multiplier = (type == SHOP_WEAPON_ANTIQUE
                                     || type == SHOP_ARMOUR_ANTIQUE
                                     || type == SHOP_GENERAL_ANTIQUE) ? 3 : 2;
@@ -4111,8 +4166,6 @@ bool gozag_call_merchant()
                             || (mitm[dummy].base_type != OBJ_MISSILES
                                 && mitm[dummy].base_type != OBJ_FOOD)))
                     {
-                        price += item_value(mitm[dummy], !antique)
-                                 * greed / 10;
                         shop_items.push_back(mitm[dummy].to_spec());
                     }
                     else
