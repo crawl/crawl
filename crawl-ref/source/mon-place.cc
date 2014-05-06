@@ -656,12 +656,12 @@ monster_type resolve_monster_type(monster_type mon_type,
         if (!vault_mon_types.empty())
         {
             int i = 0;
-            monster_type type;
+            int type;
             do
             {
                 i = choose_random_weighted(vault_mon_weights.begin(),
                                            vault_mon_weights.end());
-                type = (monster_type) vault_mon_types[i];
+                type = vault_mon_types[i];
 
                 // If the monster list says not to place, or to place
                 // by level, accept that.
@@ -669,11 +669,11 @@ monster_type resolve_monster_type(monster_type mon_type,
                     break;
             }
             while (mon_type == RANDOM_MOBILE_MONSTER
-                      && mons_class_is_stationary(type)
+                      && mons_class_is_stationary((monster_type)type)
                    || mon_type == RANDOM_COMPATIBLE_MONSTER
-                      && _is_incompatible_monster(type)
+                      && _is_incompatible_monster((monster_type)type)
                    || mon_type == RANDOM_BANDLESS_MONSTER
-                      && _is_banded_monster(type));
+                      && _is_banded_monster((monster_type)type));
 
             int base = vault_mon_bases[i];
             bool banded = vault_mon_bands[i];
@@ -683,7 +683,7 @@ monster_type resolve_monster_type(monster_type mon_type,
             else
             {
                 base_type = (monster_type) base;
-                mon_type  = type;
+                mon_type  = (monster_type) type;
                 if (want_band)
                     *want_band = banded;
                 if (needs_resolution(mon_type))
