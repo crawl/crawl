@@ -1915,6 +1915,22 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_ANTIMAGIC:
         antimagic_affects_defender(damage_done);
         break;
+
+    default:
+        if (using_weapon() && is_unrandom_artefact(*weapon)
+            && weapon->special == UNRAND_HELLFIRE)
+        {
+            calc_elemental_brand_damage(BEAM_HELLFIRE,
+                                        defender->is_monster()
+                                        ? defender->as_monster()->res_hellfire()
+                                        : 0,
+                                        defender->is_icy() ? "melt" : "burn",
+                                        what);
+            defender->expose_to_element(BEAM_HELLFIRE);
+            attacker->god_conduct(DID_UNHOLY, 2 + random2(3));
+            attacker->god_conduct(DID_FIRE, 10 + random2(5));
+        }
+        break;
     }
 
     if (damage_brand == SPWPN_CHAOS && brand != SPWPN_CHAOS && !ret

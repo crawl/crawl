@@ -17,6 +17,8 @@ struct bolt;
 #define ARTEFACT_NAME_KEY   "artefact_name"
 #define ARTEFACT_APPEAR_KEY "artefact_appearance"
 
+#define HELLFIRE_BOLT_KEY "hellfire_bolt"
+
 enum unrand_flag_type
 {
     UNRAND_FLAG_NONE             = 0x00,

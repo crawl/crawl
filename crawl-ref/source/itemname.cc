@@ -1230,6 +1230,9 @@ string ego_type_string(const item_def &item, bool terse)
         else
             return "";
     case OBJ_MISSILES:
+        // HACKHACKHACK
+        if (item.props.exists(HELLFIRE_BOLT_KEY))
+            return "hellfire";
         return _missile_brand_name(get_ammo_brand(item),
             terse ? MBN_TERSE : MBN_BRAND);
     default:
@@ -1381,8 +1384,13 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
     {
         special_missile_type brand  = get_ammo_brand(*this);
 
-        if (!terse && _missile_brand_is_prefix(brand))
-            buff << _missile_brand_name(brand, MBN_NAME) << ' ';
+        if (!terse)
+        {
+            if (props.exists(HELLFIRE_BOLT_KEY))
+                buff << "hellfire ";
+            else if (_missile_brand_is_prefix(brand))
+                buff << _missile_brand_name(brand, MBN_NAME) << ' ';
+        }
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
@@ -1393,7 +1401,12 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             && !basename && !qualname && !dbname)
         {
             if (terse)
-                buff << " (" <<  _missile_brand_name(brand, MBN_TERSE) << ")";
+            {
+                if (props.exists(HELLFIRE_BOLT_KEY))
+                    buff << " (hellfire)";
+                else
+                    buff << " (" <<  _missile_brand_name(brand, MBN_TERSE) << ")";
+            }
             else if (_missile_brand_is_postfix(brand))
                 buff << " of " << _missile_brand_name(brand, MBN_NAME);
         }
