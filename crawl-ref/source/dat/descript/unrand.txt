@@ -131,7 +131,7 @@ mischief-maker and general scamp, it's since fallen into less savoury hands.
 %%%%
 bow of Krishna "Sharnga"
 
-A wonderful golden bow that once belonged to a god of distant lands. It can
+A wonderful golden longbow that once belonged to a god of distant lands. It can
 fire as fast as thought and hurl divine arrows of terrible power — though,
 sadly, none seem to be available here.
 %%%%
@@ -258,7 +258,7 @@ cutlass was thought to be lost with him.
 %%%%
 storm bow
 
-This bow has the colour of dark rain clouds.
+This longbow has the colour of dark rain clouds.
 {{
     if you.can_smell() then
         return "It smells like a storm just past, or one about to begin."
