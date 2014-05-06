@@ -283,7 +283,6 @@ static const pop_entry pop_swamp[] =
 { // Swamp
   {  1,  5,  999, FLAT, MONS_FUNGUS },
   {  1,  5, 1000, FLAT, MONS_PLANT },
-  {  1,  3,   25, DOWN, MONS_GIANT_NEWT },
   {  1,  5,  879, FLAT, MONS_WATER_MOCCASIN },
   {  1,  3,   50, DOWN, MONS_GIANT_SLUG },
   {  1,  5, 1000, FLAT, MONS_ALLIGATOR },
@@ -317,7 +316,6 @@ static const pop_entry pop_swamp[] =
 
 static const pop_entry pop_shoals[] =
 { // Shoals
-  { -1,  3,  100, DOWN, MONS_BAT },
   {  1,  5,  475, FLAT, MONS_SEA_SNAKE },
   {  1,  5,  220, DOWN, MONS_HIPPOGRIFF },
   {  1,  5,  450, SEMI, MONS_GRIFFON },
@@ -340,14 +338,13 @@ static const pop_entry pop_shoals[] =
   {  1,  5,  125, FLAT, MONS_WIND_DRAKE },
   {  1,  5,  195, FLAT, MONS_WATER_ELEMENTAL },
   {  1,  7,  300, SEMI, MONS_WATER_NYMPH },
+  { -1,  3,  100, DOWN, MONS_NO_MONSTER }, // Old bat weight
   {  3,  7,  365, SEMI, MONS_NO_MONSTER },
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_snake[] =
 { // Snake Pit
-  { -1,  5,   52, SEMI, MONS_BALL_PYTHON },
-  {  1,  5,  500, DOWN, MONS_ADDER },
   {  1,  7,  650, DOWN, MONS_WATER_MOCCASIN },
   {  1,  9, 1125, SEMI, MONS_BLACK_MAMBA },
   {  1,  7,  315, SEMI, MONS_ANACONDA },
@@ -362,14 +359,12 @@ static const pop_entry pop_snake[] =
   {  3,  9,  245, SEMI, MONS_GREATER_NAGA },
   {  1,  5,  215, SEMI, MONS_SALAMANDER },
   {  3,  7,  110, PEAK, MONS_SALAMANDER_MYSTIC },
+  {  1,  5,  500, DOWN, MONS_NO_MONSTER }, // Old adder weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
 static const pop_entry pop_spider[] =
 { // Spider Nest
-  { -1,  5,   89, SEMI, MONS_WORM },
-  { -1,  5,   52, SEMI, MONS_GIANT_COCKROACH },
-  { -1,  5,   52, SEMI, MONS_GIANT_MITE },
   {  1,  5,  334, FLAT, MONS_SPIDER },
   {  1,  5,  258, FLAT, MONS_SCORPION },
   {  1,  5,   52, FLAT, MONS_YELLOW_WASP },
@@ -387,6 +382,7 @@ static const pop_entry pop_spider[] =
   {  0, 10,  763, SEMI, MONS_DEMONIC_CRAWLER },
   {  2, 10,  200, PEAK, MONS_GHOST_MOTH },
   {  2,  7,  155, SEMI, MONS_MOTH_OF_WRATH },
+  { -1,  5,  193, SEMI, MONS_NO_MONSTER}, // Old worm/cockroach/mite weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
