@@ -1582,7 +1582,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     if (you.attribute[ATTR_DIVINE_FIRE_RES]
         && !player_under_penance(GOD_QAZLAL))
     {
-        rf += 2;
+        rf++;
     }
 
     // spells:
@@ -1752,7 +1752,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
     if (you.attribute[ATTR_DIVINE_COLD_RES]
         && !player_under_penance(GOD_QAZLAL))
     {
-        rc += 2;
+        rc++;
     }
 
     if (rc < -3)
@@ -6713,7 +6713,7 @@ int player::armour_class() const
         AC += 300;
 
     if (you.attribute[ATTR_DIVINE_AC] && !player_under_penance(GOD_QAZLAL))
-        AC += 500;
+        AC += 300;
 
     if (!player_is_shapechanged()
         || (form == TRAN_DRAGON && player_genus(GENPC_DRACONIAN))
