@@ -454,9 +454,6 @@ int place_monster_corpse(const monster* mons, bool silent,
         return -1;
     }
 
-    if (mons && mons_is_phoenix(mons))
-        corpse.props["destroy_xp"].get_int() = _calc_player_experience(mons);
-
     int o = get_mitm_slot();
 
     // Zotdef corpse creation forces cleanup, otherwise starvation
@@ -1570,7 +1567,7 @@ int monster_die(monster* mons, killer_type killer,
     bool unsummoned          = killer == KILL_UNSUMMONED;
     bool timeout             = killer == KILL_TIMEOUT;
     const bool gives_xp      = (!summoned && !mons_class_flag(mons->type,
-                                M_NO_EXP_GAIN) && !mons_is_phoenix(mons));
+                                M_NO_EXP_GAIN));
 
     bool drop_items    = !hard_reset;
 
@@ -2489,11 +2486,6 @@ int monster_die(monster* mons, killer_type killer,
         else
             shedu_do_resurrection(mons);
     }
-    else if (mons_is_phoenix(mons))
-    {
-        if (!was_banished)
-            phoenix_died(mons);
-    }
     else if (mons->type == MONS_VAULT_WARDEN)
         timeout_terrain_changes(0, true);
     else if (mons->type == MONS_FLAYED_GHOST)
@@ -3395,182 +3387,6 @@ void mons_felid_revive(monster* mons)
             }
 
         newmons->props["felid_revives"].get_byte() = revives;
-    }
-}
-
-/**
- * Phoenix death effects
- *
- * When a phoenix dies, a short time later, its corpse will go up in flames and
- * the phoenix will be reborn. This is similar to a shedu being resurrected,
- * only it uses a level-specific marker.
-**/
-
-/**
- * Determine if a monster is a phoenix.
- *
- * Monsters that were previously phoenixes are not considered phoenixes for
- * phoenix resurrection purposes, I suppose.
- *
- * @param mons      The monster to check.
- * @returns         True if Phoenix, False otherwise.
-**/
-bool mons_is_phoenix(const monster* mons)
-{
-    return mons->type == MONS_PHOENIX;
-}
-
-/**
- * Perform phoenix death effect
- *
- * @param mons      The monster that just died.
-**/
-void phoenix_died(monster* mons)
-{
-    int durt = (random2(10) + random2(5) + 10) * BASELINE_DELAY;
-    env.markers.add(new map_phoenix_marker(mons->pos(),
-                        durt,
-                        static_cast<int>(mons->mid),
-                        mons->behaviour,
-                        mons->attitude,
-                        mons->deity(),
-                        mons->pos()));
-    env.markers.clear_need_activate();
-}
-
-/**
- * Get vector of phoenix markers
- *
- * @returns     Vector of map_phoenix_markers.
-**/
-static vector<map_phoenix_marker*> get_phoenix_markers()
-{
-    vector<map_phoenix_marker*> mm_markers;
-
-    vector<map_marker*> markers = env.markers.get_all(MAT_PHOENIX);
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        map_marker *mark = markers[i];
-        if (mark->get_type() != MAT_PHOENIX)
-            continue;
-
-        map_phoenix_marker *mmark = dynamic_cast<map_phoenix_marker*>(mark);
-
-        mm_markers.push_back(mmark);
-    }
-
-    return mm_markers;
-}
-
-/**
- * Timeout phoenix markers
- *
- * @param duration      Duration.
-**/
-void timeout_phoenix_markers(int duration)
-{
-    vector<map_phoenix_marker*> markers = get_phoenix_markers();
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        map_phoenix_marker *mmark = markers[i];
-
-        if (duration)
-            mmark->duration -= duration;
-
-        if (mmark->duration < 0)
-        {
-            // Now, look for the corpse
-            bool found_body = false;
-            coord_def place_at;
-            bool from_inventory = false;
-
-            for (radius_iterator ri(mmark->corpse_pos, LOS_RADIUS, C_ROUND, false); ri; ++ri)
-            {
-                for (stack_iterator si(*ri); si; ++si)
-                    if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
-                        && si->props.exists(MONSTER_MID)
-                        && si->props[MONSTER_MID].get_int() == mmark->mon_num)
-                    {
-                        place_at = *ri;
-                        destroy_item(si->index());
-                        found_body = true;
-                        break;
-                    }
-            }
-
-            if (!found_body)
-            {
-                for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
-                {
-                    if (!you.inv[slot].defined())
-                        continue;
-
-                    item_def* si = &you.inv[slot];
-                    if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
-                        && si->props.exists(MONSTER_MID)
-                        && si->props[MONSTER_MID].get_int() == mmark->mon_num)
-                    {
-                        // it was in the player's inventory
-                        place_at = coord_def(-1, -1);
-                        dec_inv_item_quantity(slot, 1, false);
-                        found_body = true;
-                        from_inventory = true;
-                        break;
-                    }
-                }
-
-                if (found_body)
-                    place_at = you.pos();
-            }
-
-            if (!found_body || place_at.origin())
-            {
-                // Actually time-out this marker; we didn't find a body, too bad.
-                env.markers.remove(mmark);
-                continue;
-            }
-
-            // Okay, we have a corpse, which we've destroyed. We'll place a cloud!
-            mgen_data new_pho;
-            new_pho.cls = MONS_PHOENIX;
-            new_pho.behaviour = mmark->behaviour;
-            new_pho.god = mmark->god;
-
-            monster* mons = 0;
-
-            for (distance_iterator di(place_at, true, false); di; ++di)
-            {
-                if (monster_at(*di) || !monster_habitable_grid(MONS_PHOENIX, grd(*di)))
-                    continue;
-
-                new_pho.pos = *di;
-                if (mons = place_monster(new_pho, true))
-                    break;
-            }
-
-            // give up
-            if (!mons)
-            {
-                dprf("Couldn't place new phoenix!");
-                // We couldn't place it, so nuke the marker.
-                env.markers.remove(mmark);
-                continue;
-            }
-
-            mons->attitude = mmark->attitude;
-
-            // We no longer need the marker now, so free it.
-            env.markers.remove(mmark);
-
-            if (from_inventory)
-                simple_monster_message(mons, " is reborn from your pack in a blaze of fire!");
-            else if (you.can_see(mons))
-                simple_monster_message(mons, " is reborn in a blaze of fire!");
-
-            // Now, place a cloud to compensate
-            place_cloud(CLOUD_FIRE, place_at, 4+random2(10), NULL);
-        }
     }
 }
 

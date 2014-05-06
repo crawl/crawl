@@ -2164,7 +2164,6 @@ void run_environment_effects()
                        false, true);
     timeout_tombs(you.time_taken);
     timeout_malign_gateways(you.time_taken);
-    timeout_phoenix_markers(you.time_taken);
     timeout_terrain_changes(you.time_taken);
     run_cloud_spreaders(you.time_taken);
 }

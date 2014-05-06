@@ -63,10 +63,6 @@ bool mons_is_natasha(const monster* mons);
 bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
 
-bool mons_is_phoenix(const monster* mons);
-void phoenix_died(monster* mons);
-void timeout_phoenix_markers(int duration);
-
 monster* get_shedu_pair(const monster* mons);
 bool shedu_pair_alive(const monster* mons);
 bool mons_is_shedu(const monster* mons);

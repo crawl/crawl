@@ -60,7 +60,6 @@ butterfly10
 fire_bat MONS_FIRE_BAT
 %rim 1
 raven MONS_RAVEN
-mon/holy/phoenix MONS_PHOENIX
 %sdir mon/vault
 %rim 0
 microbat MONS_MICROBAT
