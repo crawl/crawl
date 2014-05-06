@@ -392,7 +392,6 @@ static const pop_entry pop_spider[] =
 
 static const pop_entry pop_slime[] =
 { // Slime Pits
-  {  1,  6,  514, FLAT, MONS_OOZE },
   {  1,  6, 1000, FLAT, MONS_JELLY },
   {  1,  6, 1000, FLAT, MONS_ACID_BLOB },
   {  1,  6,  514, FLAT, MONS_GIANT_EYEBALL },
@@ -407,6 +406,7 @@ static const pop_entry pop_slime[] =
   {  1,  9,  192, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  1,  6,  192, UP,   MONS_DEATH_OOZE },
   {  2,  6,   89, UP,   MONS_GIANT_ORANGE_BRAIN },
+  {  1,  6,  514, FLAT, MONS_NO_MONSTER }, // Old ooze weight.
   { 0,0,0,FLAT,MONS_0 }
 };
 
