@@ -129,10 +129,14 @@ bool unmeld_slot(equipment_type slot, bool msg)
 
 static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
 static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld);
-static void _equip_armour_effect(item_def& arm, bool unmeld);
-static void _unequip_armour_effect(item_def& item, bool meld);
-static void _equip_jewellery_effect(item_def &item, bool unmeld);
-static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld);
+static void _equip_armour_effect(item_def& arm, bool unmeld,
+                                 equipment_type slot);
+static void _unequip_armour_effect(item_def& item, bool meld,
+                                   equipment_type slot);
+static void _equip_jewellery_effect(item_def &item, bool unmeld,
+                                    equipment_type slot);
+static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
+                                      equipment_type slot);
 static void _equip_use_warning(const item_def& item);
 
 static void _assert_valid_slot(equipment_type eq, equipment_type slot)
@@ -170,9 +174,9 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
     if (slot == EQ_WEAPON)
         _equip_weapon_effect(item, msg, unmeld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
-        _equip_armour_effect(item, unmeld);
+        _equip_armour_effect(item, unmeld, slot);
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
-        _equip_jewellery_effect(item, unmeld);
+        _equip_jewellery_effect(item, unmeld, slot);
 }
 
 static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
@@ -189,16 +193,17 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
     if (slot == EQ_WEAPON)
         _unequip_weapon_effect(item, msg, meld);
     else if (slot >= EQ_CLOAK && slot <= EQ_BODY_ARMOUR)
-        _unequip_armour_effect(item, meld);
+        _unequip_armour_effect(item, meld, slot);
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
-        _unequip_jewellery_effect(item, msg, meld);
+        _unequip_jewellery_effect(item, msg, meld, slot);
 }
 
 ///////////////////////////////////////////////////////////
 // Actual equip and unequip effect implementation below
 //
 
-static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
+static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
+                                   equipment_type slot)
 {
 #define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
 
@@ -215,7 +220,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 
         if (entry->world_reacts_func)
         {
-            equipment_type slot = get_item_slot(item.base_type, item.sub_type);
             you.unrand_reacts.set(slot);
         }
     }
@@ -281,7 +285,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 }
 
 static void _unequip_artefact_effect(item_def &item,
-                                     bool *show_msgs, bool meld)
+                                     bool *show_msgs, bool meld,
+                                     equipment_type slot)
 {
     ASSERT(is_artefact(item));
 
@@ -348,7 +353,6 @@ static void _unequip_artefact_effect(item_def &item,
 
         if (entry->world_reacts_func)
         {
-            equipment_type slot = get_item_slot(item.base_type, item.sub_type);
             you.unrand_reacts.set(slot, false);
         }
     }
@@ -464,7 +468,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
     {
         // Call unrandart equip func before item is identified.
         if (artefact)
-            _equip_artefact_effect(item, &showMsgs, unmeld);
+            _equip_artefact_effect(item, &showMsgs, unmeld, EQ_WEAPON);
 
         const bool was_known      = item_type_known(item);
               bool known_recurser = false;
@@ -660,7 +664,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
     if (is_artefact(item))
-        _unequip_artefact_effect(item, &showMsgs, meld);
+        _unequip_artefact_effect(item, &showMsgs, meld, EQ_WEAPON);
 
     if (item.base_type == OBJ_MISCELLANY
         && item.sub_type == MISC_LANTERN_OF_SHADOWS)
@@ -821,7 +825,8 @@ static void _spirit_shield_message(bool unmeld)
         mpr("You feel spirits watching over you.");
 }
 
-static void _equip_armour_effect(item_def& arm, bool unmeld)
+static void _equip_armour_effect(item_def& arm, bool unmeld,
+                                 equipment_type slot)
 {
     const bool known_cursed = item_known_cursed(arm);
     int ego = get_armour_ego_type(arm);
@@ -929,7 +934,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
     if (is_artefact(arm))
     {
         bool show_msgs = true;
-        _equip_artefact_effect(arm, &show_msgs, unmeld);
+        _equip_artefact_effect(arm, &show_msgs, unmeld, slot);
     }
 
     if (arm.cursed() && !unmeld)
@@ -961,7 +966,8 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
     you.redraw_evasion = true;
 }
 
-static void _unequip_armour_effect(item_def& item, bool meld)
+static void _unequip_armour_effect(item_def& item, bool meld,
+                                   equipment_type slot)
 {
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
@@ -1090,7 +1096,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, NULL, meld);
+        _unequip_artefact_effect(item, NULL, meld, slot);
 }
 
 static void _remove_amulet_of_faith(item_def &item)
@@ -1155,7 +1161,8 @@ static void _remove_amulet_of_faith(item_def &item)
     }
 }
 
-static void _equip_jewellery_effect(item_def &item, bool unmeld)
+static void _equip_jewellery_effect(item_def &item, bool unmeld,
+                                    equipment_type slot)
 {
     const bool artefact     = is_artefact(item);
     const bool known_cursed = item_known_cursed(item);
@@ -1281,7 +1288,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     if (artefact)
     {
         bool show_msgs = true;
-        _equip_artefact_effect(item, &show_msgs, unmeld);
+        _equip_artefact_effect(item, &show_msgs, unmeld, slot);
 
         set_ident_flags(item, ISFLAG_KNOW_PROPERTIES);
     }
@@ -1315,7 +1322,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     mprf_nocap("%s", item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
-static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
+static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld,
+                                      equipment_type slot)
 {
     // The ring/amulet must already be removed from you.equip at this point.
 
@@ -1406,7 +1414,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
     }
 
     if (is_artefact(item))
-        _unequip_artefact_effect(item, &mesg, meld);
+        _unequip_artefact_effect(item, &mesg, meld, slot);
 
     // Must occur after ring is removed. -- bwr
     calc_mp();
