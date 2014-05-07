@@ -1183,6 +1183,60 @@ bool _leave_level(dungeon_feature_type stair_taken, const level_id& old_level,
 
 
 /**
+ * Generate a new level.
+ *
+ * Cleanup the environment, build the level, and possibly place a ghost or
+ * handle initial AK entrance.
+ *
+ * @param stair_taken   The means used to leave the last level.
+ * @param old_level     The ID of the previous level.
+ */
+void _make_level(dungeon_feature_type stair_taken, const level_id& old_level)
+{
+
+    dprf("Generating new level for '%s'.", level_name.c_str());
+    env.turns_on_level = -1;
+
+    if (you.char_direction == GDT_GAME_START
+        && player_in_branch(BRANCH_DUNGEON))
+    {
+        // If we're leaving the Abyss for the first time as a Chaos
+        // Knight of Lugonu (who start out there), enable normal monster
+        // generation.
+        you.char_direction = GDT_DESCENDING;
+    }
+
+    tile_init_default_flavour();
+    tile_clear_flavour();
+    env.tile_names.clear();
+
+    // XXX: This is ugly.
+    bool dummy;
+    dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
+        _get_dest_stair_type(old_level.branch,
+                             static_cast<dungeon_feature_type>(stair_taken),
+                             dummy));
+
+    _clear_env_map();
+    builder(true, stair_type);
+
+    if (!crawl_state.game_is_tutorial()
+        && !crawl_state.game_is_zotdef()
+        && !Options.seed
+        && !player_in_branch(BRANCH_ABYSS)
+        && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
+        && one_chance_in(3))
+    {
+        load_ghost(true);
+    }
+    env.turns_on_level = 0;
+    // sanctuary
+    env.sanctuary_pos  = coord_def(-1, -1);
+    env.sanctuary_time = 0;
+}
+
+
+/**
  * Load the current level.
  *
  * @param stair_taken   The means used to enter the level.
@@ -1192,6 +1246,11 @@ bool _leave_level(dungeon_feature_type stair_taken, const level_id& old_level,
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
+
+    string level_name = level_id::current().describe();
+    const bool make_changes =
+    (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
+
     // Did we get here by popping the level stack?
     bool popped = false;
 
@@ -1201,7 +1260,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
-
     unwind_bool ylev(you.entering_level, load_mode != LOAD_VISITOR, false);
 
 #ifdef DEBUG_LEVEL_LOAD
@@ -1215,13 +1273,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.
     you.reset_prev_move();
-
-    const bool make_changes =
-        (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);
-
-    bool just_created_level = false;
-
-    string level_name = level_id::current().describe();
 
     you.prev_targ     = MHITNOT;
     you.prev_grd_targ.reset();
@@ -1267,50 +1318,14 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 #endif
 
+    bool just_created_level = false;
+
     // GENERATE new level when the file can't be opened:
     if (!you.save->has_chunk(level_name))
     {
-        dprf("Generating new level for '%s'.", level_name.c_str());
         ASSERT(load_mode != LOAD_VISITOR);
-        env.turns_on_level = -1;
-
-        if (you.char_direction == GDT_GAME_START
-            && player_in_branch(BRANCH_DUNGEON))
-        {
-            // If we're leaving the Abyss for the first time as a Chaos
-            // Knight of Lugonu (who start out there), enable normal monster
-            // generation.
-            you.char_direction = GDT_DESCENDING;
-        }
-
-        tile_init_default_flavour();
-        tile_clear_flavour();
-        env.tile_names.clear();
-
-        // XXX: This is ugly.
-        bool dummy;
-        dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            _get_dest_stair_type(old_level.branch,
-                                 static_cast<dungeon_feature_type>(stair_taken),
-                                 dummy));
-
-        _clear_env_map();
-        builder(true, stair_type);
+        _make_level(stair_taken, old_level);
         just_created_level = true;
-
-        if (!crawl_state.game_is_tutorial()
-            && !crawl_state.game_is_zotdef()
-            && !Options.seed
-            && !player_in_branch(BRANCH_ABYSS)
-            && (!player_in_branch(BRANCH_DUNGEON) || you.depth > 2)
-            && one_chance_in(3))
-        {
-            load_ghost(true);
-        }
-        env.turns_on_level = 0;
-        // sanctuary
-        env.sanctuary_pos  = coord_def(-1, -1);
-        env.sanctuary_time = 0;
     }
     else
     {
