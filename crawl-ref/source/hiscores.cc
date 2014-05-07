@@ -977,6 +977,7 @@ void scorefile_entry::set_base_xlog_fields() const
     else if (crawl_state.game_is_zotdef())
         score_version += "-zotdef.1";
     fields->add_field("v", "%s", Version::Short);
+    fields->add_field("vlong", "%s", Version::Long);
     fields->add_field("lv", "%s", score_version.c_str());
 #ifdef EXPERIMENTAL_BRANCH
     fields->add_field("explbr", EXPERIMENTAL_BRANCH);
