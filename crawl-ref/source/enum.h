@@ -2149,7 +2149,9 @@ enum map_marker_type
     MAT_WIZ_PROPS,
     MAT_TOMB,
     MAT_MALIGN,
+#if TAG_MAJOR_VERSION == 34
     MAT_PHOENIX,
+#endif
     MAT_POSITION,
 #if TAG_MAJOR_VERSION == 34
     MAT_DOOR_SEAL,
@@ -2879,8 +2881,8 @@ enum monster_type                      // menv[].type
     MONS_DAEVA,
     MONS_CHERUB,
     MONS_SERAPH,
-    MONS_PHOENIX,
 #if TAG_MAJOR_VERSION == 34
+    MONS_PHOENIX,
     MONS_SILVER_STAR,
     MONS_BLESSED_TOE,
 #endif
