@@ -8394,6 +8394,12 @@ bool player::form_uses_xl() const
     return you.form == TRAN_WISP || you.form == TRAN_FUNGUS;
 }
 
+bool player::can_device_heal()
+{
+    return mutation[MUT_NO_DEVICE_HEAL] < 2;
+}
+
+
 // Lava orcs!
 int temperature()
 {

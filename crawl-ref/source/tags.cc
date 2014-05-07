@@ -2551,32 +2551,43 @@ static void tag_read_you(reader &th)
         you.mutation[j] = you.innate_mutations[j] = 0;
 
 #if TAG_MAJOR_VERSION == 34
-    if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
-        you.mutation[MUT_TELEPORT_CONTROL] = 0;
-    if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 0)
-        you.mutation[MUT_TRAMPLE_RESISTANCE] = 0;
-    if (you.mutation[MUT_CLING] == 1)
-        you.mutation[MUT_CLING] = 0;
-    if (you.species == SP_GARGOYLE)
-    {
-        you.mutation[MUT_POISON_RESISTANCE] =
-        you.innate_mutations[MUT_POISON_RESISTANCE] = 0;
-    }
-    if (you.species == SP_DJINNI)
-    {
-        you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] =
-        you.innate_mutations[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-    }
-    if (you.species == SP_FELID && you.innate_mutations[MUT_JUMP] == 0)
-    {
-        you.mutation[MUT_JUMP] = you.innate_mutations[MUT_JUMP]
-                               = min(1 + you.experience_level / 6, 3);
-    }
-    if (you.species == SP_FORMICID)
-    {
-        you.mutation[MUT_ANTENNAE] = you.innate_mutations[MUT_ANTENNAE] = 3;
-        you.mutation[MUT_EXOSKELETON] =
-        you.innate_mutations[MUT_EXOSKELETON] = 0;
+    if (th.getMinorVersion() < TAG_MINOR_NO_DEVICE_HEAL)
+    {   // These use to apply no matter what the minor tag
+        // was, so when TAG_MINOR_NO_DEVICE_HEAL was added
+        // these were all moved to only apply to previous
+        // tags.
+        if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
+            you.mutation[MUT_TELEPORT_CONTROL] = 0;
+        if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 0)
+            you.mutation[MUT_TRAMPLE_RESISTANCE] = 0;
+        if (you.mutation[MUT_CLING] == 1)
+            you.mutation[MUT_CLING] = 0;
+        if (you.species == SP_GARGOYLE)
+        {
+            you.mutation[MUT_POISON_RESISTANCE] =
+            you.innate_mutations[MUT_POISON_RESISTANCE] = 0;
+        }
+        if (you.species == SP_DJINNI)
+        {
+            you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] =
+            you.innate_mutations[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
+        }
+        if (you.species == SP_FELID && you.innate_mutations[MUT_JUMP] == 0)
+        {
+            you.mutation[MUT_JUMP] = you.innate_mutations[MUT_JUMP]
+                                   = min(1 + you.experience_level / 6, 3);
+        }
+        if (you.species == SP_FORMICID)
+        {
+            you.mutation[MUT_ANTENNAE] = you.innate_mutations[MUT_ANTENNAE] = 3;
+            you.mutation[MUT_EXOSKELETON] =
+            you.innate_mutations[MUT_EXOSKELETON] = 0;
+        }
+        if (you.species == SP_VINE_STALKER)
+        {
+            you.mutation[MUT_NO_DEVICE_HEAL] =
+            you.innate_mutations[MUT_NO_DEVICE_HEAL] = 2;
+        }
     }
 #endif
 

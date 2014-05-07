@@ -93,6 +93,7 @@ enum tag_minor_version
     TAG_MINOR_ATTACK_DESCS,        // Added attacks to monster_info.
     TAG_MINOR_BRIBE_BRANCH,        // Bribe branch tracking
     TAG_MINOR_CLOUD_OWNER,         // Track owners of clouds in map knowledge
+    TAG_MINOR_NO_DEVICE_HEAL,      // Made MUT_NO_DEVICE_HEAL a normal bad mutation.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -77,7 +77,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             break;
         }
 
-        if (you.mutation[MUT_NO_DEVICE_HEAL]
+        if (!you.can_device_heal()
             && potion && was_known
             && you.duration[DUR_CONF] == 0
             && you.duration[DUR_POISONING] == 0
@@ -88,7 +88,10 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             return false;
         }
 
-        if (!you.mutation[MUT_NO_DEVICE_HEAL])
+        if (you.mutation[MUT_NO_DEVICE_HEAL])
+            factor = 2;
+
+        if (you.can_device_heal())
             inc_hp((5 + random2(7)) / factor);
 
         mpr("You feel better.");
@@ -118,7 +121,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             break;
         }
 
-        if (you.mutation[MUT_NO_DEVICE_HEAL])
+        if (!you.can_device_heal())
         {
             if (potion && was_known)
             {
@@ -128,6 +131,9 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             mpr("That seemed strangely inert.");
             break;
         }
+
+        if (you.mutation[MUT_NO_DEVICE_HEAL])
+            factor = 2;
 
         inc_hp((10 + random2avg(28, 3)) / factor);
         mpr("You feel much better.");
