@@ -95,8 +95,8 @@ static colour_t _feat_colour(dungeon_feature_type feat)
     case DNGN_ENTER_GEHENNA:            return RED;
     case DNGN_ENTER_COCYTUS:            return LIGHTCYAN;
     case DNGN_ENTER_TARTARUS:           return MAGENTA;
-    case DNGN_ENTER_ABYSS:              return ETC_RANDOM;
-    case DNGN_EXIT_THROUGH_ABYSS:       return ETC_RANDOM;
+    case DNGN_ENTER_ABYSS:              return ETC_WARP;
+    case DNGN_EXIT_THROUGH_ABYSS:       return ETC_WARP;
     case DNGN_ENTER_PANDEMONIUM:        return LIGHTBLUE;
     case DNGN_ENTER_TROVE:              return BLUE;
     case DNGN_ENTER_SEWER:              return LIGHTGREEN;
@@ -107,7 +107,7 @@ static colour_t _feat_colour(dungeon_feature_type feat)
     case DNGN_EXIT_DUNGEON:             return LIGHTBLUE;
     case DNGN_RETURN_FROM_ZOT:          return MAGENTA;
     case DNGN_EXIT_HELL:                return LIGHTRED;
-    case DNGN_EXIT_ABYSS:               return ETC_RANDOM;
+    case DNGN_EXIT_ABYSS:               return ETC_WARP;
     case DNGN_EXIT_PANDEMONIUM:         return LIGHTBLUE;
     case DNGN_TRANSIT_PANDEMONIUM:      return LIGHTGREEN;
     case DNGN_EXIT_TROVE:               return BLUE;
