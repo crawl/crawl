@@ -32,7 +32,7 @@ int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
 int ash_skill_boost(skill_type sk, int scale);
 map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
-int gozag_gold_bonus();
+int gozag_gold_in_los(actor* who);
 int qazlal_sh_boost(int piety = you.piety);
 void qazlal_storm_clouds();
 void qazlal_element_adapt(beam_type flavour, int strength);

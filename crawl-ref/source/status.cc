@@ -697,26 +697,6 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
-    case STATUS_GOLDEN:
-    {
-        const int gold_bonus = gozag_gold_bonus();
-
-        if (gold_bonus == 0)
-            break;
-
-        inf->light_colour = (gold_bonus >= 5) ? WHITE :
-                            (gold_bonus >= 3) ? LIGHTBLUE
-                                              : BLUE;
-
-        inf->light_text = "Gold";
-        inf->short_text = "gold lust";
-        inf->long_text =
-            make_stringf("Your skills are %senhanced by your lust for gold.",
-                         gold_bonus >= 5 ? "greatly " :
-                         gold_bonus <  3 ? "slightly " : "");
-        break;
-    }
-
     case STATUS_BRIBE:
     {
         int bribe = 0;

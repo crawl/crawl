@@ -4318,7 +4318,9 @@ void display_char_status()
         STATUS_MAGIC_SAPPED,
         DUR_PORTAL_PROJECTILE,
         DUR_NO_POTIONS,
+#if TAG_MAJOR_VERSION == 34
         STATUS_GOLDEN,
+#endif
         STATUS_BRIBE,
         DUR_QAZLAL_FIRE_RES,
         DUR_QAZLAL_COLD_RES,
@@ -6565,8 +6567,6 @@ int player::skill(skill_type sk, int scale, bool real) const
     if (is_useless_skill(sk))
         return 0;
 
-    const int gold_bonus = gozag_gold_bonus();
-
     // skills[sk] might not be updated yet if this is in the middle of
     // skill training, so make sure to use the correct value.
     // This duplicates code in check_skill_level_change(), unfortunately.
@@ -6590,8 +6590,6 @@ int player::skill(skill_type sk, int scale, bool real) const
     int level = actual_skill * scale + get_skill_progress(sk, actual_skill, skill_points[sk], scale);
     if (real)
         return level;
-    if (gold_bonus)
-        level = min(level + gold_bonus * scale, 27 * scale);
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
     if (penance[GOD_ASHENZARI])
