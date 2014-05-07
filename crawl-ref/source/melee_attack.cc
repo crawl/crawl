@@ -2800,6 +2800,18 @@ bool melee_attack::mons_attack_effects()
     if (attacker != defender && defender->alive())
     {
         mons_apply_attack_flavour();
+
+        if (needs_message && !special_damage_message.empty())
+            mprf("%s", special_damage_message.c_str());
+
+        if (special_damage > 0)
+        {
+            inflict_damage(special_damage, special_damage_flavour);
+            special_damage = 0;
+            special_damage_message.clear();
+            special_damage_flavour = BEAM_NONE;
+        }
+
         apply_staff_damage();
 
         if (needs_message && !special_damage_message.empty())
