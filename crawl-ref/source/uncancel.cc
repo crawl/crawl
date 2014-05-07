@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 #include "acquire.h"
 #include "decks.h"
+#include "godabil.h"
 #include "libutil.h"
 #include "player.h"
 #include "state.h"
@@ -61,6 +62,15 @@ void run_uncancels()
                 return;
             break;
 
+        case UNC_POTION_PETITION:
+            if (!gozag_potion_petition() && crawl_state.seen_hups)
+                return;
+            break;
+
+        case UNC_CALL_MERCHANT:
+            if (!gozag_call_merchant() && crawl_state.seen_hups)
+                return;
+            break;
         }
 
         if (act != -1)

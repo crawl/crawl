@@ -80,6 +80,7 @@
 #include "hints.h"
 #include "terrain.h"
 #include "traps.h"
+#include "uncancel.h"
 #include "zotdef.h"
 
 enum ability_flag_type
@@ -1657,6 +1658,12 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
+    case ABIL_GOZAG_POTION_PETITION:
+        return gozag_setup_potion_petition();
+
+    case ABIL_GOZAG_CALL_MERCHANT:
+        return gozag_setup_call_merchant();
+
     default:
         return true;
     }
@@ -2935,15 +2942,11 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_GOZAG_POTION_PETITION:
-        if (!gozag_potion_petition())
-            return false;
-
+        run_uncancel(UNC_POTION_PETITION, 0);
         break;
 
     case ABIL_GOZAG_CALL_MERCHANT:
-        if (!gozag_call_merchant())
-            return false;
-
+        run_uncancel(UNC_CALL_MERCHANT, 0);
         break;
 
     case ABIL_GOZAG_BRIBE_BRANCH:

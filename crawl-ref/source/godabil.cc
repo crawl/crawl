@@ -3838,7 +3838,7 @@ static void _gozag_add_bad_potion(CrawlVector &vec)
     vec.push_back(what);
 }
 
-bool gozag_potion_petition()
+bool gozag_setup_potion_petition()
 {
     CrawlVector *pots[4];
     int prices[4];
@@ -3847,17 +3847,7 @@ bool gozag_potion_petition()
     dummy.base_type = OBJ_POTIONS;
     dummy.quantity = 1;
 
-    if (you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)))
-    {
-        for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
-        {
-            string key = make_stringf(GOZAG_POTIONS_KEY, i);
-            pots[i] = &you.props[key].get_vector();
-            key = make_stringf(GOZAG_PRICE_KEY, i);
-            prices[i] = you.props[key].get_int();
-        }
-    }
-    else
+    if (!you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)))
     {
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
@@ -3919,24 +3909,31 @@ bool gozag_potion_petition()
         return false;
     }
 
+    return true;
+}
+
+bool gozag_potion_petition()
+{
+    CrawlVector *pots[4];
+    int prices[4];
+
+    ASSERT(you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)));
+    for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
+    {
+        string key = make_stringf(GOZAG_POTIONS_KEY, i);
+        pots[i] = &you.props[key].get_vector();
+        key = make_stringf(GOZAG_PRICE_KEY, i);
+        prices[i] = you.props[key].get_int();
+    }
+
     int keyin = 0;
     int faith_price = 0;
 
     while (true)
     {
         if (crawl_state.seen_hups)
-        {
-            int min_price = INT_MAX;
-            for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
-            {
-                if (prices[i] < min_price)
-                {
-                    keyin = i;
-                    min_price = prices[i];
-                }
-            }
-            break;
-        }
+            return false;
+
         mesclr();
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
@@ -4028,9 +4025,9 @@ static int _proximity_to_explored_levels(level_id where)
     return min_diff;
 }
 
-bool gozag_call_merchant()
+static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth,
+                                                   int *max_diff)
 {
-    int max_absdepth = 0, max_diff = 0;
     vector<level_id> candidates;
 
     // First figure out where shops can normally place.
@@ -4066,9 +4063,12 @@ bool gozag_call_merchant()
         // Base shop level number on the deepest we can place a shop
         // in the given game; this is constant for as long as we can place
         // shops and is intended to prevent scummy behaviour.
-        const int absdepth = branches[i].absdepth + brdepth[i] - 1;
-        if (absdepth > max_absdepth)
-            max_absdepth = absdepth;
+        if (max_absdepth)
+        {
+            const int absdepth = branches[i].absdepth + brdepth[i] - 1;
+            if (absdepth > *max_absdepth)
+                *max_absdepth = absdepth;
+        }
 
         // Don't place shops on the last level of a branch; it's too mean.
         for (int j = 1; j < brdepth[i]; j++)
@@ -4080,12 +4080,28 @@ bool gozag_call_merchant()
                                                   lid.describe().c_str())))
             {
                 candidates.push_back(lid);
-                const int diff = _proximity_to_explored_levels(lid);
-                if (diff > max_diff)
-                    max_diff = diff;
+                if (max_diff)
+                {
+                    const int diff = _proximity_to_explored_levels(lid);
+                    if (diff > *max_diff)
+                        *max_diff = diff;
+                }
             }
         }
     }
+
+    return candidates;
+}
+
+bool gozag_setup_call_merchant()
+{
+    int max_absdepth = 0;
+    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth,
+                                                             NULL);
+
+    const map_def *shop_vault = find_map_by_name("serial_shops"); // XXX
+    if (!shop_vault)
+        die("Someone changed the shop vault name!");
 
     if (!candidates.size())
     {
@@ -4103,12 +4119,11 @@ bool gozag_call_merchant()
         }
     }
 
-    const int level_number = max_absdepth * 2;
-
     // Set up some dummy shops.
     // Generate some shop inventory and store it as a store spec.
     if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, 0)))
     {
+        const int level_number = 2 * max_absdepth;
         for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
             shop_type type = NUM_SHOPS;
@@ -4201,28 +4216,23 @@ bool gozag_call_merchant()
         return false;
     }
 
+    return true;
+}
+
+bool gozag_call_merchant()
+{
+    int max_absdepth = 0, max_diff = 0;
+    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth,
+                                                             &max_diff);
+
     int i = 0;
     int cost = 0;
     int faith_cost = 0;
     while (true)
     {
         if (crawl_state.seen_hups)
-        {
-            int min_price = INT_MAX;
-            for (int j = 0; j < GOZAG_MAX_POTIONS; j++)
-            {
-                cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)]
-                       .get_int();
-                if (cost < min_price)
-                {
-                    i = j;
-                    min_price = cost;
-                }
-            }
-            cost = min_price;
-            faith_cost = you.faith() ? cost * 2 / 3 : cost;
-            break;
-        }
+            return false;
+
         mesclr();
         for (i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
