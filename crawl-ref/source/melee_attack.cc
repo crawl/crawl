@@ -3125,10 +3125,11 @@ void melee_attack::mons_apply_attack_flavour()
 
         if (defender->res_poison() <= 0)
         {
+            int flat_bonus  = attacker->type == MONS_RED_WASP ? 1 : 0;
             if (one_chance_in(paralyse_roll))
-                defender->paralyse(attacker, roll_dice(1, 3));
+                defender->paralyse(attacker, flat_bonus + roll_dice(1, 3));
             else
-                defender->slow_down(attacker, roll_dice(1, 3));
+                defender->slow_down(attacker, flat_bonus + roll_dice(1, 3));
         }
         break;
     }
