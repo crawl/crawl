@@ -3905,61 +3905,86 @@ bool gozag_potion_petition()
         }
     }
 
-    mesclr();
     bool afford_any = false;
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
         const int faith_price = you.faith() ? prices[i] * 2 / 3
                                             : prices[i];
-        string line = make_stringf("  [%c] - %d gold - ", i + 'a',
-                                   faith_price);
         if (you.gold >= faith_price)
             afford_any = true;
-        vector<string> pot_names;
-        for (int j = 0; j < pots[i]->size(); j++)
-            pot_names.push_back(potion_type_name((*pots[i])[j].get_int()));
-        line += comma_separated_line(pot_names.begin(), pot_names.end());
-        mpr_nojoin(MSGCH_PLAIN, line.c_str());
     }
     if (!afford_any)
     {
-        mpr("You can't afford to purchase any of these!");
+        mpr("You can't afford to purchase potions right now!");
         return false;
     }
-    mprf(MSGCH_PROMPT, "Purchase which effect? (any other key to cancel)");
-    const int keyin = toalower(get_ch()) - 'a';
-    if (keyin >= 0 && keyin <= GOZAG_MAX_POTIONS - 1)
+
+    int keyin = 0;
+    int faith_price = 0;
+
+    while (true)
     {
-        const int faith_price = you.faith() ? prices[keyin] * 2 / 3
-                                            : prices[keyin];
+        if (crawl_state.seen_hups)
+        {
+            int min_price = INT_MAX;
+            for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
+            {
+                if (prices[i] < min_price)
+                {
+                    keyin = i;
+                    min_price = prices[i];
+                }
+            }
+            break;
+        }
+        mesclr();
+        for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
+        {
+            faith_price = you.faith() ? prices[i] * 2 / 3 : prices[i];
+            string line = make_stringf("  [%c] - %d gold - ", i + 'a',
+                                       faith_price);
+            vector<string> pot_names;
+            for (int j = 0; j < pots[i]->size(); j++)
+                pot_names.push_back(potion_type_name((*pots[i])[j].get_int()));
+            line += comma_separated_line(pot_names.begin(), pot_names.end());
+            mpr_nojoin(MSGCH_PLAIN, line.c_str());
+        }
+        mprf(MSGCH_PROMPT, "Purchase which effect?");
+        keyin = toalower(get_ch()) - 'a';
+        if (keyin < 0 || keyin > GOZAG_MAX_POTIONS - 1)
+            continue;
+
+        faith_price = you.faith() ? prices[keyin] * 2 / 3 : prices[keyin];
         if (you.gold < faith_price)
         {
             mpr("You don't have enough gold for that!");
-            return false;
-        }
-        you.gold -= faith_price;
-        you.attribute[ATTR_GOZAG_GOLD_USED] += faith_price;
-        for (int j = 0; j < pots[keyin]->size(); j++)
-        {
-            potion_effect(static_cast<potion_type>((*pots[keyin])[j].get_int()),
-                          40);
+            more();
+            continue;
         }
 
-        you.attribute[ATTR_GOZAG_POTIONS]++;
-
-        for (int i = 0; i < 4; i++)
-        {
-            string key = make_stringf(GOZAG_POTIONS_KEY, i);
-            you.props.erase(key);
-            key = make_stringf(GOZAG_PRICE_KEY, i);
-            you.props.erase(key);
-        }
-
-        return true;
+        break;
     }
 
-    canned_msg(MSG_OK);
-    return false;
+    ASSERT(you.gold >= faith_price);
+    you.gold -= faith_price;
+    you.attribute[ATTR_GOZAG_GOLD_USED] += faith_price;
+    for (int j = 0; j < pots[keyin]->size(); j++)
+    {
+        potion_effect(static_cast<potion_type>((*pots[keyin])[j].get_int()),
+                      40);
+    }
+
+    you.attribute[ATTR_GOZAG_POTIONS]++;
+
+    for (int i = 0; i < 4; i++)
+    {
+        string key = make_stringf(GOZAG_POTIONS_KEY, i);
+        you.props.erase(key);
+        key = make_stringf(GOZAG_PRICE_KEY, i);
+        you.props.erase(key);
+    }
+
+    return true;
 }
 
 static bool _duplicate_shop_type(int cur, shop_type type)
@@ -4164,136 +4189,169 @@ bool gozag_call_merchant()
         const int faith_cost = you.faith() ? cost * 2 / 3
                                            : cost;
         if (you.gold >= faith_cost)
+        {
             afford_any = true;
-        string line =
-            make_stringf("  [%c] %5d gold - %s %s %s",
-                         'a' + i,
-                         faith_cost,
-                         apostrophise(
-                             you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY,
-                                       i)].get_string()).c_str(),
-                         shop_type_name(
-                             static_cast<shop_type>(
-                                 you.props[
-                                     make_stringf(GOZAG_SHOP_TYPE_KEY, i)]
-                                     .get_int())).c_str(),
-                         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, i)]
-                             .get_string().c_str());
-        mpr_nojoin(MSGCH_PLAIN, line.c_str());
+            break;
+        }
     }
 
     if (!afford_any)
     {
-        mpr("You can't afford to fund any of these merchants!");
+        mpr("You can't afford to fund any merchants right now!");
         return false;
     }
 
-    mprf(MSGCH_PROMPT, "Fund which merchant? (any other key to cancel)");
-    const int i = toalower(get_ch()) - 'a';
-    if (i >= 0 && i <= GOZAG_MAX_SHOPS - 1)
+    int i = 0;
+    int cost = 0;
+    int faith_cost = 0;
+    while (true)
     {
-        const int cost =
-            you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
-        const int faith_cost = you.faith() ? cost * 2 / 3
-                                           : cost;
+        if (crawl_state.seen_hups)
+        {
+            int min_price = INT_MAX;
+            for (int j = 0; j < GOZAG_MAX_POTIONS; j++)
+            {
+                cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)]
+                       .get_int();
+                if (cost < min_price)
+                {
+                    i = j;
+                    min_price = cost;
+                }
+            }
+            cost = min_price;
+            faith_cost = you.faith() ? cost * 2 / 3 : cost;
+            break;
+        }
+        mesclr();
+        for (i = 0; i < GOZAG_MAX_SHOPS; i++)
+        {
+            cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
+            faith_cost = you.faith() ? cost * 2 / 3 : cost;
+            string line =
+                make_stringf("  [%c] %5d gold - %s %s %s",
+                             'a' + i,
+                             faith_cost,
+                             apostrophise(
+                                 you.props[
+                                     make_stringf(GOZAG_SHOPKEEPER_NAME_KEY,
+                                     i)].get_string()).c_str(),
+                             shop_type_name(
+                                 static_cast<shop_type>(
+                                     you.props[
+                                         make_stringf(GOZAG_SHOP_TYPE_KEY, i)]
+                                         .get_int())).c_str(),
+                             you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, i)]
+                                 .get_string().c_str());
+            mpr_nojoin(MSGCH_PLAIN, line.c_str());
+        }
+        mprf(MSGCH_PROMPT, "Fund which merchant?");
+        i = toalower(get_ch()) - 'a';
+        if (i < 0 || i > GOZAG_MAX_SHOPS - 1)
+            continue;
+        cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
+        faith_cost = you.faith() ? cost * 2 / 3 : cost;
         if (you.gold < faith_cost)
         {
             mpr("You don't have enough gold to fund that merchant!");
-            return false;
-        }
-        you.gold -= faith_cost;
-        you.attribute[ATTR_GOZAG_GOLD_USED] += faith_cost;
-
-        const shop_type type =
-            static_cast<shop_type>(
-                you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int());
-        const string name =
-            you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)];
-
-        string suffix = replace_all(
-                             you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, i)]
-                                 .get_string(), " ", "_");
-        if (!suffix.empty())
-            suffix = " suffix:" + suffix;
-
-        string spec =
-            make_stringf("%s shop name:%s%s greed:%d use_all ; %s",
-                         shoptype_to_str(type),
-                         replace_all(name, " ", "_").c_str(),
-                         suffix.c_str(),
-                         you.props[make_stringf(GOZAG_SHOP_GREED_KEY, i)]
-                             .get_int(),
-                         you.props[make_stringf(GOZAG_SHOP_ITEMS_KEY, i)]
-                             .get_string().c_str()
-                         );
-
-        if (candidates.size())
-        {
-            vector<int> weights;
-            for (unsigned int j = 0; j < candidates.size(); j++)
-            {
-                const int diff =
-                    abs(max_diff - _proximity_to_explored_levels(candidates[j]));
-                weights.push_back(diff * diff);
-            }
-            const int which =
-                choose_random_weighted(weights.begin(), weights.end());
-            level_id lid = candidates[which];
-            you.props[make_stringf(GOZAG_SHOP_KEY, lid.describe().c_str())]
-                .get_string() = spec;
-
-            mprf(MSGCH_GOD, "%s sets up shop in %s.", name.c_str(),
-                 branches[lid.branch].longname);
-            dprf("%s", lid.describe().c_str());
-
-            mark_offlevel_shop(lid, type);
-        }
-        else
-        {
-            ASSERT(grd(you.pos()) == DNGN_FLOOR);
-            keyed_mapspec kmspec;
-            kmspec.set_feat(spec, false);
-            if (!kmspec.get_feat().shop.get())
-            {
-                mprf(MSGCH_ERROR, "Tried to place an invalid shop spec!");
-                mprf(MSGCH_ERROR, "Spec is, \"%s\"", spec.c_str());
-                mprf(MSGCH_ERROR, "Please show someone this spec so the "
-                                  "underlying bug can be fixed!");
-                mprf(MSGCH_ERROR, "Falling back to just name and type...");
-                vector<string> parts = split_string(";", spec);
-                ASSERT(parts.size() > 0);
-                kmspec.set_feat(parts[0], false);
-                if (!kmspec.get_feat().shop.get())
-                    die("Invalid shop spec?");
-            }
-
-            place_spec_shop(you.pos(), kmspec.get_feat().shop.get());
-            link_items();
-            env.markers.add(new map_feature_marker(you.pos(),
-                                                   DNGN_ABANDONED_SHOP));
-            env.markers.clear_need_activate();
-
-            mprf(MSGCH_GOD, "A shop appears before you!");
+            more();
+            continue;
         }
 
-        you.attribute[ATTR_GOZAG_SHOPS]++;
-        you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
-
-        for (int j = 0; j < 3; j++)
-        {
-            you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
-            you.props.erase(make_stringf(GOZAG_SHOP_TYPE_KEY, j));
-            you.props.erase(make_stringf(GOZAG_SHOP_SUFFIX_KEY, j));
-            you.props.erase(make_stringf(GOZAG_SHOP_GREED_KEY, j));
-            you.props.erase(make_stringf(GOZAG_SHOP_ITEMS_KEY, j));
-            you.props.erase(make_stringf(GOZAG_SHOP_COST_KEY, j));
-        }
-
-        return true;
+        break;
     }
 
-    canned_msg(MSG_OK);
-    return false;
+    ASSERT(you.gold >= faith_cost);
+
+    you.gold -= faith_cost;
+    you.attribute[ATTR_GOZAG_GOLD_USED] += faith_cost;
+
+    const shop_type type =
+        static_cast<shop_type>(
+            you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int());
+    const string name =
+        you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)];
+
+    string suffix = replace_all(
+                         you.props[make_stringf(GOZAG_SHOP_SUFFIX_KEY, i)]
+                             .get_string(), " ", "_");
+    if (!suffix.empty())
+        suffix = " suffix:" + suffix;
+
+    string spec =
+        make_stringf("%s shop name:%s%s greed:%d use_all ; %s",
+                     shoptype_to_str(type),
+                     replace_all(name, " ", "_").c_str(),
+                     suffix.c_str(),
+                     you.props[make_stringf(GOZAG_SHOP_GREED_KEY, i)]
+                         .get_int(),
+                     you.props[make_stringf(GOZAG_SHOP_ITEMS_KEY, i)]
+                         .get_string().c_str()
+                     );
+
+    if (candidates.size())
+    {
+        vector<int> weights;
+        for (unsigned int j = 0; j < candidates.size(); j++)
+        {
+            const int diff = max_diff - abs(level_id::current().absdepth()
+                                            - candidates[j].absdepth());
+            weights.push_back(diff * diff);
+        }
+        const int which =
+            choose_random_weighted(weights.begin(), weights.end());
+        level_id lid = candidates[which];
+        you.props[make_stringf(GOZAG_SHOP_KEY, lid.describe().c_str())]
+            .get_string() = spec;
+
+        mprf(MSGCH_GOD, "%s sets up shop in %s.", name.c_str(),
+             branches[lid.branch].longname);
+        dprf("%s", lid.describe().c_str());
+
+        mark_offlevel_shop(lid, type);
+    }
+    else
+    {
+        ASSERT(grd(you.pos()) == DNGN_FLOOR);
+        keyed_mapspec kmspec;
+        kmspec.set_feat(spec, false);
+        if (!kmspec.get_feat().shop.get())
+        {
+            mprf(MSGCH_ERROR, "Tried to place an invalid shop spec!");
+            mprf(MSGCH_ERROR, "Spec is, \"%s\"", spec.c_str());
+            mprf(MSGCH_ERROR, "Please show someone this spec so the "
+                              "underlying bug can be fixed!");
+            mprf(MSGCH_ERROR, "Falling back to just name and type...");
+            vector<string> parts = split_string(";", spec);
+            ASSERT(parts.size() > 0);
+            kmspec.set_feat(parts[0], false);
+            if (!kmspec.get_feat().shop.get())
+                die("Invalid shop spec?");
+        }
+
+        place_spec_shop(you.pos(), kmspec.get_feat().shop.get());
+        link_items();
+        env.markers.add(new map_feature_marker(you.pos(),
+                                               DNGN_ABANDONED_SHOP));
+        env.markers.clear_need_activate();
+
+        mprf(MSGCH_GOD, "A shop appears before you!");
+    }
+
+    you.attribute[ATTR_GOZAG_SHOPS]++;
+    you.attribute[ATTR_GOZAG_SHOPS_CURRENT]++;
+
+    for (int j = 0; j < 3; j++)
+    {
+        you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
+        you.props.erase(make_stringf(GOZAG_SHOP_TYPE_KEY, j));
+        you.props.erase(make_stringf(GOZAG_SHOP_SUFFIX_KEY, j));
+        you.props.erase(make_stringf(GOZAG_SHOP_GREED_KEY, j));
+        you.props.erase(make_stringf(GOZAG_SHOP_ITEMS_KEY, j));
+        you.props.erase(make_stringf(GOZAG_SHOP_COST_KEY, j));
+    }
+
+    return true;
 }
 
 typedef struct
