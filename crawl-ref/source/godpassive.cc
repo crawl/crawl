@@ -723,15 +723,13 @@ void qazlal_storm_clouds()
             if (!cell_is_solid(*ai))
                 count++;
 
-        if (count >= 3)
+        if (count >= 5)
             candidates.push_back(*ri);
     }
     const int count =
-        div_rand_round((min((int)you.piety, piety_breakpoint(5))
-                        - piety_breakpoint(0))
+        div_rand_round(min((int)you.piety, piety_breakpoint(5))
                        * candidates.size() * you.time_taken,
-                       (piety_breakpoint(5) - piety_breakpoint(0))
-                       * 10 * BASELINE_DELAY);
+                       piety_breakpoint(5) * 7 * BASELINE_DELAY);
     if (count < 0)
         return;
     shuffle_array(candidates);
