@@ -2103,12 +2103,7 @@ bool monster_simulacrum(monster *caster, bool actual)
                                   caster->god,
                                   sim_type)))
                 {
-                    if (!created++ && cast_visible)
-                    {
-                        simple_monster_message(caster,
-                            " holds a chunk of flesh high, and a cloud of icy vapour forms.",
-                            caster->friendly() ? MSGCH_FRIEND_SPELL : MSGCH_MONSTER_SPELL);
-                    }
+                    created++;
 
                     if (dec_mitm_item_quantity(item.index(), 1))
                         caster->inv[MSLOT_MISCELLANY] = NON_ITEM;
@@ -2125,15 +2120,15 @@ bool monster_simulacrum(monster *caster, bool actual)
             {
                 if (seen > 1)
                 {
-                    mprf(MSGCH_WARN,
-                         "The vapour coalesces into ice likenesses of %s.",
+                    mprf("%s creates some ice likenesses of %s.",
+                         caster->name(DESC_THE).c_str(),
                          pluralise(mons_class_name(sim_type)).c_str());
                 }
                 else if (seen == 1)
                 {
                     const char *name = mons_class_name(sim_type);
-                    mprf(MSGCH_WARN,
-                         "The vapour coalesces into an ice likeness of %s.",
+                    mprf("%s creates an ice likeness of %s.",
+                         caster->name(DESC_THE).c_str(),
                          article_a(name).c_str());
                 }
             }
