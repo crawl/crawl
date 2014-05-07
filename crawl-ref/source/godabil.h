@@ -60,10 +60,11 @@ bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates)
 bool fedhas_plant_ring_from_fruit();
 int fedhas_rain(const coord_def &target);
 int count_corpses_in_los(vector<stack_iterator> *positions);
-int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY,
-                         bool interactive = true);
+int fedhas_check_corpse_spores();
+int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY);
 bool mons_is_evolvable(const monster* mon);
-bool fedhas_evolve_flora();
+bool fedhas_check_evolve_flora();
+void fedhas_evolve_flora();
 
 void lugonu_bend_space();
 

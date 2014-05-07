@@ -2749,11 +2749,7 @@ int count_corpses_in_los(vector<stack_iterator> *positions)
     return count;
 }
 
-// Destroy corpses in the player's LOS (first corpse on a stack only)
-// and make 1 giant spore per corpse.  Spores are given the input as
-// their starting behavior; the function returns the number of corpses
-// processed.
-int fedhas_corpse_spores(beh_type attitude, bool interactive)
+int fedhas_check_corpse_spores()
 {
     vector<stack_iterator> positions;
     int count = count_corpses_in_los(&positions);
@@ -2779,12 +2775,27 @@ int fedhas_corpse_spores(beh_type attitude, bool interactive)
 #endif
     }
 
-    if (interactive && yesnoquit("Will you create these spores?",
-                                 true, 'y') <= 0)
+    if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
     {
         viewwindow(false);
         return -1;
     }
+
+    return count;
+}
+
+// Destroy corpses in the player's LOS (first corpse on a stack only)
+// and make 1 giant spore per corpse.  Spores are given the input as
+// their starting behavior; the function returns the number of corpses
+// processed.
+int fedhas_corpse_spores(beh_type attitude)
+{
+    vector<stack_iterator> positions;
+    int count = count_corpses_in_los(&positions);
+    ASSERT(attitude != BEH_FRIENDLY || count > 0);
+
+    if (count == 0)
+        return count;
 
     for (unsigned i = 0; i < positions.size(); ++i)
     {
@@ -2918,7 +2929,9 @@ static bool _place_ballisto(const coord_def& pos)
     return false;
 }
 
-bool fedhas_evolve_flora()
+#define FEDHAS_EVOLVE_TARGET_KEY "fedhas_evolve_target"
+
+bool fedhas_check_evolve_flora()
 {
     monster_conversion upgrade;
 
@@ -2978,8 +2991,8 @@ bool fedhas_evolve_flora()
                 mpr("You must target a plant or fungus.");
             return false;
         }
-        return _place_ballisto(spelld.target);
-
+        you.props[FEDHAS_EVOLVE_TARGET_KEY].get_coord() = spelld.target;
+        return true;
     }
 
     if (!_possible_evolution(plant, upgrade))
@@ -3014,6 +3027,27 @@ bool fedhas_evolve_flora()
         mpr("Not enough piety available.");
         return false;
     }
+
+    you.props[FEDHAS_EVOLVE_TARGET_KEY].get_coord() = spelld.target;
+    return true;
+}
+
+void fedhas_evolve_flora()
+{
+    monster_conversion upgrade;
+    const coord_def target = you.props[FEDHAS_EVOLVE_TARGET_KEY].get_coord();
+    you.props.erase(FEDHAS_EVOLVE_TARGET_KEY);
+
+    monster* const plant = monster_at(target);
+
+    if (!plant)
+    {
+        ASSERT(is_moldy(target));
+        _place_ballisto(target);
+        return;
+    }
+
+    ASSERT(_possible_evolution(plant, upgrade));
 
     switch (plant->type)
     {
@@ -3078,15 +3112,17 @@ bool fedhas_evolve_flora()
     plant->hit_dice += you.skill_rdiv(SK_INVOCATIONS);
 
     if (upgrade.fruit_cost)
+    {
+        vector<pair<int, int> > collected_fruit;
+        _collect_fruit(collected_fruit);
         _decrease_amount(collected_fruit, upgrade.fruit_cost);
+    }
 
     if (upgrade.piety_cost)
     {
         lose_piety(upgrade.piety_cost);
         mpr("Your piety has decreased.");
     }
-
-    return true;
 }
 
 static int _lugonu_warp_monster(monster* mon, int pow)

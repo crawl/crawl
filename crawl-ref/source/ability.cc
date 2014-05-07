@@ -1554,6 +1554,23 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return true;
 
+    case ABIL_FEDHAS_EVOLUTION:
+        return fedhas_check_evolve_flora();
+
+    case ABIL_FEDHAS_SPAWN_SPORES:
+    {
+        const int retval = fedhas_check_corpse_spores();
+        if (retval <= 0)
+        {
+            if (retval == 0)
+                mpr("No corpses are in range.");
+            else
+                canned_msg(MSG_OK);
+            return false;
+        }
+        return true;
+    }
+
     case ABIL_SPIT_POISON:
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
@@ -2769,22 +2786,11 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_FEDHAS_SPAWN_SPORES:
-    {
-        const int retval = fedhas_corpse_spores();
-        if (retval <= 0)
-        {
-            if (retval == 0)
-                mpr("No corpses are in range.");
-            else
-                canned_msg(MSG_OK);
-            return false;
-        }
+        ASSERT(fedhas_corpse_spores() > 0);
         break;
-    }
 
     case ABIL_FEDHAS_EVOLUTION:
-        if (!fedhas_evolve_flora())
-            return false;
+        fedhas_evolve_flora();
         break;
 
     case ABIL_TRAN_BAT:
