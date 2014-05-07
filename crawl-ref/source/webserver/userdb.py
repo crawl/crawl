@@ -145,7 +145,9 @@ def session_info(sid):
     return s
 
 def renew_session(sid):
+    if sid not in sessions: return False
     sessions[sid]["expires"] = (time.time() + 5*60)
+    return True
 
 def new_session():
     sid = pack_sid(rand.getrandbits(128))

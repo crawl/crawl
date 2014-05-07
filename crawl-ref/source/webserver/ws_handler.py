@@ -205,7 +205,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.reset_timeout()
 
         if config.max_connections < len(sockets):
-            self.send_message("close", reason="The maximum number of"
+            self.send_message("close", reason="The maximum number of "
                               + "connections has been reached, sorry :(")
             self.close()
         else:
@@ -279,7 +279,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             if self.is_running() and self.process.idle_time() > config.max_idle_time:
                 self.logger.info("Stopping crawl after idle time limit.")
-                self.stop_playing()
+                self.go_lobby()
 
         if not self.client_closed:
             self.reset_timeout()
@@ -566,7 +566,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         if self.sid:
-            userdb.renew_session(self.sid)
+            if not userdb.renew_session(self.sid):
+                self.send_message("close", reconnect=True)
+                self.close()
         if message.startswith("{"):
             try:
                 obj = json_decode(message)

@@ -114,7 +114,11 @@ function (exports, $, React, comm, LobbyRoot, Loader, pubsub) {
 
     function connection_closed(data)
     {
-        update({state: "closed", msg: data.reason});
+        if (data.reconnect)
+            location.reload();
+        else
+            update({state: "closed", msg: data.reason});
+        return true;
     }
 
     function go_to(data)
