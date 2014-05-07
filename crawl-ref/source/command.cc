@@ -596,6 +596,7 @@ static const char *targeting_help_wiz =
     "<w>D</w>: get debugging information about the monster\n"
     "<w>o</w>: give item to monster\n"
     "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
+    "<w>G</w>: make monster gain experience\n"
     "<w>Ctrl-H</w>: heal the monster to full hit points\n"
     "<w>P</w>: apply divine blessing to monster\n"
     "<w>m</w>: move monster or player\n"
