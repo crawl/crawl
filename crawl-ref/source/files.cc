@@ -1235,6 +1235,45 @@ void _make_level(dungeon_feature_type stair_taken, const level_id& old_level)
     env.sanctuary_time = 0;
 }
 
+/**
+ * Move the player to the appropriate entrance location in a level.
+ *
+ * @param stair_taken   The means used to leave the last level.
+ * @param old_branch    The previous level's branch.
+ * @param return_pos    The location of the entrance portal, if applicable.
+ * @param dest_pos      The player's location on the last level.
+ */
+void _place_player(dungeon_feature_type stair_taken, branch_type old_branch,
+                   const coord_def &return_pos, const coord_def &dest_pos)
+{
+    if (player_in_branch(BRANCH_ABYSS))
+        you.moveto(ABYSS_CENTRE);
+    else if (!return_pos.origin())
+        you.moveto(return_pos);
+    else
+        _place_player_on_stair(old_branch, stair_taken, dest_pos);
+
+    // Don't return the player into walls, deep water, or a trap.
+    for (distance_iterator di(you.pos(), true, false); di; ++di)
+        if (you.is_habitable_feat(grd(*di))
+            && !is_feat_dangerous(grd(*di), true)
+            && !feat_is_trap(grd(*di), true))
+        {
+            if (you.pos() != *di)
+                you.moveto(*di);
+            break;
+        }
+
+    // This should fix the "monster occurring under the player" bug.
+    if (monster* mon = monster_at(you.pos()))
+        for (distance_iterator di(you.pos()); di; ++di)
+            if (!monster_at(*di) && mon->is_habitable(*di))
+            {
+                mon->move_to_pos(*di);
+                break;
+            }
+}
+
 
 /**
  * Load the current level.
@@ -1368,32 +1407,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _clear_clouds();
 
-        if (player_in_branch(BRANCH_ABYSS))
-            you.moveto(ABYSS_CENTRE);
-        else if (!return_pos.origin())
-            you.moveto(return_pos);
-        else
-            _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
-
-        // Don't return the player into walls, deep water, or a trap.
-        for (distance_iterator di(you.pos(), true, false); di; ++di)
-            if (you.is_habitable_feat(grd(*di))
-                && !is_feat_dangerous(grd(*di), true)
-                && !feat_is_trap(grd(*di), true))
-            {
-                if (you.pos() != *di)
-                    you.moveto(*di);
-                break;
-            }
-
-        // This should fix the "monster occurring under the player" bug.
-        if (monster* mon = monster_at(you.pos()))
-            for (distance_iterator di(you.pos()); di; ++di)
-                if (!monster_at(*di) && mon->is_habitable(*di))
-                {
-                    mon->move_to_pos(*di);
-                    break;
-                }
+        _place_player(stair_taken, old_level.branch, return_pos, dest_pos);
     }
 
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
