@@ -4128,13 +4128,7 @@ item_info get_item_info(const item_def& item)
 
 int runes_in_pack()
 {
-    int num_runes = 0;
-
-    for (int i = 0; i < NUM_RUNE_TYPES; i++)
-        if (you.runes[i])
-            num_runes++;
-
-    return num_runes;
+    return static_cast<int>(you.runes.count());
 }
 
 static const object_class_type _mimic_item_classes[] =
