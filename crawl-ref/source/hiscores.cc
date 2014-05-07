@@ -1474,8 +1474,7 @@ void scorefile_entry::init(time_t dt)
     if (base_score)
     {
         // sprint games could overflow a 32 bit value
-        uint64_t pt = points + min(you.gold, 1000000);
-        pt += _award_modified_experience();
+        uint64_t pt = points + _award_modified_experience();
 
         num_runes      = runes_in_pack();
         num_diff_runes = num_runes;
