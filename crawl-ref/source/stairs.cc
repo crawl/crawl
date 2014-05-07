@@ -806,11 +806,7 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
     if (stair_find == DNGN_ENTER_ZIGGURAT)
     {
         #define ZIG_RUNES 3
-        int nrune = 0;
-        for (int i = 0; i < NUM_RUNE_TYPES; i++)
-            if (you.runes[i])
-                nrune++;
-        if (nrune < ZIG_RUNES)
+        if (runes_in_pack() < ZIG_RUNES)
         {
             mprf("You need at least %d runes to enter this place.", ZIG_RUNES);
             return;
