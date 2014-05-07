@@ -746,7 +746,8 @@ bool fill_status_info(int status, status_info* inf)
                                                             ", ", ", ")
                                                             .c_str());
         inf->long_text = "You are bribing "
-                         + comma_separated_line(places.begin(), places.end());
+                         + comma_separated_line(places.begin(), places.end())
+                         + ".";
         break;
     }
 
