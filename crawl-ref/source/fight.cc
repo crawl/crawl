@@ -664,11 +664,12 @@ void get_all_cleave_targets(const actor* attacker, const coord_def& def,
         return;
 
     int dir = coinflip() ? -1 : 1;
-    get_cleave_targets(attacker, def, dir, targets, true);
+    bool behind = coinflip();
+    get_cleave_targets(attacker, def, dir, targets, behind);
     targets.reverse();
     if (actor_at(def))
         targets.push_back(actor_at(def));
-    get_cleave_targets(attacker, def, -dir, targets, false);
+    get_cleave_targets(attacker, def, -dir, targets, !behind);
 }
 
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
