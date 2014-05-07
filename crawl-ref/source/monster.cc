@@ -4152,7 +4152,7 @@ int monster::skill(skill_type sk, int scale, bool real) const
         return hd;
 
     case SK_NECROMANCY:
-        return (holiness() == MH_UNDEAD || holiness() == MH_DEMONIC) ? hd : hd/2;
+        return (has_spell_of_type(SPTYP_NECROMANCY)) ? hd : hd/2;
 
     case SK_POISON_MAGIC:
     case SK_FIRE_MAGIC:
