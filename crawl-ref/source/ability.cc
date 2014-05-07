@@ -2956,10 +2956,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_QAZLAL_UPHEAVAL:
         if (!qazlal_upheaval(coord_def()))
-        {
-            canned_msg(MSG_OK);
             return false;
-        }
         break;
 
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
