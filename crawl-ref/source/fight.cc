@@ -633,7 +633,17 @@ void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
 
     const coord_def atk = attacker->pos();
     coord_def atk_vector = def - atk;
-    const int num = behind ? 4 : 3;
+    int num = behind ? 4 : 3;
+    // Let the cleave try to go farther around if we are sure that this
+    // won't overlap with going in the other direction.
+    for (adjacent_iterator ai(atk); ai; ++ai)
+    {
+        if (cell_is_solid(*ai))
+        {
+            num = 7;
+            break;
+        }
+    }
 
     for (int i = 0; i < num; ++i)
     {
