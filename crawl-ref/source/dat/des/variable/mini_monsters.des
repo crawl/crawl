@@ -2852,7 +2852,7 @@ ENDMAP
 NAME:    minislime_mu
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   Depths, !Depths:$
-MONS:    large slime creature, giant eyeball, eye of draining
+MONS:    large slime creature, great orb of eyes, eye of draining
 KITEM:   R = royal jelly
 ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
 ITEM:    wand of digging / wand of disintegration
