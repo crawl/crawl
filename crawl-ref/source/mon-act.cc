@@ -2065,6 +2065,19 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    const int gold = gozag_gold_in_los(mons);
+    if (gold > 0)
+    {
+        for (int i = 0; i < gold; i++)
+            if (one_chance_in(20))
+            {
+                simple_monster_message(mons,
+                                       " is distracted by the nearby gold.");
+                mons->speed_increment -= non_move_energy;
+                return;
+            }
+    }
+
     if (crawl_state.disables[DIS_MON_ACT] && _unfriendly_or_insane(mons))
     {
         mons->speed_increment -= non_move_energy;

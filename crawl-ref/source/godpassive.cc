@@ -662,14 +662,14 @@ int ash_skill_boost(skill_type sk, int scale)
     return min(level, 27 * scale);
 }
 
-int gozag_gold_bonus()
+int gozag_gold_in_los(actor *who)
 {
     if (!you_worship(GOD_GOZAG) || player_under_penance())
         return 0;
 
     int gold_count = 0;
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND, LOS_DEFAULT);
+    for (radius_iterator ri(who->pos(), LOS_RADIUS, C_ROUND, LOS_DEFAULT);
          ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)
