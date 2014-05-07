@@ -48,12 +48,6 @@
 #include "viewmap.h"
 #include "xom.h"
 
-static bool _abyss_blocks_teleport(bool cblink)
-{
-    // Controlled Blink (the spell) works more reliably in the Abyss.
-    return cblink ? coinflip() : !one_chance_in(3);
-}
-
 // XXX: can miscast before cancelling.
 spret_type cast_controlled_blink(int pow, bool fail)
 {
@@ -136,14 +130,6 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         if (pre_msg)
             mpr(pre_msg->c_str());
         canned_msg(MSG_STRANGE_STASIS);
-    }
-    else if (player_in_branch(BRANCH_ABYSS)
-             && _abyss_blocks_teleport(high_level_controlled_blink)
-             && !wizard_blink)
-    {
-        if (pre_msg)
-            mpr(pre_msg->c_str());
-        mpr("The power of the Abyss keeps you in your place!");
     }
     else if (you.confused() && !wizard_blink)
     {
@@ -305,12 +291,6 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 
     if (you.no_tele(true, true, true) && !override_stasis)
         canned_msg(MSG_STRANGE_STASIS);
-    else if (player_in_branch(BRANCH_ABYSS)
-             && !override_abyss
-             && _abyss_blocks_teleport(false))
-    {
-        mpr("The power of the Abyss keeps you in your place!");
-    }
     // First try to find a random square not adjacent to the player,
     // then one adjacent if that fails.
     else if (!random_near_space(&you, you.pos(), target)
