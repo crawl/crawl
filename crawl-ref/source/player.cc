@@ -7354,7 +7354,7 @@ void player::paralyse(actor *who, int str, string source)
     // Death's Door + Borg's paralysis unblockable.
     if (who && (duration[DUR_PARALYSIS] || duration[DUR_PARALYSIS_IMMUNITY]))
     {
-        canned_msg(MSG_YOU_RESIST);
+        mpr("You shrug off the repeated paralysis!");
         return;
     }
 
