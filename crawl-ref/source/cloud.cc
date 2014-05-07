@@ -375,11 +375,11 @@ void manage_clouds()
             if (x_chance_in_y(dissipate, 400) && !actor_at(cloud.pos))
             {
                 bool you_see = you.see_cell(cloud.pos);
-                if (you_see)
+                if (you_see && !you_worship(GOD_QAZLAL))
                     mpr("Lightning arcs down from a storm cloud!");
                 noisy(25, cloud.pos,
-                      you_see ? NULL
-                              : "You hear a mighty clap of thunder!");
+                      you_see || you_worship(GOD_QAZLAL) ? NULL
+                      : "You hear a mighty clap of thunder!");
             }
             if (grd(cloud.pos) == DNGN_LAVA)
                 dissipate *= 4;
@@ -1156,6 +1156,7 @@ static int _actor_cloud_damage(actor *act,
                     }
                     noisy(25, act->pos(),
                           act->is_player() || you.see_cell(act->pos())
+                          || you_worship(GOD_QAZLAL)
                           ? NULL
                           : "You hear a clap of thunder!");
 
