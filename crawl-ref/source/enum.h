@@ -4455,6 +4455,8 @@ enum uncancellable_type
     UNC_DRAW_THREE,            // arg is inv slot of the deck
     UNC_STACK_FIVE,            // arg is inv slot of the deck
     UNC_MERCENARY,             // arg is mid of the monster
+    UNC_POTION_PETITION,       // arg is ignored
+    UNC_CALL_MERCHANT,         // arg is ignored
 };
 
 // game-wide random seeds
