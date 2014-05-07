@@ -3251,7 +3251,7 @@ bool cheibriados_slouch(int pow)
         }
 
     targetter_los hitfunc(&you, LOS_DEFAULT);
-    if (stop_attack_prompt(hitfunc, "hurt", _act_slouchable))
+    if (stop_attack_prompt(hitfunc, "harm", _act_slouchable))
         return false;
 
     mpr("You can feel time thicken for a moment.");
