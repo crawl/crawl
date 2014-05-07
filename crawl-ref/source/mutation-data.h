@@ -1303,12 +1303,20 @@
   "antimagic bite"
 },
 
-{ MUT_NO_DEVICE_HEAL,                 0,  1, true,  false,  false,
+{ MUT_NO_DEVICE_HEAL,                 7,  2, true,  false,  false,
   "no device heal",
 
-  {"Potions and wands cannot restore your HP.", "", ""},
-  {"Your system rejects artificial healing.", "", ""},
-  {"Your system accepts artificial healing.", "", ""},
+  {"Potions and wands are less effective at restoring your HP.",
+   "Potions and wands cannot restore your HP.",
+   ""},
+
+  {"Your system partially rejects artificial healing.",
+   "Your system completely rejects artificial healing.",
+   ""},
+
+  {"Your system completely accepts artificial healing.",
+   "Your system partially accepts artificial healing.",
+   ""},
 
   "no device heal"
 },

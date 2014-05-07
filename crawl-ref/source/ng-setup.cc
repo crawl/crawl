@@ -332,7 +332,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ANTIMAGIC_BITE] = 1;
         you.mutation[MUT_REGENERATION]   = 1;
         you.mutation[MUT_MANA_SHIELD]    = 1;
-        you.mutation[MUT_NO_DEVICE_HEAL] = 1;
+        you.mutation[MUT_NO_DEVICE_HEAL] = 2;
         break;
     default:
         break;

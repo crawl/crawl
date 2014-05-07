@@ -2941,7 +2941,7 @@ bool is_emergency_item(const item_def &item)
         case WAND_TELEPORTATION:
             return you.species != SP_FORMICID;
         case WAND_HEAL_WOUNDS:
-            return !you.mutation[MUT_NO_DEVICE_HEAL];
+            return you.can_device_heal();
         default:
             return false;
         }
@@ -2966,7 +2966,7 @@ bool is_emergency_item(const item_def &item)
         case POT_HASTE:
             return !you_worship(GOD_CHEIBRIADOS) && you.species != SP_FORMICID;
         case POT_HEAL_WOUNDS:
-            return !you.mutation[MUT_NO_DEVICE_HEAL];
+            return you.can_device_heal();
         case POT_CURING:
         case POT_RESISTANCE:
         case POT_MAGIC:
@@ -3293,7 +3293,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_WANDS:
 
-        if (you.mutation[MUT_NO_DEVICE_HEAL]
+        if (!you.can_device_heal()
             && item_type_known(item)
             && item.sub_type == WAND_HEAL_WOUNDS)
         {
@@ -3379,7 +3379,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_PARALYSIS:
             return you.species == SP_FORMICID;
         case POT_HEAL_WOUNDS:
-            return you.mutation[MUT_NO_DEVICE_HEAL];
+            return !you.can_device_heal();
         case POT_INVISIBILITY:
             return _invisibility_is_useless(temp);
         }
