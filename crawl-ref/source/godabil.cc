@@ -4044,7 +4044,7 @@ static bool _duplicate_shop_type(int cur, shop_type type)
 int gozag_price_for_shop(bool max)
 {
     // This value probably needs tweaking.
-    const int base = max ? 1000 : 500 + random2avg(501, 2);
+    const int base = max ? 1000 : random_range(500, 1000);
     const int price = base
                       * (GOZAG_SHOP_BASE_MULTIPLIER
                          + GOZAG_SHOP_MOD_MULTIPLIER
