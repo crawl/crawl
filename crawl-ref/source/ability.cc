@@ -1503,7 +1503,7 @@ static bool _check_ability_possible(const ability_def& abil,
         && get_real_mp(false) < (int)abil.mp_cost)
     {
         if (!quiet)
-            mpr("You haven't enough innate magic capacity to sacrifice.");
+            mpr("You don't have enough innate magic capacity to sacrifice.");
         return false;
     }
 
