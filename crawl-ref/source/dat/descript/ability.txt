@@ -110,7 +110,7 @@ Stop singing your Song of Slaying.
 Self-Restoration ability
 
 At the permanent loss of one magic point restore your Strength, Dexterity and
-Intelligence, and heal any rotted hit points.
+Intelligence, and heal any rotted health.
 %%%%
 Device Recharging ability
 
@@ -138,8 +138,8 @@ Evoke Blink ability
 %%%%
 Evoke Berserk Rage ability
 
-Go berserk. Going berserk greatly, if temporarily, increases your hit points
-and damage output in melee fights. It will time out quickly if you don't kill
+Go berserk. Going berserk greatly, if temporarily, increases your health and
+damage output in melee fights. It will time out quickly if you don't kill
 anything, but may be extended by multiple kills. While berserk, you cannot
 perform a number of actions such as, for example, (un)wield a weapon, quaff
 something, evoke wands or items, or cast spells. Such a rage is usually
@@ -281,7 +281,7 @@ zombies and skeletons cannot leave the level they were created on.
 %%%%
 Drain Life ability
 
-Heal hit points by draining the life force of the monsters surrounding you.
+Heal by draining the life force of the monsters surrounding you.
 %%%%
 Enslave Soul ability
 
@@ -351,8 +351,8 @@ greatly appreciates using this ability.
 %%%%
 Berserk ability
 
-Go berserk. Going berserk greatly, if temporarily, increases your hit points
-and damage output in melee fights. It will time out quickly if you don't kill
+Go berserk. Going berserk greatly, if temporarily, increases your health and
+damage output in melee fights. It will time out quickly if you don't kill
 anything, but may be extended by multiple kills. While berserk, you cannot
 perform a number of actions such as, for example, (un)wield a weapon, quaff
 something, evoke wands or items, or cast spells. Such a rage is usually
@@ -398,7 +398,7 @@ You can also heal allies and neutral monsters.
 %%%%
 Lesser Self-Healing ability
 
-Depending on your Invocations skill, heal a small amount of hit points.
+Depending on your Invocations skill, heal a small amount of health.
 %%%%
 Purification ability
 
@@ -425,14 +425,14 @@ You can also heal allies and neutral monsters.
 %%%%
 Greater Self-Healing ability
 
-Depending on your Invocations skill, heal a moderate amount of hit points.
+Depending on your Invocations skill, heal a moderate amount of health.
 Roughly, Greater Healing will allow you to heal three times the amount of
 Lesser Healing at a slightly higher total piety cost.
 %%%%
 Divine Vigour ability
 
-Greatly increase your maximum hit points and magic points, depending on
-Invocations skill. Your current hit points and magic points will also be
+Greatly increase your maximum health and magic points, depending on
+Invocations skill. Your current health and magic points will also be
 increased proportionally.
 %%%%
 # Lugonu

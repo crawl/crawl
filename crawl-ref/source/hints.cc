@@ -644,7 +644,7 @@ static void _hints_healing_reminder()
 
             string text;
             text =  "Remember to rest between fights and to enter unexplored "
-                    "terrain with full hitpoints and magic. Ideally you "
+                    "terrain with full health and magic. Ideally you "
                     "should retreat into areas you've already explored and "
                     "cleared of monsters; resting on the edge of the explored "
                     "terrain increases the chances of your rest being "
@@ -656,8 +656,8 @@ static void _hints_healing_reminder()
             if (you.hp < you.hp_max && you_worship(GOD_TROG)
                 && you.can_go_berserk())
             {
-                text += "\nAlso, berserking might help you not to lose so many "
-                        "hitpoints in the first place. To use your abilities type "
+                text += "\nAlso, berserking might help you not to lose so much "
+                        "health in the first place. To use your abilities type "
                         "<w>a</w>.";
             }
             mprf(MSGCH_TUTORIAL, "%s", text.c_str());
@@ -1921,7 +1921,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             learned_something_new(HINT_YOU_ENCHANTED);
             Hints.hints_just_triggered = true;
         }
-        text << "While sick, your hitpoints won't regenerate and your attributes "
+        text << "While sick, your health won't regenerate and your attributes "
                 "may decrease. Sickness wears off with time, so you should wait it "
                 "out with %.";
         cmd.push_back(CMD_REST);
@@ -1936,8 +1936,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             learned_something_new(HINT_YOU_ENCHANTED);
             Hints.hints_just_triggered = true;
         }
-        text << "Poison will slowly reduce your HP. You can try to wait it out "
-                "with <w>%</w>, but if you're low on hit points it's usually safer "
+        text << "Poison will slowly reduce your health. You can try to wait it out "
+                "with <w>%</w>, but if you're low on health it's usually safer "
                 "to quaff a potion of curing.";
         cmd.push_back(CMD_REST);
         break;
@@ -1950,15 +1950,15 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         Hints.hints_just_triggered = true;
 
         text << "Ugh, your flesh is rotting! Not only does this slowly "
-                "reduce your HP, it also slowly reduces your <w>maximum</w> "
-                "HP (your usual maximum HP will be indicated by a number in "
-                "parentheses).\n"
+                "reduce your health, it also slowly reduces your <w>maximum</w> "
+                "health (your usual maximum health will be indicated by a "
+                "number in parentheses).\n"
                 "While you can wait it out, you'll probably want to stop the "
                 "rotting as soon as possible by <w>%</w>uaffing a potion of "
-                "curing, since the longer you wait the more your maximum HP "
-                "will be reduced. Once you've stopped rotting you can restore "
-                "your maximum HP to normal by drinking potions of curing and "
-                "heal wounds while fully healed.";
+                "curing, since the longer you wait the more your maximum "
+                "health will be reduced. Once you've stopped rotting you can "
+                "restore your maximum health to normal by drinking potions of "
+                "curing and heal wounds while fully healed.";
         cmd.push_back(CMD_QUAFF);
         break;
 
@@ -2179,12 +2179,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_HEALING_POTIONS:
-        text << "Your hit points are getting dangerously low. Retreating and/or "
+        text << "Your health is getting dangerously low. Retreating and/or "
                 "quaffing a potion of heal wounds or curing might be a good idea.";
         break;
 
     case HINT_NEED_HEALING:
-        text << "If you're low on hitpoints or magic and there's no urgent "
+        text << "If you're low on health or magic and there's no urgent "
                 "need to move, you can rest for a bit. Ideally, you should "
                 "retreat to an area you've already explored and cleared "
                 "of monsters before resting, since resting on the edge of "
@@ -2220,7 +2220,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_NEED_HEALING_INVIS:
         text << "You recently noticed an invisible monster, so unless you "
                 "killed it or left the scene resting might not be safe. If you "
-                "still need to replenish your hitpoints or magic, you'll have "
+                "still need to replenish your health or magic, you'll have "
                 "to quaff an appropriate potion. For normal resting you will "
                 "first have to get away from the danger.";
 
@@ -2247,10 +2247,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_RUN_AWAY:
-        text << "Whenever you've got only a few hitpoints left and you're in "
-                "danger of dying, check your options carefully. Often, "
-                "retreat or use of some item might be a viable alternative "
-                "to fighting on.";
+        text << "Whenever your health is very low and you're in danger of "
+                "dying, check your options carefully. Often, retreat or use "
+                "of some item might be a viable alternative to fighting on.";
 
         if (you.species == SP_CENTAUR)
         {
@@ -2269,11 +2268,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             text << "\nAlso, with "
                  << apostrophise(god_name(you.religion))
-                 << " support you can use your Berserk ability (<w>%</w>) "
-                    "to temporarily gain more hitpoints and greater "
-                    "strength. Bear in mind that berserking at the last "
-                    "minute is often risky, and prevents you from using "
-                    "items to escape!";
+                 << " support you can use your Berserk ability (<w>%</w>) to "
+                    "temporarily gain more health and greater strength. Bear "
+                    "in mind that berserking at the last minute is often "
+                    "risky, and prevents you from using items to escape!";
             cmd.push_back(CMD_USE_ABILITY);
         }
         break;

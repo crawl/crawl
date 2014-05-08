@@ -1566,7 +1566,7 @@ static bool _check_ability_possible(const ability_def& abil,
             && !player_rotted())
         {
             if (!quiet)
-                mpr("You don't need to restore your stats or hit points!");
+                mpr("You don't need to restore your stats or health!");
             return false;
         }
         return true;

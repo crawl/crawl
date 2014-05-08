@@ -245,7 +245,7 @@ string Note::describe(bool when, bool where, bool what) const
             result << "Magic: " << first << "/" << second;
             break;
         case NOTE_MAXHP_CHANGE:
-            result << "Reached " << first << " max hit points";
+            result << "Reached " << first << " max health";
             break;
         case NOTE_MAXMP_CHANGE:
             result << "Reached " << first << " max magic points";

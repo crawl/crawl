@@ -2,7 +2,7 @@
 Fighting
 
 Fighting skill increases your accuracy and damage in hand-to-hand combat, and
-also increases your maximum hit points.
+also increases your maximum health.
 %%%%
 Short Blades
 
