@@ -4331,8 +4331,8 @@ bool gozag_call_merchant()
         vector<int> weights;
         for (unsigned int j = 0; j < candidates.size(); j++)
         {
-            const int diff = max_diff - abs(level_id::current().absdepth()
-                                            - candidates[j].absdepth());
+            const int diff = max_diff + 1
+                             - _proximity_to_explored_levels(candidates[j]);
             weights.push_back(diff * diff);
         }
         const int which =
