@@ -700,7 +700,7 @@ bool player::cannot_fight() const
     return false;
 }
 
-void player::attacking(actor *other)
+void player::attacking(actor *other, bool ranged)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -714,7 +714,7 @@ void player::attacking(actor *other)
             pet_target = mon->mindex();
     }
 
-    if (mons_is_firewood((monster*) other))
+    if (ranged || mons_is_firewood((monster*) other))
         return;
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);

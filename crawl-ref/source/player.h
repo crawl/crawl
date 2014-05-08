@@ -557,7 +557,7 @@ public:
     bool cannot_fight() const;
     bool fights_well_unarmed(int heavy_armour_penalty);
 
-    void attacking(actor *other);
+    void attacking(actor *other, bool ranged = false);
     bool can_go_berserk() const;
     bool can_go_berserk(bool intentional, bool potion = false,
                         bool quiet = false) const;
