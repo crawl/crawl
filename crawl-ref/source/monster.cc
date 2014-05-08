@@ -4404,11 +4404,6 @@ bool monster::fully_petrify(actor *atk, bool quiet)
                          " turns to stone!" : " stops moving altogether!");
 
     add_ench(ENCH_PETRIFIED);
-    mons_check_pool(this, pos(),
-                    atk ? atk->is_player() ? KILL_YOU_MISSILE
-                                           : KILL_MON_MISSILE
-                        : KILL_NONE,
-                    atk ? atk->mindex() : NON_MONSTER);
     return msg;
 }
 
