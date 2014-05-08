@@ -85,8 +85,10 @@ void dithmenos_shadow_melee(actor* target);
 void dithmenos_shadow_throw(coord_def target);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
+int gozag_porridge_price();
 bool gozag_setup_potion_petition();
 bool gozag_potion_petition();
+int gozag_price_for_shop(bool max = false);
 bool gozag_setup_call_merchant();
 bool gozag_call_merchant();
 int gozag_type_bribable(monster_type type, bool force = false);
