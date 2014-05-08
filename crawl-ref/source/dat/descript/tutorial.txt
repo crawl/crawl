@@ -160,7 +160,7 @@ it.
 %%%%
 tutorial2 resting
 
-Very good! You can regain any lost hit points by resting with
+Very good! You can regain any lost health by resting with
 <input>$cmd[CMD_REST]</input>. This will make you rest for up to 100 turns, but
 will get interrupted by a number of important events.
 %%%%

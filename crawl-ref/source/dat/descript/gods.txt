@@ -204,10 +204,10 @@ the Necronomicon, or to have their weapon imbued with pain.
 Yredelemnul powers
 
 Yredelemnul gives followers the power to raise skeletons and corpses, to recall
-undead followers to their vicinity, and to heal hit points by draining the life
-force of living creatures. With sufficient piety, Yredelemnul can be called
-upon to mirror a follower's injuries onto attackers. Eventually, followers will
-gain the power to bind a monster's soul, and make it fight for them instead.
+undead followers to their vicinity, and to heal by draining the life force of
+living creatures. With sufficient piety, Yredelemnul can be called upon to
+mirror a follower's injuries onto attackers. Eventually, followers will gain
+the power to bind a monster's soul, and make it fight for them instead.
 Yredelemnul will sporadically gift followers increasingly powerful undead
 servants.
 %%%%

@@ -1306,8 +1306,8 @@
 { MUT_NO_DEVICE_HEAL,                 7,  2, true,  false,  false,
   "no device heal",
 
-  {"Potions and wands are less effective at restoring your HP.",
-   "Potions and wands cannot restore your HP.",
+  {"Potions and wands are less effective at restoring your health.",
+   "Potions and wands cannot restore your health.",
    ""},
 
   {"Your system partially rejects artificial healing.",

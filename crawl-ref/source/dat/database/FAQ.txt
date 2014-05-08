@@ -114,7 +114,7 @@ A:survival
 
 A: If you've got trouble even reaching the Temple, you might want to try a game or two in hints mode for some general playing hints.
 
-Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution, try to choose the location where you fight monsters, and keep an eye on your hit points and magic.
+Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution, try to choose the location where you fight monsters, and keep an eye on your health and magic.
 
 For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue directory that you can then post e.g. in the Stone Soup forum (https://crawl.develz.org/tavern/), so other players can comment on your equipment, skills or spell selection. Please trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list).
 
