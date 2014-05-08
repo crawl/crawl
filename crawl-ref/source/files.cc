@@ -1194,7 +1194,6 @@ bool _leave_level(dungeon_feature_type stair_taken, const level_id& old_level,
 void _make_level(dungeon_feature_type stair_taken, const level_id& old_level)
 {
 
-    dprf("Generating new level for '%s'.", level_name.c_str());
     env.turns_on_level = -1;
 
     if (you.char_direction == GDT_GAME_START
@@ -1363,6 +1362,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (!you.save->has_chunk(level_name))
     {
         ASSERT(load_mode != LOAD_VISITOR);
+        dprf("Generating new level for '%s'.", level_name.c_str());
         _make_level(stair_taken, old_level);
         just_created_level = true;
     }
