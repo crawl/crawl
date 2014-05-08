@@ -35,6 +35,8 @@ function (exports, $, React, comm, LobbyRoot, Loader, pubsub) {
         }
     });
 
+    handle_old_hash();
+
     // Render the page
     var root = React.renderComponent(PageRoot(),
                                      document.getElementById("root"));
@@ -61,6 +63,28 @@ function (exports, $, React, comm, LobbyRoot, Loader, pubsub) {
             return root.props.state;
         }
     });
+
+    function handle_old_hash()
+    {
+        var play = location.hash.match(/^#play-(.+)/);
+        if (play)
+        {
+            var game_id = play[1];
+            if (history)
+                history.replaceState(null, "", "/play/" + game_id);
+            else
+                location = "/play/" + game_id;
+        }
+        var watch = location.hash.match(/^#watch-(.+)/);
+        if (watch)
+        {
+            var watch_user = watch[1];
+            if (history)
+                history.replaceState(null, "", "/watch/" + watch_user);
+            else
+                location = "/watch/" + watch_user;
+        }
+    }
 
     function do_url_action()
     {
