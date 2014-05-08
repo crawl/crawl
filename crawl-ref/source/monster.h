@@ -302,7 +302,7 @@ public:
 
     int  skill(skill_type skill, int scale = 1, bool real = false) const;
 
-    void attacking(actor *other);
+    void attacking(actor *other, bool ranged);
     bool can_go_frenzy() const;
     bool can_go_berserk() const;
     bool can_jump() const;

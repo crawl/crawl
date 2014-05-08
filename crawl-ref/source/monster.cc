@@ -2998,7 +2998,7 @@ bool monster::cannot_fight() const
            || mons_is_statue(type);
 }
 
-void monster::attacking(actor * /* other */)
+void monster::attacking(actor * /* other */, bool /* ranged */)
 {
 }
 

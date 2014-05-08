@@ -160,7 +160,7 @@ bool ranged_attack::attack()
 // XXX: Are there any cases where this might fail?
 bool ranged_attack::handle_phase_attempted()
 {
-    attacker->attacking(defender);
+    attacker->attacking(defender, true);
     attack_occurred = true;
 
     return true;
