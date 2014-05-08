@@ -1131,8 +1131,8 @@ static void _do_lost_items()
  * @param return_pos    Set to the level entrance, if popping a stack level.
  * @return Whether the level was popped onto the stack.
  */
-bool _leave_level(dungeon_feature_type stair_taken, const level_id& old_level,
-                  coord_def *return_pos)
+static bool _leave_level(dungeon_feature_type stair_taken,
+                         const level_id& old_level, coord_def *return_pos)
 {
     bool popped = false;
 
@@ -1191,7 +1191,8 @@ bool _leave_level(dungeon_feature_type stair_taken, const level_id& old_level,
  * @param stair_taken   The means used to leave the last level.
  * @param old_level     The ID of the previous level.
  */
-void _make_level(dungeon_feature_type stair_taken, const level_id& old_level)
+static void _make_level(dungeon_feature_type stair_taken,
+                        const level_id& old_level)
 {
 
     env.turns_on_level = -1;
@@ -1242,8 +1243,9 @@ void _make_level(dungeon_feature_type stair_taken, const level_id& old_level)
  * @param return_pos    The location of the entrance portal, if applicable.
  * @param dest_pos      The player's location on the last level.
  */
-void _place_player(dungeon_feature_type stair_taken, branch_type old_branch,
-                   const coord_def &return_pos, const coord_def &dest_pos)
+static void _place_player(dungeon_feature_type stair_taken,
+                          branch_type old_branch, const coord_def &return_pos,
+                          const coord_def &dest_pos)
 {
     if (player_in_branch(BRANCH_ABYSS))
         you.moveto(ABYSS_CENTRE);
