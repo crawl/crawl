@@ -8,6 +8,7 @@
 #include "dactions.h"
 
 #include "act-iter.h"
+#include "attitude-change.h"
 #include "coordit.h"
 #include "decks.h"
 #include "dungeon.h"
@@ -133,6 +134,9 @@ bool mons_matches_daction(const monster* mon, daction_type act)
                   && (mon->has_ench(ENCH_PERMA_BRIBED)
                       || mon->props.exists(GOZAG_PERMABRIBE_KEY));
 
+    case DACT_SET_BRIBES:
+        return !testbits(mon->flags, MF_WAS_IN_VIEW);
+
     default:
         return false;
     }
@@ -249,6 +253,9 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             }
             break;
 
+        case DACT_SET_BRIBES:
+            gozag_set_bribe(mon);
+
         // The other dactions do not affect monsters directly.
         default:
             break;
@@ -277,6 +284,7 @@ static void _apply_daction(daction_type act)
     case DACT_PIKEL_SLAVES:
     case DACT_KIRKE_HOGS:
     case DACT_BRIBE_TIMEOUT:
+    case DACT_SET_BRIBES:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))

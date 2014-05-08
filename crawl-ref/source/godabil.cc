@@ -4600,6 +4600,7 @@ bool gozag_bribe_branch()
         string msg = make_stringf(" spreads your bribe to %s!",
                                   branches[branch].longname);
         simple_god_message(msg.c_str());
+        add_daction(DACT_SET_BRIBES);
         return true;
     }
 
