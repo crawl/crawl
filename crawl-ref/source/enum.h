@@ -4388,6 +4388,9 @@ enum daction_type
     DACT_REMOVE_GOZAG_SHOPS,
     DACT_SET_BRIBES,
     NUM_DACTIONS,
+    // If you want to add a new daction, you need to
+    // add a corresponding entry to *daction_names[]
+    // of dactions.cc to avoid breaking the debug build
 };
 
 enum disable_type
