@@ -4903,6 +4903,10 @@ void describe_god(god_type which_god, bool give_title)
                                        + " turns your defeated foes' bodies"
                                        + " to gold.",
                                        ABIL_NON_ABILITY);
+            _print_final_god_abil_desc(which_god,
+                                       "Your enemies may become distracted by "
+                                       "glittering piles of gold.",
+                                       ABIL_NON_ABILITY);
         }
         else if (which_god == GOD_QAZLAL)
         {
