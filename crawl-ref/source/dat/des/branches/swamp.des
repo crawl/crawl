@@ -1651,7 +1651,7 @@ NAME: cheibrodos_swamp_heart_of_darkness
 DEPTH: Swamp, !Swamp:$
 TAGS: no_item_gen no_monster_gen
 ORIENT: northeast
-MONS: spriggan rider, w:3 spriggan defender / spriggan berserker, spriggan druid
+MONS: spriggan rider, spriggan berserker, spriggan druid
 MAP
                               ttt
                           ttttttttt
