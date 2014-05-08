@@ -4,6 +4,9 @@ watch_socket_dirs: Watch socket dirs for games not started by the server.
 games: Game configs.
   %n in paths and urls is replaced by the current username.
   morgue_url is for a publicly available URL to access morgue_path.
+game_link_settings: Options that control how the game links are displayed.
+  hide_versions: List of versions that should be hidden behind a "More..." button.
+  more_versions: The text of that button.
 init_player_program:
   Script to initialize a user, e.g. make sure the paths and the rc file
   exist. This is not done by the server at the moment.
@@ -29,3 +32,5 @@ player_url:
 Only for development:
 no_cache: Disable caching of static files which are not part of game data.
 autologin: Automatically log in all users with the username given here.
+use_minified: If false, don't use minified javascript even if it exists.
+use_cdn: If false, don't load libraries from a CDN.

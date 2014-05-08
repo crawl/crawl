@@ -30,11 +30,13 @@ the lobby.
 
 3. Running a real server
 ------------------------
-The server can be configured by modifying the file config.py. Most of
-the options are commented or should be self-evident. You should
-probably set uid and gid to a non-privileged user; you will also want
-to enable logging to a file by removing the # before the relevant line
-in the logging_config.
+The server can be configured by modifying the file config.json. When
+looking for this file, the server first looks at the WEBTILES_CONF
+environment variable, then in the working directory, and then the
+directory containing the server's python code.
+Some of the non-obvious configuration options are described in
+config.txt. You should probably set uid and gid to a non-privileged
+user; you will also want to enable logging to a file.
 
 You will also need a script that initializes user-specific data, like
 copying a default rc file if the user doesn't yet have one --
