@@ -1176,6 +1176,19 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     }
 }
 
+double chance_miscast_prot()
+{
+    double miscast_prot = 0;
+
+    if (you_worship(GOD_SIF_MUNA)
+        && !player_under_penance()
+        && you.piety >= piety_breakpoint(3))
+    {
+        miscast_prot = (double) you.piety/piety_breakpoint(5);
+    }
+    return min(1.0, miscast_prot);
+}
+
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
 // the casting.
@@ -1389,10 +1402,9 @@ spret_type your_spells(spell_type spell, int powc,
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);
 
-        if (you_worship(GOD_SIF_MUNA)
-            && !player_under_penance()
-            && you.piety >= piety_breakpoint(3)
-            && x_chance_in_y(you.piety, piety_breakpoint(5)))
+        if(random_real_inc() > chance_miscast_prot())
+        // Using random_real_inc() is a bit hacky but it's
+        // better than duplcating the miscast protection code.
         {
             simple_god_message(" protects you from the effects of your miscast!");
             return SPRET_FAIL;
@@ -1980,11 +1992,21 @@ double get_miscast_chance(spell_type spell, int severity)
     return chance;
 }
 
+double get_miscast_chance_with_miscast_prot(spell_type spell)
+{
+    double raw_chance = get_miscast_chance(spell);
+    double miscast_prot = chance_miscast_prot();
+    double chance = raw_chance * (1 - miscast_prot);
+
+    return chance;
+}
+
 // Chooses a colour for the failure rate display for a spell. The colour is
 // based on the chance of getting a severity >= 2 miscast.
 int failure_rate_colour(spell_type spell)
 {
-    double chance = get_miscast_chance(spell);
+    double chance = get_miscast_chance_with_miscast_prot(spell);
+
     return (chance < 0.001) ? LIGHTGREY :
            (chance < 0.005) ? YELLOW    :
            (chance < 0.025) ? LIGHTRED  :
