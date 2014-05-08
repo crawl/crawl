@@ -4712,6 +4712,7 @@ static monsterentry mondata[] =
 },
 
 // Octopode race, not a 'normal' octopus.
+// Dummy monster for recolouring.
 {
     MONS_OCTOPODE, 'x', LIGHTCYAN, "octopode",
     M_NO_SKELETON | M_SPEAKS,

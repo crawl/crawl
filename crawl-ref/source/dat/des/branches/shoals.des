@@ -1004,23 +1004,22 @@ DEPTH: Shoals, !Shoals:$
 TAGS: no_item_gen no_monster_gen
 ORIENT: float
 MONS: merfolk
-KMONS: 2 = octopode ; trident
 KMONS: ' = merfolk impaler ; demon trident good_item | trident good_item . gold
 KMONS: " = octopode crusher ; shield good_item . hat good_item . gold
 MAP
       cccccccccccc
      ccGcGccccGcGcc
-  .cccwWWWW..WWWWwccc.
-@.ccwwWWWW.21.WWWWwwcc.@
+  .cccwWWWW11WWWWwccc.
+@.ccwwWWWW1..1WWWWwwcc.@
 ..cwWWWWccc++cccWWWWwc..
-.c+WWWWcc1....2ccWWWW+c.
-.ccccccc1......2ccccccc.
+.c+WWWWcc......ccWWWW+c.
+.ccccccc........ccccccc.
 .ccccccG'......"Gcccccc.
-.ccccccc1......2ccccccc.
-.c+WWWWcc1....2ccWWWW+c.
+.ccccccc........ccccccc.
+.c+WWWWcc......ccWWWW+c.
 ..cwWWWWccc++cccWWWWwc..
-@.ccwwWWWW.12.WWWWwwcc.@
-  .cccwWWWW..WWWWwccc.
+@.ccwwWWWW1..1WWWWwwcc.@
+  .cccwWWWW11WWWWwccc.
      ccGcGccccGcGcc
       cccccccccccc
 ENDMAP
