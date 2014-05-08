@@ -8,8 +8,6 @@ function($, comm, client) {
 
     function set_layer(layer)
     {
-        client.hide_prompt();
-
         $.each(layers, function (i, l) {
             if (l == layer)
                 $("#" + l).show();
