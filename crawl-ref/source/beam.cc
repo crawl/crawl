@@ -2060,6 +2060,8 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
             levels -= 2;
         }
         mons->add_ench(me);
+        if (!mons->paralysed() && !mons->petrified())
+            simple_monster_message(mons, " seems to slow down.");
     }
 
     // Deities take notice.
