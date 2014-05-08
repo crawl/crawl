@@ -364,16 +364,6 @@ void monster_caught_in_net(monster* mon, actor* agent)
             mpr("Something gets caught in the net!");
         else
             simple_monster_message(mon, " is caught in the net!");
-
-        if (mon->flight_mode() == FL_WINGED)
-        {
-            simple_monster_message(mon, " falls like a stone!");
-            mons_check_pool(mon, mon->pos(),
-                            agent && agent->is_player()  ? KILL_YOU_MISSILE :
-                            agent && agent->is_monster() ? KILL_MON_MISSILE
-                                                         : KILL_MISC,
-                            agent ? agent->mindex() : -1);
-        }
     }
 }
 

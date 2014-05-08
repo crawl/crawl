@@ -1989,7 +1989,6 @@ void bolt::apply_bolt_paralysis(monster* mons)
 
     mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, agent(),
                                ench_power * BASELINE_DELAY));
-    mons_check_pool(mons, mons->pos(), killer(), beam_source);
 }
 
 // Petrification works in two stages. First the monster is slowed down in
