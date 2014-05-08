@@ -2589,6 +2589,12 @@ static void tag_read_you(reader &th)
             you.innate_mutations[MUT_NO_DEVICE_HEAL] = 2;
         }
     }
+    if (th.getMinorVersion() < TAG_MINOR_DIET_MUT)
+    {
+        you.mutation[MUT_CARNIVOROUS] = you.innate_mutations[MUT_CARNIVOROUS];
+        you.mutation[MUT_HERBIVOROUS] = you.innate_mutations[MUT_HERBIVOROUS];
+
+    }
 #endif
 
     count = unmarshallUByte(th);
