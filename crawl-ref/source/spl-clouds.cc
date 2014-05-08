@@ -495,5 +495,8 @@ spret_type cast_cloud_cone(const actor *caster, int pow, const coord_def &pos,
          caster->conj_verb("create").c_str(),
          cloud_type_name(cloud).c_str());
 
+    if (cloud == CLOUD_FIRE)
+        did_god_conduct(DID_FIRE, min(5 + pow/2, 23));
+
     return SPRET_SUCCESS;
 }
