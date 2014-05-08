@@ -4611,7 +4611,7 @@ bool enough_hp(int minimum, bool suppress_msg, bool abort_macros)
     if (you.hp < minimum + 1)
     {
         if (!suppress_msg)
-            mpr("You haven't enough health at the moment.");
+            mpr("You don't have enough health at the moment.");
 
         if (abort_macros)
         {
@@ -4638,9 +4638,9 @@ bool enough_mp(int minimum, bool suppress_msg, bool abort_macros)
         if (!suppress_msg)
         {
             if (get_real_mp(true) < minimum)
-                mpr("You haven't enough magic capacity.");
+                mpr("You don't have enough magic capacity.");
             else
-                mpr("You haven't enough magic at the moment.");
+                mpr("You don't have enough magic at the moment.");
         }
         if (abort_macros)
         {
@@ -4660,7 +4660,7 @@ bool enough_zp(int minimum, bool suppress_msg)
     if (you.zot_points < minimum)
     {
         if (!suppress_msg)
-            mpr("You haven't enough Zot Points.");
+            mpr("You don't have enough Zot Points.");
 
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
@@ -7407,7 +7407,7 @@ void player::paralyse(actor *who, int str, string source)
     }
 
     mprf("You %s the ability to move!",
-         paralysis ? "still haven't" : "suddenly lose");
+         paralysis ? "still don't have" : "suddenly lose");
 
     str *= BASELINE_DELAY;
     if (str > paralysis && (paralysis < 3 || one_chance_in(paralysis)))
