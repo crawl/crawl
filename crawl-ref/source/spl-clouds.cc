@@ -221,13 +221,6 @@ void big_cloud(cloud_type cl_type, const actor *agent,
 
 spret_type cast_ring_of_flames(int power, bool fail)
 {
-    // You shouldn't be able to cast this in the rain. {due}
-    if (in_what_cloud(CLOUD_RAIN))
-    {
-        mpr("Your spell sizzles in the rain.");
-        return SPRET_ABORT;
-    }
-
     fail_check();
     did_god_conduct(DID_FIRE, min(5 + power/5, 50));
     you.increase_duration(DUR_FIRE_SHIELD,
