@@ -98,7 +98,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME: red_sonja_temple_1
-TAGS: red_sonja_temple
+TAGS: red_sonja_temple no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MONS: jelly, elephant slug
 KFEAT: A = altar_zin
 KFEAT: B = altar_the_shining_one
@@ -127,7 +127,7 @@ ccccccccx.xxx
 ENDMAP
 
 NAME: red_sonja_temple_small_1
-TAGS: red_sonja_temple_small
+TAGS: red_sonja_temple_small no_item_gen no_trap_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 MONS: slime creature
 SUBST: r = r.
 SUBST: r = ~.
