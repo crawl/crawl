@@ -1,5 +1,6 @@
-Stone Soup 0.15 (up to 0.15-a0-402-g0f93d02)
+Stone Soup 0.15 (up to 0.15-a0-640-g3d343ae)
 --------------------------------------------
+* Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
 * Ranged combat has been rewritten from the ground up.
 
 Branches, environment
@@ -8,6 +9,7 @@ Branches, environment
 * Some areas of the Tomb layout can now vary.
 * Mechanical traps no longer drop ammo.
 * Troves asking for items require that item to be unequipped.
+* The Abyss no longer sometimes blocks blinking.
 
 Character
 ---------
@@ -16,6 +18,8 @@ Character
 * All non-undead forms can eat and drink normally.
 * All forms can butcher.
 * Wisp form can read scrolls and cannot blink on demand.
+* Wanderers have tweaked starting kits with generally better items.
+* Teleportitis cannot be controlled.
 
 Monsters
 --------
@@ -25,8 +29,13 @@ Monsters
 * Manticores now move as fast as the player.
 * Komodo dragons now bite harder but don't sicken the player.
 * Deep dwarf death knights are now just death knights.
+* Manticores have an unlimited number of spike volleys.
+* Base draconians can become nonbase draconians with experience.
+* Undead and nonliving enemies regenerate as fast as other enemies.
+* Ghouls and necrophages can no longer equip weapons or armour.
+* Monster melee attacks can no longer destroy items.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
-  flaming corpses, grizzly bears, phoenixes.
+  flaming corpses, grizzly bears, spriggan enchanters, phoenixes.
 
 Spells
 ------
@@ -35,8 +44,10 @@ Spells
   in the book of Burglary.
 * Casting Ozocubu's Refrigeration now prevents the player from using potions
   for several turns instead of destroying potions.
+* Death Channel lasts twice as long.
 * The Book of War Chants is no more.
-* Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon.
+* Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon,
+  Summon Elemental.
 
 Items
 -----
@@ -44,6 +55,8 @@ Items
   has more of an impact, attack delay is more predictable, and Throwing
   should be more viable as a ranged option as compared to bows and crossbows,
   among other changes.
+* The blowgun of the Assassin returns; it has a chance to affect the target
+  more than normal blowguns.
 * Cleaving hits the full eight squares around a player.
 * Jewellery automatically identifies on equipping it.
 * Damage from the electrocution brand has been reduced slightly.
@@ -53,15 +66,47 @@ Items
 * Amulets of inaccuracy are always cursed.
 * New rings of stealth and loudness, which positively/negatively adjust
   a player's stealth.
+* Gloves of archery no longer penalise melee.
+* (Plain) bows have been renamed to shortbows.
+* Identify scrolls now always identify a single item.
 * Removed items: rings of hunger and sustenance.
 
 Gods
 ----
+* Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer. Both are
+  temple gods with an altar either in Temple or on D:2-9.
+  - Gozag
+    - Charges a service fee for joining, dependent on the amount of gold that
+      has been generated in the game.
+    - Does not have piety.
+    - Defeated enemies turn to gold; these gold piles distract nearby
+      creatures, causing them to sometimes not act.
+    - Potion Petition: purchase one set of potion effects.
+    - Call Merchant: fund a merchant to set up shop somewhere near to areas
+      of the dungeon you have explored.
+    - Bribe Branch: send money to the inhabitants of a branch to turn them
+      temporarily neutral or incite them to join you.
+    - Duplication: one non-artefact item can be duplicated at an altar.
+  - Qazlal
+    - Piety on kills.
+    - All followers are immune from their own clouds.
+    - 1*: Storm Shield: you passively generate elemental clouds around you and
+          gain bonus SH, and gain RMsl at 3*; you also generate a lot of
+          noise.
+    - 2*: Upheaval: blast a small nearby area with elemental forces.
+    - 3*: Elemental Force: turn nearby clouds into elementals.
+    - 4*: Elemental Adaptation: taking elemental or physical damage sometimes
+          temporarily grants you resistance against that element.
+    - 5*: Disaster Area: blast the entire area around you with elemental
+          forces.
+    - 6*: at an altar, gain a permanent elemental resistance of your choice
+          for as long as you worship Qazlal.
 * Followers of good gods no longer get a chance to turn holy enemies neutral.
 
 Interface
 ---------
 * There are status lights for Might, Agility, and Brilliance.
+* Monsters with special attack flavours have this noted in their descriptions.
 
 Stone Soup 0.14.1 (20140428)
 ----------------------------
