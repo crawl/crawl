@@ -616,24 +616,22 @@ your skills will be further drained when taking damage.
 Potion Petition ability
 
 Petition Gozag to sell you the effects of a set of potions. Gozag will offer
-four lists at a time, one of which always solely consists of a potion of
-porridge, and the lists will remain fixed until you purchase one of them.
-Prices will slowly increase as you purchase potions.
+four lists at a time, with varying prices. One of the potion sets will always
+solely consist of a potion of porridge, which will always be affordable if the
+ability is usable. Prices will slowly increase as you purchase potions.
 %%%%
 Call Merchant ability
 
 Through Gozag, send funds to a merchant to help them set up shop in the
-dungeon. The shop will appear in a branch where shops can normally be found
-on a level that you haven't visited yet, assuming no other merchant has
-claimed that location; if you have visited all possible levels where shops
-can be found, this ability does nothing. The cost of funding a shop increases
-with the number of shops funded.
+dungeon. The shop may appear in an unvisited area of the dungeon, or near your
+location if there are no other appropriate locations for a store. The cost of
+funding a shop increases with the number of shops funded.
 %%%%
 Bribe Branch ability
 
 Give 3000 gold to Gozag to spread throughout the inhabitants of the current
-branch, only possible if the branch has intelligent followers. Inhabitants
-native to a bribed branch occasionally become uninterested in fighting you
+branch, only possible if the branch has intelligent native monsters. Those
+native to a bribed branch will occasionally become uninterested in fighting you
 (with tougher inhabitants having an increasing chance of being bribed),
 and more rarely will join your ranks subject to continued payment. Upon
 exhaustion of the bribe fund, bribed enemies who have not joined you will
