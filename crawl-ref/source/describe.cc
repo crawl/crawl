@@ -4205,16 +4205,14 @@ static string _religion_help(god_type god)
     switch (god)
     {
     case GOD_ZIN:
-        result += "You can pray at an altar to donate your money.";
+        result += "You can pray at an altar to donate your money";
         if (!player_under_penance()
             && you.piety >= piety_breakpoint(5)
             && !you.one_time_ability_used[god])
         {
-            if (!result.empty())
-                result += " ";
-
-            result += "You can have all your mutations cured.";
+            result += " or have all your mutations cured";
         }
+        result += ".";
         break;
 
     case GOD_SHINING_ONE:
@@ -4958,22 +4956,19 @@ void describe_god(god_type which_god, bool give_title)
             }
         }
 
+        string extra = get_linebreak_string(_religion_help(which_god),
+                                            numcols).c_str();
+        if (!extra.empty())
+        {
+            have_any = true;
+            _print_final_god_abil_desc(which_god, extra, ABIL_NON_ABILITY);
+        }
+
         if (!have_any)
             cprintf("None.\n");
     }
 
     const int bottom_line = min(30, get_number_of_lines());
-
-    // Only give this additional information for worshippers.
-    if (which_god == you.religion)
-    {
-        string extra = get_linebreak_string(_religion_help(which_god),
-                                            numcols).c_str();
-        cgotoxy(1, bottom_line - count(extra.begin(), extra.end(), '\n')-1,
-                GOTO_CRT);
-        textcolor(LIGHTGREY);
-        cprintf("%s", extra.c_str());
-    }
 
     cgotoxy(1, bottom_line);
     textcolor(LIGHTGREY);
