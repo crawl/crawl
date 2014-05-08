@@ -3894,6 +3894,16 @@ bool gozag_setup_potion_petition()
             you.props[key].get_int() = prices[i];
         }
     }
+    else
+    {
+        for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
+        {
+            string key = make_stringf(GOZAG_POTIONS_KEY, i);
+            pots[i] = &you.props[key].get_vector();
+            key = make_stringf(GOZAG_PRICE_KEY, i);
+            prices[i] = you.props[key].get_int();
+        }
+    }
 
     bool afford_any = false;
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
@@ -3917,6 +3927,7 @@ bool gozag_potion_petition()
     CrawlVector *pots[4];
     int prices[4];
 
+    bool afford_any = false;
     ASSERT(you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)));
     for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
     {
@@ -3924,7 +3935,14 @@ bool gozag_potion_petition()
         pots[i] = &you.props[key].get_vector();
         key = make_stringf(GOZAG_PRICE_KEY, i);
         prices[i] = you.props[key].get_int();
+        const int faith_price = you.faith() ? prices[i] * 2 / 3 : prices[i];
+        if (you.gold >= faith_price)
+            afford_any = true;
     }
+
+    // TODO: change this to an assert after bugged saves clear out
+    if (!afford_any)
+        return false;
 
     int keyin = 0;
     int faith_price = 0;
