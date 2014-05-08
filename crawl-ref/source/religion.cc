@@ -355,7 +355,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Gozag
     { "petition Gozag for potion effects",
       "fund merchants seeking to open stores in the dungeon",
-      "bribe branches to halt enemies' attacks and recruit followers",
+      "bribe branches to halt enemies' attacks and recruit allies",
       "",
       ""
     },

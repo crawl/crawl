@@ -158,8 +158,8 @@ light.
 Gozag
 
 Gozag Ym Sagoz the Greedy believes that the world belongs to the rich. Those
-accepting this decree perform noticeably better when they see gold glint around
-them. Followers don't earn piety in a traditional way; the only way to
+accepting this decree may spend their gold in order to recieve divine
+assistance. Followers don't earn piety in a traditional way; the only way to
 impress Gozag is by amassing a fortune.
 %%%%
 Qazlal
@@ -345,11 +345,11 @@ themself.
 Gozag powers
 
 For Gozag, both flesh and food are inferior to wealth, and therefore all
-corpses are turned into gold piles. Stalwarts can order immediate help in the
-form of potions, with prices being dictated by the Greedy. Particularly
-well-off adherers may attract shopkeepers into the dungeon, and even bribe
-entire branches of the dungeon. Gozag will also duplicate any one non-artefact
-item for a servant.
+corpses are turned into gold piles. These piles of gold may briefly distract
+nearby monsters. Stalwarts can order immediate help in the form of potions,
+with prices being dictated by the Greedy. Particularly well-off adherers may
+attract shopkeepers into the dungeon, and even bribe entire branches of the
+dungeon. Gozag will also duplicate any one non-artefact item for a servant.
 %%%%
 Qazlal powers
 
