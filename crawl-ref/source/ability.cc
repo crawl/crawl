@@ -673,6 +673,21 @@ static int _zp_cost(const ability_def& abil)
     return c;
 }
 
+static int _get_gold_cost(ability_type ability)
+{
+    switch (ability)
+    {
+    case ABIL_GOZAG_CALL_MERCHANT:
+        return gozag_price_for_shop(true);
+    case ABIL_GOZAG_POTION_PETITION:
+        return gozag_porridge_price();
+    case ABIL_GOZAG_BRIBE_BRANCH:
+        return GOZAG_BRIBE_AMOUNT;
+    default:
+        return 0;
+    }
+}
+
 const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -728,7 +743,13 @@ const string make_cost_description(ability_type ability)
         ret += ", Skill drain";
 
     if (abil.flags & ABFLAG_GOLD)
-        ret += ", Gold";
+    {
+        const int amount = _get_gold_cost(ability);
+        if (amount)
+            ret += make_stringf(", %d Gold", amount);
+        else
+            ret += ", Gold";
+    }
 
     // If we haven't output anything so far, then the effect has no cost
     if (ret.empty())
@@ -804,10 +825,13 @@ static const string _detailed_cost_description(ability_type ability)
 
     if (abil.flags & ABFLAG_GOLD)
     {
-        // TODO: make this more of a field so we can display "variable" or
-        // "3000" or similar?
         have_cost = true;
-        ret << "\nGold";
+        ret << "\nGold   : ";
+        int gold_amount = _get_gold_cost(ability);
+        if (gold_amount)
+            ret << gold_amount;
+        else
+            ret << "variable";
     }
 
     if (!have_cost)

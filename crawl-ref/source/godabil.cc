@@ -3838,8 +3838,34 @@ static void _gozag_add_bad_potion(CrawlVector &vec)
     vec.push_back(what);
 }
 
+int gozag_porridge_price()
+{
+    int multiplier = GOZAG_POTION_BASE_MULTIPLIER
+                     + you.attribute[ATTR_GOZAG_POTIONS];
+    multiplier *= 4;
+    // These two potions currently have the same price, but just in case...
+    potion_type porridge_type = you.species == SP_VAMPIRE
+                                || player_mutation_level(MUT_CARNIVOROUS) == 3
+                                ? POT_BLOOD
+                                : POT_PORRIDGE;
+    item_def dummy;
+    dummy.base_type = OBJ_POTIONS;
+    dummy.sub_type = porridge_type;
+    dummy.quantity = 1;
+    int price = multiplier * item_value(dummy, true) / 10;
+    return you.faith() ? price * 2 / 3 : price;
+}
+
 bool gozag_setup_potion_petition()
 {
+    const int gold_min = gozag_porridge_price();
+    if (you.gold < gold_min)
+    {
+        mprf("You need at least %d gold to purchase potions right now!",
+             gold_min);
+        return false;
+    }
+
     CrawlVector *pots[4];
     int prices[4];
 
@@ -3857,27 +3883,26 @@ bool gozag_setup_potion_petition()
             string key = make_stringf(GOZAG_POTIONS_KEY, i);
             you.props[key].new_vector(SV_INT, SFLAG_CONST_TYPE);
             pots[i] = &you.props[key].get_vector();
-            if (i == 3)
+            if (i == GOZAG_MAX_POTIONS - 1)
             {
                 pots[i]->push_back(
                     you.species == SP_VAMPIRE
                     || player_mutation_level(MUT_CARNIVOROUS) == 3
                     ? POT_BLOOD
                     : POT_PORRIDGE);
+                multiplier *= 4; // ouch
             }
             else
             {
                 ADD_POTIONS(*pots[i], _gozag_potion_list);
                 if (coinflip())
                     ADD_POTIONS(*pots[i], _gozag_potion_list);
+                if (coinflip())
+                {
+                    _gozag_add_bad_potion(*pots[i]);
+                    multiplier -= 5;
+                }
             }
-            if (i < GOZAG_MAX_POTIONS - 1 && coinflip())
-            {
-                _gozag_add_bad_potion(*pots[i]);
-                multiplier -= 5;
-            }
-            else if (i == GOZAG_MAX_POTIONS - 1)
-                multiplier *= 4; // ouch
 
             for (int j = 0; j < pots[i]->size(); j++)
             {
@@ -3893,7 +3918,7 @@ bool gozag_setup_potion_petition()
             key = make_stringf(GOZAG_PRICE_KEY, i);
             you.props[key].get_int() = prices[i];
         }
-    }
+    } // The checks below this probably aren't necessary any more?
     else
     {
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
@@ -4011,11 +4036,21 @@ static bool _duplicate_shop_type(int cur, shop_type type)
     return false;
 }
 
-static int _gozag_price_for_shop(int greed)
+/**
+ * The price to order a merchant from Gozag. Doesn't depend on the shop's
+ * type or contents. The maximum possible price is used as the minimum amount
+ * of gold you need to use the ability.
+ */
+int gozag_price_for_shop(bool max)
 {
-    // the 25 is kind of arbitrary
-    const int value = 25 * greed / 10;
-    return 5 * value + random2avg(11 * value + 1, 3);
+    // This value probably needs tweaking.
+    const int base = max ? 1000 : 500 + random2avg(501, 2);
+    const int price = base
+                      * (GOZAG_SHOP_BASE_MULTIPLIER
+                         + GOZAG_SHOP_MOD_MULTIPLIER
+                           * you.attribute[ATTR_GOZAG_SHOPS])
+                      / GOZAG_SHOP_BASE_MULTIPLIER;
+    return (max && you.faith()) ? price * 2 / 3 : price;
 }
 
 static int _proximity_to_explored_levels(level_id where)
@@ -4108,6 +4143,13 @@ static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth,
 
 bool gozag_setup_call_merchant()
 {
+    const int gold_min = gozag_price_for_shop(true);
+    if (you.gold < gold_min)
+    {
+        mprf("You currently need %d gold to open negotiations with a merchant.", gold_min);
+        return false;
+    }
+
     int max_absdepth = 0;
     vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth,
                                                              NULL);
@@ -4160,7 +4202,6 @@ bool gozag_setup_call_merchant()
                 = greed;
             vector<string> shop_items;
             int dummy;
-            int price = _gozag_price_for_shop(greed);
             const int multiplier = (type == SHOP_WEAPON_ANTIQUE
                                     || type == SHOP_ARMOUR_ANTIQUE
                                     || type == SHOP_GENERAL_ANTIQUE) ? 3 : 2;
@@ -4195,36 +4236,11 @@ bool gozag_setup_call_merchant()
                                        " | ", " | ");
 
             // TODO: figure out if this is reasonable
-            const int cost = min(price,
-                                 price
-                                 * (GOZAG_SHOP_BASE_MULTIPLIER
-                                    + GOZAG_SHOP_MOD_MULTIPLIER
-                                      * you.attribute[ATTR_GOZAG_SHOPS])
-                                 / 100);
+            const int cost = gozag_price_for_shop();
 
             you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int()
                 = cost;
         }
-    }
-
-    bool afford_any = false;
-    for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
-    {
-        const int &cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)]
-                             .get_int();
-        const int faith_cost = you.faith() ? cost * 2 / 3
-                                           : cost;
-        if (you.gold >= faith_cost)
-        {
-            afford_any = true;
-            break;
-        }
-    }
-
-    if (!afford_any)
-    {
-        mpr("You can't afford to fund any merchants right now!");
-        return false;
     }
 
     return true;
@@ -4539,7 +4555,7 @@ void gozag_deduct_bribe(branch_type br, int amount)
 
 bool gozag_bribe_branch()
 {
-    const int bribe_amount = 3000;
+    const int bribe_amount = GOZAG_BRIBE_AMOUNT;
     bool prompted = false;
     branch_type branch = you.where_are_you;
     if (feat_is_branch_stairs(grd(you.pos())))

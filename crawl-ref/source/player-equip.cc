@@ -1103,16 +1103,7 @@ static void _remove_amulet_of_faith(item_def &item)
         if (you_worship(GOD_GOZAG))
         {
             const int potion_increment = 2;
-            const int shop_increment =
-                GOZAG_SHOP_BASE_MULTIPLIER
-                + GOZAG_SHOP_MOD_MULTIPLIER*you.attribute[ATTR_GOZAG_SHOPS]
-                    >= 100
-                ? 0
-                : min(2, (100
-                          - GOZAG_SHOP_BASE_MULTIPLIER
-                          - GOZAG_SHOP_MOD_MULTIPLIER
-                            *you.attribute[ATTR_GOZAG_SHOPS])
-                          / GOZAG_SHOP_MOD_MULTIPLIER);
+            const int shop_increment = 2;
 
             // XXX: this isn't a 100% match for the list generation; in
             // particular it does not take into account the presence/absence
