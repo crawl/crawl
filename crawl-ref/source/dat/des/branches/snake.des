@@ -863,6 +863,54 @@ xxx...c.B.....c.....C.c...xxx
           xxx.'.xxx
 ENDMAP
 
+NAME: cheibrodos_snake_lava_hold
+DEPTH: Snake, !Snake:$
+TAGS: no_item_gen no_monster_gen patrolling
+ORIENT: float
+NSUBST: ' = 2:'l / *:'
+KFEAT: '" = lava
+KMONS: " = salamander mystic
+KMONS: ' = salamander
+
+MAP
+    ccccccccccccccc
+   ccccccccccccccccc
+  ccclclc'c'c'c'clccc
+ cccll.............ccc
+ ccll..lclclc.......cc
+cccl..lccccclc..clc..c
+cc"l..lc*$*ccl.clllc.+@
+cc'l....$|$Gcc.lllll.+@
+cc"l..lc*$*ccl.clllc.+@
+cccl..lccccclc..clc..c
+ ccll..lclclc.......cc
+ cccll.............ccc
+  ccclclc'c'c'c'clccc
+   ccccccccccccccccc
+    ccccccccccccccc
+ENDMAP
+
+NAME: cheibrodos_snake_ritualist_ritual
+DEPTH: Snake, !Snake:$
+TAGS: no_item_gen no_monster_gen no_pool_fixup patrolling
+ORIENT: float
+MONS: naga mage / mana viper
+KMONS: - = naga ritualist
+KITEM: - = any good_item / any amulet
+MAP
+...........
+.wwwwwwwww.
+.w1.....1w.
+.w.ww.ww.w.
+.w.w...w.w.
+@..w.-.w..@
+.w.w...w.w.
+.w.ww.ww.w.
+.w1.....1w.
+.wwwwwwwww.
+...........
+ENDMAP
+
 ################################################################################
 # Snake endings
 ################################################################################

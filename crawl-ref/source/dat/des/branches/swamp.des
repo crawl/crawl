@@ -1647,6 +1647,28 @@ _..BbbB'''''DddD.._
        _____
 ENDMAP
 
+NAME: cheibrodos_swamp_heart_of_darkness
+DEPTH: Swamp, !Swamp:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: northeast
+MONS: spriggan rider, w:3 spriggan defender / spriggan berserker, spriggan druid
+MAP
+                              ttt
+                          ttttttttt
+                        ttttttwwttttt
+                      tttttwwWWWWwtttt
+          ttt     tttttttwwWWW...WWWttt
+   ttttttttttt  tttttttwWWW.........3tt
+  ttttttttWWWttttttttwwWW0tt......c+ctt
+ ttt.wwWWWwwWWttWwwwwWWWttttt111..c*ctt
+ttt.wWWttt.0wWWWwWWWWWttttttcccc..ccctt
+tttwWttttttt.www.tttttttt  tc2.+.cccttt
+ ttwWttt  tttttttttttt     tc|.c.c%cttt
+  .Wtt       tttt          tcccc3+%ctt
+  @.                         ttttccct
+                                 ttt
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #

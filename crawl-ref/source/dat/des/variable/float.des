@@ -2916,6 +2916,57 @@ xc,,,,,cc,,,cc,,,,,cx
 x,,,,,,,,,@,,,,,,,,,x
 ENDMAP
 
+NAME: cheibrodos_breeding_chamber
+TAGS: no_item_gen no_monster_gen
+DEPTH: D:10-
+ORIENT: float
+MONS: wizard, ugly thing, very ugly thing
+SUBST: y = * |:4, r = *:2 %
+NSUBST: ' = 9:2 / *:.
+NSUBST: " = 3:3 / *:.
+MAP
+    cccccccccc         cccccccccc
+   cccccGcccccc       ccccccGccccc
+  ccc.WW'''WWcccc   ccccWWW'''''ccc
+ cccW''''WW''WcccccccccWWWWW''''Wccc
+ cccWWccGccW'''cccUccc'''WccGccWWccc
+ ccWWccccccc''''WWWWW''''cccccccWWcc
+ ccWWccccccccWW''WWW''WWccccccccWWcc
+ cccWWccrrrcccW''''''WWcccyrrccWWccc
+ cccWWWW"""yccc''''''Wcccr"1""WWWccc
+  cccWW""1"rcccW'''''Wcccy"""WWWccc
+   cccccrryccccW.....Wccccrrrccccc
+    cccccccccccW....WWccccccccccc
+      cccccccccc...WWcccccccccc
+             ccccn+ncccc
+                 .@.
+ENDMAP
+
+NAME: cheibrodos_stairvault_heist
+DEPTH: D:8-,!D:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: iron golem
+MAP
+vvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvv
+vv9...........]vv
+vv.............vv
+vv..vvvv.vvvv..vv
+vv..v1.....1v..vv
+vv..v.......v..vv
+vv..v..*$%..v..vv
+vv..v..$|$..v..vv
+vv..v..%$*..v..vv
+vv..v.......v..vv
+vv..v1.....1v..vv
+vv..vvvv.vvvv..vv
+vv.............vv
+vv[...........9vv
+vvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvv
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Abstract or generic threat vaults.

@@ -998,6 +998,55 @@ c...c.................WWWWWWuwwwc
 c...c.................WWWWWWuwwwc
 ccccccccccccccccccccccccccccccccc
 ENDMAP
+
+NAME: cheibrodos_shoals_oceanic_diplomacy
+DEPTH: Shoals, !Shoals:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: merfolk
+KMONS: 2 = octopode ; trident
+KMONS: ' = merfolk impaler ; demon trident good_item | trident good_item . gold
+KMONS: " = octopode crusher ; shield good_item . hat good_item . gold
+MAP
+      cccccccccccc
+     ccGcGccccGcGcc
+  .cccwWWWW..WWWWwccc.
+@.ccwwWWWW.21.WWWWwwcc.@
+..cwWWWWccc++cccWWWWwc..
+.c+WWWWcc1....2ccWWWW+c.
+.ccccccc1......2ccccccc.
+.ccccccG'......"Gcccccc.
+.ccccccc1......2ccccccc.
+.c+WWWWcc1....2ccWWWW+c.
+..cwWWWWccc++cccWWWWwc..
+@.ccwwWWWW.12.WWWWwwcc.@
+  .cccwWWWW..WWWWwccc.
+     ccGcGccccGcGcc
+      cccccccccccc
+ENDMAP
+
+NAME: cheibrodos_shoals_roost
+DEPTH: Shoals, !Shoals:$
+TAGS: no_monster_gen
+ORIENT: float
+MONS: harpy, manticore
+NSUBST: - = 6:12 / 3:%*
+MAP
+    ..ccc..
+   .cccGccc.
+  .ccc---ccc.
+ .cc---W---cc.
+ .cc-WWWWW-cc.
+.cc--WWWWW--cc.
+.cG-WWWWWWW-Gc.
+.cc--WWWWWW-cc.
+ .cc-WWWWWWWc.
+ .cc---WWWWWW.
+  .ccc---WWWW.
+   .cccGccWW@
+    ..ccc...
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps
