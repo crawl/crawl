@@ -5423,6 +5423,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     // Qazlal
     case ABIL_QAZLAL_UPHEAVAL:
         return TILEG_ABILITY_QAZLAL_UPHEAVAL;
+    case ABIL_QAZLAL_ELEMENTAL_FORCE:
+        return TILEG_ABILITY_QAZLAL_ELEMENTAL_FORCE;
     case ABIL_QAZLAL_DISASTER_AREA:
         return TILEG_ABILITY_QAZLAL_DISASTER_AREA;
 
