@@ -3993,11 +3993,6 @@ static bool _duplicate_shop_type(int cur, shop_type type)
     return false;
 }
 
-/**
- * Calculate some expected price of the contents of the shop, without
- * exact reference to shop contents or type.
- * This probably could use tweaking.
- */
 static int _gozag_price_for_shop(int greed)
 {
     // the 25 is kind of arbitrary
