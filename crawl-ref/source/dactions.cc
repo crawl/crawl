@@ -67,6 +67,7 @@ static const char *daction_names[] =
     "gold to top of piles",
     "bribe timeout",
     "remove Gozag shops",
+    "apply Gozag bribes",
 };
 #endif
 
