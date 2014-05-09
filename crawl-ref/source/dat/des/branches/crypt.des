@@ -71,7 +71,7 @@ function crypt_loot_plus(e)
   local vamp = "ego:vampiricism ident:type"
   local book = "randbook disc:necromancy numspells:6 spells:"
   local ring = "ring of positive energy randart good_item"
-  local amulet = "amulet of warding randart good_item ident:all"
+  local amulet = "amulet of warding randart good_item"
   -- One drop-off of these,
   e.kitem("d = bastard sword w:5 " .. drain .." / claymore w:5 " .. drain ..
           " / quick blade " .. drain .. " / executioner's axe " .. drain ..
