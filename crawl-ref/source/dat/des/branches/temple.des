@@ -3028,21 +3028,21 @@ MAP
                 bbbbb
                 b...b
             bbbbb.B.bbbbb
-            b... ... ...b
-        bbbbb.B.bb bb.B.bbbbb
-        b... ... ... ... ...b
-    bbbbb.B.bb bb.T.bb bb.B.bbbbb
-    b... ... ... ... ... ... ...b
-bbbbb.B.bb bb.T.bb bb.T.bb bb.B.bbbbb
-b... ... ... ... ... ... ... ... ...b
-b.B.bb bb.B.bb bb.{.bb bb.B.bb bb.B.b
-b... ... ... ... ... ... ... ... ...b
-bbbbb.B.bb bb.T.bb bb T.bb bb.B.bbbbb
-    b... ... ... ... ... ... ...b
-    bbbbb.B.bb bb.T.bb bb.B.bbbbb
-        b... ... ... ... ...b
-        bbbbb.B.bb bb.B.bbbbb
-            b... ... ...b
+            b...........b
+        bbbbb.B.bb.bb.B.bbbbb
+        b...................b
+    bbbbb.B.bb.bb.T.bb.bb.B.bbbbb
+    b...........................b
+bbbbb.B.bb.bb.T.bb.bb.T.bb.bb.B.bbbbb
+b...................................b
+b.B.bb.bb.B.bb.bb.{.bb.bb.B.bb.bb.B.b
+b...................................b
+bbbbb.B.bb.bb.T.bb.bb.T.bb.bb.B.bbbbb
+    b...........................b
+    bbbbb.B.bb.bb.T.bb.bb.B.bbbbb
+        b...................b
+        bbbbb.B.bb.bb.B.bbbbb
+            b...........b
             bbbbb.B.bbbbb
                 b...b
                 bbbbb
