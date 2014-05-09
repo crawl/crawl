@@ -171,6 +171,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             {
                 // Likes it.
                 mpr("This tastes like blood.");
+                if (you.species == SP_GHOUL && player_rotted())
+                {
+                    mpr("You feel more resilient.");
+                    unrot_hp(1);
+                }
                 lessen_hunger(value, true);
             }
             else
