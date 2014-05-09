@@ -215,8 +215,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
 
         if (entry->world_reacts_func)
         {
-            equipment_type eq = get_item_slot(item.base_type, item.sub_type);
-            you.unrand_reacts |= (1 << eq);
+            equipment_type slot = get_item_slot(item.base_type, item.sub_type);
+            you.unrand_reacts.set(slot);
         }
     }
 
@@ -348,8 +348,8 @@ static void _unequip_artefact_effect(item_def &item,
 
         if (entry->world_reacts_func)
         {
-            equipment_type eq = get_item_slot(item.base_type, item.sub_type);
-            you.unrand_reacts &= ~(1 << eq);
+            equipment_type slot = get_item_slot(item.base_type, item.sub_type);
+            you.unrand_reacts.set(slot, false);
         }
     }
 }

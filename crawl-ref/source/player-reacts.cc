@@ -1253,7 +1253,7 @@ void player_reacts()
 
     _check_equipment_conducts();
 
-    if (you.unrand_reacts != 0)
+    if (you.unrand_reacts.any())
         unrand_reacts();
 
     // Handle sound-dependent effects that are silenced

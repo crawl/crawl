@@ -2071,7 +2071,7 @@ void unrand_reacts()
 
     for (int i = 0; i < NUM_EQUIP; i++)
     {
-        if (you.unrand_reacts & (1 << i))
+        if (you.unrand_reacts[i])
         {
             item_def&        item  = you.inv[you.equip[i]];
             const unrandart_entry* entry = get_unrand_entry(item.special);

@@ -5840,7 +5840,7 @@ void player::init()
 
     equip.init(-1);
     melded.reset();
-    unrand_reacts   = 0;
+    unrand_reacts.reset();
 
     symbol          = MONS_PLAYER;
     form            = TRAN_NONE;

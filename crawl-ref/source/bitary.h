@@ -83,6 +83,11 @@ public:
         return data.count();
     }
 
+    inline bool any() const
+    {
+        return data.any();
+    }
+
     inline FixedBitVector<SIZE>& operator|=(const FixedBitVector<SIZE>&x)
     {
         data |= x.data;
