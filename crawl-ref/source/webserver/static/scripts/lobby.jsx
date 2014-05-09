@@ -77,6 +77,14 @@ function (React, comm, pubsub, user, misc, login, $) {
               <a href={"data:text/plain," + encodeURI(this.state.contents)}
                  target="_blank" download="init.txt">download</a>
             );
+            var confirm_msg = (
+                <span>
+                  Really reset your settings file to defaults?
+                  <div className="warning">
+                    All changes you have made to your options will be lost!
+                  </div>
+                </span>
+            );
             return (
               <div style={{overflow: "hidden"}}>
                <h3>Edit RC</h3>
@@ -93,7 +101,7 @@ function (React, comm, pubsub, user, misc, login, $) {
                <input type="button" value="Cancel"
                       onClick={this.handle_cancel} />
                <ConfirmClick on_confirm={this.handle_reset}
-                             text="Really reset your RC file to defaults?">
+                             text={confirm_msg}>
                  <input type="button" value="Reset" />
                </ConfirmClick>
                <input type="submit" value="Save"

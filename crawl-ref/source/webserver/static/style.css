@@ -103,6 +103,11 @@ a:hover {
     color: red;
 }
 
+.warning {
+    color: yellow;
+    font-weight: bold;
+}
+
 .overlay.confirm {
     overflow: hidden;
 }

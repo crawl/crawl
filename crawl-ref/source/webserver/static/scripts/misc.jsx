@@ -58,7 +58,10 @@ define(["react"], function (React) {
         propTypes: {
             children: React.PropTypes.component.isRequired,
             on_confirm: React.PropTypes.func.isRequired,
-            text: React.PropTypes.string.isRequired,
+            text: React.PropTypes.oneOfType([
+                React.PropTypes.string.isRequired,
+                React.PropTypes.component.isRequired
+            ]),
             title: React.PropTypes.string
         },
 
