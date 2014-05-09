@@ -1291,7 +1291,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.royal_jelly_dead);
     marshallByte(th, you.transform_uncancellable);
     marshallByte(th, you.is_undead);
-    marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
     marshallInt(th, you.abyss_speed);
 
@@ -2111,7 +2110,10 @@ static void tag_read_you(reader &th)
 
     you.is_undead         = static_cast<undead_state_type>(unmarshallUByte(th));
     ASSERT(you.is_undead <= US_SEMI_UNDEAD);
-    you.unrand_reacts     = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_CALC_UNRAND_REACTS)
+      unmarshallShort(th);
+#endif
     you.berserk_penalty   = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_GARGOYLE_DR
@@ -2944,6 +2946,20 @@ static void tag_read_you_items(reader &th)
     ASSERT(count == ENDOFPACK); // not supposed to change
     for (i = 0; i < count; ++i)
         unmarshallItem(th, you.inv[i]);
+
+    // Initialize cache of equipped unrand functions
+    for (i = 0; i < NUM_EQUIP; ++i)
+    {
+        const item_def *item = you.slot_item(static_cast<equipment_type>(i));
+
+        if (item && is_unrandom_artefact(*item))
+        {
+            const unrandart_entry *entry = get_unrand_entry(item->special);
+
+            if (entry->world_reacts_func)
+                you.unrand_reacts.set(i);
+        }
+    }
 
     unmarshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     you.obtainable_runes = unmarshallByte(th);

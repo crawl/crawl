@@ -96,6 +96,7 @@ enum tag_minor_version
     TAG_MINOR_NO_DEVICE_HEAL,      // Made MUT_NO_DEVICE_HEAL a normal bad mutation.
     TAG_MINOR_DIET_MUT,            // Remove carnivore/herbivore muts from random generation.
     TAG_MINOR_SAGE_REMOVAL,        // Removed the Sage card and status.
+    TAG_MINOR_CALC_UNRAND_REACTS,  // Compute you.unrand_reacts on load
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
