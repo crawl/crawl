@@ -4207,14 +4207,13 @@ static string _religion_help(god_type god)
     switch (god)
     {
     case GOD_ZIN:
-        result += "You can pray at an altar to donate your money";
         if (!player_under_penance()
             && you.piety >= piety_breakpoint(5)
             && !you.one_time_ability_used[god])
         {
-            result += " or have all your mutations cured";
+            result += "You can have all your mutations cured.\n";
         }
-        result += ".";
+        result += "You can pray at an altar to donate money.";
         break;
 
     case GOD_SHINING_ONE:
