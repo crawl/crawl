@@ -680,23 +680,24 @@ bool fill_status_info(int status, status_info* inf)
         vector<string> places;
         for (int i = 0; i < NUM_BRANCHES; i++)
         {
-            if (bribe < branch_bribe[i])
-                bribe = branch_bribe[i];
             if (branch_bribe[i] > 0)
             {
+                if (player_in_branch(static_cast<branch_type>(i)))
+                    bribe = branch_bribe[i];
+
                 places.push_back(branches[static_cast<branch_type>(i)]
                                  .longname);
             }
         }
 
-        if (bribe == 0)
-            break;
+        if (bribe > 0)
+        {
+            inf->light_colour = (bribe >= 2000) ? WHITE :
+                                (bribe >= 1000) ? LIGHTBLUE
+                                                : BLUE;
 
-        inf->light_colour = (bribe >= 2000) ? WHITE :
-                            (bribe >= 1000) ? LIGHTBLUE
-                                            : BLUE;
-
-        inf->light_text = "Bribe";
+            inf->light_text = "Bribe";
+        }
         inf->short_text = make_stringf("bribing [%s]",
                                        comma_separated_line(places.begin(),
                                                             places.end(),
