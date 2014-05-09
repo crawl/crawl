@@ -307,6 +307,7 @@ effect/tomahawk7 MI_TOMAHAWK7
 needle1 MI_NEEDLE
 needle2
 needle-p MI_NEEDLE_P
+needle-c MI_NEEDLE_CURARE
 # flying needles
 effect/needle0 MI_NEEDLE0
 effect/needle1 MI_NEEDLE1
