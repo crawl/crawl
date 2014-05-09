@@ -3183,6 +3183,7 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         default:             return TILE_MI_NEEDLE + 1;
         case 0:              return TILE_MI_NEEDLE;
         case SPMSL_POISONED: return TILE_MI_NEEDLE_P;
+        case SPMSL_CURARE:   return TILE_MI_NEEDLE_CURARE;
         }
 
     case MI_ARROW:
