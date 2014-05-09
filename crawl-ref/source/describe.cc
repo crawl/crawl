@@ -4307,8 +4307,8 @@ static string _religion_help(god_type god)
         if (!player_under_penance()
             && !you.one_time_ability_used[god])
         {
-            result += "You can place an item on an altar and pray to duplicate "
-                      "that item.";
+            result += "You can place a non-artefact item on an altar and pray "
+                      "to duplicate that item.";
         }
         break;
 

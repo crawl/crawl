@@ -274,6 +274,7 @@ static bool _altar_prayer()
     else if (you_worship(GOD_GOZAG) && !player_under_penance()
         && !you.one_time_ability_used[GOD_GOZAG])
     {
+        bool found = false;
         bool prompted = false;
         for (stack_iterator j(you.pos()); j; ++j)
         {
@@ -282,6 +283,7 @@ static bool _altar_prayer()
                 || item_is_rune(*j)
                 || j->base_type == OBJ_GOLD)
             {
+                found = true;
                 continue;
             }
 
@@ -316,6 +318,8 @@ static bool _altar_prayer()
         }
         if (prompted)
             canned_msg(MSG_OK);
+        else if (found)
+            mprf("There's no item here that can be duplicated.");
         return false;
     }
 
