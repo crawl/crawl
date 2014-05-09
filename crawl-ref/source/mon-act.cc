@@ -2066,7 +2066,8 @@ void handle_monster_move(monster* mons)
     }
 
     const int gold = gozag_gold_in_los(mons);
-    if (!mons->wont_attack() && gold > 0)
+    if (!mons->asleep()
+        && !mons->wont_attack() && gold > 0)
     {
         for (int i = 0; i < gold; i++)
             if (one_chance_in(20))
