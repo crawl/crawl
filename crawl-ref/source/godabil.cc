@@ -3789,12 +3789,17 @@ bool gozag_setup_potion_petition()
             pots[i] = &you.props[key].get_vector();
             if (i == GOZAG_MAX_POTIONS - 1)
             {
-                pots[i]->push_back(
-                    you.species == SP_VAMPIRE
-                    || player_mutation_level(MUT_CARNIVOROUS) == 3
-                    ? POT_BLOOD
-                    : POT_PORRIDGE);
-                multiplier *= 4; // ouch
+                if (you.species == SP_VAMPIRE
+                    || player_mutation_level(MUT_CARNIVOROUS) == 3)
+                {
+                    for (int j = 0; j < 4; j++)
+                        pots[i]->push_back(POT_BLOOD);
+                }
+                else
+                {
+                    pots[i]->push_back(POT_PORRIDGE);
+                    multiplier *= 4; // ouch
+                }
             }
             else
             {
