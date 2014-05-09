@@ -159,6 +159,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "lobby": self.send_lobby,
             "get_rc": self.get_rc,
             "set_rc": self.set_rc,
+            "reset_rc": self.reset_rc,
             "change_password": self.change_password,
         }
 
@@ -453,7 +454,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if game_id not in config.games: return None
         if not self.username: return None
         path = dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
+                              self.username, config.games[game_id])
         return os.path.join(path, self.username + ".rc")
 
     def send_json_options(self, game_id, player_name):
@@ -547,11 +548,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.send_message("rcfile_contents", contents = contents)
 
     def set_rc(self, game_id, contents):
-        rcfile_path = dgl_format_str(config.games[game_id]["rcfile_path"],
-                                     self.username, config.games[game_id])
-        rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
+        rcfile_path = self.rcfile_path(game_id)
         with open(rcfile_path, 'w') as f:
             f.write(contents.encode("utf8"))
+
+    def reset_rc(self, game_id):
+        rcfile_path = self.rcfile_path(game_id)
+        os.remove(rcfile_path)
+        if not self.init_user():
+            self.logger.warning("User initialization returned an error for user %s!",
+                                self.username)
+        try:
+            with open(rcfile_path, 'r') as f:
+                contents = f.read()
+        except:
+            contents = ""
+        self.send_message("rcfile_contents", contents=contents)
 
     def change_password(self, old_password, new_password):
         if self.username is None: return

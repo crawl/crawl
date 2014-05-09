@@ -6,6 +6,7 @@ function (React, comm, pubsub, user, misc, login, $) {
     var extend = $.extend;
 
     var Overlay = misc.Overlay;
+    var ConfirmClick = misc.ConfirmClick;
     var LoginForm = login.LoginForm;
     var PasswordChangeLink = login.PasswordChangeLink;
     var LogoutLink = login.LogoutLink;
@@ -43,6 +44,10 @@ function (React, comm, pubsub, user, misc, login, $) {
             });
             this.props.on_finished();
         },
+        handle_reset: function (ev) {
+            comm.send_message("reset_rc", {game_id: this.props.game_id});
+            this.setState({contents: null});
+        },
 
         render: function () {
             var textbox_style = {
@@ -50,21 +55,27 @@ function (React, comm, pubsub, user, misc, login, $) {
                 margin: 0,
                 width: "100%"
             };
-            return <div style={{overflow: "hidden"}}>
-                     <h3>Edit RC</h3>
-                     <textarea value={this.state.contents}
-                               onChange={this.handle_change}
-                               style={textbox_style}
-                               disabled={this.state.contents === null}
-                               cols="80" rows="25" ref="editor" />
-                     <br />
-                     <input type="button" value="Cancel"
-                            onClick={this.handle_cancel} />
-                     <input type="submit" value="Save"
-                            style={{"float": "right"}}
-                            onClick={this.handle_save} />
-                     <br />
-                   </div>;
+            return (
+              <div style={{overflow: "hidden"}}>
+               <h3>Edit RC</h3>
+               <textarea value={this.state.contents}
+                         onChange={this.handle_change}
+                         style={textbox_style}
+                         disabled={this.state.contents === null}
+                         cols="80" rows="25" ref="editor" />
+               <br />
+               <input type="button" value="Cancel"
+                      onClick={this.handle_cancel} />
+               <ConfirmClick on_confirm={this.handle_reset}
+                             text="Really reset your RC file to defaults?">
+                 <input type="button" value="Reset" />
+               </ConfirmClick>
+               <input type="submit" value="Save"
+                      style={{"float": "right"}}
+                      onClick={this.handle_save} />
+               <br />
+             </div>
+           );
         }
     });
 

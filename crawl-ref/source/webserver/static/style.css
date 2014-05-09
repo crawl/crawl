@@ -103,6 +103,16 @@ a:hover {
     color: red;
 }
 
+.overlay.confirm {
+    overflow: hidden;
+}
+.overlay.confirm input[value="Cancel"] {
+    float: left;
+}
+.overlay.confirm input[value="OK"] {
+    float: right;
+}
+
 /* game selector ---------------------------------- */
 .saved_games {
     margin: 0.5em 0;
