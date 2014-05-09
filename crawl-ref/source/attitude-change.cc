@@ -376,11 +376,15 @@ void gozag_set_bribe(monster* traitor)
     const int bribability = gozag_type_bribable(traitor->type);
     if (bribability > 0)
     {
+        const branch_type br = gozag_bribable_branch(traitor->type);
+        if (!player_in_branch(br))
+            return;
+
         const monster* leader =
             traitor->props.exists("band_leader")
             ? monster_by_mid(traitor->props["band_leader"].get_int())
             : NULL;
-        const branch_type br = gozag_bribable_branch(traitor->type);
+
         int cost = max(1, exper_value(traitor) / 20);
 
         if (leader)
