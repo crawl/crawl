@@ -2,6 +2,9 @@
 
 import json
 import config
+import re
+
+VERSION_RE = r"trunk$|\d.\d\d$"
 
 def binds():
     if not config.bind_nonsecure:
@@ -23,8 +26,23 @@ def sslbinds():
     return [{"address": address, "port": port}
             for (address, port) in pairs]
 
+def convert_game(**data):
+    versions = re.findall(VERSION_RE, data["name"])
+    if versions: data["version"] = versions[0]
+    opts = data.get("options", [])
+    if "-sprint" in opts:
+        mode = "Dungeon Sprint"
+    elif "-zotdef" in opts:
+        mode = "Zot Defence"
+    elif "-tutorial" in opts:
+        mode = "Tutorial"
+    else:
+        mode = "Dungeon Crawl"
+    data["mode"] = mode
+    return data
+
 def games():
-    return [dict(id=id, **data) for (id, data) in config.games.items()]
+    return [convert_game(id=id, **data) for (id, data) in config.games.items()]
 
 def milestones():
     if config.milestone_file is None:
