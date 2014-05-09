@@ -84,8 +84,8 @@ enum card_type
 
     CARD_POTION,
     CARD_FOCUS,
-    CARD_SHUFFLE,
 #if TAG_MAJOR_VERSION == 34
+    CARD_SHUFFLE,
     CARD_EXPERIENCE,
 #endif
     CARD_WILD_MAGIC,

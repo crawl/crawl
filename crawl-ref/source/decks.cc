@@ -164,7 +164,6 @@ const deck_archetype deck_of_wonders[] =
 {
     { CARD_POTION,     {5, 5, 5} },
     { CARD_FOCUS,      {1, 1, 1} },
-    { CARD_SHUFFLE,    {0, 0, 1} },
     { CARD_WILD_MAGIC, {5, 3, 1} },
     { CARD_DOWSING,    {5, 5, 5} },
     { CARD_BATTLELUST, {5, 5, 5} },
@@ -317,8 +316,8 @@ const char* card_name(card_type card)
     case CARD_SHADOW:          return "the Shadow";
     case CARD_POTION:          return "the Potion";
     case CARD_FOCUS:           return "Focus";
-    case CARD_SHUFFLE:         return "Shuffle";
 #if TAG_MAJOR_VERSION == 34
+    case CARD_SHUFFLE:         return "Shuffle";
     case CARD_EXPERIENCE:      return "Experience";
 #endif
     case CARD_HELIX:           return "the Helix";
@@ -2141,34 +2140,6 @@ static void _focus_card(int power, deck_rarity_type rarity)
     modify_stat(worst_stat, -1, true, cause.c_str(), true);
 }
 
-static void _shuffle_card(int power, deck_rarity_type rarity)
-{
-    int perm[] = { 0, 1, 2 };
-    COMPILE_CHECK(ARRAYSZ(perm) == NUM_STATS);
-    shuffle_array(perm, NUM_STATS);
-
-    FixedVector<int8_t, NUM_STATS> new_base;
-    for (int i = 0; i < NUM_STATS; ++i)
-        new_base[perm[i]]  = you.base_stats[i];
-
-    const string cause = _god_wrath_stat_check("the Shuffle card");
-
-    for (int i = 0; i < NUM_STATS; ++i)
-    {
-        modify_stat(static_cast<stat_type>(i),
-                    new_base[i] - you.base_stats[i],
-                    true, cause.c_str(), true);
-    }
-
-    char buf[128];
-    snprintf(buf, sizeof(buf),
-             "Shuffle card: Str %d[%d], Int %d[%d], Dex %d[%d]",
-             you.base_stats[STAT_STR], you.strength(false),
-             you.base_stats[STAT_INT], you.intel(false),
-             you.base_stats[STAT_DEX], you.dex(false));
-    take_note(Note(NOTE_MESSAGE, 0, 0, buf));
-}
-
 static void _remove_bad_mutation()
 {
     // Ensure that only bad mutations are removed.
@@ -2817,7 +2788,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SHADOW:           _shadow_card(power, rarity); break;
     case CARD_POTION:           _potion_card(power, rarity); break;
     case CARD_FOCUS:            _focus_card(power, rarity); break;
-    case CARD_SHUFFLE:          _shuffle_card(power, rarity); break;
     case CARD_HELIX:            _helix_card(power, rarity); break;
     case CARD_DOWSING:          _dowsing_card(power, rarity); break;
     case CARD_STAIRS:           _stairs_card(power, rarity); break;
@@ -2888,6 +2858,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         break;
 
 #if TAG_MAJOR_VERSION == 34
+    case CARD_SHUFFLE:
     case CARD_EXPERIENCE:
     case CARD_SAGE:
     case CARD_WATER:
