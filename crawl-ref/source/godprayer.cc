@@ -751,33 +751,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         break;
     }
 
-    case GOD_NEMELEX_XOBEH:
-    {
-        if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
-        {
-            you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
-            mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
-                 you.attribute[ATTR_CARD_COUNTDOWN]);
-#endif
-        }
-        // Nemelex piety gain is fairly fast... at least when you
-        // have low piety.
-        int piety_change = value/2 + 1;
-        if (is_artefact(item))
-            piety_change *= 2;
-        int piety_denom = 30 + you.piety/2;
-
-        gain_piety(piety_change, piety_denom);
-
-        // Preserving the old behaviour of giving the big message for
-        // artefacts and artefacts only.
-        relative_piety_gain = x_chance_in_y(piety_change, piety_denom) ?
-                                is_artefact(item) ?
-                                  PIETY_LOTS : PIETY_SOME : PIETY_NONE;
-        break;
-    }
-
     case GOD_JIYVA:
     {
         // compress into range 0..250
