@@ -1086,37 +1086,6 @@ static bool _siren_movement_effect(const monster* mons)
     return do_resist;
 }
 
-static bool _silver_statue_effects(monster* mons)
-{
-    actor *foe = mons->get_foe();
-
-    int abjuration_duration = 5;
-
-    // Tone down friendly silver statues for Zotdef.
-    if (mons->attitude == ATT_FRIENDLY && !(foe && foe->is_player())
-        && crawl_state.game_is_zotdef())
-    {
-        if (!one_chance_in(3))
-            return false;
-        abjuration_duration = 1;
-    }
-
-    if (foe && mons->can_see(foe) && !one_chance_in(3))
-    {
-        const string msg = "'s eyes glow " + weird_glowing_colour() + '.';
-        simple_monster_message(mons, msg.c_str(), MSGCH_WARN);
-
-        create_monster(
-            mgen_data(
-                summon_any_demon((coinflip() ? RANDOM_DEMON_COMMON
-                                             : RANDOM_DEMON_LESSER)),
-                SAME_ATTITUDE(mons), mons, abjuration_duration, 0,
-                foe->pos(), mons->foe));
-        return true;
-    }
-    return false;
-}
-
 static bool _orange_statue_effects(monster* mons)
 {
     actor *foe = mons->get_foe();
@@ -3510,13 +3479,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
 
         used = _orange_statue_effects(mons);
-        break;
-
-    case MONS_SILVER_STATUE:
-        if (player_or_mon_in_sanct(mons))
-            break;
-
-        used = _silver_statue_effects(mons);
         break;
 
     case MONS_BALL_LIGHTNING:

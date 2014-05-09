@@ -440,7 +440,6 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_OKLOB_PLANT, "Make oklob plant", 0, 0, 0, 0, 250, ABFLAG_ZOTDEF},
     { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 0, 0, 2000, ABFLAG_ZOTDEF},
     { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 0, 0, 2000, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 0, 0, 3000, ABFLAG_ZOTDEF},
     { ABIL_MAKE_CURSE_SKULL, "Make curse skull",
       0, 0, 600, 0, 10000, ABFLAG_ZOTDEF|ABFLAG_NECRO_MISCAST_MINOR},
     { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, 2, ABFLAG_ZOTDEF},
@@ -531,7 +530,6 @@ static monster_type _monster_for_ability(const ability_def& abil)
         case ABIL_MAKE_LIGHTNING_SPIRE:  mtyp = MONS_LIGHTNING_SPIRE;  break;
         case ABIL_MAKE_ICE_STATUE:    mtyp = MONS_ICE_STATUE;    break;
         case ABIL_MAKE_OCS:           mtyp = MONS_ORANGE_STATUE; break;
-        case ABIL_MAKE_SILVER_STATUE: mtyp = MONS_SILVER_STATUE; break;
         case ABIL_MAKE_CURSE_SKULL:   mtyp = MONS_CURSE_SKULL;   break;
         default:
             mprf("DEBUG: NO RELEVANT MONSTER FOR %d", abil.ability);
@@ -556,8 +554,6 @@ static string _zd_mons_description_for_ability(const ability_def &abil)
         return "Water vapor collects and crystallises into an icy humanoid shape.";
     case ABIL_MAKE_OCS:
         return "Quartz juts from the ground and forms a humanoid shape. You smell citrus.";
-    case ABIL_MAKE_SILVER_STATUE:
-        return "Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape.";
     case ABIL_MAKE_CURSE_SKULL:
         return "You sculpt a terrible being from the primitive principle of evil.";
     case ABIL_MAKE_LIGHTNING_SPIRE:
@@ -638,7 +634,6 @@ static int _zp_cost(const ability_def& abil)
             break;
 
         // Monster type 3: least generous
-        case ABIL_MAKE_SILVER_STATUE:
         case ABIL_MAKE_CURSE_SKULL:
             scale20 = _count_relevant_monsters(abil); // scale immediately
             break;
@@ -967,7 +962,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_DART_TRAP:
     case ABIL_MAKE_ICE_STATUE:
     case ABIL_MAKE_OCS:
-    case ABIL_MAKE_SILVER_STATUE:
     case ABIL_MAKE_CURSE_SKULL:
     case ABIL_MAKE_TELEPORT:
     case ABIL_MAKE_ARROW_TRAP:
@@ -1931,7 +1925,6 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MAKE_BURNING_BUSH:
     case ABIL_MAKE_ICE_STATUE:
     case ABIL_MAKE_OCS:
-    case ABIL_MAKE_SILVER_STATUE:
     case ABIL_MAKE_CURSE_SKULL:
     case ABIL_MAKE_LIGHTNING_SPIRE:
         if (!create_zotdef_ally(_monster_for_ability(abil),
@@ -3350,8 +3343,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_MAKE_WATER, check_confused);
         if (you.experience_level >= 19)
             _add_talent(talents, ABIL_MAKE_LIGHTNING_SPIRE, check_confused);
-        if (you.experience_level >= 20)
-            _add_talent(talents, ABIL_MAKE_SILVER_STATUE, check_confused);
         // gain bazaar and gold together
         if (you.experience_level >= 21)
             _add_talent(talents, ABIL_MAKE_BAZAAR, check_confused);

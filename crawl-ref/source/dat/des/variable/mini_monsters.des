@@ -2506,22 +2506,22 @@ NAME:   hangedman_devilish_allure
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:12-, Depths
 WEIGHT: 5
-MONS:   silver statue, lesser demon, common demon
+MONS:   lesser demon, common demon
 MONS:   efreet / large abomination / rakshasa
 MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
         hell beast / hellion / reaper / lorocyproca / tormentor
 KITEM:  | = superb_item / any good_item / any w:5
 : if you.branch() == "Depths" then
-SUBST:  2 = 23, 4 = 5
+SUBST:  1 = 12, 3 = 4
 : end
 MAP
 xxxxxxxxxxxx@@x
 @.lxlll.l.l...x
 @..xl..l.l.l.lx
 x.{xl%vvvvvvvvx
-x..m$*v22234vvx
-xl.m2|122333|vx
-x..m$*v22234vvx
+x..m$*v11123vvx
+xl.m1|.11222|vx
+x..m$*v11123vvx
 x.(xl%vvvvvvvvx
 @..xl..l.l.l.lx
 @.lxlll.l.l...x
@@ -2537,7 +2537,7 @@ ENDMAP
 
 NAME:  minmay_statue_bubble
 DEPTH: D:9-
-MONS:  silver statue / orange crystal statue / ice statue w:5
+MONS:  orange crystal statue / ice statue w:5
 SUBST: ? = bbb.
 MAP
  .......
@@ -2553,7 +2553,7 @@ ENDMAP
 
 NAME:  minmay_protected_statue
 DEPTH: D:9-, Depths, !Depths:$
-MONS:  silver statue / orange crystal statue, plant, bush
+MONS:  orange crystal statue, plant, bush
 SUBST: n : n:20 G 2:1 3:1
 KFEAT: n = iron_grate
 MAP
@@ -2568,7 +2568,7 @@ ENDMAP
 
 NAME:   minmay_statue_crystal_thing
 DEPTH:  D:9-
-MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
+MONS:   orange crystal statue w:30 / ice statue w:5
 MAP
       .....
     ...b=b...
@@ -2671,7 +2671,7 @@ ENDMAP
 
 NAME:   statue_in_the_mist_lemuel
 TAGS:   extra
-MONS:   orange crystal statue / silver statue / ice statue
+MONS:   orange crystal statue / ice statue
 DEPTH:  D:9-, Depths, Orc, Elf, Snake, Swamp
 MARKER: G = lua:fog_machine { cloud_type= "grey smoke", \
             pow_min = 10, pow_max = 20, delay_min = 15, delay_max = 35, \
@@ -2685,7 +2685,7 @@ ENDMAP
 NAME:    david_greed
 DEPTH:   D:10-, Elf
 WEIGHT:  4
-MONS:    silver statue / orange crystal statue / ice statue
+MONS:    orange crystal statue / ice statue
 ITEM:    nothing / any good_item
 SHUFFLE: d|
 MAP
@@ -2728,7 +2728,7 @@ ENDMAP
 
 NAME:  minmay_more_statues
 DEPTH: D:12-
-MONS:  ice statue w:5 / silver statue / orange crystal statue
+MONS:  ice statue w:5 / orange crystal statue
 MAP
 cccbcccccbcccccbccc
 c.....c%*|*%c.....c
@@ -5741,7 +5741,7 @@ NAME:   minmay_guarded_unrand_mage
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  Depths
 WEIGHT: 3
-MONS:   wizard, orange crystal statue / silver statue
+MONS:   wizard, orange crystal statue
 KMONS:  3 = lich / ancient lich
 KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage no_pickup
 KPROP:  32' = no_tele_into
@@ -5853,7 +5853,7 @@ NAME:   grunt_guarded_unrand_obsidian_axe
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:$, Depths
 WEIGHT: 3
-MONS:   silver statue
+MONS:   patrolling rakshasa
 MONS:   patrolling hell knight
 MONS:   sun demon / soul eater / ice devil / smoke demon / neqoxec / \
         ynoxinul / chaos spawn
@@ -5979,7 +5979,7 @@ NAME: minivault_8
 DEPTH: D:9-, Elf:1-2
 MONS: patrolling molten gargoyle
 SUBST: F = G:99 F:1
-KMONS: F = orange crystal statue / silver statue / ice statue
+KMONS: F = orange crystal statue / ice statue
 MAP
 x.x.x.x.x.x.
 .c.c.c.c.c.x
@@ -6102,7 +6102,7 @@ DEPTH: D:9-, Elf, Abyss
 SHUFFLE: AB, CD, EH/FG
 KITEM: ABCD = gold / nothing
 SUBST: F = G:99 F:1
-KMONS: F = orange crystal statue / silver statue / ice statue
+KMONS: F = orange crystal statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
@@ -6121,7 +6121,7 @@ ENDMAP
 # Lava pond
 NAME:  minivault_15
 TAGS:  extra
-KMONS: 1 = silver statue / ice statue
+KMONS: 1 = ice statue
 KFEAT: 1 = <
 MAP
 .........
@@ -6139,7 +6139,7 @@ NAME:   minivault_16
 TAGS:   allow_dup extra luniq
 WEIGHT: 40
 # as this replaces the former statue only minivaults
-MONS:   orange crystal statue / silver statue / ice statue
+MONS:   orange crystal statue / ice statue
 SUBST:  G = G111
 MAP
 ...........
