@@ -2269,15 +2269,14 @@ static vector<formatted_string> _get_overview_resistances(
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
     out += _resist_composer("rMut", cwidth, rmuta) + "\n";
 
+
+    const int gourmand = you.gourmand(calc_unid);
     const int saplevel = player_mutation_level(MUT_SAPROVOROUS);
-    const bool show_gourm = (you.species != SP_MUMMY
-                             && you.species != SP_VAMPIRE
-                             && player_mutation_level(MUT_HERBIVOROUS) < 3
-                             && you.gourmand());
-    out += _resist_composer(show_gourm ? "Gourm" : "Saprov",
+    const bool show_saprov = saplevel && !gourmand;
+    out += _resist_composer(show_saprov ? "Saprov" : "Gourm",
                             cwidth,
-                            show_gourm ? 1 : saplevel,
-                            show_gourm ? 1 : 3) + "\n";
+                            show_saprov ? saplevel : gourmand,
+                            show_saprov ? 3 : 1) + "\n";
 
     const int rmagi = player_res_magic(calc_unid) / 40;
     out += _resist_composer("MR", cwidth, rmagi, 5) + "\n";
