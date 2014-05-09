@@ -1157,7 +1157,7 @@ COLOUR:   LIGHTRED
 TILE:     urand_orange_crystal
 TILE_EQ:  orange_crystal
 PLUS:     8
-INT:      6
+INT:      3
 BRAND:    SPARM_ARCHMAGI
 BOOL:     clarity, sustab
 
