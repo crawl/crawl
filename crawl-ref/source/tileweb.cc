@@ -199,7 +199,7 @@ void TilesFramework::finish_message()
 
         for (unsigned int i = 0; i < m_dest_addrs.size(); ++i)
         {
-            int retries = 10;
+            int retries = 30;
             ssize_t sent = 0;
             while (sent < fragment_size)
             {
@@ -218,11 +218,16 @@ void TilesFramework::finish_message()
                         i--;
                         break;
                     }
-                    else if (errno == ENOBUFS || errno == EAGAIN
-                        || errno == EWOULDBLOCK || errno == EINTR)
+                    else if (errno == ENOBUFS || errno == EWOULDBLOCK
+                          || errno == EINTR)
                     {
                         // Wait for up to half a second, then try again
                         usleep(retries <= 5 ? 500 * 1000 : 10 * 1000);
+                    }
+                    else if (errno == EAGAIN)
+                    {
+                        // Wait longer after a few attempts
+                        usleep(retries <= 10 ? 500 * 1000 : 5000 * 1000);
                     }
                     else
                         die("Socket write error: %s", strerror(errno));
