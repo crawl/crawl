@@ -648,7 +648,6 @@ static bool _check_buggy_deck(item_def& deck)
             unwield_item();
 
         dec_inv_item_quantity(deck.link, 1);
-        did_god_conduct(DID_CARDS, 1);
 
         return true;
     }
@@ -708,7 +707,6 @@ static bool _check_buggy_deck(item_def& deck)
             unwield_item();
 
         dec_inv_item_quantity(deck.link, 1);
-        did_god_conduct(DID_CARDS, 1);
 
         return true;
     }
@@ -1478,7 +1476,6 @@ void evoke_deck(item_def& deck)
     if (_check_buggy_deck(deck))
         return;
 
-    int brownie_points = 0;
     bool allow_id = in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE);
 
     const deck_rarity_type rarity = deck_rarity(deck);
@@ -1540,7 +1537,6 @@ void evoke_deck(item_def& deck)
         dec_inv_item_quantity(deck.link, 1);
         // Finishing the deck will earn a point, even if it
         // was marked or stacked.
-        brownie_points++;
     }
 
     card_effect(card, rarity, flags, false);
@@ -1550,16 +1546,7 @@ void evoke_deck(item_def& deck)
         // Could a Xom worshipper ever get a stacked deck in the first
         // place?
         xom_is_stimulated(amusement);
-
-        // Nemelex likes gamblers.
-        brownie_points++;
-        if (one_chance_in(3))
-            brownie_points++;
     }
-
-    // No piety from Deal Four.
-    if (!(flags & CFLAG_DEALT))
-        did_god_conduct(DID_CARDS, brownie_points);
 
     // Always wield change, since the number of cards used/left has
     // changed.
@@ -2450,6 +2437,8 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     // leaves a trail of weapons behind, most of which just get
     // offered to Nemelex again, adding an unnecessary source of
     // piety.
+    // This is of course irrelevant now that Nemelex sacrifices
+    // are gone.
     if (mon)
     {
         // Override the weapon.

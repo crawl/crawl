@@ -1055,7 +1055,6 @@ enum conduct_type
     DID_SPELL_MEMORISE,
     DID_SPELL_CASTING,
     DID_SPELL_PRACTISE,
-    DID_CARDS,
     DID_DRINK_BLOOD,
     DID_CANNIBALISM,
     DID_EAT_SOULED_BEING,                 // Zin

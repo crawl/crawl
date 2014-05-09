@@ -162,11 +162,11 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " & consumed in a column of flame.",
         " & consumed in a roaring column of flame.",
     },
-    // Nemelex
+    // Nemelex (no sacrifices)
     {
-        " disappear% without a[dditional] glow.",
-        " glow% slightly [brighter ]and disappear%.",
-        " glow% with a rainbow of weird colours and disappear%.",
+        " & eaten by a bored swarm of bugs.",
+        " & eaten by a swarm of bugs.",
+        " & eaten by a ravening swarm of bugs."
     },
     // Elyvilon
     {
@@ -613,14 +613,6 @@ string get_god_likes(god_type which_god, bool verbose)
         likes.push_back(info);
         break;
 
-    case GOD_NEMELEX_XOBEH:
-        snprintf(info, INFO_SIZE, "you draw unmarked cards and use up decks%s",
-                 verbose ? " (by <w>w</w>ielding and e<w>v</w>oking them)"
-                         : "");
-
-        likes.push_back(info);
-        break;
-
     case GOD_ELYVILON:
         snprintf(info, INFO_SIZE, "you destroy weapons (especially unholy and "
                                   "evil ones)%s",
@@ -682,8 +674,7 @@ string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_NEMELEX_XOBEH:
-        snprintf(info, INFO_SIZE, "you sacrifice items%s",
-                 verbose ? " (by standing over them and <w>p</w>raying)" : "");
+        snprintf(info, INFO_SIZE, "you explore the world");
         likes.push_back(info);
         break;
 
@@ -1492,8 +1483,7 @@ static bool _give_nemelex_gift(bool forced = false)
     if (forced
         || !you.num_total_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
-        || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
-           && !you.attribute[ATTR_CARD_COUNTDOWN])
+        || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY))
     {
         misc_item_type gift_type = random_choose_weighted(
                                        8, MISC_DECK_OF_DESTRUCTION,
@@ -1541,7 +1531,6 @@ static bool _give_nemelex_gift(bool forced = false)
             more();
             canned_msg(MSG_SOMETHING_APPEARS);
 
-            you.attribute[ATTR_CARD_COUNTDOWN] = 5;
             _inc_gift_timeout(5 + random2avg(9, 2));
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
@@ -2803,7 +2792,8 @@ static void _gain_piety_point()
         // no longer have a piety cost for getting them.
         // Jiyva is an exception because there's usually a time-out and
         // the gifts aren't that precious.
-        if (!one_chance_in(4) && !you_worship(GOD_JIYVA))
+        if (!one_chance_in(4) && !you_worship(GOD_JIYVA)
+            && !you_worship(GOD_NEMELEX_XOBEH))
         {
 #ifdef DEBUG_PIETY
             mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
@@ -3526,11 +3516,24 @@ void print_sacrifice_message(god_type god, const item_def &item,
                            piety_gain).c_str());
 }
 
+static string nemelex_death_glow_message(int piety_gain)
+{
+    static const char *messages[NUM_PIETY_GAIN] =
+    {
+        " disappear% without a[dditional] glow.",
+        " glow% slightly [brighter ]and disappear%.",
+        " glow% with a rainbow of weird colours and disappear%.",
+    };
+
+    return messages[piety_gain];
+}
+
 void nemelex_death_message()
 {
     const piety_gain_t piety_gain = static_cast<piety_gain_t>
             (min(random2(you.piety) / 30, (int)PIETY_LOTS));
-    mprf("%s", _sacrifice_message(_Sacrifice_Messages[GOD_NEMELEX_XOBEH][piety_gain],
+
+    mprf("%s", _sacrifice_message(nemelex_death_glow_message(piety_gain),
                "Your body", you.backlit(), false, piety_gain).c_str());
 }
 
@@ -3586,7 +3589,6 @@ bool god_likes_items(god_type god, bool greedy_explore)
     switch (god)
     {
     case GOD_BEOGH:
-    case GOD_NEMELEX_XOBEH:
     case GOD_ASHENZARI:
     case GOD_ELYVILON:
         return true;

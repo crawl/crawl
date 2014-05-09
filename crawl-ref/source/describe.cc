@@ -4241,12 +4241,6 @@ static string _religion_help(god_type god)
                   "square.";
         break;
 
-    case GOD_NEMELEX_XOBEH:
-        result += "You can pray to sacrifice all items on your square. "
-                  "Inscribe items with !p, !* or =p to avoid sacrificing "
-                  "them accidentally.";
-        break;
-
     case GOD_FEDHAS:
         if (you.piety >= piety_breakpoint(0))
         {
@@ -4550,15 +4544,7 @@ static void _detailed_god_description(god_type which_god)
         case GOD_NEMELEX_XOBEH:
             if (which_god == you.religion)
             {
-                broken = "The piety increase when sacrificing mostly depends "
-                         "on the value of the item. To prevent items from "
-                         "being accidentally sacrificed, you can "
-                         "<w>i</w>nscribe them with <w>!p</w> (protects the "
-                         "whole stack), with <w>=p</w> (protects only the "
-                         "item), or with <w>!D</w> (causes item to be ignored "
-                         "in sacrifices)."
-                         "\n\n"
-                         "The power of Nemelex Xobeh's abilities and of the "
+                broken = "The power of Nemelex Xobeh's abilities and of the "
                          "cards' effects is governed by Evocations skill "
                          "instead of Invocations.";
             }

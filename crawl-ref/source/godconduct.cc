@@ -830,39 +830,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_CARDS:
-            if (you_worship(GOD_NEMELEX_XOBEH))
-            {
-                piety_change = level;
-                retval = true;
-
-                // level == 0: stacked, deck not used up
-                // level == 1: used up or nonstacked
-                // level == 2: used up and nonstacked
-                // and there's a 1/3 chance of an additional bonus point
-                // for nonstacked cards.
-                int chance = 0;
-                switch (level)
-                {
-                case 0: chance = 0;   break;
-                case 1: chance = 40;  break;
-                case 2: chance = 70;  break;
-                default:
-                case 3: chance = 100; break;
-                }
-
-                if (x_chance_in_y(chance, 100)
-                    && you.attribute[ATTR_CARD_COUNTDOWN])
-                {
-                    you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_CARDS) || defined(DEBUG_GIFTS)
-                    mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
-                         you.attribute[ATTR_CARD_COUNTDOWN]);
-#endif
-                }
-            }
-            break;
-
         case DID_DELIBERATE_MUTATING:
         case DID_CAUSE_GLOWING:
             if (you_worship(GOD_ZIN))
@@ -994,6 +961,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 const int base_gain = 8; // base gain per dungeon level
                 // levels: x1, x1.25, x1.5, x1.75, x2
                 piety_change = base_gain + base_gain * you.bondage_level / 4;
+                piety_denom = level;
+                retval = true;
+            }
+            else if (you_worship(GOD_NEMELEX_XOBEH))
+            {
+                piety_change = 12;
                 piety_denom = level;
                 retval = true;
             }
@@ -1129,7 +1102,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Demon", "Servant Kill Natural Unholy",
                 "Servant Kill Natural Evil", "Undead Slave Kill Holy",
                 "Servant Kill Holy", "Banishment", "Spell Memorise", "Spell Cast",
-                "Spell Practise", "Cards",
+                "Spell Practise",
                 "Drink Blood", "Cannibalism","Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
