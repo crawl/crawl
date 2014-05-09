@@ -250,7 +250,7 @@ NAME:   overgrown_statue
 DEPTH:  Shoals
 WEIGHT: 1
 MONS:   plant
-MONS:   ice statue / orange crystal statue / silver statue
+MONS:   ice statue / orange crystal statue
 SUBST:  . = 1:1 .:30
 SUBST:  p = 1:2 .
 SUBST:  P = 1:20 .

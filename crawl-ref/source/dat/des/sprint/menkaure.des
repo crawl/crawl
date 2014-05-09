@@ -318,22 +318,6 @@ ENDMAP
 
 NAME:   sprint2_obstacle_3
 TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
-KMONS:  a = silver statue
-SHUFFLE:  l.
-MARKER: a = lua:fog_machine { \
-             pow_min = 2, pow_max = 4, delay = 3, \
-             size = 4, walk_dist = 8, spread_rate= -1, \
-             cloud_type= "poison gas" }
-MAP
-  lllllll
- lllllllll
-lllllalllll
- lllllllll
-  lllllll
-ENDMAP
-
-NAME:   sprint2_obstacle_4
-TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
 KMONS:  a = orange crystal statue
 MARKER: a = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 3, \
@@ -347,7 +331,7 @@ lllllalllll
   lllllll
 ENDMAP
 
-NAME:   sprint2_obstacle_5
+NAME:   sprint2_obstacle_4
 TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
 NSUBST: l = 4:D / *:l
 KMONS:  D = lava snake
@@ -364,7 +348,7 @@ lllllalllll
   lllllll
 ENDMAP
 
-NAME:   sprint2_obstacle_6
+NAME:   sprint2_obstacle_5
 TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
 KMONS:  a = Roxanne
 SUBST:  l = .
@@ -380,7 +364,7 @@ lllllalllll
   lllllll
 ENDMAP
 
-NAME:   sprint2_obstacle_7
+NAME:   sprint2_obstacle_6
 TAGS:   sprint2_obstacle no_item_gen no_trap_gen no_monster_gen no_pool_fixup
 NSUBST: l = 8:1 / *:w
 KMONS:  a = electric eel

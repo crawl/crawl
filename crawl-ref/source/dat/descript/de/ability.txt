@@ -548,11 +548,6 @@ Make lightning spire ability
 Erbaut einen Blitz-Turm mit der Fähigkeit Blitze auf die gewählte Position zu
 werfen.
 %%%%
-Make silver statue ability
-
-Erbaue eine Statue auf der gewählten Position, mit der Fähigkeit freundliche
-Dämonen zu beschwören.
-%%%%
 Make bazaar ability
 
 Erschaffe auf deiner Position ein Portal zu einem Basar.
