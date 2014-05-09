@@ -366,8 +366,7 @@ bool is_hasty_item(const item_def& item)
     }
 
     if (is_artefact(item) && item.base_type != OBJ_BOOKS
-        && (artefact_wpn_property(item, ARTP_ANGRY)
-            || artefact_wpn_property(item, ARTP_BERSERK)))
+        && (artefact_wpn_property(item, ARTP_ANGRY)))
     {
         retval = true;
     }
