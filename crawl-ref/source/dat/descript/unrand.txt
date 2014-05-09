@@ -523,6 +523,7 @@ macabre finger necklace
 
 This dangling finger would look better with a ring on it.
 %%%%
+# TAG_MAJOR_VERSION == 34
 boots of the spider
 
 A novel pair of boots invented by a suitor of Arachne.
