@@ -219,9 +219,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
             entry->equip_func(&item, show_msgs, unmeld);
 
         if (entry->world_reacts_func)
-        {
             you.unrand_reacts.set(slot);
-        }
     }
 
     const bool alreadyknown = item_type_known(item);
@@ -352,9 +350,7 @@ static void _unequip_artefact_effect(item_def &item,
             entry->unequip_func(&item, show_msgs);
 
         if (entry->world_reacts_func)
-        {
             you.unrand_reacts.set(slot, false);
-        }
     }
 }
 
