@@ -48,6 +48,24 @@ function (React, comm, pubsub, user, misc, login, $) {
             comm.send_message("reset_rc", {game_id: this.props.game_id});
             this.setState({contents: null});
         },
+        handle_drag_over: function (ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "copy";
+        },
+        handle_drop: function (ev) {
+            var file = ev.dataTransfer.files[0];
+            if (file)
+            {
+                ev.stopPropagation();
+                ev.preventDefault();
+                var reader = new FileReader();
+                reader.onload = function () {
+                    this.setState({contents: reader.result});
+                }.bind(this);
+                reader.readAsText(file);
+            }
+        },
 
         render: function () {
             var textbox_style = {
@@ -55,15 +73,23 @@ function (React, comm, pubsub, user, misc, login, $) {
                 margin: 0,
                 width: "100%"
             };
+            var download = (
+              <a href={"data:text/plain," + encodeURI(this.state.contents)}
+                 target="_blank" download="init.txt">download</a>
+            );
             return (
               <div style={{overflow: "hidden"}}>
                <h3>Edit RC</h3>
                <textarea value={this.state.contents}
                          onChange={this.handle_change}
+                         onDragOver={this.handle_drag_over}
+                         onDrop={this.handle_drop}
                          style={textbox_style}
                          disabled={this.state.contents === null}
                          cols="80" rows="25" ref="editor" />
                <br />
+               You can {download} the current contents, or drop a file onto the
+               text area to load it. <br />
                <input type="button" value="Cancel"
                       onClick={this.handle_cancel} />
                <ConfirmClick on_confirm={this.handle_reset}
