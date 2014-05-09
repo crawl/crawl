@@ -1293,7 +1293,7 @@
   "acidic bite"
 },
 
-{ MUT_ANTIMAGIC_BITE,                 0,  1, false,  true,  true,
+{ MUT_ANTIMAGIC_BITE,                 5,  1, false,  true,  true,
   "antimagic bite",
 
   {"Your bite disrupts and absorbs the magic of your enemies.", "", ""},
