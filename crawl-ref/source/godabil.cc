@@ -3957,60 +3957,16 @@ int gozag_price_for_shop(bool max)
     return (max && you.faith()) ? price * 2 / 3 : price;
 }
 
-static int _proximity_to_explored_levels(level_id where)
-{
-    int min_diff = INT_MAX;
-    vector<PlaceInfo> list = you.get_all_place_info(true, false);
-    for (unsigned int i = 0; i < list.size(); i++)
-    {
-        for (int j = 1; j <= brdepth[list[i].branch]; j++)
-        {
-            level_id lid(list[i].branch, j);
-            if (is_existing_level(lid))
-            {
-                const int diff = abs(lid.absdepth() - where.absdepth());
-                if (diff < min_diff)
-                    min_diff = diff;
-            }
-        }
-    }
-    return min_diff;
-}
-
-static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth,
-                                                   int *max_diff)
+static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
 {
     vector<level_id> candidates;
 
-    // First figure out where shops can normally place.
-    const map_def *shop_vault = find_map_by_name("serial_shops"); // XXX
-    if (!shop_vault)
-        die("Someone changed the shop vault name!");
-
-    // Find the lowest place we can place a shop.
-    for (int i = 0; i < NUM_BRANCHES; i++)
+    branch_type allowed_branches[3] = {BRANCH_DUNGEON, BRANCH_VAULTS, BRANCH_DEPTHS};
+    for (int ii = 0; ii < 3; ii++)
     {
-        /* The branch needs to exist in this game, and it can't be a
-         * Lair branch - allowing lair branches here leaks info about the
-         * dungeon structure if they are placed early, and results in the
-         * total effectiveness of this ability changing depending on which
-         * branches are rolled. */
-        if (i != root_branch
-            && (!brentry[static_cast<branch_type>(i)].is_valid()
-                || brentry[static_cast<branch_type>(i)].branch == BRANCH_LAIR))
-        {
-            continue;
-        }
+        branch_type i = allowed_branches[ii];
 
-        // These side branches already have enough loot:
-        if (i == BRANCH_ORC || i == BRANCH_ELF)
-            continue;
-
-        level_id lid(static_cast<branch_type>(i), brdepth[i]);
-        // ASSUMPTION: the lower part of a branch has an equal chance of
-        // placing a shop.
-        if (shop_vault->chance(lid).chance <= 0)
-            continue;
+        level_id lid(i, brdepth[i]);
 
         // Base shop level number on the deepest we can place a shop
         // in the given game; this is constant for as long as we can place
@@ -4022,22 +3978,18 @@ static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth,
                 *max_absdepth = absdepth;
         }
 
-        // Don't place shops on the last level of a branch; it's too mean.
-        for (int j = 1; j < brdepth[i]; j++)
+        for (int j = 1; j <= brdepth[i] && candidates.size() < 4; j++)
         {
+            // Don't try to place shops on Vaults:$, since they'll be totally
+            // insignificant next to the regular loot/shops
+            if (i == BRANCH_VAULTS && j == brdepth[i])
+                continue;
             lid.depth = j;
             if (!is_existing_level(lid)
-                && shop_vault->depths.is_usable_in(lid)
                 && !you.props.exists(make_stringf(GOZAG_SHOP_KEY,
                                                   lid.describe().c_str())))
             {
                 candidates.push_back(lid);
-                if (max_diff)
-                {
-                    const int diff = _proximity_to_explored_levels(lid);
-                    if (diff > *max_diff)
-                        *max_diff = diff;
-                }
             }
         }
     }
@@ -4055,8 +4007,7 @@ bool gozag_setup_call_merchant()
     }
 
     int max_absdepth = 0;
-    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth,
-                                                             NULL);
+    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
 
     const map_def *shop_vault = find_map_by_name("serial_shops"); // XXX
     if (!shop_vault)
@@ -4152,9 +4103,8 @@ bool gozag_setup_call_merchant()
 
 bool gozag_call_merchant()
 {
-    int max_absdepth = 0, max_diff = 0;
-    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth,
-                                                             &max_diff);
+    int max_absdepth = 0;
+    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
 
     int i = 0;
     int cost = 0;
@@ -4234,11 +4184,7 @@ bool gozag_call_merchant()
     {
         vector<int> weights;
         for (unsigned int j = 0; j < candidates.size(); j++)
-        {
-            const int diff = max_diff + 1
-                             - _proximity_to_explored_levels(candidates[j]);
-            weights.push_back(diff * diff);
-        }
+            weights.push_back(candidates.size() - j);
         const int which =
             choose_random_weighted(weights.begin(), weights.end());
         level_id lid = candidates[which];
