@@ -56,7 +56,7 @@ enum card_type
     CARD_DAMNATION,             // banishment
     CARD_SOLITUDE,              // dispersal
     CARD_WARPWRIGHT,            // create teleport trap
-    CARD_FLIGHT,
+    CARD_SHAFT,
 
     CARD_VITRIOL,               // acid damage
     CARD_FLAME,                 // fire damage

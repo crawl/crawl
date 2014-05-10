@@ -42,11 +42,9 @@ Warpwright card
 This card creates a teleportation trap in an adjacent square, with a chance of
 its position being revealed at high power.
 %%%%
-Flight card
+the Shaft card
 
-This card helps you run away by transforming you or granting flight and swift
-movement. At high power it will additionally create a shaft beneath you, and
-may even provide temporary invisibility.
+This card creates a shaft beneath you.
 %%%%
 the Elixir card
 
