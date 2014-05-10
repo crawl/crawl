@@ -44,8 +44,10 @@ enum card_flags_type
 
 enum card_type
 {
+#if TAG_MAJOR_VERSION == 34
     CARD_PORTAL,                // "the mover"
     CARD_WARP,                  // "the jumper"
+#endif
     CARD_SWAP,                  // "swap"
     CARD_VELOCITY,              // "the runner"
 
