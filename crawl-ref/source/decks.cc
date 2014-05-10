@@ -112,7 +112,7 @@ const deck_archetype deck_of_emergency[] =
     { CARD_TOMB,       {5, 5, 5} },
     { CARD_BANSHEE,    {5, 5, 5} },
     { CARD_DAMNATION,  {0, 1, 2} },
-    { CARD_FLIGHT,     {5, 5, 5} },
+    { CARD_SHAFT,      {5, 5, 5} },
     { CARD_ALCHEMIST,  {5, 5, 5} },
     END_OF_DECK
 };
@@ -351,7 +351,7 @@ const char* card_name(card_type card)
     case CARD_FAMINE:          return "Famine";
     case CARD_FEAST:           return "the Feast";
     case CARD_WARPWRIGHT:      return "Warpwright";
-    case CARD_FLIGHT:          return "Flight";
+    case CARD_SHAFT:           return "the Shaft";
     case CARD_VITRIOL:         return "Vitriol";
     case CARD_FLAME:           return "Flame";
     case CARD_FROST:           return "Frost";
@@ -1700,34 +1700,8 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _flight_card(int power, deck_rarity_type rarity)
+static void _shaft_card()
 {
-    const int power_level = _get_power_level(power, rarity);
-
-    // Assume something _will_ happen.
-    bool success = true;
-
-    if (power_level == 0)
-    {
-        if (!transform(random2(power/4), coinflip() ? TRAN_SPIDER : TRAN_BAT,
-                       true))
-        {
-            // Oops, something went wrong here (either because of cursed
-            // equipment or the possibility of stat loss).
-            success = false;
-        }
-    }
-    else if (power_level >= 1)
-    {
-        cast_fly(random2(power/4));
-        if (!you_worship(GOD_CHEIBRIADOS))
-            cast_swiftness(random2(power/4));
-        else
-            simple_god_message(" protects you from inadvertent hurry.");
-    }
-
-    if (power_level == 2) // Stacks with the above.
-    {
         if (is_valid_shaft_level() && grd(you.pos()) == DNGN_FLOOR)
         {
             if (place_specific_trap(you.pos(), TRAP_SHAFT))
@@ -1736,11 +1710,8 @@ static void _flight_card(int power, deck_rarity_type rarity)
                 mpr("A shaft materialises beneath you!");
             }
         }
-    }
-    if (one_chance_in(4 - power_level))
-        potion_effect(POT_INVISIBILITY, random2(power)/4);
-    else if (!success)
-        canned_msg(MSG_NOTHING_HAPPENS);
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 static int stair_draw_count = 0;
@@ -2841,7 +2812,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_GENIE:            _genie_card(power, rarity); break;
     case CARD_CURSE:            _curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
-    case CARD_FLIGHT:           _flight_card(power, rarity); break;
+    case CARD_SHAFT:            _shaft_card(); break;
     case CARD_TOMB:             entomb(10 + power/20 + random2(power/4)); break;
     case CARD_WRAITH:           drain_exp(false, power / 4); break;
     case CARD_WRATH:            _godly_wrath(); break;
