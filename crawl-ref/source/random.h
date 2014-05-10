@@ -30,6 +30,7 @@ int binomial_generator(unsigned n_trials, unsigned trial_prob);
 bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
 int roll_dice(int num, int size);
+bool percent_chance(double percent);
 
 int ui_random(int max);
 
