@@ -55,6 +55,7 @@
 #include "skill_menu.h"
 #include "skills2.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
@@ -123,7 +124,7 @@ const deck_archetype deck_of_destruction[] =
     { CARD_FROST,    {5, 5, 5} },
     { CARD_VENOM,    {5, 5, 5} },
     { CARD_STRENGTH, {5, 5, 5} },
-    { CARD_SPARK,    {5, 5, 5} },
+    { CARD_STORM,    {5, 5, 5} },
     { CARD_PAIN,     {5, 5, 3} },
     { CARD_ORB,      {5, 5, 5} },
     END_OF_DECK
@@ -355,7 +356,7 @@ const char* card_name(card_type card)
     case CARD_FLAME:           return "Flame";
     case CARD_FROST:           return "Frost";
     case CARD_VENOM:           return "Venom";
-    case CARD_SPARK:           return "the Spark";
+    case CARD_STORM:           return "the Storm";
     case CARD_STRENGTH:        return "Strength";
     case CARD_PAIN:            return "Pain";
     case CARD_TORMENT:         return "Torment";
@@ -1796,8 +1797,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     const zap_type frostzaps[3]  = { ZAP_THROW_FROST, ZAP_THROW_ICICLE, ZAP_BOLT_OF_COLD };
     const zap_type venomzaps[3]  = { ZAP_STING, ZAP_VENOM_BOLT,
                                      ZAP_POISON_ARROW };
-    const zap_type sparkzaps[3]  = { ZAP_SHOCK, ZAP_LIGHTNING_BOLT,
-                                     ZAP_ORB_OF_ELECTRICITY };
     const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
     const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD, ZAP_IOOD };
 
@@ -1809,7 +1808,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
     case CARD_FROST:  ztype = frostzaps[power_level];  break;
     case CARD_VENOM:  ztype = venomzaps[power_level];  break;
-    case CARD_SPARK:  ztype = sparkzaps[power_level];  break;
     case CARD_ORB:    ztype = orbzaps[power_level];    break;
 
     case CARD_PAIN:
@@ -2724,6 +2722,33 @@ static void _strength_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void _storm_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+
+    big_cloud(CLOUD_RAIN, &you, you.pos(),
+              30 + (power_level > 0) ? random2(20) : 0, 8 + random2(8));
+
+    if (x_chance_in_y(power_level + 1, 2))
+    {
+        if (!you_worship(GOD_CHEIBRIADOS))
+            cast_swiftness(random2(power/4));
+        else
+            simple_god_message(" protects you from inadvertent hurry.");
+    }
+
+    if (x_chance_in_y(power_level, 3))
+    {
+         if (create_monster(
+             mgen_data(MONS_TWISTER,
+                       BEH_HOSTILE, &you, 1 + random2(power_level + 1),
+                       0, you.pos(), MHITYOU)))
+         {
+           mpr("A tornado forms.");
+         }
+     }
+ }
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety
 // or penance, and are based on experience level instead of evocations skill
 // for more appropriate scaling.
@@ -2776,8 +2801,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         // These card types will usually give this message in the targeting
         // prompt, and the cases where they don't are handled specially.
         if (which_card != CARD_VITRIOL && which_card != CARD_FROST
-            && which_card != CARD_SPARK && which_card != CARD_PAIN
-            && which_card != CARD_VENOM && which_card != CARD_ORB)
+            && which_card != CARD_PAIN && which_card != CARD_VENOM
+            && which_card != CARD_ORB)
         {
             mprf("You have %s %s.", participle, card_name(which_card));
         }
@@ -2834,11 +2859,11 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
     case CARD_FLAME:            _flame_card(power, rarity); break;
     case CARD_STRENGTH:         _strength_card(power, rarity); break;
+    case CARD_STORM:            _storm_card(power, rarity); break;
 
     case CARD_VENOM:
     case CARD_VITRIOL:
     case CARD_FROST:
-    case CARD_SPARK:
     case CARD_PAIN:
     case CARD_ORB:
         _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
