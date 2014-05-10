@@ -1500,14 +1500,8 @@ static bool _give_nemelex_gift(bool forced = false)
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY))
     {
-        misc_item_type gift_type = random_choose_weighted(
-                                       8, MISC_DECK_OF_DESTRUCTION,
-                                       6, MISC_DECK_OF_SUMMONING,
-                                       3, MISC_DECK_OF_ESCAPE,
-                                       3, MISC_DECK_OF_WONDERS,
-                                       0);
 
-        int thing_created = items(1, OBJ_MISCELLANY, gift_type,
+        int thing_created = items(1, OBJ_MISCELLANY, MISC_DECK_OF_WAR,
                                   true, 1, 0, 0, 0, GOD_NEMELEX_XOBEH);
 
         move_item_to_grid(&thing_created, you.pos(), true);
@@ -1541,6 +1535,7 @@ static bool _give_nemelex_gift(bool forced = false)
 
             deck.special = rarity;
             deck.colour  = deck_rarity_to_colour(rarity);
+            deck.flags |= ISFLAG_KNOW_TYPE;
 
             simple_god_message(" grants you a gift!");
             more();

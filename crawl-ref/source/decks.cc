@@ -99,10 +99,10 @@ typedef card_with_weights deck_archetype;
 
 const deck_archetype deck_of_transport[] =
 {
-    { CARD_PORTAL,   {5, 5, 5} },
-    { CARD_WARP,     {5, 5, 5} },
-    { CARD_SWAP,     {5, 5, 5} },
-    { CARD_VELOCITY, {5, 5, 5} },
+    { CARD_WARPWRIGHT, {5, 5, 5} },
+    { CARD_SWAP,       {5, 5, 5} },
+    { CARD_VELOCITY,   {5, 5, 5} },
+    { CARD_SOLITUDE,   {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -111,8 +111,6 @@ const deck_archetype deck_of_emergency[] =
     { CARD_TOMB,       {5, 5, 5} },
     { CARD_BANSHEE,    {5, 5, 5} },
     { CARD_DAMNATION,  {0, 1, 2} },
-    { CARD_SOLITUDE,   {5, 5, 5} },
-    { CARD_WARPWRIGHT, {5, 5, 5} },
     { CARD_FLIGHT,     {5, 5, 5} },
     { CARD_ALCHEMIST,  {5, 5, 5} },
     END_OF_DECK
@@ -134,12 +132,13 @@ const deck_archetype deck_of_destruction[] =
 const deck_archetype deck_of_battle[] =
 {
     { CARD_ELIXIR,        {5, 5, 5} },
-    { CARD_BATTLELUST,    {5, 5, 5} },
+    { CARD_POTION,        {5, 5, 5} },
     { CARD_METAMORPHOSIS, {5, 5, 5} },
     { CARD_HELM,          {5, 5, 5} },
     { CARD_BLADE,         {5, 5, 5} },
     { CARD_SHADOW,        {5, 5, 5} },
-    { CARD_MERCENARY,     {5, 5, 5} },
+    { CARD_DOWSING,       {5, 5, 5} },
+    { CARD_FOCUS,         {1, 1, 1} },
     END_OF_DECK
 };
 
@@ -166,11 +165,10 @@ const deck_archetype deck_of_wonders[] =
     { CARD_POTION,     {5, 5, 5} },
     { CARD_FOCUS,      {1, 1, 1} },
     { CARD_WILD_MAGIC, {5, 3, 1} },
-    { CARD_DOWSING,    {5, 5, 5} },
     { CARD_BATTLELUST, {5, 5, 5} },
     { CARD_HELM,       {5, 5, 5} },
     { CARD_SHADOW,     {5, 5, 5} },
-
+    { CARD_MERCENARY,  {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -303,8 +301,10 @@ const char* card_name(card_type card)
 {
     switch (card)
     {
+#if TAG_MAJOR_VERSION == 34
     case CARD_PORTAL:          return "the Portal";
     case CARD_WARP:            return "the Warp";
+#endif
     case CARD_SWAP:            return "Swap";
     case CARD_VELOCITY:        return "Velocity";
     case CARD_DAMNATION:       return "Damnation";
@@ -1607,46 +1607,6 @@ static int _get_power_level(int power, deck_rarity_type rarity)
 }
 
 // Actual card implementations follow.
-static void _portal_card(int power, deck_rarity_type rarity)
-{
-    const int control_level = _get_power_level(power, rarity);
-    bool controlled = false;
-
-    if (x_chance_in_y(control_level, 2))
-        controlled = true;
-
-    int threshold = 9;
-    const bool was_controlled = player_control_teleport();
-    const bool short_control = (you.duration[DUR_CONTROL_TELEPORT] > 0
-                                && you.duration[DUR_CONTROL_TELEPORT]
-                                                < threshold * BASELINE_DELAY);
-
-    if (controlled && (!was_controlled || short_control))
-        you.set_duration(DUR_CONTROL_TELEPORT, threshold); // Long enough to kick in.
-
-    if (x_chance_in_y(control_level, 2))
-        random_blink(false);
-
-    you_teleport();
-}
-
-static void _warp_card(int power, deck_rarity_type rarity)
-{
-    if (you.no_tele(true, true, true))
-    {
-        canned_msg(MSG_STRANGE_STASIS);
-        return;
-    }
-
-    const int control_level = _get_power_level(power, rarity);
-    if (!you.confused() && control_level >= 2)
-        blink(1000, false);
-    else if (!you.confused() && control_level == 1
-             && allow_control_teleport(true))
-        cast_semi_controlled_blink(power / 4, false, false);
-    else
-        random_blink(false);
-}
 
 static void _swap_monster_card(int power, deck_rarity_type rarity)
 {
@@ -2838,8 +2798,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     switch (which_card)
     {
-    case CARD_PORTAL:           _portal_card(power, rarity); break;
-    case CARD_WARP:             _warp_card(power, rarity); break;
     case CARD_SWAP:             _swap_monster_card(power, rarity); break;
     case CARD_VELOCITY:         _velocity_card(power, rarity); break;
     case CARD_DAMNATION:        _damnation_card(power, rarity); break;
@@ -2929,6 +2887,8 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_GLASS:
     case CARD_TROWEL:
     case CARD_MINEFIELD:
+    case CARD_PORTAL:
+    case CARD_WARP:
         mpr("This type of card no longer exists!");
         break;
 #endif

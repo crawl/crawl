@@ -663,7 +663,7 @@ static int _acquirement_misc_subtype()
 {
     // Total weight if none have been seen is 100.
     int result = random_choose_weighted(              // Decks given lowest weight.
-                                                      2, MISC_DECK_OF_WAR,
+                                                      2, MISC_DECK_OF_WONDERS,
                                                       3, MISC_DECK_OF_CHANGES,
                                                       3, MISC_DECK_OF_DEFENCE,
                                                       // The player might want
