@@ -1402,7 +1402,7 @@ spret_type your_spells(spell_type spell, int powc,
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);
 
-        if(random_real_inc() > _chance_miscast_prot())
+        if(random_real_inc() < _chance_miscast_prot())
         // Using random_real_inc() is a bit hacky but it's
         // better than duplcating the miscast protection code.
         {
