@@ -378,6 +378,11 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
     return val + random2avg(lfuzz + hfuzz + 1, naverage) - lfuzz;
 }
 
+bool percent_chance(double percent)
+{
+    return random_real() < percent;
+}
+
 // This is used when the front-end randomness is inconclusive.  There are
 // never more than two possibilities, which simplifies things.
 bool defer_rand::x_chance_in_y_contd(int x, int y, int index)
