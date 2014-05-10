@@ -3430,6 +3430,9 @@ int monster::armour_class() const
     if (has_ench(ENCH_WRETCHED))
         a -= get_ench(ENCH_WRETCHED).degree;
 
+    if (has_ench(ENCH_CORROSION))
+        a /= 2;
+
     return max(a, 0);
 }
 

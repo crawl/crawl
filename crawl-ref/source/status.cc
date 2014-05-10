@@ -176,6 +176,8 @@ static duration_def duration_data[] =
       LIGHTBLUE, "rElec+", "protected from electricity", "Qazlal is protecting you from electricity." },
     { DUR_QAZLAL_AC, false,
       LIGHTBLUE, "", "protected from physical damage", "Qazlal is protecting you from physical damage." },
+    { DUR_CORROSION, false,
+      RED, "Corr", "corroded equipment", "Your equipment is corroded." },
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -305,6 +307,12 @@ bool fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+
+    case DUR_CORROSION:
+        inf->light_text = make_stringf("Corr (%d)",
+                          (-3 * you.props["corrosion_amount"].get_int()));
+        break;
+
     case DUR_CONTROL_TELEPORT:
         if (!allow_control_teleport(true))
             inf->light_colour = DARKGREY;

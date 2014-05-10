@@ -881,7 +881,8 @@ static const char* dur_names[] =
     "qazlal fire resistance",
     "qazlal cold resistance",
     "qazlal elec resistance",
-    "qazlal ac"
+    "qazlal ac",
+    "corrosion"
 };
 
 void wizard_edit_durations(void)

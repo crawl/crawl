@@ -1344,6 +1344,9 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
         if (weapon->base_type == OBJ_RODS)
             damage_plus = weapon->special;
+
+        if (you.duration[DUR_CORROSION])
+            damage_plus -= 3 * you.props["corrosion_amount"].get_int();
     }
     damage_plus += slaying_bonus(PWPN_DAMAGE,
                                  !weapon && wpn_skill == SK_THROWING

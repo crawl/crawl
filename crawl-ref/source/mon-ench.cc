@@ -1018,6 +1018,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer being sapped.");
         break;
 
+    case ENCH_CORROSION:
+        if (!quiet)
+           simple_monster_message(this, " is no longer covered in acid.");
+        break;
+
     default:
         break;
     }
@@ -1128,7 +1133,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_FLAYED: case ENCH_BARBS:
         case ENCH_AGILE: case ENCH_FROZEN: case ENCH_EPHEMERAL_INFUSION:
         case ENCH_BLACK_MARK: case ENCH_SAP_MAGIC: case ENCH_BRIBED:
-        case ENCH_PERMA_BRIBED:
+        case ENCH_PERMA_BRIBED: case ENCH_CORROSION:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1336,6 +1341,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_EPHEMERAL_INFUSION:
     case ENCH_SAP_MAGIC:
     case ENCH_PERMA_BRIBED:
+    case ENCH_CORROSION:
     // case ENCH_ROLLING:
         decay_enchantment(en);
         break;
@@ -2222,7 +2228,7 @@ static const char *enchant_names[] =
     "poison_vuln", "icemail", "agile",
     "frozen", "ephemeral_infusion", "black_mark", "grand_avatar",
     "sap magic", "shroud", "phantom_mirror", "bribed", "permabribed",
-    "buggy",
+    "corrosion", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -2379,6 +2385,7 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
+    case ENCH_CORROSION:
         cturn = 250 / (1 + modded_speed(mons, 10));
         break;
     case ENCH_FEAR:

@@ -1022,6 +1022,14 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SAP_MAGIC, delay,
                           "Your magic seems less tainted.");
 
+    if (_decrement_a_duration(DUR_CORROSION, delay,
+                          "You repair your equipment."))
+    {
+        you.props["corrosion_amount"] = 0;
+        you.redraw_armour_class = true;
+        you.wield_change = true;
+    }
+
     if (!you.duration[DUR_SAP_MAGIC])
     {
         _decrement_a_duration(DUR_MAGIC_SAPPED, delay,
