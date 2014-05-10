@@ -218,7 +218,8 @@ static void _shoals_smooth_water()
 static void _shoals_apply_level()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
-        grd(*ri) = _shoals_feature_at(*ri);
+        if (!map_masked(*ri, MMT_VAULT))
+            grd(*ri) = _shoals_feature_at(*ri);
 }
 
 static void _shoals_postbuild_apply_level()
