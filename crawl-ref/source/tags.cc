@@ -1988,7 +1988,7 @@ static void unmarshall_level_vault_data(reader &th)
 
     unmarshall_level_map_masks(th);
     unmarshall_level_map_unique_ids(th);
-#if TAG_MAJOR_VERSION <= 34
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_VAULT_LIST) // 33:17 has it
         unmarshallStringVector(th);
 #endif
@@ -3260,7 +3260,7 @@ static void tag_read_you_dungeon(reader &th)
                          (ssipair (string_set::*)(const string &))
                          &string_set::insert,
                          unmarshallString);
-#if TAG_MAJOR_VERSION <= 34
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_VAULT_LIST) // 33:17 has it
 #endif
     unmarshallMap(th, you.vault_list, unmarshall_level_id,
