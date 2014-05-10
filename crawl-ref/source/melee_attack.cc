@@ -3684,32 +3684,32 @@ void melee_attack::do_minotaur_retaliation()
     if (!defender->is_player())
     {
         // monsters have no STR or DEX
-        if (!x_chance_in_y(2, 5))
-            return;
-
-        int hurt = attacker->apply_ac(random2(21));
-        if (you.see_cell(defender->pos()))
+        if (x_chance_in_y(2, 5))
         {
-            const string defname = defender->name(DESC_THE);
-            mprf("%s furiously retaliates!", defname.c_str());
-            if (hurt <= 0)
+            int hurt = attacker->apply_ac(random2(21));
+            if (you.see_cell(defender->pos()))
             {
-                mprf("%s headbutts %s, but does no damage.", defname.c_str(),
-                     attacker->name(DESC_THE).c_str());
+                const string defname = defender->name(DESC_THE);
+                mprf("%s furiously retaliates!", defname.c_str());
+                if (hurt <= 0)
+                {
+                    mprf("%s headbutts %s, but does no damage.", defname.c_str(),
+                         attacker->name(DESC_THE).c_str());
+                }
+                else
+                {
+                    mprf("%s headbutts %s%s", defname.c_str(),
+                         attacker->name(DESC_THE).c_str(),
+                         get_exclams(hurt).c_str());
+                }
             }
-            else
+            if (hurt > 0)
             {
-                mprf("%s headbutts %s%s", defname.c_str(),
-                     attacker->name(DESC_THE).c_str(),
-                     get_exclams(hurt).c_str());
+                if (attacker->is_player())
+                    ouch(hurt, defender->mindex(), KILLED_BY_HEADBUTT);
+                else
+                    attacker->hurt(defender, hurt);
             }
-        }
-        if (hurt > 0)
-        {
-            if (attacker->is_player())
-                ouch(hurt, defender->mindex(), KILLED_BY_HEADBUTT);
-            else
-                attacker->hurt(defender, hurt);
         }
         return;
     }
