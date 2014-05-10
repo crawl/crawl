@@ -42,11 +42,11 @@ This amulet protects its wearer from mutations, although not infallibly so.
 amulet of stasis
 
 An amulet meticulously constructed with magical wards to block magical and
-physiological effects that would otherwise teleport, slow, haste, or paralyse
-its wearer.
+physiological effects that would otherwise teleport, slow, haste, enrage, or
+paralyse its wearer.
 
-While the amulet is effective against most translocular magic, plane shifts
-such as banishment are beyond its ability to block.
+While the amulet is effective against most translocations, plane shifts such as
+banishment are beyond its ability to block.
 %%%%
 amulet of the gourmand
 
