@@ -30,6 +30,7 @@
 #include "godpassive.h"
 #include "initfile.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "lang-fake.h"
 #include "libutil.h"
@@ -778,6 +779,8 @@ static void _print_stats_ac(int x, int y)
     {
         textcolor(LIGHTBLUE);
     }
+    else if (you.duration[DUR_CORROSION])
+        textcolor(RED);
     else
         textcolor(HUD_VALUE_COLOUR);
     string ac = make_stringf("%2d ", you.armour_class());
@@ -1078,6 +1081,7 @@ static void _get_status_lights(vector<status_light>& out)
         DUR_QAZLAL_COLD_RES,
         DUR_QAZLAL_ELEC_RES,
         // DUR_QAZLAL_AC intentionally omitted - shows as AC bonus
+        DUR_CORROSION,
     };
 
     status_info inf;

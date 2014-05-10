@@ -198,6 +198,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_SAP_MAGIC;
     case ENCH_SHROUD:
         return MB_SHROUD;
+    case ENCH_CORROSION:
+        return MB_CORROSION;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1597,6 +1599,8 @@ vector<string> monster_info::attributes() const
         v.push_back("magic-sapped");
     if (is(MB_SHROUD))
         v.push_back("shrouded");
+    if (is(MB_CORROSION))
+        v.push_back("covered in acid");
     return v;
 }
 

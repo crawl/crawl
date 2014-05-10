@@ -4275,6 +4275,7 @@ void display_char_status()
         DUR_QAZLAL_COLD_RES,
         DUR_QAZLAL_ELEC_RES,
         DUR_QAZLAL_AC,
+        DUR_CORROSION,
     };
 
     status_info inf;
@@ -6658,6 +6659,9 @@ int player::armour_class() const
 
     if (you.attribute[ATTR_DIVINE_AC] && !player_under_penance(GOD_QAZLAL))
         AC += 300;
+
+    if (you.duration[DUR_CORROSION])
+        AC -= 500 * you.props["corrosion_amount"].get_int();
 
     if (!player_is_shapechanged()
         || (form == TRAN_DRAGON && player_genus(GENPC_DRACONIAN))

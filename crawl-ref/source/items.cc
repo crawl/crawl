@@ -47,6 +47,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-ench.h"
 #include "notes.h"
 #include "options.h"
 #include "orb.h"
@@ -4200,14 +4201,12 @@ void corrode_item(item_def &item, actor *holder)
 
     if (holder && holder->is_player())
     {
-        mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
+        you.increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
+                              "The acid corrodes your equipment!");
         xom_is_stimulated(50);
-
-        if (item.base_type == OBJ_ARMOUR)
-            you.redraw_armour_class = true;
-
-        if (you.equip[EQ_WEAPON] == item.link)
-            you.wield_change = true;
+        you.props["corrosion_amount"].get_int()++;
+        you.redraw_armour_class = true;
+        you.wield_change = true;
     }
     else if (holder && holder->type == MONS_PLAYER_SHADOW)
         return; // it's just a temp copy of the item
@@ -4220,18 +4219,13 @@ void corrode_item(item_def &item, actor *holder)
         }
         else
         {
-            mprf("The acid corrodes %s %s!",
-                 apostrophise(holder->name(DESC_THE)).c_str(),
-                 item.name(DESC_PLAIN).c_str());
+            mprf("The acid corrodes %s equipment!",
+                 apostrophise(holder->name(DESC_THE)).c_str());
         }
     }
 
-    how_rusty--;
-
-    if (item.base_type == OBJ_WEAPONS)
-        item.plus2 = how_rusty;
-    else
-        item.plus  = how_rusty;
+    if (holder && holder->is_monster())
+        holder->as_monster()->add_ench(mon_enchant(ENCH_CORROSION, 0));
 }
 
 // If there is only one unidentified subtype left in the item's object type,
