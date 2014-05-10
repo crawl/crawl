@@ -1323,7 +1323,7 @@ static string _describe_armour(const item_def &item, bool verbose)
 
         // This is only for gloves.
         case SPARM_ARCHERY:
-            description += "These improve your skills with ranged weaponry.";
+            description += "It improves your effectiveness with ranged weaponry.";
             break;
         }
     }
