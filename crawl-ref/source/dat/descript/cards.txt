@@ -152,10 +152,9 @@ Venom card
 
 This card unleashes a poisonous attack spell.
 %%%%
-the Spark card
+the Storm card
 
-This card unleashes an electrical attack spell, which may affect a large area
-at high power.
+This card unleashes a storm -- rain, wind and the occasional tornado.
 %%%%
 Fortitude card
 
