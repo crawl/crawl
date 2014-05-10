@@ -351,7 +351,7 @@ double random_real_inc()
 }
 
 // range [0, 1.0], weighted to middle with multiple rolls
-double random_real_avg(int rolls)
+static double _random_real_avg(int rolls)
 {
     ASSERT(rolls > 0);
     double sum = 0;
@@ -365,7 +365,7 @@ double random_real_avg(int rolls)
 // range [low, high], weighted to middle with multiple rolls
 double random_range_real(double low, double high, int nrolls)
 {
-    const int roll = random_real_avg(nrolls) * (high - low);
+    const int roll = _random_real_avg(nrolls) * (high - low);
     return low + roll;
 }
 
