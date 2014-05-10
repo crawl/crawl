@@ -37,6 +37,7 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-clone.h"
 #include "mon-place.h"
 #include "mon-project.h"
 #include "mon-util.h"
@@ -158,6 +159,7 @@ const deck_archetype deck_of_summoning[] =
     { CARD_SUMMON_FLYING,   {5, 5, 5} },
     { CARD_SUMMON_SKELETON, {5, 5, 5} },
     { CARD_SUMMON_UGLY,     {5, 5, 5} },
+    { CARD_ILLUSION,        {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -370,6 +372,7 @@ const char* card_name(card_type card)
     case CARD_ALCHEMIST:       return "the Alchemist";
     case CARD_ORB:             return "the Orb";
     case CARD_MERCENARY:       return "the Mercenary";
+    case CARD_ILLUSION:        return "the Illusion";
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -2720,6 +2723,25 @@ static void _storm_card(int power, deck_rarity_type rarity)
      }
  }
 
+static void _illusion_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    monster* mon = get_free_monster();
+
+    if (!mon || monster_at(you.pos()))
+        return;
+
+    mon->type = MONS_PLAYER;
+    mon->behaviour = BEH_SEEK;
+    mon->attitude = ATT_FRIENDLY;
+    mon->set_position(you.pos());
+    mon->mid = MID_PLAYER;
+    mgrd(you.pos()) = mon->mindex();
+
+    mons_summon_illusion_from(mon, (actor *)&you, SPELL_NO_SPELL, power_level);
+    mon->reset();
+ }
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety
 // or penance, and are based on experience level instead of evocations skill
 // for more appropriate scaling.
@@ -2831,6 +2853,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_FLAME:            _flame_card(power, rarity); break;
     case CARD_STRENGTH:         _strength_card(power, rarity); break;
     case CARD_STORM:            _storm_card(power, rarity); break;
+    case CARD_ILLUSION:         _illusion_card(power, rarity); break;
 
     case CARD_VENOM:
     case CARD_VITRIOL:

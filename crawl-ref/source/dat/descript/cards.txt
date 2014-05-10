@@ -138,6 +138,11 @@ Repulsiveness card
 
 This card summons an ugly or very ugly thing.
 %%%%
+the Illusion card
+
+This card summons an illusion of you. Its power will depend upon
+your own.
+%%%%
 Vitriol card
 
 This card unleashes a corrosive attack spell.

@@ -119,6 +119,7 @@ enum card_type
     CARD_FAMINE,
     CARD_CURSE,                 // Curse your items
     CARD_SWINE,                 // *oink*
+    CARD_ILLUSION,
 
     NUM_CARDS
 };
