@@ -1001,7 +1001,7 @@ ENDMAP
 
 NAME: cheibrodos_shoals_oceanic_diplomacy
 DEPTH: Shoals, !Shoals:$
-TAGS: no_item_gen no_monster_gen
+TAGS: water_ok no_item_gen no_monster_gen
 ORIENT: float
 MONS: merfolk
 KMONS: ' = merfolk impaler ; demon trident good_item | trident good_item . gold
@@ -1026,7 +1026,7 @@ ENDMAP
 
 NAME: cheibrodos_shoals_roost
 DEPTH: Shoals, !Shoals:$
-TAGS: no_monster_gen
+TAGS: water_ok no_monster_gen
 ORIENT: float
 MONS: harpy, manticore
 NSUBST: - = 6:12 / 3:%*
