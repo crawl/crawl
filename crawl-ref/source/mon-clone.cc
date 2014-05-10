@@ -191,15 +191,26 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
 }
 
 void mons_summon_illusion_from(monster* mons, actor *foe,
-                               spell_type spell_cast)
+                               spell_type spell_cast, int card_power)
 {
     if (foe->is_player())
     {
+        int abj = 6;
+
+        if (card_power >= 0)
+        {
+          // card effect
+          abj = 2 + random2(card_power);
+        }
+
         if (monster *clone = create_monster(
                 mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(mons), mons,
-                          6, spell_cast, mons->pos(), mons->foe, 0)))
+                          abj, spell_cast, mons->pos(), mons->foe, 0)))
         {
-            mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
+            if (card_power >= 0)
+                mpr("Suddenly you stand beside yourself.");
+            else
+                mprf(MSGCH_WARN, "There is a horrible, sudden wrenching feeling in your soul!");
 
             // Change type from player ghost.
             clone->type = MONS_PLAYER_ILLUSION;
@@ -207,6 +218,8 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
         }
+        else if (card_power >= 0)
+            mpr("You see a puff of smoke.");
     }
     else
     {
