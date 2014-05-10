@@ -1590,6 +1590,12 @@ static string _describe_deck(const item_def &item)
         description += "\n";
     }
 
+    if (item.props.exists("peeked") && item.props["peeked"].get_bool())
+    {
+        description += "This deck has been peeked at and cannot be used "
+                       "with Nemelex Xobeh's abilities.\n";
+    }
+
     return description;
 }
 
