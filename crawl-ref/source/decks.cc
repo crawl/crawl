@@ -16,6 +16,7 @@
 #include "act-iter.h"
 #include "beam.h"
 #include "cio.h"
+#include "cloud.h"
 #include "coordit.h"
 #include "database.h"
 #include "dactions.h"
@@ -1792,7 +1793,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
     dist target;
     zap_type ztype = ZAP_DEBUGGING_RAY;
-    const zap_type firezaps[3]   = { ZAP_THROW_FLAME, ZAP_STICKY_FLAME, ZAP_BOLT_OF_FIRE };
     const zap_type frostzaps[3]  = { ZAP_THROW_FROST, ZAP_THROW_ICICLE, ZAP_BOLT_OF_COLD };
     const zap_type hammerzaps[3] = { ZAP_STONE_ARROW, ZAP_IRON_SHOT,
                                      ZAP_LEHUDIBS_CRYSTAL_SPEAR };
@@ -1807,10 +1807,6 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
     {
     case CARD_VITRIOL:
         ztype = ZAP_BREATHE_ACID;
-        break;
-
-    case CARD_FLAME:
-        ztype = (coinflip() ? ZAP_FIREBALL : firezaps[power_level]);
         break;
 
     case CARD_FROST:  ztype = frostzaps[power_level];  break;
@@ -2680,6 +2676,43 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
+static void _flame_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    bool something_happened = false;
+
+    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+    {
+        monster *mons = monster_at(*di);
+        bool make_cloud = false;
+
+        // don't flame the player or allies
+        if (*di == you.pos() || (mons && mons->wont_attack()))
+            continue;
+        else if (grd(*di) == DNGN_FLOOR && env.cgrid(*di) == EMPTY_CLOUD)
+        {
+            if (mons && x_chance_in_y(power_level + 1, 4))
+                make_cloud = true;
+            else if (x_chance_in_y(power_level + 1, 10))
+                make_cloud = true;
+        }
+
+        if (make_cloud)
+        {
+            const int cloud_power = 5 + random2((power_level + 1) * 3);
+            place_cloud(CLOUD_FIRE, *di, cloud_power, &you);
+
+            if (you.see_cell(*di))
+            something_happened = true;
+        }
+    }
+
+    if (something_happened)
+        mpr("Fire appears around you!");
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+}
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety
 // or penance, and are based on experience level instead of evocations skill
 // for more appropriate scaling.
@@ -2731,7 +2764,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     {
         // These card types will usually give this message in the targeting
         // prompt, and the cases where they don't are handled specially.
-        if (which_card != CARD_VITRIOL && which_card != CARD_FLAME
+        if (which_card != CARD_VITRIOL
             && which_card != CARD_FROST && which_card != CARD_HAMMER
             && which_card != CARD_SPARK && which_card != CARD_PAIN
             && which_card != CARD_VENOM && which_card != CARD_ORB)
@@ -2789,10 +2822,10 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
     case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
+    case CARD_FLAME:            _flame_card(power, rarity); break;
 
     case CARD_VENOM:
     case CARD_VITRIOL:
-    case CARD_FLAME:
     case CARD_FROST:
     case CARD_HAMMER:
     case CARD_SPARK:
