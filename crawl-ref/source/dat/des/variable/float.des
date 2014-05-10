@@ -2916,6 +2916,81 @@ xc,,,,,cc,,,cc,,,,,cx
 x,,,,,,,,,@,,,,,,,,,x
 ENDMAP
 
+## Plants, beasts, and humanoids alike gather in a splendid palace devoted to
+## the worship of a life-bringing water diety.
+NAME:     gammafunk_depths_water_palace
+DEPTH:    Depths:2-, !Depths:$
+ORIENT:   float
+TAGS:     no_monster_gen patrolling no_pool_fixup
+## Plants or water monsters
+KMONS:    f = plant / fungus
+KMONS:    R = electric eel / shark / water elemental
+KMONS:    S = electric eel / shark / water elemental
+## Main monster sets
+KMONS:    1 = spriggan rider / spriggan berserker / centaur warrior \
+              / minotaur / satyr / merfolk impaler / deep elf knight
+KMONS:    2 = spriggan defender / deep elf blademaster / deep elf master archer\
+              / octopode crusher
+KMONS:    3 = spriggan air mage / spriggan druid / deep elf annihilator
+KMONS:    4 = ice statue / w:5 orange crystal statue
+KMONS:    5 = catoblepas / dire elephant / emperor scorpion \
+              / alligator snapping turtle / shambling mangrove / thorn hunter
+KMONS:    6 = siren
+KMONS:    7 = water nymph / wind drake
+KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
+              / spriggan air mage
+KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon
+KMONS:    O = the Enchantress band
+## The loot items need this to be placed in water
+KITEM:    % = %
+KITEM:    $ = $
+KITEM:    * = *
+KITEM:    E| = |
+KFEAT:    567DER%$*| = W
+KFEAT:    S = w
+KFEAT:    m = t
+KPROP:    ~`5R = no_rtele_into
+SHUFFLE:  HI / JK
+NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
+SUBST:    B : cf, C : cf, ~" = ffWmm, '` = W
+COLOUR:   c = white
+COLOUR:   x = cyan
+TILE:     m = dngn_mangrove
+TILE:     x = wall_pebble_cyan
+FTILE:    .+ctmGTUf1234O = floor_pebble_cyan
+veto {{
+  return crawl.game_started() and you.uniques("the Enchantress")
+}}
+MAP
+      ccccccccccccccccccccccccc
+    cccttct1t.t.'Gx'Hx'Hx'mcmTccc
+   cc'...+....3.''''''I''''+'wwwcc
+  ccG'.2.+.t2t.t''Gx'Hx'Hx'+'''wwcc
+  ccc'.GcccBBccccccccccccccc''''wwc
+  ccGR.cc~``cccccUGUccccc""'5x'''Sc
+ cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
+ cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
+ ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
+ cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
+cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
+c..1...c~ccc''cm''D''mc'5cccG'm'm'wTc
++.''''.nmcU|$''''...''''''++'D''''llc
++.'ll'2nTcG||'D''.O.''D'''++'''U''lGc
++.''''.nmcU|$''''...''''''++'D''''llc
+c..1...c~ccc''cm''D''mc'5cccG'm'm'wTc
+cctGt..c~~cc''cc*%$%*cc''cc""''x''wcc
+ cccc++c`~ccc''cccGccc''ccc"''m5m'Sc
+ ct1...cR~cccL'''ccc'''Lccc"'m'x''wc
+ cT'''.n``~ccc'''$%$'''ccc"''x7m'wwc
+ cccc'.n~5`cccc''*E*''cccc"'m'm''wcc
+  ccGR.cc~``cccccUGUccccc""'5x'''Sc
+  ccc'.GcccCCccccccccccccccc''''wwc
+  ccG'.2.+.t2t.t''''Jx'''''+'''wwcc
+   cc'...+....3.''''''K''''+'wwwcc
+    cccttct1t.t.'Gx''''Jx'mcmTccc
+     ccccccccccccccccccccccccccc
+ENDMAP
+
 NAME: cheibrodos_breeding_chamber
 TAGS: no_item_gen no_monster_gen
 DEPTH: D:10-
@@ -2965,6 +3040,62 @@ vv.............vv
 vv[...........9vv
 vvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME: cheibrodos_poisonous_passages
+DEPTH: Depths, !Depths:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+: local brnd = crawl.random2(15)
+: if brnd >= 10 then
+MONS: mana viper / naga warrior / naga mage
+MONS: greater naga / naga ritualist / w:8 green death
+: elseif brnd >= 5 then
+MONS: jumping spider / wolf spider / tarantella
+MONS: emperor scorpion / w:8 green death / w:3 ghost moth
+: else
+MONS: skeletal warrior ; long sword ego:venom | broad axe ego:venom \
+      | halberd ego:venom
+MONS: reaper ; scythe ego:venom / w:8 green death \
+      / ancient champion ; great mace ego:venom | battleaxe ego:venom \
+      | glaive ego:venom
+: end
+KMONS: A = lich
+KFEAT: A = stone_arch
+KPROP: '? = no_rtele_into
+NSUBST: - = 4:| / 4:* / 4:% / *:.
+MARKER:  ? = lua:fog_machine { cloud_type = "poison gas", pow_min = 2, \
+        pow_max = 7, delay = 30, start_clouds = 1, size_min = 1, \
+        size_max = 7, spread_rate = 1 }
+MAP
+                  ccccccc
+                cccc'?'cccc
+              ccc'''''''''ccc
+             cc?'''nnnnn'''?cc
+            cc'''nnn---nnn'''cc
+           cc'''nn...1...nn'''cc
+           c'''nn-..2A2..-nn'''c
+           c''nn-..1.2.1..-nn''c
+           c'''nn-.......-nn'''c
+           cc?''nn.......nnn'?cc
+            cc'''nn.....nn'''cc
+             cc'''nn...nn'''cc
+              cc'''n...n'''cc
+     ccccc     cc''n...n''cc     ccccc
+   ccc'''ccc  cc?''n...n''?cc  ccc'''ccc
+  cc?'''''?cccc'''ccc+ccc'''cccc?'''''?cc
+ cc'''nnn''''''''cc.....cc''''''''nnn'''cc
+ c''nnn-nnn''''ccc.......ccc''''nnn-nnn''c
+cc'nn-...-nnnnnc...cncnc...cnnnnn-...-nn'cc
+c''n..2.1......c...n'''n...c......1.2..n''c
+c?'n..A1.......+...c'?'c...+.......1A..n'?c
+c''n..2.1......c...n'''n...c......1.2..n''c
+cc'nn-...-nnnnnc...cncnc...cnnnnn-...-nn'cc
+ c''nnn-nnn''''ccc.......ccc''''nnn-nnn''c
+ cc'''nnn'''''cc cc.....cc cc'''''nnn'''cc
+  cc?'''''?cccc   ccc+ccc   cccc?'''''?cc
+   ccc'''ccc                   ccc'''ccc
+     ccccc                       ccccc
 ENDMAP
 
 ###############################################################################
