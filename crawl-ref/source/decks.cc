@@ -293,8 +293,8 @@ static void _set_card_and_flags(item_def& deck, int idx, card_type card,
     CrawlVector    &cards = props["cards"].get_vector();
     CrawlVector    &flags = props["card_flags"].get_vector();
 
-    if (idx == -1)
-        idx = static_cast<int>(cards.size()) - 1;
+    if (idx < 0)
+        idx = static_cast<int>(cards.size()) + idx;
 
     cards[idx].get_byte() = card;
     flags[idx].get_byte() = _flags;
@@ -882,7 +882,7 @@ static void _deck_lose_card(item_def& deck)
     deck.plus2++;
 }
 
-// Peek at two cards in a deck, then shuffle them back in.
+// Peek at two cards in a deck, then place them on top.
 // Return false if the operation was failed/aborted along the way.
 bool deck_peek()
 {
@@ -897,6 +897,13 @@ bool deck_peek()
     if (_check_buggy_deck(deck))
         return false;
 
+    if (deck.props["peeked"].get_bool())
+    {
+        mpr("You have already peeked at this deck.");
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
     if (cards_in_deck(deck) > 2)
     {
         _deck_lose_card(deck);
@@ -909,7 +916,9 @@ bool deck_peek()
     card_type card1, card2;
     uint8_t flags1, flags2;
 
-    card1 = get_card_and_flags(deck, 0, flags1);
+    card1 = get_card_and_flags(deck, -1, flags1);
+
+    deck.props["peeked"] = true;
 
     if (num_cards == 1)
     {
@@ -923,7 +932,7 @@ bool deck_peek()
         return true;
     }
 
-    card2 = get_card_and_flags(deck, 1, flags2);
+    card2 = get_card_and_flags(deck, -2, flags2);
 
     int already_seen = 0;
     if (flags1 & CFLAG_SEEN)
@@ -934,11 +943,9 @@ bool deck_peek()
     mprf("You draw two cards from the deck. They are: %s and %s.",
          card_name(card1), card_name(card2));
 
-    _set_card_and_flags(deck, 0, card1, flags1 | CFLAG_SEEN);
-    _set_card_and_flags(deck, 1, card2, flags2 | CFLAG_SEEN);
-
-    mpr("You shuffle the cards back into the deck.");
-    _shuffle_deck(deck);
+    _set_card_and_flags(deck, -1, card1, flags1 | CFLAG_SEEN | CFLAG_MARKED);
+    _set_card_and_flags(deck, -2, card2, flags2 | CFLAG_SEEN | CFLAG_MARKED);
+    deck.props["num_marked"] = 2;
 
     // Peeking identifies the deck.
     _deck_ident(deck);
@@ -988,6 +995,13 @@ bool deck_deal()
     if (props["stacked"].get_bool())
     {
         mpr("This deck seems insufficiently random for dealing.");
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    if (props["peeked"].get_bool())
+    {
+        mpr("This deck cannot be dealt as it has already been peeked.");
         crawl_state.zero_turns_taken();
         return false;
     }
@@ -1155,6 +1169,13 @@ bool deck_stack()
         return false;
     }
 
+    if (deck.props["peeked"].get_bool())
+    {
+        mpr("This deck cannot be stacked as it has already been peeked.");
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
     _deck_ident(deck);
     const int num_cards    = cards_in_deck(deck);
 
@@ -1293,6 +1314,17 @@ bool deck_triple_draw()
     const int slot = _choose_inventory_deck("Triple draw from which deck?");
     if (slot == -1)
     {
+        crawl_state.zero_turns_taken();
+        return false;
+    }
+
+    item_def& deck(you.inv[slot]);
+    if (_check_buggy_deck(deck))
+        return false;
+
+    if (deck.props["peeked"].get_bool())
+    {
+        mpr("This deck cannot be used as it has already been peeked.");
         crawl_state.zero_turns_taken();
         return false;
     }

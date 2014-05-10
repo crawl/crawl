@@ -471,8 +471,10 @@ Choose any deck in your inventory and draw a card from it.
 Peek at Two ability
 
 Discard one card from any deck in your inventory to draw two cards from the
-deck, look at them, and shuffle them back into the deck. The deck will be
-identified and inscribed as containing those two cards.
+deck, look at them, and place them back on top of the deck. The deck will be
+identified and inscribed as containing those two cards. Note that once
+peeked at, a deck cannot be used with any of Nemelex's other abilities
+(except Draw One).
 %%%%
 Triple Draw ability
 
