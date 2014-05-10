@@ -2435,6 +2435,8 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
     // leaves a trail of weapons behind, most of which just get
     // offered to Nemelex again, adding an unnecessary source of
     // piety.
+    // This is of course irrelevant now that Nemelex sacrifices
+    // are gone.
     if (mon)
     {
         // Override the weapon.
