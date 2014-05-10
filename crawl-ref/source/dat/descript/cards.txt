@@ -142,7 +142,7 @@ This card unleashes a corrosive attack spell.
 %%%%
 Flame card
 
-This card unleashes a fiery attack spell, which may be explosive.
+This card creates flames around you.
 %%%%
 Frost card
 
