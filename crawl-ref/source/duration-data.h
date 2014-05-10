@@ -321,6 +321,10 @@ static const duration_def duration_data[] =
       false, RED, "Corr",
       "corroded equipment", "corrosion",
       "Your equipment is corroded." },
+    { DUR_FORTITUDE,
+      false, LIGHTBLUE, "Fort", 
+      "immense fortitude", "",
+      "You have immense fortitude and shrug off injury." },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

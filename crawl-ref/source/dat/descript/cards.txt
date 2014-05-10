@@ -157,9 +157,9 @@ the Spark card
 This card unleashes an electrical attack spell, which may affect a large area
 at high power.
 %%%%
-the Hammer card
+Fortitude card
 
-This card unleashes a physical attack spell.
+This card grants immense strength and the ability to ignore injury.
 %%%%
 Pain card
 
