@@ -752,6 +752,13 @@ static void _decrement_durations()
         invalidate_agrid();
     }
 
+    if (_decrement_a_duration(DUR_FORTITUDE, delay,
+                              "Your fortitude fades away."))
+    {
+        notify_stat_change(STAT_STR, -10, true, "Fortitude card running out");
+    }
+
+
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
     {
