@@ -136,7 +136,20 @@ function (React, comm, pubsub, user, login, misc, linkify) {
             {
                 if (i > 0) speclist.push(", ");
                 var cls = specs[i].player ? "player" : "watcher";
-                speclist.push(<span className={cls}>{specs[i].name}</span>);
+                if (specs[i].url)
+                {
+                    speclist.push(
+                      <a href={specs[i].url} target="_blank" className={cls}>
+                        {specs[i].name}
+                      </a>
+                    );
+                }
+                else
+                {
+                    speclist.push(
+                      <span className={cls}>{specs[i].name}</span>
+                    );
+                }
                 if (!specs[i].player) ++spec_count;
             }
 

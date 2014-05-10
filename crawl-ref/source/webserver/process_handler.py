@@ -161,25 +161,15 @@ class CrawlProcessHandlerBase(object):
             player_url = config.player_url
         except:
             player_url = None
-        def wrap_name(watcher, is_player=False):
-            if is_player:
-                class_type = 'player'
-            else:
-                class_type = 'watcher'
-            if player_url is None:
-                return "<span class='{0}'>{1}</span>".format(class_type,
-                                                             watcher)
-            username = "<a href='{0}' target='_blank' class='{1}'>{2}</a>".format(config.player_url, class_type, watcher)
-            username = username.replace('%s', watcher.lower())
-            return username
-
-        player_name = None
         watchers = []
         for w in self._receivers:
             if not w.username:
                 continue
-            watchers.append({"name": w.username,
-                             "player": w.process is not None})
+            wdata = {"name": w.username,
+                     "player": w.process is not None}
+            if player_url:
+                wdata["url"] = player_url % (w.username.lower());
+            watchers.append(wdata)
         anon_count = len(self._receivers) - len(watchers)
         self.send_to_all("update_spectators", anon_count=anon_count,
                          spectators=watchers)
