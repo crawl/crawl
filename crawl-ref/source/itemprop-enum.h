@@ -119,7 +119,7 @@ enum brand_type // item_def.special
     NUM_REAL_SPECIAL_WEAPONS,
 
     SPWPN_ACID,    // acid bite only for the moment
-#if TAG_MAJOR_VERSION != 34
+#if TAG_MAJOR_VERSION > 34
     SPWPN_CONFUSE, // Confusing Touch only for the moment
 #endif
     SPWPN_DEBUG_RANDART,
