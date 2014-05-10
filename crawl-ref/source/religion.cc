@@ -162,11 +162,11 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " & consumed in a column of flame.",
         " & consumed in a roaring column of flame.",
     },
-    // Nemelex (no sacrifices)
+    // Nemelex (no sacrifices but used on death messages)
     {
-        " & eaten by a bored bug.",
-        " & eaten by a bug.",
-        " & eaten by a greedy bug.",
+        " disappear% without a[dditional] glow.",
+        " glow% slightly [brighter ]and disappear%.",
+        " glow% with a rainbow of weird colours and disappear%.",
     },
     // Elyvilon
     {
