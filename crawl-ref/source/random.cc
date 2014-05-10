@@ -345,7 +345,7 @@ double random_real()
 }
 
 // range [0, 1.0]
-double random_real_inc()
+static double _random_real_inc()
 {
     return get_uint32() / 4294967295.0;
 }
@@ -357,7 +357,7 @@ static double _random_real_avg(int rolls)
     double sum = 0;
 
     for (int i = 0; i < rolls; i++)
-        sum += random_real_inc();
+        sum += _random_real_inc();
 
     return sum / (double)rolls;
 }

@@ -21,7 +21,6 @@ int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
 uint32_t random_int();
 double random_real();
-double random_real_inc();
 double random_range_real(double low, double high, int nrolls = 1);
 
 int random2avg(int max, int rolls);
