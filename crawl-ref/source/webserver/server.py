@@ -241,16 +241,14 @@ if __name__ == "__main__":
 
     shed_privileges()
 
-    if config.dgl_mode:
-        userdb.ensure_user_db_exists()
+    userdb.ensure_user_db_exists()
 
     ioloop = tornado.ioloop.IOLoop.instance()
     ioloop.set_blocking_log_threshold(0.5)
 
-    if config.dgl_mode:
-        status_file_timeout()
-        purge_login_tokens_timeout()
-        start_reading_milestones()
+    status_file_timeout()
+    purge_login_tokens_timeout()
+    start_reading_milestones()
 
     if config.get("watch_socket_dirs"):
         process_handler.watch_socket_dirs()

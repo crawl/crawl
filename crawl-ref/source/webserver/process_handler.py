@@ -54,8 +54,7 @@ def handle_new_socket(path, event):
         process.logger.info("Found a %s game.", game_info["id"])
 
         # Notify lobbys
-        if config.dgl_mode:
-            update_all_lobbys(process)
+        update_all_lobbys(process)
     elif event == DirectoryWatcher.DELETE:
         if abspath not in processes: return
         process = processes[abspath]
@@ -125,8 +124,7 @@ class CrawlProcessHandlerBase(object):
     def check_idle(self):
         if self.is_idle() != self._was_idle:
             self._was_idle = self.is_idle()
-            if config.dgl_mode:
-                update_all_lobbys(self)
+            update_all_lobbys(self)
 
     def flush_messages_to_all(self):
         for receiver in self._receivers:
@@ -174,8 +172,7 @@ class CrawlProcessHandlerBase(object):
         self.send_to_all("update_spectators", anon_count=anon_count,
                          spectators=watchers)
 
-        if config.dgl_mode:
-            update_all_lobbys(self)
+        update_all_lobbys(self)
 
     def add_watcher(self, watcher):
         self.last_watcher_join = time.time()
@@ -470,10 +467,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         processes[os.path.abspath(self.socketpath)] = self
 
-        if config.dgl_mode:
-            self.logger.info("Starting %s.", game["id"])
-        else:
-            self.logger.info("Starting game.")
+        self.logger.info("Starting %s.", game["id"])
 
         try:
             self.process = TerminalRecorder(call, self.ttyrec_filename,
@@ -678,25 +672,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
             self.write_to_all(msg, not self.queue_messages)
 
-
-
-class DGLLessCrawlProcessHandler(CrawlProcessHandler):
-    def __init__(self, logger, io_loop):
-        game_params = dict(
-            name = "DCSS",
-            ttyrec_path = "./",
-            inprogress_path = "./",
-            socket_path = "./",
-            client_path = "./webserver/game_data")
-        super(DGLLessCrawlProcessHandler, self).__init__(game_params,
-                                                         "game",
-                                                         logger, io_loop)
-
-    def _base_call(self):
-        return ["./crawl"]
-
-    def check_where(self):
-        pass
 
 
 class CompatCrawlProcessHandler(CrawlProcessHandlerBase):

@@ -215,22 +215,19 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if self.request.headers.get("Origin") != host:
                 return
 
-            if config.dgl_mode:
-                if self.get_cookie("sid"):
-                    # short-lived session
-                    sid = url_unescape(self.get_cookie("sid"))
-                    session = userdb.session_info(sid)
-                    if session and session.get("username"):
-                        self.logger.info("Session user: %s.",
-                                         session["username"])
-                        self.do_login(session["username"], sid=sid)
-                if self.username is None and self.get_cookie("login"):
-                    # long-lived saved login
-                    self.token_login(url_unescape(self.get_cookie("login")))
-                elif config.get("autologin"):
-                    self.do_login(config.autologin)
-            else:
-                self.start_crawl(None)
+            if self.get_cookie("sid"):
+                # short-lived session
+                sid = url_unescape(self.get_cookie("sid"))
+                session = userdb.session_info(sid)
+                if session and session.get("username"):
+                    self.logger.info("Session user: %s.",
+                                     session["username"])
+                    self.do_login(session["username"], sid=sid)
+            if self.username is None and self.get_cookie("login"):
+                # long-lived saved login
+                self.token_login(url_unescape(self.get_cookie("login")))
+            elif config.get("autologin"):
+                self.do_login(config.autologin)
 
     def idle_time(self):
         return self.process.idle_time()
@@ -286,17 +283,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def start_crawl(self, game_id):
-        if config.dgl_mode and game_id not in config.games:
+        if game_id not in config.games:
             self.go_lobby()
             return
 
-        if config.dgl_mode:
-            game_params = dict(config.games[game_id])
-            if self.username == None:
-                if self.watched_game:
-                    self.stop_watching()
-                self.send_message("login_required", game = game_params["name"])
-                return
+        game_params = dict(config.games[game_id])
+        if self.username == None:
+            if self.watched_game:
+                self.stop_watching()
+            self.send_message("login_required", game = game_params["name"])
+            return
 
         if self.process:
             # ignore multiple requests for the same game, can happen when
@@ -318,15 +314,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.send_message("game_started")
                 return
 
-        if config.dgl_mode:
-            args = (game_params, self.username, self.logger, self.ioloop)
-            if (game_params.get("compat_mode") or
-                "client_prefix" in game_params):
-                self.process = process_handler.CompatCrawlProcessHandler(*args)
-            else:
-                self.process = process_handler.CrawlProcessHandler(*args)
+        args = (game_params, self.username, self.logger, self.ioloop)
+        if (game_params.get("compat_mode") or
+            "client_prefix" in game_params):
+            self.process = process_handler.CompatCrawlProcessHandler(*args)
         else:
-            self.process = process_handler.DGLLessCrawlProcessHandler(self.logger, self.ioloop)
+            self.process = process_handler.CrawlProcessHandler(*args)
 
         self.process.add_watcher(self)
         try:
@@ -342,12 +335,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             self.send_message("game_started")
 
-            if config.dgl_mode:
-                if self.process.where == {}:
-                    # If location info was found, the lobbys were already
-                    # updated by set_where_data
-                    update_all_lobbys(self.process)
-                update_global_status()
+            if self.process.where == {}:
+                # If location info was found, the lobbys were already
+                # updated by set_where_data
+                update_all_lobbys(self.process)
+            update_global_status()
 
     def stop_playing(self):
         self.process.remove_watcher(self)
@@ -371,11 +363,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             # Go back to lobby
             self.send_message("game_ended", reason = reason,
                               message = message, dump = dump_url)
-            if not config.dgl_mode:
-                self.start_crawl(None)
 
-        if config.dgl_mode:
-            update_global_status()
+        update_global_status()
 
     def init_user(self):
         with open("/dev/null", "w") as f:

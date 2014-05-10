@@ -72,7 +72,6 @@ class FileTailer(object):
 
 def dgl_format_str(s, username, game_params):
     s = s.replace("%n", username)
-
     return s
 
 where_entry_regex = re.compile("(?<=[^:]):(?=[^:])")
