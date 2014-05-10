@@ -746,6 +746,13 @@ static void _decrement_durations()
         invalidate_agrid();
     }
 
+    if (_decrement_a_duration(DUR_STRENGTH, delay,
+                              "Your strength fades away."))
+    {
+        notify_stat_change(STAT_STR, -10, true, "Strength card running out");
+    }
+
+
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
     {

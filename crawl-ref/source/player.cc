@@ -4261,6 +4261,7 @@ void display_char_status()
         DUR_QAZLAL_COLD_RES,
         DUR_QAZLAL_ELEC_RES,
         DUR_QAZLAL_AC,
+        DUR_STRENGTH,
     };
 
     status_info inf;

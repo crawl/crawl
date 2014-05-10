@@ -178,6 +178,8 @@ static duration_def duration_data[] =
       LIGHTBLUE, "rElec+", "protected from electricity", "Qazlal is protecting you from electricity." },
     { DUR_QAZLAL_AC, false,
       LIGHTBLUE, "", "protected from physical damage", "Qazlal is protecting you from physical damage." },
+    { DUR_STRENGTH, false,
+      LIGHTBLUE, "", "immense strength", "You have immense strength." },
 };
 
 static int duration_index[NUM_DURATIONS];

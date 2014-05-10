@@ -719,6 +719,7 @@ static short _get_stat_colour(stat_type stat)
     if (you.duration[DUR_DIVINE_STAMINA]
         || stat == STAT_STR && you.duration[DUR_MIGHT]
         || stat == STAT_STR && you.duration[DUR_BERSERK]
+        || stat == STAT_STR && you.duration[DUR_STRENGTH]
         || stat == STAT_INT && you.duration[DUR_BRILLIANCE]
         || stat == STAT_DEX && you.duration[DUR_AGILITY])
     {
@@ -2560,6 +2561,7 @@ static string _status_mut_abilities(int sw)
         DUR_QAZLAL_COLD_RES,
         DUR_QAZLAL_ELEC_RES,
         DUR_QAZLAL_AC,
+        DUR_STRENGTH,
     };
 
     status_info inf;

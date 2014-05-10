@@ -1724,6 +1724,7 @@ enum duration_type
     DUR_QAZLAL_COLD_RES,
     DUR_QAZLAL_ELEC_RES,
     DUR_QAZLAL_AC,
+    DUR_STRENGTH,
     NUM_DURATIONS
 };
 
