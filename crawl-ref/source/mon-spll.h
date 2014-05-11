@@ -2453,4 +2453,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_SILVER_STATUE,
+      {
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_SUMMON_DEMON,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_SUMMON_DEMON,
+       SPELL_NO_SPELL
+      }
+    },
 #endif
