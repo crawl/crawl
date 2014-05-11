@@ -2216,7 +2216,7 @@ static int _xom_enchant_monster(bool helpful, bool debug = false)
         ench = RANDOM_ELEMENT(enchantments);
     }
 
-    enchant_monster_with_flavour(mon, 0, ench);
+    enchant_actor_with_flavour(mon, 0, ench);
 
     // Take a note.
     static char ench_buf[80];

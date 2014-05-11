@@ -4385,17 +4385,17 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 void monster::confuse(actor *atk, int strength)
 {
     if (!check_clarity(false))
-        enchant_monster_with_flavour(this, atk, BEAM_CONFUSION, strength);
+        enchant_actor_with_flavour(this, atk, BEAM_CONFUSION, strength);
 }
 
 void monster::paralyse(actor *atk, int strength, string cause)
 {
-    enchant_monster_with_flavour(this, atk, BEAM_PARALYSIS, strength);
+    enchant_actor_with_flavour(this, atk, BEAM_PARALYSIS, strength);
 }
 
 void monster::petrify(actor *atk, bool force)
 {
-    enchant_monster_with_flavour(this, atk, BEAM_PETRIFY);
+    enchant_actor_with_flavour(this, atk, BEAM_PETRIFY);
 }
 
 bool monster::fully_petrify(actor *atk, bool quiet)
@@ -4409,7 +4409,7 @@ bool monster::fully_petrify(actor *atk, bool quiet)
 
 void monster::slow_down(actor *atk, int strength)
 {
-    enchant_monster_with_flavour(this, atk, BEAM_SLOW, strength);
+    enchant_actor_with_flavour(this, atk, BEAM_SLOW, strength);
 }
 
 void monster::set_ghost(const ghost_demon &g)
@@ -5604,27 +5604,27 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
         break;
 
     case POT_BERSERK_RAGE:
-        if (enchant_monster_with_flavour(this, this, BEAM_BERSERK))
+        if (enchant_actor_with_flavour(this, this, BEAM_BERSERK))
             ident = ID_KNOWN_TYPE;
         break;
 
     case POT_HASTE:
-        if (enchant_monster_with_flavour(this, this, BEAM_HASTE))
+        if (enchant_actor_with_flavour(this, this, BEAM_HASTE))
             ident = ID_KNOWN_TYPE;
         break;
 
     case POT_MIGHT:
-        if (enchant_monster_with_flavour(this, this, BEAM_MIGHT))
+        if (enchant_actor_with_flavour(this, this, BEAM_MIGHT))
             ident = ID_KNOWN_TYPE;
         break;
 
     case POT_INVISIBILITY:
-        if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
+        if (enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY))
             ident = ID_KNOWN_TYPE;
         break;
 
     case POT_AGILITY:
-        if (enchant_monster_with_flavour(this, this, BEAM_AGILITY))
+        if (enchant_actor_with_flavour(this, this, BEAM_AGILITY))
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -5699,12 +5699,12 @@ item_type_id_state_type monster::evoke_jewellery_effect(jewellery_type jtype)
     switch (jtype)
     {
     case AMU_RAGE:
-        if (enchant_monster_with_flavour(this, this, BEAM_BERSERK))
+        if (enchant_actor_with_flavour(this, this, BEAM_BERSERK))
             ident = ID_KNOWN_TYPE;
         break;
 
     case RING_INVISIBILITY:
-        if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
+        if (enchant_actor_with_flavour(this, this, BEAM_INVISIBILITY))
             ident = ID_KNOWN_TYPE;
         break;
 

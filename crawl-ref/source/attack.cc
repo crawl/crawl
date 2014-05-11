@@ -579,29 +579,8 @@ bool attack::distortion_affects_defender()
 
 void attack::antimagic_affects_defender(int pow)
 {
-    int amount = 0;
-    if (defender->is_player())
-    {
-        amount = min(you.magic_points, random2avg(pow, 3));
-        if (!amount)
-            return;
-        mprf(MSGCH_WARN, "You feel your power leaking away.");
-        drain_mp(amount);
-        obvious_effect = true;
-    }
-    else if (mons_antimagic_affected(defender->as_monster()))
-    {
-        int dur = div_rand_round(pow * 8, defender->as_monster()->hit_dice);
-        amount = random2(dur + 1);
-        dur = amount * BASELINE_DELAY;
-        defender->as_monster()->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
-                                attacker, // doesn't matter
-                                dur));
-        special_damage_message =
-                    apostrophise(defender->name(DESC_THE))
-                    + " magic leaks into the air.";
-        obvious_effect = true;
-    }
+    obvious_effect =
+        enchant_actor_with_flavour(defender, NULL, BEAM_DRAIN_MAGIC, pow);
 }
 
 void attack::pain_affects_defender()
@@ -1913,7 +1892,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_ANTIMAGIC:
-        antimagic_affects_defender(damage_done);
+        antimagic_affects_defender(damage_done * 8);
         break;
 
     default:

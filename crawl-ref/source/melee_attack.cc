@@ -419,7 +419,7 @@ void melee_attack::apply_black_mark_effects()
         switch(random2(3))
         {
             case 0:
-                antimagic_affects_defender(damage_done);
+                antimagic_affects_defender(damage_done * 8);
                 break;
             case 1:
                 defender->weaken(attacker, 2);
@@ -443,7 +443,7 @@ void melee_attack::apply_black_mark_effects()
         switch(random2(3))
         {
             case 0:
-                antimagic_affects_defender(damage_done);
+                antimagic_affects_defender(damage_done * 8);
                 break;
             case 1:
                 defender->slow_down(attacker, 5 + random2(7));
@@ -1370,7 +1370,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             const bool spell_user = mons_antimagic_affected(defender->as_monster());
 
-            antimagic_affects_defender(damage_done * 2);
+            antimagic_affects_defender(damage_done * 16);
             mprf("You drain %s %s.",
                  defender->as_monster()->pronoun(PRONOUN_POSSESSIVE).c_str(),
                  spell_user ? "magic" : "power");
@@ -3193,7 +3193,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_ANTIMAGIC:
-        antimagic_affects_defender(attacker->get_experience_level() * 3 / 2);
+        antimagic_affects_defender(attacker->get_experience_level() * 12);
 
         if (mons_genus(attacker->type) == MONS_VINE_STALKER
             && attacker->is_monster())

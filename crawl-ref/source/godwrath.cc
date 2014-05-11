@@ -1887,19 +1887,19 @@ void gozag_incite(monster *mon)
                 case 0:
                     if (mon->has_ench(ENCH_MIGHT))
                         break;
-                    enchant_monster_with_flavour(mon, mon, BEAM_MIGHT);
+                    enchant_actor_with_flavour(mon, mon, BEAM_MIGHT);
                     success = true;
                     break;
                 case 1:
                     if (mon->has_ench(ENCH_HASTE))
                         break;
-                    enchant_monster_with_flavour(mon, mon, BEAM_HASTE);
+                    enchant_actor_with_flavour(mon, mon, BEAM_HASTE);
                     success = true;
                     break;
                 case 2:
                     if (mon->invisible() || you.can_see_invisible())
                         break;
-                    enchant_monster_with_flavour(mon, mon, BEAM_INVISIBILITY);
+                    enchant_actor_with_flavour(mon, mon, BEAM_INVISIBILITY);
                     success = true;
                     break;
             }
