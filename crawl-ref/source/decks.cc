@@ -60,6 +60,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
+#include "spl-monench.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
@@ -1625,19 +1626,88 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
 
 static void _velocity_card(int power, deck_rarity_type rarity)
 {
-    if (you_worship(GOD_CHEIBRIADOS))
-        return simple_god_message(" protects you from inadvertent hurry.");
 
     const int power_level = _get_power_level(power, rarity);
-    if (power_level >= 2)
+    bool did_something = false;
+
+    if (you.duration[DUR_SLOW] && (power_level > 0 || coinflip()))
     {
-        potion_effect(POT_HASTE, random2(power / 4));
-        cast_swiftness(random2(power / 4));
+        if (you_worship(GOD_CHEIBRIADOS))
+            simple_god_message(" protects you from inadvertent hurry.");
+        else
+        {
+            you.duration[DUR_SLOW] = 1;
+            did_something = true;
+        }
     }
-    else if (power_level == 1)
-        potion_effect(POT_HASTE, random2(power / 4));
-    else
-        cast_swiftness(random2(power / 4));
+
+    if (you.duration[DUR_HASTE] && (power_level == 0 && coinflip()))
+    {
+        you.duration[DUR_HASTE] = 1;
+        did_something = true;
+    }
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+
+        if (mon && !mons_immune_magic(mon))
+        {
+            const bool hostile = !mon->wont_attack();
+            const bool was_hasted = mon->has_ench(ENCH_HASTE);
+            const bool haste_immune = (mon->check_stasis(false)
+                                || mons_is_immotile(mon));
+
+            bool did_haste = false;
+
+            // Explanatory variables.
+            const int speed = mon->speed;
+            const bool slow = speed < BASELINE_DELAY;
+            const bool fast = speed > BASELINE_DELAY;
+            const bool normal = speed == BASELINE_DELAY;
+
+
+            // benefits the player
+            if (x_chance_in_y(power_level + 1, 3))
+            {
+                if (hostile && (fast || normal))
+                {
+                    do_slow_monster(mon, &you);
+                    did_something = true;
+                }
+                else if (!hostile && !haste_immune && (slow || normal))
+                {
+                    mon->add_ench(ENCH_HASTE);
+                    did_something = true;
+
+                if (!was_hasted)
+                    did_haste = true;
+                }
+            }   // doesn't benefit the player
+            else if (x_chance_in_y(2 - power_level, 4))
+            {
+                if (slow && hostile)
+                {
+                    mon->add_ench(ENCH_HASTE);
+                    did_something = true;
+
+                    if (!was_hasted)
+                        did_haste = true;
+                }
+                else if (fast && !hostile)
+                {
+                    do_slow_monster(mon, &you);
+                    did_something = true;
+                }
+            }
+
+            if (did_haste)
+                simple_monster_message(mon, " seems to speed up.");
+        }
+    }
+
+    if (!did_something)
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 static void _damnation_card(int power, deck_rarity_type rarity)

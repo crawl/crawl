@@ -16,7 +16,8 @@ This card swaps your position with that of a nearby creature.
 %%%%
 Velocity card
 
-This card makes you move or even act faster.
+This card makes the slow fast and the fast slow. Whether or not you
+benefit from this exchange depends on power.
 %%%%
 # decks of emergency -> escape
 the Tomb card
