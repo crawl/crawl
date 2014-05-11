@@ -6271,6 +6271,11 @@ default confused giant firefly
 
 @default confused winged insect@
 %%%%
+################## Ice statue ##############################
+default ice statue
+
+VISUAL:@The_monster@ glitters chillingly in the dim dungeon light.
+%%%%
 ################## Hell lords ##############################
 hell lord
 
@@ -6394,9 +6399,9 @@ default orange crystal statue
 
 VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
 %%%%
-default ice statue
+default silver statue
 
-VISUAL:@The_monster@ glitters chillingly in the dim dungeon light.
+VISUAL:@The_monster@ glitters argentine in the dim dungeon light.
 %%%%
 ################## Sheep ###################################
 sheep

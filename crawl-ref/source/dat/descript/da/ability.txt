@@ -683,6 +683,10 @@ Make lightning spire ability
 
 Bygger et lynspir, som kan udslynge elektricitet, på det valgte sted.
 %%%%
+Make silver statue ability
+
+Bygger en statue med evnen til at hidkalde venlige dæmoner på det valgte sted.
+%%%%
 Make bazaar ability
 
 Skaber en portal til en basar der, hvor du står.
