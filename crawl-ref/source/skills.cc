@@ -888,17 +888,6 @@ bool skill_trained(int i)
     return you.can_train[i] && you.train[i];
 }
 
-void train_skill(skill_type skill, int exp)
-{
-    const int cost = calc_skill_cost(you.skill_cost_level);
-    int gain = 0;
-
-    while (exp >= cost)
-        gain += _train(skill, exp);
-
-    dprf("Trained %s by %d.", skill_name(skill), gain);
-}
-
 void check_skill_cost_change()
 {
     while (you.skill_cost_level < 27
