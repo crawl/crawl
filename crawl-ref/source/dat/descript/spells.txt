@@ -440,7 +440,7 @@ Drain Life spell
 Drain Magic spell
 
 This hex causes the target's magic to leak into the air, as though they were
-hit by an anti-magic weapon.
+hit by an antimagic weapon.
 %%%%
 Druid's Call spell
 

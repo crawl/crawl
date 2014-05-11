@@ -2284,14 +2284,14 @@ DEPTH:   D:14-15, Depths, !Depths:$
 MONS:    orc knight ; wand of frost . crossbow ego:flame . bolt ego:none . chain mail / \
          orc knight ; wand of flame . crossbow ego:frost . bolt ego:none . chain mail
 MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
-MONS:    rakshasa ; scythe ego:anti-magic | trident ego:anti-magic / \
+MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
          mermaid ; chain mail . javelin ego:poisoned
 MONS:    fire giant ; battleaxe ego:freezing ident:type
 MONS:    frost giant ; great sword ego:flaming ident:type
 MONS:    golden dragon / crystal guardian w:8
 MONS:    vampire knight ; wand of lightning | wand of draining . \
          great sword . chain mail / tengu reaver ; chain mail . \
-         halberd ego:anti-magic ident:type | glaive ego:anti-magic ident:type
+         halberd ego:antimagic ident:type | glaive ego:antimagic ident:type
 KMONS:   A = fire drake / salamander / fire elemental
 KMONS:   B = lindwurm / fire crab / efreet w:5
 KMONS:   C = salamander firebrand / ophan w:5 / balrug w:5
