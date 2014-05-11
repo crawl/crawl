@@ -4730,7 +4730,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "frost",
         "vampiricism",
         "pain",
-        "anti-magic",
+        "antimagic",
         "distortion",
 #if TAG_MAJOR_VERSION == 34
         "reaching",

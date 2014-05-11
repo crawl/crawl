@@ -1705,20 +1705,20 @@ DEPTH:  D:3-9
 WEIGHT: 4
 MONS:   eye of draining
 : if you.absdepth() > 5 and crawl.coinflip() then
-KMONS:  2 = ogre god:trog ; giant club ego:anti-magic ident:type | w:3 giant club / \
-        ogre god:trog ; giant spiked club ego:anti-magic ident:type | w:5 giant spiked club / \
-        orc warrior god:trog ; halberd ego:anti-magic ident:type | war axe ego:anti-magic ident:type | \
-        flail ego:anti-magic ident:type | great mace ego:anti-magic ident:type | any weapon / \
-        big kobold god:trog ; short sword ego:anti-magic ident:type | dagger ego:anti-magic ident:type | \
-        cutlass ego:anti-magic ident:type | cutlass
+KMONS:  2 = ogre god:trog ; giant club ego:antimagic ident:type | w:3 giant club / \
+        ogre god:trog ; giant spiked club ego:antimagic ident:type | w:5 giant spiked club / \
+        orc warrior god:trog ; halberd ego:antimagic ident:type | war axe ego:antimagic ident:type | \
+        flail ego:antimagic ident:type | great mace ego:antimagic ident:type | any weapon / \
+        big kobold god:trog ; short sword ego:antimagic ident:type | dagger ego:antimagic ident:type | \
+        cutlass ego:antimagic ident:type | cutlass
 : else
-KMONS:  2 = orc god:trog ; spear ego:anti-magic ident:type | hand axe ego:anti-magic ident:type | \
-        war axe ego:anti-magic ident:type | any weapon / \
-        kobold god:trog ; short sword ego:anti-magic ident:type | hand axe ego:anti-magic ident:type | \
-        club ego:anti-magic ident:type | whip ego:anti-magic ident:type | any weapon / \
-        goblin god:trog ; dagger ego:anti-magic ident:type | short sword ego:anti-magic ident:type / \
-        gnoll god:trog ; spear ego:anti-magic ident:type | trident ego:anti-magic ident:type | \
-        halberd ego:anti-magic ident:type | whip ego:anti-magic ident:type | halberd | any weapon
+KMONS:  2 = orc god:trog ; spear ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
+        war axe ego:antimagic ident:type | any weapon / \
+        kobold god:trog ; short sword ego:antimagic ident:type | hand axe ego:antimagic ident:type | \
+        club ego:antimagic ident:type | whip ego:antimagic ident:type | any weapon / \
+        goblin god:trog ; dagger ego:antimagic ident:type | short sword ego:antimagic ident:type / \
+        gnoll god:trog ; spear ego:antimagic ident:type | trident ego:antimagic ident:type | \
+        halberd ego:antimagic ident:type | whip ego:antimagic ident:type | halberd | any weapon
 : end
 KFEAT:  _ = altar_trog
 NSUBST: 1 = 1:1 / 1 = 1. / 1 = 1.. / *:.
