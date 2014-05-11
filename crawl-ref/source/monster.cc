@@ -2089,7 +2089,7 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
             // Monsters in a fight will only pick up missiles if doing so
             // is worthwhile.
             if (!mons_is_wandering(this)
-                && (!friendly() || foe != MHITYOU)
+                && foe != MHITYOU
                 && (item.quantity < 5 || miss && miss->quantity >= 7))
             {
                 return false;
@@ -2264,8 +2264,7 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     {
         // If a monster isn't otherwise occupied (has a foe, is fleeing, etc.)
         // it is considered wandering.
-        bool wandering = (mons_is_wandering(this)
-                          || friendly() && foe == MHITYOU);
+        bool wandering = mons_is_wandering(this);
         const int itype = item.base_type;
 
         // Weak(ened) monsters won't stop to pick up things as long as they
@@ -2281,35 +2280,6 @@ bool monster::pickup_item(item_def &item, int near, bool force)
         // move everything away from them.
         if (testbits(item.flags, ISFLAG_SEEN))
             return false;
-
-        if (friendly())
-        {
-            // Allies are only interested in armour and weaponry.
-            // Everything else is likely to only annoy the player
-            // because the monster either won't use the object or
-            // might use it in ways not helpful to the player.
-            //
-            // Not adding jewellery to the list because of potential
-            // balance implications for perm-allies. Perhaps this should
-            // be reconsidered -NFM
-            if (itype != OBJ_ARMOUR && itype != OBJ_WEAPONS
-                && itype != OBJ_MISSILES)
-            {
-                return false;
-            }
-
-            // Depending on the friendly pickup toggle, your allies may not
-            // pick up anything, or only stuff dropped by (other) allies.
-            if (you.friendly_pickup == FRIENDLY_PICKUP_NONE
-                || you.friendly_pickup == FRIENDLY_PICKUP_FRIEND
-                   && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY)
-                || you.friendly_pickup == FRIENDLY_PICKUP_PLAYER
-                   && !(item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
-                                        | ISFLAG_DROPPED_BY_ALLY)))
-            {
-                return false;
-            }
-        }
 
         if (!wandering)
         {
@@ -2331,9 +2301,8 @@ bool monster::pickup_item(item_def &item, int near, bool force)
                 // While occupied, hostile monsters won't pick up items
                 // dropped or thrown by you. (You might have done that to
                 // distract them.)
-                if (!friendly()
-                    && (testbits(item.flags, ISFLAG_DROPPED)
-                        || testbits(item.flags, ISFLAG_THROWN)))
+                if (testbits(item.flags, ISFLAG_DROPPED)
+                    || testbits(item.flags, ISFLAG_THROWN))
                 {
                     return false;
                 }
