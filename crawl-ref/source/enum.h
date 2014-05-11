@@ -747,7 +747,6 @@ enum command_type
     CMD_GO_UPSTAIRS,
     CMD_GO_DOWNSTAIRS,
     CMD_TOGGLE_AUTOPICKUP,
-    CMD_TOGGLE_FRIENDLY_PICKUP,
     CMD_TOGGLE_VIEWPORT_MONSTER_HP,
     CMD_TOGGLE_TRAVEL_SPEED,
     CMD_PICKUP,
@@ -4236,14 +4235,6 @@ enum unique_item_status_type
     UNIQ_NOT_EXISTS = 0,
     UNIQ_EXISTS = 1,
     UNIQ_LOST_IN_ABYSS = 2,
-};
-
-enum friendly_pickup_type
-{
-    FRIENDLY_PICKUP_NONE = 0,
-    FRIENDLY_PICKUP_FRIEND,
-    FRIENDLY_PICKUP_PLAYER,
-    FRIENDLY_PICKUP_ALL,
 };
 
 enum zap_type

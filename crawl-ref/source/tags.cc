@@ -1526,8 +1526,6 @@ static void tag_construct_you(writer &th)
 
     you.m_quiver->save(th);
 
-    marshallByte(th, you.friendly_pickup);
-
     marshallString(th, you.zotdef_wave_name);
 
     CANARY;
@@ -2851,7 +2849,10 @@ static void tag_read_you(reader &th)
 
     you.m_quiver->load(th);
 
-    you.friendly_pickup = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FRIENDLY_PICKUP)
+        unmarshallByte(th);
+#endif
 
     you.zotdef_wave_name = unmarshallString(th);
 

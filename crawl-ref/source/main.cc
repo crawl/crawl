@@ -1013,7 +1013,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
-    case CMD_TOGGLE_FRIENDLY_PICKUP:
     case CMD_TOGGLE_TRAVEL_SPEED:
     case CMD_ADJUST_INVENTORY:
     case CMD_QUIVER_ITEM:
@@ -1663,34 +1662,6 @@ static void _experience_check()
 #endif
 }
 
-static void _print_friendly_pickup_setting(bool was_changed)
-{
-    string now = (was_changed? "now " : "");
-
-    if (you.friendly_pickup == FRIENDLY_PICKUP_NONE)
-    {
-        mprf("Your intelligent allies are %sforbidden to pick up anything at all.",
-             now.c_str());
-    }
-    else if (you.friendly_pickup == FRIENDLY_PICKUP_FRIEND)
-    {
-        mprf("Your intelligent allies may %sonly pick up items dropped by allies.",
-             now.c_str());
-    }
-    else if (you.friendly_pickup == FRIENDLY_PICKUP_PLAYER)
-    {
-        mprf("Your intelligent allies may %sonly pick up items dropped by you "
-             "and your allies.", now.c_str());
-    }
-    else if (you.friendly_pickup == FRIENDLY_PICKUP_ALL)
-    {
-        mprf("Your intelligent allies may %spick up anything they need.",
-             now.c_str());
-    }
-    else
-        mprf(MSGCH_ERROR, "Your allies%s are collecting bugs!", now.c_str());
-}
-
 static void _do_remove_armour()
 {
     if (you.species == SP_FELID)
@@ -1708,33 +1679,6 @@ static void _do_remove_armour()
     int index = 0;
     if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
         takeoff_armour(index);
-}
-
-static void _toggle_friendly_pickup()
-{
-    // Toggle pickup mode for friendlies.
-    _print_friendly_pickup_setting(false);
-
-    mprf(MSGCH_PROMPT, "Change to (d)efault, (n)othing, (f)riend-dropped, "
-                       "(p)layer, or (a)ll? ");
-
-    int type;
-    {
-        cursor_control con(true);
-        type = toalower(getchm(KMC_DEFAULT));
-    }
-
-    switch (type)
-    {
-    case 'd': you.friendly_pickup = Options.default_friendly_pickup; break;
-    case 'n': you.friendly_pickup = FRIENDLY_PICKUP_NONE; break;
-    case 'f': you.friendly_pickup = FRIENDLY_PICKUP_FRIEND; break;
-    case 'p': you.friendly_pickup = FRIENDLY_PICKUP_PLAYER; break;
-    case 'a': you.friendly_pickup = FRIENDLY_PICKUP_ALL; break;
-    default: canned_msg(MSG_OK); return;
-    }
-
-    _print_friendly_pickup_setting(true);
 }
 
 static void _toggle_travel_speed()
@@ -1923,7 +1867,6 @@ void process_command(command_type cmd)
         mprf("Autopickup is now %s.", Options.autopickup_on > 0 ? "on" : "off");
         break;
 
-    case CMD_TOGGLE_FRIENDLY_PICKUP:     _toggle_friendly_pickup(); break;
     case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 

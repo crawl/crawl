@@ -774,7 +774,6 @@ void game_options::reset_options()
 
     autopickup_on    = 1;
     autopickup_starting_ammo = true;
-    default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     default_manual_training = false;
 
     show_newturn_mark = true;
@@ -2407,17 +2406,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             autopickup_on = 0;
     }
     else BOOL_OPTION(autopickup_starting_ammo);
-    else if (key == "default_friendly_pickup")
-    {
-        if (field == "none")
-            default_friendly_pickup = FRIENDLY_PICKUP_NONE;
-        else if (field == "friend")
-            default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
-        else if (field == "player")
-            default_friendly_pickup = FRIENDLY_PICKUP_PLAYER;
-        else if (field == "all")
-            default_friendly_pickup = FRIENDLY_PICKUP_ALL;
-    }
     else if (key == "default_manual_training")
     {
         if (_read_bool(field, true))
