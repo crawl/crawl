@@ -2239,21 +2239,12 @@ bool monster::pickup_food(item_def &item, int near)
 
 bool monster::pickup_misc(item_def &item, int near)
 {
-    // Never pick up the horn of Geryon or runes, except for mimics.
-    if (item.base_type == OBJ_MISCELLANY
-        && ((item.sub_type == MISC_HORN_OF_GERYON && type != MONS_GERYON)
-            || item.sub_type == MISC_RUNE_OF_ZOT)
-        && !mons_is_item_mimic(type))
-    {
-        return false;
-    }
+    if (mons_is_item_mimic(type))
+        pickup(item, MSLOT_MISCELLANY, near);
 
-    // Holy monsters and worshippers of good gods won't pick up evil
-    // miscellaneous items.
-    if ((is_holy() || is_good_god(god)) && is_evil_item(item))
-        return false;
-
-    return pickup(item, MSLOT_MISCELLANY, near);
+    // Monsters can't use any miscellaneous items right now, so don't
+    // let them pick them up.
+    return false;
 }
 
 // Eaten items are handled elsewhere, in _handle_pickup() in mon-stuff.cc.
