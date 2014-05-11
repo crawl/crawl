@@ -335,6 +335,14 @@ giant orange brain cast
 
 @The_monster@ pulsates.
 %%%%
+orange crystal statue cast
+
+@The_monster@ glitters.
+%%%%
+orange crystal statue cast targeted
+
+@The_monster@ fixes its piercing gaze on @target@.
+%%%%
 orb of fire cast
 
 @The_monster@ glows yellow.

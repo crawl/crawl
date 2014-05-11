@@ -2464,4 +2464,15 @@
        SPELL_NO_SPELL
       }
     },
+
+    {  MST_ORANGE_CRYSTAL_STATUE,
+      {
+       SPELL_BRAIN_FEED,
+       SPELL_DRAIN_MAGIC,
+       SPELL_CONFUSE,
+       SPELL_BRAIN_FEED,
+       SPELL_DRAIN_MAGIC,
+       SPELL_CONFUSE
+      }
+    },
 #endif
