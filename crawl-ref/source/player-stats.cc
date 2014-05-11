@@ -377,7 +377,7 @@ static int _strength_modifier()
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         result += 5;
 
-    if (you.duration[DUR_STRENGTH])
+    if (you.duration[DUR_FORTITUDE])
         result += 10;
 
     if (you.duration[DUR_DIVINE_STAMINA])

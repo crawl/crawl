@@ -125,7 +125,7 @@ const deck_archetype deck_of_destruction[] =
     { CARD_FLAME,    {5, 5, 5} },
     { CARD_FROST,    {5, 5, 5} },
     { CARD_VENOM,    {5, 5, 5} },
-    { CARD_STRENGTH, {5, 5, 5} },
+    { CARD_FORTITUDE, {5, 5, 5} },
     { CARD_STORM,    {5, 5, 5} },
     { CARD_PAIN,     {5, 5, 3} },
     { CARD_ORB,      {5, 5, 5} },
@@ -360,7 +360,7 @@ const char* card_name(card_type card)
     case CARD_FROST:           return "Frost";
     case CARD_VENOM:           return "Venom";
     case CARD_STORM:           return "the Storm";
-    case CARD_STRENGTH:        return "Strength";
+    case CARD_FORTITUDE:       return "Fortitude";
     case CARD_PAIN:            return "Pain";
     case CARD_TORMENT:         return "Torment";
 #if TAG_MAJOR_VERSION == 34
@@ -2728,16 +2728,16 @@ static void _flame_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-static void _strength_card(int power, deck_rarity_type rarity)
+static void _fortitude_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
-    const bool strong = you.duration[DUR_STRENGTH] > 0;
+    const bool strong = you.duration[DUR_FORTITUDE] > 0;
 
-    you.increase_duration(DUR_STRENGTH, 10 + random2((power_level + 1) * 10));
+    you.increase_duration(DUR_FORTITUDE, 10 + random2((power_level + 1) * 10));
 
     if (!strong)
     {
-        mprf(MSGCH_DURATION, "You are filled with a great strength.");
+        mprf(MSGCH_DURATION, "You are filled with a great fortitude.");
         notify_stat_change(STAT_STR, 10, true, "");
     }
 }
@@ -2897,7 +2897,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
     case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
     case CARD_FLAME:            _flame_card(power, rarity); break;
-    case CARD_STRENGTH:         _strength_card(power, rarity); break;
+    case CARD_FORTITUDE:        _fortitude_card(power, rarity); break;
     case CARD_STORM:            _storm_card(power, rarity); break;
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
 

@@ -62,7 +62,7 @@ enum card_type
     CARD_FLAME,                 // fire damage
     CARD_FROST,                 // cold damage
     CARD_VENOM,                 // poison damage
-    CARD_STRENGTH,              // strength and damage reduction
+    CARD_FORTITUDE,             // strength and damage shaving
     CARD_STORM,
     CARD_PAIN,                  // single target, like spell of agony
     CARD_TORMENT,               // Symbol of Torment
