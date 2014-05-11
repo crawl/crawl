@@ -4292,6 +4292,9 @@ static string _religion_help(god_type god)
         {
             result += "Evolving plants requires fruit, and evolving "
                       "fungi requires piety.";
+        }
+        break;
+
     case GOD_QAZLAL:
         if (!player_under_penance()
             && you.piety >= piety_breakpoint(5)
@@ -4301,7 +4304,6 @@ static string _religion_help(god_type god)
                       "resistances.";
         }
         break;
-        }
 
     case GOD_GOZAG:
         if (!player_under_penance()
