@@ -1855,13 +1855,13 @@ ENDMAP
 NAME:  guppyfry_early_orc_mine
 DEPTH: D:2-5
 TAGS:  patrolling no_monster_gen mini_float transparent
-MONS:  orc, goblin, hobgoblin
-MONS:  orc / orc warrior / orc priest / orc wizard
-ITEM:  stone / large rock
-SUBST: - = 123.x$dI
-SUBST: ? = .$d
+MONS:  orc, goblin, hobgoblin, orc priest, orc wizard, orc warrior
+ITEM:  stone / large rock q:1 w:1
+NSUBST: ? = 2:$ / 2:d / *:.
 : if you.absdepth() > 3 then
-SUBST: 1 = 4
+NSUBST: - = 1:6 / 1:5 / 1:4 / 3:1 / 2:. / 2:x / 2:I / *:.
+: else
+NSUBST: - = 2:1 / 2:2 / 2:3 / 2:. / 2:x / 2:I / *:.
 : end
 MAP
 ..............
