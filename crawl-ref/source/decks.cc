@@ -60,6 +60,7 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
+#include "spl-monench.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
@@ -1629,15 +1630,60 @@ static void _velocity_card(int power, deck_rarity_type rarity)
         return simple_god_message(" protects you from inadvertent hurry.");
 
     const int power_level = _get_power_level(power, rarity);
-    if (power_level >= 2)
+
+    if (you.duration[DUR_SLOW] && (power_level > 0 || coinflip()))
+        you.duration[DUR_SLOW] = 1;
+
+    if (you.duration[DUR_HASTE] && (power_level == 0 && coinflip()))
+        you.duration[DUR_HASTE] = 1;
+
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        potion_effect(POT_HASTE, random2(power / 4));
-        cast_swiftness(random2(power / 4));
+        monster* mon = monster_at(*ri);
+
+        if (mon && !mons_immune_magic(mon))
+        {
+           int speed = mon->speed;
+           bool hostile = !mon->wont_attack();
+           bool was_hasted = mon->has_ench(ENCH_HASTE);
+           bool haste_immune = (mon->check_stasis(false) || mons_is_immotile(mon));
+           bool did_haste = false;
+
+           // benefits the player
+           if (((speed > BASELINE_DELAY && hostile) ||
+              (speed < BASELINE_DELAY && !hostile)) &&
+              x_chance_in_y(power_level + 1, 3))
+           {
+              if (hostile)
+                  do_slow_monster(mon, &you);
+              else if (!hostile && !haste_immune)
+              {
+                  mon->add_ench(ENCH_HASTE);
+
+                  if (!was_hasted)
+                      did_haste = true;
+              }
+           }   // doesn't benefit the player
+           else if (((speed < BASELINE_DELAY && hostile) ||
+                    (speed > BASELINE_DELAY && !hostile)) &&
+                    ((power_level == 0 && coinflip()) ||
+                    (power_level == 1 && one_chance_in(4))))
+           {
+                if (hostile)
+                {
+                    mon->add_ench(ENCH_HASTE);
+
+                    if (!was_hasted)
+                        did_haste = true;
+                }
+                else
+                    do_slow_monster(mon, &you);
+           }
+
+           if (did_haste)
+               simple_monster_message(mon, " seems to speed up.");
+        }
     }
-    else if (power_level == 1)
-        potion_effect(POT_HASTE, random2(power / 4));
-    else
-        cast_swiftness(random2(power / 4));
 }
 
 static void _damnation_card(int power, deck_rarity_type rarity)
