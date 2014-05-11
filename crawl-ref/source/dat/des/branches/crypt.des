@@ -1339,7 +1339,7 @@ MONS:   flying skull / skeletal warrior / w:40 nothing
 MONS:   ancient champion
 KFEAT:  ^ = alarm trap
 SUBST:  F = G:99 F:1
-KMONS:  F = orange crystal statue / ice statue
+KMONS:  F = orange crystal statue / silver statue / ice statue
 {{
 lua_marker("|",
            Triggerable.synchronized_markers(

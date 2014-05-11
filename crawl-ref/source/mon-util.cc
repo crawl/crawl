@@ -980,7 +980,7 @@ bool invalid_monster_index(int i)
 
 bool mons_is_statue(monster_type mc, bool allow_disintegrate)
 {
-    if (mc == MONS_ORANGE_STATUE)
+    if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
         return true;
 
     if (!allow_disintegrate)
@@ -2045,7 +2045,7 @@ int exper_value(const monster* mon, bool real)
     // The beta26 statues have non-spell-like abilities that the experience
     // code can't see, so inflate their XP a bit.  Ice statues and Roxanne
     // get plenty of XP for their spells.
-    if (mc == MONS_ORANGE_STATUE)
+    if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
         return hd * 15;
 
     x_val = (16 + maxhp) * hd * hd / 10;
@@ -3433,7 +3433,7 @@ bool mons_has_los_ability(monster_type mon_type)
     }
 
     // Although not using spells, these are exceedingly dangerous.
-    if (mon_type == MONS_ORANGE_STATUE)
+    if (mon_type == MONS_SILVER_STATUE || mon_type == MONS_ORANGE_STATUE)
         return true;
 
     // Beholding just needs LOS.

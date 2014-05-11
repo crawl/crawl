@@ -315,7 +315,7 @@ MONS:     mummy / guardian mummy w:3 / nothing
 # the weights reflect the recursive SUBST: to keep them the same as before.
 MONS:     guardian mummy w:233 / mummy / nothing w:233
 MONS:     mummy priest / nothing, sphinx / nothing, greater mummy / nothing
-MONS:     orange crystal statue / ice statue
+MONS:     silver statue / orange crystal statue / ice statue
 #
 : set_feature_name("granite_statue", "sarcophagus")
 MAP
@@ -407,7 +407,7 @@ SUBST:   F = G
 MONS:    mummy / guardian mummy w:3 / nothing
 MONS:    guardian mummy w:233 / mummy / nothing w:233
 MONS:    mummy priest / nothing, greater mummy / nothing
-MONS:    orange crystal statue / ice statue
+MONS:    silver statue / orange crystal statue / ice statue
 SUBST:   t = ~ .:50
 #
 : set_feature_name("granite_statue", "sarcophagus")
@@ -441,7 +441,7 @@ MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
          ancient champion / nothing w:250
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy / ancient lich w:1 / nothing w:11
-MONS:    orange crystal statue / ice statue
+MONS:    silver statue / orange crystal statue / ice statue
 TILE:    F  = dngn_sarcophagus_pedestal_left
 TILE:    M  = dngn_sarcophagus_pedestal_right
 COLOUR:  FM = yellow
@@ -479,7 +479,7 @@ MONS:    guardian mummy w:200 / mummy w:30 / skeletal warrior / \
          ancient champion / nothing w:250
 MONS:    mummy priest w:20 / unborn / revenant w:5 / lich w:5 / nothing w:30
 MONS:    greater mummy / ancient lich w:1 / nothing w:11
-MONS:    orange crystal statue / ice statue
+MONS:    silver statue / orange crystal statue / ice statue
 TILE:    F  = dngn_sarcophagus_pedestal_left
 TILE:    M  = dngn_sarcophagus_pedestal_right
 COLOUR:  FM = yellow

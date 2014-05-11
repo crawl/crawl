@@ -1974,6 +1974,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TRAINING_DUMMY;
     case MONS_ICE_STATUE:
         return TILEP_MONS_ICE_STATUE;
+    case MONS_SILVER_STATUE:
+        return TILEP_MONS_SILVER_STATUE;
     case MONS_ORANGE_STATUE:
         return TILEP_MONS_ORANGE_STATUE;
     case MONS_DIAMOND_OBELISK:
@@ -5446,6 +5448,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZOTDEF_ICE_STATUE;
     case ABIL_MAKE_OCS:
         return TILEG_ABILITY_ZOTDEF_OCS;
+    case ABIL_MAKE_SILVER_STATUE:
+        return TILEG_ABILITY_ZOTDEF_SILVER_STATUE;
     case ABIL_MAKE_CURSE_SKULL:
         return TILEG_ABILITY_ZOTDEF_CURSE_SKULL;
     case ABIL_MAKE_TELEPORT:
