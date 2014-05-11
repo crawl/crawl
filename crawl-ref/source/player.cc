@@ -5673,7 +5673,6 @@ void player::init()
 
     is_undead       = US_ALIVE;
 
-    friendly_pickup = 0;
     dead = false;
     lives = 0;
     deaths = 0;

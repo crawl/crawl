@@ -298,8 +298,6 @@ static void _post_init(bool newc)
 
     if (newc) // start a new game
     {
-        you.friendly_pickup = Options.default_friendly_pickup;
-
         // Mark items in inventory as of unknown origin.
         origin_set_inventory(origin_set_unknown);
 
