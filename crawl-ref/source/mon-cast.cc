@@ -1079,6 +1079,11 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+    case SPELL_DRAIN_MAGIC:
+        beam.ench_power = mons->spell_hd(real_spell) * 6;
+        beam.flavour    = BEAM_DRAIN_MAGIC;
+        break;
+
     default:
         if (check_validity)
         {

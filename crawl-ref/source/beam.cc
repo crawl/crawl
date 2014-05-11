@@ -3472,13 +3472,14 @@ bool bolt::misses_player()
     return miss;
 }
 
-void bolt::affect_player_enchantment()
+void bolt::affect_player_enchantment(bool resistible)
 {
-    if (((flavour != BEAM_MALMUTATE
-         && flavour != BEAM_CORRUPT_BODY
-         && flavour != BEAM_SAP_MAGIC
-         && has_saving_throw())
-          || flavour == BEAM_VIRULENCE)
+    if (resistible
+        && ((flavour != BEAM_MALMUTATE
+             && flavour != BEAM_CORRUPT_BODY
+             && flavour != BEAM_SAP_MAGIC
+             && has_saving_throw())
+              || flavour == BEAM_VIRULENCE)
         && you.check_res_magic(ench_power) > 0)
     {
         // You resisted it.
@@ -3823,6 +3824,17 @@ void bolt::affect_player_enchantment()
         else
            mpr("You feel corrupt for a moment.");
         break;
+
+    case BEAM_DRAIN_MAGIC:
+    {
+        int amount = min(you.magic_points, random2avg(ench_power / 8, 3));
+        if (!amount)
+            break;
+        mprf(MSGCH_WARN, "You feel your power leaking away.");
+        drain_mp(amount);
+        obvious_effect = true;
+        break;
+    }
 
     default:
         // _All_ enchantments should be enumerated here!
@@ -5253,6 +5265,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = ignite_poison_affects(mon);
         break;
 
+    case BEAM_DRAIN_MAGIC:
+        rc = mons_antimagic_affected(mon);
+        break;
+
     default:
         break;
     }
@@ -5260,14 +5276,18 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
     return rc;
 }
 
-bool enchant_monster_with_flavour(monster* mon, actor *foe,
-                                  beam_type flavour, int powc)
+bool enchant_actor_with_flavour(actor* victim, actor *foe,
+                                beam_type flavour, int powc)
 {
     bolt dummy;
     dummy.flavour = flavour;
     dummy.ench_power = powc;
     dummy.set_agent(foe);
-    dummy.apply_enchantment_to_monster(mon);
+    dummy.animate = false;
+    if (victim->is_player())
+        dummy.affect_player_enchantment(false);
+    else
+        dummy.apply_enchantment_to_monster(victim->as_monster());
     return dummy.obvious_effect;
 }
 
@@ -5751,6 +5771,26 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             }
         }
         break;
+
+    case BEAM_DRAIN_MAGIC:
+    {
+        if (!mons_antimagic_affected(mon))
+            break;
+
+        const int dur =
+            random2(div_rand_round(ench_power, mon->hit_dice) + 1)
+                    * BASELINE_DELAY;
+        mon->add_ench(mon_enchant(ENCH_ANTIMAGIC, 0,
+                                  agent(), // doesn't matter
+                                  dur));
+        if (you.can_see(mon))
+        {
+            mprf("%s magic leaks into the air.",
+                 apostrophise(mon->name(DESC_THE)).c_str());
+        }
+        obvious_effect = true;
+        break;
+    }
 
     default:
         break;
@@ -6610,6 +6650,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_CORRUPT_BODY:          return "corrupt body";
     case BEAM_CHAOTIC_REFLECTION:    return "chaotic reflection";
     case BEAM_CRYSTAL:               return "crystal bolt";
+    case BEAM_DRAIN_MAGIC:           return "drain magic";
     case BEAM_BOUNCY_TRACER:         return "bouncy tracer";
 
     case NUM_BEAMS:                  die("invalid beam type");

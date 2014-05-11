@@ -267,7 +267,7 @@ public:
     bool god_cares() const; // Will the god be unforgiving about this beam?
 
     // Stuff when a monster or player is hit.
-    void affect_player_enchantment();
+    void affect_player_enchantment(bool resistible = true);
     void tracer_affect_player();
     void tracer_affect_monster(monster* mon);
     void apply_bolt_paralysis(monster* mons);
@@ -315,8 +315,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 
 // Return whether the effect was visible.
-bool enchant_monster_with_flavour(monster* mon, actor *atk,
-                                  beam_type flavour, int powc = 0);
+bool enchant_actor_with_flavour(actor* victim, actor *atk,
+                                beam_type flavour, int powc = 0);
 
 bool enchant_monster_invisible(monster* mon, const string &how);
 
