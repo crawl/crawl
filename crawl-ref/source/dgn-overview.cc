@@ -150,16 +150,6 @@ static string shoptype_to_string(shop_type s)
     }
 }
 
-static inline string place_desc(const level_pos &pos)
-{
-    return "[" + pos.id.describe(false, true) + "] ";
-}
-
-static inline string altar_description(god_type god)
-{
-    return feature_description(altar_for_god(god));
-}
-
 bool overview_knows_portal(branch_type portal)
 {
     for (portal_map_type::const_iterator pl_iter = portals_present.begin();
