@@ -666,9 +666,14 @@ monster_type resolve_monster_type(monster_type mon_type,
                 type = vault_mon_types[i];
 
                 // If the monster list says not to place, or to place
-                // by level, accept that.
-                if (type == MONS_NO_MONSTER || type == -1)
+                // by level, or to place a random monster, accept that.
+                // If it's random, we'll be recursively calling ourselves
+                // later on for the new monster type.
+                if (type == MONS_NO_MONSTER || type == -1
+                    || needs_resolution((monster_type)type))
+                {
                     break;
+                }
             }
             while (mon_type == RANDOM_MOBILE_MONSTER
                       && mons_class_is_stationary((monster_type)type)

@@ -1176,7 +1176,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     }
 }
 
-double chance_miscast_prot()
+static double _chance_miscast_prot()
 {
     double miscast_prot = 0;
 
@@ -1402,9 +1402,7 @@ spret_type your_spells(spell_type spell, int powc,
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);
 
-        if(random_real_inc() > chance_miscast_prot())
-        // Using random_real_inc() is a bit hacky but it's
-        // better than duplcating the miscast protection code.
+        if (percent_chance(_chance_miscast_prot()))
         {
             simple_god_message(" protects you from the effects of your miscast!");
             return SPRET_FAIL;
@@ -1992,10 +1990,10 @@ double get_miscast_chance(spell_type spell, int severity)
     return chance;
 }
 
-double get_miscast_chance_with_miscast_prot(spell_type spell)
+static double _get_miscast_chance_with_miscast_prot(spell_type spell)
 {
     double raw_chance = get_miscast_chance(spell);
-    double miscast_prot = chance_miscast_prot();
+    double miscast_prot = _chance_miscast_prot();
     double chance = raw_chance * (1 - miscast_prot);
 
     return chance;
@@ -2005,7 +2003,7 @@ double get_miscast_chance_with_miscast_prot(spell_type spell)
 // based on the chance of getting a severity >= 2 miscast.
 int failure_rate_colour(spell_type spell)
 {
-    double chance = get_miscast_chance_with_miscast_prot(spell);
+    double chance = _get_miscast_chance_with_miscast_prot(spell);
 
     return (chance < 0.001) ? LIGHTGREY :
            (chance < 0.005) ? YELLOW    :

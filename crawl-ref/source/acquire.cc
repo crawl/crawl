@@ -1196,43 +1196,43 @@ int acquirement_create_item(object_class_type class_wanted,
         if (thing_created == NON_ITEM)
             continue;
 
-        item_def &doodad(mitm[thing_created]);
+        item_def &acq_item(mitm[thing_created]);
 
         // Not a god, prefer better brands.
-        if (!divine && !is_artefact(doodad) && doodad.base_type == OBJ_WEAPONS)
+        if (!divine && !is_artefact(acq_item) && acq_item.base_type == OBJ_WEAPONS)
         {
-            while (_weapon_brand_quality(get_weapon_brand(doodad),
-                                        is_range_weapon(doodad)) < random2(6))
+            while (_weapon_brand_quality(get_weapon_brand(acq_item),
+                                        is_range_weapon(acq_item)) < random2(6))
             {
-                reroll_brand(doodad, ITEM_LEVEL);
+                reroll_brand(acq_item, ITEM_LEVEL);
             }
         }
 
         // Try to not generate brands that were already seen, although unlike
         // jewelry and books, this is not absolute.
-        while (!is_artefact(doodad)
-               && (doodad.base_type == OBJ_WEAPONS
-                     && you.seen_weapon[doodad.sub_type]
-                        & (1<<get_weapon_brand(doodad))
-                   || doodad.base_type == OBJ_ARMOUR
-                     && you.seen_armour[doodad.sub_type]
-                        & (1<<get_armour_ego_type(doodad)))
+        while (!is_artefact(acq_item)
+               && (acq_item.base_type == OBJ_WEAPONS
+                     && you.seen_weapon[acq_item.sub_type]
+                        & (1<<get_weapon_brand(acq_item))
+                   || acq_item.base_type == OBJ_ARMOUR
+                     && you.seen_armour[acq_item.sub_type]
+                        & (1<<get_armour_ego_type(acq_item)))
                && !one_chance_in(5))
         {
-            reroll_brand(doodad, ITEM_LEVEL);
+            reroll_brand(acq_item, ITEM_LEVEL);
         }
 
         // For plain armour, try to change the subtype to something
         // matching a currently unfilled equipment slot.
-        if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad))
+        if (acq_item.base_type == OBJ_ARMOUR && !is_artefact(acq_item))
         {
-            const special_armour_type sparm = get_armour_ego_type(doodad);
+            const special_armour_type sparm = get_armour_ego_type(acq_item);
 
             if (agent != GOD_XOM
-                  && you.seen_armour[doodad.sub_type] & (1 << sparm)
+                  && you.seen_armour[acq_item.sub_type] & (1 << sparm)
                   && x_chance_in_y(MAX_ACQ_TRIES - item_tries, MAX_ACQ_TRIES + 5)
                 || !divine
-                   && you.seen_armour[doodad.sub_type]
+                   && you.seen_armour[acq_item.sub_type]
                    && !one_chance_in(3)
                    && item_tries < 20)
             {
@@ -1246,9 +1246,9 @@ int acquirement_create_item(object_class_type class_wanted,
             }
 
             // Try to fill empty slots.
-            if ((_is_armour_plain(doodad)
-                 || get_armour_slot(doodad) == EQ_BODY_ARMOUR && coinflip())
-                && _armour_slot_seen((armour_type)doodad.sub_type))
+            if ((_is_armour_plain(acq_item)
+                 || get_armour_slot(acq_item) == EQ_BODY_ARMOUR && coinflip())
+                && _armour_slot_seen((armour_type)acq_item.sub_type))
             {
                 armour_type at = _pick_unseen_armour();
                 if (at != NUM_ARMOURS)
@@ -1268,10 +1268,10 @@ int acquirement_create_item(object_class_type class_wanted,
             }
         }
 
-        if (doodad.base_type == OBJ_WEAPONS
-               && !can_wield(&doodad, false, true)
-            || doodad.base_type == OBJ_ARMOUR
-               && !can_wear_armour(doodad, false, true))
+        if (acq_item.base_type == OBJ_WEAPONS
+               && !can_wield(&acq_item, false, true)
+            || acq_item.base_type == OBJ_ARMOUR
+               && !can_wear_armour(acq_item, false, true))
         {
             destroy_item(thing_created, true);
             thing_created = NON_ITEM;
@@ -1283,17 +1283,17 @@ int acquirement_create_item(object_class_type class_wanted,
         if (agent == GOD_TROG)
         {
             // ... but he loves the antimagic brand specially.
-            if (coinflip() && doodad.base_type == OBJ_WEAPONS
-                && !is_range_weapon(doodad) && !is_unrandom_artefact(doodad))
+            if (coinflip() && acq_item.base_type == OBJ_WEAPONS
+                && !is_range_weapon(acq_item) && !is_unrandom_artefact(acq_item))
             {
-                set_item_ego_type(doodad, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
+                set_item_ego_type(acq_item, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
             }
 
-            int brand = get_weapon_brand(doodad);
+            int brand = get_weapon_brand(acq_item);
             if (brand == SPWPN_PAIN
-                || is_unrandom_artefact(doodad)
-                   && (doodad.special == UNRAND_TROG
-                       || doodad.special == UNRAND_WUCAD_MU))
+                || is_unrandom_artefact(acq_item)
+                   && (acq_item.special == UNRAND_TROG
+                       || acq_item.special == UNRAND_WUCAD_MU))
             {
                 destroy_item(thing_created, true);
                 thing_created = NON_ITEM;
@@ -1304,10 +1304,10 @@ int acquirement_create_item(object_class_type class_wanted,
         // MT - Check: god-gifted weapons and armour shouldn't kill you.
         // Except Xom.
         if ((agent == GOD_TROG || agent == GOD_OKAWARU)
-            && is_artefact(doodad))
+            && is_artefact(acq_item))
         {
             artefact_properties_t  proprt;
-            artefact_wpn_properties(doodad, proprt);
+            artefact_wpn_properties(acq_item, proprt);
 
             // Check vs. stats. positive stats will automatically fall
             // through.  As will negative stats that won't kill you.
@@ -1325,10 +1325,10 @@ int acquirement_create_item(object_class_type class_wanted,
         // Sif Muna shouldn't gift special books.
         // (The spells therein are still fair game for randart books.)
         if (agent == GOD_SIF_MUNA
-            && doodad.sub_type >= MIN_RARE_BOOK
-            && doodad.sub_type <= MAX_RARE_BOOK)
+            && acq_item.sub_type >= MIN_RARE_BOOK
+            && acq_item.sub_type <= MAX_RARE_BOOK)
         {
-            ASSERT(doodad.base_type == OBJ_BOOKS);
+            ASSERT(acq_item.base_type == OBJ_BOOKS);
 
             // Try again.
             destroy_item(thing_created);
@@ -1336,49 +1336,49 @@ int acquirement_create_item(object_class_type class_wanted,
             continue;
         }
 
-        ASSERT(doodad.is_valid());
+        ASSERT(acq_item.is_valid());
 
         if (class_wanted == OBJ_WANDS)
-            doodad.plus = max(static_cast<int>(doodad.plus), 3 + random2(3));
+            acq_item.plus = max(static_cast<int>(acq_item.plus), 3 + random2(3));
         else if (class_wanted == OBJ_GOLD)
         {
             // New gold acquirement formula from dpeg.
             // Min=220, Max=5520, Mean=1218, Std=911
-            doodad.quantity = 10 * (20
+            acq_item.quantity = 10 * (20
                                     + roll_dice(1, 20)
                                     + (roll_dice(1, 8)
                                        * roll_dice(1, 8)
                                        * roll_dice(1, 8)));
         }
         else if (class_wanted == OBJ_MISSILES && !divine)
-            doodad.quantity *= 5;
+            acq_item.quantity *= 5;
         else if (quant > 1)
-            doodad.quantity = quant;
+            acq_item.quantity = quant;
 
-        if (is_blood_potion(doodad))
-            init_stack_blood_potions(doodad);
+        if (is_blood_potion(acq_item))
+            init_stack_blood_potions(acq_item);
 
         // Remove curse flag from item, unless worshipping Ashenzari.
         if (you_worship(GOD_ASHENZARI))
-            do_curse_item(doodad, true);
+            do_curse_item(acq_item, true);
         else
-            do_uncurse_item(doodad, false);
+            do_uncurse_item(acq_item, false);
 
-        if (doodad.base_type == OBJ_BOOKS)
+        if (acq_item.base_type == OBJ_BOOKS)
         {
-            if (!_do_book_acquirement(doodad, agent))
+            if (!_do_book_acquirement(acq_item, agent))
             {
-                destroy_item(doodad, true);
+                destroy_item(acq_item, true);
                 return _failed_acquirement(quiet);
             }
             // Don't mark books as seen if only generated for the
             // acquirement statistics.
             if (!debug)
-                mark_had_book(doodad);
+                mark_had_book(acq_item);
         }
-        else if (doodad.base_type == OBJ_JEWELLERY)
+        else if (acq_item.base_type == OBJ_JEWELLERY)
         {
-            switch (doodad.sub_type)
+            switch (acq_item.sub_type)
             {
             case RING_PROTECTION:
             case RING_STRENGTH:
@@ -1386,61 +1386,61 @@ int acquirement_create_item(object_class_type class_wanted,
             case RING_DEXTERITY:
             case RING_EVASION:
                 // Make sure plus is >= 1.
-                doodad.plus = max(abs((int) doodad.plus), 1);
+                acq_item.plus = max(abs((int) acq_item.plus), 1);
                 break;
 
             case RING_SLAYING:
                 // Two plusses to handle here, and accuracy can be +0.
-                doodad.plus = abs(doodad.plus);
-                doodad.plus2 = max(abs((int) doodad.plus2), 2);
+                acq_item.plus = abs(acq_item.plus);
+                acq_item.plus2 = max(abs((int) acq_item.plus2), 2);
                 break;
 
             case RING_LOUDNESS:
             case AMU_INACCURACY:
                 // These are the only truly bad pieces of jewellery.
                 if (!one_chance_in(9))
-                    make_item_randart(doodad);
+                    make_item_randart(acq_item);
                 break;
 
             default:
                 break;
             }
         }
-        else if (doodad.base_type == OBJ_WEAPONS
-                 && !is_unrandom_artefact(doodad)
-                 && doodad.sub_type != WPN_BLOWGUN)
+        else if (acq_item.base_type == OBJ_WEAPONS
+                 && !is_unrandom_artefact(acq_item)
+                 && acq_item.sub_type != WPN_BLOWGUN)
         {
             // These can never get egos, and mundane versions are quite common, so
             // guarantee artefact status.  Rarity is a bit low to compensate.
-            if (is_giant_club_type(doodad.sub_type))
+            if (is_giant_club_type(acq_item.sub_type))
             {
                 if (!one_chance_in(25))
-                    make_item_randart(doodad, true);
+                    make_item_randart(acq_item, true);
             }
 
             int plusmod = random2(4);
             if (agent == GOD_TROG)
             {
                 // More damage, less accuracy.
-                doodad.plus  -= plusmod;
-                doodad.plus2 += plusmod;
-                if (!is_artefact(doodad))
-                    doodad.plus = max(static_cast<int>(doodad.plus), 0);
+                acq_item.plus  -= plusmod;
+                acq_item.plus2 += plusmod;
+                if (!is_artefact(acq_item))
+                    acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
             }
             else if (agent == GOD_OKAWARU)
             {
                 // More accuracy, less damage.
-                doodad.plus  += plusmod;
-                doodad.plus2 -= plusmod;
-                if (!is_artefact(doodad))
-                    doodad.plus2 = max(static_cast<int>(doodad.plus2), 0);
+                acq_item.plus  += plusmod;
+                acq_item.plus2 -= plusmod;
+                if (!is_artefact(acq_item))
+                    acq_item.plus2 = max(static_cast<int>(acq_item.plus2), 0);
             }
         }
-        else if (is_deck(doodad))
+        else if (is_deck(acq_item))
         {
             // Non-legendary decks aren't very useful for non-nemelexites
             // and nemelexites get plenty of lower-quality decks anyway.
-            doodad.special = DECK_RARITY_LEGENDARY;
+            acq_item.special = DECK_RARITY_LEGENDARY;
         }
 
         // Last check: don't acquire items your god hates.
@@ -1448,16 +1448,16 @@ int acquirement_create_item(object_class_type class_wanted,
         // it is a hated brand (this addresses, e.g., Elyvilon followers
         // immediately identifying evil weapons).
         // Note that Xom will happily give useless items!
-        int oldflags = doodad.flags;
-        doodad.flags |= ISFLAG_KNOW_TYPE;
-        if ((is_useless_item(doodad, false) && agent != GOD_XOM)
-            || god_hates_item(doodad))
+        int oldflags = acq_item.flags;
+        acq_item.flags |= ISFLAG_KNOW_TYPE;
+        if ((is_useless_item(acq_item, false) && agent != GOD_XOM)
+            || god_hates_item(acq_item))
         {
             destroy_item(thing_created);
             thing_created = NON_ITEM;
             continue;
         }
-        doodad.flags = oldflags;
+        acq_item.flags = oldflags;
         break;
     }
 

@@ -1150,7 +1150,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "reaping",
             "INVALID",
             "acid",
-#if TAG_MAJOR_VERSION != 34
+#if TAG_MAJOR_VERSION > 34
             "confuse",
 #endif
             "debug randart",
@@ -1363,7 +1363,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_EYESIGHT
          1, //ARTP_INVISIBLE
          1, //ARTP_FLY
-#if TAG_MAJOR_VERSION != 34
+#if TAG_MAJOR_VERSION > 34
          1, //ARTP_FOG,
 #endif
          1, //ARTP_BLINK
@@ -1521,7 +1521,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_EYESIGHT",
         "ARTP_INVISIBLE",
         "ARTP_FLY",
-#if TAG_MAJOR_VERSION != 34
+#if TAG_MAJOR_VERSION > 34
         "ARTP_FOG",
 #endif
         "ARTP_BLINK",
