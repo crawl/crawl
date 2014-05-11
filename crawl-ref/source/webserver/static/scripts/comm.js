@@ -1,7 +1,7 @@
 define(["jquery", "contrib/inflate"], function ($) {
     "use strict";
 
-    window.log_messages = 1;
+    window.log_messages = false;
     window.log_message_size = false;
 
     var socket = null;
