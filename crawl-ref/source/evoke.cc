@@ -1697,6 +1697,7 @@ bool evoke_item(int slot, bool check_range)
             wind_blast(&you, you.skill(SK_EVOCATIONS, 10), coord_def());
             _fan_of_gales_elementals();
             _expend_xp_evoker(item);
+            pract = 1;
             break;
 
         case MISC_LAMP_OF_FIRE:
@@ -1706,7 +1707,10 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
             if (_lamp_of_fire())
+            {
                 _expend_xp_evoker(item);
+                pract = 1;
+            }
             else
                 return false;
 
@@ -1719,7 +1723,10 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
             if (_stone_of_tremors())
+            {
                 _expend_xp_evoker(item);
+                pract = 1;
+            }
             else
                 return false;
             break;
@@ -1731,7 +1738,10 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
             if (_phial_of_floods())
+            {
                 _expend_xp_evoker(item);
+                pract = 1;
+            }
             else
                 return false;
             break;
@@ -1743,7 +1753,10 @@ bool evoke_item(int slot, bool check_range)
                 return false;
             }
             if (_evoke_horn_of_geryon(item))
+            {
                 _expend_xp_evoker(item);
+                pract = 1;
+            }
             else
                 return false;
             break;
@@ -1767,7 +1780,7 @@ bool evoke_item(int slot, bool check_range)
 
         case MISC_DISC_OF_STORMS:
             if (disc_of_storms())
-                pract = (coinflip() ? 2 : 1);
+                pract = 1;
             break;
 
         case MISC_QUAD_DAMAGE:
