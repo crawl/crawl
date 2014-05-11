@@ -2276,6 +2276,12 @@ bool monster::pickup_item(item_def &item, int near, bool force)
             return false;
         }
 
+        // There are fairly serious problems with monsters being able to pick
+        // up items you've seen, mostly in terms of tediously being able to
+        // move everything away from them.
+        if (testbits(item.flags, ISFLAG_SEEN))
+            return false;
+
         if (friendly())
         {
             // Allies are only interested in armour and weaponry.
