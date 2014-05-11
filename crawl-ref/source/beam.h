@@ -270,7 +270,6 @@ public:
     void affect_player_enchantment();
     void tracer_affect_player();
     void tracer_affect_monster(monster* mon);
-    bool handle_statue_disintegration(monster* mon);
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
     void enchantment_affect_monster(monster* mon);
