@@ -1086,76 +1086,6 @@ static bool _siren_movement_effect(const monster* mons)
     return do_resist;
 }
 
-static bool _silver_statue_effects(monster* mons)
-{
-    actor *foe = mons->get_foe();
-
-    int abjuration_duration = 5;
-
-    // Tone down friendly silver statues for Zotdef.
-    if (mons->attitude == ATT_FRIENDLY && !(foe && foe->is_player())
-        && crawl_state.game_is_zotdef())
-    {
-        if (!one_chance_in(3))
-            return false;
-        abjuration_duration = 1;
-    }
-
-    if (foe && mons->can_see(foe) && !one_chance_in(3))
-    {
-        const string msg = "'s eyes glow " + weird_glowing_colour() + '.';
-        simple_monster_message(mons, msg.c_str(), MSGCH_WARN);
-
-        create_monster(
-            mgen_data(
-                summon_any_demon((coinflip() ? RANDOM_DEMON_COMMON
-                                             : RANDOM_DEMON_LESSER)),
-                SAME_ATTITUDE(mons), mons, abjuration_duration, 0,
-                foe->pos(), mons->foe));
-        return true;
-    }
-    return false;
-}
-
-static bool _orange_statue_effects(monster* mons)
-{
-    actor *foe = mons->get_foe();
-
-    int pow  = random2(15);
-    int fail = random2(150);
-
-    if (foe && mons->can_see(foe) && !one_chance_in(3))
-    {
-        // Tone down friendly OCSs for Zotdef.
-        if (mons->attitude == ATT_FRIENDLY && !foe->is_player()
-            && crawl_state.game_is_zotdef())
-        {
-            if (foe->check_res_magic(120) > 0)
-                return false;
-            pow  /= 2;
-            fail /= 2;
-        }
-
-        if (you.can_see(foe))
-        {
-            if (foe->is_player())
-                mprf(MSGCH_WARN, "A hostile presence attacks your mind!");
-            else if (you.can_see(mons))
-                mprf(MSGCH_WARN, "%s fixes %s piercing gaze on %s.",
-                     mons->name(DESC_THE).c_str(),
-                     mons->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                     foe->name(DESC_THE).c_str());
-        }
-
-        MiscastEffect(foe, mons->mindex(), SPTYP_DIVINATION,
-                      pow, fail,
-                      "an orange crystal statue");
-        return true;
-    }
-
-    return false;
-}
-
 enum battlecry_type
 {
     BATTLECRY_ORC,
@@ -3503,20 +3433,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (_battle_cry(mons, BATTLECRY_SATYR_PIPES))
                 used = true;
         }
-        break;
-
-    case MONS_ORANGE_STATUE:
-        if (player_or_mon_in_sanct(mons))
-            break;
-
-        used = _orange_statue_effects(mons);
-        break;
-
-    case MONS_SILVER_STATUE:
-        if (player_or_mon_in_sanct(mons))
-            break;
-
-        used = _silver_statue_effects(mons);
         break;
 
     case MONS_BALL_LIGHTNING:
