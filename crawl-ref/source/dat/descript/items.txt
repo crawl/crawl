@@ -1558,7 +1558,7 @@ A magical device which drills tunnels through unworked rock.
 wand of disintegration
 
 A magical device which disrupts the physical structure of anything but the
-hardest walls — even rigid statues, to say nothing of flesh.
+hardest walls — even granite statues, to say nothing of flesh.
 %%%%
 wand of draining
 
