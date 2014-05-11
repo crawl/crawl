@@ -770,6 +770,10 @@ void slimify_monster(monster* mon, bool hostile)
 
 void corrode_monster(monster* mons, const actor* evildoer)
 {
+    // Don't corrode spectral weapons.
+    if (mons_is_avatar(mons->type))
+        return;
+
     item_def *has_shield = mons->mslot_item(MSLOT_SHIELD);
     item_def *has_armour = mons->mslot_item(MSLOT_ARMOUR);
 
