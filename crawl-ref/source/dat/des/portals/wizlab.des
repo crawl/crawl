@@ -1448,7 +1448,7 @@ TAGS:       no_rotate
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:80 tile:mons_wucad_mu_statue \
-                spells:shadow_creatures;shadow_creatures;shadow_creatures;\
+                spells:brain_feed;drain_magic;confuse;\
                        shadow_creatures;shadow_creatures;.
 KITEM:      8 = staff of energy unrand:staff_of_wucad_mu, \
                 potion of restore abilities ident:type
