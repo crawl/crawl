@@ -295,7 +295,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Nemelex
     { "draw cards from decks in your inventory",
-      "peek at two random cards from a deck",
+      "peek at the top two cards from a deck",
       "choose one out of three cards",
       "deal four cards at a time",
       "order the top five cards of a deck, losing the rest" },
@@ -433,7 +433,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Nemelex
     { "draw cards from decks in your inventory",
-      "peek at random cards",
+      "peek at cards",
       "choose one out of three cards",
       "deal four cards at a time",
       "stack decks" },
