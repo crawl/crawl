@@ -422,10 +422,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("login_fail")
 
     def token_login(self, cookie):
-        username, (new_cookie, expires) = userdb.token_login(cookie, logger=self.logger)
+        username, new_cookie = userdb.token_login(cookie, logger=self.logger)
         if username:
+            (new_cookie_contents, expires) = new_cookie
             self.do_login(username)
-            self.send_message("login_cookie", cookie=new_cookie,
+            self.send_message("login_cookie", cookie=new_cookie_contents,
                               expires=expires+time.timezone)
         else:
             self.send_message("login_fail")
