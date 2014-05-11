@@ -4800,36 +4800,6 @@ bool bolt::attempt_block(monster* mon)
     return rc;
 }
 
-bool bolt::handle_statue_disintegration(monster* mon)
-{
-    bool rc = false;
-    if ((flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
-        && mons_is_statue(mon->type, true))
-    {
-        rc = true;
-        // Disintegrate the statue.
-        if (!silenced(you.pos()))
-        {
-            if (!you.see_cell(mon->pos()))
-                mprf(MSGCH_SOUND, "You hear a hideous screaming!");
-            else
-                mprf(MSGCH_SOUND, "The statue screams as its substance crumbles away!");
-        }
-        else if (you.see_cell(mon->pos()))
-        {
-            mpr("The statue twists and shakes as its substance "
-                "crumbles away!");
-        }
-        obvious_effect = true;
-        update_hurt_or_helped(mon);
-        mon->hurt(agent(), INSTANT_DEATH);
-        apply_hit_funcs(mon, INSTANT_DEATH);
-        // Stop here.
-        finish_beam();
-    }
-    return rc;
-}
-
 void bolt::affect_monster(monster* mon)
 {
     // Don't hit dead monsters.
@@ -4881,12 +4851,6 @@ void bolt::affect_monster(monster* mon)
         apply_hit_funcs(mon, 0);
         return;
     }
-
-    // Special case: disintegrate (or Shatter) a statue.
-    // Since disintegration is an enchantment, it has to be handled
-    // here.
-    if (handle_statue_disintegration(mon))
-        return;
 
     if (flavour == BEAM_MISSILE && item)
     {
