@@ -4681,7 +4681,9 @@ enum timed_effect_type
     TIMER_ABYSS_SPEED,
     TIMER_JIYVA,
     TIMER_EVOLUTION,
+#if TAG_MAJOR_VERSION == 34
     TIMER_BRIBE_TIMEOUT,
+#endif
     NUM_TIMERS,
 };
 
