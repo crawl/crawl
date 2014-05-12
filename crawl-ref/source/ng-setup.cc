@@ -222,14 +222,9 @@ void give_basic_mutations(species_type speci)
     {
     case SP_LAVA_ORC:
         you.mutation[MUT_CONSERVE_SCROLLS] = 1;
-    // Intentional fallthrough.
-    case SP_HILL_ORC:
-        you.mutation[MUT_SAPROVOROUS] = 1;
         break;
     case SP_OGRE:
         you.mutation[MUT_TOUGH_SKIN]      = 1;
-        you.mutation[MUT_FAST_METABOLISM] = 1;
-        you.mutation[MUT_SAPROVOROUS]     = 1;
         break;
     case SP_HALFLING:
         you.mutation[MUT_SLOW_METABOLISM]     = 1;
@@ -298,7 +293,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SHAGGY_FUR]      = 1;
         break;
     case SP_KOBOLD:
-        you.mutation[MUT_SAPROVOROUS] = 2;
         you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_VAMPIRE:

@@ -2584,6 +2584,20 @@ static void tag_read_you(reader &th)
         you.mutation[MUT_HERBIVOROUS] = you.innate_mutations[MUT_HERBIVOROUS];
 
     }
+    if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS)
+    {
+        if (you.species != SP_TROLL && you.species != SP_GHOUL)
+        {
+           you.mutation[MUT_SAPROVOROUS] =
+           you.innate_mutations[MUT_SAPROVOROUS] = 0;
+        }
+        if (you.species == SP_OGRE)
+        {
+            // Remove the innate level of fast metabolism
+            you.mutation[MUT_FAST_METABOLISM] -= 1;
+            you.innate_mutations[MUT_FAST_METABOLISM] -= 1;
+        }
+    }
 #endif
 
     count = unmarshallUByte(th);
