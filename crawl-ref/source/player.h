@@ -913,7 +913,7 @@ int player_speed(void);
 
 int player_spell_levels(void);
 
-int player_sust_abil(bool calc_unid = true);
+bool player_sust_abil(bool calc_unid = true);
 
 int player_teleport(bool calc_unid = true);
 

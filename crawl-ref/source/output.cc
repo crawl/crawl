@@ -2329,7 +2329,7 @@ static vector<formatted_string> _get_overview_resistances(
     out += _resist_composer("rElec", cwidth, relec) + "\n";
 
     const int rsust = player_sust_abil(calc_unid);
-    out += _resist_composer("SustAb", cwidth, rsust, 2) + "\n";
+    out += _resist_composer("SustAb", cwidth, rsust) + "\n";
 
     const int rmuta = (you.rmut_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3);
