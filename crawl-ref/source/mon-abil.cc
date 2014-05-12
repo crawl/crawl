@@ -5108,7 +5108,7 @@ static int _throw_site_score(actor *thrower, actor *victim, coord_def site)
     if (tmons->friendly() || (vmons && vmons->friendly()))
         return score;
 
-    for(adjacent_iterator ai(site); ai; ++ai)
+    for (adjacent_iterator ai(site); ai; ++ai)
     {
         if (!thrower->see_cell(*ai))
             continue;

@@ -43,7 +43,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
         kill_type = KILLED_BY_SELF_AIMED;
         aux_source = proj_name;
     }
-    else if(is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED)
+    else if (is_launched(attacker, weapon, *projectile) == LRET_LAUNCHED)
     {
         aux_source = make_stringf("Shot with a%s %s by %s",
                  (is_vowel(proj_name[0]) ? "n" : ""), proj_name.c_str(),

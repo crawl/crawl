@@ -950,7 +950,7 @@ void job_group::attach(const newgame_def* ng, const newgame_def& defaults,
             tmp->set_fg_colour(LIGHTGRAY);
             tmp->set_highlight_colour(BLUE);
         }
-        else if(job_allowed(ng->species, job) == CC_RESTRICTED)
+        else if (job_allowed(ng->species, job) == CC_RESTRICTED)
         {
             tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(BLUE);

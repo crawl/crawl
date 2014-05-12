@@ -798,7 +798,7 @@ static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_
             break;
     }
 
-    while(spells[i] != SPELL_NO_SPELL)
+    while (spells[i] != SPELL_NO_SPELL)
     {
         if (_know_spell(spells[i]))
             return spells[i];

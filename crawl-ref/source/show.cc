@@ -397,7 +397,7 @@ static void _mark_invisible_at(const coord_def &where,
 static void _handle_unseen_mons(monster* mons, uint32_t hash_ind)
 {
     // Monster didn't go unseen last turn.
-    if(mons->unseen_pos.origin())
+    if (mons->unseen_pos.origin())
         return;
 
 
