@@ -56,6 +56,8 @@ for (@files)
     # and $cont may be invalid.
     print "zero width space: $file\n" if s/\xe2\x80\x8b//sg; # U+200B
     print "BOM: $file\n" if !$bom && s/\xef\xbb\xbf//sg; # U+FFEF
+    print "Control statement space: $file\n" if $file =~ /\.(cc|h|js)$/i
+        && s/\b(if|while|for|switch|catch)\(/$1 (/sg;
 
     if ($_ ne $cont)
     {
