@@ -4427,9 +4427,53 @@ void gozag_deduct_bribe(branch_type br, int amount)
     }
 }
 
+bool gozag_check_bribe_branch(bool quiet)
+{
+    const int bribe_amount = GOZAG_BRIBE_AMOUNT;
+    if (you.gold < bribe_amount)
+    {
+        if (!quiet)
+            mprf("You need at least %d gold to offer a bribe.", bribe_amount);
+        return false;
+    }
+    branch_type branch = you.where_are_you;
+    branch_type branch2 = NUM_BRANCHES;
+    if (feat_is_branch_stairs(grd(you.pos())))
+    {
+        for (int i = 0; i < NUM_BRANCHES; ++i)
+            if (branches[i].entry_stairs == grd(you.pos())
+                && _gozag_branch_bribable(static_cast<branch_type>(i)))
+            {
+                branch2 = static_cast<branch_type>(i);
+                break;
+            }
+    }
+    const string who = make_stringf("the denizens of %s",
+                                   branches[branch].longname);
+    const string who2 = branch2 != NUM_BRANCHES
+                        ? make_stringf("the denizens of %s",
+                                       branches[branch2].longname)
+                        : "";
+    if (!_gozag_branch_bribable(branch)
+        && (branch2 == NUM_BRANCHES
+            || !_gozag_branch_bribable(branch2)))
+    {
+        if (!quiet)
+        {
+            if (branch2 != NUM_BRANCHES)
+                mprf("You can't bribe %s or %s.", who.c_str(), who2.c_str());
+            else
+                mprf("You can't bribe %s.", who.c_str());
+        }
+        return false;
+    }
+    return true;
+}
+
 bool gozag_bribe_branch()
 {
     const int bribe_amount = GOZAG_BRIBE_AMOUNT;
+    ASSERT(you.gold >= bribe_amount);
     bool prompted = false;
     branch_type branch = you.where_are_you;
     if (feat_is_branch_stairs(grd(you.pos())))
@@ -4454,11 +4498,6 @@ bool gozag_bribe_branch()
     if (!_gozag_branch_bribable(branch))
     {
         mprf("You can't bribe %s.", who.c_str());
-        return false;
-    }
-    if (you.gold < bribe_amount)
-    {
-        mprf("You don't have enough gold to bribe %s.", who.c_str());
         return false;
     }
 
