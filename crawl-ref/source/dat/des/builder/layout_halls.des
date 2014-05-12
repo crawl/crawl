@@ -77,7 +77,7 @@
 
 NAME:   layout_hall_layers
 DEPTH:  Depths, Zot, Lair, Elf
-WEIGHT: 5, 10 (Zot), 20 (Zot:5), 5 (Lair), 20 (Elf)
+WEIGHT: 5, 10 (Zot), 20 (Zot:5), 5 (Lair), 10 (Elf)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand central layout_type_halls
 {{
@@ -539,8 +539,8 @@ ENDMAP
 # This is properly called a labyrinth, but that name is already taken
 # Idea by Vivificient, code by infiniplex
 NAME:   layout_concentric_octagons
-DEPTH:  Snake, Depths, Zot
-WEIGHT: 5, 20 (Zot)
+DEPTH:  Snake, Elf, Depths, Zot
+WEIGHT: 5, 10 (Elf), 20 (Zot)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_hmirror no_vmirror
 TAGS:   central layout_type_halls
