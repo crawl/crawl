@@ -3293,44 +3293,6 @@ bool item_def::is_greedy_sacrificeable() const
     return god_likes_item(you.religion, *this);
 }
 
-// Make a spec for this item, if it isn't an artefact.
-string item_def::to_spec() const
-{
-    string spec = name_aux(DESC_DBNAME, false, true, false, 0x0);
-    string ego = replace_all(ego_type_string(*this, false), " ", "_");;
-    if (base_type == OBJ_WEAPONS && get_weapon_brand(*this) == SPWPN_VORPAL)
-        ego = "vorpal";
-    if (base_type == OBJ_MISSILES && get_ammo_brand(*this) == SPMSL_SLEEP)
-        ego = "sleep"; // ugh special cases
-    if (base_type == OBJ_MISSILES && get_ammo_brand(*this) == SPMSL_POISONED)
-        ego = "poisoned"; // ditto
-
-    ASSERT(!is_artefact(*this));
-
-    if (is_deck(*this))
-        return string(deck_rarity_name(deck_rarity(*this))) + " " + spec;
-
-    spec += " no_uniq";
-    if (ego != "")
-        spec += " ego:" + ego;
-
-    if (cursed())
-        spec += " cursed";
-    else
-        spec += " not_cursed";
-
-    spec += make_stringf(" %s:%d",
-                         base_type == OBJ_WANDS ? "charges" : "plus", plus);
-    spec += make_stringf(" plus2:%d", plus2);
-
-    if (quantity > 1)
-        spec += make_stringf(" q:%d", quantity);
-
-    // TODO: handle ident if necessary
-
-    return spec;
-}
-
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];

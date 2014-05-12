@@ -589,9 +589,6 @@ public:
     // Returns true if this item causes autoexplore to visit it.
     bool is_greedy_sacrificeable() const;
 
-    // Returns an item_spec for a non-artefact item.
-    string to_spec() const;
-
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
                     bool with_inscription, iflags_t ignore_flags) const;

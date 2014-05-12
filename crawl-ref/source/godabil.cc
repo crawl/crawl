@@ -3778,6 +3778,11 @@ bool gozag_setup_potion_petition(bool quiet)
         return false;
     }
 
+    return true;
+}
+
+bool gozag_potion_petition()
+{
     CrawlVector *pots[4];
     int prices[4];
 
@@ -3835,7 +3840,7 @@ bool gozag_setup_potion_petition(bool quiet)
             key = make_stringf(GOZAG_PRICE_KEY, i);
             you.props[key].get_int() = prices[i];
         }
-    } // The checks below this probably aren't necessary any more?
+    }
     else
     {
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
@@ -3846,46 +3851,6 @@ bool gozag_setup_potion_petition(bool quiet)
             prices[i] = you.props[key].get_int();
         }
     }
-
-    bool afford_any = false;
-    for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
-    {
-        const int faith_price = you.faith() ? prices[i] * 2 / 3
-                                            : prices[i];
-        if (you.gold >= faith_price)
-            afford_any = true;
-    }
-    if (!afford_any)
-    {
-        if (!quiet)
-            mpr("You can't afford to purchase potions right now!");
-        return false;
-    }
-
-    return true;
-}
-
-bool gozag_potion_petition()
-{
-    CrawlVector *pots[4];
-    int prices[4];
-
-    bool afford_any = false;
-    ASSERT(you.props.exists(make_stringf(GOZAG_POTIONS_KEY, 0)));
-    for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
-    {
-        string key = make_stringf(GOZAG_POTIONS_KEY, i);
-        pots[i] = &you.props[key].get_vector();
-        key = make_stringf(GOZAG_PRICE_KEY, i);
-        prices[i] = you.props[key].get_int();
-        const int faith_price = you.faith() ? prices[i] * 2 / 3 : prices[i];
-        if (you.gold >= faith_price)
-            afford_any = true;
-    }
-
-    // TODO: change this to an assert after bugged saves clear out
-    if (!afford_any)
-        return false;
 
     int keyin = 0;
     int faith_price = 0;
@@ -4027,12 +3992,11 @@ bool gozag_setup_call_merchant(bool quiet)
     int max_absdepth = 0;
     vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
 
-    const map_def *shop_vault = find_map_by_name("serial_shops"); // XXX
-    if (!shop_vault)
-        die("Someone changed the shop vault name!");
-
     if (!candidates.size())
     {
+        const map_def *shop_vault = find_map_by_name("serial_shops"); // XXX
+        if (!shop_vault)
+            die("Someone changed the shop vault name!");
         if (!shop_vault->depths.is_usable_in(level_id::current()))
         {
             if (!quiet)
@@ -4053,19 +4017,25 @@ bool gozag_setup_call_merchant(bool quiet)
         }
     }
 
+    return true;
+}
+
+bool gozag_call_merchant()
+{
+    int max_absdepth = 0;
+    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
+
     // Set up some dummy shops.
     // Generate some shop inventory and store it as a store spec.
+    // We still set up the shops in advance in case of hups.
     if (!you.props.exists(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, 0)))
     {
-        const int level_number = 2 * max_absdepth;
         for (int i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
             shop_type type = NUM_SHOPS;
             do
                 type = static_cast<shop_type>(random2(NUM_SHOPS));
             while (_duplicate_shop_type(i, type));
-            const int greed = greed_for_shop_type(type, level_number);
-            int item_count = 5 + random2avg(12, 3);
             you.props[make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, i)].get_string()
                 = make_name(random_int(), false);
             you.props[make_stringf(GOZAG_SHOP_TYPE_KEY, i)].get_int()
@@ -4077,58 +4047,11 @@ bool gozag_setup_call_merchant(bool quiet)
                    ? ""
                    : random_choose("Shoppe", "Boutique",
                                    "Emporium", "Shop", NULL);
-            you.props[make_stringf(GOZAG_SHOP_GREED_KEY, i)].get_int()
-                = greed;
-            vector<string> shop_items;
-            int dummy;
-            const int multiplier = (type == SHOP_WEAPON_ANTIQUE
-                                    || type == SHOP_ARMOUR_ANTIQUE
-                                    || type == SHOP_GENERAL_ANTIQUE) ? 3 : 2;
-            for (; item_count > 0; item_count--)
-            {
-                const object_class_type basetype = item_in_shop(type);
-                int item_level = level_number + random2((level_number + 1)
-                                                        * multiplier);
-                dummy = items(false, basetype, OBJ_RANDOM, true, item_level);
-                if (dummy != NON_ITEM)
-                {
-                    if (!is_artefact(mitm[dummy])
-                        && (one_chance_in(10) || !is_useless_item(mitm[dummy]))
-                        && mitm[dummy].base_type != OBJ_GOLD
-                        && (type != SHOP_GENERAL_ANTIQUE
-                            || (mitm[dummy].base_type != OBJ_MISSILES
-                                && mitm[dummy].base_type != OBJ_FOOD)))
-                    {
-                        shop_items.push_back(mitm[dummy].to_spec());
-                    }
-                    else
-                        ++item_count;
-                    mitm[dummy].clear();
-                    dummy = NON_ITEM;
-                }
-                else
-                    ++item_count; // try again
-            }
-
-            you.props[make_stringf(GOZAG_SHOP_ITEMS_KEY, i)].get_string()
-                = comma_separated_line(shop_items.begin(), shop_items.end(),
-                                       " | ", " | ");
-
-            // TODO: figure out if this is reasonable
-            const int cost = gozag_price_for_shop();
 
             you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int()
-                = cost;
+                = gozag_price_for_shop();
         }
     }
-
-    return true;
-}
-
-bool gozag_call_merchant()
-{
-    int max_absdepth = 0;
-    vector<level_id> candidates = _get_gozag_shop_candidates(&max_absdepth);
 
     int i = 0;
     int cost = 0;
@@ -4194,15 +4117,10 @@ bool gozag_call_merchant()
         suffix = " suffix:" + suffix;
 
     string spec =
-        make_stringf("%s shop name:%s%s greed:%d use_all ; %s",
+        make_stringf("%s shop name:%s%s",
                      shoptype_to_str(type),
                      replace_all(name, " ", "_").c_str(),
-                     suffix.c_str(),
-                     you.props[make_stringf(GOZAG_SHOP_GREED_KEY, i)]
-                         .get_int(),
-                     you.props[make_stringf(GOZAG_SHOP_ITEMS_KEY, i)]
-                         .get_string().c_str()
-                     );
+                     suffix.c_str());
 
     if (candidates.size())
     {
@@ -4227,18 +4145,7 @@ bool gozag_call_merchant()
         keyed_mapspec kmspec;
         kmspec.set_feat(spec, false);
         if (!kmspec.get_feat().shop.get())
-        {
-            mprf(MSGCH_ERROR, "Tried to place an invalid shop spec!");
-            mprf(MSGCH_ERROR, "Spec is, \"%s\"", spec.c_str());
-            mprf(MSGCH_ERROR, "Please show someone this spec so the "
-                              "underlying bug can be fixed!");
-            mprf(MSGCH_ERROR, "Falling back to just name and type...");
-            vector<string> parts = split_string(";", spec);
-            ASSERT(parts.size() > 0);
-            kmspec.set_feat(parts[0], false);
-            if (!kmspec.get_feat().shop.get())
-                die("Invalid shop spec?");
-        }
+            die("Invalid shop spec?");
 
         place_spec_shop(you.pos(), kmspec.get_feat().shop.get());
         link_items();
@@ -4257,8 +4164,6 @@ bool gozag_call_merchant()
         you.props.erase(make_stringf(GOZAG_SHOPKEEPER_NAME_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_TYPE_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_SUFFIX_KEY, j));
-        you.props.erase(make_stringf(GOZAG_SHOP_GREED_KEY, j));
-        you.props.erase(make_stringf(GOZAG_SHOP_ITEMS_KEY, j));
         you.props.erase(make_stringf(GOZAG_SHOP_COST_KEY, j));
     }
 
