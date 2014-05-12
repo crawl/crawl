@@ -2661,7 +2661,7 @@ int count_corpses_in_los(vector<stack_iterator> *positions)
     return count;
 }
 
-int fedhas_check_corpse_spores()
+int fedhas_check_corpse_spores(bool quiet)
 {
     vector<stack_iterator> positions;
     int count = count_corpses_in_los(&positions);
@@ -2687,7 +2687,8 @@ int fedhas_check_corpse_spores()
 #endif
     }
 
-    if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
+    if (!quiet
+        && yesnoquit("Will you create these spores?", true, 'y') <= 0)
     {
         viewwindow(false);
         return -1;
@@ -2843,7 +2844,7 @@ static bool _place_ballisto(const coord_def& pos)
 
 #define FEDHAS_EVOLVE_TARGET_KEY "fedhas_evolve_target"
 
-bool fedhas_check_evolve_flora()
+bool fedhas_check_evolve_flora(bool quiet)
 {
     monster_conversion upgrade;
 
@@ -2864,9 +2865,13 @@ bool fedhas_check_evolve_flora()
 
     if (!in_range)
     {
-        mpr("No evolvable flora in sight.");
+        if (!quiet)
+            mpr("No evolvable flora in sight.");
         return false;
     }
+
+    if (quiet) // just checking if there's something we can evolve here
+        return true;
 
     dist spelld;
 
@@ -3760,13 +3765,16 @@ int gozag_porridge_price()
     return you.faith() ? price * 2 / 3 : price;
 }
 
-bool gozag_setup_potion_petition()
+bool gozag_setup_potion_petition(bool quiet)
 {
     const int gold_min = gozag_porridge_price();
     if (you.gold < gold_min)
     {
-        mprf("You need at least %d gold to purchase potions right now!",
-             gold_min);
+        if (!quiet)
+        {
+            mprf("You need at least %d gold to purchase potions right now!",
+                 gold_min);
+        }
         return false;
     }
 
@@ -3849,7 +3857,8 @@ bool gozag_setup_potion_petition()
     }
     if (!afford_any)
     {
-        mpr("You can't afford to purchase potions right now!");
+        if (!quiet)
+            mpr("You can't afford to purchase potions right now!");
         return false;
     }
 
@@ -4002,12 +4011,16 @@ static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
     return candidates;
 }
 
-bool gozag_setup_call_merchant()
+bool gozag_setup_call_merchant(bool quiet)
 {
     const int gold_min = gozag_price_for_shop(true);
     if (you.gold < gold_min)
     {
-        mprf("You currently need %d gold to open negotiations with a merchant.", gold_min);
+        if (!quiet)
+        {
+            mprf("You currently need %d gold to open negotiations with a "
+                 "merchant.", gold_min);
+        }
         return false;
     }
 
@@ -4022,15 +4035,21 @@ bool gozag_setup_call_merchant()
     {
         if (!shop_vault->depths.is_usable_in(level_id::current()))
         {
-            mprf("No merchants are willing to come to this level in the "
-                 "absence of new frontiers.");
-            return false;
+            if (!quiet)
+            {
+                mprf("No merchants are willing to come to this level in the "
+                     "absence of new frontiers.");
+                return false;
+            }
         }
         if (grd(you.pos()) != DNGN_FLOOR)
         {
-            mprf("You need to be standing on an open floor tile to call a "
-                 "shop here.");
-            return false;
+            if (!quiet)
+            {
+                mprf("You need to be standing on an open floor tile to call a "
+                     "shop here.");
+                return false;
+            }
         }
     }
 

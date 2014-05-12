@@ -59,10 +59,10 @@ bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates)
 bool fedhas_plant_ring_from_fruit();
 int fedhas_rain(const coord_def &target);
 int count_corpses_in_los(vector<stack_iterator> *positions);
-int fedhas_check_corpse_spores();
+int fedhas_check_corpse_spores(bool quiet = false);
 int fedhas_corpse_spores(beh_type attitude = BEH_FRIENDLY);
 bool mons_is_evolvable(const monster* mon);
-bool fedhas_check_evolve_flora();
+bool fedhas_check_evolve_flora(bool quiet = false);
 void fedhas_evolve_flora();
 
 void lugonu_bend_space();
@@ -85,10 +85,10 @@ void dithmenos_shadow_throw(coord_def target);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
 int gozag_porridge_price();
-bool gozag_setup_potion_petition();
+bool gozag_setup_potion_petition(bool quiet = false);
 bool gozag_potion_petition();
 int gozag_price_for_shop(bool max = false);
-bool gozag_setup_call_merchant();
+bool gozag_setup_call_merchant(bool quiet = false);
 bool gozag_call_merchant();
 int gozag_type_bribable(monster_type type, bool force = false);
 branch_type gozag_bribable_branch(monster_type type);
