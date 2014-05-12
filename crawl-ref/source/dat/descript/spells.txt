@@ -483,11 +483,6 @@ Explosive Bolt spell
 This spell hurls a bolt containing fiery energy; on piercing a target, it lets
 loose an explosion that harms nearby creatures as well.
 %%%%
-Fire Brand spell
-
-This spell sets a weapon or launcher held by the caster ablaze. It will not
-affect weapons otherwise subject to special enchantments.
-%%%%
 Fire Breath spell
 
 <Breathe Fire ability>
@@ -544,12 +539,6 @@ Freeze spell
 
 This spell freezes a creature. This may temporarily slow the metabolism of a
 cold-blooded creature.
-%%%%
-Freezing Aura spell
-
-This spell surrounds a weapon or launcher held by the caster with an aura of
-freezing cold. It will not affect weapons which are otherwise subject to
-special enchantments.
 %%%%
 Freezing Cloud spell
 
@@ -741,11 +730,6 @@ Spear, Orb of Destruction, Ghostly Fireball, Fireball, or Flash Freeze.
 Lehudib's Crystal Spear spell
 
 This spell hurls a lethally sharp bolt of crystal.
-%%%%
-Lethal Infusion spell
-
-This spell infuses a weapon held by the caster with unholy energies. It will
-not affect weapons which are otherwise subject to special enchantments.
 %%%%
 Lightning Bolt spell
 
@@ -961,11 +945,6 @@ This spell hurls a magical arrow coated with the most vile and noxious toxin.
 No living thing is completely immune to its effects, and even the undead will
 take damage from the physical component of the spell.
 %%%%
-Poison Weapon spell
-
-This spell temporarily coats any weapon or launcher with poison. It will only
-work on weapons without an existing enchantment.
-%%%%
 Poisonous Cloud spell
 
 This spell conjures forth a great cloud of lethal gasses.
@@ -1004,11 +983,6 @@ Random Bolt spell
 
 This spell creates, at random, a bolt of venom, negative energy, fire, cold,
 dispelling energy, electricity, or a bouncing crystal bolt of fire or cold.
-%%%%
-# TAG_MAJOR_VERSION == 34
-Rearrange the Pieces spell
-
-This spell swaps positions of random pairs of nearby creatures.
 %%%%
 Recall spell
 

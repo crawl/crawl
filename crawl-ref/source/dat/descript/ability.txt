@@ -770,11 +770,6 @@ Make oklob circle ability
 
 Grow a circle of oklob plants centred at the targeted location.
 %%%%
-Sage ability
-
-Funnel some of your earned experience towards a certain skill and train it
-faster than normal.
-%%%%
 Acquirement ability
 
 Acquire a chosen type of item.

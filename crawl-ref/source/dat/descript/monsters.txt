@@ -1955,10 +1955,6 @@ A nearly-transparent undead spirit, suspected by some sages to be a degenerate
 form of ghost, with no memories of its former life. It rarely stays in one
 place for long.
 %%%%
-phoenix
-
-A bird of myth and legend, said to die in flames and be reborn from the ashes.
-%%%%
 pillar of salt
 
 A large pillar of salt that is quickly crumbling away.
@@ -2924,21 +2920,6 @@ the job a little too much.
 earth elementalist statue
 
 A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
-%%%%
-faint deep troll monk
-
-A flimsy representation of a deep troll monk; little more than a half-formed
-memory, yet still ready to fight.
-%%%%
-faint demonspawn monk
-
-A flimsy representation of a monstrous demonspawn monk; little more than a
-half-formed memory, yet still ready to fight.
-%%%%
-faint grey draconian monk
-
-A flimsy representation of a draconian monk; little more than a half-formed
-memory, yet still ready to fight.
 %%%%
 fire elementalist statue
 
