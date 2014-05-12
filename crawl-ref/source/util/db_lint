@@ -184,7 +184,7 @@ sub at_at_replaces($$)
 my @monspeak_at_at = at_at_replaces("mon-util.cc", "do_mon_str_replacements");
 
 my @gods = ("the Shining One", "Sif Muna","Nemelex Xobeh",
-            qw(Zin Kikubaaqudgha Yredelemnul Xom Vehumet
+            qw(Zin Kikubaaqudgha Yredelemnul Xom Vehumet Gozag Qazlal
                Okawaru Makhleb Trog Elyvilon Lugonu Dithmenos
                Beogh Jiyva Fedhas Cheibriados Ashenzari));
 
@@ -197,12 +197,13 @@ sub godspeak_keys()
     my %keys;
     $keys{"Xom $_"}=1 for m{_get_xom_speech\("([^"]+)"\)}g;
     $keys{"Xom $_"}=1 for m{XOM_SPEECH\("([^"]+)"\)}g;
-    $keys{"Xom $_"}=1 for qw(bored prayer);
+    $keys{"Xom bored"}=1;
     for (@gods)
     {
         $keys{"$_ newgame"}=1;
         $keys{"$_ welcome"}=1;
         $keys{"$_ penance"}=1;
+        $keys{"$_ prayer"}=1;
     }
     $keys{"Beogh idol $_"}=1 for qw(follower orc other);
     $keys{$_}=1 for ("the Shining One holy evil", "the Shining One holy other",
@@ -318,6 +319,7 @@ if (read_file("database/godspeak"))
 {
     $entries{"$_ newgame"}=1 for @gods; # not mandatory
     $entries{"$_ penance"}=1 for @gods; # not mandatory
+    $entries{"$_ prayer"}=1 for @gods; # not mandatory
     check_db_needed("godspeak", godspeak_keys());
 }
 __________________________________________________________________________();
