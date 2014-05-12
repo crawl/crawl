@@ -697,15 +697,16 @@ bool fill_status_info(int status, status_info* inf)
                                                 : BLUE;
 
             inf->light_text = "Bribe";
+            inf->short_text = make_stringf("bribing [%s]",
+                                           comma_separated_line(places.begin(),
+                                                                places.end(),
+                                                                ", ", ", ")
+                                                                .c_str());
+            inf->long_text = "You are bribing "
+                             + comma_separated_line(places.begin(),
+                                                    places.end())
+                             + ".";
         }
-        inf->short_text = make_stringf("bribing [%s]",
-                                       comma_separated_line(places.begin(),
-                                                            places.end(),
-                                                            ", ", ", ")
-                                                            .c_str());
-        inf->long_text = "You are bribing "
-                         + comma_separated_line(places.begin(), places.end())
-                         + ".";
         break;
     }
 
