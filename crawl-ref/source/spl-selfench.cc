@@ -324,9 +324,9 @@ spret_type cast_infusion(int pow, bool fail)
 {
     fail_check();
     if (!you.duration[DUR_INFUSION])
-        mpr("Your attacks are magically infused.");
+        mpr("You begin infusing your attacks with magical energy.");
     else
-        mpr("Your attacks are magically infused for longer.");
+        mpr("You extend your infusion's duration.");
 
     you.increase_duration(DUR_INFUSION,  8 + roll_dice(2, pow), 100);
     you.props["infusion_power"] = pow;

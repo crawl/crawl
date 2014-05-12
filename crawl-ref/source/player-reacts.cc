@@ -993,9 +993,9 @@ static void _decrement_durations()
                           "Your shroud begins to fray at the edges.");
 
     _decrement_a_duration(DUR_INFUSION, delay,
-                          "Your attacks are no longer magically infused.",
+                          "You are no longer magically infusing your attacks.",
                           0,
-                          "You are feeling less magically infused.");
+                          "Your magical infusion is running out.");
 
     _decrement_a_duration(DUR_SONG_OF_SLAYING, delay,
                           "Your song has ended.",
