@@ -1689,6 +1689,9 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_GOZAG_CALL_MERCHANT:
         return gozag_setup_call_merchant(quiet);
 
+    case ABIL_GOZAG_BRIBE_BRANCH:
+        return gozag_check_bribe_branch(quiet);
+
     default:
         return true;
     }

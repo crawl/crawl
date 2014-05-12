@@ -93,6 +93,7 @@ bool gozag_call_merchant();
 int gozag_type_bribable(monster_type type, bool force = false);
 branch_type gozag_bribable_branch(monster_type type);
 void gozag_deduct_bribe(branch_type br, int amount);
+bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
 
 bool qazlal_upheaval(coord_def target, bool quiet = false);
