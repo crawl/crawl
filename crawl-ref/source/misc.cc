@@ -1312,7 +1312,6 @@ bool go_berserk(bool intentional, bool potion)
         return false;
 
     if (stasis_blocks_effect(true,
-                             true,
                              "%s thrums violently and saps your rage.",
                              3,
                              "%s vibrates violently and saps your rage."))
@@ -2457,7 +2456,7 @@ void swap_with_monster(monster* mon_to_swap)
     ASSERT(mon.alive());
     const coord_def newpos = mon.pos();
 
-    if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.",
+    if (stasis_blocks_effect(true, "%s emits a piercing whistle.",
                              20, "%s makes your neck tingle."))
     {
         return;
@@ -2529,19 +2528,6 @@ void swap_with_monster(monster* mon_to_swap)
         if (!you_caught)
             mon.del_ench(ENCH_HELD, true);
     }
-}
-
-/**
- * Identify a worn piece of jewellery's type.
- */
-void wear_id_type(item_def &item)
-{
-    if (item_type_known(item))
-        return;
-    set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
-    set_ident_flags(item, ISFLAG_KNOW_TYPE);
-    mprf("You are wearing: %s",
-         item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 void auto_id_inventory()

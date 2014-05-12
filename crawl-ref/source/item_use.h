@@ -48,10 +48,9 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 
 void prompt_inscribe_item();
 
-bool stasis_blocks_effect(bool calc_unid, bool identify,
+bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise = 0,
                           const char *silencedmsg = NULL);
-item_def* get_only_unided_ring();
 
 #ifdef USE_TILE
 void tile_item_use_floor(int idx);
