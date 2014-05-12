@@ -3202,7 +3202,9 @@ bool bolt::harmless_to_player() const
 
     case BEAM_POISON:
         return player_res_poison(false) >= 3
-               || is_big_cloud && player_res_poison(false) > 0;
+               || is_big_cloud
+                  && (player_res_poison(false) > 0
+                      || you_worship(GOD_QAZLAL) && !player_under_penance());
 
     case BEAM_MEPHITIC:
         return player_res_poison(false) > 0 || you.clarity(false)
@@ -3216,7 +3218,9 @@ bool bolt::harmless_to_player() const
 
     // Fire and ice can destroy inventory items, acid damage equipment.
     case BEAM_COLD:
-        return is_big_cloud && you.mutation[MUT_ICEMAIL];
+        return is_big_cloud
+               && (you.mutation[MUT_ICEMAIL]
+                   || you_worship(GOD_QAZLAL) && !player_under_penance());
 
     case BEAM_ACID:
         return false;
