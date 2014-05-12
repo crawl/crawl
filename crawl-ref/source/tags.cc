@@ -2586,7 +2586,8 @@ static void tag_read_you(reader &th)
     }
     if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS)
     {
-        if (you.species != SP_TROLL && you.species != SP_GHOUL)
+        if (you.species == SP_LAVA_ORC || you.species == SP_HILL_ORC
+            || you.species == SP_OGRE || you.species == SP_KOBOLD)
         {
            you.mutation[MUT_SAPROVOROUS] =
            you.innate_mutations[MUT_SAPROVOROUS] = 0;
