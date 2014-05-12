@@ -305,8 +305,10 @@ void player_reacts_to_monsters()
     }
 
     if (you.duration[DUR_TELEPATHY])
+    {
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);
+    }
 
     // We have to do the messaging here, because a simple wand of flame will
     // call _maybe_melt_player_enchantments twice. It also avoid duplicate
@@ -368,7 +370,9 @@ static void _handle_recitation(int step)
 
     if (apply_area_visible(_zin_recite_to_monsters,
                            you.attribute[ATTR_RECITE_TYPE], &you))
+    {
         viewwindow();
+    }
 
     // Recite trains more than once per use, because it has a
     // long timer in between uses and actually takes up multiple

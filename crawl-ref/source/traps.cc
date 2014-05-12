@@ -1506,8 +1506,10 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     else if (!force_hit && one_chance_in(5))
     {
         if (was_known && you.see_cell(pos) && you.can_see(&act))
+        {
             mprf("%s avoids triggering %s trap.", act.name(DESC_THE).c_str(),
                  name(DESC_A).c_str());
+        }
         return;
     }
 

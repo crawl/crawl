@@ -50,7 +50,9 @@ static bool _monster_clone_exists(monster* mons)
         monster* thing(*mi);
         if (thing->props.exists(clone_slave_key)
             && thing->props[clone_slave_key].get_string() == clone_id)
+        {
             return true;
+        }
     }
     return false;
 }
@@ -123,9 +125,11 @@ static void _mons_summon_monster_illusion(monster* caster,
         if (cloning_visible)
         {
             if (!you.can_see(caster))
+            {
                 mprf("%s seems to step out of %s!",
                      foe->name(DESC_THE).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
+            }
             else
                 mprf("%s seems to draw %s out of %s!",
                      caster->name(DESC_THE).c_str(),

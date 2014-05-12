@@ -45,7 +45,9 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
                       || ench == ENCH_SWIFT
                       || ench == ENCH_PETRIFIED
                       || ench == ENCH_PETRIFYING))
+    {
         return NUM_MB_FLAGS;
+    }
 
     if (ench == ENCH_HASTE && mons.has_ench(ENCH_SLOW))
         return NUM_MB_FLAGS;

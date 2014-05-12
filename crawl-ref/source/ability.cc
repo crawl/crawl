@@ -692,12 +692,16 @@ const string make_cost_description(ability_type ability)
     const ability_def& abil = get_ability_def(ability);
     string ret;
     if (abil.mp_cost)
+    {
         ret += make_stringf(", %d %sMP", abil.mp_cost,
             abil.flags & ABFLAG_PERMANENT_MP ? "Permanent " : "");
+    }
 
     if (abil.hp_cost)
+    {
         ret += make_stringf(", %d %sHP", abil.hp_cost.cost(you.hp_max),
             abil.flags & ABFLAG_PERMANENT_HP ? "Permanent " : "");
+    }
 
     if (abil.zp_cost)
         ret += make_stringf(", %d ZP", (int)_zp_cost(abil));
@@ -1473,8 +1477,10 @@ static bool _check_ability_possible(const ability_def& abil,
         if (tal.is_invocation)
         {
             if (!quiet)
+            {
                 mprf("You cannot call out to %s while silenced.",
                      god_name(you.religion).c_str());
+            }
             return false;
         }
     }
@@ -1484,8 +1490,10 @@ static bool _check_ability_possible(const ability_def& abil,
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
         if (!quiet)
+        {
             dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",
                  you.hunger, abil.food_cost * 2, expected_hunger);
+        }
         // Safety margin for natural hunger, mutations etc.
         if (expected_hunger <= 50)
         {
@@ -3476,7 +3484,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // And finally, the ability to opt-out of your faith {dlb}:
     if (!you_worship(GOD_NO_GOD)
         && (include_unusable || !silenced(you.pos())))
+    {
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
+    }
 
     if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
         _add_talent(talents, ABIL_CONVERT_TO_BEOGH, check_confused);

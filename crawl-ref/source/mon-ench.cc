@@ -1011,8 +1011,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_BLACK_MARK:
         if (!quiet)
+        {
             simple_monster_message(this, " is no longer absorbing vital"
                                          " energies.");
+        }
         calc_speed();
         break;
 

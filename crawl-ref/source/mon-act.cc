@@ -1737,7 +1737,9 @@ static void _pre_monster_move(monster* mons)
             {
                 if (mons->props["foe_pos"].get_coord().distance_from(mons->pos())
                     > foe->pos().distance_from(mons->pos()))
+                {
                     mons->props["foe_approaching"].get_bool() = true;
+                }
                 else
                     mons->props["foe_approaching"].get_bool() = false;
 
@@ -3344,7 +3346,9 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
         if (targmonster->type == MONS_TOADSTOOL
             && mons->type == MONS_WANDERING_MUSHROOM)
+        {
             return true;
+        }
 
         // Cut down plants only when no alternative, or they're
         // our target.
@@ -3702,7 +3706,9 @@ static bool _may_cutdown(monster* mons, monster* targ)
         // Don't try to attack briars unless their damage will be insignificant
         if (targ->type == MONS_BRIAR_PATCH && mons->type != MONS_THORN_HUNTER
             && (mons->armour_class() * mons->hit_points) < 400)
+        {
             return false;
+        }
         else
             return true;
     }
@@ -4141,9 +4147,11 @@ static void _heated_area(monster* mons)
     if (final_damage > 0)
     {
         if (mons->observable())
+        {
             mprf("%s is %s by your radiant heat.",
                  mons->name(DESC_THE).c_str(),
                  (final_damage) > 10 ? "blasted" : "burned");
+        }
 
         behaviour_event(mons, ME_DISTURB, 0, mons->pos());
 

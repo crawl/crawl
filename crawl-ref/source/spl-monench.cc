@@ -52,7 +52,9 @@ int englaciate(coord_def where, int pow, int, actor *agent)
 
     if ((!mons && player_genus(GENPC_DRACONIAN)) // res_cold() checked above
         || (mons && mons_class_flag(mons->type, M_COLD_BLOOD)))
+    {
         duration *= 2;
+    }
 
     if (!mons)
         return slow_player(duration);

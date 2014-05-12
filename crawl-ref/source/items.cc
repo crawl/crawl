@@ -156,12 +156,16 @@ static bool _item_preferred_to_clean(int item)
     if (mitm[item].base_type == OBJ_WEAPONS
         && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
         && !is_artefact(mitm[item]))
+    {
         return true;
+    }
 
     if (mitm[item].base_type == OBJ_MISSILES
         && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
         && !is_artefact(mitm[item]))
+    {
         return true;
+    }
 
     return false;
 }
@@ -3971,9 +3975,11 @@ item_info get_item_info(const item_def& item)
         else
         {
             if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
+            {
                 ii.sub_type = NUM_MISCELLANY; // Needs to be changed if we add other
                                               // miscellaneous items that can be
                                               // non-identified
+            }
             else
                 ii.sub_type = item.sub_type;
         }

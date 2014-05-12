@@ -161,12 +161,14 @@ void dgn_island_plan::build_island()
         const coord_def offsetC =
             dgn_random_point_from(c, addition_offset, level_border_depth);
         if (!offsetC.origin())
+        {
             dgn_island_centred_at(
                 offsetC, resolve_range(n_island_aux_delta_points),
                 resolve_range(island_aux_radius_range),
                 island_aux_point_height_increment,
                 level_border_depth,
                 x_chance_in_y(atoll_roll, 100));
+        }
     }
 }
 

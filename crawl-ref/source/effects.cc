@@ -2706,9 +2706,11 @@ int place_ring(vector<coord_def> &ring_points,
         prototype.pos = ring_points.at(i);
 
         if (create_monster(prototype, false))
+        {
             spawned_count++;
             if (you.see_cell(ring_points.at(i)))
                 seen_count++;
+        }
     }
 
     return spawned_count;

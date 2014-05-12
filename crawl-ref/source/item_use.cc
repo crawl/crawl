@@ -632,8 +632,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (bad_size)
     {
         if (verbose)
+        {
             mprf("This armour is too %s for you!",
                  (bad_size > 0) ? "big" : "small");
+        }
 
         return false;
     }

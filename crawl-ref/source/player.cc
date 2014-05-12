@@ -599,8 +599,10 @@ monster_type player_mons(bool transform)
     if (mons == MONS_ORC)
     {
         if (you_worship(GOD_BEOGH))
+        {
             mons = (you.piety >= piety_breakpoint(4)) ? MONS_ORC_HIGH_PRIEST
                                                       : MONS_ORC_PRIEST;
+        }
     }
     else if (mons == MONS_OGRE)
     {
@@ -7689,8 +7691,10 @@ bool player::backlit(bool check_haloed, bool self_halo) const
         return true;
     }
     if (check_haloed)
+    {
         return !umbraed() && haloed()
                && (self_halo || halo_radius2() == -1);
+    }
     return false;
 }
 
@@ -7700,8 +7704,10 @@ bool player::umbra(bool check_haloed, bool self_halo) const
         return false;
 
     if (check_haloed)
+    {
         return umbraed() && !haloed()
                && (self_halo || umbra_radius2() == -1);
+    }
     return false;
 }
 

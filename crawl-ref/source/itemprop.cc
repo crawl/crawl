@@ -504,7 +504,9 @@ bool curse_an_item(bool ignore_holy_wrath)
 
             if (ignore_holy_wrath && you.inv[i].base_type == OBJ_WEAPONS
                 && get_weapon_brand(you.inv[i]) == SPWPN_HOLY_WRATH)
+            {
                 continue;
+            }
 
             // Item is valid for cursing, so we'll give it a chance.
             count++;
@@ -958,7 +960,9 @@ int armour_max_enchant(const item_def &item)
     if (eq_slot == EQ_BODY_ARMOUR
         || item.sub_type == ARM_CENTAUR_BARDING
         || item.sub_type == ARM_NAGA_BARDING)
+    {
         max_plus = property(item, PARM_AC);
+    }
     else if (eq_slot == EQ_SHIELD)
         max_plus = 3;
 
@@ -1491,7 +1495,9 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
 
     if (you.duration[DUR_WEAPON_BRAND] != 0
         && you.weapon() == &wpn)
+    {
         return false;
+    }
 
     return true;
 }
@@ -2355,7 +2361,9 @@ bool gives_ability(const item_def &item)
 
         if (ego == SPARM_DARKNESS || ego == SPARM_FLYING
             || ego == SPARM_JUMPING)
+        {
             return true;
+        }
         break;
     }
     default:

@@ -492,7 +492,9 @@ static bool _connected_minivault_place(const coord_def &c,
         if (_may_overwrite_feature(ci, false, false)
             || (place.map.has_tag("replace_portal")
                 && _is_portal_place(ci)))
+        {
             return true;
+        }
     }
 
     return false;
@@ -1503,8 +1505,10 @@ void reread_maps()
 void dump_map(const map_def &map)
 {
     if (crawl_state.dump_maps)
+    {
         fprintf(stderr, "\n----------------------------------------\n%s\n",
                 map.describe().c_str());
+    }
 }
 
 void add_parsed_map(const map_def &md)
@@ -1536,8 +1540,10 @@ void run_map_local_preludes()
         {
             string err = vdefs[i].run_lua(true);
             if (!err.empty())
+            {
                 mprf(MSGCH_ERROR, "Lua error (map %s): %s",
                      vdefs[i].name.c_str(), err.c_str());
+            }
         }
     }
 }

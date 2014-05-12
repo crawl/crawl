@@ -328,7 +328,9 @@ static string _get_unseen_branches()
                  && seen_lair_branches >= 2)
                 || (parent_branch((branch_type)i) == BRANCH_VAULTS)
                     && seen_vaults_branches >= 1))
+        {
             continue;
+        }
 
         if (i == BRANCH_VESTIBULE || !is_connected_branch(branch))
             continue;

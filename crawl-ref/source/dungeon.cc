@@ -2093,8 +2093,10 @@ static void _build_overflow_temples()
                 vault = random_map_for_tag(vault_tag, true);
 #ifdef DEBUG_TEMPLES
                 if (vault == NULL)
+                {
                     mprf(MSGCH_DIAGNOSTICS, "Couldn't find overflow temple "
                          "for combination of tags %s", vault_tag.c_str());
+                }
 #endif
             }
 
@@ -3593,7 +3595,9 @@ static coord_def _dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
             const coord_def c = random_in_bounds();
             if (_point_matches_feat(c, searchfeat, mapmask, adjacent_feat,
                                     monster_free))
+            {
                 return c;
+            }
         }
         return coord_def(0, 0);
     }
@@ -4740,7 +4744,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 
         if (spec.base_type == OBJ_UNASSIGNED
             || (spec.base_type == OBJ_MISCELLANY && spec.sub_type == MISC_RUNE_OF_ZOT))
+        {
             continue;
+        }
 
         // Don't give monster a randart, and don't randomly give
         // monster an ego item.

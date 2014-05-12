@@ -79,7 +79,9 @@ bool branch_is_unfinished(branch_type branch)
 #if TAG_MAJOR_VERSION == 34
     if (branch == BRANCH_DWARF
         || branch == BRANCH_FOREST)
+    {
         return true;
+    }
 #endif
     return false;
 }

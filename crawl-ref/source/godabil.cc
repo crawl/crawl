@@ -4287,9 +4287,11 @@ int gozag_type_bribable(monster_type type, bool force)
     for (unsigned int i = 0; i < ARRAYSZ(mons_bribability); i++)
     {
         if (mons_bribability[i].type == type)
+        {
             return force || branch_bribe[mons_bribability[i].branch]
                    ? mons_bribability[i].susceptibility
                    : 0;
+        }
     }
 
     return 0;

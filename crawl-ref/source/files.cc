@@ -364,8 +364,10 @@ void assert_read_safe_path(const string &path) throw (string)
 
 #ifdef UNIX
     if (!shell_safe(path.c_str()))
+    {
         throw make_stringf("\"%s\" contains bad characters.",
                            path.c_str());
+    }
 #endif
 
 #ifdef DATA_DIR_PATH
@@ -766,8 +768,10 @@ public:
         if (tmp_filename != target_filename)
         {
             if (rename_u(tmp_filename.c_str(), target_filename.c_str()))
+            {
                 end(1, true, "failed to rename %s -> %s",
                     tmp_filename.c_str(), target_filename.c_str());
+            }
         }
     }
 
@@ -778,11 +782,13 @@ public:
             filep = (lock? lk_open(filemode, tmp_filename)
                      : fopen_u(tmp_filename.c_str(), filemode));
             if (!filep)
+            {
                 end(-1, true,
                     "Failed to open \"%s\" (%s; locking:%s)",
                     tmp_filename.c_str(),
                     filemode,
                     lock? "YES" : "no");
+            }
         }
         return filep;
     }

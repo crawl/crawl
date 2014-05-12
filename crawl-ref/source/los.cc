@@ -422,8 +422,10 @@ static void _create_blockrays()
     {
         blockrays(*qi) = new bit_vector(n_min_rays);
         for (int i = 0; i < n_min_rays; ++i)
+        {
             blockrays(*qi)->set(i, all_blockrays(*qi)
                                    ->get(min_indices[i]));
+        }
     }
 
     // We can throw away all_blockrays now.

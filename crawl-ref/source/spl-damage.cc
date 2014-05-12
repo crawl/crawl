@@ -768,8 +768,10 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
     if (actual)
     {
         if (post_hook)
+        {
             (*post_hook)(agent, affects_you, affected_monsters, pow,
                          total_damage);
+        }
 
         return SPRET_SUCCESS;
     }
@@ -1331,8 +1333,10 @@ bool mons_shatter(monster* caster, bool actual)
     if (actual)
     {
         if (silence)
+        {
             mprf("The dungeon shakes around %s!",
                  caster->name(DESC_THE).c_str());
+        }
         else
         {
             noisy(30, caster->pos(), caster->mindex());
@@ -2525,6 +2529,7 @@ void forest_damage(const actor *mon)
     const int hd = mon->get_experience_level();
 
     if (one_chance_in(4))
+    {
         forest_message(pos, random_choose(
             "The trees move their gnarly branches around.",
             "You feel roots moving beneath the ground.",
@@ -2532,6 +2537,7 @@ void forest_damage(const actor *mon)
             "Trunks creak and shift.",
             "Tree limbs sway around you.",
             0), MSGCH_TALK_VISUAL);
+    }
 
     for (radius_iterator ri(pos, LOS_NO_TRANS); ri; ++ri)
     {

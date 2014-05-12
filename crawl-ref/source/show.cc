@@ -335,7 +335,9 @@ static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
 {
     if (!you.see_cell(where) || where == you.pos()
         || env.map_knowledge(where).flags & MAP_INVISIBLE_UPDATE)
+    {
         return false;
+    }
 
     monster *mons_at = monster_at(where);
     if (mons_at && mons_at != mons)

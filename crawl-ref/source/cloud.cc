@@ -227,7 +227,9 @@ static void _spread_fire(const cloud_struct &cloud)
         if (!in_bounds(*ai)
             || env.cgrid(*ai) != EMPTY_CLOUD
             || is_sanctuary(*ai))
+        {
             continue;
+        }
 
         // burning trees produce flames all around
         if (!cell_is_solid(*ai) && make_flames)

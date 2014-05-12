@@ -4534,9 +4534,11 @@ void mon_nearby_ability(monster* mons)
         {
             const bool can_see = you.can_see(mons);
             if (can_see && you.can_see(foe))
+            {
                 mprf("%s blinks at %s.",
                      mons->name(DESC_THE).c_str(),
                      foe->name(DESC_THE).c_str());
+            }
 
             int confuse_power = 2 + random2(3);
 
@@ -4571,9 +4573,11 @@ void mon_nearby_ability(monster* mons)
         {
             const bool can_see = you.can_see(mons);
             if (can_see && you.can_see(foe))
+            {
                 mprf("%s stares at %s.",
                      mons->name(DESC_THE).c_str(),
                      foe->name(DESC_THE).c_str());
+            }
 
             if (foe->is_player() && !can_see)
                 canned_msg(MSG_BEING_WATCHED);

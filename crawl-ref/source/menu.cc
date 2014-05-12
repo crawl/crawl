@@ -3312,6 +3312,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
     }
 
     if (m_active_item == NULL && m_default_item != NULL)
+    {
         switch (key)
         {
         case CK_UP:
@@ -3322,6 +3323,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             set_active_item(m_default_item);
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
+    }
 
     MenuItem* find_entry = NULL;
     switch (key)

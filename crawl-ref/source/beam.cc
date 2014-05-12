@@ -4565,7 +4565,9 @@ static bool _dazzle_monster(monster* mons, actor* act)
 {
     if (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_NONLIVING
         || mons->holiness() == MH_PLANT)
+    {
         return false;
+    }
 
     if (x_chance_in_y(85 - mons->hit_dice * 3 , 100))
     {
@@ -4894,8 +4896,10 @@ void bolt::affect_monster(monster* mon)
             if (hit_verb.empty())
                 hit_verb = engulfs ? "engulfs" : "hits";
             if (mons_near(mon))
+            {
                 mprf("The %s %s %s.", name.c_str(), hit_verb.c_str(),
                      mon->name(DESC_THE).c_str());
+            }
             else if (heard && !noise_msg.empty())
                 mprf(MSGCH_SOUND, "%s", noise_msg.c_str());
         }
@@ -5650,7 +5654,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                                        (mon->body_size(PSIZE_BODY) > SIZE_BIG)
                                         ? " is filled with an intense inner flame!"
                                         : " is filled with an inner flame."))
+            {
                 obvious_effect = true;
+            }
         }
         return MON_AFFECTED;
 
@@ -5703,8 +5709,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             mon_enchant ench = mon->get_ench(ENCH_POISON);
             poison_monster(mon, agent(), ench.degree, false, false);
             if (you.can_see(mon))
+            {
                 mprf("The poison in %s body grows stronger.",
                      mon->name(DESC_ITS).c_str());
+            }
         }
 
         if (mon->check_res_magic(ench_power) > 0)
@@ -6272,7 +6280,9 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat)
         && !(delta.origin() && can_affect_wall(dngn_feat))
         && stop_at_statues)
+    {
         return;
+    }
 
     // Check if it passes the callback functions.
     bool hits = true;
@@ -6540,8 +6550,10 @@ string bolt::get_short_name() const
         return short_name;
 
     if (item != NULL && item->defined())
+    {
         return item->name(DESC_A, false, false, false, false,
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK);
+    }
 
     if (real_flavour == BEAM_RANDOM
         || real_flavour == BEAM_CHAOS
