@@ -2,10 +2,11 @@
 use Encode;
 use Text::Tabs;
 use Getopt::Std;
+use strict;
 
 our ($opt_n, $opt_t);
 getopts('t:n'); # this removes -t and -n from @ARGV;
-$tabstop = $opt_t if ($opt_t);
+my $tabstop = $opt_t if ($opt_t);
 my $dry_run = $opt_n;
 my $any_bad = 0;
 
