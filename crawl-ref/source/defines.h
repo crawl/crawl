@@ -339,8 +339,6 @@ const char * const GOZAG_PRICE_KEY = "gozag_price%d";
 const char * const GOZAG_SHOPKEEPER_NAME_KEY = "gozag_shopkeeper_%d";
 const char * const GOZAG_SHOP_TYPE_KEY       = "gozag_shop_type_%d";
 const char * const GOZAG_SHOP_SUFFIX_KEY     = "gozag_shop_suffix_%d";
-const char * const GOZAG_SHOP_GREED_KEY      = "gozag_shop_greed_%d";
-const char * const GOZAG_SHOP_ITEMS_KEY      = "gozag_shop_items_%d";
 const char * const GOZAG_SHOP_COST_KEY       = "gozag_shop_cost_%d";
 
 const char * const GOZAG_BRIBE_KEY           = "gozag_bribed";
