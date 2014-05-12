@@ -416,7 +416,7 @@ void melee_attack::apply_black_mark_effects()
         if (!defender->alive())
             return;
 
-        switch(random2(3))
+        switch (random2(3))
         {
             case 0:
                 antimagic_affects_defender(damage_done * 8);
@@ -440,7 +440,7 @@ void melee_attack::apply_black_mark_effects()
         if (!defender->alive())
             return;
 
-        switch(random2(3))
+        switch (random2(3))
         {
             case 0:
                 antimagic_affects_defender(damage_done * 8);

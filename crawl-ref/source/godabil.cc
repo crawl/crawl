@@ -739,9 +739,9 @@ bool zin_recite_to_single_monster(const coord_def& where)
         return false;
 
     recite_type prayertype = RECITE_CHAOTIC;
-    for(int i = RECITE_CHAOTIC; i != NUM_RECITE_TYPES; i++)
+    for (int i = RECITE_CHAOTIC; i != NUM_RECITE_TYPES; i++)
     {
-            if(eligibility[i] > eligibility[prayertype])
+            if (eligibility[i] > eligibility[prayertype])
                     prayertype = static_cast <recite_type>(i);
     }
 
@@ -4475,7 +4475,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
 
     string message = "";
 
-    switch(random2(4))
+    switch (random2(4))
     {
         case 0:
             beam.name     = "blast of magma";
@@ -4603,7 +4603,7 @@ void qazlal_elemental_force()
     {
         if (env.cgrid(*ri) != EMPTY_CLOUD)
         {
-            switch(env.cloud[env.cgrid(*ri)].type)
+            switch (env.cloud[env.cgrid(*ri)].type)
             {
             case CLOUD_FIRE:
             case CLOUD_COLD:
@@ -4649,7 +4649,7 @@ void qazlal_elemental_force()
                        agent->is_player() ? BEH_FRIENDLY
                                           : SAME_ATTITUDE(agent->as_monster());
         mg.pos       = pos;
-        switch(cl.type)
+        switch (cl.type)
         {
         case CLOUD_FIRE:
         case CLOUD_FOREST_FIRE:
