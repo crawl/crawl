@@ -77,7 +77,7 @@
 
 NAME:   layout_hall_layers
 DEPTH:  Depths, Zot, Lair, Elf
-WEIGHT: 5, 10 (Zot), 5 (Lair), 20 (Elf)
+WEIGHT: 5, 10 (Zot), 20 (Zot:5), 5 (Lair), 20 (Elf)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand central layout_type_halls
 {{
@@ -217,7 +217,7 @@ ENDMAP
 # shape, somewhat like an onion. Carves randomly spaced gaps in the walls
 # to connect everything up.
 NAME:   layout_onion
-DEPTH:  Zot,Snake
+DEPTH:  Zot, Snake
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand central layout_type_halls
@@ -323,7 +323,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_catacombs
 # Layers two onions on top of each other to create an
 # interference pattern (with option xor)
 NAME:   layout_onion_interference
-DEPTH:  Zot:1-4,Snake
+DEPTH:  Zot:1-4, Snake
 WEIGHT: 0
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand central layout_type_halls
@@ -437,7 +437,7 @@ ENDMAP
 # the horizontal whilst still allowing the patterns to connect. Optionally
 # it applies a polar transform producing something sometimes like a spiderweb.
 NAME:   layout_cathedral_of_symmetry
-DEPTH:  Zot,Tar
+DEPTH:  Zot, Tar
 WEIGHT: 20, 50(Tar)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand central layout_type_halls
@@ -508,6 +508,11 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
     if mode == "central" then
       polarise = true
     end
+  end
+
+  -- Zot:5 always gets a polar layout.
+  if you.in_branch("zot") and you.at_branch_bottom() then
+    polarise = true
   end
 
   local scale = 80/reps
