@@ -133,8 +133,6 @@ bool is_dragonkind(const actor *act);
 
 void swap_with_monster(monster *mon_to_swap);
 
-void wear_id_type(item_def &item);
-
 bool maybe_id_weapon(item_def &item, const char *msg = 0);
 void auto_id_inventory();
 

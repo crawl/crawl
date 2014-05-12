@@ -1076,11 +1076,6 @@ static void _unequip_armour_effect(item_def& item, bool meld,
             if (you.species == SP_DEEP_DWARF)
                 mpr("Your magic begins regenerating once more.");
         }
-        else if (you.wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, true))
-        {
-            item_def& amu(you.inv[you.equip[EQ_AMULET]]);
-            wear_id_type(amu);
-        }
         break;
 
     case SPARM_ARCHERY:

@@ -2519,15 +2519,6 @@ bool melee_attack::attack_warded_off()
                  atk_name(DESC_THE).c_str(),
                  defender_name().c_str());
         }
-
-        if (defender->is_player()
-            && you.wearing(EQ_AMULET, AMU_WARDING, true)
-            && !you.wearing(EQ_STAFF, STAFF_SUMMONING, true))
-        {
-            item_def *amu = you.slot_item(EQ_AMULET);
-            ASSERT(amu);
-            wear_id_type(*amu);
-        }
         return true;
     }
 

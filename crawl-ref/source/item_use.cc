@@ -3017,7 +3017,6 @@ void read_scroll(int slot)
 }
 
 bool stasis_blocks_effect(bool calc_unid,
-                          bool identify,
                           const char *msg, int noise,
                           const char *silenced_msg)
 {
@@ -3051,42 +3050,9 @@ bool stasis_blocks_effect(bool calc_unid,
                     mpr(message.c_str());
             }
         }
-
-        // The amulet auto-ids if requested.
-        if (you.species != SP_FORMICID
-            && amulet && identify && !item_type_known(*amulet))
-        {
-            wear_id_type(*amulet);
-        }
         return true;
     }
     return false;
-}
-
-item_def* get_only_unided_ring()
-{
-    item_def* found = NULL;
-
-    for (int i = EQ_LEFT_RING; i <= EQ_RING_EIGHT; i++)
-    {
-        if (i == EQ_AMULET)
-            continue;
-
-        if (!player_wearing_slot(i))
-            continue;
-
-        item_def& item = you.inv[you.equip[i]];
-        if (!item_type_known(item))
-        {
-            if (found)
-            {
-                // Both rings are unid'd, so return NULL.
-                return NULL;
-            }
-            found = &item;
-        }
-    }
-    return found;
 }
 
 #ifdef USE_TILE

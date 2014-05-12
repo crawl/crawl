@@ -1609,7 +1609,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_OKAWARU_FINESSE:
-        if (stasis_blocks_effect(false, false,
+        if (stasis_blocks_effect(false,
                                  quiet ? NULL : "%s makes your neck tingle."))
         {
             return false;
@@ -2569,7 +2569,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_OKAWARU_FINESSE:
-        if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.",
+        if (stasis_blocks_effect(true, "%s emits a piercing whistle.",
                                  20, "%s makes your neck tingle."))
         {
             // Identify the amulet and spend costs - finesse will be aborted

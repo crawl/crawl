@@ -529,16 +529,6 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
 
         int sust = player_sust_abil();
         stat_loss >>= sust;
-
-        if (sust && !player_sust_abil(false))
-        {
-            item_def *ring = get_only_unided_ring();
-            if (ring && !is_artefact(*ring)
-                && ring->sub_type == RING_SUSTAIN_ABILITIES)
-            {
-                wear_id_type(*ring);
-            }
-        }
     }
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
