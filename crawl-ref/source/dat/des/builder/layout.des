@@ -472,48 +472,6 @@ ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
 TAGS:   layout_type_city
 {{
-    function treasure_area (x1, y1, x2, y2)
-        x2 = x2 + 1
-        y2 = y2 + 1
-
-        if x2 <= x1 or y2 <= y1 then
-            return false
-        end
-
-        local area = (x2 - x1) * (y2 - y1)
-        if area >= 40 then
-            return false
-        end
-
-        -- for bigger rooms, use less valuable loot
-        local loot = { }
-        if area <= 4 then
-            loot['|'] = 1
-        elseif area <= 10 then
-            loot['|'] = 10 - area
-            loot['*'] = area - 4
-        elseif area < 25 then
-            loot['*'] = 25 - area
-            loot['%'] = area - 10
-        else
-            loot['%'] = 1
-        end
-
-        local tl = dgn.point(x1, y1)
-        local br = dgn.point(x2 - 1, y2 - 1)
-
-        for point in iter.rect_iterator(tl, br) do
-            if is_valid_coord {x = point.x, y = point.y } then
-                if is_passable_coord { x=point.x, y=point.y }
-                   or crawl.coinflip() then
-                    mapgrd[point.x][point.y] = crawl.random_element (loot)
-                end
-            end
-        end
-
-        return true
-    end
-
     local gxm, gym = dgn.max_bounds()
 
     extend_map{width = gxm, height = gym, fill = 'x'}
@@ -602,11 +560,6 @@ TAGS:   layout_type_city
                         make_box_doors { x1=A1, y1=A2, x2=B1, y2=B2,
                                          number=door_number }
 
-                        if crawl.x_chance_in_y(thickness*4,
-                                               percent_inner_box) then
-                            treasure_area(A1+1, A2+1, B1-1, B2-1)
-                        end
-
                     elseif crawl.x_chance_in_y(percent_inner_split, 100) then
                         local door_x = a1 + thickness + 1
                                        + crawl.random2(size_x_inner - 2)
@@ -663,9 +616,6 @@ TAGS:   layout_type_city
                         door=outer_door, inner_door=inner_door,
                         veto_gates=true }
     end
-
-    -- Prevent treasure rooms being overwritten by vaults
-    kmask('|*% = vault')
 }}
 MAP
 ENDMAP
@@ -789,14 +739,12 @@ WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
 {{
-    function make_inner_room(room, feat, treasure)
+    function make_inner_room(room, feat)
         local inner_room = {
             x1 = room.x1 + 1, y1 = room.y1 + 1,
             x2 = room.x2 - 1, y2 = room.y2 - 1,
             wall = feat, number = 1
         }
-
-        if treasure then inner_room.floor = '*' end
 
         make_box(inner_room)
         make_box_doors(inner_room)
@@ -1038,7 +986,7 @@ TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
                 local feat = crawl.random_element { ['v'] = 2,
                                                     ['c'] = 3,
                                                     ['x'] = 3 }
-                make_inner_room(room, feat, crawl.coinflip())
+                make_inner_room(room, feat)
             end
         end
     end
