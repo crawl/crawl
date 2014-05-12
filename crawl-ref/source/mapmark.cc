@@ -201,8 +201,10 @@ map_lua_marker::map_lua_marker(const string &s, const string &,
     else
     {
         if (dlua.execstring(("return " + s).c_str(), "lua_marker_mapless", 1))
+        {
             mprf(MSGCH_ERROR, "lua_marker_mapless exec error: %s",
                  dlua.error.c_str());
+        }
     }
     check_register_table();
 }
@@ -1299,8 +1301,10 @@ void remove_markers_and_listeners_at(coord_def p)
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         if (markers[i]->get_type() == MAT_LUA_MARKER)
+        {
             dungeon_events.remove_listener(
                 dynamic_cast<map_lua_marker*>(markers[i]));
+        }
     }
 
     env.markers.remove_markers_at(p);

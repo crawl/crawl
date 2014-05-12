@@ -2369,8 +2369,10 @@ static bool _want_target_monster(const monster *mon, int mode)
         return mon->friendly();
 
     if (mode == TARG_INJURED_FRIEND)
+    {
         return mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
                || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0;
+    }
 
     if (mode == TARG_EVOLVABLE_PLANTS)
         return mons_is_evolvable(mon);

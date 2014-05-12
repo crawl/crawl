@@ -1781,8 +1781,10 @@ void game_options::read_options(LineInput &il, bool runscript,
             if (runscript)
             {
                 if (luacode.run(clua))
+                {
                     mprf(MSGCH_ERROR, "Lua error: %s",
                          luacode.orig_error().c_str());
+                }
             }
 #endif
             luacode.clear();

@@ -1260,7 +1260,9 @@ bool spell_no_hostile_in_range(spell_type spell)
                     && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
                         || (mons->type == MONS_BALLISTOMYCETE
                             && mons->number != 0)))
+                {
                     return false;
+                }
             }
         }
 

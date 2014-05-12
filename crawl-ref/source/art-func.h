@@ -1012,8 +1012,10 @@ static void _SPELLBINDER_melee_effects(item_def* weapon, actor* attacker,
             for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
             {
                 if (testbits(school, 1 << i))
+                {
                     schools.push_back(
                         static_cast<spschool_flag_type>(1 << i));
+                }
             }
             ASSERT(schools.size() > 0);
             MiscastEffect(defender, attacker->mindex(),

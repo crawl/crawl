@@ -2164,8 +2164,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
 #else
 #ifdef USE_TILE_WEB
     if (tiles.is_controlled_from_web())
+    {
         cols.add_formatted(0, "<w>F12</w> : read messages (online play only)",
                            false);
+    }
     else
 #endif
     _add_command(cols, 0, CMD_READ_MESSAGES, "read messages (online play only)", 2);

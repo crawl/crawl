@@ -240,8 +240,10 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld,
         autotoggle_autopickup(false);
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
+    {
         canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
                                                   : MSG_MANA_DECREASE);
+    }
 
     // Modify ability scores.
     notify_stat_change(STAT_STR, proprt[ARTP_STRENGTH],

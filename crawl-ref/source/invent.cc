@@ -1844,9 +1844,11 @@ bool check_warning_inscriptions(const item_def& item,
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_A));
         if (_nasty_stasis(item, oper))
+        {
             prompt += string(" while ")
                       + (you.duration[DUR_TELEPORT] ? "about to teleport" :
                          you.duration[DUR_SLOW] ? "slowed" : "hasted");
+        }
         prompt += "?";
         return yesno(prompt.c_str(), false, 'n')
                && check_old_item_warning(item, oper);

@@ -2498,8 +2498,10 @@ bool do_god_gift(bool forced)
 string god_name(god_type which_god, bool long_name)
 {
     if (which_god == GOD_JIYVA)
+    {
         return god_name_jiyva(long_name) +
                (long_name? " the Shapeless" : "");
+    }
 
     if (long_name)
     {
@@ -4338,6 +4340,7 @@ int elyvilon_lifesaving()
 bool god_protects_from_harm()
 {
     if (you.duration[DUR_LIFESAVING])
+    {
         switch (elyvilon_lifesaving())
         {
         case 1:
@@ -4349,6 +4352,7 @@ bool god_protects_from_harm()
             lose_piety(21 + random2(20));
             return true;
         }
+    }
 
     if (god_can_protect_from_harm(you.religion)
         && (one_chance_in(10) || x_chance_in_y(piety_scale(you.piety), 1000)))

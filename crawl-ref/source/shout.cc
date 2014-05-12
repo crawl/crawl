@@ -619,7 +619,9 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
         case SENSE_WEB_VIBRATION:
             if (!mons_class_flag(mi->type, M_WEB_SENSE)
                 && !mons_class_flag(get_chimera_legs(*mi), M_WEB_SENSE))
+            {
                 break;
+            }
             if (!one_chance_in(4))
             {
                 if (coinflip())
@@ -1037,9 +1039,11 @@ void noise_grid::write_cell(FILE *outf, coord_def p, int ch) const
 {
     const int intensity = min(25, cells(p).noise_intensity_millis / 1000);
     if (intensity)
+    {
         fprintf(outf,
                 "<span class='i%d'>&#%d;</span>",
                 intensity, ch);
+    }
     else
         fprintf(outf, "<span>&#%d;</span>", ch);
 }

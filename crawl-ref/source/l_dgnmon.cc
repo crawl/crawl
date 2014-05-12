@@ -146,19 +146,25 @@ static int dgn_set_random_mon_list(lua_State *ls)
         mons.push_back(mon);
 
         if (mon.number != 0)
+        {
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : number for %s "
                  "being discarded.",
                  name.c_str());
+        }
 
         if (mon.colour != BLACK)
+        {
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : colour for "
                  "%s being ignored.",
                  name.c_str());
+        }
 
         if (!mon.items.empty())
+        {
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : items for "
                  "%s being ignored.",
                  name.c_str());
+        }
     } // for (int i = 0; i < num_mons; i++)
 
     if (mons.empty() && num_lords > 0)

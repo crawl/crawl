@@ -329,16 +329,20 @@ string ash_describe_bondage(int flags, bool level)
     else
     {
         if (flags & ETF_ARMOUR && you.bondage[ET_ARMOUR] != -1)
+        {
             desc += make_stringf("You are %s bound in armour.\n",
                                  you.bondage[ET_ARMOUR] == 0 ? "not" :
                                  you.bondage[ET_ARMOUR] == 1 ? "partially"
                                                              : "fully");
+        }
 
         if (flags & ETF_JEWELS && you.bondage[ET_JEWELS] != -1)
+        {
             desc += make_stringf("You are %s bound in magic.\n",
                                  you.bondage[ET_JEWELS] == 0 ? "not" :
                                  you.bondage[ET_JEWELS] == 1 ? "partially"
                                                              : "fully");
+        }
     }
 
     if (level)

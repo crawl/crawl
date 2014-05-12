@@ -1205,8 +1205,10 @@ static void _debug_acquirement_stats(FILE *ostat)
         for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)
         {
             if (ego_quants[i] > 0)
+            {
                 fprintf(ostat, "%17s: %5.2f\n", names[i],
                         100.0 * (float) ego_quants[i] / (float) non_art);
+            }
         }
         fprintf(ostat, "\n\n");
     }

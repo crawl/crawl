@@ -527,10 +527,12 @@ static void _shoals_plant_supercluster(coord_def c,
         const coord_def satellite(
             dgn_random_point_from(c, random_range(2, 12), _shoals_margin));
         if (!satellite.origin())
+        {
             _shoals_plant_cluster(satellite, random_range(5, 12, 2),
                                   random_range(2, 7),
                                   favoured_feat,
                                   verboten);
+        }
     }
 }
 

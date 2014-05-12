@@ -165,7 +165,9 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
             || species == SP_DJINNI
 #endif
             )
+    {
         return true;
+    }
 
     if (actual_grid == DNGN_LAVA && species != SP_LAVA_ORC
         || actual_grid == DNGN_DEEP_WATER && !can_swim())
@@ -424,7 +426,9 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
             && (item_mass(item) >= 500
                 || item.base_type == OBJ_WEAPONS
                     && item_mass(item) >= 300))
+    {
         return false;
+    }
 
     // Anybody can wield missiles to enchant, item_mass permitting
     if (item.base_type == OBJ_MISSILES)

@@ -217,8 +217,10 @@ package::~package()
     // all errors here should be cached write errors
     if (fd != -1)
         if (close(fd) && !aborted)
+        {
             sysfail(rw ? "write error while saving"
                        : "can't close the save I've just read???");
+        }
     dprintf("package: closed\n");
 }
 

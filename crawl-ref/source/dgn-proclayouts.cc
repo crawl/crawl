@@ -503,7 +503,9 @@ UnderworldLayout::operator()(const coord_def &p, const uint32_t offset) const
         {
             if ((lateral >= 0.3 && lateral < 0.4 || lateral >= 0.6 && lateral < 0.7)
                  || (lateral >= 0.4 && lateral < 0.6 && city < (city_outer_limit+city_wall_width)))
+            {
                 feat = city_wall;
+            }
             else if (lateral >= 0.4 && lateral < 0.6)
                 feat = DNGN_FLOOR;
         }

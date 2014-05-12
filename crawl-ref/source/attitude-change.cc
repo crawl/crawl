@@ -460,7 +460,9 @@ void gozag_break_bribe(monster* victim)
         && !victim->has_ench(ENCH_PERMA_BRIBED)
         && !victim->props.exists(GOZAG_BRIBE_KEY)
         && !victim->props.exists(GOZAG_PERMABRIBE_KEY))
+    {
         return;
+    }
 
     const branch_type br = gozag_bribable_branch(victim->type);
     ASSERT(br != NUM_BRANCHES);

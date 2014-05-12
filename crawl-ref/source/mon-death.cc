@@ -3053,11 +3053,15 @@ void hogs_to_humans()
         if (!(mi->type == MONS_HOG
               || mi->type == MONS_HELL_HOG
               || mi->type == MONS_HOLY_SWINE))
+        {
             continue;
+        }
 
         if (!mi->props.exists("kirke_band")
             && !mi->props.exists(ORIG_MONSTER_KEY))
+        {
             continue;
+        }
 
         // Shapeshifters will stop being a hog when they feel like it.
         if (mi->is_shapeshifter())
@@ -3084,8 +3088,10 @@ void hogs_to_humans()
     else if (any > 1)
     {
         if (any == human)
+        {
             final_msg = "No longer under Kirke's spell, the hogs revert to their "
                         "human forms!";
+        }
         else
             final_msg = "No longer under Kirke's spell, the hogs revert to their "
                         "original forms!";

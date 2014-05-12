@@ -1040,8 +1040,10 @@ public:
         ranges.clear(reader_fn(inf));
         const int count = unmarshallShort(inf);
         for (int i = 0; i < count; ++i)
+        {
             ranges.depth_range_Xs.push_back(
                 depth_range_X<X>::read(inf, reader_fn));
+        }
         return ranges;
     }
     template <typename writer_fn_type>

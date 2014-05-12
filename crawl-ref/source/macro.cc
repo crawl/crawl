@@ -989,9 +989,11 @@ void macro_add_query(void)
     {
         const bool deleted_macro = macro_del(mapref, key);
         if (deleted_macro)
+        {
             mprf("Deleted %s for '%s'.",
                  macro_type.c_str(),
                  vtostr(key).c_str());
+        }
         else
             canned_msg(MSG_OK);
     }

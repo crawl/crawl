@@ -3352,8 +3352,10 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_DEXTERITY:
 #endif
             if (you.species == SP_VAMPIRE)
+            {
                 return temp && you.hunger_state < HS_SATIATED
                        && item.sub_type != POT_BENEFICIAL_MUTATION;
+            }
             if (you.form == TRAN_LICH)
                 return temp;
             return you.is_undead;
@@ -3646,7 +3648,9 @@ string item_prefix(const item_def &item, bool temp)
         if (item.sub_type != BOOK_MANUAL
             && item.sub_type != BOOK_DESTRUCTION
             && item.sub_type != NUM_BOOKS)
+        {
             prefixes.push_back("spellbook");
+        }
         break;
 
     default:

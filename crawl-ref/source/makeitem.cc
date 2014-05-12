@@ -2650,7 +2650,9 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     if (force_type != OBJ_RANDOM
         && force_type != NUM_RINGS
         && force_type != NUM_JEWELLERY)
+    {
         item.sub_type = force_type;
+    }
     else
     {
         int tries = 500;

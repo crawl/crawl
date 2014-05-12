@@ -139,7 +139,9 @@ static void _give_wand(monster* mon, int level)
 {
     if (!mons_is_unique(mon->type) || mons_class_flag(mon->type, M_NO_WAND)
                 || !_should_give_unique_item(mon))
+    {
         return;
+    }
 
     if (!one_chance_in(5) && (mon->type != MONS_MAURICE || !one_chance_in(3)))
         return;

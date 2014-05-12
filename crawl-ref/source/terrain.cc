@@ -733,7 +733,9 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
         || feat == DNGN_EXIT_PORTAL_VAULT
 #endif
         || feat >= DNGN_EXIT_FIRST_PORTAL && feat <= DNGN_EXIT_LAST_PORTAL)
+    {
         return false;
+    }
 
     // There's only one branch exit.
     if (you.depth == 1 && feat_is_travelable_stair(feat)

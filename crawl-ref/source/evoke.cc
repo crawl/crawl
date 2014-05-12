@@ -874,7 +874,9 @@ static vector<coord_def> _get_jitter_path(coord_def source, coord_def target,
             //Don't try to aim at targets in the opposite direction of main aim
             if ((abs(aim_dir.x - delta.sgn().x) + abs(aim_dir.y - delta.sgn().y) >= 2)
                  && !delta.origin())
+            {
                 continue;
+            }
 
             target = trace_beam.path_taken.back();
             break;

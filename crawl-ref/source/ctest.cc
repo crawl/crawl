@@ -191,6 +191,7 @@ void run_tests()
         for_each(tests.begin(), tests.end(), run_test);
 
         if (failures.empty() && !ntests && crawl_state.script)
+        {
             failures.push_back(
                 file_error(
                     "Script setup",
@@ -199,6 +200,7 @@ void run_tests()
                                          crawl_state.tests_selected.end(),
                                          ", ",
                                          ", ")));
+        }
     }
 
     if (crawl_state.test_list)

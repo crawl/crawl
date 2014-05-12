@@ -339,6 +339,7 @@ static void _german(string &txt)
     */
     for (unsigned int i = 0; i < txt.length(); i++)
         if (txt[i] == 'c' || txt[i] == 'C')
+        {
             switch (tolower(txt[i+1]))
             {
             case 'h': case 'z':
@@ -349,6 +350,7 @@ static void _german(string &txt)
             default:
                 txt[i] = isalower(txt[i]) ? 'k' : 'K';
             }
+        }
     /*
     There will be growing publik enthusiasm in the sekond year when the
     troublesome "ph" will be replaced with "f". This will make words like
@@ -381,7 +383,9 @@ static void _german(string &txt)
             if (!isaalpha(txt[i-1])
               || !isaalpha(txt[i-2])
               || !isaalpha(txt[i-3]))
+            {
                 continue;
+            }
             txt.erase(i, 1);
         }
     /*
