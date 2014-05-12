@@ -1617,17 +1617,20 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_FEDHAS_EVOLUTION:
-        return fedhas_check_evolve_flora();
+        return fedhas_check_evolve_flora(quiet);
 
     case ABIL_FEDHAS_SPAWN_SPORES:
     {
-        const int retval = fedhas_check_corpse_spores();
+        const int retval = fedhas_check_corpse_spores(quiet);
         if (retval <= 0)
         {
-            if (retval == 0)
-                mpr("No corpses are in range.");
-            else
-                canned_msg(MSG_OK);
+            if (!quiet)
+            {
+                if (retval == 0)
+                    mpr("No corpses are in range.");
+                else
+                    canned_msg(MSG_OK);
+            }
             return false;
         }
         return true;
@@ -1681,10 +1684,10 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_GOZAG_POTION_PETITION:
-        return gozag_setup_potion_petition();
+        return gozag_setup_potion_petition(quiet);
 
     case ABIL_GOZAG_CALL_MERCHANT:
-        return gozag_setup_call_merchant();
+        return gozag_setup_call_merchant(quiet);
 
     default:
         return true;
