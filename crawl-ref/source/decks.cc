@@ -2740,6 +2740,8 @@ static void _fortitude_card(int power, deck_rarity_type rarity)
         mprf(MSGCH_DURATION, "You are filled with a great fortitude.");
         notify_stat_change(STAT_STR, 10, true, "");
     }
+    else
+        mprf(MSGCH_DURATION, "You become more resolute.");
 }
 
 static void _storm_card(int power, deck_rarity_type rarity)

@@ -214,6 +214,8 @@ void mons_summon_illusion_from(monster* mons, actor *foe,
                 get_monster_data(MONS_PLAYER_ILLUSION));
             _mons_load_player_enchantments(mons, clone);
         }
+        else if (card_power >= 0)
+            mpr("You see a puff of smoke.");
     }
     else
     {
