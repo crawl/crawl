@@ -382,7 +382,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot, Pan
+DEPTH: D, Depths, Lair, Snake, Crypt, Zot, Pan
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_rooms
@@ -784,7 +784,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 ##############################################################
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: D:2-, Lair, Snake, Elf
+DEPTH: D:2-, Lair, Snake
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
@@ -1545,7 +1545,7 @@ ENDMAP
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot
+DEPTH: D, Depths, Lair, Snake, Crypt, Zot
 WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_basic
