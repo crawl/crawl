@@ -1986,26 +1986,6 @@ phase bat
 
 <bat>
 %%%%
-phoenix
-
-“They have also another sacred bird called the phoenix which I myself have
-never seen, except in pictures. Indeed it is a great rarity, even in Egypt,
-only coming there (according to the accounts of the people of Heliopolis) once
-in five hundred years, when the old phoenix dies. Its size and appearance, if
-it is like the pictures, are as follow:- The plumage is partly red, partly
-golden, while the general make and size are almost exactly that of the eagle.
-They tell a story of what this bird does, which does not seem to me to be
-credible: that he comes all the way from Arabia, and brings the parent bird,
-all plastered over with myrrh, to the temple of the Sun, and there buries the
-body. In order to bring him, they say, he first forms a ball of myrrh as big as
-he finds that he can carry; then he hollows out the ball, and puts his parent
-inside, after which he covers over the opening with fresh myrrh, and the ball
-is then of exactly the same weight as at first; so he brings it to Egypt,
-plastered over as I have said, and deposits it in the temple of the Sun. Such
-is the story they tell of the doings of this bird.”
-    -Herodotus, _Histories_, II, 73. ca. 440 B.C.
-     trans. George Rawlinson, 1858.
-%%%%
 pillar of salt
 
 “Then the LORD rained upon Sodom and upon Gomorrah brimstone and fire from the

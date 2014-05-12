@@ -88,10 +88,6 @@ Focus card
 
 This card further boosts your strongest attribute at the cost of your worst.
 %%%%
-Shuffle card
-
-This card interchanges your three attributes. Use with caution!
-%%%%
 Wild Magic card
 
 This card causes wild magic, as if from miscasting a spell, to act upon you.

@@ -359,12 +359,6 @@ This unholy book describes a variety of magical methods for the creation and
 command of undead servants. The dreadful book radiates a malignant aura, and
 its parchment pages sometimes twitch and shudder on their own.
 %%%%
-book of war chants
-
-A book of spells helpful for a warrior. The versions contained here have a
-musical form, following the traditions of fighting skalds. Functionally,
-though, they work the same as spells whose magic words are merely spoken.
-%%%%
 book of wizardry
 
 A book of various magic spells, useful for any sufficiently-talented
