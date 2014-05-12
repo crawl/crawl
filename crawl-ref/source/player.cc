@@ -2719,17 +2719,10 @@ int player_shield_class(void)
     return (shield + stat + 50) / 100;
 }
 
-int player_sust_abil(bool calc_unid)
+bool player_sust_abil(bool calc_unid)
 {
-    int sa = 0;
-
-    sa += you.wearing(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
-    sa += you.scan_artefacts(ARTP_SUSTAB);
-
-    if (sa > 2)
-        sa = 2;
-
-    return sa;
+    return you.wearing(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid)
+           || you.scan_artefacts(ARTP_SUSTAB);
 }
 
 int carrying_capacity(burden_state_type bs)
