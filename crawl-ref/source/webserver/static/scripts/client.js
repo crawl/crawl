@@ -187,6 +187,10 @@ function (exports, $, React, comm, LobbyRoot, Loader, pubsub) {
     exports.hide_dialog = hide_dialog;
     exports.center_element = center_element;
 
+    exports.is_watching = function () {
+        return root.props.state === "watch";
+    };
+
     window.assert = function () {};
     window.log = function (text)
     {
