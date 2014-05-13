@@ -162,11 +162,11 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " & consumed in a column of flame.",
         " & consumed in a roaring column of flame.",
     },
-    // Nemelex (no sacrifices but used on death messages)
+    // Nemelex (no sacrifices)
     {
-        " disappear% without a[dditional] glow.",
-        " glow% slightly [brighter ]and disappear%.",
-        " glow% with a rainbow of weird colours and disappear%.",
+        " & eaten by a bored swarm of bugs.",
+        " & eaten by a swarm of bugs.",
+        " & eaten by a ravening swarm of bugs."
     },
     // Elyvilon
     {
@@ -3524,11 +3524,24 @@ void print_sacrifice_message(god_type god, const item_def &item,
                            piety_gain).c_str());
 }
 
+static string nemelex_death_glow_message(int piety_gain)
+{
+    static const char *messages[NUM_PIETY_GAIN] =
+    {
+        " disappear% without a[dditional] glow.",
+        " glow% slightly [brighter ]and disappear%.",
+        " glow% with a rainbow of weird colours and disappear%.",
+    };
+
+    return messages[piety_gain];
+}
+
 void nemelex_death_message()
 {
     const piety_gain_t piety_gain = static_cast<piety_gain_t>
             (min(random2(you.piety) / 30, (int)PIETY_LOTS));
-    mprf("%s", _sacrifice_message(_Sacrifice_Messages[GOD_NEMELEX_XOBEH][piety_gain],
+
+    mprf("%s", _sacrifice_message(nemelex_death_glow_message(piety_gain),
                "Your body", you.backlit(), false, piety_gain).c_str());
 }
 
