@@ -3672,20 +3672,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_BOG_BODY:
-        if (one_chance_in(8))
-        {
-            // A hacky way of making these rot regularly.
-            if (mons->has_ench(ENCH_ROT))
-                break;
-
-            mon_enchant rot = mon_enchant(ENCH_ROT, 0, 0, 10);
-            mons->add_ench(rot);
-
-            simple_monster_message(mons, " begins to rapidly decay!");
-        }
-        break;
-
     case MONS_SNAPPING_TURTLE:
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
         // Use the same calculations as for low-HP casting
