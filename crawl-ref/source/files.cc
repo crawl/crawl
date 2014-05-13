@@ -1769,7 +1769,10 @@ static vector<string> _list_bones()
 
     string old_bonefile = _get_old_bonefile_directory() + base_filename;
     if (access(old_bonefile.c_str(), F_OK) == 0)
+    {
         dprf("Found old bonefile %s", old_bonefile.c_str());
+        bonefiles.push_back(old_bonefile);
+    }
 
     return bonefiles;
 }
