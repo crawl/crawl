@@ -2164,16 +2164,31 @@ static void _brand_weapon(item_def &wpn)
     return;
 }
 
+static object_selector _enchant_selector(scroll_type scroll)
+{
+    if (scroll == SCR_BRAND_WEAPON)
+        return OSEL_BRANDABLE_WEAPON;
+    else if (scroll == SCR_ENCHANT_WEAPON_I)
+        return OSEL_ENCHANTABLE_WEAPON_I;
+    else if (scroll == SCR_ENCHANT_WEAPON_II)
+        return OSEL_ENCHANTABLE_WEAPON_II;
+    else if (scroll == SCR_ENCHANT_WEAPON_III)
+        return OSEL_ENCHANTABLE_WEAPON_III;
+    die("Invalid scroll type %d for _enchant_selector", (int)scroll);
+}
+
 // Returns NULL if no weapon was chosen.
 static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scroll_type scroll)
 {
     int item_slot;
-    bool branding = scroll == SCR_BRAND_WEAPON;
+    const bool branding = scroll == SCR_BRAND_WEAPON;
+    const object_selector selector = _enchant_selector(scroll);
 
     while (true)
     {
-        item_slot = prompt_invent_item(branding ? "Brand which weapon?" : "Enchant which weapon?",
-                                       MT_INVLIST, branding ? OSEL_BRANDABLE_WEAPON : OSEL_ENCHANTABLE_WEAPON,
+        item_slot = prompt_invent_item(branding ? "Brand which weapon?"
+                                                : "Enchant which weapon?",
+                                       MT_INVLIST, selector,
                                        true, true, false);
 
         // The scroll is used up if we didn't know what it was originally.
@@ -2195,8 +2210,7 @@ static item_def* _scroll_choose_weapon(bool alreadyknown, string *pre_msg, scrol
 
         item_def* wpn = &you.inv[item_slot];
 
-        if (branding && !is_brandable_weapon(*wpn, true)
-            || !branding && !is_item_selected(*wpn, OSEL_ENCHANTABLE_WEAPON))
+        if (!is_item_selected(*wpn, selector))
         {
             mpr("Choose a valid weapon, or Esc to abort.");
             more();
@@ -2350,7 +2364,7 @@ static bool _identify(bool alreadyknown, string *pre_msg)
 
 static bool _handle_enchant_weapon(bool alreadyknown, string *pre_msg, scroll_type scr)
 {
-    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, SCR_ENCHANT_WEAPON_I);
+    item_def* weapon = _scroll_choose_weapon(alreadyknown, pre_msg, scr);
     if (!weapon)
         return !alreadyknown;
 
@@ -2687,7 +2701,7 @@ void read_scroll(int slot)
         case SCR_ENCHANT_WEAPON_I:
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
-            if (!any_items_to_select(OSEL_ENCHANTABLE_WEAPON, true))
+            if (!any_items_to_select(_enchant_selector(which_scroll), true))
                 return;
             break;
 
