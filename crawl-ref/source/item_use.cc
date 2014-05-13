@@ -2882,26 +2882,27 @@ void read_scroll(int slot)
     }
 
     case SCR_CURSE_WEAPON:
-        if (!you.weapon()
-            || !is_weapon(*you.weapon())
-            || you.weapon()->cursed())
+    {
+        // Not you.weapon() because we want to handle melded weapons too.
+        item_def * const weapon = you.slot_item(EQ_WEAPON, true);
+        if (!weapon || !is_weapon(*weapon) || weapon->cursed())
         {
             bool plural = false;
-            string weapon_name =
-                you.weapon()
-                ? you.weapon()->name(DESC_YOUR)
-                : "Your " + you.hand_name(true, &plural);
+            const string weapon_name =
+                weapon ? weapon->name(DESC_YOUR)
+                       : "Your " + you.hand_name(true, &plural);
             mprf("%s very briefly gain%s a black sheen.",
                  weapon_name.c_str(), plural ? "" : "s");
         }
         else
         {
             // Also sets wield_change.
-            do_curse_item(*you.weapon(), false);
+            do_curse_item(*weapon, false);
             learned_something_new(HINT_YOU_CURSED);
             bad_effect = true;
         }
         break;
+    }
 
     case SCR_ENCHANT_WEAPON_I:
     case SCR_ENCHANT_WEAPON_II:
