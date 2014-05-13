@@ -2069,6 +2069,7 @@ void handle_monster_move(monster* mons)
 
     const int gold = gozag_gold_in_los(mons);
     if (!mons->asleep()
+        && !mons_is_avatar(mons->type)
         && !mons->wont_attack() && gold > 0)
     {
         for (int i = 0; i < gold; i++)
