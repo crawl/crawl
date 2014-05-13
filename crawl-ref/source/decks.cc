@@ -1751,16 +1751,16 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
 
 static void _shaft_card()
 {
-        if (is_valid_shaft_level() && grd(you.pos()) == DNGN_FLOOR)
+    if (is_valid_shaft_level() && grd(you.pos()) == DNGN_FLOOR)
+    {
+        if (place_specific_trap(you.pos(), TRAP_SHAFT))
         {
-            if (place_specific_trap(you.pos(), TRAP_SHAFT))
-            {
-                find_trap(you.pos())->reveal();
-                mpr("A shaft materialises beneath you!");
-            }
+            find_trap(you.pos())->reveal();
+            mpr("A shaft materialises beneath you!");
         }
-        else
-            canned_msg(MSG_NOTHING_HAPPENS);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 static int stair_draw_count = 0;
