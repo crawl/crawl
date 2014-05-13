@@ -115,8 +115,6 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_PARALYSED;
     case ENCH_SOUL_RIPE:
         return MB_POSSESSABLE;
-    case ENCH_PREPARING_RESURRECT:
-        return MB_PREP_RESURRECT;
     case ENCH_REGENERATION:
         return MB_REGENERATION;
     case ENCH_RAISED_MR:
@@ -473,7 +471,6 @@ monster_info::monster_info(const monster* m, int milev)
     // these use number for internal information
     if (type == MONS_SIXFIRHY
         || type == MONS_JIANGSHI
-        || type == MONS_SHEDU
         || type == MONS_KRAKEN_TENTACLE
         || type == MONS_KRAKEN_TENTACLE_SEGMENT
         || type == MONS_ELDRITCH_TENTACLE_SEGMENT

@@ -3279,8 +3279,7 @@ bool monster::paralysed() const
 
 bool monster::cannot_act() const
 {
-    return paralysed() || petrified()
-           || has_ench(ENCH_PREPARING_RESURRECT);
+    return paralysed() || petrified();
 }
 
 bool monster::cannot_move() const

@@ -70,8 +70,8 @@ enum band_type
     BAND_ELEPHANT,
 #if TAG_MAJOR_VERSION == 34
     BAND_DEEP_DWARF,
-#endif
     BAND_SHEDU,
+#endif
     BAND_REDBACK,
     BAND_SPIDER,
     BAND_JUMPING_SPIDER,

@@ -2425,7 +2425,7 @@ ENDMAP
 NAME:    hallowed_hall
 TAGS:    no_monster_gen no_trap_gen mini_float
 DEPTH:   Depths
-MONS:    pearl dragon, shedu band, ophan, plant
+MONS:    pearl dragon, apis, ophan, plant
 ITEM:    potion of curing ident:type / potion of heal wounds ident:type
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_elyvilon
@@ -2474,7 +2474,7 @@ ENDMAP
 NAME:   hangedman_blasphemy
 DEPTH:  Depths, Crypt
 MONS:   patrolling spectral holy swine
-MONS:   shedu zombie / apis skeleton, pearl dragon zombie
+MONS:   apis skeleton, pearl dragon zombie
 MONS:   patrolling profane servitor, death knight
 COLOUR: G = lightgrey, t = w:5 lightgrey / w:5 darkgrey / brown, c = white
 FTILE:  t' = floor_pebble_brown

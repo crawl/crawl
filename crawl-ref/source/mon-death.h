@@ -61,11 +61,4 @@ void hogs_to_humans();
 bool mons_is_natasha(const monster* mons);
 bool mons_felid_can_revive(const monster* mons);
 void mons_felid_revive(monster* mons);
-
-monster* get_shedu_pair(const monster* mons);
-bool shedu_pair_alive(const monster* mons);
-bool mons_is_shedu(const monster* mons);
-void shedu_do_resurrection(const monster *mons);
-void shedu_do_actual_resurrection(monster* mons);
-
 #endif

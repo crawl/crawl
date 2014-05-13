@@ -489,15 +489,6 @@ unseen Bolt of Fire ophan cast
 
 Something harnesses the cleansing power of fire!
 %%%%
-shedu cast
-
-@The_monster@ performs a healing ritual in @possessive_God@ name.
-%%%%
-# Should only be casting spells at each other.
-shedu cast targeted
-
-@The_monster@ beseeches @possessive_God@ to heal @possessive@ mate!
-%%%%
 Shock shock serpent cast
 
 @The_monster@ discharges a narrow tendril of electricity.

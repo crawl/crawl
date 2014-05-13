@@ -492,12 +492,12 @@ string pluralise(const string &name, const char *qualifiers[],
         // mage -> magi
         return name.substr(0, name.length() - 1) + "i";
     }
-    else if (ends_with(name, "sheep") || ends_with(name, "fish")
-             || ends_with(name, "folk") || ends_with(name, "spawn")
-             || ends_with(name, "tengu") || ends_with(name, "shedu")
-             || ends_with(name, "swine") || ends_with(name, "efreet")
+    else if (name == "gold"                 || ends_with(name, "fish")
+             || ends_with(name, "folk")     || ends_with(name, "spawn")
+             || ends_with(name, "tengu")    || ends_with(name, "sheep")
+             || ends_with(name, "swine")    || ends_with(name, "efreet")
              || ends_with(name, "jiangshi") || ends_with(name, "unborn")
-             || ends_with(name, "raiju") || name == "gold")
+             || ends_with(name, "raiju")    )
     {
         return name;
     }

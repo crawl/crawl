@@ -270,7 +270,6 @@ harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
-holy/shedu CORPSE_SHEDU
 unique/arachne_staveless CORPSE_ARACHNE
 
 ## Kobolds ('K')

@@ -1581,8 +1581,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_HARPY;
     case MONS_MINOTAUR:
         return TILEP_MONS_MINOTAUR;
-    case MONS_SHEDU:
-        return TILEP_MONS_SHEDU;
     case MONS_TENGU:
         return TILEP_MONS_TENGU;
     case MONS_TENGU_CONJURER:
@@ -3848,8 +3846,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_TENGU;
     case MONS_SPHINX:
         return TILE_CORPSE_SPHINX;
-    case MONS_SHEDU:
-        return TILE_CORPSE_SHEDU;
     case MONS_ARACHNE:
         return TILE_CORPSE_ARACHNE;
 

@@ -72,7 +72,6 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
 static spell_type _map_wand_to_mspell(wand_type kind);
-static void _shedu_movement_clamp(monster* mons);
 
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
@@ -2179,7 +2178,6 @@ void handle_monster_move(monster* mons)
     {
         // Calculates mmov based on monster target.
         _handle_movement(mons);
-        _shedu_movement_clamp(mons);
 
         if (mons_is_confused(mons)
             || mons->type == MONS_AIR_ELEMENTAL
@@ -4193,18 +4191,4 @@ static spell_type _map_wand_to_mspell(wand_type kind)
     case WAND_DIGGING:         return SPELL_DIG;
     default:                   return SPELL_NO_SPELL;
     }
-}
-
-// Keep kraken tentacles from wandering too far away from the boss monster.
-static void _shedu_movement_clamp(monster *shedu)
-{
-    if (!mons_is_shedu(shedu))
-        return;
-
-    monster *my_pair = get_shedu_pair(shedu);
-    if (!my_pair)
-        return;
-
-    if (grid_distance(shedu->pos(), my_pair->pos()) >= 10)
-        mmov = (my_pair->pos() - shedu->pos()).sgn();
 }
