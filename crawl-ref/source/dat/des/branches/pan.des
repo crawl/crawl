@@ -2460,7 +2460,7 @@ xxx
 ENDMAP
 
 ##################################
-NAME:   reaver_pan_chaos_star
+NAME:   reaverb_pan_chaos_star
 TAGS:   extra decor transparent mini_float
 MAP
         ...
@@ -2485,7 +2485,7 @@ MAP
 ENDMAP
 
 ###################################
-NAME: reaver_pan_squares
+NAME: reaverb_pan_squares
 TAGS: extra decor transparent mini_float
 MAP
 .......
@@ -2504,7 +2504,7 @@ MAP
 ENDMAP
 
 ###################################
-NAME: reaver_pan_figure_eight
+NAME: reaverb_pan_figure_eight
 TAGS: extra decor transparent
 MAP
     x@x
