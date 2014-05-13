@@ -1228,16 +1228,11 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     int fleeThreshold = min(mon->max_hit_points / 4, 20);
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
-    bool wontAttack       = mon->wont_attack();
-    bool sourceWontAttack = false;
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_sleeping     = mon->asleep();
     string msg;
     int src_idx           = src ? src->mindex() : MHITNOT; // AXE ME
-
-    if (src)
-        sourceWontAttack = src->wont_attack();
 
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {
