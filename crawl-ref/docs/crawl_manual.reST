@@ -3077,6 +3077,9 @@ commands:
 \+F
   Include this item when cycling ammunition.
 
+=R
+  Do not offer to swap out this ring if another one can be removed instead.
+
 !D
   Prompt before performing an action that might destroy this item. If you're
   attempting to destroy an item thus inscribed by sacrificing it, destroying a
