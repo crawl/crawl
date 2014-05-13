@@ -1400,20 +1400,20 @@ TAGS:   temple_overflow_qazlal uniq_altar_qazlal
 KFEAT:  _ = altar_qazlal
 MARKER:  L = lua:fog_machine { cloud_type = "flame", \
                                pow_min = 5, pow_max = 7, delay_min = 55, \
-                               delay_max = 75, size = 2, walk_dist = 0, \
+                               delay_max = 75, size = 1, walk_dist = 0, \
                                spread_rate = 0, excl_rad = 0 }
 MARKER:  M = lua:fog_machine { cloud_type = "freezing vapour", \
                                pow_min = 5, pow_max = 7, delay_min = 55, \
-                               delay_max = 75, size = 2, walk_dist = 0, \
+                               delay_max = 75, size = 1, walk_dist = 0, \
                                spread_rate = 0, excl_rad = 0 }
 MARKER:  N = lua:fog_machine { cloud_type = "sparse dust", \
                                pow_min = 5, pow_max = 7, delay_min = 55, \
-                               delay_max = 75, size = 2, walk_dist = 0, \
+                               delay_max = 75, size = 1, walk_dist = 0, \
                                spread_rate = 0 }
 # not a storm cloud - it would be too noisy
 MARKER:  O = lua:fog_machine { cloud_type = "rain", \
                                pow_min = 5, pow_max = 7, delay_min = 55, \
-                               delay_max = 75, size = 2, walk_dist = 0, \
+                               delay_max = 75, size = 1, walk_dist = 0, \
                                spread_rate = 0 }
 SHUFFLE: LMNO
 KPROP:   LMNO- = no_rtele_into
