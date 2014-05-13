@@ -1181,14 +1181,6 @@ void monster::timeout_enchantments(int levels)
             break;
         }
 
-        case ENCH_PREPARING_RESURRECT:
-        {
-            const int actdur = speed_to_duration(speed) * levels;
-            if (lose_ench_duration(i->first, actdur))
-                shedu_do_actual_resurrection(this);
-            break;
-        }
-
         default:
             break;
         }
@@ -1683,11 +1675,6 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             monster_die(this, KILL_MISC, NON_MONSTER, true);
         }
-        break;
-
-    case ENCH_PREPARING_RESURRECT:
-        if (decay_enchantment(en))
-            shedu_do_actual_resurrection(this);
         break;
 
     case ENCH_SPORE_PRODUCTION:
@@ -2436,10 +2423,6 @@ int mon_enchant::calc_duration(const monster* mons,
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
         return random_range(475, 525) * 10;
-
-    case ENCH_PREPARING_RESURRECT:
-        // A timer. When it runs out, the creature will cast resurrect.
-        return random_range(4, 7) * 10;
 
     case ENCH_EXPLODING:
         return random_range(3, 7) * 10;

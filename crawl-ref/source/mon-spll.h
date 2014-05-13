@@ -1617,17 +1617,6 @@
       }
     },
 
-    {  MST_SHEDU,
-      {
-       SPELL_HEAL_OTHER,
-       SPELL_NO_SPELL,
-       SPELL_HEAL_OTHER,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-      }
-    },
-
     {  MST_EIDOLON,
       {
        SPELL_MELEE,

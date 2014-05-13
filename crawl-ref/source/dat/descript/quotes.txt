@@ -2508,13 +2508,6 @@ shapeshifter
     -Homer, _The Odyssey_, IV, 602-14.
      trans. George Chapman, 1857.
 %%%%
-shedu
-
-“May my god stand at my right hand!
- May my goddess stand at my left hand!
- May the favourable Shedu, the favourable Lamassu...with me!”
-    -Assyrian prayer. 2nd millennium B.C.
-%%%%
 shield
 
 <buckler>

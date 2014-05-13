@@ -1164,12 +1164,6 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             }
             else if (mon->type == MONS_KIRKE)
                 member->props["kirke_band"] = true;
-            else if (mon->type == MONS_SHEDU)
-            {
-                // We store these here for later resurrection, etc.
-                member->number = mon->mid;
-                mon->number = member->mid;
-            }
         }
     }
 
@@ -2571,11 +2565,6 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         band_size = 2 + random2(4);
         break;
 
-    case MONS_SHEDU:
-        band = BAND_SHEDU;
-        band_size = 1;
-        break;
-
     case MONS_REDBACK:
         band = BAND_REDBACK;
         band_size = 1 + random2(5);
@@ -3155,9 +3144,6 @@ static monster_type _band_member(band_type band, int which)
 
     case BAND_ELEPHANT:
         return MONS_ELEPHANT;
-
-    case BAND_SHEDU:
-        return MONS_SHEDU;
 
     case BAND_REDBACK:
         return random_choose_weighted(30, MONS_REDBACK,
@@ -3791,11 +3777,6 @@ bool player_angers_monster(monster* mon)
                 break;
             }
         }
-
-        // Anger a shedu's mate.  This won't be an infinite recursion
-        // because the original is already hostile.
-        if (mons_is_shedu(mon) && shedu_pair_alive(mon))
-            player_angers_monster(get_shedu_pair(mon));
 
         return true;
     }

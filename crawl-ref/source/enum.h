@@ -1787,8 +1787,8 @@ enum enchant_type
     ENCH_ANTIMAGIC,
 #if TAG_MAJOR_VERSION == 34
     ENCH_FADING_AWAY,
-#endif
     ENCH_PREPARING_RESURRECT,
+#endif
     ENCH_REGENERATION,
     ENCH_RAISED_MR,
     ENCH_MIRROR_DAMAGE,
@@ -2920,8 +2920,8 @@ enum monster_type                      // menv[].type
     MONS_PHOENIX,
     MONS_SILVER_STAR,
     MONS_BLESSED_TOE,
-#endif
     MONS_SHEDU,
+#endif
     MONS_OPHAN,
 #if TAG_MAJOR_VERSION == 34
     MONS_SPIRIT,

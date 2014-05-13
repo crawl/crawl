@@ -619,8 +619,6 @@ int monster::halo_radius2() const
         return 50;
     case MONS_OPHAN:
         return 65; // highest rank among sentient ones
-    case MONS_SHEDU:
-        return 10;
     case MONS_HOLY_SWINE:
         return 2;  // only notionally holy
     case MONS_MENNAS:

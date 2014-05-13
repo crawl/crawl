@@ -1711,33 +1711,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     coord_def newpos;
 
-    if (mons_is_shedu(mons) && shedu_pair_alive(mons))
-    {
-        // find a location close to its mate instead.
-        monster* my_pair = get_shedu_pair(mons);
-        coord_def pair = my_pair->pos();
-        coord_def target;
-
-        int tries = 0;
-        while (tries++ < 1000)
-        {
-            target = coord_def(random_range(pair.x - 5, pair.x + 5),
-                               random_range(pair.y - 5, pair.y + 5));
-
-            if (grid_distance(target, pair) >= 10)
-                continue;
-
-            if (!monster_space_valid(mons, target, !mons->wont_attack()))
-                continue;
-
-            newpos = target;
-            break;
-        }
-
-        if (newpos.origin())
-            dprf("ERROR: Couldn't find a safe location near mate for Shedu!");
-    }
-
     if (newpos.origin())
         _monster_random_space(mons, newpos, !mons->wont_attack());
 

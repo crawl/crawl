@@ -2200,12 +2200,6 @@ shark
 A sharp-toothed predatory denizen of the waters, the shark evolved over
 millions of years into an almost perfect killing machine.
 %%%%
-shedu
-
-These boviform divine beings are always found in pairs, often protecting some
-sacred shrine. They can heal and even resurrect each other, doubling their
-effectiveness as guardians.
-%%%%
 sheep
 
 A dim-witted, fluffy ovine, better known for its woolly hide than its
