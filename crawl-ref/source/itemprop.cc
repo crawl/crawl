@@ -498,10 +498,6 @@ bool curse_an_item(bool ignore_holy_wrath)
             if (you.inv[i].cursed())
                 continue;
 
-            // Melded items cannot be cursed.
-            if (item_is_melded(you.inv[i]))
-                continue;
-
             if (ignore_holy_wrath && you.inv[i].base_type == OBJ_WEAPONS
                 && get_weapon_brand(you.inv[i]) == SPWPN_HOLY_WRATH)
             {
@@ -1074,9 +1070,6 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged)
     }
     else if (it.base_type == OBJ_RODS)
     {
-        if (item_is_melded(it))
-            return false;
-
         if (!hide_charged)
             return true;
 
@@ -1160,10 +1153,6 @@ bool is_offensive_wand(const item_def& item)
 bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
 {
     if (arm.base_type != OBJ_ARMOUR)
-        return false;
-
-    // Melded armour cannot be enchanted.
-    if (item_is_melded(arm))
         return false;
 
     // If we don't know the plusses, assume enchanting is possible.

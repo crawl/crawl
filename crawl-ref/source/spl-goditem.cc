@@ -619,11 +619,12 @@ bool remove_curse(bool alreadyknown, string *pre_msg)
     bool success = false;
 
     // Only cursed *weapons* in hand count as cursed. - bwr
-    if (you.weapon() && is_weapon(*you.weapon())
-        && you.weapon()->cursed())
+    // Not you.weapon() because we want to handle melded weapons too.
+    item_def * const weapon = you.slot_item(EQ_WEAPON, true);
+    if (weapon && is_weapon(*weapon) && weapon->cursed())
     {
         // Also sets wield_change.
-        do_uncurse_item(*you.weapon());
+        do_uncurse_item(*weapon);
         success = true;
     }
 
