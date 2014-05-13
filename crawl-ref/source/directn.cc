@@ -3321,6 +3321,7 @@ string feature_description_at(const coord_def& where, bool covering,
                               bool base_desc)
 {
     dungeon_feature_type grid = env.map_knowledge(where).feat();
+    trap_type trap = env.map_knowledge(where).trap();
 
     string marker_desc = env.markers.property_at(where, MAT_ANY,
                                                  "feature_description");
@@ -3404,7 +3405,7 @@ string feature_description_at(const coord_def& where, bool covering,
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
-        return feature_description(grid, get_trap_type(where),
+        return feature_description(grid, trap,
                                    covering_description, dtype,
                                    add_stop, base_desc);
     case DNGN_ABANDONED_SHOP:
@@ -3428,7 +3429,7 @@ string feature_description_at(const coord_def& where, bool covering,
     default:
         const string featdesc = grid == grd(where)
                               ? raw_feature_description(where)
-                              : _base_feature_desc(grid, get_trap_type(where));
+                              : _base_feature_desc(grid, trap);
         return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
                                 featdesc + covering_description);
     }
