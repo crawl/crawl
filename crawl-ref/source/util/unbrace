@@ -12,7 +12,7 @@ my @files = @ARGV;
 undef $/;
 unless (@files)
 {
-    @files = (grep /\.(cc|h)$/ && !/^prebuilt\//, split /\n/, `git ls-files`);
+    @files = (grep /\.(cc|h)$/ && !/(^|\/)prebuilt\//, split /\n/, `git ls-files`);
 }
 
 sub rebrace($$$)
