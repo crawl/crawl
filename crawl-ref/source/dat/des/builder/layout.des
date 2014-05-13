@@ -382,14 +382,78 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: D, Depths, Lair, Snake, Crypt, Zot, Pan
-WEIGHT: 60 (Pan), 10 (Zot), 20
+DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot, Pan
+WEIGHT: 60 (Pan), 10 (Zot), 10 (Elf), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand layout_type_rooms
 {{
+    function draw_room(room)
+        local room_type = 0
+        if you.branch() == "Elf" then
+           if crawl.coinflip() then
+             room_type = 1
+           else
+             room_type = 2
+           end
+        else
+           room_type = crawl.random2(3)
+        end
+        if room_type == 0 then
+            -- rectangular
+            replace_area({
+                x1 = room.x1,
+                y1 = room.y1,
+                x2 = room.x2,
+                y2 = room.y2,
+                find = "x",
+                replace = "."})
+        elseif room_type == 1 then
+            -- octagonal-ish
+            local corner_size =
+                1 + crawl.random2(math.min(room.x2 - room.x1 - 1,
+                                           room.y2 - room.y1 - 1))
+            for i = 0, corner_size do
+                local j = corner_size - i
+                replace_area({
+                    x1 = room.x1 + i,
+                    y1 = room.y1 + j,
+                    x2 = room.x2 - i,
+                    y2 = room.y2 - j,
+                    find = "x",
+                    replace = "."})
+            end
+        else
+            -- circular-ish
+            local xdelta = room.x2 - room.x1
+            local ydelta = room.y2 - room.y1
+            local radius = math.max(xdelta, ydelta) / 2
+            local steps = math.abs(ydelta - xdelta) - radius
+            if ydelta > xdelta then
+                for i = 1, steps do
+                    make_circle ({ x = room.x1 + radius,
+                                   y = room.y1 + radius + i,
+                                   radius = radius, fill = '.'})
+                    make_circle ({ x = room.x2 - radius,
+                                   y = room.y1 + radius + i,
+                                   radius = radius, fill = '.'})
+                end
+            else
+                for i = 1, steps do
+                    make_circle ({ x = room.x1 + radius + i,
+                                   y = room.y1 + radius,
+                                   radius = radius, fill = '.'})
+                    make_circle ({ x = room.x1 + radius + i,
+                                   y = room.y2 - radius,
+                                   radius = radius, fill = '.'})
+                end
+            end
+        end
+    end
+
     function random_room_point(room)
-        return dgn.point(room.x1 + crawl.random2(room.x2 - room.x1),
-                         room.y1 + crawl.random2(room.y2 - room.y1))
+        -- TODO: make this properly random for the new room types
+        return dgn.point((room.x1 + room.x2) / 2,
+                         (room.y1 + room.y2) / 2)
     end
 
     function join_the_dots_p(start, finish)
@@ -425,13 +489,7 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
             feat = "x"})
 
         if (not exclusive or not_walls == 0) then
-            replace_area({
-                x1 = new_room.x1,
-                y1 = new_room.y1,
-                x2 = new_room.x2,
-                y2 = new_room.y2,
-                find = "x",
-                replace = "."})
+            draw_room(new_room)
 
             if #rooms > 0 and not exclusive2 then
                 join_the_dots_p(random_room_point(new_room),

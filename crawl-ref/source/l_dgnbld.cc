@@ -598,16 +598,19 @@ LUAFN(dgn_join_the_dots)
         if (at == to)
             break;
 
-        if (at.x < to.x)
+        if (at.y == to.y || coinflip())
         {
-            at.x++;
-            continue;
-        }
+            if (at.x < to.x)
+            {
+                at.x++;
+                continue;
+            }
 
-        if (at.x > to.x)
-        {
-            at.x--;
-            continue;
+            if (at.x > to.x)
+            {
+                at.x--;
+                continue;
+            }
         }
 
         if (at.y > to.y)
