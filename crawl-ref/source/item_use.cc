@@ -1152,7 +1152,9 @@ static bool _swap_rings(int ring_slot)
     vector<equipment_type> ring_types = _current_ring_types();
     const int num_rings = ring_types.size();
     int unwanted = 0;
+    int last_inscribed = 0;
     int cursed = 0;
+    int inscribed = 0;
     int melded = 0; // Both melded rings and unavailable slots.
     int available = 0;
     bool all_same = true;
@@ -1181,12 +1183,24 @@ static bool _swap_rings(int ring_slot)
 
             if (ring->cursed())
                 cursed++;
+            else if (strstr(ring->inscription.c_str(), "=R"))
+            {
+                inscribed++;
+                last_inscribed = you.equip[*eq_it];
+            }
             else
             {
                 available++;
                 unwanted = you.equip[*eq_it];
             }
         }
+    }
+
+    // If the only swappable rings are inscribed =R, go ahead and use them.
+    if (available == 0 && inscribed > 0)
+    {
+        available += inscribed;
+        unwanted = last_inscribed;
     }
 
     // We can't put a ring on, because we're wearing all cursed ones.
