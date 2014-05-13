@@ -1659,6 +1659,7 @@ ENDMAP
 # contains up to to 4 basilisks, standing around an item
 NAME:   kennysheep_basilisk_garden
 DEPTH:  Lair:3-
+TAGS:   mini_float
 MONS:   basilisk
 NSUBST: . = 1:1 / 3 = 111.
 SUBST:  . = .........G
@@ -1777,7 +1778,7 @@ ENDMAP
 
 NAME: nicolae_quartered_pool_little
 DEPTH: Lair
-TAGS: transparent extra decor luniq_qpool
+TAGS: transparent extra decor luniq_qpool mini_float
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm, Nn, Oo, Pp, Qq
 SUBST: abcdefghijklmnopq = ., ABCDEFGHIJKLMNOPQ = W, 7 = t
 MAP
@@ -1799,7 +1800,7 @@ ENDMAP
 
 NAME: nicolae_quartered_pool_medium
 DEPTH: Lair
-TAGS: transparent extra decor luniq_qpool
+TAGS: transparent extra decor luniq_qpool mini_float
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
 SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu
 SUBST: abcdefghijklmnopqrstu = ., ABCDEFGHIJKLMNOPQRSTU = W, 7 = t
@@ -1824,7 +1825,7 @@ ENDMAP
 
 NAME: nicolae_quartered_pool_super
 DEPTH: Lair
-TAGS: transparent extra decor luniq_qpool
+TAGS: transparent extra decor luniq_qpool mini_float
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
 SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu, Vv, Ww, Xx, Yy, Zz
 SHUFFLE: 12, 34, 56
@@ -1853,7 +1854,7 @@ ENDMAP
 
 NAME: nicolae_lair_firefly_meadow
 DEPTH: Lair
-TAGS: transparent
+TAGS: transparent mini_float
 MONS: giant firefly
 NSUBST: . = 5:1
 MAP
@@ -1869,7 +1870,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_lair_grove_arrangements
-TAGS: transparent decor extra luniq
+TAGS: transparent decor extra luniq mini_float
 DEPTH: Lair
 SHUFFLE: abcdefghi/''''T''''/T'''''''T/T'''T'''T/T'T'''T'T/T'T'T'T'T/\
          TTT'''TTT/'T'T'T'T'/T'T''''T'/'T'TTT'T'/'T'''''T'/TTTT'TTTT/\
@@ -1932,7 +1933,7 @@ ENDMAP
 
 #####
 NAME:   grunt_forest_stairs_basic
-TAGS:   transparent extra luniq_staircase decor
+TAGS:   transparent extra luniq_staircase mini_float decor
 DEPTH:  Lair
 MONS:   plant
 SUBST:  1 = 1.
@@ -1953,6 +1954,7 @@ ENDMAP
 
 NAME:   grunt_forest_stairs_clearing
 DEPTH:  Lair:2-, !Lair:$
+TAGS:   mini_float
 MONS:   plant / bush, wolf, black bear, polar bear, spriggan
 SUBST:  t = t.
 NSUBST: Q = 3:2 / 1:3 / 1:4 / 1:5 / *:.
@@ -1991,7 +1993,7 @@ xttt.......tttx
 xxtttt...ttttxx
  xxxtt..ttxxxx
   xxxtt..ttxx
-   xxtt..ttx
+   xxtt@@ttx
 ENDMAP
 
 NAME:    bh_autumn_forest_stairs
@@ -2037,33 +2039,33 @@ SHUFFLE: Ww. / ''` / ''`
 SUBST: t = t.., '` = 1:49 d:36 .:405
 SUBST: G = w., W = WW., w = wwW
 MAP
- tt...tt
+ tt@@@tt
 t.......t
 t..WWW..t
-..WwwwW..
-..WwGwW..
-..WwwwW..
+@.WwwwW.@
+@.WwGwW.@
+@.WwwwW.@
 t..WWW..t
 t.......t
- tt...tt
+ tt@@@tt
 ENDMAP
 
 NAME: grunt_forest_small_clearing_treed
 TAGS: transparent patrolling
 DEPTH: Lair
-MONS: plant / bush, spriggan
+MONS: plant / bush
 SUBST: t = t..
 KPROP: * = no_rtele_into
 MAP
- tt...tt
+ tt@@@tt
 t.......t
 t.1...1.t
-...ttt...
-...t*t...
-...ttt...
+@..ttt..@
+@..t*t..@
+@..ttt..@
 t.1...1.t
 t.......t
- tt...tt
+ tt@@@tt
 ENDMAP
 
 # Prviously large_clearing_fruit, _statues, _slash, _guards
@@ -2083,7 +2085,7 @@ SHUFFLE: wW'"^~-_9 / ''GG''''* / '''0''''% / ``````22G
 SUBST:   t = t.., '. = 1:49 d:36 .:405, W = WW., "w = wwW
 NSUBST:  2 = 3:2 / 2:3 / 1:4 / *:.
 MAP
-      tt...tt
+      tt@@@tt
     ttt.....ttt
   ttt.........ttt
   tww...........t
@@ -2091,9 +2093,9 @@ MAP
  t..www..'.......t
 tt...w"w....'....tt
 t.....ww-._.......t
-.......-~W^_.......
-.....'..W9W..'.....
-......._^W~-.......
+@......-~W^_......@
+@....'..W9W..'....@
+@......_^W~-......@
 t.....'._.-ww.....t
 tt.........w"w...tt
  t.......'..www..t
@@ -2101,7 +2103,7 @@ tt.........w"w...tt
   t...........wwt
   ttt.........ttt
     ttt.....ttt
-      tt...tt
+      tt@@@tt
 ENDMAP
 
 NAME:  grunt_forest_large_clearing_hut
@@ -2113,7 +2115,7 @@ SUBST: . = 1 .:90
 COLOUR: -*29 = lightgrey
 FTILE:  -*29 = floor_normal
 MAP
-      tt...tt
+      tt@@@tt
     ttt.....ttt
   ttt.........ttt
   t.............t
@@ -2121,9 +2123,9 @@ MAP
  t...............t
 tt...............tt
 t......ccccc......t
-.......c-9*c.......
-.......+-*2c.......
-.......c-9*c.......
+@......c-9*c......@
+@......+-*2c......@
+@......c-9*c......@
 t......ccccc......t
 tt...............tt
  t...............t
@@ -2131,7 +2133,7 @@ tt...............tt
   t.............t
   ttt.........ttt
     ttt.....ttt
-      tt...tt
+      tt@@@tt
 ENDMAP
 
 ###############################################################################
