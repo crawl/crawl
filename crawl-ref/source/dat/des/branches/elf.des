@@ -1168,7 +1168,7 @@ ENDMAP
 #
 # Elf:$ branch endings
 #
-# Total weight: 160.
+# Total weight: 190.
 ##############################################################################
 ##############################################################################
 
@@ -1848,4 +1848,147 @@ xxxxxxxxxxxcc*|c......1......c|*ccxxxxxxxx
 xxxxxxxxxxxxcccccc.........ccccccxxxxxxxxx
 xxxxxxxxxxxxxxccccc.......cccccxxxxxxxxxxx
 xxxxxxxxxxxxxxxxcccccc@ccccccxxxxxxxxxxxxx
+ENDMAP
+
+# Before transform: 30x$, 31x*, 26x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
+NAME:   grunt_elf_hall_branching
+PLACE:  Elf:$
+ORIENT: north
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+SHUFFLE: 23, 45, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxcccccccccxxxxxxxxxxx
+xxxxxxxxxxcc$|*|*|$ccxxxxxxxxxx
+xxxxxxxxxxc$|*|*|*|$cxxxxxxxxxx
+xxxxxxxxxxc$.|*|*|.$cxxxxxxxxxx
+xxxxxxxxxxcc+ccccc+ccxxxxxxxxxx
+xxxxxxxxxxc2.3ccc2.3cxxxxxxxxxx
+xxxxxxxxxxc...ccc...cxxxxxxxxxx
+xxccccccxxc...ccc...cxxccccccxx
+xcc|*$$cxxcc.5...4.ccxxc$$*|ccx
+cc|*$*.cxxxc...b...cxxxc.*$*|cc
+c|*|cc+cxxxcc..b..ccxxxc+cc|*|c
+c*$cc3.ccccxc.4b5.cxcccc.2cc$*c
+c$*c261.5.cccc...cccc.4.173c*$c
+c$.+...4U....c.2.c....U5...+.$c
+ccccccc...5..3...3..4...ccccccc
+c..............b..............c
+@.bbb.2..3..2.bbb.2..2..3.bbb.@
+c..............b..............c
+ccccccc...4..3...3..5...ccccccc
+c$.+...5U....c.2.c....U4...+.$c
+c$*c371.4.cccc...cccc.5.162c*$c
+c*$cc2.ccccxxc.b.cxxcccc.3cc$*c
+c|*|cc+cxxxxxc.b.cxxxxxc+cc|*|c
+cc|*$*.cxxxxxc.b.cxxxxxc.*$*|cc
+ cc|*$$cxxxxxc...cxxxxxc$$*|cc
+  ccccccxxxxxcc@ccxxxxxcccccc
+ENDMAP
+
+# Before randomisation: 28x$, 32x*, 27x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
+NAME:   grunt_elf_hall_diamonds
+PLACE:  Elf:$
+ORIENT: north
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+SHUFFLE: 23, 45, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcccxxxxxxxxxxxxxx
+xxxxxxcccxxxxcc|ccxxxxcccxxxxxx
+xxxxxcc$ccxxcc|*|ccxxcc$ccxxxxx
+xxxxcc$..cccc|*|*|cccc..$ccxxxx
+xxxcc|*$..cc|*|*|*|cc..$*|ccxxx
+xxcc|*|*.5.cc$*|*$cc.5.*|*|ccxx
+xcc$*|*b....cc$.$cc....b*|*$ccx
+xc$.$*bbb..3.cc+cc.2..bbb*$.$cx
+xcc....b....cc...cc....b....ccx
+xxcc.4...6.cc.3.2.cc.7...4.ccxx
+xxxcc..........5..........ccxxx
+xxxccc.2.c.1..2.3..1.c.3.cccxxx
+xxcc.cc.cc..b..4..b..cc.cc.ccxx
+xcc.3.ccc....bb.bb....ccc.2.ccx
+cc.....c...3.bbbbb.2...c.....cc
+@...U.....4.5.bbb.5.4.....U...@
+cc.....c...2.bbbbb.3...c.....cc
+xcc.2.ccc....bb.bb....ccc.3.ccx
+xxcc.cc.cc..b..4..b..cc.cc.ccxx
+xxxccc.3.c.1..3.2..1.c.2.cccxxx
+xxxcc..........5..........ccxxx
+xxcc.4...7.cc.....cc.6...4.ccxx
+xcc....b....cc...cc....b....ccx
+xc$.$*bbb..2.cc.cc.3..bbb*$.$cx
+xcc$*|*b....cc...cc....b*|*$ccx
+xxcc|*|*.5.cc.....cc.5.*|*|ccxx
+xxxcc|*$..cc.2.U.3.cc..$*|ccxxx
+xxxxcc$..cccc.....cccc..$ccxxxx
+xxxxxcc$ccxxcc...ccxxcc$ccxxxxx
+xxxxxxcccxxxxcc@ccxxxxcccxxxxxx
+ENDMAP
+
+# Before randomisation: 27x$, 27x*, 28x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
+NAME:   grunt_elf_hall_asides
+PLACE:  Elf:$
+ORIENT: northeast
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
+SHUFFLE: 23, 45, 67
+SHUFFLE: AB, CD, EFGH, IJKL, MNOP
+SUBST:   ACEFIJ = ., BDGH = c, KLP = b, MNO = $
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxcccccxxxxxxxxxxx
+xxxxxxxxcc|*|ccxxxxxxxxxx
+xxxxxxxcc|*|*|ccxxxxxxxxx
+xxxxxxccO*|*|*Pccxxxxxxxx
+xxxxxccOOO*|*PPPccxxxxxxx
+xxxxcc|*OOO*PPP*|ccxxxxxx
+xxxxc|*|*OObPP*|*|cxxxxxx
+xxxxc*|*|*bbb*|*|*cxxxxxx
+xxxxc|*|*MMbNN*|*|cxxxxxx
+xxxxcc|*MMM.NNN*|ccxxxxxx
+xxxxxccMMM3U2NNNccxxxxxxx
+xxxxxxccM.4L5.Nccxxxxxxxx
+xxxxxccH2.KbK.3Gccxxxxxxx
+xxxxccHH..5L4..GGccxxxxxx
+xxxccHH.3..1..2.GGccxxxxx
+xxcc...7.HH|GG.6...ccxxxx
+xcc.....HHbbbGG.....ccxxx
+xc3.5J4.HbbbbbG.5J4.2cxxx
+xcU.IbI1|bbbbb|1IbI.Ucxxx
+xc2.3J2.EbbbbbF.3J2.3cxxx
+xcc.....EEbbbFF.....ccxxx
+xxcc...6.EE|FF.7...ccxxxx
+xxxccEE.3..1..2.FFccxxxxx
+xxxxccEE..4L5..FFccxxxxxx
+xxxxxccE..KbK..Fccxxxxxxx
+xxxxxxcc..5L4..ccxxxxxxxx
+xxxxxcc.2.....3.ccxxxxxxx
+xxxxcc...CC.DD...ccxxxxxx
+xxxxc.3.CCC2DDD.2.cxxxxxx
+xxxxc4.CCC3.5DDD.5cxxxxxx
+xxxxc.CCC..4..DDD.cxxxxxx
+xxxxccCC...c...DDccxxxxxx
+xxxxxcc.3.ccc.2.ccxxxxxxx
+xxxxxxcc.AAcBB.ccxxxxxxxx
+xxxxxxxccAA.BBccxxxxxxxxx
+xxxxxxxxcc...ccxxxxxxxxxx
+xxxxxxxxxcc@ccxxxxxxxxxxx
 ENDMAP
