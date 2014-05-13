@@ -61,7 +61,6 @@ bolt_of_magma BOLT_OF_MAGMA
 conjure_flame CONJURE_FLAME
 delayed_fireball DELAYED_FIREBALL
 dragon_form DRAGON_FORM
-fire_brand FIRE_BRAND
 fire_storm FIRE_STORM
 fireball FIREBALL
 flame_tongue FLAME_TONGUE
@@ -76,7 +75,6 @@ bolt_of_cold BOLT_OF_COLD
 condensation_shield CONDENSATION_SHIELD
 ensorcelled_hibernation ENSORCELLED_HIBERNATION
 freeze FREEZE
-freezing_aura FREEZING_AURA
 freezing_cloud FREEZING_CLOUD
 throw_icicle THROW_ICICLE
 ice_form ICE_FORM
@@ -99,7 +97,6 @@ deaths_door DEATHS_DOOR
 dispel_undead DISPEL_UNDEAD
 excruciating_wounds EXCRUCIATING_WOUNDS
 haunt HAUNT
-lethal_infusion LETHAL_INFUSION
 necromutation NECROMUTATION
 pain PAIN
 regeneration REGENERATION
@@ -115,7 +112,6 @@ cure_poison CURE_POISON
 mephitic_cloud MEPHITIC_CLOUD
 olgrebs_toxic_radiance OLGREBS_TOXIC_RADIANCE
 poison_arrow POISON_ARROW
-poison_brand POISON_BRAND
 poisonous_cloud POISONOUS_CLOUD
 spider_form SPIDER_FORM
 sting STING
