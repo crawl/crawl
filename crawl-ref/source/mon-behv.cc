@@ -1276,21 +1276,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     case ME_WHACK:
     case ME_ANNOY:
+        // Will turn monster against <src>.
         // Orders to withdraw take precedence over interruptions
         if (mon->behaviour == BEH_WITHDRAW && src != &you)
             break;
-
-        // Will turn monster against <src>, unless they
-        // are BOTH friendly or good neutral AND stupid,
-        // or else fleeing anyway.  Hitting someone over
-        // the head, of course, always triggers this code.
-        if (event != ME_WHACK
-            && !mon->has_ench(ENCH_INSANE)
-            && (wontAttack == sourceWontAttack && mons_intel(mon) <= I_PLANT
-                || mons_is_fleeing(mon)))
-        {
-            break;
-        }
 
         // Monster types that you can't gain experience from cannot
         // fight back, so don't bother having them do so.  If you
