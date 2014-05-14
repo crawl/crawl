@@ -1,4 +1,4 @@
-Stone Soup 0.15 (up to 0.15-a0-640-g3d343ae)
+Stone Soup 0.15 (up to 0.15-a0-824-g4b23974)
 --------------------------------------------
 * Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
 * Ranged combat has been rewritten from the ground up.
@@ -20,6 +20,10 @@ Character
 * Wisp form can read scrolls and cannot blink on demand.
 * Wanderers have tweaked starting kits with generally better items.
 * Teleportitis cannot be controlled.
+* Player clinging (seen only in Spider Form and with the boots of the Spider)
+  is no more.
+* Kobolds, hill orcs, and ogres are no longer saprovorous.
+* Ogres no longer have a fast metabolism.
 
 Monsters
 --------
@@ -34,8 +38,13 @@ Monsters
 * Undead and nonliving enemies regenerate as fast as other enemies.
 * Ghouls and necrophages can no longer equip weapons or armour.
 * Monster melee attacks can no longer destroy items.
+* Silver statues and orange crystal statues are immune to disintegration,
+  but have less health and AC and have their abilities converted to spells
+  such that they spam less; this implies OCS confusion can be resisted.
+* Bog bodies no longer randomly rot.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
-  flaming corpses, grizzly bears, spriggan enchanters, phoenixes.
+  flaming corpses, grizzly bears, spriggan enchanters, phoenixes,
+  shedu, plague shamblers.
 
 Spells
 ------
@@ -57,6 +66,8 @@ Items
   among other changes.
 * The blowgun of the Assassin returns; it has a chance to affect the target
   more than normal blowguns.
+* New unrand: the +8 orange crystal plate armour {Archmagi, Int+3 Clar
+  SustAb}.
 * Cleaving hits the full eight squares around a player.
 * Jewellery automatically identifies on equipping it.
 * Damage from the electrocution brand has been reduced slightly.
@@ -69,7 +80,20 @@ Items
 * Gloves of archery no longer penalise melee.
 * (Plain) bows have been renamed to shortbows.
 * Identify scrolls now always identify a single item.
+* Potions of blood cure a point of ghoul rotting.
 * Removed items: rings of hunger and sustenance.
+* Removed unrands: the boots of the Spider.
+
+Cards
+-----
+* Decks of wonders now contain Dowsing, Battlelust, Helm, and Shadow instead
+  of Experience, Helix, Sage, and Trowel
+* Decks of dungeon are no more.
+* The Potion card has a new list of effects: power 0 is decay/curing/agility/
+  might/brilliance; 1 has a chance of resistance/haste; 2 has a chance of
+  magic/heal wounds.
+* Removed cards: Experience, Sage, Water, Vitrification, Trowel, Minefield,
+  and Shuffle.
 
 Gods
 ----
@@ -102,6 +126,8 @@ Gods
     - 6*: at an altar, gain a permanent elemental resistance of your choice
           for as long as you worship Qazlal.
 * Followers of good gods no longer get a chance to turn holy enemies neutral.
+* Zin's Recite no longer prompts for a book, instead affecting all monsters
+  in sight with the strongest effects that would impact them.
 
 Interface
 ---------
