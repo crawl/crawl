@@ -22,6 +22,9 @@ struct zap_info
 }
 */
 
+static const zap_info zap_data[] =
+{
+
 {
     ZAP_THROW_FLAME,
     "puff of flame",
@@ -1179,3 +1182,5 @@ struct zap_info
     false,
     0
 },
+
+};

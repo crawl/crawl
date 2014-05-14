@@ -57,10 +57,7 @@
 #define RANDART_BOOK_TYPE_THEME "theme"
 
 // The list of spells in spellbooks:
-static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
-{
-#   include "book-data.h"
-};
+#include "book-data.h"
 
 spell_type which_spell_in_book(const item_def &book, int spl)
 {

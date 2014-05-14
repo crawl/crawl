@@ -1,3 +1,6 @@
+static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
+{
+
 {   // Book of Minor Magic
     SPELL_MAGIC_DART,
     SPELL_BLINK,
@@ -603,3 +606,5 @@
     SPELL_NO_SPELL,
 },
 #endif
+
+};
