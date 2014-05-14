@@ -4241,7 +4241,6 @@ void display_char_status()
         STATUS_LIQUEFIED,
         DUR_WATER_HOLD,
         DUR_FLAYED,
-        DUR_RETCHING,
         DUR_WEAK,
         DUR_DIMENSION_ANCHOR,
         DUR_INFUSION,

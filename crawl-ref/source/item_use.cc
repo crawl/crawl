@@ -1917,12 +1917,6 @@ void drink(int slot)
         return;
     }
 
-    if (you.duration[DUR_RETCHING])
-    {
-        mpr("You can't gag anything down in your present state!");
-        return;
-    }
-
     if (you.duration[DUR_NO_POTIONS])
     {
         mpr("You cannot drink potions in your current state!");

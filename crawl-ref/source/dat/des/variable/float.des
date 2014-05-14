@@ -2143,7 +2143,7 @@ MONS:    vampire knight / ghoul / large abomination / phantasmal warrior
 KMONS:   4 = Boris / lich / unborn
 KMONS:   5 = lich / unborn
 : elseif you.absdepth() > 13 then
-MONS:    skeletal warrior / plague shambler / eidolon
+MONS:    skeletal warrior / eidolon
 KMONS:   4 = Frances / vampire mage / necromancer
 KMONS:   5 = vampire mage / necromancer
 : else

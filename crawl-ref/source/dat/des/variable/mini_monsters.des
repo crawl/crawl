@@ -4851,21 +4851,6 @@ xx8ACC888xx8CAA.ACC8888CCA8xx
               .....@
 ENDMAP
 
-NAME: nicolae_tainted_love
-DEPTH: Depths, Crypt
-TAGS: no_monster_gen no_pool_fixup
-KMONS: 1 = siren
-KMONS: 2 = plague shambler
-MAP
-xxxxxxxxxxxxxx
-x%.2..xxxxxxxx
-xWww.....x...x
-xW1w2....=...+
-xWww.....x...x
-x%.2..xxxxxxxx
-xxxxxxxxxxxxxx
-ENDMAP
-
 NAME:   kennysheep_kite_vault
 TAGS:   no_item_gen no_monster_gen
 SUBST:  x : xcnvb

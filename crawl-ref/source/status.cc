@@ -136,8 +136,6 @@ static duration_def duration_data[] =
       BLUE, "Slay", "singing", "Your melee attacks are strengthened by your song."},
     { DUR_FLAYED, true,
       RED, "Flay", "flayed", "You are covered in terrible wounds." },
-    { DUR_RETCHING, true,
-      RED, "Retch", "retching", "You are retching with violent nausea." },
     { DUR_WEAK, false,
       RED, "Weak", "weakened", "Your attacks are enfeebled." },
     { DUR_DIMENSION_ANCHOR, false,

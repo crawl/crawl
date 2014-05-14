@@ -1267,8 +1267,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_NECROPHAGE;
     case MONS_GHOUL:
         return TILEP_MONS_GHOUL;
-    case MONS_PLAGUE_SHAMBLER:
-        return TILEP_MONS_ROTTING_HULK;
 
     // orcs ('o')
     case MONS_ORC:
@@ -3649,8 +3647,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_NECROPHAGE;
     case MONS_GHOUL:
         return TILE_CORPSE_GHOUL;
-    case MONS_PLAGUE_SHAMBLER:
-        return TILE_CORPSE_ROTTING_HULK;
 
     // orcs ('o')
     case MONS_ORC:

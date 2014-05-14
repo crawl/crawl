@@ -501,7 +501,7 @@ NAME:  tombwall_bobbens
 TAGS:  allow_dup
 DEPTH: Crypt
 MONS:  w:150 zombie / skeletal warrior / ghoul / \
-       large abomination / small abomination / necrophage / plague shambler / \
+       large abomination / small abomination / necrophage / \
        w:150 skeleton / w:30 nothing
 MAP
 ccccccccccccccccccccccc
@@ -1565,7 +1565,7 @@ KMONS:  H = w:20 patrolling unborn / patrolling profane servitor
 KMONS:  0 = patrolling ghoul
 KMONS:  A = patrolling death knight
 KMONS:  B = skeletal warrior
-KMONS:  C = necrophage / plague shambler
+KMONS:  C = necrophage
 KMONS:  E = phantasmal warrior / w:4 flayed ghost / w:1 phantom / w:1 shadow / nothing
 KMONS:  F = patrolling bone dragon / patrolling unborn
 : else
@@ -1789,7 +1789,7 @@ MONS:    skeletal warrior / jiangshi, flying skull band
 SHUFFLE: 34 / 56 / 78 / 90, AB / CD / EF / HI / JK / LM / NO / PQ
 
 KMONS:   3 = ghoul
-KMONS:   4 = plague shambler / necrophage
+KMONS:   4 = necrophage
 KMONS:   5 = necromancer
 KMONS:   6 = simulacrum / spectral thing / zombie w:5 / skeleton w:5 / \
              hell knight w:5

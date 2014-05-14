@@ -117,7 +117,9 @@ enum attack_flavour
     AF_PURE_FIRE,
     AF_DRAIN_SPEED,
     AF_VULN,
+#if TAG_MAJOR_VERSION == 34
     AF_PLAGUE,
+#endif
     AF_WEAKNESS_POISON,
     AF_SHADOWSTAB,
     AF_DROWN,

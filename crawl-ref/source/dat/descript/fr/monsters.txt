@@ -1595,12 +1595,6 @@ pillar of salt
 
 Un énorme pilier de sel qui est en train de fondre rapidement.
 %%%%
-plague shambler
-
-Un cadavre réanimé qui se déplace d'un pas traînant. Piégé par un tissu de
-sorts maléfiques dans une grotesque parodie de vie, cet infecte corps en
-décomposition cherche en titubant à punir les vivants.
-%%%%
 plant
 
 Peu de plantes peuvent pousser dans l'environnement ingrat du donjon, mais

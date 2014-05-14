@@ -913,8 +913,8 @@ NAME:    hangedman_swamp_ravenous
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 MONS:    bog body
-MONS:    plague shambler / necrophage w:4
-MONS:    ghoul w:19 / plague shambler w:1
+MONS:    necrophage
+MONS:    ghoul
 SUBST:   jl = t
 KFEAT:   % = shallow_water / .
 SHUFFLE: jJ / lL, })

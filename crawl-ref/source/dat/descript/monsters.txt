@@ -1959,12 +1959,6 @@ pillar of salt
 
 A large pillar of salt that is quickly crumbling away.
 %%%%
-plague shambler
-
-A shambling reanimated corpse. Trapped by evil spellweaving in a grotesque
-parody of life, this infected decaying body lurches about, seeking retribution
-on the living.
-%%%%
 plant
 
 Few plants can grow in the unpleasant dungeon environment, but some have
