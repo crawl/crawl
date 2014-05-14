@@ -20,6 +20,9 @@ struct spell_desc
 }
 */
 
+static const struct spell_desc spelldata[] =
+{
+
 {
     SPELL_TELEPORT_SELF, "Teleport Self",
      SPTYP_TRANSLOCATION,
@@ -3787,3 +3790,5 @@ struct spell_desc
      false,
      false
 },
+
+};
