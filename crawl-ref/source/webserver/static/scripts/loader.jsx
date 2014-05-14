@@ -8,10 +8,10 @@ function (React, comm, pubsub, misc, login, Chat, $) {
 
     var normal_exit = ["saved", "cancel", "quit", "won", "bailed out", "dead"];
 
-    // Wrapper for game HTML
+    // Compatibility wrapper for old game HTML
     //
     // Also shows the chat.
-    var Game = React.createClass({
+    var LegacyGame = React.createClass({
         componentDidMount: function () {
             $("body").prepend("<div id='game'>");
             $("#game").html(this.props.html);
@@ -118,27 +118,42 @@ function (React, comm, pubsub, misc, login, Chat, $) {
         },
         receive_game_client: function (data) {
             comm.inhibit_messages();
-            var version = data.content.match(/^<!-- +version: +(\d+) /);
-            if (version == null)
-                version = 0;
-            else
-                version = parseInt(version[1]);
-
             var _this = this;
-            function do_load(compat)
+            if (data.content === undefined)
             {
-                function create_game_component()
-                {
-                    return Game({compat_handler: compat,
-                                 html: data.content});
-                }
-                _this.setState({game_component: create_game_component});
+                var path = "/gamedata/" + data.version;
+                var module = "game" + (data.min ? ".min" : "");
+                require.config({paths: {
+                    "game_data": path,
+                    "game_data/game": path + "/" + module
+                }});
+                require(["game_data/game"], function (game) {
+                    _this.setState({game_component: game});
+                    comm.uninhibit_messages();
+                });
             }
-
-            if (version < 1)
-                require(["compat" + version], do_load);
             else
-                do_load(null);
+            {
+                var version = data.content.match(/^<!-- +version: +(\d+) /);
+                if (version == null)
+                    version = 0;
+                else
+                    version = parseInt(version[1]);
+                var do_load = function (compat)
+                {
+                    function create_game_component()
+                    {
+                        return LegacyGame({compat_handler: compat,
+                                           html: data.content});
+                    }
+                    _this.setState({game_component: create_game_component});
+                }
+
+                if (version < 1)
+                    require(["compat" + version], do_load);
+                else
+                    do_load(null);
+            }
         },
 
         logged_in: function () {

@@ -218,17 +218,27 @@ class CrawlProcessHandlerBase(object):
             h.update(self.crawl_version)
         v = h.hexdigest()
         static_path = os.path.join(self.client_path, "static")
-        GameDataHandler.add_version(v, static_path)
-        if (os.path.exists(os.path.join(static_path, "game.min.js")) and
-            config.get("use_minified", True)):
-            module = "/gamedata/%s/game.min" % v
-        else:
-            module = "/gamedata/%s/game" % v
         templ_path = os.path.join(self.client_path, "templates")
-        loader = DynamicTemplateLoader.get(templ_path)
-        templ = loader.load("game.html")
-        game_html = templ.generate(version=v, module=module)
-        watcher.send_message("game_client", version=v, content=game_html)
+        if not os.path.exists(os.path.join(templ_path, "game.html")):
+            GameDataHandler.add_version(v, self.client_path)
+            if (os.path.exists(os.path.join(self.client_path, "game.min.js")) and
+                config.get("use_minified", True)):
+                minified = True
+            else:
+                minified = False
+            watcher.send_message("game_client", version=v, min=minified)
+        else:
+            GameDataHandler.add_version(v, static_path)
+            # compatibility
+            if (os.path.exists(os.path.join(static_path, "game.min.js")) and
+                config.get("use_minified", True)):
+                module = "/gamedata/%s/game.min" % v
+            else:
+                module = "/gamedata/%s/game" % v
+            loader = DynamicTemplateLoader.get(templ_path)
+            templ = loader.load("game.html")
+            game_html = templ.generate(version=v, module=module)
+            watcher.send_message("game_client", version=v, content=game_html)
 
     def stop(self):
         if self.no_player_timeout is not None:
