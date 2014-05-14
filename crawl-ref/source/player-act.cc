@@ -425,10 +425,13 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     if (species == SP_FELID)
         return false;
 
-    if (body_size(PSIZE_TORSO, true) < SIZE_LARGE
-            && (item_mass(item) >= 500
-                || item.base_type == OBJ_WEAPONS
-                    && item_mass(item) >= 300))
+    // Only ogres and trolls can wield giant clubs and large rocks (for
+    // sandblast).
+    if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
+        && ((item.base_type == OBJ_WEAPONS
+             && is_giant_club_type(item.sub_type))
+            || (item.base_type == OBJ_MISSILES &&
+                item.sub_type == MI_LARGE_ROCK)))
     {
         return false;
     }
@@ -444,7 +447,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     // Small species wielding large weapons...
     if (body_size(PSIZE_BODY, ignore_transform) < SIZE_MEDIUM
         && !check_weapon_wieldable_size(item,
-               body_size(PSIZE_BODY, ignore_transform)))
+            body_size(PSIZE_BODY, ignore_transform)))
     {
         return false;
     }
