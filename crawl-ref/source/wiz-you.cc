@@ -841,7 +841,9 @@ static const char* dur_names[] =
     "drowning",
     "drowning immunity",
     "flayed",
+#if TAG_MAJOR_VERSION == 34
     "retching",
+#endif
     "weak",
     "dimension anchor",
     "antimagic",
