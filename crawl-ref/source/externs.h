@@ -515,8 +515,8 @@ typedef uint32_t iflags_t;
 
 struct item_def
 {
-    object_class_type base_type:8; // basic class (ie OBJ_WEAPON)
-    uint8_t        sub_type;       // type within that class (ie WPN_DAGGER)
+    object_class_type base_type:8; // basic class (eg OBJ_WEAPON)
+    uint8_t        sub_type;       // type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
     union { short plus; monster_type mon_type:16; }; // +to hit, charges, corpse mon id
 #pragma pack(pop)
