@@ -907,8 +907,7 @@ void wizard_edit_durations(void)
             mprf_nocap(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, (int)max_len,
                  dur_names[dur], you.duration[dur]);
         }
-        mprf(MSGCH_PROMPT, "");
-        mprf(MSGCH_PROMPT, "Edit which duration (letter or name)? ");
+        mprf(MSGCH_PROMPT, "\nEdit which duration (letter or name)? ");
     }
     else
         mprf(MSGCH_PROMPT, "Edit which duration (name)? ");
