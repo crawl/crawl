@@ -819,23 +819,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     }
 
     fail_check();
-    // Mass of one unit.
-    const int unit_mass = item_mass(item);
-    const int max_mass = pow * 30 + random2(pow * 20);
-
-    int max_units = item.quantity;
-    if (unit_mass > 0)
-        max_units = max_mass / unit_mass;
-
-    if (max_units <= 0)
-    {
-        if (item_is_orb(item))
-            orb_pickup_noise(where, 30);
-
-        mpr("The mass is resisting your pull.");
-
-        return SPRET_SUCCESS;
-    }
 
     // We need to modify the item *before* we move it, because
     // move_top_item() might change the location, or merge
@@ -887,10 +870,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     // The maximum number of squares the item will actually move, always
     // at least one square.
-    int quantity = item.quantity;
-    int apported_mass = unit_mass * min(quantity, max_units);
-
-    int max_dist = max(60 * pow / (apported_mass + 150), 1);
+    int max_dist = max(pow * 2 / 5, 1);
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
@@ -922,19 +902,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     mprf("Yoink! You pull the item%s towards yourself.",
          (item.quantity > 1) ? "s" : "");
 
-    if (max_units < item.quantity)
-    {
-        if (!copy_item_to_grid(item, new_spot, max_units))
-        {
-            // Always >1 item.
-            mpr("They abruptly stop in place!");
-            // Too late to abort.
-            return SPRET_SUCCESS;
-        }
-        item.quantity -= max_units;
-    }
-    else
-        move_top_item(where, new_spot);
+    move_top_item(where, new_spot);
 
     // Mark the item as found now.
     origin_set(new_spot);
