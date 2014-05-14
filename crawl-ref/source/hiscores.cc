@@ -813,7 +813,7 @@ enum old_job_type
     OLD_JOB_STALKER      = -5,
     OLD_JOB_JESTER       = -6,
     OLD_JOB_PRIEST       = -7,
-    NUM_OLD_JOBS
+    NUM_OLD_JOBS = -OLD_JOB_PRIEST
 };
 
 static const char* _job_name(int job)
@@ -875,7 +875,7 @@ static int _job_by_name(const string& name)
     if (job != JOB_UNKNOWN)
         return job;
 
-    for (job = -1; job > NUM_OLD_JOBS - 2; job--)
+    for (job = -1; job >= -NUM_OLD_JOBS; job--)
         if (name == _job_name(job))
             return job;
 
