@@ -130,6 +130,7 @@ const deck_archetype deck_of_destruction[] =
     { CARD_STORM,    {5, 5, 5} },
     { CARD_PAIN,     {5, 5, 3} },
     { CARD_ORB,      {5, 5, 5} },
+    { CARD_DEGEN,    {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -377,6 +378,7 @@ const char* card_name(card_type card)
     case CARD_ORB:             return "the Orb";
     case CARD_MERCENARY:       return "the Mercenary";
     case CARD_ILLUSION:        return "the Illusion";
+    case CARD_DEGEN:           return "Degeneration";
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -2814,6 +2816,31 @@ static void _illusion_card(int power, deck_rarity_type rarity)
     mon->reset();
  }
 
+static void _degeneration_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    bool effects = false;
+
+    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
+    {
+        monster *mons = monster_at(*di);
+
+        if (mons && (mons->wont_attack() || !mons->can_polymorph()
+            || mons_is_firewood(mons)))
+            continue;
+
+        if (mons &&
+            x_chance_in_y((power_level + 1) * 5 + random2(5), mons->hit_dice))
+        {
+            effects = true;
+            monster_polymorph(mons, RANDOM_MONSTER, PPT_LESS);
+        }
+    }
+
+    if (!effects)
+        canned_msg(MSG_NOTHING_HAPPENS);
+}
+
 // Punishment cards don't have their power adjusted depending on Nemelex piety
 // or penance, and are based on experience level instead of evocations skill
 // for more appropriate scaling.
@@ -2926,6 +2953,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_FORTITUDE:        _fortitude_card(power, rarity); break;
     case CARD_STORM:            _storm_card(power, rarity); break;
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
+    case CARD_DEGEN:            _degeneration_card(power, rarity); break;
 
     case CARD_VENOM:
     case CARD_VITRIOL:

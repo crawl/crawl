@@ -178,6 +178,10 @@ the Orb card
 This card unleashes a destructive orb of pure magic, sometimes even multiple
 ones.
 %%%%
+Degeneration card
+
+This card attempts to polymorph nearby enemies into weaker forms.
+%%%%
 Wrath card
 
 This card draws a god's wrath against you.
