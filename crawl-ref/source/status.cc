@@ -490,9 +490,9 @@ bool fill_status_info(int status, status_info* inf)
             if (you.duration[DUR_ELIXIR_HEALTH] && you.duration[DUR_ELIXIR_MAGIC])
                 inf->light_colour = WHITE;
             else if (you.duration[DUR_ELIXIR_HEALTH])
-                inf->light_colour = LIGHTBLUE;
+                inf->light_colour = LIGHTGREEN;
             else
-                inf->light_colour = LIGHTMAGENTA;
+                inf->light_colour = LIGHTBLUE;
             inf->light_text   = "Elixir";
         }
         break;

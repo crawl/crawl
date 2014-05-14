@@ -116,6 +116,7 @@ const deck_archetype deck_of_emergency[] =
     { CARD_DAMNATION,  {0, 1, 2} },
     { CARD_SHAFT,      {5, 5, 5} },
     { CARD_ALCHEMIST,  {5, 5, 5} },
+    { CARD_ELIXIR,     {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -420,7 +421,6 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
         break;
     case MISC_DECK_OF_WAR:
         subdecks.push_back(deck_of_destruction);
-        subdecks.push_back(deck_of_enchantments);
         subdecks.push_back(deck_of_battle);
         subdecks.push_back(deck_of_summoning);
         break;
