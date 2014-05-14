@@ -1437,8 +1437,8 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_MUTATIONS; ++j)
     {
         marshallByte(th, you.mutation[j]);
-        marshallByte(th, you.innate_mutations[j]);
-        marshallByte(th, you.temp_mutations[j]);
+        marshallByte(th, you.innate_mutation[j]);
+        marshallByte(th, you.temp_mutation[j]);
     }
 
     marshallByte(th, you.demonic_traits.size());
@@ -2467,22 +2467,22 @@ static void tag_read_you(reader &th)
     for (j = 0; j < count; ++j)
     {
         you.mutation[j]         = unmarshallUByte(th);
-        you.innate_mutations[j] = unmarshallUByte(th);
+        you.innate_mutation[j] = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
         if (th.getMinorVersion() >= TAG_MINOR_TEMP_MUTATIONS
             && th.getMinorVersion() != TAG_MINOR_0_11)
         {
 #endif
-        you.temp_mutations[j] = unmarshallUByte(th);
+        you.temp_mutation[j] = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 34
         }
 #endif
 
 #if TAG_MAJOR_VERSION == 34
-        if (you.innate_mutations[j] + you.temp_mutations[j] > you.mutation[j])
+        if (you.innate_mutation[j] + you.temp_mutation[j] > you.mutation[j])
         {
             mprf(MSGCH_ERROR, "Mutation #%d out of sync, fixing up.", j);
-            you.mutation[j] = you.innate_mutations[j] + you.temp_mutations[j];
+            you.mutation[j] = you.innate_mutation[j] + you.temp_mutation[j];
         }
 #endif
     }
@@ -2497,11 +2497,11 @@ static void tag_read_you(reader &th)
         {
             mutation_type mut = stat_mutations[j];
             stat_type stat = stat_types[j];
-            int total_mutation_level = you.temp_mutations[mut] + you.mutation[mut];
+            int total_mutation_level = you.temp_mutation[mut] + you.mutation[mut];
             if (total_mutation_level > 2)
             {
-                int new_level = max(0, min(you.temp_mutations[mut] - you.mutation[mut], 2));
-                you.temp_mutations[mut] = new_level;
+                int new_level = max(0, min(you.temp_mutation[mut] - you.mutation[mut], 2));
+                you.temp_mutation[mut] = new_level;
             }
             if (you.mutation[mut] > 2)
             {
@@ -2530,18 +2530,18 @@ static void tag_read_you(reader &th)
                 you.mutation[mut] = 2;
                 break;
             };
-            if (you.temp_mutations[mut] > 2 && you.mutation[mut] < 2)
-                you.temp_mutations[mut] = 1;
+            if (you.temp_mutation[mut] > 2 && you.mutation[mut] < 2)
+                you.temp_mutation[mut] = 1;
             else
-                you.temp_mutations[mut] = 0;
+                you.temp_mutation[mut] = 0;
         }
     }
-    you.mutation[MUT_FAST] = you.innate_mutations[MUT_FAST];
-    you.mutation[MUT_SLOW] = you.innate_mutations[MUT_SLOW];
+    you.mutation[MUT_FAST] = you.innate_mutation[MUT_FAST];
+    you.mutation[MUT_SLOW] = you.innate_mutation[MUT_SLOW];
 #endif
 
     for (j = count; j < NUM_MUTATIONS; ++j)
-        you.mutation[j] = you.innate_mutations[j] = 0;
+        you.mutation[j] = you.innate_mutation[j] = 0;
 
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() < TAG_MINOR_NO_DEVICE_HEAL)
@@ -2558,34 +2558,34 @@ static void tag_read_you(reader &th)
         if (you.species == SP_GARGOYLE)
         {
             you.mutation[MUT_POISON_RESISTANCE] =
-            you.innate_mutations[MUT_POISON_RESISTANCE] = 0;
+            you.innate_mutation[MUT_POISON_RESISTANCE] = 0;
         }
         if (you.species == SP_DJINNI)
         {
             you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] =
-            you.innate_mutations[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
+            you.innate_mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
         }
-        if (you.species == SP_FELID && you.innate_mutations[MUT_JUMP] == 0)
+        if (you.species == SP_FELID && you.innate_mutation[MUT_JUMP] == 0)
         {
-            you.mutation[MUT_JUMP] = you.innate_mutations[MUT_JUMP]
+            you.mutation[MUT_JUMP] = you.innate_mutation[MUT_JUMP]
                                    = min(1 + you.experience_level / 6, 3);
         }
         if (you.species == SP_FORMICID)
         {
-            you.mutation[MUT_ANTENNAE] = you.innate_mutations[MUT_ANTENNAE] = 3;
+            you.mutation[MUT_ANTENNAE] = you.innate_mutation[MUT_ANTENNAE] = 3;
             you.mutation[MUT_EXOSKELETON] =
-            you.innate_mutations[MUT_EXOSKELETON] = 0;
+            you.innate_mutation[MUT_EXOSKELETON] = 0;
         }
         if (you.species == SP_VINE_STALKER)
         {
             you.mutation[MUT_NO_DEVICE_HEAL] =
-            you.innate_mutations[MUT_NO_DEVICE_HEAL] = 2;
+            you.innate_mutation[MUT_NO_DEVICE_HEAL] = 2;
         }
     }
     if (th.getMinorVersion() < TAG_MINOR_DIET_MUT)
     {
-        you.mutation[MUT_CARNIVOROUS] = you.innate_mutations[MUT_CARNIVOROUS];
-        you.mutation[MUT_HERBIVOROUS] = you.innate_mutations[MUT_HERBIVOROUS];
+        you.mutation[MUT_CARNIVOROUS] = you.innate_mutation[MUT_CARNIVOROUS];
+        you.mutation[MUT_HERBIVOROUS] = you.innate_mutation[MUT_HERBIVOROUS];
 
     }
     if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS)
@@ -2594,13 +2594,13 @@ static void tag_read_you(reader &th)
             || you.species == SP_OGRE || you.species == SP_KOBOLD)
         {
            you.mutation[MUT_SAPROVOROUS] =
-           you.innate_mutations[MUT_SAPROVOROUS] = 0;
+           you.innate_mutation[MUT_SAPROVOROUS] = 0;
         }
         if (you.species == SP_OGRE)
         {
             // Remove the innate level of fast metabolism
             you.mutation[MUT_FAST_METABOLISM] -= 1;
-            you.innate_mutations[MUT_FAST_METABOLISM] -= 1;
+            you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
         }
     }
 #endif

@@ -342,7 +342,7 @@ void give_basic_mutations(species_type speci)
 
     // Starting mutations are unremovable.
     for (int i = 0; i < NUM_MUTATIONS; ++i)
-        you.innate_mutations[i] = you.mutation[i];
+        you.innate_mutation[i] = you.mutation[i];
 }
 
 static void _newgame_make_item_tutorial(int slot, equipment_type eqslot,

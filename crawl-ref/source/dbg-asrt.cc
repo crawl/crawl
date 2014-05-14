@@ -280,8 +280,8 @@ static void _dump_player(FILE *file)
     {
         mutation_type mut = static_cast<mutation_type>(i);
         int normal = you.mutation[i];
-        int innate = you.innate_mutations[i];
-        int temp   = you.temp_mutations[i];
+        int innate = you.innate_mutation[i];
+        int temp   = you.temp_mutation[i];
 
         // Normally innate and temp imply normal, but a crash handler should
         // expect the spanish^Wunexpected.

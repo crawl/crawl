@@ -1355,7 +1355,7 @@ void untransform(bool skip_wielding, bool skip_move)
             ASSERT(beastly_slot(app) != EQ_NONE);
             // would be lots of work to do it via delete_mutation, the hacky
             // way is one line:
-            you.mutation[app] = you.innate_mutations[app];
+            you.mutation[app] = you.innate_mutation[app];
             you.attribute[ATTR_APPENDAGE] = 0;
             mprf(MSGCH_DURATION, "Your %s disappear%s.", appendage_name(app),
                  (app == MUT_TENTACLE_SPIKE) ? "s" : "");

@@ -214,7 +214,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     if (you.is_undead == US_SEMI_UNDEAD)
     {
         // Innate mutations are always active
-        if (you.innate_mutations[mut])
+        if (you.innate_mutation[mut])
             return MUTACT_FULL;
 
         // ... as are all mutations for semi-undead who are fully alive
@@ -670,7 +670,7 @@ string describe_mutations(bool center_title)
     // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (you.mutation[i] != 0 && you.innate_mutations[i])
+        if (you.mutation[i] != 0 && you.innate_mutation[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
             result += mutation_desc(mut_type, -1, true);
@@ -694,8 +694,8 @@ string describe_mutations(bool center_title)
     // Now add removable mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (you.mutation[i] != 0 && !you.innate_mutations[i]
-                && !you.temp_mutations[i])
+        if (you.mutation[i] != 0 && !you.innate_mutation[i]
+                && !you.temp_mutation[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
             result += mutation_desc(mut_type, -1, true);
@@ -707,7 +707,7 @@ string describe_mutations(bool center_title)
     //Finally, temporary mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (you.mutation[i] != 0 && you.temp_mutations[i])
+        if (you.mutation[i] != 0 && you.temp_mutation[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
             result += mutation_desc(mut_type, -1, true);
@@ -1062,7 +1062,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
     if (ignore_rarity)
         return true;
 
-    const int rarity = mdef.rarity + you.innate_mutations[mutat];
+    const int rarity = mdef.rarity + you.innate_mutation[mutat];
 
     // Low rarity means unlikely to choose it.
     return x_chance_in_y(rarity, 10);
@@ -1250,7 +1250,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
 
             if (mutation == a && you.mutation[b] > 0)
             {
-                if (you.innate_mutations[b] >= you.mutation[b])
+                if (you.innate_mutation[b] >= you.mutation[b])
                     return -1;
 
                 int res = conflict[i][2];
@@ -1805,7 +1805,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
         else
         {
-            you.temp_mutations[mutat]++;
+            you.temp_mutation[mutat]++;
             you.attribute[ATTR_TEMP_MUTATIONS]++;
             you.attribute[ATTR_TEMP_MUT_XP] =
                     min(you.experience_level, 17)
@@ -1842,10 +1842,10 @@ static bool _delete_single_mutation_level(mutation_type mutat,
     if (you.mutation[mutat] == 0)
         return false;
 
-    if (you.innate_mutations[mutat] >= you.mutation[mutat])
+    if (you.innate_mutation[mutat] >= you.mutation[mutat])
         return false;
 
-    if (!transient && you.temp_mutations[mutat] >= you.mutation[mutat])
+    if (!transient && you.temp_mutation[mutat] >= you.mutation[mutat])
         return false;
 
     const mutation_def& mdef = get_mutation_def(mutat);
@@ -1978,7 +1978,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
                 continue;
             }
 
-            if (you.innate_mutations[mutat] >= you.mutation[mutat])
+            if (you.innate_mutation[mutat] >= you.mutation[mutat])
                 continue;
 
             // MUT_ANTENNAE is 0, and you.attribute[] is initialized to 0.
@@ -2030,7 +2030,7 @@ bool delete_temp_mutation()
 
         int count = 0;
         for (int i = 0; i < NUM_MUTATIONS; i++)
-            if (you.temp_mutations[i] > 0 && one_chance_in(++count))
+            if (you.temp_mutation[i] > 0 && one_chance_in(++count))
                 mutat = static_cast<mutation_type>(i);
 
 #if TAG_MAJOR_VERSION == 34
@@ -2050,7 +2050,7 @@ bool delete_temp_mutation()
 
         if (_delete_single_mutation_level(mutat, "temp mutation expiry", true))
         {
-            --you.temp_mutations[mutat];
+            --you.temp_mutation[mutat];
             --you.attribute[ATTR_TEMP_MUTATIONS];
             return true;
         }
@@ -2080,7 +2080,7 @@ string mutation_desc(mutation_type mut, int level, bool colour)
         || active == MUTACT_HUNGER && lowered);
     const bool fully_inactive = (active == MUTACT_INACTIVE);
 
-    const bool temporary   = (you.temp_mutations[mut] > 0);
+    const bool temporary   = (you.temp_mutation[mut] > 0);
 
     // level == -1 means default action of current level
     if (level == -1)
@@ -2133,7 +2133,7 @@ string mutation_desc(mutation_type mut, int level, bool colour)
         }
 
         if (you.species == SP_VAMPIRE && !mdef.physical
-            && !you.innate_mutations[mut])
+            && !you.innate_mutation[mut])
         {
             ++_num_hunger_based;
             result += colour ? "<lightred>+</lightred>" : "+";
@@ -2149,7 +2149,7 @@ string mutation_desc(mutation_type mut, int level, bool colour)
     if (colour)
     {
         const char* colourname = (mdef.bad ? "red" : "lightgrey");
-        const bool permanent   = (you.innate_mutations[mut] > 0);
+        const bool permanent   = (you.innate_mutation[mut] > 0);
 
         if (innate_upgrade)
         {
@@ -2163,7 +2163,7 @@ string mutation_desc(mutation_type mut, int level, bool colour)
         else if (permanent)
         {
             const bool demonspawn = (you.species == SP_DEMONSPAWN);
-            const bool extra = (you.mutation[mut] > you.innate_mutations[mut]);
+            const bool extra = (you.mutation[mut] > you.innate_mutation[mut]);
 
             if (fully_inactive)
                 colourname = "darkgrey";
@@ -2183,7 +2183,7 @@ string mutation_desc(mutation_type mut, int level, bool colour)
         else if (_is_slime_mutation(mut))
             colourname = "green";
         else if (temporary)
-            colourname = (you.mutation[mut] > you.temp_mutations[mut]) ?
+            colourname = (you.mutation[mut] > you.temp_mutation[mut]) ?
                          "lightmagenta" : "magenta";
 
         // Build the result
@@ -2491,10 +2491,10 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     int levels = 0;
     while (how_much-- > 0)
     {
-    dprf("Perma Mutate: %d, %d, %d", cap, you.mutation[which_mut], you.innate_mutations[which_mut]);
+    dprf("Perma Mutate: %d, %d, %d", cap, you.mutation[which_mut], you.innate_mutation[which_mut]);
         if (you.mutation[which_mut] == cap
-            && you.innate_mutations[which_mut] > 0
-            && you.innate_mutations[which_mut] == cap-1)
+            && you.innate_mutation[which_mut] > 0
+            && you.innate_mutation[which_mut] == cap-1)
         {
             // [rpb] primarily for demonspawn, if the mutation level is already
             // at the cap for this facet, the innate mutation level is greater
@@ -2510,7 +2510,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
         }
         levels++;
     }
-    you.innate_mutations[which_mut] += levels;
+    you.innate_mutation[which_mut] += levels;
 
     return levels > 0;
 }
@@ -2529,7 +2529,7 @@ int how_mutated(bool all, bool levels)
     {
         if (you.mutation[i])
         {
-            if (!all && you.innate_mutations[i] >= you.mutation[i])
+            if (!all && you.innate_mutation[i] >= you.mutation[i])
                 continue;
 
             if (levels)

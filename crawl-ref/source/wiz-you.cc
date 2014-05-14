@@ -98,24 +98,24 @@ void wizard_change_species(void)
     uint8_t prev_muts[NUM_MUTATIONS];
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (you.innate_mutations[i] > 0)
+        if (you.innate_mutation[i] > 0)
         {
-            if (you.innate_mutations[i] > you.mutation[i])
+            if (you.innate_mutation[i] > you.mutation[i])
                 you.mutation[i] = 0;
             else
-                you.mutation[i] -= you.innate_mutations[i];
+                you.mutation[i] -= you.innate_mutation[i];
 
-            you.innate_mutations[i] = 0;
+            you.innate_mutation[i] = 0;
         }
         prev_muts[i] = you.mutation[i];
     }
     give_basic_mutations(sp);
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (prev_muts[i] > you.innate_mutations[i])
-            you.innate_mutations[i] = 0;
+        if (prev_muts[i] > you.innate_mutation[i])
+            you.innate_mutation[i] = 0;
         else
-            you.innate_mutations[i] -= prev_muts[i];
+            you.innate_mutation[i] -= prev_muts[i];
     }
 
     switch (sp)
@@ -165,7 +165,7 @@ void wizard_change_species(void)
                 continue;
 
             ++you.mutation[m];
-            ++you.innate_mutations[m];
+            ++you.innate_mutation[m];
         }
         break;
     }

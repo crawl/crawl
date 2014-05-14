@@ -191,8 +191,8 @@ public:
   FixedVector<uint8_t, NUM_GODS>  piety_max;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
-  FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
-  FixedVector<uint8_t, NUM_MUTATIONS> temp_mutations;
+  FixedVector<uint8_t, NUM_MUTATIONS> innate_mutation;
+  FixedVector<uint8_t, NUM_MUTATIONS> temp_mutation;
 
   struct demon_trait
   {
