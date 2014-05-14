@@ -2411,7 +2411,7 @@ static tentacle_type _get_tentacle_type(const int mtype)
             return TYPE_VINE;
 
         default:
-            ASSERT("Invalid tentacle type!");
+            die("Invalid tentacle type!");
             return TYPE_KRAKEN; // Silence a warning
     }
 }
