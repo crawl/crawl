@@ -73,7 +73,7 @@
 #include "shout.h"
 #include "xom.h"
 
-static void _end_game(scorefile_entry &se);
+static NORETURN void _end_game(scorefile_entry &se);
 
 static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
@@ -1285,7 +1285,7 @@ static void _delete_files()
     you.save = 0;
 }
 
-void screen_end_game(string text)
+NORETURN void screen_end_game(string text)
 {
     crawl_state.cancel_cmd_all();
     _delete_files();
@@ -1303,7 +1303,7 @@ void screen_end_game(string text)
     game_ended();
 }
 
-void _end_game(scorefile_entry &se)
+static NORETURN void _end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
         if (you.inv[i].defined() && item_type_unknown(you.inv[i]))
