@@ -6524,7 +6524,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
     if (penance[GOD_ASHENZARI])
-        level = max(level - min(4 * scale, level / 2), 0);
+        level = max(level - 4 * scale, level / 2);
     else if (religion == GOD_ASHENZARI && piety_rank() > 2)
     {
         if (skill_boost.count(sk)
