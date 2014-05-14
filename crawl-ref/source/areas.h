@@ -12,7 +12,9 @@ enum area_centre_type
     AREA_UMBRA,
     AREA_QUAD,
     AREA_DISJUNCTION,
+#if TAG_MAJOR_VERSION == 34
     AREA_HOT,
+#endif
     AREA_GOLD,
 };
 
@@ -47,8 +49,10 @@ bool disjunction_haloed(const coord_def& p);
 // ...or endarkened by an umbra?
 bool umbraed(const coord_def& p);
 
+#if TAG_MAJOR_VERSION == 34
 // ...or is the area hot?
 bool heated(const coord_def& p);
+#endif
 
 // ...or glowing with fresh gold (Gozag)?
 bool golden(const coord_def& p);

@@ -169,8 +169,11 @@ bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
         return true;
     }
 
-    if (actual_grid == DNGN_LAVA && species != SP_LAVA_ORC
-        || actual_grid == DNGN_DEEP_WATER && !can_swim())
+    if (
+#if TAG_MAJOR_VERSION == 34
+        actual_grid == DNGN_LAVA && species != SP_LAVA_ORC ||
+#endif
+        actual_grid == DNGN_DEEP_WATER && !can_swim())
     {
         return false;
     }

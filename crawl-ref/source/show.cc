@@ -148,8 +148,10 @@ static void _update_feat_at(const coord_def &gp)
     if (disjunction_haloed(gp))
         env.map_knowledge(gp).flags |= MAP_DISJUNCT;
 
+#if TAG_MAJOR_VERSION == 34
     if (heated(gp))
         env.map_knowledge(gp).flags |= MAP_HOT;
+#endif
 
     if (golden(gp))
         env.map_knowledge(gp).flags |= MAP_GOLDEN;

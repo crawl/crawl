@@ -70,7 +70,9 @@ static void _species_stat_init(species_type which_species)
     case SP_MINOTAUR:           s = 12; i =  5; d =  5;      break;  // 22
     case SP_GARGOYLE:           s = 11; i =  8; d =  5;      break;  // 24
     case SP_HILL_ORC:           s = 10; i =  8; d =  6;      break;  // 24
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:           s = 10; i =  8; d =  6;      break;  // 24
+#endif
     case SP_CENTAUR:            s = 10; i =  7; d =  4;      break;  // 21
     case SP_NAGA:               s = 10; i =  8; d =  6;      break;  // 24
 
@@ -220,9 +222,11 @@ void give_basic_mutations(species_type speci)
 {
     switch (speci)
     {
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:
         you.mutation[MUT_CONSERVE_SCROLLS] = 1;
         break;
+#endif
     case SP_OGRE:
         you.mutation[MUT_TOUGH_SKIN]      = 1;
         break;

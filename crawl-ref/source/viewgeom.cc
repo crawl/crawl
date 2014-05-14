@@ -378,7 +378,10 @@ void crawl_view_geometry::init_geometry()
     hudsz  = coord_def(HUD_WIDTH,
                        HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0)
                                   + crawl_state.game_is_zotdef()
-                                  + ((you.species == SP_LAVA_ORC) ? 1 : 0));
+#if TAG_MAJOR_VERSION == 34
+                                  + ((you.species == SP_LAVA_ORC) ? 1 : 0)
+#endif
+                                  );
 
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);

@@ -2661,12 +2661,14 @@ void read_scroll(int slot)
         return;
     }
 
+#if TAG_MAJOR_VERSION == 34
     // Prevent hot lava orcs reading scrolls
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
     {
         crawl_state.zero_turns_taken();
         return mpr("You'd burn any scroll you tried to read!");
     }
+#endif
 
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     const bool alreadyknown = item_type_known(scroll);

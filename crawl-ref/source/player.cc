@@ -358,12 +358,13 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 // Extra time if you stepped in.
                 if (stepped)
                     you.time_taken *= 2;
-
+#if TAG_MAJOR_VERSION == 34
                 // This gets called here because otherwise you wouldn't heat
                 // until your second turn in lava.
                 if (temperature() < TEMP_FIRE)
                     mpr("The lava instantly superheats you.");
                 you.temperature = TEMP_MAX;
+#endif
             }
 
             else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
@@ -1537,6 +1538,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     if (you.species == SP_MUMMY)
         rf--;
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
     {
         if (temperature_effect(LORC_FIRE_RES_I))
@@ -1546,6 +1548,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         if (temperature_effect(LORC_FIRE_RES_III))
             rf++;
     }
+#endif
 
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
@@ -1675,8 +1678,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
                 rc++;
         }
 
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC && temperature_effect(LORC_COLD_VULN))
             rc--;
+#endif
     }
 
     if (items)
@@ -2021,8 +2026,10 @@ int player_spec_fire()
     // rings of fire:
     sf += you.wearing(EQ_RINGS, RING_FIRE);
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_FIRE_BOOST))
         sf++;
+#endif
 
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
@@ -2040,12 +2047,14 @@ int player_spec_cold()
     // rings of ice:
     sc += you.wearing(EQ_RINGS, RING_ICE);
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC
         && (temperature_effect(LORC_LAVA_BOOST)
             || temperature_effect(LORC_FIRE_BOOST)))
     {
         sc--;
     }
+#endif
 
     return sc;
 }
@@ -3213,7 +3222,9 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 break;
 
             case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
             case SP_LAVA_ORC:
+#endif
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -5875,8 +5886,10 @@ void player::init()
     lives = 0;
     deaths = 0;
 
+#if TAG_MAJOR_VERSION == 34
     temperature = 1; // 1 is min; 15 is max.
     temperature_last = 1;
+#endif
 
     xray_vision = false;
 
@@ -6009,7 +6022,9 @@ void player::init()
     redraw_status_flags = 0;
     redraw_hit_points   = false;
     redraw_magic_points = false;
+#if TAG_MAJOR_VERSION == 34
     redraw_temperature  = false;
+#endif
     redraw_stats.init(false);
     redraw_experience   = false;
     redraw_armour_class = false;
@@ -6546,6 +6561,7 @@ int player_icemail_armour_class()
 
 bool player_stoneskin()
 {
+#if TAG_MAJOR_VERSION == 34
     // Lava orcs ignore DUR_STONESKIN
     if (you.species == SP_LAVA_ORC)
     {
@@ -6556,7 +6572,8 @@ bool player_stoneskin()
         return temperature_effect(LORC_STONESKIN);
     }
     else
-        return you.duration[DUR_STONESKIN];
+#endif
+    return you.duration[DUR_STONESKIN];
 }
 
 static int _stoneskin_bonus()
@@ -6566,19 +6583,23 @@ static int _stoneskin_bonus()
 
     // Max +7.4 base
     int boost = 200;
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         boost += 20 * you.experience_level;
     else
-        boost += you.skill(SK_EARTH_MAGIC, 20);
+#endif
+    boost += you.skill(SK_EARTH_MAGIC, 20);
 
     // Max additional +7.75 from statue form
     if (you.form == TRAN_STATUE)
     {
         boost += 100;
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC)
             boost += 25 * you.experience_level;
         else
-            boost += you.skill(SK_EARTH_MAGIC, 25);
+#endif
+        boost += you.skill(SK_EARTH_MAGIC, 25);
     }
 
     return boost;
@@ -8361,7 +8382,7 @@ bool player::can_device_heal()
     return mutation[MUT_NO_DEVICE_HEAL] < 2;
 }
 
-
+#if TAG_MAJOR_VERSION == 34
 // Lava orcs!
 int temperature()
 {
@@ -8612,3 +8633,4 @@ string temperature_text(int temp)
             return "";
     }
 }
+#endif

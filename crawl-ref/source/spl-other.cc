@@ -494,6 +494,7 @@ spret_type cast_stoneskin(int pow, bool fail)
         return SPRET_ABORT;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
     {
         // We can't get here from normal casting, and probably don't want
@@ -501,6 +502,7 @@ spret_type cast_stoneskin(int pow, bool fail)
         // mpr("Your skin is naturally stony.");
         return SPRET_ABORT;
     }
+#endif
 
     fail_check();
 

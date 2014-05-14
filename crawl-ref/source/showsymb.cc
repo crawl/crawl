@@ -134,8 +134,10 @@ static unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = ETC_ORB_GLOW;
         else if (cell.flags & MAP_QUAD_HALOED)
             colour = BLUE;
+#if TAG_MAJOR_VERSION == 34
         else if (cell.flags & MAP_HOT)
             colour = ETC_FIRE;
+#endif
         else if (cell.flags & MAP_GOLDEN)
             colour = ETC_GOLD;
     }

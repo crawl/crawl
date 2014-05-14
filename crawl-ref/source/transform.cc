@@ -135,12 +135,16 @@ bool form_likes_water(transformation_type form)
 
 bool form_likes_lava(transformation_type form)
 {
+#if TAG_MAJOR_VERSION == 34
     // Lava orcs can only swim in non-phys-change forms.
     // However, ice beast & statue form will melt back to lava, so they're OK
     return you.species == SP_LAVA_ORC
            && (!form_changed_physiology(form)
                || form == TRAN_ICE_BEAST
                || form == TRAN_STATUE);
+#else
+    return false;
+#endif
 }
 
 // Used to mark transformations which override species intrinsics.
@@ -853,6 +857,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
         return _abort_or_fizzle(just_check);
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN)
         && (which_trans == TRAN_ICE_BEAST || which_trans == TRAN_STATUE))
     {
@@ -860,6 +865,7 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
             mpr("Your temperature is too high to benefit from that spell.");
         return _abort_or_fizzle(just_check);
     }
+#endif
 
     set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
@@ -1074,8 +1080,10 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     case TRAN_STATUE:
         if (you.duration[DUR_STONESKIN])
             mpr("Your new body merges with your stone armour.");
+#if TAG_MAJOR_VERSION == 34
         else if (you.species == SP_LAVA_ORC)
             mpr("Your new body is particularly stony.");
+#endif
         if (you.duration[DUR_ICY_ARMOUR])
         {
             mprf(MSGCH_DURATION, "Your new body cracks your icy armour.");
@@ -1276,12 +1284,19 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_STATUE:
         // This only handles lava orcs going statue -> stoneskin.
-        if (you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
-            || you.species == SP_GARGOYLE)
+        if (
+#if TAG_MAJOR_VERSION == 34
+            you.species == SP_LAVA_ORC && temperature_effect(LORC_STONESKIN)
+            ||
+#endif
+            you.species == SP_GARGOYLE)
         {
             mprf(MSGCH_DURATION, "You revert to a slightly less stony form.");
         }
-        else if (you.species != SP_LAVA_ORC)
+        else
+#if TAG_MAJOR_VERSION == 34
+        if (you.species != SP_LAVA_ORC)
+#endif
             mprf(MSGCH_DURATION, "You revert to your normal fleshy form.");
         notify_stat_change(STAT_DEX, 2, true,
                      "losing the statue transformation");
@@ -1295,10 +1310,12 @@ void untransform(bool skip_wielding, bool skip_move)
         break;
 
     case TRAN_ICE_BEAST:
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
             mprf(MSGCH_DURATION, "Your icy form melts away into molten rock.");
         else
-            mprf(MSGCH_DURATION, "You warm up again.");
+#endif
+        mprf(MSGCH_DURATION, "You warm up again.");
 
         // Note: if the core goes down, the combined effect soon disappears,
         // but the reverse isn't true. -- bwr

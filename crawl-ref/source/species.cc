@@ -27,7 +27,7 @@ static species_type species_order[] =
     SP_TENGU,          SP_BASE_DRACONIAN,
     SP_GARGOYLE,       SP_FORMICID,
     // mostly human shape but made of a strange substance
-    SP_LAVA_ORC,       SP_VINE_STALKER,
+    SP_VINE_STALKER,
     // celestial species
     SP_DEMIGOD,        SP_DEMONSPAWN,
     // undead species
@@ -63,13 +63,13 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
       "Fe", "Op",
 #if TAG_MAJOR_VERSION == 34
-      "Dj",
+      "Dj", "LO",
 #endif
-      "LO", "Gr", "Fo", "VS",
+      "Gr", "Fo", "VS",
       // placeholders
       "El", "HD", "OM", "GE", "Gn", "MD",
 #if TAG_MAJOR_VERSION > 34
-      "SE", "Dj",
+      "SE", "Dj", "LO",
 #endif
 };
 
@@ -181,7 +181,9 @@ string species_name(species_type speci, bool genus, bool adj)
             switch (speci)
             {
             case SP_HILL_ORC: res = "Hill Orc"; break;
+#if TAG_MAJOR_VERSION == 34
             case SP_LAVA_ORC: res = "Lava Orc"; break;
+#endif
             default:          res = "Orc";      break;
             }
         }
@@ -255,7 +257,11 @@ bool species_likes_water(species_type species)
 
 bool species_likes_lava(species_type species)
 {
+#if TAG_MAJOR_VERSION == 34
     return species == SP_LAVA_ORC;
+#else
+    return false;
+#endif
 }
 
 bool species_can_throw_large_rocks(species_type species)
@@ -288,7 +294,9 @@ genus_type species_genus(species_type species)
         return GENPC_ELVEN;
 
     case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:
+#endif
         return GENPC_ORCISH;
 
     default:
@@ -334,8 +342,10 @@ monster_type player_species_to_mons_species(species_type species)
         return MONS_HALFLING;
     case SP_HILL_ORC:
         return MONS_ORC;
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:
         return MONS_LAVA_ORC;
+#endif
     case SP_KOBOLD:
         return MONS_KOBOLD;
     case SP_MUMMY:
@@ -428,14 +438,13 @@ bool is_valid_species(species_type species)
 bool is_species_valid_choice(species_type species)
 {
 #if TAG_MAJOR_VERSION == 34
-    if (species == SP_SLUDGE_ELF || species == SP_DJINNI)
-        return false;
-#endif
-    if ((species == SP_LAVA_ORC)
-        && Version::ReleaseType != VER_ALPHA)
+    if (species == SP_SLUDGE_ELF
+        || species == SP_DJINNI
+        || species == SP_LAVA_ORC)
     {
         return false;
     }
+#endif
 
     // Non-base draconians cannot be selected either.
     return is_valid_species(species)
@@ -487,9 +496,9 @@ int species_exp_modifier(species_type species)
     case SP_DEMONSPAWN:
 #if TAG_MAJOR_VERSION == 34
     case SP_DJINNI:
-#endif
     case SP_LAVA_ORC:
         return -1;
+#endif
     case SP_DEMIGOD:
         return -2;
     default:
@@ -535,7 +544,9 @@ int species_hp_modifier(species_type species)
     case SP_PALE_DRACONIAN:
     case SP_GHOUL:
     case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:
+#endif
     case SP_MINOTAUR:
         return 1;
     case SP_DEEP_DWARF:
