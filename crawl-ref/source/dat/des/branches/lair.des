@@ -1778,9 +1778,10 @@ ENDMAP
 
 NAME: nicolae_quartered_pool_little
 DEPTH: Lair
-TAGS: transparent extra decor luniq_qpool mini_float
+TAGS: transparent extra decor luniq_qpool
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm, Nn, Oo, Pp, Qq
-SUBST: abcdefghijklmnopq = ., ABCDEFGHIJKLMNOPQ = W, 7 = t
+SUBST: abcdefghijklmnopq = ., ABCDEFGHIJKLMNOPQ = W
+NSUBST: 7 = t@
 MAP
     777777
    7qolLOQ7
@@ -1800,10 +1801,11 @@ ENDMAP
 
 NAME: nicolae_quartered_pool_medium
 DEPTH: Lair
-TAGS: transparent extra decor luniq_qpool mini_float
+TAGS: transparent extra decor luniq_qpool
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
 SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu
-SUBST: abcdefghijklmnopqrstu = ., ABCDEFGHIJKLMNOPQRSTU = W, 7 = t
+SUBST: abcdefghijklmnopqrstu = ., ABCDEFGHIJKLMNOPQRSTU = W
+NSUBST: 7 = t@
 MAP
       7777
     77spPS77
@@ -1825,12 +1827,12 @@ ENDMAP
 
 NAME: nicolae_quartered_pool_super
 DEPTH: Lair
-TAGS: transparent extra decor luniq_qpool mini_float
+TAGS: transparent extra decor luniq_qpool
 SHUFFLE: Aa, Bb, Cc, Dd, Ee, Ff, Gg, Hh, Ii, Jj, Kk, Ll, Mm
 SHUFFLE: Nn, Oo, Pp, Qq, Rr, Ss, Tt, Uu, Vv, Ww, Xx, Yy, Zz
 SHUFFLE: 12, 34, 56
 SUBST: abcdefghijklmnopqrstuvwxyz135 = ., ABCDEFGHIJKLMNOPQRSTUVWXYZ246 = W
-SUBST: 7 = t
+NSUBST: 7 = @ / t@
 MAP
       777777
     771xtTX277
