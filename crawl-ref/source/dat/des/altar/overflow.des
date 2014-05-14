@@ -750,6 +750,7 @@ NAME:   grunt_gozag_potion_petition
 DEPTH:  D:2-
 TAGS:   transparent no_item_gen no_monster_gen no_trap_gen temple_overflow_1
 TAGS:   temple_overflow_gozag uniq_altar_gozag
+WEIGHT: 5
 KFEAT:  _ = altar_gozag
 KFEAT:  O = general shop name:Gozag type:Nutrition suffix:Petition greed:100 \
         use_all ; potion of porridge | potion of blood q:4
@@ -790,6 +791,7 @@ NAME:  nicolae_gozag_zags_fifth_avenue
 TAGS:  temple_overflow_gozag temple_overflow_1 uniq_altar_gozag
 TAGS:  no_pool_fixup no_item_gen no_monster_gen decor transparent
 DEPTH: D:2-
+WEIGHT: 5
 FTILE: '_TS = floor_limestone
 KFEAT: _ = altar_gozag
 KFEAT: S = general shop name:Gozag type:Platinum suffix:Reserve count:4 \
