@@ -2640,9 +2640,9 @@ void seen_item(const item_def &item)
     {
         // Known brands will be set in set_item_flags().
         if (item.base_type == OBJ_WEAPONS)
-            you.seen_weapon[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+            you.seen_weapon[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_ARMOUR)
-            you.seen_armour[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+            you.seen_armour[item.sub_type] |= 1U << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_MISCELLANY
             && !is_deck(item))
         {
