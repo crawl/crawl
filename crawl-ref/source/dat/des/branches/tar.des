@@ -263,7 +263,7 @@ TAGS:    no_monster_gen
 DEPTH:   Tar, !Tar:$
 MONS:    soul eater, curse skull
 MONS:    skeletal warrior / phantasmal warrior w:6 / \
-         shadow wraith w:4 / plague shambler / guardian mummy
+         shadow wraith w:4 / guardian mummy
 KMONS:   45 = vampire knight
 KMONS:   67 = vampire mage
 KMONS:   89 = ghoul

@@ -1330,7 +1330,6 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FIRE_VULN:
     case ENCH_BARBS:
     case ENCH_POISON_VULN:
-    case ENCH_RETCHING:
     case ENCH_DIMENSION_ANCHOR:
     case ENCH_AGILE:
     case ENCH_FROZEN:

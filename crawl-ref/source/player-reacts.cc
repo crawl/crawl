@@ -1054,8 +1054,6 @@ static void _decrement_durations()
             you.duration[DUR_FLAYED] += div_rand_round(50, delay);
     }
 
-    _decrement_a_duration(DUR_RETCHING, delay, "Your fit of retching subsides.");
-
     if (you.duration[DUR_TOXIC_RADIANCE])
     {
         int ticks = (you.duration[DUR_TOXIC_RADIANCE] / 10)

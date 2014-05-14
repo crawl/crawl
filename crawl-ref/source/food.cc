@@ -688,16 +688,6 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     if (!check_hunger)
         return true;
 
-    if (you.duration[DUR_RETCHING])
-    {
-        if (!silent)
-        {
-            mpr("You couldn't keep anything down in your present state!");
-            crawl_state.zero_turns_taken();
-        }
-        return false;
-    }
-
     if (you.hunger_state >= HS_ENGORGED)
     {
         if (!silent)

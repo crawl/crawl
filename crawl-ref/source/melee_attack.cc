@@ -3315,28 +3315,6 @@ void melee_attack::mons_apply_attack_flavour()
         }
         break;
 
-    case AF_PLAGUE:
-        if (defender->sicken(30 + random2(50), true, true))
-        {
-            if (defender->is_player())
-            {
-                you.increase_duration(DUR_RETCHING, 7 + random2(9), 25);
-                mpr("You feel violently ill.");
-            }
-            else
-            {
-                if (!defender->as_monster()->has_ench(ENCH_RETCHING)
-                    && you.can_see(defender))
-                {
-                    simple_monster_message(defender->as_monster(),
-                                           " looks violently ill.");
-                }
-                defender->as_monster()->add_ench(mon_enchant(ENCH_RETCHING, 1,
-                                                             attacker, 7 + random2(9)));
-            }
-        }
-        break;
-
     case AF_WEAKNESS_POISON:
         if (coinflip() && mons_do_poison())
             defender->weaken(attacker, 12);

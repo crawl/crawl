@@ -1684,7 +1684,9 @@ enum duration_type
     DUR_WATER_HOLD,
     DUR_WATER_HOLD_IMMUNITY,
     DUR_FLAYED,
+#if TAG_MAJOR_VERSION == 34
     DUR_RETCHING,
+#endif
     DUR_WEAK,
     DUR_DIMENSION_ANCHOR,
     DUR_ANTIMAGIC,
@@ -1822,7 +1824,9 @@ enum enchant_type
     ENCH_WATER_HOLD,     // Silence and asphyxiation damage
     ENCH_FLAYED,
     ENCH_HAUNTING,
+#if TAG_MAJOR_VERSION == 34
     ENCH_RETCHING,
+#endif
     ENCH_WEAK,
     ENCH_DIMENSION_ANCHOR,
     ENCH_AWAKEN_VINES,   // Is presently animating snaplasher vines
@@ -2862,7 +2866,9 @@ enum monster_type                      // menv[].type
     MONS_SKELETON,
     MONS_SIMULACRUM,
 #endif
+#if TAG_MAJOR_VERSION == 34
     MONS_PLAGUE_SHAMBLER,
+#endif
     MONS_NECROPHAGE,
     MONS_GHOUL,
 #if TAG_MAJOR_VERSION == 34

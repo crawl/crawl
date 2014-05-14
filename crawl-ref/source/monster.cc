@@ -3594,8 +3594,7 @@ bool monster::is_unclean(bool check_spells) const
     if (has_attack_flavour(AF_DISEASE)
         || has_attack_flavour(AF_HUNGER)
         || has_attack_flavour(AF_ROT)
-        || has_attack_flavour(AF_STEAL)
-        || has_attack_flavour(AF_PLAGUE))
+        || has_attack_flavour(AF_STEAL))
     {
         return true;
     }
@@ -5499,8 +5498,7 @@ bool monster::can_drink_potion(potion_type ptype) const
     // These monsters cannot drink.
     if (is_skeletal() || is_insubstantial()
         || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY
-        || type == MONS_GASTRONOK
-        || has_ench(ENCH_RETCHING))
+        || type == MONS_GASTRONOK)
     {
         return false;
     }

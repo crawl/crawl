@@ -3154,7 +3154,6 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_PURE_FIRE:       return "deal pure fire damage";
     case AF_DRAIN_SPEED:     return "drain speed";
     case AF_VULN:            return "reduce resistance to hostile enchantments";
-    case AF_PLAGUE:          return "cause sickness and retching";
     case AF_WEAKNESS_POISON: return "cause poison and weakness";
     case AF_SHADOWSTAB:      return "deal extra damage from the shadows";
     case AF_DROWN:           return "deal drowning damage";
