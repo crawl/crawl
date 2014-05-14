@@ -136,11 +136,13 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
-    // Only ogres and trolls can wield giant clubs (>= 30 aum)
-    // and large rocks (60 aum).
-    if (you.body_size(PSIZE_TORSO, true) < SIZE_LARGE && (item_mass(*weapon) >= 500
-                                         || weapon->base_type == OBJ_WEAPONS
-                                            && item_mass(*weapon) >= 300))
+    // Only ogres and trolls can wield giant clubs and large rocks (for
+    // sandblast).
+    if (you.body_size(PSIZE_TORSO, true) < SIZE_LARGE
+        && ((weapon->base_type == OBJ_WEAPONS
+             && (is_giant_club_type(weapon->sub_type)))
+             || (weapon->base_type == OBJ_MISSILES &&
+                 weapon->sub_type == MI_LARGE_ROCK)))
     {
         SAY(mpr("That's too large and heavy for you to wield."));
         return false;
