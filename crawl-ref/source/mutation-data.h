@@ -11,6 +11,9 @@
 // fourth strings = message given when losing the mutation
 // fifth  string  = wizard-mode name of mutation
 
+static const mutation_def mut_data[] =
+{
+
 { MUT_TOUGH_SKIN,                     0,  3, false,  true,  true,
   "tough skin",
 
@@ -1663,3 +1666,5 @@
 
   "black mark"
 }
+
+};
