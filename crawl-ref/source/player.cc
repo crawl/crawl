@@ -2858,7 +2858,7 @@ void forget_map(bool rot)
 #endif
 }
 
-static void _remove_temp_mutations()
+static void _remove_temp_mutation()
 {
     int num_remove = min(you.attribute[ATTR_TEMP_MUTATIONS],
         max(you.attribute[ATTR_TEMP_MUTATIONS] * 5 / 12 - random2(3),
@@ -2977,7 +2977,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
     {
         you.attribute[ATTR_TEMP_MUT_XP] -= exp_gained;
         if (you.attribute[ATTR_TEMP_MUT_XP] <= 0)
-            _remove_temp_mutations();
+            _remove_temp_mutation();
     }
 
     recharge_xp_evokers(exp_gained);
@@ -5937,8 +5937,8 @@ void player::init()
     exp_docked_total = 0;
 
     mutation.init(0);
-    innate_mutations.init(0);
-    temp_mutations.init(0);
+    innate_mutation.init(0);
+    temp_mutation.init(0);
     demonic_traits.clear();
 
     magic_contamination = 0;

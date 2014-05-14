@@ -451,7 +451,7 @@ void ghost_demon::init_player_ghost()
     else
     {
         // Unarmed combat.
-        if (you.innate_mutations[MUT_CLAWS])
+        if (you.innate_mutation[MUT_CLAWS])
             damage += you.experience_level;
 
         damage += you.skills[SK_UNARMED_COMBAT];
