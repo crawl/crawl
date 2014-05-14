@@ -357,7 +357,7 @@ orb of fire cast
 %%%%
 silver statue cast
 
-@The_monster@'s eyes glow @glowing_colour_name@.
+@The_monster@'s eyes glow briefly.
 %%%%
 # Sphinxes can't gesture or point.
 sphinx cast
