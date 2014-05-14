@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
+#include <cfloat>
 
 #include "externs.h"
 #include "misc.h"
@@ -1981,7 +1982,7 @@ void bring_to_safety()
     }
 
     coord_def best_pos, pos;
-    double min_threat = 1e38;
+    double min_threat = DBL_MAX;
     int tries = 0;
 
     // Up to 100 valid spots, but don't lock up when there's none.  This can happen
@@ -2022,7 +2023,7 @@ void bring_to_safety()
         tries += 1000;
     }
 
-    if (min_threat != 1e38)
+    if (min_threat < DBL_MAX)
         you.moveto(best_pos);
 }
 
