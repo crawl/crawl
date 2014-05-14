@@ -238,7 +238,8 @@ public:
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
                              string source = "") = 0;
 
-    virtual int  skill(skill_type sk, int scale = 1, bool real = false) const = 0;
+    virtual int  skill(skill_type sk, int scale = 1,
+                       bool real = false, bool drained = true) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
     virtual int stat_hp() const = 0;

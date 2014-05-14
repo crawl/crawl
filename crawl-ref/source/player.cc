@@ -6486,7 +6486,7 @@ int player::shield_tohit_penalty(bool random_factor, int scale) const
     return maybe_roll_dice(1, adjusted_shield_penalty(scale), random_factor);
 }
 
-int player::skill(skill_type sk, int scale, bool real) const
+int player::skill(skill_type sk, int scale, bool real, bool drained) const
 {
     // wizard racechange, or upgraded old save
     if (is_useless_skill(sk))
@@ -6515,6 +6515,12 @@ int player::skill(skill_type sk, int scale, bool real) const
     int level = actual_skill * scale + get_skill_progress(sk, actual_skill, skill_points[sk], scale);
     if (real)
         return level;
+    if (drained && you.attribute[ATTR_XP_DRAIN])
+    {
+        int drain_scale = max(0, (30 * 100 - you.attribute[ATTR_XP_DRAIN]) * scale);
+        level = skill(sk, drain_scale, real, false);
+        return max(0, (level - 30 * scale * you.attribute[ATTR_XP_DRAIN]) / (30 * 100));
+    }
     if (duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
         level = min(level + 5 * scale, 27 * scale);
     if (penance[GOD_ASHENZARI])
@@ -6526,11 +6532,6 @@ int player::skill(skill_type sk, int scale, bool real) const
         {
             level = ash_skill_boost(sk, scale);
         }
-    }
-    if (you.attribute[ATTR_XP_DRAIN])
-    {
-        level = (int) max(0.0, level - you.attribute[ATTR_XP_DRAIN] / 100.0
-                                       * (scale + level/30.0));
     }
 
     return level;
