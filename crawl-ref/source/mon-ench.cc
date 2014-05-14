@@ -2195,17 +2195,24 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic",
 #if TAG_MAJOR_VERSION == 34
-    "fading_away",
+    "fading_away", "preparing_resurrect",
 #endif
-    "preparing_resurrect", "regen",
+    "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
     "withdrawn", "attached", "guardian_timer", "flight",
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "wretched", "screamed", "rune_of_recall", "injury bond",
-    "drowning", "flayed", "haunting", "retching", "weak", "dimension_anchor",
-    "awaken vines", "control_winds", "wind_aided", "summon_capped",
+    "drowning", "flayed", "haunting",
+#if TAG_MAJOR_VERSION == 34
+    "retching",
+#endif
+    "weak", "dimension_anchor", "awaken vines", "control_winds",
+#if TAG_MAJOR_VERSION == 34
+    "wind_aided",
+#endif
+    "summon_capped",
     "toxic_radiance", "grasping_roots_source", "grasping_roots",
     "iood_charged", "fire_vuln", "tornado_cooldown", "siren_song",
     "barbs",
