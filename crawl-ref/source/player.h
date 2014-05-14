@@ -120,8 +120,10 @@ public:
   bool dead; // ... but pending revival
   int lives;
   int deaths;
+#if TAG_MAJOR_VERSION == 34
   float temperature; // For lava orcs.
   float temperature_last;
+#endif
 
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
@@ -333,7 +335,9 @@ public:
   bool redraw_title;
   bool redraw_hit_points;
   bool redraw_magic_points;
+#if TAG_MAJOR_VERSION == 34
   bool redraw_temperature;
+#endif
   FixedVector<bool, NUM_STATS> redraw_stats;
   bool redraw_experience;
   bool redraw_armour_class;
@@ -656,7 +660,9 @@ public:
     int silence_radius2() const;
     int liquefying_radius2() const;
     int umbra_radius2() const;
+#if TAG_MAJOR_VERSION == 34
     int heat_radius2() const;
+#endif
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
@@ -1035,6 +1041,7 @@ bool need_expiration_warning(coord_def p = you.pos());
 void count_action(caction_type type, int subtype = 0);
 bool player_has_orb();
 
+#if TAG_MAJOR_VERSION == 34
 enum temperature_level
 {
     TEMP_MIN = 1, // Minimum (and starting) temperature. Not any warmer than bare rock.
@@ -1073,4 +1080,6 @@ bool temperature_effect(int which);
 int temperature_colour(int temp);
 string temperature_string(int temp);
 string temperature_text(int temp);
+#endif
+
 #endif

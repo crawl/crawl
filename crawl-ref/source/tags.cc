@@ -1500,8 +1500,10 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.deaths);
     marshallByte(th, you.lives);
 
+#if TAG_MAJOR_VERSION == 34
     marshallFloat(th, you.temperature);
     marshallFloat(th, you.temperature_last);
+#endif
 
     CANARY;
 
@@ -2757,10 +2759,8 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_LORC_TEMPERATURE)
     {
-#endif
         you.temperature = unmarshallFloat(th);
         you.temperature_last = unmarshallFloat(th);
-#if TAG_MAJOR_VERSION == 34
     }
     else
     {

@@ -328,7 +328,11 @@ class colour_bar
                && you.num_turns >= m_request_redraw_after;
     }
 
+#if TAG_MAJOR_VERSION == 34
     void draw(int ox, int oy, int val, int max_val, bool temp = false, int sub_val = 0)
+#else
+    void draw(int ox, int oy, int val, int max_val, int sub_val = 0)
+#endif
     {
         ASSERT(val <= max_val);
         if (max_val <= 0)
@@ -336,8 +340,9 @@ class colour_bar
             m_old_disp = -1;
             return;
         }
-
+#if TAG_MAJOR_VERSION == 34
         const colour_t temp_colour = temperature_colour(temperature());
+#endif
         const int width = crawl_view.hudsz.x - (ox - 1);
         const int sub_disp = (width * val / max_val);
         int disp  = width * max(0, val - sub_val) / max_val;
@@ -358,7 +363,13 @@ class colour_bar
             textcolor(BLACK + m_empty * 16);
 
             if (cx < disp)
+            {
+#if TAG_MAJOR_VERSION == 34
                 textcolor(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
+#else
+                textcolor(BLACK + m_default * 16);
+#endif
+            }
             else if (cx < sub_disp)
                 textcolor(BLACK + YELLOW * 16);
             else if (old_disp >= sub_disp && cx < old_disp)
@@ -367,7 +378,11 @@ class colour_bar
 #else
             if (cx < disp && cx < old_disp)
             {
+#if TAG_MAJOR_VERSION == 34
                 textcolor((temp) ? temp_colour : m_default);
+#else
+                textcolor(m_default);
+#endif
                 putwch('=');
             }
             else if (cx < disp)
@@ -503,7 +518,10 @@ void update_turn_count()
     }
 
     const int yhack = crawl_state.game_is_zotdef()
-                    + (you.species == SP_LAVA_ORC);
+#if TAG_MAJOR_VERSION == 34
+                    + (you.species == SP_LAVA_ORC)
+#endif
+                    ;
     CGOTOXY(19+6, 9 + yhack, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
@@ -531,6 +549,7 @@ static int _count_digits(int val)
     return 1;
 }
 
+#if TAG_MAJOR_VERSION == 34
 static void _print_stats_temperature(int x, int y)
 {
     cgotoxy(x, y, GOTO_STAT);
@@ -539,6 +558,7 @@ static void _print_stats_temperature(int x, int y)
 
     Temp_Bar.draw(19, y, temperature(), TEMP_MAX, true);
 }
+#endif
 
 static void _print_stats_mp(int x, int y)
 {
@@ -701,8 +721,10 @@ static void _print_stats_hp(int x, int y)
     if (you.species == SP_DJINNI)
         EP_Bar.draw(19, y, you.hp, you.hp_max);
     else
-#endif
         HP_Bar.draw(19, y, you.hp, you.hp_max, false, you.hp - max(0, poison_survival()));
+#else
+        HP_Bar.draw(19, y, you.hp, you.hp_max, you.hp - max(0, poison_survival()));
+#endif
 }
 
 static short _get_stat_colour(stat_type stat)
@@ -1263,10 +1285,15 @@ static void _redraw_title(const string &your_name, const string &job_name)
 
 void print_stats(void)
 {
+#if TAG_MAJOR_VERSION == 34
     int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
     int temp_pos = 5;
     int ac_pos = temp_pos + temp;
     int ev_pos = temp_pos + temp + 1;
+#else
+    int ac_pos = 5;
+    int ev_pos = ac_pos + 1;
+#endif
 
     cursor_control coff(false);
     textcolor(LIGHTGREY);
@@ -1279,8 +1306,10 @@ void print_stats(void)
         you.redraw_hit_points = true;
     if (MP_Bar.wants_redraw())
         you.redraw_magic_points = true;
+#if TAG_MAJOR_VERSION == 34
     if (Temp_Bar.wants_redraw() && you.species == SP_LAVA_ORC)
         you.redraw_temperature = true;
+#endif
 
     // Poison display depends on regen rate, so should be redrawn every turn.
     if (you.duration[DUR_POISONING])
@@ -1302,19 +1331,29 @@ void print_stats(void)
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
 #if TAG_MAJOR_VERSION == 34
     _print_stats_contam(1, 4);
-#endif
     if (you.redraw_temperature)  { you.redraw_temperature = false;  _print_stats_temperature (1, temp_pos); }
+#endif
     if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, ac_pos); }
     if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (1, ev_pos); }
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
+        {
+#if TAG_MAJOR_VERSION == 34
             _print_stat(static_cast<stat_type>(i), 19, 5 + i + temp);
+#else
+            _print_stat(static_cast<stat_type>(i), 19, 5 + i);
+#endif
+        }
     you.redraw_stats.init(false);
 
     if (you.redraw_experience)
     {
+#if TAG_MAJOR_VERSION == 34
         CGOTOXY(1, 8 + temp, GOTO_STAT);
+#else
+        CGOTOXY(1, 8, GOTO_STAT);
+#endif
         textcolor(Options.status_caption_colour);
         CPRINTF("XL: ");
         textcolor(HUD_VALUE_COLOUR);
@@ -1330,7 +1369,11 @@ void print_stats(void)
         }
         if (crawl_state.game_is_zotdef())
         {
+#if TAG_MAJOR_VERSION == 34
             CGOTOXY(1, 9 + temp, GOTO_STAT);
+#else
+            CGOTOXY(1, 9, GOTO_STAT);
+#endif
             textcolor(Options.status_caption_colour);
             CPRINTF("ZP: ");
             textcolor(HUD_VALUE_COLOUR);
@@ -1339,7 +1382,11 @@ void print_stats(void)
         you.redraw_experience = false;
     }
 
+#if TAG_MAJOR_VERSION == 34
     int yhack = crawl_state.game_is_zotdef() + temp;
+#else
+    int yhack = crawl_state.game_is_zotdef();
+#endif
 
     // If Options.show_gold_turns, line 9 is Gold and Turns
 #ifdef USE_TILE_LOCAL
@@ -1416,8 +1463,10 @@ static string _level_description_string_hud()
 void print_stats_level()
 {
     int ypos = 8;
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
         ypos++;
+#endif
     cgotoxy(19, ypos, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOUR);
     CPRINTF("Place: ");
@@ -1437,12 +1486,20 @@ void draw_border(void)
 
     textcolor(Options.status_caption_colour);
 
+#if TAG_MAJOR_VERSION == 34
     int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
+#endif
 //    int hp_pos = 3;
     int mp_pos = 4;
+#if TAG_MAJOR_VERSION == 34
     int ac_pos = 5 + temp;
     int ev_pos = 6 + temp;
     int sh_pos = 7 + temp;
+#else
+    int ac_pos = 5;
+    int ev_pos = 6;
+    int sh_pos = 7;
+#endif
     int str_pos = ac_pos;
     int int_pos = ev_pos;
     int dex_pos = sh_pos;
@@ -1465,7 +1522,11 @@ void draw_border(void)
 
     if (Options.show_gold_turns)
     {
+#if TAG_MAJOR_VERSION == 34
         int yhack = crawl_state.game_is_zotdef() + temp;
+#else
+        int yhack = crawl_state.game_is_zotdef();
+#endif
         CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
         CGOTOXY(19, 9 + yhack, GOTO_STAT);
         CPRINTF(Options.show_game_turns ? "Time:" : "Turn:");
@@ -2190,6 +2251,7 @@ static vector<formatted_string> _get_overview_stats()
     else
         lives[0] = 0;
 
+#if TAG_MAJOR_VERSION == 34
     char temperature[20];
     if (you.species == SP_LAVA_ORC)
     {
@@ -2198,6 +2260,7 @@ static vector<formatted_string> _get_overview_stats()
     }
     else
         temperature[0] = 0;
+#endif
 
     snprintf(buf, sizeof buf,
              "XL: %d%s\n"

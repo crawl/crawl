@@ -1092,6 +1092,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         }
 
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
         {
             switch (spell)
@@ -1106,6 +1107,7 @@ bool spell_is_useless(spell_type spell, bool transient)
                 break;
             }
         }
+#endif
     }
 
     switch (spell)
@@ -1162,10 +1164,12 @@ bool spell_is_useless(spell_type spell, bool transient)
         }
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case SPELL_STONESKIN:
         if (you.species == SP_LAVA_ORC)
             return true;
         break;
+#endif
 
     case SPELL_LEDAS_LIQUEFACTION:
         if (!you.stand_on_solid_ground()

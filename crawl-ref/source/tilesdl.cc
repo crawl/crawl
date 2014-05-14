@@ -1337,9 +1337,11 @@ void TilesFramework::layout_statcol()
 
         m_statcol_bottom = m_region_tab->sy - m_tab_margin;
 
+#if TAG_MAJOR_VERSION == 34
         // Lava orc temperature bar and zot points.
         if (you.species == SP_LAVA_ORC)
             ++crawl_view.hudsz.y;
+#endif
         if (crawl_state.game_is_zotdef())
             ++crawl_view.hudsz.y;
         m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);

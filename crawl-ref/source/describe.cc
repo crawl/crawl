@@ -4023,7 +4023,9 @@ string get_ghost_description(const monster_info &mi, bool concise)
     case SP_OGRE:
     case SP_MINOTAUR:
     case SP_HILL_ORC:
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:
+#endif
     case SP_CENTAUR:
     case SP_NAGA:
     case SP_MUMMY:

@@ -516,11 +516,13 @@ static int _spell_enhancement(unsigned int typeflags)
 
     enhanced += you.archmagi();
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_LAVA_BOOST)
         && (typeflags & SPTYP_FIRE) && (typeflags & SPTYP_EARTH))
     {
         enhanced++;
     }
+#endif
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)
@@ -920,6 +922,7 @@ static bool _vampire_cannot_cast(spell_type spell)
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 static bool _too_hot_to_cast(spell_type spell)
 {
     if (you.species != SP_LAVA_ORC)
@@ -947,6 +950,7 @@ static bool _too_hot_to_cast(spell_type spell)
         return false;
     }
 }
+#endif
 
 bool is_prevented_teleport(spell_type spell)
 {
@@ -973,6 +977,7 @@ bool spell_is_uncastable(spell_type spell, string &msg)
         return true;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (_too_hot_to_cast(spell))
     {
         if (spell == SPELL_STONESKIN && temperature_effect(LORC_STONESKIN))
@@ -983,6 +988,7 @@ bool spell_is_uncastable(spell_type spell, string &msg)
             msg = "Your temperature is too high to benefit from that spell.";
         return true;
     }
+#endif
 
     return false;
 }

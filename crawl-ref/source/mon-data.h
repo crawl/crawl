@@ -1600,6 +1600,7 @@ static monsterentry mondata[] =
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     MONS_LAVA_ORC, 'o', RED, "lava orc",
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
@@ -1611,6 +1612,7 @@ static monsterentry mondata[] =
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
+#endif
 
 // humans ('p')
 {

@@ -573,7 +573,6 @@ bool you_cannot_memorise(spell_type spell, bool &form)
     {
         rc = true, form = false;
     }
-#endif
 
     if (you.species == SP_LAVA_ORC
         && (spell == SPELL_STONESKIN
@@ -581,6 +580,7 @@ bool you_cannot_memorise(spell_type spell, bool &form)
     {
         rc = true, form = false;
     }
+#endif
 
     if (you.form == TRAN_WISP)
     {

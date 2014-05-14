@@ -530,6 +530,7 @@ string describe_mutations(bool center_title)
         break;
 #endif
 
+#if TAG_MAJOR_VERSION == 34
     case SP_LAVA_ORC:
     {
         have_any = true;
@@ -579,6 +580,7 @@ string describe_mutations(bool center_title)
 
         break;
     }
+#endif
 
     case SP_FORMICID:
         result += "Your are under a permanent stasis effect.\n";
@@ -729,6 +731,7 @@ static const string _vampire_Ascreen_footer = (
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
 
+#if TAG_MAJOR_VERSION == 34
 static const string _lava_orc_Ascreen_footer = (
 #ifndef USE_TILE_LOCAL
     "Press '<w>!</w>'"
@@ -737,6 +740,7 @@ static const string _lava_orc_Ascreen_footer = (
 #endif
     " to toggle between mutations and properties depending on your\n"
     "temperature.\n");
+#endif
 
 static void _display_vampire_attributes()
 {
@@ -835,6 +839,7 @@ static void _display_vampire_attributes()
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 static void _display_temperature()
 {
     ASSERT(you.species == SP_LAVA_ORC);
@@ -914,6 +919,7 @@ static void _display_temperature()
         display_mutations();
     }
 }
+#endif
 
 void display_mutations()
 {
@@ -938,6 +944,7 @@ void display_mutations()
         extra += _vampire_Ascreen_footer;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC)
     {
         if (!extra.empty())
@@ -945,6 +952,7 @@ void display_mutations()
 
         extra += _lava_orc_Ascreen_footer;
     }
+#endif
 
     if (!extra.empty())
     {
@@ -965,12 +973,14 @@ void display_mutations()
     {
         _display_vampire_attributes();
     }
+#if TAG_MAJOR_VERSION == 34
     if (you.species == SP_LAVA_ORC
         && (mutation_menu.getkey() == '!'
             || mutation_menu.getkey() == CK_MOUSE_CMD))
     {
         _display_temperature();
     }
+#endif
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)

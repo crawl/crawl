@@ -3254,8 +3254,10 @@ bool is_useless_item(const item_def &item, bool temp)
         return !can_wear_armour(item, false, true);
 
     case OBJ_SCROLLS:
+#if TAG_MAJOR_VERSION == 34
         if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
             return true;
+#endif
 
         if (!item_type_known(item))
             return false;

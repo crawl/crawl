@@ -44,7 +44,9 @@ enum areaprop_flag
     APROP_QUAD          = (1 << 8),
     APROP_DISJUNCTION   = (1 << 9),
     APROP_SOUL_AURA     = (1 << 10),
+#if TAG_MAJOR_VERSION == 34
     APROP_HOT           = (1 << 11),
+#endif
     APROP_GOLD          = (1 << 12),
 };
 
@@ -88,7 +90,10 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
          || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1
-         || act->heat_radius2() > -1))
+#if TAG_MAJOR_VERSION == 34
+         || act->heat_radius2() > -1
+#endif
+         ))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -142,6 +147,7 @@ static void _actor_areas(actor *a)
         no_areas = false;
     }
 
+#if TAG_MAJOR_VERSION == 34
     if ((r = a->heat_radius2()) >= 0)
     {
         _agrid_centres.push_back(area_centre(AREA_HOT, a->pos(), r));
@@ -150,6 +156,7 @@ static void _actor_areas(actor *a)
             _set_agrid_flag(*ri, APROP_HOT);
         no_areas = false;
     }
+#endif
 }
 
 /**
@@ -251,8 +258,10 @@ static area_centre_type _get_first_area(const coord_def& f)
         return AREA_SANCTUARY;
     if (a & APROP_SILENCE)
         return AREA_SILENCE;
+#if TAG_MAJOR_VERSION == 34
     if (a & APROP_HOT)
         return AREA_HOT;
+#endif
     if (a & APROP_HALO)
         return AREA_HALO;
     if (a & APROP_UMBRA)
@@ -764,6 +773,7 @@ int monster::umbra_radius2() const
     }
 }
 
+#if TAG_MAJOR_VERSION == 34
 /////////////
 // Heat aura (lava orcs).
 
@@ -800,6 +810,7 @@ bool actor::heated() const
 {
     return ::heated(pos());
 }
+#endif
 
 /////////////
 // Gold aura (Gozag).

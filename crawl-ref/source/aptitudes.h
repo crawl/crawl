@@ -1370,7 +1370,6 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DJINNI,          SK_POISON_MAGIC,   -1),
     APT(SP_DJINNI,          SK_INVOCATIONS,    -1),
     APT(SP_DJINNI,          SK_EVOCATIONS,      2),
-#endif
 
     // SP_LAVA_ORC
     APT(SP_LAVA_ORC,        SK_FIGHTING,        2),
@@ -1387,13 +1386,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_ARMOUR,          1),
     APT(SP_LAVA_ORC,        SK_DODGING,        -2),
     APT(SP_LAVA_ORC,        SK_STEALTH,        -1),
-#if TAG_MAJOR_VERSION == 34
     APT(SP_LAVA_ORC,        SK_STABBING,      -99),
-#endif
     APT(SP_LAVA_ORC,        SK_SHIELDS,         1),
-#if TAG_MAJOR_VERSION == 34
     APT(SP_LAVA_ORC,        SK_TRAPS,         -99),
-#endif
     APT(SP_LAVA_ORC,        SK_UNARMED_COMBAT,  1),
     APT(SP_LAVA_ORC,        SK_SPELLCASTING,   -3),
     APT(SP_LAVA_ORC,        SK_CONJURATIONS,    0),
@@ -1410,6 +1405,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_LAVA_ORC,        SK_POISON_MAGIC,   -1),
     APT(SP_LAVA_ORC,        SK_INVOCATIONS,     3),
     APT(SP_LAVA_ORC,        SK_EVOCATIONS,      1),
+#endif
 
     // SP_FORMICID
     APT(SP_FORMICID,        SK_FIGHTING,        1),
