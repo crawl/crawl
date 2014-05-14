@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 #include <math.h>
+#include <cfloat>
 
 #include "spl-damage.h"
 
@@ -173,7 +174,7 @@ static coord_def _rotate(coord_def org, coord_def from,
         return from;
 
     coord_def best = from;
-    double hiscore = 1e38;
+    double hiscore = DBL_MAX;
 
     double dist0 = sqrt((from - org).abs());
     double ang0 = atan2(from.x - org.x, from.y - org.y) + rdur * 0.01;
@@ -192,7 +193,7 @@ static coord_def _rotate(coord_def org, coord_def from,
     }
 
     // must find _something_, the original space might be already taken
-    ASSERT(hiscore != 1e38);
+    ASSERT(hiscore != DBL_MAX);
 
     return best;
 }
