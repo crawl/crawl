@@ -70,10 +70,7 @@ struct spell_desc
     bool         ms_utility;
 };
 
-static const struct spell_desc spelldata[] =
-{
-    #include "spl-data.h"
-};
+#include "spl-data.h"
 
 static int spell_list[NUM_SPELLS];
 
