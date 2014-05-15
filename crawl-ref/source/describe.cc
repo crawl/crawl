@@ -3123,7 +3123,6 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_BLINK:           return "blink self";
     case AF_COLD:            return "deal extra cold damage";
     case AF_CONFUSE:         return "cause confusion";
-    case AF_DISEASE:         return "cause sickness";
     case AF_DRAIN_STR:       return "drain strength";
     case AF_DRAIN_INT:       return "drain intelligence";
     case AF_DRAIN_DEX:       return "drain dexterity";

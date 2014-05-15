@@ -514,8 +514,6 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     // Hits monsters that have these brands.
     if (mon->has_attack_flavour(AF_VAMPIRIC))
         eligibility[RECITE_IMPURE]++;
-    if (mon->has_attack_flavour(AF_DISEASE))
-        eligibility[RECITE_IMPURE]++;
     if (mon->has_attack_flavour(AF_HUNGER))
         eligibility[RECITE_IMPURE]++;
     if (mon->has_attack_flavour(AF_ROT))
