@@ -22,6 +22,7 @@
 #define TEMPLE_GODS_KEY      "temple_gods_key"
 #define OVERFLOW_TEMPLES_KEY "overflow_temples_key"
 #define TEMPLE_MAP_KEY       "temple_map_key"
+#define TEMPLE_SIZE_KEY      "temple_size_key"
 
 const int MAKE_GIFT_ITEM = 350; // worse than the next one
 const int MAKE_GOOD_ITEM = 351;

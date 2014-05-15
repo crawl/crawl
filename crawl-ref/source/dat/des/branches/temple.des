@@ -1,7 +1,27 @@
 ##############################################################################
 # temple.des: Entries for the Ecumenical Temple, and Temples themselves
+#
+# You can create temples with variable numbers of altars by specifying a
+# "temple_variable" tag and one or more "temple_altars_#" tags with the
+# number of altars you wish to place. Use get_altar_count() below to get
+# the number of altars you need to place; see corrupted_temple for an
+# example.
 ##############################################################################
 
+{{
+function get_altar_count(e)
+  local params = dgn.map_parameters()
+  if params ~= nil then
+    local tag = unpack(params)
+    if tag ~= nil then
+      -- temple_altars_ is 14 characters
+      return string.sub(tag, 15)
+    end
+  end
+
+  return 0
+end
+}}
 
 ##############################################################################
 # Temple entries
@@ -3214,19 +3234,18 @@ c.............c
 ccccccccccccccc
 ENDMAP
 
-# 6 gods
-# plus 6 more altars to Lugonu.
-# NOTE: A random number of temple gods would be nicer, but
-#       this does not currently work. Since the map is evaluated
-#       twice (once at gamestart, once at Temple generation),
-#       pre-rolled altars may end up not being placed without
-#       overflow altars to replace them elsewhere, leading to
-#       gods missing from the game entirely.
-NAME:     corrupted_temple_6
+# 6-9 gods
+# plus 3-6 altars to Lugonu.
+NAME:     corrupted_temple
+TAGS:     temple_variable
+TAGS:     temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
 PLACE:    Temple
 WEIGHT:   10
 ORIENT:   encompass
-NSUBST:   O = 6:B / *:O
+{{
+local altar_count = is_validating() and 6 or get_altar_count(_G)
+nsubst("O = " .. altar_count .. ":B / *:O")
+}}
 KFEAT:    O = altar_lugonu
 MONS:     plant col:random name:demonic name_adjective tile:mons_demonic_plant
 SUBST:    . = . x:1 w:1 l:1
