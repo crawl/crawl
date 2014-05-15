@@ -13,8 +13,6 @@ struct item_def;
 
 void banished(const string &who = "");
 
-bool forget_spell(void);
-
 int mushroom_prob(item_def & corpse);
 
 bool mushroom_spawn_message(int seen_targets, int seen_corpses);

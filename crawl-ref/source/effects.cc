@@ -430,37 +430,6 @@ void banished(const string &who)
     }
 }
 
-bool forget_spell(void)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (!you.spell_no)
-        return false;
-
-    // find a random spell to forget:
-    int slot = -1;
-    int num  = 0;
-
-    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
-    {
-        if (you.spells[i] != SPELL_NO_SPELL)
-        {
-            num++;
-            if (one_chance_in(num))
-                slot = i;
-        }
-    }
-
-    if (slot == -1)              // should never happen though
-        return false;
-
-    mprf("Your knowledge of %s becomes hazy all of a sudden, and you forget "
-         "the spell!", spell_title(you.spells[slot]));
-
-    del_spell_from_memory_by_slot(slot);
-    return true;
-}
-
 void direct_effect(monster* source, spell_type spell,
                    bolt &pbolt, actor *defender)
 {
