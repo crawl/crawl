@@ -3377,6 +3377,14 @@ static void _place_gozag_shop(dungeon_feature_type stair)
         grd(*shop_place) = DNGN_ABANDONED_SHOP;
 }
 
+// Shafts can be generated visible.
+//
+// Starts about 50% of the time and approaches 0%
+static bool _shaft_known(int depth)
+{
+        return coinflip() && x_chance_in_y(3, depth);
+}
+
 static void _place_traps()
 {
     const int num_traps = num_traps_for_place();
@@ -3431,7 +3439,7 @@ static void _place_traps()
 
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
         env.tgrid(ts.pos) = i;
-        if (ts.type == TRAP_SHAFT && shaft_known(level_number, true))
+        if (ts.type == TRAP_SHAFT && shaft_known(level_number))
             ts.reveal();
         ts.prepare_ammo();
     }
