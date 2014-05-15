@@ -2152,11 +2152,6 @@ int exper_value(const monster* mon, bool real)
         x_val /= 10;
     }
 
-    // Slime creature exp hack part 2: Scale exp back up by the number
-    // of blobs merged. -cao
-    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
-        x_val *= mon->number;
-
     // Scale starcursed mass exp by what percentage of the whole it represents
     if (mon->type == MONS_STARCURSED_MASS)
         x_val = (x_val * mon->number) / 12;
@@ -2170,6 +2165,13 @@ int exper_value(const monster* mon, bool real)
         x_val = 100 + ((x_val - 100) * 3) / 4;
     if (x_val > 750)
         x_val = 750 + (x_val - 750) / 3;
+
+    // Slime creature exp hack part 2: Scale exp back up by the number
+    // of blobs merged. -cao
+    // Has to be after the stepdown to prevent issues with 4-5 merged slime
+    // creatures. -pf
+    if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
+        x_val *= mon->number;
 
     // Guarantee the value is within limits.
     if (x_val <= 0)
