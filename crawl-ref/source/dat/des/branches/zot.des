@@ -1180,7 +1180,7 @@ MAP
 ENDMAP
 
 NAME:   bh_zot_levy_curve
-TAGS:   extra mini_float
+TAGS:   extra
 DEPTH:  Zot
 SUBST:  W = Ww
 MAP

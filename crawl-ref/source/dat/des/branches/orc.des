@@ -699,7 +699,6 @@ ENDMAP
 # A temple (minmay)
 #
 NAME:   minmay_orc_temple_a
-TAGS:   mini_float
 DEPTH:  Orc
 MONS:   orc, patrolling orc priest
 KFEAT:  _ = altar_beogh
@@ -718,7 +717,6 @@ ENDMAP
 # Another temple (minmay)
 #
 NAME:   minmay_orc_temple_b
-TAGS:   mini_float
 DEPTH:  Orc
 MONS:   orc / nothing w:40, patrolling orc priest / nothing w:5
 KFEAT:  _ = altar_beogh
@@ -752,7 +750,6 @@ ENDMAP
 # Still another temple (minmay)
 #
 NAME:   minmay_orc_temple_c
-TAGS:   mini_float
 DEPTH:  Orc:2-
 MONS:   orc, orc priest, orc high priest
 SUBST:  . = 1 .:200
@@ -789,7 +786,6 @@ ENDMAP
 #######################
 # Yet Another Temple
 NAME:   bh_open_orc_temple
-TAGS:   mini_float
 DEPTH:  Orc:3-
 SUBST:  " = 1.......
 MONS:   orc w:8 / orc priest w:2 / orc warrior
@@ -818,7 +814,6 @@ ENDMAP
 # Treasure chamber (minmay)
 #
 NAME:   minmay_orc_treasury
-TAGS:   mini_float
 DEPTH:  Orc:3-
 MONS:   orc warlord band, orc knight band
 SUBST:  $ = $:100 *|
@@ -852,7 +847,7 @@ vv...................vv
 ENDMAP
 
 NAME:    guppyfry_orc_lava_fort
-TAGS:    no_item_gen no_monster_gen mini_float
+TAGS:    no_item_gen no_monster_gen
 DEPTH:   Orc:3-
 KMONS:   1 = orc high priest / orc sorcerer
 KMONS:   2 = orc knight
@@ -918,7 +913,7 @@ ENDMAP
 ##################################################
 # The orcs piled up some loose rubble.
 NAME:   rock_pile
-TAGS:   no_item_gen no_monster_gen mini_float
+TAGS:   no_item_gen no_monster_gen
 DEPTH:  Orc
 MONS:   orc ; sling . stone q:30, boulder beetle
 KITEM:  d = w:3 stone / w:1 large rock q:1
@@ -1189,7 +1184,7 @@ xxxxxxXXXX''''Exxx
 ENDMAP
 
 NAME: nicolae_orc_flooded_monolith
-TAGS: extra decor mini_float transparent
+TAGS: extra decor transparent
 DEPTH: Orc
 SUBST: W = w., c : ccccbv
 MAP
@@ -1275,7 +1270,7 @@ xxxxXXxxxxxX....@
 ENDMAP
 
 NAME: nicolae_orc_rockfall
-TAGS: transparent extra decor mini_float no_item_gen
+TAGS: transparent extra decor no_item_gen
 DEPTH: Orc
 : dgn.delayed_decay_extra(_G, 'o', 'orc corpse', 'stone q:1 / nothing, large rock q:1')
 KITEM: r = stone q:1 / nothing w:5 / large rock q:1 w:3
@@ -1291,7 +1286,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_orc_sculptors_studio
-TAGS: extra decor mini_float no_item_gen
+TAGS: extra decor no_item_gen
 DEPTH: Orc
 NSUBST: r = 1:H / 1:C / *:r
 SUBST: G = GGGI

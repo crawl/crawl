@@ -241,7 +241,7 @@ x@@xxxxxxxx
 ENDMAP
 
 NAME:   rand_demon_pan_entry_3
-TAGS:   mini_float transparent
+TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -260,7 +260,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_4
-TAGS:   mini_float transparent
+TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -278,7 +278,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_5
-TAGS:   mini_float transparent
+TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -297,7 +297,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_7
-TAGS:   mini_float transparent
+TAGS:   transparent
 NSUBST: ? = 1:O / 4:1 / *:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
@@ -317,7 +317,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_8
-TAGS:   mini_float transparent
+TAGS:   transparent
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
 MAP
@@ -336,7 +336,7 @@ MAP
 ENDMAP
 
 NAME:   rand_demon_pan_entry_9
-TAGS:   mini_float transparent
+TAGS:   transparent
 NSUBST: ^ = 4:1 / *:.
 : pan_entry_feature(_G, 'O')
 : pan_entry_vault_contents(_G, 'O')
@@ -359,7 +359,7 @@ ENDMAP
 # More entries based on panlord vaults.
 
 NAME:  grunt_pan_entry_in_and_out
-TAGS:  mini_float transparent
+TAGS:  transparent
 SUBST: d = 112
 : pan_entry_feature(_G, 'e')
 : pan_entry_vault_contents(_G, 'e')
@@ -379,7 +379,7 @@ MAP
 ENDMAP
 
 NAME:  grunt_pan_entry_spiral
-TAGS:  mini_float transparent
+TAGS:  transparent
 SUBST: d = 112
 : pan_entry_feature(_G, 'e')
 : pan_entry_vault_contents(_G, 'e')
@@ -399,7 +399,7 @@ MAP
 ENDMAP
 
 NAME:  grunt_pan_entry_zigzag
-TAGS:  mini_float transparent
+TAGS:  transparent
 SUBST: d = 112
 : pan_entry_feature(_G, 'e')
 : pan_entry_vault_contents(_G, 'e')
@@ -2461,7 +2461,7 @@ ENDMAP
 
 ##################################
 NAME:   reaverb_pan_chaos_star
-TAGS:   extra decor transparent mini_float
+TAGS:   extra decor transparent
 MAP
         ...
  ....  ..x..  ....
@@ -2486,7 +2486,7 @@ ENDMAP
 
 ###################################
 NAME: reaverb_pan_squares
-TAGS: extra decor transparent mini_float
+TAGS: extra decor transparent
 MAP
 .......
 .xxxxx.

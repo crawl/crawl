@@ -689,7 +689,6 @@ ENDMAP
 
 NAME:  guppyfry_elf_castle
 DEPTH: Elf:2-
-TAGS:  mini_float
 MONS:  deep elf fighter / deep elf mage / deep elf knight
 MONS:  deep elf blademaster / deep elf death mage / deep elf sorcerer
 MONS:  plant
@@ -712,7 +711,6 @@ ENDMAP
 
 NAME:  guppyfry_elf_garden
 DEPTH: Elf:2-
-TAGS:  mini_float
 MONS:  deep elf fighter / deep elf mage / deep elf priest
 MONS:  deep elf blademaster / deep elf master archer / deep elf sorcerer
 MONS:  plant
@@ -760,7 +758,6 @@ ENDMAP
 
 NAME:  guppyfry_elf_lava
 DEPTH: Elf:2-
-TAGS:  mini_float
 MONS:  deep elf conjurer / deep elf mage / deep elf summoner
 MONS:  deep elf annihilator / deep elf death mage / deep elf demonologist
 KFEAT: v = general shop type:Elven suffix:Fire count:7 ; \
@@ -846,7 +843,7 @@ ENDMAP
 
 NAME:    nicolae_elf_stone_circles
 DEPTH:   Elf
-TAGS:    transparent extra decor allow_dup luniq mini_float
+TAGS:    transparent extra decor allow_dup luniq
 SHUFFLE: za, bd
 SUBST:   a = A, b = B, zd = c
 SHUFFLE: AB, DEFG
@@ -1085,7 +1082,7 @@ cG..xJ..E.x.xxDxx
 ENDMAP
 
 NAME:    hangedman_elven_pyramids
-TAGS:    extra transparent mini_float decor
+TAGS:    extra transparent decor
 DEPTH:   Elf
 SHUFFLE: ABCD, +-_, yz / yz / zy
 SUBST:   A : ZZ., B : Z., C : Z.., D = .

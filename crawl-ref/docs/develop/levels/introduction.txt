@@ -170,11 +170,6 @@ If you do use them, > is almost always better than <.
 
 Entry points
 ------------
-Minivaults can use explicit @ exits, or be completely surrounded by
-one space of floor for accessibility. Alternatively, you can request
-that the dungeon builder pick appropriate exits as it does for
-floating vaults by using the "mini_float" tag.
-
 The entry point '@' must be present for all vaults (except for
 full-screen vaults where it must not, and for floating vaults and
 minivaults where it is optional). All @ will be connected to floor
@@ -191,10 +186,11 @@ The level-builder will also implicitly treat doors and runed doors
 on the edge of a map as explicit exits (the same as using @) and
 connect them to the rest of the level.
 
-Not using @ and allowing the level-builder to pick exits is
-acceptable in floating vaults, but when you use no @'s with this
-feature in mind, please add comments stating this - else somebody
-may just add @'s later on. :)
+Not using @ will cause the level builder to pick exits randomly from
+non-solid squaress on the edge of your vault. You should always either
+have explicit exits or accessible squares; if the vault is completely
+inaccessible (by exits, non-solid squares that can act as exits, or by
+stair), it will fail to load - so don't do that.
 
 Minivaults vs. random vaults
 ----------------------------

@@ -95,7 +95,7 @@ NAME:     blue_anna_alchemist
 DEPTH:    D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
-TAGS:     uniq_second_food extra chance_second_food mini_float
+TAGS:     uniq_second_food extra chance_second_food
 SUBVAULT: Z : fruiting_plant
 SUBVAULT: Y : fruiting_plant
 SUBVAULT: X : fruiting_plant

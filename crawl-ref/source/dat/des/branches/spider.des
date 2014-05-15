@@ -347,7 +347,7 @@ xxW.xxxW..xxxxW.xx
 ENDMAP
 
 NAME:   spiders_nest_the_unseen
-TAGS:   no_item_gen no_monster_gen mini_float
+TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   trapdoor spider, patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
@@ -372,7 +372,7 @@ MAP
 ENDMAP
 
 NAME:   spiders_nest_ghost_moth_duel
-TAGS:   no_item_gen no_monster_gen mini_float
+TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   ghost moth, tarantella
 ITEM:   piece of ambrosia
@@ -462,7 +462,7 @@ MAP
 ENDMAP
 
 NAME:   hangedman_spider_trapstep
-TAGS:   no_monster_gen no_pool_fixup patrolling mini_float allow_dup
+TAGS:   no_monster_gen no_pool_fixup patrolling allow_dup
 DEPTH:  Spider:1-3, Zot:1-4
 KMONS:  0 = patrolling spider
 KMONS:  1 = tarantella
@@ -564,7 +564,6 @@ ENDMAP
 # Some wasp vaults. Wasps eat spiders (and players).
 NAME:   spiders_nest_wasp_nest
 DEPTH:  Spider
-TAGS:   mini_float
 MONS:   red wasp / w:5 yellow wasp
 SUBST:  1 = %1
 SUBST:  a = .a
@@ -819,7 +818,7 @@ ENDMAP
 
 NAME:   nicolae_orb_island
 DEPTH:  Spider:2-
-TAGS:   no_pool_fixup mini_float
+TAGS:   no_pool_fixup
 MONS:   generate_awake orb spider
 KPROP:  1'z = no_rtele_into
 KMASK:  w = no_monster_gen
@@ -893,7 +892,7 @@ ENDMAP
 # Demonic crawler nest, maybe with a demonic farmer
 NAME:   nicolae_crawler_farm
 DEPTH:  Spider
-TAGS:   no_monster_gen patrolling no_trap_gen mini_float
+TAGS:   no_monster_gen patrolling no_trap_gen
 MONS:   crimson imp w:50 / white imp w:25 / shadow imp w:15 / \
         iron imp w:10 / nothing w:50
 MONS:   demonic crawler
@@ -918,7 +917,6 @@ ENDMAP
 
 NAME:   nicolae_spider_shape
 DEPTH:  Spider
-TAGS:   mini_float
 MAP
  ...........
  .xxx...xxx.
@@ -934,7 +932,7 @@ ENDMAP
 
 NAME:   nicolae_arachne_temple
 DEPTH:  Spider:2-
-TAGS:   no_item_gen no_monster_gen no_trap_gen mini_float
+TAGS:   no_item_gen no_monster_gen no_trap_gen
 MONS:   spider, tarantella, wolf spider, redback, jumping spider
 FTILE:  -2 = FLOOR_SANDSTONE
 FTILE:  'A435 = FLOOR_LIMESTONE
@@ -1080,7 +1078,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME: nicolae_spider_circle_web
-TAGS: mini_float transparent extra
+TAGS: transparent extra
 DEPTH: Spider
 MAP
        ......x
@@ -1107,7 +1105,7 @@ xxx..x...xxx...x..x..
 ENDMAP
 
 NAME: nicolae_spider_webs_and_nodes
-TAGS: mini_float transparent extra
+TAGS: transparent extra
 DEPTH: Spider
 SUBST: A : .B, B : x .:5, C : .D, D : x .:5
 MAP

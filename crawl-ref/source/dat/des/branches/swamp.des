@@ -73,7 +73,7 @@ MAP
 ENDMAP
 
 NAME:   minmay_swamp_entry_swarm
-TAGS:   swamp_entry mini_float
+TAGS:   swamp_entry
 WEIGHT: 5
 SUBST:  W = 1WWWWW, t = ttt., T = tttW, W = WWWwww., ' = W
 NSUBST: 1 = 2:1 / 1WWWWW
@@ -196,7 +196,7 @@ default-depth: Swamp
 ###############################################################################
 # A series of pools by Jude.
 NAME:   swamp_pool1
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 WEIGHT: 1000
 {{ smear_map({iterations=5, smear='w', onto='wwt"', boxy=false}) }}
 SUBST:  "=ttw
@@ -211,7 +211,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool2
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 WEIGHT: 500
 SUBST:  "=ttttw
 MAP
@@ -225,7 +225,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool3
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 WEIGHT: 500
 SUBST:  '=Wt, "=wwt
 MAP
@@ -238,7 +238,7 @@ twwww"t
 ENDMAP
 
 NAME:   swamp_pool4
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 WEIGHT: 500
 SUBST:  "=ttttw
 MAP
@@ -252,7 +252,7 @@ MAP
 ENDMAP
 
 NAME:   swamp_pool5
-TAGS:   no_pool_fixup allow_dup extra luniq_pool mini_float
+TAGS:   no_pool_fixup allow_dup extra luniq_pool
 KMONS:  1 = patrolling swamp drake
 KFEAT:  1 = deep_water
 WEIGHT: 500
@@ -323,7 +323,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_swamp_treefoil
-TAGS: transparent mini_float extra decor
+TAGS: transparent extra decor
 SUBST: T = t.
 KFEAT: . = . w:30 / W
 MAP
@@ -1321,7 +1321,7 @@ tWTTWWTTWt
 ENDMAP
 
 NAME: nicolae_swamp_snake_nest
-TAGS: transparent no_monster_gen mini_float
+TAGS: transparent no_monster_gen
 KMONS: 1 = anaconda
 KMONS: 2 = adder / ball python / water moccasin / black mamba
 SUBST: T = ..ttw
@@ -1382,7 +1382,7 @@ tttt@@tttt
 ENDMAP
 
 NAME: nicolae_swamp_dragon_and_kin
-TAGS: patrolling transparent mini_float
+TAGS: patrolling transparent
 SUBST: T = t., B = tt_
 NSUBST: d = D / d
 KMONS: D = swamp dragon
@@ -1407,7 +1407,7 @@ BBttTTTTTTTtttBB
 ENDMAP
 
 NAME: nicolae_swamp_hydra_murder_den
-TAGS: no_monster_gen mini_float
+TAGS: no_monster_gen
 : local heads = crawl.roll_dice(2, 3) + 7
 KPROP: ' = no_rtele_into
 SUBST: Z = T_
@@ -1559,7 +1559,7 @@ txx+xxt
 ENDMAP
 
 NAME:  cheibrodos_swamp_minitomb
-TAGS:  no_item_gen no_monster_gen mini_float
+TAGS:  no_item_gen no_monster_gen
 DEPTH: Swamp, !Swamp:$
 KMONS: - = bog body w:20 / troll zombie / troll skeleton / shadow w:5
 KITEM: - = w:5 gold / w:2 any jewellery / w:20 nothing

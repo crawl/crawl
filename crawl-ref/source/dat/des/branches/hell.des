@@ -264,7 +264,7 @@ ENDMAP
 
 ##############################################################################
 NAME: grunt_hell_horde
-TAGS: nolayout_encompass mini_float uniq_hell_entry_high
+TAGS: nolayout_encompass uniq_hell_entry_high
 : hell_entry_feature(_G, 'O')
 NSUBST: + = 1:+ / 1:+x / *:x
 MONS: hell hog / hell hound, hell hound / nothing

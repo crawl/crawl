@@ -289,7 +289,7 @@ ENDMAP
 
 NAME:    nicolae_geh_sunburst
 DEPTH:   Geh, !Geh:$
-TAGS:    transparent extra mini_float decor
+TAGS:    transparent extra decor
 SHUFFLE: abcdefgh/!''''!!!/!!''!!''/!''!!''!/!'!'!'!'/!!!'!!!'/!!!!!!!'/''''''''
 SUBST:   { = }}}{
 SHUFFLE: }]), ([{
@@ -342,7 +342,7 @@ ENDMAP
 
 NAME:     nicolae_geh_fiery_graves
 DEPTH:    Geh, !Geh:$
-TAGS:     transparent extra decor mini_float
+TAGS:     transparent extra decor
 SUBVAULT: A : nicolae_fiery_grave
 SUBVAULT: B : nicolae_fiery_grave
 SUBVAULT: C : nicolae_fiery_grave

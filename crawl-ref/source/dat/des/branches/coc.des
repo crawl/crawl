@@ -47,7 +47,7 @@ end
 ##############################################################################
 
 NAME:   grunt_cocytus_stairs_refrigerator
-TAGS:   transparent mini_float
+TAGS:   transparent
 DEPTH:  Coc:1-6
 COLOUR: c = blue
 MONS:   Ice Fiend, blizzard demon, ice devil, blue devil, white imp
@@ -72,7 +72,7 @@ ENDMAP
 
 NAME:    nicolae_coc_three_mouths
 DEPTH:   Coc, !Coc:$
-TAGS:    transparent extra mini_float decor
+TAGS:    transparent extra decor
 SUBST:   j = >}}, b = >]], c = >))
 SHUFFLE: )}]
 MAP
