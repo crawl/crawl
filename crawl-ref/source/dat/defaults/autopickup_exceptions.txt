@@ -34,4 +34,4 @@ ae += amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasi
 # the Abyss. Still, they're more in line with lanterns of shadow, so you can
 # pick up the second one by hand.
 ae += ring of (see invisible|flight|poison resistance|teleportation)
-ae += ring of (invisibility|teleport control)
+ae += ring of (invisibility|teleport control|sustain abilities)
