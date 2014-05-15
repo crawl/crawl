@@ -3203,7 +3203,7 @@ ENDMAP
 
 ##########################################################################
 # Some sporadic layouts
-#   Total weight: 16 = 3+10+1+2
+#   Total weight: 19 = 3+10+2+1+1+2
 
 # 12 gods
 NAME:    minmay_freezing_vapour_temple_12
@@ -3282,6 +3282,97 @@ xx.O.xxx.'.xxx.O.xx
        x'..x
        x1{1x
        xxxxx
+ENDMAP
+
+# 6-9 gods
+# plus 3-6 more altars to Jiyva.
+# Layout based on zaba_magenta_temple_12.
+NAME:      pf_slimified_temple
+TAGS:      temple_variable
+TAGS:      temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
+PLACE:     Temple
+WEIGHT:    2
+TAGS:      no_rotate
+ORIENT:    encompass
+{{
+local altar_count = is_validating() and 6 or get_altar_count(_G)
+nsubst("O = " .. altar_count .. ":B / *:O")
+}}
+KFEAT:     O = altar_jiyva
+KFEAT:     S = slimy_wall
+SUBST:     E = D.
+KFEAT:     D = floor
+LFLOORCOL: green
+COLOUR:    D = lightgray
+FTILE:     .O = floor_slime
+MAP
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSS...S...SSSSSSS.......SSSSSSS...S...SSSS
+SS...O...O...SSS...O...O...SSS...O...O...SS
+S......E......S.....EEE.....S......E......S
+SS....EEEEE.......EEEEEE........EEEEE....SS
+SSS..EEEEEEEEEEEEEEEE{EEEEEEEEEEEEEEEE..SSS
+SS....EEEEE.......EEEEEE........EEEEE....SS
+S......E......S.....EEE.....S......E......S
+SS...O...O...SSS...O...O...SSS...O...O...SS
+SSSS...S...SSSSSSS.......SSSSSSS...S...SSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+ENDMAP
+
+# 6-9 gods
+# plus 4-7 more altars to Jiyva.
+NAME:      pf_slime_end_temple
+TAGS:      temple_variable
+TAGS:      temple_altars_6 temple_altars_7 temple_altars_8 temple_altars_9
+PLACE:     Temple
+WEIGHT:    1
+ORIENT:    encompass
+{{
+local altar_count = is_validating() and 6 or get_altar_count(_G)
+nsubst("O = " .. altar_count .. ":B / *:Z")
+}}
+KFEAT:     Z = altar_jiyva
+SUBST:     " : " .:3,  " = .c
+SUBST:     ' : ' .:3,  ' = .S
+SUBST:     E = DD.
+KFEAT:     D = floor
+LFLOORCOL: green
+COLOUR:    D = lightgray
+KFEAT:     S = slimy_wall
+FTILE:     .OZ = floor_slime
+{{
+    set_feature_name("stone_wall", "rune carved stone wall")
+}}
+
+MAP
+SSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSS''''''''''''SSSSSSSS
+SSSSSSS'............'SSSSSSS
+SSSSSS'..............'SSSSSS
+SSSSS'...""""."""""...'SSSSS
+SSSS'..."cccc.ccccc"...'SSSS
+SSS'..."ccOcc..ccOcc"...'SSS
+SS'..."cc...cc.c...cc"...'SS
+S'..."cc...cc..cc...cc"...'S
+S'.."cc....Oc.ccO....cc"..'S
+S'.."ccO...cc..cc...Occ"..'S
+S'.."ccc..c.cc.c.c..ccc"..'S
+S'.."ccccccc....ccccccc"..'S
+S..E.c...c....Z...c...c"..'S
+S.E{E.c...c....c...c......'S
+S..E.ccccccc....ccccccc"..'S
+S'.."ccc..c.cc.c.c..ccc"..'S
+S'.."ccO...cc..cc...Occ"..'S
+S'.."cc....Oc.ccO....cc"..'S
+S'..."cc...cc..cc...cc"...'S
+SS'..."cc...cc.c...cc"...'SS
+SSS'..."ccOcc..ccOcc"...'SSS
+SSSS'..."cccc.ccccc"...'SSSS
+SSSSS'...""""."""""...'SSSSS
+SSSSSS'..............'SSSSSS
+SSSSSSS'............'SSSSSSS
+SSSSSSSS''''''''''''SSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ENDMAP
 
 # 8 gods
