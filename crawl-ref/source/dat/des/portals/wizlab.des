@@ -461,6 +461,7 @@ wwbm..O..mbww
 ENDMAP
 
 NAME:       mu_enter_wizlab_2
+TAGS:       mini_float
 SHUFFLE:    tU
 TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
@@ -484,7 +485,6 @@ MAP
 ENDMAP
 
 NAME:       mu_enter_wizlab_3
-DEPTH:      D:$, Depths, Elf, Crypt, Vaults:1-4
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 5, \
@@ -538,7 +538,6 @@ w..www
 ENDMAP
 
 NAME:       mu_enter_wizlab_5
-DEPTH:      D:$, Depths, Elf, Crypt, Vaults:1-4
 COLOUR:     U = random
 COLOUR:     W = mutagenic
 KFEAT:      o = granite_statue
@@ -562,6 +561,7 @@ bbbb...bbbb
 ENDMAP
 
 NAME:       mu_enter_wizlab_6
+TAGS:       mini_float
 SUBST:      x = mc.
 TILE:       c = wall_stone_white
 TILE:       m = dngn_transparent_stone_magenta
@@ -582,7 +582,6 @@ x.x.x.x.x..
 ENDMAP
 
 NAME:   mu_enter_wizlab_7
-DEPTH:  D:$, Depths, Elf, Crypt, Vaults:1-4
 KFEAT:  abcd : floor
 KFEAT:  ABCD : rock_wall
 TILE:   ABCD = floor_rough_white
@@ -611,7 +610,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_glasses
-DEPTH:    D:22-, Elf, Crypt, Vaults:1-4
+TAGS:     mini_float
 FTILE:    GO_ = floor_rough_magenta
 TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
@@ -629,6 +628,7 @@ MAP
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_water
+TAGS:     mini_float
 FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
@@ -649,7 +649,7 @@ ww......ww
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_spiral
-DEPTH:    D:$, Depths, Elf, Crypt, Vaults:1-4
+TAGS:     mini_float
 SUBST:    G : xG.
 SUBST:    x : xx.
 MARKER:   ! = lua:fog_machine { \
