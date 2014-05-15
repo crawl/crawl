@@ -3591,8 +3591,7 @@ bool monster::is_unclean(bool check_spells) const
     if (has_unclean_spell() && check_spells)
         return true;
 
-    if (has_attack_flavour(AF_DISEASE)
-        || has_attack_flavour(AF_HUNGER)
+    if (has_attack_flavour(AF_HUNGER)
         || has_attack_flavour(AF_ROT)
         || has_attack_flavour(AF_STEAL))
     {

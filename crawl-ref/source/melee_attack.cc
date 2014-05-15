@@ -2912,10 +2912,6 @@ void melee_attack::mons_apply_attack_flavour()
             rot_defender(2 + random2(3), damage_done > 5 ? 1 : 0);
         break;
 
-    case AF_DISEASE:
-        defender->sicken(50 + random2(100));
-        break;
-
     case AF_FIRE:
         base_damage = attacker->get_experience_level()
                       + random2(attacker->get_experience_level());
