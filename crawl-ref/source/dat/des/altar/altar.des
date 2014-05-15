@@ -373,11 +373,9 @@ ENDMAP
 ### Altars to Jiyva ##########################################################
 
 NAME:   jiyva_altar_1
-DEPTH:  D:2-
+DEPTH:  D:4-
 KFEAT:  _ = altar_jiyva
-: if you.depth() < 3 then
-SUBST:  1 = 2
-: elseif you.depth() < 6 then
+: if you.depth() < 6 then
 NSUBST: 1 = 1:1 / *:2
 : elseif you.depth() < 9 then
 NSUBST: 1 = 2:1 / *:2

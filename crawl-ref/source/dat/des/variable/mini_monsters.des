@@ -3115,7 +3115,7 @@ ENDMAP
 
 NAME:    lasty_cornered_adventurer
 TAGS:    no_monster_gen patrolling
-DEPTH:   D:2-6
+DEPTH:   D:4-6
 WEIGHT:  4
 MONS:    ooze, jelly
 {{
