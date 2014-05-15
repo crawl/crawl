@@ -50,6 +50,8 @@
  * loops through all their available attacks, instantiating a new melee_attack
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
+ *
+ * Returns whether the attack took time (i.e. wasn't cancelled).
  */
 bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
@@ -110,7 +112,7 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
             // Attack was cancelled or unsuccessful...
             if (attk.cancel_attack)
                 you.turn_is_over = false;
-            return false;
+            return !attk.cancel_attack;
         }
 
         if (did_hit)
