@@ -3439,7 +3439,7 @@ static void _place_traps()
 
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
         env.tgrid(ts.pos) = i;
-        if (ts.type == TRAP_SHAFT && shaft_known(level_number))
+        if (ts.type == TRAP_SHAFT && _shaft_known(level_number))
             ts.reveal();
         ts.prepare_ammo();
     }
