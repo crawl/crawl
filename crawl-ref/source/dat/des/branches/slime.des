@@ -364,7 +364,7 @@ ENDMAP
 
 NAME: nicolae_slime_pool
 DEPTH: Slime
-TAGS: transparent mini_float
+TAGS: transparent
 MONS: slime creature
 ORIENT: float
 SHUFFLE: abcd

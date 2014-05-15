@@ -1300,7 +1300,7 @@ private:
     string rewrite_chunk_errors(const string &s) const;
     string apply_subvault(string_spec &);
     string validate_map_placeable();
-    bool has_exit(bool &floating) const;
+    bool has_exit() const;
 };
 
 const int CHANCE_ROLL = 10000;

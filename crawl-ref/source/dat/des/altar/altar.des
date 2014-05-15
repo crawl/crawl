@@ -86,7 +86,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   basic_altar
-TAGS:   allow_dup extra no_monster_gen transparent mini_float decor
+TAGS:   allow_dup extra no_monster_gen transparent decor
 DEPTH:  5-
 CHANCE: 20% (Orc)
 CHANCE: 10% (Snake, Forest)
@@ -153,7 +153,7 @@ MAP
 ENDMAP
 
 NAME:  lemuel_tele_altar
-TAGS:  transparent mini_float decor
+TAGS:  transparent decor
 DEPTH: D:2-, Vaults
 SUBST: Y = X x
 KFEAT: X = known teleport trap
@@ -277,7 +277,7 @@ ENDMAP
 #
 NAME:  lemuel_hellish_altar
 DEPTH: D:8-, Crypt, Geh
-TAGS:  no_monster_gen mini_float
+TAGS:  no_monster_gen
 MONS:  iron devil/orange demon
 MONS:  hell beast/red devil
 MONS:  iron imp

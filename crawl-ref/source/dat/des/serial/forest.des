@@ -359,7 +359,7 @@ ENDMAP
 # 10 vaults
 
 NAME:    infiniplex_forest_clump_tiny
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
  """
@@ -368,7 +368,7 @@ MAP
 ENDMAP
 
 NAME:    infiniplex_forest_clump_small
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 3, 9)
 MAP
   ""
@@ -380,7 +380,7 @@ MAP
 ENDMAP
 
 NAME:    infiniplex_forest_clump_medium
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
   """"
@@ -394,7 +394,7 @@ DEEtEED"
 ENDMAP
 
 NAME:    infiniplex_forest_clump_large
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 1, 3)
 MAP
    """"
@@ -410,7 +410,7 @@ MAP
 ENDMAP
 
 NAME:    infiniplex_forest_clump_long
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
     """"""
@@ -423,7 +423,7 @@ DEEtttttDED"
 ENDMAP
 
 NAME:    infiniplex_forest_clump_diagonal
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
 """"
@@ -438,7 +438,7 @@ MAP
 ENDMAP
 
 NAME:    infiniplex_forest_clump_curved
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
    """"""
@@ -454,7 +454,7 @@ MAP
 ENDMAP
 
 NAME:    infiniplex_forest_clump_C
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 1, 3)
 MAP
   """""
@@ -469,7 +469,7 @@ MAP
 ENDMAP
 
 NAME:    infiniplex_forest_clump_cross
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 1, 3)
 MAP
     """
@@ -486,7 +486,7 @@ DEEttttEtE"
 ENDMAP
 
 NAME:    infiniplex_forest_clump_double
-TAGS:    transparent mini_float
+TAGS:    transparent
 : init_forest(_G, 2, 6)
 MAP
    ""
@@ -570,7 +570,7 @@ t t.t t
 ENDMAP
 
 NAME:    infiniplex_forest_lined_room_
-TAGS:    transparent mini_float
+TAGS:    transparent
 SHUFFLE: JK
 SUBST:   J = t
 SUBST:   K = .
@@ -584,7 +584,7 @@ t t t
 ENDMAP
 
 NAME:    infiniplex_forest_lined_room_2
-TAGS:    transparent mini_float
+TAGS:    transparent
 SHUFFLE: JK
 SUBST:   J = t
 SUBST:   K = .
@@ -600,7 +600,7 @@ t t t t
 ENDMAP
 
 NAME:    infiniplex_forest_lined_room_3
-TAGS:    transparent mini_float
+TAGS:    transparent
 SHUFFLE: JK
 SUBST:   J = t
 SUBST:   K = .
@@ -618,7 +618,7 @@ t t t t t
 ENDMAP
 
 NAME:    infiniplex_forest_lined_ring
-TAGS:    transparent mini_float
+TAGS:    transparent
 SHUFFLE: JKLL
 SUBST:   J = t
 SUBST:   K = .

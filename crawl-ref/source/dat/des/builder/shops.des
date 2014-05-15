@@ -357,7 +357,7 @@ ENDMAP
 NAME:  nicolae_offbrand_ammo
 DEPTH:  D:5-, Depths, Orc
 WEIGHT: 1
-TAGS:  no_hmirror no_vmirror mini_float
+TAGS:  no_hmirror no_vmirror
 KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
        large rock ego:returning q:3 | large rock ego:exploding q:3 | \
        large rock ego:chaos q:3 | large rock ego:poisoned q:3 | \

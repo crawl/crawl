@@ -96,7 +96,7 @@ syn keyword desOrientation lab generate_loot
 syn keyword desOrientation ziggurat_pillar centered
 " map building in dungeon.cc (`transparent` is handled later)
 "Note: `dummy` mis-catches `training dummy` about half as often as actually used as tag
-syn keyword desOrientation dummy arrival mini_float extra ruin layout pan decor
+syn keyword desOrientation dummy arrival no_exits extra ruin layout pan decor
 syn keyword desOrientation allow_dup uniq luniq
 syn keyword desOrientation no_hmirror no_vmirror no_rotate
 syn keyword desOrientation no_dump

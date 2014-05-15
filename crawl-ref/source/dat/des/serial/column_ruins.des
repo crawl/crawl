@@ -260,7 +260,7 @@ ENDMAP
 # (4 vaults)
 
 NAME:    column_ruins_portal_island
-TAGS:    serial_column_ruins_portal luniq_column_ruins_portal mini_float
+TAGS:    serial_column_ruins_portal luniq_column_ruins_portal
 WEIGHT:  1
 SHUFFLE: ?!
 SUBST:   ! : -
@@ -290,7 +290,7 @@ ENDMAP
 # Although it is hard to tell from the map, this enterance can
 #  have a moat of lava around it too.
 NAME:    column_ruins_portal_squares
-TAGS:    serial_column_ruins_portal luniq_column_ruins_portal mini_float
+TAGS:    serial_column_ruins_portal luniq_column_ruins_portal
 WEIGHT:  4
 :  if crawl.one_chance_in(2) then
 SUBST:   JKL : l
@@ -353,7 +353,7 @@ MAP
 ENDMAP
 
 NAME:    column_ruins_portal_hut
-TAGS:    serial_column_ruins_portal luniq_column_ruins_portal mini_float
+TAGS:    serial_column_ruins_portal luniq_column_ruins_portal
 WEIGHT:  2
 : init_column_ruins_hut(_G)
 : init_column_ruins_portal(_G)
@@ -378,7 +378,7 @@ ENDMAP
 
 NAME:    column_ruins_temple_circle
 TAGS:    serial_column_ruins_fancy luniq_column_ruins_temple
-TAGS:    mini_float transparent
+TAGS:    transparent
 WEIGHT:  5
 SHUFFLE: GI
 SUBST:   G = p
@@ -417,7 +417,7 @@ ENDMAP
 
 NAME:    column_ruins_temple_hut
 TAGS:    serial_column_ruins_fancy luniq_column_ruins_temple
-TAGS:    mini_float transparent
+TAGS:    transparent
 WEIGHT:  2
 : init_column_ruins_hut(_G)
 : init_column_ruins(_G)
@@ -436,7 +436,7 @@ ENDMAP
 
 NAME:    column_ruins_square_huge
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  2
 SUBST:   Z : KKT
 SUBST:   T : TTGG_
@@ -458,7 +458,7 @@ ENDMAP
 
 NAME:    column_ruins_square_large
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  5
 SUBST:   Z : LLLT
 SUBST:   T : TG_
@@ -478,7 +478,7 @@ ENDMAP
 
 NAME:    column_ruins_square_medium
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  8
 SUBST:   T : TG__
 SUBST:   T = TTUVVV
@@ -495,7 +495,7 @@ ENDMAP
 
 NAME:    column_ruins_square_small
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  5
 SUBST:   T : TG____
 SUBST:   T = TTUVVV
@@ -510,7 +510,7 @@ ENDMAP
 
 NAME:    column_ruins_circle_large
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  2
 SUBST:   Z : JJT
 SUBST:   T : TG_
@@ -532,7 +532,7 @@ ENDMAP
 
 NAME:    column_ruins_circle_medium
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  5
 SUBST:   Z : KKKT
 SUBST:   T : TG__
@@ -552,7 +552,7 @@ ENDMAP
 
 NAME:    column_ruins_circle_small
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  3
 SUBST:   T : TG____
 SUBST:   T = TTUVVV
@@ -569,7 +569,7 @@ ENDMAP
 
 NAME:    column_ruins_courtyard_long
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float
+TAGS:    allow_dup
 WEIGHT:  5
 : init_column_ruins(_G)
 MAP
@@ -582,7 +582,7 @@ ENDMAP
 
 NAME:    column_ruins_courtyard_long_water
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float
+TAGS:    allow_dup
 WEIGHT:  1
 :  if you.branch() == "Depths" then
 SUBST:   w : wl
@@ -600,7 +600,7 @@ ENDMAP
 
 NAME:    column_ruins_hut
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  40
 SUBST:   0 = 0:40 9:10 $:15 %:5 *:1 T:9 _:120
 SUBST:   T = TTUVVV
@@ -621,7 +621,7 @@ ENDMAP
 
 NAME:    column_ruins_hut_ruined
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  15
 NSUBST:  x = 6:x / 2:_ / *=xx_
 : init_column_ruins_hut(_G)
@@ -641,7 +641,7 @@ ENDMAP
 
 NAME:    column_ruins_hut_water
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  5
 SUBST:   z = ww_
 SUBST:   y = W__
@@ -665,7 +665,7 @@ ENDMAP
 
 NAME:    column_ruins_hut_pillars
 TAGS:    serial_column_ruins_fancy luniq
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  10
 SUBST:   0 = 0:40 9:10 $:15 %:5 *:1 T:9 _:20
 SUBST:   T = TTUVVV
@@ -694,7 +694,7 @@ ENDMAP
 
 NAME:    column_ruins_open_tiny
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  25
 : init_column_ruins(_G)
 MAP
@@ -705,7 +705,7 @@ ENDMAP
 
 NAME:    column_ruins_open_small
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  20
 SUBST:   T : TG____
 SUBST:   T = TTUVVV
@@ -720,7 +720,7 @@ ENDMAP
 
 NAME:    column_ruins_open_medium
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  10
 SUBST:   T : TG__
 SUBST:   T = TTUVVV
@@ -737,7 +737,7 @@ ENDMAP
 
 NAME:    column_ruins_open_large
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  5
 SUBST:   T : TG_
 SUBST:   T = TTUVVV
@@ -756,7 +756,7 @@ ENDMAP
 
 NAME:    column_ruins_open_tiny_water
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  2
 :  if you.branch() == "Depths" then
 SUBST:   w : l
@@ -773,7 +773,7 @@ ENDMAP
 
 NAME:    column_ruins_open_small_water
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  3
 :  if you.branch() == "Depths" then
 SUBST:   w : l
@@ -792,7 +792,7 @@ ENDMAP
 
 NAME:    column_ruins_open_medium_water
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float transparent
+TAGS:    allow_dup transparent
 WEIGHT:  1
 :  if you.branch() == "Depths" then
 SUBST:   w : l
@@ -813,7 +813,7 @@ ENDMAP
 
 NAME:    column_ruins_columns_dead_end
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float
+TAGS:    allow_dup
 WEIGHT:  5
 : init_column_ruins(_G)
 MAP
@@ -824,7 +824,7 @@ ENDMAP
 
 NAME:    column_ruins_columns_straight
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float
+TAGS:    allow_dup
 WEIGHT:  20
 : init_column_ruins(_G)
 MAP
@@ -835,7 +835,7 @@ ENDMAP
 
 NAME:    column_ruins_columns_corner
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float
+TAGS:    allow_dup
 WEIGHT:  10
 : init_column_ruins(_G)
 MAP
@@ -851,7 +851,7 @@ ENDMAP
 
 NAME:    column_ruins_columns_T
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float
+TAGS:    allow_dup
 WEIGHT:  3
 : init_column_ruins(_G)
 MAP
@@ -867,7 +867,7 @@ ENDMAP
 
 NAME:    column_ruins_columns_plus
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float
+TAGS:    allow_dup
 WEIGHT:  2
 : init_column_ruins(_G)
 MAP
@@ -888,7 +888,7 @@ ENDMAP
 
 NAME:    column_ruins_columns_water
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup mini_float
+TAGS:    allow_dup
 WEIGHT:  2
 :  if you.branch() == "Depths" then
 SUBST:   w : l
@@ -996,7 +996,7 @@ ENDMAP
 # This one is more common because it might be any single pillar
 NAME:    column_ruins_grid_1
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup transparent mini_float
+TAGS:    allow_dup transparent
 WEIGHT:  25
 : init_column_ruins(_G)
 MAP
@@ -1007,7 +1007,7 @@ ENDMAP
 
 NAME:    column_ruins_grid_2
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup transparent mini_float
+TAGS:    allow_dup transparent
 WEIGHT:  5
 : init_column_ruins(_G)
 MAP
@@ -1020,7 +1020,7 @@ ENDMAP
 
 NAME:    column_ruins_grid_3
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup transparent mini_float
+TAGS:    allow_dup transparent
 WEIGHT:  10
 : init_column_ruins(_G)
 MAP
@@ -1035,7 +1035,7 @@ ENDMAP
 
 NAME:    column_ruins_grid_4
 TAGS:    serial_column_ruins_simple
-TAGS:    allow_dup transparent mini_float
+TAGS:    allow_dup transparent
 WEIGHT:  5
 : init_column_ruins(_G)
 MAP
@@ -1052,7 +1052,7 @@ ENDMAP
 
 NAME:    column_ruins_grid_5
 TAGS:    serial_column_ruins_fancy
-TAGS:    allow_dup transparent mini_float
+TAGS:    allow_dup transparent
 WEIGHT:  2
 : init_column_ruins(_G)
 MAP

@@ -94,7 +94,7 @@ xx+xx
 ENDMAP
 
 NAME:    abyss_entry_crystal
-TAGS:    nolayout_encompass mini_float
+TAGS:    nolayout_encompass
 : abyss_entry(_G, 'O')
 SHUFFLE: AB
 SUBST:   A : .:50 G:50 T U V Y t
@@ -109,7 +109,7 @@ xb.....bx
 ENDMAP
 
 NAME:    abyss_entry_glasseish
-TAGS:    nolayout_encompass mini_float transparent
+TAGS:    nolayout_encompass transparent
 WEIGHT:  5
 : abyss_entry(_G, 'O')
 KPROP:   T = no_rtele_into
@@ -521,7 +521,7 @@ SUBST:   + = M, ' = x:5 c:2 v:1 b:1, " = ., % = %%***|
 SUBST:   AB : wwl, CD : wll
 NSUBST:  M : 1:+ / 2 = mmm+ / * = m:19 +:1
 : else
-TAGS:    extra transparent mini_float
+TAGS:    extra transparent
 WEIGHT:  1
 SUBST:   M = m, 34'" = ., ABCD = W
 : end
@@ -705,7 +705,7 @@ x.xxxd.x+xx..
 ENDMAP
 
 NAME:   hangedman_abyss_or_decor_stabs
-TAGS:   transparent mini_float no_pool_fixup decor
+TAGS:   transparent no_pool_fixup decor
 DEPTH:  D, Depths, Abyss
 : if you.branch() == "Abyss" then
 SUBST:  xc = xxxxcccb, ' = %0, " = wl...
@@ -728,7 +728,7 @@ MAP
 ENDMAP
 
 NAME:   hangedman_abyss_or_decor_jellyfish_corner
-TAGS:   transparent mini_float decor
+TAGS:   transparent decor
 DEPTH:  D:4-, Depths, Abyss
 WEIGHT: 5 (D), 10
 : if you.branch() == "Abyss" then
@@ -757,7 +757,7 @@ ccccccccc...J.
 ENDMAP
 
 NAME:    hangedman_abyss_or_decor_lesser_grid
-TAGS:    transparent mini_float no_pool_fixup decor
+TAGS:    transparent no_pool_fixup decor
 DEPTH:   D, Depths, Abyss
 : if you.branch() == "Abyss" then
 SHUFFLE: ABCDEF, "'
@@ -785,7 +785,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_abyss_or_decor_clamps
-TAGS:    transparent mini_float no_pool_fixup decor
+TAGS:    transparent no_pool_fixup decor
 DEPTH:   D:8-, Depths, Abyss
 KFEAT:   @ = +
 SHUFFLE: ABCDEFGH, '"
@@ -1367,7 +1367,7 @@ cc.4nnn.....nnn4.cc
 ENDMAP
 
 NAME:    hangedman_abyss_rune_treasure_dump
-TAGS:    abyss_rune unrand no_monster_gen no_item_gen mini_float
+TAGS:    abyss_rune unrand no_monster_gen no_item_gen
 WEIGHT:  2
 KMONS:   12 = great orb of eyes perm_ench:shapeshifter
 KMONS:   34 = guardian serpent perm_ench:shapeshifter

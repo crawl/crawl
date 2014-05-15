@@ -461,7 +461,6 @@ wwbm..O..mbww
 ENDMAP
 
 NAME:       mu_enter_wizlab_2
-TAGS:       mini_float
 SHUFFLE:    tU
 TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
@@ -561,7 +560,6 @@ bbbb...bbbb
 ENDMAP
 
 NAME:       mu_enter_wizlab_6
-TAGS:       mini_float
 SUBST:      x = mc.
 TILE:       c = wall_stone_white
 TILE:       m = dngn_transparent_stone_magenta
@@ -610,7 +608,6 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_glasses
-TAGS:     mini_float
 FTILE:    GO_ = floor_rough_magenta
 TILE:     m = dngn_transparent_wall_green
 COLOUR:   m = lightgreen
@@ -628,7 +625,6 @@ MAP
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_water
-TAGS:     mini_float
 FTILE:    cnO_ = floor_rough_magenta
 TILE:     n = dngn_transparent_stone_magenta
 COLOUR:   n = lightmagenta
@@ -649,7 +645,6 @@ ww......ww
 ENDMAP
 
 NAME:     infiniplex_enter_wizlab_spiral
-TAGS:     mini_float
 SUBST:    G : xG.
 SUBST:    x : xx.
 MARKER:   ! = lua:fog_machine { \

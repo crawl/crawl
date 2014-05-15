@@ -60,7 +60,6 @@ end
 default-depth: D:3-6
 
 NAME:   portal_sewer_entry_a
-TAGS:   mini_float
 : sewer_portal(_G)
 SUBST:  1 = 2234..........
 MONS:   nothing
@@ -194,7 +193,7 @@ xx-------xx
 ENDMAP
 
 NAME:   gup_sewer_entry_bubbles
-TAGS:   mini_float patrolling
+TAGS:   patrolling
 : sewer_portal(_G)
 KMONS:  1 = rat / green rat w:5 / adder w:5 / giant cockroach / \
             giant mite / giant gecko / worm w:5 / nothing
@@ -215,7 +214,6 @@ xx-xxxxxx-xx
 ENDMAP
 
 NAME:   gup_sewer_entry_bowl
-TAGS:   mini_float
 : sewer_portal(_G)
 KMONS:  1 = rat / green rat w:5 / \
             giant cockroach / giant mite / giant gecko / worm w:3 / nothing
@@ -231,7 +229,6 @@ MAP
 ENDMAP
 
 NAME:   gup_sewer_entry_glass
-TAGS:   mini_float
 : sewer_portal(_G)
 KMONS:  1 = adder / giant cockroach / nothing
 MAP
@@ -245,7 +242,6 @@ MAP
 ENDMAP
 
 NAME: lightli_sewer_entry_pipes
-TAGS: mini_float
 NSUBST: o = 1:O / *:W
 SUBST: W = WWWWW1
 MONS: green rat / adder / rat / worm

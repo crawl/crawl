@@ -1347,7 +1347,7 @@ ENDMAP
 
 NAME:    aquarium_pool_1
 WEIGHT:  10
-TAGS:    serial_aquarium_pool mini_float
+TAGS:    serial_aquarium_pool
 NSUBST:  ! = 1:@ / *:!
 SUBST:   ! = @....
 : init_aquarium(_G)
@@ -1363,7 +1363,7 @@ ENDMAP
 
 NAME:    aquarium_pool_2
 WEIGHT:  20
-TAGS:    serial_aquarium_pool mini_float
+TAGS:    serial_aquarium_pool
 NSUBST:  ! = 1:@ / *:!
 SUBST:   ! = @....
 : init_aquarium(_G)

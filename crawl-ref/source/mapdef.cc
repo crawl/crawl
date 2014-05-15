@@ -2791,7 +2791,7 @@ string map_def::validate_map_placeable()
 /**
  * Check to see if the vault can connect normally to the rest of the dungeon.
  */
-bool map_def::has_exit(bool &floating) const
+bool map_def::has_exit() const
 {
     map_def dup = *this;
     for (int y = 0, cheight = map.height(); y < cheight; ++y)
@@ -2804,41 +2804,21 @@ bool map_def::has_exit(bool &floating) const
                 map_feature_at(&dup, coord_def(x, y), -1);
             // If we have a stair, assume the vault can be disconnected.
             if (feat_is_stair(feat) && !feat_is_escape_hatch(feat))
-            {
-                floating = false;
                 return true;
-            }
             const bool non_floating =
                 glyph == '@' || glyph == '=' || glyph == '+';
             if (non_floating
                 || !feat_is_solid(feat) || feat_is_closed_door(feat))
             {
                 if (x == 0 || x == cwidth - 1 || y == 0 || y == cheight - 1)
-                {
-                    if (non_floating)
-                    {
-                        floating = false;
-                        return true;
-                    }
-                    floating = true;
-                    continue;
-                }
+                    return true;
                 for (orth_adjacent_iterator ai(coord_def(x, y)); ai; ++ai)
-                {
                     if (!map.in_map(*ai))
-                    {
-                        if (non_floating)
-                        {
-                            floating = false;
-                            return true;
-                        }
-                        floating = true;
-                    }
-                }
+                        return true;
             }
         }
 
-    return floating;
+    return false;
 }
 
 string map_def::validate_map_def(const depth_ranges &default_depths)
@@ -2960,22 +2940,14 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
 
     // Encompass vaults, pure subvaults, and dummy vaults are exempt from
     // exit-checking.
-    if (orient != MAP_ENCOMPASS && !has_tag("unrand") && !has_tag("dummy"))
+    if (orient != MAP_ENCOMPASS && !has_tag("unrand") && !has_tag("dummy")
+        && !has_tag("no_exits") && map.width() > 0 && map.height() > 0)
     {
-        bool floating = false;
-        if (!has_exit(floating))
+        if (!has_exit())
         {
             return make_stringf(
-                "Map '%s' has no (possible) exits",
-                name.c_str());
-        }
-        // Lab minivaults work differently - they are supposed to guarantee
-        // connectivity around the edge.
-        if (floating && is_minivault() && !has_tag("mini_float")
-            && !depths.is_usable_in(level_id(BRANCH_LABYRINTH)))
-        {
-            return make_stringf(
-                "Minivault '%s' has no explicit exits or mini_float",
+                "Map '%s' has no (possible) exits; use TAGS: no_exits if "
+                "this is intentional",
                 name.c_str());
         }
     }

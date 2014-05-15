@@ -44,9 +44,10 @@ Features
 --------
  @ - Entry point - must be on outside edge. This point will be connected to the
      rest of the level with a corridor for both normal vaults and minivaults.
-     If a normal vault, or a minivault tagged 'mini_float', has no entry points
-     defined, random traversable squares on its edge will be chosen and
-     connected, as if they had the @ glyph.
+     If a vault has no entry points defined, random traversable squares on
+     its edge will be chosen and connected, as if they had the @ glyph. (In
+     the rare event where you don't want this - usually completely enclosed
+     vaults accessible through some other means - use the "no_exits" tag.)
 
      The + and = glyphs, when placed on the edge of the map, are also considered
      entry points.
@@ -377,11 +378,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              the area.
           * "no_item_gen": Prevents random item generation in the vault.
              Items explicitly placed by the vault are not affected.
-          * "mini_float": applicable only to minivaults, requests that
-             the dungeon builder pick random exits from the minivault and
-             connect it to the rest of the level, similar to the exit behaviour
-             for floating vaults. Has no effect if the minivault has explicitly
-             defined exits (the @ glyph).
+          * "no_exits": In the absence of explicit exits, requests that the
+             dungeon builder does not try to pick its own exits from the
+             (mini)vault. Usually only used when the vault is completely
+             enclosed and accessible through other means.
           * "no_monster_gen": Prevents random monster generation at the time of
              the vault's creation. Highly advised for arrival vaults with a
              player-hostile geography, MUST-HAVE for those with water/lava.
@@ -442,16 +442,13 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              removing walls near the edges, making it look like a ruin.
              You can request that a vault be ruined only in a particular
              branch using "ruin_<branch>". For instance: "ruin_lair".
-          * "trowel_portal": This vault can be created by the Trowel card.
-             This tag should be used exclusively for the generic (one tile)
-             entries to portal vaults, like bazaars and labyrinths. Other
-             portal vaults may be eligible for Trowel, too.
           * "no_dump": Don't dump out this vault's name in the list of
              vaults generated during the game. Use this if the vault
              is predictable (like the Vaults:5 and Slime:6 vaults) or
              are for weird internal uses (like the shoalhut vaults).
           * "unrand": Don't pick this vault randomly by DEPTH. Can still be
-             picked by tag or PLACE.
+             picked by tag or PLACE. Almost exclusively used by layouts and
+             subvaults.
           * "transparent": Marks the vault as potentially passable for the
              purposes of level connectivity. By default, vaults are considered
              non-passable regardless of their contents. With this tag, the

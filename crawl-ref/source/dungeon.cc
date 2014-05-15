@@ -4332,7 +4332,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
         _ruin_vault(place);
 
     if (place.exits.empty() && placed_vault_orientation != MAP_ENCOMPASS
-        && (!place.map.is_minivault() || place.map.has_tag("mini_float")))
+        && (!place.map.is_minivault() || !place.map.has_tag("no_exits")))
     {
         _pick_float_exits(place, place.exits);
     }
