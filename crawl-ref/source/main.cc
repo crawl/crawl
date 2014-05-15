@@ -3636,7 +3636,8 @@ static void _move_player(coord_def move)
 
         if (you.duration[DUR_BARBS])
         {
-            mpr("The barbed spikes dig painfully into your body as you move.");
+            mprf(MSGCH_WARN,"The barbed spikes dig painfully into your body "
+            "as you move.");
             ouch(roll_dice(2, you.attribute[ATTR_BARBS_POW]), NON_MONSTER,
                  KILLED_BY_BARBS);
             bleed_onto_floor(you.pos(), MONS_PLAYER, 2, false);
