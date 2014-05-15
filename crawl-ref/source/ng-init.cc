@@ -139,11 +139,42 @@ void initialise_temples()
     map_def *main_temple = NULL;
     for (int i = 0; i < 10; i++)
     {
+        int altar_count = 0;
+
         main_temple
             = const_cast<map_def*>(random_map_for_place(ecumenical, false));
 
         if (main_temple == NULL)
             end(1, false, "No temples?!");
+
+        if (main_temple->has_tag("temple_variable"))
+        {
+            vector<int> sizes;
+            vector<string> tag_list = main_temple->get_tags();
+            for (unsigned int j = 0; j < tag_list.size(); j++)
+            {
+                if (starts_with(tag_list[j], "temple_altars_"))
+                {
+                    sizes.push_back(
+                        atoi(
+                            strip_tag_prefix(
+                                tag_list[j], "temple_altars_").c_str()));
+                }
+            }
+            if (sizes.empty())
+            {
+                mprf(MSGCH_ERROR,
+                     "Temple %s set as variable but has no sizes.",
+                     main_temple->name.c_str());
+                main_temple = NULL;
+                continue;
+            }
+            altar_count =
+                you.props[TEMPLE_SIZE_KEY].get_int() =
+                    sizes[random2(sizes.size())];
+        }
+
+        dgn_map_parameters mp(make_stringf("temple_altars_%d", altar_count));
 
         // Without all this find_glyph() returns 0.
         string err;
@@ -156,6 +187,7 @@ void initialise_temples()
             mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
             main_temple = NULL;
+            you.props.erase(TEMPLE_SIZE_KEY);
             continue;
         }
 
@@ -167,6 +199,7 @@ void initialise_temples()
             mprf(MSGCH_ERROR, "Temple %s: %s", main_temple->name.c_str(),
                  err.c_str());
             main_temple = NULL;
+            you.props.erase(TEMPLE_SIZE_KEY);
             continue;
         }
         break;

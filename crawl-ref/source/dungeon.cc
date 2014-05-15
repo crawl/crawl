@@ -3261,6 +3261,12 @@ static bool _builder_normal()
 
     if (vault)
     {
+        // TODO: figure out a good way to do this only in Temple
+        dgn_map_parameters mp(
+            you.props.exists(TEMPLE_SIZE_KEY)
+            ? make_stringf("temple_altars_%d",
+                           you.props[TEMPLE_SIZE_KEY].get_int())
+            : "");
         env.level_build_method += " random_map_for_place";
         _ensure_vault_placed_ex(_build_primary_vault(vault), vault);
         // Only place subsequent random vaults on non-encompass maps
