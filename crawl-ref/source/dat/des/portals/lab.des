@@ -716,10 +716,9 @@ ENDMAP
 NAME:   labyrinth_skeletal_remains
 TAGS:   allow_dup extra
 WEIGHT: 40
-KFEAT:  x = .
-: dgn.delayed_decay(_G, 'x', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
+: dgn.delayed_decay(_G, 'd', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
 MAP
-x
+d
 ENDMAP
 
 ############################################################################

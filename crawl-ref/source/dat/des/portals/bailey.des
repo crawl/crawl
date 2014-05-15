@@ -140,6 +140,7 @@ O
 ENDMAP
 
 NAME: enter_bailey_2
+TAGS: transparent
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 ITEM: hand axe
@@ -157,6 +158,7 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_3
+TAGS: transparent
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; hand axe
@@ -179,6 +181,7 @@ MAP
 ENDMAP
 
 NAME:   enter_bailey_4
+TAGS:   transparent
 WEIGHT: 5
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -209,6 +212,7 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_5
+TAGS: transparent
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; tomahawk ego:returning ident:type q:4 | \
@@ -230,6 +234,7 @@ MAP
 ENDMAP
 
 NAME:   enter_bailey_6
+TAGS:   transparent
 WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
@@ -311,6 +316,7 @@ MAP
 ENDMAP
 
 NAME: lightli_bailey_entry_fortress
+TAGS: transparent
 WEIGHT: 1
 : local rnd = crawl.random2(2)
 : if rnd == 0 then

@@ -248,6 +248,7 @@ default-depth: D:10-, Depths, Elf, Vaults
 ##############################################################################
 
 NAME:   enter_trove_0
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -255,6 +256,7 @@ O
 ENDMAP
 
 NAME:   enter_trove_1
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -264,6 +266,7 @@ MAP
 ENDMAP
 
 NAME:   enter_trove_2
+TAGS:   transparent
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -312,7 +315,6 @@ cl.lc
 c.e.c
 cl.lc
 cc+cc
-  @
 ENDMAP
 
 # Someone left some gold behind for you!
@@ -330,7 +332,6 @@ c$XOX$c
 c$XXX$c
 c$$$$$c
 ccc+ccc
-   @
 ENDMAP
 
 NAME: nicolae_trove_entry_columns
@@ -394,6 +395,7 @@ cccO.cc
 ENDMAP
 
 NAME: nicolae_trove_entry_free_sample
+TAGS: transparent
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: % = blue
@@ -405,7 +407,7 @@ MAP
 ENDMAP
 
 NAME: nicolae_trove_entry_isolated
-TAGS: no_pool_fixup
+TAGS: no_pool_fixup transparent
 CHANCE: 5%
 KPROP: .O = no_rtele_into
 KFEAT: ' = .

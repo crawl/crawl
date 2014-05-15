@@ -269,11 +269,11 @@ RTILE:   b = dngn_crystal_lightmagenta
 : place_bazaar_portal(_G)
 : set_feature_name("green_crystal_wall", "wall of crystal")
 MAP
-bb.bb
+bb@bb
 b...b
-..O..
+@.O.@
 b...b
-bb.bb
+bb@bb
 ENDMAP
 
 ###############################################################################

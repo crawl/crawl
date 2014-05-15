@@ -2668,7 +2668,7 @@ MAP
 ENDMAP
 
 NAME:   statue_in_the_mist_lemuel
-TAGS:   extra
+TAGS:   extra no_exits
 MONS:   orange crystal statue / silver statue / ice statue
 DEPTH:  D:9-, Depths, Orc, Elf, Snake, Swamp
 MARKER: G = lua:fog_machine { cloud_type= "grey smoke", \
@@ -6203,7 +6203,7 @@ DEPTH: D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
 {{
     -- An incredibly ugly kludge to avoid duplicating the list of valid
     -- branches/depths (and causing mysterious errors if it's not up to date).
-    if not dgn.map_by_tag("special_room") then
+    if not dgn.map_by_tag("special_room") and not is_validating() then
       return
     end
 
