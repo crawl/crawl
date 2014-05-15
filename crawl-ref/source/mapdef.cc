@@ -610,7 +610,7 @@ void map_lines::apply_grid_overlay(const coord_def &c)
 
             bool has_floor = false, has_rock = false;
             string name = (*overlay)(x, y).floortile;
-            if (!name.empty())
+            if (!name.empty() && name != "none")
             {
                 env.tile_flv(gc).floor_idx =
                     store_tilename_get_index(name);
@@ -625,7 +625,7 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             }
 
             name = (*overlay)(x, y).rocktile;
-            if (!name.empty())
+            if (!name.empty() && name != "none")
             {
                 env.tile_flv(gc).wall_idx =
                     store_tilename_get_index(name);
@@ -640,7 +640,7 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             }
 
             name = (*overlay)(x, y).tile;
-            if (!name.empty())
+            if (!name.empty() && name != "none")
             {
                 env.tile_flv(gc).feat_idx =
                     store_tilename_get_index(name);
