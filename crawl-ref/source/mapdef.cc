@@ -2788,6 +2788,59 @@ string map_def::validate_map_placeable()
                         name.c_str(), tags.c_str());
 }
 
+/**
+ * Check to see if the vault can connect normally to the rest of the dungeon.
+ */
+bool map_def::has_exit(bool &floating) const
+{
+    map_def dup = *this;
+    for (int y = 0, cheight = map.height(); y < cheight; ++y)
+        for (int x = 0, cwidth = map.width(); x < cwidth; ++x)
+        {
+            if (!map.in_map(coord_def(x, y)))
+                continue;
+            const char glyph = map.glyph(x, y);
+            dungeon_feature_type feat =
+                map_feature_at(&dup, coord_def(x, y), -1);
+            // If we have a stair, assume the vault can be disconnected.
+            if (feat_is_stair(feat) && !feat_is_escape_hatch(feat))
+            {
+                floating = false;
+                return true;
+            }
+            const bool non_floating =
+                glyph == '@' || glyph == '=' || glyph == '+';
+            if (non_floating
+                || !feat_is_solid(feat) || feat_is_closed_door(feat))
+            {
+                if (x == 0 || x == cwidth - 1 || y == 0 || y == cheight - 1)
+                {
+                    if (non_floating)
+                    {
+                        floating = false;
+                        return true;
+                    }
+                    floating = true;
+                    continue;
+                }
+                for (orth_adjacent_iterator ai(coord_def(x, y)); ai; ++ai)
+                {
+                    if (!map.in_map(*ai))
+                    {
+                        if (non_floating)
+                        {
+                            floating = false;
+                            return true;
+                        }
+                        floating = true;
+                    }
+                }
+            }
+        }
+
+    return floating;
+}
+
 string map_def::validate_map_def(const depth_ranges &default_depths)
 {
     unwind_bool valid_flag(validating_map_flag, true);
@@ -2903,6 +2956,28 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
         break;
     default:
         break;
+    }
+
+    // Encompass vaults, pure subvaults, and dummy vaults are exempt from
+    // exit-checking.
+    if (orient != MAP_ENCOMPASS && !has_tag("unrand") && !has_tag("dummy"))
+    {
+        bool floating = false;
+        if (!has_exit(floating))
+        {
+            return make_stringf(
+                "Map '%s' has no (possible) exits",
+                name.c_str());
+        }
+        // Lab minivaults work differently - they are supposed to guarantee
+        // connectivity around the edge.
+        if (floating && is_minivault() && !has_tag("mini_float")
+            && !depths.is_usable_in(level_id(BRANCH_LABYRINTH)))
+        {
+            return make_stringf(
+                "Minivault '%s' has no explicit exits or mini_float",
+                name.c_str());
+        }
     }
 
     dlua_set_map dl(this);
