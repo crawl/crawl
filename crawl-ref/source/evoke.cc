@@ -240,10 +240,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             you.turn_is_over = true;
         }
         else
-        {
-            canned_msg(MSG_OK);
             return false;
-        }
     }
 
     return true;
