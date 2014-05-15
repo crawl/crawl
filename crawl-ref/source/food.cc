@@ -733,62 +733,6 @@ bool eat_food(int slot)
 
 //     END PUBLIC FUNCTIONS
 
-static bool _player_has_enough_food()
-{
-    int food_value = 0;
-    item_def item;
-    for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
-    {
-        item = you.inv[slot];
-        if (!item.defined())
-            continue;
-
-        if (!can_ingest(item, true, false))
-            continue;
-
-        if (food_is_rotten(item) && !player_mutation_level(MUT_SAPROVOROUS))
-            continue;
-
-        if (is_bad_food(item))
-            continue;
-
-        // Vampires can only drain corpses.
-        if (you.species == SP_VAMPIRE)
-            food_value += 3;
-        else
-        {
-            if (item.base_type != OBJ_FOOD)
-                continue;
-
-            switch (item.sub_type)
-            {
-            case FOOD_CHUNK:
-                if (!player_mutation_level(MUT_HERBIVOROUS))
-                    food_value += 2 * item.quantity;
-                break;
-            case FOOD_MEAT_RATION:
-                if (!player_mutation_level(MUT_HERBIVOROUS))
-                    food_value += 3 * item.quantity;
-                break;
-            case FOOD_BREAD_RATION:
-                if (!player_mutation_level(MUT_CARNIVOROUS))
-                    food_value += 3 * item.quantity;
-                break;
-            default:
-                // Only count snacks if we really like them
-                if (is_preferred_food(item))
-                    food_value += item.quantity;
-                break;
-            }
-        }
-    }
-
-    // You have "enough" food if you have, e.g.
-    //  1 meat ration + 1 chunk, or 2 chunks for carnivores, or
-    //  5 items of fruit, or 1 bread ration and 2 fruit items as a herbivore.
-    return food_value > 5;
-}
-
 static string _how_hungry()
 {
     if (you.hunger_state > HS_SATIATED)
@@ -878,14 +822,6 @@ bool food_change(bool initial)
                     msg += "are starving!";
 
                 mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
-
-                // Xom thinks this is funny if you're in a labyrinth
-                // and are low on food.
-                if (player_in_branch(BRANCH_LABYRINTH)
-                    && !_player_has_enough_food())
-                {
-                    xom_is_stimulated(50);
-                }
 
                 learned_something_new(HINT_YOU_STARVING);
                 you.check_awaken(500);
