@@ -2785,9 +2785,9 @@ DEPTH: D, Depths
 TAGS:  transparent allow_dup decor temple_overflow_generic_1
 : altar_check(_G)
 MAP
-b.b
-.C.
-b.b
+b@b
+@C@
+b@b
 ENDMAP
 
 NAME:    lemuel_doored_altar

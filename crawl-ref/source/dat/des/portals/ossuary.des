@@ -69,6 +69,7 @@ end
 default-depth: D:4-8
 
 NAME:   enter_ossuary_1
+TAGS:   transparent
 SUBST:  . = . ':7
 : ossuary_portal(_G)
 MAP
@@ -80,6 +81,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ossuary_2
+TAGS:    transparent
 SHUFFLE: C+
 SUBST:   C = c
 : ossuary_portal(_G)
@@ -94,6 +96,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_3
+TAGS:   transparent
 SUBST:  . = ' .
 MONS:   rat zombie / jackal zombie / worm zombie
 MONS:   kobold zombie / goblin zombie / hobgoblin zombie
@@ -107,6 +110,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_4
+TAGS:   transparent
 COLOUR: 1 = yellow, x = white
 MONS:   rat zombie / quokka zombie / goblin zombie
 FTILE:  1 = floor_sandstone, x = floor_sandstone, O = floor_sandstone
@@ -123,6 +127,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ossuary_5
+TAGS:   transparent
 COLOUR: c = white, + = white, ' = yellow
 : ossuary_portal(_G)
 MAP
@@ -138,7 +143,7 @@ MAP
 ENDMAP
 
 NAME:   gup_ossuary_entry_pyramid
-TAGS:   mini_float
+TAGS:   transparent
 KMONS:  O = mummy
 NSUBST: ' = 3:~ / *:'
 : ossuary_portal(_G)
@@ -193,6 +198,7 @@ xc'O'A'O'cx
 ENDMAP
 
 NAME: nicolae_ossuary_entry_giza
+TAGS: transparent
 NSUBST: M = 1:O / *:z
 KMONS: O = mummy
 KMONS: z = goblin zombie / hobgoblin zombie / kobold zombie / orc zombie

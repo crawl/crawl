@@ -526,6 +526,7 @@ _xxXX..Lxxx_
 ENDMAP
 
 NAME: nicolae_volcano_entry_lava_flow
+TAGS: transparent
 NSUBST: V = 3:X / 1:XS / 1:lS / *:S, A = 2:X / 2:. / *:S, B = 2:X / 2:. / *:S, \
         C = 2:X / 2:. / *:S, D = 2:X / 2:. / *:S, E = 2:X / 2:. / *:S, \
         F = 2:X / 2:. / *:S
@@ -678,7 +679,7 @@ MAP
 ENDMAP
 
 NAME:  vgs_original
-TAGS:  volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
+TAGS:  volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror unrand
 KFEAT: _ = altar_makhleb / altar_trog / altar_vehumet
 #      Sets up the temple guardians.
 :      fiery_guardians(_G)
@@ -701,7 +702,7 @@ xxxxxxxcccccxxxxxxx
 ENDMAP
 
 NAME:   vgs_dualism
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror unrand
 KFEAT:  BC = altar_makhleb / altar_trog / altar_vehumet
 #       Place the door.
 NSUBST: X = 1:+ / *:x
@@ -725,7 +726,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   vgs_hot_hot_hot
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen unrand
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Place the doors.
 NSUBST: X = 1:+ / 1:G / *:x
@@ -754,7 +755,7 @@ xxxxxxxxccccccccccc
 ENDMAP
 
 NAME:   vgs_many_chambers
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen unrand
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Place the doors.
 NSUBST: X = 1:+ / *:x, Y = 1:+ / *:x
@@ -779,7 +780,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   vgs_firespitter
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror unrand
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
@@ -804,7 +805,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   vgs_trial_of_fire_spitters
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror unrand
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
@@ -830,7 +831,7 @@ xxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   vgs_trial_of_fire_lashers
-TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror
+TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_vmirror unrand
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
@@ -1032,7 +1033,7 @@ ENDMAP
 
 NAME:    vts_original
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
-TAGS:    no_vmirror
+TAGS:    no_vmirror unrand
 #        We have a specific monster set for this vault.
 KMONS:   12 = mummy / vampire w:12
 KMONS:   3 = guardian mummy / Menkaure w:5, guardian mummy
@@ -1068,7 +1069,7 @@ ENDMAP
 
 NAME:    vts_chambers
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
-TAGS:    no_vmirror
+TAGS:    no_vmirror unrand
 #        Traps and doors.
 NSUBST:  X = 1:+ / *:v
 NSUBST:  Y = 1:+ / *:c

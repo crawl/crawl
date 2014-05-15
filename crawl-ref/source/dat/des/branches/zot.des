@@ -741,7 +741,7 @@ ENDMAP
 #
 NAME:  lemuel_golem_globe
 DEPTH: Zot
-TAGS:  no_rotate
+TAGS:  no_rotate no_exits
 KFEAT: T = teleport trap
 KFEAT: m = iron_grate
 SUBST: 1 = 1.

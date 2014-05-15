@@ -127,7 +127,7 @@ CHANCE: 3%
 #
 
 NAME:    column_ruins_pillar_1
-TAGS:    serial_column_ruins_pillar allow_dup overwritable
+TAGS:    serial_column_ruins_pillar allow_dup overwritable no_exits
 WEIGHT:  10
 : init_column_ruins(_G)
 MAP

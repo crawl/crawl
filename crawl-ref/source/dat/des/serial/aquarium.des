@@ -364,7 +364,7 @@ ENDMAP
 # subvaults for small islands
 
 NAME:    aquarium_subvault_small_water
-TAGS:    aquarium_subvault_small_water
+TAGS:    aquarium_subvault_small_water no_exits
 : init_aquarium(_G)
 MAP
 cmc
@@ -385,7 +385,7 @@ ENDMAP
 # subvaults for large islands
 
 NAME:    aquarium_subvault_large_water
-TAGS:    aquarium_subvault_large_water
+TAGS:    aquarium_subvault_large_water no_exits
 : init_aquarium(_G)
 MAP
 cmmmmmc

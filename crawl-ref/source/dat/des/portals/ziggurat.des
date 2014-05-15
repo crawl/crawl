@@ -25,7 +25,7 @@ O
 ENDMAP
 
 NAME:   enter_ziggurat_a
-TAGS:   zig_entry
+TAGS:   zig_entry transparent
 KFEAT:  O = enter_ziggurat
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
@@ -43,7 +43,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_b
-TAGS:    zig_entry
+TAGS:    zig_entry transparent
 KFEAT:   O = enter_ziggurat
 TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
@@ -65,7 +65,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_c
-TAGS:    zig_entry no_trap_gen
+TAGS:    zig_entry no_trap_gen transparent
 KFEAT:   O = enter_ziggurat
 MONS:    lich / ancient lich
 MONS:    angel / daeva
@@ -88,7 +88,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_d
-TAGS:    zig_entry no_trap_gen
+TAGS:    zig_entry no_trap_gen transparent
 KFEAT:   O = enter_ziggurat
 MONS:    lich / ancient lich
 MONS:    angel / daeva
@@ -112,7 +112,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ziggurat_e
-TAGS:   zig_entry
+TAGS:   zig_entry transparent
 KFEAT:  O = enter_ziggurat
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
@@ -130,7 +130,7 @@ MAP
 ENDMAP
 
 NAME:   enter_ziggurat_f
-TAGS:   zig_entry no_trap_gen
+TAGS:   zig_entry no_trap_gen transparent
 KFEAT:  O = enter_ziggurat
 MONS:   angel / nothing w:20
 KPROP:  1Om; = no_rtele_into
@@ -154,7 +154,7 @@ ENDMAP
 default-depth: Pan
 
 NAME:   enter_ziggurat_pan_a
-TAGS:   chance_pan_zig extra allow_dup
+TAGS:   chance_pan_zig extra allow_dup transparent
 CHANCE: 8%
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
@@ -173,7 +173,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_pan_b
-TAGS:    chance_pan_zig extra allow_dup no_pool_fixup
+TAGS:    chance_pan_zig extra allow_dup no_pool_fixup transparent
 CHANCE:  8%
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
@@ -195,7 +195,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_pan_c
-TAGS:    chance_pan_zig extra allow_dup
+TAGS:    chance_pan_zig extra allow_dup transparent
 CHANCE:  8%
 MONS:    lich / ancient lich
 MONS:    angel / daeva
@@ -218,7 +218,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_pan_d
-TAGS:    chance_pan_zig extra allow_dup
+TAGS:    chance_pan_zig extra allow_dup transparent
 CHANCE:  8%
 MONS:    lich / ancient lich
 MONS:    angel / daeva
@@ -251,7 +251,7 @@ default-depth: Zig
 # - ziggurat pillars cannot use map markers.
 #######################################################################
 NAME: ziggurat_pillar_abc
-TAGS: ziggurat_pillar
+TAGS: ziggurat_pillar unrand
 WEIGHT: 20
 SHUFFLE: dD / eD / eE
 SUBST: ceE : bcmvxG
@@ -262,7 +262,7 @@ cd
 ENDMAP
 
 NAME: ziggurat_pillar_d
-TAGS: ziggurat_pillar
+TAGS: ziggurat_pillar unrand
 DEPTH: Zig:18-
 SUBST: c : cxvb
 MAP
@@ -272,7 +272,7 @@ cc
 ENDMAP
 
 NAME:  ziggurat_pillar_e
-TAGS:  ziggurat_pillar
+TAGS:  ziggurat_pillar unrand
 DEPTH: Zig:18-
 WEIGHT: 5
 SUBST: c : bcv
@@ -285,7 +285,7 @@ ccccc
 ENDMAP
 
 NAME: ziggurat_pillar_centre_a
-TAGS: ziggurat_pillar centered no_dump
+TAGS: ziggurat_pillar centered no_dump unrand
 MAP
 lll
 lGl
@@ -293,7 +293,7 @@ lll
 ENDMAP
 
 NAME: ziggurat_pillar_centre_b
-TAGS: ziggurat_pillar centered no_dump
+TAGS: ziggurat_pillar centered no_dump unrand
 SHUFFLE: wb / lb / nb / cb / bx
 MAP
  www
@@ -304,7 +304,7 @@ wwwww
 ENDMAP
 
 NAME: ziggurat_pillar_centre_c
-TAGS: ziggurat_pillar centered
+TAGS: ziggurat_pillar centered unrand
 # This is evil. Monster sets are: summoners (1), stares (2), harmless (3).
 # This pillar has tactical implications: you will have to stay away from it,
 # and teleports are more risky.
@@ -324,14 +324,14 @@ nnn
 ENDMAP
 
 NAME: ziggurat_pillar_centre_monster
-TAGS: ziggurat_pillar centered no_dump
+TAGS: ziggurat_pillar centered no_dump unrand
 MONS: curse skull / ice statue / orange crystal statue / silver statue
 MAP
 1
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_def
-TAGS:    ziggurat_pillar centered no_dump
+TAGS:    ziggurat_pillar centered no_dump unrand
 WEIGHT:  20
 SHUFFLE: xy'z / xY'z / "Y"Z
 SUBST:   xYZ : bcmvxG, y" = .
@@ -345,7 +345,7 @@ z'z'z
 ENDMAP
 
 NAME: ziggurat_pillar_centre_h
-TAGS: ziggurat_pillar centered no_dump
+TAGS: ziggurat_pillar centered no_dump unrand
 MAP
 ccncc
 c...c
@@ -355,7 +355,7 @@ ccncc
 ENDMAP
 
 NAME: ziggurat_pillar_centre_i
-TAGS: ziggurat_pillar centered no_dump
+TAGS: ziggurat_pillar centered no_dump unrand
 MAP
 vlv
 lvl
@@ -363,7 +363,7 @@ vlv
 ENDMAP
 
 NAME:  ziggurat_pillar_centre_j
-TAGS:  ziggurat_pillar centered no_dump
+TAGS:  ziggurat_pillar centered no_dump unrand
 SUBST: x : bcmvxG
 MAP
  x
@@ -372,7 +372,7 @@ xxx
 ENDMAP
 
 NAME: ziggurat_pillar_centre_k
-TAGS: ziggurat_pillar centered
+TAGS: ziggurat_pillar centered unrand
 MONS: boring beetle, boulder beetle, orb spider
 SUBST: 2 : 2:19 3:1
 MAP
@@ -384,7 +384,7 @@ xxxxx
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_l
-TAGS:    ziggurat_pillar centered no_dump
+TAGS:    ziggurat_pillar centered no_dump unrand
 SHUFFLE: X' / X' / 'X
 SUBST:   xX : bcmvxG, ' = .
 MAP
@@ -396,7 +396,7 @@ xX'Xx
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_m
-TAGS:    ziggurat_pillar centered no_dump
+TAGS:    ziggurat_pillar centered no_dump unrand
 DEPTH:   Zig:18-
 SHUFFLE: X'" / X'" / 'X" / '"X
 SUBST:   x : bcmvxG, X : bcmvxG, '" = .
@@ -411,7 +411,7 @@ x...".x
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_n
-TAGS:    ziggurat_pillar centered no_dump
+TAGS:    ziggurat_pillar centered no_dump unrand
 DEPTH:   Zig:18-
 WEIGHT:  5
 SUBST:   x : w:40 bcmvxG
@@ -424,7 +424,7 @@ MAP
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_o
-TAGS:    ziggurat_pillar centered no_dump
+TAGS:    ziggurat_pillar centered no_dump unrand
 WEIGHT:  5
 SUBST:   x : bcmvx
 MAP
@@ -436,7 +436,7 @@ MAP
 ENDMAP
 
 NAME: ziggurat_pillar_centre_oklobs
-TAGS: ziggurat_pillar centered
+TAGS: ziggurat_pillar centered unrand
 MONS: plant / oklob plant / nothing w:20
 MAP
  111
@@ -447,7 +447,7 @@ MAP
 ENDMAP
 
 NAME:   ziggurat_pillar_centre_dead_trees
-TAGS:   ziggurat_pillar centered
+TAGS:   ziggurat_pillar centered unrand
 SUBST:  T = t.
 COLOUR: t = w:5 lightgrey / w:5 darkgrey / brown
 TILE:   t = DNGN_TREE_DEAD
@@ -460,7 +460,7 @@ TtttT
 ENDMAP
 
 NAME:  ziggurat_pillar_centre_smoke
-TAGS:  ziggurat_pillar centered
+TAGS:  ziggurat_pillar centered unrand
 WEIGHT: 5
 MARKER:  Z = lua:fog_machine { cloud_type = "black smoke", \
          pow_min = 25, pow_max = 25, \
@@ -474,7 +474,7 @@ vv.v.
 ENDMAP
 
 NAME:  ziggurat_pillar_centre_lightning
-TAGS:  ziggurat_pillar centered no_dump
+TAGS:  ziggurat_pillar centered no_dump unrand
 MONS:  lightning spire
 MAP
 v...v
@@ -485,7 +485,7 @@ v...v
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_more_plants
-TAGS:    ziggurat_pillar centered
+TAGS:    ziggurat_pillar centered unrand
 DEPTH:   Zig:18-
 WEIGHT:  5
 MONS:    plant, bush, patrolling thorn hunter, patrolling shambling mangrove
@@ -502,7 +502,7 @@ tt.x.tt
 ENDMAP
 
 NAME:    ziggurat_pillar_centre_drop
-TAGS:    ziggurat_pillar centered generate_awake
+TAGS:    ziggurat_pillar centered generate_awake unrand
 DEPTH:   Zig:10-
 WEIGHT:  5
 MONS:    lost soul
@@ -570,7 +570,7 @@ ENDMAP
 # not finished!
 NAME: ziggurat_arena
 # Just to keep the map compiler happy:
-TAGS: ziggurat_arena
+TAGS: ziggurat_arena unrand
 MAP
 nnnnnnnnnnnnnn
 n...........An
