@@ -42,8 +42,10 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
     monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
 
-    monster_level_up(MONS_NAGA, MONS_NAGA_WARRIOR),
+    monster_level_up(MONS_NAGA, MONS_NAGA_WARRIOR, 500),
+    monster_level_up(MONS_NAGA, MONS_NAGA_MAGE),
     monster_level_up(MONS_NAGA_MAGE, MONS_GREATER_NAGA),
+    monster_level_up(MONS_NAGA_WARRIOR, MONS_GREATER_NAGA),
 
     monster_level_up(MONS_DEEP_ELF_FIGHTER, MONS_DEEP_ELF_KNIGHT),
 
