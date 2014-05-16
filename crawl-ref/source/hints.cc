@@ -4149,7 +4149,7 @@ static void _hints_describe_feature(int x, int y)
             ostr << "\n\n";
 
         ostr << "Many forms of combat and some forms of magical attack "
-                "will splatter the surroundings with blood (if the victim has "
+                "will spatter the surroundings with blood (if the victim has "
                 "any blood, that is). Some monsters can smell blood from "
                 "a distance and will come looking for whatever the blood "
                 "was spilled from.";
