@@ -1620,12 +1620,12 @@ KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:shroud_of_golubria|passage_of_golubria
 KITEM:   g = ring of flight / potion of flight q:2 / \
-             wand of digging w:5 / lantern of shadows / \
-             potion of haste w:5 / scroll of fog / potion of porridge / \
-             any wand w:1 / any potion w:1 / any scroll w:1
+             lantern of shadows / potion of haste w:5 / \
+             scroll of fog / potion of porridge / \
+             any potion w:1 / any scroll w:1
 KITEM:   h = pair of boots ego:flying w:8 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:8 / pair of boots w:3
-KITEM:   i = wand of disintegration
+KITEM:   i = wand of disintegration w:5 / wand of digging w:5 / any wand w:1
 KITEM:   j = any level:3, any level:3 / nothing
 KITEM:   k = star_item / any w:5, any w:5 / nothing
 KITEM:   | = cloak good_item w:75 / randart cloak w:95 / cloak unrand:cloak_of_flash / \
@@ -1727,11 +1727,11 @@ Xcaaaaaaaaa--'---'Cn'C''CnC'^C'nC'---'--aaccnnccacXX
 Xcaaaaaaaaa-'----'C'@C'`'n'`'C@'C'----'-ccc...HcccXX
 Xcaaaa""aaa--'--'CCCC`````````CCCC'--'-cc1......ccXX
 Xcaccnnccaa-'----'C^'`````````''C'---'cc....0B...cXXXXXXXX
-XcccO...ccc-'---'CC'````mmm````'CC'---+..[.BBB..qEXXnnnnnX
+XcccO...ccc-'---'CC'````m`m````'CC'---+..[.BBB..qEXXnnnnnX
 Xcc......1cc-'-'-'CC'``mm7mm```CC'-'-'c.....2B...EXXnA.AnX
-Xc.........cc-4G--(nn``m787m``nn(--G4-cc.........cXXn...nX
+Xc.........cc-4G--(nn```787```nn(--G4-cc.........cXXn...nX
 XE...B2.....c'-'-'CC'``mm7mm```CC'-'-'-cc1......ccXXnA.AnX
-XEu..BBB.[..+---'CC'````mmm````'CC'---'-ccc...TcccXXnnnnnX
+XEu..BBB.[..+---'CC'````m`m````'CC'---'-ccc...TcccXXnnnnnX
 Xc...B0....cc'---'C''`````````'^C'----'-aaccnnccacXXXXXXXX
 Xcc......1cc-'--'CCCC`````````CCCC'--'--aaa""aaaacXX
 XcccL...ccc-'----'C'@C'`'n'`'C@'C'----'-aaaaaaaaacXX
