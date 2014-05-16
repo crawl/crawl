@@ -1,7 +1,11 @@
 # GDB autoload file
 
 import gdb.printing
+import sys
 
+# We want to work with both Python 2 and 3
+if sys.version_info[0] > 2:
+    long = int
 
 ## Copied from gdb.printing because, having an initial underscore,
 ## it's probably not a stable interface...
