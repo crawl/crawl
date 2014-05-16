@@ -1029,8 +1029,8 @@ but increases the speed of their metabolism greatly while doing so.
 %%%%
 ring of loudness
 
-This ring passively emits an aura of loud noise, causing the wearer to be
-considerably less stealthy.
+This ring causes the wearer's movements to be particularly loud, making them
+less stealthy.
 %%%%
 ring of magical power
 
@@ -1079,7 +1079,7 @@ respectively.
 %%%%
 ring of stealth
 
-This ring dampens the noises of the wearer, making them more stealthy.
+This ring allows the wearer to move quietly, making them more stealthy.
 %%%%
 ring of strength
 
