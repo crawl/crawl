@@ -359,18 +359,12 @@ DEPTH:  D:5-, Depths, Orc
 WEIGHT: 1
 TAGS:  no_hmirror no_vmirror
 KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
-       large rock ego:returning q:3 | large rock ego:exploding q:3 | \
-       large rock ego:chaos q:3 | large rock ego:poisoned q:3 | \
-       large rock ego:dispersal q:3 | large rock ego:flame q:3 | \
-       large rock ego:frost q:3 | stone ego:flame | stone ego:returning | \
-       stone ego:exploding | stone ego:dispersal | stone ego:poisoned | \
-       stone ego:chaos | stone ego:frost | javelin ego:dispersal | \
+       tomahawk ego:flame | tomahawk ego:exploding | tomahawk ego:dispersal | \
+       tomahawk ego:frost | tomahawk ego:chaos | javelin ego:dispersal | \
        javelin ego:exploding | javelin ego:chaos | arrow ego:silver | \
-       arrow ego:steel | arrow ego:exploding | arrow ego:returning | \
-       arrow ego:penetration | arrow ego:chaos | bolt ego:exploding | \
-       bolt ego:returning | bolt ego:dispersal | bolt ego:chaos | \
-       sling bullet ego:dispersal | sling bullet ego:chaos | \
-       sling bullet ego:returning
+       arrow ego:steel | arrow ego:exploding | arrow ego:penetration | \
+       arrow ego:chaos | bolt ego:exploding | bolt ego:dispersal | \
+       bolt ego:chaos | sling bullet ego:dispersal | sling bullet ego:chaos
 MAP
 .......
 .lllll.
