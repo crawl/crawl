@@ -25,34 +25,34 @@ such a weapon, or why, but Xom is probably to blame somehow.
 %%%%
 Glaive of Prune
 
-It is the creation of a mad god, and carries a curse which transforms anyone
-wielding it into a prune. Fortunately, the curse works very slowly, and one can
-use it briefly with no consequences worse than slightly purple skin and a few
-wrinkles.
+This weapon is the creation of a mad god, and carries a curse which transforms
+anyone wielding it into a prune. Fortunately, the curse works very slowly, and
+one can use it briefly with no consequences worse than slightly purple skin and
+a few wrinkles.
 %%%%
 Sword of Power
 
-It rewards the powerful with power and the meek with weakness.
+This sword rewards the powerful with power and the meek with weakness.
 %%%%
 Staff of Olgreb
 
 This was the weapon wielded by the mighty wizard Olgreb, before he met his fate
 somewhere within these dungeons. It increases the power of its wielder's
-venomous magic, and can be evoked to activate its own brand of poison magic.
-Its touch may poison even resistant creatures, and it grants protection from
-all venoms while wielded.
+poison magic, and can be evoked to activate its own venomous spells. Its touch
+may poison even resistant creatures, and it grants protection from all venoms
+while wielded.
 %%%%
 Staff of Wucad Mu
 
-It can be evoked to restore large amounts of magical energy, but at the risk of
-damaging the user's mind. Its power depends on the wielder's evocations skill.
+This staff can be evoked to restore large amounts of magical energy, but with
+the risk of damaging the user's mind. Its power depends on the wielder's
+Evocations skill.
 %%%%
 Vampire's Tooth
 
-This ivory-like dagger looks like it could actually have been created from a
-tooth of some enormous predatory creature, although obviously not an average
-human-sized bloodsucker. It is lethally vampiric, and restores a greater
-portion of life to its user than other vampiric weapons.
+This ivory-like dagger looks like it could have been crafted from the tooth of
+some enormous predatory creature. It is lethally vampiric, and restores a
+greater portion of life to its user than other vampiric weapons.
 %%%%
 Scythe of Curses
 
@@ -66,7 +66,7 @@ This truly accursed weapon is an instrument of Hell.
 Sword of Zonguldrok
 
 This dreadful weapon is used at the user's peril. Those slain in its presence
-are reanimated by its power, and forced to fight on.
+are reanimated by its power and forced to fight on.
 %%%%
 Sword of Cerebov
 
@@ -81,20 +81,19 @@ stopped anyone in their quest for power?
 %%%%
 Sceptre of Asmodeus
 
-It carries some of the powers of the arch-fiend Asmodeus. Evoking the sceptre
-can summon fiery demons from their infernal home and enslave them to do your
-bidding, although they may not remain enslaved for long.
+This sceptre carries some of the powers of the arch-fiend Asmodeus. Evoking it
+can summon fiery demons from their infernal home to do your bidding, although
+they will not remain enslaved for long.
 %%%%
 faerie dragon armour
 
-Faerie dragons used to be a race of the same species as mottled ones.
-Unfortunately, their vivid colours became their bane, as they alerted potential
-prey. They are now extinct, and this prized relic is one of the last proofs
-they ever existed.
+Faerie dragons were once a breed of the same species as mottled dragons. Their
+vivid colours proved to be their bane, as they alerted potential prey. They are
+now extinct, and this prized relic is one of the last proofs they ever existed.
 %%%%
 demon blade "Bloodbane"
 
-It carries the bloody taint of an inhuman madman.
+This blade carries the bloody taint of an inhuman madman.
 %%%%
 scimitar of Flaming Death
 
@@ -102,18 +101,18 @@ Smokin'!
 %%%%
 mace of Brilliance
 
-This mace will let you shine some light into the dungeon, and also will make
-sure enemies are well-warned of your presence. Its light is hated by the
-undead, and can reveal any machinations of those who try to stay invisible.
+This mace illuminates the dungeon's recesses, but its halo may alert enemies to
+your presence. Its light is hated by the undead, and can reveal any
+machinations of those who try to stay invisible.
 %%%%
 demon blade "Leech"
 
-It drives its owner's mind into a narrow purpose: gorging on drained life
-force. It is unerringly vampiric, draining life every time it strikes.
+This weapon drives its owner's mind into a narrow purpose: gorging on drained
+life force. It is unerringly vampiric, draining life every time it strikes.
 %%%%
 dagger of Chilly Death
 
-A dagger made of one huge piece of sapphire.
+A dagger made of one huge shard of sapphire.
 %%%%
 dagger "Morg"
 
@@ -122,7 +121,7 @@ called Boris. He got lost in the Dungeon while seeking the Orb.
 %%%%
 scythe "Finisher"
 
-A long and sharp scythe, specially modified for combat purposes.
+A long and sharp scythe, specially modified to be quickly swung in combat.
 %%%%
 sling "Punk"
 
@@ -190,8 +189,8 @@ A beautiful mithril axe, probably lost by some dwarven hero.
 Elemental Staff
 
 This powerful staff used to belong to the leader of the Guild of Five Elements.
-In addition to the protection it provides, it sometimes discharges powerful
-blasts of elemental energy when it strikes.
+In addition to the protection it provides, those skilled in Evocations may
+use it to discharge powerful blasts of elemental energy with their strikes.
 %%%%
 crossbow "Sniper"
 
@@ -309,7 +308,7 @@ A cloak that twitches and jerks without any intervention.
 boots of the Assassin
 
 Some soft boots, specially designed by the Assassin's Guild. They make the
-wearer more perceptive of potential victims, and more able to find
+wearer more perceptive of potential victims, and grant the ability to find
 vulnerabilities when attacking unaware opponents.
 %%%%
 Lear's hauberk
@@ -355,7 +354,7 @@ back for a refund.
 %%%%
 mask of the Dragon
 
-A strange blue mask made of hard flexible leather, resembling a dragon's
+A strange blue mask made of hard, flexible leather, resembling a dragon's
 visage.
 %%%%
 robe of Night
@@ -461,8 +460,8 @@ protect against the effects of salt.
 obsidian axe
 
 This axe has had a curse placed on it by one of the lords of Pandemonium so
-that unsuspecting adventurers like you would unleash demons into this world.
-Beware, for this axe has ways of taking its wielder under its command...
+that unsuspecting adventurers would unleash demons into this world. Beware, for
+this axe has ways of taking its wielder under its command...
 %%%%
 lightning scales
 
@@ -472,12 +471,11 @@ slither at almost a human's pace.
 %%%%
 Black Knight's horse barding
 
-This gear used to be worn by the personal horse of the Black Knight during his
-reign of terror. Pitch-black, it appears to be made not only of some strange
-black steel, but also of entire plates of black diamond! Naturally, such a
-weight of metal and stone cannot be good for the mount's speed. However, it
-offers not only mundane protection against blows; the adamant bears an
-enchantment that makes its wearer partially undead.
+This barding once protected the steed of the Black Knight during his reign of
+terror. It is a heavy coat, made not only of pitch-black steel, but inlaid
+with massive plates of black diamond. The weight of metal and stone slows the
+steed it protects. It offers more than protection against blows; the adamant
+bears an enchantment that makes its wearer partially undead.
 %%%%
 ring of Vitality
 
@@ -550,13 +548,13 @@ demon whip "Spellbinder"
 
 A weapon said to have once been used to keep unruly imprisoned wizards in line;
 it violently disrupts their ability to use magic, inflicting wild and
-unpredictable residual magical effects on those it strikes.
+unpredictable magical effects on those it strikes.
 %%%%
 lajatang of Order
 
 Long ago Zin bestowed this gift upon a favoured worshipper. It became the
-most prized weapon of the many priests of Zin; but after their order was
-destroyed, it fell into disuse and vanished from history.
+most prized weapon of the many priests of Zin; after their order was destroyed,
+it fell into disuse and vanished from history.
 
 %%%%
 great mace "Firestarter"
