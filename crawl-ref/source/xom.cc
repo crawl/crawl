@@ -851,16 +851,12 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (is_blessed(item))
         return false;
 
-    // God gifts from good gods are protected.  Also, Beogh hates all
-    // the other gods, so he'll protect his gifts as well.
+    // God gifts are protected.
     if (item.orig_monnum < 0)
     {
         god_type iorig = static_cast<god_type>(-item.orig_monnum);
-        if (iorig > GOD_NO_GOD && iorig < NUM_GODS
-            && (is_good_god(iorig) || iorig == GOD_BEOGH))
-        {
+        if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
             return false;
-        }
     }
 
     // Leave branded items alone, since this is supposed to be an
