@@ -57,7 +57,7 @@
  * @param[out] did_hit If non-null, receives true if the attack hit the
  *                     defender, and false otherwise.
  * @param simu Is this a simulated attack?  Disables a few problematic
- *             effects such as blood spatter and distortion teleports. 
+ *             effects such as blood spatter and distortion teleports.
  *
  * @return Whether the attack took time (i.e. wasn't cancelled).
  */
