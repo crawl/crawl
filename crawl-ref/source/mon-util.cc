@@ -3420,7 +3420,8 @@ bool mons_has_los_ability(monster_type mon_type)
     if (mon_type == MONS_GIANT_EYEBALL
         || mon_type == MONS_EYE_OF_DRAINING
         || mon_type == MONS_GOLDEN_EYE
-        || mon_type == MONS_MOTH_OF_WRATH)
+        || mon_type == MONS_MOTH_OF_WRATH
+        || mon_type == MONS_GHOST_MOTH)
     {
         return true;
     }
