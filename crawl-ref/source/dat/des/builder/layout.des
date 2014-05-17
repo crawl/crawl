@@ -220,6 +220,18 @@ WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
 TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
 {{
+    function smear()
+        local gxm, gym = dgn.max_bounds()
+        local iterations = 100 + crawl.random2(800)
+        smear_map{iterations = iterations, boxy = false}
+
+        --Fill in disconnected zones now, prior to adding the stairs.
+        --Temporarily set a (passable) unique symbol in the middle of the map,
+        --to guarantee everything is connected to it after smearing.
+        mapgrd[gxm/2][gym/2] = '@'
+        fill_disconnected{wanted = '@'}
+        mapgrd[gxm/2][gym/2] = '.'
+    end
     -- Step 1: Big octagon.
 
     local gxm, gym = dgn.max_bounds()
@@ -235,17 +247,12 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
         replace = 'x',
         inside = '.'}
 
+    -- 50% chance of smearing at all; 50% chance of including pillars in
+    -- smearing when smearing.
     local do_smear = crawl.coinflip()
-    if do_smear then
-        local iterations = 100 + crawl.random2(800)
-        smear_map{iterations = iterations, boxy = false}
-
-        --Fill in disconnected zones now, prior to adding the stairs.
-        --Temporarily set a (passable) unique symbol in the middle of the map,
-        --to guarantee everything is connected to it after smearing.
-        mapgrd[gxm/2][gym/2] = '@'
-        fill_disconnected{wanted = '@'}
-        mapgrd[gxm/2][gym/2] = '.'
+    local smear_before = crawl.coinflip()
+    if do_smear and smear_before then
+        smear()
     end
 
     -- Step 2: Add pillars
@@ -271,24 +278,36 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
         make_rounded_square
     }
 
-    -- Pillar size params
-    -- NOTE: Be careful about tweaking the ranges here. Pillars that are
-    -- too large, close, or large in number can entirely surround the center.
-    local pfunc = pillar_func[crawl.random2(#pillar_func) + 1]
-    local num = 3 + crawl.random2(9)
-    local pillar_radius = 1 + crawl.random2((pfunc == make_diamond) and 3 or 2)
-    local circle_radius = 2 + crawl.random2(6) + pillar_radius * 2 + num / 2
-    local fill = crawl.random_element(pillar_fill)
+    -- Sometimes generate more than one pillar ring for variety.
+    local ring_count = 1 + crawl.random2(4)
+    local circle_radius = 2 + crawl.random2(ring_count == 1 and 6 or 3)
 
-    -- Finally, make the pillars
-    local make_pillar = function(x, y)
-        return pfunc({
-            x = x,
-            y = y,
-            radius = pillar_radius,
-            fill = fill})
+    for i = 1, ring_count do
+        -- Pillar size params
+        -- NOTE: Be careful about tweaking the ranges here. Pillars that are
+        -- too large, close, or large in number can entirely surround the center.
+        local pfunc = pillar_func[crawl.random2(#pillar_func) + 1]
+        local num = 3 + 2*i crawl.random2(9 - 2*i)
+        local pillar_radius =
+            1 + crawl.random2((pfunc == make_diamond) and 3 or 2)
+        circle_radius = circle_radius + pillar_radius * 2 + num / 2
+        if circle_radius >= (gym-oblique)/2 then break end
+        local fill = crawl.random_element(pillar_fill)
+
+        -- Finally, make the pillars
+        local make_pillar = function(x, y)
+            return pfunc({
+                x = x,
+                y = y,
+                radius = pillar_radius,
+                fill = fill})
+        end
+        apply_circle(gxm/2, gym/2, num, circle_radius, 1, 1, make_pillar)
     end
-    apply_circle(gxm/2, gym/2, num, circle_radius, 1, 1, make_pillar)
+
+    if do_smear and not smear_before then
+        smear()
+    end
 
     -- Step 3: Create stairs
 
@@ -300,15 +319,31 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
     -- 4) down
     -- 5) left
 
-    local up_loc = crawl.random2(6)
-    local down_loc = crawl.random2(6)
-    while up_loc == down_loc do
-        down_loc = crawl.random2(6)
-    end
+    local full_stair_set = {[0] = {}, [1] = {}, [2] = {},
+                            [3] = {}, [4] = {}, [5] = {} }
 
-    local up_stairs = {"{", "(", "["}
-    local down_stairs = {"}", ")", "]"}
-    local full_stair_set = {[up_loc] = up_stairs, [down_loc] = down_stairs}
+    if crawl.coinflip() then
+        -- Sets of stairs all in the same place, as with the original layout.
+        local up_loc = crawl.random2(6)
+        local down_loc = crawl.random2(6)
+        while up_loc == down_loc do
+            down_loc = crawl.random2(6)
+        end
+
+        local up_stairs = {"{", "(", "["}
+        local down_stairs = {"}", ")", "]"}
+        full_stair_set = {[up_loc] = up_stairs, [down_loc] = down_stairs}
+    else
+        -- Each stair goes to a unique location.
+        local stairs = {"{", "}", "(", ")", "[", "]"}
+        local locs = {0, 1, 2, 3, 4, 5}
+        for i = 1, #stairs do
+            local which = crawl.random2(#locs) + 1
+            local loc = locs[which]
+            table.remove(locs, which)
+            full_stair_set[loc] = { stairs[i] }
+        end
+    end
 
     for loc, stair_list in pairs (full_stair_set) do
         for i = 1, #stair_list do
@@ -358,17 +393,12 @@ TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
         end
     end
 
-    if (you.in_branch("D") and you.depth() > 21 or you.where() == "Pan")
-      and crawl.coinflip()
-    then
+    -- Do we still want this special case here?
+    if you.where() == "Pan" and crawl.coinflip() then
         mapgrd[40][36] = 'O'
         mapgrd[41][36] = 'O'
         nsubst('O = 1:O / *:.')
-        if you.in_branch("Pan") then
-            kfeat('O = exit_through_abyss')
-        else
-            kfeat('O = enter_abyss')
-        end
+        kfeat('O = exit_through_abyss')
     end
 
     theme.level_material(_G)
