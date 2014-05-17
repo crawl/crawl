@@ -38,7 +38,7 @@ function interest_check(e)
   end
 end
 
-function get_altar_count(e)
+function get_overflow_altar_count(e)
   local params = dgn.map_parameters()
   if params ~= nil then
     local tag = unpack(params)
@@ -56,7 +56,7 @@ function altar_check(e)
     e.subst('C = B')
     return
   end
-  if get_altar_count(e) ~= nil then
+  if get_overflow_altar_count(e) ~= nil then
     e.subst('C = B')
   else
     e.tags('extra')
@@ -3108,7 +3108,7 @@ SHUFFLE: defghijk / efghijkd
   if is_validating() then
     altarcount = 8
   else
-    altarcount = get_altar_count(_G)
+    altarcount = get_overflow_altar_count(_G)
   end
   if altarcount == "1" then
     subst("d = B")
@@ -3163,7 +3163,7 @@ TAGS:  temple_overflow_generic_2
   if is_validating() then
     altarcount = 14
   else
-    altarcount = get_altar_count(_G)
+    altarcount = get_overflow_altar_count(_G)
   end
   nsubst("B : " .. altarcount .. ":B / *:x")
 }}
@@ -3187,7 +3187,7 @@ TAGS: temple_overflow_generic_5 temple_overflow_generic_4 temple_overflow_generi
   if is_validating() then
     altarcount = 5
   else
-    altarcount = get_altar_count(_G)
+    altarcount = get_overflow_altar_count(_G)
   end
   if altarcount == "1" then
     subst("c = B")
