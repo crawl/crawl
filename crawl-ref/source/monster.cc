@@ -423,17 +423,6 @@ int monster::body_weight(bool /*base*/) const
     return weight;
 }
 
-int monster::total_weight() const
-{
-    int burden = 0;
-
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-        if (inv[i] != NON_ITEM)
-            burden += item_mass(mitm[inv[i]]) * mitm[inv[i]].quantity;
-
-    return body_weight() + burden;
-}
-
 brand_type monster::damage_brand(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
@@ -5272,7 +5261,7 @@ bool monster::do_shaft()
             return false;
         }
 
-        if (!ground_level() || total_weight() == 0)
+        if (!ground_level() || body_weight() == 0)
         {
             if (mons_near(this))
             {

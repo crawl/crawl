@@ -950,7 +950,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
         // Depending on total (body + equipment) weight, give monsters
         // and player a chance to escape a shaft.
-        if (x_chance_in_y(200, triggerer.total_weight()))
+        if (x_chance_in_y(140, triggerer.body_weight()))
             break;
 
         // Fire away!

@@ -216,11 +216,6 @@ int player::body_weight(bool base) const
     return weight;
 }
 
-int player::total_weight() const
-{
-    return body_weight() + burden;
-}
-
 int player::damage_type(int)
 {
     if (const item_def* wp = weapon())

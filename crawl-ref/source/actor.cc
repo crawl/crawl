@@ -31,7 +31,7 @@ actor::~actor()
 
 bool actor::will_trigger_shaft() const
 {
-    return ground_level() && total_weight() > 0 && is_valid_shaft_level()
+    return ground_level() && body_weight() > 0 && is_valid_shaft_level()
            // let's pretend that they always make their saving roll
            && !(is_monster()
                 && mons_is_elven_twin(static_cast<const monster* >(this)));
