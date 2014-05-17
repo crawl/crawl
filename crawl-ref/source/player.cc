@@ -7955,7 +7955,7 @@ bool player::do_shaft()
         case DNGN_TRAP_SHAFT:
         case DNGN_UNDISCOVERED_TRAP:
         case DNGN_ENTER_SHOP:
-            if (!ground_level() || total_weight() == 0)
+            if (!ground_level() || body_weight() == 0)
                 return true;
             break;
 
