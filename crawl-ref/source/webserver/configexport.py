@@ -3,6 +3,9 @@
 import json
 import config
 import re
+from collections import OrderedDict
+
+json.encoder.c_make_encoder = None # http://bugs.python.org/issue6105
 
 VERSION_RE = r"trunk$|\d.\d\d$"
 
@@ -39,7 +42,13 @@ def convert_game(**data):
     else:
         mode = "Dungeon Crawl"
     data["mode"] = mode
-    return data
+    d = OrderedDict()
+    for key in ["id", "name", "version", "mode", "comment", "morgue_url",
+                "crawl_binary", "options", "inprogress_path", "rcfile_path",
+                "socket_path", "morgue_path", "client_path", "macro_path",
+                "ttyrec_path", "send_json_options"]:
+        if key in data: d[key] = data[key]
+    return d
 
 def games():
     return [convert_game(id=id, **data) for (id, data) in config.games.items()]
@@ -52,44 +61,49 @@ def milestones():
     else:
         return [config.milestone_file]
 
-conf = {
-    "dgl_mode": config.dgl_mode,
-    "binds": binds(),
-    "logging_config": config.logging_config,
-    "password_db": config.password_db,
-    "static_path": config.static_path,
-    "template_path": config.template_path,
-    "server_socket_path": config.server_socket_path,
-    "server_id": config.server_id,
-    "game_data_no_cache": config.game_data_no_cache,
-    "watch_socket_dirs": config.watch_socket_dirs,
-    "games": games(),
-    "dgl_status_file": config.dgl_status_file,
-    "milestone_files": milestones(),
-    "status_file_update_rate": config.status_file_update_rate,
-    "recording_term_size": config.recording_term_size,
-    "max_connections": config.max_connections,
-    "init_player_program": config.init_player_program,
-    "ssl_options": config.ssl_options,
-    "ssl_binds": sslbinds(),
-    "connection_timeout": config.connection_timeout,
-    "max_idle_time": config.max_idle_time,
-    "http_connection_timeout": config.http_connection_timeout,
-    "kill_timeout": config.kill_timeout,
-    "nick_regex": config.nick_regex,
-    "max_passwd_length": config.max_passwd_length,
-    "crypt_algorithm": config.crypt_algorithm,
-    "crypt_salt_length": config.crypt_salt_length,
-    "login_token_lifetime": config.login_token_lifetime,
-    "uid": config.uid,
-    "gid": config.gid,
-    "umask": config.umask,
-    "chroot": config.chroot,
-    "pidfile": config.pidfile,
-    "daemon": config.daemon,
-    "player_url": config.player_url,
-    "no_cache": config.no_cache,
-    "autologin": config.autologin
-    }
+conf = OrderedDict([
+    ("binds", binds()),
+    ("ssl_options", config.ssl_options),
+    ("ssl_binds", sslbinds()),
+    ("daemon", config.daemon),
+    ("uid", config.uid),
+    ("gid", config.gid),
+    ("umask", config.umask),
+    ("chroot", config.chroot),
+    ("pidfile", config.pidfile),
+    ("logging_config", config.logging_config),
+    ("http_connection_timeout", config.http_connection_timeout),
+    ("max_connections", config.max_connections),
+    ("dgl_status_file", config.dgl_status_file),
+    ("server_id", config.server_id),
+    ("init_player_program", config.init_player_program),
+    ("password_db", config.password_db),
+    ("crypt_algorithm", config.crypt_algorithm),
+    ("crypt_salt_length", config.crypt_salt_length),
+    ("nick_regex", config.nick_regex),
+    ("max_passwd_length", config.max_passwd_length),
+    ("login_token_lifetime", config.login_token_lifetime),
+
+    ("static_path", config.static_path),
+    ("template_path", config.template_path),
+    ("server_socket_path", config.server_socket_path),
+
+    ("max_idle_time", config.max_idle_time),
+    ("connection_timeout", config.connection_timeout),
+    ("kill_timeout", config.kill_timeout),
+
+    ("recording_term_size", config.recording_term_size),
+
+    ("watch_socket_dirs", config.watch_socket_dirs),
+    ("status_file_update_rate", config.status_file_update_rate),
+    ("player_url", config.player_url),
+    ("milestone_files", milestones()),
+
+    ("games", games())
+])
+
+if config.game_data_no_cache: conf["game_data_no_cache"] = True
+if config.no_cache: conf["no_cache"] = True
+if config.autologin: conf["no_cache"] = config.autologin
 
 print json.dumps(conf, indent=4, separators=(',', ': '))
