@@ -2801,7 +2801,8 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
     {
         monster *mons = monster_at(*di);
 
-        if (mons && (mons->wont_attack() || !mons->can_polymorph()))
+        if (mons && (mons->wont_attack() || !mons->can_polymorph()
+            || mons_is_firewood(mons)))
             continue;
 
         if (mons &&
