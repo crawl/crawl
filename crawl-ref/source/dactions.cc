@@ -45,7 +45,9 @@ static const char *daction_names[] =
 
     // Actions not needing a counter.
     "old enslaved souls go poof",
+#if TAG_MAJOR_VERSION == 34
     "holy beings allow another conversion attempt",
+#endif
 #if TAG_MAJOR_VERSION > 34
     "slimes allow another conversion attempt",
 #endif
