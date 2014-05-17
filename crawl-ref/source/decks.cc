@@ -1632,12 +1632,19 @@ static void _velocity_card(int power, deck_rarity_type rarity)
         return simple_god_message(" protects you from inadvertent hurry.");
 
     const int power_level = _get_power_level(power, rarity);
+    bool did_something = false;
 
     if (you.duration[DUR_SLOW] && (power_level > 0 || coinflip()))
+    {
         you.duration[DUR_SLOW] = 1;
+        did_something = true;
+    }
 
     if (you.duration[DUR_HASTE] && (power_level == 0 && coinflip()))
+    {
         you.duration[DUR_HASTE] = 1;
+        did_something = true;
+    }
 
     for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
     {
@@ -1652,40 +1659,51 @@ static void _velocity_card(int power, deck_rarity_type rarity)
            bool did_haste = false;
 
            // benefits the player
-           if (((speed > BASELINE_DELAY && hostile) ||
-              (speed < BASELINE_DELAY && !hostile)) &&
-              x_chance_in_y(power_level + 1, 3))
+           if (((speed >= BASELINE_DELAY && hostile)
+              || (speed <= BASELINE_DELAY && !hostile))
+              && x_chance_in_y(power_level + 1, 3))
            {
               if (hostile)
+              {
                   do_slow_monster(mon, &you);
+                  did_something = true;
+              }
               else if (!hostile && !haste_immune)
               {
                   mon->add_ench(ENCH_HASTE);
+                  did_something = true;
 
                   if (!was_hasted)
                       did_haste = true;
               }
            }   // doesn't benefit the player
-           else if (((speed < BASELINE_DELAY && hostile) ||
-                    (speed > BASELINE_DELAY && !hostile)) &&
-                    ((power_level == 0 && coinflip()) ||
-                    (power_level == 1 && one_chance_in(4))))
+           else if (((speed < BASELINE_DELAY && hostile)
+                    || (speed > BASELINE_DELAY && !hostile))
+                    && ((power_level == 0 && coinflip())
+                    || (power_level == 1 && one_chance_in(4))))
            {
                 if (hostile)
                 {
                     mon->add_ench(ENCH_HASTE);
+                    did_something = true;
 
                     if (!was_hasted)
                         did_haste = true;
                 }
                 else
+                {
                     do_slow_monster(mon, &you);
+                    did_something = true;
+                }
            }
 
            if (did_haste)
                simple_monster_message(mon, " seems to speed up.");
         }
     }
+
+    if (!did_something)
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 static void _damnation_card(int power, deck_rarity_type rarity)
