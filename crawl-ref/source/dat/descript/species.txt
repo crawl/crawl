@@ -130,3 +130,8 @@ Vine Stalker
 Frail symbionts, Vine Stalkers cannot regain health from devices or potions.
 Their magical reserves absorb damage, and they pack a magic-restoring bite.
 %%%%
+Plutonian
+
+Radioactive humanoids that draw strength from their magical contamination.
+If they accumulate too much contamination, they meltdown.
+%%%%

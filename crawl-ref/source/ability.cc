@@ -69,6 +69,7 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-miscast.h"
+#include "spl-util.h"
 #include "stairs.h"
 #include "state.h"
 #include "stuff.h"
@@ -250,6 +251,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_DIG, "Dig", 0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, 0, ABFLAG_DELAY},
+        { ABIL_OVERLOAD, "Overload", 2, 0, 0, 0, 0, ABFLAG_NONE},
 
     // EVOKE abilities use Evocations and come from items.
     // Teleportation and Blink can also come from mutations
@@ -1052,6 +1054,15 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_SHAFT_SELF:
         failure = 0;
         break;
+
+        case ABIL_EAT_GOLD:
+        case ABIL_INFUSE_GOLD:
+            failure = 0;
+                break;
+
+        case ABIL_OVERLOAD:
+            failure = 27 - you.experience_level;
+                break;
         // end species abilities (some mutagenic)
 
         // begin demonic powers {dlb}
@@ -2108,6 +2119,27 @@ static bool _do_ability(const ability_def& abil)
                 return false;
         }
         else
+            return false;
+        break;
+
+        case ABIL_OVERLOAD:
+        if (yesno("Are you sure you want to explode?", true, 'n'))
+                {
+            beam.flavour      = BEAM_MAGIC;
+            beam.damage       = dice_def(2, int(you.hp_max/3));
+            beam.target       = you.pos();
+            beam.name         = "magical storm";
+            beam.beam_source  = NON_MONSTER;
+            beam.aux_source   = "a magical explosion";
+            beam.ex_size      = 3;
+            beam.ench_power   = div_rand_round(you.magic_contamination, 200);
+            beam.is_explosion = true;
+
+            beam.explode();
+
+                    contaminate_player(3000, true);
+                }
+                else
             return false;
         break;
 
@@ -3387,6 +3419,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
+
+        if (you.species == SP_PLUTONIAN)
+        _add_talent(talents, ABIL_OVERLOAD, check_confused);
 
     if (you.species == SP_FORMICID)
     {

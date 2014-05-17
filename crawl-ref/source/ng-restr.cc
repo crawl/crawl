@@ -161,6 +161,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_MERFOLK:
         case SP_BASE_DRACONIAN:
         case SP_VAMPIRE:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -190,6 +191,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_OCTOPODE:
         case SP_HUMAN:
         case SP_MUMMY:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -204,6 +206,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_TENGU:
         case SP_BASE_DRACONIAN:
         case SP_DEMIGOD:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -278,6 +281,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_TENGU:
         case SP_DEMIGOD:
         case SP_GARGOYLE:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -293,6 +297,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_BASE_DRACONIAN:
         case SP_DEMIGOD:
         case SP_GARGOYLE:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -307,6 +312,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_BASE_DRACONIAN:
         case SP_NAGA:
         case SP_VINE_STALKER:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -322,6 +328,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_DEMIGOD:
         case SP_GHOUL:
         case SP_OCTOPODE:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -337,6 +344,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_TENGU:
         case SP_FELID:
         case SP_DEMONSPAWN:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -414,6 +422,7 @@ char_choice_restriction species_allowed(job_type job, species_type speci)
         case SP_BASE_DRACONIAN:
         case SP_HUMAN:
         case SP_DEMONSPAWN:
+                case SP_PLUTONIAN:
             return CC_UNRESTRICTED;
         default:
             return CC_RESTRICTED;
@@ -832,6 +841,23 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case JOB_NECROMANCER:
             case JOB_AIR_ELEMENTALIST:
             case JOB_ICE_ELEMENTALIST:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_RESTRICTED;
+        }
+        case SP_PLUTONIAN:
+        switch (job)
+        {
+                    case JOB_FIGHTER:
+                    case JOB_ABYSSAL_KNIGHT:
+                        case JOB_BERSERKER:
+                        case JOB_DEATH_KNIGHT:
+            case JOB_WIZARD:
+            case JOB_AIR_ELEMENTALIST:
+            case JOB_EARTH_ELEMENTALIST:
+            case JOB_FIRE_ELEMENTALIST:
+                        case JOB_ICE_ELEMENTALIST:
+            case JOB_VENOM_MAGE:
                 return CC_UNRESTRICTED;
             default:
                 return CC_RESTRICTED;

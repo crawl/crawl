@@ -81,7 +81,12 @@ enum ability_type
     // Formicids
     ABIL_DIG,
     ABIL_SHAFT_SELF,
-    ABIL_MAX_INTRINSIC = ABIL_SHAFT_SELF,
+        // Gold dwarves
+        ABIL_EAT_GOLD,
+        ABIL_INFUSE_GOLD,
+        // Plutonians
+        ABIL_OVERLOAD,
+    ABIL_MAX_INTRINSIC = ABIL_OVERLOAD,
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
@@ -2649,6 +2654,7 @@ enum monster_type                      // menv[].type
     MONS_GREATER_NAGA,
     MONS_GUARDIAN_SERPENT,
     MONS_OCTOPODE,
+        MONS_PLUTONIAN,
 #if TAG_MAJOR_VERSION > 34
     MONS_OCTOPODE_CRUSHER,
 #endif
@@ -3789,7 +3795,8 @@ enum species_type
     SP_GARGOYLE,
     SP_FORMICID,
     SP_VINE_STALKER,
-    LAST_VALID_SPECIES = SP_VINE_STALKER,
+        SP_PLUTONIAN,
+    LAST_VALID_SPECIES = SP_PLUTONIAN,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)

@@ -1248,6 +1248,10 @@ static int _player_bonus_regen()
 {
     int rr = 0;
 
+        const int pl_bonus_hp = (you.magic_contamination/400) + you.experience_level;
+        if (you.species == SP_PLUTONIAN)
+            rr += pl_bonus_hp;
+
     // Trog's Hand is handled separately so that it will bypass slow healing,
     // and it overrides the spell.
     if (you.duration[DUR_REGENERATION]
@@ -1329,6 +1333,7 @@ int player_regen()
         else if (you.hunger_state >= HS_FULL)
             rr += 10; // Bonus regeneration for full vampires.
     }
+
 #if TAG_MAJOR_VERSION == 34
 
     // Compared to other races, a starting djinni would have regen of 4 (hp)
@@ -3152,6 +3157,11 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
             switch (you.species)
             {
             case SP_HUMAN:
+                if (!(you.experience_level % 4))
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+                break;
+
+            case SP_PLUTONIAN:
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;

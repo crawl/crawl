@@ -80,6 +80,13 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         you.hunger_state = HS_SATIATED;
         return;
     }
+
+    if (you.species == SP_PLUTONIAN)
+    {
+        contaminate_player(hunger_amount * 4 / 3, true);
+        return;
+    }
+
 #if TAG_MAJOR_VERSION == 34
     // Lich/tree form djinn don't get exempted from food costs: infinite
     // healing from channeling would be just too good.
@@ -154,6 +161,7 @@ bool you_foodless(bool can_eat)
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI && !can_eat
 #endif
+        || you.species == SP_PLUTONIAN && !can_eat
         ;
 }
 
@@ -163,6 +171,7 @@ bool you_foodless_normally()
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI
 #endif
+        || you.species == SP_PLUTONIAN
         ;
 }
 
@@ -2088,6 +2097,7 @@ bool is_preferred_food(const item_def &food)
 
     if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE
         && item_type_known(food)
+                && you.species != SP_PLUTONIAN
 #if TAG_MAJOR_VERSION == 34
         && you.species != SP_DJINNI
 #endif

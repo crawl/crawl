@@ -1227,7 +1227,12 @@ static void _regenerate_hp_and_mp(int delay)
         const int base_val = 7 + you.max_magic_points / 2;
         int mp_regen_countup = div_rand_round(base_val * delay, BASELINE_DELAY);
         if (you.mutation[MUT_MANA_REGENERATION])
+        {
             mp_regen_countup *= 2;
+                const int pl_bonus = (you.magic_contamination/2000) + you.experience_level/3;
+            if (you.species == SP_PLUTONIAN)
+            mp_regen_countup += pl_bonus;
+        }
         tmp += mp_regen_countup;
     }
 

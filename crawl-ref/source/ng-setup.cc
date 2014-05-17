@@ -102,7 +102,8 @@ static void _species_stat_init(species_type which_species)
 
     case SP_FELID:              s =  4; i =  9; d = 11;      break;  // 24
     case SP_OCTOPODE:           s =  7; i = 10; d =  7;      break;  // 24
-    }
+    case SP_PLUTONIAN:          s =  8; i =  8; d =  8;      break;  // 24
+        }
 
     you.base_stats[STAT_STR] = s;
     you.base_stats[STAT_INT] = i;
@@ -331,6 +332,9 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_REGENERATION]   = 1;
         you.mutation[MUT_MANA_SHIELD]    = 1;
         you.mutation[MUT_NO_DEVICE_HEAL] = 2;
+        break;
+    case SP_PLUTONIAN:
+        you.mutation[MUT_NO_DEVICE_HEAL] = 1;
         break;
     default:
         break;
@@ -993,6 +997,8 @@ static void _give_items_skills(const newgame_def& ng)
     if (you.species == SP_DEEP_DWARF)
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEAL_WOUNDS, -1, 1, 5);
 
+        if (you.species == SP_PLUTONIAN)
+            you.magic_contamination = 10000;
     // Zotdef: everyone gets bonus two potions of curing.
 
     if (crawl_state.game_is_zotdef())
@@ -1045,6 +1051,11 @@ static void _give_starting_food()
         item.sub_type  = POT_BLOOD;
         init_stack_blood_potions(item);
     }
+        else if (you.species == SP_PLUTONIAN)
+        {
+            item.base_type = OBJ_POTIONS;
+        item.sub_type  = POT_CURING;
+        }
     else
     {
         item.base_type = OBJ_FOOD;

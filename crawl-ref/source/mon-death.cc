@@ -23,6 +23,7 @@
 #include "dlua.h"
 #include "dgn-overview.h"
 #include "effects.h"
+#include "enum.h"
 #include "env.h"
 #include "fineff.h"
 #include "food.h"
@@ -51,6 +52,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "spl-damage.h"
@@ -1896,7 +1898,12 @@ int monster_die(monster* mons, killer_type killer,
 
             // Killing triggers hints mode lesson.
             if (gives_xp)
+            {
                 _hints_inspect_kill();
+                                // Killing monsters that give xp reduces plutonian contam.
+                                if (you.species == SP_PLUTONIAN)
+                                    you.magic_contamination -= 200;
+            }
 
             // Prevent summoned creatures from being good kills.
             if (bad_kill || good_kill)

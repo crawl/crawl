@@ -1985,8 +1985,12 @@ static void _handle_magic_contamination()
         added_contamination += 13;
 
     // Normal dissipation
-    if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE])
+    if (!you.duration[DUR_INVIS]
+        && !you.duration[DUR_HASTE]
+        && you.species != SP_PLUTONIAN)
+    {
         added_contamination -= 25;
+    }
 
     // Scaling to turn length
     added_contamination = div_rand_round(added_contamination * you.time_taken,
@@ -2003,42 +2007,69 @@ static void _magic_contamination_effects()
 
     const int contam = you.magic_contamination;
 
-    // For particularly violent releases, make a little boom.
-    if (contam > 10000 && coinflip())
+    if (you.species == SP_PLUTONIAN)
     {
-        bolt beam;
+        mprf(MSGCH_WARN, "MELTDOWN!");
 
-        beam.flavour      = BEAM_RANDOM;
-        beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def(3, div_rand_round(contam, 2000 ));
-        beam.target       = you.pos();
-        beam.name         = "magical storm";
-        beam.beam_source  = NON_MONSTER;
-        beam.aux_source   = "a magical explosion";
-        beam.ex_size      = max(1, min(9, div_rand_round(contam, 15000)));
-        beam.ench_power   = div_rand_round(contam, 200);
-        beam.is_explosion = true;
+        const int pl_rot = you.experience_level/3;
 
-        // Undead enjoy extra contamination explosion damage because
-        // the magical contamination has a harder time dissipating
-        // through non-living flesh. :-)
-        if (you.is_undead)
-            beam.damage.size *= 2;
-
-        beam.explode();
+        rot_hp(pl_rot);
+        // The good old Plutonian Meltdown
+        if (contam > 10000)
+        {
+            bolt beam;
+            beam.flavour      = BEAM_MAGIC;
+            beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage       = dice_def(3, div_rand_round(contam, 2000));
+            beam.target       = you.pos();
+            beam.name         = "magical storm";
+            beam.beam_source  = NON_MONSTER;
+            beam.aux_source   = "a magical explosion";
+            beam.ex_size      = 9;
+            beam.ench_power   = div_rand_round(contam, 200);
+            beam.is_explosion = true;
+            beam.explode();
+        }
     }
+    else
+    {
+        // For particularly violent releases, make a little boom.
+        if (contam > 10000 && coinflip())
+        {
+            bolt beam;
 
-    // We want to warp the player, not do good stuff!
-    mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-           "mutagenic glow", true,
-           coinflip(),
-           false, false, false, false,
+            beam.flavour      = BEAM_RANDOM;
+            beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage       = dice_def(3, div_rand_round(contam, 2000 ));
+            beam.target       = you.pos();
+            beam.name         = "magical storm";
+            beam.beam_source  = NON_MONSTER;
+            beam.aux_source   = "a magical explosion";
+            beam.ex_size      = max(1, min(9, div_rand_round(contam, 15000)));
+            beam.ench_power   = div_rand_round(contam, 200);
+            beam.is_explosion = true;
+
+            // Undead enjoy extra contamination explosion damage because
+            // the magical contamination has a harder time dissipating
+            // through non-living flesh. :-)
+            if (you.is_undead)
+                beam.damage.size *= 2;
+
+            beam.explode();
+        }
+
+        // We want to warp the player, not do good stuff!
+        mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
+               "mutagenic glow", true,
+               coinflip(),
+               false, false, false, false,
 #if TAG_MAJOR_VERSION == 34
-           you.species == SP_DJINNI
+               you.species == SP_DJINNI
 #else
-           false
+               false
 #endif
-           );
+               );
+    }
 
     // we're meaner now, what with explosions and whatnot, but
     // we dial down the contamination a little faster if its actually
@@ -2051,16 +2082,16 @@ static void _handle_magic_contamination(int time_delta)
 {
     UNUSED(time_delta);
 
-    // [ds] Move magic contamination effects closer to b26 again.
-    const bool glow_effect = get_contamination_level() > 1
+    const int safe_level = you.species == SP_PLUTONIAN ? 3 : 1;
+    const bool glow_effect = get_contamination_level() > safe_level
             && x_chance_in_y(you.magic_contamination, 12000);
 
     if (glow_effect)
     {
         if (is_sanctuary(you.pos()))
         {
-            mprf(MSGCH_GOD, "Your body momentarily shudders from a surge of wild "
-                            "energies until Zin's power calms it.");
+            mprf(MSGCH_GOD, "Your body momentarily shudders from a surge of "
+                            "wild energies until Zin's power calms it.");
         }
         else
             _magic_contamination_effects();
