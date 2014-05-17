@@ -42,6 +42,8 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                        numspells:2 /\
               randbook owner:Lugonu spells:animate_dead|sublimation_of_blood \
                        numspells:2",
+         Gozag="amulet of the gourmand ident:type /\
+              randbook owner:Lugonu spells:corpse_rot|animate_dead numspells:2",
          Jiyva="stone q:10-20 / large rock q:2-4",
          Kikubaaqudgha="randbook owner:Lugonu spells:control_undead|dispel_undead \
                        numspells:2 /\
@@ -50,6 +52,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Makhleb="no",
          ["Nemelex Xobeh"]="scroll of random uselessness ident:type q:5-10",
          Okawaru="no",
+         Qazlal="no",
          ["Sif Muna"]="no",
          ["the Shining One"]="wand of invisibility ident:type /\
               book of Envenomations / Young Poisoner's Handbook /\
