@@ -734,11 +734,14 @@ bool zin_recite_to_single_monster(const coord_def& where)
     if (_zin_check_recite_to_single_monster(mon, eligibility) < 1)
         return false;
 
-    recite_type prayertype = RECITE_CHAOTIC;
-    for (int i = RECITE_CHAOTIC; i != NUM_RECITE_TYPES; i++)
+    recite_type prayertype = RECITE_HERETIC;
+    for (int i = NUM_RECITE_TYPES - 1; i >= RECITE_HERETIC; i--)
     {
-            if (eligibility[i] > eligibility[prayertype])
-                    prayertype = static_cast <recite_type>(i);
+        if (eligibility[i] > 0)
+        {
+            prayertype = static_cast <recite_type>(i);
+            break;
+        }
     }
 
     // Second check: because this affects the whole screen over several turns,

@@ -3493,9 +3493,9 @@ enum orb_type
 
 enum recite_type
 {
+    RECITE_HERETIC,
     RECITE_CHAOTIC,
     RECITE_IMPURE,
-    RECITE_HERETIC,
     RECITE_UNHOLY,
     NUM_RECITE_TYPES
 };
