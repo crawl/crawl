@@ -1408,7 +1408,7 @@ spret_type your_spells(spell_type spell, int powc,
         flush_input_buffer(FLUSH_ON_FAILURE);
         learned_something_new(HINT_SPELL_MISCAST);
 
-        if (percent_chance(_chance_miscast_prot()))
+        if (decimal_chance(_chance_miscast_prot()))
         {
             simple_god_message(" protects you from the effects of your miscast!");
             return SPRET_FAIL;
