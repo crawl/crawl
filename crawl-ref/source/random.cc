@@ -378,7 +378,7 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
     return val + random2avg(lfuzz + hfuzz + 1, naverage) - lfuzz;
 }
 
-bool percent_chance(double percent)
+bool decimal_chance(double percent)
 {
     return random_real() < percent;
 }
