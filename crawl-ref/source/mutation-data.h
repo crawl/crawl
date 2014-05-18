@@ -1665,6 +1665,16 @@ static const mutation_def mut_data[] =
   {"", "", ""},
 
   "black mark"
-}
+},
+
+{ MUT_COLD_BLOODED,                0,  1, true, false, true,
+  "cold-blooded",
+
+  {"Your cold-blooded metabolism reacts poorly to cold.", "", ""},
+  {"You feel cold-blooded.", "", ""},
+  {"You feel warm-blooded.", "", ""},
+
+  "cold-blooded"
+},
 
 };

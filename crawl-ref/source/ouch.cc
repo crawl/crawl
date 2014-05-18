@@ -616,7 +616,7 @@ bool expose_player_to_element(beam_type flavour, int strength,
     _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
     qazlal_element_adapt(flavour, strength);
 
-    if (flavour == BEAM_COLD && slow_dracs && player_genus(GENPC_DRACONIAN)
+    if (flavour == BEAM_COLD && slow_dracs && you.innate_mutation[MUT_COLD_BLOODED]
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);

@@ -340,6 +340,9 @@ void give_basic_mutations(species_type speci)
     // relevant during character choice.
     you.mutation[MUT_CLAWS] = species_has_claws(speci, true);
 
+    // Necessary mostly for wizmode race changing.
+    you.mutation[MUT_COLD_BLOODED] = species_genus(speci) == GENPC_DRACONIAN;
+
     // Starting mutations are unremovable.
     for (int i = 0; i < NUM_MUTATIONS; ++i)
         you.innate_mutation[i] = you.mutation[i];

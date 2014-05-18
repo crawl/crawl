@@ -645,7 +645,7 @@ string describe_mutations(bool center_title)
         num << 4 + you.experience_level / 3
                  + (you.species == SP_GREY_DRACONIAN ? 5 : 0);
 
-        string msg = "Your " + scale_type + " scales are "
+        const string msg = "Your " + scale_type + " scales are "
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
               + " (AC +" + num.str() + ").";
 
@@ -653,12 +653,6 @@ string describe_mutations(bool center_title)
                       player_is_shapechanged() && you.form != TRAN_DRAGON);
 
         result += "Your body does not fit into most forms of armour.\n";
-
-        msg = "Your cold-blooded metabolism reacts poorly to cold.";
-        if (player_res_cold(false) <= 0)
-            result += msg + "\n";
-        else
-            result += "<darkgrey>" + msg + "</darkgrey>\n";
 
         have_any = true;
     }
@@ -2165,7 +2159,7 @@ string mutation_desc(mutation_type mut, int level, bool colour)
             const bool demonspawn = (you.species == SP_DEMONSPAWN);
             const bool extra = (you.mutation[mut] > you.innate_mutation[mut]);
 
-            if (fully_inactive)
+            if (fully_inactive || (mut == MUT_COLD_BLOODED && player_res_cold(false) > 0))
                 colourname = "darkgrey";
             else if (partially_active)
                 colourname = demonspawn ? "yellow"    : "blue";
