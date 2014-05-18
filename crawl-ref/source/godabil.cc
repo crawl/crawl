@@ -4437,8 +4437,8 @@ bool qazlal_upheaval(coord_def target, bool quiet)
     beam.source_name = "you";
     beam.thrower     = KILL_YOU;
     beam.range       = LOS_RADIUS;
-    beam.damage      = calc_dice(3, 37 + pow / 3);
-    beam.hit         = 10 + you.skill(SK_INVOCATIONS);
+    beam.damage      = calc_dice(3, 27 + div_rand_round(2 * pow, 5));
+    beam.hit         = AUTOMATIC_HIT;
     beam.glyph       = dchar_glyph(DCHAR_EXPLOSION);
     beam.loudness    = 10;
 #ifdef USE_TILE
