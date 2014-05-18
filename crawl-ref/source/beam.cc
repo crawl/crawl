@@ -116,7 +116,8 @@ bool bolt::is_blockable() const
     // BEAM_ELECTRICITY is added here because chain lightning is not
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
-    return !is_beam && !is_explosion && flavour != BEAM_ELECTRICITY;
+    return !is_beam && !is_explosion && flavour != BEAM_ELECTRICITY
+           && hit != AUTOMATIC_HIT;
 }
 
 void bolt::emit_message(const char* m)
