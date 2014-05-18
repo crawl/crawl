@@ -1761,6 +1761,7 @@ bool load_ghost(bool creating_level)
         return false;                 // no such ghost.
     }
 
+    inf.set_safe_read(true); // don't die on 0-byte bones
     if (_ghost_version_compatible(inf))
     {
         try

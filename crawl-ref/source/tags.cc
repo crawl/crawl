@@ -97,7 +97,7 @@ extern abyss_state abyssal_state;
 
 reader::reader(const string &_read_filename, int minorVersion)
     : _filename(_read_filename), _chunk(0), _pbuf(NULL), _read_offset(0),
-      _minorVersion(minorVersion)
+      _minorVersion(minorVersion), _safe_read(false)
 {
     _file       = fopen_u(_filename.c_str(), "rb");
     opened_file = !!_file;
@@ -105,7 +105,7 @@ reader::reader(const string &_read_filename, int minorVersion)
 
 reader::reader(package *save, const string &chunkname, int minorVersion)
     : _file(0), _chunk(0), opened_file(false), _pbuf(0), _read_offset(0),
-     _minorVersion(minorVersion)
+     _minorVersion(minorVersion), _safe_read(false)
 {
     ASSERT(save);
     _chunk = new chunk_reader(save, chunkname);
@@ -143,9 +143,9 @@ bool reader::valid() const
            (_pbuf && _read_offset < _pbuf->size());
 }
 
-static NORETURN void _short_read()
+static NORETURN void _short_read(bool safe_read)
 {
-    if (!crawl_state.need_save)
+    if (!crawl_state.need_save || safe_read)
         throw short_read_exception();
     // Would be nice to name the save chunk here, but in interesting cases
     // we're reading a copy from memory (why?).
@@ -159,20 +159,20 @@ unsigned char reader::readByte()
     {
         int b = fgetc(_file);
         if (b == EOF)
-            _short_read();
+            _short_read(_safe_read);
         return b;
     }
     else if (_chunk)
     {
         unsigned char buf;
         if (_chunk->read(&buf, 1) != 1)
-            _short_read();
+            _short_read(_safe_read);
         return buf;
     }
     else
     {
         if (_read_offset >= _pbuf->size())
-            _short_read();
+            _short_read(_safe_read);
         return (*_pbuf)[_read_offset++];
     }
 }
@@ -184,7 +184,7 @@ void reader::read(void *data, size_t size)
         if (data)
         {
             if (fread(data, 1, size, _file) != size)
-                _short_read();
+                _short_read(_safe_read);
         }
         else
             fseek(_file, (long)size, SEEK_CUR);
@@ -192,12 +192,12 @@ void reader::read(void *data, size_t size)
     else if (_chunk)
     {
         if (_chunk->read(data, size) != size)
-            _short_read();
+            _short_read(_safe_read);
     }
     else
     {
         if (_read_offset+size > _pbuf->size())
-            _short_read();
+            _short_read(_safe_read);
         if (data && size)
             memcpy(data, &(*_pbuf)[_read_offset], size);
 
