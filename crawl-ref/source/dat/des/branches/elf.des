@@ -1174,6 +1174,7 @@ ENDMAP
 ## Classical elf_hall
 ##
 NAME:    elf_hall
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 WEIGHT:  30
 ORIENT:  northwest
@@ -1225,6 +1226,7 @@ ENDMAP
 ## A wide and narrow one, with total weight 20.
 ##
 NAME:    elf_hall_gauntlet_wide
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  float
 TAGS:    no_pool_fixup
@@ -1271,6 +1273,7 @@ xxxxxxxxxxxx@@xxxxxxxxxxxx
 ENDMAP
 
 NAME:    elf_hall_gauntlet_narrow
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  float
 TAGS:    no_pool_fixup
@@ -1326,6 +1329,7 @@ ENDMAP
 ## minmay's Elf hall
 ##
 NAME:    minmay_elf_hall
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  southwest
 : elf_setup(_G)
@@ -1424,6 +1428,7 @@ ENDMAP
 # Before transforms: 32x$, 27x*, 29x|, 4x1, 13x2, 10x3, 6x4, 9x5, 4x6, 2x7
 #
 NAME:    minmay_elf_hall_hex
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1481,6 +1486,7 @@ ENDMAP
 
 # Before transforms: 26x$, 24x*, 24x|, 5x1, 3x2, 8x3, 4x4, 7x5, 2x6, 2x7
 NAME:    minmay_elf_hall_dome
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1518,6 +1524,7 @@ ENDMAP
 
 # Before transforms: 32x$, 27x*, 27x|, 4x1, 8x2, 9x3, 2x4, 10x5, 2x6, 2x7
 NAME:    minmay_elf_hall_spiked
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1560,6 +1567,7 @@ ENDMAP
 
 # Before transforms: 20x$, 31x*, 28x|, 8x1, 4x2, 8x3, 4x4, 8x5, 4x6, 2x7
 NAME:    minmay_elf_hall_quartered_circle
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1606,6 +1614,7 @@ ENDMAP
 # The elves have created golems to guard their treasure.
 # Before transforms: 39x$, 26x*, 26x|, 6x1, 8x2, 4x3, 10x4, 6x5, 2x6, 2x7, 16x8
 NAME:    minmay_elf_hall_golems
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1648,6 +1657,7 @@ ENDMAP
 
 # Before transforms: 28x$, 27x*, 29x|, 4x1, 9x2, 8x3, 6x4, 8x5, 2x6, 2x7
 NAME:    minmay_elf_hall_x
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1691,6 +1701,7 @@ ENDMAP
 
 # Before transforms: 18x$, 23x*, 31x|, 6x1, 8x2, 7x3, 10x4, 11x5, 2x6, 4x7
 NAME:    minmay_elf_hall_four_x
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1782,6 +1793,7 @@ ENDMAP
 
 # Before transforms: 26x|, 31x*, 28x$, 8x1, 7x2, 8x3, 7x4, 8x5, 4x6, 4x7
 NAME:    nooodl_elf_gasket
+TAGS:    nolayout_halls
 PLACE:   Elf:$
 ORIENT:  northwest
 : elf_setup(_G)
@@ -1849,6 +1861,7 @@ ENDMAP
 
 # Before transform: 30x$, 31x*, 26x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
 NAME:   grunt_elf_hall_branching
+TAGS:   nolayout_halls
 PLACE:  Elf:$
 ORIENT: north
 : elf_setup(_G)
@@ -1891,6 +1904,7 @@ ENDMAP
 
 # Before randomisation: 28x$, 32x*, 27x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
 NAME:   grunt_elf_hall_diamonds
+TAGS:   nolayout_halls
 PLACE:  Elf:$
 ORIENT: north
 : elf_setup(_G)
@@ -1937,6 +1951,7 @@ ENDMAP
 
 # Before randomisation: 27x$, 27x*, 28x|, 4x1, 12x2, 12x3, 8x4, 8x5, 2x6, 2x7
 NAME:   grunt_elf_hall_asides
+TAGS:   nolayout_halls
 PLACE:  Elf:$
 ORIENT: northeast
 : elf_setup(_G)
