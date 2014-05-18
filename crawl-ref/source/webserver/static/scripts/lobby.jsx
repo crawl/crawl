@@ -151,7 +151,6 @@ function (React, comm, pubsub, user, misc, login, $) {
             this.setState({editing_rc: null});
         },
         select_version: function (v) {
-            console.log("select", v);
             var game;
             if (v !== this.more_versions_text())
                 game = collect_version_games(this.props.games, v)[0];
@@ -164,7 +163,6 @@ function (React, comm, pubsub, user, misc, login, $) {
             this.setState({selected_game: game});
         },
         select_game: function (g) {
-            console.log("select", g);
             this.setState({selected_game: g});
         },
 
