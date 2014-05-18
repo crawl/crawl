@@ -1513,7 +1513,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_PLUTONIAN,       SK_HEXES,          -1),
     APT(SP_PLUTONIAN,       SK_CHARMS,         -1),
     APT(SP_PLUTONIAN,       SK_SUMMONINGS,     -1),
-    APT(SP_PLUTONIAN,       SK_NECROMANCY,     -2),
+    APT(SP_PLUTONIAN,       SK_NECROMANCY,     -1),
     APT(SP_PLUTONIAN,       SK_TRANSLOCATIONS, -1),
     APT(SP_PLUTONIAN,       SK_TRANSMUTATIONS,  0),
     APT(SP_PLUTONIAN,       SK_FIRE_MAGIC,      1),
