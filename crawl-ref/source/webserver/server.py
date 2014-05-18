@@ -21,7 +21,6 @@ def scan_titles():
     for f in os.listdir(config.static_path):
         if title_regex.match(f):
             title_imgs.append(f)
-scan_titles()
 
 def maybe_minified(module):
     if not config.get("use_minified", True):
@@ -240,6 +239,8 @@ if __name__ == "__main__":
     servers = bind_server()
 
     shed_privileges()
+
+    scan_titles()
 
     userdb.ensure_user_db_exists()
 
