@@ -2644,8 +2644,12 @@ static void _prepare_water()
 
 static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
 {
-    if (!vault->has_tag_prefix("layout_"))
+    bool permissive = false;
+    if (!vault->has_tag_prefix("layout_")
+        && !(permissive = vault->has_tag_prefix("nolayout_")))
+    {
         return true;
+    }
 
     ASSERT(layout->has_tag_prefix("layout_type_"));
 
@@ -2658,10 +2662,12 @@ static bool _vault_can_use_layout(const map_def *vault, const map_def *layout)
             string type = strip_tag_prefix(tags[i], "layout_type_");
             if (vault->has_tag("layout_" + type))
                 return true;
+            else if (vault->has_tag("nolayout_" + type))
+                return false;
         }
     }
 
-    return false;
+    return permissive;
 }
 
 static const map_def *_pick_layout(const map_def *vault)
