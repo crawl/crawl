@@ -1628,16 +1628,19 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
 
 static void _velocity_card(int power, deck_rarity_type rarity)
 {
-    if (you_worship(GOD_CHEIBRIADOS))
-        return simple_god_message(" protects you from inadvertent hurry.");
 
     const int power_level = _get_power_level(power, rarity);
     bool did_something = false;
 
     if (you.duration[DUR_SLOW] && (power_level > 0 || coinflip()))
     {
-        you.duration[DUR_SLOW] = 1;
-        did_something = true;
+        if (you_worship(GOD_CHEIBRIADOS))
+            simple_god_message(" protects you from inadvertent hurry.");
+        else
+        {
+            you.duration[DUR_SLOW] = 1;
+            did_something = true;
+        }
     }
 
     if (you.duration[DUR_HASTE] && (power_level == 0 && coinflip()))
