@@ -2122,9 +2122,9 @@ static bool _do_ability(const ability_def& abil)
             return false;
         break;
 
-        case ABIL_OVERLOAD:
+    case ABIL_OVERLOAD:
         if (yesno("Are you sure you want to explode?", true, 'n'))
-                {
+        {
             beam.flavour      = BEAM_MAGIC;
             beam.damage       = dice_def(2, int(you.hp_max/3));
             beam.target       = you.pos();
@@ -2137,9 +2137,9 @@ static bool _do_ability(const ability_def& abil)
 
             beam.explode();
 
-                    contaminate_player(3000, true);
-                }
-                else
+        contaminate_player(1000, true);
+        }
+        else
             return false;
         break;
 
