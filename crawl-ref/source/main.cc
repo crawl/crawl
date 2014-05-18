@@ -229,7 +229,6 @@ static void _god_greeting_message(bool game_start);
 static void _take_starting_note();
 static void _startup_hints_mode();
 static void _set_removed_types_as_identified();
-static void _count_all_gold();
 
 static void _compile_time_asserts();
 
@@ -419,7 +418,6 @@ NORETURN static void _launch_game()
     init_hints_options();
 
     _set_removed_types_as_identified();
-    _count_all_gold();
 
     if (!game_start && you.prev_save_version != Version::Long)
     {
@@ -669,46 +667,6 @@ static void _set_removed_types_as_identified()
 #endif
     // not generated, but the enum value is still used
     you.type_ids[OBJ_POTIONS][POT_SLOWING] = ID_KNOWN_TYPE;
-}
-
-// Count gold generated on all levels.
-// Needed for calculating Gozag's service fee.
-static void _count_all_gold()
-{
-    if (crawl_state.game_is_arena() || you.attribute[ATTR_GOLD_GENERATED] > 0)
-        return;
-
-    vector<PlaceInfo> list = you.get_all_place_info(true, false);
-    for (unsigned int i = 0; i < list.size(); i++)
-    {
-        for (int j = 1; j <= brdepth[list[i].branch]; j++)
-        {
-            level_id lid(list[i].branch, j);
-            if (is_existing_level(lid))
-            {
-                level_excursion le;
-                le.go_to(lid);
-                for (rectangle_iterator ri(0); ri; ++ri)
-                {
-                    for (stack_iterator k(*ri); k; ++k)
-                    {
-                        if (k->base_type != OBJ_GOLD)
-                            continue;
-
-                        you.attribute[ATTR_GOLD_GENERATED] += k->quantity;
-                    }
-                    if (monster* mons = monster_at(*ri))
-                    {
-                        if (mons->inv[MSLOT_GOLD] != NON_ITEM)
-                        {
-                            you.attribute[ATTR_GOLD_GENERATED]
-                                += mitm[mons->inv[MSLOT_GOLD]].quantity;
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 #ifdef WIZARD
