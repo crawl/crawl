@@ -3675,12 +3675,11 @@ static bool _transformed_player_can_join_god(god_type which_god)
 
 int gozag_service_fee()
 {
-    const int gold = you.attribute[ATTR_GOLD_GENERATED];
-    int fee =
-        50 + (int)((double)gold - (double)gold / log10((double)(gold + 10)))/2;
-
     if (you.char_class == JOB_MONK && had_gods() == 0)
-        fee /= 2;
+        return 0;
+
+    const int gold = you.attribute[ATTR_GOLD_GENERATED];
+    int fee = 50 + (int)(gold - gold / log10(gold + 10.0))/2;
 
     dprf("found %d gold, fee %d", gold, fee);
     return fee;
@@ -3852,10 +3851,18 @@ void god_pitch(god_type which_god)
     string service_fee = "";
     if (which_god == GOD_GOZAG)
     {
-        service_fee = make_stringf(
-            "The service fee for joining is currently %d gold; you currently"
-            " have %d.\n",
-            fee, you.gold);
+        if (fee == 0)
+        {
+            service_fee = string("Gozag will waive the service fee if you ")
+                          + (coinflip() ? "act now" : "join today") + "!\n";
+        }
+        else
+        {
+            service_fee = make_stringf(
+                    "The service fee for joining is currently %d gold; you"
+                    " currently have %d.\n",
+                    fee, you.gold);
+        }
     }
     snprintf(info, INFO_SIZE, "%sDo you wish to %sjoin this religion?",
              service_fee.c_str(),
@@ -4105,9 +4112,15 @@ void god_pitch(god_type which_god)
     if (you_worship(GOD_GOZAG))
     {
         bool needs_redraw = false;
-        mprf("You pay a service fee of %d gold.", fee);
-        you.gold -= fee;
-        you.attribute[ATTR_GOZAG_GOLD_USED] += fee;
+        if (fee > 0)
+        {
+            mprf(MSGCH_GOD, "You pay a service fee of %d gold.", fee);
+            you.gold -= fee;
+            you.attribute[ATTR_GOZAG_GOLD_USED] += fee;
+        }
+        else
+            simple_god_message(" waives the service fee.");
+
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
         {
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
