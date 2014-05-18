@@ -17,7 +17,7 @@ class GameDataHandler(tornado.web.StaticFileHandler):
         super(GameDataHandler, self).get(path, include_body)
 
     def set_extra_headers(self, path):
-        if config.game_data_no_cache:
+        if config.get("game_data_no_cache"):
             self.set_header("Cache-Control",
                             "no-cache, no-store, must-revalidate")
             self.set_header("Pragma", "no-cache")
