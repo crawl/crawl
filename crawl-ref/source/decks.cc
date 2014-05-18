@@ -1652,37 +1652,40 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 
         if (mon && !mons_immune_magic(mon))
         {
-           int speed = mon->speed;
-           bool hostile = !mon->wont_attack();
-           bool was_hasted = mon->has_ench(ENCH_HASTE);
-           bool haste_immune = (mon->check_stasis(false) || mons_is_immotile(mon));
-           bool did_haste = false;
+            const bool hostile = !mon->wont_attack();
+            const bool was_hasted = mon->has_ench(ENCH_HASTE);
+            const bool haste_immune = (mon->check_stasis(false)
+                                || mons_is_immotile(mon));
 
-           // benefits the player
-           if (((speed >= BASELINE_DELAY && hostile)
-              || (speed <= BASELINE_DELAY && !hostile))
-              && x_chance_in_y(power_level + 1, 3))
-           {
-              if (hostile)
-              {
-                  do_slow_monster(mon, &you);
-                  did_something = true;
-              }
-              else if (!hostile && !haste_immune)
-              {
-                  mon->add_ench(ENCH_HASTE);
-                  did_something = true;
+            bool did_haste = false;
 
-                  if (!was_hasted)
-                      did_haste = true;
-              }
-           }   // doesn't benefit the player
-           else if (((speed < BASELINE_DELAY && hostile)
-                    || (speed > BASELINE_DELAY && !hostile))
-                    && ((power_level == 0 && coinflip())
-                    || (power_level == 1 && one_chance_in(4))))
-           {
-                if (hostile)
+            // Explanatory variables.
+            const int speed = mon->speed;
+            const bool slow = speed < BASELINE_DELAY;
+            const bool fast = speed > BASELINE_DELAY;
+            const bool normal = speed == BASELINE_DELAY;
+
+
+            // benefits the player
+            if (x_chance_in_y(power_level + 1, 3))
+            {
+                if (hostile && (fast || normal))
+                {
+                    do_slow_monster(mon, &you);
+                    did_something = true;
+                }
+                else if (!hostile && !haste_immune && (slow || normal))
+                {
+                    mon->add_ench(ENCH_HASTE);
+                    did_something = true;
+
+                if (!was_hasted)
+                    did_haste = true;
+                }
+            }   // doesn't benefit the player
+            else if (x_chance_in_y(2 - power_level, 4))
+            {
+                if (slow && hostile)
                 {
                     mon->add_ench(ENCH_HASTE);
                     did_something = true;
@@ -1690,15 +1693,15 @@ static void _velocity_card(int power, deck_rarity_type rarity)
                     if (!was_hasted)
                         did_haste = true;
                 }
-                else
+                else if (fast && !hostile)
                 {
                     do_slow_monster(mon, &you);
                     did_something = true;
                 }
-           }
+            }
 
-           if (did_haste)
-               simple_monster_message(mon, " seems to speed up.");
+            if (did_haste)
+                simple_monster_message(mon, " seems to speed up.");
         }
     }
 
