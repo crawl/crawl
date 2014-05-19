@@ -106,7 +106,6 @@
     GreyKnight
     Joshua Gross
     Brian Haase
-    Shayne Halvorson
     Sophie Hamilton
     Chris Hamons
     Anders Heggestøyl
@@ -213,6 +212,7 @@ The Dungeon Crawl Stone Soup development team is:
     Florian Diebold
     Michael Gagno
     gammafunk
+    Shayne Halvorson
     Brendan Hickey
     Pete Hurst
     Eino Keskitalo
