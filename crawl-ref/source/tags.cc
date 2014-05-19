@@ -2604,7 +2604,7 @@ static void tag_read_you(reader &th)
         }
     }
     if (th.getMinorVersion() < TAG_MINOR_PLUTO_NO_DEVICE_HEAL
-        && you.species == SP_PLUTONIAN);
+        && you.species == SP_PLUTONIAN)
     {
         you.innate_mutation[MUT_NO_DEVICE_HEAL] -= 1;
         you.mutation[MUT_NO_DEVICE_HEAL] -= 1;
