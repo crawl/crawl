@@ -745,48 +745,6 @@ ORIENT:  encompass
 PLACE:   Depths:$
 DEPTH:   Depths:2-
 WEIGHT:  1 (Depths:$), 10
-MONS:    lindwurm / death yak / elephant / griffon / polar bear w:5 / \
-         mottled dragon w:8 / giant firefly w:3 / boulder beetle w:5 / \
-         red wasp / mana viper w:5 / wolf spider / \
-         sea snake w:5 / alligator / hell hound w:2
-MONS:    swamp dragon w:5 / fire crab w:4 / catoblepas w:4 / \
-         fire dragon w:16 / ice dragon w:16 / orb spider w:1 / \
-         dire elephant w:9 / anaconda / hydra w:15 / snapping turtle / harpy w:4
-MONS:    ghost moth w:4 / death drake w:2 / golden dragon / iron dragon / \
-         quicksilver dragon w:15 / shadow dragon w:20 / storm dragon w:20 / \
-         hell beast w:4 / hellephant w:5 / \
-         alligator snapping turtle w:5 / emperor scorpion w:5
-MONS:    very ugly thing / very large slime creature / great orb of eyes / \
-         shapeshifter hd:4 w:5 / unseen horror / \
-         eye of draining / shadow wraith w:5 / shadow / \
-         air elemental / dancing weapon w:4 ; short sword good_item
-MONS:    giant orange brain / eye of devastation / golden eye w:5 / \
-         shapeshifter hd:6 w:5 / shapeshifter hd:7 / shapeshifter hd:8 w:5 / \
-         titanic slime creature / water elemental w:5 / hydra simulacrum w:3 / \
-         anaconda simulacrum w:3 / harpy simulacrum w:3 / eidolon w:5 / \
-         dire elephant simulacrum w:1 / dancing weapon w:5 ; long sword good_item
-MONS:    giant eyeball w:45 / bone dragon w:15 / tentacled monstrosity w:15 / \
-         glowing shapeshifter hd:12 w:30 / glowing shapeshifter hd:13 w:15 / \
-         azure jelly / flayed ghost / \
-         dancing weapon w:5 ; glaive good_item / war gargoyle
-MONS:    centaur warrior / yaktaur w:5 / orc knight / \
-         deep elf priest w:5 / deep troll / boggart w:5 / \
-         rakshasa w:3 / wizard / necromancer / spriggan rider w:5 / \
-         cyclops w:5 / kobold demonologist w:3 / \
-         skeletal warrior w:5 / vampire
-KMONS:   8 = orc high priest / orc sorcerer / naga warrior w:5 / naga mage / \
-         yaktaur captain w:5 / ogre mage / deep elf knight w:15 / \
-         hell knight / efreet w:1 / deep elf conjurer / \
-         guardian serpent w:5 / phantasmal warrior w:5 / salamander mystic w:4
-KMONS:   9 = fire giant / frost giant w:11 / stone giant w:11 / ettin w:11 / \
-         orc warlord / spriggan berserker w:3 / minotaur w:5 / \
-         deep troll shaman w:5 / deep troll earth mage w:8 / \
-         vampire knight / tengu reaver w:4 / salamander firebrand w:5 / \
-         spriggan air mage w:6 / deep elf death mage w:6 / \
-         ancient champion w:6 / deep elf demonologist w:5 / vampire mage w:5
-KMONS:   0 = titan w:15 / lich / sphinx / deep elf annihilator / \
-         deep elf sorcerer / deep elf high priest w:5 / greater naga w:5 / \
-         spriggan defender w:5 / shadow demon w:5 / reaper w:5
 KMONS:   & = draconian knight / draconian monk w:15 / \
          draconian annihilator / deep elf blademaster w:15 / \
          deep elf master archer w:15 / lich w:15 / ancient lich w:15 / \
@@ -799,22 +757,13 @@ SHUFFLE: NO / NO / ON, PQ / PQ / QP, RS / RS / SR, lm / lm / ml
 NSUBST:  ] = 1:) / 1:]
 SUBST:   B : b.., C : cb., D : x.., E : xx., F : xx.
 SUBST:   HJOQRm = x, IKNPSl = ., L : xx., M : xx., j : x.., k : x.., n : x.
-SUBST:   b : b:6 v:1 c:1, @ = 114777, ^ = 224999
+SUBST:   b : b:6 v:1 c:1, ^ = 099888
 SUBST:   y = Y, & = &:26 0:1
-: local Z = you.depth()
-:   subst("9 = 9:90 0:" .. Z + 5)
-:   subst("8 = 9:" .. Z + 2 .. " 8:20")
-:   subst("5 = 6:" .. Z + 2 .. " 5:20")
-:   subst("2 = 3:" .. Z + 2 .. " 2:20")
-:     if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
 SUBST:  )]} = ., > = <, " = `
 NSUBST: ' = 1:Z / 2:` / *:`
-:     end
+: end
 SUBST:  '" = .
-: subst("1 = 1:" .. math.max(26 - Z * 2, 16) .. " 2:" .. Z + 1)
-: subst("4 = 4:" .. math.max(26 - Z * 2, 16) .. " 5:" .. Z + 1)
-: subst("7 = 7:" .. math.max(26 - Z * 2, 16) .. " 8:" .. Z + 1)
-SUBST:  ! = 1, $ = 4, ? = 7, 7 = 7:499 .:1
 MARKER: Y = lua:props_marker { portal=1 }
 FTILE:  Z` = floor_marble
 MAP
@@ -824,64 +773,64 @@ xxxxxxxxxxJ.............xxxxxx
 xxxxxxxxxxx......c.........xxx
 xxxxxxxxx"".....cbc..x......xxx
 xxxxxxxxx".....cbcbc.x......Mxxxx
-xxxxxx'"7.....xF.b.cc...n....Lxxxx
-xxxxxx""1....x...x..cc.x.......xxx
-xxxxxx74.........b..7cc.........xxx
-xxxx"".....x..xxb.bxb.cc..8.....xxx
-xxJx".....x..E...b...b.cc@..n...xxx
-xx.......x.......xx.4x.8cc.x.....xx
+xxxxxx'"0.....xF.b.cc...n....Lxxxx
+xxxxxx""0....x...x..cc.x.......xxx
+xxxxxx00.........b..0cc.........xxx
+xxxx"".....x..xxb.bxb.cc..9.....xxx
+xxJx".....x..E...b...b.cc0..n...xxx
+xx.......x.......xx.0x.9cc.x.....xx
 xx.............F...x.b*..cc......xx
 xx.....x..E........xb.bxb.cc.xx..xx
-xx....x..x...........b.7.b9cc....xxxxxxxxxxxxx
-xx...cF..x..F....%...xx.5x..cc...xxxxxxxxxxxxxx
-xx..cb...b......%*.....x.b...bc..xxxx@.%.%.@.xxx
+xx....x..x...........b.0.b8cc....xxxxxxxxxxxxx
+xx...cF..x..F....%...xx.9x..cc...xxxxxxxxxxxxxx
+xx..cb...b......%*.....x.b...bc..xxxx0.%.%.0.xxx
 xx.cbcbxb.bx...%*.*%...xb.bxbcbc.xxxxx........xxx
 xx..cb...b.x.....*%....x.b...bc..xxxxxx........xxx
 xx...cc..x..xx...%...xx..x..cc...xxxxxxx%.......xxx
-xx....cc7b71.b.......b%65b8cc....xxxxxxxx...I.x.xxxx
+xx....cc0b00.b.......b%89b9cc....xxxxxxxx...I.x.xxxx
 xx..xx.cc.bcb.bx...xb.bxb.cc..xx.xx..xxxxx...H.^..xxx
 xx......cc..*b.x...x%b%*|cc......xx....xxxx.x...x..xxx
-xx.....x.cc8.x1.xxx.3x*&cc.......xx.......xx...H....xxx
-xxxx..n..@cc.b72.b..2b|cc.....xMx.x.xLx.....x.x.I....xx
- xxx....8..cc.bxb.bxb.cc.8.xxx...xxx...xxx...x......@xx
-  xx........cc9..b..8cc.........x...x........xx......xx
-  xxxxL....x.cc..x..cc...x.@..SR..@..RS..@.x..xx....%xx
+xx.....x.cc9.x0.xxx.8x*&cc.......xx.......xx...H....xxx
+xxxx..n..0cc.b09.b..9b|cc.....xMx.x.xLx.....x.x.I....xx
+ xxx....9..cc.bxb.bxb.cc.9.xxx...xxx...xxx...x......0xx
+  xx........cc8..b..9cc.........x...x........xx......xx
+  xxxxL....x.cc..x..cc...x.0..SR..0..RS..0.x..xx....%xx
   xxxxxM..n...cc.b.cc....x....SR.....RS....x..xxx%...xx
      xxx.....x.cbcbc.....x....SR.....RS....x..xxxx..%xx
     xxcc.....x..cbc..x..x..SSSJ.x.Q.x.HSSS..x..xxxx..xx
-    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx@xx
+    xcc..........c...x..L..RRR.K.cPc.I.RRR..M..xxxxx0xx
    xxc.xx...............x.x...x.J...H.x...x.x...xxxxxxx
-   xc@.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
-   xc....xx.....nnnnxxxxxx.@..NO..z..ON..@.xxxxxxxxxxxxxxx
+   xc0.xx...xxxxxxxxxxxx.x.....c.>.[.c.....x....xxxxxxx
+   xc....xx.....nnnnxxxxxx.0..NO..z..ON..0.xxxxxxxxxxxxxxx
   xc.....xx........nx....x.....c.(.{.c.....x.xxxxxxxxxxxxxx
   xc.......xx......nx...x.x...x.H...J.x...x.x............xxxxxx
   xxc......xx.......xx..M..RRR.I.cPc.K.RRR..L......c......xxxxx
    xc...j....xx......x..x..SSSH.x.Q.x.JSSS..x..Y..cbc........xx
    xxc.......xx.c....x...x....SR.....RS....x]....xbcbx.......xxx
     xc..........b....xx..x....SR.....RS....x....x..b..x......Lxxxxx
-    x@cc......cb%bc...x..x.@..SR..@..RS..@.x.x.x..1c...x.x....Mxxxx
-    xc..cc..cc.@b.....KJ........x...x.....y....b..7b81.b.........xx
+    x0cc......cb%bc...x..x.0..SR..0..RS..0.x.x.x..0c...x.x....Mxxxx
+    xc..cc..cc.0b.....KJ........x...x.....y....b..0b90.b.........xx
     xc....cc....c.xx..KJ...xxx...xxx...xxx.}.xb.bcbcbcb.bx.......xxx
     xxc........c..xx...KJ.....xLx.x.xMx]....x..b..%b%..b..x......xxx
-     xc.....k..c....xx..KJJ.......xx.....x.x..1c.1ccc1.c1..x.x....xxx
-     xxc..%...c.....xx...KKxx.....xx.......b.47b*cc&cc%b92.b.......xx
-     xxc..%%..c.......xx....xxxx..xx..Y..xb.bcbcbc6x6cbcbcb.bx.....xx
-     xc..k.....c......xx.......xxxxx....x..b..*b9..x..9b*..b..x....xx
-    xxc........c...j....xx......nnnx...x...c.4cc.7|x|*4cc7.c...x...xx
-    xc....cc....c.......xx.c......nx..cb.74c%cc3.|x%*|.2cc*b82.bc..xx
-    xc@.cc..cc."b".........b......nx.cbcbccccc&xxx%|%xxxccbcbcbcbc.xx
-    x.cc......cb'bc......cb%bc....nx..cb..8c%cc3.|*%x.....%C...Bx..xx
-    xc........1"b".cc..cc.@b.......x...x..4c.4cc.*|x....C..x...x...xx
-   xxc.mm....ll4c....cc....c.xx....x....x..b..%c91.x.....%.x..x....xx
-   xc..mm...%ll..c........c..xx....x.....xb.bccccc5x....D.x........xx
-   xc......xx%...c.....k..c....xx..........b..9c*ccc.C%D...........xx
-  xc%.....%xx.....c..%...c.....xx........x.x.5.c.4cc.....D.x.......xx
+     xc.....k..c....xx..KJJ.......xx.....x.x..0c.0ccc0.c0..x.x....xxx
+     xxc..%...c.....xx...KKxx.....xx.......b.00b*cc&cc%b89.b.......xx
+     xxc..%%..c.......xx....xxxx..xx..Y..xb.bcbcbc8x8cbcbcb.bx.....xx
+     xc..k.....c......xx.......xxxxx....x..b..*b8..x..8b*..b..x....xx
+    xxc........c...j....xx......nnnx...x...c.0cc.0|x|*0cc0.c...x...xx
+    xc....cc....c.......xx.c......nx..cb.00c%cc8.|x%*|.9cc*b99.bc..xx
+    xc0.cc..cc."b".........b......nx.cbcbccccc&xxx%|%xxxccbcbcbcbc.xx
+    x.cc......cb'bc......cb%bc....nx..cb..9c%cc8.|*%x.....%C...Bx..xx
+    xc........0"b".cc..cc.0b.......x...x..0c.0cc.*|x....C..x...x...xx
+   xxc.mm....ll0c....cc....c.xx....x....x..b..%c80.x.....%.x..x....xx
+   xc..mm...%ll..c........c..xx....x.....xb.bccccc9x....D.x........xx
+   xc......xx%...c.....k..c....xx..........b..8c*ccc.C%D...........xx
+  xc%.....%xx.....c..%...c.....xx........x.x.9.c.0cc.....D.x.......xx
   xc%....xx%......c..%%..c.......xx.........x..b..*b%..x.........HOxx
   xxc...%xx......c..k.....c......xx..........xb.bcbcCxx..x.......Pxxx
-   xc..ll%...mm..c........c...j....xx..........b..5b........"""JRlxxx
-   xxc2ll....mm.c....cc....c.......xx.cxM....x.x..8c........"'"jxxxxx
-    xc^5........c@.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
-    xxcc......cc.ccxxxxxxcc@cc.....@ccxxxx.......xbcBx......Jjklxxxxx
+   xc..ll%...mm..c........c...j....xx..........b..9b........"""JRlxxx
+   xxc9ll....mm.c....cc....c.......xx.cxM....x.x..9c........"'"jxxxxx
+    xc^9........c0.ccxxcc..c.........ccxxL......x..b..x....."""kxxxxx
+    xxcc......cc.ccxxxxxxcc0cc.....0ccxxxx.......xbcBx......Jjklxxxxx
      xxxcc%%ccxxxxxx    xxxxxxcc..ccxxx xx........cbx.......Rxxxxxxxx
        xxxccxxx              xxxccxxx   xxxxx......c......HPlxxxxxxxx
          xxxx                  xxxx     xxxxxx............Oxxxxxxxxxx
