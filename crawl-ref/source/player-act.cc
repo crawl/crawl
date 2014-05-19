@@ -330,7 +330,7 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     if (species == SP_FELID)
         return false;
 
-    if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
+    if (body_size(PSIZE_TORSO, true) < SIZE_LARGE
             && (item_mass(item) >= 500
                 || item.base_type == OBJ_WEAPONS
                     && item_mass(item) >= 300))
