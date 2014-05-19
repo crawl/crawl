@@ -505,7 +505,7 @@ ORIENT:   encompass
 NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
 KMONS:    W = giant newt / ball python / giant cockroach / giant mite / \
-              giant gecko / adder w:4 / jelly w:2 / \
+              giant gecko / ooze / adder w:4 / \
               nothing w:270
 KFEAT:    W = W
 KFEAT:    ! = w
