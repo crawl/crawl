@@ -325,9 +325,10 @@ MAP
 ENDMAP
 
 ##############################################################################
+# Some branch-inspired mini entries. Total weight 14 for each branch.
 NAME:    hangedman_geh_valley
-WEIGHT:  14
-TAGS:    transparent
+WEIGHT:  4
+TAGS:    transparent uniq_hell_entry_geh
 KMONS:   O = red devil / crimson imp w:20 / nothing
 SHUFFLE: +- / +- / =+
 NSUBST:  - = 1:+cc / *:c
@@ -349,9 +350,92 @@ xlxxxxlxxxxlx
 xxx  xxx  xxx
 ENDMAP
 
+# Inspired by the grated corridors in evilmike_geh.
+NAME:   pf_hell_entry_great_geh
+TAGS:   uniq_hell_entry_geh
+WEIGHT: 4
+KFEAT:  m = iron_grate
+TILE:   c = dngn_stone_wall_red
+COLOUR: c = red
+FTILE:  .O = floor_infernal_blank
+KMASK:  l = no_monster_gen
+KPROP:  l = no_rtele_into
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+cccc@cccc
+clm...mlc
+clm...mlc
+clm...mlc
+clm...mlc
+clm...mlc
+clm...mlc
+clm...mlc
+cccc+cccc
+ccl...lcc
+ccl.O.lcc
+ccl...lcc
+ccclllccc
+ccccccccc
+ENDMAP
+
+# Inspired by the entrance to evilmike_geh.
+NAME:    pf_vacation_house_of_asmodeus
+TAGS:    transparent uniq_hell_entry_geh
+WEIGHT:  4
+TILE:    c = dngn_stone_wall_red
+COLOUR:  c = red
+FTILE:  'O = floor_infernal_blank
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+       @
+  ccccc'ccccc
+ cc'''c'c'''cc
+ c'''''''''''c
+ c''vv'''vv''c
+ c''vv'''vv''c
+ cc'''''''''cc
+@''''''O''''''@
+ cc'''''''''cc
+ c''vv'''vv''c
+ c''vv'''vv''c
+ c'''''''''''c
+ cc'''c'c'''cc
+  ccccc'ccccc
+       @
+ENDMAP
+
+# Inspired by the end of lightli_geh, sort of.
+# (Low weight because the associated vault is disabled. -- Grunt)
+NAME:   pf_dread_powers_of_hell
+TAGS:   transparent uniq_hell_entry_geh
+WEIGHT: 2
+KMONS:  i = crimson imp ; wand of flame
+TILE:   c = dngn_stone_wall_red
+COLOUR: c = red
+FTILE:  'iO = floor_infernal_blank
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+     ........
+    ..cccccc...
+   ....cci'ccc..
+  ...l..cc'''cc..
+ ...lll..cc'''cc..
+...lllll..cc'''cc..
+..lllllll.'''O''c..
+...lllll..cc'''cc..
+ ...lll..cc'''cc..
+  ...l..cc'''cc..
+   ....cci'ccc..
+    ..cccccc...
+     ........
+ENDMAP
+
 NAME:    hangedman_coc_ice_floe
-WEIGHT:  14
-TAGS:    transparent no_pool_fixup
+WEIGHT:  7
+TAGS:    transparent no_pool_fixup uniq_hell_entry_coc
 KMONS:   O = blue devil / white imp w:20 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: ab / ab / ba
@@ -375,9 +459,37 @@ MAP
   ..  ..
 ENDMAP
 
+# A variant on hangedman_coc_ice_floe.
+NAME:   pf_coc_iceberg
+WEIGHT: 7
+TAGS:   transparent no_pool_fixup uniq_hell_entry_coc
+TILE:   x = wall_ice
+COLOUR: x = lightcyan
+FTILE:  'O = floor_frozen
+COLOUR: ' = lightblue
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+   ..  ..
+  .........
+ ...wwwww...
+...wwxxxww...
+...wxxxxxw...
+..wxxx'xxxw..
+..wxx'''xxw..
+..wxx'O'WxW..
+..wxx'''xWw..
+..wxxx'xxxw..
+...wxxxxxw...
+...wwxxxww...
+ ...wwwww...
+  .........
+   ..   ..
+ENDMAP
+
 NAME:    hangedman_tar_grid_catacomb
-WEIGHT:  14
-TAGS:    transparent
+WEIGHT:  4
+TAGS:    transparent uniq_hell_entry_tar
 KMONS:   O = shadow imp w:20 / nothing
 KFEAT:   A = stone_arch
 SHUFFLE: o@O& / O&o@
@@ -400,6 +512,62 @@ xx....cccc....xx
     x.cccc.x
     @.oxxo.@
     x@xxxx@x
+ENDMAP
+
+# Inspired by the loot vaults in tar_minmay_river.
+NAME:   pf_hell_entry_tar_spiral
+TAGS:   transparent no_monster_gen uniq_hell_entry_tar
+WEIGHT: 5
+TILE:   c = wall_cobalt_stone
+COLOUR: . = magenta
+FTILE:  +.O = floor_infernal_blank
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+    cccc
+  ccc..ccc
+ cc......cc
+ cc..cccc..c
+ c..cc..cc..
+cc.cc....cc.@
+c..c..cc.+..
+c..c..cc.ccc
+cc.cc......c
+ c..cc+c.O.c
+ cc..c.c..cc
+  cc...cccc
+   ccc....c
+     cccc.c
+         @
+ENDMAP
+
+# Inspired by the sad fish in tar_minmay river. They've never gotten a kill. :(
+# (They probably won't get a kill here, either.)
+NAME:   pf_hell_entry_tar_river
+TAGS:   transparent no_pool_fixup uniq_hell_entry_tar
+WEIGHT: 5
+COLOUR: . = magenta
+FTILE:  .O = floor_infernal_blank
+NSUBST: w = 5=F / *:w
+KMONS:  F = spectral shark / spectral big fish
+KFEAT:  EFw = deep_water
+KMASK:  Ww = no_monster_gen
+: hell_entry_feature(_G, 'O')
+: hell_entry_tier(_G, "low")
+MAP
+      @
+   wwWwwww
+  wwWwwwwww
+ wwwwWwwwwww
+ wwwwwWwwwww
+ wwWww.wwWww
+@WWwW.O.WwWw@
+ wwwww.wwwwW
+ wwwwWwwwwww
+ wwwwwWwwwww
+  wwwwWwwww
+   wwwwWww
+      @
 ENDMAP
 
 ####
