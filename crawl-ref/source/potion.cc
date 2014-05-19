@@ -77,21 +77,22 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             break;
         }
 
-        if (you.species == SP_PLUTONIAN)
-        {
-            mpr("You feel less contaminated.");
-                you.magic_contamination -= 1000;
-        }
-
         if (!you.can_device_heal()
             && potion && was_known
             && you.duration[DUR_CONF] == 0
             && you.duration[DUR_POISONING] == 0
             && you.rotting == 0
-            && you.disease == 0)
+            && you.disease == 0
+            && you.species != SP_PLUTONIAN)
         {
             mpr("You have no ailments to cure.");
             return false;
+        }
+
+        if (you.species == SP_PLUTONIAN)
+        {
+            mpr("You feel less contaminated.");
+                you.magic_contamination -= 1000;
         }
 
         if (you.mutation[MUT_NO_DEVICE_HEAL])
