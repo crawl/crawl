@@ -2011,9 +2011,7 @@ static void _magic_contamination_effects()
     {
         mprf(MSGCH_WARN, "MELTDOWN!");
 
-        const int pl_rot = you.experience_level/3;
-
-        rot_hp(pl_rot);
+        rot_hp(4);
         // The good old Plutonian Meltdown
         if (contam > 10000)
         {
