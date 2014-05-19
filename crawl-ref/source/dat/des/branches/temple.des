@@ -1208,7 +1208,7 @@ ENDMAP
 
 ##########################################################################
 # Temples with lots of trees
-#    Total weight: 40 = 10+5+2+2+3+3+10+5
+#    Total weight: 45 = 10+5+2+2+3+3+10+5+5
 #    Trees, sometimes other plants.
 
 # 18 gods
@@ -1597,6 +1597,58 @@ ttttttttttT'''''''''''''''''''''''Ttttttttttt
 tttttttttttTTTTTTTTTTTTTTTTTTTTTTTttttttttttt
 ttttttttttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+# 16 gods
+NAME:   lightli_temple_of_artemis
+WEIGHT: 5
+PLACE:  Temple
+TAGS:   no_pool_fixup
+ORIENT: encompass
+MARKER: d = lua:fog_machine { cloud_type = "flame", \
+                              pow_min = 100, pow_max = 100, delay = 10, \
+                              start_clouds = 1, size = 1, spread_rate = 0, \
+                              excl_rad = 0 }
+COLOUR: c = white
+COLOUR: . = lightgrey
+KFEAT:  ~ = floor
+COLOUR: ~ = green
+FTILE:  . = floor_marble
+FTILE:  ~ = floor_grass
+FTILE:  c = wall_marble
+MAP
+ttttttttttttttttttttt
+twwwwwwwwwwwwwwwwwwwt
+tw~~~~~~~~~~~~~~~~~wt
+tw~c~c~c~c~c~c~c~c~wt
+tw~~~~~~~~~~~~~~~~~wt
+tw~c~ccccccccccc~c~wt
+tw~~~c...cdc...c~~~wt
+tw~c~c....B....c~c~wt
+tw~~~c...cGc...c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c.........c~~~wt
+tw~c~c..B.B.B..c~c~wt
+tw~~~c.........c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c..B.B.B..c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c.........c~~~wt
+tw~c~c..B.B.B..c~c~wt
+tw~~~c.........c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c..B.B.B..c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c.........c~~~wt
+tw~c~cG.B.B.B.Gc~c~wt
+tw~~~c.........c~~~wt
+tw~c~c.........c~c~wt
+tw~~~c.........c~~~wt
+tw~c~cccc...cccc~c~wt
+tw~~~~~~~~~~~~~~~~~wt
+tw~c~c~c~c~c~c~c~c~wt
+twwwwwwwww{wwwwwwwwwt
+ttttttttttttttttttttt
 ENDMAP
 
 ##########################################################################
