@@ -1,4 +1,4 @@
-Stone Soup 0.15 (up to 0.15-a0-824-g4b23974)
+Stone Soup 0.15 (up to 0.15-a0-911-gf0b1c87)
 --------------------------------------------
 * Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
 * Ranged combat has been rewritten from the ground up.
@@ -28,6 +28,7 @@ Character
 Monsters
 --------
 * Many enemy glyphs have been adjusted. See 0.14_monster_glyphs.txt.
+* Corrosion affects all of your equipment, but only temporarily.
 * Enemies are more intelligent about using area-of-attack spells such as
   Symbol of Torment and Chain Lightning when you are not in sight.
 * Manticores now move as fast as the player.
@@ -42,6 +43,7 @@ Monsters
   but have less health and AC and have their abilities converted to spells
   such that they spam less; this implies OCS confusion can be resisted.
 * Bog bodies no longer randomly rot.
+* Purple ugly things deal extra damage in lieu of a sickness attack.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
   flaming corpses, grizzly bears, spriggan enchanters, phoenixes,
   shedu, plague shamblers.
@@ -81,6 +83,7 @@ Items
 * (Plain) bows have been renamed to shortbows.
 * Identify scrolls now always identify a single item.
 * Potions of blood cure a point of ghoul rotting.
+* Sustain abilities effects no longer stack.
 * Removed items: rings of hunger and sustenance.
 * Removed unrands: the boots of the Spider.
 
@@ -92,6 +95,7 @@ Cards
 * The Potion card has a new list of effects: power 0 is decay/curing/agility/
   might/brilliance; 1 has a chance of resistance/haste; 2 has a chance of
   magic/heal wounds.
+* The Mercenary card can generate base demonspawn instead of spriggan riders.
 * Removed cards: Experience, Sage, Water, Vitrification, Trowel, Minefield,
   and Shuffle.
 
@@ -128,6 +132,7 @@ Gods
 * Followers of good gods no longer get a chance to turn holy enemies neutral.
 * Zin's Recite no longer prompts for a book, instead affecting all monsters
   in sight with the strongest effects that would impact them.
+* Sif Muna wrath can no longer cause amnesia.
 
 Interface
 ---------
