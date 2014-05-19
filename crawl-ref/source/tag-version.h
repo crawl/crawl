@@ -98,6 +98,7 @@ enum tag_minor_version
     TAG_MINOR_SAGE_REMOVAL,        // Removed the Sage card and status.
     TAG_MINOR_CALC_UNRAND_REACTS,  // Compute you.unrand_reacts on load
     TAG_MINOR_SAPROVOROUS,         // Remove Saprovorous from several species
+    TAG_MINOR_PLUTO_NO_DEVICE_HEAL,// Remove MUT_NO_DEVICE_HEAL from Plutonians
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

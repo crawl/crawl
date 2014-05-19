@@ -333,9 +333,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_MANA_SHIELD]    = 1;
         you.mutation[MUT_NO_DEVICE_HEAL] = 2;
         break;
-    case SP_PLUTONIAN:
-        you.mutation[MUT_NO_DEVICE_HEAL] = 1;
-        break;
     default:
         break;
     }
@@ -997,10 +994,10 @@ static void _give_items_skills(const newgame_def& ng)
     if (you.species == SP_DEEP_DWARF)
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEAL_WOUNDS, -1, 1, 5);
 
-        if (you.species == SP_PLUTONIAN)
-            you.magic_contamination = 10000;
-    // Zotdef: everyone gets bonus two potions of curing.
+    if (you.species == SP_PLUTONIAN)
+        you.magic_contamination = 10000;
 
+    // Zotdef: everyone gets bonus two potions of curing.
     if (crawl_state.game_is_zotdef())
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
 
