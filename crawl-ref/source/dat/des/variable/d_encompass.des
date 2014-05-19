@@ -271,6 +271,352 @@ vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
                          vvvvvvv
 ENDMAP
 
+################################################################################
+# Giving players the runaround...
+
+default-depth:
+
+NAME: grunt_runaround
+TAGS: no_monster_gen uniq_d_encompass
+PLACE: Depths:$
+DEPTH: D:$, Depths:2-
+WEIGHT: 1 (D:$), 2 (Depths:$), 10
+ORIENT: encompass
+SUBVAULT: B : grunt_runaround_doors_1
+SUBVAULT: C : grunt_runaround_doors_2
+SUBVAULT: D : grunt_runaround_doors_3
+SUBVAULT: E : grunt_runaround_doors_4
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+KFEAT:  Z = stone_wall
+TILE:   Z = wall_zot_magenta
+COLOUR: Z = lightmagenta
+SUBVAULT: F : grunt_runaround_zot
+NSUBST: < = 1:{ / 1:[ / 1:( / 2:< / *=A
+: elseif you.where() == dgn.level_name(dgn.br_entrance("Depths")) then
+KFEAT:  Z = metal_wall
+SUBST:  9 = 0
+SUBVAULT: F : grunt_runaround_depths
+NSUBST: < = 1:{ / 1:[ / 1:( / 2:< / *=A
+: else
+KFEAT: Z = metal_wall
+SUBVAULT: F : grunt_runaround_loot
+NSUBST: < = 1:{ / 1:[ / 1:( / 1:] / 1:) / *=A
+: end
+{{
+local room_centres = { 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+                       'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+                       'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W' }
+for i = 1, #room_centres do
+  subst(room_centres[i] .. ' : .:21 w l c v b:2')
+end
+}}
+#KMASK: 09 = !no_monster_gen
+SUBST: 0 = 0.
+SUBST: 9 = 90
+KMONS: 0 = 0 band
+KMONS: 9 = 9 band
+KFEAT: G = granite_statue / fountain_blue / fountain_sparkling w:1 / \
+           floor w:21
+MARKER: A = lua:props_marker { portal=1 }
+KFEAT:  A = floor
+MAP
+                  cccccccccccccccc
+                ccc.......<......ccc
+             cccc..................cccc
+           ccc..c..0.dddGddGddd.0..c..ccc
+          cc....BB................BB....cc
+         cc...0..c.cBBccccccccBBc.c..0...cc
+        cc......cccc.....cc.....cccc......cc
+       cc..kk.ccc...HH...CC...II...ccc.ee..cc
+      cc<.Gk.BB..HHGH..0.CC.0..IGII..BB.eG.<cc
+     cc..kk.cc...H.......cc.......I...cc.ee..cc
+    cc..Gk.cc..0....cCCccccccCCc....0..cc.eG..cc
+   cc..kk.ccc.....ccc..........ccc.....ccc.ee..cc
+   c...k.cccCC..CCc.c..0.QQ.0..c.cCC..CCccc.e...c
+  cc....Bc..CCccc...DD..QGGQ..DD...cccCC..cB....cc
+  c..0.cB....ccc..0..c........c..0..ccc....Bc.0..c
+  c....c..0..cc.PP...cDDccccDDc...RR.cc..0..c....c
+ cccB.cc....Cc.PG..DDc...ZZ...cDD..GR.cC....cc.Bccc
+ c..Bcc.OO..C..P..cc...9.EE.9...cc..R..C..JJ.ccB..c
+cc....c.O..cc.0..ccZ..9G.EE.G9..Zcc..0.cc..J.c....cc
+c..0.cc.G..c....DcZEE....ZZ....EEZcD....c..G.cc.0..c
+c....B.OO.cccD..D..EEZZEEZZEEZZEE..D..Dccc.JJ.B....c
+c..j.B.O..C..Dccc...ZZZFFFFFFZZZ...cccD..C..J.B.f..c
+c..j.c....C....D..9.ZZFFFFFFFFZZ.9..D....C....c.f..c
+c..j.c..0.c.0..D.9G.EFFFFFFFFFFE.G9.D..0.c.0..c.f..c
+c..G.c....c..W.c....EFFFFFFFFFFE....c.S..c....c.G..c
+c<.j.ccCCcc.WG.cZEEZZFFFFFFFFFFZZEEZc.GS.ccCCcc.f..c
+c..j.ccCCcc.WG.cZEEZZFFFFFFFFFFZZEEZc.GS.ccCCcc.f.<c
+c..G.c....c..W.c....EFFFFFFFFFFE....c.S..c....c.G..c
+c..j.c..0.c.0..D.9G.EFFFFFFFFFFE.G9.D..0.c.0..c.f..c
+c..j.c....C....D..9.ZZFFFFFFFFZZ.9..D....C....c.f..c
+c..j.B.N..C..Dccc...ZZZFFFFFFZZZ...cccD..C..K.B.f..c
+c....B.NN.cccD..D..EEZZEEZZEEZZEE..D..Dccc.KK.B....c
+c..0.cc.G..c....DcZEE....ZZ....EEZcD....c..G.cc.0..c
+cc....c.N..cc.0..ccZ..9G.EE.G9..Zcc..0.cc..K.c....cc
+ c..Bcc.NN..C..V..cc...9.EE.9...cc..T..C..KK.ccB..c
+ cccB.cc....Cc.VG..DDc...ZZ...cDD..GT.cC....cc.Bccc
+  c....c..0..cc.VV...cDDccccDDc...TT.cc..0..c....c
+  c..0.cB....ccc..0..c........c..0..ccc....Bc.0..c
+  cc....Bc..CCccc...DD..UGGU..DD...cccCC..cB....cc
+   c...i.cccCC..CCc.c..0.UU.0..c.cCC..CCccc.g...c
+   cc..ii.ccc.....ccc..........ccc.....ccc.gg..cc
+    cc..Gi.cc..0....cCCccccccCCc....0..cc.gG..cc
+     cc..ii.cc...M.......cc.......L...cc.gg..cc
+      cc<.Gi.BB..MMGM..0.CC.0..LGLL..BB.gG.<cc
+       cc..ii.ccc...MM...CC...LL...ccc.gg..cc
+        cc......cccc.....cc.....cccc......cc
+         cc...0..c.cBBccccccccBBc.c..0...cc
+          cc....BB................BB....cc
+           ccc..c..0.hhhGhhGhhh.0..c..ccc
+             cccc..................cccc
+                ccc......<.......ccc
+                  cccccccccccccccc
+ENDMAP
+
+NAME: grunt_runaround_doors_1
+TAGS: grunt_runaround_doors_1 allow_dup unrand
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOPQRSTUVWX
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
+CLEAR: _
+MAP
+            AA                BB
+                II        JJ
+_
+_
+         XX                      KK
+_
+_
+_
+_
+    W                                  L
+    W                                  L
+_
+H                                          C
+H                                          C
+_
+_
+ V                                        M
+ V                                        M
+_
+_
+_
+_
+_
+_
+_
+_
+ U                                        N
+ U                                        N
+_
+_
+G                                          D
+G                                          D
+_
+    T                                  O
+    T                                  O
+_
+_
+_
+_
+         SS                      PP
+_
+_
+                RR        QQ
+            FF                EE
+ENDMAP
+
+NAME: grunt_runaround_doors_2
+TAGS: grunt_runaround_doors_2 allow_dup unrand
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOPQRSTUVWX
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
+CLEAR: _
+MAP
+                  AA
+                  AA
+_
+              XX      II
+_
+     HH  WW                JJ  BB
+     HH                        BB
+_
+_
+     V                          K
+     V                          K
+_
+_
+_
+   U                              L
+   U                              L
+_
+_
+GG                                  CC
+GG                                  CC
+_
+_
+   T                              M
+   T                              M
+_
+_
+_
+     S                          N
+     S                          N
+_
+_
+     FF                        DD
+     FF  RR                OO  DD
+_
+              QQ      PP
+_
+                  EE
+                  EE
+ENDMAP
+
+NAME: grunt_runaround_doors_3
+TAGS: grunt_runaround_doors_3 allow_dup unrand
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOPQRSTUVWX
+SUBST: ABCDEFGIJ : +, HKLMNOPQRSTUVWX : c
+CLEAR: _
+MAP
+       AA        BB
+_
+         II    JJ
+      XX          KK
+_
+_
+   W                  L
+H  W                  L  C
+H                        C
+  V                    M
+  V                    M
+_
+_
+_
+_
+  U                    N
+  U                    N
+G                        D
+G  T                  O  D
+   T                  O
+_
+_
+      SS          PP
+         RR    QQ
+_
+       FF        EE
+ENDMAP
+
+NAME: grunt_runaround_doors_4
+TAGS: grunt_runaround_doors_4 allow_dup unrand
+SHUFFLE: ABCDEFGH
+SHUFFLE: IJKLMNOP
+SUBST:   ABCDEFGI : +, HJKLMNOP : Z
+: if you.where() == dgn.level_name(dgn.br_entrance("Zot")) then
+KFEAT:  Z = stone_wall
+TILE:   Z = wall_zot_magenta
+COLOUR: Z = lightmagenta
+: else
+KFEAT:  Z = metal_wall
+: end
+CLEAR: _
+MAP
+        AA
+        AA
+  HH          BB
+  HH  PP  II  BB
+_
+_
+   O          J
+   O          J
+GG              CC
+GG              CC
+   N          K
+   N          K
+_
+_
+  FF  MM  LL  DD
+  FF          DD
+        EE
+        EE
+ENDMAP
+
+NAME: grunt_runaround_loot
+TAGS: grunt_runaround_loot allow_dup unrand
+SHUFFLE: }>de
+SUBST: de = %
+NSUBST: % = 4:| / 8:* / *=%
+KMONS: 9 = 9 band
+KMONS: 8 = 8 band
+MAP
+  ......
+ ..9..9..
+..8.%%.8..
+.9.%%%%.9.
+..%%}>%%..
+..%%de%%..
+.9.%%%%.9.
+..8.%%.8..
+ ..9..9..
+  ......
+ENDMAP
+
+NAME: grunt_runaround_depths
+TAGS: grunt_runaround_depths allow_dup unrand
+SHUFFLE: O3hi
+SUBST: hi = .
+NSUBST: 1 = 1:2 / *=1
+KFEAT: O = enter_depths
+MONS: tengu warrior band w:5 / tengu conjurer band w:5 / hill giant / \
+      ogre mage band / centaur warrior band / yaktaur band / cyclops band / \
+      deep elf priest band
+MONS: ettin w:20 / stone giant w:20 / fire giant / frost giant / \
+      fire dragon w:12 / ice dragon w:8 / yaktaur captain band
+MONS: hydra / dire elephant / emperor scorpion / death yak band / \
+      very ugly thing band
+MAP
+  ......
+ ...cc...
+..1....1..
+..........
+.c..Oh..c.
+.c..i3..c.
+..........
+..1....1..
+ ...cc...
+  ......
+ENDMAP
+
+NAME: grunt_runaround_zot
+TAGS: grunt_runaround_zot allow_dup unrand
+COLOUR: .1defghijO = magenta
+FTILE: .1defghijO = floor_hall
+SHUFFLE: defg
+SHUFFLE: Ohij
+SUBST: hij = .
+NSUBST: 1 = 1:2 / *=1
+KFEAT: O = enter_zot
+KMONS: d = golden dragon
+KMONS: e = quicksilver dragon
+KMONS: f = storm dragon
+KMONS: g = shadow dragon
+MONS: base draconian
+MONS: nonbase draconian
+MAP
+  ......
+ ..1..1..
+..d....e..
+.1......1.
+....Oh....
+....ij....
+.1......1.
+..f....g..
+ ..1..1..
+  ......
+ENDMAP
+
 ##############################################################
 NAME:   kennysheep_town
 TAGS:   uniq_d_encompass
