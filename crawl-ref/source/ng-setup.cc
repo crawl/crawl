@@ -995,7 +995,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEAL_WOUNDS, -1, 1, 5);
 
     if (you.species == SP_PLUTONIAN)
-        you.magic_contamination = 10000;
+        you.magic_contamination = 7500;
 
     // Zotdef: everyone gets bonus two potions of curing.
     if (crawl_state.game_is_zotdef())
