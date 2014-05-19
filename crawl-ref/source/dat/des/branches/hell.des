@@ -407,22 +407,21 @@ ENDMAP
 NAME: grunt_hell_entry_dis_old
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 4
-MONS: iron imp / nothing
-KMONS: O = iron devil
+KMONS: O = iron devil / iron imp w:20 / nothing
 : hell_entry_feature(_G, 'O')
 MAP
 ...................
 .vvvv.........vvvv.
 .v%.vvvvvvvvvvv.%v.
-.v.1+$%vvvvv$%+1.v.
+.v..+$%vvvvv$%+..v.
 .vv+vvvv...vvvv+vv.
-..v....+.1.+....v..
+..v....+...+....v..
 ..v+vvvv...vvvv.v..
 ..v....vv+vv.%v.v..
 ..v..vOvv.vv.vv.v..
 ..v....vv.vv....v..
 .vv+v..vv.vvvvv+vv.
-.v.1vvvvv.vvvvv1.v.
+.v..vvvvv.vvvvv..v.
 .v%.vvvvv+vvvvv.%v.
 .vvvv.........vvvv.
 .........@.........
@@ -431,19 +430,18 @@ ENDMAP
 NAME: grunt_hell_entry_dis_mu
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
-MONS: iron imp / nothing
-KMONS: O = iron devil
+KMONS: O = iron devil / iron imp w:20 / nothing
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
 ...................
 ..vvvvvvv.vvv......
 ..v$v$v$vvv$vvv....
-.vv+v+v1+.+1vvvvv..
+.vv+v+v.+.+.vvvvv..
 .v....vvv.vvv...vv.
-.v1vvvvv...v.vvv.v.
-.v.+.1.+.1.+.vO+1v.
-.v1vvvvv...v.vvv.v.
+.v.vvvvv...v.vvv.v.
+.v.+...+...+.vO+.v.
+.v.vvvvv...v.vvv.v.
 .v....vvv+vvv...vv.
 .vv+v+vvv.vvvvvvv..
 ..v$v$v.v.vvvvv....
@@ -454,21 +452,20 @@ ENDMAP
 NAME: grunt_hell_entry_dis_grunt
 TAGS: transparent nolayout_encompass uniq_hell_entry_dis
 WEIGHT: 5
-MONS: iron imp / nothing
-KMONS: O = iron devil
+KMONS: O = iron devil / iron imp w:20 / nothing
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "low")
 MAP
 ...................
 ...................
 ...vvvvvvvvv...vvv.
-...v.+1v$v1vv.vv1v.
-...v1v+v+vv.vvv.vv.
-.v+v.v.v1vvv...vv..
-.+1+.v1+.+1+.%.v...
-.v+v.v.v1vvv...vv..
-...v1v+v+vv.vvv.vv.
-...v.+1v$vOvv.vv1v.
+...v.+.v$v.vv.vv.v.
+...v.v+v+vv.vvv.vv.
+.v+v.v.v.vvv...vv..
+.+.+.v.+.+.+.%.v...
+.v+v.v.v.vvv...vv..
+...v.v+v+vv.vvv.vv.
+...v.+.v$vOvv.vv.v.
 ...vvvvvvvvv...vvv.
 ...................
 .........@.........
