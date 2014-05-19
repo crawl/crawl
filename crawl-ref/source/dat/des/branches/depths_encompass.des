@@ -24,6 +24,76 @@
                                         size = 1, spread_rate = 0,
                                         walk_dist = 0, excl_rad = 0 })
     end
+
+    function radiant_caverns_setup(e)
+        e.set_random_mon_list(
+            "glowing shapeshifter w:100 / air elemental / fire elemental / " ..
+            "earth elemental / crystal guardian / molten gargoyle / " ..
+            "war gargoyle / dancing weapon / very ugly thing band")
+        e.mons("raiju band / spriggan air mage band / titan w:5 / " ..
+               "storm dragon w:5 / wind drake w:5")
+        e.mons("fire giant / fire dragon / molten gargoyle / " ..
+               "salamander mystic / salamander firebrand w:2 / " ..
+               "nothing w:42")
+        e.mons("glowing shapeshifter / nothing")
+        e.mons("very ugly thing w:5 / ugly thing / pulsating lump")
+        e.mons("ball lightning / nothing w:4")
+        e.mons("insubstantial wisp / nothing")
+        e.mons("crystal guardian")
+        e.shuffle("wKLMN / lghij")
+        e.shuffle("KLMN")
+        e.shuffle("ghij")
+        e.shuffle("JH")
+        e.shuffle("34")
+        e.shuffle("m6")
+        e.subst("x = xxxxxbb")
+        e.subst("s = .*$p|O")
+        e.subst("u = ||$.O")
+        e.kitem("p = w:50 potion of mutation / " ..
+                "w:15 amulet of resist mutation ident:all / " ..
+                "w:1 potion of cure mutation")
+        e.kitem("O = | mimic")
+        e.kitem("Q = potion of cure mutation")
+        e.kitem("Z = amulet of resist mutation ident:all")
+        e.kitem("U = potion of cure mutation / nothing")
+        e.nsubst("u = 2:Q / 1:Z / 1:U / *:u")
+        e.subst("x = x b:2")
+        e.nsubst("H = 2:D / 2:E")
+        e.nsubst("Y = 1:G / *:I")
+        e.nsubst("J = 2:E / 2:4")
+        e.nsubst(": = 3:a / *:.")
+        e.nsubst("w = 4:r / *:w")
+        e.nsubst("1 = 2:1 / *:.")
+        e.kfeat("r = deep_water")
+        e.kmons("r = water elemental")
+        e.kmons("n = glowing shapeshifter / w:5 dancing weapon / w:25 nothing")
+        e.kmons("m = very ugly thing w:5 / ugly thing / pulsating lump / " ..
+                "w:25 nothing")
+        e.kmons("jL = war gargoyle / crystal guardian / w:1 iron golem / " ..
+                "w:21 nothing")
+        e.kmons("iN = earth elemental / nothing")
+        e.kmons("h = w:30 air elemental / glowing shapeshifter / " ..
+                " w:30 nothing")
+        e.kmons("g = w:30 water elemental / glowing shapeshifter / " ..
+                "w:30 nothing")
+        e.kmons("q = war gargoyle / crystal guardian / " ..
+                "glowing shapeshifter / earth elemental")
+        e.kmons("tV = ball lightning / fire vortex / fire elemental / " ..
+                "air elemental / wind drake / nothing w:75")
+        e.kmons("S = gargoyle / molten gargoyle / w:1 war gargoyle / " ..
+                "w:21 nothing")
+        e.kmons("D = dancing weapon")
+        e.kmons("E = glowing shapeshifter")
+        e.kmons("K = molten gargoyle / fire elemental / " ..
+                "w:50 earth elemental / w:70 nothing")
+        e.kmons("M = earth elemental / fire elemental / w:20 nothing")
+        e.kmons("I = silver statue / ice statue / w:1 orange crystal statue")
+        e.kmons("y = glowing shapeshifter / war gargoyle w:5 / " ..
+                "crystal guardian w:5")
+        e.kmons("z = crystal guardian / w:30 dancing weapon")
+        e.kfeat("A = stone_arch")
+        e.marker("A = lua:props_marker { portal=1 }")
+    end
 }}
 
 default-depth: Depths:2-, !Depths:$
@@ -836,4 +906,123 @@ xxxx..n..0cc.b09.b..9b|cc.....xMx.x.xLx.....x.x.I....xx
          xxxx                  xxxx     xxxxxx............Oxxxxxxxxxx
                                             xxxxxxxxxxxxxxxxxxxxxxxxx
                                              xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Maps from the now-defunct Radiant Caverns portal vault idea.
+# Original design by rkd; modernised by Grunt.
+
+NAME:   radiant_caverns_a_rkd
+TAGS:   no_monster_gen no_item_gen uniq_d_encompass
+ORIENT: encompass
+: radiant_caverns_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx{.(.[.....xxxxxxxxxlllxxxsss..xxxxxxxxxxxxxxx.....H....xxxxxxxxxxxx
+xx...........xxxxxxxlllxxxxssJJ..xxxxxxxxxxx..V..HH...H...xxxxxxxxxxx
+xx}..........xxxxxlllxxxxx).JJ...xxxxxxx............xx....xxxxxxxxxxx
+xxxxxxx........xxxlllxxxxxxx...xx..xxxxx..VV...xxllxxxx.V...xxxxxxxxx
+xxxxxxxx....KK..xlllxxxxxxxxxxxxxx..xx...VV...xxllxxxx......xxxxxxxxx
+xxxxxxxx....KK.Klllxxxxxxxxxxxxxxxx.........xxxllxxxx...4..xxxxxxxxxx
+xxxxxxx.......Klll......xxxxxxxxxxxx......xxxxll......V.4.xxxxxxxxxxx
+xxxxxx..V...xxlll....N.N.xxxxxxxxxx.....xxxxxll.VV.......xxxxxxxxxxxx
+xxxxxx....xxxlllx....N.N..xxxxxxxxx..V.xxxxxll34..xxxxxxxxxxxxxxxxxxx
+xxxxx....xxllllxx..........xxxxxxx.SS.xxxxxllx4....xxxxxxxxxxxxxxxxxx
+xxxxx...xxllllxx.L..xx..L..xxxxxx.SS.xxxxxllxxx..V..xxxxxxxxxxxxxxxxx
+xxxx.M..xlllxxx....xxxx..LV.xxxx.SS.xxxxxllxxxxx.3...xxxxxxxxxxxxxxxx
+xxxx.M..lllxx.....xxxxxx.....xx....xxxxxllssxxxx.34..xxxxxxxxxxxxxxxx
+xxxx..MM......L..xxxxxxxx....xx...xxxxxllssY<xx..V..xxxxxxxxxxxxxxxxx
+xxxxlll...V.....xxxxxxxxxx.L.....xxxxxllxxxxxx.3...xxxxxxxxxxxxxxxxxx
+xxxlllx.....L..xxxxxxxxxxxxxxxxxxxxxxllxxxxx1...xxxxxxxxxxxxxxxxxxxxx
+xxlllxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllxxxx...xxxxxxxxxxxxxxxxxxxxxxxx
+xllxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx......V...xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxb.bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxbb.bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxbb...bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxbbbbbbbbbbbbbbb..]..bbbbbbbbbbbbbbbxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxbb.................................bbxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxbb......................V............bbxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxbb.....5..666...V.........mmm.5......j.bbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxbb.h..V....666.......5.....mmm....V....j.bbxxxxxxxxxxxxx
+xxxxxxxxxxxxbb.h..5......V..5..........5........V..j.j.bbxxxxxxxxxxxx
+xxxxxxxxxxxbbww..h..n............V................n...wwbbxxxxxxxxxxx
+xxxxxxxxxxbbwwwwh...V.......n..n.5.n...n.i.......5..jwwwwbbxxxxxxxxxx
+xxxxxxxxxxbwwwwwwV..5....wwwwww.......wwwwwwii......wwwwwwbxxxxxxxxxx
+xxxxxxxxxxbsswwwwwg.....wwwwwwww.n.n.wwwwwwwwi..V..wwwwwssbxxxxxxxxxx
+xxxxxxxxxxbYsswwwwg.ggnwwbbbbbbww...wwbbbbbbww.n.n.wwwwssYbxxxxxxxxxx
+xxxxxxxxxxbbsswwwwwwwwwwwbuu..bww.V.wwb.yu.bwwwwwwwwwwwssbbxxxxxxxxxx
+xxxxxxxxxxxbbswwwwwwwwwwwb.yAubww.V.wwbuAuubwwwwwwwwwwwsbbxxxxxxxxxxx
+xxxxxxxxxxxxbbwwwwbbbbbbwb.z.ubww...wwb.z..bwbbbbbbwwwwbbxxxxxxxxxxxx
+xxxxxxxxxxxxxbbwwwbuuuzbwb+bbbbbb+++bbbbbb+bbb.u.ubwwwbbxxxxxxxxxxxxx
+xxxxxxxxxxxxxxbbwwbuA..bbb..b...........b..bbbyzAubwwbbxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxbbwby...bb...b...........b...bb..u.bwbbxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxbbbbbb.b....b...b...b...b....b.bbbbbbxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxbbb+b..b+b.....7.....b+b..b+bbbxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb....b.b...b7.7b...b.b....bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb....b.b...........b.b....bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb....bzbqq.b...b.qqbzb....bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbbz1..b.bbq.......qbb.b..1zbbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbbbbbbb.Ybbbb+++bbbbY.bbbbbbbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbbuuuub..bb.......bb..buuuubbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb.uuub.bb.........bb.buuu.bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb..uub.b...ttttt...b.buu..bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxbb....b.....ttttt.....b....bbxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxbbbb+bbbb..ttttt..bbbbb+bbbxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxbb.zyz.b.........b.yzz.bbxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxbb....bb.bb>bb.bb....bbxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxbb.......bbb.......bbxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxbbbbbbbbbbbbbbbbbbbxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   radiant_caverns_b_rkd
+TAGS:   no_monster_gen no_item_gen uniq_d_encompass
+ORIENT: encompass
+: radiant_caverns_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx.HH.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxHHV..x..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx..3.33...1.......xxb.bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxbb.bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx.Vxxxxxxxxxxxxxxxxxbb...bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx4.xxxxbbbbbbbbbbbbbbb..]..bbbbbbbbbbbbbbbxxxxxxxxxxxxxxxxx
+xxxxxxxxxx..xxxxbb.................................bbxxxxxxxxxxxxxxxx
+xxxxxxxxx.V.xxxbb......................V............bbxxxxxxxxxxxxxxx
+xxxxxxxx.44xxxbb.....5..666...V.........mmm.5......j.bbxxxxxxxxxxxxxx
+xxxxxxx..4xxxbb.h..V....666.......5.....mmm....V....j.bbxxxxxxxxxxxxx
+xxxxxx.3.xxxbb.h..5......V..5..........5........V..j.j.bbxxxxxxxxxxxx
+xxxxx.3.xxxbbww..h..n............V................n...wwbbxxxxxxxxxxx
+xxxxx..xxxbbwwwwh...V.......n..n.5.n...n.i.......5..jwwwwbbxxxxxxxxxx
+xxxxx.xxxxbwwwwwwV..5....wwwwww.......wwwwwwii......wwwwwwbxxxxxxxxxx
+xxxxx.xxxxbsswwwwwg.....wwwwwwww.n.n.wwwwwwwwi..V..wwwwwssbxxxxxxxxxx
+xxxxx.xxxxbYsswwwwg.ggnwwbbbbbbww...wwbbbbbbww.n.n.wwwwssYbxxxxxxxxxx
+xxxx...xxxbbsswwwwwwwwwwwbuu..bww.V.wwb.yu.bwwwwwwwwwwwssbbxxxxxxxxxx
+xxx.....xxxbbswwwwwwwwwwwb.yAubww.V.wwbuAuubwwwwwwwwwwwsbbxxxxxxxxxxx
+xx..NN...xxxbbwwwwbbbbbbwb.z.ubww...wwb.z..bwbbbbbbwwwwbbxxxxxxxxxxxx
+xx..NN.V.xxxxbbwwwbuuuzbwb+bbbbbb+++bbbbbb+bbb.u.ubwwwbbxxxxxxxxxxxxx
+xx.V.......xxxbbwwbuA..bbb..b...........b..bbbyzAubwwbbxxxxxxxxxxxxxx
+xx..JJV..xx.xxxbbwby...bb...b...........b...bb..u.bwbbxxxxxxxxxxxxxxx
+xx.......xxx.xxxbbbbbb.b....b...b...b...b....b.bbbbbbxxxxxxxxxxxxxxxx
+xxx.....xxxxx.xxxxxbbb+b..b+b.....7.....b+b..b+bbbxxxxxxxxxxxxxxxxxxx
+xxxx...xxxxxxxV.xxxxbb....b.b...b7.7b...b.b....bbxxxxxxxxxxxxxxxxxxxx
+xxxxx..xxxxxxxxV.xxxbb....b.b...........b.b....bbxlllllxxxxxxxxxxxxxx
+xxxxxx..xxxxxxxx..xxbb....bzbqq.b...b.qqbzb....bbxlKK.lxxxxxxxxxxxxxx
+xxxxxxx..xxxxxxx..xxbbz1..b.bbq.......qbb.b..1zbbxl.K.lxxxxxxxxxxxxxx
+xxxxxxxx..xxxxxx..xxbbbbbbb.Ybbbb+++bbbbY.bbbbbbbxlllllxxxxxllxxxxxxx
+xxxxxxxx..xxxxxx..xxbbuuuub..bb.......bb..buuuubbxxxllxxxxxllx.xxxxxx
+xxxxxxxx..xxxxxx..xxbb.uuub.bb.........bb.buuu.bbxxllxxxxxllxx.xxxxxx
+xxxxxxxx..xxxxxxJ.xxbb..uub.b...ttttt...b.buu..bbxllxxxxxllxx...xxxxx
+xxxxxx.......xxx.Jxxbb....b.....ttttt.....b....bbxlllxxxxlxxss..<xxxx
+xxxxxx.SSSVV.xxx..xxxbbbb+bbbb..ttttt..bbbbb+bbbxllxllxxlllxxsY.xxxxx
+xxxxx..SSS.V.xx....xxxbb.zyz.b.........b.yzz.bbxllxxllxllxllxxxxxxxxx
+xxxxx.V......xx.JJssxxxbb....bb.bb>bb.bb....bbxxlxx..lllxxxllxxxxxxxx
+xxxxx........xx).sssxxxxbb.......bbb.......bbxxllxx..LLL..xxllxxxxxxx
+xxxxxxxxxxx.xxxxxxxxxxxxxbbbbbbbbbbbbbbbbbbbxxx.llxx.LL..ssxxlxxxxxxx
+xxxxxxxxxxx...xxxxxxMM..xxxxxxxxxxxxxxxxxxxxxxx.Vllxxssssxxxxlxxxxxxx
+xxM...xxxxxxx.xxxxxxMM.V.xxxx............xxxxxxx.Kllxx<xxxllllxxxxxxx
+xxs.x.xxxxxxx....xxx.......xx.xxx.[..xxx.xx.....V.Kllxxxlllxxxxxxxxxx
+xxssx..M.....xxxx...xxxxxx....xx.{.(.}xx....xxxxxxxxlllllxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
