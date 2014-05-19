@@ -62,6 +62,91 @@ function lair_small_ending(e)
         end
     end)
 end
+
+function beast_lair_populate_mons_large(e)
+    local set = crawl.random2(3)
+    if you.depth() > 3 then
+      set = set + 3
+    end
+    e.tags("no_monster_gen")
+    e.mons("plant") -- 1 is always plant.
+    if set == 0 then
+        e.mons("hound / wolf")
+        e.mons("wolf")
+        e.mons("wolf / warg w:1")
+    elseif set == 1 then
+        e.mons("black bear")
+        e.mons("black bear / polar bear")
+        e.mons("polar bear")
+    elseif set == 2 then
+        e.mons("iguana")
+        e.mons("iguana / komodo dragon")
+        e.mons("komodo dragon w:20 / basilisk w:1 / hydra w:1")
+    elseif set == 3 then
+        e.mons("elephant")
+        e.mons("elephant")
+        e.mons("elephant / dire elephant w:1")
+    elseif set == 4 then
+        e.mons("yak")
+        e.mons("yak / death yak")
+        e.mons("death yak / catoblepas w:1")
+    else
+        e.mons("water moccasin")
+        e.mons("water moccasin / black mamba w:5")
+        e.mons("black mamba / anaconda w:1")
+    end
+end
+
+function beast_lair_populate_mons_small(e)
+    if crawl.one_chance_in(25) then
+        beast_lair_populate_mons_large(e)
+    else
+        local monster_list = {}
+        if you.depth() < 4 then
+            monster_list = { "porcupine", "porcupine", "iguana", "giant frog",
+                             "wolf", "yak", "komodo dragon", "spiny frog",
+                             "crocodile" }
+        else
+            monster_list = { "yak", "yak", "polar bear", "death yak",
+                             "elephant", "spiny frog", "komodo dragon",
+                             "wyvern" }
+        end
+        e.mons(plant)
+        e.mons(monster_list[crawl.random2(#monster_list) + 1])
+        e.mons(monster_list[crawl.random2(#monster_list) + 1])
+        e.mons(monster_list[crawl.random2(#monster_list) + 1])
+    end
+end
+
+function beast_lair_randomise(e)
+    -- Tools for randomizing environment
+    -- A has a 33% chance of being a plant, 66% chance of being floor.
+    e.subst("A = 1:5 .")
+    -- B has a 23% chance of being a wall, 77% chance of being floor.
+    e.subst("B = x:3 .")
+    -- C has a 23% chance of being shallow water, 77% chance of being floor.
+    e.subst("C = W:3 .")
+    -- D has even odds of being shallow water, a wall, a plant of empty floor.
+    e.subst("D = Wx1.")
+    -- 25% chance that all instances of E in the vault will be plants.
+    e.subst("E : 1:3 .:9")
+    -- 25% chance that all instances of F in the vault will be walls.
+    e.subst("F : x:3 .:9")
+    -- 25% chance that all instances of G in the vault will be shallow water.
+    e.subst("G : W:3 .:9")
+    -- Tools or randomizin monsters and items
+    -- M, for monster. 33% chance to be 2, 67% chance to be floor.
+    e.subst("M = 2:4 .:8")
+    -- P, for pack. 17% chance to be 2, 83% chance to be floor.
+    e.subst("P : 2:2 .")
+    -- L (Loot) tiny chance to be good item, high chance to be normal item.
+    e.subst("L = *:1 % .:5")
+    -- J (Junk) small chance to be an item, high chance to be nothing.
+    e.subst("J = %:6 .:28")
+    -- Universal settings
+    e.tags("no_trap_gen")
+    e.depth("Lair, !Lair:$")
+end
 }}
 
 ################################################################################
@@ -2129,6 +2214,271 @@ tt...............tt
   ttt.........ttt
     ttt.....ttt
       tt@@@tt
+ENDMAP
+
+####
+# Some "beast lair" vaults, originally submitted as a serial vault.
+NAME:   beast_lair_carwin_large_1
+TAGS:   transparent luniq_beast_lair
+ORIENT: float
+: beast_lair_populate_mons_large(_G)
+: beast_lair_randomise(_G)
+MAP
+                E.EEJ
+      1     1  ..E.ME
+...........1.xxx.ME.
+ .Axxxxx..xxxx.xxxA..
+..xxJ..xx.xx.B.FFxx1.E
+ ..xxx.B........GGxx...
+ .xxA.....FFxxG..Gxxx.
+ .x...423...xGGG.GGGx.
+..x.AxxxFFFxxG4223Axx.1
+..xx..AFFFxx%LL4xxxx..
+..Axx..MFxxxxxxxx.xxx.
+ ..x..xxxxAxx......A..
+ .A.............  .
+      .            ..
+ENDMAP
+
+NAME:   beast_lair_carwin_large_2
+TAGS:   transparent luniq_beast_lair
+ORIENT: float
+: beast_lair_populate_mons_large(_G)
+: beast_lair_randomise(_G)
+MAP
+  ..1.. 1
+   .x........
+  ...xxxxxxx.
+. ..xxxLxxJxx.
+ ..Ax44....Ex.
+ .Gxx%4xx..xx.
+ GGGxLxxxE.xx.
+ .GGxxxx...xx.
+ .Gxxxx..EEx..A
+..xx31xx..xx....
+1.x32..x.xx..  A
+ .xxx....xx1.
+ ..xxxxEMExx..
+ .............
+ENDMAP
+
+NAME:   beast_lair_carwin_large_3
+TAGS:   transparent luniq_beast_lair
+ORIENT: float
+: beast_lair_populate_mons_large(_G)
+: beast_lair_randomise(_G)
+MAP
+            ..
+        .......
+ .........Mxxx...
+ x  xxx.xxxxxxxxx
+ xxxxM...A......xx
+ .xxA......xx..M.xx.
+..x...xxAA..x22.Mx...
+..xx.xxxxxx.xxx..xx..
+ .xx.xx44LA...x.......
+ .x..xx%4...x.xxxxx.
+......xxxxLx......x..
+..xx.MM.2xxx....xxxx.
+   x...24x....xxx  ..
+   xxxxxxx.xxxxxx x
+    ................
+   ...         .
+ENDMAP
+
+# This vault is kinda neat because if the Fs become walls (1/4th of the time)
+# it's a maze-like warren, but if they become floors it's an open "village".
+NAME:   beast_lair_carwin_large_4
+TAGS:   transparent luniq_beast_lair
+ORIENT: float
+: beast_lair_populate_mons_large(_G)
+: beast_lair_randomise(_G)
+SUBST: T:5 6:3
+MAP
+  .          .A1
+.........  ........x    .
+ ...xxxA.....xxxx.......x
+ ...x3xxFFFAxx4x...xxxx..x.
+ ..xx.xx..Fx...xFFxx24xA.....
+...x3..........2xF....x...x
+..FxxF11..FFxxx.x.....xxx.
+.......Fx...LF....xx.xx  .
+.x...xxx..x4Tx.F...F...D 1.
+x.Mxxx...xxxxxxx.FFF.D.2WWW
+xxxx....x.24xxxxxF...MWWWW
+2....xx...Mxxxxx.D..3WWWWWWW
+4..       .  Ax ..M1WWW W
+ENDMAP
+
+NAME: beast_lair_carwin_1
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+     ..
+  1......
+ ..xxxxx..
+ .xxM3Axx1..
+ .xAMJ4xFx.
+.Axx.xxxFF.1
+..1x..x...
+ ..xx..x...
+  .....
+ENDMAP
+
+NAME:   beast_lair_carwin_2
+TAGS:   transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+ITEM: w:7 meat ration / sausage / beef jerky
+SUBST: ? : .
+MAP
+  ...
+ ..2..
+..3d2..
+ ..2..
+  ...
+ENDMAP
+
+NAME: beast_lair_carwin_3
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+  1
+   ..
+....B..
+ .xxxx..
+..x33xx.1
+.xxM.Ax.
+A.xx.xx.
+ ..B...B
+ENDMAP
+
+
+NAME:   beast_lair_carwin_4
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+  ...  A
+ ..x....
+A.xxxFA..
+..x32FFB.
+..xxM1x...
+.xx..x1.
+....FxA
+ENDMAP
+
+NAME:   beast_lair_carwin_5
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+ .
+ ...1...
+..xxxx......
+ ...3x.xBA.
+ .x2xx.xxxB
+ .xJ.2...
+1.xxBxxxA
+ ........A
+ENDMAP
+
+NAME:   beast_lair_carwin_6
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+  .........
+   .Axxxx.1
+ .....GGxx.
+ ..xxxxGGx...
+..1xxGG.Gxx.
+ .xxD24Jxx..
+ ..xx32xxA.
+ .A.FFFFF..
+  ......
+ENDMAP
+
+NAME: beast_lair_carwin_7
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+.x....
+...x....
+..1x.x....
+ .xx.xx.x..
+..xPPxxxxx..x .
+Exx3PPx1Jx..x.
+E.xxxxx....x.
+ E.EEx42Pxxx..
+ ..E.xxxxx.x...1
+  ...........
+     A
+ENDMAP
+
+NAME:   beast_lair_carwin_8
+TAGS:   transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+. .. . ..   1   .......   1
+ ..Axxxx.... .  xxxxxx....
+..xxGGGxx.xxxxxxA.1.xxx.
+..xGGGGG..M243.....F..x..
+.xxxGGxxxxxxxxxxxx...xxx..
+....G..1         FFA......
+ENDMAP
+
+NAME:   beast_lair_carwin_9
+TAGS:   transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+ .   1    .
+ ........  .
+...xxxxx.....
+ .AAxxxxxxxx.
+ ..1xxxx4Lx....
+..xxx.M44xx.
+ x.....xxx..
+...xxxxx... A
+...xxxx..x.s
+      .
+ENDMAP
+
+NAME: beast_lair_carwin_10
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+  AA
+ .......
+ .x..xx.xx
+...x..xx.
+ .Axx.4x.
+ ..Jx3xx.
+...xxxx1x
+  .x43xx.1
+ .xxx.Ax..
+ .xxx.xx.1
+1.........
+ENDMAP
+
+NAME: beast_lair_carwin_11
+TAGS: transparent luniq_beast_lair
+: beast_lair_populate_mons_small(_G)
+: beast_lair_randomise(_G)
+MAP
+     .E
+. .......xx
+ ..xxxxx..E
+..xx2x4xE..
+.xx...2xx.
+..B.xxxxxx..
+ ...    .....E
 ENDMAP
 
 ###############################################################################
