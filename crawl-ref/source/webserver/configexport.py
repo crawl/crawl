@@ -44,9 +44,9 @@ def convert_game(**data):
     data["mode"] = mode
     d = OrderedDict()
     for key in ["id", "name", "version", "mode", "comment", "morgue_url",
-                "crawl_binary", "options", "inprogress_path", "rcfile_path",
-                "socket_path", "morgue_path", "client_path", "macro_path",
-                "ttyrec_path", "send_json_options"]:
+                "crawl_binary", "options", "pre_options", "inprogress_path",
+                "rcfile_path", "socket_path", "morgue_path", "client_path",
+                "macro_path", "ttyrec_path", "send_json_options"]:
         if key in data: d[key] = data[key]
     return d
 
