@@ -18,13 +18,10 @@ end
 
 function hell_entry_tier(e, tier)
     e.tags("nolayout_encompass")
-    if tier == "low" then
-        e.weight(14)
-    else
+    if tier ~= "low" then
         e.tags("luniq_hellpanabyss_threat_entry")
         if tier == "high" then
             e.tags("uniq_hell_entry_high")
-            e.weight(6)
         end
     end
 end
@@ -113,6 +110,7 @@ ENDMAP
 ##############################################################################
 # Hellmouth 2 (Lemuel)
 NAME:   hellmouth_2
+WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen transparent
 MONS:   crimson imp / red devil / hellwing / hell hound
@@ -185,6 +183,7 @@ ENDMAP
 ##############################################################################
 
 NAME:   grunt_hell_entry_demonic_statue
+WEIGHT: 6
 ORIENT: float
 TAGS:   no_monster_gen no_rtele_into
 MONS:   blue devil / orange demon / red devil / w:5 iron devil / \
@@ -264,6 +263,7 @@ ENDMAP
 
 ##############################################################################
 NAME: grunt_hell_horde
+WEIGHT: 6
 TAGS: nolayout_encompass uniq_hell_entry_high
 : hell_entry_feature(_G, 'O')
 NSUBST: + = 1:+ / 1:+x / *:x
@@ -282,6 +282,7 @@ xxl2.2lxx
 ENDMAP
 
 NAME: grunt_metal_band
+WEIGHT: 6
 KMONS: O = Margery band / hell knight band w:4, hell knight band
 : hell_entry_feature(_G, 'O')
 : hell_entry_tier(_G, "high")
@@ -324,9 +325,8 @@ MAP
 ENDMAP
 
 ##############################################################################
-# Large need for non-threat hell entries if there's going to be a chance
-# on every floor of a branch for a hell entry vault, so.
 NAME:    hangedman_geh_valley
+WEIGHT:  14
 TAGS:    transparent
 KMONS:   O = red devil / crimson imp w:20 / nothing
 SHUFFLE: +- / +- / =+
@@ -350,6 +350,7 @@ xxx  xxx  xxx
 ENDMAP
 
 NAME:    hangedman_coc_ice_floe
+WEIGHT:  14
 TAGS:    transparent no_pool_fixup
 KMONS:   O = blue devil / white imp w:20 / nothing
 KFEAT:   A = stone_arch
@@ -375,6 +376,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_tar_grid_catacomb
+WEIGHT:  14
 TAGS:    transparent
 KMONS:   O = shadow imp w:20 / nothing
 KFEAT:   A = stone_arch
