@@ -2082,7 +2082,7 @@ static void _handle_magic_contamination(int time_delta)
 {
     UNUSED(time_delta);
 
-    const int safe_level = you.species == SP_PLUTONIAN ? 3 : 1;
+    const int safe_level = you.species == SP_PLUTONIAN ? 2 : 1;
     const bool glow_effect = get_contamination_level() > safe_level
             && x_chance_in_y(you.magic_contamination, 12000);
 
