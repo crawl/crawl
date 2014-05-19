@@ -3669,6 +3669,10 @@ void unmarshallItem(reader &th, item_def &item)
             artefact_set_property(item, ARTP_STEALTH, 0);
         }
     }
+
+    // Replace War Chants with Battle to avoid empty-book errors.
+    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_WAR_CHANTS)
+        item.sub_type = BOOK_BATTLE;
 #endif
 
     if (is_unrandom_artefact(item))
