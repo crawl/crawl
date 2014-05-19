@@ -212,6 +212,13 @@ def check_config():
             not os.path.exists(game_data["client_path"])):
             logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
+
+        if type(game_data.get("options", [])) is not list:
+            logging.warning("The options field should be a list!")
+            success = False
+        if type(game_data.get("pre_options", [])) is not list:
+            logging.warning("The pre_options field should be a list!")
+            success = False
     return success
 
 
