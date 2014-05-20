@@ -1371,6 +1371,9 @@ int acquirement_create_item(object_class_type class_wanted,
                 destroy_item(acq_item, true);
                 return _failed_acquirement(quiet);
             }
+            // That might have changed the item's subtype.
+            item_colour(acq_item);
+
             // Don't mark books as seen if only generated for the
             // acquirement statistics.
             if (!debug)
