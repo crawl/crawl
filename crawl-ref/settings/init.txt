@@ -232,20 +232,20 @@
 
 ##### 3-j       Colours (messages and menus) ##########
 #
-# Food is colour coded by default as follows:
+# Items are colour coded by default as follows:
 #
-#   yellow     = preferred food
-#   darkgrey   = cannot be eaten at all
-#   lightred   = causes rot
-#   magenta    = dangerous to use, mutagenic
-#   red        = considered "evil" by your deity
-#   lightgreen = poisonous
-#   brown      = contaminated, may cause nausea
+#   yellow     = useful escape item / preferred food
+#   darkgrey   = cannot be used
+#   lightred   = harmful / cursed and in use
+#   magenta    = dangerous to use / mutagenic
+#   red        = disliked by your deity
+#   lightgreen = poisonous (food only)
+#   brown      = less nutritious (food only)
+#   cyan       = useful non-combat item
+#   white      = artefact
+#   lightblue  = unidentified magic item
 #
 # You can change colours by using something like
-# menu_colour ^= magenta:contaminated
-
-# You can redefine inventory items like this:
 # menu_colour ^= inventory:magenta:shillelagh
 # or ones in pick-up dialogs:
 # menu_colour ^= pickup:green:god gift
