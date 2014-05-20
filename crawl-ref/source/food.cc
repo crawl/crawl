@@ -252,9 +252,10 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
              && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
              && !you.has_spell(SPELL_SIMULACRUM))
     {
-        const string msg = make_stringf("You could %s this corpse's blood instead. Continue anyway?",
-                                        can_bottle_blood_from_corpse(corpse.mon_type)
-                                        ? "drain or bottle" : "drain");
+        bool can_bottle = can_bottle_blood_from_corpse(corpse.mon_type);
+        const string msg = make_stringf("You could drain this corpse's blood with <w>%s</w> instead%s. Continue anyway?",
+                                        command_to_string(CMD_EAT).c_str(),
+                                        can_bottle ? ", or drain it" : "");
         if (Options.confirm_butcher != CONFIRM_NEVER)
         {
             if (!yesno(msg.c_str(), true, 'n'))
