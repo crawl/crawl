@@ -1505,8 +1505,7 @@ int attack::calc_damage()
 
         potential_damage = player_stat_modify_damage(potential_damage);
 
-        damage_done =
-            potential_damage > 0 ? one_chance_in(3) + random2(potential_damage) : 0;
+        damage_done = random2(potential_damage+1);
 
         damage_done = player_apply_weapon_skill(damage_done);
         damage_done = player_apply_fighting_skill(damage_done, false);
