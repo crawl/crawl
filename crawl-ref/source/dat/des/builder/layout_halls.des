@@ -320,7 +320,8 @@ TAGS: overwritable layout allow_dup unrand layout_type_catacombs
   theme.level_material(_G)
 }}
 
-# Layers two onions on top of each other to create an interference pattern
+# Layers two onions on top of each other to create an
+# interference pattern (with option xor)
 NAME:   layout_onion_interference
 DEPTH:  Zot:1-4, Snake
 WEIGHT: 10
@@ -330,12 +331,13 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
 
   local gxm,gym = dgn.max_bounds()
 
-  local wall_break = util.random_range_real(.4,.7)
-  local rings = crawl.random_range(5,8)
+  local wall_break = util.random_range_real(.4,.6)
+  local num_rings1 = crawl.random_range(5,8)
+  local num_rings2 = crawl.random_range(5,8)
 
   local fill_center = crawl.coinflip()
-  local frings1 = onion_skin(rings,wall_break)
-  local frings2 = onion_skin(rings,wall_break)
+  local frings1 = onion_skin(num_rings1,wall_break)
+  local frings2 = onion_skin(num_rings2,wall_break)
 
   local dist = crawl.random_range(3,6)
   local dir = { x = util.random_range_real(0.5,1) * dist,
@@ -344,11 +346,11 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   -- Position on map
   frings1 = procedural.translate(
                 procedural.scale(frings1,
-                                 math.min(gxm,gym)/2),
+                                 math.min(gxm,gym)*(3+crawl.random2(2))/8),
                                  gxm/2,gym/2)
   frings2 = procedural.translate(
                 procedural.scale(frings2,
-                                 math.min(gxm,gym)/2),
+                                 math.min(gxm,gym)*(3+crawl.random2(2))/8),
                                  gxm/2+dir.x,gym/2+dir.y)
 
   if you.in_branch("Snake") then
@@ -357,8 +359,15 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
   end
 
   -- Generate the interference pattern by combining the two functions
-
+  local xor = crawl.coinflip()
   local fphase = function(x,y)
+    if xor then
+      if frings1(x, y) > wall_break then
+        return frings2(x,y) > wall_break and 0 or 1
+      else
+        return frings2(x,y) > wall_break and 1 or 0
+      end
+    end
     return (frings1(x,y) + frings2(x,y)) / 2
   end
 
