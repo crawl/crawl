@@ -5,8 +5,8 @@
 Zin
 
 Zin is a god of discipline. Followers must remain pure of body and soul,
-refraining from dark magic, mutation, and the consumption of intelligent
-beings. They must also selflessly tithe a small fraction of all gold gained,
+refraining from dark magic and chaotic acts, and never consuming the flesh of
+intelligent beings. They must also tithe a fraction of all gold gained,
 preferably followed by donations of more. In exchange, worshippers may invoke
 Zin's wrath upon sinners, and eventually gain various divine protections. Zin's
 followers can convert to Elyvilon or the Shining One while keeping some piety.
@@ -74,17 +74,17 @@ and its false laws for their evil god's glory.
 Sif Muna
 
 Sif Muna the Loreminder is a contemplative but powerful deity, served by those
-who seek magical knowledge. The Loreminder appreciates the training of spell
-casting skills, and will reward faithful followers with a supply of spellbooks
-taken directly from Sif Muna's legendary library. Like any good librarian,
-though, Sif Muna despises those who would damage books in their care.
+who seek magical knowledge. The Loreminder appreciates the training of
+spellcasting skills, and will reward faithful followers with a supply of
+spellbooks taken directly from Sif Muna's legendary library.
 %%%%
 Trog
 
 Trog is an ancient god of anger and violence. Followers are expected to kill in
-Trog's name and sacrifice the dead, and in return gain power in battle and also
-occasional rewards. Trog hates all wizards, and loves to see their spellbooks
-burn. Followers are absolutely forbidden the use of spell magic.
+Trog's name and sacrifice the dead. In return, worshippers of Trog gain the
+ability to go berserk at will in combat, and will be granted gifts of powerful
+weapons. Trog hates all wizards, and loves to see their spellbooks burn.
+Followers are absolutely forbidden the use of spell magic.
 %%%%
 Nemelex Xobeh
 
@@ -106,9 +106,11 @@ keeping some piety.
 %%%%
 Lugonu
 
-Lugonu the Unformed revels in the chaos of the Abyss. Followers are sent out to
-cause bloodshed and corruption in the overworld, and must do so unflaggingly to
-earn this evil God's favour.
+Banished to the chaotic realm of the Abyss, Lugonu the Unformed seeks followers
+to spread bloodshed and corruption in the overworld. Those who gain Lugonu's
+favour will be granted some of the power of the Abyss itself, allowing them to
+call forth eldritch horrors, and even to travel between the overworld and the
+Abyss at will.
 %%%%
 Beogh
 
@@ -116,7 +118,7 @@ Beogh is an evil deity, worshipped by the cave orcs native to the dungeon. Only
 orcs may devote their service to Beogh, and they must prove their devotion with
 bloodshed. Especially fervent devotees of Beogh will find orcish followers
 flocking to their banner: it is an age of signs and portents, and the orcs have
-become increasingly certain that the coming of the Orc Messiah is nigh.
+become increasingly certain that the coming of their Messiah is nigh.
 %%%%
 Fedhas
 
@@ -139,10 +141,10 @@ time and its needless disturbances.
 Ashenzari
 
 While it seems inconceivable that the divine could be shackled, Ashenzari is
-just that: being purposely nailed to the sky for eternity, the unbudging god is
-all-knowing, all-seeing. Devoted worshippers are allowed to grasp shreds of
-this knowledge and foresight, but be warned: to Ashenzari, power and blessing
-and curse are all the same thing.
+just that: bound to the sky for eternity, the unbudging god is all-knowing,
+all-seeing. Devoted worshippers are allowed to grasp shreds of this knowledge
+and foresight, but be warned: to Ashenzari, power and blessing and curse are
+all the same thing.
 %%%%
 Jiyva
 
@@ -164,19 +166,18 @@ light.
 Gozag
 
 Gozag Ym Sagoz the Greedy teaches that the world belongs to the rich. Those
-accepting this principle may exchange their gold for divine assistance. Gozag
-has no respect for mealy-mouthed 'pious' followers; the only way to impress
-this god is by amassing a fortune. Fortunately enough, Gozag's worshippers are
-said to have the touch of gold...
+accepting this principle may exchange their gold for divine assistance.
+Followers of Gozag do not earn piety; the only way to impress this god is by
+amassing a fortune, and worshippers may request as much assistance as they can
+afford. Fortunately, Gozag's worshippers are said to have the touch of gold.
 %%%%
 Qazlal
 
 Qazlal Stormbringer is a violent god of tempests, who delights in unleashing
 the forces of nature against the unsuspecting. Those who invite Qazlal's gaze
 will find themselves the eye in a storm of elemental destruction, from which
-only their god can protect them. Pious worshippers of Qazlal will gain the
-ability to direct and control the storm. In return, their god asks only two
-things of them: to kill, and to destroy!
+only their God can protect them. Pious worshippers of Qazlal will gain the
+ability to direct and control the destructive might of the storm.
 %%%%
 Zin powers
 
