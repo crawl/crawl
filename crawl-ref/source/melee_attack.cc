@@ -347,7 +347,7 @@ bool melee_attack::handle_phase_dodged()
                  defender->conj_verb("phase").c_str(),
                  atk_name(DESC_ITS).c_str(),
                  defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                 attack_strength_punctuation().c_str());
+                 attack_strength_punctuation(damage_done).c_str());
         }
     }
     else
@@ -364,7 +364,7 @@ bool melee_attack::handle_phase_dodged()
                      atk_name(DESC_THE).c_str(),
                      evasion_margin_adverb().c_str(),
                      defender_name().c_str(),
-                     attack_strength_punctuation().c_str());
+                     attack_strength_punctuation(damage_done).c_str());
             }
         }
     }
@@ -631,7 +631,7 @@ bool melee_attack::handle_phase_damaged()
                 mprf("%s shroud bends %s attack away%s",
                      def_name(DESC_ITS).c_str(),
                      atk_name(DESC_ITS).c_str(),
-                     attack_strength_punctuation().c_str());
+                     attack_strength_punctuation(damage_done).c_str());
             }
             did_hit = false;
             damage_done = 0;
@@ -1426,7 +1426,7 @@ void melee_attack::player_announce_aux_hit()
          aux_verb.c_str(),
          defender->name(DESC_THE).c_str(),
          debug_damage_number().c_str(),
-         attack_strength_punctuation().c_str());
+         attack_strength_punctuation(damage_done).c_str());
 }
 
 string melee_attack::player_why_missed()
@@ -2638,7 +2638,7 @@ void melee_attack::announce_hit()
              defender_name().c_str(),
              debug_damage_number().c_str(),
              mons_attack_desc().c_str(),
-             attack_strength_punctuation().c_str());
+             attack_strength_punctuation(damage_done).c_str());
     }
     else
     {
@@ -2649,7 +2649,7 @@ void melee_attack::announce_hit()
              attack_verb.c_str(),
              defender->name(DESC_THE).c_str(),
              verb_degree.c_str(), debug_damage_number().c_str(),
-             attack_strength_punctuation().c_str());
+             attack_strength_punctuation(damage_done).c_str());
     }
 }
 
@@ -2707,7 +2707,7 @@ void melee_attack::mons_do_napalm()
             mprf("%s %s covered in liquid flames%s",
                  def_name(DESC_THE).c_str(),
                  defender->conj_verb("are").c_str(),
-                 special_attack_punctuation().c_str());
+                 attack_strength_punctuation(special_damage).c_str());
         }
 
         if (defender->is_player())
@@ -2927,7 +2927,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s engulfed in flames%s",
                  def_name(DESC_THE).c_str(),
                  defender->conj_verb("are").c_str(),
-                 special_attack_punctuation().c_str());
+                 attack_strength_punctuation(special_damage).c_str());
 
             _print_resist_messages(defender, base_damage, BEAM_FIRE);
         }
@@ -2951,7 +2951,7 @@ void melee_attack::mons_apply_attack_flavour()
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("freeze").c_str(),
                  defender_name().c_str(),
-                 special_attack_punctuation().c_str());
+                 attack_strength_punctuation(special_damage).c_str());
 
             _print_resist_messages(defender, base_damage, BEAM_COLD);
         }
@@ -2976,7 +2976,7 @@ void melee_attack::mons_apply_attack_flavour()
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("shock").c_str(),
                  defender_name().c_str(),
-                 special_attack_punctuation().c_str());
+                 attack_strength_punctuation(special_damage).c_str());
 
             _print_resist_messages(defender, base_damage, BEAM_ELECTRICITY);
         }
@@ -3153,7 +3153,7 @@ void melee_attack::mons_apply_attack_flavour()
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("sear").c_str(),
                  defender_name().c_str(),
-                 special_attack_punctuation().c_str());
+                 attack_strength_punctuation(special_damage).c_str());
 
         }
         break;
@@ -3338,7 +3338,7 @@ void melee_attack::mons_apply_attack_flavour()
                     atk_name(DESC_THE).c_str(),
                     attacker->conj_verb("drown").c_str(),
                     defender_name().c_str(),
-                    special_attack_punctuation().c_str());
+                    attack_strength_punctuation(special_damage).c_str());
             }
         }
         break;
@@ -3646,7 +3646,7 @@ void melee_attack::do_minotaur_retaliation()
                 {
                     mprf("%s headbutts %s%s", defname.c_str(),
                          attacker->name(DESC_THE).c_str(),
-                         get_exclams(hurt).c_str());
+                         attack_strength_punctuation(hurt).c_str());
                 }
             }
             if (hurt > 0)
@@ -3692,7 +3692,7 @@ void melee_attack::do_minotaur_retaliation()
         {
             mprf("You headbutt %s%s",
                  attacker->name(DESC_THE).c_str(),
-                 get_exclams(hurt).c_str());
+                 attack_strength_punctuation(hurt).c_str());
             attacker->hurt(&you, hurt);
         }
     }
