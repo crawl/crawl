@@ -896,6 +896,15 @@ runrest_stop_message += <regex>, <regex>, ...
         Note also that runrest_ignore_message has no effect on what
         explore_stop stops for.
 
+interrupt_<delay> += <activity_interrupt_type>, <activity_interrupt_type>, ...
+        (List option)
+        Use this option to not interrupt a delayed action on a certain trigger.
+        The list of delay types is in delay.cc in the delay_names string array,
+        and the list of interruption types is in activity_interrupt_names.
+        For example, use
+            interrupt_travel -= sense_monster
+        to not interrupt autotravel when a monster is sensed but not seen.
+
 runrest_safe_poison = <% of hp>:<% of mhp>
         Poison damage will be ignored if it is projected to drop your hp
         by less than x% of your current hp and less than y% of your max
