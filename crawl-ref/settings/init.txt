@@ -192,8 +192,8 @@
 
 # autofight_stop = 30
 # automagic_enable = false
-# automagic_stop = 0
 # automagic_fight = false
+# automagic_stop = 0
 
 ##### 3-i       Messages and Display Enhancements #####
 #
@@ -204,25 +204,31 @@
 # stat_colour = 1:lightred, 3:red
 
 # status_caption_colour        = yellow
-# mlist_min_height             = 4
-# msg_min_height               = 7
-# msg_max_height               = 10
-# mlist_allow_alternate_layout = true
-# messages_at_top              = true
-# mlist_targeting              = true
-# show_gold_turns              = false
-# show_game_turns              = false
-# show_newturn_mark            = false
 # clear_messages               = true
 # small_more                   = true
 # show_more                    = false
 # show_inventory_weights       = (drop_pickup | true | false)
+# show_newturn_mark            = false
+# show_gold_turns              = false
+# show_game_turns              = false
 # item_stack_summary_minimum   = 4
+# mlist_min_height             = 4
+# mlist_allow_alternate_layout = true
+# mlist_targeting              = true
+# msg_min_height               = 7
+# msg_max_height               = 10
+# messages_at_top              = true
 # msg_condense_repeats         = false
 # msg_condense_short           = false
 # skill_focus                  = false
 # show_travel_trail            = false (true for online)
 # view_delay                   = 600
+
+# You can also enforce a --more-- prompt for messages
+
+## Avoid wasting turns with aborted actions:
+# force_more_message += There are no visible monsters within range
+# force_more_message += This wand has no charges
 
 ##### 3-j       Colours (messages and menus) ##########
 #
@@ -262,12 +268,6 @@
 # message_colour ^= mute:You start resting
 # message_colour ^= mute:(HP|Magic) restored
 # message_colour ^= mute:warning:Not with.*(in view|monsters around)
-
-# You can also enforce a --more-- prompt for messages
-
-## Avoid wasting turns with aborted actions:
-# force_more_message += There are no visible monsters within range
-# force_more_message += This wand has no charges
 
 ##### 3-k       Firing Commands #######################
 #
