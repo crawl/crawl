@@ -3001,8 +3001,7 @@ string hints_skills_info()
         "You can toggle which skills to train by "
         "pressing their slot letters. A <darkgrey>grey</darkgrey> skill "
         "will not be trained and ease the training of others. "
-        "Press <w>!</w> to learn about skill training and <w>?</w> to read "
-        "your skills' descriptions.";
+        "Press <w>?</w> to read your skills' descriptions.";
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
