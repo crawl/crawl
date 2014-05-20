@@ -346,6 +346,8 @@ void practise(exer_type ex, int param1)
     case EX_MONSTER_WILL_HIT:
         if (coinflip())
             _check_train_armour(coinflip() ? 2 : 1);
+        else if (coinflip())
+            exercise(SK_FIGHTING, 1);
         break;
 
     case EX_MONSTER_MAY_HIT:
