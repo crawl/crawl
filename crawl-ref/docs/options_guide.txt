@@ -65,15 +65,16 @@ The contents of this text are:
                 show_more, small_more, show_inventory_weights,
                 show_newturn_mark, show_gold_turns, show_game_turns,
                 item_stack_summary_minimum,
-                mlist_min_height, msg_min_height, msg_max_height,
+                mlist_min_height, mlist_allow_alternate_layout,
+                mlist_targeting, msg_min_height, msg_max_height,
                 messages_at_top, skill_focus,
-                mlist_allow_alternate_layout, mlist_targeting,
-                menu_colour, message_colour, force_more_message,
                 msg_condense_repeats, msg_condense_short, show_travel_trail,
-                monster_list_colour, view_delay
-3-j     Missiles.
+                monster_list_colour, view_delay, force_more_message
+3-j     Colours (messages and menus)
+                menu_colour, message_colour
+3-k     Missiles.
                 fire_items_start, fire_order
-3-k     Message Channels.
+3-l     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, talk, talk_visual, timed_portal, sound,
                 intrinsic_gain, mutation, monster_spell, monster_enchant,
@@ -81,12 +82,12 @@ The contents of this text are:
                 monster_target, banishment, rotten_meat, equipment, floor,
                 multiturn, examine, examine_filter, diagnostics, error,
                 tutorial, orb, hell_effect
-3-l     Inscriptions.
+3-m     Inscriptions.
                 autoinscribe, autoinscribe_cursed
-3-m     Macro related Options.
+3-n     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 additional_macro_file, bindkey
-3-n     Tiles Options.
+3-o     Tiles Options.
                 tile_show_items, tile_skip_title, tile_menu_icons,
                 tile_player_col, tile_monster_col, tile_neutral_col,
                 tile_peaceful_col, tile_friendly_col, tile_plant_col,
@@ -873,7 +874,7 @@ runrest_stop_message += <regex>, <regex>, ...
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 3-k below on Message
+        the channel name and a colon (see section 3-l below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message += god:wrath finds you
@@ -1327,6 +1328,18 @@ mlist_min_height = 4
         before letting the message area get more.
         (Note that the monster list is only available for ASCII.)
 
+mlist_allow_alternate_layout = false
+        Display the monster list wherever Crawl may find space on
+        your console display, usually to the left of the map, rather
+        than using the fixed position below the stat area.
+        This option is not supported in the tiles build.
+
+mlist_targeting = false
+        Using the monster list you can directly target monsters in targeting
+        mode. This can be toggled during a game with Ctrl-L while in targeting
+        mode, and this option controls the initial setting at game start or
+        reload.
+
 msg_min_height = 7
         You can reduce this to give more space to the map display. The
         minimum value is 5.
@@ -1343,17 +1356,68 @@ messages_at_top = false
         the last message close to the center of the view when not
         using clear_messages=true.
 
-mlist_allow_alternate_layout = false
-        Display the monster list wherever Crawl may find space on
-        your console display, usually to the left of the map, rather
-        than using the fixed position below the stat area.
-        This option is not supported in the tiles build.
+msg_condense_repeats = true
+        If the same message is repeated multiple times during the same
+        turn, then it will be output in a condensed format indicating
+        how many times it was repeated. If the same output (including the
+        counter) is repeated over several turns, the Show Previous Message
+        command (Ctrl-P) will likewise condense them into one. For example:
+            The killer bee misses you. x5
 
-mlist_targeting = false
-        Using the monster list you can directly target monsters in targeting
-        mode. This can be toggled during a game with Ctrl-L while in targeting
-        mode, and this option controls the initial setting at game start or
-        reload.
+msg_condense_short = true
+        If set, short messages on the same channel don't all start a new
+        line.
+
+show_travel_trail = false (defaults to true for online servers)
+        When set to true, the path taken during autoexplore or travel
+        will be highlighted. If a travel trail is currently being displayed,
+        the Clear Map command (Ctrl-C) clears the trail instead of the map
+        (pressing it a second time then clears the map as usual).
+
+skill_focus = true
+        When set to true, skills cycle between disabled, enabled and focus in
+        the skill screen. When set to false, they only toggle between enabled
+        and disabled. Setting the option to "toggle" adds a toggle to the skill
+        screen to change the behaviour in-game.
+
+monster_list_colour += <key>:<colour>, <key>:<colour>
+monster_list_colour -= <key>
+        (List option)
+        Change the colours used to display monster names in the monster list.
+        Valid keys, and their default colours, are:
+
+           Monster attitudes:
+             friendly       - green
+             neutral        - brown ("indifferent")
+             good_neutral   - brown ("peaceful")
+             strict_neutral - brown ("fellow slime")
+
+           Threat levels for hostile monsters:
+             trivial        - darkgrey
+             easy           - lightgrey
+             tough          - yellow
+             nasty          - lightred
+
+         Removing a key with -= currently has the same effect as setting its
+         colour to lightgrey.
+
+         Note that, for TSO worshippers, monsters whom it is forbidden to
+         attack will appear in the "evil colour" (magenta by default)
+         regardless of this option.
+
+view_delay = 600
+        Controls the speed of animations from, e.g., ranged and magical
+        attacks and invocations with visual effects.
+
+force_more_message += <regex>, <regex>
+        (List option)
+        Any message that contains a regex specified here, will enforce a
+        -More- prompt, so it can be used to highlight really important
+        events.
+        The syntax is identical to that of runrest_ignore_message (3-g).
+
+3-j     Colours (messages and menus)
+-----------------
 
 menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         (Ordered list option)
@@ -1454,67 +1518,7 @@ message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
         If you don't want to see a message at all, you can mute it:
              message_colour += mute:You start resting
 
-force_more_message += <regex>, <regex>
-        (List option)
-        Any message that contains a regex specified here, will enforce a
-        -More- prompt, so it can be used to highlight really important
-        events.
-        The syntax is identical to that of runrest_ignore_message (3-g).
-
-msg_condense_repeats = true
-        If the same message is repeated multiple times during the same
-        turn, then it will be output in a condensed format indicating
-        how many times it was repeated. If the same output (including the
-        counter) is repeated over several turns, the Show Previous Message
-        command (Ctrl-P) will likewise condense them into one. For example:
-            The killer bee misses you. x5
-
-msg_condense_short = true
-        If set, short messages on the same channel don't all start a new
-        line.
-
-show_travel_trail = false (defaults to true for online servers)
-        When set to true, the path taken during autoexplore or travel
-        will be highlighted. If a travel trail is currently being displayed,
-        the Clear Map command (Ctrl-C) clears the trail instead of the map
-        (pressing it a second time then clears the map as usual).
-
-skill_focus = true
-        When set to true, skills cycle between disabled, enabled and focus in
-        the skill screen. When set to false, they only toggle between enabled
-        and disabled. Setting the option to "toggle" adds a toggle to the skill
-        screen to change the behaviour in-game.
-
-monster_list_colour += <key>:<colour>, <key>:<colour>
-monster_list_colour -= <key>
-        (List option)
-        Change the colours used to display monster names in the monster list.
-        Valid keys, and their default colours, are:
-
-           Monster attitudes:
-             friendly       - green
-             neutral        - brown ("indifferent")
-             good_neutral   - brown ("peaceful")
-             strict_neutral - brown ("fellow slime")
-
-           Threat levels for hostile monsters:
-             trivial        - darkgrey
-             easy           - lightgrey
-             tough          - yellow
-             nasty          - lightred
-
-         Removing a key with -= currently has the same effect as setting its
-         colour to lightgrey.
-
-         Note that, for TSO worshippers, monsters whom it is forbidden to
-         attack will appear in the "evil colour" (magenta by default)
-         regardless of this option.
-
-view_delay = 600
-        Controls the speed of animations from, e.g., ranged and magical
-        attacks and invocations with visual effects.
-
-3-j     Missiles.
+3-k     Missiles.
 -----------------
 
 fire_items_start = a
@@ -1546,7 +1550,7 @@ fire_order += inscribed
 
 (See also pickup_thrown in 3-a.)
 
-3-k     Message Channels.
+3-l     Message Channels.
 -------------------------
 
 Crawl communicates to the players with its message window. Every message
@@ -1606,7 +1610,7 @@ COLOUR can be any of the colours described in section 5-a (colour option).
 The only multi-colour channels currently are monster_damage and god. All
 other channels are defaulted to on.
 
-3-l     Inscriptions.
+3-m     Inscriptions.
 ---------------------
 
 See the "Inscriptions" section of the crawl manual for more information
@@ -1640,7 +1644,7 @@ show_god_gift = unident|yes|no
         fully known. Regardless of this setting, you can see the item's
         origin in its description.
 
-3-m     Macro related Options.
+3-n     Macro related Options.
 ------------------------------
 
 flush.failure = true
@@ -1672,7 +1676,7 @@ bindkey = [^D] CMD_BUTCHER
         bind the same command to different keys.
         For a full list of possible commands, see keybind.txt.
 
-3-n     Tiles Options.
+3-o     Tiles Options.
 ----------------------
 In non-tile games the tile options are ignored.
 
