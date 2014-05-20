@@ -1306,7 +1306,7 @@ static const mutation_def mut_data[] =
   "antimagic bite"
 },
 
-{ MUT_NO_DEVICE_HEAL,                 7,  2, true,  false,  false,
+{ MUT_NO_DEVICE_HEAL,                 3,  2, true,  false,  false,
   "no device heal",
 
   {"Potions and wands are less effective at restoring your health.",
