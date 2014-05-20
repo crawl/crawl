@@ -2475,13 +2475,12 @@ void list_commands(int hotkey, bool do_redraw_screen, string highlight_string)
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    const bool hint_tuto = crawl_state.game_is_hints_tutorial();
-    if (hint_tuto)
+    if (crawl_state.game_is_hints_tutorial())
         _add_formatted_hints_help(cols);
     else
         _add_formatted_keyhelp(cols);
 
-    _show_keyhelp_menu(cols.formatted_lines(), !hint_tuto, Options.easy_exit_menu,
+    _show_keyhelp_menu(cols.formatted_lines(), true, Options.easy_exit_menu,
                        hotkey, highlight_string);
 
     if (do_redraw_screen)
