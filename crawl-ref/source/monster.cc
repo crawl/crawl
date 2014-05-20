@@ -1559,6 +1559,10 @@ static bool _is_signature_weapon(const monster* mons, const item_def &weapon)
             return wtype == WPN_DEMON_BLADE || wtype == WPN_DEMON_WHIP
                 || wtype == WPN_DEMON_TRIDENT;
         }
+
+        // Donald kept dropping his shield. I hate that.
+        if (mons->type == MONS_DONALD)
+            return mons->hands_reqd(weapon) == HANDS_ONE;
     }
 
     if (mons->is_holy())
