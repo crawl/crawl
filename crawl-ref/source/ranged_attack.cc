@@ -854,6 +854,9 @@ void ranged_attack::set_attack_verb()
 
 void ranged_attack::announce_hit()
 {
+    if (!needs_message)
+        return;
+
     mprf("%s %s %s%s%s%s",
          projectile->name(DESC_THE).c_str(),
          attack_verb.c_str(),
