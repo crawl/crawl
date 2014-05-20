@@ -240,7 +240,7 @@ bool ranged_attack::handle_phase_dodged()
                  defender->conj_verb("phase").c_str(),
                  projectile->name(DESC_THE).c_str(),
                  defender->pronoun(PRONOUN_OBJECTIVE).c_str(),
-                 attack_strength_punctuation().c_str());
+                 attack_strength_punctuation(damage_done).c_str());
         }
 
         return true;
@@ -252,7 +252,7 @@ bool ranged_attack::handle_phase_dodged()
              projectile->name(DESC_THE).c_str(),
              evasion_margin_adverb().c_str(),
              defender_name().c_str(),
-             attack_strength_punctuation().c_str());
+             attack_strength_punctuation(damage_done).c_str());
     }
 
     return true;
@@ -862,5 +862,5 @@ void ranged_attack::announce_hit()
              ? " in a vulnerable spot"
              : "",
          debug_damage_number().c_str(),
-         attack_strength_punctuation().c_str());
+         attack_strength_punctuation(damage_done).c_str());
 }

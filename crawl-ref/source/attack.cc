@@ -1125,32 +1125,11 @@ string attack::debug_damage_number()
 #endif
 }
 
-/* Returns special punctuation
- *
- * Used (mostly) for elemental or branded attacks (napalm, dragon slaying, orc
- * slaying, holy, etc.)
- */
-string attack::special_attack_punctuation()
-{
-    if (special_damage < 6)
-        return ".";
-    else
-        return "!";
-}
-
 /* Returns standard attack punctuation
  *
  * Used in player / monster (both primary and aux) attacks
  */
-string attack::attack_strength_punctuation()
-{
-    if (attacker->is_player())
-        return get_exclams(damage_done);
-    else
-        return damage_done < HIT_WEAK ? "." : "!";
-}
-
-string attack::get_exclams(int dmg)
+string attack::attack_strength_punctuation(int dmg)
 {
     if (dmg < HIT_WEAK)
         return ".";
@@ -1715,7 +1694,7 @@ bool attack::apply_damage_brand(const char *what)
                     "%s %s%s",
                     def_name(DESC_THE).c_str(),
                     defender->conj_verb("convulse").c_str(),
-                    special_attack_punctuation().c_str());
+                    attack_strength_punctuation(special_damage).c_str());
         }
         break;
 
@@ -1745,7 +1724,7 @@ bool attack::apply_damage_brand(const char *what)
                         "%s %s%s",
                         defender->name(DESC_THE).c_str(),
                         defender->conj_verb("convulse").c_str(),
-                        special_attack_punctuation().c_str());
+                        attack_strength_punctuation(special_damage).c_str());
             }
         }
         break;
@@ -1980,7 +1959,7 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
             what ? pluralise(verb).c_str() // XXX: may need to change this
                   : attacker->conj_verb(verb).c_str(),
             defender_name().c_str(),
-            special_attack_punctuation().c_str());
+            attack_strength_punctuation(special_damage).c_str());
     }
 }
 

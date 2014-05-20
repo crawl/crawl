@@ -169,9 +169,7 @@ protected:
 
     /* Output */
     string debug_damage_number();
-    string special_attack_punctuation();
-    string attack_strength_punctuation();
-    string get_exclams(int dmg);
+    string attack_strength_punctuation(int dmg);
     string evasion_margin_adverb();
 
     virtual void adjust_noise() = 0;
