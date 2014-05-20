@@ -705,6 +705,8 @@ Character
   further stat drain damages the player. The effects of a stat being at zero
   (fainting, slow actions, etc.) persist.
 * Ogre hunters and artificers now start with a club instead of a short sword.
+* Teleport control is a duration, which expires after time or use. It still
+  is disallowed on some levels.
 
 Monsters
 --------
@@ -923,6 +925,7 @@ Items
    - The knife of accuracy and boots of the Assassin are no more.
    - The lightning scales are now +6 (was +3).
 * Hammers do not generate outside of vaults.
+* Rings of teleport control must be evoked to work.
 
 Gods
 ----
