@@ -5056,12 +5056,11 @@ bool curare_hits_player(int death_source, int levels, string name,
     return hurted > 0;
 }
 
-void paralyse_player(string source, int amount, int factor)
+void paralyse_player(string source, int amount)
 {
     if (!amount)
         amount = 2 + random2(6 + you.duration[DUR_PARALYSIS] / BASELINE_DELAY);
 
-    amount /= factor;
     you.paralyse(NULL, amount, source);
 }
 
