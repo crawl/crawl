@@ -379,7 +379,7 @@ MONS:    steam dragon / mottled dragon / swamp drake
 MONS:    w:20 iguana / komodo dragon / giant gecko / crocodile / nothing
 SUBST:   ? = x.c
 SHUFFLE: %*RO
-KITEM:   R = w:2 honeycomb / w:1 royal jelly
+KITEM:   R = honeycomb
 KFEAT:   O = enter_lair
 
 MAP

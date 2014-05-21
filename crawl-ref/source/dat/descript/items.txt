@@ -1148,11 +1148,6 @@ rod of the swarm
 
 This rod allows its wielder to summon a swarm of insects.
 %%%%
-royal jelly
-
-A particularly rich and golden gelatinous thing. Consuming it will restore lost
-abilities, in addition to the nutrition it provides.
-%%%%
 rune of zot
 
 A talisman which allows entry into Zot's domain.

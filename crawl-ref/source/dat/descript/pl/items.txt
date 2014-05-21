@@ -576,11 +576,6 @@ rod of the swarm
 
 Ten pręt pozwala przyzwać chmarę owadów.
 %%%%
-royal jelly
-
-Lekko złotawa galaretowata substancja, wyjątkowo bogata w składniki odżywcze.
-Oprócz wartości pokarmowych, pozwala także odzyskać utracone siły.
-%%%%
 rune of zot
 
 Talizman który pozwala otworzyć bramę do krainy Zot.

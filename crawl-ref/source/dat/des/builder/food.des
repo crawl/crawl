@@ -64,14 +64,14 @@ x.1xxx
 x+xxxx
 ENDMAP
 
-# 18.6k, min 14k
+# 14k
 NAME:   david_nohive_1
 DEPTH:  D:8-14
 : food_weight(_G, 8)
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
-ITEM:   w:2 honeycomb no_mimic / w:1 royal jelly no_mimic
+ITEM:   honeycomb no_mimic
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
@@ -173,7 +173,7 @@ KMONS:  B = ooze
 : if you.absdepth() > 10 then
 KMONS:  C = slime creature
 : end
-KITEM:  C = royal jelly q:4 no_mimic / royal jelly q:6 no_mimic
+KITEM:  C = honeycomb q:10 no_mimic / honeycomb q:15 no_mimic
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
 MAP
@@ -296,8 +296,7 @@ KMONS:   F = human
 KMONS:   G = necrophage
 KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 no_pickup / large rock q:1 w:5
-KITEM:   Ya = royal jelly no_mimic / meat ration no_mimic / \
-              bread ration no_mimic
+KITEM:   Ya = bread ration no_mimic / meat ration no_mimic
 KITEM:   b = honeycomb no_mimic / cheese no_mimic / apricot q:2 no_mimic / \
              apple q:2 no_mimic / choko q:2 no_mimic
 KFEAT:   1Yab = shallow_water

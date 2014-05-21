@@ -84,7 +84,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
         text += fs.tostring(2, -2);
     }
 
-    // Include singular form (royal jelly vs royal jellies).
+    // Include singular form (slice of pizza vs slices of pizza).
     if (item->quantity > 1)
     {
         text += "\n";

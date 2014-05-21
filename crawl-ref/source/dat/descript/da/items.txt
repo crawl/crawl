@@ -690,11 +690,6 @@ rod of the swarm
 
 Denne stok lader brugeren hidkalde en sværm af insekter.
 %%%%
-royal jelly
-
-En særligt fed og gylden geléagtig tingest. Hvis du indtager den, giver den,
-udover næring, dig dine tabte evner tilbage.
-%%%%
 rune of zot
 
 En talisman, som lader dig træde ind i Zots domæne.

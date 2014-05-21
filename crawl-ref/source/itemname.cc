@@ -1575,7 +1575,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_APPLE: buff << "apple"; break;
         case FOOD_CHOKO: buff << "choko"; break;
         case FOOD_HONEYCOMB: buff << "honeycomb"; break;
-        case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_SNOZZCUMBER: buff << "snozzcumber"; break;
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_APRICOT: buff << "apricot"; break;

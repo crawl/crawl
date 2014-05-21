@@ -131,7 +131,7 @@ SUBST:  ? : .w
 SUBST:  1 = 1 a:2, 1 : 1:15 2 3:2
 SUBST:  * : * R:3
 KITEM:  * = *
-KITEM:  R = honeycomb w:20 / royal jelly
+KITEM:  R = honeycomb
 COLOUR: x = yellow
 TILE:   x = wall_wax
 MAP
@@ -154,7 +154,7 @@ NAME:   minivault_7
 TAGS:   uniq_beehive
 DEPTH:  D:9-
 MONS:   patrolling queen bee, patrolling killer bee
-KITEM:  R = honeycomb w:20 / royal jelly
+KITEM:  R = honeycomb
 COLOUR: x = yellow
 TILE:   x = wall_wax
 MAP
@@ -1817,7 +1817,7 @@ MONS:  ettin ; rod of the swarm ident:type . great mace
 : end
 MONS:  killer bee w:3 / wolf spider w:1 / scorpion w:1 / worm w:1
 MONS:  worker ant w:3 / vampire mosquito w:1 / goliath beetle w:1 / yellow wasp w:1
-ITEM:  royal jelly
+ITEM: honeycomb
 MAP
 xxxxxx
 x32*dx
@@ -2851,7 +2851,7 @@ NAME:    minislime_mu
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   Depths, !Depths:$
 MONS:    large slime creature, great orb of eyes, eye of draining
-KITEM:   R = royal jelly
+KITEM:   R = honeycomb
 ITEM:    ring of teleportation / scroll of teleportation w:30 q:2
 ITEM:    wand of digging / wand of disintegration
 ITEM:    stone of tremors

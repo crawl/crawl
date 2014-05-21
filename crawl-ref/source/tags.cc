@@ -3690,9 +3690,19 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
-    // Replace War Chants with Battle to avoid empty-book errors.
-    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_WAR_CHANTS)
-        item.sub_type = BOOK_BATTLE;
+    if (th.getMinorVersion() < TAG_MINOR_NO_POT_FOOD)
+    {
+        // Replace War Chants with Battle to avoid empty-book errors.
+
+        // Moved under TAG_MINOR_NO_POT_FOOD because it was formerly
+        // not restricted to a particular range of minor tags.
+        if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_WAR_CHANTS)
+            item.sub_type = BOOK_BATTLE;
+
+        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_ROYAL_JELLY)
+            item.sub_type = FOOD_HONEYCOMB;
+    }
+
 #endif
 
     if (is_unrandom_artefact(item))
