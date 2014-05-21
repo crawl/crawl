@@ -565,7 +565,6 @@ lychee FOOD_LYCHEE
 beef_jerky FOOD_BEEF_JERKY
 cheese FOOD_CHEESE
 sausage FOOD_SAUSAGE
-piece_of_ambrosia FOOD_AMBROSIA
 %rim 0
 bone_humanoid1 FOOD_BONE_HUMANOID
 bone_humanoid2

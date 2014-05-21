@@ -675,12 +675,6 @@ Un récipient enchanté qui déborde d'eau élémentaire. Retirer le bouchon dé
 un torrent d'eau de la fiole et libère les esprits de l'eau qui résident à
 l'intérieur.
 %%%%
-piece of ambrosia
-
-Une partie de l'étrange substance produite par les papillons de nuits fantômes.
-Le consommer fournit de l'énergie magique ainsi que la nutrition, au prix d'une
-perte de concentration mentale pour une courte période.
-%%%%
 potion of agility
 
 Une potion magique qui augmente considérablement la dextérité et l'esquive de

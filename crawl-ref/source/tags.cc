@@ -3699,8 +3699,11 @@ void unmarshallItem(reader &th, item_def &item)
         if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_WAR_CHANTS)
             item.sub_type = BOOK_BATTLE;
 
-        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_ROYAL_JELLY)
+        if (item.base_type == OBJ_FOOD && (item.sub_type == FOOD_ROYAL_JELLY
+                                           || item.sub_type == FOOD_AMBROSIA))
+        {
             item.sub_type = FOOD_HONEYCOMB;
+        }
     }
 
 #endif

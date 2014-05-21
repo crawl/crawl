@@ -827,12 +827,6 @@ An enchanted vessel brimming over with elemental water. Removing the stopper
 unleashes a torrent of water from the phial and sets free the water spirits
 that dwell within it.
 %%%%
-piece of ambrosia
-
-A portion of strange substance, produced by ghost moths. Consuming it provides
-magical energy as well as nutrition, at the cost of losing your mental focus
-for a short period.
-%%%%
 plate armour
 
 A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate

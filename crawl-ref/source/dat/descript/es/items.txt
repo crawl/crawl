@@ -378,12 +378,6 @@ La escamosa piel de un dragón nacarado. Puede usarse para elaborar una armadura
 propiamente dicha, pero incluso en esta basta forma proporciona protección
 contra la energía negativa.
 %%%%
-piece of ambrosia
-
-Un poco una extraña sustancia producida por la polillas fantasma. Su consumo
-proporciona tanto energía mágica como sustento, pero perderás tu concentración
-mental durante un corto periodo de tiempo.
-%%%%
 potion of agility
 
 Una poción mágica que incrementa muy considerablemente la destreza y elusividad
