@@ -1472,11 +1472,11 @@ static bool _need_missile_gift(bool forced)
     // Default to throwing if all missile skills are at zero.
     if (you.skills[sk] == 0)
         sk = SK_THROWING;
-    return (forced
-            || (you.piety >= piety_breakpoint(2)
-                && random2(you.piety) > 70
-                && one_chance_in(8)
-                && x_chance_in_y(1 + you.skills[sk], 12)));
+    return forced
+           || (you.piety >= piety_breakpoint(2)
+               && random2(you.piety) > 70
+               && one_chance_in(8)
+               && x_chance_in_y(1 + you.skills[sk], 12));
 }
 
 static bool _give_nemelex_gift(bool forced = false)
