@@ -69,7 +69,7 @@ int ranged_attack::calc_to_hit(bool random)
     {
         orig_to_hit +=
             (attacker->is_player())
-            ? random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4)
+            ? maybe_random2(you.attribute[ATTR_PORTAL_PROJECTILE] / 4, random)
             : 3 * attacker->as_monster()->hit_dice;
     }
 
