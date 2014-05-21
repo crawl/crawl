@@ -742,7 +742,7 @@ static void _display_vampire_attributes()
 
     string result;
 
-    const int lines = 14;
+    const int lines = 13;
     string column[lines][7] =
     {
         {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
@@ -769,9 +769,7 @@ static void _display_vampire_attributes()
         {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
 
         {"\n<w>Other effects</w>\n"
-         "Mutation chance      ", "always     ", "often   ", "sometimes ", "never    ", "never    ", "never "},
-
-        {"Non-physical \n"
+         "Non-physical \n"
          "mutation effects     ", "full       ", "capped  ", "capped    ", "none     ", "none     ", "none  "},
 
         {"Bat Form             ", "no         ", "no      ", "yes       ", "yes      ", "yes      ", "yes   "},
@@ -1484,23 +1482,11 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
-bool undead_mutation_rot(bool is_beneficial_mutation)
+// Undead can't be mutated, and fall apart instead.
+// Vampires mutate as normal.
+bool undead_mutation_rot()
 {
-    if (you.is_undead == US_SEMI_UNDEAD)
-    {
-        if (is_beneficial_mutation)
-            return false;
-        switch (you.hunger_state)
-        {
-        case HS_SATIATED:  return !one_chance_in(3);
-        case HS_FULL:      return coinflip();
-        case HS_VERY_FULL: return one_chance_in(3);
-        case HS_ENGORGED:  return false;
-        default: return true;
-        }
-    }
-
-    return you.is_undead;
+    return you.is_undead && you.is_undead != US_SEMI_UNDEAD;
 }
 
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
@@ -1560,7 +1546,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     // Undead bodies don't mutate, they fall apart. -- bwr
     // except for demonspawn (or other permamutations) in lichform -- haranp
-    if (undead_mutation_rot(beneficial) && !demonspawn)
+    if (undead_mutation_rot() && !demonspawn)
     {
         if (no_rot)
             return false;
@@ -1934,7 +1920,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
             }
         }
 
-        if (undead_mutation_rot(false))
+        if (undead_mutation_rot())
             return false;
     }
 
