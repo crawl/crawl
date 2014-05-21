@@ -57,6 +57,7 @@ private:
     const item_def *projectile;
     bool teleport;
     int orig_to_hit;
+    bool should_alert_defender;
 };
 
 #endif
