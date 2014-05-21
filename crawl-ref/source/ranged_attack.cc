@@ -29,7 +29,7 @@ ranged_attack::ranged_attack(actor *attk, actor *defn, item_def *proj,
                              bool tele) :
                              ::attack(attk, defn), range_used(0),
                              reflected(false), projectile(proj), teleport(tele),
-                             orig_to_hit(0)
+                             orig_to_hit(0), should_alert_defender(true)
 {
     init_attack(SK_THROWING, 0);
     kill_type = KILLED_BY_BEAM;
@@ -139,7 +139,8 @@ bool ranged_attack::attack()
 
     // TODO: adjust_noise
 
-    alert_defender();
+    if (should_alert_defender)
+        alert_defender();
 
     if (!defender->alive())
         handle_phase_killed();
@@ -315,7 +316,8 @@ bool ranged_attack::handle_phase_hit()
     }
 
     // XXX: unify this with melee_attack's code
-    if (attacker->is_player() && defender->is_monster())
+    if (attacker->is_player() && defender->is_monster()
+        && should_alert_defender)
     {
         behaviour_event(defender->as_monster(), ME_WHACK, attacker,
                         coord_def(), !stab_attempt);
@@ -767,6 +769,7 @@ bool ranged_attack::apply_missile_brand()
         if (!blowgun_check(brand))
             break;
         defender->put_to_sleep(attacker, damage_done);
+        should_alert_defender = false;
         break;
     case SPMSL_CONFUSION:
         if (!blowgun_check(brand))
