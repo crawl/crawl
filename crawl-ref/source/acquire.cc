@@ -386,11 +386,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
 {
     // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
-    {
-        type_wanted = random_choose_weighted(4, FOOD_CHUNK,
-                                             1, FOOD_AMBROSIA,
-                                             0);
-    }
+        type_wanted = FOOD_CHUNK;
     else if (you.species == SP_VAMPIRE)
     {
         // Vampires really don't want any OBJ_FOOD but OBJ_CORPSES
@@ -407,7 +403,6 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     {
         type_wanted = random_choose_weighted(
                         6, FOOD_HONEYCOMB,
-                        3, FOOD_AMBROSIA,
                         1, player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
                                                                   : FOOD_MEAT_RATION,
                         0);

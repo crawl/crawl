@@ -505,12 +505,6 @@ Dette fortryllede kar er ved at flyde over af elementarvand. Hvis man fjerner
 proppen, flyder en rivende strøm af vand fra karret og slipper vandånderne i
 den fri.
 %%%%
-piece of ambrosia
-
-En del af en sælsom substans, som spøgelsesmøl producerer. Man får både magisk
-energi og næring, når man spiser den, på bekostning af at miste sit mentale
-fokus i en kort periode.
-%%%%
 potion of agility
 
 En trylledrik, som øger din behændighed og din evne til at undvige

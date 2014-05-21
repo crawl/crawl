@@ -624,7 +624,9 @@ enum food_type
     FOOD_CHEESE,
     FOOD_SAUSAGE,
     FOOD_CHUNK,
+#if TAG_MAJOR_VERSION == 34
     FOOD_AMBROSIA,
+#endif
     NUM_FOODS
 };
 

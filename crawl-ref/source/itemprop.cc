@@ -429,7 +429,6 @@ static const food_def Food_prop[NUM_FOODS] =
     { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 2, FFL_NONE },
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2, FFL_NONE },
     { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_AMBROSIA,     "ambrosia",     2500,     0,     0,  40, 1, FFL_NONE },
 };
 
 // Must call this functions early on so that the above tables can

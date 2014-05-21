@@ -452,12 +452,6 @@ seiner rohen Form bietet es nicht viel Schutz, aber mit magischen Hilfsmitteln
 kann es womöglich verwendet werden, um eine ausgezeichnete Rüstung
 herzustellen.
 %%%%
-piece of ambrosia
-
-Ein Teil von Geistesnachtfaltern produzierter fremder Substanz. Es zu
-konsumieren, liefert magische sowohl Energie als auch Ernährung zu den Kosten,
-Ihren geistigen Fokus zu verlieren, für eine kurze Periode
-%%%%
 potion of agility
 
 Ein zauberhafter Trank, der das Geschick und Ausweichen von eins sehr steigert,
