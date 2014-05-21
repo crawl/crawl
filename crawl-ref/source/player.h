@@ -994,7 +994,7 @@ bool curare_hits_player(int death_source, int levels, string name,
                         string source_name);
 bool poison_player(int amount, string source, string source_aux = "",
                    bool force = false);
-void paralyse_player(string source, int amount = 0, int factor = 1);
+void paralyse_player(string source, int amount = 0);
 void handle_player_poison(int delay);
 void reduce_player_poison(int amount);
 int get_player_poisoning();

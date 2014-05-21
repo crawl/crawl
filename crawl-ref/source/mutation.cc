@@ -742,7 +742,7 @@ static void _display_vampire_attributes()
 
     string result;
 
-    const int lines = 15;
+    const int lines = 14;
     string column[lines][7] =
     {
         {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
@@ -773,8 +773,6 @@ static void _display_vampire_attributes()
 
         {"Non-physical \n"
          "mutation effects     ", "full       ", "capped  ", "capped    ", "none     ", "none     ", "none  "},
-
-        {"Potion effects       ", "full       ", "full    ", "full      ", "halved   ", "halved   ", "halved"},
 
         {"Bat Form             ", "no         ", "no      ", "yes       ", "yes      ", "yes      ", "yes   "},
 

@@ -50,12 +50,11 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 {
     pow = min(pow, 150);
 
-    int factor = (you.species == SP_VAMPIRE
-                  && you.hunger_state < HS_SATIATED
-                  && potion ? 2 : 1);
+    // Reduced effect for healing potions.
+    int factor = you.mutation[MUT_NO_DEVICE_HEAL] ? 2 : 1;
 
     // Knowingly drinking bad potions is much less amusing.
-    int xom_factor = factor;
+    int xom_factor = 1;
     if (potion && was_known)
     {
         xom_factor *= 2;
@@ -87,9 +86,6 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             mpr("You have no ailments to cure.");
             return false;
         }
-
-        if (you.mutation[MUT_NO_DEVICE_HEAL])
-            factor = 2;
 
         if (you.can_device_heal())
             inc_hp((5 + random2(7)) / factor);
@@ -132,16 +128,13 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             break;
         }
 
-        if (you.mutation[MUT_NO_DEVICE_HEAL])
-            factor = 2;
-
         inc_hp((10 + random2avg(28, 3)) / factor);
         mpr("You feel much better.");
 
         // only fix rot when healed to full
         if (you.hp == you.hp_max)
         {
-            unrot_hp((2 + random2avg(5, 2)) / factor);
+            unrot_hp(2 + random2avg(5, 2));
             set_hp(you.hp_max);
         }
         break;
@@ -201,7 +194,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             return false;
         }
 
-        if (haste_player((40 + random2(pow)) / factor))
+        if (haste_player(40 + random2(pow)))
             did_god_conduct(DID_HASTY, 10, was_known);
         break;
 
@@ -212,7 +205,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
 
-        you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
+        you.increase_duration(DUR_MIGHT, 35 + random2(pow), 80);
 
         if (!were_mighty)
             notify_stat_change(STAT_STR, 5, true, "");
@@ -226,8 +219,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_brilliant ? "more clever" : "clever");
 
-        you.increase_duration(DUR_BRILLIANCE,
-                              (35 + random2(pow)) / factor, 80);
+        you.increase_duration(DUR_BRILLIANCE, 35 + random2(pow), 80);
 
         if (!were_brilliant)
             notify_stat_change(STAT_INT, 5, true, "");
@@ -241,7 +233,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_agile ? "more agile" : "agile");
 
-        you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
+        you.increase_duration(DUR_AGILITY, 35 + random2(pow), 80);
 
         if (!were_agile)
             notify_stat_change(STAT_DEX, 5, true, "");
@@ -308,17 +300,17 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_SLOWING:
-        if (slow_player((10 + random2(pow)) / factor))
+        if (slow_player(10 + random2(pow)))
             xom_is_stimulated(50 / xom_factor);
         break;
 
     case POT_PARALYSIS:
-        paralyse_player("a potion of paralysis", 0, factor);
+        paralyse_player("a potion of paralysis");
         xom_is_stimulated(50 / xom_factor);
         break;
 
     case POT_CONFUSION:
-        if (confuse_player((3 + random2(8)) / factor))
+        if (confuse_player(3 + random2(8)))
             xom_is_stimulated(100 / xom_factor);
         break;
 
@@ -388,7 +380,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         if (potion)
             mpr("There was something very wrong with that liquid!");
 
-        if (lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)) / factor, false,
+        if (lose_stat(STAT_RANDOM, 1 + random2avg(4, 2), false,
                       "drinking a potion of degeneration"))
         {
             xom_is_stimulated(50 / xom_factor);
@@ -397,7 +389,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
     // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
-        if (you.rot(&you, 0, (3 + random2(3)) / factor))
+        if (you.rot(&you, 0, 3 + random2(3)))
             xom_is_stimulated(50 / xom_factor);
         break;
 
@@ -528,7 +520,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
     case POT_RESISTANCE:
         mprf(MSGCH_DURATION, "You feel protected.");
-        you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);
+        you.increase_duration(DUR_RESISTANCE, random2(pow) + 35);
         break;
 
     case POT_LIGNIFY:
