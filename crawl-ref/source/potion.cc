@@ -463,7 +463,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_CURE_MUTATION:
-        if (potion && was_known && undead_mutation_rot(true))
+        if (potion && was_known && undead_mutation_rot())
         {
             mpr(you.form == TRAN_LICH ? "You cannot mutate at present."
                                       : "You cannot mutate.");
@@ -476,7 +476,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_MUTATION:
-        if (potion && was_known && undead_mutation_rot(true))
+        if (potion && was_known && undead_mutation_rot())
         {
             mpr(you.form == TRAN_LICH ? "You cannot mutate at present."
                                       : "You cannot mutate.");
@@ -492,7 +492,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         break;
 
     case POT_BENEFICIAL_MUTATION:
-        if (undead_mutation_rot(true))
+        if (undead_mutation_rot())
         {
             if (potion && was_known)
             {

@@ -3074,11 +3074,6 @@ bool is_bad_item(const item_def &item, bool temp)
             // Poison is not that bad if you're poison resistant.
             return player_res_poison(false) <= 0
                    || !temp && you.species == SP_VAMPIRE;
-        case POT_MUTATION:
-            // Not bad_item, just useless, for mummies, ghouls, and liches,
-            // as they can't even drink known mutation potions.
-            return temp && you.species == SP_VAMPIRE
-                   && you.hunger_state < HS_SATIATED;
         default:
             return false;
         }
@@ -3147,8 +3142,11 @@ bool is_dangerous_item(const item_def &item, bool temp)
         switch (item.sub_type)
         {
         case POT_MUTATION:
+            // Non-vampire undead can't be mutated.
+            return !you.is_undead
+                   || you.is_undead == US_SEMI_UNDEAD;
         case POT_LIGNIFY:
-            // Only living characters can mutate or change form
+            // Only living characters can change form.
             return !you.is_undead
                    || temp && you.species == SP_VAMPIRE
                       && you.hunger_state >= HS_SATIATED;
@@ -3353,14 +3351,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
 #endif
-            if (you.species == SP_VAMPIRE)
-            {
-                return temp && you.hunger_state < HS_SATIATED
-                       && item.sub_type != POT_BENEFICIAL_MUTATION;
-            }
             if (you.form == TRAN_LICH)
                 return temp;
-            return you.is_undead;
+            return you.is_undead && you.is_undead != US_SEMI_UNDEAD;
 
         case POT_LIGNIFY:
             return you.is_undead
