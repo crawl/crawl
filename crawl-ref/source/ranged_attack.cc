@@ -777,7 +777,13 @@ bool ranged_attack::apply_missile_brand()
         if (!blowgun_check(brand))
             break;
         if (defender->is_monster())
-            defender->as_monster()->go_frenzy(attacker);
+        {
+            monster* mon = defender->as_monster();
+            // Wake up the monster so that it can frenzy.
+            if (mon->behaviour == BEH_SLEEP)
+                mon->behaviour = BEH_WANDER;
+            mon->go_frenzy(attacker);
+        }
         else
             defender->go_berserk(false);
         break;
