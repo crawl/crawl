@@ -4166,6 +4166,13 @@ void corrode_item(item_def &item, actor *holder)
     if (item.base_type != OBJ_ARMOUR && item.base_type != OBJ_WEAPONS)
         return;
 
+    // Don't corrode spectral weapons.
+    if (holder && holder->is_monster()
+        && mons_is_avatar(holder->as_monster()->type))
+    {
+        return;
+    }
+
     // Anti-corrosion items protect against 90% of corrosion.
     if (holder && holder->res_corr() && !one_chance_in(10))
     {
