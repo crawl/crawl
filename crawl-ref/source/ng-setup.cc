@@ -231,7 +231,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 1;
         break;
     case SP_HALFLING:
-        you.mutation[MUT_SLOW_METABOLISM]     = 1;
         you.mutation[MUT_MUTATION_RESISTANCE] = 1;
         break;
     case SP_MINOTAUR:
@@ -247,8 +246,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 3;
         you.mutation[MUT_FAST]            = 2;
         you.mutation[MUT_DEFORMED]        = 1;
-        you.mutation[MUT_FAST_METABOLISM] = 1;
-        you.mutation[MUT_HERBIVOROUS]     = 1;
         you.mutation[MUT_HOOVES]          = 3;
         break;
     case SP_NAGA:

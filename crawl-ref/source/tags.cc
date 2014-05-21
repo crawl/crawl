@@ -2582,12 +2582,14 @@ static void tag_read_you(reader &th)
             you.innate_mutation[MUT_NO_DEVICE_HEAL] = 2;
         }
     }
+
     if (th.getMinorVersion() < TAG_MINOR_DIET_MUT)
     {
         you.mutation[MUT_CARNIVOROUS] = you.innate_mutation[MUT_CARNIVOROUS];
         you.mutation[MUT_HERBIVOROUS] = you.innate_mutation[MUT_HERBIVOROUS];
 
     }
+
     if (th.getMinorVersion() < TAG_MINOR_SAPROVOROUS)
     {
         if (you.species == SP_LAVA_ORC || you.species == SP_HILL_ORC
@@ -2603,6 +2605,24 @@ static void tag_read_you(reader &th)
             you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
         }
     }
+
+    if (th.getMinorVersion() < TAG_MINOR_CE_HA_DIET)
+    {
+        if (you.species == SP_CENTAUR)
+        {
+            you.mutation[MUT_FAST_METABOLISM] -= 1;
+            you.innate_mutation[MUT_FAST_METABOLISM] -= 1;
+
+            you.mutation[MUT_HERBIVOROUS] -= 1;
+            you.innate_mutation[MUT_HERBIVOROUS] -= 1;
+        }
+        else if (you.species == SP_HALFLING)
+        {
+            you.mutation[MUT_SLOW_METABOLISM] -= 1;
+            you.innate_mutation[MUT_SLOW_METABOLISM] -= 1;
+        }
+    }
+
 #endif
 
     count = unmarshallUByte(th);
