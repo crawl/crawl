@@ -1466,32 +1466,17 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
     return created;
 }
 
-static const item_def* _find_missile_launcher(int skill)
-{
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (!you.inv[i].defined())
-            continue;
-
-        const item_def &item = you.inv[i];
-        if (is_range_weapon(item)
-            && range_skill(item) == skill_type(skill))
-        {
-            return &item;
-        }
-    }
-    return NULL;
-}
-
 static bool _need_missile_gift(bool forced)
 {
-    const skill_type sk = best_skill(SK_SLINGS, SK_THROWING);
-    if (sk != SK_THROWING && !_find_missile_launcher(sk))
-        return false;
-    return (forced || you.piety >= piety_breakpoint(2)
-                      && random2(you.piety) > 70
-                      && one_chance_in(8))
-           && you.skills[sk] /* no skill boosts */ >= 8;
+    skill_type sk = best_skill(SK_SLINGS, SK_THROWING);
+    // Default to throwing if all missile skills are at zero.
+    if (you.skills[sk] == 0)
+        sk = SK_THROWING;
+    return (forced
+            || (you.piety >= piety_breakpoint(2)
+                && random2(you.piety) > 70
+                && one_chance_in(8)
+                && x_chance_in_y(1 + you.skills[sk], 12)));
 }
 
 static bool _give_nemelex_gift(bool forced = false)
@@ -2266,7 +2251,7 @@ bool do_god_gift(bool forced)
             const bool need_missiles = _need_missile_gift(forced);
             object_class_type gift_type;
 
-            if (forced && (!need_missiles || one_chance_in(4))
+            if (forced && coinflip()
                 || (!forced && you.piety >= piety_breakpoint(4)
                     && random2(you.piety) > 120
                     && one_chance_in(4)))
