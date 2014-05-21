@@ -1464,13 +1464,14 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
         The following only apply to items whose subtype is known.
            forbidden       (Your god would hate it if you used this item.)
-
            emergency_item  (This item is invaluable in emergencies.)
            good_item       (This item is generally a good item.)
            dangerous_item  (Using this item can be dangerous.)
            bad_item        (This item is generally a bad item.)
            useless_item    (This item is of no use to you.)
 
+        The following apply only to items of certain base types, whether
+        identified or not:
            inedible        (You cannot eat this, or get no nutrition from it.)
            preferred       (The food type your character prefers, for example
                             for herbivores/carnivores.)
@@ -1481,7 +1482,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
            equipped        (Equipped items.)
            artefact        (For artefacts, whether identified or not.)
-           melee           (Melee weapons.)
+           melee           (Melee weapons, including rods and magical staves.)
            ranged          (Ranged weapons.)
 
         When looking for menu_colour matches, these prefixes are prepended to
