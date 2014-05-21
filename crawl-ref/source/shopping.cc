@@ -1489,10 +1489,6 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_FOOD:
         switch (item.sub_type)
         {
-        case FOOD_ROYAL_JELLY:
-            valued = 120;
-            break;
-
         case FOOD_MEAT_RATION:
             valued = 50;
             break;

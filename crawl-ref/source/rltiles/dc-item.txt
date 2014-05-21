@@ -551,7 +551,6 @@ pear FOOD_PEAR
 apple FOOD_APPLE
 choko FOOD_CHOKO
 honeycomb FOOD_HONEYCOMB
-lump_of_royal_jelly FOOD_ROYAL_JELLY
 snozzcumber FOOD_SNOZZCUMBER
 pizza FOOD_PIZZA
 apricot FOOD_APRICOT

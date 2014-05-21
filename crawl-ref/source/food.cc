@@ -1849,10 +1849,6 @@ void finished_eating_message(int food_type)
     case FOOD_HONEYCOMB:
         mpr("That honeycomb was delicious!");
         break;
-    case FOOD_ROYAL_JELLY:
-        mpr("That royal jelly was delicious!");
-        restore_stat(STAT_ALL, 0, false);
-        break;
     case FOOD_AMBROSIA:                       // XXX: could put some more
         mpr("That ambrosia tasted strange."); // inspired messages here --evk
         potion_effect(POT_CONFUSION, 0, nullptr, false);
@@ -2103,10 +2099,6 @@ bool is_preferred_food(const item_def &food)
     // Poisoned, mutagenic, etc. food should never be marked as "preferred".
     if (is_bad_food(food))
         return false;
-
-    // Royal jellies restore stats for everyone.
-    if (food.sub_type == FOOD_ROYAL_JELLY)
-        return true;
 
     // Ghouls specifically like rotten food.
     if (you.species == SP_GHOUL)

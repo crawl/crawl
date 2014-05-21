@@ -94,7 +94,7 @@ WEIGHT: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
 NSUBST: ' = 1:1 / 2:R / *:.
-KITEM:  R = w:2 honeycomb / w:1 royal jelly
+KITEM:  R = honeycomb
 MONS:   patrolling black bear
 MAP
 xxxxxxxxxxxxxxx
@@ -112,7 +112,7 @@ WEIGHT: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
 NSUBST: ' = 1:1 / 2:R / *:.
-KITEM:  R = w:2 honeycomb / w:1 royal jelly
+KITEM:  R = honeycomb
 MONS:   patrolling black bear
 MAP
 xxxxxxxx@xx
@@ -1440,7 +1440,7 @@ DEPTH:   D:12-
 ORIENT:  north
 MONS:    killer bee, queen bee, oklob plant
 KFEAT:   X = x
-ITEM:    honeycomb / royal jelly w:1, honeycomb w:4 / royal jelly
+ITEM:    honeycomb / honeycomb / honeycomb
 KITEM:   | = |
 SUBST:   A = X:3 .:2, z = x.., ' = .:460 01d%
 : if you.absdepth() > 14 then

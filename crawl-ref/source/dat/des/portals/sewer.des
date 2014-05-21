@@ -660,8 +660,8 @@ KMONS:  4 = Purgy, giant slug
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration /\
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of random uselessness / meat ration / royal jelly / \
-        potion of blood / nothing w:140
+        scroll of random uselessness / meat ration / potion of blood / \
+        nothing w:140
 : sewer_setup(_G)
 MAP
    ccccccccc
@@ -788,8 +788,8 @@ KMONS:  2 = purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration / \
         scroll of blinking / scroll of teleportation / scroll of fear / \
-        scroll of random uselessness / meat ration / royal jelly / \
-        potion of blood / nothing w:140
+        scroll of random uselessness / meat ration / potion of blood / \
+        nothing w:140
 NSUBST: e = 3:* / 9:d / *:.
 NSUBST: 0 = 5:1 / 1:2 / *:.
 KFEAT:  ' = deep_water

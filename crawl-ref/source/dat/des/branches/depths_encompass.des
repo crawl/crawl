@@ -232,7 +232,7 @@ KMONS:   Z = queen bee
 ITEM:    ring of teleportation
 ITEM:    scroll of teleportation
 ITEM:    amulet of stasis
-KITEM:   gzZ = royal jelly / honeycomb w:20 / nothing w:120
+KITEM:   gzZ = honeycomb w:10 / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w
 KFEAT:   ^ = known teleport trap / known Zot trap

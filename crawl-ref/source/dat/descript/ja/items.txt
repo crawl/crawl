@@ -562,11 +562,6 @@ rod of the swarm
 
 このロッドは手にしている者に昆虫の群れを召喚することを可能にする。
 %%%%
-royal jelly
-
-とりわけ豪華な、金色をしたゼリー状の存在だ。 Consuming it will restore lost
-abilities, in addition to the nutrition it provides.
-%%%%
 rune of zot
 
 ゾットの領域に訪れることを可能にする御守りだ。

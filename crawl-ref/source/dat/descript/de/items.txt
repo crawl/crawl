@@ -624,12 +624,6 @@ rod of the swarm
 
 Dieser Stab erlaubt seinem Benutzer einen Schwarm Insekten zu rufen.
 %%%%
-royal jelly
-
-Eine besonders reiche und goldene gallertartige Sache. Der Konsum wird
-verlorene Fähigkeiten wieder herstellen, zusätzlich zu der Ernährung die es
-bietet.
-%%%%
 rune of zot
 
 Ein Talisman, der Eintritt in Zots Reich gewährt.

@@ -388,7 +388,6 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     if (you.species == SP_GHOUL)
     {
         type_wanted = random_choose_weighted(4, FOOD_CHUNK,
-                                             2, FOOD_ROYAL_JELLY,
                                              1, FOOD_AMBROSIA,
                                              0);
     }
@@ -407,11 +406,10 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     else
     {
         type_wanted = random_choose_weighted(
-                        5, FOOD_ROYAL_JELLY,
+                        6, FOOD_HONEYCOMB,
                         3, FOOD_AMBROSIA,
                         1, player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
                                                                   : FOOD_MEAT_RATION,
-                        1, FOOD_HONEYCOMB,
                         0);
     }
 
