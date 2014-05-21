@@ -13,7 +13,6 @@ class formatted_string;
 enum mutation_activity_type
 {
     MUTACT_INACTIVE, // form-based mutations in most forms
-    MUTACT_HUNGER,   // non-physical mutations on vampires
     MUTACT_PARTIAL,  // scales on statues
     MUTACT_FULL,     // other mutations
 };
@@ -50,8 +49,6 @@ struct mutation_def
     bool        bad;        // A mutation that's more bad than good. Xom uses
                             // this to decide which mutations to hand out as
                             // rewards.
-    bool        physical;   // A mutation affecting a character's outward
-                            // appearance; active for thirsty semi-undead.
     bool        form_based; // A mutation that is suppressed when shapechanged.
     const char* short_desc; // What appears on the '%' screen.
     const char* have[3];    // What appears on the 'A' screen.

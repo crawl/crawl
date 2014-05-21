@@ -2353,8 +2353,7 @@ int player_speed(void)
 }
 
 // Get level of player mutation, ignoring mutations with an activity level
-// less than minact (unless they have MUTACT_HUNGER, in which case check
-// the player's hunger state).
+// less than minact.
 static int _mut_level(mutation_type mut, mutation_activity_type minact)
 {
     const int mlevel = you.mutation[mut];
@@ -2363,28 +2362,12 @@ static int _mut_level(mutation_type mut, mutation_activity_type minact)
 
     if (active >= minact)
         return mlevel;
-    else if (active == MUTACT_HUNGER)
-    {
-        switch (you.hunger_state)
-        {
-        case HS_ENGORGED:
-            return mlevel;
-        case HS_VERY_FULL:
-        case HS_FULL:
-            return min(mlevel, 2);
-        case HS_SATIATED:
-            return min(mlevel, 1);
-        default:
-            return 0;
-        }
-    }
 
     return 0;
 }
 
 // Output level of player mutation.  If temp is true (the default), take into
-// account the suppression of mutations by non-"Alive" Vampires and by changes
-// of form.
+// account the suppression of mutations by changes of form.
 int player_mutation_level(mutation_type mut, bool temp)
 {
     return _mut_level(mut, temp ? MUTACT_PARTIAL : MUTACT_INACTIVE);
