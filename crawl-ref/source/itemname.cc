@@ -3632,20 +3632,21 @@ string item_prefix(const item_def &item, bool temp)
         }
         break;
 
+    case OBJ_STAVES:
+    case OBJ_RODS:
     case OBJ_WEAPONS:
         if (is_range_weapon(item))
             prefixes.push_back("ranged");
-        else
+        else if (is_melee_weapon(item)) // currently redundant
             prefixes.push_back("melee");
         // fall through
+
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
         if (is_artefact(item))
             prefixes.push_back("artefact");
         // fall through
 
-    case OBJ_STAVES:
-    case OBJ_RODS:
     case OBJ_MISSILES:
         if (item_is_equipped(item, true))
             prefixes.push_back("equipped");
