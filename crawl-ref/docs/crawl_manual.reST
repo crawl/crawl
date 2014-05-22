@@ -3091,7 +3091,7 @@ commands:
 You can use the autoinscribe option to have some items automatically inscribed.
 See options_guide.txt for details. Some examples are:
 
-  autoinscribe = royal jell:=g
+  autoinscribe = honeycomb:=g
   autoinscribe = wand of heal wounds:!v
 
 Artefacts autoinscriptions
