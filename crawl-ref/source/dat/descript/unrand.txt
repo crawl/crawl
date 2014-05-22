@@ -97,7 +97,8 @@ This blade carries the bloody taint of an inhuman madman.
 %%%%
 scimitar of Flaming Death
 
-Smokin'!
+A scimitar with a mysteriously smoking blade. Occasionally its heat leaks out,
+covering opponents in magical flame.
 %%%%
 mace of Brilliance
 
@@ -112,7 +113,8 @@ life force. It is unerringly vampiric, draining life every time it strikes.
 %%%%
 dagger of Chilly Death
 
-A dagger made of one huge shard of sapphire.
+A dagger made of one huge shard of sapphire. It covers opponents in ice,
+slowing down their movement somewhat.
 %%%%
 dagger "Morg"
 

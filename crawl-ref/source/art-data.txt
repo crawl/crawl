@@ -366,7 +366,7 @@ BOOL:    life
 
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
-PLUS:    +5/+7
+PLUS:    +8/+10
 COLOUR:  ETC_ICE
 TILE:    urand_chilly_death
 TILE_EQ: chilly_death
