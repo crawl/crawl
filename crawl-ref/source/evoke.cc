@@ -1528,7 +1528,10 @@ static void _expend_xp_evoker(item_def &item)
 bool evoke_item(int slot, bool check_range)
 {
     if (you.form == TRAN_WISP)
-        return mpr("You cannot handle anything in this form."), false;
+    {
+        mpr("You cannot evoke items in this form.");
+        return false;
+    }
 
     if (you.berserk() && (slot == -1
                        || slot != you.equip[EQ_WEAPON]
