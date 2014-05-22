@@ -59,7 +59,7 @@ struct armour_def
 // flexible and adjustable and can be worn by any player character...
 // providing they also pass the shape test, of course.
 static int Armour_index[NUM_ARMOURS];
-static const armour_def Armour_prop[NUM_ARMOURS] =
+static const armour_def Armour_prop[] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,   0,  100,
         EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
@@ -174,7 +174,7 @@ struct weapon_def
 };
 
 static int Weapon_index[NUM_WEAPONS];
-static const weapon_def Weapon_prop[NUM_WEAPONS] =
+static const weapon_def Weapon_prop[] =
 {
     // Maces & Flails
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
@@ -365,7 +365,7 @@ struct missile_def
 };
 
 static int Missile_index[NUM_MISSILES];
-static const missile_def Missile_prop[NUM_MISSILES] =
+static const missile_def Missile_prop[] =
 {
     { MI_NEEDLE,        "needle",        0,    1, false },
     { MI_STONE,         "stone",         2,    6, true  },
@@ -403,7 +403,7 @@ struct food_def
 // (like ghoul chunks) to guarantee that the special thing is only
 // done once.  See the ghoul eating code over in food.cc.
 static int Food_index[NUM_FOODS];
-static const food_def Food_prop[NUM_FOODS] =
+static const food_def Food_prop[] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
     { FOOD_SAUSAGE,      "sausage",      1200,   150,  -400,  40, 2, FFL_NONE },
@@ -441,7 +441,7 @@ static const food_def Food_prop[NUM_FOODS] =
 void init_properties()
 {
     // The compiler would complain about too many initializers but not
-    // about too few, check it by hand:
+    // about too few, so we check this ourselves.
     COMPILE_CHECK(NUM_ARMOURS  == ARRAYSZ(Armour_prop));
     COMPILE_CHECK(NUM_WEAPONS  == ARRAYSZ(Weapon_prop));
     COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
