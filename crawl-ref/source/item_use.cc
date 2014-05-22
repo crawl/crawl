@@ -2756,6 +2756,14 @@ void read_scroll(int slot)
         return;
     }
 
+    // Imperfect vision prevents players from reading actual content {dlb}:
+    if (player_mutation_level(MUT_BLURRY_VISION)
+        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5))
+    {
+        mpr("The writing blurs in front of your eyes.");
+        return;
+    }
+
     // For cancellable scrolls leave printing this message to their
     // respective functions.
     string pre_succ_msg =
@@ -3033,10 +3041,6 @@ void read_scroll(int slot)
         // since there are no *really* bad scrolls, merely useless ones).
         xom_is_stimulated(bad_effect ? 100 : 50);
     }
-
-    // Make characters with Blurry Vision take more time to read scrolls
-    you.time_taken *= (2 + player_mutation_level(MUT_BLURRY_VISION));
-    you.time_taken /= 2;
 }
 
 bool stasis_blocks_effect(bool calc_unid,
