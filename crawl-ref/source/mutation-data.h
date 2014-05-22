@@ -606,17 +606,17 @@ static const mutation_def mut_data[] =
 { MUT_BLURRY_VISION,                 10,  3,  true, false,
   "blurry vision",
 
-  {"You take a little longer to read scrolls due to your blurry vision.",
-   "You take longer to read scrolls due to your blurry vision.",
-   "You take a lot longer to read scrolls due to your blurry vision."},
+  {"Your vision is a little blurry.",
+   "Your vision is quite blurry.",
+   "Your vision is extremely blurry."},
 
   {"Your vision blurs.",
    "Your vision blurs.",
    "Your vision blurs."},
 
   {"Your vision sharpens.",
-   "Your vision sharpens some.",
-   "Your vision sharpens some."},
+   "Your vision sharpens a little.",
+   "Your vision sharpens a little."},
 
   "blurry vision"
 },
