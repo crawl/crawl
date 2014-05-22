@@ -388,16 +388,6 @@ bool player_caught_in_net()
         // item yet
         you.attribute[ATTR_HELD] = 10;
 
-        // I guess magical works differently, keeping both you
-        // and the net hovering above the floor.
-        // Currently we cheat for bat and dragon forms, pretending them to
-        // be magical, and thus this check never matches currently.
-        if (you.flight_mode() == FL_WINGED)
-        {
-            mpr("You fall like a stone!");
-            fall_into_a_pool(you.pos(), grd(you.pos()));
-        }
-
         stop_delay(true); // even stair delays
         return true;
     }

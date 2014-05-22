@@ -6131,8 +6131,6 @@ flight_type player::flight_mode() const
 #endif
         || attribute[ATTR_PERM_FLIGHT]
         || form == TRAN_WISP
-        // dragon and bat should be FL_WINGED, but we don't want paralysis
-        // instakills over lava
         || form == TRAN_DRAGON
         || form == TRAN_BAT)
     {
