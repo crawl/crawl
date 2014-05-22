@@ -424,13 +424,6 @@ void tome_of_power(int slot)
 
     you.turn_is_over = true;
 
-    if (player_mutation_level(MUT_BLURRY_VISION) > 0
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
-    {
-        mpr("The page is too blurry for you to read.");
-        return;
-    }
-
     mpr("You find yourself reciting the magical words!");
     practise(EX_WILL_READ_TOME);
     count_action(CACT_EVOKE, EVOC_TOME);
@@ -504,6 +497,10 @@ void tome_of_power(int slot)
 
         your_spells(spell_casted, powc, false);
     }
+
+    // Make characters with Blurry Vision take more time to read
+    you.time_taken *= (2 + player_mutation_level(MUT_BLURRY_VISION));
+    you.time_taken /= 2;
 }
 
 // return a slot that has manual for given skill, or -1 if none exists
