@@ -2088,11 +2088,7 @@ static void _brand_weapon(item_def &wpn)
 {
     you.wield_change = true;
 
-    // If there's no brand, make it vorpal.
-    if (get_weapon_brand(wpn) == SPWPN_NORMAL)
-        set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_VORPAL);
-    else
-        _rebrand_weapon(wpn);
+    _rebrand_weapon(wpn);
 
     const string itname = wpn.name(DESC_YOUR);
     bool success = true;
