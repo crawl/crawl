@@ -1183,11 +1183,7 @@ void search_around()
     if (you_worship(GOD_ASHENZARI) && !player_under_penance())
         skill += you.piety * 2;
 
-    int farskill = skill;
-
-    // Traps and doors stepdown skill:
-    // skill/(2x-1) for squares at distance x
-    int max_dist = div_rand_round(farskill, 32);
+    int max_dist = div_rand_round(skill, 32);
     if (max_dist > 5)
         max_dist = 5;
     if (max_dist < 1)
@@ -1203,7 +1199,7 @@ void search_around()
         // Own square is not excluded; may be flying.
         // XXX: Currently, flying over a trap will always detect it.
 
-        int effective = (dist <= 1) ? skill : farskill / (dist * 2 - 1);
+        int effective = (dist <= 1) ? skill : skill / (dist * 2 - 1);
 
         trap_def* ptrap = find_trap(*ri);
         if (!ptrap)
