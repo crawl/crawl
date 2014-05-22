@@ -401,11 +401,9 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     }
     else
     {
-        type_wanted = random_choose_weighted(
-                        6, FOOD_ROYAL_JELLY,
-                        1, player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
-                                                                  : FOOD_MEAT_RATION,
-                        0);
+        type_wanted = coinflip() ? FOOD_ROYAL_JELLY
+                        : player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
+                                                                 : FOOD_MEAT_RATION;
     }
 
     quantity = 3 + random2(5);
