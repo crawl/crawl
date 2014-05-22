@@ -2372,41 +2372,38 @@ static void _generate_scroll_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight: 7824 if depth_mod < 4,
-            //               8524 if 4 <= depth_mod < 7,
-            //               8944 if depth_mod >= 7,
-            //               and -1133 in sprint
+            // total weight:    688  if depth_mod <4
+            //                  786  otherwise
+            //                  -103 in sprint
             item.sub_type = random_choose_weighted(
-                1800, SCR_IDENTIFY,
-                1120, SCR_REMOVE_CURSE,
+                180, SCR_IDENTIFY,
+                112, SCR_REMOVE_CURSE,
                  // [Cha] don't generate teleportation scrolls if in sprint
-                 802, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
-                 331, SCR_FEAR,
-                 331, SCR_MAGIC_MAPPING,
-                 331, SCR_FOG,
-                 331, SCR_RANDOM_USELESSNESS,
-                 331, SCR_RECHARGING,
-                 331, SCR_BLINKING,
-                 331, SCR_ENCHANT_ARMOUR,
-                 331, SCR_ENCHANT_WEAPON_I,
-                 331, SCR_ENCHANT_WEAPON_II,
-                 331, SCR_AMNESIA,
+                 80, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
+                 33, SCR_FEAR,
+                 33, SCR_MAGIC_MAPPING,
+                 33, SCR_FOG,
+                 33, SCR_RANDOM_USELESSNESS,
+                 33, SCR_RECHARGING,
+                 33, SCR_BLINKING,
+                 33, SCR_ENCHANT_ARMOUR,
+                 33, SCR_ENCHANT_WEAPON_I,
+                 33, SCR_ENCHANT_WEAPON_II,
+                 33, SCR_AMNESIA,
                  // [Cha] don't generate noise scrolls if in sprint
-                 331, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
+                 33, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
 
-                 331, SCR_IMMOLATION,
+                 33, SCR_IMMOLATION,
 
-                 // Medium-level scrolls.
-                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
-                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_ENCHANT_WEAPON_III),
-                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
-                 140, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
-                 270, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
-
-                 // High-level scrolls.
-                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
-                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_TORMENT),
-                 140, (depth_mod < 7 ? NUM_SCROLLS : SCR_HOLY_WORD),
+                 // Higher-level scrolls.
+                 27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
+                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
+                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_ENCHANT_WEAPON_III),
+                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
+                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
+                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
+                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
+                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
 
                  0);
         }
