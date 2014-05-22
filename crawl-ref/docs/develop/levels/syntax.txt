@@ -92,9 +92,9 @@ Items
 
 NOTE: The P (place a rune here with 1/3 chance) and R (place a honeycomb with
       2/3 chance or else a royal jelly) symbols have been removed. You can
-      produce the desired behaviour using
+      produce the desired (or similar) behaviour using
       SUBST: P = O..
-      KITEM: R = w:2 honeycomb / w:1 royal jelly
+      KITEM: R = w:2 honeycomb / w:1 potion of restore abilities
 
       The O symbol has been removed. It used to either place an appropriate
       rune, or an appropriate substitution for a rune (a staircase/portal into
