@@ -501,7 +501,7 @@ bool you_cannot_memorise(spell_type spell)
     return you_cannot_memorise(spell, temp);
 }
 
-// form is set to true if a form (lich or wisp) prevents us from
+// form is set to true if a form (lich) prevents us from
 // memorising the spell.
 bool you_cannot_memorise(spell_type spell, bool &form)
 {
@@ -581,14 +581,6 @@ bool you_cannot_memorise(spell_type spell, bool &form)
         rc = true, form = false;
     }
 #endif
-
-    if (you.form == TRAN_WISP)
-    {
-        // If we were otherwise allowed to memorise the spell.
-        if (!rc)
-            form = true;
-        return true;
-    }
 
     if (you.species == SP_FORMICID
         && (spell == SPELL_BLINK
@@ -678,13 +670,6 @@ static bool _get_mem_list(spell_list &mem_spells,
                           bool just_check = false,
                           spell_type current_spell = SPELL_NO_SPELL)
 {
-    if (you.form == TRAN_WISP)
-    {
-        if (!just_check)
-            mprf(MSGCH_PROMPT, "You can't handle any books in this form.");
-        return false;
-    }
-
     bool          book_errors    = false;
     unsigned int  num_on_ground  = 0;
     unsigned int  num_books      = 0;

@@ -2817,8 +2817,7 @@ static int _get_spell_description(const spell_type spell,
     if (you_cannot_memorise(spell, form))
         description += "\n" + desc_cannot_memorise_reason(form) + "\n";
 
-    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
-        && you.form != TRAN_WISP)
+    if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {
         if (you.has_spell(spell))
         {
