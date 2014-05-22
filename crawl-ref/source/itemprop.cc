@@ -429,6 +429,11 @@ static const food_def Food_prop[NUM_FOODS] =
     { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 2, FFL_NONE },
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2, FFL_NONE },
     { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 2, FFL_NONE },
+
+#if TAG_MAJOR_VERSION == 34
+    { FOOD_UNUSED,       "buggy",           0,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  40, 2, FFL_NONE },
+#endif
 };
 
 // Must call this functions early on so that the above tables can
