@@ -3410,7 +3410,7 @@ static tileidx_t _tileidx_food(const item_def &item)
     case FOOD_PEAR:         return TILE_FOOD_PEAR;
     case FOOD_APPLE:        return TILE_FOOD_APPLE;
     case FOOD_CHOKO:        return TILE_FOOD_CHOKO;
-    case FOOD_HONEYCOMB:    return TILE_FOOD_HONEYCOMB;
+    case FOOD_ROYAL_JELLY:  return TILE_FOOD_ROYAL_JELLY;
     case FOOD_SNOZZCUMBER:  return TILE_FOOD_SNOZZCUMBER;
     case FOOD_PIZZA:        return TILE_FOOD_PIZZA;
     case FOOD_APRICOT:      return TILE_FOOD_APRICOT;

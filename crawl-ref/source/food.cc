@@ -1846,8 +1846,8 @@ void finished_eating_message(int food_type)
 
     switch (food_type)
     {
-    case FOOD_HONEYCOMB:
-        mpr("That honeycomb was delicious!");
+    case FOOD_ROYAL_JELLY:
+        mpr("That royal jelly was delicious!");
         break;
     case FOOD_PIZZA:
     {

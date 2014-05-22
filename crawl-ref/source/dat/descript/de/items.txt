@@ -361,10 +361,6 @@ helmet
 
 Ein Stück einer Kopfbedeckung aus Metall.
 %%%%
-honeycomb
-
-Ein Klumpen von einer köstlichen Honigwabe, von riesigen Bienen geschaffen.
-%%%%
 ice dragon hide
 
 Die schuppige Haut eines Kälte atmenden Drachen. Es kann in die richtige
@@ -617,6 +613,12 @@ Energieblitz abzuschießen.
 rod of the swarm
 
 Dieser Stab erlaubt seinem Benutzer einen Schwarm Insekten zu rufen.
+%%%%
+royal jelly
+
+Eine besonders reiche und goldene gallertartige Sache. Der Konsum wird
+verlorene Fähigkeiten wieder herstellen, zusätzlich zu der Ernährung die es
+bietet.
 %%%%
 rune of zot
 

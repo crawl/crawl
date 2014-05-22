@@ -377,7 +377,7 @@ void item_colour(item_def &item)
             break;
         case FOOD_BANANA:
         case FOOD_CHEESE:
-        case FOOD_HONEYCOMB:
+        case FOOD_ROYAL_JELLY:
         case FOOD_LEMON:
         case FOOD_PIZZA:
             item.colour = YELLOW;
@@ -2250,7 +2250,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
                                                  1, FOOD_LYCHEE,
                                                  1, FOOD_BEEF_JERKY,
                                                  1, FOOD_SAUSAGE,
-                                                 1, FOOD_HONEYCOMB,
+                                                 1, FOOD_ROYAL_JELLY,
                                                  0);
     }
     else

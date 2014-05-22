@@ -426,7 +426,7 @@ static const food_def Food_prop[NUM_FOODS] =
     { FOOD_GRAPE,        "grape",         100,   -20,    20,   2, 1, FFL_FRUIT},
     { FOOD_SULTANA,      "sultana",        70,   -20,    20,   1, 1, FFL_FRUIT},
 
-    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 2, FFL_NONE },
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2, FFL_NONE },
     { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 2, FFL_NONE },
 };

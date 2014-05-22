@@ -351,7 +351,7 @@ TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   trapdoor spider, patrolling ghost moth
 SUBST:  | = %%d, * = ..%%d
-ITEM:   honeycomb
+ITEM:   royal jelly
 MAP
      ........
     ..xxxxxx..
@@ -375,7 +375,7 @@ NAME:   spiders_nest_ghost_moth_duel
 TAGS:   no_item_gen no_monster_gen
 DEPTH:  Spider:3-
 MONS:   ghost moth, tarantella
-ITEM:   honeycomb
+ITEM:   royal jelly
 MAP
     ........
    ..xx..xx..
@@ -431,7 +431,7 @@ SUBST:   6 = 6 *:2
 KMONS:   6 = spider / wolf spider w:4 / jumping spider w:1
 SUBST:   7 = 7 .:50
 KMONS:   7 = trapdoor spider
-KITEM:   t = honeycomb
+KITEM:   t = royal jelly
 MAP
      ..........   ......  ........
      .xwxxxxxx3....xxxx....xxxxwx..
@@ -1299,7 +1299,7 @@ NAME:   spider_rune_water
 PLACE:  Spider:$
 WEIGHT: 20
 ORIENT: northwest
-KITEM:  O = honeycomb q:3, gossamer rune of Zot
+KITEM:  O = royal jelly q:3, gossamer rune of Zot
 MONS:   ghost moth, red wasp / w:5 yellow wasp, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   trapdoor spider / nothing
@@ -1357,7 +1357,7 @@ WEIGHT: 20
 PLACE:  Spider:$
 ORIENT: northwest
 KITEM:  O = gossamer rune of Zot
-ITEM:   honeycomb
+ITEM:   royal jelly
 MONS:   ghost moth / w:7 nothing, moth of wrath / ghost moth, emperor scorpion
 MONS:   wolf spider / redback / tarantella / jumping spider / w:20 nothing
 MONS:   orb spider / nothing, trapdoor spider / nothing
@@ -1406,7 +1406,7 @@ TAGS:   no_pool_fixup
 ORIENT: southwest
 KITEM:  O = gossamer rune of zot
 KMONS:  O = ghost moth
-KITEM:  *d = honeycomb
+KITEM:  *d = royal jelly
 KMONS:  * = emperor scorpion
 MONS:   ghost moth, ghost moth / moth of wrath
 MONS:   yellow wasp / red wasp / w:5 nothing
@@ -1455,7 +1455,7 @@ PLACE:  Spider:$
 ORIENT: east
 NSUBST: O = 1:O / *:P
 KITEM:  O = gossamer rune of Zot
-KITEM:  P = honeycomb
+KITEM:  P = royal jelly
 MONS:   ghost moth, moth of wrath, emperor scorpion
 MONS:   wolf spider w:11 / redback / tarantella / jumping spider
 MONS:   orb spider / red wasp, trapdoor spider
@@ -1504,7 +1504,7 @@ PLACE:   Spider:$
 ORIENT:  north
 NSUBST:  d = 1:O / 3:d / *:.
 KITEM:   O = gossamer rune of Zot
-ITEM:    honeycomb
+ITEM:    royal jelly
 MONS:    ghost moth, moth of wrath, emperor scorpion
 MONS:    red wasp / yellow wasp w:2, orb spider
 MONS:    wolf spider, redback / tarantella

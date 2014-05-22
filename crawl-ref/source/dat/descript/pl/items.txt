@@ -293,11 +293,6 @@ helmet
 
 Metalowe nakrycie głowy.
 %%%%
-honeycomb
-
-Jakkolwiek pszczoły spotykane w tych lochach osiągają ogromne rozmiary, miód
-przez nie produkowany w niczym nie ustępuje temu z powierzchni.
-%%%%
 ice dragon hide
 
 Łuskowata skóra lodowego smoka, w surowej postaci. Można z niej zrobić dobrą
@@ -568,6 +563,11 @@ skutki są dość brutalne.
 rod of the swarm
 
 Ten pręt pozwala przyzwać chmarę owadów.
+%%%%
+royal jelly
+
+Lekko złotawa galaretowata substancja, wyjątkowo bogata w składniki odżywcze.
+Oprócz wartości pokarmowych, pozwala także odzyskać utracone siły.
 %%%%
 rune of zot
 

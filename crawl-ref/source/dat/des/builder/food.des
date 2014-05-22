@@ -71,7 +71,7 @@ DEPTH:  D:8-14
 WEIGHT: 15
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
-ITEM:   honeycomb no_mimic
+ITEM:   royal jelly no_mimic
 COLOUR: a = yellow
 TILE:   a = wall_wax
 SUBST:  a = x
@@ -152,7 +152,7 @@ TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   spider / brain worm w:5 / goliath beetle / worker ant
 MONS:   yellow wasp w:7 / boring beetle / soldier ant w:13 / giant slug
 ITEM:   cheese q:3 no_mimic / beef jerky q:3 no_mimic / lemon q:3 no_mimic
-ITEM:   potion of porridge no_mimic, honeycomb q:6 no_mimic
+ITEM:   potion of porridge no_mimic, royal jelly q:6 no_mimic
 MAP
 .xxxxxxx
 @xx.x.xcccc
@@ -173,7 +173,7 @@ KMONS:  B = ooze
 : if you.absdepth() > 10 then
 KMONS:  C = slime creature
 : end
-KITEM:  C = honeycomb q:10 no_mimic / honeycomb q:15 no_mimic
+KITEM:  C = royal jelly q:10 no_mimic
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
 MAP
@@ -256,7 +256,7 @@ MONS:   shadow imp
 KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 ITEM:  sultana q:1 no_mimic / grape w:8 q:1 no_mimic
 ITEM:  sultana mimic q:1 w:8 / grape mimic w:8 q:1
-ITEM:  honeycomb q:2 no_mimic, bread ration q:3 no_mimic
+ITEM:  royal jelly q:2 no_mimic, bread ration q:3 no_mimic
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'h', 'spriggan skeleton')
 : else
@@ -297,7 +297,7 @@ KMONS:   G = necrophage
 KMONS:   H = crimson imp
 KITEM:   1 = stone q:1 no_pickup / large rock q:1 w:5
 KITEM:   Ya = bread ration no_mimic / meat ration no_mimic
-KITEM:   b = honeycomb no_mimic / cheese no_mimic / apricot q:2 no_mimic / \
+KITEM:   b = royal jelly no_mimic / cheese no_mimic / apricot q:2 no_mimic / \
              apple q:2 no_mimic / choko q:2 no_mimic
 KFEAT:   1Yab = shallow_water
 KMASK:   1Yac = no_monster_gen

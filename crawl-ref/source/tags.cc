@@ -3114,7 +3114,7 @@ static void tag_read_you_items(reader &th)
         const int oldstate = you.force_autopickup[OBJ_FOOD][NUM_FOODS];
         you.force_autopickup[OBJ_FOOD][FOOD_MEAT_RATION] = oldstate;
         you.force_autopickup[OBJ_FOOD][FOOD_PEAR] = oldstate;
-        you.force_autopickup[OBJ_FOOD][FOOD_HONEYCOMB] = oldstate;
+        you.force_autopickup[OBJ_FOOD][FOOD_ROYAL_JELLY] = oldstate;
 
         you.force_autopickup[OBJ_BOOKS][BOOK_MANUAL] =
             you.force_autopickup[OBJ_BOOKS][NUM_BOOKS];
@@ -3699,10 +3699,10 @@ void unmarshallItem(reader &th, item_def &item)
         if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_WAR_CHANTS)
             item.sub_type = BOOK_BATTLE;
 
-        if (item.base_type == OBJ_FOOD && (item.sub_type == FOOD_ROYAL_JELLY
+        if (item.base_type == OBJ_FOOD && (item.sub_type == FOOD_UNUSED
                                            || item.sub_type == FOOD_AMBROSIA))
         {
-            item.sub_type = FOOD_HONEYCOMB;
+            item.sub_type = FOOD_ROYAL_JELLY;
         }
     }
 
