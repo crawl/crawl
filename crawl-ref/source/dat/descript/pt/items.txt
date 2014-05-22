@@ -194,10 +194,6 @@ helmet
 
 Uma peça de armadura para a cabeça.
 %%%%
-honeycomb
-
-Um delicioso naco de favo de mel feito por abelhas gigantes.
-%%%%
 javelin
 
 Esta lança leve foi projetada para ser arremessada e causar muito dano.

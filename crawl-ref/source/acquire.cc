@@ -402,7 +402,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     else
     {
         type_wanted = random_choose_weighted(
-                        6, FOOD_HONEYCOMB,
+                        6, FOOD_ROYAL_JELLY,
                         1, player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
                                                                   : FOOD_MEAT_RATION,
                         0);
@@ -413,7 +413,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     if (type_wanted == FOOD_BANANA || type_wanted == FOOD_ORANGE || type_wanted == FOOD_LEMON)
         quantity = 8 + random2avg(15, 2);
     // giving more of the lower food value items
-    else if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
+    else if (type_wanted == FOOD_ROYAL_JELLY || type_wanted == FOOD_CHUNK)
         quantity += random2avg(10, 2);
     else if (type_wanted == POT_BLOOD)
     {

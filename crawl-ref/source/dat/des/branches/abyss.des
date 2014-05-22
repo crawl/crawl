@@ -296,7 +296,7 @@ KMONS:  1 = orange demon
 KMONS:  2 = red wasp / yellow wasp / killer bee w:2 / nothing w:2
 KMONS:  3 = death drake / green death
 KFEAT:  123 = W
-KITEM:  23 = honeycomb / nothing
+KITEM:  23 = royal jelly / nothing
 MAP
  xxxxxxx
 xx22222xx
@@ -907,7 +907,7 @@ MONS:    draconian shifter w:5 / shadow demon w:5 / lich / \
 MONS:    bone dragon / tentacled starspawn / starcursed mass / \
          apocalypse crab / dancing weapon / tentacled monstrosity / \
          glowing shapeshifter
-ITEM:    superb_item, honeycomb q:2
+ITEM:    superb_item, royal jelly q:2
 ITEM:    dart good_item q:100, any magical staff
 ITEM:    scroll of magic mapping q:4 / scroll of random uselessness q:4
 ITEM:    ring mail randart / scale mail randart / chain mail randart w:20
@@ -1428,7 +1428,7 @@ ENDMAP
 NAME:   grunt_abyss_rune_wretched_hive
 TAGS:   abyss_rune unrand patrolling
 MONS:   killer bee, wretched star, green ugly thing
-ITEM:   honeycomb q:1 / nothing w:190
+ITEM:   royal jelly q:1 / nothing w:190
 KMONS:  O = queen bee
 KITEM:  O = abyssal rune of Zot
 NSUBST: 1 = 4:3 / 1:1 / 1:. / * = 1.

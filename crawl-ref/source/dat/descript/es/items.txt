@@ -286,10 +286,6 @@ helmet
 
 Una protección metálica para la cabeza.
 %%%%
-honeycomb
-
-Un trozo de un panal de miel, creado por abejas gigantes.
-%%%%
 ice dragon hide
 
 La escamosa piel de un dragón. Puede usarse para elaborar una armadura, pero
@@ -525,6 +521,11 @@ mismo efecto.
 ring of wizardry
 
 Este anillo incrementa la habilidad de su portador para usar hechizos mágicos.
+%%%%
+royal jelly
+
+Una cosa gelatinosa dorada bastante nutritiva. Consumirla restaurará tus
+habilidades, además de que es saludable.
 %%%%
 rune of zot
 

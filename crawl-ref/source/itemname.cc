@@ -1574,7 +1574,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         case FOOD_PEAR: buff << "pear"; break;
         case FOOD_APPLE: buff << "apple"; break;
         case FOOD_CHOKO: buff << "choko"; break;
-        case FOOD_HONEYCOMB: buff << "honeycomb"; break;
+        case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
         case FOOD_SNOZZCUMBER: buff << "snozzcumber"; break;
         case FOOD_PIZZA: buff << "slice of pizza"; break;
         case FOOD_APRICOT: buff << "apricot"; break;
@@ -2433,7 +2433,7 @@ void check_item_knowledge(bool unknown_items)
         };
         static const int misc_ST_list[] =
         {
-            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_HONEYCOMB,
+            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
             NUM_MISCELLANY
         };

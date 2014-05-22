@@ -123,10 +123,6 @@ helmet
 
 Část kovové pokrývky hlavy.
 %%%%
-honeycomb
-
-Kus lahodného plástve obřích včel.
-%%%%
 lajatang
 
 Velmi vzácná a velmi efektivní dovážená zbraň. Představuje jí tyč s

@@ -99,7 +99,7 @@ function sroom_beehive(e)
     fill_special_room(e, "patrolling killer bee",
                       "patrolling queen bee", true)
 
-    e.kitem('12 = honeycomb / nothing')
+    e.kitem('12 = royal jelly / nothing')
 end
 
 function sroom_morgue(e)

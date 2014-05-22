@@ -630,10 +630,6 @@ helmet
 
 A piece of metal headgear.
 %%%%
-honeycomb
-
-A lump of the delicious honeycomb made by giant bees.
-%%%%
 horn of Geryon
 
 The horn belonging to Geryon, guardian of the Vestibule of Hell. Legends say
@@ -1141,6 +1137,10 @@ skill will help improve your basic effectiveness with the weapon.
 rod of the swarm
 
 This rod allows its wielder to summon a swarm of insects.
+%%%%
+royal jelly
+
+A particularly rich and golden gelatinous thing.
 %%%%
 rune of zot
 

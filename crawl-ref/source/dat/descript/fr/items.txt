@@ -543,10 +543,6 @@ helmet
 
 Un couvre-chef en métal.
 %%%%
-honeycomb
-
-Un morceau de ruche d'abeilles géantes, gorgé de succulent miel.
-%%%%
 horn of Geryon
 
 La corne de Geryon, le gardien du Vestibule des Enfers. Les légendes racontent
@@ -869,6 +865,11 @@ Ce sceptre tire des créatures des ombres et de l’éther.
 rod of the swarm
 
 Ce sceptre permet à son porteur de convoquer un essaim d'insectes.
+%%%%
+royal jelly
+
+Une gelée dorée et particulièrement nourrissante. La consommer restaure les
+caractéristiques en plus de la satiété qu'elle apporte.
 %%%%
 rune of zot
 

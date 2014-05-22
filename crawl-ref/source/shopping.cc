@@ -1497,7 +1497,7 @@ unsigned int item_value(item_def item, bool ident)
             valued = 44;
             break;
 
-        case FOOD_HONEYCOMB:
+        case FOOD_ROYAL_JELLY:
             valued = 20;
             break;
 

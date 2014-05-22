@@ -333,10 +333,6 @@ helmet
 
 金属製の被り物だ。
 %%%%
-honeycomb
-
-一塊の巨大なミツバチによって作られた、美味しい蜂の巣だ。
-%%%%
 ice dragon hide
 
 これは冷気を吐くドラゴンの鱗に覆われた皮だ。
@@ -555,6 +551,11 @@ rod of inaccuracy
 rod of the swarm
 
 このロッドは手にしている者に昆虫の群れを召喚することを可能にする。
+%%%%
+royal jelly
+
+とりわけ豪華な、金色をしたゼリー状の存在だ。 Consuming it will restore lost
+abilities, in addition to the nutrition it provides.
 %%%%
 rune of zot
 
