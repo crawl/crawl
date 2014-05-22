@@ -1184,8 +1184,7 @@ void search_around()
         skill += you.piety * 2;
 
     int farskill = skill;
-    if (int mut = you.mutation[MUT_BLURRY_VISION])
-        farskill >>= mut;
+
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
     int max_dist = div_rand_round(farskill, 32);
