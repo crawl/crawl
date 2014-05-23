@@ -26,6 +26,7 @@
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "effects.h"
 #include "env.h"
 #include "exclude.h"
 #include "feature.h"
@@ -296,6 +297,7 @@ void update_monsters_in_view()
         unsigned int size = monsters.size();
         map<monster_type, int> types;
         map<monster_type, int> genera; // This is the plural for genus!
+        const monster* target = NULL;
         for (unsigned int i = 0; i < size; ++i)
         {
             const monster_type type = monsters[i]->type;
@@ -320,6 +322,13 @@ void update_monsters_in_view()
         for (unsigned int i = 0; i < size; ++i)
         {
             const monster* mon = monsters[i];
+            if (!target
+                && player_mutation_level(MUT_SCREAM)
+                && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3,
+                                 100))
+            {
+                target = mon;
+            }
             if (!mon->props.exists("ash_id") && !mon->props.exists("zin_id"))
                 continue;
 
@@ -364,6 +373,9 @@ void update_monsters_in_view()
                 update_monster_pane();
 #endif
         }
+
+        if (target)
+            yell(target);
 
         if (player_under_penance(GOD_GOZAG))
         {

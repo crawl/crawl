@@ -22,6 +22,7 @@
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "effects.h"
 #include "exercise.h"
 #include "enum.h"
 #include "fprop.h"
@@ -1675,6 +1676,11 @@ static inline bool _monster_warning(activity_interrupt_type ai,
                     dec_penance(GOD_GOZAG, 1);
                 }
             }
+        }
+        if (player_mutation_level(MUT_SCREAM)
+            && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
+        {
+            yell(mon);
         }
         const_cast<monster* >(mon)->seen_context = SC_JUST_SEEN;
     }
