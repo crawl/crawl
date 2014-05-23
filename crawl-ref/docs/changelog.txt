@@ -1,4 +1,4 @@
-Stone Soup 0.15 (up to 0.15-a0-911-gf0b1c87)
+Stone Soup 0.15 (up to 0.15-a0-985-g23b1178)
 --------------------------------------------
 * Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
 * Ranged combat has been rewritten from the ground up.
@@ -23,7 +23,13 @@ Character
 * Player clinging (seen only in Spider Form and with the boots of the Spider)
   is no more.
 * Kobolds, hill orcs, and ogres are no longer saprovorous.
-* Ogres no longer have a fast metabolism.
+* Ogres and centaurs no longer have a fast metabolism; halflings no longer
+  have a fast metabolism.
+* Centaurs are no longer herbivorous.
+* Vampires:
+  - always get the full effect of all potions;
+  - can always mutate; and
+  - always get the full effect of all mutations.
 
 Monsters
 --------
@@ -44,6 +50,8 @@ Monsters
   such that they spam less; this implies OCS confusion can be resisted.
 * Bog bodies no longer randomly rot.
 * Purple ugly things deal extra damage in lieu of a sickness attack.
+* Boris can use weapons.
+* Cherub's hymns can buff any allies, not just those with higher HDs.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
   flaming corpses, grizzly bears, spriggan enchanters, phoenixes,
   shedu, plague shamblers.
@@ -84,7 +92,10 @@ Items
 * Identify scrolls now always identify a single item.
 * Potions of blood cure a point of ghoul rotting.
 * Sustain abilities effects no longer stack.
-* Removed items: rings of hunger and sustenance.
+* Honeycombs have been renamed to royal jellies (to account for the removal
+  of the latter).
+* Scrolls of brand weapon can apply any brand to an unbranded weapon.
+* Removed items: rings of hunger and sustenance, ambrosia, (old) royal jelly.
 * Removed unrands: the boots of the Spider.
 
 Cards
@@ -133,6 +144,7 @@ Gods
 * Zin's Recite no longer prompts for a book, instead affecting all monsters
   in sight with the strongest effects that would impact them.
 * Sif Muna wrath can no longer cause amnesia.
+* Gods that give missile gifts can do so sooner.
 
 Interface
 ---------
