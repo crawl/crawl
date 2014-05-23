@@ -1,9 +1,5 @@
 ############################################################
-# As of Stone Soup 0.3 the previously hardcoded monster
-# speech has been outsourced. This makes changing existing
-# messages, and adding new ones really easy.
-#
-# monspeak.txt contains the messages of monsters that "talk"
+# This file contains the messages of monsters that "talk"
 # to the player, or at least the biggest part there-of.
 #
 # For an explanation of how to read shout.txt and monspeak.txt
