@@ -1154,11 +1154,12 @@ static int _battle_cry(monster* chief, battlecry_type type)
             if (*mi != chief
                 && _is_battlecry_compatible(*mi, type)
                 && mons_aligned(chief, *mi)
-                && mi->hit_dice < chief->hit_dice
                 && !mi->berserk_or_insane()
                 && !mi->has_ench(ENCH_MIGHT)
                 && !mi->cannot_move()
-                && !mi->confused())
+                && !mi->confused()
+                && (mi->hit_dice < chief->hit_dice
+                   || BATTLECRY_CHERUB_HYMN))
             {
                 mon_enchant ench = mi->get_ench(battlecry);
                 if (ench.ench == ENCH_NONE || ench.degree < level)
