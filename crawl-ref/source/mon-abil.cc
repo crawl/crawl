@@ -1159,7 +1159,7 @@ static int _battle_cry(monster* chief, battlecry_type type)
                 && !mi->cannot_move()
                 && !mi->confused()
                 && (mi->hit_dice < chief->hit_dice
-                   || BATTLECRY_CHERUB_HYMN))
+                    || type == BATTLECRY_CHERUB_HYMN))
             {
                 mon_enchant ench = mi->get_ench(battlecry);
                 if (ench.ench == ENCH_NONE || ench.degree < level)
