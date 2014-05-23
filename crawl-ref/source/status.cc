@@ -129,7 +129,7 @@ static duration_def duration_data[] =
     { DUR_DISJUNCTION, true,
       BLUE, "Disjoin", "disjoining", "You are disjoining your surroundings." },
     { DUR_SENTINEL_MARK, true,
-      MAGENTA, "Mark", "marked", "You are marked for hunting." },
+      LIGHTRED, "Mark", "marked", "A sentinel's mark is revealing your location to enemies." },
     { DUR_INFUSION, true,
       BLUE, "Infus", "infused", "Your attacks are magically infused."},
     { DUR_SONG_OF_SLAYING, true,
