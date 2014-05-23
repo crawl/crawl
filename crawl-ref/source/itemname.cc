@@ -3292,14 +3292,6 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_WANDS:
-
-        if (!you.can_device_heal()
-            && item_type_known(item)
-            && item.sub_type == WAND_HEAL_WOUNDS)
-        {
-            return true;
-        }
-
         if (item.sub_type == WAND_INVISIBILITY
             && item_type_known(item)
                 && _invisibility_is_useless(temp))
