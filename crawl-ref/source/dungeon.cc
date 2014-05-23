@@ -304,7 +304,10 @@ static void _count_gold()
             }
             update_item_at(pos, true);
             if (detected)
+            {
+                ASSERT(env.map_knowledge(pos).item());
                 env.map_knowledge(pos).flags |= MAP_DETECTED_ITEM;
+            }
         }
     }
 }

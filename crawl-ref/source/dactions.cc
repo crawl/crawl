@@ -337,7 +337,10 @@ static void _apply_daction(daction_type act)
                     }
                     update_item_at(*ri, true);
                     if (detected)
+                    {
+                        ASSERT(env.map_knowledge(*ri).item());
                         env.map_knowledge(*ri).flags |= MAP_DETECTED_ITEM;
+                    }
                     break;
                 }
             }
