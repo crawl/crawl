@@ -1501,7 +1501,12 @@ static bool _give_nemelex_gift(bool forced = false)
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY))
     {
 
-        int thing_created = items(1, OBJ_MISCELLANY, MISC_DECK_OF_WAR,
+        misc_item_type gift_type = random_choose_weighted(
+                                        8, MISC_DECK_OF_WAR,
+                                        2, MISC_DECK_OF_ESCAPE,
+                                        0);
+
+        int thing_created = items(1, OBJ_MISCELLANY, gift_type,
                                   true, 1, 0, 0, 0, GOD_NEMELEX_XOBEH);
 
         move_item_to_grid(&thing_created, you.pos(), true);

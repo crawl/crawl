@@ -2742,9 +2742,10 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
              || item.sub_type == MISC_BOTTLED_EFREET
              || item.sub_type == MISC_DECK_OF_DUNGEONS
 #endif
-             // Nemelex' deck is rare in the dungeon.
-             || (item.sub_type == MISC_DECK_OF_WAR
-                 && !one_chance_in(5)));
+             // Nemelex' decks are rare in the dungeon.
+             || ((item.sub_type == MISC_DECK_OF_WAR
+                    || item.sub_type == MISC_DECK_OF_ESCAPE)
+                && !one_chance_in(5)));
     }
 
     // Pick number of beasts in the box
@@ -2763,11 +2764,6 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
     if (is_deck(item))
     {
         item.plus = 4 + random2(10);
-
-        // Nemelex' decks have a few more cards.
-
-        if (item.sub_type == MISC_DECK_OF_WAR)
-            item.plus += random2(6);
 
         if (force_ego >= DECK_RARITY_COMMON && force_ego <= DECK_RARITY_LEGENDARY)
             item.special = force_ego;

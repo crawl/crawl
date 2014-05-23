@@ -423,8 +423,6 @@ static const vector<const deck_archetype *> _subdecks(uint8_t deck_type)
         subdecks.push_back(deck_of_destruction);
         subdecks.push_back(deck_of_battle);
         subdecks.push_back(deck_of_summoning);
-        subdecks.push_back(deck_of_transport);
-        subdecks.push_back(deck_of_emergency);
         break;
     case MISC_DECK_OF_CHANGES:
         subdecks.push_back(deck_of_battle);
