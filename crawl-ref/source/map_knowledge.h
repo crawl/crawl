@@ -151,7 +151,14 @@ struct map_cell
 
     bool detected_item() const
     {
-        return !!(flags & MAP_DETECTED_ITEM);
+        const bool ret = !!(flags & MAP_DETECTED_ITEM);
+        // TODO: change to an ASSERT when the underlying crash goes away
+        if (ret && !_item)
+        {
+            //clear_item();
+            return false;
+        }
+        return ret;
     }
 
     void set_item(const item_info& ii, bool more_items)
