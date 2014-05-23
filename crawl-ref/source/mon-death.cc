@@ -2554,7 +2554,9 @@ int monster_die(monster* mons, killer_type killer,
          || killer == KILL_YOU_MISSILE
          || killer == KILL_YOU_CONF
          || pet_kill)
-             && corpse >= 0 && player_mutation_level(MUT_POWERED_BY_DEATH))
+             && corpse >= 0
+             && mitm[corpse].base_type != OBJ_GOLD
+             && player_mutation_level(MUT_POWERED_BY_DEATH))
     {
         const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
                             + roll_dice(2, 8);
@@ -2562,7 +2564,7 @@ int monster_die(monster* mons, killer_type killer,
             you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
     }
 
-    if (corpse >= 0)
+    if (corpse >= 0 && mitm[corpse].base_type != OBJ_GOLD)
     {
         // Powered by death.
         // Find nearby putrid demonspawn.
