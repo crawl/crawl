@@ -24,7 +24,7 @@ Character
   is no more.
 * Kobolds, hill orcs, and ogres are no longer saprovorous.
 * Ogres and centaurs no longer have a fast metabolism; halflings no longer
-  have a fast metabolism.
+  have a slow metabolism.
 * Centaurs are no longer herbivorous.
 * Vampires:
   - always get the full effect of all potions;
