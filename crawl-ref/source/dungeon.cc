@@ -293,7 +293,7 @@ static void _count_gold()
         for (unsigned int i = 0; i < gold_places.size(); i++)
         {
             bool detected = false;
-            int dummy = gold_piles[i]->link;
+            int dummy = gold_piles[i]->index();
             coord_def &pos = gold_places[i];
             unlink_item(dummy);
             move_item_to_grid(&dummy, pos, true);

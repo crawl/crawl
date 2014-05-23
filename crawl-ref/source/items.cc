@@ -1911,6 +1911,24 @@ void clear_item_pickup_flags(item_def &item)
     item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED | ISFLAG_NO_PICKUP);
 }
 
+// Move gold to the the top of a pile if following Gozag.
+static void _gozag_move_gold_to_top(const coord_def p)
+{
+    if (you_worship(GOD_GOZAG))
+    {
+        for (int gold = igrd(p); gold != NON_ITEM;
+             gold = mitm[gold].link)
+        {
+            if (mitm[gold].base_type == OBJ_GOLD)
+            {
+                unlink_item(gold);
+                move_item_to_grid(&gold, p, true);
+                break;
+            }
+        }
+    }
+}
+
 // Moves mitm[obj] to p... will modify the value of obj to
 // be the index of the final object (possibly different).
 //
@@ -1963,6 +1981,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 merge_item_stacks(item, *si);
                 destroy_item(ob);
                 ob = si->index();
+                _gozag_move_gold_to_top(p);
                 return true;
             }
         }
@@ -1998,20 +2017,8 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     if (item_is_orb(item))
         env.orb_pos = p;
 
-    // Gozag: make sure gold stays on top of piles.
-    if (you_worship(GOD_GOZAG) && item.base_type != OBJ_GOLD)
-    {
-        for (int gold = mitm[igrd(p)].link; gold != NON_ITEM;
-             gold = mitm[gold].link)
-        {
-            if (mitm[gold].base_type == OBJ_GOLD)
-            {
-                unlink_item(gold);
-                move_item_to_grid(&gold, p, true);
-                break;
-            }
-        }
-    }
+    if (item.base_type != OBJ_GOLD)
+        _gozag_move_gold_to_top(p);
 
     return true;
 }
