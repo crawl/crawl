@@ -8355,7 +8355,7 @@ bool player::form_uses_xl() const
 
 bool player::can_device_heal()
 {
-    return mutation[MUT_NO_DEVICE_HEAL] < 2;
+    return mutation[MUT_NO_DEVICE_HEAL] < 3;
 }
 
 #if TAG_MAJOR_VERSION == 34

@@ -700,7 +700,7 @@ static int _acquirement_wand_subtype()
         switch (type)
         {
         case WAND_HEAL_WOUNDS:
-            w = (you.innate_mutation[MUT_NO_DEVICE_HEAL] ? 5 : 25); break;
+            w = (you.innate_mutation[MUT_NO_DEVICE_HEAL] == 3 ? 5 : 25); break;
         case WAND_HASTING:          // each 17.9%, group unknown each 26.3%
             w = (you.species == SP_FORMICID ? 5 : 25); break;
         case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
