@@ -244,13 +244,9 @@ bool monster::swimming() const
 
 bool monster::wants_submerge() const
 {
-    // Trapdoor spiders only hide themselves under the floor when they
-    // can't see their prey.
+    // Trapdoor spiders don't re-submerge randomly.
     if (type == MONS_TRAPDOOR_SPIDER)
-    {
-        const actor* _foe = get_foe();
-        return _foe == NULL || !can_see(_foe);
-    }
+        return false;
 
     // Don't submerge if we just unsubmerged to shout.
     if (seen_context == SC_FISH_SURFACES_SHOUT)
