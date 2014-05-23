@@ -51,7 +51,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
     pow = min(pow, 150);
 
     // Reduced effect for healing potions.
-    float mut_factor = you.mutation[MUT_NO_DEVICE_HEAL] / 3;
+    int mut_factor = 3 - you.mutation[MUT_NO_DEVICE_HEAL];
 
     // Knowingly drinking bad potions is much less amusing.
     int xom_factor = 1;
@@ -88,7 +88,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         }
 
         if (you.can_device_heal())
-            inc_hp((5 + random2(7)) * mut_factor);
+            inc_hp((5 + random2(7)) * mut_factor / 3);
 
         mpr("You feel better.");
 
@@ -128,7 +128,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
             break;
         }
 
-        inc_hp((10 + random2avg(28, 3)) * mut_factor);
+        inc_hp((10 + random2avg(28, 3)) * mut_factor / 3);
         mpr("You feel much better.");
 
         // only fix rot when healed to full
