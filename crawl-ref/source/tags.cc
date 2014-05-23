@@ -2576,11 +2576,12 @@ static void tag_read_you(reader &th)
             you.mutation[MUT_EXOSKELETON] =
             you.innate_mutation[MUT_EXOSKELETON] = 0;
         }
-        if (you.species == SP_VINE_STALKER)
-        {
-            you.mutation[MUT_NO_DEVICE_HEAL] =
-            you.innate_mutation[MUT_NO_DEVICE_HEAL] = 2;
-        }
+    }
+
+    if (you.species == SP_VINE_STALKER)
+    {
+        you.mutation[MUT_NO_DEVICE_HEAL] =
+        you.innate_mutation[MUT_NO_DEVICE_HEAL] = 3;
     }
 
     if (th.getMinorVersion() < TAG_MINOR_DIET_MUT)

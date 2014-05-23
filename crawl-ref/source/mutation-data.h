@@ -1305,20 +1305,20 @@ static const mutation_def mut_data[] =
   "antimagic bite"
 },
 
-{ MUT_NO_DEVICE_HEAL,                 3,  2, true, false,
+{ MUT_NO_DEVICE_HEAL,                 3,  3, true, false,
   "no device heal",
 
   {"Potions and wands are less effective at restoring your health.",
-   "Potions and wands cannot restore your health.",
-   ""},
+   "Potions and wands are poor at restoring your health.",
+   "Potions and wands cannot restore your health."},
 
   {"Your system partially rejects artificial healing.",
-   "Your system completely rejects artificial healing.",
-   ""},
+   "Your system mostly rejects artificial healing.",
+   "Your system completely rejects artificial healing."},
 
   {"Your system completely accepts artificial healing.",
-   "Your system partially accepts artificial healing.",
-   ""},
+   "Your system mostly accepts artificial healing.",
+   "Your system partly accepts artificial healing."},
 
   "no device heal"
 },
