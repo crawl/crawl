@@ -542,9 +542,9 @@ static const mutation_def mut_data[] =
 { MUT_SCREAM,                         6,  3,  true, false,
   "screaming",
 
-  {"You occasionally shout uncontrollably.",
-   "You sometimes yell uncontrollably.",
-   "You frequently scream uncontrollably."},
+  {"You occasionally shout uncontrollably at your foes.",
+   "You sometimes yell uncontrollably at your foes.",
+   "You frequently scream uncontrollably at your foes."},
 
   {"You feel the urge to shout.",
    "You feel a strong urge to yell.",

@@ -853,15 +853,9 @@ static void _set_allies_withdraw(const coord_def &target)
     }
 }
 
-void yell(bool force)
+void yell(const actor* mon)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
-    {
-        mpr("You cannot shout while unable to breathe!");
-        return;
-    }
 
     bool targ_prev = false;
     int mons_targd = MHITNOT;
@@ -874,9 +868,9 @@ void yell(bool force)
 
     if (you.cannot_speak())
     {
-        if (force)
+        if (mon)
         {
-            if (you.paralysed())
+            if (you.paralysed() || you.duration[DUR_WATER_HOLD])
             {
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
@@ -895,12 +889,12 @@ void yell(bool force)
         return;
     }
 
-    if (force)
+    if (mon)
     {
-        if (you.duration[DUR_RECITE])
-            mpr("You feel yourself shouting your recitation.");
-        else
-            mprf("A %s rips itself from your throat!", shout_verb.c_str());
+        mprf("You %s%s at %s!",
+             shout_verb.c_str(),
+             you.duration[DUR_RECITE] ? " your recitation" : "",
+             mon->name(DESC_THE).c_str());
         noisy(noise_level, you.pos());
         return;
     }
@@ -2124,17 +2118,6 @@ static void _deteriorate(int time_delta)
     }
 }
 
-static void _scream(int time_delta)
-{
-    UNUSED(time_delta);
-    if (player_mutation_level(MUT_SCREAM)
-        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100)
-        && !(you.duration[DUR_WATER_HOLD] && !you.res_water_drowning()))
-    {
-        yell(true);
-    }
-}
-
 // Exercise armour *xor* stealth skill: {dlb}
 static void _wait_practice(int time_delta)
 {
@@ -2275,7 +2258,9 @@ static struct timed_effect timed_effects[] =
     { TIMER_CONTAM,        _handle_magic_contamination,   200,   600, false },
     { TIMER_DETERIORATION, _deteriorate,                  100,   300, false },
     { TIMER_GOD_EFFECTS,   handle_god_time,               100,   300, false },
-    { TIMER_SCREAM,        _scream,                       100,   300, false },
+#if TAG_MAJOR_VERSION == 34
+    { TIMER_SCREAM, NULL,                                   0,     0, false },
+#endif
     { TIMER_FOOD_ROT,      _rot_inventory_food,           100,   300, false },
     { TIMER_PRACTICE,      _wait_practice,                100,   300, false },
     { TIMER_LABYRINTH,     _lab_change,                  1000,  3000, false },
