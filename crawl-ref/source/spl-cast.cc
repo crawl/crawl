@@ -1105,6 +1105,13 @@ static bool _spellcasting_aborted(spell_type spell,
         return true;
     }
 
+    if (spell == SPELL_ANIMATE_DEAD && !can_see_animatable_remains()
+         && check_range_usability)
+    {
+        mpr("You don't see any remains to animate.");
+        return true;
+    }
+
     return false;
 }
 
