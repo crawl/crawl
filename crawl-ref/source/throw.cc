@@ -1205,7 +1205,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         break;
 
     case MI_TOMAHAWK:
-        chance = 30;
+        chance = 20;
         break;
 
     case MI_JAVELIN:
@@ -1213,7 +1213,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         break;
 
     case MI_LARGE_ROCK:
-        chance = 50;
+        chance = 30;
         break;
 
     default:
