@@ -50,6 +50,7 @@
 #include "shout.h"
 #include "spl-util.h"
 #include "spl-zap.h"
+#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "teleport.h"
@@ -1389,6 +1390,22 @@ static bool _animatable_remains(const item_def& item)
         // the above allows spectrals/etc
         && (mons_zombifiable(item.mon_type)
             || mons_skeleton(item.mon_type));
+}
+
+bool can_see_animatable_remains()
+{
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        const int oid = you.visible_igrd(*ri);
+        if (oid == NON_ITEM)
+            continue;
+
+        vector<item_def> items = item_list_in_stash(*ri);
+        for (unsigned int i = 0; i < items.size(); ++i)
+            if (_animatable_remains(items[i]))
+              return true;
+    }
+    return false;
 }
 
 // Try to equip the skeleton/zombie with the objects it died with.  This

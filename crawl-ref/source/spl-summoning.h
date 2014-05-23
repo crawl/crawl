@@ -74,6 +74,7 @@ spret_type cast_spellforged_servitor(int pow, god_type god, bool fail);
 
 spret_type cast_forceful_dismissal(int pow, bool fail);
 
+bool can_see_animatable_remains();
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     actor *as = NULL, string nas = "",
