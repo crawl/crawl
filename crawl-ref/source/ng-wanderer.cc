@@ -859,7 +859,7 @@ static void _wanderer_cover_equip_holes(int & slot)
 
 // New style wanderers are supposed to be decent in terms of skill
 // levels/equipment, but pretty randomised.
-void create_wanderer(void)
+void create_wanderer()
 {
     // Decide what our character roles are.
     stat_type primary_role   = _wanderer_choose_role();

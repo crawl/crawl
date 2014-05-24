@@ -316,7 +316,7 @@ void set_terrain_seen(const coord_def c);
 void set_terrain_visible(const coord_def c);
 void clear_terrain_visibility();
 
-int count_detected_mons(void);
+int count_detected_mons();
 
 void clear_map(bool clear_items = true, bool clear_mons = true);
 

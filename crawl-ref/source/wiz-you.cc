@@ -43,7 +43,7 @@ static void _swap_equip(equipment_type a, equipment_type b)
     you.melded.set(b, tmp);
 }
 
-void wizard_change_species(void)
+void wizard_change_species()
 {
     char specs[80];
 
@@ -228,7 +228,7 @@ void wizard_change_species(void)
 
 #ifdef WIZARD
 // Casts a specific spell by number or name.
-void wizard_cast_spec_spell(void)
+void wizard_cast_spec_spell()
 {
     char specs[80], *end;
     int spell;
@@ -258,7 +258,7 @@ void wizard_cast_spec_spell(void)
         crawl_state.cancel_cmd_repeat();
 }
 
-void wizard_memorise_spec_spell(void)
+void wizard_memorise_spec_spell()
 {
     char specs[80], *end;
     int spell;
@@ -436,7 +436,7 @@ void wizard_set_piety()
 //
 //---------------------------------------------------------------
 #ifdef WIZARD
-void wizard_exercise_skill(void)
+void wizard_exercise_skill()
 {
     skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
 
@@ -493,7 +493,7 @@ void wizard_set_skill_level(skill_type skill)
 #endif
 
 #ifdef WIZARD
-void wizard_set_all_skills(void)
+void wizard_set_all_skills()
 {
     double amount = prompt_for_float("Set all skills to what level? ");
 
@@ -885,7 +885,7 @@ static const char* dur_names[] =
     "corrosion"
 };
 
-void wizard_edit_durations(void)
+void wizard_edit_durations()
 {
     COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS);
     vector<int> durs;
@@ -1068,7 +1068,7 @@ void set_xl(const int newxl, const bool train)
         debug_uptick_xl(newxl, train);
 }
 
-void wizard_get_god_gift(void)
+void wizard_get_god_gift()
 {
     if (you_worship(GOD_NO_GOD))
     {

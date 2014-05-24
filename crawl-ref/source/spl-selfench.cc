@@ -25,7 +25,7 @@
 #include "transform.h"
 #include "view.h"
 
-int allowed_deaths_door_hp(void)
+int allowed_deaths_door_hp()
 {
     int hp = you.skill(SK_NECROMANCY) / 2;
 

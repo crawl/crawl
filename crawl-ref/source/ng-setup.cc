@@ -36,7 +36,7 @@
 static void _newgame_give_item(object_class_type base, int sub_type,
                                int qty = 1, int plus = 0, int plus2 = 0);
 
-static void _init_player(void)
+static void _init_player()
 {
     you.init();
     dlua.callfn("dgn_clear_data", "");

@@ -134,7 +134,7 @@ static short translate_colour(short col)
     }
 }
 
-static void setup_colour_pairs(void)
+static void setup_colour_pairs()
 {
     short i, j;
 
@@ -326,7 +326,7 @@ static void unix_handle_terminal_resize()
     console_startup();
 }
 
-static void unixcurses_defkeys(void)
+static void unixcurses_defkeys()
 {
 #ifdef NCURSES_VERSION
     // keypad 0-9 (only if the "application mode" was successfully initialised)
@@ -410,7 +410,7 @@ int unixcurses_get_vi_key(int keyin)
 #define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
 #define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
 
-void console_startup(void)
+void console_startup()
 {
     termio_init();
 
@@ -535,7 +535,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // this file.  This is good, since there are some issues with
 // name space collisions between curses macros and the standard
 // C++ string class.  -- bwr
-void update_screen(void)
+void update_screen()
 {
     refresh();
 
@@ -544,7 +544,7 @@ void update_screen(void)
 #endif
 }
 
-void clear_to_end_of_line(void)
+void clear_to_end_of_line()
 {
     textcolor(LIGHTGREY);
     textbackground(BLACK);
@@ -555,12 +555,12 @@ void clear_to_end_of_line(void)
 #endif
 }
 
-int get_number_of_lines(void)
+int get_number_of_lines()
 {
     return LINES;
 }
 
-int get_number_of_cols(void)
+int get_number_of_cols()
 {
     return COLS;
 }

@@ -441,12 +441,12 @@ void handle_interrupted_swap()
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
-bool you_are_delayed(void)
+bool you_are_delayed()
 {
     return !you.delay_queue.empty();
 }
 
-delay_type current_delay_action(void)
+delay_type current_delay_action()
 {
     return you_are_delayed() ? you.delay_queue.front().type
                              : DELAY_NOT_DELAYED;

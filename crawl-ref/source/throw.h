@@ -32,7 +32,7 @@ bool fire_warn_if_impossible(bool silent = false);
 int get_next_fire_item(int current, int offset);
 int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 void fire_thing(int item = -1);
-void throw_item_no_quiver(void);
+void throw_item_no_quiver();
 
 bool silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                            string &dmg_msg);

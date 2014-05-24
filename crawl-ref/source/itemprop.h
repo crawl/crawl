@@ -10,7 +10,7 @@
 
 struct bolt;
 
-void init_properties(void);
+void init_properties();
 
 // cursed:
 bool item_known_cursed(const item_def &item) PURE;

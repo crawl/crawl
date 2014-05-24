@@ -111,7 +111,7 @@ static bool _read_char_chunk(package *save);
 
 const short GHOST_SIGNATURE = short(0xDC55);
 
-static void _redraw_all(void)
+static void _redraw_all()
 {
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;

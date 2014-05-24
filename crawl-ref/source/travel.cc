@@ -601,7 +601,7 @@ static inline void _check_interesting_square(const coord_def pos,
     ed.found_feature(pos, grd(pos));
 }
 
-static void _userdef_run_stoprunning_hook(void)
+static void _userdef_run_stoprunning_hook()
 {
 #ifdef CLUA_BINDINGS
     if (you.running)
@@ -611,7 +611,7 @@ static void _userdef_run_stoprunning_hook(void)
 #endif
 }
 
-static void _userdef_run_startrunning_hook(void)
+static void _userdef_run_startrunning_hook()
 {
 #ifdef CLUA_BINDINGS
     if (you.running)

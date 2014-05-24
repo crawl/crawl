@@ -454,7 +454,7 @@ skill_type best_skill(skill_type min_skill, skill_type max_skill,
 // other skills will have to attain the next level higher to be
 // considered a better skill (thus, the first skill to reach level 27
 // becomes the characters final nickname). -- bwr
-void init_skill_order(void)
+void init_skill_order()
 {
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {

@@ -107,7 +107,7 @@ void fix_item_coordinates()
 }
 
 // This function uses the items coordinates to relink all the igrd lists.
-void link_items(void)
+void link_items()
 {
     // First, initialise igrd array.
     igrd.init(NON_ITEM);
@@ -173,7 +173,7 @@ static bool _item_preferred_to_clean(int item)
 
 // Returns index number of first available space, or NON_ITEM for
 // unsuccessful cleanup (should be exceedingly rare!)
-static int _cull_items(void)
+static int _cull_items()
 {
     crawl_state.cancel_cmd_repeat();
 
@@ -3004,7 +3004,7 @@ void autopickup()
     _do_autopickup();
 }
 
-int inv_count(void)
+int inv_count()
 {
     int count = 0;
 

@@ -31,7 +31,7 @@ void dump_map(const char* fname, bool debug = false, bool dist = false);
 void dump_map(FILE *fp, bool debug = false, bool dist = false);
 void display_notes();
 string munge_description(string inStr);
-const char *hunger_level(void);
+const char *hunger_level();
 
 #ifdef DGL_WHEREIS
 void whereis_record(const char *status = "active");

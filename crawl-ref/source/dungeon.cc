@@ -108,7 +108,7 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
 static void _place_branch_entrances(bool use_vaults);
 static void _place_extra_vaults();
 static void _place_chance_vaults();
-static void _place_minivaults(void);
+static void _place_minivaults();
 static int _place_uniques();
 static void _place_gozag_shop(dungeon_feature_type stair);
 static void _place_traps();
@@ -3244,7 +3244,7 @@ static void _place_chance_vaults()
     }
 }
 
-static void _place_minivaults(void)
+static void _place_minivaults()
 {
     // Always try to place PLACE:X minivaults.
     const map_def *vault = NULL;

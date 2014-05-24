@@ -476,17 +476,17 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
         return false;
 }
 
-bool is_map_persistent(void)
+bool is_map_persistent()
 {
     return !testbits(env.level_flags, LFLAG_NO_MAP);
 }
 
-bool player_in_hell(void)
+bool player_in_hell()
 {
     return is_hell_subbranch(you.where_are_you);
 }
 
-bool player_in_connected_branch(void)
+bool player_in_connected_branch()
 {
     return is_connected_branch(you.where_are_you);
 }
@@ -1450,7 +1450,7 @@ int player_hunger_rate(bool temp)
     return hunger;
 }
 
-int player_spell_levels(void)
+int player_spell_levels()
 {
     int sl = you.experience_level - 1 + you.skill(SK_SPELLCASTING, 2, true);
 
@@ -2323,7 +2323,7 @@ int player_movement_speed(bool ignore_burden)
 // This function differs from the above in that it's used to set the
 // initial time_taken value for the turn.  Everything else (movement,
 // spellcasting, combat) applies a ratio to this value.
-int player_speed(void)
+int player_speed()
 {
     int ps = 10;
 
@@ -2414,7 +2414,7 @@ bool player_effectively_in_light_armour()
 // that lich transformation doesn't change the character's shape
 // (so we end up with Naga-liches, Spiggan-liches, Minotaur-liches)
 // it just makes the character undead (with the benefits that implies). - bwr
-bool player_is_shapechanged(void)
+bool player_is_shapechanged()
 {
     if (you.form == TRAN_NONE
         || you.form == TRAN_BLADE_HANDS
@@ -2628,13 +2628,13 @@ int player_armour_shield_spell_penalty()
     return max(total_penalty, 0) / scale;
 }
 
-int player_wizardry(void)
+int player_wizardry()
 {
     return you.wearing(EQ_RINGS, RING_WIZARDRY)
            + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
 }
 
-int player_shield_class(void)
+int player_shield_class()
 {
     int shield = 0;
     int stat = 0;
@@ -2727,7 +2727,7 @@ int carrying_capacity(burden_state_type bs)
         return cap;
 }
 
-int burden_change(void)
+int burden_change()
 {
     const burden_state_type old_burdenstate = you.burden_state;
 
@@ -3684,7 +3684,7 @@ void adjust_level(int diff, bool just_xp)
 // Here's a question for you: does the ordering of mods make a difference?
 // (yes) -- are these things in the right order of application to stealth?
 // - 12mar2000 {dlb}
-int check_stealth(void)
+int check_stealth()
 {
     ASSERT(!crawl_state.game_is_arena());
     // Extreme stealthiness can be enforced by wizmode stealth setting.

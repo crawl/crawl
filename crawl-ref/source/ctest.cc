@@ -143,7 +143,7 @@ static bool _has_test(const string& test)
     return crawl_state.tests_selected[0].find(test) != string::npos;
 }
 
-static void _run_test(const string &name, void (*func)(void))
+static void _run_test(const string &name, void (*func)())
 {
     if (crawl_state.test_list)
         return (void)printf("%s\n", name.c_str());

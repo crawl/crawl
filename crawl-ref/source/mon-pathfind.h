@@ -20,12 +20,12 @@ public:
     bool init_pathfind(coord_def src, coord_def dest,
                        bool diag = true, bool msg = false);
     bool start_pathfind(bool msg = false);
-    vector<coord_def> backtrack(void);
-    vector<coord_def> calc_waypoints(void);
+    vector<coord_def> backtrack();
+    vector<coord_def> calc_waypoints();
 
 protected:
     // protected methods
-    bool calc_path_to_neighbours(void);
+    bool calc_path_to_neighbours();
     bool traversable(const coord_def& p);
     int  travel_cost(coord_def npos);
     bool mons_traversable(const coord_def& p);
@@ -33,7 +33,7 @@ protected:
     int  estimated_cost(coord_def npos);
     void add_new_pos(coord_def pos, int total);
     void update_pos(coord_def pos, int total);
-    bool get_best_position(void);
+    bool get_best_position();
 
     // The monster trying to find a path.
     const monster* mons;

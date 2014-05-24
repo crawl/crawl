@@ -98,7 +98,7 @@ static int find_weight(string &s, int defweight = TAG_UNFOUND)
     return weight == TAG_UNFOUND ? defweight : weight;
 }
 
-void clear_subvault_stack(void)
+void clear_subvault_stack()
 {
     env.new_subvault_names.clear();
     env.new_subvault_tags.clear();

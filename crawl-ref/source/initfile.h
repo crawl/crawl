@@ -24,7 +24,7 @@ newgame_def read_startup_prefs();
 void read_options(const string &s, bool runscript = false,
                   bool clear_aliases = false);
 
-void get_system_environment(void);
+void get_system_environment();
 
 class depth_ranges;
 
@@ -70,7 +70,7 @@ bool parse_args(int argc, char **argv, bool rc_only);
 struct newgame_def;
 void write_newgame_options_file(const newgame_def& prefs);
 
-void save_player_name(void);
+void save_player_name();
 
 string channel_to_str(int ch);
 

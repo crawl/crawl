@@ -452,7 +452,7 @@ static void _tweak_randart(item_def &item)
     }
 }
 
-void wizard_tweak_object(void)
+void wizard_tweak_object()
 {
     char specs[50];
     int keyin;
@@ -1579,7 +1579,7 @@ static void _debug_rap_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
-void debug_item_statistics(void)
+void debug_item_statistics()
 {
     FILE *ostat = fopen("items.stat", "a");
 
