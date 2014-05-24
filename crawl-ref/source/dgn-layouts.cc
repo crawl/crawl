@@ -24,7 +24,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 static void _builder_extras(int level_number);
 static bool _octa_room(dgn_region& region, int oblique_max,
                        dungeon_feature_type type_floor);
-static dungeon_feature_type _random_wall(void);
+static dungeon_feature_type _random_wall();
 static void _chequerboard(dgn_region& region, dungeon_feature_type target,
                           dungeon_feature_type floor1,
                           dungeon_feature_type floor2);
@@ -127,7 +127,7 @@ void dgn_build_basic_level()
     _builder_extras(level_number);
 }
 
-void dgn_build_bigger_room_level(void)
+void dgn_build_bigger_room_level()
 {
     env.level_build_method += " bigger_room";
     env.level_layout_types.insert("open");

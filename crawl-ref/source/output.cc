@@ -1287,7 +1287,7 @@ static void _redraw_title(const string &your_name, const string &job_name)
     textcolor(LIGHTGREY);
 }
 
-void print_stats(void)
+void print_stats()
 {
 #if TAG_MAJOR_VERSION == 34
     int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
@@ -1483,7 +1483,7 @@ void print_stats_level()
     clear_to_end_of_line();
 }
 
-void draw_border(void)
+void draw_border()
 {
     textcolor(HUD_CAPTION_COLOUR);
     clrscr();

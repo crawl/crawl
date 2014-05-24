@@ -37,7 +37,7 @@ bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);
 
-void alert_nearby_monsters(void);
+void alert_nearby_monsters();
 
 beh_type attitude_creation_behavior(mon_attitude_type att);
 beh_type actual_same_attitude(const monster& base);

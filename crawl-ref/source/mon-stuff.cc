@@ -158,7 +158,7 @@ void monster_drop_things(monster* mons,
     }
 }
 // If you're invis and throw/zap whatever, alerts menv to your position.
-void alert_nearby_monsters(void)
+void alert_nearby_monsters()
 {
     // Judging from the above comment, this function isn't
     // intended to wake up monsters, so we're only going to

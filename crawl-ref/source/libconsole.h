@@ -12,19 +12,19 @@ int get_number_of_lines();
 int get_number_of_cols();
 int num_to_lines(int num);
 
-void clrscr(void);
+void clrscr();
 void clear_to_end_of_line();
 void gotoxy_sys(int x, int y);
 void textcolor(int c);
 void textbackground(int c);
 void cprintf(const char *format, ...);
 
-int wherex(void);
-int wherey(void);
+int wherex();
+int wherey();
 void putwch(ucs_t c);
-int getchk(void);
-int getch_ck(void);
-bool kbhit(void);
+int getchk();
+int getch_ck();
+bool kbhit();
 void delay(unsigned int ms);
 void puttext(int x, int y, const crawl_view_buffer &vbuf);
 void update_screen();

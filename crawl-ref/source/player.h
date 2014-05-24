@@ -24,7 +24,7 @@
 
 class targetter;
 
-int check_stealth(void);
+int check_stealth();
 
 typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
@@ -813,22 +813,22 @@ bool check_moveto_trap(const coord_def& p, const string &move_verb = "step",
 
 void move_player_to_grid(const coord_def& p, bool stepped);
 
-bool is_map_persistent(void);
-bool player_in_mappable_area(void);
-bool player_in_connected_branch(void);
-bool player_in_hell(void);
+bool is_map_persistent();
+bool player_in_mappable_area();
+bool player_in_connected_branch();
+bool player_in_hell();
 
 static inline bool player_in_branch(int branch)
 {
     return you.where_are_you == branch;
 };
 
-bool berserk_check_wielded_weapon(void);
+bool berserk_check_wielded_weapon();
 bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
 bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
-bool player_is_shapechanged(void);
+bool player_is_shapechanged();
 
 bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
@@ -838,11 +838,11 @@ static inline int player_under_penance(god_type god = you.religion)
     return you.penance[god];
 }
 
-int burden_change(void);
+int burden_change();
 
 int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
-int player_energy(void);
+int player_energy();
 
 int player_raw_body_armour_evasion_penalty();
 int player_adjusted_shield_evasion_penalty(int scale);
@@ -859,12 +859,12 @@ int player_icemail_armour_class();
 
 bool player_stoneskin();
 
-int player_wizardry(void);
+int player_wizardry();
 
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
-int player_regen(void);
+int player_regen();
 
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
@@ -896,22 +896,22 @@ int player_res_magic(bool calc_unid = true, bool temp = true);
 
 bool player_control_teleport(bool temp = true);
 
-int player_shield_class(void);
+int player_shield_class();
 
-int player_spec_air(void);
-int player_spec_cold(void);
-int player_spec_conj(void);
-int player_spec_death(void);
-int player_spec_earth(void);
-int player_spec_fire(void);
-int player_spec_hex(void);
-int player_spec_charm(void);
-int player_spec_poison(void);
-int player_spec_summ(void);
+int player_spec_air();
+int player_spec_cold();
+int player_spec_conj();
+int player_spec_death();
+int player_spec_earth();
+int player_spec_fire();
+int player_spec_hex();
+int player_spec_charm();
+int player_spec_poison();
+int player_spec_summ();
 
-int player_speed(void);
+int player_speed();
 
-int player_spell_levels(void);
+int player_spell_levels();
 
 bool player_sust_abil(bool calc_unid = true);
 
@@ -926,7 +926,7 @@ bool will_gain_life(int lev);
 
 int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);
-void display_char_status(void);
+void display_char_status();
 
 void forget_map(bool rot = false);
 

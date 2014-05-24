@@ -29,7 +29,7 @@ enum hints_types
 
 void save_hints(writer& outf);
 void load_hints(reader& inf);
-void init_hints_options(void);
+void init_hints_options();
 
 enum hints_event_type
 {
@@ -152,14 +152,14 @@ struct newgame_def;
 void init_hints();
 void tutorial_init_hints();
 void pick_hints(newgame_def* choice);
-void hints_load_game(void);
+void hints_load_game();
 
 formatted_string hints_starting_info2();
-void hints_starting_screen(void);
+void hints_starting_screen();
 void hints_new_turn();
 void print_hint(string key, const string arg1 = "", const string arg2 = "");
-void hints_death_screen(void);
-void hints_finished(void);
+void hints_death_screen();
+void hints_finished();
 
 void hints_dissection_reminder(bool healthy);
 void hints_healing_check();
@@ -170,10 +170,10 @@ void hints_monster_seen(const monster& mon);
 void hints_first_item(const item_def& item);
 void learned_something_new(hints_event_type seen_what,
                            coord_def gc = coord_def());
-formatted_string hints_abilities_info(void);
-string hints_skills_info(void);
+formatted_string hints_abilities_info();
+string hints_skills_info();
 string hints_skill_training_info();
-string hints_skills_description_info(void);
+string hints_skills_description_info();
 
 // Additional information for tutorial players.
 void check_item_hint(const item_def &item, unsigned int num_old_talents);

@@ -50,7 +50,7 @@
 
 #ifdef WIZARD
 // Creates a specific monster by mon type number.
-void wizard_create_spec_monster(void)
+void wizard_create_spec_monster()
 {
     int mon = prompt_for_int("Which monster by number? ", true);
 

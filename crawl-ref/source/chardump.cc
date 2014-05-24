@@ -1360,7 +1360,7 @@ static const char* thirst_names[] =
     "almost alive",
 };
 
-const char *hunger_level(void)
+const char *hunger_level()
 {
     COMPILE_CHECK(ARRAYSZ(hunger_names) == HS_ENGORGED + 1);
     COMPILE_CHECK(ARRAYSZ(thirst_names) == HS_ENGORGED + 1);

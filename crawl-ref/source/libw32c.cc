@@ -95,7 +95,7 @@ static bool w32_smart_cursor = true;
 // we can do straight translation of DOS color to win32 console color.
 #define WIN32COLOR(col) (WORD)(col)
 static void writeChar(ucs_t c);
-static void bFlush(void);
+static void bFlush();
 static void _setcursortype_internal(bool curstype);
 
 // [ds] Unused for portability reasons
@@ -191,7 +191,7 @@ bool is_smart_cursor_enabled()
     return w32_smart_cursor;
 }
 
-void bFlush(void)
+void bFlush()
 {
     COORD source;
     SMALL_RECT target;
@@ -494,7 +494,7 @@ void clear_to_end_of_line()
         cprintf("%*s", cols - pos + 1, "");
 }
 
-void clrscr(void)
+void clrscr()
 {
     int x,y;
     COORD source;
@@ -608,12 +608,12 @@ void cprintf(const char *format, ...)
     va_end(argp);
 }
 
-int wherex(void)
+int wherex()
 {
     return cx+1;
 }
 
-int wherey(void)
+int wherey()
 {
     return cy+1;
 }
@@ -769,7 +769,7 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     return 0;
 }
 
-int getch_ck(void)
+int getch_ck()
 {
     INPUT_RECORD ir;
     DWORD nread;
@@ -839,7 +839,7 @@ int getch_ck(void)
     return key;
 }
 
-int getchk(void)
+int getchk()
 {
     int c = getch_ck();
     return key_to_command(c);

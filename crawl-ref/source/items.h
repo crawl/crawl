@@ -55,9 +55,9 @@ int item_on_floor(const item_def &item, const coord_def& where);
 
 void init_item(int item);
 
-void link_items(void);
+void link_items();
 
-void fix_item_coordinates(void);
+void fix_item_coordinates();
 
 int get_mitm_slot(int reserve = 50);
 
@@ -90,9 +90,9 @@ const item_def* top_item_at(const coord_def& where);
 // Returns whether there is more than one item in a given cell.
 bool multiple_items_at(const coord_def& where);
 
-void drop(void);
+void drop();
 
-int inv_count(void);
+int inv_count();
 int runes_in_pack();
 
 bool pickup_single_item(int link, int qty);

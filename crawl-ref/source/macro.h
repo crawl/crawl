@@ -39,7 +39,7 @@ private:
 int getchm(int (*rgetch)() = NULL);       // keymaps applied (ie for prompts)
 int getchm(KeymapContext context, int (*rgetch)() = NULL);
 
-int getch_with_command_macros(void);  // keymaps and macros (ie for commands)
+int getch_with_command_macros();  // keymaps and macros (ie for commands)
 
 void flush_input_buffer(int reason);
 

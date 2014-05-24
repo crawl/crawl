@@ -786,7 +786,7 @@ static bool _sack_of_spiders(item_def &sack)
     return success;
 }
 
-static bool _ball_of_energy(void)
+static bool _ball_of_energy()
 {
     bool ret = false;
 

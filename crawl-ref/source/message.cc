@@ -1641,7 +1641,7 @@ void load_messages(reader& inf)
     mesclr();
 }
 
-void replay_messages(void)
+void replay_messages()
 {
     formatted_scroller hist(MF_START_AT_END | MF_ALWAYS_SHOW_MORE, "");
     hist.set_more();

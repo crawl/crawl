@@ -83,7 +83,7 @@ static const struct spell_desc *_seekspell(spell_type spellid);
 //
 
 // All this does is merely refresh the internal spell list {dlb}:
-void init_spell_descs(void)
+void init_spell_descs()
 {
     for (int i = 0; i < NUM_SPELLS; i++)
         spell_list[i] = -1;

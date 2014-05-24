@@ -15,7 +15,7 @@
 extern string init_file_error; // defined in main.cc
 
 // Eventually, this should be something more grand. {dlb}
-void opening_screen(void)
+void opening_screen()
 {
     string msg =
     "<yellow>Hello, welcome to " CRAWL " " + string(Version::Long) + "!</yellow>\n"

@@ -550,7 +550,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     }
 }
 
-void init_show_table(void)
+void init_show_table()
 {
     show_type obj;
     for (int i = 0; i < NUM_FEATURES; i++)

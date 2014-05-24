@@ -28,7 +28,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget,
                  int spread_rate = -1, int colour = -1, string name = "",
                  string tile = "", int excl_rad = -1);
 
-void manage_clouds(void);
+void manage_clouds();
 
 bool is_opaque_cloud(int cloud_idx);
 

@@ -69,7 +69,7 @@ static void _dump_item(const char *name, int num, const item_def &item,
 // debug_item_scan
 //
 //---------------------------------------------------------------
-void debug_item_scan(void)
+void debug_item_scan()
 {
     int   i;
     char  name[256];

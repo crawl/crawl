@@ -54,13 +54,13 @@ enum run_mode_type
 /* ***********************************************************************
  * Initialises the travel subsystem.
  */
-void stop_running(void);
+void stop_running();
 void travel_init_load_level();
 void travel_init_new_level();
 
 uint8_t is_waypoint(const coord_def &p);
 command_type direction_to_command(int x, int y);
-bool is_resting(void);
+bool is_resting();
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool feat_is_traversable_now(dungeon_feature_type feat, bool try_fallback = false);
 bool feat_is_traversable(dungeon_feature_type feat, bool try_fallback = false);

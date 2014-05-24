@@ -24,7 +24,7 @@
 #include "state.h"
 #include "stuff.h"
 
-monster_type debug_prompt_for_monster(void)
+monster_type debug_prompt_for_monster()
 {
     char specs[1024];
 

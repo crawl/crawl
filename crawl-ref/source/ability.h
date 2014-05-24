@@ -91,9 +91,9 @@ bool check_ability_possible(const ability_type ability, bool hungerCheck = true,
 bool activate_talent(const talent& tal);
 vector<talent> your_talents(bool check_confused, bool include_unusable = false);
 bool string_matches_ability_name(const string& key);
-string print_abilities(void);
+string print_abilities();
 
-void set_god_ability_slots(void);
+void set_god_ability_slots();
 vector<ability_type> get_god_abilities(bool include_unusable = false,
                                        bool ignore_piety = false);
 

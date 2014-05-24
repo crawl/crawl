@@ -200,9 +200,9 @@ const struct coord_def Compass[9] =
 static void _launch_game_loop();
 NORETURN static void _launch_game();
 
-static void _do_berserk_no_combat_penalty(void);
-static void _do_searing_ray(void);
-static void _input(void);
+static void _do_berserk_no_combat_penalty();
+static void _do_searing_ray();
+static void _input();
 static void _move_player(int move_x, int move_y);
 static void _move_player(coord_def move);
 static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
@@ -233,7 +233,7 @@ static void _set_removed_types_as_identified();
 static void _compile_time_asserts();
 
 #ifdef WIZARD
-static void _handle_wizard_command(void);
+static void _handle_wizard_command();
 #endif
 
 //
@@ -855,7 +855,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     you.turn_is_over = false;
 }
 
-static void _handle_wizard_command(void)
+static void _handle_wizard_command()
 {
     int wiz_command;
 
@@ -3179,7 +3179,7 @@ static void _close_door(coord_def move)
 // Total penalty (including the standard one during upkeep is:
 //          2  5  9  14  20  27  35  44
 //
-static void _do_berserk_no_combat_penalty(void)
+static void _do_berserk_no_combat_penalty()
 {
     // Butchering/eating a corpse will maintain a blood rage.
     const int delay = current_delay_action();

@@ -305,7 +305,7 @@ NORETURN void game_ended_with_error(const string &message)
         end(1, false, "%s", message.c_str());
 }
 
-void redraw_screen(void)
+void redraw_screen()
 {
     if (!crawl_state.need_save)
     {

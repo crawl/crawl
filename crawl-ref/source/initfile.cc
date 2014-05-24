@@ -3816,7 +3816,7 @@ static string check_string(const char *s)
     return s? s : "";
 }
 
-void get_system_environment(void)
+void get_system_environment()
 {
     // The player's name
     SysEnv.crawl_name = check_string(getenv("CRAWL_NAME"));

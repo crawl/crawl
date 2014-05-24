@@ -152,7 +152,7 @@ int ui_random(int max)
 }
 
 // [0, 1]
-bool coinflip(void)
+bool coinflip()
 {
     return static_cast<bool>(random2(2));
 }

@@ -347,7 +347,7 @@ spret_type cast_teleport_self(bool fail)
     return SPRET_SUCCESS;
 }
 
-void you_teleport(void)
+void you_teleport()
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)

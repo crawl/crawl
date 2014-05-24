@@ -143,7 +143,7 @@ static void _init_consoles()
 static void _shutdown_console()
 {
 #ifdef TARGET_OS_WINDOWS
-    typedef BOOL (WINAPI *fc_func)(void);
+    typedef BOOL (WINAPI *fc_func)();
     fc_func free_console = (fc_func)GetProcAddress(
         GetModuleHandle(TEXT("kernel32.dll")), "FreeConsole");
     if (free_console)

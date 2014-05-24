@@ -32,13 +32,13 @@ public:
     static void cgotoxy(int x, int y);
     static int wherex();
     static int wherey();
-    //static int get_number_of_lines(void);
+    //static int get_number_of_lines();
     static void _setcursortype(int curstype);
     static void textbackground(int bg);
     static void textcolor(int col);
 
     // Object's method
-    void clear_to_end_of_line(void);
+    void clear_to_end_of_line();
     void putwch(ucs_t chr);
 
     ucs_t   *cbuf; //text backup

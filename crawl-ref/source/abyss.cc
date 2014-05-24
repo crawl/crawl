@@ -71,8 +71,8 @@ static sample_queue abyss_sample_queue;
 static vector<dungeon_feature_type> abyssal_features;
 static list<monster*> displaced_monsters;
 
-static void abyss_area_shift(void);
-static void _push_items(void);
+static void abyss_area_shift();
+static void _push_items();
 static void _push_displaced_monster(monster* mon);
 
 // If not_seen is true, don't place the feature where it can be seen from
@@ -1356,7 +1356,7 @@ void set_abyss_state(coord_def coord, uint32_t depth)
     _abyss_apply_terrain(abyss_genlevel_mask, true, true);
 }
 
-static void abyss_area_shift(void)
+static void abyss_area_shift()
 {
     dprf(DIAG_ABYSS, "area_shift() - player at pos (%d, %d)",
          you.pos().x, you.pos().y);

@@ -166,7 +166,7 @@ static bool userfunc_referenced(int index)
 }
 
 // Expensive function to discard unused function names
-static void userfunc_collectgarbage(void)
+static void userfunc_collectgarbage()
 {
     for (int i = userfunctions.size() - 1; i >= 0; --i)
     {
@@ -883,7 +883,7 @@ static string _macro_type_name(bool keymap, KeymapContext keymc)
                         (keymap ? "keymap" : "macro"));
 }
 
-void macro_add_query(void)
+void macro_add_query()
 {
     int input;
     bool keymap = false;

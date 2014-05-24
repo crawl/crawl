@@ -1449,7 +1449,7 @@ static void _parse_maps(const string &s)
     time_t mtime = file_modtime(dat);
     _reset_map_parser();
 
-    extern int yyparse(void);
+    extern int yyparse();
     extern FILE *yyin;
     yyin = dat;
 
