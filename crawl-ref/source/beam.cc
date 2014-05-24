@@ -2714,7 +2714,7 @@ void bolt::drop_object()
             {
                 // If no trapping net found mark this one.
                 if (get_trapping_net(pos(), true) == NON_ITEM)
-                    set_item_stationary(*item);
+                    set_net_stationary(*item);
             }
         }
 

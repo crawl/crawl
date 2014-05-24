@@ -815,6 +815,11 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js, int quantity)
     return relative_gain;
 }
 
+/*
+ * Sacrifice the items at the player's location to the player's god.
+ *
+ * @returns True if an item was sacrificed, false otherwise.
+*/
 static bool _offer_items()
 {
     if (!god_likes_items(you.religion))
@@ -837,7 +842,7 @@ static bool _offer_items()
         const int next = item.link;  // in case we can't get it later.
         const bool disliked = !god_likes_item(you.religion, item);
 
-        if (item_is_stationary(item) || disliked)
+        if (item_is_stationary_net(item) || disliked)
         {
             i = next;
             if (disliked)

@@ -2056,6 +2056,16 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
     return false;
 }
 
+/*
+ * Have a monster pick up a missile item.
+ *
+ * @param item The item to pick up.
+ * @param near If -1, a message is printed if the player can see the monster,
+ *             if non-zero a message is always printed, and no message is
+ *             printed if 0.
+ * @param force If true, the monster will always try to pick up the item.
+ * @returns True if the monster picked up the missile, false otherwise.
+*/
 bool monster::pickup_missile(item_def &item, int near, bool force)
 {
     const item_def *miss = missiles();
@@ -2065,7 +2075,7 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
         if (item.sub_type == MI_THROWING_NET)
         {
             // Monster may not pick up trapping net.
-            if (caught() && item_is_stationary(item))
+            if (caught() && item_is_stationary_net(item))
                 return false;
         }
         else // None of these exceptions hold for throwing nets.

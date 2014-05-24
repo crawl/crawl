@@ -2685,10 +2685,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
                            / (crawl_state.game_is_zotdef() ? 30 : 20) + quant;
             eaten += quant;
 
-            if (mons->caught()
-                && si->base_type == OBJ_MISSILES
-                && si->sub_type == MI_THROWING_NET
-                && item_is_stationary(*si))
+            if (mons->caught() && item_is_stationary_net(*si))
             {
                 mons->del_ench(ENCH_HELD, true);
                 eaten_net = true;

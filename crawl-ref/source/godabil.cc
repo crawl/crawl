@@ -1801,6 +1801,11 @@ bool kiku_receive_corpses(int pow)
     }
 }
 
+/*
+ * Destroy a corpse at the player's location
+ *
+ * @returns True if a corpse was destroyed, false otherwise.
+*/
 bool kiku_take_corpse()
 {
     for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
@@ -1809,12 +1814,6 @@ bool kiku_take_corpse()
 
         if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
             continue;
-        // should only fresh corpses count?
-
-        // only nets currently, but let's check anyway...
-        if (item_is_stationary(item))
-            continue;
-
         item_was_destroyed(item);
         destroy_item(i);
         return true;

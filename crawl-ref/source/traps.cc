@@ -261,16 +261,21 @@ bool trap_def::is_safe(actor* act) const
     return false;
 }
 
-// Returns the number of a net on a given square.
-// If trapped, only stationary ones are counted
-// otherwise the first net found is returned.
+/*
+ * Get the item index of the first net on the square.
+ *
+ * @param where The location.
+ * @param trapped If true, the index of the stationary net (trapping a victim)
+ *                is returned.
+ * @returns The item index of the net.
+*/
 int get_trapping_net(const coord_def& where, bool trapped)
 {
     for (stack_iterator si(where); si; ++si)
     {
         if (si->base_type == OBJ_MISSILES
             && si->sub_type == MI_THROWING_NET
-            && (!trapped || item_is_stationary(*si)))
+            && (!trapped || item_is_stationary_net(*si)))
         {
             return si->index();
         }
@@ -284,7 +289,7 @@ static void _maybe_split_nets(item_def &item, const coord_def& where)
 {
     if (item.quantity == 1)
     {
-        set_item_stationary(item);
+        set_net_stationary(item);
         return;
     }
 
@@ -300,7 +305,7 @@ static void _maybe_split_nets(item_def &item, const coord_def& where)
     item_colour(it);
 
     item.quantity = 1;
-    set_item_stationary(item);
+    set_net_stationary(item);
 
     copy_item_to_grid(it, where);
 }
@@ -1727,6 +1732,14 @@ level_id generic_shaft_dest(coord_def pos, bool known = false)
     return _generic_shaft_dest(level_pos(level_id::current(), pos));
 }
 
+/*
+ * When a player falls through a shaft at a location, disperse items on the
+ * target level.
+ *
+ * @param pos The location.
+ * @param open_shaft If True and the location was seen, print a shaft opening
+ *                   message, otherwise don't.
+*/
 void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
 {
     if (!is_valid_shaft_level())
@@ -1748,7 +1761,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     {
         int next = mitm[o].link;
 
-        if (mitm[o].defined() && !item_is_stationary(mitm[o]))
+        if (mitm[o].defined() && !item_is_stationary_net(mitm[o]))
         {
             if (need_open_message)
             {
