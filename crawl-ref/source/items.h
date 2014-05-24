@@ -73,7 +73,8 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-void item_list_on_square(vector<const item_def*>& items, int obj);
+void item_list_on_square(vector<const item_def*>& items, int obj,
+                         bool exclude_stationary = false);
 
 bool copy_item_to_grid(const item_def &item, const coord_def& p,
                        int quant_drop = -1,    // item.quantity by default
@@ -149,6 +150,7 @@ bool is_valid_mimic_item(const item_def &item);
 bool maybe_identify_base_type(item_def &item);
 // Returns the Orb's position on the ground, or origin()
 coord_def orb_position();
+int count_movable_items(int obj);
 
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're

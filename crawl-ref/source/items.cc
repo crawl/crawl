@@ -615,21 +615,39 @@ void lose_item_stack(const coord_def& where)
     igrd(where) = NON_ITEM;
 }
 
-static int _count_items(int obj)
+/*
+ * How many movable items are there at a location?
+ *
+ * @param obj The item link for the location.
+ * @returns The number of movable items at the location.
+*/
+int count_movable_items(int obj)
 {
     int result = 0;
 
     for (stack_iterator si(obj); si; ++si)
-        ++result;
-
+    {
+        if (!item_is_stationary(*si))
+            ++result;
+    }
     return result;
 }
 
-// Fill items with the items on a square.
-void item_list_on_square(vector<const item_def*>& items, int obj)
+/*
+ * Fill the given vector with the items on the given location link.
+ *
+ * @param[out] items A vector to hold the item_defs of the item.
+ * @param[in] obj The location link; an index in mitm.
+ * @param exclude_stationary If true, don't include stationary items.
+*/
+void item_list_on_square(vector<const item_def*>& items, int obj, bool exclude_stationary)
 {
     for (stack_iterator si(obj); si; ++si)
+    {
+        if (exclude_stationary && item_is_stationary(*si))
+            continue;
         items.push_back(& (*si));
+    }
 }
 
 bool need_to_autopickup()
@@ -819,7 +837,8 @@ void pickup_menu(int item_link)
     int n_tried_pickup = 0;
 
     vector<const item_def*> items;
-    item_list_on_square(items, item_link);
+    item_list_on_square(items, item_link, true);
+    ASSERT(items.size());
 
 #ifdef TOUCH_UI
     string prompt = "Pick up what? (<Enter> or tap header to pick up)";
@@ -1121,9 +1140,24 @@ string origin_desc(const item_def &item)
     return desc;
 }
 
+/*
+ * Pickup a single item stack at the given location link
+ *
+ * @param link The location link
+ * @param qty If 0, prompt for quantity of that item to pick up, if < 0,
+ *            pick up the entire stack, otherwise pick up qty of the item.
+ * @returns True if any item was picked up, false otherwise.
+*/
 bool pickup_single_item(int link, int qty)
 {
+    ASSERT(link != NON_ITEM);
+
     item_def* item = &mitm[link];
+    if (item_is_stationary(mitm[link]))
+    {
+        mpr("You can't pick that up.");
+        return false;
+    }
     if (item->base_type == OBJ_GOLD && !qty && !i_feel_safe()
         && !yesno("Are you sure you want to pick up this pile of gold now?",
                   true, 'n'))
@@ -1169,13 +1203,6 @@ bool pickup_single_item(int link, int qty)
         learned_something_new(HINT_FULL_INVENTORY);
         return false;
     }
-    else if (num == 0)
-    {
-        mpr("You can't carry that much weight.");
-        learned_something_new(HINT_FULL_INVENTORY);
-        return false;
-    }
-
     return true;
 }
 
@@ -1188,12 +1215,18 @@ bool player_on_single_stack()
         return mitm[o].link == NON_ITEM && mitm[o].quantity > 1;
 }
 
+/*
+ * Do the pickup command.
+ *
+ * @param partial_quantity If true, prompt for a quantity to pick up when
+ *                         picking up a single stack.
+*/
 void pickup(bool partial_quantity)
 {
     int keyin = 'x';
 
     int o = you.visible_igrd(you.pos());
-    const int num_items = _count_items(o);
+    const int num_items = count_movable_items(o);
 
     // Store last_pickup in case we need to restore it.
     // Then clear it to fill with items picked up.
@@ -1202,15 +1235,23 @@ void pickup(bool partial_quantity)
 
     if (o == NON_ITEM)
         mpr("There are no items here.");
+    else if (num_items == 0)
+        mpr("There are no items here that you can pick up.");
     else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
         mpr("You can't reach the bottom while floating on water.");
-    else if (mitm[o].link == NON_ITEM)      // just one item?
+    // just one movable item?
+    else if (num_items == 1)
+    {
+        // Get the link to the movable item in the pile.
+        while (item_is_stationary(mitm[o]))
+            o = mitm[o].link;
         pickup_single_item(o, partial_quantity ? 0 : mitm[o].quantity);
+    }
     else if (Options.pickup_menu
              || Options.pickup_menu_limit
-                && num_items >= (Options.pickup_menu_limit < 0
-                                 ? Options.item_stack_summary_minimum
-                                 : Options.pickup_menu_limit))
+             && num_items >= (Options.pickup_menu_limit < 0
+                              ? Options.item_stack_summary_minimum
+                              : Options.pickup_menu_limit))
     {
         pickup_menu(o);
     }
@@ -1256,13 +1297,9 @@ void pickup(bool partial_quantity)
                 clear_item_pickup_flags(mitm[o]);
                 int result = move_item_to_player(o, num_to_take);
 
-                if (result == 0 || result == -1)
+                if (result == -1)
                 {
-                    if (result == 0)
-                        pickup_warning = "You can't carry that much weight.";
-                    else
-                        pickup_warning = "You can't carry that many items.";
-
+                    pickup_warning = "You can't carry that many items.";
                     mitm[o].flags = old_flags;
                 }
             }
@@ -1531,7 +1568,10 @@ void note_inscribe_item(item_def &item)
 }
 
 /*
- * Move the given item and quantity to the player's inventory
+ * Move the given item and quantity to the player's inventory.
+ *
+ * Returns 1 so pickup can continue if the pickup fails due to the item being
+ * stationary or not having enough runes to pick up the orb in zotdef.
  * @param obj The item index in mitm.
  * @param quant_got The quantity of this item to move.
  * @param quiet If true, most messages notifying the player of item pickup (or
@@ -1545,7 +1585,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
 
     if (item_is_stationary(it))
     {
-        mpr("You cannot pick up the net that holds you!");
+        mpr("You can't pick that up.");
         // Fake a successful pickup (return 1), so we can continue to
         // pick up anything else that might be on this square.
         return 1;

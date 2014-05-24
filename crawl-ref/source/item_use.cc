@@ -3095,6 +3095,12 @@ void tile_item_use_floor(int idx)
 
 void tile_item_pickup(int idx, bool part)
 {
+    if (item_is_stationary(mitm[idx]))
+    {
+        mpr("You can't pick that up.");
+        return;
+    }
+
     if (part)
     {
         pickup_menu(idx);

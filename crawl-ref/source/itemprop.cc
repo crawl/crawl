@@ -635,18 +635,39 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
         ash_check_bondage();
 }
 
-// Is item stationary (cannot be picked up)?
-void set_item_stationary(item_def &item)
+/*
+ * Make a net stationary (because it currently traps a victim).
+ *
+ * @param item The net item.
+*/
+void set_net_stationary(item_def &item)
 {
     if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
         item.plus2 = 1;
 }
 
+/*
+ * Is the item stationary (unmovable)
+ *
+ * Currently only carrion and nets with a trapped victim are stationary.
+ * @param item The item.
+ * @returns True iff the item is stationary.
+*/
 bool item_is_stationary(const item_def &item)
 {
-    return item.base_type == OBJ_MISSILES
-           && item.sub_type == MI_THROWING_NET
-           && item.plus2;
+    return item.base_type == OBJ_CORPSES || item_is_stationary_net(item);
+}
+
+/*
+ * Is the item a stationary net
+ *
+ * @param item The item.
+ * @returns True iff the item is a stationary net.
+*/
+bool item_is_stationary_net(const item_def &item)
+{
+    return item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET
+        && item.plus2;
 }
 
 static bool _in_shop(const item_def &item)

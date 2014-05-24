@@ -875,9 +875,10 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
                 }
                 else
                 {
+
                     // pick up menu
                     // More than a single item -> open menu right away.
-                    if (o != NON_ITEM && mitm[o].link != NON_ITEM)
+                    if (count_movable_items(o) > 1)
                     {
                         pickup_menu(o);
                         flush_prev_message();

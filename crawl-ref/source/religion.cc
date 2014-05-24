@@ -3561,6 +3561,15 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
     }
 }
 
+/*
+ * Does this god accept items for sacrifice?
+ *
+ * @param god The god.
+ * @param greedy_explore If true, the return value is based on whether
+ *                       we should make explore greedy for items under
+ *                       this god.
+ * @returns True if the god accepts items for sacrifice, false otherwise.
+*/
 bool god_likes_items(god_type god, bool greedy_explore)
 {
     if (greedy_explore && (!(Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
@@ -3583,13 +3592,20 @@ bool god_likes_items(god_type god, bool greedy_explore)
         return true;
 
     case NUM_GODS: case GOD_RANDOM: case GOD_NAMELESS:
-        mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god));
+        die("Bad god for item sacrifice check: %d", static_cast<int>(god));
 
     default:
         return false;
     }
 }
 
+/*
+ * Does a god like a particular item for sacrifice?
+ *
+ * @param god The god.
+ * @param item The item.
+ * @returns True if the god likes the item, false otherwise.
+*/
 bool god_likes_item(god_type god, const item_def& item)
 {
     if (!god_likes_items(god))
@@ -3605,7 +3621,7 @@ bool god_likes_item(god_type god, const item_def& item)
     switch (god)
     {
     case GOD_ELYVILON:
-        if (item_is_stationary(item)) // Held in a net?
+        if (item_is_stationary_net(item)) // Held in a net?
             return false;
         return (item.base_type == OBJ_WEAPONS
                 || item.base_type == OBJ_STAVES
