@@ -50,7 +50,7 @@ enum element_type
     ETC_WAVES,          // cyan, with regularly occurring lightcyan waves
     ETC_TREE,           // colour of trees on land
     ETC_RANDOM,         // any colour (except BLACK)
-    ETC_TORNADO,        // twisting swirls of gray
+    ETC_TORNADO,        // twisting swirls of grey
     ETC_LIQUEFIED,      // ripples of yellow and brown.
 #if TAG_MAJOR_VERSION == 34
     ETC_MANGROVE,       // colour of trees on water
