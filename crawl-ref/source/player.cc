@@ -6975,7 +6975,7 @@ int player::res_rotting(bool temp) const
         return 3;
     }
 
-    if (species == SP_GARGOYLE || species == SP_VINE_STALKER)
+    if (player_mutation_level(MUT_ROT_IMMUNITY))
         return 3;
 
     if (mutation[MUT_FOUL_STENCH])

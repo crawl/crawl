@@ -100,6 +100,7 @@ enum tag_minor_version
     TAG_MINOR_SAPROVOROUS,         // Remove Saprovorous from several species
     TAG_MINOR_CE_HA_DIET,          // Remove intrinsic diet muts from Ce & Ha
     TAG_MINOR_NO_POT_FOOD,         // Remove Royal Jellies & Ambrosia
+    TAG_MINOR_ROT_IMMUNITY,        // Make rot immunity an intrinsic mutation.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

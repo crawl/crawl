@@ -568,7 +568,6 @@ string describe_mutations(bool center_title)
     {
         result += "You are resistant to torment.\n";
         result += "You are immune to poison.\n";
-        result += "You are immune to rotting.\n";
         if (you.experience_level >= 14)
             result += "You can fly continuously.\n";
 
@@ -582,10 +581,6 @@ string describe_mutations(bool center_title)
                                               && you.form != TRAN_STATUE);
         break;
     }
-
-    case SP_VINE_STALKER:
-        result += "You are immune to rotting.\n";
-        break;
 
     default:
         break;
