@@ -935,6 +935,16 @@ static const mutation_def mut_data[] =
   "saprovorous"
 },
 
+{ MUT_ROT_IMMUNITY,                 0,  1, false, false,
+  "rot immunity",
+
+  {"You are immune to rotting.", "", ""},
+  {"You feel immune to rotting.", "", ""},
+  {"You feel vulnerable to rotting.", "", ""},
+
+  "rot immunity"
+},
+
 { MUT_GOURMAND,                       0,  1, false, false,
   "gourmand",
 

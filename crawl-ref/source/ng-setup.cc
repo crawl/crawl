@@ -280,6 +280,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 1;
         you.mutation[MUT_SHOCK_RESISTANCE]           = 1;
         you.mutation[MUT_UNBREATHING]                = 1;
+        you.mutation[MUT_ROT_IMMUNITY]               = 1;
         break;
     case SP_TENGU:
         you.mutation[MUT_BEAK]   = 1;
@@ -328,6 +329,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_REGENERATION]   = 1;
         you.mutation[MUT_MANA_SHIELD]    = 1;
         you.mutation[MUT_NO_DEVICE_HEAL] = 3;
+        you.mutation[MUT_ROT_IMMUNITY]   = 1;
         break;
     default:
         break;

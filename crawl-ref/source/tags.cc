@@ -2578,12 +2578,6 @@ static void tag_read_you(reader &th)
         }
     }
 
-    if (you.species == SP_VINE_STALKER)
-    {
-        you.mutation[MUT_NO_DEVICE_HEAL] =
-        you.innate_mutation[MUT_NO_DEVICE_HEAL] = 3;
-    }
-
     if (th.getMinorVersion() < TAG_MINOR_DIET_MUT)
     {
         you.mutation[MUT_CARNIVOROUS] = you.innate_mutation[MUT_CARNIVOROUS];
@@ -2621,6 +2615,22 @@ static void tag_read_you(reader &th)
         {
             you.mutation[MUT_SLOW_METABOLISM] -= 1;
             you.innate_mutation[MUT_SLOW_METABOLISM] -= 1;
+        }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_ROT_IMMUNITY)
+    {
+        if (you.species == SP_VINE_STALKER)
+        {
+            you.mutation[MUT_NO_DEVICE_HEAL] =
+            you.innate_mutation[MUT_NO_DEVICE_HEAL] = 3;
+        }
+
+        if (you.species == SP_VINE_STALKER
+            || you.species == SP_GARGOYLE)
+        {
+            you.mutation[MUT_ROT_IMMUNITY] =
+            you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
         }
     }
 
