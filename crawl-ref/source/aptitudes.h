@@ -990,9 +990,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_GARGOYLE,         SK_SHORT_BLADES,   -1),
     APT(SP_GARGOYLE,         SK_LONG_BLADES,    -1),
     APT(SP_GARGOYLE,         SK_AXES,           -1),
-    APT(SP_GARGOYLE,         SK_MACES_FLAILS,    1),
+    APT(SP_GARGOYLE,         SK_MACES_FLAILS,    0),
     APT(SP_GARGOYLE,         SK_POLEARMS,       -1),
-    APT(SP_GARGOYLE,         SK_STAVES,          1),
+    APT(SP_GARGOYLE,         SK_STAVES,          0),
     APT(SP_GARGOYLE,         SK_SLINGS,         -1),
     APT(SP_GARGOYLE,         SK_BOWS,            0),
     APT(SP_GARGOYLE,         SK_CROSSBOWS,       0),
@@ -1007,7 +1007,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
 #if TAG_MAJOR_VERSION == 34
     APT(SP_GARGOYLE,         SK_TRAPS,         -99),
 #endif
-    APT(SP_GARGOYLE,         SK_UNARMED_COMBAT,  1),
+    APT(SP_GARGOYLE,         SK_UNARMED_COMBAT,  0),
     APT(SP_GARGOYLE,         SK_SPELLCASTING,   -1),
     APT(SP_GARGOYLE,         SK_CONJURATIONS,    1),
     APT(SP_GARGOYLE,         SK_HEXES,          -1),
