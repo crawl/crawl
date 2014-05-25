@@ -5554,10 +5554,6 @@ void dec_disease_player(int delay)
         if (you.duration[DUR_TROGS_HAND])
             rr += 100;
 
-        // Kobolds get a bonus too.
-        if (you.species == SP_KOBOLD)
-            rr += 100;
-
         rr = div_rand_round(rr * delay, 50);
 
         you.disease -= rr;
