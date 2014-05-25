@@ -1679,7 +1679,7 @@ bool attack::apply_damage_brand(const char *what)
     case SPWPN_FROST:
         calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze",
                                     what);
-        defender->expose_to_element(BEAM_COLD, 2, false);
+        defender->expose_to_element(BEAM_COLD, 2);
         break;
 
     case SPWPN_HOLY_WRATH:

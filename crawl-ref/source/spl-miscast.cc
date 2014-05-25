@@ -2317,7 +2317,7 @@ void MiscastEffect::_ice(int severity)
             else
                 do_msg();
             if (target->alive())
-                target->expose_to_element(BEAM_COLD, 2, true, false);
+                target->expose_to_element(BEAM_COLD, 2, false);
             break;
         }
         break;

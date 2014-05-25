@@ -421,212 +421,22 @@ void splash_with_acid(int acid_strength, int death_source, bool allow_corrosion,
     }
 }
 
-// Helper function for the expose functions below.
-// This currently works because elements only target a single type each.
-static int _get_target_class(beam_type flavour)
-{
-    int target_class = OBJ_UNASSIGNED;
-
-    switch (flavour)
-    {
-    case BEAM_FIRE:
-    case BEAM_LAVA:
-    case BEAM_NAPALM:
-    case BEAM_HELLFIRE:
-        target_class = OBJ_SCROLLS;
-        break;
-
-    case BEAM_COLD:
-    case BEAM_ICE:
-        target_class = OBJ_POTIONS;
-        break;
-
-    case BEAM_SPORE:
-    case BEAM_DEVOUR_FOOD:
-        target_class = OBJ_FOOD;
-        break;
-
-    default:
-        break;
-    }
-
-    return target_class;
-}
-
-// XXX: These expose functions could use being reworked into a real system...
-// the usage and implementation is currently very hacky.
-// Handles the destruction of inventory items from the elements.
-static bool _expose_invent_to_element(beam_type flavour, int strength)
-{
-    int num_dest = 0;
-    int total_dest = 0;
-    int jiyva_block = 0;
-
-    const int target_class = _get_target_class(flavour);
-    if (target_class == OBJ_UNASSIGNED)
-        return false;
-
-    // Fedhas worshipers are exempt from the food destruction effect
-    // of spores.
-    if (flavour == BEAM_SPORE
-        && you_worship(GOD_FEDHAS))
-    {
-        simple_god_message(" protects your food from the spores.",
-                           GOD_FEDHAS);
-        return false;
-    }
-
-    // Currently we test against each stack (and item in the stack)
-    // independently at strength%... perhaps we don't want that either
-    // because it makes the system very fair and removes the protection
-    // factor of junk (which might be more desirable for game play).
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        if (!you.inv[i].defined())
-            continue;
-
-        if (you.inv[i].base_type == target_class
-            || target_class == OBJ_FOOD
-               && you.inv[i].base_type == OBJ_CORPSES)
-        {
-            // Conservation doesn't help against harpies' devouring food.
-            if (flavour != BEAM_DEVOUR_FOOD
-                && you.conservation() && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            // These stack with conservation; they're supposed to be good.
-            if (target_class == OBJ_SCROLLS
-                && you.mutation[MUT_CONSERVE_SCROLLS]
-                && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            if (target_class == OBJ_SCROLLS
-                && player_equip_unrand(UNRAND_FIRESTARTER)
-                && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            if (target_class == OBJ_POTIONS
-                && you.mutation[MUT_CONSERVE_POTIONS]
-                && !one_chance_in(10))
-            {
-                continue;
-            }
-
-            if (you_worship(GOD_JIYVA) && !player_under_penance()
-                && x_chance_in_y(you.piety, MAX_PIETY))
-            {
-                ++jiyva_block;
-                continue;
-            }
-
-            // Get name and quantity before destruction.
-            const string item_name = you.inv[i].name(DESC_PLAIN);
-            const int quantity = you.inv[i].quantity;
-            num_dest = 0;
-
-            // Loop through all items in the stack.
-            for (int j = 0; j < you.inv[i].quantity; ++j)
-            {
-                if (bernoulli(strength, 0.01))
-                {
-                    num_dest++;
-
-                    if (i == you.equip[EQ_WEAPON])
-                        you.wield_change = true;
-
-                    if (dec_inv_item_quantity(i, 1))
-                        break;
-                    else if (is_blood_potion(you.inv[i]))
-                        remove_oldest_blood_potion(you.inv[i]);
-                }
-            }
-
-            // Name destroyed items.
-            // TODO: Combine messages using a vector.
-            if (num_dest > 0)
-            {
-                switch (target_class)
-                {
-                case OBJ_SCROLLS:
-                    mprf("%s %s catch%s fire!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "es" : "");
-                    break;
-
-                case OBJ_POTIONS:
-                    mprf("%s %s freeze%s and shatter%s!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "s" : "",
-                         (num_dest == 1) ? "s" : "");
-                    break;
-
-                case OBJ_FOOD:
-                    mprf("%s %s %s %s!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "is" : "are",
-                         (flavour == BEAM_DEVOUR_FOOD) ?
-                             "devoured" : "covered with spores");
-                    break;
-
-                default:
-                    mprf("%s %s %s destroyed!",
-                         part_stack_string(num_dest, quantity).c_str(),
-                         item_name.c_str(),
-                         (num_dest == 1) ? "is" : "are");
-                    break;
-                }
-
-                total_dest += num_dest;
-            }
-        }
-    }
-
-    if (jiyva_block)
-    {
-        simple_god_message(
-            make_stringf(" shields %s delectables from destruction.",
-                         (total_dest > 0) ? "some of your" : "your").c_str(),
-            GOD_JIYVA);
-    }
-
-    if (!total_dest)
-        return false;
-
-    // Message handled elsewhere.
-    if (flavour == BEAM_DEVOUR_FOOD)
-        return true;
-
-    xom_is_stimulated((num_dest > 1) ? 25 : 12);
-
-    return true;
-}
-
-// Handle side-effects for exposure to element other than damage.  This
-// function exists because some code calculates its own damage instead
-// of using check_your_resists() and we want to isolate all the special
-// code they keep having to do... namely condensation shield checks,
-// you really can't expect this function to even be called for much
-// else.
-//
-// This function now calls _expose_invent_to_element() if strength > 0.
-//
-// XXX: This function is far from perfect and a work in progress.
-bool expose_player_to_element(beam_type flavour, int strength,
-                              bool damage_inventory, bool slow_dracs)
+/**
+ * Handle side-effects for exposure to element other than damage.
+ *
+ * @param flavour The beam type.
+ * @param strength The strength, which is interpreted as a number of player turns.
+ * @param slow_cold_blooded If True, the beam_type is BEAM_COLD, and the player
+ *                          is cold-blooded and not cold-resistant, slow the
+ *                          player 50% of the time.
+ */
+void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_blooded)
 {
     _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
     qazlal_element_adapt(flavour, strength);
 
-    if (flavour == BEAM_COLD && slow_dracs && you.innate_mutation[MUT_COLD_BLOODED]
+    if (flavour == BEAM_COLD && slow_cold_blooded
+        && you.innate_mutation[MUT_COLD_BLOODED]
         && you.res_cold() <= 0 && coinflip())
     {
         you.slow_down(0, strength);
@@ -639,11 +449,6 @@ bool expose_player_to_element(beam_type flavour, int strength,
         you.props.erase("napalmer");
         you.props.erase("napalm_aux");
     }
-
-    if (strength <= 0 || !damage_inventory)
-        return false;
-
-    return _expose_invent_to_element(flavour, strength);
 }
 
 static void _lose_level_abilities()

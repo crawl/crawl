@@ -401,7 +401,6 @@ static void _fiery_explosion()
     beam.ex_size       = 2;
     beam.is_explosion  = true;
     beam.effect_known  = true;
-    beam.affects_items = true;
     beam.thrower       = KILL_YOU;
     beam.beam_source   = NON_MONSTER;
 

@@ -319,7 +319,6 @@ public:
     bool polymorph(int pow);
     void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0,
-                           bool damage_inventory = true,
                            bool slow_cold_blood = true);
 
     monster_type mons_species(bool zombie_base = false) const;
