@@ -1829,7 +1829,6 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         rc = random_choose(SPARM_POISON_RESISTANCE,
                            SPARM_DARKNESS,
                            SPARM_MAGIC_RESISTANCE,
-                           SPARM_PRESERVATION,
                            -1);
         break;
 
@@ -1941,11 +1940,12 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
 
     case SPARM_PONDEROUSNESS:
         return true;
-
+#if TAG_MAJOR_VERSION == 34
     case SPARM_PRESERVATION:
         if (type == ARM_PLATE_ARMOUR && !strict)
             return true;
         // deliberate fall-through
+#endif
     case SPARM_DARKNESS:
         return slot == EQ_CLOAK;
 
@@ -3075,8 +3075,8 @@ jewellery_type get_random_amulet_type()
     int res;
     do
         res = (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
-    // Do not generate cFly
-    while (res == AMU_CONTROLLED_FLIGHT);
+    // Do not generate cFly or Cons
+    while (res == AMU_CONTROLLED_FLIGHT || res == AMU_CONSERVATION);
 
     return jewellery_type(res);
 #else

@@ -1807,13 +1807,6 @@ static int _get_monster_armour_value(const monster *mon,
     if (!mons_class_flag(mon->type, M_SEE_INVIS))
         value += get_armour_see_invisible(item, true);
 
-    // Likewise rCorr
-    if (get_armour_ego_type(item) == SPARM_PRESERVATION
-        && !mon->res_corr(false, false))
-    {
-        value++;
-    }
-
     // Give a sizable bonus for shields of reflection.
     if (get_armour_ego_type(item) == SPARM_REFLECTION)
         value += 3;

@@ -180,8 +180,8 @@ static const char* _jewellery_base_ability_string(int subtype)
     case AMU_WARDING:            return "Ward";
     case AMU_RESIST_CORROSION:   return "rCorr";
     case AMU_THE_GOURMAND:       return "Gourm";
-    case AMU_CONSERVATION:       return "Cons";
 #if TAG_MAJOR_VERSION == 34
+    case AMU_CONSERVATION:       return "Cons";
     case AMU_CONTROLLED_FLIGHT:  return "cFly";
 #endif
     case AMU_RESIST_MUTATION:    return "rMut";
@@ -402,8 +402,10 @@ static const char* _jewellery_base_ability_description(int subtype)
         return "It protects you from acid and corrosion.";
     case AMU_THE_GOURMAND:
         return "It allows you to eat raw meat even when not hungry.";
+#if TAG_MAJOR_VERSION == 34
     case AMU_CONSERVATION:
         return "It protects your inventory from destruction.";
+#endif
     case AMU_RESIST_MUTATION:
         return "It protects you from mutation.";
     case AMU_GUARDIAN_SPIRIT:
@@ -1276,12 +1278,12 @@ static string _describe_armour(const item_def &item, bool verbose)
             description += "It increases the power of its wearer's "
                 "magical spells.";
             break;
-
+#if TAG_MAJOR_VERSION == 34
         case SPARM_PRESERVATION:
             description += "It protects its wearer's possessions "
                 "from corrosion and destruction.";
             break;
-
+#endif
         case SPARM_REFLECTION:
             description += "It reflects blocked things back in the "
                 "direction they came from.";
@@ -1612,7 +1614,7 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
     else if (item.base_type == OBJ_ARMOUR)
     {
         const int spec_ench = get_armour_ego_type(item);
-        return spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_PRESERVATION;
+        return spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_ARCHMAGI;
     }
     else if (item.base_type == OBJ_JEWELLERY)
         return true;

@@ -4,11 +4,6 @@ amulet of clarity
 This amulet protects its wearer from some forms of mental confusion, including
 being berserked against one's will.
 %%%%
-amulet of conservation
-
-This amulet protects some of the possessions of its wearer from outright
-destruction, but not infallibly so.
-%%%%
 amulet of faith
 
 This is a talisman crafted to call the attention of the gods to its wearer.

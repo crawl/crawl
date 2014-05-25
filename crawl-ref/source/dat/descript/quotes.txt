@@ -645,10 +645,6 @@ amulet of clarity
 
 <amulet>
 %%%%
-amulet of conservation
-
-<amulet>
-%%%%
 amulet of faith
 
 <amulet>

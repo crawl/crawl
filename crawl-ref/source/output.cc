@@ -2298,8 +2298,6 @@ static vector<formatted_string> _get_overview_resistances(
     out += show_angry ? _resist_composer("Rnd*Rage", cwidth, 1, 1, false) + "\n"
                       : _resist_composer("Clarity", cwidth, rclar) + "\n";
 
-    const int rcons = you.conservation(calc_unid);
-    out += _resist_composer("Conserve", cwidth, rcons) + "\n";
     const int rcorr = you.res_corr(calc_unid);
     out += _resist_composer("rCorr", cwidth, rcorr) + "\n";
     const int rrott = you.res_rotting();

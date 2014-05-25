@@ -800,7 +800,7 @@ PLUS:    +15
 COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
 TILE_EQ: maxwell
-BRAND:   SPARM_PRESERVATION
+BRAND:   SPARM_RESISTANCE
 MAGIC:   1
 BOOL:    nospell, notelep, cursed
 

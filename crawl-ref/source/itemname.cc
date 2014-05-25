@@ -534,7 +534,9 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_RESISTANCE:        return "resistance";
         case SPARM_POSITIVE_ENERGY:   return "positive energy";
         case SPARM_ARCHMAGI:          return "the Archmagi";
+#if TAG_MAJOR_VERSION == 34
         case SPARM_PRESERVATION:      return "preservation";
+#endif
         case SPARM_REFLECTION:        return "reflection";
         case SPARM_SPIRIT_SHIELD:     return "spirit shield";
         case SPARM_ARCHERY:           return "archery";
@@ -564,7 +566,9 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_RESISTANCE:        return "rC+ rF+";
         case SPARM_POSITIVE_ENERGY:   return "rN+";
         case SPARM_ARCHMAGI:          return "Archmagi";
+#if TAG_MAJOR_VERSION == 34
         case SPARM_PRESERVATION:      return "rCorr, Cons";
+#endif
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
         case SPARM_ARCHERY:           return "archery";
@@ -752,8 +756,8 @@ static const char* jewellery_type_name(int jeweltype)
     case AMU_WARDING:           return "amulet of warding";
     case AMU_RESIST_CORROSION:  return "amulet of resist corrosion";
     case AMU_THE_GOURMAND:      return "amulet of the gourmand";
-    case AMU_CONSERVATION:      return "amulet of conservation";
 #if TAG_MAJOR_VERSION == 34
+    case AMU_CONSERVATION:      return "amulet of conservation";
     case AMU_CONTROLLED_FLIGHT: return "amulet of controlled flight";
 #endif
     case AMU_INACCURACY:        return "amulet of inaccuracy";
@@ -2329,8 +2333,11 @@ void check_item_knowledge(bool unknown_items)
                 continue;
             }
 
-            if (i == OBJ_JEWELLERY && j == AMU_CONTROLLED_FLIGHT)
+            if (i == OBJ_JEWELLERY
+                && (j == AMU_CONTROLLED_FLIGHT || j == AMU_CONSERVATION))
+            {
                 continue;
+            }
 
             if (i == OBJ_STAVES && j == STAFF_ENCHANTMENT)
                 continue;

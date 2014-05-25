@@ -514,8 +514,7 @@ function coven_setup(e)
   e.tile("v = wall_emerald")
   e.subst("0 = 0:20 9:1")
   e.kitem("a = any book good_item ident:all")
-  e.kitem("b = amulet of conservation randart not_cursed ident:all /\
-          amulet of faith randart not_cursed ident:all /\
+  e.kitem("b = amulet of faith randart not_cursed ident:all /\
           amulet of guardian spirit randart not_cursed ident:all /\
           amulet of resist corrosion randart not_cursed ident:all /\
           amulet of resist mutation randart not_cursed ident:all /\
