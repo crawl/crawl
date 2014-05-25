@@ -1826,7 +1826,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         const int burn_power = (pbolt.is_explosion) ? 5 :
                                (pbolt.is_beam)      ? 3
                                                     : 2;
-        mons->expose_to_element(pbolt.flavour, burn_power, true, false);
+        mons->expose_to_element(pbolt.flavour, burn_power, false);
     }
 
     return hurted;
@@ -3976,7 +3976,6 @@ void bolt::affect_player()
     // FIXME: Lots of duplicated code here (compare handling of
     // monsters)
     int hurted = 0;
-    int burn_power = (is_explosion) ? 5 : (is_beam) ? 3 : 2;
 
     // Roll the damage.
     if (name != "flash freeze" || !you.duration[DUR_FROZEN])
@@ -3989,11 +3988,14 @@ void bolt::affect_player()
     vector<string> messages;
     apply_dmg_funcs(&you, hurted, messages);
 
+#ifdef DEBUG_DIAGNOSTICS
     const int preac = hurted;
+#endif
+
     hurted = apply_AC(&you, hurted);
-    const int postac = hurted;
 
 #ifdef DEBUG_DIAGNOSTICS
+    const int postac = hurted;
     dprf(DIAG_BEAM, "Player damage: rolled=%d; before AC=%d; after AC=%d",
                     roll, preac, postac);
 #endif
@@ -4100,35 +4102,6 @@ void bolt::affect_player()
     if (flavour == BEAM_ENSNARE)
         was_affected = ensnare(&you) || was_affected;
 
-    // Last resort for characters mainly focusing on AC:
-    // Chance of not affecting items if not much damage went through
-    if (!x_chance_in_y(postac, random2avg(preac, 2)))
-        affects_items = false;
-
-    if (affects_items)
-    {
-        // Simple cases for scroll burns.
-        if (flavour == BEAM_LAVA || name.find("hellfire") != string::npos)
-            expose_player_to_element(BEAM_LAVA, burn_power);
-
-        // More complex (geez..)
-        if (flavour == BEAM_FIRE && name != "ball of steam")
-            expose_player_to_element(BEAM_FIRE, burn_power);
-
-        // Potions exploding.
-        if (flavour == BEAM_COLD)
-            expose_player_to_element(BEAM_COLD, burn_power, true, false);
-
-        if (flavour == BEAM_ELECTRICITY)
-            expose_player_to_element(BEAM_ELECTRICITY, burn_power, true, false);
-
-        if (flavour == BEAM_MISSILE || flavour == BEAM_FRAG)
-            expose_player_to_element(BEAM_FRAG, burn_power, true, false);
-
-        // Spore pops.
-        if (in_explosion_phase && flavour == BEAM_SPORE)
-            expose_player_to_element(BEAM_SPORE, burn_power);
-    }
 
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         antimagic();

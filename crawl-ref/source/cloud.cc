@@ -1222,7 +1222,7 @@ int actor_apply_cloud(actor *act)
     }
 
     if (cloud_flavour != BEAM_NONE)
-        act->expose_to_element(cloud_flavour, 7, true, false);
+        act->expose_to_element(cloud_flavour, 7);
 
     const bool side_effects =
         _actor_apply_cloud_side_effects(act, cloud, final_damage);

@@ -87,9 +87,8 @@ void lose_level(int death_source, const char* aux);
 bool drain_exp(bool announce_full = true, int power = 25,
                bool ignore_protection = false);
 
-bool expose_player_to_element(beam_type flavour, int strength = 0,
-                              bool damage_inventory = true,
-                              bool slow_dracs = true);
+void expose_player_to_element(beam_type flavour, int strength = 0,
+                              bool slow_cold_blooded = true);
 
 NORETURN void screen_end_game(string text);
 int timescale_damage(const actor *act, int damage);

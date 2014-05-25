@@ -582,7 +582,6 @@ public:
     void drain_stat(stat_type stat, int amount, actor* attacker);
 
     void expose_to_element(beam_type element, int strength = 0,
-                           bool damage_inventory = true,
                            bool slow_cold_blood = true);
     void god_conduct(conduct_type thing_done, int level);
 

@@ -3038,7 +3038,7 @@ void monster::go_berserk(bool intentional, bool /* potion */)
 }
 
 void monster::expose_to_element(beam_type flavour, int strength,
-                                bool damage_inventory, bool slow_cold_blood)
+                                bool slow_cold_blood)
 {
     switch (flavour)
     {
