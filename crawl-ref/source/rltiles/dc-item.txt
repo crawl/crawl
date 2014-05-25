@@ -547,24 +547,10 @@ i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 %sdir item/food
 meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
 bread_ration FOOD_BREAD_RATION
-pear FOOD_PEAR
-apple FOOD_APPLE
-choko FOOD_CHOKO
-lump_of_royal_jelly FOOD_ROYAL_JELLY
-snozzcumber FOOD_SNOZZCUMBER
-pizza FOOD_PIZZA
-apricot FOOD_APRICOT
-orange FOOD_ORANGE
-banana FOOD_BANANA
-strawberry FOOD_STRAWBERRY
-rambutan FOOD_RAMBUTAN
-lemon FOOD_LEMON
-grape FOOD_GRAPE
-sultana FOOD_SULTANA
-lychee FOOD_LYCHEE
+choko FOOD_FRUIT
 beef_jerky FOOD_BEEF_JERKY
-cheese FOOD_CHEESE
-sausage FOOD_SAUSAGE
+lump_of_royal_jelly FOOD_ROYAL_JELLY
+pizza FOOD_PIZZA
 %rim 0
 bone_humanoid1 FOOD_BONE_HUMANOID
 bone_humanoid2
