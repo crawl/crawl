@@ -2720,7 +2720,7 @@ static void _flame_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     bool something_happened = false;
 
-    for (distance_iterator di(you.pos(), false, true, LOS_RADIUS); di; ++di)
+    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
     {
         monster *mons = monster_at(*di);
         bool make_cloud = false;
@@ -2819,7 +2819,7 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
     bool effects = false;
 
-    for (distance_iterator di(you.pos(), false, true, LOS_RADIUS); di; ++di)
+    for (radius_iterator di(you.pos(), LOS_NO_TRANS); di; ++di)
     {
         monster *mons = monster_at(*di);
 
