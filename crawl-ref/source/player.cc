@@ -6976,9 +6976,6 @@ int player::res_rotting(bool temp) const
     if (player_mutation_level(MUT_ROT_IMMUNITY))
         return 3;
 
-    if (mutation[MUT_FOUL_STENCH])
-        return 1;
-
     switch (is_undead)
     {
     default:

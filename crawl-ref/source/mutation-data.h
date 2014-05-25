@@ -1563,8 +1563,8 @@ static const mutation_def mut_data[] =
 { MUT_FOUL_STENCH,                    0,  2, false, false,
   "foul stench",
 
-  {"You emit a foul stench, and are resistant to rotting and decay.",
-   "You radiate miasma, and are resistant to rotting and decay.",
+  {"You emit a foul stench.",
+   "You radiate miasma.",
    ""},
 
   {"You begin to emit a foul stench of rot and decay.",
