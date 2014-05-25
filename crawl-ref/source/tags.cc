@@ -3728,6 +3728,33 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE)
+    {
+        if (item.base_type == OBJ_FOOD)
+        {
+            if (item.sub_type == FOOD_SAUSAGE)
+                item.sub_type = FOOD_BEEF_JERKY;
+            if (item.sub_type == FOOD_CHEESE)
+                item.sub_type = FOOD_PIZZA;
+            if (item.sub_type == FOOD_PEAR
+                || item.sub_type == FOOD_APPLE
+                || item.sub_type == FOOD_CHOKO
+                || item.sub_type == FOOD_APRICOT
+                || item.sub_type == FOOD_ORANGE
+                || item.sub_type == FOOD_BANANA
+                || item.sub_type == FOOD_STRAWBERRY
+                || item.sub_type == FOOD_RAMBUTAN
+                || item.sub_type == FOOD_LEMON
+                || item.sub_type == FOOD_GRAPE
+                || item.sub_type == FOOD_SULTANA
+                || item.sub_type == FOOD_LYCHEE
+                || item.sub_type == FOOD_LEMON)
+            {
+                item.sub_type = FOOD_FRUIT;
+            }
+        }
+    }
+
 #endif
 
     if (is_unrandom_artefact(item))
