@@ -266,7 +266,6 @@ public:
     bool      pickup_gold(item_def &item, int near);
     bool      pickup_launcher(item_def &launcher, int near, bool force = false);
     bool      pickup_melee_weapon(item_def &item, int near);
-    bool      pickup_missile(item_def &item, int near);
     bool      pickup_weapon(item_def &item, int near, bool force);
     bool      pickup_armour(item_def &item, int near, bool force);
     bool      pickup_jewellery(item_def &item, int near, bool force);
