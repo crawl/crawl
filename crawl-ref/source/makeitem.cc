@@ -368,39 +368,15 @@ void item_colour(item_def &item)
         {
         case FOOD_BEEF_JERKY:
         case FOOD_BREAD_RATION:
-        case FOOD_LYCHEE:
         case FOOD_MEAT_RATION:
-        case FOOD_RAMBUTAN:
-        case FOOD_SAUSAGE:
-        case FOOD_SULTANA:
             item.colour = BROWN;
             break;
-        case FOOD_BANANA:
-        case FOOD_CHEESE:
         case FOOD_ROYAL_JELLY:
-        case FOOD_LEMON:
         case FOOD_PIZZA:
             item.colour = YELLOW;
             break;
-        case FOOD_PEAR:
+        case FOOD_FRUIT:
             item.colour = LIGHTGREEN;
-            break;
-        case FOOD_CHOKO:
-        case FOOD_SNOZZCUMBER:
-            item.colour = GREEN;
-            break;
-        case FOOD_APRICOT:
-        case FOOD_ORANGE:
-            item.colour = LIGHTRED;
-            break;
-        case FOOD_STRAWBERRY:
-            item.colour = RED;
-            break;
-        case FOOD_APPLE:
-            item.colour = (coinflip() ? RED : GREEN);
-            break;
-        case FOOD_GRAPE:
-            item.colour = (coinflip() ? MAGENTA : GREEN);
             break;
         case FOOD_CHUNK:
             // Set the appropriate colour of the meat:
@@ -2232,25 +2208,11 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
     if (force_type == OBJ_RANDOM)
     {
         item.sub_type = random_choose_weighted( 30, FOOD_BREAD_RATION,
-                                                25, FOOD_MEAT_RATION,
-                                                10, FOOD_PEAR,
-                                                10, FOOD_APPLE,
-                                                10, FOOD_CHOKO,
-                                                 1, FOOD_CHEESE,
-                                                 1, FOOD_PIZZA,
-                                                 1, FOOD_SNOZZCUMBER,
-                                                 1, FOOD_APRICOT,
-                                                 1, FOOD_ORANGE,
-                                                 1, FOOD_BANANA,
-                                                 1, FOOD_STRAWBERRY,
-                                                 1, FOOD_RAMBUTAN,
-                                                 1, FOOD_LEMON,
-                                                 1, FOOD_GRAPE,
-                                                 1, FOOD_SULTANA,
-                                                 1, FOOD_LYCHEE,
-                                                 1, FOOD_BEEF_JERKY,
-                                                 1, FOOD_SAUSAGE,
-                                                 1, FOOD_ROYAL_JELLY,
+                                                10, FOOD_FRUIT,
+                                                30, FOOD_MEAT_RATION,
+                                                15, FOOD_BEEF_JERKY,
+                                                10, FOOD_PIZZA,
+                                                 5, FOOD_ROYAL_JELLY,
                                                  0);
     }
     else
@@ -2279,12 +2241,8 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
             if (one_chance_in(80))
                 item.quantity += random2(3);
 
-            if (item.sub_type == FOOD_STRAWBERRY
-                || item.sub_type == FOOD_GRAPE
-                || item.sub_type == FOOD_SULTANA)
-            {
-                item.quantity += 3 + random2avg(15,2);
-            }
+            if (is_fruit(item))
+                item.quantity += random2avg(13,2);
         }
     }
 }

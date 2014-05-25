@@ -1571,24 +1571,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         {
         case FOOD_MEAT_RATION: buff << "meat ration"; break;
         case FOOD_BREAD_RATION: buff << "bread ration"; break;
-        case FOOD_PEAR: buff << "pear"; break;
-        case FOOD_APPLE: buff << "apple"; break;
-        case FOOD_CHOKO: buff << "choko"; break;
         case FOOD_ROYAL_JELLY: buff << "royal jelly"; break;
-        case FOOD_SNOZZCUMBER: buff << "snozzcumber"; break;
+        case FOOD_FRUIT: buff << "fruit"; break;
         case FOOD_PIZZA: buff << "slice of pizza"; break;
-        case FOOD_APRICOT: buff << "apricot"; break;
-        case FOOD_ORANGE: buff << "orange"; break;
-        case FOOD_BANANA: buff << "banana"; break;
-        case FOOD_STRAWBERRY: buff << "strawberry"; break;
-        case FOOD_RAMBUTAN: buff << "rambutan"; break;
-        case FOOD_LEMON: buff << "lemon"; break;
-        case FOOD_GRAPE: buff << "grape"; break;
-        case FOOD_SULTANA: buff << "sultana"; break;
-        case FOOD_LYCHEE: buff << "lychee"; break;
         case FOOD_BEEF_JERKY: buff << "beef jerky"; break;
-        case FOOD_CHEESE: buff << "cheese"; break;
-        case FOOD_SAUSAGE: buff << "sausage"; break;
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {
@@ -1603,6 +1589,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             else
                 buff << "chunk of flesh";
             break;
+        default: buff << "buggy food"; break;
         }
 
         break;
@@ -2181,7 +2168,7 @@ public:
             case FOOD_MEAT_RATION:
                 name = "preserved meat";
                 break;
-            case FOOD_PEAR:
+            case FOOD_FRUIT:
                 name = "fruit";
                 break;
             default:
@@ -2433,7 +2420,7 @@ void check_item_knowledge(bool unknown_items)
         };
         static const int misc_ST_list[] =
         {
-            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_PEAR, FOOD_ROYAL_JELLY,
+            FOOD_CHUNK, FOOD_MEAT_RATION, FOOD_FRUIT, FOOD_ROYAL_JELLY,
             BOOK_MANUAL, NUM_RODS, 1, MISC_RUNE_OF_ZOT,
             NUM_MISCELLANY
         };

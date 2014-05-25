@@ -602,15 +602,18 @@ enum food_type
 {
     FOOD_MEAT_RATION,
     FOOD_BREAD_RATION,
+#if TAG_MAJOR_VERSION == 34
     FOOD_PEAR,
     FOOD_APPLE,
     FOOD_CHOKO,
+#endif
     FOOD_ROYAL_JELLY,
 #if TAG_MAJOR_VERSION == 34
     FOOD_UNUSED, // was: royal jelly
 #endif
-    FOOD_SNOZZCUMBER,
+    FOOD_FRUIT,  // was: snozzcumber
     FOOD_PIZZA,
+#if TAG_MAJOR_VERSION == 34
     FOOD_APRICOT,
     FOOD_ORANGE,
     FOOD_BANANA,
@@ -620,9 +623,12 @@ enum food_type
     FOOD_GRAPE,
     FOOD_SULTANA,
     FOOD_LYCHEE,
+#endif
     FOOD_BEEF_JERKY,
+#if TAG_MAJOR_VERSION == 34
     FOOD_CHEESE,
     FOOD_SAUSAGE,
+#endif
     FOOD_CHUNK,
 #if TAG_MAJOR_VERSION == 34
     FOOD_AMBROSIA,

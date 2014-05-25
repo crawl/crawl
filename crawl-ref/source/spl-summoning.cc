@@ -1950,9 +1950,6 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
         else if (sim_type == MONS_DEATH_YAK)
             name = "bull";
         break;
-    case FOOD_SAUSAGE:
-        sim_type = MONS_HOG;
-        break;
     default:
         // usual suspects for mystery meat's identity
         {

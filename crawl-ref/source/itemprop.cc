@@ -406,33 +406,33 @@ static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
-    { FOOD_SAUSAGE,      "sausage",      1200,   150,  -400,  40, 2, FFL_NONE },
     { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  50, 3, FFL_NONE },
     { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2, FFL_NONE },
 
     { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4, FFL_NONE },
 
-    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 2, FFL_FRUIT},
-    { FOOD_ORANGE,       "orange",       1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_BANANA,       "banana",       1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_LEMON,        "lemon",        1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_PEAR,         "pear",          700,  -200,   200,  20, 2, FFL_FRUIT},
-    { FOOD_APPLE,        "apple",         700,  -200,   200,  20, 2, FFL_FRUIT},
-    { FOOD_APRICOT,      "apricot",       700,  -200,   200,  15, 2, FFL_FRUIT},
-    { FOOD_CHOKO,        "choko",         600,  -200,   200,  30, 2, FFL_FRUIT},
-    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   200,  10, 2, FFL_FRUIT},
-    { FOOD_LYCHEE,       "lychee",        600,  -200,   200,  10, 2, FFL_FRUIT},
-    { FOOD_STRAWBERRY,   "strawberry",    200,   -50,    50,   5, 2, FFL_FRUIT},
-    { FOOD_GRAPE,        "grape",         100,   -20,    20,   2, 1, FFL_FRUIT},
-    { FOOD_SULTANA,      "sultana",        70,   -20,    20,   1, 1, FFL_FRUIT},
+    { FOOD_FRUIT,        "fruit",         250,  -100,    50,  20, 1, FFL_FRUIT},
 
     { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 2, FFL_NONE },
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 2, FFL_NONE },
 
 #if TAG_MAJOR_VERSION == 34
     { FOOD_UNUSED,       "buggy",           0,     0,     0,  40, 2, FFL_NONE },
     { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_BANANA,       "buggy",        1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_LEMON,        "buggy",        1000,  -300,   300,  20, 2, FFL_FRUIT},
+    { FOOD_PEAR,         "buggy",         700,  -200,   200,  20, 2, FFL_FRUIT},
+    { FOOD_APPLE,        "buggy",         700,  -200,   200,  20, 2, FFL_FRUIT},
+    { FOOD_APRICOT,      "buggy",         700,  -200,   200,  15, 2, FFL_FRUIT},
+    { FOOD_CHOKO,        "buggy",         600,  -200,   200,  30, 2, FFL_FRUIT},
+    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200,  10, 2, FFL_FRUIT},
+    { FOOD_LYCHEE,       "buggy",         600,  -200,   200,  10, 2, FFL_FRUIT},
+    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50,   5, 2, FFL_FRUIT},
+    { FOOD_GRAPE,        "buggy",         100,   -20,    20,   2, 1, FFL_FRUIT},
+    { FOOD_SULTANA,      "buggy",          70,   -20,    20,   1, 1, FFL_FRUIT},
+    { FOOD_CHEESE,       "buggy",        1200,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400,  40, 2, FFL_NONE },
 #endif
 };
 

@@ -1711,9 +1711,6 @@ void finished_eating_message(int food_type)
                  one_chance_in(4) ? "jerk-a-riffic"
                                   : "delicious");
             return;
-        case FOOD_SAUSAGE:
-            mpr("That sausage was delicious!");
-            return;
         default:
             break;
         }
@@ -1734,47 +1731,6 @@ void finished_eating_message(int food_type)
         case FOOD_BREAD_RATION:
             mpr("That bread ration really hit the spot!");
             return;
-        case FOOD_PEAR:
-        case FOOD_APPLE:
-        case FOOD_APRICOT:
-            mprf("Mmmm... Yummy %s.",
-                (food_type == FOOD_APPLE)   ? "apple" :
-                (food_type == FOOD_PEAR)    ? "pear" :
-                (food_type == FOOD_APRICOT) ? "apricot"
-                                            : "fruit");
-            return;
-        case FOOD_CHOKO:
-            mpr("That choko was very bland.");
-            return;
-        case FOOD_SNOZZCUMBER:
-            mpr("That snozzcumber tasted truly putrid!");
-            return;
-        case FOOD_ORANGE:
-            mprf("That orange was delicious!%s",
-                 one_chance_in(8) ? " Even the peel tasted good!" : "");
-            return;
-        case FOOD_BANANA:
-            mprf("That banana was delicious!%s",
-                 one_chance_in(8) ? " Even the peel tasted good!" : "");
-            return;
-        case FOOD_STRAWBERRY:
-            mpr("That strawberry was delicious!");
-            return;
-        case FOOD_RAMBUTAN:
-            mpr("That rambutan was delicious!");
-            return;
-        case FOOD_LEMON:
-            mpr("That lemon was rather sour... but delicious nonetheless!");
-            return;
-        case FOOD_GRAPE:
-            mpr("That grape was delicious!");
-            return;
-        case FOOD_SULTANA:
-            mpr("That sultana was delicious... but very small.");
-            return;
-        case FOOD_LYCHEE:
-            mpr("That lychee was delicious!");
-            return;
         default:
             break;
         }
@@ -1790,14 +1746,6 @@ void finished_eating_message(int food_type)
         string taste = getMiscString("eating_pizza");
         if (taste.empty())
             taste = "Bleh, bug pizza.";
-        mprf("%s", taste.c_str());
-        break;
-    }
-    case FOOD_CHEESE:
-    {
-        string taste = getMiscString("eating_cheese");
-        if (taste.empty())
-            taste = "Yeuchh! Moldy bug cheese.";
         mprf("%s", taste.c_str());
         break;
     }

@@ -1490,11 +1490,8 @@ unsigned int item_value(item_def item, bool ident)
         switch (item.sub_type)
         {
         case FOOD_MEAT_RATION:
-            valued = 50;
-            break;
-
         case FOOD_BREAD_RATION:
-            valued = 44;
+            valued = 50;
             break;
 
         case FOOD_ROYAL_JELLY:
@@ -1503,45 +1500,13 @@ unsigned int item_value(item_def item, bool ident)
 
         case FOOD_BEEF_JERKY:
         case FOOD_PIZZA:
-        case FOOD_SNOZZCUMBER:
+        case FOOD_FRUIT:
             valued = 15;
             break;
 
-        case FOOD_CHEESE:
-        case FOOD_SAUSAGE:
-            valued = 12;
-            break;
-
-        case FOOD_LEMON:
-        case FOOD_ORANGE:
-        case FOOD_BANANA:
-            valued = 10;
-            break;
-
-        case FOOD_APPLE:
-        case FOOD_APRICOT:
-        case FOOD_PEAR:
-            valued = 7;
-            break;
-
         case FOOD_CHUNK:
-            if (food_is_rotten(item))
+        default:
                 break;
-
-        case FOOD_CHOKO:
-        case FOOD_LYCHEE:
-        case FOOD_RAMBUTAN:
-            valued = 6;
-            break;
-
-        case FOOD_STRAWBERRY:
-            valued = 2;
-            break;
-
-        case FOOD_GRAPE:
-        case FOOD_SULTANA:
-            valued = 1;
-            break;
         }
         break;
 

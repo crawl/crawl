@@ -397,7 +397,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     else if (you_worship(GOD_FEDHAS))
     {
         // Fedhas worshippers get fruit to use for growth and evolution
-        type_wanted = random_choose(FOOD_BANANA, FOOD_ORANGE, FOOD_LEMON, -1);
+        type_wanted = FOOD_FRUIT;
     }
     else
     {
@@ -408,7 +408,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
 
     quantity = 3 + random2(5);
 
-    if (type_wanted == FOOD_BANANA || type_wanted == FOOD_ORANGE || type_wanted == FOOD_LEMON)
+    if (type_wanted == FOOD_FRUIT)
         quantity = 8 + random2avg(15, 2);
     // giving more of the lower food value items
     else if (type_wanted == FOOD_ROYAL_JELLY || type_wanted == FOOD_CHUNK)

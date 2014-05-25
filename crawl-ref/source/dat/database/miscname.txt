@@ -359,30 +359,6 @@ SOUND:You hear words spoken in a strange and terrible language...
 
 SOUND:You hear diabolical laughter!
 %%%%
-eating_cheese
-
-Mmm...@_cheese_kind_@.
-%%%%
-_cheese_kind_
-
-Cheddar
-
-Edam
-
-Wensleydale
-
-Camembert
-
-Goat cheese
-
-Fruit cheese
-
-Mozzarella
-
-Sheep cheese
-
-Yak cheese
-%%%%
 eating_pizza
 
 @_carni_mmm_@ Ham and pineapple.
@@ -405,7 +381,7 @@ end
 
 Mmm... That's the fabled Pandemonium Pizza!
 
-Mmm... Cheesy.
+Mmm... @_cheese_kind_@ pizza.
 
 @_herbi_mmm_@ Vegetable.
 
@@ -432,4 +408,24 @@ else
     return "Mmm..."
 end
 }}
+%%%%
+_cheese_kind_
+
+Cheddar
+
+Edam
+
+Wensleydale
+
+Camembert
+
+Goat cheese
+
+Fruit cheese
+
+Mozzarella
+
+Sheep cheese
+
+Yak cheese
 %%%%
