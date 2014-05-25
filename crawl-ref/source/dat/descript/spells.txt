@@ -1139,8 +1139,8 @@ volatile of magics cannot be imbued in this fashion.
 %%%%
 Spider Form spell
 
-This spell temporarily transforms the caster into a swift, venomous (but
-poison-susceptible), spider-like creature. Spellcasting is slightly more
+This spell temporarily transforms the caster into a venomous (but
+poison-susceptible) spider-like creature. Spellcasting is slightly more
 difficult in this form.
 %%%%
 Spit Acid spell

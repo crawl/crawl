@@ -2244,9 +2244,7 @@ int player_movement_speed(bool ignore_burden)
     int mv = 10;
 
     // transformations
-    if (you.form == TRAN_SPIDER)
-        mv = 8;
-    else if (you.form == TRAN_BAT)
+    if (you.form == TRAN_BAT)
         mv = 5; // but allowed minimum is six
     else if (you.form == TRAN_PIG)
         mv = 7;
