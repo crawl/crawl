@@ -1526,100 +1526,12 @@ void scorefile_entry::init(time_t dt)
         }
     }
 
-    // Note active status effects.
-    const int statuses[] =
-    {
-        DUR_AGILITY,
-        DUR_BERSERK,
-        DUR_BRILLIANCE,
-        DUR_CONF,
-        DUR_CONFUSING_TOUCH,
-        DUR_CONTROL_TELEPORT,
-        DUR_DEATH_CHANNEL,
-        DUR_DIVINE_STAMINA,
-        DUR_DIVINE_VIGOUR,
-        DUR_EXHAUSTED,
-        DUR_FIRE_SHIELD,
-        DUR_ICY_ARMOUR,
-        DUR_LIQUID_FLAMES,
-        DUR_LOWERED_MR,
-        DUR_MAGIC_SHIELD,
-        DUR_MIGHT,
-        DUR_PARALYSIS,
-        DUR_PETRIFIED,
-        DUR_PETRIFYING,
-        DUR_RESISTANCE,
-        DUR_SLIMIFY,
-        DUR_SLEEP,
-        DUR_STONESKIN,
-        DUR_SWIFTNESS,
-        DUR_TELEPATHY,
-        DUR_TELEPORT,
-        DUR_DEATHS_DOOR,
-        DUR_PHASE_SHIFT,
-        DUR_QUAD_DAMAGE,
-        DUR_SILENCE,
-        DUR_STEALTH,
-        DUR_AFRAID,
-        DUR_MIRROR_DAMAGE,
-        DUR_SCRYING,
-        DUR_TORNADO,
-        DUR_LIQUEFYING,
-        DUR_HEROISM,
-        DUR_FINESSE,
-        DUR_LIFESAVING,
-        DUR_DARKNESS,
-        DUR_SHROUD_OF_GOLUBRIA,
-        DUR_DISJUNCTION,
-        DUR_SENTINEL_MARK,
-        STATUS_AIRBORNE,
-        STATUS_BEHELD,
-        STATUS_BURDEN,
-        STATUS_CONTAMINATION,
-        STATUS_BACKLIT,
-        STATUS_UMBRA,
-        STATUS_NET,
-        STATUS_HUNGER,
-        STATUS_REGENERATION,
-        STATUS_SICK,
-        STATUS_SPEED,
-        STATUS_INVISIBLE,
-        DUR_POISONING,
-        STATUS_MISSILES,
-        DUR_SURE_BLADE,
-        DUR_TRANSFORMATION,
-        STATUS_CONSTRICTED,
-        STATUS_SILENCE,
-        STATUS_RECALL,
-        DUR_WEAK,
-        DUR_DIMENSION_ANCHOR,
-        DUR_ANTIMAGIC,
-        DUR_FLAYED,
-        DUR_WATER_HOLD,
-        STATUS_DRAINED,
-        DUR_TOXIC_RADIANCE,
-        DUR_FIRE_VULN,
-        DUR_POISON_VULN,
-        DUR_FROZEN,
-        DUR_SAP_MAGIC,
-        STATUS_MAGIC_SAPPED,
-        DUR_PORTAL_PROJECTILE,
-        DUR_NO_POTIONS,
-#if TAG_MAJOR_VERSION == 34
-        STATUS_GOLDEN,
-#endif
-        STATUS_BRIBE,
-        DUR_QAZLAL_FIRE_RES,
-        DUR_QAZLAL_COLD_RES,
-        DUR_QAZLAL_ELEC_RES,
-        DUR_QAZLAL_AC,
-        DUR_CORROSION,
-    };
-
+    // A hard-coded duration/status list used to be used here. This list is no
+    // longer hard-coded. May 2014. -reaverb
     status_info inf;
-    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
-        if (fill_status_info(statuses[i], &inf) && !inf.short_text.empty())
+        if (fill_status_info(i, &inf) && !inf.short_text.empty())
         {
             if (!status_effects.empty())
                 status_effects += ",";
