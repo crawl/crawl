@@ -4757,7 +4757,9 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "resistance",
         "positive_energy",
         "archmagi",
+#if TAG_MAJOR_VERSION == 34
         "preservation",
+#endif
         "reflection",
         "spirit_shield",
         "archery",

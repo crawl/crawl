@@ -414,7 +414,7 @@
 # note_skill_max  = false
 # note_xom_effects = false
 # note_chat_messages = false
-# note_items    += rod of, acquirement, preservation, running, of Zot
+# note_items    += rod of, acquirement, running, of Zot
 # note_monsters += orb of fire, ancient lich, Sigmund
 
 ##### 5-  Miscellaneous #############################################

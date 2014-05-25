@@ -260,18 +260,9 @@ bool actor::gourmand(bool calc_unid, bool items) const
     return items && wearing(EQ_AMULET, AMU_THE_GOURMAND, calc_unid);
 }
 
-bool actor::conservation(bool calc_unid, bool items) const
-{
-    return items && (wearing(EQ_AMULET, AMU_CONSERVATION, calc_unid)
-                     || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION,
-                                    calc_unid));
-}
-
 bool actor::res_corr(bool calc_unid, bool items) const
 {
-    return items && (wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid)
-                     || wearing_ego(EQ_ALL_ARMOUR, SPARM_PRESERVATION,
-                                    calc_unid));
+    return items && wearing(EQ_AMULET, AMU_RESIST_CORROSION, calc_unid);
 }
 
 // This is a bit confusing. This is not the function that determines whether or

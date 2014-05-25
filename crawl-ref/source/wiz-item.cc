@@ -1198,7 +1198,9 @@ static void _debug_acquirement_stats(FILE *ostat)
             "resistance",
             "positive energy",
             "archmagi",
+#if TAG_MAJOR_VERSION == 34
             "preservation",
+#endif
             "reflection",
             "spirit shield",
             "archery",

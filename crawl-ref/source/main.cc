@@ -658,6 +658,7 @@ static void _set_removed_types_as_identified()
 {
 #if TAG_MAJOR_VERSION == 34
     you.type_ids[OBJ_JEWELLERY][AMU_CONTROLLED_FLIGHT] = ID_KNOWN_TYPE;
+    you.type_ids[OBJ_JEWELLERY][AMU_CONSERVATION] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_STAVES][STAFF_ENCHANTMENT] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_STAVES][STAFF_CHANNELING] = ID_KNOWN_TYPE;
     you.type_ids[OBJ_POTIONS][POT_GAIN_STRENGTH] = ID_KNOWN_TYPE;
