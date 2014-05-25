@@ -2035,9 +2035,6 @@ void handle_monster_move(monster* mons)
 
     mons->shield_blocks = 0;
 
-    const int  cloud_num   = env.cgrid(mons->pos());
-    const bool avoid_cloud = mons_avoids_cloud(mons, cloud_num);
-
     _mons_in_cloud(mons);
 #if TAG_MAJOR_VERSION == 34
     _heated_area(mons);
@@ -2102,17 +2099,6 @@ void handle_monster_move(monster* mons)
     ASSERT(!crawl_state.game_is_arena() || mons->foe != MHITYOU);
     ASSERT_IN_BOUNDS_OR_ORIGIN(mons->target);
 
-    // Submerging monsters will hide from clouds.
-    if (avoid_cloud
-        && monster_can_submerge(mons, grd(mons->pos()))
-        && !mons->caught()
-        && !mons->submerged())
-    {
-        mons->add_ench(ENCH_SUBMERGED);
-        mons->speed_increment -= ENERGY_SUBMERGE(entry);
-        return;
-    }
-
     if (mons->speed >= 100)
     {
         mons->speed_increment -= non_move_energy;
@@ -2151,14 +2137,6 @@ void handle_monster_move(monster* mons)
         {
             if (mons->submerged())
             {
-                // Don't unsubmerge if the monster is avoiding the
-                // cloud on top of the water.
-                if (avoid_cloud)
-                {
-                    mons->speed_increment -= non_move_energy;
-                    return;
-                }
-
                 if (!mons->del_ench(ENCH_SUBMERGED))
                 {
                     // Couldn't unsubmerge.
