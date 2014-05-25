@@ -986,6 +986,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_BASE_DRACONIAN:
         case SP_FORMICID:
         case SP_VINE_STALKER:
+        case SP_HALFLING:
             return CC_UNRESTRICTED;
 
         default:

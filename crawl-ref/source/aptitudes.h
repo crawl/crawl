@@ -178,9 +178,9 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HALFLING,        SK_BOWS,            2),
     APT(SP_HALFLING,        SK_CROSSBOWS,      -1),
     APT(SP_HALFLING,        SK_THROWING,        3),
-    APT(SP_HALFLING,        SK_ARMOUR,         -2),
-    APT(SP_HALFLING,        SK_DODGING,         2),
-    APT(SP_HALFLING,        SK_STEALTH,         4),
+    APT(SP_HALFLING,        SK_ARMOUR,          1),
+    APT(SP_HALFLING,        SK_DODGING,         1),
+    APT(SP_HALFLING,        SK_STEALTH,         1),
 #if TAG_MAJOR_VERSION == 34
     APT(SP_HALFLING,        SK_STABBING,      -99),
 #endif
@@ -203,7 +203,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HALFLING,        SK_EARTH_MAGIC,     0),
     APT(SP_HALFLING,        SK_POISON_MAGIC,   -1),
     APT(SP_HALFLING,        SK_INVOCATIONS,     1),
-    APT(SP_HALFLING,        SK_EVOCATIONS,      2),
+    APT(SP_HALFLING,        SK_EVOCATIONS,      1),
 
     // SP_HILL_ORC
     APT(SP_HILL_ORC,        SK_FIGHTING,        2),
