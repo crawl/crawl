@@ -2634,6 +2634,17 @@ static void tag_read_you(reader &th)
         }
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_FOUL_STENCH
+        && you.species == SP_DEMONSPAWN
+        && you.innate_mutation[MUT_SAPROVOROUS])
+    {
+        you.mutation[MUT_SAPROVOROUS] =
+        you.innate_mutation[MUT_SAPROVOROUS] = 0;
+
+        you.mutation[MUT_ROT_IMMUNITY] =
+        you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
+    }
+
 #endif
 
     count = unmarshallUByte(th);
