@@ -1712,47 +1712,6 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
     return pickup(item, eslot, near);
 }
 
-// Arbitrary damage adjustment for quantity of missiles. So sue me.
-static int _q_adj_damage(int damage, int qty)
-{
-    return damage * min(qty, 8);
-}
-
-bool monster::pickup_missile(item_def &item, int near)
-{
-    const mon_inv_type slot = item_to_mslot(item);
-
-    ASSERT(slot == MSLOT_MISSILE);
-
-    // Spellcasters shouldn't bother with missiles.
-    if (mons_has_ranged_spell(this, true, false))
-        return false;
-
-    // If occupied, pick up a missile only if it would stack with an existing
-    // one. (Upgrading is possible.)
-    if (mslot_item(slot)
-        && (mons_is_wandering(this) || friendly() && foe == MHITYOU)
-        && pickup(item, slot, near))
-    {
-        return true;
-    }
-
-    item_def *launch = NULL;
-    const int exist_missile = mons_usable_missile(this, &launch);
-    if (exist_missile == NON_ITEM
-        || (_q_adj_damage(mons_missile_damage(this, launch,
-                                              &mitm[exist_missile]),
-                          mitm[exist_missile].quantity)
-            < _q_adj_damage(mons_missile_damage(this, launch, &item),
-                          item.quantity)))
-    {
-        if (inv[slot] != NON_ITEM && !drop_item(slot, near))
-            return false;
-        return pickup(item, slot, near);
-    }
-    return false;
-}
-
 bool monster::wants_weapon(const item_def &weap) const
 {
     if (!could_wield(weap))
