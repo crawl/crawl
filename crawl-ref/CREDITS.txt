@@ -95,7 +95,6 @@
     Micha Elsner
     Carl-Oscar Erneholm
     Christopher Evenstar
-    Nicholas Feinberg
     Brett Foster
     Kyle Fox
     Chris Galardi
@@ -210,6 +209,7 @@ The Dungeon Crawl Stone Soup development team is:
     Chris Campbell
     Matthew Cline
     Florian Diebold
+    Nicholas Feinberg
     Michael Gagno
     gammafunk
     Shayne Halvorson
