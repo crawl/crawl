@@ -444,11 +444,6 @@ string describe_mutations(bool center_title)
         have_any = true;
         break;
 
-    case SP_KOBOLD:
-        result += "You recuperate from illness quickly.\n";
-        have_any = true;
-        break;
-
     case SP_VAMPIRE:
         have_any = true;
         if (you.hunger_state == HS_STARVING)
