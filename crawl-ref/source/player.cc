@@ -4166,96 +4166,12 @@ void display_char_status()
     if (you.species == SP_VAMPIRE)
         _display_vampire_status();
 
-    static int statuses[] =
-    {
-        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
-        DUR_PETRIFYING,
-        DUR_TRANSFORMATION,
-        STATUS_BURDEN,
-        STATUS_MANUAL,
-        DUR_BREATH_WEAPON,
-        DUR_LIQUID_FLAMES,
-        DUR_FIRE_SHIELD,
-        DUR_ICY_ARMOUR,
-        DUR_ANTIMAGIC,
-        STATUS_MISSILES,
-        STATUS_REGENERATION,
-        DUR_SWIFTNESS,
-        DUR_RESISTANCE,
-        DUR_TELEPORT,
-        DUR_CONTROL_TELEPORT,
-        DUR_DISJUNCTION,
-        DUR_DEATH_CHANNEL,
-        DUR_PHASE_SHIFT,
-        DUR_SILENCE,
-        DUR_STONESKIN,
-        STATUS_INVISIBLE,
-        DUR_CONF,
-        STATUS_BEHELD,
-        DUR_PARALYSIS,
-        DUR_PETRIFIED,
-        DUR_SLEEP,
-        DUR_EXHAUSTED,
-        STATUS_SPEED,
-        DUR_MIGHT,
-        DUR_BRILLIANCE,
-        DUR_AGILITY,
-        DUR_DIVINE_VIGOUR,
-        DUR_DIVINE_STAMINA,
-        DUR_BERSERK,
-        STATUS_AIRBORNE,
-        STATUS_NET,
-        DUR_POISONING,
-        STATUS_SICK,
-        STATUS_ROT,
-        STATUS_CONTAMINATION,
-        DUR_CONFUSING_TOUCH,
-        DUR_SURE_BLADE,
-        DUR_AFRAID,
-        DUR_MIRROR_DAMAGE,
-        DUR_SCRYING,
-        STATUS_FIREBALL,
-        DUR_SHROUD_OF_GOLUBRIA,
-        STATUS_BACKLIT,
-        STATUS_UMBRA,
-        STATUS_CONSTRICTED,
-        STATUS_AUGMENTED,
-        STATUS_SILENCE,
-        DUR_SENTINEL_MARK,
-        STATUS_RECALL,
-        STATUS_LIQUEFIED,
-        DUR_WATER_HOLD,
-        DUR_FLAYED,
-        DUR_WEAK,
-        DUR_DIMENSION_ANCHOR,
-        DUR_INFUSION,
-        DUR_SONG_OF_SLAYING,
-        STATUS_DRAINED,
-        DUR_TOXIC_RADIANCE,
-        DUR_RECITE,
-        DUR_GRASPING_ROOTS,
-        DUR_FIRE_VULN,
-        DUR_POISON_VULN,
-        DUR_FROZEN,
-        DUR_SAP_MAGIC,
-        STATUS_MAGIC_SAPPED,
-        DUR_PORTAL_PROJECTILE,
-        DUR_NO_POTIONS,
-#if TAG_MAJOR_VERSION == 34
-        STATUS_GOLDEN,
-#endif
-        STATUS_BRIBE,
-        DUR_QAZLAL_FIRE_RES,
-        DUR_QAZLAL_COLD_RES,
-        DUR_QAZLAL_ELEC_RES,
-        DUR_QAZLAL_AC,
-        DUR_CORROSION,
-    };
-
+    // A hard-coded duration/status list used to be used here. This list is no
+    // longer hard-coded. May 2014. -reaverb
     status_info inf;
-    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
-        if (fill_status_info(statuses[i], &inf) && !inf.long_text.empty())
+        if (fill_status_info(i, &inf) && !inf.long_text.empty())
             mprf("%s", inf.long_text.c_str());
     }
     string cinfo = _constriction_description();
