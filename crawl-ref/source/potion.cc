@@ -299,6 +299,8 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         }
         break;
 
+    // Potions of slowing no longer exist, but tons of other effects use
+    // potion_effect(POT_SLOWING) so this code stays in.
     case POT_SLOWING:
         if (slow_player(10 + random2(pow)))
             xom_is_stimulated(50 / xom_factor);
