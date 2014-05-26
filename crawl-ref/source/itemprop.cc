@@ -379,12 +379,6 @@ static const missile_def Missile_prop[] =
     { MI_TOMAHAWK,      "tomahawk",      6,   30, true  },
 };
 
-enum food_flag_type
-{
-    FFL_NONE  = 0x00,
-    FFL_FRUIT = 0x01,
-};
-
 struct food_def
 {
     int         id;
@@ -394,7 +388,6 @@ struct food_def
     int         herb_mod;
     int         mass;
     int         turns;
-    uint32_t    flags;
 };
 
 // NOTE: Any food with special random messages or side effects
@@ -405,34 +398,34 @@ struct food_def
 static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
-    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  50, 3, FFL_NONE },
-    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2, FFL_NONE },
+    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4 },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500,  50, 3 },
+    { FOOD_BEEF_JERKY,   "beef jerky",   1500,   200,  -200,  20, 2 },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4, FFL_NONE },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4 },
 
-    { FOOD_FRUIT,        "fruit",         250,  -100,    50,  20, 1, FFL_FRUIT},
+    { FOOD_FRUIT,        "fruit",         250,  -100,    50,  20, 1 },
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2, FFL_NONE },
+    { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 2 },
+    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2 },
 
 #if TAG_MAJOR_VERSION == 34
-    { FOOD_UNUSED,       "buggy",           0,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_BANANA,       "buggy",        1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_LEMON,        "buggy",        1000,  -300,   300,  20, 2, FFL_FRUIT},
-    { FOOD_PEAR,         "buggy",         700,  -200,   200,  20, 2, FFL_FRUIT},
-    { FOOD_APPLE,        "buggy",         700,  -200,   200,  20, 2, FFL_FRUIT},
-    { FOOD_APRICOT,      "buggy",         700,  -200,   200,  15, 2, FFL_FRUIT},
-    { FOOD_CHOKO,        "buggy",         600,  -200,   200,  30, 2, FFL_FRUIT},
-    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200,  10, 2, FFL_FRUIT},
-    { FOOD_LYCHEE,       "buggy",         600,  -200,   200,  10, 2, FFL_FRUIT},
-    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50,   5, 2, FFL_FRUIT},
-    { FOOD_GRAPE,        "buggy",         100,   -20,    20,   2, 1, FFL_FRUIT},
-    { FOOD_SULTANA,      "buggy",          70,   -20,    20,   1, 1, FFL_FRUIT},
-    { FOOD_CHEESE,       "buggy",        1200,     0,     0,  40, 2, FFL_NONE },
-    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400,  40, 2, FFL_NONE },
+    { FOOD_UNUSED,       "buggy",           0,     0,     0,  40, 2 },
+    { FOOD_AMBROSIA,     "buggy",           0,     0,     0,  40, 2 },
+    { FOOD_ORANGE,       "buggy",        1000,  -300,   300,  20, 2 },
+    { FOOD_BANANA,       "buggy",        1000,  -300,   300,  20, 2 },
+    { FOOD_LEMON,        "buggy",        1000,  -300,   300,  20, 2 },
+    { FOOD_PEAR,         "buggy",         700,  -200,   200,  20, 2 },
+    { FOOD_APPLE,        "buggy",         700,  -200,   200,  20, 2 },
+    { FOOD_APRICOT,      "buggy",         700,  -200,   200,  15, 2 },
+    { FOOD_CHOKO,        "buggy",         600,  -200,   200,  30, 2 },
+    { FOOD_RAMBUTAN,     "buggy",         600,  -200,   200,  10, 2 },
+    { FOOD_LYCHEE,       "buggy",         600,  -200,   200,  10, 2 },
+    { FOOD_STRAWBERRY,   "buggy",         200,   -50,    50,   5, 2 },
+    { FOOD_GRAPE,        "buggy",         100,   -20,    20,   2, 1 },
+    { FOOD_SULTANA,      "buggy",          70,   -20,    20,   1, 1 },
+    { FOOD_CHEESE,       "buggy",        1200,     0,     0,  40, 2 },
+    { FOOD_SAUSAGE,      "buggy",        1200,   150,  -400,  40, 2 },
 #endif
 };
 
@@ -1929,10 +1922,7 @@ bool can_cut_meat(const item_def &item)
 
 bool is_fruit(const item_def & item)
 {
-    if (item.base_type != OBJ_FOOD)
-        return false;
-
-    return Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT;
+    return item.base_type == OBJ_FOOD && item.sub_type == FOOD_FRUIT;
 }
 
 bool food_is_rotten(const item_def &item)
