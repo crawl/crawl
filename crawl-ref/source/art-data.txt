@@ -1165,6 +1165,7 @@ BOOL:     clarity, sustab
 
 ENUM:    MAJIN
 NAME:    Majin-Bo
+INSCRIP: Archmagi,
 OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
 PLUS:    +6/+6
 COLOUR:  ETC_UNHOLY
@@ -1173,6 +1174,7 @@ TILE_EQ: majin
 MP:      6
 INT:     6
 BRAND:   SPWPN_VAMPIRICISM
+BOOL:    unholy
 
 # This is the first of two amulets used to test suppression aura.
 # Together, they confer every randart effect except for a few that are
