@@ -429,3 +429,46 @@ Sheep cheese
 
 Yak cheese
 %%%%
+eating_fruit
+
+Mmmm... Yummy @_fruit_type_@.
+
+That @_fruit_type_@ was delicious!
+
+w:1
+That @_peel_fruit_@ was delicious! Even the peel tasted good!
+
+w:1
+That lemon was rather sour... but delicious nonetheless!
+
+That choko was very bland.
+
+w:1
+That snozzcumber tasted truly putrid!
+%%%%
+_fruit_type_
+
+orange
+
+banana
+
+pear
+
+apple
+
+apricot
+
+rambutan
+
+lychee
+
+strawberry
+
+grape
+%%%%
+_peel_fruit_
+
+orange
+
+banana
+%%%%

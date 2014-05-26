@@ -1731,6 +1731,14 @@ void finished_eating_message(int food_type)
         case FOOD_BREAD_RATION:
             mpr("That bread ration really hit the spot!");
             return;
+        case FOOD_FRUIT:
+        {
+            string taste = getMiscString("eating_fruit");
+            if (taste.empty())
+                taste = "Eugh, buggy fruit.";
+            mprf("%s", taste.c_str());
+            break;
+        }
         default:
             break;
         }
