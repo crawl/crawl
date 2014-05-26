@@ -70,7 +70,6 @@ static void _sdump_header(dump_params &);
 static void _sdump_stats(dump_params &);
 static void _sdump_location(dump_params &);
 static void _sdump_religion(dump_params &);
-static void _sdump_burden(dump_params &);
 static void _sdump_hunger(dump_params &);
 static void _sdump_transform(dump_params &);
 static void _sdump_visits(dump_params &);
@@ -125,7 +124,6 @@ static dump_section_handler dump_handlers[] =
     { "stats",          _sdump_stats         },
     { "location",       _sdump_location      },
     { "religion",       _sdump_religion      },
-    { "burden",         _sdump_burden        },
     { "hunger",         _sdump_hunger        },
     { "transform",      _sdump_transform     },
     { "visits",         _sdump_visits        },
@@ -216,23 +214,6 @@ static void _sdump_stats(dump_params &par)
 {
     par.text += dump_overview_screen(par.full_id);
     par.text += "\n\n";
-}
-
-static void _sdump_burden(dump_params &par)
-{
-    string verb = par.se? "were" : "are";
-
-    switch (you.burden_state)
-    {
-    case BS_OVERLOADED:
-        par.text += "You " + verb + " overloaded with stuff.\n";
-        break;
-    case BS_ENCUMBERED:
-        par.text += "You " + verb + " encumbered.\n";
-        break;
-    default:
-        break;
-    }
 }
 
 static void _sdump_hunger(dump_params &par)
@@ -491,7 +472,6 @@ static void _sdump_misc(dump_params &par)
 {
     _sdump_location(par);
     _sdump_religion(par);
-    _sdump_burden(par);
     _sdump_hunger(par);
     _sdump_transform(par);
     _sdump_visits(par);

@@ -1778,9 +1778,7 @@ static void _rot_inventory_food(int time_delta)
 
         if (item.base_type == OBJ_POTIONS)
         {
-            // Also handles messaging.
-            if (maybe_coagulate_blood_potions_inv(item))
-                burden_changed_by_rot = true;
+            maybe_coagulate_blood_potions_inv(item);
             continue;
         }
 
@@ -1944,7 +1942,6 @@ static void _rot_inventory_food(int time_delta)
             msg += "rotted away.";
             mprf(MSGCH_ROTTEN_MEAT, "%s", msg.c_str());
         }
-        burden_change();
     }
 }
 

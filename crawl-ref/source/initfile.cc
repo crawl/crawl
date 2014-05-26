@@ -575,8 +575,8 @@ void game_options::set_default_activity_interrupts()
         "interrupt_vampire_feed = interrupt_butcher",
         "interrupt_multidrop = hp_loss, monster_attack, teleport, stat",
         "interrupt_macro = interrupt_multidrop",
-        "interrupt_travel = interrupt_butcher, statue, hungry, "
-                            "burden, hit_monster, sense_monster",
+        "interrupt_travel = interrupt_butcher, statue, hungry, hit_monster, "
+                            "sense_monster",
         "interrupt_run = interrupt_travel, message",
         "interrupt_rest = interrupt_run, full_hp, full_mp",
 
@@ -800,7 +800,6 @@ void game_options::reset_options()
     auto_switch             = false;
     suppress_startup_errors = false;
 
-    show_inventory_weights = MB_MAYBE;
     show_uncursed          = true;
     travel_open_doors      = true;
     easy_unequip           = true;
@@ -816,7 +815,6 @@ void game_options::reset_options()
     allow_self_target      = CONFIRM_PROMPT;
     hp_warning             = 30;
     magic_point_warning    = 0;
-    autopickup_no_burden   = true;
     skill_focus            = SKM_FOCUS_ON;
 
     user_note_prefix       = "";
@@ -2616,15 +2614,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             report_error("Unknown show_god_gift value: %s\n", field.c_str());
     }
-    else if (key == "show_inventory_weights")
-    {
-        if (field == "yes" || field == "true")
-            show_inventory_weights = MB_TRUE;
-        else if (field == "no" || field == "false")
-            show_inventory_weights = MB_FALSE;
-        else
-            show_inventory_weights = MB_MAYBE;
-    }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal, caret_equal);
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
@@ -2657,7 +2646,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         macro_dir = field;
 #endif
 #endif
-    else BOOL_OPTION(autopickup_no_burden);
 #ifdef DGL_SIMPLE_MESSAGING
     else BOOL_OPTION(messaging);
 #endif

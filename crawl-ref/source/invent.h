@@ -116,8 +116,6 @@ public:
     virtual bool get_tiles(vector<tile_def>& tiles) const;
 #endif
 
-    bool show_weight;
-
 private:
     void add_class_hotkeys(const item_def &i);
 };

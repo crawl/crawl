@@ -207,7 +207,6 @@
 # clear_messages               = true
 # small_more                   = true
 # show_more                    = false
-# show_inventory_weights       = (drop_pickup | true | false)
 # show_newturn_mark            = false
 # show_gold_turns              = false
 # show_game_turns              = false

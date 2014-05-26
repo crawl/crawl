@@ -91,8 +91,6 @@ public:
   FixedBitVector<NUM_RUNE_TYPES> runes;
   int obtainable_runes; // can be != 15 in Sprint
 
-  int burden;
-  burden_state_type burden_state;
   FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
   set<spell_type> old_vehumet_gifts, vehumet_gifts;
 
@@ -840,10 +838,6 @@ static inline int player_under_penance(god_type god = you.religion)
     return you.penance[god];
 }
 
-int burden_change();
-
-int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
-
 int player_energy();
 
 int player_raw_body_armour_evasion_penalty();
@@ -851,7 +845,7 @@ int player_adjusted_shield_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
-int player_movement_speed(bool ignore_burden = false);
+int player_movement_speed();
 
 int player_hunger_rate(bool temp = true);
 

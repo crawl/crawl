@@ -166,7 +166,6 @@ public:
 
     FixedBitVector<NUM_OBJECT_CLASSES> autopickups; // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
-    maybe_bool  show_inventory_weights; // show weights in inventory listings
     bool        show_uncursed;   // label known uncursed items as "uncursed"
     bool        travel_open_doors;     // open doors while exploring
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
@@ -178,7 +177,6 @@ public:
     chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
-    bool        autopickup_no_burden;   // don't autopickup if it changes burden
     skill_focus_mode skill_focus; // is the focus skills available
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)

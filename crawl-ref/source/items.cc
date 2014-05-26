@@ -287,12 +287,12 @@ stack_iterator stack_iterator::operator++(int dummy)
     ++(*this);
     return copy;
 }
-/*---------------------------------------------------------------------*/
 
-// Reduce quantity of an inventory item, do cleanup if item goes away.
-//
-// Returns true if stack of items no longer exists.
-bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden)
+/*
+ * Reduce quantity of an inventory item, do cleanup if item goes away.
+ * @returns True if stack of items no longer exists, false otherwise.
+*/
+bool dec_inv_item_quantity(int obj, int amount)
 {
     bool ret = false;
 
@@ -333,9 +333,6 @@ bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden)
     else
         you.inv[obj].quantity -= amount;
 
-    if (!suppress_burden)
-        burden_change();
-
     return ret;
 }
 
@@ -363,16 +360,13 @@ bool dec_mitm_item_quantity(int obj, int amount)
     return false;
 }
 
-void inc_inv_item_quantity(int obj, int amount, bool suppress_burden)
+void inc_inv_item_quantity(int obj, int amount)
 {
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
 
     you.m_quiver->on_inv_quantity_changed(obj, amount);
     you.inv[obj].quantity += amount;
-
-    if (!suppress_burden)
-        burden_change();
 }
 
 void inc_mitm_item_quantity(int obj, int amount)
@@ -819,45 +813,6 @@ void item_check(bool verbose)
     }
 }
 
-static int _menu_selection_weight(const Menu* menu)
-{
-    vector<MenuEntry*> se = menu->selected_entries();
-    int weight(0);
-    for (int i = 0, size = se.size(); i < size; ++i)
-    {
-        const item_def *item = static_cast<item_def*>(se[i]->data);
-        if (se[i]->selected_qty > 0)
-            weight += item_mass(*item) * se[i]->selected_qty;
-    }
-    return weight;
-}
-
-static string _menu_burden_invstatus(const Menu *menu, bool is_pickup = false)
-{
-    int sel_weight = _menu_selection_weight(menu);
-    int new_burd = you.burden + (is_pickup ? sel_weight : -sel_weight);
-    string sw = sel_weight ? make_stringf(">%.0f", new_burd * BURDEN_TO_AUM) : "";
-    //TODO: Should somehow colour burdened/overloaded in LIGHTRED/RED
-    //      respectively {kittel}
-    string newstate =
-        new_burd > carrying_capacity(BS_ENCUMBERED) ? "overloaded" :
-      new_burd > carrying_capacity(BS_UNENCUMBERED) ? "burdened"
-                                                    : "unencumbered";
-    if (Options.show_inventory_weights)
-    {
-        newstate = make_stringf("%.0f%s/%.0f aum",
-                       you.burden * BURDEN_TO_AUM,
-                       sw.c_str(),
-                       carrying_capacity(BS_UNENCUMBERED) * BURDEN_TO_AUM);
-    }
-    return make_stringf("(Burden: %s)", newstate.c_str());
-}
-
-static string _pickup_menu_title(const Menu *menu, const string &oldt)
-{
-    return _menu_burden_invstatus(menu, true) + " " + oldt;
-}
-
 void pickup_menu(int item_link)
 {
     int n_did_pickup   = 0;
@@ -874,7 +829,7 @@ void pickup_menu(int item_link)
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
     vector<SelItem> selected = select_items(items, prompt.c_str(), false,
-                                            MT_PICKUP, _pickup_menu_title);
+                                            MT_PICKUP);
     if (selected.empty())
         canned_msg(MSG_OK);
     redraw_screen();
@@ -897,14 +852,10 @@ void pickup_menu(int item_link)
                 // If we cleared any flags on the items, but the pickup was
                 // partial, reset the flags for the items that remain on the
                 // floor.
-                if (result == 0 || result == -1)
+                if (result == -1)
                 {
                     n_tried_pickup++;
-                    if (result == 0)
-                        pickup_warning = "You can't carry that much weight.";
-                    else
-                        pickup_warning = "You can't carry that many items.";
-
+                    pickup_warning = "You can't carry that many items.";
                     if (mitm[j].defined())
                         mitm[j].flags = oldflags;
                 }
@@ -923,7 +874,7 @@ void pickup_menu(int item_link)
     if (!pickup_warning.empty())
     {
         mpr(pickup_warning.c_str());
-        learned_something_new(HINT_HEAVY_LOAD);
+        learned_something_new(HINT_FULL_INVENTORY);
     }
 
     if (n_did_pickup)
@@ -1215,13 +1166,13 @@ bool pickup_single_item(int link, int qty)
     if (num == -1)
     {
         mpr("You can't carry that many items.");
-        learned_something_new(HINT_HEAVY_LOAD);
+        learned_something_new(HINT_FULL_INVENTORY);
         return false;
     }
     else if (num == 0)
     {
         mpr("You can't carry that much weight.");
-        learned_something_new(HINT_HEAVY_LOAD);
+        learned_something_new(HINT_FULL_INVENTORY);
         return false;
     }
 
@@ -1579,10 +1530,16 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
-// Returns quantity of items moved into player's inventory and -1 if
-// the player's inventory is full.
-int move_item_to_player(int obj, int quant_got, bool quiet,
-                        bool ignore_burden)
+/*
+ * Move the given item and quantity to the player's inventory
+ * @param obj The item index in mitm.
+ * @param quant_got The quantity of this item to move.
+ * @param quiet If true, most messages notifying the player of item pickup (or
+ *              item pickup failure) aren't printed.
+ * @returns The quantity of items moved or -1 if the player's inventory is
+ *          full.
+*/
+int move_item_to_player(int obj, int quant_got, bool quiet)
 {
     item_def &it = mitm[obj];
 
@@ -1669,7 +1626,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         mprf(MSGCH_ORB, "You pick up the Orb of Zot!");
         you.char_direction = GDT_ASCENDING;
-        burden_change();
 
         env.orb_pos = you.pos(); // can be wrong in wizmode
         orb_pickup_noise(you.pos(), 30);
@@ -1693,7 +1649,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return retval;
     }
 
-    const int unit_mass = item_mass(it);
     if (quant_got > it.quantity || quant_got <= 0)
         quant_got = it.quantity;
 
@@ -1738,39 +1693,12 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         }
     }
 
-    int imass = unit_mass * quant_got;
-    if (!ignore_burden && (you.burden + imass > carrying_capacity()))
-    {
-        if (drop_spoiled_chunks(you.burden + imass - carrying_capacity()))
-            imass = unit_mass * quant_got;
-    }
-
-    bool partial_pickup = false;
-
-    if (!ignore_burden && (you.burden + imass > carrying_capacity()))
-    {
-        // calculate quantity we can actually pick up
-        int part = (carrying_capacity() - you.burden) / unit_mass;
-
-        if (part < 1)
-            return 0;
-
-        // only pickup 'part' items
-        quant_got = part;
-        partial_pickup = true;
-
-        retval = part;
-    }
-
     if (is_stackable_item(it))
     {
         for (int m = 0; m < ENDOFPACK; m++)
         {
             if (items_stack(you.inv[m], it))
             {
-                if (!quiet && partial_pickup)
-                    mpr("You can only carry some of what is here.");
-
                 _check_note_item(it);
 
                 // If the object on the ground is inscribed, but not
@@ -1786,7 +1714,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
                 inc_inv_item_quantity(m, quant_got);
                 dec_mitm_item_quantity(obj, quant_got);
-                burden_change();
 
                 _got_item(it, quant_got);
 
@@ -1806,13 +1733,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     }
 
     // Can't combine, check for slot space.
-    if (inv_count() >= ENDOFPACK)
-        drop_spoiled_chunks(1, true);
-    if (inv_count() >= ENDOFPACK)
+    if (inv_count() >= ENDOFPACK && !drop_spoiled_chunks())
         return -1;
-
-    if (!quiet && partial_pickup)
-        mpr("You can only carry some of what is here.");
 
     int freeslot = find_free_slot(it);
     ASSERT_RANGE(freeslot, 0, ENDOFPACK);
@@ -1859,7 +1781,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     }
     dec_mitm_item_quantity(obj, quant_got);
     you.m_quiver->on_inv_quantity_changed(freeslot, quant_got);
-    burden_change();
 
     if (!quiet)
     {
@@ -2310,11 +2231,6 @@ void drop_last()
     }
 }
 
-static string _drop_menu_title(const Menu *menu, const string &oldt)
-{
-    return _menu_burden_invstatus(menu) + " " + oldt;
-}
-
 int get_equip_slot(const item_def *item)
 {
     int worn = -1;
@@ -2419,7 +2335,7 @@ void drop()
 #else
     tmp_items = prompt_invent_items("Drop what? (_ for help)", MT_DROP,
 #endif
-                                     -1, _drop_menu_title, true, true, 0,
+                                     -1, NULL, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop);
 
@@ -2914,40 +2830,6 @@ static void _do_autopickup()
 
         if (item_needs_autopickup(mitm[o]))
         {
-            int num_to_take = mitm[o].quantity;
-            int unit_mass = item_mass(mitm[o]);
-            if (Options.autopickup_no_burden && unit_mass != 0)
-            {
-                int capacity = carrying_capacity(you.burden_state);
-                int num_can_take = (capacity - you.burden) / unit_mass;
-
-                if (num_can_take < num_to_take
-                    && drop_spoiled_chunks(you.burden
-                           + num_to_take * unit_mass - capacity))
-                {
-                    // Yay, some new space, retry.
-                    // Compare to the old burden capacity, not the new one.
-                    num_can_take = (capacity - you.burden) / unit_mass;
-                }
-
-                if (num_can_take < num_to_take)
-                {
-                    if (!n_tried_pickup)
-                    {
-                        mpr("You can't pick everything up without burdening "
-                            "yourself.");
-                    }
-                    n_tried_pickup++;
-                    num_to_take = num_can_take;
-                }
-
-                if (num_can_take == 0)
-                {
-                    o = next;
-                    continue;
-                }
-            }
-
             // Do this before it's picked up, otherwise the picked up
             // item will be in inventory and _interesting_explore_pickup()
             // will always return false.
@@ -2960,17 +2842,14 @@ static void _do_autopickup()
 
             clear_item_pickup_flags(mitm[o]);
 
-            const int result = move_item_to_player(o, num_to_take);
+            const int result = move_item_to_player(o, mitm[o].quantity);
             if (mitm[o].base_type == OBJ_FOOD && mitm[o].sub_type == FOOD_CHUNK)
                 mitm[o].flags |= ISFLAG_DROPPED;
 
-            if (result == 0 || result == -1)
+            if (result == -1)
             {
                 n_tried_pickup++;
-                if (result == 0)
-                    pickup_warning = "You can't carry any more.";
-                else
-                    pickup_warning = "Your pack is full.";
+                pickup_warning = "Your pack is full.";
                 mitm[o].flags = iflags;
             }
             else

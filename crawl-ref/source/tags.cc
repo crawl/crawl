@@ -1345,8 +1345,6 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.pos().x);
     marshallShort(th, you.pos().y);
 
-    marshallShort(th, you.burden);
-
     // how many spells?
     marshallUByte(th, MAX_KNOWN_SPELLS);
     for (i = 0; i < MAX_KNOWN_SPELLS; ++i)
@@ -2230,7 +2228,10 @@ static void tag_read_you(reader &th)
     ASSERT(!x && !y || in_bounds(x, y));
     you.moveto(coord_def(x, y));
 
-    you.burden = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_WEIGHTLESS)
+        unmarshallShort(th);
+#endif
 
     // how many spells?
     you.spell_no = 0;

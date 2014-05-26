@@ -35,11 +35,7 @@ static int food_prompt_floor(lua_State *ls)
 {
     int eaten = 0;
     if (!you.turn_is_over)
-    {
         eaten = eat_from_floor();
-        if (eaten == 1)
-            burden_change();
-    }
     lua_pushboolean(ls, (eaten != 0));
     return 1;
 }

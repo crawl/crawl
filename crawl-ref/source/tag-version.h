@@ -104,6 +104,7 @@ enum tag_minor_version
     TAG_MINOR_FOUL_STENCH,         // Remove Saprovore from the Foul Stench DS Facet
     TAG_MINOR_FOOD_PURGE,          // Cleaning up old types of food.
     TAG_MINOR_FOOD_PURGE_AP_FIX,   // Correctly carry over old fruit autopickup.
+    TAG_MINOR_WEIGHTLESS,          // Removal of player burden.
 #endif
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

@@ -1421,10 +1421,6 @@ int player_hunger_rate(bool temp)
                 - player_mutation_level(MUT_SLOW_METABOLISM);
     }
 
-    // burden
-    if (temp)
-        hunger += you.burden_state;
-
     if (you.hp < you.hp_max
         && player_mutation_level(MUT_SLOW_HEALING) < 3)
     {
@@ -2239,7 +2235,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 // this isn't as fast as it used to be (6 for having anything), but
 // even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
-int player_movement_speed(bool ignore_burden)
+int player_movement_speed()
 {
     int mv = 10;
 
@@ -2285,15 +2281,6 @@ int player_movement_speed(bool ignore_burden)
     {
         mv *= 10 + slow * 2;
         mv /= 10;
-    }
-
-    // Burden
-    if (!ignore_burden)
-    {
-        if (you.burden_state == BS_ENCUMBERED)
-            mv++;
-        else if (you.burden_state == BS_OVERLOADED)
-            mv += 3;
     }
 
     if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_liquid())
@@ -2704,82 +2691,6 @@ bool player_sust_abil(bool calc_unid)
 {
     return you.wearing(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid)
            || you.scan_artefacts(ARTP_SUSTAB);
-}
-
-int carrying_capacity(burden_state_type bs)
-{
-    // Use untransformed body weight, to prevent transformations
-    // causing frequent large changes in carrying capacity.
-    int cap = 2 * you.body_weight(true) + you.strength() * 250 + 1000;
-    // We are nice to the lighter species in that strength adds absolutely
-    // instead of relatively to body weight. --dpeg
-
-    if (you.stat_zero[STAT_STR])
-        cap /= 2;
-
-    if (bs == BS_UNENCUMBERED)
-        return cap * 5 / 6;
-    else if (bs == BS_ENCUMBERED)
-        return cap * 11 / 12;
-    else
-        return cap;
-}
-
-int burden_change()
-{
-    const burden_state_type old_burdenstate = you.burden_state;
-
-    // XXX: the 600 here is the weight of the Orb.
-    // TODO: make this use a dummy item or similar?
-    you.burden = player_has_orb() ? 600 : 0;
-
-    for (int bu = 0; bu < ENDOFPACK; bu++)
-    {
-        if (you.inv[bu].quantity < 1)
-            continue;
-
-        you.burden += item_mass(you.inv[bu]) * you.inv[bu].quantity;
-    }
-
-    you.burden_state = BS_UNENCUMBERED;
-    set_redraw_status(REDRAW_BURDEN);
-    you.redraw_evasion = true;
-
-    // changed the burdened levels to match the change to max_carried
-    if (you.burden <= carrying_capacity(BS_UNENCUMBERED))
-    {
-        you.burden_state = BS_UNENCUMBERED;
-
-        // this message may have to change, just testing {dlb}
-        if (old_burdenstate != you.burden_state)
-            mpr("Your possessions no longer seem quite so burdensome.");
-    }
-    else if (you.burden <= carrying_capacity(BS_ENCUMBERED))
-    {
-        you.burden_state = BS_ENCUMBERED;
-
-        if (old_burdenstate != you.burden_state)
-        {
-            mpr("You are being weighed down by all of your possessions.");
-            learned_something_new(HINT_HEAVY_LOAD);
-        }
-    }
-    else
-    {
-        you.burden_state = BS_OVERLOADED;
-
-        if (old_burdenstate != you.burden_state)
-        {
-            mpr("You are being crushed by all of your possessions.");
-            learned_something_new(HINT_HEAVY_LOAD);
-        }
-    }
-
-    // Stop travel if we get burdened (as from potions of might wearing off).
-    if (you.burden_state > old_burdenstate)
-        interrupt_activity(AI_BURDEN_CHANGE);
-
-    return you.burden;
 }
 
 void forget_map(bool rot)
@@ -3786,9 +3697,6 @@ int check_stealth()
     }
 
     stealth += you.skill(SK_STEALTH, race_mod);
-
-    if (you.burden_state > BS_UNENCUMBERED)
-        stealth /= you.burden_state;
 
     if (you.confused())
         stealth /= 3;
@@ -5742,8 +5650,6 @@ void player::init()
     runes.reset();
     obtainable_runes = 15;
 
-    burden          = 0;
-    burden_state    = BS_UNENCUMBERED;
     spells.init(SPELL_NO_SPELL);
     old_vehumet_gifts.clear();
     spell_no        = 0;
@@ -7055,9 +6961,8 @@ bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 
 bool player::fights_well_unarmed(int heavy_armour_penalty)
 {
-    return burden_state == BS_UNENCUMBERED
-           && x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200)
-           && x_chance_in_y(2, 1 + heavy_armour_penalty);
+    return x_chance_in_y(skill(SK_UNARMED_COMBAT, 10), 200)
+        && x_chance_in_y(2, 1 + heavy_armour_penalty);
 }
 
 bool player::cancellable_flight() const
