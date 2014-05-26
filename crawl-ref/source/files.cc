@@ -2301,17 +2301,23 @@ bool unlock_file_handle(FILE *handle)
     return unlock_file(fileno(handle));
 }
 
+/**
+ * Attempts to open & lock a file.
+ *
+ * @param mode      The file access mode. ('r', 'ab+', etc)
+ * @param file      The path to the file to be opened.
+ * @return          A handle for the specified file, if successful; else NULL.
+ */
 FILE *lk_open(const char *mode, const string &file)
 {
+    ASSERT(mode);
+
     FILE *handle = fopen_u(file.c_str(), mode);
     if (!handle)
         return NULL;
 
-    bool locktype = false;
-    if (mode && mode[0] != 'r')
-        locktype = true;
-
-    if (handle && !lock_file_handle(handle, locktype))
+    const bool write_lock = mode[0] != 'r' || strchr(mode, '+');
+    if (!lock_file_handle(handle, write_lock))
     {
         mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         fclose(handle);
