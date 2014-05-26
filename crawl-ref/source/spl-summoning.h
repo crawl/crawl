@@ -45,7 +45,7 @@ bool summon_berserker(int pow, actor *caster,
 bool summon_holy_warrior(int pow, bool punish);
 
 bool tukima_affects(const monster *mon);
-void cast_tukimas_dance(int pow, actor *target, bool force_hostile = false);
+void cast_tukimas_dance(int pow, actor *target, bool force_friendly = false);
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail);
 spret_type cast_summon_lightning_spire(int pow, const coord_def& where, god_type god, bool fail);
 

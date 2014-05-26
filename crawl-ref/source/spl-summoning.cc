@@ -800,9 +800,9 @@ bool _check_tukima_validity(const actor *target)
  *
  * @param pow               Spellpower.
  * @param target            The spell's target (monster or player)
- * @param force_hostile     Whether the weapon should always be anti-player.
+ * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-void _animate_weapon(int pow, actor* target, bool force_hostile)
+void _animate_weapon(int pow, actor* target, bool force_friendly)
 {
     bool target_is_player = target == &you;
     item_def* wpn = target->weapon();
@@ -818,21 +818,29 @@ void _animate_weapon(int pow, actor* target, bool force_hostile)
         }
         cp.flags |= ISFLAG_THROWN;
     }
-    // Cursed weapons become hostile.
-    const bool friendly = !force_hostile && !wpn->cursed();
+    // Self-casting haunts yourself!
+    const bool friendly = force_friendly || !target_is_player;
     const int dur = min(2 + (random2(pow) / 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON,
                  friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                 force_hostile ? 0 : target,
+                 &you,
                  dur, SPELL_TUKIMAS_DANCE,
                  target->pos(),
-                 MHITYOU,
-                 MG_AUTOFOE);
+                 target_is_player ? MHITYOU : target->mindex(),
+                 MG_FORCE_BEH);
     mg.props[TUKIMA_WEAPON] = cp;
     mg.props[TUKIMA_POWER] = pow;
 
     monster *mons = create_monster(mg);
+
+    // Don't haunt yourself if the weapon is friendly
+    if (!force_friendly)
+    {
+        mons->add_ench(mon_enchant(ENCH_HAUNTING, 1, target,
+                                   INFINITE_DURATION));
+        mons->foe = target->mindex();
+    }
 
     // We are successful.  Unwield the weapon, removing any wield effects.
     mprf("%s dances into the air!",
@@ -873,16 +881,16 @@ void _animate_weapon(int pow, actor* target, bool force_hostile)
  *
  * @param pow               Spellpower.
  * @param where             The target grid.
- * @param force_hostile     Whether the weapon should always be anti-player.
+ * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-void cast_tukimas_dance(int pow, actor* target, bool force_hostile)
+void cast_tukimas_dance(int pow, actor* target, bool force_friendly)
 {
     ASSERT(target);
 
     if (!_check_tukima_validity(target))
         return;
 
-    _animate_weapon(pow, target, force_hostile);
+    _animate_weapon(pow, target, force_friendly);
 }
 
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
