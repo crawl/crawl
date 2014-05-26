@@ -943,6 +943,17 @@ struct status_light
     string text;
 };
 
+static void _add_status_light_to_out(int i, vector<status_light>& out)
+{
+    status_info inf;
+
+    if (fill_status_info(i, &inf) && !inf.light_text.empty())
+    {
+        status_light sl(inf.light_colour, inf.light_text);
+        out.push_back(sl);
+    }
+}
+
 // The colour scheme for these flags is currently:
 //
 // - yellow, "orange", red      for bad conditions
@@ -978,18 +989,44 @@ static void _get_status_lights(vector<status_light>& out)
     }
 #endif
 
-    // A hard-coded duration/status list used to be used here. This list is no
-    // longer hard-coded. May 2014. -reaverb
-    status_info inf;
-    for (unsigned i = 0; i <= STATUS_LAST_STATUS ; ++i)
+    // We used to have to hardcode every status, now we just hardcode the
+    // statuses important enough to appear first. (Rightmost)
+    const unsigned int important_statuses[] =
     {
-        if (fill_status_info(i, &inf) && !inf.light_text.empty())
+        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+        STATUS_HUNGER,
+        DUR_PARALYSIS,
+        DUR_CONF,
+        DUR_PETRIFYING,
+        DUR_PETRIFIED,
+        DUR_BERSERK,
+        DUR_TELEPORT,
+        DUR_HASTE,
+        DUR_SLOW,
+        STATUS_SPEED,
+        DUR_DEATHS_DOOR,
+        DUR_EXHAUSTED,
+        DUR_QUAD_DAMAGE,
+        STATUS_BURDEN,
+    };
+
+    for (unsigned i = 0; i < ARRAYSZ(important_statuses) ; ++i)
+        _add_status_light_to_out(important_statuses[i], out);
+
+    for (unsigned status = 0; status <= STATUS_LAST_STATUS ; ++status)
+    {
+        bool cancel = false;
+
+        for (unsigned i = 0; i < ARRAYSZ(important_statuses) ; ++i)
         {
-            if (inf.light_text == "")
-                break; // "" means no status light.
-            status_light sl(inf.light_colour, inf.light_text);
-            out.push_back(sl);
+            if (important_statuses[i] == status)
+                cancel = true;
         }
+
+        if (cancel)
+            continue;
+
+        _add_status_light_to_out(status, out);
     }
 }
 
