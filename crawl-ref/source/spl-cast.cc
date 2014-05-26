@@ -879,11 +879,10 @@ static void _spellcasting_god_conduct(spell_type spell)
  * Spell noise, magic 'sap' effects, and god conducts.
  *
  * @param spell         The type of spell just cast.
- * @param pow           The power of the spell. UNUSED.
  * @param god           Which god is casting the spell; NO_GOD if it's you.
  * @param real_spell    An actual spellcast, vs. spell-like effects (rods?)
  */
-static void _spellcasting_side_effects(spell_type spell, int pow, god_type god,
+static void _spellcasting_side_effects(spell_type spell, god_type god,
                                        bool real_spell)
 {
     _spellcasting_god_conduct(spell);
@@ -1239,7 +1238,7 @@ static void _spellcasting_corruption(spell_type spell)
  * @param spell         The type of spell being cast.
  * @param powc          Spellpower.
  * @param allow_fail    Whether spell-fail chance applies.
- * @param check_range   ...I'm not sure this actually does anything
+ * @param check_range   If true, abort Animate Dead if no targets are in range.
  * @return SPRET_SUCCESS if spell is successfully cast for purposes of
  * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
  * the casting.
@@ -1445,7 +1444,7 @@ spret_type your_spells(spell_type spell, int powc,
         {
             dithmenos_shadow_spell(&beam, spell);
         }
-        _spellcasting_side_effects(spell, powc, god, allow_fail);
+        _spellcasting_side_effects(spell, god, allow_fail);
         return SPRET_SUCCESS;
     }
     case SPRET_FAIL:
