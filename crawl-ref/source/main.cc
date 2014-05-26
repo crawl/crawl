@@ -1474,14 +1474,6 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         }
     }
 
-    // Overloaded, can't go up stairs.
-    if (!down && you.burden_state == BS_OVERLOADED
-        && !feat_is_escape_hatch(ftype) && !feat_is_gate(ftype))
-    {
-        mpr("You are carrying too much to climb upwards.");
-        return false;
-    }
-
     return true;
 }
 
@@ -1612,8 +1604,7 @@ static void _take_stairs(bool down)
     else
     {
         tag_followers(); // Only those beside us right now can follow.
-        start_delay(down ? DELAY_DESCENDING_STAIRS : DELAY_ASCENDING_STAIRS,
-                    1 + (you.burden_state > BS_UNENCUMBERED));
+        start_delay(down ? DELAY_DESCENDING_STAIRS : DELAY_ASCENDING_STAIRS, 1);
     }
 }
 

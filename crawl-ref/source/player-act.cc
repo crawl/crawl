@@ -300,12 +300,8 @@ random_var player::attack_delay(item_def *weap, item_def *projectile,
                              rv::roll_dice(2, armour_penalty),
                              20)));
 
-            // Unarmed speed. Min delay is 10 - 270/54 = 5.
-            if (you.burden_state == BS_UNENCUMBERED)
-            {
-                skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
-                attk_delay -= div_rand_round(constant(you.skill(sk, 10)), 54);
-            }
+            skill_type sk = projectile ? SK_THROWING : SK_UNARMED_COMBAT;
+            attk_delay -= div_rand_round(constant(you.skill(sk, 10)), 54);
 
             // Bats are faster (for what good it does them).
             if (you.form == TRAN_BAT && !projectile)
@@ -417,12 +413,14 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool ignore_transform) const
 {
+    size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
+
     if (species == SP_FELID)
         return false;
 
-    // Only ogres and trolls can wield giant clubs and large rocks (for
+    // Only ogres and trolls can wield giant clubs or large rocks (for
     // sandblast).
-    if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
+    if (bsize < SIZE_LARGE
         && ((item.base_type == OBJ_WEAPONS
              && is_giant_club_type(item.sub_type))
             || (item.base_type == OBJ_MISSILES &&
@@ -440,12 +438,8 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return true;
 
     // Small species wielding large weapons...
-    if (body_size(PSIZE_BODY, ignore_transform) < SIZE_MEDIUM
-        && !check_weapon_wieldable_size(item,
-            body_size(PSIZE_BODY, ignore_transform)))
-    {
+    if (bsize < SIZE_MEDIUM && !check_weapon_wieldable_size(item, bsize))
         return false;
-    }
 
     if (!ignore_brand)
     {

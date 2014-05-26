@@ -133,16 +133,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
             origin_acquired(wpn, GOD_SHINING_ONE);
             wpn.flags |= ISFLAG_BLESSED_WEAPON;
         }
-
-        burden_change();
     }
     else if (is_evil_god(god))
     {
         convert2bad(wpn);
-
         wpn.flags &= ~ISFLAG_BLESSED_WEAPON;
-
-        burden_change();
     }
 
     you.wield_change = true;

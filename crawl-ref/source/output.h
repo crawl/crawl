@@ -9,8 +9,7 @@
 enum status_redraw_flag_type
 {
     REDRAW_HUNGER         = 0x00000001,
-    REDRAW_BURDEN         = 0x00000002,
-    REDRAW_LINE_1_MASK    = 0x00000003,
+    REDRAW_LINE_1_MASK    = 0x00000002,
 
     REDRAW_PRAYER         = 0x00000100,
     REDRAW_BREATH         = 0x00000200,

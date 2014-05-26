@@ -521,10 +521,12 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
          verb.c_str());
 }
 
-// Returns true if the total number of potions in inventory decreased,
-// in which case burden_change() will need to be called.
-// Also handles coagulation messages.
-bool maybe_coagulate_blood_potions_inv(item_def &blood)
+
+/*
+ * Coagulate and/or rot away blood potions in a stack if necessary.
+ * @param blood The blood potion.
+*/
+void maybe_coagulate_blood_potions_inv(item_def &blood)
 {
     ASSERT(blood.defined());
     ASSERT(is_blood_potion(blood));
@@ -570,7 +572,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     }
 
     if (!rot_count && !coag_count)
-        return false; // Nothing to be done.
+        return; // Nothing to be done.
 
 #ifdef DEBUG_BLOOD_POTIONS
     mprf(MSGCH_DIAGNOSTICS, "in maybe_coagulate_blood_potions_INV "
@@ -594,8 +596,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
         if (!destroyed)
             _compare_blood_quantity(blood, timer.size());
-
-        return true;
+        return;
     }
 
     // Coagulated blood cannot coagulate any further...
@@ -620,9 +621,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
             ASSERT(props2.exists("timer"));
             CrawlVector &timer2 = props2["timer"].get_vector();
-            // Don't recalculate burden here, since we will add the same
-            // same number of potions back in.
-            if (!dec_inv_item_quantity(blood.link, coag_count + rot_count, true))
+            if (!dec_inv_item_quantity(blood.link, coag_count + rot_count))
                 _compare_blood_quantity(blood, timer.size());
 
             // Update timer -> push(pop).
@@ -639,8 +638,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
             // re-sort timer
             _int_sort(timer2);
-
-            return rot_count > 0;
+            return;
         }
     }
 
@@ -663,8 +661,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         blood.quantity -= rot_count;
         // Stack still exists because of coag_count.
         _compare_blood_quantity(blood, timer.size());
-
-        return rot_count > 0;
+        return;
     }
 
     // Else, create new stack in inventory.
@@ -680,8 +677,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
         blood.quantity -= coag_count + rot_count;
         _compare_blood_quantity(blood, timer.size());
-
-        return rot_count > 0;
+        return;
     }
 
     mprf("You can't carry %s right now.", coag_count > 1 ? "them" : "it");
@@ -716,8 +712,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             ASSERT(timer2.size() == mitm[o].quantity);
             dec_inv_item_quantity(blood.link, rot_count + coag_count);
             _compare_blood_quantity(blood, timer.size());
-
-            return true;
+            return;
         }
         o = mitm[o].link;
     }
@@ -726,14 +721,14 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // Create a new stack of potions.
     o = get_mitm_slot();
     if (o == NON_ITEM)
-        return false;
+        return;
+
     _init_coagulated_blood(mitm[o], coag_count, blood, age_timer);
 
     move_item_to_grid(&o, you.pos());
 
     if (!dec_inv_item_quantity(blood.link, coag_count + rot_count))
         _compare_blood_quantity(blood, timer.size());
-    return true;
 }
 
 // Removes the oldest timer of a stack of blood potions.
@@ -2083,8 +2078,6 @@ void revive()
 
     mpr("You rejoin the land of the living...");
     more();
-
-    burden_change();
 }
 
 ////////////////////////////////////////////////////////////////////////////

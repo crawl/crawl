@@ -63,8 +63,6 @@ protected:
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc
 #define HIGHSCORE_SIZE  800          // <= 10 Lines for long format scores
 
-#define BURDEN_TO_AUM 0.1f           // scale factor for converting burden to aum
-
 extern char info[INFO_SIZE];         // defined in main.cc {dlb}
 
 #define kNameLen        30

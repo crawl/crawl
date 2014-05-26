@@ -1894,7 +1894,6 @@ void shop()
     if (_shop_get_stock(i).empty())
         _delete_shop(i);
 
-    burden_change();
     redraw_screen();
 
     if (bought_something)

@@ -210,7 +210,7 @@ static bool _fsim_kit_equip(const string &kit, string &error)
                                          you.pos(), &error);
             if (item == NON_ITEM)
                 return false;
-            if (move_item_to_player(item, 1, true, true) <= 0)
+            if (move_item_to_player(item, 1, true) <= 0)
                 return false;
             _equip_weapon(weapon, abort);
         }

@@ -2439,6 +2439,12 @@ bool gives_resistance(const item_def &item)
     return false;
 }
 
+/*
+ * Return the mass of an item (aum).
+ *
+ * @param item The item.
+ * @returns The mass of the item.
+*/
 int item_mass(const item_def &item)
 {
     int unit_mass = 0;

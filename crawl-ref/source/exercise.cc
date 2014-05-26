@@ -291,7 +291,6 @@ static void _check_train_sneak(bool invis)
     const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
     const int armour_mass = body_armour? item_mass(*body_armour) : 0;
     if (!x_chance_in_y(armour_mass, 1000)
-        && you.burden_state == BS_UNENCUMBERED
         && !you.attribute[ATTR_SHADOWS]
             // If invisible, training happens much more rarely.
         && (!invis && one_chance_in(25) || one_chance_in(100)))
@@ -307,9 +306,7 @@ static void _exercise_passive()
         // Armour trained in check_train_armour
     }
     // Exercise stealth skill:
-    else if (you.burden_state == BS_UNENCUMBERED
-             && !you.berserk()
-             && !you.attribute[ATTR_SHADOWS])
+    else if (!you.berserk() && !you.attribute[ATTR_SHADOWS])
     {
         const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
         const int armour_mass = body_armour? item_mass(*body_armour) : 0;

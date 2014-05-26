@@ -62,14 +62,13 @@ The contents of this text are:
 3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
-                show_more, small_more, show_inventory_weights,
-                show_newturn_mark, show_gold_turns, show_game_turns,
-                item_stack_summary_minimum,
+                show_more, small_more, show_newturn_mark, show_gold_turns,
+                show_game_turns, item_stack_summary_minimum,
                 mlist_min_height, mlist_allow_alternate_layout,
                 mlist_targeting, msg_min_height, msg_max_height,
-                messages_at_top, skill_focus,
-                msg_condense_repeats, msg_condense_short, show_travel_trail,
-                monster_list_colour, view_delay, force_more_message
+                messages_at_top, skill_focus, msg_condense_repeats,
+                msg_condense_short, show_travel_trail, monster_list_colour,
+                view_delay, force_more_message
 3-j     Colours (messages and menus)
                 menu_colour, message_colour
 3-k     Missiles.
@@ -1290,15 +1289,6 @@ small_more = false
         separate line at the bottom of the message window. With
         small_more = true, it is just the bottom left character if
         clear_messages is not set.
-
-show_inventory_weights = drop_pickup|true|false
-        When this is set to true, inventory listings will mention the
-        weight of each item.  When set to "drop_pickup" (the default), or
-        indeed any value other than true/false/yes/no, the menus for
-        picking up and dropping items will list item weights, but other
-        inventory menus will not.
-        Note: This option doesn't currently work for Tiles unless you use
-              tile_menu_icons = false.
 
 show_newturn_mark = true
         When set to false, this option disables the underscore (_) displayed in

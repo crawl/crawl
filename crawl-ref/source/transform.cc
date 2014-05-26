@@ -1056,7 +1056,6 @@ bool transform(int pow, transformation_type which_trans, bool involuntary,
     update_player_symbol();
 
     _remove_equipment(rem_stuff);
-    burden_change();
 
     if (str)
     {
@@ -1257,8 +1256,6 @@ void untransform(bool skip_wielding, bool skip_move)
     you.form = TRAN_NONE;
     you.duration[DUR_TRANSFORMATION]   = 0;
     update_player_symbol();
-
-    burden_change();
 
     switch (old_form)
     {

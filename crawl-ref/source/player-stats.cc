@@ -669,7 +669,6 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     switch (stat)
     {
     case STAT_STR:
-        burden_change();
         you.redraw_armour_class = true; // includes shields
         break;
 
@@ -710,8 +709,6 @@ void update_stat_zero()
             {
                 mprf("Your %s has recovered.", stat_desc(s, SD_NAME));
                 you.redraw_stats[s] = true;
-                if (i == STAT_STR)
-                    burden_change();
             }
         }
         else // no stat penalty at all

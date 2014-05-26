@@ -99,7 +99,6 @@ static void _mark_expiring(status_info* inf, bool expiring)
 }
 
 static void _describe_airborne(status_info* inf);
-static void _describe_burden(status_info* inf);
 static void _describe_glow(status_info* inf);
 static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
@@ -184,10 +183,6 @@ bool fill_status_info(int status, status_info* inf)
             inf->short_text   = "mesmerised";
             inf->long_text    = "You are mesmerised.";
         }
-        break;
-
-    case STATUS_BURDEN:
-        _describe_burden(inf);
         break;
 
     case STATUS_CONTAMINATION:
@@ -803,27 +798,6 @@ static void _describe_sickness(status_info* inf)
 
         inf->short_text = mod + "diseased";
         inf->long_text  = "You are " + mod + "diseased.";
-    }
-}
-
-static void _describe_burden(status_info* inf)
-{
-    switch (you.burden_state)
-    {
-    case BS_OVERLOADED:
-        inf->light_colour = RED;
-        inf->light_text   = "Overloaded";
-        inf->short_text   = "overloaded";
-        inf->long_text    = "You are overloaded with stuff.";
-        break;
-    case BS_ENCUMBERED:
-        inf->light_colour = LIGHTRED;
-        inf->light_text   = "Burdened";
-        inf->short_text   = "burdened";
-        inf->long_text    = "You are burdened.";
-        break;
-    case BS_UNENCUMBERED:
-        break;
     }
 }
 

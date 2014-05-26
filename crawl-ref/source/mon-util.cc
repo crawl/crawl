@@ -689,7 +689,7 @@ int cheibriados_monster_player_speed_delta(const monster* mon)
 {
     // Ignore the Slow effect.
     unwind_var<int> ignore_slow(you.duration[DUR_SLOW], 0);
-    const int pspeed = 1000 / (player_movement_speed(true) * player_speed());
+    const int pspeed = 1000 / (player_movement_speed() * player_speed());
     dprf("Your delay: %d, your speed: %d, mon speed: %d",
         player_movement_speed(), pspeed, mon->speed);
     return mon->speed - pspeed;

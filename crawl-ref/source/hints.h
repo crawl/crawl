@@ -117,7 +117,7 @@ enum hints_event_type
     HINT_ABYSS,
     // interface
     HINT_MULTI_PICKUP,
-    HINT_HEAVY_LOAD,
+    HINT_FULL_INVENTORY,
     HINT_SHIFT_RUN,
     HINT_MAP_VIEW,
     HINT_AUTO_EXPLORE,

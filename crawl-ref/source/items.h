@@ -29,18 +29,17 @@ enum item_source_type
 int get_max_subtype(object_class_type base_type);
 bool item_type_has_unidentified(object_class_type base_type);
 
-bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
+bool dec_inv_item_quantity(int obj, int amount);
 bool dec_mitm_item_quantity(int obj, int amount);
 
-void inc_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
+void inc_inv_item_quantity(int obj, int amount);
 void inc_mitm_item_quantity(int obj, int amount);
 
 bool move_item_to_grid(int *const obj, const coord_def& p,
                         bool silent = false);
 void move_item_stack_to_grid(const coord_def& from, const coord_def& to);
 void note_inscribe_item(item_def &item);
-int  move_item_to_player(int obj, int quant_got, bool quiet = false,
-                         bool ignore_burden = false);
+int  move_item_to_player(int obj, int quant_got, bool quiet = false);
 void mark_items_non_pickup_at(const coord_def &pos);
 void mark_items_non_visit_at(const coord_def &pos);
 void clear_item_pickup_flags(item_def &item);

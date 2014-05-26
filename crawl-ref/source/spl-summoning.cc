@@ -772,8 +772,6 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
         did_god_conduct(why, 10, true, mons);
     }
 
-    burden_change();
-
     return SPRET_SUCCESS;
 }
 

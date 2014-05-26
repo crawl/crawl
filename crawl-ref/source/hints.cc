@@ -2007,18 +2007,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_PICKUP);
         break;
 
-    case HINT_HEAVY_LOAD:
-        if (you.burden_state != BS_UNENCUMBERED)
-        {
-            text << "It is not usually a good idea to run around encumbered; "
-                    "it slows you down and increases your hunger.";
-        }
-        else
-        {
-            text << "Sadly, your inventory is limited to 52 items, and it "
-                    "appears your knapsack is full.";
-        }
-
+    case HINT_FULL_INVENTORY:
+        text << "Sadly, your inventory is limited to 52 items, and it "
+            "appears your knapsack is full.";
         text << " However, this is easy enough to rectify: simply "
                 "<w>%</w>rop some of the stuff you don't need or that's too "
                 "heavy to lug around permanently.";
@@ -2713,10 +2704,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "</w>)"
 #endif
                 ", keep moving, don't fight any of the monsters, and don't "
-                "bother picking up any items on the ground. If you're "
-                "encumbered or overburdened, then lighten up your load, and if "
-                "the monsters are closing in, try to use items of hasting to get "
-                "away.";
+                "bother picking up any items on the ground. If the monsters "
+                "are closing in, try to use items of hasting to get away.";
         break;
 
     case HINT_SPELL_MISCAST:

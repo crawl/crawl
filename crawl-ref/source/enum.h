@@ -252,7 +252,6 @@ enum activity_interrupt_type
     AI_HUNGRY,                      // Hunger increased
     AI_MESSAGE,                     // Message was displayed
     AI_HP_LOSS,
-    AI_BURDEN_CHANGE,
     AI_STAT_CHANGE,
     AI_SEE_MONSTER,
     AI_MONSTER_ATTACKS,
@@ -598,13 +597,6 @@ enum branch_type                // you.where_are_you
     BRANCH_DEPTHS,
 #endif
     NUM_BRANCHES
-};
-
-enum burden_state_type          // you.burden_state
-{   // these values increase hunger and divide stealth
-    BS_UNENCUMBERED = 0,
-    BS_ENCUMBERED   = 2,
-    BS_OVERLOADED   = 5,
 };
 
 enum caction_type    // Primary categorization of counted actions.
