@@ -1061,7 +1061,7 @@ static const struct spell_desc spelldata[] =
      0,
      NULL,
      true,
-     true
+     false
 },
 
 {
