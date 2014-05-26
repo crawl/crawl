@@ -978,117 +978,15 @@ static void _get_status_lights(vector<status_light>& out)
     }
 #endif
 
-    const int statuses[] =
-    {
-        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
-        STATUS_BURDEN,
-        STATUS_HUNGER,
-        DUR_PETRIFYING,
-        DUR_PETRIFIED,
-        DUR_PARALYSIS,
-        DUR_TELEPORT,
-        DUR_DEATHS_DOOR,
-        DUR_QUAD_DAMAGE,
-        DUR_ANTIMAGIC,
-        STATUS_MISSILES,
-        STATUS_REGENERATION,
-        DUR_BERSERK,
-        STATUS_DIG,
-        DUR_RESISTANCE,
-        STATUS_AIRBORNE,
-        STATUS_INVISIBLE,
-        DUR_CONTROL_TELEPORT,
-        DUR_DISJUNCTION,
-        DUR_SILENCE,
-        DUR_CONFUSING_TOUCH,
-        DUR_FIRE_SHIELD,
-        DUR_SLIMIFY,
-        DUR_SURE_BLADE,
-        DUR_CONF,
-        DUR_LOWERED_MR,
-        STATUS_BEHELD,
-        DUR_LIQUID_FLAMES,
-        DUR_POISONING,
-        STATUS_SICK,
-        STATUS_ROT,
-        STATUS_NET,
-        STATUS_CONTAMINATION,
-        DUR_SWIFTNESS,
-        STATUS_SPEED,
-        DUR_DEATH_CHANNEL,
-        DUR_TELEPATHY,
-        DUR_STEALTH,
-        DUR_BREATH_WEAPON,
-        DUR_EXHAUSTED,
-        DUR_POWERED_BY_DEATH,
-        DUR_TRANSFORMATION,
-        DUR_AFRAID,
-        DUR_MIRROR_DAMAGE,
-        DUR_SCRYING,
-        DUR_TORNADO,
-        DUR_LIQUEFYING,
-        DUR_HEROISM,
-        DUR_FINESSE,
-        DUR_LIFESAVING,
-        DUR_DARKNESS,
-        STATUS_FIREBALL,
-        DUR_SHROUD_OF_GOLUBRIA,
-        DUR_TORNADO_COOLDOWN,
-        DUR_CORONA,
-        STATUS_UMBRA,
-        STATUS_CONSTRICTED,
-        DUR_DIVINE_STAMINA,
-        STATUS_AUGMENTED,
-        STATUS_TERRAIN,
-        STATUS_SILENCE,
-        STATUS_NO_CTELE,
-        DUR_SENTINEL_MARK,
-        STATUS_RECALL,
-        STATUS_LIQUEFIED,
-        DUR_WATER_HOLD,
-        DUR_FLAYED,
-        DUR_WEAK,
-        DUR_DIMENSION_ANCHOR,
-        STATUS_BEOGH,
-        DUR_INFUSION,
-        DUR_SONG_OF_SLAYING,
-        STATUS_DRAINED,
-        DUR_TOXIC_RADIANCE,
-        STATUS_RAY,
-        DUR_RECITE,
-        DUR_GRASPING_ROOTS,
-        DUR_FIRE_VULN,
-        DUR_FROZEN,
-        DUR_SAP_MAGIC,
-        STATUS_MAGIC_SAPPED,
-        STATUS_ELIXIR,
-        DUR_BARBS,
-        DUR_POISON_VULN,
-        DUR_PORTAL_PROJECTILE,
-        DUR_FORESTED,
-        DUR_DRAGON_CALL,
-        DUR_DRAGON_CALL_COOLDOWN,
-        DUR_ABJURATION_AURA,
-        DUR_AGILITY,
-        DUR_BRILLIANCE,
-        DUR_MIGHT,
-        DUR_NO_POTIONS,
-#if TAG_MAJOR_VERSION == 34
-        STATUS_GOLDEN,
-#endif
-        STATUS_BRIBE,
-        DUR_QAZLAL_FIRE_RES,
-        DUR_QAZLAL_COLD_RES,
-        DUR_QAZLAL_ELEC_RES,
-        // DUR_QAZLAL_AC intentionally omitted - shows as AC bonus
-        DUR_CORROSION,
-    };
-
+    // A hard-coded duration/status list used to be used here. This list is no
+    // longer hard-coded. May 2014. -reaverb
     status_info inf;
-    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS ; ++i)
     {
-        if (fill_status_info(statuses[i], &inf) && !inf.light_text.empty())
+        if (fill_status_info(i, &inf) && !inf.light_text.empty())
         {
+            if (inf.light_text == "")
+                break; // "" means no status light.
             status_light sl(inf.light_colour, inf.light_text);
             out.push_back(sl);
         }
