@@ -2011,8 +2011,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "Sadly, your inventory is limited to 52 items, and it "
             "appears your knapsack is full.";
         text << " However, this is easy enough to rectify: simply "
-                "<w>%</w>rop some of the stuff you don't need or that's too "
-                "heavy to lug around permanently.";
+                "<w>%</w>rop some of the stuff you don't need right now.";
         cmd.push_back(CMD_DROP);
 
 #ifdef USE_TILE
