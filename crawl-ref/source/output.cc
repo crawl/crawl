@@ -2655,10 +2655,6 @@ static string _status_mut_abilities(int sw)
         mutations.push_back("restore body");
         break;
 
-    case SP_KOBOLD:
-        mutations.push_back("disease resistance");
-        break;
-
     case SP_VAMPIRE:
         if (you.experience_level >= 6)
             mutations.push_back("bottle blood");
