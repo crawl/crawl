@@ -26,7 +26,7 @@ struct duration_def
     duration_type dur;
     bool expire;         // whether to do automat expiring transforms
     int    light_colour; // status light base colour
-    string light_text;   // for the status lights
+    string light_text;   // for the status lights. "" means no status light.
     string short_text;   // for @: line
     string long_text ;   // for @ message
 };
