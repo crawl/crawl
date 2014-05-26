@@ -92,7 +92,8 @@ sub find_skill
 sub split_species
 {
     my $sp = shift;
-    return ($2, $1) if ($sp =~ /^(.*) (.*)$/);
+    # Don't split Vine Stalker, because it's not a kind of Stalker.
+    return ($2, $1) if ($sp =~ /^(?!Vine Stalker)(.*) (.*)$/);
     return ($sp, $sp);
 }
 
