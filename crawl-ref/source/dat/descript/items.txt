@@ -65,22 +65,10 @@ A large piece of thick skin covered in fur, cut from the corpse of an animal
 and worn as a primitive garment. It offers rudimentary protection against harm,
 but, having never been tanned, it carries a light stench of rotting flesh.
 %%%%
-apple
-
-A delicious fruit, tart to the tongue.
-%%%%
-apricot
-
-A succulent yellow-orange fruit, prunus armeniaca.
-%%%%
 arrow
 
 A long shafted projectile intended to be shot with a short- or longbow, fletched
 with feathers at one end and a point at the other.
-%%%%
-banana
-
-A delicious yellow fruit.
 %%%%
 bardiche
 
@@ -397,14 +385,6 @@ A suit made entirely out of tiny metal rings. Offering strong protection
 against weapons, claws and carnassials, chain mail hinders quick and stealthy
 movement.
 %%%%
-cheese
-
-A lump of cheese.
-%%%%
-choko
-
-An almost tasteless green vegetable, which grows on a vine.
-%%%%
 chunk of flesh
 
 A piece of raw meat found in the dungeon. It won't stay fresh for long.
@@ -562,6 +542,10 @@ flail
 
 A mace with a short chain connecting the head to the haft.
 %%%%
+fruit
+
+A delicious edible flower ovary.
+%%%%
 giant club
 
 A giant lump of wood.
@@ -596,10 +580,6 @@ The pages of this book describe how the mighty among summoners can bend to
 their will the terrible things from betwixt the planes. Many have been the
 unwary souls, however, who have toyed with this tome and been driven mad by
 unimaginable eldritch horrors.
-%%%%
-grape
-
-A small fruit.
 %%%%
 great mace
 
@@ -715,10 +695,6 @@ A suit made from layers of tanned animal hide, this light armour provides basic
 protection with almost no hindrance to elaborate gestures or swift, stealthy
 movement.
 %%%%
-lemon
-
-A yellow fruit.
-%%%%
 lightning rod
 
 This rod allows its wielder to fire continuous lightning: the discharge is
@@ -734,10 +710,6 @@ longbow
 
 A long, strong bow made of yew. It does excellent damage in combat and a
 skilled archer can use it to great effect.
-%%%%
-lychee
-
-A tropical fruit.
 %%%%
 mace
 
@@ -785,10 +757,6 @@ A thin piece of metal, typically coated in some harmful substance. When
 launched from a blowgun it can deliver its toxins into the bloodstream of a
 living or demonic being.
 %%%%
-orange
-
-A delicious, juicy orange fruit.
-%%%%
 orb of zot
 
 Once you have escaped to the surface with this invaluable artefact, your quest
@@ -801,10 +769,6 @@ A pair of boots.
 pair of gloves
 
 A pair of gloves.
-%%%%
-pear
-
-A delicious, juicy fruit.
 %%%%
 pearl dragon armour
 
@@ -967,11 +931,6 @@ quick blade
 
 This carefully wrought short sword is preternaturally well-balanced, making it
 much easier for even inexperienced handlers to attack with it quickly.
-%%%%
-rambutan
-
-A small but delicious tropical fruit. How it got into this dungeon is anyone's
-guess.
 %%%%
 ring mail
 
@@ -1155,11 +1114,6 @@ sacred scourge
 
 A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is
 a favoured weapon of the Shining One's servants.
-%%%%
-sausage
-
-An elongated lump of low-grade gristle, entrails and cereal products encased in
-an intestine. Yum!
 %%%%
 scale mail
 
@@ -1357,10 +1311,6 @@ sling bullet
 A small, heavy projectile specially shaped for use with slings. It is more
 effective as ammunition than simple stones.
 %%%%
-snozzcumber
-
-A repulsive cucumber-shaped vegetable.
-%%%%
 spear
 
 A hunting weapon consisting of a wooden shaft with a pointed metal head
@@ -1466,14 +1416,6 @@ The hide of a lightning-breathing dragon, covered in extremely hard blue
 scales. In its raw form it does not provide much protection beyond resistance
 to electrical discharge, but with magical means it may be used to make
 excellent armour.
-%%%%
-strawberry
-
-A small but delicious red fruit.
-%%%%
-sultana
-
-A humble raisin.
 %%%%
 swamp dragon armour
 
