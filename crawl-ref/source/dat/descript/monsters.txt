@@ -1620,12 +1620,6 @@ large abomination
 A large and hideous conglomeration of mangled body parts, demonically possessed
 and altered in ways that challenge your sanity.
 %%%%
-lava orc
-
-A tall, muscular humanoid strongly in tune with the elemental forces of fire
-and earth. These distant relatives of cave orcs are possessed of passionate
-hearts, and their inner temperature is closely linked to their emotions.
-%%%%
 lava snake
 
 A burning red snake which dwells in pools of lava. It spits gobs of molten rock
