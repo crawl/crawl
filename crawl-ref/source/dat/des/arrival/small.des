@@ -1842,8 +1842,7 @@ SHUFFLE: 1x
 SUBST:   x = '
 SUBST:   ' = ':140 d
 SUBST:   . = '.
-KITEM:   d : apple / apricot / pear / apricot / orange / banana / \
-             strawberry / lemon
+KITEM:   d : fruit
 KFEAT:   d = '
 FTILE:   d'1{ = floor_grass
 COLOUR:  d' = green
@@ -2196,7 +2195,7 @@ NAME:    onia_arrival_mini_maze
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    apple / sausage / nothing / stone
+ITEM:    fruit / beef jerky / nothing / stone
 SHUFFLE: Aa, Bb, Cc, Ee, Ff
 MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
 SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
@@ -2222,7 +2221,7 @@ NAME:    onia_arrival_mini_maze_b
 TAGS:    arrival
 WEIGHT:  5
 ORIENT:  float
-ITEM:    apple / sausage / nothing / stone / w:30 nothing
+ITEM:    fruit / beef jerky / nothing / stone / w:30 nothing
 SHUFFLE: AB
 SUBST:   A : x , B = +., X = x+
 MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm

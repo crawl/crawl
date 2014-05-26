@@ -894,7 +894,7 @@ MONS:   human ; club
 SUBST:  1 = 1 2:5 3:20
 SUBST:  2 = 2 2 .
 SUBST:  % = !:20 ?:5 .:20
-KITEM:  ! = banana
+KITEM:  ! = fruit
 KITEM:  ? = wand of random effects
 COLOUR: " : yellow
 MAP

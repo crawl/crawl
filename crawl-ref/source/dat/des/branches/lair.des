@@ -511,7 +511,7 @@ ORIENT:  northeast
 DEPTH:   D:5-8, Lair
 SHUFFLE: 23, 34
 MONS:    rat, rat / green rat w:5, green rat, orange rat
-ITEM:    cheese w:100 / apple / orange / pear / apricot / choko
+ITEM:    slice of pizza w:80 / fruit
 SUBST:   d = d$..., e = d$
 : if you.branch() == "Lair" then
 TAGS:    extra
@@ -585,14 +585,14 @@ ENDMAP
 #
 
 # Three separate decorative bubbles mixed into one vault.
-NAME:   lemuel_strawberry_fields
+NAME:   lemuel_fruit_fields
 TAGS:   allow_dup extra transparent decor
 DEPTH:  Lair
 ORIENT: float
 WEIGHT: 9
 MONS:   plant, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
-        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
+ITEM:   fruit q:1 / fruit q:2 w:7 / fruit q:3 w:3 /\
+        fruit q:4 w:1 / fruit q:5 w:1 / fruit q:6 w:1
 KFEAT:  ^~ = .
 : local size = crawl.random2(9)
 : if size > 7 then
@@ -636,7 +636,7 @@ TAGS:   extra transparent decor
 DEPTH:  Lair, Snake
 ORIENT: float
 MONS:   plant, fungus
-KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
+KITEM:  a : fruit
 : if crawl.one_chance_in(5) then
 SUBST:  '"~ = . 1
 SUBST:  0`-. = .:90 a:10 2:1
@@ -658,84 +658,6 @@ _---..`"`..--_
  _--~....~.-_
   _--.....-_
    ________
-ENDMAP
-
-##############################################################################
-# A number of fruity vaults, by blue_anna
-# [Condensed into one vault by HangedMan.]
-#
-# The "fruiting_plant" tag uses this as a subvault for food vaults.
-#
-# TODO: Using KMONS and KITEM, we could have fruits on the same
-#       square as a plant, though it'd change nutrition averages.
-#
-# Average of 6.044 apples, pears, apricots, oranges, lemons, lychee, and rambutan,
-# 12.5 grapes, 14.236 sultanas, 5.756 snozzcumbers,
-# 14.608 strawberries, 10.875 bananas, and 4.675 chokos.
-# Nutrition averages, normal/herbivore 3 [carnivore 3 is always 0]:
-# apple/pear/apricot   4.2k/9.7k  |  snozzcumber    8.6k/17.3k
-# orange/lemon         6k/13.2k   |  strawberry     2.9k/???
-# lychee/rambutan      3.6k/8.1k  |  banana         10.9k/23.4k
-# grape                1.2k/3.1k  |  choko          2.8k/6.3k
-# sultana              1k/2.3k
-#
-NAME:   blue_anna_fruit_fields
-TAGS:   fruiting_plant allow_dup extra decor
-# Needs to be available in D because it is used as a subvault of some
-# food vaults.
-DEPTH:  Lair, D:7-14
-MONS:   plant
-ITEM:   apple q:1 no_mimic / apple q:2 no_mimic / apple q:3 w:2 no_mimic
-ITEM:   pear q:1 no_mimic / pear q:2 no_mimic / pear q:3 w:2 no_mimic
-ITEM:   apricot q:1 no_mimic / apricot q:2 no_mimic / apricot q:3 w:2 no_mimic
-: if crawl.coinflip() then
-ITEM:   orange q:1 no_mimic / orange q:2 no_mimic / orange q:3 w:2 no_mimic
-ITEM:   lychee q:1 no_mimic / lychee q:2 no_mimic / lychee q:3 w:2 no_mimic
-ITEM:   grape q:1 w:3 no_mimic / grape q:2 w:5 no_mimic / grape q:3 no_mimic / \
-        grape q:4 w:7 no_mimic / grape q:5 w:5 no_mimic / grape q:6 w:2 no_mimic
-: else
-ITEM:   lemon q:1 no_mimic / lemon q:2 no_mimic / lemon q:3 w:2 no_mimic
-ITEM:   rambutan q:1 no_mimic / rambutan q:2 no_mimic / \
-        rambutan q:3 w:2 no_mimic
-ITEM:   sultana q:1 w:2 no_mimic / sultana q:2 w:3 no_mimic / \
-        sultana q:3 no_mimic / \
-        sultana q:4 w:5 no_mimic / sultana q:5 w:7 no_mimic / sultana q:6 w:5 no_mimic
-: end
-ITEM:   snozzcumber q:1 no_mimic / snozzcumber q:2 no_mimic / \
-        snozzcumber q:3 w:2 no_mimic
-ITEM:   strawberry q:1 no_mimic / strawberry q:2 w:7 no_mimic / \
-        strawberry q:3 w:3 no_mimic / strawberry q:4 w:1 no_mimic / \
-        strawberry q:5 w:1 no_mimic / strawberry q:6 w:1 no_mimic
-KITEM:  l = banana q:6 w:2 no_mimic / banana q:7 w:4 no_mimic / \
-        banana q:10 no_mimic / banana q:12 no_mimic / \
-        banana q:14 w:4 no_mimic / banana q:16 w:2 no_mimic
-KITEM:  m = choko q:1 / choko q:2 / choko q:3 w:2
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  BG = .
-: local fruitchoice = crawl.random2(18)
-: if fruitchoice < 9 then
-SUBST:  . = d .:50, '" = d .:33
-SHUFFLE: defgh
-: elseif fruitchoice < 11 then
-SUBST:  .'"1 = i 1 .:34
-: elseif fruitchoice < 12 then
-SUBST:  .'" = j 1 .:34
-: elseif fruitchoice < 14 then
-NSUBST: . = 2:1 / * = kkk..1
-: elseif fruitchoice < 16 then
-NSUBST: 1" = 1:l / *:., '. = 1:1 / * = .....1
-: else
-SUBST: .'"1 = m 1 .:50
-: end
-MAP
-.'''.
-."1".
-.""".
-.....
 ENDMAP
 
 ##############################################################################
@@ -1667,7 +1589,7 @@ DEPTH:  Lair
 ORIENT: float
 MONS:   green rat band, orange rat, green rat / rat
 KMONS:  P = plant / fungus w:2
-KITEM:  d = cheese / slice of pizza / sausage / bread ration
+KITEM:  d = slice of pizza / beef jerky / bread ration
 NSUBST: W = 1:1 / 2:P / 2:2 / 2:3 / 2:d
 MAP
  xxxx
@@ -1687,7 +1609,7 @@ TAGS:   ruin
 DEPTH:  Lair
 ORIENT: float
 MONS:   green rat / rat, orange rat, rat
-KITEM:  d = cheese / slice of pizza / sausage / bread ration
+KITEM:  d = slice of pizza / beef jerky / bread ration
 SUBST:  d = d123..., 2 = 2.
 NSUBST: 1 = *:1
 MAP
@@ -1786,8 +1708,7 @@ TAGS:   patrolling no_monster_gen
 MONS:   black bear / polar bear
 KFEAT:  " = W
 KMONS:  " = big fish / shark / electric eel
-KITEM:  % = strawberry / grape / lychee / choko / rambutan / apple / pear \
-            / orange / w:1 meat ration
+KITEM:  % = fruit w:80 / w:1 meat ration
 SUBST:  % = %., * = *:40 |, B = 1., E = tE
 CLEAR:  E
 MAP
@@ -1985,7 +1906,7 @@ DEPTH: Lair:6-
 TAGS: no_monster_gen no_item_gen no_trap_gen
 SUBST: P = P.
 NSUBST: D = 1:D / *:.
-KITEM: f = apple / orange / apricot / nothing
+KITEM: f = fruit w:30 / nothing
 KMONS: Y = yak
 KMONS: D = death yak
 KMONS: C = catoblepas
@@ -2112,8 +2033,7 @@ NAME: grunt_forest_small_clearings
 TAGS: transparent extra decor
 DEPTH: Lair
 MONS: plant / bush
-KITEM: d = strawberry q:3 / grape q:3 / lychee / choko / \
-           rambutan / apple / pear / orange
+KITEM: d = fruit
 KMASK: G = no_monster_gen
 SHUFFLE: Ww. / ''` / ''`
 SUBST: t = t.., '` = 1:49 d:36 .:405
@@ -2157,8 +2077,7 @@ MONS:    plant / bush, wolf / giant firefly w:2
 MONS:    black bear / polar bear, spriggan / centaur w:4
 KMONS:   9 = 9
 KMONS:   * = spriggan rider / faun w:4
-ITEM:    strawberry q:3 / grape q:3 / lychee / choko / \
-         rambutan / apple / pear / orange
+ITEM:    fruit
 KITEM:   9* = *
 KFEAT:   9 = W
 SHUFFLE: wW'"^~-_9 / ''GG''''* / '''0''''% / ``````22G
@@ -2330,7 +2249,7 @@ NAME:   beast_lair_carwin_2
 TAGS:   transparent luniq_beast_lair
 : beast_lair_populate_mons_small(_G)
 : beast_lair_randomise(_G)
-ITEM: w:7 meat ration / sausage / beef jerky
+ITEM: w:7 meat ration / beef jerky
 SUBST: ? : .
 MAP
   ...
@@ -2653,7 +2572,7 @@ KMONS:   7 = black bear
 KMONS:   8 = hog
 KMONS:   9 = polar bear
 KMONS:   0 = raiju
-KITEM:   $ = any, sausage q:3
+KITEM:   $ = any, beef jerky q:3
 KITEM:   % = any, royal jelly q:2
 KITEM:   *| = gold, gold, gold, acquire any
 NSUBST:  4 = 1:6 / *:4

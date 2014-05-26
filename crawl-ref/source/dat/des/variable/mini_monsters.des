@@ -472,10 +472,10 @@ MAP
 ...........
 ENDMAP
 
-NAME:  minmay_rats_cheese
+NAME:  minmay_rats_cheesy_pizza
 DEPTH: D:2-3
 MONS:  rat
-ITEM:  cheese
+ITEM:  slice of pizza
 MAP
 xxxxx+xxxxxxx
 x1....xd1111x
@@ -495,7 +495,7 @@ ENDMAP
 NAME:  minmay_rat_hole
 DEPTH: D:2-4
 MONS:  rat, quokka
-ITEM:  cheese w:30 / bread ration / meat ration / nothing w:60
+ITEM:  bread ration / meat ration / nothing w:60
 MAP
  xxx
 xxdx
@@ -1070,7 +1070,7 @@ DEPTH: D:2-5
 KMONS: 1 = big fish
 KMONS: 2 = giant slug / adder
 KMONS: 3 = plant
-ITEM:  apple / apricot / pear / orange / banana / strawberry
+ITEM:  fruit
 SUBST: - = wwwwwwWWW1
 SUBST: . = ........33
 SUBST: ? = .wwt3%dd22

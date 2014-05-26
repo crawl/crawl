@@ -1189,7 +1189,7 @@ ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 #           Loot: 11 items, 8 gold.
 :           volcano_setup(_G)
-ITEM:       apple / choko
+ITEM:       fruit
 COLOUR:     m = blue
 MONS:       human ; hammer ego:flaming ident:type . robe ego:fire_resistance ident:type
 MONS:       toenail golem

@@ -766,7 +766,7 @@ KITEM:    L = scroll of blinking q:3 ident:all, \
               scroll of fog q:7 ident:all, \
               scroll of recharging q:3 ident:all, \
           scroll of amnesia q:4 ident:all
-KITEM:    M = meat ration q:4, bread ration q:4, strawberry q:42
+KITEM:    M = meat ration q:4, bread ration q:4, fruit q:42
 KITEM:    N = wand of draining ident:all charges:5, \
               wand of cold ident:all charges:5, \
               wand of fire ident:all charges:5, \

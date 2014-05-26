@@ -338,7 +338,7 @@ ENDMAP
 
 NAME:     items_3
 TAGS:     items_3
-KITEM:    a = meat ration q:12, bread ration q:12, strawberry q:40
+KITEM:    a = meat ration q:12, bread ration q:12, fruit q:40
 KITEM:    b = pair of gloves mundane ident:all not_cursed /\
            pair of boots mundane ident:all not_cursed /\
            helmet mundane ident:all not_cursed /\

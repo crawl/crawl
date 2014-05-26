@@ -671,7 +671,7 @@ SUBVAULT: U : equipment_1
 # Initial consumables
 KITEM: a = bread ration q:7, \
        meat ration q:7, \
-       strawberry q:40
+       fruit q:40
 KITEM: b = scroll of summoning ident:all q:1, \
        scroll of amnesia q:5 ident:all, \
        scroll of remove curse q:3 ident:all, \
