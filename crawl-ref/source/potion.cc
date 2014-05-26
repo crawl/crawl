@@ -363,7 +363,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
 
         break;
 
-    case POT_PORRIDGE:          // oatmeal - always gluggy white/grey?
+    case POT_PORRIDGE:
         if (you.species == SP_VAMPIRE
             || player_mutation_level(MUT_CARNIVOROUS) == 3)
         {
@@ -387,7 +387,6 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         }
         break;
 
-    // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
         if (you.rot(&you, 0, 3 + random2(3)))
             xom_is_stimulated(50 / xom_factor);
