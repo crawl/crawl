@@ -4847,10 +4847,8 @@ void describe_god(god_type which_god, bool give_title)
             _print_final_god_abil_desc(which_god,
                 "You are provided with a bounty of information.",
                 ABIL_NON_ABILITY);
-            string buf = "You can pray to bestow "
-                         + apostrophise(god_name(which_god))
-                         + " curse upon scrolls that usually remove them.";
-            _print_final_god_abil_desc(which_god, buf,
+            _print_final_god_abil_desc(which_god,
+                "You can pray to corrupt 'remove curse' scrolls on your square.",
                                        ABIL_NON_ABILITY);
         }
         else if (which_god == GOD_CHEIBRIADOS)
