@@ -2474,99 +2474,12 @@ static string _status_mut_abilities(int sw)
     string text = "<w>@:</w> ";
     vector<string> status;
 
-    const int statuses[] =
-    {
-        DUR_TRANSFORMATION,
-        DUR_PARALYSIS,
-        DUR_PETRIFIED,
-        DUR_SLEEP,
-        DUR_PETRIFYING,
-        STATUS_BURDEN,
-        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
-        DUR_BREATH_WEAPON,
-        STATUS_BEHELD,
-        DUR_LIQUID_FLAMES,
-        DUR_ICY_ARMOUR,
-        DUR_ANTIMAGIC,
-        STATUS_MISSILES,
-        STATUS_REGENERATION,
-        DUR_DEATHS_DOOR,
-        DUR_STONESKIN,
-        DUR_TELEPORT,
-        DUR_DISJUNCTION,
-        DUR_DEATH_CHANNEL,
-        DUR_PHASE_SHIFT,
-        DUR_SILENCE,
-        STATUS_INVISIBLE,
-        DUR_CONF,
-        DUR_EXHAUSTED,
-        DUR_MIGHT,
-        DUR_BRILLIANCE,
-        DUR_AGILITY,
-        DUR_DIVINE_VIGOUR,
-        DUR_DIVINE_STAMINA,
-        DUR_BERSERK,
-        STATUS_AIRBORNE,
-        STATUS_MANUAL,
-        DUR_MAGIC_SHIELD,
-        DUR_FIRE_SHIELD,
-        DUR_POISONING,
-        STATUS_SICK,
-        STATUS_CONTAMINATION,
-        STATUS_ROT,
-        DUR_CONFUSING_TOUCH,
-        DUR_SLIMIFY,
-        DUR_SURE_BLADE,
-        STATUS_NET,
-        STATUS_SPEED,
-        DUR_AFRAID,
-        DUR_MIRROR_DAMAGE,
-        DUR_SCRYING,
-        DUR_TORNADO,
-        DUR_HEROISM,
-        DUR_FINESSE,
-        DUR_LIFESAVING,
-        DUR_DARKNESS,
-        STATUS_FIREBALL,
-        DUR_SHROUD_OF_GOLUBRIA,
-        DUR_TORNADO_COOLDOWN,
-        STATUS_BACKLIT,
-        STATUS_UMBRA,
-        STATUS_CONSTRICTED,
-        STATUS_AUGMENTED,
-        STATUS_RECALL,
-        STATUS_LIQUEFIED,
-        DUR_FLAYED,
-        DUR_WEAK,
-        DUR_DIMENSION_ANCHOR,
-        STATUS_DRAINED,
-        DUR_TOXIC_RADIANCE,
-        DUR_RECITE,
-        DUR_GRASPING_ROOTS,
-        DUR_FIRE_VULN,
-        DUR_POISON_VULN,
-        DUR_FROZEN,
-        DUR_SAP_MAGIC,
-        STATUS_MAGIC_SAPPED,
-        DUR_FORESTED,
-        DUR_DRAGON_CALL,
-        DUR_ABJURATION_AURA,
-        DUR_NO_POTIONS,
-#if TAG_MAJOR_VERSION == 34
-        STATUS_GOLDEN,
-#endif
-        STATUS_BRIBE,
-        DUR_QAZLAL_FIRE_RES,
-        DUR_QAZLAL_COLD_RES,
-        DUR_QAZLAL_ELEC_RES,
-        DUR_QAZLAL_AC,
-        DUR_CORROSION,
-    };
-
+    // A hard-coded duration/status list used to be used here. This list is no
+    // longer hard-coded. May 2014. -reaverb
     status_info inf;
-    for (unsigned i = 0; i < ARRAYSZ(statuses); ++i)
+    for (unsigned i = 0; i <= STATUS_LAST_STATUS; ++i)
     {
-        if (fill_status_info(statuses[i], &inf) && !inf.short_text.empty())
+        if (fill_status_info(i, &inf) && !inf.short_text.empty())
             status.push_back(inf.short_text);
     }
 
