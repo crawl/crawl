@@ -1598,7 +1598,7 @@ SUBST: ghi = .
 KMONS: D = patrolling spriggan rider
 KMONS: SGHI = spriggan / nothing
 KMONS: F = spriggan druid
-KITEM: f = potion of porridge / bread ration / apple / banana
+KITEM: f = potion of porridge / bread ration / fruit
 MAP
        ttttt
   ttttttgggt

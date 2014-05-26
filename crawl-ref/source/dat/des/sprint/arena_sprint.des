@@ -1098,7 +1098,7 @@ KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
             wand of hasting charges:5 | wand of hasting charges:5 |\
             wand of invisibility charges:5 | crystal ball of energy
 KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
-            sultana q:200 | potion of blood q:5 | potion of blood q:5 |\
+            fruit q:100 | potion of blood q:5 | potion of blood q:5 |\
             potion of blood q:5 | potion of blood q:5 | ring of poison resistance |\
             ring of protection from fire | ring of protection from cold |\
             ring of protection from magic | ring of regeneration |\
