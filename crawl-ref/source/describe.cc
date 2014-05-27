@@ -1174,7 +1174,7 @@ static string _describe_ammo(const item_def &item)
         case SPMSL_STEEL:
             description += "Compared to normal ammo, it does 30% more "
                 "damage, is destroyed upon impact only 1/10th of the "
-                "time, and weighs three times as much.";
+                "time.";
             break;
         case SPMSL_SILVER:
             description += "Silver sears all those touched by chaos. "
@@ -1182,8 +1182,7 @@ static string _describe_ammo(const item_def &item)
                 "chaotic and magically transformed beings. It also does "
                 "extra damage against mutated beings according to how "
                 "mutated they are. With due care, silver ammo can still "
-                "be handled by those it affects. It weighs twice as much "
-                "as normal ammo.";
+                "be handled by those it affects.";
             break;
         }
     }
@@ -2029,14 +2028,8 @@ string get_item_description(const item_def &item, bool verbose,
         {
             if (need_extra_line)
                 description << "\n";
-            description << "\nIt";
             if (item_known_cursed(item))
-                description << " has a curse placed upon it, and it";
-
-            const int mass = item_mass(item);
-            description << " weighs around " << (mass / 10)
-                        << "." << (mass % 10)
-                        << " aum. "; // arbitrary unit of mass
+                description << "\nIt has a curse placed upon it.";
 
             if (is_artefact(item))
             {
