@@ -1146,21 +1146,6 @@ KPROP:   V2 = no_tele_into
 SUBST:   . = .W
 SUBST:   V = .WWWW
 SUBST:   X = xx"
-#      Sometimes there's a rat nest in the end.
-: if crawl.one_chance_in(3) then
-NSUBST:  Y = 2:. /*:c
-SUBST:   d = e
-KMONS:   Z = nothing w:60 / rat / green rat w:7
-KITEM:   Z = cheese w:2 / nothing
-KMONS:   R = orange rat
-KFEAT:   ' = .
-: else
-SUBST:   Y = c
-SUBST:   d = x
-KFEAT:   Z = x
-KFEAT:   R = x
-KFEAT:   ' = x
-: end
 #      rat path
 KPROP:   " = no_tele_into
 KMONS:   " = nothing w:50 / rat w:15 / green rat w:7
@@ -1174,20 +1159,8 @@ KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of recharging w:2 / scroll of fog w:3
 : sewer_setup(_G)
 MAP
-                        xxxxxxxxxxxxx
-                        xxxxx''xxxxxx
-                        xxx'ddddd'xxx
-                        xxxZZZZZZZ'xx
-                        xx'ZZZRZZZZ'x
-                        x'ZZZZZZZZ'xx
-                        x''ZZZZ''''xx
-                        xx''''xx'x'xx
-                        xx'xx'xx''xxx
-                        x'xx'xxxxx'xx
-                        x'xxx''x''xxx
-                        xx''x'x''xxxx
- xxxxxxxxxxxxxxxxxxxxxxxxxxx'x'x'xxxxxxxxxxxxxxxxx
- xcccccccccccccccccccccccccYYYYYYYcccccccccccccccx
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ xcccccccccccccccccccccccccccccccccccccccccccccccx
  xwwwwwwwwmwWe.....1......VVVVVVVVV......1.....<cx
  xwwwwwwwwmwWe.........1..VVVVVVVVV.1..........ecx
  xccccccccccccIIIIIIccccccccccKccccccMMMcccccMMMcx
