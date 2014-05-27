@@ -1342,11 +1342,11 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     case MONS_SPRIGGAN_DEFENDER:
     case MONS_THE_ENCHANTRESS:
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_LAJATANG,    // best spriggan weapon
-                                       WPN_QUICK_BLADE, // overrated on monsters
-                                       WPN_CUTLASS,     // ordinary but popular
-                                       WPN_DEMON_WHIP,  // goodness
-                                       WPN_FLAIL,       // best ordinary 1-handed
+        item.sub_type  = random_choose(WPN_LAJATANG,
+                                       WPN_QUICK_BLADE,
+                                       WPN_CUTLASS,
+                                       WPN_DEMON_WHIP,
+                                       WPN_FLAIL,
                                        -1);
         level = MAKE_GOOD_ITEM;
         if (mon->type == MONS_THE_ENCHANTRESS && one_chance_in(6))
