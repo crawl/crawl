@@ -26,6 +26,7 @@ static int duration_index[NUM_DURATIONS];
 
 void init_duration_index()
 {
+    COMPILE_CHECK(ARRAYSZ(duration_data) == NUM_DURATIONS);
     for (int i = 0; i < NUM_DURATIONS; ++i)
         duration_index[i] = -1;
 
@@ -33,6 +34,7 @@ void init_duration_index()
     {
         duration_type dur = duration_data[i].dur;
         ASSERT_RANGE(dur, 0, NUM_DURATIONS);
+        // Catch redefinitions.
         ASSERT(duration_index[dur] == -1);
         duration_index[dur] = i;
     }
@@ -45,6 +47,11 @@ static const duration_def* _lookup_duration(duration_type dur)
         return NULL;
     else
         return &duration_data[duration_index[dur]];
+}
+
+const char *duration_name(duration_type dur)
+{
+    return _lookup_duration(dur)->name();
 }
 
 static void _reset_status_info(status_info* inf)

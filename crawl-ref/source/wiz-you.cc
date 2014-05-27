@@ -731,181 +731,29 @@ void wizard_set_stats()
     you.redraw_evasion = true;
 }
 
-static const char* dur_names[] =
-{
-    "invis",
-    "conf",
-    "paralysis",
-    "slow",
-    "mesmerised",
-    "haste",
-    "might",
-    "brilliance",
-    "agility",
-    "flight",
-    "berserker",
-    "poisoning",
-    "confusing touch",
-    "sure blade",
-    "corona",
-    "deaths door",
-    "fire shield",
-    "building rage",
-    "exhausted",
-    "liquid flames",
-    "icy armour",
-#if TAG_MAJOR_VERSION == 34
-    "repel missiles",
-    "prayer",
-#endif
-    "piety pool",
-    "divine vigour",
-    "divine stamina",
-    "divine shield",
-    "regeneration",
-    "swiftness",
-#if TAG_MAJOR_VERSION == 34
-    "controlled flight",
-#endif
-    "teleport",
-    "control teleport",
-    "breath weapon",
-    "transformation",
-    "death channel",
-#if TAG_MAJOR_VERSION == 34
-    "deflect missiles",
-#endif
-    "phase shift",
-#if TAG_MAJOR_VERSION == 34
-    "see invisible",
-#endif
-    "weapon brand",
-    "demonic guardian",
-    "pbd",
-    "silence",
-    "condensation shield",
-    "stoneskin",
-    "gourmand",
-#if TAG_MAJOR_VERSION == 34
-    "bargain",
-    "insulation",
-#endif
-    "resistance",
-#if TAG_MAJOR_VERSION == 34
-    "slaying",
-#endif
-    "stealth",
-    "magic shield",
-    "sleep",
-    "telepathy",
-    "petrified",
-    "lowered mr",
-    "repel stairs move",
-    "repel stairs climb",
-    "coloured smoke trail",
-    "slimify",
-    "time step",
-    "icemail depleted",
-#if TAG_MAJOR_VERSION == 34
-    "misled",
-#endif
-    "quad damage",
-    "afraid",
-    "mirror damage",
-    "scrying",
-    "tornado",
-    "liquefying",
-    "heroism",
-    "finesse",
-    "lifesaving",
-    "paralysis immunity",
-    "darkness",
-    "petrifying",
-    "shrouded",
-    "tornado cooldown",
-#if TAG_MAJOR_VERSION == 34
-    "nausea",
-#endif
-    "ambrosia",
-#if TAG_MAJOR_VERSION == 34
-    "temporary mutations",
-#endif
-    "disjunction",
-    "vehumet gift",
-#if TAG_MAJOR_VERSION == 34
-    "battlesphere",
-#endif
-    "sentinel's mark",
-    "sickening",
-    "drowning",
-    "drowning immunity",
-    "flayed",
-#if TAG_MAJOR_VERSION == 34
-    "retching",
-#endif
-    "weak",
-    "dimension anchor",
-    "antimagic",
-#if TAG_MAJOR_VERSION == 34
-    "spirit howl",
-#endif
-    "infused",
-    "song of slaying",
-#if TAG_MAJOR_VERSION == 34
-    "song of shielding",
-#endif
-    "toxic radiance",
-    "reciting",
-    "grasping roots",
-    "sleep immunity",
-    "fire vulnerability",
-    "elixir health",
-    "elixir magic",
-#if TAG_MAJOR_VERSION == 34
-    "antennae extend",
-#endif
-    "trogs hand",
-    "manticore barbs",
-    "poison vulnerability",
-    "frozen",
-    "sap magic",
-    "magic sapped",
-    "portal projectile",
-    "forested",
-    "dragon call",
-    "dragon call cooldown",
-    "aura of abjuration",
-    "mesmerisation immunity",
-    "no potions",
-    "qazlal fire resistance",
-    "qazlal cold resistance",
-    "qazlal elec resistance",
-    "qazlal ac",
-    "corrosion"
-};
-
 void wizard_edit_durations()
 {
-    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS);
-    vector<int> durs;
+    vector<duration_type> durs;
     size_t max_len = 0;
 
     for (int i = 0; i < NUM_DURATIONS; ++i)
     {
+        const duration_type dur = static_cast<duration_type>(i);
+
         if (!you.duration[i])
             continue;
 
-        max_len = max(strlen(dur_names[i]), max_len);
-        durs.push_back(i);
+        max_len = max(strlen(duration_name(dur)), max_len);
+        durs.push_back(dur);
     }
 
     if (!durs.empty())
     {
-        for (unsigned int i = 0; i < durs.size(); ++i)
+        for (size_t i = 0; i < durs.size(); ++i)
         {
-            int dur = durs[i];
+            const duration_type dur = durs[i];
             mprf_nocap(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, (int)max_len,
-                 dur_names[dur], you.duration[dur]);
+                 duration_name(dur), you.duration[dur]);
         }
         mprf(MSGCH_PROMPT, "\nEdit which duration (letter or name)? ");
     }
@@ -926,7 +774,7 @@ void wizard_edit_durations()
         return;
     }
 
-    int choice = -1;
+    duration_type choice = NUM_DURATIONS;
 
     if (strlen(buf) == 1)
     {
@@ -935,9 +783,9 @@ void wizard_edit_durations()
             mprf(MSGCH_PROMPT, "No existing durations to choose from.");
             return;
         }
-        choice = buf[0] - 'a';
+        const int dchoice = buf[0] - 'a';
 
-        if (choice < 0 || choice >= (int) durs.size())
+        if (dchoice < 0 || dchoice >= (int) durs.size())
         {
             mprf(MSGCH_PROMPT, "Invalid choice.");
             return;
@@ -946,23 +794,24 @@ void wizard_edit_durations()
     }
     else
     {
-        vector<int>    matches;
+        vector<duration_type> matches;
         vector<string> match_names;
 
         for (int i = 0; i < NUM_DURATIONS; ++i)
         {
-            if (strcmp(dur_names[i], buf) == 0)
+            const duration_type dur = static_cast<duration_type>(i);
+            if (strcmp(duration_name(dur), buf) == 0)
             {
-                choice = i;
+                choice = dur;
                 break;
             }
-            if (strstr(dur_names[i], buf) != NULL)
+            if (strstr(duration_name(dur), buf) != NULL)
             {
-                matches.push_back(i);
-                match_names.push_back(dur_names[i]);
+                matches.push_back(dur);
+                match_names.push_back(duration_name(dur));
             }
         }
-        if (choice != -1)
+        if (choice != NUM_DURATIONS)
             ;
         else if (matches.size() == 1)
             choice = matches[0];
@@ -983,7 +832,7 @@ void wizard_edit_durations()
         }
     }
 
-    snprintf(buf, sizeof(buf), "Set '%s' to: ", dur_names[choice]);
+    snprintf(buf, sizeof(buf), "Set '%s' to: ", duration_name(choice));
     int num = prompt_for_int(buf, false);
 
     if (num == 0)
