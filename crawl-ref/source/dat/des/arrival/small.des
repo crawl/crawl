@@ -1840,9 +1840,9 @@ ORIENT:  float
 MONS:    plant
 SHUFFLE: 1x
 SUBST:   x = '
-SUBST:   ' = ':140 d
-SUBST:   . = '.
-KITEM:   d : fruit
+NSUBST:  ' = 2:d / *:'
+NSUBST:  . = '.
+KITEM:   d : fruit q:1
 KFEAT:   d = '
 FTILE:   d'1{ = floor_grass
 COLOUR:  d' = green
