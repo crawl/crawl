@@ -68,8 +68,7 @@ bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
-spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-                       bool check_range = true);
+spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true);
 
 double get_miscast_chance(spell_type spell, int severity = 2);
 int failure_rate_colour(spell_type spell);
