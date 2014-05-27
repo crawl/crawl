@@ -1806,15 +1806,13 @@ VISUAL:@The_monster@ slowly taps his weapon in his hand.
 
 @The_monster@ says, "Your corpse will decorate my castle walls." @player_only@
 
-@The_monster@ says, "In my kingdom, weaklings like you are put to the
-sword." @player_only@
+@The_monster@ says, "In my kingdom, weaklings like you are put to the sword." @player_only@
 
 @The_monster@ says, "No maze can contain me."
 
 @The_monster@ chants a prayer to Makhleb.
 
-@The_monster@ says @to_foe@, "Your valuables will do nicely in my
-coffers." @player_only@
+@The_monster@ says @to_foe@, "Your valuables will do nicely in my coffers." @player_only@
 
 %%%%
 _Asterion_rare_
