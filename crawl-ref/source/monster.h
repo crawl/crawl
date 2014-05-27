@@ -276,6 +276,7 @@ public:
     bool      unequip(item_def &item, int slot, int near = -1,
                       bool force = false);
     void      steal_item_from_player();
+    item_def* take_item(int steal_what, int mslot);
 
     bool      can_use_missile(const item_def &item) const;
 
