@@ -447,7 +447,7 @@ size_type player::transform_size(transformation_type tform, int psize) const
     case TRAN_ICE_BEAST:
         return SIZE_LARGE;
     case TRAN_DRAGON:
-        return SIZE_HUGE;
+        return SIZE_GIANT;
     default:
         return SIZE_CHARACTER;
     }

@@ -3568,7 +3568,9 @@ static string _monster_stat_description(const monster_info& mi)
         "large",
         "very large",
         "giant",
+#if TAG_MAJOR_VERSION == 34
         "huge",
+#endif
     };
 
     if (mons_is_feat_mimic(mi.type))

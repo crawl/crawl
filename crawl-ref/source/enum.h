@@ -3646,7 +3646,9 @@ enum size_type
     SIZE_LARGE,             // trolls/ogres/centaurs/nagas
     SIZE_BIG,               // large quadrupeds
     SIZE_GIANT,             // giants
+#if TAG_MAJOR_VERSION == 34
     SIZE_HUGE,              // dragons
+#endif
     NUM_SIZE_LEVELS,
     SIZE_CHARACTER,         // transformations that don't change size
 };

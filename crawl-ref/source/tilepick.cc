@@ -3435,10 +3435,8 @@ static tileidx_t _tileidx_bone(const item_def &item)
     case SIZE_LARGE:
     case SIZE_BIG:
         cs = 2; break;
-    case SIZE_HUGE:
     case SIZE_GIANT:
         cs = 3; break;
-
     }
 
     switch (get_mon_shape(item.mon_type))
