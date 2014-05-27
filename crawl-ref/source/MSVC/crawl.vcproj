@@ -1147,6 +1147,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\duration-data.h"
+			>
+		</File>
+		<File
 			RelativePath="..\effects.cc"
 			>
 		</File>
