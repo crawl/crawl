@@ -360,6 +360,7 @@ static const duration_def duration_data[] =
     { DUR_TROGS_HAND, false, 0, "", "", "trogs hand", "" },
     { DUR_MAGIC_SAPPED, false, 0, "", "", "magic sapped", "" },
 
+#if TAG_MAJOR_VERSION == 34
     // And removed ones
     { DUR_REPEL_MISSILES, false, 0, "", "", "old repel missiles", "" },
     { DUR_DEFLECT_MISSILES, false, 0, "", "", "old deflect missiles", "" },
@@ -377,4 +378,5 @@ static const duration_def duration_data[] =
     { DUR_SPIRIT_HOWL, false, 0, "", "", "old spirit howl", "" },
     { DUR_SONG_OF_SHIELDING, false, 0, "", "", "old song of shielding", "" },
     { DUR_ANTENNAE_EXTEND, false, 0, "", "", "old antennae extend", "" },
+#endif
 };
