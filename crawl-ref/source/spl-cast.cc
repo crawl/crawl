@@ -786,7 +786,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     // Silently take MP before the spell.
     dec_mp(cost, true);
 
-    const spret_type cast_result = your_spells(spell, 0, true, check_range);
+    const spret_type cast_result = your_spells(spell, 0, true);
     if (cast_result == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
@@ -1073,10 +1073,9 @@ static void _maybe_cancel_repeat(spell_type spell)
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
                            god_type god, int potion,
-                           bool check_range, bool fail);
+                           bool fail);
 
 static bool _spellcasting_aborted(spell_type spell,
-                                  bool check_range_usability,
                                   bool wiz_cast)
 {
     string msg;
@@ -1231,13 +1230,12 @@ static void _spellcasting_corruption(spell_type spell)
  * @param spell         The type of spell being cast.
  * @param powc          Spellpower.
  * @param allow_fail    Whether spell-fail chance applies.
- * @param check_range   If true, abort Animate Dead if no targets are in range.
  * @return SPRET_SUCCESS if spell is successfully cast for purposes of
  * exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player cancelled
  * the casting.
  **/
 spret_type your_spells(spell_type spell, int powc,
-                       bool allow_fail, bool check_range)
+                       bool allow_fail)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1249,7 +1247,7 @@ spret_type your_spells(spell_type spell, int powc,
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch.
-    if (_spellcasting_aborted(spell, check_range, wiz_cast))
+    if (_spellcasting_aborted(spell, wiz_cast))
         return SPRET_ABORT;
 
     const unsigned int flags = get_spell_flags(spell);
@@ -1414,7 +1412,7 @@ spret_type your_spells(spell_type spell, int powc,
     const bool old_target = actor_at(beam.target);
 
     spret_type cast_result = _do_cast(spell, powc, spd, beam, god,
-                                      potion, check_range, fail);
+                                      potion, fail);
 
     if (cast_result != SPRET_ABORT && you.spell_hp_cost() && allow_fail)
         _spellcasting_corruption(spell);
@@ -1523,7 +1521,7 @@ static void _spell_zap_effect(spell_type spell)
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
                            god_type god, int potion,
-                           bool check_range, bool fail)
+                           bool fail)
 {
     // First handle the zaps.
     zap_type zap = spell_to_zap(spell);
