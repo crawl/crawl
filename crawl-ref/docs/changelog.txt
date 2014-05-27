@@ -13,6 +13,7 @@ Branches, environment
 
 Character
 ---------
+* Inventory item weight and player burden states are no more.
 * Formicids can no longer throw large rocks.
 * Tengu now gain permaflight at XL14 (was 15).
 * All non-undead forms can eat and drink normally.
@@ -95,6 +96,7 @@ Items
 * Honeycombs have been renamed to royal jellies (to account for the removal
   of the latter).
 * Scrolls of brand weapon can apply any brand to an unbranded weapon.
+* Corpses and skeletons are stationary, and can't be picked up nor apported.
 * Removed items: rings of hunger and sustenance, ambrosia, (old) royal jelly.
 * Removed unrands: the boots of the Spider.
 
