@@ -1589,7 +1589,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             else
                 buff << "chunk of flesh";
             break;
-        default: buff << "buggy food"; break;
+#if TAG_MAJOR_VERSION == 34
+        default: buff << "removed food"; break;
+#endif
         }
 
         break;
