@@ -260,10 +260,10 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns no_pool_fixup
 
   local gxm,gym = dgn.max_bounds()
   local limit,border,margin = 0.35,8,8
-  local reps = crawl.random_range(0.7,0.85)
+  local reps = crawl.random_range(70,85)
 
-  local fcaves = procedural.worley_diff { scale = .075/reps }
-  fcaves = procedural.transform.polar_inverse(fcaves,gym/1.8,gxm/reps,gym/2)
+  local fcaves = procedural.worley_diff { scale = 7.5/reps }
+  fcaves = procedural.transform.polar_inverse(fcaves,gym/1.8,100*gxm/reps,gym/2)
   fcaves = procedural.add(fcaves,procedural.mul(limit,procedural.border{padding=border,margin=margin}))
 
   procedural.render_map(_G,fcaves,function(value) return value < limit and '.' or 't' end)
