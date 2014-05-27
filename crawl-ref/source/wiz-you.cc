@@ -753,7 +753,7 @@ void wizard_edit_durations()
         for (size_t i = 0; i < durs.size(); ++i)
         {
             const duration_type dur = durs[i];
-            mprf_nocap(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, (int)max_len,
+            mprf_nocap(MSGCH_PROMPT, "%lu) %-*s : %d", 'a' + i, (int)max_len,
                  duration_name(dur), you.duration[dur]);
         }
         mprf(MSGCH_PROMPT, "\nEdit which duration (letter or name)? ");
