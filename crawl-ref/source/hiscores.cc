@@ -70,7 +70,7 @@ static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 static int newest_entry = -1;
 
 static FILE *_hs_open(const char *mode, const string &filename);
-static void  _hs_close(FILE *handle, const char *mode, const string &filename);
+static void  _hs_close(FILE *handle, const string &filename);
 static bool  _hs_read(FILE *scores, scorefile_entry &dest);
 static void  _hs_write(FILE *scores, scorefile_entry &entry);
 static time_t _parse_time(const string &st);
@@ -156,7 +156,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     if (!inserted)
     {
         newest_entry = -1; // This might not be the first game
-        _hs_close(scores, "a+", _score_file_name());
+        _hs_close(scores, _score_file_name());
         return;
     }
 
@@ -179,7 +179,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     }
 
     // close scorefile.
-    _hs_close(scores, "a+", _score_file_name());
+    _hs_close(scores, _score_file_name());
 }
 
 void logfile_new_entry(const scorefile_entry &ne)
@@ -200,7 +200,7 @@ void logfile_new_entry(const scorefile_entry &ne)
     _hs_write(logfile, le);
 
     // close logfile.
-    _hs_close(logfile, "a", _log_file_name());
+    _hs_close(logfile, _log_file_name());
 }
 
 template <class t_printf>
@@ -249,7 +249,7 @@ void hiscores_print_all(int display_count, int format)
             _hiscores_print_entry(se, entry, format, printf);
     }
 
-    _hs_close(scores, "r", _score_file_name());
+    _hs_close(scores, _score_file_name());
 }
 
 // Displays high scores using curses. For output to the console, use
@@ -279,7 +279,7 @@ void hiscores_print_list(int display_count, int format)
     total_entries = i;
 
     // close off
-    _hs_close(scores, "r", _score_file_name());
+    _hs_close(scores, _score_file_name());
 
     textcolor(LIGHTGREY);
 
@@ -342,7 +342,7 @@ static void _construct_hiscore_table(MenuScroller* scroller)
             break;
     }
 
-    _hs_close(scores, "r", _score_file_name());
+    _hs_close(scores, _score_file_name());
 
     for (int j=0; j<i; j++)
         _add_hiscore_row(scroller, *hs_list[j], j);
@@ -379,7 +379,7 @@ static void _show_morgue(scorefile_entry& se)
         morgue_text += "<w>" + line + "</w>" + '\n';
     }
 
-    lk_close(morgue, "r", morgue_path);
+    lk_close(morgue, morgue_path);
 
     clrscr();
 
@@ -561,9 +561,9 @@ static FILE *_hs_open(const char *mode, const string &scores)
     return lk_open(mode, scores);
 }
 
-static void _hs_close(FILE *handle, const char *mode, const string &scores)
+static void _hs_close(FILE *handle, const string &scores)
 {
-    lk_close(handle, mode, scores);
+    lk_close(handle, scores);
 }
 
 static bool _hs_read(FILE *scores, scorefile_entry &dest)
@@ -2825,7 +2825,7 @@ void mark_milestone(const string &type, const string &milestone,
     if (FILE *fp = lk_open("a", milestone_file))
     {
         fprintf(fp, "%s\n", xlog_line.c_str());
-        lk_close(fp, "a", milestone_file);
+        lk_close(fp, milestone_file);
     }
 #endif // DGL_MILESTONES
 }
