@@ -798,7 +798,7 @@ public:
         if (filep)
         {
             if (lock)
-                lk_close(filep, filemode, tmp_filename);
+                lk_close(filep, tmp_filename);
             else
                 fclose(filep);
             filep = NULL;
@@ -2328,10 +2328,8 @@ FILE *lk_open(const char *mode, const string &file)
     return handle;
 }
 
-void lk_close(FILE *handle, const char *mode, const string &file)
+void lk_close(FILE *handle, const string &file)
 {
-    UNUSED(mode);
-
     if (handle == NULL || handle == stdin)
         return;
 
@@ -2356,7 +2354,7 @@ file_lock::file_lock(const string &s, const char *_mode, bool die_on_fail)
 file_lock::~file_lock()
 {
     if (handle)
-        lk_close(handle, mode, filename);
+        lk_close(handle, filename);
 }
 
 /////////////////////////////////////////////////////////////////////////////
