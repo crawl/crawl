@@ -1,4 +1,4 @@
-Stone Soup 0.15 (up to 0.15-a0-985-g23b1178)
+Stone Soup 0.15 (up to 0.15-a0-1064-gdf5a4c5)
 --------------------------------------------
 * Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
 * Ranged combat has been rewritten from the ground up.
@@ -24,6 +24,8 @@ Character
 * Player clinging (seen only in Spider Form and with the boots of the Spider)
   is no more.
 * Kobolds, hill orcs, and ogres are no longer saprovorous.
+* Kobolds no longer have disease resistance.
+* Halflings have rebalanced aptitudes, shifting them towards defense.
 * Ogres and centaurs no longer have a fast metabolism; halflings no longer
   have a slow metabolism.
 * Centaurs are no longer herbivorous.
@@ -64,6 +66,7 @@ Spells
   in the book of Burglary.
 * Casting Ozocubu's Refrigeration now prevents the player from using potions
   for several turns instead of destroying potions.
+* Spider Form now moves at normal speed.
 * Death Channel lasts twice as long.
 * The Book of War Chants is no more.
 * Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon,
@@ -79,6 +82,11 @@ Items
   more than normal blowguns.
 * New unrand: the +8 orange crystal plate armour {Archmagi, Int+3 Clar
   SustAb}.
+* New fixedart: the +6 Majin-Bo {vamp, Archmagi, MP+6 Int+6}. A quarterstaff
+  that takes HP every time you cast a spell.
+* The dagger of Chilly Death now sometimes flash-freezes enemies, slowing their
+  movement, and the scimitar of Flaming Death now sometimes applies sticky
+  flame to its victims.
 * Cleaving hits the full eight squares around a player.
 * Jewellery automatically identifies on equipping it.
 * Damage from the electrocution brand has been reduced slightly.
@@ -95,6 +103,8 @@ Items
 * Sustain abilities effects no longer stack.
 * Honeycombs have been renamed to royal jellies (to account for the removal
   of the latter).
+* All types of fruit have been merged together into one gooey, messy item type.
+* Cheese and sausages are no more.
 * Scrolls of brand weapon can apply any brand to an unbranded weapon.
 * Corpses and skeletons are stationary, and can't be picked up nor apported.
 * Removed items: rings of hunger and sustenance, ambrosia, (old) royal jelly.
@@ -150,8 +160,10 @@ Gods
 
 Interface
 ---------
+* Monsters with special melee attacks (e.g. poison, fire) have this noted in
+  their descriptions.
+* Ability icons have been reworked.
 * There are status lights for Might, Agility, and Brilliance.
-* Monsters with special attack flavours have this noted in their descriptions.
 
 Stone Soup 0.14.1 (20140428)
 ----------------------------
