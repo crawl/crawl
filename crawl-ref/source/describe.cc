@@ -4407,9 +4407,9 @@ static const char *divine_title[NUM_GODS][8] =
     {"Illuminated",        "Gloomy",                "Aphotic",                  "Caliginous",
      "Darkened",           "Shadowed",              "Eclipsing",                "Eternal Night"},
 
-    // Gozag -- enterprenur theme
-    {"Profligate",         "Pauper",                "Materialist",              "Vendee",
-     "Enterpreneur",       "Mogul",                 "Magnate",                  "Tycoon"},
+    // Gozag -- entrepreneur theme
+    {"Profligate",         "Pauper",                "Entrepreneur",             "Capitalist",
+     "Rich",               "Opulent",               "Tycoon",                   "Plutocrat"},
 
     // Qazlal -- natural disaster theme
     {"Unspoiled",          "%s Mishap",             "Lightning Rod",            "%s Disaster",
