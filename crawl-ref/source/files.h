@@ -97,6 +97,7 @@ void save_ghost(bool force = false);
 bool load_ghost(bool creating_level);
 
 FILE *lk_open(const char *mode, const string &file);
+FILE *lk_open_exclusive(const string &file);
 void lk_close(FILE *handle, const string &file);
 
 // file locking stuff

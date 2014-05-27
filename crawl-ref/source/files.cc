@@ -2328,6 +2328,30 @@ FILE *lk_open(const char *mode, const string &file)
     return handle;
 }
 
+/**
+ * Attempts to open and lock a file for exclusive write access; fails if
+ * the file already exists.
+ *
+ * @param file The path to the file to be opened.
+ * @return     A locked file handle for the specified file, if
+ *             successful; else NULL.
+ */
+FILE *lk_open_exclusive(const string &file)
+{
+    int fd = open_u(file.c_str(), O_WRONLY|O_BINARY|O_EXCL|O_CREAT, 0666);
+    if (fd < 0)
+        return NULL;
+
+    if (!lock_file(fd, true))
+    {
+        mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
+        close(fd);
+        return NULL;
+    }
+
+    return fdopen(fd, "wb");
+}
+
 void lk_close(FILE *handle, const string &file)
 {
     if (handle == NULL || handle == stdin)
