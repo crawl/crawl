@@ -6009,35 +6009,19 @@ void monster::steal_item_from_player()
     ASSERT(mslot != NUM_MONSTER_SLOTS);
     ASSERT(inv[mslot] == NON_ITEM);
 
-    // Create new item.
-    int index = get_mitm_slot(10);
-    if (index == NON_ITEM)
+    const int orig_qty = you.inv[steal_what].quantity;
+
+    item_def* tmp = take_item(steal_what, mslot);
+    if (!tmp)
         return;
-
-    item_def &new_item = mitm[index];
-
-    // Copy item.
-    new_item = you.inv[steal_what];
-
-    // Set quantity, and set the item as unlinked.
-    const int orig_qty = new_item.quantity;
-    new_item.quantity -= random2(orig_qty);
-    new_item.pos.reset();
-    new_item.link = NON_ITEM;
+    item_def& new_item = *tmp;
 
     mprf("%s steals %s!",
          name(DESC_THE).c_str(),
          new_item.name(DESC_YOUR).c_str());
 
-    unlink_item(index);
-    inv[mslot] = index;
-    new_item.set_holding_monster(mindex());
     // You'll want to autopickup it after killing Maurice.
     new_item.flags |= ISFLAG_THROWN;
-    equip(new_item, mslot, true);
-
-    // Item is gone from player's inventory.
-    dec_inv_item_quantity(steal_what, new_item.quantity);
 
     // Fix up blood timers.
     if (is_blood_potion(new_item))
@@ -6050,6 +6034,54 @@ void monster::steal_item_from_player()
         if (you.inv[steal_what].defined())
             remove_newest_blood_potion(you.inv[steal_what]);
     }
+}
+
+/**
+ * "Give" a monster an item from the player's inventory.
+ *
+ * @param steal_what The slot in your inventory of the item.
+ * @param mslot Which mon_inv_type to put the item in
+ *
+ * @returns new_item the new item, now in the monster's inventory.
+ */
+item_def* monster::take_item(int steal_what, int mslot)
+{
+    // Create new item.
+    int index = get_mitm_slot(10);
+    if (index == NON_ITEM)
+        return NULL;
+
+    item_def &new_item = mitm[index];
+
+    // Copy item.
+    new_item = you.inv[steal_what];
+
+    // Drop the item already in the slot (including the shield
+    // if it's a two-hander).
+    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
+        && inv[MSLOT_SHIELD] != NON_ITEM
+        && hands_reqd(new_item) == HANDS_TWO)
+    {
+        drop_item(MSLOT_SHIELD, true);
+    }
+    if (inv[mslot] != NON_ITEM)
+        drop_item(mslot, true);
+
+    // Set quantity, and set the item as unlinked.
+    new_item.quantity -= random2(new_item.quantity);
+    new_item.pos.reset();
+    new_item.link = NON_ITEM;
+
+    unlink_item(index);
+    inv[mslot] = index;
+    new_item.set_holding_monster(mindex());
+
+    equip(new_item, mslot, true);
+
+    // Item is gone from player's inventory.
+    dec_inv_item_quantity(steal_what, new_item.quantity);
+
+    return &new_item;
 }
 
 bool monster::is_web_immune() const
