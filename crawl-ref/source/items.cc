@@ -129,9 +129,31 @@ void link_items()
             continue;
         }
 
-        // link to top
-        mitm[i].link = igrd(mitm[i].pos);
-        igrd(mitm[i].pos) = i;
+        bool move_below = item_is_stationary(mitm[i])
+            && !item_is_stationary_net(mitm[i]);
+        int movable_ind = -1;
+        // Stationary item, find index at location
+        if (move_below)
+        {
+
+            for (stack_iterator si(mitm[i].pos); si; ++si)
+            {
+                if (!item_is_stationary(*si) || item_is_stationary_net(*si))
+                    movable_ind = si->index();
+            }
+        }
+        // Link to top
+        if (!move_below || movable_ind == -1)
+        {
+            mitm[i].link = igrd(mitm[i].pos);
+            igrd(mitm[i].pos) = i;
+        }
+        // Link below movable items.
+        else
+        {
+            mitm[i].link = mitm[movable_ind].link;
+            mitm[movable_ind].link = i;
+        }
     }
 }
 
@@ -1903,11 +1925,13 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     ASSERT_IN_BOUNDS(p);
 
     int& ob(*obj);
+
     // Must be a valid reference to a valid object.
     if (ob == NON_ITEM || !mitm[ob].defined())
         return false;
 
     item_def& item(mitm[ob]);
+    bool move_below = item_is_stationary(item) && !item_is_stationary_net(item);
 
     if (feat_destroys_item(grd(p), mitm[ob], !silenced(p) && !silent))
     {
@@ -1924,8 +1948,9 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
         maybe_identify_base_type(item);
     }
 
-    // If it's a stackable type...
-    if (is_stackable_item(item))
+    // If it's a stackable type or stationary item that's not a net...
+    int movable_ind = -1;
+    if (move_below || is_stackable_item(item))
     {
         // Look for similar item to stack:
         for (stack_iterator si(p); si; ++si)
@@ -1944,6 +1969,11 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
                 ob = si->index();
                 _gozag_move_gold_to_top(p);
                 return true;
+            }
+            if (move_below
+                && (!item_is_stationary(*si) || item_is_stationary_net(*si)))
+            {
+                movable_ind = si->index();
             }
         }
     }
@@ -1971,9 +2001,19 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     // Move item to coord.
     item.pos = p;
 
-    // Link item to top of list.
-    item.link = igrd(p);
-    igrd(p) = ob;
+    // Need to move this stationary item to the position in the pile
+    // below the lowest non-stationary, non-net item.
+    if (move_below && movable_ind >= 0)
+    {
+        item.link = mitm[movable_ind].link;
+        mitm[movable_ind].link = item.index();
+    }
+    // Movable item or no movable items in pile, link item to top of list.
+    else
+    {
+        item.link = igrd(p);
+        igrd(p) = ob;
+    }
 
     if (item_is_orb(item))
         env.orb_pos = p;
