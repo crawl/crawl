@@ -3135,11 +3135,21 @@ static void tag_read_you_items(reader &th)
     {
         const int oldstate = you.force_autopickup[OBJ_FOOD][NUM_FOODS];
         you.force_autopickup[OBJ_FOOD][FOOD_MEAT_RATION] = oldstate;
-        you.force_autopickup[OBJ_FOOD][FOOD_PEAR] = oldstate;
+        you.force_autopickup[OBJ_FOOD][FOOD_FRUIT] = oldstate;
         you.force_autopickup[OBJ_FOOD][FOOD_ROYAL_JELLY] = oldstate;
 
         you.force_autopickup[OBJ_BOOKS][BOOK_MANUAL] =
             you.force_autopickup[OBJ_BOOKS][NUM_BOOKS];
+    }
+    if (th.getMinorVersion() < TAG_MINOR_FOOD_PURGE_AP_FIX)
+    {
+        FixedVector<int, MAX_SUBTYPES> &food_pickups =
+            you.force_autopickup[OBJ_FOOD];
+
+        // If fruit pickup was not set explicitly during the time between
+        // FOOD_PURGE and FOOD_PURGE_AP_FIX, copy the old exemplar FOOD_PEAR.
+        if (food_pickups[FOOD_FRUIT] == 0)
+            food_pickups[FOOD_FRUIT] = food_pickups[FOOD_PEAR];
     }
     if (you.species == SP_FORMICID)
         remove_one_equip(EQ_HELMET, false, true);
