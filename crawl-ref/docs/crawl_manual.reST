@@ -2181,7 +2181,7 @@ Stealth
   with a dagger, slightly less effective with other short blades and less useful
   (although by no means negligible) with any other weapon. Stabbing also improves
   some melee attacks against confused or otherwise incapacitated monsters, though
-  this is much less effective than when the monster is asleep or paralyzed.
+  this is much less effective than when the monster is asleep or paralysed.
 
   Note that in addition to the bonus from using a short blade/dagger, there is an
   additional stabbing bonus based on the average of your stealth skill and your
@@ -2189,7 +2189,7 @@ Stealth
 
 Shields
   Affects the amount of protection you gain by using a shield, and the degree to
-  which it hinders you. For most races, 5/15/25 skill us enough to mitigate the
+  which it hinders you. For most races, 5/15/25 skill is enough to mitigate the
   encumbrance of bucklers/shields/large shields respectively, though larger
   races need less skill and and smaller races more.
 
@@ -2463,7 +2463,7 @@ Ctrl-F
   for altars to a special god, a search for 'Trog' , etc. works. A string like
   'D:13' will list all known items on that level. 'D:1}' will search for items
   on level 1 only, as opposed to 'D:1', which will also list items on D:10
-  through D:19. Once the list of all   found places is displayed, you can cause
+  through D:19. Once the list of all found places is displayed, you can cause
   auto-travel to go there (press the associated letter) or you can examine the
   items (press ? followed by the letter).
 
@@ -2705,9 +2705,7 @@ Examining surroundings ('x')
 ========================================
 
 When roaming the dungeon, the surroundings mode is activated by 'x'. It lets you
-have a look at items or monsters in line of sight. You may also examine stashed
-items outside current view using the option target_oos = true (if using this,
-check the option target_los_first).
+have a look at items or monsters in line of sight.
 
 Esc, Space, x
   Return to playing mode.
@@ -2826,10 +2824,9 @@ cTele
   not totally reliable.
 
 Fly
-  You fly above the ground, and so are able to cross water and lava and avoid
-  most types of traps. Due to low ceilings in the dungeon, this is not enough
-  to get out of reach of ground-based enemies. Most types of flight will time
-  out - be sure you're not above deadly liquids when that happens.
+  You fly above the ground, and are able to cross water and lava. Most types of
+  flight will time out - be sure you're not above deadly liquids when that
+  happens.
 
 Regen
   You regenerate hit points at an unnaturally fast rate. This is only shown for
@@ -2870,13 +2867,10 @@ Starving
   combat abilities are impaired and you are unable to cast spells or use many
   evoked or divine abilities.
 
-Retch
-  Something is causing you to feel rather ill. You cannot eat anything or quaff
-  any potions in this state.
-
 Pois
-  You are poisoned and continually lose hit points. There are several levels of
-  poisoning. Cure with potions of curing or by waiting it out.
+  You are poisoned and continually lose hit points. While poisoned, your current
+  health will be partially recoloured to display the eventual poison damage that
+  will be dealt. Cure with potions of curing or by waiting it out.
 
 Drain
   Your skills have been drained by negative energy, and are less effective.
@@ -2989,9 +2983,8 @@ uses.
 Automatic inscriptions
 ========================================
 
-These are done by the game to help you to identify items. For example, rings or
-scrolls which did not do anything obvious upon first use will be automatically
-inscribed with "{tried}".
+These are done by the game to help you to identify items. For example, items
+that you have seen a monster use will be inscribed with "{tried by monster}".
 
 Inscriptions as shortcuts
 ========================================
@@ -3091,7 +3084,7 @@ commands:
 You can use the autoinscribe option to have some items automatically inscribed.
 See options_guide.txt for details. Some examples are:
 
-  autoinscribe = honeycomb:=g
+  autoinscribe = royal jelly:=g
   autoinscribe = wand of heal wounds:!v
 
 Artefacts autoinscriptions
@@ -3173,11 +3166,11 @@ Acc+3
 MR
   boost to magical resistance to hostile enchantments
 
-Stlth
+Stealth+
   stealth boost
 
-Stlth+
-  higher stealth boost
+Stealth-
+  stealth penalty
 
 rCorr
   resist corrosion
@@ -3215,9 +3208,6 @@ Contam
 Noisy
   makes noises on hit
 
-Hunger, Hunger+
-  increased rate of hunger
-
 Curse
   chance of self-cursing when equipped
 
@@ -3229,9 +3219,6 @@ Ice
 
 SustAb
   sustain abilities
-
-Hunger-
-  sustenance
 
 Regen
   regeneration
