@@ -636,7 +636,7 @@ TAGS:   extra transparent decor
 DEPTH:  Lair, Snake
 ORIENT: float
 MONS:   plant, fungus
-KITEM:  a : fruit
+KITEM:  a : fruit q:1
 : if crawl.one_chance_in(5) then
 SUBST:  '"~ = . 1
 SUBST:  0`-. = .:90 a:10 2:1
