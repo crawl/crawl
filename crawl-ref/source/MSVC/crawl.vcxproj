@@ -660,6 +660,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\directn.h" />
     <ClInclude Include="..\dlua.h" />
     <ClInclude Include="..\dungeon.h" />
+    <ClInclude Include="..\duration-data.h" />
     <ClInclude Include="..\effects.h" />
     <ClInclude Include="..\endianness.h" />
     <ClInclude Include="..\enum.h" />
