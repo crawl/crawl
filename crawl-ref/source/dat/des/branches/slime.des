@@ -270,36 +270,6 @@ MAP
     ...
 ENDMAP
 
-NAME: nicolae_slime_entry_corroded_items
-TAGS: slime_entry
-KFEAT: O = enter_slime_pits
-NSUBST: ' = 6:i / *:.
-SUBST: i = wa, s = ssx
-KITEM: w = damaged long sword ego:none ident:pluses / damaged mace ego:none ident:pluses / \
-   damaged flail ego:none ident:pluses / damaged spear ego:none ident:pluses / \
-   damaged trident ego:none ident:pluses / damaged dagger ego:none ident:pluses / \
-   damaged short sword ego:none ident:pluses / damaged lajatang ego:none ident:pluses / \
-   damaged hand axe ego:none ident:pluses / damaged war axe ego:none ident:pluses
-KITEM: a = damaged helmet ego:none ident:pluses / damaged pair of gloves ego:none ident:pluses / \
-   damaged pair of boots ego:none ident:pluses / damaged leather armour ego:none ident:pluses / \
-   damaged ring mail ego:none ident:pluses / damaged chain mail ego:none ident:pluses / \
-   damaged plate armour ego:none ident:pluses / damaged cloak ego:none ident:pluses / \
-   damaged shield ego:none ident:pluses
-KFEAT: s = slimy_wall
-MAP
-   xxxxxx
- @.xssssxx
- ......ssxx
-xx..'''.ssx
-xs.'''''.sx
-xs.''O''.sx
-xs.'''''.sx
-xss.'''.ssx
-xxss...ssxx
- xxsssssxx
-  xxxxxxx
-ENDMAP
-
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
