@@ -21,7 +21,7 @@ struct duration_def
     string long_text ;   // for @ message
 };
 
-static duration_def duration_data[] =
+static const duration_def duration_data[] =
 {
     { DUR_AGILITY, false,
       LIGHTBLUE, "Agi", "agile", "You are agile." },
