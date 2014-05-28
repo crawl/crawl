@@ -1327,7 +1327,10 @@ static void _input()
             if (++crawl_state.lua_calls_no_turn > 1000)
                 mprf(MSGCH_ERROR, "Infinite lua loop detected, aborting.");
             else
-                clua.callfn("ready", 0, 0);
+            {
+                if (!clua.callfn("ready", 0, 0) && !clua.error.empty())
+                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            }
         }
 
 #ifdef WATCHDOG
