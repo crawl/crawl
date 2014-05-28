@@ -23,7 +23,10 @@ LUAFN(view_feature_at)
     COORDSHOW(s, 1, 2)
     const coord_def p = player2grid(s);
     if (!map_bounds(p))
+    {
+        lua_pushnil(ls);
         return 1;
+    }
     dungeon_feature_type f = env.map_knowledge(p).feat();
     lua_pushstring(ls, dungeon_feature_name(f));
     return 1;
@@ -34,7 +37,10 @@ LUAFN(view_is_safe_square)
     COORDSHOW(s, 1, 2)
     const coord_def p = player2grid(s);
     if (!map_bounds(p))
+    {
+        PLUARET(boolean, false);
         return 1;
+    }
     cloud_type c = env.map_knowledge(p).cloud();
     if (c != CLOUD_NONE
         && is_damaging_cloud(c, true)
@@ -97,7 +103,10 @@ LUAFN(view_withheld)
     COORDSHOW(s, 1, 2)
     const coord_def p = player2grid(s);
     if (!map_bounds(p))
+    {
+        PLUARET(boolean, false);
         return 1;
+    }
     PLUARET(boolean, env.map_knowledge(p).flags & MAP_WITHHELD);
     return 1;
 }
