@@ -1057,7 +1057,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         if (player)
             splash_with_acid(5, agent ? agent->mindex() : NON_MONSTER, true);
         else
-            corrode_monster(mons, agent);
+            splash_monster_with_acid(mons, agent);
         return true;
     }
 

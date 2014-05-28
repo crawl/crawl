@@ -58,7 +58,7 @@ void slimify_monster(monster* mons, bool hostile = false);
 
 bool mon_can_be_slimified(monster* mons);
 
-void corrode_monster(monster* mons, const actor* evildoer);
+void splash_monster_with_acid(monster* mons, const actor* evildoer);
 
 int dismiss_monsters(string pattern);
 void zap_los_monsters(bool items_also);

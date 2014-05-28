@@ -3120,6 +3120,54 @@ void recharge_rods(int aut, bool level_only)
         _recharge_rod(mitm[item], aut, false);
 }
 
+/**
+ * Applies a temporary corrosion debuff to an actor.
+ */
+void corrode_actor(actor *act)
+{
+    // Don't corrode spectral weapons.
+    if (act->is_monster()
+        && mons_is_avatar(act->as_monster()->type))
+    {
+        return;
+    }
+
+    // Anti-corrosion items protect against 90% of corrosion.
+    if (act->res_corr() && !one_chance_in(10))
+    {
+        dprf("Amulet protects.");
+        return;
+    }
+
+    if (act->is_player())
+    {
+        you.increase_duration(DUR_CORROSION, 10 + roll_dice(2, 4), 50,
+                              "The acid corrodes your equipment!");
+        xom_is_stimulated(50);
+        you.props["corrosion_amount"].get_int()++;
+        you.redraw_armour_class = true;
+        you.wield_change = true;
+    }
+    else if (act->type == MONS_PLAYER_SHADOW)
+        return; // it's just a temp copy of the item
+    else if (you.see_cell(act->pos()))
+    {
+        if (act->type == MONS_DANCING_WEAPON)
+        {
+            mprf("The acid corrodes %s!",
+                 act->name(DESC_THE).c_str());
+        }
+        else
+        {
+            mprf("The acid corrodes %s equipment!",
+                 apostrophise(act->name(DESC_THE)).c_str());
+        }
+    }
+
+    if (act->is_monster())
+        act->as_monster()->add_ench(mon_enchant(ENCH_CORROSION, 0));
+}
+
 void slime_wall_damage(actor* act, int delay)
 {
     ASSERT(act);

@@ -774,32 +774,6 @@ void append_weapon_stats(string &description, const item_def &item)
     _append_value(description, weapon_min_delay(item) / 10.0f, false);
 }
 
-static string _corrosion_resistance_string(const item_def &item)
-{
-    const int ench = item.base_type == OBJ_WEAPONS ? item.plus2 : item.plus;
-    const char* format = "\nIts enchantment level renders it %s to acidic "
-                         "corrosion.";
-
-    if (is_artefact(item))
-        return "";
-    if (ench >= 5 && item_ident(item, ISFLAG_KNOW_PLUSES))
-        return make_stringf(format, "immune");
-    else if (ench >= 4 && item_ident(item, ISFLAG_KNOW_PLUSES))
-        return make_stringf(format, "extremely resistant");
-    else if (item.base_type == OBJ_ARMOUR
-             && item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR)
-    {
-        return "\nBeing made of crystal renders it very resistant to acidic "
-               "corrosion.";
-    }
-    else if (ench >= 3 && item_ident(item, ISFLAG_KNOW_PLUSES))
-        return make_stringf(format, "resistant");
-    else if (ench >= 2 && item_ident(item, ISFLAG_KNOW_PLUSES))
-        return make_stringf(format, "somewhat resistant");
-    else
-        return "";
-}
-
 static string _handedness_string(const item_def &item)
 {
     string description;
@@ -1057,8 +1031,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
             description += ".";
         }
     }
-
-    description += _corrosion_resistance_string(item);
 
     return description;
 }
@@ -1358,8 +1330,6 @@ static string _describe_armour(const item_def &item, bool verbose)
         else
             description += "\nIt cannot be enchanted further.";
     }
-
-    description += _corrosion_resistance_string(item);
 
     return description;
 }

@@ -358,10 +358,22 @@ int check_your_resists(int hurted, beam_type flavour, string source,
     return hurted;
 }
 
-void splash_with_acid(int acid_strength, int death_source, bool corrode_items,
+/**
+ * Attempts to apply corrosion to the player and deals acid damage.
+ *
+ * Each full equipment slot gives a chance of applying the corrosion debuff,
+ * and each empty equipment slot increases the amount of acid damage taken.
+ *
+ * @param acid_strength The strength of the acid.
+ * @param death_source The monster index of the acid's source.
+ * @param allow_corrosion Whether to try and apply the corrosion debuff.
+ * @param hurt_msg A message to display when dealing damage.
+ */
+void splash_with_acid(int acid_strength, int death_source, bool allow_corrosion,
                       const char* hurt_msg)
 {
     int dam = 0;
+    bool do_corrosion = false;
     const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
 
     for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; slot++)
@@ -375,10 +387,13 @@ void splash_with_acid(int acid_strength, int death_source, bool corrode_items,
             if (!item && slot != EQ_SHIELD)
                 dam++;
 
-            if (item && corrode_items && x_chance_in_y(acid_strength + 1, 20))
-                corrode_item(*item, &you);
+            if (item && allow_corrosion && x_chance_in_y(acid_strength + 1, 30))
+                do_corrosion = true;
         }
     }
+
+    if (do_corrosion)
+        corrode_actor(&you);
 
     // Covers head, hands and feet.
     if (player_equip_unrand(UNRAND_LEAR))

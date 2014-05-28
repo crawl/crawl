@@ -768,20 +768,17 @@ void slimify_monster(monster* mon, bool hostile)
     mons_att_changed(mon);
 }
 
-void corrode_monster(monster* mons, const actor* evildoer)
+/**
+ * Attempts to either apply corrosion to a monster or make it bleed from acid
+ * damage.
+ */
+void splash_monster_with_acid(monster* mons, const actor* evildoer)
 {
-    // Don't corrode spectral weapons.
-    if (mons_is_avatar(mons->type))
-        return;
-
     item_def *has_shield = mons->mslot_item(MSLOT_SHIELD);
     item_def *has_armour = mons->mslot_item(MSLOT_ARMOUR);
 
     if (!one_chance_in(3) && (has_shield || has_armour))
-    {
-        item_def &thing_chosen = (has_armour ? *has_armour : *has_shield);
-        corrode_item(thing_chosen, mons);
-    }
+        corrode_actor(mons);
     else if (!one_chance_in(3) && !(has_shield || has_armour)
              && mons->can_bleed() && !mons->res_acid())
     {
