@@ -182,12 +182,6 @@ MAP
 O
 ENDMAP
 
-NAME:    abyss_fake_rune
-ITEM:    abyssal rune of Zot mimic
-MAP
-d
-ENDMAP
-
 ###############################################################################
 NAME: abyss_furniture_001
 TAGS: extra allow_dup
