@@ -1582,7 +1582,7 @@ bool beogh_gift_item()
 
     monster* mons = monster_at(spd.target);
 
-    if (!mons)
+    if (!mons || !mons->visible_to(&you))
     {
         canned_msg(MSG_NOTHING_THERE);
         return false;
