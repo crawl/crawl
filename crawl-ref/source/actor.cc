@@ -244,9 +244,6 @@ int actor::body_weight(bool base) const
     case SIZE_BIG:
         return 1500;
     case SIZE_GIANT:
-#if TAG_MAJOR_VERSION == 34
-    case SIZE_HUGE:
-#endif
         return 1800;
     default:
         die("invalid body weight");

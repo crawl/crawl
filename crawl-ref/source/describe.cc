@@ -3529,7 +3529,7 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " regenerates quickly.\n";
 
     // Size
-    const char *sizes[NUM_SIZE_LEVELS] =
+    static const char * const sizes[] =
     {
         "tiny",
         "very small",
@@ -3538,10 +3538,8 @@ static string _monster_stat_description(const monster_info& mi)
         "large",
         "very large",
         "giant",
-#if TAG_MAJOR_VERSION == 34
-        "huge",
-#endif
     };
+    COMPILE_CHECK(ARRAYSZ(sizes) == NUM_SIZE_LEVELS);
 
     if (mons_is_feat_mimic(mi.type))
     {
