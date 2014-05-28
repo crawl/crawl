@@ -322,7 +322,7 @@ static const duration_def duration_data[] =
       "corroded equipment", "corrosion",
       "Your equipment is corroded." },
     { DUR_FORTITUDE,
-      false, LIGHTBLUE, "Fort", 
+      false, LIGHTBLUE, "Fort",
       "immense fortitude", "",
       "You have immense fortitude and shrug off injury." },
 
