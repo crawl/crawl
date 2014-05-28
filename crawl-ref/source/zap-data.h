@@ -204,7 +204,7 @@ static const zap_info zap_data[] =
 {
     ZAP_TUKIMAS_DANCE,
     "",
-    200,
+    100,
     NULL,
     NULL,
     BLACK,
