@@ -2924,6 +2924,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_SUMMONED;
     if (mons.is(MB_PERM_SUMMON))
         ch |= TILE_FLAG_PERM_SUMMON;
+    if (mons.is(MB_DEATHS_DOOR))
+        ch |= TILE_FLAG_DEATHS_DOOR;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
