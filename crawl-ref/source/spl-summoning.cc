@@ -702,11 +702,12 @@ bool summon_holy_warrior(int pow, bool punish)
 
 /**
  * Essentially a macro to allow for a generic fail pattern to avoid leaking
- * information about invisible enemies. (Not implmented as a macro because I
+ * information about invisible enemies. (Not implemented as a macro because I
  * find they create unreadable code.)
+ *
  * @return SPRET_SUCCESS
  **/
-bool _fail_tukimas()
+static bool _fail_tukimas()
 {
     mprf("You can't see a target there!");
     return false; // Waste the turn - no anti-invis tech
@@ -715,7 +716,7 @@ bool _fail_tukimas()
 /**
  * Gets an item description for use in Tukima's Dance messages.
  **/
-string _get_item_desc(item_def* wpn, bool target_is_player)
+static string _get_item_desc(item_def* wpn, bool target_is_player)
 {
     return wpn->name(target_is_player ? DESC_YOUR : DESC_THE);
 }
@@ -746,7 +747,7 @@ bool tukima_affects(const monster *mon)
  * @param target     The spell's target.
  * @return           Whether the target is valid.
  **/
-bool _check_tukima_validity(const actor *target)
+static bool _check_tukima_validity(const actor *target)
 {
     bool target_is_player = target == &you;
     item_def* wpn = target->weapon();
@@ -802,7 +803,7 @@ bool _check_tukima_validity(const actor *target)
  * @param target            The spell's target (monster or player)
  * @param force_friendly    Whether the weapon should always be pro-player.
  **/
-void _animate_weapon(int pow, actor* target, bool force_friendly)
+static void _animate_weapon(int pow, actor* target, bool force_friendly)
 {
     bool target_is_player = target == &you;
     item_def* wpn = target->weapon();
