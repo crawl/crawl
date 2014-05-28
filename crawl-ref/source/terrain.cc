@@ -335,6 +335,12 @@ bool feat_is_closed_door(dungeon_feature_type feat)
            || feat == DNGN_SEALED_DOOR;
 }
 
+bool feat_is_sealed(dungeon_feature_type feat)
+{
+    return feat == DNGN_SEALED_STAIRS_DOWN || feat == DNGN_SEALED_STAIRS_UP
+           || feat == DNGN_SEALED_DOOR;
+}
+
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
 {
     return feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE;
