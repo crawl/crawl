@@ -2827,7 +2827,9 @@ static void _degeneration_card(int power, deck_rarity_type rarity)
 
         if (mons && (mons->wont_attack() || !mons->can_polymorph()
             || mons_is_firewood(mons)))
+        {
             continue;
+        }
 
         if (mons &&
             x_chance_in_y((power_level + 1) * 5 + random2(5), mons->hit_dice))
