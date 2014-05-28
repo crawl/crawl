@@ -834,7 +834,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->is_fiery()
                 || player &&
                    (you.duration[DUR_FIRE_SHIELD]
-                    || you.mutation[MUT_IGNITE_BLOOD]
+                    || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
 #if TAG_MAJOR_VERSION == 34
                     || you.species == SP_DJINNI
 #endif
@@ -843,7 +843,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->res_holy_fire() > 0;
     case CLOUD_COLD:
         return act->is_icy()
-               || (player && you.mutation[MUT_ICEMAIL]);
+               || (player && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]);
     case CLOUD_MEPHITIC:
         return act->res_poison() > 0 || act->is_unbreathing();
     case CLOUD_POISON:

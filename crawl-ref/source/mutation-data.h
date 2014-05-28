@@ -1065,6 +1065,7 @@ static const mutation_def mut_data[] =
   "icemail"
 },
 
+#if TAG_MAJOR_VERSION == 34
 { MUT_CONSERVE_SCROLLS,               0,  1, false, false,
   "conserve scrolls",
 
@@ -1083,6 +1084,7 @@ static const mutation_def mut_data[] =
   {"", "", ""},
   "conserve potions",
 },
+#endif
 
 { MUT_PASSIVE_FREEZE,                 0,  1, false, false,
   "passive freeze",
@@ -1684,6 +1686,25 @@ static const mutation_def mut_data[] =
   {"You feel warm-blooded.", "", ""},
 
   "cold-blooded"
+},
+
+{ MUT_FLAME_CLOUD_IMMUNITY,               0,  1, false, false,
+  "flame cloud immunity",
+
+  {"You are immune to clouds of flame.", "", ""},
+  {"You feel less concerned about heat.", "", ""},
+  {"", "", ""},
+
+  "flame cloud immunity",
+},
+
+{ MUT_FREEZING_CLOUD_IMMUNITY,               0,  1, false, false,
+  "freezing cloud immunity",
+
+  {"You are immune to freezing clouds.", "", ""},
+  {"You feel less concerned about cold.", "", ""},
+  {"", "", ""},
+  "freezing cloud immunity",
 },
 
 };

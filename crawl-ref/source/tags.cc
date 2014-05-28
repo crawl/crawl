@@ -2646,6 +2646,26 @@ static void tag_read_you(reader &th)
         you.innate_mutation[MUT_ROT_IMMUNITY] = 1;
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_DS_CLOUD_MUTATIONS
+        && you.species == SP_DEMONSPAWN)
+    {
+        if (you.innate_mutation[MUT_CONSERVE_POTIONS])
+        {
+            you.mutation[MUT_CONSERVE_POTIONS] =
+            you.innate_mutation[MUT_CONSERVE_POTIONS] = 0;
+
+            you.mutation[MUT_FREEZING_CLOUD_IMMUNITY] =
+            you.innate_mutation[MUT_FREEZING_CLOUD_IMMUNITY] = 1;
+        }
+        if (you.innate_mutation[MUT_CONSERVE_SCROLLS])
+        {
+            you.mutation[MUT_CONSERVE_SCROLLS] =
+            you.innate_mutation[MUT_CONSERVE_SCROLLS] = 0;
+
+            you.mutation[MUT_FLAME_CLOUD_IMMUNITY] =
+            you.innate_mutation[MUT_FLAME_CLOUD_IMMUNITY] = 1;
+        }
+    }
 #endif
 
     count = unmarshallUByte(th);
@@ -2656,6 +2676,12 @@ static void tag_read_you(reader &th)
         dt.level_gained = unmarshallByte(th);
         ASSERT_RANGE(dt.level_gained, 1, 28);
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 34
+        if (dt.mutation == MUT_CONSERVE_POTIONS)
+            dt.mutation = MUT_FREEZING_CLOUD_IMMUNITY;
+        else if (dt.mutation == MUT_CONSERVE_SCROLLS)
+            dt.mutation = MUT_FLAME_CLOUD_IMMUNITY;
+#endif
         ASSERT_RANGE(dt.mutation, 0, NUM_MUTATIONS);
         you.demonic_traits.push_back(dt);
     }
