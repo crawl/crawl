@@ -413,7 +413,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool ignore_transform) const
 {
-    size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
+    const size_type bsize = body_size(PSIZE_TORSO, ignore_transform);
 
     if (species == SP_FELID)
         return false;
