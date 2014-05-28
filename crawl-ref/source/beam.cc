@@ -1576,7 +1576,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         else if (res <= 0 && doFlavouredEffects)
-            corrode_monster(mons, pbolt.agent());
+            splash_monster_with_acid(mons, pbolt.agent());
         break;
     }
 

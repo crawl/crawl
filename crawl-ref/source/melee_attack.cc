@@ -1354,7 +1354,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             mprf("%s is splashed with acid.",
                  defender->name(DESC_THE).c_str());
-            corrode_monster(defender->as_monster(), &you);
+            splash_monster_with_acid(defender->as_monster(), &you);
         }
 
         // TODO: remove this? Unarmed poison attacks?
@@ -2198,14 +2198,17 @@ void melee_attack::attacker_sustain_passive_damage()
         {
             int acid_strength = resist_adjust_damage(attacker, BEAM_ACID, rA, 5);
             item_def *weap = weapon;
+            // Spectral weapons can't be corroded (but can take acid damage).
+            bool avatar = attacker->is_monster()
+                          && mons_is_avatar(attacker->as_monster()->type);
 
             if (!weap)
                 weap = attacker->slot_item(EQ_GLOVES);
 
-            if (weap)
+            if (weap && !avatar)
             {
-                if (x_chance_in_y(acid_strength + 1, 20))
-                    corrode_item(*weap, attacker);
+                if (x_chance_in_y(acid_strength + 1, 30))
+                    corrode_actor(attacker);
             }
             else if (attacker->is_player())
             {
@@ -2734,7 +2737,7 @@ void melee_attack::splash_defender_with_acid(int strength)
         special_damage += roll_dice(2, 4);
         if (defender_visible)
             mprf("%s is splashed with acid.", defender->name(DESC_THE).c_str());
-        corrode_monster(defender->as_monster(), attacker);
+        splash_monster_with_acid(defender->as_monster(), attacker);
     }
 }
 

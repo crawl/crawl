@@ -65,6 +65,7 @@ void handle_time();
 void recharge_rods(int aut, bool floor_only);
 void recharge_xp_evokers(int exp);
 
+void corrode_actor(actor *act);
 void slime_wall_damage(actor* act, int delay);
 
 #endif
