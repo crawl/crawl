@@ -3252,7 +3252,7 @@ bool item_def::is_greedy_sacrificeable() const
 
     if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN)
         || item_needs_autopickup(*this)
-        || item_is_stationary(*this)
+        || item_is_stationary_net(*this)
         || this->inscription.find("!p") != string::npos
         || this->inscription.find("=p") != string::npos
         || this->inscription.find("!*") != string::npos
