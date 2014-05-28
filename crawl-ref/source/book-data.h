@@ -90,9 +90,9 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 },
 
 {   // Book of Enchantments
+    SPELL_TUKIMAS_DANCE,
     SPELL_CAUSE_FEAR,
     SPELL_SILENCE,
-    SPELL_TUKIMAS_DANCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
     SPELL_DISCORD,
@@ -372,8 +372,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_APPORTATION,
     SPELL_BLINK,
-    SPELL_INTOXICATE,
     SPELL_TUKIMAS_DANCE,
+    SPELL_INTOXICATE,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
