@@ -67,20 +67,21 @@ saltchars = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 def make_salt(saltlen):
     return ''.join(random.choice(saltchars) for x in xrange(0,saltlen))
 
+def get_salt(passwd):
+    algo = config.get("crypt_algorithm", "6")
+    if algo:
+        salt = "$%s$%s$" % (algo, make_salt(config.crypt_salt_length))
+    else:
+        salt = make_salt(2)
+    return salt
+
 def register_user(username, passwd, email): # Returns an error message or None
     if passwd == "": return "The password can't be empty!"
     passwd = passwd[0:config.max_passwd_length]
     username = username.strip()
     if not re.match(config.nick_regex, username): return "Invalid username!"
 
-    if config.crypt_algorithm == "broken":
-        salt = passwd
-    elif config.crypt_algorithm:
-        salt = "$%s$%s$" % (config.crypt_algorithm,
-                            make_salt(config.crypt_salt_length))
-    else:
-        salt = make_salt(2)
-
+    salt = get_salt(passwd)
     crypted_pw = crypt.crypt(passwd, salt)
 
     try:
@@ -106,14 +107,7 @@ def set_password(username, passwd): # Returns True or False
     if passwd == "": return False
     passwd = passwd[0:config.max_passwd_length]
 
-    if config.crypt_algorithm == "broken":
-        salt = passwd
-    elif config.crypt_algorithm:
-        salt = "$%s$%s$" % (config.crypt_algorithm,
-                            make_salt(config.crypt_salt_length))
-    else:
-        salt = make_salt(2)
-
+    salt = get_salt(passwd)
     crypted_pw = crypt.crypt(passwd, salt)
 
     try:

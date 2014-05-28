@@ -16,10 +16,7 @@ kill_timeout: Seconds until crawl is killed after HUP is sent.
 crypt_algorithm:
   crypt() algorithm, e.g. "1" for MD5 or "6" for SHA-512; see crypt(3). If
   false, use traditional DES (but then only the first eight characters of the
-  password are significant). If set to "broken", use traditional DES with
-  the password itself as the salt; this is necessary for compatibility with
-  dgamelaunch, but should be avoided if possible because it leaks the first
-  two characters of the password's plaintext.
+  password are significant).
 crypt_salt_length:
   The length of the salt string to use. If crypt_algorithm is false, this
   setting is ignored and the salt is two characters.
