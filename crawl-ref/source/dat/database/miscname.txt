@@ -435,13 +435,18 @@ Mmmm... Yummy @_fruit_type_@.
 
 That @_fruit_type_@ was delicious!
 
+Mmm - a full handful of @_small_fruits_@!
+
 w:1
 That @_peel_fruit_@ was delicious! Even the peel tasted good!
 
 w:1
-That lemon was rather sour... but delicious nonetheless!
+That @_sour_fruit_@ was rather sour... but delicious nonetheless!
 
 That choko was very bland.
+
+w:1
+That durian smelled terrible... but tasted delicious!
 
 w:1
 That snozzcumber tasted truly putrid!
@@ -458,17 +463,72 @@ apple
 
 apricot
 
+tomato
+
+peach
+
+plum
+
 rambutan
 
 lychee
 
-strawberry
+mango
 
-grape
+watermelon
+
+coconut
+
+breadfruit
+
+eggfruit
+
+dragonfruit
+
+guava
+
+mangosteen
+
+tangerine
+%%%%
+_small_fruits_
+
+strawberries
+
+blueberries
+
+blackberries
+
+bilberries
+
+raspberries
+
+huckleberries
+
+gooseberries
+
+cherries
+
+grapes
+
+sultanas
+
+figs
+
+dates
+
+almonds
+
 %%%%
 _peel_fruit_
 
 orange
 
 banana
+%%%%
+_sour_fruit_
+
+lemon
+
+lime
 %%%%
