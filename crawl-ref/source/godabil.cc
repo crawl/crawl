@@ -1544,6 +1544,105 @@ bool beogh_water_walk()
            && you.piety >= piety_breakpoint(4);
 }
 
+/**
+ * Has the monster been given a Beogh gift?
+ *
+ * @param mon the orc in question.
+ * @returns whether you have given the monster a Beogh gift before now.
+ */
+static bool _given_gift(monster* mon)
+{
+    return mon->props.exists("given beogh weapon")
+            || mon->props.exists("given beogh armour")
+            || mon->props.exists("given beogh shield");
+}
+
+/**
+ * Allow the player to give an item to a named orcish ally that hasn't
+ * been given a gift before
+ *
+ * @returns whether an item was given.
+ */
+bool beogh_gift_item()
+{
+    bolt beam;
+    dist spd;
+
+    spd.isValid = spell_direction(spd, beam, DIR_TARGET,
+                                  TARG_FRIEND, LOS_RADIUS);
+
+    if (!spd.isValid)
+        return false;
+
+    if (spd.target == you.pos())
+    {
+       mpr("You can't give yourself an item!");
+       return false;
+    }
+
+    monster* mons = monster_at(spd.target);
+
+    if (!mons)
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        return false;
+    }
+
+    if (!is_orcish_follower(mons))
+    {
+        mpr("That's not an orcish ally!");
+        return false;
+    }
+
+    if (!mons->is_named())
+    {
+        mpr("That orc has not proved itself worthy of your gift.");
+        return false;
+    }
+
+    const char* monsname = mons->name(DESC_THE, false).c_str();
+
+    if (_given_gift(mons))
+    {
+        mprf("%s has already been given a gift.", monsname);
+        return false;
+    }
+
+    int item_slot = prompt_invent_item("Give which item?",
+                                       MT_INVLIST, OSEL_ANY, true);
+
+    if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    item_def& gift = you.inv[item_slot];
+
+    const bool shield = is_shield(gift);
+    const bool body_armour = gift.base_type == OBJ_ARMOUR
+                             && get_armour_slot(gift) == EQ_BODY_ARMOUR;
+
+    if (!(gift.base_type == OBJ_WEAPONS && mons->could_wield(gift)
+          || body_armour && check_armour_size(gift, mons->body_size())
+          || shield && mons->hands_reqd(*mons->weapon()) != HANDS_TWO))
+    {
+        mprf("%s can't use that.", monsname);
+        return false;
+    }
+    mons->take_item(item_slot, body_armour ? MSLOT_ARMOUR :
+                                    shield ? MSLOT_SHIELD :
+                                             MSLOT_WEAPON);
+    if (shield)
+        mons->props["given beogh shield"] = true;
+    else if (body_armour)
+        mons->props["given beogh armour"] = true;
+    else
+        mons->props["given beogh weapon"] = true;
+
+    return true;
+}
+
 void jiyva_paralyse_jellies()
 {
     mprf("You call upon nearby slimes to pray to %s.",

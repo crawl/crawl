@@ -316,7 +316,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
-      "walk on water" },
+      "walk on water and give items to your followers" },
     // Jiyva
     { "request a jelly",
       "temporarily halt your jellies' item consumption",
@@ -454,7 +454,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
-      "walk on water" },
+      "walk on water or give items to your followers" },
     // Jiyva
     { "request a jelly",
       "temporarily halt your jellies' item consumption",
