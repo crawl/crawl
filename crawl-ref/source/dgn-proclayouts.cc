@@ -188,7 +188,9 @@ dungeon_feature_type sanitize_feature(dungeon_feature_type feature, bool strict)
 {
     if (feat_is_gate(feature) || feature == DNGN_TELEPORTER)
         feature = DNGN_STONE_ARCH;
-    if (feat_is_stair(feature))
+    if (feature == DNGN_SEALED_DOOR)
+        feature = DNGN_CLOSED_DOOR;
+    if (feat_is_stair(feature) || feat_is_sealed(feature))
         feature = strict ? DNGN_FLOOR : DNGN_STONE_ARCH;
     if (feat_is_altar(feature))
         feature = DNGN_FLOOR;

@@ -1907,13 +1907,6 @@ void timeout_tombs(int duration)
     }
 }
 
-static bool _feat_is_sealed(dungeon_feature_type feat)
-{
-    return feat == DNGN_SEALED_DOOR
-        || feat == DNGN_SEALED_STAIRS_DOWN
-        || feat == DNGN_SEALED_STAIRS_UP;
-}
-
 void timeout_terrain_changes(int duration, bool force)
 {
     if (!duration && !force)
@@ -1932,7 +1925,7 @@ void timeout_terrain_changes(int duration, bool force)
             marker->duration -= duration;
 
         if (marker->change_type == TERRAIN_CHANGE_DOOR_SEAL
-            && !_feat_is_sealed(grd(marker->pos)))
+            && !feat_is_sealed(grd(marker->pos)))
         {
             continue;
         }
