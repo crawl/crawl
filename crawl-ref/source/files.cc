@@ -773,69 +773,6 @@ static void _write_ghost_version(writer &outf)
         marshallInt(outf, 0);
 }
 
-class safe_file_writer
-{
-public:
-    safe_file_writer(const string &filename,
-                     const char *mode = "wb",
-                     bool _lock = false)
-        : target_filename(filename), tmp_filename(target_filename),
-          filemode(mode), lock(_lock), filep(NULL)
-    {
-        tmp_filename = target_filename + ".tmp";
-    }
-
-    ~safe_file_writer()
-    {
-        close();
-        if (tmp_filename != target_filename)
-        {
-            if (rename_u(tmp_filename.c_str(), target_filename.c_str()))
-            {
-                end(1, true, "failed to rename %s -> %s",
-                    tmp_filename.c_str(), target_filename.c_str());
-            }
-        }
-    }
-
-    FILE *open()
-    {
-        if (!filep)
-        {
-            filep = (lock? lk_open(filemode, tmp_filename)
-                     : fopen_u(tmp_filename.c_str(), filemode));
-            if (!filep)
-            {
-                end(-1, true,
-                    "Failed to open \"%s\" (%s; locking:%s)",
-                    tmp_filename.c_str(),
-                    filemode,
-                    lock? "YES" : "no");
-            }
-        }
-        return filep;
-    }
-
-    void close()
-    {
-        if (filep)
-        {
-            if (lock)
-                lk_close(filep, tmp_filename);
-            else
-                fclose(filep);
-            filep = NULL;
-        }
-    }
-
-private:
-    string target_filename, tmp_filename;
-    const char *filemode;
-    bool lock;
-
-    FILE *filep;
-};
-
 static void _write_tagged_chunk(const string &chunkname, tag_type tag)
 {
     writer outf(you.save, chunkname);
