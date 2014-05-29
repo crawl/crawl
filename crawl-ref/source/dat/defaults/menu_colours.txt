@@ -69,10 +69,6 @@ menu_colour += pickup:green:god gift
 menu_colour += inventory:white:\w \+\s
 menu_colour += inventory:white:\w \#\s
 
-# Grey out un-pick-up-able items from pickup menu.  Using ^= to
-# override food_colouring.txt.
-menu_colour ^= pickup:darkgrey:stationary
-
 
 # Not really menu.
 menu_colour += notes:white:Reached XP level
