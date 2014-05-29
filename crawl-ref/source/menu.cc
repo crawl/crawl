@@ -367,10 +367,15 @@ int Menu::get_cursor() const
     if (last_selected == -1)
         return -1;
 
+    unsigned int last = last_selected % item_count();
     unsigned int next = (last_selected + 1) % item_count();
 
-    if (items[next]->level != MEL_ITEM)
+    // Items with no hotkeys are unselectable
+    while (next != last && (items[next]->hotkeys.empty()
+                            || items[next]->level != MEL_ITEM))
+    {
         next = (next + 1) % item_count();
+    }
 
     return next;
 }
