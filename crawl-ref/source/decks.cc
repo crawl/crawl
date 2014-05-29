@@ -146,12 +146,6 @@ const deck_archetype deck_of_battle[] =
     END_OF_DECK
 };
 
-const deck_archetype deck_of_enchantments[] =
-{
-    { CARD_ELIXIR, {5, 5, 5} },
-    END_OF_DECK
-};
-
 const deck_archetype deck_of_summoning[] =
 {
     { CARD_CRUSADE,         {5, 5, 5} },
