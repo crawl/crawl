@@ -1,5 +1,7 @@
 ###############################################################################
 # layout_city.des: City-like layouts; streets, houses, rooms ...
+#
+# TODO: Move layout_regular_city and layout_chaotic_city here?
 ###############################################################################
 
 : require("dlua/util.lua")

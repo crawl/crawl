@@ -555,14 +555,15 @@ MAP
 ENDMAP
 
 ##############################################################
-# layout_city
+# layout_regular_city
 #
 # This replaces dungeon.cc:_city_level().
+# Previously named "layout_city".
 #
 # Only available on upper Lair depths otherwise the high
 # ruination makes it basically indistinguishable from a big
 # open room
-NAME:   layout_city
+NAME:   layout_regular_city
 DEPTH:  Lair:1-2, Snake, Crypt:1-4, Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
@@ -718,10 +719,12 @@ MAP
 ENDMAP
 
 ##############################################################
-# layout_misc
+# layout_misc_corridors
 #
 # This replaces dungeon.cc:_plan_5().
-NAME:   layout_misc
+# Previously named "layout_misc".
+#
+NAME:   layout_misc_corridors
 DEPTH:  D, Lair, Snake, Elf, Crypt, Zot, Pan
 WEIGHT: 10
 ORIENT: encompass
@@ -1137,12 +1140,14 @@ MAP
 ENDMAP
 
 ##############################################################
-# layout_delve
+# layout_spider_delve
+#
+# Previously named "layout_delve".
 #
 # TODO: Use "layout_type_anastomotic" tag for passage-y version
 #       and "layout_type_raniform" tag for more open version.
 #
-NAME:   layout_delve
+NAME:   layout_spider_delve
 DEPTH:  Spider
 CHANCE: 100%
 ORIENT: encompass
@@ -1184,7 +1189,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 }}
 
 ################################################################
-# layout_cocytus
+# layout_cocytus_delve
+#
+# Previously named "layout_cocytus".
 #
 # An ice cave approximation for Cocytus.  There is one main
 # delved path that is guaranteed to contain at least one up and
@@ -1193,7 +1200,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 # water.  To avoid trapping the player, all random teleports go
 # to the main path.
 #
-NAME:   layout_cocytus
+NAME:   layout_cocytus_delve
 DEPTH:  Coc
 CHANCE: 100%
 ORIENT: encompass
@@ -1314,9 +1321,11 @@ TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_anastomo
 }}
 
 ##############################################################
-# layout_dis, by rwbarton
+# layout_subdivisions, by rwbarton
 #
-NAME:   layout_dis
+# Previously named "layout_dis".
+#
+NAME:   layout_subdivisions
 DEPTH:  Dis:1-6
 WEIGHT: 20
 ORIENT: encompass
@@ -1668,9 +1677,11 @@ MAP
 ENDMAP
 
 ##############################################################
-# layout_swamp
+# layout_basic_swamp
 #
-NAME:   layout_swamp
+# Previously named "layout_swamp".
+#
+NAME:   layout_basic_swamp
 DEPTH:  Swamp
 WEIGHT: 25
 ORIENT: encompass

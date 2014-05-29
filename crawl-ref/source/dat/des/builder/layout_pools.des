@@ -123,14 +123,16 @@
 }}
 
 ##############################################################
-# layout_pools
+# layout_cave_pools
+#
+# Previously named "layout_pools".
 #
 # This layout creates an irregular cave with clumps of rock and
 #  possibly a few pools of water.  There are more pools at
 #  deeper depths.  Starting at depth 19, there is an increasing
 #  chance of lava pools instead of water pools (never mixed).
 #
-NAME:   layout_pools
+NAME:   layout_cave_pools
 DEPTH:  D:9-, Depths
 WEIGHT: 10
 ORIENT: encompass
