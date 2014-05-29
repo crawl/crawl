@@ -1283,6 +1283,12 @@ void pickup(bool partial_quantity)
             // Must save this because pickup can destroy the item.
             next = mitm[o].link;
 
+            if (item_is_stationary(mitm[o]))
+            {
+                o = next;
+                continue;
+            }
+
             if (keyin != 'a')
             {
                 string prompt = "Pick up %s? ((y)es/(n)o/(a)ll/(m)enu/*?g,/q)";
