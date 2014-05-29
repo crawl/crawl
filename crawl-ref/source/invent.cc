@@ -1079,11 +1079,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
         menu.set_type(mtype);
         menu.set_title(title);
         if (mtype == MT_PICKUP)
-        {
             menu.set_tag("pickup");
-            // Need this before load_items.
-            menu.set_flags(menu.get_flags() | MF_DROP_PICKUP);
-        }
 
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
@@ -1294,8 +1290,6 @@ static unsigned char _invent_select(const char *title = NULL,
                                     Menu::selitem_tfn selitemfn = NULL,
                                     const vector<SelItem> *pre_select = NULL)
 {
-    if (type == MT_DROP || type == MT_PICKUP)
-        flags |= MF_DROP_PICKUP;
     InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
     menu.set_preselect(pre_select);
