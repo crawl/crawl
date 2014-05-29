@@ -206,7 +206,9 @@ string InvEntry::get_text(bool need_cursor) const
     else
         tstr << ' ';
 
-    if (!selected_qty)
+    if (nosel)
+        tstr << ' ';
+    else if (!selected_qty)
         tstr << '-';
     else if (selected_qty < quantity)
         tstr << '#';
