@@ -859,10 +859,20 @@ menu_letter InvMenu::load_items(const vector<const item_def*> &mitems,
         {
             InvEntry *ie = items_in_class[j];
             if (tag == "pickup")
-                ie->tag = "pickup";
+            {
+                if (ie->item && item_is_stationary(*ie->item))
+                    ie->tag = "nopickup";
+                else
+                    ie->tag = "pickup";
+            }
             // If there's no hotkey, provide one.
             if (ie->hotkeys[0] == ' ')
-                ie->hotkeys[0] = ckey++;
+            {
+                if (ie->tag == "nopickup")
+                    ie->hotkeys.clear();
+                else
+                    ie->hotkeys[0] = ckey++;
+            }
             do_preselect(ie);
 
             add_entry(procfn? (*procfn)(ie) : ie);
