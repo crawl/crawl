@@ -23,6 +23,7 @@ void do_uncurse_item(item_def &item, bool inscribe = true, bool no_ash = false,
 void set_net_stationary(item_def &item);
 bool item_is_stationary(const item_def &item) PURE;
 bool item_is_stationary_net(const item_def &item) PURE;
+actor *net_holdee(const item_def &net);
 
 // ident:
 bool item_ident(const item_def &item, iflags_t flags) PURE;
