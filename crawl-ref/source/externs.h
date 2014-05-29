@@ -513,21 +513,30 @@ typedef uint32_t iflags_t;
 
 struct item_def
 {
-    object_class_type base_type:8; // basic class (eg OBJ_WEAPON)
-    uint8_t        sub_type;       // type within that class (eg WPN_DAGGER)
+    object_class_type base_type:8; ///< basic class (eg OBJ_WEAPON)
+    uint8_t        sub_type;       ///< type within that class (eg WPN_DAGGER)
 #pragma pack(push,2)
-    union { short plus; monster_type mon_type:16; }; // +to hit, charges, corpse mon id
+    /// +to hit, charges, corpse mon id
+    union { short plus; monster_type mon_type:16; };
 #pragma pack(pop)
-    short          plus2;          // +to dam, sub-sub type for boots/helms
-    int            special;        // special stuff
-    colour_t       colour;         // item colour
-    uint8_t        rnd;            // random number, used for tile choice
-    short          quantity;       // number of items
-    iflags_t       flags;          // item status flags
+    short          plus2;          ///< +to dam, sub-sub type for boots/helms
+    int            special;        ///< special stuff
+    colour_t       colour;         ///< item colour
+    uint8_t        rnd;            ///< random number, used for tile choice
+    short          quantity;       ///< number of items
+    iflags_t       flags;          ///< item status flags
 
-    coord_def pos;     // for inventory items == (-1, -1)
-    short  link;       // link to next item;  for inventory items = slot
-    short  slot;       // Inventory letter
+    /// The location of the item. Items in player inventory are indicated by
+    /// pos (-1, -1), items in monster inventory by (-2, -2), and and items
+    /// in shops by (0, y) for y >= 5.
+    coord_def pos;
+    /// Index in the mitm array of the next item in the stack. NON_ITEM for
+    /// the last item in a stack. For items in player inventory, instead
+    /// equal to slot. For items in monster inventory, equal to
+    /// NON_ITEM + 1 + mindex
+    short  link;
+    // Inventory letter of the item.
+    short  slot;
 
     unsigned short orig_place;
     short          orig_monnum;
@@ -551,10 +560,16 @@ public:
     bool has_spells() const;
     bool cursed() const;
     int book_number() const;
-    zap_type zap() const; // what kind of beam it shoots (if wand).
+    zap_type zap() const; ///< what kind of beam it shoots (if wand).
 
-    // Returns index in mitm array. Results are undefined if this item is
-    // not in the array!
+    /**
+     * Find the index of an item in the mitm array. Results are undefined
+     * if this item is not in the array!
+     *
+     * @pre The item is actually in the mitm array.
+     * @returns The index of this item in the mitm array, between
+     *          0 and MAX_ITEMS-1.
+     */
     int  index() const;
 
     int  armour_rating() const;
@@ -566,25 +581,33 @@ public:
         *this = item_def();
     }
 
-    // Sets this item as being held by a given monster.
+    /**
+     * Sets this item as being held by a given monster.
+     *
+     * @param midx The mindex of the monster.
+     */
     void set_holding_monster(int midx);
 
-    // Returns monster holding this item.  NULL if none.
+    /**
+     * Get the monster holding this item.
+     *
+     * @return A pointer to the monster holding this item, null if none.
+     */
     monster* holding_monster() const;
 
-    // Returns true if a monster is holding this item.
+    /** Is this item being held by a monster? */
     bool held_by_monster() const;
 
     bool defined() const;
     bool is_valid(bool info = false) const;
 
-    // Returns true if this item should be preserved as far as possible.
+    /** Should this item be preserved as far as possible? */
     bool is_critical() const;
 
-    // Returns true if this item should not normally be enchanted.
+    /** Is this item of a type that should not be generated enchanted? */
     bool is_mundane() const;
 
-    // Returns true if this item causes autoexplore to visit it.
+    /** Should greedy-sacrifice autoexplore visit this item? */
     bool is_greedy_sacrificeable() const;
 
 private:
