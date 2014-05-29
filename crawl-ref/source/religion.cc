@@ -3564,7 +3564,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
     }
 }
 
-/*
+/**
  * Does this god accept items for sacrifice?
  *
  * @param god The god.
@@ -3601,7 +3601,7 @@ bool god_likes_items(god_type god, bool greedy_explore)
     }
 }
 
-/*
+/**
  * Does a god like a particular item for sacrifice?
  *
  * @param god The god.

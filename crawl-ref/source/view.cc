@@ -200,7 +200,7 @@ static monster_type _mons_genus_keep_uniques(monster_type mc)
     return mons_is_unique(mc) ? mc : mons_genus(mc);
 }
 
-/*
+/**
  * Monster list simplification
  *
  * When too many monsters come into view at once, we group the ones with the

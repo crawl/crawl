@@ -1801,7 +1801,7 @@ bool kiku_receive_corpses(int pow)
     }
 }
 
-/*
+/**
  * Destroy a corpse at the player's location
  *
  * @returns True if a corpse was destroyed, false otherwise.

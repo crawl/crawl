@@ -1,7 +1,7 @@
 #ifndef RANDOM_WEIGHT_H
 #define RANDOM_WEIGHT_H
 
-/*
+/**
  * Get a random weighted choice.
  *
  * Weights are assumed to be non-negative, but are allowed to be zero.
@@ -27,7 +27,7 @@ T* random_choose_weighted(vector<pair<T, int> >& choices)
     return NULL;
 }
 
-/*
+/**
  * Get an index for a random weighted choice using a fixed vector of
  * weights.
  *

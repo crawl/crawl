@@ -2477,7 +2477,7 @@ bool gives_resistance(const item_def &item)
     return false;
 }
 
-/*
+/**
  * Return the mass of an item (aum).
  *
  * @param item The item.

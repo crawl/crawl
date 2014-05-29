@@ -261,7 +261,7 @@ bool trap_def::is_safe(actor* act) const
     return false;
 }
 
-/*
+/**
  * Get the item index of the first net on the square.
  *
  * @param where The location.
@@ -1732,7 +1732,7 @@ level_id generic_shaft_dest(coord_def pos, bool known = false)
     return _generic_shaft_dest(level_pos(level_id::current(), pos));
 }
 
-/*
+/**
  * When a player falls through a shaft at a location, disperse items on the
  * target level.
  *

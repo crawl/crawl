@@ -310,7 +310,7 @@ stack_iterator stack_iterator::operator++(int dummy)
     return copy;
 }
 
-/*
+/**
  * Reduce quantity of an inventory item, do cleanup if item goes away.
  * @returns True if stack of items no longer exists, false otherwise.
 */
@@ -637,7 +637,7 @@ void lose_item_stack(const coord_def& where)
     igrd(where) = NON_ITEM;
 }
 
-/*
+/**
  * How many movable items are there at a location?
  *
  * @param obj The item link for the location.
@@ -655,7 +655,7 @@ int count_movable_items(int obj)
     return result;
 }
 
-/*
+/**
  * Fill the given vector with the items on the given location link.
  *
  * @param[out] items A vector to hold the item_defs of the item.
@@ -1168,7 +1168,7 @@ string origin_desc(const item_def &item)
     return desc;
 }
 
-/*
+/**
  * Pickup a single item stack at the given location link
  *
  * @param link The location link
@@ -1243,7 +1243,7 @@ bool player_on_single_stack()
         return mitm[o].link == NON_ITEM && mitm[o].quantity > 1;
 }
 
-/*
+/**
  * Do the pickup command.
  *
  * @param partial_quantity If true, prompt for a quantity to pick up when
@@ -1609,7 +1609,7 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
-/*
+/**
  * Move the given item and quantity to the player's inventory.
  *
  * Returns 1 so pickup can continue if the pickup fails due to the item being

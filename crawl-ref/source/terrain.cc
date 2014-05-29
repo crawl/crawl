@@ -1701,7 +1701,7 @@ void nuke_wall(const coord_def& p)
     env.level_map_mask(p) |= MMT_NUKED;
 }
 
-/*
+/**
  * Check if an actor can cling to a cell.
  *
  * Wall clinging is done only on orthogonal walls.
@@ -1719,7 +1719,7 @@ bool cell_is_clingable(const coord_def pos)
     return false;
 }
 
-/*
+/**
  * Check if an actor can cling from a cell to another.
  *
  * "clinging" to a wall means being orthogonally (left, right, up, down) next

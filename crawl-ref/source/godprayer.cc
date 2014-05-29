@@ -788,7 +788,7 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js, int quantity)
     return relative_gain;
 }
 
-/*
+/**
  * Sacrifice the items at the player's location to the player's god.
  *
  * @returns True if an item was sacrificed, false otherwise.
