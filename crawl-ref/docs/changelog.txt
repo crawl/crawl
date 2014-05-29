@@ -1,4 +1,4 @@
-Stone Soup 0.15 (up to 0.15-a0-1064-gdf5a4c5)
+Stone Soup 0.15 (up to 0.15-a0-1140-g4b0d1de)
 --------------------------------------------
 * Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
 * Ranged combat has been rewritten from the ground up.
@@ -33,11 +33,17 @@ Character
   - always get the full effect of all potions;
   - can always mutate; and
   - always get the full effect of all mutations.
+* Some Demonspawn mutations have been modified:
+  - The Foul Stench facet gives rot immunity earlier and separately instead of
+    saprovore.
+  - Facets which gave potion/scroll item conservation now give freezing/fire
+    cloud immunity earlier and separately.
 
 Monsters
 --------
 * Many enemy glyphs have been adjusted. See 0.14_monster_glyphs.txt.
 * Corrosion affects all of your equipment, but only temporarily.
+* The chance of corroding equipment no longer considers item enchantment.
 * Enemies are more intelligent about using area-of-attack spells such as
   Symbol of Torment and Chain Lightning when you are not in sight.
 * Manticores now move as fast as the player.
@@ -47,7 +53,7 @@ Monsters
 * Base draconians can become nonbase draconians with experience.
 * Undead and nonliving enemies regenerate as fast as other enemies.
 * Ghouls and necrophages can no longer equip weapons or armour.
-* Monster melee attacks can no longer destroy items.
+* Item destruction of scrolls and potions has been completely removed.
 * Silver statues and orange crystal statues are immune to disintegration,
   but have less health and AC and have their abilities converted to spells
   such that they spam less; this implies OCS confusion can be resisted.
@@ -68,6 +74,8 @@ Spells
   for several turns instead of destroying potions.
 * Spider Form now moves at normal speed.
 * Death Channel lasts twice as long.
+* Tukima's Dance now animates weapons held by monsters. The weapons will fight
+  against their former owners. It is also now level 3.
 * The Book of War Chants is no more.
 * Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon,
   Summon Elemental.
@@ -82,7 +90,7 @@ Items
   more than normal blowguns.
 * New unrand: the +8 orange crystal plate armour {Archmagi, Int+3 Clar
   SustAb}.
-* New fixedart: the +6 Majin-Bo {vamp, Archmagi, MP+6 Int+6}. A quarterstaff
+* New unrand: the +6 Majin-Bo {vamp, Archmagi, MP+6 Int+6}. A quarterstaff
   that takes HP every time you cast a spell.
 * The dagger of Chilly Death now sometimes flash-freezes enemies, slowing their
   movement, and the scimitar of Flaming Death now sometimes applies sticky
@@ -112,15 +120,26 @@ Items
 
 Cards
 -----
-* Decks of wonders now contain Dowsing, Battlelust, Helm, and Shadow instead
-  of Experience, Helix, Sage, and Trowel
-* Decks of dungeon are no more.
-* The Potion card has a new list of effects: power 0 is decay/curing/agility/
-  might/brilliance; 1 has a chance of resistance/haste; 2 has a chance of
-  magic/heal wounds.
+* New cards.
+  - Fortitude, which gives Damage Shaving and a bonus to strength.
+  - Storm, which can make shallow water, a tornado, or cause swiftness.
+  - Degeneration, which polymorphs nearby monsters into weaker ones.
+  - Shaft, which creates a shaft under the player. This is an old effect of the
+    Flight card.
+  - Illusion, which summons an illusion of the player.
+* Revamped cards.
+  - Flame card now spawns flame clouds around the user and on hostiles rather
+    than dealing damage.
+  - Velocity card now hastes the slow and slows hasty rather than simply
+    speeding up the player.
+  - Potion card has a new list of effects.
 * The Mercenary card can generate base demonspawn instead of spriggan riders.
+* Decks of war now contain the Drowsing and Potion cards.
+* Decks of wonders now contain Mercenary, Battlelust, Helm, and Shadow instead
+  of Experience, Helix, Sage, and Trowel.
+* Decks of dungeon are no more.
 * Removed cards: Experience, Sage, Water, Vitrification, Trowel, Minefield,
-  and Shuffle.
+  Shuffle, Warp, Portal, Hammer, Spark, Flight, and Genie.
 
 Gods
 ----
@@ -152,6 +171,14 @@ Gods
           forces.
     - 6*: at an altar, gain a permanent elemental resistance of your choice
           for as long as you worship Qazlal.
+* Nemelex has been revamped.
+  - Nemelex only gives piety for exploration rather than item sacrifices or
+    deck usage.
+  - Peek at Two now reveals the top cards of a deck but cannot be used with
+    other Nemelex abilities.
+  - Nemelex now only gifts decks of war and escape.
+  - Various cards have been changed, added, or removed. See the Cards section
+    for details.
 * Followers of good gods no longer get a chance to turn holy enemies neutral.
 * Zin's Recite no longer prompts for a book, instead affecting all monsters
   in sight with the strongest effects that would impact them.
