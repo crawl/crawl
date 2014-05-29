@@ -39,6 +39,9 @@
 
 }}
 
+##############################################################
+# layout_stronghold
+#
 # Use grid techniques to build up clusters of odd-shaped dwellings that
 # look a little like fortified cities.
 # TODO: - Fix the problem causing buildings to butt up against each
@@ -47,6 +50,7 @@
 # - Fill in more space around the edges
 # - Differentiate in D a little
 # - Add decor in rooms if enough space - pillars, statues, whatever.
+#
 NAME:   layout_stronghold
 DEPTH:  D:10-, Dis:1-6, Lair, Pan
 WEIGHT: 5, 20(Dis), 10(Pan)
@@ -235,12 +239,12 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
 #  at layout_chaotic_city in dgn_layouts.cc.  It can make as
 #  many as 5000, although 4000 is more likely.
 #
-NAME: layout_irregular_city
-DEPTH: D:10-, Dis:1-6, Pan
+NAME:   layout_irregular_city
+DEPTH:  D:10-, Dis:1-6, Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_hmirror no_vmirror
-TAGS: layout_type_city
+TAGS:   overwritable layout allow_dup unrand layout_type_city
+TAGS:   no_rotate no_hmirror no_vmirror
 {{
     local stage_count = 3
 

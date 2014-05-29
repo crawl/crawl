@@ -75,11 +75,14 @@
 
 }}
 
+##############################################################
+# layout_hall_layers
+#
 NAME:   layout_hall_layers
 DEPTH:  Depths, Zot, Lair, Elf
 WEIGHT: 5, 10 (Zot), 20 (Zot:5), 5 (Lair), 10 (Elf)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_halls
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -213,14 +216,18 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
 MAP
 ENDMAP
 
-# Takes one of the primitive shapes and creates nested corridors in that
-# shape, somewhat like an onion. Carves randomly spaced gaps in the walls
-# to connect everything up.
+##############################################################
+# layout_onion
+#
+# Takes one of the primitive shapes and creates nested corridors
+# in that shape, somewhat like an onion. Carves randomly spaced
+# gaps in the walls to connect everything up.
+#
 NAME:   layout_onion
 DEPTH:  Zot, Snake
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_halls
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -250,16 +257,22 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
 MAP
 ENDMAP
 
-# Takes an inverted version of the onion layout so what were walls
-# are now rooms - connects these up with a noise pattern.
+##############################################################
+# layout_catacombs
+#
+# Takes an inverted version of the onion layout so what were
+# walls are now rooms - connects these up with a noise pattern.
 # Hopefully this should look like ancient abandoned catacombs.
-# TODO: Other ways of connecting up the rooms. Need something starting
-# in the centre and spreading out in a branching way, like particle diffusion.
+#
+# TODO: Other ways of connecting up the rooms. Need something
+#       starting in the centre and spreading out in a branching
+#       way, like particle diffusion.
+#
 NAME:   layout_catacombs
 DEPTH:  Crypt,Tar
 WEIGHT: 50, 50 (Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_catacombs
+TAGS:   overwritable layout allow_dup unrand layout_type_catacombs
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -320,13 +333,17 @@ TAGS: overwritable layout allow_dup unrand layout_type_catacombs
   theme.level_material(_G)
 }}
 
+##############################################################
+# layout_onion_interference
+#
 # Layers two onions on top of each other to create an
 # interference pattern (with option xor)
+#
 NAME:   layout_onion_interference
 DEPTH:  Zot:1-4, Snake
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_halls
 {{
 
   local gxm,gym = dgn.max_bounds()
@@ -379,15 +396,21 @@ validate {{
   return count_feature_in_box { feat="." } >= 750
 }}
 
-# This maps the x,y domain to a 3D cylinder extruded along the y-axis in the
-# Worley space. This creates a strong sense of repetition and symmetry along
-# the horizontal whilst still allowing the patterns to connect. Optionally
-# it applies a polar transform producing something sometimes like a spiderweb.
+##############################################################
+# layout_cathedral_of_symmetry
+#
+# This maps the x,y domain to a 3D cylinder extruded along the
+# y-axis in the Worley space. This creates a strong sense of
+# repetition and symmetry along the horizontal whilst still
+# allowing the patterns to connect. Optionally it applies a
+# polar transform producing something sometimes like a
+# spiderweb.
+#
 NAME:   layout_cathedral_of_symmetry
 DEPTH:  Zot, Tar
 WEIGHT: 20, 50(Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_halls
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -483,8 +506,12 @@ TAGS: overwritable layout allow_dup unrand central layout_type_halls
 MAP
 ENDMAP
 
-# This is properly called a labyrinth, but that name is already taken
+##############################################################
+# layout_concentric_octagons
 # Idea by Vivificient, code by infiniplex
+#
+# This is properly called a labyrinth, but that name is already taken
+#
 NAME:   layout_concentric_octagons
 DEPTH:  Snake, Elf, Depths, Zot
 WEIGHT: 5, 10 (Elf), 20 (Zot)

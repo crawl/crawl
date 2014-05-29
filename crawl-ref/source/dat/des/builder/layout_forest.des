@@ -8,12 +8,16 @@
 : require("dlua/layout/hyper.lua")
 : require("dlua/layout/theme.lua")
 
+##############################################################
+# layout_forest
+#
 # A twisty turny forest maze.
+#
 NAME:   layout_twisted_forest
 DEPTH:  Forest
 WEIGHT: 100
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_forest
+TAGS:   overwritable layout allow_dup unrand layout_type_forest
 {{
   if is_validating() then return; end
 
