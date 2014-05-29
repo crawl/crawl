@@ -196,10 +196,6 @@ the Swine card
 
 This card will make you turn pink and root for truffles.
 %%%%
-the Genie card
-
-The Genie may grant you an acquirement or punish you for trying.
-%%%%
 the Feast card
 
 This card feeds you.
