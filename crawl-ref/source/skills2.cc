@@ -648,7 +648,7 @@ int elemental_preference(spell_type spell, int scale)
     return preference;
 }
 
-/*
+/**
  * Compare skill levels
  *
  * It compares the level of 2 skills, and breaks ties by using skill order.

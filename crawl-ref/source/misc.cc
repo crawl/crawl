@@ -522,7 +522,7 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
 }
 
 
-/*
+/**
  * Coagulate and/or rot away blood potions in a stack if necessary.
  * @param blood The blood potion.
 */
@@ -952,7 +952,7 @@ bool maybe_bloodify_square(const coord_def& where)
     return true;
 }
 
-/*
+/**
  * Rotate the wall blood splat tile, so that it is facing the source.
  *
  * Wall blood splat tiles are drawned with the blood dripping down. We need

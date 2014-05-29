@@ -898,7 +898,7 @@ static void _clear_net_trapping_status(coord_def c)
     }
 }
 
-/*
+/**
  * Have the shoals tides sometimes move items at a location to a higher spot
  * with a solid floor.
  *
@@ -935,7 +935,7 @@ static void _shoals_tide_sweep_items_clear(coord_def c)
     }
 }
 
-/*
+/**
  * Have the shoals tides sometimes move non-water-capable actors a location to
  * an adjacent spot.
  *
@@ -983,7 +983,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
     return true;
 }
 
-/*
+/**
  * Have the shoals tides sometimes move items and non-water-capable actors a
  * location to an adjacent spot.
  *

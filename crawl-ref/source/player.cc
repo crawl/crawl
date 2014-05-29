@@ -7145,7 +7145,7 @@ void player::confuse(actor *who, int str)
     confuse_player(str);
 }
 
-/*
+/**
  * Paralyse the player for str turns.
  *
  *  Duration is capped at 13.
@@ -8043,7 +8043,7 @@ void player::weaken(actor *attacker, int pow)
     increase_duration(DUR_WEAK, pow + random2(pow + 3), 50);
 }
 
-/*
+/**
  * Check if the player is about to die from flight/form expiration.
  *
  * Check whether the player is on a cell which would be deadly if not for some

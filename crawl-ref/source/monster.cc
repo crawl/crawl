@@ -281,7 +281,7 @@ bool monster::extra_balanced() const
     return extra_balanced_at(pos());
 }
 
-/*
+/**
  * Monster floundering conditions.
  *
  * Floundering reduces movement speed and can cause the monster to fumble
@@ -2049,7 +2049,7 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
     return false;
 }
 
-/*
+/**
  * Have a monster pick up a missile item.
  *
  * @param item The item to pick up.

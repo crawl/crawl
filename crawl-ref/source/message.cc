@@ -1503,7 +1503,7 @@ static void readkey_more(bool user_forced)
         set_more_autoclear(true);
 }
 
-/*
+/**
  * more() preprocessing.
  *
  * @return Whether the more prompt should be skipped.

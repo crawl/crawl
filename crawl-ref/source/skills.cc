@@ -491,7 +491,7 @@ static bool _cmp_rest(const pair<skill_type, int64_t>& a,
     return a.second < b.second;
 }
 
-/*
+/**
  * Scale an array.
  *
  * @param array The array to be scaled.

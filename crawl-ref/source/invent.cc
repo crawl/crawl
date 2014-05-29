@@ -2054,15 +2054,16 @@ bool item_is_wieldable(const item_def &item)
               && item.sub_type == MISC_LANTERN_OF_SHADOWS;
 }
 
-/*
- * Return wether an item can be evoked.
+/**
+ * Return whether an item can be evoked.
+ *
  * @param item      The item to check
  * @param reach     Do weapons of reaching count?
- * @param known     When set it returns true for items of unknown type which
+ * @param known     When set, return true for items of unknown type which
  *                  might be evokable.
- * @param all_wands When set, it returns true for empty wands.
+ * @param all_wands When set, return true for empty wands.
  * @param msg       Whether we need to print a message.
- * @param equip     When disabled, ignore wield and meld requirements.
+ * @param equip     When false, ignore wield and meld requirements.
  */
 bool item_is_evokable(const item_def &item, bool reach, bool known,
                       bool all_wands, bool msg, bool equip)

@@ -34,7 +34,7 @@
 #include "transform.h"
 #include "xom.h"
 
-/*
+/**
  * Apply the effect of a potion to the player.
  *
  * This is called when the player quaffs a potion, but also for some cards,
