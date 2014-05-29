@@ -10,13 +10,17 @@
 : require("dlua/layout/hyper_caves.lua")
 : require("dlua/layout/theme.lua")
 
+##############################################################
+# layout_layer_cave
+#
 # A similar idea to layered_grids - pick two or three different noise
 # functions from weighted selections and draw them overwritten.
+#
 NAME:   layout_layer_cave
 DEPTH:  Depths, !Depths:$, Lair, Snake
 WEIGHT: 15, 20(Lair)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
   if is_validating() then return; end
 
@@ -94,6 +98,9 @@ TAGS: overwritable layout allow_dup unrand layout_type_caves
   theme.D.caves(_G)
 }}
 
+##############################################################
+# layout_cave_shapes
+#
 # The premise here is we pick a random shape function and apply cavelike edges.
 # We optionally apply a fairly large-scale domain distortion to the underlying shape.
 # TODO: * Some flooding/river on 1/10 chance (certain branches)
@@ -101,11 +108,12 @@ TAGS: overwritable layout allow_dup unrand layout_type_caves
 #       * Some shapes work better in certain branches. Snake/D could occasionally get straight edged shapes.
 #       * Snake should have domain distortion every time (use the one from Halls)
 #       * It should be possible to fold most of these effects into layer_cave
+#
 NAME:   layout_cave_shapes
 DEPTH:  Depths, !Depths:$, Lair, Snake
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caverns
+TAGS:   overwritable layout allow_dup unrand layout_type_caverns
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -210,15 +218,19 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns
   theme.D.caves(_G)
 }}
 
+##############################################################
+# layout_waterfall
+#
 # Use polar inverse on a noise function to create corridors that tail off in size.
 # Conceptually this is really quite similar to layout_cathedral_of_symmetry and even
 # produces the same kind of symmetries. It could be an alternate algorithm there but
 # ... it just looks more cave-like.
+#
 NAME:   layout_waterfall
 DEPTH:  Depths, !Depths:$, Tar
 WEIGHT: 5, 50(Tar)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caverns
+TAGS:   overwritable layout allow_dup unrand layout_type_caverns
 {{
 
   -- TODO: For now this looks pretty good; but tweaking the reps and also the worley
@@ -247,14 +259,18 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns
   theme.D.caves(_G)
 }}
 
+##############################################################
+# layout_falls_marsh
+#
 # A mash-up of layout_waterfall and layout_pools for Swamp,
 # with dripping splatters in a more enclosed layout.
 # TODO: Somebody with greater noise manipulation prowress than I
 # should widen the occasional thin corridor at the end of each drip.
+#
 NAME:   layout_falls_marsh
 DEPTH:  Swamp:1-4
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caverns no_pool_fixup
+TAGS:   overwritable layout allow_dup unrand layout_type_caverns no_pool_fixup
 {{
   if is_validating() then return end
 
@@ -290,13 +306,17 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns no_pool_fixup
   zonify.grid_fill_water_zones(1,"t")
 }}
 
+##############################################################
+# layout_cave_pods
+#
 # Intended as a series of interconnected roughly geometrically-shaped rooms
 # for e.g. Dis/Zot, came out much more organic like a burrow of caves.
+#
 NAME:   layout_cave_pods
 DEPTH:  Snake,Lair,Spider
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -319,13 +339,17 @@ TAGS: overwritable layout allow_dup unrand layout_type_caves
 MAP
 ENDMAP
 
+##############################################################
+# layout_chambers
+#
 # This is a very similar version of the previous one and
 # should really be folded in with randomisation
+#
 NAME:   layout_chambers
 DEPTH:  Snake,Lair,Spider
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_chambers
+TAGS:   overwritable layout allow_dup unrand layout_type_chambers
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -345,9 +369,15 @@ TAGS: overwritable layout allow_dup unrand layout_type_chambers
 MAP
 ENDMAP
 
-# A big cavern with a few huts or caves in it
-# TODO: Use other layouts as the base (e.g. cave_shapes, a river/forest/pools layout like bigger_room,
-# even swamp / shoals) and add rooms to them
+##############################################################
+# layout_cave_town
+#
+# A big cavern with a few huts or caves in it.
+#
+# TODO: Use other layouts as the base (e.g. cave_shapes, a
+#       river/forest/pools layout like bigger_room, even
+#       swamp / shoals) and add rooms to them
+#
 NAME: layout_cave_town
 WEIGHT: 8
 ORIENT: encompass
@@ -400,11 +430,14 @@ TAGS: no_hmirror no_vmirror chance_d layout_type_cave_town
 MAP
 ENDMAP
 
+##############################################################
+# layout_gehenna_lava_paths
+#
 NAME:   layout_gehenna_lava_paths
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_paths
+TAGS:   overwritable layout allow_dup unrand layout_type_paths
 {{
   if is_validating() then return end
 
@@ -447,11 +480,14 @@ TAGS: overwritable layout allow_dup unrand layout_type_paths
 MAP
 ENDMAP
 
+##############################################################
+# layout_gehenna_lava_caves
+#
 NAME:   layout_gehenna_lava_caves
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caverns
+TAGS:   overwritable layout allow_dup unrand layout_type_caverns
 {{
   if is_validating() then return end
 
@@ -489,11 +525,14 @@ TAGS: overwritable layout allow_dup unrand layout_type_caverns
 MAP
 ENDMAP
 
+##############################################################
+# layout_ice_bergs
+#
 NAME:   layout_ice_bergs
 DEPTH:  Coc
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_caverns
+TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_caverns
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()

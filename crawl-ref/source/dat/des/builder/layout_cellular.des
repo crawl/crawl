@@ -88,18 +88,27 @@
 
 }}
 
-# Acts like a cellular automaton, growing wall shapes in an irregular cell grid
-# from starting ceeds according to different sets of rules.
-# TODO: With the current rules and parameters it looks most like an iron maze for
-# Dis, but with some tweaking could do nice stuff in other branches (or maybe just
-# make different versions of a similar algorithm). The special rendering for Dis vs. Pan
-# is nice but produces some strange artefacts because walls next to each other might
-# not overlap properly. Some other render modes would be good.
+##############################################################
+# layout_cellular_growth
+#
+# Acts like a cellular automaton, growing wall shapes in an
+# irregular cell grid from starting ceeds according to different
+# sets of rules.
+#
+# TODO: With the current rules and parameters it looks most like
+#       an iron maze for Dis, but with some tweaking could do
+#       nice stuff in other branches (or maybe just make
+#       different versions of a similar algorithm). The special
+#       rendering for Dis vs. Pan is nice but produces some
+#       strange artefacts because walls next to each other might
+#       not overlap properly. Some other render modes would be
+#       good.
+#
 NAME:   layout_cellular_growth
 DEPTH:  Dis:1-6, Pan
 WEIGHT: 20 (Dis), 10 (Pan)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_maze
+TAGS:   overwritable layout allow_dup unrand layout_type_maze
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -196,12 +205,16 @@ TAGS: overwritable layout allow_dup unrand layout_type_maze
 MAP
 ENDMAP
 
+##############################################################
+# layout_gridville
+#
 # A bit similar to stronghold but better architecture.
+#
 NAME:   layout_gridville
 DEPTH:  Depths, Snake, Dis:1-6, Pan
 WEIGHT: 10, 20(Dis)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_city
+TAGS:   overwritable layout allow_dup unrand layout_type_city
 {{
   if is_validating() then return; end
 
@@ -284,13 +297,17 @@ TAGS: overwritable layout allow_dup unrand layout_type_city
 MAP
 ENDMAP
 
+##############################################################
+# layout_gridlike
+#
 # A bit similar to roguey but better architecture.
+#
 NAME:   layout_gridlike
 DEPTH:  D:10-, Lair, Crypt, Snake, Elf, Pan
 WEIGHT: 20, 50(D), 50(Depths), 10(Elf), 50(Crypt)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
-TAGS: layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()

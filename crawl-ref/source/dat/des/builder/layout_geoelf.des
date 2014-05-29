@@ -7,11 +7,17 @@
 # Required file contains overview
 : require("dlua/layout/geoelf.lua")
 
-################
+##############################################################
+# layout_geoelf_grid
+#
 # A grid of rooms, inspired by layout_roguey.  There are no
 #  missing rooms because they mess up the corridors between
 #  rooms and can disconnect the map (or connect it through a
 #  primary vault and have the connection be overwritten).
+#
+# These 3 layouts could be combined into 1 big layout, but it
+# would be as long as the three combined, so it would just make
+# them harder to read.
 #
 #  O-O-O-O-O
 #  |X|X|X|X|      O-O-O-O
@@ -144,7 +150,9 @@ TAGS:   no_rotate no_vmirror no_hmirror
 MAP
 ENDMAP
 
-################
+##############################################################
+# layout_geoelf_diagonals
+#
 # A grid of rooms, with most connection along the diagonals.
 #
 #    O---O---O
@@ -285,7 +293,9 @@ TAGS:   no_rotate no_vmirror no_hmirror
 MAP
 ENDMAP
 
-################
+##############################################################
+# layout_geoelf_octagon
+#
 # A large central room, with 2 rings of other rooms around it.
 #  There is no simple formula for this one, so the code is a bit
 #  confusing.  Basically the rooms all start in an array.

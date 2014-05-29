@@ -145,11 +145,11 @@ ENDMAP
 # This replaces dungeon.cc:_plan_2(). It creates a large cross
 # of varying width.
 #
-NAME:    layout_cross
-DEPTH:   D:4-, Lair:1-7
-WEIGHT:  10
-ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand layout_type_cross
+NAME:   layout_cross
+DEPTH:  D:4-, Lair:1-7
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_cross
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'L'}
@@ -214,11 +214,11 @@ ENDMAP
 # room with some number of pillars in the middle. The stairs
 # are generally all grouped together.
 #
-NAME: layout_big_octagon
-DEPTH:   D:4-, Lair:1-7, Pan
-WEIGHT:  6 (Pan), 10
-ORIENT:  encompass
-TAGS:    overwritable layout no_primary_vault allow_dup unrand layout_type_open
+NAME:   layout_big_octagon
+DEPTH:  D:4-, Lair:1-7, Pan
+WEIGHT: 6 (Pan), 10
+ORIENT: encompass
+TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
 {{
     function smear()
         local gxm, gym = dgn.max_bounds()
@@ -411,11 +411,11 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_3().
 #
-NAME: layout_rooms
-DEPTH: D, Depths, Lair, Snake, Elf, Crypt, Zot, Pan
+NAME:   layout_rooms
+DEPTH:  D, Depths, Lair, Snake, Elf, Crypt, Zot, Pan
 WEIGHT: 60 (Pan), 10 (Zot), 10 (Elf), 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
     function draw_room(room)
         local room_type = 0
@@ -557,8 +557,8 @@ NAME:   layout_city
 DEPTH:  Lair:1-2, Snake, Crypt:1-4, Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
-TAGS:   layout_type_city
+TAGS:   overwritable layout allow_dup unrand layout_type_city
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
 
@@ -712,11 +712,11 @@ ENDMAP
 # layout_misc
 #
 # This replaces dungeon.cc:_plan_5().
-NAME: layout_misc
-DEPTH: D, Lair, Snake, Elf, Crypt, Zot, Pan
+NAME:   layout_misc
+DEPTH:  D, Lair, Snake, Elf, Crypt, Zot, Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_misc
+TAGS:   overwritable layout allow_dup unrand layout_type_misc
 {{
     function random_coord(max_x, max_y)
         return crawl.random2(max_x - 20) + 10,
@@ -753,12 +753,12 @@ ENDMAP
 # One (sometimes more) large open caverns with irregular
 # walls.
 #
-NAME: layout_caves
-DEPTH: D:9-, Depths, Orc, Slime
+NAME:   layout_caves
+DEPTH:  D:9-, Depths, Orc, Slime
 CHANCE: 100% (Orc), 100% (Slime)
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
 
@@ -799,13 +799,16 @@ MAP
 ENDMAP
 
 ##############################################################
+# layout_twisted_cavern
+#
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
-NAME: layout_twisted_cavern
-DEPTH: D:5-
+#
+NAME:   layout_twisted_cavern
+DEPTH:  D:5-
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_delve
+TAGS:   overwritable layout allow_dup unrand layout_type_delve
 {{
     if is_validating() then return; end
 
@@ -820,12 +823,13 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 }}
 
 ##############################################################
-## This replaces dungeon.cc:_roguey_level.
-NAME: layout_roguey
-DEPTH: D:2-, Lair, Snake
+# This replaces dungeon.cc:_roguey_level.
+#
+NAME:   layout_roguey
+DEPTH:  D:2-, Lair, Snake
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
 {{
     function make_inner_room(room, feat)
         local inner_room = {
@@ -1123,11 +1127,14 @@ TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
 MAP
 ENDMAP
 
-NAME: layout_delve
-DEPTH: Spider
+##############################################################
+# layout_delve
+#
+NAME:   layout_delve
+DEPTH:  Spider
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_delve
+TAGS:   overwritable layout allow_dup unrand layout_type_delve
 {{
     if is_validating() then return; end
 
@@ -1168,17 +1175,17 @@ TAGS: overwritable layout allow_dup unrand layout_type_delve
 # layout_cocytus
 #
 # An ice cave approximation for Cocytus.  There is one main
-#  delved path that is guaranteed to contain at least one up and
-#  down stairs.  There are also other delved paths and
-#  diamond-shaped rooms, but these might be behind pools of
-#  water.  To avoid trapping the player, all random teleports go
-#  to the main path.
+# delved path that is guaranteed to contain at least one up and
+# down stairs.  There are also other delved paths and
+# diamond-shaped rooms, but these might be behind pools of
+# water.  To avoid trapping the player, all random teleports go
+# to the main path.
 #
-NAME: layout_cocytus
-DEPTH: Coc
+NAME:   layout_cocytus
+DEPTH:  Coc
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_delve
+TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_delve
 {{
     if is_validating() then return; end
 
@@ -1296,11 +1303,12 @@ TAGS: overwritable layout allow_dup unrand chance_cocytus layout_type_delve
 
 ##############################################################
 # layout_dis, by rwbarton
-NAME: layout_dis
-DEPTH: Dis:1-6
+#
+NAME:   layout_dis
+DEPTH:  Dis:1-6
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
     local subdivide_threshold = 12
 
@@ -1404,11 +1412,11 @@ ENDMAP
 # This layout places many overlapping boxes and then connects
 # the resulting mess into a layout.
 #
-NAME: layout_overlapping_boxes
-DEPTH: Dis:1-6
+NAME:   layout_overlapping_boxes
+DEPTH:  Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
@@ -1456,11 +1464,13 @@ ENDMAP
 #  effect of this is that it is not always obvious whether you
 #  are inside a room or outside.
 #
-NAME: layout_jigsaw
-DEPTH: Dis:1-6
+# This is a Dis-specific variant of layout_honeycomb.
+#
+NAME:   layout_jigsaw
+DEPTH:  Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
     local ROOMS_ACROSS = 4
     local ROOM_SIZE = 11
@@ -1578,36 +1588,51 @@ TAGS: overwritable layout allow_dup unrand layout_type_rooms
 MAP
 ENDMAP
 
+
+
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
-NAME: layout_basic
-DEPTH: D, Depths, Lair, Snake, Crypt, Zot
+
+##############################################################
+# layout_basic
+#
+NAME:   layout_basic
+DEPTH:  D, Depths, Lair, Snake, Crypt, Zot
 WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_basic
+TAGS:   overwritable layout allow_dup unrand layout_type_basic
 {{
     if not is_validating() then layout_basic() end
 }}
 MAP
 ENDMAP
 
-# XXX: Disabled until we can annoy the player less with water monsters.
-NAME: layout_bigger_room
-DEPTH: D:9-, Lair:1-7
+##############################################################
+# layout_bigger_room
+#
+# Disabled until we can annoy the player less with water monsters.
+#
+NAME:   layout_bigger_room
+DEPTH:  D:9-, Lair:1-7
 WEIGHT: 0
 ORIENT: encompass
-TAGS: overwritable layout no_primary_vault allow_dup unrand layout_type_open
+TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
 {{
     if not is_validating() then layout_bigger_room() end
 }}
 MAP
 ENDMAP
 
-NAME: layout_chaotic_city
-DEPTH: D:4-, Lair:1-3, Snake, Crypt:1-4, Dis, Pan
+##############################################################
+# layout_chaotic_city
+#
+# This layout places many non-overlapping boxes, some hollow.
+#
+NAME:   layout_chaotic_city
+DEPTH:  D:4-, Lair:1-3, Snake, Crypt:1-4, Dis, Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_city
+TAGS:   overwritable layout allow_dup unrand layout_type_city
 {{
     if not is_validating() then
       layout_chaotic_city((you.branch() == "Dis") and "metal_wall" or nil)
@@ -1616,22 +1641,28 @@ TAGS: overwritable layout allow_dup unrand layout_type_city
 MAP
 ENDMAP
 
-NAME: layout_shoals
-DEPTH: Shoals
+##############################################################
+# layout_shoals
+#
+NAME:   layout_shoals
+DEPTH:  Shoals
 CHANCE: 100%
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_shoals
+TAGS:   overwritable layout allow_dup unrand layout_type_shoals
 {{
     if not is_validating() then layout_shoals() end
 }}
 MAP
 ENDMAP
 
-NAME: layout_swamp
-DEPTH: Swamp
+##############################################################
+# layout_swamp
+#
+NAME:   layout_swamp
+DEPTH:  Swamp
 WEIGHT: 25
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_swamp
+TAGS:   overwritable layout allow_dup unrand layout_type_swamp
 {{
     if is_validating() then return; end
 

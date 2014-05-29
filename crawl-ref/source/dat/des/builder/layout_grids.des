@@ -121,12 +121,21 @@
 
 }}
 
+##############################################################
+# layout_big_grid
+#
+# This layout should appear at most once, so it does not have an
+# "allow_dup" tag,
+#
+# This layout is included provisionally.  It might be better
+# to remove it entirely.
+#
 NAME:   layout_big_grid
 DEPTH:  D:5-, Depths, Lair
 WEIGHT: 0
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS: no_hmirror no_vmirror layout_type_open layout_type_big_grid
+TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS:   no_hmirror no_vmirror layout_type_open layout_type_big_grid
 {{
   if is_validating() then return; end
   local edge = crawl.x_chance_in_y(2,3)
@@ -150,12 +159,15 @@ TAGS: no_hmirror no_vmirror layout_type_open layout_type_big_grid
   zonify.grid_fill_zones(1, "rock_wall")
 }}
 
+##############################################################
+# layout_small_grid
+#
 NAME:   layout_small_grid
 DEPTH:  D:3-, Depths, Lair
 WEIGHT: 5
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS: no_hmirror no_vmirror layout_type_corridors layout_type_small_grid
+TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS:   no_hmirror no_vmirror layout_type_corridors layout_type_small_grid
 {{
   if is_validating() then return; end
 
@@ -178,12 +190,15 @@ TAGS: no_hmirror no_vmirror layout_type_corridors layout_type_small_grid
     } )
 }}
 
+##############################################################
+# layout_long_grid
+#
 NAME:   layout_long_grid
 DEPTH:  D:3-, Depths, Lair
 WEIGHT: 5
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS: no_hmirror no_vmirror layout_type_corridors layout_type_long_grid
+TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS:   no_hmirror no_vmirror layout_type_corridors layout_type_long_grid
 {{
   if is_validating() then return; end
   local min_size = you.in_branch("lair") and 1 or 2
@@ -232,16 +247,22 @@ TAGS: no_hmirror no_vmirror layout_type_corridors layout_type_long_grid
   render_grid(_G, "Long Grid", grid_opts, paint_opts)
 }}
 
+##############################################################
+# layout_layered_grid
+#
 # Generates up to 3 grids of different granularities, then layers
 # then on top of each other. At its simplest reduction this looks like
 # forbidden_donut but with a randomly-placed hole. At its most complex
 # it does all kinds of interesting things.
-NAME: layout_layered_grid
+#
+# Attempting to use this layout causes LUA runtime errors.
+#
+NAME:   layout_layered_grid
 DEPTH:  D, Depths, Crypt, Lair
 WEIGHT: 0
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS: no_hmirror no_vmirror chance_d layout_type_hyper_grid
+TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS:   no_hmirror no_vmirror chance_d layout_type_hyper_grid
 {{
   if is_validating() then return; end
 
@@ -277,7 +298,12 @@ TAGS: no_hmirror no_vmirror chance_d layout_type_hyper_grid
   zonify.grid_fill_zones(1, "rock_wall")
 }}
 
-# Draws a random grid but can use a variety of different shapes to draw each grid area.
+##############################################################
+# layout_grid_shapes
+#
+# Draws a random grid but can use a variety of different shapes to
+# draw each grid area.
+#
 NAME:   layout_grid_shapes
 DEPTH:  Snake, Pan, Zot
 WEIGHT: 8, 20(Pan)
@@ -376,9 +402,16 @@ TAGS: overwritable layout allow_dup unrand layout_type_open
   else theme.level_material(_G) end
 }}
 
-# Builds a complex maze by starting off with a subdivided grid then iteratively linking
-# up rooms until all original cells are connected.
-# TODO: Fortify edges; randomise door positions; something unique in Pan; maybe an Elf version
+##############################################################
+# layout_grid_maze
+#
+# Builds a complex maze by starting off with a subdivided grid then
+# iteratively linking up rooms until all original cells are connected.
+# TODO: Fortify edges;
+#       randomise door positions;
+#       something unique in Pan;
+#       maybe an Elf version
+#
 NAME:   layout_grid_maze
 DEPTH:  D:8-, Depths, Lair, Tar, Pan
 WEIGHT: 5, 80(Tar), 10 (Pan)
