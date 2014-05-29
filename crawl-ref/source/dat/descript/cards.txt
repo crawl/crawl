@@ -1,15 +1,5 @@
 %%%%
 # decks of transport -> escape
-the Portal card
-
-This card teleports you to a random location, allowing control of the
-translocation and sometimes additionally causing a random blink at high power.
-%%%%
-the Warp card
-
-This card translocates you a short distance, either randomly or with increasing
-levels of control at higher power levels.
-%%%%
 Swap card
 
 This card swaps your position with that of a nearby creature.
