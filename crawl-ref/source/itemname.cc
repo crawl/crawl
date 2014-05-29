@@ -3563,6 +3563,9 @@ string item_prefix(const item_def &item, bool temp)
     if (is_useless_item(item, temp))
         prefixes.push_back("useless_item");
 
+    if (item_is_stationary(item))
+        prefixes.push_back("stationary");
+
     switch (item.base_type)
     {
     case OBJ_CORPSES:
