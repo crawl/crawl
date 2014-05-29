@@ -404,7 +404,7 @@ static const food_def Food_prop[] =
 
     { FOOD_BREAD_RATION, "bread ration", 4400, -1000,   500,  80, 4 },
 
-    { FOOD_FRUIT,        "fruit",         250,  -100,    50,  20, 1 },
+    { FOOD_FRUIT,        "fruit",         850,  -100,    50,  20, 1 },
 
     { FOOD_ROYAL_JELLY,  "royal jelly",  2000,     0,     0,  40, 2 },
     { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 2 },

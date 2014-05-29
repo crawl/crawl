@@ -2242,7 +2242,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
                 item.quantity += random2(3);
 
             if (is_fruit(item))
-                item.quantity += random2avg(13,2);
+                item.quantity += random2avg(5,2);
         }
     }
 }
