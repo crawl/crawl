@@ -1253,8 +1253,6 @@ void pickup(bool partial_quantity)
 
     if (o == NON_ITEM)
         mpr("There are no items here.");
-    else if (num_items == 0)
-        mpr("There are no items here that you can pick up.");
     else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
         mpr("You can't reach the bottom while floating on water.");
     // just one movable item?
@@ -1278,6 +1276,7 @@ void pickup(bool partial_quantity)
         int next;
         mpr("There are several objects here.");
         string pickup_warning;
+        bool any_selectable = false;
         while (o != NON_ITEM)
         {
             // Must save this because pickup can destroy the item.
@@ -1288,6 +1287,7 @@ void pickup(bool partial_quantity)
                 o = next;
                 continue;
             }
+            any_selectable = true;
 
             if (keyin != 'a')
             {
@@ -1332,6 +1332,14 @@ void pickup(bool partial_quantity)
 
             if (o == NON_ITEM && keyin != 'y' && keyin != 'a')
                 canned_msg(MSG_OK);
+        }
+
+        // If there were no selectable items (all corpses, for example),
+        // list them.
+        if (!any_selectable)
+        {
+            for (stack_iterator si(you.pos(), true); si; si++)
+                mprf_nocap("%s", get_menu_colour_prefix_tags(*si, DESC_A).c_str());
         }
 
         if (!pickup_warning.empty())
