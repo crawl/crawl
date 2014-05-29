@@ -391,12 +391,16 @@ move_again:
     {
         if (cell_is_solid(pos))
         {
+            const int boulder_noisiness = 5; // don't want this to be big
             if (you.see_cell(pos) && you.see_cell(mon.pos()))
             {
                 mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
                      feature_description_at(pos, false, DESC_A).c_str());
-            } else if (!silenced(pos) && !silenced(you.pos()))
-                mpr("You hear a loud crash.");
+                if (!iood)
+                    noisy(boulder_noisiness, pos);
+            }
+            else if (!iood && !silenced(you.pos()))
+                noisy(boulder_noisiness, pos, "You hear a crash.");
 
             if (!iood) // boulders need to stop now
             {
