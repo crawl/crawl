@@ -1668,6 +1668,20 @@ static bool _blessing_AC(monster* mon)
 
     item_def& arm(mitm[slot]);
 
+    if (you_worship(GOD_BEOGH)
+        && !is_artefact(arm)
+        && x_chance_in_y(mon->hit_dice, 250)
+        && ((slot == shield
+             && !mon->props.exists("given beogh shield")
+             && arm.sub_type < ARM_LARGE_SHIELD)
+            || (slot == armour
+                && !mon->props.exists("given beogh armour")
+                && arm.sub_type >= ARM_FIRST_MUNDANE_BODY
+                && arm.sub_type < ARM_LAST_MUNDANE_BODY)))
+    {
+        arm.sub_type++;
+    }
+
     int ac_change;
 
     // And enchant or uncurse it.
