@@ -966,11 +966,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
     // Acquired randart books have a chance of being named after the player.
     string owner = "";
-    if (agent == AQ_SCROLL && one_chance_in(12)
-        || agent == AQ_CARD_GENIE && one_chance_in(6))
-    {
+    if (agent == AQ_SCROLL && one_chance_in(12))
         owner = you.your_name;
-    }
 
     switch (choice)
     {

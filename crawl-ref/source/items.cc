@@ -1088,8 +1088,16 @@ bool origin_is_acquirement(const item_def& item, item_source_type *type)
     *type = IT_SRC_NONE;
 
     const int iorig = -item.orig_monnum;
-    if (iorig == AQ_SCROLL || iorig == AQ_CARD_GENIE
-        || iorig == AQ_WIZMODE)
+#if TAG_MAJOR_VERSION == 34
+// Copy pasting is bad but this will autoupdate on version bump
+    if (iorig == AQ_CARD_GENIE)
+    {
+        *type = static_cast<item_source_type>(iorig);
+        return true;
+    }
+
+#endif
+    if (iorig == AQ_SCROLL || iorig == AQ_WIZMODE)
     {
         *type = static_cast<item_source_type>(iorig);
         return true;
@@ -1123,9 +1131,11 @@ string origin_desc(const item_def &item)
             case AQ_SCROLL:
                 desc += "You acquired " + _article_it(item) + " ";
                 break;
+#if TAG_MAJOR_VERSION == 34
             case AQ_CARD_GENIE:
                 desc += "You drew the Genie ";
                 break;
+#endif
             case AQ_WIZMODE:
                 desc += "Your wizardly powers created "+ _article_it(item)+ " ";
                 break;

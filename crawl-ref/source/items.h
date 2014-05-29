@@ -17,7 +17,9 @@ enum item_source_type
     // Empty space for the gods
 
     AQ_SCROLL     = 100,
+#if TAG_MAJOR_VERSION == 34
     AQ_CARD_GENIE,
+#endif
     IT_SRC_START,
     IT_SRC_SHOP,
 
