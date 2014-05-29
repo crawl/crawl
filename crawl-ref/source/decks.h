@@ -108,8 +108,8 @@ enum card_type
 #endif
     CARD_STAIRS,                // moves stairs around
 
-    CARD_GENIE,                 // acquirement OR rotting/deterioration
 #if TAG_MAJOR_VERSION == 34
+    CARD_GENIE,                 // acquirement OR rotting/deterioration
     CARD_BARGAIN,               // shopping discount
 #endif
     CARD_WRATH,                 // Godly wrath

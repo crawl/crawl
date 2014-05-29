@@ -185,7 +185,6 @@ const deck_archetype deck_of_dungeons[] =
 
 const deck_archetype deck_of_oddities[] =
 {
-    { CARD_GENIE,   {5, 5, 5} },
     { CARD_WRATH,   {5, 5, 5} },
     { CARD_XOM,     {5, 5, 5} },
     { CARD_FEAST,   {5, 5, 5} },
@@ -333,7 +332,9 @@ const char* card_name(card_type card)
     case CARD_MINEFIELD:       return "the Minefield";
 #endif
     case CARD_STAIRS:          return "the Stairs";
+#if TAG_MAJOR_VERSION == 34
     case CARD_GENIE:           return "the Genie";
+#endif
     case CARD_TOMB:            return "the Tomb";
 #if TAG_MAJOR_VERSION == 34
     case CARD_WATER:           return "Water";
@@ -2280,23 +2281,6 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _genie_card(int power, deck_rarity_type rarity)
-{
-    if (coinflip())
-    {
-        mpr("A genie takes form and thunders: "
-            "\"Choose your reward, mortal!\"");
-        more();
-        run_uncancel(UNC_ACQUIREMENT, AQ_CARD_GENIE);
-    }
-    else
-    {
-        mpr("A genie takes form and thunders: "
-            "\"You disturbed me, fool!\"");
-        potion_effect(coinflip() ? POT_DEGENERATION : POT_DECAY, 40);
-    }
-}
-
 // Special case for *your* god, maybe?
 static void _godly_wrath()
 {
@@ -2934,7 +2918,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_HELIX:            _helix_card(power, rarity); break;
     case CARD_DOWSING:          _dowsing_card(power, rarity); break;
     case CARD_STAIRS:           _stairs_card(power, rarity); break;
-    case CARD_GENIE:            _genie_card(power, rarity); break;
     case CARD_CURSE:            _curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;
     case CARD_SHAFT:            _shaft_card(); break;
@@ -3012,6 +2995,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_MINEFIELD:
     case CARD_PORTAL:
     case CARD_WARP:
+    case CARD_GENIE:
         mpr("This type of card no longer exists!");
         break;
 #endif
