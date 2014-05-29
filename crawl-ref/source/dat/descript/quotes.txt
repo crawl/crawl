@@ -1092,7 +1092,7 @@ elephant
  ‘Assuredly, Lord: we now know what an elephant is like.’
  ‘Tell me then, O blind men, what an elephant is like.’
  And those blind men, O Bhikkhus, who had felt the head of the elephant, said:
-‘An elephant, Sir, is like a large round jar .
+‘An elephant, Sir, is like a large round jar.
  Those who had felt its ears, said: 'it is like a winnowing basket.’
  Those who had felt its tusks, said: ‘it is like a plough-share.’
  Those who had felt its trunk, said: ‘it is like a plough.’
@@ -1107,20 +1107,6 @@ this.’”
  And the King, O Bhikkhus, was highly delighted.
     -_Udāna_, VI “Jaccandhavagga”. ca. 5th cent. B.C.
      trans. Dawsonne Melanchthon Strong, 1902.
-
-“And so these men of Indostan
- Disputed loud and long,
- Each in his own opinion
- Exceeding stiff and strong,
- Though each was partly in the right,
- And all were in the wrong!
- So oft in theologic wars,
- The disputants, I ween,
- Rail on in utter ignorance
- Of what each other mean,
- And prate about an Elephant
- Not one of them has seen!”
-    -John Godfrey Saxe, “The Blind Men and the Elephant”. 1872.
 %%%%
 emperor scorpion
 
