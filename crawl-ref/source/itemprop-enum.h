@@ -3,7 +3,7 @@
 
 enum armour_type
 {
-    ARM_ROBE,
+    ARM_ROBE, // order of mundane armour matters to _upgrade_body_armour
     ARM_FIRST_MUNDANE_BODY = ARM_ROBE,
     ARM_LEATHER_ARMOUR,
     ARM_RING_MAIL,
@@ -25,8 +25,10 @@ enum armour_type
     ARM_BOOTS,
 
     ARM_BUCKLER, // order of shields matters
+    ARM_FIRST_SHIELD = ARM_BUCKLER,
     ARM_SHIELD,
     ARM_LARGE_SHIELD,
+    ARM_LAST_SHIELD = ARM_LARGE_SHIELD,
 
     ARM_CRYSTAL_PLATE_ARMOUR,
     ARM_MIN_UNBRANDED = ARM_CRYSTAL_PLATE_ARMOUR,

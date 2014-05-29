@@ -1710,6 +1710,23 @@ static bool _blessing_wpn(monster* mon)
     return true;
 }
 
+static void _upgrade_shield(item_def &sh)
+{
+    // Promote from buckler up through large shield.
+    if (sh.sub_type >= ARM_FIRST_SHIELD && sh.sub_type < ARM_LAST_SHIELD)
+        sh.sub_type++;
+}
+
+static void _upgrade_body_armour(item_def &arm)
+{
+    // Promote from robe up through plate.
+    if (arm.sub_type >= ARM_FIRST_MUNDANE_BODY
+        && arm.sub_type < ARM_LAST_MUNDANE_BODY)
+    {
+        arm.sub_type++;
+    }
+}
+
 static bool _blessing_AC(monster* mon)
 {
     // Pick either a monster's armour or its shield.
@@ -1727,18 +1744,13 @@ static bool _blessing_AC(monster* mon)
 
     item_def& arm(mitm[slot]);
 
-    if (you_worship(GOD_BEOGH)
-        && !is_artefact(arm)
-        && x_chance_in_y(mon->hit_dice, 250)
-        && ((slot == shield
-             && !mon->props.exists("given beogh shield")
-             && arm.sub_type < ARM_LARGE_SHIELD)
-            || (slot == armour
-                && !mon->props.exists("given beogh armour")
-                && arm.sub_type >= ARM_FIRST_MUNDANE_BODY
-                && arm.sub_type < ARM_LAST_MUNDANE_BODY)))
+    if (you_worship(GOD_BEOGH) && !is_artefact(arm)
+        && x_chance_in_y(mon->hit_dice, 250))
     {
-        arm.sub_type++;
+        if (slot == shield && !mon->props.exists("given beogh shield"))
+            _upgrade_shield(arm);
+        else if (slot == armour && !mon->props.exists("given beogh armour"))
+            _upgrade_body_armour(arm);
     }
 
     int ac_change;
