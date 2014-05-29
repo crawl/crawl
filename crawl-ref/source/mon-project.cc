@@ -14,6 +14,7 @@
 
 #include "externs.h"
 
+#include "areas.h"
 #include "cloud.h"
 #include "directn.h"
 #include "env.h"
@@ -390,11 +391,12 @@ move_again:
     {
         if (cell_is_solid(pos))
         {
-            if (you.see_cell(pos))
+            if (you.see_cell(pos) && you.see_cell(mon.pos()))
             {
                 mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
                      feature_description_at(pos, false, DESC_A).c_str());
-            }
+            } else if (!silenced(pos) && !silenced(you.pos()))
+                mpr("You hear a loud crash.");
 
             if (!iood) // boulders need to stop now
             {
