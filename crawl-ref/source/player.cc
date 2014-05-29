@@ -5201,10 +5201,6 @@ void dec_napalm_player(int delay)
     const int hurted = resist_adjust_damage(&you, BEAM_FIRE, player_res_fire(),
                                             random2avg(9, 2) + 1);
 
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
-    if (you.duration[DUR_ICY_ARMOUR] > 0)
-        remove_ice_armour();
     ouch(hurted * delay / BASELINE_DELAY, NON_MONSTER, KILLED_BY_BURNING);
 
     you.duration[DUR_LIQUID_FLAMES] -= delay;
