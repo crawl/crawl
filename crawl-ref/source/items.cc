@@ -662,14 +662,10 @@ int count_movable_items(int obj)
  * @param[in] obj The location link; an index in mitm.
  * @param exclude_stationary If true, don't include stationary items.
 */
-void item_list_on_square(vector<const item_def*>& items, int obj, bool exclude_stationary)
+void item_list_on_square(vector<const item_def*>& items, int obj)
 {
     for (stack_iterator si(obj); si; ++si)
-    {
-        if (exclude_stationary && item_is_stationary(*si))
-            continue;
         items.push_back(& (*si));
-    }
 }
 
 bool need_to_autopickup()
@@ -859,7 +855,7 @@ void pickup_menu(int item_link)
     int n_tried_pickup = 0;
 
     vector<const item_def*> items;
-    item_list_on_square(items, item_link, true);
+    item_list_on_square(items, item_link);
     ASSERT(items.size());
 
 #ifdef TOUCH_UI
