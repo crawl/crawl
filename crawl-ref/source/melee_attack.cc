@@ -2398,7 +2398,7 @@ void melee_attack::apply_staff_damage()
 /**
  * Calculate the to-hit for an attacker
  *
- * @param random If false, return the average damage deterministically.
+ * @param random If false, calculate average to-hit deterministically.
  */
 int melee_attack::calc_to_hit(bool random)
 {

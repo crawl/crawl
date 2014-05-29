@@ -148,9 +148,10 @@ bool attack::handle_phase_end()
     return true;
 }
 
-/** Calculate the to-hit for an attacker
+/**
+ * Calculate the to-hit for an attacker
  *
- * @param random deterministic or stochastic calculation(s)
+ * @param random If false, calculate average to-hit deterministically.
  */
 int attack::calc_to_hit(bool random)
 {
