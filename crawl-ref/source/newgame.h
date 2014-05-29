@@ -22,12 +22,12 @@ bool choose_game(newgame_def *ng, newgame_def* choice,
  */
 struct job_group
 {
-    const char* name;   //<! Name of the group.
-    coord_def position; //<! Relative coordinates of the title.
-    int width;          //<! Column width.
-    job_type jobs[JOB_GROUP_SIZE]; //<! List of jobs in the group.
+    const char* name;   ///< Name of the group.
+    coord_def position; ///< Relative coordinates of the title.
+    int width;          ///< Column width.
+    job_type jobs[JOB_GROUP_SIZE]; ///< List of jobs in the group.
 
-    //! A method to attach the group to a freeform.
+    /// A method to attach the group to a freeform.
     void attach(const newgame_def* ng, const newgame_def& defaults,
                 MenuFreeform* menu, menu_letter &letter);
 };

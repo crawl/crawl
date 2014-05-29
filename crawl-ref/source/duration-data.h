@@ -22,10 +22,10 @@ struct duration_def
     bool expire;         ///< Whether to do automatic expiration colouring.
     int    light_colour; ///< Base colour for status light.
     const char *light_text; ///< Text for the status light.
-    const char *short_text; //<! Text for @ line on the % screen and morgues.
-                            //<! Usually an adjective.
-    const char *name_text;  //<! Text used in wizmode &^D. If empty, use the
-                            //<! short_text.
+    const char *short_text; ///< Text for @ line on the % screen and morgues.
+                            ///< Usually an adjective.
+    const char *name_text;  ///< Text used in wizmode &^D. If empty, use the
+                            ///< short_text.
     const char *long_text;  ///< Text for the @ message.
 
     /// Return the name of the duration (name_text or short_text). */

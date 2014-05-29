@@ -123,21 +123,21 @@ public:
   float temperature_last;
 #endif
 
-  FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
-  FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
-  FixedVector<int8_t, NUM_SKILLS>  train_alt; //<! config of the other mode.
-  FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
-  FixedBitVector<NUM_SKILLS> can_train; //!<Is training this skill allowed
+  FixedVector<uint8_t, NUM_SKILLS> skills; ///< skill level
+  FixedVector<int8_t, NUM_SKILLS>  train;  ///< 0: disabled, 1: normal, 2: focus
+  FixedVector<int8_t, NUM_SKILLS>  train_alt;      ///< config of the other mode
+  FixedVector<unsigned int, NUM_SKILLS>  training; ///< percentage of XP used
+  FixedBitVector<NUM_SKILLS> can_train; ///< Is training this skill allowed?
   FixedVector<unsigned int, NUM_SKILLS> skill_points;
-  FixedVector<unsigned int, NUM_SKILLS> ct_skill_points; //<!track skill points
-                                                    //<!gained by crosstraining
+  FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;///<track skill points
+                                                    ///<gained by crosstraining
   FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
   bool auto_training;
-  list<skill_type> exercises;     //<! recent practise events
-  list<skill_type> exercises_all; //<! also include events for disabled skills
-  set<skill_type> stop_train; //<! need to check if we can still train
-  set<skill_type> start_train; //<! we can resume training
+  list<skill_type> exercises;     ///< recent practise events
+  list<skill_type> exercises_all; ///< also include events for disabled skills
+  set<skill_type> stop_train;     ///< need to check if we can still train
+  set<skill_type> start_train;    ///< we can resume training
 
   // Skill menu states
   skill_menu_state skill_menu_do;
