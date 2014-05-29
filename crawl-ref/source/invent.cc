@@ -196,7 +196,10 @@ string InvEntry::get_text(bool need_cursor) const
 
     ostringstream tstr;
 
-    tstr << ' ' << static_cast<char>(hotkeys[0]);
+    const bool nosel = hotkeys.empty();
+    const char key = nosel ? ' ' : static_cast<char>(hotkeys[0]);
+
+    tstr << ' ' << key;
 
     if (need_cursor)
         tstr << '[';
