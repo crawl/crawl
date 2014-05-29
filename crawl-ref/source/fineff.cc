@@ -193,6 +193,7 @@ void trample_follow_fineff::fire()
         && attack->is_habitable(posn))
     {
         attack->move_to_pos(posn);
+        attack->apply_location_effects(posn);
     }
 }
 
