@@ -68,6 +68,9 @@
 # This replaces dungeon.cc:_plan_1(). It usually creates a
 # room with a large hole in the middle.
 #
+# TODO: Use "layout_type_raniform" tag for cave version and
+#       "layout_type_open" tag for non-cave version.
+#
 NAME:   layout_forbidden_donut
 DEPTH:  D:4-, Lair:1-7, Pan
 WEIGHT: 10
@@ -145,11 +148,14 @@ ENDMAP
 # This replaces dungeon.cc:_plan_2(). It creates a large cross
 # of varying width.
 #
+# TODO: Use "layout_type_raniform" tag for cave version and
+#       "layout_type_open" tag for non-cave version.
+#
 NAME:   layout_cross
 DEPTH:  D:4-, Lair:1-7
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_cross
+TAGS:   overwritable layout allow_dup unrand layout_type_open
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'L'}
@@ -213,6 +219,9 @@ ENDMAP
 # This replaces dungeon.cc:_plan_6(). It has an octagonal
 # room with some number of pillars in the middle. The stairs
 # are generally all grouped together.
+#
+# TODO: Use "layout_type_raniform" tag for cave version and
+#       "layout_type_open" tag for non-cave version.
 #
 NAME:   layout_big_octagon
 DEPTH:  D:4-, Lair:1-7, Pan
@@ -716,7 +725,7 @@ NAME:   layout_misc
 DEPTH:  D, Lair, Snake, Elf, Crypt, Zot, Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_misc
+TAGS:   overwritable layout allow_dup unrand layout_type_angular
 {{
     function random_coord(max_x, max_y)
         return crawl.random2(max_x - 20) + 10,
@@ -758,7 +767,7 @@ DEPTH:  D:9-, Depths, Orc, Slime
 CHANCE: 100% (Orc), 100% (Slime)
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_raniform
 {{
     local gxm, gym = dgn.max_bounds()
 
@@ -808,7 +817,7 @@ NAME:   layout_twisted_cavern
 DEPTH:  D:5-
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_delve
+TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 {{
     if is_validating() then return; end
 
@@ -1130,11 +1139,14 @@ ENDMAP
 ##############################################################
 # layout_delve
 #
+# TODO: Use "layout_type_anastomotic" tag for passage-y version
+#       and "layout_type_raniform" tag for more open version.
+#
 NAME:   layout_delve
 DEPTH:  Spider
 CHANCE: 100%
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_delve
+TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 {{
     if is_validating() then return; end
 
@@ -1185,7 +1197,7 @@ NAME:   layout_cocytus
 DEPTH:  Coc
 CHANCE: 100%
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_delve
+TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_anastomotic
 {{
     if is_validating() then return; end
 
@@ -1308,7 +1320,7 @@ NAME:   layout_dis
 DEPTH:  Dis:1-6
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_divisions
 {{
     local subdivide_threshold = 12
 
@@ -1416,7 +1428,7 @@ NAME:   layout_overlapping_boxes
 DEPTH:  Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_divisions
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
@@ -1470,7 +1482,7 @@ NAME:   layout_jigsaw
 DEPTH:  Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_divisions
 {{
     local ROOMS_ACROSS = 4
     local ROOM_SIZE = 11
@@ -1600,7 +1612,7 @@ NAME:   layout_basic
 DEPTH:  D, Depths, Lair, Snake, Crypt, Zot
 WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_basic
+TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
     if not is_validating() then layout_basic() end
 }}

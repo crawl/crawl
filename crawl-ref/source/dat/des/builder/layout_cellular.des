@@ -108,7 +108,7 @@ NAME:   layout_cellular_growth
 DEPTH:  Dis:1-6, Pan
 WEIGHT: 20 (Dis), 10 (Pan)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_maze
+TAGS:   overwritable layout allow_dup unrand layout_type_passages
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -210,11 +210,14 @@ ENDMAP
 #
 # A bit similar to stronghold but better architecture.
 #
+# TODO: Use "layout_type_angular" tag for width-1 corrdiors and
+#       "layout_type_passages" tag for wider corridors.
+#
 NAME:   layout_gridville
 DEPTH:  Depths, Snake, Dis:1-6, Pan
 WEIGHT: 10, 20(Dis)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_city
+TAGS:   overwritable layout allow_dup unrand layout_type_passages
 {{
   if is_validating() then return; end
 
