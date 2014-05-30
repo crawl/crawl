@@ -353,7 +353,6 @@ static const duration_def duration_data[] =
     { DUR_TIME_STEP, false, 0, "", "", "time step", "" },
     { DUR_ICEMAIL_DEPLETED, false, 0, "", "", "icemail depleted", "" },
     { DUR_PARALYSIS_IMMUNITY, false, 0, "", "", "paralysis immunity", "" },
-    { DUR_AMBROSIA, false, 0, "", "", "ambrosia", "" },
     { DUR_VEHUMET_GIFT, false, 0, "", "", "vehumet gift", "" },
     { DUR_SICKENING, false, 0, "", "", "sickening", "" },
     { DUR_WATER_HOLD, false, 0, "", "", "drowning", "" },
@@ -382,5 +381,6 @@ static const duration_def duration_data[] =
     { DUR_SPIRIT_HOWL, false, 0, "", "", "old spirit howl", "" },
     { DUR_SONG_OF_SHIELDING, false, 0, "", "", "old song of shielding", "" },
     { DUR_ANTENNAE_EXTEND, false, 0, "", "", "old antennae extend", "" },
+    { DUR_AMBROSIA, false, 0, "", "", "old ambrosia", "" },
 #endif
 };

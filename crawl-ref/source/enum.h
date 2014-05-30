@@ -1663,9 +1663,7 @@ enum duration_type
     DUR_TORNADO_COOLDOWN,
 #if TAG_MAJOR_VERSION == 34
     DUR_NAUSEA,
-#endif
     DUR_AMBROSIA,
-#if TAG_MAJOR_VERSION == 34
     DUR_TEMP_MUTATIONS,
 #endif
     DUR_DISJUNCTION,
