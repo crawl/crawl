@@ -336,7 +336,7 @@ ENDMAP
 #
 NAME:   layout_geoelf_octagon
 DEPTH:  Elf
-WEIGHT: 10
+WEIGHT: 15
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 TAGS:   no_rotate no_vmirror no_hmirror

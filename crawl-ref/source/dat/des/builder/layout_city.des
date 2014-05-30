@@ -53,9 +53,12 @@
 # - Differentiate in D a little
 # - Add decor in rooms if enough space - pillars, statues, whatever.
 #
+# TODO: Remove small wall blocks in Dis, then add to Dis:1-6 at
+#       weight 10.
+#
 NAME:   layout_stronghold
-DEPTH:  D:10-, Dis:1-6, Lair, Pan
-WEIGHT: 5, 20(Dis), 10(Pan)
+DEPTH:  D:9-, Pan
+WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
 {{
@@ -242,8 +245,8 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
 #  many as 5000, although 4000 is more likely.
 #
 NAME:   layout_irregular_city
-DEPTH:  D:10-, Dis:1-6, Pan
-WEIGHT: 10
+DEPTH:  D:9-, Pan
+WEIGHT: 15 (D), 10 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
 TAGS:   no_rotate no_hmirror no_vmirror
@@ -339,3 +342,33 @@ TAGS:   no_rotate no_hmirror no_vmirror
 }}
 MAP
 ENDMAP
+
+
+
+##############################################################
+# layout_onion_city
+#
+# I (infiniplex) need to revise and add this one.  This
+# placeholder included here because I budgeted space for it when
+# working out the rations of layout types per branch.
+#
+#NAME:   layout_onion_city
+#DEPTH:  Elf, Pan
+#WEIGHT: 20 (Elf), 5 (Pan)
+#ORIENT: encompass
+#TAGS:   overwritable layout allow_dup unrand layout_type_city
+#TAGS:   no_rotate no_vmirror no_hmirror
+
+##############################################################
+# layout_geometric_city
+#
+# I (infiniplex) need to revise and add this one.  This
+# placeholder included here because I budgeted space for it when
+# working out the rations of layout types per branch.
+#
+#NAME:   layout_geometric_city
+#DEPTH:  Pan
+#WEIGHT: 25
+#ORIENT: encompass
+#TAGS:   overwritable layout allow_dup unrand layout_type_city
+#TAGS:   no_rotate no_vmirror no_hmirror
