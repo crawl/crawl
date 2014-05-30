@@ -136,7 +136,7 @@ NAME:   layout_cave_pools
 DEPTH:  D:9-, Depths
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
@@ -260,7 +260,7 @@ NAME:   layout_gehenna_pools_basic
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
@@ -376,7 +376,7 @@ NAME:   layout_gehenna_pools_box
 DEPTH:  Geh
 WEIGHT: 50
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
@@ -447,7 +447,7 @@ NAME:   layout_gehenna_pools_triple
 DEPTH:  Geh
 WEIGHT: 50
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()

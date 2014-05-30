@@ -113,7 +113,7 @@ NAME:   layout_cave_shapes
 DEPTH:  Depths, !Depths:$, Lair, Snake
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -437,7 +437,7 @@ NAME:   layout_gehenna_lava_paths
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
   if is_validating() then return end
 
@@ -532,7 +532,7 @@ NAME:   layout_ice_bergs
 DEPTH:  Coc
 CHANCE: 100%
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
