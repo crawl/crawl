@@ -1517,9 +1517,12 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         if (one_chance_in(4))
             level = MAKE_GOOD_ITEM;
-        item.sub_type = random_choose_weighted(10, WPN_MORNINGSTAR, 10, WPN_FLAIL,
-                                                5, WPN_DIRE_FLAIL,   5, WPN_GREAT_MACE,
-                                                1, WPN_LAJATANG, 0);
+        item.sub_type = random_choose_weighted(10, WPN_MORNINGSTAR,
+                                               10, WPN_FLAIL,
+                                               5, WPN_DIRE_FLAIL,
+                                               5, WPN_GREAT_MACE,
+                                               1, WPN_LAJATANG,
+                                               0);
         break;
 
         case MONS_IRON_DEVIL:
