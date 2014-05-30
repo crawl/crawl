@@ -742,6 +742,7 @@ static short _get_stat_colour(stat_type stat)
     if (you.duration[DUR_DIVINE_STAMINA]
         || stat == STAT_STR && you.duration[DUR_MIGHT]
         || stat == STAT_STR && you.duration[DUR_BERSERK]
+        || stat == STAT_STR && you.duration[DUR_FORTITUDE]
         || stat == STAT_INT && you.duration[DUR_BRILLIANCE]
         || stat == STAT_DEX && you.duration[DUR_AGILITY])
     {
