@@ -241,8 +241,10 @@ spret_type cast_confusing_touch(int power, bool fail)
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
                 << "." << endl;
 
-    you.increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5),
-                          50, NULL);
+    you.set_duration(DUR_CONFUSING_TOUCH,
+                     max(10 + random2(power) / 5,
+                         you.duration[DUR_CONFUSING_TOUCH]),
+                     20, NULL);
 
     return SPRET_SUCCESS;
 }

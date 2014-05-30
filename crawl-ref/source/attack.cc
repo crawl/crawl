@@ -1340,6 +1340,8 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
 
 int attack::player_apply_final_multipliers(int damage)
 {
+    if (you.duration[DUR_CONFUSING_TOUCH] && wpn_skill == SK_UNARMED_COMBAT)
+        return 0;
     return damage;
 }
 
@@ -1419,9 +1421,6 @@ int attack::calc_base_unarmed_damage()
         }
         else
             damage += you.skill_rdiv(wpn_skill);
-
-        if (you.duration[DUR_CONFUSING_TOUCH] && wpn_skill == SK_UNARMED_COMBAT)
-            damage -= 3;
 
         if (damage < 0)
             damage = 0;
@@ -1512,9 +1511,8 @@ int attack::calc_damage()
         damage_done = player_apply_fighting_skill(damage_done, false);
         damage_done = player_apply_misc_modifiers(damage_done);
         damage_done = player_apply_slaying_bonuses(damage_done, false);
-        damage_done = player_apply_final_multipliers(damage_done);
-
         damage_done = player_stab(damage_done);
+        damage_done = player_apply_final_multipliers(damage_done);
         damage_done = apply_defender_ac(damage_done);
 
         set_attack_verb();
@@ -1859,11 +1857,7 @@ bool attack::apply_damage_brand(const char *what)
         if (attacker->is_player() && damage_brand == SPWPN_CONFUSE
             && you.duration[DUR_CONFUSING_TOUCH])
         {
-            you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5)
-                                                 * BASELINE_DELAY;
-
-            if (you.duration[DUR_CONFUSING_TOUCH] < 1)
-                you.duration[DUR_CONFUSING_TOUCH] = 1;
+            you.duration[DUR_CONFUSING_TOUCH] = 1;
             obvious_effect = false;
         }
         break;
