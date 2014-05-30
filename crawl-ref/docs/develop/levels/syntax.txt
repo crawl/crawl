@@ -419,7 +419,7 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              * rooms: Corridors connecting rooms
              * passages: Mostly multi-cell corridors
              * anastomotic: Corridor-like caves
-             * raniform: Open caves
+             * caves: Open caves
              * city: A large open room with "building" rooms in it
              * open: Layout is mostly open but not cavelike
              * divisions: Just ajoining rooms
