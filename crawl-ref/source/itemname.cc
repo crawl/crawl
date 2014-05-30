@@ -2405,6 +2405,10 @@ void check_item_knowledge(bool unknown_items)
         // Missiles
         for (int i = 0; i < NUM_MISSILES; i++)
         {
+#if TAG_MAJOR_VERSION == 34
+            if (i == MI_DART)
+                continue;
+#endif
             item_def* ptmp = new item_def;
             if (ptmp != 0)
             {
