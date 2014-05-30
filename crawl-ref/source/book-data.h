@@ -358,7 +358,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 },
 
 {   // Book of Cantrips
-    SPELL_CONFUSING_TOUCH,
+    SPELL_CORONA,
     SPELL_ANIMATE_SKELETON,
     SPELL_SUMMON_SMALL_MAMMAL,
     SPELL_APPORTATION,
