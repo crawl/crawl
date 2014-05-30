@@ -2641,7 +2641,7 @@ int player_shield_class()
         shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
         shield += base_shield * beogh_bonus * 10 / 6;
 
-        shield += item.plus * 100;
+        shield += item.plus * 200;
 
         if (item.sub_type == ARM_BUCKLER)
             stat = you.dex() * 38;
