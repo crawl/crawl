@@ -68,7 +68,7 @@
 # This replaces dungeon.cc:_plan_1(). It usually creates a
 # room with a large hole in the middle.
 #
-# TODO: Use "layout_type_raniform" tag for cave version and
+# TODO: Use "layout_type_caves" tag for cave version and
 #       "layout_type_open" tag for non-cave version.
 #
 NAME:   layout_forbidden_donut
@@ -148,7 +148,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_2(). It creates a large cross
 # of varying width.
 #
-# TODO: Use "layout_type_raniform" tag for cave version and
+# TODO: Use "layout_type_caves" tag for cave version and
 #       "layout_type_open" tag for non-cave version.
 #
 NAME:   layout_cross
@@ -220,7 +220,7 @@ ENDMAP
 # room with some number of pillars in the middle. The stairs
 # are generally all grouped together.
 #
-# TODO: Use "layout_type_raniform" tag for cave version and
+# TODO: Use "layout_type_caves" tag for cave version and
 #       "layout_type_open" tag for non-cave version.
 #
 NAME:   layout_big_octagon
@@ -770,7 +770,7 @@ DEPTH:  D:9-, Depths, Orc, Slime
 CHANCE: 100% (Orc), 100% (Slime)
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
     local gxm, gym = dgn.max_bounds()
 
@@ -1145,7 +1145,7 @@ ENDMAP
 # Previously named "layout_delve".
 #
 # TODO: Use "layout_type_anastomotic" tag for passage-y version
-#       and "layout_type_raniform" tag for more open version.
+#       and "layout_type_caves" tag for more open version.
 #
 NAME:   layout_spider_delve
 DEPTH:  Spider

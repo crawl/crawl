@@ -414,8 +414,8 @@ ENDMAP
 
 # Do not disturb the sanctity of this place, mortal...
 NAME:   grunt_crypt_arrival_guarded_gate
-TAGS:   uniq_crypt_arrival no_item_gen no_monster_gen no_trap_gen layout_basic \
-        layout_rooms layout_city layout_misc no_hmirror no_rotate extra
+TAGS:   uniq_crypt_arrival no_item_gen no_monster_gen no_trap_gen \
+        layout_rooms layout_city layout_angular no_hmirror no_rotate extra
 ORIENT: south
 DEPTH:  Crypt:1
 WEIGHT: 30
