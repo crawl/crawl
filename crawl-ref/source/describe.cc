@@ -563,13 +563,7 @@ string trap_name(trap_type trap)
 {
     COMPILE_CHECK(ARRAYSZ(trap_names) == NUM_TRAPS);
 
-    if (
-#if TAG_MAJOR_VERSION == 34
-        trap >= TRAP_DART
-#else
-        trap >= TRAP_ARROW
-#endif
-        && trap < NUM_TRAPS)
+    if (trap >= 0 && trap < NUM_TRAPS)
         return trap_names[trap];
     return "";
 }
