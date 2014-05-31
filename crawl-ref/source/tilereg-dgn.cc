@@ -1198,8 +1198,12 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     {
         if (you.see_cell(gc) && env.map_knowledge(gc).item())
         {
-            _add_tip(tip, "[L-Click] Pick up items (%)");
-            cmd.push_back(CMD_PICKUP);
+            const item_info * const item = env.map_knowledge(gc).item();
+            if (item && !item_is_stationary(*item))
+            {
+                _add_tip(tip, "[L-Click] Pick up items (%)");
+                cmd.push_back(CMD_PICKUP);
+            }
         }
 
         const dungeon_feature_type feat = env.map_knowledge(gc).feat();

@@ -337,12 +337,15 @@ bool InventoryRegion::update_tip_text(string& tip)
         if (!display_actions)
             return true;
 
-        tip += "\n[L-Click] Pick up (%)";
-        cmd.push_back(CMD_PICKUP);
-        if (item.quantity > 1)
+        if (!item_is_stationary(item))
         {
-            tip += "\n[Ctrl + L-Click] Partial pick up (%)";
-            cmd.push_back(CMD_PICKUP_QUANTITY);
+            tip += "\n[L-Click] Pick up (%)";
+            cmd.push_back(CMD_PICKUP);
+            if (item.quantity > 1)
+            {
+                tip += "\n[Ctrl + L-Click] Partial pick up (%)";
+                cmd.push_back(CMD_PICKUP_QUANTITY);
+            }
         }
         if (item.base_type == OBJ_CORPSES
             && item.sub_type != CORPSE_SKELETON
