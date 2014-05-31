@@ -2146,6 +2146,8 @@ static void _brand_weapon(item_def &wpn)
     if (success)
     {
         item_set_appearance(wpn);
+        // Message would spoil this even if we didn't identify.
+        set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
         // Might be rebranding to/from protection or evasion.
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
