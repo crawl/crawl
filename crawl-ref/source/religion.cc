@@ -3632,12 +3632,6 @@ bool god_likes_item(god_type god, const item_def& item)
         return item.base_type == OBJ_CORPSES
                && mons_genus(item.mon_type) == MONS_ORC;
 
-    case GOD_NEMELEX_XOBEH:
-        return !is_deck(item)
-               && !item.is_critical()
-               && !item_is_rune(item)
-               && item.base_type != OBJ_GOLD;
-
     case GOD_ASHENZARI:
         return item.base_type == OBJ_SCROLLS
                && item.sub_type == SCR_REMOVE_CURSE;

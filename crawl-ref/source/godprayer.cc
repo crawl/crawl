@@ -860,21 +860,10 @@ static bool _offer_items()
     {
         ASSERT(disliked_item);
 
-        if (item_is_orb(*disliked_item))
-            simple_god_message(" wants the Orb's power used on the surface!");
-        else if (item_is_rune(*disliked_item))
-            simple_god_message(" wants the runes to be proudly displayed.");
-        // Zin was handled above, and the other gods don't care about
-        // sacrifices.
-        else if (god_likes_fresh_corpses(you.religion))
+        if (god_likes_fresh_corpses(you.religion))
             simple_god_message(" only cares about fresh corpses!");
         else if (you_worship(GOD_BEOGH))
             simple_god_message(" only cares about orcish remains!");
-        else if (you_worship(GOD_NEMELEX_XOBEH))
-            if (disliked_item->base_type == OBJ_GOLD)
-                simple_god_message(" does not care about gold!");
-            else
-                simple_god_message(" expects you to use your decks, not offer them!");
         else if (you_worship(GOD_ASHENZARI))
             simple_god_message(" can corrupt only scrolls of remove curse.");
     }
