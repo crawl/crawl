@@ -2677,9 +2677,9 @@ int player_shield_class()
     }
 
     // mutations
-    // +2, +4, +6
+    // +3, +6, +9
     shield += (player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 200
+               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 300
                : 0);
 
     stat += qazlal_sh_boost() * 100;
