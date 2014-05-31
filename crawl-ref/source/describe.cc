@@ -4760,17 +4760,6 @@ void describe_god(god_type which_god, bool give_title)
         }
         else if (which_god == GOD_JIYVA)
         {
-            if (!player_under_penance())
-            {
-                have_any = true;
-                const char *how = (you.piety >= 150) ? "carefully" :
-                                  (you.piety >= 100) ? "often" :
-                                  (you.piety >=  50) ? "sometimes" :
-                                                       "occasionally";
-
-                cprintf("%s %s shields your consumables from destruction.\n",
-                        uppercase_first(god_name(which_god)).c_str(), how);
-            }
             if (you.piety >= piety_breakpoint(2))
             {
                 have_any = true;
