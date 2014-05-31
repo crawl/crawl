@@ -57,6 +57,8 @@ function hell_lava_spawns(e)
 end
 }}
 
+default-depth: Depths, D:21-
+
 ##############################################################################
 # Vestibule entries
 ##############################################################################
@@ -66,14 +68,11 @@ end
 # placements.
 NAME:   hell_entry
 TAGS:   allow_dup can_overwrite replace_portal transparent fallback_enter_hell
-DEPTH:  Depths, D:21-
 WEIGHT: 50
 : hell_entry_feature(_G, 'O')
 MAP
 O
 ENDMAP
-
-default-depth: Depths
 
 ##############################################################################
 # Hellmouth (Lemuel)
