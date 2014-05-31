@@ -1027,6 +1027,16 @@ static const mutation_def mut_data[] =
   "wild magic"
 },
 
+{ MUT_FORLORN,                      6,  1,  true, false,
+    "forlorn",
+
+    {"You have difficulty communicating with the divine.","",""},
+    {"You feel forlorn.","",""},
+    {"You feel more spiritual.","",""},
+
+    "forlorn"
+},
+
 { MUT_STOCHASTIC_TORMENT_RESISTANCE,  0,  1, false, false,
   "50% torment resistance",
 

@@ -3746,7 +3746,7 @@ static void _gozag_add_bad_potion(CrawlVector &vec)
 
 int gozag_faith_adjusted_price(int price)
 {
-    return you.faith() ? price * 2 / 3 : price;
+    return price - (you.faith() * price)/3;
 }
 
 int gozag_porridge_price()

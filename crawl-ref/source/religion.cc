@@ -2730,16 +2730,10 @@ void dock_piety(int piety_loss, int penance)
     }
 }
 
-// Scales a piety number, applying boosters (amulet of faith).
+// Scales a piety number, applying modifiers (faith, forlorn).
 int piety_scale(int piety)
 {
-    if (piety < 0)
-        return -piety_scale(-piety);
-
-    if (you.faith())
-        return piety + div_rand_round(piety, 3);
-
-    return piety;
+    return piety + (you.faith() * div_rand_round(piety, 3));
 }
 
 static void _gain_piety_point();
