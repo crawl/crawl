@@ -645,7 +645,7 @@ BRAND:    SPWPN_ELECTROCUTION
 
 NAME:    large shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
-PLUS:    +8
+PLUS:    +6
 COLOUR:  BROWN
 TILE:    urand_ignorance
 TILE_EQ: lshield_of_ignorance
@@ -876,7 +876,7 @@ BOOL:     life, poison
 
 NAME:     shield of the gong
 OBJ:      OBJ_ARMOUR/ARM_SHIELD
-PLUS:     +13
+PLUS:     +18
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
 TILE_EQ:  shield_gong
