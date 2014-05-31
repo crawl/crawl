@@ -337,6 +337,12 @@ bool InventoryRegion::update_tip_text(string& tip)
         if (!display_actions)
             return true;
 
+        if (item_is_stationary_net(item))
+        {
+            tip += make_stringf(" (holding %s)",
+                                net_holdee(item)->name(DESC_A).c_str());
+        }
+
         if (!item_is_stationary(item))
         {
             tip += "\n[L-Click] Pick up (%)";
