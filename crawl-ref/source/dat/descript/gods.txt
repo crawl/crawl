@@ -328,9 +328,9 @@ Jiyva's followers can request jellies, turn monsters to slime, and eventually
 remove their harmful mutations. Followers of Jiyva may also pray alongside
 visible slimes, preventing items from being eaten for a while. As their piety
 grows, Jiyva will, with increasing frequency, drop jellies into the dungeon;
-rearrange followers' attributes based on their skills, armour, and burden; and
-grant mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva
-demands the same conduct in return.
+rearrange followers' attributes based on their skills and armour; and grant
+mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands
+the same conduct in return.
 %%%%
 Ashenzari powers
 
