@@ -6079,19 +6079,22 @@ void monster::steal_item_from_player()
     }
 }
 
+/**
+ * Checks if the monster can pass through webs freely.
+ *
+ * Currently: spiders (including Arachne), moths, demonic crawlers,
+ * ghosts & other incorporeal monsters, and jelly monsters.
+ *
+ * @return Whether the monster is immune to webs.
+ */
 bool monster::is_web_immune() const
 {
-    // Spiders, Demonic crawlers
-    // Moths
-    // Ghosts and other incorporeals
-    // Oozes
-    // All 'I' (ice / sky beast)
     return mons_genus(type) == MONS_SPIDER
-           || type == MONS_ARACHNE
-           || is_insubstantial()
-           || mons_genus(type) == MONS_JELLY
-           || mons_genus(type) == MONS_DEMONIC_CRAWLER
-           || mons_genus(type) == MONS_MOTH;
+            || type == MONS_ARACHNE
+            || mons_genus(type) == MONS_MOTH
+            || mons_genus(type) == MONS_DEMONIC_CRAWLER
+            || is_insubstantial()
+            || mons_genus(type) == MONS_JELLY;
 }
 
 // Undead monsters have nightvision, as do all followers of Yredelemnul
