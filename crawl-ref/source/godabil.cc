@@ -3744,7 +3744,7 @@ static void _gozag_add_bad_potion(CrawlVector &vec)
     vec.push_back(what);
 }
 
-int gozag_faith_adjusted_price(int price)
+static int _gozag_faith_adjusted_price(int price)
 {
     return price - (you.faith() * price)/3;
 }
@@ -3764,7 +3764,7 @@ int gozag_porridge_price()
     dummy.sub_type = porridge_type;
     dummy.quantity = 1;
     int price = multiplier * item_value(dummy, true) / 10;
-    return gozag_faith_adjusted_price(price);
+    return _gozag_faith_adjusted_price(price);
 }
 
 bool gozag_setup_potion_petition(bool quiet)
@@ -3865,7 +3865,7 @@ bool gozag_potion_petition()
         mesclr();
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
-            faith_price = gozag_faith_adjusted_price(prices[i]);
+            faith_price = _gozag_faith_adjusted_price(prices[i]);
             string line = make_stringf("  [%c] - %d gold - ", i + 'a',
                                        faith_price);
             vector<string> pot_names;
@@ -3879,7 +3879,7 @@ bool gozag_potion_petition()
         if (keyin < 0 || keyin > GOZAG_MAX_POTIONS - 1)
             continue;
 
-        faith_price = gozag_faith_adjusted_price(prices[keyin]);
+        faith_price = _gozag_faith_adjusted_price(prices[keyin]);
         if (you.gold < faith_price)
         {
             mpr("You don't have enough gold for that!");
@@ -3935,7 +3935,7 @@ int gozag_price_for_shop(bool max)
                          + GOZAG_SHOP_MOD_MULTIPLIER
                            * you.attribute[ATTR_GOZAG_SHOPS])
                       / GOZAG_SHOP_BASE_MULTIPLIER;
-    return max ? gozag_faith_adjusted_price(price) : price;
+    return max ? _gozag_faith_adjusted_price(price) : price;
 }
 
 static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
@@ -4067,7 +4067,7 @@ bool gozag_call_merchant()
         for (i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
             cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
-            faith_cost = gozag_faith_adjusted_price(cost);
+            faith_cost = _gozag_faith_adjusted_price(cost);
             string line =
                 make_stringf("  [%c] %5d gold - %s %s %s",
                              'a' + i,
@@ -4090,7 +4090,7 @@ bool gozag_call_merchant()
         if (i < 0 || i > GOZAG_MAX_SHOPS - 1)
             continue;
         cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
-        faith_cost = gozag_faith_adjusted_price(cost);
+        faith_cost = _gozag_faith_adjusted_price(cost);
         if (you.gold < faith_cost)
         {
             mpr("You don't have enough gold to fund that merchant!");
