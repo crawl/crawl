@@ -553,7 +553,7 @@ double NoiseLayout::_optimum_range(const double val, const double rstart, const 
 }
 double NoiseLayout::_optimum_range_mid(const double val, const double rstart, const double rmax1, const double rmax2, const double rend) const
 {
-    if (rmax1 <= val <= rmax2) return 1.0;
+    if (rmax1 <= val && val <= rmax2) return 1.0;
     if (val <= rstart || val >= rend) return 0.0;
     if (val < rmax1)
         return (val - rstart) / (rmax1-rstart);
