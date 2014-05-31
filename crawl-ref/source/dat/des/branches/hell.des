@@ -63,7 +63,7 @@ end
 # placements.
 NAME:   hell_entry
 TAGS:   allow_dup can_overwrite replace_portal transparent fallback_enter_hell
-DEPTH:  Depths
+DEPTH:  Depths, D:21-
 WEIGHT: 50
 : hell_entry_feature(_G, 'O')
 MAP
