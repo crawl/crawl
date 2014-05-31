@@ -4741,14 +4741,17 @@ void describe_god(god_type which_god, bool give_title)
         }
         else if (which_god == GOD_SHINING_ONE)
         {
-            have_any = true;
-            const char *how = (you.piety >= 150) ? "carefully" :
-                              (you.piety >= 100) ? "often" :
-                              (you.piety >=  50) ? "sometimes" :
-                                                   "occasionally";
+            if (you.piety >= piety_breakpoint(1))
+            {
+                have_any = true;
+                const char *how =
+                    (you.piety >= piety_breakpoint(5)) ? "carefully" :
+                    (you.piety >= piety_breakpoint(3)) ? "often" :
+                                                         "sometimes";
 
-            cprintf("%s %s shields you from negative energy.\n",
-                    uppercase_first(god_name(which_god)).c_str(), how);
+                cprintf("%s %s shields you from negative energy.\n",
+                        uppercase_first(god_name(which_god)).c_str(), how);
+            }
         }
         else if (which_god == GOD_TROG)
         {

@@ -2164,10 +2164,17 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         }
     }
 
-    // Same here.  Your piety status, and, hence, TSO's protection, is
+    // Same here. Your piety status, and, hence, TSO's protection, is
     // something you can more or less control.
-    if (you_worship(GOD_SHINING_ONE) && you.piety > pl * 50)
-        pl = you.piety / 50;
+    if (you_worship(GOD_SHINING_ONE))
+    {
+        if (you.piety >= piety_breakpoint(1))
+            pl++;
+        if (you.piety >= piety_breakpoint(3))
+            pl++;
+        if (you.piety >= piety_breakpoint(5))
+            pl++;
+    }
 
     if (temp)
     {
