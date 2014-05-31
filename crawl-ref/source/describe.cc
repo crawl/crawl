@@ -4730,10 +4730,11 @@ void describe_god(god_type which_god, bool give_title)
         if (which_god == GOD_ZIN)
         {
             have_any = true;
-            const char *how = (you.piety >= 150) ? "carefully" :
-                              (you.piety >= 100) ? "often" :
-                              (you.piety >=  50) ? "sometimes" :
-                                                   "occasionally";
+            const char *how =
+                (you.piety >= piety_breakpoint(5)) ? "carefully" :
+                (you.piety >= piety_breakpoint(3)) ? "often" :
+                (you.piety >= piety_breakpoint(1)) ? "sometimes" :
+                                                     "occasionally";
 
             cprintf("%s %s shields you from chaos.\n",
                     uppercase_first(god_name(which_god)).c_str(), how);
