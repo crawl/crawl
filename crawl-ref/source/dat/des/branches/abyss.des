@@ -44,7 +44,7 @@ end
 # 1/3 chance to appear on D:21-27, and guaranteed on D:25.
 ###############################################################################
 
-default-depth: Depths
+default-depth: Depths, D:21-
 
 # This one is the backup and the one used in encompass vaults.
 NAME: abyss_entry
