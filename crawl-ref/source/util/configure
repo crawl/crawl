@@ -17,7 +17,7 @@ int main()
 }
 END
 
-"$CXX" "$@" -c conftest.cc >/dev/null 2>/dev/null &&
+$CXX "$@" -c conftest.cc >/dev/null 2>/dev/null &&
   FDATASYNC="#define HAVE_FDATASYNC" || FDATASYNC="#undef HAVE_FDATASYNC"
 rm -f conftest.cc conftest.o
 
@@ -32,7 +32,7 @@ int main()
 }
 END
 
-"$CXX" "$@" -c conftest.cc >/dev/null 2>/dev/null &&
+$CXX "$@" -c conftest.cc >/dev/null 2>/dev/null &&
   STRLCPY="#define HAVE_STRLCPY" || STRLCPY="#undef HAVE_STRLCPY"
 rm -f conftest.cc conftest.o
 
