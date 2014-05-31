@@ -484,8 +484,17 @@ ifeq ($(shell which $(LMACH)gcc$(GCC_VER_SUFFIX) > /dev/null 2> /dev/null && ech
 LMACH :=
 endif
 
+ifneq ($(FORCE_CC),)
+GCC := $(FORCE_CC)
+else
 GCC := $(LMACH)$(GCC_VER_PREFIX)gcc$(GCC_VER_SUFFIX)
+endif
+
+ifneq ($(FORCE_CXX),)
+GXX := $(FORCE_CXX)
+else
 GXX := $(LMACH)$(GCC_VER_PREFIX)g++$(GCC_VER_SUFFIX)
+endif
 
 else
 
