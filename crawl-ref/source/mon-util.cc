@@ -4764,7 +4764,7 @@ void debug_mondata()
 
         int MR = md->resist_magic;
         if (MR < 0)
-            MR = md->hpdice[9] * -MR * 4 / 3;
+            MR = md->hpdice[0] * -MR * 4 / 3;
         if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
 
