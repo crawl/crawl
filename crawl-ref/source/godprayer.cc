@@ -425,10 +425,10 @@ void pray()
 
     if (you_worship(GOD_XOM))
         mprf(MSGCH_GOD, "%s", getSpeakString("Xom prayer").c_str());
+    else if (you_worship(GOD_GOZAG))
+        mprf(MSGCH_GOD, "%s", getSpeakString("Gozag prayer").c_str());
     else if (player_under_penance())
         simple_god_message(" demands penance!");
-    if (you_worship(GOD_GOZAG))
-        mprf(MSGCH_GOD, "%s", getSpeakString("Gozag prayer").c_str());
     else
         mprf(MSGCH_PRAY, you.religion, "%s", god_prayer_reaction().c_str());
 
