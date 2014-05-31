@@ -1027,7 +1027,7 @@ static const mutation_def mut_data[] =
   "wild magic"
 },
 
-{ MUT_FORLORN,                      6,  1,  true, false,
+{ MUT_FORLORN,                      3,  1,  true, false,
     "forlorn",
 
     {"You have difficulty communicating with the divine.","",""},
