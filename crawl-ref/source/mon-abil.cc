@@ -1003,6 +1003,7 @@ static bool _will_starcursed_scream(monster* mon)
 static bool _siren_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD]
+                      || you.duration[DUR_TIME_STEP]
                       || you.cannot_act()
                       || you.clarity()
                       || you.is_stationary());
