@@ -1576,6 +1576,7 @@ static bool _qazlal_retribution()
         }
         break;
     }
+    return true;
 }
 
 static bool _igni_retribution()
