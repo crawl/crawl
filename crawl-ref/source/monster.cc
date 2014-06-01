@@ -5186,7 +5186,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
     {
         monster_type genus = mons_genus(type);
 
-        if (genus == MONS_JELLY || genus == MONS_GIANT_SLUG)
+        if (genus == MONS_JELLY || genus == MONS_ELEPHANT_SLUG)
         {
             prop &= ~FPROP_BLOODY;
             if (you.see_cell(pos()) && !visible_to(&you))
