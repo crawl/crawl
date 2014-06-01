@@ -1283,8 +1283,7 @@ static string _describe_armour(const item_def &item, bool verbose)
             break;
 #if TAG_MAJOR_VERSION == 34
         case SPARM_PRESERVATION:
-            description += "It protects its wearer's possessions "
-                "from corrosion and destruction.";
+            description += "It does nothing special.";
             break;
 #endif
         case SPARM_REFLECTION:
