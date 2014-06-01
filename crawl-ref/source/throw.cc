@@ -983,6 +983,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         delete pbolt.special_explosion;
 
     if (!teleport
+        && projected
         && you_worship(GOD_DITHMENOS)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE
