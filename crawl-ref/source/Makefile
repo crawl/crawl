@@ -200,11 +200,11 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
+		COPY_FONTS = yes
 	endif
 	ifeq ($(shell gcc -v -static -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
 		EXTRA_LIBS += -static -static-libgcc -static-libstdc++
 	endif
-	COPY_FONTS = yes
 endif
 ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
@@ -219,8 +219,8 @@ ifeq ($(uname_S),Darwin)
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
+		COPY_FONTS = yes
 	endif
-	COPY_FONTS = yes
 endif
 ifdef USE_ICC
 	NO_RDYNAMIC := YesPlease
