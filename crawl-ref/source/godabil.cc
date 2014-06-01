@@ -3508,7 +3508,6 @@ monster* shadow_monster(bool equip)
         return NULL;
 
     int wpn_index  = NON_ITEM;
-    int ammo_index = NON_ITEM;
 
     // Do a basic clone of the weapon.
     item_def* wpn = you.weapon();
@@ -3541,24 +3540,6 @@ monster* shadow_monster(bool equip)
         new_item.quantity = 1;
         new_item.flags   |= ISFLAG_SUMMONED;
     }
-    const int missile = you.m_quiver->get_fire_item();
-    if (equip && missile != -1)
-    {
-        ammo_index = get_mitm_slot(10);
-        if (ammo_index == NON_ITEM)
-        {
-            if (wpn_index != NON_ITEM)
-                destroy_item(wpn_index);
-            return NULL;
-        }
-        item_def& new_item = mitm[ammo_index];
-        item_def *ammo     = &you.inv[missile];
-        new_item.base_type = ammo->base_type;
-        new_item.sub_type  = ammo->sub_type;
-        new_item.colour    = ammo->colour;
-        new_item.quantity  = 1;
-        new_item.flags    |= ISFLAG_SUMMONED;
-    }
 
     monster* mon = get_free_monster();
     if (!mon)
@@ -3583,7 +3564,7 @@ monster* shadow_monster(bool equip)
     mon->set_position(you.pos());
     mon->mid        = MID_PLAYER;
     mon->inv[MSLOT_WEAPON]  = wpn_index;
-    mon->inv[MSLOT_MISSILE] = ammo_index;
+    mon->inv[MSLOT_MISSILE] = NON_ITEM;
 
     mgrd(you.pos()) = mon->mindex();
 
@@ -3621,7 +3602,7 @@ void dithmenos_shadow_melee(actor* target)
     shadow_monster_reset(mon);
 }
 
-void dithmenos_shadow_throw(coord_def target)
+void dithmenos_shadow_throw(coord_def target, const item_def &item)
 {
     if (target.origin()
         || !_dithmenos_shadow_acts())
@@ -3633,8 +3614,17 @@ void dithmenos_shadow_throw(coord_def target)
     if (!mon)
         return;
 
-    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
+    int ammo_index = get_mitm_slot(10);
+    if (ammo_index != NON_ITEM)
     {
+        item_def& new_item = mitm[ammo_index];
+        new_item.base_type = item.base_type;
+        new_item.sub_type  = item.sub_type;
+        new_item.colour    = item.colour;
+        new_item.quantity  = 1;
+        new_item.flags    |= ISFLAG_SUMMONED;
+        mon->inv[MSLOT_MISSILE] = ammo_index;
+
         mon->target = target;
 
         bolt beem;
