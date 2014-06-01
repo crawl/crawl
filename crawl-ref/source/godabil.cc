@@ -4810,9 +4810,7 @@ bool igni_fire_fortress()
             env.cloud[cloud].set_whose(KC_YOU);
         }
         else
-        {
             place_cloud(CLOUD_FIRE, *it, durat, &you);
-        }
         success = true;
     }
 
