@@ -52,8 +52,6 @@
 #include "viewchar.h"
 #include "xom.h"
 
-static int _body_covered();
-
 #include "mutation-data.h"
 
 static const body_facet_def _body_facets[] =
