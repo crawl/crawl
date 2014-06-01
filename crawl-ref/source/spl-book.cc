@@ -1380,7 +1380,7 @@ int rod_spell(int rod, bool check_range)
         return -1;
     }
 
-    if (check_range && spell_no_hostile_in_range(spell))
+    if (check_range && spell_no_hostile_in_range(spell, true))
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
@@ -1389,7 +1389,7 @@ int rod_spell(int rod, bool check_range)
 
         if (Options.darken_beyond_range)
         {
-            targetter_smite range(&you, calc_spell_range(spell), 0, 0, true);
+            targetter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
             range_view_annotator show_range(&range);
             delay(50);
         }
