@@ -496,9 +496,9 @@ const char* weapon_brand_name(const item_def& item, bool terse)
 
     // obsolete and buggy brands
 #if TAG_MAJOR_VERSION == 34
-    case SPWPN_ORC_SLAYING: return terse ? "slay orc" : "orc slaying";
-    case SPWPN_REACHING: return terse ? "reach" : "reaching";
-    case SPWPN_RETURNING: return terse ? "return" : "returning";
+    case SPWPN_ORC_SLAYING: return terse ? "obsolete" : "orc slaying";
+    case SPWPN_REACHING: return terse ? "obsolete" : "reaching";
+    case SPWPN_RETURNING: return terse ? "obsolete" : "returning";
     case SPWPN_CONFUSE: return terse ? "confuse" : "confusion";
 #endif
     default: return terse ? "buggy" : "bugginess";
@@ -570,7 +570,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_POSITIVE_ENERGY:   return "rN+";
         case SPARM_ARCHMAGI:          return "Archmagi";
 #if TAG_MAJOR_VERSION == 34
-        case SPARM_PRESERVATION:      return "";
+        case SPARM_PRESERVATION:      return "obsolete";
 #endif
         case SPARM_REFLECTION:        return "reflect";
         case SPARM_SPIRIT_SHIELD:     return "Spirit";
