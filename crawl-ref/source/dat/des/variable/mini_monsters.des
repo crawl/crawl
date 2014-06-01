@@ -276,7 +276,7 @@ ENDMAP
 NAME:  worms_lemuel
 TAGS:  no_rotate no_monster_gen
 DEPTH: D:8-13, Lair, Spider
-KMONS: 1 = worm w:140 / giant slug w:60 / brain worm
+KMONS: 1 = worm w:190 / brain worm
 KMONS: 2| = swamp worm
 KMONS: P = plant
 KITEM: | = |, *, %
@@ -349,7 +349,7 @@ NAME:    hangedman_stitches_earthworm
 TAGS:    no_monster_gen no_item_gen transparent no_pool_fixup
 DEPTH:   Depths, Spider:2-, Abyss
 KMONS:   0 = 0
-KMONS:   1 = giant slug
+KMONS:   1 = worm
 KMONS:   2 = boulder beetle
 KMONS:   3 = trapdoor spider / orb spider w:5
 KMONS:   4 = thrashing horror
@@ -1009,7 +1009,7 @@ KMONS:   8 = ball python / adder w:8
 KMONS:   A = green rat
 KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
-KMONS:   D = giant slug
+KMONS:   D = worm
 KMONS:   E = jelly
 KMONS:   F = worker ant
 KMONS:   G = hound / wolf w:3
@@ -1068,7 +1068,7 @@ NAME:  guppyfry_early_lair_pool
 TAGS:  patrolling no_monster_gen transparent
 DEPTH: D:2-5
 KMONS: 1 = big fish
-KMONS: 2 = giant slug / adder
+KMONS: 2 = adder
 KMONS: 3 = plant
 ITEM:  fruit
 SUBST: - = wwwwwwWWW1

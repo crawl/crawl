@@ -1254,10 +1254,6 @@ giant orange brain
 A huge wrinkled brain, floating just off the floor and glowing with mutagenic
 energies. Every now and then it seems to pulsate.
 %%%%
-giant slug
-
-A huge and disgusting gastropod, squirming slowly across the dungeon floor.
-%%%%
 giant spore
 
 A deceptively fast, floating ball filled with gas and spores, prone to burst at

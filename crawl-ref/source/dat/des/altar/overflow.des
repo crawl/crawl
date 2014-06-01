@@ -165,7 +165,7 @@ DEPTH:   D:2-
 WEIGHT:  1
 KPROP:   1 = no_rtele_into
 KFEAT:   _ = altar_cheibriados
-MONS:    giant slug, elephant slug
+MONS:    worm
 SUBST:   1 : 1:50 2:30 3:10 4:10
 NSUBST:  4 = 1:1 / 1:2 / 1:3
 : interest_check(_G)
@@ -247,12 +247,12 @@ c.....c
 ccc+ccc
 ENDMAP
 
-NAME:   chei_snail_safe_becter
+NAME:   chei_worm_safe_becter
 TAGS:   overflow_altar_cheibriados transparent no_monster_gen
 TAGS:   transparent
 DEPTH:  D:4-9
 WEIGHT: 5
-KMONS:  a = giant slug
+KMONS:  a = worm
 NSUBST: ' = 1:a / *:.
 KFEAT:  _ = altar_cheibriados
 MAP
@@ -268,13 +268,13 @@ MAP
 .........
 ENDMAP
 
-NAME:   cheibrodos_slug_habitat
+NAME:   cheibrodos_worm_habitat
 TAGS:   no_item_gen no_monster_gen temple_overflow_1 transparent
 TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
 DEPTH:  D:5-9
 WEIGHT: 5
 KFEAT:  _ = altar_cheibriados
-MONS:   giant slug
+MONS:   worm
 MAP
 .............
 .xxxxx.xxxxx.

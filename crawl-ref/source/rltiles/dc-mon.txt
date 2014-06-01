@@ -105,7 +105,6 @@ komodo_dragon MONS_KOMODO_DRAGON
 %sdir mon/unique
 gastronok MONS_GASTRONOK
 %sdir mon/animals
-giant_slug MONS_GIANT_SLUG
 elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')

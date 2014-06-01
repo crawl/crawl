@@ -165,9 +165,10 @@ ENDMAP
 ##############################################################################
 # Generic Lair entry
 #
+# This could probably use some randomization.
 NAME:    david_lair_generic
 TAGS:    lair_entry
-MONS:    crocodile / sheep, giant slug / elephant slug / nothing
+MONS:    crocodile / sheep, worm
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -212,13 +213,12 @@ ENDMAP
 NAME:    dpeg_lair_monsters
 TAGS:    lair_entry
 ORIENT:  float
-MONS:    w:60 nothing / w:30 giant slug
 MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          komodo dragon / basilisk w:5
 MONS:    green rat / porcupine / orange rat / quokka / rat
 MONS:    w:90 nothing / w:30 giant frog / blink frog / spiny frog
-SHUFFLE: 12345
+SHUFFLE: 1234
 KFEAT:   O = enter_lair
 MAP
 111...@......
@@ -293,7 +293,7 @@ NAME:   minmay_lair_entry_grove
 TAGS:   lair_entry
 ORIENT: float
 MONS:   plant / bush w:2 / fungus w:2
-MONS:   crocodile / basilisk w:5 / giant slug
+MONS:   crocodile / basilisk w:5
 MONS:   yak
 MONS:   sheep
 MONS:   rat w:2 / porcupine / green rat / quokka w:1
@@ -555,8 +555,7 @@ DEPTH:   Lair:3-7
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
-MONS:    giant slug zombie / \
-         elephant slug zombie w:2 / nothing
+MONS:    elephant slug zombie w:5 / nothing
 MONS:    crocodile zombie / basilisk zombie / \
          komodo dragon zombie w:4 / nothing
 MAP
@@ -1681,7 +1680,7 @@ ENDMAP
 # an altar to chei, and a few followers
 NAME:  kennysheep_slug_temple
 DEPTH: Lair
-MONS:  giant slug / elephant slug w:2 / nothing
+MONS:  worm / nothing
 KFEAT: a = altar_cheibriados
 MAP
  @
@@ -2522,7 +2521,7 @@ PLACE:   Lair:$
 TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
 MONS:    plant
-MONS:    elephant slug / giant slug, worm, brain worm
+MONS:    elephant slug / nothing, worm, brain worm
 MONS:    giant leech, lindwurm, fire dragon / ice dragon
 KMONS:   8 = giant firefly
 SHUFFLE: ABC
@@ -2813,7 +2812,7 @@ KMONS:   9 = water moccasin
 KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
-KMONS:   C = giant slug
+KMONS:   C = worm
 KMONS:   D = elephant slug
 KMONS:   E = boring beetle
 KMONS:   F = boulder beetle
