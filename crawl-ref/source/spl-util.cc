@@ -1209,13 +1209,13 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
     return default_color;
 }
 
-bool spell_no_hostile_in_range(spell_type spell)
+bool spell_no_hostile_in_range(spell_type spell, bool rod)
 {
     int minRange = get_dist_to_nearest_monster();
     if (minRange < 0)
         return false;
 
-    const int range = calc_spell_range(spell);
+    const int range = calc_spell_range(spell, 0, rod);
     if (range < 0)
         return false;
 
