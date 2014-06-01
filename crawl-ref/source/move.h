@@ -50,6 +50,8 @@ protected:
     bool need_another_move;
     bool kill_after_move;
 
+    virtual void move_init();
+
     virtual void move_again();
     virtual void setup() = 0;
     virtual void save() = 0;
@@ -213,18 +215,26 @@ class PlayerBoulderMovement : public BoulderMovement
 {
 public:
     PlayerBoulderMovement (actor *_subject) :
-        BoulderMovement(_subject)
+        BoulderMovement(_subject),
+        speed(0), turn_movement(0)
         { };
+
     void stop(bool show_message = true);
     void impulse(float ix, float iy);
     static void start_rolling();
     double velocity();
 
 protected:
-    void normalise();
+    void move_init();
+    void post_move_attempt();
+    void denormalise();
+    void setup();
     bool hit_solid(const coord_def& pos);
     int get_hit_power();
     int strike_max_damage();
+
+    float speed;
+    float turn_movement;
 };
 
 #endif

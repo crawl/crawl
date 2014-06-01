@@ -121,7 +121,7 @@ bool MovementHandler::move()
  */
 bool MovementHandler::attempt_move()
 {
-    need_another_move = true;
+    move_init();
     while (need_another_move && !kill_after_move)
     {
         need_another_move = false;
@@ -157,6 +157,11 @@ bool MovementHandler::attempt_move()
     }
 
     return false; // no problems
+}
+
+void MovementHandler::move_init()
+{
+    need_another_move = true;
 }
 
 /**
@@ -974,6 +979,9 @@ bool BoulderMovement::strike(actor *victim)
              subject->name(DESC_THE, true).c_str(),
              victim->name(DESC_THE, true).c_str());
     }
+
+    const coord_def victim_pos = victim->pos();
+
     int dam_max = strike_max_damage();
     int dam = victim->apply_ac(roll_dice(div_rand_round(dam_max,6), dam_max));
     if (victim->is_player())
@@ -981,7 +989,7 @@ bool BoulderMovement::strike(actor *victim)
     else
         victim->hurt(subject, dam);
 
-    noisy(5, victim->pos());
+    noisy(5, victim_pos);
     return !(victim->alive());
 }
 
@@ -993,7 +1001,9 @@ bool BoulderMovement::hit_solid(const coord_def& pos)
     noisy(10, pos);
     if ((!you.see_cell(pos) || !you.see_cell(subject->pos()))
         && !silenced(you.pos()))
+    {
         mprf("You hear a loud crash.");
+    }
 
     // Bounce (deaden the impact if the angle of incidence is too high)
     if (pos.x == subject->pos().x)
@@ -1103,6 +1113,8 @@ void MonsterBoulderMovement::start_rolling(monster *mon, bolt *beam)
 // Handle impulse
 void PlayerBoulderMovement::impulse(float ix, float iy)
 {
+    denormalise();
+
     // Impulse has less effect the faster you're already going
     vx += (random_range_real(0.9,1.1)*ix)/(2.0f * (abs(vx)<1?1:abs(vx)));
     vy += (random_range_real(0.9,1.1)*iy)/(2.0f * (abs(vy)<1?1:abs(vy)));
@@ -1111,6 +1123,9 @@ void PlayerBoulderMovement::impulse(float ix, float iy)
         vx = 5.0f * sgn(vx);
     if (abs(vy) > 5.0f)
         vy = 5.0f * sgn(vy);
+
+    speed = sqrt(vx*vx + vy*vy);
+    normalise();
 }
 
 bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
@@ -1123,26 +1138,38 @@ bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
         return true;
     }
 
+    denormalise();
+
     // Bounce (deaden the impact if the angle of incidence is too high)
     if (pos.x != subject->pos().x)
     {
         if (abs(vx)<0.5)
             vx = -vx;
         else
+        {
             vx = 0;
+            speed = vy;
+        }
     }
     if (pos.y != subject->pos().y)
     {
         if (abs(vy)<0.5)
             vy = -vy;
         else
+        {
             vy = 0;
+            speed = vx;
+        }
     }
 
+    normalise();
+
     if (vx || vy)
+    {
         mprf("%s bounce off %s",
              subject->name(DESC_THE, true).c_str(),
              feature_description_at(pos, false, DESC_A).c_str());
+    }
     else
         mprf("%s hit %s",
              subject->name(DESC_THE, true).c_str(),
@@ -1168,15 +1195,7 @@ void PlayerBoulderMovement::stop(bool show_message)
 // How much damage enemies take
 int PlayerBoulderMovement::strike_max_damage()
 {
-    return div_rand_round(ceil(velocity() * 100),10);
-}
-
-// Absolute current velocity, used for damage calculations.
-// Not needed on base classes since their velocity is always
-// normalised to 1.
-double PlayerBoulderMovement::velocity()
-{
-    return sqrt(vx * vx + vy * vy);
+    return div_rand_round(ceil(speed * 100),10);
 }
 
 int PlayerBoulderMovement::get_hit_power()
@@ -1184,10 +1203,25 @@ int PlayerBoulderMovement::get_hit_power()
     return div_rand_round(subject->as_player()->experience_level,2);
 }
 
-// Override normalisation, to prevent it
-void PlayerBoulderMovement::normalise()
+
+void PlayerBoulderMovement::move_init()
 {
-    // XXX: If abs(vx,vy)>1, take multiple steps so as not to jump over things...
+    BoulderMovement::move_init();
+    turn_movement = 0;
+}
+
+void PlayerBoulderMovement::post_move_attempt()
+{
+    BoulderMovement::post_move_attempt();
+    turn_movement++;
+    if (turn_movement < speed)
+        need_another_move = true;
+}
+
+void PlayerBoulderMovement::denormalise()
+{
+    vx *= speed;
+    vy *= speed;
 }
 
 void PlayerBoulderMovement::start_rolling()
@@ -1204,4 +1238,10 @@ void PlayerBoulderMovement::start_rolling()
     // Flag the movement handler to change, and take an initial move
     you.movement_changed();
     you.movement()->move();
+}
+
+void PlayerBoulderMovement::setup()
+{
+    BoulderMovement::setup();
+    speed = sqrt(vx*vx + vy*vy);
 }
