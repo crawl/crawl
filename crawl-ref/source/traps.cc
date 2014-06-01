@@ -1412,6 +1412,7 @@ void free_stationary_net(int item_index)
     item_def &item = mitm[item_index];
     if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
     {
+        const coord_def pos = item.pos;
         // Probabilistically mulch net based on damage done, otherwise
         // reset damage counter (ie: item.plus).
         if (x_chance_in_y(-item.plus, 9))
@@ -1421,6 +1422,10 @@ void free_stationary_net(int item_index)
             item.plus = 0;
             item.plus2 = 0;
         }
+
+        // Make sure we don't leave a bad trapping net in the stash
+        // FIXME: may leak info if a monster escapes an out-of-sight net.
+        StashTrack.update_stash(pos);
     }
 }
 
