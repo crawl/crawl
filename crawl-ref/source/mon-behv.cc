@@ -151,112 +151,6 @@ static void _set_firing_pos(monster* mon, coord_def target)
     mon->firing_pos = best_pos;
 }
 
-struct dist2_sorter
-{
-    coord_def pos;
-    bool operator()(const coord_def a, const coord_def b)
-    {
-        return distance2(a, pos) < distance2(b, pos);
-    }
-};
-
-static bool _can_traverse_unseen(const monster* mon, const coord_def& target)
-{
-    if (mon->pos() == target)
-        return true;
-
-    ray_def ray;
-    if (!find_ray(mon->pos(), target, ray, opc_immob))
-        return false;
-
-    while (ray.pos() != target && ray.advance())
-        if (!mon_can_move_to_pos(mon, ray.pos() - mon->pos()))
-            return false;
-
-    return true;
-}
-
-// Attempt to find the furthest position from a given target which still has
-// line of sight to it, and which the monster can move to (without pathfinding)
-static coord_def _furthest_aim_spot(monster* mon, coord_def target)
-{
-    int best_distance = 0;
-    coord_def best_pos(0, 0);
-
-    for (distance_iterator di(mon->pos(), false, false, LOS_RADIUS);
-         di; ++di)
-    {
-        const coord_def p(*di);
-        const int range = p.distance_from(target);
-
-        if (!cell_see_cell(mon->pos(), *di, LOS_NO_TRANS))
-            continue;
-
-        if (!in_bounds(p) || range > LOS_RADIUS - 1
-            || !cell_see_cell(p, target, LOS_NO_TRANS)
-            || !mon_can_move_to_pos(mon, p - mon->pos(), true))
-        {
-            continue;
-        }
-
-        const int distance = p.distance_from(target);
-        if (distance > best_distance)
-        {
-            if (_can_traverse_unseen(mon, p))
-            {
-                best_pos = p;
-                best_distance = distance;
-            }
-        }
-    }
-
-    return best_pos;
-}
-
-// Tries to find and set an optimal spot for the curse skull to lurk, just
-// outside player's line of sight. We consider this to be the spot the furthest
-// from the player which still has line of sight to where the player will move
-// if they are approaching us. (This keeps it from lurking immediately around
-// corners, where the player can enter melee range of it the first turn it comes
-// into sight)
-//
-// The answer given is not always strictly optimal, since no actual pathfinding
-// is done, and sometimes the best lurking position crosses spots visible to
-// the player unless a more circuitous route is taken, but generally it is
-// pretty good, and eliminates the most obvious cases of players luring them
-// into easy kill.
-static void _set_curse_skull_lurk_pos(monster* mon)
-{
-    // If we're already moving somewhere that we can actually reach, don't
-    // search for a new spot.
-    if (!mon->firing_pos.origin() && _can_traverse_unseen(mon, mon->firing_pos))
-        return;
-
-    // Examine spots adjacent to our target, starting with those closest to us
-    vector<coord_def> spots;
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
-    {
-        if (!cell_is_solid(*ai) || feat_is_door(grd(*ai)))
-            spots.push_back(*ai);
-    }
-
-    dist2_sorter sorter = {mon->pos()};
-    sort(spots.begin(), spots.end(), sorter);
-
-    coord_def lurk_pos(0, 0);
-    for (unsigned int i = 0; i < spots.size(); ++i)
-    {
-        lurk_pos = _furthest_aim_spot(mon, spots[i]);
-
-        // Consider the first position found to be good enough
-        if (!lurk_pos.origin())
-        {
-            mon->firing_pos = lurk_pos;
-            return;
-        }
-    }
-}
-
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -750,12 +644,6 @@ void handle_behaviour(monster* mon)
                     && !(mon->friendly() && mon->foe == MHITYOU))
                 {
                     new_beh = BEH_WANDER;
-                }
-                else if ((mon->type == MONS_CURSE_SKULL
-                          && mon->foe == MHITYOU
-                          && grid_distance(mon->pos(), you.pos()) <= LOS_RADIUS))
-                {
-                    _set_curse_skull_lurk_pos(mon);
                 }
                 // If the player walk out of the LOS of a monster with a ranged
                 // attack, we assume it sees in which direction the player went
