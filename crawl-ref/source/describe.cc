@@ -3587,6 +3587,8 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen)
 {
     if (inf.title.empty())
+        inf.title = getMiscString(mi.common_name(DESC_DBNAME) + " title");
+    if (inf.title.empty())
         inf.title = uppercase_first(mi.full_name(DESC_A, true)) + ".";
 
     string db_name;

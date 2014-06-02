@@ -1560,7 +1560,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         return false;
     else
     {
-        string text = mon->full_name(DESC_A);
+        string text = getMiscString(mon->name(DESC_DBNAME) + " title");
+        if (text.empty())
+            text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
             text += make_stringf(" (%s)",
