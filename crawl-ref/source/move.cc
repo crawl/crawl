@@ -24,6 +24,7 @@
 #include "shout.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 #include "viewchar.h"
 
 #define OOD_SHORT_DIST 2
@@ -1186,10 +1187,7 @@ bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
 
 void PlayerBoulderMovement::stop(bool show_message)
 {
-    vx = 0;
-    vy = 0;
-    if (show_message)
-        mprf("%s start gathering moss.", subject->name(DESC_THE, true).c_str());
+    untransform();
 }
 
 // How much damage enemies take
