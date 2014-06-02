@@ -1422,6 +1422,14 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
         return false;
     }
 
+    // Boulder
+    if (you.form == TRAN_BOULDER
+        && feat_stair_direction(ftype) == CMD_GO_UPSTAIRS)
+    {
+        mpr("You can't roll up the stairs!");
+        return false;
+    }
+
     // Mesmerized
     if (you.beheld() && !you.confused())
     {

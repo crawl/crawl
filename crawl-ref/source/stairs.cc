@@ -340,12 +340,6 @@ void up_stairs(dungeon_feature_type force_stair)
                                        : orig_terrain(you.pos()));
     const level_id old_level = level_id::current();
 
-    if (you.form == TRAN_BOULDER)
-    {
-        mpr("You can't roll up the stairs!");
-        return;
-    }
-
     // Up and down both work for portals.
     // Canonicalize the direction; hell exits into the vestibule are handled
     // by up_stairs; everything else by down_stairs.
