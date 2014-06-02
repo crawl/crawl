@@ -1138,8 +1138,6 @@ bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
         return true;
     }
 
-    denormalise();
-
     // Bounce (deaden the impact if the angle of incidence is too high)
     if (pos.x != subject->pos().x)
     {
@@ -1148,7 +1146,7 @@ bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
         else
         {
             vx = 0;
-            speed = vy;
+            speed *= vy;
         }
     }
     if (pos.y != subject->pos().y)
@@ -1158,28 +1156,26 @@ bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
         else
         {
             vy = 0;
-            speed = vx;
+            speed *= vx;
         }
     }
 
-    normalise();
+    noisy(5, subject->pos());
 
     if (vx || vy)
     {
         mprf("%s bounce off %s",
              subject->name(DESC_THE, true).c_str(),
              feature_description_at(pos, false, DESC_A).c_str());
+        move_again();
     }
     else
+    {
         mprf("%s hit %s",
              subject->name(DESC_THE, true).c_str(),
              feature_description_at(pos, false, DESC_A).c_str());
-
-    noisy(5, subject->pos());
-
-    // Acknowledge if this brought you to a standstill
-    if (vx == 0 && vy == 0 && subject->alive())
         stop();
+    }
 
     return false;
 }
