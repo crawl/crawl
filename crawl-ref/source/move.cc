@@ -347,13 +347,14 @@ coord_def ProjectileMovement::get_move_pos()
  *
  * Place a trailing cloud, if moving normally.
  *
- * @param old_pos       Unused.
+ * @param old_pos       The last square (where to place the cloud).
  */
 void ProjectileMovement::post_move(const coord_def& old_pos)
 {
-    if (!catching_up)
+    if (!catching_up && !actor_at(old_pos)
+        && !cell_is_solid(old_pos)) // ???
     {
-        place_cloud(trail_type(), subject->pos(),
+        place_cloud(trail_type(), old_pos,
                     2 + random2(3), subject);
     }
 }
@@ -891,7 +892,6 @@ spret_type OrbMovement::cast_iood(actor *caster, int pow, bolt *beam,
     }
 
     // Move away from the caster's square.
-    // XXX: Prevent trail in this case (just check for occupant of square)
     mon->movement()->move();
     // We need to take at least one full move (for the above), but let's
     // randomize it and take more so players won't get guaranteed instant
