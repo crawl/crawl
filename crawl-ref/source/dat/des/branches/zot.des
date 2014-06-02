@@ -1037,7 +1037,7 @@ ORIENT: float
 MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
         w:6 lightning spire / nothing
 MONS:   ice statue / silver statue / orange crystal statue / \
-        patrolling curse skull / w:5 nothing
+        curse skull / w:5 nothing
 SUBST:  3 = 11.
 # Not quite the orb, but but close enough
 ITEM:   crystal ball of energy
