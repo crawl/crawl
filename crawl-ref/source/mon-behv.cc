@@ -620,9 +620,7 @@ void handle_behaviour(monster* mon)
                             else
                             {
                                 if (x_chance_in_y(50, you.stealth())
-                                    || you.penance[GOD_ASHENZARI] && coinflip()
-                                    || mons_class_flag(mon->type, M_VIGILANT)
-                                       && !one_chance_in(3))
+                                    || you.penance[GOD_ASHENZARI] && coinflip())
                                 {
                                     mon->target = you.pos();
                                 }
