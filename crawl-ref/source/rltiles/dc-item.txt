@@ -434,14 +434,18 @@ cap_jester THELM_CAP_JESTER
 hat1 THELM_HAT
 hat2
 
-helmet1_visored THELM_HELM THELM_FIRST
-helmet2_etched
+helmet1 THELM_HELM THELM_FIRST
+helmet2
 helmet3
-helmet4_visor
-helmet_horned THELM_HELM_HORNED
-helmet_spiked THELM_HELM_SPIKED
-helmet_plumed THELM_HELM_PLUMED
-helmet_winged THELM_HELM_WINGED THELM_LAST
+helmet4
+helmet5 THELM_LAST
+helmet_ego1 THELM_EGO_FIRST
+helmet_ego2
+helmet_ego3
+helmet_ego4 THELM_EGO_LAST
+helmet_art1 THELM_ART_FIRST
+helmet_art2
+helmet_art3 THELM_ART_LAST
 
 %sdir item/armour
 ###### GLOVES

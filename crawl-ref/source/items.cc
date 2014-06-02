@@ -3882,6 +3882,7 @@ item_info get_item_info(const item_def& item)
             ii.plus = item.plus;
         if (item_type_known(item))
             ii.special = item.special; // brand
+        ii.rnd = item.rnd; // used for appearance
         break;
     case OBJ_WANDS:
         if (item_type_known(item))
