@@ -64,14 +64,6 @@ enum armour_property_type
     PARM_EVASION,
 };
 
-enum boot_type          // used in pluses2
-{
-    TBOOT_BOOTS,
-    TBOOT_NAGA_BARDING,
-    TBOOT_CENTAUR_BARDING,
-    NUM_BOOT_TYPES
-};
-
 const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
 const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
@@ -136,20 +128,6 @@ enum hands_reqd_type
 {
     HANDS_ONE,
     HANDS_TWO,
-};
-
-enum helmet_desc_type
-{
-    THELM_DESC_PLAIN,
-    THELM_DESC_WINGED,
-    THELM_DESC_HORNED,
-    THELM_DESC_CRESTED,
-    THELM_DESC_PLUMED,
-    THELM_DESC_MAX_SOFT = THELM_DESC_PLUMED,
-    THELM_DESC_SPIKED,
-    THELM_DESC_VISORED,
-    THELM_DESC_GOLDEN,
-    THELM_NUM_DESCS
 };
 
 enum jewellery_type
