@@ -1184,10 +1184,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_NATASHA:
         return TILEP_MONS_NATASHA;
 
-    // slugs ('j')
-    case MONS_ELEPHANT_SLUG:
-        return TILEP_MONS_ELEPHANT_SLUG;
-
     // killer bees ('k')
     case MONS_KILLER_BEE:
         return TILEP_MONS_KILLER_BEE;

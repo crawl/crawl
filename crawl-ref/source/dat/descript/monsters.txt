@@ -1059,10 +1059,6 @@ elephant
 A large, thick-hided pachyderm. It crushes its foes and then thrashes them with
 its trunk.
 %%%%
-elephant slug
-
-A grey gastropod of impressive size, with folds upon folds of wrinkled skin.
-%%%%
 elf
 
 An elf, a member of an ancient fey race. Elves are slightly built when compared
