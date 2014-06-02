@@ -1995,116 +1995,66 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-// Simulacrum
-//
-// This spell extends creating undead to Ice mages, as such it's high
-// level, requires wielding of the material component, and the undead
-// aren't overly powerful (they're also vulnerable to fire).  I've put
-// back the abjuration level in order to keep down the army sizes again.
-//
-// As for what it offers necromancers considering all the downsides
-// above... it allows the turning of a single corpse into an army of
-// monsters (one per food chunk)... which is also a good reason for
-// why it's high level.
-//
-// Hides and other "animal part" items are intentionally left out, it's
-// unrequired complexity, and fresh flesh makes more "sense" for a spell
-// reforming the original monster out of ice anyway.
-
-static struct { monster_type mons; const char* name; } mystery_meats[] =
-{
-    { MONS_RAVEN, "crow" },
-    { MONS_YAK, "" },
-    { MONS_HOG, "" },
-    { MONS_SHEEP, "" },
-    { MONS_ELEPHANT, "" },
-    { MONS_YAK, "cow" },
-    { MONS_DEATH_YAK, "bull" },
-};
-
+/**
+ * Have the player cast simulacrum.
+ *
+ * @param pow The spell power.
+ * @param god The god casting the spell.
+ * @param fail If true, return SPRET_FAIL unless the spell is aborted.
+ * @returns SPRET_ABORT if no viable corpse was at the player's location,
+ *          otherwise SPRET_TRUE or SPRET_FAIL based on fail.
+ */
 spret_type cast_simulacrum(int pow, god_type god, bool fail)
 {
-    const item_def* flesh = you.weapon();
-
-    if (!flesh || flesh->base_type != OBJ_FOOD || !food_is_meaty(*flesh))
+    bool found = false;
+    int co = -1;
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        mpr("You need to wield a piece of raw flesh for this spell to be "
-            "effective!");
-        return SPRET_ABORT;
-    }
-
-    monster_type sim_type = MONS_PROGRAM_BUG;
-    string name;
-
-    switch (flesh->sub_type)
-    {
-    case FOOD_CHUNK:
-        sim_type = flesh->mon_type;
-        break;
-    case FOOD_BEEF_JERKY:
-        sim_type = random_choose_weighted(4, MONS_YAK,
-                                          5, MONS_DEATH_YAK,
-                                          1, MONS_MINOTAUR,
-                                          0);
-        if (sim_type == MONS_YAK)
-            name = "cow";
-        else if (sim_type == MONS_DEATH_YAK)
-            name = "bull";
-        break;
-    default:
-        // usual suspects for mystery meat's identity
+        if (si->base_type == OBJ_CORPSES
+            && si->sub_type == CORPSE_BODY
+            && mons_class_can_be_zombified(si->mon_type))
         {
-            const int which = random2(ARRAYSZ(mystery_meats));
-            sim_type = mystery_meats[which].mons;
-            name = mystery_meats[which].name;
+            found = true;
+            co = si->index();
         }
     }
 
-    if (!mons_class_can_be_zombified(sim_type))
+    if (!found)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        mpr("There is nothing here that can be animated!");
         return SPRET_ABORT;
     }
 
     fail_check();
+    canned_msg(MSG_ANIMATE_REMAINS);
 
-    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you,
-                 0, SPELL_SIMULACRUM,
-                 you.pos(), MHITYOU,
-                 MG_FORCE_BEH | MG_AUTOFOE, god,
-                 flesh->sub_type == FOOD_CHUNK ?
-                     static_cast<monster_type>(flesh->orig_monnum) :
-                     sim_type);
+    // How many simulacra can this particular monster give at maximum.
+    int num_sim  = 1 + random2(mons_weight(mitm[co].mon_type) / 150);
+    num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
-    // Can't create more than the available chunks.
+    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
+                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god,
+                 mitm[co].mon_type);
+
+    // Can't create more than the max for the monster.
     int how_many = min(8, 4 + random2(pow) / 20);
-    how_many = min<int>(how_many, flesh->quantity);
-
+    how_many = min<int>(how_many, num_sim);
     int count = 0;
-
     for (int i = 0; i < how_many; ++i)
     {
         // Use the original monster type as the zombified type here,
         // to get the proper stats from it.
         if (monster *sim = create_monster(mg))
         {
-            if (!name.empty())
-            {
-                sim->mname = name;
-                sim->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR | MF_NAME_SPECIES;
-                sim->props["dbname"].get_string() = mons_class_name(MONS_SIMULACRUM);
-            }
-
             count++;
-
-            dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
             player_angers_monster(sim);
             sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
         }
     }
 
-    if (!count)
+    if (count)
+        turn_corpse_into_skeleton(mitm[co]);
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
