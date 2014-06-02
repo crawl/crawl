@@ -2244,9 +2244,10 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
 },
 
+// dummy genus monster
 {
     MONS_ELEPHANT_SLUG, 'w', WHITE, "elephant slug",
-    M_NO_SKELETON,
+    M_NO_SKELETON| M_CANT_SPAWN,
     MR_VUL_POISON,
     1800, 2, MONS_ELEPHANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

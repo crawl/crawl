@@ -555,7 +555,7 @@ DEPTH:   Lair:3-7
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
-MONS:    elephant slug zombie w:5 / nothing
+MONS:    elephant zombie w:2 / nothing
 MONS:    crocodile zombie / basilisk zombie / \
          komodo dragon zombie w:4 / nothing
 MAP
@@ -2521,7 +2521,7 @@ PLACE:   Lair:$
 TAGS:    no_wall_fixup no_monster_gen no_rotate
 ORIENT:  southeast
 MONS:    plant
-MONS:    elephant slug / nothing, worm, brain worm
+MONS:    fire drake, worm, brain worm
 MONS:    giant leech, lindwurm, fire dragon / ice dragon
 KMONS:   8 = giant firefly
 SHUFFLE: ABC
@@ -2813,7 +2813,7 @@ KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
 KMONS:   C = worm
-KMONS:   D = elephant slug
+KMONS:   D = giant frog
 KMONS:   E = boring beetle
 KMONS:   F = boulder beetle
 KMONS:   G = sheep

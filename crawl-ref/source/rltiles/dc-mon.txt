@@ -104,10 +104,9 @@ komodo_dragon MONS_KOMODO_DRAGON
 ## Slugs ('j')
 %sdir mon/unique
 gastronok MONS_GASTRONOK
-%sdir mon/animals
-elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')
+%sdir mon/animals
 %rim 0
 rat MONS_RAT
 green_rat MONS_GREEN_RAT

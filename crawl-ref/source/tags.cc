@@ -5009,6 +5009,9 @@ void unmarshallMonster(reader &th, monster& m)
             ASSERT(m.base_monster != MONS_NO_MONSTER);
         }
     }
+    // Turn elephant slugs into ghosts because they are dummies now.
+    else if (m.type == MONS_ELEPHANT_SLUG)
+        m.type = MONS_GHOST;
     else
 #endif
     if (parts & MP_GHOST_DEMON)

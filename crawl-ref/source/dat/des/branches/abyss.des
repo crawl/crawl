@@ -2005,7 +2005,7 @@ ENDMAP
 
 NAME:    hangedman_abyss_exit_choices
 TAGS:    abyss_exit unrand no_monster_gen
-MONS:    elephant slug, giant leech, great orb of eyes
+MONS:    death yak, giant leech, great orb of eyes
 MONS:    giant orange brain, swamp drake, wind drake, hell hound
 KMONS:   8 = raiju
 KMONS:   9 = mana viper
