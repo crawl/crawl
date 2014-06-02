@@ -1072,7 +1072,6 @@ bool MonsterBoulderMovement::check_pos(const coord_def &pos)
     // Boulders stop at lava/water to prevent unusual behaviour;
     // skimming across the water like a pebble could be justifiable, but
     // it raises too many questions.
-    // XXX: Boulders used to collide with walls because this check happened elsewhere
     if (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos)))
     {
         if (!catching_up)
