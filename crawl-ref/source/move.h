@@ -26,6 +26,7 @@ public:
         need_another_move(false),
         kill_after_move(false)
         {};
+    virtual ~MovementHandler() {};
 
     static MovementHandler* handler_for(actor *act);
 
