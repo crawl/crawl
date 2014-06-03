@@ -1186,11 +1186,13 @@ static void _check_equipment_conducts()
 }
 
 
-// cjo: Handles player hp and mp regeneration. If the counter you.hit_points_regeneration
-// is over 100, a loop restores 1 hp and decreases the counter by 100 (so you can regen
-// more than 1 hp per turn). If the counter is below 100, it is increased by a variable
-// calculated from delay, BASELINE_DELAY, and your regeneration rate. MP regeneration happens
-// similarly, but the countup depends on delay, BASELINE_DELAY, and you.max_magic_points
+// cjo: Handles player hp and mp regeneration. If the counter
+// you.hit_points_regeneration is over 100, a loop restores 1 hp and decreases
+// the counter by 100 (so you can regen more than 1 hp per turn). If the counter
+// is below 100, it is increased by a variable calculated from delay,
+// BASELINE_DELAY, and your regeneration rate. MP regeneration happens
+// similarly, but the countup depends on delay, BASELINE_DELAY, and
+// you.max_magic_points
 static void _regenerate_hp_and_mp(int delay)
 {
     if (crawl_state.disables[DIS_PLAYER_REGEN])
