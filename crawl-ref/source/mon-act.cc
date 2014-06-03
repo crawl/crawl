@@ -2066,15 +2066,26 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->has_ench(ENCH_GOLD_LUST))
+    {
+        mons->speed_increment -= non_move_energy;
+        return;
+    }
+
     const int gold = gozag_gold_in_los(mons);
     if (!mons->asleep()
         && !mons_is_avatar(mons->type)
         && !mons->wont_attack() && gold > 0)
     {
-        if (bernoulli(gold, 1/20.0))
+        if (bernoulli(gold, 3.0/100.0))
         {
             simple_monster_message(mons,
                     " is distracted by the nearby gold.");
+            mons->add_ench(
+                mon_enchant(ENCH_GOLD_LUST, 1, NULL,
+                            random_range(1, 5) * BASELINE_DELAY));
+            mons->foe = MHITNOT;
+            mons->target = mons->pos();
             mons->speed_increment -= non_move_energy;
             return;
         }
