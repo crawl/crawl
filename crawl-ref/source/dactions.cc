@@ -132,10 +132,9 @@ bool mons_matches_daction(const monster* mon, daction_type act)
 
     case DACT_BRIBE_TIMEOUT:
         return mon->has_ench(ENCH_BRIBED)
+               || mon->has_ench(ENCH_PERMA_BRIBED)
                || mon->props.exists(GOZAG_BRIBE_KEY)
-               || !you_worship(GOD_GOZAG)
-                  && (mon->has_ench(ENCH_PERMA_BRIBED)
-                      || mon->props.exists(GOZAG_PERMABRIBE_KEY));
+               || mon->props.exists(GOZAG_PERMABRIBE_KEY);
 
     case DACT_SET_BRIBES:
         return !testbits(mon->flags, MF_WAS_IN_VIEW);
@@ -246,14 +245,11 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
 
         case DACT_BRIBE_TIMEOUT:
             mon->del_ench(ENCH_BRIBED);
+            mon->del_ench(ENCH_PERMA_BRIBED);
             if (mon->props.exists(GOZAG_BRIBE_KEY))
                 mon->props.erase(GOZAG_BRIBE_KEY);
-            if (!you_worship(GOD_GOZAG))
-            {
-                mon->del_ench(ENCH_PERMA_BRIBED);
             if (mon->props.exists(GOZAG_PERMABRIBE_KEY))
                 mon->props.erase(GOZAG_PERMABRIBE_KEY);
-            }
             break;
 
         case DACT_SET_BRIBES:
