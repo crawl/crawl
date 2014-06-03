@@ -935,61 +935,10 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
 {
     int amusement = 12 * (11 - get_mutation_def(which_mutation).rarity);
 
-    switch (which_mutation)
-    {
-    case MUT_STRONG:
-    case MUT_CLEVER:
-    case MUT_AGILE:
-    case MUT_POISON_RESISTANCE:
-    case MUT_SHOCK_RESISTANCE:
-    case MUT_REGENERATION:
-    case MUT_SLOW_METABOLISM:
-    case MUT_MAGIC_RESISTANCE:
-    case MUT_CLARITY:
-    case MUT_MUTATION_RESISTANCE:
-    case MUT_ROBUST:
-    case MUT_HIGH_MAGIC:
-    case MUT_MANA_SHIELD:
-    case MUT_MANA_REGENERATION:
-    case MUT_MANA_LINK:
-        amusement /= 2;  // not funny
-        break;
-
-    case MUT_CARNIVOROUS:
-    case MUT_HERBIVOROUS:
-    case MUT_SLOW_HEALING:
-    case MUT_FAST_METABOLISM:
-    case MUT_WEAK:
-    case MUT_DOPEY:
-    case MUT_CLUMSY:
-    case MUT_TELEPORT:
-    case MUT_DEFORMED:
-    case MUT_SPIT_POISON:
-    case MUT_BREATHE_FLAMES:
-    case MUT_BLINK:
-    case MUT_HORNS:
-    case MUT_BEAK:
-    case MUT_SCREAM:
-    case MUT_BERSERK:
-    case MUT_DETERIORATION:
-    case MUT_BLURRY_VISION:
-    case MUT_FRAIL:
-    case MUT_CLAWS:
-    case MUT_FANGS:
-    case MUT_HOOVES:
-    case MUT_TALONS:
-    case MUT_TENTACLE_SPIKE:
-    case MUT_BREATHE_POISON:
-    case MUT_STINGER:
-    case MUT_BIG_WINGS:
-    case MUT_LOW_MAGIC:
-    case MUT_EVOLUTION:
-        amusement *= 2; // funny!
-        break;
-
-    default:
-        break;
-    }
+    if (mut_data[which_mutation].bad == MT_GOOD)
+        amusement /= 2;
+    else if (mut_data[which_mutation].bad == MT_BAD)
+        amusement *= 2;
 
     return amusement;
 }
