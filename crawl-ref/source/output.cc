@@ -2683,8 +2683,7 @@ static string _status_mut_abilities(int sw)
     string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
-        mutation_type mut = static_cast<mutation_type>(i);
-        if (!player_mutation_level(mut))
+        if (!you.mutation[i])
             continue;
 
         int level = player_mutation_level((mutation_type) i);

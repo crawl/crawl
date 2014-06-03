@@ -2550,11 +2550,11 @@ static void tag_read_you(reader &th)
         // was, so when TAG_MINOR_NO_DEVICE_HEAL was added
         // these were all moved to only apply to previous
         // tags.
-        if (player_mutation_level(MUT_TELEPORT_CONTROL) == 1)
+        if (you.mutation[MUT_TELEPORT_CONTROL] == 1)
             you.mutation[MUT_TELEPORT_CONTROL] = 0;
         if (you.mutation[MUT_TRAMPLE_RESISTANCE] > 0)
             you.mutation[MUT_TRAMPLE_RESISTANCE] = 0;
-        if (player_mutation_level(MUT_CLING) == 1)
+        if (you.mutation[MUT_CLING] == 1)
             you.mutation[MUT_CLING] = 0;
         if (you.species == SP_GARGOYLE)
         {

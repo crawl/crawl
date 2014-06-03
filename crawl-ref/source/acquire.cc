@@ -157,11 +157,8 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     {
         // Check for Horns 3 & Antennae 3 - Don't give a cap if those mutation
         // levels have been reached.
-        if (player_mutation_level(MUT_HORNS) <= 2
-            || player_mutation_level(MUT_ANTENNAE) <= 2)
-        {
+        if (you.mutation[MUT_HORNS] <= 2 || you.mutation[MUT_ANTENNAE] <= 2)
             result = ARM_HAT;
-        }
         else
             result = NUM_ARMOURS;
     }
