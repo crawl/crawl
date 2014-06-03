@@ -4165,8 +4165,20 @@ static string _describe_favour(god_type which_god)
     {
         case 7:  return "A prized avatar of " + godname;
         case 6:  return "A favoured servant of " + godname + ".";
-        case 5:  return "A shining star in the eyes of " + godname + ".";
-        case 4:  return "A rising star in the eyes of " + godname + ".";
+        case 5:
+
+        if (you_worship(GOD_DITHMENOS))
+            return "A glorious shadow in the eyes of " + godname + ".";
+        else
+            return "A shining star in the eyes of " + godname + ".";
+
+        case 4:
+
+        if (you_worship(GOD_DITHMENOS))
+            return "A rising shadow in the eyes of " + godname + ".";
+        else
+            return "A rising star in the eyes of " + godname + ".";
+
         case 3:  return uppercase_first(godname) + " is most pleased with you.";
         case 2:  return uppercase_first(godname) + " is pleased with you.";
         default: return uppercase_first(godname) + " is noncommittal.";
