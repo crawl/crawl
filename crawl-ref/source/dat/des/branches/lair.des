@@ -168,7 +168,7 @@ ENDMAP
 # This could probably use some randomization.
 NAME:    david_lair_generic
 TAGS:    lair_entry
-MONS:    crocodile / sheep, worm
+MONS:    crocodile / sheep, goliath beetle
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
 MONS:    elephant
 SHUFFLE: 12
@@ -1678,9 +1678,9 @@ MAP
 ENDMAP
 
 # an altar to chei, and a few followers
-NAME:  kennysheep_slug_temple
+NAME:  kennysheep_beetle_temple
 DEPTH: Lair
-MONS:  worm / nothing
+MONS:  goliath beetle / nothing
 KFEAT: a = altar_cheibriados
 MAP
  @
@@ -2812,7 +2812,7 @@ KMONS:   9 = water moccasin
 KMONS:   0 = blink frog
 KMONS:   A = spiny frog
 KMONS:   B = black mamba
-KMONS:   C = worm
+KMONS:   C = porcupine
 KMONS:   D = giant frog
 KMONS:   E = boring beetle
 KMONS:   F = boulder beetle
