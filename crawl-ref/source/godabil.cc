@@ -3881,7 +3881,7 @@ bool gozag_potion_petition()
     }
 
     ASSERT(you.gold >= faith_price);
-    you.gold -= faith_price;
+    you.del_gold(faith_price);
     you.attribute[ATTR_GOZAG_GOLD_USED] += faith_price;
     for (int j = 0; j < pots[keyin]->size(); j++)
     {
@@ -4093,7 +4093,7 @@ bool gozag_call_merchant()
 
     ASSERT(you.gold >= faith_cost);
 
-    you.gold -= faith_cost;
+    you.del_gold(faith_cost);
     you.attribute[ATTR_GOZAG_GOLD_USED] += faith_cost;
 
     const shop_type type =

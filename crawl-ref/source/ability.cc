@@ -666,7 +666,7 @@ static int _zp_cost(const ability_def& abil)
     return c;
 }
 
-static int _get_gold_cost(ability_type ability)
+int get_gold_cost(ability_type ability)
 {
     switch (ability)
     {
@@ -741,7 +741,7 @@ const string make_cost_description(ability_type ability)
 
     if (abil.flags & ABFLAG_GOLD)
     {
-        const int amount = _get_gold_cost(ability);
+        const int amount = get_gold_cost(ability);
         if (amount)
             ret += make_stringf(", %d Gold", amount);
         else
@@ -824,7 +824,7 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\nGold   : ";
-        int gold_amount = _get_gold_cost(ability);
+        int gold_amount = get_gold_cost(ability);
         if (gold_amount)
             ret << gold_amount;
         else

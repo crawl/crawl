@@ -4871,8 +4871,12 @@ void describe_god(god_type which_god, bool give_title)
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
         {
+            vector<ability_type> abilities = get_god_abilities(true, true);
             for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
-                if ((you_worship(GOD_GOZAG) || you.piety >= piety_breakpoint(i))
+                if ((you_worship(GOD_GOZAG)
+                     && you.gold >= get_gold_cost(abilities[i])
+                     || !you_worship(GOD_GOZAG)
+                        && you.piety >= piety_breakpoint(i))
                     && _print_god_abil_desc(which_god, i))
                 {
                     have_any = true;
