@@ -16,6 +16,7 @@
 #include <sstream>
 #include <algorithm>
 
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
@@ -7933,6 +7934,26 @@ void player::set_gold(int amount)
         const int old_gold = gold;
         gold = amount;
         shopping_list.gold_changed(old_gold, gold);
+
+        // XXX: this might benefit from being in its own function
+        if (you_worship(GOD_GOZAG))
+        {
+            vector<ability_type> abilities = get_god_abilities(true, true);
+            for (int i = 0; i < MAX_GOD_ABILITIES; i++)
+            {
+                const int cost = get_gold_cost(abilities[i]);
+                if (gold >= cost && old_gold < cost)
+                {
+                    mprf(MSGCH_GOD, "You now have enough gold to %s.",
+                         god_gain_power_messages[you.religion][i]);
+                }
+                else if (old_gold >= cost && gold < cost)
+                {
+                    mprf(MSGCH_GOD, "You no longer have enough gold to %s.",
+                         god_gain_power_messages[you.religion][i]);
+                }
+            }
+        }
     }
 }
 

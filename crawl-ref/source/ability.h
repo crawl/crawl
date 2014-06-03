@@ -75,6 +75,7 @@ struct talent
     bool is_zotdef;
 };
 
+int get_gold_cost(ability_type ability);
 const string make_cost_description(ability_type ability);
 const ability_def& get_ability_def(ability_type abil);
 talent get_talent(ability_type ability, bool check_confused);

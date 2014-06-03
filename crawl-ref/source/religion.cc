@@ -4114,8 +4114,9 @@ void god_pitch(god_type which_god)
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
         {
-            if (_abil_chg_message(god_gain_power_messages[you.religion][i],
-                                  "You can now %s.", i))
+            if (you.gold >= get_gold_cost(abilities[i])
+                && _abil_chg_message(god_gain_power_messages[you.religion][i],
+                                     "You have enough gold to %s.", i))
             {
                 needs_redraw = true;
             }
