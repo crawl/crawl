@@ -111,14 +111,16 @@ MAP
    ..2.22.
 ENDMAP
 
-NAME:   minmay_shoals_entry_beasts
-TAGS:   shoals_entry
-MONS:   hippogriff / manticore / griffon / nothing w:60
-KFEAT:  O = enter_shoals
+NAME:    minmay_shoals_entry_beasts
+TAGS:    shoals_entry
+MONS:    hippogriff, griffon, manticore, nothing, nothing, nothing, nothing
+KMONS:   8 = nothing
+SHUFFLE: 12345678
+KFEAT:   O = enter_shoals
 MAP
-111
-1O1
-111
+123
+8O4
+765
 ENDMAP
 
 NAME:   minmay_shoals_entry_sharks
