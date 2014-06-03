@@ -307,7 +307,7 @@ static int _corpse_badness(corpse_effect_type ce, const item_def &item,
     // themself.
 
     int contam = _contamination_ratio(ce);
-    if (you.mutation[MUT_SAPROVOROUS] == 3)
+    if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         contam = -contam;
 
     // Arbitrarily lower the value of poisonous chunks: swapping resistances
@@ -2447,7 +2447,7 @@ bool drop_spoiled_chunks()
         }
 
         bool rotten = food_is_rotten(item);
-        if (rotten && !you.mutation[MUT_SAPROVOROUS] && !wants_any)
+        if (rotten && !player_mutation_level(MUT_SAPROVOROUS) && !wants_any)
             return drop_item(slot, item.quantity);
 
         corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
