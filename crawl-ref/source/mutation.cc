@@ -1004,7 +1004,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 
     const mutation_def& mdef = get_mutation_def(mutat);
 
-    if (you.mutation[mutat] >= mdef.levels)
+    if (player_mutation_level(mutat) >= mdef.levels)
         return false;
 
     if (ignore_rarity)
@@ -1587,7 +1587,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 
     const mutation_def& mdef = get_mutation_def(mutat);
 
-    if (you.mutation[mutat] >= mdef.levels)
+    if (player_mutation_level(mutat) >= mdef.levels)
     {
         bool found = false;
         if (you.species == SP_DEMONSPAWN)
@@ -1696,13 +1696,13 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         case MUT_HOOVES:
         case MUT_TALONS:
             // Hooves and talons force boots off at 3.
-            if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
+            if (player_mutation_level(mutat) >= 3 && !you.melded[EQ_BOOTS])
                 remove_one_equip(EQ_BOOTS, false, true);
             break;
 
         case MUT_CLAWS:
             // Claws force gloves off at 3.
-            if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
+            if (player_mutation_level(mutat) >= 3 && !you.melded[EQ_GLOVES])
                 remove_one_equip(EQ_GLOVES, false, true);
             break;
 
@@ -1711,7 +1711,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             // Horns & Antennae 3 removes all headgear.  Same algorithm as with
             // glove removal.
 
-            if (you.mutation[mutat] >= 3 && !you.melded[EQ_HELMET])
+            if (player_mutation_level(mutat) >= 3 && !you.melded[EQ_HELMET])
                 remove_one_equip(EQ_HELMET, false, true);
             // Intentional fall-through
         case MUT_BEAK:
@@ -1781,7 +1781,7 @@ static bool _delete_single_mutation_level(mutation_type mutat,
                                           const string &reason,
                                           bool transient = false)
 {
-    if (you.mutation[mutat] == 0)
+    if (player_mutation_level(mutat) == 0)
         return false;
 
     if (you.innate_mutation[mutat] >= you.mutation[mutat])
@@ -1903,7 +1903,7 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
 
             mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
 
-            if (you.mutation[mutat] == 0
+            if (player_mutation_level(mutat) == 0
                 && mutat != MUT_STRONG
                 && mutat != MUT_CLEVER
                 && mutat != MUT_AGILE
@@ -2425,7 +2425,7 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     while (how_much-- > 0)
     {
     dprf("Perma Mutate: %d, %d, %d", cap, you.mutation[which_mut], you.innate_mutation[which_mut]);
-        if (you.mutation[which_mut] == cap
+        if (player_mutation_level(which_mut) == cap
             && you.innate_mutation[which_mut] > 0
             && you.innate_mutation[which_mut] == cap-1)
         {

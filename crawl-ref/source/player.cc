@@ -151,7 +151,7 @@ bool check_moveto_cloud(const coord_def& p, const string &move_verb,
                     threshold = threshold * 3 / 2;
                 threshold = threshold * you.time_taken / BASELINE_DELAY;
                 // Do prompt if we'd lose icemail, though.
-                if (you.hp > threshold && !you.mutation[MUT_ICEMAIL])
+                if (you.hp > threshold && !player_mutation_level(MUT_ICEMAIL))
                     return true;
             }
 
@@ -6324,7 +6324,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
 
 int player_icemail_armour_class()
 {
-    if (!you.mutation[MUT_ICEMAIL])
+    if (!player_mutation_level(MUT_ICEMAIL))
         return 0;
 
     return you.duration[DUR_ICEMAIL_DEPLETED] ? 0 : ICEMAIL_MAX;
