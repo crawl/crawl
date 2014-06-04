@@ -7,13 +7,14 @@
 {{
 function callback.spider_nest_trap(data, triggerable, triggerer, marker, ev)
   local x, y = marker:pos()
-  if not you.pos(x, y) then
+  local youpos = dgn.point(you.pos())
+  if youpos ~= marker:pos() then
     -- pretend the monster avoided it
     return
   end
   local spiders = 0
   for p in iter.rect_iterator(dgn.point(x-1, y-1), dgn.point(x+1, y+1)) do
-    if (dgn.mons_at(p.x, p.y) == nil and p ~= you.pos() and dgn.is_passable(p.x, p.y)) then
+    if (dgn.mons_at(p.x, p.y) == nil and p ~= youpos and dgn.is_passable(p.x, p.y)) then
       if (dgn.create_monster(p.x, p.y, "generate_awake spider")) then
         spiders = spiders + 1
       end
