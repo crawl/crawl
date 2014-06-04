@@ -1239,6 +1239,26 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
     return 0;
 }
 
+static int _shatter_player_dice()
+{
+    if (you.is_insubstantial())
+        return 0;
+    else if (you.petrified())
+        return 12; // reduced later
+    else if (you.petrifying())
+        return 6;  // reduced later
+    // Same order as for monsters -- petrified flyers get hit hard, skeletal
+    // flyers get no extra damage.
+    else if (you.airborne())
+        return 1;
+    else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
+        return 6;
+    else if (you.form == TRAN_ICE_BEAST)
+        return coinflip() ? 5 : 4;
+    else
+        return 3;
+}
+
 /**
  * Is this a valid target for shatter?
  *
@@ -1248,7 +1268,7 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
 static bool _shatterable(const actor *act)
 {
     if (act->is_player())
-        return !you.is_insubstantial();
+        return _shatter_player_dice();
     return _shatter_mon_dice(act->as_monster());
 }
 
@@ -1289,26 +1309,6 @@ spret_type cast_shatter(int pow, bool fail)
         mprf(MSGCH_SOUND, "Ka-crash!");
 
     return SPRET_SUCCESS;
-}
-
-static int _shatter_player_dice()
-{
-    if (you.is_insubstantial())
-        return 0;
-    else if (you.petrified())
-        return 12; // reduced later
-    else if (you.petrifying())
-        return 6;  // reduced later
-    // Same order as for monsters -- petrified flyers get hit hard, skeletal
-    // flyers get no extra damage.
-    else if (you.airborne())
-        return 1;
-    else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
-        return 6;
-    else if (you.form == TRAN_ICE_BEAST)
-        return coinflip() ? 5 : 4;
-    else
-        return 3;
 }
 
 static int _shatter_player(int pow, actor *wielder, bool devastator = false)
