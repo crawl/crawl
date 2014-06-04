@@ -157,7 +157,7 @@ static bool _dithmenos_random_shadow(const int count, const int tier)
 static int _igni_random_summon(int availible_cost)
 {
     monster_type mon_type = coinflip() ? MONS_FIRE_ELEMENTAL
-                                       : MONS_STONE_GOLEM;
+                                       : MONS_EARTH_ELEMENTAL;
     int ret_cost = 1;
 
     if (availible_cost > 3
