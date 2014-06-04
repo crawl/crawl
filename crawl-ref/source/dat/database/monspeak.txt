@@ -2547,8 +2547,6 @@ w:50
 
 @The_monster@ says, "I hope this rune is worth it!"
 
-@The_monster@ says, "Why did I leave my potions and scrolls outside? I need a drink."
-
 @The_monster@ says, "I thought elves might be good for a party. Nope."
 
 @The_monster@ says, "Really pretty, but really, really boring. I hate that."
@@ -2556,6 +2554,8 @@ w:50
 @The_monster@ says, "What's with all the gesturing? I hate that."
 
 @The_monster@ says, "I don't get the difference between high elves and deep elves."
+
+@The monster@ says, "Why do these elves have so many gross rats and spiders?"
 
 @The_monster@ says, "None of these elves know how to fight. I hate that."
 %%%%
@@ -2753,6 +2753,11 @@ w:50
 @The_monster@ says, "I wish they'd hurry up and stop blocking the corridors."
 
 @The_monster@ says, "Man, snails must be faster than these guys."
+
+@The_monster@ says, "How does a snake shoot lightning, anyway?"
+
+w:1
+@The_monster@ says, "First nagas, now salamanders. What's next, crocodiles with mirrors on their heads?"
 %%%%
 Vaults Donald
 
@@ -2774,6 +2779,8 @@ w:50
 @The_monster@ says, "This is an awful lot of space just to hold some junk."
 
 @The_monster@ says, "I saw some yaktaurs earlier, but I bolted."
+
+@The_monster@ says, "I saw a dragon earlier, but I didn't get too close - it seemed pretty mercurial."
 %%%%
 Hall of Blades Donald
 
@@ -2876,6 +2883,8 @@ w:50
 @The_monster@ says, "I saw a sphinx earlier. I hate that."
 
 @The_monster@ says, "The Crypt, the Tomb, what's next? The Coffin?"
+
+@The_monster@ says, "All these vampires have me hopping mad!"
 %%%%
 Labyrinth Donald
 
@@ -3123,10 +3132,6 @@ w:50
 @The_monster@ says, "What's all in the cards? Your future?"
 
 @The_monster@ says, "You missed a spot upstairs."
-
-@The_monster@ says, "You forgot to sacrifice a pile of trash back there."
-
-@The_monster@ says, "Accidentally sacrificed anything yet?"
 
 @The_monster@ says, "I bet you're feeling stupid now, huh?"
 
@@ -3377,6 +3382,10 @@ w:50
 @The_monster@ says, "Couldn't find enough potions?"
 
 @The_monster@ says, "So the shops here weren't enough for you?"
+
+@The_monster@ says, "Feeling hungry, yet?"
+
+@The monster@ says, "I bet you can make some really great dragon armour out of gold."
 %%%%
 Qazlal Donald
 
@@ -3390,6 +3399,10 @@ w:50
 @The_monster@ says, "I hate storms."
 
 @The_monster@ says, "I hate disasters."
+
+@The_monster@ says, "What was that? Sorry, I couldn't hear you over all this noise."
+
+@The_monster@ says, "Well, at least you're never short of company."
 
 @The_monster@ says, "Great. Now my shield is all dirty."
 %%%%
