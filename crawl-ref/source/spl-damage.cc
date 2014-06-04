@@ -1123,7 +1123,7 @@ static int _shatter_mon_dice(const monster *mon)
             return 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())
-            return 4;
+            return coinflip() ? 5 : 4;
         // Double damage to bone.
         else if (mon->is_skeletal())
             return 6;
