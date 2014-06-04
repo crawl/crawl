@@ -4575,10 +4575,10 @@ static string _describe_branch_bribability()
                 line += "very high  ";
                 break;
         }
-        if (!branch_bribe[i])
+        if (!branch_bribe[targets[i]])
             line += "not bribed";
         else
-            line += make_stringf("$%d", branch_bribe[i]);
+            line += make_stringf("$%d", branch_bribe[targets[i]]);
 
         ret += line + "\n";
     }
