@@ -1306,7 +1306,7 @@ static int _shatter_player_dice()
     else if (you.form == TRAN_STATUE || you.species == SP_GARGOYLE)
         return 6;
     else if (you.form == TRAN_ICE_BEAST)
-        return 4;
+        return coinflip() ? 5 : 4;
     else
         return 3;
 }
