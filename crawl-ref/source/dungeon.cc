@@ -3177,6 +3177,8 @@ static void _slime_connectivity_fixup()
 
             // Did the search, now remove any walls adjacent to squares in
             // the path.
+            if (!path.size())
+                continue;
             const position_node * current = &(*path[0]);
 
             while (current)
