@@ -804,7 +804,7 @@ static void _print_stats_ac(int x, int y)
     }
     else
         textcolor(HUD_VALUE_COLOUR);
-    CPRINTF("%2d ", player_shield_class());
+    CPRINTF("%2d ", player_displayed_shield_class());
 }
 
 static void _print_stats_ev(int x, int y)
@@ -2130,10 +2130,10 @@ static vector<formatted_string> _get_overview_stats()
     if (boosted_sh)
     {
         snprintf(buf, sizeof buf, "SH <lightblue>%2d</lightblue>",
-                 player_shield_class());
+                 player_displayed_shield_class());
     }
     else
-        snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
+        snprintf(buf, sizeof buf, "SH %2d", player_displayed_shield_class());
     cols1.add_formatted(1, buf, false);
 
     const char* str_col = colour_to_str(_get_stat_colour(STAT_STR)).c_str();

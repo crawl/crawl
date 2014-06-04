@@ -2627,6 +2627,12 @@ int player_wizardry()
            + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
 }
 
+/**
+ * Calculate the SH value used internally.
+ *
+ * Exactly twice the value displayed to players, for legacy reasons.
+ * @return      The player's current SH value.
+ */
 int player_shield_class()
 {
     int shield = 0;
@@ -2685,14 +2691,25 @@ int player_shield_class()
     }
 
     // mutations
-    // +3, +6, +9
+    // +2, +4, +6 (displayed)
     shield += (player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 300
+               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 200 + 200
                : 0);
 
     stat += qazlal_sh_boost() * 100;
 
     return (shield + stat + 50) / 100;
+}
+
+/**
+ * Calculate the SH value that should be displayed to players.
+ *
+ * Exactly half the internal value, for legacy reasons.
+ * @return      The SH value to be displayed.
+ */
+int player_displayed_shield_class()
+{
+    return player_shield_class() / 2;
 }
 
 bool player_sust_abil(bool calc_unid)
