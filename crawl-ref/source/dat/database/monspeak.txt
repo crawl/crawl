@@ -4768,7 +4768,42 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 ############ LOUISE ### A sorceress driven mad by the abyss
 Louise
 
-@_mercenary_guard_@
+@_Louise_common_@
+
+w:2
+@_Louise_rare_@
+
+%%%%
+_Louise_common_
+
+@The_monster@ says, "Want to take a trip?"
+
+@The_monster@ says, "Even the Abyss couldn't kill me! What makes you think you can?"
+
+@The_monster@ says, "Powers from beyond reality are at my beck and call!"
+
+@The_monster@ says, "Need a shortcut to the ORB? Here, let me help!"
+
+@The_monster@ gibbers incoherently.
+
+@The_monster@ screams!
+
+@The_monster@ laughs uncontrollably.
+
+@The_monster@ begins to sob.
+
+@The_monster@ asks, "Why won't you be my friend?"
+
+@_wizard_common_spell_@
+@_fake_spell_effect_@
+%%%%
+_Louise_rare_
+
+@The_monster@ says, "I'm not feeling very well..."
+
+@The_monster@ says, "Who do you take me for, some common mercenary?"
+
+@The_monster@ says, "It's the perfect time of year for a holiday!"
 ### END Louise
 %%%%
 ############ MARA ### A powerful demon lord, Lord of Illusions
