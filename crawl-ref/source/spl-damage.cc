@@ -1239,10 +1239,16 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
     return 0;
 }
 
+/**
+ * Is this a valid target for shatter?
+ *
+ * @param act     The actor being considered
+ * @return        Whether the actor will take damage from shatter.
+ */
 static bool _shatterable(const actor *act)
 {
     if (act->is_player())
-        return true; // no player ghostlies... at least user-controllable ones
+        return !you.is_insubstantial();
     return _shatter_mon_dice(act->as_monster());
 }
 
@@ -1287,7 +1293,9 @@ spret_type cast_shatter(int pow, bool fail)
 
 static int _shatter_player_dice()
 {
-    if (you.petrified())
+    if (you.is_insubstantial())
+        return 0;
+    else if (you.petrified())
         return 12; // reduced later
     else if (you.petrifying())
         return 6;  // reduced later
