@@ -622,6 +622,10 @@ ifndef BUILD_LUA
   LIBS += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --libs)
 endif
 
+ifdef USE_LUAJIT
+DEFINES_L += -DUSE_LUAJIT
+endif
+
 ifndef BUILD_SQLITE
   ifeq ($(shell grep -q sqlite3_prepare $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
     # INCLUDES_L += -isystem $(SQLITE_INCLUDE_DIR)
