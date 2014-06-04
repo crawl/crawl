@@ -3042,6 +3042,10 @@ w:50
 @The_monster@ says, "Okawaru's gifts are murder."
 
 @The_monster@ says, "You can only wear one cloak at a time, you know?"
+
+@The_monster@ says, "Do you think you're a hero? I hate that."
+
+@The_monster@ says, "How much finesse does it take to swing your arms real fast, anyway?"
 %%%%
 Makhleb Donald
 
@@ -3273,6 +3277,8 @@ w:50
 
 @The_monster@ says, "You're not very quick on the up-take, are you?"
 
+@The_monster@ says, "You know, if you want, I know a very good posture trainer."
+
 @The_monster@ says, "Am I talking too fast for you?"
 
 @The_monster@ says, "Look at me! I'm running, I'm running!"
@@ -3384,6 +3390,8 @@ w:50
 @The_monster@ says, "So the shops here weren't enough for you?"
 
 @The_monster@ says, "Feeling hungry, yet?"
+
+@The_monster@ says, "I saw some gold over there. Quick, better go get it!"
 
 @The monster@ says, "I bet you can make some really great dragon armour out of gold."
 %%%%
