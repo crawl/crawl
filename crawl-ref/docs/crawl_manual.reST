@@ -788,7 +788,8 @@ With '[' you can have a quick look at your current gear.
 
 Most armours can be improved by reading the appropriate scroll. Body armour and
 bardings can be enchanted up to the base value of AC they provide. Shields can
-be enchanted up to +3. Other gear is limited to +2.
+be enchanted up to +3, +5, or +8, depending on their size. Other gear is limited
+to +2.
 
 % Food and Carrion
 ========================================
