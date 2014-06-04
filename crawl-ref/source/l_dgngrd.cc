@@ -106,7 +106,7 @@ static int dgn_grid(lua_State *ls)
     {
         const dungeon_feature_type feat = _get_lua_feature(ls, 3);
         if (feat)
-            grd(c) = feat;
+            dungeon_terrain_changed(c, feat);
     }
     PLUARET(number, grd(c));
 }
