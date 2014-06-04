@@ -1555,7 +1555,7 @@ void scorefile_entry::init(time_t dt)
 
     ac    = you.armour_class();
     ev    = player_evasion();
-    sh    = player_shield_class();
+    sh    = player_displayed_shield_class();
 
     god = you.religion;
     if (!you_worship(GOD_NO_GOD))

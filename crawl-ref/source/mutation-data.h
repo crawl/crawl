@@ -1403,9 +1403,9 @@ static const mutation_def mut_data[] =
 { MUT_LARGE_BONE_PLATES,              2,  3, false, true,
   "large bone plates",
 
-  {"You are partially covered in large bone plates (AC +2, SH +3).",
-   "You are mostly covered in large bone plates (AC +3, SH +6).",
-   "You are completely covered in large bone plates (AC +4, SH +9)."},
+  {"You are partially covered in large bone plates (AC +2, SH +2).",
+   "You are mostly covered in large bone plates (AC +3, SH +3).",
+   "You are completely covered in large bone plates (AC +4, SH +4)."},
 
   {"Large bone plates grow over parts of your arms.",
    "Large bone plates spread over more of your arms.",
