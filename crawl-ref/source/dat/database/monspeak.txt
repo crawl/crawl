@@ -3833,7 +3833,7 @@ _Erica_rare_
 @The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
 ## END Erica ##
 %%%%
-############ EROLCHA ### An ugly ogre capable of casting
+############ EROLCHA ### An vicious ogre capable of casting
 Erolcha
 
 @_Erolcha_common_@
@@ -4500,7 +4500,7 @@ confused Ijyb
 VISUAL:@The_monster@ clutches @possessive@ head and gibbers rapidly, swaying.
 ## END Ijyb ##
 %%%%
-############ ILSUIW ### a pretty merfolk witch
+############ ILSUIW ### a powerful merfolk witch
 Ilsuiw
 
 @_Ilsuiw_common_@
@@ -4698,7 +4698,7 @@ _Joseph_rare_
 @The_monster@ shouts @at_foe@, "Wow!"
 ## END Joseph ##
 %%%%
-############ JOSEPHINE ### An ugly old witch looking for someone to kill
+############ JOSEPHINE ### An twisted old witch looking for someone to kill
 Josephine
 
 VISUAL:@The_monster@ grins evilly.
@@ -4765,7 +4765,7 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 @_fake_spell_effect_@
 ### END Kirke ###
 %%%%
-############ LOUISE ### A mercenary guarding the dungeon
+############ LOUISE ### A sorceress driven mad by the abyss
 Louise
 
 @_mercenary_guard_@
