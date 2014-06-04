@@ -3833,7 +3833,7 @@ _Erica_rare_
 @The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
 ## END Erica ##
 %%%%
-############ EROLCHA ### An vicious ogre capable of casting
+############ EROLCHA ### A vicious ogre capable of casting
 Erolcha
 
 @_Erolcha_common_@
@@ -4698,7 +4698,7 @@ _Joseph_rare_
 @The_monster@ shouts @at_foe@, "Wow!"
 ## END Joseph ##
 %%%%
-############ JOSEPHINE ### An twisted old witch looking for someone to kill
+############ JOSEPHINE ### A twisted old witch looking for someone to kill
 Josephine
 
 VISUAL:@The_monster@ grins evilly.
