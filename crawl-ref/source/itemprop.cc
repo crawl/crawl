@@ -981,7 +981,12 @@ bool hide2armour(item_def &item)
     return true;
 }
 
-// Return the enchantment limit of a piece of armour.
+/**
+ * Return the enchantment limit of a piece of armour.
+ *
+ * @param item      The item being considered.
+ * @return          The maximum enchantment the item can hold.
+ */
 int armour_max_enchant(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -996,7 +1001,8 @@ int armour_max_enchant(const item_def &item)
         max_plus = property(item, PARM_AC);
     }
     else if (eq_slot == EQ_SHIELD)
-        max_plus = 3;
+        // 3 / 5 / 8 for bucklers/shields/lg. shields
+        max_plus = (property(item, PARM_AC) - 3)/2 + 3;
 
     return max_plus;
 }
