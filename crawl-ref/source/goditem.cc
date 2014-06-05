@@ -351,7 +351,7 @@ bool is_hasty_item(const item_def& item)
         retval = (item.sub_type == WAND_HASTING);
         break;
     case OBJ_JEWELLERY:
-        retval = (item.sub_type == AMU_RAGE);
+        retval = (item.sub_type == AMU_RAGE && !is_artefact(item));
         break;
     case OBJ_POTIONS:
         retval = (item.sub_type == POT_HASTE
@@ -363,12 +363,6 @@ bool is_hasty_item(const item_def& item)
         break;
     default:
         break;
-    }
-
-    if (is_artefact(item) && item.base_type != OBJ_BOOKS
-        && (artefact_wpn_property(item, ARTP_ANGRY)))
-    {
-        retval = true;
     }
 
     return retval;
