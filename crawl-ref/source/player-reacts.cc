@@ -447,7 +447,7 @@ static void _decrement_durations()
 
     // Must come before berserk.
     if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
-        go_berserk(false);
+        you.go_berserk(false);
 
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);

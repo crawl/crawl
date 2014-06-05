@@ -305,7 +305,7 @@ public:
     bool can_go_frenzy() const;
     bool can_go_berserk() const;
     bool can_jump() const;
-    void go_berserk(bool intentional, bool potion = false);
+    bool go_berserk(bool intentional, bool potion = false);
     bool go_frenzy(actor *source);
     bool berserk() const;
     bool berserk_or_insane() const;
