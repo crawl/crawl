@@ -1650,21 +1650,11 @@ int monster_die(monster* mons, killer_type killer,
             mprf(MSGCH_GOD, GOD_TROG,
                  "You feel the power of Trog in you as your rage grows.");
         }
-        else if (player_equip_unrand(UNRAND_BLOODLUST))
-        {
-            if (coinflip())
-            {
-                const int bonus = (2 + random2(4)) / 2;
-                you.increase_duration(DUR_BERSERK, bonus);
-                mpr("The necklace of Bloodlust glows a violent red.");
-            }
-        }
-        else if (you.wearing(EQ_AMULET, AMU_RAGE)
-                 && one_chance_in(30))
+        else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
         {
             const int bonus = (2 + random2(4)) / 2;
             you.increase_duration(DUR_BERSERK, bonus);
-            mpr("Your amulet glows a violent red.");
+            mpr("The necklace of Bloodlust glows a violent red.");
         }
     }
 
