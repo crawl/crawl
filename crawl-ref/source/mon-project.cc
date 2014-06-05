@@ -237,7 +237,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 
     bolt beam;
     beam.name = "orb of destruction";
-    beam.flavour = BEAM_NUKE;
+    beam.flavour = BEAM_DEVASTATION;
     beam.attitude = mon.attitude;
 
     actor *caster = actor_by_mid(mon.summoner);

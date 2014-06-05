@@ -1056,7 +1056,7 @@ void bolt::affect_wall()
         fire_wall_effect();
     else if (flavour == BEAM_ELECTRICITY)
         elec_wall_effect();
-    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
         destroy_wall_effect();
 
     if (cell_is_solid(pos()))
@@ -2825,7 +2825,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
         return is_superhot() ? MB_TRUE : MB_MAYBE;
 
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
-        || flavour == BEAM_NUKE)
+        || flavour == BEAM_DEVASTATION)
     {
         if (feat_is_tree(wall))
             return MB_TRUE;
@@ -3019,7 +3019,7 @@ void bolt::internal_ouch(int dam)
         ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
     }
-    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
     {
         ouch(dam, beam_source, KILLED_BY_DISINT, what, true,
              source_name.empty() ? NULL : source_name.c_str());
@@ -4022,7 +4022,7 @@ void bolt::affect_player()
     if (flavour == BEAM_MIASMA && hurted > 0)
         was_affected = miasma_player(get_source_name(), name);
 
-    if (flavour == BEAM_NUKE) // DISINTEGRATION already handled
+    if (flavour == BEAM_DEVASTATION) // DISINTEGRATION already handled
         blood_spray(you.pos(), MONS_PLAYER, hurted / 5);
 
     // Confusion effect for spore explosions
@@ -6325,7 +6325,7 @@ bool bolt::nasty_to(const monster* mon) const
     // The orbs are made of pure disintegration energy.  This also has the side
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
-    if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+    if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
         return mon->type != MONS_ORB_OF_DESTRUCTION;
 
     // Take care of other non-enchantments.
@@ -6590,7 +6590,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_FRAG:                  return "fragments";
     case BEAM_LAVA:                  return "magma";
     case BEAM_ICE:                   return "ice";
-    case BEAM_NUKE:                  return "nuke";
+    case BEAM_DEVASTATION:           return "devastation";
 #if TAG_MAJOR_VERSION == 34
     case BEAM_LIGHT:                 return "light";
 #endif

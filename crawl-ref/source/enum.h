@@ -398,7 +398,7 @@ enum beam_type                  // bolt::flavour
     BEAM_FRAG,
     BEAM_LAVA,
     BEAM_ICE,
-    BEAM_NUKE,
+    BEAM_DEVASTATION,
 #if TAG_MAJOR_VERSION == 34
     BEAM_LIGHT,
 #endif

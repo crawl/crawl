@@ -692,8 +692,8 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.short_name = "energy";
         beam.damage     = dice_def(3, 20);
         beam.hit        = 15 + power / 30;
-        beam.flavour    = BEAM_NUKE; // a magical missile which destroys walls
-        beam.is_beam    = true;
+        beam.flavour    = BEAM_DEVASTATION; // BEAM_DEVASTATION is like magic
+        beam.is_beam    = true;             // dart but it  destroys walls
         break;
 
     case SPELL_STING:              // sting
@@ -881,7 +881,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PORTAL_PROJECTILE:     // ditto
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
-        beam.flavour  = BEAM_NUKE;
+        beam.flavour  = BEAM_DEVASTATION;
         beam.is_beam  = true;
         // Doesn't take distance into account, but this is just a tracer so
         // we'll ignore that.  We need some damage on the tracer so the monster
