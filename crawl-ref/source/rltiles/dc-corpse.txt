@@ -56,7 +56,6 @@ komodo_dragon CORPSE_KOMODO_DRAGON
 ## Slugs ('j')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 elephant_slug CORPSE_ELEPHANT_SLUG
-giant_slug CORPSE_GIANT_SLUG
 
 ## Rodents ('r')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
