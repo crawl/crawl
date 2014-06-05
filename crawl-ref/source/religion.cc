@@ -4309,6 +4309,8 @@ bool god_hates_ability(ability_type ability, god_type god)
         case ABIL_DELAYED_FIREBALL:
         case ABIL_HELLFIRE:
             return god == GOD_DITHMENOS;
+        case ABIL_EVOKE_BERSERK:
+            return god == GOD_CHEIBRIADOS;
         default:
             break;
     }
