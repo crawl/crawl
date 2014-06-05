@@ -7097,8 +7097,11 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         die("player::hurt() called for self-damage");
     }
 
-    if ((flavour == BEAM_NUKE || flavour == BEAM_DISINTEGRATION) && can_bleed())
+    if ((flavour == BEAM_DEVASTATION || flavour == BEAM_DISINTEGRATION)
+        && can_bleed())
+    {
         blood_spray(pos(), type, amount / 5);
+    }
 
     return amount;
 }
