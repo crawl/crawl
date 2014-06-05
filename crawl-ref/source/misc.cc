@@ -1287,6 +1287,37 @@ string weird_sound()
 }
 
 /**
+ * Check to see if Chei slows down the berserking player.
+ * @param intentional If true, this was initiated by the player, and additional
+ *                    messages can be printed if we can't berserk.
+ * @return            True if Chei will slow the player, false otherwise.
+ */
+static bool _chei_prevents_berserk_haste(bool intentional)
+{
+    if (!you_worship(GOD_CHEIBRIADOS))
+        return false;
+
+    // Chei makes berserk not speed you up.
+    // Unintentional would be forgiven "just this once" every time.
+    // Intentional could work as normal, but that would require storing
+    // whether you transgressed to start it -- so we just consider this
+    // a part of your penance.
+    if (!intentional)
+    {
+        simple_god_message(" protects you from inadvertent hurry.");
+        return true;
+    }
+
+    did_god_conduct(DID_HASTY, 8);
+    // Let's see if you've lost your religion...
+    if (!you_worship(GOD_CHEIBRIADOS))
+        return false;
+
+    simple_god_message(" forces you to slow down.");
+    return true;
+}
+
+/**
  * Make the player go berserk!
  * @param intentional If true, this was initiated by the player, and additional
  *                    messages can be printed if we can't berserk.
@@ -1321,22 +1352,7 @@ bool go_berserk(bool intentional, bool potion)
         mpr("Finesse? Hah! Time to rip out guts!");
     }
 
-    if (you_worship(GOD_CHEIBRIADOS))
-    {
-        // Chei makes berserk not speed you up.
-        // Unintentional would be forgiven "just this once" every time.
-        // Intentional could work as normal, but that would require storing
-        // whether you transgressed to start it -- so we just consider this
-        // a part of your penance.
-        if (intentional)
-        {
-            did_god_conduct(DID_HASTY, 8);
-            simple_god_message(" forces you to slow down.");
-        }
-        else
-            simple_god_message(" protects you from inadvertent hurry.");
-    }
-    else
+    if (!_chei_prevents_berserk_haste(intentional))
         mpr("You feel yourself moving faster!");
 
     mpr("You feel mighty!");
