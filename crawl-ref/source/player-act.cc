@@ -789,7 +789,7 @@ bool player::go_berserk(bool intentional, bool potion)
     if (you.duration[DUR_FINESSE] > 0)
     {
         you.duration[DUR_FINESSE] = 0; // Totally incompatible.
-        mpr("Finesse? Hah! Time to rip out guts!");
+        mpr("Your finesse ends abruptly.");
     }
 
     if (!_chei_prevents_berserk_haste(intentional))
