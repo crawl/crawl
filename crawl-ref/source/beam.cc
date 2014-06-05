@@ -806,7 +806,7 @@ void bolt::digging_wall_effect()
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_SLIMY_WALL:
     case DNGN_GRATE:
-        nuke_wall(pos());
+        destroy_wall(pos());
         if (!msg_generated)
         {
             if (!you.see_cell(pos()))
@@ -862,7 +862,7 @@ void bolt::fire_wall_effect()
     }
 
     // Destroy the wall.
-    nuke_wall(pos());
+    destroy_wall(pos());
     if (you.see_cell(pos()))
     {
         if (player_in_branch(BRANCH_SWAMP))
@@ -896,7 +896,7 @@ void bolt::elec_wall_effect()
     fire_wall_effect();
 }
 
-static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
+static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
 {
     const char *msg = nullptr;
     msg_channel_type chan = MSGCH_PLAIN;
@@ -915,8 +915,8 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         // XXX: When silenced, features disappear without message.
         // XXX: For doors, we only issue a sound where the beam hit.
         //      If someone wants to improve on the door messaging,
-        //      probably best to merge _nuke_wall_msg back into
-        //      nuke_wall_effect. [rob]
+        //      probably best to merge _destroy_wall_msg back into
+        //      destroy_wall_effect. [rob]
         if (hear)
         {
             msg = "You hear a grinding noise.";
@@ -973,7 +973,7 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         return false;
 }
 
-void bolt::nuke_wall_effect()
+void bolt::destroy_wall_effect()
 {
     if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
     {
@@ -992,7 +992,7 @@ void bolt::nuke_wall_effect()
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
     case DNGN_TREE:
-        nuke_wall(pos());
+        destroy_wall(pos());
         break;
 
     case DNGN_CLOSED_DOOR:
@@ -1003,7 +1003,7 @@ void bolt::nuke_wall_effect()
         find_connected_identical(pos(), doors);
         set<coord_def>::iterator it;
         for (it = doors.begin(); it != doors.end(); ++it)
-            nuke_wall(*it);
+            destroy_wall(*it);
         break;
     }
 
@@ -1012,7 +1012,7 @@ void bolt::nuke_wall_effect()
         return;
     }
 
-    obvious_effect = _nuke_wall_msg(feat, pos());
+    obvious_effect = _destroy_wall_msg(feat, pos());
 
     if (feat == DNGN_ORCISH_IDOL)
     {
@@ -1057,7 +1057,7 @@ void bolt::affect_wall()
     else if (flavour == BEAM_ELECTRICITY)
         elec_wall_effect();
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
-        nuke_wall_effect();
+        destroy_wall_effect();
 
     if (cell_is_solid(pos()))
         finish_beam();

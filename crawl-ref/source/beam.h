@@ -294,7 +294,7 @@ public:
     void digging_wall_effect();
     void fire_wall_effect();
     void elec_wall_effect();
-    void nuke_wall_effect();
+    void destroy_wall_effect();
     void drop_object();
     int range_used(bool leg_only = false) const;
     void finish_beam();

@@ -3562,7 +3562,7 @@ static void _move_player(coord_def move)
         {
             mprf("You dig through %s.", feature_description_at(targ, false,
                  DESC_THE, false).c_str());
-            nuke_wall(targ);
+            destroy_wall(targ);
             noisy(6, you.pos());
             make_hungry(50, true);
             additional_time_taken += BASELINE_DELAY / 5;

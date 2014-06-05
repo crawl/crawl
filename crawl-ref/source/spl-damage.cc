@@ -1226,7 +1226,7 @@ static int _shatter_walls(coord_def where, int pow, actor *agent)
     {
         noisy(30, where);
 
-        nuke_wall(where);
+        destroy_wall(where);
 
         if (agent->is_player() && grid == DNGN_ORCISH_IDOL)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
@@ -2010,7 +2010,8 @@ spret_type cast_dispersal(int pow, bool fail)
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool allow_random,
                               bool get_max_distance, bool quiet,
-                              const char **what, bool &destroy_wall, bool &hole)
+                              const char **what, bool &should_destroy_wall,
+                              bool &hole)
 {
     beam.flavour     = BEAM_FRAG;
     beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
@@ -2203,7 +2204,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                      || !allow_random && get_max_distance)))
         {
             beam.ex_size = 2;
-            destroy_wall = true;
+            should_destroy_wall = true;
         }
         break;
 
@@ -2223,7 +2224,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             || grid == DNGN_GRATE)
         {
             beam.damage.num += 2;
-            destroy_wall     = true;
+            should_destroy_wall     = true;
         }
         break;
 
@@ -2239,7 +2240,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             || !allow_random && get_max_distance)
         {
             beam.ex_size = 3;
-            destroy_wall = true;
+            should_destroy_wall = true;
         }
         break;
 
@@ -2252,7 +2253,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         // Doors always blow up, stone arches never do (would cause problems).
         if (what)
             *what = "door";
-        destroy_wall = true;
+        should_destroy_wall = true;
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
@@ -2287,15 +2288,16 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 spret_type cast_fragmentation(int pow, const actor *caster,
                               const coord_def target, bool fail)
 {
-    bool destroy_wall = false;
-    bool hole         = true;
-    const char *what  = NULL;
+    bool should_destroy_wall = false;
+    bool hole                = true;
+    const char *what         = NULL;
     const dungeon_feature_type grid = grd(target);
 
     bolt beam;
 
+    // should_destroy_wall is an output argument.
     if (!setup_fragmentation_beam(beam, pow, caster, target, true, false,
-                                  false, &what, destroy_wall, hole))
+                                  false, &what, should_destroy_wall, hole))
     {
         return SPRET_ABORT;
     }
@@ -2333,8 +2335,8 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     {
         if (you.see_cell(target))
             mprf("The %s shatters!", what);
-        if (destroy_wall)
-            nuke_wall(target);
+        if (should_destroy_wall)
+            destroy_wall(target);
     }
     else if (target == you.pos()) // You explode.
     {

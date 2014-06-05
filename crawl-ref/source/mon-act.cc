@@ -3900,7 +3900,7 @@ static bool _monster_move(monster* mons)
                           2, MON_SUMM_ANIMATE,
                           target, MHITNOT,
                           0, GOD_LUGONU));
-            nuke_wall(target);
+            destroy_wall(target);
         }
     }
 
@@ -3942,7 +3942,7 @@ static bool _monster_move(monster* mons)
                  && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
-            nuke_wall(target);
+            destroy_wall(target);
 
             if (flattens_trees)
             {
