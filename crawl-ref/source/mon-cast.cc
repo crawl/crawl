@@ -4680,7 +4680,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #ifdef ASSERTS
     const unsigned int flags = get_spell_flags(spell_cast);
 
-    ASSERT(!(flags & (SPFLAG_TESTING | SPFLAG_MAPPING)));
+    ASSERT(!(flags & SPFLAG_TESTING));
 
     // Targeted spells need a valid target.
     // Wizard-mode cast monster spells may target the boundary (shift-dir).
