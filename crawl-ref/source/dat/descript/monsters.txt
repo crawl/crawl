@@ -2997,6 +2997,12 @@ oklob sapling wizard
 
 <oklob plant annihilator>
 %%%%
+orb beetle
+
+A monstrously big beetle who apparently ate a mighty conjurer, or maybe an orb
+spider. Or perhaps it's a product of divine experiments, in which case it looks
+like Xom's handiwork...
+%%%%
 orb of electricity
 
 A massive floating ball. It resembles ball lightning, but looks far more
@@ -3012,12 +3018,6 @@ A globe of primordial ice, floating in the air. You don't know whether the
 tales about the world's once being a void bracketed by realms of endless fire
 and cold are true, but if they are, this orb may be a relic of that ancient
 time.
-%%%%
-orb slug
-
-A monstrously big slug who apparently ate a mighty conjurer, or maybe an orb
-spider. Or perhaps it's a product of divine experiments, in which case it looks
-like Xom's handiwork...
 %%%%
 petrified plant
 
