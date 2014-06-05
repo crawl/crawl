@@ -1685,7 +1685,7 @@ const char *dungeon_feature_name(dungeon_feature_type rfeat)
     return dngn_feature_names[feat];
 }
 
-void nuke_wall(const coord_def& p)
+void destroy_wall(const coord_def& p)
 {
     if (!in_bounds(p))
         return;

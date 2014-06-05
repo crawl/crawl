@@ -119,7 +119,7 @@ const char* feat_type_name(dungeon_feature_type feat);
 dungeon_feature_type dungeon_feature_by_name(const string &name);
 vector<string> dungeon_feature_matches(const string &name);
 const char *dungeon_feature_name(dungeon_feature_type rfeat);
-void nuke_wall(const coord_def& p);
+void destroy_wall(const coord_def& p);
 void set_terrain_changed(const coord_def c);
 bool cell_is_clingable(const coord_def pos);
 bool cell_can_cling_to(const coord_def& from, const coord_def to);

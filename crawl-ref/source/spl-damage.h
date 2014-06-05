@@ -35,7 +35,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool allow_random,
                               bool get_max_distance, bool quiet,
                               const char **what,
-                              bool &destroy_wall, bool &hole);
+                              bool &should_destroy_wall, bool &hole);
 spret_type cast_fragmentation(int powc, const actor *caster,
                               const coord_def target, bool fail);
 int wielding_rocks();

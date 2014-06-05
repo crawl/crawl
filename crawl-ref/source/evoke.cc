@@ -1415,7 +1415,7 @@ static bool _stone_of_tremors()
     // Destroy doors.
     for (unsigned int i = 0; i < door_pos.size(); ++i)
     {
-        nuke_wall(door_pos[i]);
+        destroy_wall(door_pos[i]);
         mpr("The door collapses!");
     }
 
@@ -1425,7 +1425,7 @@ static bool _stone_of_tremors()
     {
         if (_is_rock(grd(wall_pos[i])) && one_chance_in(3))
         {
-            nuke_wall(wall_pos[i]);
+            destroy_wall(wall_pos[i]);
             rubble_pos.push_back(wall_pos[i]);
         }
     }

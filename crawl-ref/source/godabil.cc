@@ -4590,7 +4590,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
                     || grd(pos) == DNGN_GRATE))
                 {
                     noisy(30, pos);
-                    nuke_wall(pos);
+                    destroy_wall(pos);
                     wall_count++;
                 }
                 break;

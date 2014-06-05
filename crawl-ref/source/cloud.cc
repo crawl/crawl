@@ -248,7 +248,7 @@ static void _spread_fire(const cloud_struct &cloud)
 
             if (you.see_cell(*ai))
                 mpr("The forest fire spreads!");
-            nuke_wall(*ai);
+            destroy_wall(*ai);
             _place_new_cloud(cloud.type, *ai, random2(30)+25, cloud.whose,
                               cloud.killer, cloud.source, cloud.spread_rate,
                               cloud.colour, cloud.name, cloud.tile, cloud.excl_rad);
