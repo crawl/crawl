@@ -1220,11 +1220,12 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     {
         const coord_def p(*ri);
         const coord_def abyss_coord = p + abyssal_state.major_coord;
-        bool nuked = map_masked(p, MMT_TURNED_TO_FLOOR);
-        if (used_queue && !nuked)
+        bool turned_to_floor = map_masked(p, MMT_TURNED_TO_FLOOR);
+        if (used_queue && !turned_to_floor)
             continue;
 
-        if (nuked && (now || x_chance_in_y(delta, 50)) || !nuked && !used_queue)
+        if (turned_to_floor && (now || x_chance_in_y(delta, 50))
+            || !turned_to_floor && !used_queue)
         {
             ++ii;
             _update_abyss_terrain(abyss_coord, abyss_genlevel_mask, morph);
