@@ -652,26 +652,26 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 static int _acquirement_misc_subtype()
 {
     // Total weight if none have been seen is 100.
-    int result = random_choose_weighted(              // Decks given lowest weight.
-                                                      2, MISC_DECK_OF_WONDERS,
-                                                      3, MISC_DECK_OF_CHANGES,
-                                                      3, MISC_DECK_OF_DEFENCE,
-                                                      // The player might want
-                                                      // multiple of these.
-       (you.seen_misc[MISC_LAMP_OF_FIRE] ?       8 : 15), MISC_LAMP_OF_FIRE,
-       (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    8 : 15), MISC_PHIAL_OF_FLOODS,
-       (you.seen_misc[MISC_FAN_OF_GALES] ?       8 : 15), MISC_FAN_OF_GALES,
-       (you.seen_misc[MISC_STONE_OF_TREMORS] ?   8 : 15), MISC_STONE_OF_TREMORS,
-                                                      // These have charges, so
-                                                      // give them a constant
-                                                      // weight.
-                                                      8, MISC_BOX_OF_BEASTS,
-                                                      8, MISC_SACK_OF_SPIDERS,
-                                                      // The player never needs
-                                                      // more than one.
-       (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  8), MISC_DISC_OF_STORMS,
-       (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  8), MISC_LANTERN_OF_SHADOWS,
-                                                      0);
+    int result = random_choose_weighted(           // Decks given lowest weight.
+                                                   2, MISC_DECK_OF_WONDERS,
+                                                   3, MISC_DECK_OF_CHANGES,
+                                                   3, MISC_DECK_OF_DEFENCE,
+                                                   // The player might want
+                                                   // multiple of these.
+    (you.seen_misc[MISC_LAMP_OF_FIRE] ?       8 : 15), MISC_LAMP_OF_FIRE,
+    (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    8 : 15), MISC_PHIAL_OF_FLOODS,
+    (you.seen_misc[MISC_FAN_OF_GALES] ?       8 : 15), MISC_FAN_OF_GALES,
+    (you.seen_misc[MISC_STONE_OF_TREMORS] ?   8 : 15), MISC_STONE_OF_TREMORS,
+                                                   // These have charges, so
+                                                   // give them a constant
+                                                   // weight.
+                                                   8, MISC_BOX_OF_BEASTS,
+                                                   8, MISC_SACK_OF_SPIDERS,
+                                                   // The player never needs
+                                                   // more than one.
+    (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  8), MISC_DISC_OF_STORMS,
+    (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  8), MISC_LANTERN_OF_SHADOWS,
+                                                   0);
 
     // Give a crystal ball based on both evocations and either spellcasting or
     // invocations if we haven't seen one.
