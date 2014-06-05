@@ -2992,13 +2992,13 @@ bool monster::go_frenzy(actor *source)
     return true;
 }
 
-void monster::go_berserk(bool intentional, bool /* potion */)
+bool monster::go_berserk(bool intentional, bool /* potion */)
 {
     if (!can_go_berserk())
-        return;
+        return false;
 
     if (check_stasis(false))
-        return;
+        return false;
 
     if (has_ench(ENCH_SLOW))
     {
@@ -3028,6 +3028,8 @@ void monster::go_berserk(bool intentional, bool /* potion */)
                 if (mons_aligned(this, *mi))
                     mi->go_berserk(false);
     }
+
+    return true;
 }
 
 void monster::expose_to_element(beam_type flavour, int strength,

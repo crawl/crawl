@@ -17,7 +17,6 @@ struct bolt;
 class dist;
 struct activity_interrupt_data;
 
-bool go_berserk(bool intentional, bool potion = false);
 void search_around();
 
 void emergency_untransform();

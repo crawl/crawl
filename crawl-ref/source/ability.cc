@@ -2303,7 +2303,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
-        go_berserk(true);
+        you.go_berserk(true);
         break;
 
     // Fly (tengu/drac) - permanent at high XL
@@ -2659,7 +2659,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_TROG_BERSERK:
         // Trog abilities don't use or train invocations.
-        go_berserk(true);
+        you.go_berserk(true);
         break;
 
     case ABIL_TROG_REGEN_MR:
