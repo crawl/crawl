@@ -163,7 +163,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     return result;
 }
 
-static armour_type _acquirement_armour_subtype(bool divine)
+static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
 {
     // Increasing the representation of the non-body armour
     // slots here to make up for the fact that there's only
@@ -378,9 +378,9 @@ static armour_type _pick_unseen_armour()
     return picked;
 }
 
-// Write results into arguments.
-static void _acquirement_determine_food(int& type_wanted, int& quantity)
+static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
 {
+    int type_wanted;
     // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
         type_wanted = FOOD_CHUNK;
@@ -398,27 +398,26 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     }
     else
     {
-        type_wanted = coinflip() ? FOOD_ROYAL_JELLY
-                        : player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
-                                                                 : FOOD_MEAT_RATION;
+        type_wanted = coinflip()
+            ? FOOD_ROYAL_JELLY
+            : player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
+                                                     : FOOD_MEAT_RATION;
     }
 
     quantity = 3 + random2(5);
 
+    // giving more of the lower food value items
     if (type_wanted == FOOD_FRUIT)
         quantity = 8 + random2avg(15, 2);
-    // giving more of the lower food value items
     else if (type_wanted == FOOD_ROYAL_JELLY || type_wanted == FOOD_CHUNK)
         quantity += random2avg(10, 2);
     else if (type_wanted == POT_BLOOD)
-    {
-    // this was above in the vampire block, but gets overwritten by line 1371
-    // so moving here {due}
         quantity = 8 + random2(5);
-    }
+
+    return type_wanted;
 }
 
-static int _acquirement_weapon_subtype(bool divine)
+static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
 {
     // Asking for a weapon is biased towards your skills.
     // First pick a skill, weighting towards those you have.
@@ -512,7 +511,7 @@ static int _acquirement_weapon_subtype(bool divine)
     return result;
 }
 
-static missile_type _acquirement_missile_subtype()
+static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int count = 0;
     int skill = SK_THROWING;
@@ -563,7 +562,7 @@ static missile_type _acquirement_missile_subtype()
     return result;
 }
 
-static int _acquirement_jewellery_subtype()
+static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int result = 0;
 
@@ -594,7 +593,7 @@ static bool _want_rod()
            && !one_chance_in(5);
 }
 
-static int _acquirement_staff_subtype()
+static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Try to pick an enhancer staff matching the player's best skill.
     skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
@@ -642,11 +641,24 @@ static int _acquirement_staff_subtype()
     return result;
 }
 
+static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
+{
+#if TAG_MAJOR_VERSION == 34
+    int result;
+    do
+        result = random2(NUM_RODS);
+    while (result == ROD_WARDING || result == ROD_VENOM);
+    return result;
+#else
+    return random2(NUM_RODS);
+#endif
+}
+
 /**
  * Return a miscellaneous evokable item for acquirement.
  * @return   The item type chosen.
  */
-static int _acquirement_misc_subtype()
+static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Total weight if none have been seen is 100.
     int result = random_choose_weighted(           // Decks given lowest weight.
@@ -683,7 +695,7 @@ static int _acquirement_misc_subtype()
     return result;
 }
 
-static int _acquirement_wand_subtype()
+static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int picked = NUM_WANDS;
 
@@ -736,54 +748,49 @@ static int _acquirement_wand_subtype()
     return picked;
 }
 
+typedef int (*acquirement_subtype_finder)(bool divine, int &quantity);
+static const acquirement_subtype_finder _subtype_finders[] =
+{
+    _acquirement_weapon_subtype,
+    _acquirement_missile_subtype,
+    _acquirement_armour_subtype,
+    _acquirement_wand_subtype,
+    _acquirement_food_subtype,
+    0, // no scrolls
+    _acquirement_jewellery_subtype,
+    _acquirement_food_subtype, // potion acquirement = food for vampires
+    0, // books handled elsewhere
+    _acquirement_staff_subtype,
+    0, // no, you can't acquire the orb
+    _acquirement_misc_subtype,
+    0, // no corpses
+    0, // gold handled elsewhere, and doesn't have subtypes anyway
+    _acquirement_rod_subtype,
+};
+
 static int _find_acquirement_subtype(object_class_type &class_wanted,
                                      int &quantity, bool divine,
                                      int agent = -1)
 {
+    COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
     int type_wanted = OBJ_RANDOM;
 
     int useless_count = 0;
 
-    while (1)
+    do
     {
         // Staves and rods have a common acquirement class.
         if (class_wanted == OBJ_STAVES || class_wanted == OBJ_RODS)
             class_wanted = _want_rod() ? OBJ_RODS : OBJ_STAVES;
 
-        switch (class_wanted)
-        {
-        case OBJ_FOOD:
-            // Clobber class_wanted for vampires.
-            if (you.species == SP_VAMPIRE)
-                class_wanted = OBJ_POTIONS;
-            // Deliberate fall-through
-        case OBJ_POTIONS: // Should only happen for vampires.
-            // set type_wanted and quantity
-            _acquirement_determine_food(type_wanted, quantity);
-            break;
+        // Vampires acquire blood, not food.
+        if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
+            class_wanted = OBJ_POTIONS;
 
-        case OBJ_WEAPONS:    type_wanted = _acquirement_weapon_subtype(divine);  break;
-        case OBJ_MISSILES:   type_wanted = _acquirement_missile_subtype(); break;
-        case OBJ_ARMOUR:     type_wanted = _acquirement_armour_subtype(divine); break;
-        case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype(); break;
-        case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
-        case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype();
-            break;
-#if TAG_MAJOR_VERSION == 34
-        case OBJ_RODS:
-            do
-                type_wanted = random2(NUM_RODS);
-            while (type_wanted == ROD_WARDING || type_wanted == ROD_VENOM);
-            break;
-#else
-        case OBJ_RODS:       type_wanted = random2(NUM_RODS); break;
-#endif
-        case OBJ_JEWELLERY:  type_wanted = _acquirement_jewellery_subtype();
-            break;
-        default: break;         // gold, books
-        }
+        if (_subtype_finders[class_wanted])
+            type_wanted = (*_subtype_finders[class_wanted])(divine, quantity);
 
         item_def dummy;
         dummy.base_type = class_wanted;
@@ -791,14 +798,10 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENT_MASK;
 
-        if ((is_useless_item(dummy, false) || god_hates_item(dummy))
-            && useless_count++ < 200)
-        {
-            continue;
-        }
-        else
+        if (!is_useless_item(dummy, false) && !god_hates_item(dummy))
             break;
     }
+    while (useless_count++ < 200);
 
     return type_wanted;
 }
