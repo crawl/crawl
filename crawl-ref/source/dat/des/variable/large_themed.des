@@ -1722,3 +1722,44 @@ ppptc.......c..........c...c...ctpt''
          ''''  '  ''   '!!!'
                         @@@
 ENDMAP
+
+NAME: cheibrodos_hippocracy
+DEPTH: D:12-15
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: north
+MONS: giant orange brain, small abomination, giant eyeball, demonic crawler
+ITEM: randbook
+NSUBST: ' = 3:4 / *:.
+NSUBST: " = 4:0 / 1:9 / *:.
+NSUBST: ? = 1:9 / *:0
+MAP
+      xxxxxxxxxxxxxxxxxxxxxxx
+     xxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxwwwwwxxxxxxxxx......xxxx
+  xxxxwxxxxx...xxxx...xxxx..xxx
+ xxxwwxx.........x..xxx..xx..xx
+xxxwxxx............xx.....xx.xx
+xxwxx*...?.?......xx..xx..2x.xx
+xxwx%d....1.......x..xxW22Wx.xx
+xxwx**...?.?.....xx..xxWWWxx.xx
+xxwxx%..........xx....xxwxx..xx
+xxxwxxxx......xxxw.xx..xxx..xxx
+ xxxwwwxxxxxxxxwwww'xx.....xxx
+  xxxxxwwwwwwwwxx.w'xxxxxxxxx
+   xxxxxxxx4.xxxx.w'xxxxxxxx
+   xx"m"xxx*%xxxxw'wxx
+  xx"m""".xmxxxxx'wxxx
+  xx3m"""..xxxx''w'xx
+  xx"m"""..xxx'ww'xx
+   xx"m"xx.xxx'w'xx
+    xxxxxx.xx'ww'xx
+        xx.xxx'w'xx
+         xx.xx'ww'xx
+         xx.xx'ww'xx
+         xx.x.xw'xx
+          xx.xxx'xxx
+           xxxxxw.xx
+              xxw.xx
+              xx.xxx
+              xx@xxx
+ENDMAP

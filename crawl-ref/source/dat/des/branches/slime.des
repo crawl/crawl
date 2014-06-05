@@ -534,6 +534,139 @@ XXxxxxxx@@@@@xxxxxxXX
   XXXX         XXXX
 ENDMAP
 
+NAME: cheibrodos_slime_lost_civilization_1
+DEPTH: Slime, !Slime:$
+TAGS: decor transparent ruin
+ORIENT: float
+SUBST: B = xxxW., C = W., D = VVW.
+MAP
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+xx..............@
+xx..............@
+xx..x.......x...@
+xx.....BBB......@
+xx....CCBCC....xx
+xx...BCDBDCB...xx
+xx...BBBBBBB...xx
+xx...BCDBDCB...xx
+xx....CCBCC....xx
+@......BBB.....xx
+@...x.......x..xx
+@..............xx
+@..............xx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME: cheibrodos_slime_lost_civilization_2
+DEPTH: Slime, !Slime:$
+TAGS: decor
+ORIENT: float
+MAP
+   xxxxx
+  xxxxxxx
+ xxx...xxx
+xxx.....xxx
+xx...{...xx
+xx.G...G.xx
+xx...(...xx
+xxx.....xxx
+xxxx...xxxx
+ xxx...xxx
+  xx@@@xx
+ENDMAP
+
+NAME: cheibrodos_slime_lost_civilization_3
+DEPTH: Slime, !Slime:$
+TAGS: decor transparent
+ORIENT: float
+SHUFFLE: W.
+SUBST: W = WW.
+KMASK: W = no_monster_gen
+MAP
+xxxxxxxxxxxxx
+xWWWxWWWxWWWx
+xWWWxWWWxWWWx
+xx.xxx.xxx.xx
+@...........@
+@...........@
+@...........@
+xx.xxx.xxx.xx
+xWWWxWWWxWWWx
+xWWWxWWWxWWWx
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME: cheibrodos_slime_lost_civilization_4
+DEPTH: Slime, !Slime:$
+TAGS: decor
+MAP
+.x...x.
+.......
+x..G..x
+.......
+.x...x.
+ENDMAP
+
+NAME: cheibrodos_slime_lost_civilization_5
+DEPTH: Slime, !Slime:$
+TAGS: decor
+SUBST: A=x, B=.
+SHUFFLE: AB
+MAP
+     ...
+    ..B..
+   A.BBB.A
+  AAA.B.AAA
+ ..A.....A..
+..B.......B..
+.BBB..{..BBB.
+..B.......B..
+ ..A.....A..
+  AAA.B.AAA
+   A.BBB.A
+    ..B..
+     ...
+ENDMAP
+
+NAME: cheibrodos_slime_lost_civilization_6
+DEPTH: Slime, !Slime:$
+TAGS: decor
+SUBST: } = }G..
+MAP
+.............
+.x.x.x.x.x.x.
+..x.x.x.x.x..
+.x.........x.
+..x.......x..
+.x...}.....x.
+..x.......x..
+.x.....{...x.
+..x.......x..
+.x.........x.
+..x.x.x.x.x..
+.x.x.x.x.x.x.
+.............
+ENDMAP
+
+NAME: cheibrodos_slime_lost_civilization_7
+DEPTH: Slime, !Slime:$
+TAGS: decor
+MAP
+  ...........
+ .............
+...............
+.......x.......
+.......0.......
+.....x0V0x.....
+.......0.......
+.......x.......
+...............
+ .............
+  ...........
+ENDMAP
+
 ################################################################################
 # Slime Pit
 ################################################################################

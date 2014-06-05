@@ -6291,3 +6291,73 @@ ccww.........wwcc
      cc...cc
       c+++c
 ENDMAP
+
+NAME: cheibrodos_birdhouse
+DEPTH: Depths, !Depths:$
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+MONS: raven, tengu warrior, tengu conjurer, tengu reaver
+KFEAT: m = iron_grate
+SUBST: " = .....1112W
+NSUBST: ' = 2:4 / 4=23 / *:.
+NSUBST: ? = 3:* / *:%
+MAP
+           .........
+          ..wwwWwww..
+          .wwwWWWwww.
+          .wwWxmxWww.
+          .wWxx"xxWw.
+          .WWm"""mWW.
+          .wWxx"xxWw.
+          .wwWx+xWww.
+          .wwWx'xWww.
+         ..wWxx'xxWw..
+ .........WWWx?'?xWWW.........
+..wwwWwwwWWWWx'''xWWWwwwwWwww..
+.wwwWWWwwWWW+x'''x+WWWwwWWWwww.
+.wwWxmxWWxxxx'''''xxxxWWxmxWww.
+.wWxx"xxxx?'''''''''?xxxx"xxWw.
+.WWm"""+'''''''''''''''+"""mWW.
+.wWxx"xxxx?'''''''''?xxxx"xxWw.
+.wwWxmxWWxxxx'''''xxxxWWxmxWww.
+.wwwWWWwwWWW+x'''x+WWWwwWWWwww.
+..wwwWwwwwWWWx'''xWWWwwwwWwww..
+ .........WWWx?'?xWWW.........
+         ..wWxx'xxWw..
+          .wwWx'xWww.
+          .wwWx+xWww.
+          .wWxx"xxWw.
+          .WWm"""mWW.
+          .wWxx"xxWw.
+          .wwWxmxWww.
+          .wwwWWWwww.
+          ..wwwWwww..
+           .........
+ENDMAP
+
+NAME: cheibrodos_lost_city_excavation
+DEPTH: D:11-15, Depths
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+: if you.branch() == "Dungeon" then
+MONS: deep elf mage w:8 / fire elemental w:5 / nothing, wizard
+: else
+MONS: wizard w:5 / fire elemental w:5 / nothing, lich
+: end
+ITEM: randbook / any scroll
+SUBST: - = .lx
+MAP
+llllll
+llllllllll
+.l-x-llllllllllllll
+@.+1xlxx-lllllllllll
+.lx.-l-1xlxx-lxxxxll
+lll.llx...+1xlxddxll
+llx.xlll.l-.xlx22xll
+ll+1.l-x.lx..lx..xll
+llx--..1+l-.xlx..xll
+llllll-xxlx1+.+..xll
+llllllllll-xxlxxxxll
+    llllllllllllllll
+        lllllllllll
+ENDMAP
