@@ -597,7 +597,7 @@ static bool _want_rod()
            && !one_chance_in(5);
 }
 
-static int _acquirement_staff_subtype(const has_vector& already_has)
+static int _acquirement_staff_subtype()
 {
     // Try to pick an enhancer staff matching the player's best skill.
     skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
@@ -747,22 +747,6 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
 
     int type_wanted = OBJ_RANDOM;
 
-    // Write down what the player is carrying.
-    has_vector already_has;
-    already_has.init(0);
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        const item_def& item = you.inv[i];
-        if (item.defined() && item.base_type == class_wanted)
-        {
-            ASSERT(item.sub_type < max_has_value);
-            already_has[item.sub_type] += item.quantity;
-        }
-    }
-
-    bool try_again = (class_wanted == OBJ_JEWELLERY
-                      || class_wanted == OBJ_STAVES
-                      || class_wanted == OBJ_MISCELLANY);
     int useless_count = 0;
 
     while (1)
@@ -788,7 +772,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         case OBJ_ARMOUR:     type_wanted = _acquirement_armour_subtype(divine); break;
         case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype(); break;
         case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
-        case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
+        case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype();
             break;
 #if TAG_MAJOR_VERSION == 34
         case OBJ_RODS:
@@ -815,14 +799,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         {
             continue;
         }
-
-        if (!try_again)
-            break;
-
-        ASSERT(type_wanted < max_has_value);
-        if (!already_has[type_wanted])
-            break;
-        if (one_chance_in(200))
+        else
             break;
     }
 
