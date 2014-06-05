@@ -692,8 +692,8 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.short_name = "energy";
         beam.damage     = dice_def(3, 20);
         beam.hit        = 15 + power / 30;
-        beam.flavour    = BEAM_DEVASTATION; // BEAM_DEVASTATION is like magic
-        beam.is_beam    = true;             // dart but it  destroys walls
+        beam.flavour    = BEAM_DEVASTATION; // DEVASTATION is BEAM_MMISSILE
+        beam.is_beam    = true;             // except it also destroys walls
         break;
 
     case SPELL_STING:              // sting
