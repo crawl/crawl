@@ -24,7 +24,7 @@ enum spflag_type
     SPFLAG_UNCLEAN              = 0x000200,      // counts as "unclean"
     SPFLAG_CHAOTIC              = 0x000400,      // counts as "chaotic"
     SPFLAG_HASTY                = 0x000800,      // counts as "hasty"
-    SPFLAG_MAPPING              = 0x001000,      // a mapping spell of some kind
+                                //0x001000,
     SPFLAG_ESCAPE               = 0x002000,      // useful for running away
     SPFLAG_RECOVERY             = 0x004000,      // healing or recovery spell
     SPFLAG_AREA                 = 0x008000,      // area affect

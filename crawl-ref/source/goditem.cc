@@ -706,7 +706,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
 
         // Xom would probably find these extra boring.
         if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL | SPFLAG_ESCAPE
-                     | SPFLAG_RECOVERY | SPFLAG_MAPPING))
+                     | SPFLAG_RECOVERY))
         {
             return true;
         }
