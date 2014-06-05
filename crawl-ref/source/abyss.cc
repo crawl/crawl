@@ -1166,7 +1166,7 @@ static void _destroy_all_terrain(bool vaults)
     {
         if (vaults && env.level_map_mask(*ri) & MMT_VAULT)
             continue;
-        env.level_map_mask(*ri) = MMT_NUKED;
+        env.level_map_mask(*ri) = MMT_TURNED_TO_FLOOR;
     }
 }
 
@@ -1220,7 +1220,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     {
         const coord_def p(*ri);
         const coord_def abyss_coord = p + abyssal_state.major_coord;
-        bool nuked = map_masked(p, MMT_NUKED);
+        bool nuked = map_masked(p, MMT_TURNED_TO_FLOOR);
         if (used_queue && !nuked)
             continue;
 
@@ -1228,7 +1228,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         {
             ++ii;
             _update_abyss_terrain(abyss_coord, abyss_genlevel_mask, morph);
-            env.level_map_mask(p) &= ~MMT_NUKED;
+            env.level_map_mask(p) &= ~MMT_TURNED_TO_FLOOR;
         }
         if (morph)
             continue;
