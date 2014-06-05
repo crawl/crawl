@@ -1792,7 +1792,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
  * but it may include the player as a victim.
  * @param debug  If true, don't have Xom act, but return a value indicating
  *               whether he would have acted.
- * @returns      XOM_DID_NOTHING if Xom didn't act, XOM_GOOD_LIGHTNING
+ * @return       XOM_DID_NOTHING if Xom didn't act, XOM_GOOD_LIGHTNING
  *               otherwise.
  */
 static int _xom_throw_divine_lightning(bool debug = false)
@@ -3993,7 +3993,7 @@ static string _get_death_type_keyword(const kill_method_type killed_by)
  * save you.
  * @param death_type  The type of death that occurred.
  * @param aux         Additional string describing this death.
- * @returns           True if Xom saves your life, false otherwise.
+ * @return            True if Xom saves your life, false otherwise.
  */
 bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
 {

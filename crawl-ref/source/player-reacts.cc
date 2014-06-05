@@ -183,7 +183,7 @@
  * @param chan The channel where the endmsg will be printed if the duration
  *             ends.
  *
- * @returns True if the duration ended, false otherwise.
+ * @return  True if the duration ended, false otherwise.
  */
 
 static bool _decrement_a_duration(duration_type dur, int delay,

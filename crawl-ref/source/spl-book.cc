@@ -1140,7 +1140,7 @@ string desc_cannot_memorise_reason(bool form)
  * Can the player learn the given spell?
  *
  * @param   specspell  The spell to be learned.
- * @returns            false if the player can't learn the spell for any
+ * @return             false if the player can't learn the spell for any
  *                     reason, true otherwise.
 */
 static bool _learn_spell_checks(spell_type specspell)
@@ -1189,7 +1189,7 @@ static bool _learn_spell_checks(spell_type specspell)
  * Attempt to make the player learn the given spell.
  *
  * @param   specspell  The spell to be learned.
- * @returns            true if the player learned the spell, false
+ * @return             true if the player learned the spell, false
  *                     otherwise.
 */
 bool learn_spell(spell_type specspell)

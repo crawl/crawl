@@ -2948,7 +2948,7 @@ string summoned_poof_msg(const monster* mons, const item_def &item)
  * Pikelness to be transferred through polymorph.
  *
  * @param mons    The monster to be checked.
- * @returns       True if the monster is Pikel, otherwise false.
+ * @return        True if the monster is Pikel, otherwise false.
 **/
 bool mons_is_pikel(monster* mons)
 {
@@ -2994,7 +2994,7 @@ void pikel_band_neutralise()
  * tracking through polymorph.
  *
  * @param mons    The monster to check.
- * @returns       True if Kirke, false otherwise.
+ * @return        True if Kirke, false otherwise.
 **/
 bool mons_is_kirke(monster* mons)
 {
@@ -3075,7 +3075,7 @@ void hogs_to_humans()
  * Tracks through type and original_name, thus tracking through polymorph.
  *
  * @param mons    The monster to check.
- * @returns       True if Dowan, otherwise false.
+ * @return        True if Dowan, otherwise false.
 **/
 bool mons_is_dowan(const monster* mons)
 {
@@ -3090,7 +3090,7 @@ bool mons_is_dowan(const monster* mons)
  * Tracks through type and original_name, thus tracking through polymorph.
  *
  * @param mons    The monster to check.
- * @returns       True if Duvessa, otherwise false.
+ * @return        True if Duvessa, otherwise false.
 **/
 bool mons_is_duvessa(const monster* mons)
 {
@@ -3107,7 +3107,7 @@ bool mons_is_duvessa(const monster* mons)
  * death function should be called for the monster in question.
  *
  * @param mons    The monster to check.
- * @returns       True if either Dowan or Duvessa, otherwise false.
+ * @return        True if either Dowan or Duvessa, otherwise false.
 **/
 bool mons_is_elven_twin(const monster* mons)
 {

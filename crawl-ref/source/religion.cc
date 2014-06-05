@@ -3565,7 +3565,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
  * @param greedy_explore If true, the return value is based on whether
  *                       we should make explore greedy for items under
  *                       this god.
- * @returns True if the god accepts items for sacrifice, false otherwise.
+ * @return  True if the god accepts items for sacrifice, false otherwise.
 */
 bool god_likes_items(god_type god, bool greedy_explore)
 {
@@ -3600,7 +3600,7 @@ bool god_likes_items(god_type god, bool greedy_explore)
  *
  * @param god The god.
  * @param item The item.
- * @returns True if the god likes the item, false otherwise.
+ * @return  True if the god likes the item, false otherwise.
 */
 bool god_likes_item(god_type god, const item_def& item)
 {

@@ -8180,7 +8180,7 @@ void count_action(caction_type type, int subtype)
 
 /**
  *   The player's radius of monster detection.
- *   @returns  the radius in which a player can detect monsters.
+ *   @return   the radius in which a player can detect monsters.
 **/
 int player_monster_detect_radius()
 {
@@ -8195,7 +8195,7 @@ int player_monster_detect_radius()
 
 /**
  * Return true if the player has the Orb of Zot.
- * @returns True if the player has the Orb, false otherwise.
+ * @return  True if the player has the Orb, false otherwise.
  */
 bool player_has_orb()
 {

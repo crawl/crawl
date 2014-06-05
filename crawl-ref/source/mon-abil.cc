@@ -4978,7 +4978,7 @@ void guardian_golem_bond(monster* mons)
  * @param thrower  The thrower.
  * @param victim   The victim.
  * @param pow      The throw power, which is the die size for damage.
- * @returns        True if the victim was thrown, False otherwise.
+ * @return         True if the victim was thrown, False otherwise.
  */
 static bool _do_throw(actor *thrower, actor *victim, int pow)
 {
@@ -5084,7 +5084,7 @@ static bool _do_throw(actor *thrower, actor *victim, int pow)
  * @param   thrower  The thrower.
  * @param   victim   The victim.
  * @param   site     The site to score.
- * @returns          An integer score >= 0
+ * @return           An integer score >= 0
 */
 static int _throw_site_score(actor *thrower, actor *victim, coord_def site)
 {

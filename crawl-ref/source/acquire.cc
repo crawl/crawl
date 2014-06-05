@@ -647,7 +647,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 
 /**
  * Return a miscellaneous evokable item for acquirement.
- * @returns  The item type chosen.
+ * @return   The item type chosen.
  */
 static int _acquirement_misc_subtype()
 {

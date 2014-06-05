@@ -940,7 +940,7 @@ static void _shoals_tide_sweep_items_clear(coord_def c)
  * an adjacent spot.
  *
  * @param c The location.
- * @returns False if there was a drownable actor at the location that couldn't
+ * @return  False if there was a drownable actor at the location that couldn't
  *          be moved, true otherwise.
 */
 static bool _shoals_tide_sweep_actors_clear(coord_def c)
@@ -988,7 +988,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
  * location to an adjacent spot.
  *
  * @param c The location.
- * @returns False if there was a drownable actor at the location that couldn't
+ * @return  False if there was a drownable actor at the location that couldn't
  *          be moved, true otherwise.
 */
 static bool _shoals_tide_sweep_clear(coord_def c)

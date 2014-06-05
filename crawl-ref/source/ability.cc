@@ -3306,7 +3306,7 @@ static void _add_talent(vector<talent>& vec, const ability_type ability,
  *                       be excluded.
  * @param include_unusable If true, abilities that are currently unusable will
  *                         be excluded.
- * @returns A vector of talent structs.
+ * @return  A vector of talent structs.
  */
 vector<talent> your_talents(bool check_confused, bool include_unusable)
 {

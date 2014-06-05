@@ -3906,7 +3906,7 @@ void setup_breath_timeout(monster* mons)
  * @param mons      The monster doing the mesmerisation.
  * @param actual    Whether or not we are actually casting the spell. If false,
  *                  no messages are emitted.
- * @returns         0 if the player could be mesmerised but wasn't, 1 if the
+ * @return          0 if the player could be mesmerised but wasn't, 1 if the
  *                  player was mesmerised, -1 if the player couldn't be
  *                  mesmerised.
 **/

@@ -1702,7 +1702,7 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
  * @param base_flavour If true, attack flavours that are randomised on every attack
  *                     will have their base flavour returned instead of one of the
  *                     random flavours.
- * @returns A mon_attack_def for the specified attack.
+ * @return  A mon_attack_def for the specified attack.
  */
 mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_flavour)
 {
@@ -4442,7 +4442,7 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
 /**
  * Get the monster body shape of the given monster.
  * @param mon  The monster in question.
- * @returns    The mon_body_shape type of this monster.
+ * @return     The mon_body_shape type of this monster.
  */
 mon_body_shape get_mon_shape(const monster* mon)
 {
@@ -4457,7 +4457,7 @@ mon_body_shape get_mon_shape(const monster* mon)
 /**
  * Get the monster body shape of the given monster type.
  * @param mon  The monster type in question.
- * @returns    The mon_body_shape type of this monster type.
+ * @return     The mon_body_shape type of this monster type.
  */
 mon_body_shape get_mon_shape(const monster_type mc)
 {
@@ -4471,7 +4471,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
 /**
  * Get a DB lookup string for the given monster body shape.
  * @param mon  The monster body shape type in question.
- * @returns    A DB lookup string for the monster body shape.
+ * @return     A DB lookup string for the monster body shape.
  */
 string get_mon_shape_str(const mon_body_shape shape)
 {

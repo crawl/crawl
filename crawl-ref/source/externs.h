@@ -567,7 +567,7 @@ public:
      * if this item is not in the array!
      *
      * @pre The item is actually in the mitm array.
-     * @returns The index of this item in the mitm array, between
+     * @return  The index of this item in the mitm array, between
      *          0 and MAX_ITEMS-1.
      */
     int  index() const;
