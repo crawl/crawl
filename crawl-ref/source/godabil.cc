@@ -444,11 +444,11 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
  *             which recitation types the monster is affected by, if any:
  *             eligibility[RECITE_FOO] is nonzero if the monster is affected
  *             by RECITE_FOO. Only modified if the function returns 0 or 1.
- * @returns -1 if the monster is already affected or of the wrong holiness.
+ * @return  -1 if the monster is already affected or of the wrong holiness.
  *          The eligibility vector is unchanged.
- * @returns 0 if the monster is otherwise ineligible for recite. The
+ * @return  0 if the monster is otherwise ineligible for recite. The
  *          eligibility vector is filled with zeros.
- * @returns 1 if the monster is eligible for recite. The eligibility vector
+ * @return  1 if the monster is eligible for recite. The eligibility vector
  *          indicates which types of recitation it is vulnerable to.
  */
 static int _zin_check_recite_to_single_monster(const monster *mon,
@@ -637,11 +637,11 @@ bool zin_check_able_to_recite(bool quiet)
  * @param[out] prayertype If non-null, receives the type of recitation to
  *             be used: either the only possible type, or the type chosen
  *             by the player.  Only modified when we return 1.
- * @returns 0 if no monsters were found, or if the player declined to choose
+ * @return  0 if no monsters were found, or if the player declined to choose
  *          a type of recitation, or if all the found monsters returned
  *          zero from _zin_check_recite_to_single_monster().
- * @returns 1 if an eligible audience was found.
- * @returns -1 if only an ineligible audience was found: no eligibile
+ * @return  1 if an eligible audience was found.
+ * @return  -1 if only an ineligible audience was found: no eligibile
  *          monsters, and at least one returned -1 from
  *          _zin_check_recite_to_single_monster().
  */
@@ -1804,7 +1804,7 @@ bool kiku_receive_corpses(int pow)
 /**
  * Destroy a corpse at the player's location
  *
- * @returns True if a corpse was destroyed, false otherwise.
+ * @return  True if a corpse was destroyed, false otherwise.
 */
 bool kiku_take_corpse()
 {

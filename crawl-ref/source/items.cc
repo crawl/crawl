@@ -312,7 +312,7 @@ stack_iterator stack_iterator::operator++(int dummy)
 
 /**
  * Reduce quantity of an inventory item, do cleanup if item goes away.
- * @returns True if stack of items no longer exists, false otherwise.
+ * @return  True if stack of items no longer exists, false otherwise.
 */
 bool dec_inv_item_quantity(int obj, int amount)
 {
@@ -641,7 +641,7 @@ void lose_item_stack(const coord_def& where)
  * How many movable items are there at a location?
  *
  * @param obj The item link for the location.
- * @returns The number of movable items at the location.
+ * @return  The number of movable items at the location.
 */
 int count_movable_items(int obj)
 {
@@ -1180,7 +1180,7 @@ string origin_desc(const item_def &item)
  * @param link The location link
  * @param qty If 0, prompt for quantity of that item to pick up, if < 0,
  *            pick up the entire stack, otherwise pick up qty of the item.
- * @returns True if any item was picked up, false otherwise.
+ * @return  True if any item was picked up, false otherwise.
 */
 bool pickup_single_item(int link, int qty)
 {
@@ -1624,7 +1624,7 @@ void note_inscribe_item(item_def &item)
  * @param quant_got The quantity of this item to move.
  * @param quiet If true, most messages notifying the player of item pickup (or
  *              item pickup failure) aren't printed.
- * @returns The quantity of items moved or -1 if the player's inventory is
+ * @return  The quantity of items moved or -1 if the player's inventory is
  *          full.
 */
 int move_item_to_player(int obj, int quant_got, bool quiet)

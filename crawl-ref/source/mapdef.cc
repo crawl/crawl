@@ -5861,7 +5861,7 @@ void keyed_mapspec::parse_features(const string &s)
  *
  * @param s       The string to be parsed.
  * @param weight  The weight of this string.
- * @returns       A feature_spec with the contained, parsed trap_spec stored via
+ * @return        A feature_spec with the contained, parsed trap_spec stored via
  *                unique_ptr as feature_spec->trap.
 **/
 feature_spec keyed_mapspec::parse_trap(string s, int weight)
@@ -5891,7 +5891,7 @@ feature_spec keyed_mapspec::parse_trap(string s, int weight)
  * @param weight   The weight of this string.
  * @param mimic    What kind of mimic (if any) to set for this shop.
  * @param no_mimic Whether to prohibit mimics altogether for this shop.
- * @returns        A feature_spec with the contained, parsed shop_spec stored
+ * @return         A feature_spec with the contained, parsed shop_spec stored
  *                 via unique_ptr as feature_spec->shop.
 **/
 feature_spec keyed_mapspec::parse_shop(string s, int weight, int mimic,

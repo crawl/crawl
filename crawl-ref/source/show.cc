@@ -331,7 +331,7 @@ static void _check_monster_pos(const monster* mons)
  *
  * @param where    The location being queried.
  * @param mons     The moster being mimicked.
- * @returns        True if valid, otherwise False.
+ * @return         True if valid, otherwise False.
 */
 static bool _valid_invisible_spot(const coord_def &where, const monster* mons)
 {

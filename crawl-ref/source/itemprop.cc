@@ -654,7 +654,7 @@ void set_net_stationary(item_def &item)
  *
  * Currently only carrion and nets with a trapped victim are stationary.
  * @param item The item.
- * @returns True iff the item is stationary.
+ * @return  True iff the item is stationary.
 */
 bool item_is_stationary(const item_def &item)
 {
@@ -665,7 +665,7 @@ bool item_is_stationary(const item_def &item)
  * Is the item a stationary net?
  *
  * @param item The item.
- * @returns True iff the item is a stationary net.
+ * @return  True iff the item is a stationary net.
 */
 bool item_is_stationary_net(const item_def &item)
 {
@@ -677,7 +677,7 @@ bool item_is_stationary_net(const item_def &item)
  * Get the actor held in a stationary net.
  *
  * @param net A stationary net item.
- * @returns A pointer to the actor in the net, guaranteed to be non-null.
+ * @return  A pointer to the actor in the net, guaranteed to be non-null.
  */
 actor *net_holdee(const item_def &net)
 {
@@ -2491,7 +2491,7 @@ bool gives_resistance(const item_def &item)
  * Return the mass of an item (aum).
  *
  * @param item The item.
- * @returns The mass of the item.
+ * @return  The mass of the item.
 */
 int item_mass(const item_def &item)
 {

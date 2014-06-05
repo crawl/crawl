@@ -2424,7 +2424,7 @@ static bool _compare_second(const pair<int, int> &a, const pair<int, int> &b)
 
 /**
  * Try to free an inventory slot by dropping a stack of chunks.
- * @returns True if a stack was dropped, false otherwise.
+ * @return  True if a stack was dropped, false otherwise.
 **/
 bool drop_spoiled_chunks()
 {

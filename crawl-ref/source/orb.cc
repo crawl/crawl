@@ -19,7 +19,7 @@
  *
  * @param where      The location the "noise" comes from.
  * @param loudness   The loudness of the noise, determining distance travelled.
- * @returns          True if the area was unsilenced and thus an actual noise
+ * @return           True if the area was unsilenced and thus an actual noise
  *                   occurred, otherwise false, denoting that flashing lights
  *                   occurred.
 **/

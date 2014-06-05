@@ -2017,7 +2017,7 @@ static double _get_true_fail_rate(int raw_fail)
  * Compute the chance of getting a miscast effect of a given severity or higher.
  * @param spell     The spell to be checked.
  * @param severity  Check the chance of getting a miscast this severe or higher.
- * @returns         The chance of this kind of miscast.
+ * @return          The chance of this kind of miscast.
  */
 double get_miscast_chance(spell_type spell, int severity)
 {

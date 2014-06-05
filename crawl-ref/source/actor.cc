@@ -430,7 +430,7 @@ bool actor_slime_wall_immune(const actor *act)
 /**
  * Accessor method to the clinging member.
  *
- * @returns The value of clinging.
+ * @return  The value of clinging.
  */
 bool actor::is_wall_clinging() const
 {
@@ -441,7 +441,7 @@ bool actor::is_wall_clinging() const
  * Check a cell to see if actor can keep clinging if it moves to it.
  *
  * @param p Coordinates of the cell checked.
- * @returns Whether the actor can cling.
+ * @return  Whether the actor can cling.
  */
 bool actor::can_cling_to(const coord_def& p) const
 {

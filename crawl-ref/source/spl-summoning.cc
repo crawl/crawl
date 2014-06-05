@@ -1407,7 +1407,7 @@ static bool _water_adjacent(coord_def p)
  * @param pow    The spell power.
  * @param god    The god of the summoned dryad (usually the caster's).
  * @param fail   Did this spell miscast? If true, abort the cast.
- * @returns      SPRET_ABORT if a summoning area couldn't be found,
+ * @return       SPRET_ABORT if a summoning area couldn't be found,
  *               SPRET_FAIL if one could be found but we miscast, and
  *               SPRET_SUCCESS if the spell was succesfully cast.
 */

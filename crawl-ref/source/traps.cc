@@ -269,7 +269,7 @@ bool trap_def::is_safe(actor* act) const
  * @param where The location.
  * @param trapped If true, the index of the stationary net (trapping a victim)
  *                is returned.
- * @returns The item index of the net.
+ * @return  The item index of the net.
 */
 int get_trapping_net(const coord_def& where, bool trapped)
 {
@@ -1808,7 +1808,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
  * No traps are placed in either Temple or disconnected branches other than
  * Pandemonium. For other branches, we place 0-8 traps a level, averaged over
  * two dice.
- * @returns A number of traps to be placed.
+ * @return  A number of traps to be placed.
 */
 int num_traps_for_place()
 {

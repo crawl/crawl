@@ -771,7 +771,7 @@ static bool _know_spell(spell_type spell)
  * @param spells The list of spells; it must be terminated by SPELL_NO_SPELL.
  * @param ignore_up_to_spell Ignore entries in the list up to and
  *                           including this one.
- * @returns The first spell the player knows.
+ * @return  The first spell the player knows.
  */
 static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_spell)
 {

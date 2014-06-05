@@ -1826,7 +1826,7 @@ static int _get_monster_armour_value(const monster *mon,
  *              message, and for any other value print the message regardless
  *              of visibility.
  * @params force If true, force the monster to pick up and wear the item.
- * @returns True if the monster picks up and wears the item, false otherwise.
+ * @return  True if the monster picks up and wears the item, false otherwise.
  */
 bool monster::pickup_armour(item_def &item, int near, bool force)
 {
@@ -2057,7 +2057,7 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
  *             if non-zero a message is always printed, and no message is
  *             printed if 0.
  * @param force If true, the monster will always try to pick up the item.
- * @returns True if the monster picked up the missile, false otherwise.
+ * @return  True if the monster picked up the missile, false otherwise.
 */
 bool monster::pickup_missile(item_def &item, int near, bool force)
 {
@@ -6143,7 +6143,7 @@ bool monster::attempt_escape(int attempts)
 /**
  * Does the monster have a free tentacle to constrict something?
  * Currently only used by octopode monsters.
- * @returns True if it can constrict an additional monster, false otherwise.
+ * @return  True if it can constrict an additional monster, false otherwise.
  */
 bool monster::has_usable_tentacle() const
 {
