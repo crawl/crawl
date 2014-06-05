@@ -1952,3 +1952,67 @@ cc.7.cc  Gc..cG  cc.7.cc
 ccccccc  ..@@..  ccccccc
 ccccccc          ccccccc
 ENDMAP
+
+NAME: cheibrodos_crypt_down_in_the_bonehoard
+DEPTH: Crypt, !Crypt:$
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+MONS: lich, mummy priest, freezing wraith / w:5 flayed ghost
+KITEM: 1 = %
+KFEAT: A = altar_kikubaaqudgha
+SHUFFLE: 12
+NSUBST: . = 8:0
+NSUBST: " = 1:| / 5=*$ / *:%
+MAP
+          ccccc       ccccc
+         cc.G.cc     cc.G.cc
+        cc.....ccccccc.....cc
+        c..0....c...c....0..c
+        cG..9...+.0.+...0..Gc
+  ccccccc....0..c...c..0....c
+ cc.....cc.....ccccccc.....cc
+cc.ccccc.cc...ccWWWWW+c...cc
+c.cc"""cc.cc+ccWWwwwWWccccc
+c.c""""1c.c...cWww3wwWc....
+c.+""A""c.+.0GcWw3V3wWcG0.@
+c.c""""1c.c...cWww3wwWc....
+c.cc"""cc.cccccWWwwwWWcc+cc
+cc.ccccc.cc...c+WWWWWcc...cc
+ cc.....cc.....ccccccc.....cc
+  ccccccc....0..c...c..0....c
+        cG..9...+.0.+...0..Gc
+        c..0....c...c....0..c
+        cc.....ccccccc.....cc
+         cc.G.cc     cc.G.cc
+          ccccc       ccccc
+ENDMAP
+
+NAME: cheibrodos_crypt_eye_of_stone
+DEPTH: Crypt, !Crypt:$
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+MONS: giant eyeball, silver statue / orange crystal statue / curse skull
+MONS: ancient champion, skeletal warrior
+SHUFFLE: AB / CD
+SUBST: A = G, B = 1, C = ., D = 2
+KFEAT: - = altar_kikubaaqudgha
+SUBST: * = *%
+MAP
+          cccc
+         cc$*cc
+      cccc..$*c
+   cccc......$c
+  cc.4.......cc
+ cc.3.......ccc
+ c..4......ccVcc
+cc.4.cAc...cV...
+c-3..ABA...+...@
+cc.4.cAc...cV...
+ c..4......ccVcc
+ cc.3.......ccc
+  cc.4.......cc
+   cccc......$c
+      cccc..$*c
+         cc$*cc
+          cccc
+ENDMAP

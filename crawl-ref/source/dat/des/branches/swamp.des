@@ -1669,6 +1669,35 @@ tttwWttttttt.www.tttttttt  tc2.+.cccttt
                                  ttt
 ENDMAP
 
+NAME: cheibrodos_swamp_tower_of_moss
+DEPTH: Swamp, !Swamp:$
+TAGS: ruin
+ORIENT: float
+MONS: toadstool
+KMONS: 2 = thorn hunter
+KFEAT: 2 = W
+KFEAT: - = .
+SUBST: " = ---Wtt1, t = ttt-, - = -:50 .
+TILE: x = wall_brick_vines
+FTILE: -Wt1 = floor_sandstone
+MAP
+   .........
+  ..xxxxxxx..
+ ..xx"-"--xx..
+..xx"-"""-"xx..
+.xx""-t"t-""xx.
+.x"--W"W"W--"x.
+.x-"t"WWW"t"--@
+.x"""WW2WW"""x.
+.x-"t"WWW"t"-x.
+.x"--W"W"W--"x.
+.xx""-t"t-""xx.
+..xx"-"""-"xx..
+ ..xx"-"-"xx..
+  ..xxxxxxx..
+   .........
+ENDMAP
+
 ###############################################################################
 # Swamp ending vaults
 #
