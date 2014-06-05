@@ -47,9 +47,6 @@ static armour_type _random_nonbody_armour_type()
                          ARM_BOOTS, -1);
 }
 
-static const int max_has_value = 100;
-typedef FixedVector<int, max_has_value> has_vector;
-
 static armour_type _pick_wearable_armour(const armour_type arm)
 {
     armour_type result = arm;
