@@ -1160,7 +1160,7 @@ static void _update_abyss_terrain(const coord_def &p,
     }
 }
 
-static void _nuke_all_terrain(bool vaults)
+static void _destroy_all_terrain(bool vaults)
 {
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
@@ -1338,7 +1338,7 @@ static void _initialize_abyss_state()
     abyssal_state.seed = random_int() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random_int() & 0x7FFFFFFF;
-    abyssal_state.nuke_all = false;
+    abyssal_state.destroy_all_terrain = false;
     abyssal_state.level = _get_random_level();
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
@@ -1349,7 +1349,7 @@ void set_abyss_state(coord_def coord, uint32_t depth)
     abyssal_state.depth = depth;
     abyssal_state.seed = random_int() & 0x7FFFFFFF;
     abyssal_state.phase = 0.0;
-    abyssal_state.nuke_all = true;
+    abyssal_state.destroy_all_terrain = true;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
     you.moveto(ABYSS_CENTRE);
     map_bitmask abyss_genlevel_mask(true);
@@ -1557,10 +1557,10 @@ static void _increase_depth()
 
 void abyss_morph(double duration)
 {
-    if (abyssal_state.nuke_all)
+    if (abyssal_state.destroy_all_terrain)
     {
-        _nuke_all_terrain(false);
-        abyssal_state.nuke_all = false;
+        _destroy_all_terrain(false);
+        abyssal_state.destroy_all_terrain = false;
     }
     if (!player_in_branch(BRANCH_ABYSS))
         return;

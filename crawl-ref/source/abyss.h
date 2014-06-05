@@ -21,7 +21,7 @@ struct abyss_state
     uint32_t depth;
     double phase;
     level_id level;
-    bool nuke_all;
+    bool destroy_all_terrain;
 };
 
 extern abyss_state abyssal_state;
