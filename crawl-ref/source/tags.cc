@@ -2938,14 +2938,14 @@ static void tag_read_you(reader &th)
 #endif
             abyssal_state.seed = unmarshallInt(th);
         abyssal_state.depth = unmarshallInt(th);
-        abyssal_state.nuke_all = false;
+        abyssal_state.destroy_all_terrain = false;
 #if TAG_MAJOR_VERSION == 34
     }
     else
     {
         unmarshallFloat(th); // converted abyssal_state.depth to int.
         abyssal_state.depth = 0;
-        abyssal_state.nuke_all = true;
+        abyssal_state.destroy_all_terrain = true;
         abyssal_state.seed = random_int();
     }
 #endif
