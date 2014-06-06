@@ -2426,7 +2426,7 @@ int monster_die(monster* mons, killer_type killer,
                         wizard, fake);
         }
     }
-    else if (mons_is_elven_twin(mons) && mons_near(mons))
+    else if (mons_is_elven_twin(mons))
         elven_twin_died(mons, in_transit, killer, killer_index);
     else if (mons->type == MONS_VAULT_WARDEN)
         timeout_terrain_changes(0, true);
@@ -3157,7 +3157,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
     string key = mons->name(DESC_THE, true) + "_"
-                 + twin->name(DESC_THE) + "_dies_";
+                 + twin->name(DESC_THE, true) + "_dies_";
 
     if (mons_near(mons) && !mons->observable())
         key += "invisible_";
