@@ -17,6 +17,7 @@
 #include "terrain.h"
 #include "cloud.h"
 #include "travel.h"
+#include "view.h"
 
 LUAFN(view_feature_at)
 {
@@ -111,12 +112,20 @@ LUAFN(view_withheld)
     return 1;
 }
 
+LUAFN(view_update_monsters)
+{
+    update_monsters_in_view();
+    return 0;
+}
+
 static const struct luaL_reg view_lib[] =
 {
     { "feature_at", view_feature_at },
     { "is_safe_square", view_is_safe_square },
     { "can_reach", view_can_reach },
     { "withheld", view_withheld },
+
+    { "update_monsters", view_update_monsters },
 
     { NULL, NULL }
 };

@@ -3,6 +3,8 @@
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "areas.h"
+#include "database.h"
 #include "delay.h"
 #include "dlua.h"
 #include "libutil.h"
@@ -10,6 +12,7 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-util.h"
+#include "mon-speak.h"
 #include "mon-stuff.h"
 #include "monster.h"
 
@@ -476,6 +479,23 @@ MDEF(you_can_see)
     PLUARET(boolean, you.can_see(mons));
 }
 
+static int l_mons_do_speak(lua_State *ls)
+{
+    // We should only be able to get monsters to speak from dlua.
+    ASSERT_DLUA;
+
+    monster* mons = clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    const char *speech_key = luaL_checkstring(ls, 1);
+
+    mons_speaks_msg(mons, getSpeakString(speech_key), MSGCH_TALK,
+                    silenced(mons->pos()));
+
+    return 0;
+}
+
+MDEFN(speak, do_speak)
+
 struct MonsAccessor
 {
     const char *attribute;
@@ -523,7 +543,9 @@ static MonsAccessor mons_attrs[] =
     { "has_prop",        l_mons_has_prop        },
     { "add_ench",        l_mons_add_ench        },
     { "del_ench",        l_mons_del_ench        },
-    { "you_can_see",     l_mons_you_can_see     }
+    { "you_can_see",     l_mons_you_can_see     },
+
+    { "speak",           l_mons_speak           }
 };
 
 static int monster_get(lua_State *ls)
