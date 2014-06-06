@@ -1231,6 +1231,11 @@ bool PlayerBoulderMovement::can_be_stopped()
     return true;
 }
 
+float PlayerBoulderMovement::get_speed()
+{
+    return speed;
+}
+
 void PlayerBoulderMovement::start_rolling()
 {
     // Pre-populating the props hash so the values get picked up in setup.

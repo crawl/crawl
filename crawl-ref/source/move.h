@@ -40,6 +40,8 @@ public:
 
     virtual bool be_hit_by(actor* aggressor) { return false; };
 
+    virtual float get_speed() { return 1; }
+
     // Called when the monster has been moved by another force,
     // e.g. tele, so we can update our information about it
     virtual void moved_by_other(const coord_def& new_pos) { };
@@ -225,7 +227,7 @@ public:
     void stop(bool show_message = true);
     void impulse(float ix, float iy);
     static void start_rolling();
-    double velocity();
+    float get_speed();
 
 protected:
     void move_init();

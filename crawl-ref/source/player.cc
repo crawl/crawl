@@ -2567,8 +2567,6 @@ int player_evasion(ev_ignore_type evit)
         return max(1, paralysed_base_ev + repulsion_ev);
     }
 
-    // XXX: Give TRAN_BOULDER higher ev at higher speed
-
     const int scale = 100;
     const int size_base_ev = (10 + size_factor) * scale;
 
@@ -3727,8 +3725,8 @@ int check_stealth()
             stealth -= 50; // a constant penalty
         break;
     case TRAN_BOULDER:
-        // XXX: Stealth to depend on velocity
-        race_mod = 8; // slightly more subtle than a dragon
+        race_mod = 27 >> ((int)you.movement()->get_speed());
+        // from 'scenery' to 'zero (base) stealth'
         break;
     case TRAN_NONE:
     case TRAN_APPENDAGE:
