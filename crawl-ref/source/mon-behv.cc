@@ -1209,7 +1209,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
         if (src == &you
             && !mon->has_ench(ENCH_INSANE)
-            && !mons_is_avatar(mon->type))
+            && !mons_is_avatar(mon->type)
+            && mon->type != MONS_SPELLFORGED_SERVITOR)
         {
             mon->attitude = ATT_HOSTILE;
             breakCharm    = true;
