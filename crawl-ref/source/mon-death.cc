@@ -1866,7 +1866,8 @@ int monster_die(monster* mons, killer_type killer,
         case KILL_YOU_MISSILE:  // You kill by missile or beam.
         case KILL_YOU_CONF:     // You kill by confusion.
         {
-            const bool bad_kill    = god_hates_killing(you.religion, mons);
+            const bool bad_kill    = god_hates_killing(you.religion, mons)
+                                     && killer_index != YOU_FAULTLESS;
             const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
             const bool good_kill   = gives_xp && !created_friendly;
 
@@ -1957,7 +1958,7 @@ int monster_die(monster* mons, killer_type killer,
 
                 // Jiyva hates you killing slimes, but eyeballs
                 // mutation can confuse without you meaning it.
-                if (mons_is_slime(mons) && killer != KILL_YOU_CONF)
+                if (mons_is_slime(mons) && killer != KILL_YOU_CONF && bad_kill)
                 {
                     did_god_conduct(DID_KILL_SLIME, mons->hit_dice,
                                     true, mons);
