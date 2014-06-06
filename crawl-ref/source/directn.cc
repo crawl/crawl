@@ -1102,7 +1102,8 @@ coord_def direction_chooser::find_default_target() const
              || mode == TARG_HOSTILE_SUBMERGED
              || mode == TARG_EVOLVABLE_PLANTS
              || mode == TARG_HOSTILE_UNDEAD
-             || mode == TARG_INJURED_FRIEND)
+             || mode == TARG_INJURED_FRIEND
+             || (mode == TARG_ANY || mode == TARG_FRIEND) && cancel_at_self)
     {
         success = find_default_monster_target(result);
     }
