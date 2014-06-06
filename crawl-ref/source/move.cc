@@ -785,7 +785,7 @@ void OrbMovement::strike(const coord_def &pos, bool big_boom)
     monster* mon = subject->as_monster();
     bolt beam;
     beam.name = "orb of destruction";
-    beam.flavour = BEAM_NUKE;
+    beam.flavour = BEAM_DEVASTATION;
     beam.attitude = mon->attitude;
 
     actor *caster = get_caster();
