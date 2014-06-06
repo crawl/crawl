@@ -322,6 +322,12 @@ void ProjectileMovement::save_all()
  */
 coord_def ProjectileMovement::get_move_pos()
 {
+    if (can_be_stopped() && !vx && !vy)
+    {
+        return coord_def(static_cast<int>(round(nx)),
+                         static_cast<int>(round(ny)));
+    }
+
     ASSERT(vx || vy);
     normalise();
 
@@ -1126,6 +1132,8 @@ void PlayerBoulderMovement::impulse(float ix, float iy)
 
     speed = sqrt(vx*vx + vy*vy);
     normalise();
+
+    started_rolling = true;
 }
 
 bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
@@ -1182,7 +1190,8 @@ bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
 
 void PlayerBoulderMovement::stop(bool show_message)
 {
-    untransform();
+    if (started_rolling)
+        untransform();
 }
 
 // How much damage enemies take
@@ -1217,16 +1226,18 @@ void PlayerBoulderMovement::denormalise()
     vy *= speed;
 }
 
+bool PlayerBoulderMovement::can_be_stopped()
+{
+    return true;
+}
+
 void PlayerBoulderMovement::start_rolling()
 {
-    // TODO: Would be nice to give a little impulse based on the direction.
-    // For now it's just a small random velocity.
-
     // Pre-populating the props hash so the values get picked up in setup.
     you.props["iood_x"].get_float() = (float)you.pos().x - 0.5f;
     you.props["iood_y"].get_float() = (float)you.pos().y - 0.5f;
-    you.props["iood_vx"].get_float() = random_real() - 0.5f;
-    you.props["iood_vy"].get_float() = random_real() - 0.5f;
+    you.props["iood_vx"].get_float() = 0.0f;
+    you.props["iood_vy"].get_float() = 0.0f;
 
     // Flag the movement handler to change, and take an initial move
     you.movement_changed();

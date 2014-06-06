@@ -70,6 +70,8 @@ protected:
     virtual bool hit_solid(const coord_def& pos) { return false; };
     virtual bool hit_player() { return false; };
     virtual bool hit_monster(monster* victim) { return false; };
+
+    virtual bool can_be_stopped(void) { return false; };
 };
 
 // Default movement doesn't override; lets 'classic'
@@ -217,7 +219,7 @@ class PlayerBoulderMovement : public BoulderMovement
 public:
     PlayerBoulderMovement (actor *_subject) :
         BoulderMovement(_subject),
-        speed(0), turn_movement(0)
+        speed(0), turn_movement(0), started_rolling(false)
         { };
 
     void stop(bool show_message = true);
@@ -233,9 +235,11 @@ protected:
     bool hit_solid(const coord_def& pos);
     int get_hit_power();
     int strike_max_damage();
+    virtual bool can_be_stopped();
 
     float speed;
     float turn_movement;
+    bool started_rolling;
 };
 
 #endif
