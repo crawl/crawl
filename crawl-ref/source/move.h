@@ -134,7 +134,7 @@ protected:
     int get_hit_power();
 
     bool has_trail();
-    virtual cloud_type trail_type();
+    virtual cloud_type trail_type(const coord_def& old_pos);
 
     virtual void normalise();
     static void _normalise(float &x, float &y);
@@ -197,7 +197,7 @@ protected:
     bool strike(actor *victim);
     int strike_max_damage() { return 20; };
 
-    cloud_type trail_type();
+    cloud_type trail_type(const coord_def& old_pos);
 };
 
 // For boulder beetle movement
@@ -231,9 +231,11 @@ public:
 
 protected:
     void move_init();
+    void post_move(const coord_def& old_pos);
     void post_move_attempt();
     void denormalise();
     void setup();
+    bool check_pos(const coord_def& new_pos);
     bool hit_solid(const coord_def& pos);
     int get_hit_power();
     int strike_max_damage();

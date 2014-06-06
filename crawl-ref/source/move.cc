@@ -361,7 +361,7 @@ void ProjectileMovement::post_move(const coord_def& old_pos)
     if (!catching_up && !actor_at(old_pos)
         && !cell_is_solid(old_pos)) // ???
     {
-        place_cloud(trail_type(), old_pos,
+        place_cloud(trail_type(old_pos), old_pos,
                     2 + random2(3), subject);
     }
 }
@@ -562,7 +562,7 @@ bool ProjectileMovement::has_trail()
     return !catching_up;
 }
 
-cloud_type ProjectileMovement::trail_type()
+cloud_type ProjectileMovement::trail_type(const coord_def& old_pos)
 {
     return CLOUD_MAGIC_TRAIL;
 }
@@ -1057,9 +1057,11 @@ bool BoulderMovement::hit_own_kind(monster *victim)
     return true;
 }
 
-cloud_type BoulderMovement::trail_type()
+cloud_type BoulderMovement::trail_type(const coord_def& old_pos)
 {
-    return CLOUD_DUST_TRAIL;
+    if (feat_has_dry_floor(grd(old_pos)))
+        return CLOUD_DUST_TRAIL;
+    return CLOUD_MIST;
 }
 
 void MonsterBoulderMovement::aim()
@@ -1135,6 +1137,17 @@ void PlayerBoulderMovement::impulse(float ix, float iy)
     normalise();
 
     started_rolling = true;
+}
+
+bool PlayerBoulderMovement::check_pos(const coord_def &pos)
+{
+    if (!feat_has_solid_floor(grd(pos)))
+    {
+        mpr("You screech to a halt.");
+        stop(false);
+        return false;
+    }
+    return ProjectileMovement::check_pos(pos);
 }
 
 bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
@@ -1213,6 +1226,13 @@ void PlayerBoulderMovement::move_init()
     turn_movement = 0;
 }
 
+void PlayerBoulderMovement::post_move(const coord_def& old_pos)
+{
+    BoulderMovement::post_move(old_pos);
+    if (grd(old_pos) == DNGN_SHALLOW_WATER)
+        speed *= 0.75f;
+}
+
 void PlayerBoulderMovement::post_move_attempt()
 {
     BoulderMovement::post_move_attempt();
@@ -1245,9 +1265,8 @@ void PlayerBoulderMovement::start_rolling()
     you.props["iood_vx"].get_float() = 0.0f;
     you.props["iood_vy"].get_float() = 0.0f;
 
-    // Flag the movement handler to change, and take an initial move
+    // Flag the movement handler to change
     you.movement_changed();
-    you.movement()->move();
 }
 
 void PlayerBoulderMovement::setup()
