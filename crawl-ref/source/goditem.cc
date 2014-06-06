@@ -698,6 +698,10 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         // effect, are risky to use, or would otherwise amuse him, but
         // that would be a really small number of spells.
 
+        // Neutral, but in an amusing way.
+        if (spell == SPELL_INNER_FLAME)
+            return false;
+
         // Xom would probably find these extra boring.
         if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL | SPFLAG_ESCAPE
                      | SPFLAG_RECOVERY))

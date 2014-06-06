@@ -5254,6 +5254,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
         rc = mons_antimagic_affected(mon);
         break;
 
+    case BEAM_INNER_FLAME:
+        rc = !(mon->is_summoned() || mon->has_ench(ENCH_INNER_FLAME));
+        break;
+
     default:
         break;
     }
@@ -6338,6 +6342,10 @@ bool bolt::nasty_to(const monster* mon) const
 
     // Positive effects.
     if (nice_to(mon))
+        return false;
+   
+    // Co-aligned inner flame is fine.
+    if (flavour == BEAM_INNER_FLAME && mons_aligned(mon, agent()))
         return false;
 
     // Friendly and good neutral monsters don't mind being teleported.
