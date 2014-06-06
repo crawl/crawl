@@ -571,6 +571,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\tiletex.cc" />
     <ClCompile Include="..\tileview.cc" />
     <ClCompile Include="..\tileweb.cc" />
+    <ClCompile Include="..\tileweb-text.cc" />
     <ClCompile Include="..\transform.cc" />
     <ClCompile Include="..\traps.cc" />
     <ClCompile Include="..\travel.cc" />
@@ -880,6 +881,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\tiletex.h" />
     <ClInclude Include="..\tileview.h" />
     <ClInclude Include="..\tileweb.h" />
+    <ClInclude Include="..\tileweb-text.h" />
     <ClInclude Include="..\transform.h" />
     <ClInclude Include="..\traps.h" />
     <ClInclude Include="..\trap_def.h" />
