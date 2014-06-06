@@ -6343,7 +6343,7 @@ bool bolt::nasty_to(const monster* mon) const
     // Positive effects.
     if (nice_to(mon))
         return false;
-   
+
     // Co-aligned inner flame is fine.
     if (flavour == BEAM_INNER_FLAME && mons_aligned(mon, agent()))
         return false;

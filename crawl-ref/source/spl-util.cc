@@ -1285,7 +1285,7 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     // The healing spells.
     if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
         return false;
-    
+
     const bool neutral = testbits(get_spell_flags(spell), SPFLAG_NEUTRAL);
 
     bolt beam;
