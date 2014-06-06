@@ -1285,6 +1285,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
     // The healing spells.
     if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
         return false;
+    
+    const bool neutral = testbits(get_spell_flags(spell), SPFLAG_NEUTRAL);
 
     bolt beam;
     beam.flavour = BEAM_VISUAL;
@@ -1335,7 +1337,8 @@ bool spell_no_hostile_in_range(spell_type spell, bool rod)
             tempbeam = beam;
             tempbeam.target = *ri;
             tempbeam.fire();
-            if (tempbeam.foe_info.count > 0)
+            if (tempbeam.foe_info.count > 0
+                || neutral && tempbeam.friend_info.count > 0)
             {
                 found = true;
                 break;
