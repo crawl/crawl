@@ -56,7 +56,6 @@ lua_marker('H', props_marker {sheep_place = 1})
 lua_marker('c', props_marker {feat_remove = 1})
 lua_marker('+', props_marker {feat_remove = 1})
 lua_marker('+', restrict_door())
-lua_marker('+', props_marker {veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto"})
 
 if you.branch() == "D" then
   if you.absdepth() > 9 then
