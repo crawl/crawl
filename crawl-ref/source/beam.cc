@@ -5111,9 +5111,13 @@ void bolt::affect_monster(monster* mon)
         else
         {
             killer_type ref_killer = thrower;
+            int kindex = /*beam_source_as_target()*/beam_source;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
+            {
                 ref_killer = KILL_YOU_MISSILE;
-            monster_die(mon, ref_killer, /*beam_source_as_target()*/beam_source);
+                kindex = YOU_FAULTLESS;
+            }
+            monster_die(mon, ref_killer, kindex);
         }
     }
 
