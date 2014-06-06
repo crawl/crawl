@@ -930,6 +930,26 @@ static vector<equipment_type> _current_jewellery_types()
     return ret;
 }
 
+static const char _ring_slot_key(equipment_type slot)
+{
+    switch (slot)
+    {
+    case EQ_LEFT_RING:      return '<';
+    case EQ_RIGHT_RING:     return '>';
+    case EQ_RING_AMULET:    return '^';
+    case EQ_RING_ONE:       return '1';
+    case EQ_RING_TWO:       return '2';
+    case EQ_RING_THREE:     return '3';
+    case EQ_RING_FOUR:      return '4';
+    case EQ_RING_FIVE:      return '5';
+    case EQ_RING_SIX:       return '6';
+    case EQ_RING_SEVEN:     return '7';
+    case EQ_RING_EIGHT:     return '8';
+    default:
+        die("Invalid ring slot");
+    }
+}
+
 static int _prompt_ring_to_remove(int new_ring)
 {
     const vector<equipment_type> ring_types = _current_ring_types();
@@ -955,13 +975,12 @@ static int _prompt_ring_to_remove(int new_ring)
     for (size_t i = 0; i < rings.size(); i++)
     {
         string m;
-        if (ring_types[i] == EQ_LEFT_RING)
-            m += "<< or ";
-        if (ring_types[i] == EQ_RIGHT_RING)
-            m += "> or ";
-        if (ring_types[i] == EQ_RING_AMULET)
-            m += "^ or ";
-        m += rings[i]->name(DESC_INVENTORY);
+        const char key = _ring_slot_key(ring_types[i]);
+        m += key;
+        if (key == '<')
+            m += '<';
+
+        m += " or " + rings[i]->name(DESC_INVENTORY);
         mprf_nocap("%s", m.c_str());
     }
     flush_prev_message();
@@ -979,9 +998,7 @@ static int _prompt_ring_to_remove(int new_ring)
         for (size_t i = 0; i < slot_chars.size(); i++)
         {
             if (c == slot_chars[i]
-                || (ring_types[i] == EQ_LEFT_RING   && c == '<')
-                || (ring_types[i] == EQ_RIGHT_RING  && c == '>')
-                || (ring_types[i] == EQ_RING_AMULET && c == '^'))
+                || c == _ring_slot_key(ring_types[i]))
             {
                 eqslot = ring_types[i];
                 c = ' ';
@@ -1213,17 +1230,19 @@ static bool _swap_rings(int ring_slot)
         return false;
     }
     // The simple case - only one available ring.
-    else if (available == 1)
+    // If the jewellery_prompt option is true, always allow choosing the
+    // ring slot (even if we still have empty slots).
+    else if (available == 1 && !Options.jewellery_prompt)
     {
         if (!remove_ring(unwanted, false))
             return false;
     }
     // We can't put a ring on without swapping - because we found
     // multiple available rings.
-    else if (available > 1)
+    else
     {
-        // Don't prompt if all the rings are the same
-        if (!all_same)
+        // Don't prompt if all the rings are the same.
+        if (!all_same || Options.jewellery_prompt)
             unwanted = _prompt_ring_to_remove(ring_slot);
 
         // Cancelled:
@@ -1243,7 +1262,67 @@ static bool _swap_rings(int ring_slot)
     return true;
 }
 
-static bool _puton_item(int item_slot)
+static equipment_type _choose_ring_slot()
+{
+    mesclr();
+
+    mprf(MSGCH_PROMPT,
+         "Put ring on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
+
+    const vector<equipment_type> slots = _current_ring_types();
+    for (vector<equipment_type>::const_iterator eq_it = slots.begin();
+         eq_it != slots.end();
+         ++eq_it)
+    {
+        string msg = "";
+        const char key = _ring_slot_key(*eq_it);
+        msg += key;
+        if (key == '<')
+            msg += '<';
+
+        item_def* ring = you.slot_item(*eq_it, true);
+        if (ring)
+            msg += " or " + ring->name(DESC_INVENTORY);
+        else
+            msg += " - no ring";
+
+        if (*eq_it == EQ_LEFT_RING)
+            msg += " (left)";
+        else if (*eq_it == EQ_RIGHT_RING)
+            msg += " (right)";
+        else if (*eq_it == EQ_RING_AMULET)
+            msg += " (amulet)";
+        mprf_nocap("%s", msg.c_str());
+    }
+    flush_prev_message();
+
+    equipment_type eqslot = EQ_NONE;
+    mouse_control mc(MOUSE_MODE_PROMPT);
+    int c;
+    do
+    {
+        c = getchm();
+        for (vector<equipment_type>::const_iterator eq_it = slots.begin();
+             eq_it != slots.end();
+             ++eq_it)
+        {
+            if (c == _ring_slot_key(*eq_it)
+                || (you.slot_item(*eq_it, true)
+                    && c == index_to_letter(you.slot_item(*eq_it, true)->link)))
+            {
+                eqslot = *eq_it;
+                c = ' ';
+                break;
+            }
+        }
+    } while (!key_is_escape(c) && c != ' ');
+
+    mesclr();
+
+    return eqslot;
+}
+
+static bool _puton_item(int item_slot, bool prompt_slot)
 {
     item_def& item = you.inv[item_slot];
 
@@ -1321,6 +1400,26 @@ static bool _puton_item(int item_slot)
 
     if (is_amulet)
         hand_used = EQ_AMULET;
+    else if (prompt_slot)
+    {
+        // Prompt for a slot, even if we have empty ring slots.
+        hand_used = _choose_ring_slot();
+
+        if (hand_used == EQ_NONE)
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+        // Allow swapping out a ring.
+        else if (you.slot_item(hand_used, true))
+        {
+            if (!remove_ring(you.equip[hand_used], false))
+                return false;
+
+            start_delay(DELAY_JEWELLERY_ON, 1, item_slot);
+            return true;
+        }
+    }
     else
     {
         for (vector<equipment_type>::const_iterator eq_it = ring_types.begin();
@@ -1356,7 +1455,7 @@ static bool _puton_item(int item_slot)
     return true;
 }
 
-bool puton_ring(int slot)
+bool puton_ring(int slot, bool allow_prompt)
 {
     int item_slot;
 
@@ -1384,7 +1483,9 @@ bool puton_ring(int slot)
     if (prompt_failed(item_slot))
         return false;
 
-    return _puton_item(item_slot);
+    bool prompt = allow_prompt ? Options.jewellery_prompt : false;
+
+    return _puton_item(item_slot, prompt);
 }
 
 bool remove_ring(int slot, bool announce)
@@ -1402,7 +1503,7 @@ bool remove_ring(int slot, bool announce)
     {
         if (player_wearing_slot(*eq_it))
         {
-            if (has_jewellery)
+            if (has_jewellery || Options.jewellery_prompt)
             {
                 // At least one other piece, which means we'll have to ask
                 hand_used = EQ_NONE;
