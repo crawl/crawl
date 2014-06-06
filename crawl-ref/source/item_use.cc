@@ -1988,7 +1988,10 @@ void drink(int slot)
 {
     if (you_foodless(true))
     {
-        mpr("You can't drink.");
+        if (you.form = TRAN_BOULDER)
+            mpr("Just roll with it."); // --mu
+        else
+            mpr("You can't drink.");
         return;
     }
 
@@ -2700,6 +2703,12 @@ void read_scroll(int slot)
     if (you.confused())
     {
         canned_msg(MSG_TOO_CONFUSED);
+        return;
+    }
+
+    if (you.form == TRAN_BOULDER)
+    {
+        mpr("Just roll with it."); // --mu
         return;
     }
 

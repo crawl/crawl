@@ -154,7 +154,7 @@ bool you_foodless(bool can_eat)
 #if TAG_MAJOR_VERSION == 34
         || you.species == SP_DJINNI && !can_eat
 #endif
-        ;
+        || you.form == TRAN_BOULDER;
 }
 
 bool you_foodless_normally()
