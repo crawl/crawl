@@ -352,7 +352,7 @@ void manage_clouds()
         if (cloud.type == CLOUD_NONE)
             continue;
 
-#if ASSERTS
+#ifdef ASSERTS
         if (cell_is_solid(cloud.pos))
         {
             die("cloud %s in %s at (%d,%d)", cloud_type_name(cloud.type).c_str(),
