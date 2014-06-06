@@ -861,7 +861,7 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_JEWELLERY_ON:
-        puton_ring(delay.parm1);
+        puton_ring(delay.parm1, false);
         break;
 
     case DELAY_ARMOUR_ON:

@@ -802,6 +802,7 @@ void game_options::reset_options()
     travel_open_doors      = true;
     easy_unequip           = true;
     equip_unequip          = false;
+    jewellery_prompt       = false;
     confirm_butcher        = CONFIRM_AUTO;
     chunks_autopickup      = true;
     prompt_for_swap        = true;
@@ -2452,6 +2453,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(travel_open_doors);
     else BOOL_OPTION(easy_unequip);
     else BOOL_OPTION(equip_unequip);
+    else BOOL_OPTION(jewellery_prompt);
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
     else if (key == "confirm_butcher")
