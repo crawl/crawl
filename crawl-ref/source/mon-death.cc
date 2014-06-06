@@ -3213,6 +3213,9 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         mons->spells[3] = SPELL_STONE_ARROW;
         mons->spells[4] = SPELL_HASTE;
         // Nothing with 6.
+
+        // Indicate that he has an updated spellbook.
+        mons->props["custom_spells"] = true;
     }
 }
 
