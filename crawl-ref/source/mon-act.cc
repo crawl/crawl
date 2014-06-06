@@ -1990,8 +1990,7 @@ void handle_monster_move(monster* mons)
     // Overriding movement; we'll exit the function immediately
     // afterwards, only lose energy if the actor still exists
     if (mons->movement()->do_override()) {
-        if (mons->movement()->move())
-            return;
+        mons->movement()->move();
         // XXX: Move into MovementHandler
         mons->lose_energy(EUT_MOVE);
         return;
