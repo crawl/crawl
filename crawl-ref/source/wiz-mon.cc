@@ -607,9 +607,10 @@ void debug_stethoscope(int mon)
     const habitat_type hab = mons_habitat(&mons);
 
     COMPILE_CHECK(ARRAYSZ(ht_names) == NUM_HABITATS);
+    const actor * const summoner = actor_by_mid(mons.summoner);
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
-         "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s",
+         "firing_pos=(%d,%d) patrol_point=(%d,%d) god=%s%s",
          (hab >= 0 && hab < NUM_HABITATS) ? ht_names[hab] : "INVALID",
          mons.asleep()                    ? "sleep"
          : mons_is_wandering(&mons)       ? "wander"
@@ -630,7 +631,11 @@ void debug_stethoscope(int mon)
          mons.target.x, mons.target.y,
          mons.firing_pos.x, mons.firing_pos.y,
          mons.patrol_point.x, mons.patrol_point.y,
-         god_name(mons.god).c_str());
+         god_name(mons.god).c_str(),
+         (summoner ? make_stringf(" summoner=%s(%d)",
+                                  summoner->name(DESC_PLAIN, true).c_str(),
+                                  summoner->mindex()).c_str()
+                   : ""));
 
     // Print resistances.
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d "
