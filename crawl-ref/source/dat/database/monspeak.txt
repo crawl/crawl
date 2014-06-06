@@ -5247,6 +5247,14 @@ Natasha permanently killed
 
 You feel @the_monster@'s spirit has finally been put to rest.
 %%%%
+confused Natasha killed
+
+@Natasha killed@
+%%%%
+confused Natasha permanently killed
+
+@Natasha permanently killed@
+%%%%
 ############ NELLIE ### An escaped circus (h)elephant.
 Nellie
 
