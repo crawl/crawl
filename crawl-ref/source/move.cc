@@ -173,7 +173,8 @@ void MovementHandler::move_init()
  */
 void MovementHandler::move_again()
 {
-    subject->lose_energy(EUT_MOVE);
+    ASSERT(get_speed());
+    subject->lose_energy(EUT_MOVE, 1 / get_speed());
     need_another_move = true;
 }
 
