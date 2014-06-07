@@ -1159,7 +1159,8 @@ void PlayerBoulderMovement::impulse(float ix, float iy)
 
 bool PlayerBoulderMovement::check_pos(const coord_def &pos)
 {
-    if (in_bounds(pos) && !feat_has_solid_floor(grd(pos)))
+    if (in_bounds(pos)
+        && !feat_is_solid(grd(pos)) && !feat_has_solid_floor(grd(pos)))
     {
         mpr("You screech to a halt.");
         stop(false);
@@ -1178,31 +1179,17 @@ bool PlayerBoulderMovement::hit_solid(const coord_def& pos)
         return true;
     }
 
-    // Bounce (deaden the impact if the angle of incidence is too high)
+    // Bounce
     if (pos.x != subject->pos().x)
-    {
-        if (abs(vx)<0.5)
-            vx = -vx;
-        else
-        {
-            vx = 0;
-            speed *= vy;
-        }
-    }
+        vx = -vx;
     if (pos.y != subject->pos().y)
-    {
-        if (abs(vy)<0.5)
-            vy = -vy;
-        else
-        {
-            vy = 0;
-            speed *= vx;
-        }
-    }
+        vy = -vy;
 
     noisy(5, subject->pos());
 
-    if (vx || vy)
+    speed *= 0.75;
+
+    if (speed >= 0.5)
     {
         mprf("%s bounce off %s",
              subject->name(DESC_THE, true).c_str(),
