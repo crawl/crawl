@@ -2383,6 +2383,10 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
         if (!quiet)
             canned_msg(MSG_NOTHING_HAPPENS);
 
+        // That proved that it was uncursed.
+        if (!you_worship(GOD_ASHENZARI))
+            arm.flags |= ISFLAG_KNOW_CURSE;
+
         return false;
     }
 
@@ -2412,24 +2416,18 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     // Even if not affected, it may be uncursed.
     if (!is_enchantable_armour(arm, false))
     {
-        if (is_cursed)
+        if (!quiet)
         {
-            if (!quiet)
+            if (is_cursed)
             {
                 mprf("%s glows silver for a moment.",
                      arm.name(DESC_YOUR).c_str());
             }
-
-            do_uncurse_item(arm, true, true);
-            return true;
-        }
-        else
-        {
-            if (!quiet)
+            else
                 canned_msg(MSG_NOTHING_HAPPENS);
-
-            return false;
         }
+        do_uncurse_item(arm, true, true);
+        return is_cursed; // was_cursed, really
     }
 
     // Output message before changing enchantment and curse status.
