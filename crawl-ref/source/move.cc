@@ -1044,21 +1044,7 @@ bool BoulderMovement::hit_solid(const coord_def& pos)
         mprf("You hear a loud crash.");
     }
 
-    // Bounce (deaden the impact if the angle of incidence is too high)
-    if (pos.x == subject->pos().x)
-    {
-        if (abs(vy)<0.5)
-            vy = -vy;
-        else
-            vy = 0;
-    }
-    if (pos.y == subject->pos().y)
-    {
-        if (abs(vx)<0.5)
-            vx = -vx;
-        else
-            vx = 0;
-    }
+    stop();
     return false;
 }
 
@@ -1112,7 +1098,8 @@ bool MonsterBoulderMovement::check_pos(const coord_def &pos)
     // Boulders stop at lava/water to prevent unusual behaviour;
     // skimming across the water like a pebble could be justifiable, but
     // it raises too many questions.
-    if (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos)))
+    if (!feat_is_solid(grd(pos))
+        && (!feat_has_solid_floor(grd(pos)) || feat_is_water(grd(pos))))
     {
         if (!catching_up)
             mprf("%s screeches to a halt.", subject->name(DESC_THE, true).c_str());
