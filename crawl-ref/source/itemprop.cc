@@ -1198,16 +1198,19 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
         return false;
 
     // If we don't know the plusses, assume enchanting is possible.
-    if (unknown && !is_known_artefact(arm)
-        && !item_ident(arm, ISFLAG_KNOW_PLUSES))
-    {
+    if (unknown && !is_artefact(arm) && !item_ident(arm, ISFLAG_KNOW_PLUSES))
         return true;
-    }
 
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return uncurse && arm.cursed() && !you_worship(GOD_ASHENZARI);
+    {
+        if (!uncurse || you_worship(GOD_ASHENZARI))
+            return false;
+        if (unknown && !item_ident(arm, ISFLAG_KNOW_CURSE))
+            return true;
+        return arm.cursed();
+    }
 
     return true;
 }
