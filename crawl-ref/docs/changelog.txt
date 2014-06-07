@@ -46,10 +46,10 @@ Monsters
 * The chance of corroding equipment no longer considers item enchantment.
 * Enemies are more intelligent about using area-of-attack spells such as
   Symbol of Torment and Chain Lightning when you are not in sight.
-* Manticores now move as fast as the player.
 * Komodo dragons now bite harder but don't sicken the player.
 * Deep dwarf death knights are now just death knights.
-* Manticores have an unlimited number of spike volleys.
+* Manticores now move as fast as the player, and have an unlimited number of
+  spike volleys.
 * Base draconians can become nonbase draconians with experience.
 * Undead and nonliving enemies regenerate as fast as other enemies.
 * Ghouls and necrophages can no longer equip weapons or armour.
