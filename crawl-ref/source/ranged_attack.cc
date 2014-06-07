@@ -665,7 +665,7 @@ bool ranged_attack::apply_missile_brand()
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_FIRE);
-        attacker->god_conduct(DID_FIRE, 1);
+        attacker->god_conduct(DID_FIRE, 2);
         break;
     case SPMSL_FROST:
         if (using_weapon()
