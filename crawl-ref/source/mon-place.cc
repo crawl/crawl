@@ -2394,8 +2394,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_DEEP_TROLL_EARTH_MAGE:
-    case MONS_DEEP_TROLL_SHAMAN:
         band = BAND_DEEP_TROLLS;
+        band_size = 3 + random2(3);
+        break;
+
+    case MONS_DEEP_TROLL_SHAMAN:
+        band = BAND_DEEP_TROLL_SHAMAN;
         band_size = 3 + random2(3);
         break;
 
@@ -2845,6 +2849,13 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     return band;
 }
 
+/**
+ * Return the type of the nth monster in a band.
+ *
+ * @param band      The type of band
+ * @param which     The index of the monster (starting from 1)
+ * @return          The type of monster to create
+ */
 static monster_type _band_member(band_type band, int which)
 {
     if (band == BAND_NO_BAND)
@@ -3066,6 +3077,10 @@ static monster_type _band_member(band_type band, int which)
                                       3, MONS_NECROPHAGE,
                                       2, MONS_BOG_BODY,
                                       0);
+    case BAND_DEEP_TROLL_SHAMAN:
+        if (one_chance_in(4))
+            return MONS_IRON_TROLL;
+        // intentional fallthrough
     case BAND_DEEP_TROLLS:
         if (one_chance_in(4))
         {
