@@ -178,6 +178,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
                  || feat == DNGN_EXIT_ABYSS
                  || feat == DNGN_EXIT_PANDEMONIUM
                  || feat == DNGN_TRANSIT_PANDEMONIUM
+                 || feat == DNGN_RETURN_FROM_VAULTS
                  || feat == DNGN_RETURN_FROM_ZOT)
         {
             if (!f.colour)
