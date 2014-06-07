@@ -807,7 +807,6 @@ static bool _offer_items()
 
     int num_sacced = 0;
     int num_disliked = 0;
-    item_def *disliked_item = 0;
 
     while (i != NON_ITEM)
     {
@@ -817,12 +816,9 @@ static bool _offer_items()
 
         if (item_is_stationary_net(item) || disliked)
         {
-            i = next;
             if (disliked)
-            {
                 num_disliked++;
-                disliked_item = &item;
-            }
+            i = next;
             continue;
         }
 
@@ -858,8 +854,6 @@ static bool _offer_items()
     // Explanatory messages if nothing the god likes is sacrificed.
     if (num_sacced == 0 && num_disliked > 0)
     {
-        ASSERT(disliked_item);
-
         if (god_likes_fresh_corpses(you.religion))
             simple_god_message(" only cares about fresh corpses!");
         else if (you_worship(GOD_BEOGH))
