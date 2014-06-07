@@ -735,45 +735,65 @@ static bool _sack_of_spiders(item_def &sack)
         return false;
     }
 
-    bool success = false;
-
-    if (!one_chance_in(5))
+    if (one_chance_in(5))
     {
-        int count = 1 + random2(3)
-                    + random2(div_rand_round(you.skill(SK_EVOCATIONS,10),40));
-        for (int n = 0; n < count; n++)
-        {
-            // Invoke mon-pick with our custom list
-            monster_type mon = pick_monster_from(pop_spiders,
-                                            max(1, you.skill(SK_EVOCATIONS)),
-                                            _box_of_beasts_veto_mon);
-            mgen_data mg = mgen_data(mon,
-                                     BEH_FRIENDLY, &you,
-                                     3 + random2(4), 0,
-                                     you.pos(),
-                                     MHITYOU, MG_AUTOFOE);
-            if (create_monster(mg))
-                success = true;
-        }
+        mpr("...but nothing happens.");
+        return false;
+    }
+
+    bool success = false;
+    int count = 1 + random2(3)
+        + random2(div_rand_round(you.skill(SK_EVOCATIONS, 10), 40));
+    for (int n = 0; n < count; n++)
+    {
+        // Invoke mon-pick with our custom list
+        monster_type mon = pick_monster_from(pop_spiders,
+                                             max(1, you.skill(SK_EVOCATIONS)),
+                                             _box_of_beasts_veto_mon);
+        mgen_data mg = mgen_data(mon,
+                                 BEH_FRIENDLY, &you,
+                                 3 + random2(4), 0,
+                                 you.pos(),
+                                 MHITYOU, MG_AUTOFOE);
+        if (create_monster(mg))
+            success = true;
     }
 
     if (success)
     {
-        // Also generate webs
+        mpr("...and things crawl out!");
+        // Also generate webs on hostile monsters and trap them.
         int rad = LOS_RADIUS / 2 + 2;
-        for (radius_iterator ri(you.pos(), rad, C_ROUND, LOS_SOLID, true); ri; ++ri)
+        for (monster_near_iterator mi(you.pos(), LOS_SOLID); mi; ++mi)
         {
-            if (grd(*ri) == DNGN_FLOOR)
+            trap_def *trap = find_trap((*mi)->pos());
+            // Don't destroy non-web traps or try to trap monsters
+            // currently caught by something.
+            if (you.pos().range((*mi)->pos()) > rad
+                || (!trap && grd((*mi)->pos()) != DNGN_FLOOR)
+                || (trap && trap->type != TRAP_WEB)
+                || (*mi)->friendly()
+                || (*mi)->caught())
             {
-                int chance = 100 - (100 * (you.pos().range(*ri) - 1) / rad)
-                             - 2 * (27 - you.skill(SK_EVOCATIONS));
-                if (x_chance_in_y(chance,100) && place_specific_trap(*ri, TRAP_WEB))
+                continue;
+            }
+
+            int chance = 100 - (100 * (you.pos().range((*mi)->pos()) - 1) / rad)
+                - 2 * (27 - you.skill(SK_EVOCATIONS));
+            if (x_chance_in_y(chance, 100))
+            {
+                if (trap && trap->type == TRAP_WEB)
+                    destroy_trap((*mi)->pos());
+
+                if (place_specific_trap((*mi)->pos(), TRAP_WEB))
+                {
                     // Reveal the trap
-                    grd(*ri) = DNGN_TRAP_WEB;
+                    grd((*mi)->pos()) = DNGN_TRAP_WEB;
+                    trap = find_trap((*mi)->pos());
+                    trap->trigger(**mi);
+                }
             }
         }
-        mpr("...and things crawl out!");
-        xom_is_stimulated(10);
         // Decrease charges
         sack.plus--;
         sack.plus2++;
