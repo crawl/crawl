@@ -1,4 +1,4 @@
-Stone Soup 0.15 (up to 0.15-a0-1140-g4b0d1de)
+Stone Soup 0.15 (up to 0.15-a0-1331-ga052c3c)
 --------------------------------------------
 * Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
 * Ranged combat has been rewritten from the ground up.
@@ -61,9 +61,10 @@ Monsters
 * Purple ugly things deal extra damage in lieu of a sickness attack.
 * Boris can use weapons.
 * Cherub's hymns can buff any allies, not just those with higher HDs.
+* Curse skulls are now immobile, again.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
   flaming corpses, grizzly bears, spriggan enchanters, phoenixes,
-  shedu, plague shamblers.
+  shedu, plague shamblers, giant slug, elephant slug.
 
 Spells
 ------
@@ -76,16 +77,25 @@ Spells
 * Death Channel lasts twice as long.
 * Tukima's Dance now animates weapons held by monsters. The weapons will fight
   against their former owners. It is also now level 3.
+* Confusing Touch now has a short, non-stacking duration which discharges
+  entirely when it successfully confuses an enemy. While it's in effect, your
+  attacks do no damage. It's been moved to level 2.
 * The Book of War Chants is no more.
 * Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon,
   Summon Elemental.
 
 Items
 -----
+* Item destruction is no more.
 * Ranged combat has been rewritten based on melee attacks - AC and EV
   has more of an impact, attack delay is more predictable, and Throwing
   should be more viable as a ranged option as compared to bows and crossbows,
   among other changes.
+* Shields have been rebalanced. All non-shield-enchantment sources of SH have
+  been halved, and the effectiveness of SH at blocking attacks has been
+  doubled, to make the utility of a point of SH roughly equivalent to a point
+  of EV. In effect, this is a small buff. Non-bucklers can now be enchanted
+  past +3.
 * The blowgun of the Assassin returns; it has a chance to affect the target
   more than normal blowguns.
 * New unrand: the +8 orange crystal plate armour {Archmagi, Int+3 Clar
@@ -95,6 +105,9 @@ Items
 * The dagger of Chilly Death now sometimes flash-freezes enemies, slowing their
   movement, and the scimitar of Flaming Death now sometimes applies sticky
   flame to its victims.
+* Maxwell's Patent Armour now gives rF+ rC+ instead of Conservation.
+* The Shield of Resistance, Shield of the Gong, and Large Shield of Ignorance
+  have had their enchantment levels tweaked.
 * Cleaving hits the full eight squares around a player.
 * Jewellery automatically identifies on equipping it.
 * Damage from the electrocution brand has been reduced slightly.
@@ -115,7 +128,8 @@ Items
 * Cheese and sausages are no more.
 * Scrolls of brand weapon can apply any brand to an unbranded weapon.
 * Corpses and skeletons are stationary, and can't be picked up nor apported.
-* Removed items: rings of hunger and sustenance, ambrosia, (old) royal jelly.
+* Removed items: darts, rings of hunger and sustenance, amulet of conservation,
+  cloak of preservation, ambrosia, (old) royal jelly.
 * Removed unrands: the boots of the Spider.
 
 Cards
@@ -189,6 +203,7 @@ Interface
 ---------
 * Monsters with special melee attacks (e.g. poison, fire) have this noted in
   their descriptions.
+* Unique enemies are now announced by their proper titles when first appearing.
 * Ability icons have been reworked.
 * There are status lights for Might, Agility, and Brilliance.
 
