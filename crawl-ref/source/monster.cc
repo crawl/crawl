@@ -4526,7 +4526,9 @@ bool monster::find_home_near_place(const coord_def &c)
         if (dist(p - c) >= last_dist && nvalid)
         {
             // already found a valid closer destination
-            return move_to_pos(place);
+            move_to_pos(place);
+            apply_location_effects(place);
+            return true;
         }
         else if (dist(p - c) >= MAX_PLACE_NEAR_DIST)
             break;
@@ -4559,7 +4561,11 @@ bool monster::find_home_anywhere()
     int nvalid = 0;
     for (int tries = 0; tries < 600; ++tries)
         if (check_set_valid_home(random_in_bounds(), place, nvalid))
-            return move_to_pos(place);
+        {
+            move_to_pos(place);
+            apply_location_effects(place);
+            return true;
+        }
     return false;
 }
 
