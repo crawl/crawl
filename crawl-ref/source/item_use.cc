@@ -1888,7 +1888,7 @@ static void _vampire_corpse_help()
         return;
 
     if (check_blood_corpses_on_ground() || count_corpses_in_pack(true) > 0)
-        mpr("If it's blood you're after, try <w>e</w>.");
+        mpr("Use <w>e</w> to drain blood from corpses.");
 }
 
 void drink(int slot)
