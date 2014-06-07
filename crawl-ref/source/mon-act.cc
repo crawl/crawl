@@ -59,7 +59,6 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "throw.h"
-#include "traps.h"
 #include "hints.h"
 #include "view.h"
 #include "viewchar.h"
@@ -70,8 +69,6 @@ static void _mons_in_cloud(monster* mons);
 #if TAG_MAJOR_VERSION == 34
 static void _heated_area(monster* mons);
 #endif
-static bool _is_trap_safe(const monster* mons, const coord_def& where,
-                          bool just_check = false);
 static bool _monster_move(monster* mons);
 static spell_type _map_wand_to_mspell(wand_type kind);
 
@@ -2882,120 +2879,6 @@ static bool _handle_pickup(monster* mons)
     return count_pickup > 0;
 }
 
-// Randomise potential damage.
-static int _estimated_trap_damage(trap_type trap)
-{
-    switch (trap)
-    {
-        case TRAP_BLADE: return 10 + random2(30);
-        case TRAP_ARROW: return random2(7);
-        case TRAP_SPEAR: return random2(10);
-        case TRAP_BOLT:  return random2(13);
-        default:         return 0;
-    }
-}
-
-// Check whether a given trap (described by trap position) can be
-// regarded as safe.  Takes into account monster intelligence and
-// allegiance.
-// (just_check is used for intelligent monsters trying to avoid traps.)
-static bool _is_trap_safe(const monster* mons, const coord_def& where,
-                          bool just_check)
-{
-    const int intel = mons_intel(mons);
-
-    const trap_def *ptrap = find_trap(where);
-    if (!ptrap)
-        return true;
-    const trap_def& trap = *ptrap;
-
-    const bool player_knows_trap = (trap.is_known(&you));
-
-    // No friendly monsters will ever enter a Zot trap you know.
-    if (player_knows_trap && mons->friendly() && trap.type == TRAP_ZOT)
-        return false;
-
-    // Dumb monsters don't care at all.
-    if (intel == I_PLANT)
-        return true;
-
-    // Known shafts are safe. Unknown ones are unknown.
-    if (trap.type == TRAP_SHAFT)
-        return true;
-
-    // Hostile monsters are not afraid of non-mechanical traps.
-    // Allies will try to avoid teleportation and zot traps.
-    const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
-
-    if (trap.is_known(mons))
-    {
-        if (just_check)
-            return false; // Square is blocked.
-        else
-        {
-            // Test for corridor-like environment.
-            const int x = where.x - mons->pos().x;
-            const int y = where.y - mons->pos().y;
-
-            // The question is whether the monster (m) can easily reach its
-            // presumable destination (x) without stepping on the trap. Traps
-            // in corridors do not allow this. See e.g
-            //  #x#        ##
-            //  #^#   or  m^x
-            //   m         ##
-            //
-            // The same problem occurs if paths are blocked by monsters,
-            // hostile terrain or other traps rather than walls.
-            // What we do is check whether the squares with the relative
-            // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
-            // (relative to the _trap_ position rather than the monster one).
-            // If they don't, the trap square is marked as "unsafe" (because
-            // there's a good alternative move for the monster to take),
-            // otherwise the decision will be made according to later tests
-            // (monster hp, trap type, ...)
-            // If a monster still gets stuck in a corridor it will usually be
-            // because it has less than half its maximum hp.
-
-            if ((mon_can_move_to_pos(mons, coord_def(x-1, y), true)
-                 || mon_can_move_to_pos(mons, coord_def(x+1,y), true))
-                && (mon_can_move_to_pos(mons, coord_def(x,y-1), true)
-                    || mon_can_move_to_pos(mons, coord_def(x,y+1), true)))
-            {
-                return false;
-            }
-        }
-    }
-
-    // Friendlies will try not to be parted from you.
-    if (intelligent_ally(mons) && trap.type == TRAP_TELEPORT
-        && player_knows_trap && mons_near(mons))
-    {
-        return false;
-    }
-
-    // Healthy monsters don't mind a little pain.
-    if (mechanical && mons->hit_points >= mons->max_hit_points / 2
-        && (intel == I_ANIMAL
-            || mons->hit_points > _estimated_trap_damage(trap.type)))
-    {
-        return true;
-    }
-
-    // In Zotdef critters will risk death to get to the Orb
-    if (crawl_state.game_is_zotdef() && mechanical)
-        return true;
-
-    // Friendly and good neutral monsters don't enjoy Zot trap perks;
-    // handle accordingly.  In the arena Zot traps affect all monsters.
-    if (mons->wont_attack() || crawl_state.game_is_arena())
-    {
-        return mechanical ? mons_flies(mons)
-                          : !trap.is_known(mons) || trap.type != TRAP_ZOT;
-    }
-    else
-        return !mechanical || mons_flies(mons) || !trap.is_known(mons);
-}
-
 static void _mons_open_door(monster* mons, const coord_def &pos)
 {
     const char *adj = "", *noun = "door";
@@ -3378,7 +3261,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Wandering through a trap is OK if we're pretty healthy,
     // really stupid, or immune to the trap.
-    if (!_is_trap_safe(mons, targ, just_check))
+    if (!mons->is_trap_safe(targ, just_check))
         return false;
 
     // If we end up here the monster can safely move.
