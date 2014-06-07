@@ -391,15 +391,6 @@ int monster::body_weight(bool /*base*/) const
             weight *= 4;
             break;
 
-        case MONS_FLYING_SKULL:
-        case MONS_CURSE_SKULL:
-        case MONS_BONE_DRAGON:
-        case MONS_SKELETAL_WARRIOR:
-        case MONS_ANCIENT_CHAMPION:
-        case MONS_REVENANT:
-            weight /= 2;
-            break;
-
         case MONS_SHADOW_FIEND:
         case MONS_SHADOW_IMP:
         case MONS_SHADOW_DEMON:
@@ -409,12 +400,9 @@ int monster::body_weight(bool /*base*/) const
         default: ;
         }
 
-        if (mons_base_char(mc) == 'L')
+        if (is_skeletal() || mons_base_char(mc) == 'L')
             weight /= 2;
     }
-
-    if (mc == MONS_SKELETON)
-        weight /= 2;
 
     // Slime creature weight is multiplied by the number merged.
     if (mc == MONS_SLIME_CREATURE && number > 1)
