@@ -490,12 +490,19 @@ bool ProjectileMovement::hit_actor(actor *victim)
         return false;
     }
 
+    be_reflected_by(victim);
+    return false;
+}
+
+void ProjectileMovement::be_reflected_by(actor *victim)
+{
     // Shield of reflection block
+    item_def *shield = victim->shield();
     if (victim->is_player())
     {
         mprf("Your %s reflects %s!",
-            shield->name(DESC_PLAIN).c_str(),
-            subject->name(DESC_THE, true).c_str());
+             shield->name(DESC_PLAIN).c_str(),
+             subject->name(DESC_THE, true).c_str());
         ident_reflector(shield);
     }
     else if (you.see_cell(subject->pos()))
@@ -503,16 +510,16 @@ bool ProjectileMovement::hit_actor(actor *victim)
         if (victim->observable())
         {
             mprf("%s reflects %s with %s %s!",
-                victim->name(DESC_THE, true).c_str(),
-                subject->name(DESC_THE, true).c_str(),
-                victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
-                shield->name(DESC_PLAIN).c_str());
+                 victim->name(DESC_THE, true).c_str(),
+                 subject->name(DESC_THE, true).c_str(),
+                 victim->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                 shield->name(DESC_PLAIN).c_str());
             ident_reflector(shield);
         }
         else if (you.see_cell(subject->pos()))
         {
             mprf("%s bounces off thin air!",
-                subject->name(DESC_THE, true).c_str());
+                 subject->name(DESC_THE, true).c_str());
         }
     }
     victim->shield_block_succeeded(subject);
@@ -523,7 +530,6 @@ bool ProjectileMovement::hit_actor(actor *victim)
     if (subject->pos().y != victim->pos().y || subject->pos() == victim->pos())
         vy = -vy;
 
-    return false;
 }
 
 // Alas, too much differs to reuse beam shield blocks :(
@@ -593,6 +599,8 @@ void OrbMovement::setup()
     ProjectileMovement::setup();
     caster_mid = ((monster*)subject)->summoner;
     flawed = subject->props.exists("iood_flawed");
+    reflector = subject->props.exists("iood_reflector") ?
+                subject->props["iood_reflector"].get_int64() : 0;
     tpos = subject->props["tpos"].get_short();
 }
 
@@ -617,6 +625,8 @@ void OrbMovement::save_all()
         ((monster*)subject)->summoner = 0;
         subject->props["iood_caster"] = "none";
     }
+
+    subject->props["iood_reflector"] = (int64_t) reflector;
 }
 
 actor* OrbMovement::get_caster()
@@ -732,6 +742,12 @@ bool OrbMovement::hit_actor(actor *victim)
     return false;
 }
 
+void OrbMovement::be_reflected_by(actor *victim)
+{
+    ProjectileMovement::be_reflected_by(victim);
+    reflector = victim->mid;
+}
+
 /**
  * Handle orb-orb collisions.
  *
@@ -798,6 +814,21 @@ void OrbMovement::strike(const coord_def &pos, bool big_boom)
     actor *caster = get_caster();
     if (!caster)        // caster is dead/gone, blame the orb itself (as its
         caster = mon;   // friendliness is correct)
+
+    if (reflector)
+    {
+        beam.reflections = 1;
+
+        if (reflector == MID_PLAYER)
+            beam.reflector = NON_MONSTER;
+        else
+        {
+            // If the reflecting monster has died, credit the original caster.
+            const monster * const rmon = monster_by_mid(reflector);
+            beam.reflector = rmon ? rmon->mindex() : caster->mindex();
+        }
+    }
+
     beam.set_agent(caster);
     beam.colour = WHITE;
     beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);

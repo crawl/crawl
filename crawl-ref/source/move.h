@@ -129,6 +129,7 @@ protected:
     virtual bool hit_monster(monster* victim);
     virtual bool hit_own_kind(monster* victim);
     virtual bool hit_actor(actor *victim);
+    virtual void be_reflected_by(actor* victim);
 
     bool victim_shielded(actor *victim);
     int get_hit_power();
@@ -165,6 +166,7 @@ public:
 protected:
     bool flawed;
     mid_t caster_mid;
+    mid_t reflector;
     actor *get_caster();
     string get_caster_name();
 
@@ -172,6 +174,7 @@ protected:
 
     bool hit_solid(const coord_def& pos);
     bool hit_actor(actor *actor);
+    void be_reflected_by(actor* victim);
     bool hit_own_kind(monster *victim);
     void strike(const coord_def &pos, bool big_boom = false);
 
