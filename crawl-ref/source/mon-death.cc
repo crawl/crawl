@@ -3143,7 +3143,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Okay, let them climb stairs now.
-    mons->props["can_climb"] = "yes";
+    mons->props["can_climb"] = true;
     if (!in_transit)
         mons->props["speech_prefix"] = "twin_died";
     else
@@ -3184,30 +3184,10 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     else if (mons->can_speak())
         mprf("%s", death_message.c_str());
 
-    if (mons_is_duvessa(mons))
+    // Upgrade the spellbook here, as elven_twin_energize
+    // may not be called due to lack of visibility.
+    if (mons_is_dowan(mons))
     {
-        if (mons_near(mons))
-        {
-            // Provides its own flavour message.
-            mons->go_berserk(true);
-        }
-        else
-        {
-            // She'll go berserk the next time she sees you
-            mons->props["duvessa_berserk"] = bool(true);
-        }
-    }
-    else
-    {
-        ASSERT(mons_is_dowan(mons));
-        if (mons->observable())
-        {
-            mons->add_ench(ENCH_HASTE);
-            simple_monster_message(mons, " seems to find hidden reserves of power!");
-        }
-        else
-            mons->props["dowan_upgrade"] = bool(true);
-
         mons->spells[0] = SPELL_THROW_ICICLE;
         mons->spells[1] = SPELL_BLINK;
         mons->spells[3] = SPELL_STONE_ARROW;
@@ -3216,6 +3196,26 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 
         // Indicate that he has an updated spellbook.
         mons->props["custom_spells"] = true;
+    }
+
+    // Finally give them new energy
+    if (mons_near(mons))
+        elven_twin_energize(mons);
+    else
+        mons->props[ELVEN_ENERGIZE_KEY] = true;
+}
+
+void elven_twin_energize(monster* mons)
+{
+    if (mons_is_duvessa(mons))
+        mons->go_berserk(true);
+    else
+    {
+        ASSERT(mons_is_dowan(mons));
+        if (mons->observable())
+            simple_monster_message(mons, " seems to find hidden reserves of power!");
+
+        mons->add_ench(ENCH_HASTE);
     }
 }
 

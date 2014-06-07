@@ -10,6 +10,11 @@
 #define ROTTING_CORPSE   99
 
 #define ORIG_MONSTER_KEY "orig_monster_key"
+#define ELVEN_ENERGIZE_KEY "elven_twin_energize"
+#if TAG_MAJOR_VERSION == 34
+#define OLD_DUVESSA_ENERGIZE_KEY "duvessa_berserk"
+#define OLD_DOWAN_ENERGIZE_KEY "dowan_upgrade"
+#endif
 
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
@@ -66,6 +71,7 @@ bool mons_is_duvessa(const monster* mons);
 bool mons_is_dowan(const monster* mons);
 bool mons_is_elven_twin(const monster* mons);
 void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int killer_index);
+void elven_twin_energize(monster* mons);
 void elven_twins_pacify(monster* twin);
 void elven_twins_unpacify(monster* twin);
 
