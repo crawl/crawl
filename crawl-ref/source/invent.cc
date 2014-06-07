@@ -1222,9 +1222,12 @@ static bool _item_class_selected(const item_def &i, int selector)
     {
         if (!is_weapon(i))
             return false;
-        // Ashenzari would just preserve the curse.
-        if (i.cursed() && !you_worship(GOD_ASHENZARI))
+        if ((!item_ident(i, ISFLAG_KNOW_CURSE) || item_known_cursed(i))
+            // Ashenzari would just preserve the curse.
+            && !you_worship(GOD_ASHENZARI))
+        {
             return true;
+        }
         if (itype != OBJ_WEAPONS || is_artefact(i))
             return false;
         if (!item_ident(i, ISFLAG_KNOW_PLUSES))
