@@ -247,7 +247,7 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     if (mon.props.exists("iood_reflector"))
     {
         beam.reflections = 1;
-        
+
         const mid_t refl_mid = mon.props["iood_reflector"].get_int64();
 
         if (refl_mid == MID_PLAYER)
