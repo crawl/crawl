@@ -1607,7 +1607,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " comes up the stairs.";
         else if (at.context == SC_DOWNSTAIRS)
             text += " comes down the stairs.";
-        else if (at.context == SC_GATE)
+        else if (at.context == SC_ARCH)
             text += " comes through the gate.";
         else if (at.context == SC_ABYSS)
             text += _abyss_monster_creation_message(mon);

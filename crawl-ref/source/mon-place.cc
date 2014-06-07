@@ -1087,7 +1087,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         {
         case DCHAR_STAIRS_DOWN: mon->seen_context = SC_UPSTAIRS; break;
         case DCHAR_STAIRS_UP:   mon->seen_context = SC_DOWNSTAIRS; break;
-        case DCHAR_ARCH:        mon->seen_context = SC_GATE; break;
+        case DCHAR_ARCH:        mon->seen_context = SC_ARCH; break;
         default: ;
         }
     }
