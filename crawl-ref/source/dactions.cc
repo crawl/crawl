@@ -332,11 +332,10 @@ static void _apply_daction(daction_type act)
                         detected = true;
                     }
                     update_item_at(*ri, true);
-                    if (detected)
-                    {
-                        ASSERT(env.map_knowledge(*ri).item());
+
+                    // The gold might be beneath deep water.
+                    if (detected && env.map_knowledge(*ri).item())
                         env.map_knowledge(*ri).flags |= MAP_DETECTED_ITEM;
-                    }
                     break;
                 }
             }
