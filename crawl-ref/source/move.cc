@@ -1172,7 +1172,7 @@ void PlayerBoulderMovement::impulse(float ix, float iy)
 
 bool PlayerBoulderMovement::check_pos(const coord_def &pos)
 {
-    if (!feat_has_solid_floor(grd(pos)))
+    if (in_bounds(pos) && !feat_has_solid_floor(grd(pos)))
     {
         mpr("You screech to a halt.");
         stop(false);
