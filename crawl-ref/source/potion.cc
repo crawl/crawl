@@ -536,6 +536,19 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         else
             mpr("You feel woody for a moment.");
         break;
+
+    case POT_CRAGGIFY:
+        if (potion && was_known && !transform(0, TRAN_BOULDER, false, true))
+            return false;
+
+        if (transform(30, TRAN_BOULDER, !was_known))
+        {
+            you.transform_uncancellable = true;
+            did_god_conduct(DID_CHAOS, 10, was_known);
+        }
+        else
+            mpr("You feel craggy for a moment.");
+        break;
     }
 
     if (potion && !was_known)

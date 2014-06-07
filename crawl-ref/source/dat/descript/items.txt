@@ -863,6 +863,12 @@ A potion which temporarily transforms the imbiber into an animated tree with
 branches capable of holding weapons. Such a tree is very resilient, although it
 is rooted in place for the duration and cannot teleport.
 %%%%
+potion of craggification
+
+A potion which temporarily transforms the imbiber into an gigantic boulder,
+capable of rolling at high speeds and crushing foes beneath its bulk. The
+transformation ends once the boulder comes to a stop.
+%%%%
 potion of magic
 
 A valuable potion which grants an infusion of magical energy.

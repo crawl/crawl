@@ -1454,6 +1454,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_HEAL_WOUNDS:
             case POT_RESTORE_ABILITIES:
             case POT_FLIGHT:
+            case POT_CRAGGIFY:
                 valued += 30;
                 break;
 

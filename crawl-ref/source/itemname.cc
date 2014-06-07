@@ -688,6 +688,7 @@ const char* potion_type_name(int potiontype)
     case POT_RESISTANCE:        return "resistance";
     case POT_LIGNIFY:           return "lignification";
     case POT_BENEFICIAL_MUTATION: return "beneficial mutation";
+    case POT_CRAGGIFY:           return "craggification";
     default:                    return "bugginess";
     }
 }
@@ -3147,6 +3148,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
             return !you.is_undead
                    || you.is_undead == US_SEMI_UNDEAD;
         case POT_LIGNIFY:
+        case POT_CRAGGIFY:
             // Only living characters can change form.
             return !you.is_undead
                    || temp && you.species == SP_VAMPIRE
@@ -3345,6 +3347,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.is_undead && you.is_undead != US_SEMI_UNDEAD;
 
         case POT_LIGNIFY:
+        case POT_CRAGGIFY:
             return you.is_undead
                    && (you.species != SP_VAMPIRE
                        || temp && you.hunger_state <= HS_SATIATED);
