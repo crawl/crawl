@@ -2507,6 +2507,9 @@ static int _player_evasion_bonuses(ev_ignore_type evit)
     if (you.form == TRAN_STATUE)
         evbonus -= 10;               // stiff and slow
 
+    if (player_mutation_level(MUT_SLOW_REFLEXES))
+        evbonus -= player_mutation_level(MUT_SLOW_REFLEXES) * 3;
+
     return evbonus;
 }
 
@@ -6575,7 +6578,8 @@ int player::armour_class() const
           ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0; // +2, +3, +4
     AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
           ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
-
+    AC -= player_mutation_level(MUT_PHYSICAL_VULNERABILITY)
+          ? player_mutation_level(MUT_PHYSICAL_VULNERABILITY) * 300 : 0;       // +3, +6, +9
     return AC / 100;
 }
  /**

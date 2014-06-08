@@ -5010,6 +5010,24 @@ void iashol_offer_new_sacrifices()
     you.available_sacrifices.push_back(
             possible_sacrifices[greater_sacrifice]);
 
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH
+        || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH
+        || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH)
+    {
+        switch (random2(3)) {
+            case 0:
+                you.current_health_sacrifice.push_back(
+                    MUT_PHYSICAL_VULNERABILITY);
+                break;
+            case 1:
+                you.current_health_sacrifice.push_back(MUT_SLOW_REFLEXES);
+                break;
+            case 2:
+                you.current_health_sacrifice.push_back(MUT_FRAIL);
+                break;
+        }
+    }
+
     if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
         || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA)
@@ -5087,6 +5105,20 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_DRINK, 1, "Iashol sacrifice");
             }
             gain_piety(35 + random2(5));
+            break;
+        case ABIL_IASHOL_SACRIFICE_HEALTH:
+            mprf("Iashol asks you to corrupt yourself with %s.",
+                mutation_name(you.current_health_sacrifice[0]));
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(you.current_health_sacrifice[0],
+                    1, "Iashol sacrifice");
+            }
+            gain_piety(30 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_STEALTH:
             if (!yesno("Do you really want to do make this sacrifice?",
@@ -5245,6 +5277,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 void iashol_expire_sacrifices()
 {
     you.available_sacrifices.clear();
+    you.current_health_sacrifice.clear();
     you.current_arcane_sacrifices.clear();
 }
 
