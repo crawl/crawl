@@ -152,11 +152,13 @@ const uint64_t M_CANT_SPAWN        = (uint64_t)1<<46;
 // derived undead can't be randomly generated
 const uint64_t M_NO_GEN_DERIVED    = (uint64_t)1<<47;
 
+// 1<<48
+
 // hybridized monster composed of other monster parts
 const uint64_t M_HYBRID            = (uint64_t)1<<49;
 
-// Used to be M_VIGILANT, that was removed
-const uint64_t M_UNUSED            = (uint64_t)1<<50;
+// blinks around randomly (was M_VIGILANT)
+const uint64_t M_BLINKER           = (uint64_t)1<<50;
 
 // monster starts with Ozocubu's Armour
 const uint64_t M_OZOCUBUS_ARMOUR   = (uint64_t)1<<51;
