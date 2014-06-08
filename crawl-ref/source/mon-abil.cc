@@ -3633,20 +3633,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
             mons->go_berserk(true);
         break;
 
-    case MONS_CRIMSON_IMP:
-    case MONS_PHANTOM:
-    case MONS_INSUBSTANTIAL_WISP:
-    case MONS_BLINK_FROG:
-    case MONS_KILLER_KLOWN:
-    case MONS_PRINCE_RIBBIT:
-    case MONS_MARA:
-    case MONS_GOLDEN_EYE:
-        if (mons->no_tele(true, false))
-            break;
-        if (one_chance_in(7) || mons->caught() && one_chance_in(3))
-            used = monster_blink(mons);
-        break;
-
     case MONS_PHANTASMAL_WARRIOR:
     {
         actor *foe = mons->get_foe();
@@ -4434,6 +4420,13 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     default:
+        if (mons_class_flag(mclass, M_BLINKER)
+            && !mons->no_tele(true, false)
+            && one_chance_in(7)
+               || mons->caught() && one_chance_in(3))
+        {
+            used = monster_blink(mons);
+        }
         break;
     }
 

@@ -1774,7 +1774,7 @@ static monsterentry mondata[] =
 
 {
     MONS_KILLER_KLOWN, 'p', BLACK, "Killer Klown",
-    M_SEE_INVIS | M_SPEAKS | M_WARM_BLOOD | M_FAST_REGEN,
+    M_SEE_INVIS | M_SPEAKS | M_WARM_BLOOD | M_FAST_REGEN | M_BLINKER,
     MR_NO_FLAGS,
     0, 17, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -6,
     { {AT_HIT, AF_KLOWN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2172,7 +2172,7 @@ static monsterentry mondata[] =
 
 {
     MONS_INSUBSTANTIAL_WISP, 'v', LIGHTGREY, "insubstantial wisp",
-    M_INSUBSTANTIAL,
+    M_INSUBSTANTIAL | M_BLINKER,
     mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD, 2),
     0, 8, MONS_INSUBSTANTIAL_WISP, MONS_INSUBSTANTIAL_WISP,
         MH_NONLIVING, MAG_IMMUNE,
@@ -3021,7 +3021,7 @@ static monsterentry mondata[] =
 
 {
     MONS_BLINK_FROG, 'F', LIGHTGREEN, "blink frog",
-    M_COLD_BLOOD | M_PHASE_SHIFT,
+    M_COLD_BLOOD | M_PHASE_SHIFT | M_BLINKER,
     MR_NO_FLAGS,
     450, 13, MONS_BLINK_FROG, MONS_BLINK_FROG, MH_NATURAL, -5,
     { {AT_HIT, AF_BLINK, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3107,7 +3107,7 @@ static monsterentry mondata[] =
 
 {
     MONS_GOLDEN_EYE, 'G', ETC_GOLD, "golden eye",
-    M_BATTY | M_GLOWS_LIGHT,
+    M_BATTY | M_GLOWS_LIGHT | M_BLINKER,
     MR_RES_ASPHYX,
     0, 17, MONS_GIANT_EYEBALL, MONS_GOLDEN_EYE, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -4104,7 +4104,7 @@ static monsterentry mondata[] =
 // dangerous, but still come out at 200+ XP
 {
     MONS_PHANTOM, 'W', BLUE, "phantom",
-    M_INSUBSTANTIAL,
+    M_INSUBSTANTIAL | M_BLINKER,
     mrd(MR_RES_COLD, 2),
     0, 5, MONS_GHOST, MONS_PHANTOM, MH_UNDEAD, -4,
     { {AT_HIT, AF_BLINK, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5109,7 +5109,7 @@ static monsterentry mondata[] =
 // minor demons: imps, etc. ('5')
 {
     MONS_CRIMSON_IMP, '5', RED, "crimson imp",
-    M_SPEAKS | M_FAST_REGEN,
+    M_SPEAKS | M_FAST_REGEN | M_BLINKER,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 13, MONS_CRIMSON_IMP, MONS_CRIMSON_IMP, MH_DEMONIC, -9,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6154,7 +6154,7 @@ static monsterentry mondata[] =
 {
     MONS_PRINCE_RIBBIT, 'F', LIGHTCYAN, "Prince Ribbit",
     M_UNIQUE | M_COLD_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS
-        | M_PHASE_SHIFT,
+        | M_PHASE_SHIFT | M_BLINKER,
     MR_NO_FLAGS,
     450, 12, MONS_BLINK_FROG, MONS_HUMAN, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6524,7 +6524,7 @@ static monsterentry mondata[] =
 
 {
     MONS_MARA, 'R', LIGHTMAGENTA, "Mara",
-    M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_UNIQUE,
+    M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_UNIQUE | M_BLINKER,
     MR_RES_POISON | mrd(MR_RES_FIRE, 2),
     0, 25, MONS_RAKSHASA, MONS_RAKSHASA, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
