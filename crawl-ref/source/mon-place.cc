@@ -2837,6 +2837,38 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_TORPOR_SNAIL:
+        // would be nice to support more branches, generically...
+        if (player_in_branch(BRANCH_LAIR))
+            band = random_choose_weighted(5, BAND_YAKS,
+                                          2, BAND_DEATH_YAKS,
+                                          1, BAND_SHEEP,
+                                          0);
+        else if (player_in_branch(BRANCH_SPIDER))
+            band = coinflip() ? BAND_REDBACK : BAND_RANDOM_SINGLE;
+
+        switch (band)
+        {
+            case BAND_YAKS:
+                band_size = 2 + random2(4); // 2-5
+                break;
+            case BAND_DEATH_YAKS:
+                band_size = 1 + random2(2); // 1-2
+                break;
+            case BAND_SHEEP:
+                band_size = 5 + random2(4); // 5-8
+                break;
+            case BAND_REDBACK:
+                band_size = 2 + random2(3); // 2-4
+                break;
+            case BAND_RANDOM_SINGLE:
+                band_size = 1;
+                break;
+            default:
+                break;
+        }
+        break;
+
     default: ;
     }
 
