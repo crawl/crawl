@@ -4859,3 +4859,48 @@ bool qazlal_disaster_area()
 
     return true;
 }
+
+// Check to see if you're eligible to retaliate.
+//Your chance of eligiblity scales with piety.
+bool will_iashol_retaliate()
+{
+    // Scales up to a 33% chance of retribution
+    return you_worship(GOD_IASHOL)
+           && you.piety >= piety_breakpoint(2)
+           && crawl_state.which_god_acting() != GOD_IASHOL
+           && one_chance_in(div_rand_round(600, you.piety));
+}
+
+// Power of retribution increases with damage, decreases with monster HD.
+void iashol_do_retribution(monster* mons, int damage)
+{
+    int power = max(0, random2(div_rand_round(you.piety, 4))
+        + damage - (2 * mons->hit_dice));
+    const actor* act = &you;
+
+    if (power > 50)
+    {
+        simple_monster_message(mons, " is silenced in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_MUTE, 1, act, power+random2(120)));
+    }
+    else if (power > 35)
+    {
+        simple_monster_message(mons, " is paralyzed in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, act, power+random2(60)));
+    }
+    else if (power > 25)
+    {
+        simple_monster_message(mons, " is slowed in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_SLOW, 1, act, power+random2(100)));
+    }
+    else if (power > 15)
+    {
+        simple_monster_message(mons, " is blinded in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_BLIND, 1, act, power+random2(100)));
+    }
+    else if (power > 0)
+    {
+        simple_monster_message(mons, " is illuminated in retribution by your aura!");
+        mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
+    }
+}

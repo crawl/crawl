@@ -47,6 +47,20 @@ protected:
     int damage;
 };
 
+class iashol_retribution_fineff : public final_effect
+{
+public:
+    iashol_retribution_fineff(const actor *attack, const actor *defend, int dam)
+        : final_effect(attack, defend, coord_def()), damage(dam)
+    {
+    }
+    bool mergeable(const final_effect &a) const;
+    void merge(const final_effect &a);
+    void fire();
+protected:
+    int damage;
+};
+
 class trample_follow_fineff : public final_effect
 {
 public:
