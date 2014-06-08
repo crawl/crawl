@@ -61,7 +61,10 @@
 * Members of the Dungeon Crawl community who have contributed to Dungeon
   Crawl Stone Soup:
     Mike Adams
+    Nikhil Addleman
     Warwick Allison
+    araganzar
+    argonaut
     Juha Arpiainen
     Arxale
     John 'Poor Yurik' Attea
@@ -73,21 +76,27 @@
     Stu Black
     blackcustard
     Peter 'xFleury' Blain
+    Bloax
     Terje Bø
     Erik Inge Bolsø
+    bones
     Peter Borgmann
+    Mike Boutin
     Daniel Mark Brownrigg
     Andre Bubel
+    Corin Buchanan-Howland
     Trent W. Buck
     Joe Buzzelli
     Policarpo Caballero
     Cedor
+    Rahul Chandra
     Henry Cipolla
     Vitor 'Baconkid' Costa
     Aaron Curtis
     Simon Curtis
     Denzi
     Lothar Dierkes
+    drachereborn
     Mike Drinen
     Kieron Dunbar
     John "Elwin" Edwards
@@ -107,6 +116,7 @@
     Brian Haase
     Sophie Hamilton
     Chris Hamons
+    Taylor Hedberg
     Anders Heggestøyl
     R. Dan Henry
     Chris Honey
@@ -115,11 +125,14 @@
     Iainuki
     Icy Lich
     Ilyak
+    Implojin
     Matthew Ince
     Mitsuhiro Itakura
+    Jeekaroose
     Mikko Juola
     Dominic 'dk' Kexel
     Jarmo Kielosto
+    Brandon Kime
     Kornel Kisielewicz
     Vesa Kivimäki
     Daniel Klein
@@ -133,6 +146,7 @@
     Maciej Lapinski
     Jordan Lewis
     Sami Liedes
+    Dom Light
     Rob Lund
     Michael Lynn
     Lain I. W. Madreisz
@@ -146,6 +160,7 @@
     Andrew Minton
     Shawn M Moore
     Eva Myers
+    nagdon
     Naruni
     nooodl
     Erkki Nurmi
@@ -153,6 +168,7 @@
     nyra
     Dylan O'Donnell
     Chris Oelmueller
+    John Olender
     Aaron Olowin
     Yuuma Oohara
     Malwyn P
@@ -163,6 +179,7 @@
     pubby
     Derek Ray
     Terence Reeves
+    Tobias Rehbein
     Remsleep
     Ryan Riegel
     RjY
@@ -170,6 +187,7 @@
     David Rose
     Risto Saarelma
     Sebastian Salman
+    Sandman25
     Brett Scarborough
     Roman Sêk
     ShadyAmish
@@ -181,6 +199,7 @@
     Richard Soderberg
     Solf
     Michael Spang
+    David Speare
     Jan 'heftig' Steffens
     Johan Strandell
     Ben Striegel
@@ -188,9 +207,11 @@
     Pavel 'Curio' Svinarchuk
     Matthew Tadd
     William Tanksley, Jr.
+    Tedronai
     Chris Terenzi
     Jared 'Twinge' Tinney
     Matt Titus
+    Tommy
     Steven Wheeler
     Thomas Willem
     Evan Williams
