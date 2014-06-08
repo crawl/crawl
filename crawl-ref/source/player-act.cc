@@ -797,10 +797,6 @@ bool player::go_berserk(bool intentional, bool potion)
 
     mpr("You feel mighty!");
 
-    // Cutting the duration in half since berserk causes haste and hasted
-    // actions have half the usual delay. This keeps player turns
-    // approximately consistent withe previous versions. -cao
-    // Only 1.5 now, but I'm keeping the reduction as a nerf. -1KB
     int berserk_duration = (20 + random2avg(19,2)) / 2;
 
     you.increase_duration(DUR_BERSERK, berserk_duration);
