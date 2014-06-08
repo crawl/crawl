@@ -104,15 +104,6 @@ entrances to two more branches. They can only be entered while carrying at
 least one rune of Zot. The entrance can be found on either level 13 or 14 of
 the main dungeon.
 %%%%
-Hall of Blades
-
-Once upon a time, all the daggers and axes and polearms would gather at night
-and dance the waltz, dreaming of battlefields void of man and beast. That time
-is no more, yet the weapons still remain in the Hall of Blades.
-
-The Hall of Blades is a single level and can be found on either Vaults:3 or
-Vaults:4.
-%%%%
 Crypt
 
 The Crypt is a huge repository for the ancient dead. The air is chill and
