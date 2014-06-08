@@ -173,13 +173,13 @@ bool is_feature(ucs_t feature, const coord_def& where)
 #if TAG_MAJOR_VERSION == 34
         case DNGN_RETURN_FROM_DWARF:
         case DNGN_RETURN_FROM_FOREST:
+        case DNGN_RETURN_FROM_BLADE:
 #endif
         case DNGN_RETURN_FROM_ORC:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME:
         case DNGN_RETURN_FROM_VAULTS:
         case DNGN_RETURN_FROM_CRYPT:
-        case DNGN_RETURN_FROM_BLADE:
         case DNGN_RETURN_FROM_TEMPLE:
         case DNGN_RETURN_FROM_SNAKE:
         case DNGN_RETURN_FROM_ELF:
@@ -205,13 +205,13 @@ bool is_feature(ucs_t feature, const coord_def& where)
 #if TAG_MAJOR_VERSION == 34
         case DNGN_ENTER_DWARF:
         case DNGN_ENTER_FOREST:
+        case DNGN_ENTER_BLADE:
 #endif
         case DNGN_ENTER_ORC:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME:
         case DNGN_ENTER_VAULTS:
         case DNGN_ENTER_CRYPT:
-        case DNGN_ENTER_BLADE:
         case DNGN_ENTER_TEMPLE:
         case DNGN_ENTER_SNAKE:
         case DNGN_ENTER_ELF:
