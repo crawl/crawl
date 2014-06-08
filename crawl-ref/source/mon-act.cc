@@ -2074,6 +2074,17 @@ void handle_monster_move(monster* mons)
         }
     }
 
+    if (!mons->asleep()
+        && !mons->wont_attack() && you_worship(GOD_IASHOL))
+    {
+        if (random2(100) < you.piety / 10)
+        {
+            simple_monster_message(mons, " falters in the face of your power.");
+            mons->speed_increment -= non_move_energy;
+            return;
+        }
+    }
+
     if (crawl_state.disables[DIS_MON_ACT] && _unfriendly_or_insane(mons))
     {
         mons->speed_increment -= non_move_energy;
