@@ -228,6 +228,12 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
         " is consumed by the earth.",
         " is consumed by a violent tear in the earth.",
     },
+    // Iashol
+    {
+        " disappears in a small burst of power.",
+        " disappears in a burst of power",
+        " disappears in an immense burst of power",
+    },
 };
 
 /**
@@ -366,6 +372,13 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "You adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
     },
+    //Iashol
+    { "You exude an aura of power that intimidates your foes.",
+      "Your aura of power can strike those that harm you.",
+      "use your power to heal your body and restore your magic",
+      "gather your power into a mighty leap",
+      "wreak a terrible wrath on all visible foes"
+    },
 };
 
 /**
@@ -503,6 +516,13 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "give life to nearby clouds",
       "You no longer adapt resistances upon receiving elemental damage.",
       "call upon nature's wrath in a wide area around you"
+    },
+    //Iashol
+    { "You no longer exude an aura of power that intimidates your foes.",
+      "Your aura of power no longer strikes those that harm you.",
+      "use your power to heal your body and restore your magic",
+      "gather your power into a mighty leap",
+      "wreak a terrible wrath on all visible foes"
     },
 };
 
@@ -653,6 +673,10 @@ string get_god_likes(god_type which_god, bool verbose)
     case GOD_GOZAG:
         likes.push_back("you collect gold");
         break;
+
+    case GOD_IASHOL:
+      likes.push_back("you make personal sacrifices");
+      break;
 
     default:
         break;
@@ -2598,6 +2622,7 @@ string god_name(god_type which_god, bool long_name)
     case GOD_DITHMENOS:     return "Dithmenos";
     case GOD_GOZAG:         return "Gozag";
     case GOD_QAZLAL:        return "Qazlal";
+    case GOD_IASHOL:        return "Iashol";
     case GOD_JIYVA: // This is handled at the beginning of the function
     case NUM_GODS:          return "Buggy";
     }
@@ -4597,6 +4622,7 @@ void handle_god_time(int time_delta)
             break;
 
         case GOD_GOZAG:
+        case GOD_IASHOL:
             return;
 
         default:
@@ -4658,6 +4684,7 @@ int god_colour(god_type god) // mv - added
         return MAGENTA;
 
     case GOD_QAZLAL:
+    case GOD_IASHOL:
         return BROWN;
 
     case GOD_NO_GOD:
@@ -4741,6 +4768,7 @@ colour_t god_message_altar_colour(god_type god)
         return coinflip() ? YELLOW : BROWN;
 
     case GOD_QAZLAL:
+    case GOD_IASHOL:
         return BROWN;
 
     default:

@@ -4410,6 +4410,10 @@ static const char *divine_title[NUM_GODS][8] =
     // Qazlal -- natural disaster theme
     {"Unspoiled",          "%s Mishap",             "Lightning Rod",            "%s Disaster",
      "Eye of the Storm",   "%s Catastrophe",        "%s Cataclysm",             "End of an Era"},
+
+    // Iashol -- sacrifice theme
+    {"Shirker",           "Volunteer",              "Sufferer",                 "Afflicted",
+     "Agonized",          "Tortured",               "Martyr",                   "Saint"},
 };
 
 string god_title(god_type which_god, species_type which_species, int piety)

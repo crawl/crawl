@@ -137,6 +137,7 @@ static colour_t _feat_colour(dungeon_feature_type feat)
     case DNGN_ALTAR_DITHMENOS:          return ETC_DITHMENOS;
     case DNGN_ALTAR_GOZAG:              return ETC_GOLD; // for the Gold God!
     case DNGN_ALTAR_QAZLAL:             return ETC_ELEMENTAL;
+    case DNGN_ALTAR_IASHOL:             return BROWN;
     default: return 0;
     }
 }

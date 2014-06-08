@@ -10,6 +10,7 @@
 
 #include "areas.h"
 #include "artefact.h"
+#include "ability.h"
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
