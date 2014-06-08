@@ -4904,3 +4904,13 @@ void iashol_do_retribution(monster* mons, int damage)
         mons->add_ench(mon_enchant(ENCH_CORONA, 1, act, power+random2(150)));
     }
 }
+
+void iashol_draw_out_power()
+{
+    mpr("You are restored by drawing out deep reserves of power within.");
+    inc_hp(div_rand_round(you.piety, 20)
+        + roll_dice(div_rand_round(you.piety, 25), 5));
+    inc_mp(div_rand_round(you.piety, 60)
+        + roll_dice(div_rand_round(you.piety, 50), 3));
+    drain_exp(false, 20, true);
+}
