@@ -2323,7 +2323,7 @@ void save_ghost(bool force)
         return;
     }
 
-    if (_list_bones().size() >= GHOST_LIMIT)
+    if (_list_bones().size() >= static_cast<size_t>(GHOST_LIMIT))
     {
 #ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
