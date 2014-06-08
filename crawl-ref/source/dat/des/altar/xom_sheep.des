@@ -3,6 +3,9 @@
 {{
 function callback.kb_xom_exploding_sheep(data, triggerable,
                                          triggerer, marker, ev)
+  if dgn.persist.kb_xom_sheep_generated then return end
+  dgn.persist.kb_xom_sheep_generated = true
+
   local x, y = marker:pos()
 
   crawl.mpr("Walls come down!")
@@ -48,7 +51,9 @@ TAGS:   temple_overflow_xom uniq_altar_xom
 DEPTH:  D:3-, Lair
 KFEAT:  _ = altar_xom
 {{
-local tm = TriggerableFunction:new{func="callback.kb_xom_exploding_sheep"}
+dgn.persist.kb_xom_sheep_generated = false
+local tm = TriggerableFunction:new{func="callback.kb_xom_exploding_sheep",
+                                   repeated = true}
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 lua_marker('_', props_marker {sheep_place = 1})
