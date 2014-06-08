@@ -59,7 +59,7 @@ enum card_type
     CARD_SHAFT,
 
     CARD_VITRIOL,               // acid damage
-    CARD_FLAME,                 // fire damage
+    CARD_CLOUD,                 // fire/cold clouds
     CARD_FROST,                 // cold damage
     CARD_VENOM,                 // poison damage
     CARD_FORTITUDE,             // strength and damage shaving

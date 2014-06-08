@@ -134,9 +134,9 @@ Vitriol card
 
 This card unleashes a corrosive attack spell.
 %%%%
-Flame card
+Cloud card
 
-This card creates flames around you.
+This card creates flames or freezing vapours around you.
 %%%%
 Frost card
 
