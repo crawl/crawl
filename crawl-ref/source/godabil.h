@@ -102,4 +102,7 @@ bool gozag_bribe_branch();
 bool qazlal_upheaval(coord_def target, bool quiet = false);
 void qazlal_elemental_force();
 bool qazlal_disaster_area();
+
+bool will_iashol_retaliate();
+void iashol_do_retribution(monster* mons, int damage);
 #endif
