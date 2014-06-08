@@ -1237,9 +1237,12 @@ void print_stats()
     cursor_control coff(false);
     textcolor(LIGHTGREY);
 
-    // Displayed evasion is now tied to dex.
-    if (you.redraw_stats[STAT_DEX])
+    // Displayed evasion is tied to dex/str.
+    if (you.redraw_stats[STAT_DEX]
+        || you.redraw_stats[STAT_STR])
+    {
         you.redraw_evasion = true;
+    }
 
     if (HP_Bar.wants_redraw())
         you.redraw_hit_points = true;
