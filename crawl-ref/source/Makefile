@@ -192,7 +192,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
 	BUILD_ZLIB = YesPlease
-	DEFINES_L += -DWINMM_PLAY_SOUNDS
+	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
 		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDLmain.a -mwindows
