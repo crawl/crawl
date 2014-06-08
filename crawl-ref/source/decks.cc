@@ -123,7 +123,7 @@ const deck_archetype deck_of_emergency[] =
 const deck_archetype deck_of_destruction[] =
 {
     { CARD_VITRIOL,  {5, 5, 5} },
-    { CARD_FLAME,    {5, 5, 5} },
+    { CARD_CLOUD,    {5, 5, 5} },
     { CARD_FROST,    {5, 5, 5} },
     { CARD_VENOM,    {5, 5, 5} },
     { CARD_FORTITUDE, {5, 5, 5} },
@@ -355,7 +355,7 @@ const char* card_name(card_type card)
     case CARD_WARPWRIGHT:      return "Warpwright";
     case CARD_SHAFT:           return "the Shaft";
     case CARD_VITRIOL:         return "Vitriol";
-    case CARD_FLAME:           return "Flame";
+    case CARD_CLOUD:           return "Cloud";
     case CARD_FROST:           return "Frost";
     case CARD_VENOM:           return "Venom";
     case CARD_STORM:           return "the Storm";
@@ -2701,7 +2701,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-static void _flame_card(int power, deck_rarity_type rarity)
+static void _cloud_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     bool something_happened = false;
@@ -2725,7 +2725,8 @@ static void _flame_card(int power, deck_rarity_type rarity)
         if (make_cloud)
         {
             const int cloud_power = 5 + random2((power_level + 1) * 3);
-            place_cloud(CLOUD_FIRE, *di, cloud_power, &you);
+            place_cloud(coinflip() ? CLOUD_FIRE : CLOUD_COLD,
+                        *di, cloud_power, &you);
 
             if (you.see_cell(*di))
             something_happened = true;
@@ -2733,7 +2734,7 @@ static void _flame_card(int power, deck_rarity_type rarity)
     }
 
     if (something_happened)
-        mpr("Fire appears around you!");
+        mpr("Clouds appear around you!");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 }
@@ -2936,7 +2937,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
     case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
-    case CARD_FLAME:            _flame_card(power, rarity); break;
+    case CARD_CLOUD:            _cloud_card(power, rarity); break;
     case CARD_FORTITUDE:        _fortitude_card(power, rarity); break;
     case CARD_STORM:            _storm_card(power, rarity); break;
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
