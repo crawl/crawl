@@ -1382,6 +1382,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SWAMP_WORM;
     case MONS_GIANT_LEECH:
         return TILEP_MONS_GIANT_LEECH;
+    case MONS_TORPOR_SNAIL:
+        return TILEP_MONS_TORPOR_SNAIL;
 
     // small abominations ('x')
     case MONS_UNSEEN_HORROR:
@@ -3692,7 +3694,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return ugly_corpse_tile + colour_offset;
     }
 
-    // worms ('w')
+    // worms and gastropods ('w')
     case MONS_WORM:
         return TILE_CORPSE_WORM;
     case MONS_BRAIN_WORM:
@@ -3701,6 +3703,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_SWAMP_WORM;
     case MONS_GIANT_LEECH:
         return TILE_CORPSE_GIANT_LEECH;
+    case MONS_TORPOR_SNAIL:
+        return TILE_CORPSE_TORPOR_SNAIL;
 
     // flying insects ('y')
     case MONS_VAMPIRE_MOSQUITO:

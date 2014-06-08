@@ -4807,6 +4807,33 @@ void ancient_zyme_sicken(monster* mons)
     }
 }
 
+/**
+ * Apply the torpor snail -swift effect.
+ *
+ * @param mons      The snail applying the effect.
+ */
+void torpor_snail_unswift(monster* mons)
+{
+    if (is_sanctuary(mons->pos())
+        || is_sanctuary(you.pos())
+        || you_worship(GOD_CHEIBRIADOS)
+        || !you.can_see(mons)
+        || !cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+    {
+        return;
+    }
+
+    you.set_duration(DUR_SWIFTNESS, 9 + random2(6), 15);
+    if (you.attribute[ATTR_SWIFTNESS] != -1)
+    {
+        you.attribute[ATTR_SWIFTNESS] = -1;
+        mprf("Seeing %s leaves you feeling sluggish.",
+            mons->name(DESC_THE).c_str());
+    }
+
+    // slow (friendly) monsters? (would need to change initial bloc)
+}
+
 static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
 {
     // Combine enchantment durations.
