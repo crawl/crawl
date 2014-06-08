@@ -3096,6 +3096,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARF:
         return "staircase to the Dwarven Hall";
+    case DNGN_ENTER_BLADE:
+        return "staircase to the Hall of Blades";
 #endif
     case DNGN_ENTER_ORC:
         return "staircase to the Orcish Mines";
@@ -3107,8 +3109,6 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "gate to the Vaults";
     case DNGN_ENTER_CRYPT:
         return "staircase to the Crypt";
-    case DNGN_ENTER_BLADE:
-        return "staircase to the Hall of Blades";
     case DNGN_ENTER_ZOT:
         return "gate to the Realm of Zot";
     case DNGN_ENTER_TEMPLE:
@@ -3175,8 +3175,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
     case DNGN_RETURN_FROM_SPIDER:
         return "crawl-hole back to the Lair";
     case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_BLADE:
 #if TAG_MAJOR_VERSION == 34
+    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_FOREST:
 #endif
         return "staircase back to the Vaults";

@@ -865,9 +865,6 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_SPIDER:
         return mons_genus(mons->type) == MONS_SPIDER;
 
-    case BRANCH_BLADE:
-        return mons->type == MONS_DANCING_WEAPON;
-
     case BRANCH_ABYSS:
         return mons_is_abyssal_only(mons->type)
                || mons->type == MONS_ABOMINATION_LARGE

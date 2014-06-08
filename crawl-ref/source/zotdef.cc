@@ -80,8 +80,6 @@ static bool _is_branch_fitting(branch_type pb, int wavenum)
         return wavenum > 15;                 // 3.2K-
     case BRANCH_SLIME:
         return wavenum > 20 && coinflip();   // 4K-
-    case BRANCH_BLADE:
-        return wavenum > 30;                 // 6K-
     case BRANCH_TOMB:
         return wavenum > 30 && coinflip();   // 6K-
     case BRANCH_DIS:                         // 8K-
@@ -704,9 +702,6 @@ void zotdef_set_wave()
     case 3:
     {
         branch_type b = _zotdef_random_branch();
-        // HoB branch waves v. rare before 10K turns
-        if (b == BRANCH_BLADE && you.num_turns / ZOTDEF_CYCLE_LENGTH < 50)
-            b = _zotdef_random_branch();
         _zotdef_set_branch_wave(b, power);
         break;
     }

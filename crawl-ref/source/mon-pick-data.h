@@ -195,7 +195,6 @@ static const pop_entry pop_elf[] =
   {  6,  7,   10, UP,   MONS_DEEP_ELF_MASTER_ARCHER },
   { 0,0,0,FLAT,MONS_0 }
 };
-
 #if TAG_MAJOR_VERSION == 34
 static const pop_entry pop_dwarf[] =
 { // Dwarven Hall
@@ -212,6 +211,12 @@ static const pop_entry pop_dwarf[] =
   {  1,  1,    3, FLAT, MONS_SHADOW_WRAITH },
   {  1,  1,    8, FLAT, MONS_EIDOLON },
   {  1,  1,    8, FLAT, MONS_PHANTASMAL_WARRIOR },
+  { 0,0,0,FLAT,MONS_0 }
+};
+
+static const pop_entry pop_blade[] =
+{ // Hall of Blades
+  {  1,  1, 1000, FLAT, MONS_DANCING_WEAPON },
   { 0,0,0,FLAT,MONS_0 }
 };
 #endif
@@ -470,12 +475,6 @@ static const pop_entry pop_vaults[] =
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_SORCERER },
   { 11, 12,   16, FLAT, MONS_DEEP_ELF_DEATH_MAGE },
   { 12, 12,   16, FLAT, MONS_ANCIENT_LICH },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
-static const pop_entry pop_blade[] =
-{ // Hall of Blades
-  {  1,  1, 1000, FLAT, MONS_DANCING_WEAPON },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -1139,7 +1138,9 @@ static const struct { const pop_entry *pop; int count; } population[] =
     POP(spider),
     POP(slime),
     POP(vaults),
+#if TAG_MAJOR_VERSION == 34
     POP(blade),
+#endif
     POP(crypt),
     POP(tomb),
 #if TAG_MAJOR_VERSION > 34
@@ -1247,7 +1248,9 @@ static const struct { const pop_entry *pop; int count; } population_zombie[] =
     POP(spider),
     POP(slime),
     POP(vaults),
+#if TAG_MAJOR_VERSION == 34
     POP(blade),
+#endif
     POP(generic_late_zombie),
     POP(generic_late_zombie),
 #if TAG_MAJOR_VERSION > 34
@@ -1357,7 +1360,9 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
     POP(water_generic),
     POP(water_generic),
     POP(water_generic),
+#if TAG_MAJOR_VERSION == 34
     POP(water_generic),
+#endif
     POP(water_generic),
     POP(water_generic),
 #if TAG_MAJOR_VERSION > 34
@@ -1459,7 +1464,9 @@ static const struct { const pop_entry *pop; int count; } population_lava[] =
     POP(lava_generic),
     POP(lava_generic),
     POP(lava_generic),
+#if TAG_MAJOR_VERSION == 34
     POP(lava_generic),
+#endif
     POP(lava_generic),
     POP(lava_generic),
 #if TAG_MAJOR_VERSION > 34

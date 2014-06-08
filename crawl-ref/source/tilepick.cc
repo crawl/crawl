@@ -293,9 +293,9 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARF:
     case DNGN_ENTER_FOREST:
-#endif
     case DNGN_ENTER_BLADE:
         return TILE_DNGN_ENTER;
+#endif
     case DNGN_ENTER_TEMPLE:
         return TILE_DNGN_ENTER_TEMPLE;
     case DNGN_ENTER_ORC:
@@ -349,9 +349,9 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARF:
     case DNGN_RETURN_FROM_FOREST:
-#endif
     case DNGN_RETURN_FROM_BLADE:
         return TILE_DNGN_RETURN;
+#endif
     case DNGN_RETURN_FROM_TEMPLE:
         return TILE_DNGN_EXIT_TEMPLE;
     case DNGN_RETURN_FROM_ORC:

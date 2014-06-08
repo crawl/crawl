@@ -849,6 +849,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_EXIT_HELL:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARF:
+    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_ORC:
@@ -856,7 +857,6 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_RETURN_FROM_SLIME:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_ZOT:
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_SNAKE:
@@ -895,6 +895,7 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_EXIT_HELL:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARF:
+    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_ORC:
@@ -902,7 +903,6 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_RETURN_FROM_SLIME:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_ZOT:
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_SNAKE:
@@ -5559,10 +5559,6 @@ static dungeon_feature_type _pick_an_altar()
                                          1, GOD_SIF_MUNA,
                                          1, GOD_SHINING_ONE,
                                          0);
-            break;
-
-        case BRANCH_BLADE:
-            god = GOD_OKAWARU;
             break;
 
         case BRANCH_ELF: // magic gods
