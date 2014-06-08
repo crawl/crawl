@@ -1309,7 +1309,6 @@ void player_reacts()
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
-            mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
             you_teleport_now(false); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
