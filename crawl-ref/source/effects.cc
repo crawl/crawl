@@ -2381,9 +2381,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
         return;
 
     // After x turns, half of the monsters will have forgotten about the
-    // player, and a quarter has gone to sleep. A given monster has a
-    // 95% chance of forgetting the player after 4*x turns, and going to
-    // sleep after 10*x turns.
+    // player. A given monster has a 95% chance of forgetting the player after
+    // 4*x turns.
     int x = 0; // Quiet unitialized variable compiler warning.
     switch (mons_intel(mon))
     {
@@ -2412,14 +2411,10 @@ static void _catchup_monster_moves(monster* mon, int turns)
         if (coinflip())
         {
             changed = true;
-            if (coinflip())
-                mon->behaviour = BEH_SLEEP;
-            else
-            {
-                mon->behaviour = BEH_WANDER;
-                mon->foe = MHITNOT;
-                mon->target = random_in_bounds();
-            }
+
+            mon->behaviour = BEH_WANDER;
+            mon->foe = MHITNOT;
+            mon->target = random_in_bounds();
         }
     }
 
