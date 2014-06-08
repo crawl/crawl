@@ -223,13 +223,8 @@ static const pop_entry pop_blade[] =
 
 static const pop_entry pop_lair[] =
 { // Lair
-  {  1,  5,   89, DOWN, MONS_GIANT_NEWT },
-  { -4,  6,  514, SEMI, MONS_GIANT_GECKO },
   { -4,  6,  826, SEMI, MONS_IGUANA },
-  {  1,  6,  999, FLAT, MONS_BAT },
-  {  1,  6, 1000, FLAT, MONS_RAT },
   {  1,  6,  999, FLAT, MONS_QUOKKA },
-  { -4,  6,  826, SEMI, MONS_JACKAL },
   {  1,  7,  999, FLAT, MONS_PORCUPINE },
   { -3,  7,  690, SEMI, MONS_HOUND },
   {  1,  7,  999, FLAT, MONS_GIANT_FROG },
@@ -237,7 +232,6 @@ static const pop_entry pop_lair[] =
   {  1,  8,  923, FLAT, MONS_ADDER },
   { -2,  8,  749, SEMI, MONS_GREEN_RAT },
   {  1,  8,  981, FLAT, MONS_CROCODILE },
-  { -2,  8,  192, PEAK, MONS_GIANT_MITE },
   {  0,  6,   25, PEAK, MONS_SCORPION },
   {  0,  8,  258, SEMI, MONS_BASILISK },
   {  1,  8,  981, FLAT, MONS_WATER_MOCCASIN },
@@ -272,6 +266,7 @@ static const pop_entry pop_lair[] =
   {  8,  8,    1, FLAT, MONS_FIRE_CRAB },
   {  3,  8,  180, UP  , MONS_BORING_BEETLE },
   {  4,  8,   89, UP  , MONS_BOULDER_BEETLE },
+  {  1,  6, 3000, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -395,7 +390,7 @@ static const pop_entry pop_slime[] =
   {  1,  9,  300, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  1,  6,  200, UP,   MONS_DEATH_OOZE },
   {  2,  6,  100, UP,   MONS_GIANT_ORANGE_BRAIN },
-  {  1,  6,  800, FLAT, MONS_NO_MONSTER },
+  {  1,  6,  800, FLAT, MONS_NO_MONSTER }, // Old ooze weight
   { 0,0,0,FLAT,MONS_0 }
 };
 
