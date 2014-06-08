@@ -124,7 +124,7 @@ const deck_archetype deck_of_destruction[] =
 {
     { CARD_VITRIOL,  {5, 5, 5} },
     { CARD_CLOUD,    {5, 5, 5} },
-    { CARD_FROST,    {5, 5, 5} },
+    { CARD_HAMMER,   {5, 5, 5} },
     { CARD_VENOM,    {5, 5, 5} },
     { CARD_FORTITUDE, {5, 5, 5} },
     { CARD_STORM,    {5, 5, 5} },
@@ -356,7 +356,7 @@ const char* card_name(card_type card)
     case CARD_SHAFT:           return "the Shaft";
     case CARD_VITRIOL:         return "Vitriol";
     case CARD_CLOUD:           return "Cloud";
-    case CARD_FROST:           return "Frost";
+    case CARD_HAMMER:          return "the Hammer";
     case CARD_VENOM:           return "Venom";
     case CARD_STORM:           return "the Storm";
     case CARD_FORTITUDE:       return "Fortitude";
@@ -1835,11 +1835,13 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
     dist target;
     zap_type ztype = ZAP_DEBUGGING_RAY;
-    const zap_type frostzaps[3]  = { ZAP_THROW_FROST, ZAP_THROW_ICICLE, ZAP_BOLT_OF_COLD };
+    const zap_type hammerzaps[3]  = { ZAP_STONE_ARROW, ZAP_IRON_SHOT,
+                                      ZAP_LEHUDIBS_CRYSTAL_SPEAR };
     const zap_type venomzaps[3]  = { ZAP_STING, ZAP_VENOM_BOLT,
                                      ZAP_POISON_ARROW };
     const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
-    const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD, ZAP_IOOD };
+    const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD,
+                                     ZAP_IOOD };
 
     switch (card)
     {
@@ -1847,9 +1849,9 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         ztype = ZAP_BREATHE_ACID;
         break;
 
-    case CARD_FROST:  ztype = frostzaps[power_level];  break;
-    case CARD_VENOM:  ztype = venomzaps[power_level];  break;
-    case CARD_ORB:    ztype = orbzaps[power_level];    break;
+    case CARD_HAMMER:  ztype = hammerzaps[power_level];  break;
+    case CARD_VENOM:   ztype = venomzaps[power_level];   break;
+    case CARD_ORB:     ztype = orbzaps[power_level];     break;
 
     case CARD_PAIN:
         if (power_level == 2)
@@ -2881,7 +2883,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     {
         // These card types will usually give this message in the targeting
         // prompt, and the cases where they don't are handled specially.
-        if (which_card != CARD_VITRIOL && which_card != CARD_FROST
+        if (which_card != CARD_VITRIOL && which_card != CARD_HAMMER
             && which_card != CARD_PAIN && which_card != CARD_VENOM
             && which_card != CARD_ORB)
         {
@@ -2945,7 +2947,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     case CARD_VENOM:
     case CARD_VITRIOL:
-    case CARD_FROST:
+    case CARD_HAMMER:
     case CARD_PAIN:
     case CARD_ORB:
         _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
