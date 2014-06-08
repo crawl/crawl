@@ -3047,6 +3047,18 @@ static bool _do_ability(const ability_def& abil)
             return false;
         break;
 
+    case ABIL_IASHOL_DRAW_OUT_POWER:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to draw out your power.");
+            return false;
+        }
+        if (you.hp == you.hp_max && you.magic_points == you.max_magic_points)
+            return false;
+        iashol_draw_out_power();
+        you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
                   false, 'n')

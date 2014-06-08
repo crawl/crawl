@@ -105,4 +105,5 @@ bool qazlal_disaster_area();
 
 bool will_iashol_retaliate();
 void iashol_do_retribution(monster* mons, int damage);
+void iashol_draw_out_power();
 #endif
