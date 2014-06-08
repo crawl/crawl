@@ -179,6 +179,15 @@ will find themselves the eye in a storm of elemental destruction, from which
 only their God can protect them. Pious worshippers of Qazlal will gain the
 ability to direct and control the destructive might of the storm.
 %%%%
+Iashol
+
+Iashol the Incorporeal is a god of sacrifice and the balance of power. Those who
+understand that to gain great power they must give a great sacrifice can follow
+Iashol's teachings to gain immense power. Sacrificiants will cause foes to
+falter and become striken with maladies if they harm you. With greater sacrifice
+can restore health and magic, and perform lightning-fast leaps. Truly great
+sacrificiants can unleash their power in a massive strike against their foes.
+%%%%
 Zin powers
 
 Zin grants followers the ability to preach to the unenlightened masses, and
@@ -351,6 +360,14 @@ occasionally shrouding those struck by attacks in dark smoke. Sufficiently
 pious followers of Dithmenos will find their own shadow will begin to attack on
 its own, and eventually gain the ability to assume the form of a shadow
 themself.
+%%%%
+Iashol powers
+
+Iashol's teachings to gain immense power which initially will cause foes to
+falter and become striken with maladies if they harm you. As you make further
+sacrifices, you will be able to draw on this power to restore your health and
+magic and make a lightning-fast explosive leap. Exceptional sacrificiants can
+unleash their power in a massive strike against all their foes.
 %%%%
 Gozag powers
 

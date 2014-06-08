@@ -186,6 +186,11 @@ public:
   FixedVector<short,   NUM_GODS>  num_total_gifts;
   FixedBitVector<   NUM_GODS>  one_time_ability_used;
   FixedVector<uint8_t, NUM_GODS>  piety_max;
+  vector<ability_type> available_sacrifices;
+  vector<mutation_type> current_arcane_sacrifices;
+  vector<mutation_type> current_purity_sacrifice;
+  vector<mutation_type> current_health_sacrifice;
+  vector<mutation_type> current_essence_sacrifice;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutation;
