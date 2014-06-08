@@ -1578,6 +1578,7 @@ void abyss_teleport()
 {
     xom_abyss_feature_amusement_check xomcheck;
     dprf(DIAG_ABYSS, "New area Abyss teleport.");
+    mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
     _abyss_generate_new_area();
     _write_abyssal_features();
     grd(you.pos()) = _veto_dangerous_terrain(grd(you.pos()));
