@@ -1689,7 +1689,7 @@ static string _make_ghost_filename()
  *
  * @return A vector containing absolute paths to 0+ bonefiles.
  */
-vector<string> _list_bones()
+static vector<string> _list_bones()
 {
     string bonefile_dir = _get_bonefile_directory();
     string base_filename = _make_ghost_filename();
@@ -1721,7 +1721,7 @@ vector<string> _list_bones()
  *
  * @return The filename of an appropriate bones file; may be "".
  */
-string _find_ghost_file()
+static string _find_ghost_file()
 {
     vector<string> bonefiles = _list_bones();
     if (bonefiles.empty())
@@ -2255,7 +2255,7 @@ static bool _ghost_version_compatible(reader &inf)
  * @param[out] return_gfilename     The name of the file created, if any.
  * @return                          A FILE object, or NULL.
  **/
-FILE* _make_bones_file(string * return_gfilename)
+static FILE* _make_bones_file(string * return_gfilename)
 {
 
     const string bone_dir = _get_bonefile_directory();
