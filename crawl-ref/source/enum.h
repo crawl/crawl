@@ -2631,7 +2631,9 @@ enum monster_type                      // menv[].type
     MONS_SPRIGGAN_BERSERKER,
     MONS_SPRIGGAN_DEFENDER,
     MONS_SPRIGGAN_AIR_MAGE,
+#if TAG_MAJOR_VERSION == 34
     MONS_FIREFLY,
+#endif
     MONS_TENGU,
 #if TAG_MAJOR_VERSION > 34
     MONS_TENGU_WARRIOR,

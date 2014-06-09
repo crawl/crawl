@@ -2536,7 +2536,7 @@ int monster_die(monster* mons, killer_type killer,
 
         if (mons->type == MONS_SPRIGGAN_RIDER)
         {
-            corpse2 = mounted_kill(mons, MONS_FIREFLY, killer, killer_index);
+            corpse2 = mounted_kill(mons, MONS_VAMPIRE_MOSQUITO, killer, killer_index);
             mons->type = MONS_SPRIGGAN;
         }
         corpse = place_monster_corpse(mons, silent);

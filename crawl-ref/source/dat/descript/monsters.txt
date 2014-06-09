@@ -1215,12 +1215,6 @@ giant eyeball
 A giant floating eyeball, with a gaze that can paralyse even the most
 strong-willed of adventurers. Some say giant eyeballs are servitors of Jiyva.
 %%%%
-giant firefly
-
-Unlike its mundane counterparts that are merely half an inch big, this enormous
-flying bug is large enough to be ridden by some spriggans. When threatened, it
-can flash warning signals to its kin (and anyone else close enough to observe).
-%%%%
 giant frog
 
 A large and unusually aggressive amphibian that can cover distance rapidly by
@@ -2361,8 +2355,8 @@ who so much as snaps a twig.
 %%%%
 spriggan rider
 
-Mounted on giant fireflies, these riders make sure no one who dares to intrude
-on the spriggan forests and cairns will be able to just walk away.
+Mounted on vampire mosquitoes, these cruel riders make sure anyone who dares to
+intrude on the spriggan fens and cairns will regret it.
 %%%%
 starcursed mass
 

@@ -4288,57 +4288,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
     }
     break;
 
-    case MONS_FIREFLY:
-        if (!one_chance_in(7) || mons->friendly() || mons->confused()
-            || mons->has_ench(ENCH_INVIS))
-        {
-            break;
-        }
-
-        simple_monster_message(mons, " flashes a warning beacon!",
-                               MSGCH_MONSTER_SPELL);
-
-        for (monster_near_iterator mi(mons); mi; ++mi)
-        {
-            // Fireflies (and their riders) are attuned enough to the light
-            // to wake in response, while other creatures sleep through it
-            if (mi->asleep() && (mi->type == MONS_FIREFLY
-                                 || mi->type == MONS_SPRIGGAN_RIDER))
-            {
-                behaviour_event(*mi, ME_DISTURB, mons->get_foe(), mons->pos());
-
-                // Give riders a chance to shout and alert their companions
-                // (this won't otherwise happen if the player is still out
-                // of their sight)
-                if (mi->behaviour == BEH_WANDER && coinflip())
-                    handle_monster_shouts(*mi);
-            }
-
-            if (!mi->asleep())
-            {
-                // We consider the firefly's foe to be the 'source' of the
-                // light here so that monsters wandering around for the player
-                // will be alerted by fireflies signaling in response to the
-                // player, but ignore signals in response to other monsters
-                // if they're already in pursuit of the player.
-                behaviour_event(*mi, ME_ALERT, mons->get_foe(), mons->pos());
-                if (mi->target == mons->pos())
-                {
-                    monster_pathfind mp;
-                    if (mp.init_pathfind(*mi, mons->pos()))
-                    {
-                        mi->travel_path = mp.calc_waypoints();
-                        if (!mi->travel_path.empty())
-                        {
-                            mi->target = mi->travel_path[0];
-                            mi->travel_target = MTRAV_PATROL;
-                        }
-                    }
-                }
-            }
-        }
-        break;
-
     case MONS_SHOCK_SERPENT:
 
         if (mons->has_ench(ENCH_CONFUSION))

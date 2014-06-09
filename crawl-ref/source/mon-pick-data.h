@@ -286,7 +286,7 @@ static const pop_entry pop_swamp[] =
   {  1,  5,  100, DOWN, MONS_KOMODO_DRAGON },
   {  1,  5,  826, FLAT, MONS_GIANT_LEECH },
   {  1,  5, 1000, FLAT, MONS_SPINY_FROG },
-  {  1,  5,  400, FLAT, MONS_SWAMP_DRAGON },
+  {  1,  5,  500, FLAT, MONS_SWAMP_DRAGON },
   {  1,  5,  192, FLAT, MONS_RED_WASP },
   {  1,  7,   40, PEAK, MONS_UGLY_THING },
   {  1,  5,  335, FLAT, MONS_INSUBSTANTIAL_WISP },
@@ -300,7 +300,6 @@ static const pop_entry pop_swamp[] =
   {  1,  6,  480, SEMI, MONS_SPRIGGAN_RIDER },
   {  3,  5,  525, UP,   MONS_SPRIGGAN_DRUID },
   {  2,  5,  435, UP,   MONS_THORN_HUNTER },
-  {  1,  5,  100, FLAT, MONS_FIREFLY },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -741,7 +740,6 @@ static const pop_entry pop_forest[] =
   {  1,  7,  145, SEMI, MONS_DIRE_ELEPHANT },
   {  1,  5,   15, DOWN, MONS_YELLOW_WASP },
   {  1,  5,   30, FLAT, MONS_RED_WASP },
-  {  1,  9,  100, SEMI, MONS_FIREFLY },
   {  1,  6,   75, DOWN, MONS_REDBACK },
   {  2,  7,   35, SEMI, MONS_WOLF_SPIDER },
   {  1,  9,   75, SEMI, MONS_OKLOB_PLANT },

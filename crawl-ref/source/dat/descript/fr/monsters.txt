@@ -977,13 +977,6 @@ giant eyeball
 Un globe oculaire géant en lévitation au regard hypnotique. Certains disent que
 les globes oculaires géants sont des serviteurs de Jiyva.
 %%%%
-giant firefly
-
-Contrairement a ses homologues ordinaires qui sont a peine plus grands qu'un
-centimètre, cet insecte volant est assez grand pour être chevauché par des
-spriggans. Il brille, cependant de manière assez pâle pour être difficilement
-visible.
-%%%%
 giant frog
 
 Un gros amphibien et inhabituellement agressif qui peut parcourir des distances
