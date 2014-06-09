@@ -148,8 +148,8 @@ sub aptitude_table
             $fmt = " NA" if $skill == -99;
 	    if ($abbr eq 'HP' || $abbr eq 'MP')
 	    {
-	        $skill = 100 + $skill * 10;
-                $fmt = "%3d%%";
+	        $skill = $skill * 10;
+                $fmt = "%+3d%%";
 	    }
             $line .= sprintf($fmt, $skill);
         }
