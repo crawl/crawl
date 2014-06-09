@@ -6,6 +6,7 @@ auto_exclude += mimic
 # Interrupting run and rest compound commands:
 runrest_safe_poison  = 80:100
 runrest_ignore_monster += ^butterfly$:1
+runrest_ignore_monster += ^wandering mushroom$:1
 
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,blade:95
 
