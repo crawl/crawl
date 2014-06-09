@@ -2809,7 +2809,7 @@ WEIGHT:   1 (D:10-, Lair:2-, Snake:2-, Shoals:2-, Depths:2-)
 WEIGHT:   10 (Lair:1, Shoals:1, Snake:1, Depths:1)
 : if you.branch() == "Snake" or you.branch() == "Shoals" then
 MONS:     oklob plant / silver statue / orange crystal statue / ice statue /\
-          w:1 Roxanne 
+          w:1 Roxanne
 : elseif you.branch() == "Dungeon" or you.branch() == "Lair" then
 MONS:     oklob plant / burning bush
 : elseif you.branch() == "Vaults" then
