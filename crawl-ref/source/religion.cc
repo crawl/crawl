@@ -4621,8 +4621,22 @@ void handle_god_time(int time_delta)
                 lose_piety(1);
             break;
 
-        case GOD_GOZAG:
         case GOD_IASHOL:
+            if (you.iashol_points >= 50)
+            {
+                if (you.piety < 200)
+                {
+                    iashol_offer_new_sacrifices();
+
+                    simple_god_message(" believes you are ready to make a new sacrifice.");
+                    more();
+                }
+                you.iashol_points -= 50;
+            }
+            break;
+            return;
+
+        case GOD_GOZAG:
             return;
 
         default:

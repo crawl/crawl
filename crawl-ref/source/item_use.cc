@@ -1714,6 +1714,12 @@ void zap_wand(int slot)
         return;
     }
 
+    if (player_mutation_level(MUT_NO_ARTIFICE))
+    {
+        mpr("You cannot evoke magical items.");
+        return;
+    }
+
     if (slot != -1)
         item_slot = slot;
     else

@@ -103,6 +103,10 @@ bool qazlal_upheaval(coord_def target, bool quiet = false);
 void qazlal_elemental_force();
 bool qazlal_disaster_area();
 
+vector<ability_type> get_possible_sacrifices();
+void iashol_offer_new_sacrifices();
+void iashol_do_sacrifice(ability_type sacrifice);
+void iashol_expire_sacrifices();
 bool will_iashol_retaliate();
 void iashol_do_retribution(monster* mons, int damage);
 void iashol_draw_out_power();

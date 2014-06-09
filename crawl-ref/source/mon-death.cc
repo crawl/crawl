@@ -2050,6 +2050,12 @@ int monster_die(monster* mons, killer_type killer,
                 }
             }
 
+            if (good_kill && you_worship(GOD_IASHOL) && you.piety < 200
+                    && one_chance_in(2))
+            {
+                you.iashol_points += 1;
+            }
+
             // Randomly bless a follower.
             if (!created_friendly
                 && gives_xp

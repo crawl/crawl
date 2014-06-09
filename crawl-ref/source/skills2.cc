@@ -490,6 +490,17 @@ bool is_useless_skill(skill_type skill)
     if (skill == SK_STABBING || skill == SK_TRAPS)
         return true;
 #endif
+
+    if (
+        (skill == SK_DODGING && player_mutation_level(MUT_NO_DODGING))
+        || (skill == SK_ARMOUR && player_mutation_level(MUT_NO_ARMOUR))
+        || (skill == SK_EVOCATIONS && player_mutation_level(MUT_NO_ARTIFICE))
+        || (skill == SK_STEALTH && player_mutation_level(MUT_NO_STEALTH))
+    )
+    {
+        return true;
+    }
+
     return species_apt(skill) == -99;
 }
 
