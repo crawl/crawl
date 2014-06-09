@@ -2805,8 +2805,8 @@ ENDMAP
 NAME:     dpeg_stationary_puzzle
 DEPTH:    D:10-, Lair, Snake, Shoals, Depths
 # Weights for levels not of subdepth 1 intentionally lower.
-WEIGHT:   1 (D:10-, Lair:2-, Snake:2-, Shoals:2-, Depths:2-), \\
-          10 (Lair:1, Shoals:1, Snake:1, Depths:1)
+WEIGHT:   1 (D:10-, Lair:2-, Snake:2-, Shoals:2-, Depths:2-)
+WEIGHT:   10 (Lair:1, Shoals:1, Snake:1, Depths:1)
 : if you.branch() == "Snake" or you.branch() == "Shoals" then
 MONS:     oklob plant / silver statue / orange crystal statue / ice statue /\
           w:1 Roxanne 
