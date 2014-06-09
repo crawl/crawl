@@ -4199,10 +4199,11 @@ enum stat_type
 enum targeting_type
 {
     DIR_NONE,
-    DIR_TARGET,        // smite targeting
-    DIR_DIR,           // needs a clear line to target
-    DIR_TARGET_OBJECT, // targets items
-    DIR_JUMP,          // a jump target
+    DIR_TARGET,         // smite targeting
+    DIR_DIR,            // needs a clear line to target
+    DIR_TARGET_OBJECT,  // targets items
+    DIR_MOVABLE_OBJECT, // skips corpses
+    DIR_JUMP,           // a jump target
 };
 
 enum torment_source_type
