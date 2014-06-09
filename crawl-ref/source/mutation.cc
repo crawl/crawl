@@ -1083,8 +1083,10 @@ retry:
     int cweight = random2(total_rarity[mt]);
     for (unsigned i = 0; i < ARRAYSZ(mut_data); ++i)
     {
-        if (!mut_data[i].bad == mt)
+        // if the mut's badness isn't the kind we're looking for, skip it.
+        if (mut_data[i].bad != (mt == MT_BAD)) // sorry :(
             continue;
+
         if ((cweight -= mut_data[i].rarity) >= 0)
             continue;
 
