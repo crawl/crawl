@@ -1980,9 +1980,10 @@ xxtttt...ttttxx
 ENDMAP
 
 NAME:    bh_autumn_forest_stairs
-TAGS:    extra luniq_staircase decor
+TAGS:    luniq_staircase decor
 ORIENT:  float
 DEPTH:   Lair
+WEIGHT:  5
 COLOUR:  t = lightred / red w:3
 SHUFFLE: Aaq / Bbr / Ccs
 SUBST:   q = @
