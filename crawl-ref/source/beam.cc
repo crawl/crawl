@@ -2655,7 +2655,6 @@ void bolt::affect_endpoint()
     // FIXME: why don't these just have is_explosion set?
     // They don't explode in tracers: why not?
     if (name == "orb of electricity"
-       || name == "metal orb"
        || name == "great blast of cold")
     {
         target = pos();
@@ -5939,17 +5938,6 @@ void bolt::refine_for_explosion()
         colour     = LIGHTCYAN;
         damage.num = 1;
         ex_size    = 2;
-    }
-
-    if (name == "metal orb")
-    {
-        seeMsg  = "The orb explodes into a blast of deadly shrapnel!";
-        hearMsg = "You hear an explosion!";
-
-        name    = "blast of shrapnel";
-        glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
-        flavour = BEAM_FRAG;     // Sets it from pure damage to shrapnel
-                                 // (which is absorbed extra by armour).
     }
 
     if (name == "great blast of fire")
