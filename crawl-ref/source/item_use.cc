@@ -254,20 +254,12 @@ static bool _valid_weapon_swap(const item_def &item)
     if (item_is_snakable(item) && you.has_spell(SPELL_STICKS_TO_SNAKES))
         return true;
 
-    // What follows pertains only to Sublimation of Blood and/or Simulacrum.
-    if (!you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-        && !you.has_spell(SPELL_SIMULACRUM))
+    if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
     {
-        return false;
-    }
-
-    if (item.base_type == OBJ_FOOD && food_is_meaty(item))
-        return item.sub_type == FOOD_CHUNK || you.has_spell(SPELL_SIMULACRUM);
-
-    if (item.base_type == OBJ_POTIONS && item_type_known(item)
-        && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
-    {
-        return is_blood_potion(item);
+        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
+            return true;
+        if (is_blood_potion(item))
+            return true;
     }
 
     return false;

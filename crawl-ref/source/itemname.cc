@@ -3308,12 +3308,8 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_POTIONS:
     {
         // Not useless, even if you can't quaff it.
-        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-            && (item.sub_type == POT_BLOOD
-                || item.sub_type == POT_BLOOD_COAGULATED))
-        {
+        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD) && is_blood_potion(item))
             return false;
-        }
 
         // Mummies can't use potions.
         if (you.species == SP_MUMMY)
@@ -3485,9 +3481,6 @@ bool is_useless_item(const item_def &item, bool temp)
             return false;
         }
 
-        if (food_is_meaty(item) && you.has_spell(SPELL_SIMULACRUM))
-            return false;
-
         if (is_fruit(item) && you_worship(GOD_FEDHAS))
             return false;
 
@@ -3499,17 +3492,15 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
+            || you.has_spell(SPELL_SIMULACRUM)
             || you_worship(GOD_YREDELEMNUL) && !you.penance[GOD_YREDELEMNUL]
                && you.piety >= piety_breakpoint(0))
         {
             return false;
         }
 
-        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-            || you.has_spell(SPELL_SIMULACRUM))
-        {
+        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
             return false;
-        }
 
         return true;
 

@@ -270,7 +270,6 @@ public:
     bool      pickup_armour(item_def &item, int near, bool force);
     bool      pickup_jewellery(item_def &item, int near, bool force);
     bool      pickup_misc(item_def &item, int near);
-    bool      pickup_food(item_def &item, int near);
     bool      pickup_missile(item_def &item, int near, bool force);
     bool      drop_item(int eslot, int near);
     void      equip(item_def &item, int slot, int near = -1);
