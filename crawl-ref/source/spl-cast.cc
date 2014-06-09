@@ -1274,10 +1274,10 @@ spret_type your_spells(spell_type spell, int powc,
             targ = TARG_HOSTILE_UNDEAD;
 
         targeting_type dir  =
-            (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :
-             testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET        :
-             testbits(flags, SPFLAG_GRID)     ? DIR_TARGET        :
-             testbits(flags, SPFLAG_DIR)      ? DIR_DIR           :
+            (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_MOVABLE_OBJECT :
+             testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET         :
+             testbits(flags, SPFLAG_GRID)     ? DIR_TARGET         :
+             testbits(flags, SPFLAG_DIR)      ? DIR_DIR            :
                                                 DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);

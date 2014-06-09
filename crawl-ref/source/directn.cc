@@ -91,6 +91,12 @@ enum LOSSelect
     LS_NONE     = 0xFFFF,
 };
 
+enum target_obj_mode
+{
+    TARGOBJ_ANY,
+    TARGOBJ_MOVABLE,
+};
+
 #ifdef WIZARD
 static void _wizard_make_friendly(monster* m);
 #endif
@@ -380,12 +386,18 @@ void direction_chooser::print_key_hints() const
             break;
         case DIR_DIR:
         case DIR_TARGET_OBJECT:
+        case DIR_MOVABLE_OBJECT:
             break;
         }
     }
 
     // Display the prompt.
     mprf(MSGCH_PROMPT, "%s", prompt.c_str());
+}
+
+bool direction_chooser::targets_objects() const
+{
+    return restricts == DIR_TARGET_OBJECT || restricts == DIR_MOVABLE_OBJECT;
 }
 
 void direction_chooser::describe_cell() const
@@ -403,7 +415,7 @@ void direction_chooser::describe_cell() const
         print_key_hints();
         bool did_cloud = false;
         print_target_description(did_cloud);
-        if (just_looking || (show_items_once && restricts != DIR_TARGET_OBJECT))
+        if (just_looking || (show_items_once && !targets_objects()))
             print_items_description();
         if (just_looking || show_floor_desc)
         {
@@ -959,7 +971,7 @@ bool direction_chooser::move_is_ok() const
             // cancel_at_self == not allowed to target yourself
             // (SPFLAG_NOT_SELF)
 
-            if (restricts != DIR_TARGET_OBJECT
+            if (!targets_objects()
                 && (mode == TARG_ENEMY || mode == TARG_HOSTILE
                     || mode == TARG_HOSTILE_SUBMERGED
                     || mode == TARG_HOSTILE_UNDEAD))
@@ -1091,12 +1103,14 @@ coord_def direction_chooser::find_default_target() const
     coord_def result = you.pos();
     bool success = false;
 
-    if (restricts == DIR_TARGET_OBJECT)
+    if (targets_objects())
     {
         // Try to find an object.
-        success = _find_square_wrapper(result, 1, _find_object,
-                                       needs_path, TARG_ANY, range, hitfunc,
-                                       true, LS_FLIPVH);
+        success = _find_square_wrapper(result, 1, _find_object, needs_path,
+                                       restricts == DIR_MOVABLE_OBJECT
+                                           ? TARGOBJ_MOVABLE
+                                           : TARGOBJ_ANY,
+                                       range, hitfunc, true, LS_FLIPVH);
     }
     else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
              || mode == TARG_HOSTILE_SUBMERGED
@@ -1246,8 +1260,10 @@ bool direction_chooser::in_range(const coord_def& p) const
 // and update output accordingly if successful.
 void direction_chooser::object_cycle(int dir)
 {
-    if (_find_square_wrapper(objfind_pos, dir, _find_object,
-                             needs_path, TARG_ANY, range, hitfunc, true,
+    if (_find_square_wrapper(objfind_pos, dir, _find_object, needs_path,
+                             restricts == DIR_MOVABLE_OBJECT ? TARGOBJ_MOVABLE
+                                                             : TARGOBJ_ANY,
+                             range, hitfunc, true,
                              (dir > 0 ? LS_FLIPVH : LS_FLIPHV)))
     {
         set_target(objfind_pos);
@@ -1387,7 +1403,7 @@ void direction_chooser::show_initial_prompt()
 
 void direction_chooser::print_target_description(bool &did_cloud) const
 {
-    if (restricts == DIR_TARGET_OBJECT)
+    if (targets_objects())
         print_target_object_description();
     else
         print_target_monster_description(did_cloud);
@@ -1953,7 +1969,7 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_GET:             loop_done = pickup_item(); break;
 
     case CMD_TARGET_CYCLE_BACK:
-        if (restricts != DIR_TARGET_OBJECT)
+        if (!targets_objects())
         {
             monster_cycle(-1);
             break;
@@ -1961,7 +1977,7 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_OBJ_CYCLE_BACK:    object_cycle(-1);  break;
 
     case CMD_TARGET_CYCLE_FORWARD:
-        if (restricts != DIR_TARGET_OBJECT)
+        if (!targets_objects())
         {
             monster_cycle(1);
             break;
@@ -2527,8 +2543,10 @@ static bool _find_object(const coord_def& where, int mode,
     if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
         return false;
 
-    return env.map_knowledge(where).item()
-           || (you.see_cell(where) && top_item_at(where));
+    const item_def * const item = you.see_cell(where)
+                                      ? top_item_at(where)
+                                      : env.map_knowledge(where).item();
+    return item && !(mode == TARGOBJ_MOVABLE && item_is_stationary(*item));
 }
 
 static int _next_los(int dir, int los, bool wrap)

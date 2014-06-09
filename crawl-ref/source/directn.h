@@ -113,6 +113,7 @@ public:
     bool choose_direction();
 
 private:
+    bool targets_objects() const;
     bool choose_compass();      // Used when we only need to choose a direction
 
     bool do_main_loop();
