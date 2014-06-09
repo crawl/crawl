@@ -191,6 +191,7 @@ public:
   vector<mutation_type> current_purity_sacrifice;
   vector<mutation_type> current_health_sacrifice;
   vector<mutation_type> current_essence_sacrifice;
+  int iashol_points;       // Used to smoothe out Iashol sacrifice frequency
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutation;

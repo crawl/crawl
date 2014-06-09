@@ -4860,6 +4860,180 @@ bool qazlal_disaster_area()
     return true;
 }
 
+vector<ability_type> get_possible_sacrifices()
+{
+    vector<ability_type> possible_sacrifices;
+
+    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_PURITY);
+    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_ESSENCE);
+    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_HEALTH);
+
+    if (player_mutation_level(MUT_NO_AIR_MAGIC)
+        + player_mutation_level(MUT_NO_CHARM_MAGIC)
+        + player_mutation_level(MUT_NO_CONJURATION_MAGIC)
+        + player_mutation_level(MUT_NO_EARTH_MAGIC)
+        + player_mutation_level(MUT_NO_FIRE_MAGIC)
+        + player_mutation_level(MUT_NO_HEXES_MAGIC)
+        + player_mutation_level(MUT_NO_ICE_MAGIC)
+        + player_mutation_level(MUT_NO_NECROMANCY_MAGIC)
+        + player_mutation_level(MUT_NO_POISON_MAGIC)
+        + player_mutation_level(MUT_NO_SUMMONING_MAGIC)
+        + player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC)
+        + player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC)
+        < 6)
+    {
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_ARCANA);
+    }
+    if (!player_mutation_level(MUT_NO_READ))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_WORDS);
+    if (!player_mutation_level(MUT_NO_DRINK))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_DRINK);
+    if (!player_mutation_level(MUT_NO_STEALTH))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_STEALTH);
+    if (!player_mutation_level(MUT_NO_ARTIFICE))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_ARTIFICE);
+    if (!player_mutation_level(MUT_NO_LOVE))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_LOVE);
+    if (!player_mutation_level(MUT_FEAR_BLOOD))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_SANITY);
+    if (!player_mutation_level(MUT_NO_DODGING))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_NIMBLENESS);
+    if (!player_mutation_level(MUT_NO_ARMOUR))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_DURABILITY);
+    if (!player_mutation_level(MUT_MISSING_HAND))
+        possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_HAND);
+
+    return possible_sacrifices;
+}
+
+// Pick three new sacrifices to offer to the player. They should be distinct
+// from one another and not offer duplicates of some options. Ideally we'll
+// offer three "tiers" of sacrifices, but right now we mostly have two tiers.
+// Since these sacrifices will be abilities, we also need to set up those
+// abilities and the descriptions of them, so players know what they're
+// getting into.
+void iashol_offer_new_sacrifices()
+{
+    iashol_expire_sacrifices();
+
+    vector<ability_type> possible_sacrifices = get_possible_sacrifices();
+
+    //for now we'll just pick three at random
+    int num_sacrifices = possible_sacrifices.size();
+
+    // try to get three distinct sacrifices
+    int lesser_sacrifice = random2(num_sacrifices);
+    int sacrifice = -1;
+    int greater_sacrifice = -1;
+
+    do {
+        sacrifice = random2(num_sacrifices);
+    } while (sacrifice == -1 || sacrifice == lesser_sacrifice);
+
+    do {
+        greater_sacrifice = random2(num_sacrifices);
+    } while (greater_sacrifice == -1 || greater_sacrifice == lesser_sacrifice
+        || greater_sacrifice == sacrifice);
+
+    // set the new abilities
+    you.available_sacrifices.push_back(
+            possible_sacrifices[lesser_sacrifice]);
+    you.available_sacrifices.push_back(
+            possible_sacrifices[sacrifice]);
+    you.available_sacrifices.push_back(
+            possible_sacrifices[greater_sacrifice]);
+}
+
+void iashol_do_sacrifice(ability_type sacrifice)
+{
+    skill_type mutation_skill;
+    int arcane_mutations_size;
+
+    switch (sacrifice)
+    {
+        case ABIL_IASHOL_SACRIFICE_STEALTH:
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(MUT_NO_STEALTH, 1, "Iashol sacrifice");
+            }
+            gain_piety(div_rand_round(skill_exp_needed(
+                 you.skills[SK_STEALTH], SK_STEALTH, SP_HUMAN), 50));
+
+            // zero out useless skills
+            you.skills[SK_STEALTH] = 0;
+            gain_piety(30 + div_rand_round(skill_exp_needed(
+                    you.skills[SK_STEALTH], SK_STEALTH, SP_HUMAN), 50));
+            break;
+        case ABIL_IASHOL_SACRIFICE_ARTIFICE:
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(MUT_NO_ARTIFICE, 1, "Iashol sacrifice");
+            }
+            gain_piety(div_rand_round(skill_exp_needed(
+                 you.skills[SK_EVOCATIONS], SK_EVOCATIONS, SP_HUMAN), 50));
+
+            // zero out useless skills
+            you.skills[SK_EVOCATIONS] = 0;
+            gain_piety(40 + div_rand_round(skill_exp_needed(
+                    you.skills[SK_EVOCATIONS], SK_EVOCATIONS, SP_HUMAN), 50));
+            break;
+        case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(MUT_NO_DODGING, 1, "Iashol sacrifice");
+            }
+            gain_piety(div_rand_round(skill_exp_needed(
+                 you.skills[SK_DODGING], SK_DODGING, SP_HUMAN), 50));
+
+            // zero out useless skills
+            you.skills[SK_DODGING] = 0;
+            gain_piety(30 + div_rand_round(skill_exp_needed(
+                    you.skills[SK_DODGING], SK_DODGING, SP_HUMAN), 50));
+            break;
+        case ABIL_IASHOL_SACRIFICE_DURABILITY:
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(MUT_NO_ARMOUR, 1, "Iashol sacrifice");
+            }
+            gain_piety(div_rand_round(skill_exp_needed(
+                 you.skills[SK_ARMOUR], SK_ARMOUR, SP_HUMAN), 50));
+
+            // zero out useless skills
+            you.skills[SK_ARMOUR] = 0;
+            gain_piety(30 + div_rand_round(skill_exp_needed(
+                    you.skills[SK_ARMOUR], SK_ARMOUR, SP_HUMAN), 50));
+            break;
+        default:
+            return;
+            break;
+    }
+    iashol_expire_sacrifices();
+}
+
+// Remove the offer of sacrifices after they've been offered for sufficient
+// time or it's time to offer something new.
+void iashol_expire_sacrifices()
+{
+    you.available_sacrifices.clear();
+}
+
+
 // Check to see if you're eligible to retaliate.
 //Your chance of eligiblity scales with piety.
 bool will_iashol_retaliate()

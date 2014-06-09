@@ -92,6 +92,8 @@
 #include "viewgeom.h"
 #include "xom.h"
 
+int iashol_points = 0;
+
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
@@ -3603,8 +3605,11 @@ int check_stealth()
     if (crawl_state.disables[DIS_MON_SIGHT])
         return 1000;
 
-    if (you.attribute[ATTR_SHADOWS] || you.berserk() || you.stat_zero[STAT_DEX])
+    if (you.attribute[ATTR_SHADOWS] || you.berserk() || you.stat_zero[STAT_DEX]
+        || player_mutation_level(MUT_NO_STEALTH))
+    {
         return 0;
+    }
 
     int stealth = you.dex() * 3;
 

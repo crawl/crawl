@@ -970,6 +970,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level;
                 retval = true;
             }
+            else if (you_worship(GOD_IASHOL))
+            {
+                if (one_chance_in(100))
+                    you.iashol_points += 1;
+            }
             break;
 
         case DID_SEE_MONSTER:

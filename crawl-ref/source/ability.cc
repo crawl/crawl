@@ -3047,6 +3047,22 @@ static bool _do_ability(const ability_def& abil)
             return false;
         break;
 
+    case ABIL_IASHOL_SACRIFICE_PURITY:
+    case ABIL_IASHOL_SACRIFICE_WORDS:
+    case ABIL_IASHOL_SACRIFICE_DRINK:
+    case ABIL_IASHOL_SACRIFICE_ESSENCE:
+    case ABIL_IASHOL_SACRIFICE_HEALTH:
+    case ABIL_IASHOL_SACRIFICE_STEALTH:
+    case ABIL_IASHOL_SACRIFICE_ARTIFICE:
+    case ABIL_IASHOL_SACRIFICE_LOVE:
+    case ABIL_IASHOL_SACRIFICE_SANITY:
+    case ABIL_IASHOL_SACRIFICE_ARCANA:
+    case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
+    case ABIL_IASHOL_SACRIFICE_DURABILITY:
+    case ABIL_IASHOL_SACRIFICE_HAND:
+        iashol_do_sacrifice(abil.ability);
+        break;
+
     case ABIL_IASHOL_DRAW_OUT_POWER:
         if (you.duration[DUR_EXHAUSTED])
         {
@@ -3595,16 +3611,23 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_STOP_SINGING, check_confused);
 
     // Evocations from items.
-    if (you.scan_artefacts(ARTP_BLINK))
+    if (you.scan_artefacts(ARTP_BLINK)
+        && !player_mutation_level(MUT_NO_ARTIFICE))
+    {
         _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
+    }
 
-    if (you.scan_artefacts(ARTP_FOG))
+    if (you.scan_artefacts(ARTP_FOG)
+        && !player_mutation_level(MUT_NO_ARTIFICE))
+    {
         _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
+    }
 
-    if (you.evokable_berserk())
+    if (you.evokable_berserk() && !player_mutation_level(MUT_NO_ARTIFICE))
         _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-    if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
+    if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
+        && !player_mutation_level(MUT_NO_ARTIFICE))
     {
         // Now you can only turn invisibility off if you have an
         // activatable item.  Wands and potions will have to time
@@ -3615,7 +3638,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
     }
 
-    if (you.evokable_flight())
+    if (you.evokable_flight() && !player_mutation_level(MUT_NO_ARTIFICE))
     {
         // Has no effect on permanently flying Tengu.
         if (!you.permanent_flight() || !you.racial_permanent_flight())
@@ -3635,17 +3658,21 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         }
     }
 
-    if (you.evokable_jump())
+    if (you.evokable_jump() && !player_mutation_level(MUT_NO_ARTIFICE))
         _add_talent(talents, ABIL_EVOKE_JUMP, check_confused);
 
-    if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
+    if (you.wearing(EQ_RINGS, RING_TELEPORTATION
+        && !player_mutation_level(MUT_NO_ARTIFICE))
         && !crawl_state.game_is_sprint())
     {
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
     }
 
-    if (you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL))
+    if (you.wearing(EQ_RINGS, RING_TELEPORT_CONTROL)
+        && !player_mutation_level(MUT_NO_ARTIFICE))
+    {
         _add_talent(talents, ABIL_EVOKE_TELEPORT_CONTROL, check_confused);
+    }
 
     // Find hotkeys for the non-hotkeyed talents.
     for (unsigned int i = 0; i < talents.size(); ++i)
