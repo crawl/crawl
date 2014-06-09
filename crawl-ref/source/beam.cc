@@ -6149,6 +6149,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         for (siter ci = sweep.begin(); ci != sweep.end(); ++ci)
         {
+            bool pass_visible = false;
             for (viter cci = ci->begin(); cci != ci->end(); ++cci)
             {
                 const coord_def delta = *cci;
@@ -6157,11 +6158,13 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
                     continue;
 
                 if (exp_map(delta + centre) < INT_MAX)
-                    explosion_draw_cell(delta + pos());
+                    pass_visible |= explosion_draw_cell(delta + pos());
             }
-            update_screen();
-
-            scaled_delay(explode_delay);
+            if (pass_visible)
+            {
+                update_screen();
+                scaled_delay(explode_delay);
+            }
         }
     }
 
@@ -6193,29 +6196,34 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     return cells_seen > 0;
 }
 
-void bolt::explosion_draw_cell(const coord_def& p)
+/**
+ * Draw one tile of an explosion, if that cell is visible.
+ *
+ * @param p The cell to draw, in grid coordinates.
+ * @return True if the cell was actually drawn.
+ */
+bool bolt::explosion_draw_cell(const coord_def& p)
 {
     if (you.see_cell(p))
     {
         const coord_def drawpos = grid2view(p);
-#ifdef USE_TILE
-        if (in_los_bounds_v(drawpos))
-        {
-            int dist = (p - source).rdist();
-            tileidx_t tile = tileidx_bolt(*this);
-            tiles.add_overlay(p, vary_bolt_tile(tile, dist));
-        }
-#endif
-#ifndef USE_TILE_LOCAL
         // bounds check
         if (in_los_bounds_v(drawpos))
         {
+#ifdef USE_TILE
+            int dist = (p - source).rdist();
+            tileidx_t tile = tileidx_bolt(*this);
+            tiles.add_overlay(p, vary_bolt_tile(tile, dist));
+#endif
+#ifndef USE_TILE_LOCAL
             cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
             put_colour_ch(colour == BLACK ? random_colour() : colour,
                           dchar_glyph(DCHAR_EXPLOSION));
-        }
 #endif
+            return true;
+        }
     }
+    return false;
 }
 
 void bolt::explosion_affect_cell(const coord_def& p)
