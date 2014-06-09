@@ -88,7 +88,6 @@ enum mut_total
 {
     MT_GOOD,
     MT_BAD,
-    MT_ALL,
     NUM_MT
 };
 
@@ -107,7 +106,6 @@ void init_mut_index()
         ASSERT_RANGE(mut, 0, NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
-        total_rarity[MT_ALL] += mut_data[i].rarity;
         total_rarity[mut_data[i].bad ? MT_BAD : MT_GOOD] += mut_data[i].rarity;
     }
 }
@@ -1063,10 +1061,20 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
     mut_total mt;
     switch (mutclass)
     {
-    case RANDOM_MUTATION:      mt = MT_ALL; break;
-    case RANDOM_BAD_MUTATION:  mt = MT_BAD; break;
-    case RANDOM_GOOD_MUTATION: mt = MT_GOOD; break;
-    default: die("invalid mutation class: %d", mutclass);
+        case RANDOM_MUTATION:
+            // maintain an arbitrary ratio of good to bad muts to allow easier
+            // weight changes within categories - 60% good seems to be about
+            // where things are right now
+            mt = x_chance_in_y(3, 5) ? MT_GOOD : MT_BAD;
+            break;
+        case RANDOM_BAD_MUTATION:
+            mt = MT_BAD;
+            break;
+        case RANDOM_GOOD_MUTATION:
+            mt = MT_GOOD;
+            break;
+        default:
+            die("invalid mutation class: %d", mutclass);
     }
 
     int tries = 0;
