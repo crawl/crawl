@@ -2516,9 +2516,10 @@ static void _summon_flying(int power, deck_rarity_type rarity)
         MONS_BUTTERFLY, MONS_INSUBSTANTIAL_WISP, MONS_KILLER_BEE,
         MONS_VAMPIRE_MOSQUITO, MONS_YELLOW_WASP, MONS_RED_WASP
     };
+    const int num_flytypes = ARRAYSZ(flytypes);
 
     // Choose what kind of monster.
-    monster_type result = flytypes[random2(5) + power_level];
+    monster_type result = flytypes[random2(num_flytypes - 2) + power_level];
     const int how_many = 2 + random2(3) + power_level * 3;
     bool hostile_invis = false;
 
