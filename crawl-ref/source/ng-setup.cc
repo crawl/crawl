@@ -81,8 +81,8 @@ static void _species_stat_init(species_type which_species)
     case SP_FORMICID:           s = 12; i =  7; d =  6;      break;  // 25
     case SP_VINE_STALKER:       s = 10; i =  8; d =  9;      break;  // 27
 
-    case SP_KOBOLD:             s =  7; i =  6; d = 10;      break;  // 23
-    case SP_HALFLING:           s =  5; i =  8; d = 11;      break;  // 24
+    case SP_KOBOLD:             s =  6; i =  6; d = 11;      break;  // 23
+    case SP_HALFLING:           s =  8; i =  7; d =  9;      break;  // 24
     case SP_SPRIGGAN:           s =  4; i =  9; d = 11;      break;  // 24
 
     case SP_MUMMY:              s = 11; i =  7; d =  7;      break;  // 25
