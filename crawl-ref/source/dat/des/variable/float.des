@@ -43,8 +43,8 @@ end
 
 function grunt_megastairs_setup(e)
   e.orient("float")
-  e.tags("extra luniq_grunt_megastairs")
-  e.depth("Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
+  e.tags("extra luniq_grunt_megastairs ruin_lair")
+  e.depth("Lair, Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
   e.nsubst("0 = 2:0 / 2:0. / *:.")
   e.subst("@ = @+")
   if you.depth() == 1 then
@@ -64,7 +64,7 @@ function grunt_megastairs_setup(e)
     e.subst("x = v")
   elseif you.branch() == "Depths" then
     e.subst("x : cccccvvvb")
-  else
+  elseif you.branch() ~= "Lair" then
     e.subst("x = c")
   end
   e.subst("G : GGGGTTVt")
