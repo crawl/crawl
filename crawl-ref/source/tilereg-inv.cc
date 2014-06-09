@@ -543,10 +543,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                 // For Sublimation of Blood.
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                else if (food_is_meaty(item)
-                             && you.has_spell(SPELL_SIMULACRUM)
-                         || item.sub_type == FOOD_CHUNK
-                             && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
+                else if (item.sub_type == FOOD_CHUNK
+                         && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
                 {
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
                 }

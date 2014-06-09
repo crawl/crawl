@@ -189,8 +189,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     item.quantity  = 1 + random2(max_chunks);
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
-    bool wants_for_spells = you.has_spell(SPELL_SIMULACRUM)
-                            || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
+    bool wants_for_spells = you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
     // Don't mark it as dropped if we are forcing autopickup of chunks.
     if (you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= 0
         && is_bad_food(item) && !wants_for_spells)

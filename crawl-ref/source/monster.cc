@@ -2202,22 +2202,6 @@ bool monster::pickup_gold(item_def &item, int near)
     return pickup(item, MSLOT_GOLD, near);
 }
 
-bool monster::pickup_food(item_def &item, int near)
-{
-    // Chunks are used only for Simulacrum.
-    if (item.base_type == OBJ_FOOD
-        && item.sub_type == FOOD_CHUNK
-        && has_spell(SPELL_SIMULACRUM)
-        && mons_class_can_be_zombified(item.mon_type))
-    {
-        // If a Beoghite monster ever gets Simulacrum, please
-        // add monster type restrictions here.
-        return pickup(item, MSLOT_MISCELLANY, near);
-    }
-
-    return false;
-}
-
 bool monster::pickup_misc(item_def &item, int near)
 {
     // Never pick up the horn of Geryon or runes, except for mimics.
@@ -2323,8 +2307,6 @@ bool monster::pickup_item(item_def &item, int near, bool force)
         return pickup_armour(item, near, force);
     case OBJ_MISCELLANY:
         return pickup_misc(item, near);
-    case OBJ_FOOD:
-        return pickup_food(item, near);
     case OBJ_GOLD:
         return pickup_gold(item, near);
     case OBJ_JEWELLERY:
