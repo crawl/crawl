@@ -304,7 +304,7 @@ public:
 
     // Various explosion-related stuff.
     void refine_for_explosion();
-    void explosion_draw_cell(const coord_def& p);
+    bool explosion_draw_cell(const coord_def& p);
     void explosion_affect_cell(const coord_def& p);
     void determine_affected_cells(explosion_map& m, const coord_def& delta,
                                   int count, int r,
