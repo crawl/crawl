@@ -4371,8 +4371,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     default:
         if (mons_class_flag(mclass, M_BLINKER)
             && !mons->no_tele(true, false)
-            && one_chance_in(7)
-               || mons->caught() && one_chance_in(3))
+            && x_chance_in_y(mons->caught() ? 3 : 1, 7))
         {
             used = monster_blink(mons);
         }
