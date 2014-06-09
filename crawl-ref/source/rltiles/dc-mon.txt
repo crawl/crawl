@@ -92,7 +92,6 @@ natasha MONS_NATASHA
 ## Bees ('k')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
-giant_firefly MONS_FIREFLY
 
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT

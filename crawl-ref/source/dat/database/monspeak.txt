@@ -6326,11 +6326,6 @@ default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
 %%%%
-################## Giant firefly ###########################
-default confused giant firefly
-
-@default confused winged insect@
-%%%%
 ################## Ice statue ##############################
 default ice statue
 

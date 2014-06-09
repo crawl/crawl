@@ -3527,6 +3527,10 @@ bool monster::is_evil(bool check_spells) const
         return true;
     }
 
+    // They ride on top of evil monsters.
+    if (type == MONS_SPRIGGAN_RIDER)
+        return true;
+
     return false;
 }
 
@@ -5894,7 +5898,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!fly_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));
 
-            type = fly_died ? MONS_SPRIGGAN : MONS_FIREFLY;
+            type = fly_died ? MONS_SPRIGGAN : MONS_VAMPIRE_MOSQUITO;
             define_monster(this);
             hit_points = min(old_hp, hit_points);
             flags          = old_flags;
@@ -5905,7 +5909,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!old_name.empty())
                 mname = old_name;
 
-            mounted_kill(this, fly_died ? MONS_FIREFLY : MONS_SPRIGGAN,
+            mounted_kill(this, fly_died ? MONS_VAMPIRE_MOSQUITO : MONS_SPRIGGAN,
                 !oppressor ? KILL_MISC
                 : (oppressor->is_player())
                   ? KILL_YOU : KILL_MON,

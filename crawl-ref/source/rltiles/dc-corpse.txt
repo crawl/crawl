@@ -43,7 +43,6 @@ cat1 CORPSE_FELID
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 killer_bee CORPSE_KILLER_BEE
 queen_bee CORPSE_QUEEN_BEE
-giant_firefly CORPSE_FIREFLY
 
 ## Lizards ('l')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
