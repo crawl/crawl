@@ -2095,7 +2095,7 @@ static void _potion_card(int power, deck_rarity_type rarity)
                                              1, POT_CONFUSION,
                                              1, POT_SLOWING,
                                              1, POT_DECAY,
-                                             0);
+                                             -1);
 
     if (power_level >= 1 && coinflip())
         pot = (coinflip() ? POT_RESISTANCE : POT_HASTE);

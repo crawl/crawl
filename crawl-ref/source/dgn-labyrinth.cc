@@ -107,7 +107,7 @@ static void _labyrinth_place_items(const coord_def &end)
                                        8, OBJ_BOOKS,
                                        4, OBJ_STAVES,
                                        4, OBJ_RODS,
-                                       0);
+                                       -1);
 
         const int treasure_item =
             items(1, glopop, OBJ_RANDOM, true,
