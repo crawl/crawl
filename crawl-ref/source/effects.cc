@@ -876,7 +876,7 @@ static void _set_allies_withdraw(const coord_def &target)
         if (mons_class_flag(mi->type, M_STATIONARY))
             continue;
         mi->behaviour = BEH_WITHDRAW;
-        mi->target = target;
+        mi->target = clamp_in_bounds(target);
         mi->patrol_point = rally_point;
         mi->foe = MHITNOT;
 
