@@ -326,7 +326,7 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
                                                    3,   MONS_SNAPPING_TURTLE,
                                                    2,   MONS_ALLIGATOR_SNAPPING_TURTLE,
                                                    100, RANDOM_MONSTER,
-                                                   0);
+                                                   -1);
 
     if (basetype == RANDOM_MONSTER && one_chance_in(4))
     {

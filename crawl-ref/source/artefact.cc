@@ -737,7 +737,7 @@ static void _get_randart_properties(const item_def &item,
                 4, SPWPN_VORPAL,
                 4, SPWPN_FLAMING,
                 4, SPWPN_FREEZING,
-                0);
+                -1);
 
             if (atype == WPN_BLOWGUN)
                 proprt[ARTP_BRAND] = coinflip() ? SPWPN_SPEED : SPWPN_EVASION;
@@ -781,7 +781,7 @@ static void _get_randart_properties(const item_def &item,
                 13, SPWPN_PAIN,
                 13, SPWPN_ANTIMAGIC,
                  3, SPWPN_DISTORTION,
-                 0);
+                 -1);
         }
 
         // no brand = magic flag to reject and retry

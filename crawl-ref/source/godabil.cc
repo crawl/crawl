@@ -3730,7 +3730,7 @@ static void _gozag_add_bad_potion(CrawlVector &vec)
                                                     10, POT_LIGNIFY,
                                                      5, POT_DEGENERATION,
                                                      2, POT_STRONG_POISON,
-                                                     0);
+                                                     -1);
     vec.push_back(what);
 }
 

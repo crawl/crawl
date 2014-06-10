@@ -2365,7 +2365,7 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
                                    5, MONS_WRAITH,
                                    2, MONS_FREEZING_WRAITH,
                                    2, MONS_PHANTASMAL_WARRIOR,
-                                   0);
+                                   -1);
 
         if (monster *mons = create_monster(
                 mgen_data(mon,

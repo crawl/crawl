@@ -117,7 +117,7 @@ static dungeon_feature_type _abyss_proto_feature()
                                    300, DNGN_STONE_WALL,
                                    100, DNGN_METAL_WALL,
                                      1, DNGN_CLOSED_DOOR,
-                                     0);
+                                     -1);
 }
 
 static void _write_abyssal_features()

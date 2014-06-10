@@ -2156,7 +2156,7 @@ static void _rebrand_weapon(item_def& wpn)
                                     12, SPWPN_EVASION,
                                     5, SPWPN_ELECTROCUTION,
                                     3, SPWPN_CHAOS,
-                                    0);
+                                    -1);
         }
         else
         {
@@ -2170,7 +2170,7 @@ static void _rebrand_weapon(item_def& wpn)
                                     12, SPWPN_PROTECTION,
                                     8, SPWPN_VAMPIRICISM,
                                     3, SPWPN_CHAOS,
-                                    0);
+                                    -1);
         }
     }
 

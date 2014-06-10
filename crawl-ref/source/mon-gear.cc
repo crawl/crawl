@@ -346,7 +346,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type = random_choose_weighted(5, WPN_MORNINGSTAR, 5, WPN_GREAT_MACE,
                                                5, WPN_HALBERD,     8, WPN_GLAIVE,
                                                5, WPN_GREAT_SWORD, 10, WPN_BROAD_AXE,
-                                               15, WPN_BATTLEAXE, 0);
+                                               15, WPN_BATTLEAXE, -1);
         if (coinflip())
         {
             force_item  = true;
@@ -370,14 +370,14 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         {
             item.sub_type = random_choose_weighted(5, WPN_MORNINGSTAR, 5, WPN_GREAT_MACE,
                                                    5, WPN_GREAT_SWORD, 10, WPN_BROAD_AXE,
-                                                   15, WPN_BATTLEAXE, 0);
+                                                   15, WPN_BATTLEAXE, -1);
         }
         else
         {
             item.sub_type = random_choose_weighted(5, WPN_FLAIL, 5, WPN_MACE,
                                                    5, WPN_SPEAR, 5, WPN_HALBERD,
                                                    5, WPN_GREAT_SWORD, 10, WPN_WAR_AXE,
-                                                   15, WPN_HAND_AXE, 0);
+                                                   15, WPN_HAND_AXE, -1);
         }
 
         if (coinflip())
@@ -420,7 +420,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                           random_choose_weighted(2, SPWPN_FLAMING,
                                                  2, SPWPN_FREEZING,
                                                  1, SPWPN_ELECTROCUTION,
-                                                 0));
+                                                 -1));
         item.plus  += random2(3);
         item.plus2 += random2(3);
         break;
@@ -431,7 +431,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = random_choose_weighted(3, WPN_SPEAR,
                                                 1, WPN_HALBERD,
                                                 1, WPN_GLAIVE,
-                                                0);
+                                                -1);
         item.plus  += -2 + random2(4);
         item.plus2 += -1 + random2(2);
         break;
@@ -472,7 +472,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                 20, WPN_MACE,        15, WPN_WHIP,
                 10, WPN_TRIDENT,     10, WPN_FALCHION,
                 6, WPN_WAR_AXE,      3, WPN_MORNINGSTAR,
-                0);
+                -1);
         }
         break;
 
@@ -485,14 +485,14 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                 10, WPN_TRIDENT,
                                                 10, WPN_FALCHION,
                                                 3, WPN_MORNINGSTAR,
-                                                0);
+                                                -1);
         break;
 
     case MONS_DUVESSA:
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(30, WPN_SHORT_SWORD,
                                                10, WPN_CUTLASS,
-                                               0);
+                                               -1);
         break;
 
     case MONS_MARA:
@@ -517,7 +517,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = random_choose_weighted(
             22, WPN_LONG_SWORD, 22, WPN_SHORT_SWORD, 17, WPN_SCIMITAR,
             17, WPN_SHORTBOW,   5,  WPN_LONGBOW,
-            0);
+            -1);
         break;
 
     case MONS_DEEP_ELF_BLADEMASTER:
@@ -535,7 +535,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.sub_type = random_choose_weighted(40, WPN_CUTLASS,
                                                    10, WPN_SHORT_SWORD,
                                                    2,  WPN_QUICK_BLADE,
-                                                   0);
+                                                   -1);
         }
         break;
     }
@@ -586,7 +586,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                 item.sub_type = random_choose_weighted(3, WPN_CROSSBOW,
                                                        2, WPN_SHORTBOW,
                                                        1, WPN_LONGBOW,
-                                                       0);
+                                                       -1);
             }
             break;
         }
@@ -622,7 +622,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             10, WPN_DIRE_FLAIL, 10, WPN_TRIDENT,
             9,  WPN_WAR_AXE,    9, WPN_FLAIL,
             1,  WPN_BROAD_AXE,  1, WPN_MORNINGSTAR,
-            0);
+            -1);
         break;
 
     case MONS_NAGA_RITUALIST:
@@ -630,7 +630,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(12, WPN_DAGGER,
                                                  5, WPN_SCIMITAR,
-                                                 0);
+                                                 -1);
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_VENOM);
         item.flags |= ISFLAG_KNOW_TYPE;
         if (coinflip())
@@ -656,7 +656,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                2, WPN_CLAYMORE,
                                                8, WPN_BATTLEAXE,
                                                2, WPN_EXECUTIONERS_AXE,
-                                               0);
+                                               -1);
         level = MAKE_GOOD_ITEM;
         break;
 
@@ -740,7 +740,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             3, WPN_GREAT_MACE,  2, WPN_DIRE_FLAIL,
             1, WPN_BARDICHE,    1, WPN_GLAIVE,
             1, WPN_BROAD_AXE,   1, WPN_HALBERD,
-            0);
+            -1);
 
         if (one_chance_in(4))
             item.plus += 1 + random2(3);
@@ -760,7 +760,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type = random_choose_weighted(
             5, WPN_LONG_SWORD,   4, WPN_FALCHION,
             3, WPN_WAR_AXE,      3, WPN_MORNINGSTAR,
-            0);
+            -1);
 
         break;
 
@@ -771,7 +771,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             3, WPN_GREAT_MACE,  2, WPN_DIRE_FLAIL,
             2, WPN_FLAIL,       2, WPN_MORNINGSTAR,
             1, WPN_MACE,
-            0);
+            -1);
 
         if (mon->type == MONS_IRONHEART_PRESERVER && one_chance_in(3))
         {
@@ -841,7 +841,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.base_type = OBJ_WEAPONS;
         item.sub_type = random_choose_weighted(100, WPN_TRIDENT,
                                                15, WPN_DEMON_TRIDENT,
-                                               0);
+                                               -1);
         if (!one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         break;
@@ -868,7 +868,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                     10, WPN_TRIDENT,
                                                     5, WPN_HALBERD,
                                                     5, WPN_GLAIVE,
-                                                    0);
+                                                    -1);
             break;
         }
         else
@@ -902,7 +902,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             item.sub_type = random_choose_weighted(2, WPN_SPEAR,
                                                    1, WPN_CLUB,
                                                    2, WPN_QUARTERSTAFF,
-                                                   0);
+                                                   -1);
         }
         break;
 
@@ -1023,7 +1023,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                7, WPN_EVENINGSTAR,
                                                7, WPN_BASTARD_SWORD,
                                                7, WPN_DEMON_TRIDENT,
-                                               0);
+                                               -1);
         if (x_chance_in_y(5, 9))
             level = MAKE_GOOD_ITEM;
         break;
@@ -1063,7 +1063,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                      4, SPWPN_VORPAL,
                                                      2, SPWPN_DISTORTION,
                                                      2, SPWPN_PAIN,
-                                                     0));
+                                                     -1));
         }
 
         item.plus  += random2(6);
@@ -1085,7 +1085,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                10, WPN_BASTARD_SWORD,
                                                13, WPN_EVENINGSTAR,
                                                14, WPN_DEMON_TRIDENT,
-                                               0);
+                                               -1);
         if (x_chance_in_y(5, 9))
             level = MAKE_GOOD_ITEM;
         else
@@ -1162,7 +1162,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
             set_item_ego_type(item, OBJ_WEAPONS,
                               random_choose_weighted(3, SPWPN_CHAOS,
                                                      1, SPWPN_DISTORTION,
-                                                     0));
+                                                     -1));
             item.plus  = random2(5);
             item.plus2 = random2(5);
         }
@@ -1190,7 +1190,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                           random_choose_weighted(3, SPWPN_DISTORTION,
                                                  2, SPWPN_VENOM,
                                                  1, SPWPN_DRAINING,
-                                                 0));
+                                                 -1));
         break;
 
     case MONS_MAURICE:
@@ -1260,7 +1260,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                 3, WPN_SPEAR,
                                                 2, WPN_GLAIVE,
                                                 5, WPN_SHORTBOW,
-                                                0);
+                                                -1);
 
         if (is_range_weapon(item))
         {
@@ -1296,7 +1296,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.sub_type  = random_choose_weighted(10, WPN_QUARTERSTAFF,
                                                  5, WPN_DAGGER,
                                                  2, WPN_SCIMITAR,
-                                                 0);
+                                                 -1);
         break;
 
     case MONS_SPRIGGAN:
@@ -1325,7 +1325,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                  5, WPN_BROAD_AXE,
                                                  8, WPN_FLAIL,
                                                 10, WPN_CUTLASS,
-                                                 0);
+                                                 -1);
         if (one_chance_in(4))
         {
             force_item = true;
@@ -1389,7 +1389,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                       4, SPWPN_FREEZING,
                                                       4, SPWPN_FLAMING,
                                                       2, SPWPN_PAIN,
-                                                      0));
+                                                      -1));
         }
 
         item.plus  += random2(4);
@@ -1435,14 +1435,14 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                 10, WPN_HALBERD,
                                                 10, WPN_GLAIVE,
                                                 10, WPN_DEMON_TRIDENT,
-                                                 0);
+                                                 -1);
         break;
 
     case MONS_BLOOD_SAINT:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(4, WPN_DAGGER,
                                                 1, WPN_QUARTERSTAFF,
-                                                0);
+                                                -1);
         break;
 
     case MONS_CHAOS_CHAMPION:
@@ -1488,7 +1488,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                     5, WPN_GLAIVE,
                                                     2, WPN_BARDICHE,
                                                     1, WPN_LAJATANG,
-                                                    0);
+                                                    -1);
         }
         break;
 
@@ -1510,7 +1510,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                10, WPN_FLAIL,
                                                 5, WPN_MORNINGSTAR,
                                                 2, WPN_DIRE_FLAIL,
-                                                0);
+                                                -1);
         break;
 
     case MONS_WAR_GARGOYLE:
@@ -1522,7 +1522,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                5, WPN_DIRE_FLAIL,
                                                5, WPN_GREAT_MACE,
                                                1, WPN_LAJATANG,
-                                               0);
+                                               -1);
         break;
 
         case MONS_IRON_DEVIL:
@@ -1531,7 +1531,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
                                                    1, WPN_DIRE_FLAIL,
                                                    2, WPN_BATTLEAXE,
                                                    1, WPN_GREAT_SWORD,
-                                                   0);
+                                                   -1);
 
     default:
         break;
@@ -2042,7 +2042,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                     2, ARM_RING_MAIL,
                                                     1, ARM_SCALE_MAIL,
                                                     1, ARM_CHAIN_MAIL,
-                                                    0);
+                                                    -1);
         }
         else
             return;
@@ -2082,7 +2082,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(3, ARM_LEATHER_ARMOUR,
                                                 2, ARM_RING_MAIL,
-                                                0);
+                                                -1);
         break;
 
     case MONS_TERENCE:
@@ -2090,7 +2090,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type  = random_choose_weighted(1, ARM_RING_MAIL,
                                                 3, ARM_SCALE_MAIL,
                                                 2, ARM_CHAIN_MAIL,
-                                                0);
+                                                -1);
         break;
 
     case MONS_SLAVE:
@@ -2119,7 +2119,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type = random_choose_weighted(8, ARM_CHAIN_MAIL,
                                                10, ARM_PLATE_ARMOUR,
                                                1, ARM_CRYSTAL_PLATE_ARMOUR,
-                                               0);
+                                               -1);
         break;
 
     case MONS_JORGRUN:
@@ -2174,7 +2174,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.sub_type = random_choose_weighted(3, ARM_MOTTLED_DRAGON_ARMOUR,
                                                1, ARM_SWAMP_DRAGON_ARMOUR,
                                                6, ARM_FIRE_DRAGON_ARMOUR,
-                                               0);
+                                               -1);
         break;
 
     case MONS_UNBORN:
@@ -2194,7 +2194,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = random_choose_weighted(7, ARM_CHAIN_MAIL,
                                                 1, ARM_PLATE_ARMOUR,
-                                                0);
+                                                -1);
         break;
 
     case MONS_MERFOLK_IMPALER:
@@ -2203,7 +2203,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                60, ARM_LEATHER_ARMOUR,
                                                5, ARM_TROLL_LEATHER_ARMOUR,
                                                5, ARM_STEAM_DRAGON_ARMOUR,
-                                               0);
+                                               -1);
         break;
 
     case MONS_MERFOLK_JAVELINEER:
@@ -2423,7 +2423,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                 5, ARM_SCALE_MAIL,
                                                 3, ARM_CHAIN_MAIL,
                                                 2, ARM_PLATE_ARMOUR,
-                                                0);
+                                                -1);
         break;
 
     case MONS_BLOOD_SAINT:
@@ -2466,7 +2466,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
                                                   5, ARM_FIRE_DRAGON_ARMOUR,
                                                   5, ARM_ICE_DRAGON_ARMOUR,
                                                   5, ARM_MOTTLED_DRAGON_ARMOUR,
-                                                  0);
+                                                  -1);
         break;
 
     default:

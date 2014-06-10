@@ -798,7 +798,7 @@ void attack::chaos_affects_defender()
             level1_chance, 1,
             level2_chance, 2,
             level3_chance, 3,
-            0);
+            -1);
 
         miscast_level  = level;
         miscast_type   = SPTYP_RANDOM;
@@ -909,7 +909,7 @@ brand_type attack::random_chaos_brand()
                      5, SPWPN_ANTIMAGIC,
                      2, SPWPN_CONFUSE,
                      2, SPWPN_DISTORTION,
-                     0));
+                     -1));
 
         if (one_chance_in(3))
             break;
