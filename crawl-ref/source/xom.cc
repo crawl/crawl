@@ -956,7 +956,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
             // If the launcher alters its ammo, then branding the
             // monster's ammo won't be an upgrade.
             int brand = get_weapon_brand(item);
-            if (brand == SPWPN_FLAME || brand == SPWPN_FROST
+            if (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
                 || brand == SPWPN_VENOM)
             {
                 special_launcher = true;

@@ -3692,6 +3692,13 @@ void unmarshallItem(reader &th, item_def &item)
         item.special = SPWPN_NORMAL;
     }
 
+    // Not putting these in a minor tag since it's possible for an old
+    // random monster spawn list to place flame/frost weapons.
+    if (item.base_type == OBJ_WEAPONS && item.special == SPWPN_FROST)
+        item.special = SPWPN_FREEZING;
+    if (item.base_type == OBJ_WEAPONS && item.special == SPWPN_FLAME)
+        item.special = SPWPN_FLAMING;
+
     if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_HORN_OF_GERYON
         && th.getMinorVersion() < TAG_MINOR_HORN_GERYON_CHANGE)
     {

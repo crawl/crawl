@@ -224,12 +224,12 @@ void ghost_demon::init_random_demon()
                || brand == SPWPN_ORC_SLAYING
                || brand == SPWPN_RETURNING
                || brand == SPWPN_REACHING
+               || brand == SPWPN_FLAME
+               || brand == SPWPN_FROST
 #endif
                || brand == SPWPN_DRAGON_SLAYING
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_EVASION
-               || brand == SPWPN_FLAME
-               || brand == SPWPN_FROST
                );
     }
 

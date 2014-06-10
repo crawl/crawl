@@ -1078,10 +1078,8 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPWPN_CHAOS:
             case SPWPN_DRAINING:
-            case SPWPN_FLAME:
             case SPWPN_FLAMING:
             case SPWPN_FREEZING:
-            case SPWPN_FROST:
             case SPWPN_HOLY_WRATH:
                 valued *= 18;
                 break;

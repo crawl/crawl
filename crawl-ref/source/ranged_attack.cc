@@ -422,8 +422,6 @@ bool ranged_attack::apply_damage_brand(const char *what)
             || brand == SPWPN_HOLY_WRATH
             || brand == SPWPN_ELECTROCUTION
             || brand == SPWPN_VENOM
-            || brand == SPWPN_FLAME
-            || brand == SPWPN_FROST
             || brand == SPWPN_CHAOS))
     {
         return false;
@@ -656,8 +654,7 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_FLAME:
         if (using_weapon()
-            && (get_weapon_brand(*weapon) == SPWPN_FROST
-                || get_weapon_brand(*weapon) == SPWPN_FREEZING))
+            && get_weapon_brand(*weapon) == SPWPN_FREEZING)
         {
             break;
         }
@@ -669,8 +666,7 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_FROST:
         if (using_weapon()
-            && (get_weapon_brand(*weapon) == SPWPN_FLAME
-                || get_weapon_brand(*weapon) == SPWPN_FLAMING))
+            && get_weapon_brand(*weapon) == SPWPN_FLAMING)
         {
             break;
         }

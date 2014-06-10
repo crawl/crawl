@@ -860,21 +860,37 @@ static string _describe_weapon(const item_def &item, bool verbose)
         switch (spec_ench)
         {
         case SPWPN_FLAMING:
-            description += "It emits flame when wielded, causing extra "
-                "injury to most foes and up to double damage against "
-                "particularly susceptible opponents.";
-            if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
+            if (is_range_weapon(item))
             {
-                description += " Big, fiery blades are also staple armaments "
-                    "of hydra-hunters.";
+                description += "It turns projectiles fired from it into "
+                    "bolts of flame.";
+            }
+            else
+            {
+                description += "It emits flame when wielded, causing extra "
+                    "injury to most foes and up to double damage against "
+                    "particularly susceptible opponents.";
+                if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
+                {
+                    description += " Big, fiery blades are also staple armaments "
+                        "of hydra-hunters.";
+                }
             }
             break;
         case SPWPN_FREEZING:
-            description += "It has been specially enchanted to freeze "
-                "those struck by it, causing extra injury to most foes "
-                "and up to double damage against particularly "
-                "susceptible opponents. It can also slow down "
-                "cold-blooded creatures.";
+            if (is_range_weapon(item))
+            {
+                description += "It turns projectiles fired from it into "
+                    "bolts of frost.";
+            }
+            else
+            {
+                description += "It has been specially enchanted to freeze "
+                    "those struck by it, causing extra injury to most foes "
+                    "and up to double damage against particularly "
+                    "susceptible opponents. It can also slow down "
+                    "cold-blooded creatures.";
+            }
             break;
         case SPWPN_HOLY_WRATH:
             description += "It has been blessed by the Shining One to "
@@ -930,14 +946,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
                 description += "It inflicts extra damage upon your "
                     "enemies.";
             }
-            break;
-        case SPWPN_FLAME:
-            description += "It turns projectiles fired from it into "
-                "bolts of flame.";
-            break;
-        case SPWPN_FROST:
-            description += "It turns projectiles fired from it into "
-                "bolts of frost.";
             break;
         case SPWPN_CHAOS:
             if (is_range_weapon(item))

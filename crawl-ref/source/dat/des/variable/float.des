@@ -2281,8 +2281,8 @@ NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   D:14-15, Depths, !Depths:$
-MONS:    orc knight ; wand of frost . crossbow ego:flame . bolt ego:none . chain mail / \
-         orc knight ; wand of flame . crossbow ego:frost . bolt ego:none . chain mail
+MONS:    orc knight ; wand of frost . crossbow ego:flaming . bolt ego:none . chain mail / \
+         orc knight ; wand of flame . crossbow ego:freezing . bolt ego:none . chain mail
 MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
 MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
          mermaid ; chain mail . javelin ego:poisoned
@@ -2743,7 +2743,7 @@ MONS: flying skull
 ITEM: bolt ego:exploding q:5
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
-ITEM: crossbow ego:flame w:9 ident:type / crossbow unrand:hellfire w:1
+ITEM: crossbow ego:flaming w:9 ident:type / crossbow unrand:hellfire w:1
 SUBST: ( = ()
 TILE: c = wall_marble
 MAP

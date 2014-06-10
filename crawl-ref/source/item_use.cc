@@ -2123,7 +2123,6 @@ static bool _god_hates_brand(const int brand)
 
     if (you_worship(GOD_DITHMENOS)
         && (brand == SPWPN_FLAMING
-            || brand == SPWPN_FLAME
             || brand == SPWPN_CHAOS))
     {
         return true;
@@ -2150,8 +2149,8 @@ static void _rebrand_weapon(item_def& wpn)
         if (is_range_weapon(wpn))
         {
             new_brand = random_choose_weighted(
-                                    30, SPWPN_FLAME,
-                                    30, SPWPN_FROST,
+                                    30, SPWPN_FLAMING,
+                                    30, SPWPN_FREEZING,
                                     20, SPWPN_VENOM,
                                     20, SPWPN_VORPAL,
                                     12, SPWPN_EVASION,
@@ -2198,13 +2197,11 @@ static void _brand_weapon(item_def &wpn)
         mprf("%s emits a brilliant flash of light!",itname.c_str());
         break;
 
-    case SPWPN_FLAME:
     case SPWPN_FLAMING:
         flash_colour = RED;
         mprf("%s is engulfed in flames!", itname.c_str());
         break;
 
-    case SPWPN_FROST:
     case SPWPN_FREEZING:
         flash_colour = LIGHTCYAN;
         mprf("%s is covered with a thin layer of ice!", itname.c_str());

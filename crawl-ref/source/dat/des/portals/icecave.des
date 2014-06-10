@@ -213,8 +213,8 @@ function ice_cave_caverns_natural_giant_loot(e)
           glaive " .. goodfreezeweap .. " w:4 / \
           great sword " .. goodfreezeweap .. " w:2 / nothing")
   e.item("book of ice / randbook disc:ice numspells:6 w:2 / \
-          crossbow ego:frost good_item no_uniq ident:type / \
-          longbow ego:frost good_item no_uniq ident:type / nothing w:20")
+          crossbow ego:freezing good_item no_uniq ident:type / \
+          longbow ego:freezing good_item no_uniq ident:type / nothing w:20")
   e.item("ring of ice / ring of protection from cold / wand of cold / \
           arrow ego:frost q:25 / bolt ego:frost q:20 / nothing")
 end

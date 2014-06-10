@@ -876,7 +876,8 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
             mpr("It bursts into flame!");
             break;
         case SPWPN_FREEZING:
-            mpr("It glows with a cold blue light!");
+            mpr(is_range_weapon(item) ? "It is covered in frost."
+                                      : "It glows with a cold blue light!");
             break;
         case SPWPN_HOLY_WRATH:
             mpr("It softly glows with a divine radiance!");
@@ -889,12 +890,6 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
             break;
         case SPWPN_DRAINING:
             mpr("You sense an unholy aura.");
-            break;
-        case SPWPN_FLAME:
-            mpr("It bursts into flame!");
-            break;
-        case SPWPN_FROST:
-            mpr("It is covered in frost.");
             break;
         case SPWPN_DISTORTION:
             mpr("Its appearance distorts for a moment.");
@@ -1386,9 +1381,9 @@ static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
     switch (ammo_brand)
     {
     case SPMSL_FLAME:
-        return bow_brand != SPWPN_FLAME;
+        return bow_brand != SPWPN_FLAMING;
     case SPMSL_FROST:
-        return bow_brand != SPWPN_FROST;
+        return bow_brand != SPWPN_FREEZING;
     case SPMSL_CHAOS:
         return bow_brand != SPWPN_CHAOS;
     case SPMSL_PENETRATION:
