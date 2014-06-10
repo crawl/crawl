@@ -983,7 +983,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_weight = false)
     return x_chance_in_y(weight, 10);
 }
 
-static mutation_type _get_randmut(mut_use_type mt)
+static mutation_type _get_mut_with_use(mut_use_type mt)
 {
     int cweight = random2(total_weight[mt]);
     for (unsigned i = 0; i < ARRAYSZ(mut_data); ++i)
@@ -1003,21 +1003,9 @@ static mutation_type _get_randmut(mut_use_type mt)
     die("Error while selecting mutations");
 }
 
-static mutation_type _get_randmut_with_retries(mut_use_type mt)
-{
-    for (int attempt = 0; attempt < 100; ++attempt)
-    {
-        mutation_type mut = _get_randmut(mt);
-        if (mut != NUM_MUTATIONS)
-            return mut;
-    }
-
-    return NUM_MUTATIONS;
-}
-
 static mutation_type _get_random_slime_mutation()
 {
-    return _get_randmut(MU_USE_JIYVA);
+    return _get_mut_with_use(MU_USE_JIYVA);
 }
 
 static mutation_type _delete_random_slime_mutation()
@@ -1057,7 +1045,7 @@ static mutation_type _get_random_xom_mutation()
         if (one_chance_in(1000))
             return NUM_MUTATIONS;
         else if (one_chance_in(5))
-            mutat = _get_randmut(MU_USE_XOM);
+            mutat = _get_mut_with_use(MU_USE_XOM);
     }
     while (!_accept_mutation(mutat, false));
 
@@ -1066,12 +1054,12 @@ static mutation_type _get_random_xom_mutation()
 
 static mutation_type _get_random_corrupt_mutation()
 {
-    return _get_randmut(MU_USE_CORRUPT);
+    return _get_mut_with_use(MU_USE_CORRUPT);
 }
 
 static mutation_type _get_random_qazlal_mutation()
 {
-    return _get_randmut(MU_USE_QAZLAL);
+    return _get_mut_with_use(MU_USE_QAZLAL);
 }
 
 static mutation_type _get_random_mutation(mutation_type mutclass)
@@ -1095,7 +1083,14 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
             die("invalid mutation class: %d", mutclass);
     }
 
-    return _get_randmut_with_retries(mt);
+    for (int attempt = 0; attempt < 100; ++attempt)
+    {
+        mutation_type mut = _get_mut_with_use(mt);
+        if (mut != NUM_MUTATIONS)
+            return mut;
+    }
+
+    return NUM_MUTATIONS;
 }
 
 // Tries to give you the mutation by deleting a conflicting
