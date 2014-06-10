@@ -65,11 +65,6 @@ bool got_curare_roll(const int item_level)
                          (364 - 7 * item_level) / 25);
 }
 
-static bool _got_distortion_roll(const int item_level)
-{
-    return one_chance_in(25);
-}
-
 static int _exciting_colour()
 {
     switch (random2(3))
@@ -930,7 +925,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(25))
                 rc = SPWPN_PAIN;
 
-            if (_got_distortion_roll(item_level))
+            if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(3) && (rc == SPWPN_NORMAL || one_chance_in(5)))
@@ -959,7 +954,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(25))
                 rc = SPWPN_ANTIMAGIC;
 
-            if (_got_distortion_roll(item_level))
+            if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(10))
@@ -1005,7 +1000,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
-            if (_got_distortion_roll(item_level))
+            if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(5))
@@ -1047,7 +1042,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
-            if (_got_distortion_roll(item_level))
+            if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(3) && (rc == SPWPN_NORMAL || one_chance_in(5)))
@@ -1073,7 +1068,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_PAIN;
 
-            if (_got_distortion_roll(item_level))
+            if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(10))
@@ -1113,7 +1108,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(10))
                 rc = SPWPN_VAMPIRICISM;
 
-            if (_got_distortion_roll(item_level))
+            if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(5) && (rc == SPWPN_NORMAL || one_chance_in(6)))
@@ -1166,7 +1161,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(30))
                 rc = SPWPN_PAIN;
 
-            if (_got_distortion_roll(item_level))
+            if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(10))
@@ -1187,7 +1182,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_SPEED;
             else if (one_chance_in(12))
                 rc = SPWPN_PAIN;
-            else if (_got_distortion_roll(item_level))
+            else if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
             else if (one_chance_in(9))
                 rc = SPWPN_PROTECTION;
