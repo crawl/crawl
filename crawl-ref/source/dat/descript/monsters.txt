@@ -1604,7 +1604,7 @@ are too big to embrace a small creature like you.
 large abomination
 
 A large and hideous conglomeration of mangled body parts, demonically possessed
-and altered in ways that challenge your sanity.
+and altered in ways that challenge sanity.
 %%%%
 lava snake
 
