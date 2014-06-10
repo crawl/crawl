@@ -41,14 +41,36 @@ struct demon_mutation_info
         : mut(m), when(w), facet(f) { }
 };
 
+enum mut_use_type // Which gods/effects use these mutations?
+{
+    MU_USE_NONE,     // unused
+    MU_USE_GOOD,     // used by benemut etc
+    MU_USE_MIN     = MU_USE_GOOD,
+    MU_USE_BAD,      // used by malmut etc
+    MU_USE_JIYVA,    // jiyva-only muts
+    MU_USE_QAZLAL,   // qazlal wrath
+    MU_USE_XOM,      // xom being xom
+    MU_USE_CORRUPT,  // wretched stars
+    NUM_MU_USE
+};
+
+#define MFLAG(mt) (1 << (mt))
+#define MUTFLAG_NONE    MFLAG(MU_USE_NONE)
+#define MUTFLAG_GOOD    MFLAG(MU_USE_GOOD)
+#define MUTFLAG_BAD     MFLAG(MU_USE_BAD)
+#define MUTFLAG_JIYVA   MFLAG(MU_USE_JIYVA)
+#define MUTFLAG_QAZLAL  MFLAG(MU_USE_QAZLAL)
+#define MUTFLAG_XOM     MFLAG(MU_USE_XOM)
+#define MUTFLAG_CORRUPT MFLAG(MU_USE_CORRUPT)
+
 struct mutation_def
 {
     mutation_type mutation;
-    short       rarity;     // Rarity of the mutation.
+    short       weight;     // Commonality of the mutation; bigger = appears
+                            // more often.
     short       levels;     // The number of levels of the mutation.
-    bool        bad;        // A mutation that's more bad than good. Xom uses
-                            // this to decide which mutations to hand out as
-                            // rewards.
+    unsigned int  uses;     // Bitfield holding types of effects that grant
+                            // this mutation. (MFLAG)
     bool        form_based; // A mutation that is suppressed when shapechanged.
     const char* short_desc; // What appears on the '%' screen.
     const char* have[3];    // What appears on the 'A' screen.
