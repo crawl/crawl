@@ -1097,7 +1097,7 @@ static void _remove_amulet_of_faith(item_def &item)
             you.attribute[ATTR_GOZAG_POTIONS] += 2;
             you.attribute[ATTR_GOZAG_SHOPS]   += 2;
 
-            simple_god_message(" adjusts your offered prices.");
+            simple_god_message(" increases your offered prices.");
             return;
         }
 
@@ -1183,6 +1183,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
     case AMU_FAITH:
         mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
              you_worship(GOD_NO_GOD) ? "strange " : "");
+        if (you_worship(GOD_GOZAG))
+            simple_god_message(" discounts your offered prices.");
         break;
 
     case AMU_THE_GOURMAND:
