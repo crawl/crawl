@@ -759,7 +759,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_EXECUTIONERS_AXE,
                              WPN_QUICK_BLADE,
                              WPN_CLAYMORE,
-                             0);
+                             -1);
     }
     else if (x_chance_in_y(item_level, 20))
     {
@@ -781,7 +781,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_TRIDENT,
                              WPN_FLAIL,
                              WPN_CUTLASS,
-                             0);
+                             -1);
     }
     else
     {
@@ -794,7 +794,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
                              WPN_CLUB,
                              WPN_WHIP,
                              WPN_SHORT_SWORD,
-                             0);
+                             -1);
     }
 }
 
