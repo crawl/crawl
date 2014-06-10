@@ -1721,7 +1721,10 @@ static void _upgrade_body_armour(item_def &arm)
 {
     // Promote from robe up through plate.
     if (arm.sub_type >= ARM_FIRST_MUNDANE_BODY
-        && arm.sub_type < ARM_LAST_MUNDANE_BODY)
+        && arm.sub_type < ARM_LAST_MUNDANE_BODY
+        // These are supposed to be robe-only.
+        && arm.special != SPARM_ARCHAMGI
+        && arm.special != SPARM_RESISTANCE)
     {
         arm.sub_type++;
     }
