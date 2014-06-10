@@ -76,8 +76,7 @@ T random_choose_weighted(int weight, T first, ...)
     while (nargs-- > 0)
     {
         const int nweight = va_arg(args, int);
-
-        if (nweight == -1)
+        if (!nweight)
             break;
 
         const int choice = va_arg(args, int);

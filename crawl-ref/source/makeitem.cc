@@ -1492,7 +1492,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     10, SPMSL_PARALYSIS,
                                     10, SPMSL_FRENZY,
                                     nw, SPMSL_POISONED,
-                                    -1);
+                                    0);
         break;
     case MI_ARROW:
         rc = random_choose_weighted(30, SPMSL_FLAME,
@@ -1500,7 +1500,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     20, SPMSL_POISONED,
                                     15, SPMSL_DISPERSAL,
                                     nw, SPMSL_NORMAL,
-                                    -1);
+                                    0);
         break;
     case MI_BOLT:
         rc = random_choose_weighted(30, SPMSL_FLAME,
@@ -1510,7 +1510,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     15, SPMSL_SILVER,
                                     10, SPMSL_STEEL,
                                     nw, SPMSL_NORMAL,
-                                    -1);
+                                    0);
         break;
     case MI_JAVELIN:
         rc = random_choose_weighted(30, SPMSL_RETURNING,
@@ -1519,7 +1519,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     21, SPMSL_STEEL,
                                     20, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL,
-                                    -1);
+                                    0);
         break;
     case MI_TOMAHAWK:
         rc = random_choose_weighted(15, SPMSL_POISONED,
@@ -1528,7 +1528,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     12, SPMSL_DISPERSAL,
                                     28, SPMSL_RETURNING,
                                     nw, SPMSL_NORMAL,
-                                    -1);
+                                    0);
         break;
 #if TAG_MAJOR_VERSION == 34
     case MI_DART:
@@ -1547,13 +1547,13 @@ static special_missile_type _determine_missile_brand(const item_def& item,
                                     15, SPMSL_SILVER,
                                     20, SPMSL_EXPLODING,
                                     nw, SPMSL_NORMAL,
-                                    -1);
+                                    0);
         break;
     case MI_THROWING_NET:
         rc = random_choose_weighted(30, SPMSL_STEEL,
                                     30, SPMSL_SILVER,
                                     nw, SPMSL_NORMAL,
-                                    -1);
+                                    0);
         break;
     }
 
@@ -1674,7 +1674,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    2,  MI_JAVELIN,
                                    1,  MI_THROWING_NET,
                                    1,  MI_LARGE_ROCK,
-                                   -1);
+                                   0);
     }
 
     // No fancy rocks -- break out before we get to special stuff.
@@ -1790,7 +1790,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
                                    120, SPARM_POSITIVE_ENERGY,
                                    240, SPARM_REFLECTION,
                                    480, SPARM_PROTECTION,
-                                     -1);
+                                     0);
         break;
 
     case ARM_CLOAK:
@@ -1807,7 +1807,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
                                         2, SPARM_INTELLIGENCE,
                                         2, SPARM_SEE_INVISIBLE,
                                         1, SPARM_SPIRIT_SHIELD,
-                                        -1);
+                                        0);
         }
         break;
 
@@ -1841,7 +1841,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
                                     2, SPARM_POSITIVE_ENERGY,
                                     4, SPARM_MAGIC_RESISTANCE,
                                     4, SPARM_ARCHMAGI,
-                                    -1);
+                                    0);
 
         // Only ever generate robes of archmagi for random pieces of armour,
         // for whatever reason.
@@ -2181,7 +2181,7 @@ static void _generate_food_item(item_def& item, int force_quant, int force_type)
                                                 15, FOOD_BEEF_JERKY,
                                                 10, FOOD_PIZZA,
                                                  5, FOOD_ROYAL_JELLY,
-                                                 -1);
+                                                 0);
     }
     else
         item.sub_type = force_type;
@@ -2259,7 +2259,7 @@ static void _generate_potion_item(item_def& item, int force_type,
                                              6, POT_PORRIDGE,
                                              1, POT_EXPERIENCE,
                                              1, POT_DECAY,
-                                             -1);
+                                             0);
         }
         while (stype == POT_POISON && item_level < 1
                || stype == POT_BERSERK_RAGE && item_level < 2
@@ -2694,7 +2694,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
             item.special = random_choose_weighted(8, DECK_RARITY_LEGENDARY,
                                                  20, DECK_RARITY_RARE,
                                                  72, DECK_RARITY_COMMON,
-                                                  -1);
+                                                  0);
         }
         init_deck(item);
     }
@@ -2760,7 +2760,7 @@ int items(bool allow_uniques,
                                    300, OBJ_MISSILES,
                                    360, OBJ_SCROLLS,
                                    400, OBJ_GOLD,
-                                     -1);
+                                     0);
 
         // misc items placement wholly dependent upon current depth {dlb}:
         if (item_level > 7 && x_chance_in_y(21 + item_level, 3500))
@@ -3160,7 +3160,7 @@ static armour_type _get_random_armour_type(int item_level)
             armtype = random_choose_weighted(333, ARM_SHIELD,
                                              500, ARM_BUCKLER,
                                              167, ARM_LARGE_SHIELD,
-                                               -1);
+                                               0);
         }
     }
 

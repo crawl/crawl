@@ -1489,7 +1489,7 @@ static bool _give_nemelex_gift(bool forced = false)
         misc_item_type gift_type = random_choose_weighted(
                                         8, MISC_DECK_OF_WAR,
                                         2, MISC_DECK_OF_ESCAPE,
-                                        -1);
+                                        0);
 
         int thing_created = items(1, OBJ_MISCELLANY, gift_type,
                                   true, 1, 0, 0, 0, GOD_NEMELEX_XOBEH);
@@ -1519,7 +1519,7 @@ static bool _give_nemelex_gift(bool forced = false)
                 common_weight, DECK_RARITY_COMMON,
                 rare_weight,   DECK_RARITY_RARE,
                 legend_weight, DECK_RARITY_LEGENDARY,
-                -1);
+                0);
 
             item_def &deck(mitm[thing_created]);
 

@@ -590,7 +590,7 @@ static void _ashenzari_sac_scroll(const item_def& item)
             scr = random_choose_weighted(wpn, SCR_CURSE_WEAPON,
                                          arm, SCR_CURSE_ARMOUR,
                                          jwl, SCR_CURSE_JEWELLERY,
-                                         -1);
+                                         0);
         }
         int it = items(0, OBJ_SCROLLS, scr, true, 0, 0, 0, 0, GOD_ASHENZARI);
         if (it == NON_ITEM)
