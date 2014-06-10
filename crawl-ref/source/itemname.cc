@@ -456,11 +456,11 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_DRAGON_SLAYING: return terse ? "slay drac" : "dragon slaying";
     case SPWPN_VENOM: return terse ? "venom" : "venom";
     case SPWPN_PROTECTION: return terse ? "protect" : "protection";
-    case SPWPN_EVASION: return terse ? "evade" : "evasion";
     case SPWPN_DRAINING: return terse ? "drain" : "draining";
     case SPWPN_SPEED: return terse ? "speed" : "speed";
     case SPWPN_PAIN: return terse ? "pain" : "pain";
     case SPWPN_DISTORTION: return terse ? "distort" : "distortion";
+    case SPWPN_REAPING: return terse ? "reap" : "reaping";
 
     case SPWPN_VAMPIRICISM:
         return terse ? "vamp" : ""; // non-terse already handled
@@ -485,11 +485,9 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_ANTIMAGIC: return terse ? "antimagic" : ""; // non-terse
                                                       // handled elsewhere
 
-    // ranged weapon brands
-    case SPWPN_FLAME: return terse ? "flame" : "flame";
-    case SPWPN_FROST: return terse ? "frost" : "frost";
+    // ranged
     case SPWPN_PENETRATION: return terse ? "penet" : "penetration";
-    case SPWPN_REAPING: return terse ? "reap" : "reaping";
+    case SPWPN_EVASION: return terse ? "evade" : "evasion";
 
     // both ranged and non-ranged
     case SPWPN_CHAOS: return terse ? "chaos" : "chaos";
@@ -500,6 +498,8 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     case SPWPN_REACHING: return terse ? "obsolete" : "reaching";
     case SPWPN_RETURNING: return terse ? "obsolete" : "returning";
     case SPWPN_CONFUSE: return terse ? "confuse" : "confusion";
+    case SPWPN_FLAME: return terse ? "obsolete" : "flame";
+    case SPWPN_FROST: return terse ? "obsolete" : "frost";
 #endif
     default: return terse ? "buggy" : "bugginess";
     }

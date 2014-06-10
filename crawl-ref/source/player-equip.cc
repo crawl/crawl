@@ -504,7 +504,8 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_FREEZING:
-                    mpr("It glows with a cold blue light!");
+                    mpr(is_range_weapon(item) ? "It is covered in frost."
+                                              : "It glows with a cold blue light!");
                     break;
 
                 case SPWPN_HOLY_WRATH:
@@ -544,14 +545,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_SPEED:
                     mprf("Your %s tingle!",
                          you.hand_name(true).c_str());
-                    break;
-
-                case SPWPN_FLAME:
-                    mpr("It bursts into flame!");
-                    break;
-
-                case SPWPN_FROST:
-                    mpr("It is covered in frost.");
                     break;
 
                 case SPWPN_VAMPIRICISM:

@@ -456,7 +456,7 @@ bool is_fiery_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_FLAMING || item_brand == SPWPN_FLAME)
+        if (item_brand == SPWPN_FLAMING)
             return true;
         }
         break;

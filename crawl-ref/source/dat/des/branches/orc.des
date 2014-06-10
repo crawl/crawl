@@ -881,7 +881,7 @@ NAME:   mines_bat_river
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 DEPTH:  Orc
 MONS:   bat
-MONS:   generate_awake orc ; shortbow ego:flame | shortbow ego:frost | shortbow ego:vorpal . arrow q:10
+MONS:   generate_awake orc ; shortbow ego:flaming | shortbow ego:freezing | shortbow ego:vorpal . arrow q:10
 NSUBST: . = 2:2 / 2:c
 NSUBST: c = *: 2 .
 KITEM:  d = arrow q:1

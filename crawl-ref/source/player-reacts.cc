@@ -532,15 +532,11 @@ static void _decrement_durations()
                     else
                         msg = " feels lighter.";
                     break;
-                case SPWPN_FLAME:
                 case SPWPN_FLAMING:
                     msg = " goes out.";
                     break;
                 case SPWPN_FREEZING:
                     msg = " stops glowing.";
-                    break;
-                case SPWPN_FROST:
-                    msg = "'s frost melts away.";
                     break;
                 case SPWPN_VENOM:
                     msg = " stops dripping with poison.";

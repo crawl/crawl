@@ -177,10 +177,7 @@ end
 function make_fiery_weapon (e, weapon)
     local weapon_string = ""
     for _, wt in ipairs(weapon) do
-        if string.find(wt, "bow") == nil
-          then weapon_string = weapon_string .. " / " .. wt .. " ego:flaming ident:type good_item"
-          else weapon_string = weapon_string .. " / " .. wt .. " ego:flame ident:type good_item"
-        end
+       weapon_string = weapon_string .. " / " .. wt .. " ego:flaming ident:type good_item"
     end
     local n_weapon = string.gsub(weapon_string, "%s*/$", "")
     e.item(n_weapon)
@@ -250,7 +247,7 @@ function fiery_guardians (e, intelligent, village)
         local ogrestuff = "great mace " .. flame .. " | giant club " .. flame
         local centaur = "centaur ; shortbow ego:none . arrow ego:flame"
         local centaurstuff = "robe " .. res
-                             .. " . shortbow ego:flame ident:type . arrow"
+                             .. " . shortbow ego:flaming ident:type . arrow"
         local elfstuff = "long sword " .. flame
                          .. " | short sword " .. flame
                          .. " . leather armour " .. res

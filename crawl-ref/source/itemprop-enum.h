@@ -86,8 +86,10 @@ enum brand_type // item_def.special
     SPWPN_DRAINING,
     SPWPN_SPEED,
     SPWPN_VORPAL,
+#if TAG_MAJOR_VERSION == 34
     SPWPN_FLAME,   // ranged, only
     SPWPN_FROST,   // ranged, only
+#endif
     SPWPN_VAMPIRICISM,
     SPWPN_PAIN,
     SPWPN_ANTIMAGIC,

@@ -224,7 +224,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     case GOD_DITHMENOS:
         // No fiery weapons.
         if (item.base_type == OBJ_WEAPONS
-            && (brand == SPWPN_FLAME || brand == SPWPN_FLAMING))
+            && brand == SPWPN_FLAMING)
         {
             return false;
         }
@@ -735,8 +735,8 @@ static void _get_randart_properties(const item_def &item,
                 2, SPWPN_SPEED,
                 4, SPWPN_VENOM,
                 4, SPWPN_VORPAL,
-                4, SPWPN_FLAME,
-                4, SPWPN_FROST,
+                4, SPWPN_FLAMING,
+                4, SPWPN_FREEZING,
                 0);
 
             if (atype == WPN_BLOWGUN)

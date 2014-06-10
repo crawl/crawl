@@ -983,9 +983,6 @@ brand_type attack::random_chaos_brand()
     case SPWPN_VAMPIRICISM:     brand_name += "vampiricism"; break;
     case SPWPN_VORPAL:          brand_name += "vorpal"; break;
     case SPWPN_ANTIMAGIC:       brand_name += "antimagic"; break;
-    // ranged weapon brands
-    case SPWPN_FLAME:           brand_name += "flame"; break;
-    case SPWPN_FROST:           brand_name += "frost"; break;
 
     // both ranged and non-ranged
     case SPWPN_CHAOS:           brand_name += "chaos"; break;
@@ -1641,7 +1638,6 @@ bool attack::apply_damage_brand(const char *what)
     brand = damage_brand == SPWPN_CHAOS ? random_chaos_brand() : damage_brand;
 
     if (brand != SPWPN_FLAMING && brand != SPWPN_FREEZING
-        && brand != SPWPN_FLAME && brand != SPWPN_FROST
         && brand != SPWPN_ELECTROCUTION && brand != SPWPN_VAMPIRICISM
         && !defender->alive())
     {
@@ -1652,7 +1648,6 @@ bool attack::apply_damage_brand(const char *what)
 
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
-            || brand == SPWPN_FLAME || brand == SPWPN_FROST
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_DRAGON_SLAYING
             || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRICISM
             || brand == SPWPN_ANTIMAGIC))
@@ -1664,7 +1659,6 @@ bool attack::apply_damage_brand(const char *what)
     switch (brand)
     {
     case SPWPN_FLAMING:
-    case SPWPN_FLAME:
         calc_elemental_brand_damage(BEAM_FIRE, defender->res_fire(),
                                     defender->is_icy() ? "melt" : "burn",
                                     what);
@@ -1673,7 +1667,6 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_FREEZING:
-    case SPWPN_FROST:
         calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze",
                                     what);
         defender->expose_to_element(BEAM_COLD, 2);

@@ -1117,19 +1117,13 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_SHORTBOW:
         case WPN_LONGBOW:
         case WPN_CROSSBOW:
-        {
-            const int tmp = random2(1000);
-            if (tmp < 480)
-                rc = SPWPN_FLAME;
-            else if (tmp < 730)
-                rc = SPWPN_FROST;
-            else if (tmp < 880)
-                rc = SPWPN_EVASION;
-            else if (tmp < 990)
-                rc = SPWPN_VORPAL;
-
+            rc = random_choose_weighted(48, SPWPN_FLAMING,
+                                        25, SPWPN_FREEZING,
+                                        15, SPWPN_EVASION,
+                                        11, SPWPN_VORPAL,
+                                         1, SPWPN_NORMAL,
+                                         0);
             break;
-        }
 
         case WPN_BLOWGUN:
             if (one_chance_in(30))
@@ -1274,11 +1268,11 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_CHAOS:
     case SPWPN_HOLY_WRATH:
     case SPWPN_ELECTROCUTION:
+    case SPWPN_FLAMING:
+    case SPWPN_FREEZING:
         break;
 
     // Melee-only brands.
-    case SPWPN_FLAMING:
-    case SPWPN_FREEZING:
     case SPWPN_DRAGON_SLAYING:
     case SPWPN_DRAINING:
     case SPWPN_VAMPIRICISM:
@@ -1291,8 +1285,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         break;
 
     // Ranged-only brands.
-    case SPWPN_FLAME:
-    case SPWPN_FROST:
     case SPWPN_PENETRATION:
     case SPWPN_EVASION:
         if (!is_range_weapon(item))
@@ -1304,6 +1296,8 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_RETURNING:
     case SPWPN_REACHING:
     case SPWPN_ORC_SLAYING:
+    case SPWPN_FLAME:
+    case SPWPN_FROST:
         return false;
 #endif
 

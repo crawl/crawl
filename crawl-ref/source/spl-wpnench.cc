@@ -23,25 +23,12 @@ static special_missile_type _convert_to_missile(brand_type which_brand)
     switch (which_brand)
     {
     case SPWPN_NORMAL: return SPMSL_NORMAL;
-    case SPWPN_FLAME: // deliberate fall through
     case SPWPN_FLAMING: return SPMSL_FLAME;
-    case SPWPN_FROST: // deliberate fall through
     case SPWPN_FREEZING: return SPMSL_FROST;
     case SPWPN_VENOM: return SPMSL_POISONED;
     case SPWPN_CHAOS: return SPMSL_CHAOS;
     default: return SPMSL_NORMAL; // there are no equivalents for the rest
                                   // of the ammo brands.
-    }
-}
-
-// Some launchers need to convert different brands.
-static brand_type _convert_to_launcher(brand_type which_brand)
-{
-    switch (which_brand)
-    {
-    case SPWPN_FREEZING: return SPWPN_FROST;
-    case SPWPN_FLAMING: return SPWPN_FLAME;
-    default: return which_brand;
     }
 }
 
@@ -51,9 +38,7 @@ static bool _ok_for_launchers(brand_type which_brand)
     {
     case SPWPN_NORMAL:
     case SPWPN_FREEZING:
-    case SPWPN_FROST:
     case SPWPN_FLAMING:
-    case SPWPN_FLAME:
     case SPWPN_VENOM:
     //case SPWPN_PAIN: -- no pain missile type yet
     case SPWPN_CHAOS:
@@ -115,10 +100,6 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
             mpr("You cannot enchant this weapon with this spell.");
             return SPRET_ABORT;
         }
-
-        // Otherwise, convert to the correct brand type, most specifically (but
-        // not necessarily only) flaming -> flame, freezing -> frost.
-        which_brand = _convert_to_launcher(which_brand);
     }
 
     fail_check();
@@ -137,19 +118,13 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     int duration_affected = 10;
     switch (which_brand)
     {
-    case SPWPN_FLAME:
     case SPWPN_FLAMING:
         msg += " bursts into flame!";
         duration_affected = 7;
         break;
 
-    case SPWPN_FROST:
-        msg += " frosts over!";
-        duration_affected = 7;
-        break;
-
     case SPWPN_FREEZING:
-        msg += " glows blue.";
+        msg += is_range_weapon(weapon) ? " frosts over!" : " glows blue.";
         duration_affected = 7;
         break;
 

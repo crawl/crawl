@@ -913,7 +913,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         item.plus     += 1 + random2(3);
         item.plus2    += 1 + random2(3);
         item.flags    |= ISFLAG_KNOW_TYPE;
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAME);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
     case MONS_YAKTAUR:
@@ -1264,7 +1264,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
         if (is_range_weapon(item))
         {
-            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAME);
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
             item.flags |= ISFLAG_KNOW_TYPE;
         }
 
@@ -1649,7 +1649,7 @@ static void _give_ammo(monster* mon, int level, bool mons_summoned)
             const int bow_brand  = get_weapon_brand(*launcher);
             const int ammo_brand = get_ammo_brand(mitm[thing_created]);
             if (ammo_brand != SPMSL_NORMAL
-                && (bow_brand == SPWPN_FLAME || bow_brand == SPWPN_FROST))
+                && (bow_brand == SPWPN_FLAMING || bow_brand == SPWPN_FREEZING))
             {
                 mitm[thing_created].special = SPMSL_NORMAL;
             }
