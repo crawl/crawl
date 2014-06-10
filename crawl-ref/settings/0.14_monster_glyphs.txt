@@ -29,7 +29,6 @@ mon_glyph += fire drake : red l
 mon_glyph += flayed ghost : red p
 mon_glyph += fungus : lightred f
 mon_glyph += ghost : lightgrey p
-mon_glyph += giant firefly : lightblue k
 mon_glyph += giant slug : green j
 mon_glyph += glowing shapeshifter : red @
 mon_glyph += hell knight : red @
