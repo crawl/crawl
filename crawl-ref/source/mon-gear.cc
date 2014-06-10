@@ -228,7 +228,8 @@ static item_def* make_item_for_monster(
     iflags_t flags);
 
 static void _give_weapon(monster* mon, int level, bool melee_only = false,
-                         bool give_aux_melee = true, bool spectral_orcs = false)
+                         bool give_aux_melee = true, bool spectral_orcs = false,
+                         bool merc = false)
 {
     bool force_item = false;
     bool force_uncursed = false;
@@ -238,7 +239,7 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
 
     item.base_type = OBJ_UNASSIGNED;
 
-    if (mon->type == MONS_DANCING_WEAPON)
+    if (mon->type == MONS_DANCING_WEAPON || merc)
         level = MAKE_GOOD_ITEM;
 
     // moved setting of quantity here to keep it in mind {dlb}
@@ -1986,7 +1987,7 @@ static void _give_shield(monster* mon, int level)
     }
 }
 
-static void _give_armour(monster* mon, int level, bool spectral_orcs)
+static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 {
     item_def               item;
 
@@ -2462,6 +2463,9 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         return;
     }
 
+    if (merc)
+       level = MAKE_GOOD_ITEM;
+
     // Only happens if something in above switch doesn't set it. {dlb}
     if (item.base_type == OBJ_UNASSIGNED)
         return;
@@ -2510,7 +2514,7 @@ void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spect
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
 
-void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
+void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs, bool merc)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
 
@@ -2520,8 +2524,8 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
     _give_scroll(mons, level_number);
     _give_wand(mons, level_number);
     _give_potion(mons, level_number);
-    _give_weapon(mons, level_number, false, true, spectral_orcs);
+    _give_weapon(mons, level_number, false, true, spectral_orcs, merc);
     _give_ammo(mons, level_number, mons_summoned);
-    _give_armour(mons, 1 + level_number / 2, spectral_orcs);
+    _give_armour(mons, 1 + level_number / 2, spectral_orcs, merc);
     _give_shield(mons, 1 + level_number / 2);
 }
