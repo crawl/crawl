@@ -2612,7 +2612,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
     mgen_data mg(merctypes[merc], BEH_HOSTILE, &you,
                  0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
 
-    mg.extra_flags |= MF_NO_REWARD;
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     // This is a bit of a hack to use give_monster_proper_name to feed
     // the mgen_data, but it gets the job done.
@@ -2622,6 +2622,8 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
         mg.mname = tempmon.mname;
     else
         mg.mname = make_name(random_int(), false);
+    // This is used for giving the merc better stuff in mon-gear.
+    mg.props["mercenary items"] = true;
 
     monster *mon = create_monster(mg);
 
