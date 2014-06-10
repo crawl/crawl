@@ -747,55 +747,21 @@ static bool _is_boring_item(int type, int sub_type)
 
 static weapon_type _determine_weapon_subtype(int item_level)
 {
-    weapon_type rc = WPN_UNKNOWN;
-
-    const weapon_type common_subtypes[] =
-    {
-        WPN_SLING,
-        WPN_SPEAR,
-        WPN_HAND_AXE,
-        WPN_MACE,
-        WPN_DAGGER, WPN_DAGGER,
-        WPN_CLUB,
-        WPN_WHIP,
-        WPN_SHORT_SWORD
-    };
-
-    const weapon_type good_common_subtypes[] =
-    {
-        WPN_QUARTERSTAFF,
-        WPN_FALCHION,
-        WPN_LONG_SWORD,
-        WPN_WAR_AXE,
-        WPN_TRIDENT,
-        WPN_FLAIL,
-        WPN_CUTLASS,
-    };
-
-    const weapon_type rare_subtypes[] =
-    {
-        WPN_LAJATANG,
-        WPN_DEMON_WHIP,
-        WPN_DEMON_BLADE,
-        WPN_DEMON_TRIDENT,
-        WPN_BASTARD_SWORD,
-        WPN_EVENINGSTAR,
-        WPN_EXECUTIONERS_AXE,
-        WPN_QUICK_BLADE,
-        WPN_CLAYMORE,
-    };
-
     if (item_level > 6 && one_chance_in(30)
         && x_chance_in_y(10 + item_level, 100))
     {
-        rc = RANDOM_ELEMENT(rare_subtypes);
+        return random_choose(WPN_LAJATANG,
+                             WPN_DEMON_WHIP,
+                             WPN_DEMON_BLADE,
+                             WPN_DEMON_TRIDENT,
+                             WPN_BASTARD_SWORD,
+                             WPN_EVENINGSTAR,
+                             WPN_EXECUTIONERS_AXE,
+                             WPN_QUICK_BLADE,
+                             WPN_CLAYMORE,
+                             0);
     }
-    else if (x_chance_in_y(20 - item_level, 20))
-        if (x_chance_in_y(7, item_level+7))
-            rc = RANDOM_ELEMENT(common_subtypes);
-        else
-            rc = RANDOM_ELEMENT(good_common_subtypes);
-    else
+    else if (x_chance_in_y(item_level, 20))
     {
         // Pick a weapon based on rarity.
         while (true)
@@ -803,13 +769,33 @@ static weapon_type _determine_weapon_subtype(int item_level)
             const int wpntype = random2(NUM_WEAPONS);
 
             if (x_chance_in_y(weapon_rarity(wpntype), 10))
-            {
-                rc = static_cast<weapon_type>(wpntype);
-                break;
-            }
+                return static_cast<weapon_type>(wpntype);
         }
     }
-    return rc;
+    else if (x_chance_in_y(item_level, item_level+7))
+    {
+        return random_choose(WPN_QUARTERSTAFF,
+                             WPN_FALCHION,
+                             WPN_LONG_SWORD,
+                             WPN_WAR_AXE,
+                             WPN_TRIDENT,
+                             WPN_FLAIL,
+                             WPN_CUTLASS,
+                             0);
+    }
+    else
+    {
+        return random_choose(WPN_SLING,
+                             WPN_SPEAR,
+                             WPN_HAND_AXE,
+                             WPN_MACE,
+                             // Not worth _weighted for one doubled type.
+                             WPN_DAGGER, WPN_DAGGER,
+                             WPN_CLUB,
+                             WPN_WHIP,
+                             WPN_SHORT_SWORD,
+                             0);
+    }
 }
 
 static bool _try_make_item_unrand(item_def& item, int force_type)
