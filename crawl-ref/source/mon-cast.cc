@@ -3626,7 +3626,7 @@ static monster_type _pick_vermin()
                                   2, MONS_TARANTELLA,
                                   2, MONS_JUMPING_SPIDER,
                                   3, MONS_DEMONIC_CRAWLER,
-                                  -1);
+                                  0);
 }
 
 static void _do_high_level_summon(monster* mons, bool monsterNearby,
@@ -4973,7 +4973,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                             2, MONS_SHADOW_IMP,
                             2, MONS_WHITE_IMP,
                             4, MONS_CRIMSON_IMP,
-                            -1),
+                            0),
                           SAME_ATTITUDE(mons), mons,
                           duration, spell_cast, mons->pos(), mons->foe, 0,
                           god));
@@ -5524,7 +5524,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                         40, MONS_SHINING_EYE,
                                         20, MONS_GREAT_ORB_OF_EYES,
                                         10, MONS_EYE_OF_DEVASTATION,
-                                         -1);
+                                         0);
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons, duration,
@@ -5601,7 +5601,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                        3, MONS_BALRUG,
                                        2, MONS_HELLION,
                                        1, MONS_BRIMSTONE_FIEND,
-                                       -1);
+                                       0);
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons, duration,
@@ -5818,7 +5818,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                               5, SPELL_GHOSTLY_FIREBALL,
                              10, SPELL_FIREBALL,
                              10, SPELL_FLASH_FREEZE,
-                              -1);
+                              0);
             range = spell_range(real_spell,
                                 12 * mons->spell_hd(real_spell),
                                 false);

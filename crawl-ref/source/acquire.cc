@@ -238,7 +238,7 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
                                                 3, ARM_STEAM_DRAGON_ARMOUR,
                                                 1, ARM_SWAMP_DRAGON_ARMOUR,
                                                 1, ARM_FIRE_DRAGON_ARMOUR,
-                                                -1);
+                                                0);
             }
 
             // Non-god acquirement not only has a much better chance, but
@@ -322,7 +322,7 @@ static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
                                              5, ARM_STORM_DRAGON_ARMOUR,
                                              5, ARM_GOLD_DRAGON_ARMOUR,
                                              5, ARM_PEARL_DRAGON_ARMOUR,
-                                             -1);
+                                             0);
         }
     }
 

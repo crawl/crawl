@@ -544,7 +544,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
             10, BEAM_PETRIFY,
             10, BEAM_AGILITY,
              2, BEAM_ENSNARE,
-            -1);
+            0);
     }
     while (beam->name == "arc of chaos"
            && (flavour == BEAM_BANISH
@@ -569,7 +569,7 @@ static beam_type _chaotic_reflection_flavour(bolt* beam)
             10, BEAM_SLEEP,
             10, BEAM_VULNERABILITY,
              2, BEAM_ENSNARE,
-             -1);
+             0);
 }
 
 bool bolt::visible() const

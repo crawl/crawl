@@ -1438,7 +1438,7 @@ static void _fixup_walls()
         {
             wall_type = random_choose_weighted(1, DNGN_GREEN_CRYSTAL_WALL,
                                                9, DNGN_METAL_WALL,
-                                               -1);
+                                               0);
         }
         break;
     }
@@ -3878,7 +3878,7 @@ static void _place_aquatic_in(vector<coord_def> &places, const pop_entry *pop,
 
             mg.base_type = mg.cls;
             int s = mons_skeleton(mg.cls) ? 2 : 0;
-            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, -1)];
+            mg.cls = lut[random_choose_weighted(s, 0, 8, 1, 1, 2, 0)];
         }
 
         place_monster(mg);
@@ -4628,7 +4628,7 @@ static object_class_type _superb_object_class()
             9, OBJ_STAVES,
             1, OBJ_RODS,
             10, OBJ_MISCELLANY,
-            -1);
+            0);
 }
 
 int dgn_place_item(const item_spec &spec,
@@ -5558,7 +5558,7 @@ static dungeon_feature_type _pick_an_altar()
                                          1, GOD_ELYVILON,
                                          1, GOD_SIF_MUNA,
                                          1, GOD_SHINING_ONE,
-                                         -1);
+                                         0);
             break;
 
         case BRANCH_ELF: // magic gods

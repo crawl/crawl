@@ -56,7 +56,7 @@ void init_pandemonium()
                                2, MONS_INFERNAL_DEMONSPAWN,
                                2, MONS_PUTRID_DEMONSPAWN,
                                2, MONS_TORTUROUS_DEMONSPAWN,
-                               -1);
+                               0);
 
         if (one_chance_in(10))
         {
@@ -103,7 +103,7 @@ void init_pandemonium()
                   2, MONS_WARMONGER,
                   2, MONS_CORRUPTER,
                   2, MONS_BLACK_SUN,
-                  -1);
+                  0);
         }
     }
 
