@@ -25,6 +25,7 @@
 #include "fineff.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -48,6 +49,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
+#include "shout.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -59,10 +61,9 @@
 #include "teleport.h"
 #include "terrain.h"
 #include "throw.h"
-#include "hints.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
-#include "shout.h"
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
@@ -2423,12 +2424,157 @@ void handle_monster_move(monster* mons)
     }
 }
 
+/**
+ * Let trapped monsters struggle against nets, webs, etc.
+ */
+void monster::struggle_against_net()
+{
+    if (is_stationary() || cannot_act() || asleep())
+        return;
+
+    int net = get_trapping_net(pos(), true);
+
+    if (net == NON_ITEM)
+    {
+        trap_def *trap = find_trap(pos());
+        if (trap && trap->type == TRAP_WEB)
+        {
+            if (props.exists(NEW_WEB_KEY))
+            {
+                props.erase(NEW_WEB_KEY);
+                return; // don't try to escape on the same turn you were
+                        // webbed!
+            }
+
+            if (coinflip())
+            {
+                if (mons_near(this) && !visible_to(&you))
+                    mpr("Something you can't see is thrashing in a web.");
+                else
+                {
+                    simple_monster_message(this,
+                                           " struggles to get unstuck from the web.");
+                }
+                return;
+            }
+            maybe_destroy_web(this);
+        }
+        del_ench(ENCH_HELD);
+        return;
+    }
+
+    // Handled in handle_pickup().
+    if (mons_eats_items(this))
+        return;
+
+    // The enchantment doubles as the durability of a net
+    // the more corroded it gets, the more easily it will break.
+    const int hold = mitm[net].plus; // This will usually be negative.
+    const int mon_size = body_size(PSIZE_BODY);
+
+    // Smaller monsters can escape more quickly.
+    if (mon_size < random2(SIZE_BIG)  // BIG = 5
+        && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
+    {
+        if (mons_near(this) && !visible_to(&you))
+            mpr("Something wriggles in the net.");
+        else
+            simple_monster_message(this, " struggles to escape the net.");
+
+        // Confused monsters have trouble finding the exit.
+        if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
+            return;
+
+        decay_enchantment(ENCH_HELD, 2*(NUM_SIZE_LEVELS - mon_size) - hold);
+
+        // Frayed nets are easier to escape.
+        if (mon_size <= -(hold-1)/2)
+            decay_enchantment(ENCH_HELD, (NUM_SIZE_LEVELS - mon_size));
+    }
+    else // Large (and above) monsters always thrash the net and destroy it
+    {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
+
+        if (mons_near(this) && !visible_to(&you))
+            mpr("Something wriggles in the net.");
+        else
+            simple_monster_message(this, " struggles against the net.");
+
+        // Confused monsters more likely to struggle without result.
+        if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
+            return;
+
+        // Nets get destroyed more quickly for larger monsters
+        // and if already strongly frayed.
+        int damage = 0;
+
+        // tiny: 1/6, little: 2/5, small: 3/4, medium and above: always
+        if (x_chance_in_y(mon_size + 1, SIZE_GIANT - mon_size))
+            damage++;
+
+        // Handled specially to make up for its small size.
+        if (type == MONS_DANCING_WEAPON)
+        {
+            damage += one_chance_in(3);
+
+            if (can_cut_meat(mitm[inv[MSLOT_WEAPON]]))
+                damage++;
+        }
+
+        // Extra damage for large (50%) and big (always).
+        if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
+            damage++;
+
+        // overall damage per struggle:
+        // tiny   -> 1/6
+        // little -> 2/5
+        // small  -> 3/4
+        // medium -> 1
+        // large  -> 1,5
+        // big    -> 2
+
+        // extra damage if already damaged
+        if (random2(body_size(PSIZE_BODY) - hold + 1) >= 4)
+            damage++;
+
+        // Berserking doubles damage dealt.
+        if (berserk())
+            damage *= 2;
+
+        // Faster monsters can damage the net more often per
+        // time period.
+        if (speed != 0)
+            damage = div_rand_round(damage * speed, 10);
+
+        mitm[net].plus -= damage;
+
+        if (mitm[net].plus < -7)
+        {
+            if (mons_near(this))
+            {
+                if (visible_to(&you))
+                {
+                    mprf("The net rips apart, and %s comes free!",
+                         name(DESC_THE).c_str());
+                }
+                else
+                    mpr("All of a sudden the net rips apart!");
+            }
+            destroy_item(net);
+
+            del_ench(ENCH_HELD, true);
+        }
+    }
+}
+
 static void _post_monster_move(monster* mons)
 {
     if (invalid_monster(mons))
         return;
 
     mons->handle_constriction();
+
+    if (mons->has_ench(ENCH_HELD))
+        mons->struggle_against_net();
 
     if (mons->type == MONS_ANCIENT_ZYME)
         ancient_zyme_sicken(mons);

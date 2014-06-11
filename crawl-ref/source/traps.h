@@ -9,6 +9,8 @@
 #include "enum.h"
 #include "externs.h"
 
+#define NEW_WEB_KEY "freshly_webbed"
+
 struct bolt;
 class monster;
 struct trap_def;

@@ -878,6 +878,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 // If somehow already caught, make it worse.
                 m->add_ench(ENCH_HELD);
 
+                // Don't try to escape the web in the same turn
+                m->props[NEW_WEB_KEY] = true;
+
                 // Alert monsters.
                 check_monsters_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
             }
@@ -2014,6 +2017,7 @@ bool ensnare(actor *fly)
     {
         simple_monster_message(fly->as_monster(), " is caught in a web!");
         fly->as_monster()->add_ench(ENCH_HELD);
+        fly->props[NEW_WEB_KEY] = true;
     }
 
     // Drowned?
