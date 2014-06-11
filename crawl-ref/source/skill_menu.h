@@ -24,7 +24,7 @@ enum skill_menu_flags
     SKMF_SPECIAL           = SKMF_RESKILLING | SKMF_EXPERIENCE,
 
     SKMF_CROSSTRAIN        = 1<<4,
-    SKMF_ANTITRAIN         = 1<<5,
+                           //1<<5,  // was SKMF_ANTITRAIN
     SKMF_ENHANCED          = 1<<6,
     SKMF_REDUCED           = 1<<7,
     SKMF_CHANGED           = SKMF_ENHANCED | SKMF_REDUCED,
