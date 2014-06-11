@@ -828,7 +828,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return true;
     }
 #if TAG_MAJOR_VERSION == 34
-    
+
     if (player && you.species == SP_DJINNI
         && (cloud.type == CLOUD_FIRE
             || cloud.type == CLOUD_FOREST_FIRE
