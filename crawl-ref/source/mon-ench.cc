@@ -1489,7 +1489,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                 }
             }
 
-            hurt(me.agent(), dam, BEAM_NAPALM);
+            hurt(me.agent(), dam, BEAM_STICKY_FLAME);
         }
 
         decay_enchantment(en, true);
