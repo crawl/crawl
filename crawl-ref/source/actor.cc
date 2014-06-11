@@ -295,8 +295,17 @@ int actor::faith(bool calc_unid, bool items) const
         net_faith++;
 
     if (is_player() && player_mutation_level(MUT_FORLORN))
+    {
         net_faith--;
 
+        // 133 means 1/6 piety gain at max piety.
+        if (div_rand_round(you.piety, 133) == 1
+            && !you_worship(GOD_XOM)
+            && !you_worship(GOD_GOZAG)) // Ignore gods which don't use piety.
+        {
+            net_faith--;
+        }
+    }
     return net_faith;
 }
 
