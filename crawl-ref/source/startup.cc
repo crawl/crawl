@@ -196,12 +196,14 @@ static void _initialize()
 
 /** KILL_RESETs all monsters in LOS.
 *
-*  Uses LOS_DEFAULT since some arrival vaults have glass.
+*  Doesn't affect monsters behind glass, only those that would
+*  immediately have line-of-fire.
+*
 *  @param items_also whether to zap items as well as monsters.
 */
 static void _zap_los_monsters(bool items_also)
 {
-    for (radius_iterator ri(you.pos(), LOS_DEFAULT); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_SOLID); ri; ++ri)
     {
         if (items_also)
         {
