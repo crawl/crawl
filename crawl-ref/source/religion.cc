@@ -2824,18 +2824,60 @@ int piety_scale(int piety)
     return piety + (you.faith() * div_rand_round(piety, 3));
 }
 
+/** Gain or lose piety to reach a certain value.
+ *
+ * If the player cannot gain piety (because they worship Xom, Gozag, or
+ * no god), their piety will be unchanged.
+ *
+ * @param piety The new piety value.
+ * @pre piety is between 0 and MAX_PIETY, inclusive.
+ */
+void set_piety(int piety)
+{
+    ASSERT(piety >= 0);
+    ASSERT(piety <= MAX_PIETY);
+
+    // We have to set the exact piety value this way, because diff may
+    // be decreased to account for things like penance and gift timeout.
+    int diff;
+    do
+    {
+        diff = piety - you.piety;
+        if (diff > 0)
+        {
+            if (!gain_piety(diff, 1, true, false))
+                break;
+        }
+        else if (diff < 0)
+            lose_piety(-diff);
+    }
+    while (diff != 0);
+}
+
 static void _gain_piety_point();
-void gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
+/**
+ * Gain an amount of piety.
+ *
+ * @param original_gain The numerator of the nominal piety gain.
+ * @param denominator The denominator of the nominal piety gain.
+ * @param force Unused.
+ * @param should_scale_piety Should the piety gain be scaled by faith,
+ *   forlorn, and Sprint?
+ * @return True if something happened, or if another call with the same
+ *   arguments might cause something to happen (because of random number
+ *   rolls).
+ */
+bool gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
 {
     if (original_gain <= 0)
-        return;
+        return false;
 
     // Xom uses piety differently; Gozag doesn't at all.
     if (you_worship(GOD_NO_GOD)
         || you_worship(GOD_XOM)
         || you_worship(GOD_GOZAG))
     {
-        return;
+        return false;
     }
 
     int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
@@ -2856,6 +2898,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         }
         you.piety_max[you.religion] = you.piety;
     }
+    return true;
 }
 
 static void _gain_piety_point()
