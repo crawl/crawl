@@ -1789,7 +1789,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ENSNARE:
-        ensnare(mons);
+        if (doFlavouredEffects)
+            ensnare(mons);
         break;
 
     case BEAM_GHOSTLY_FLAME:
