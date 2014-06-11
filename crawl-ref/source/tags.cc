@@ -3021,6 +3021,13 @@ static void tag_read_you(reader &th)
 
     you.props.clear();
     you.props.read(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_STICKY_FLAME)
+    {
+        you.props["sticky_flame_source"] = you.props["napalmer"];
+        you.props["sticky_flame_aux"] = you.props["napalm_aux"];
+    }
+#endif
 }
 
 static void tag_read_you_items(reader &th)

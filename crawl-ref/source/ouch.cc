@@ -446,8 +446,8 @@ void expose_player_to_element(beam_type flavour, int strength, bool slow_cold_bl
     {
         mprf(MSGCH_WARN, "The flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("napalmer");
-        you.props.erase("napalm_aux");
+        you.props.erase("sticky_flame_source");
+        you.props.erase("sticky_flame_aux");
     }
 }
 
