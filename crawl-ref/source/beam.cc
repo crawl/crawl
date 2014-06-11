@@ -529,7 +529,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
             10, BEAM_NEG,
             10, BEAM_ACID,
             10, BEAM_HELLFIRE,
-            10, BEAM_NAPALM,
+            10, BEAM_STICKY_FLAME,
             10, BEAM_SLOW,
             10, BEAM_HASTE,
             10, BEAM_MIGHT,
@@ -680,7 +680,7 @@ void bolt::apply_beam_conducts()
             break;
         case BEAM_FIRE:
         case BEAM_HOLY_FLAME:
-        case BEAM_NAPALM:
+        case BEAM_STICKY_FLAME:
             did_god_conduct(DID_FIRE,
                             is_beam || is_explosion ? 6 + random2(3)
                                                     : 2 + random2(3),
@@ -3228,7 +3228,7 @@ bool bolt::harmless_to_player() const
     case BEAM_FIRE:
     case BEAM_HELLFIRE:
     case BEAM_HOLY_FLAME:
-    case BEAM_NAPALM:
+    case BEAM_STICKY_FLAME:
         return you.species == SP_DJINNI;
 #endif
 
@@ -6592,7 +6592,7 @@ static string _beam_type_name(beam_type type)
     case BEAM_SPORE:                 return "spores";
     case BEAM_POISON_ARROW:          return "poison arrow";
     case BEAM_HELLFIRE:              return "hellfire";
-    case BEAM_NAPALM:                return "sticky fire";
+    case BEAM_STICKY_FLAME:          return "sticky fire";
     case BEAM_STEAM:                 return "steam";
     case BEAM_ENERGY:                return "energy";
     case BEAM_HOLY:                  return "holy energy";

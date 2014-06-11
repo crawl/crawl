@@ -5218,7 +5218,7 @@ void dec_napalm_player(int delay)
 
     mprf(MSGCH_WARN, "You are covered in liquid flames!");
 
-    expose_player_to_element(BEAM_NAPALM,
+    expose_player_to_element(BEAM_STICKY_FLAME,
                              div_rand_round(delay * 4, BASELINE_DELAY));
 
     const int hurted = resist_adjust_damage(&you, BEAM_FIRE, player_res_fire(),

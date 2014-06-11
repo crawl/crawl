@@ -2981,7 +2981,7 @@ void monster::expose_to_element(beam_type flavour, int strength,
     case BEAM_FIRE:
     case BEAM_LAVA:
     case BEAM_HELLFIRE:
-    case BEAM_NAPALM:
+    case BEAM_STICKY_FLAME:
     case BEAM_STEAM:
         if (has_ench(ENCH_OZOCUBUS_ARMOUR))
         {

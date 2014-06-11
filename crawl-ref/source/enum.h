@@ -392,7 +392,7 @@ enum beam_type                  // bolt::flavour
     BEAM_SPORE,
     BEAM_POISON_ARROW,
     BEAM_HELLFIRE,
-    BEAM_NAPALM,
+    BEAM_STICKY_FLAME,
     BEAM_STEAM,
     BEAM_ENERGY,
     BEAM_HOLY,

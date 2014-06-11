@@ -78,7 +78,7 @@ static NORETURN void _end_game(scorefile_entry &se);
 static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
-        || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
+        || flavour == BEAM_HELLFIRE || flavour == BEAM_STICKY_FLAME
         || flavour == BEAM_STEAM)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
