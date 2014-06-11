@@ -157,7 +157,6 @@ public:
 
     int         autopickup_on;
     bool        autopickup_starting_ammo;
-    int         default_friendly_pickup;
     bool        default_manual_training;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn

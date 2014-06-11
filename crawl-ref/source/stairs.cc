@@ -1008,9 +1008,6 @@ void down_stairs(dungeon_feature_type force_stair, bool force_known_shaft)
 
     if (newlevel)
     {
-        // When entering a new level, reset friendly_pickup to default.
-        you.friendly_pickup = Options.default_friendly_pickup;
-
         switch (you.where_are_you)
         {
         default:

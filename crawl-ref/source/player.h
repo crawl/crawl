@@ -114,7 +114,6 @@ public:
 
   undead_state_type is_undead;
 
-  int  friendly_pickup;       // pickup setting for allies
   bool dead; // ... but pending revival
   int lives;
   int deaths;

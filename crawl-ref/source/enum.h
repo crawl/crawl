@@ -163,6 +163,7 @@ enum ability_type
     // Beogh
     ABIL_BEOGH_SMITING = 1120,
     ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
+    ABIL_BEOGH_GIFT_ITEM,
     // Jiyva
     ABIL_JIYVA_CALL_JELLY = 1130,
     ABIL_JIYVA_JELLY_PARALYSE,
@@ -751,7 +752,6 @@ enum command_type
     CMD_GO_UPSTAIRS,
     CMD_GO_DOWNSTAIRS,
     CMD_TOGGLE_AUTOPICKUP,
-    CMD_TOGGLE_FRIENDLY_PICKUP,
     CMD_TOGGLE_VIEWPORT_MONSTER_HP,
     CMD_TOGGLE_TRAVEL_SPEED,
     CMD_PICKUP,
@@ -2069,9 +2069,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_NOTED_ID          = 0x08000000,
     ISFLAG_NOTED_GET         = 0x10000000,
 
-#if TAG_MAJOR_VERSION == 34
-    ISFLAG_UNUSED            = 0x20000000,  // was ISFLAG_BEEN_IN_INV
-#endif
+    ISFLAG_SEEN              = 0x20000000,  // has it been seen
     ISFLAG_SUMMONED          = 0x40000000,  // Item generated on a summon
     ISFLAG_DROPPED_BY_ALLY   = 0x80000000,  // Item was dropped by an ally
 };
@@ -4261,14 +4259,6 @@ enum unique_item_status_type
     UNIQ_NOT_EXISTS = 0,
     UNIQ_EXISTS = 1,
     UNIQ_LOST_IN_ABYSS = 2,
-};
-
-enum friendly_pickup_type
-{
-    FRIENDLY_PICKUP_NONE = 0,
-    FRIENDLY_PICKUP_FRIEND,
-    FRIENDLY_PICKUP_PLAYER,
-    FRIENDLY_PICKUP_ALL,
 };
 
 enum zap_type
