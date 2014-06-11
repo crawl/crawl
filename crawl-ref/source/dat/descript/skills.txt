@@ -242,8 +242,6 @@ Being skilled in Fire Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
-
-Being skilled in Fire Magic makes Ice Magic harder to learn, and vice versa.
 %%%%
 Ice Magic
 
@@ -254,8 +252,6 @@ Being skilled in Ice Magic increases the success rate and spell power of spells
 in this school. Many spells belong to a combination of several schools, in
 which case spellcasting success and power will depend on the average skill in
 these schools.
-
-Being skilled in Ice Magic makes Fire Magic harder to learn, and vice versa.
 %%%%
 Air Magic
 
@@ -268,8 +264,6 @@ Being skilled in Air Magic increases the success rate and spell power of spells
 in this school. Many spells belong to a combination of several schools, in
 which case spellcasting success and power will depend on the average skill in
 these schools.
-
-Being skilled in Air Magic makes Earth Magic harder to learn, and vice versa.
 %%%%
 Earth Magic
 
@@ -282,8 +276,6 @@ Being skilled in Earth Magic increases the success rate and spell power of
 spells in this school. Many spells belong to a combination of several schools,
 in which case spellcasting success and power will depend on the average skill
 in these schools.
-
-Being skilled in Earth Magic makes Air Magic harder to learn, and vice versa.
 %%%%
 Poison Magic
 

@@ -1227,36 +1227,20 @@ void SkillMenu::set_default_help()
         text = hints_skills_info();
     else
     {
-        if (!is_set(SKMF_CROSSTRAIN) && !is_set(SKMF_ANTITRAIN))
+        if (!is_set(SKMF_CROSSTRAIN))
             text = m_switches[SKM_VIEW]->get_help();
 
-        if (get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-            && !(is_set(SKMF_CROSSTRAIN) && is_set(SKMF_ANTITRAIN)))
-        {
+        if (get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED)
             text += m_switches[SKM_LEVEL]->get_help();
-        }
         else
             text += "The species aptitude is in <white>white</white>. ";
 
         if (is_set(SKMF_CROSSTRAIN))
-            text += "Crosstraining is in <green>green</green>. ";
-        if (is_set(SKMF_ANTITRAIN))
-            text += "Antitraining is in <red>red</red>. ";
 
-        if (is_set(SKMF_CROSSTRAIN) && is_set(SKMF_ANTITRAIN))
         {
-            text += "The skill responsible for the bonus or malus is "
-                    "marked with '*'.";
-        }
-        else if (is_set(SKMF_CROSSTRAIN))
-        {
+            text += "Crosstraining is in <green>green</green>. ";
             text += "The skill responsible for the bonus is marked with "
                     "'<green>*</green>'.";
-        }
-        else if (is_set(SKMF_ANTITRAIN))
-        {
-            text += "The skill responsible for the malus is marked with "
-                    "'<red>*</red>'.";
         }
     }
 
@@ -1286,7 +1270,6 @@ void SkillMenu::set_skills()
     SkillMenuEntry::m_letter = '9';
     bool default_set = false;
     clear_flag(SKMF_CROSSTRAIN);
-    clear_flag(SKMF_ANTITRAIN);
 
     int col = 0, ln = 0;
 

@@ -726,7 +726,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
 
     // We need to transfer by small steps and update skill levels each time
-    // so that cross/anti-training are handled properly.
+    // so that cross-training is handled properly.
     while (total_skp_lost < skp_max
            && (simu || total_skp_lost < (int)you.transfer_skill_points))
     {

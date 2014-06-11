@@ -220,8 +220,6 @@ const int INVALID_ABSDEPTH = -1000;
   #define ITEM_MIMIC_CHANCE    1000
 #endif
 
-const int ANTITRAIN_PENALTY = 2;
-
 const int AGILITY_BONUS = 5;
 
 #define TORNADO_RADIUS 6
