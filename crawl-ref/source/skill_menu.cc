@@ -299,8 +299,6 @@ COLORS SkillMenuEntry::get_colour() const
     }
     else if (crosstrain_bonus(m_sk) > 1 && is_set(SKMF_APTITUDE))
         return GREEN;
-    else if (is_antitrained(m_sk) && is_set(SKMF_APTITUDE))
-        return RED;
     else if (you.train[m_sk] == 2)
         return WHITE;
     else
@@ -345,16 +343,6 @@ static bool _crosstrain_other(skill_type sk, skill_menu_state state)
     return false;
 }
 
-static bool _antitrain_other(skill_type sk, skill_menu_state state)
-{
-    skill_type opposite = opposite_skill(sk);
-    if (opposite == SK_NONE)
-        return false;
-
-    return _show_skill(opposite, state) && you.skills[sk] > 0
-           && you.skills[opposite] < 27 && compare_skills(sk, opposite);
-}
-
 void SkillMenuEntry::set_aptitude()
 {
     string text = "<white>";
@@ -375,12 +363,7 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</white>";
 
-    if (_antitrain_other(m_sk, skm.get_state(SKM_SHOW)))
-    {
-        skm.set_flag(SKMF_ANTITRAIN);
-        text += "<red>*</red>";
-    }
-    else if (_crosstrain_other(m_sk, skm.get_state(SKM_SHOW)))
+    if (_crosstrain_other(m_sk, skm.get_state(SKM_SHOW)))
     {
         skm.set_flag(SKMF_CROSSTRAIN);
         text += "<green>*</green>";
@@ -388,12 +371,7 @@ void SkillMenuEntry::set_aptitude()
     else
         text += " ";
 
-    if (is_antitrained(m_sk))
-    {
-        skm.set_flag(SKMF_ANTITRAIN);
-        text += make_stringf("<red>%d</red>", ct_bonus - 4);
-    }
-    else if (ct_bonus)
+    if (ct_bonus)
     {
         skm.set_flag(SKMF_CROSSTRAIN);
         text += manual ? "<lightgreen>" : "<green>";

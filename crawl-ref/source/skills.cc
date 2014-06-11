@@ -924,9 +924,6 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     if (exsk < SK_ARMOUR)
         skill_inc *= crosstrain_bonus(exsk);
 
-    if (is_antitrained(exsk))
-        cost *= ANTITRAIN_PENALTY;
-
     // Scale cost and skill_inc to available experience.
     const int spending_limit = min(MAX_SPENDING_LIMIT, max_exp);
     if (cost > spending_limit)
