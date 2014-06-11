@@ -1474,7 +1474,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_GLOWING))
         v.push_back("softly glowing");
     if (is(MB_SLOWED))
-        v.push_back("moving slowly");
+        v.push_back("slow");
     if (is(MB_INSANE))
         v.push_back("frenzied and insane");
     if (is(MB_BERSERK))
@@ -1484,7 +1484,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_ROUSED))
         v.push_back("inspired to greatness");
     if (is(MB_HASTED))
-        v.push_back("moving very quickly");
+        v.push_back("fast");
     if (is(MB_STRONG))
         v.push_back("unusually strong");
     if (is(MB_CONFUSED))
@@ -1506,7 +1506,7 @@ vector<string> monster_info::attributes() const
     if (is(MB_VULN_MAGIC))
         v.push_back("susceptible to magic");
     if (is(MB_SWIFT))
-        v.push_back("moving somewhat quickly");
+        v.push_back("covering ground quickly");
     if (is(MB_SILENCING))
         v.push_back("radiating silence");
     if (is(MB_PARALYSED))
