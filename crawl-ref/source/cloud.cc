@@ -827,6 +827,16 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     {
         return true;
     }
+#if TAG_MAJOR_VERSION == 34
+    
+    if (player && you.species == SP_DJINNI
+        && (cloud.type == CLOUD_FIRE
+            || cloud.type == CLOUD_FOREST_FIRE
+            || cloud.type == CLOUD_HOLY_FLAMES))
+    {
+        return true;
+    }
+#endif
 
     switch (cloud.type)
     {
@@ -835,13 +845,9 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->is_fiery()
                 || player &&
                    (you.duration[DUR_FIRE_SHIELD]
-                    || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
-#if TAG_MAJOR_VERSION == 34
-                    || you.species == SP_DJINNI
-#endif
-                   );
+                    || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]);
     case CLOUD_HOLY_FLAMES:
-        return act->res_holy_fire() > 0;
+        return act->res_holy_energy() > 0;
     case CLOUD_COLD:
         return act->is_icy()
                || (player && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]);
@@ -887,7 +893,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_STEAM:
         return act->res_steam();
     case CLOUD_HOLY_FLAMES:
-        return act->res_holy_fire();
+        return act->res_holy_energy();
     case CLOUD_COLD:
         return act->res_cold();
     case CLOUD_PETRIFY:

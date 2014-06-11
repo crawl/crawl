@@ -6720,15 +6720,6 @@ int player::res_fire() const
     return player_res_fire();
 }
 
-int player::res_holy_fire() const
-{
-#if TAG_MAJOR_VERSION == 34
-    if (species == SP_DJINNI)
-        return 3;
-#endif
-    return actor::res_holy_fire();
-}
-
 int player::res_steam() const
 {
     return player_res_steam();

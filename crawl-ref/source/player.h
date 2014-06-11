@@ -618,7 +618,6 @@ public:
     bool is_insubstantial() const;
     int res_acid(bool calc_unid = true) const;
     int res_fire() const;
-    int res_holy_fire() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
