@@ -3121,7 +3121,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_KLOWN:           return "cause random powerful effects";
     case AF_DISTORT:         return "cause wild translocation effects";
     case AF_RAGE:            return "cause berserking";
-    case AF_NAPALM:          return "apply sticky flame";
+    case AF_STICKY_FLAME:    return "apply sticky flame";
     case AF_CHAOS:           return "cause unpredictable effects";
     case AF_STEAL:           return "steal items";
     case AF_CRUSH:           return "constrict";

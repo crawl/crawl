@@ -3134,7 +3134,7 @@ void melee_attack::mons_apply_attack_flavour()
         defender->go_berserk(false);
         break;
 
-    case AF_NAPALM:
+    case AF_STICKY_FLAME:
         mons_do_napalm();
         break;
 

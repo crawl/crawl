@@ -736,7 +736,7 @@ bool mons_is_fiery(const monster* mon)
     }
     return mon->has_attack_flavour(AF_FIRE)
            || mon->has_attack_flavour(AF_PURE_FIRE)
-           || mon->has_attack_flavour(AF_NAPALM)
+           || mon->has_attack_flavour(AF_STICKY_FLAME)
            || (mon->has_spell_of_type(SPTYP_FIRE)
                && mon->can_use_spells());
 }
