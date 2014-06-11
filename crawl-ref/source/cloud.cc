@@ -1029,9 +1029,10 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         {
             if (player)
             {
-                mpr("Strange energies course through your body.");
-                return mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-                              "mutagenic cloud");
+                mpr("The mutagenic energy flows into you.");
+                // It's possible that you got trampled into the mutagenic cloud and it's not your fault...
+                contaminate_player(1000, false);
+                return true;
             }
             else if (mons->malmutate("mutagenic cloud"))
             {
