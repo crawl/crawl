@@ -122,15 +122,6 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::res_holy_fire() const
-{
-    if (is_evil() || is_unholy())
-        return -1;
-    else if (is_holy())
-        return 3;
-    return 0;
-}
-
 int actor::check_res_magic(int power)
 {
     const int mrs = res_magic();
