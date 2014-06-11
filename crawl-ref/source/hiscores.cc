@@ -1320,8 +1320,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
     if (death_type == KILLED_BY_BURNING)
     {
-        death_source_name = you.props["napalmer"].get_string();
-        auxkilldata = you.props["napalm_aux"].get_string();
+        death_source_name = you.props["sticky_flame_source"].get_string();
+        auxkilldata = you.props["sticky_flame_aux"].get_string();
     }
 }
 

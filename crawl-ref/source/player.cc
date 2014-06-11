@@ -5194,8 +5194,8 @@ bool napalm_player(int amount, string source, string source_aux)
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
         mprf(MSGCH_WARN, "You are covered in liquid flames!");
 
-    you.props["napalmer"] = source;
-    you.props["napalm_aux"] = source_aux;
+    you.props["sticky_flame_source"] = source;
+    you.props["sticky_flame_aux"] = source_aux;
 
     return true;
 }
@@ -5211,8 +5211,8 @@ void dec_napalm_player(int delay)
         else
             mprf(MSGCH_WARN, "You dip into the water, and the flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("napalmer");
-        you.props.erase("napalm_aux");
+        you.props.erase("sticky_flame_source");
+        you.props.erase("sticky_flame_aux");
         return;
     }
 
@@ -5229,8 +5229,8 @@ void dec_napalm_player(int delay)
     you.duration[DUR_LIQUID_FLAMES] -= delay;
     if (you.duration[DUR_LIQUID_FLAMES] <= 0)
     {
-        you.props.erase("napalmer");
-        you.props.erase("napalm_aux");
+        you.props.erase("sticky_flame_source");
+        you.props.erase("sticky_flame_aux");
     }
 }
 
