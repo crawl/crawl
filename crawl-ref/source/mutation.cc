@@ -995,9 +995,7 @@ static mutation_type _get_mut_with_use(mut_use_type mt)
         if (cweight >= 0)
             continue;
 
-        if (_accept_mutation(mut_data[i].mutation, true))
-            return mut_data[i].mutation;
-        return NUM_MUTATIONS;
+        return mut_data[i].mutation;
     }
 
     die("Error while selecting mutations");
@@ -1086,7 +1084,7 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
     for (int attempt = 0; attempt < 100; ++attempt)
     {
         mutation_type mut = _get_mut_with_use(mt);
-        if (mut != NUM_MUTATIONS)
+        if (_accept_mutation(mut, true))
             return mut;
     }
 
