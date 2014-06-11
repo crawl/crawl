@@ -686,25 +686,25 @@ void actor::handle_constriction()
         damage = defender->hurt(this, damage, BEAM_MISSILE, false);
         DIAG_ONLY(const int infdam = damage);
 
-        string exclams;
+        string exclamations;
         if (damage <= 0 && is_player()
             && you.can_see(defender))
         {
-            exclams = ", but do no damage.";
+            exclamations = ", but do no damage.";
         }
         else if (damage < HIT_WEAK)
-            exclams = ".";
+            exclamations = ".";
         else if (damage < HIT_MED)
-            exclams = "!";
+            exclamations = "!";
         else if (damage < HIT_STRONG)
-            exclams = "!!";
+            exclamations = "!!";
         else
         {
             int tmpdamage = damage;
-            exclams = "!!!";
+            exclamations = "!!!";
             while (tmpdamage >= 2*HIT_STRONG)
             {
-                exclams += "!";
+                exclamations += "!";
                 tmpdamage >>= 1;
             }
         }
@@ -721,7 +721,7 @@ void actor::handle_constriction()
 #else
                  "",
 #endif
-                 exclams.c_str());
+                 exclamations.c_str());
         }
         else if (you.can_see(defender) || defender->is_player())
         {
@@ -733,7 +733,7 @@ void actor::handle_constriction()
 #else
                  "",
 #endif
-                 exclams.c_str());
+                 exclamations.c_str());
         }
 
         dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",
