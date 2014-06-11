@@ -847,7 +847,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
                    (you.duration[DUR_FIRE_SHIELD]
                     || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]);
     case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy() > 0;
+        return act->res_holy_energy(find_agent(cloud.source, cloud.whose)) > 0;
     case CLOUD_COLD:
         return act->is_icy()
                || (player && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]);
@@ -893,7 +893,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_STEAM:
         return act->res_steam();
     case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy();
+        return act->res_holy_energy(find_agent(cloud.source, cloud.whose));
     case CLOUD_COLD:
         return act->res_cold();
     case CLOUD_PETRIFY:
