@@ -2200,7 +2200,7 @@ bool monster::pickup_gold(item_def &item, int near)
 bool monster::pickup_misc(item_def &item, int near)
 {
     if (mons_is_item_mimic(type))
-        pickup(item, MSLOT_MISCELLANY, near);
+        return pickup(item, MSLOT_MISCELLANY, near);
 
     // Monsters can't use any miscellaneous items right now, so don't
     // let them pick them up.
