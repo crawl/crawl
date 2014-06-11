@@ -487,6 +487,7 @@ public:
     void bind_spell_flags();
     void calc_speed();
     bool attempt_escape(int attempts = 1);
+    void struggle_against_net();
     bool has_usable_tentacle() const;
 
     bool check_clarity(bool silent) const;

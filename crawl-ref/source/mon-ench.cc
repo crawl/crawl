@@ -1227,7 +1227,6 @@ bool monster::decay_enchantment(enchant_type en, bool decay_degree)
 void monster::apply_enchantment(const mon_enchant &me)
 {
     enchant_type en = me.ench;
-    const int spd = 10;
     switch (me.ench)
     {
     case ENCH_INSANE:
@@ -1356,137 +1355,8 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_HELD:
-    {
-        if (is_stationary() || cannot_act() || asleep())
-            break;
+        break; // handled in mon-act.cc:struggle_against_net()
 
-        int net = get_trapping_net(pos(), true);
-
-        if (net == NON_ITEM)
-        {
-            trap_def *trap = find_trap(pos());
-            if (trap && trap->type == TRAP_WEB)
-            {
-                if (coinflip())
-                {
-                    if (mons_near(this) && !visible_to(&you))
-                        mpr("Something you can't see is thrashing in a web.");
-                    else
-                    {
-                        simple_monster_message(this,
-                            " struggles to get unstuck from the web.");
-                    }
-                    break;
-                }
-                maybe_destroy_web(this);
-            }
-            del_ench(ENCH_HELD);
-            break;
-        }
-
-        // Handled in handle_pickup().
-        if (mons_eats_items(this))
-            break;
-
-        // The enchantment doubles as the durability of a net
-        // the more corroded it gets, the more easily it will break.
-        const int hold = mitm[net].plus; // This will usually be negative.
-        const int mon_size = body_size(PSIZE_BODY);
-
-        // Smaller monsters can escape more quickly.
-        if (mon_size < random2(SIZE_BIG)  // BIG = 5
-            && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
-        {
-            if (mons_near(this) && !visible_to(&you))
-                mpr("Something wriggles in the net.");
-            else
-                simple_monster_message(this, " struggles to escape the net.");
-
-            // Confused monsters have trouble finding the exit.
-            if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
-                break;
-
-            decay_enchantment(en, 2*(NUM_SIZE_LEVELS - mon_size) - hold);
-
-            // Frayed nets are easier to escape.
-            if (mon_size <= -(hold-1)/2)
-                decay_enchantment(en, (NUM_SIZE_LEVELS - mon_size));
-        }
-        else // Large (and above) monsters always thrash the net and destroy it
-        {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
-
-            if (mons_near(this) && !visible_to(&you))
-                mpr("Something wriggles in the net.");
-            else
-                simple_monster_message(this, " struggles against the net.");
-
-            // Confused monsters more likely to struggle without result.
-            if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
-                break;
-
-            // Nets get destroyed more quickly for larger monsters
-            // and if already strongly frayed.
-            int damage = 0;
-
-            // tiny: 1/6, little: 2/5, small: 3/4, medium and above: always
-            if (x_chance_in_y(mon_size + 1, SIZE_GIANT - mon_size))
-                damage++;
-
-            // Handled specially to make up for its small size.
-            if (type == MONS_DANCING_WEAPON)
-            {
-                damage += one_chance_in(3);
-
-                if (can_cut_meat(mitm[inv[MSLOT_WEAPON]]))
-                    damage++;
-            }
-
-            // Extra damage for large (50%) and big (always).
-            if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
-                damage++;
-
-            // overall damage per struggle:
-            // tiny   -> 1/6
-            // little -> 2/5
-            // small  -> 3/4
-            // medium -> 1
-            // large  -> 1,5
-            // big    -> 2
-
-            // extra damage if already damaged
-            if (random2(body_size(PSIZE_BODY) - hold + 1) >= 4)
-                damage++;
-
-            // Berserking doubles damage dealt.
-            if (berserk())
-                damage *= 2;
-
-            // Faster monsters can damage the net more often per
-            // time period.
-            if (speed != 0)
-                damage = div_rand_round(damage * speed, spd);
-
-            mitm[net].plus -= damage;
-
-            if (mitm[net].plus < -7)
-            {
-                if (mons_near(this))
-                {
-                    if (visible_to(&you))
-                    {
-                        mprf("The net rips apart, and %s comes free!",
-                             name(DESC_THE).c_str());
-                    }
-                    else
-                        mpr("All of a sudden the net rips apart!");
-                }
-                destroy_item(net);
-
-                del_ench(ENCH_HELD, true);
-            }
-        }
-        break;
-    }
     case ENCH_CONFUSION:
         if (!mons_class_flag(type, M_CONFUSED))
             decay_enchantment(en);
