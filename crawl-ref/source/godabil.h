@@ -39,6 +39,7 @@ void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
 bool beogh_water_walk();
+bool beogh_gift_item();
 
 bool yred_injury_mirror();
 bool yred_can_animate_dead();

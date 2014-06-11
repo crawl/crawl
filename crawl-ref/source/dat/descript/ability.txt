@@ -508,6 +508,11 @@ Stop Recall ability
 
 Stop recalling your followers.
 %%%%
+Give Item to Follower ability
+
+Give a weapon or piece of armour to a named orcish follower. Once the orc has
+been so gifted, it cannot receive another one.
+%%%%
 # Fedhas
 Sunlight ability
 

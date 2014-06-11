@@ -316,7 +316,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
-      "walk on water" },
+      "walk on water and give items to your followers" },
     // Jiyva
     { "request a jelly",
       "temporarily halt your jellies' item consumption",
@@ -454,7 +454,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
-      "walk on water" },
+      "walk on water or give items to your followers" },
     // Jiyva
     { "request a jelly",
       "temporarily halt your jellies' item consumption",
@@ -1622,6 +1622,54 @@ bool is_follower(const monster* mon)
         return mon->alive() && mon->friendly();
 }
 
+/**
+ * Given the weapon type, find an upgrade.
+ *
+ * @param old_type the current weapon_type of the weapon.
+ * @param has_shield whether we can go from 1h -> 2h.
+ * @param highlevel whether the orc is a strong type.
+ * @returns a new weapon type (or sometimes the old one).
+ */
+// TODO: a less awful way of doing this?
+static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
+{
+    switch (old_type)
+    {
+    case WPN_CLUB:        return WPN_WHIP;
+    case WPN_WHIP:        return WPN_MACE;
+    case WPN_MACE:        return WPN_FLAIL;
+    case WPN_FLAIL:       return WPN_MORNINGSTAR;
+    case WPN_MORNINGSTAR: return !has_shield ? WPN_DIRE_FLAIL  :
+                                 highlevel   ? WPN_EVENINGSTAR :
+                                               WPN_MORNINGSTAR;
+    case WPN_DIRE_FLAIL:  return WPN_GREAT_MACE;
+
+    case WPN_DAGGER:      return WPN_SHORT_SWORD;
+    case WPN_SHORT_SWORD: return WPN_CUTLASS;
+    case WPN_CUTLASS:     return WPN_SCIMITAR;
+    case WPN_FALCHION:    return WPN_LONG_SWORD;
+    case WPN_LONG_SWORD:  return WPN_SCIMITAR;
+    case WPN_SCIMITAR:    return !has_shield ? WPN_GREAT_SWORD   :
+                                 highlevel   ? WPN_BASTARD_SWORD :
+                                               WPN_SCIMITAR;
+    case WPN_GREAT_SWORD: return highlevel ? WPN_CLAYMORE : WPN_GREAT_SWORD;
+
+    case WPN_HAND_AXE:    return WPN_WAR_AXE;
+    // Low level orcs shouldn't get fairly rare items.
+    case WPN_WAR_AXE:     return !highlevel  ? WPN_WAR_AXE   :
+                                 has_shield  ? WPN_BROAD_AXE :
+                                               WPN_BATTLEAXE;
+    case WPN_BATTLEAXE:   return highlevel ? WPN_EXECUTIONERS_AXE : WPN_BATTLEAXE;
+
+    case WPN_SPEAR:       return WPN_TRIDENT;
+    case WPN_TRIDENT:     return has_shield ? WPN_TRIDENT : WPN_HALBERD;
+    case WPN_HALBERD:     return WPN_GLAIVE;
+    case WPN_GLAIVE:      return highlevel ? WPN_BARDICHE : WPN_GLAIVE;
+
+    default:              return old_type;
+    }
+}
+
 static bool _blessing_wpn(monster* mon)
 {
     // Pick a monster's weapon.
@@ -1642,6 +1690,17 @@ static bool _blessing_wpn(monster* mon)
 
     item_def& wpn(mitm[slot]);
 
+    if (you_worship(GOD_BEOGH)
+        && !is_artefact(wpn)
+        && x_chance_in_y(mon->hit_dice, 250)
+        && !mon->props.exists("given beogh weapon"))
+    {
+        wpn.sub_type = _upgrade_weapon_type(wpn.sub_type,
+                                            mon->inv[MSLOT_SHIELD] != NON_ITEM,
+                                            mon->type == MONS_ORC_KNIGHT
+                                             || mon->type == MONS_ORC_WARLORD);
+    }
+
     // And enchant or uncurse it.
     int which = random2(2);
     if (!enchant_weapon(wpn, which, 1 - which, NULL))
@@ -1649,6 +1708,26 @@ static bool _blessing_wpn(monster* mon)
 
     item_set_appearance(wpn);
     return true;
+}
+
+static void _upgrade_shield(item_def &sh)
+{
+    // Promote from buckler up through large shield.
+    if (sh.sub_type >= ARM_FIRST_SHIELD && sh.sub_type < ARM_LAST_SHIELD)
+        sh.sub_type++;
+}
+
+static void _upgrade_body_armour(item_def &arm)
+{
+    // Promote from robe up through plate.
+    if (arm.sub_type >= ARM_FIRST_MUNDANE_BODY
+        && arm.sub_type < ARM_LAST_MUNDANE_BODY
+        // These are supposed to be robe-only.
+        && arm.special != SPARM_ARCHMAGI
+        && arm.special != SPARM_RESISTANCE)
+    {
+        arm.sub_type++;
+    }
 }
 
 static bool _blessing_AC(monster* mon)
@@ -1667,6 +1746,15 @@ static bool _blessing_AC(monster* mon)
     while (slot == NON_ITEM);
 
     item_def& arm(mitm[slot]);
+
+    if (you_worship(GOD_BEOGH) && !is_artefact(arm)
+        && x_chance_in_y(mon->hit_dice, 250))
+    {
+        if (slot == shield && !mon->props.exists("given beogh shield"))
+            _upgrade_shield(arm);
+        else if (slot == armour && !mon->props.exists("given beogh armour"))
+            _upgrade_body_armour(arm);
+    }
 
     int ac_change;
 

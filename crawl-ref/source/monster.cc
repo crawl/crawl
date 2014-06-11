@@ -2065,7 +2065,7 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
             // Monsters in a fight will only pick up missiles if doing so
             // is worthwhile.
             if (!mons_is_wandering(this)
-                && (!friendly() || foe != MHITYOU)
+                && foe != MHITYOU
                 && (item.quantity < 5 || miss && miss->quantity >= 7))
             {
                 return false;
@@ -2199,21 +2199,12 @@ bool monster::pickup_gold(item_def &item, int near)
 
 bool monster::pickup_misc(item_def &item, int near)
 {
-    // Never pick up the horn of Geryon or runes, except for mimics.
-    if (item.base_type == OBJ_MISCELLANY
-        && ((item.sub_type == MISC_HORN_OF_GERYON && type != MONS_GERYON)
-            || item.sub_type == MISC_RUNE_OF_ZOT)
-        && !mons_is_item_mimic(type))
-    {
-        return false;
-    }
+    if (mons_is_item_mimic(type))
+        pickup(item, MSLOT_MISCELLANY, near);
 
-    // Holy monsters and worshippers of good gods won't pick up evil
-    // miscellaneous items.
-    if ((is_holy() || is_good_god(god)) && is_evil_item(item))
-        return false;
-
-    return pickup(item, MSLOT_MISCELLANY, near);
+    // Monsters can't use any miscellaneous items right now, so don't
+    // let them pick them up.
+    return false;
 }
 
 // Eaten items are handled elsewhere, in _handle_pickup() in mon-stuff.cc.
@@ -2224,8 +2215,7 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     {
         // If a monster isn't otherwise occupied (has a foe, is fleeing, etc.)
         // it is considered wandering.
-        bool wandering = (mons_is_wandering(this)
-                          || friendly() && foe == MHITYOU);
+        bool wandering = mons_is_wandering(this);
         const int itype = item.base_type;
 
         // Weak(ened) monsters won't stop to pick up things as long as they
@@ -2236,34 +2226,11 @@ bool monster::pickup_item(item_def &item, int near, bool force)
             return false;
         }
 
-        if (friendly())
-        {
-            // Allies are only interested in armour and weaponry.
-            // Everything else is likely to only annoy the player
-            // because the monster either won't use the object or
-            // might use it in ways not helpful to the player.
-            //
-            // Not adding jewellery to the list because of potential
-            // balance implications for perm-allies. Perhaps this should
-            // be reconsidered -NFM
-            if (itype != OBJ_ARMOUR && itype != OBJ_WEAPONS
-                && itype != OBJ_MISSILES)
-            {
-                return false;
-            }
-
-            // Depending on the friendly pickup toggle, your allies may not
-            // pick up anything, or only stuff dropped by (other) allies.
-            if (you.friendly_pickup == FRIENDLY_PICKUP_NONE
-                || you.friendly_pickup == FRIENDLY_PICKUP_FRIEND
-                   && !testbits(item.flags, ISFLAG_DROPPED_BY_ALLY)
-                || you.friendly_pickup == FRIENDLY_PICKUP_PLAYER
-                   && !(item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
-                                        | ISFLAG_DROPPED_BY_ALLY)))
-            {
-                return false;
-            }
-        }
+        // There are fairly serious problems with monsters being able to pick
+        // up items you've seen, mostly in terms of tediously being able to
+        // move everything away from them.
+        if (testbits(item.flags, ISFLAG_SEEN))
+            return false;
 
         if (!wandering)
         {
@@ -2285,9 +2252,8 @@ bool monster::pickup_item(item_def &item, int near, bool force)
                 // While occupied, hostile monsters won't pick up items
                 // dropped or thrown by you. (You might have done that to
                 // distract them.)
-                if (!friendly()
-                    && (testbits(item.flags, ISFLAG_DROPPED)
-                        || testbits(item.flags, ISFLAG_THROWN)))
+                if (testbits(item.flags, ISFLAG_DROPPED)
+                    || testbits(item.flags, ISFLAG_THROWN))
                 {
                     return false;
                 }
@@ -6136,35 +6102,19 @@ void monster::steal_item_from_player()
     ASSERT(mslot != NUM_MONSTER_SLOTS);
     ASSERT(inv[mslot] == NON_ITEM);
 
-    // Create new item.
-    int index = get_mitm_slot(10);
-    if (index == NON_ITEM)
+    const int orig_qty = you.inv[steal_what].quantity;
+
+    item_def* tmp = take_item(steal_what, mslot);
+    if (!tmp)
         return;
-
-    item_def &new_item = mitm[index];
-
-    // Copy item.
-    new_item = you.inv[steal_what];
-
-    // Set quantity, and set the item as unlinked.
-    const int orig_qty = new_item.quantity;
-    new_item.quantity -= random2(orig_qty);
-    new_item.pos.reset();
-    new_item.link = NON_ITEM;
+    item_def& new_item = *tmp;
 
     mprf("%s steals %s!",
          name(DESC_THE).c_str(),
          new_item.name(DESC_YOUR).c_str());
 
-    unlink_item(index);
-    inv[mslot] = index;
-    new_item.set_holding_monster(mindex());
     // You'll want to autopickup it after killing Maurice.
     new_item.flags |= ISFLAG_THROWN;
-    equip(new_item, mslot, true);
-
-    // Item is gone from player's inventory.
-    dec_inv_item_quantity(steal_what, new_item.quantity);
 
     // Fix up blood timers.
     if (is_blood_potion(new_item))
@@ -6177,6 +6127,54 @@ void monster::steal_item_from_player()
         if (you.inv[steal_what].defined())
             remove_newest_blood_potion(you.inv[steal_what]);
     }
+}
+
+/**
+ * "Give" a monster an item from the player's inventory.
+ *
+ * @param steal_what The slot in your inventory of the item.
+ * @param mslot Which mon_inv_type to put the item in
+ *
+ * @returns new_item the new item, now in the monster's inventory.
+ */
+item_def* monster::take_item(int steal_what, int mslot)
+{
+    // Create new item.
+    int index = get_mitm_slot(10);
+    if (index == NON_ITEM)
+        return NULL;
+
+    item_def &new_item = mitm[index];
+
+    // Copy item.
+    new_item = you.inv[steal_what];
+
+    // Drop the item already in the slot (including the shield
+    // if it's a two-hander).
+    if ((mslot == MSLOT_WEAPON || mslot == MSLOT_ALT_WEAPON)
+        && inv[MSLOT_SHIELD] != NON_ITEM
+        && hands_reqd(new_item) == HANDS_TWO)
+    {
+        drop_item(MSLOT_SHIELD, true);
+    }
+    if (inv[mslot] != NON_ITEM)
+        drop_item(mslot, true);
+
+    // Set quantity, and set the item as unlinked.
+    new_item.quantity -= random2(new_item.quantity);
+    new_item.pos.reset();
+    new_item.link = NON_ITEM;
+
+    unlink_item(index);
+    inv[mslot] = index;
+    new_item.set_holding_monster(mindex());
+
+    equip(new_item, mslot, true);
+
+    // Item is gone from player's inventory.
+    dec_inv_item_quantity(steal_what, new_item.quantity);
+
+    return &new_item;
 }
 
 /**

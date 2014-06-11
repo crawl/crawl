@@ -180,7 +180,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_LUGONU_CORRUPT, ABIL_LUGONU_ABYSS_ENTER },
     // Beogh
     { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING, ABIL_NON_ABILITY,
-      ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY },
+      ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_BEOGH_GIFT_ITEM },
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, ABIL_JIYVA_JELLY_PARALYSE, ABIL_NON_ABILITY,
       ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION },
@@ -377,6 +377,8 @@ static const ability_def Ability_List[] =
       3, 0, 80, generic_cost::fixed(3), 0, ABFLAG_NONE},
     { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
       2, 0, 50, 0, 0, ABFLAG_NONE},
+    { ABIL_BEOGH_GIFT_ITEM, "Give Item to Follower",
+      0, 0, 0, 0, 0, ABFLAG_NONE},
 
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly", 2, 0, 20, 1, 0, ABFLAG_NONE},
@@ -1097,6 +1099,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
     case ABIL_ASHENZARI_END_TRANSFER:
     case ABIL_ASHENZARI_SCRYING:
+    case ABIL_BEOGH_GIFT_ITEM:
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
@@ -2819,6 +2822,11 @@ static bool _do_ability(const ability_def& abil)
         {
             return false;
         }
+        break;
+
+    case ABIL_BEOGH_GIFT_ITEM:
+        if (!beogh_gift_item())
+            return false;
         break;
 
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
