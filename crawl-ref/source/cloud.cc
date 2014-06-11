@@ -847,7 +847,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
                    (you.duration[DUR_FIRE_SHIELD]
                     || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]);
     case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy(find_agent(cloud.source, cloud.whose)) > 0;
+        return act->res_holy_energy(cloud.agent()) > 0;
     case CLOUD_COLD:
         return act->is_icy()
                || (player && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]);
@@ -893,7 +893,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_STEAM:
         return act->res_steam();
     case CLOUD_HOLY_FLAMES:
-        return act->res_holy_energy(find_agent(cloud.source, cloud.whose));
+        return act->res_holy_energy(cloud.agent());
     case CLOUD_COLD:
         return act->res_cold();
     case CLOUD_PETRIFY:
@@ -1009,25 +1009,25 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_POISON:
         if (player)
         {
-            const actor* agent = find_agent(cloud.source, cloud.whose);
+            const actor* agent = cloud.agent();
             poison_player(5 + roll_dice(3, 8), agent ? agent->name(DESC_A) : "",
                           cloud.cloud_name());
         }
         else
-            poison_monster(mons, find_agent(cloud.source, cloud.whose));
+            poison_monster(mons, cloud.agent());
         return true;
 
     case CLOUD_MIASMA:
         if (player)
         {
-            const actor* agent = find_agent(cloud.source, cloud.whose);
+            const actor* agent = cloud.agent();
             if (agent)
                 miasma_player(agent->name(DESC_A), cloud.cloud_name());
             else
                 miasma_player(cloud.cloud_name());
         }
         else
-            miasma_monster(mons, find_agent(cloud.source, cloud.whose));
+            miasma_monster(mons, cloud.agent());
         break;
 
     case CLOUD_MUTAGENIC:
@@ -1061,7 +1061,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
 
     case CLOUD_ACID:
     {
-        const actor* agent = find_agent(cloud.source, cloud.whose);
+        const actor* agent = cloud.agent();
         if (player)
             splash_with_acid(5, agent ? agent->mindex() : NON_MONSTER, true);
         else
@@ -1071,7 +1071,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
 
     case CLOUD_NEGATIVE_ENERGY:
     {
-        actor* agent = find_agent(cloud.source, cloud.whose);
+        actor* agent = cloud.agent();
         if (act->drain_exp(agent))
         {
             if (cloud.whose == KC_YOU)
@@ -1247,7 +1247,7 @@ int actor_apply_cloud(actor *act)
              final_damage,
              cloud.cloud_name().c_str());
 #endif
-        actor *oppressor = find_agent(cloud.source, cloud.whose);
+        actor *oppressor = cloud.agent();
 
         if (player)
         {
@@ -1460,6 +1460,11 @@ void cloud_struct::set_killer(killer_type _killer)
     default:
         break;
     }
+}
+
+actor *cloud_struct::agent() const
+{
+    return find_agent(source, whose);
 }
 
 string cloud_struct::cloud_name(const string &defname,
