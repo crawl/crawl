@@ -74,7 +74,6 @@ bool compare_skills(skill_type sk1, skill_type sk2);
 vector<skill_type> get_crosstrain_skills(skill_type sk);
 
 float crosstrain_bonus(skill_type sk);
-bool is_antitrained(skill_type sk);
 
 int elemental_preference(spell_type spell, int scale = 1);
 

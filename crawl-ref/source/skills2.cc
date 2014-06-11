@@ -669,15 +669,6 @@ bool compare_skills(skill_type sk1, skill_type sk2)
                   && you.skill_order[sk1] < you.skill_order[sk2];
 }
 
-bool is_antitrained(skill_type sk)
-{
-    skill_type opposite = opposite_skill(sk);
-    if (opposite == SK_NONE || you.skills[sk] >= 27)
-        return false;
-
-    return compare_skills(opposite, sk) && you.skills[opposite];
-}
-
 void dump_skills(string &text)
 {
     for (uint8_t i = 0; i < NUM_SKILLS; i++)
@@ -748,8 +739,6 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
             skp_gained *= ct_bonus;
             you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
         }
-        else if (is_antitrained(tsk))
-            skp_gained /= ANTITRAIN_PENALTY;
 
         ASSERT(you.skill_points[fsk] > you.ct_skill_points[fsk]);
 
