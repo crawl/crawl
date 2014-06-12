@@ -246,9 +246,8 @@ Training can be done in two modes, which are toggled with the <w>/</w> key.
 How fast you train a skill is governed by the following factors:
 * aptitude: Shown <white>white</white> in the Apt column. Higher numbers mean that
       less experience is needed to advance a skill. Depends on species.
-* cross-training: Some skills are easier to learn when you already are
-      proficient with a related one, e.g. Long and Short Blades.
-      The aptitude bonus for crosstraining is indicated in <green>green</green>.
+* cross-training: Proficiency in some skills carries over to related skills.
+      The enhancer bonus for crosstraining is indicated in <blue>blue</blue>.
 * magic penalties: It is harder to learn an elemental skill if you are
       proficient in the opposing element (Air-Earth, Ice-Fire).
       The aptitude penalty is indicated in <red>red</red>.
