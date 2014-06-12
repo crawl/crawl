@@ -3447,6 +3447,7 @@ enum mutation_type
     MUT_FLAME_CLOUD_IMMUNITY,
 #endif
     MUT_FORLORN,
+    MUT_CONTEMPLATIVE,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
