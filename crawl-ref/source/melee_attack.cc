@@ -1667,7 +1667,7 @@ void melee_attack::set_attack_verb()
             case MH_NATURAL:
             case MH_DEMONIC:
                 attack_verb = "punish";
-                verb_degree = "causing immense pain";
+                verb_degree = ", causing immense pain";
                 break;
             default:
                 attack_verb = "devastate";
@@ -2649,8 +2649,11 @@ void melee_attack::announce_hit()
     }
     else
     {
-        if (!verb_degree.empty() && verb_degree[0] != ' ')
+        if (!verb_degree.empty() && verb_degree[0] != ' '
+            && verb_degree[0] != ',')
+        {
             verb_degree = " " + verb_degree;
+        }
 
         mprf("You %s %s%s%s%s",
              attack_verb.c_str(),
