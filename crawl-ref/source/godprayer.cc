@@ -84,7 +84,7 @@ string god_prayer_reaction()
 static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
-                                       OSEL_BRANDABLE_WEAPON, true, true, false);
+                                       OSEL_BLESSABLE_WEAPON, true, true, false);
 
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
         return false;

@@ -33,6 +33,7 @@ enum object_selector
     OSEL_ENCHANTABLE_WEAPON_I    = -17,
     OSEL_ENCHANTABLE_WEAPON_II   = -18,
     OSEL_ENCHANTABLE_WEAPON_III  = -19,
+    OSEL_BLESSABLE_WEAPON        = -20,
 };
 
 #define SLOT_BARE_HANDS      -2
