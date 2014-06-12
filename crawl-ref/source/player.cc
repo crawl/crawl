@@ -6305,7 +6305,7 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
         for (size_t i = 0; i < cross_skills.size(); ++i)
             effective_points += skill_points[cross_skills[i]] / 5;
     }
-    effective_points = min(effective_points, 29750u);
+    effective_points = min(effective_points, skill_exp_needed(27, sk));
     while (1)
     {
         if (actual_skill < 27
