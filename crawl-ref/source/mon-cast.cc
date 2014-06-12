@@ -2779,6 +2779,9 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
     hitfunc.set_aim(pos);
 
     bolt tracer;
+    tracer.foe_ratio = 80;
+    tracer.beam_source = agent->mindex();
+    tracer.target = pos;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
         if (hitfunc.is_affected(ai->pos()) == AFF_NO || !agent->can_see(*ai))

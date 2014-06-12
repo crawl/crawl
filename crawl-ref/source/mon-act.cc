@@ -1240,7 +1240,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
     bool was_visible = you.can_see(mons);
 
     bool check_validity   = true;
-    bool is_direct_effect = false;
     spell_type mzap       = SPELL_NO_SPELL;
     int rate              = 0;
 
@@ -1315,32 +1314,19 @@ static bool _handle_rod(monster *mons, bolt &beem)
         zap = mons_should_fire(beem);
     }
 
-    if (is_direct_effect)
-    {
-        actor* foe = mons->get_foe();
-        if (!foe)
-            return false;
-        _rod_fired_pre(mons);
-        direct_effect(mons, mzap, beem, foe);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
-    }
-    else if (mzap == SPELL_THUNDERBOLT)
+   
+    if (zap)
     {
         _rod_fired_pre(mons);
-        cast_thunderbolt(mons, power, beem.target);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
-    }
-    else if (mzap == SPELL_CLOUD_CONE)
-    {
-        _rod_fired_pre(mons);
-        cast_cloud_cone(mons, power, beem.target);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
-    }
-    else if (zap)
-    {
-        _rod_fired_pre(mons);
-        beem.is_tracer = false;
-        beem.fire();
+        if (mzap == SPELL_THUNDERBOLT)
+            cast_thunderbolt(mons, power, beem.target);
+        else if (mzap == SPELL_CLOUD_CONE)
+            cast_cloud_cone(mons, power, beem.target);
+        else
+        {
+            beem.is_tracer = false;
+            beem.fire();
+        }
         return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
     }
 
