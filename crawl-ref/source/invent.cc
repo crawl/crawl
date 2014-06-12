@@ -1246,6 +1246,9 @@ static bool _item_class_selected(const item_def &i, int selector)
         return false;
     }
 
+    case OSEL_BLESSABLE_WEAPON:
+        return is_brandable_weapon(i, you_worship(GOD_SHINING_ONE), true);
+
     default:
         return false;
     }
