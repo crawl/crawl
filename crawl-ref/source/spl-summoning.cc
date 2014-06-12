@@ -813,7 +813,10 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
     {
         // Clear temp branding so we don't change the brand permanently.
         if (you.duration[DUR_WEAPON_BRAND])
-            end_weapon_brand();
+        {
+            ASSERT(you.weapon());
+            end_weapon_brand(*wpn);
+        }
 
         // Mark weapon as "thrown", so we'll autopickup it later.
         cp.flags |= ISFLAG_THROWN;

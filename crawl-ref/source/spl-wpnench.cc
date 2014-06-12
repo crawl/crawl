@@ -56,14 +56,13 @@ static bool _ok_for_launchers(brand_type which_brand)
  *
  * Returns the weapon to the previous brand, and ends the
  * DUR_WEAPON_BRAND.
+ * @param weapon The item in question (which may have just been unwielded).
  * @param verbose whether to print a message about expiration.
  */
-void end_weapon_brand(bool verbose)
+void end_weapon_brand(item_def &weapon, bool verbose)
 {
     ASSERT(you.duration[DUR_WEAPON_BRAND]);
-    ASSERT(you.weapon());
 
-    item_def& weapon = *you.weapon();
     const int temp_effect = get_weapon_brand(weapon);
     set_item_ego_type(weapon, OBJ_WEAPONS, you.props["orig brand"]);
     you.wield_change = true;
@@ -254,7 +253,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     if (!extending)
     {
         if (has_temp_brand)
-            end_weapon_brand();
+            end_weapon_brand(weapon);
         you.props["orig brand"] = get_weapon_brand(weapon);
         set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
         you.wield_change = true;

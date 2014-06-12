@@ -758,7 +758,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
             if (you.duration[DUR_WEAPON_BRAND])
             {
-                end_weapon_brand();
+                end_weapon_brand(item);
                 // We're letting this through even if hiding messages.
                 mpr("Your temporary branding evaporates.");
             }

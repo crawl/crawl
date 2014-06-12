@@ -513,7 +513,8 @@ static void _decrement_durations()
         if (you.duration[DUR_WEAPON_BRAND] <= 0)
         {
             you.duration[DUR_WEAPON_BRAND] = 1;
-            end_weapon_brand(true);
+            ASSERT(you.weapon());
+            end_weapon_brand(*you.weapon(), true);
         }
     }
 
