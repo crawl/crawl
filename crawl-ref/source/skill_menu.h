@@ -23,7 +23,7 @@ enum skill_menu_flags
     SKMF_EXPERIENCE        = SKMF_EXPERIENCE_CARD | SKMF_EXPERIENCE_POTION,
     SKMF_SPECIAL           = SKMF_RESKILLING | SKMF_EXPERIENCE,
 
-    SKMF_CROSSTRAIN        = 1<<4,
+    SKMF_MANUAL            = 1<<4,  // was SKMF_CROSSTRAIN
                            //1<<5,  // was SKMF_ANTITRAIN
     SKMF_ENHANCED          = 1<<6,
     SKMF_REDUCED           = 1<<7,

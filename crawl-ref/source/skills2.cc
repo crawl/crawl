@@ -602,22 +602,6 @@ vector<skill_type> get_crosstrain_skills(skill_type sk)
     }
 }
 
-float crosstrain_bonus(skill_type sk)
-{
-    int bonus = 1;
-
-    vector<skill_type> crosstrain_skills = get_crosstrain_skills(sk);
-
-    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
-        if (you.skill(crosstrain_skills[i], 10, true)
-            >= you.skill(sk, 10, true) + CROSSTRAIN_THRESHOLD)
-        {
-            bonus *= 2;
-        }
-
-    return bonus;
-}
-
 skill_type opposite_skill(skill_type sk)
 {
     switch (sk)
@@ -732,13 +716,6 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     {
         int skp_lost = min(20, skp_max - total_skp_lost);
         int skp_gained = skp_lost * penalty / 100;
-
-        float ct_bonus = crosstrain_bonus(tsk);
-        if (ct_bonus > 1 && fsk != tsk)
-        {
-            skp_gained *= ct_bonus;
-            you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
-        }
 
         ASSERT(you.skill_points[fsk] > you.ct_skill_points[fsk]);
 
