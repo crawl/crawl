@@ -1935,8 +1935,6 @@ void revive()
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    if (you.duration[DUR_WEAPON_BRAND])
-        set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_NORMAL);
     if (you.form)
         untransform();
     you.clear_beholders();

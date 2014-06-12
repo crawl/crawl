@@ -49,6 +49,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stuff.h"
@@ -810,13 +811,11 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
     item_def cp = *wpn;
     if (target_is_player)
     {
-        // Clear temp branding so we don't brand permanently.
+        // Clear temp branding so we don't change the brand permanently.
         if (you.duration[DUR_WEAPON_BRAND])
-        {
-            set_item_ego_type(cp, OBJ_WEAPONS, SPWPN_NORMAL);
+            end_weapon_brand();
 
         // Mark weapon as "thrown", so we'll autopickup it later.
-        }
         cp.flags |= ISFLAG_THROWN;
     }
     // Self-casting haunts yourself!

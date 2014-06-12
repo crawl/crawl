@@ -30,6 +30,7 @@
 #include "shopping.h"
 #include "skills2.h"
 #include "state.h"
+#include "spl-wpnench.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "unwind.h"
@@ -110,7 +111,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         return false;
     }
 
-    you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
+    if (you.duration[DUR_WEAPON_BRAND]) // just in case
+        end_weapon_brand();
 
     string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);

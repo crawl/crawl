@@ -26,6 +26,7 @@
 #include "spl-cast.h"
 #include "spl-miscast.h"
 #include "spl-summoning.h"
+#include "spl-wpnench.h"
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
@@ -757,11 +758,9 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
             if (you.duration[DUR_WEAPON_BRAND])
             {
-                you.duration[DUR_WEAPON_BRAND] = 0;
-                set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
-
+                end_weapon_brand();
                 // We're letting this through even if hiding messages.
-                mpr("Your branding evaporates.");
+                mpr("Your temporary branding evaporates.");
             }
         }
     }

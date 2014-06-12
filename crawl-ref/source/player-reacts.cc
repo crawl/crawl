@@ -127,6 +127,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
@@ -505,67 +506,14 @@ static void _decrement_durations()
     }
 
     //jmf: More flexible weapon branding code.
-    int last_value = you.duration[DUR_WEAPON_BRAND];
-
-    if (last_value > 0)
+    if (you.duration[DUR_WEAPON_BRAND] > 0)
     {
         you.duration[DUR_WEAPON_BRAND] -= delay;
 
         if (you.duration[DUR_WEAPON_BRAND] <= 0)
         {
-            you.duration[DUR_WEAPON_BRAND] = 0;
-            item_def& weapon = *you.weapon();
-            const int temp_effect = get_weapon_brand(weapon);
-
-            set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
-            const char *msg = nullptr;
-
-            switch (temp_effect)
-            {
-                case SPWPN_VORPAL:
-                    if (get_vorpal_type(weapon) == DVORP_SLICING)
-                        msg = " seems blunter.";
-                    else
-                        msg = " feels lighter.";
-                    break;
-                case SPWPN_FLAMING:
-                    msg = " goes out.";
-                    break;
-                case SPWPN_FREEZING:
-                    msg = " stops glowing.";
-                    break;
-                case SPWPN_VENOM:
-                    msg = " stops dripping with poison.";
-                    break;
-                case SPWPN_DRAINING:
-                    msg = " stops crackling.";
-                    break;
-                case SPWPN_DISTORTION:
-                    msg = " seems straighter.";
-                    break;
-                case SPWPN_PAIN:
-                    msg = " seems less pained.";
-                    break;
-                case SPWPN_CHAOS:
-                    msg = " seems more stable.";
-                    break;
-                case SPWPN_ELECTROCUTION:
-                    msg = " stops emitting sparks.";
-                    break;
-                case SPWPN_HOLY_WRATH:
-                    msg = "'s light goes out.";
-                    break;
-                case SPWPN_ANTIMAGIC:
-                    msg = " stops repelling magic.";
-                    calc_mp();
-                    break;
-                default:
-                    msg = " seems inexplicably less special.";
-                    break;
-            }
-
-            mprf(MSGCH_DURATION, "%s%s", weapon.name(DESC_YOUR).c_str(), msg);
-            you.wield_change = true;
+            you.duration[DUR_WEAPON_BRAND] = 1;
+            end_weapon_brand(true);
         }
     }
 
