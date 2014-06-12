@@ -401,10 +401,10 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
             g.col = mons_class_colour(stype);
 
         // If we want to show weapons, overwrite all of that.
-	item_def* weapon = mi->inv[MSLOT_WEAPON].get();
+        item_def* weapon = mi->inv[MSLOT_WEAPON].get();
         if (crawl_state.viewport_weapons && weapon)
         {
-	    show = *weapon;
+            show = *weapon;
             g = _get_item_override(*weapon);
             if (!g.col)
                 g.col = weapon->colour;
