@@ -474,7 +474,9 @@ enum beam_type                  // bolt::flavour
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
+#if TAG_MAJOR_VERSION == 34
     BEAM_DEVOUR_FOOD,             // Pseudo-beam for harpies' devouring food.
+#endif
 
     NUM_BEAMS
 };

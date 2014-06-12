@@ -6599,8 +6599,8 @@ static string _beam_type_name(beam_type type)
     case BEAM_BERSERK:               return "berserk";
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
-    case BEAM_DEVOUR_FOOD:           return "devour food";
 #if TAG_MAJOR_VERSION == 34
+    case BEAM_DEVOUR_FOOD:           return "devour food";
     case BEAM_GLOOM:                 return "gloom";
 #endif
     case BEAM_INK:                   return "ink";
