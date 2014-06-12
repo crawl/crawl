@@ -166,6 +166,11 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_colour = DARKGREY;
         break;
 
+    case DUR_NO_POTIONS:
+        if (you.species == SP_MUMMY)
+            inf->light_colour = DARKGREY;
+        break;
+
     case DUR_SWIFTNESS:
         if (you.attribute[ATTR_SWIFTNESS] < 0)
         {
