@@ -297,8 +297,6 @@ COLORS SkillMenuEntry::get_colour() const
             return LIGHTGREEN;
         return you.train[m_sk] ? LIGHTGREEN : GREEN;
     }
-    else if (crosstrain_bonus(m_sk) > 1 && is_set(SKMF_APTITUDE))
-        return GREEN;
     else if (you.train[m_sk] == 2)
         return WHITE;
     else
@@ -326,23 +324,6 @@ string SkillMenuEntry::get_prefix()
 #endif
 }
 
-static bool _crosstrain_other(skill_type sk, skill_menu_state state)
-{
-    vector<skill_type> crosstrain_skills = get_crosstrain_skills(sk);
-
-    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
-    {
-        if (you.skill(crosstrain_skills[i], 10, true)
-            <= you.skill(sk, 10, true) - CROSSTRAIN_THRESHOLD
-           && _show_skill(crosstrain_skills[i], state))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 void SkillMenuEntry::set_aptitude()
 {
     string text = "<white>";
@@ -350,39 +331,28 @@ void SkillMenuEntry::set_aptitude()
     const bool manual = skill_has_manual(m_sk);
     const int apt = species_apt(m_sk, you.species);
 
-    // Crosstraining + manuals aptitude bonus.
-    int ct_bonus = manual ? 4 : 0;
-
-    for (int ct_mult = crosstrain_bonus(m_sk); ct_mult > 1; ct_mult /= 2)
-        ct_bonus += 4;
+    // Manuals aptitude bonus.
+    int manual_bonus = manual ? 4 : 0;
 
     if (apt != 0)
         text += make_stringf("%+d", apt);
     else
         text += make_stringf(" %d", apt);
 
-    text += "</white>";
+    text += "</white> ";
 
-    if (_crosstrain_other(m_sk, skm.get_state(SKM_SHOW)))
+    if (manual_bonus)
     {
-        skm.set_flag(SKMF_CROSSTRAIN);
-        text += "<green>*</green>";
-    }
-    else
-        text += " ";
-
-    if (ct_bonus)
-    {
-        skm.set_flag(SKMF_CROSSTRAIN);
-        text += manual ? "<lightgreen>" : "<green>";
+        skm.set_flag(SKMF_MANUAL);
+        text += "<lightgreen>";
 
         // Only room for two characters.
-        if (ct_bonus < 10)
-            text += make_stringf("+%d", ct_bonus);
+        if (manual_bonus < 10)
+            text += make_stringf("+%d", manual_bonus);
         else
-            text += make_stringf("%d", ct_bonus);
+            text += make_stringf("%d", manual_bonus);
 
-        text += manual ? "</lightgreen>" : "</green>";
+        text += "</lightgreen>";
     }
 
     m_aptitude->set_text(text);
@@ -557,9 +527,7 @@ string SkillMenuSwitch::get_help()
     case SKM_LEVEL_ENHANCED:
         if (skm.is_set(SKMF_ENHANCED))
         {
-            return make_stringf("Skills enhanced by the power of %s are in "
-                                "<blue>blue</blue>. ",
-                                god_name(you.religion).c_str());
+            return make_stringf("Enhanced skills are in <blue>blue</blue>.");
         }
         else
         {
@@ -1227,7 +1195,7 @@ void SkillMenu::set_default_help()
         text = hints_skills_info();
     else
     {
-        if (!is_set(SKMF_CROSSTRAIN))
+        if (!is_set(SKMF_MANUAL))
             text = m_switches[SKM_VIEW]->get_help();
 
         if (get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED)
@@ -1235,12 +1203,10 @@ void SkillMenu::set_default_help()
         else
             text += "The species aptitude is in <white>white</white>. ";
 
-        if (is_set(SKMF_CROSSTRAIN))
+        if (is_set(SKMF_MANUAL))
 
         {
-            text += "Crosstraining is in <green>green</green>. ";
-            text += "The skill responsible for the bonus is marked with "
-                    "'<green>*</green>'.";
+            text += "Manual usage is in <green>green</green>. ";
         }
     }
 
@@ -1269,7 +1235,7 @@ void SkillMenu::set_skills()
 
     SkillMenuEntry::m_letter = '9';
     bool default_set = false;
-    clear_flag(SKMF_CROSSTRAIN);
+    clear_flag(SKMF_MANUAL);
 
     int col = 0, ln = 0;
 
