@@ -43,6 +43,7 @@ game_state::game_state()
       repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
       lua_calls_no_turn(0), stat_gain_prompt(false),
       level_annotation_shown(false), viewport_monster_hp(false),
+      viewport_weapons(false),
 #ifndef USE_TILE_LOCAL
       mlist_targeting(false),
 #else
