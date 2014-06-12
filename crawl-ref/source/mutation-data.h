@@ -1020,7 +1020,7 @@ static const mutation_def mut_data[] =
 { MUT_CONTEMPLATIVE,                6,  3,  MUTFLAG_GOOD, false,
   "contemplative",
 
-  {"Your spells are a little easier to cast, but a little less powerful."
+  {"Your spells are a little easier to cast, but a little less powerful.",
    "Your spells are easier to cast, but less powerful.",
    "Your spells are much easier to cast, but much less powerful."},
 
