@@ -90,6 +90,7 @@ struct game_state
 
     bool level_annotation_shown;
     bool viewport_monster_hp;
+    bool viewport_weapons;
 
 #ifndef USE_TILE_LOCAL
     // Are we currently targeting using the mlist?

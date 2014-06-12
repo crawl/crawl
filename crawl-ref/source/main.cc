@@ -1872,6 +1872,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_TOGGLE_VIEWPORT_MONSTER_HP: toggle_viewport_monster_hp(); break;
+    case CMD_TOGGLE_VIEWPORT_WEAPONS: toggle_viewport_weapons(); break;
     case CMD_TOGGLE_TRAVEL_SPEED:        _toggle_travel_speed(); break;
 
         // Map commands.
@@ -2266,9 +2267,10 @@ void world_reacts()
 
     fire_final_effects();
 
-    if (crawl_state.viewport_monster_hp)
+    if (crawl_state.viewport_monster_hp || crawl_state.viewport_weapons)
     {
         crawl_state.viewport_monster_hp = false;
+        crawl_state.viewport_weapons = false;
         viewwindow();
     }
 
