@@ -1527,6 +1527,9 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
         return false;
     }
 
+    if (is_blessed(wpn))
+        return false;
+
     return true;
 }
 
