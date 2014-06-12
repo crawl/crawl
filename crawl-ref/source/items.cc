@@ -3908,6 +3908,8 @@ item_info get_item_info(const item_def& item)
             ii.plus = item.plus; // monster
             ii.special = food_is_rotten(item) ? 99 : 100;
         }
+        if (ii.sub_type == FOOD_FRUIT)
+            ii.rnd = item.rnd; //appearance
         break;
     case OBJ_CORPSES:
         ii.sub_type = item.sub_type;

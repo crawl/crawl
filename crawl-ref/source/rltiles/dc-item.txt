@@ -534,7 +534,21 @@ i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 %sdir item/food
 meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
 bread_ration FOOD_BREAD_RATION
-choko FOOD_FRUIT
+
+apple FOOD_FRUIT_FIRST
+apricot
+banana
+choko
+grape
+lemon
+lychee
+orange
+pear
+rambutan
+snozzcumber
+strawberry FOOD_FRUIT_LAST
+fruit FOOD_FRUIT_INVENTORY
+
 beef_jerky FOOD_BEEF_JERKY
 lump_of_royal_jelly FOOD_ROYAL_JELLY
 pizza FOOD_PIZZA
