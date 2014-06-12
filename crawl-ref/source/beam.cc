@@ -496,26 +496,6 @@ bool bolt::can_affect_actor(const actor *act) const
     return !act->submerged();
 }
 
-// Affect actor in wall unless it can shield itself using the wall.
-// The wall will always shield the actor if the beam bounces off the
-// wall.
-bool bolt::can_affect_wall_actor(const actor *act) const
-{
-    if (!can_affect_actor(act))
-        return false;
-
-    if (is_enchantment())
-        return true;
-
-    if (!is_explosion && !is_big_cloud)
-        return true;
-
-    if (is_bouncy(grd(act->pos())))
-        return false;
-
-    return false;
-}
-
 static beam_type _chaos_beam_flavour(bolt* beam)
 {
     beam_type flavour;
@@ -1166,27 +1146,13 @@ void bolt::affect_cell()
     const coord_def old_pos = pos();
     const bool was_solid = cell_is_solid(pos());
 
-    if (was_solid)
+    // Note that this can change the ray position and the solidity
+    // of the wall.
+    if (was_solid && hit_wall())
     {
-        // Some special casing.
-        if (actor *act = actor_at(pos()))
-        {
-            if (can_affect_wall_actor(act))
-                affect_actor(act);
-            else if (!is_tracer && you.can_see(act))
-            {
-                mprf("The %s protects %s from harm.",
-                     raw_feature_description(act->pos()).c_str(),
-                     act->name(DESC_THE).c_str());
-            }
-        }
-
-        // Note that this can change the ray position and the solidity
-        // of the wall.
-        if (hit_wall())
-            // Beam ended due to hitting wall, so don't hit the player
-            // or monster with the regressed beam.
-            return;
+        // Beam ended due to hitting wall, so don't hit the player
+        // or monster with the regressed beam.
+        return;
     }
 
     // If the player can ever walk through walls, this will need
