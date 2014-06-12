@@ -854,7 +854,7 @@ static void _decrement_durations()
         && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
-        gain_piety(1, 1, true);
+        gain_piety(1, 1);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
         mprf(MSGCH_DIAGNOSTICS, "Piety increases by 1 due to piety pool.");
