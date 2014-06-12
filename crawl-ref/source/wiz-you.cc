@@ -366,9 +366,9 @@ void wizard_set_piety()
     }
 
     const int newpiety = atoi(buf);
-    if (newpiety < 0 || newpiety > 200)
+    if (newpiety < 0 || newpiety > MAX_PIETY)
     {
-        mpr("Piety needs to be between 0 and 200.");
+        mprf("Piety needs to be between 0 and %d.", MAX_PIETY);
         return;
     }
 
