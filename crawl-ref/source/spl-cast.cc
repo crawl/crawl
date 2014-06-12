@@ -383,6 +383,7 @@ int spell_fail(spell_type spell)
     }
 
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
+    chance2 -= 7 * player_mutation_level(MUT_CONTEMPLATIVE);
 
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
@@ -455,7 +456,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         if (!fail_rate_check)
         {
             power *= 10 + 5 * player_mutation_level(MUT_WILD_MAGIC);
-            power /= 10;
+            power /= 10 + 5 * player_mutation_level(MUT_CONTEMPLATIVE);
         }
 
         // Augmentation boosts spell power at high HP.
