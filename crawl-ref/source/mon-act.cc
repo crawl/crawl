@@ -1314,7 +1314,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
         zap = mons_should_fire(beem);
     }
 
-   
     if (zap)
     {
         _rod_fired_pre(mons);
