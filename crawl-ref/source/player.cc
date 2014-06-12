@@ -6298,12 +6298,12 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     // skill training, so make sure to use the correct value.
     // This duplicates code in check_skill_level_change(), unfortunately.
     int actual_skill = skills[sk];
-    uint32_t effective_points = skill_points[sk];
-    if (!real) {
-      vector<skill_type> cross_skills = get_crosstrain_skills(sk);
-      for (size_t i = 0; i < cross_skills.size(); ++i) {
-        effective_points += skill_points[cross_skills[i]] / 5;
-      }
+    unsigned int effective_points = skill_points[sk];
+    if (!real)
+    {
+        vector<skill_type> cross_skills = get_crosstrain_skills(sk);
+        for (size_t i = 0; i < cross_skills.size(); ++i)
+            effective_points += skill_points[cross_skills[i]] / 5;
     }
     effective_points = min(effective_points, 29750u);
     while (1)
