@@ -2845,7 +2845,7 @@ void set_piety(int piety)
         diff = piety - you.piety;
         if (diff > 0)
         {
-            if (!gain_piety(diff, 1, true, false))
+            if (!gain_piety(diff, 1, false))
                 break;
         }
         else if (diff < 0)
@@ -2860,14 +2860,13 @@ static void _gain_piety_point();
  *
  * @param original_gain The numerator of the nominal piety gain.
  * @param denominator The denominator of the nominal piety gain.
- * @param force Unused.
  * @param should_scale_piety Should the piety gain be scaled by faith,
  *   forlorn, and Sprint?
  * @return True if something happened, or if another call with the same
  *   arguments might cause something to happen (because of random number
  *   rolls).
  */
-bool gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
+bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
 {
     if (original_gain <= 0)
         return false;
@@ -4042,7 +4041,7 @@ void god_pitch(god_type which_god)
     if (crawl_state.game_is_tutorial())
     {
         // Tutorial needs berserk usable.
-        gain_piety(30, 1, true, false);
+        gain_piety(30, 1, false);
     }
 
     if (you_worship(GOD_BEOGH))
@@ -4165,7 +4164,7 @@ void god_pitch(god_type which_god)
         }
         // Give a piety bonus when switching between good gods.
         if (old_piety > piety_breakpoint(0))
-            gain_piety(old_piety - piety_breakpoint(0), 2, true, false);
+            gain_piety(old_piety - piety_breakpoint(0), 2, false);
     }
 
     // Warn if a good god is starting wrath now.
@@ -4196,11 +4195,11 @@ void god_pitch(god_type which_god)
     if (you.char_class == JOB_MONK && had_gods() <= 1)
     {
         // monks get bonus piety for first god
-        gain_piety(35, 1, true, false);
+        gain_piety(35, 1, false);
     }
 
     if (you_worship(GOD_LUGONU) && you.worshipped[GOD_LUGONU] == 1)
-        gain_piety(20, 1, true, false);  // allow instant access to first power
+        gain_piety(20, 1, false);  // allow instant access to first power
 
     // Complimentary jelly upon joining.
     if (you_worship(GOD_JIYVA))
