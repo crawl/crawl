@@ -97,7 +97,7 @@ int get_vorpal_type(const item_def &item) PURE;
 int get_damage_type(const item_def &item) PURE;
 int single_damage_type(const item_def &item) PURE;
 
-bool is_brandable_weapon(const item_def &wpn, bool allow_ranged);
+bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine = false);
 
 int weapon_str_weight(const item_def &wpn) PURE;
 

@@ -92,7 +92,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     item_def& wpn(you.inv[item_slot]);
 
     // Only TSO allows blessing ranged weapons.
-    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH))
+    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
         return false;
 
     string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
