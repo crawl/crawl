@@ -6,6 +6,7 @@
 #include "branch.h"
 #include "env.h"
 #include "evoke.h"
+#include "food.h"
 #include "godabil.h"
 #include "godpassive.h"
 #include "libutil.h"
@@ -167,7 +168,7 @@ bool fill_status_info(int status, status_info* inf)
         break;
 
     case DUR_NO_POTIONS:
-        if (you.species == SP_MUMMY)
+        if (you_foodless(true))
             inf->light_colour = DARKGREY;
         break;
 
