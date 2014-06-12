@@ -455,8 +455,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // Wild magic boosts spell power but decreases success rate.
         if (!fail_rate_check)
         {
-            power *= 10 + 5 * player_mutation_level(MUT_WILD_MAGIC);
-            power /= 10 + 5 * player_mutation_level(MUT_CONTEMPLATIVE);
+            power *= (10 + 5 * player_mutation_level(MUT_WILD_MAGIC));
+            power /= (10 + 5 * player_mutation_level(MUT_CONTEMPLATIVE));
         }
 
         // Augmentation boosts spell power at high HP.
