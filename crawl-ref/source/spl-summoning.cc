@@ -808,7 +808,6 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
 {
     bool target_is_player = target == &you;
     item_def* wpn = target->weapon();
-    item_def cp = *wpn;
     if (target_is_player)
     {
         // Clear temp branding so we don't change the brand permanently.
@@ -819,8 +818,9 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
         }
 
         // Mark weapon as "thrown", so we'll autopickup it later.
-        cp.flags |= ISFLAG_THROWN;
+        wpn->flags |= ISFLAG_THROWN;
     }
+    item_def cp = *wpn;
     // Self-casting haunts yourself!
     const bool friendly = force_friendly || !target_is_player;
     const int dur = min(2 + (random2(pow) / 5), 6);

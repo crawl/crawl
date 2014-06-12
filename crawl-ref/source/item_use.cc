@@ -56,6 +56,7 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
+#include "spl-wpnench.h"
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
@@ -2139,9 +2140,9 @@ static bool _god_hates_brand(const int brand)
 
 static void _rebrand_weapon(item_def& wpn)
 {
+    if (&wpn == you.weapon() && you.duration[DUR_WEAPON_BRAND])
+        end_weapon_brand(wpn);
     int old_brand = get_weapon_brand(wpn);
-    if (you.duration[DUR_WEAPON_BRAND])
-        old_brand = you.props["orig brand"];
     int new_brand = old_brand;
     const string itname = wpn.name(DESC_YOUR);
 
