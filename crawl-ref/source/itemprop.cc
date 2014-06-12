@@ -1527,12 +1527,6 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
         return false;
     }
 
-    if (you.duration[DUR_WEAPON_BRAND] != 0
-        && you.weapon() == &wpn)
-    {
-        return false;
-    }
-
     return true;
 }
 

@@ -444,9 +444,9 @@ static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
     }
 }
 
-const char* weapon_brand_name(const item_def& item, bool terse)
+const char* weapon_brand_name(const item_def& item, bool terse, int override_brand)
 {
-    switch (get_weapon_brand(item))
+    switch (override_brand == -1 ? get_weapon_brand(item) : override_brand)
     {
     case SPWPN_NORMAL: return "";
     case SPWPN_FLAMING: return terse ? "flame" : "flaming";
@@ -1218,7 +1218,7 @@ string sub_type_string(const item_def &item, bool known)
     }
 }
 
-string ego_type_string(const item_def &item, bool terse)
+string ego_type_string(const item_def &item, bool terse, int override_brand)
 {
     switch (item.base_type)
     {
@@ -1227,15 +1227,17 @@ string ego_type_string(const item_def &item, bool terse)
     case OBJ_WEAPONS:
         if (!terse)
         {
+            int checkbrand = override_brand == -1 ? get_weapon_brand(item)
+                                                  : override_brand;
             // this is specialcased out of weapon_brand_name
             // ("vampiric hand axe", etc)
-            if (get_weapon_brand(item) == SPWPN_VAMPIRICISM)
+            if (checkbrand == SPWPN_VAMPIRICISM)
                 return "vampiricism";
-            else if (get_weapon_brand(item) == SPWPN_ANTIMAGIC)
+            else if (checkbrand == SPWPN_ANTIMAGIC)
                 return "antimagic";
         }
         if (get_weapon_brand(item) != SPWPN_NORMAL)
-            return weapon_brand_name(item, terse);
+            return weapon_brand_name(item, terse, override_brand);
         else
             return "";
     case OBJ_MISSILES:

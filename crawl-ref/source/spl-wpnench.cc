@@ -13,8 +13,11 @@
 #include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
+#include "religion.h"
 #include "shout.h"
 #include "skills2.h"
+#include "spl-miscast.h"
+#include "stuff.h"
 
 // We need to know what brands equate with what missile brands to know if
 // we should disallow temporary branding or not.
@@ -49,6 +52,55 @@ static bool _ok_for_launchers(brand_type which_brand)
     }
 }
 
+/** End your weapon branding spell.
+ *
+ * Returns the weapon to the previous brand, and ends the
+ * DUR_WEAPON_BRAND.
+ * @param verbose whether to print a message about expiration.
+ */
+void end_weapon_brand(bool verbose)
+{
+    ASSERT(you.duration[DUR_WEAPON_BRAND]);
+    ASSERT(you.weapon());
+
+    item_def& weapon = *you.weapon();
+    const int temp_effect = get_weapon_brand(weapon);
+    set_item_ego_type(weapon, OBJ_WEAPONS, you.props["orig brand"]);
+    you.wield_change = true;
+    you.props.erase("orig brand");
+    you.duration[DUR_WEAPON_BRAND] = 0;
+    if (verbose)
+    {
+        const char *msg = nullptr;
+
+        switch (temp_effect)
+        {
+        case SPWPN_VORPAL:
+            if (get_vorpal_type(weapon) == DVORP_SLICING)
+                msg = " seems blunter.";
+            else
+                msg = " feels lighter.";
+            break;
+        case SPWPN_ANTIMAGIC:
+            msg = " stops repelling magic.";
+            calc_mp();
+            break;
+        case SPWPN_FLAMING:       msg = " goes out."; break;
+        case SPWPN_FREEZING:      msg = " stops glowing."; break;
+        case SPWPN_VENOM:         msg = " stops dripping with poison."; break;
+        case SPWPN_DRAINING:      msg = " stops crackling."; break;
+        case SPWPN_DISTORTION:    msg = " seems straighter."; break;
+        case SPWPN_PAIN:          msg = " seems less pained."; break;
+        case SPWPN_CHAOS:         msg = " seems more stable."; break;
+        case SPWPN_ELECTROCUTION: msg = " stops emitting sparks."; break;
+        case SPWPN_HOLY_WRATH:    msg = "'s light goes out."; break;
+        default: msg = " seems inexplicably less special."; break;
+        }
+
+        mprf(MSGCH_DURATION, "%s%s", weapon.name(DESC_YOUR).c_str(), msg);
+    }
+}
+
 spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 {
     if (!you.weapon())
@@ -57,7 +109,6 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         return SPRET_ABORT;
     }
 
-    bool temp_brand = you.duration[DUR_WEAPON_BRAND];
     item_def& weapon = *you.weapon();
 
     if (!is_brandable_weapon(weapon, true))
@@ -69,10 +120,11 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         return SPRET_ABORT;
     }
 
-    // Can't brand already-branded items.
-    if (!temp_brand && get_weapon_brand(weapon) != SPWPN_NORMAL)
+    bool has_temp_brand = you.duration[DUR_WEAPON_BRAND];
+    // No need to brand with a brand it's already branded with.
+    if (!has_temp_brand && get_weapon_brand(weapon) == which_brand)
     {
-        mpr("This weapon is already enchanted.");
+        mpr("This weapon is already enchanted with that brand.");
         return SPRET_ABORT;
     }
 
@@ -102,19 +154,28 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         }
     }
 
-    fail_check();
-
-    // Allow rebranding a temporarily-branded item to a different brand.
-    if (temp_brand && (get_weapon_brand(weapon) != which_brand))
+    // Can't get out of it that easily...
+    if (get_weapon_brand(weapon) == SPWPN_DISTORTION
+        && !has_temp_brand
+        && !you_worship(GOD_LUGONU))
     {
-        you.duration[DUR_WEAPON_BRAND] = 0;
-        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
-        temp_brand = false;
+        const string prompt =
+              "Really brand " + weapon.name(DESC_INVENTORY) + "?";
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+        MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
+                      9, 90, "a distortion unwield");
     }
+
+    fail_check();
 
     string msg = weapon.name(DESC_YOUR);
 
-    bool emit_special_message = !temp_brand;
+    bool extending = has_temp_brand && get_weapon_brand(weapon) == which_brand;
+    bool emit_special_message = !extending;
     int duration_affected = 10;
     switch (which_brand)
     {
@@ -190,8 +251,11 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         break;
     }
 
-    if (!temp_brand)
+    if (!extending)
     {
+        if (has_temp_brand)
+            end_weapon_brand();
+        you.props["orig brand"] = get_weapon_brand(weapon);
         set_item_ego_type(weapon, OBJ_WEAPONS, which_brand);
         you.wield_change = true;
     }

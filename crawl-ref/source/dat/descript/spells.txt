@@ -475,8 +475,7 @@ the recipients on the brink of death but never outright kills them.
 Excruciating Wounds spell
 
 This spell temporarily infuses the weapon held by the caster with the essence
-of pain itself. It will not affect artefact weapons or weapons that are already
-branded.
+of pain itself. It will not affect artefact weapons.
 %%%%
 Explosive Bolt spell
 
@@ -1454,9 +1453,8 @@ through unhindered.
 Warp Weapon spell
 
 This spell temporarily binds a localized warp field to the caster's weapon.
-It will not affect artefact weapons or weapons that are already branded. Unlike
-a permanently distortion-branded weapon, the affected weapon may still be
-safely unwielded.
+It will not affect artefact weapons. Unlike a permanently distortion-branded
+weapon, the affected weapon may still be safely unwielded.
 %%%%
 Waterstrike spell
 

@@ -2139,7 +2139,9 @@ static bool _god_hates_brand(const int brand)
 
 static void _rebrand_weapon(item_def& wpn)
 {
-    const int old_brand = get_weapon_brand(wpn);
+    int old_brand = get_weapon_brand(wpn);
+    if (you.duration[DUR_WEAPON_BRAND])
+        old_brand = you.props["orig brand"];
     int new_brand = old_brand;
     const string itname = wpn.name(DESC_YOUR);
 
