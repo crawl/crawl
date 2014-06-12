@@ -1595,7 +1595,9 @@ enum duration_type
     DUR_DEATHS_DOOR,
     DUR_FIRE_SHIELD,
 
-    DUR_BUILDING_RAGE,          // countdown to starting berserk
+#if TAG_MAJOR_VERSION == 34
+    DUR_BUILDING_RAGE,
+#endif
     DUR_EXHAUSTED,              // fatigue counter for berserk
 
     DUR_LIQUID_FLAMES,

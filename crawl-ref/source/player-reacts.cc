@@ -445,10 +445,6 @@ static void _decrement_durations()
             you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
     }
 
-    // Must come before berserk.
-    if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
-        you.go_berserk(false);
-
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
 
