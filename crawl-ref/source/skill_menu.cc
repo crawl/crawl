@@ -526,9 +526,7 @@ string SkillMenuSwitch::get_help()
                "fast as others.";
     case SKM_LEVEL_ENHANCED:
         if (skm.is_set(SKMF_ENHANCED))
-        {
             return make_stringf("Enhanced skills are in <blue>blue</blue>.");
-        }
         else
         {
             vector<string> causes;
