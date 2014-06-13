@@ -992,7 +992,7 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size   = x_chance_in_y(origin.hit_dice, 24) ? 3 : 2;
     // Don't credit the player for ally-summoned ball lightning explosions.
     if (origin.summoner && origin.summoner != MID_PLAYER)
-            beam.thrower = KILL_MON;
+        beam.thrower = KILL_MON;
 }
 
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
