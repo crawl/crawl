@@ -388,9 +388,9 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
 bool ranged_attack::attack_ignores_shield(bool verbose)
 {
     if (is_launched(attacker, weapon, *projectile) != LRET_FUMBLED
-        && (weapon && get_weapon_brand(*weapon) == SPWPN_PENETRATION
-            || projectile->base_type == OBJ_MISSILES
-               && get_ammo_brand(*projectile) == SPMSL_PENETRATION))
+            && projectile->base_type == OBJ_MISSILES
+            && get_ammo_brand(*projectile) == SPMSL_PENETRATION
+        || using_weapon() && get_weapon_brand(*weapon) == SPWPN_PENETRATION)
     {
         if (verbose)
         {
