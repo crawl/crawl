@@ -3506,6 +3506,8 @@ static bool _mons_has_ranged_ability(const monster* mon)
     case MONS_FIRE_DRAKE:
     case MONS_XTAHUA:
     case MONS_FIRE_CRAB:
+    case MONS_APOCALYPSE_CRAB:
+    case MONS_GHOST_CRAB:
     case MONS_ELECTRIC_EEL:
     case MONS_LAVA_SNAKE:
     case MONS_MANTICORE:

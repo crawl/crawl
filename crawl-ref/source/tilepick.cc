@@ -912,7 +912,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     case MON_SHAPE_QUADRUPED_TAILLESS:
         if (mons_base_char(subtype) == 'F')
             z_tile = TILEP_MONS_ZOMBIE_TOAD;
-        else if (subtype == MONS_FIRE_CRAB || subtype == MONS_APOCALYPSE_CRAB)
+        else if (mons_genus(subtype) == MONS_CRAB)
             z_tile = TILEP_MONS_ZOMBIE_CRAB;
         else if (subtype == MONS_SNAPPING_TURTLE || subtype == MONS_ALLIGATOR_SNAPPING_TURTLE)
             z_tile = TILEP_MONS_ZOMBIE_TURTLE;
