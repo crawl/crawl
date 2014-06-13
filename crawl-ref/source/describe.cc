@@ -990,10 +990,17 @@ static string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (you.duration[DUR_WEAPON_BRAND])
+    if (you.duration[DUR_WEAPON_BRAND] && &item == you.weapon())
     {
-        description += "\nIt is temporarily rebranded; it is actually a weapon of "
-                       + ego_type_string(item, false, you.props["orig brand"]) + ".";
+        description += "\nIt is temporarily rebranded; it is actually a";
+        if ((int) you.props["orig brand"] == SPWPN_NORMAL)
+            description += "n unbranded weapon.";
+        else
+        {
+            description += " weapon of "
+                        + ego_type_string(item, false, you.props["orig brand"])
+                        + ".";
+        }
     }
 
     if (is_artefact(item))

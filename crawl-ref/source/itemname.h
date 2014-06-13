@@ -101,7 +101,7 @@ bool is_useless_item(const item_def &item, bool temp = false);
 
 string make_name(uint32_t seed, bool all_caps, int maxlen = -1, char start = 0);
 
-const char* weapon_brand_name(const item_def& item, bool terse, int override_brand = -1);
+const char* weapon_brand_name(const item_def& item, bool terse, int override_brand = 0);
 const char* armour_ego_name(const item_def& item, bool terse);
 
 bool item_type_has_ids(object_class_type base_type);
@@ -134,7 +134,7 @@ string base_type_string(const item_def &item, bool known = true);
 
 string sub_type_string(const item_def &item, bool known = true);
 
-string ego_type_string(const item_def &item, bool terse = false, int override_brand = -1);
+string ego_type_string(const item_def &item, bool terse = false, int override_brand = 0);
 
 const char* potion_type_name(int potiontype);  //used in xom.cc
 #endif
