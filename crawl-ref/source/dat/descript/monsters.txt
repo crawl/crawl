@@ -1183,6 +1183,11 @@ gargoyle
 
 A granite statue of a hideous winged monster, somehow brought to life.
 %%%%
+ghost crab
+
+A close relative of the fire crab, twisted by proximity to negative energy.
+Apparitions of the dead swirl around it, only barely visible.
+%%%%
 ghost moth
 
 A vile interdimensional predator that feeds on the life force of living beings.

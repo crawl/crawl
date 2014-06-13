@@ -3773,6 +3773,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
             spell = SPELL_CHAOS_BREATH;
     // Intentional fallthrough
 
+    case MONS_GHOST_CRAB:
+        if (spell == SPELL_NO_SPELL)
+            spell = SPELL_GHOSTLY_FLAMES;
+    // Intentional fallthrough
+
     // Dragon breath weapons:
     case MONS_FIRE_DRAGON:
     case MONS_HELL_HOUND:
@@ -3799,13 +3804,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             setup_mons_cast(mons, beem, spell);
 
-            if (mons->type == MONS_FIRE_CRAB)
-            {
-                beem.is_big_cloud = true;
-                beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
-            }
-
-            if (mons->type == MONS_APOCALYPSE_CRAB)
+            if (mons->type == MONS_FIRE_CRAB
+                || mons->type == MONS_APOCALYPSE_CRAB
+                || mons->type == MONS_GHOST_CRAB)
             {
                 beem.is_big_cloud = true;
                 beem.damage       = dice_def(1, (mons->hit_dice*3)/2);

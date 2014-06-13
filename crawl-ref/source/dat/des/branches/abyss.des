@@ -1513,6 +1513,7 @@ TAGS:    abyss_rune unrand transparent
 KMONS:   O = apocalypse crab / nothing
 KMONS:   1P = apocalypse crab
 KMONS:   2 = fire crab
+KMONS:   3 = ghost crab
 KITEM:   OP = abyssal rune of Zot
 KFEAT:   O1Pw = W
 SHUFFLE: O1/O1/Pw
@@ -1529,7 +1530,7 @@ MAP
  ..cc.....cc..
  ..c.......c..
  .ccc.....ccc.
- .c2.......2c.
+ .c2.......3c.
  .ccc.....ccc.
  .............
 ENDMAP

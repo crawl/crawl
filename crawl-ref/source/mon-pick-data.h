@@ -501,7 +501,7 @@ static const pop_entry pop_crypt[] =
   { -2,  4,   70, PEAK, MONS_SHADOW },
   { -2,  4,   40, PEAK, MONS_WIGHT },
   { -2,  4,   45, PEAK, MONS_FLYING_SKULL },
-  {  1,  5,   35, FLAT, MONS_HUNGRY_GHOST },
+  {  1,  5,   75, DOWN, MONS_GHOST_CRAB },
   { 0,0,0,FLAT,MONS_0 }
 };
 
@@ -679,7 +679,7 @@ static const pop_entry pop_tar[] =
   {  1,  7,  367, FLAT, MONS_TORMENTOR },
   {  1,  7,  244, SEMI, MONS_ICE_DEVIL },
   {  1,  7,  217, SEMI, MONS_BLUE_DEVIL },
-  {  1,  7,  230, SEMI, MONS_MUMMY },
+  {  1,  7,  230, SEMI, MONS_GHOST_CRAB },
   {  1,  7,  217, FLAT, MONS_HUNGRY_GHOST },
   {  1,  7,  192, FLAT, MONS_FLAYED_GHOST },
   {  1,  7,  420, FLAT, MONS_PHANTASMAL_WARRIOR },
