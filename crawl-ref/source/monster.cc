@@ -2199,12 +2199,7 @@ bool monster::pickup_gold(item_def &item, int near)
 
 bool monster::pickup_misc(item_def &item, int near)
 {
-    if (mons_is_item_mimic(type))
-        return pickup(item, MSLOT_MISCELLANY, near);
-
-    // Monsters can't use any miscellaneous items right now, so don't
-    // let them pick them up.
-    return false;
+    return pickup(item, MSLOT_MISCELLANY, near);
 }
 
 // Eaten items are handled elsewhere, in _handle_pickup() in mon-stuff.cc.
@@ -2266,8 +2261,6 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     // Pickup some stuff only if WANDERING.
     case OBJ_ARMOUR:
         return pickup_armour(item, near, force);
-    case OBJ_MISCELLANY:
-        return pickup_misc(item, near);
     case OBJ_GOLD:
         return pickup_gold(item, near);
     case OBJ_JEWELLERY:
@@ -2289,6 +2282,9 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     case OBJ_POTIONS:
         return pickup_potion(item, near);
     case OBJ_BOOKS:
+    case OBJ_MISCELLANY:
+        // Monsters can't use any miscellaneous items right now, so don't
+        // let them pick them up unless explicitly given.
         if (force)
             return pickup_misc(item, near);
         // else fall through
