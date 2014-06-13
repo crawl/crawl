@@ -3936,7 +3936,8 @@ static void _place_assorted_zombies()
         monster_type z_base;
         do
             z_base = pick_random_zombie();
-        while (skel && !mons_skeleton(z_base));
+        while (mons_class_flag(z_base, M_NO_GEN_DERIVED)
+               || !(skel ? mons_skeleton(z_base) : mons_zombifiable(z_base)));
 
         mgen_data mg;
         mg.cls = (skel ? MONS_SKELETON : MONS_ZOMBIE);
