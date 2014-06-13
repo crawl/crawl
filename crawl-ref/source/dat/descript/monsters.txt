@@ -1715,11 +1715,6 @@ monstrous demonspawn
 
 <demonspawn>
 %%%%
-moth
-
-Although this moth is unusually large and aggressive, it is quite mundane
-compared to most moths found in the dungeon.
-%%%%
 moth of wrath
 
 A rare species of moth, eradicated from the surface centuries ago due to its
