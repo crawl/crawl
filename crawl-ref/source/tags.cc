@@ -47,6 +47,7 @@
 #include "ghost.h"
 #include "godcompanions.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -3706,10 +3707,20 @@ void unmarshallItem(reader &th, item_def &item)
 
     // Not putting these in a minor tag since it's possible for an old
     // random monster spawn list to place flame/frost weapons.
-    if (item.base_type == OBJ_WEAPONS && item.special == SPWPN_FROST)
-        item.special = SPWPN_FREEZING;
-    if (item.base_type == OBJ_WEAPONS && item.special == SPWPN_FLAME)
-        item.special = SPWPN_FLAMING;
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FROST)
+    {
+        if (is_artefact(item))
+            artefact_set_property(item, ARTP_BRAND, SPWPN_FREEZING);
+        else
+            item.special = SPWPN_FREEZING;
+    }
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FLAME)
+    {
+        if (is_artefact(item))
+            artefact_set_property(item, ARTP_BRAND, SPWPN_FLAMING);
+        else
+            item.special = SPWPN_FLAMING;
+    }
 
     if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_HORN_OF_GERYON
         && th.getMinorVersion() < TAG_MINOR_HORN_GERYON_CHANGE)
