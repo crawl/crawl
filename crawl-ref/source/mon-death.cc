@@ -1822,6 +1822,7 @@ int monster_die(monster* mons, killer_type killer,
     const bool exploded      = mons->flags & MF_EXPLODE_KILL;
 
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
+    const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
           bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     mon_holy_type targ_holy = mons->holiness();
 
@@ -1838,8 +1839,11 @@ int monster_die(monster* mons, killer_type killer,
 
     // Adjust song of slaying bonus
     // Kills by the spectral weapon should be adjusted by this point to be
-    // kills by the player --- so kills by the spectral weapon are considered here as well
-    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp)
+    // kills by the player --- so kills by the spectral weapon are considered
+    // here as well
+    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && gives_xp
+        && !mons->has_ench(ENCH_ABJ) && !fake_abjuration && !created_friendly
+        && !was_neutral)
     {
         int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
         mon_threat_level_type threat = mons_threat_level(mons, true);
@@ -1861,7 +1865,6 @@ int monster_die(monster* mons, killer_type killer,
         {
             const bool bad_kill    = god_hates_killing(you.religion, mons)
                                      && killer_index != YOU_FAULTLESS;
-            const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
             const bool good_kill   = gives_xp && !created_friendly;
 
             if (death_message)
