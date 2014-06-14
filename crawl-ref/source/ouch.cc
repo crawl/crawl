@@ -877,6 +877,22 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
 
+    if (dam > 0 && player_mutation_level(MUT_NO_DRINK))
+    {
+        if (one_chance_in(min(1, you.hp_max - dam*2))) {
+            you.increase_duration(DUR_NO_POTIONS, 1 + random2(dam), 30);
+            mpr("You feel threatened and lose the ability to drink potions!");
+        }
+    }
+
+    if (dam > 0 && player_mutation_level(MUT_NO_READ))
+    {
+        if (one_chance_in(min(1, you.hp_max - dam*2))) {
+            you.increase_duration(DUR_NO_SCROLLS, 1 + random2(dam), 30);
+            mpr("You feel threatened and lose the ability to read scrolls!");
+        }
+    }
+
     if (dam > 0 && death_type != KILLED_BY_POISON)
         you.check_awaken(500);
 

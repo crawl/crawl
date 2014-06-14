@@ -681,6 +681,10 @@ static void _decrement_durations()
                                              : "You can drink potions again.",
                           0, NULL, MSGCH_RECOVERY);
 
+    _decrement_a_duration(DUR_NO_SCROLLS, delay,
+                          "You can read scrolls again.",
+                          0, NULL, MSGCH_RECOVERY);
+
     dec_slow_player(delay);
     dec_exhaust_player(delay);
     dec_haste_player(delay);

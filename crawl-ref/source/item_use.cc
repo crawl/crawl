@@ -2723,6 +2723,12 @@ void read_scroll(int slot)
         return;
     }
 
+    if (you.duration[DUR_NO_SCROLLS])
+    {
+        mpr("You cannot read scrolls in your current state!");
+        return;
+    }
+
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
