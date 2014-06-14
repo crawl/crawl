@@ -3728,6 +3728,11 @@ conduct_type player_will_anger_monster(monster_type type)
 
 conduct_type player_will_anger_monster(monster* mon)
 {
+    if (player_mutation_level(MUT_NO_LOVE))
+    {
+        // Player angers all monsters
+        return DID_SACRIFICE_LOVE;
+    }
     if (is_good_god(you.religion) && mon->is_unholy())
         return DID_UNHOLY;
     if (is_good_god(you.religion) && mon->is_evil())
@@ -3785,6 +3790,9 @@ bool player_angers_monster(monster* mon)
                 break;
             case DID_SPELL_CASTING:
                 mprf("%s is enraged by your magic-hating god!", mname.c_str());
+                break;
+            case DID_SACRIFICE_LOVE:
+                mprf("%s can only feel hate for you!", mname.c_str());
                 break;
             default:
                 mprf("%s is enraged by a buggy thing about you!", mname.c_str());
