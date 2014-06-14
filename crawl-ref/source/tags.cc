@@ -3828,7 +3828,7 @@ void unmarshallItem(reader &th, item_def &item)
     {
         int acc, dam, slay = 0;
 
-        if (is_artefact(item))
+        if (item.props.exists(ARTEFACT_PROPS_KEY))
         {
             acc = artefact_wpn_property(item, ARTP_ACCURACY);
             dam = artefact_wpn_property(item, ARTP_SLAYING);
