@@ -1751,6 +1751,7 @@ enum duration_type
     DUR_QAZLAL_AC,
     DUR_CORROSION,
     DUR_FORTITUDE,
+    DUR_HORROR,
     NUM_DURATIONS
 };
 

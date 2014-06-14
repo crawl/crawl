@@ -385,6 +385,9 @@ int spell_fail(spell_type spell)
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
     chance2 -= 7 * player_mutation_level(MUT_CONTEMPLATIVE);
 
+    if (you.duration[DUR_HORROR])
+        chance2 += 3 * you.props["horror_penalty"].get_int();
+
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
 
