@@ -329,6 +329,10 @@ static const duration_def duration_data[] =
       false, RED, "Horr",
       "horrified", "",
       "You are horrified by the amount of blood." },
+    { DUR_NO_SCROLLS,
+      false, RED, "-Scroll",
+      "no scrolls", "",
+      "You cannot read scrolls." },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.

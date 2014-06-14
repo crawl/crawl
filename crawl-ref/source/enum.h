@@ -1752,6 +1752,7 @@ enum duration_type
     DUR_CORROSION,
     DUR_FORTITUDE,
     DUR_HORROR,
+    DUR_NO_SCROLLS,
     NUM_DURATIONS
 };
 

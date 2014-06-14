@@ -4952,6 +4952,28 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
     switch (sacrifice)
     {
+        case ABIL_IASHOL_SACRIFICE_WORDS:
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(MUT_NO_READ, 1, "Iashol sacrifice");
+            }
+            gain_piety(35 + random2(5));
+            break;
+        case ABIL_IASHOL_SACRIFICE_DRINK:
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(MUT_NO_DRINK, 1, "Iashol sacrifice");
+            }
+            gain_piety(35 + random2(5));
+            break;
         case ABIL_IASHOL_SACRIFICE_STEALTH:
             if (!yesno("Do you really want to do make this sacrifice?",
                 false, 'n'))
