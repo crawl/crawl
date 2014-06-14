@@ -2409,8 +2409,12 @@ bool ShoppingList::items_are_same(const item_def& item_a,
 
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
-    if (crawl_state.map_stat_gen || crawl_state.test)
+    if (crawl_state.map_stat_gen
+        || crawl_state.obj_stat_gen
+        || crawl_state.test)
+    {
         return; // Shopping list is unitialized and uneeded.
+    }
 
     const level_pos src(level_id::current(), _src);
     const level_pos dst(level_id::current(), _dst);

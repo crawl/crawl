@@ -14,6 +14,7 @@
 #include "ctest.h"
 #include "database.h"
 #include "dbg-maps.h"
+#include "dbg-scan.h"
 #include "defines.h"
 #include "dlua.h"
 #include "dungeon.h"
@@ -118,8 +119,8 @@ static void _initialize()
     // Draw the splash screen before the database gets initialised as that
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
-    if (!crawl_state.map_stat_gen && !crawl_state.test
-        && crawl_state.title_screen)
+    if (!crawl_state.map_stat_gen && !crawl_state.obj_stat_gen
+        && !crawl_state.test && crawl_state.title_screen)
     {
         tiles.draw_title();
         tiles.update_title_msg("Loading databases...");
@@ -161,6 +162,12 @@ static void _initialize()
     {
         release_cli_signals();
         mapstat_generate_stats();
+        end(0, false);
+    }
+    else if (crawl_state.obj_stat_gen)
+    {
+        release_cli_signals();
+        objgen_generate_stats();
         end(0, false);
     }
 #endif

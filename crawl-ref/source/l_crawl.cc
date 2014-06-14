@@ -658,6 +658,7 @@ static int crawl_article_a(lua_State *ls)
 
 LUARET1(crawl_game_started, boolean, crawl_state.need_save
                                      || crawl_state.map_stat_gen
+                                     || crawl_state.obj_stat_gen
                                      || crawl_state.test)
 LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
 LUARET1(crawl_random2, number, random2(luaL_checkint(ls, 1)))

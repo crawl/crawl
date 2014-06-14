@@ -366,7 +366,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         you.uniq_map_names = uniq_names;
     }
 
-    if (!crawl_state.map_stat_gen)
+    if (!crawl_state.map_stat_gen && !crawl_state.obj_stat_gen)
     {
         // Failed to build level, bail out.
         if (crawl_state.need_save)
@@ -5478,7 +5478,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
         {
             // Altar god doesn't matter, setting up the whole machinery would
             // be too much work.
-            if (crawl_state.map_stat_gen)
+            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen)
                 return DNGN_ALTAR_XOM;
 
             mprf(MSGCH_ERROR, "Ran out of altars for temple!");
