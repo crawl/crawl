@@ -51,6 +51,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "place.h"
+#include "player-equip.h"
 #include "player-stats.h"
 #include "potion.h"
 #include "random.h"
@@ -5030,6 +5031,40 @@ void iashol_do_sacrifice(ability_type sacrifice)
             }
             gain_piety(25 + random2(5) + div_rand_round(skill_exp_needed(
                     you.skills[SK_SUMMONINGS], SK_SUMMONINGS, SP_HUMAN), 50));
+            break;
+        case ABIL_IASHOL_SACRIFICE_HAND:
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(MUT_MISSING_HAND, 1, "Iashol sacrifice");
+            }
+
+            // Drop your shield if there is one
+            if (you.inv[EQ_SHIELD].defined())
+            {
+                item_def& shield = you.inv[EQ_SHIELD];
+                mprf("You can no longer hold %s!",
+                    shield.name(DESC_YOUR).c_str());
+                unequip_item(EQ_SHIELD);
+            }
+
+            // And your two-handed weapon
+            if (you.inv[EQ_WEAPON].defined())
+            {
+                item_def& weapon = you.inv[EQ_WEAPON];
+                if (you.hands_reqd(weapon) == HANDS_TWO)
+                {
+                    mprf("You can no longer hold %s!",
+                        weapon.name(DESC_YOUR).c_str());
+                    unequip_item(EQ_WEAPON);
+                }
+            }
+
+            gain_piety(80 + div_rand_round(skill_exp_needed(
+                    you.skills[SK_SHIELDS], SK_SHIELDS, SP_HUMAN), 50));
             break;
         default:
             return;

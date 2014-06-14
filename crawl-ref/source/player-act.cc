@@ -409,8 +409,12 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
     const bool two_handed = item.base_type == OBJ_UNASSIGNED
                             || hands_reqd(item) == HANDS_TWO;
 
-    if (two_handed && !ignore_shield && player_wearing_slot(EQ_SHIELD))
+    if (two_handed && (
+        (!ignore_shield && player_wearing_slot(EQ_SHIELD))
+        || player_mutation_level(MUT_MISSING_HAND)))
+    {
         return false;
+    }
 
     return could_wield(item, ignore_brand, ignore_transform);
 }
