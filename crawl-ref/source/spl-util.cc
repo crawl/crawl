@@ -1110,6 +1110,37 @@ bool spell_is_useless(spell_type spell, bool transient)
 #endif
     }
 
+    // Check for banned schools.
+    if (
+        (spell_typematch(spell, SPTYP_AIR
+            && player_mutation_level(MUT_NO_AIR_MAGIC)))
+        || (spell_typematch(spell, SPTYP_CHARMS
+            && player_mutation_level(MUT_NO_CHARM_MAGIC)))
+        || (spell_typematch(spell, SPTYP_CONJURATION
+            && player_mutation_level(MUT_NO_CONJURATION_MAGIC)))
+        || (spell_typematch(spell, SPTYP_EARTH
+            && player_mutation_level(MUT_NO_EARTH_MAGIC)))
+        || (spell_typematch(spell, SPTYP_FIRE
+            && player_mutation_level(MUT_NO_FIRE_MAGIC)))
+        || (spell_typematch(spell, SPTYP_HEXES
+            && player_mutation_level(MUT_NO_HEXES_MAGIC)))
+        || (spell_typematch(spell, SPTYP_ICE
+            && player_mutation_level(MUT_NO_ICE_MAGIC)))
+        || (spell_typematch(spell, SPTYP_NECROMANCY
+            && player_mutation_level(MUT_NO_NECROMANCY_MAGIC)))
+        || (spell_typematch(spell, SPTYP_POISON
+            && player_mutation_level(MUT_NO_POISON_MAGIC)))
+        || (spell_typematch(spell, SPTYP_SUMMONING
+            && player_mutation_level(MUT_NO_SUMMONING_MAGIC)))
+        || (spell_typematch(spell, SPTYP_TRANSLOCATION
+            && player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC)))
+        || (spell_typematch(spell, SPTYP_TRANSMUTATION
+            && player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC)))
+    )
+    {
+        return true;
+    }
+
     switch (spell)
     {
     case SPELL_BLINK:
