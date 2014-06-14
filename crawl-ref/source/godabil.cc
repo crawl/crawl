@@ -5028,6 +5028,53 @@ void iashol_offer_new_sacrifices()
         }
     }
 
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE
+        || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE
+        || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE)
+    {
+        switch (random2(3)) {
+            case 0:
+                you.current_essence_sacrifice.push_back(MUT_ANTI_WIZARDRY);
+                break;
+            case 1:
+                you.current_essence_sacrifice.push_back(
+                    MUT_MAGICAL_VULNERABILITY);
+                break;
+            case 2:
+                you.current_essence_sacrifice.push_back(MUT_LOW_MAGIC);
+                break;
+        }
+    }
+
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY
+        || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY
+        || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY)
+    {
+        switch (random2(7)) {
+            case 0:
+                you.current_purity_sacrifice.push_back(MUT_DETERIORATION);
+                break;
+            case 1:
+                you.current_purity_sacrifice.push_back(MUT_SCREAM);
+                break;
+            case 2:
+                you.current_purity_sacrifice.push_back(MUT_DEFORMED);
+                break;
+            case 3:
+                you.current_purity_sacrifice.push_back(MUT_SLOW_HEALING);
+                break;
+            case 4:
+                you.current_purity_sacrifice.push_back(MUT_DOPEY);
+                break;
+            case 5:
+                you.current_purity_sacrifice.push_back(MUT_CLUMSY);
+                break;
+            case 6:
+                you.current_purity_sacrifice.push_back(MUT_WEAK);
+                break;
+        }
+    }
+
     if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
         || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA)
@@ -5119,6 +5166,27 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     1, "Iashol sacrifice");
             }
             gain_piety(30 + random2(5));
+            break;
+        case ABIL_IASHOL_SACRIFICE_PURITY:
+            mprf("Iashol asks you to corrupt yourself with %s.",
+                mutation_name(you.current_purity_sacrifice[0]));
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                perma_mutate(you.current_purity_sacrifice[0],
+                    1, "Iashol sacrifice");
+            }
+            if (you.current_purity_sacrifice[0] == MUT_WEAK
+                || you.current_purity_sacrifice[0] == MUT_CLUMSY
+                || you.current_purity_sacrifice[0] == MUT_DOPEY)
+            {
+                gain_piety(10 + random2(5));
+            }
+            else
+                gain_piety(25 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_STEALTH:
             if (!yesno("Do you really want to do make this sacrifice?",
@@ -5278,6 +5346,8 @@ void iashol_expire_sacrifices()
 {
     you.available_sacrifices.clear();
     you.current_health_sacrifice.clear();
+    you.current_essence_sacrifice.clear();
+    you.current_purity_sacrifice.clear();
     you.current_arcane_sacrifices.clear();
 }
 
