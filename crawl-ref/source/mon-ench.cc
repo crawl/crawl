@@ -679,6 +679,9 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             free_stationary_net(net);
 
+            if (props.exists(NEWLY_TRAPPED_KEY))
+                props.erase(NEWLY_TRAPPED_KEY);
+
             if (!quiet)
                 simple_monster_message(this, " breaks free.");
         }

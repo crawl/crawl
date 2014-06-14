@@ -323,10 +323,17 @@ static void _mark_net_trapping(const coord_def& where)
     }
 }
 
-void monster_caught_in_net(monster* mon, actor* agent)
+/**
+ * Attempt to trap a monster in a net.
+ *
+ * @param mon       The monster being trapped.
+ * @param agent     The entity doing the trapping.
+ * @return          Whether the monster was successfully trapped.
+ */
+bool monster_caught_in_net(monster* mon, actor* agent)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
-        return;
+        return false;
 
     if (mons_class_is_stationary(mon->type))
     {
@@ -340,7 +347,7 @@ void monster_caught_in_net(monster* mon, actor* agent)
             else
                 mpr("The net is caught on something unseen!");
         }
-        return;
+        return false;
     }
 
     if (mon->is_insubstantial())
@@ -350,19 +357,19 @@ void monster_caught_in_net(monster* mon, actor* agent)
             mprf("The net passes right through %s!",
                  mon->name(DESC_THE).c_str());
         }
-        return;
+        return false;
     }
 
     if (mon->flight_mode() && !mons_is_confused(mon) && one_chance_in(3))
     {
         simple_monster_message(mon, " darts out from under the net!");
-        return;
+        return false;
     }
 
     if (mon->type == MONS_OOZE || mon->type == MONS_PULSATING_LUMP)
     {
         simple_monster_message(mon, " oozes right through the net!");
-        return;
+        return false;
     }
 
     if (!mon->caught() && mon->add_ench(ENCH_HELD))
@@ -371,7 +378,10 @@ void monster_caught_in_net(monster* mon, actor* agent)
             mpr("Something gets caught in the net!");
         else
             simple_monster_message(mon, " is caught in the net!");
+        return true;
     }
+
+    return false;
 }
 
 bool player_caught_in_net()
@@ -798,7 +808,12 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                         mpr("A large net falls down!");
                 }
 
-                monster_caught_in_net(m, NULL);
+                // actually try to net the monster
+                if (monster_caught_in_net(m, NULL))
+                {
+                    // Don't try to escape the net in the same turn
+                    m->props[NEWLY_TRAPPED_KEY] = true;
+                }
             }
 
             if (triggered)
@@ -879,7 +894,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 m->add_ench(ENCH_HELD);
 
                 // Don't try to escape the web in the same turn
-                m->props[NEW_WEB_KEY] = true;
+                m->props[NEWLY_TRAPPED_KEY] = true;
 
                 // Alert monsters.
                 check_monsters_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
@@ -2017,7 +2032,6 @@ bool ensnare(actor *fly)
     {
         simple_monster_message(fly->as_monster(), " is caught in a web!");
         fly->as_monster()->add_ench(ENCH_HELD);
-        fly->props[NEW_WEB_KEY] = true;
     }
 
     // Drowned?

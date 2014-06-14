@@ -2416,6 +2416,12 @@ void monster::struggle_against_net()
     if (is_stationary() || cannot_act() || asleep())
         return;
 
+    if (props.exists(NEWLY_TRAPPED_KEY))
+    {
+        props.erase(NEWLY_TRAPPED_KEY);
+        return; // don't try to escape on the same turn you were trapped!
+    }
+
     int net = get_trapping_net(pos(), true);
 
     if (net == NON_ITEM)
@@ -2423,12 +2429,6 @@ void monster::struggle_against_net()
         trap_def *trap = find_trap(pos());
         if (trap && trap->type == TRAP_WEB)
         {
-            if (props.exists(NEW_WEB_KEY))
-            {
-                props.erase(NEW_WEB_KEY);
-                return; // don't try to escape on the same turn you were
-                        // webbed!
-            }
 
             if (coinflip())
             {
