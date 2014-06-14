@@ -79,7 +79,7 @@
 
   local lost_soul =
     "phantom hp:500 hd:50 name:lost_soul dbname:meat_lost_soul n_rpl n_des n_spe \
-    never_corpse col:lightred generate_awake \
+    never_corpse col:red generate_awake \
     spells:bolt_of_draining;bolt_of_draining;dispel_undead;dispel_undead \
     perm_ench:invis"
 
