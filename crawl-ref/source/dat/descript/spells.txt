@@ -1265,8 +1265,8 @@ regardless!
 Summon Guardian Golem spell
 
 This spell summons a protective golem. It redirects the injuries of its allies
-to itself, though it risks overheating after absorbing significant amounts of
-damage. It will gain more health at high power.
+(but not the caster!) to itself, though it risks overheating after absorbing
+significant amounts of damage. It will gain more health at high power.
 %%%%
 Summon Hell Beast spell
 
