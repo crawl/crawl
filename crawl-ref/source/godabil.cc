@@ -1625,7 +1625,9 @@ bool beogh_gift_item()
 
     if (!(gift.base_type == OBJ_WEAPONS && mons->could_wield(gift)
           || body_armour && check_armour_size(gift, mons->body_size())
-          || shield && mons->hands_reqd(*mons->weapon()) != HANDS_TWO))
+          || shield
+             && (!mons->weapon()
+                 || mons->hands_reqd(*mons->weapon()) != HANDS_TWO)))
     {
         mprf("%s can't use that.", monsname);
         return false;
