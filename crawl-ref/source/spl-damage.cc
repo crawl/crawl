@@ -782,6 +782,9 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
 // Screaming Sword
 void sonic_damage(bool scream)
 {
+    if (is_sanctuary(you.pos()))
+        return;
+
     // First build the message.
     counted_monster_list affected_monsters;
 
@@ -831,7 +834,7 @@ void sonic_damage(bool scream)
         dprf("damage done: %d", hurt);
         mi->hurt(&you, hurt);
 
-        if (is_sanctuary(you.pos()) || is_sanctuary(mi->pos()))
+        if (is_sanctuary(mi->pos()))
             remove_sanctuary(true);
     }
 }
