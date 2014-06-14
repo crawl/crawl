@@ -325,6 +325,10 @@ static const duration_def duration_data[] =
       false, LIGHTBLUE, "Fort",
       "immense fortitude", "",
       "You have immense fortitude and shrug off injury." },
+    { DUR_HORROR,
+      false, RED, "Horr",
+      "horrified", "",
+      "You are horrified by the amount of blood." },
 
     // The following are visible in wizmode only, or are handled
     // specially in the status lights and/or the % or @ screens.
