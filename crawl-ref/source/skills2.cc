@@ -492,7 +492,26 @@ bool is_useless_skill(skill_type skill)
 #endif
 
     if (
-        (skill == SK_DODGING && player_mutation_level(MUT_NO_DODGING))
+        (skill == SK_AIR_MAGIC && player_mutation_level(MUT_NO_AIR_MAGIC))
+        || (skill == SK_CHARMS && player_mutation_level(MUT_NO_CHARM_MAGIC))
+        || (skill == SK_CONJURATIONS
+            && player_mutation_level(MUT_NO_CONJURATION_MAGIC))
+        || (skill == SK_EARTH_MAGIC
+            && player_mutation_level(MUT_NO_EARTH_MAGIC))
+        || (skill == SK_FIRE_MAGIC && player_mutation_level(MUT_NO_FIRE_MAGIC))
+        || (skill == SK_HEXES && player_mutation_level(MUT_NO_HEXES_MAGIC))
+        || (skill == SK_ICE_MAGIC && player_mutation_level(MUT_NO_ICE_MAGIC))
+        || (skill == SK_NECROMANCY
+            && player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+        || (skill == SK_POISON_MAGIC
+            && player_mutation_level(MUT_NO_POISON_MAGIC))
+        || (skill == SK_SUMMONINGS
+            && player_mutation_level(MUT_NO_SUMMONING_MAGIC))
+        || (skill == SK_TRANSLOCATIONS
+            && player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
+        || (skill == SK_TRANSMUTATIONS
+            && player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
+        || (skill == SK_DODGING && player_mutation_level(MUT_NO_DODGING))
         || (skill == SK_ARMOUR && player_mutation_level(MUT_NO_ARMOUR))
         || (skill == SK_EVOCATIONS && player_mutation_level(MUT_NO_ARTIFICE))
         || (skill == SK_STEALTH && player_mutation_level(MUT_NO_STEALTH))

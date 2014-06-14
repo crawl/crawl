@@ -4907,6 +4907,72 @@ vector<ability_type> get_possible_sacrifices()
     return possible_sacrifices;
 }
 
+const char* arcane_mutation_to_school_name(mutation_type mutation)
+{
+    switch (mutation)
+    {
+        case MUT_NO_AIR_MAGIC:
+            return "Air Magic";
+        case MUT_NO_CHARM_MAGIC:
+            return "Charms";
+        case MUT_NO_CONJURATION_MAGIC:
+            return "Conjurations";
+        case MUT_NO_EARTH_MAGIC:
+            return "Earth Magic";
+        case MUT_NO_FIRE_MAGIC:
+            return "Fire Magic";
+        case MUT_NO_HEXES_MAGIC:
+            return "Hexes";
+        case MUT_NO_ICE_MAGIC:
+            return "Ice Magic";
+        case MUT_NO_NECROMANCY_MAGIC:
+            return "Necromancy";
+        case MUT_NO_POISON_MAGIC:
+            return "Poison Magic";
+        case MUT_NO_SUMMONING_MAGIC:
+            return "Summoning";
+        case MUT_NO_TRANSLOCATION_MAGIC:
+            return "Translocations";
+        case MUT_NO_TRANSMUTATION_MAGIC:
+            return "Transmutations";
+        default:
+            return "N/A";
+    }
+}
+
+const skill_type arcane_mutation_to_skill(mutation_type mutation)
+{
+    switch (mutation)
+    {
+        case MUT_NO_AIR_MAGIC:
+            return SK_AIR_MAGIC;
+        case MUT_NO_CHARM_MAGIC:
+            return SK_CHARMS;
+        case MUT_NO_CONJURATION_MAGIC:
+            return SK_CONJURATIONS;
+        case MUT_NO_EARTH_MAGIC:
+            return SK_EARTH_MAGIC;
+        case MUT_NO_FIRE_MAGIC:
+            return SK_FIRE_MAGIC;
+        case MUT_NO_HEXES_MAGIC:
+            return SK_HEXES;
+        case MUT_NO_ICE_MAGIC:
+            return SK_ICE_MAGIC;
+        case MUT_NO_NECROMANCY_MAGIC:
+            return SK_NECROMANCY;
+        case MUT_NO_POISON_MAGIC:
+            return SK_POISON_MAGIC;
+        case MUT_NO_SUMMONING_MAGIC:
+            return SK_SUMMONINGS;
+        case MUT_NO_TRANSLOCATION_MAGIC:
+            return SK_TRANSLOCATIONS;
+        case MUT_NO_TRANSMUTATION_MAGIC:
+            return SK_TRANSMUTATIONS;
+        default:
+            return SK_NONE;
+    }
+}
+
 // Pick three new sacrifices to offer to the player. They should be distinct
 // from one another and not offer duplicates of some options. Ideally we'll
 // offer three "tiers" of sacrifices, but right now we mostly have two tiers.
@@ -4943,6 +5009,54 @@ void iashol_offer_new_sacrifices()
             possible_sacrifices[sacrifice]);
     you.available_sacrifices.push_back(
             possible_sacrifices[greater_sacrifice]);
+
+    if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
+        || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
+        || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA)
+    {
+        vector<mutation_type> possible_minor_mutations;
+        vector<mutation_type> possible_medium_mutations;
+        vector<mutation_type> possible_major_mutations;
+        int num_major_mutations;
+        int num_medium_mutations;
+        int num_minor_mutations;
+
+        if (!player_mutation_level(MUT_NO_CHARM_MAGIC))
+            possible_major_mutations.push_back(MUT_NO_CHARM_MAGIC);
+        if (!player_mutation_level(MUT_NO_CONJURATION_MAGIC))
+            possible_major_mutations.push_back(MUT_NO_CONJURATION_MAGIC);
+        if (!player_mutation_level(MUT_NO_SUMMONING_MAGIC))
+            possible_major_mutations.push_back(MUT_NO_SUMMONING_MAGIC);
+        if (!player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
+            possible_major_mutations.push_back(MUT_NO_TRANSLOCATION_MAGIC);
+        num_major_mutations = possible_major_mutations.size();
+        you.current_arcane_sacrifices.push_back(
+            possible_major_mutations[random2(num_major_mutations)]);
+
+        if (!player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
+            possible_medium_mutations.push_back(MUT_NO_TRANSMUTATION_MAGIC);
+        if (!player_mutation_level(MUT_NO_NECROMANCY_MAGIC))
+            possible_medium_mutations.push_back(MUT_NO_NECROMANCY_MAGIC);
+        if (!player_mutation_level(MUT_NO_HEXES_MAGIC))
+            possible_medium_mutations.push_back(MUT_NO_HEXES_MAGIC);
+        num_medium_mutations = possible_medium_mutations.size();
+        you.current_arcane_sacrifices.push_back(
+            possible_medium_mutations[random2(num_medium_mutations)]);
+
+        if (!player_mutation_level(MUT_NO_AIR_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_AIR_MAGIC);
+        if (!player_mutation_level(MUT_NO_EARTH_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_EARTH_MAGIC);
+        if (!player_mutation_level(MUT_NO_FIRE_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_FIRE_MAGIC);
+        if (!player_mutation_level(MUT_NO_ICE_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_ICE_MAGIC);
+        if (!player_mutation_level(MUT_NO_POISON_MAGIC))
+            possible_minor_mutations.push_back(MUT_NO_POISON_MAGIC);
+        num_minor_mutations = possible_minor_mutations.size();
+        you.current_arcane_sacrifices.push_back(
+            possible_minor_mutations[random2(num_minor_mutations)]);
+    }
 }
 
 void iashol_do_sacrifice(ability_type sacrifice)
@@ -5054,6 +5168,37 @@ void iashol_do_sacrifice(ability_type sacrifice)
             gain_piety(25 + random2(5) + div_rand_round(skill_exp_needed(
                     you.skills[SK_SUMMONINGS], SK_SUMMONINGS, SP_HUMAN), 50));
             break;
+        case ABIL_IASHOL_SACRIFICE_ARCANA:
+            mprf("Iashol asks you to sacrifice all use of %s, %s, and %s.",
+                arcane_mutation_to_school_name(
+                    you.current_arcane_sacrifices[0]),
+                arcane_mutation_to_school_name(
+                    you.current_arcane_sacrifices[1]),
+                arcane_mutation_to_school_name(
+                    you.current_arcane_sacrifices[2])
+                );
+            if (!yesno("Do you want to accept this sacrifice? ",
+                true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
+
+            arcane_mutations_size = you.current_arcane_sacrifices.size();
+            for (int i = 0; i < arcane_mutations_size; ++i) {
+                perma_mutate(you.current_arcane_sacrifices[i], 1,
+                    "Iashol sacrifice");
+
+                // gain one piety for every 50 skill points
+                mutation_skill =
+                    arcane_mutation_to_skill(you.current_arcane_sacrifices[i]);
+                gain_piety(div_rand_round(skill_exp_needed(
+                    you.skills[mutation_skill], mutation_skill, SP_HUMAN), 50));
+
+                // zero out useless skills
+                you.skills[mutation_skill] = 0;
+            }
+            break;
         case ABIL_IASHOL_SACRIFICE_HAND:
             if (!yesno("Do you really want to do make this sacrifice?",
                 false, 'n'))
@@ -5100,6 +5245,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 void iashol_expire_sacrifices()
 {
     you.available_sacrifices.clear();
+    you.current_arcane_sacrifices.clear();
 }
 
 
