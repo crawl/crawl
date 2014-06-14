@@ -3853,6 +3853,7 @@ enum commandline_option_type
     CLO_MORGUE,
     CLO_MACRO,
     CLO_MAPSTAT,
+    CLO_OBJSTAT,
     CLO_ARENA,
     CLO_DUMP_MAPS,
     CLO_TEST,
@@ -3887,7 +3888,7 @@ static const char *cmd_ops[] =
 {
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat", "arena", "dump-maps", "test", "script", "builddb",
+    "mapstat", "objstat", "arena", "dump-maps", "test", "script", "builddb",
     "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
     "print-charset", "zotdef", "tutorial", "wizard", "no-save",
@@ -4437,8 +4438,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_MAPSTAT:
+        case CLO_OBJSTAT:
 #ifdef DEBUG_DIAGNOSTICS
-            crawl_state.map_stat_gen = true;
+            if (o == CLO_MAPSTAT)
+                crawl_state.map_stat_gen = true;
+            else
+                crawl_state.obj_stat_gen = true;
+
             SysEnv.map_gen_iters = 100;
             if (!next_is_param)
                 ;
@@ -4454,15 +4460,16 @@ bool parse_args(int argc, char **argv, bool rc_only)
             else
             {
                 SysEnv.map_gen_range.reset(new depth_ranges);
-                *SysEnv.map_gen_range = depth_ranges::parse_depth_ranges(next_arg);
+                *SysEnv.map_gen_range =
+                    depth_ranges::parse_depth_ranges(next_arg);
                 nextUsed = true;
             }
-
-            break;
 #else
-            fprintf(stderr, "mapstat is available only in DEBUG_DIAGNOSTICS builds.\n");
+            fprintf(stderr, "mapstat and objstat are available only in "
+                    "DEBUG_DIAGNOSTICS builds.\n");
             end(1);
 #endif
+            break;
 
         case CLO_ARENA:
             if (!rc_only)

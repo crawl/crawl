@@ -25,6 +25,8 @@
 
 static map<string, int> try_count;
 static map<string, int> use_count;
+static vector<level_id> generated_levels;
+static int branch_count;
 static map<level_id, int> level_mapcounts;
 static map< level_id, pair<int,int> > map_builds;
 static map< level_id, set<string> > level_mapsused;
@@ -138,16 +140,20 @@ static bool _do_build_level()
     return true;
 }
 
-static vector<level_id> _dungeon_places(int *num_branches = NULL)
+static void _dungeon_places()
 {
-    vector<level_id> places;
-    if (num_branches)
-        *num_branches = 0;
-
+    generated_levels.clear();
+    branch_count = 0;
     for (int br = BRANCH_DUNGEON; br < NUM_BRANCHES; ++br)
     {
         if (brdepth[br] == -1)
             continue;
+#if TAG_MAJOR_VERSION == 34
+        // Don't want to include Forest since it doesn't generate
+        if (br == BRANCH_FOREST)
+            continue;
+#endif
+
         bool new_branch = true;
         const branch_type branch = static_cast<branch_type>(br);
         for (int depth = 1; depth <= brdepth[br]; ++depth)
@@ -155,22 +161,18 @@ static vector<level_id> _dungeon_places(int *num_branches = NULL)
             level_id l(branch, depth);
             if (SysEnv.map_gen_range.get() && !SysEnv.map_gen_range->is_usable_in(l))
                 continue;
-            places.push_back(l);
-            if (num_branches && new_branch)
-            {
-                ++(*num_branches);
-                new_branch =  false;
-            }
+            generated_levels.push_back(l);
+            if (new_branch)
+                ++branch_count;
         }
     }
-    return places;
 }
 
-static bool _build_dungeon(const vector<level_id> &places)
+static bool _build_dungeon()
 {
-    for (int i = 0, size = places.size(); i < size; ++i)
+    for (int i = 0, size = generated_levels.size(); i < size; ++i)
     {
-        const level_id &lid = places[i];
+        const level_id &lid = generated_levels[i];
         you.where_are_you = lid.branch;
         you.depth = lid.depth;
 
@@ -188,16 +190,10 @@ static bool _build_dungeon(const vector<level_id> &places)
     return true;
 }
 
-static void _build_levels(int niters)
+void mapstat_build_levels(int niters)
 {
-    int num_branches = 0;
-    const vector<level_id> places = _dungeon_places(&num_branches);
-
-    clear_messages();
-    mpr("Generating dungeon map stats");
-    printf("Generating map stats for %d iteration(s) of %d level(s) over "
-           "%d branch(es).\n", niters, (int) places.size(), num_branches);
-    fflush(stdout);
+    if (!generated_levels.size())
+        _dungeon_places();
     for (int i = 0; i < niters; ++i)
     {
         clear_messages();
@@ -218,7 +214,7 @@ static void _build_levels(int niters)
         you.unique_creatures.reset();
         initialise_branch_depths();
         init_level_connectivity();
-        if (!_build_dungeon(places))
+        if (!_build_dungeon())
             break;
     }
 }
@@ -246,11 +242,9 @@ static void _report_available_random_vaults(FILE *outf)
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
 
-    const vector<level_id> places = _dungeon_places();
     fprintf(outf, "\n\nRandom vaults available by dungeon level:\n");
-
-    for (vector<level_id>::const_iterator i = places.begin();
-         i != places.end(); ++i)
+    for (vector<level_id>::const_iterator i = generated_levels.begin();
+         i != generated_levels.end(); ++i)
     {
         // The watchdog has already been activated by _do_build_level.
         // Reporting all the vaults could take a while.
@@ -279,7 +273,6 @@ static void _write_map_stats()
     fprintf(outf, "Levels attempted: %d, built: %d, failed: %d\n",
             levels_tried, levels_tried - levels_failed,
             levels_failed);
-
     if (!errors.empty())
     {
         fprintf(outf, "\n\nMap errors:\n");
@@ -452,7 +445,15 @@ void mapstat_generate_stats()
     // We have to run map preludes ourselves.
     run_map_global_preludes();
     run_map_local_preludes();
-    _build_levels(SysEnv.map_gen_iters);
+
+    _dungeon_places();
+    clear_messages();
+    mpr("Generating dungeon map stats");
+    printf("Generating map stats for %d iteration(s) of %d level(s) over "
+           "%d branch(es).\n", SysEnv.map_gen_iters,
+           (int) generated_levels.size(), branch_count);
+    fflush(stdout);
+    mapstat_build_levels(SysEnv.map_gen_iters);
     _write_map_stats();
 }
 
