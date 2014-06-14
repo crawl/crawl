@@ -52,6 +52,7 @@ enum NOTE_TYPES
     NOTE_ALLY_DEATH,            /* needs: ally name (string) */
     NOTE_FEAT_MIMIC,            /* needs: mimiced feature (string) */
     NOTE_OFFERED_SPELL,         /* needs: spell idx */
+    NOTE_PERM_MUTATION,         /* needs: mutation idx, reason (string) */
     NOTE_NUM_TYPES
 };
 

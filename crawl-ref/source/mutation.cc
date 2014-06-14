@@ -2386,6 +2386,8 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
             // in question is one less than the cap, we are permafying a
             // temporary mutation. This fails to produce any output normally.
             mprf(MSGCH_MUTATION, "Your mutations feel more permanent.");
+            take_note(Note(NOTE_PERM_MUTATION, which_mut,
+                           you.mutation[which_mut], reason.c_str()));
         }
         else if (you.mutation[which_mut] < cap
             && !mutate(which_mut, reason, false, true, false, false, true))
