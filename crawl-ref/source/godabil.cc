@@ -5043,3 +5043,69 @@ bool iashol_power_leap()
 
     return return_val;
 }
+
+static int _cataclysmable(coord_def where, int pow, int, actor* agent)
+{
+    monster* mon = monster_at(where);
+    if (mon == NULL || mons_is_projectile(mon->type) || mon->friendly())
+        return 0;
+    return 1;
+}
+
+static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
+{
+    if (!_cataclysmable(where, pow, dummy, agent))
+        return 0;
+    monster* mons = monster_at(where);
+
+    ASSERT(mons);
+
+    int dmg;
+
+    int effect = random2(6);
+    switch (effect)
+    {
+        case 0:
+            simple_monster_message(mons, " silenced by your wave of power!");
+            mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(120)));
+            dmg = roll_dice(div_rand_round(pow, 10), 4);
+            break;
+
+        case 1:
+            simple_monster_message(mons, " is paralyzed by your wave of power!");
+            mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent, 60 + random2(60)));
+            dmg = roll_dice(div_rand_round(pow, 10), 4);
+            break;
+
+        case 2:
+            simple_monster_message(mons, " is slowed by your wave of power!");
+            mons->add_ench(mon_enchant(ENCH_SLOW, 1, agent, 100 + random2(100)));
+            dmg = roll_dice(div_rand_round(pow, 10), 5);
+            break;
+
+        default:
+            dmg = roll_dice(div_rand_round(pow, 10), 6);
+            break;
+    }
+    mons->hurt(agent, dmg, BEAM_MMISSILE, true);
+
+    return 1;
+}
+
+bool iashol_cataclysm()
+{
+    int count = apply_area_visible(_cataclysmable, you.piety, &you);
+    if (!count)
+    {
+        if (!yesno("There are no visible enemies. Unleash your cataclysm anyway?",
+            true, 'n'))
+        {
+            return false;
+        }
+    }
+    mpr("You release an incredible wave of power!");
+
+    apply_area_visible(_apply_cataclysm, you.piety, &you);
+    drain_exp(false, 100, true);
+    return true;
+}

@@ -3073,6 +3073,17 @@ static bool _do_ability(const ability_def& abil)
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
+    case ABIL_IASHOL_CATACLYSM:
+        if (you.duration[DUR_EXHAUSTED])
+        {
+            mpr("You're too exhausted to unleash your cataclysmic power.");
+            return false;
+        }
+        if (!iashol_cataclysm())
+            return false;
+        you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
+        break;
+
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
                   false, 'n')
