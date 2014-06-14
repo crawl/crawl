@@ -444,8 +444,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_STRENGTH, "It affects your strength (%d).", false},
         { ARTP_INTELLIGENCE, "It affects your intelligence (%d).", false},
         { ARTP_DEXTERITY, "It affects your dexterity (%d).", false},
-        { ARTP_SLAYING, "It affects your accuracy and damage with non-spells.",
-                        false},
+        { ARTP_SLAYING, "It affects your accuracy and damage with ranged "
+                        "weapons and melee attacks (%d).", false},
         { ARTP_FIRE, "fire", true},
         { ARTP_COLD, "cold", true},
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
@@ -1408,7 +1408,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
 
             case RING_SLAYING:
                 description += "\nIt affects your accuracy and damage "
-                               "with non-spells (";
+                               "with ranged weapons and melee attacks (";
                 _append_value(description, item.plus, true);
                 description += ").";
                 break;
