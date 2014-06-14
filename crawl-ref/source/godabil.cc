@@ -4914,3 +4914,132 @@ void iashol_draw_out_power()
         + roll_dice(div_rand_round(you.piety, 50), 3));
     drain_exp(false, 20, true);
 }
+
+bool iashol_power_leap()
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    dist beam;
+
+    if (crawl_state.is_repeating_cmd())
+    {
+        crawl_state.cant_cmd_repeat("You can't repeat power leaps.");
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return false;
+    }
+
+    // query for location:
+    while (1)
+    {
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.needs_path = false;
+        args.may_target_monster = false;
+        args.top_prompt = "Leap to where?";
+        args.range = 3;
+        direction(beam, args);
+
+        if (crawl_state.seen_hups)
+        {
+            mpr("Cancelling jump due to HUP.");
+            return false;
+        }
+
+        if (!beam.isValid || beam.target == you.pos())
+            return false;         // early return
+
+        monster* beholder = you.get_beholder(beam.target);
+        if (beholder)
+        {
+            mprf("You cannot leap away from %s!",
+                beholder->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        monster* fearmonger = you.get_fearmonger(beam.target);
+        if (fearmonger)
+        {
+            mprf("You cannot leap closer to %s!",
+                fearmonger->name(DESC_THE, true).c_str());
+            continue;
+        }
+
+        if (grd(beam.target) == DNGN_OPEN_SEA)
+        {
+            mesclr();
+            mpr("You can't leap into the sea!");
+        }
+        else if (grd(beam.target) == DNGN_LAVA_SEA)
+        {
+            mesclr();
+            mpr("You can't leap into the sea of lava!");
+        }
+        else if (!check_moveto(beam.target, "blink"))
+        {
+            // try again (messages handled by check_moveto)
+        }
+        else if (you.see_cell_no_trans(beam.target))
+        {
+            // Grid in los, no problem.
+            break;
+        }
+        else if (you.trans_wall_blocking(beam.target))
+        {
+            mesclr();
+            mpr("There's something in the way!");
+        }
+        else
+        {
+            mesclr();
+            mpr("You can only blink to visible locations.");
+        }
+    }
+
+    bool return_val = false;
+
+    if (you.attempt_escape(2)) // I'm hoping this returns true if not constrict
+    {
+        if (cell_is_solid(beam.target) || monster_at(beam.target))
+            mpr("Something unexpectedly blocked you, preventing you from leaping!");
+        else
+            move_player_to_grid(beam.target, false);
+
+        crawl_state.cancel_cmd_again();
+        crawl_state.cancel_cmd_repeat();
+        return_val = true;
+
+    }
+
+    bolt wave;
+    wave.thrower = KILL_YOU;
+    wave.name = "power leap";
+    wave.source_name = "you";
+    wave.beam_source = you.mindex();
+    wave.flavour = BEAM_VISUAL;
+    wave.colour = BROWN;
+    wave.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    wave.range = 1;
+    wave.ex_size = 1;
+    wave.is_explosion = true;
+    wave.source = you.pos();
+    wave.target = you.pos();
+    wave.hit = AUTOMATIC_HIT;
+    //wave.damage = dice_def(3, div_rand_round(you.piety, 3));
+    wave.loudness = 4;
+    wave.explode();
+
+    // we need to exempt the player from damage.
+    for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
+    {
+        monster* mon = monster_at(*ai);
+        if (mon == NULL || mons_is_projectile(mon->type) || mon->friendly())
+            continue;
+        ASSERT(mon);
+
+        mon->hurt((actor*)&you, roll_dice(div_rand_round(you.piety, 9), 3),
+            BEAM_MMISSILE, true);
+    }
+
+    return return_val;
+}
