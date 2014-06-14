@@ -5019,6 +5019,18 @@ void iashol_do_sacrifice(ability_type sacrifice)
             gain_piety(30 + div_rand_round(skill_exp_needed(
                     you.skills[SK_ARMOUR], SK_ARMOUR, SP_HUMAN), 50));
             break;
+        case ABIL_IASHOL_SACRIFICE_LOVE:
+            if (!yesno("Do you really want to do make this sacrifice?",
+                false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            } else {
+                    perma_mutate(MUT_NO_LOVE, 1, "Iashol sacrifice");
+            }
+            gain_piety(25 + random2(5) + div_rand_round(skill_exp_needed(
+                    you.skills[SK_SUMMONINGS], SK_SUMMONINGS, SP_HUMAN), 50));
+            break;
         default:
             return;
             break;
