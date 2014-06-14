@@ -77,7 +77,6 @@ bool can_wield(item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
-
     if (!ignore_temporary_disability && you.berserk())
     {
         SAY(canned_msg(MSG_TOO_BERSERK));
@@ -109,6 +108,13 @@ bool can_wield(item_def *weapon, bool say_reason,
     // If we don't have an actual weapon to check, return now.
     if (!weapon)
         return true;
+
+    if (player_mutation_level(MUT_MISSING_HAND)
+            && you.hands_reqd(*weapon) == HANDS_TWO)
+    {
+        SAY(mpr("You can't wield that without your missing limb."));
+        return false;
+    }
 
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
     {
