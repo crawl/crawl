@@ -848,8 +848,8 @@ COLOUR:  WHITE
 TILE:    urand_fencer
 TILE_EQ: glove_white
 EV:      3
-DEX:     3
-SLAY:    3
+DEX:     6
+SLAY:    2
 
 NAME:     cloak of Starlight
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
