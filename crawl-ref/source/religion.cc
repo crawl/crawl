@@ -4042,6 +4042,18 @@ void god_pitch(god_type which_god)
         you.piety = HALF_MAX_PIETY;
         you.gift_timeout = random2(40) + random2(40);
     }
+    else if (you_worship(GOD_IASHOL))
+    {
+        you.piety = 1; // you don't start w/ anything.
+        you.piety_hysteresis = 0;
+        you.gift_timeout = 0;
+        you.props["available_sacrifices"].new_vector(SV_INT);
+        you.props["current_health_sacrifice"].new_vector(SV_INT);
+        you.props["current_essence_sacrifice"].new_vector(SV_INT);
+        you.props["current_purity_sacrifice"].new_vector(SV_INT);
+        you.props["current_arcane_sacrifices"].new_vector(SV_INT);
+        you.props["iashol_progress_to_next_sacrifice"] = 0;
+    }
     else
     {
         you.piety = 15; // to prevent near instant excommunication
@@ -4622,7 +4634,8 @@ void handle_god_time(int time_delta)
             break;
 
         case GOD_IASHOL:
-            if (you.iashol_points >= 50)
+            ASSERT(you.props.exists("iashol_progress_to_next_sacrifice"));
+            if (you.props["iashol_progress_to_next_sacrifice"].get_int() >= 70)
             {
                 if (you.piety < 200)
                 {
@@ -4631,7 +4644,7 @@ void handle_god_time(int time_delta)
                     simple_god_message(" believes you are ready to make a new sacrifice.");
                     more();
                 }
-                you.iashol_points -= 50;
+                you.props["iashol_progress_to_next_sacrifice"].get_int() = 0;
             }
             break;
             return;

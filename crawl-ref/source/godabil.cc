@@ -4865,9 +4865,9 @@ vector<ability_type> get_possible_sacrifices()
 {
     vector<ability_type> possible_sacrifices;
 
-    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_PURITY);
-    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_ESSENCE);
     possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_HEALTH);
+    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_ESSENCE);
+    possible_sacrifices.push_back(ABIL_IASHOL_SACRIFICE_PURITY);
 
     if (player_mutation_level(MUT_NO_AIR_MAGIC)
         + player_mutation_level(MUT_NO_CHARM_MAGIC)
@@ -5002,13 +5002,21 @@ void iashol_offer_new_sacrifices()
     } while (greater_sacrifice == -1 || greater_sacrifice == lesser_sacrifice
         || greater_sacrifice == sacrifice);
 
+    ASSERT(you.props.exists("available_sacrifices"));
+    CrawlVector &available_sacrifices
+        = you.props["available_sacrifices"].get_vector();
+
     // set the new abilities
-    you.available_sacrifices.push_back(
-            possible_sacrifices[lesser_sacrifice]);
-    you.available_sacrifices.push_back(
-            possible_sacrifices[sacrifice]);
-    you.available_sacrifices.push_back(
-            possible_sacrifices[greater_sacrifice]);
+    available_sacrifices.push_back(
+            static_cast<int>(possible_sacrifices[lesser_sacrifice]));
+    available_sacrifices.push_back(
+            static_cast<int>(possible_sacrifices[sacrifice]));
+    available_sacrifices.push_back(
+            static_cast<int>(possible_sacrifices[greater_sacrifice]));
+
+    ASSERT(you.props.exists("current_health_sacrifice"));
+    CrawlVector &current_health_sacrifice
+        = you.props["current_health_sacrifice"].get_vector();
 
     if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH
@@ -5016,17 +5024,23 @@ void iashol_offer_new_sacrifices()
     {
         switch (random2(3)) {
             case 0:
-                you.current_health_sacrifice.push_back(
-                    MUT_PHYSICAL_VULNERABILITY);
+                current_health_sacrifice.push_back(
+                    static_cast<int>(MUT_PHYSICAL_VULNERABILITY));
                 break;
             case 1:
-                you.current_health_sacrifice.push_back(MUT_SLOW_REFLEXES);
+                current_health_sacrifice.push_back(
+                    static_cast<int>(MUT_SLOW_REFLEXES));
                 break;
             case 2:
-                you.current_health_sacrifice.push_back(MUT_FRAIL);
+                current_health_sacrifice.push_back(
+                    static_cast<int>(MUT_FRAIL));
                 break;
         }
     }
+
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    CrawlVector &current_essence_sacrifice
+        = you.props["current_essence_sacrifice"].get_vector();
 
     if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE
@@ -5034,17 +5048,23 @@ void iashol_offer_new_sacrifices()
     {
         switch (random2(3)) {
             case 0:
-                you.current_essence_sacrifice.push_back(MUT_ANTI_WIZARDRY);
+                current_essence_sacrifice.push_back(
+                    static_cast<int>(MUT_ANTI_WIZARDRY));
                 break;
             case 1:
-                you.current_essence_sacrifice.push_back(
-                    MUT_MAGICAL_VULNERABILITY);
+                current_essence_sacrifice.push_back(
+                    static_cast<int>(MUT_MAGICAL_VULNERABILITY));
                 break;
             case 2:
-                you.current_essence_sacrifice.push_back(MUT_LOW_MAGIC);
+                current_essence_sacrifice.push_back(
+                    static_cast<int>(MUT_LOW_MAGIC));
                 break;
         }
     }
+
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    CrawlVector &current_purity_sacrifice
+        = you.props["current_purity_sacrifice"].get_vector();
 
     if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY
@@ -5052,28 +5072,39 @@ void iashol_offer_new_sacrifices()
     {
         switch (random2(7)) {
             case 0:
-                you.current_purity_sacrifice.push_back(MUT_DETERIORATION);
+                current_purity_sacrifice.push_back(
+                    static_cast<int>(MUT_DETERIORATION));
                 break;
             case 1:
-                you.current_purity_sacrifice.push_back(MUT_SCREAM);
+                current_purity_sacrifice.push_back(
+                    static_cast<int>(MUT_SCREAM));
                 break;
             case 2:
-                you.current_purity_sacrifice.push_back(MUT_DEFORMED);
+                current_purity_sacrifice.push_back(
+                    static_cast<int>(MUT_DEFORMED));
                 break;
             case 3:
-                you.current_purity_sacrifice.push_back(MUT_SLOW_HEALING);
+                current_purity_sacrifice.push_back(
+                    static_cast<int>(MUT_SLOW_HEALING));
                 break;
             case 4:
-                you.current_purity_sacrifice.push_back(MUT_DOPEY);
+                current_purity_sacrifice.push_back(
+                    static_cast<int>(MUT_DOPEY));
                 break;
             case 5:
-                you.current_purity_sacrifice.push_back(MUT_CLUMSY);
+                current_purity_sacrifice.push_back(
+                    static_cast<int>(MUT_CLUMSY));
                 break;
             case 6:
-                you.current_purity_sacrifice.push_back(MUT_WEAK);
+                current_purity_sacrifice.push_back(
+                    static_cast<int>(MUT_WEAK));
                 break;
         }
     }
+
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
 
     if (possible_sacrifices[lesser_sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ARCANA
@@ -5095,8 +5126,9 @@ void iashol_offer_new_sacrifices()
         if (!player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC))
             possible_major_mutations.push_back(MUT_NO_TRANSLOCATION_MAGIC);
         num_major_mutations = possible_major_mutations.size();
-        you.current_arcane_sacrifices.push_back(
-            possible_major_mutations[random2(num_major_mutations)]);
+        current_arcane_sacrifices.push_back(
+            static_cast<int>(possible_major_mutations[
+                random2(num_major_mutations)]));
 
         if (!player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC))
             possible_medium_mutations.push_back(MUT_NO_TRANSMUTATION_MAGIC);
@@ -5105,8 +5137,9 @@ void iashol_offer_new_sacrifices()
         if (!player_mutation_level(MUT_NO_HEXES_MAGIC))
             possible_medium_mutations.push_back(MUT_NO_HEXES_MAGIC);
         num_medium_mutations = possible_medium_mutations.size();
-        you.current_arcane_sacrifices.push_back(
-            possible_medium_mutations[random2(num_medium_mutations)]);
+        current_arcane_sacrifices.push_back(
+            static_cast<int>(possible_medium_mutations[
+                random2(num_medium_mutations)]));
 
         if (!player_mutation_level(MUT_NO_AIR_MAGIC))
             possible_minor_mutations.push_back(MUT_NO_AIR_MAGIC);
@@ -5119,8 +5152,9 @@ void iashol_offer_new_sacrifices()
         if (!player_mutation_level(MUT_NO_POISON_MAGIC))
             possible_minor_mutations.push_back(MUT_NO_POISON_MAGIC);
         num_minor_mutations = possible_minor_mutations.size();
-        you.current_arcane_sacrifices.push_back(
-            possible_minor_mutations[random2(num_minor_mutations)]);
+        current_arcane_sacrifices.push_back(
+            static_cast<int>(possible_minor_mutations[
+                random2(num_minor_mutations)]));
     }
 }
 
@@ -5128,6 +5162,24 @@ void iashol_do_sacrifice(ability_type sacrifice)
 {
     skill_type mutation_skill;
     int arcane_mutations_size;
+
+    ASSERT(you.props.exists("current_health_sacrifice"));
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+
+    CrawlVector &current_health_sacrifice =
+        you.props["current_health_sacrifice"].get_vector();
+    CrawlVector &current_essence_sacrifice =
+        you.props["current_essence_sacrifice"].get_vector();
+    CrawlVector &current_purity_sacrifice =
+        you.props["current_purity_sacrifice"].get_vector();
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
+
+    mutation_type health_sacrifice;
+    mutation_type essence_sacrifice;
+    mutation_type purity_sacrifice;
 
     switch (sacrifice)
     {
@@ -5154,48 +5206,54 @@ void iashol_do_sacrifice(ability_type sacrifice)
             gain_piety(35 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_HEALTH:
+            health_sacrifice = static_cast<mutation_type>(
+                current_health_sacrifice[0].get_int());
+
             mprf("Iashol asks you to corrupt yourself with %s.",
-                mutation_name(you.current_health_sacrifice[0]));
+                mutation_name(health_sacrifice));
             if (!yesno("Do you really want to do make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;
             } else {
-                perma_mutate(you.current_health_sacrifice[0],
-                    1, "Iashol sacrifice");
+                perma_mutate(health_sacrifice, 1, "Iashol sacrifice");
             }
             gain_piety(30 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_ESSENCE:
+            essence_sacrifice = static_cast<mutation_type>(
+                current_essence_sacrifice[0].get_int());
+
             mprf("Iashol asks you to corrupt yourself with %s.",
-                mutation_name(you.current_essence_sacrifice[0]));
+                mutation_name(essence_sacrifice));
             if (!yesno("Do you really want to do make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;
             } else {
-                perma_mutate(you.current_essence_sacrifice[0],
-                    1, "Iashol sacrifice");
+                perma_mutate(essence_sacrifice, 1, "Iashol sacrifice");
             }
             gain_piety(30 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_PURITY:
+            purity_sacrifice = static_cast<mutation_type>(
+                current_purity_sacrifice[0].get_int());
+
             mprf("Iashol asks you to corrupt yourself with %s.",
-                mutation_name(you.current_purity_sacrifice[0]));
+                mutation_name(purity_sacrifice));
             if (!yesno("Do you really want to do make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;
             } else {
-                perma_mutate(you.current_purity_sacrifice[0],
-                    1, "Iashol sacrifice");
+                perma_mutate(purity_sacrifice, 1, "Iashol sacrifice");
             }
-            if (you.current_purity_sacrifice[0] == MUT_WEAK
-                || you.current_purity_sacrifice[0] == MUT_CLUMSY
-                || you.current_purity_sacrifice[0] == MUT_DOPEY)
+            if (purity_sacrifice == MUT_WEAK
+                || purity_sacrifice == MUT_CLUMSY
+                || purity_sacrifice == MUT_DOPEY)
             {
                 gain_piety(10 + random2(5));
             }
@@ -5211,8 +5269,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(MUT_NO_STEALTH, 1, "Iashol sacrifice");
             }
-            gain_piety(div_rand_round(skill_exp_needed(
-                 you.skills[SK_STEALTH], SK_STEALTH, SP_HUMAN), 50));
 
             // zero out useless skills
             you.skills[SK_STEALTH] = 0;
@@ -5228,8 +5284,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(MUT_NO_ARTIFICE, 1, "Iashol sacrifice");
             }
-            gain_piety(div_rand_round(skill_exp_needed(
-                 you.skills[SK_EVOCATIONS], SK_EVOCATIONS, SP_HUMAN), 50));
 
             // zero out useless skills
             you.skills[SK_EVOCATIONS] = 0;
@@ -5245,8 +5299,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(MUT_NO_DODGING, 1, "Iashol sacrifice");
             }
-            gain_piety(div_rand_round(skill_exp_needed(
-                 you.skills[SK_DODGING], SK_DODGING, SP_HUMAN), 50));
 
             // zero out useless skills
             you.skills[SK_DODGING] = 0;
@@ -5262,8 +5314,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(MUT_NO_ARMOUR, 1, "Iashol sacrifice");
             }
-            gain_piety(div_rand_round(skill_exp_needed(
-                 you.skills[SK_ARMOUR], SK_ARMOUR, SP_HUMAN), 50));
 
             // zero out useless skills
             you.skills[SK_ARMOUR] = 0;
@@ -5291,16 +5341,19 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     perma_mutate(MUT_NO_LOVE, 1, "Iashol sacrifice");
             }
             gain_piety(25 + random2(5) + div_rand_round(skill_exp_needed(
-                    you.skills[SK_SUMMONINGS], SK_SUMMONINGS, SP_HUMAN), 50));
+                    you.skills[SK_SUMMONINGS], SK_SUMMONINGS, SP_HUMAN), 200));
             break;
         case ABIL_IASHOL_SACRIFICE_ARCANA:
             mprf("Iashol asks you to sacrifice all use of %s, %s, and %s.",
                 arcane_mutation_to_school_name(
-                    you.current_arcane_sacrifices[0]),
+                    static_cast<mutation_type>(
+                        current_arcane_sacrifices[0].get_int())),
                 arcane_mutation_to_school_name(
-                    you.current_arcane_sacrifices[1]),
+                    static_cast<mutation_type>(
+                        current_arcane_sacrifices[1].get_int())),
                 arcane_mutation_to_school_name(
-                    you.current_arcane_sacrifices[2])
+                    static_cast<mutation_type>(
+                        current_arcane_sacrifices[2].get_int()))
                 );
             if (!yesno("Do you want to accept this sacrifice? ",
                 true, 'n'))
@@ -5309,16 +5362,18 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
 
-            arcane_mutations_size = you.current_arcane_sacrifices.size();
+            arcane_mutations_size = current_arcane_sacrifices.size();
             for (int i = 0; i < arcane_mutations_size; ++i) {
-                perma_mutate(you.current_arcane_sacrifices[i], 1,
-                    "Iashol sacrifice");
+                mutation_type arcane_sacrifice =
+                    static_cast<mutation_type>(
+                        current_arcane_sacrifices[i].get_int());
+                perma_mutate(arcane_sacrifice, 1, "Iashol sacrifice");
 
                 // gain one piety for every 50 skill points
-                mutation_skill =
-                    arcane_mutation_to_skill(you.current_arcane_sacrifices[i]);
-                gain_piety(div_rand_round(skill_exp_needed(
-                    you.skills[mutation_skill], mutation_skill, SP_HUMAN), 50));
+                mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
+                gain_piety(25 + random2(5) + div_rand_round(skill_exp_needed(
+                    you.skills[mutation_skill], mutation_skill, SP_HUMAN),
+                    50));
 
                 // zero out useless skills
                 you.skills[mutation_skill] = 0;
@@ -5369,11 +5424,28 @@ void iashol_do_sacrifice(ability_type sacrifice)
 // time or it's time to offer something new.
 void iashol_expire_sacrifices()
 {
-    you.available_sacrifices.clear();
-    you.current_health_sacrifice.clear();
-    you.current_essence_sacrifice.clear();
-    you.current_purity_sacrifice.clear();
-    you.current_arcane_sacrifices.clear();
+    ASSERT(you.props.exists("available_sacrifices"));
+    ASSERT(you.props.exists("current_health_sacrifice"));
+    ASSERT(you.props.exists("current_essence_sacrifice"));
+    ASSERT(you.props.exists("current_purity_sacrifice"));
+    ASSERT(you.props.exists("current_arcane_sacrifices"));
+
+    CrawlVector &available_sacrifices
+        = you.props["available_sacrifices"].get_vector();
+    CrawlVector &current_health_sacrifice
+        = you.props["current_health_sacrifice"].get_vector();
+    CrawlVector &current_essence_sacrifice
+        = you.props["current_essence_sacrifice"].get_vector();
+    CrawlVector &current_purity_sacrifice
+        = you.props["current_purity_sacrifice"].get_vector();
+    CrawlVector &current_arcane_sacrifices
+        = you.props["current_arcane_sacrifices"].get_vector();
+
+    available_sacrifices.clear();
+    current_health_sacrifice.clear();
+    current_essence_sacrifice.clear();
+    current_purity_sacrifice.clear();
+    current_arcane_sacrifices.clear();
 }
 
 

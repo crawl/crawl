@@ -92,8 +92,6 @@
 #include "viewgeom.h"
 #include "xom.h"
 
-int iashol_points = 0;
-
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());
