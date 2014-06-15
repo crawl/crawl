@@ -1038,20 +1038,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     if (!is_artefact(item))
     {
-        if (item_ident(item, ISFLAG_KNOW_PLUSES)
-            && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
-        {
+        if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
             description += "\nIt cannot be enchanted further.";
-        }
         else
         {
             description += "\nIt can be maximally enchanted to +";
             _append_value(description, MAX_WPN_ENCHANT, false);
-            if (item.sub_type != WPN_BLOWGUN)
-            {
-                description += ", +";
-                _append_value(description, MAX_WPN_ENCHANT, false);
-            }
             description += ".";
         }
     }

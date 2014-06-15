@@ -1360,7 +1360,7 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
 
 int mons_weapon_damage_rating(const item_def &launcher)
 {
-    return property(launcher, PWPN_DAMAGE) + launcher.plus2;
+    return property(launcher, PWPN_DAMAGE) + launcher.plus;
 }
 
 // Returns a rough estimate of damage from firing/throwing missile.
