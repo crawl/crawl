@@ -124,8 +124,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     const bool is_cursed = wpn.cursed();
 
-    enchant_weapon(wpn);
-    enchant_weapon(wpn);
+    enchant_weapon(wpn, true);
+    enchant_weapon(wpn, true);
 
     if (is_cursed)
         do_uncurse_item(wpn, false);

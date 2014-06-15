@@ -1702,7 +1702,7 @@ static bool _blessing_wpn(monster* mon)
     }
 
     // Enchant and uncurse it.
-    if (!enchant_weapon(wpn))
+    if (!enchant_weapon(wpn, true))
         return false;
 
     item_set_appearance(wpn);
