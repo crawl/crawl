@@ -800,7 +800,7 @@ Sacrifices cannot be taken back.
 %%%%
 Sacrifice a Hand ability
 
-Adherents who choose to sacrifice a hand lose the ability to lose two-handed
+Adherents who choose to sacrifice a hand lose the ability to use two-handed
 weapons and shields, and also may only wear one ring. If you make this
 sacrifice, your powers granted by Iashol will become stronger in proportion
 to the value of the sacrifice, and you may gain new powers as well.
