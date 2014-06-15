@@ -53,6 +53,8 @@ Monsters
 * Monsters no longer fall asleep after long periods of time.
 * Corrosion affects all of your equipment, but only temporarily.
 * The chance of corroding equipment no longer considers item enchantment.
+* New monster: ghost crabs, found in Crypt. They breathe ghostly flames that
+  call dangerous specters into existence.
 * Enemies are more intelligent about using area-of-attack spells such as
   Symbol of Torment and Chain Lightning when you are not in sight.
 * Komodo dragons now bite harder but don't sicken the player.
