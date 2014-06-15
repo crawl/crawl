@@ -1309,6 +1309,18 @@ int attack::player_apply_misc_modifiers(int damage)
     return damage;
 }
 
+/**
+ * Get the damage bonus from a weapon's enchantment.
+ */
+int attack::get_weapon_plus()
+{
+    if (weapon->base_type == OBJ_RODS)
+        return weapon->special;
+    if (weapon->sub_type == WPN_BLOWGUN)
+        return 0;
+    return weapon->plus;
+}
+
 // Slaying and weapon enchantment. Apply this for slaying even if not
 // using a weapon to attack.
 int attack::player_apply_slaying_bonuses(int damage, bool aux)
@@ -1316,11 +1328,7 @@ int attack::player_apply_slaying_bonuses(int damage, bool aux)
     int damage_plus = 0;
     if (!aux && using_weapon())
     {
-        damage_plus = weapon->plus2;
-
-        if (weapon->base_type == OBJ_RODS)
-            damage_plus = weapon->special;
-
+        damage_plus = get_weapon_plus();
         if (you.duration[DUR_CORROSION])
             damage_plus -= 3 * you.props["corrosion_amount"].get_int();
     }
@@ -1454,11 +1462,7 @@ int attack::calc_damage()
 
             int wpn_damage_plus = 0;
             if (weapon) // can be 0 for throwing projectiles
-            {
-                wpn_damage_plus = (weapon->base_type == OBJ_RODS)
-                                  ? weapon->special
-                                  : weapon->plus2;
-            }
+                wpn_damage_plus = get_weapon_plus();
 
             const int jewellery = attacker->as_monster()->inv[MSLOT_JEWELLERY];
             if (jewellery != NON_ITEM

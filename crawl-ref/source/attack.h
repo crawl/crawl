@@ -132,6 +132,7 @@ protected:
     /* Combat Calculations */
     virtual bool using_weapon() = 0;
     virtual int weapon_damage() = 0;
+    virtual int get_weapon_plus();
     virtual int calc_base_unarmed_damage();
     int calc_stat_to_hit_base();
     int calc_stat_to_dam_base();
