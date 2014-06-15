@@ -2821,7 +2821,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
             if (mons->caught() && item_is_stationary_net(*si))
             {
-                mons->del_ench(ENCH_HELD, true);
+                // We don't want to mulch the net just yet.
+                mons->del_ench(ENCH_HELD, true, false);
                 eaten_net = true;
             }
         }
