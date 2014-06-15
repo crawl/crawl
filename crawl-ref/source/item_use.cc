@@ -796,6 +796,18 @@ bool do_wear_armour(int item, bool quiet)
         }
     }
 
+    if (player_mutation_level(MUT_MISSING_HAND) && is_shield(invitem))
+    {
+        if (!quiet)
+        {
+            if (you.species == SP_OCTOPODE)
+                mpr("You need the rest of your tentacles for walking.");
+            else
+                mprf("You'd need another %s to do that!", you.hand_name(true).c_str());
+        }
+        return false;
+    }
+
     // if you're wielding something,
     if (you.weapon()
         // attempting to wear a shield,
@@ -915,14 +927,17 @@ static vector<equipment_type> _current_ring_types()
     vector<equipment_type> ret;
     if (you.species == SP_OCTOPODE)
     {
-        const int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
+        int num_rings = (form_keeps_mutations() || you.form == TRAN_SPIDER
                                ? 8 : 2);
+        if (player_mutation_level(MUT_MISSING_HAND))
+            num_rings -= 1;
         for (int i = 0; i != num_rings; ++i)
             ret.push_back((equipment_type)(EQ_RING_ONE + i));
     }
     else
     {
-        ret.push_back(EQ_LEFT_RING);
+        if (player_mutation_level(MUT_MISSING_HAND) == 0)
+            ret.push_back(EQ_LEFT_RING);
         ret.push_back(EQ_RIGHT_RING);
     }
     if (player_equip_unrand(UNRAND_FINGER_AMULET))

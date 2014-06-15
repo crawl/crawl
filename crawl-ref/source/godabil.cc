@@ -5181,6 +5181,18 @@ void iashol_do_sacrifice(ability_type sacrifice)
     mutation_type essence_sacrifice;
     mutation_type purity_sacrifice;
 
+    // set these up for Sac Hand
+    equipment_type ring_slot;
+
+    if (you.species == SP_OCTOPODE)
+        ring_slot = EQ_RING_EIGHT;
+    else
+        ring_slot = EQ_LEFT_RING;
+
+    item_def* const shield = you.slot_item(EQ_SHIELD, true);
+    item_def* const weapon = you.slot_item(EQ_WEAPON, true);
+    item_def* const ring = you.slot_item(ring_slot, true);
+
     switch (sacrifice)
     {
         case ABIL_IASHOL_SACRIFICE_WORDS:
@@ -5390,24 +5402,30 @@ void iashol_do_sacrifice(ability_type sacrifice)
             }
 
             // Drop your shield if there is one
-            if (you.inv[EQ_SHIELD].defined())
+            if (shield != NULL)
             {
-                item_def& shield = you.inv[EQ_SHIELD];
                 mprf("You can no longer hold %s!",
-                    shield.name(DESC_YOUR).c_str());
+                    shield->name(DESC_YOUR).c_str());
                 unequip_item(EQ_SHIELD);
             }
 
             // And your two-handed weapon
-            if (you.inv[EQ_WEAPON].defined())
+            if (weapon != NULL)
             {
-                item_def& weapon = you.inv[EQ_WEAPON];
-                if (you.hands_reqd(weapon) == HANDS_TWO)
+                if (you.hands_reqd(*weapon) == HANDS_TWO)
                 {
                     mprf("You can no longer hold %s!",
-                        weapon.name(DESC_YOUR).c_str());
+                        weapon->name(DESC_YOUR).c_str());
                     unequip_item(EQ_WEAPON);
                 }
+            }
+
+            // And one ring
+            if (ring != NULL )
+            {
+                mprf("You can no longer wear %s!",
+                    ring->name(DESC_YOUR).c_str());
+                unequip_item(ring_slot);
             }
 
             gain_piety(80 + div_rand_round(skill_exp_needed(
