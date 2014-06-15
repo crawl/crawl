@@ -2320,7 +2320,7 @@ static bool _handle_brand_weapon(bool alreadyknown, string *pre_msg)
     return true;
 }
 
-bool enchant_weapon(item_def &wpn)
+bool enchant_weapon(item_def &wpn, bool quiet)
 {
     bool success = false;
 
@@ -2335,7 +2335,8 @@ bool enchant_weapon(item_def &wpn)
         {
             wpn.plus++;
             success = true;
-            mprf("%s glows red for a moment.", iname.c_str());
+            if (!quiet)
+                mprf("%s glows red for a moment.", iname.c_str());
         }
 
         if (wpn.cursed())
@@ -2347,7 +2348,7 @@ bool enchant_weapon(item_def &wpn)
         }
     }
 
-    if (!success)
+    if (!success && !quiet)
         mprf("%s very briefly gains a red sheen.", iname.c_str());
 
     if (success)
@@ -2433,7 +2434,7 @@ static bool _handle_enchant_weapon(bool alreadyknown, string *pre_msg)
     if (!weapon)
         return !alreadyknown;
 
-    enchant_weapon(*weapon);
+    enchant_weapon(*weapon, false);
     return true;
 }
 
