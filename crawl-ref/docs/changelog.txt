@@ -19,7 +19,7 @@ Character
 * Inventory item weight and player burden states are no more.
 * Cross-training now gives a direct bonus to cross-trained skills, rather than
   decreasing the XP cost of learning them.
-* Anti-training (for opposite elemntal schools) has been removed.
+* Anti-training (for opposite elemental schools) has been removed.
 * Formicids can no longer throw large rocks.
 * Tengu now gain permaflight at XL14 (was 15).
 * All non-undead forms can eat and drink normally.
@@ -48,7 +48,8 @@ Character
 Monsters
 --------
 * Many enemy glyphs have been adjusted. See 0.14_monster_glyphs.txt.
-* Monsters will no longer pick up items that the player has seen.
+* Monsters will no longer pick up items that the player has seen. Allies won't
+  pick up items at all.
 * Monsters no longer fall asleep after long periods of time.
 * Corrosion affects all of your equipment, but only temporarily.
 * The chance of corroding equipment no longer considers item enchantment.
@@ -73,7 +74,7 @@ Monsters
 * Boris can use weapons.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
   flaming corpses, grizzly bears, spriggan enchanters, phoenixes,
-  shedu, plague shamblers, giant slug, elephant slug. giant firefly.
+  shedu, plague shamblers, giant slugs, elephant slugs, giant fireflies.
 
 Spells
 ------
@@ -88,10 +89,12 @@ Spells
 * Confusing Touch now has a short, non-stacking duration which discharges
   entirely when it successfully confuses an enemy. While it's in effect, your
   attacks do no damage. It's been moved to level 2.
-* Simulacrum now works on a single corpse at the caster's feet, creating
-  several simulacrula from it.
 * Sublimation of Blood no longer uses chunks; it now only draws from the
   caster's HP.
+* Simulacrum now works on a single corpse at the caster's feet, creating
+  several simulacrula from it.
+* Monsters casting Simulacrum now affect all monsters in LOS, producing half as
+  many simulacrula as the player version of the spell.
 * Death Channel lasts twice as long.
 * The Book of War Chants is no more.
 * Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon,
@@ -150,7 +153,8 @@ Items
 * The amulet of rage no longer has a tiny chance of extending berserk duration.
 * The Sack of Spiders now places webs directly onto enemies, rather than
   spreading them randomly around the area.
-* Cleaving hits the full eight squares around a player.
+* Cleaving hits the full eight squares around a player, when not blocked by
+  walls.
 * Gloves of archery no longer penalise melee.
 * (Plain) bows have been renamed to shortbows.
 * Sustain abilities effects no longer stack.
@@ -230,6 +234,7 @@ Interface
 ---------
 * Monsters with special melee attacks (e.g. poison, fire) have this noted in
   their descriptions.
+* Ctrl-T now displays the weapons that enemies are carrying, in console.
 * Unique enemies are now announced by their proper titles when first appearing.
 * Ability icons have been reworked.
 * There are status lights for Might, Agility, and Brilliance.
