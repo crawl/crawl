@@ -9,6 +9,7 @@
 
 #include "abyss.h"
 
+#include "chardump.h"
 #include "cio.h"
 #include "dbg-util.h"
 #include "food.h"
@@ -1099,6 +1100,9 @@ void wizard_load_dump_file()
 
     if (filename[0] == '\0')
         canned_msg(MSG_OK);
-    else if (!_load_dump_file(filename))
+    else if (!_load_dump_file(filename)
+             && !_load_dump_file((morgue_directory() + filename).c_str()))
+    {
         canned_msg(MSG_NOTHING_THERE);
+    }
 }
