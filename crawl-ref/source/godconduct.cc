@@ -972,8 +972,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             else if (you_worship(GOD_IASHOL))
             {
+                ASSERT(you.props.exists("iashol_progress_to_next_sacrifice"));
                 if (one_chance_in(100))
-                    you.iashol_points += 1;
+                {
+                    int current_progress =
+                        you.props["iashol_progress_to_next_sacrifice"]
+                            .get_int();
+                    you.props["iashol_progress_to_next_sacrifice"] =
+                        current_progress + 1;
+                }
             }
             break;
 
