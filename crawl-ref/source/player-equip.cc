@@ -548,7 +548,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                          you.hand_name(true).c_str());
                     break;
 
-                case SPWPN_VAMPIRICISM:
+                case SPWPN_VAMPIRISM:
                     if (you.species == SP_VAMPIRE)
                     {
                         mpr("You feel a bloodthirsty glee!");
@@ -707,7 +707,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                 you.redraw_evasion = true;
                 break;
 
-            case SPWPN_VAMPIRICISM:
+            case SPWPN_VAMPIRISM:
                 if (showMsgs)
                 {
                     if (you.species == SP_VAMPIRE)

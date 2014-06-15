@@ -265,7 +265,7 @@ brand_type player::damage_brand(int)
 
         case TRAN_BAT:
             if (species == SP_VAMPIRE && one_chance_in(8))
-                ret = SPWPN_VAMPIRICISM;
+                ret = SPWPN_VAMPIRISM;
             break;
 
         default:

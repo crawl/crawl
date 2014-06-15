@@ -192,7 +192,7 @@ i-speed BRAND_SPEED
 i-vorpal BRAND_VORPAL
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
-i-vampiricism BRAND_VAMPIRICISM
+i-vampirism BRAND_VAMPIRISM
 i-pain BRAND_PAIN
 %rim 1
 i-antimagic BRAND_ANTIMAGIC

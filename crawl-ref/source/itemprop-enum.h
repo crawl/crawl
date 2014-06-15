@@ -94,7 +94,7 @@ enum brand_type // item_def.special
     SPWPN_FLAME,   // ranged, only
     SPWPN_FROST,   // ranged, only
 #endif
-    SPWPN_VAMPIRICISM,
+    SPWPN_VAMPIRISM,
     SPWPN_PAIN,
     SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,

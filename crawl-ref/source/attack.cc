@@ -903,7 +903,7 @@ brand_type attack::random_chaos_brand()
                     10, SPWPN_VENOM,
                     10, SPWPN_CHAOS,
                      5, SPWPN_DRAINING,
-                     5, SPWPN_VAMPIRICISM,
+                     5, SPWPN_VAMPIRISM,
                      5, SPWPN_HOLY_WRATH,
                      5, SPWPN_ANTIMAGIC,
                      2, SPWPN_CONFUSE,
@@ -928,7 +928,7 @@ brand_type attack::random_chaos_brand()
             if (defender->holiness() == MH_UNDEAD)
                 susceptible = false;
             break;
-        case SPWPN_VAMPIRICISM:
+        case SPWPN_VAMPIRISM:
             if (defender->is_summoned())
             {
                 susceptible = false;
@@ -979,7 +979,7 @@ brand_type attack::random_chaos_brand()
     case SPWPN_VENOM:           brand_name += "venom"; break;
     case SPWPN_DRAINING:        brand_name += "draining"; break;
     case SPWPN_DISTORTION:      brand_name += "distortion"; break;
-    case SPWPN_VAMPIRICISM:     brand_name += "vampiricism"; break;
+    case SPWPN_VAMPIRISM:     brand_name += "vampirism"; break;
     case SPWPN_VORPAL:          brand_name += "vorpal"; break;
     case SPWPN_ANTIMAGIC:       brand_name += "antimagic"; break;
 
@@ -1640,7 +1640,7 @@ bool attack::apply_damage_brand(const char *what)
     brand = damage_brand == SPWPN_CHAOS ? random_chaos_brand() : damage_brand;
 
     if (brand != SPWPN_FLAMING && brand != SPWPN_FREEZING
-        && brand != SPWPN_ELECTROCUTION && brand != SPWPN_VAMPIRICISM
+        && brand != SPWPN_ELECTROCUTION && brand != SPWPN_VAMPIRISM
         && !defender->alive())
     {
         // Most brands have no extra effects on just killed enemies, and the
@@ -1651,7 +1651,7 @@ bool attack::apply_damage_brand(const char *what)
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
             || brand == SPWPN_HOLY_WRATH || brand == SPWPN_DRAGON_SLAYING
-            || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRICISM
+            || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRISM
             || brand == SPWPN_ANTIMAGIC))
     {
         // These brands require some regular damage to function.
@@ -1756,7 +1756,7 @@ bool attack::apply_damage_brand(const char *what)
         // Note: Leaving special_damage_message empty because there isn't one.
         break;
 
-    case SPWPN_VAMPIRICISM:
+    case SPWPN_VAMPIRISM:
     {
         if (x_chance_in_y(defender->res_negative_energy(), 3))
             break;

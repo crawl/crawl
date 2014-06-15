@@ -233,7 +233,7 @@ PLUS:    +4
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
 TILE_EQ: vampires_tooth
-BRAND:   SPWPN_VAMPIRICISM
+BRAND:   SPWPN_VAMPIRISM
 VALUE:   1000
 BOOL:    special
 
@@ -354,7 +354,7 @@ PLUS:    +8
 COLOUR:  ETC_DARK
 TILE:    urand_leech
 TILE_EQ: leech
-BRAND:   SPWPN_VAMPIRICISM
+BRAND:   SPWPN_VAMPIRISM
 EV:      -2
 STR:     -2
 INT:     -2
@@ -1168,7 +1168,7 @@ TILE:    spwpn_majin
 TILE_EQ: majin
 MP:      6
 INT:     6
-BRAND:   SPWPN_VAMPIRICISM
+BRAND:   SPWPN_VAMPIRISM
 BOOL:    unholy
 
 # This is the first of two amulets used to test suppression aura.

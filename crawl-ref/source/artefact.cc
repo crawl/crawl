@@ -129,7 +129,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     else if (is_good_god(which_god)
              && (brand == SPWPN_DRAINING
                  || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRICISM
+                 || brand == SPWPN_VAMPIRISM
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
@@ -748,7 +748,7 @@ static void _get_randart_properties(const item_def &item,
                 SPWPN_FLAMING,
                 SPWPN_FREEZING,
                 SPWPN_ELECTROCUTION,
-                SPWPN_VAMPIRICISM,
+                SPWPN_VAMPIRISM,
                 SPWPN_PAIN,
                 SPWPN_VENOM,
                 -1);
@@ -767,7 +767,7 @@ static void _get_randart_properties(const item_def &item,
                 13, SPWPN_HOLY_WRATH,
                 13, SPWPN_ELECTROCUTION,
                 13, SPWPN_SPEED,
-                13, SPWPN_VAMPIRICISM,
+                13, SPWPN_VAMPIRISM,
                 13, SPWPN_PAIN,
                 13, SPWPN_ANTIMAGIC,
                  3, SPWPN_DISTORTION,
