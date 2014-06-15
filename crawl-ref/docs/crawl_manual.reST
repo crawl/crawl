@@ -3236,9 +3236,6 @@ SInv
 Clar
   clarity
 
-Cons
-  conservation
-
 Gourm
   gourmand
 
