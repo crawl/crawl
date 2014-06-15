@@ -781,7 +781,7 @@ void wizard_edit_durations()
             mprf(MSGCH_PROMPT, "Invalid choice.");
             return;
         }
-        choice = durs[choice];
+        choice = durs[dchoice];
     }
     else
     {
