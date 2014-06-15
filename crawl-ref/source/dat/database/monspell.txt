@@ -425,6 +425,10 @@ angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.
 %%%%
+drake cast targeted
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
 dragon cast targeted
 
 @The_monster@ breathes @beam@ @at@ @target@.
