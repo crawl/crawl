@@ -2388,11 +2388,6 @@ Ctrl-A
   Toggle autopickup. Note that encounters with invisible monsters always turns
   autopickup off. You need to switch it on with Ctrl-A afterwards.
 
-Ctrl-T
-  Toggle your allies' pickup behaviour between three settings: don't pick up
-  anything, only pick up items dropped by allies, pick up anything. This toggle
-  only works for characters who have gained permanent, intelligent allies.
-
 \`
   Re-do previous command
 
