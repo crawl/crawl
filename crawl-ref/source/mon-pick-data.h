@@ -246,7 +246,6 @@ static const pop_entry pop_lair[] =
   {  2,  8,   52, SEMI, MONS_POLAR_BEAR },
   {  1,  9,  420, SEMI, MONS_BLINK_FROG },
   {  2,  8,   25, PEAK, MONS_STEAM_DRAGON },
-  {  4,  6,    3, SEMI, MONS_GIANT_SPORE },
   {  1, 11,  457, SEMI, MONS_BLACK_MAMBA },
   {  1, 11,  514, SEMI, MONS_HYDRA },
   {  3,  9,   52, SEMI, MONS_CATOBLEPAS },
@@ -263,7 +262,7 @@ static const pop_entry pop_lair[] =
   {  5,  9,   17, SEMI, MONS_REDBACK },
   {  5,  9,   17, SEMI, MONS_WANDERING_MUSHROOM },
   {  3,  8,  192, UP  , MONS_DEATH_YAK },
-  {  8,  8,    1, FLAT, MONS_FIRE_CRAB },
+  {  5, 12,   66, UP  , MONS_FIRE_CRAB },
   {  3,  8,  180, UP  , MONS_BORING_BEETLE },
   {  4,  8,   89, UP  , MONS_BOULDER_BEETLE },
   {  1,  6, 3000, FLAT, MONS_NO_MONSTER }, // Roughly old D:1 chaff weight
