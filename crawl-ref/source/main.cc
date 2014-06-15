@@ -3532,7 +3532,9 @@ static void _move_player(coord_def move)
         you.stop_constricting_all(true);
         you.stop_being_constricted();
 
-        move_player_to_grid(targ, true);
+        // Don't trigger traps when confusion causes no move.
+        if (you.pos() != targ)
+            move_player_to_grid(targ, true);
 
         if (you.duration[DUR_BARBS])
         {
