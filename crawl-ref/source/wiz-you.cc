@@ -1064,19 +1064,24 @@ static void _wizard_modify_character(string inputdata)
     return;
 }
 
-void wizard_load_dump_file()
+/**
+ * Load a character from a dump file.
+ *
+ * @param filename The name of the file to open.
+ * @pre The file either does not exist, or is a complete
+ *      dump or morgue file.
+ * @returns True if the file existed and could be opened.
+ * @post The player's stats, level, skills, training, and gold are
+ *       those listed in the dump file.
+ */
+static bool _load_dump_file(const char *filename)
 {
-    char filename[80];
-    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
-    if (filename[0] == '\0')
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
+    FileLineInput f(filename);
+    if (f.eof())
+        return false;
 
     you.init_skills();
 
-    FileLineInput f(filename);
     while (!f.eof())
         _wizard_modify_character(f.get_line());
 
@@ -1084,4 +1089,16 @@ void wizard_load_dump_file()
     init_can_train();
     init_train();
     init_training();
+    return true;
+}
+
+void wizard_load_dump_file()
+{
+    char filename[80];
+    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
+
+    if (filename[0] == '\0')
+        canned_msg(MSG_OK);
+    else if (!_load_dump_file(filename))
+        canned_msg(MSG_NOTHING_THERE);
 }
