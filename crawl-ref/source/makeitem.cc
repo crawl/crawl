@@ -2269,8 +2269,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight:    688  if depth_mod <4
-            //                  786  otherwise
+            // total weight:    735  if depth_mod <4
+            //                  846  otherwise
             //                  -103 in sprint
             item.sub_type = random_choose_weighted(
                 180, SCR_IDENTIFY,
@@ -2284,8 +2284,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  33, SCR_RECHARGING,
                  33, SCR_BLINKING,
                  33, SCR_ENCHANT_ARMOUR,
-                 // roughly similar to combined weights of old ew 1-3 scrolls
-                 66, SCR_ENCHANT_WEAPON,
+                 33, SCR_ENCHANT_WEAPON,
                  33, SCR_AMNESIA,
                  // [Cha] don't generate noise scrolls if in sprint
                  33, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),

@@ -2329,14 +2329,13 @@ bool enchant_weapon(item_def &wpn)
 
     if (is_weapon(wpn))
     {
-        if (!is_artefact(wpn) && wpn.base_type == OBJ_WEAPONS)
+        if (!is_artefact(wpn)
+            && wpn.base_type == OBJ_WEAPONS
+            && wpn.plus < MAX_WPN_ENCHANT)
         {
-            if (wpn.plus < 4 || !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT))
-            {
-                wpn.plus++;
-                success = true;
-                mprf("%s glows red for a moment.", iname.c_str());
-            }
+            wpn.plus++;
+            success = true;
+            mprf("%s glows red for a moment.", iname.c_str());
         }
 
         if (wpn.cursed())
