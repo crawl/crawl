@@ -3661,8 +3661,8 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.evokable_jump() && !player_mutation_level(MUT_NO_ARTIFICE))
         _add_talent(talents, ABIL_EVOKE_JUMP, check_confused);
 
-    if (you.wearing(EQ_RINGS, RING_TELEPORTATION
-        && !player_mutation_level(MUT_NO_ARTIFICE))
+    if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
+        && !player_mutation_level(MUT_NO_ARTIFICE)
         && !crawl_state.game_is_sprint())
     {
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
