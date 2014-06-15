@@ -1757,7 +1757,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
 
         if (goldify > 0)
         {
-            int gold_count = max(goldify, goldify * val / 10);
             string msg = get_desc_quantity(goldify, quant_got, "the")
                          + " " + it.name(DESC_PLAIN);
             if (goldify > 1)
@@ -1771,11 +1770,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
                 msg += "it.";
 
             mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-            _got_gold(it, gold_count, quiet);
+            _got_gold(it, goldify, quiet);
             dec_penance(GOD_GOZAG, goldify);
 
             if (dec_mitm_item_quantity(obj, goldify))
-                return gold_count;
+                return goldify;
 
             quant_got -= goldify;
         }
