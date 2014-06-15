@@ -462,7 +462,7 @@ const char* weapon_brand_name(const item_def& item, bool terse, int override_bra
     case SPWPN_DISTORTION: return terse ? "distort" : "distortion";
     case SPWPN_REAPING: return terse ? "reap" : "reaping";
 
-    case SPWPN_VAMPIRICISM:
+    case SPWPN_VAMPIRISM:
         return terse ? "vamp" : ""; // non-terse already handled
 
     case SPWPN_VORPAL:
@@ -1229,8 +1229,8 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
                                             : get_weapon_brand(item);
             // this is specialcased out of weapon_brand_name
             // ("vampiric hand axe", etc)
-            if (checkbrand == SPWPN_VAMPIRICISM)
-                return "vampiricism";
+            if (checkbrand == SPWPN_VAMPIRISM)
+                return "vampirism";
             else if (checkbrand == SPWPN_ANTIMAGIC)
                 return "antimagic";
         }
@@ -1361,7 +1361,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_brand && !terse)
         {
             int brand = get_weapon_brand(*this);
-            if (brand == SPWPN_VAMPIRICISM)
+            if (brand == SPWPN_VAMPIRISM)
                 buff << "vampiric ";
             else if (brand == SPWPN_ANTIMAGIC)
                 buff << "antimagic ";

@@ -1066,7 +1066,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SPWPN_SPEED:
-            case SPWPN_VAMPIRICISM:
+            case SPWPN_VAMPIRISM:
                 valued *= 30;
                 break;
 

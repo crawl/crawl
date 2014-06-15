@@ -1139,7 +1139,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "vorpal",
             "flame",
             "frost",
-            "vampiricism",
+            "vampirism",
             "pain",
             "antimagic",
             "distortion",

@@ -1103,7 +1103,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
                 || you.hunger_state < HS_SATIATED && coinflip()
                 || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
         {
-            damage_brand = SPWPN_VAMPIRICISM;
+            damage_brand = SPWPN_VAMPIRISM;
         }
 
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
@@ -1250,7 +1250,7 @@ bool melee_attack::player_aux_unarmed()
             continue;
 
         to_hit = random2(calc_your_to_hit_unarmed(atk,
-                         damage_brand == SPWPN_VAMPIRICISM));
+                         damage_brand == SPWPN_VAMPIRISM));
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
@@ -1363,7 +1363,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
 
         // Normal vampiric biting attack, not if already got stabbing special.
-        if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
+        if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
             && (!stab_attempt || stab_bonus <= 0))
         {
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
@@ -1878,7 +1878,7 @@ bool melee_attack::player_monattk_hit_effects()
         // No further effects.
     }
     else if (you.species == SP_VAMPIRE
-             && damage_brand == SPWPN_VAMPIRICISM
+             && damage_brand == SPWPN_VAMPIRISM
              && you.weapon()
              && _player_vampire_draws_blood(defender->as_monster(),
                                             damage_done, false, 5))

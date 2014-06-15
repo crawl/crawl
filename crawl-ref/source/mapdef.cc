@@ -4785,7 +4785,7 @@ static int _str_to_ego(item_spec &spec, string ego_str)
         "vorpal",
         "flame",
         "frost",
-        "vampiricism",
+        "vampirism",
         "pain",
         "antimagic",
         "distortion",

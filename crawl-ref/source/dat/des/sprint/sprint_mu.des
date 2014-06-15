@@ -906,7 +906,7 @@ NAME: sprint_mu_vaults_butterflies
 TAGS: sprint_mu_vaults no_rotate no_hmirror no_vmirror
 MONS: centaur warrior, lich, shadow dragon, ogre mage
 MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
-      dire flail ego:vampiricism | war axe ego:freezing | spear ego:vorpal |\
+      dire flail ego:vampirism | war axe ego:freezing | spear ego:vorpal |\
       great mace ego:pain | great sword ego:venom .\
       chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\

@@ -957,7 +957,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "different, random effect.";
             }
             break;
-        case SPWPN_VAMPIRICISM:
+        case SPWPN_VAMPIRISM:
             description += "It inflicts no extra harm, but heals its "
                 "wielder somewhat when it strikes a living foe.";
             break;

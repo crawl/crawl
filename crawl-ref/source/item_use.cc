@@ -182,7 +182,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     }
     else if (!ignore_temporary_disability
              && you.hunger_state < HS_FULL
-             && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
+             && get_weapon_brand(*weapon) == SPWPN_VAMPIRISM
              && !crawl_state.game_is_zotdef()
              && !you.is_undead
              && !you_foodless()
@@ -2115,7 +2115,7 @@ static bool _god_hates_brand(const int brand)
 {
     if (is_good_god(you.religion)
         && (brand == SPWPN_DRAINING
-            || brand == SPWPN_VAMPIRICISM
+            || brand == SPWPN_VAMPIRISM
             || brand == SPWPN_CHAOS))
     {
         return true;
@@ -2170,7 +2170,7 @@ static void _rebrand_weapon(item_def& wpn)
                                     15, SPWPN_VORPAL,
                                     15, SPWPN_ELECTROCUTION,
                                     12, SPWPN_PROTECTION,
-                                    8, SPWPN_VAMPIRICISM,
+                                    8, SPWPN_VAMPIRISM,
                                     3, SPWPN_CHAOS,
                                     0);
         }
@@ -2210,7 +2210,7 @@ static void _brand_weapon(item_def &wpn)
         break;
 
     case SPWPN_DRAINING:
-    case SPWPN_VAMPIRICISM:
+    case SPWPN_VAMPIRISM:
         flash_colour = DARKGREY;
         mprf("%s thirsts for the lives of mortals!", itname.c_str());
         break;

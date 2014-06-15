@@ -888,7 +888,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
 
             if (one_chance_in(20))
-                rc = SPWPN_VAMPIRICISM;
+                rc = SPWPN_VAMPIRISM;
             // **** intentional fall through here ****
         case WPN_MACE:
         case WPN_GREAT_MACE:
@@ -934,7 +934,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(10))
-                rc = SPWPN_VAMPIRICISM;
+                rc = SPWPN_VAMPIRISM;
 
             if (one_chance_in(8))
                 rc = SPWPN_ELECTROCUTION;
@@ -974,7 +974,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_ANTIMAGIC;
 
             if (one_chance_in(10))
-                rc = SPWPN_VAMPIRICISM;
+                rc = SPWPN_VAMPIRISM;
 
             if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
@@ -1016,7 +1016,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_PAIN;
 
             if (one_chance_in(10))
-                rc = SPWPN_VAMPIRICISM;
+                rc = SPWPN_VAMPIRISM;
 
             if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
@@ -1048,7 +1048,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_DISTORTION;
 
             if (one_chance_in(10))
-                rc = SPWPN_VAMPIRICISM;
+                rc = SPWPN_VAMPIRISM;
 
             if (one_chance_in(8))
                 rc = SPWPN_DRAINING;
@@ -1082,7 +1082,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_PAIN;
 
             if (one_chance_in(10))
-                rc = SPWPN_VAMPIRICISM;
+                rc = SPWPN_VAMPIRISM;
 
             if (one_chance_in(25))
                 rc = SPWPN_DISTORTION;
@@ -1159,7 +1159,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             else if (one_chance_in(6))
                 rc = SPWPN_ELECTROCUTION;
             else if (one_chance_in(5))
-                rc = SPWPN_VAMPIRICISM;
+                rc = SPWPN_VAMPIRISM;
             else if (one_chance_in(6))
                 rc = SPWPN_VENOM;
             else if (one_chance_in(8))
@@ -1173,7 +1173,7 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_ANTIMAGIC;
 
             if (one_chance_in(5))       // 7.3%
-                rc = SPWPN_VAMPIRICISM;
+                rc = SPWPN_VAMPIRISM;
 
             if (one_chance_in(10))      // 4.0%
                 rc = SPWPN_PAIN;
@@ -1265,7 +1265,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     // Melee-only brands.
     case SPWPN_DRAGON_SLAYING:
     case SPWPN_DRAINING:
-    case SPWPN_VAMPIRICISM:
+    case SPWPN_VAMPIRISM:
     case SPWPN_PAIN:
     case SPWPN_DISTORTION:
     case SPWPN_ANTIMAGIC:
