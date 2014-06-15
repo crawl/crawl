@@ -1971,8 +1971,8 @@ static const mutation_def mut_data[] =
   "magic vulnerable",
 
   {"You are slightly vulnerable to magic. (-20 MR)",
-    "You are vulnerable to magic. (-20 MR)",
-    "You are extremely vulnerable to magic. (-20 MR)"},
+    "You are vulnerable to magic. (-40 MR)",
+    "You are extremely vulnerable to magic. (-60 MR)"},
   {"You feel vulnerable to magic.",
     "You feel more vulnerable to magic.",
     "You feel more vulnerable to magic."},
