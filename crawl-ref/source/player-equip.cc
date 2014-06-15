@@ -1171,7 +1171,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_TELEPORTATION:
-        if (crawl_state.game_is_sprint())
+        if (you.no_tele())
             mpr("You feel a slight, muted jump rush through you.");
         else
             // keep in sync with player_teleport
