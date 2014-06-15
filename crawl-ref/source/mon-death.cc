@@ -873,9 +873,9 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         // Mummy killed by trap or something other than the player or
         // another monster, so no curse.
         case KILL_MISC:
-        // Mummy sent to the Abyss wasn't actually killed, so no curse.
         case KILL_RESET:
         case KILL_DISMISSED:
+        // Mummy sent to the Abyss wasn't actually killed, so no curse.
         case KILL_BANISHED:
             return;
 
@@ -897,31 +897,22 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
             return;
     }
 
-    // beam code might give an index of MHITYOU for the player.
-    if (YOU_KILL(killer))
-        index = NON_MONSTER;
-
-    // Killed by a Zot trap, a god, etc.
-    if (index != NON_MONSTER && invalid_monster_index(index))
-        return;
-
     actor* target;
-    if (index == NON_MONSTER)
+
+    if (YOU_KILL(killer))
         target = &you;
+    // Killed by a Zot trap, a god, etc, or suicide.
+    else if (invalid_monster_index(index) || index == mons->mindex())
+        return;
     else
-    {
-        // Mummies committing suicide don't cause a death curse.
-        if (index == mons->mindex())
-            return;
         target = &menv[index];
-    }
 
     // Mummy was killed by a giant spore or ball lightning?
     if (!target->alive())
         return;
 
     if ((mons->type == MONS_MUMMY || mons->type == MONS_MENKAURE)
-        && YOU_KILL(killer))
+        && target->is_player())
     {
         // Kiku protects you from ordinary mummy curses.
         if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance()
@@ -936,7 +927,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     }
     else
     {
-        if (index == NON_MONSTER)
+        if (target->is_player())
             mprf(MSGCH_MONSTER_SPELL, "You feel extremely nervous for a moment...");
         else if (you.can_see(target))
         {
