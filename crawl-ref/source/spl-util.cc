@@ -870,6 +870,28 @@ skill_type spell_type2skill(unsigned int spelltype)
     }
 }
 
+unsigned int skill2spell_type(skill_type spell_skill)
+{
+    switch (spell_skill)
+    {
+    case SK_CONJURATIONS:    return SPTYP_CONJURATION;
+    case SK_HEXES:           return SPTYP_HEXES;
+    case SK_CHARMS:          return SPTYP_CHARMS;
+    case SK_FIRE_MAGIC:      return SPTYP_FIRE;
+    case SK_ICE_MAGIC:       return SPTYP_ICE;
+    case SK_TRANSMUTATIONS:  return SPTYP_TRANSMUTATION;
+    case SK_NECROMANCY:      return SPTYP_NECROMANCY;
+    case SK_SUMMONINGS:      return SPTYP_SUMMONING;
+    case SK_TRANSLOCATIONS:  return SPTYP_TRANSLOCATION;
+    case SK_POISON_MAGIC:    return SPTYP_POISON;
+    case SK_EARTH_MAGIC:     return SPTYP_EARTH;
+    case SK_AIR_MAGIC:       return SPTYP_AIR;
+
+    default:
+        return SPTYP_NONE;
+    }
+}
+
 /*
  **************************************************
  *                                                *
@@ -1108,37 +1130,6 @@ bool spell_is_useless(spell_type spell, bool transient)
             }
         }
 #endif
-    }
-
-    // Check for banned schools.
-    if (
-        (spell_typematch(spell, SPTYP_AIR
-            && player_mutation_level(MUT_NO_AIR_MAGIC)))
-        || (spell_typematch(spell, SPTYP_CHARMS
-            && player_mutation_level(MUT_NO_CHARM_MAGIC)))
-        || (spell_typematch(spell, SPTYP_CONJURATION
-            && player_mutation_level(MUT_NO_CONJURATION_MAGIC)))
-        || (spell_typematch(spell, SPTYP_EARTH
-            && player_mutation_level(MUT_NO_EARTH_MAGIC)))
-        || (spell_typematch(spell, SPTYP_FIRE
-            && player_mutation_level(MUT_NO_FIRE_MAGIC)))
-        || (spell_typematch(spell, SPTYP_HEXES
-            && player_mutation_level(MUT_NO_HEXES_MAGIC)))
-        || (spell_typematch(spell, SPTYP_ICE
-            && player_mutation_level(MUT_NO_ICE_MAGIC)))
-        || (spell_typematch(spell, SPTYP_NECROMANCY
-            && player_mutation_level(MUT_NO_NECROMANCY_MAGIC)))
-        || (spell_typematch(spell, SPTYP_POISON
-            && player_mutation_level(MUT_NO_POISON_MAGIC)))
-        || (spell_typematch(spell, SPTYP_SUMMONING
-            && player_mutation_level(MUT_NO_SUMMONING_MAGIC)))
-        || (spell_typematch(spell, SPTYP_TRANSLOCATION
-            && player_mutation_level(MUT_NO_TRANSLOCATION_MAGIC)))
-        || (spell_typematch(spell, SPTYP_TRANSMUTATION
-            && player_mutation_level(MUT_NO_TRANSMUTATION_MAGIC)))
-    )
-    {
-        return true;
     }
 
     switch (spell)

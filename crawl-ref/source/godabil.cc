@@ -5407,6 +5407,19 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 change_skill_points(mutation_skill,
                     -you.skill_points[mutation_skill], true);
                 you.stop_train.insert(mutation_skill);
+
+                for (int j = 0; j < 52; ++j)
+                {
+                    const char letter = index_to_letter(j);
+                    const spell_type spell = get_spell_by_letter(letter);
+                    if (!is_valid_spell(spell))
+                        continue;
+                    if (spell_typematch(spell,
+                        skill2spell_type(mutation_skill)))
+                    {
+                        del_spell_from_memory_by_slot(j);
+                    }
+                }
             }
             break;
         case ABIL_IASHOL_SACRIFICE_HAND:
