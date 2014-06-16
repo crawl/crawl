@@ -59,6 +59,7 @@
 #include "skill_menu.h"
 #include "shopping.h"
 #include "shout.h"
+#include "skills.h"
 #include "spl-book.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
@@ -5282,10 +5283,14 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_STEALTH, 1, "Iashol sacrifice");
             }
 
-            // zero out useless skills
-            you.skills[SK_STEALTH] = 0;
             gain_piety(30 + div_rand_round(skill_exp_needed(
                     you.skills[SK_STEALTH], SK_STEALTH, SP_HUMAN), 50));
+
+            // zero out useless skills
+            change_skill_points(SK_STEALTH,
+                -you.skill_points[SK_STEALTH], true);
+            you.stop_train.insert(SK_STEALTH);
+
             break;
         case ABIL_IASHOL_SACRIFICE_ARTIFICE:
             if (!yesno("Do you really want to do make this sacrifice?",
@@ -5297,10 +5302,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_ARTIFICE, 1, "Iashol sacrifice");
             }
 
-            // zero out useless skills
-            you.skills[SK_EVOCATIONS] = 0;
             gain_piety(40 + div_rand_round(skill_exp_needed(
                     you.skills[SK_EVOCATIONS], SK_EVOCATIONS, SP_HUMAN), 50));
+            // zero out useless skills
+            change_skill_points(SK_EVOCATIONS,
+                -you.skill_points[SK_EVOCATIONS], true);
+            you.stop_train.insert(SK_EVOCATIONS);
+
             break;
         case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
             if (!yesno("Do you really want to do make this sacrifice?",
@@ -5312,10 +5320,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_DODGING, 1, "Iashol sacrifice");
             }
 
-            // zero out useless skills
-            you.skills[SK_DODGING] = 0;
             gain_piety(30 + div_rand_round(skill_exp_needed(
                     you.skills[SK_DODGING], SK_DODGING, SP_HUMAN), 50));
+            // zero out useless skills
+            change_skill_points(SK_DODGING,
+                -you.skill_points[SK_DODGING], true);
+            you.stop_train.insert(SK_DODGING);
+
             break;
         case ABIL_IASHOL_SACRIFICE_DURABILITY:
             if (!yesno("Do you really want to do make this sacrifice?",
@@ -5327,10 +5338,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_ARMOUR, 1, "Iashol sacrifice");
             }
 
-            // zero out useless skills
-            you.skills[SK_ARMOUR] = 0;
             gain_piety(30 + div_rand_round(skill_exp_needed(
                     you.skills[SK_ARMOUR], SK_ARMOUR, SP_HUMAN), 50));
+            // zero out useless skills
+            change_skill_points(SK_ARMOUR,
+                -you.skill_points[SK_ARMOUR], true);
+            you.stop_train.insert(SK_ARMOUR);
+
             break;
         case ABIL_IASHOL_SACRIFICE_SANITY:
             if (!yesno("Do you really want to do make this sacrifice?",
@@ -5352,8 +5366,10 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                     perma_mutate(MUT_NO_LOVE, 1, "Iashol sacrifice");
             }
+
             gain_piety(25 + random2(5) + div_rand_round(skill_exp_needed(
                     you.skills[SK_SUMMONINGS], SK_SUMMONINGS, SP_HUMAN), 200));
+
             break;
         case ABIL_IASHOL_SACRIFICE_ARCANA:
             mprf("Iashol asks you to sacrifice all use of %s, %s, and %s.",
@@ -5388,7 +5404,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     50));
 
                 // zero out useless skills
-                you.skills[mutation_skill] = 0;
+                change_skill_points(mutation_skill,
+                    -you.skill_points[mutation_skill], true);
+                you.stop_train.insert(mutation_skill);
             }
             break;
         case ABIL_IASHOL_SACRIFICE_HAND:
@@ -5430,6 +5448,8 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             gain_piety(80 + div_rand_round(skill_exp_needed(
                     you.skills[SK_SHIELDS], SK_SHIELDS, SP_HUMAN), 50));
+
+            you.stop_train.insert(SK_SHIELDS);
             break;
         default:
             return;
