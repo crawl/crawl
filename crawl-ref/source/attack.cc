@@ -940,11 +940,8 @@ brand_type attack::random_chaos_brand()
                 susceptible = false;
             break;
         case SPWPN_HOLY_WRATH:
-            if (defender->holiness() != MH_UNDEAD
-                && defender->holiness() != MH_DEMONIC)
-            {
+            if (!defender->holy_wrath_susceptible())
                 susceptible = false;
-            }
             break;
         case SPWPN_CONFUSE:
             if (defender->holiness() == MH_NONLIVING
@@ -1675,7 +1672,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_HOLY_WRATH:
-        if (defender->undead_or_demonic())
+        if (defender->holy_wrath_susceptible())
             special_damage = 1 + (random2(damage_done * 15) / 10);
 
         if (special_damage && defender_visible)

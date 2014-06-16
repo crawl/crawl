@@ -3154,7 +3154,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_HOLY:
-        if (defender->undead_or_demonic())
+        if (defender->holy_wrath_suseceptible())
             special_damage = attk_damage * 0.75;
 
         if (needs_message && special_damage)

@@ -6629,6 +6629,11 @@ bool player::undead_or_demonic() const
     return is_undead || species == SP_DEMONSPAWN;
 }
 
+bool player::holy_wrath_susceptible() const
+{
+    return undead_or_demonic();
+}
+
 bool player::is_holy(bool check_spells) const
 {
     if (is_good_god(religion) && check_spells)
