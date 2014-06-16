@@ -135,7 +135,7 @@ DEPTH:  D:5-, Depths, Lair
 WEIGHT: 0
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS:   no_hmirror no_vmirror layout_type_open layout_type_big_grid
+TAGS:   no_hmirror no_vmirror layout_type_open
 {{
   if is_validating() then return; end
   local edge = crawl.x_chance_in_y(2,3)
@@ -167,7 +167,7 @@ DEPTH:  D:3-, Depths, Lair
 WEIGHT: 5
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS:   no_hmirror no_vmirror layout_type_corridors layout_type_small_grid
+TAGS:   no_hmirror no_vmirror layout_type_passages
 {{
   if is_validating() then return; end
 
@@ -198,7 +198,7 @@ DEPTH:  D:3-, Depths, Lair
 WEIGHT: 5
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS:   no_hmirror no_vmirror layout_type_corridors layout_type_long_grid
+TAGS:   no_hmirror no_vmirror layout_type_passages
 {{
   if is_validating() then return; end
   local min_size = you.in_branch("lair") and 1 or 2
@@ -262,7 +262,7 @@ DEPTH:  D, Depths, Crypt, Lair
 WEIGHT: 0
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS:   no_hmirror no_vmirror chance_d layout_type_hyper_grid
+TAGS:   no_hmirror no_vmirror chance_d layout_type_passages
 {{
   if is_validating() then return; end
 
@@ -308,7 +308,7 @@ NAME:   layout_grid_shapes
 DEPTH:  Snake, Pan, Zot
 WEIGHT: 8, 20(Pan)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_open
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
   if is_validating() then return; end
 
@@ -416,7 +416,7 @@ NAME:   layout_grid_maze
 DEPTH:  D:8-, Depths, Lair, Tar, Pan
 WEIGHT: 5, 80(Tar), 10 (Pan)
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand layout_type_maze
+TAGS:   overwritable layout allow_dup unrand layout_type_passages
 {{
   if is_validating() then return; end
 

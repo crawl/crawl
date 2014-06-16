@@ -345,7 +345,7 @@ void xom_tick()
         }
     }
 
-    if (you.faith() ? coinflip() : one_chance_in(3))
+    if (x_chance_in_y(2 + you.faith(), 6))
     {
         const int tension = get_tension(GOD_XOM);
         const int chance = (tension ==  0 ? 1 :
@@ -956,7 +956,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
             // If the launcher alters its ammo, then branding the
             // monster's ammo won't be an upgrade.
             int brand = get_weapon_brand(item);
-            if (brand == SPWPN_FLAME || brand == SPWPN_FROST
+            if (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
                 || brand == SPWPN_VENOM)
             {
                 special_launcher = true;
@@ -1014,8 +1014,8 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
             item.flags |= ISFLAG_GLOWING;
 
         // Make the pluses more like a randomly generated ego item.
-        item.plus  += random2(5);
-        item.plus2 += random2(5);
+        if (item.base_type == OBJ_WEAPONS)
+            item.plus  += random2(5);
     }
 }
 
@@ -1414,7 +1414,7 @@ static int _xom_swap_weapons(bool debug = false)
             && !(weapon.flags & ISFLAG_SUMMONED)
             && you.can_wield(weapon, true) && mi->can_wield(*wpn, true)
             && get_weapon_brand(weapon) != SPWPN_DISTORTION
-            && (get_weapon_brand(weapon) != SPWPN_VAMPIRICISM
+            && (get_weapon_brand(weapon) != SPWPN_VAMPIRISM
                 || you.is_undead || you.hunger_state >= HS_FULL)
             && (!is_artefact(weapon) || _art_is_safe(weapon)))
         {
@@ -1792,7 +1792,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
  * but it may include the player as a victim.
  * @param debug  If true, don't have Xom act, but return a value indicating
  *               whether he would have acted.
- * @returns      XOM_DID_NOTHING if Xom didn't act, XOM_GOOD_LIGHTNING
+ * @return       XOM_DID_NOTHING if Xom didn't act, XOM_GOOD_LIGHTNING
  *               otherwise.
  */
 static int _xom_throw_divine_lightning(bool debug = false)
@@ -3993,7 +3993,7 @@ static string _get_death_type_keyword(const kill_method_type killed_by)
  * save you.
  * @param death_type  The type of death that occurred.
  * @param aux         Additional string describing this death.
- * @returns           True if Xom saves your life, false otherwise.
+ * @return            True if Xom saves your life, false otherwise.
  */
 bool xom_saves_your_life(const kill_method_type death_type, const char *aux)
 {

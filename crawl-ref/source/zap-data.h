@@ -980,7 +980,7 @@ static const zap_info zap_data[] =
     new tohit_calculator<AUTOMATIC_HIT>,
     WHITE,
     false,
-    BEAM_NUKE,
+    BEAM_DEVASTATION,
     NUM_DCHAR_TYPES, // no dchar, to get bolt.glyph == 0,
                      // hence invisible
     true,

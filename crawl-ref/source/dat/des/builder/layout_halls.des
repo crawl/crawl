@@ -78,11 +78,14 @@
 ##############################################################
 # layout_hall_layers
 #
+# TODO: Correctly assign "layout_type_caves" tag with cave
+#       mode and "layout_mode_passages" tag without it.
+#
 NAME:   layout_hall_layers
 DEPTH:  Depths, Zot, Lair, Elf
 WEIGHT: 5, 10 (Zot), 20 (Zot:5), 5 (Lair), 10 (Elf)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_anastomotic
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -227,7 +230,7 @@ NAME:   layout_onion
 DEPTH:  Zot, Snake
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_anastomotic
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -272,7 +275,7 @@ NAME:   layout_catacombs
 DEPTH:  Crypt,Tar
 WEIGHT: 50, 50 (Tar)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_catacombs
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -343,7 +346,7 @@ NAME:   layout_onion_interference
 DEPTH:  Zot:1-4, Snake
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_anastomotic
 {{
 
   local gxm,gym = dgn.max_bounds()
@@ -406,11 +409,17 @@ validate {{
 # polar transform producing something sometimes like a
 # spiderweb.
 #
+# TODO: Use "layout_type_anastomotic" tag for the less open
+#       (normal) version and the "layout_type_caves" tag
+#       for the openm version that sometimes appears.  If they
+#       are all mixed up, layout_type_caves is probably
+#       better.
+#
 NAME:   layout_cathedral_of_symmetry
 DEPTH:  Zot, Tar
 WEIGHT: 20, 50(Tar)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -516,8 +525,8 @@ NAME:   layout_concentric_octagons
 DEPTH:  Snake, Elf, Depths, Zot
 WEIGHT: 5, 10 (Elf), 20 (Zot)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand no_rotate no_hmirror no_vmirror
-TAGS:   central layout_type_halls
+TAGS:   overwritable layout allow_dup unrand central layout_type_passages
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
   --   xx
   --  xxxx

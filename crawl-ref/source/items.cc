@@ -177,7 +177,7 @@ static bool _item_preferred_to_clean(int item)
 {
     // Preferably clean "normal" weapons and ammo
     if (mitm[item].base_type == OBJ_WEAPONS
-        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
+        && mitm[item].plus <= 0
         && !is_artefact(mitm[item]))
     {
         return true;
@@ -312,7 +312,7 @@ stack_iterator stack_iterator::operator++(int dummy)
 
 /**
  * Reduce quantity of an inventory item, do cleanup if item goes away.
- * @returns True if stack of items no longer exists, false otherwise.
+ * @return  True if stack of items no longer exists, false otherwise.
 */
 bool dec_inv_item_quantity(int obj, int amount)
 {
@@ -641,7 +641,7 @@ void lose_item_stack(const coord_def& where)
  * How many movable items are there at a location?
  *
  * @param obj The item link for the location.
- * @returns The number of movable items at the location.
+ * @return  The number of movable items at the location.
 */
 int count_movable_items(int obj)
 {
@@ -873,12 +873,17 @@ void pickup_menu(int item_link)
 
     string pickup_warning;
     for (int i = 0, count = selected.size(); i < count; ++i)
-        for (int j = item_link; j != NON_ITEM; j = mitm[j].link)
+    {
+        // Moving the item might destroy it, in which case we can't
+        // rely on the link.
+        short next;
+        for (int j = item_link; j != NON_ITEM; j = next)
         {
+            next = mitm[j].link;
             if (&mitm[j] == selected[i].item)
             {
                 if (j == item_link)
-                    item_link = mitm[j].link;
+                    item_link = next;
 
                 int num_to_take = selected[i].quantity;
                 const bool take_all = (num_to_take == mitm[j].quantity);
@@ -907,6 +912,7 @@ void pickup_menu(int item_link)
                 }
             }
         }
+    }
 
     if (!pickup_warning.empty())
     {
@@ -1174,7 +1180,7 @@ string origin_desc(const item_def &item)
  * @param link The location link
  * @param qty If 0, prompt for quantity of that item to pick up, if < 0,
  *            pick up the entire stack, otherwise pick up qty of the item.
- * @returns True if any item was picked up, false otherwise.
+ * @return  True if any item was picked up, false otherwise.
 */
 bool pickup_single_item(int link, int qty)
 {
@@ -1618,7 +1624,7 @@ void note_inscribe_item(item_def &item)
  * @param quant_got The quantity of this item to move.
  * @param quiet If true, most messages notifying the player of item pickup (or
  *              item pickup failure) aren't printed.
- * @returns The quantity of items moved or -1 if the player's inventory is
+ * @return  The quantity of items moved or -1 if the player's inventory is
  *          full.
 */
 int move_item_to_player(int obj, int quant_got, bool quiet)
@@ -1751,7 +1757,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
 
         if (goldify > 0)
         {
-            int gold_count = max(goldify, goldify * val / 10);
             string msg = get_desc_quantity(goldify, quant_got, "the")
                          + " " + it.name(DESC_PLAIN);
             if (goldify > 1)
@@ -1765,11 +1770,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
                 msg += "it.";
 
             mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-            _got_gold(it, gold_count, quiet);
+            _got_gold(it, goldify, quiet);
             dec_penance(GOD_GOZAG, goldify);
 
             if (dec_mitm_item_quantity(obj, goldify))
-                return gold_count;
+                return goldify;
 
             quant_got -= goldify;
         }
@@ -3754,8 +3759,6 @@ bool get_item_by_name(item_def *item, char* specs,
         switch (item->sub_type)
         {
         case RING_SLAYING:
-            item->plus2 = 5;
-            // intentional fall-through
         case RING_PROTECTION:
         case RING_EVASION:
         case RING_STRENGTH:
@@ -3858,24 +3861,25 @@ item_info get_item_info(const item_def& item)
 
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
     case OBJ_MISSILES:
+        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            ii.plus2 = item.plus2;
+        // intentional fall-through
+    case OBJ_WEAPONS:
         ii.sub_type = item.sub_type;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-        {
             ii.plus = item.plus;
-            ii.plus2 = item.plus2;
-        }
         if (item_type_known(item))
             ii.special = item.special; // brand
         break;
     case OBJ_ARMOUR:
         ii.sub_type = item.sub_type;
-        ii.plus2    = item.plus2;      // sub-subtype (gauntlets, etc)
+        ii.plus2    = item.plus2;      // sub-subtype (helmets, etc)
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;
         if (item_type_known(item))
             ii.special = item.special; // brand
+        ii.rnd = item.rnd; // used for appearance
         break;
     case OBJ_WANDS:
         if (item_type_known(item))
@@ -3901,6 +3905,8 @@ item_info get_item_info(const item_def& item)
             ii.plus = item.plus; // monster
             ii.special = food_is_rotten(item) ? 99 : 100;
         }
+        if (ii.sub_type == FOOD_FRUIT)
+            ii.rnd = item.rnd; //appearance
         break;
     case OBJ_CORPSES:
         ii.sub_type = item.sub_type;
@@ -3921,10 +3927,7 @@ item_info get_item_info(const item_def& item)
         else
             ii.sub_type = jewellery_is_amulet(item) ? NUM_JEWELLERY : NUM_RINGS;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-        {
             ii.plus = item.plus;   // str/dex/int/ac/ev ring plus
-            ii.plus2 = item.plus2; // slaying damage bonus
-        }
         ii.special = item.special; // appearance
         ii.rnd = item.rnd; // randart appearance
         break;

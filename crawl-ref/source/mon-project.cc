@@ -237,13 +237,28 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
 
     bolt beam;
     beam.name = "orb of destruction";
-    beam.flavour = BEAM_NUKE;
+    beam.flavour = BEAM_DEVASTATION;
     beam.attitude = mon.attitude;
 
     actor *caster = actor_by_mid(mon.summoner);
     if (!caster)        // caster is dead/gone, blame the orb itself (as its
         caster = &mon;  // friendliness is correct)
     beam.set_agent(caster);
+    if (mon.props.exists("iood_reflector"))
+    {
+        beam.reflections = 1;
+
+        const mid_t refl_mid = mon.props["iood_reflector"].get_int64();
+
+        if (refl_mid == MID_PLAYER)
+            beam.reflector = NON_MONSTER;
+        else
+        {
+            // If the reflecting monster has died, credit the original caster.
+            const monster * const rmon = monster_by_mid(refl_mid);
+            beam.reflector = rmon ? rmon->mindex() : caster->mindex();
+        }
+    }
     beam.colour = WHITE;
     beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.range = 1;
@@ -533,6 +548,8 @@ move_again:
             }
             victim->shield_block_succeeded(&mon);
 
+            // mid_t is unsigned so won't fit in a plain int
+            mon.props["iood_reflector"] = (int64_t) victim->mid;
             mon.props["iood_vx"] = vx = -vx;
             mon.props["iood_vy"] = vy = -vy;
 

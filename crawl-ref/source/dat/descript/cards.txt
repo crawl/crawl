@@ -134,13 +134,13 @@ Vitriol card
 
 This card unleashes a corrosive attack spell.
 %%%%
-Flame card
+Cloud card
 
-This card creates flames around you.
+This card creates flames or freezing vapours around you.
 %%%%
-Frost card
+the Hammer card
 
-This card unleashes an icy attack spell.
+This card unleashes an physical attack spell.
 %%%%
 Venom card
 

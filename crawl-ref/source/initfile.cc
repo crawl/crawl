@@ -313,8 +313,6 @@ static fire_type _str_to_fire_types(const string &str)
 {
     if (str == "launcher")
         return FIRE_LAUNCHER;
-    else if (str == "dart")
-        return FIRE_DART;
     else if (str == "stone")
         return FIRE_STONE;
     else if (str == "rock")
@@ -774,7 +772,6 @@ void game_options::reset_options()
 
     autopickup_on    = 1;
     autopickup_starting_ammo = true;
-    default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     default_manual_training = false;
 
     show_newturn_mark = true;
@@ -804,6 +801,7 @@ void game_options::reset_options()
     travel_open_doors      = true;
     easy_unequip           = true;
     equip_unequip          = false;
+    jewellery_prompt       = false;
     confirm_butcher        = CONFIRM_AUTO;
     chunks_autopickup      = true;
     prompt_for_swap        = true;
@@ -931,7 +929,7 @@ void game_options::reset_options()
 
     // Clear fire_order and set up the defaults.
     set_fire_order("launcher, return, "
-                   "javelin / tomahawk / dart / stone / rock / net, "
+                   "javelin / tomahawk / stone / rock / net, "
                    "inscribed",
                    false, false);
 
@@ -2407,17 +2405,6 @@ void game_options::read_option_line(const string &str, bool runscript)
             autopickup_on = 0;
     }
     else BOOL_OPTION(autopickup_starting_ammo);
-    else if (key == "default_friendly_pickup")
-    {
-        if (field == "none")
-            default_friendly_pickup = FRIENDLY_PICKUP_NONE;
-        else if (field == "friend")
-            default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
-        else if (field == "player")
-            default_friendly_pickup = FRIENDLY_PICKUP_PLAYER;
-        else if (field == "all")
-            default_friendly_pickup = FRIENDLY_PICKUP_ALL;
-    }
     else if (key == "default_manual_training")
     {
         if (_read_bool(field, true))
@@ -2454,6 +2441,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(travel_open_doors);
     else BOOL_OPTION(easy_unequip);
     else BOOL_OPTION(equip_unequip);
+    else BOOL_OPTION(jewellery_prompt);
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
     else if (key == "confirm_butcher")

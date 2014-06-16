@@ -297,7 +297,7 @@ SUBST:   C=., !=@
 SHUFFLE: B(' / zzz, V[" / yyy
 SUBST:   z=x, y=x, B=., '=+, V=., "=+
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 MAP
 xxxxxxxxxxxxxxxxxxx....@
 xxxxxxxCCCCCCCxxxxx.....

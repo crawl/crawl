@@ -43,8 +43,8 @@ end
 
 function grunt_megastairs_setup(e)
   e.orient("float")
-  e.tags("extra luniq_grunt_megastairs")
-  e.depth("Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
+  e.tags("extra luniq_grunt_megastairs ruin_lair")
+  e.depth("Lair, Depths, Crypt, Elf, Snake, Zot, Dis, Geh, Coc, Tar")
   e.nsubst("0 = 2:0 / 2:0. / *:.")
   e.subst("@ = @+")
   if you.depth() == 1 then
@@ -64,7 +64,7 @@ function grunt_megastairs_setup(e)
     e.subst("x = v")
   elseif you.branch() == "Depths" then
     e.subst("x : cccccvvvb")
-  else
+  elseif you.branch() ~= "Lair" then
     e.subst("x = c")
   end
   e.subst("G : GGGGTTVt")
@@ -2281,8 +2281,8 @@ NAME:    hangedman_opposites_gauntlet
 TAGS:    no_monster_gen patrolling
 ORIENT:  float
 DEPTH:   D:14-15, Depths, !Depths:$
-MONS:    orc knight ; wand of frost . crossbow ego:flame . bolt ego:none . chain mail / \
-         orc knight ; wand of flame . crossbow ego:frost . bolt ego:none . chain mail
+MONS:    orc knight ; wand of frost . crossbow ego:flaming . bolt ego:none . chain mail / \
+         orc knight ; wand of flame . crossbow ego:freezing . bolt ego:none . chain mail
 MONS:    ettin ; giant club ego:holy_wrath ident:type . great mace ego:draining ident:type
 MONS:    rakshasa ; scythe ego:antimagic | trident ego:antimagic / \
          mermaid ; chain mail . javelin ego:poisoned
@@ -2743,7 +2743,7 @@ MONS: flying skull
 ITEM: bolt ego:exploding q:5
 ITEM: potion of heal wounds
 ITEM: plate armour good_item
-ITEM: crossbow ego:flame w:9 ident:type / crossbow unrand:hellfire w:1
+ITEM: crossbow ego:flaming w:9 ident:type / crossbow unrand:hellfire w:1
 SUBST: ( = ()
 TILE: c = wall_marble
 MAP
@@ -6290,4 +6290,74 @@ ccww.........wwcc
     ccw...wcc
      cc...cc
       c+++c
+ENDMAP
+
+NAME: cheibrodos_birdhouse
+DEPTH: Depths, !Depths:$
+TAGS: no_item_gen no_monster_gen no_pool_fixup
+ORIENT: float
+MONS: raven, tengu warrior, tengu conjurer, tengu reaver
+KFEAT: m = iron_grate
+SUBST: " = .....1112W
+NSUBST: ' = 2:4 / 4=23 / *:.
+NSUBST: ? = 3:* / *:%
+MAP
+           .........
+          ..wwwWwww..
+          .wwwWWWwww.
+          .wwWxmxWww.
+          .wWxx"xxWw.
+          .WWm"""mWW.
+          .wWxx"xxWw.
+          .wwWx+xWww.
+          .wwWx'xWww.
+         ..wWxx'xxWw..
+ .........WWWx?'?xWWW.........
+..wwwWwwwWWWWx'''xWWWwwwwWwww..
+.wwwWWWwwWWW+x'''x+WWWwwWWWwww.
+.wwWxmxWWxxxx'''''xxxxWWxmxWww.
+.wWxx"xxxx?'''''''''?xxxx"xxWw.
+.WWm"""+'''''''''''''''+"""mWW.
+.wWxx"xxxx?'''''''''?xxxx"xxWw.
+.wwWxmxWWxxxx'''''xxxxWWxmxWww.
+.wwwWWWwwWWW+x'''x+WWWwwWWWwww.
+..wwwWwwwwWWWx'''xWWWwwwwWwww..
+ .........WWWx?'?xWWW.........
+         ..wWxx'xxWw..
+          .wwWx'xWww.
+          .wwWx+xWww.
+          .wWxx"xxWw.
+          .WWm"""mWW.
+          .wWxx"xxWw.
+          .wwWxmxWww.
+          .wwwWWWwww.
+          ..wwwWwww..
+           .........
+ENDMAP
+
+NAME: cheibrodos_lost_city_excavation
+DEPTH: D:11-15, Depths
+TAGS: no_item_gen no_monster_gen
+ORIENT: float
+: if you.branch() == "Dungeon" then
+MONS: deep elf mage w:8 / fire elemental w:5 / nothing, wizard
+: else
+MONS: wizard w:5 / fire elemental w:5 / nothing, lich
+: end
+ITEM: randbook / any scroll
+SUBST: - = .lx
+MAP
+llllll
+llllllllll
+.l-x-llllllllllllll
+@.+1xlxx-lllllllllll
+.lx.-l-1xlxx-lxxxxll
+lll.llx...+1xlxddxll
+llx.xlll.l-.xlx22xll
+ll+1.l-x.lx..lx..xll
+llx--..1+l-.xlx..xll
+llllll-xxlx1+.+..xll
+llllllllll-xxlxxxxll
+    llllllllllllllll
+        lllllllllll
 ENDMAP

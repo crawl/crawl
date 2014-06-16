@@ -182,6 +182,7 @@ public:
     bool is_patrolling() const;
     bool needs_abyss_transit() const;
     void set_transit(const level_id &destination);
+    bool is_trap_safe(const coord_def& where, bool just_check = false) const;
     bool find_place_to_live(bool near_player = false);
     bool find_home_near_place(const coord_def &c);
     bool find_home_near_player();
@@ -269,13 +270,13 @@ public:
     bool      pickup_armour(item_def &item, int near, bool force);
     bool      pickup_jewellery(item_def &item, int near, bool force);
     bool      pickup_misc(item_def &item, int near);
-    bool      pickup_food(item_def &item, int near);
     bool      pickup_missile(item_def &item, int near, bool force);
     bool      drop_item(int eslot, int near);
     void      equip(item_def &item, int slot, int near = -1);
     bool      unequip(item_def &item, int slot, int near = -1,
                       bool force = false);
     void      steal_item_from_player();
+    item_def* take_item(int steal_what, int mslot);
 
     bool      can_use_missile(const item_def &item) const;
 
@@ -305,7 +306,7 @@ public:
     bool can_go_frenzy() const;
     bool can_go_berserk() const;
     bool can_jump() const;
-    void go_berserk(bool intentional, bool potion = false);
+    bool go_berserk(bool intentional, bool potion = false);
     bool go_frenzy(actor *source);
     bool berserk() const;
     bool berserk_or_insane() const;
@@ -487,6 +488,7 @@ public:
     void bind_spell_flags();
     void calc_speed();
     bool attempt_escape(int attempts = 1);
+    void struggle_against_net();
     bool has_usable_tentacle() const;
 
     bool check_clarity(bool silent) const;

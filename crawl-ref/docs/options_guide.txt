@@ -25,7 +25,7 @@ The contents of this text are:
                 autopickup, autopickup_exceptions, default_autopickup,
                 autopickup_no_burden, pickup_thrown, chunks_autopickup,
                 assign_item_slot, pickup_menu, pickup_menu_limit,
-                drop_filter, default_friendly_pickup
+                drop_filter
 3-b     Targeting.
                 darken_beyond_range
 3-c     Passive Sightings (detected and remembered entities).
@@ -51,8 +51,8 @@ The contents of this text are:
                 runrest_safe_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
 3-h     Command Enhancements.
-                auto_switch, easy_open, easy_unequip,
-                equip_unequip, easy_confirm, allow_self_target,
+                auto_switch, easy_open, easy_unequip, equip_unequip,
+                jewellery_prompt, easy_confirm, allow_self_target,
                 confirm_butcher, easy_eat_chunks, auto_drop_chunks,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
@@ -522,30 +522,6 @@ drop_filter += <regex>, <regex>, ...
         set/clear selection of items that match the filter
         expression(s).
 
-default_friendly_pickup = (friend | player | none | all)
-        Using an in-game toggle, you can control what types of items
-        your allies will pick up:
-             none   = They won't pick up anything at all.
-             friend = They may pick up anything they or another ally
-                      dropped, e.g. if another ally dies.
-                      (This is the default setting.)
-             player = Like 'friend', but they may also pick up anything
-                      you've dropped or thrown.
-             all    = They may pick up anything they want to have.
-                      (This is how it works for hostile monsters.)
-
-        This option controls which is the default setting for this toggle
-        when you start a new game, or when you enter a level for the first
-        time.
-
-        Note that this only works for intelligent allies (such as those you can
-        get when worshipping Beogh), and that monsters have their own
-        reasonings for which items they may need, and when they feel safe
-        enough to pick them up. Except for "none", these options won't let you
-        override these requirements.
-        Also, friendly jellies won't ever eat any items, regardless of
-        this option.
-
 3-b     Targeting.
 -------------------
 
@@ -972,6 +948,13 @@ equip_unequip = false
         If this is true, 'W'ear will also allow you to 'T'ake off worn
         armour, and vice versa, and the same is true for 'P'utting on/
         'R'emoving jewellery.
+
+jewellery_prompt = false
+        If this is true, equipping rings will always prompt for the slot to
+        use, instead of automatically equipping the ring if there is an
+        available empty slot. Unequipping jewellery will also always prompt for
+        an item to remove, instead of skipping the prompt if only one item
+        of jewellery is equipped.
 
 easy_confirm = (none | safe | all)
         Make confirmation questions easier to answer:

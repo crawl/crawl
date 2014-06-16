@@ -224,12 +224,12 @@ void ghost_demon::init_random_demon()
                || brand == SPWPN_ORC_SLAYING
                || brand == SPWPN_RETURNING
                || brand == SPWPN_REACHING
+               || brand == SPWPN_FLAME
+               || brand == SPWPN_FROST
 #endif
                || brand == SPWPN_DRAGON_SLAYING
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_EVASION
-               || brand == SPWPN_FLAME
-               || brand == SPWPN_FROST
                );
     }
 
@@ -503,7 +503,7 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
     switch (u_att_flav)
     {
     case AF_FIRE:
-        u_att_flav = AF_NAPALM;
+        u_att_flav = AF_STICKY_FLAME;
         break;
 
     case AF_POISON:
@@ -638,7 +638,7 @@ static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
     switch (u_att_flav)
     {
     case AF_FIRE:
-    case AF_NAPALM:
+    case AF_STICKY_FLAME:
         return MR_RES_FIRE * (very_ugly ? 2 : 1) | MR_RES_STICKY_FLAME;
 
     case AF_ACID:
@@ -771,7 +771,7 @@ static bool _know_spell(spell_type spell)
  * @param spells The list of spells; it must be terminated by SPELL_NO_SPELL.
  * @param ignore_up_to_spell Ignore entries in the list up to and
  *                           including this one.
- * @returns The first spell the player knows.
+ * @return  The first spell the player knows.
  */
 static spell_type search_spell_list(spell_type* spells, spell_type ignore_up_to_spell)
 {

@@ -220,7 +220,7 @@ KMONS:   ABCD = shadow dragon
 KMONS:   EF = death drake
 : end
 KMONS:   0 = soul eater
-KMONS:   Z = patrolling curse skull
+KMONS:   Z = curse skull
 SHUFFLE: 1234, 12 / 34 / 56, ABCD, AB / CD / EF, {'" / {'" / }`_, {', }`, GHI
 SUBST:   { : -_= |:3, } : -= |:2, ' : |:1 .:4, " = ., Z = Z:1 c:8
 SUBST:   G : O:20 X, H : O X:50, I = X, X : xc

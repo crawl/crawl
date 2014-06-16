@@ -906,7 +906,7 @@ NAME: sprint_mu_vaults_butterflies
 TAGS: sprint_mu_vaults no_rotate no_hmirror no_vmirror
 MONS: centaur warrior, lich, shadow dragon, ogre mage
 MONS: vault guard ; short sword ego:electrocution | long sword ego:flaming |\
-      dire flail ego:vampiricism | war axe ego:freezing | spear ego:vorpal |\
+      dire flail ego:vampirism | war axe ego:freezing | spear ego:vorpal |\
       great mace ego:pain | great sword ego:venom .\
       chain mail ego:poison_resistance | chain mail ego:cold_resistance |\
       scale mail ego:poison_resistance | scale mail ego:cold_resistance |\
@@ -1156,7 +1156,7 @@ KMONS: 2 = patrolling mara
 KMONS: 3 = molten gargoyle
 KMONS: 4 = patrolling titanic slime creature
 KMONS: 5 = generate_awake curse skull
-KMONS: f = skeletal warrior ; longbow ego:flame . arrow q:30
+KMONS: f = skeletal warrior ; longbow ego:flaming . arrow q:30
 KMONS: 6 = shadow wraith
 KMONS: g = ball lightning / giant spore
 KMONS: 7 = patrolling storm dragon
@@ -1309,7 +1309,7 @@ KMONS: 3 = brimstone fiend
 NSUBST: l = 1:1 / *:l
 KITEM: % = obsidian rune of zot
 KITEM: $ = superb_item, any, any
-KITEM: ? = superb_item, superb_item, scroll of enchant weapon III ident:all q:4
+KITEM: ? = superb_item, superb_item, scroll of enchant weapon ident:all q:6
 : acq_on_sight(_G, '!', {"weapon","weapon"})
 MARKER:  G = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \

@@ -18,21 +18,21 @@ between the levels 4 and 7 of the main dungeon.
 %%%%
 Orcish Mines
 
-The well-worked goldmines of the orcish tribes are filled with orcs, their
-humanoid labourers, and piles of their freshly mined gold. Enterprising
-merchants have set up trading posts to help relieve the orcs of their auric
-burden. The haphazard manner in which orcs tend to dig their mineshafts has
-resulted in a complex and treacherous tangle of chambers in which it is easy to
-get trapped.
+These bustling goldmines are filled with orcs, their humanoid labourers, and
+piles of freshly mined gold. Enterprising merchants have set up trading posts
+to help relieve the orcs of the latter. Prospective customers should be warned:
+the haphazard manner in which orcs dig their mineshafts has resulted in a
+complex and treacherous tangle of chambers, in which it is easy to be trapped.
 
 The Orcish Mines are four levels deep and contain the entrance to the Elven
 Halls.
 %%%%
 Elven Halls
 
-Whereas most elven folk would never move into a dark subterranean complex like
-this, the deep elves did. Their halls are filled with riches, but any
-passers-by should be aware of the legendary magical prowess of this species.
+This is the realm of the deep elves, a race that turned their backs on the sun
+long ago. Their halls are filled with riches, but a deadly welcome awaits any
+would-be robbers. In their long seclusion, the deep elves have perfected dark
+sorceries of a power the orcs can only dream of!
 
 The Elven Halls are three levels deep.
 %%%%
@@ -83,12 +83,11 @@ is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
 Slime Pits
 
-The Slime Pits are the amorphous realm of acids, jellies and slimes. Any trace
-of intelligent beings has long been dissolved. Still, there are rumours of
-great treasures deep down, hidden safely away in secret chambers without door
-or window for acid to leak in. It is well known that even the walls of this
-horrible place are dripping with painful acid, growing more caustic as you
-descend.
+The Slime Pits are the amorphous realm of acids, jellies and slimes. Even the
+walls drip with painful acid, growing ever more caustic as one travels deeper.
+Any trace of intelligent beings has long been dissolved. Still, there are
+rumours of great treasures deep down, hidden safely away in secret chambers
+without door or window.
 
 The Slime Pits are six levels deep and contain the slimy rune. The entry is
 between Lair:6 and Lair:8.
@@ -104,20 +103,11 @@ entrances to two more branches. They can only be entered while carrying at
 least one rune of Zot. The entrance can be found on either level 13 or 14 of
 the main dungeon.
 %%%%
-Hall of Blades
-
-Once upon a time, all the daggers and axes and polearms would gather at night
-and dance the waltz, dreaming of battlefields void of man and beast. That time
-is no more, yet the weapons still remain in the Hall of Blades.
-
-The Hall of Blades is a single level and can be found on either Vaults:3 or
-Vaults:4.
-%%%%
 Crypt
 
 The Crypt is a huge repository for the ancient dead. The air is chill and
-fetid, the walls cold and damp. Bones are strewn liberally everywhere and the
-whole place resounds with the keening of the unquiet dead.
+fetid, the walls cold and damp. Bones are strewn liberally everywhere, and
+every noise echoes worryingly, violating the overbearing silence of the grave.
 
 The Crypt is three levels deep, and contains the entrance to the Tomb. Its entry
 is either on Vaults:2 or Vaults:3.
@@ -199,7 +189,7 @@ Pandemonium is an infinite realm of pain and suffering. While there are many
 treasures to be found within, they are guarded by cruel demons and even
 crueller demon lords.
 
-Pandemonium is endless. Portals there are found abundantly in the Depths. Note
+Pandemonium is endless. Portals leading there are found in the Depths. Note
 that getting back might be more difficult.
 
 No fewer than five runes can be found in Pandemonium:
@@ -207,7 +197,7 @@ No fewer than five runes can be found in Pandemonium:
  • a glowing rune in the contaminated domain of Mnoleg
  • a magical rune guarded by the arcane powers of Lom Lobon and his minions
  • a dark rune in the shadowy abode of Gloorx Vloq
- • demonic runes exist in multiple copies, owned by less famous lords
+ • a demonic rune existing in multiple places, owned by less famous lords
 %%%%
 Ziggurat
 
@@ -222,14 +212,12 @@ It can only be entered when carrying at least three runes of Zot.
 %%%%
 Labyrinth
 
-The labyrinth is a large, complex maze designed by subtle and malicious minds
-for reasons long lost to history. Old stories say that the labyrinth was
+The labyrinth is a complex, ever-shifting maze designed by subtle and malicious
+minds for reasons long lost to history. Old stories say that the labyrinth was
 constructed as a prison for a fearsome minotaur. More recent stories say this
 beast dwells there still, guarding the labyrinth's sole exit — as well as a
 hoard of treasure taken from the bodies of the foolish adventurers who got lost
-inside and starved to death. Take care inside the shifting, twisting passages
-of this labyrinth, or your own possessions may end up in the minotaur's
-treasure pile.
+inside and starved to death.
 %%%%
 Bazaar
 
@@ -243,8 +231,7 @@ Trove
 Once upon a time, an enterprising thief and wizard created a system of portals
 leading into the secret treasure troves and chambers of the rich. Too scared to
 loot them himself, he instead charged an extortionate fee for entry to anyone
-who wanted to rifle through them. A clever artificer, he designed his portals
-to direct the entrant to the trove most suited to their needs.
+who wanted to rifle through them.
 
 The items inside this trove are likely to be useful, but beware: the wizard is
 long dead, and even while alive he never offered a money-back guarantee.
@@ -270,7 +257,7 @@ Bailey
 
 The bailey is the still-occupied and well-guarded fortress of an orcish lord.
 The treasures within are protected by both physical barriers and large numbers
-of well armed humanoid warriors.
+of well-armed humanoid warriors.
 %%%%
 Ice Cave
 
@@ -288,13 +275,13 @@ volcano's heart never ceases.
 %%%%
 Wizlab
 
-In ages past, the most powerful mages — many of whom you may have heard of —
-would frequently find or construct small realms sealed off from the rest of the
-world, where they could isolate themselves in the pursuit of ever-greater
-magical knowledge and power. The mages are long gone, but many of their arcane
-laboratories still exist, filled with the results of their experiments. Those
-willing to explore these laboratories may find powerful magical treasures, but
-be warned: the wizards to whom they belonged deserved their reputations.
+In ages past, the most powerful mages would frequently find or construct small
+realms sealed off from the rest of the world, where they could isolate
+themselves in the pursuit of ever-greater magical knowledge and power. The
+mages are long gone, but many of their arcane laboratories still exist, filled
+with the results of their experiments. Those willing to explore these
+laboratories may find powerful magical treasures, but be warned: any wizard
+capable of constructing such a realm deserved their reputation.
 %%%%
 Depths
 

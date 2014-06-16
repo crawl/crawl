@@ -941,9 +941,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (ammo_brand == SPMSL_FRENZY)
         did_god_conduct(DID_HASTY, 6 + random2(3), ammo_brand_known);
 
-    if (bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
-        did_god_conduct(DID_FIRE, 1, true);
-
     if (did_return)
     {
         // Fire beam in reverse.
@@ -983,12 +980,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         delete pbolt.special_explosion;
 
     if (!teleport
+        && projected
         && you_worship(GOD_DITHMENOS)
         && thrown.base_type == OBJ_MISSILES
         && thrown.sub_type != MI_NEEDLE
         && acc_bonus != DEBUG_COOKIE)
     {
-        dithmenos_shadow_throw(thr.target);
+        dithmenos_shadow_throw(thr.target, item);
     }
 
     return hit;
@@ -1200,9 +1198,11 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         chance = 8;
         break;
 
+#if TAG_MAJOR_VERSION == 34
     case MI_DART:
         chance = 6;
         break;
+#endif
 
     case MI_TOMAHAWK:
         chance = 20;

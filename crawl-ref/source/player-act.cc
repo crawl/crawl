@@ -9,6 +9,7 @@
 
 #include <math.h>
 
+#include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
@@ -17,13 +18,17 @@
 #include "env.h"
 #include "fight.h"
 #include "food.h"
+#include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
+#include "player-stats.h"
+#include "religion.h"
 #include "spl-damage.h"
 #include "state.h"
 #include "stuff.h"
@@ -261,7 +266,7 @@ brand_type player::damage_brand(int)
 
         case TRAN_BAT:
             if (species == SP_VAMPIRE && one_chance_in(8))
-                ret = SPWPN_VAMPIRICISM;
+                ret = SPWPN_VAMPIRISM;
             break;
 
         case TRAN_MAGMA:
@@ -731,9 +736,112 @@ void player::attacking(actor *other, bool ranged)
         go_berserk(false);
 }
 
-void player::go_berserk(bool intentional, bool potion)
+/**
+ * Check to see if Chei slows down the berserking player.
+ * @param intentional If true, this was initiated by the player, and additional
+ *                    messages can be printed if we can't berserk.
+ * @return            True if Chei will slow the player, false otherwise.
+ */
+static bool _chei_prevents_berserk_haste(bool intentional)
 {
-    ::go_berserk(intentional, potion);
+    if (!you_worship(GOD_CHEIBRIADOS))
+        return false;
+
+    // Chei makes berserk not speed you up.
+    // Unintentional would be forgiven "just this once" every time.
+    // Intentional could work as normal, but that would require storing
+    // whether you transgressed to start it -- so we just consider this
+    // a part of your penance.
+    if (!intentional)
+    {
+        simple_god_message(" protects you from inadvertent hurry.");
+        return true;
+    }
+
+    did_god_conduct(DID_HASTY, 8);
+    // Let's see if you've lost your religion...
+    if (!you_worship(GOD_CHEIBRIADOS))
+        return false;
+
+    simple_god_message(" forces you to slow down.");
+    return true;
+}
+
+/**
+ * Make the player go berserk!
+ * @param intentional If true, this was initiated by the player, and additional
+ *                    messages can be printed if we can't berserk.
+ * @param potion      If true, this was caused by the player quaffing !berserk;
+ *                    and we get the same additional messages as when
+ *                    intentional is true.
+ * @return            True if we went berserk, false otherwise.
+ */
+bool player::go_berserk(bool intentional, bool potion)
+{
+    ASSERT(!crawl_state.game_is_arena());
+
+    if (!you.can_go_berserk(intentional, potion))
+        return false;
+
+    if (stasis_blocks_effect(true,
+                             "%s thrums violently and saps your rage.",
+                             3,
+                             "%s vibrates violently and saps your rage."))
+    {
+        return false;
+    }
+
+    if (crawl_state.game_is_hints())
+        Hints.hints_berserk_counter++;
+
+    mpr("A red film seems to cover your vision as you go berserk!");
+
+    if (you.duration[DUR_FINESSE] > 0)
+    {
+        you.duration[DUR_FINESSE] = 0; // Totally incompatible.
+        mpr("Your finesse ends abruptly.");
+    }
+
+    if (!_chei_prevents_berserk_haste(intentional))
+        mpr("You feel yourself moving faster!");
+
+    mpr("You feel mighty!");
+
+    int berserk_duration = (20 + random2avg(19,2)) / 2;
+
+    you.increase_duration(DUR_BERSERK, berserk_duration);
+
+    calc_hp();
+    set_hp(you.hp * 3 / 2);
+
+    deflate_hp(you.hp_max, false);
+
+    if (!you.duration[DUR_MIGHT])
+        notify_stat_change(STAT_STR, 5, true, "going berserk");
+
+    if (you.berserk_penalty != NO_BERSERK_PENALTY)
+        you.berserk_penalty = 0;
+
+    you.redraw_quiver = true; // Account for no firing.
+
+#if TAG_MAJOR_VERSION == 34
+    if (you.species == SP_LAVA_ORC)
+    {
+        mpr("You burn with rage!");
+        // This will get sqrt'd later, so.
+        you.temperature = TEMP_MAX;
+    }
+#endif
+
+    if (you.form == TRAN_MAGMA)
+        you.erupt = true;
+
+    if (player_equip_unrand(UNRAND_JIHAD))
+        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
+            if (mi->friendly())
+                mi->go_berserk(false);
+
+    return true;
 }
 
 bool player::can_go_berserk() const

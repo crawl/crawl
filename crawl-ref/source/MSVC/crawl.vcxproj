@@ -107,7 +107,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -138,8 +138,8 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;FULLDEBUG;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -165,8 +165,8 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
 </Command>
     </PreBuildEvent>
     <ClCompile>
-      <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AppHdr.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
@@ -197,8 +197,8 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
       <TargetEnvironment>X64</TargetEnvironment>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>./include;.;..;../contrib/lua/src;../contrib/sqlite;../contrib/pcre;../rltiles;../contrib/sdl/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;_ALLOW_KEYWORD_MACROS;WIZARD;USE_TILE;USE_TILE_LOCAL;PROPORTIONAL_FONT="..\\..\\contrib\\fonts\\DejaVuSans.ttf";MONOSPACED_FONT="..\\..\\contrib\\fonts\\DejaVuSansMono.ttf";USE_FT;FT_FREETYPE_H="freetype.h";USE_GL;USE_SDL;CLUA_BINDINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>AppHdr.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
@@ -307,6 +307,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\godpassive.cc" />
     <ClCompile Include="..\godprayer.cc" />
     <ClCompile Include="..\godwrath.cc" />
+    <ClCompile Include="..\hash.cc" />
     <ClCompile Include="..\hints.cc" />
     <ClCompile Include="..\hiscores.cc" />
     <ClCompile Include="..\initfile.cc" />
@@ -451,7 +452,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\rltiles\tiledef-floor.cc" />
     <ClCompile Include="..\rltiles\tiledef-icons.cc" />
     <ClCompile Include="..\rltiles\tiledef-wall.cc" />
-    <ClCompile Include="..\rng.cc" />
     <ClCompile Include="..\shopping.cc" />
     <ClCompile Include="..\shout.cc" />
     <ClCompile Include="..\show.cc" />
@@ -487,7 +487,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\stuff.cc" />
     <ClCompile Include="..\syscalls.cc" />
     <ClCompile Include="..\tags.cc" />
-    <ClCompile Include="..\tagstring.cc" />
     <ClCompile Include="..\target.cc" />
     <ClCompile Include="..\teleport.cc" />
     <ClCompile Include="..\terrain.cc" />
@@ -574,6 +573,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClCompile Include="..\tiletex.cc" />
     <ClCompile Include="..\tileview.cc" />
     <ClCompile Include="..\tileweb.cc" />
+    <ClCompile Include="..\tileweb-text.cc" />
     <ClCompile Include="..\transform.cc" />
     <ClCompile Include="..\traps.cc" />
     <ClCompile Include="..\travel.cc" />
@@ -637,7 +637,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\dactions.h" />
     <ClInclude Include="..\data-index.h" />
     <ClInclude Include="..\database.h" />
-    <ClInclude Include="..\dbg-crsh.h" />
     <ClInclude Include="..\dbg-maps.h" />
     <ClInclude Include="..\dbg-scan.h" />
     <ClInclude Include="..\dbg-util.h" />
@@ -674,10 +673,8 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\fight.h" />
     <ClInclude Include="..\files.h" />
     <ClInclude Include="..\fineff.h" />
-    <ClInclude Include="..\fixary.h" />
     <ClInclude Include="..\fixedarray.h" />
     <ClInclude Include="..\fixedvector.h" />
-    <ClInclude Include="..\fixvec.h" />
     <ClInclude Include="..\flood_find.h" />
     <ClInclude Include="..\fontwrapper-ft.h" />
     <ClInclude Include="..\food.h" />
@@ -714,7 +711,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\losglobal.h" />
     <ClInclude Include="..\l_defs.h" />
     <ClInclude Include="..\l_libs.h" />
-    <ClInclude Include="..\l_los.h" />
     <ClInclude Include="..\lev-pand.h" />
     <ClInclude Include="..\matrix.h" />
     <ClInclude Include="..\melee_attack.h" />
@@ -810,7 +806,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\rltiles\tiledef-icons.h" />
     <ClInclude Include="..\rltiles\tiledef-wall.h" />
     <ClInclude Include="..\rltiles\tiledef_defines.h" />
-    <ClInclude Include="..\rng.h" />
     <ClInclude Include="..\SDLMain.h" />
     <ClInclude Include="..\shopping.h" />
     <ClInclude Include="..\shout.h" />
@@ -848,7 +843,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\syscalls.h" />
     <ClInclude Include="..\tag-version.h" />
     <ClInclude Include="..\tags.h" />
-    <ClInclude Include="..\tagstring.h" />
     <ClInclude Include="..\target.h" />
     <ClInclude Include="..\teleport.h" />
     <ClInclude Include="..\terrain.h" />
@@ -892,6 +886,7 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\tiletex.h" />
     <ClInclude Include="..\tileview.h" />
     <ClInclude Include="..\tileweb.h" />
+    <ClInclude Include="..\tileweb-text.h" />
     <ClInclude Include="..\transform.h" />
     <ClInclude Include="..\traps.h" />
     <ClInclude Include="..\trap_def.h" />
@@ -900,7 +895,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\tutorial.h" />
     <ClInclude Include="..\uncancel.h" />
     <ClInclude Include="..\unicode.h" />
-    <ClInclude Include="..\unrand.h" />
     <ClInclude Include="..\unwind.h" />
     <ClInclude Include="..\version.h" />
     <ClInclude Include="..\view.h" />
@@ -909,7 +903,6 @@ perl.exe "util/gen-cflg.pl" compflag.h "&lt;UNKNOWN&gt;" "&lt;UNKNOWN&gt;"
     <ClInclude Include="..\viewmap.h" />
     <ClInclude Include="..\windowmanager-sdl.h" />
     <ClInclude Include="..\windowmanager.h" />
-    <ClInclude Include="..\winhdr.h" />
     <ClInclude Include="..\wiz-dgn.h" />
     <ClInclude Include="..\wiz-fsim.h" />
     <ClInclude Include="..\wiz-item.h" />

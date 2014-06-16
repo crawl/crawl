@@ -39,6 +39,7 @@ void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
 bool beogh_water_walk();
+bool beogh_gift_item();
 
 bool yred_injury_mirror();
 bool yred_can_animate_dead();
@@ -81,7 +82,7 @@ bool dithmenos_shadow_step();
 monster* shadow_monster(bool equip = true);
 void shadow_monster_reset(monster *mon);
 void dithmenos_shadow_melee(actor* target);
-void dithmenos_shadow_throw(coord_def target);
+void dithmenos_shadow_throw(coord_def target, const item_def &item);
 void dithmenos_shadow_spell(bolt* orig_beam, spell_type spell);
 
 int gozag_porridge_price();
@@ -92,6 +93,8 @@ bool gozag_setup_call_merchant(bool quiet = false);
 bool gozag_call_merchant();
 int gozag_type_bribable(monster_type type, bool force = false);
 branch_type gozag_bribable_branch(monster_type type);
+bool gozag_branch_bribable(branch_type branch);
+int gozag_branch_bribe_susceptibility(branch_type branch);
 void gozag_deduct_bribe(branch_type br, int amount);
 bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();

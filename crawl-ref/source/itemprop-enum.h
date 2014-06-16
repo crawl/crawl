@@ -3,12 +3,14 @@
 
 enum armour_type
 {
-    ARM_ROBE,
+    ARM_ROBE, // order of mundane armour matters to _upgrade_body_armour
+    ARM_FIRST_MUNDANE_BODY = ARM_ROBE,
     ARM_LEATHER_ARMOUR,
     ARM_RING_MAIL,
     ARM_SCALE_MAIL,
     ARM_CHAIN_MAIL,
     ARM_PLATE_ARMOUR,
+    ARM_LAST_MUNDANE_BODY = ARM_PLATE_ARMOUR,
 
     ARM_CLOAK,
 
@@ -23,8 +25,10 @@ enum armour_type
     ARM_BOOTS,
 
     ARM_BUCKLER, // order of shields matters
+    ARM_FIRST_SHIELD = ARM_BUCKLER,
     ARM_SHIELD,
     ARM_LARGE_SHIELD,
+    ARM_LAST_SHIELD = ARM_LARGE_SHIELD,
 
     ARM_CRYSTAL_PLATE_ARMOUR,
     ARM_MIN_UNBRANDED = ARM_CRYSTAL_PLATE_ARMOUR,
@@ -64,14 +68,6 @@ enum armour_property_type
     PARM_EVASION,
 };
 
-enum boot_type          // used in pluses2
-{
-    TBOOT_BOOTS,
-    TBOOT_NAGA_BARDING,
-    TBOOT_CENTAUR_BARDING,
-    NUM_BOOT_TYPES
-};
-
 const int SP_FORBID_EGO   = -1;
 const int SP_FORBID_BRAND = -1;
 const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
@@ -94,9 +90,11 @@ enum brand_type // item_def.special
     SPWPN_DRAINING,
     SPWPN_SPEED,
     SPWPN_VORPAL,
+#if TAG_MAJOR_VERSION == 34
     SPWPN_FLAME,   // ranged, only
     SPWPN_FROST,   // ranged, only
-    SPWPN_VAMPIRICISM,
+#endif
+    SPWPN_VAMPIRISM,
     SPWPN_PAIN,
     SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,
@@ -136,20 +134,6 @@ enum hands_reqd_type
 {
     HANDS_ONE,
     HANDS_TWO,
-};
-
-enum helmet_desc_type
-{
-    THELM_DESC_PLAIN,
-    THELM_DESC_WINGED,
-    THELM_DESC_HORNED,
-    THELM_DESC_CRESTED,
-    THELM_DESC_PLUMED,
-    THELM_DESC_MAX_SOFT = THELM_DESC_PLUMED,
-    THELM_DESC_SPIKED,
-    THELM_DESC_VISORED,
-    THELM_DESC_GOLDEN,
-    THELM_NUM_DESCS
 };
 
 enum jewellery_type
@@ -257,7 +241,9 @@ enum misc_item_type
 
 enum missile_type
 {
+#if TAG_MAJOR_VERSION == 34
     MI_DART,
+#endif
     MI_NEEDLE,
     MI_ARROW,
     MI_BOLT,
@@ -311,7 +297,7 @@ enum scroll_type
     SCR_NOISE,
     SCR_REMOVE_CURSE,
     SCR_SUMMONING,
-    SCR_ENCHANT_WEAPON_I,
+    SCR_ENCHANT_WEAPON,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
     SCR_RANDOM_USELESSNESS,
@@ -322,10 +308,14 @@ enum scroll_type
     SCR_MAGIC_MAPPING,
     SCR_FOG,
     SCR_ACQUIREMENT,
+#if TAG_MAJOR_VERSION == 34
     SCR_ENCHANT_WEAPON_II,
+#endif
     SCR_BRAND_WEAPON,
     SCR_RECHARGING,
+#if TAG_MAJOR_VERSION == 34
     SCR_ENCHANT_WEAPON_III,
+#endif
     SCR_HOLY_WORD,
     SCR_VULNERABILITY,
     SCR_SILENCE,

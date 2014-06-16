@@ -1074,17 +1074,19 @@ end
 #
 
 ##############################################################
-# layout_loops_misc
+# layout_loops_ring
+#
+# Previously named "layout_loops_misc".
 #
 # This layout has a lot of hallways with many, usually-small
 #  rooms.  The overall structure is a doughnut, although this
 #  can be difficult to see in the final map.
 #
-NAME:    layout_loops_misc
-DEPTH:   D, Depths, Lair, Snake, Elf, Crypt, Zot
-WEIGHT:  5 (Pan), 10 (Zot), 20
-ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand layout_type_misc
+NAME:   layout_loops_ring
+DEPTH:  D, Depths, Lair, Snake, Elf, Crypt, Zot
+WEIGHT: 5 (Pan), 10 (Zot), 20
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_angular
 {{
   local wall_glyph = getRandomWallMaterial()
 
@@ -1197,12 +1199,12 @@ ENDMAP
 #  the cross and the three down stairs will be placed around
 #  another (random) arm of the cross.
 #
-NAME:    layout_loops_cross
-DEPTH:   D, Depths, Lair, Snake, Elf, Crypt, Pan
-WEIGHT:  5 (Pan), 10
-ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand
-TAGS:    no_rotate no_hmirror no_vmirror layout_type_misc
+NAME:   layout_loops_cross
+DEPTH:  D, Depths, Lair, Snake, Elf, Crypt, Pan
+WEIGHT: 5 (Pan), 10
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_angular
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
   local CONNECTION_PLUS_OFFSET = 4
   local CONNECTION_VARIATION_BIG = 8
@@ -1451,11 +1453,11 @@ ENDMAP
 #  in each corner.  There are small hallway loops and rooms
 #  generated around the central rooms.
 #
-NAME:    layout_loops_corners
-DEPTH:   D, Depths, Lair, Snake, Elf, Crypt
-WEIGHT:  5
-ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand layout_type_misc
+NAME:   layout_loops_corners
+DEPTH:  D, Depths, Lair, Snake, Elf, Crypt
+WEIGHT: 5
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_angular
 {{
   local wall_glyph = getRandomWallMaterial()
 

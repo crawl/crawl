@@ -157,7 +157,6 @@ public:
 
     int         autopickup_on;
     bool        autopickup_starting_ammo;
-    int         default_friendly_pickup;
     bool        default_manual_training;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
@@ -170,6 +169,7 @@ public:
     bool        travel_open_doors;     // open doors while exploring
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
+    bool        jewellery_prompt; // Always prompt for slot when changing jewellery.
     int         confirm_butcher; // When to prompt for butchery
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering

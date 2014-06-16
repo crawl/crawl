@@ -189,8 +189,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     item.quantity  = 1 + random2(max_chunks);
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
-    bool wants_for_spells = you.has_spell(SPELL_SIMULACRUM)
-                            || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
+    bool wants_for_spells = you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
     // Don't mark it as dropped if we are forcing autopickup of chunks.
     if (you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= 0
         && is_bad_food(item) && !wants_for_spells)
@@ -1286,102 +1285,6 @@ string weird_sound()
     return getMiscString("sound_name");
 }
 
-/**
- * Make the player go berserk!
- * @param intentional If true, this was initiated by the player, and additional
- *                    messages can be printed if we can't berserk.
- * @param potion      If true, this was caused by the player quaffing !berserk;
- *                    and we get the same additional messages as when
- *                    intentional is true.
- * @returns           True if we went berserk, false otherwise.
- */
-bool go_berserk(bool intentional, bool potion)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (!you.can_go_berserk(intentional, potion))
-        return false;
-
-    if (stasis_blocks_effect(true,
-                             "%s thrums violently and saps your rage.",
-                             3,
-                             "%s vibrates violently and saps your rage."))
-    {
-        return false;
-    }
-
-    if (crawl_state.game_is_hints())
-        Hints.hints_berserk_counter++;
-
-    mpr("A red film seems to cover your vision as you go berserk!");
-
-    if (you.duration[DUR_FINESSE] > 0)
-    {
-        you.duration[DUR_FINESSE] = 0; // Totally incompatible.
-        mpr("Finesse? Hah! Time to rip out guts!");
-    }
-
-    if (you_worship(GOD_CHEIBRIADOS))
-    {
-        // Chei makes berserk not speed you up.
-        // Unintentional would be forgiven "just this once" every time.
-        // Intentional could work as normal, but that would require storing
-        // whether you transgressed to start it -- so we just consider this
-        // a part of your penance.
-        if (intentional)
-        {
-            did_god_conduct(DID_HASTY, 8);
-            simple_god_message(" forces you to slow down.");
-        }
-        else
-            simple_god_message(" protects you from inadvertent hurry.");
-    }
-    else
-        mpr("You feel yourself moving faster!");
-
-    mpr("You feel mighty!");
-
-    // Cutting the duration in half since berserk causes haste and hasted
-    // actions have half the usual delay. This keeps player turns
-    // approximately consistent withe previous versions. -cao
-    // Only 1.5 now, but I'm keeping the reduction as a nerf. -1KB
-    int berserk_duration = (20 + random2avg(19,2)) / 2;
-
-    you.increase_duration(DUR_BERSERK, berserk_duration);
-
-    calc_hp();
-    set_hp(you.hp * 3 / 2);
-
-    deflate_hp(you.hp_max, false);
-
-    if (!you.duration[DUR_MIGHT])
-        notify_stat_change(STAT_STR, 5, true, "going berserk");
-
-    if (you.berserk_penalty != NO_BERSERK_PENALTY)
-        you.berserk_penalty = 0;
-
-    you.redraw_quiver = true; // Account for no firing.
-
-#if TAG_MAJOR_VERSION == 34
-    if (you.species == SP_LAVA_ORC)
-    {
-        mpr("You burn with rage!");
-        // This will get sqrt'd later, so.
-        you.temperature = TEMP_MAX;
-    }
-#endif
-
-    if (you.form == TRAN_MAGMA)
-        you.erupt = true;
-
-    if (player_equip_unrand(UNRAND_JIHAD))
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-            if (mi->friendly())
-                mi->go_berserk(false);
-
-    return true;
-}
-
 // HACK ALERT: In the following several functions, want_move is true if the
 // player is travelling. If that is the case, things must be considered one
 // square closer to the player, since we don't yet know where the player will
@@ -2032,8 +1935,6 @@ void revive()
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    if (you.duration[DUR_WEAPON_BRAND])
-        set_item_ego_type(*you.weapon(), OBJ_WEAPONS, SPWPN_NORMAL);
     if (you.form)
         untransform();
     you.clear_beholders();

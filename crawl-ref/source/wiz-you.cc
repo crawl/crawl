@@ -9,6 +9,7 @@
 
 #include "abyss.h"
 
+#include "chardump.h"
 #include "cio.h"
 #include "dbg-util.h"
 #include "food.h"
@@ -366,9 +367,9 @@ void wizard_set_piety()
     }
 
     const int newpiety = atoi(buf);
-    if (newpiety < 0 || newpiety > 200)
+    if (newpiety < 0 || newpiety > MAX_PIETY)
     {
-        mpr("Piety needs to be between 0 and 200.");
+        mprf("Piety needs to be between 0 and %d.", MAX_PIETY);
         return;
     }
 
@@ -411,19 +412,7 @@ void wizard_set_piety()
         return;
     }
     mprf("Setting piety to %d.", newpiety);
-
-    // We have to set the exact piety value this way, because diff may
-    // be decreased to account for things like penance and gift timeout.
-    int diff;
-    do
-    {
-        diff = newpiety - you.piety;
-        if (diff > 0)
-            gain_piety(diff, 1, true, false);
-        else if (diff < 0)
-            lose_piety(-diff);
-    }
-    while (diff != 0);
+    set_piety(newpiety);
 
     // Automatically reduce penance to 0.
     if (player_under_penance())
@@ -793,7 +782,7 @@ void wizard_edit_durations()
             mprf(MSGCH_PROMPT, "Invalid choice.");
             return;
         }
-        choice = durs[choice];
+        choice = durs[dchoice];
     }
     else
     {
@@ -1076,19 +1065,24 @@ static void _wizard_modify_character(string inputdata)
     return;
 }
 
-void wizard_load_dump_file()
+/**
+ * Load a character from a dump file.
+ *
+ * @param filename The name of the file to open.
+ * @pre The file either does not exist, or is a complete
+ *      dump or morgue file.
+ * @returns True if the file existed and could be opened.
+ * @post The player's stats, level, skills, training, and gold are
+ *       those listed in the dump file.
+ */
+static bool _load_dump_file(const char *filename)
 {
-    char filename[80];
-    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
-    if (filename[0] == '\0')
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
+    FileLineInput f(filename);
+    if (f.eof())
+        return false;
 
     you.init_skills();
 
-    FileLineInput f(filename);
     while (!f.eof())
         _wizard_modify_character(f.get_line());
 
@@ -1096,4 +1090,19 @@ void wizard_load_dump_file()
     init_can_train();
     init_train();
     init_training();
+    return true;
+}
+
+void wizard_load_dump_file()
+{
+    char filename[80];
+    msgwin_get_line_autohist("Which dump file? ", filename, sizeof(filename));
+
+    if (filename[0] == '\0')
+        canned_msg(MSG_OK);
+    else if (!_load_dump_file(filename)
+             && !_load_dump_file((morgue_directory() + filename).c_str()))
+    {
+        canned_msg(MSG_NOTHING_THERE);
+    }
 }

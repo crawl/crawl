@@ -127,6 +127,7 @@
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "stairs.h"
 #include "stash.h"
 #include "state.h"
@@ -183,7 +184,7 @@
  * @param chan The channel where the endmsg will be printed if the duration
  *             ends.
  *
- * @returns True if the duration ended, false otherwise.
+ * @return  True if the duration ended, false otherwise.
  */
 
 static bool _decrement_a_duration(duration_type dur, int delay,
@@ -445,10 +446,6 @@ static void _decrement_durations()
             you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
     }
 
-    // Must come before berserk.
-    if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
-        go_berserk(false);
-
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
 
@@ -509,71 +506,15 @@ static void _decrement_durations()
     }
 
     //jmf: More flexible weapon branding code.
-    int last_value = you.duration[DUR_WEAPON_BRAND];
-
-    if (last_value > 0)
+    if (you.duration[DUR_WEAPON_BRAND] > 0)
     {
         you.duration[DUR_WEAPON_BRAND] -= delay;
 
         if (you.duration[DUR_WEAPON_BRAND] <= 0)
         {
-            you.duration[DUR_WEAPON_BRAND] = 0;
-            item_def& weapon = *you.weapon();
-            const int temp_effect = get_weapon_brand(weapon);
-
-            set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
-            const char *msg = nullptr;
-
-            switch (temp_effect)
-            {
-                case SPWPN_VORPAL:
-                    if (get_vorpal_type(weapon) == DVORP_SLICING)
-                        msg = " seems blunter.";
-                    else
-                        msg = " feels lighter.";
-                    break;
-                case SPWPN_FLAME:
-                case SPWPN_FLAMING:
-                    msg = " goes out.";
-                    break;
-                case SPWPN_FREEZING:
-                    msg = " stops glowing.";
-                    break;
-                case SPWPN_FROST:
-                    msg = "'s frost melts away.";
-                    break;
-                case SPWPN_VENOM:
-                    msg = " stops dripping with poison.";
-                    break;
-                case SPWPN_DRAINING:
-                    msg = " stops crackling.";
-                    break;
-                case SPWPN_DISTORTION:
-                    msg = " seems straighter.";
-                    break;
-                case SPWPN_PAIN:
-                    msg = " seems less pained.";
-                    break;
-                case SPWPN_CHAOS:
-                    msg = " seems more stable.";
-                    break;
-                case SPWPN_ELECTROCUTION:
-                    msg = " stops emitting sparks.";
-                    break;
-                case SPWPN_HOLY_WRATH:
-                    msg = "'s light goes out.";
-                    break;
-                case SPWPN_ANTIMAGIC:
-                    msg = " stops repelling magic.";
-                    calc_mp();
-                    break;
-                default:
-                    msg = " seems inexplicably less special.";
-                    break;
-            }
-
-            mprf(MSGCH_DURATION, "%s%s", weapon.name(DESC_YOUR).c_str(), msg);
-            you.wield_change = true;
+            you.duration[DUR_WEAPON_BRAND] = 1;
+            ASSERT(you.weapon());
+            end_weapon_brand(*you.weapon(), true);
         }
     }
 
@@ -736,7 +677,8 @@ static void _decrement_durations()
                           0, NULL, MSGCH_RECOVERY);
 
     _decrement_a_duration(DUR_NO_POTIONS, delay,
-                          "You can drink potions again.",
+                          you_foodless(true) ? NULL
+                                             : "You can drink potions again.",
                           0, NULL, MSGCH_RECOVERY);
 
     dec_slow_player(delay);
@@ -858,7 +800,7 @@ static void _decrement_durations()
         && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
-        gain_piety(1, 1, true);
+        gain_piety(1, 1);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
         mprf(MSGCH_DIAGNOSTICS, "Piety increases by 1 due to piety pool.");
@@ -1187,11 +1129,13 @@ static void _check_equipment_conducts()
 }
 
 
-// cjo: Handles player hp and mp regeneration. If the counter you.hit_points_regeneration
-// is over 100, a loop restores 1 hp and decreases the counter by 100 (so you can regen
-// more than 1 hp per turn). If the counter is below 100, it is increased by a variable
-// calculated from delay, BASELINE_DELAY, and your regeneration rate. MP regeneration happens
-// similarly, but the countup depends on delay, BASELINE_DELAY, and you.max_magic_points
+// cjo: Handles player hp and mp regeneration. If the counter
+// you.hit_points_regeneration is over 100, a loop restores 1 hp and decreases
+// the counter by 100 (so you can regen more than 1 hp per turn). If the counter
+// is below 100, it is increased by a variable calculated from delay,
+// BASELINE_DELAY, and your regeneration rate. MP regeneration happens
+// similarly, but the countup depends on delay, BASELINE_DELAY, and
+// you.max_magic_points
 static void _regenerate_hp_and_mp(int delay)
 {
     if (crawl_state.disables[DIS_PLAYER_REGEN])
@@ -1308,7 +1252,6 @@ void player_reacts()
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80)
                  && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
-            mprf(MSGCH_BANISHMENT, "You are suddenly pulled into a different region of the Abyss!");
             you_teleport_now(false); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
@@ -1347,16 +1290,7 @@ void player_reacts()
     food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
 
     if (food_use > 0 && you.hunger > 0)
-    {
         make_hungry(food_use, true);
-        if (you.duration[DUR_AMBROSIA])
-        {
-            if (food_use > you.duration[DUR_AMBROSIA])
-                food_use = you.duration[DUR_AMBROSIA];
-            you.duration[DUR_AMBROSIA] -= food_use;
-            inc_mp(food_use);
-        }
-    }
 
     _regenerate_hp_and_mp(capped_time);
 

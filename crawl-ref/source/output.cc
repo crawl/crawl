@@ -742,6 +742,7 @@ static short _get_stat_colour(stat_type stat)
     if (you.duration[DUR_DIVINE_STAMINA]
         || stat == STAT_STR && you.duration[DUR_MIGHT]
         || stat == STAT_STR && you.duration[DUR_BERSERK]
+        || stat == STAT_STR && you.duration[DUR_FORTITUDE]
         || stat == STAT_INT && you.duration[DUR_BRILLIANCE]
         || stat == STAT_DEX && you.duration[DUR_AGILITY])
     {
@@ -803,7 +804,7 @@ static void _print_stats_ac(int x, int y)
     }
     else
         textcolor(HUD_VALUE_COLOUR);
-    CPRINTF("%2d ", player_shield_class());
+    CPRINTF("%2d ", player_displayed_shield_class());
 }
 
 static void _print_stats_ev(int x, int y)
@@ -1238,9 +1239,12 @@ void print_stats()
     cursor_control coff(false);
     textcolor(LIGHTGREY);
 
-    // Displayed evasion is now tied to dex.
-    if (you.redraw_stats[STAT_DEX])
+    // Displayed evasion is tied to dex/str.
+    if (you.redraw_stats[STAT_DEX]
+        || you.redraw_stats[STAT_STR])
+    {
         you.redraw_evasion = true;
+    }
 
     if (HP_Bar.wants_redraw())
         you.redraw_hit_points = true;
@@ -2131,10 +2135,10 @@ static vector<formatted_string> _get_overview_stats()
     if (boosted_sh)
     {
         snprintf(buf, sizeof buf, "SH <lightblue>%2d</lightblue>",
-                 player_shield_class());
+                 player_displayed_shield_class());
     }
     else
-        snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
+        snprintf(buf, sizeof buf, "SH %2d", player_displayed_shield_class());
     cols1.add_formatted(1, buf, false);
 
     const char* str_col = colour_to_str(_get_stat_colour(STAT_STR)).c_str();

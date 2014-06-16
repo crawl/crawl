@@ -852,7 +852,7 @@ int artefact_value(const item_def &item)
 
     // This should probably be more complex... but this isn't so bad:
     ret += 6 * prop[ ARTP_AC ] + 6 * prop[ ARTP_EVASION ]
-            + 3 * prop[ ARTP_ACCURACY ] + 6 * prop[ ARTP_DAMAGE ]
+            + 6 * prop[ ARTP_SLAYING ]
             + 3 * prop[ ARTP_STRENGTH ] + 3 * prop[ ARTP_INTELLIGENCE ]
             + 3 * prop[ ARTP_DEXTERITY ];
 
@@ -1066,7 +1066,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SPWPN_SPEED:
-            case SPWPN_VAMPIRICISM:
+            case SPWPN_VAMPIRISM:
                 valued *= 30;
                 break;
 
@@ -1078,10 +1078,8 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPWPN_CHAOS:
             case SPWPN_DRAINING:
-            case SPWPN_FLAME:
             case SPWPN_FLAMING:
             case SPWPN_FREEZING:
-            case SPWPN_FROST:
             case SPWPN_HOLY_WRATH:
                 valued *= 18;
                 break;
@@ -1102,7 +1100,7 @@ unsigned int item_value(item_def item, bool ident)
         }
 
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
-            valued += 10 * item.plus + 50 * item.plus2;
+            valued += 50 * item.plus;
 
         if (is_artefact(item))
         {
@@ -1125,7 +1123,6 @@ unsigned int item_value(item_def item, bool ident)
     case OBJ_MISSILES:          // ammunition
         switch (item.sub_type)
         {
-        case MI_DART:
         case MI_STONE:
         case MI_NONE:
             valued++;
@@ -1520,7 +1517,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 520;
                 break;
 
-            case SCR_ENCHANT_WEAPON_III:
             case SCR_BRAND_WEAPON:
                 valued += 200;
                 break;
@@ -1532,6 +1528,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
+            case SCR_ENCHANT_WEAPON:
             case SCR_TORMENT:
             case SCR_HOLY_WORD:
             case SCR_SILENCE:
@@ -1539,12 +1536,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 75;
                 break;
 
-            case SCR_ENCHANT_WEAPON_II:
-                valued += 55;
-                break;
-
             case SCR_AMNESIA:
-            case SCR_ENCHANT_WEAPON_I:
             case SCR_FEAR:
             case SCR_IMMOLATION:
             case SCR_MAGIC_MAPPING:
@@ -1594,15 +1586,13 @@ unsigned int item_value(item_def item, bool ident)
                 int base = 0;
                 int coefficient = 0;
                 if (item.sub_type == RING_SLAYING)
-                    base = item.plus + 2 * item.plus2;
+                    base = 3 * item.plus;
                 else
                     base = 2 * item.plus;
 
                 switch (item.sub_type)
                 {
                 case RING_SLAYING:
-                    coefficient = 50;
-                    break;
                 case RING_PROTECTION:
                 case RING_EVASION:
                     coefficient = 40;
@@ -1793,8 +1783,10 @@ unsigned int item_value(item_def item, bool ident)
             valued = 150;
         else
             valued = 250;
+
+        // Both max charges and enchantment.
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
-            valued += 50 * (item.plus2 / ROD_CHARGE_MULT);
+            valued += 50 * (item.plus2 / ROD_CHARGE_MULT + item.special);
         break;
 
     case OBJ_ORBS:
@@ -2231,14 +2223,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     // Ignore stat-modification rings which reduce a stat, since they're
     // worthless.
-    if (item.base_type == OBJ_JEWELLERY)
-    {
-        if (item.sub_type == RING_SLAYING && item.plus < 0 && item.plus2 < 0)
-            return 0;
-
-        if (item.plus < 0)
-            return 0;
-    }
+    if (item.base_type == OBJ_JEWELLERY && item.plus < 0)
+        return 0;
 
     // Manuals are consumable, and interesting enough to keep on list.
     if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_MANUAL)
@@ -2280,14 +2266,12 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         // known pluses when the new ring's pluses are unknown.
         if (item.base_type == OBJ_JEWELLERY)
         {
-            const int nplus = ring_has_pluses(item);
+            const bool has_plus = ring_has_pluses(item);
             const int delta_p = item.plus - list_item.plus;
-            const int delta_p2 = nplus >= 2 ? item.plus2 - list_item.plus2 : 0;
-            if (nplus
+            if (has_plus
                 && item_ident(list_item, ISFLAG_KNOW_PLUSES)
                 && (!item_ident(item, ISFLAG_KNOW_PLUSES)
-                     || delta_p <= 0 && delta_p2 <= 0
-                        && (delta_p < 0 || delta_p2 < 0)))
+                     || delta_p < 0))
             {
                 continue;
             }

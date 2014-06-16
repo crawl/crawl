@@ -600,10 +600,6 @@ et omdømme!
 
 Alle andre guder hader Beogh og tager ikke let på desertering.
 %%%%
-Make dart trap ability
-
-Skaber en kastepilefælde på det valgte sted.
-%%%%
 Make oklob sapling ability
 
 Plante en oklob-spire med evnen til at spytte syre på det valgte sted.

@@ -692,8 +692,8 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.short_name = "energy";
         beam.damage     = dice_def(3, 20);
         beam.hit        = 15 + power / 30;
-        beam.flavour    = BEAM_NUKE; // a magical missile which destroys walls
-        beam.is_beam    = true;
+        beam.flavour    = BEAM_DEVASTATION; // DEVASTATION is BEAM_MMISSILE
+        beam.is_beam    = true;             // except it also destroys walls
         break;
 
     case SPELL_STING:              // sting
@@ -881,7 +881,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
     case SPELL_PORTAL_PROJECTILE:     // ditto
     case SPELL_GLACIATE:              // ditto
     case SPELL_CLOUD_CONE:            // ditto
-        beam.flavour  = BEAM_NUKE;
+        beam.flavour  = BEAM_DEVASTATION;
         beam.is_beam  = true;
         // Doesn't take distance into account, but this is just a tracer so
         // we'll ignore that.  We need some damage on the tracer so the monster
@@ -2779,6 +2779,9 @@ bool mons_should_cloud_cone(monster* agent, int power, const coord_def pos)
     hitfunc.set_aim(pos);
 
     bolt tracer;
+    tracer.foe_ratio = 80;
+    tracer.beam_source = agent->mindex();
+    tracer.target = pos;
     for (actor_near_iterator ai(agent, LOS_NO_TRANS); ai; ++ai)
     {
         if (hitfunc.is_affected(ai->pos()) == AFF_NO || !agent->can_see(*ai))
@@ -3906,7 +3909,7 @@ void setup_breath_timeout(monster* mons)
  * @param mons      The monster doing the mesmerisation.
  * @param actual    Whether or not we are actually casting the spell. If false,
  *                  no messages are emitted.
- * @returns         0 if the player could be mesmerised but wasn't, 1 if the
+ * @return          0 if the player could be mesmerised but wasn't, 1 if the
  *                  player was mesmerised, -1 if the player couldn't be
  *                  mesmerised.
 **/
@@ -4680,7 +4683,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #ifdef ASSERTS
     const unsigned int flags = get_spell_flags(spell_cast);
 
-    ASSERT(!(flags & (SPFLAG_TESTING | SPFLAG_MAPPING)));
+    ASSERT(!(flags & SPFLAG_TESTING));
 
     // Targeted spells need a valid target.
     // Wizard-mode cast monster spells may target the boundary (shift-dir).

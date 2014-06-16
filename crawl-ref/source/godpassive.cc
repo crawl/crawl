@@ -423,7 +423,7 @@ bool god_id_item(item_def& item, bool silent)
         // gives more information than absolutely needed.
         brand_type brand = get_weapon_brand(item);
         if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-            || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING)
+            || brand == SPWPN_VAMPIRISM || brand == SPWPN_REAPING)
         {
             ided |= ISFLAG_KNOW_TYPE;
         }
@@ -776,7 +776,7 @@ void qazlal_element_adapt(beam_type flavour, int strength)
     {
         case BEAM_FIRE:
         case BEAM_LAVA:
-        case BEAM_NAPALM:
+        case BEAM_STICKY_FLAME:
         case BEAM_STEAM:
             what = BEAM_FIRE;
             dur = DUR_QAZLAL_FIRE_RES;

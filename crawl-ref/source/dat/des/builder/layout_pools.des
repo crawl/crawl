@@ -123,19 +123,21 @@
 }}
 
 ##############################################################
-# layout_pools
+# layout_cave_pools
+#
+# Previously named "layout_pools".
 #
 # This layout creates an irregular cave with clumps of rock and
 #  possibly a few pools of water.  There are more pools at
 #  deeper depths.  Starting at depth 19, there is an increasing
 #  chance of lava pools instead of water pools (never mixed).
 #
-NAME:   layout_pools
+NAME:   layout_cave_pools
 DEPTH:  D:9-, Depths
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
-TAGS:   layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
@@ -182,8 +184,8 @@ NAME:   layout_honeycomb
 DEPTH:  Depths, Snake:1-4, Tar
 WEIGHT: 10, 80(Tar)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
-TAGS:   layout_type_rooms
+TAGS:   overwritable layout allow_dup unrand layout_type_divisions
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map { width = gxm, height = gym, fill = 'x' }
@@ -247,6 +249,8 @@ ENDMAP
 #     paths
 #
 
+##############################################################
+# layout_gehenna_pools_basic
 #
 # This layout has a single main horizontal path.  It may have
 #  large areas on either end and may have a large rooms at the
@@ -256,8 +260,8 @@ NAME:   layout_gehenna_pools_basic
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
-TAGS:   layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
@@ -357,6 +361,8 @@ validate {{
     return count_feature_in_box { feat="." } >= FLOOR_AREA_MINIMUM
 }}
 
+##############################################################
+# layout_gehenna_pools_box
 #
 # This layout draws a rough box which is often missing a
 #  horizontal and/or vertical side.
@@ -370,8 +376,8 @@ NAME:   layout_gehenna_pools_box
 DEPTH:  Geh
 WEIGHT: 50
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
-TAGS:   layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}
@@ -429,6 +435,8 @@ validate {{
     return count_feature_in_box { feat="." } >= FLOOR_AREA_MINIMUM
 }}
 
+##############################################################
+# layout_gehenna_pools_triple
 #
 # This layout builds three parallel horizontal paths.  The paths
 #  may continue the whole length of the map separately, or may
@@ -439,8 +447,8 @@ NAME:   layout_gehenna_pools_triple
 DEPTH:  Geh
 WEIGHT: 50
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand no_rotate no_vmirror no_hmirror
-TAGS:   layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'x'}

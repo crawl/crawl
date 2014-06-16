@@ -323,6 +323,7 @@ struct cloud_struct
     bool temporary() const { return excl_rad == -1; }
     int exclusion_radius() const { return excl_rad; }
 
+    actor *agent() const;
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);
 
@@ -567,7 +568,7 @@ public:
      * if this item is not in the array!
      *
      * @pre The item is actually in the mitm array.
-     * @returns The index of this item in the mitm array, between
+     * @return  The index of this item in the mitm array, between
      *          0 and MAX_ITEMS-1.
      */
     int  index() const;

@@ -525,8 +525,6 @@ static bool _item_matches(const item_def &item, fire_type types,
     if (item.base_type != OBJ_MISSILES)
         return false;
 
-    if ((types & FIRE_DART) && item.sub_type == MI_DART)
-        return true;
     if ((types & FIRE_STONE) && item.sub_type == MI_STONE)
         return true;
     if ((types & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)

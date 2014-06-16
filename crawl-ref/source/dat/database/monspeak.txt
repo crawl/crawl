@@ -2547,8 +2547,6 @@ w:50
 
 @The_monster@ says, "I hope this rune is worth it!"
 
-@The_monster@ says, "Why did I leave my potions and scrolls outside? I need a drink."
-
 @The_monster@ says, "I thought elves might be good for a party. Nope."
 
 @The_monster@ says, "Really pretty, but really, really boring. I hate that."
@@ -2556,6 +2554,8 @@ w:50
 @The_monster@ says, "What's with all the gesturing? I hate that."
 
 @The_monster@ says, "I don't get the difference between high elves and deep elves."
+
+@The monster@ says, "Why do these elves have so many gross rats and spiders?"
 
 @The_monster@ says, "None of these elves know how to fight. I hate that."
 %%%%
@@ -2753,6 +2753,11 @@ w:50
 @The_monster@ says, "I wish they'd hurry up and stop blocking the corridors."
 
 @The_monster@ says, "Man, snails must be faster than these guys."
+
+@The_monster@ says, "How does a snake shoot lightning, anyway?"
+
+w:1
+@The_monster@ says, "First nagas, now salamanders. What's next, crocodiles with mirrors on their heads?"
 %%%%
 Vaults Donald
 
@@ -2774,6 +2779,8 @@ w:50
 @The_monster@ says, "This is an awful lot of space just to hold some junk."
 
 @The_monster@ says, "I saw some yaktaurs earlier, but I bolted."
+
+@The_monster@ says, "I saw a dragon earlier, but I didn't get too close - it seemed pretty mercurial."
 %%%%
 Hall of Blades Donald
 
@@ -2876,6 +2883,8 @@ w:50
 @The_monster@ says, "I saw a sphinx earlier. I hate that."
 
 @The_monster@ says, "The Crypt, the Tomb, what's next? The Coffin?"
+
+@The_monster@ says, "All these vampires have me hopping mad!"
 %%%%
 Labyrinth Donald
 
@@ -3033,6 +3042,10 @@ w:50
 @The_monster@ says, "Okawaru's gifts are murder."
 
 @The_monster@ says, "You can only wear one cloak at a time, you know?"
+
+@The_monster@ says, "Do you think you're a hero? I hate that."
+
+@The_monster@ says, "How much finesse does it take to swing your arms real fast, anyway?"
 %%%%
 Makhleb Donald
 
@@ -3123,10 +3136,6 @@ w:50
 @The_monster@ says, "What's all in the cards? Your future?"
 
 @The_monster@ says, "You missed a spot upstairs."
-
-@The_monster@ says, "You forgot to sacrifice a pile of trash back there."
-
-@The_monster@ says, "Accidentally sacrificed anything yet?"
 
 @The_monster@ says, "I bet you're feeling stupid now, huh?"
 
@@ -3268,6 +3277,8 @@ w:50
 
 @The_monster@ says, "You're not very quick on the up-take, are you?"
 
+@The_monster@ says, "You know, if you want, I know a very good posture trainer."
+
 @The_monster@ says, "Am I talking too fast for you?"
 
 @The_monster@ says, "Look at me! I'm running, I'm running!"
@@ -3377,6 +3388,12 @@ w:50
 @The_monster@ says, "Couldn't find enough potions?"
 
 @The_monster@ says, "So the shops here weren't enough for you?"
+
+@The_monster@ says, "Feeling hungry, yet?"
+
+@The_monster@ says, "I saw some gold over there. Quick, better go get it!"
+
+@The monster@ says, "I bet you can make some really great dragon armour out of gold."
 %%%%
 Qazlal Donald
 
@@ -3390,6 +3407,10 @@ w:50
 @The_monster@ says, "I hate storms."
 
 @The_monster@ says, "I hate disasters."
+
+@The_monster@ says, "What was that? Sorry, I couldn't hear you over all this noise."
+
+@The_monster@ says, "Well, at least you're never short of company."
 
 @The_monster@ says, "Great. Now my shield is all dirty."
 %%%%
@@ -3812,7 +3833,7 @@ _Erica_rare_
 @The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
 ## END Erica ##
 %%%%
-############ EROLCHA ### An ugly ogre capable of casting
+############ EROLCHA ### A vicious ogre capable of casting
 Erolcha
 
 @_Erolcha_common_@
@@ -4479,7 +4500,7 @@ confused Ijyb
 VISUAL:@The_monster@ clutches @possessive@ head and gibbers rapidly, swaying.
 ## END Ijyb ##
 %%%%
-############ ILSUIW ### a pretty merfolk witch
+############ ILSUIW ### a powerful merfolk witch
 Ilsuiw
 
 @_Ilsuiw_common_@
@@ -4677,7 +4698,7 @@ _Joseph_rare_
 @The_monster@ shouts @at_foe@, "Wow!"
 ## END Joseph ##
 %%%%
-############ JOSEPHINE ### An ugly old witch looking for someone to kill
+############ JOSEPHINE ### A twisted old witch looking for someone to kill
 Josephine
 
 VISUAL:@The_monster@ grins evilly.
@@ -4744,10 +4765,45 @@ VISUAL:@The_monster@ throws some [strange|weird|mysterious] powder @at_foe@.
 @_fake_spell_effect_@
 ### END Kirke ###
 %%%%
-############ LOUISE ### A mercenary guarding the dungeon
+############ LOUISE ### A sorceress driven mad by the abyss
 Louise
 
-@_mercenary_guard_@
+@_Louise_common_@
+
+w:2
+@_Louise_rare_@
+
+%%%%
+_Louise_common_
+
+@The_monster@ says, "Want to take a trip?"
+
+@The_monster@ says, "Even the Abyss couldn't kill me! What makes you think you can?"
+
+@The_monster@ says, "Powers from beyond reality are at my beck and call!"
+
+@The_monster@ says, "Need a shortcut to the ORB? Here, let me help!"
+
+@The_monster@ gibbers incoherently.
+
+@The_monster@ screams!
+
+@The_monster@ laughs uncontrollably.
+
+@The_monster@ begins to sob.
+
+@The_monster@ asks, "Why won't you be my friend?"
+
+@_wizard_common_spell_@
+@_fake_spell_effect_@
+%%%%
+_Louise_rare_
+
+@The_monster@ says, "I'm not feeling very well..."
+
+@The_monster@ says, "Who do you take me for, some common mercenary?"
+
+@The_monster@ says, "It's the perfect time of year for a holiday!"
 ### END Louise
 %%%%
 ############ MARA ### A powerful demon lord, Lord of Illusions
@@ -5190,6 +5246,14 @@ You hear a faint echoing roar filled with hate and sorrow!
 Natasha permanently killed
 
 You feel @the_monster@'s spirit has finally been put to rest.
+%%%%
+confused Natasha killed
+
+@Natasha killed@
+%%%%
+confused Natasha permanently killed
+
+@Natasha permanently killed@
 %%%%
 ############ NELLIE ### An escaped circus (h)elephant.
 Nellie
@@ -6261,11 +6325,6 @@ deep elf sorcerer
 default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
-%%%%
-################## Giant firefly ###########################
-default confused giant firefly
-
-@default confused winged insect@
 %%%%
 ################## Ice statue ##############################
 default ice statue

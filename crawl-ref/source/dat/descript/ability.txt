@@ -508,6 +508,11 @@ Stop Recall ability
 
 Stop recalling your followers.
 %%%%
+Give Item to Follower ability
+
+Give a weapon or piece of armour to a named orcish follower. Once the orc has
+been so gifted, it cannot receive another one.
+%%%%
 # Fedhas
 Sunlight ability
 
@@ -714,10 +719,6 @@ you've built your reputation!
 All other gods hate Beogh, and don't take desertion lightly.
 %%%%
 # Zotdef
-Make dart trap ability
-
-Create a dart trap at the targeted location.
-%%%%
 Make oklob sapling ability
 
 Plant an oklob sapling with the ability to spit acid at the targeted location.

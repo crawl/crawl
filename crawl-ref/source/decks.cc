@@ -123,8 +123,8 @@ const deck_archetype deck_of_emergency[] =
 const deck_archetype deck_of_destruction[] =
 {
     { CARD_VITRIOL,  {5, 5, 5} },
-    { CARD_FLAME,    {5, 5, 5} },
-    { CARD_FROST,    {5, 5, 5} },
+    { CARD_CLOUD,    {5, 5, 5} },
+    { CARD_HAMMER,   {5, 5, 5} },
     { CARD_VENOM,    {5, 5, 5} },
     { CARD_FORTITUDE, {5, 5, 5} },
     { CARD_STORM,    {5, 5, 5} },
@@ -355,8 +355,8 @@ const char* card_name(card_type card)
     case CARD_WARPWRIGHT:      return "Warpwright";
     case CARD_SHAFT:           return "the Shaft";
     case CARD_VITRIOL:         return "Vitriol";
-    case CARD_FLAME:           return "Flame";
-    case CARD_FROST:           return "Frost";
+    case CARD_CLOUD:           return "Cloud";
+    case CARD_HAMMER:          return "the Hammer";
     case CARD_VENOM:           return "Venom";
     case CARD_STORM:           return "the Storm";
     case CARD_FORTITUDE:       return "Fortitude";
@@ -1835,11 +1835,13 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
 
     dist target;
     zap_type ztype = ZAP_DEBUGGING_RAY;
-    const zap_type frostzaps[3]  = { ZAP_THROW_FROST, ZAP_THROW_ICICLE, ZAP_BOLT_OF_COLD };
+    const zap_type hammerzaps[3]  = { ZAP_STONE_ARROW, ZAP_IRON_SHOT,
+                                      ZAP_LEHUDIBS_CRYSTAL_SPEAR };
     const zap_type venomzaps[3]  = { ZAP_STING, ZAP_VENOM_BOLT,
                                      ZAP_POISON_ARROW };
     const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_BOLT_OF_DRAINING };
-    const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD, ZAP_IOOD };
+    const zap_type orbzaps[3]    = { ZAP_ISKENDERUNS_MYSTIC_BLAST, ZAP_IOOD,
+                                     ZAP_IOOD };
 
     switch (card)
     {
@@ -1847,9 +1849,9 @@ static void _damaging_card(card_type card, int power, deck_rarity_type rarity,
         ztype = ZAP_BREATHE_ACID;
         break;
 
-    case CARD_FROST:  ztype = frostzaps[power_level];  break;
-    case CARD_VENOM:  ztype = venomzaps[power_level];  break;
-    case CARD_ORB:    ztype = orbzaps[power_level];    break;
+    case CARD_HAMMER:  ztype = hammerzaps[power_level];  break;
+    case CARD_VENOM:   ztype = venomzaps[power_level];   break;
+    case CARD_ORB:     ztype = orbzaps[power_level];     break;
 
     case CARD_PAIN:
         if (power_level == 2)
@@ -1927,18 +1929,6 @@ static void _elixir_card(int power, deck_rarity_type rarity)
         you.set_duration(DUR_ELIXIR_HEALTH, 10);
         you.set_duration(DUR_ELIXIR_MAGIC, 10);
     }
-}
-
-static void _battle_lust_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    if (power_level == 2)
-        potion_effect(POT_AGILITY, random2(power/4));
-    if (power_level >= 1)
-        potion_effect(POT_MIGHT, random2(power/4));
-    else
-        you.set_duration(DUR_BUILDING_RAGE, 2,
-                         0, "You feel your rage building.");
 }
 
 static void _metamorphosis_card(int power, deck_rarity_type rarity)
@@ -2065,6 +2055,20 @@ static void _blade_card(int power, deck_rarity_type rarity)
         }
         else
             mprf("Your %s twitch.", you.hand_name(true).c_str());
+    }
+}
+
+static void _battle_lust_card(int power, deck_rarity_type rarity)
+{
+    const int power_level = _get_power_level(power, rarity);
+    if (power_level == 2)
+        potion_effect(POT_AGILITY, random2(power/4));
+    if (power_level >= 1)
+        potion_effect(POT_MIGHT, random2(power/4));
+    else
+    {
+        _do_weapon_swap();
+        you.go_berserk(true);
     }
 }
 
@@ -2459,8 +2463,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         if (power_level == 0)
         {
             // Wimpy, negative-enchantment weapon.
-            wpn.plus  = -random2(4);
-            wpn.plus2 = -random2(4);
+            wpn.plus = -random2(4);
             wpn.sub_type = (coinflip() ? WPN_SHORT_SWORD : WPN_HAND_AXE);
 
             set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_NORMAL);
@@ -2468,8 +2471,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         else if (power_level == 1)
         {
             // This is getting good.
-            wpn.plus  = random2(4) - 1;
-            wpn.plus2 = random2(4) - 1;
+            wpn.plus = random2(4) - 1;
             wpn.sub_type = (coinflip() ? WPN_LONG_SWORD : WPN_TRIDENT);
 
             if (coinflip())
@@ -2483,8 +2485,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         else if (power_level == 2)
         {
             // Rare and powerful.
-            wpn.plus  = random2(4) + 2;
-            wpn.plus2 = random2(4) + 2;
+            wpn.plus = random2(4) + 2;
             wpn.sub_type = (coinflip() ? WPN_DIRE_FLAIL : WPN_EXECUTIONERS_AXE);
 
             set_item_ego_type(wpn, OBJ_WEAPONS,
@@ -2511,12 +2512,13 @@ static void _summon_flying(int power, deck_rarity_type rarity)
 
     const monster_type flytypes[] =
     {
-        MONS_BUTTERFLY, MONS_INSUBSTANTIAL_WISP, MONS_KILLER_BEE, MONS_FIREFLY,
+        MONS_BUTTERFLY, MONS_INSUBSTANTIAL_WISP, MONS_KILLER_BEE,
         MONS_VAMPIRE_MOSQUITO, MONS_YELLOW_WASP, MONS_RED_WASP
     };
+    const int num_flytypes = ARRAYSZ(flytypes);
 
     // Choose what kind of monster.
-    monster_type result = flytypes[random2(5) + power_level];
+    monster_type result = flytypes[random2(num_flytypes - 2) + power_level];
     const int how_many = 2 + random2(3) + power_level * 3;
     bool hostile_invis = false;
 
@@ -2585,7 +2587,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
     const monster_type merctypes[] =
     {
         MONS_BIG_KOBOLD, MONS_MERFOLK, MONS_NAGA,
-        MONS_TENGU, MONS_ORC_KNIGHT, MONS_CENTAUR_WARRIOR,
+        MONS_TENGU, MONS_DEEP_ELF_CONJURER, MONS_ORC_KNIGHT,
         RANDOM_BASE_DEMONSPAWN, MONS_OGRE_MAGE, MONS_MINOTAUR,
         RANDOM_BASE_DRACONIAN, MONS_DEEP_ELF_BLADEMASTER,
     };
@@ -2596,7 +2598,7 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
     mgen_data mg(merctypes[merc], BEH_HOSTILE, &you,
                  0, 0, you.pos(), MHITYOU, MG_FORCE_BEH, you.religion);
 
-    mg.extra_flags |= MF_NO_REWARD;
+    mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
     // This is a bit of a hack to use give_monster_proper_name to feed
     // the mgen_data, but it gets the job done.
@@ -2606,6 +2608,8 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
         mg.mname = tempmon.mname;
     else
         mg.mname = make_name(random_int(), false);
+    // This is used for giving the merc better stuff in mon-gear.
+    mg.props["mercenary items"] = true;
 
     monster *mon = create_monster(mg);
 
@@ -2701,7 +2705,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-static void _flame_card(int power, deck_rarity_type rarity)
+static void _cloud_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
     bool something_happened = false;
@@ -2725,7 +2729,8 @@ static void _flame_card(int power, deck_rarity_type rarity)
         if (make_cloud)
         {
             const int cloud_power = 5 + random2((power_level + 1) * 3);
-            place_cloud(CLOUD_FIRE, *di, cloud_power, &you);
+            place_cloud(coinflip() ? CLOUD_FIRE : CLOUD_COLD,
+                        *di, cloud_power, &you);
 
             if (you.see_cell(*di))
             something_happened = true;
@@ -2733,7 +2738,7 @@ static void _flame_card(int power, deck_rarity_type rarity)
     }
 
     if (something_happened)
-        mpr("Fire appears around you!");
+        mpr("Clouds appear around you!");
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 }
@@ -2880,7 +2885,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     {
         // These card types will usually give this message in the targeting
         // prompt, and the cases where they don't are handled specially.
-        if (which_card != CARD_VITRIOL && which_card != CARD_FROST
+        if (which_card != CARD_VITRIOL && which_card != CARD_HAMMER
             && which_card != CARD_PAIN && which_card != CARD_VENOM
             && which_card != CARD_ORB)
         {
@@ -2936,7 +2941,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
     case CARD_MERCENARY:        _mercenary_card(power, rarity); break;
-    case CARD_FLAME:            _flame_card(power, rarity); break;
+    case CARD_CLOUD:            _cloud_card(power, rarity); break;
     case CARD_FORTITUDE:        _fortitude_card(power, rarity); break;
     case CARD_STORM:            _storm_card(power, rarity); break;
     case CARD_ILLUSION:         _illusion_card(power, rarity); break;
@@ -2944,7 +2949,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
 
     case CARD_VENOM:
     case CARD_VITRIOL:
-    case CARD_FROST:
+    case CARD_HAMMER:
     case CARD_PAIN:
     case CARD_ORB:
         _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);

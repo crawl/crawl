@@ -1022,12 +1022,6 @@ dark maul
     -prince Dajmiech, “Kajko and Kokosz: The Battle with Dajmiech”, Janusz
 Christa
 %%%%
-dart
-
-“Loving the hand that sent it
- I the dart revere.”
-    -Emily Dickinson. mid 19th cent.
-%%%%
 demon blade
 
 “Quemadmodum gladius neminem occidit: occidentis telum est.”
@@ -1431,6 +1425,17 @@ coming and raised the alarm. Yet they had hardly done so before the Harpyiai
 had devoured the whole meal and were on the wing once more, far out at sea. All
 they left was an intolerable stench.”
     -Apollonius Rhodius, Argonautica 2. 179 — 434
+%%%%
+hell hound
+
+“About her middle round
+ A cry of Hell-hounds never-ceasing barked
+ With wide Cerberean mouths full loud, and rung
+ A hideous peal; yet, when they list, would creep,
+ If aught disturbed their noise, into her womb,
+ And kennel there; yet there still barked and howled
+ Within unseen.”
+    -John Milton, _Paradise Lost_, Book II, l. 653-659. 1667.
 %%%%
 hell knight
 
@@ -2263,15 +2268,7 @@ scroll of enchant armour
 
 <scroll>
 %%%%
-scroll of enchant weapon i
-
-<scroll>
-%%%%
-scroll of enchant weapon ii
-
-<scroll>
-%%%%
-scroll of enchant weapon iii
+scroll of enchant weapon
 
 <scroll>
 %%%%

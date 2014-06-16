@@ -20,7 +20,7 @@ NAME:   layout_layer_cave
 DEPTH:  Depths, !Depths:$, Lair, Snake
 WEIGHT: 15, 20(Lair)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 {{
   if is_validating() then return; end
 
@@ -113,7 +113,7 @@ NAME:   layout_cave_shapes
 DEPTH:  Depths, !Depths:$, Lair, Snake
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caverns
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -230,7 +230,7 @@ NAME:   layout_waterfall
 DEPTH:  Depths, !Depths:$, Tar
 WEIGHT: 5, 50(Tar)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caverns
+TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 {{
 
   -- TODO: For now this looks pretty good; but tweaking the reps and also the worley
@@ -270,7 +270,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_caverns
 NAME:   layout_falls_marsh
 DEPTH:  Swamp:1-4
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caverns no_pool_fixup
+TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
 {{
   if is_validating() then return end
 
@@ -316,7 +316,7 @@ NAME:   layout_cave_pods
 DEPTH:  Snake,Lair,Spider
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_ranifrom
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -349,7 +349,7 @@ NAME:   layout_chambers
 DEPTH:  Snake,Lair,Spider
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_chambers
+TAGS:   overwritable layout allow_dup unrand layout_type_ranifrom
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -378,12 +378,12 @@ ENDMAP
 #       river/forest/pools layout like bigger_room, even
 #       swamp / shoals) and add rooms to them
 #
-NAME: layout_cave_town
+NAME:   layout_cave_town
 WEIGHT: 8
 ORIENT: encompass
-DEPTH: Depths, !Depths:$, Snake, Lair:1-3
-TAGS: overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS: no_hmirror no_vmirror chance_d layout_type_cave_town
+DEPTH:  Depths, !Depths:$, Snake, Lair:1-3
+TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
+TAGS:   no_hmirror no_vmirror chance_d layout_type_city
 {{
   if is_validating() then return; end
 
@@ -437,7 +437,7 @@ NAME:   layout_gehenna_lava_paths
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_paths
+TAGS:   overwritable layout allow_dup unrand layout_type_caves
 {{
   if is_validating() then return end
 
@@ -487,7 +487,7 @@ NAME:   layout_gehenna_lava_caves
 DEPTH:  Geh
 WEIGHT: 100
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caverns
+TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 {{
   if is_validating() then return end
 
@@ -532,7 +532,7 @@ NAME:   layout_ice_bergs
 DEPTH:  Coc
 CHANCE: 100%
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_caverns
+TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()

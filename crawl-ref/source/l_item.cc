@@ -682,15 +682,7 @@ IDEF(plus2)
     if (!item || !item->defined())
         return 0;
 
-    if (item_ident(*item, ISFLAG_KNOW_PLUSES)
-        && (item->base_type == OBJ_WEAPONS
-            || item->base_type == OBJ_JEWELLERY
-               && item->sub_type == RING_SLAYING))
-    {
-        lua_pushnumber(ls, item->plus2);
-    }
-    else
-        lua_pushnil(ls);
+    lua_pushnil(ls);
 
     return 1;
 }
@@ -709,10 +701,8 @@ static int l_item_do_pluses(lua_State *ls)
     }
 
     lua_pushnumber(ls, item->plus);
-    // XXX: May cause issues on items that don't use plus2, ie ammunition.
-    lua_pushnumber(ls, item->plus2);
 
-    return 2;
+    return 1;
 }
 
 IDEFN(pluses, do_pluses)

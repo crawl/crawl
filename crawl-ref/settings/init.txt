@@ -91,7 +91,6 @@
 # pickup_menu = false
 # pickup_menu_limit = 4
 # drop_filter += skeleton, corpse, useless_item
-# default_friendly_pickup = (none | friend | player | all)
 
 ##### 3-b       Targeting ############################
 #
@@ -178,6 +177,7 @@
 # travel_open_doors      = false
 # easy_unequip  = false
 # equip_unequip = true
+# jewellery_prompt = true
 # easy_confirm  = (none | safe | all)
 # allow_self_target      = (yes | no | prompt)
 # confirm_butcher        = (auto | always | never)

@@ -118,6 +118,7 @@ static TextDB AllDBs[] =
     TextDB("misc", "database/",
             "miscname.txt", // names for miscellaneous things
             "godname.txt",  // god-related names (mostly His Xomminess)
+            "montitle.txt", // titles for monsters (i.e. uniques)
             NULL),
 
     TextDB("quotes", "descript/",

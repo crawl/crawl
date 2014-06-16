@@ -383,6 +383,7 @@ int spell_fail(spell_type spell)
     }
 
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
+    chance2 -= 7 * player_mutation_level(MUT_CONTEMPLATIVE);
 
     if (player_equip_unrand(UNRAND_HIGH_COUNCIL))
         chance2 += 7;
@@ -454,8 +455,8 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         // Wild magic boosts spell power but decreases success rate.
         if (!fail_rate_check)
         {
-            power *= 10 + 5 * player_mutation_level(MUT_WILD_MAGIC);
-            power /= 10;
+            power *= (10 + 5 * player_mutation_level(MUT_WILD_MAGIC));
+            power /= (10 + 5 * player_mutation_level(MUT_CONTEMPLATIVE));
         }
 
         // Augmentation boosts spell power at high HP.
@@ -1292,10 +1293,10 @@ spret_type your_spells(spell_type spell, int powc,
             targ = TARG_HOSTILE_UNDEAD;
 
         targeting_type dir  =
-            (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :
-             testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET        :
-             testbits(flags, SPFLAG_GRID)     ? DIR_TARGET        :
-             testbits(flags, SPFLAG_DIR)      ? DIR_DIR           :
+            (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_MOVABLE_OBJECT :
+             testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET         :
+             testbits(flags, SPFLAG_GRID)     ? DIR_TARGET         :
+             testbits(flags, SPFLAG_DIR)      ? DIR_DIR            :
                                                 DIR_NONE);
 
         const char *prompt = get_spell_target_prompt(spell);
@@ -2035,7 +2036,7 @@ static double _get_true_fail_rate(int raw_fail)
  * Compute the chance of getting a miscast effect of a given severity or higher.
  * @param spell     The spell to be checked.
  * @param severity  Check the chance of getting a miscast this severe or higher.
- * @returns         The chance of this kind of miscast.
+ * @return          The chance of this kind of miscast.
  */
 double get_miscast_chance(spell_type spell, int severity)
 {

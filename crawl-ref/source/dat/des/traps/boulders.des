@@ -39,7 +39,7 @@ function callback.boulder_grate_trap_stepped(data, triggerable, triggerer, marke
   local p = dgn.find_marker_positions_by_prop(data.gratename, 1)[1]
   if (p ~= nil) then
     -- Monster is in the way, don't do anything
-    if (dgn.mons_at(p.x, p.y) ~= nil or p == you.pos()) then
+    if (dgn.mons_at(p.x, p.y) ~= nil or p == dgn.point(you.pos())) then
       if (you.see_cell(x, y)) then
         crawl.mpr("A part of the floor depresses, but nothing seems to happen.")
         return

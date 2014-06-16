@@ -448,11 +448,11 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
  *             which recitation types the monster is affected by, if any:
  *             eligibility[RECITE_FOO] is nonzero if the monster is affected
  *             by RECITE_FOO. Only modified if the function returns 0 or 1.
- * @returns -1 if the monster is already affected or of the wrong holiness.
+ * @return  -1 if the monster is already affected or of the wrong holiness.
  *          The eligibility vector is unchanged.
- * @returns 0 if the monster is otherwise ineligible for recite. The
+ * @return  0 if the monster is otherwise ineligible for recite. The
  *          eligibility vector is filled with zeros.
- * @returns 1 if the monster is eligible for recite. The eligibility vector
+ * @return  1 if the monster is eligible for recite. The eligibility vector
  *          indicates which types of recitation it is vulnerable to.
  */
 static int _zin_check_recite_to_single_monster(const monster *mon,
@@ -641,11 +641,11 @@ bool zin_check_able_to_recite(bool quiet)
  * @param[out] prayertype If non-null, receives the type of recitation to
  *             be used: either the only possible type, or the type chosen
  *             by the player.  Only modified when we return 1.
- * @returns 0 if no monsters were found, or if the player declined to choose
+ * @return  0 if no monsters were found, or if the player declined to choose
  *          a type of recitation, or if all the found monsters returned
  *          zero from _zin_check_recite_to_single_monster().
- * @returns 1 if an eligible audience was found.
- * @returns -1 if only an ineligible audience was found: no eligibile
+ * @return  1 if an eligible audience was found.
+ * @return  -1 if only an ineligible audience was found: no eligibile
  *          monsters, and at least one returned -1 from
  *          _zin_check_recite_to_single_monster().
  */
@@ -1548,6 +1548,107 @@ bool beogh_water_walk()
            && you.piety >= piety_breakpoint(4);
 }
 
+/**
+ * Has the monster been given a Beogh gift?
+ *
+ * @param mon the orc in question.
+ * @returns whether you have given the monster a Beogh gift before now.
+ */
+static bool _given_gift(monster* mon)
+{
+    return mon->props.exists("given beogh weapon")
+            || mon->props.exists("given beogh armour")
+            || mon->props.exists("given beogh shield");
+}
+
+/**
+ * Allow the player to give an item to a named orcish ally that hasn't
+ * been given a gift before
+ *
+ * @returns whether an item was given.
+ */
+bool beogh_gift_item()
+{
+    bolt beam;
+    dist spd;
+
+    spd.isValid = spell_direction(spd, beam, DIR_TARGET,
+                                  TARG_FRIEND, LOS_RADIUS);
+
+    if (!spd.isValid)
+        return false;
+
+    if (spd.target == you.pos())
+    {
+       mpr("You can't give yourself an item!");
+       return false;
+    }
+
+    monster* mons = monster_at(spd.target);
+
+    if (!mons || !mons->visible_to(&you))
+    {
+        canned_msg(MSG_NOTHING_THERE);
+        return false;
+    }
+
+    if (!is_orcish_follower(mons))
+    {
+        mpr("That's not an orcish ally!");
+        return false;
+    }
+
+    if (!mons->is_named())
+    {
+        mpr("That orc has not proved itself worthy of your gift.");
+        return false;
+    }
+
+    const char* monsname = mons->name(DESC_THE, false).c_str();
+
+    if (_given_gift(mons))
+    {
+        mprf("%s has already been given a gift.", monsname);
+        return false;
+    }
+
+    int item_slot = prompt_invent_item("Give which item?",
+                                       MT_INVLIST, OSEL_ANY, true);
+
+    if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
+    {
+        canned_msg(MSG_OK);
+        return false;
+    }
+
+    item_def& gift = you.inv[item_slot];
+
+    const bool shield = is_shield(gift);
+    const bool body_armour = gift.base_type == OBJ_ARMOUR
+                             && get_armour_slot(gift) == EQ_BODY_ARMOUR;
+
+    if (!(gift.base_type == OBJ_WEAPONS && mons->could_wield(gift)
+          || body_armour && check_armour_size(gift, mons->body_size())
+          || shield
+             && (!mons->weapon()
+                 || mons->hands_reqd(*mons->weapon()) != HANDS_TWO)))
+    {
+        mprf("%s can't use that.", monsname);
+        return false;
+    }
+    mons->take_item(item_slot, body_armour ? MSLOT_ARMOUR :
+                                    shield ? MSLOT_SHIELD :
+                                             MSLOT_WEAPON);
+    if (shield)
+        mons->props["given beogh shield"] = true;
+    else if (body_armour)
+        mons->props["given beogh armour"] = true;
+    else
+        mons->props["given beogh weapon"] = true;
+
+    return true;
+}
+
 void jiyva_paralyse_jellies()
 {
     mprf("You call upon nearby slimes to pray to %s.",
@@ -1808,7 +1909,7 @@ bool kiku_receive_corpses(int pow)
 /**
  * Destroy a corpse at the player's location
  *
- * @returns True if a corpse was destroyed, false otherwise.
+ * @return  True if a corpse was destroyed, false otherwise.
 */
 bool kiku_take_corpse()
 {
@@ -3512,7 +3613,6 @@ monster* shadow_monster(bool equip)
         return NULL;
 
     int wpn_index  = NON_ITEM;
-    int ammo_index = NON_ITEM;
 
     // Do a basic clone of the weapon.
     item_def* wpn = you.weapon();
@@ -3545,24 +3645,6 @@ monster* shadow_monster(bool equip)
         new_item.quantity = 1;
         new_item.flags   |= ISFLAG_SUMMONED;
     }
-    const int missile = you.m_quiver->get_fire_item();
-    if (equip && missile != -1)
-    {
-        ammo_index = get_mitm_slot(10);
-        if (ammo_index == NON_ITEM)
-        {
-            if (wpn_index != NON_ITEM)
-                destroy_item(wpn_index);
-            return NULL;
-        }
-        item_def& new_item = mitm[ammo_index];
-        item_def *ammo     = &you.inv[missile];
-        new_item.base_type = ammo->base_type;
-        new_item.sub_type  = ammo->sub_type;
-        new_item.colour    = ammo->colour;
-        new_item.quantity  = 1;
-        new_item.flags    |= ISFLAG_SUMMONED;
-    }
 
     monster* mon = get_free_monster();
     if (!mon)
@@ -3587,7 +3669,7 @@ monster* shadow_monster(bool equip)
     mon->set_position(you.pos());
     mon->mid        = MID_PLAYER;
     mon->inv[MSLOT_WEAPON]  = wpn_index;
-    mon->inv[MSLOT_MISSILE] = ammo_index;
+    mon->inv[MSLOT_MISSILE] = NON_ITEM;
 
     mgrd(you.pos()) = mon->mindex();
 
@@ -3625,7 +3707,7 @@ void dithmenos_shadow_melee(actor* target)
     shadow_monster_reset(mon);
 }
 
-void dithmenos_shadow_throw(coord_def target)
+void dithmenos_shadow_throw(coord_def target, const item_def &item)
 {
     if (target.origin()
         || !_dithmenos_shadow_acts())
@@ -3637,8 +3719,17 @@ void dithmenos_shadow_throw(coord_def target)
     if (!mon)
         return;
 
-    if (mon->inv[MSLOT_MISSILE] != NON_ITEM)
+    int ammo_index = get_mitm_slot(10);
+    if (ammo_index != NON_ITEM)
     {
+        item_def& new_item = mitm[ammo_index];
+        new_item.base_type = item.base_type;
+        new_item.sub_type  = item.sub_type;
+        new_item.colour    = item.colour;
+        new_item.quantity  = 1;
+        new_item.flags    |= ISFLAG_SUMMONED;
+        mon->inv[MSLOT_MISSILE] = ammo_index;
+
         mon->target = target;
 
         bolt beem;
@@ -3748,6 +3839,11 @@ static void _gozag_add_bad_potion(CrawlVector &vec)
     vec.push_back(what);
 }
 
+static int _gozag_faith_adjusted_price(int price)
+{
+    return price - (you.faith() * price)/3;
+}
+
 int gozag_porridge_price()
 {
     int multiplier = GOZAG_POTION_BASE_MULTIPLIER
@@ -3763,7 +3859,7 @@ int gozag_porridge_price()
     dummy.sub_type = porridge_type;
     dummy.quantity = 1;
     int price = multiplier * item_value(dummy, true) / 10;
-    return you.faith() ? price * 2 / 3 : price;
+    return _gozag_faith_adjusted_price(price);
 }
 
 bool gozag_setup_potion_petition(bool quiet)
@@ -3864,7 +3960,7 @@ bool gozag_potion_petition()
         mesclr();
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
-            faith_price = you.faith() ? prices[i] * 2 / 3 : prices[i];
+            faith_price = _gozag_faith_adjusted_price(prices[i]);
             string line = make_stringf("  [%c] - %d gold - ", i + 'a',
                                        faith_price);
             vector<string> pot_names;
@@ -3878,7 +3974,7 @@ bool gozag_potion_petition()
         if (keyin < 0 || keyin > GOZAG_MAX_POTIONS - 1)
             continue;
 
-        faith_price = you.faith() ? prices[keyin] * 2 / 3 : prices[keyin];
+        faith_price = _gozag_faith_adjusted_price(prices[keyin]);
         if (you.gold < faith_price)
         {
             mpr("You don't have enough gold for that!");
@@ -3890,7 +3986,7 @@ bool gozag_potion_petition()
     }
 
     ASSERT(you.gold >= faith_price);
-    you.gold -= faith_price;
+    you.del_gold(faith_price);
     you.attribute[ATTR_GOZAG_GOLD_USED] += faith_price;
     for (int j = 0; j < pots[keyin]->size(); j++)
     {
@@ -3934,7 +4030,7 @@ int gozag_price_for_shop(bool max)
                          + GOZAG_SHOP_MOD_MULTIPLIER
                            * you.attribute[ATTR_GOZAG_SHOPS])
                       / GOZAG_SHOP_BASE_MULTIPLIER;
-    return (max && you.faith()) ? price * 2 / 3 : price;
+    return max ? _gozag_faith_adjusted_price(price) : price;
 }
 
 static vector<level_id> _get_gozag_shop_candidates(int *max_absdepth)
@@ -4066,7 +4162,7 @@ bool gozag_call_merchant()
         for (i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
             cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
-            faith_cost = you.faith() ? cost * 2 / 3 : cost;
+            faith_cost = _gozag_faith_adjusted_price(cost);
             string line =
                 make_stringf("  [%c] %5d gold - %s %s %s",
                              'a' + i,
@@ -4089,7 +4185,7 @@ bool gozag_call_merchant()
         if (i < 0 || i > GOZAG_MAX_SHOPS - 1)
             continue;
         cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
-        faith_cost = you.faith() ? cost * 2 / 3 : cost;
+        faith_cost = _gozag_faith_adjusted_price(cost);
         if (you.gold < faith_cost)
         {
             mpr("You don't have enough gold to fund that merchant!");
@@ -4102,7 +4198,7 @@ bool gozag_call_merchant()
 
     ASSERT(you.gold >= faith_cost);
 
-    you.gold -= faith_cost;
+    you.del_gold(faith_cost);
     you.attribute[ATTR_GOZAG_GOLD_USED] += faith_cost;
 
     const shop_type type =
@@ -4310,7 +4406,7 @@ branch_type gozag_bribable_branch(monster_type type)
     return NUM_BRANCHES;
 }
 
-static bool _gozag_branch_bribable(branch_type branch)
+bool gozag_branch_bribable(branch_type branch)
 {
     for (unsigned int i = 0; i < ARRAYSZ(mons_bribability); i++)
     {
@@ -4319,6 +4415,21 @@ static bool _gozag_branch_bribable(branch_type branch)
     }
 
     return false;
+}
+
+int gozag_branch_bribe_susceptibility(branch_type branch)
+{
+    int susceptibility = 0;
+    for (unsigned int i = 0; i < ARRAYSZ(mons_bribability); i++)
+    {
+        if (mons_bribability[i].branch == branch
+            && susceptibility < mons_bribability[i].susceptibility)
+        {
+            susceptibility = mons_bribability[i].susceptibility;
+        }
+    }
+
+    return susceptibility;
 }
 
 void gozag_deduct_bribe(branch_type br, int amount)
@@ -4350,7 +4461,7 @@ bool gozag_check_bribe_branch(bool quiet)
     {
         for (int i = 0; i < NUM_BRANCHES; ++i)
             if (branches[i].entry_stairs == grd(you.pos())
-                && _gozag_branch_bribable(static_cast<branch_type>(i)))
+                && gozag_branch_bribable(static_cast<branch_type>(i)))
             {
                 branch2 = static_cast<branch_type>(i);
                 break;
@@ -4362,9 +4473,9 @@ bool gozag_check_bribe_branch(bool quiet)
                         ? make_stringf("the denizens of %s",
                                        branches[branch2].longname)
                         : "";
-    if (!_gozag_branch_bribable(branch)
+    if (!gozag_branch_bribable(branch)
         && (branch2 == NUM_BRANCHES
-            || !_gozag_branch_bribable(branch2)))
+            || !gozag_branch_bribable(branch2)))
     {
         if (!quiet)
         {
@@ -4388,7 +4499,7 @@ bool gozag_bribe_branch()
     {
         for (int i = 0; i < NUM_BRANCHES; ++i)
             if (branches[i].entry_stairs == grd(you.pos())
-                && _gozag_branch_bribable(static_cast<branch_type>(i)))
+                && gozag_branch_bribable(static_cast<branch_type>(i)))
             {
                 string prompt =
                     make_stringf("Do you want to bribe the denizens of %s?",
@@ -4403,7 +4514,7 @@ bool gozag_bribe_branch()
     }
     string who = make_stringf("the denizens of %s",
                               branches[branch].longname);
-    if (!_gozag_branch_bribable(branch))
+    if (!gozag_branch_bribable(branch))
     {
         mprf("You can't bribe %s.", who.c_str());
         return false;
@@ -4415,7 +4526,7 @@ bool gozag_bribe_branch()
 
     if (prompted || yesno(prompt.c_str(), true, 'n'))
     {
-        you.gold -= bribe_amount;
+        you.del_gold(bribe_amount);
         you.attribute[ATTR_GOZAG_GOLD_USED] += bribe_amount;
         branch_bribe[branch] += bribe_amount;
         string msg = make_stringf(" spreads your bribe to %s!",
@@ -4584,7 +4695,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
                     || grd(pos) == DNGN_GRATE))
                 {
                     noisy(30, pos);
-                    nuke_wall(pos);
+                    destroy_wall(pos);
                     wall_count++;
                 }
                 break;

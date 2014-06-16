@@ -114,7 +114,6 @@ public:
 
   undead_state_type is_undead;
 
-  int  friendly_pickup;       // pickup setting for allies
   bool dead; // ... but pending revival
   int lives;
   int deaths;
@@ -565,7 +564,7 @@ public:
                         bool quiet = false) const;
     bool can_jump() const;
     bool can_jump(bool quiet) const;
-    void go_berserk(bool intentional, bool potion = false);
+    bool go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
     bool has_lifeforce() const;
     bool can_mutate() const;
@@ -621,7 +620,6 @@ public:
     bool is_insubstantial() const;
     int res_acid(bool calc_unid = true) const;
     int res_fire() const;
-    int res_holy_fire() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
@@ -894,6 +892,7 @@ int player_res_magic(bool calc_unid = true, bool temp = true);
 bool player_control_teleport(bool temp = true);
 
 int player_shield_class();
+int player_displayed_shield_class();
 
 int player_spec_air();
 int player_spec_cold();
@@ -916,7 +915,7 @@ int player_teleport(bool calc_unid = true);
 
 int player_monster_detect_radius();
 
-int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
+int slaying_bonus(bool ranged = false);
 
 unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);
@@ -1018,6 +1017,7 @@ bool flight_allowed(bool quiet = false);
 void fly_player(int pow, bool already_flying = false);
 void float_player();
 bool land_player(bool quiet = false);
+void player_open_door(coord_def doorpos, bool check_confused);
 
 void dec_disease_player(int delay);
 

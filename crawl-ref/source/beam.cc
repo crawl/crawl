@@ -496,26 +496,6 @@ bool bolt::can_affect_actor(const actor *act) const
     return !act->submerged();
 }
 
-// Affect actor in wall unless it can shield itself using the wall.
-// The wall will always shield the actor if the beam bounces off the
-// wall.
-bool bolt::can_affect_wall_actor(const actor *act) const
-{
-    if (!can_affect_actor(act))
-        return false;
-
-    if (is_enchantment())
-        return true;
-
-    if (!is_explosion && !is_big_cloud)
-        return true;
-
-    if (is_bouncy(grd(act->pos())))
-        return false;
-
-    return false;
-}
-
 static beam_type _chaos_beam_flavour(bolt* beam)
 {
     beam_type flavour;
@@ -529,7 +509,7 @@ static beam_type _chaos_beam_flavour(bolt* beam)
             10, BEAM_NEG,
             10, BEAM_ACID,
             10, BEAM_HELLFIRE,
-            10, BEAM_NAPALM,
+            10, BEAM_STICKY_FLAME,
             10, BEAM_SLOW,
             10, BEAM_HASTE,
             10, BEAM_MIGHT,
@@ -680,7 +660,7 @@ void bolt::apply_beam_conducts()
             break;
         case BEAM_FIRE:
         case BEAM_HOLY_FLAME:
-        case BEAM_NAPALM:
+        case BEAM_STICKY_FLAME:
             did_god_conduct(DID_FIRE,
                             is_beam || is_explosion ? 6 + random2(3)
                                                     : 2 + random2(3),
@@ -806,7 +786,7 @@ void bolt::digging_wall_effect()
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_SLIMY_WALL:
     case DNGN_GRATE:
-        nuke_wall(pos());
+        destroy_wall(pos());
         if (!msg_generated)
         {
             if (!you.see_cell(pos()))
@@ -862,7 +842,7 @@ void bolt::fire_wall_effect()
     }
 
     // Destroy the wall.
-    nuke_wall(pos());
+    destroy_wall(pos());
     if (you.see_cell(pos()))
     {
         if (player_in_branch(BRANCH_SWAMP))
@@ -896,7 +876,7 @@ void bolt::elec_wall_effect()
     fire_wall_effect();
 }
 
-static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
+static bool _destroy_wall_msg(dungeon_feature_type feat, const coord_def& p)
 {
     const char *msg = nullptr;
     msg_channel_type chan = MSGCH_PLAIN;
@@ -915,8 +895,8 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         // XXX: When silenced, features disappear without message.
         // XXX: For doors, we only issue a sound where the beam hit.
         //      If someone wants to improve on the door messaging,
-        //      probably best to merge _nuke_wall_msg back into
-        //      nuke_wall_effect. [rob]
+        //      probably best to merge _destroy_wall_msg back into
+        //      destroy_wall_effect. [rob]
         if (hear)
         {
             msg = "You hear a grinding noise.";
@@ -973,7 +953,7 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         return false;
 }
 
-void bolt::nuke_wall_effect()
+void bolt::destroy_wall_effect()
 {
     if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
     {
@@ -992,7 +972,7 @@ void bolt::nuke_wall_effect()
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
     case DNGN_TREE:
-        nuke_wall(pos());
+        destroy_wall(pos());
         break;
 
     case DNGN_CLOSED_DOOR:
@@ -1003,7 +983,7 @@ void bolt::nuke_wall_effect()
         find_connected_identical(pos(), doors);
         set<coord_def>::iterator it;
         for (it = doors.begin(); it != doors.end(); ++it)
-            nuke_wall(*it);
+            destroy_wall(*it);
         break;
     }
 
@@ -1012,7 +992,7 @@ void bolt::nuke_wall_effect()
         return;
     }
 
-    obvious_effect = _nuke_wall_msg(feat, pos());
+    obvious_effect = _destroy_wall_msg(feat, pos());
 
     if (feat == DNGN_ORCISH_IDOL)
     {
@@ -1056,8 +1036,8 @@ void bolt::affect_wall()
         fire_wall_effect();
     else if (flavour == BEAM_ELECTRICITY)
         elec_wall_effect();
-    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
-        nuke_wall_effect();
+    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
+        destroy_wall_effect();
 
     if (cell_is_solid(pos()))
         finish_beam();
@@ -1166,27 +1146,13 @@ void bolt::affect_cell()
     const coord_def old_pos = pos();
     const bool was_solid = cell_is_solid(pos());
 
-    if (was_solid)
+    // Note that this can change the ray position and the solidity
+    // of the wall.
+    if (was_solid && hit_wall())
     {
-        // Some special casing.
-        if (actor *act = actor_at(pos()))
-        {
-            if (can_affect_wall_actor(act))
-                affect_actor(act);
-            else if (!is_tracer && you.can_see(act))
-            {
-                mprf("The %s protects %s from harm.",
-                     raw_feature_description(act->pos()).c_str(),
-                     act->name(DESC_THE).c_str());
-            }
-        }
-
-        // Note that this can change the ray position and the solidity
-        // of the wall.
-        if (hit_wall())
-            // Beam ended due to hitting wall, so don't hit the player
-            // or monster with the regressed beam.
-            return;
+        // Beam ended due to hitting wall, so don't hit the player
+        // or monster with the regressed beam.
+        return;
     }
 
     // If the player can ever walk through walls, this will need
@@ -1789,7 +1755,8 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ENSNARE:
-        ensnare(mons);
+        if (doFlavouredEffects)
+            ensnare(mons);
         break;
 
     case BEAM_GHOSTLY_FLAME:
@@ -2655,7 +2622,6 @@ void bolt::affect_endpoint()
     // FIXME: why don't these just have is_explosion set?
     // They don't explode in tracers: why not?
     if (name == "orb of electricity"
-       || name == "metal orb"
        || name == "great blast of cold")
     {
         target = pos();
@@ -2826,7 +2792,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
         return is_superhot() ? MB_TRUE : MB_MAYBE;
 
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
-        || flavour == BEAM_NUKE)
+        || flavour == BEAM_DEVASTATION)
     {
         if (feat_is_tree(wall))
             return MB_TRUE;
@@ -3026,7 +2992,7 @@ void bolt::internal_ouch(int dam)
         ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());
     }
-    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
     {
         ouch(dam, beam_source, KILLED_BY_DISINT, what, true,
              source_name.empty() ? NULL : source_name.c_str());
@@ -3235,7 +3201,7 @@ bool bolt::harmless_to_player() const
     case BEAM_FIRE:
     case BEAM_HELLFIRE:
     case BEAM_HOLY_FLAME:
-    case BEAM_NAPALM:
+    case BEAM_STICKY_FLAME:
         return you.species == SP_DJINNI;
 #endif
 
@@ -4029,7 +3995,7 @@ void bolt::affect_player()
     if (flavour == BEAM_MIASMA && hurted > 0)
         was_affected = miasma_player(get_source_name(), name);
 
-    if (flavour == BEAM_NUKE) // DISINTEGRATION already handled
+    if (flavour == BEAM_DEVASTATION) // DISINTEGRATION already handled
         blood_spray(you.pos(), MONS_PLAYER, hurted / 5);
 
     // Confusion effect for spore explosions
@@ -5118,9 +5084,13 @@ void bolt::affect_monster(monster* mon)
         else
         {
             killer_type ref_killer = thrower;
+            int kindex = /*beam_source_as_target()*/beam_source;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
+            {
                 ref_killer = KILL_YOU_MISSILE;
-            monster_die(mon, ref_killer, /*beam_source_as_target()*/beam_source);
+                kindex = YOU_FAULTLESS;
+            }
+            monster_die(mon, ref_killer, kindex);
         }
     }
 
@@ -5259,6 +5229,10 @@ bool ench_flavour_affects_monster(beam_type flavour, const monster* mon,
 
     case BEAM_DRAIN_MAGIC:
         rc = mons_antimagic_affected(mon);
+        break;
+
+    case BEAM_INNER_FLAME:
+        rc = !(mon->is_summoned() || mon->has_ench(ENCH_INNER_FLAME));
         break;
 
     default:
@@ -5940,17 +5914,6 @@ void bolt::refine_for_explosion()
         ex_size    = 2;
     }
 
-    if (name == "metal orb")
-    {
-        seeMsg  = "The orb explodes into a blast of deadly shrapnel!";
-        hearMsg = "You hear an explosion!";
-
-        name    = "blast of shrapnel";
-        glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
-        flavour = BEAM_FRAG;     // Sets it from pure damage to shrapnel
-                                 // (which is absorbed extra by armour).
-    }
-
     if (name == "great blast of fire")
     {
         seeMsg  = "A raging storm of fire appears!";
@@ -6175,6 +6138,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         for (siter ci = sweep.begin(); ci != sweep.end(); ++ci)
         {
+            bool pass_visible = false;
             for (viter cci = ci->begin(); cci != ci->end(); ++cci)
             {
                 const coord_def delta = *cci;
@@ -6183,11 +6147,13 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
                     continue;
 
                 if (exp_map(delta + centre) < INT_MAX)
-                    explosion_draw_cell(delta + pos());
+                    pass_visible |= explosion_draw_cell(delta + pos());
             }
-            update_screen();
-
-            scaled_delay(explode_delay);
+            if (pass_visible)
+            {
+                update_screen();
+                scaled_delay(explode_delay);
+            }
         }
     }
 
@@ -6219,29 +6185,34 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     return cells_seen > 0;
 }
 
-void bolt::explosion_draw_cell(const coord_def& p)
+/**
+ * Draw one tile of an explosion, if that cell is visible.
+ *
+ * @param p The cell to draw, in grid coordinates.
+ * @return True if the cell was actually drawn.
+ */
+bool bolt::explosion_draw_cell(const coord_def& p)
 {
     if (you.see_cell(p))
     {
         const coord_def drawpos = grid2view(p);
-#ifdef USE_TILE
-        if (in_los_bounds_v(drawpos))
-        {
-            int dist = (p - source).rdist();
-            tileidx_t tile = tileidx_bolt(*this);
-            tiles.add_overlay(p, vary_bolt_tile(tile, dist));
-        }
-#endif
-#ifndef USE_TILE_LOCAL
         // bounds check
         if (in_los_bounds_v(drawpos))
         {
+#ifdef USE_TILE
+            int dist = (p - source).rdist();
+            tileidx_t tile = tileidx_bolt(*this);
+            tiles.add_overlay(p, vary_bolt_tile(tile, dist));
+#endif
+#ifndef USE_TILE_LOCAL
             cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
             put_colour_ch(colour == BLACK ? random_colour() : colour,
                           dchar_glyph(DCHAR_EXPLOSION));
-        }
 #endif
+            return true;
+        }
     }
+    return false;
 }
 
 void bolt::explosion_affect_cell(const coord_def& p)
@@ -6359,7 +6330,7 @@ bool bolt::nasty_to(const monster* mon) const
     // The orbs are made of pure disintegration energy.  This also has the side
     // effect of not stopping us from firing further orbs when the previous one
     // is still flying.
-    if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+    if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_DEVASTATION)
         return mon->type != MONS_ORB_OF_DESTRUCTION;
 
     // Take care of other non-enchantments.
@@ -6372,6 +6343,10 @@ bool bolt::nasty_to(const monster* mon) const
 
     // Positive effects.
     if (nice_to(mon))
+        return false;
+
+    // Co-aligned inner flame is fine.
+    if (flavour == BEAM_INNER_FLAME && mons_aligned(mon, agent()))
         return false;
 
     // Friendly and good neutral monsters don't mind being teleported.
@@ -6617,14 +6592,14 @@ static string _beam_type_name(beam_type type)
     case BEAM_SPORE:                 return "spores";
     case BEAM_POISON_ARROW:          return "poison arrow";
     case BEAM_HELLFIRE:              return "hellfire";
-    case BEAM_NAPALM:                return "sticky fire";
+    case BEAM_STICKY_FLAME:          return "sticky fire";
     case BEAM_STEAM:                 return "steam";
     case BEAM_ENERGY:                return "energy";
     case BEAM_HOLY:                  return "holy energy";
     case BEAM_FRAG:                  return "fragments";
     case BEAM_LAVA:                  return "magma";
     case BEAM_ICE:                   return "ice";
-    case BEAM_NUKE:                  return "nuke";
+    case BEAM_DEVASTATION:           return "devastation";
 #if TAG_MAJOR_VERSION == 34
     case BEAM_LIGHT:                 return "light";
 #endif
@@ -6658,8 +6633,8 @@ static string _beam_type_name(beam_type type)
     case BEAM_BERSERK:               return "berserk";
     case BEAM_VISUAL:                return "visual effects";
     case BEAM_TORMENT_DAMAGE:        return "torment damage";
-    case BEAM_DEVOUR_FOOD:           return "devour food";
 #if TAG_MAJOR_VERSION == 34
+    case BEAM_DEVOUR_FOOD:           return "devour food";
     case BEAM_GLOOM:                 return "gloom";
 #endif
     case BEAM_INK:                   return "ink";

@@ -276,7 +276,7 @@ ENDMAP
 NAME:  worms_lemuel
 TAGS:  no_rotate no_monster_gen
 DEPTH: D:8-13, Lair, Spider
-KMONS: 1 = worm w:140 / giant slug w:60 / brain worm
+KMONS: 1 = worm w:190 / brain worm
 KMONS: 2| = swamp worm
 KMONS: P = plant
 KITEM: | = |, *, %
@@ -349,7 +349,7 @@ NAME:    hangedman_stitches_earthworm
 TAGS:    no_monster_gen no_item_gen transparent no_pool_fixup
 DEPTH:   Depths, Spider:2-, Abyss
 KMONS:   0 = 0
-KMONS:   1 = giant slug
+KMONS:   1 = brain worm
 KMONS:   2 = boulder beetle
 KMONS:   3 = trapdoor spider / orb spider w:5
 KMONS:   4 = thrashing horror
@@ -894,7 +894,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:5 title:Nature \
         spells:beastly_appendage|sting|sticks_to_snakes|cure_poison|spider_form w:245
 : if crawl.coinflip() then
-KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / dart ego:poisoned
+KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
 KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
 : end
@@ -950,7 +950,7 @@ ITEM:   Young Poisoner's Handbook / book of Changes / \
         randbook numspells:5 title:Nature \
         spells:beastly_appendage|sting|sticks_to_snakes|cure_poison|spider_form w:245
 : if crawl.coinflip() then
-KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / dart ego:poisoned
+KITEM:  f = arrow ego:poisoned / javelin ego:poisoned q:4-6 / tomahawk ego:poisoned
 : else
 KITEM:  f = blowgun / w:5 nothing, needle ego:poisoned / needle ego:curare / needle ego:paralysis
 : end
@@ -1001,7 +1001,7 @@ ENDMAP
 
 NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
-TAGS:    layout_rooms layout_misc layout_rooms layout_basic
+TAGS:    layout_rooms layout_angular layout_rooms
 DEPTH:   D:11-
 MONS:    rat, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
@@ -1009,8 +1009,8 @@ KMONS:   8 = ball python / adder w:8
 KMONS:   A = green rat
 KMONS:   B = vampire bat / fire bat w:8
 KMONS:   C = iguana / basilisk w:8
-KMONS:   D = giant slug
-KMONS:   E = jelly
+KMONS:   D = worm
+KMONS:   E = goliath beetle
 KMONS:   F = worker ant
 KMONS:   G = hound / wolf w:3
 KMONS:   H = water moccasin
@@ -1068,7 +1068,7 @@ NAME:  guppyfry_early_lair_pool
 TAGS:  patrolling no_monster_gen transparent
 DEPTH: D:2-5
 KMONS: 1 = big fish
-KMONS: 2 = giant slug / adder
+KMONS: 2 = adder
 KMONS: 3 = plant
 ITEM:  fruit
 SUBST: - = wwwwwwWWW1
@@ -1234,8 +1234,8 @@ ENDMAP
 # Very unpleasant kobold minivaults
 NAME:   minmay_unpleasant_kobolds
 DEPTH:  D:6-
-MONS:   kobold ; dart ego:dispersal q:2 / w:3 big kobold ; dart ego:dispersal q:4
-MONS:   kobold ; dart ego:exploding q:2 / w:3 big kobold ; dart ego:exploding q:4
+MONS:   kobold ; tomahawk ego:dispersal q:2 / w:3 big kobold ; tomahawk ego:dispersal q:4
+MONS:   kobold ; tomahawk ego:exploding q:2 / w:3 big kobold ; tomahawk ego:exploding q:4
 MONS:   kobold ; blowgun . needle ego:curare q:1 / \
         w:3 big kobold ; blowgun . needle ego:curare q:2
 : if you.absdepth() > 13 then
@@ -1320,7 +1320,7 @@ TAGS:    no_monster_gen
 KPROP:   56' = no_rtele_into
 MONS:    kobold, plant, bush
 : if you.absdepth() < 4 then
-MONS:    kobold ; dagger . dart
+MONS:    kobold ; dagger . stone
 : else
 MONS:    big kobold ; dagger . throwing net q:2
 : end
@@ -2783,6 +2783,70 @@ MAP
  ..............
   ............
    .........
+ENDMAP
+
+# A stationary monster guarding a staircase.
+#
+# This can place a crucial locations (like Snake:1), forcing the player
+# to actually deal with the problem -- hence "stationary puzzle".
+# We expect players to have resources to cope with it.
+#
+# TODO: This could be extended to branch entries but I don't know if I can
+#       do that feasibly in a single map.
+#
+# With increasing depth the distance between staircase and stationary monster
+# can decrease, and fewer supporting walls are to be expected. Sometimes a
+# nearby downstairs exit is generated, to provide another option.
+#
+# Monster set: currently only the classical stationary monsters, i.e.
+# statues, oklob plants, burning bush, curse skulls.
+# This could be expanded: pool with electric eel, or monsters behind grates.
+#
+NAME:     dpeg_stationary_puzzle
+DEPTH:    D:10-, Lair, Snake, Shoals, Depths
+# Weights for levels not of subdepth 1 intentionally lower.
+WEIGHT:   1 (D:10-, Lair:2-, Snake:2-, Shoals:2-, Depths:2-)
+WEIGHT:   10 (Lair:1, Shoals:1, Snake:1, Depths:1)
+: if you.branch() == "Snake" or you.branch() == "Shoals" then
+MONS:     oklob plant / silver statue / orange crystal statue / ice statue /\
+          w:1 Roxanne
+: elseif you.branch() == "Dungeon" or you.branch() == "Lair" then
+MONS:     oklob plant / burning bush
+: elseif you.branch() == "Vaults" then
+MONS:     silver statue / orange crystal statue / ice statue / w:1 Roxanne
+: elseif you.branch() == "Depths" then
+MONS:     silver statue / orange crystal statue / ice statue / w:3 Roxanne /\
+          curse skull w:25
+: end
+#
+# Sometimes add some additional rock walls
+SUBST:    . : ._
+NSUBST:   _ = 3:x / *:.
+#
+# Select possible staircase range:
+: if you.absdepth() < 14 then
+NSUBST:   bc = 1:x / *:.
+: elseif you.absdepth() < 18 then
+SHUFFLE:  ab
+NSUBST:   c = 1:x / *:.
+: else
+SHUFFLE:  abc
+: end
+#
+NSUBST:   a = 1:{ / *:.
+SUBST:    'bc = .
+#
+# 50% chance for nearby >
+SUBST:    x : xy
+NSUBST:   y = 1:} / *:x
+MAP
+ ......x
+ ....cbxx
+ '''''cbaxx
+@'1'''''aa@
+ '''''cbaxx
+ ....cbxx
+ ......x
 ENDMAP
 
 ###################################################################
@@ -6195,8 +6259,8 @@ ENDMAP
 
 NAME: special_room
 TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
-TAGS: no_monster_gen layout_basic layout_rooms layout_misc layout_caves
-TAGS: layout_delve
+TAGS: no_monster_gen layout_rooms layout_angular layout_caves
+TAGS: layout_anastomotic
 CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
 DEPTH: D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
        Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$

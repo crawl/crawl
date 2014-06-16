@@ -337,12 +337,21 @@ bool InventoryRegion::update_tip_text(string& tip)
         if (!display_actions)
             return true;
 
-        tip += "\n[L-Click] Pick up (%)";
-        cmd.push_back(CMD_PICKUP);
-        if (item.quantity > 1)
+        if (item_is_stationary_net(item))
         {
-            tip += "\n[Ctrl + L-Click] Partial pick up (%)";
-            cmd.push_back(CMD_PICKUP_QUANTITY);
+            tip += make_stringf(" (holding %s)",
+                                net_holdee(item)->name(DESC_A).c_str());
+        }
+
+        if (!item_is_stationary(item))
+        {
+            tip += "\n[L-Click] Pick up (%)";
+            cmd.push_back(CMD_PICKUP);
+            if (item.quantity > 1)
+            {
+                tip += "\n[Ctrl + L-Click] Partial pick up (%)";
+                cmd.push_back(CMD_PICKUP_QUANTITY);
+            }
         }
         if (item.base_type == OBJ_CORPSES
             && item.sub_type != CORPSE_SKELETON
@@ -534,10 +543,8 @@ bool InventoryRegion::update_tip_text(string& tip)
                 // For Sublimation of Blood.
                 if (wielded)
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
-                else if (food_is_meaty(item)
-                             && you.has_spell(SPELL_SIMULACRUM)
-                         || item.sub_type == FOOD_CHUNK
-                             && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
+                else if (item.sub_type == FOOD_CHUNK
+                         && you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
                 {
                     _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ");
                 }

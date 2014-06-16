@@ -1,0 +1,293 @@
+###############################################################################
+# Monster titles.
+# Displayed when they first come into view and on their description screen.
+#########
+%%%%
+Agnes title
+
+Agnes the Wanderer
+%%%%
+Aizul title
+
+Aizul the Neglectful Guardian
+%%%%
+Antaeus title
+
+Antaeus, Guardian of Cocytus
+%%%%
+Arachne title
+
+Arachne the Spider Queen
+%%%%
+Asmodeus title
+
+Asmodeus, Prince of Gehenna
+%%%%
+Asterion title
+
+Asterion the Fallen King
+%%%%
+Azrael title
+
+Azrael the Boundless Flame
+%%%%
+Boris title
+
+Boris, Master of Life and Death
+%%%%
+Cerebov title
+
+Cerebov, Demon Lord of Fire and Steel
+%%%%
+Chuck title
+
+Chuck the Collector
+%%%%
+Crazy Yiuf title
+
+Crazy Yiuf the Enlightened
+%%%%
+Dispater title
+
+Dispater, Lord of the Iron City
+%%%%
+Dissolution title
+
+High Priest Dissolution
+%%%%
+Donald title
+
+Donald the Adventurer
+%%%%
+Dowan title
+
+Dowan, Brother of Duvessa
+%%%%
+Duvessa title
+
+Duvessa, Sister of Dowan
+%%%%
+Edmund title
+
+Edmund the Younger
+%%%%
+Ereshkigal title
+
+Ereshkigal, Queen of Tartarus
+%%%%
+Erica title
+
+Erica the Fiery-Tempered
+%%%%
+Erolcha title
+
+Erolcha the Cunning
+%%%%
+Eustachio title
+
+Eustachio the Magnificent
+%%%%
+Fannar title
+
+Fannar the Cold-Hearted
+%%%%
+Frances title
+
+Frances, Duchess of Pandemonium
+%%%%
+Frederick title
+
+Frederick the Vigilant
+%%%%
+Gastronok title
+
+Gastronok the Ponderous
+%%%%
+Geryon title
+
+Geryon, Gatekeeper of Hell
+%%%%
+Gloorx Vloq title
+
+Gloorx Vloq, Demon Lord of Darkness
+%%%%
+Grum title
+
+Grum the Hunter
+%%%%
+Harold title
+
+Harold the Weathered
+%%%%
+Ignacio title
+
+Ignacio, Master of Excruciating Pain
+%%%%
+Ilsuiw title
+
+Ilsuiw, Witch of the Tides
+%%%%
+Ijyb title
+
+Ijyb the Twisted Goblin
+%%%%
+Jessica title
+
+Jessica the Apprentice Sorceress
+%%%%
+Jorgrun title
+
+Jorgrun Earthshaker
+%%%%
+Jory title
+
+Jory the Bloodstained Count
+%%%%
+Joseph title
+
+Joseph, a Mercenary
+%%%%
+Josephine title
+
+Josephine the Decaying Necromancer
+%%%%
+Khufu title
+
+The Undying Pharaoh, Khufu
+%%%%
+Kirke title
+
+Kirke, Weaver of Myths
+%%%%
+Lom Lobon title
+
+Lom Lobon, Demon Lord of Forbidden Knowledge
+%%%%
+Louise title
+
+Louise the Corrupted
+%%%%
+Mara title
+
+Mara, Lord of Illusions
+%%%%
+Margery title
+
+Margery the Dragonslayer
+%%%%
+Maud title
+
+Maud the Forgotten
+%%%%
+Maurice title
+
+Maurice the Thief
+%%%%
+Menkaure title
+
+Menkaure, Prince of Dust
+%%%%
+Mennas title
+
+Mennas, the Voice of Zin
+%%%%
+Mnoleg title
+
+Mnoleg, Demon Lord of Chaos
+%%%%
+Murray title
+
+Murray the Demonic Talking Skull
+%%%%
+Natasha title
+
+Natasha, Servant of Life and Death
+%%%%
+Nellie title
+
+Nellie, Star of the Show
+%%%%
+Nergalle title
+
+Nergalle the Soulbinder
+%%%%
+Nessos title
+
+Nessos the Markscentaur
+%%%%
+Nikola title
+
+Nikola the Mad Inventor
+%%%%
+Norris title
+
+Norris the Nihilist
+%%%%
+Pikel title
+
+Pikel the Slaver
+%%%%
+Polyphemus title
+
+Polyphemus the Watchful Shepherd
+%%%%
+Psyche title
+
+Psyche the Insane Magess
+%%%%
+Purgy title
+
+Purgy the Meek
+%%%%
+Roxanne title
+
+Roxanne, Geomancer Emeritus
+%%%%
+Rupert title
+
+Rupert the Unclean
+%%%%
+Saint Roka title
+
+Saint Roka the Messiah
+%%%%
+Sigmund title
+
+Sigmund the Dreaded
+%%%%
+Snorg title
+
+Snorg the Insatiable
+%%%%
+Sojobo title
+
+Sojobo, King of Tengu
+%%%%
+Sonja title
+
+Sonja, the Graceful Assassin
+%%%%
+Terence title
+
+Terence the Incautious
+%%%%
+Tiamat title
+
+Tiamat, Avatar of the Dragonlord
+%%%%
+Urug title
+
+Urug the Orcish Ballista
+%%%%
+Vashnia title
+
+Vashnia the Elite Marksnaga
+%%%%
+Wiglaf title
+
+Wiglaf the dwarf
+%%%%
+Xtahua title
+
+Xtahua the Ancient
+%%%%

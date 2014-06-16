@@ -180,7 +180,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_LUGONU_CORRUPT, ABIL_LUGONU_ABYSS_ENTER },
     // Beogh
     { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING, ABIL_NON_ABILITY,
-      ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY },
+      ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_BEOGH_GIFT_ITEM },
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, ABIL_JIYVA_JELLY_PARALYSE, ABIL_NON_ABILITY,
       ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION },
@@ -384,6 +384,8 @@ static const ability_def Ability_List[] =
       3, 0, 80, generic_cost::fixed(3), 0, 0, ABFLAG_NONE},
     { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
       2, 0, 50, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_BEOGH_GIFT_ITEM, "Give Item to Follower",
+      0, 0, 0, 0, 0, 0, ABFLAG_NONE},
 
     // Jiyva
     { ABIL_JIYVA_CALL_JELLY, "Request Jelly", 2, 0, 20, 1, 0, 0, ABFLAG_NONE},
@@ -450,7 +452,6 @@ static const ability_def Ability_List[] =
 
     // zot defence abilities
     { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, 10, 0, ABFLAG_ZOTDEF},
-    { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, 5, 0, ABFLAG_ZOTDEF},
     { ABIL_MAKE_PLANT, "Make plant", 0, 0, 0, 0, 2, 0, ABFLAG_ZOTDEF},
     { ABIL_MAKE_OKLOB_SAPLING, "Make oklob sapling", 0, 0, 0, 0, 60, 0, ABFLAG_ZOTDEF},
     { ABIL_MAKE_BURNING_BUSH, "Make burning bush", 0, 0, 0, 0, 200, 0, ABFLAG_ZOTDEF},
@@ -596,7 +597,6 @@ static trap_type _trap_for_ability(const ability_def& abil)
 {
     switch (abil.ability)
     {
-        case ABIL_MAKE_DART_TRAP: return TRAP_DART;
         case ABIL_MAKE_ARROW_TRAP: return TRAP_ARROW;
         case ABIL_MAKE_BOLT_TRAP: return TRAP_BOLT;
         case ABIL_MAKE_SPEAR_TRAP: return TRAP_SPEAR;
@@ -661,10 +661,6 @@ static int _zp_cost(const ability_def& abil)
             break;
 
         // Simple Traps
-        case ABIL_MAKE_DART_TRAP:
-            scale10 = max(count_traps(TRAP_DART)-10, 0); // First 10 at base cost
-            break;
-
         case ABIL_MAKE_ARROW_TRAP:
         case ABIL_MAKE_BOLT_TRAP:
         case ABIL_MAKE_SPEAR_TRAP:
@@ -689,7 +685,7 @@ static int _zp_cost(const ability_def& abil)
     return c;
 }
 
-static int _get_gold_cost(ability_type ability)
+int get_gold_cost(ability_type ability)
 {
     switch (ability)
     {
@@ -767,7 +763,7 @@ const string make_cost_description(ability_type ability)
 
     if (abil.flags & ABFLAG_GOLD)
     {
-        const int amount = _get_gold_cost(ability);
+        const int amount = get_gold_cost(ability);
         if (amount)
             ret += make_stringf(", %d Gold", amount);
         else
@@ -850,7 +846,7 @@ static const string _detailed_cost_description(ability_type ability)
     {
         have_cost = true;
         ret << "\nGold   : ";
-        int gold_amount = _get_gold_cost(ability);
+        int gold_amount = get_gold_cost(ability);
         if (gold_amount)
             ret << gold_amount;
         else
@@ -995,7 +991,6 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_OKLOB_PLANT:
     case ABIL_MAKE_OKLOB_SAPLING:
     case ABIL_MAKE_BURNING_BUSH:
-    case ABIL_MAKE_DART_TRAP:
     case ABIL_MAKE_ICE_STATUE:
     case ABIL_MAKE_OCS:
     case ABIL_MAKE_SILVER_STATUE:
@@ -1134,6 +1129,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
     case ABIL_ASHENZARI_END_TRANSFER:
     case ABIL_ASHENZARI_SCRYING:
+    case ABIL_BEOGH_GIFT_ITEM:
     case ABIL_JIYVA_CALL_JELLY:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_JIYVA_JELLY_PARALYSE:
@@ -2017,7 +2013,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     // ZotDef traps
-    case ABIL_MAKE_DART_TRAP:
     case ABIL_MAKE_ARROW_TRAP:
     case ABIL_MAKE_BOLT_TRAP:
     case ABIL_MAKE_SPEAR_TRAP:
@@ -2368,7 +2363,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_BERSERK:    // amulet of rage, randarts
-        go_berserk(true);
+        you.go_berserk(true);
         break;
 
     // Fly (tengu/drac) - permanent at high XL
@@ -2724,7 +2719,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_TROG_BERSERK:
         // Trog abilities don't use or train invocations.
-        go_berserk(true);
+        you.go_berserk(true);
         break;
 
     case ABIL_TROG_REGEN_MR:
@@ -2884,6 +2879,11 @@ static bool _do_ability(const ability_def& abil)
         {
             return false;
         }
+        break;
+
+    case ABIL_BEOGH_GIFT_ITEM:
+        if (!beogh_gift_item())
+            return false;
         break;
 
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
@@ -3426,7 +3426,7 @@ static void _add_talent(vector<talent>& vec, const ability_type ability,
  *                       be excluded.
  * @param include_unusable If true, abilities that are currently unusable will
  *                         be excluded.
- * @returns A vector of talent structs.
+ * @return  A vector of talent structs.
  */
 vector<talent> your_talents(bool check_confused, bool include_unusable)
 {
@@ -3435,8 +3435,6 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // zot defence abilities; must also be updated in player.cc when these levels are changed
     if (crawl_state.game_is_zotdef())
     {
-        if (you.experience_level >= 1)
-            _add_talent(talents, ABIL_MAKE_DART_TRAP, check_confused);
         if (you.experience_level >= 2)
             _add_talent(talents, ABIL_MAKE_OKLOB_SAPLING, check_confused);
         if (you.experience_level >= 3)

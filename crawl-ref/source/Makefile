@@ -192,7 +192,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	NEED_LIBW32C = YesPlease
 	BUILD_PCRE = YesPlease
 	BUILD_ZLIB = YesPlease
-	DEFINES_L += -DWINMM_PLAY_SOUNDS
+	DEFINES_L += -DWINMM_PLAY_SOUNDS -D__USE_MINGW_ANSI_STDIO
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
 		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDLmain.a -mwindows
@@ -200,11 +200,11 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
+		COPY_FONTS = yes
 	endif
 	ifeq ($(shell gcc -v -static -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
 		EXTRA_LIBS += -static -static-libgcc -static-libstdc++
 	endif
-	COPY_FONTS = yes
 endif
 ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
@@ -219,8 +219,8 @@ ifeq ($(uname_S),Darwin)
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
+		COPY_FONTS = yes
 	endif
-	COPY_FONTS = yes
 endif
 ifdef USE_ICC
 	NO_RDYNAMIC := YesPlease
@@ -484,8 +484,17 @@ ifeq ($(shell which $(LMACH)gcc$(GCC_VER_SUFFIX) > /dev/null 2> /dev/null && ech
 LMACH :=
 endif
 
+ifneq ($(FORCE_CC),)
+GCC := $(FORCE_CC)
+else
 GCC := $(LMACH)$(GCC_VER_PREFIX)gcc$(GCC_VER_SUFFIX)
+endif
+
+ifneq ($(FORCE_CXX),)
+GXX := $(FORCE_CXX)
+else
 GXX := $(LMACH)$(GCC_VER_PREFIX)g++$(GCC_VER_SUFFIX)
+endif
 
 else
 
@@ -611,6 +620,10 @@ ifndef BUILD_LUA
   INCLUDES_L += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-I | sed -e 's/-I/-isystem /')
   CFLAGS_L  += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-other)
   LIBS += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --libs)
+endif
+
+ifdef USE_LUAJIT
+DEFINES_L += -DUSE_LUAJIT
 endif
 
 ifndef BUILD_SQLITE

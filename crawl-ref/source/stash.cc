@@ -183,11 +183,13 @@ Stash::Stash(int xp, int yp) : enabled(true), items()
     update();
 }
 
-bool Stash::are_items_same(const item_def &a, const item_def &b)
+bool Stash::are_items_same(const item_def &a, const item_def &b, bool exact)
 {
     const bool same = a.base_type == b.base_type
         && a.sub_type == b.sub_type
-        && (a.plus == b.plus || a.base_type == OBJ_GOLD)
+        // Ignore Gozag's gold flag, and rod charges.
+        && (a.plus == b.plus || a.base_type == OBJ_GOLD && !exact
+                             || a.base_type == OBJ_RODS && !exact)
         && a.plus2 == b.plus2
         && a.special == b.special
         && a.colour == b.colour
@@ -196,7 +198,7 @@ bool Stash::are_items_same(const item_def &a, const item_def &b)
 
     // Account for rotting meat when comparing items.
     return same
-           || (a.base_type == b.base_type
+           || (!exact && a.base_type == b.base_type
                && (a.base_type == OBJ_CORPSES
                    || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
                        && b.sub_type == FOOD_CHUNK))
@@ -355,7 +357,16 @@ void Stash::update()
         // the top item matches what we remember.
         const item_def &first = items[0];
         // Compare these items
-        if (!are_items_same(first, item))
+        if (are_items_same(first, item))
+        {
+            // Replace the item to reflect seen recharging, rotting, etc.
+            if (!are_items_same(first, item, true))
+            {
+                items.erase(items.begin());
+                add_item(item, true);
+            }
+        }
+        else
         {
             // See if 'item' matches any of the items we have. If it does,
             // we'll just make that the first item and leave 'verified'

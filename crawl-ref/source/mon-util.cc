@@ -473,7 +473,6 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
     case EQ_AMULET:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
-    case EQ_RINGS_PLUS2:
         item = mslot_item(MSLOT_JEWELLERY);
         if (item && item->base_type == OBJ_JEWELLERY
             && item->sub_type == sub_type
@@ -481,8 +480,6 @@ int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         {
             if (slot == EQ_RINGS_PLUS)
                 ret += item->plus;
-            else if (slot == EQ_RINGS_PLUS2)
-                ret += item->plus2;
             else
                 ret++;
         }
@@ -549,7 +546,6 @@ int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_STAFF:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
-    case EQ_RINGS_PLUS2:
         // No egos.
         break;
 
@@ -736,7 +732,7 @@ bool mons_is_fiery(const monster* mon)
     }
     return mon->has_attack_flavour(AF_FIRE)
            || mon->has_attack_flavour(AF_PURE_FIRE)
-           || mon->has_attack_flavour(AF_NAPALM)
+           || mon->has_attack_flavour(AF_STICKY_FLAME)
            || (mon->has_spell_of_type(SPTYP_FIRE)
                && mon->can_use_spells());
 }
@@ -864,9 +860,6 @@ bool mons_is_native_in_branch(const monster* mons,
 
     case BRANCH_SPIDER:
         return mons_genus(mons->type) == MONS_SPIDER;
-
-    case BRANCH_BLADE:
-        return mons->type == MONS_DANCING_WEAPON;
 
     case BRANCH_ABYSS:
         return mons_is_abyssal_only(mons->type)
@@ -1702,7 +1695,7 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
  * @param base_flavour If true, attack flavours that are randomised on every attack
  *                     will have their base flavour returned instead of one of the
  *                     random flavours.
- * @returns A mon_attack_def for the specified attack.
+ * @return  A mon_attack_def for the specified attack.
  */
 mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_flavour)
 {
@@ -3509,6 +3502,8 @@ static bool _mons_has_ranged_ability(const monster* mon)
     case MONS_FIRE_DRAKE:
     case MONS_XTAHUA:
     case MONS_FIRE_CRAB:
+    case MONS_APOCALYPSE_CRAB:
+    case MONS_GHOST_CRAB:
     case MONS_ELECTRIC_EEL:
     case MONS_LAVA_SNAKE:
     case MONS_MANTICORE:
@@ -4442,7 +4437,7 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
 /**
  * Get the monster body shape of the given monster.
  * @param mon  The monster in question.
- * @returns    The mon_body_shape type of this monster.
+ * @return     The mon_body_shape type of this monster.
  */
 mon_body_shape get_mon_shape(const monster* mon)
 {
@@ -4457,7 +4452,7 @@ mon_body_shape get_mon_shape(const monster* mon)
 /**
  * Get the monster body shape of the given monster type.
  * @param mon  The monster type in question.
- * @returns    The mon_body_shape type of this monster type.
+ * @return     The mon_body_shape type of this monster type.
  */
 mon_body_shape get_mon_shape(const monster_type mc)
 {
@@ -4471,7 +4466,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
 /**
  * Get a DB lookup string for the given monster body shape.
  * @param mon  The monster body shape type in question.
- * @returns    A DB lookup string for the monster body shape.
+ * @return     A DB lookup string for the monster body shape.
  */
 string get_mon_shape_str(const mon_body_shape shape)
 {
@@ -4764,7 +4759,7 @@ void debug_mondata()
 
         int MR = md->resist_magic;
         if (MR < 0)
-            MR = md->hpdice[9] * -MR * 4 / 3;
+            MR = md->hpdice[0] * -MR * 4 / 3;
         if (md->resist_magic > 200 && md->resist_magic != MAG_IMMUNE)
             fails += make_stringf("%s has MR %d > 200\n", name, MR);
 

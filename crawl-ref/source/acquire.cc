@@ -47,9 +47,6 @@ static armour_type _random_nonbody_armour_type()
                          ARM_BOOTS, -1);
 }
 
-static const int max_has_value = 100;
-typedef FixedVector<int, max_has_value> has_vector;
-
 static armour_type _pick_wearable_armour(const armour_type arm)
 {
     armour_type result = arm;
@@ -166,7 +163,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     return result;
 }
 
-static armour_type _acquirement_armour_subtype(bool divine)
+static int _acquirement_armour_subtype(bool divine, int & /*quantity*/)
 {
     // Increasing the representation of the non-body armour
     // slots here to make up for the fact that there's only
@@ -381,9 +378,9 @@ static armour_type _pick_unseen_armour()
     return picked;
 }
 
-// Write results into arguments.
-static void _acquirement_determine_food(int& type_wanted, int& quantity)
+static int _acquirement_food_subtype(bool /*divine*/, int& quantity)
 {
+    int type_wanted;
     // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
         type_wanted = FOOD_CHUNK;
@@ -401,27 +398,26 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity)
     }
     else
     {
-        type_wanted = coinflip() ? FOOD_ROYAL_JELLY
-                        : player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
-                                                                 : FOOD_MEAT_RATION;
+        type_wanted = coinflip()
+            ? FOOD_ROYAL_JELLY
+            : player_mutation_level(MUT_HERBIVOROUS) ? FOOD_BREAD_RATION
+                                                     : FOOD_MEAT_RATION;
     }
 
     quantity = 3 + random2(5);
 
+    // giving more of the lower food value items
     if (type_wanted == FOOD_FRUIT)
         quantity = 8 + random2avg(15, 2);
-    // giving more of the lower food value items
     else if (type_wanted == FOOD_ROYAL_JELLY || type_wanted == FOOD_CHUNK)
         quantity += random2avg(10, 2);
     else if (type_wanted == POT_BLOOD)
-    {
-    // this was above in the vampire block, but gets overwritten by line 1371
-    // so moving here {due}
         quantity = 8 + random2(5);
-    }
+
+    return type_wanted;
 }
 
-static int _acquirement_weapon_subtype(bool divine)
+static int _acquirement_weapon_subtype(bool divine, int & /*quantity*/)
 {
     // Asking for a weapon is biased towards your skills.
     // First pick a skill, weighting towards those you have.
@@ -515,7 +511,7 @@ static int _acquirement_weapon_subtype(bool divine)
     return result;
 }
 
-static missile_type _acquirement_missile_subtype()
+static int _acquirement_missile_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int count = 0;
     int skill = SK_THROWING;
@@ -530,7 +526,7 @@ static missile_type _acquirement_missile_subtype()
         }
     }
 
-    missile_type result = MI_DART;
+    missile_type result = MI_TOMAHAWK;
 
     switch (skill)
     {
@@ -544,7 +540,6 @@ static missile_type _acquirement_missile_subtype()
             // Only give needles if they have a blowgun in inventory.
             vector<pair<missile_type, int> > missile_weights;
 
-            missile_weights.push_back(make_pair(MI_DART, 50));
             missile_weights.push_back(make_pair(MI_TOMAHAWK, 75));
 
             // Include the possibility of needles if they have some stealth skill.
@@ -567,7 +562,7 @@ static missile_type _acquirement_missile_subtype()
     return result;
 }
 
-static int _acquirement_jewellery_subtype()
+static int _acquirement_jewellery_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int result = 0;
 
@@ -598,7 +593,7 @@ static bool _want_rod()
            && !one_chance_in(5);
 }
 
-static int _acquirement_staff_subtype(const has_vector& already_has)
+static int _acquirement_staff_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Try to pick an enhancer staff matching the player's best skill.
     skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
@@ -646,33 +641,46 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     return result;
 }
 
+static int _acquirement_rod_subtype(bool /*divine*/, int & /*quantity*/)
+{
+#if TAG_MAJOR_VERSION == 34
+    int result;
+    do
+        result = random2(NUM_RODS);
+    while (result == ROD_WARDING || result == ROD_VENOM);
+    return result;
+#else
+    return random2(NUM_RODS);
+#endif
+}
+
 /**
  * Return a miscellaneous evokable item for acquirement.
- * @returns  The item type chosen.
+ * @return   The item type chosen.
  */
-static int _acquirement_misc_subtype()
+static int _acquirement_misc_subtype(bool /*divine*/, int & /*quantity*/)
 {
     // Total weight if none have been seen is 100.
-    int result = random_choose_weighted(              // Decks given lowest weight.
-                                                      2, MISC_DECK_OF_WONDERS,
-                                                      3, MISC_DECK_OF_CHANGES,
-                                                      3, MISC_DECK_OF_DEFENCE,
-                                                      // The player might want
-                                                      // multiple of these.
-       (you.seen_misc[MISC_LAMP_OF_FIRE] ?       8 : 15), MISC_LAMP_OF_FIRE,
-       (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    8 : 15), MISC_PHIAL_OF_FLOODS,
-       (you.seen_misc[MISC_FAN_OF_GALES] ?       8 : 15), MISC_FAN_OF_GALES,
-       (you.seen_misc[MISC_STONE_OF_TREMORS] ?   8 : 15), MISC_STONE_OF_TREMORS,
-                                                      // These have charges, so
-                                                      // give them a constant
-                                                      // weight.
-                                                      8, MISC_BOX_OF_BEASTS,
-                                                      8, MISC_SACK_OF_SPIDERS,
-                                                      // The player never needs
-                                                      // more than one.
-       (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  8), MISC_DISC_OF_STORMS,
-       (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  8), MISC_LANTERN_OF_SHADOWS,
-                                                      0);
+    int result = random_choose_weighted(           // Decks given lowest weight.
+                                                   2, MISC_DECK_OF_WONDERS,
+                                                   3, MISC_DECK_OF_CHANGES,
+                                                   3, MISC_DECK_OF_DEFENCE,
+                                                   // The player might want
+                                                   // multiple of these.
+    (you.seen_misc[MISC_LAMP_OF_FIRE] ?       8 : 15), MISC_LAMP_OF_FIRE,
+    (you.seen_misc[MISC_PHIAL_OF_FLOODS] ?    8 : 15), MISC_PHIAL_OF_FLOODS,
+    (you.seen_misc[MISC_FAN_OF_GALES] ?       8 : 15), MISC_FAN_OF_GALES,
+    (you.seen_misc[MISC_STONE_OF_TREMORS] ?   8 : 15), MISC_STONE_OF_TREMORS,
+                                                   // These have charges, so
+                                                   // give them a constant
+                                                   // weight.
+                                                   8, MISC_BOX_OF_BEASTS,
+                                                   8, MISC_SACK_OF_SPIDERS,
+                                                   // The player never needs
+                                                   // more than one.
+    (you.seen_misc[MISC_DISC_OF_STORMS] ?     0 :  8), MISC_DISC_OF_STORMS,
+    (you.seen_misc[MISC_LANTERN_OF_SHADOWS] ? 0 :  8), MISC_LANTERN_OF_SHADOWS,
+                                                   0);
 
     // Give a crystal ball based on both evocations and either spellcasting or
     // invocations if we haven't seen one.
@@ -687,7 +695,7 @@ static int _acquirement_misc_subtype()
     return result;
 }
 
-static int _acquirement_wand_subtype()
+static int _acquirement_wand_subtype(bool /*divine*/, int & /*quantity*/)
 {
     int picked = NUM_WANDS;
 
@@ -740,70 +748,49 @@ static int _acquirement_wand_subtype()
     return picked;
 }
 
+typedef int (*acquirement_subtype_finder)(bool divine, int &quantity);
+static const acquirement_subtype_finder _subtype_finders[] =
+{
+    _acquirement_weapon_subtype,
+    _acquirement_missile_subtype,
+    _acquirement_armour_subtype,
+    _acquirement_wand_subtype,
+    _acquirement_food_subtype,
+    0, // no scrolls
+    _acquirement_jewellery_subtype,
+    _acquirement_food_subtype, // potion acquirement = food for vampires
+    0, // books handled elsewhere
+    _acquirement_staff_subtype,
+    0, // no, you can't acquire the orb
+    _acquirement_misc_subtype,
+    0, // no corpses
+    0, // gold handled elsewhere, and doesn't have subtypes anyway
+    _acquirement_rod_subtype,
+};
+
 static int _find_acquirement_subtype(object_class_type &class_wanted,
                                      int &quantity, bool divine,
                                      int agent = -1)
 {
+    COMPILE_CHECK(ARRAYSZ(_subtype_finders) == NUM_OBJECT_CLASSES);
     ASSERT(class_wanted != OBJ_RANDOM);
 
     int type_wanted = OBJ_RANDOM;
 
-    // Write down what the player is carrying.
-    has_vector already_has;
-    already_has.init(0);
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        const item_def& item = you.inv[i];
-        if (item.defined() && item.base_type == class_wanted)
-        {
-            ASSERT(item.sub_type < max_has_value);
-            already_has[item.sub_type] += item.quantity;
-        }
-    }
-
-    bool try_again = (class_wanted == OBJ_JEWELLERY
-                      || class_wanted == OBJ_STAVES
-                      || class_wanted == OBJ_MISCELLANY);
     int useless_count = 0;
 
-    while (1)
+    do
     {
         // Staves and rods have a common acquirement class.
         if (class_wanted == OBJ_STAVES || class_wanted == OBJ_RODS)
             class_wanted = _want_rod() ? OBJ_RODS : OBJ_STAVES;
 
-        switch (class_wanted)
-        {
-        case OBJ_FOOD:
-            // Clobber class_wanted for vampires.
-            if (you.species == SP_VAMPIRE)
-                class_wanted = OBJ_POTIONS;
-            // Deliberate fall-through
-        case OBJ_POTIONS: // Should only happen for vampires.
-            // set type_wanted and quantity
-            _acquirement_determine_food(type_wanted, quantity);
-            break;
+        // Vampires acquire blood, not food.
+        if (class_wanted == OBJ_FOOD && you.species == SP_VAMPIRE)
+            class_wanted = OBJ_POTIONS;
 
-        case OBJ_WEAPONS:    type_wanted = _acquirement_weapon_subtype(divine);  break;
-        case OBJ_MISSILES:   type_wanted = _acquirement_missile_subtype(); break;
-        case OBJ_ARMOUR:     type_wanted = _acquirement_armour_subtype(divine); break;
-        case OBJ_MISCELLANY: type_wanted = _acquirement_misc_subtype(); break;
-        case OBJ_WANDS:      type_wanted = _acquirement_wand_subtype(); break;
-        case OBJ_STAVES:     type_wanted = _acquirement_staff_subtype(already_has);
-            break;
-#if TAG_MAJOR_VERSION == 34
-        case OBJ_RODS:
-            do
-                type_wanted = random2(NUM_RODS);
-            while (type_wanted == ROD_WARDING || type_wanted == ROD_VENOM);
-            break;
-#else
-        case OBJ_RODS:       type_wanted = random2(NUM_RODS); break;
-#endif
-        case OBJ_JEWELLERY:  type_wanted = _acquirement_jewellery_subtype();
-            break;
-        default: break;         // gold, books
-        }
+        if (_subtype_finders[class_wanted])
+            type_wanted = (*_subtype_finders[class_wanted])(divine, quantity);
 
         item_def dummy;
         dummy.base_type = class_wanted;
@@ -811,21 +798,10 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENT_MASK;
 
-        if ((is_useless_item(dummy, false) || god_hates_item(dummy))
-            && useless_count++ < 200)
-        {
-            continue;
-        }
-
-        if (!try_again)
-            break;
-
-        ASSERT(type_wanted < max_has_value);
-        if (!already_has[type_wanted])
-            break;
-        if (one_chance_in(200))
+        if (!is_useless_item(dummy, false) && !god_hates_item(dummy))
             break;
     }
+    while (useless_count++ < 200);
 
     return type_wanted;
 }
@@ -902,6 +878,7 @@ static bool _skill_useless_with_god(int skill)
     case GOD_VEHUMET:
     case GOD_ASHENZARI:
     case GOD_JIYVA:
+    case GOD_GOZAG:
     case GOD_NO_GOD:
         return skill == SK_INVOCATIONS;
     default:
@@ -1376,14 +1353,9 @@ int acquirement_create_item(object_class_type class_wanted,
             case RING_INTELLIGENCE:
             case RING_DEXTERITY:
             case RING_EVASION:
+            case RING_SLAYING:
                 // Make sure plus is >= 1.
                 acq_item.plus = max(abs((int) acq_item.plus), 1);
-                break;
-
-            case RING_SLAYING:
-                // Two plusses to handle here, and accuracy can be +0.
-                acq_item.plus = abs(acq_item.plus);
-                acq_item.plus2 = max(abs((int) acq_item.plus2), 2);
                 break;
 
             case RING_LOUDNESS:
@@ -1409,22 +1381,12 @@ int acquirement_create_item(object_class_type class_wanted,
                     make_item_randart(acq_item, true);
             }
 
-            int plusmod = random2(4);
-            if (agent == GOD_TROG)
+            if (agent == GOD_TROG || agent == GOD_OKAWARU)
             {
-                // More damage, less accuracy.
-                acq_item.plus  -= plusmod;
-                acq_item.plus2 += plusmod;
+                if (agent == GOD_TROG)
+                    acq_item.plus += random2(3);
                 if (!is_artefact(acq_item))
-                    acq_item.plus = max(static_cast<int>(acq_item.plus), 0);
-            }
-            else if (agent == GOD_OKAWARU)
-            {
-                // More accuracy, less damage.
-                acq_item.plus  += plusmod;
-                acq_item.plus2 -= plusmod;
-                if (!is_artefact(acq_item))
-                    acq_item.plus2 = max(static_cast<int>(acq_item.plus2), 0);
+                    acq_item.plus = max(static_cast<int>(acq_item.plus), 1);
             }
         }
         else if (is_deck(acq_item))

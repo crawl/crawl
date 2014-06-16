@@ -249,8 +249,7 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
     else if (!bottle_blood && you.species == SP_VAMPIRE
              && (can_bottle_blood_from_corpse(corpse.mon_type)
                  || mons_has_blood(corpse.mon_type) && !is_bad_food(corpse))
-             && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-             && !you.has_spell(SPELL_SIMULACRUM))
+             && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD))
     {
         bool can_bottle = can_bottle_blood_from_corpse(corpse.mon_type);
         const string msg = make_stringf("You could drain this corpse's blood with <w>%s</w> instead%s. Continue anyway?",
@@ -414,8 +413,7 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
-    bool wants_any = you.has_spell(SPELL_SIMULACRUM)
-                  || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
+    bool wants_any = you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
 
     // First determine how many things there are to butcher.
     int num_corpses = 0;
@@ -2424,15 +2422,14 @@ static bool _compare_second(const pair<int, int> &a, const pair<int, int> &b)
 
 /**
  * Try to free an inventory slot by dropping a stack of chunks.
- * @returns True if a stack was dropped, false otherwise.
+ * @return  True if a stack was dropped, false otherwise.
 **/
 bool drop_spoiled_chunks()
 {
     if (Options.auto_drop_chunks == ADC_NEVER)
         return false;
 
-    bool wants_any = you.has_spell(SPELL_SIMULACRUM)
-                  || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
+    bool wants_any = you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
     int nchunks = 0;
     vector<pair<int, int> > chunk_slots;
     for (int slot = 0; slot < ENDOFPACK; slot++)

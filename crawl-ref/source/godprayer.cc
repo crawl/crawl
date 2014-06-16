@@ -30,6 +30,7 @@
 #include "shopping.h"
 #include "skills2.h"
 #include "state.h"
+#include "spl-wpnench.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "unwind.h"
@@ -83,7 +84,7 @@ string god_prayer_reaction()
 static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
     int item_slot = prompt_invent_item("Brand which weapon?", MT_INVLIST,
-                                       OSEL_BRANDABLE_WEAPON, true, true, false);
+                                       OSEL_BLESSABLE_WEAPON, true, true, false);
 
     if (item_slot == PROMPT_NOTHING || item_slot == PROMPT_ABORT)
         return false;
@@ -91,7 +92,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     item_def& wpn(you.inv[item_slot]);
 
     // Only TSO allows blessing ranged weapons.
-    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH))
+    if (!is_brandable_weapon(wpn, brand == SPWPN_HOLY_WRATH, true))
         return false;
 
     string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
@@ -110,7 +111,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         return false;
     }
 
-    you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
+    if (you.duration[DUR_WEAPON_BRAND]) // just in case
+    {
+        ASSERT(you.weapon());
+        end_weapon_brand(*you.weapon());
+    }
 
     string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
@@ -119,7 +124,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     const bool is_cursed = wpn.cursed();
 
-    enchant_weapon(wpn, 1 + random2(2), 1 + random2(2), 0);
+    enchant_weapon(wpn, true);
+    enchant_weapon(wpn, true);
 
     if (is_cursed)
         do_uncurse_item(wpn, false);
@@ -425,10 +431,10 @@ void pray()
 
     if (you_worship(GOD_XOM))
         mprf(MSGCH_GOD, "%s", getSpeakString("Xom prayer").c_str());
+    else if (you_worship(GOD_GOZAG))
+        mprf(MSGCH_GOD, "%s", getSpeakString("Gozag prayer").c_str());
     else if (player_under_penance())
         simple_god_message(" demands penance!");
-    if (you_worship(GOD_GOZAG))
-        mprf(MSGCH_GOD, "%s", getSpeakString("Gozag prayer").c_str());
     else
         mprf(MSGCH_PRAY, you.religion, "%s", god_prayer_reaction().c_str());
 
@@ -791,7 +797,7 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js, int quantity)
 /**
  * Sacrifice the items at the player's location to the player's god.
  *
- * @returns True if an item was sacrificed, false otherwise.
+ * @return  True if an item was sacrificed, false otherwise.
 */
 static bool _offer_items()
 {
@@ -807,7 +813,6 @@ static bool _offer_items()
 
     int num_sacced = 0;
     int num_disliked = 0;
-    item_def *disliked_item = 0;
 
     while (i != NON_ITEM)
     {
@@ -817,12 +822,9 @@ static bool _offer_items()
 
         if (item_is_stationary_net(item) || disliked)
         {
-            i = next;
             if (disliked)
-            {
                 num_disliked++;
-                disliked_item = &item;
-            }
+            i = next;
             continue;
         }
 
@@ -858,23 +860,10 @@ static bool _offer_items()
     // Explanatory messages if nothing the god likes is sacrificed.
     if (num_sacced == 0 && num_disliked > 0)
     {
-        ASSERT(disliked_item);
-
-        if (item_is_orb(*disliked_item))
-            simple_god_message(" wants the Orb's power used on the surface!");
-        else if (item_is_rune(*disliked_item))
-            simple_god_message(" wants the runes to be proudly displayed.");
-        // Zin was handled above, and the other gods don't care about
-        // sacrifices.
-        else if (god_likes_fresh_corpses(you.religion))
+        if (god_likes_fresh_corpses(you.religion))
             simple_god_message(" only cares about fresh corpses!");
         else if (you_worship(GOD_BEOGH))
             simple_god_message(" only cares about orcish remains!");
-        else if (you_worship(GOD_NEMELEX_XOBEH))
-            if (disliked_item->base_type == OBJ_GOLD)
-                simple_god_message(" does not care about gold!");
-            else
-                simple_god_message(" expects you to use your decks, not offer them!");
         else if (you_worship(GOD_ASHENZARI))
             simple_god_message(" can corrupt only scrolls of remove curse.");
     }

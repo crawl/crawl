@@ -1,8 +1,8 @@
 %%%%
 Centaur
 
-Swift, strong and bulky, Centaurs need more food than other species. They are
-particularly skilled with ranged weaponry.
+Swift, strong and bulky, Centaurs are particularly skilled with ranged
+weaponry.
 %%%%
 Deep Dwarf
 

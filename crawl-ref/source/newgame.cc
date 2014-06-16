@@ -1705,10 +1705,6 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
 {
     switch (ng_choice->weapon)
     {
-    case WPN_UNKNOWN:
-        ng->weapon = WPN_UNKNOWN;
-        return;
-
     case WPN_VIABLE:
     {
         int good_choices = 0;
@@ -1729,16 +1725,9 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
         return;
 
     default:
-        // Check this is a legal choice, in case it came
-        // through command line options.
+        // _fixup_weapon will return WPN_UNKNOWN, allowing the player
+        // to select the weapon, if the weapon option is incompatible.
         ng->weapon = _fixup_weapon(ng_choice->weapon, weapons);
-        if (ng->weapon == WPN_UNKNOWN)
-        {
-            // Either an invalid combination was passed in through options,
-            // or we messed up.
-            end(1, false,
-                "Incompatible weapon specified in options file.");
-        }
         return;
     }
 }
@@ -1779,13 +1768,14 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
         return true;
     }
 
-    if (ng_choice->weapon == WPN_UNKNOWN
-        && !_prompt_weapon(ng, ng_choice, defaults, weapons))
+    _resolve_weapon(ng, ng_choice, weapons);
+    if (ng->weapon == WPN_UNKNOWN)
     {
-        return false;
+        if (!_prompt_weapon(ng, ng_choice, defaults, weapons))
+            return false;
+        _resolve_weapon(ng, ng_choice, weapons);
     }
 
-    _resolve_weapon(ng, ng_choice, weapons);
     return true;
 }
 

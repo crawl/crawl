@@ -248,7 +248,7 @@ static void _spread_fire(const cloud_struct &cloud)
 
             if (you.see_cell(*ai))
                 mpr("The forest fire spreads!");
-            nuke_wall(*ai);
+            destroy_wall(*ai);
             _place_new_cloud(cloud.type, *ai, random2(30)+25, cloud.whose,
                               cloud.killer, cloud.source, cloud.spread_rate,
                               cloud.colour, cloud.name, cloud.tile, cloud.excl_rad);
@@ -273,6 +273,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             const coord_def p(*ai);
             if (in_bounds(p)
                 && feat_is_watery(grd(p))
+                && !cell_is_solid(p)
                 && env.cgrid(p) == EMPTY_CLOUD
                 && one_chance_in(7))
             {
@@ -331,7 +332,8 @@ static void _handle_ghostly_flame(const cloud_struct& cloud)
     {
         do
             basetype = pick_random_zombie();
-        while (!monster_habitable_grid(basetype, grd(cloud.pos)));
+        while (mons_class_flag(basetype, M_NO_GEN_DERIVED)
+               || !monster_habitable_grid(basetype, grd(cloud.pos)));
     }
 
     monster* agent = monster_by_mid(cloud.source);
@@ -353,7 +355,7 @@ void manage_clouds()
         if (cloud.type == CLOUD_NONE)
             continue;
 
-#if ASSERTS
+#ifdef ASSERTS
         if (cell_is_solid(cloud.pos))
         {
             die("cloud %s in %s at (%d,%d)", cloud_type_name(cloud.type).c_str(),
@@ -826,6 +828,16 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     {
         return true;
     }
+#if TAG_MAJOR_VERSION == 34
+
+    if (player && you.species == SP_DJINNI
+        && (cloud.type == CLOUD_FIRE
+            || cloud.type == CLOUD_FOREST_FIRE
+            || cloud.type == CLOUD_HOLY_FLAMES))
+    {
+        return true;
+    }
+#endif
 
     switch (cloud.type)
     {
@@ -834,13 +846,9 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return act->is_fiery()
                 || player &&
                    (you.duration[DUR_FIRE_SHIELD]
-                    || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]
-#if TAG_MAJOR_VERSION == 34
-                    || you.species == SP_DJINNI
-#endif
-                   );
+                    || you.mutation[MUT_FLAME_CLOUD_IMMUNITY]);
     case CLOUD_HOLY_FLAMES:
-        return act->res_holy_fire() > 0;
+        return act->res_holy_energy(cloud.agent()) > 0;
     case CLOUD_COLD:
         return act->is_icy()
                || (player && you.mutation[MUT_FREEZING_CLOUD_IMMUNITY]);
@@ -857,7 +865,9 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_PETRIFY:
         return act->res_petrify();
     case CLOUD_GHOSTLY_FLAME:
-        return act->holiness() == MH_UNDEAD;
+        return act->holiness() == MH_UNDEAD
+               // Don't let these guys kill themselves.
+               || act->type == MONS_GHOST_CRAB;
     case CLOUD_ACID:
         return act->res_acid() > 0;
     case CLOUD_STORM:
@@ -886,7 +896,7 @@ static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
     case CLOUD_STEAM:
         return act->res_steam();
     case CLOUD_HOLY_FLAMES:
-        return act->res_holy_fire();
+        return act->res_holy_energy(cloud.agent());
     case CLOUD_COLD:
         return act->res_cold();
     case CLOUD_PETRIFY:
@@ -1002,25 +1012,25 @@ static bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_POISON:
         if (player)
         {
-            const actor* agent = find_agent(cloud.source, cloud.whose);
+            const actor* agent = cloud.agent();
             poison_player(5 + roll_dice(3, 8), agent ? agent->name(DESC_A) : "",
                           cloud.cloud_name());
         }
         else
-            poison_monster(mons, find_agent(cloud.source, cloud.whose));
+            poison_monster(mons, cloud.agent());
         return true;
 
     case CLOUD_MIASMA:
         if (player)
         {
-            const actor* agent = find_agent(cloud.source, cloud.whose);
+            const actor* agent = cloud.agent();
             if (agent)
                 miasma_player(agent->name(DESC_A), cloud.cloud_name());
             else
                 miasma_player(cloud.cloud_name());
         }
         else
-            miasma_monster(mons, find_agent(cloud.source, cloud.whose));
+            miasma_monster(mons, cloud.agent());
         break;
 
     case CLOUD_MUTAGENIC:
@@ -1028,9 +1038,10 @@ static bool _actor_apply_cloud_side_effects(actor *act,
         {
             if (player)
             {
-                mpr("Strange energies course through your body.");
-                return mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-                              "mutagenic cloud");
+                mpr("The mutagenic energy flows into you.");
+                // It's possible that you got trampled into the mutagenic cloud and it's not your fault...
+                contaminate_player(1000, false);
+                return true;
             }
             else if (mons->malmutate("mutagenic cloud"))
             {
@@ -1053,7 +1064,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
 
     case CLOUD_ACID:
     {
-        const actor* agent = find_agent(cloud.source, cloud.whose);
+        const actor* agent = cloud.agent();
         if (player)
             splash_with_acid(5, agent ? agent->mindex() : NON_MONSTER, true);
         else
@@ -1063,7 +1074,7 @@ static bool _actor_apply_cloud_side_effects(actor *act,
 
     case CLOUD_NEGATIVE_ENERGY:
     {
-        actor* agent = find_agent(cloud.source, cloud.whose);
+        actor* agent = cloud.agent();
         if (act->drain_exp(agent))
         {
             if (cloud.whose == KC_YOU)
@@ -1239,7 +1250,7 @@ int actor_apply_cloud(actor *act)
              final_damage,
              cloud.cloud_name().c_str());
 #endif
-        actor *oppressor = find_agent(cloud.source, cloud.whose);
+        actor *oppressor = cloud.agent();
 
         if (player)
         {
@@ -1452,6 +1463,11 @@ void cloud_struct::set_killer(killer_type _killer)
     default:
         break;
     }
+}
+
+actor *cloud_struct::agent() const
+{
+    return find_agent(source, whose);
 }
 
 string cloud_struct::cloud_name(const string &defname,

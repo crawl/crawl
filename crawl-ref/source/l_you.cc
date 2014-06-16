@@ -613,9 +613,7 @@ static int _you_piety(lua_State *ls)
     if (lua_gettop(ls) >= 1)
     {
         const int new_piety = min(max(luaL_checkint(ls, 1), 0), MAX_PIETY);
-        while (new_piety > you.piety)
-            gain_piety(new_piety - you.piety, 1, true, false);
-        lose_piety(you.piety - new_piety);
+        set_piety(new_piety);
     }
     PLUARET(number, you.piety);
 }

@@ -192,7 +192,7 @@ i-speed BRAND_SPEED
 i-vorpal BRAND_VORPAL
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
-i-vampiricism BRAND_VAMPIRICISM
+i-vampirism BRAND_VAMPIRISM
 i-pain BRAND_PAIN
 %rim 1
 i-antimagic BRAND_ANTIMAGIC
@@ -272,23 +272,6 @@ effect/bolt4 MI_BOLT4
 effect/bolt5 MI_BOLT5
 effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
-
-dart1 MI_DART UNSEEN_MISSILE
-dart2
-dart-p MI_DART_POISONED
-steel_dart1 MI_DART_STEEL
-steel_dart2
-silver_dart1 MI_DART_SILVER
-silver_dart2
-# flying darts
-effect/dart0 MI_DART0
-effect/dart1 MI_DART1
-effect/dart2 MI_DART2
-effect/dart3 MI_DART3
-effect/dart4 MI_DART4
-effect/dart5 MI_DART5
-effect/dart6 MI_DART6
-effect/dart7 MI_DART7
 
 tomahawk1 MI_TOMAHAWK
 tomahawk2
@@ -451,14 +434,18 @@ cap_jester THELM_CAP_JESTER
 hat1 THELM_HAT
 hat2
 
-helmet1_visored THELM_HELM THELM_FIRST
-helmet2_etched
+helmet1 THELM_HELM THELM_FIRST
+helmet2
 helmet3
-helmet4_visor
-helmet_horned THELM_HELM_HORNED
-helmet_spiked THELM_HELM_SPIKED
-helmet_plumed THELM_HELM_PLUMED
-helmet_winged THELM_HELM_WINGED THELM_LAST
+helmet4
+helmet5 THELM_LAST
+helmet_ego1 THELM_EGO_FIRST
+helmet_ego2
+helmet_ego3
+helmet_ego4 THELM_EGO_LAST
+helmet_art1 THELM_ART_FIRST
+helmet_art2
+helmet_art3 THELM_ART_LAST
 
 %sdir item/armour
 ###### GLOVES
@@ -547,7 +534,21 @@ i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 %sdir item/food
 meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
 bread_ration FOOD_BREAD_RATION
-choko FOOD_FRUIT
+
+apple FOOD_FRUIT_FIRST
+apricot
+banana
+choko
+grape
+lemon
+lychee
+orange
+pear
+rambutan
+snozzcumber
+strawberry FOOD_FRUIT_LAST
+fruit FOOD_FRUIT_INVENTORY
+
 beef_jerky FOOD_BEEF_JERKY
 lump_of_royal_jelly FOOD_ROYAL_JELLY
 pizza FOOD_PIZZA
@@ -588,7 +589,7 @@ chunk_brands/i-rotten FOOD_INEDIBLE
 %sdir item/scroll
 scroll SCROLL UNSEEN_SCROLL
 
-#### These must be in the same order as the enum in item-prop.h!
+#### These must be in the same order as the enum in itemprop-enum.h!
 %sdir item/scroll
 %back scroll-yellow
 i-identify SCR_IDENTIFY SCR_ID_FIRST
@@ -603,7 +604,7 @@ i-remove_curse SCR_REMOVE_CURSE
 %back scroll-brown
 i-unholy_creation SCR_UNHOLY_CREATION
 %back scroll-green
-i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
+i-enchant-weapon SCR_ENCHANT_WEAPON
 i-enchant_armour SCR_ENCHANT_ARMOUR
 %back scroll-red
 i-torment SCR_TORMENT
@@ -622,10 +623,11 @@ i-fog SCR_FOG
 %back scroll-cyan
 i-acquirement SCR_ACQUIREMENT
 %back scroll-green
-i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
+#if TAG_MAJOR_VERSION == 34 # Remove the two i-enchant-weapon
+i-enchant-weapon SCR_ENCHANT_WEAPON_II
 i-brand-weapon SCR_BRAND_WEAPON
 i-recharging SCR_RECHARGING
-i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
+i-enchant-weapon SCR_ENCHANT_WEAPON_III
 %back scroll-red
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY

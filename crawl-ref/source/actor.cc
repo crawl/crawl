@@ -122,15 +122,6 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
     return div_rand_round(skill(sk, mult * 256), div * 256);
 }
 
-int actor::res_holy_fire() const
-{
-    if (is_evil() || is_unholy())
-        return -1;
-    else if (is_holy())
-        return 3;
-    return 0;
-}
-
 int actor::check_res_magic(int power)
 {
     const int mrs = res_magic();
@@ -296,9 +287,25 @@ bool actor::clarity(bool calc_unid, bool items) const
                      || scan_artefacts(ARTP_CLARITY, calc_unid));
 }
 
-bool actor::faith(bool calc_unid, bool items) const
+int actor::faith(bool calc_unid, bool items) const
 {
-    return items && wearing(EQ_AMULET, AMU_FAITH, calc_unid);
+    int net_faith = 0;
+
+    if (items && wearing(EQ_AMULET, AMU_FAITH, calc_unid))
+        net_faith++;
+
+    if (is_player() && player_mutation_level(MUT_FORLORN))
+    {
+        net_faith--;
+
+        // Ignore gods which don't use piety.
+        if (!you_worship(GOD_XOM) && !you_worship(GOD_GOZAG))
+        {
+            // 133 means 1/6 piety gain at max piety.
+            net_faith -= div_rand_round(you.piety, 133);
+        }
+    }
+    return net_faith;
 }
 
 bool actor::warding(bool calc_unid, bool items) const
@@ -422,7 +429,7 @@ bool actor_slime_wall_immune(const actor *act)
 /**
  * Accessor method to the clinging member.
  *
- * @returns The value of clinging.
+ * @return  The value of clinging.
  */
 bool actor::is_wall_clinging() const
 {
@@ -433,7 +440,7 @@ bool actor::is_wall_clinging() const
  * Check a cell to see if actor can keep clinging if it moves to it.
  *
  * @param p Coordinates of the cell checked.
- * @returns Whether the actor can cling.
+ * @return  Whether the actor can cling.
  */
 bool actor::can_cling_to(const coord_def& p) const
 {
@@ -678,25 +685,25 @@ void actor::handle_constriction()
         damage = defender->hurt(this, damage, BEAM_MISSILE, false);
         DIAG_ONLY(const int infdam = damage);
 
-        string exclams;
+        string exclamations;
         if (damage <= 0 && is_player()
             && you.can_see(defender))
         {
-            exclams = ", but do no damage.";
+            exclamations = ", but do no damage.";
         }
         else if (damage < HIT_WEAK)
-            exclams = ".";
+            exclamations = ".";
         else if (damage < HIT_MED)
-            exclams = "!";
+            exclamations = "!";
         else if (damage < HIT_STRONG)
-            exclams = "!!";
+            exclamations = "!!";
         else
         {
             int tmpdamage = damage;
-            exclams = "!!!";
+            exclamations = "!!!";
             while (tmpdamage >= 2*HIT_STRONG)
             {
-                exclams += "!";
+                exclamations += "!";
                 tmpdamage >>= 1;
             }
         }
@@ -713,7 +720,7 @@ void actor::handle_constriction()
 #else
                  "",
 #endif
-                 exclams.c_str());
+                 exclamations.c_str());
         }
         else if (you.can_see(defender) || defender->is_player())
         {
@@ -725,7 +732,7 @@ void actor::handle_constriction()
 #else
                  "",
 #endif
-                 exclams.c_str());
+                 exclamations.c_str());
         }
 
         dprf("constrict at: %s df: %s base %d dur %d ac %d tsc %d inf %d",

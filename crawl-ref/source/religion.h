@@ -46,11 +46,11 @@ void dec_penance(god_type god, int val);
 
 void excommunication(god_type new_god = GOD_NO_GOD);
 
-void gain_piety(int pgn, int denominator = 1,
-                bool force = false, bool should_scale_piety = true);
+bool gain_piety(int pgn, int denominator = 1, bool should_scale_piety = true);
 void dock_piety(int pietyloss, int penance);
 void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
+void set_piety(int piety);
 void handle_god_time(int time_delta);
 int god_colour(god_type god);
 colour_t god_message_altar_colour(god_type god);

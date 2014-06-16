@@ -1103,7 +1103,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
                 || you.hunger_state < HS_SATIATED && coinflip()
                 || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
         {
-            damage_brand = SPWPN_VAMPIRICISM;
+            damage_brand = SPWPN_VAMPIRISM;
         }
 
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
@@ -1250,7 +1250,7 @@ bool melee_attack::player_aux_unarmed()
             continue;
 
         to_hit = random2(calc_your_to_hit_unarmed(atk,
-                         damage_brand == SPWPN_VAMPIRICISM));
+                         damage_brand == SPWPN_VAMPIRISM));
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
@@ -1363,7 +1363,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
 
         // Normal vampiric biting attack, not if already got stabbing special.
-        if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
+        if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
             && (!stab_attempt || stab_bonus <= 0))
         {
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
@@ -1525,6 +1525,9 @@ int melee_attack::player_apply_final_multipliers(int damage)
     if (you.duration[DUR_WEAK])
         damage = div_rand_round(damage * 3, 4);
 
+    if (you.duration[DUR_CONFUSING_TOUCH] && wpn_skill == SK_UNARMED_COMBAT)
+        return 0;
+
     return damage;
 }
 
@@ -1664,7 +1667,7 @@ void melee_attack::set_attack_verb()
             case MH_NATURAL:
             case MH_DEMONIC:
                 attack_verb = "punish";
-                verb_degree = "causing immense pain";
+                verb_degree = ", causing immense pain";
                 break;
             default:
                 attack_verb = "devastate";
@@ -1901,7 +1904,7 @@ bool melee_attack::player_monattk_hit_effects()
         // No further effects.
     }
     else if (you.species == SP_VAMPIRE
-             && damage_brand == SPWPN_VAMPIRICISM
+             && damage_brand == SPWPN_VAMPIRISM
              && you.weapon()
              && _player_vampire_draws_blood(defender->as_monster(),
                                             damage_done, false, 5))
@@ -2673,8 +2676,11 @@ void melee_attack::announce_hit()
     }
     else
     {
-        if (!verb_degree.empty() && verb_degree[0] != ' ')
+        if (!verb_degree.empty() && verb_degree[0] != ' '
+            && verb_degree[0] != ',')
+        {
             verb_degree = " " + verb_degree;
+        }
 
         mprf("You %s %s%s%s%s",
              attack_verb.c_str(),
@@ -3158,7 +3164,7 @@ void melee_attack::mons_apply_attack_flavour()
         defender->go_berserk(false);
         break;
 
-    case AF_NAPALM:
+    case AF_STICKY_FLAME:
         mons_do_napalm();
         break;
 
@@ -3961,7 +3967,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
     else if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         your_to_hit -= 3;
 
-    your_to_hit += slaying_bonus(PWPN_HIT);
+    your_to_hit += slaying_bonus();
 
     return your_to_hit;
 }

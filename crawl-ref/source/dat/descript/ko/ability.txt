@@ -462,10 +462,6 @@ Convert to Beogh ability
 
 다른 신들은 베오그를 싫어하며, 쉽게 저버리지 않을 것이다.
 %%%%
-Make dart trap ability
-
-해당 지역에 다트 함정을 만든다.
-%%%%
 Make oklob sapling ability
 
 해당 지역에 산을 뿌리는 오클롭 식물의 새싹을 심는다.

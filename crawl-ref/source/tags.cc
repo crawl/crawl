@@ -47,6 +47,7 @@
 #include "ghost.h"
 #include "godcompanions.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -1524,8 +1525,6 @@ static void tag_construct_you(writer &th)
 
     you.m_quiver->save(th);
 
-    marshallByte(th, you.friendly_pickup);
-
     marshallString(th, you.zotdef_wave_name);
 
     CANARY;
@@ -2875,7 +2874,10 @@ static void tag_read_you(reader &th)
 
     you.m_quiver->load(th);
 
-    you.friendly_pickup = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_FRIENDLY_PICKUP)
+        unmarshallByte(th);
+#endif
 
     you.zotdef_wave_name = unmarshallString(th);
 
@@ -2936,14 +2938,14 @@ static void tag_read_you(reader &th)
 #endif
             abyssal_state.seed = unmarshallInt(th);
         abyssal_state.depth = unmarshallInt(th);
-        abyssal_state.nuke_all = false;
+        abyssal_state.destroy_all_terrain = false;
 #if TAG_MAJOR_VERSION == 34
     }
     else
     {
         unmarshallFloat(th); // converted abyssal_state.depth to int.
         abyssal_state.depth = 0;
-        abyssal_state.nuke_all = true;
+        abyssal_state.destroy_all_terrain = true;
         abyssal_state.seed = random_int();
     }
 #endif
@@ -3018,6 +3020,17 @@ static void tag_read_you(reader &th)
 
     you.props.clear();
     you.props.read(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() < TAG_MINOR_STICKY_FLAME)
+    {
+        if (you.props.exists("napalmer"))
+            you.props["sticky_flame_source"] = you.props["napalmer"];
+        if (you.props.exists("napalm_aux"))
+            you.props["sticky_flame_aux"] = you.props["napalm_aux"];
+    }
+    if (you.duration[DUR_WEAPON_BRAND] && !you.props.exists("orig brand"))
+        you.props["orig brand"] = SPWPN_NORMAL;
+#endif
 }
 
 static void tag_read_you_items(reader &th)
@@ -3690,6 +3703,23 @@ void unmarshallItem(reader &th, item_def &item)
         item.special = SPWPN_NORMAL;
     }
 
+    // Not putting these in a minor tag since it's possible for an old
+    // random monster spawn list to place flame/frost weapons.
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FROST)
+    {
+        if (is_artefact(item))
+            artefact_set_property(item, ARTP_BRAND, SPWPN_FREEZING);
+        else
+            item.special = SPWPN_FREEZING;
+    }
+    if (item.base_type == OBJ_WEAPONS && get_weapon_brand(item) == SPWPN_FLAME)
+    {
+        if (is_artefact(item))
+            artefact_set_property(item, ARTP_BRAND, SPWPN_FLAMING);
+        else
+            item.special = SPWPN_FLAMING;
+    }
+
     if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_HORN_OF_GERYON
         && th.getMinorVersion() < TAG_MINOR_HORN_GERYON_CHANGE)
     {
@@ -3790,6 +3820,57 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+    // Combine old rings of slaying (Acc/Dam) to new (Dam).
+    // Also handle the changes to the respective ARTP_.
+    if (th.getMinorVersion() < TAG_MINOR_SLAYRING_PLUSES)
+    {
+        int acc, dam, slay = 0;
+
+        if (item.props.exists(ARTEFACT_PROPS_KEY))
+        {
+            acc = artefact_wpn_property(item, ARTP_ACCURACY);
+            dam = artefact_wpn_property(item, ARTP_SLAYING);
+            slay = dam < 0 ? dam : max(acc, dam);
+
+            artefact_set_property(item, ARTP_SLAYING, slay);
+        }
+
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_SLAYING)
+        {
+             acc = item.plus;
+             dam = item.plus2;
+             slay = dam < 0 ? dam : max(acc, dam);
+
+            item.plus = slay;
+            item.plus2 = 0;
+        }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_MERGE_EW)
+    {
+        // Combine EW1/EW2/EW3 scrolls into single enchant weapon scroll.
+        if (item.base_type == OBJ_SCROLLS
+            && (item.sub_type == SCR_ENCHANT_WEAPON_II
+                || item.sub_type == SCR_ENCHANT_WEAPON_III))
+        {
+            item.sub_type = SCR_ENCHANT_WEAPON;
+        }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_WEAPON_PLUSES)
+    {
+        int acc, dam, slay = 0;
+
+        if (item.base_type == OBJ_WEAPONS)
+        {
+            acc = item.plus;
+            dam = item.plus2;
+            slay = dam < 0 ? dam : max(acc,dam);
+
+            item.plus = slay;
+            item.plus2 = 0;
+        }
+    }
 #endif
 
     if (is_unrandom_artefact(item))
@@ -5007,6 +5088,9 @@ void unmarshallMonster(reader &th, monster& m)
             ASSERT(m.base_monster != MONS_NO_MONSTER);
         }
     }
+    // Turn elephant slugs into ghosts because they are dummies now.
+    else if (m.type == MONS_ELEPHANT_SLUG)
+        m.type = MONS_GHOST;
     else
 #endif
     if (parts & MP_GHOST_DEMON)

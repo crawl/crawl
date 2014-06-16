@@ -849,6 +849,7 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_EXIT_HELL:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARF:
+    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_ORC:
@@ -856,7 +857,6 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_RETURN_FROM_SLIME:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_ZOT:
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_SNAKE:
@@ -895,6 +895,7 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_EXIT_HELL:
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARF:
+    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_FOREST:
 #endif
     case DNGN_RETURN_FROM_ORC:
@@ -902,7 +903,6 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_RETURN_FROM_SLIME:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_CRYPT:
-    case DNGN_RETURN_FROM_BLADE:
     case DNGN_RETURN_FROM_ZOT:
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_SNAKE:
@@ -3177,6 +3177,8 @@ static void _slime_connectivity_fixup()
 
             // Did the search, now remove any walls adjacent to squares in
             // the path.
+            if (!path.size())
+                continue;
             const position_node * current = &(*path[0]);
 
             while (current)
@@ -3934,7 +3936,8 @@ static void _place_assorted_zombies()
         monster_type z_base;
         do
             z_base = pick_random_zombie();
-        while (skel && !mons_skeleton(z_base));
+        while (mons_class_flag(z_base, M_NO_GEN_DERIVED)
+               || !(skel ? mons_skeleton(z_base) : mons_zombifiable(z_base)));
 
         mgen_data mg;
         mg.cls = (skel ? MONS_SKELETON : MONS_ZOMBIE);
@@ -4581,11 +4584,6 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         && props.exists("plus") && !is_unrandom_artefact(item))
     {
         item.plus = props["plus"].get_int();
-    }
-    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_JEWELLERY)
-        && props.exists("plus2") && !is_unrandom_artefact(item))
-    {
-        item.plus2 = props["plus2"].get_int();
     }
     if (props.exists("ident"))
         item.flags |= props["ident"].get_int();
@@ -5557,10 +5555,6 @@ static dungeon_feature_type _pick_an_altar()
                                          1, GOD_SIF_MUNA,
                                          1, GOD_SHINING_ONE,
                                          0);
-            break;
-
-        case BRANCH_BLADE:
-            god = GOD_OKAWARU;
             break;
 
         case BRANCH_ELF: // magic gods

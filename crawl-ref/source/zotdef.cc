@@ -80,8 +80,6 @@ static bool _is_branch_fitting(branch_type pb, int wavenum)
         return wavenum > 15;                 // 3.2K-
     case BRANCH_SLIME:
         return wavenum > 20 && coinflip();   // 4K-
-    case BRANCH_BLADE:
-        return wavenum > 30;                 // 6K-
     case BRANCH_TOMB:
         return wavenum > 30 && coinflip();   // 6K-
     case BRANCH_DIS:                         // 8K-
@@ -422,7 +420,7 @@ static void _insect_wave(int power)
     wave_name("INSECT WAVE");
     monster_type insects[] = {MONS_WORKER_ANT, MONS_KILLER_BEE, MONS_YELLOW_WASP,
                 MONS_GOLIATH_BEETLE, MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
-                MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_FIREFLY, MONS_REDBACK,
+                MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_REDBACK,
                 MONS_VAMPIRE_MOSQUITO, MONS_RED_WASP, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
                 MONS_GIANT_COCKROACH, MONS_BORING_BEETLE, MONS_TRAPDOOR_SPIDER,
                 MONS_SCORPION, END};
@@ -704,9 +702,6 @@ void zotdef_set_wave()
     case 3:
     {
         branch_type b = _zotdef_random_branch();
-        // HoB branch waves v. rare before 10K turns
-        if (b == BRANCH_BLADE && you.num_turns / ZOTDEF_CYCLE_LENGTH < 50)
-            b = _zotdef_random_branch();
         _zotdef_set_branch_wave(b, power);
         break;
     }

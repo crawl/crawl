@@ -475,8 +475,7 @@ the recipients on the brink of death but never outright kills them.
 Excruciating Wounds spell
 
 This spell temporarily infuses the weapon held by the caster with the essence
-of pain itself. It will not affect artefact weapons or weapons that are already
-branded.
+of pain itself. It will not affect artefact weapons.
 %%%%
 Explosive Bolt spell
 
@@ -1084,11 +1083,10 @@ use them.
 %%%%
 Simulacrum spell
 
-This spell uses a piece of flesh in hand to create a replica of the original
-being out of ice. This magic is unstable so eventually the replica will
-sublimate into a freezing cloud, if it isn't hacked or melted into a small
-puddle of water first. Note that simulacra are incapable of leaving the level
-they were created on.
+This spell creates a icy replica from the corpse of the original being. This
+magic is unstable, so eventually the replica will sublimate into a freezing
+cloud, if it isn't hacked or melted into a small puddle of water first. Note
+that simulacra are incapable of leaving the level they were created on.
 %%%%
 Sleep spell
 
@@ -1267,8 +1265,8 @@ regardless!
 Summon Guardian Golem spell
 
 This spell summons a protective golem. It redirects the injuries of its allies
-to itself, though it risks overheating after absorbing significant amounts of
-damage. It will gain more health at high power.
+(but not the caster!) to itself, though it risks overheating after absorbing
+significant amounts of damage. It will gain more health at high power.
 %%%%
 Summon Hell Beast spell
 
@@ -1456,9 +1454,8 @@ through unhindered.
 Warp Weapon spell
 
 This spell temporarily binds a localized warp field to the caster's weapon.
-It will not affect artefact weapons or weapons that are already branded. Unlike
-a permanently distortion-branded weapon, the affected weapon may still be
-safely unwielded.
+It will not affect artefact weapons. Unlike a permanently distortion-branded
+weapon, the affected weapon may still be safely unwielded.
 %%%%
 Waterstrike spell
 

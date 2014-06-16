@@ -63,7 +63,10 @@ bool trap_def::type_has_ammo() const
 {
     switch (type)
     {
-    case TRAP_DART:   case TRAP_ARROW:  case TRAP_BOLT:
+#if TAG_MAJOR_VERSION == 34
+    case TRAP_DART:
+#endif
+    case TRAP_ARROW:  case TRAP_BOLT:
     case TRAP_NEEDLE: case TRAP_SPEAR:
         return true;
     default:
@@ -116,7 +119,6 @@ void trap_def::prepare_ammo(int charges)
     }
     switch (type)
     {
-    case TRAP_DART:
     case TRAP_ARROW:
     case TRAP_BOLT:
     case TRAP_NEEDLE:
@@ -267,7 +269,7 @@ bool trap_def::is_safe(actor* act) const
  * @param where The location.
  * @param trapped If true, the index of the stationary net (trapping a victim)
  *                is returned.
- * @returns The item index of the net.
+ * @return  The item index of the net.
 */
 int get_trapping_net(const coord_def& where, bool trapped)
 {
@@ -321,10 +323,17 @@ static void _mark_net_trapping(const coord_def& where)
     }
 }
 
-void monster_caught_in_net(monster* mon, actor* agent)
+/**
+ * Attempt to trap a monster in a net.
+ *
+ * @param mon       The monster being trapped.
+ * @param agent     The entity doing the trapping.
+ * @return          Whether the monster was successfully trapped.
+ */
+bool monster_caught_in_net(monster* mon, actor* agent)
 {
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
-        return;
+        return false;
 
     if (mons_class_is_stationary(mon->type))
     {
@@ -338,7 +347,7 @@ void monster_caught_in_net(monster* mon, actor* agent)
             else
                 mpr("The net is caught on something unseen!");
         }
-        return;
+        return false;
     }
 
     if (mon->is_insubstantial())
@@ -348,19 +357,19 @@ void monster_caught_in_net(monster* mon, actor* agent)
             mprf("The net passes right through %s!",
                  mon->name(DESC_THE).c_str());
         }
-        return;
+        return false;
     }
 
     if (mon->flight_mode() && !mons_is_confused(mon) && one_chance_in(3))
     {
         simple_monster_message(mon, " darts out from under the net!");
-        return;
+        return false;
     }
 
     if (mon->type == MONS_OOZE || mon->type == MONS_PULSATING_LUMP)
     {
         simple_monster_message(mon, " oozes right through the net!");
-        return;
+        return false;
     }
 
     if (!mon->caught() && mon->add_ench(ENCH_HELD))
@@ -369,7 +378,10 @@ void monster_caught_in_net(monster* mon, actor* agent)
             mpr("Something gets caught in the net!");
         else
             simple_monster_message(mon, " is caught in the net!");
+        return true;
     }
+
+    return false;
 }
 
 bool player_caught_in_net()
@@ -796,7 +808,12 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                         mpr("A large net falls down!");
                 }
 
-                monster_caught_in_net(m, NULL);
+                // actually try to net the monster
+                if (monster_caught_in_net(m, NULL))
+                {
+                    // Don't try to escape the net in the same turn
+                    m->props[NEWLY_TRAPPED_KEY] = true;
+                }
             }
 
             if (triggered)
@@ -875,6 +892,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 // If somehow already caught, make it worse.
                 m->add_ench(ENCH_HELD);
+
+                // Don't try to escape the web in the same turn
+                m->props[NEWLY_TRAPPED_KEY] = true;
 
                 // Alert monsters.
                 check_monsters_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
@@ -1007,7 +1027,6 @@ int trap_def::max_damage(const actor& act)
     switch (type)
     {
         case TRAP_NEEDLE: return 0;
-        case TRAP_DART:   return mon ?  4 :  6;
         case TRAP_ARROW:  return mon ?  7 : 15;
         case TRAP_SPEAR:  return mon ? 10 : 26;
         case TRAP_BOLT:   return mon ? 18 : 40;
@@ -1032,8 +1051,6 @@ int trap_def::difficulty()
     switch (type)
     {
     // To-hit and disarming:
-    case TRAP_DART:
-        return 3;
     case TRAP_ARROW:
         return 7;
     case TRAP_SPEAR:
@@ -1054,7 +1071,9 @@ int trap_def::difficulty()
 #if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
         return 15;
-#endif
+    case TRAP_DART:
+        return 3;
+ #endif
     // Irrelevant:
     default:
         return 0;
@@ -1411,6 +1430,7 @@ void free_stationary_net(int item_index)
     item_def &item = mitm[item_index];
     if (item.base_type == OBJ_MISSILES && item.sub_type == MI_THROWING_NET)
     {
+        const coord_def pos = item.pos;
         // Probabilistically mulch net based on damage done, otherwise
         // reset damage counter (ie: item.plus).
         if (x_chance_in_y(-item.plus, 9))
@@ -1420,6 +1440,10 @@ void free_stationary_net(int item_index)
             item.plus = 0;
             item.plus2 = 0;
         }
+
+        // Make sure we don't leave a bad trapping net in the stash
+        // FIXME: may leak info if a monster escapes an out-of-sight net.
+        StashTrack.update_stash(pos);
     }
 }
 
@@ -1448,7 +1472,9 @@ item_def trap_def::generate_trap_item()
 
     switch (type)
     {
+#if TAG_MAJOR_VERSION == 34
     case TRAP_DART:   base = OBJ_MISSILES; sub = MI_DART;         break;
+#endif
     case TRAP_ARROW:  base = OBJ_MISSILES; sub = MI_ARROW;        break;
     case TRAP_BOLT:   base = OBJ_MISSILES; sub = MI_BOLT;         break;
     case TRAP_SPEAR:  base = OBJ_WEAPONS;  sub = WPN_SPEAR;       break;
@@ -1615,7 +1641,6 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_GOLUBRIA:
         return DNGN_PASSAGE_OF_GOLUBRIA;
 
-    case TRAP_DART:
     case TRAP_ARROW:
     case TRAP_SPEAR:
     case TRAP_BLADE:
@@ -1624,6 +1649,7 @@ dungeon_feature_type trap_category(trap_type type)
     case TRAP_NET:
 #if TAG_MAJOR_VERSION == 34
     case TRAP_GAS:
+    case TRAP_DART:
 #endif
     case TRAP_PLATE:
         return DNGN_TRAP_MECHANICAL;
@@ -1800,7 +1826,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
  * No traps are placed in either Temple or disconnected branches other than
  * Pandemonium. For other branches, we place 0-8 traps a level, averaged over
  * two dice.
- * @returns A number of traps to be placed.
+ * @return  A number of traps to be placed.
 */
 int num_traps_for_place()
 {
@@ -1832,20 +1858,14 @@ static trap_type _random_trap_slime(int level_number)
 
 static trap_type _random_trap_default(int level_number)
 {
-    trap_type type = TRAP_DART;
+    trap_type type = TRAP_ARROW;
 
     if ((random2(1 + level_number) > 1) && one_chance_in(4))
         type = TRAP_NEEDLE;
     if (random2(1 + level_number) > 3)
         type = TRAP_SPEAR;
 
-    if (type == TRAP_DART ? random2(1 + level_number) > 2
-                          : one_chance_in(7))
-    {
-        type = TRAP_ARROW;
-    }
-
-    if ((type == TRAP_DART || type == TRAP_ARROW) && one_chance_in(15))
+    if (type == TRAP_ARROW && one_chance_in(15))
         type = TRAP_NET;
 
     if (random2(1 + level_number) > 7)

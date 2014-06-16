@@ -418,8 +418,29 @@ static inline void UNUSED(const volatile T &)
 
 #ifdef __GNUC__
 // show warnings about the format string
+# ifdef TARGET_COMPILER_MINGW
+// Configure mingw32 / mingw-w64 printf format
+//
+// If __USE_MINGW_ANSI_STDIO is defined, mingw-w64 will try to use a C99 printf
+//  However, stdio.h must be included to have a C99 printf for use with
+//  __attribute__((format(...)).
+#  ifdef __cplusplus
+#   include <cstdio>
+#  else
+#   include <stdio.h>
+#  endif
+// If mingw defined a special format function to use, use this over 'printf'.
+#  ifdef __MINGW_PRINTF_FORMAT
+#   define CRAWL_PRINTF_FORMAT __MINGW_PRINTF_FORMAT
+#  else
+#   define CRAWL_PRINTF_FORMAT printf
+#  endif
+# else
+// standard GNU-compatible compiler (i.e., not mingw32/mingw-w64)
+#  define CRAWL_PRINTF_FORMAT printf
+# endif
 # define PRINTF(x, dfmt) const char *format dfmt, ...) \
-                   __attribute__((format (printf, x+1, x+2))
+                   __attribute__((format (CRAWL_PRINTF_FORMAT, x+1, x+2))
 #else
 # define PRINTF(x, dfmt) const char *format dfmt, ...
 #endif

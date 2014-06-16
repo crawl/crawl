@@ -368,9 +368,11 @@ struct missile_def
 static int Missile_index[NUM_MISSILES];
 static const missile_def Missile_prop[] =
 {
+#if TAG_MAJOR_VERSION == 34
+    { MI_DART,          "dart",          2,    3, true  },
+#endif
     { MI_NEEDLE,        "needle",        0,    1, false },
     { MI_STONE,         "stone",         2,    6, true  },
-    { MI_DART,          "dart",          2,    3, true  },
     { MI_ARROW,         "arrow",         7,    5, false },
     { MI_BOLT,          "bolt",          9,    5, false },
     { MI_LARGE_ROCK,    "large rock",   20,  600, true  },
@@ -652,7 +654,7 @@ void set_net_stationary(item_def &item)
  *
  * Currently only carrion and nets with a trapped victim are stationary.
  * @param item The item.
- * @returns True iff the item is stationary.
+ * @return  True iff the item is stationary.
 */
 bool item_is_stationary(const item_def &item)
 {
@@ -663,7 +665,7 @@ bool item_is_stationary(const item_def &item)
  * Is the item a stationary net?
  *
  * @param item The item.
- * @returns True iff the item is a stationary net.
+ * @return  True iff the item is a stationary net.
 */
 bool item_is_stationary_net(const item_def &item)
 {
@@ -675,7 +677,7 @@ bool item_is_stationary_net(const item_def &item)
  * Get the actor held in a stationary net.
  *
  * @param net A stationary net item.
- * @returns A pointer to the actor in the net, guaranteed to be non-null.
+ * @return  A pointer to the actor in the net, guaranteed to be non-null.
  */
 actor *net_holdee(const item_def &net)
 {
@@ -979,7 +981,12 @@ bool hide2armour(item_def &item)
     return true;
 }
 
-// Return the enchantment limit of a piece of armour.
+/**
+ * Return the enchantment limit of a piece of armour.
+ *
+ * @param item      The item being considered.
+ * @return          The maximum enchantment the item can hold.
+ */
 int armour_max_enchant(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
@@ -994,7 +1001,8 @@ int armour_max_enchant(const item_def &item)
         max_plus = property(item, PARM_AC);
     }
     else if (eq_slot == EQ_SHIELD)
-        max_plus = 3;
+        // 3 / 5 / 8 for bucklers/shields/lg. shields
+        max_plus = (property(item, PARM_AC) - 3)/2 + 3;
 
     return max_plus;
 }
@@ -1201,16 +1209,19 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
         return false;
 
     // If we don't know the plusses, assume enchanting is possible.
-    if (unknown && !is_known_artefact(arm)
-        && !item_ident(arm, ISFLAG_KNOW_PLUSES))
-    {
+    if (unknown && !is_artefact(arm) && !item_ident(arm, ISFLAG_KNOW_PLUSES))
         return true;
-    }
 
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
-        return uncurse && arm.cursed() && !you_worship(GOD_ASHENZARI);
+    {
+        if (!uncurse || you_worship(GOD_ASHENZARI))
+            return false;
+        if (unknown && !item_ident(arm, ISFLAG_KNOW_CURSE))
+            return true;
+        return arm.cursed();
+    }
 
     return true;
 }
@@ -1513,7 +1524,7 @@ bool convert2bad(item_def &item)
     return true;
 }
 
-bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
+bool is_brandable_weapon(const item_def &wpn, bool allow_ranged, bool divine)
 {
     if (wpn.base_type != OBJ_WEAPONS)
         return false;
@@ -1527,11 +1538,10 @@ bool is_brandable_weapon(const item_def &wpn, bool allow_ranged)
         return false;
     }
 
-    if (you.duration[DUR_WEAPON_BRAND] != 0
-        && you.weapon() == &wpn)
-    {
+    // Only gods can rebrand blessed weapons, and they revert back to their
+    // old base type in the process.
+    if (is_blessed(wpn) && !divine)
         return false;
-    }
 
     return true;
 }
@@ -1739,8 +1749,10 @@ const char *ammo_name(const item_def &bow)
 bool has_launcher(const item_def &ammo)
 {
     ASSERT(ammo.base_type == OBJ_MISSILES);
-    return ammo.sub_type != MI_DART
-           && ammo.sub_type != MI_LARGE_ROCK
+    return ammo.sub_type != MI_LARGE_ROCK
+#if TAG_MAJOR_VERSION == 34
+           && ammo.sub_type != MI_DART
+#endif
            && ammo.sub_type != MI_JAVELIN
            && ammo.sub_type != MI_TOMAHAWK
            && ammo.sub_type != MI_THROWING_NET;
@@ -1835,32 +1847,30 @@ bool item_is_spellbook(const item_def &item)
 //
 // Ring functions:
 
-// Returns number of pluses on jewellery (always none for amulets yet).
-int ring_has_pluses(const item_def &item)
+// Returns whether jewellery has plusses.
+bool ring_has_pluses(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_JEWELLERY);
 
-    // not known -> no pluses
+    // not known -> no plusses
     if (!item_type_known(item))
-        return 0;
+        return false;
 
     switch (item.sub_type)
     {
     case RING_SLAYING:
-        return 2;
-
     case RING_PROTECTION:
     case RING_EVASION:
     case RING_STRENGTH:
     case RING_INTELLIGENCE:
     case RING_DEXTERITY:
-        return 1;
+        return true;
 
     default:
         break;
     }
 
-    return 0;
+    return false;
 }
 
 // Returns true if having two rings of the same type on at the same
@@ -2492,7 +2502,7 @@ bool gives_resistance(const item_def &item)
  * Return the mass of an item (aum).
  *
  * @param item The item.
- * @returns The mass of the item.
+ * @return  The mass of the item.
 */
 int item_mass(const item_def &item)
 {
@@ -2699,6 +2709,7 @@ void seen_item(const item_def &item)
     }
 
     // major hack.  Deconstify should be safe here, but it's still repulsive.
+    ((item_def*)&item)->flags |= ISFLAG_SEEN;
     if (you_worship(GOD_ASHENZARI))
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)

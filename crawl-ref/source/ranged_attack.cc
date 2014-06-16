@@ -388,9 +388,9 @@ int ranged_attack::apply_damage_modifiers(int damage, int damage_max,
 bool ranged_attack::attack_ignores_shield(bool verbose)
 {
     if (is_launched(attacker, weapon, *projectile) != LRET_FUMBLED
-        && (weapon && get_weapon_brand(*weapon) == SPWPN_PENETRATION
-            || projectile->base_type == OBJ_MISSILES
-               && get_ammo_brand(*projectile) == SPMSL_PENETRATION))
+            && projectile->base_type == OBJ_MISSILES
+            && get_ammo_brand(*projectile) == SPMSL_PENETRATION
+        || using_weapon() && get_weapon_brand(*weapon) == SPWPN_PENETRATION)
     {
         if (verbose)
         {
@@ -422,8 +422,6 @@ bool ranged_attack::apply_damage_brand(const char *what)
             || brand == SPWPN_HOLY_WRATH
             || brand == SPWPN_ELECTROCUTION
             || brand == SPWPN_VENOM
-            || brand == SPWPN_FLAME
-            || brand == SPWPN_FROST
             || brand == SPWPN_CHAOS))
     {
         return false;
@@ -656,8 +654,7 @@ bool ranged_attack::apply_missile_brand()
         break;
     case SPMSL_FLAME:
         if (using_weapon()
-            && (get_weapon_brand(*weapon) == SPWPN_FROST
-                || get_weapon_brand(*weapon) == SPWPN_FREEZING))
+            && get_weapon_brand(*weapon) == SPWPN_FREEZING)
         {
             break;
         }
@@ -665,12 +662,11 @@ bool ranged_attack::apply_missile_brand()
                                     defender->is_icy() ? "melt" : "burn",
                                     projectile->name(DESC_THE).c_str());
         defender->expose_to_element(BEAM_FIRE);
-        attacker->god_conduct(DID_FIRE, 1);
+        attacker->god_conduct(DID_FIRE, 2);
         break;
     case SPMSL_FROST:
         if (using_weapon()
-            && (get_weapon_brand(*weapon) == SPWPN_FLAME
-                || get_weapon_brand(*weapon) == SPWPN_FLAMING))
+            && get_weapon_brand(*weapon) == SPWPN_FLAMING)
         {
             break;
         }

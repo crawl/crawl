@@ -6,6 +6,7 @@
 #include "branch.h"
 #include "env.h"
 #include "evoke.h"
+#include "food.h"
 #include "godabil.h"
 #include "godpassive.h"
 #include "libutil.h"
@@ -166,6 +167,11 @@ bool fill_status_info(int status, status_info* inf)
             inf->light_colour = DARKGREY;
         break;
 
+    case DUR_NO_POTIONS:
+        if (you_foodless(true))
+            inf->light_colour = DARKGREY;
+        break;
+
     case DUR_SWIFTNESS:
         if (you.attribute[ATTR_SWIFTNESS] < 0)
         {
@@ -272,17 +278,8 @@ bool fill_status_info(int status, status_info* inf)
 
     case DUR_CONFUSING_TOUCH:
     {
-        const int dur = you.duration[DUR_CONFUSING_TOUCH];
-        const int high = 40 * BASELINE_DELAY;
-        const int low  = 20 * BASELINE_DELAY;
-        inf->long_text = string("Your ") + you.hand_name(true) + " are glowing ";
-        if (dur > high)
-            inf->long_text += "an extremely bright ";
-        else if (dur > low)
-            inf->long_text += "bright ";
-        else
-           inf->long_text += "a soft ";
-        inf->long_text += "red.";
+        inf->long_text = string("Your ") + you.hand_name(true)
+                         + " are glowing red.";
         break;
     }
 

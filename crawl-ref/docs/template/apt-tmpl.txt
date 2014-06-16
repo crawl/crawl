@@ -1,16 +1,12 @@
 TABLES OF APTITUDES
 
 The following three tables describe all aptitudes of the various species
-for the various skills. These are not necessary for winning in Crawl,
-neither explicit nor implicit. The qualitative information behind this
-sheet (i.e., which species is good at which tasks) can be obtained in
-two other, less sophisticated ways:
+for the various skills. Knowledge, neither explicit nor implicit, of these
+are not necessary for winning in Crawl. The qualitative information behind
+this sheet (i.e., which species are good at which tasks) can be obtained in
+two other ways:
 - Read the species section in the manual about strengths and weaknesses.
-- Look at which combinations of species and background are recommended
-  (lightgrey).
-
-If you consider figuring out such things yourself to be fun, stop
-reading now. Otherwise, just go ahead.
+- Look at which combinations of species and background are recommended.
 
  -5  abysmal aptitude
  -4  terrible aptitude (learning half as fast as at 0 aptitude)
@@ -24,14 +20,9 @@ reading now. Otherwise, just go ahead.
  +4  outstanding aptitude (learning twice as fast as at 0 aptitude)
  +5  exceptional aptitude
 
-Please note that many things affect how quickly a character will
-actually learn a skill. Thus, the numbers below are good enough for
-comparisons among species, but not necessarily among skills.
-
 There are three special values: HP, MP and Experience:
 - The HP and MP values indicate the percentages of hit points and magic
-  points that are gained per level. 0 is the Human standard, -1 is 10%
-  fewer points, +1 is 10% more points, etc.
+  points that are gained per level, 100% being the Human standard.
 - The Experience value indicates how much experience has to be earned in
   order to gain a new level. +1 is the Human standard, and all other
   species (apart from Halfling and Kobold) are slower. These values use
@@ -57,7 +48,7 @@ Exp - experience             Crb - Crossbows             Ear - Earth Magic
                                                          Poi - Poison Magic
 
 
-                 Arm Ddg Sth Shd   Inv Evo            HP  MP  Exp
+                 Arm Ddg Sth Shd   Inv Evo           HP   MP   Exp
 ----------------------------------------------------------------------
 
 

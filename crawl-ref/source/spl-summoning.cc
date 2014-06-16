@@ -49,6 +49,7 @@
 #include "religion.h"
 #include "shout.h"
 #include "spl-util.h"
+#include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stuff.h"
@@ -807,18 +808,19 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
 {
     bool target_is_player = target == &you;
     item_def* wpn = target->weapon();
-    item_def cp = *wpn;
     if (target_is_player)
     {
-        // Clear temp branding so we don't brand permanently.
+        // Clear temp branding so we don't change the brand permanently.
         if (you.duration[DUR_WEAPON_BRAND])
         {
-            set_item_ego_type(cp, OBJ_WEAPONS, SPWPN_NORMAL);
+            ASSERT(you.weapon());
+            end_weapon_brand(*wpn);
+        }
 
         // Mark weapon as "thrown", so we'll autopickup it later.
-        }
-        cp.flags |= ISFLAG_THROWN;
+        wpn->flags |= ISFLAG_THROWN;
     }
+    item_def cp = *wpn;
     // Self-casting haunts yourself!
     const bool friendly = force_friendly || !target_is_player;
     const int dur = min(2 + (random2(pow) / 5), 6);
@@ -1346,7 +1348,7 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("SHT_int_loss").c_str());
-        lose_stat(STAT_INT, 1 + random2(3), false, "summoning horrible things");
+        lose_stat(STAT_INT, 1 + random2(2), false, "summoning horrible things");
     }
 
     int num_abominations = random_range(2, 4) + x_chance_in_y(pow, 200);
@@ -1407,7 +1409,7 @@ static bool _water_adjacent(coord_def p)
  * @param pow    The spell power.
  * @param god    The god of the summoned dryad (usually the caster's).
  * @param fail   Did this spell miscast? If true, abort the cast.
- * @returns      SPRET_ABORT if a summoning area couldn't be found,
+ * @return       SPRET_ABORT if a summoning area couldn't be found,
  *               SPRET_FAIL if one could be found but we miscast, and
  *               SPRET_SUCCESS if the spell was succesfully cast.
 */
@@ -1801,7 +1803,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     else if (mons_genus(zombie_type)    == MONS_SNAKE
              || mons_genus(zombie_type) == MONS_NAGA
              || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
-             || mons_genus(zombie_type) == MONS_GIANT_SLUG
+             || mons_genus(zombie_type) == MONS_ELEPHANT_SLUG
              || mons_genus(zombie_type) == MONS_GIANT_LEECH
              || mons_genus(zombie_type) == MONS_WORM)
     {
@@ -1995,296 +1997,154 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-// Simulacrum
-//
-// This spell extends creating undead to Ice mages, as such it's high
-// level, requires wielding of the material component, and the undead
-// aren't overly powerful (they're also vulnerable to fire).  I've put
-// back the abjuration level in order to keep down the army sizes again.
-//
-// As for what it offers necromancers considering all the downsides
-// above... it allows the turning of a single corpse into an army of
-// monsters (one per food chunk)... which is also a good reason for
-// why it's high level.
-//
-// Hides and other "animal part" items are intentionally left out, it's
-// unrequired complexity, and fresh flesh makes more "sense" for a spell
-// reforming the original monster out of ice anyway.
-
-static struct { monster_type mons; const char* name; } mystery_meats[] =
-{
-    { MONS_RAVEN, "crow" },
-    { MONS_YAK, "" },
-    { MONS_HOG, "" },
-    { MONS_SHEEP, "" },
-    { MONS_ELEPHANT, "" },
-    { MONS_YAK, "cow" },
-    { MONS_DEATH_YAK, "bull" },
-};
-
+/**
+ * Have the player cast simulacrum.
+ *
+ * @param pow The spell power.
+ * @param god The god casting the spell.
+ * @param fail If true, return SPRET_FAIL unless the spell is aborted.
+ * @returns SPRET_ABORT if no viable corpse was at the player's location,
+ *          otherwise SPRET_TRUE or SPRET_FAIL based on fail.
+ */
 spret_type cast_simulacrum(int pow, god_type god, bool fail)
 {
-    const item_def* flesh = you.weapon();
-
-    if (!flesh || flesh->base_type != OBJ_FOOD || !food_is_meaty(*flesh))
+    bool found = false;
+    int co = -1;
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        mpr("You need to wield a piece of raw flesh for this spell to be "
-            "effective!");
-        return SPRET_ABORT;
-    }
-
-    monster_type sim_type = MONS_PROGRAM_BUG;
-    string name;
-
-    switch (flesh->sub_type)
-    {
-    case FOOD_CHUNK:
-        sim_type = flesh->mon_type;
-        break;
-    case FOOD_BEEF_JERKY:
-        sim_type = random_choose_weighted(4, MONS_YAK,
-                                          5, MONS_DEATH_YAK,
-                                          1, MONS_MINOTAUR,
-                                          0);
-        if (sim_type == MONS_YAK)
-            name = "cow";
-        else if (sim_type == MONS_DEATH_YAK)
-            name = "bull";
-        break;
-    default:
-        // usual suspects for mystery meat's identity
+        if (si->base_type == OBJ_CORPSES
+            && si->sub_type == CORPSE_BODY
+            && mons_class_can_be_zombified(si->mon_type))
         {
-            const int which = random2(ARRAYSZ(mystery_meats));
-            sim_type = mystery_meats[which].mons;
-            name = mystery_meats[which].name;
+            found = true;
+            co = si->index();
         }
     }
 
-    if (!mons_class_can_be_zombified(sim_type))
+    if (!found)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        mpr("There is nothing here that can be animated!");
         return SPRET_ABORT;
     }
 
     fail_check();
+    canned_msg(MSG_ANIMATE_REMAINS);
 
-    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you,
-                 0, SPELL_SIMULACRUM,
-                 you.pos(), MHITYOU,
-                 MG_FORCE_BEH | MG_AUTOFOE, god,
-                 flesh->sub_type == FOOD_CHUNK ?
-                     static_cast<monster_type>(flesh->orig_monnum) :
-                     sim_type);
+    // How many simulacra can this particular monster give at maximum.
+    int num_sim  = 1 + random2(mons_weight(mitm[co].mon_type) / 150);
+    num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
-    // Can't create more than the available chunks.
+    mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
+                 you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god,
+                 mitm[co].mon_type);
+
+    // Can't create more than the max for the monster.
     int how_many = min(8, 4 + random2(pow) / 20);
-    how_many = min<int>(how_many, flesh->quantity);
-
+    how_many = min<int>(how_many, num_sim);
     int count = 0;
-
     for (int i = 0; i < how_many; ++i)
     {
         // Use the original monster type as the zombified type here,
         // to get the proper stats from it.
         if (monster *sim = create_monster(mg))
         {
-            if (!name.empty())
-            {
-                sim->mname = name;
-                sim->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR | MF_NAME_SPECIES;
-                sim->props["dbname"].get_string() = mons_class_name(MONS_SIMULACRUM);
-            }
-
             count++;
-
-            dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
-
             player_angers_monster(sim);
             sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
         }
     }
 
-    if (!count)
+    if (count)
+        turn_corpse_into_skeleton(mitm[co]);
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
 }
 
-static void _apport_and_butcher(monster *caster, item_def &item)
+/**
+ * Have a monster cast simulacrum.
+ *
+ * @param mon The monster casting the spell.
+ * @param actual If false, return true if the spell would have succeeded on at
+ *               least one corpse, but don't cast.
+ * @returns True if at least one simulacrum was created, or if actual is true,
+ *          if one would have been created.
+ */
+bool monster_simulacrum(monster *mon, bool actual)
 {
-    ASSERT(caster->inv[MSLOT_MISCELLANY] == NON_ITEM);
-    bool apported = false;
+    // You can see the spell being cast, not necessarily the caster.
+    const bool cast_visible = you.see_cell(mon->pos());
+    bool did_creation = false;
+    int num_seen = 0;
 
-    if (item.pos != caster->pos())
-    {
-        apported = true;
-        const string item_name = item.name(DESC_A);
-
-        string theft;
-        if (is_being_drained(item))
-            theft = " you were drinking from";
-        else if (is_being_butchered(item))
-            theft = " you were butchering";
-
-        if (you.can_see(caster))
-        {
-            mprf("%s casts a spell and %s%s float%s close.",
-                 caster->name(DESC_THE).c_str(),
-                 item_name.c_str(),
-                 theft.c_str(),
-                 item.quantity > 1 ? "" : "s");
-        }
-        else if (you.see_cell(item.pos))
-        {
-            mprf("%s%s suddenly rise%s and float%s away!",
-                 item_name.c_str(),
-                 theft.c_str(),
-                 item.quantity > 1 ? "" : "s",
-                 item.quantity > 1 ? "" : "s");
-        }
-        if (!theft.empty())
-            xom_is_stimulated(100);
-    }
-
-    // Monsters get to pick up items as a free action elsewhere so let's
-    // exploit that here.  No Apportation tug of war, Animate Dead or Corpse
-    // Rot as guaranteed defense.
-    if (you.see_cell(caster->pos()))
-    {
-        mprf("%s picks up %s%s.",
-             caster->name(DESC_THE).c_str(),
-             item.name(apported ? DESC_THE : DESC_A).c_str(),
-             item.base_type == OBJ_CORPSES ? " and starts butchering it"
-                                           : "");
-    }
-
-    if (item.base_type == OBJ_CORPSES)
-    {
-        // Butchering takes a long time, though.
-        caster->lose_energy(EUT_SPECIAL, 1, 4);
-        butcher_corpse(item);
-    }
-
-    if (!caster->pickup_item(item, 0, true))
-    {
-        mprf(MSGCH_ERROR,
-             "ERROR: monster %s can't pick up simulacrum ingredients (%s).",
-             caster->name(DESC_PLAIN).c_str(),
-             item.name(DESC_PLAIN).c_str());
-        return;
-    }
-
-    ASSERT(item.is_valid());
-}
-
-// Monsters who get Simulacrum automatically know Apportation as well, just
-// like those with summoning spells get Abjuration.
-bool monster_simulacrum(monster *caster, bool actual)
-{
     dprf("trying to cast simulacrum");
-    bool need_drop = false;
-    if (caster->inv[MSLOT_MISCELLANY] != NON_ITEM)
+    for (radius_iterator ri(mon->pos(), LOS_NO_TRANS); ri; ++ri)
     {
-        item_def& item(mitm[caster->inv[MSLOT_MISCELLANY]]);
-        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
-            && mons_class_can_be_zombified(item.mon_type))
+
+        // Search all the items on the ground for a corpse.
+        for (stack_iterator si(*ri, true); si; ++si)
         {
+
+            if (si->base_type != OBJ_CORPSES
+                || si->sub_type != CORPSE_BODY
+                || !mons_class_can_be_zombified(si->mon_type))
+            {
+                continue;
+            }
+
             if (!actual)
                 return true;
 
-            // You can see the spell being cast, not necessarily the caster.
-            bool cast_visible = you.see_cell(caster->pos());
-
-            monster_type sim_type = item.mon_type;
-
-            // Can't create more than the available chunks.
-            int how_many = min(8, 4 + random2(100) / 20);
-            how_many = min<int>(how_many, item.quantity);
-
-            int created = 0;
-            int seen = 0;
-
-            sim_type = static_cast<monster_type>(item.orig_monnum);
-
+            int co = si->index();
+            // Create half as many as the player version.
+            int how_many = 1 + random2(mons_weight(mitm[co].mon_type) / 300);
+            how_many  = stepdown_value(how_many, 2, 2, 6, 6);
+            bool was_draining = is_being_drained(*si);
+            bool was_butchering = is_being_butchered(*si);
+            bool was_successful = false;
             for (int i = 0; i < how_many; ++i)
             {
                 // Use the original monster type as the zombified type here,
                 // to get the proper stats from it.
                 if (monster *sim = create_monster(
-                        mgen_data(MONS_SIMULACRUM, SAME_ATTITUDE(caster), caster,
-                                  0, SPELL_SIMULACRUM,
-                                  caster->pos(), caster->foe,
-                                  MG_FORCE_BEH | (cast_visible ? MG_DONT_COME : 0),
-                                  caster->god,
-                                  sim_type)))
+                        mgen_data(MONS_SIMULACRUM, SAME_ATTITUDE(mon), mon, 0,
+                                  SPELL_SIMULACRUM, *ri, mon->foe,
+                                  MG_FORCE_BEH
+                                  | (cast_visible ? MG_DONT_COME : 0),
+                                  mon->god,
+                                  mitm[co].mon_type)))
                 {
-                    created++;
-
-                    if (dec_mitm_item_quantity(item.index(), 1))
-                        caster->inv[MSLOT_MISCELLANY] = NON_ITEM;
-
+                    was_successful = true;
                     player_angers_monster(sim);
-
                     sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
                     if (you.can_see(sim))
-                        seen++;
+                        num_seen++;
                 }
             }
 
-            if (cast_visible)
+            if (was_successful)
             {
-                if (seen > 1)
+                did_creation = true;
+                turn_corpse_into_skeleton(mitm[co]);
+                // Ignore quiet.
+                if (was_butchering || was_draining)
                 {
-                    mprf("%s creates some ice likenesses of %s.",
-                         caster->name(DESC_THE).c_str(),
-                         pluralise(mons_class_name(sim_type)).c_str());
+                    mprf("The flesh of the corpse you are %s vaporises!",
+                         was_draining ? "drinking from" : "butchering");
+                    xom_is_stimulated(200);
                 }
-                else if (seen == 1)
-                {
-                    const char *name = mons_class_name(sim_type);
-                    mprf("%s creates an ice likeness of %s.",
-                         caster->name(DESC_THE).c_str(),
-                         article_a(name).c_str());
-                }
-            }
-            // if the cast was not visible, you get "comes into view" instead
 
-            // Always return -- if we have chunks but there is no space to
-            // create simulacra, obtaining more would have to be restricted
-            // only to the same monster type.
-            return created;
-        }
-
-        // a non-chunk
-        need_drop = true;
-    }
-
-    // need to be able to pick up the apported corpse
-    if (feat_virtually_destroys_item(grd(caster->pos()), item_def()))
-        return false;
-
-    for (distance_iterator di(caster->pos(), true, false, LOS_RADIUS); di; ++di)
-    {
-        if (!cell_see_cell(caster->pos(), *di, LOS_NO_TRANS))
-            continue;
-        for (stack_iterator si(*di); si; ++si)
-        {
-            if ((si->base_type == OBJ_FOOD && si->sub_type == FOOD_CHUNK
-                 || si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-                && mons_class_can_be_zombified(si->mon_type))
-            {
-                dprf("found %s", si->name(DESC_PLAIN).c_str());
-                if (actual)
-                {
-                    if (need_drop)
-                        caster->drop_item(MSLOT_MISCELLANY, -1);
-                    _apport_and_butcher(caster, *si);
-                }
-                return true;
             }
         }
     }
-    return false;
+
+    if (num_seen > 1)
+        mprf("Some icy apparitions appear!");
+    else if (num_seen == 1)
+        mprf("An icy apparition appears!");
+
+    return did_creation;
 }
 
 // Return a definite/indefinite article for (number) things.

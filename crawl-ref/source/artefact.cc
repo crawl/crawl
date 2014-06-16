@@ -129,7 +129,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     else if (is_good_god(which_god)
              && (brand == SPWPN_DRAINING
                  || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRICISM
+                 || brand == SPWPN_VAMPIRISM
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
@@ -224,7 +224,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     case GOD_DITHMENOS:
         // No fiery weapons.
         if (item.base_type == OBJ_WEAPONS
-            && (brand == SPWPN_FLAME || brand == SPWPN_FLAMING))
+            && brand == SPWPN_FLAMING)
         {
             return false;
         }
@@ -519,10 +519,8 @@ void artefact_desc_properties(const item_def &item,
         break;
 
     case RING_SLAYING:
-        fake_rap   = ARTP_ACCURACY;
-        fake_plus  = item.plus;
-        fake_rap2  = ARTP_DAMAGE;
-        fake_plus2 = item.plus2;
+        fake_rap  = ARTP_SLAYING;
+        fake_plus = item.plus;
         break;
 
     case RING_SEE_INVISIBLE:
@@ -665,12 +663,11 @@ static int _randart_add_one_property(const item_def &item,
 }
 
 // An artefact will pass this check if it has any non-stat properties, and
-// also if it has enough stat (Str, Dex, Int, Acc, Dam) properties.
+// also if it has enough stat properties (AC, EV, Str, Dex, Int).
 // Returns how many (more) stat properties we need to add.
 static int _need_bonus_stat_props(const artefact_properties_t &proprt)
 {
     int num_stats   = 0;
-    int num_acc_dam = 0;
 
     for (int i = 0; i < ARTP_NUM_PROPERTIES; i++)
     {
@@ -682,13 +679,9 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
 
         if (i >= ARTP_AC && i <= ARTP_DEXTERITY)
             num_stats++;
-        else if (i >= ARTP_ACCURACY && i <= ARTP_DAMAGE)
-            num_acc_dam++;
         else
             return 0;
     }
-
-    num_stats += num_acc_dam;
 
     // If an artefact has no properties at all, something is wrong.
     if (num_stats == 0)
@@ -699,10 +692,7 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
         return 0;
 
     // If an artefact has exactly one stat property, we might want to add
-    // some more. (66% chance if it's Acc/Dam, else always.)
-    if (num_acc_dam > 0)
-        return random2(3);
-
+    // some more.
     return 1 + random2(2);
 }
 
@@ -718,7 +708,7 @@ static void _get_randart_properties(const item_def &item,
     else if (aclass == OBJ_JEWELLERY)
         power_level = 1 + random2(3) + random2(2);
     else // OBJ_WEAPON
-        power_level = item.plus / 3 + item.plus2 / 3;
+        power_level = item.plus / 3;
 
     if (power_level < 0)
         power_level = 0;
@@ -735,8 +725,8 @@ static void _get_randart_properties(const item_def &item,
                 2, SPWPN_SPEED,
                 4, SPWPN_VENOM,
                 4, SPWPN_VORPAL,
-                4, SPWPN_FLAME,
-                4, SPWPN_FROST,
+                4, SPWPN_FLAMING,
+                4, SPWPN_FREEZING,
                 0);
 
             if (atype == WPN_BLOWGUN)
@@ -758,7 +748,7 @@ static void _get_randart_properties(const item_def &item,
                 SPWPN_FLAMING,
                 SPWPN_FREEZING,
                 SPWPN_ELECTROCUTION,
-                SPWPN_VAMPIRICISM,
+                SPWPN_VAMPIRISM,
                 SPWPN_PAIN,
                 SPWPN_VENOM,
                 -1);
@@ -777,7 +767,7 @@ static void _get_randart_properties(const item_def &item,
                 13, SPWPN_HOLY_WRATH,
                 13, SPWPN_ELECTROCUTION,
                 13, SPWPN_SPEED,
-                13, SPWPN_VAMPIRICISM,
+                13, SPWPN_VAMPIRISM,
                 13, SPWPN_PAIN,
                 13, SPWPN_ANTIMAGIC,
                  3, SPWPN_DISTORTION,
@@ -840,25 +830,13 @@ static void _get_randart_properties(const item_def &item,
         && (aclass != OBJ_JEWELLERY || atype != RING_SLAYING))
     {
         // Weapons and rings of slaying can't get these.
-        if (one_chance_in(4 + power_level))  // to-hit
-        {
-            proprt[ARTP_ACCURACY] = 2 + random2(3) + random2(3);
-            power_level++;
-            if (one_chance_in(4))
-            {
-                proprt[ARTP_ACCURACY] -= 2 + random2(4) + random2(4)
-                                           + random2(3);
-                power_level--;
-            }
-        }
-
         if (one_chance_in(4 + power_level))  // to-dam
         {
-            proprt[ARTP_DAMAGE] = 2 + random2(3) + random2(3);
+            proprt[ARTP_SLAYING] = 2 + random2(3) + random2(3);
             power_level++;
             if (one_chance_in(4))
             {
-                proprt[ARTP_DAMAGE] -= 2 + random2(4) + random2(4)
+                proprt[ARTP_SLAYING] -= 2 + random2(4) + random2(4)
                                          + random2(3);
                 power_level--;
             }
@@ -1200,7 +1178,6 @@ void setup_unrandart(item_def &item)
     item.base_type = unrand->base_type;
     item.sub_type  = unrand->sub_type;
     item.plus      = unrand->plus;
-    item.plus2     = unrand->plus2;
     item.colour    = unrand->colour;
 }
 
@@ -1646,7 +1623,6 @@ static bool _randart_is_redundant(const item_def &item,
         return false;
 
     artefact_prop_type provides  = ARTP_NUM_PROPERTIES;
-    artefact_prop_type provides2 = ARTP_NUM_PROPERTIES;
 
     switch (item.sub_type)
     {
@@ -1673,8 +1649,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case RING_SLAYING:
-        provides  = ARTP_DAMAGE;
-        provides2 = ARTP_ACCURACY;
+        provides  = ARTP_SLAYING;
         break;
 
     case RING_SEE_INVISIBLE:
@@ -1726,7 +1701,7 @@ static bool _randart_is_redundant(const item_def &item,
         break;
 
     case AMU_INACCURACY:
-        provides = ARTP_ACCURACY;
+        provides = ARTP_SLAYING;
         break;
 
     case AMU_STASIS:
@@ -1738,12 +1713,6 @@ static bool _randart_is_redundant(const item_def &item,
         return false;
 
     if (proprt[provides] != 0)
-        return true;
-
-    if (provides2 == ARTP_NUM_PROPERTIES)
-        return false;
-
-    if (proprt[provides2] != 0)
         return true;
 
     return false;
@@ -1954,12 +1923,12 @@ static void _igni_add_prop(item_def& wpn, _igni_artp_def def)
         if ((short)rap[ARTP_BRAND] == 0 ||
             (short)rap[ARTP_BRAND] == SPWPN_NORMAL)
         {
-            def.prop = ARTP_DAMAGE;
+            def.prop = ARTP_SLAYING;
             def.value = 3;
         }
     }
 
-    if (def.prop == ARTP_DAMAGE)
+    if (def.prop == ARTP_SLAYING)
     {
         if (wpn.sub_type != WPN_BLOWGUN)
             wpn.plus2 += def.value;
@@ -2069,7 +2038,7 @@ vector<igni_art> make_igni_randarts(const item_def& wpn)
         { ARTP_MAGIC, 100 },
         { ARTP_BRAND, SPWPN_PENETRATION, true },
         { ARTP_REGENERATION, 40 },
-        { ARTP_DAMAGE, 5 },
+        { ARTP_SLAYING, 5 },
     };
 
     _igni_artp_def cheap_tier[] =
@@ -2081,7 +2050,7 @@ vector<igni_art> make_igni_randarts(const item_def& wpn)
         { ARTP_NEGATIVE_ENERGY, 1 },
         { ARTP_MAGIC, 40 },
         { ARTP_EYESIGHT, 1 },
-        { ARTP_DAMAGE, 3 },
+        { ARTP_SLAYING, 3 },
         { ARTP_MAGICAL_POWER, 5 },
         { ARTP_BRAND, SPWPN_EVASION, true },
     };
@@ -2092,10 +2061,10 @@ vector<igni_art> make_igni_randarts(const item_def& wpn)
         { ARTP_COLD, 2 },
         { ARTP_NEGATIVE_ENERGY, 2 },
         { ARTP_RMSL, 1 },
-        { ARTP_DAMAGE, 8 },
+        { ARTP_SLAYING, 8 },
         { ARTP_BRAND, SPWPN_SPEED, true },
         { ARTP_BRAND, is_range_weapon(wpn) ? SPWPN_SPEED
-                                           : SPWPN_VAMPIRICISM, true },
+                                           : SPWPN_VAMPIRISM, true },
         { ARTP_BRAND, SPWPN_ELECTROCUTION, true },
     };
 
@@ -2109,7 +2078,7 @@ vector<igni_art> make_igni_randarts(const item_def& wpn)
         { ARTP_COLD, -1 },
         { ARTP_MUTAGENIC, 1 },
         { ARTP_NOISES, 3 },
-        { ARTP_DAMAGE, -3 },
+        { ARTP_SLAYING, -3 },
         { ARTP_BRAND, SPWPN_VENOM, true },
         { ARTP_BRAND, SPWPN_CHAOS, true },
         { ARTP_BRAND, SPWPN_NORMAL, true },
@@ -2313,10 +2282,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     _set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
     if (unrand_index == UNRAND_VARIABILITY)
-    {
-        item.plus  = random_range(-4, 16);
-        item.plus2 = random_range(-4, 16);
-    }
+        item.plus = random_range(-4, 16);
     else if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
@@ -2341,8 +2307,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 void unrand_reacts()
 {
     item_def*  weapon     = you.weapon();
-    const int  old_plus   = weapon ? weapon->plus   : 0;
-    const int  old_plus2  = weapon ? weapon->plus2  : 0;
+    const int  old_plus   = weapon ? weapon->plus : 0;
 
     for (int i = 0; i < NUM_EQUIP; i++)
     {
@@ -2355,7 +2320,7 @@ void unrand_reacts()
         }
     }
 
-    if (weapon && (old_plus != weapon->plus || old_plus2 != weapon->plus2))
+    if (weapon && (old_plus != weapon->plus))
         you.wield_change = true;
 }
 

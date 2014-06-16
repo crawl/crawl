@@ -171,7 +171,7 @@ public:
     virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other, bool ranged = false) = 0;
     virtual bool can_go_berserk() const = 0;
-    virtual void go_berserk(bool intentional, bool potion = false) = 0;
+    virtual bool go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
@@ -280,7 +280,6 @@ public:
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid(bool calc_unid = true) const = 0;
     virtual int res_fire() const = 0;
-    virtual int res_holy_fire() const;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
@@ -309,7 +308,7 @@ public:
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
     virtual bool clarity(bool calc_unid = true, bool items = true) const;
-    virtual bool faith(bool calc_unid = true, bool items = true) const;
+    virtual int faith(bool calc_unid = true, bool items = true) const;
     virtual bool warding(bool calc_unid = true, bool items = true) const;
     virtual int archmagi(bool calc_unid = true, bool items = true) const;
     virtual bool no_cast(bool calc_unid = true, bool items = true) const;

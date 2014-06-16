@@ -61,10 +61,6 @@ A crawl-hole back to the Lair
 Un passage qui mène vers des endroits moins exiguës et avec moins de toiles
 d'araignée.
 %%%%
-A dart trap
-
-Ce piège peut tirer des piques de métal relativement faibles.
-%%%%
 A deep blue altar of Sif Muna
 
 Un autel du bleu le plus pur, couvert de motifs complexes et d'écrits d'une

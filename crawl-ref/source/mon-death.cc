@@ -873,9 +873,9 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         // Mummy killed by trap or something other than the player or
         // another monster, so no curse.
         case KILL_MISC:
-        // Mummy sent to the Abyss wasn't actually killed, so no curse.
         case KILL_RESET:
         case KILL_DISMISSED:
+        // Mummy sent to the Abyss wasn't actually killed, so no curse.
         case KILL_BANISHED:
             return;
 
@@ -897,31 +897,26 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
             return;
     }
 
-    // beam code might give an index of MHITYOU for the player.
-    if (YOU_KILL(killer))
-        index = NON_MONSTER;
-
-    // Killed by a Zot trap, a god, etc.
-    if (index != NON_MONSTER && invalid_monster_index(index))
-        return;
-
     actor* target;
-    if (index == NON_MONSTER)
+
+    if (YOU_KILL(killer))
         target = &you;
+    // Killed by a Zot trap, a god, etc, or suicide.
+    else if (invalid_monster_index(index) || index == mons->mindex())
+        return;
     else
-    {
-        // Mummies committing suicide don't cause a death curse.
-        if (index == mons->mindex())
-            return;
         target = &menv[index];
-    }
 
     // Mummy was killed by a giant spore or ball lightning?
     if (!target->alive())
         return;
 
+    // Mummies are smart enough not to waste curses on summons or allies.
+    if (target->is_monster() && target->as_monster()->friendly())
+        target = &you;
+
     if ((mons->type == MONS_MUMMY || mons->type == MONS_MENKAURE)
-        && YOU_KILL(killer))
+        && target->is_player())
     {
         // Kiku protects you from ordinary mummy curses.
         if (you_worship(GOD_KIKUBAAQUDGHA) && !player_under_penance()
@@ -936,7 +931,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     }
     else
     {
-        if (index == NON_MONSTER)
+        if (target->is_player())
             mprf(MSGCH_MONSTER_SPELL, "You feel extremely nervous for a moment...");
         else if (you.can_see(target))
         {
@@ -990,6 +985,9 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.noise_msg = "You hear a clap of thunder!";
     beam.colour    = LIGHTCYAN;
     beam.ex_size   = x_chance_in_y(origin.hit_dice, 24) ? 3 : 2;
+    // Don't credit the player for ally-summoned ball lightning explosions.
+    if (origin.summoner && origin.summoner != MID_PLAYER)
+        beam.thrower = KILL_MON;
 }
 
 static void _setup_prism_explosion(bolt& beam, const monster& origin)
@@ -1647,21 +1645,11 @@ int monster_die(monster* mons, killer_type killer,
             mprf(MSGCH_GOD, GOD_TROG,
                  "You feel the power of Trog in you as your rage grows.");
         }
-        else if (player_equip_unrand(UNRAND_BLOODLUST))
-        {
-            if (coinflip())
-            {
-                const int bonus = (2 + random2(4)) / 2;
-                you.increase_duration(DUR_BERSERK, bonus);
-                mpr("The necklace of Bloodlust glows a violent red.");
-            }
-        }
-        else if (you.wearing(EQ_AMULET, AMU_RAGE)
-                 && one_chance_in(30))
+        else if (player_equip_unrand(UNRAND_BLOODLUST) && coinflip())
         {
             const int bonus = (2 + random2(4)) / 2;
             you.increase_duration(DUR_BERSERK, bonus);
-            mpr("Your amulet glows a violent red.");
+            mpr("The necklace of Bloodlust glows a violent red.");
         }
     }
 
@@ -1829,6 +1817,7 @@ int monster_die(monster* mons, killer_type killer,
     const bool exploded      = mons->flags & MF_EXPLODE_KILL;
 
     const bool created_friendly = testbits(mons->flags, MF_NO_REWARD);
+    const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
           bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
     mon_holy_type targ_holy = mons->holiness();
 
@@ -1845,8 +1834,11 @@ int monster_die(monster* mons, killer_type killer,
 
     // Adjust song of slaying bonus
     // Kills by the spectral weapon should be adjusted by this point to be
-    // kills by the player --- so kills by the spectral weapon are considered here as well
-    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && !mons->is_summoned() && gives_xp)
+    // kills by the player --- so kills by the spectral weapon are considered
+    // here as well
+    if (killer == KILL_YOU && you.duration[DUR_SONG_OF_SLAYING] && gives_xp
+        && !mons->has_ench(ENCH_ABJ) && !fake_abjuration && !created_friendly
+        && !was_neutral)
     {
         int sos_bonus = you.props["song_of_slaying_bonus"].get_int();
         mon_threat_level_type threat = mons_threat_level(mons, true);
@@ -1866,8 +1858,8 @@ int monster_die(monster* mons, killer_type killer,
         case KILL_YOU_MISSILE:  // You kill by missile or beam.
         case KILL_YOU_CONF:     // You kill by confusion.
         {
-            const bool bad_kill    = god_hates_killing(you.religion, mons);
-            const bool was_neutral = testbits(mons->flags, MF_WAS_NEUTRAL);
+            const bool bad_kill    = god_hates_killing(you.religion, mons)
+                                     && killer_index != YOU_FAULTLESS;
             const bool good_kill   = gives_xp && !created_friendly;
 
             if (death_message)
@@ -1957,7 +1949,7 @@ int monster_die(monster* mons, killer_type killer,
 
                 // Jiyva hates you killing slimes, but eyeballs
                 // mutation can confuse without you meaning it.
-                if (mons_is_slime(mons) && killer != KILL_YOU_CONF)
+                if (mons_is_slime(mons) && killer != KILL_YOU_CONF && bad_kill)
                 {
                     did_god_conduct(DID_KILL_SLIME, mons->hit_dice,
                                     true, mons);
@@ -2542,7 +2534,7 @@ int monster_die(monster* mons, killer_type killer,
 
         if (mons->type == MONS_SPRIGGAN_RIDER)
         {
-            corpse2 = mounted_kill(mons, MONS_FIREFLY, killer, killer_index);
+            corpse2 = mounted_kill(mons, MONS_YELLOW_WASP, killer, killer_index);
             mons->type = MONS_SPRIGGAN;
         }
         corpse = place_monster_corpse(mons, silent);
@@ -2948,7 +2940,7 @@ string summoned_poof_msg(const monster* mons, const item_def &item)
  * Pikelness to be transferred through polymorph.
  *
  * @param mons    The monster to be checked.
- * @returns       True if the monster is Pikel, otherwise false.
+ * @return        True if the monster is Pikel, otherwise false.
 **/
 bool mons_is_pikel(monster* mons)
 {
@@ -2994,7 +2986,7 @@ void pikel_band_neutralise()
  * tracking through polymorph.
  *
  * @param mons    The monster to check.
- * @returns       True if Kirke, false otherwise.
+ * @return        True if Kirke, false otherwise.
 **/
 bool mons_is_kirke(monster* mons)
 {
@@ -3075,7 +3067,7 @@ void hogs_to_humans()
  * Tracks through type and original_name, thus tracking through polymorph.
  *
  * @param mons    The monster to check.
- * @returns       True if Dowan, otherwise false.
+ * @return        True if Dowan, otherwise false.
 **/
 bool mons_is_dowan(const monster* mons)
 {
@@ -3090,7 +3082,7 @@ bool mons_is_dowan(const monster* mons)
  * Tracks through type and original_name, thus tracking through polymorph.
  *
  * @param mons    The monster to check.
- * @returns       True if Duvessa, otherwise false.
+ * @return        True if Duvessa, otherwise false.
 **/
 bool mons_is_duvessa(const monster* mons)
 {
@@ -3107,7 +3099,7 @@ bool mons_is_duvessa(const monster* mons)
  * death function should be called for the monster in question.
  *
  * @param mons    The monster to check.
- * @returns       True if either Dowan or Duvessa, otherwise false.
+ * @return        True if either Dowan or Duvessa, otherwise false.
 **/
 bool mons_is_elven_twin(const monster* mons)
 {

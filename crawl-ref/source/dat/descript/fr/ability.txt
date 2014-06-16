@@ -629,10 +629,6 @@ peuvent être hostile jusqu'à ce que votre réputation soit plus grande !
 Tous les autres dieux détestent Beogh, et ne prennent pas à la légère la
 désertion.
 %%%%
-Make dart trap ability
-
-Crée un piège à dards sur la position ciblée.
-%%%%
 Make oklob sapling ability
 
 Plante un jeune oklob, avec la capacité de cracher de l'acide, sur la position

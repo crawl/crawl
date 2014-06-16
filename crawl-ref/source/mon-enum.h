@@ -103,7 +103,7 @@ enum attack_flavour
     AF_KLOWN,
     AF_DISTORT,
     AF_RAGE,
-    AF_NAPALM,
+    AF_STICKY_FLAME,
     AF_CHAOS,
     AF_STEAL,
 #if TAG_MAJOR_VERSION == 34

@@ -229,7 +229,6 @@ static void _olgreb_pluses(item_def *item)
     // Giving Olgreb's staff a little lift since staves of poison have
     // been made better. -- bwr
     item->plus  = you.skill(SK_POISON_MAGIC) / 3;
-    item->plus2 = item->plus;
 }
 
 static void _OLGREB_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -307,7 +306,6 @@ static void _OLGREB_melee_effects(item_def* weapon, actor* attacker,
 static void _power_pluses(item_def *item)
 {
     item->plus  = min(you.hp / 10, 27);
-    item->plus2 = item->plus;
 }
 
 static void _POWER_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -525,20 +523,12 @@ static void _VARIABILITY_world_reacts(item_def *item)
     do_uncurse_item(*item);
 
     if (x_chance_in_y(2, 5))
-        item->plus  += (coinflip() ? +1 : -1);
-
-    if (x_chance_in_y(2, 5))
-        item->plus2 += (coinflip() ? +1 : -1);
+        item->plus += (coinflip() ? +1 : -1);
 
     if (item->plus < -4)
         item->plus = -4;
     else if (item->plus > 16)
         item->plus = 16;
-
-    if (item->plus2 < -4)
-        item->plus2 = -4;
-    else if (item->plus2 > 16)
-        item->plus2 = 16;
 }
 
 ///////////////////////////////////////////////////
@@ -716,9 +706,10 @@ static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
     dprf("Killed a drac with hd %d.", hd);
     bool boosted = false;
     if (weapon->plus < hd)
-        weapon->plus++, boosted = true;
-    if (weapon->plus2 < hd)
-        weapon->plus2++, boosted = true;
+    {
+        weapon->plus++;
+        boosted = true;
+    }
     if (boosted)
     {
         mprf("<green>The lance glows as it skewers %s.</green>",

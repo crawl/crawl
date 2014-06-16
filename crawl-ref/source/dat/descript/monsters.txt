@@ -1059,10 +1059,6 @@ elephant
 A large, thick-hided pachyderm. It crushes its foes and then thrashes them with
 its trunk.
 %%%%
-elephant slug
-
-A grey gastropod of impressive size, with folds upon folds of wrinkled skin.
-%%%%
 elf
 
 An elf, a member of an ancient fey race. Elves are slightly built when compared
@@ -1187,6 +1183,11 @@ gargoyle
 
 A granite statue of a hideous winged monster, somehow brought to life.
 %%%%
+ghost crab
+
+A close relative of the fire crab, twisted by proximity to negative energy.
+Apparitions of the dead swirl around it, only barely visible.
+%%%%
 ghost moth
 
 A vile interdimensional predator that feeds on the life force of living beings.
@@ -1219,12 +1220,6 @@ giant eyeball
 A giant floating eyeball, with a gaze that can paralyse even the most
 strong-willed of adventurers. Some say giant eyeballs are servitors of Jiyva.
 %%%%
-giant firefly
-
-Unlike its mundane counterparts that are merely half an inch big, this enormous
-flying bug is large enough to be ridden by some spriggans. When threatened, it
-can flash warning signals to its kin (and anyone else close enough to observe).
-%%%%
 giant frog
 
 A large and unusually aggressive amphibian that can cover distance rapidly by
@@ -1253,10 +1248,6 @@ giant orange brain
 
 A huge wrinkled brain, floating just off the floor and glowing with mutagenic
 energies. Every now and then it seems to pulsate.
-%%%%
-giant slug
-
-A huge and disgusting gastropod, squirming slowly across the dungeon floor.
 %%%%
 giant spore
 
@@ -1618,7 +1609,7 @@ are too big to embrace a small creature like you.
 large abomination
 
 A large and hideous conglomeration of mangled body parts, demonically possessed
-and altered in ways that challenge your sanity.
+and altered in ways that challenge sanity.
 %%%%
 lava snake
 
@@ -1723,11 +1714,6 @@ body.
 monstrous demonspawn
 
 <demonspawn>
-%%%%
-moth
-
-Although this moth is unusually large and aggressive, it is quite mundane
-compared to most moths found in the dungeon.
 %%%%
 moth of wrath
 
@@ -2369,8 +2355,8 @@ who so much as snaps a twig.
 %%%%
 spriggan rider
 
-Mounted on giant fireflies, these riders make sure no one who dares to intrude
-on the spriggan forests and cairns will be able to just walk away.
+Mounted on wasps, these cruel riders make sure anyone who dares to intrude on
+the spriggan fens and cairns will regret it.
 %%%%
 starcursed mass
 
@@ -3005,6 +2991,12 @@ oklob sapling wizard
 
 <oklob plant annihilator>
 %%%%
+orb beetle
+
+A monstrously big beetle who apparently ate a mighty conjurer, or maybe an orb
+spider. Or perhaps it's a product of divine experiments, in which case it looks
+like Xom's handiwork...
+%%%%
 orb of electricity
 
 A massive floating ball. It resembles ball lightning, but looks far more
@@ -3020,12 +3012,6 @@ A globe of primordial ice, floating in the air. You don't know whether the
 tales about the world's once being a void bracketed by realms of endless fire
 and cold are true, but if they are, this orb may be a relic of that ancient
 time.
-%%%%
-orb slug
-
-A monstrously big slug who apparently ate a mighty conjurer, or maybe an orb
-spider. Or perhaps it's a product of divine experiments, in which case it looks
-like Xom's handiwork...
 %%%%
 petrified plant
 

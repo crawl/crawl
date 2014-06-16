@@ -326,8 +326,10 @@ static int8_t _prop_type[] =
     ARTP_VAL_POS,  //METABOLISM
 #endif
     ARTP_VAL_POS,  //MUTAGENIC
+#if TAG_MAJOR_VERSION == 34
     ARTP_VAL_ANY,  //ACCURACY
-    ARTP_VAL_ANY,  //DAMAGE
+#endif
+    ARTP_VAL_ANY,  //SLAYING
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
     ARTP_VAL_ANY,  //MAGICAL_POWER
@@ -1137,7 +1139,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "vorpal",
             "flame",
             "frost",
-            "vampiricism",
+            "vampirism",
             "pain",
             "antimagic",
             "distortion",
@@ -1385,8 +1387,10 @@ static void _debug_rap_stats(FILE *ostat)
          0, //ARTP_METABOLISM
 #endif
         -1, //ARTP_MUTAGENIC
+#if TAG_MAJOR_VERSION == 34
          0, //ARTP_ACCURACY
-         0, //ARTP_DAMAGE
+#endif
+         0, //ARTP_SLAYING
         -1, //ARTP_CURSED
          0, //ARTP_STEALTH
          0, //ARTP_MAGICAL_POWER
@@ -1543,8 +1547,10 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_METABOLISM",
 #endif
         "ARTP_MUTAGENIC",
+#if TAG_MAJOR_VERSION == 34
         "ARTP_ACCURACY",
-        "ARTP_DAMAGE",
+#endif
+        "ARTP_SLAYING",
         "ARTP_CURSED",
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",

@@ -25,6 +25,7 @@
 #include "fineff.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -48,6 +49,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h" // for item values
+#include "shout.h"
 #include "spl-book.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -60,10 +62,8 @@
 #include "terrain.h"
 #include "throw.h"
 #include "traps.h"
-#include "hints.h"
 #include "view.h"
 #include "viewchar.h"
-#include "shout.h"
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
@@ -1243,7 +1243,6 @@ static bool _handle_rod(monster *mons, bolt &beem)
     bool was_visible = you.can_see(mons);
 
     bool check_validity   = true;
-    bool is_direct_effect = false;
     spell_type mzap       = SPELL_NO_SPELL;
     int rate              = 0;
 
@@ -1318,32 +1317,18 @@ static bool _handle_rod(monster *mons, bolt &beem)
         zap = mons_should_fire(beem);
     }
 
-    if (is_direct_effect)
-    {
-        actor* foe = mons->get_foe();
-        if (!foe)
-            return false;
-        _rod_fired_pre(mons);
-        direct_effect(mons, mzap, beem, foe);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
-    }
-    else if (mzap == SPELL_THUNDERBOLT)
+    if (zap)
     {
         _rod_fired_pre(mons);
-        cast_thunderbolt(mons, power, beem.target);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
-    }
-    else if (mzap == SPELL_CLOUD_CONE)
-    {
-        _rod_fired_pre(mons);
-        cast_cloud_cone(mons, power, beem.target);
-        return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
-    }
-    else if (zap)
-    {
-        _rod_fired_pre(mons);
-        beem.is_tracer = false;
-        beem.fire();
+        if (mzap == SPELL_THUNDERBOLT)
+            cast_thunderbolt(mons, power, beem.target);
+        else if (mzap == SPELL_CLOUD_CONE)
+            cast_cloud_cone(mons, power, beem.target);
+        else
+        {
+            beem.is_tracer = false;
+            beem.fire();
+        }
         return _rod_fired_post(mons, rod, weapon, beem, rate, was_visible);
     }
 
@@ -1814,11 +1799,8 @@ static void _pre_monster_move(monster* mons)
 
     // Memory is decremented here for a reason -- we only want it
     // decrementing once per monster "move".
-    if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI]
-        && !mons_class_flag(mons->type, M_VIGILANT))
-    {
+    if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI])
         mons->foe_memory -= you.time_taken;
-    }
 
     // Otherwise there are potential problems with summonings.
     if (mons->type == MONS_GLOWING_SHAPESHIFTER)
@@ -2076,19 +2058,29 @@ void handle_monster_move(monster* mons)
         return;
     }
 
+    if (mons->has_ench(ENCH_GOLD_LUST))
+    {
+        mons->speed_increment -= non_move_energy;
+        return;
+    }
+
     const int gold = gozag_gold_in_los(mons);
     if (!mons->asleep()
         && !mons_is_avatar(mons->type)
         && !mons->wont_attack() && gold > 0)
     {
-        for (int i = 0; i < gold; i++)
-            if (one_chance_in(20))
-            {
-                simple_monster_message(mons,
-                                       " is distracted by the nearby gold.");
-                mons->speed_increment -= non_move_energy;
-                return;
-            }
+        if (bernoulli(gold, 3.0/100.0))
+        {
+            simple_monster_message(mons,
+                    " is distracted by the nearby gold.");
+            mons->add_ench(
+                mon_enchant(ENCH_GOLD_LUST, 1, NULL,
+                            random_range(1, 5) * BASELINE_DELAY));
+            mons->foe = MHITNOT;
+            mons->target = mons->pos();
+            mons->speed_increment -= non_move_energy;
+            return;
+        }
     }
 
     if (crawl_state.disables[DIS_MON_ACT] && _unfriendly_or_insane(mons))
@@ -2116,13 +2108,12 @@ void handle_monster_move(monster* mons)
         && (mons_itemuse(mons) >= MONUSE_WEAPONS_ARMOUR
             || mons_itemeat(mons) != MONEAT_NOTHING))
     {
-        // Keep neutral, charmed, summoned monsters from picking up stuff.
-        // Same for friendlies if friendly_pickup is set to "none".
+        // Keep neutral, charmed, summoned, and friendly monsters from
+        // picking up stuff.
         if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
              || (you_worship(GOD_JIYVA) && mons_is_slime(mons)))
             && !mons->is_summoned() && !mons->is_perm_summoned()
-            && (!mons->friendly()
-                || you.friendly_pickup != FRIENDLY_PICKUP_NONE))
+            && !mons->friendly())
         {
             if (_handle_pickup(mons))
             {
@@ -2426,12 +2417,157 @@ void handle_monster_move(monster* mons)
     }
 }
 
+/**
+ * Let trapped monsters struggle against nets, webs, etc.
+ */
+void monster::struggle_against_net()
+{
+    if (is_stationary() || cannot_act() || asleep())
+        return;
+
+    if (props.exists(NEWLY_TRAPPED_KEY))
+    {
+        props.erase(NEWLY_TRAPPED_KEY);
+        return; // don't try to escape on the same turn you were trapped!
+    }
+
+    int net = get_trapping_net(pos(), true);
+
+    if (net == NON_ITEM)
+    {
+        trap_def *trap = find_trap(pos());
+        if (trap && trap->type == TRAP_WEB)
+        {
+
+            if (coinflip())
+            {
+                if (mons_near(this) && !visible_to(&you))
+                    mpr("Something you can't see is thrashing in a web.");
+                else
+                {
+                    simple_monster_message(this,
+                                           " struggles to get unstuck from the web.");
+                }
+                return;
+            }
+            maybe_destroy_web(this);
+        }
+        del_ench(ENCH_HELD);
+        return;
+    }
+
+    // Handled in handle_pickup().
+    if (mons_eats_items(this))
+        return;
+
+    // The enchantment doubles as the durability of a net
+    // the more corroded it gets, the more easily it will break.
+    const int hold = mitm[net].plus; // This will usually be negative.
+    const int mon_size = body_size(PSIZE_BODY);
+
+    // Smaller monsters can escape more quickly.
+    if (mon_size < random2(SIZE_BIG)  // BIG = 5
+        && !berserk_or_insane() && type != MONS_DANCING_WEAPON)
+    {
+        if (mons_near(this) && !visible_to(&you))
+            mpr("Something wriggles in the net.");
+        else
+            simple_monster_message(this, " struggles to escape the net.");
+
+        // Confused monsters have trouble finding the exit.
+        if (has_ench(ENCH_CONFUSION) && !one_chance_in(5))
+            return;
+
+        decay_enchantment(ENCH_HELD, 2*(NUM_SIZE_LEVELS - mon_size) - hold);
+
+        // Frayed nets are easier to escape.
+        if (mon_size <= -(hold-1)/2)
+            decay_enchantment(ENCH_HELD, (NUM_SIZE_LEVELS - mon_size));
+    }
+    else // Large (and above) monsters always thrash the net and destroy it
+    {    // e.g. ogre, large zombie (large); centaur, naga, hydra (big).
+
+        if (mons_near(this) && !visible_to(&you))
+            mpr("Something wriggles in the net.");
+        else
+            simple_monster_message(this, " struggles against the net.");
+
+        // Confused monsters more likely to struggle without result.
+        if (has_ench(ENCH_CONFUSION) && one_chance_in(3))
+            return;
+
+        // Nets get destroyed more quickly for larger monsters
+        // and if already strongly frayed.
+        int damage = 0;
+
+        // tiny: 1/6, little: 2/5, small: 3/4, medium and above: always
+        if (x_chance_in_y(mon_size + 1, SIZE_GIANT - mon_size))
+            damage++;
+
+        // Handled specially to make up for its small size.
+        if (type == MONS_DANCING_WEAPON)
+        {
+            damage += one_chance_in(3);
+
+            if (can_cut_meat(mitm[inv[MSLOT_WEAPON]]))
+                damage++;
+        }
+
+        // Extra damage for large (50%) and big (always).
+        if (mon_size == SIZE_BIG || mon_size == SIZE_LARGE && coinflip())
+            damage++;
+
+        // overall damage per struggle:
+        // tiny   -> 1/6
+        // little -> 2/5
+        // small  -> 3/4
+        // medium -> 1
+        // large  -> 1,5
+        // big    -> 2
+
+        // extra damage if already damaged
+        if (random2(body_size(PSIZE_BODY) - hold + 1) >= 4)
+            damage++;
+
+        // Berserking doubles damage dealt.
+        if (berserk())
+            damage *= 2;
+
+        // Faster monsters can damage the net more often per
+        // time period.
+        if (speed != 0)
+            damage = div_rand_round(damage * speed, 10);
+
+        mitm[net].plus -= damage;
+
+        if (mitm[net].plus < -7)
+        {
+            if (mons_near(this))
+            {
+                if (visible_to(&you))
+                {
+                    mprf("The net rips apart, and %s comes free!",
+                         name(DESC_THE).c_str());
+                }
+                else
+                    mpr("All of a sudden the net rips apart!");
+            }
+            destroy_item(net);
+
+            del_ench(ENCH_HELD, true);
+        }
+    }
+}
+
 static void _post_monster_move(monster* mons)
 {
     if (invalid_monster(mons))
         return;
 
     mons->handle_constriction();
+
+    if (mons->has_ench(ENCH_HELD))
+        mons->struggle_against_net();
 
     if (mons->type == MONS_ANCIENT_ZYME)
         ancient_zyme_sicken(mons);
@@ -2694,7 +2830,8 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
             if (mons->caught() && item_is_stationary_net(*si))
             {
-                mons->del_ench(ENCH_HELD, true);
+                // We don't want to mulch the net just yet.
+                mons->del_ench(ENCH_HELD, true, false);
                 eaten_net = true;
             }
         }
@@ -2880,121 +3017,6 @@ static bool _handle_pickup(monster* mons)
     }
 
     return count_pickup > 0;
-}
-
-// Randomise potential damage.
-static int _estimated_trap_damage(trap_type trap)
-{
-    switch (trap)
-    {
-        case TRAP_BLADE: return 10 + random2(30);
-        case TRAP_DART:  return random2(4);
-        case TRAP_ARROW: return random2(7);
-        case TRAP_SPEAR: return random2(10);
-        case TRAP_BOLT:  return random2(13);
-        default:         return 0;
-    }
-}
-
-// Check whether a given trap (described by trap position) can be
-// regarded as safe.  Takes into account monster intelligence and
-// allegiance.
-// (just_check is used for intelligent monsters trying to avoid traps.)
-static bool _is_trap_safe(const monster* mons, const coord_def& where,
-                          bool just_check)
-{
-    const int intel = mons_intel(mons);
-
-    const trap_def *ptrap = find_trap(where);
-    if (!ptrap)
-        return true;
-    const trap_def& trap = *ptrap;
-
-    const bool player_knows_trap = (trap.is_known(&you));
-
-    // No friendly monsters will ever enter a Zot trap you know.
-    if (player_knows_trap && mons->friendly() && trap.type == TRAP_ZOT)
-        return false;
-
-    // Dumb monsters don't care at all.
-    if (intel == I_PLANT)
-        return true;
-
-    // Known shafts are safe. Unknown ones are unknown.
-    if (trap.type == TRAP_SHAFT)
-        return true;
-
-    // Hostile monsters are not afraid of non-mechanical traps.
-    // Allies will try to avoid teleportation and zot traps.
-    const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
-
-    if (trap.is_known(mons))
-    {
-        if (just_check)
-            return false; // Square is blocked.
-        else
-        {
-            // Test for corridor-like environment.
-            const int x = where.x - mons->pos().x;
-            const int y = where.y - mons->pos().y;
-
-            // The question is whether the monster (m) can easily reach its
-            // presumable destination (x) without stepping on the trap. Traps
-            // in corridors do not allow this. See e.g
-            //  #x#        ##
-            //  #^#   or  m^x
-            //   m         ##
-            //
-            // The same problem occurs if paths are blocked by monsters,
-            // hostile terrain or other traps rather than walls.
-            // What we do is check whether the squares with the relative
-            // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
-            // (relative to the _trap_ position rather than the monster one).
-            // If they don't, the trap square is marked as "unsafe" (because
-            // there's a good alternative move for the monster to take),
-            // otherwise the decision will be made according to later tests
-            // (monster hp, trap type, ...)
-            // If a monster still gets stuck in a corridor it will usually be
-            // because it has less than half its maximum hp.
-
-            if ((mon_can_move_to_pos(mons, coord_def(x-1, y), true)
-                 || mon_can_move_to_pos(mons, coord_def(x+1,y), true))
-                && (mon_can_move_to_pos(mons, coord_def(x,y-1), true)
-                    || mon_can_move_to_pos(mons, coord_def(x,y+1), true)))
-            {
-                return false;
-            }
-        }
-    }
-
-    // Friendlies will try not to be parted from you.
-    if (intelligent_ally(mons) && trap.type == TRAP_TELEPORT
-        && player_knows_trap && mons_near(mons))
-    {
-        return false;
-    }
-
-    // Healthy monsters don't mind a little pain.
-    if (mechanical && mons->hit_points >= mons->max_hit_points / 2
-        && (intel == I_ANIMAL
-            || mons->hit_points > _estimated_trap_damage(trap.type)))
-    {
-        return true;
-    }
-
-    // In Zotdef critters will risk death to get to the Orb
-    if (crawl_state.game_is_zotdef() && mechanical)
-        return true;
-
-    // Friendly and good neutral monsters don't enjoy Zot trap perks;
-    // handle accordingly.  In the arena Zot traps affect all monsters.
-    if (mons->wont_attack() || crawl_state.game_is_arena())
-    {
-        return mechanical ? mons_flies(mons)
-                          : !trap.is_known(mons) || trap.type != TRAP_ZOT;
-    }
-    else
-        return !mechanical || mons_flies(mons) || !trap.is_known(mons);
 }
 
 static void _mons_open_door(monster* mons, const coord_def &pos)
@@ -3243,7 +3265,6 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     // Wandering mushrooms usually don't move while you are looking.
     if (mons->type == MONS_WANDERING_MUSHROOM
         || mons->type == MONS_DEATHCAP
-        || mons->type == MONS_CURSE_SKULL
         || (mons->type == MONS_LURKING_HORROR
             && mons->foe_distance() > random2(LOS_RADIUS + 1)))
     {
@@ -3380,7 +3401,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Wandering through a trap is OK if we're pretty healthy,
     // really stupid, or immune to the trap.
-    if (!_is_trap_safe(mons, targ, just_check))
+    if (!mons->is_trap_safe(targ, just_check))
         return false;
 
     // If we end up here the monster can safely move.
@@ -3902,7 +3923,7 @@ static bool _monster_move(monster* mons)
                           2, MON_SUMM_ANIMATE,
                           target, MHITNOT,
                           0, GOD_LUGONU));
-            nuke_wall(target);
+            destroy_wall(target);
         }
     }
 
@@ -3944,7 +3965,7 @@ static bool _monster_move(monster* mons)
                  && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
-            nuke_wall(target);
+            destroy_wall(target);
 
             if (flattens_trees)
             {

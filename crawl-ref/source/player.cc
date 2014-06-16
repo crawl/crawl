@@ -16,6 +16,7 @@
 #include <sstream>
 #include <algorithm>
 
+#include "ability.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "art-enum.h"
@@ -28,6 +29,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
@@ -83,6 +85,7 @@
 #include "throw.h"
 #ifdef USE_TILE
  #include "tileview.h"
+ #include "tiledef-feat.h"
 #endif
 #include "transform.h"
 #include "traps.h"
@@ -867,8 +870,6 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
-    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
-        eq = EQ_RINGS;
 
     // Everybody but porcupines and wisps can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
@@ -1062,22 +1063,6 @@ int player::wearing(equipment_type slot, int sub_type, bool calc_unid) const
         }
         break;
 
-    case EQ_RINGS_PLUS2:
-        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
-        {
-            if (slots == EQ_AMULET)
-                continue;
-
-            if ((item = slot_item(static_cast<equipment_type>(slots)))
-                && item->sub_type == sub_type
-                && (calc_unid
-                    || item_type_known(*item)))
-            {
-                ret += item->plus2;
-            }
-        }
-        break;
-
     case EQ_ALL_ARMOUR:
         // Doesn't make much sense here... be specific. -- bwr
         die("EQ_ALL_ARMOUR is not a proper slot");
@@ -1125,7 +1110,6 @@ int player::wearing_ego(equipment_type slot, int special, bool calc_unid) const
     case EQ_STAFF:
     case EQ_RINGS:
     case EQ_RINGS_PLUS:
-    case EQ_RINGS_PLUS2:
         // no ego types for these slots
         break;
 
@@ -1202,7 +1186,6 @@ bool player_equip_unrand(int unrand_index)
     case EQ_LEFT_RING:
     case EQ_RIGHT_RING:
     case EQ_RINGS_PLUS:
-    case EQ_RINGS_PLUS2:
     case EQ_ALL_ARMOUR:
         // no unrandarts for these slots.
         break;
@@ -2210,10 +2193,17 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         }
     }
 
-    // Same here.  Your piety status, and, hence, TSO's protection, is
+    // Same here. Your piety status, and, hence, TSO's protection, is
     // something you can more or less control.
-    if (you_worship(GOD_SHINING_ONE) && you.piety > pl * 50)
-        pl = you.piety / 50;
+    if (you_worship(GOD_SHINING_ONE))
+    {
+        if (you.piety >= piety_breakpoint(1))
+            pl++;
+        if (you.piety >= piety_breakpoint(3))
+            pl++;
+        if (you.piety >= piety_breakpoint(5))
+            pl++;
+    }
 
     if (temp)
     {
@@ -2443,7 +2433,7 @@ bool player_effectively_in_light_armour()
 // This function returns true if the player has a radically different
 // shape... minor changes like blade hands don't count, also note
 // that lich transformation doesn't change the character's shape
-// (so we end up with Naga-liches, Spiggan-liches, Minotaur-liches)
+// (so we end up with Naga-liches, Spriggan-liches, Minotaur-liches)
 // it just makes the character undead (with the benefits that implies). - bwr
 bool player_is_shapechanged()
 {
@@ -2666,6 +2656,12 @@ int player_wizardry()
            + you.wearing(EQ_STAFF, STAFF_WIZARDRY);
 }
 
+/**
+ * Calculate the SH value used internally.
+ *
+ * Exactly twice the value displayed to players, for legacy reasons.
+ * @return      The player's current SH value.
+ */
 int player_shield_class()
 {
     int shield = 0;
@@ -2690,7 +2686,7 @@ int player_shield_class()
         shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
         shield += base_shield * total_bonus * 10 / 6;
 
-        shield += item.plus * 100;
+        shield += item.plus * 200;
 
         if (item.sub_type == ARM_BUCKLER)
             stat = you.dex() * 38;
@@ -2726,14 +2722,25 @@ int player_shield_class()
     }
 
     // mutations
-    // +2, +4, +6
+    // +2, +4, +6 (displayed)
     shield += (player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 200
+               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 200 + 200
                : 0);
 
     stat += qazlal_sh_boost() * 100;
 
     return (shield + stat + 50) / 100;
+}
+
+/**
+ * Calculate the SH value that should be displayed to players.
+ *
+ * Exactly half the internal value, for legacy reasons.
+ * @return      The SH value to be displayed.
+ */
+int player_displayed_shield_class()
+{
+    return player_shield_class() / 2;
 }
 
 bool player_sust_abil(bool calc_unid)
@@ -3492,8 +3499,6 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
         // zot defence abilities; must also be updated in ability.cc when these levels are changed
         if (crawl_state.game_is_zotdef())
         {
-            if (you.experience_level == 1)
-                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of dart traps.");
             if (you.experience_level == 2)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob saplings.");
             if (you.experience_level == 3)
@@ -4268,24 +4273,14 @@ unsigned int exp_needed(int lev, int exp_apt)
 }
 
 // returns bonuses from rings of slaying, etc.
-int slaying_bonus(weapon_property_type which_affected, bool ranged)
+int slaying_bonus(bool ranged)
 {
     int ret = 0;
 
-    if (which_affected == PWPN_HIT)
-    {
-        ret += you.wearing(EQ_RINGS_PLUS, RING_SLAYING);
-        ret += you.scan_artefacts(ARTP_ACCURACY);
-        if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
-            ret += 5;
-    }
-    else if (which_affected == PWPN_DAMAGE)
-    {
-        ret += you.wearing(EQ_RINGS_PLUS2, RING_SLAYING);
-        ret += you.scan_artefacts(ARTP_DAMAGE);
-        if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
-            ret += 3;
-    }
+    ret += you.wearing(EQ_RINGS_PLUS, RING_SLAYING);
+    ret += you.scan_artefacts(ARTP_SLAYING);
+    if (you.wearing_ego(EQ_GLOVES, SPARM_ARCHERY) && ranged)
+        ret += 4;
 
     ret += 4 * augmentation_amount();
 
@@ -5251,8 +5246,8 @@ bool napalm_player(int amount, string source, string source_aux)
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
         mprf(MSGCH_WARN, "You are covered in liquid flames!");
 
-    you.props["napalmer"] = source;
-    you.props["napalm_aux"] = source_aux;
+    you.props["sticky_flame_source"] = source;
+    you.props["sticky_flame_aux"] = source_aux;
 
     return true;
 }
@@ -5268,14 +5263,14 @@ void dec_napalm_player(int delay)
         else
             mprf(MSGCH_WARN, "You dip into the water, and the flames go out!");
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        you.props.erase("napalmer");
-        you.props.erase("napalm_aux");
+        you.props.erase("sticky_flame_source");
+        you.props.erase("sticky_flame_aux");
         return;
     }
 
     mprf(MSGCH_WARN, "You are covered in liquid flames!");
 
-    expose_player_to_element(BEAM_NAPALM,
+    expose_player_to_element(BEAM_STICKY_FLAME,
                              div_rand_round(delay * 4, BASELINE_DELAY));
 
     const int hurted = resist_adjust_damage(&you, BEAM_FIRE, player_res_fire(),
@@ -5286,8 +5281,8 @@ void dec_napalm_player(int delay)
     you.duration[DUR_LIQUID_FLAMES] -= delay;
     if (you.duration[DUR_LIQUID_FLAMES] <= 0)
     {
-        you.props.erase("napalmer");
-        you.props.erase("napalm_aux");
+        you.props.erase("sticky_flame_source");
+        you.props.erase("sticky_flame_aux");
     }
 }
 
@@ -5732,7 +5727,6 @@ void player::init()
 
     is_undead       = US_ALIVE;
 
-    friendly_pickup = 0;
     dead = false;
     lives = 0;
     deaths = 0;
@@ -6252,13 +6246,9 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::missile_deflection() const
 {
-    if (attribute[ATTR_DEFLECT_MISSILES]
-/*        || you_worship(GOD_QAZLAL)
-           && !player_under_penance(GOD_QAZLAL)
-           && you.piety >= piety_breakpoint(4)*/)
-    {
+    if (attribute[ATTR_DEFLECT_MISSILES])
         return 2;
-    }
+
     if (attribute[ATTR_REPEL_MISSILES]
         || player_mutation_level(MUT_DISTORTION_FIELD) == 3
         || scan_artefacts(ARTP_RMSL, true)
@@ -6268,6 +6258,7 @@ int player::missile_deflection() const
     {
         return 1;
     }
+
     return 0;
 }
 
@@ -6361,14 +6352,22 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
     // skill training, so make sure to use the correct value.
     // This duplicates code in check_skill_level_change(), unfortunately.
     int actual_skill = skills[sk];
+    unsigned int effective_points = skill_points[sk];
+    if (!real)
+    {
+        vector<skill_type> cross_skills = get_crosstrain_skills(sk);
+        for (size_t i = 0; i < cross_skills.size(); ++i)
+            effective_points += skill_points[cross_skills[i]] / 5;
+    }
+    effective_points = min(effective_points, skill_exp_needed(27, sk));
     while (1)
     {
         if (actual_skill < 27
-            && skill_points[sk] >= skill_exp_needed(actual_skill + 1, sk))
+            && effective_points >= skill_exp_needed(actual_skill + 1, sk))
         {
             ++actual_skill;
         }
-        else if (skill_points[sk] < skill_exp_needed(actual_skill, sk))
+        else if (effective_points < skill_exp_needed(actual_skill, sk))
         {
             actual_skill--;
             ASSERT(actual_skill >= 0);
@@ -6377,7 +6376,8 @@ int player::skill(skill_type sk, int scale, bool real, bool drained) const
             break;
     }
 
-    int level = actual_skill * scale + get_skill_progress(sk, actual_skill, skill_points[sk], scale);
+    int level = actual_skill * scale
+      + get_skill_progress(sk, actual_skill, effective_points, scale);
     if (real)
         return level;
     if (drained && you.attribute[ATTR_XP_DRAIN])
@@ -6801,15 +6801,6 @@ int player::res_fire() const
     return player_res_fire();
 }
 
-int player::res_holy_fire() const
-{
-#if TAG_MAJOR_VERSION == 34
-    if (species == SP_DJINNI)
-        return 3;
-#endif
-    return actor::res_holy_fire();
-}
-
 int player::res_steam() const
 {
     return player_res_steam();
@@ -7181,8 +7172,11 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
         die("player::hurt() called for self-damage");
     }
 
-    if ((flavour == BEAM_NUKE || flavour == BEAM_DISINTEGRATION) && can_bleed())
+    if ((flavour == BEAM_DEVASTATION || flavour == BEAM_DISINTEGRATION)
+        && can_bleed())
+    {
         blood_spray(pos(), type, amount / 5);
+    }
 
     return amount;
 }
@@ -8035,6 +8029,26 @@ void player::set_gold(int amount)
         const int old_gold = gold;
         gold = amount;
         shopping_list.gold_changed(old_gold, gold);
+
+        // XXX: this might benefit from being in its own function
+        if (you_worship(GOD_GOZAG))
+        {
+            vector<ability_type> abilities = get_god_abilities(true, true);
+            for (int i = 0; i < MAX_GOD_ABILITIES; i++)
+            {
+                const int cost = get_gold_cost(abilities[i]);
+                if (gold >= cost && old_gold < cost)
+                {
+                    mprf(MSGCH_GOD, "You now have enough gold to %s.",
+                         god_gain_power_messages[you.religion][i]);
+                }
+                else if (old_gold >= cost && gold < cost)
+                {
+                    mprf(MSGCH_GOD, "You no longer have enough gold to %s.",
+                         god_gain_power_messages[you.religion][i]);
+                }
+            }
+        }
     }
 }
 
@@ -8244,7 +8258,7 @@ void count_action(caction_type type, int subtype)
 
 /**
  *   The player's radius of monster detection.
- *   @returns  the radius in which a player can detect monsters.
+ *   @return   the radius in which a player can detect monsters.
 **/
 int player_monster_detect_radius()
 {
@@ -8259,7 +8273,7 @@ int player_monster_detect_radius()
 
 /**
  * Return true if the player has the Orb of Zot.
- * @returns True if the player has the Orb, false otherwise.
+ * @return  True if the player has the Orb, false otherwise.
  */
 bool player_has_orb()
 {
@@ -8533,3 +8547,161 @@ string temperature_text(int temp)
     }
 }
 #endif
+
+void player_open_door(coord_def doorpos, bool check_confused)
+{
+    // Finally, open the closed door!
+    set<coord_def> all_door;
+    find_connected_identical(doorpos, all_door);
+    const char *adj, *noun;
+    get_door_description(all_door.size(), &adj, &noun);
+
+    const string door_desc_adj  =
+        env.markers.property_at(doorpos, MAT_ANY, "door_description_adjective");
+    const string door_desc_noun =
+        env.markers.property_at(doorpos, MAT_ANY, "door_description_noun");
+    if (!door_desc_adj.empty())
+        adj = door_desc_adj.c_str();
+    if (!door_desc_noun.empty())
+        noun = door_desc_noun.c_str();
+
+    if (!(check_confused && you.confused()))
+    {
+        string door_open_prompt =
+            env.markers.property_at(doorpos, MAT_ANY, "door_open_prompt");
+
+        bool ignore_exclude = false;
+
+        if (!door_open_prompt.empty())
+        {
+            door_open_prompt += " (y/N)";
+            if (!yesno(door_open_prompt.c_str(), true, 'n', true, false))
+            {
+                if (is_exclude_root(doorpos))
+                    canned_msg(MSG_OK);
+                else
+                {
+                    if (yesno("Put travel exclusion on door? (Y/n)",
+                              true, 'y'))
+                    {
+                        // Zero radius exclusion right on top of door.
+                        set_exclude(doorpos, 0);
+                    }
+                }
+                interrupt_activity(AI_FORCE_INTERRUPT);
+                return;
+            }
+            ignore_exclude = true;
+        }
+
+        if (!ignore_exclude && is_exclude_root(doorpos))
+        {
+            string prompt = make_stringf("This %s%s is marked as excluded! "
+                                         "Open it anyway?", adj, noun);
+
+            if (!yesno(prompt.c_str(), true, 'n', true, false))
+            {
+                canned_msg(MSG_OK);
+                interrupt_activity(AI_FORCE_INTERRUPT);
+                return;
+            }
+        }
+    }
+
+    int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
+
+    string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
+                                                  "door_berserk_verb_open");
+    string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
+                                                       "door_berserk_adjective");
+    string door_open_creak = env.markers.property_at(doorpos, MAT_ANY,
+                                                     "door_noisy_verb_open");
+    string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
+                                                   "door_airborne_verb_open");
+    string door_open_verb = env.markers.property_at(doorpos, MAT_ANY,
+                                                    "door_verb_open");
+
+    if (you.berserk())
+    {
+        // XXX: Better flavour for larger doors?
+        if (silenced(you.pos()))
+        {
+            if (!berserk_open.empty())
+            {
+                berserk_open += ".";
+                mprf(berserk_open.c_str(), adj, noun);
+            }
+            else
+                mprf("The %s%s flies open!", adj, noun);
+        }
+        else
+        {
+            if (!berserk_open.empty())
+            {
+                if (!berserk_adjective.empty())
+                    berserk_open += " " + berserk_adjective;
+                else
+                    berserk_open += ".";
+                mprf(MSGCH_SOUND, berserk_open.c_str(), adj, noun);
+            }
+            else
+                mprf(MSGCH_SOUND, "The %s%s flies open with a bang!", adj, noun);
+            noisy(15, you.pos());
+        }
+    }
+    else if (one_chance_in(skill) && !silenced(you.pos()))
+    {
+        if (!door_open_creak.empty())
+            mprf(MSGCH_SOUND, door_open_creak.c_str(), adj, noun);
+        else
+        {
+            mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
+                 adj, noun);
+        }
+        noisy(10, you.pos());
+    }
+    else
+    {
+        const char* verb;
+        if (you.airborne())
+        {
+            if (!door_airborne.empty())
+                verb = door_airborne.c_str();
+            else
+                verb = "You reach down and open the %s%s.";
+        }
+        else
+        {
+            if (!door_open_verb.empty())
+               verb = door_open_verb.c_str();
+            else
+               verb = "You open the %s%s.";
+        }
+
+        mprf(verb, adj, noun);
+    }
+
+    vector<coord_def> excludes;
+    for (set<coord_def>::iterator i = all_door.begin(); i != all_door.end(); ++i)
+    {
+        const coord_def& dc = *i;
+        // Even if some of the door is out of LOS, we want the entire
+        // door to be updated.  Hitting this case requires a really big
+        // door!
+        if (env.map_knowledge(dc).seen())
+        {
+            env.map_knowledge(dc).set_feature(DNGN_OPEN_DOOR);
+#ifdef USE_TILE
+            env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
+#endif
+        }
+        grd(dc) = DNGN_OPEN_DOOR;
+        set_terrain_changed(dc);
+        dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
+        if (is_excluded(dc))
+            excludes.push_back(dc);
+    }
+
+    update_exclusion_los(excludes);
+    viewwindow();
+}

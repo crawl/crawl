@@ -458,7 +458,7 @@ bool potion_effect(potion_type pot_eff, int pow, item_def *potion, bool was_know
         }
         else
         {
-            if (go_berserk(was_known, true))
+            if (you.go_berserk(was_known, true))
                 xom_is_stimulated(50);
         }
         break;

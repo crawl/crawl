@@ -31,6 +31,7 @@
 #include "fight.h"
 #include "food.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
 #include "invent.h"
@@ -246,8 +247,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Str",    ARTP_STRENGTH,              0 },
         { "Dex",    ARTP_DEXTERITY,             0 },
         { "Int",    ARTP_INTELLIGENCE,          0 },
-        { "Acc",    ARTP_ACCURACY,              0 },
-        { "Dam",    ARTP_DAMAGE,                0 },
+        { "Slay",   ARTP_SLAYING,               0 },
 
         // Qualitative attributes (and Stealth)
         { "SInv",   ARTP_EYESIGHT,              2 },
@@ -444,10 +444,8 @@ static string _randart_descrip(const item_def &item)
         { ARTP_STRENGTH, "It affects your strength (%d).", false},
         { ARTP_INTELLIGENCE, "It affects your intelligence (%d).", false},
         { ARTP_DEXTERITY, "It affects your dexterity (%d).", false},
-        { ARTP_ACCURACY, "It affects your accuracy with ranged weapons and "
-                         "melee attacks (%d).", false},
-        { ARTP_DAMAGE, "It affects your damage with ranged weapons and melee "
-                       "attacks (%d).", false},
+        { ARTP_SLAYING, "It affects your accuracy and damage with ranged "
+                        "weapons and melee attacks (%d).", false},
         { ARTP_FIRE, "fire", true},
         { ARTP_COLD, "cold", true},
         { ARTP_ELECTRICITY, "It insulates you from electricity.", false},
@@ -547,7 +545,10 @@ static string _randart_descrip(const item_def &item)
 
 static const char *trap_names[] =
 {
-    "dart", "arrow", "spear",
+#if TAG_MAJOR_VERSION == 34
+    "dart",
+#endif
+    "arrow", "spear",
     "teleport", "alarm", "blade",
     "bolt", "net", "Zot", "needle",
     "shaft", "passage", "pressure plate", "web",
@@ -560,7 +561,7 @@ string trap_name(trap_type trap)
 {
     COMPILE_CHECK(ARRAYSZ(trap_names) == NUM_TRAPS);
 
-    if (trap >= TRAP_DART && trap < NUM_TRAPS)
+    if (trap >= 0 && trap < NUM_TRAPS)
         return trap_names[trap];
     return "";
 }
@@ -856,21 +857,37 @@ static string _describe_weapon(const item_def &item, bool verbose)
         switch (spec_ench)
         {
         case SPWPN_FLAMING:
-            description += "It emits flame when wielded, causing extra "
-                "injury to most foes and up to double damage against "
-                "particularly susceptible opponents.";
-            if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
+            if (is_range_weapon(item))
             {
-                description += " Big, fiery blades are also staple armaments "
-                    "of hydra-hunters.";
+                description += "It turns projectiles fired from it into "
+                    "bolts of flame.";
+            }
+            else
+            {
+                description += "It emits flame when wielded, causing extra "
+                    "injury to most foes and up to double damage against "
+                    "particularly susceptible opponents.";
+                if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
+                {
+                    description += " Big, fiery blades are also staple armaments "
+                        "of hydra-hunters.";
+                }
             }
             break;
         case SPWPN_FREEZING:
-            description += "It has been specially enchanted to freeze "
-                "those struck by it, causing extra injury to most foes "
-                "and up to double damage against particularly "
-                "susceptible opponents. It can also slow down "
-                "cold-blooded creatures.";
+            if (is_range_weapon(item))
+            {
+                description += "It turns projectiles fired from it into "
+                    "bolts of frost.";
+            }
+            else
+            {
+                description += "It has been specially enchanted to freeze "
+                    "those struck by it, causing extra injury to most foes "
+                    "and up to double damage against particularly "
+                    "susceptible opponents. It can also slow down "
+                    "cold-blooded creatures.";
+            }
             break;
         case SPWPN_HOLY_WRATH:
             description += "It has been blessed by the Shining One to "
@@ -927,14 +944,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "enemies.";
             }
             break;
-        case SPWPN_FLAME:
-            description += "It turns projectiles fired from it into "
-                "bolts of flame.";
-            break;
-        case SPWPN_FROST:
-            description += "It turns projectiles fired from it into "
-                "bolts of frost.";
-            break;
         case SPWPN_CHAOS:
             if (is_range_weapon(item))
             {
@@ -948,7 +957,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "different, random effect.";
             }
             break;
-        case SPWPN_VAMPIRICISM:
+        case SPWPN_VAMPIRISM:
             description += "It inflicts no extra harm, but heals its "
                 "wielder somewhat when it strikes a living foe.";
             break;
@@ -975,6 +984,19 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "spellcasters and certain magical creatures (including "
                     "the wielder).";
             break;
+        }
+    }
+
+    if (you.duration[DUR_WEAPON_BRAND] && &item == you.weapon())
+    {
+        description += "\nIt is temporarily rebranded; it is actually a";
+        if ((int) you.props["orig brand"] == SPWPN_NORMAL)
+            description += "n unbranded weapon.";
+        else
+        {
+            description += " weapon of "
+                        + ego_type_string(item, false, you.props["orig brand"])
+                        + ".";
         }
     }
 
@@ -1016,20 +1038,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     if (!is_artefact(item))
     {
-        if (item_ident(item, ISFLAG_KNOW_PLUSES)
-            && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
-        {
+        if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
             description += "\nIt cannot be enchanted further.";
-        }
         else
         {
             description += "\nIt can be maximally enchanted to +";
             _append_value(description, MAX_WPN_ENCHANT, false);
-            if (item.sub_type != WPN_BLOWGUN)
-            {
-                description += ", +";
-                _append_value(description, MAX_WPN_ENCHANT, false);
-            }
             description += ".";
         }
     }
@@ -1280,8 +1294,7 @@ static string _describe_armour(const item_def &item, bool verbose)
             break;
 #if TAG_MAJOR_VERSION == 34
         case SPARM_PRESERVATION:
-            description += "It protects its wearer's possessions "
-                "from corrosion and destruction.";
+            description += "It does nothing special.";
             break;
 #endif
         case SPARM_REFLECTION:
@@ -1351,8 +1364,7 @@ static string _describe_jewellery(const item_def &item, bool verbose)
         && item_ident(item, ISFLAG_KNOW_PLUSES))
     {
         // Explicit description of ring power.
-        if (item.plus != 0
-            || item.sub_type == RING_SLAYING && item.plus2 != 0)
+        if (item.plus != 0)
         {
             switch (item.sub_type)
             {
@@ -1387,21 +1399,10 @@ static string _describe_jewellery(const item_def &item, bool verbose)
                 break;
 
             case RING_SLAYING:
-                if (item.plus != 0)
-                {
-                    description += "\nIt affects your accuracy with ranged "
-                                   "weapons and melee attacks (";
-                    _append_value(description, item.plus, true);
-                    description += ").";
-                }
-
-                if (item.plus2 != 0)
-                {
-                    description += "\nIt affects your damage with ranged "
-                                   "weapons and melee attacks (";
-                    _append_value(description, item.plus2, true);
-                    description += ").";
-                }
+                description += "\nIt affects your accuracy and damage "
+                               "with ranged weapons and melee attacks (";
+                _append_value(description, item.plus, true);
+                description += ").";
                 break;
 
             default:
@@ -3110,7 +3111,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_KLOWN:           return "cause random powerful effects";
     case AF_DISTORT:         return "cause wild translocation effects";
     case AF_RAGE:            return "cause berserking";
-    case AF_NAPALM:          return "apply sticky flame";
+    case AF_STICKY_FLAME:    return "apply sticky flame";
     case AF_CHAOS:           return "cause unpredictable effects";
     case AF_STEAL:           return "steal items";
     case AF_CRUSH:           return "constrict";
@@ -3417,6 +3418,9 @@ static string _monster_stat_description(const monster_info& mi)
         result << uppercase_first(pronoun) << " cannot move.\n";
     }
 
+    if (mons_class_flag(mi.type, M_BLINKER))
+        result << uppercase_first(pronoun) << " blinks uncontrollably.\n";
+
     // Monsters can glow from both light and radiation.
     if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
         result << uppercase_first(pronoun) << " is outlined in light.\n";
@@ -3584,6 +3588,8 @@ static string _serpent_of_hell_flavour(monster_type m)
 void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen)
 {
+    if (inf.title.empty())
+        inf.title = getMiscString(mi.common_name(DESC_DBNAME) + " title");
     if (inf.title.empty())
         inf.title = uppercase_first(mi.full_name(DESC_A, true)) + ".";
 
@@ -4161,8 +4167,20 @@ static string _describe_favour(god_type which_god)
     {
         case 7:  return "A prized avatar of " + godname;
         case 6:  return "A favoured servant of " + godname + ".";
-        case 5:  return "A shining star in the eyes of " + godname + ".";
-        case 4:  return "A rising star in the eyes of " + godname + ".";
+        case 5:
+
+        if (you_worship(GOD_DITHMENOS))
+            return "A glorious shadow in the eyes of " + godname + ".";
+        else
+            return "A shining star in the eyes of " + godname + ".";
+
+        case 4:
+
+        if (you_worship(GOD_DITHMENOS))
+            return "A rising shadow in the eyes of " + godname + ".";
+        else
+            return "A rising star in the eyes of " + godname + ".";
+
         case 3:  return uppercase_first(godname) + " is most pleased with you.";
         case 2:  return uppercase_first(godname) + " is pleased with you.";
         default: return uppercase_first(godname) + " is noncommittal.";
@@ -4482,6 +4500,98 @@ static string _describe_ash_skill_boost()
     return desc.str();
 }
 
+// from dgn-overview.cc
+extern map<branch_type, set<level_id> > stair_level;
+
+static string _describe_branch_bribability()
+{
+    string ret = "You can bribe the following branches:\n";
+    vector<branch_type> targets;
+    size_t width = 0;
+    for (unsigned int i = 0; i < NUM_BRANCHES; i++)
+    {
+        const branch_type br = static_cast<branch_type>(i);
+        if (!gozag_branch_bribable(br))
+            continue;
+
+        // If you don't know the branch exists, don't list it;
+        // this mainly plugs info leaks about Lair branch structure.
+        if (!stair_level.count(br) && is_random_subbranch(br))
+            continue;
+
+        targets.push_back(br);
+        width = max(width, strlen(branches[i].longname));
+    }
+
+    for (unsigned int i = 0; i < targets.size(); i++)
+    {
+        string line(branches[targets[i]].longname);
+        line += string(width + 1 - strwidth(line), ' ');
+        // XXX: move this elsewhere?
+        switch (targets[i])
+        {
+            case BRANCH_ORC:
+                line += "(orcs)              ";
+                break;
+            case BRANCH_ELF:
+                line += "(elves)             ";
+                break;
+            case BRANCH_SNAKE:
+                line += "(nagas/salamanders) ";
+                break;
+            case BRANCH_SHOALS:
+                line += "(merfolk)           ";
+                break;
+            case BRANCH_VAULTS:
+                line += "(humans)            ";
+                break;
+            case BRANCH_ZOT:
+                line += "(draconians)        ";
+                break;
+            case BRANCH_COCYTUS:
+            case BRANCH_DIS:
+            case BRANCH_GEHENNA:
+            case BRANCH_TARTARUS:
+                line += "(demons)            ";
+                break;
+            default:
+                line += "(buggy)             ";
+                break;
+        }
+        line += "Susceptibility: ";
+        switch (gozag_branch_bribe_susceptibility(targets[i]))
+        {
+            case 0:
+                line += "none       ";
+                break;
+            case 1:
+                line += "very low   ";
+                break;
+            case 2:
+                line += "low        ";
+                break;
+            case 3:
+                line += "moderate   ";
+                break;
+            case 4:
+                line += "high       ";
+                break;
+            case 5:
+            default:
+                line += "very high  ";
+                break;
+        }
+        if (!branch_bribe[targets[i]])
+            line += "not bribed";
+        else
+            line += make_stringf("$%d", branch_bribe[targets[i]]);
+
+        ret += line + "\n";
+    }
+
+    return ret;
+}
+
 static void _detailed_god_description(god_type which_god)
 {
     clrscr();
@@ -4561,6 +4671,10 @@ static void _detailed_god_description(god_type which_god)
                          "cards' effects is governed by Evocations skill "
                          "instead of Invocations.";
             }
+            break;
+
+        case GOD_GOZAG:
+            broken = _describe_branch_bribability();
             break;
 
         default:
@@ -4732,24 +4846,28 @@ void describe_god(god_type which_god, bool give_title)
         if (which_god == GOD_ZIN)
         {
             have_any = true;
-            const char *how = (you.piety >= 150) ? "carefully" :
-                              (you.piety >= 100) ? "often" :
-                              (you.piety >=  50) ? "sometimes" :
-                                                   "occasionally";
+            const char *how =
+                (you.piety >= piety_breakpoint(5)) ? "carefully" :
+                (you.piety >= piety_breakpoint(3)) ? "often" :
+                (you.piety >= piety_breakpoint(1)) ? "sometimes" :
+                                                     "occasionally";
 
             cprintf("%s %s shields you from chaos.\n",
                     uppercase_first(god_name(which_god)).c_str(), how);
         }
         else if (which_god == GOD_SHINING_ONE)
         {
-            have_any = true;
-            const char *how = (you.piety >= 150) ? "carefully" :
-                              (you.piety >= 100) ? "often" :
-                              (you.piety >=  50) ? "sometimes" :
-                                                   "occasionally";
+            if (you.piety >= piety_breakpoint(1))
+            {
+                have_any = true;
+                const char *how =
+                    (you.piety >= piety_breakpoint(5)) ? "carefully" :
+                    (you.piety >= piety_breakpoint(3)) ? "often" :
+                                                         "sometimes";
 
-            cprintf("%s %s shields you from negative energy.\n",
-                    uppercase_first(god_name(which_god)).c_str(), how);
+                cprintf("%s %s shields you from negative energy.\n",
+                        uppercase_first(god_name(which_god)).c_str(), how);
+            }
         }
         else if (which_god == GOD_TROG)
         {
@@ -4762,17 +4880,6 @@ void describe_god(god_type which_god, bool give_title)
         }
         else if (which_god == GOD_JIYVA)
         {
-            if (!player_under_penance())
-            {
-                have_any = true;
-                const char *how = (you.piety >= 150) ? "carefully" :
-                                  (you.piety >= 100) ? "often" :
-                                  (you.piety >=  50) ? "sometimes" :
-                                                       "occasionally";
-
-                cprintf("%s %s shields your consumables from destruction.\n",
-                        uppercase_first(god_name(which_god)).c_str(), how);
-            }
             if (you.piety >= piety_breakpoint(2))
             {
                 have_any = true;
@@ -4879,8 +4986,12 @@ void describe_god(god_type which_god, bool give_title)
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
         {
+            vector<ability_type> abilities = get_god_abilities(true, true);
             for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
-                if ((you_worship(GOD_GOZAG) || you.piety >= piety_breakpoint(i))
+                if ((you_worship(GOD_GOZAG)
+                     && you.gold >= get_gold_cost(abilities[i])
+                     || !you_worship(GOD_GOZAG)
+                        && you.piety >= piety_breakpoint(i))
                     && _print_god_abil_desc(which_god, i))
                 {
                     have_any = true;

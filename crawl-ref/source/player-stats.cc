@@ -673,6 +673,7 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     {
     case STAT_STR:
         you.redraw_armour_class = true; // includes shields
+        you.redraw_evasion = true; // Might reduce EV penalty
         break;
 
     case STAT_INT:

@@ -10,6 +10,7 @@
 #include "branch.h"
 #include "cio.h"
 #include "command.h"
+#include "coordit.h"
 #include "ctest.h"
 #include "database.h"
 #include "dbg-maps.h"
@@ -34,6 +35,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-cast.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
@@ -192,6 +194,42 @@ static void _initialize()
     }
 }
 
+/** KILL_RESETs all monsters in LOS.
+*
+*  Doesn't affect monsters behind glass, only those that would
+*  immediately have line-of-fire.
+*
+*  @param items_also whether to zap items as well as monsters.
+*/
+static void _zap_los_monsters(bool items_also)
+{
+    for (radius_iterator ri(you.pos(), LOS_SOLID); ri; ++ri)
+    {
+        if (items_also)
+        {
+            int item = igrd(*ri);
+
+            if (item != NON_ITEM && mitm[item].defined())
+                destroy_item(item);
+        }
+
+        // If we ever allow starting with a friendly monster,
+        // we'll have to check here.
+        monster* mon = monster_at(*ri);
+        if (mon == NULL || mons_class_flag(mon->type, M_NO_EXP_GAIN))
+            continue;
+
+        dprf("Dismissing %s",
+             mon->name(DESC_PLAIN, true).c_str());
+
+        // Do a hard reset so the monster's items will be discarded.
+        mon->flags |= MF_HARD_RESET;
+        // Do a silent, wizard-mode monster_die() just to be extra sure the
+        // player sees nothing.
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+    }
+}
+
 static void _post_init(bool newc)
 {
     ASSERT(strwidth(you.your_name) <= kNameLen);
@@ -298,14 +336,12 @@ static void _post_init(bool newc)
 
     if (newc) // start a new game
     {
-        you.friendly_pickup = Options.default_friendly_pickup;
-
         // Mark items in inventory as of unknown origin.
         origin_set_inventory(origin_set_unknown);
 
         // For a new game, wipe out monsters in LOS, and
         // for new hints mode games also the items.
-        zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
+        _zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
 
         if (crawl_state.game_is_zotdef())
             fully_map_level();

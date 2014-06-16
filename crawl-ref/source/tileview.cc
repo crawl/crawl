@@ -108,8 +108,10 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 #endif
 
-    case BRANCH_ELF:
+#if TAG_MAJOR_VERSION == 34
     case BRANCH_BLADE:
+#endif
+    case BRANCH_ELF:
         flv.wall  = TILE_WALL_HALL;
         flv.floor = TILE_FLOOR_HALL;
         return;

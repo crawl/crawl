@@ -59,8 +59,6 @@ static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);
 static bool _beogh_idol_revenge();
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
-static bool _tso_holy_revenge();
-static bool _ely_holy_revenge(const monster *victim);
 
 static bool _yred_random_zombified_hostile()
 {
@@ -329,12 +327,9 @@ static void _ely_dull_inventory_weapons()
 
         if (you.inv[i].base_type == OBJ_WEAPONS)
         {
-            // Don't dull artefacts at all, or weapons below -1/-1.
-            if (is_artefact(you.inv[i])
-                || you.inv[i].plus <= -1 && you.inv[i].plus2 <= -1)
-            {
+            // Don't dull artefacts at all, or weapons below -1.
+            if (is_artefact(you.inv[i]) || you.inv[i].plus <= -1)
                 continue;
-            }
 
             // 2/3 of the time, don't do anything.
             if (!one_chance_in(3))
@@ -348,8 +343,6 @@ static void _ely_dull_inventory_weapons()
             // Dull the weapon.
             if (you.inv[i].plus > -1)
                 you.inv[i].plus--;
-            if (you.inv[i].plus2 > -1)
-                you.inv[i].plus2--;
 
             // Update the weapon display, if necessary.
             if (wielded)
@@ -832,7 +825,6 @@ static bool _beogh_retribution()
                 set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
 
                 wpn.plus  = random2(3);
-                wpn.plus2 = random2(3);
                 wpn.sub_type = wpn_type;
 
                 set_ident_flags(wpn, ISFLAG_KNOW_TYPE);
@@ -1728,7 +1720,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     return true;
 }
 
-bool do_god_revenge(conduct_type thing_done, const monster *victim)
+bool do_god_revenge(conduct_type thing_done)
 {
     bool retval = false;
 
@@ -1736,16 +1728,6 @@ bool do_god_revenge(conduct_type thing_done, const monster *victim)
     {
     case DID_DESTROY_ORCISH_IDOL:
         retval = _beogh_idol_revenge();
-        break;
-    case DID_KILL_HOLY:
-    case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
-    case DID_HOLY_KILLED_BY_SERVANT:
-        // It's TSO who does the smiting and war stuff so he handles revenge
-        // for his allies as well -- unless another god has some special ties.
-        if (victim && victim->god == GOD_ELYVILON)
-            retval = _ely_holy_revenge(victim);
-        else
-            retval = _tso_holy_revenge();
         break;
     default:
         break;
@@ -1818,78 +1800,6 @@ static void _tso_blasts_cleansing_flame(const char *message)
         cleansing_flame(5 + (you.experience_level * 7) / 12,
                         CLEANSING_FLAME_TSO, you.pos());
     }
-}
-
-// Currently only used when holy beings have been killed.
-static string _get_tso_speech(const string key)
-{
-    string result = getSpeakString("the Shining One " + key);
-
-    if (result.empty())
-        return "The Shining One is angry!";
-
-    return result;
-}
-
-// Killing holy beings may anger TSO.
-static bool _tso_holy_revenge()
-{
-    god_acting gdact(GOD_SHINING_ONE, true);
-
-    // TSO watches evil god worshippers more closely.
-    if (!is_good_god(you.religion)
-        && ((is_evil_god(you.religion) && one_chance_in(6))
-            || one_chance_in(8)))
-    {
-        string revenge;
-
-        if (is_evil_god(you.religion))
-            revenge = _get_tso_speech("holy evil");
-        else
-            revenge = _get_tso_speech("holy other");
-
-        _tso_blasts_cleansing_flame(revenge.c_str());
-
-        return true;
-    }
-
-    return false;
-}
-
-// Killing apises may make Elyvilon sad.  She'll sulk and stuff.
-static bool _ely_holy_revenge(const monster *victim)
-{
-    god_acting gdact(GOD_ELYVILON, true);
-
-    if (!is_good_god(you.religion)
-        && ((is_evil_god(you.religion) && one_chance_in(4))
-            || one_chance_in(6)))
-    {
-        string msg = getSpeakString("Elyvilon holy");
-        if (msg.empty())
-            msg = "Elyvilon is displeased.";
-        mprf(MSGCH_GOD, GOD_ELYVILON, "%s", msg.c_str());
-
-        vector<monster*> targets;
-        for (monster_near_iterator mi(you.pos(), LOS_NO_TRANS); mi; ++mi)
-        {
-            if (mi->friendly())
-                targets.push_back(*mi);
-        }
-
-        mprf("You %sare rebuked by divine will.", targets.size() ? "and your allies "
-                                                                 : "");
-        for (vector<monster*>::const_iterator mi = targets.begin();
-             mi != targets.end(); ++mi)
-        {
-            (*mi)->weaken(NULL, 25);
-        }
-        you.weaken(NULL, 25);
-
-        return true;
-    }
-
-    return false;
 }
 
 static void _god_smites_you(god_type god, const char *message,

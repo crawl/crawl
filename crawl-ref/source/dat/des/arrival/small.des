@@ -207,7 +207,7 @@ ORIENT: float
 NSUBST: s = 1:+ / *:x, p = 1:+ / *:x, q = 1:+ / *:x, r = 1:+ / *:x
 NSUBST: _ = 1:w / *:., ' = 1:w / *:., ` = 1:w / 1:d / *:.
 SUBST:  w:wlxm, x:xccv, +=+++.
-ITEM:   stone / dart
+ITEM:   stone
 MAP
    ...........
   ..rrrrrrrrr..
@@ -239,7 +239,7 @@ SHUFFLE: d'
 : end
 SUBST:   '=.
 MONS:    worm
-ITEM:    stone / dart
+ITEM:    stone
 MAP
 xxxxxxxxxxxxxxxxx
 x%1.+d....{....'+
@@ -389,24 +389,6 @@ MAP
 ..cAAAAAc..
 .{.........
 ...........
-ENDMAP
-
-##############################################################
-# A gimmicky, but cute vault.
-NAME:   minmay_arrival_blink_away
-TAGS:   arrival generate_awake
-WEIGHT: 2
-ORIENT: float
-MONS:   kobold; dart ego:dispersal q:3
-MAP
-.............
-.x+xxxxxxx+x.
-.x.llllll{.l@
-.x.llllll>.l.
-.x.xxxxxxx+x.
-.x1x.........
-.xxx.........
-.............
 ENDMAP
 
 ##############################################################
@@ -777,7 +759,7 @@ ENDMAP
 NAME:   dpeg_arrival_chase
 TAGS:   arrival no_monster_gen no_pool_fixup no_rotate
 MONS:   kobold, hobgoblin / goblin / bat
-ITEM:   stone, dart
+ITEM:   stone
 ORIENT: float
 SUBST:  w : w l:1
 MAP
@@ -790,7 +772,7 @@ xwwww...........wwww...x
 xwwwwww.................
 xwwwwwwwwwwwwwww.......@
 x1wwwwwwwwwwwwwwww......
-x1e1...wwwwwwwwwwwwwww.x
+x1d1...wwwwwwwwwwwwwww.x
 x1d1...........wwwwwwwwx
 x>...................wwx
 xxxxxxxxxxxxxxxxxxxxxxxx
@@ -802,7 +784,7 @@ TAGS:    arrival no_monster_gen
 ORIENT:  float
 SHUFFLE: cvb
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 MAP
 xxxxxxxxxxxxxxx
 xcccccccx.....x
@@ -867,7 +849,7 @@ ORIENT:  float
 SHUFFLE: cxxx
 NSUBST:  . = 1:d / *:.
 SUBST:   T = TVVVV
-ITEM:    stone / dart
+ITEM:    stone
 MAP
         ccccccc@ccccccc
     ccccc.............ccccc
@@ -890,7 +872,7 @@ TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 SHUFFLE: cxxx
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 SUBST:   T = TVVVV
 MAP
      ccccccccccc
@@ -916,7 +898,7 @@ TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 SHUFFLE: cxxx
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 SUBST:   T = TVVVV
 MAP
          ccccc
@@ -970,7 +952,7 @@ TAGS:    arrival no_monster_gen no_rotate
 ORIENT:  float
 SHUFFLE: cxxx
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 SUBST:   T = TVVVV
 MAP
    ccccccccccccccccc
@@ -998,7 +980,7 @@ ORIENT: float
 SUBST:  ' = .x
 SUBST:  G : GTVt
 NSUBST: d = 1:d / *:'
-ITEM:   stone / dart
+ITEM:   stone
 MAP
                xxxxx
              xxx...xxx
@@ -1208,7 +1190,7 @@ NAME:   dpeg_arrival_simpleton_a
 TAGS:   arrival  no_monster_gen
 ORIENT: float
 NSUBST: . = 1:d / *:.
-ITEM:   stone / dart
+ITEM:   stone
 MAP
 @xx           xx@
 x.xxxx     xxxx.x
@@ -1277,7 +1259,7 @@ SHUFFLE: ABCDEFGH
 SUBST:   A={, B=', C=', D=', E=', F=', G=', H=d
 SUBST:   ' = .:70 1 w:2
 SUBST:   . = .:60 2:1 3:1
-ITEM:    stone / dart
+ITEM:    stone
 MONS:    fungus, rat, giant cockroach
 MAP
 xxxxxxxxxxxxxxxxx
@@ -1377,7 +1359,7 @@ NAME:   zaba_arrival_water
 TAGS:   arrival no_monster_gen no_item_gen no_rotate
 ORIENT: float
 SUBST:  T = TV, ? = wW, > = >d
-ITEM:   dart / stone
+ITEM:   stone
 MAP
 xxx@xxx@xxx@xxx
 x.............x
@@ -1560,7 +1542,7 @@ SUBST:  0 = 0 .
 SUBST:  ' = w'
 NSUBST: . = 1:d / *:.
 NSUBST: " = 1:@ / *:.
-ITEM:   stone / dart
+ITEM:   stone
 MAP
 ".0.0....0."
 xxwwwwwwwxxx
@@ -1582,7 +1564,7 @@ SUBST:   {=., [=.
 SUBST:   Z=x, Y=x, W=@, C=+x
 SUBST:   z=@, y=+, w=x
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 ORIENT:  float
 MAP
   xZxxx
@@ -1606,7 +1588,7 @@ ENDMAP
 NAME:    dpeg_arrival_sounds_slurp
 TAGS:    arrival no_monster_gen
 MONS:    generate_awake jelly / kobold
-ITEM:    dart
+ITEM:    club
 ORIENT:  float
 KPROP:   1d> = no_rtele_into
 SHUFFLE: {[(
@@ -1696,7 +1678,7 @@ ORIENT:  float
 SUBST:   ' : . x ':40, '=.x
 NSUBST:  . = 1:d / *:.
 NSUBST:  { = 1:{ / *:.
-ITEM:    stone / dart
+ITEM:    stone
 MAP
     xxxxxxxxxxxxxxxxx
    xx''xx''''''xx''xx
@@ -1998,7 +1980,7 @@ SHUFFLE: DX'/CY"
 SUBST:   D = c, XC" = x, 'Y = .
 SHUFFLE: cvb
 NSUBST:  . = 1:d / *:.
-ITEM:    stone / dart
+ITEM:    stone
 MAP
           xxxxxxxxxxx
      xxxxxx...xxxx..xx

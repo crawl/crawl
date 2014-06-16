@@ -92,7 +92,6 @@ natasha MONS_NATASHA
 ## Bees ('k')
 killer_bee MONS_KILLER_BEE
 queen_bee MONS_QUEEN_BEE
-giant_firefly MONS_FIREFLY
 
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT
@@ -104,11 +103,9 @@ komodo_dragon MONS_KOMODO_DRAGON
 ## Slugs ('j')
 %sdir mon/unique
 gastronok MONS_GASTRONOK
-%sdir mon/animals
-giant_slug MONS_GIANT_SLUG
-elephant_slug MONS_ELEPHANT_SLUG
 
 ## Rodents ('r')
+%sdir mon/animals
 %rim 0
 rat MONS_RAT
 green_rat MONS_GREEN_RAT

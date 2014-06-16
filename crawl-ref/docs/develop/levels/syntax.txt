@@ -414,10 +414,19 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              compatible with, for vaults that don't fit in with all layouts;
              the absence of this type of tags means it can go with any
              layout. Multiple layout_foo tags can be used if it can be used
-             with multiple layouts. Current values for "foo" are: rooms,
-             city, open, caves, cross, abyss, basic, delve, misc, shoals,
-             swamp, labyrinth (though currently random vaults aren't placed
-             in the last three).
+             with multiple layouts. Current values for "foo" are:
+             * angular: Mostly 1-cell-wide corridors
+             * rooms: Corridors connecting rooms
+             * passages: Mostly multi-cell corridors
+             * anastomotic: Corridor-like caves
+             * caves: Open caves
+             * city: A large open room with "building" rooms in it
+             * open: Layout is mostly open but not cavelike
+             * divisions: Just ajoining rooms
+             * vaults: Used in the Vaults branch (no normal vault placement)
+             * shoals: Used in the Shoals branch
+             * swamp: Used in the Swamp branch
+             * forest: Was used in the now-defunct Forest branch
           * "no_species_xx": Disables the vault for a given player species
              (two-letter abbreviation). Note that the current design rules
              strictly disallow varying the map generation based on the

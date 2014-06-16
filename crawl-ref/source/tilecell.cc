@@ -339,20 +339,24 @@ static dungeon_feature_type _safe_feat(coord_def gc)
     return env.map_knowledge(gc).feat();
 }
 
+static bool _feat_is_mangrove(dungeon_feature_type feat)
+{
+    return feat == DNGN_TREE && player_in_branch(BRANCH_SWAMP);
+}
+
 static bool _is_seen_land(coord_def gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
 
-    return feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat);
+    return feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat)
+           && !_feat_is_mangrove(feat);
 }
 
 static bool _is_seen_shallow(coord_def gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
 
-    return feat == DNGN_SHALLOW_WATER || (feat == DNGN_TREE
-                                          && player_in_branch(BRANCH_SWAMP));
-
+    return feat == DNGN_SHALLOW_WATER || _feat_is_mangrove(feat);
 }
 
 static void _pack_default_waves(const coord_def &gc, packed_cell *cell)

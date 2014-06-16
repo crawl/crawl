@@ -17,7 +17,6 @@ function ch_item_wieldable(it)
     local spells = make_hash(you.spells())
 
     if spells["Sublimation of Blood"] and food.ischunk(it)
-            or spells["Simulacrum"] and food.ismeaty(it)
     then
         return true
     end

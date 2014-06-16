@@ -646,17 +646,16 @@ cc.....cc
 ENDMAP
 
 ###############################################################################
-# Another one with a big bad monster. Likely to be a giant slug, which hits
-# slightly harder than the crocodile, but is much slower.
+# Another one with a big bad monster.
 #
-NAME:   sewer_the_slug
+NAME:   sewer_the_crocodile
 TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 SUBST:  - = WW...
 MONS:   kobold, jackal
 SUBST:  3 = 334
-KMONS:  3 = giant slug
-KMONS:  4 = Purgy, giant slug
+KMONS:  3 = crocodile
+KMONS:  4 = Purgy, crocodile
 ITEM:   potion of flight / potion of agility / potion of heal wounds / \
         potion of invisibility / potion of mutation / potion of degeneration /\
         scroll of blinking / scroll of teleportation / scroll of fear / \

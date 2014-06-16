@@ -146,6 +146,11 @@ sub aptitude_table
             my $fmt = "%+3d";
             $fmt = "%3d" if $skill == 0;
             $fmt = " NA" if $skill == -99;
+	    if ($abbr eq 'HP' || $abbr eq 'MP')
+	    {
+	        $skill = $skill * 10;
+                $fmt = "%+3d%%";
+	    }
             $line .= sprintf($fmt, $skill);
         }
         $text .= "$line\n";

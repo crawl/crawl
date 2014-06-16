@@ -861,7 +861,7 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_JEWELLERY_ON:
-        puton_ring(delay.parm1);
+        puton_ring(delay.parm1, false);
         break;
 
     case DELAY_ARMOUR_ON:
@@ -1560,7 +1560,9 @@ static inline bool _monster_warning(activity_interrupt_type ai,
         return false;
     else
     {
-        string text = mon->full_name(DESC_A);
+        string text = getMiscString(mon->name(DESC_DBNAME) + " title");
+        if (text.empty())
+            text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
             text += make_stringf(" (%s)",
@@ -1605,7 +1607,7 @@ static inline bool _monster_warning(activity_interrupt_type ai,
             text += " comes up the stairs.";
         else if (at.context == SC_DOWNSTAIRS)
             text += " comes down the stairs.";
-        else if (at.context == SC_GATE)
+        else if (at.context == SC_ARCH)
             text += " comes through the gate.";
         else if (at.context == SC_ABYSS)
             text += _abyss_monster_creation_message(mon);

@@ -602,22 +602,6 @@ vector<skill_type> get_crosstrain_skills(skill_type sk)
     }
 }
 
-float crosstrain_bonus(skill_type sk)
-{
-    int bonus = 1;
-
-    vector<skill_type> crosstrain_skills = get_crosstrain_skills(sk);
-
-    for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
-        if (you.skill(crosstrain_skills[i], 10, true)
-            >= you.skill(sk, 10, true) + CROSSTRAIN_THRESHOLD)
-        {
-            bonus *= 2;
-        }
-
-    return bonus;
-}
-
 skill_type opposite_skill(skill_type sk)
 {
     switch (sk)
@@ -667,15 +651,6 @@ bool compare_skills(skill_type sk1, skill_type sk2)
         return you.skill(sk1, 10, true) > you.skill(sk2, 10, true)
                || you.skill(sk1, 10, true) == you.skill(sk2, 10, true)
                   && you.skill_order[sk1] < you.skill_order[sk2];
-}
-
-bool is_antitrained(skill_type sk)
-{
-    skill_type opposite = opposite_skill(sk);
-    if (opposite == SK_NONE || you.skills[sk] >= 27)
-        return false;
-
-    return compare_skills(opposite, sk) && you.skills[opposite];
 }
 
 void dump_skills(string &text)
@@ -735,21 +710,12 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
 
     // We need to transfer by small steps and update skill levels each time
-    // so that cross/anti-training are handled properly.
+    // so that cross-training is handled properly.
     while (total_skp_lost < skp_max
            && (simu || total_skp_lost < (int)you.transfer_skill_points))
     {
         int skp_lost = min(20, skp_max - total_skp_lost);
         int skp_gained = skp_lost * penalty / 100;
-
-        float ct_bonus = crosstrain_bonus(tsk);
-        if (ct_bonus > 1 && fsk != tsk)
-        {
-            skp_gained *= ct_bonus;
-            you.ct_skill_points[tsk] += (1 - 1 / ct_bonus) * skp_gained;
-        }
-        else if (is_antitrained(tsk))
-            skp_gained /= ANTITRAIN_PENALTY;
 
         ASSERT(you.skill_points[fsk] > you.ct_skill_points[fsk]);
 

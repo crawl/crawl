@@ -111,6 +111,8 @@ static bool _read_char_chunk(package *save);
 
 const short GHOST_SIGNATURE = short(0xDC55);
 
+const int GHOST_LIMIT = 27; // max number of ghost files per level
+
 static void _redraw_all()
 {
     you.redraw_hit_points   = true;
@@ -531,9 +533,30 @@ static string _get_savefile_directory()
     return dir;
 }
 
+
+/**
+ * Location of legacy ghost files. (The save directory.)
+ *
+ * @return The path to the directory for old ghost files.
+ */
+static string _get_old_bonefile_directory()
+{
+    string dir = catpath(Options.shared_dir, crawl_state.game_savedir_path());
+    check_mkdir("Bones directory", &dir, false);
+    if (dir.empty())
+        dir = ".";
+    return dir;
+}
+
+/**
+ * Location of ghost files.
+ *
+ * @return The path to the directory for ghost files.
+ */
 static string _get_bonefile_directory()
 {
     string dir = catpath(Options.shared_dir, crawl_state.game_savedir_path());
+    dir = catpath(dir, "bones");
     check_mkdir("Bones directory", &dir, false);
     if (dir.empty())
         dir = ".";
@@ -749,69 +772,6 @@ static void _write_ghost_version(writer &outf)
     for (int i = 0; i < 3; ++i)
         marshallInt(outf, 0);
 }
-
-class safe_file_writer
-{
-public:
-    safe_file_writer(const string &filename,
-                     const char *mode = "wb",
-                     bool _lock = false)
-        : target_filename(filename), tmp_filename(target_filename),
-          filemode(mode), lock(_lock), filep(NULL)
-    {
-        tmp_filename = target_filename + ".tmp";
-    }
-
-    ~safe_file_writer()
-    {
-        close();
-        if (tmp_filename != target_filename)
-        {
-            if (rename_u(tmp_filename.c_str(), target_filename.c_str()))
-            {
-                end(1, true, "failed to rename %s -> %s",
-                    tmp_filename.c_str(), target_filename.c_str());
-            }
-        }
-    }
-
-    FILE *open()
-    {
-        if (!filep)
-        {
-            filep = (lock? lk_open(filemode, tmp_filename)
-                     : fopen_u(tmp_filename.c_str(), filemode));
-            if (!filep)
-            {
-                end(-1, true,
-                    "Failed to open \"%s\" (%s; locking:%s)",
-                    tmp_filename.c_str(),
-                    filemode,
-                    lock? "YES" : "no");
-            }
-        }
-        return filep;
-    }
-
-    void close()
-    {
-        if (filep)
-        {
-            if (lock)
-                lk_close(filep, tmp_filename);
-            else
-                fclose(filep);
-            filep = NULL;
-        }
-    }
-
-private:
-    string target_filename, tmp_filename;
-    const char *filemode;
-    bool lock;
-
-    FILE *filep;
-};
 
 static void _write_tagged_chunk(const string &chunkname, tag_type tag)
 {
@@ -1718,12 +1678,63 @@ void save_game_state()
 
 static string _make_ghost_filename()
 {
-    return _get_bonefile_directory() + "bones."
+    return "bones."
            + replace_all(level_id::current().describe(), ":", "-");
 }
 
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
 
+/**
+ * Lists all bonefiles for the current level.
+ *
+ * @return A vector containing absolute paths to 0+ bonefiles.
+ */
+static vector<string> _list_bones()
+{
+    string bonefile_dir = _get_bonefile_directory();
+    string base_filename = _make_ghost_filename();
+    string underscored_filename = base_filename + "_";
+
+    vector<string> filenames = get_dir_files(bonefile_dir);
+    vector<string> bonefiles;
+    for (std::vector<string>::iterator it = filenames.begin();
+         it != filenames.end(); ++it)
+    {
+        const string &filename = *it;
+
+        if (starts_with(filename, underscored_filename))
+            bonefiles.push_back(bonefile_dir + filename);
+    }
+
+    string old_bonefile = _get_old_bonefile_directory() + base_filename;
+    if (access(old_bonefile.c_str(), F_OK) == 0)
+    {
+        dprf("Found old bonefile %s", old_bonefile.c_str());
+        bonefiles.push_back(old_bonefile);
+    }
+
+    return bonefiles;
+}
+
+/**
+ * Attempts to find a file containing ghost(s) appropriate for the player.
+ *
+ * @return The filename of an appropriate bones file; may be "".
+ */
+static string _find_ghost_file()
+{
+    vector<string> bonefiles = _list_bones();
+    if (bonefiles.empty())
+        return "";
+    return bonefiles[ui_random(bonefiles.size())];
+}
+
+/**
+ * Attempt to load one or more ghosts into the level.
+ *
+ * @param creating_level    Whether a level is currently being generated.
+ * @return                  Whether ghosts were actually generated.
+ */
 bool load_ghost(bool creating_level)
 {
     const bool wiz_cmd = (crawl_state.prev_cmd == CMD_WIZARD);
@@ -1752,13 +1763,20 @@ bool load_ghost(bool creating_level)
 
 #endif // BONES_DIAGNOSTICS
 
-    const string ghost_filename = _make_ghost_filename();
+    const string ghost_filename = _find_ghost_file();
+    if (ghost_filename.empty())
+    {
+        if (wiz_cmd && !creating_level)
+            mprf(MSGCH_PROMPT, "No ghost files for this level.");
+        return false; // no such ghost.
+    }
+
     reader inf(ghost_filename);
     if (!inf.valid())
     {
         if (wiz_cmd && !creating_level)
-            mprf(MSGCH_PROMPT, "No ghost files for this level.");
-        return false;                 // no such ghost.
+            mprf(MSGCH_PROMPT, "Ghost file invalidated before read.");
+        return false;
     }
 
     inf.set_safe_read(true); // don't die on 0-byte bones
@@ -2231,6 +2249,48 @@ static bool _ghost_version_compatible(reader &inf)
     return true;
 }
 
+/**
+ * Attempt to open a new bones file for saving ghosts.
+ *
+ * @param[out] return_gfilename     The name of the file created, if any.
+ * @return                          A FILE object, or NULL.
+ **/
+static FILE* _make_bones_file(string * return_gfilename)
+{
+
+    const string bone_dir = _get_bonefile_directory();
+    const string base_filename = _make_ghost_filename();
+    for (int i = 0; i < GHOST_LIMIT; i++)
+    {
+        const string g_file_name = make_stringf("%s%s_%d", bone_dir.c_str(),
+                                                base_filename.c_str(), i);
+        FILE *gfil = lk_open_exclusive(g_file_name);
+        // need to check file size, so can't open 'wb' - would truncate!
+
+        if (!gfil)
+        {
+            dprf("Could not open %s", g_file_name.c_str());
+            continue;
+        }
+
+        dprf("found %s", g_file_name.c_str());
+
+        *return_gfilename = g_file_name;
+        return gfil;
+    }
+
+    return NULL;
+}
+
+/**
+ * Attempt to save all ghosts from the current level.
+ *
+ * Including the player, if they're not undead. Doesn't save ghosts from D:1-2
+ * or Temple.
+ *
+ * @param force   Forces ghost generation even in otherwise-disallowed levels.
+ **/
+
 void save_ghost(bool force)
 {
 #ifdef BONES_DIAGNOSTICS
@@ -2245,27 +2305,6 @@ void save_ghost(bool force)
 
 #endif // BONES_DIAGNOSTICS
 
-    // No ghosts on D:1, D:2, or the Temple.
-    if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
-                   || player_in_branch(BRANCH_TEMPLE)))
-    {
-        return;
-    }
-
-    const string cha_fil = _make_ghost_filename();
-    FILE *gfile = fopen_u(cha_fil.c_str(), "rb");
-
-    // Don't overwrite existing bones!
-    if (gfile != NULL)
-    {
-#ifdef BONES_DIAGNOSTICS
-        if (do_diagnostics)
-            mprf(MSGCH_DIAGNOSTICS, "Ghost file for this level already exists.");
-#endif
-        fclose(gfile);
-        return;
-    }
-
     ghosts = ghost_demon::find_ghosts();
 
     if (ghosts.empty())
@@ -2277,15 +2316,44 @@ void save_ghost(bool force)
         return;
     }
 
-    safe_file_writer sw(cha_fil, "wb", true);
-    writer outw(cha_fil, sw.open());
+    // No ghosts on D:1, D:2, or the Temple.
+    if (!force && (you.depth < 3 && player_in_branch(BRANCH_DUNGEON)
+                   || player_in_branch(BRANCH_TEMPLE)))
+    {
+        return;
+    }
+
+    if (_list_bones().size() >= static_cast<size_t>(GHOST_LIMIT))
+    {
+#ifdef BONES_DIAGNOSTICS
+        if (do_diagnostics)
+            mprf(MSGCH_DIAGNOSTICS, "Too many ghosts for this level already!");
+#endif
+        return;
+    }
+
+    string g_file_name = "";
+    FILE* ghost_file = _make_bones_file(&g_file_name);
+
+    if (!ghost_file)
+    {
+#ifdef BONES_DIAGNOSTICS
+        if (do_diagnostics)
+            mprf(MSGCH_DIAGNOSTICS, "Could not open file to save ghosts.");
+#endif
+        return;
+    }
+
+    writer outw(g_file_name, ghost_file);
 
     _write_ghost_version(outw);
     tag_write(TAG_GHOST, outw);
 
+    lk_close(ghost_file, g_file_name);
+
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
-        mprf(MSGCH_DIAGNOSTICS, "Saved ghost (%s).", cha_fil.c_str());
+        mprf(MSGCH_DIAGNOSTICS, "Saved ghosts (%s).", g_file_name.c_str());
 #endif
 }
 

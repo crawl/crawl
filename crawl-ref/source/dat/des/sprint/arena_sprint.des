@@ -363,7 +363,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Misc
                 "centaur w:15 / centaur warrior w:5 / nessos w:1",
                 "ugly thing w:30 / w:15 very ugly thing / w:1 kirke",
-                "vampire mosquito / red wasp w:5 / yellow wasp / giant firefly",
+                "vampire mosquito / red wasp w:5 / yellow wasp",
                 "ogre mage / w:5 deep elf mage / vampire mage / naga mage",
                 "troll / deep troll / iron troll",
                 "fire drake w:5 / swamp drake / swamp dragon /\
@@ -516,7 +516,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ghost moth / w:30 lorocyproca / eye of draining",
                 "giant eyeball w:5 / ettin",
                 "executioner / w:1 ignacio",
-                "ghost moth / moth of wrath / w:15 vampire mosquito / w:15 giant firefly"
+                "ghost moth / moth of wrath / w:30 vampire mosquito"
             }
         elseif round <= 36 then
             mon_set = {
@@ -582,12 +582,12 @@ function arena_sprint_get_monster_set(round, boss)
                 "ghost moth / w:30 lorocyproca / eye of draining",
                 "giant eyeball w:5 / tentacled monstrosity",
                 "executioner / w:1 ignacio / w:5 death drake",
-                "ghost moth / moth of wrath / w:5 vampire mosquito / w:5 giant firefly",
+                "ghost moth / moth of wrath / vampire mosquito",
                 -- Aaaarggghhhhh!
                 "daeva / w:15 angel",
                 "greater mummy / mummy priest / guardian mummy",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan / air elemental w:20",
-                "elephant slug col:magenta name:orb_slug n_rpl n_des n_spe spells:orb_of_destruction",
+                "goliath beetle hd:20 col:magenta name:orb_beetle n_rpl n_des n_spe spells:orb_of_destruction",
                 "brimstone fiend / ice fiend / shadow fiend / executioner / hell sentinel",
                 "titan / spriggan air mage / blizzard demon / w:20 sky beast",
                 "sphinx / place:Tomb:$",
@@ -657,7 +657,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "daeva",
                 "greater mummy / mummy priest",
                 "air elemental name:greater n_adj perm_ench:tornado col:lightcyan",
-                "elephant slug col:magenta name:orb_slug n_rpl n_des n_spe spells:orb_of_destruction",
+                "goliath beetle hd:20 col:magenta name:orb_beetle n_rpl n_des n_spe spells:orb_of_destruction",
                 "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
                 "titan / spriggan air mage / blizzard demon",
                 "sphinx",
@@ -1040,7 +1040,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
             scroll of recharging q:3 | scroll of recharging q:3 | scroll of recharging q:3 |\
             scroll of silence q:3 | scroll of brand weapon | scroll of vulnerability q:3 |\
-            scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon iii q:6 |\
+            scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon q:8 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
 KFEAT:  FS = distillery shop use_all count:17 greed:10 ; \
              potion of haste q:3 | potion of haste q:4 | potion of haste q:5 |\

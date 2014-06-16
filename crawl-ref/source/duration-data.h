@@ -341,7 +341,6 @@ static const duration_def duration_data[] =
     { DUR_FLIGHT, false, 0, "", "", "flight", "" },
     { DUR_POISONING, false, 0, "", "", "poisoning", "" },
     { DUR_SURE_BLADE, false, 0, "", "", "sure blade", "" },
-    { DUR_BUILDING_RAGE, false, 0, "", "", "building rage", "" },
     { DUR_PIETY_POOL, false, 0, "", "", "piety pool", "" },
     { DUR_DIVINE_SHIELD, false, 0, "", "", "divine shield", "" },
     { DUR_REGENERATION, false, 0, "", "", "regeneration", "" },
@@ -357,7 +356,6 @@ static const duration_def duration_data[] =
     { DUR_TIME_STEP, false, 0, "", "", "time step", "" },
     { DUR_ICEMAIL_DEPLETED, false, 0, "", "", "icemail depleted", "" },
     { DUR_PARALYSIS_IMMUNITY, false, 0, "", "", "paralysis immunity", "" },
-    { DUR_AMBROSIA, false, 0, "", "", "ambrosia", "" },
     { DUR_VEHUMET_GIFT, false, 0, "", "", "vehumet gift", "" },
     { DUR_SICKENING, false, 0, "", "", "sickening", "" },
     { DUR_WATER_HOLD, false, 0, "", "", "drowning", "" },
@@ -386,5 +384,7 @@ static const duration_def duration_data[] =
     { DUR_SPIRIT_HOWL, false, 0, "", "", "old spirit howl", "" },
     { DUR_SONG_OF_SHIELDING, false, 0, "", "", "old song of shielding", "" },
     { DUR_ANTENNAE_EXTEND, false, 0, "", "", "old antennae extend", "" },
+    { DUR_AMBROSIA, false, 0, "", "", "old ambrosia", "" },
+    { DUR_BUILDING_RAGE, false, 0, "", "", "old building rage", "" },
 #endif
 };

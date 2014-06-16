@@ -323,7 +323,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
-      "walk on water" },
+      "walk on water and give items to your followers" },
     // Jiyva
     { "request a jelly",
       "temporarily halt your jellies' item consumption",
@@ -468,7 +468,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "smite your foes",
       "gain orcish followers",
       "recall your orcish followers",
-      "walk on water" },
+      "walk on water or give items to your followers" },
     // Jiyva
     { "request a jelly",
       "temporarily halt your jellies' item consumption",
@@ -1650,6 +1650,54 @@ bool is_follower(const monster* mon)
         return mon->alive() && mon->friendly();
 }
 
+/**
+ * Given the weapon type, find an upgrade.
+ *
+ * @param old_type the current weapon_type of the weapon.
+ * @param has_shield whether we can go from 1h -> 2h.
+ * @param highlevel whether the orc is a strong type.
+ * @returns a new weapon type (or sometimes the old one).
+ */
+// TODO: a less awful way of doing this?
+static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
+{
+    switch (old_type)
+    {
+    case WPN_CLUB:        return WPN_WHIP;
+    case WPN_WHIP:        return WPN_MACE;
+    case WPN_MACE:        return WPN_FLAIL;
+    case WPN_FLAIL:       return WPN_MORNINGSTAR;
+    case WPN_MORNINGSTAR: return !has_shield ? WPN_DIRE_FLAIL  :
+                                 highlevel   ? WPN_EVENINGSTAR :
+                                               WPN_MORNINGSTAR;
+    case WPN_DIRE_FLAIL:  return WPN_GREAT_MACE;
+
+    case WPN_DAGGER:      return WPN_SHORT_SWORD;
+    case WPN_SHORT_SWORD: return WPN_CUTLASS;
+    case WPN_CUTLASS:     return WPN_SCIMITAR;
+    case WPN_FALCHION:    return WPN_LONG_SWORD;
+    case WPN_LONG_SWORD:  return WPN_SCIMITAR;
+    case WPN_SCIMITAR:    return !has_shield ? WPN_GREAT_SWORD   :
+                                 highlevel   ? WPN_BASTARD_SWORD :
+                                               WPN_SCIMITAR;
+    case WPN_GREAT_SWORD: return highlevel ? WPN_CLAYMORE : WPN_GREAT_SWORD;
+
+    case WPN_HAND_AXE:    return WPN_WAR_AXE;
+    // Low level orcs shouldn't get fairly rare items.
+    case WPN_WAR_AXE:     return !highlevel  ? WPN_WAR_AXE   :
+                                 has_shield  ? WPN_BROAD_AXE :
+                                               WPN_BATTLEAXE;
+    case WPN_BATTLEAXE:   return highlevel ? WPN_EXECUTIONERS_AXE : WPN_BATTLEAXE;
+
+    case WPN_SPEAR:       return WPN_TRIDENT;
+    case WPN_TRIDENT:     return has_shield ? WPN_TRIDENT : WPN_HALBERD;
+    case WPN_HALBERD:     return WPN_GLAIVE;
+    case WPN_GLAIVE:      return highlevel ? WPN_BARDICHE : WPN_GLAIVE;
+
+    default:              return old_type;
+    }
+}
+
 static bool _blessing_wpn(monster* mon)
 {
     // Pick a monster's weapon.
@@ -1670,13 +1718,43 @@ static bool _blessing_wpn(monster* mon)
 
     item_def& wpn(mitm[slot]);
 
-    // And enchant or uncurse it.
-    int which = random2(2);
-    if (!enchant_weapon(wpn, which, 1 - which, NULL))
+    if (you_worship(GOD_BEOGH)
+        && !is_artefact(wpn)
+        && x_chance_in_y(mon->hit_dice, 250)
+        && !mon->props.exists("given beogh weapon"))
+    {
+        wpn.sub_type = _upgrade_weapon_type(wpn.sub_type,
+                                            mon->inv[MSLOT_SHIELD] != NON_ITEM,
+                                            mon->type == MONS_ORC_KNIGHT
+                                             || mon->type == MONS_ORC_WARLORD);
+    }
+
+    // Enchant and uncurse it.
+    if (!enchant_weapon(wpn, true))
         return false;
 
     item_set_appearance(wpn);
     return true;
+}
+
+static void _upgrade_shield(item_def &sh)
+{
+    // Promote from buckler up through large shield.
+    if (sh.sub_type >= ARM_FIRST_SHIELD && sh.sub_type < ARM_LAST_SHIELD)
+        sh.sub_type++;
+}
+
+static void _upgrade_body_armour(item_def &arm)
+{
+    // Promote from robe up through plate.
+    if (arm.sub_type >= ARM_FIRST_MUNDANE_BODY
+        && arm.sub_type < ARM_LAST_MUNDANE_BODY
+        // These are supposed to be robe-only.
+        && arm.special != SPARM_ARCHMAGI
+        && arm.special != SPARM_RESISTANCE)
+    {
+        arm.sub_type++;
+    }
 }
 
 static bool _blessing_AC(monster* mon)
@@ -1695,6 +1773,15 @@ static bool _blessing_AC(monster* mon)
     while (slot == NON_ITEM);
 
     item_def& arm(mitm[slot]);
+
+    if (you_worship(GOD_BEOGH) && !is_artefact(arm)
+        && x_chance_in_y(mon->hit_dice, 250))
+    {
+        if (slot == shield && !mon->props.exists("given beogh shield"))
+            _upgrade_shield(arm);
+        else if (slot == armour && !mon->props.exists("given beogh armour"))
+            _upgrade_body_armour(arm);
+    }
 
     int ac_change;
 
@@ -2759,30 +2846,65 @@ void dock_piety(int piety_loss, int penance)
     }
 }
 
-// Scales a piety number, applying boosters (amulet of faith).
+// Scales a piety number, applying modifiers (faith, forlorn).
 int piety_scale(int piety)
 {
-    if (piety < 0)
-        return -piety_scale(-piety);
+    return piety + (you.faith() * div_rand_round(piety, 3));
+}
 
-    if (you.faith())
-        return piety + div_rand_round(piety, 3);
+/** Gain or lose piety to reach a certain value.
+ *
+ * If the player cannot gain piety (because they worship Xom, Gozag, or
+ * no god), their piety will be unchanged.
+ *
+ * @param piety The new piety value.
+ * @pre piety is between 0 and MAX_PIETY, inclusive.
+ */
+void set_piety(int piety)
+{
+    ASSERT(piety >= 0);
+    ASSERT(piety <= MAX_PIETY);
 
-    return piety;
+    // We have to set the exact piety value this way, because diff may
+    // be decreased to account for things like penance and gift timeout.
+    int diff;
+    do
+    {
+        diff = piety - you.piety;
+        if (diff > 0)
+        {
+            if (!gain_piety(diff, 1, false))
+                break;
+        }
+        else if (diff < 0)
+            lose_piety(-diff);
+    }
+    while (diff != 0);
 }
 
 static void _gain_piety_point();
-void gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
+/**
+ * Gain an amount of piety.
+ *
+ * @param original_gain The numerator of the nominal piety gain.
+ * @param denominator The denominator of the nominal piety gain.
+ * @param should_scale_piety Should the piety gain be scaled by faith,
+ *   forlorn, and Sprint?
+ * @return True if something happened, or if another call with the same
+ *   arguments might cause something to happen (because of random number
+ *   rolls).
+ */
+bool gain_piety(int original_gain, int denominator, bool should_scale_piety)
 {
     if (original_gain <= 0)
-        return;
+        return false;
 
     // Xom uses piety differently; Gozag doesn't at all.
     if (you_worship(GOD_NO_GOD)
         || you_worship(GOD_XOM)
         || you_worship(GOD_GOZAG))
     {
-        return;
+        return false;
     }
 
     int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
@@ -2803,6 +2925,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         }
         you.piety_max[you.religion] = you.piety;
     }
+    return true;
 }
 
 static void _gain_piety_point()
@@ -3623,7 +3746,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
  * @param greedy_explore If true, the return value is based on whether
  *                       we should make explore greedy for items under
  *                       this god.
- * @returns True if the god accepts items for sacrifice, false otherwise.
+ * @return  True if the god accepts items for sacrifice, false otherwise.
 */
 bool god_likes_items(god_type god, bool greedy_explore)
 {
@@ -3658,7 +3781,7 @@ bool god_likes_items(god_type god, bool greedy_explore)
  *
  * @param god The god.
  * @param item The item.
- * @returns True if the god likes the item, false otherwise.
+ * @return  True if the god likes the item, false otherwise.
 */
 bool god_likes_item(god_type god, const item_def& item)
 {
@@ -3689,12 +3812,6 @@ bool god_likes_item(god_type god, const item_def& item)
     case GOD_BEOGH:
         return item.base_type == OBJ_CORPSES
                && mons_genus(item.mon_type) == MONS_ORC;
-
-    case GOD_NEMELEX_XOBEH:
-        return !is_deck(item)
-               && !item.is_critical()
-               && !item_is_rune(item)
-               && item.base_type != OBJ_GOLD;
 
     case GOD_ASHENZARI:
         return item.base_type == OBJ_SCROLLS
@@ -3806,9 +3923,7 @@ static void _god_welcome_handle_gear()
 
     if (you_worship(GOD_IGNI_IPTHES))
     {
-        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_I, ID_KNOWN_TYPE);
-        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_II, ID_KNOWN_TYPE);
-        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III, ID_KNOWN_TYPE);
+        set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON, ID_KNOWN_TYPE);
         set_ident_type(OBJ_SCROLLS, SCR_ENCHANT_ARMOUR, ID_KNOWN_TYPE);
     }
 
@@ -3986,7 +4101,7 @@ void god_pitch(god_type which_god)
     if (crawl_state.game_is_tutorial())
     {
         // Tutorial needs berserk usable.
-        gain_piety(30, 1, true, false);
+        gain_piety(30, 1, false);
     }
 
     if (you_worship(GOD_BEOGH))
@@ -4111,7 +4226,7 @@ void god_pitch(god_type which_god)
         }
         // Give a piety bonus when switching between good gods.
         if (old_piety > piety_breakpoint(0))
-            gain_piety(old_piety - piety_breakpoint(0), 2, true, false);
+            gain_piety(old_piety - piety_breakpoint(0), 2, false);
     }
 
     // Warn if a good god is starting wrath now.
@@ -4142,11 +4257,11 @@ void god_pitch(god_type which_god)
     if (you.char_class == JOB_MONK && had_gods() <= 1)
     {
         // monks get bonus piety for first god
-        gain_piety(35, 1, true, false);
+        gain_piety(35, 1, false);
     }
 
     if (you_worship(GOD_LUGONU) && you.worshipped[GOD_LUGONU] == 1)
-        gain_piety(20, 1, true, false);  // allow instant access to first power
+        gain_piety(20, 1, false);  // allow instant access to first power
 
     // Complimentary jelly upon joining.
     if (you_worship(GOD_JIYVA))
@@ -4191,8 +4306,9 @@ void god_pitch(god_type which_god)
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
         {
-            if (_abil_chg_message(god_gain_power_messages[you.religion][i],
-                                  "You can now %s.", i))
+            if (you.gold >= get_gold_cost(abilities[i])
+                && _abil_chg_message(god_gain_power_messages[you.religion][i],
+                                     "You have enough gold to %s.", i))
             {
                 needs_redraw = true;
             }
@@ -4385,6 +4501,8 @@ bool god_hates_ability(ability_type ability, god_type god)
         case ABIL_DELAYED_FIREBALL:
         case ABIL_HELLFIRE:
             return god == GOD_DITHMENOS;
+        case ABIL_EVOKE_BERSERK:
+            return god == GOD_CHEIBRIADOS;
         default:
             break;
     }

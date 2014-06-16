@@ -245,7 +245,25 @@ static monsterentry mondata[] =
     AXED_MON(MONS_PHOENIX)
     AXED_MON(MONS_SHEDU)
     AXED_MON(MONS_PLAGUE_SHAMBLER)
+    AXED_MON(MONS_GIANT_SLUG)
+    AXED_MON(MONS_FIREFLY)
 #endif
+
+// Used for genus monsters (which are used for grouping monsters by how they
+// work and in comes-into-view messages.
+#define DUMMY_GENUS(id, glyph, colour, name) \
+{ \
+    (id), (glyph), (colour), (name), \
+    M_CANT_SPAWN, \
+    MR_NO_FLAGS, \
+    0, 10, (id), (id), MH_NONLIVING, -3, \
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK }, \
+    { 0, 0, 0, 0 }, \
+    0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, \
+    I_PLANT, HT_LAND, FL_NONE, 0, DEFAULT_ENERGY, \
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_MISC \
+},
+
 
 // Real monsters begin here {dlb}:
 
@@ -1118,18 +1136,7 @@ static monsterentry mondata[] =
     MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_LITTLE, MON_SHAPE_QUADRUPED
 },
 
-{ // dummy genus monster
-    MONS_BEAR, 'h', LIGHTGREY, "bear",
-    M_WARM_BLOOD | M_SPELLCASTER | M_FAKE_SPELLS | M_CANT_SPAWN,
-    MR_NO_FLAGS,
-    1100, 10, MONS_BEAR, MONS_BEAR, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 12}, {AT_CLAW, AF_PLAIN, 8}, {AT_CLAW, AF_PLAIN, 8},
-       AT_NO_ATK },
-    { 7, 4, 4, 0 },
-    5, 8, MST_BERSERK_ESCAPE, CE_CLEAN, Z_NOZOMBIE, S_GROWL,
-    I_ANIMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_TAILLESS
-},
+DUMMY_GENUS(MONS_BEAR, 'h', LIGHTGREY, "bear")
 
 {
     MONS_POLAR_BEAR, 'h', LIGHTBLUE, "polar bear",
@@ -1232,17 +1239,7 @@ static monsterentry mondata[] =
 },
 
 // drakes ('k')
-{ // dummy genus monster
-    MONS_DRAKE, 'k', LIGHTGRAY, "drake",
-    M_WARM_BLOOD | M_CANT_SPAWN,
-    MR_RES_POISON,
-    900, 16, MONS_DRAKE, MONS_DRAKE, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 5, 5, 0 },
-    3, 11, MST_NO_SPELLS, CE_POISON_CONTAM, Z_NOZOMBIE, S_ROAR,
-    I_ANIMAL, HT_LAND, FL_WINGED, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_WINGED
-},
+DUMMY_GENUS(MONS_DRAKE, 'k', LIGHTGREY, "drake")
 
 {
     MONS_SWAMP_DRAKE, 'k', BROWN, "swamp drake",
@@ -1306,17 +1303,7 @@ static monsterentry mondata[] =
 },
 
 // lizards ('l')
-{ // dummy genus monster
-    MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard",
-    M_COLD_BLOOD | M_CANT_SPAWN,
-    MR_NO_FLAGS,
-    170, 10, MONS_GIANT_LIZARD, MONS_GIANT_LIZARD, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 1, 2, 0 },
-    0, 15, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SILENT,
-    I_REPTILE, HT_AMPHIBIOUS, FL_NONE, 10, SWIM_ENERGY(6),
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY, MON_SHAPE_QUADRUPED
-},
+DUMMY_GENUS(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
 
 {
     MONS_GIANT_NEWT, 'l', GREEN, "giant newt",
@@ -1773,7 +1760,7 @@ static monsterentry mondata[] =
 
 {
     MONS_KILLER_KLOWN, 'p', BLACK, "Killer Klown",
-    M_SEE_INVIS | M_SPEAKS | M_WARM_BLOOD | M_FAST_REGEN,
+    M_SEE_INVIS | M_SPEAKS | M_WARM_BLOOD | M_FAST_REGEN | M_BLINKER,
     MR_NO_FLAGS,
     0, 17, MONS_HUMAN, MONS_HUMAN, MH_NATURAL, -6,
     { {AT_HIT, AF_KLOWN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2081,11 +2068,13 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_TAILLESS
 },
 
+DUMMY_GENUS(MONS_CRAB, 't', LIGHTGREY, "crab")
+
 {
     MONS_FIRE_CRAB, 't', LIGHTRED, "fire crab",
     M_NO_SKELETON,
     MR_VUL_POISON | mrd(MR_RES_FIRE, 3),
-    320, 25, MONS_FIRE_CRAB, MONS_FIRE_CRAB, MH_NATURAL, -4,
+    320, 25, MONS_CRAB, MONS_FIRE_CRAB, MH_NATURAL, -4,
     { {AT_BITE, AF_FIRE, 15}, {AT_CLAW, AF_FIRE, 15}, AT_NO_ATK, AT_NO_ATK },
     { 8, 4, 5, 0 },
     9, 6, MST_NO_SPELLS, CE_POISON_CONTAM, Z_SMALL, S_SILENT,
@@ -2094,10 +2083,22 @@ static monsterentry mondata[] =
 },
 
 {
+    MONS_GHOST_CRAB, 't', LIGHTGREY, "ghost crab",
+    M_NO_SKELETON,
+    MR_VUL_POISON | mrd(MR_RES_NEG, 3),
+    320, 25, MONS_CRAB, MONS_GHOST_CRAB, MH_NATURAL, -4,
+    { {AT_BITE, AF_DRAIN_XP, 20}, {AT_CLAW, AF_DRAIN_XP, 15}, AT_NO_ATK, AT_NO_ATK },
+    { 9, 4, 5, 0 },
+    9, 6, MST_NO_SPELLS, CE_ROT, Z_SMALL, S_SILENT,
+    I_INSECT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL, MON_SHAPE_QUADRUPED
+},
+
+{
     MONS_APOCALYPSE_CRAB, 't', WHITE, "apocalypse crab",
     M_NO_SKELETON | M_SEE_INVIS,
     MR_VUL_POISON | mrd(MR_RES_FIRE | MR_RES_COLD, 2),
-    320, 13, MONS_APOCALYPSE_CRAB, MONS_APOCALYPSE_CRAB, MH_DEMONIC, -5,
+    320, 13, MONS_CRAB, MONS_APOCALYPSE_CRAB, MH_DEMONIC, -5,
     { {AT_BITE, AF_CHAOS, 15}, {AT_CLAW, AF_CHAOS, 15}, AT_NO_ATK, AT_NO_ATK },
     { 8, 4, 5, 0 },
     11, 6, MST_NO_SPELLS, CE_MUTAGEN, Z_SMALL, S_SILENT,
@@ -2171,7 +2172,7 @@ static monsterentry mondata[] =
 
 {
     MONS_INSUBSTANTIAL_WISP, 'v', LIGHTGREY, "insubstantial wisp",
-    M_INSUBSTANTIAL,
+    M_INSUBSTANTIAL | M_BLINKER,
     mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD, 2),
     0, 8, MONS_INSUBSTANTIAL_WISP, MONS_INSUBSTANTIAL_WISP,
         MH_NONLIVING, MAG_IMMUNE,
@@ -2243,23 +2244,12 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
 },
 
-{
-    MONS_GIANT_SLUG, 'w', GREEN, "giant slug",
-    M_NO_SKELETON,
-    MR_NO_FLAGS,
-    850, 4, MONS_GIANT_SLUG, MONS_GIANT_SLUG, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 5, 3, 0 },
-    0, 2, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT,
-    I_INSECT, HT_AMPHIBIOUS, FL_NONE, 6, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_SNAIL
-},
-
+// dummy genus monster; not using DUMMY_GENUS since it's also a dummy species
 {
     MONS_ELEPHANT_SLUG, 'w', WHITE, "elephant slug",
-    M_NO_SKELETON,
+    M_NO_SKELETON| M_CANT_SPAWN,
     MR_VUL_POISON,
-    1800, 2, MONS_GIANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, -3,
+    1800, 2, MONS_ELEPHANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 20, 5, 3, 0 },
     2, 1, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT,
@@ -2408,29 +2398,7 @@ static monsterentry mondata[] =
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY, MON_SHAPE_INSECT_WINGED
 },
 
-{
-    MONS_FIREFLY, 'y', LIGHTBLUE, "giant firefly",
-    M_NO_SKELETON,
-    MR_VUL_POISON,
-    200, 10, MONS_FIREFLY, MONS_FIREFLY, MH_NATURAL, -7,
-    { {AT_BITE, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 3, 0 },
-    1, 18, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SILENT,
-    I_INSECT, HT_LAND, FL_WINGED, 16, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY, MON_SHAPE_INSECT_WINGED
-},
-
-{ // dummy genus monster
-    MONS_MOTH, 'y', WHITE, "moth",
-    M_NO_SKELETON | M_CANT_SPAWN,
-    MR_NO_FLAGS,
-    300, 10, MONS_MOTH, MONS_MOTH, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 9, 3, 5, 0 },
-    0, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT,
-    I_INSECT, HT_LAND, FL_WINGED, 12, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL, MON_SHAPE_INSECT_WINGED
-},
+DUMMY_GENUS(MONS_MOTH, 'y', WHITE, "moth")
 
 {
     MONS_GHOST_MOTH, 'y', MAGENTA, "ghost moth",
@@ -2510,14 +2478,13 @@ static monsterentry mondata[] =
 // placed in the Crypt.
 {
     MONS_CURSE_SKULL, 'z', LIGHTCYAN, "curse skull",
-    M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_NOISY_SPELLS | M_MAINTAIN_RANGE
-    | M_VIGILANT,
+    M_SPELLCASTER | M_SEE_INVIS | M_STATIONARY | M_SPEAKS | M_NOISY_SPELLS,
     mrd(MR_RES_ELEC | MR_RES_COLD, 2) | MR_RES_HELLFIRE,
     0, 20, MONS_CURSE_SKULL, MONS_CURSE_SKULL, MH_UNDEAD, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 13, 0, 0, 55 },
-    25, 3, MST_CURSE_SKULL, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN,
-    I_HIGH, HT_LAND, FL_LEVITATE, 10, MOVE_ENERGY(7),
+    { 13, 0, 0, 66 },
+    40, 3, MST_CURSE_SKULL, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN,
+    I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY, MON_SHAPE_MISC
 },
 
@@ -2642,17 +2609,7 @@ static monsterentry mondata[] =
 },
 
 // cyclopes and giants ('C')
-{ // dummy genus monster
-    MONS_GIANT, 'C', LIGHTGREY, "giant",
-    M_WARM_BLOOD | M_SPEAKS | M_CANT_SPAWN,
-    MR_NO_FLAGS,
-    1700, 7, MONS_GIANT, MONS_GIANT, MH_NATURAL, -3,
-    { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
-    3, 4, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT,
-    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_GIANT, MON_SHAPE_HUMANOID
-},
+DUMMY_GENUS(MONS_GIANT, 'C', LIGHTGREY, "giant")
 
 {
     MONS_HILL_GIANT, 'C', LIGHTRED, "hill giant",
@@ -2742,18 +2699,7 @@ static monsterentry mondata[] =
 },
 
 // dragons ('D')
-{ // dummy genus monster
-    MONS_DRAGON, 'D', GREEN, "dragon",
-    M_WARM_BLOOD | M_CANT_SPAWN,
-    MR_RES_POISON | mrd(MR_RES_FIRE, 2) | MR_VUL_COLD,
-    2400, 12, MONS_DRAGON, MONS_DRAGON, MH_NATURAL, -4,
-    { {AT_BITE, AF_PLAIN, 20}, {AT_CLAW, AF_PLAIN, 13},
-      {AT_TRAMPLE, AF_PLAIN, 13}, AT_NO_ATK },
-    { 12, 5, 5, 0 },
-    10, 8, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_SILENT,
-    I_ANIMAL, HT_LAND, FL_WINGED, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_GIANT, MON_SHAPE_QUADRUPED_WINGED
-},
+DUMMY_GENUS(MONS_DRAGON, 'D', GREEN, "dragon")
 
 {
     MONS_WYVERN, 'D', LIGHTRED, "wyvern",
@@ -2933,17 +2879,7 @@ static monsterentry mondata[] =
 },
 
 // elementals (E)
-{ // dummy genus monster
-    MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental",
-    M_CANT_SPAWN,
-    mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
-    0, 13, MONS_ELEMENTAL, MONS_ELEMENTAL, MH_NONLIVING, MAG_IMMUNE,
-    { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 5, 5, 0 },
-    14, 4, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 6, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG, MON_SHAPE_MISC
-},
+DUMMY_GENUS(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
 
 {
     MONS_EARTH_ELEMENTAL, 'E', ETC_EARTH, "earth elemental",
@@ -3032,7 +2968,7 @@ static monsterentry mondata[] =
 
 {
     MONS_BLINK_FROG, 'F', LIGHTGREEN, "blink frog",
-    M_COLD_BLOOD | M_PHASE_SHIFT,
+    M_COLD_BLOOD | M_PHASE_SHIFT | M_BLINKER,
     MR_NO_FLAGS,
     450, 13, MONS_BLINK_FROG, MONS_BLINK_FROG, MH_NATURAL, -5,
     { {AT_HIT, AF_BLINK, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3118,7 +3054,7 @@ static monsterentry mondata[] =
 
 {
     MONS_GOLDEN_EYE, 'G', ETC_GOLD, "golden eye",
-    M_BATTY | M_GLOWS_LIGHT,
+    M_BATTY | M_GLOWS_LIGHT | M_BLINKER,
     MR_RES_ASPHYX,
     0, 17, MONS_GIANT_EYEBALL, MONS_GOLDEN_EYE, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3809,7 +3745,7 @@ static monsterentry mondata[] =
     0, 15, MONS_RAKSHASA, MONS_RAKSHASA, MH_DEMONIC, -10,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 6, 0 },
-    10, 14, MST_RAKSHASA, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    6, 14, MST_RAKSHASA, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
@@ -3865,17 +3801,7 @@ static monsterentry mondata[] =
 },
 
 // snakes ('S')
-{ // dummy genus monster
-    MONS_SNAKE, 'S', LIGHTGREEN, "snake",
-    M_COLD_BLOOD | M_CANT_SPAWN,
-    MR_NO_FLAGS,
-    200, 10, MONS_SNAKE, MONS_SNAKE, MH_NATURAL, -3,
-    { {AT_BITE, AF_POISON, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 2, 3, 5, 0 },
-    1, 15, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
-    I_REPTILE, HT_AMPHIBIOUS, FL_NONE, 13, SWIM_ENERGY(6),
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE, MON_SHAPE_SNAKE
-},
+DUMMY_GENUS(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 {
     MONS_BALL_PYTHON, 'S', GREEN, "ball python",
@@ -4127,7 +4053,7 @@ static monsterentry mondata[] =
 // dangerous, but still come out at 200+ XP
 {
     MONS_PHANTOM, 'W', BLUE, "phantom",
-    M_INSUBSTANTIAL,
+    M_INSUBSTANTIAL | M_BLINKER,
     mrd(MR_RES_COLD, 2),
     0, 5, MONS_GHOST, MONS_PHANTOM, MH_UNDEAD, -4,
     { {AT_HIT, AF_BLINK, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5132,7 +5058,7 @@ static monsterentry mondata[] =
 // minor demons: imps, etc. ('5')
 {
     MONS_CRIMSON_IMP, '5', RED, "crimson imp",
-    M_SPEAKS | M_FAST_REGEN,
+    M_SPEAKS | M_FAST_REGEN | M_BLINKER,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 13, MONS_CRIMSON_IMP, MONS_CRIMSON_IMP, MH_DEMONIC, -9,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5226,7 +5152,7 @@ static monsterentry mondata[] =
     { {AT_HIT, AF_PLAIN, 14}, {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     16, 8, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SCREECH,
-    I_HIGH, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
+    I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
 
@@ -5569,17 +5495,7 @@ static monsterentry mondata[] =
 
 // non-living creatures
 // golems ('8')
-{ // dummy genus monster
-    MONS_GOLEM, '8', LIGHTGREY, "golem",
-    M_SEE_INVIS | M_ARTIFICIAL | M_CANT_SPAWN,
-    mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
-    0, 10, MONS_GOLEM, MONS_GOLEM, MH_NONLIVING, MAG_IMMUNE,
-    { {AT_HIT, AF_PLAIN, 11}, {AT_HIT, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK },
-    { 8, 7, 3, 0 },
-    7, 5, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_HUMANOID
-},
+DUMMY_GENUS(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_IRON_GOLEM, '8', CYAN, "iron golem",
@@ -5613,7 +5529,7 @@ static monsterentry mondata[] =
     { {AT_HIT, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 5, 3, 0 },
     8, 5, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
+    I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_HUMANOID
 },
 
@@ -5820,7 +5736,7 @@ static monsterentry mondata[] =
 },
 
 // Demon in hell.  Currently only used as genus/species for hell guardians.
-{ // dummy genus monster
+{ // dummy genus monster -- used as a species so no DUMMY_GENUS
     MONS_HELL_LORD, '&', BLACK, "hell lord",
     M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_CANT_SPAWN,
     MR_RES_POISON,
@@ -6177,7 +6093,7 @@ static monsterentry mondata[] =
 {
     MONS_PRINCE_RIBBIT, 'F', LIGHTCYAN, "Prince Ribbit",
     M_UNIQUE | M_COLD_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS
-        | M_PHASE_SHIFT,
+        | M_PHASE_SHIFT | M_BLINKER,
     MR_NO_FLAGS,
     450, 12, MONS_BLINK_FROG, MONS_HUMAN, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -6363,7 +6279,7 @@ static monsterentry mondata[] =
     M_NO_SKELETON | M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SEE_INVIS
         | M_SPEAKS | M_NO_WAND,
     MR_NO_FLAGS,
-    1800, 10, MONS_GIANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, -3,
+    1800, 10, MONS_ELEPHANT_SLUG, MONS_ELEPHANT_SLUG, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 20, 0, 0, 150 },
     2, 1, MST_GASTRONOK, CE_POISONOUS, Z_NOZOMBIE, S_GURGLE,
@@ -6547,7 +6463,7 @@ static monsterentry mondata[] =
 
 {
     MONS_MARA, 'R', LIGHTMAGENTA, "Mara",
-    M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_UNIQUE,
+    M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_UNIQUE | M_BLINKER,
     MR_RES_POISON | mrd(MR_RES_FIRE, 2),
     0, 25, MONS_RAKSHASA, MONS_RAKSHASA, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },

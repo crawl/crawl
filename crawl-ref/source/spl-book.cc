@@ -1140,7 +1140,7 @@ string desc_cannot_memorise_reason(bool form)
  * Can the player learn the given spell?
  *
  * @param   specspell  The spell to be learned.
- * @returns            false if the player can't learn the spell for any
+ * @return             false if the player can't learn the spell for any
  *                     reason, true otherwise.
 */
 static bool _learn_spell_checks(spell_type specspell)
@@ -1189,7 +1189,7 @@ static bool _learn_spell_checks(spell_type specspell)
  * Attempt to make the player learn the given spell.
  *
  * @param   specspell  The spell to be learned.
- * @returns            true if the player learned the spell, false
+ * @return             true if the player learned the spell, false
  *                     otherwise.
 */
 bool learn_spell(spell_type specspell)
@@ -1380,7 +1380,7 @@ int rod_spell(int rod, bool check_range)
         return -1;
     }
 
-    if (check_range && spell_no_hostile_in_range(spell))
+    if (check_range && spell_no_hostile_in_range(spell, true))
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for a short while.
@@ -1389,7 +1389,7 @@ int rod_spell(int rod, bool check_range)
 
         if (Options.darken_beyond_range)
         {
-            targetter_smite range(&you, calc_spell_range(spell), 0, 0, true);
+            targetter_smite range(&you, calc_spell_range(spell, 0, true), 0, 0, true);
             range_view_annotator show_range(&range);
             delay(50);
         }

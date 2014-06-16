@@ -102,8 +102,6 @@ static tileidx_t _tileidx_trap(trap_type type)
 {
     switch (type)
     {
-    case TRAP_DART:
-        return TILE_DNGN_TRAP_DART;
     case TRAP_ARROW:
         return TILE_DNGN_TRAP_ARROW;
     case TRAP_SPEAR:
@@ -225,7 +223,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_OPEN_DOOR:
         return TILE_DNGN_OPEN_DOOR;
     case DNGN_TRAP_MECHANICAL:
-        return TILE_DNGN_TRAP_DART;
+        return TILE_DNGN_TRAP_ARROW;
     case DNGN_TRAP_TELEPORT:
         return TILE_DNGN_TRAP_TELEPORT;
     case DNGN_TRAP_ALARM:
@@ -295,9 +293,9 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 #if TAG_MAJOR_VERSION == 34
     case DNGN_ENTER_DWARF:
     case DNGN_ENTER_FOREST:
-#endif
     case DNGN_ENTER_BLADE:
         return TILE_DNGN_ENTER;
+#endif
     case DNGN_ENTER_TEMPLE:
         return TILE_DNGN_ENTER_TEMPLE;
     case DNGN_ENTER_ORC:
@@ -351,9 +349,9 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 #if TAG_MAJOR_VERSION == 34
     case DNGN_RETURN_FROM_DWARF:
     case DNGN_RETURN_FROM_FOREST:
-#endif
     case DNGN_RETURN_FROM_BLADE:
         return TILE_DNGN_RETURN;
+#endif
     case DNGN_RETURN_FROM_TEMPLE:
         return TILE_DNGN_EXIT_TEMPLE;
     case DNGN_RETURN_FROM_ORC:
@@ -916,7 +914,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     case MON_SHAPE_QUADRUPED_TAILLESS:
         if (mons_base_char(subtype) == 'F')
             z_tile = TILEP_MONS_ZOMBIE_TOAD;
-        else if (subtype == MONS_FIRE_CRAB || subtype == MONS_APOCALYPSE_CRAB)
+        else if (mons_genus(subtype) == MONS_CRAB)
             z_tile = TILEP_MONS_ZOMBIE_CRAB;
         else if (subtype == MONS_SNAPPING_TURTLE || subtype == MONS_ALLIGATOR_SNAPPING_TURTLE)
             z_tile = TILEP_MONS_ZOMBIE_TURTLE;
@@ -1188,19 +1186,11 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_NATASHA:
         return TILEP_MONS_NATASHA;
 
-    // slugs ('j')
-    case MONS_ELEPHANT_SLUG:
-        return TILEP_MONS_ELEPHANT_SLUG;
-    case MONS_GIANT_SLUG:
-        return TILEP_MONS_GIANT_SLUG;
-
     // killer bees ('k')
     case MONS_KILLER_BEE:
         return TILEP_MONS_KILLER_BEE;
     case MONS_QUEEN_BEE:
         return TILEP_MONS_QUEEN_BEE;
-    case MONS_FIREFLY:
-        return TILEP_MONS_FIREFLY;
 
     // lizards ('l')
     case MONS_GIANT_NEWT:
@@ -2914,7 +2904,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_PAIN_MIRROR;
     if (mons.is(MB_HASTED))
         ch |= TILE_FLAG_HASTED;
-    if (mons.is(MB_STRONG))
+    if (mons.is(MB_STRONG) || mons.is(MB_FRENZIED) || mons.is(MB_ROUSED))
         ch |= TILE_FLAG_MIGHT;
     if (mons.is(MB_PETRIFYING))
         ch |= TILE_FLAG_PETRIFYING;
@@ -2928,6 +2918,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_PERM_SUMMON;
     if (mons.is(MB_DEATHS_DOOR))
         ch |= TILE_FLAG_DEATHS_DOOR;
+    if (mons.is(MB_WORD_OF_RECALL))
+        ch |= TILE_FLAG_RECALL;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
@@ -3157,17 +3149,6 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
     case MI_STONE:        return TILE_MI_STONE;
     case MI_LARGE_ROCK:   return TILE_MI_LARGE_ROCK;
     case MI_THROWING_NET: return TILE_MI_THROWING_NET;
-
-    case MI_DART:
-        switch (brand)
-        {
-        default:             return TILE_MI_DART + 1;
-        case 0:              return TILE_MI_DART;
-        case SPMSL_POISONED: return TILE_MI_DART_POISONED;
-        case SPMSL_STEEL:    return TILE_MI_DART_STEEL;
-        case SPMSL_SILVER:   return TILE_MI_DART_SILVER;
-        }
-
     case MI_TOMAHAWK:
         switch (brand)
         {
@@ -3273,7 +3254,7 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
 #endif
 
     case ARM_HELMET:
-        return _modrng(item.rnd, TILE_THELM_FIRST, TILE_THELM_LAST);
+        return TILE_THELM_HELM;
 
     case ARM_GLOVES:
         return TILE_ARM_GLOVES;
@@ -3411,7 +3392,7 @@ static tileidx_t _tileidx_food(const item_def &item)
     {
     case FOOD_MEAT_RATION:  return TILE_FOOD_MEAT_RATION;
     case FOOD_BREAD_RATION: return TILE_FOOD_BREAD_RATION;
-    case FOOD_FRUIT:        return TILE_FOOD_FRUIT;
+    case FOOD_FRUIT:        return _modrng(item.rnd, TILE_FOOD_FRUIT_FIRST, TILE_FOOD_FRUIT_LAST);
     case FOOD_ROYAL_JELLY:  return TILE_FOOD_ROYAL_JELLY;
     case FOOD_PIZZA:        return TILE_FOOD_PIZZA;
     case FOOD_BEEF_JERKY:   return TILE_FOOD_BEEF_JERKY;
@@ -3579,16 +3560,12 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // slugs ('j')
     case MONS_ELEPHANT_SLUG:
         return TILE_CORPSE_ELEPHANT_SLUG;
-    case MONS_GIANT_SLUG:
-        return TILE_CORPSE_GIANT_SLUG;
 
     // bees ('k')
     case MONS_KILLER_BEE:
         return TILE_CORPSE_KILLER_BEE;
     case MONS_QUEEN_BEE:
         return TILE_CORPSE_QUEEN_BEE;
-    case MONS_FIREFLY:
-        return TILE_CORPSE_FIREFLY;
 
     // lizards ('l')
     case MONS_GIANT_NEWT:
@@ -4260,9 +4237,6 @@ tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy)
                 break;
             case MI_BOLT:
                 ch = TILE_MI_BOLT0;
-                break;
-            case MI_DART:
-                ch = TILE_MI_DART0;
                 break;
             case MI_NEEDLE:
                 ch = TILE_MI_NEEDLE0;
@@ -5420,8 +5394,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_ZOTDEF_PLANT;
     case ABIL_MAKE_OKLOB_SAPLING:
         return TILEG_ABILITY_ZOTDEF_OKLOB_SAPLING;
-    case ABIL_MAKE_DART_TRAP:
-        return TILEG_ABILITY_ZOTDEF_DART_TRAP;
     case ABIL_MAKE_ICE_STATUE:
         return TILEG_ABILITY_ZOTDEF_ICE_STATUE;
     case ABIL_MAKE_OCS:
@@ -5631,6 +5603,25 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
     };
 
     const int etype = enchant_to_int(item);
+
+    if (tile == TILE_THELM_HELM)
+    {
+        switch (etype)
+        {
+            case 1:
+            case 2:
+            case 3:
+                tile = _modrng(item.rnd, TILE_THELM_EGO_FIRST, TILE_THELM_EGO_LAST);
+                break;
+            case 4:
+                tile = _modrng(item.rnd, TILE_THELM_ART_FIRST, TILE_THELM_ART_LAST);
+                break;
+            default:
+                tile = _modrng(item.rnd, TILE_THELM_FIRST, TILE_THELM_LAST);
+        }
+        return tile;
+    }
+
     int idx;
     if (player)
         idx = tile_player_count(tile) - 1;
