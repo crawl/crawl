@@ -1769,19 +1769,12 @@ void melee_attack::set_attack_verb()
                     attack_verb = "punch";
                 else if (damage_to_display < HIT_STRONG)
                     attack_verb = "pummel";
-                // XXX: detect this better
                 else if (defender->is_monster()
-                         && (get_mon_shape(defender->type)
-                               == MON_SHAPE_INSECT
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_INSECT_WINGED
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_CENTIPEDE
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_ARACHNID))
+                         && (mons_genus(defender->type) == MONS_WORKER_ANT
+                             || mons_genus(defender->type) == MONS_FORMICID))
                 {
                     attack_verb = "squash";
-                    verb_degree = "like a proverbial bug";
+                    verb_degree = "like the proverbial ant";
                 }
                 else
                 {
@@ -1789,7 +1782,7 @@ void melee_attack::set_attack_verb()
                         {{"pound",     "into fine dust"},
                          {"pummel",    "like a punching bag"},
                          {"pulverise", ""},
-                         {"squash",    "like a bug"}};
+                         {"squash",    "like an ant"}};
                     const int choice = random2(ARRAYSZ(punch_desc));
                     // XXX: could this distinction work better?
                     if (choice == 0
