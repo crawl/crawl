@@ -181,8 +181,6 @@ ability to direct and control the destructive might of the storm.
 %%%%
 Igni Ipthes
 
-0*: Enchant scrolls never fail.
-
 1*: AC of metal body armour is boosted. Any size character can now wear metal
     body armour. The deformed body mutation affects AC less.
 
