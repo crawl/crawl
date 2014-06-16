@@ -4818,7 +4818,7 @@ void torpor_snail_unswift(monster* mons)
         || is_sanctuary(you.pos())
         || you_worship(GOD_CHEIBRIADOS)
         || !you.can_see(mons)
-        || !cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
+        || !cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         return;
     }
@@ -4827,7 +4827,7 @@ void torpor_snail_unswift(monster* mons)
     if (you.attribute[ATTR_SWIFTNESS] != -1)
     {
         you.attribute[ATTR_SWIFTNESS] = -1;
-        mprf("Seeing %s leaves you feeling sluggish.",
+        mprf("Being near %s leaves you feeling sluggish.",
             mons->name(DESC_THE).c_str());
     }
 
