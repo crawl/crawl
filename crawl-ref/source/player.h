@@ -609,6 +609,7 @@ public:
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
+    bool holy_wrath_susceptible() const;
     bool is_holy(bool spells = true) const;
     bool is_unholy(bool spells = true) const;
     bool is_evil(bool spells = true) const;
