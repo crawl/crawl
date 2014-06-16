@@ -4818,7 +4818,7 @@ void torpor_snail_unswift(monster* mons)
         || is_sanctuary(you.pos())
         || you_worship(GOD_CHEIBRIADOS)
         || !you.can_see(mons)
-        || !cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+        || !cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
     {
         return;
     }
