@@ -1678,9 +1678,9 @@ MAP
 ENDMAP
 
 # an altar to chei, and a few followers
-NAME:  kennysheep_beetle_temple
+NAME:  kennysheep_snail_temple
 DEPTH: Lair
-MONS:  goliath beetle / nothing
+MONS:  torpor snail / nothing
 KFEAT: a = altar_cheibriados
 MAP
  @
