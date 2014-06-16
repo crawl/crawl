@@ -4232,7 +4232,10 @@ void god_pitch(god_type which_god)
     if (you.char_class == JOB_MONK && had_gods() <= 1)
     {
         // monks get bonus piety for first god
-        gain_piety(35, 1, false);
+        if (you_worship(GOD_IASHOL))
+            you.props["iashol_progress_to_next_sacrifice"] = 100;
+        else
+            gain_piety(35, 1, false);
     }
 
     if (you_worship(GOD_LUGONU) && you.worshipped[GOD_LUGONU] == 1)
