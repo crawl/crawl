@@ -511,24 +511,6 @@ MAP
 .....
 ENDMAP
 
-NAME:   minmay_temple_entry_spiral
-TAGS:   temple_entry
-ORIENT: float
-KFEAT:  O = enter_temple
-MAP
-cncncncnc@c
-n.......n.n
-c.cncnc.c.c
-n.n...n.n.n
-c.c.c.c.c.c
-n.n.nOn.n.n
-c.c.cnc.c.c
-n.n.....n.n
-c.cncncnc.c
-n.........n
-cncncncncnc
-ENDMAP
-
 NAME:   minmay_temple_entry_butterflies
 TAGS:   temple_entry
 ORIENT: float
