@@ -5677,7 +5677,10 @@ bool iashol_power_leap()
             continue;
         ASSERT(mon);
 
-        mon->hurt((actor*)&you, roll_dice(div_rand_round(you.piety, 9), 3),
+        //damage scales with XL amd piety
+        mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(
+            div_rand_round(you.piety, 12) *
+            (54 + you.experience_level), 81), 3),
             BEAM_MMISSILE, true);
     }
 
@@ -5702,29 +5705,31 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
 
     int dmg;
 
+    int die_size = 1 + div_rand_round(
+        div_rand_round(pow, 10) * (54 + you.experience_level), 81);
     int effect = random2(6);
     switch (effect)
     {
         case 0:
             simple_monster_message(mons, " silenced by your wave of power!");
             mons->add_ench(mon_enchant(ENCH_MUTE, 1, agent, 120 + random2(120)));
-            dmg = roll_dice(div_rand_round(pow, 10), 4);
+            dmg = roll_dice(die_size, 4);
             break;
 
         case 1:
             simple_monster_message(mons, " is paralyzed by your wave of power!");
-            mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent, 60 + random2(60)));
-            dmg = roll_dice(div_rand_round(pow, 10), 4);
+            mons->add_ench(mon_enchant(ENCH_PARALYSIS, 1, agent, 80 + random2(60)));
+            dmg = roll_dice(die_size, 4);
             break;
 
         case 2:
             simple_monster_message(mons, " is slowed by your wave of power!");
             mons->add_ench(mon_enchant(ENCH_SLOW, 1, agent, 100 + random2(100)));
-            dmg = roll_dice(div_rand_round(pow, 10), 5);
+            dmg = roll_dice(die_size, 5);
             break;
 
         default:
-            dmg = roll_dice(div_rand_round(pow, 10), 6);
+            dmg = roll_dice(die_size, 6);
             break;
     }
     mons->hurt(agent, dmg, BEAM_MMISSILE, true);
