@@ -541,11 +541,6 @@ Brimstone Fiend
 Un démon puissant et énorme, baigné de flammes infernales et doté de grandes
 ailes écailleuses. Un des plus effrayants habitants de n'importe quel Enfer.
 %%%%
-brown ooze
-
-Un être liquide et visqueux qui s'écoule sur le sol à la recherche de quelque
-chose à dissoudre.
-%%%%
 burning bush
 
 Une masse de brindilles noircies entourées de flammes oranges. Les murs et le

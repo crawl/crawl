@@ -2406,8 +2406,8 @@ enum monster_type                      // menv[].type
 
     MONS_OOZE,
     MONS_JELLY,
-    MONS_BROWN_OOZE,
 #if TAG_MAJOR_VERSION == 34
+    MONS_BROWN_OOZE,
     MONS_GIANT_AMOEBA,
 #endif
     MONS_AZURE_JELLY,

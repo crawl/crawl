@@ -699,11 +699,6 @@ Brimstone Fiend
 A huge and powerful demon wreathed in hellfire, with great scaly wings. One of
 the most fearsome denizens of any of the Hells.
 %%%%
-brown ooze
-
-A viscous liquid being that flows along the floor in search of matter to
-dissolve and consume.
-%%%%
 burning bush
 
 A mass of blackened twigs wreathed in orange flames. The walls and floor

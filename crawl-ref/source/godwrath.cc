@@ -1192,7 +1192,6 @@ static bool _jiyva_retribution()
             MONS_SHINING_EYE,
             MONS_GIANT_ORANGE_BRAIN,
             MONS_JELLY,
-            MONS_BROWN_OOZE,
             MONS_ACID_BLOB,
             MONS_AZURE_JELLY,
             MONS_DEATH_OOZE,

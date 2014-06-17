@@ -377,10 +377,9 @@ static const pop_entry pop_spider[] =
 
 static const pop_entry pop_slime[] =
 { // Slime Pits
-  {  1,  6, 1000, FLAT, MONS_JELLY },
+  {  1,  6, 2000, FLAT, MONS_JELLY },
   {  1,  6, 1000, FLAT, MONS_ACID_BLOB },
-  {  0,  6, 2000, FLAT, MONS_BROWN_OOZE },
-  {  0,  6, 1000, FLAT, MONS_SLIME_CREATURE },
+  {  0,  6, 2000, FLAT, MONS_SLIME_CREATURE },
   {  0,  6,  514, FLAT, MONS_EYE_OF_DRAINING },
   {  1,  6,  514, FLAT, MONS_AZURE_JELLY },
   {  1,  6,  514, FLAT, MONS_SHINING_EYE },
