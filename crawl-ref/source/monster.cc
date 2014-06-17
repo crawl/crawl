@@ -3416,7 +3416,7 @@ bool monster::undead_or_demonic() const
     return holi == MH_UNDEAD || holi == MH_DEMONIC || mons_is_demonspawn(type);
 }
 
-bool monster::is_holy_wrath_susceptible() const
+bool monster::holy_wrath_susceptible() const
 {
     return undead_or_demonic() && type != MONS_PROFANE_SERVITOR;
 }
