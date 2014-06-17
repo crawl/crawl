@@ -5970,6 +5970,9 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec, int ch
     bool no_shaft = no_tele || !is_valid_shaft_level();
 
     while (spec_type >= NUM_TRAPS
+#if TAG_MAJOR_VERSION == 34
+           || spec_type == TRAP_DART || spec_type == TRAP_GAS
+#endif
            || no_tele && spec_type == TRAP_TELEPORT
            || no_shaft && spec_type == TRAP_SHAFT)
     {
