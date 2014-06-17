@@ -2840,10 +2840,12 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
     case MONS_TORPOR_SNAIL:
         // would be nice to support more branches, generically...
         if (player_in_branch(BRANCH_LAIR))
+        {
             band = random_choose_weighted(5, BAND_YAKS,
                                           2, BAND_DEATH_YAKS,
                                           1, BAND_SHEEP,
                                           0);
+        }
         else if (player_in_branch(BRANCH_SPIDER))
             band = coinflip() ? BAND_REDBACK : BAND_RANDOM_SINGLE;
 
