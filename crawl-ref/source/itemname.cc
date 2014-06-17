@@ -3288,6 +3288,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return you.species == SP_FELID;
         case SCR_SUMMONING:
             return player_mutation_level(MUT_NO_LOVE) > 0;
+        case SCR_RECHARGING:
+            return player_mutation_level(MUT_NO_ARTIFICE) > 0;
         default:
             return false;
         }
