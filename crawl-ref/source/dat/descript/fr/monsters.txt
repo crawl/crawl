@@ -1617,14 +1617,6 @@ program bug
 Un monstre vorace et incroyablement buggé. Veuillez rapporter son existence aux
 développeurs de Devteam.
 %%%%
-pulsating lump
-
-Un blob répugnant de toute sortes de matières organiques – muscle, tripes,
-nerf, viscère, moelle – empilés aléatoirement en une seule masse contorsionnée.
-Sa chair altérée est mutagène au contact ; mais sans aucune forme d'agencement
-structurel de ses parties, il lui manque la coordination nécessaire pour se
-déplacer rapidement.
-%%%%
 quasit
 
 Un petit démon lâche avec une longue queue pointue. Ses griffes acérées sont

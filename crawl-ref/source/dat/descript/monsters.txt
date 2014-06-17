@@ -1966,13 +1966,6 @@ program bug
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
 %%%%
-pulsating lump
-
-A revolting blob of all kinds of living matter — muscle, gut, nerves, viscera,
-marrow — piled haphazardly into a single writhing mass. This distorted flesh is
-mutagenic on contact, but without any kind of structural arrangement to its
-parts, it lacks the coordination needed to move quickly.
-%%%%
 purple draconian
 
 A muscular purple-scaled humanoid with a reptilian tail and small wings.

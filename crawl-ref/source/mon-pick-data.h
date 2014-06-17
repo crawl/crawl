@@ -384,9 +384,8 @@ static const pop_entry pop_slime[] =
   {  1,  6,  514, FLAT, MONS_AZURE_JELLY },
   {  1,  6,  514, FLAT, MONS_SHINING_EYE },
   {  1,  6,  200, FLAT, MONS_GOLDEN_EYE },
-  {  1,  9,   89, PEAK, MONS_PULSATING_LUMP },
   {  1,  9,  300, SEMI, MONS_EYE_OF_DEVASTATION },
-  {  1,  9,  300, SEMI, MONS_GREAT_ORB_OF_EYES },
+  {  1,  9,  389, SEMI, MONS_GREAT_ORB_OF_EYES },
   {  1,  6,  200, UP,   MONS_DEATH_OOZE },
   {  2,  6,  100, UP,   MONS_GIANT_ORANGE_BRAIN },
   {  1,  6,  800, FLAT, MONS_NO_MONSTER }, // Old ooze weight

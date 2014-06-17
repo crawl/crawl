@@ -366,7 +366,7 @@ bool monster_caught_in_net(monster* mon, actor* agent)
         return false;
     }
 
-    if (mon->type == MONS_OOZE || mon->type == MONS_PULSATING_LUMP)
+    if (mon->type == MONS_OOZE)
     {
         simple_monster_message(mon, " oozes right through the net!");
         return false;
@@ -431,8 +431,7 @@ void check_net_will_hold_monster(monster* mons)
         }
     }
     else if (mons->is_insubstantial()
-             || mons->type == MONS_OOZE
-             || mons->type == MONS_PULSATING_LUMP)
+             || mons->type == MONS_OOZE)
     {
         const int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)

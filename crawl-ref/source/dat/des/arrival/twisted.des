@@ -438,7 +438,7 @@ SUBST:   t : U....
 KFEAT:   C = altar_jiyva
 SUBST:   D = .
 SUBST:   t : U....
-KMONS:   1 = jelly / ooze / pulsating lump w:1
+KMONS:   1 = jelly / ooze
 :else
 SUBST:   D = C
 SHUFFLE: VCd

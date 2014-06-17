@@ -249,27 +249,6 @@ MAP
   .........
 ENDMAP
 
-NAME: nicolae_slime_entry_wandering_lumps
-TAGS: slime_entry
-SUBST: P = p.., L = l.
-KFEAT: O = enter_slime_pits
-KMONS: p = plant
-KMONS: l = pulsating lump
-KMONS: O = pulsating lump / nothing w:20
-MAP
-    ...
-   .....
-  xxpppxx
- .xPPPPPx.
-..pPl..Pp..
-..pP.O.Pp..
-..pP..LPp..
- .xPPPPPx.
-  xxpppxx
-   .....
-    ...
-ENDMAP
-
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
@@ -422,7 +401,7 @@ NAME: nicolae_slime_welcoming_committee
 TAGS: no_monster_gen no_item_gen no_trap_gen
 DEPTH: Slime:2-5
 SUBST: X = x., { = {[(
-KMONS: 1 : jelly w:20 / pulsating lump w:20 / ooze / slime creature w:30 / \
+KMONS: 1 : jelly w:20 / ooze / slime creature w:30 / \
    acid blob w:5 / death ooze w:5 / azure jelly w:5
 MAP
       xxx
