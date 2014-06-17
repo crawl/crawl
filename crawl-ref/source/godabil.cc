@@ -5399,7 +5399,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
                 // gain one piety for every 50 skill points
                 mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
-                gain_piety(25 + random2(5) + div_rand_round(skill_exp_needed(
+                gain_piety(random2(5) + div_rand_round(skill_exp_needed(
                     you.skills[mutation_skill], mutation_skill, SP_HUMAN),
                     50));
 
@@ -5421,6 +5421,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     }
                 }
             }
+            gain_piety(25 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_HAND:
             if (!yesno("Do you really want to do make this sacrifice?",
