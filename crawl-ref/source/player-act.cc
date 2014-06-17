@@ -450,6 +450,10 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
     if (bsize < SIZE_MEDIUM && !check_weapon_wieldable_size(item, bsize))
         return false;
 
+    if (player_mutation_level(MUT_MISSING_HAND)
+        && you.hands_reqd(item) == HANDS_TWO)
+        return false;
+
     if (!ignore_brand)
     {
         if (undead_or_demonic() && is_holy_item(item))
