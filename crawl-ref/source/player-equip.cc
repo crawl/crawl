@@ -1087,7 +1087,8 @@ static void _unequip_armour_effect(item_def& item, bool meld,
 static void _remove_amulet_of_faith(item_def &item)
 {
     if (!you_worship(GOD_NO_GOD)
-        && !you_worship(GOD_XOM))
+        && !you_worship(GOD_XOM)
+        && !you_worship(GOD_IASHOL))
     {
         simple_god_message(" seems less interested in you.");
 
@@ -1181,7 +1182,8 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
 
     case AMU_FAITH:
         mprf(MSGCH_GOD, "You feel a %ssurge of divine interest.",
-             you_worship(GOD_NO_GOD) ? "strange " : "");
+             (you_worship(GOD_NO_GOD) || you_worship(GOD_IASHOL))
+                ? "strange " : "");
         if (you_worship(GOD_GOZAG))
             simple_god_message(" discounts your offered prices.");
         break;
