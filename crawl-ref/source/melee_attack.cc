@@ -2246,6 +2246,9 @@ void melee_attack::apply_staff_damage()
     if (!weapon)
         return;
 
+    if (player_mutation_level(MUT_NO_ARTIFICE))
+        return;
+
     if (weapon->base_type == OBJ_RODS && weapon->sub_type == ROD_STRIKING)
     {
         if (weapon->plus < ROD_CHARGE_MULT)
