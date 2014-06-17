@@ -5743,8 +5743,8 @@ bool iashol_cataclysm()
             return false;
         }
     }
-    mpr("You release an incredible wave of power!");
-
+    mpr("BWOOM! You release an incredible blast of power in all directions!");
+    noisy(30, you.pos());
     apply_area_visible(_apply_cataclysm, you.piety, &you);
     drain_exp(false, 100, true);
     return true;
