@@ -441,6 +441,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_IASHOL_SACRIFICE_ARTIFICE, "Sacrifice Artifice",
       0, 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_IASHOL_SACRIFICE_LOVE, "Sacrifice Love",
+      0, 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_IASHOL_SACRIFICE_SANITY, "Sacrifice Sanity",
       0, 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_IASHOL_SACRIFICE_ARCANA, "Sacrifice Arcana",
