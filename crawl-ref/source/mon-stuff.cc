@@ -261,7 +261,6 @@ static bool _jiyva_slime_target(monster_type targetc)
 void change_monster_type(monster* mons, monster_type targetc)
 {
     bool could_see     = you.can_see(mons);
-    bool degenerated = (targetc == MONS_PULSATING_LUMP);
     bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
@@ -384,7 +383,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     const bool need_save_spells
             = (!name.empty()
                && (!mons->can_use_spells() || mons->is_actual_spellcaster())
-               && !degenerated && !slimified);
+               && !slimified);
 
     mons->number       = 0;
 
@@ -585,14 +584,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         string verb = "";
         string obj = "";
 
-        if (!can_see)
-            obj = "something you cannot see";
-        else
-        {
-            obj = mons_type_name(targetc, DESC_A);
-            if (targetc == MONS_PULSATING_LUMP)
-                obj += " of flesh";
-        }
+        obj = can_see ? mons_type_name(targetc, DESC_A)
+                      : "something you cannot see";
 
         if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
         {
@@ -601,8 +594,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         }
         else if (mons->is_shapeshifter())
             verb = "changes into ";
-        else if (targetc == MONS_PULSATING_LUMP)
-            verb = "degenerates into ";
         else if (_jiyva_slime_target(targetc))
             verb = "quivers uncontrollably and liquefies into ";
         else

@@ -5725,7 +5725,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                     mon->props["tile_num"].get_short() = random2(256);
                     break;
                 case MONS_WRETCHED_STAR:
-                case MONS_PULSATING_LUMP:
                 case MONS_CHAOS_SPAWN:
                     break;
                 default:

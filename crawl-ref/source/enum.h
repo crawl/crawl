@@ -2414,7 +2414,9 @@ enum monster_type                      // menv[].type
     MONS_DEATH_OOZE,
     MONS_ACID_BLOB,
     MONS_SLIME_CREATURE,
+#if TAG_MAJOR_VERSION == 34
     MONS_PULSATING_LUMP,
+#endif
     MONS_GIANT_EYEBALL,
     MONS_EYE_OF_DRAINING,
     MONS_SHINING_EYE,

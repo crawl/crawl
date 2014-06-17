@@ -3967,7 +3967,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
                         m->props["tile_num"].get_short() = random2(256);
                     case MONS_WRETCHED_STAR:
                     case MONS_CHAOS_SPAWN:
-                    case MONS_PULSATING_LUMP:
                         break;
 
                     default:

@@ -36,7 +36,7 @@
                "salamander mystic / salamander firebrand w:2 / " ..
                "nothing w:42")
         e.mons("glowing shapeshifter / nothing")
-        e.mons("very ugly thing w:5 / ugly thing / pulsating lump")
+        e.mons("very ugly thing w:5 / ugly thing")
         e.mons("ball lightning / nothing w:4")
         e.mons("insubstantial wisp / nothing")
         e.mons("crystal guardian")
@@ -67,8 +67,7 @@
         e.kfeat("r = deep_water")
         e.kmons("r = water elemental")
         e.kmons("n = glowing shapeshifter / w:5 dancing weapon / w:25 nothing")
-        e.kmons("m = very ugly thing w:5 / ugly thing / pulsating lump / " ..
-                "w:25 nothing")
+        e.kmons("m = very ugly thing w:5 / ugly thing / w:25 nothing")
         e.kmons("jL = war gargoyle / crystal guardian / w:1 iron golem / " ..
                 "w:21 nothing")
         e.kmons("iN = earth elemental / nothing")

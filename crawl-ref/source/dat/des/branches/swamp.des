@@ -939,7 +939,7 @@ NAME:    hangedman_swamp_muck
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 KMONS:   1 = slime creature
-KMONS:   2 = slime creature / pulsating lump
+KMONS:   2 = slime creature / brown ugly thing
 KMONS:   3 = jelly
 KFEAT:   12 = shallow_water
 SHUFFLE: })
