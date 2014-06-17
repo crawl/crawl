@@ -3131,7 +3131,7 @@ ENDMAP
 
 NAME: wheals_arrival_demonology
 ORIENT: float
-TAGS: arrival no_monster_gen
+TAGS: arrival no_monster_gen no_item_gen
 KMASK: 12345&a = no_trap_gen
 KPROP: 12345&a = no_rtele_into
 SUBST: a=.
