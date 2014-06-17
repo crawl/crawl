@@ -108,6 +108,8 @@ static tileidx_t _tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_SPEAR;
     case TRAP_TELEPORT:
         return TILE_DNGN_TRAP_TELEPORT;
+    case TRAP_TELEPORT_PERMANENT:
+        return TILE_DNGN_TRAP_TELEPORT;
     case TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case TRAP_BLADE:

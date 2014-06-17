@@ -411,6 +411,13 @@ Stepping on this portal will send you to another room nearby.
 A teleport trap
 
 This magical trap can displace anyone hapless enough to step on it — or even
+fly above it — to a random place on the same dungeon level. Traps of this kind
+found in the dungeon are worn with age, and will dissipate on use; fresher,
+newly-made traps may survive several passages.
+%%%%
+A permanent teleport trap
+
+This magical trap can displace anyone hapless enough to step on it — or even
 fly above it — to a random place on the same dungeon level.
 %%%%
 A translucent rock wall

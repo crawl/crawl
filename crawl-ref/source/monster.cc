@@ -4488,7 +4488,8 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     }
 
     // Friendlies will try not to be parted from you.
-    if (intelligent_ally(this) && trap.type == TRAP_TELEPORT
+    if (intelligent_ally(this) && (trap.type == TRAP_TELEPORT
+                                   || trap.type == TRAP_TELEPORT_PERMANENT)
         && player_knows_trap && mons_near(this))
     {
         return false;

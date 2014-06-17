@@ -2751,7 +2751,7 @@ ENDMAP
 NAME: baited_tele_trap
 DEPTH: D, Depths, Orc, Elf, Lair, Swamp, Shoals, Snake, Spider, Vaults, Crypt, Zot
 KITEM: ^ = any good_item, any good_item/nothing, any good_item/nothing
-KFEAT: ^ = teleport trap
+KFEAT: ^ = permanent teleport trap
 MAP
 ^
 ENDMAP
@@ -2783,7 +2783,7 @@ ENDMAP
 NAME:  min_item_tele_traps
 TAGS:  extra
 DEPTH: D:2-, Depths
-KFEAT: ! = known teleport trap
+KFEAT: ! = known permanent teleport trap
 MAP
 .....
 .v!v.

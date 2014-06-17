@@ -178,7 +178,7 @@ SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=c , D=c
 SUBST:   = = +
 NSUBST:  M = 2=E / *=M E:2
-KFEAT:   E = teleport trap
+KFEAT:   E = permanent teleport trap
 KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO

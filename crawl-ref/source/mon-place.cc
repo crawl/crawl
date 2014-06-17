@@ -494,7 +494,7 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
     if (mons_is_tentacle_segment(mon_type))
         return true;
 
-    if (trap == TRAP_TELEPORT)
+    if (trap == TRAP_TELEPORT || trap == TRAP_TELEPORT_PERMANENT)
         return false;
 
     if (trap == TRAP_SHAFT)
