@@ -2754,25 +2754,36 @@ void monster_cleanup(monster* mons)
 int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
                 int killer_index)
 {
-    monster mon;
-    mon.type = mc;
-    mon.moveto(daddy->pos());
-    define_monster(&mon);
-    mon.flags = daddy->flags;
-    mon.attitude = daddy->attitude;
-    mon.damage_friendly = daddy->damage_friendly;
-    mon.damage_total = daddy->damage_total;
-    // Keep the rider's name, if it had one (Mercenary card).
-    if (!daddy->mname.empty() && mon.type == MONS_SPRIGGAN)
-        mon.mname = daddy->mname;
-    if (daddy->props.exists("reaping_damage"))
+    // Save a copy of the original monster, to become the surviving half.
+    // Kill the original monster so that it has a valid mindex for death
+    // effects.  Not using an unwind_var<> so we have access to the
+    // original without making multiple copies.
+    monster copy = *daddy;
+
+    daddy->reset();
+    daddy->type = mc;
+    daddy->moveto(copy.pos());
+    define_monster(daddy);
+    daddy->flags = copy.flags;
+    daddy->attitude = copy.attitude;
+    daddy->damage_friendly = copy.damage_friendly;
+    daddy->damage_total = copy.damage_total;
+    // Keep the rider's name, if it had one (Mercenary card). Assumes
+    // riders and not mounts are intelligent.
+    if (!copy.mname.empty() && mons_class_intel(mc) >= I_NORMAL)
+        daddy->mname = copy.mname;
+    if (copy.props.exists("reaping_damage"))
     {
         dprf("Mounted kill: marking the other monster as reaped as well.");
-        mon.props["reaping_damage"].get_int() = daddy->props["reaping_damage"].get_int();
-        mon.props["reaper"].get_int() = daddy->props["reaper"].get_int();
+        daddy->props["reaping_damage"].get_int() = copy.props["reaping_damage"].get_int();
+        daddy->props["reaper"].get_int() = copy.props["reaper"].get_int();
     }
 
-    return monster_die(&mon, killer, killer_index, false, false, true);
+    const int corpse = monster_die(daddy, killer, killer_index, false, false, true);
+    // Restore the original monster.
+    *daddy = copy;
+    mgrd(daddy->pos()) = daddy->mindex();
+    return corpse;
 }
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
