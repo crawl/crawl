@@ -759,7 +759,7 @@ KITEM:  a = scroll of acquirement q:3 / potion of cure mutation q:3 / potion of 
 KITEM:  $ = gold q:81
 KITEM:  b = scroll of acquirement / potion of magic q:9 / potion of haste q:3
 KITEM:  h = potion of flight q:3
-MONS:   Nessos, brown ooze, sixfirhy, Gastronok, orc sorcerer, dire elephant
+MONS:   Nessos, jelly, sixfirhy, Gastronok, orc sorcerer, dire elephant
 SUBST:  . = '.....
 KFEAT:  ' = net trap / needle trap / bolt trap / spear trap / arrow trap
 KFEAT:  q = book shop

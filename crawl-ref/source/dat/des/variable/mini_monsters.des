@@ -1018,7 +1018,7 @@ KMONS:   I = orange rat
 KMONS:   J = unseen horror
 KMONS:   K = alligator
 KMONS:   L = lindwurm
-KMONS:   M = brown ooze / large slime creature
+KMONS:   M = large slime creature
 KMONS:   N = demonic crawler
 KMONS:   O = hell hound
 KMONS:   P = black mamba
@@ -2985,7 +2985,7 @@ ENDMAP
 NAME:   minmay_acid_items
 TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
 DEPTH:  Depths, !Depths:$
-MONS:   ooze / jelly / brown ooze w:20 / death ooze / azure jelly
+MONS:   ooze / jelly w:30 / death ooze / azure jelly
 MONS:   acid blob
 KPROP:  | = no_tele_into
 MAP
@@ -3131,8 +3131,7 @@ NAME:    hangedman_jelly_panic
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   D:4-, Depths
 KMONS:   1 = ooze
-KMONS:   2J = jelly
-KMONS:   3 = brown ooze
+KMONS:   23J = jelly
 KMONS:   4K = slime creature
 KMONS:   5L = acid blob w:5 / azure jelly / death ooze
 KFEAT:   JKL = altar_jiyva
