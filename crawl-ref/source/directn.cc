@@ -2949,43 +2949,17 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 {
     if (feat_is_trap(grid) && trap != NUM_TRAPS)
     {
+        string basename = trap_name(trap);
         switch (trap)
         {
-        case TRAP_ARROW:
-            return "arrow trap";
-        case TRAP_NEEDLE:
-            return "needle trap";
-        case TRAP_BOLT:
-            return "bolt trap";
-        case TRAP_SPEAR:
-            return "spear trap";
-        case TRAP_BLADE:
-            return "blade trap";
-        case TRAP_NET:
-            return "net trap";
-#if TAG_MAJOR_VERSION == 34
-        case TRAP_DART:
-            return "dart trap";
-        case TRAP_GAS:
-            return "gas trap";
-#endif
-        case TRAP_ALARM:
-            return "alarm trap";
-        case TRAP_SHAFT:
-            return "shaft";
-        case TRAP_TELEPORT:
-            return "teleport trap";
-        case TRAP_ZOT:
-            return "Zot trap";
         case TRAP_GOLUBRIA:
-            return "passage of Golubria";
+            return basename + " of Golubria";
         case TRAP_PLATE:
-            return "pressure plate";
         case TRAP_WEB:
-            return "web";
+        case TRAP_GAS:
+            return basename;
         default:
-            die("Error: invalid trap type %d", trap);
-            return "undefined trap";
+            return basename + " trap";
         }
     }
 
