@@ -135,7 +135,7 @@ void trap_def::prepare_ammo(int charges)
         if (crawl_state.game_is_zotdef())
             ammo_qty = 2 + random2(2);
         else
-            ammo_qty = 0;
+            ammo_qty = 1;
         break;
     default:
         ammo_qty = 0;
@@ -240,7 +240,8 @@ bool trap_def::is_safe(actor* act) const
 
     // No prompt (teleport traps are ineffective if wearing an amulet of
     // stasis or a -Tele item)
-    if (type == TRAP_TELEPORT && you.no_tele(false))
+    if ((type == TRAP_TELEPORT || type == TRAP_TELEPORT_PERMANENT)
+        && you.no_tele(false))
         return true;
 
     if (!is_known(act))
@@ -600,12 +601,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
     }
     case TRAP_TELEPORT:
+    case TRAP_TELEPORT_PERMANENT:
         // Never revealed by monsters.
         // except when it's in sight, it's pretty obvious what happened. -doy
         if (!you_trigger && !you_know && !in_sight)
             hide();
         if (you_trigger)
-            mpr("You enter a teleport trap!");
+            mprf("You enter %s trap!", name(DESC_A).c_str());
         if (ammo_qty > 0 && !--ammo_qty)
         {
             // can't use trap_destroyed, as we might recurse into a shaft
@@ -613,7 +615,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (in_sight)
             {
                 env.map_knowledge(pos).set_feature(DNGN_FLOOR);
-                mpr("The teleport trap disappears.");
+                mprf("%s trap disappears.", name(DESC_THE).c_str());
             }
             disarm();
         }
@@ -1632,6 +1634,7 @@ dungeon_feature_type trap_category(trap_type type)
         return DNGN_TRAP_SHAFT;
 
     case TRAP_TELEPORT:
+    case TRAP_TELEPORT_PERMANENT:
         return DNGN_TRAP_TELEPORT;
     case TRAP_ALARM:
         return DNGN_TRAP_ALARM;

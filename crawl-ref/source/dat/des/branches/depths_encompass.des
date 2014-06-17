@@ -235,7 +235,7 @@ KITEM:   gzZ = royal jelly w:10 / nothing w:40
 KFEAT:   L = l
 KFEAT:   ~ = w
 KFEAT:   ^ = known teleport trap / known Zot trap
-KFEAT:   T = known teleport trap
+KFEAT:   T = known permanent teleport trap
 NSUBST:  T = 1:. / *:T
 NSUBST:  w = 1:~ / *:w, l = 1:L / *:l
 NSUBST:  A = 1:+ / *:b, B = 1:+ / *:b

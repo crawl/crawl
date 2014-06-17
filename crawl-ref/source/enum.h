@@ -4242,7 +4242,10 @@ enum trap_type
 #endif
     TRAP_ARROW,
     TRAP_SPEAR,
+#if TAG_MAJOR_VERSION > 34
     TRAP_TELEPORT,
+#endif
+    TRAP_TELEPORT_PERMANENT,
     TRAP_ALARM,
     TRAP_BLADE,
     TRAP_BOLT,
@@ -4255,6 +4258,7 @@ enum trap_type
     TRAP_WEB,
 #if TAG_MAJOR_VERSION == 34
     TRAP_GAS,
+    TRAP_TELEPORT,
 #endif
     NUM_TRAPS,
     TRAP_MAX_REGULAR = TRAP_SHAFT,

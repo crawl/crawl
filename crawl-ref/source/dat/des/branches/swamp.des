@@ -1622,7 +1622,7 @@ SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
 NSUBST: ' = 1:^ / 1:o / *:'
 SUBST: abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%, \
        _ = .._, . = ......W
-KFEAT: ^ = teleport trap
+KFEAT: ^ = permanent teleport trap
 KMONS: o = oklob plant
 CLEAR: _
 MAP

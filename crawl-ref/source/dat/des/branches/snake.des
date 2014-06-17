@@ -922,7 +922,7 @@ WEIGHT:  20
 TAGS:    no_rotate
 ORIENT:  northwest
 KFEAT:   Z = known teleport trap w:2 / .
-KFEAT:   z = teleport trap / Zot trap / . w:20
+KFEAT:   z = permanent teleport trap / Zot trap / . w:20
 MONS:    naga / nothing
 MONS:    greater naga / nothing
 MONS:    guardian serpent / nothing

@@ -2862,7 +2862,7 @@ TAGS:   uniq_jelly_drop
 DEPTH:  D:8-, Depths
 WEIGHT: 5
 MONS:   jelly generate_awake
-KFEAT:  a = known teleport trap
+KFEAT:  a = known permanent teleport trap
 MAP
 ..............
 ...vvvvvvvv...
@@ -3109,7 +3109,7 @@ KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
               disc of storms w:4 / lightning rod ident:type w:1
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
-KFEAT:   T = teleport trap
+KFEAT:   T = known permanent teleport trap
 MARKER:  T = lua:fog_machine { cloud_type = "rain", pow_max = 2, \
                  delay_min = 10, delay_max = 60, size = 4, walk_dist = 2 }
 SHUFFLE: ab, {( / <<
@@ -3484,8 +3484,8 @@ DEPTH: D:$, Depths
 KMONS: 8 = 8
 KMONS: 9 = 9
 KITEM: 89 = % / * / w:1 |
-KFEAT: X = known teleport trap
-KFEAT: Z : known teleport trap / w:30 x
+KFEAT: X = known permanent teleport trap
+KFEAT: Z : known permanent teleport trap / w:30 x
 SUBST: Y = 89, x : xcvb
 MAP
 ............
@@ -4551,7 +4551,7 @@ ENDMAP
 NAME:   grunt_tough_drop
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-, Depths
-KFEAT:  ^ = known teleport trap
+KFEAT:  ^ = known permanent teleport trap
 KFEAT:  _ = known alarm trap
 KPROP:  8^ = no_rtele_into
 : if you.absdepth() < 9 then
@@ -5859,7 +5859,7 @@ KMONS:   X = deep elf fighter ; cutlass | long sword . robe | leather armour . b
 KMONS:   Y = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
 KITEM:   S = good_item long sword / good_item great sword / good_item demon blade /\
              good_item claymore / good_item bastard sword
-KFEAT:   S = known teleport trap
+KFEAT:   S = known permanent teleport trap
 NSUBST:  k = 4=k / * = .:19 k:1
 SHUFFLE: bm
 SUBST:   b = cccvvb
