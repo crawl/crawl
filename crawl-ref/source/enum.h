@@ -2170,8 +2170,8 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_YOU_CONF,                     // died while confused as caused by you
     KILL_MISCAST,                      // as a result of a spell miscast
     KILL_MISC,                         // any miscellaneous killing
-    KILL_RESET,                        // ???
-    KILL_DISMISSED,                    // ???
+    KILL_RESET,                        // excised from existence
+    KILL_DISMISSED,                    // like KILL_RESET, but drops inventory
     KILL_BANISHED,                     // monsters what got banished
     KILL_UNSUMMONED,                   // summoned monsters whose timers ran out
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
