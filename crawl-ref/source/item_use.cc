@@ -2331,8 +2331,7 @@ bool enchant_weapon(item_def &wpn, bool quiet)
     {
         if (!is_artefact(wpn)
             && wpn.base_type == OBJ_WEAPONS
-            && wpn.plus < MAX_WPN_ENCHANT
-            && (wpn.plus < 4 || !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)))
+            && wpn.plus < MAX_WPN_ENCHANT)
         {
             wpn.plus++;
             success = true;
