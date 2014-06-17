@@ -5677,10 +5677,9 @@ bool iashol_power_leap()
             continue;
         ASSERT(mon);
 
-        //damage scales with XL amd piety
-        mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(
-            div_rand_round(you.piety, 12) *
-            (54 + you.experience_level), 81), 3),
+        //damage scales with XL amd piety -- divisor should be a multiple of 81
+        mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(you.piety *
+            (54 + you.experience_level), 972), 3),
             BEAM_MMISSILE, true);
     }
 
@@ -5705,8 +5704,8 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
 
     int dmg;
 
-    int die_size = 1 + div_rand_round(
-        div_rand_round(pow, 10) * (54 + you.experience_level), 81);
+    // divisor should be a multiple of 81 to match to max of 54 + XL
+    int die_size = 1 + div_rand_round(pow * (54 + you.experience_level), 810);
     int effect = random2(6);
     switch (effect)
     {
