@@ -889,11 +889,13 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         case MONS_MUMMY:          pow = 1; break;
         case MONS_GUARDIAN_MUMMY: pow = 3; break;
         case MONS_MUMMY_PRIEST:   pow = 8; break;
+        case MONS_BONE_RIDER:
         case MONS_GREATER_MUMMY:  pow = 11; break;
         case MONS_KHUFU:          pow = 15; break;
 
         default:
-            mprf(MSGCH_DIAGNOSTICS, "Unknown mummy type.");
+            mprf(MSGCH_DIAGNOSTICS, "Unknown mummy type %s (%s).",
+                    mons_class_name(mons->type), mons->type);
             return;
     }
 
@@ -2536,6 +2538,11 @@ int monster_die(monster* mons, killer_type killer,
         {
             corpse2 = mounted_kill(mons, MONS_YELLOW_WASP, killer, killer_index);
             mons->type = MONS_SPRIGGAN;
+        }
+        else if (mons->type == MONS_BONE_RIDER)
+        {
+            corpse2 = mounted_kill(mons, MONS_BONE_DRAGON, killer, killer_index);
+            mons->type = MONS_GREATER_MUMMY;
         }
         corpse = place_monster_corpse(mons, silent);
         if (corpse == -1)

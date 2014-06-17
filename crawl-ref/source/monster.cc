@@ -5818,8 +5818,14 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         place_cloud(CLOUD_FIRE, pos(), 20 + random2(15), oppressor, 5);
     }
-    else if (type == MONS_SPRIGGAN_RIDER)
+    else if (type == MONS_SPRIGGAN_RIDER || type == MONS_BONE_RIDER)
     {
+        const monster_type rider = type == MONS_SPRIGGAN_RIDER
+                                           ? MONS_SPRIGGAN
+                                           : MONS_GREATER_MUMMY;
+        const monster_type mount = type == MONS_SPRIGGAN_RIDER
+                                           ? MONS_YELLOW_WASP
+                                           : MONS_BONE_DRAGON;
         if (hit_points + damage > max_hit_points / 2)
             damage = max_hit_points / 2 - hit_points;
         if (damage > 0 && x_chance_in_y(damage, damage + hit_points))
@@ -5835,7 +5841,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!fly_died)
                 monster_drop_things(this, mons_aligned(oppressor, &you));
 
-            type = fly_died ? MONS_SPRIGGAN : MONS_YELLOW_WASP;
+            type = fly_died ? rider : mount;
             define_monster(this);
             hit_points = min(old_hp, hit_points);
             flags          = old_flags;
@@ -5846,7 +5852,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             if (!old_name.empty())
                 mname = old_name;
 
-            mounted_kill(this, fly_died ? MONS_YELLOW_WASP : MONS_SPRIGGAN,
+            mounted_kill(this, fly_died ? mount : rider,
                 !oppressor ? KILL_MISC
                 : (oppressor->is_player())
                   ? KILL_YOU : KILL_MON,
@@ -5862,19 +5868,22 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 hit_points = 0;
                 if (observable())
                 {
+                    const bool is_mummy = mons_genus(rider) == MONS_MUMMY;
                     mprf("As %s mount dies, %s plunges down into %s!",
                          pronoun(PRONOUN_POSSESSIVE).c_str(),
                          name(DESC_THE).c_str(),
-                         grd(pos()) == DNGN_LAVA ?
-                             "lava and is incinerated" :
-                             "deep water and drowns");
+                         grd(pos()) == DNGN_LAVA ? "lava and is incinerated"
+                         : is_mummy              ? "deep water and falls apart"
+                                                 : "deep water and drowns");
                 }
             }
             else if (fly_died && observable())
             {
-                mprf("%s jumps down from %s now dead mount.",
+                mprf("%s jumps down from %s now %s mount.",
                      name(DESC_THE).c_str(),
-                     pronoun(PRONOUN_POSSESSIVE).c_str());
+                     pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     wounded_damaged(mons_class_holiness(mount))
+                         ? "destroyed" : "dead");
             }
         }
     }

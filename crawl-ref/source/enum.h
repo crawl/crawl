@@ -2892,6 +2892,9 @@ enum monster_type                      // menv[].type
     MONS_GUARDIAN_MUMMY,
     MONS_GREATER_MUMMY,
     MONS_MUMMY_PRIEST,
+#if TAG_MAJOR_VERSION > 34
+    MONS_BONE_RIDER,
+#endif
     MONS_VAMPIRE,
     MONS_VAMPIRE_KNIGHT,
     MONS_VAMPIRE_MAGE,
@@ -3211,6 +3214,7 @@ enum monster_type                      // menv[].type
     MONS_CRAB,
     MONS_GHOST_CRAB,
     MONS_TORPOR_SNAIL,
+    MONS_BONE_RIDER,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
