@@ -3512,17 +3512,19 @@ bool is_useless_item(const item_def &item, bool temp)
         return true;
 
     case OBJ_MISCELLANY:
-        if (player_mutation_level(MUT_NO_ARTIFICE))
-            return false;
-
         switch (item.sub_type)
         {
 #if TAG_MAJOR_VERSION == 34
         case MISC_BUGGY_EBONY_CASKET:
             return item_type_known(item);
 #endif
-        default:
+        // These can always be used.
+        case MISC_LANTERN_OF_SHADOWS:
+        case MISC_RUNE_OF_ZOT:
             return false;
+
+        default:
+            return player_mutation_level(MUT_NO_ARTIFICE);
         }
 
     case OBJ_BOOKS:
