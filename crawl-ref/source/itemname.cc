@@ -3462,7 +3462,9 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_RODS:
         if (you.species == SP_FELID
             || player_mutation_level(MUT_NO_ARTIFICE))
+        {
             return true;
+        }
         break;
 
     case OBJ_STAVES:

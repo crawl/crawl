@@ -452,7 +452,9 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
 
     if (player_mutation_level(MUT_MISSING_HAND)
         && you.hands_reqd(item) == HANDS_TWO)
+    {
         return false;
+    }
 
     if (!ignore_brand)
     {

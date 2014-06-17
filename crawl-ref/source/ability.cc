@@ -3903,8 +3903,10 @@ vector<ability_type> get_god_abilities(bool include_unusable, bool ignore_piety)
 
         int num_sacrifices = available_sacrifices.size();
         for (int i = 0; i < num_sacrifices; ++i)
+        {
             abilities.push_back(
                 static_cast<ability_type>(available_sacrifices[i].get_int()));
+        }
     }
     else if (you.transfer_skill_points > 0)
         abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
