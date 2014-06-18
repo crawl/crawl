@@ -696,12 +696,10 @@ bool mon_can_be_slimified(monster* mons)
 {
     const mon_holy_type holi = mons->holiness();
 
-    return !(mons->flags & MF_GOD_GIFT)
-           && !mons->is_insubstantial()
+    return !mons->is_insubstantial()
            && !mons_is_tentacle_or_tentacle_segment(mons->type)
            && (holi == MH_UNDEAD
-                || holi == MH_NATURAL && !mons_is_slime(mons))
-         ;
+                || holi == MH_NATURAL && !mons_is_slime(mons));
 }
 
 void slimify_monster(monster* mon, bool hostile)
