@@ -59,7 +59,7 @@ static bool _ok_for_launchers(brand_type which_brand)
  * @param is_range_weapon   Whether the weapon is ranged.
  * @return                  The message for the brand being applied.
  */
-string _get_brand_msg(brand_type which_brand, bool is_range_weapon)
+static string _get_brand_msg(brand_type which_brand, bool is_range_weapon)
 {
     string msg; // for distortion
     switch (which_brand)
@@ -150,7 +150,7 @@ void end_weapon_brand(item_def &weapon, bool verbose)
  * @param which_brand       The type of brand.
  * @return                  The duration modifier, default 10.
  */
- int _get_brand_duration(brand_type which_brand)
+static int _get_brand_duration(brand_type which_brand)
 {
     switch (which_brand)
     {
