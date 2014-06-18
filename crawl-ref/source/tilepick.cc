@@ -109,7 +109,7 @@ static tileidx_t _tileidx_trap(trap_type type)
     case TRAP_TELEPORT:
         return TILE_DNGN_TRAP_TELEPORT;
     case TRAP_TELEPORT_PERMANENT:
-        return TILE_DNGN_TRAP_TELEPORT;
+        return TILE_DNGN_TRAP_TELEPORT_PERMANENT;
     case TRAP_ALARM:
         return TILE_DNGN_TRAP_ALARM;
     case TRAP_BLADE:
@@ -538,6 +538,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     }
 
     case DNGN_TRAP_MECHANICAL:
+    case DNGN_TRAP_TELEPORT:
         return _tileidx_trap(env.map_knowledge(gc).trap());
 
     case DNGN_TRAP_WEB:
