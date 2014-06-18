@@ -258,10 +258,8 @@ static bool _altar_prayer()
         int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
                                   0, 0, 0, you.religion);
 
-        if (thing_created == NON_ITEM)
+        if (thing_created == NON_ITEM || !move_item_to_grid(&thing_created, you.pos()))
             return false;
-
-        move_item_to_grid(&thing_created, you.pos());
 
         simple_god_message(" grants you a gift!");
         more();
