@@ -209,7 +209,7 @@ function sroom_jelly_pit(e)
 
     mons[1] = "ooze w:" .. (27 - math.floor(level / 3))
     mons[2] = "jelly w:15"
-    mons[3] = "brown_ooze w:" .. (6 + level)
+    mons[3] = "great orb of eyes w:" .. (3 + level)
     mons[4] = "death ooze w:" .. (2 + (2 * math.floor(level / 3)))
 
     if level >= 12 then
