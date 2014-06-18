@@ -400,7 +400,7 @@ int monster::body_weight(bool /*base*/) const
         default: ;
         }
 
-        if (is_skeletal() || mons_base_char(mc) == 'L')
+        if (is_skeletal() || mons_genus(mc) == MONS_LICH)
             weight /= 2;
     }
 
@@ -3786,7 +3786,7 @@ int monster::res_rotting(bool temp) const
         res = 0;
         break;
     case MH_UNDEAD:
-        if (mons_base_char(type) == 'n' || type == MONS_ZOMBIE)
+        if (mons_genus(type) == MONS_GHOUL || type == MONS_ZOMBIE)
             res = 1;
         else
             res = 3;
