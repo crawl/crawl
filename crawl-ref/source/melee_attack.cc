@@ -1585,6 +1585,11 @@ void melee_attack::set_attack_verb()
                 attack_verb = "spit";
                 verb_degree = "like the proverbial pig";
             }
+            else if (defender_genus == MONS_CRAB && Options.lang == LANG_GRUNT)
+            {
+                attack_verb = "attack";
+                verb_degree = "'s weak point";
+            }
             else
             {
                 const char* pierce_desc[][2] = {{"spit", "like a pig"},
@@ -1618,6 +1623,9 @@ void melee_attack::set_attack_verb()
             attack_verb = "carve";
             verb_degree = "like a proverbial ham";
         }
+        else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
+                 && Options.lang == LANG_GRUNT)
+            attack_verb = "shave";
         else
         {
             const char* pierce_desc[][2] = {{"open",    "like a pillowcase"},
@@ -2643,7 +2651,7 @@ void melee_attack::announce_hit()
     else
     {
         if (!verb_degree.empty() && verb_degree[0] != ' '
-            && verb_degree[0] != ',')
+            && verb_degree[0] != ',' && verb_degree[0] != '\'')
         {
             verb_degree = " " + verb_degree;
         }
