@@ -69,7 +69,9 @@ enum card_type
     CARD_ORB,
 
     CARD_ELIXIR,                // healing
+#if TAG_MAJOR_VERSION == 34
     CARD_BATTLELUST,            // melee boosts
+#endif
     CARD_METAMORPHOSIS,         // transformation
     CARD_HELM,                  // defence
     CARD_BLADE,                 // weapon boosts

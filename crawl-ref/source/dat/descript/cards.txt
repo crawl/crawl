@@ -41,11 +41,6 @@ the Elixir card
 
 This card rapidly restores your health or magic, or both at high power levels.
 %%%%
-Battlelust card
-
-This card makes you more powerful in physical combat, causing berserk rage at
-low power, or providing great might and agility with higher power.
-%%%%
 Metamorphosis card
 
 This card temporarily transforms you.
