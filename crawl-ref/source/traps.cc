@@ -242,7 +242,9 @@ bool trap_def::is_safe(actor* act) const
     // stasis or a -Tele item)
     if ((type == TRAP_TELEPORT || type == TRAP_TELEPORT_PERMANENT)
         && you.no_tele(false))
+    {
         return true;
+    }
 
     if (!is_known(act))
         return false;
