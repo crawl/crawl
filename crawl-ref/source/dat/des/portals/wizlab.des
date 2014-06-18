@@ -1375,7 +1375,6 @@ lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 
 }}
 :           set_feature_name("granite_statue", "gravestone")
-:           set_feature_name("floor", "the ground")
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
@@ -1523,7 +1522,6 @@ MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
 :           set_feature_name("tree", "autumnal tree")
 :           set_feature_name("stone_wall", "crumbled stone wall")
 :           set_feature_name("granite_statue", "strange statue")
-:           set_feature_name("floor", "timeless floor")
 epilogue{{
             wizlab_milestone(_G, "Wucad Mu's Monastery")
 }}
@@ -1950,7 +1948,6 @@ SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
 :           set_random_mon_list([[lesser demon w:50 / red devil / blue devil / ]]
 :                            .. [[orange demon / ynoxinul / kobold demonologist / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
-:           set_feature_name("floor", "hot floor")
 :           set_feature_name("stone_wall", "black wall")
 :           set_feature_name("rock_wall", "carved rock wall")
 epilogue{{
