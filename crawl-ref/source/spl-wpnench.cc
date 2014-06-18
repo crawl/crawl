@@ -52,6 +52,50 @@ static bool _ok_for_launchers(brand_type which_brand)
     }
 }
 
+/**
+ * Gets the message for when a weapon is branded.
+ *
+ * @param which_brand       The type of brand.
+ * @param is_range_weapon   Whether the weapon is ranged.
+ * @return                  The message for the brand being applied.
+ */
+string _get_brand_msg(brand_type which_brand, bool is_range_weapon)
+{
+    string msg; // for distortion
+    switch (which_brand)
+    {
+    case SPWPN_FLAMING:
+        return " bursts into flame!";
+    case SPWPN_FREEZING:
+        return is_range_weapon ? " frosts over!" : " glows blue.";
+    case SPWPN_VENOM:
+        return " starts dripping with poison.";
+    case SPWPN_DRAINING:
+        return " crackles with unholy energy.";
+    case SPWPN_VORPAL:
+        return " glows silver and looks extremely dangerous.";
+    case SPWPN_DISTORTION:
+        msg = " seems to ";
+        msg += random_choose("twist", "bend", "vibrate",
+                             "flex", "wobble", "twang", NULL);
+        msg += (coinflip() ? " oddly." : " strangely.");
+        return msg;
+    case SPWPN_PAIN:
+        return silenced(you.pos()) ? " writhes in agony." :
+                                        " shrieks in agony.";
+    case SPWPN_HOLY_WRATH:
+        return " shines with holy light.";
+    case SPWPN_ELECTROCUTION:
+        return " starts to spark.";
+    case SPWPN_ANTIMAGIC:
+        return " depletes magic around it.";
+    case SPWPN_CHAOS:
+        return " glistens with random hues.";
+    default:
+        return " wibbles buggily.";
+    }
+}
+
 /** End your weapon branding spell.
  *
  * Returns the weapon to the previous brand, and ends the
@@ -100,6 +144,40 @@ void end_weapon_brand(item_def &weapon, bool verbose)
     }
 }
 
+/**
+ *  Gets the duration modifier for a given brand type.
+ *
+ * @param which_brand       The type of brand.
+ * @return                  The duration modifier, default 10.
+ */
+ int _get_brand_duration(brand_type which_brand)
+{
+    switch (which_brand)
+    {
+    case SPWPN_FLAMING:
+    case SPWPN_FREEZING:
+        return 7;
+    case SPWPN_VENOM:
+        return 15;
+    case SPWPN_DRAINING:
+        return 12;
+    case SPWPN_DISTORTION:
+        return 5;
+    case SPWPN_PAIN:
+        return 8;
+    default:
+        return 10;
+    }
+ }
+
+/**
+ * Temporarily brand a weapon.
+ *
+ * @param[in] which_brand   The brand type to apply.
+ * @param[in] power         Spellpower.
+ * @param[in] fail          Whether you've already failed to cast.
+ * @return                  Success, fail, or abort.
+ */
 spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 {
     if (!you.weapon())
@@ -175,79 +253,16 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 
     bool extending = has_temp_brand && get_weapon_brand(weapon) == which_brand;
     bool emit_special_message = !extending;
-    int duration_affected = 10;
-    switch (which_brand)
-    {
-    case SPWPN_FLAMING:
-        msg += " bursts into flame!";
-        duration_affected = 7;
-        break;
+    int duration_affected = _get_brand_duration(which_brand);
+    msg += _get_brand_msg(which_brand, is_range_weapon(weapon));
 
-    case SPWPN_FREEZING:
-        msg += is_range_weapon(weapon) ? " frosts over!" : " glows blue.";
-        duration_affected = 7;
-        break;
-
-    case SPWPN_VENOM:
-        msg += " starts dripping with poison.";
-        duration_affected = 15;
-        break;
-
-    case SPWPN_DRAINING:
-        msg += " crackles with unholy energy.";
-        duration_affected = 12;
-        break;
-
-    case SPWPN_VORPAL:
-        msg += " glows silver and looks extremely sharp.";
-        duration_affected = 10;
-        break;
-
-    case SPWPN_DISTORTION:
-        msg += " seems to ";
-        msg += random_choose("twist", "bend", "vibrate",
-                                    "flex", "wobble", "twang", NULL);
-        msg += (coinflip() ? " oddly." : " strangely.");
-        duration_affected = 5;
-
-        // Low duration, but power still helps.
+    if (which_brand == SPWPN_DISTORTION)
         power /= 2;
-        break;
-
-    case SPWPN_PAIN:
-        // Well, in theory, we could be silenced, but then how are
-        // we casting the brand spell?
-        // 1KB: Xom can cast it.  The Blade card currently can't.
-        if (silenced(you.pos()))
-            msg += " writhes in agony.";
-        else
-        {
-            msg += " shrieks in agony.";
-            noisy(15, you.pos());
-        }
-        duration_affected = 8;
+    else if (which_brand == SPWPN_PAIN && !silenced(you.pos()))
+    {
+        noisy(15, you.pos());
         // We must repeat the special message here (as there's a side effect.)
         emit_special_message = true;
-        break;
-
-    case SPWPN_HOLY_WRATH:
-        msg += " shines with holy light.";
-        break;
-
-    case SPWPN_ELECTROCUTION:
-        msg += " starts to spark.";
-        break;
-
-    case SPWPN_ANTIMAGIC:
-        msg += " depletes magic around it.";
-        break;
-
-    case SPWPN_CHAOS:
-        msg += " glistens with random hues.";
-        break;
-
-    default:
-        break;
     }
 
     if (!extending)
