@@ -5197,7 +5197,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
     switch (sacrifice)
     {
         case ABIL_IASHOL_SACRIFICE_WORDS:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5208,7 +5208,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             gain_piety(35 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_DRINK:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5224,7 +5224,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             mprf("Iashol asks you to corrupt yourself with %s.",
                 mutation_name(health_sacrifice));
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5240,7 +5240,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             mprf("Iashol asks you to corrupt yourself with %s.",
                 mutation_name(essence_sacrifice));
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5256,7 +5256,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             mprf("Iashol asks you to corrupt yourself with %s.",
                 mutation_name(purity_sacrifice));
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5274,7 +5274,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 gain_piety(25 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_STEALTH:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5293,7 +5293,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_IASHOL_SACRIFICE_ARTIFICE:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5311,7 +5311,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5329,7 +5329,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_IASHOL_SACRIFICE_DURABILITY:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5347,7 +5347,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_IASHOL_SACRIFICE_SANITY:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5358,7 +5358,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             gain_piety(25 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_LOVE:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
@@ -5424,7 +5424,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             gain_piety(25 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_HAND:
-            if (!yesno("Do you really want to do make this sacrifice?",
+            if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
                 canned_msg(MSG_OK);
