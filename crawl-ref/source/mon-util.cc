@@ -673,9 +673,10 @@ bool mons_has_flesh(const monster* mon)
     // yet I exclude sense 3 anyway but include arthropods and molluscs.
     return mon->holiness() != MH_PLANT
            && mon->holiness() != MH_NONLIVING
-           && mons_base_char(mon->type) != 'G'  // eyes
-           && mons_base_char(mon->type) != 'J'  // jellies
-           && mons_base_char(mon->type) != '%';// cobs (plant!)
+           && mons_genus(mon->type) != MONS_GIANT_EYEBALL
+           && mons_genus(mon->type) != MONS_GIANT_ORANGE_BRAIN
+           && mons_genus(mon->type) != MONS_JELLY
+           && mon->type != MONS_DEATH_COB; // plant!
 }
 
 // Difference in speed between monster and the player for Cheibriados'
