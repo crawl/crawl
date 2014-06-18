@@ -164,7 +164,6 @@ const deck_archetype deck_of_wonders[] =
     { CARD_POTION,     {5, 5, 5} },
     { CARD_FOCUS,      {1, 1, 1} },
     { CARD_WILD_MAGIC, {5, 3, 1} },
-    { CARD_BATTLELUST, {5, 5, 5} },
     { CARD_HELM,       {5, 5, 5} },
     { CARD_SHADOW,     {5, 5, 5} },
     { CARD_MERCENARY,  {5, 5, 5} },
@@ -311,7 +310,9 @@ const char* card_name(card_type card)
     case CARD_DAMNATION:       return "Damnation";
     case CARD_SOLITUDE:        return "Solitude";
     case CARD_ELIXIR:          return "the Elixir";
+#if TAG_MAJOR_VERSION == 34
     case CARD_BATTLELUST:      return "Battlelust";
+#endif
     case CARD_METAMORPHOSIS:   return "Metamorphosis";
     case CARD_HELM:            return "the Helm";
     case CARD_BLADE:           return "the Blade";
@@ -2058,20 +2059,6 @@ static void _blade_card(int power, deck_rarity_type rarity)
     }
 }
 
-static void _battle_lust_card(int power, deck_rarity_type rarity)
-{
-    const int power_level = _get_power_level(power, rarity);
-    if (power_level == 2)
-        potion_effect(POT_AGILITY, random2(power/4));
-    if (power_level >= 1)
-        potion_effect(POT_MIGHT, random2(power/4));
-    else
-    {
-        _do_weapon_swap();
-        you.go_berserk(true);
-    }
-}
-
 static void _shadow_card(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2913,7 +2900,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_DAMNATION:        _damnation_card(power, rarity); break;
     case CARD_SOLITUDE:         cast_dispersal(power/4); break;
     case CARD_ELIXIR:           _elixir_card(power, rarity); break;
-    case CARD_BATTLELUST:       _battle_lust_card(power, rarity); break;
     case CARD_METAMORPHOSIS:    _metamorphosis_card(power, rarity); break;
     case CARD_HELM:             _helm_card(power, rarity); break;
     case CARD_BLADE:            _blade_card(power, rarity); break;
@@ -3001,6 +2987,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_PORTAL:
     case CARD_WARP:
     case CARD_GENIE:
+    case CARD_BATTLELUST:
         mpr("This type of card no longer exists!");
         break;
 #endif
