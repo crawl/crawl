@@ -182,9 +182,10 @@ i-flaming BRAND_FLAMING BRAND_WEP_FIRST
 i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
 i-electrocution BRAND_ELECTROCUTION
-# Remove i-orc_slaying when TAG_MAJOR_VERSION > 34
+# Remove _slaying brands when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_ORC_SLAYING
-i-dragon_slaying BRAND_DRAGON_SLAYING
+i-confusion BRAND_DRAGON_SLAYING
+# End removals
 i-venom BRAND_VENOM
 i-protection BRAND_PROTECTION
 i-draining BRAND_DRAINING

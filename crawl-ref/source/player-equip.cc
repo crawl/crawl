@@ -520,13 +520,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                         mpr("You see sparks fly.");
                     break;
 
-                case SPWPN_DRAGON_SLAYING:
-                    mpr(player_genus(GENPC_DRACONIAN)
-                        || you.form == TRAN_DRAGON
-                            ? "You feel a sudden desire to commit suicide."
-                            : "You feel a sudden desire to slay dragons!");
-                    break;
-
                 case SPWPN_VENOM:
                     mpr("It begins to drip with poison!");
                     break;

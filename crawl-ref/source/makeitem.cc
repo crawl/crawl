@@ -1095,9 +1095,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(6))
                 rc = SPWPN_VENOM;
-
-            if (one_chance_in(5))
-                rc = SPWPN_DRAGON_SLAYING;
             break;
 
         case WPN_SLING:
@@ -1227,12 +1224,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
         return false;
 
-    if (weapon_skill(OBJ_WEAPONS, type) != SK_POLEARMS
-        && brand == SPWPN_DRAGON_SLAYING)
-    {
-        return false;
-    }
-
     if (type == WPN_BLOWGUN)
     {
         switch ((brand_type)brand)
@@ -1263,7 +1254,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
         break;
 
     // Melee-only brands.
-    case SPWPN_DRAGON_SLAYING:
     case SPWPN_DRAINING:
     case SPWPN_VAMPIRISM:
     case SPWPN_PAIN:
@@ -1288,6 +1278,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_ORC_SLAYING:
     case SPWPN_FLAME:
     case SPWPN_FROST:
+    case SPWPN_DRAGON_SLAYING:
         return false;
 #endif
 
@@ -3177,7 +3168,8 @@ void makeitem_tests()
         if (item.special == SPWPN_ORC_SLAYING
             || item.special == SPWPN_REACHING
             || item.special == SPWPN_RETURNING
-            || item.special == SPWPN_CONFUSE)
+            || item.special == SPWPN_CONFUSE
+            || item.special == SPWPN_DRAGON_SLAYING)
         {
             item.special = SPWPN_FORBID_BRAND;
         }

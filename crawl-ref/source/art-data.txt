@@ -557,7 +557,6 @@ PLUS:    +8
 COLOUR:  LIGHTGREEN
 TILE:    urand_wyrmbane
 TILE_EQ: wyrmbane
-BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
 BOOL:    poison, berserk, no_upgrade
