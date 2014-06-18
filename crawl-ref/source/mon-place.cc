@@ -3920,6 +3920,7 @@ static void _get_vault_mon_list(vector<mons_spec> &list);
 
 monster_type summon_any_demon(monster_type dct)
 {
+    // Draw random demon types in Pan from the local pools first.
     if (player_in_branch(BRANCH_PANDEMONIUM) && !one_chance_in(40))
     {
         monster_type typ = MONS_0;
@@ -3934,15 +3935,14 @@ monster_type summon_any_demon(monster_type dct)
                                            : env.mons_alloc[i];
             if (invalid_monster_type(cur))
                 continue;
-            const monsterentry *mentry = get_monster_data(cur);
             if (dct == RANDOM_DEMON && mons_class_holiness(cur) != MH_DEMONIC
-                || dct == RANDOM_DEMON_LESSER && mentry->basechar != '5'
+                || dct == RANDOM_DEMON_LESSER && mons_demon_tier(cur) != 5
                 || dct == RANDOM_DEMON_COMMON
-                   && mentry->basechar != '4'
-                   && mentry->basechar != '3'
+                   && mons_demon_tier(cur) != 4
+                   && mons_demon_tier(cur) != 3
                 || dct == RANDOM_DEMON_GREATER
-                   && mentry->basechar != '2'
-                   && mentry->basechar != '1')
+                   && mons_demon_tier(cur) != 2
+                   && mons_demon_tier(cur) != 1)
             {
                 continue;
             }
