@@ -1569,8 +1569,6 @@ void evoke_deck(item_def& deck)
     {
         canned_msg(MSG_DECK_EXHAUSTED);
         dec_inv_item_quantity(deck.link, 1);
-        // Finishing the deck will earn a point, even if it
-        // was marked or stacked.
     }
 
     card_effect(card, rarity, flags, false);
