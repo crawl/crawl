@@ -285,7 +285,9 @@ static bool _is_level_exit(const coord_def& pos)
     const trap_type tt = get_trap_type(pos);
     if (tt == TRAP_TELEPORT || tt == TRAP_TELEPORT_PERMANENT
         || tt == TRAP_SHAFT)
+    {
         return true;
+    }
 
     return false;
 }
