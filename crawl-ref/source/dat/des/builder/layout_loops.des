@@ -1089,7 +1089,7 @@ NAME:   layout_loops_ring
 DEPTH:  D, Lair
 WEIGHT: 15 (D), 8 (Lair)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_angular
+TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
   local wall_glyph = getRandomWallMaterial()
@@ -1207,7 +1207,7 @@ NAME:   layout_loops_cross
 DEPTH:  D
 WEIGHT: 5
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_angular
+TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
   local CONNECTION_PLUS_OFFSET = 4
@@ -1461,7 +1461,7 @@ NAME:   layout_loops_corners
 DEPTH:  D
 WEIGHT: 5
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_angular
+TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
   local wall_glyph = getRandomWallMaterial()

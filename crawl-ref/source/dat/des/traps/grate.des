@@ -69,7 +69,8 @@ end
 NAME:   basic_stair_grate_trap
 DEPTH:  D:9-, Depths:2-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-
 ORIENT: float
-TAGS:   allow_dup extra luniq_grate_trap layout_rooms layout_caves
+TAGS:   allow_dup extra luniq_grate_trap
+TAGS:   layout_rooms layout_corridors layout_narrow_caves
 : place_grate_trap(_G, '^', 'm')
 MAP
 xxxx

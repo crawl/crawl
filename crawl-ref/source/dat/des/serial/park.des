@@ -5,7 +5,7 @@
 default-depth: D
 
 NAME:   serial_park
-TAGS:   allow_dup extra luniq_serial decor layout_open layout_caves
+TAGS:   allow_dup extra luniq_serial decor layout_open layout_open_caves
 CHANCE: 1%
 {{
   local c = 5 + crawl.random2(3)*crawl.random2(2)
