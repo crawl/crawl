@@ -1723,7 +1723,7 @@ static string _bless_weapon(monster* mon, bool improve_type = false)
 
     give_monster_proper_name(mon);
     item_set_appearance(wpn);
-    return "extra attack power";
+    return "superior armament";
 }
 
 static void _upgrade_shield(item_def &sh)
@@ -1798,7 +1798,7 @@ static string _bless_armour(monster* mon, bool improve_type = false)
 
     give_monster_proper_name(mon);
     item_set_appearance(arm);
-    return "extra defense";
+    return "improved armour";
 }
 
 static bool _blessing_balms(monster* mon)
