@@ -369,7 +369,7 @@ static const ability_def Ability_List[] =
     { ABIL_NEMELEX_DRAW_ONE, "Draw One", 2, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_NEMELEX_PEEK_TWO, "Peek at Two", 3, 0, 0, 1, 0, ABFLAG_INSTANT},
     { ABIL_NEMELEX_TRIPLE_DRAW, "Triple Draw", 2, 0, 100, 2, 0, ABFLAG_NONE},
-    { ABIL_NEMELEX_DEAL_FOUR, "Deal Four", 8, 0, 200, 10, 0, ABFLAG_NONE},
+    { ABIL_NEMELEX_DEAL_FOUR, "Deal Four", 8, 0, 200, 8, 0, ABFLAG_NONE},
     { ABIL_NEMELEX_STACK_FIVE, "Stack Five", 5, 0, 250, 10, 0, ABFLAG_NONE},
 
     // Beogh
