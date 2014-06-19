@@ -3776,9 +3776,9 @@ conduct_type player_will_anger_monster(monster* mon)
         return DID_HOLY;
     if (you_worship(GOD_ZIN))
     {
-        if (mon->is_unclean())
+        if (mon->unclean())
             return DID_UNCLEAN;
-        if (mon->is_chaotic())
+        if (mon->chaos())
             return DID_CHAOS;
     }
     if (you_worship(GOD_TROG) && mon->is_actual_spellcaster())

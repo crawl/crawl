@@ -3466,85 +3466,147 @@ bool monster::is_evil(bool check_spells) const
     return false;
 }
 
-bool monster::is_unclean(bool check_spells) const
+/** Is the monster insane?
+ *
+ *  Somewhat subjective, of course.
+ *  @returns true if the monster is a unique deemed insane by Zin.
+ */
+bool monster::is_insane() const
 {
-    if (has_unclean_spell() && check_spells)
-        return true;
+    return type == MONS_CRAZY_YIUF
+           || type == MONS_PSYCHE
+           || type == MONS_LOUISE;
+}
 
-    if (has_attack_flavour(AF_HUNGER)
-        || has_attack_flavour(AF_ROT)
-        || has_attack_flavour(AF_STEAL))
-    {
-        return true;
-    }
+/** Is the monster considered unclean by Zin?
+ *
+ *  If not 0, then Zin won't let you have it as an ally, and gives
+ *  piety for killing it.
+ *  @param check_god whether the monster having a chaotic god matters.
+ *  @returns 0 if not hated, a number greater than 0 otherwise.
+ */
+int monster::unclean(bool check_god) const
+{
+    int uncleanliness = 0;
+
+    if (has_attack_flavour(AF_HUNGER))
+        uncleanliness++;
+    if (has_attack_flavour(AF_ROT))
+        uncleanliness++;
+    if (has_attack_flavour(AF_STEAL))
+        uncleanliness++;
+    if (has_attack_flavour(AF_VAMPIRIC))
+        uncleanliness++;
 
     // Zin considers insanity unclean.  And slugs that speak.
-    if (type == MONS_CRAZY_YIUF
-        || type == MONS_PSYCHE
+    if (is_insane()
         || type == MONS_GASTRONOK)
     {
-        return true;
+        uncleanliness++;
     }
 
     // A floating mass of disease is nearly the definition of unclean.
     if (type == MONS_ANCIENT_ZYME)
-        return true;
+        uncleanliness++;
+
+    // Zin _really_ doesn't like death drakes or necrophages.
+    if (type == MONS_NECROPHAGE || type == MONS_DEATH_DRAKE)
+        uncleanliness++;
 
     // Assume that all unknown gods are not chaotic.
     //
     // Being a worshipper of a chaotic god doesn't yet make you
     // physically/essentially chaotic (so you don't get hurt by silver),
     // but Zin does mind.
-    if (is_priest() && is_chaotic_god(god) && check_spells)
-        return true;
+    if (is_priest() && is_chaotic_god(god) && check_god)
+        uncleanliness++;
 
-    if (has_chaotic_spell() && is_actual_spellcaster() && check_spells)
-        return true;
+    if (has_unclean_spell())
+        uncleanliness++;
+
+    if (has_chaotic_spell() && is_actual_spellcaster())
+        uncleanliness++;
 
     corpse_effect_type ce = mons_corpse_effect(type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !is_chaotic())
-        return true;
+    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !chaos())
+        uncleanliness++;
 
-    return false;
+    // Zin has a food conduct for monsters too.
+    if (mons_eats_corpses(this))
+        uncleanliness++;
+
+    // Corporeal undead are a perversion of natural form.
+    if (holiness() == MH_UNDEAD && !is_insubstantial())
+        uncleanliness++;
+
+    return uncleanliness;
 }
 
-bool monster::is_known_chaotic() const
+/** How chaotic do you know this monster to be?
+ *
+ * @param check_spells_god whether to look at its spells and/or
+ *        religion; silver damage does not.
+ * @returns 0 if not chaotic, a larger number if so.
+ */
+int monster::known_chaos(bool check_spells_god) const
 {
+    int chaotic = 0;
+
     if (type == MONS_UGLY_THING
         || type == MONS_VERY_UGLY_THING
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_WRETCHED_STAR
-        || type == MONS_KILLER_KLOWN // For their random attacks.
-        || type == MONS_TIAMAT       // For her colour-changing.
-        || mons_is_demonspawn(type)  // Like player demonspawn
+        || type == MONS_KILLER_KLOWN  // For their random attacks.
+        || type == MONS_TIAMAT        // For her colour-changing.
+        || mons_is_demonspawn(type)   // Like player demonspawn
         || mons_class_is_chimeric(type))
     {
-        return true;
+        chaotic++;
     }
 
     if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))
-        return true;
+        chaotic++;
 
     // Knowing chaotic spells is not enough to make you "essentially"
-    // chaotic (i.e., silver doesn't hurt you), it's just unclean for
-    // Zin.  Having chaotic abilities (not actual spells) does mean
-    // you're truly changed by chaos.
-    if (has_chaotic_spell() && !is_actual_spellcaster())
-        return true;
+    // chaotic (i.e., silver doesn't hurt you), but it does make you
+    // chaotic enough for Zin's chaos recitation. Having chaotic
+    // abilities (not actual spells) does mean you're truly changed
+    // by chaos.
+    if (has_chaotic_spell() && (!is_actual_spellcaster()
+                                || check_spells_god))
+    {
+        chaotic++;
+    }
 
     if (has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_CHAOS))
     {
-        return true;
+        chaotic++;
     }
 
-    return false;
+    if (is_chaotic_god(god))
+        chaotic++;
+
+    if (is_chaotic_god(god) && is_priest())
+        chaotic++;
+
+    return chaotic;
 }
 
-bool monster::is_chaotic() const
+/** How chaotic is this monster really?
+ *
+ * @param check_spells_god whether to look at its spells and/or
+ *        religion; silver damage does not.
+ * @returns 0 if not chaotic, a larger number if so.
+ */
+int monster::chaos(bool check_spells_god) const
 {
-    return is_shapeshifter() || is_known_chaotic();
+    // Don't count known shapeshifters twice.
+    if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))
+        return known_chaos(check_spells_god);
+    else
+        return is_shapeshifter() + known_chaos(check_spells_god);
 }
 
 bool monster::is_artificial() const

@@ -1922,12 +1922,12 @@ int monster_die(monster* mons, killer_type killer,
                 }
 
                 // Zin hates unclean and chaotic beings.
-                if (mons->is_unclean())
+                if (mons->unclean())
                 {
                     did_god_conduct(DID_KILL_UNCLEAN,
                                     mons->hit_dice, true, mons);
                 }
-                else if (mons->is_chaotic())
+                else if (mons->chaos())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
                                     mons->hit_dice, true, mons);
@@ -2157,13 +2157,13 @@ int monster_die(monster* mons, killer_type killer,
                                 mons->hit_dice);
                         }
 
-                        if (mons->is_unclean())
+                        if (mons->unclean())
                         {
                             did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
                                             mons->hit_dice);
                         }
 
-                        if (mons->is_chaotic())
+                        if (mons->chaos())
                         {
                             did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
                                             mons->hit_dice);
@@ -2216,13 +2216,13 @@ int monster_die(monster* mons, killer_type killer,
                                         mons->hit_dice);
                     }
 
-                    if (mons->is_unclean())
+                    if (mons->unclean())
                     {
                         did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
                                         mons->hit_dice);
                     }
 
-                    if (mons->is_chaotic())
+                    if (mons->chaos())
                     {
                         did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
                                         mons->hit_dice);
