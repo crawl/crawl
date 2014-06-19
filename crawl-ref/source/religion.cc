@@ -1695,11 +1695,16 @@ static string _bless_weapon(monster* mon, bool improve_type = false)
 
     item_def& wpn = *wpn_ptr;
 
+    if (mon->props.exists("given beogh weapon"))
+    {
+        dprf("Can't bless weapons gifted by the player!");
+        return "";
+    }
+
     const int old_weapon_type = wpn.sub_type;
     if (improve_type
         && !is_artefact(wpn)
-        && x_chance_in_y(mon->hit_dice, 250)
-        && !mon->props.exists("given beogh weapon"))
+        && x_chance_in_y(mon->hit_dice, 250))
     {
         wpn.sub_type = _upgrade_weapon_type(wpn.sub_type,
                                             mon->inv[MSLOT_SHIELD] != NON_ITEM,
@@ -1764,13 +1769,20 @@ static string _bless_armour(monster* mon, bool improve_type = false)
                      armour : shield;
     item_def& arm(mitm[slot]);
 
+    if (slot == shield && mon->props.exists("given beogh shield")
+        || slot == armour && mon->props.exists("given beogh armour"))
+    {
+        dprf("Can't bless armour gifted by the player!");
+        return "";
+    }
+
     const int old_subtype = arm.sub_type;
     if (improve_type && !is_artefact(arm)
         && x_chance_in_y(mon->hit_dice, 250))
     {
-        if (slot == shield && !mon->props.exists("given beogh shield"))
+        if (slot == shield)
             _upgrade_shield(arm);
-        else if (slot == armour && !mon->props.exists("given beogh armour"))
+        else
             _upgrade_body_armour(arm);
     }
 
