@@ -29,9 +29,6 @@
 #include "unwind.h"
 #include "view.h"
 
-const string clone_master_key = "mcloneorig";
-const string clone_slave_key  = "mclonedupe";
-
 static string _monster_clone_id_for(monster* mons)
 {
     return make_stringf("%s%d",
@@ -41,15 +38,15 @@ static string _monster_clone_id_for(monster* mons)
 
 static bool _monster_clone_exists(monster* mons)
 {
-    if (!mons->props.exists(clone_master_key))
+    if (!mons->props.exists(CLONE_MASTER_KEY))
         return false;
 
-    const string clone_id = mons->props[clone_master_key].get_string();
+    const string clone_id = mons->props[CLONE_MASTER_KEY].get_string();
     for (monster_iterator mi; mi; ++mi)
     {
         monster* thing(*mi);
-        if (thing->props.exists(clone_slave_key)
-            && thing->props[clone_slave_key].get_string() == clone_id)
+        if (thing->props.exists(CLONE_SLAVE_KEY)
+            && thing->props[CLONE_SLAVE_KEY].get_string() == clone_id)
         {
             return true;
         }
@@ -61,7 +58,7 @@ static bool _mons_is_illusion(monster* mons)
 {
     return mons->type == MONS_PLAYER_ILLUSION
            || mons->has_ench(ENCH_PHANTOM_MIRROR)
-           || mons->props.exists(clone_slave_key);
+           || mons->props.exists(CLONE_SLAVE_KEY);
 }
 
 static bool _mons_is_illusion_cloneable(monster* mons)
@@ -107,8 +104,8 @@ static void _mons_summon_monster_illusion(monster* caster,
     if (monster *clone = clone_mons(foe, true, &cloning_visible))
     {
         const string clone_id = _monster_clone_id_for(foe);
-        clone->props[clone_slave_key] = clone_id;
-        foe->props[clone_master_key] = clone_id;
+        clone->props[CLONE_SLAVE_KEY] = clone_id;
+        foe->props[CLONE_MASTER_KEY] = clone_id;
         mons_add_blame(clone,
                        "woven by " + caster->name(DESC_THE));
         if (!clone->has_ench(ENCH_ABJ))
