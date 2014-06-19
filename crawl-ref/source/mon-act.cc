@@ -1682,7 +1682,9 @@ static void _pre_monster_move(monster* mons)
         }
     }
 
-    if (mons->summoner && mons->is_summoned())
+    int sumtype = 0;
+    if (mons->summoner && (mons->is_summoned(NULL, &sumtype)
+                           || sumtype == MON_SUMM_CLONE))
     {
         const actor * const summoner = actor_by_mid(mons->summoner);
         if ((!summoner || !summoner->alive()) && mons->del_ench(ENCH_ABJ))
