@@ -5159,6 +5159,20 @@ void iashol_offer_new_sacrifices()
     }
 }
 
+static const char* _describe_sacrifice_piety_gain(int piety_gain)
+{
+    if (piety_gain >= 50)
+        return "an incredible";
+    else if (piety_gain >= 36)
+        return "a major";
+    else if (piety_gain >= 26)
+        return "a significant";
+    else if (piety_gain >= 16)
+        return "a modest";
+    else
+        return "a trivial";
+}
+
 void iashol_do_sacrifice(ability_type sacrifice)
 {
     skill_type mutation_skill;
@@ -5194,9 +5208,17 @@ void iashol_do_sacrifice(ability_type sacrifice)
     item_def* const weapon = you.slot_item(EQ_WEAPON, true);
     item_def* const ring = you.slot_item(ring_slot, true);
 
+    int piety_gain;
+    int divisor = 700;
+
     switch (sacrifice)
     {
         case ABIL_IASHOL_SACRIFICE_WORDS:
+            piety_gain = 35;
+
+            mprf("Iashol asks you to sacrifice your ability to drink while threatened.");
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5205,9 +5227,12 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(MUT_NO_READ, 1, "Iashol sacrifice");
             }
-            gain_piety(35 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_DRINK:
+            piety_gain = 35;
+            mprf("Iashol asks you to sacrifice your ability to read while threatened.");
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5216,14 +5241,16 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(MUT_NO_DRINK, 1, "Iashol sacrifice");
             }
-            gain_piety(35 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_HEALTH:
+            piety_gain = 30;
             health_sacrifice = static_cast<mutation_type>(
                 current_health_sacrifice[0].get_int());
 
             mprf("Iashol asks you to corrupt yourself with %s.",
                 mutation_name(health_sacrifice));
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5232,14 +5259,20 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(health_sacrifice, 1, "Iashol sacrifice");
             }
-            gain_piety(30 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_ESSENCE:
             essence_sacrifice = static_cast<mutation_type>(
                 current_essence_sacrifice[0].get_int());
 
+            if (essence_sacrifice == MUT_LOW_MAGIC)
+                piety_gain = 15;
+            else
+                piety_gain = 20;
+
             mprf("Iashol asks you to corrupt yourself with %s.",
                 mutation_name(essence_sacrifice));
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5248,14 +5281,22 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(essence_sacrifice, 1, "Iashol sacrifice");
             }
-            gain_piety(30 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_PURITY:
             purity_sacrifice = static_cast<mutation_type>(
                 current_purity_sacrifice[0].get_int());
 
+            if (purity_sacrifice == MUT_WEAK
+                || purity_sacrifice == MUT_CLUMSY
+                || purity_sacrifice == MUT_DOPEY)
+                piety_gain = 10;
+            else
+                piety_gain = 25;
+
             mprf("Iashol asks you to corrupt yourself with %s.",
                 mutation_name(purity_sacrifice));
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5264,16 +5305,15 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(purity_sacrifice, 1, "Iashol sacrifice");
             }
-            if (purity_sacrifice == MUT_WEAK
-                || purity_sacrifice == MUT_CLUMSY
-                || purity_sacrifice == MUT_DOPEY)
-            {
-                gain_piety(10 + random2(5));
-            }
-            else
-                gain_piety(25 + random2(5));
+
             break;
         case ABIL_IASHOL_SACRIFICE_STEALTH:
+            piety_gain = 25 + div_rand_round(skill_exp_needed(
+                you.skills[SK_STEALTH], SK_STEALTH, you.species), divisor);
+
+            mprf("Iashol asks you to sacrifice your ability to go unnoticed.");
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5283,9 +5323,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_STEALTH, 1, "Iashol sacrifice");
             }
 
-            gain_piety(30 + div_rand_round(skill_exp_needed(
-                    you.skills[SK_STEALTH], SK_STEALTH, SP_HUMAN), 50));
-
             // zero out useless skills
             change_skill_points(SK_STEALTH,
                 -you.skill_points[SK_STEALTH], true);
@@ -5293,6 +5330,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_IASHOL_SACRIFICE_ARTIFICE:
+            piety_gain = 40 + div_rand_round(skill_exp_needed(
+                you.skills[SK_EVOCATIONS], SK_EVOCATIONS, you.species),
+                divisor);
+
+            mprf("Iashol asks you to sacrifice all use of magical tools.");
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5302,8 +5346,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_ARTIFICE, 1, "Iashol sacrifice");
             }
 
-            gain_piety(40 + div_rand_round(skill_exp_needed(
-                    you.skills[SK_EVOCATIONS], SK_EVOCATIONS, SP_HUMAN), 50));
             // zero out useless skills
             change_skill_points(SK_EVOCATIONS,
                 -you.skill_points[SK_EVOCATIONS], true);
@@ -5311,6 +5353,14 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
+            piety_gain = 25 + div_rand_round(skill_exp_needed(
+                you.skills[SK_DODGING], SK_DODGING, you.species), divisor);
+            if (player_mutation_level(MUT_NO_ARMOUR))
+                piety_gain += 35;
+
+            mprf("Iashol asks you to sacrifice your ability to dodge.");
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5320,8 +5370,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_DODGING, 1, "Iashol sacrifice");
             }
 
-            gain_piety(30 + div_rand_round(skill_exp_needed(
-                    you.skills[SK_DODGING], SK_DODGING, SP_HUMAN), 50));
             // zero out useless skills
             change_skill_points(SK_DODGING,
                 -you.skill_points[SK_DODGING], true);
@@ -5329,6 +5377,14 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_IASHOL_SACRIFICE_DURABILITY:
+            piety_gain = 25 + div_rand_round(skill_exp_needed(
+                you.skills[SK_ARMOUR], SK_ARMOUR, you.species), divisor);
+            if (player_mutation_level(MUT_NO_DODGING))
+                piety_gain += 35;
+
+            mprf("Iashol asks you to sacrifice your ability to wear armour well.");
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5338,8 +5394,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_NO_ARMOUR, 1, "Iashol sacrifice");
             }
 
-            gain_piety(30 + div_rand_round(skill_exp_needed(
-                    you.skills[SK_ARMOUR], SK_ARMOUR, SP_HUMAN), 50));
             // zero out useless skills
             change_skill_points(SK_ARMOUR,
                 -you.skill_points[SK_ARMOUR], true);
@@ -5347,6 +5401,11 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             break;
         case ABIL_IASHOL_SACRIFICE_SANITY:
+            piety_gain = 25;
+
+            mprf("Iashol asks you to sacrifice your sanity.");
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5355,9 +5414,15 @@ void iashol_do_sacrifice(ability_type sacrifice)
             } else {
                 perma_mutate(MUT_FEAR_BLOOD, 1, "Iashol sacrifice");
             }
-            gain_piety(25 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_LOVE:
+            piety_gain = 25 + div_rand_round(skill_exp_needed(
+                you.skills[SK_SUMMONINGS], SK_SUMMONINGS, you.species),
+                divisor);
+
+            mprf("Iashol asks you to sacrifice your ability to be loved.");
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5367,11 +5432,20 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     perma_mutate(MUT_NO_LOVE, 1, "Iashol sacrifice");
             }
 
-            gain_piety(25 + random2(5) + div_rand_round(skill_exp_needed(
-                    you.skills[SK_SUMMONINGS], SK_SUMMONINGS, SP_HUMAN), 200));
-
             break;
         case ABIL_IASHOL_SACRIFICE_ARCANA:
+            piety_gain = 25;
+            arcane_mutations_size = current_arcane_sacrifices.size();
+            for (int i = 0; i < arcane_mutations_size; ++i) {
+                mutation_type arcane_sacrifice =
+                    static_cast<mutation_type>(
+                        current_arcane_sacrifices[i].get_int());
+                mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
+                piety_gain += div_rand_round(skill_exp_needed(
+                    you.skills[mutation_skill], mutation_skill, you.species),
+                    divisor);
+            }
+
             mprf("Iashol asks you to sacrifice all use of %s, %s, and %s.",
                 arcane_mutation_to_school_name(
                     static_cast<mutation_type>(
@@ -5383,6 +5457,8 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     static_cast<mutation_type>(
                         current_arcane_sacrifices[2].get_int()))
                 );
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you want to accept this sacrifice? ",
                 true, 'n'))
             {
@@ -5399,9 +5475,6 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
                 // gain one piety for every 50 skill points
                 mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
-                gain_piety(random2(5) + div_rand_round(skill_exp_needed(
-                    you.skills[mutation_skill], mutation_skill, SP_HUMAN),
-                    50));
 
                 // zero out useless skills
                 change_skill_points(mutation_skill,
@@ -5421,9 +5494,15 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     }
                 }
             }
-            gain_piety(25 + random2(5));
             break;
         case ABIL_IASHOL_SACRIFICE_HAND:
+            piety_gain = 80 + div_rand_round(skill_exp_needed(
+                    you.skills[SK_SHIELDS], SK_SHIELDS, you.species), divisor);
+
+            mprf("Iashol asks you to sacrifice your one of your %s.",
+                you.hand_name(true).c_str());
+            mprf("This is %s sacrifice.",
+                _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
                 false, 'n'))
             {
@@ -5460,15 +5539,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 unequip_item(ring_slot);
             }
 
-            gain_piety(80 + div_rand_round(skill_exp_needed(
-                    you.skills[SK_SHIELDS], SK_SHIELDS, SP_HUMAN), 50));
-
             you.stop_train.insert(SK_SHIELDS);
             break;
         default:
             return;
             break;
     }
+    gain_piety(piety_gain - 2 + random2(7)); // randomize it a bit.
     iashol_expire_sacrifices();
 }
 
