@@ -633,15 +633,19 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (silenced(pos))
         {
             if (you_know && in_sight)
+            {
                 mprf("%s vibrates slightly, failing to make a sound.",
                      name(DESC_THE).c_str());
+            }
         }
         else
         {
             string msg;
             if (you_trigger)
+            {
                 msg = make_stringf("%s emits a blaring wail!",
                                    name(DESC_THE).c_str());
+            }
             else
             {
                 string dir = _direction_string(pos, !in_sight);
