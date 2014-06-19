@@ -1130,8 +1130,8 @@ static void _debug_acquirement_stats(FILE *ostat)
             "electrocution",
 #if TAG_MAJOR_VERSION == 34
             "orc slaying",
-#endif
             "dragon slaying",
+#endif
             "venom",
             "protection",
             "draining",
