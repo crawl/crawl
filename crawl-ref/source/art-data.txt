@@ -414,12 +414,12 @@ BOOL:     seeinv
 
 NAME:    giant club "Skullcrusher"
 OBJ:     OBJ_WEAPONS/WPN_GIANT_CLUB
-PLUS:    +1
+PLUS:    +3
 COLOUR:  BROWN
 TILE:    urand_skullcrusher
 TILE_EQ: giant_club_slant
 BRAND:   SPWPN_SPEED
-STR:     10
+STR:     7
 
 NAME:     glaive of the Guard
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
@@ -911,10 +911,11 @@ NAME:    necklace of Bloodlust
 OBJ:     OBJ_JEWELLERY/AMU_RAGE
 COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
-STR:     10
+STR:     2
 INT:     -2
 MAGIC:   1
 ANGRY:   9
+SLAY:    3
 CURSED:  3
 
 NAME:    ring of Shaolin
