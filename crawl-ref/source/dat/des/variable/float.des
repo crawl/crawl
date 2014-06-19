@@ -2933,7 +2933,7 @@ KMONS:    4 = ice statue / w:5 orange crystal statue
 KMONS:    5 = catoblepas / dire elephant / emperor scorpion \
               / alligator snapping turtle / shambling mangrove / thorn hunter
 KMONS:    6 = siren
-KMONS:    7 = water nymph / wind drake
+KMONS:    7 = water nymph / wind drake / sphinx
 KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
               / spriggan air mage
 KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon
@@ -2943,13 +2943,13 @@ KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
 KITEM:    E| = |
-KFEAT:    567DER%$*| = W
+KFEAT:    f567DER%$*| = W
 KFEAT:    S = w
 KFEAT:    m = t
 KPROP:    ~`5R = no_rtele_into
 SHUFFLE:  HI / JK
 NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
-SUBST:    B : cf, C : cf, ~" = ffWmm, '` = W
+SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
 COLOUR:   c = white
 COLOUR:   x = cyan
 TILE:     m = dngn_mangrove
