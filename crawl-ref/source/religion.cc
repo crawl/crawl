@@ -4399,6 +4399,10 @@ bool god_hates_killing(god_type god, const monster* mon)
     if (mons_is_object(mon->type))
         return false;
 
+    // kill as many illusions as you want.
+    if (mon->is_illusion())
+        return false;
+
     bool retval = false;
     const mon_holy_type holiness = mon->holiness();
 
