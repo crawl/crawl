@@ -38,8 +38,6 @@
 -- only get about 60 turns to kill the last enemy, and it might spawn in a far
 -- away spot. This is intentional.
 --
--- XXX: TRJ doesn't work.
---
 -- XXX: Zin is overpowered.
 
 function arena_sprint_is_boss_round(round_id)
