@@ -966,7 +966,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             else if (you_worship(GOD_NEMELEX_XOBEH))
             {
-                piety_change = 12;
+                piety_change = 14;
                 piety_denom = level;
                 retval = true;
             }
