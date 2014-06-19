@@ -3484,18 +3484,12 @@ void level_change(int source, const char* aux, bool skip_attribute_increase)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through acquiring gold.");
             if (you.experience_level == 22)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of oklob circles.");
-            if (you.experience_level == 23)
-                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through invoking Sage effects.");
             if (you.experience_level == 24)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through acquirement.");
             if (you.experience_level == 25)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of blade traps.");
             if (you.experience_level == 26)
                 mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of curse skulls.");
-#if 0
-            if (you.experience_level == 27)
-                mprf(MSGCH_INTRINSIC_GAIN, "Your Zot abilities now extend through the making of teleport traps.");
-#endif
         }
 
         const int old_hp = you.hp;
