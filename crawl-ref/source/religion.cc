@@ -1670,27 +1670,33 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
     }
 }
 
-static bool _blessing_wpn(monster* mon)
-{
-    // Pick a monster's weapon.
-    const int weapon = mon->inv[MSLOT_WEAPON];
-    const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
-    if (weapon == NON_ITEM && alt_weapon == NON_ITEM
-        || mon->type == MONS_DANCING_WEAPON)
+/**
+ * Attempt to bless a follower's weapon.
+ *
+ * @param[in] mon      The follower whose weapon should be blessed.
+ * @return                  The type of blessing; may be empty.
+ */
+static string _bless_weapon(monster* mon, bool improve_type = false)
+{
+    if (mon->type == MONS_DANCING_WEAPON)
     {
-        return false;
+        dprf("Can't bless a dancing weapon's weapon!");
+        return "";
     }
 
-    int slot;
+    item_def* wpn_ptr = mon->weapon();
+    if (wpn_ptr == NULL)
+    {
+        // XXX: give an item?
+        dprf("Couldn't bless follower's weapon; they have none!");
+        return "";
+    }
 
-    do
-        slot = (coinflip()) ? weapon : alt_weapon;
-    while (slot == NON_ITEM);
+    item_def& wpn = *wpn_ptr;
 
-    item_def& wpn(mitm[slot]);
-
-    if (you_worship(GOD_BEOGH)
+    const int old_weapon_type = wpn.sub_type;
+    if (improve_type
         && !is_artefact(wpn)
         && x_chance_in_y(mon->hit_dice, 250)
         && !mon->props.exists("given beogh weapon"))
@@ -1702,11 +1708,17 @@ static bool _blessing_wpn(monster* mon)
     }
 
     // Enchant and uncurse it.
-    if (!enchant_weapon(wpn, true))
-        return false;
+    const bool enchanted = enchant_weapon(wpn, true);
 
+    if (!enchanted && wpn.sub_type == old_weapon_type)
+    {
+        dprf("Couldn't bless follower's weapon!");
+        return "";
+    }
+
+    give_monster_proper_name(mon);
     item_set_appearance(wpn);
-    return true;
+    return "extra attack power";
 }
 
 static void _upgrade_shield(item_def &sh)
@@ -1729,24 +1741,31 @@ static void _upgrade_body_armour(item_def &arm)
     }
 }
 
-static bool _blessing_AC(monster* mon)
+/**
+ * Attempt to bless a follower's armour.
+ *
+ * @param[in] follower      The follower whose armour should be blessed.
+ * @return                  The type of blessing; may be empty.
+ */
+static string _bless_armour(monster* mon, bool improve_type = false)
 {
     // Pick either a monster's armour or its shield.
     const int armour = mon->inv[MSLOT_ARMOUR];
     const int shield = mon->inv[MSLOT_SHIELD];
 
     if (armour == NON_ITEM && shield == NON_ITEM)
-        return false;
+    {
+        // XXX: give an item?
+        dprf("Can't improve the armour of a naked character!");
+        return "";
+    }
 
-    int slot;
-
-    do
-        slot = (coinflip()) ? armour : shield;
-    while (slot == NON_ITEM);
-
+    const int slot = shield == NON_ITEM || (coinflip() && armour != NON_ITEM) ?
+                     armour : shield;
     item_def& arm(mitm[slot]);
 
-    if (you_worship(GOD_BEOGH) && !is_artefact(arm)
+    const int old_subtype = arm.sub_type;
+    if (improve_type && !is_artefact(arm)
         && x_chance_in_y(mon->hit_dice, 250))
     {
         if (slot == shield && !mon->props.exists("given beogh shield"))
@@ -1755,14 +1774,19 @@ static bool _blessing_AC(monster* mon)
             _upgrade_body_armour(arm);
     }
 
-    int ac_change;
-
     // And enchant or uncurse it.
-    if (!enchant_armour(ac_change, true, arm))
-        return false;
+    int ac_change;
+    const bool enchanted = enchant_armour(ac_change, true, arm);
 
+    if (!enchanted && old_subtype == arm.sub_type)
+    {
+        dprf("Couldn't enchant follower's armour!");
+        return "";
+    }
+
+    give_monster_proper_name(mon);
     item_set_appearance(arm);
-    return true;
+    return "extra defense";
 }
 
 static bool _blessing_balms(monster* mon)
@@ -1932,201 +1956,236 @@ static bool _beogh_blessing_priesthood(monster* mon)
     return false;
 }
 
+/**
+ * Attempt to bless a follower with curing and/or healing.
+ *
+ * @param[in] follower      The follower to heal.
+ * @return                  The type of healing that occurred; may be empty.
+ */
+static string _bless_with_healing(monster* follower)
+{
+    string blessing = "";
+
+    // Maybe try to cure status conditions.
+    bool balms = false;
+    if (coinflip())
+    {
+        balms = _blessing_balms(follower);
+        if (balms)
+            blessing = "divine balms";
+        else
+            dprf("Couldn't apply balms.");
+    }
+
+    // Heal the follower.
+    bool healing = _blessing_healing(follower);
+
+    // Maybe heal the follower again.
+    if ((!healing || coinflip()) && _blessing_healing(follower))
+        healing = true;
+
+    if (healing)
+    {
+        if (balms)
+            blessing += " and ";
+        blessing += "healing";
+    }
+    else
+        dprf("Couldn't heal monster.");
+
+    return blessing;
+}
+
+
+/**
+ * Print a message for a god blessing a follower.
+ *
+ * Also flash the screen, in local tiles.
+ *
+ * @param[in] follower  The follower being blessed.
+ * @param god           The god doing the blessing.
+ * @param message       The blessing being delivered.
+ */
+static void _display_god_blessing(monster* follower, god_type god,
+                                  string blessing)
+{
+    ASSERT(follower);
+
+    string whom = you.can_see(follower) ? follower->name(DESC_THE)
+                                        : "a follower";
+
+    simple_god_message(make_stringf(" blesses %s with %s.",
+                                    whom.c_str(), blessing.c_str()).c_str(),
+                       god);
+
+#ifndef USE_TILE_LOCAL
+    flash_monster_colour(follower, god_colour(god), 200);
+#endif
+}
+
+/**
+ * Have Beogh attempt to bless the specified follower.
+ *
+ * He may choose to bless another nearby follower, if no follower is specified,
+ * or the follower is invalid.
+ *
+ * @param[in] follower      The follower to try to bless.
+ * @param[in] force         Whether to check follower validity.
+ * @return Whether a blessing occurred.
+ */
+static bool _beogh_bless_follower(monster* follower, bool force)
+{
+    // If a follower was specified, and it's suitable, pick it.
+    // Otherwise, pick a random follower.
+    // XXX: factor out into another function?
+    if (!follower || (!force && !is_follower(follower)))
+    {
+        if (!one_chance_in(10))
+            return false;
+
+        // Choose a random follower in LOS, preferably a named or
+        // priestly one.
+        follower = choose_random_nearby_monster(0, is_follower, true);
+    }
+
+    if (!follower)
+    {
+        if (coinflip())
+            return false;
+
+        // Try *again*, on the entire level (2.5% chance).
+        follower = choose_random_monster_on_level(0, is_follower);
+    }
+
+    if (!follower)
+    {
+        // If no follower was found, attempt to send
+        // reinforcements.
+        _beogh_blessing_reinforcements();
+
+        // Possibly send more reinforcements.
+        if (coinflip())
+            _beogh_blessing_reinforcements();
+
+        _delayed_monster_done("Beogh blesses you with "
+                              "reinforcements.", "");
+
+        // Return true, even though the reinforcements might
+        // not be placed.
+        return true;
+    }
+
+    string blessing = "";
+
+    // 10% chance of blessing to priesthood or improving equipment.
+    if (one_chance_in(10))
+    {
+        if (_beogh_blessing_priesthood(follower))
+            blessing = "priesthood";
+        else
+        {
+            dprf("Couldn't promote monster to priesthood");
+            blessing = coinflip() ? _bless_weapon(follower, true)
+                                  : _bless_armour(follower, true);
+        }
+    }
+
+    // 90% chance of trying to heal.
+    if (blessing.empty())
+        blessing = _bless_with_healing(follower);
+
+    if (blessing.empty())
+        return false;
+
+    _display_god_blessing(follower, GOD_BEOGH, blessing);
+    return true;
+}
+
+/**
+ * Attempt to increase the duration of a follower.
+ *
+ * Their summon duration, if summoned, or charm duration, if charmed.
+ *
+ * @param[in] follower    The follower to bless.
+ * @return                The type of blessing that was given; may be empty.
+ */
+static string _tso_bless_duration(monster* follower)
+{
+    // Extend a monster's stay if it's abjurable, or extend charm
+    // duration. If neither is possible, deliberately fall through.
+    const bool more_time = _tso_blessing_extend_stay(follower);
+    const bool friendliness = _tso_blessing_friendliness(follower);
+
+    if (!more_time && !friendliness)
+    {
+        dprf("Couldn't increase monster's friendliness or summon time.");
+        return "";
+    }
+
+    string blessing = "";
+    if (friendliness)
+    {
+        blessing += "friendliness";
+        if (more_time)
+            blessing += " and ";
+    }
+
+    if (more_time)
+        blessing += "more time in this world";
+
+    return blessing;
+}
+
+/**
+ * Have The Shining One attempt to bless the specified follower.
+ *
+ * 10% chance of blessing equipment; otherwise, increase duration, or
+ * barring that, just heal & cure.
+ *
+ * @param[in] follower      The follower to try to bless.
+ * @param[in] force         Whether to check follower validity.
+ * @return Whether a blessing occurred.
+ */
+static bool _tso_bless_follower(monster* follower, bool force)
+{
+
+    if (!follower || (!force && !is_follower(follower)))
+        return false;
+
+    string blessing = "";
+    if (one_chance_in(10))
+    {
+        blessing = coinflip() ? _bless_weapon(follower)
+                              : _bless_armour(follower);
+    }
+    if (blessing.empty())
+        blessing = _tso_bless_duration(follower);
+    if (blessing.empty())
+        blessing = _bless_with_healing(follower);
+
+    if (blessing.empty())
+        return false;
+
+    _display_god_blessing(follower, GOD_SHINING_ONE, blessing);
+    return true;
+}
+
 // Bless the follower indicated in follower, if any.  If there isn't
 // one, bless a random follower within sight of the player, if any, or,
 // with decreasing chances, any follower on the level.
 // Blessing can be enforced with a wizard mode command.
 bool bless_follower(monster* follower,
                     god_type god,
-                    bool (*suitable)(const monster* mon),
                     bool force)
 {
-    int chance = (force ? coinflip() : random2(20));
-    string result;
-    bool blessed = false;
-
-    // If a follower was specified, and it's suitable, pick it.
-    // Otherwise, pick a random follower.
-    if (!follower || (!force && !suitable(follower)))
+    switch (god)
     {
-        // Only Beogh blesses random followers.
-        if (god != GOD_BEOGH)
-            return false;
-
-        if (chance > 2)
-            return false;
-
-        // Choose a random follower in LOS, preferably a named or
-        // priestly one (10% chance).
-        follower = choose_random_nearby_monster(0, suitable, true);
-
-        if (!follower)
-        {
-            if (coinflip())
-                return false;
-
-            // Try *again*, on the entire level (2.5% chance).
-            follower = choose_random_monster_on_level(0, suitable);
-
-            if (!follower)
-            {
-                // If no follower was found, attempt to send
-                // reinforcements.
-                _beogh_blessing_reinforcements();
-
-                // Possibly send more reinforcements.
-                if (coinflip())
-                    _beogh_blessing_reinforcements();
-
-                _delayed_monster_done("Beogh blesses you with "
-                                      "reinforcements.", "");
-
-                // Return true, even though the reinforcements might
-                // not be placed.
-                return true;
-            }
-        }
+        case GOD_BEOGH: return _beogh_bless_follower(follower, force);
+        case GOD_SHINING_ONE:   return _tso_bless_follower(follower, force);
+        default: return false; // XXX: print something here?
     }
-    ASSERT(follower);
-
-    if (chance <= 1 && god == GOD_BEOGH) // 10% chance of priesthood
-    {
-        // Turn a monster into a priestly monster, if possible.
-        if (_beogh_blessing_priesthood(follower))
-        {
-            result = "priesthood";
-            blessed = true;
-        }
-        else if (force)
-            mpr("Couldn't promote monster to priesthood.");
-    }
-
-    // Enchant a monster's weapon or armour/shield by one point, or at
-    // least uncurse it, if possible (10% chance).
-    // This will happen if the above blessing attempts are unsuccessful.
-    if (chance <= 1 && !blessed)
-    {
-        if (coinflip())
-        {
-            if (_blessing_wpn(follower))
-            {
-                result = "extra attack power";
-                give_monster_proper_name(follower);
-                blessed = true;
-            }
-            else if (force)
-                mpr("Couldn't enchant monster's weapon.");
-        }
-        else
-        {
-            if (_blessing_AC(follower))
-            {
-                result = "extra defence";
-                give_monster_proper_name(follower);
-                blessed = true;
-            }
-            else if (force)
-                mpr("Couldn't enchant monster's armour.");
-        }
-    }
-
-    // These effects happen if no other blessing was chosen (90%),
-    // or if the above attempts were all unsuccessful.
-    if (!blessed)
-    {
-        switch (god)
-        {
-            case GOD_SHINING_ONE:
-            {
-                // Extend a monster's stay if it's abjurable, or extend charm
-                // duration. If neither is possible, deliberately fall through.
-                bool more_time = _tso_blessing_extend_stay(follower);
-                bool friendliness = false;
-
-                if (!more_time || coinflip())
-                    friendliness = _tso_blessing_friendliness(follower);
-
-                result = "";
-
-                if (friendliness)
-                {
-                    result += "friendliness";
-                    if (more_time)
-                        result += " and ";
-                }
-
-                if (more_time)
-                    result += "more time in this world";
-
-                if (more_time || friendliness)
-                    break;
-
-                if (force)
-                    mpr("Couldn't increase monster's friendliness or time.");
-            }
-
-            // Deliberate fallthrough for the healing effects.
-            case GOD_BEOGH:
-            {
-                // Remove harmful ailments from a monster, or heal it, if
-                // possible.
-                if (coinflip())
-                {
-                    if (_blessing_balms(follower))
-                    {
-                        result = "divine balms";
-                        break;
-                    }
-                    else if (force)
-                        mpr("Couldn't apply balms.");
-                }
-
-                bool healing = _blessing_healing(follower);
-
-                if ((!healing || coinflip())
-                        && _blessing_healing(follower))
-                {
-                    healing = true;
-                }
-
-                if (healing)
-                {
-                    result += "healing";
-                    break;
-                }
-                else if (force)
-                    mpr("Couldn't heal monster.");
-
-                return false;
-            }
-
-            default:
-                break;
-        }
-    }
-
-    string whom = "";
-    if (!follower)
-        whom = "you";
-    else
-    {
-        if (you.can_see(follower))
-            whom = follower->name(DESC_THE);
-        else
-            whom = "a follower";
-    }
-
-    simple_god_message(
-        make_stringf(" blesses %s with %s.",
-                     whom.c_str(), result.c_str()).c_str(),
-        god);
-
-#ifndef USE_TILE_LOCAL
-    flash_monster_colour(follower, god_colour(god), 200);
-#endif
-
-    return true;
 }
+
 
 static void _delayed_gift_callback(const mgen_data &mg, monster *&mon,
                                    int placed)

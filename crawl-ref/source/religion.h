@@ -100,7 +100,6 @@ bool is_fellow_slime(const monster* mon);
 bool is_follower(const monster* mon);
 bool bless_follower(monster* follower = NULL,
                     god_type god = you.religion,
-                    bool (*suitable)(const monster* mon) = is_follower,
                     bool force = false);
 
 // Vehumet gift interface.
