@@ -843,6 +843,13 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
 
     monster *mons = create_monster(mg);
 
+    if (!mons)
+    {
+        mprf("%s twitches for a moment.",
+             _get_item_desc(wpn, target_is_player).c_str());
+        return;
+    }
+
     // Don't haunt yourself if the weapon is friendly
     if (!force_friendly)
     {
