@@ -1561,9 +1561,10 @@ bool evoke_item(int slot, bool check_range)
     {
         canned_msg(MSG_TOO_BERSERK);
         return false;
-    } else if (player_mutation_level(MUT_NO_ARTIFICE) && (slot == -1
-                       || slot != you.equip[EQ_WEAPON]
-                       || weapon_reach(*you.weapon()) <= 2))
+    }
+    else if (player_mutation_level(MUT_NO_ARTIFICE)
+             && (slot == -1 || slot != you.equip[EQ_WEAPON]
+                            || weapon_reach(*you.weapon()) <= 2))
     {
         return mpr("You cannot evoke magical items."), false;
     }

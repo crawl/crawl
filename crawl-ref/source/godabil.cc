@@ -4994,14 +4994,14 @@ void iashol_offer_new_sacrifices()
     int sacrifice = -1;
     int greater_sacrifice = -1;
 
-    do {
+    do
         sacrifice = random2(num_sacrifices);
-    } while (sacrifice == -1 || sacrifice == lesser_sacrifice);
+    while (sacrifice == -1 || sacrifice == lesser_sacrifice);
 
-    do {
+    do
         greater_sacrifice = random2(num_sacrifices);
-    } while (greater_sacrifice == -1 || greater_sacrifice == lesser_sacrifice
-        || greater_sacrifice == sacrifice);
+    while (greater_sacrifice == -1 || greater_sacrifice == lesser_sacrifice
+           || greater_sacrifice == sacrifice);
 
     ASSERT(you.props.exists("available_sacrifices"));
     CrawlVector &available_sacrifices
@@ -5023,19 +5023,20 @@ void iashol_offer_new_sacrifices()
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH
         || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_HEALTH)
     {
-        switch (random2(3)) {
-            case 0:
-                current_health_sacrifice.push_back(
-                    static_cast<int>(MUT_PHYSICAL_VULNERABILITY));
-                break;
-            case 1:
-                current_health_sacrifice.push_back(
-                    static_cast<int>(MUT_SLOW_REFLEXES));
-                break;
-            case 2:
-                current_health_sacrifice.push_back(
-                    static_cast<int>(MUT_FRAIL));
-                break;
+        switch (random2(3))
+        {
+        case 0:
+            current_health_sacrifice.push_back(
+                static_cast<int>(MUT_PHYSICAL_VULNERABILITY));
+            break;
+        case 1:
+            current_health_sacrifice.push_back(
+                static_cast<int>(MUT_SLOW_REFLEXES));
+            break;
+        case 2:
+            current_health_sacrifice.push_back(
+                static_cast<int>(MUT_FRAIL));
+            break;
         }
     }
 
@@ -5047,19 +5048,20 @@ void iashol_offer_new_sacrifices()
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE
         || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_ESSENCE)
     {
-        switch (random2(3)) {
-            case 0:
-                current_essence_sacrifice.push_back(
-                    static_cast<int>(MUT_ANTI_WIZARDRY));
-                break;
-            case 1:
-                current_essence_sacrifice.push_back(
-                    static_cast<int>(MUT_MAGICAL_VULNERABILITY));
-                break;
-            case 2:
-                current_essence_sacrifice.push_back(
-                    static_cast<int>(MUT_LOW_MAGIC));
-                break;
+        switch (random2(3))
+        {
+        case 0:
+            current_essence_sacrifice.push_back(
+                static_cast<int>(MUT_ANTI_WIZARDRY));
+            break;
+        case 1:
+            current_essence_sacrifice.push_back(
+                static_cast<int>(MUT_MAGICAL_VULNERABILITY));
+            break;
+        case 2:
+            current_essence_sacrifice.push_back(
+                static_cast<int>(MUT_LOW_MAGIC));
+            break;
         }
     }
 
@@ -5071,35 +5073,36 @@ void iashol_offer_new_sacrifices()
         || possible_sacrifices[sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY
         || possible_sacrifices[greater_sacrifice] == ABIL_IASHOL_SACRIFICE_PURITY)
     {
-        switch (random2(7)) {
-            case 0:
-                current_purity_sacrifice.push_back(
-                    static_cast<int>(MUT_DETERIORATION));
-                break;
-            case 1:
-                current_purity_sacrifice.push_back(
-                    static_cast<int>(MUT_SCREAM));
-                break;
-            case 2:
-                current_purity_sacrifice.push_back(
-                    static_cast<int>(MUT_DEFORMED));
-                break;
-            case 3:
-                current_purity_sacrifice.push_back(
-                    static_cast<int>(MUT_SLOW_HEALING));
-                break;
-            case 4:
-                current_purity_sacrifice.push_back(
-                    static_cast<int>(MUT_DOPEY));
-                break;
-            case 5:
-                current_purity_sacrifice.push_back(
-                    static_cast<int>(MUT_CLUMSY));
-                break;
-            case 6:
-                current_purity_sacrifice.push_back(
-                    static_cast<int>(MUT_WEAK));
-                break;
+        switch (random2(7))
+        {
+        case 0:
+            current_purity_sacrifice.push_back(
+                static_cast<int>(MUT_DETERIORATION));
+            break;
+        case 1:
+            current_purity_sacrifice.push_back(
+                static_cast<int>(MUT_SCREAM));
+            break;
+        case 2:
+            current_purity_sacrifice.push_back(
+                static_cast<int>(MUT_DEFORMED));
+            break;
+        case 3:
+            current_purity_sacrifice.push_back(
+                static_cast<int>(MUT_SLOW_HEALING));
+            break;
+        case 4:
+            current_purity_sacrifice.push_back(
+                static_cast<int>(MUT_DOPEY));
+            break;
+        case 5:
+            current_purity_sacrifice.push_back(
+                static_cast<int>(MUT_CLUMSY));
+            break;
+        case 6:
+            current_purity_sacrifice.push_back(
+                static_cast<int>(MUT_WEAK));
+            break;
         }
     }
 
@@ -5222,13 +5225,13 @@ void iashol_do_sacrifice(ability_type sacrifice)
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
-                false, 'n'))
+                       false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(MUT_NO_READ, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(MUT_NO_READ, 1, "Iashol sacrifice");
             break;
         case ABIL_IASHOL_SACRIFICE_DRINK:
             piety_gain = 35;
@@ -5240,9 +5243,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(MUT_NO_DRINK, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(MUT_NO_DRINK, 1, "Iashol sacrifice");
             break;
         case ABIL_IASHOL_SACRIFICE_HEALTH:
             piety_gain = 30;
@@ -5257,9 +5260,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(health_sacrifice, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(health_sacrifice, 1, "Iashol sacrifice");
             break;
         case ABIL_IASHOL_SACRIFICE_ESSENCE:
             essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
@@ -5278,9 +5281,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(essence_sacrifice, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(essence_sacrifice, 1, "Iashol sacrifice");
             break;
         case ABIL_IASHOL_SACRIFICE_PURITY:
             purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
@@ -5288,7 +5291,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             if (purity_sacrifice == MUT_WEAK
                 || purity_sacrifice == MUT_CLUMSY
                 || purity_sacrifice == MUT_DOPEY)
+            {
                 piety_gain = 10;
+            }
             else
                 piety_gain = 25;
 
@@ -5301,9 +5306,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(purity_sacrifice, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(purity_sacrifice, 1, "Iashol sacrifice");
 
             break;
         case ABIL_IASHOL_SACRIFICE_STEALTH:
@@ -5318,9 +5323,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(MUT_NO_STEALTH, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(MUT_NO_STEALTH, 1, "Iashol sacrifice");
 
             // zero out useless skills
             change_skill_points(SK_STEALTH,
@@ -5341,9 +5346,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(MUT_NO_ARTIFICE, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(MUT_NO_ARTIFICE, 1, "Iashol sacrifice");
 
             // zero out useless skills
             change_skill_points(SK_EVOCATIONS,
@@ -5365,9 +5370,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(MUT_NO_DODGING, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(MUT_NO_DODGING, 1, "Iashol sacrifice");
 
             // zero out useless skills
             change_skill_points(SK_DODGING,
@@ -5389,9 +5394,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(MUT_NO_ARMOUR, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(MUT_NO_ARMOUR, 1, "Iashol sacrifice");
 
             // zero out useless skills
             change_skill_points(SK_ARMOUR,
@@ -5410,9 +5415,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(MUT_FEAR_BLOOD, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(MUT_FEAR_BLOOD, 1, "Iashol sacrifice");
             break;
         case ABIL_IASHOL_SACRIFICE_LOVE:
             piety_gain = 25 + div_rand_round(skill_exp_needed(
@@ -5427,15 +5432,15 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                    perma_mutate(MUT_NO_LOVE, 1, "Iashol sacrifice");
             }
-
+            else
+                perma_mutate(MUT_NO_LOVE, 1, "Iashol sacrifice");
             break;
         case ABIL_IASHOL_SACRIFICE_ARCANA:
             piety_gain = 25;
             arcane_mutations_size = current_arcane_sacrifices.size();
-            for (int i = 0; i < arcane_mutations_size; ++i) {
+            for (int i = 0; i < arcane_mutations_size; ++i)
+            {
                 mutation_type arcane_sacrifice =
                     AS_MUT(current_arcane_sacrifices[i]);
                 mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
@@ -5465,7 +5470,8 @@ void iashol_do_sacrifice(ability_type sacrifice)
             }
 
             arcane_mutations_size = current_arcane_sacrifices.size();
-            for (int i = 0; i < arcane_mutations_size; ++i) {
+            for (int i = 0; i < arcane_mutations_size; ++i)
+            {
                 mutation_type arcane_sacrifice =
                     AS_MUT(current_arcane_sacrifices[i]);
                 perma_mutate(arcane_sacrifice, 1, "Iashol sacrifice");
@@ -5505,9 +5511,9 @@ void iashol_do_sacrifice(ability_type sacrifice)
             {
                 canned_msg(MSG_OK);
                 return;
-            } else {
-                perma_mutate(MUT_MISSING_HAND, 1, "Iashol sacrifice");
             }
+            else
+                perma_mutate(MUT_MISSING_HAND, 1, "Iashol sacrifice");
 
             // Drop your shield if there is one
             if (shield != NULL)
