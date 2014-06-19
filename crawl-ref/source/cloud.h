@@ -45,6 +45,9 @@ bool is_damaging_cloud(cloud_type type, bool temp = false);
 bool is_harmless_cloud(cloud_type type);
 bool in_what_cloud(cloud_type type);
 
+bool mons_avoids_cloud(const monster* mons, int cloud_num,
+                       bool placement = false);
+
 void remove_tornado_clouds(mid_t whose);
 
 void run_cloud_spreaders(int dur);

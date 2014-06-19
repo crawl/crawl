@@ -58,7 +58,7 @@
 #include "mon-gear.h"
 #include "mon-place.h"
 #include "mon-util.h"
-#include "mon-stuff.h"
+#include "mgen_data.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"

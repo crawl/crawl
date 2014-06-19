@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "colour.h"
 #include "coordit.h"
@@ -39,7 +40,7 @@
 #include "mon-chimera.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "notes.h"
 #include "options.h"
 #include "random.h"
@@ -315,33 +316,6 @@ void init_monster_symbols()
             monster_symbols[i].glyph = mons_base_char(i);
 }
 
-static bool _get_tentacle_head(const monster*& mon)
-{
-    // For tentacle segments, find the associated tentacle.
-    if (mon->is_child_tentacle_segment())
-    {
-        if (invalid_monster_index(mon->number))
-            return false;
-        if (invalid_monster(&menv[mon->number]))
-            return false;
-
-        mon = &menv[mon->number];
-    }
-
-    // For tentacles, find the associated head.
-    if (mon->is_child_tentacle())
-    {
-        if (invalid_monster_index(mon->number))
-            return false;
-        if (invalid_monster(&menv[mon->number]))
-            return false;
-
-        mon = &menv[mon->number];
-    }
-
-    return true;
-}
-
 void set_resist(resists_t &all, mon_resist_flags res, int lev)
 {
     if (res > MR_LAST_MULTI)
@@ -366,7 +340,7 @@ resists_t get_mons_class_resists(monster_type mc)
 
 resists_t get_mons_resists(const monster* mon)
 {
-    _get_tentacle_head(mon);
+    get_tentacle_head(mon);
 
     resists_t resists = get_mons_class_resists(mon->type);
 
@@ -1440,9 +1414,36 @@ bool mons_class_can_regenerate(monster_type mc)
     return !mons_class_flag(mc, M_NO_REGEN);
 }
 
+bool get_tentacle_head(const monster*& mon)
+{
+    // For tentacle segments, find the associated tentacle.
+    if (mon->is_child_tentacle_segment())
+    {
+        if (invalid_monster_index(mon->number))
+            return false;
+        if (invalid_monster(&menv[mon->number]))
+            return false;
+
+        mon = &menv[mon->number];
+    }
+
+    // For tentacles, find the associated head.
+    if (mon->is_child_tentacle())
+    {
+        if (invalid_monster_index(mon->number))
+            return false;
+        if (invalid_monster(&menv[mon->number]))
+            return false;
+
+        mon = &menv[mon->number];
+    }
+
+    return true;
+}
+
 bool mons_can_regenerate(const monster* mon)
 {
-    _get_tentacle_head(mon);
+    get_tentacle_head(mon);
 
     if (testbits(mon->flags, MF_NO_REGEN))
         return false;
@@ -1453,23 +1454,6 @@ bool mons_can_regenerate(const monster* mon)
 bool mons_class_fast_regen(monster_type mc)
 {
     return mons_class_flag(mc, M_FAST_REGEN);
-}
-
-bool mons_class_can_display_wounds(monster_type mc)
-{
-    // Zombified monsters other than spectral things don't show
-    // wounds.
-    if (mons_class_is_zombified(mc) && mc != MONS_SPECTRAL_THING)
-        return false;
-
-    return true;
-}
-
-bool mons_can_display_wounds(const monster* mon)
-{
-    _get_tentacle_head(mon);
-
-    return mons_class_can_display_wounds(mon->type);
 }
 
 bool mons_class_leaves_hide(monster_type mc)
@@ -1702,7 +1686,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number, bool base_f
 {
     monster_type mc = mon->type;
 
-    _get_tentacle_head(mon);
+    get_tentacle_head(mon);
 
     const bool zombified = mons_is_zombified(mon);
 
@@ -2910,7 +2894,7 @@ mon_intel_type mons_class_intel(monster_type mc)
 
 mon_intel_type mons_intel(const monster* mon)
 {
-    _get_tentacle_head(mon);
+    get_tentacle_head(mon);
 
     if (mons_enslaved_soul(mon))
         return mons_class_intel(mons_zombie_base(mon));
@@ -4838,6 +4822,34 @@ vector<monster* > get_on_level_followers()
     return mon_list;
 }
 
+// Return the number of monsters of the specified type.
+// If friendly_only is true, only count friendly
+// monsters, otherwise all of them
+int count_monsters(monster_type mtyp, bool friendly_only)
+{
+    int count = 0;
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+    {
+        monster *mons = &menv[mon];
+        if (mons->alive() && mons->type == mtyp
+            && (!friendly_only || mons->friendly()))
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+int count_allies()
+{
+    int count = 0;
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+        if (menv[mon].alive() && menv[mon].friendly())
+            count++;
+
+    return count;
+}
+
 bool mons_stores_tracking_data(const monster* mons)
 {
     return mons->type == MONS_THORN_HUNTER
@@ -4883,4 +4895,72 @@ bool mons_antimagic_affected(const monster* mons)
     return mons->can_use_spells()
            && !mons->is_priest()
            && !mons_class_flag(mons->type, M_FAKE_SPELLS);
+}
+
+// The default suitable() function for choose_random_nearby_monster().
+bool choose_any_monster(const monster* mon)
+{
+    return !mons_is_projectile(mon->type);
+}
+
+// Find a nearby monster and return its index, including you as a
+// possibility with probability weight.  suitable() should return true
+// for the type of monster wanted.
+// If prefer_named is true, named monsters (including uniques) are twice
+// as likely to get chosen compared to non-named ones.
+// If prefer_priest is true, priestly monsters (including uniques) are
+// twice as likely to get chosen compared to non-priestly ones.
+monster* choose_random_nearby_monster(int weight,
+                                      bool (*suitable)(const monster* mon),
+                                      bool prefer_named_or_priest)
+{
+    monster* chosen = NULL;
+    for (radius_iterator ri(you.pos(), LOS_NO_TRANS); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+        if (!mon || !suitable(mon))
+            continue;
+
+        // FIXME: if the intent is to favour monsters
+        // named by $DEITY, we should set a flag on the
+        // monster (something like MF_DEITY_PREFERRED) and
+        // use that instead of checking the name, given
+        // that other monsters can also have names.
+
+        // True, but it's currently only used for orcs, and
+        // Blork and Urug also being preferred to non-named orcs
+        // is fine, I think. Once more gods name followers (and
+        // prefer them) that should be changed, of course. (jpeg)
+        int mon_weight = 1;
+
+        if (prefer_named_or_priest)
+            mon_weight += mon->is_named() + mon->is_priest();
+
+        if (x_chance_in_y(mon_weight, weight += mon_weight))
+            chosen = mon;
+    }
+
+    return chosen;
+}
+
+monster* choose_random_monster_on_level(int weight,
+                                        bool (*suitable)(const monster* mon))
+{
+    monster* chosen = NULL;
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        monster* mon = monster_at(*ri);
+        if (!mon || !suitable(mon))
+            continue;
+
+        // Named or priestly monsters have doubled chances.
+        int mon_weight = 1
+                       + mon->is_named() + mon->is_priest();
+
+        if (x_chance_in_y(mon_weight, weight += mon_weight))
+            chosen = mon;
+    }
+
+    return chosen;
 }

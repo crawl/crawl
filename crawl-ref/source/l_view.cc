@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "env.h"
 #include "libutil.h"
+#include "mon-death.h"
 #include "player.h"
 #include "religion.h"
 #include "terrain.h"

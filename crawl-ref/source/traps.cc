@@ -33,7 +33,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "ouch.h"
@@ -1432,6 +1431,18 @@ void free_self_from_net()
 
         you.attribute[ATTR_HELD] -= escape;
     }
+}
+
+void mons_clear_trapping_net(monster* mon)
+{
+    if (!mon->caught())
+        return;
+
+    const int net = get_trapping_net(mon->pos());
+    if (net != NON_ITEM)
+        free_stationary_net(net);
+
+    mon->del_ench(ENCH_HELD, true);
 }
 
 void free_stationary_net(int item_index)

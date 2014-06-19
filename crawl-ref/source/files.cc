@@ -65,7 +65,6 @@
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "notes.h"
@@ -88,6 +87,7 @@
  #include "tilepick-p.h"
 #endif
 #include "tileview.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"

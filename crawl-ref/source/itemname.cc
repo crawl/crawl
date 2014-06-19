@@ -31,7 +31,6 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "mon-util.h"
-#include "mon-stuff.h"
 #include "notes.h"
 #include "player.h"
 #include "religion.h"

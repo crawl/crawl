@@ -11,12 +11,12 @@
 #include <algorithm>
 
 #include "describe.h"
-#include "mon-stuff.h"
 #include "mon-info.h"
 #include "files.h"
 #include "ghost.h"
 #include "libutil.h"
 #include "monster.h"
+#include "mon-death.h"
 #include "place.h"
 #include "travel.h"
 #include "tags.h"

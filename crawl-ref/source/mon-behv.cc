@@ -20,6 +20,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
@@ -28,7 +29,6 @@
 #include "mon-movetarget.h"
 #include "mon-pathfind.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"
@@ -1474,6 +1474,36 @@ void make_mons_stop_fleeing(monster* mon)
         behaviour_event(mon, ME_CORNERED);
 }
 
+beh_type attitude_creation_behavior(mon_attitude_type att)
+{
+    switch (att)
+    {
+    case ATT_NEUTRAL:
+        return BEH_NEUTRAL;
+    case ATT_GOOD_NEUTRAL:
+        return BEH_GOOD_NEUTRAL;
+    case ATT_STRICT_NEUTRAL:
+        return BEH_STRICT_NEUTRAL;
+    case ATT_FRIENDLY:
+        return BEH_FRIENDLY;
+    default:
+        return BEH_HOSTILE;
+    }
+}
+
+// If you're invis and throw/zap whatever, alerts menv to your position.
+void alert_nearby_monsters()
+{
+    // Judging from the above comment, this function isn't
+    // intended to wake up monsters, so we're only going to
+    // alert monsters that aren't sleeping.  For cases where an
+    // event should wake up monsters and alert them, I'd suggest
+    // calling noisy() before calling this function. - bwr
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (!mi->asleep())
+             behaviour_event(*mi, ME_ALERT, &you);
+}
+
 //Make all monsters lose track of a given target after a few turns
 void shake_off_monsters(const actor* target)
 {
@@ -1542,4 +1572,62 @@ void make_mons_leave_level(monster* mon)
         mon->flags |= MF_HARD_RESET;
         monster_die(mon, KILL_DISMISSED, NON_MONSTER);
     }
+}
+
+// Given an adjacent monster, returns true if the monster can hit it
+// (the monster should not be submerged, be submerged in shallow water
+// if the monster has a polearm, or be submerged in anything if the
+// monster has tentacles).
+bool monster_can_hit_monster(monster* mons, const monster* targ)
+{
+    if (!summon_can_attack(mons, targ))
+        return false;
+
+    if (!targ->submerged() || mons->has_damage_type(DVORP_TENTACLE))
+        return true;
+
+    if (grd(targ->pos()) != DNGN_SHALLOW_WATER)
+        return false;
+
+    const item_def *weapon = mons->weapon();
+    return weapon && weapon_skill(*weapon) == SK_POLEARMS;
+}
+
+// Friendly summons can't attack out of the player's LOS, it's too abusable.
+bool summon_can_attack(const monster* mons)
+{
+    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
+        return true;
+
+    return !mons->friendly() || !mons->is_summoned()
+           || you.see_cell_no_trans(mons->pos());
+}
+
+bool summon_can_attack(const monster* mons, const coord_def &p)
+{
+    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
+        return true;
+
+    // Spectral weapons only attack their target
+    if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        // FIXME: find a way to use check_target_spectral_weapon
+        //        without potential info leaks about visibility.
+        if (mons->props.exists(SW_TARGET_MID))
+        {
+            actor *target = actor_by_mid(mons->props[SW_TARGET_MID].get_int());
+            return target && target->pos() == p;
+        }
+        return false;
+    }
+
+    if (!mons->friendly() || !mons->is_summoned())
+        return true;
+
+    return you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
+}
+
+bool summon_can_attack(const monster* mons, const actor* targ)
+{
+    return summon_can_attack(mons, targ->pos());
 }

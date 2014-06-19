@@ -58,6 +58,7 @@
 #include "mon-death.h"
 #include "mon-util.h"
 #include "mon-pick.h"
+#include "mon-poly.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-pathfind.h"

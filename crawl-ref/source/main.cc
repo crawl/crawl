@@ -93,7 +93,7 @@
 #include "mon-act.h"
 #include "mon-abil.h"
 #include "mon-cast.h"
-#include "mon-stuff.h"
+#include "mon-place.h"
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -3036,6 +3036,38 @@ static void _move_player(int move_x, int move_y)
     _move_player(coord_def(move_x, move_y));
 }
 
+// Swap monster to this location.  Player is swapped elsewhere.
+static bool _swap_places(monster* mons, const coord_def &loc)
+{
+    ASSERT(map_bounds(loc));
+    ASSERT(monster_habitable_grid(mons, grd(loc)));
+
+    if (monster_at(loc))
+    {
+        if (mons->type == MONS_WANDERING_MUSHROOM
+            && monster_at(loc)->type == MONS_TOADSTOOL)
+        {
+            monster_swaps_places(mons, loc - mons->pos());
+            return true;
+        }
+        else
+        {
+            mpr("Something prevents you from swapping places.");
+            return false;
+        }
+    }
+
+    mpr("You swap places.");
+
+    mgrd(mons->pos()) = NON_MONSTER;
+
+    mons->moveto(loc);
+
+    mgrd(mons->pos()) = mons->mindex();
+
+    return true;
+}
+
 static void _move_player(coord_def move)
 {
     ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
@@ -3363,7 +3395,7 @@ static void _move_player(coord_def move)
         }
 
         if (swap)
-            swap_places(targ_monst, mon_swap_dest);
+            _swap_places(targ_monst, mon_swap_dest);
         else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
         {
             check_place_cloud(CLOUD_MAGIC_TRAIL, you.pos(),

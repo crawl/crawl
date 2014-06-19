@@ -12,7 +12,6 @@
 #include "areas.h"
 #include "env.h"
 #include "message.h"
-#include "mon-stuff.h"
 #include "random.h"
 #include "spl-util.h"
 #include "stuff.h"

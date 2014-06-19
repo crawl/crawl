@@ -37,6 +37,7 @@
 #include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-death.h"
 #include "mon-util.h"
 #include "options.h"
 #include "place.h"

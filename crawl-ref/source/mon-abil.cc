@@ -37,6 +37,7 @@
 #include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-project.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -44,7 +45,6 @@
 #include "mgen_data.h"
 #include "cloud.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
@@ -4577,7 +4577,7 @@ void ballisto_on_move(monster* mons, const coord_def& position)
         {
             if (one_chance_in(4))
             {
-                beh_type attitude = actual_same_attitude(*mons);
+                beh_type attitude = attitude_creation_behavior(mons->attitude);
                 if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                         attitude,
                                                         NULL,

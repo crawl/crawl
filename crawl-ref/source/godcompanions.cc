@@ -10,7 +10,7 @@
 #include "godcompanions.h"
 
 #include "actor.h"
-#include "mon-stuff.h"
+#include "mon-message.h"
 #include "mon-util.h"
 #include "religion.h"
 #include "stuff.h"
@@ -148,7 +148,7 @@ bool recall_offlevel_ally(mid_t mid)
         // Note: these are auts, not turns, thus healing is 10 times as fast as
         // for other monsters, confusion goes away after a single turn, etc.
 
-        mons->heal(div_rand_round(turns * mons_off_level_regen_rate(mons), 100));
+        mons->heal(div_rand_round(turns * mons->off_level_regen_rate(), 100));
 
         if (turns >= 10 && mons->alive())
         {

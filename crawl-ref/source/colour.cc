@@ -8,7 +8,6 @@
 #include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
-#include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-info.h"
 #include "mon-util.h"

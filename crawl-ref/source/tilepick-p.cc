@@ -9,7 +9,6 @@
 #include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
-#include "mon-stuff.h"
 #include "player.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"

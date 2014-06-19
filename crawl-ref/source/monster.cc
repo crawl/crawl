@@ -10,6 +10,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -18,6 +19,7 @@
 #include "dgnevent.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "effects.h"
 #include "env.h"
 #include "fight.h"
 #include "fineff.h"
@@ -41,7 +43,7 @@
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mgen_data.h"
@@ -53,6 +55,7 @@
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tileview.h"
@@ -2194,7 +2197,7 @@ bool monster::pickup_misc(item_def &item, int near)
     return pickup(item, MSLOT_MISCELLANY, near);
 }
 
-// Eaten items are handled elsewhere, in _handle_pickup() in mon-stuff.cc.
+// Eaten items are handled elsewhere, in _handle_pickup() in mon-act.cc.
 bool monster::pickup_item(item_def &item, int near, bool force)
 {
     // Equipping stuff can be forced when initially equipping monsters.
@@ -3214,6 +3217,27 @@ bool monster::liquefied_ground() const
            && !mons_class_is_stationary(type);
 }
 
+// in units of 1/25 hp/turn
+int monster::natural_regen_rate() const
+{
+    // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
+    int divider = max(div_rand_round(15 - hit_dice, 4), 1);
+
+    return max(div_rand_round(hit_dice, divider), 1);
+}
+
+// in units of 1/100 hp/turn
+int monster::off_level_regen_rate() const
+{
+    if (!mons_can_regenerate(this))
+        return 0;
+
+    if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
+        return 100;
+    // Capped at 0.1 hp/turn.
+    return max(natural_regen_rate() * 4, 10);
+}
+
 bool monster::friendly() const
 {
     return temp_attitude() == ATT_FRIENDLY;
@@ -4124,6 +4148,45 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained) const
     }
 }
 
+//---------------------------------------------------------------
+//
+// monster::shift
+//
+// Moves a monster to approximately p and returns true if
+// the monster was moved.
+//
+//---------------------------------------------------------------
+bool monster::shift(coord_def p)
+{
+    coord_def result;
+
+    int count = 0;
+
+    if (p.origin())
+        p = pos();
+
+    for (adjacent_iterator ai(p); ai; ++ai)
+    {
+        // Don't drop on anything but vanilla floor right now.
+        if (grd(*ai) != DNGN_FLOOR)
+            continue;
+
+        if (actor_at(*ai))
+            continue;
+
+        if (one_chance_in(++count))
+            result = *ai;
+    }
+
+    if (count > 0)
+    {
+        mgrd(pos()) = NON_MONSTER;
+        moveto(result);
+        mgrd(result) = mindex();
+    }
+
+    return count > 0;
+}
 void monster::blink(bool)
 {
     monster_blink(this);
@@ -4200,6 +4263,31 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
     add_ench(mon_enchant(ENCH_ROT, min(amount, 4), agent));
 
     return true;
+}
+
+/**
+ * Attempts to either apply corrosion to a monster or make it bleed from acid
+ * damage.
+ */
+void monster::splash_with_acid(const actor* evildoer)
+{
+    item_def *has_shield = mslot_item(MSLOT_SHIELD);
+    item_def *has_armour = mslot_item(MSLOT_ARMOUR);
+
+    if (!one_chance_in(3) && (has_shield || has_armour))
+        corrode_actor(this);
+    else if (!one_chance_in(3) && !(has_shield || has_armour)
+             && can_bleed() && !res_acid())
+    {
+        add_ench(mon_enchant(ENCH_BLEED, 3, evildoer, (5 + random2(5))*10));
+
+        if (you.can_see(this))
+        {
+            mprf("%s writhes in agony as %s flesh is eaten away!",
+                 name(DESC_THE).c_str(),
+                 pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
+    }
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,

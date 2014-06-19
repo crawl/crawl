@@ -14,6 +14,7 @@
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-abil.h"
+#include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "ouch.h"

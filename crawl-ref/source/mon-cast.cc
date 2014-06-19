@@ -40,7 +40,6 @@
 #include "mon-act.h"
 #include "mon-gear.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"

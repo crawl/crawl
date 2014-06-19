@@ -57,7 +57,6 @@
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-project.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
@@ -2461,7 +2460,7 @@ static void _catchup_monster_moves(monster* mon, int turns)
         }
         else
         {
-            shift_monster(mon, mon->pos());
+            mon->shift(mon->pos());
             dprf("shifted to (%d, %d)", mon->pos().x, mon->pos().y);
             return;
         }
@@ -2501,8 +2500,8 @@ static void _catchup_monster_moves(monster* mon, int turns)
         pos = next;
     }
 
-    if (!shift_monster(mon, pos))
-        shift_monster(mon, mon->pos());
+    if (!mon->shift(pos))
+        mon->shift(mon->pos());
 
     // Submerge monsters that fell asleep, as on placement.
     if (changed && mon->behaviour == BEH_SLEEP
@@ -2574,7 +2573,7 @@ void update_level(int elapsedTime)
         // XXX: Allow some spellcasting (like Healing and Teleport)? - bwr
         // const bool healthy = (mi->hit_points * 2 > mi->max_hit_points);
 
-        mi->heal(div_rand_round(turns * mons_off_level_regen_rate(*mi), 100));
+        mi->heal(div_rand_round(turns * mi->off_level_regen_rate(), 100));
 
         // Handle nets specially to remove the trapping property of the net.
         if (mi->caught())

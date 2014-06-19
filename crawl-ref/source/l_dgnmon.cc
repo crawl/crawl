@@ -13,8 +13,8 @@
 #include "env.h"
 #include "libutil.h"
 #include "mapdef.h"
+#include "mon-death.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"

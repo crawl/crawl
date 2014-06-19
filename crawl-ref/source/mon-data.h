@@ -39,7 +39,7 @@
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
 
-   exp_mod: see give_adjusted_experience() in mon-stuff.cc
+   exp_mod: see give_adjusted_experience() in mon-death.cc
    - the experience given for killing this monster is calculated something
    like this:
 

@@ -30,7 +30,6 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
 #include "random.h"
@@ -420,6 +419,61 @@ void antimagic()
     }
 
     contaminate_player(-1 * (1000 + random2(4000)));
+}
+
+void debuff_monster(monster* mon)
+{
+    // List of magical enchantments which will be dispelled.
+    const enchant_type lost_enchantments[] =
+    {
+        ENCH_SLOW,
+        ENCH_HASTE,
+        ENCH_SWIFT,
+        ENCH_MIGHT,
+        ENCH_FEAR,
+        ENCH_CONFUSION,
+        ENCH_INVIS,
+        ENCH_CORONA,
+        ENCH_CHARM,
+        ENCH_PARALYSIS,
+        ENCH_PETRIFYING,
+        ENCH_PETRIFIED,
+        ENCH_REGENERATION,
+        ENCH_STICKY_FLAME,
+        ENCH_TP,
+        ENCH_INNER_FLAME,
+        ENCH_OZOCUBUS_ARMOUR
+    };
+
+    bool dispelled = false;
+
+    // Dispel all magical enchantments...
+    for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
+    {
+        if (lost_enchantments[i] == ENCH_INVIS)
+        {
+            // ...except for natural invisibility.
+            if (mons_class_flag(mon->type, M_INVIS))
+                continue;
+        }
+        if (lost_enchantments[i] == ENCH_CONFUSION)
+        {
+            // Don't dispel permaconfusion.
+            if (mons_class_flag(mon->type, M_CONFUSED))
+                continue;
+        }
+        if (lost_enchantments[i] == ENCH_REGENERATION)
+        {
+            // Don't dispel regen if it's from Trog.
+            if (mon->has_ench(ENCH_RAISED_MR))
+                continue;
+        }
+
+        if (mon->del_ench(lost_enchantments[i], true, true))
+            dispelled = true;
+    }
+    if (dispelled)
+        simple_monster_message(mon, "'s magical effects unravel!");
 }
 
 int detect_traps(int pow)

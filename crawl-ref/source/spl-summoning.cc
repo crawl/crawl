@@ -42,7 +42,6 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "options.h"
 #include "player-equip.h"
 #include "player-stats.h"
