@@ -6655,7 +6655,7 @@ bool player::is_evil(bool check_spells) const
 // This is a stub. Check is used only for silver damage. Worship of chaotic
 // gods should probably be checked in the non-existing player::is_unclean,
 // which could be used for something Zin-related (such as a priestly monster).
-int player::chaos(bool /*check_spells_god*/) const
+int player::how_chaotic(bool /*check_spells_god*/) const
 {
     return 0;
 }

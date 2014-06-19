@@ -1751,7 +1751,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // This is like Corona, but if silver harms them, it has sticky
     // flame levels of damage.
     case ENCH_SILVER_CORONA:
-        if (chaos())
+        if (how_chaotic())
         {
             int dam = roll_dice(2, 4) - 1;
             simple_monster_message(this, " is seared!");

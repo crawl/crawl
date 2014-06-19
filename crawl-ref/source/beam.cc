@@ -2148,7 +2148,7 @@ bool curare_actor(actor* source, actor* target, int levels, string name,
 int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
 {
     int ret = 0;
-    if (victim->chaos()
+    if (victim->how_chaotic()
         || victim->is_player() && player_is_shapechanged())
     {
         ret = damage * 3 / 4;
