@@ -308,7 +308,7 @@ NAME:   layout_grid_shapes
 DEPTH:  Snake, Pan
 WEIGHT: 5 (Snake), 10 (Pan)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
 

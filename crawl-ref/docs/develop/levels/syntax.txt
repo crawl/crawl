@@ -415,11 +415,11 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              the absence of this type of tags means it can go with any
              layout. Multiple layout_foo tags can be used if it can be used
              with multiple layouts. Current values for "foo" are:
-             * angular: Mostly 1-cell-wide corridors
+             * corridors: Mostly 1-cell-wide corridors
              * rooms: Corridors connecting rooms
              * passages: Mostly multi-cell corridors
-             * anastomotic: Corridor-like caves
-             * caves: Open caves
+             * narrow_caves: Corridor-like caves
+             * open_caves: Open caves
              * city: A large open room with "building" rooms in it
              * open: Layout is mostly open but not cavelike
              * divisions: Just ajoining rooms
@@ -427,6 +427,9 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              * shoals: Used in the Shoals branch
              * swamp: Used in the Swamp branch
              * forest: Was used in the now-defunct Forest branch
+             For more details on the layout types and the layouts that place
+             there, see Layout Types on the devwiki at
+             crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:dungeon:layout_types
           * "no_species_xx": Disables the vault for a given player species
              (two-letter abbreviation). Note that the current design rules
              strictly disallow varying the map generation based on the

@@ -20,7 +20,7 @@ NAME:   layout_layer_cave
 DEPTH:  D:4-, Lair, Snake
 WEIGHT: 20, 15 (Snake)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
   if is_validating() then return; end
 
@@ -113,7 +113,7 @@ NAME:   layout_cave_shapes
 DEPTH:  Lair, Snake, Depths
 WEIGHT: 3 (Lair), 5 (Snake), 10 (Depths)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -233,7 +233,7 @@ NAME:   layout_waterfall
 DEPTH:  Tar
 WEIGHT: 0
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
 
   -- TODO: For now this looks pretty good; but tweaking the reps and also the worley
@@ -322,7 +322,7 @@ NAME:   layout_cave_pods
 DEPTH:  D:4-, Lair, Snake
 WEIGHT: 5, 15 (Lair)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -355,7 +355,7 @@ NAME:   layout_chambers
 DEPTH:  Snake, Spider, Pan
 WEIGHT: 15 (Snake), 5 (Spider), 10 (Pan)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_raniform
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -449,7 +449,7 @@ NAME:   layout_gehenna_lava_paths
 DEPTH:  Coc
 WEIGHT: 0
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return end
 
@@ -501,7 +501,7 @@ NAME:   layout_gehenna_lava_caves
 DEPTH:  Geh
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
   if is_validating() then return end
 
@@ -546,7 +546,7 @@ NAME:   layout_ice_bergs
 DEPTH:  Coc
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()

@@ -2301,7 +2301,7 @@ ENDMAP
 NAME:       hall_of_Zot
 PLACE:      Zot:$
 ORIENT:     north
-TAGS:       no_dump layout_halls
+TAGS:       no_dump
 LFLAGS:     no_tele_control
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
