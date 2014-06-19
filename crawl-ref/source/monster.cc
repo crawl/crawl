@@ -3466,18 +3466,6 @@ bool monster::is_evil(bool check_spells) const
     return false;
 }
 
-/** Is the monster insane?
- *
- *  Somewhat subjective, of course.
- *  @returns true if the monster is a unique deemed insane by Zin.
- */
-bool monster::is_insane() const
-{
-    return type == MONS_CRAZY_YIUF
-           || type == MONS_PSYCHE
-           || type == MONS_LOUISE;
-}
-
 /** Is the monster considered unclean by Zin?
  *
  *  If not 0, then Zin won't let you have it as an ally, and gives
@@ -3499,7 +3487,9 @@ int monster::how_unclean(bool check_god) const
         uncleanliness++;
 
     // Zin considers insanity unclean.  And slugs that speak.
-    if (is_insane()
+    if (type == MONS_CRAZY_YIUF
+        || type == MONS_PSYCHE
+        || type == MONS_LOUISE
         || type == MONS_GASTRONOK)
     {
         uncleanliness++;

@@ -330,7 +330,6 @@ public:
     bool is_holy(bool check_spells = true) const;
     bool is_unholy(bool check_spells = true) const;
     bool is_evil(bool check_spells = true) const;
-    bool is_insane() const;
     int how_unclean(bool check_god = true) const;
     int known_chaos(bool check_spells_god = false) const;
     int how_chaotic(bool check_spells_god = false) const;
