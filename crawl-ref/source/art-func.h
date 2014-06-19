@@ -683,6 +683,15 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
+    if (is_dragonkind(defender) && !mondied)
+    {
+        mprf("<grey>%s %s!</grey>",
+            defender->name(DESC_THE).c_str(),
+            defender->conj_verb("convulse").c_str());
+
+        defender->hurt(attacker, 1 + random2(3*dam/2));
+    }
+
     if (!mondied || !defender || !is_dragonkind(defender)
         || defender->is_summoned()
         || defender->is_monster()
