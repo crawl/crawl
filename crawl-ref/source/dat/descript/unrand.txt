@@ -210,9 +210,9 @@ the target, packing a nasty punch.
 %%%%
 lance "Wyrmbane"
 
-An enchanted lance which grows more and more powerful every time it inflicts a
-killing blow on a strong dragon. The more powerful it grows, the harder it will
-be to find a worthy opponent.
+An enchanted lance deadly to all dragonkind. It grows more powerful every time
+it inflicts a killing blow on a strong dragon. The more powerful it grows, the
+harder it will be to find a worthy opponent.
 %%%%
 Spriggan's Knife
 
