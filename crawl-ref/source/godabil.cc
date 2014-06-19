@@ -476,6 +476,7 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     // Hits some specific insane or shapeshifted uniques.
     if (mon->type == MONS_LOUISE
         || mon->type == MONS_PSYCHE
+        || mon->type == MONS_GASTRONOK
         || mon->type == MONS_PRINCE_RIBBIT)
     {
         eligibility[RECITE_CHAOTIC]++;
