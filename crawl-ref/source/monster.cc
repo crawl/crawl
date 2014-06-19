@@ -38,6 +38,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-chimera.h"
+#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -6333,6 +6334,11 @@ bool monster::is_parent_monster_of(const monster* mons) const
 {
     return mons_base_type(this) == mons_tentacle_parent_type(mons)
            && (int) mons->number == mindex();
+}
+
+bool monster::is_illusion() const
+{
+    return props.exists(CLONE_SLAVE_KEY);
 }
 
 bool monster::is_divine_companion() const

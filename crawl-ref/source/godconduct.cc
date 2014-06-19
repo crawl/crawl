@@ -1178,7 +1178,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
         _first_attack_was_unchivalric.set(midx);
     }
 
-    if (mon->is_holy())
+    if (mon->is_holy() && !mon->is_illusion())
         conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 
     _first_attack_conduct.set(midx);
