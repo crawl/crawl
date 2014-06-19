@@ -2419,7 +2419,11 @@ int how_mutated(bool all, bool levels)
                 continue;
 
             if (levels)
+            {
                 j += you.mutation[i];
+                if (!all)
+                    j -= you.innate_mutation[i];
+            }
             else
                 j++;
         }
