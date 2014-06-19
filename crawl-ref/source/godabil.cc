@@ -5173,6 +5173,8 @@ static const char* _describe_sacrifice_piety_gain(int piety_gain)
         return "a trivial";
 }
 
+#define AS_MUT(csv) (static_cast<mutation_type>((csv).get_int()))
+
 void iashol_do_sacrifice(ability_type sacrifice)
 {
     skill_type mutation_skill;
@@ -5244,8 +5246,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             break;
         case ABIL_IASHOL_SACRIFICE_HEALTH:
             piety_gain = 30;
-            health_sacrifice = static_cast<mutation_type>(
-                current_health_sacrifice[0].get_int());
+            health_sacrifice = AS_MUT(current_health_sacrifice[0]);
 
             mprf("Iashol asks you to corrupt yourself with %s.",
                 mutation_name(health_sacrifice));
@@ -5261,8 +5262,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             }
             break;
         case ABIL_IASHOL_SACRIFICE_ESSENCE:
-            essence_sacrifice = static_cast<mutation_type>(
-                current_essence_sacrifice[0].get_int());
+            essence_sacrifice = AS_MUT(current_essence_sacrifice[0]);
 
             if (essence_sacrifice == MUT_LOW_MAGIC)
                 piety_gain = 15;
@@ -5283,8 +5283,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             }
             break;
         case ABIL_IASHOL_SACRIFICE_PURITY:
-            purity_sacrifice = static_cast<mutation_type>(
-                current_purity_sacrifice[0].get_int());
+            purity_sacrifice = AS_MUT(current_purity_sacrifice[0]);
 
             if (purity_sacrifice == MUT_WEAK
                 || purity_sacrifice == MUT_CLUMSY
@@ -5438,8 +5437,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             arcane_mutations_size = current_arcane_sacrifices.size();
             for (int i = 0; i < arcane_mutations_size; ++i) {
                 mutation_type arcane_sacrifice =
-                    static_cast<mutation_type>(
-                        current_arcane_sacrifices[i].get_int());
+                    AS_MUT(current_arcane_sacrifices[i]);
                 mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
                 piety_gain += div_rand_round(skill_exp_needed(
                     you.skills[mutation_skill], mutation_skill, you.species),
@@ -5469,8 +5467,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             arcane_mutations_size = current_arcane_sacrifices.size();
             for (int i = 0; i < arcane_mutations_size; ++i) {
                 mutation_type arcane_sacrifice =
-                    static_cast<mutation_type>(
-                        current_arcane_sacrifices[i].get_int());
+                    AS_MUT(current_arcane_sacrifices[i]);
                 perma_mutate(arcane_sacrifice, 1, "Iashol sacrifice");
 
                 // gain one piety for every 50 skill points
