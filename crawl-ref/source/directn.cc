@@ -2938,20 +2938,7 @@ string thing_do_grammar(description_level_type dtype, bool add_stop,
 static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 {
     if (feat_is_trap(grid) && trap != NUM_TRAPS)
-    {
-        string basename = trap_name(trap);
-        switch (trap)
-        {
-        case TRAP_GOLUBRIA:
-            return basename + " of Golubria";
-        case TRAP_PLATE:
-        case TRAP_WEB:
-        case TRAP_GAS:
-            return basename;
-        default:
-            return basename + " trap";
-        }
-    }
+        return full_trap_name(trap);
 
     switch (grid)
     {

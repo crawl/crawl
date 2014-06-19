@@ -24,7 +24,7 @@ ignore += (crumbles|melts) away\.
 
 # Traps
 #
-ignore += You found a web trap!
+ignore += You found a web!
 stop += found.*trap
 stop += You have blundered into a Zot trap
 stop += You fall through a shaft

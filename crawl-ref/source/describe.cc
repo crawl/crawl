@@ -570,6 +570,25 @@ string trap_name(trap_type trap)
     return "";
 }
 
+string full_trap_name(trap_type trap)
+{
+    string basename = trap_name(trap);
+    switch (trap)
+    {
+    case TRAP_GOLUBRIA:
+        return basename + " of Golubria";
+    case TRAP_PLATE:
+    case TRAP_WEB:
+    case TRAP_SHAFT:
+#if TAG_MAJOR_VERSION == 34
+    case TRAP_GAS:
+#endif
+        return basename;
+    default:
+        return basename + " trap";
+    }
+}
+
 int str_to_trap(const string &s)
 {
     // "Zot trap" is capitalised in trap_names[], but the other trap
