@@ -2266,7 +2266,8 @@ void world_reacts()
     ASSERT(!env.markers.need_activate());
 
     // If the player fears blood, horrify them in proportion to the blood
-    if (player_mutation_level(MUT_FEAR_BLOOD)) {
+    if (player_mutation_level(MUT_FEAR_BLOOD))
+    {
         const coord_def& center = you.pos();
         const int radius = 8;
         int blood_count = 0;
@@ -2303,7 +2304,9 @@ void world_reacts()
             you.props["horror_penalty"] = 0;
             you.set_duration(DUR_HORROR, 0);
         }
-    } else if (you.duration[DUR_HORROR]) {
+    }
+    else if (you.duration[DUR_HORROR])
+    {
         // If the player somehow stops fearing blood, we need to handle that too
         you.props["horror_penalty"] = 0;
         you.set_duration(DUR_HORROR, 0);
