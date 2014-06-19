@@ -161,12 +161,12 @@ const deck_archetype deck_of_summoning[] =
 
 const deck_archetype deck_of_wonders[] =
 {
-    { CARD_POTION,     {5, 5, 5} },
-    { CARD_FOCUS,      {1, 1, 1} },
-    { CARD_WILD_MAGIC, {5, 3, 1} },
-    { CARD_HELM,       {5, 5, 5} },
-    { CARD_SHADOW,     {5, 5, 5} },
+    { CARD_FOCUS,      {3, 3, 3} },
+    { CARD_HELIX,      {3, 4, 5} },
+    { CARD_SHAFT,      {5, 5, 5} },
+    { CARD_DOWSING,    {5, 5, 5} },
     { CARD_MERCENARY,  {5, 5, 5} },
+    { CARD_ALCHEMIST,  {5, 5, 5} },
     END_OF_DECK
 };
 
