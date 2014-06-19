@@ -749,8 +749,7 @@ KITEM: c = mace ego:vorpal ident:all not_cursed /\
        mace ego:protection ident:all not_cursed /\
        flail ego:vorpal ident:all not_cursed /\
        flail ego:protection ident:all not_cursed
-KITEM: d = trident ego:vorpal ident:all not_cursed /\
-       trident ego:dragon_slaying ident:all not_cursed
+KITEM: d = trident ego:vorpal ident:all not_cursed
 KITEM: e = quarterstaff ego:protection ident:all not_cursed /\
        quarterstaff ego:speed ident:all not_cursed
 KITEM: f = long sword ego:holy_wrath ident:all not_cursed /\
