@@ -809,6 +809,8 @@ bool check_moveto_exclusion(const coord_def& p,
 bool check_moveto_trap(const coord_def& p, const string &move_verb = "step",
         bool *prompted = nullptr);
 
+bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
+
 void move_player_to_grid(const coord_def& p, bool stepped);
 
 bool is_map_persistent();

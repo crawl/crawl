@@ -18,6 +18,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
@@ -42,7 +43,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "mon-info.h"
 #include "output.h"
 #include "shopping.h"
@@ -330,6 +330,19 @@ monster* direction_chooser::targeted_monster() const
         return NULL;
 }
 
+// Return your target, if it still exists and is visible to you.
+static monster* _get_current_target()
+{
+    if (invalid_monster_index(you.prev_targ))
+        return NULL;
+
+    monster* mon = &menv[you.prev_targ];
+    if (mon->alive() && you.can_see(mon))
+        return mon;
+    else
+        return NULL;
+}
+
 string direction_chooser::build_targeting_hint_string() const
 {
     string hint_string;
@@ -337,7 +350,7 @@ string direction_chooser::build_targeting_hint_string() const
     // Hint for 'p' - previous target, and for 'f' - current cell, if
     // applicable.
     const actor*   f_target = targeted_actor();
-    const monster* p_target = get_current_target();
+    const monster* p_target = _get_current_target();
 
     if (f_target && f_target == p_target)
         hint_string = ", f/p - " + f_target->name(DESC_PLAIN);
@@ -1033,7 +1046,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     bool (*find_targ)(const coord_def&, int, bool, int, targetter*);
 
     // First try to pick our previous target.
-    const monster* mons_target = get_current_target();
+    const monster* mons_target = _get_current_target();
     if (mons_target != NULL
         && (mode != TARG_EVOLVABLE_PLANTS
             && mons_attitude(mons_target) == ATT_HOSTILE
@@ -1633,7 +1646,7 @@ void direction_chooser::toggle_beam()
 
 bool direction_chooser::select_previous_target()
 {
-    if (const monster* mon_target = get_current_target())
+    if (const monster* mon_target = _get_current_target())
     {
         // We have all the information we need.
         moves.isValid  = true;

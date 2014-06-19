@@ -47,7 +47,6 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-chimera.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"

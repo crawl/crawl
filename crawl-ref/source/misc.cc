@@ -57,7 +57,6 @@
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
-#include "mon-stuff.h"
 #include "ng-setup.h"
 #include "notes.h"
 #include "ouch.h"

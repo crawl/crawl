@@ -53,7 +53,8 @@
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-stuff.h"
+#include "mon-death.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"
@@ -320,6 +321,84 @@ bool check_moveto(const coord_def& p, const string &move_verb, const string &msg
            && check_moveto_cloud(p, move_verb)
            && check_moveto_trap(p, move_verb)
            && check_moveto_exclusion(p, move_verb);
+}
+
+// Returns true if this is a valid swap for this monster.  If true, then
+// the valid location is set in loc. (Otherwise loc becomes garbage.)
+bool swap_check(monster* mons, coord_def &loc, bool quiet)
+{
+    loc = you.pos();
+
+    if (you.form == TRAN_TREE)
+        return false;
+
+    // Don't move onto dangerous terrain.
+    if (is_feat_dangerous(grd(mons->pos())))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return false;
+    }
+
+    if (mons->is_projectile())
+    {
+        if (!quiet)
+            mpr("It's unwise to walk into this.");
+        return false;
+    }
+
+    if (mons->caught())
+    {
+        if (!quiet)
+        {
+            simple_monster_message(mons,
+                make_stringf(" is %s!", held_status(mons)).c_str());
+        }
+        return false;
+    }
+
+    if (mons->is_constricted())
+    {
+        if (!quiet)
+            simple_monster_message(mons, " is being constricted!");
+        return false;
+    }
+
+    // First try: move monster onto your position.
+    bool swap = !monster_at(loc) && monster_habitable_grid(mons, grd(loc));
+
+    if (monster_at(loc)
+        && monster_at(loc)->type == MONS_TOADSTOOL
+        && mons->type == MONS_WANDERING_MUSHROOM)
+    {
+        swap = monster_habitable_grid(mons, grd(loc));
+    }
+
+    // Choose an appropriate habitat square at random around the target.
+    if (!swap)
+    {
+        int num_found = 0;
+
+        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+            if (!monster_at(*ai) && monster_habitable_grid(mons, grd(*ai))
+                && one_chance_in(++num_found))
+            {
+                loc = *ai;
+            }
+
+        if (num_found)
+            swap = true;
+    }
+
+    if (!swap && !quiet)
+    {
+        // Might not be ideal, but it's better than insta-killing
+        // the monster... maybe try for a short blink instead? - bwr
+        simple_monster_message(mons, " cannot make way for you.");
+        // FIXME: AI_HIT_MONSTER isn't ideal.
+        interrupt_activity(AI_HIT_MONSTER, mons);
+    }
+
+    return swap;
 }
 
 static void _splash()

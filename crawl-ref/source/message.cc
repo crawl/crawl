@@ -14,7 +14,7 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "menu.h"
-#include "mon-stuff.h"
+#include "mon-message.h"
 #include "notes.h"
 #include "options.h"
 #include "player.h"

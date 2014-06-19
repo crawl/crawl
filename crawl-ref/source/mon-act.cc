@@ -92,7 +92,7 @@ static int _compass_idx(const coord_def& mov)
 
 static inline bool _mons_natural_regen_roll(monster* mons)
 {
-    const int regen_rate = mons_natural_regen_rate(mons);
+    const int regen_rate = mons->natural_regen_rate();
     return x_chance_in_y(regen_rate, 25);
 }
 

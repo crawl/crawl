@@ -45,9 +45,9 @@
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -1354,7 +1354,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             mprf("%s is splashed with acid.",
                  defender->name(DESC_THE).c_str());
-            splash_monster_with_acid(defender->as_monster(), &you);
+            defender->as_monster()->splash_with_acid(&you);
         }
 
         // TODO: remove this? Unarmed poison attacks?
@@ -2745,7 +2745,7 @@ void melee_attack::splash_defender_with_acid(int strength)
         special_damage += roll_dice(2, 4);
         if (defender_visible)
             mprf("%s is splashed with acid.", defender->name(DESC_THE).c_str());
-        splash_monster_with_acid(defender->as_monster(), attacker);
+        defender->as_monster()->splash_with_acid(attacker);
     }
 }
 

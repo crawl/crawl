@@ -20,7 +20,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "mon-stuff.h"
 #include "player.h"
 #include "religion.h"
 #include "shout.h"

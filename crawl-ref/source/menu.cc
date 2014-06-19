@@ -31,7 +31,6 @@
  #include "tilereg-menu.h"
 #endif
 #ifdef USE_TILE
- #include "mon-stuff.h"
  #include "mon-util.h"
  #include "terrain.h"
  #include "tiledef-dngn.h"

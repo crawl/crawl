@@ -34,7 +34,7 @@
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-pick.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"

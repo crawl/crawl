@@ -29,6 +29,7 @@
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mon-poly.h"
 #include "monster.h"
 #include "libutil.h"
 #include "player.h"

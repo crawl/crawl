@@ -42,6 +42,10 @@ void behaviour_event(monster* mon, mon_event_type event_type,
 // behaviour_event(mon, ME_EVAL) instead.
 void handle_behaviour(monster* mon);
 
+beh_type attitude_creation_behavior(mon_attitude_type att);
+
+void alert_nearby_monsters();
+
 void make_mons_stop_fleeing(monster* mon);
 
 void set_random_target(monster* mon);

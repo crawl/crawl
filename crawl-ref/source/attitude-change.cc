@@ -23,13 +23,49 @@
 #include "mon-death.h"
 #include "mon-util.h"
 #include "monster.h"
-#include "mon-stuff.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "state.h"
 #include "travel.h"
 #include "transform.h"
+
+// Called whenever an already existing monster changes its attitude, possibly
+// temporarily.
+void mons_att_changed(monster* mon)
+{
+    const mon_attitude_type att = mon->temp_attitude();
+
+    if (mons_is_tentacle_head(mons_base_type(mon))
+        || mon->type == MONS_ELDRITCH_TENTACLE)
+    {
+        for (monster_iterator mi; mi; ++mi)
+            if (mi->is_child_tentacle_of(mon))
+            {
+                mi->attitude = att;
+                if (mon->type != MONS_ELDRITCH_TENTACLE)
+                {
+                    for (monster_iterator connect; connect; ++connect)
+                    {
+                        if (connect->is_child_tentacle_of(mi->as_monster()))
+                            connect->attitude = att;
+                    }
+                }
+
+                // It's almost always flipping between hostile and friendly;
+                // enslaving a pacified starspawn is still a shock.
+                mi->stop_constricting_all();
+            }
+    }
+
+    if (mon->attitude == ATT_HOSTILE
+        && (mons_is_god_gift(mon, GOD_BEOGH)
+           || mons_is_god_gift(mon, GOD_YREDELEMNUL)))
+    {
+        remove_companion(mon);
+    }
+    mon->align_avatars();
+}
 
 static void _jiyva_convert_slime(monster* slime);
 static void _fedhas_neutralise_plant(monster* plant);

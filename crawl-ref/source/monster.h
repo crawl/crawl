@@ -395,6 +395,8 @@ public:
     bool petrified() const;
     bool petrifying() const;
     bool liquefied_ground() const;
+    int natural_regen_rate() const;
+    int off_level_regen_rate() const;
 
     bool friendly() const;
     bool neutral() const;
@@ -434,6 +436,7 @@ public:
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
     bool rot(actor *, int amount, int immediate = 0, bool quiet = false);
+    void splash_with_acid(const actor* evildoer);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true,
@@ -443,6 +446,7 @@ public:
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool wizard_tele = false);
+    bool shift(coord_def p = coord_def(0, 0));
     void suicide(int hp = -1);
 
     void hibernate(int power = 0);

@@ -13,6 +13,7 @@
 
 #include "externs.h"
 
+#include "attitude-change.h"
 #include "act-iter.h"
 #include "beam.h"
 #include "cio.h"
@@ -39,10 +40,10 @@
 #include "misc.h"
 #include "mon-clone.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-project.h"
 #include "mon-util.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"

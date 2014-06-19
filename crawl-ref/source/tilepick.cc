@@ -17,7 +17,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"

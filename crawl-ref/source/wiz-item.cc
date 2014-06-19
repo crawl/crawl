@@ -29,7 +29,6 @@
 #include "mapdef.h"
 #include "misc.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "options.h"
 #include "output.h"
 #include "player-equip.h"

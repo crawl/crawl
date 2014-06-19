@@ -13,7 +13,6 @@
 #include "mon-death.h"
 #include "mon-util.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "monster.h"
 
 #define WRAPPED_MONSTER(ls, name)                                       \

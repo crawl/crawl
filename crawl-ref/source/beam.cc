@@ -49,7 +49,7 @@
 #include "mon-death.h"
 #include "mon-ench.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -1542,7 +1542,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         else if (res <= 0 && doFlavouredEffects)
-            splash_monster_with_acid(mons, pbolt.agent());
+            mons->splash_with_acid(pbolt.agent());
         break;
     }
 

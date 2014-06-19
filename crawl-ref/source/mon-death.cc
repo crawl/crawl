@@ -47,8 +47,8 @@
 #include "mon-behv.h"
 #include "mon-gear.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "random.h"
@@ -62,6 +62,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "unwind.h"
@@ -1182,73 +1183,6 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 
     if (cloud != CLOUD_NONE)
         place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
-}
-
-void mons_relocated(monster* mons)
-{
-    // If the main body teleports get rid of the tentacles
-    if (mons_is_tentacle_head(mons_base_type(mons)))
-    {
-        int headnum = mons->mindex();
-
-        if (invalid_monster_index(headnum))
-            return;
-
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (mi->is_child_tentacle_of(mons))
-            {
-                for (monster_iterator connect; connect; ++connect)
-                {
-                    if (connect->is_child_tentacle_of(*mi))
-                        monster_die(*connect, KILL_RESET, -1, true, false);
-                }
-                monster_die(*mi, KILL_RESET, -1, true, false);
-            }
-        }
-    }
-    // If a tentacle/segment is relocated just kill the tentacle
-    else if (mons->is_child_monster())
-    {
-        int base_id = mons->mindex();
-
-        monster* tentacle = mons;
-
-        if (mons->is_child_tentacle_segment()
-                && !::invalid_monster_index(base_id)
-                && menv[base_id].is_parent_monster_of(mons))
-        {
-            tentacle = &menv[base_id];
-        }
-
-        for (monster_iterator connect; connect; ++connect)
-        {
-            if (connect->is_child_tentacle_of(tentacle))
-                monster_die(*connect, KILL_RESET, -1, true, false);
-        }
-
-        monster_die(tentacle, KILL_RESET, -1, true, false);
-    }
-    else if (mons->type == MONS_ELDRITCH_TENTACLE
-             || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
-    {
-        int base_id = mons->type == MONS_ELDRITCH_TENTACLE
-                      ? mons->mindex() : mons->number;
-
-        monster_die(&menv[base_id], KILL_RESET, -1, true, false);
-
-        for (monster_iterator mit; mit; ++mit)
-        {
-            if (mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && (int) mit->number == base_id)
-            {
-                monster_die(*mit, KILL_RESET, -1, true, false);
-            }
-        }
-
-    }
-
-    mons->clear_clinging();
 }
 
 // When given either a tentacle end or segment, kills the end and all segments
@@ -2841,6 +2775,60 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
             mons->add_ench(ENCH_SUBMERGED);
         }
     }
+}
+
+// Make all of the monster's original equipment disappear, unless it's a fixed
+// artefact or unrand artefact.
+static void _vanish_orig_eq(monster* mons)
+{
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    {
+        if (mons->inv[i] == NON_ITEM)
+            continue;
+
+        item_def &item(mitm[mons->inv[i]]);
+
+        if (!item.defined())
+            continue;
+
+        if (item.orig_place != 0 || item.orig_monnum != 0
+            || !item.inscription.empty()
+            || is_unrandom_artefact(item)
+            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+                              | ISFLAG_NOTED_GET)))
+        {
+            continue;
+        }
+        item.flags |= ISFLAG_SUMMONED;
+    }
+}
+
+int dismiss_monsters(string pattern)
+{
+    // Make all of the monsters' original equipment disappear unless "keepitem"
+    // is found in the regex (except for fixed arts and unrand arts).
+    const bool keep_item = strip_tag(pattern, "keepitem");
+    const bool harmful = pattern == "harmful";
+    const bool mobile  = pattern == "mobile";
+
+    // Dismiss by regex.
+    text_pattern tpat(pattern);
+    int ndismissed = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->alive()
+            && (mobile ? !mons_class_is_stationary(mi->type) :
+                harmful ? !mons_is_firewood(*mi) && !mi->wont_attack()
+                : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
+        {
+            if (!keep_item)
+                _vanish_orig_eq(*mi);
+            monster_die(*mi, KILL_DISMISSED, NON_MONSTER, false, true);
+            ++ndismissed;
+        }
+    }
+
+    return ndismissed;
 }
 
 string summoned_poof_msg(const monster* mons, bool plural)

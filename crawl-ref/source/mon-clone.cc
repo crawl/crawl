@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include "mon-clone.h"
 
 #include "act-iter.h"
 #include "arena.h"
@@ -16,10 +17,9 @@
 #include "mgen_data.h"
 #include "monster.h"
 #include "mon-behv.h"
-#include "mon-clone.h"
+#include "mon-death.h"
 #include "mon-enum.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"

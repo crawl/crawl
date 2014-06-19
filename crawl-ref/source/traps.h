@@ -17,6 +17,7 @@ struct trap_def;
 
 void disarm_trap(const coord_def& where);
 void free_self_from_net();
+void mons_clear_trapping_net(monster* mon);
 void free_stationary_net(int item_index);
 
 void handle_traps(trap_type trt, int i, bool trap_known);
