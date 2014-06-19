@@ -1208,7 +1208,7 @@ void search_around()
         if (effective > ptrap->skill_rnd)
         {
             ptrap->reveal();
-            mprf("You found %s trap!",
+            mprf("You found %s!",
                  ptrap->name(DESC_A).c_str());
             learned_something_new(HINT_SEEN_TRAP, *ri);
         }

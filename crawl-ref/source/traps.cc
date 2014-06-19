@@ -156,7 +156,7 @@ string trap_def::name(description_level_type desc) const
     if (type >= NUM_TRAPS)
         return "buggy";
 
-    string basename = trap_name(type);
+    string basename = full_trap_name(type);
     if (desc == DESC_A)
     {
         string prefix = "a";
@@ -609,7 +609,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (!you_trigger && !you_know && !in_sight)
             hide();
         if (you_trigger)
-            mprf("You enter %s trap!", name(DESC_A).c_str());
+            mprf("You enter %s!", name(DESC_A).c_str());
         if (ammo_qty > 0 && !--ammo_qty)
         {
             // can't use trap_destroyed, as we might recurse into a shaft
@@ -617,7 +617,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (in_sight)
             {
                 env.map_knowledge(pos).set_feature(DNGN_FLOOR);
-                mprf("%s trap disappears.", name(DESC_THE).c_str());
+                mprf("%s disappears.", name(DESC_THE).c_str());
             }
             disarm();
         }
@@ -633,13 +633,15 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (silenced(pos))
         {
             if (you_know && in_sight)
-                mpr("The alarm trap vibrates slightly, failing to make a sound.");
+                mprf("%s vibrates slightly, failing to make a sound.",
+                     name(DESC_THE).c_str());
         }
         else
         {
             string msg;
             if (you_trigger)
-                msg = "The alarm trap emits a blaring wail!";
+                msg = make_stringf("%s emits a blaring wail!",
+                                   name(DESC_THE).c_str());
             else
             {
                 string dir = _direction_string(pos, !in_sight);
@@ -914,7 +916,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 xom_is_stimulated(25);
 
             MiscastEffect(&you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                           3, "a Zot trap");
+                           3, name(DESC_A));
         }
         else if (m)
         {
@@ -1523,7 +1525,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     {
         if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
         {
-            mprf("You avoid triggering %s trap.", name(DESC_A).c_str());
+            mprf("You avoid triggering %s.", name(DESC_A).c_str());
             return;         // no ammo generated either
         }
     }
@@ -1531,7 +1533,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     {
         if (was_known && you.see_cell(pos) && you.can_see(&act))
         {
-            mprf("%s avoids triggering %s trap.", act.name(DESC_THE).c_str(),
+            mprf("%s avoids triggering %s.", act.name(DESC_THE).c_str(),
                  name(DESC_A).c_str());
         }
         return;
@@ -1545,7 +1547,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
     const int con_block = random2(20 + act.shield_block_penalty());
     const int pro_block = act.shield_bonus();
-    dprf("%s trap: hit %d EV %d, shield hit %d block %d", name(DESC_PLAIN).c_str(),
+    dprf("%s: hit %d EV %d, shield hit %d block %d", name(DESC_PLAIN).c_str(),
          trap_hit, act.melee_evasion(0), con_block, pro_block);
 
     // Determine whether projectile hits.
