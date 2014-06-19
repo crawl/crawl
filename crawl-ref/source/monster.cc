@@ -3485,7 +3485,7 @@ bool monster::is_insane() const
  *  @param check_god whether the monster having a chaotic god matters.
  *  @returns 0 if not hated, a number greater than 0 otherwise.
  */
-int monster::unclean(bool check_god) const
+int monster::how_unclean(bool check_god) const
 {
     int uncleanliness = 0;
 
@@ -3528,7 +3528,7 @@ int monster::unclean(bool check_god) const
         uncleanliness++;
 
     corpse_effect_type ce = mons_corpse_effect(type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !chaos())
+    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !how_chaotic())
         uncleanliness++;
 
     // Zin has a food conduct for monsters too.
@@ -3600,7 +3600,7 @@ int monster::known_chaos(bool check_spells_god) const
  *        religion; silver damage does not.
  * @returns 0 if not chaotic, a larger number if so.
  */
-int monster::chaos(bool check_spells_god) const
+int monster::how_chaotic(bool check_spells_god) const
 {
     // Don't count known shapeshifters twice.
     if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))

@@ -512,11 +512,11 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
     eligibility.init(0);
 
     // Anti-chaos prayer: Hits things vulnerable to silver, or with chaotic spells/gods.
-    eligibility[RECITE_CHAOTIC] = mon->chaos(true);
+    eligibility[RECITE_CHAOTIC] = mon->how_chaotic(true);
 
     // Anti-impure prayer: Hits things that Zin hates in general.
     // Don't look at the monster's god; that's what RECITE_HERETIC is for.
-    eligibility[RECITE_IMPURE] = mon->unclean(false);
+    eligibility[RECITE_IMPURE] = mon->how_unclean(false);
     // Sanity check: if a monster is 'really' natural, don't consider it impure.
     if (mons_intel(mon) < I_NORMAL
         && (holiness == MH_NATURAL || holiness == MH_PLANT)

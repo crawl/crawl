@@ -613,7 +613,7 @@ public:
     bool is_holy(bool spells = true) const;
     bool is_unholy(bool spells = true) const;
     bool is_evil(bool spells = true) const;
-    int chaos(bool check_spells_god) const;
+    int how_chaotic(bool check_spells_god) const;
     bool is_artificial() const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
