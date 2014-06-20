@@ -786,6 +786,25 @@ xx44..........3.xx
 ENDMAP
 
 ##############################################################################
+# Snail & Pal
+#
+NAME:   pf_torpor_hydra
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  Lair:3-7
+MONS:   torpor snail, hydra
+NSUBST: . = 1:| / 1:* / 2:% / *:.
+MAP
+x xx  x
+ xxxxxx x
+xx....xxx
+x..x1..=xx
+x..2...x@x
+xx..x.xx
+ xxxxxx
+   x  x
+ENDMAP
+
+##############################################################################
 #       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
