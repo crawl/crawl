@@ -1697,26 +1697,43 @@ static string _bless_weapon(monster* mon, bool improve_type = false)
 
     if (mon->props.exists("given beogh weapon"))
     {
+        if (wpn.cursed())
+        {
+            do_uncurse_item(wpn, true, true);
+            return "uncursed armament";
+        }
+
         dprf("Can't bless weapons gifted by the player!");
         return "";
     }
 
     const int old_weapon_type = wpn.sub_type;
+    // 50% chance of upgrading weapon type.
     if (improve_type
         && !is_artefact(wpn)
-        && x_chance_in_y(mon->hit_dice, 250))
+        && coinflip())
     {
+        // lower chance of upgrading to very good weapon types
+        bool highlevel_ok = one_chance_in(mon->type == MONS_ORC_WARLORD ? 3 :
+                                          mon->type == MONS_ORC_KNIGHT ? 6 :
+                                          1000000); // it's one in a million!
         wpn.sub_type = _upgrade_weapon_type(wpn.sub_type,
                                             mon->inv[MSLOT_SHIELD] != NON_ITEM,
-                                            mon->type == MONS_ORC_KNIGHT
-                                             || mon->type == MONS_ORC_WARLORD);
+                                            highlevel_ok);
     }
 
-    // Enchant and uncurse it.
-    const bool enchanted = enchant_weapon(wpn, true);
+    // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
+    const bool enchanted = !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
+                           && enchant_weapon(wpn, true);
 
     if (!enchanted && wpn.sub_type == old_weapon_type)
     {
+        if (wpn.cursed())
+        {
+            do_uncurse_item(wpn, true, true);
+            return "uncursed armament";
+        }
+
         dprf("Couldn't bless follower's weapon!");
         return "";
     }
@@ -1777,8 +1794,8 @@ static string _bless_armour(monster* mon, bool improve_type = false)
     }
 
     const int old_subtype = arm.sub_type;
-    if (improve_type && !is_artefact(arm)
-        && x_chance_in_y(mon->hit_dice, 250))
+    // 50% chance of improving armour/shield type
+    if (improve_type && !is_artefact(arm) && coinflip())
     {
         if (slot == shield)
             _upgrade_shield(arm);
@@ -1786,9 +1803,10 @@ static string _bless_armour(monster* mon, bool improve_type = false)
             _upgrade_body_armour(arm);
     }
 
-    // And enchant or uncurse it.
+    // And enchant or uncurse it. (Lower chance for higher enchantment.)
     int ac_change;
-    const bool enchanted = enchant_armour(ac_change, true, arm);
+    const bool enchanted = !x_chance_in_y(arm.plus, armour_max_enchant(arm))
+                           && enchant_armour(ac_change, true, arm);
 
     if (!enchanted && old_subtype == arm.sub_type)
     {
@@ -2089,20 +2107,23 @@ static bool _beogh_bless_follower(monster* follower, bool force)
 
     string blessing = "";
 
-    // 10% chance of blessing to priesthood or improving equipment.
+    // 10% chance of blessing to priesthood.
     if (one_chance_in(10))
     {
         if (_beogh_blessing_priesthood(follower))
             blessing = "priesthood";
         else
-        {
             dprf("Couldn't promote monster to priesthood");
-            blessing = coinflip() ? _bless_weapon(follower, true)
-                                  : _bless_armour(follower, true);
-        }
     }
 
-    // 90% chance of trying to heal.
+    // ~15% chance of blessing armament (assume that most priest buffs fail)
+    if (blessing.empty() && one_chance_in(7))
+    {
+        blessing = coinflip() ? _bless_weapon(follower, true)
+                              : _bless_armour(follower, true);
+    }
+
+    // ~85% chance of trying to heal.
     if (blessing.empty())
         blessing = _bless_with_healing(follower);
 
