@@ -9,6 +9,10 @@
 #include "enum.h"
 #include "externs.h"
 
+#define BEOGH_WPN_GIFT_KEY "given beogh weapon"
+#define BEOGH_ARM_GIFT_KEY "given beogh armour"
+#define BEOGH_SH_GIFT_KEY "given beogh shield"
+
 struct bolt;
 class stack_iterator;
 
