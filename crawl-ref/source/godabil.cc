@@ -1501,9 +1501,9 @@ bool beogh_water_walk()
  */
 static bool _given_gift(monster* mon)
 {
-    return mon->props.exists("given beogh weapon")
-            || mon->props.exists("given beogh armour")
-            || mon->props.exists("given beogh shield");
+    return mon->props.exists(BEOGH_WPN_GIFT_KEY)
+            || mon->props.exists(BEOGH_ARM_GIFT_KEY)
+            || mon->props.exists(BEOGH_SH_GIFT_KEY);
 }
 
 /**
@@ -1585,11 +1585,11 @@ bool beogh_gift_item()
                                     shield ? MSLOT_SHIELD :
                                              MSLOT_WEAPON);
     if (shield)
-        mons->props["given beogh shield"] = true;
+        mons->props[BEOGH_SH_GIFT_KEY] = true;
     else if (body_armour)
-        mons->props["given beogh armour"] = true;
+        mons->props[BEOGH_ARM_GIFT_KEY] = true;
     else
-        mons->props["given beogh weapon"] = true;
+        mons->props[BEOGH_WPN_GIFT_KEY] = true;
 
     return true;
 }
