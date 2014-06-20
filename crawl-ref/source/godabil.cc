@@ -5761,7 +5761,7 @@ bool iashol_power_leap()
         //damage scales with XL amd piety -- divisor should be a multiple of 81
         mon->hurt((actor*)&you, roll_dice(1 + div_rand_round(you.piety *
             (54 + you.experience_level), 972), 3),
-            BEAM_MMISSILE, true);
+            BEAM_ENERGY, true);
     }
 
     return return_val;
@@ -5812,7 +5812,7 @@ static int _apply_cataclysm(coord_def where, int pow, int dummy, actor* agent)
             dmg = roll_dice(die_size, 6);
             break;
     }
-    mons->hurt(agent, dmg, BEAM_MMISSILE, true);
+    mons->hurt(agent, dmg, BEAM_ENERGY, true);
 
     return 1;
 }
