@@ -5221,7 +5221,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
         case ABIL_IASHOL_SACRIFICE_WORDS:
             piety_gain = 35;
 
-            mprf("Iashol asks you to sacrifice your ability to drink while threatened.");
+            mprf("Iashol asks you to sacrifice your ability to read while threatened.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
@@ -5235,7 +5235,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
             break;
         case ABIL_IASHOL_SACRIFICE_DRINK:
             piety_gain = 35;
-            mprf("Iashol asks you to sacrifice your ability to read while threatened.");
+            mprf("Iashol asks you to sacrifice your ability to drink while threatened.");
             mprf("This is %s sacrifice.",
                 _describe_sacrifice_piety_gain(piety_gain));
             if (!yesno("Do you really want to make this sacrifice?",
