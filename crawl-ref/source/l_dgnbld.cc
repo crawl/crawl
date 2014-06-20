@@ -579,7 +579,7 @@ LUAFN(dgn_primary_vault_dimensions)
     for (int y = 0; y < lines.height(); y++)
         for (int x = 0; x < lines.width(); x++)
         {
-            if(env.level_map_mask(coord_def(x,y)) & MMT_VAULT)
+            if (env.level_map_mask(coord_def(x,y)) & MMT_VAULT)
             {
                 if (x < x_min)
                     x_min = x;
@@ -592,13 +592,13 @@ LUAFN(dgn_primary_vault_dimensions)
             }
         }
 
-    if(x_min != NO_PRIMARY_VAULT)
+    if (x_min != NO_PRIMARY_VAULT)
     {
-        if(x_max == -NO_PRIMARY_VAULT)
+        if (x_max == -NO_PRIMARY_VAULT)
             return luaL_error(ls, "Primary vault has x_min %d but no x_max", x_min);
-        if(y_min ==  NO_PRIMARY_VAULT)
+        if (y_min ==  NO_PRIMARY_VAULT)
             return luaL_error(ls, "Primary vault has x_min %d but no y_min", x_min);
-        if(y_max == -NO_PRIMARY_VAULT)
+        if (y_max == -NO_PRIMARY_VAULT)
             return luaL_error(ls, "Primary vault has x_min %d but no y_max", x_min);
 
         lua_pushnumber(ls, x_min);
@@ -608,11 +608,11 @@ LUAFN(dgn_primary_vault_dimensions)
     }
     else  // no primary vault found
     {
-        if(x_max != -NO_PRIMARY_VAULT)
+        if (x_max != -NO_PRIMARY_VAULT)
             return luaL_error(ls, "Primary vault has x_max %d but no x_min", x_max);
-        if(y_min !=  NO_PRIMARY_VAULT)
+        if (y_min !=  NO_PRIMARY_VAULT)
             return luaL_error(ls, "Primary vault has y_min %d but no x_min", y_min);
-        if(y_max != -NO_PRIMARY_VAULT)
+        if (y_max != -NO_PRIMARY_VAULT)
             return luaL_error(ls, "Primary vault has y_max %d but no x_min", y_max);
 
         lua_pushnil(ls);
