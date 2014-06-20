@@ -2743,45 +2743,20 @@ static bool _pan_level()
                                        + pandemon_level_names[which_demon]));
     }
 
+    const map_def *vault = NULL;
+
     if (which_demon >= 0)
     {
-        const map_def *vault =
-            random_map_for_tag(pandemon_level_names[which_demon], false,
-                               false, MB_FALSE);
-
-        ASSERT(vault);
-
-        _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
-        return vault->orient != MAP_ENCOMPASS;
+        vault = random_map_for_tag(pandemon_level_names[which_demon], false,
+                                   false, MB_FALSE);
     }
     else
-    {
-        const map_def *vault = random_map_in_depth(level_id::current(),
-                                                   false, MB_FALSE);
-        // vault can be NULL if a dummy vault is selected.
-        if (vault && vault->orient == MAP_ENCOMPASS)
-        {
-            _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
-            return false;
-        }
-        else
-        {
-            const map_def *layout = vault ? _pick_layout(vault)
-                                          : random_map_for_tag("layout", true,
-                                                               true);
+        vault = random_map_in_depth(level_id::current(), false, MB_FALSE);
 
-            {
-                dgn_map_parameters mp(vault && vault->orient == MAP_CENTRE
-                                      ? "central" : "layout");
-                _dgn_ensure_vault_placed(_build_primary_vault(layout), false);
-            }
-
-            dgn_check_connectivity = true;
-            if (vault)
-                _build_secondary_vault(vault);
-            return true;
-        }
-    }
+    // Every Pan level should have a primary vault.
+    ASSERT(vault);
+    _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
+    return vault->orient != MAP_ENCOMPASS;
 }
 
 // Returns true if we want the dungeon builder
