@@ -634,6 +634,7 @@ void fully_map_level()
 // Is the given monster near (in LOS of) the player?
 bool mons_near(const monster* mons)
 {
+    ASSERT(mons);
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return true;
     return you.see_cell(mons->pos());
