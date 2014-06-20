@@ -1032,6 +1032,11 @@ static bool _is_slime_mutation(mutation_type m)
     return _mut_has_use(mut_data[mut_index[m]], MU_USE_JIYVA);
 }
 
+static bool _is_sacrifice_mutation(mutation_type m)
+{
+    return _mut_has_use(mut_data[mut_index[m]], MU_USE_IASHOL);
+}
+
 static mutation_type _get_random_xom_mutation()
 {
     mutation_type mutat = NUM_MUTATIONS;
@@ -2407,7 +2412,17 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
                   false, true);
 }
 
-int how_mutated(bool all, bool levels)
+/**
+ * How mutated is the player?
+ *
+ * @param innate     Whether to count innate mutations.
+ * @param levels     Whether to add up mutation levels.
+ * @param sacrifice  Whether to count Iashol sacrifice mutations.
+ *                   Currently irrelevant outside wizmode if \c !innate
+ * @return Either the number of matching mutations, or the sum of their
+ *         levels, depending on \c levels
+ */
+int how_mutated(bool innate, bool levels, bool sacrifice)
 {
     int j = 0;
 
@@ -2415,13 +2430,16 @@ int how_mutated(bool all, bool levels)
     {
         if (you.mutation[i])
         {
-            if (!all && you.innate_mutation[i] >= you.mutation[i])
+            if (!innate && you.innate_mutation[i] >= you.mutation[i])
+                continue;
+
+            if (!sacrifice && _is_sacrifice_mutation((mutation_type)i))
                 continue;
 
             if (levels)
             {
                 j += you.mutation[i];
-                if (!all)
+                if (!innate)
                     j -= you.innate_mutation[i];
             }
             else
@@ -2429,7 +2447,8 @@ int how_mutated(bool all, bool levels)
         }
     }
 
-    dprf("how_mutated(): all = %u, levels = %u, j = %d", all, levels, j);
+    dprf("how_mutated(): innate = %u, levels = %u, sacrifice = %u, j = %d",
+         innate, levels, sacrifice, j);
 
     return j;
 }
