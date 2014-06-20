@@ -3980,26 +3980,6 @@ static void _display_tohit()
 
     dprf("To-hit: %d", to_hit);
 #endif
-/*
-    // Messages based largely on percentage chance of missing the
-    // average EV 10 humanoid, and very agile EV 30 (pretty much
-    // max EV for monsters currently).
-    //
-    // "awkward"    - need lucky hit (less than EV)
-    // "difficult"  - worse than 2 in 3
-    // "hard"       - worse than fair chance
-    mprf("%s given your current equipment.",
-         (to_hit <   1) ? "You are completely incapable of fighting" :
-         (to_hit <   5) ? "Hitting even clumsy monsters is extremely awkward" :
-         (to_hit <  10) ? "Hitting average monsters is awkward" :
-         (to_hit <  15) ? "Hitting average monsters is difficult" :
-         (to_hit <  20) ? "Hitting average monsters is hard" :
-         (to_hit <  30) ? "Very agile monsters are a bit awkward to hit" :
-         (to_hit <  45) ? "Very agile monsters are a bit difficult to hit" :
-         (to_hit <  60) ? "Very agile monsters are a bit hard to hit" :
-         (to_hit < 100) ? "You feel comfortable with your ability to fight"
-                        : "You feel confident with your ability to fight");
-*/
 }
 
 static const char* _attack_delay_desc(int attack_delay)
