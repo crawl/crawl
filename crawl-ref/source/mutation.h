@@ -113,7 +113,8 @@ void roll_demonspawn_mutations();
 
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason);
 bool temp_mutate(mutation_type which_mut, const string &reason);
-int how_mutated(bool all = false, bool levels = false);
+int how_mutated(bool innate = false, bool levels = false,
+                bool sacrifice = false);
 
 void check_demonic_guardian();
 void check_monster_detect();
