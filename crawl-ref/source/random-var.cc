@@ -50,9 +50,41 @@ void random_var::init_weights(weight_func w)
 
 void random_var::init()
 {
-    total = 0;
+    int64_t sum = 0;
     for (int v = start; v < end; ++v)
-        total += weight(v);
+        sum += weight(v);
+
+    if (sum <= (int64_t) INT_MAX)
+        total = (int) sum;
+    else
+    {
+        // The total is too big: rescale all entries by 256.
+        ASSERT(sum <= 256 * (int64_t) INT_MAX);
+
+        total = 0;
+
+        const int length = weights.size();
+        int first_nonzero = -1;
+        int last_nonzero = -1;
+        for (int i = 0; i < length; ++i)
+        {
+            weights[i] /= 256;
+            total += weights[i];
+
+            if (first_nonzero < 0 && weights[i] > 0)
+                first_nonzero = i;
+            if (weights[i] > 0)
+                last_nonzero = i;
+        }
+        ASSERT(first_nonzero >= 0 && last_nonzero >= 0);
+
+        // Weights that rounded to zero should be dropped.
+        weights.erase(weights.begin() + last_nonzero + 1, weights.end());
+        weights.erase(weights.begin(), weights.begin() + first_nonzero);
+        start += first_nonzero;
+        end -= (length - last_nonzero - 1);
+    }
+
     ASSERT(total > 0);
     ASSERT(weight(start) > 0);
     ASSERT(weight(end - 1) > 0);
