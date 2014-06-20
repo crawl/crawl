@@ -52,11 +52,12 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-util.h"
+#include "mon-gear.h"
 #include "mon-place.h"
-#include "mgen_data.h"
+#include "mon-util.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
@@ -1672,6 +1673,32 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
 
 
 /**
+ * Get an absdepth value for a given monster (orc)
+ *
+ * @param[in] mon   The monster in question.
+ * @return          An absdepth arbitrarily corresponding to orc type.
+ */
+static int _monster_item_level(monster* mon)
+{
+    switch (mon->type)
+    {
+    case MONS_ORC:
+    case MONS_ORC_WARRIOR:
+    case MONS_ORC_WIZARD:
+    case MONS_ORC_PRIEST:
+        return 4;
+    case MONS_ORC_KNIGHT:
+    case MONS_ORC_HIGH_PRIEST:
+    case MONS_ORC_SORCERER:
+        return 12;
+    case MONS_ORC_WARLORD:
+        return 20;
+    default:
+        return 1; // shouldn't ever come up?
+    }
+}
+
+/**
  * Attempt to bless a follower's weapon.
  *
  * @param[in] mon      The follower whose weapon should be blessed.
@@ -1688,7 +1715,16 @@ static string _bless_weapon(monster* mon, bool improve_type = false)
     item_def* wpn_ptr = mon->weapon();
     if (wpn_ptr == NULL)
     {
-        // XXX: give an item?
+        if (improve_type)
+        {
+            give_weapon(mon, _monster_item_level(mon), false);
+            wpn_ptr = mon->weapon();
+            if (wpn_ptr == NULL)
+                dprf("Couldn't give a weapon to follower!");
+            else
+                return "armament";
+        }
+
         dprf("Couldn't bless follower's weapon; they have none!");
         return "";
     }
@@ -1765,7 +1801,15 @@ static string _bless_armour(monster* mon, bool improve_type = false)
 
     if (armour == NON_ITEM && shield == NON_ITEM)
     {
-        // XXX: give an item?
+        if (improve_type)
+        {
+            give_armour(mon, _monster_item_level(mon));
+            if (mon->inv[MSLOT_ARMOUR] != NON_ITEM)
+                return "armour";
+
+            dprf("Failed to give armour to follower.");
+        }
+
         dprf("Can't improve the armour of a naked character!");
         return "";
     }

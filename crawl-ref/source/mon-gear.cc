@@ -2492,6 +2492,11 @@ void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spect
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
 
+void give_armour(monster *mons, int level_number)
+{
+    _give_armour(mons, 1 + level_number/2, false, false);
+}
+
 void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs, bool merc)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
