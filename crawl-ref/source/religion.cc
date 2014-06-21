@@ -553,12 +553,13 @@ bool is_unavailable_god(god_type god)
     // passives thoroughly overpowered.  Protection for plants, speed-up of
     // oklobs, etc...
     // Basically, ZotDef is Fedhas.
-    if (god == GOD_FEDHAS && crawl_state.game_is_zotdef())
-        return true;
 
-    // No Ashenzari, too -- nothing to explore, can't use his abilities.
+    // No Ashenzari/Nemelex, too -- nothing to explore, can't use
+    // their abilities.
     // We could give some piety for every wave, but there's little point.
-    if (god == GOD_ASHENZARI && crawl_state.game_is_zotdef())
+    if (crawl_state.game_is_zotdef() && (god == GOD_FEDHAS
+                                         || god == GOD_ASHENZARI
+                                         || god == GOD_NEMELEX_XOBEH))
         return true;
 
     return false;
