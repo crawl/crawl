@@ -683,46 +683,47 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
-    if (is_dragonkind(defender) && !mondied)
+    if (!is_dragonkind(defender))
+        return;
+
+    // Since the target will become a DEAD MONSTER if it dies due to the extra
+    // damage to dragons, we need to grab this information now.
+    int hd = min(defender->as_monster()->hit_dice, 18);
+    string name = defender->name(DESC_THE);
+
+    if (!mondied)
     {
         mprf("<grey>%s %s!</grey>",
             defender->name(DESC_THE).c_str(),
             defender->conj_verb("convulse").c_str());
 
         defender->hurt(attacker, 1 + random2(3*dam/2));
+
+        mondied = !defender->alive();
     }
 
-    if (!mondied || !defender || !is_dragonkind(defender)
-        || defender->is_summoned()
-        || defender->is_monster()
-           && testbits(defender->as_monster()->flags, MF_NO_REWARD))
+    if (!mondied || !defender || defender->is_summoned()
+        || (defender->is_monster()
+            && testbits(defender->as_monster()->flags, MF_NO_REWARD)))
     {
         return;
     }
-    if (defender->is_player())
-    {
-        // can't currently happen even on a death blow
-        mpr("<green>You see the lance glow as it kills you.</green>");
-        return;
-    }
+
     // The cap can be reached by:
     // * iron dragon, golden dragon, pearl dragon (18)
     // * Xtahua (19)
     // * bone dragon, Serpent of Hell (20)
     // * Tiamat (22)
     // * pghosts (up to 27)
-    int hd = min(defender->as_monster()->hit_dice, 18);
     dprf("Killed a drac with hd %d.", hd);
-    bool boosted = false;
+
     if (weapon->plus < hd)
     {
         weapon->plus++;
-        boosted = true;
-    }
-    if (boosted)
-    {
+
         mprf("<green>The lance glows as it skewers %s.</green>",
-              defender->name(DESC_THE).c_str());
+              name.c_str());
+
         you.wield_change = true;
     }
 }
