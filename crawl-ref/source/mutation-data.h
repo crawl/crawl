@@ -1017,8 +1017,8 @@ static const mutation_def mut_data[] =
   "wild magic"
 },
 
-{ MUT_CONTEMPLATIVE,                6,  3,  MUTFLAG_GOOD, false,
-  "contemplative",
+{ MUT_PLACID_MAGIC,                6,  3,  MUTFLAG_BAD, false,
+  "placid magic",
 
   {"Your spells are a little easier to cast, but a little less powerful.",
    "Your spells are easier to cast, but less powerful.",
@@ -1032,7 +1032,7 @@ static const mutation_def mut_data[] =
    "You feel less in control of your magic.",
    "You feel less in control of your magic."},
 
-  "contemplative"
+  "placid magic"
 },
 
 { MUT_FORLORN,                      3,  1,  MUTFLAG_BAD, false,
