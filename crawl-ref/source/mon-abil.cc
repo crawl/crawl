@@ -4807,30 +4807,45 @@ void ancient_zyme_sicken(monster* mons)
 }
 
 /**
- * Apply the torpor snail -swift effect.
+ * Apply the torpor snail slowing effect.
  *
  * @param mons      The snail applying the effect.
  */
-void torpor_snail_unswift(monster* mons)
+void torpor_snail_slow(monster* mons)
 {
-    if (is_sanctuary(mons->pos())
-        || is_sanctuary(you.pos())
-        || you_worship(GOD_CHEIBRIADOS)
-        || !you.can_see(mons)
-        || !cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
-    {
+    // XXX: might be nice to refactor together with ancient_zyme_sicken().
+
+    if (is_sanctuary(mons->pos()))
         return;
-    }
 
-    you.set_duration(DUR_SWIFTNESS, 9 + random2(6), 15);
-    if (you.attribute[ATTR_SWIFTNESS] != -1)
+    if (!is_sanctuary(you.pos())
+        && !you.stasis()
+        && !you_worship(GOD_CHEIBRIADOS)
+        && you.can_see(mons)
+        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
-        you.attribute[ATTR_SWIFTNESS] = -1;
-        mprf("Being near %s leaves you feeling sluggish.",
-            mons->name(DESC_THE).c_str());
+        if (!you.duration[DUR_SLOW])
+        {
+            mprf("Being near %s leaves you feeling lethargic.",
+                 mons->name(DESC_THE).c_str());
+        }
+
+        if (you.duration[DUR_SLOW] < 27)
+            you.set_duration(DUR_SLOW, 18 + random2(10), 27);
+        // can't set this much shorter, or you periodically 'speed up'
+        // for a turn in the middle of TORPOR COMBAT
     }
 
-    // slow (friendly) monsters? (would need to change initial bloc)
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    {
+        monster *m = monster_at(*ri);
+        if (m && !mons_aligned(mons, m) && !m->check_stasis(true)
+            && !m->is_stationary() && !is_sanctuary(*ri)
+            && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+        {
+            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 18 + random2(10)));
+        }
+    }
 }
 
 static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
