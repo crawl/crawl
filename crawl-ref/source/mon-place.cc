@@ -2838,6 +2838,8 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         break;
 
     case MONS_TORPOR_SNAIL:
+        natural_leader = true; // snails are natural-born leaders. fact.
+
         // would be nice to support more branches, generically...
         if (player_in_branch(BRANCH_LAIR))
         {
