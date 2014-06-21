@@ -843,3 +843,9 @@ void qazlal_element_adapt(beam_type flavour, int strength)
     if (what == BEAM_MISSILE)
         you.redraw_armour_class = true;
 }
+
+bool does_iashol_wanna_redirect(monster* mon)
+{
+    return (you_worship(GOD_IASHOL) && you.piety >= piety_breakpoint(1)
+            && !mon->friendly());
+}

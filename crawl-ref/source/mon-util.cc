@@ -3264,7 +3264,7 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     }
 }
 
-bool mons_should_fire(bolt &beam)
+bool mons_should_fire(bolt &beam, bool ignore_good_idea)
 {
     dprf("tracer: foes %d (pow: %d), friends %d (pow: %d), "
          "foe_ratio: %d, smart: %s",
@@ -3276,6 +3276,14 @@ bool mons_should_fire(bolt &beam)
     // enchantment (haste other).
     if (_beneficial_beam_flavour(beam.flavour))
         return _mons_should_fire_beneficial(beam);
+
+    if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
+        return false;
+
+    if (ignore_good_idea)
+        return true;
+    // After this point, safety/self-interest checks only.
+
 
     // Friendly monsters shouldn't be targeting you: this will happen
     // often because the default behaviour for charmed monsters is to
@@ -3302,9 +3310,6 @@ bool mons_should_fire(bolt &beam)
 
     // Quick check - did we in fact get any foes?
     if (beam.foe_info.count == 0)
-        return false;
-
-    if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
         return false;
 
     // If we hit no friends, fire away.
