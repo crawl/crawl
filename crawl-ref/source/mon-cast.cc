@@ -22,6 +22,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "godpassive.h"
 #include "items.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -2989,6 +2990,35 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
         }
 
+        bool ignore_good_idea = false;
+        if (does_iashol_wanna_redirect(mons)
+            && random2(100) < div_rand_round(you.piety, 40))
+        {
+            mprf("You redirect %s's attack!",
+                    mons->name(DESC_THE, true).c_str());
+            int pfound = 0;
+            for (radius_iterator ri(you.pos(),
+                LOS_DEFAULT); ri; ++ri)
+            {
+                monster* new_target = monster_at(*ri);
+
+                if (new_target == NULL
+                    || mons_is_projectile(new_target->type)
+                    || mons_is_firewood(new_target))
+                    continue;
+
+                ASSERT(new_target);
+
+                if (one_chance_in(++pfound))
+                {
+                    mons->target = new_target->pos();
+                    mons->foe = new_target->mindex();
+                    beem.target = mons->target;
+                    ignore_good_idea = true;
+                }
+            }
+        }
+
         if (!finalAnswer)
         {
             // If nothing found by now, safe friendlies and good
@@ -3151,7 +3181,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         spell_is_direct_explosion(spell_cast);
                     fire_tracer(mons, beem, explode);
                     // Good idea?
-                    if (mons_should_fire(beem))
+                    if (mons_should_fire(beem, ignore_good_idea))
                         spellOK = true;
                 }
                 else

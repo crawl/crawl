@@ -2074,17 +2074,6 @@ void handle_monster_move(monster* mons)
         }
     }
 
-    if (!mons->asleep()
-        && !mons->wont_attack() && you_worship(GOD_IASHOL))
-    {
-        if (random2(100) < you.piety / 10)
-        {
-            simple_monster_message(mons, " falters in the face of your power.");
-            mons->speed_increment -= non_move_energy;
-            return;
-        }
-    }
-
     if (crawl_state.disables[DIS_MON_ACT] && _unfriendly_or_insane(mons))
     {
         mons->speed_increment -= non_move_energy;
@@ -2240,6 +2229,16 @@ void handle_monster_move(monster* mons)
             // Let monsters who have Dig use it off-screen.
             || mons->has_spell(SPELL_DIG))
         {
+            if (does_iashol_wanna_redirect(mons))
+            {
+                if (random2(100) < div_rand_round(you.piety, 20))
+                {
+                    simple_monster_message(mons,
+                        " is stunned by your will and fails to attack.");
+                    mons->speed_increment -= non_move_energy;
+                    return;
+                }
+            }
             // [ds] Special abilities shouldn't overwhelm
             // spellcasting in monsters that have both.  This aims
             // to give them both roughly the same weight.
@@ -2304,14 +2303,61 @@ void handle_monster_move(monster* mons)
                 && !mons->has_ench(ENCH_CHARM)
                 && !mons->withdrawn())
             {
+                monster* new_target;
+                bool attack_redirected = false;
                 if (!mons->wont_attack())
                 {
-                    // If it steps into you, cancel other targets.
+                    // Otherwise, if it steps into you, cancel other targets.
                     mons->foe = MHITYOU;
                     mons->target = you.pos();
+
+                    // Check to see if your religion redirects the attack
+                    if (does_iashol_wanna_redirect(mons))
+                    {
+                        int r = random2(100);
+                        int chance = div_rand_round(you.piety, 20);
+                        // stun chance maxes at 10%
+                        if (r < chance)
+                        {
+                            simple_monster_message(mons,
+                                " is stunned by your will and fails to attack.");
+                            mons->speed_increment -= non_move_energy;
+                            return;
+                        }
+                        // redirect maxes at 3%, given the above
+                        else if (r < chance + div_rand_round(chance, 2))
+                        {
+                            // get a target
+                            int pfound = 0;
+                            for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
+                            {
+                                new_target = monster_at(*ai);
+                                if (new_target == NULL
+                                    || mons_is_projectile(new_target->type)
+                                    || mons_is_firewood(new_target))
+                                    continue;
+                                ASSERT(new_target);
+
+                                if (one_chance_in(++pfound))
+                                {
+                                    mons->target = new_target->pos();
+                                    mons->foe = new_target->mindex();
+                                    attack_redirected = true;
+                                }
+                            }
+                        }
+                    }
                 }
 
-                fight_melee(mons, &you);
+                if (attack_redirected && new_target)
+                {
+                    // attack that target
+                    mprf("You redirect %s's attack!",
+                    mons->name(DESC_THE, true).c_str());
+                    fight_melee(mons, new_target);
+                }
+                else
+                    fight_melee(mons, &you);
 
                 if (mons_is_batty(mons))
                 {
