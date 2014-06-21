@@ -2566,7 +2566,7 @@ static void _post_monster_move(monster* mons)
         ancient_zyme_sicken(mons);
 
     if (mons->type == MONS_TORPOR_SNAIL)
-        torpor_snail_unswift(mons);
+        torpor_snail_slow(mons);
 
     if (mons->type == MONS_ASMODEUS)
     {

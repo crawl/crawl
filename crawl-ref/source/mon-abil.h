@@ -26,7 +26,7 @@ void move_child_tentacles(monster * kraken);
 void move_solo_tentacle(monster * tentacle);
 
 void ancient_zyme_sicken(monster* mons);
-void torpor_snail_unswift(monster* mons);
+void torpor_snail_slow(monster* mons);
 void starcursed_merge(monster* mon, bool forced);
 
 bool has_push_space(const coord_def& pos, actor* act,
