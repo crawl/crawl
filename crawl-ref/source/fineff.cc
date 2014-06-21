@@ -192,8 +192,9 @@ void trample_follow_fineff::fire()
         && adjacent(attack->pos(), posn)
         && attack->is_habitable(posn))
     {
+        const coord_def old_pos = attack->pos();
         attack->move_to_pos(posn);
-        attack->apply_location_effects(posn);
+        attack->apply_location_effects(old_pos);
     }
 }
 
