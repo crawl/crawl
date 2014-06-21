@@ -527,15 +527,6 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 static void _construct_save_games_menu(MenuScroller* menu,
                                        const vector<player_save_info>& chars)
 {
-    if (chars.empty())
-    {
-        // no saves
-        return;
-    }
-
-    string text;
-
-    vector<player_save_info>::iterator it;
     for (unsigned int i = 0; i < chars.size(); ++i)
     {
 #ifdef USE_TILE_LOCAL
@@ -552,7 +543,6 @@ static void _construct_save_games_menu(MenuScroller* menu,
 #ifdef USE_TILE_LOCAL
         tmp->set_doll(chars.at(i).doll);
 #endif
-        //tmp->set_description_text("...");
         menu->attach_item(tmp);
         tmp->set_visible(true);
     }
