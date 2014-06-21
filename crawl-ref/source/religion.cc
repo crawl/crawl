@@ -2133,7 +2133,7 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     string blessing = "";
 
     // 10% chance of blessing to priesthood.
-    if (one_chance_in(10))
+    if (force || one_chance_in(10))
     {
         if (_beogh_blessing_priesthood(follower))
             blessing = "priesthood";
@@ -2142,7 +2142,7 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     }
 
     // ~15% chance of blessing armament (assume that most priest buffs fail)
-    if (blessing.empty() && one_chance_in(7))
+    if (blessing.empty() && (force || one_chance_in(7)))
     {
         blessing = coinflip() ? _bless_weapon(follower, true)
                               : _bless_armour(follower, true);
@@ -2211,7 +2211,7 @@ static bool _tso_bless_follower(monster* follower, bool force)
         return false;
 
     string blessing = "";
-    if (one_chance_in(10))
+    if (one_chance_in(10) || force)
     {
         blessing = coinflip() ? _bless_weapon(follower)
                               : _bless_armour(follower);
