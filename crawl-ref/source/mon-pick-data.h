@@ -730,7 +730,7 @@ static const pop_entry pop_zot[] =
   {  1, 11,  367, SEMI, MONS_GOLDEN_DRAGON },
   { 0,0,0,FLAT,MONS_0 }
 };
-
+#if TAG_MAJOR_VERSION == 34
 static const pop_entry pop_forest[] =
 { // Forest
   {  1,  5,  120, DOWN, MONS_WOLF },
@@ -758,6 +758,7 @@ static const pop_entry pop_forest[] =
   {  1,  5,  125, FLAT, MONS_BUTTERFLY },
   { 0,0,0,FLAT,MONS_0 }
 };
+#endif
 
 static const pop_entry pop_abyss[] =
 { // Abyss
@@ -1317,14 +1318,6 @@ static const pop_entry pop_water_snake[] =
   { 0,0,0,FLAT,MONS_0 }
 };
 
-static const pop_entry pop_water_forest[] =
-{ // Forest water monsters
-  {  1,   5,   35, FLAT, MONS_BIG_FISH },
-  {  1,   5,  125, FLAT, MONS_WATER_ELEMENTAL },
-  {  1,   9,  120, SEMI, MONS_WATER_NYMPH },
-  { 0,0,0,FLAT,MONS_0 }
-};
-
 static const pop_entry pop_water_hell[] =
 { // Hell branch water monsters
   {  1,  7,   150, FLAT, MONS_SPINY_FROG },
@@ -1367,7 +1360,7 @@ static const struct { const pop_entry *pop; int count; } population_water[] =
     POP(water_hell),
     POP(water_generic),
 #if TAG_MAJOR_VERSION == 34
-    POP(water_forest),
+    POP(water_generic), // Forest
 #endif
     POP(water_generic),
     POP(water_generic),
