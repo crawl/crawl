@@ -890,7 +890,7 @@ void macro_add_query()
     bool raw = false;
     KeymapContext keymc = KMC_DEFAULT;
 
-    mesclr();
+    clear_messages();
     mprf(MSGCH_PROMPT, "(m)acro, (M)acro raw, keymap "
                        "[(k) default, (x) level-map, (t)argeting, "
                        "(c)onfirm, m(e)nu], (s)ave? ");

@@ -63,7 +63,7 @@ static bool _mg_is_disconnected_level()
 
 static bool mg_do_build_level(int niters)
 {
-    mesclr();
+    clear_messages();
     mprf("On %s (%d); %d g, %d fail, %u err%s, %u uniq, "
          "%d try, %d (%.2lf%%) vetos",
          level_id::current().describe().c_str(), niters,
@@ -192,12 +192,12 @@ static bool mg_build_dungeon()
 
 static void mg_build_levels(int niters)
 {
-    mesclr();
+    clear_messages();
     mpr("Generating dungeon map stats");
 
     for (int i = 0; i < niters; ++i)
     {
-        mesclr();
+        clear_messages();
         mprf("On %d of %d; %d g, %d fail, %u err%s, %u uniq, "
              "%d try, %d (%.2lf%%) vetoes",
              i, niters,
@@ -253,7 +253,7 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
         // Reporting all the vaults could take a while.
         watchdog();
         fprintf(outf, "\n%s -------------\n", i->describe().c_str());
-        mesclr();
+        clear_messages();
         mprf("Examining random maps at %s", i->describe().c_str());
         mg_report_random_maps(outf, *i);
         if (kbhit() && key_is_escape(getchk()))

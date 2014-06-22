@@ -965,7 +965,7 @@ static int _prompt_ring_to_remove(int new_ring)
         slot_chars.push_back(index_to_letter(rings.back()->link));
     }
 
-    mesclr();
+    clear_messages();
 
     mprf(MSGCH_PROMPT,
          "You're wearing all the rings you can. Remove which one?");
@@ -1008,7 +1008,7 @@ static int _prompt_ring_to_remove(int new_ring)
         }
     } while (!key_is_escape(c) && c != ' ' && c != '?');
 
-    mesclr();
+    clear_messages();
 
     if (c == '?')
         return EQ_NONE;
@@ -1264,7 +1264,7 @@ static bool _swap_rings(int ring_slot)
 
 static equipment_type _choose_ring_slot()
 {
-    mesclr();
+    clear_messages();
 
     mprf(MSGCH_PROMPT,
          "Put ring on which %s? (<w>Esc</w> to cancel)", you.hand_name(false).c_str());
@@ -1317,7 +1317,7 @@ static equipment_type _choose_ring_slot()
         }
     } while (!key_is_escape(c) && c != ' ');
 
-    mesclr();
+    clear_messages();
 
     return eqslot;
 }
@@ -2603,7 +2603,7 @@ static void _handle_read_book(int item_slot)
 
         if (ltr < 'a' || ltr > 'h')     //jmf: was 'g', but 8=h
         {
-            mesclr();
+            clear_messages();
             return;
         }
 
@@ -2611,7 +2611,7 @@ static void _handle_read_book(int item_slot)
                                                      letter_to_index(ltr));
         if (spell == SPELL_NO_SPELL)
         {
-            mesclr();
+            clear_messages();
             return;
         }
 

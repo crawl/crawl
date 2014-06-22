@@ -330,7 +330,7 @@ static bool _altar_prayer()
         simple_god_message(
             " will protect you from an element of your choice.");
         more();
-        mesclr();
+        clear_messages();
         mpr_nojoin(MSGCH_PLAIN, "[a] Fire  (rF+)");
         mpr_nojoin(MSGCH_PLAIN, "[b] Ice   (rC+)");
         mpr_nojoin(MSGCH_PLAIN, "[c] Air   (rElec)");

@@ -653,7 +653,7 @@ static input_history mini_hist(10), primary_hist(10);
 void debug_place_map(bool primary)
 {
     char what_to_make[100];
-    mesclr();
+    clear_messages();
     mprf(MSGCH_PROMPT, primary ? "Enter map name: " :
          "Enter map name (prefix it with * for local placement): ");
     if (cancellable_get_line(what_to_make, sizeof what_to_make,

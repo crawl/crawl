@@ -646,7 +646,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             if (isaalpha(keyin) || key_is_escape(keyin))
                 break;
             else
-                mesclr();
+                clear_messages();
 
             keyin = 0;
 #else
@@ -692,7 +692,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 if (isaalpha(keyin) || key_is_escape(keyin))
                     break;
                 else
-                    mesclr();
+                    clear_messages();
 
                 keyin = 0;
             }

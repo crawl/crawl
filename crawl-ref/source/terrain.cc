@@ -1379,7 +1379,7 @@ bool fall_into_a_pool(const coord_def& entry,
                                       : "programming rift");
 
     more();
-    mesclr();
+    clear_messages();
     if (terrain == DNGN_LAVA)
     {
         mpr("The lava burns you to a cinder!");

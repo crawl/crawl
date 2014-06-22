@@ -4111,7 +4111,7 @@ object_class_type get_random_item_mimic_type()
 
 object_class_type get_item_mimic_type()
 {
-    mesclr();
+    clear_messages();
     map<char, object_class_type> choices;
     char letter = 'a';
     for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
