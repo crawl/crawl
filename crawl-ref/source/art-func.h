@@ -1191,4 +1191,3 @@ static void _OCTOPUS_KING_world_reacts(item_def *item)
 {
     item->plus = 8 + _octorings_worn();
 }
-

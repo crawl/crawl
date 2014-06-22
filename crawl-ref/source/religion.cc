@@ -560,7 +560,9 @@ bool is_unavailable_god(god_type god)
     if (crawl_state.game_is_zotdef() && (god == GOD_FEDHAS
                                          || god == GOD_ASHENZARI
                                          || god == GOD_NEMELEX_XOBEH))
+    {
         return true;
+    }
 
     return false;
 }
