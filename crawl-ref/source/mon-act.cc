@@ -862,6 +862,15 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
     return rc;
 }
 
+/**
+ * Check whether this monster can make a reaching attack, and do so if
+ * they can.
+ *
+ * @param mons The monster who might be reaching.
+ * @return Whether they attempted a reaching attack. False if the monster
+ *         doesn't have a reaching weapon, the foe isn't hostile, the foe
+ *         is too near or too far, etc.
+ */
 static bool _handle_reaching(monster* mons)
 {
     bool       ret = false;
