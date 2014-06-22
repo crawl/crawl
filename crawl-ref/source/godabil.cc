@@ -5424,9 +5424,12 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 perma_mutate(MUT_FEAR_BLOOD, 1, "Iashol sacrifice");
             break;
         case ABIL_IASHOL_SACRIFICE_LOVE:
-            piety_gain = 25 + div_rand_round(skill_exp_needed(
-                you.skills[SK_SUMMONINGS], SK_SUMMONINGS, you.species),
-                divisor);
+            if (player_mutation_level(MUT_NO_SUMMONING_MAGIC))
+                piety_gain = 3;
+            else
+                piety_gain = 25 + div_rand_round(skill_exp_needed(
+                    you.skills[SK_SUMMONINGS], SK_SUMMONINGS, you.species),
+                    divisor);
 
             mprf("Iashol asks you to sacrifice your ability to be loved.");
             mprf("This is %s sacrifice.",
@@ -5452,9 +5455,14 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 mutation_type arcane_sacrifice =
                     AS_MUT(current_arcane_sacrifices[i]);
                 mutation_skill = arcane_mutation_to_skill(arcane_sacrifice);
-                piety_gain += div_rand_round(skill_exp_needed(
-                    you.skills[mutation_skill], mutation_skill, you.species),
-                    divisor);
+                if (player_mutation_level(MUT_NO_LOVE)
+                        && arcane_sacrifice == MUT_NO_SUMMONING_MAGIC)
+                    // nothing in the summoning school helps so substact piety
+                    piety_gain -= 8;
+                else
+                    piety_gain += div_rand_round(skill_exp_needed(
+                        you.skills[mutation_skill], mutation_skill, you.species),
+                        divisor);
             }
 
             mprf("Iashol asks you to sacrifice all use of %s, %s, and %s.",
