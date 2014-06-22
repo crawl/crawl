@@ -270,8 +270,6 @@ if (read_file("descript/monsters"))
         'the Serpent of Hell',
         # overridden descriptions
         'player illusion',
-        # reglyphing/colouring dummies
-        'player', 'merged slime creature', 'animated tree',
         # replacement for removed creatures
         'ghost',
         # species-only monsters
