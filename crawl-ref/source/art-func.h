@@ -1156,3 +1156,39 @@ static void _MAJIN_unequip(item_def *item, bool *show_msgs)
                    "The darkness slowly releases its grasp on your magic.");
     }
 }
+
+///////////////////////////////////////////////////
+
+static int _octorings_worn()
+{
+    int worn = 0;
+
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+    {
+        if (you.melded[i] || you.equip[i] == -1)
+            continue;
+
+        item_def& ring = you.inv[you.equip[i]];
+        if (is_unrandom_artefact(ring) && ring.special == UNRAND_OCTOPUS_KING_RING)
+            worn++;
+    }
+
+    return worn;
+}
+
+static void _OCTOPUS_KING_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    int rings = _octorings_worn();
+
+    if (rings == 8)
+        _equip_mpr(show_msgs, "You feel like a king!");
+    else if (rings)
+        _equip_mpr(show_msgs, "You feel regal.");
+    item->plus = 8 + rings;
+}
+
+static void _OCTOPUS_KING_world_reacts(item_def *item)
+{
+    item->plus = 8 + _octorings_worn();
+}
+
