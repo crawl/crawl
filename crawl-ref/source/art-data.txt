@@ -491,7 +491,7 @@ BOOL:     poison, life
 
 NAME:     trident of the Octopus King
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
-PLUS:     +8
+PLUS:     +8 # Messed with sometimes
 COLOUR:   ETC_WATER
 TILE:     urand_octopus_king
 TILE_EQ:  trident_octopus_king
