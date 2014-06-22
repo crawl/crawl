@@ -6925,7 +6925,7 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // Mutations
     rm += 40 * player_mutation_level(MUT_MAGIC_RESISTANCE);
-    rm -= 20 * player_mutation_level(MUT_MAGICAL_VULNERABILITY);
+    rm -= 40 * player_mutation_level(MUT_MAGICAL_VULNERABILITY);
 
     // transformations
     if (you.form == TRAN_LICH && temp)

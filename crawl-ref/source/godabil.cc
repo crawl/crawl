@@ -5271,6 +5271,8 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
             if (essence_sacrifice == MUT_LOW_MAGIC)
                 piety_gain = 15;
+            else if (essence_sacrifice == MUT_MAGICAL_VULNERABILITY)
+                piety_gain = 35;
             else
                 piety_gain = 20;
 
