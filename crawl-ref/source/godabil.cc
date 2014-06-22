@@ -5215,6 +5215,8 @@ void iashol_do_sacrifice(ability_type sacrifice)
 
     int piety_gain;
     int divisor = 700;
+    // by the time we apply this, we'll have either 1 or 3 (arcane).
+    int num_sacrifices = 1;
 
     switch (sacrifice)
     {
@@ -5497,6 +5499,7 @@ void iashol_do_sacrifice(ability_type sacrifice)
                     }
                 }
             }
+            num_sacrifices = 3;
             break;
         case ABIL_IASHOL_SACRIFICE_HAND:
             piety_gain = 80 + div_rand_round(skill_exp_needed(
@@ -5548,6 +5551,12 @@ void iashol_do_sacrifice(ability_type sacrifice)
             return;
             break;
     }
+    if (you.props.exists("num_sacrifice_muts"))
+        you.props["num_sacrifice_muts"] = num_sacrifices +
+            you.props["num_sacrifice_muts"].get_int();
+    else
+        you.props["num_sacrifice_muts"] = num_sacrifices;
+
     gain_piety(piety_gain - 2 + random2(7)); // randomize it a bit.
     iashol_expire_sacrifices();
 }
