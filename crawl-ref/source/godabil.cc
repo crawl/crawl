@@ -5697,15 +5697,22 @@ bool iashol_power_leap()
             continue;
         }
 
+        monster* mons = monster_at(beam.target);
+        if (mons && you.can_see(mons))
+        {
+            mpr("You can't leap on top of the monster!");
+            continue;
+        }
+
         if (grd(beam.target) == DNGN_OPEN_SEA)
         {
-            mesclr();
             mpr("You can't leap into the sea!");
+            continue;
         }
         else if (grd(beam.target) == DNGN_LAVA_SEA)
         {
-            mesclr();
             mpr("You can't leap into the sea of lava!");
+            continue;
         }
         else if (!check_moveto(beam.target, "blink"))
         {
