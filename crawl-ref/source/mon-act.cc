@@ -877,6 +877,9 @@ static bool _handle_reaching(monster* mons)
     const reach_type range = mons->reach_range();
     actor *foe = mons->get_foe();
 
+    if (mons->caught())
+        return false;
+
     if (!foe || range <= REACH_NONE)
         return false;
 
@@ -1500,7 +1503,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
-        || mons->submerged())
+        || mons->submerged()
+        || mons->caught())
     {
         return false;
     }
