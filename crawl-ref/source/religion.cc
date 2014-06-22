@@ -1676,36 +1676,59 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
 
 
 /**
- * Get an absdepth value for a given monster (orc)
+ * Get a weapon for beogh to gift to a weaponless orc.
  *
- * @param[in] mon   The monster in question.
- * @return          An absdepth arbitrarily corresponding to orc type.
+ * Tries to give something decent, but worse than player gifts.
+ *
+ * @param[in] mon_type   The type of orc to gift to.
+ * @return               A weapon type to gift.
  */
-static int _monster_item_level(monster* mon)
+static int _orc_weapon_gift_type(monster_type mon_type)
 {
-    switch (mon->type)
+    switch (mon_type)
     {
     case MONS_ORC:
-    case MONS_ORC_WARRIOR:
     case MONS_ORC_WIZARD:
     case MONS_ORC_PRIEST:
-        return 4;
-    case MONS_ORC_KNIGHT:
     case MONS_ORC_HIGH_PRIEST:
     case MONS_ORC_SORCERER:
-        return 12;
+        return random_choose_weighted(2, WPN_HAND_AXE, // orcs love axes
+                                      1, WPN_SHORT_SWORD,
+                                      1, WPN_MACE,
+                                      0);
+    case MONS_ORC_WARRIOR:
+    case MONS_ORC_KNIGHT:
     case MONS_ORC_WARLORD:
-        return 20;
+        return random_choose_weighted(2, WPN_WAR_AXE, // orcs love axes
+                                      1, WPN_LONG_SWORD,
+                                      1, WPN_FLAIL,
+                                      1, WPN_SPEAR,
+                                      0);
+        // give a lower tier of polearms; reaching is good on followers
     default:
-        return 1; // shouldn't ever come up?
+        return WPN_CLUB; // shouldn't ever come up?
     }
+}
+
+/**
+ * Give a weapon to an orc that doesn't have one.
+ *
+ * @param[in] orc    The orc to give a weapon to.
+ */
+static void _gift_weapon_to_orc(monster* orc)
+{
+    item_def weapon;
+    weapon.base_type = OBJ_WEAPONS;
+    weapon.sub_type = _orc_weapon_gift_type(orc->type);
+    weapon.quantity = 1;
+    give_specific_item(orc, weapon);
 }
 
 /**
  * Attempt to bless a follower's weapon.
  *
  * @param[in] mon      The follower whose weapon should be blessed.
- * @return                  The type of blessing; may be empty.
+ * @return             The type of blessing; may be empty.
  */
 static string _bless_weapon(monster* mon, bool improve_type = false)
 {
@@ -1720,7 +1743,7 @@ static string _bless_weapon(monster* mon, bool improve_type = false)
     {
         if (improve_type)
         {
-            give_weapon(mon, _monster_item_level(mon), false);
+            _gift_weapon_to_orc(mon);
             wpn_ptr = mon->weapon();
             if (wpn_ptr == NULL)
                 dprf("Couldn't give a weapon to follower!");
@@ -1791,39 +1814,69 @@ static void _upgrade_body_armour(item_def &arm)
 }
 
 /**
+ * Give armour (a shield or body armour) to an orc that doesn't have one.
+ *
+ * @param[in] orc       The orc to give armour to.
+ * @param[in] shield    Whether to give a shield (default is body armour)
+ */
+static void _gift_armour_to_orc(monster* orc, bool shield = false)
+{
+    const bool highlevel = orc->type == MONS_ORC_KNIGHT
+                           || orc->type == MONS_ORC_WARLORD;
+
+
+    item_def armour;
+    armour.base_type = OBJ_ARMOUR;
+    if (shield)
+        armour.sub_type = highlevel ? ARM_SHIELD : ARM_BUCKLER;
+    else
+        armour.sub_type = highlevel ? ARM_SCALE_MAIL : ARM_RING_MAIL;
+    armour.quantity = 1;
+    give_specific_item(orc, armour);
+}
+
+/**
  * Attempt to bless a follower's armour.
  *
  * @param[in] follower      The follower whose armour should be blessed.
  * @return                  The type of blessing; may be empty.
  */
-static string _bless_armour(monster* mon, bool improve_type = false)
+static string _beogh_bless_armour(monster* mon)
 {
-    // Pick either a monster's armour or its shield.
     const int armour = mon->inv[MSLOT_ARMOUR];
     const int shield = mon->inv[MSLOT_SHIELD];
 
-    if (armour == NON_ITEM && shield == NON_ITEM)
+    // always give naked orcs armour, if possible
+    if (armour == NON_ITEM)
     {
-        if (improve_type)
-        {
-            give_armour(mon, _monster_item_level(mon));
-            if (mon->inv[MSLOT_ARMOUR] != NON_ITEM)
-                return "armour";
-
-            dprf("Failed to give armour to follower.");
-        }
-
-        dprf("Can't improve the armour of a naked character!");
+        _gift_armour_to_orc(mon);
+        if (mon->inv[MSLOT_ARMOUR] != NON_ITEM)
+            return "armour";
+        dprf("Couldn't give armour to an orc!"); //?
         return "";
     }
 
-    const int slot = shield == NON_ITEM || (coinflip() && armour != NON_ITEM) ?
-                     armour : shield;
+    // Pick either a monster's armour or its shield.
+    const item_def* weapon = mon->weapon();
+    const bool can_use_shield = weapon == NULL
+                                || mon->hands_reqd(*weapon) != HANDS_TWO;
+    const int slot = coinflip() && can_use_shield ? shield : armour;
+
+    if (slot == NON_ITEM)
+    {
+        ASSERT(slot == shield);
+        _gift_armour_to_orc(mon, true);
+        if (mon->inv[MSLOT_SHIELD] != NON_ITEM)
+            return "a shield";
+        dprf("Couldn't give a shield to an orc!"); //?
+        return "";
+    }
+
     item_def& arm(mitm[slot]);
 
     const int old_subtype = arm.sub_type;
     // 50% chance of improving armour/shield type
-    if (improve_type && !is_artefact(arm) && coinflip())
+    if (!is_artefact(arm) && coinflip())
     {
         if (slot == shield)
             _upgrade_shield(arm);
@@ -1909,6 +1962,33 @@ static bool _increase_ench_duration(monster* mon,
     mon->update_ench(ench);
 
     return true;
+}
+
+/**
+ * Attempt to bless a follower's armour.
+ *
+ * @param[in] follower      The follower whose armour should be blessed.
+ * @return                  The type of blessing; may be empty.
+ */
+static string _tso_bless_armour(monster* mon)
+{
+    // Pick either a monster's armour or its shield.
+    const int armour = mon->inv[MSLOT_ARMOUR];
+    const int shield = mon->inv[MSLOT_SHIELD];
+    const int slot = shield == NON_ITEM || (coinflip() && armour != NON_ITEM) ?
+                     armour : shield;
+
+    item_def& arm(mitm[slot]);
+
+    int ac_change;
+    if (!enchant_armour(ac_change, true, arm))
+    {
+        dprf("Couldn't enchant follower's armour!");
+        return "";
+    }
+
+    item_set_appearance(arm);
+    return "improved armour";
 }
 
 static bool _tso_blessing_extend_stay(monster* mon)
@@ -2148,7 +2228,7 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     if (blessing.empty() && (force || one_chance_in(7)))
     {
         blessing = coinflip() ? _bless_weapon(follower, true)
-                              : _bless_armour(follower, true);
+                              : _beogh_bless_armour(follower);
     }
 
     // ~85% chance of trying to heal.
@@ -2217,7 +2297,7 @@ static bool _tso_bless_follower(monster* follower, bool force)
     if (one_chance_in(10) || force)
     {
         blessing = coinflip() ? _bless_weapon(follower)
-                              : _bless_armour(follower);
+                              : _tso_bless_armour(follower);
     }
     if (blessing.empty())
         blessing = _tso_bless_duration(follower);
