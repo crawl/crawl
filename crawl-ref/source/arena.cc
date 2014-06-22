@@ -789,7 +789,7 @@ namespace arena
     static void do_fight()
     {
         viewwindow();
-        mesclr(true);
+        clear_messages(true);
         {
             cursor_control coff(false);
             while (fight_is_on())
@@ -823,14 +823,14 @@ namespace arena
                 do_respawn(faction_b);
                 balance_spawners();
                 delay(Options.view_delay);
-                mesclr();
+                clear_messages();
                 dump_messages();
                 ASSERT(you.pet_target == MHITNOT);
             }
             viewwindow();
         }
 
-        mesclr();
+        clear_messages();
 
         trials_done++;
 

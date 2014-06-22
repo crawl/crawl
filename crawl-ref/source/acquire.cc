@@ -1490,7 +1490,7 @@ bool acquirement(object_class_type class_wanted, int agent,
     while (class_wanted == OBJ_RANDOM)
     {
         ASSERT(!quiet);
-        mesclr();
+        clear_messages();
 
         string line;
         for (unsigned int i = 0; i < ARRAYSZ(acq_classes); i++)

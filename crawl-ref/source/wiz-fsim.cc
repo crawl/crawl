@@ -536,7 +536,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
     const int iter_limit = Options.fsim_rounds;
     for (int i = xl_mode ? 1 : 0; i <= 27; i++)
     {
-        mesclr();
+        clear_messages();
 
         if (xl_mode)
             set_xl(i, true);
@@ -591,7 +591,7 @@ static void _fsim_double_scale(FILE * o, monster* mon, bool defense)
         fprintf(o, Options.fsim_csv ? "%d\t" : "%2d", y);
         for (int x = 1; x <= 27; x += 2)
         {
-            mesclr();
+            clear_messages();
             set_skill_level(skx, x);
             set_skill_level(sky, y);
             fight_data fdata = _get_fight_data(*mon, iter_limit, defense);

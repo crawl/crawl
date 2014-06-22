@@ -2465,9 +2465,9 @@ static keycode_type _get_next_keycode()
     mouse_control mc(MOUSE_MODE_COMMAND);
     keyin = unmangle_direction_keys(getch_with_command_macros());
 
-    // This is the main mesclr() with Option.clear_messages.
+    // This is the main clear_messages() with Option.clear_messages.
     if (!is_synthetic_key(keyin))
-        mesclr();
+        clear_messages();
 
     return keyin;
 }

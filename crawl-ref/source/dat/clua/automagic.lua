@@ -269,7 +269,7 @@ end
 function am_set_spell()
   crawl.mpr("Which spell slot to assign to automagic? (Enter to disable, Esc to cancel)", "prompt")
   local slot = getkey()
-  crawl.mesclr()
+  crawl.clear_messages()
 
   if slot == "escape" then
     crawl.mpr("Cancelled.")

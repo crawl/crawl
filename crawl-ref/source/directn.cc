@@ -783,7 +783,7 @@ void full_describe_view()
                 // View database entry.
                 describe_monsters(*m);
                 redraw_screen();
-                mesclr();
+                clear_messages();
             }
             else // ACT_EXECUTE -> view/travel
             {
@@ -1890,7 +1890,7 @@ void direction_chooser::show_help()
 {
     show_targeting_help();
     redraw_screen();
-    mesclr(true);
+    clear_messages(true);
     need_all_redraw = true;
 }
 
@@ -2096,7 +2096,7 @@ bool direction_chooser::choose_direction()
     if (hitfunc)
         need_beam_redraw = true;
 
-    mesclr();
+    clear_messages();
     msgwin_set_temporary(true);
     show_initial_prompt();
     need_text_redraw = false;
@@ -2219,7 +2219,7 @@ void full_describe_square(const coord_def &c)
     }
 
     redraw_screen();
-    mesclr();
+    clear_messages();
 }
 
 static void _extend_move_to_edge(dist &moves)

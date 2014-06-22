@@ -6,7 +6,7 @@
 
 function tutorial_messenger (data, triggerable, triggerer, marker, ev)
 
-  crawl.mesclr(true)
+  crawl.clear_messages(true)
   crawl.mpr(data.text, data.channel)
   if data.onetime == true then
     triggerable:remove(marker)
@@ -26,7 +26,7 @@ end
 
 function tutorial_intro (msg)
   if msg ~= nil then
-    crawl.mesclr(true)
+    crawl.clear_messages(true)
     crawl.mpr(msg, "tutorial")
   end
   crawl.tutorial_msg("tutorial intro")
@@ -35,7 +35,7 @@ end
 
 function tutorial_messenger_db(data, triggerable, triggerer, marker, ev)
 
-  crawl.mesclr(true)
+  crawl.clear_messages(true)
   crawl.tutorial_msg(data.text, data.exit)
   if data.onetime == true then
     triggerable:remove(marker)

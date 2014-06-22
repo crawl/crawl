@@ -1292,7 +1292,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
     if (cmd != CMD_NO_CMD)
     {
         if (delay.type != DELAY_REST)
-            mesclr();
+            clear_messages();
         process_command(cmd);
     }
 

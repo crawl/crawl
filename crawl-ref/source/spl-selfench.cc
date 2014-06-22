@@ -293,7 +293,7 @@ int cast_selective_amnesia(string *pre_msg)
 
         if (!isaalpha(keyin))
         {
-            mesclr();
+            clear_messages();
             mprf(MSGCH_PROMPT, "Forget which spell ([?*] list [ESC] exit)? ");
             keyin = get_ch();
             continue;

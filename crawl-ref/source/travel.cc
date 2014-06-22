@@ -2157,7 +2157,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
     level_id curr = level_id::current();
     while (true)
     {
-        mesclr();
+        clear_messages();
 
         if (waypoint_list)
             travel_cache.list_waypoints();
@@ -2441,7 +2441,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
     target.p.id.depth = _get_nearest_level_depth(target.p.id.branch);
     while (true)
     {
-        mesclr();
+        clear_messages();
         mprf(MSGCH_PROMPT, "What level of %s? "
              "(default %s, ? - help) ",
              branches[target.p.id.branch].longname,
@@ -3753,7 +3753,7 @@ void TravelCache::delete_waypoint()
 
     while (get_waypoint_count())
     {
-        mesclr();
+        clear_messages();
         mpr("Existing waypoints:");
         list_waypoints();
         mprf(MSGCH_PROMPT, "Delete which waypoint? (* - delete all, Esc - exit) ");
@@ -3782,7 +3782,7 @@ void TravelCache::delete_waypoint()
         return;
     }
 
-    mesclr();
+    clear_messages();
     mpr("All waypoints deleted. Have a nice day!");
 }
 
@@ -3794,7 +3794,7 @@ void TravelCache::add_waypoint(int x, int y)
         return;
     }
 
-    mesclr();
+    clear_messages();
 
     const bool waypoints_exist = get_waypoint_count();
     if (waypoints_exist)
@@ -3838,7 +3838,7 @@ void TravelCache::add_waypoint(int x, int y)
     waypoints[waynum].pos = pos;
 
     string new_dest = _get_trans_travel_dest(waypoints[waynum], false, true);
-    mesclr();
+    clear_messages();
     if (overwrite)
     {
         if (lid == old_lid) // same level
@@ -4539,7 +4539,7 @@ void do_interlevel_travel()
         _start_translevel_travel_prompt();
 
     if (you.running)
-        mesclr();
+        clear_messages();
 }
 
 #ifdef USE_TILE

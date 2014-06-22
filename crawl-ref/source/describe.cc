@@ -2257,7 +2257,7 @@ static bool _describe_spells(const item_def &item)
     const int c = getchm();
     if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
     {
-        mesclr();
+        clear_messages();
         return false;
     }
 

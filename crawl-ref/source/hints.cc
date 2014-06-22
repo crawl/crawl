@@ -106,7 +106,7 @@ void init_hints_options()
 
     // Clear possible debug messages before messing
     // with messaging options.
-    mesclr(true);
+    clear_messages(true);
 //     Options.clear_messages = true;
     Options.show_more  = true;
     Options.small_more = false;

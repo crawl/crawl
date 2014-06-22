@@ -921,7 +921,7 @@ void yell(const actor* mon)
     mpr(" Anything else - Stay silent.");
 
     int keyn = get_ch();
-    mesclr();
+    clear_messages();
 
     switch (keyn)
     {

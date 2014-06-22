@@ -577,7 +577,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 
                 case '?':
                     show_butchering_help();
-                    mesclr();
+                    clear_messages();
                     redraw_screen();
                     repeat_prompt = true;
                     break;

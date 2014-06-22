@@ -182,7 +182,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
                     && !yesno("Are you sure you want to cancel this blink?",
                               false, 'n'))
                 {
-                    mesclr();
+                    clear_messages();
                     continue;
                 }
                 canned_msg(MSG_OK);
@@ -207,12 +207,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
 
             if (grd(beam.target) == DNGN_OPEN_SEA)
             {
-                mesclr();
+                clear_messages();
                 mpr("You can't blink into the sea!");
             }
             else if (grd(beam.target) == DNGN_LAVA_SEA)
             {
-                mesclr();
+                clear_messages();
                 mpr("You can't blink into the sea of lava!");
             }
             else if (!check_moveto(beam.target, "blink"))
@@ -230,12 +230,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
                 if (wizard_blink)
                     break;
 
-                mesclr();
+                clear_messages();
                 mpr("There's something in the way!");
             }
             else
             {
-                mesclr();
+                clear_messages();
                 mpr("You can only blink to visible locations.");
             }
         }

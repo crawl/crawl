@@ -1769,7 +1769,7 @@ void StashTracker::search_stashes()
     }
     msgwin_reply(validline ? buf : "");
 
-    mesclr();
+    clear_messages();
     if (!validline || (!*buf && lastsearch.empty()))
     {
         canned_msg(MSG_OK);

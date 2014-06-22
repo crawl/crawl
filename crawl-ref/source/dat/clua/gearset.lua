@@ -67,7 +67,7 @@ function rememberkit()
     local kit = scan_kit()
     crawl.mpr("Is this (T)ravel or (B)attle kit? ", "prompt")
     local answer = getkey("tb")
-    crawl.mesclr()
+    crawl.clear_messages()
     if answer == "escape" then
         return false
     end

@@ -3903,7 +3903,7 @@ bool gozag_potion_petition()
         if (crawl_state.seen_hups)
             return false;
 
-        mesclr();
+        clear_messages();
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
             faith_price = _gozag_faith_adjusted_price(prices[i]);
@@ -4104,7 +4104,7 @@ bool gozag_call_merchant()
         if (crawl_state.seen_hups)
             return false;
 
-        mesclr();
+        clear_messages();
         for (i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
             cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();
