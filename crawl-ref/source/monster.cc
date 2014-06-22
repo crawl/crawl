@@ -4711,10 +4711,9 @@ bool monster::find_home_near_place(const coord_def &c)
         q.pop();
         if (dist(p - c) >= last_dist && nvalid)
         {
-            // already found a valid closer destination
-            if (!move_to_pos(place))
-                return false;
-            apply_location_effects(place);
+            ASSERT(move_to_pos(place));
+            // can't apply location effects here, since the monster might not
+            // be on the level yet, which interacts poorly with e.g. shafts
             return true;
         }
         else if (dist(p - c) >= MAX_PLACE_NEAR_DIST)
@@ -4749,9 +4748,9 @@ bool monster::find_home_anywhere()
     for (int tries = 0; tries < 600; ++tries)
         if (check_set_valid_home(random_in_bounds(), place, nvalid))
         {
-            if (!move_to_pos(place))
-                return false;
-            apply_location_effects(place);
+            ASSERT(move_to_pos(place));
+            // can't apply location effects here, since the monster might not
+            // be on the level yet, which interacts poorly with e.g. shafts
             return true;
         }
     return false;
