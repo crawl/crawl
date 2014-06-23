@@ -23,6 +23,7 @@
 #include "los.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-book.h"
 #include "mon-chimera.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -1803,6 +1804,34 @@ bool monster_info::airborne() const
 bool monster_info::ground_level() const
 {
     return !airborne() && !is(MB_CLINGING);
+}
+
+// Only checks for spells from preset monster spellbooks.
+// Use monster.h's has_spells for knowing a monster has spells
+bool monster_info::has_spells() const
+{
+    const vector<mon_spellbook_type> books = get_spellbooks(*this);
+
+    const size_t num_books = books.size();
+
+    // Random pan lords don't display their spells.
+    if (num_books == 0 || books[0] == MST_NO_SPELLS || this->type == MONS_PANDEMONIUM_LORD)
+        return false;
+
+    // Ghosts have a special book but may not have any spells anyways.
+    if (books[0] == MST_GHOST)
+    {
+        bool has_spell = false;
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
+            if (this->spells[i] != SPELL_NO_SPELL)
+                has_spell = true;
+        }
+        if (!has_spell)
+            return false;
+    }
+
+    return true;
 }
 
 void get_monster_info(vector<monster_info>& mons)

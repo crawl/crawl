@@ -324,6 +324,8 @@ struct monster_info : public monster_info_base
     {
         return mons_class_flag(this->type, M_FAKE_SPELLS) || this->props.exists("fake_spells");
     }
+    
+    bool has_spells() const;
 
 protected:
     string _core_name() const;
