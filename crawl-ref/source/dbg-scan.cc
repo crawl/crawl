@@ -4,8 +4,10 @@
 **/
 
 #include "AppHdr.h"
+
 #include "dbg-scan.h"
 
+#include <errno.h>
 #include <sstream>
 
 #include "artefact.h"
@@ -734,13 +736,11 @@ void check_map_validity()
 #endif
 }
 
-
 #ifdef DEBUG_DIAGNOSTICS
-
 static FILE *og_outf;
-const static char *og_out_file = "objects.txt";
+const static char *og_out_prefix = "objgen_";
+const static char *og_out_ext = ".txt";
 #define OG_STAT_PRECISION 3
-static char og_stat_fmt[10] = "";
 
 enum og_class_type {
     OG_FOOD,
@@ -763,21 +763,35 @@ enum og_class_type {
     OG_UNUSED = 100,
 };
 
-enum og_summary_level {
-    SUMMARY_ORD,
-    SUMMARY_ARTE,
-    SUMMARY_ALL,
+enum og_antiquity_level {
+    ANTIQ_ORDINARY,
+    ANTIQ_ARTEFACT,
+    ANTIQ_ALL,
 };
 
-static vector<level_id> og_levels;
-static map<branch_type, int> og_branches;
+class og_item
+{
+public:
+    og_item(og_class_type ct, int st) : base_type(ct), sub_type(st)
+    {
+    }
+    og_item(item_def &item);
+
+    og_class_type base_type;
+    int sub_type;
+};
+
+static level_id og_all_lev(NUM_BRANCHES, -1);
+static map<branch_type, vector<level_id> > og_branches;
+static int og_num_branches = 0;
+static int og_num_levels = 0;
 
 // og_items[level_id][item.base_type][item.sub_type][field]
 static map<level_id, FixedVector<map<int, map<string, double> >, NUM_OG_CLASSES> > og_items;
 
-// og_weapon_brands[level_id][item.sub_type][type_ind][brand];
-// type_ind is 0 for ordinary, 1 for artefact, or 2 for all
-static map<level_id, vector< vector< vector< int> > > > og_weapon_brands;
+// og_weapon_brands[level_id][item.base_type][item.sub_type][arte_sum][brand];
+// arte_sum is 0 for ordinary, 1 for artefact, or 2 for all
+static map<level_id, vector <vector< vector< vector< int> > > > > og_equip_brands;
 static map<level_id, vector< vector< vector< int> > > > og_armour_brands;
 static map<level_id, vector< vector< int> > > og_missile_brands;
 
@@ -955,70 +969,6 @@ static int _og_orig_food_subtype(int sub_type)
     return 0;
 }
 
-static int _og_orig_sub_type(og_class_type item_type, int sub_type)
-{
-    int type;
-    if (item_type == OG_DECKS)
-        type = sub_type + MISC_FIRST_DECK;
-    else if (item_type == OG_MISCELLANY && sub_type >= MISC_FIRST_DECK)
-        type = sub_type + MISC_LAST_DECK - MISC_FIRST_DECK + 1;
-    else if (item_type == OG_FOOD)
-        type = _og_orig_food_subtype(sub_type);
-    else if (item_type == OG_ARTEBOOKS)
-        type = sub_type + BOOK_RANDART_LEVEL;
-    else if (item_type == OG_MANUALS)
-        type = BOOK_MANUAL;
-    else
-        type = sub_type;
-    return type;
-}
-
-static int _og_get_max_subtype(og_class_type item_type)
-{
-    int num = 0;
-    switch (item_type)
-    {
-    case OG_FOOD:
-        num = og_valid_foods.size();
-        break;
-    case OG_MISCELLANY:
-        // Decks not counted here.
-        num = NUM_MISCELLANY - (MISC_LAST_DECK - MISC_FIRST_DECK + 1);
-        break;
-    case OG_DECKS:
-        num = MISC_LAST_DECK - MISC_FIRST_DECK + 1;
-        break;
-    case OG_BOOKS:
-        num = MAX_RARE_BOOK;
-        break;
-    case OG_ARTEBOOKS:
-        num = 2;
-        break;
-    case OG_MANUALS:
-        num = 1;
-        break;
-    default:
-        num = get_max_subtype(_og_orig_base_type(item_type));
-        break;
-    }
-    return num;
-}
-
-static item_def _og_dummy_item(og_class_type base_type, int sub_type)
-{
-    item_def item;
-    item.base_type = _og_orig_base_type(base_type);
-    item.sub_type = _og_orig_sub_type(base_type, sub_type);
-    // Deck name is reported as buggy if this is not done.
-    if (base_type == OG_DECKS)
-    {
-        item.plus = 1;
-        item.special  = DECK_RARITY_COMMON;
-        init_deck(item);
-    }
-    return item;
-}
-
 static string _og_class_name(og_class_type item_type)
 {
     string name;
@@ -1039,13 +989,81 @@ static string _og_class_name(og_class_type item_type)
     return name;
 }
 
-class og_item
+static int _og_orig_sub_type(og_item &item)
 {
-public:
-    og_item(item_def &item);
-    og_class_type base_type;
-    int sub_type;
-};
+    int type;
+    switch (item.base_type)
+    {
+    case OG_DECKS:
+        type = item.sub_type + MISC_FIRST_DECK;
+        break;
+    case OG_MISCELLANY:
+        if (item.sub_type >= MISC_FIRST_DECK)
+            type = item.sub_type + MISC_LAST_DECK - MISC_FIRST_DECK + 1;
+        else
+            type = item.sub_type;
+        break;
+    case OG_FOOD:
+        type = _og_orig_food_subtype(item.sub_type);
+        break;
+    case OG_ARTEBOOKS:
+        type = item.sub_type + BOOK_RANDART_LEVEL;
+        break;
+    case OG_MANUALS:
+        type = BOOK_MANUAL;
+        break;
+    default:
+        type = item.sub_type;
+        break;
+    }
+    return type;
+}
+
+static int _og_get_max_subtype(og_class_type item_type)
+{
+    int num = 0;
+    switch (item_type)
+    {
+    case OG_FOOD:
+        num = og_valid_foods.size();
+        break;
+    case OG_MISCELLANY:
+        // Decks not counted here.
+        num = NUM_MISCELLANY - (MISC_LAST_DECK - MISC_FIRST_DECK + 1);
+        break;
+    case OG_DECKS:
+        num = MISC_LAST_DECK - MISC_FIRST_DECK + 1;
+        break;
+    case OG_BOOKS:
+        num = MAX_RARE_BOOK + 1;
+        break;
+    case OG_ARTEBOOKS:
+        num = 2;
+        break;
+    case OG_MANUALS:
+        num = 1;
+        break;
+    default:
+        num = get_max_subtype(_og_orig_base_type(item_type));
+        break;
+    }
+    return num;
+}
+
+static item_def _og_dummy_item(og_item &item)
+{
+    item_def dummy_item;
+    dummy_item.base_type = _og_orig_base_type(item.base_type);
+    dummy_item.sub_type = _og_orig_sub_type(item);
+    // Deck name is reported as buggy if this is not done.
+    if (item.base_type == OG_DECKS)
+    {
+        dummy_item.plus = 1;
+        dummy_item.special  = DECK_RARITY_COMMON;
+        init_deck(dummy_item);
+    }
+    return dummy_item;
+}
 
 og_item::og_item(item_def &item)
 {
@@ -1113,359 +1131,353 @@ static void _og_init_fields()
                   "TotalGourmNutr");
 }
 
-
 static void _og_init_stats()
 {
-    vector<level_id>::const_iterator li;
-    for (li = og_levels.begin(); li != og_levels.end(); li++)
+    map<branch_type, vector<level_id> >::const_iterator bi;
+    for (bi = og_branches.begin(); bi != og_branches.end(); bi++)
     {
-        for (int i = 0; i < NUM_OG_CLASSES; i++)
+        for (unsigned int l = 0; l <= bi->second.size(); l++)
         {
-            og_class_type item_type = static_cast<og_class_type>(i);
-            for (int  j = 0; j <= _og_get_max_subtype(item_type); j++)
+            level_id lev;
+            if (l == bi->second.size())
             {
-                for (unsigned int k = 0; k < og_item_fields[i].size(); k++)
-                    og_items[*li][i][j][og_item_fields[i][k]] = 0;
+                lev.branch = bi->first;
+                lev.depth = -1;
             }
-        }
-        og_weapon_brands[*li] = vector< vector< vector<int> > >();
-        for (int i = 0; i <= NUM_WEAPONS; i++)
-        {
-            og_weapon_brands[*li].push_back(vector< vector<int> >());
-            for (int j = 0; j < 3; j++)
+            else
+                lev = (bi->second)[l];
+            for (int i = 0; i < NUM_OG_CLASSES; i++)
             {
-                og_weapon_brands[*li][i].push_back(vector<int>());
-                for (int k = 0; k < NUM_SPECIAL_WEAPONS; k++)
-                    og_weapon_brands[*li][i][j].push_back(0);
+                og_class_type item_type = static_cast<og_class_type>(i);
+                for (int  j = 0; j <= _og_get_max_subtype(item_type); j++)
+                {
+                    for (unsigned int k = 0; k < og_item_fields[i].size(); k++)
+                        og_items[lev][i][j][og_item_fields[i][k]] = 0;
+                }
             }
-        }
-        og_armour_brands[*li] = vector< vector< vector<int> > >();
-        for (int i = 0; i <= NUM_ARMOURS; i++)
-        {
-            og_armour_brands[*li].push_back(vector< vector<int> >());
-            for (int j = 0; j < 3; j++)
+            og_equip_brands[lev] = vector< vector< vector< vector<int> > > >();
+            og_equip_brands[lev].push_back(vector< vector< vector<int> > >());
+            for (int i = 0; i <= NUM_WEAPONS; i++)
             {
-                og_armour_brands[*li][i].push_back(vector<int>());
-                for (int k = 0; k < NUM_SPECIAL_ARMOURS; k++)
-                    og_armour_brands[*li][i][j].push_back(0);
+                og_equip_brands[lev][0].push_back(vector< vector<int> >());
+                for (int j = 0; j < 3; j++)
+                {
+                    og_equip_brands[lev][0][i].push_back(vector<int>());
+                    for (int k = 0; k < NUM_SPECIAL_WEAPONS; k++)
+                        og_equip_brands[lev][0][i][j].push_back(0);
+                }
             }
-        }
-        og_missile_brands[*li] = vector< vector<int> >();
-        for (int i = 0; i <= NUM_MISSILES; i++)
-        {
-            og_missile_brands[*li].push_back(vector<int>());
-            for (int j = 0; j < NUM_SPECIAL_ARMOURS; j++)
-                og_missile_brands[*li][i].push_back(0);
-        }
 
-        map<monster_type, int>::const_iterator mi;
-        for (mi = og_valid_monsters.begin(); mi != og_valid_monsters.end();
-             mi++)
-        {
-            for (unsigned int i = 0; i < og_monster_fields.size(); i++)
-                og_monsters[*li][mi->second][og_monster_fields[i]] = 0;
-        }
+            og_equip_brands[lev].push_back(vector< vector< vector<int> > >());
+            for (int i = 0; i <= NUM_ARMOURS; i++)
+            {
+                og_equip_brands[lev][1].push_back(vector< vector<int> >());
+                for (int j = 0; j < 3; j++)
+                {
+                    og_equip_brands[lev][1][i].push_back(vector<int>());
+                    for (int k = 0; k < NUM_SPECIAL_ARMOURS; k++)
+                        og_equip_brands[lev][1][i][j].push_back(0);
+                }
+            }
 
+            og_missile_brands[lev] = vector< vector<int> >();
+            for (int i = 0; i <= NUM_MISSILES; i++)
+            {
+                og_missile_brands[lev].push_back(vector<int>());
+                for (int j = 0; j < NUM_SPECIAL_ARMOURS; j++)
+                    og_missile_brands[lev][i].push_back(0);
+            }
+
+            map<monster_type, int>::const_iterator mi;
+            for (mi = og_valid_monsters.begin(); mi != og_valid_monsters.end();
+                 mi++)
+            {
+                for (unsigned int i = 0; i < og_monster_fields.size(); i++)
+                    og_monsters[lev][mi->second][og_monster_fields[i]] = 0;
+            }
+
+        }
     }
 }
 
-void objgen_report_item(item_def &item)
+static void _og_record_item_stat(level_id &lev, og_item &item, string field,
+                          double value)
+{
+    int class_sum = _og_get_max_subtype(item.base_type);
+    level_id br_lev(lev.branch, -1);
+
+    og_items[lev][item.base_type][item.sub_type][field] += value;
+    og_items[lev][item.base_type][class_sum][field] += value;
+    og_items[br_lev][item.base_type][item.sub_type][field] += value;
+    og_items[br_lev][item.base_type][class_sum][field] += value;
+    og_items[og_all_lev][item.base_type][item.sub_type][field] += value;
+    og_items[og_all_lev][item.base_type][class_sum][field] += value;
+}
+
+static void _og_record_brand(level_id &lev, og_item &item, int quantity,
+                             bool is_arte, int brand)
+{
+    ASSERT(item.base_type == OG_WEAPONS || item.base_type == OG_ARMOUR
+           || item.base_type == OG_MISSILES);
+    int cst = _og_get_max_subtype(item.base_type);
+    int antiq = is_arte ? ANTIQ_ARTEFACT : ANTIQ_ORDINARY;
+    bool is_equip = item.base_type == OG_WEAPONS
+        || item.base_type == OG_ARMOUR;
+    int bt = item.base_type == OG_WEAPONS ? 0 : 1;
+    int st = item.sub_type;
+    level_id br_lev(lev.branch, -1);
+
+    if (is_equip)
+    {
+        og_equip_brands[lev][bt][st][antiq][brand] += quantity;
+        og_equip_brands[lev][bt][st][ANTIQ_ALL][brand] += quantity;
+        og_equip_brands[lev][bt][cst][antiq][brand] += quantity;
+        og_equip_brands[lev][bt][cst][ANTIQ_ALL][brand] += quantity;
+
+        og_equip_brands[br_lev][bt][st][antiq][brand] += quantity;
+        og_equip_brands[br_lev][bt][st][ANTIQ_ALL][brand] += quantity;
+        og_equip_brands[br_lev][bt][cst][antiq][brand] += quantity;
+        og_equip_brands[br_lev][bt][cst][ANTIQ_ALL][brand] += quantity;
+
+        og_equip_brands[og_all_lev][bt][st][antiq][brand] += quantity;
+        og_equip_brands[og_all_lev][bt][st][ANTIQ_ALL][brand] += quantity;
+        og_equip_brands[og_all_lev][bt][cst][antiq][brand] += quantity;
+        og_equip_brands[og_all_lev][bt][cst][ANTIQ_ALL][brand] += quantity;
+    }
+    else
+    {
+        og_missile_brands[lev][st][brand] += quantity;
+        og_missile_brands[lev][cst][brand] += quantity;
+        og_missile_brands[br_lev][st][brand] += quantity;
+        og_missile_brands[br_lev][cst][brand] += quantity;
+        og_missile_brands[og_all_lev][st][brand] += quantity;
+        og_missile_brands[og_all_lev][cst][brand] += quantity;
+    }
+}
+
+void objgen_record_item(item_def &item)
 {
     level_id cur_lev = level_id::current();
     og_item ogi(item);
-
-    if (ogi.base_type == OG_UNUSED)
-        return;
-
     bool is_arte = is_artefact(item);
-    bool is_weapon = ogi.base_type == OG_WEAPONS;
-    bool is_armour = ogi.base_type == OG_ARMOUR;
-    bool is_missile = ogi.base_type == OG_MISSILES;
     int brand = -1;
-    int class_sum_ind = _og_get_max_subtype(ogi.base_type);
-    og_summary_level sum_ind = is_arte ? SUMMARY_ARTE : SUMMARY_ORD;
     string num_f = is_arte ? "ArteNum" : "OrdNum";
     string cursed_f = is_arte ? "ArteNumCursed" : "OrdNumCursed";
     string ench_f = is_arte ? "ArteEnch" : "OrdEnch";
-    map<string, double> &item_stats =
-        og_items[cur_lev][ogi.base_type][ogi.sub_type];
-    map<string, double> &sum_stats =
-        og_items[cur_lev][ogi.base_type][class_sum_ind];
-
-    if (is_weapon)
-        brand = get_weapon_brand(item);
-    else if (is_armour)
-        brand = get_armour_ego_type(item);
-    else if (is_missile)
-        brand = get_ammo_brand(item);
 
     // The Some averages are calculated after all items are tallied.
     switch (ogi.base_type)
     {
     case OG_MISSILES:
-        og_missile_brands[cur_lev][ogi.sub_type][brand] += item.quantity;
-        og_missile_brands[cur_lev][class_sum_ind][brand] += item.quantity;
-        item_stats["NumBranded"] += brand > 0 ? item.quantity : 0;
-        sum_stats["NumBranded"] += brand > 0 ? item.quantity : 0;
+        brand = get_ammo_brand(item);
+        _og_record_brand(cur_lev, ogi, item.quantity, is_arte, brand);
+        if (brand > 0)
+            _og_record_item_stat(cur_lev, ogi, "NumBranded", item.quantity);
         //deliberate fallthrough
     case OG_SCROLLS:
     case OG_POTIONS:
     case OG_GOLD:
-        item_stats["Num"] += item.quantity;
-        sum_stats["Num"] += item.quantity;
-        item_stats["NumPiles"] += 1;
-        sum_stats["NumPiles"] += 1;
+        _og_record_item_stat(cur_lev, ogi, "Num", item.quantity);
+        _og_record_item_stat(cur_lev, ogi, "NumPiles", 1);
         break;
     case OG_FOOD:
-        item_stats["Num"] += item.quantity;
-        sum_stats["Num"] += item.quantity;
-        item_stats["NumPiles"] += 1;
-        sum_stats["NumPiles"] += 1;
-        item_stats["TotalNormNutr"] += food_value(item);
-        sum_stats["TotalNormNutr"] += food_value(item);
+        _og_record_item_stat(cur_lev, ogi, "Num", item.quantity);
+        _og_record_item_stat(cur_lev, ogi, "NumPiles", 1);
+        _og_record_item_stat(cur_lev, ogi, "TotalNormNutr", food_value(item));
+        // Set these dietary mutations so we can get accurate nutrition.
         you.mutation[MUT_CARNIVOROUS] = 3;
-        item_stats["TotalCarnNutr"] += food_value(item)
-            * food_is_meaty(item.sub_type);
-        sum_stats["TotalCarnNutr"] += food_value(item)
-            * food_is_meaty(item.sub_type);
+        _og_record_item_stat(cur_lev, ogi, "TotalCarnNutr",
+                             food_value(item) * food_is_meaty(item.sub_type));
         you.mutation[MUT_CARNIVOROUS] = 0;
         you.mutation[MUT_HERBIVOROUS] = 3;
-        item_stats["TotalHerbNutr"] += food_value(item)
-            * food_is_veggie(item.sub_type);
-        sum_stats["TotalHerbNutr"] += food_value(item)
-            * food_is_veggie(item.sub_type);
+        _og_record_item_stat(cur_lev, ogi, "TotalHerbNutr",
+                             food_value(item) * food_is_veggie(item.sub_type));
         you.mutation[MUT_HERBIVOROUS] = 0;
         break;
     case OG_WANDS:
-        item_stats["Num"] += 1;
-        sum_stats["Num"] += 1;
-        item_stats["WandCharges"] += item.plus;
-        sum_stats["WandCharges"] += item.plus;
+        _og_record_item_stat(cur_lev, ogi, "Num", 1);
+        _og_record_item_stat(cur_lev, ogi, "WandCharges", item.plus);
         break;
     case OG_WEAPONS:
     case OG_ARMOUR:
-        item_stats[num_f] += 1;
-        sum_stats[num_f] += 1;
-        item_stats[cursed_f] += item.cursed();
-        sum_stats[cursed_f] += item.cursed();
-        item_stats[ench_f] += item.plus;
-        sum_stats[ench_f] += item.plus;
-        item_stats["OrdNumBranded"] += !is_arte && brand > 0;
-        sum_stats["OrdNumBranded"] += !is_arte && brand > 0;
-        item_stats["AllNum"] += 1;
-        sum_stats["AllNum"] += 1;
-        item_stats["AllNumCursed"] += item.cursed();
-        sum_stats["AllNumCursed"] += item.cursed();
-        item_stats["AllEnch"] += item.plus;
-        sum_stats["AllEnch"] += item.plus;
-        if (is_weapon)
-        {
-            og_weapon_brands[cur_lev][ogi.sub_type][sum_ind][brand] += 1;
-            og_weapon_brands[cur_lev][class_sum_ind][sum_ind][brand] += 1;
-            og_weapon_brands[cur_lev][ogi.sub_type][SUMMARY_ALL][brand] += 1;
-            og_weapon_brands[cur_lev][class_sum_ind][SUMMARY_ALL][brand] += 1;
-        }
+        if (ogi.base_type == OG_WEAPONS)
+            brand = get_weapon_brand(item);
         else
+            brand = get_armour_ego_type(item);
+        _og_record_item_stat(cur_lev, ogi, num_f, 1);
+        _og_record_item_stat(cur_lev, ogi, "AllNum", 1);
+
+        if (item.cursed())
         {
-            og_armour_brands[cur_lev][ogi.sub_type][sum_ind][brand] += 1;
-            og_armour_brands[cur_lev][class_sum_ind][sum_ind][brand] += 1;
-            og_armour_brands[cur_lev][ogi.sub_type][SUMMARY_ALL][brand] += 1;
-            og_armour_brands[cur_lev][class_sum_ind][SUMMARY_ALL][brand] += 1;
+            _og_record_item_stat(cur_lev, ogi, cursed_f, item.cursed());
+            _og_record_item_stat(cur_lev, ogi, "AllNumCursed", item.cursed());
         }
+        _og_record_item_stat(cur_lev, ogi, ench_f, item.plus);
+        _og_record_item_stat(cur_lev, ogi, "AllEnch", item.plus);
+        if (!is_arte && brand > 0)
+            _og_record_item_stat(cur_lev, ogi, "OrdNumBranded", 1);
+        _og_record_brand(cur_lev, ogi, 1, is_arte, brand);
         break;
     case OG_STAVES:
-        item_stats["Num"] += 1;
-        sum_stats["Num"] += 1;
-        item_stats["NumCursed"] += item.cursed();
-        sum_stats["NumCursed"] += item.cursed();
+        _og_record_item_stat(cur_lev, ogi, "Num", 1);
+        _og_record_item_stat(cur_lev, ogi, "NumCursed", item.cursed());
         break;
     case OG_JEWELLERY:
-        item_stats[num_f] += 1;
-        sum_stats[num_f] += 1;
-        item_stats[cursed_f] += item.cursed();
-        sum_stats[cursed_f] += item.cursed();
-        item_stats[ench_f] += item.plus;
-        sum_stats[ench_f] += item.plus;
-        item_stats["AllNum"] += 1;
-        sum_stats["AllNum"] += 1;
-        item_stats["AllNumCursed"] += item.cursed();
-        sum_stats["AllNumCursed"] += item.cursed();
-        item_stats["AllEnch"] += item.plus;
-        sum_stats["AllEnch"] += item.plus;
+        _og_record_item_stat(cur_lev, ogi, num_f, 1);
+        _og_record_item_stat(cur_lev, ogi, "AllNum", 1);
+        if (item.cursed())
+        {
+            _og_record_item_stat(cur_lev, ogi, cursed_f, 1);
+            _og_record_item_stat(cur_lev, ogi, "AllNumCursed", 1);
+        }
+        _og_record_item_stat(cur_lev, ogi, ench_f, item.plus);
+        _og_record_item_stat(cur_lev, ogi, "AllEnch", item.plus);
         break;
     case OG_RODS:
-        item_stats["Num"] += 1;
-        sum_stats["Num"] += 1;
-        item_stats["RodRecharge"] += item.plus2 / ROD_CHARGE_MULT;
-        sum_stats["RodRecharge"] += item.plus2 / ROD_CHARGE_MULT;
-        item_stats["RodMana"] += item.special;
-        sum_stats["RodMana"] += item.special;
-        item_stats["NumCursed"] += item.cursed();
-        sum_stats["NumCursed"] += item.cursed();
+        _og_record_item_stat(cur_lev, ogi, "Num", 1);
+        _og_record_item_stat(cur_lev, ogi, "RodRecharge",
+                             item.plus2 / ROD_CHARGE_MULT);
+        _og_record_item_stat(cur_lev, ogi, "RodMana", item.special);
+        _og_record_item_stat(cur_lev, ogi, "NumCursed", item.cursed());
         break;
     case OG_MISCELLANY:
-        item_stats["Num"] += 1;
-        sum_stats["Num"] += 1;
-        item_stats["MiscPlus1"] += item.plus;
-        sum_stats["MiscPlus1"] += item.plus;
-        item_stats["MiscPlus2"] += item.plus2;
-        sum_stats["MiscPlus2"] += item.plus2;
+        _og_record_item_stat(cur_lev, ogi, "Num", 1);
+        _og_record_item_stat(cur_lev, ogi, "MiscPlus1", item.plus);
+        _og_record_item_stat(cur_lev, ogi, "MiscPlus2", item.plus2);
         break;
     case OG_DECKS:
         switch (deck_rarity(item))
         {
         case DECK_RARITY_COMMON:
-            item_stats["PlainNum"] += 1;
-            sum_stats["PlainNum"] += 1;
+            _og_record_item_stat(cur_lev, ogi, "PlainNum", 1);
             break;
         case DECK_RARITY_RARE:
-            item_stats["OrnateNum"] += 1;
-            sum_stats["OrnateNum"] += 1;
+            _og_record_item_stat(cur_lev, ogi, "OrnateNum", 1);
             break;
         case DECK_RARITY_LEGENDARY:
-            item_stats["LegendaryNum"] += 1;
-            sum_stats["LegendaryNum"] += 1;
+            _og_record_item_stat(cur_lev, ogi, "LegendaryNum", 1);
             break;
         default:
             break;
         }
-        item_stats["AllNum"] += 1;
-        sum_stats["AllNum"] += 1;
-        item_stats["AllDeckCards"] += item.plus;
-        sum_stats["AllDeckCards"] += item.plus;
+        _og_record_item_stat(cur_lev, ogi, "AllNum", 1);
+        _og_record_item_stat(cur_lev, ogi, "AllDeckCards", item.plus);
         break;
     case OG_BOOKS:
     case OG_MANUALS:
     case OG_ARTEBOOKS:
-        item_stats["Num"] += 1;
-        sum_stats["Num"] += 1;
+        _og_record_item_stat(cur_lev, ogi, "Num", 1);
         break;
     default:
-        die("Buggy og_class_type");
         break;
     }
 }
 
-void objgen_report_monster(monster *mons)
+static void _og_record_monster_stat(level_id &lev, int mons_ind, string field,
+                                    double value)
 {
-    level_id cur_lev = level_id::current();
+    level_id br_lev(lev.branch, -1);
+    int sum_ind = og_valid_monsters[NUM_MONSTERS];
+
+    og_monsters[lev][mons_ind][field] += value;
+    og_monsters[lev][sum_ind][field] += value;
+    og_monsters[br_lev][mons_ind][field] += value;
+    og_monsters[br_lev][sum_ind][field] += value;
+    og_monsters[og_all_lev][mons_ind][field] += value;
+    og_monsters[og_all_lev][sum_ind][field] += value;
+}
+
+void objgen_record_monster(monster *mons)
+{
     if (!og_valid_monsters.count(mons->type))
         return;
 
-    int mons_id = og_valid_monsters[mons->type];
-    int sum_ind = og_valid_monsters[NUM_MONSTERS];
-    map<string, double> &mons_stats = og_monsters[cur_lev][mons_id];
-    map<string, double> &sum_stats = og_monsters[cur_lev][sum_ind];
+    int mons_ind = og_valid_monsters[mons->type];
     corpse_effect_type chunk_effect = mons_corpse_effect(mons->type);
-
-    mons_stats["Num"] += 1;
-    sum_stats["Num"] += 1;
-    mons_stats["MonsXP"] += exper_value(mons);
-    sum_stats["MonsXP"] += exper_value(mons);
-    mons_stats["TotalXP"] += exper_value(mons);
-    sum_stats["TotalXP"] += exper_value(mons);
-    mons_stats["MonsHP"] += mons->max_hit_points;
-    sum_stats["MonsHP"] += mons->max_hit_points;
-    mons_stats["MonsHD"] += mons->hit_dice;
-    sum_stats["MonsHD"] += mons->hit_dice;
-    // copied from turn_corpse_into_chunks()
-    double avg_chunks = (1 + stepdown_value(get_max_corpse_chunks(mons->type),
-                                            4, 4, 12, 12)) / 2.0;
-    mons_stats["MonsNumChunks"] += avg_chunks;
-    sum_stats["MonsNumChunks"] += avg_chunks;
     bool is_contam = chunk_effect == CE_POISON_CONTAM
         || chunk_effect == CE_CONTAMINATED;
     bool is_clean = chunk_effect == CE_CLEAN || chunk_effect == CE_POISONOUS;
+    // copied from turn_corpse_into_chunks()
+    double avg_chunks = (1 + stepdown_value(get_max_corpse_chunks(mons->type),
+                                            4, 4, 12, 12)) / 2.0;
+    level_id lev = level_id::current();
+
+    _og_record_monster_stat(lev, mons_ind, "Num", 1);
+    _og_record_monster_stat(lev, mons_ind, "MonsXP", exper_value(mons));
+    _og_record_monster_stat(lev, mons_ind, "TotalXP", exper_value(mons));
+    _og_record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
+    _og_record_monster_stat(lev, mons_ind, "MonsHD", mons->hit_dice);
+    _og_record_monster_stat(lev, mons_ind, "MonsNumChunks", avg_chunks);
     if (is_clean)
     {
-        mons_stats["TotalNormNutr"] += avg_chunks * CHUNK_BASE_NUTRITION;
-        sum_stats["TotalNormNutr"] += avg_chunks * CHUNK_BASE_NUTRITION;
+        _og_record_monster_stat(lev, mons_ind, "TotalNormNutr",
+                                avg_chunks * CHUNK_BASE_NUTRITION);
     }
-    if (is_contam)
-    {
-        mons_stats["TotalNormNutr"] += avg_chunks * CHUNK_BASE_NUTRITION / 2.0;
-        sum_stats["TotalNormNutr"] += avg_chunks * CHUNK_BASE_NUTRITION / 2.0;
-    }
+    else if (is_contam)
+        _og_record_monster_stat(lev, mons_ind, "TotalNormNutr",
+                                avg_chunks * CHUNK_BASE_NUTRITION / 2.0);
     if (is_clean || is_contam)
     {
-        mons_stats["TotalGourmNutr"] += avg_chunks * CHUNK_BASE_NUTRITION;
-        sum_stats["TotalGourmNutr"] += avg_chunks * CHUNK_BASE_NUTRITION;
+        _og_record_monster_stat(lev, mons_ind, "TotalGourmNutr",
+                                avg_chunks * CHUNK_BASE_NUTRITION);
     }
 }
 
-static void _og_write_level_headers(int num_fields)
+static void _og_write_level_headers(branch_type br, int num_fields)
 {
-    int level_count = 0;
-    fprintf(og_outf, "Place");
+    unsigned int level_count = 0;
+    vector<level_id> &levels = og_branches[br];
     vector<level_id>::const_iterator li;
-    for (li = og_levels.begin(); li != og_levels.end(); li++)
+
+    fprintf(og_outf, "Place");
+    for (li = levels.begin(); li != levels.end(); li++)
     {
-        fprintf(og_outf, "\t%s", li->describe().c_str());
+        if (br == NUM_BRANCHES)
+            fprintf(og_outf, "\tAllLevels");
+        else
+            fprintf(og_outf, "\t%s", li->describe().c_str());
+
         for (int i = 0; i < num_fields - 1; i++)
             fprintf(og_outf, "\t");
-        if (++level_count == og_branches[li->branch])
+        if (++level_count == levels.size() && level_count > 1)
         {
-            if (level_count == 1)
-            {
-                level_count = 0;
-                continue;
-            }
-
             fprintf(og_outf, "\t%s", branches[li->branch].abbrevname);
             for (int i = 0; i < num_fields - 1; i++)
                 fprintf(og_outf, "\t");
-            level_count = 0;
         }
-    }
-    if (og_branches.size() > 1)
-    {
-        fprintf(og_outf, "\tAllLevels");
-        for (int i = 0; i < num_fields - 1; i++)
-            fprintf(og_outf, "\t");
     }
     fprintf(og_outf, "\n");
 }
 
-static void _og_write_stat_headers(vector<string> fields)
+static void _og_write_stat_headers(branch_type br, vector<string> fields)
 {
-    int level_count = 0;
-    fprintf(og_outf, "Property");
+    unsigned int level_count = 0;
+    vector<level_id> &levels = og_branches[br];
     vector<level_id>::const_iterator li;
-    for (li = og_levels.begin(); li != og_levels.end(); li++)
+
+    fprintf(og_outf, "Property");
+    for (li = levels.begin(); li != levels.end(); li++)
     {
         for (unsigned int i = 0; i < fields.size(); i++)
             fprintf(og_outf, "\t%s", fields[i].c_str());
 
-        // Branch-level headers
-        if (++level_count == og_branches[li->branch])
+        if (++level_count == levels.size() && level_count > 1)
         {
-            if (level_count == 1)
-            {
-                level_count = 0;
-                continue;
-            }
-
             for (unsigned int i = 0; i < fields.size(); i++)
                 fprintf(og_outf, "\t%s", fields[i].c_str());
-            level_count = 0;
         }
-    }
-    if (og_branches.size() > 1)
-    {
-        for (unsigned int i = 0; i < fields.size(); i++)
-            fprintf(og_outf, "\t%s", fields[i].c_str());
     }
     fprintf(og_outf, "\n");
 }
 
-static void _og_write_stat(map<string, double> &item_stats, string field)
+static void _og_write_stat(map<string, double> &stats, string field)
 {
     ostringstream output;
     double value = 0;
 
     output.precision(OG_STAT_PRECISION);
     if (field == "PileQuant")
-        value = item_stats["Num"] / item_stats["NumPiles"];
+        value = stats["Num"] / stats["NumPiles"];
     else if (field == "WandCharges"
              || field == "RodMana"
              || field == "RodRecharge"
@@ -1476,40 +1488,40 @@ static void _og_write_stat(map<string, double> &item_stats, string field)
              || field == "MonsXP"
              || field == "MonsNumChunks")
     {
-        value = item_stats[field] / item_stats["Num"];
+        value = stats[field] / stats["Num"];
     }
     else if (field == "AllEnch" || field == "AllDeckCards")
-        value = item_stats[field] / item_stats["AllNum"];
+        value = stats[field] / stats["AllNum"];
     else if (field == "ArteEnch")
-        value = item_stats[field] / item_stats["ArteNum"];
+        value = stats[field] / stats["ArteNum"];
     else if (field == "OrdEnch")
-        value = item_stats[field] / item_stats["OrdNum"];
+        value = stats[field] / stats["OrdNum"];
     else
-        value = item_stats[field] / SysEnv.map_gen_iters;
+        value = stats[field] / SysEnv.map_gen_iters;
     output << "\t" << value;
     fprintf(og_outf, "%s", output.str().c_str());
 }
 
-static string _og_brand_name(og_class_type base_type, int sub_type, int brand)
+static string _og_brand_name(og_item &item, int brand)
  {
      string brand_name = "";
-     item_def item = _og_dummy_item(base_type, sub_type);
+     item_def dummy_item = _og_dummy_item(item);
 
      if (!brand)
             brand_name = "none";
      else
      {
-         item.special = brand;
-         switch (base_type)
+         dummy_item.special = brand;
+         switch (item.base_type)
             {
             case OG_WEAPONS:
-                brand_name = weapon_brand_name(item, true);
+                brand_name = weapon_brand_name(dummy_item, true);
                 break;
             case OG_ARMOUR:
-                brand_name = armour_ego_name(item, true);
+                brand_name = armour_ego_name(dummy_item, true);
                 break;
             case OG_MISSILES:
-                brand_name = missile_brand_name(item, MBN_TERSE);
+                brand_name = missile_brand_name(dummy_item, MBN_TERSE);
                 break;
             default:
                 break;
@@ -1518,14 +1530,11 @@ static string _og_brand_name(og_class_type base_type, int sub_type, int brand)
      return brand_name;
  }
 
-static void _og_write_brand_stats(vector<int> &brand_stats,
-                                  og_class_type item_type, int sub_type,
-                                  vector<int> *branch_stats = NULL,
-                                  vector<int> *total_stats = NULL)
+static void _og_write_brand_stats(vector<int> &brand_stats, og_item &item)
 {
-    ASSERT(item_type == OG_WEAPONS || item_type == OG_ARMOUR
-           || item_type == OG_MISSILES);
-    item_def dummy_item = _og_dummy_item(item_type, sub_type);
+    ASSERT(item.base_type == OG_WEAPONS || item.base_type == OG_ARMOUR
+           || item.base_type == OG_MISSILES);
+    item_def dummy_item = _og_dummy_item(item);
     unsigned int num_brands = brand_stats.size();
     bool first_brand = true;
     ostringstream brand_summary;
@@ -1543,219 +1552,127 @@ static void _og_write_brand_stats(vector<int> &brand_stats,
         else
             brand_summary << ",";
 
-        brand_name = _og_brand_name(item_type, sub_type, i);
+        brand_name = _og_brand_name(item, i);
         brand_summary << brand_name.c_str() << "(" << value << ")";
-        if (branch_stats)
-            (*branch_stats)[i] += brand_stats[i];
-        if (total_stats)
-            (*total_stats)[i] += brand_stats[i];
     }
     fprintf(og_outf, "\t%s", brand_summary.str().c_str());
 }
 
-static string _og_item_name(og_class_type item_type, int sub_type)
+static string _og_item_name(og_item &item)
 {
 
     string name = "";
-    if (item_type == OG_MANUALS)
+
+    if (item.sub_type == _og_get_max_subtype(item.base_type))
+        name = "All " + _og_class_name(item.base_type);
+    else if (item.base_type == OG_MANUALS)
         name = "Manual";
-    else if (item_type == OG_ARTEBOOKS)
+    else if (item.base_type == OG_ARTEBOOKS)
     {
-        name = _og_orig_sub_type(item_type, sub_type) == BOOK_RANDART_LEVEL
-            ? "Level Artefact Book" : "Theme Artefact Book";
+        int orig_type = _og_orig_sub_type(item);
+        if (orig_type == BOOK_RANDART_LEVEL)
+            name = "Level Artefact Book";
+        else
+            name = "Theme Artefact Book";
     }
-    else if (sub_type == _og_get_max_subtype(item_type))
-        name = "All " + item_class_name(_og_orig_base_type(item_type));
     else
     {
-        item_def dummy_item = _og_dummy_item(item_type, sub_type);
+        item_def dummy_item = _og_dummy_item(item);
         name = dummy_item.name(DESC_DBNAME, true, true);
     }
     return name;
 }
 
-static void _og_write_item_stats(og_class_type item_type, int sub_type)
+static void _og_write_item_stats(branch_type br, og_item &item)
 {
-    map <string, double> branch_stats, total_stats;
-    bool is_brand_equip = item_type == OG_WEAPONS || item_type == OG_ARMOUR;
-    int num_brands = item_type == OG_WEAPONS ? NUM_SPECIAL_WEAPONS
-        : item_type == OG_ARMOUR ? NUM_SPECIAL_ARMOURS
-        : item_type == OG_MISSILES ? NUM_SPECIAL_MISSILES : 1;
-    vector < vector<int> > branch_brand_stats(3, vector<int>(num_brands));
-    vector < vector<int> > total_brand_stats(3, vector<int>(num_brands));
-    int level_count = 0;
-    vector <string> fields = og_item_fields[item_type];
-
-    fprintf(og_outf, "%s", _og_item_name(item_type, sub_type).c_str());
+    bool is_brand_equip = item.base_type == OG_WEAPONS
+        || item.base_type == OG_ARMOUR;
+    int equip_ind = is_brand_equip
+        ? (item.base_type == OG_WEAPONS ? 0 : 1) : -1;
+    unsigned int level_count = 0;
+    vector <string> fields = og_item_fields[item.base_type];
     vector<level_id>::const_iterator li;
 
-    for (unsigned int i = 0; i < fields.size(); i++)
-        total_stats[fields[i]] = 0;
-    for (int i = 0; i < 3; i++)
+    fprintf(og_outf, "%s", _og_item_name(item).c_str());
+    for (li = og_branches[br].begin(); li != og_branches[br].end(); li++)
     {
-        for (int j = 0; j < num_brands; j++)
-            total_brand_stats[i][j] = 0;
-    }
-    for (li = og_levels.begin(); li != og_levels.end(); li++)
-    {
-        if (!level_count)
-        {
-            for (unsigned int i = 0; i < fields.size(); i++)
-                branch_stats[fields[i]] = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < num_brands; j++)
-                    branch_brand_stats[i][j] = 0;
-            }
-        }
-
-        map <string, double> &item_stats = og_items[*li][item_type][sub_type];
+        map <string, double> &item_stats =
+            og_items[*li][item.base_type][item.sub_type];
         for (unsigned int i = 0; i < fields.size(); i++)
-        {
-            branch_stats[fields[i]] += item_stats[fields[i]];
-            total_stats[fields[i]] += item_stats[fields[i]];
             _og_write_stat(item_stats, fields[i]);
-        }
-        vector<int> brand_stats;
+
         if (is_brand_equip)
         {
+            vector< vector<int> > &brand_stats =
+                og_equip_brands[*li][equip_ind][item.sub_type];
             for (int j = 0; j < 3; j++)
-            {
-                if (item_type == OG_WEAPONS)
-                    brand_stats = og_weapon_brands[*li][sub_type][j];
-                else
-                    brand_stats = og_armour_brands[*li][sub_type][j];
-                _og_write_brand_stats(brand_stats, item_type, sub_type,
-                                      &branch_brand_stats[j],
-                                      &total_brand_stats[j]);
-            }
+                _og_write_brand_stats(brand_stats[j], item);
         }
-        else if (item_type == OG_MISSILES)
-        {
-            brand_stats = og_missile_brands[*li][sub_type];
-            _og_write_brand_stats(brand_stats, item_type, sub_type,
-                                  &branch_brand_stats[0],
-                                  &total_brand_stats[0]);
-        }
+        else if (item.base_type == OG_MISSILES)
+            _og_write_brand_stats(og_missile_brands[*li][item.sub_type], item);
 
-        if (++level_count == og_branches[li->branch])
+        if (++level_count == og_branches[li->branch].size() && level_count > 1)
         {
-            if (level_count == 1)
-            {
-                level_count = 0;
-                continue;
-            }
+            level_id br_lev(li->branch, -1);
+            map <string, double> &branch_stats =
+                og_items[br_lev][item.base_type][item.sub_type];
 
             for (unsigned int i = 0; i < fields.size(); i++)
                 _og_write_stat(branch_stats, fields[i]);
 
             if (is_brand_equip)
             {
+                vector< vector<int> > &branch_brand_stats =
+                    og_equip_brands[br_lev][equip_ind][item.sub_type];
                 for (int j = 0; j < 3; j++)
-                {
-                    _og_write_brand_stats(branch_brand_stats[j], item_type,
-                                          sub_type);
-                }
+                    _og_write_brand_stats(branch_brand_stats[j], item);
             }
-            else if (item_type == OG_MISSILES)
+            else if (item.base_type == OG_MISSILES)
             {
-                _og_write_brand_stats(branch_brand_stats[0], item_type,
-                                      sub_type);
+                _og_write_brand_stats(og_missile_brands[br_lev][item.sub_type],
+                                      item);
             }
-            level_count = 0;
         }
-    }
-    // Only do grand summary if there are multiple branches.
-    if (og_branches.size() > 1)
-    {
-        for (unsigned int i = 0; i < fields.size(); i++)
-            _og_write_stat(total_stats, fields[i]);
-
-        if (is_brand_equip)
-        {
-            for (int j = 0; j < 3; j++)
-                _og_write_brand_stats(total_brand_stats[j], item_type, sub_type);
-        }
-        else if (item_type == OG_MISSILES)
-            _og_write_brand_stats(total_brand_stats[0], item_type, sub_type);
     }
     fprintf(og_outf, "\n");
 }
 
-static void _og_write_monster_stats(int mons_id, monster_type mons_type)
+static void _og_write_monster_stats(branch_type br, monster_type mons_type,
+                                    int mons_ind)
 {
-    map <string, double> branch_stats, total_stats;
-    int level_count = 0;
+    unsigned int level_count = 0;
     vector <string> fields = og_monster_fields;
+    vector<level_id>::const_iterator li;
 
-    if (mons_id == og_valid_monsters[NUM_MONSTERS])
+    if (mons_ind == og_valid_monsters[NUM_MONSTERS])
         fprintf(og_outf, "All Monsters");
     else
         fprintf(og_outf, "%s", mons_type_name(mons_type, DESC_PLAIN).c_str());
-    vector<level_id>::const_iterator li;
-
-    for (unsigned int i = 0; i < fields.size(); i++)
-        total_stats[fields[i]] = 0;
-    for (li = og_levels.begin(); li != og_levels.end(); li++)
-    {
-        if (!level_count)
-        {
-            for (unsigned int i = 0; i < fields.size(); i++)
-                branch_stats[fields[i]] = 0;
-        }
-
-        map <string, double> &mons_stats = og_monsters[*li][mons_id];
-        for (unsigned int i = 0; i < fields.size(); i++)
-        {
-            branch_stats[fields[i]] += mons_stats[fields[i]];
-            total_stats[fields[i]] += mons_stats[fields[i]];
-            _og_write_stat(mons_stats, fields[i]);
-        }
-
-        if (++level_count == og_branches[li->branch])
-        {
-            if (level_count == 1)
-            {
-                level_count = 0;
-                continue;
-            }
-
-            for (unsigned int i = 0; i < fields.size(); i++)
-                _og_write_stat(branch_stats, fields[i]);
-
-            level_count = 0;
-        }
-    }
-    // Only do grand summary if there are multiple branches.
-    if (og_branches.size() > 1)
+    for (li = og_branches[br].begin(); li != og_branches[br].end(); li++)
     {
         for (unsigned int i = 0; i < fields.size(); i++)
-            _og_write_stat(total_stats, fields[i]);
+            _og_write_stat(og_monsters[*li][mons_ind], fields[i]);
+
+        if (++level_count == og_branches[li->branch].size() && level_count > 1)
+        {
+            level_id br_lev(li->branch, -1);
+            for (unsigned int i = 0; i < fields.size(); i++)
+                _og_write_stat(og_monsters[br_lev][mons_ind], fields[i]);
+        }
     }
     fprintf(og_outf, "\n");
 }
 
-static void _og_write_object_stats()
+static void _og_write_branch_stats(branch_type br)
 {
-    string range_desc = "";
-    if (SysEnv.map_gen_range.get())
-        range_desc = SysEnv.map_gen_range->describe();
-    else
-        range_desc = "Entire Dungeon";
-    og_outf = fopen(og_out_file, "w");
-    fprintf(og_outf, "Object Generation Stats\n"
-            "Number of iterations: %d\n"
-            "Levels generated: %s\n"
-            "Version: %s\n", SysEnv.map_gen_iters, range_desc.c_str(),
-            Version::Long);
     fprintf(og_outf, "Item Generation Stats\n");
     for (int i = 0; i < NUM_OG_CLASSES; i++)
     {
         og_class_type item_type = static_cast<og_class_type>(i);
         int num_types = _og_get_max_subtype(item_type);
-        fprintf(og_outf, "\n%s\n",
-                _og_class_name(item_type).c_str());
         vector<string> fields = og_item_fields[item_type];
+
+        fprintf(og_outf, "\n%s\n", _og_class_name(item_type).c_str());
         if (item_type == OG_WEAPONS || item_type == OG_ARMOUR)
         {
             for (int j = 0; j < 3; j++)
@@ -1764,18 +1681,53 @@ static void _og_write_object_stats()
         else if (item_type == OG_MISSILES)
             fields.push_back(og_missile_brand_field);
 
-        _og_write_level_headers(fields.size());
-        _og_write_stat_headers(fields);
+        _og_write_level_headers(br, fields.size());
+        _og_write_stat_headers(br, fields);
         for (int j = 0; j <= num_types; j++)
-            _og_write_item_stats(item_type, j);
+        {
+            og_item item(item_type, j);
+            _og_write_item_stats(br, item);
+        }
     }
-    fprintf(og_outf, "Monster Generation Stats\n");
-    _og_write_level_headers(og_monster_fields.size());
-    _og_write_stat_headers(og_monster_fields);
+    fprintf(og_outf, "\n\nMonster Generation Stats\n");
+    _og_write_level_headers(br, og_monster_fields.size());
+    _og_write_stat_headers(br, og_monster_fields);
     map<monster_type, int>::const_iterator mi;
     for (mi = og_valid_monsters.begin(); mi != og_valid_monsters.end(); mi++)
-        _og_write_monster_stats(mi->second, mi->first);
-    fclose(og_outf);
+        _og_write_monster_stats(br, mi->first, mi->second);
+}
+
+static void _og_write_object_stats()
+{
+    map<branch_type, vector<level_id> >::const_iterator bi;
+
+    for (bi = og_branches.begin(); bi != og_branches.end(); bi++)
+    {
+        string branch_name;
+        if (bi->first == NUM_BRANCHES)
+            branch_name = "AllLevels";
+        else
+            branch_name = branches[bi->first].abbrevname;
+        ostringstream out_file;
+        out_file << og_out_prefix << branch_name << og_out_ext;
+        og_outf = fopen(out_file.str().c_str(), "w");
+        if (!og_outf)
+        {
+            fprintf(stderr, "Unable to open objgen output file: %s\n"
+                    "Error: %s", out_file.str().c_str(), strerror(errno));
+            end(1);
+        }
+        fprintf(og_outf, "Object Generation Stats\n"
+                "Number of iterations: %d\n"
+                "Number of branches: %d\n"
+                "Number of levels: %d\n"
+                "Version: %s\n", SysEnv.map_gen_iters, og_num_branches,
+                og_num_levels, Version::Long);
+        _og_write_branch_stats(bi->first);
+        fclose(og_outf);
+        fprintf(stdout, "Wrote statistics for branch %s to %s.\n",
+                branch_name.c_str(), out_file.str().c_str());
+    }
 }
 
 void objgen_generate_stats()
@@ -1792,7 +1744,6 @@ void objgen_generate_stats()
     run_map_global_preludes();
     run_map_local_preludes();
 
-    sprintf(og_stat_fmt, "%%1.%df", OG_STAT_PRECISION);
     // Populate a vector of the levels ids we've made
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
@@ -1805,6 +1756,7 @@ void objgen_generate_stats()
         if (br == BRANCH_FOREST)
             continue;
 #endif
+        vector<level_id> levels;
         for (int dep = 1; dep <= brdepth[i]; ++dep)
         {
             const level_id lid(br, dep);
@@ -1813,13 +1765,24 @@ void objgen_generate_stats()
             {
                 continue;
             }
-            if (!og_branches.count(br))
-                og_branches[br] = 1;
-            else
-                og_branches[br] += 1;
-            og_levels.push_back(lid);
+            levels.push_back(lid);
+            ++og_num_levels;
+        }
+        if (levels.size())
+        {
+            og_branches[br] = levels;
+            ++og_num_branches;
         }
     }
+    // For the all-level summary
+    if (og_num_branches > 1)
+    {
+        og_branches[NUM_BRANCHES] = vector<level_id>();
+        og_branches[NUM_BRANCHES].push_back(level_id(NUM_BRANCHES, -1));
+    }
+    fprintf(stdout, "Generating object statistics for %d iterations of %d "
+            "levels over %d branches.\n", SysEnv.map_gen_iters, og_num_levels,
+            og_num_branches);
     _og_init_fields();
     _og_init_foods();
     _og_init_monsters();

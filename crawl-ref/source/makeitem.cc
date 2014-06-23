@@ -2728,7 +2728,7 @@ int items(bool allow_uniques,
             ASSERT(mitm[p].is_valid());
 #ifdef DEBUG_DIAGNOSTICS
             if (crawl_state.obj_stat_gen)
-                objgen_report_item(mitm[p]);
+                objgen_record_item(mitm[p]);
 #endif
             return p;
         }
@@ -2871,7 +2871,7 @@ int items(bool allow_uniques,
     ASSERT(mitm[p].is_valid());
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.obj_stat_gen)
-        objgen_report_item(mitm[p]);
+        objgen_record_item(mitm[p]);
 #endif
     return p;
 }
