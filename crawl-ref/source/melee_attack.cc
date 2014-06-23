@@ -2267,9 +2267,6 @@ void melee_attack::apply_staff_damage()
     switch (weapon->sub_type)
     {
     case STAFF_AIR:
-        if (damage_done + attacker->skill_rdiv(SK_AIR_MAGIC) <= random2(20))
-            break;
-
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_ELECTRICITY,
