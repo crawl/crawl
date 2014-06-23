@@ -1306,5 +1306,7 @@ void extract_manticore_spikes(const char* endmsg)
         // Otherwise, this prevents the damage.
 
         you.attribute[ATTR_BARBS_POW] = 0;
+
+        you.props.erase(BARBS_MOVE_KEY);
     }
 }

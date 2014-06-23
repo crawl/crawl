@@ -26,6 +26,7 @@
 #define ICY_ARMOUR_KEY "ozocubu's_armour_pow"
 #define STONESKIN_KEY "stoneskin_pow"
 #define TRANSFORM_POW_KEY "transform_pow"
+#define BARBS_MOVE_KEY "moved_with_barbs_status"
 
 class targetter;
 

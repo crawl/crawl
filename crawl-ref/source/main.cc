@@ -3375,6 +3375,20 @@ static void _move_player(coord_def move)
             return;
         }
 
+        if (you.duration[DUR_BARBS] && !you.props.exists(BARBS_MOVE_KEY))
+        {
+            string prompt = "The barbs in your skin will harm you if you move."
+                            " Continue?";
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                you.turn_is_over = false;
+                return;
+            }
+
+            you.props[BARBS_MOVE_KEY] = true;
+        }
+
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;
 
