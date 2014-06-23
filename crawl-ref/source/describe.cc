@@ -3184,39 +3184,15 @@ static string _monster_attacks_description(const monster_info& mi)
     return result.str();
 }
 
-// Is the spell worth listing for a monster?
-static bool _interesting_mons_spell(spell_type spell)
-{
-    return spell != SPELL_NO_SPELL && spell != SPELL_MELEE;
-}
-
 static string _monster_spells_description(const monster_info& mi)
 {
     // Show monster spells and spell-like abilities.
-    if (!mi.is_spellcaster())
+    if (!mi.is_spellcaster() || !mi.has_spells())
         return "";
 
-    const vector<mon_spellbook_type> books = get_spellbooks(mi);
+    unique_books books = get_unique_spells(mi);
     const size_t num_books = books.size();
-
-    // If there are really really no spells, print nothing.
-    // Random pan lords don't display their spells.
-    if (num_books == 0 || books[0] == MST_NO_SPELLS || mi.type == MONS_PANDEMONIUM_LORD)
-        return "";
-
-    // Special case for player ghosts: must check if they really have spells.
-    if (books[0] == MST_GHOST)
-    {
-        bool has_spell = false;
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-        {
-            if (mi.spells[i] != SPELL_NO_SPELL)
-                has_spell = true;
-        }
-        if (!has_spell)
-            return "";
-    }
-
+    
     const bool caster  = mi.is_actual_spellcaster();
     const bool priest  = mi.is_priest();
     const bool natural = mi.is_natural_caster();
@@ -3243,24 +3219,7 @@ static string _monster_spells_description(const monster_info& mi)
     // Loop through books and display spells/abilities for each of them
     for (size_t i = 0; i < num_books; ++i)
     {
-        // Create spell list containing no duplicate/irrelevant entries
-        mon_spellbook_type book = books[i];
-        vector<spell_type> book_spells;
-        for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
-        {
-            spell_type spell;
-            if (book == MST_GHOST)
-                spell = mi.spells[j];
-            else
-                spell = mspell_list[book].spells[j];
-            bool match = false;
-            for (unsigned int k = 0; k < book_spells.size(); ++k)
-                if (book_spells[k] == spell)
-                    match = true;
-
-            if (!match && _interesting_mons_spell(spell))
-                book_spells.push_back(spell);
-        }
+        vector<spell_type> book_spells = books[i];
 
         // Display spells for this book
         if (num_books > 1)
