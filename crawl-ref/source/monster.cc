@@ -10,6 +10,7 @@
 #include "areas.h"
 #include "art-enum.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coordit.h"
@@ -18,6 +19,7 @@
 #include "dgnevent.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "effects.h"
 #include "env.h"
 #include "fight.h"
 #include "fineff.h"
@@ -38,9 +40,10 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-chimera.h"
+#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mgen_data.h"
@@ -52,6 +55,7 @@
 #include "spl-util.h"
 #include "spl-summoning.h"
 #include "state.h"
+#include "teleport.h"
 #include "terrain.h"
 #ifdef USE_TILE
 #include "tileview.h"
@@ -400,7 +404,7 @@ int monster::body_weight(bool /*base*/) const
         default: ;
         }
 
-        if (is_skeletal() || mons_base_char(mc) == 'L')
+        if (is_skeletal() || mons_genus(mc) == MONS_LICH)
             weight /= 2;
     }
 
@@ -642,12 +646,6 @@ bool monster::could_wield(const item_def &item, bool ignore_brand,
 
     if (!ignore_brand)
     {
-        const int brand = get_weapon_brand(item);
-
-        // Draconians won't use dragon slaying weapons.
-        if (brand == SPWPN_DRAGON_SLAYING && is_dragonkind(this))
-            return false;
-
         // Undead and demonic monsters and monsters that are
         // gifts/worshippers of Yredelemnul won't use holy weapons.
         if ((undead_or_demonic() || god == GOD_YREDELEMNUL)
@@ -2208,7 +2206,7 @@ bool monster::pickup_misc(item_def &item, int near)
     return pickup(item, MSLOT_MISCELLANY, near);
 }
 
-// Eaten items are handled elsewhere, in _handle_pickup() in mon-stuff.cc.
+// Eaten items are handled elsewhere, in _handle_pickup() in mon-act.cc.
 bool monster::pickup_item(item_def &item, int near, bool force)
 {
     // Equipping stuff can be forced when initially equipping monsters.
@@ -3228,6 +3226,27 @@ bool monster::liquefied_ground() const
            && !mons_class_is_stationary(type);
 }
 
+// in units of 1/25 hp/turn
+int monster::natural_regen_rate() const
+{
+    // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
+    int divider = max(div_rand_round(15 - hit_dice, 4), 1);
+
+    return max(div_rand_round(hit_dice, divider), 1);
+}
+
+// in units of 1/100 hp/turn
+int monster::off_level_regen_rate() const
+{
+    if (!mons_can_regenerate(this))
+        return 0;
+
+    if (mons_class_fast_regen(type) || type == MONS_PLAYER_GHOST)
+        return 100;
+    // Capped at 0.1 hp/turn.
+    return max(natural_regen_rate() * 4, 10);
+}
+
 bool monster::friendly() const
 {
     return temp_attitude() == ATT_FRIENDLY;
@@ -3425,6 +3444,11 @@ bool monster::undead_or_demonic() const
     return holi == MH_UNDEAD || holi == MH_DEMONIC || mons_is_demonspawn(type);
 }
 
+bool monster::holy_wrath_susceptible() const
+{
+    return undead_or_demonic() && type != MONS_PROFANE_SERVITOR;
+}
+
 bool monster::is_holy(bool check_spells) const
 {
     if (holiness() == MH_HOLY)
@@ -3475,85 +3499,137 @@ bool monster::is_evil(bool check_spells) const
     return false;
 }
 
-bool monster::is_unclean(bool check_spells) const
+/** Is the monster considered unclean by Zin?
+ *
+ *  If not 0, then Zin won't let you have it as an ally, and gives
+ *  piety for killing it.
+ *  @param check_god whether the monster having a chaotic god matters.
+ *  @returns 0 if not hated, a number greater than 0 otherwise.
+ */
+int monster::how_unclean(bool check_god) const
 {
-    if (has_unclean_spell() && check_spells)
-        return true;
+    int uncleanliness = 0;
 
-    if (has_attack_flavour(AF_HUNGER)
-        || has_attack_flavour(AF_ROT)
-        || has_attack_flavour(AF_STEAL))
-    {
-        return true;
-    }
+    if (has_attack_flavour(AF_HUNGER))
+        uncleanliness++;
+    if (has_attack_flavour(AF_ROT))
+        uncleanliness++;
+    if (has_attack_flavour(AF_STEAL))
+        uncleanliness++;
+    if (has_attack_flavour(AF_VAMPIRIC))
+        uncleanliness++;
 
     // Zin considers insanity unclean.  And slugs that speak.
     if (type == MONS_CRAZY_YIUF
         || type == MONS_PSYCHE
+        || type == MONS_LOUISE
         || type == MONS_GASTRONOK)
     {
-        return true;
+        uncleanliness++;
     }
 
     // A floating mass of disease is nearly the definition of unclean.
     if (type == MONS_ANCIENT_ZYME)
-        return true;
+        uncleanliness++;
+
+    // Zin _really_ doesn't like death drakes or necrophages.
+    if (type == MONS_NECROPHAGE || type == MONS_DEATH_DRAKE)
+        uncleanliness++;
 
     // Assume that all unknown gods are not chaotic.
     //
     // Being a worshipper of a chaotic god doesn't yet make you
     // physically/essentially chaotic (so you don't get hurt by silver),
     // but Zin does mind.
-    if (is_priest() && is_chaotic_god(god) && check_spells)
-        return true;
+    if (is_priest() && is_chaotic_god(god) && check_god)
+        uncleanliness++;
 
-    if (has_chaotic_spell() && is_actual_spellcaster() && check_spells)
-        return true;
+    if (has_unclean_spell())
+        uncleanliness++;
+
+    if (has_chaotic_spell() && is_actual_spellcaster())
+        uncleanliness++;
 
     corpse_effect_type ce = mons_corpse_effect(type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !is_chaotic())
-        return true;
+    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !how_chaotic())
+        uncleanliness++;
 
-    return false;
+    // Zin has a food conduct for monsters too.
+    if (mons_eats_corpses(this))
+        uncleanliness++;
+
+    // Corporeal undead are a perversion of natural form.
+    if (holiness() == MH_UNDEAD && !is_insubstantial())
+        uncleanliness++;
+
+    return uncleanliness;
 }
 
-bool monster::is_known_chaotic() const
+/** How chaotic do you know this monster to be?
+ *
+ * @param check_spells_god whether to look at its spells and/or
+ *        religion; silver damage does not.
+ * @returns 0 if not chaotic, a larger number if so.
+ */
+int monster::known_chaos(bool check_spells_god) const
 {
+    int chaotic = 0;
+
     if (type == MONS_UGLY_THING
         || type == MONS_VERY_UGLY_THING
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
         || type == MONS_WRETCHED_STAR
-        || type == MONS_KILLER_KLOWN // For their random attacks.
-        || type == MONS_TIAMAT       // For her colour-changing.
-        || mons_is_demonspawn(type)  // Like player demonspawn
+        || type == MONS_KILLER_KLOWN  // For their random attacks.
+        || type == MONS_TIAMAT        // For her colour-changing.
+        || mons_is_demonspawn(type)   // Like player demonspawn
         || mons_class_is_chimeric(type))
     {
-        return true;
+        chaotic++;
     }
 
     if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))
-        return true;
+        chaotic++;
 
     // Knowing chaotic spells is not enough to make you "essentially"
-    // chaotic (i.e., silver doesn't hurt you), it's just unclean for
-    // Zin.  Having chaotic abilities (not actual spells) does mean
-    // you're truly changed by chaos.
-    if (has_chaotic_spell() && !is_actual_spellcaster())
-        return true;
+    // chaotic (i.e., silver doesn't hurt you), but it does make you
+    // chaotic enough for Zin's chaos recitation. Having chaotic
+    // abilities (not actual spells) does mean you're truly changed
+    // by chaos.
+    if (has_chaotic_spell() && (!is_actual_spellcaster()
+                                || check_spells_god))
+    {
+        chaotic++;
+    }
 
     if (has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_CHAOS))
     {
-        return true;
+        chaotic++;
     }
 
-    return false;
+    if (is_chaotic_god(god))
+        chaotic++;
+
+    if (is_chaotic_god(god) && is_priest())
+        chaotic++;
+
+    return chaotic;
 }
 
-bool monster::is_chaotic() const
+/** How chaotic is this monster really?
+ *
+ * @param check_spells_god whether to look at its spells and/or
+ *        religion; silver damage does not.
+ * @returns 0 if not chaotic, a larger number if so.
+ */
+int monster::how_chaotic(bool check_spells_god) const
 {
-    return is_shapeshifter() || is_known_chaotic();
+    // Don't count known shapeshifters twice.
+    if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))
+        return known_chaos(check_spells_god);
+    else
+        return is_shapeshifter() + known_chaos(check_spells_god);
 }
 
 bool monster::is_artificial() const
@@ -3790,7 +3866,7 @@ int monster::res_rotting(bool temp) const
         res = 0;
         break;
     case MH_UNDEAD:
-        if (mons_base_char(type) == 'n' || type == MONS_ZOMBIE)
+        if (mons_genus(type) == MONS_GHOUL || type == MONS_ZOMBIE)
             res = 1;
         else
             res = 3;
@@ -4081,6 +4157,45 @@ int monster::skill(skill_type sk, int scale, bool real, bool drained) const
     }
 }
 
+//---------------------------------------------------------------
+//
+// monster::shift
+//
+// Moves a monster to approximately p and returns true if
+// the monster was moved.
+//
+//---------------------------------------------------------------
+bool monster::shift(coord_def p)
+{
+    coord_def result;
+
+    int count = 0;
+
+    if (p.origin())
+        p = pos();
+
+    for (adjacent_iterator ai(p); ai; ++ai)
+    {
+        // Don't drop on anything but vanilla floor right now.
+        if (grd(*ai) != DNGN_FLOOR)
+            continue;
+
+        if (actor_at(*ai))
+            continue;
+
+        if (one_chance_in(++count))
+            result = *ai;
+    }
+
+    if (count > 0)
+    {
+        mgrd(pos()) = NON_MONSTER;
+        moveto(result);
+        mgrd(result) = mindex();
+    }
+
+    return count > 0;
+}
 void monster::blink(bool)
 {
     monster_blink(this);
@@ -4157,6 +4272,31 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
     add_ench(mon_enchant(ENCH_ROT, min(amount, 4), agent));
 
     return true;
+}
+
+/**
+ * Attempts to either apply corrosion to a monster or make it bleed from acid
+ * damage.
+ */
+void monster::splash_with_acid(const actor* evildoer)
+{
+    item_def *has_shield = mslot_item(MSLOT_SHIELD);
+    item_def *has_armour = mslot_item(MSLOT_ARMOUR);
+
+    if (!one_chance_in(3) && (has_shield || has_armour))
+        corrode_actor(this);
+    else if (!one_chance_in(3) && !(has_shield || has_armour)
+             && can_bleed() && !res_acid())
+    {
+        add_ench(mon_enchant(ENCH_BLEED, 3, evildoer, (5 + random2(5))*10));
+
+        if (you.can_see(this))
+        {
+            mprf("%s writhes in agony as %s flesh is eaten away!",
+                 name(DESC_THE).c_str(),
+                 pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
+    }
 }
 
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
@@ -4492,7 +4632,8 @@ bool monster::is_trap_safe(const coord_def& where, bool just_check) const
     }
 
     // Friendlies will try not to be parted from you.
-    if (intelligent_ally(this) && trap.type == TRAP_TELEPORT
+    if (intelligent_ally(this) && (trap.type == TRAP_TELEPORT
+                                   || trap.type == TRAP_TELEPORT_PERMANENT)
         && player_knows_trap && mons_near(this))
     {
         return false;
@@ -4579,10 +4720,9 @@ bool monster::find_home_near_place(const coord_def &c)
         q.pop();
         if (dist(p - c) >= last_dist && nvalid)
         {
-            // already found a valid closer destination
-            if (!move_to_pos(place))
-                return false;
-            apply_location_effects(place);
+            ASSERT(move_to_pos(place));
+            // can't apply location effects here, since the monster might not
+            // be on the level yet, which interacts poorly with e.g. shafts
             return true;
         }
         else if (dist(p - c) >= MAX_PLACE_NEAR_DIST)
@@ -4617,9 +4757,9 @@ bool monster::find_home_anywhere()
     for (int tries = 0; tries < 600; ++tries)
         if (check_set_valid_home(random_in_bounds(), place, nvalid))
         {
-            if (!move_to_pos(place))
-                return false;
-            apply_location_effects(place);
+            ASSERT(move_to_pos(place));
+            // can't apply location effects here, since the monster might not
+            // be on the level yet, which interacts poorly with e.g. shafts
             return true;
         }
     return false;
@@ -6342,6 +6482,11 @@ bool monster::is_parent_monster_of(const monster* mons) const
 {
     return mons_base_type(this) == mons_tentacle_parent_type(mons)
            && (int) mons->number == mindex();
+}
+
+bool monster::is_illusion() const
+{
+    return props.exists(CLONE_SLAVE_KEY);
 }
 
 bool monster::is_divine_companion() const

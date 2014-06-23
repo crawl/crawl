@@ -42,7 +42,6 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "options.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -219,9 +218,15 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
 
         // If you worship a good god, don't summon an evil/unclean
         // swarmer (in this case, the vampire mosquito).
+        const int MAX_TRIES = 100;
+        int tries = 0;
         do
             mon = RANDOM_ELEMENT(swarmers);
-        while (player_will_anger_monster(mon));
+        while (player_will_anger_monster(mon) && ++tries < MAX_TRIES);
+
+        // If twenty tries wasn't enough, it's never going to work.
+        if (tries >= MAX_TRIES)
+            break;
 
         if (create_monster(
                 mgen_data(mon, BEH_FRIENDLY, &you,
@@ -836,6 +841,13 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
     mg.props[TUKIMA_POWER] = pow;
 
     monster *mons = create_monster(mg);
+
+    if (!mons)
+    {
+        mprf("%s twitches for a moment.",
+             _get_item_desc(wpn, target_is_player).c_str());
+        return;
+    }
 
     // Don't haunt yourself if the weapon is friendly
     if (!force_friendly)

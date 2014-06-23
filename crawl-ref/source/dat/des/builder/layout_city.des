@@ -5,6 +5,7 @@
 ###############################################################################
 
 : require("dlua/util.lua")
+: require("dlua/layout/layout.lua")
 : require("dlua/layout/procedural.lua")
 : require("dlua/layout/zonify.lua")
 : require("dlua/layout/omnigrid.lua")
@@ -53,9 +54,12 @@
 # - Differentiate in D a little
 # - Add decor in rooms if enough space - pillars, statues, whatever.
 #
+# TODO: Remove small wall blocks in Dis, then add to Dis:1-6 at
+#       weight 10.
+#
 NAME:   layout_stronghold
-DEPTH:  D:10-, Dis:1-6, Lair, Pan
-WEIGHT: 5, 20(Dis), 10(Pan)
+DEPTH:  D:9-, Pan
+WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
 {{
@@ -242,8 +246,8 @@ TAGS:   overwritable layout allow_dup unrand layout_type_city
 #  many as 5000, although 4000 is more likely.
 #
 NAME:   layout_irregular_city
-DEPTH:  D:10-, Dis:1-6, Pan
-WEIGHT: 10
+DEPTH:  D:9-, Pan
+WEIGHT: 15 (D), 10 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
 TAGS:   no_rotate no_hmirror no_vmirror
@@ -339,3 +343,202 @@ TAGS:   no_rotate no_hmirror no_vmirror
 }}
 MAP
 ENDMAP
+
+##############################################################
+# layout_onion_city
+#
+# A map with many boxes for rooms, mostly inside each other.
+#
+NAME:   layout_onion_city
+DEPTH:  Elf, Pan
+WEIGHT: 20 (Elf), 5 (Pan)
+ORIENT: encompass
+TAGS:   overwritable layout allow_dup unrand layout_type_city
+TAGS:   unrand no_rotate no_hmirror no_vmirror
+{{
+  local depth_fraction = you.depth_fraction()
+
+  -- spacing between rooms
+  local spacing_min = 1.9 + depth_fraction * 0.6
+  local spacing_range = 0.85 + crawl.random_real() * 1.15
+
+  -- the chance a room contains only a single smaller room
+  local single_room_chance = crawl.random_range(1, 2 + depth_fraction * 6)
+
+  -- the chance a room split into 2 splits into (at least) 3
+  local further_subdivide_percent =  crawl.random_range(50, 80)
+                                   - math.floor(depth_fraction * 30)
+
+  -- Randomize all parameters in Pan
+  if (you.in_branch("pan")) then
+    spacing_min = 1.8 + crawl.random_real() * 0.95
+    spacing_range = 0.95 + crawl.random_real() * 1.05
+    single_room_chance = math.min(crawl.random_range(1, 10),
+                                  crawl.random_range(1, 10))
+    further_subdivide_percent = crawl.random_range(40, 90)
+  end
+
+  -- this function makes one or more rooms to fill the area
+  function onion_room (x1, y1, x2, y2)
+    local spacing = math.floor(spacing_min + crawl.random_real()*spacing_range)
+    local inner_size_min = spacing * 2 + 3 + spacing_min
+    local size_x = x2 - x1 + 1
+    local size_y = y2 - y1 + 1
+
+    -- center gap is included in room after division
+    local div_x_min = x1 + spacing     + 2
+    local div_x_max = x2 - spacing * 2 - 2
+    local div_y_min = y1 + spacing     + 2
+    local div_y_max = y2 - spacing * 2 - 2
+    local div_x_chance = math.max(0, div_x_max - div_x_min + 1)
+    local div_y_chance = math.max(0, div_y_max - div_y_min + 1)
+    local total_chance = single_room_chance + div_x_chance + div_y_chance
+
+    local chosen = crawl.random_range(0, total_chance - 1)
+    if (chosen < single_room_chance) then
+      -- place a single room
+
+      make_box       { x1=x1, y1=y1, x2=x2, y2=y2 }
+      make_box_doors { x1=x1, y1=y1, x2=x2, y2=y2, number=1 }
+      if (size_x >= inner_size_min and size_y >= inner_size_min) then
+          onion_room (x1 + spacing + 1, y1 + spacing + 1,
+                      x2 - spacing - 1, y2 - spacing - 1)
+      end
+
+    elseif (chosen < single_room_chance + div_x_chance) then
+      -- place 2 rooms along x
+
+      local division = crawl.random_range(div_x_min, div_x_max)
+      local x2in = division
+      local x1in = division + spacing + 1
+      local size_x1 = x2in - x1   + 1
+      local size_x2 = x2   - x1in + 1
+
+      -- left room
+      if (crawl.x_chance_in_y(further_subdivide_percent, 100)) then
+          onion_room (x1, y1, x2in, y2)
+      else
+        make_box       { x1=x1, y1=y1, x2=x2in, y2=y2 }
+        make_box_doors { x1=x1, y1=y1, x2=x2in, y2=y2, number=1 }
+        if(size_x1 >= inner_size_min and size_y >= inner_size_min) then
+          onion_room (x1   + spacing + 1, y1 + spacing + 1,
+                      x2in - spacing - 1, y2 - spacing - 1)
+        end
+      end
+
+      -- right room
+      if (crawl.x_chance_in_y(further_subdivide_percent, 100)) then
+        onion_room (x1in, y1, x2, y2)
+      else
+        make_box       { x1=x1in, y1=y1, x2=x2, y2=y2 }
+        make_box_doors { x1=x1in, y1=y1, x2=x2, y2=y2, number=1 }
+        if(size_x2 >= inner_size_min and size_y >= inner_size_min) then
+          onion_room (x1in + spacing + 1, y1 + spacing + 1,
+                      x2   - spacing - 1, y2 - spacing - 1)
+        end
+      end
+
+    else
+      -- place 2 rooms along y
+
+      local division = crawl.random_range(div_y_min, div_y_max)
+      local y2in = division
+      local y1in = division + spacing + 1
+      local size_y1 = y2in - y1   + 1
+      local size_y2 = y2   - y1in + 1
+
+      -- top room
+      if (crawl.x_chance_in_y(further_subdivide_percent, 100)) then
+        onion_room (x1, y1, x2, y2in)
+      else
+        make_box       { x1=x1, y1=y1, x2=x2, y2=y2in }
+        make_box_doors { x1=x1, y1=y1, x2=x2, y2=y2in, number=1 }
+        if(size_x >= inner_size_min and size_y1 >= inner_size_min) then
+          onion_room (x1 + spacing + 1, y1   + spacing + 1,
+                      x2 - spacing - 1, y2in - spacing - 1)
+        end
+      end
+
+      -- bottom room
+      if (crawl.x_chance_in_y(further_subdivide_percent, 100)) then
+        onion_room (x1, y1in, x2, y2)
+      else
+        make_box       { x1=x1, y1=y1in, x2=x2, y2=y2 }
+        make_box_doors { x1=x1, y1=y1in, x2=x2, y2=y2, number=1 }
+        if(size_x >= inner_size_min and size_y2 >= inner_size_min) then
+            onion_room (x1 + spacing + 1, y1in + spacing + 1,
+                        x2 - spacing - 1, y2   - spacing - 1)
+        end
+      end
+    end
+  end
+
+
+  local gxm, gym = dgn.max_bounds()
+  extend_map{width = gxm, height = gym, fill = 'x'}
+
+  local BORDER = 8
+  local MAX_X = gxm - BORDER - 1
+  local MAX_Y = gym - BORDER - 1
+
+  fill_area{fill = 'x'}
+  fill_area { x1 = BORDER, y1 = BORDER, x2 = MAX_X, y2 = MAX_Y, fill = "." }
+
+  local spacing = math.floor(spacing_min + crawl.random_real() * spacing_range)
+  local size_min = spacing_min + 3
+  local areas = layout.get_areas_around_primary_vault(_G, BORDER, BORDER,
+                                                          MAX_X, MAX_Y)
+  for i = 1, #areas do
+
+    -- move soft edges inward so that they don't hit the walls
+    -- we don't move soft edges in
+
+    if (not areas[i].x_min_is_soft) then
+      areas[i].x_min = areas[i].x_min + spacing
+    end
+    if (not areas[i].x_max_is_soft) then
+      areas[i].x_max = areas[i].x_max - spacing
+    end
+    if (not areas[i].y_min_is_soft) then
+      areas[i].y_min = areas[i].y_min + spacing
+    end
+    if (not areas[i].y_max_is_soft) then
+      areas[i].y_max = areas[i].y_max - spacing
+    end
+
+    -- add the rooms if there is enough space
+
+    local size_x = areas[i].x_max - areas[i].x_min + 1
+    local size_y = areas[i].y_max - areas[i].y_min + 1
+    if(size_x >= size_min and size_y >= size_min) then
+      onion_room (areas[i].x_min, areas[i].y_min,
+                  areas[i].x_max, areas[i].y_max)
+    end
+  end
+
+  -- the map is already connected in a tree, but more doors is nice
+  connect_adjacent_rooms { max = crawl.random_range(100, 250),
+                           min = 50, replace = '+', check_empty = true }
+
+  -- add windows in Elf
+  if (you.in_branch("elf")) then
+    connect_adjacent_rooms { max = 400, min = 100,
+                             replace = 'm', check_empty = false }
+  end
+}}
+MAP
+ENDMAP
+
+##############################################################
+# layout_geometric_city
+#
+# I (infiniplex) need to revise and add this one.  This
+# placeholder included here because I budgeted space for it when
+# working out the rations of layout types per branch.
+#
+#NAME:   layout_geometric_city
+#DEPTH:  Pan
+#WEIGHT: 25
+#ORIENT: encompass
+#TAGS:   overwritable layout allow_dup unrand layout_type_city
+#TAGS:   no_rotate no_vmirror no_hmirror

@@ -93,7 +93,7 @@ default-depth:
 
 NAME:   serial_column_ruins
 TAGS:   allow_dup extra luniq_serial
-TAGS:   layout_open layout_caves layout_city
+TAGS:   layout_open layout_open_caves layout_city
 DEPTH:  D, Depths
 CHANCE: 3%
 {{

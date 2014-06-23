@@ -28,7 +28,6 @@
 #include "misc.h"
 #include "mon-death.h"
 #include "mon-util.h"
-#include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
 #include "player.h"
@@ -2599,6 +2598,36 @@ int item_mass(const item_def &item)
     }
 
     return (unit_mass > 0) ? unit_mass : 0;
+}
+
+bool is_item_jelly_edible(const item_def &item)
+{
+    // Don't eat artefacts.
+    if (is_artefact(item))
+        return false;
+
+    // Don't eat mimics.
+    if (item.flags & ISFLAG_MIMIC)
+        return false;
+
+    // Shouldn't eat stone things
+    //   - but what about wands and rings?
+    if (item.base_type == OBJ_MISSILES
+        && (item.sub_type == MI_STONE || item.sub_type == MI_LARGE_ROCK))
+    {
+        return false;
+    }
+
+    // Don't eat special game items.
+    if (item.base_type == OBJ_ORBS
+        || (item.base_type == OBJ_MISCELLANY
+            && (item.sub_type == MISC_RUNE_OF_ZOT
+                || item.sub_type == MISC_HORN_OF_GERYON)))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 equipment_type get_item_slot(const item_def& item)

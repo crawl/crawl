@@ -520,13 +520,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                         mpr("You see sparks fly.");
                     break;
 
-                case SPWPN_DRAGON_SLAYING:
-                    mpr(player_genus(GENPC_DRACONIAN)
-                        || you.form == TRAN_DRAGON
-                            ? "You feel a sudden desire to commit suicide."
-                            : "You feel a sudden desire to slay dragons!");
-                    break;
-
                 case SPWPN_VENOM:
                     mpr("It begins to drip with poison!");
                     break;
@@ -1171,7 +1164,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld,
         break;
 
     case RING_TELEPORTATION:
-        if (crawl_state.game_is_sprint())
+        if (you.no_tele())
             mpr("You feel a slight, muted jump rush through you.");
         else
             // keep in sync with player_teleport

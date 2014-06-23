@@ -29,11 +29,11 @@
 #include "mon-cast.h"
 #include "mon-util.h"
 #include "mon-pick.h"
+#include "mon-poly.h"
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "makeitem.h"
-#include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player-stats.h"
@@ -1225,7 +1225,6 @@ static bool _jiyva_retribution()
             MONS_SHINING_EYE,
             MONS_GIANT_ORANGE_BRAIN,
             MONS_JELLY,
-            MONS_BROWN_OOZE,
             MONS_ACID_BLOB,
             MONS_AZURE_JELLY,
             MONS_DEATH_OOZE,

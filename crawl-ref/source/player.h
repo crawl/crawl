@@ -611,10 +611,11 @@ public:
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
+    bool holy_wrath_susceptible() const;
     bool is_holy(bool spells = true) const;
     bool is_unholy(bool spells = true) const;
     bool is_evil(bool spells = true) const;
-    bool is_chaotic() const;
+    int how_chaotic(bool check_spells_god) const;
     bool is_artificial() const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
@@ -809,6 +810,8 @@ bool check_moveto_exclusion(const coord_def& p,
                             bool *prompted = nullptr);
 bool check_moveto_trap(const coord_def& p, const string &move_verb = "step",
         bool *prompted = nullptr);
+
+bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
 void move_player_to_grid(const coord_def& p, bool stepped);
 

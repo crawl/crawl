@@ -18,6 +18,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "attitude-change.h"
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
@@ -42,7 +43,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "mon-info.h"
 #include "output.h"
 #include "shopping.h"
@@ -330,6 +330,19 @@ monster* direction_chooser::targeted_monster() const
         return NULL;
 }
 
+// Return your target, if it still exists and is visible to you.
+static monster* _get_current_target()
+{
+    if (invalid_monster_index(you.prev_targ))
+        return NULL;
+
+    monster* mon = &menv[you.prev_targ];
+    if (mon->alive() && you.can_see(mon))
+        return mon;
+    else
+        return NULL;
+}
+
 string direction_chooser::build_targeting_hint_string() const
 {
     string hint_string;
@@ -337,7 +350,7 @@ string direction_chooser::build_targeting_hint_string() const
     // Hint for 'p' - previous target, and for 'f' - current cell, if
     // applicable.
     const actor*   f_target = targeted_actor();
-    const monster* p_target = get_current_target();
+    const monster* p_target = _get_current_target();
 
     if (f_target && f_target == p_target)
         hint_string = ", f/p - " + f_target->name(DESC_PLAIN);
@@ -770,7 +783,7 @@ void full_describe_view()
                 // View database entry.
                 describe_monsters(*m);
                 redraw_screen();
-                mesclr();
+                clear_messages();
             }
             else // ACT_EXECUTE -> view/travel
             {
@@ -1033,7 +1046,7 @@ bool direction_chooser::find_default_monster_target(coord_def& result) const
     bool (*find_targ)(const coord_def&, int, bool, int, targetter*);
 
     // First try to pick our previous target.
-    const monster* mons_target = get_current_target();
+    const monster* mons_target = _get_current_target();
     if (mons_target != NULL
         && (mode != TARG_EVOLVABLE_PLANTS
             && mons_attitude(mons_target) == ATT_HOSTILE
@@ -1633,7 +1646,7 @@ void direction_chooser::toggle_beam()
 
 bool direction_chooser::select_previous_target()
 {
-    if (const monster* mon_target = get_current_target())
+    if (const monster* mon_target = _get_current_target())
     {
         // We have all the information we need.
         moves.isValid  = true;
@@ -1877,7 +1890,7 @@ void direction_chooser::show_help()
 {
     show_targeting_help();
     redraw_screen();
-    mesclr(true);
+    clear_messages(true);
     need_all_redraw = true;
 }
 
@@ -2083,7 +2096,7 @@ bool direction_chooser::choose_direction()
     if (hitfunc)
         need_beam_redraw = true;
 
-    mesclr();
+    clear_messages();
     msgwin_set_temporary(true);
     show_initial_prompt();
     need_text_redraw = false;
@@ -2206,7 +2219,7 @@ void full_describe_square(const coord_def &c)
     }
 
     redraw_screen();
-    mesclr();
+    clear_messages();
 }
 
 static void _extend_move_to_edge(dist &moves)
@@ -2920,17 +2933,7 @@ string thing_do_grammar(description_level_type dtype, bool add_stop,
     }
 
     if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
-    {
-        /* Since we're removing caps, this shouldn't be needed,
-           but we'll keep it in case, for now.
-        if (dtype == DESC_PLAIN
-            || dtype == DESC_THE
-            || dtype == DESC_A)
-        {
-            desc[0] = tolower(desc[0]);
-        }*/
         return desc;
-    }
 
     switch (dtype)
     {
@@ -2948,46 +2951,7 @@ string thing_do_grammar(description_level_type dtype, bool add_stop,
 static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 {
     if (feat_is_trap(grid) && trap != NUM_TRAPS)
-    {
-        switch (trap)
-        {
-        case TRAP_ARROW:
-            return "arrow trap";
-        case TRAP_NEEDLE:
-            return "needle trap";
-        case TRAP_BOLT:
-            return "bolt trap";
-        case TRAP_SPEAR:
-            return "spear trap";
-        case TRAP_BLADE:
-            return "blade trap";
-        case TRAP_NET:
-            return "net trap";
-#if TAG_MAJOR_VERSION == 34
-        case TRAP_DART:
-            return "dart trap";
-        case TRAP_GAS:
-            return "gas trap";
-#endif
-        case TRAP_ALARM:
-            return "alarm trap";
-        case TRAP_SHAFT:
-            return "shaft";
-        case TRAP_TELEPORT:
-            return "teleport trap";
-        case TRAP_ZOT:
-            return "Zot trap";
-        case TRAP_GOLUBRIA:
-            return "passage of Golubria";
-        case TRAP_PLATE:
-            return "pressure plate";
-        case TRAP_WEB:
-            return "web";
-        default:
-            die("Error: invalid trap type %d", trap);
-            return "undefined trap";
-        }
-    }
+        return full_trap_name(trap);
 
     switch (grid)
     {

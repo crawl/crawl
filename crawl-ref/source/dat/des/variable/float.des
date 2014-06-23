@@ -1192,15 +1192,13 @@ ENDMAP
 ##############################################################################
 # Starter slime pit
 #
-# The slime creature or brown ooze may seem too tough for the level where this
-# appears, but since they are normal speed with no range attacks, they can
-# be escaped.
-#
+# The slime creature may seem too tough for the level where this appears, but
+# since it is a normal speed monster with no range attacks, it can be escaped.
 NAME:   lemuel_slime
 DEPTH:  D:6-, Lair
 ORIENT: float
 MONS:   w:20 ooze / jelly / fungus
-MONS:   slime creature / brown ooze / oklob plant
+MONS:   slime creature / oklob plant
 MAP
 xxxxxxxxxx
 xxxx111xxx
@@ -2244,7 +2242,7 @@ ORIENT:  float
 DEPTH:   Depths, !Depths:$
 WEIGHT:  3
 MONS:    generate_awake giant eyeball, eye of devastation, giant orange brain
-MONS:    generate_awake golden eye, slime creature, brown ooze
+MONS:    generate_awake golden eye, slime creature, jelly
 KFEAT:   > = known shaft trap
 KFEAT:   n = iron_grate
 KMASK:   ' = !no_monster_gen
@@ -2555,7 +2553,7 @@ KMONS: K = greater naga w:5 / naga mage / anaconda / naga warrior / \
            guardian serpent
 KMONS: R = emperor scorpion / wolf spider / orb spider / ghost moth w:5 / \
            tarantella
-KMONS: M = acid blob w:5 / brown ooze / azure jelly / jelly / great orb of eyes
+KMONS: M = acid blob w:5 / azure jelly / jelly w:15 / great orb of eyes
 KMONS: V = vault guard / stone giant w:5 / yaktaur captain / dancing weapon / \
            skeletal warrior
 KMONS: C = skeletal warrior / bone dragon / vampire / lich w:5
@@ -2935,7 +2933,7 @@ KMONS:    4 = ice statue / w:5 orange crystal statue
 KMONS:    5 = catoblepas / dire elephant / emperor scorpion \
               / alligator snapping turtle / shambling mangrove / thorn hunter
 KMONS:    6 = siren
-KMONS:    7 = water nymph / wind drake
+KMONS:    7 = water nymph / wind drake / sphinx
 KMONS:    D = merfolk javelineer / octopode crusher / tengu reaver \
               / spriggan air mage
 KMONS:    E = quicksilver dragon / storm dragon / titan / golden dragon
@@ -2945,13 +2943,13 @@ KITEM:    % = %
 KITEM:    $ = $
 KITEM:    * = *
 KITEM:    E| = |
-KFEAT:    567DER%$*| = W
+KFEAT:    f567DER%$*| = W
 KFEAT:    S = w
 KFEAT:    m = t
 KPROP:    ~`5R = no_rtele_into
 SHUFFLE:  HI / JK
 NSUBST:   H = 1:4 / *:G, I = ', J = G, K = D, L = 2:6 / *:7
-SUBST:    B : cf, C : cf, ~" = ffWmm, '` = W
+SUBST:    B : cf, C : cf, ~" = ffffW, '` = W
 COLOUR:   c = white
 COLOUR:   x = cyan
 TILE:     m = dngn_mangrove

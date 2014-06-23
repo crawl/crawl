@@ -210,9 +210,9 @@ the target, packing a nasty punch.
 %%%%
 lance "Wyrmbane"
 
-An enchanted lance which grows more and more powerful every time it inflicts a
-killing blow on a strong dragon. The more powerful it grows, the harder it will
-be to find a worthy opponent.
+An enchanted lance deadly to all dragonkind. It grows more powerful every time
+it inflicts a killing blow on a strong dragon. The more powerful it grows, the
+harder it will be to find a worthy opponent.
 %%%%
 Spriggan's Knife
 
@@ -561,8 +561,8 @@ it fell into disuse and vanished from history.
 %%%%
 great mace "Firestarter"
 
-Alongside its obvious effects, this weapon protects its owner's inventory from
-fire, and fills monsters that it hits with an inner flame.
+This weapon is imbued with potent fire magic, and fills those it strikes with
+inner flame.
 %%%%
 orange crystal plate armour
 

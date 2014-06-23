@@ -10,7 +10,7 @@
 #include "godcompanions.h"
 
 #include "actor.h"
-#include "mon-stuff.h"
+#include "mon-message.h"
 #include "mon-util.h"
 #include "religion.h"
 #include "stuff.h"
@@ -123,49 +123,62 @@ void populate_offlevel_recall_list(vector<pair<mid_t, int> > &recall_list)
     }
 }
 
+/**
+ * Attempt to recall an ally from offlevel.
+ *
+ * @param mid   The ID of the monster to be recalled.
+ * @return      Whether the monster was successfully recalled onto the level.
+ * Note that the monster may not still be alive or onlevel, due to shafts, etc,
+ * but they were here at least briefly!
+ */
 bool recall_offlevel_ally(mid_t mid)
 {
     if (!companion_is_elsewhere(mid, true))
         return false;
 
     companion* comp = &companion_list[mid];
-    if (comp->mons.place(true))
+    if (!comp->mons.place(true))
+        return false;
+
+    monster* mons = monster_by_mid(mid);
+
+    // The monster is now on this level
+    remove_monster_from_transit(comp->level, mid);
+    comp->level = level_id::current();
+    simple_monster_message(mons, " is recalled.");
+
+    // Now that the monster is onlevel, we can safely apply traps to it.
+    // old location isn't very meaningful, so use current loc
+    mons->apply_location_effects(mons->pos());
+    // check if it was killed/shafted by a trap...
+    if (!mons->alive())
+        return true; // still successfully recalled!
+
+    // Catch up time for off-level monsters
+    // (We move the player away so that we don't get expiry
+    // messages for things that supposed wore off ages ago)
+    const coord_def old_pos = you.pos();
+    you.moveto(coord_def(0, 0));
+
+    int turns = you.elapsed_time - comp->timestamp;
+    // Note: these are auts, not turns, thus healing is 10 times as fast as
+    // for other monsters, confusion goes away after a single turn, etc.
+
+    mons->heal(div_rand_round(turns * mons->off_level_regen_rate(), 100));
+
+    if (turns >= 10 && mons->alive())
     {
-        monster* mons = monster_by_mid(mid);
-
-        // The monster is now on this level
-        remove_monster_from_transit(comp->level, mid);
-        comp->level = level_id::current();
-        simple_monster_message(mons, " is recalled.");
-
-        // Catch up time for off-level monsters
-        // (We move the player away so that we don't get expiry
-        // messages for things that supposed wore off ages ago)
-        const coord_def old_pos = you.pos();
-        you.moveto(coord_def(0, 0));
-
-        int turns = you.elapsed_time - comp->timestamp;
-        // Note: these are auts, not turns, thus healing is 10 times as fast as
-        // for other monsters, confusion goes away after a single turn, etc.
-
-        mons->heal(div_rand_round(turns * mons_off_level_regen_rate(mons), 100));
-
-        if (turns >= 10 && mons->alive())
-        {
-            // Remove confusion manually (so that the monster
-            // doesn't blink after being recalled)
-            mons->del_ench(ENCH_CONFUSION, true);
-            mons->timeout_enchantments(turns / 10);
-        }
-        you.moveto(old_pos);
-        // Do this after returning the player to the proper position
-        // because it uses player position
-        recall_orders(mons);
-
-        return true;
+        // Remove confusion manually (so that the monster
+        // doesn't blink after being recalled)
+        mons->del_ench(ENCH_CONFUSION, true);
+        mons->timeout_enchantments(turns / 10);
     }
+    you.moveto(old_pos);
+    // Do this after returning the player to the proper position
+    // because it uses player position
+    recall_orders(mons);
 
-    return false;
+    return true;
 }
 
 bool companion_is_elsewhere(mid_t mid, bool must_exist)

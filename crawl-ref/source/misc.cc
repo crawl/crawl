@@ -57,7 +57,6 @@
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
-#include "mon-stuff.h"
 #include "ng-setup.h"
 #include "notes.h"
 #include "ouch.h"
@@ -1208,7 +1207,7 @@ void search_around()
         if (effective > ptrap->skill_rnd)
         {
             ptrap->reveal();
-            mprf("You found %s trap!",
+            mprf("You found %s!",
                  ptrap->name(DESC_A).c_str());
             learned_something_new(HINT_SEEN_TRAP, *ri);
         }

@@ -1686,7 +1686,7 @@ static void _keyhelp_query_descriptions()
         _find_description(&again, &error);
 
         if (again)
-            mesclr();
+            clear_messages();
     }
     while (again);
 
@@ -1721,7 +1721,7 @@ static int _keyhelp_keyfilter(int ch)
             // resets 'again'
             again = _handle_FAQ();
             if (again)
-                mesclr();
+                clear_messages();
         }
         while (again);
 

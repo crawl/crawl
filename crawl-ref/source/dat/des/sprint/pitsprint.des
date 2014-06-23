@@ -31,7 +31,7 @@ function base_monster_setup(e)
            griffon / ugly thing / gargoyle / molten gargoyle /\
            kobold demonologist band / deep troll /\
            deep elf fighter band / boulder beetle / red wasp /\
-           orc high priest band w:5 / pulsating lump / boring beetle /\
+           orc high priest band w:5 / boring beetle /\
            flayed ghost / freezing wraith / shadow wraith / shadow /\
            orc sorcerer band w:5 / orc knight band /\
            redback / phantasmal warrior / spiny frog / orange rat /\
@@ -144,7 +144,7 @@ function base_monster_setup(e)
            lorocyproca / brimstone fiend / ice fiend / shadow fiend /\
            hell sentinel / executioner")
   e.kmons("U = place:Slime:6 / slime creature band /\
-           death ooze / azure jelly / acid blob / brown ooze /\
+           death ooze / azure jelly / acid blob /\
            giant eyeball w:3 / eye of draining w:3 / eye of devastation /\
            golden eye w:3 / shining eye w:3")
   e.kmons("V = azure jelly / death ooze / acid blob")
@@ -749,8 +749,7 @@ KITEM: c = mace ego:vorpal ident:all not_cursed /\
        mace ego:protection ident:all not_cursed /\
        flail ego:vorpal ident:all not_cursed /\
        flail ego:protection ident:all not_cursed
-KITEM: d = trident ego:vorpal ident:all not_cursed /\
-       trident ego:dragon_slaying ident:all not_cursed
+KITEM: d = trident ego:vorpal ident:all not_cursed
 KITEM: e = quarterstaff ego:protection ident:all not_cursed /\
        quarterstaff ego:speed ident:all not_cursed
 KITEM: f = long sword ego:holy_wrath ident:all not_cursed /\

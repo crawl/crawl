@@ -55,7 +55,7 @@ epilogue{{
   crawl.tutorial_hint("HINT_NEW_LEVEL")
   -- TODO: Replace this with a hint on trying to _eat_ rotten food.
   crawl.tutorial_hint("HINT_ROTTEN_FOOD")
-  crawl.mesclr(true)
+  crawl.clear_messages(true)
   crawl.tutorial_msg("tutorial2 start")
   tutorial_intro()
 }}
@@ -128,7 +128,7 @@ MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson2", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial2.win" }
 epilogue{{
-  crawl.mesclr(true)
+  crawl.clear_messages(true)
   crawl.tutorial_msg("tutorial2 newlevel")
 }}
 MAP

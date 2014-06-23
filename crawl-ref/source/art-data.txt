@@ -191,7 +191,7 @@ BRAND:   SPWPN_CHAOS
 
 NAME:    Glaive of Prune
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
-PLUS:    +9
+PLUS:    +12
 COLOUR:  LIGHTMAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
@@ -355,6 +355,7 @@ COLOUR:  ETC_DARK
 TILE:    urand_leech
 TILE_EQ: leech
 BRAND:   SPWPN_VAMPIRISM
+AC:      -2
 EV:      -2
 STR:     -2
 INT:     -2
@@ -375,7 +376,7 @@ BOOL:    poison
 
 NAME:     dagger "Morg"
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
-PLUS:     +3
+PLUS:     +4
 COLOUR:   LIGHTRED
 TILE:     urand_morg
 TILE_EQ:  morg
@@ -419,11 +420,11 @@ COLOUR:  BROWN
 TILE:    urand_skullcrusher
 TILE_EQ: giant_club_slant
 BRAND:   SPWPN_SPEED
-STR:     5
+STR:     7
 
 NAME:     glaive of the Guard
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
-PLUS:     +7
+PLUS:     +8
 COLOUR:   ETC_ELECTRICITY
 TILE:     urand_guard
 TILE_EQ:  glaive_of_the_guard
@@ -490,7 +491,7 @@ BOOL:     poison, life
 
 NAME:     trident of the Octopus King
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
-PLUS:     +7
+PLUS:     +8 # Messed with sometimes
 COLOUR:   ETC_WATER
 TILE:     urand_octopus_king
 TILE_EQ:  trident_octopus_king
@@ -557,7 +558,6 @@ PLUS:    +8
 COLOUR:  LIGHTGREEN
 TILE:    urand_wyrmbane
 TILE_EQ: wyrmbane
-BRAND:   SPWPN_DRAGON_SLAYING
 AC:      5
 FIRE:    1
 BOOL:    poison, berserk, no_upgrade
@@ -626,7 +626,7 @@ BOOL:     nogen
 
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_CUTLASS
-PLUS:     +8
+PLUS:     +10
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  capt_cutlass

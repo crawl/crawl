@@ -10,6 +10,7 @@
 
 #include "areas.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "branch.h"
 #include "cloud.h"
@@ -45,8 +46,8 @@
 #include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
@@ -440,16 +441,63 @@ string zin_recite_text(const int seed, const int prayertype, int step)
     return recite;
 }
 
+/** How vulnerable to RECITE_HERETIC is this monster?
+ *
+ * @param[in] mon The monster to check.
+ * @returns the susceptibility.
+ */
+static int _heretic_recite_weakness(const monster *mon)
+{
+    int degree = 0;
+
+    // Sleeping or paralyzed monsters will wake up or still perceive their
+    // surroundings, respectively.  So, you can still recite to them.
+    if (mons_intel(mon) >= I_NORMAL
+        && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
+    {
+        // In the eyes of Zin, everyone is a sinner until proven otherwise!
+            degree++;
+
+        // Any priest is a heretic...
+        if (mon->is_priest())
+            degree++;
+
+        // Or those who believe in themselves...
+        if (mon->type == MONS_DEMIGOD)
+            degree++;
+
+        // ...but evil gods are worse.
+        if (is_evil_god(mon->god) || is_unknown_god(mon->god))
+            degree++;
+
+        // (The above mean that worshipers will be treated as
+        // priests for reciting, even if they aren't actually.)
+
+
+        // Sanity check: monsters that won't attack you, and aren't
+        // priests/evil, don't get recited against.
+        if (mon->wont_attack() && degree <= 1)
+            degree = 0;
+
+        // Sanity check: monsters that are holy, know holy spells, or worship
+        // holy gods aren't heretics.
+        if (mon->is_holy() || is_good_god(mon->god))
+            degree = 0;
+    }
+
+    return degree;
+}
+
 typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
 /** Check whether this monster might be influenced by Recite.
  *
  * @param[in] mon The monster to check.
- * @param[out] eligibility An vector, indexed by recite_type, that indicates
+ * @param[out] eligibility A vector, indexed by recite_type, that indicates
  *             which recitation types the monster is affected by, if any:
  *             eligibility[RECITE_FOO] is nonzero if the monster is affected
  *             by RECITE_FOO. Only modified if the function returns 0 or 1.
- * @return  -1 if the monster is already affected or of the wrong holiness.
- *          The eligibility vector is unchanged.
+ * @return  -1 if the monster is already affected. The eligibility vector
+ *          is unchanged.
  * @return  0 if the monster is otherwise ineligible for recite. The
  *          eligibility vector is filled with zeros.
  * @return  1 if the monster is eligible for recite. The eligibility vector
@@ -466,74 +514,14 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 
     const mon_holy_type holiness = mon->holiness();
 
-    // Can't recite at plants or golems.
-    if (holiness == MH_PLANT || holiness == MH_NONLIVING)
-        return -1;
-
     eligibility.init(0);
 
-    // Recitations are based on monster::is_unclean, but are NOT identical to it,
-    // because that lumps all forms of uncleanliness together. We want to specify.
+    // Anti-chaos prayer: Hits things vulnerable to silver, or with chaotic spells/gods.
+    eligibility[RECITE_CHAOTIC] = mon->how_chaotic(true);
 
-    // Anti-chaos prayer:
-
-    // Hits some specific insane or shapeshifted uniques.
-    if (mon->type == MONS_CRAZY_YIUF
-        || mon->type == MONS_PSYCHE
-        || mon->type == MONS_GASTRONOK)
-    {
-        eligibility[RECITE_CHAOTIC]++;
-    }
-
-    // Hits monsters that have chaotic spells memorized.
-    if (mon->has_chaotic_spell() && mon->is_actual_spellcaster())
-        eligibility[RECITE_CHAOTIC]++;
-
-    // Hits monsters with 'innate' chaos.
-    if (mon->is_chaotic())
-        eligibility[RECITE_CHAOTIC]++;
-
-    // Hits monsters that are worshipers of a chaotic god.
-    if (is_chaotic_god(mon->god))
-        eligibility[RECITE_CHAOTIC]++;
-
-    // Hits (again) monsters that are priests of a chaotic god.
-    if (is_chaotic_god(mon->god) && mon->is_priest())
-        eligibility[RECITE_CHAOTIC]++;
-
-    // Anti-impure prayer:
-
-    // Hits monsters that have unclean spells memorized.
-    if (mon->has_unclean_spell())
-        eligibility[RECITE_IMPURE]++;
-
-    // Hits monsters that desecrate the dead.
-    if (mons_eats_corpses(mon))
-        eligibility[RECITE_IMPURE]++;
-
-    // Hits corporeal undead, which are a perversion of natural form.
-    if (holiness == MH_UNDEAD && !mon->is_insubstantial())
-        eligibility[RECITE_IMPURE]++;
-
-    // Hits monsters that have these brands.
-    if (mon->has_attack_flavour(AF_VAMPIRIC))
-        eligibility[RECITE_IMPURE]++;
-    if (mon->has_attack_flavour(AF_HUNGER))
-        eligibility[RECITE_IMPURE]++;
-    if (mon->has_attack_flavour(AF_ROT))
-        eligibility[RECITE_IMPURE]++;
-    if (mon->has_attack_flavour(AF_STEAL))
-        eligibility[RECITE_IMPURE]++;
-
-    // Being naturally mutagenic isn't good either.
-    corpse_effect_type ce = mons_corpse_effect(mon->type);
-    if ((ce == CE_ROT || ce == CE_MUTAGEN) && !mon->is_chaotic())
-        eligibility[RECITE_IMPURE]++;
-
-    // Death drakes and necrophage get a bump to uncleanliness.
-    if (mon->type == MONS_NECROPHAGE || mon->type == MONS_DEATH_DRAKE)
-        eligibility[RECITE_IMPURE]++;
-
+    // Anti-impure prayer: Hits things that Zin hates in general.
+    // Don't look at the monster's god; that's what RECITE_HERETIC is for.
+    eligibility[RECITE_IMPURE] = mon->how_unclean(false);
     // Sanity check: if a monster is 'really' natural, don't consider it impure.
     if (mons_intel(mon) < I_NORMAL
         && (holiness == MH_NATURAL || holiness == MH_PLANT)
@@ -544,53 +532,15 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
         eligibility[RECITE_IMPURE] = 0;
     }
 
-    // Anti-unholy prayer
-
-    // Hits demons and incorporeal undead.
+    // Anti-unholy prayer: Hits demons and incorporeal undead.
     if (holiness == MH_UNDEAD && mon->is_insubstantial()
         || holiness == MH_DEMONIC)
     {
         eligibility[RECITE_UNHOLY]++;
     }
 
-
-    // Anti-heretic prayer
-
-    // Sleeping or paralyzed monsters will wake up or still perceive their
-    // surroundings, respectively.  So, you can still recite to them.
-
-    if (mons_intel(mon) >= I_NORMAL
-        && !(mon->has_ench(ENCH_DUMB) || mons_is_confused(mon)))
-    {
-        // In the eyes of Zin, everyone is a sinner until proven otherwise!
-        eligibility[RECITE_HERETIC]++;
-
-        // Any priest is a heretic...
-        if (mon->is_priest())
-            eligibility[RECITE_HERETIC]++;
-
-        // Or those who believe in themselves...
-        if (mon->type == MONS_DEMIGOD)
-            eligibility[RECITE_HERETIC]++;
-
-        // ...but evil gods are worse.
-        if (is_evil_god(mon->god) || is_unknown_god(mon->god))
-            eligibility[RECITE_HERETIC]++;
-
-        // (The above mean that worshipers will be treated as
-        // priests for reciting, even if they aren't actually.)
-
-
-        // Sanity check: monsters that won't attack you, and aren't
-        // priests/evil, don't get recited against.
-        if (mon->wont_attack() && eligibility[RECITE_HERETIC] <= 1)
-            eligibility[RECITE_HERETIC] = 0;
-
-        // Sanity check: monsters that are holy, know holy spells, or worship
-        // holy gods aren't heretics.
-        if (mon->is_holy() || is_good_god(mon->god))
-            eligibility[RECITE_HERETIC] = 0;
-    }
+    // Anti-heretic prayer: Hits intelligent monsters, especially priests.
+    eligibility[RECITE_HERETIC] = _heretic_recite_weakness(mon);
 
 #ifdef DEBUG_DIAGNOSTICS
     string elig;
@@ -1556,9 +1506,9 @@ bool beogh_water_walk()
  */
 static bool _given_gift(monster* mon)
 {
-    return mon->props.exists("given beogh weapon")
-            || mon->props.exists("given beogh armour")
-            || mon->props.exists("given beogh shield");
+    return mon->props.exists(BEOGH_WPN_GIFT_KEY)
+            || mon->props.exists(BEOGH_ARM_GIFT_KEY)
+            || mon->props.exists(BEOGH_SH_GIFT_KEY);
 }
 
 /**
@@ -1640,11 +1590,11 @@ bool beogh_gift_item()
                                     shield ? MSLOT_SHIELD :
                                              MSLOT_WEAPON);
     if (shield)
-        mons->props["given beogh shield"] = true;
+        mons->props[BEOGH_SH_GIFT_KEY] = true;
     else if (body_armour)
-        mons->props["given beogh armour"] = true;
+        mons->props[BEOGH_ARM_GIFT_KEY] = true;
     else
-        mons->props["given beogh weapon"] = true;
+        mons->props[BEOGH_WPN_GIFT_KEY] = true;
 
     return true;
 }
@@ -3957,7 +3907,7 @@ bool gozag_potion_petition()
         if (crawl_state.seen_hups)
             return false;
 
-        mesclr();
+        clear_messages();
         for (int i = 0; i < GOZAG_MAX_POTIONS; i++)
         {
             faith_price = _gozag_faith_adjusted_price(prices[i]);
@@ -4158,7 +4108,7 @@ bool gozag_call_merchant()
         if (crawl_state.seen_hups)
             return false;
 
-        mesclr();
+        clear_messages();
         for (i = 0; i < GOZAG_MAX_SHOPS; i++)
         {
             cost = you.props[make_stringf(GOZAG_SHOP_COST_KEY, i)].get_int();

@@ -1424,7 +1424,7 @@ vector<SelItem> prompt_invent_items(
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            mesclr();
+            clear_messages();
         }
 
         if (need_prompt)
@@ -1476,7 +1476,7 @@ vector<SelItem> prompt_invent_items(
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
-                    mesclr();
+                    clear_messages();
                 }
 
                 for (unsigned int i = 0; i < items.size(); ++i)
@@ -1901,7 +1901,7 @@ int prompt_invent_item(const char *prompt,
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            mesclr();
+            clear_messages();
         }
 
         if (need_prompt)
@@ -1961,7 +1961,7 @@ int prompt_invent_item(const char *prompt,
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
-                    mesclr();
+                    clear_messages();
                 }
             }
         }

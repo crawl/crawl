@@ -464,9 +464,9 @@ bool debug_make_trap(const coord_def& pos)
     bool success = place_specific_trap(you.pos(), trap);
     if (success)
     {
-        mprf("Created a %s trap, marked it undiscovered.",
-             (trap == TRAP_RANDOM) ? "random"
-                                   : trap_name(trap).c_str());
+        mprf("Created a %s, marked it undiscovered.",
+             (trap == TRAP_RANDOM) ? "random trap"
+                                   : full_trap_name(trap).c_str());
     }
     else
         mpr("Could not create trap - too many traps on level.");
@@ -653,7 +653,7 @@ static input_history mini_hist(10), primary_hist(10);
 void debug_place_map(bool primary)
 {
     char what_to_make[100];
-    mesclr();
+    clear_messages();
     mprf(MSGCH_PROMPT, primary ? "Enter map name: " :
          "Enter map name (prefix it with * for local placement): ");
     if (cancellable_get_line(what_to_make, sizeof what_to_make,

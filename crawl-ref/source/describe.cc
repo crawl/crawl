@@ -47,7 +47,6 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-chimera.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"
@@ -549,11 +548,15 @@ static const char *trap_names[] =
     "dart",
 #endif
     "arrow", "spear",
-    "teleport", "alarm", "blade",
+#if TAG_MAJOR_VERSION > 34
+    "teleport",
+#endif
+    "permanent teleport",
+    "alarm", "blade",
     "bolt", "net", "Zot", "needle",
     "shaft", "passage", "pressure plate", "web",
 #if TAG_MAJOR_VERSION == 34
-    "gas",
+    "gas", "teleport",
 #endif
 };
 
@@ -564,6 +567,25 @@ string trap_name(trap_type trap)
     if (trap >= 0 && trap < NUM_TRAPS)
         return trap_names[trap];
     return "";
+}
+
+string full_trap_name(trap_type trap)
+{
+    string basename = trap_name(trap);
+    switch (trap)
+    {
+    case TRAP_GOLUBRIA:
+        return basename + " of Golubria";
+    case TRAP_PLATE:
+    case TRAP_WEB:
+    case TRAP_SHAFT:
+#if TAG_MAJOR_VERSION == 34
+    case TRAP_GAS:
+#endif
+        return basename;
+    default:
+        return basename + " trap";
+    }
 }
 
 int str_to_trap(const string &s)
@@ -906,10 +928,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "discharge some electrical energy and cause terrible "
                     "harm.";
             }
-            break;
-        case SPWPN_DRAGON_SLAYING:
-            description += "This legendary weapon is deadly to all "
-                "dragonkind.";
             break;
         case SPWPN_VENOM:
             if (is_range_weapon(item))
@@ -2239,7 +2257,7 @@ static bool _describe_spells(const item_def &item)
     const int c = getchm();
     if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
     {
-        mesclr();
+        clear_messages();
         return false;
     }
 

@@ -41,7 +41,6 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
@@ -59,6 +58,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
+#include "teleport.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -978,7 +978,7 @@ static void _finish_delay(const delay_queue_item &delay)
             if (monster* m = monster_at(pass))
             {
                 // One square, a few squares, anywhere...
-                if (!shift_monster(m) && !monster_blink(m, true))
+                if (!m->shift() && !monster_blink(m, true))
                     monster_teleport(m, true, true);
                 // Might still fail.
                 if (monster_at(pass))
@@ -1292,7 +1292,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
     if (cmd != CMD_NO_CMD)
     {
         if (delay.type != DELAY_REST)
-            mesclr();
+            clear_messages();
         process_command(cmd);
     }
 

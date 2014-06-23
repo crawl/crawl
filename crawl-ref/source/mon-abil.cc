@@ -37,6 +37,7 @@
 #include "mon-death.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-project.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -44,7 +45,6 @@
 #include "mgen_data.h"
 #include "cloud.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "random.h"
 #include "random-weight.h"
 #include "religion.h"
@@ -3967,7 +3967,6 @@ bool mon_special_ability(monster* mons, bolt & beem)
                         m->props["tile_num"].get_short() = random2(256);
                     case MONS_WRETCHED_STAR:
                     case MONS_CHAOS_SPAWN:
-                    case MONS_PULSATING_LUMP:
                         break;
 
                     default:
@@ -4578,7 +4577,7 @@ void ballisto_on_move(monster* mons, const coord_def& position)
         {
             if (one_chance_in(4))
             {
-                beh_type attitude = actual_same_attitude(*mons);
+                beh_type attitude = attitude_creation_behavior(mons->attitude);
                 if (monster *plant = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                         attitude,
                                                         NULL,
@@ -4803,6 +4802,48 @@ void ancient_zyme_sicken(monster* mons)
             && !is_sanctuary(*ri))
         {
             m->sicken(2 * you.time_taken);
+        }
+    }
+}
+
+/**
+ * Apply the torpor snail slowing effect.
+ *
+ * @param mons      The snail applying the effect.
+ */
+void torpor_snail_slow(monster* mons)
+{
+    // XXX: might be nice to refactor together with ancient_zyme_sicken().
+
+    if (is_sanctuary(mons->pos()))
+        return;
+
+    if (!is_sanctuary(you.pos())
+        && !you.stasis()
+        && !you_worship(GOD_CHEIBRIADOS)
+        && you.can_see(mons)
+        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+    {
+        if (!you.duration[DUR_SLOW])
+        {
+            mprf("Being near %s leaves you feeling lethargic.",
+                 mons->name(DESC_THE).c_str());
+        }
+
+        if (you.duration[DUR_SLOW] < 27)
+            you.set_duration(DUR_SLOW, 18 + random2(10), 27);
+        // can't set this much shorter, or you periodically 'speed up'
+        // for a turn in the middle of TORPOR COMBAT
+    }
+
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    {
+        monster *m = monster_at(*ri);
+        if (m && !mons_aligned(mons, m) && !m->check_stasis(true)
+            && !m->is_stationary() && !is_sanctuary(*ri)
+            && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+        {
+            m->add_ench(mon_enchant(ENCH_SLOW, 0, mons, 18 + random2(10)));
         }
     }
 }

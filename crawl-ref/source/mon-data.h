@@ -39,7 +39,7 @@
        MH_NONLIVING  - golems and other constructs
        MH_PLANT      - plants
 
-   exp_mod: see give_adjusted_experience() in mon-stuff.cc
+   exp_mod: see give_adjusted_experience() in mon-death.cc
    - the experience given for killing this monster is calculated something
    like this:
 
@@ -247,11 +247,13 @@ static monsterentry mondata[] =
     AXED_MON(MONS_PLAGUE_SHAMBLER)
     AXED_MON(MONS_GIANT_SLUG)
     AXED_MON(MONS_FIREFLY)
+    AXED_MON(MONS_BROWN_OOZE)
+    AXED_MON(MONS_PULSATING_LUMP)
 #endif
 
 // Used for genus monsters (which are used for grouping monsters by how they
 // work and in comes-into-view messages.
-#define DUMMY_GENUS(id, glyph, colour, name) \
+#define DUMMY(id, glyph, colour, name) \
 { \
     (id), (glyph), (colour), (name), \
     M_CANT_SPAWN, \
@@ -1136,7 +1138,7 @@ static monsterentry mondata[] =
     MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_LITTLE, MON_SHAPE_QUADRUPED
 },
 
-DUMMY_GENUS(MONS_BEAR, 'h', LIGHTGREY, "bear")
+DUMMY(MONS_BEAR, 'h', LIGHTGREY, "bear")
 
 {
     MONS_POLAR_BEAR, 'h', LIGHTBLUE, "polar bear",
@@ -1239,7 +1241,7 @@ DUMMY_GENUS(MONS_BEAR, 'h', LIGHTGREY, "bear")
 },
 
 // drakes ('k')
-DUMMY_GENUS(MONS_DRAKE, 'k', LIGHTGREY, "drake")
+DUMMY(MONS_DRAKE, 'k', LIGHTGREY, "drake")
 
 {
     MONS_SWAMP_DRAKE, 'k', BROWN, "swamp drake",
@@ -1303,7 +1305,7 @@ DUMMY_GENUS(MONS_DRAKE, 'k', LIGHTGREY, "drake")
 },
 
 // lizards ('l')
-DUMMY_GENUS(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
+DUMMY(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
 
 {
     MONS_GIANT_NEWT, 'l', GREEN, "giant newt",
@@ -2068,7 +2070,7 @@ DUMMY_GENUS(MONS_GIANT_LIZARD, 'l', LIGHTGREY, "giant lizard")
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_QUADRUPED_TAILLESS
 },
 
-DUMMY_GENUS(MONS_CRAB, 't', LIGHTGREY, "crab")
+DUMMY(MONS_CRAB, 't', LIGHTGREY, "crab")
 
 {
     MONS_FIRE_CRAB, 't', LIGHTRED, "fire crab",
@@ -2244,7 +2246,19 @@ DUMMY_GENUS(MONS_CRAB, 't', LIGHTGREY, "crab")
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE
 },
 
-// dummy genus monster; not using DUMMY_GENUS since it's also a dummy species
+{
+    MONS_TORPOR_SNAIL, 'w', GREEN, "torpor snail",
+    M_NO_SKELETON,
+    MR_NO_FLAGS,
+    1200, 20, MONS_ELEPHANT_SLUG, MONS_TORPOR_SNAIL, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 5, 2, 0 },
+    8, 1, MST_NO_SPELLS, CE_POISONOUS, Z_BIG, S_SILENT,
+    I_INSECT, HT_AMPHIBIOUS, FL_NONE, 7, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE, MON_SHAPE_SNAIL
+},
+
+// dummy genus monster; not using DUMMY since it's also a dummy species
 {
     MONS_ELEPHANT_SLUG, 'w', WHITE, "elephant slug",
     M_NO_SKELETON| M_CANT_SPAWN,
@@ -2398,7 +2412,7 @@ DUMMY_GENUS(MONS_CRAB, 't', LIGHTGREY, "crab")
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY, MON_SHAPE_INSECT_WINGED
 },
 
-DUMMY_GENUS(MONS_MOTH, 'y', WHITE, "moth")
+DUMMY(MONS_MOTH, 'y', WHITE, "moth")
 
 {
     MONS_GHOST_MOTH, 'y', MAGENTA, "ghost moth",
@@ -2609,7 +2623,7 @@ DUMMY_GENUS(MONS_MOTH, 'y', WHITE, "moth")
 },
 
 // cyclopes and giants ('C')
-DUMMY_GENUS(MONS_GIANT, 'C', LIGHTGREY, "giant")
+DUMMY(MONS_GIANT, 'C', LIGHTGREY, "giant")
 
 {
     MONS_HILL_GIANT, 'C', LIGHTRED, "hill giant",
@@ -2699,7 +2713,7 @@ DUMMY_GENUS(MONS_GIANT, 'C', LIGHTGREY, "giant")
 },
 
 // dragons ('D')
-DUMMY_GENUS(MONS_DRAGON, 'D', GREEN, "dragon")
+DUMMY(MONS_DRAGON, 'D', GREEN, "dragon")
 
 {
     MONS_WYVERN, 'D', LIGHTRED, "wyvern",
@@ -2879,7 +2893,7 @@ DUMMY_GENUS(MONS_DRAGON, 'D', GREEN, "dragon")
 },
 
 // elementals (E)
-DUMMY_GENUS(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
+DUMMY(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
 
 {
     MONS_EARTH_ELEMENTAL, 'E', ETC_EARTH, "earth elemental",
@@ -3217,41 +3231,7 @@ DUMMY_GENUS(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL, MON_SHAPE_BLOB
 },
 
-{   // not an actual monster, it's here just to allow recoloring
-    MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
-    M_CANT_SPAWN,
-    MR_RES_POISON | MR_RES_ASPHYX,
-    0, 3, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, -3,
-    { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 11, 3, 5, 0 },
-    1, 4, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_AMPHIBIOUS, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_BLOB
-},
-
-{
-    MONS_PULSATING_LUMP, 'J', RED, "pulsating lump",
-    M_SENSE_INVIS,
-    MR_RES_POISON | MR_RES_ASPHYX,
-    0, 3, MONS_JELLY, MONS_PULSATING_LUMP, MH_NATURAL, -3,
-    { {AT_HIT, AF_MUTATE, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 10, 3, 5, 0 },
-    2, 6, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 5, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_BLOB
-},
-
-{
-    MONS_BROWN_OOZE, 'J', BROWN, "brown ooze",
-    M_SENSE_INVIS | M_ACID_SPLASH,
-    MR_RES_POISON | MR_RES_ASPHYX | mrd(MR_RES_ACID, 3),
-    0, 11, MONS_JELLY, MONS_BROWN_OOZE, MH_NATURAL, -7,
-    { {AT_HIT, AF_ACID, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
-    10, 1, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_ITEMS, SIZE_LITTLE, MON_SHAPE_BLOB
-},
+DUMMY(MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature")
 
 {
     MONS_AZURE_JELLY, 'J', LIGHTBLUE, "azure jelly",
@@ -3801,7 +3781,7 @@ DUMMY_GENUS(MONS_ELEMENTAL, 'E', LIGHTGREY, "elemental")
 },
 
 // snakes ('S')
-DUMMY_GENUS(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
+DUMMY(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 
 {
     MONS_BALL_PYTHON, 'S', GREEN, "ball python",
@@ -4037,7 +4017,7 @@ DUMMY_GENUS(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 },
 
 // incorporeal undead ('W')
-{ // dummy genus monster
+{ // dummy genus monster, but also used for removed monsters
     MONS_GHOST, 'W', WHITE, "ghost",
     M_INSUBSTANTIAL | M_NO_POLY_TO,
     MR_NO_FLAGS,
@@ -4744,18 +4724,8 @@ DUMMY_GENUS(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
 },
 
-// never spawned as a monster.
-{
-    MONS_PLAYER, '@', LIGHTGREY, "player",
-    M_SPEAKS | M_CANT_SPAWN,
-    MR_NO_FLAGS,
-    0, 15, MONS_PLAYER_ILLUSION, MONS_PLAYER_ILLUSION, MH_NATURAL, -5,
-    { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 2, 3, 0 },
-    0, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
-    I_HIGH /*uh huh, sure sure*/, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_MEDIUM, MON_SHAPE_HUMANOID
-},
+// 'dummy' a fairly accurate description
+DUMMY(MONS_PLAYER, '@', LIGHTGREY, "player")
 
 // player illusion (Mara) - stats are stored in ghost struct. Undead/demonic
 // flags are set based on the current player's species!
@@ -5481,21 +5451,11 @@ DUMMY_GENUS(MONS_SNAKE, 'S', LIGHTGREEN, "snake")
 },
 
 // trees and related creatures ('7')
-{ // dummy for transformed display
-    MONS_ANIMATED_TREE, '7', ETC_TREE, "animated tree",
-    M_STATIONARY | M_CANT_SPAWN,
-    MR_RES_POISON | MR_VUL_FIRE,
-    0, 10, MONS_PLANT, MONS_ANIMATED_TREE, MH_PLANT, MAG_IMMUNE,
-    { {AT_HIT, AF_CRUSH, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 20, 3, 5, 0 },
-    25, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
-    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_GIANT, MON_SHAPE_PLANT
-},
+DUMMY(MONS_ANIMATED_TREE, '7', ETC_TREE, "animated tree")
 
 // non-living creatures
 // golems ('8')
-DUMMY_GENUS(MONS_GOLEM, '8', LIGHTGREY, "golem")
+DUMMY(MONS_GOLEM, '8', LIGHTGREY, "golem")
 
 {
     MONS_IRON_GOLEM, '8', CYAN, "iron golem",
@@ -5736,7 +5696,7 @@ DUMMY_GENUS(MONS_GOLEM, '8', LIGHTGREY, "golem")
 },
 
 // Demon in hell.  Currently only used as genus/species for hell guardians.
-{ // dummy genus monster -- used as a species so no DUMMY_GENUS
+{ // dummy genus monster -- used as a species so not a DUMMY
     MONS_HELL_LORD, '&', BLACK, "hell lord",
     M_FIGHTER | M_SPELLCASTER | M_SPEAKS | M_CANT_SPAWN,
     MR_RES_POISON,

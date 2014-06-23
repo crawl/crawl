@@ -670,7 +670,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->is_shapeshifter() && (m->flags & MF_KNOWN_SHIFTER))
         mb.set(MB_SHAPESHIFTER);
 
-    if (m->is_known_chaotic())
+    if (m->known_chaos())
         mb.set(MB_CHAOTIC);
 
     if (m->submerged())

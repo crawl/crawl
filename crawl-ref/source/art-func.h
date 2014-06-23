@@ -30,7 +30,6 @@
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
-#include "mon-stuff.h"     // For Scythe of Curses cursing items
 #include "player.h"
 #include "spl-cast.h"      // For evokes
 #include "spl-damage.h"    // For the Singing Sword.
@@ -683,37 +682,47 @@ static void _WYRMBANE_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _WYRMBANE_melee_effects(item_def* weapon, actor* attacker,
                                     actor* defender, bool mondied, int dam)
 {
-    if (!mondied || !defender || !is_dragonkind(defender)
-        || defender->is_summoned()
-        || defender->is_monster()
-           && testbits(defender->as_monster()->flags, MF_NO_REWARD))
+    if (!is_dragonkind(defender))
+        return;
+
+    // Since the target will become a DEAD MONSTER if it dies due to the extra
+    // damage to dragons, we need to grab this information now.
+    int hd = min(defender->as_monster()->hit_dice, 18);
+    string name = defender->name(DESC_THE);
+
+    if (!mondied)
+    {
+        mprf("<grey>%s %s!</grey>",
+            defender->name(DESC_THE).c_str(),
+            defender->conj_verb("convulse").c_str());
+
+        defender->hurt(attacker, 1 + random2(3*dam/2));
+
+        mondied = !defender->alive();
+    }
+
+    if (!mondied || !defender || defender->is_summoned()
+        || (defender->is_monster()
+            && testbits(defender->as_monster()->flags, MF_NO_REWARD)))
     {
         return;
     }
-    if (defender->is_player())
-    {
-        // can't currently happen even on a death blow
-        mpr("<green>You see the lance glow as it kills you.</green>");
-        return;
-    }
+
     // The cap can be reached by:
     // * iron dragon, golden dragon, pearl dragon (18)
     // * Xtahua (19)
     // * bone dragon, Serpent of Hell (20)
     // * Tiamat (22)
     // * pghosts (up to 27)
-    int hd = min(defender->as_monster()->hit_dice, 18);
     dprf("Killed a drac with hd %d.", hd);
-    bool boosted = false;
+
     if (weapon->plus < hd)
     {
         weapon->plus++;
-        boosted = true;
-    }
-    if (boosted)
-    {
+
         mprf("<green>The lance glows as it skewers %s.</green>",
-              defender->name(DESC_THE).c_str());
+              name.c_str());
+
         you.wield_change = true;
     }
 }
@@ -1146,4 +1155,39 @@ static void _MAJIN_unequip(item_def *item, bool *show_msgs)
         _equip_mpr(show_msgs,
                    "The darkness slowly releases its grasp on your magic.");
     }
+}
+
+///////////////////////////////////////////////////
+
+static int _octorings_worn()
+{
+    int worn = 0;
+
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+    {
+        if (you.melded[i] || you.equip[i] == -1)
+            continue;
+
+        item_def& ring = you.inv[you.equip[i]];
+        if (is_unrandom_artefact(ring) && ring.special == UNRAND_OCTOPUS_KING_RING)
+            worn++;
+    }
+
+    return worn;
+}
+
+static void _OCTOPUS_KING_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    int rings = _octorings_worn();
+
+    if (rings == 8)
+        _equip_mpr(show_msgs, "You feel like a king!");
+    else if (rings)
+        _equip_mpr(show_msgs, "You feel regal.");
+    item->plus = 8 + rings;
+}
+
+static void _OCTOPUS_KING_world_reacts(item_def *item)
+{
+    item->plus = 8 + _octorings_worn();
 }

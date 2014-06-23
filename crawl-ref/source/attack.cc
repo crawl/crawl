@@ -29,6 +29,7 @@
 #include "mon-behv.h"
 #include "mon-clone.h"
 #include "mon-death.h"
+#include "mon-poly.h"
 #include "monster.h"
 #include "libutil.h"
 #include "player.h"
@@ -940,11 +941,8 @@ brand_type attack::random_chaos_brand()
                 susceptible = false;
             break;
         case SPWPN_HOLY_WRATH:
-            if (defender->holiness() != MH_UNDEAD
-                && defender->holiness() != MH_DEMONIC)
-            {
+            if (!defender->holy_wrath_susceptible())
                 susceptible = false;
-            }
             break;
         case SPWPN_CONFUSE:
             if (defender->holiness() == MH_NONLIVING
@@ -1651,9 +1649,8 @@ bool attack::apply_damage_brand(const char *what)
 
     if (!damage_done
         && (brand == SPWPN_FLAMING || brand == SPWPN_FREEZING
-            || brand == SPWPN_HOLY_WRATH || brand == SPWPN_DRAGON_SLAYING
-            || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRISM
-            || brand == SPWPN_ANTIMAGIC))
+            || brand == SPWPN_HOLY_WRATH || brand == SPWPN_ANTIMAGIC
+            || brand == SPWPN_VORPAL || brand == SPWPN_VAMPIRISM))
     {
         // These brands require some regular damage to function.
         return false;
@@ -1676,7 +1673,7 @@ bool attack::apply_damage_brand(const char *what)
         break;
 
     case SPWPN_HOLY_WRATH:
-        if (defender->undead_or_demonic())
+        if (defender->holy_wrath_susceptible())
             special_damage = 1 + (random2(damage_done * 15) / 10);
 
         if (special_damage && defender_visible)
@@ -1703,22 +1700,6 @@ bool attack::apply_damage_brand(const char *what)
             special_damage_flavour = BEAM_ELECTRICITY;
         }
 
-        break;
-
-    case SPWPN_DRAGON_SLAYING:
-        if (is_dragonkind(defender))
-        {
-            special_damage = 1 + random2(3*damage_done/2);
-            if (defender_visible)
-            {
-                special_damage_message =
-                    make_stringf(
-                        "%s %s%s",
-                        defender->name(DESC_THE).c_str(),
-                        defender->conj_verb("convulse").c_str(),
-                        attack_strength_punctuation(special_damage).c_str());
-            }
-        }
         break;
 
     case SPWPN_VENOM:

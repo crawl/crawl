@@ -45,9 +45,9 @@
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -1354,7 +1354,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             mprf("%s is splashed with acid.",
                  defender->name(DESC_THE).c_str());
-            splash_monster_with_acid(defender->as_monster(), &you);
+            defender->as_monster()->splash_with_acid(&you);
         }
 
         // TODO: remove this? Unarmed poison attacks?
@@ -1585,6 +1585,11 @@ void melee_attack::set_attack_verb()
                 attack_verb = "spit";
                 verb_degree = "like the proverbial pig";
             }
+            else if (defender_genus == MONS_CRAB && Options.lang == LANG_GRUNT)
+            {
+                attack_verb = "attack";
+                verb_degree = "'s weak point";
+            }
             else
             {
                 const char* pierce_desc[][2] = {{"spit", "like a pig"},
@@ -1618,6 +1623,9 @@ void melee_attack::set_attack_verb()
             attack_verb = "carve";
             verb_degree = "like a proverbial ham";
         }
+        else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
+                 && Options.lang == LANG_GRUNT)
+            attack_verb = "shave";
         else
         {
             const char* pierce_desc[][2] = {{"open",    "like a pillowcase"},
@@ -1795,19 +1803,12 @@ void melee_attack::set_attack_verb()
                     attack_verb = "punch";
                 else if (damage_to_display < HIT_STRONG)
                     attack_verb = "pummel";
-                // XXX: detect this better
                 else if (defender->is_monster()
-                         && (get_mon_shape(defender->type)
-                               == MON_SHAPE_INSECT
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_INSECT_WINGED
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_CENTIPEDE
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_ARACHNID))
+                         && (mons_genus(defender->type) == MONS_WORKER_ANT
+                             || mons_genus(defender->type) == MONS_FORMICID))
                 {
                     attack_verb = "squash";
-                    verb_degree = "like a proverbial bug";
+                    verb_degree = "like the proverbial ant";
                 }
                 else
                 {
@@ -1815,7 +1816,7 @@ void melee_attack::set_attack_verb()
                         {{"pound",     "into fine dust"},
                          {"pummel",    "like a punching bag"},
                          {"pulverise", ""},
-                         {"squash",    "like a bug"}};
+                         {"squash",    "like an ant"}};
                     const int choice = random2(ARRAYSZ(punch_desc));
                     // XXX: could this distinction work better?
                     if (choice == 0
@@ -2677,7 +2678,7 @@ void melee_attack::announce_hit()
     else
     {
         if (!verb_degree.empty() && verb_degree[0] != ' '
-            && verb_degree[0] != ',')
+            && verb_degree[0] != ',' && verb_degree[0] != '\'')
         {
             verb_degree = " " + verb_degree;
         }
@@ -2771,7 +2772,7 @@ void melee_attack::splash_defender_with_acid(int strength)
         special_damage += roll_dice(2, 4);
         if (defender_visible)
             mprf("%s is splashed with acid.", defender->name(DESC_THE).c_str());
-        splash_monster_with_acid(defender->as_monster(), attacker);
+        defender->as_monster()->splash_with_acid(attacker);
     }
 }
 
@@ -3181,7 +3182,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_HOLY:
-        if (defender->undead_or_demonic())
+        if (defender->holy_wrath_susceptible())
             special_damage = attk_damage * 0.75;
 
         if (needs_message && special_damage)

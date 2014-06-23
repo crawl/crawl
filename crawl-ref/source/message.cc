@@ -14,7 +14,7 @@
 #include "initfile.h"
 #include "libutil.h"
 #include "menu.h"
-#include "mon-stuff.h"
+#include "mon-message.h"
 #include "notes.h"
 #include "options.h"
 #include "player.h"
@@ -1453,7 +1453,7 @@ void flush_prev_message()
     buffer.flush_prev();
 }
 
-void mesclr(bool force)
+void clear_messages(bool force)
 {
     if (!crawl_state.io_inited)
         return;
@@ -1468,7 +1468,7 @@ void mesclr(bool force)
     if (Options.clear_messages || force)
         msgwin.clear();
 
-    // TODO: we could indicate indicate mesclr with a different
+    // TODO: we could indicate indicate clear_messages with a different
     //       leading character than '-'.
 }
 
@@ -1544,7 +1544,7 @@ void more(bool user_forced)
         return;
     flush_prev_message();
     msgwin.more(false, user_forced);
-    mesclr();
+    clear_messages();
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
@@ -1638,7 +1638,7 @@ void load_messages(reader& inf)
     }
     // With Options.message_clear, we don't want the message window
     // pre-filled.
-    mesclr();
+    clear_messages();
 }
 
 void replay_messages()

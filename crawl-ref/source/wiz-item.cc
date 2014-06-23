@@ -29,7 +29,6 @@
 #include "mapdef.h"
 #include "misc.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "options.h"
 #include "output.h"
 #include "player-equip.h"
@@ -358,7 +357,7 @@ static void _tweak_randart(item_def &item)
         return;
     }
     else
-        mesclr();
+        clear_messages();
 
     artefact_properties_t props;
     artefact_wpn_properties(item, props);
@@ -877,7 +876,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     }
     mitm[p].base_type = OBJ_UNASSIGNED;
 
-    mesclr();
+    clear_messages();
     mpr("[a] Weapons [b] Armours [c] Jewellery      [d] Books");
     mpr("[e] Staves  [f] Wands   [g] Miscellaneous  [h] Food");
     mprf(MSGCH_PROMPT, "What kind of item would you like to get acquirement stats on? ");
@@ -984,7 +983,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         int curr_percent = acq_calls * 100 / num_itrs;
         if (curr_percent > last_percent)
         {
-            mesclr();
+            clear_messages();
             mprf("%2d%% done.", curr_percent);
             last_percent = curr_percent;
         }
@@ -1130,8 +1129,8 @@ static void _debug_acquirement_stats(FILE *ostat)
             "electrocution",
 #if TAG_MAJOR_VERSION == 34
             "orc slaying",
-#endif
             "dragon slaying",
+#endif
             "venom",
             "protection",
             "draining",
@@ -1495,7 +1494,7 @@ static void _debug_rap_stats(FILE *ostat)
 
         if (i % 16767 == 0)
         {
-            mesclr();
+            clear_messages();
             float curr_percent = (float) i * 1000.0
                 / (float) MAX_TRIES;
             mprf("%4.1f%% done.", curr_percent / 10.0);

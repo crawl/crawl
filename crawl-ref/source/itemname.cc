@@ -31,7 +31,6 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "mon-util.h"
-#include "mon-stuff.h"
 #include "notes.h"
 #include "player.h"
 #include "religion.h"
@@ -453,7 +452,6 @@ const char* weapon_brand_name(const item_def& item, bool terse, int override_bra
     case SPWPN_FREEZING: return terse ? "freeze" : "freezing";
     case SPWPN_HOLY_WRATH: return terse ? "holy" : "holy wrath";
     case SPWPN_ELECTROCUTION: return terse ? "elec" : "electrocution";
-    case SPWPN_DRAGON_SLAYING: return terse ? "slay drac" : "dragon slaying";
     case SPWPN_VENOM: return terse ? "venom" : "venom";
     case SPWPN_PROTECTION: return terse ? "protect" : "protection";
     case SPWPN_DRAINING: return terse ? "drain" : "draining";
@@ -494,6 +492,7 @@ const char* weapon_brand_name(const item_def& item, bool terse, int override_bra
 
     // obsolete and buggy brands
 #if TAG_MAJOR_VERSION == 34
+    case SPWPN_DRAGON_SLAYING: return terse ? "obsolete" : "dragon slaying";
     case SPWPN_ORC_SLAYING: return terse ? "obsolete" : "orc slaying";
     case SPWPN_REACHING: return terse ? "obsolete" : "reaching";
     case SPWPN_RETURNING: return terse ? "obsolete" : "returning";

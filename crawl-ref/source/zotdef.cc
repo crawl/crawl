@@ -21,7 +21,6 @@
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
 #include "mon-place.h"
 #include "mon-pick.h"
 #include "mon-util.h"

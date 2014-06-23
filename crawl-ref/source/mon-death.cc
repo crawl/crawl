@@ -47,8 +47,8 @@
 #include "mon-behv.h"
 #include "mon-gear.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "random.h"
@@ -62,6 +62,7 @@
 #include "target.h"
 #include "terrain.h"
 #include "transform.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "unwind.h"
@@ -1184,73 +1185,6 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         place_cloud(cloud, mons->pos(), 1 + random2(3), mons);
 }
 
-void mons_relocated(monster* mons)
-{
-    // If the main body teleports get rid of the tentacles
-    if (mons_is_tentacle_head(mons_base_type(mons)))
-    {
-        int headnum = mons->mindex();
-
-        if (invalid_monster_index(headnum))
-            return;
-
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (mi->is_child_tentacle_of(mons))
-            {
-                for (monster_iterator connect; connect; ++connect)
-                {
-                    if (connect->is_child_tentacle_of(*mi))
-                        monster_die(*connect, KILL_RESET, -1, true, false);
-                }
-                monster_die(*mi, KILL_RESET, -1, true, false);
-            }
-        }
-    }
-    // If a tentacle/segment is relocated just kill the tentacle
-    else if (mons->is_child_monster())
-    {
-        int base_id = mons->mindex();
-
-        monster* tentacle = mons;
-
-        if (mons->is_child_tentacle_segment()
-                && !::invalid_monster_index(base_id)
-                && menv[base_id].is_parent_monster_of(mons))
-        {
-            tentacle = &menv[base_id];
-        }
-
-        for (monster_iterator connect; connect; ++connect)
-        {
-            if (connect->is_child_tentacle_of(tentacle))
-                monster_die(*connect, KILL_RESET, -1, true, false);
-        }
-
-        monster_die(tentacle, KILL_RESET, -1, true, false);
-    }
-    else if (mons->type == MONS_ELDRITCH_TENTACLE
-             || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
-    {
-        int base_id = mons->type == MONS_ELDRITCH_TENTACLE
-                      ? mons->mindex() : mons->number;
-
-        monster_die(&menv[base_id], KILL_RESET, -1, true, false);
-
-        for (monster_iterator mit; mit; ++mit)
-        {
-            if (mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && (int) mit->number == base_id)
-            {
-                monster_die(*mit, KILL_RESET, -1, true, false);
-            }
-        }
-
-    }
-
-    mons->clear_clinging();
-}
-
 // When given either a tentacle end or segment, kills the end and all segments
 // of that tentacle.
 static int _destroy_tentacle(monster* mons)
@@ -1922,12 +1856,12 @@ int monster_die(monster* mons, killer_type killer,
                 }
 
                 // Zin hates unclean and chaotic beings.
-                if (mons->is_unclean())
+                if (mons->how_unclean())
                 {
                     did_god_conduct(DID_KILL_UNCLEAN,
                                     mons->hit_dice, true, mons);
                 }
-                else if (mons->is_chaotic())
+                else if (mons->how_chaotic())
                 {
                     did_god_conduct(DID_KILL_CHAOTIC,
                                     mons->hit_dice, true, mons);
@@ -2157,13 +2091,13 @@ int monster_die(monster* mons, killer_type killer,
                                 mons->hit_dice);
                         }
 
-                        if (mons->is_unclean())
+                        if (mons->how_unclean())
                         {
                             did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
                                             mons->hit_dice);
                         }
 
-                        if (mons->is_chaotic())
+                        if (mons->how_chaotic())
                         {
                             did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
                                             mons->hit_dice);
@@ -2216,13 +2150,13 @@ int monster_die(monster* mons, killer_type killer,
                                         mons->hit_dice);
                     }
 
-                    if (mons->is_unclean())
+                    if (mons->how_unclean())
                     {
                         did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
                                         mons->hit_dice);
                     }
 
-                    if (mons->is_chaotic())
+                    if (mons->how_chaotic())
                     {
                         did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
                                         mons->hit_dice);
@@ -2492,7 +2426,7 @@ int monster_die(monster* mons, killer_type killer,
                         wizard, fake);
         }
     }
-    else if (mons_is_elven_twin(mons) && mons_near(mons))
+    else if (mons_is_elven_twin(mons))
         elven_twin_died(mons, in_transit, killer, killer_index);
     else if (mons->type == MONS_VAULT_WARDEN)
         timeout_terrain_changes(0, true);
@@ -2843,6 +2777,60 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
     }
 }
 
+// Make all of the monster's original equipment disappear, unless it's a fixed
+// artefact or unrand artefact.
+static void _vanish_orig_eq(monster* mons)
+{
+    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
+    {
+        if (mons->inv[i] == NON_ITEM)
+            continue;
+
+        item_def &item(mitm[mons->inv[i]]);
+
+        if (!item.defined())
+            continue;
+
+        if (item.orig_place != 0 || item.orig_monnum != 0
+            || !item.inscription.empty()
+            || is_unrandom_artefact(item)
+            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN
+                              | ISFLAG_NOTED_GET)))
+        {
+            continue;
+        }
+        item.flags |= ISFLAG_SUMMONED;
+    }
+}
+
+int dismiss_monsters(string pattern)
+{
+    // Make all of the monsters' original equipment disappear unless "keepitem"
+    // is found in the regex (except for fixed arts and unrand arts).
+    const bool keep_item = strip_tag(pattern, "keepitem");
+    const bool harmful = pattern == "harmful";
+    const bool mobile  = pattern == "mobile";
+
+    // Dismiss by regex.
+    text_pattern tpat(pattern);
+    int ndismissed = 0;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->alive()
+            && (mobile ? !mons_class_is_stationary(mi->type) :
+                harmful ? !mons_is_firewood(*mi) && !mi->wont_attack()
+                : tpat.empty() || tpat.matches(mi->name(DESC_PLAIN, true))))
+        {
+            if (!keep_item)
+                _vanish_orig_eq(*mi);
+            monster_die(*mi, KILL_DISMISSED, NON_MONSTER, false, true);
+            ++ndismissed;
+        }
+    }
+
+    return ndismissed;
+}
+
 string summoned_poof_msg(const monster* mons, bool plural)
 {
     int  summon_type = 0;
@@ -3155,7 +3143,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         return;
 
     // Okay, let them climb stairs now.
-    mons->props["can_climb"] = "yes";
+    mons->props["can_climb"] = true;
     if (!in_transit)
         mons->props["speech_prefix"] = "twin_died";
     else
@@ -3169,7 +3157,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
     string key = mons->name(DESC_THE, true) + "_"
-                 + twin->name(DESC_THE) + "_dies_";
+                 + twin->name(DESC_THE, true) + "_dies_";
 
     if (mons_near(mons) && !mons->observable())
         key += "invisible_";
@@ -3196,35 +3184,38 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     else if (mons->can_speak())
         mprf("%s", death_message.c_str());
 
-    if (mons_is_duvessa(mons))
+    // Upgrade the spellbook here, as elven_twin_energize
+    // may not be called due to lack of visibility.
+    if (mons_is_dowan(mons))
     {
-        if (mons_near(mons))
-        {
-            // Provides its own flavour message.
-            mons->go_berserk(true);
-        }
-        else
-        {
-            // She'll go berserk the next time she sees you
-            mons->props["duvessa_berserk"] = bool(true);
-        }
-    }
-    else
-    {
-        ASSERT(mons_is_dowan(mons));
-        if (mons->observable())
-        {
-            mons->add_ench(ENCH_HASTE);
-            simple_monster_message(mons, " seems to find hidden reserves of power!");
-        }
-        else
-            mons->props["dowan_upgrade"] = bool(true);
-
         mons->spells[0] = SPELL_THROW_ICICLE;
         mons->spells[1] = SPELL_BLINK;
         mons->spells[3] = SPELL_STONE_ARROW;
         mons->spells[4] = SPELL_HASTE;
         // Nothing with 6.
+
+        // Indicate that he has an updated spellbook.
+        mons->props["custom_spells"] = true;
+    }
+
+    // Finally give them new energy
+    if (mons_near(mons))
+        elven_twin_energize(mons);
+    else
+        mons->props[ELVEN_ENERGIZE_KEY] = true;
+}
+
+void elven_twin_energize(monster* mons)
+{
+    if (mons_is_duvessa(mons))
+        mons->go_berserk(true);
+    else
+    {
+        ASSERT(mons_is_dowan(mons));
+        if (mons->observable())
+            simple_monster_message(mons, " seems to find hidden reserves of power!");
+
+        mons->add_ench(ENCH_HASTE);
     }
 }
 

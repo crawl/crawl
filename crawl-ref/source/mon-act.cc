@@ -95,7 +95,7 @@ static int _compass_idx(const coord_def& mov)
 
 static inline bool _mons_natural_regen_roll(monster* mons)
 {
-    const int regen_rate = mons_natural_regen_rate(mons);
+    const int regen_rate = mons->natural_regen_rate();
     return x_chance_in_y(regen_rate, 25);
 }
 
@@ -865,11 +865,23 @@ static bool _handle_evoke_equipment(monster* mons, bolt & beem)
     return rc;
 }
 
+/**
+ * Check whether this monster can make a reaching attack, and do so if
+ * they can.
+ *
+ * @param mons The monster who might be reaching.
+ * @return Whether they attempted a reaching attack. False if the monster
+ *         doesn't have a reaching weapon, the foe isn't hostile, the foe
+ *         is too near or too far, etc.
+ */
 static bool _handle_reaching(monster* mons)
 {
     bool       ret = false;
     const reach_type range = mons->reach_range();
     actor *foe = mons->get_foe();
+
+    if (mons->caught())
+        return false;
 
     if (!foe || range <= REACH_NONE)
         return false;
@@ -1494,7 +1506,8 @@ bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
-        || mons->submerged())
+        || mons->submerged()
+        || mons->caught())
     {
         return false;
     }
@@ -1685,7 +1698,9 @@ static void _pre_monster_move(monster* mons)
         }
     }
 
-    if (mons->summoner && mons->is_summoned())
+    int sumtype = 0;
+    if (mons->summoner && (mons->is_summoned(NULL, &sumtype)
+                           || sumtype == MON_SUMM_CLONE))
     {
         const actor * const summoner = actor_by_mid(mons->summoner);
         if ((!summoner || !summoner->alive()) && mons->del_ench(ENCH_ABJ))
@@ -2571,6 +2586,9 @@ static void _post_monster_move(monster* mons)
 
     if (mons->type == MONS_ANCIENT_ZYME)
         ancient_zyme_sicken(mons);
+
+    if (mons->type == MONS_TORPOR_SNAIL)
+        torpor_snail_slow(mons);
 
     if (mons->type == MONS_ASMODEUS)
     {

@@ -20,7 +20,6 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "mon-behv.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "player.h"

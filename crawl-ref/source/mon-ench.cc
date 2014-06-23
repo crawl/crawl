@@ -10,6 +10,7 @@
 #include "act-iter.h"
 #include "actor.h"
 #include "areas.h"
+#include "attitude-change.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
@@ -26,6 +27,7 @@
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-death.h"
+#include "mon-poly.h"
 #include "mon-place.h"
 #include "religion.h"
 #include "spl-clouds.h"
@@ -33,6 +35,7 @@
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
@@ -1751,7 +1754,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     // This is like Corona, but if silver harms them, it has sticky
     // flame levels of damage.
     case ENCH_SILVER_CORONA:
-        if (is_chaotic())
+        if (how_chaotic())
         {
             int dam = roll_dice(2, 4) - 1;
             simple_monster_message(this, " is seared!");

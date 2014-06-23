@@ -963,7 +963,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_change = base_gain + base_gain * you.bondage_level / 4;
             }
             else if (you_worship(GOD_NEMELEX_XOBEH))
-                piety_change = 12;
+                piety_change = 14;
             else if (you_worship(GOD_IGNI_IPTHES))
                 piety_change = 6;
 
@@ -1187,7 +1187,7 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monster* mon,
         _first_attack_was_unchivalric.set(midx);
     }
 
-    if (mon->is_holy())
+    if (mon->is_holy() && !mon->is_illusion())
         conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 
     _first_attack_conduct.set(midx);
