@@ -4555,25 +4555,6 @@ bool enough_zp(int minimum, bool suppress_msg)
     return true;
 }
 
-bool enough_gold(int minimum, bool suppress_msg, bool abort_macros)
-{
-    ASSERT(!crawl_state.game_is_arena());
-
-    if (you.gold < minimum)
-    {
-        if (!suppress_msg)
-            mpr("You haven't enough gold.");
-
-        if (abort_macros)
-        {
-            crawl_state.cancel_cmd_again();
-            crawl_state.cancel_cmd_repeat();
-        }
-        return false;
-    }
-    return true;
-}
-
 void inc_mp(int mp_gain, bool silent)
 {
     ASSERT(!crawl_state.game_is_arena());

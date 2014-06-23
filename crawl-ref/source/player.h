@@ -957,7 +957,6 @@ bool you_tran_can_wear(int eq, bool check_mutation = false);
 bool enough_hp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_mp(int minimum, bool suppress_msg, bool abort_macros = true);
 bool enough_zp(int minimum, bool suppress_msg);
-bool enough_gold(int minimum, bool suppress_msg, bool abort_macros = true);
 
 void calc_hp();
 void calc_mp();
