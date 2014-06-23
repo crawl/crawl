@@ -11,9 +11,9 @@ void debug_mons_scan();
 void check_map_validity();
 
 #ifdef DEBUG_DIAGNOSTICS
-void objgen_report_item(item_def &item);
+void objgen_record_item(item_def &item);
 void objgen_generate_stats();
-void objgen_report_monster(monster *mons);
+void objgen_record_monster(monster *mons);
 #endif
 
 #endif
