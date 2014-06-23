@@ -2325,7 +2325,7 @@ SUBST:    F = .
 #monsters
 MONS:     patrolling Orb Guardian, Killer Klown, electric golem, orb of fire
 MONS:     ancient lich, orange crystal statue / silver statue / ice statue
-SUBST:    8=8., 8=8., 5=5.
+SUBST:    8=8..., 5=5.
 SHUFFLE:  234
 SUBST:    ? = .:8 ?
 SUBST:    ? : KLM
