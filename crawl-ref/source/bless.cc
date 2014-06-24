@@ -39,8 +39,8 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
         case WPN_MACE:        return WPN_FLAIL;
         case WPN_FLAIL:       return WPN_MORNINGSTAR;
         case WPN_MORNINGSTAR: return !has_shield ? WPN_DIRE_FLAIL  :
-            highlevel   ? WPN_EVENINGSTAR :
-            WPN_MORNINGSTAR;
+                                     highlevel   ? WPN_EVENINGSTAR :
+                                                   WPN_MORNINGSTAR;
         case WPN_DIRE_FLAIL:  return WPN_GREAT_MACE;
 
         case WPN_DAGGER:      return WPN_FALCHION;
@@ -49,15 +49,15 @@ static int _upgrade_weapon_type(int old_type, bool has_shield, bool highlevel)
         case WPN_FALCHION:    return WPN_LONG_SWORD;
         case WPN_LONG_SWORD:  return WPN_SCIMITAR;
         case WPN_SCIMITAR:    return !has_shield ? WPN_GREAT_SWORD   :
-            highlevel   ? WPN_BASTARD_SWORD :
-            WPN_SCIMITAR;
+                                     highlevel   ? WPN_BASTARD_SWORD :
+                                                   WPN_SCIMITAR;
         case WPN_GREAT_SWORD: return highlevel ? WPN_CLAYMORE : WPN_GREAT_SWORD;
 
         case WPN_HAND_AXE:    return WPN_WAR_AXE;
             // Low level orcs shouldn't get fairly rare items.
         case WPN_WAR_AXE:     return !highlevel  ? WPN_WAR_AXE   :
-            has_shield  ? WPN_BROAD_AXE :
-            WPN_BATTLEAXE;
+                                     has_shield  ? WPN_BROAD_AXE :
+                                                   WPN_BATTLEAXE;
         case WPN_BATTLEAXE:   return highlevel ? WPN_EXECUTIONERS_AXE : WPN_BATTLEAXE;
 
         case WPN_SPEAR:       return WPN_TRIDENT;
@@ -125,37 +125,25 @@ static void _gift_weapon_to_orc(monster* orc)
  * @param[in] mon      The follower whose weapon should be blessed.
  * @return             The type of blessing; may be empty.
  */
-static string _bless_weapon(monster* mon, bool improve_type = false)
+static string _beogh_bless_weapon(monster* mon)
 {
-    if (mon->type == MONS_DANCING_WEAPON)
-    {
-        dprf("Can't bless a dancing weapon's weapon!");
-        return "";
-    }
-
     item_def* wpn_ptr = mon->weapon();
     if (wpn_ptr == NULL)
     {
-        if (improve_type)
-        {
-            _gift_weapon_to_orc(mon);
-            wpn_ptr = mon->weapon();
-            if (wpn_ptr == NULL)
-                dprf("Couldn't give a weapon to follower!");
-            else
-                return "armament";
-        }
+        _gift_weapon_to_orc(mon);
+        wpn_ptr = mon->weapon();
+        if (wpn_ptr != NULL)
+            return "armament";
 
-        dprf("Couldn't bless follower's weapon; they have none!");
-        return "";
+        dprf("Couldn't give a weapon to follower!");
+        return ""; // ?
     }
 
     item_def& wpn = *wpn_ptr;
 
     const int old_weapon_type = wpn.sub_type;
     // 50% chance of upgrading weapon type.
-    if (improve_type
-        && !is_artefact(wpn)
+    if (!is_artefact(wpn)
         && coinflip())
     {
         // lower chance of upgrading to very good weapon types
@@ -169,7 +157,7 @@ static string _bless_weapon(monster* mon, bool improve_type = false)
 
     // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
     const bool enchanted = !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
-    && enchant_weapon(wpn, true);
+                            && enchant_weapon(wpn, true);
 
     if (!enchanted && wpn.sub_type == old_weapon_type)
     {
@@ -357,6 +345,40 @@ static bool _increase_ench_duration(monster* mon,
     mon->update_ench(ench);
 
     return true;
+}
+
+/**
+ * Attempt to bless a follower's weapon.
+ *
+ * @param[in] mon      The follower whose weapon should be blessed.
+ * @return             The type of blessing; may be empty.
+ */
+static string _tso_bless_weapon(monster* mon)
+{
+    if (mon->type == MONS_DANCING_WEAPON)
+    {
+        dprf("Can't bless a dancing weapon's weapon!");
+        return "";
+    }
+
+    item_def* wpn_ptr = mon->weapon();
+    if (wpn_ptr == NULL)
+    {
+        dprf("Couldn't bless follower's weapon; they have none!");
+        return "";
+    }
+
+    item_def& wpn = *wpn_ptr;
+
+    // Enchant and uncurse it.
+    if (!enchant_weapon(wpn, true))
+    {
+        dprf("Couldn't bless follower's weapon!");
+        return "";
+    }
+
+    item_set_appearance(wpn);
+    return "superior armament";
 }
 
 /**
@@ -622,8 +644,8 @@ static bool _beogh_bless_follower(monster* follower, bool force)
     // ~15% chance of blessing armament (assume that most priest buffs fail)
     if (blessing.empty() && (force || one_chance_in(7)))
     {
-        blessing = coinflip() ? _bless_weapon(follower, true)
-        : _beogh_bless_armour(follower);
+        blessing = coinflip() ? _beogh_bless_weapon(follower)
+                              : _beogh_bless_armour(follower);
     }
 
     // ~85% chance of trying to heal.
@@ -691,8 +713,8 @@ static bool _tso_bless_follower(monster* follower, bool force)
     string blessing = "";
     if (one_chance_in(10) || force)
     {
-        blessing = coinflip() ? _bless_weapon(follower)
-        : _tso_bless_armour(follower);
+        blessing = coinflip() ? _tso_bless_weapon(follower)
+                              : _tso_bless_armour(follower);
     }
     if (blessing.empty())
         blessing = _tso_bless_duration(follower);
