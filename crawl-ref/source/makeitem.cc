@@ -2830,7 +2830,7 @@ int items(bool allow_uniques,
 
     // Squash plusses on boring equipment.
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR)
-        && item.plus > 0 && !get_equip_desc(item))
+        && item.plus > 0 && !get_equip_desc(item) && !is_artefact(item))
     {
         item.plus = 0;
     }
