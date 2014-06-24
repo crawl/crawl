@@ -2938,7 +2938,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return true;
 
-    if (x_chance_in_y(item.plus - 2, 3) || x_chance_in_y(item.plus2 - 2, 3))
+    if (x_chance_in_y(item.plus - 2, 3))
         return true;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
