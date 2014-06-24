@@ -1115,11 +1115,11 @@ static void _og_init_fields()
                   "ArteNumCursed", "AllNumCursed", "OrdEnch",
                   "ArteEnch", "AllEnch");
     OG_SET_FIELDS(og_item_fields[OG_RODS], rods,
-                  "Num", "RodRecharge", "RodMana", "NumCursed");
+                  "Num", "RodMana", "RodRecharge", "NumCursed");
     OG_SET_FIELDS(og_item_fields[OG_MISSILES], missiles,
                   "Num", "NumBranded", "NumPiles", "PileQuant");
     OG_SET_FIELDS(og_item_fields[OG_MISCELLANY], misc,
-                  "Num", "MiscPlus", "MiscPlus2");
+                  "Num", "MiscPlus");
     OG_SET_FIELDS(og_item_fields[OG_DECKS], decks,
                   "PlainNum", "OrnateNum", "LegendaryNum",
                   "AllNum", "AllDeckCards");
@@ -1127,7 +1127,7 @@ static void _og_init_fields()
     OG_SET_FIELDS(og_item_fields[OG_ARTEBOOKS], artebooks, "Num");
     OG_SET_FIELDS(og_item_fields[OG_MANUALS], manuals, "Num");
     OG_SET_FIELDS(og_monster_fields, monsters, "Num", "MonsHD", "MonsHP",
-                  "MonsXP", "MonsNumChunks", "TotalXP", "TotalNormNutr",
+                  "MonsXP", "TotalXP", "MonsNumChunks", "TotalNormNutr",
                   "TotalGourmNutr");
 }
 
@@ -1265,6 +1265,11 @@ void objgen_record_item(item_def &item)
     string cursed_f = is_arte ? "ArteNumCursed" : "OrdNumCursed";
     string ench_f = is_arte ? "ArteEnch" : "OrdEnch";
 
+    // Don't count mimics as items; these are converted explicitely in
+    // mg_do_build_level().
+    if (item.flags & ISFLAG_MIMIC)
+        return;
+
     // The Some averages are calculated after all items are tallied.
     switch (ogi.base_type)
     {
@@ -1335,15 +1340,14 @@ void objgen_record_item(item_def &item)
         break;
     case OG_RODS:
         _og_record_item_stat(cur_lev, ogi, "Num", 1);
-        _og_record_item_stat(cur_lev, ogi, "RodRecharge",
+        _og_record_item_stat(cur_lev, ogi, "RodMana",
                              item.plus2 / ROD_CHARGE_MULT);
-        _og_record_item_stat(cur_lev, ogi, "RodMana", item.special);
+        _og_record_item_stat(cur_lev, ogi, "RodRecharge", item.special);
         _og_record_item_stat(cur_lev, ogi, "NumCursed", item.cursed());
         break;
     case OG_MISCELLANY:
         _og_record_item_stat(cur_lev, ogi, "Num", 1);
-        _og_record_item_stat(cur_lev, ogi, "MiscPlus1", item.plus);
-        _og_record_item_stat(cur_lev, ogi, "MiscPlus2", item.plus2);
+        _og_record_item_stat(cur_lev, ogi, "MiscPlus", item.plus);
         break;
     case OG_DECKS:
         switch (deck_rarity(item))
@@ -1397,9 +1401,6 @@ void objgen_record_monster(monster *mons)
     bool is_contam = chunk_effect == CE_POISON_CONTAM
         || chunk_effect == CE_CONTAMINATED;
     bool is_clean = chunk_effect == CE_CLEAN || chunk_effect == CE_POISONOUS;
-    // copied from turn_corpse_into_chunks()
-    double avg_chunks = (1 + stepdown_value(get_max_corpse_chunks(mons->type),
-                                            4, 4, 12, 12)) / 2.0;
     level_id lev = level_id::current();
 
     _og_record_monster_stat(lev, mons_ind, "Num", 1);
@@ -1407,19 +1408,26 @@ void objgen_record_monster(monster *mons)
     _og_record_monster_stat(lev, mons_ind, "TotalXP", exper_value(mons));
     _og_record_monster_stat(lev, mons_ind, "MonsHP", mons->max_hit_points);
     _og_record_monster_stat(lev, mons_ind, "MonsHD", mons->hit_dice);
-    _og_record_monster_stat(lev, mons_ind, "MonsNumChunks", avg_chunks);
-    if (is_clean)
+    // Record chunks/nutrition if monster leaves a corpse.
+    if (chunk_effect != CE_NOCORPSE && mons_weight(mons->type))
     {
-        _og_record_monster_stat(lev, mons_ind, "TotalNormNutr",
-                                avg_chunks * CHUNK_BASE_NUTRITION);
-    }
-    else if (is_contam)
-        _og_record_monster_stat(lev, mons_ind, "TotalNormNutr",
-                                avg_chunks * CHUNK_BASE_NUTRITION / 2.0);
-    if (is_clean || is_contam)
-    {
-        _og_record_monster_stat(lev, mons_ind, "TotalGourmNutr",
-                                avg_chunks * CHUNK_BASE_NUTRITION);
+        // copied from turn_corpse_into_chunks()
+        double chunks = (1 + stepdown_value(get_max_corpse_chunks(mons->type),
+                                            4, 4, 12, 12)) / 2.0;
+        _og_record_monster_stat(lev, mons_ind, "MonsNumChunks", chunks);
+        if (is_clean)
+        {
+            _og_record_monster_stat(lev, mons_ind, "TotalNormNutr",
+                                    chunks * CHUNK_BASE_NUTRITION);
+        }
+        else if (is_contam)
+            _og_record_monster_stat(lev, mons_ind, "TotalNormNutr",
+                                    chunks * CHUNK_BASE_NUTRITION / 2.0);
+        if (is_clean || is_contam)
+        {
+            _og_record_monster_stat(lev, mons_ind, "TotalGourmNutr",
+                                    chunks * CHUNK_BASE_NUTRITION);
+        }
     }
 }
 
@@ -1482,7 +1490,6 @@ static void _og_write_stat(map<string, double> &stats, string field)
              || field == "RodMana"
              || field == "RodRecharge"
              || field == "MiscPlus"
-             || field == "MiscPlus2"
              || field == "MonsHD"
              || field == "MonsHP"
              || field == "MonsXP"
@@ -1705,7 +1712,11 @@ static void _og_write_object_stats()
     {
         string branch_name;
         if (bi->first == NUM_BRANCHES)
+        {
+            if (og_num_branches == 1)
+                continue;
             branch_name = "AllLevels";
+        }
         else
             branch_name = branches[bi->first].abbrevname;
         ostringstream out_file;
@@ -1774,14 +1785,11 @@ void objgen_generate_stats()
             ++og_num_branches;
         }
     }
-    // For the all-level summary
-    if (og_num_branches > 1)
-    {
-        og_branches[NUM_BRANCHES] = vector<level_id>();
-        og_branches[NUM_BRANCHES].push_back(level_id(NUM_BRANCHES, -1));
-    }
-    fprintf(stdout, "Generating object statistics for %d iterations of %d "
-            "levels over %d branches.\n", SysEnv.map_gen_iters, og_num_levels,
+    // We won't display these if only one branch is tallied
+    og_branches[NUM_BRANCHES] = vector<level_id>();
+    og_branches[NUM_BRANCHES].push_back(level_id(NUM_BRANCHES, -1));
+    fprintf(stdout, "Generating object statistics for %d iteration(s) of %d "
+            "level(s) over %d branche(s).\n", SysEnv.map_gen_iters, og_num_levels,
             og_num_branches);
     _og_init_fields();
     _og_init_foods();

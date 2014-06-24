@@ -101,6 +101,9 @@ static bool _do_build_level()
             default:
                 break;
             }
+            // Turn any mimics into actual monsters so they'll be recorded
+            // by objstat.
+            discover_mimic(coord_def(x, y), false);
         }
 
     {
