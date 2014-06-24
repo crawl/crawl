@@ -2961,8 +2961,11 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return false;
 
-    if (x_chance_in_y(item.plus - 2, 3))
+    if (x_chance_in_y(item.plus - 2, 3)
+        || item.plus > 1 && get_armour_slot(item) != EQ_BODY_ARMOUR)
+    {
         return true;
+    }
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
