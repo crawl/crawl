@@ -2938,9 +2938,6 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return true;
 
-    if (item.is_mundane())
-        return false;
-
     if (x_chance_in_y(item.plus - 2, 3) || x_chance_in_y(item.plus2 - 2, 3))
         return true;
 
