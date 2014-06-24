@@ -5321,6 +5321,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_NEMELEX_STACK_FIVE:
         return TILEG_ABILITY_NEMELEX_STACK_FIVE;
     // Beogh
+    case ABIL_BEOGH_GIFT_ITEM:
+        return TILEG_ABILITY_BEOGH_GIFT_ITEM;
     case ABIL_BEOGH_SMITING:
         return TILEG_ABILITY_BEOGH_SMITE;
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
