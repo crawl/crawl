@@ -376,7 +376,7 @@ static const ability_def Ability_List[] =
       3, 0, 80, generic_cost::fixed(3), 0, ABFLAG_NONE},
     { ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, "Recall Orcish Followers",
       2, 0, 50, 0, 0, ABFLAG_NONE},
-    { ABIL_BEOGH_GIFT_ITEM, "Give Item to Follower",
+    { ABIL_BEOGH_GIFT_ITEM, "Give Item to Named Follower",
       0, 0, 0, 0, 0, ABFLAG_NONE},
 
     // Jiyva
