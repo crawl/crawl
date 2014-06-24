@@ -2293,9 +2293,6 @@ void melee_attack::apply_staff_damage()
     switch (weapon->sub_type)
     {
     case STAFF_AIR:
-        if (damage_done + attacker->skill_rdiv(SK_AIR_MAGIC) <= random2(20))
-            break;
-
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_ELECTRICITY,
@@ -3571,16 +3568,14 @@ void melee_attack::do_spines()
 
     if (defender->is_player())
     {
-        const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
-        const int evp = body ? -property(*body, PARM_EVASION) : 0;
         const int mut = (you.form == TRAN_PORCUPINE) ? 3
                         : player_mutation_level(MUT_SPINY);
 
-        if (mut && attacker->alive() && one_chance_in(evp / 3 + 1)
-            && x_chance_in_y(2, 13 - (mut * 2)))
+        if (mut && attacker->alive()
+            && x_chance_in_y(2, (13 - (mut * 2)) * 3))
         {
             int dmg = roll_dice(2 + div_rand_round(mut - 1, 2), 5);
-            int hurt = attacker->apply_ac(dmg) - evp / 3;
+            int hurt = attacker->apply_ac(dmg);
 
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
@@ -3606,12 +3601,10 @@ void melee_attack::do_spines()
 
         const int degree = defender->as_monster()->spiny_degree();
 
-        if (attacker->alive() && (x_chance_in_y(2, 5)
-            || random2(div_rand_round(attacker->armour_class(), 2)) < degree))
+        if (attacker->alive() && x_chance_in_y(degree, 15))
         {
-            int dmg = (attacker->is_monster() ? roll_dice(degree, 3)
-                                              : roll_dice(degree, 4));
-            int hurt = attacker->apply_ac(dmg, AC_HALF);
+            int dmg = roll_dice(degree, 4);
+            int hurt = attacker->apply_ac(dmg);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
             if (hurt <= 0)

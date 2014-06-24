@@ -190,7 +190,8 @@ static void level_place_lost_monsters(m_transit_list &m)
             // Now that the monster is onlevel, we can safely apply traps to it.
             monster* new_mon = monster_by_mid(mon->mons.mid);
             // old loc isn't really meaningful
-            new_mon->apply_location_effects(new_mon->pos());
+            if (new_mon != NULL)
+                new_mon->apply_location_effects(new_mon->pos());
         }
     }
 }
@@ -208,7 +209,8 @@ static void level_place_followers(m_transit_list &m)
             // Now that the monster is onlevel, we can safely apply traps to it.
             monster* new_mon = monster_by_mid(mon->mons.mid);
             // old loc isn't really meaningful
-            new_mon->apply_location_effects(new_mon->pos());
+            if (new_mon != NULL)
+                new_mon->apply_location_effects(new_mon->pos());
         }
     }
 }

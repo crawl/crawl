@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "bless.h"
 #include "cio.h"
 #include "colour.h"
 #include "dbg-util.h"
