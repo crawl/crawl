@@ -49,6 +49,7 @@ NAME:   kb_xom_exploding_sheep
 TAGS:   transparent no_monster_gen no_item_gen temple_overflow_1
 TAGS:   temple_overflow_xom uniq_altar_xom
 DEPTH:  D:3-, Lair
+WEIGHT: 2
 KFEAT:  _ = altar_xom
 {{
 dgn.persist.kb_xom_sheep_generated = false
