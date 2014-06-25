@@ -537,6 +537,31 @@ item_def *monster::weapon(int which_attack) const
     return weap == NON_ITEM ? NULL : &mitm[weap];
 }
 
+/**
+ * Find a monster's melee weapon, if any.
+ *
+ * Finds melee weapons carried in the primary or aux slot; if the monster has
+ * both (dual-wielding), choose one with a coinflip.
+ *
+ * @return A melee weapon that the monster is holding, or null.
+ */
+item_def *monster::melee_weapon() const
+{
+    item_def* primary_weapon = mslot_item(MSLOT_WEAPON);
+    item_def* secondary_weapon = mslot_item(MSLOT_ALT_WEAPON);
+    const bool primary_is_melee = primary_weapon
+                                  && !is_range_weapon(*primary_weapon);
+    const bool secondary_is_melee = secondary_weapon
+                                    && !is_range_weapon(*secondary_weapon);
+    if (primary_is_melee && secondary_is_melee)
+        return coinflip() ? primary_weapon : secondary_weapon;
+    if (primary_is_melee)
+        return primary_weapon;
+    if (secondary_is_melee)
+        return secondary_weapon;
+    return NULL;
+}
+
 // Give hands required to wield weapon.
 hands_reqd_type monster::hands_reqd(const item_def &item) const
 {
