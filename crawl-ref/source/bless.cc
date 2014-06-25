@@ -347,10 +347,10 @@ static string _beogh_bless_armour(monster* mon)
     }
 
     // Pick either a monster's armour or its shield.
-    const item_def* weapon = mon->weapon();
+    const item_def* melee_weap = mon->melee_weapon();
     const item_def* launcher = mon->launcher();
-    const bool can_use_shield = (weapon == NULL
-                                 || mon->hands_reqd(*weapon) != HANDS_TWO)
+    const bool can_use_shield = (melee_weap == NULL
+                                 || mon->hands_reqd(*melee_weap) != HANDS_TWO)
                                 && (launcher == NULL
                                    || mon->hands_reqd(*launcher) != HANDS_TWO);
     const int slot = coinflip() && can_use_shield ? shield : armour;
