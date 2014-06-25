@@ -442,19 +442,40 @@ static bool _is_seen_wall(coord_def gc)
 static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell,
                                tileidx_t tile)
 {
-    if (_is_seen_wall(gc) || _safe_feat(gc) == DNGN_OPEN_DOOR)
+    // XXX: why do shadows draw on top of grates when they draw
+    // underneath stairs and such?
+    if (_is_seen_wall(gc) || _safe_feat(gc) == DNGN_GRATE)
         return;
 
+    bool orth = 0;
+    int offset;
+    // orthogonals
     if (_is_seen_wall(coord_def(gc.x - 1, gc.y)))
-        _add_overlay(tile, cell);
-    if (_is_seen_wall(coord_def(gc.x - 1, gc.y - 1)))
-        _add_overlay(tile + 1, cell);
+    {
+        offset = _is_seen_wall(coord_def(gc.x - 1, gc.y - 1)) ? 0 : 5;
+        _add_overlay(tile + offset, cell);
+        orth = 1;
+    }
     if (_is_seen_wall(coord_def(gc.x, gc.y - 1)))
+    {
         _add_overlay(tile + 2, cell);
-    if (_is_seen_wall(coord_def(gc.x + 1, gc.y - 1)))
-        _add_overlay(tile + 3, cell);
+        orth = 1;
+    }
     if (_is_seen_wall(coord_def(gc.x + 1, gc.y)))
-        _add_overlay(tile + 4, cell);
+    {
+        offset = _is_seen_wall(coord_def(gc.x - 1, gc.y - 1)) ? 4 : 6;
+        _add_overlay(tile + offset, cell);
+        orth = 1;
+    }
+
+    // corners
+    if (orth == 0)
+    {
+        if (_is_seen_wall(coord_def(gc.x - 1, gc.y - 1)))
+            _add_overlay(tile + 1, cell);
+        if (_is_seen_wall(coord_def(gc.x + 1, gc.y - 1)))
+            _add_overlay(tile + 3, cell);
+    }
 }
 
 static bool _is_seen_slimy_wall(const coord_def& gc)
@@ -483,7 +504,7 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     else
     {
         tileidx_t shadow_tile = TILE_DNGN_WALL_SHADOW;
-        if (player_in_branch(BRANCH_CRYPT))
+        if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_DEPTHS))
             shadow_tile = TILE_DNGN_WALL_SHADOW_DARK;
         _pack_wall_shadows(gc, cell, shadow_tile);
     }
