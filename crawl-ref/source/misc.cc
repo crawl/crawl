@@ -142,7 +142,12 @@ int get_max_corpse_chunks(monster_type mons_class)
     return mons_weight(mons_class) / 150;
 }
 
-void turn_corpse_into_skeleton(item_def &item)
+/** Skeletonise this corpse.
+ *
+ *  @param item the corpse to be turned into a skeleton.
+ *  @returns whether a valid skeleton could be made.
+ */
+bool turn_corpse_into_skeleton(item_def &item)
 {
     ASSERT(item.base_type == OBJ_CORPSES);
     ASSERT(item.sub_type == CORPSE_BODY);
@@ -150,11 +155,12 @@ void turn_corpse_into_skeleton(item_def &item)
     // Some monsters' corpses lack the structure to leave skeletons
     // behind.
     if (!mons_skeleton(item.mon_type))
-        return;
+        return false;
 
     item.sub_type = CORPSE_SKELETON;
     item.special  = FRESHEST_CORPSE; // reset rotting counter
     item.colour   = LIGHTGREY;
+    return true;
 }
 
 static void _maybe_bleed_monster_corpse(const item_def corpse)
