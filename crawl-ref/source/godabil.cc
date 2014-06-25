@@ -1572,19 +1572,33 @@ bool beogh_gift_item()
     const bool shield = is_shield(gift);
     const bool body_armour = gift.base_type == OBJ_ARMOUR
                              && get_armour_slot(gift) == EQ_BODY_ARMOUR;
+    const bool weapon = gift.base_type == OBJ_WEAPONS;
+    const item_def* mons_weapon = mons->weapon();
 
-    if (!(gift.base_type == OBJ_WEAPONS && mons->could_wield(gift)
+    if (!(weapon && mons->could_wield(gift)
           || body_armour && check_armour_size(gift, mons->body_size())
           || shield
-             && (!mons->weapon()
-                 || mons->hands_reqd(*mons->weapon()) != HANDS_TWO)))
+             && (!mons_weapon
+                 || mons->hands_reqd(*mons_weapon) != HANDS_TWO)))
     {
         mprf("%s can't use that.", monsname);
         return false;
     }
+
+    // if we're giving a ranged weapon to an orc holding a melee weapon in
+    // their hands, or vice versa, put it in their carried slot instead.
+    // this will of course drop anything that's there.
+    const bool use_alt_slot = weapon && mons_weapon
+                              && is_range_weapon(gift) !=
+                                 is_range_weapon(*mons_weapon);
+
     mons->take_item(item_slot, body_armour ? MSLOT_ARMOUR :
                                     shield ? MSLOT_SHIELD :
+                              use_alt_slot ? MSLOT_ALT_WEAPON :
                                              MSLOT_WEAPON);
+    if (use_alt_slot)
+        mons->swap_weapons(true);
+
     if (shield)
         mons->props[BEOGH_SH_GIFT_KEY] = true;
     else if (body_armour)
