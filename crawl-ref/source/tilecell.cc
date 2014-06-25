@@ -82,11 +82,6 @@ enum wave_type
     WV_DEEP,
 };
 
-static wave_type _get_wave_type(bool shallow)
-{
-    return shallow ? WV_SHALLOW : WV_DEEP;
-}
-
 static void _add_overlay(int tileidx, packed_cell *cell)
 {
     cell->dngn_overlay[cell->num_dngn_overlay++] = tileidx;
@@ -155,11 +150,8 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
         return;
     }
 
-    if (feat != DNGN_FLOOR && feat != DNGN_UNDISCOVERED_TRAP
-        && feat != DNGN_SHALLOW_WATER && feat != DNGN_DEEP_WATER)
-    {
+    if (feat <= DNGN_LAVA)
         return;
-    }
 
     const bool ink_only = (feat == DNGN_DEEP_WATER);
 
@@ -178,7 +170,7 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 
         const bool ink = (cloud_type_at(coord_def(*ri)) == CLOUD_INK);
 
-        bool shallow = false;
+        wave_type wt = WV_NONE;
         if (env.map_knowledge(*ri).feat() == DNGN_SHALLOW_WATER)
         {
             // Adjacent shallow water is only interesting for
@@ -186,9 +178,12 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
             if (!ink && feat == DNGN_SHALLOW_WATER)
                 continue;
 
-            shallow = true;
+            if (feat != DNGN_SHALLOW_WATER)
+                wt = WV_SHALLOW;
         }
-        else if (env.map_knowledge(*ri).feat() != DNGN_DEEP_WATER)
+        else if (env.map_knowledge(*ri).feat() == DNGN_DEEP_WATER)
+            wt = WV_DEEP;
+        else
             continue;
 
         if (!ink_only)
@@ -196,32 +191,32 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
             if (ri->x == gc.x) // orthogonals
             {
                 if (ri->y < gc.y)
-                    north = _get_wave_type(shallow);
+                    north = wt;
                 else
-                    south = _get_wave_type(shallow);
+                    south = wt;
             }
             else if (ri->y == gc.y)
             {
                 if (ri->x < gc.x)
-                    west = _get_wave_type(shallow);
+                    west = wt;
                 else
-                    east = _get_wave_type(shallow);
+                    east = wt;
             }
             else // diagonals
             {
                 if (ri->x < gc.x)
                 {
                     if (ri->y < gc.y)
-                        nw = _get_wave_type(shallow);
+                        nw = wt;
                     else
-                        sw = _get_wave_type(shallow);
+                        sw = wt;
                 }
                 else
                 {
                     if (ri->y < gc.y)
-                        ne = _get_wave_type(shallow);
+                        ne = wt;
                     else
-                        se = _get_wave_type(shallow);
+                        se = wt;
                 }
             }
         }
