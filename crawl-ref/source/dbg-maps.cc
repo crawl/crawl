@@ -138,15 +138,17 @@ static bool _do_build_level()
     return true;
 }
 
-static vector<level_id> _dungeon_places()
+static vector<level_id> _dungeon_places(int *num_branches = NULL)
 {
     vector<level_id> places;
+    if (num_branches)
+        *num_branches = 0;
 
     for (int br = BRANCH_DUNGEON; br < NUM_BRANCHES; ++br)
     {
         if (brdepth[br] == -1)
             continue;
-
+        bool new_branch = true;
         const branch_type branch = static_cast<branch_type>(br);
         for (int depth = 1; depth <= brdepth[br]; ++depth)
         {
@@ -154,15 +156,18 @@ static vector<level_id> _dungeon_places()
             if (SysEnv.map_gen_range.get() && !SysEnv.map_gen_range->is_usable_in(l))
                 continue;
             places.push_back(l);
+            if (num_branches && new_branch)
+            {
+                ++(*num_branches);
+                new_branch =  false;
+            }
         }
     }
     return places;
 }
 
-static bool _build_dungeon()
+static bool _build_dungeon(const vector<level_id> &places)
 {
-    const vector<level_id> places = _dungeon_places();
-
     for (int i = 0, size = places.size(); i < size; ++i)
     {
         const level_id &lid = places[i];
@@ -177,7 +182,6 @@ static bool _build_dungeon()
             you.unique_creatures.set(MONS_THE_ENCHANTRESS, false);
         }
 #endif
-
         if (!_do_build_level())
             return false;
     }
@@ -186,9 +190,14 @@ static bool _build_dungeon()
 
 static void _build_levels(int niters)
 {
+    int num_branches = 0;
+    const vector<level_id> places = _dungeon_places(&num_branches);
+
     clear_messages();
     mpr("Generating dungeon map stats");
-
+    printf("Generating map stats for %d iteration(s) of %d level(s) over "
+           "%d branch(es).\n", niters, (int) places.size(), num_branches);
+    fflush(stdout);
     for (int i = 0; i < niters; ++i)
     {
         clear_messages();
@@ -209,7 +218,7 @@ static void _build_levels(int niters)
         you.unique_creatures.reset();
         initialise_branch_depths();
         init_level_connectivity();
-        if (!_build_dungeon())
+        if (!_build_dungeon(places))
             break;
     }
 }
@@ -264,7 +273,8 @@ static void _check_mapless(const level_id &lid, vector<level_id> &mapless)
 
 static void _write_map_stats()
 {
-    FILE *outf = fopen("mapstat.log", "w");
+    const char *out_file = "mapstat.log";
+    FILE *outf = fopen(out_file, "w");
     fprintf(outf, "Map Generation Stats\n\n");
     fprintf(outf, "Levels attempted: %d, built: %d, failed: %d\n",
             levels_tried, levels_tried - levels_failed,
@@ -426,6 +436,7 @@ static void _write_map_stats()
         fprintf(outf, "==================\n\n");
     }
     fclose(outf);
+    printf("Wrote map stats to %s\n", out_file);
 }
 
 void mapstat_generate_stats()
