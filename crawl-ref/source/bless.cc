@@ -130,7 +130,7 @@ static void _gift_weapon_to_orc(monster* orc, int force_type = NUM_WEAPONS)
  * @param[in] initial_gift      Whether this is starting ammo or a restock.
  * (Give more ammo when restocking than initially.)
  */
-static void _gift_ammo_to_orc(monster* orc, bool initial_gift = false)
+void gift_ammo_to_orc(monster* orc, bool initial_gift)
 {
     const item_def* launcher = orc->launcher();
 
@@ -225,7 +225,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
     const bool mon_has_launcher = mon->launcher() != NULL;
     if (mon_has_launcher || mon->shield() != NULL)
     {
-        _gift_ammo_to_orc(mon);
+        gift_ammo_to_orc(mon);
         if (mon->missiles() != NULL)
             return mon_has_launcher ? "ammunition" : "ranged armament";
 
@@ -241,7 +241,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
         return ""; // ?
     }
 
-    _gift_ammo_to_orc(mon, true);
+    gift_ammo_to_orc(mon, true);
     if (mon->missiles() == NULL)
         dprf("Couldn't give initial ammo to follower");
     return "ranged armament";
@@ -270,7 +270,7 @@ static string _beogh_bless_weapon(monster* mon)
     const item_def* ammo_ptr = mon->missiles();
     if (launch_ptr != NULL && ammo_ptr == NULL)
     {
-        _gift_ammo_to_orc(mon);
+        gift_ammo_to_orc(mon);
         if (mon->missiles() != NULL)
             return "ammunition";
 
