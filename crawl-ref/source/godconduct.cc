@@ -965,7 +965,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             else if (you_worship(GOD_NEMELEX_XOBEH))
                 piety_change = 14;
             else if (you_worship(GOD_IGNI_IPTHES))
-                piety_change = 6;
+                piety_change = 9;
 
             piety_denom = level;
             retval = true;
