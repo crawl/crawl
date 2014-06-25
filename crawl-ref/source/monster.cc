@@ -547,18 +547,18 @@ item_def *monster::weapon(int which_attack) const
  */
 item_def *monster::melee_weapon() const
 {
-    item_def* primary_weapon = mslot_item(MSLOT_WEAPON);
-    item_def* secondary_weapon = mslot_item(MSLOT_ALT_WEAPON);
-    const bool primary_is_melee = primary_weapon
-                                  && !is_range_weapon(*primary_weapon);
-    const bool secondary_is_melee = secondary_weapon
-                                    && !is_range_weapon(*secondary_weapon);
+    item_def* first_weapon = mslot_item(MSLOT_WEAPON);
+    item_def* second_weapon = mslot_item(MSLOT_ALT_WEAPON);
+    const bool primary_is_melee = first_weapon
+                                  && !is_range_weapon(*first_weapon);
+    const bool secondary_is_melee = second_weapon
+                                    && !is_range_weapon(*second_weapon);
     if (primary_is_melee && secondary_is_melee)
-        return coinflip() ? primary_weapon : secondary_weapon;
+        return coinflip() ? first_weapon : second_weapon;
     if (primary_is_melee)
-        return primary_weapon;
+        return first_weapon;
     if (secondary_is_melee)
-        return secondary_weapon;
+        return second_weapon;
     return NULL;
 }
 
