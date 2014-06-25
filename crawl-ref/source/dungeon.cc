@@ -390,7 +390,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
                                   dungeon_feature_type dest_stairs_type)
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mapgen_report_map_build_start();
+    mapstat_report_map_build_start();
 #endif
 
     dgn_reset_level(enable_random_maps);
@@ -406,7 +406,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     {
         dprf("<white>VETO</white>: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
-        mapgen_report_map_veto();
+        mapstat_report_map_veto();
 #endif
         return false;
     }
@@ -4340,7 +4340,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
-        mapgen_report_map_use(place.map);
+        mapstat_report_map_use(place.map);
 #endif
 
     if (is_layout && place.map.has_tag_prefix("layout_type_"))
