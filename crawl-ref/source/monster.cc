@@ -2103,13 +2103,11 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
             }
         }
 
-        // Darts don't absolutely need a launcher - still allow upgrading.
+        // Allow upgrading throwing weapon brands (XXX: improve this!)
         if (item.sub_type == miss->sub_type
-            && item.sub_type == MI_TOMAHAWK
-            && (item.plus > miss->plus
-                || item.plus == miss->plus
-                   && get_ammo_brand(*miss) == SPMSL_NORMAL
-                   && get_ammo_brand(item) != SPMSL_NORMAL))
+            && (item.sub_type == MI_TOMAHAWK || item.sub_type == MI_JAVELIN)
+            && get_ammo_brand(*miss) == SPMSL_NORMAL
+            && get_ammo_brand(item) != SPMSL_NORMAL)
         {
             if (!drop_item(MSLOT_MISSILE, near))
                 return false;
