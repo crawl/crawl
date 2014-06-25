@@ -534,10 +534,19 @@ static void _show_commandline_options_help()
     puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
 #ifdef DEBUG_DIAGNOSTICS
     puts("");
-    puts("  -test            run all test cases in test/ except test/big/");
-    puts("  -test foo,bar    run only tests \"foo\" and \"bar\"");
-    puts("  -test list       list available tests");
-    puts("  -script <name>   run script matching <name> in ./scripts");
+    puts("  -test               run all test cases in test/ except test/big/");
+    puts("  -test foo,bar       run only tests \"foo\" and \"bar\"");
+    puts("  -test list          list available tests");
+    puts("  -script <name>      run script matching <name> in ./scripts");
+    puts("  -mapstat [<levels>] run map stats on the given range of levels");
+    puts("      Defaults to entire dungeon; level ranges follow des DEPTH "
+         "syntax.");
+    puts("      Examples: Lair:2- and '!Pan,!Abyss'");
+    puts("  -objstat [<levels>] run monster and item stats on the given range "
+         "of levels");
+    puts("      Defaults to entire dungeon; same level syntax as -mapstat.");
+    puts("  -iters <num>        For -mapstat and -objstat, set the number of "
+         "iterations");
 #endif
     puts("");
     puts("Miscellaneous options:");

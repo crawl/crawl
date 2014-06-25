@@ -167,7 +167,7 @@ static void _initialize()
     else if (crawl_state.obj_stat_gen)
     {
         release_cli_signals();
-        objgen_generate_stats();
+        objstat_generate_stats();
         end(0, false);
     }
 #endif
