@@ -1814,7 +1814,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.obj_stat_gen)
-        objgen_record_monster(mon);
+        objstat_record_monster(mon);
 #endif
     return mon;
 }
