@@ -1222,6 +1222,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         // worth it, unless we have more monsters with misc. items.
         item.base_type = OBJ_MISCELLANY;
         item.sub_type  = MISC_HORN_OF_GERYON;
+        // Don't attempt to give the horn again.
+        give_aux_melee = false;
         break;
 
     case MONS_SALAMANDER:
