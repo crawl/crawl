@@ -35,7 +35,7 @@ static map<string, string> errors;
 static string last_error;
 
 static int levels_tried = 0, levels_failed = 0;
-static int build_attempts = 0, vetoes = 0;
+static int build_attempts = 0, level_vetoes = 0;
 
 void mapstat_report_map_build_start()
 {
@@ -45,7 +45,7 @@ void mapstat_report_map_build_start()
 
 void mapstat_report_map_veto()
 {
-    vetoes++;
+    level_vetoes++;
     map_builds[level_id::current()].second++;
 }
 
@@ -61,90 +61,84 @@ static bool _is_disconnected_level()
     return dgn_count_disconnected_zones(true);
 }
 
-static bool do_build_level(int niters)
+static bool _do_build_level()
 {
     clear_messages();
-    mprf("On %s (%d); %d g, %d fail, %u err%s, %u uniq, "
+    mprf("On %s; %d g, %d fail, %u err%s, %u uniq, "
          "%d try, %d (%.2lf%%) vetos",
-         level_id::current().describe().c_str(), niters,
-         levels_tried, levels_failed,
-         (unsigned int)errors.size(),
-         last_error.empty()? ""
-         : (" (" + last_error + ")").c_str(),
-         (unsigned int)use_count.size(),
-         build_attempts, vetoes,
-         build_attempts? vetoes * 100.0 / build_attempts : 0.0);
+         level_id::current().describe().c_str(), levels_tried, levels_failed,
+         (unsigned int)errors.size(), last_error.empty() ? ""
+         : (" (" + last_error + ")").c_str(), (unsigned int) use_count.size(),
+         build_attempts, level_vetoes,
+         build_attempts ? level_vetoes * 100.0 / build_attempts : 0.0);
 
     watchdog();
 
     no_messages mx;
-    for (int i = 0; i < niters; ++i)
+    if (kbhit() && key_is_escape(getchk()))
     {
-        if (kbhit() && key_is_escape(getchk()))
-        {
-            mprf(MSGCH_WARN, "User requested cancel");
-            return false;
-        }
+        mprf(MSGCH_WARN, "User requested cancel");
+        return false;
+    }
 
-        ++levels_tried;
-        if (!builder())
-        {
-            ++levels_failed;
-            continue;
-        }
+    ++levels_tried;
+    if (!builder())
+    {
+        ++levels_failed;
+        return true;
+    }
 
-        for (int y = 0; y < GYM; ++y)
-            for (int x = 0; x < GXM; ++x)
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+        {
+            switch (grd[x][y])
             {
-                switch (grd[x][y])
-                {
-                case DNGN_RUNED_DOOR:
-                    grd[x][y] = DNGN_CLOSED_DOOR;
-                    break;
-                default:
-                    break;
-                }
+            case DNGN_RUNED_DOOR:
+                grd[x][y] = DNGN_CLOSED_DOOR;
+                break;
+            default:
+                break;
             }
-
-        {
-            unwind_bool wiz(you.wizard, true);
-            magic_mapping(1000, 100, true, true, false,
-                          coord_def(GXM/2, GYM/2));
         }
-        if (_is_disconnected_level())
+
+    {
+        unwind_bool wiz(you.wizard, true);
+        magic_mapping(1000, 100, true, true, false,
+                      coord_def(GXM/2, GYM/2));
+    }
+    if (_is_disconnected_level())
+    {
+        string vaults;
+        for (int j = 0, size = env.level_vaults.size(); j < size; ++j)
         {
-            string vaults;
-            for (int j = 0, size = env.level_vaults.size(); j < size; ++j)
-            {
-                if (j && !vaults.empty())
-                    vaults += ", ";
-                vaults += env.level_vaults[j]->map.name;
-            }
-
-            if (!vaults.empty())
-                vaults = " (" + vaults + ")";
-
-            FILE *fp = fopen("map.dump", "w");
-            fprintf(fp, "Bad (disconnected) level (%s) on %s%s.\n\n",
-                    env.level_build_method.c_str(),
-                    level_id::current().describe().c_str(),
-                    vaults.c_str());
-
-            dump_map(fp, true);
-            fclose(fp);
-
-            mprf(MSGCH_ERROR,
-                 "Bad (disconnected) level on %s%s",
-                 level_id::current().describe().c_str(),
-                 vaults.c_str());
-
-            return false;
+            if (j && !vaults.empty())
+                vaults += ", ";
+            vaults += env.level_vaults[j]->map.name;
         }
+
+        if (!vaults.empty())
+            vaults = " (" + vaults + ")";
+
+        FILE *fp = fopen("map.dump", "w");
+        fprintf(fp, "Bad (disconnected) level (%s) on %s%s.\n\n",
+                env.level_build_method.c_str(),
+                level_id::current().describe().c_str(),
+                vaults.c_str());
+
+        dump_map(fp, true);
+        fclose(fp);
+
+        mprf(MSGCH_ERROR,
+             "Bad (disconnected) level on %s%s",
+             level_id::current().describe().c_str(),
+             vaults.c_str());
+
+        return false;
     }
     return true;
 }
 
-static vector<level_id> dungeon_places()
+static vector<level_id> _dungeon_places()
 {
     vector<level_id> places;
 
@@ -165,9 +159,9 @@ static vector<level_id> dungeon_places()
     return places;
 }
 
-static bool build_dungeon()
+static bool _build_dungeon()
 {
-    const vector<level_id> places = dungeon_places();
+    const vector<level_id> places = _dungeon_places();
 
     for (int i = 0, size = places.size(); i < size; ++i)
     {
@@ -184,13 +178,13 @@ static bool build_dungeon()
         }
 #endif
 
-        if (!do_build_level(1))
+        if (!_do_build_level())
             return false;
     }
     return true;
 }
 
-static void build_levels(int niters)
+static void _build_levels(int niters)
 {
     clear_messages();
     mpr("Generating dungeon map stats");
@@ -206,8 +200,8 @@ static void build_levels(int niters)
              last_error.empty()? ""
              : (" (" + last_error + ")").c_str(),
              (unsigned int)use_count.size(),
-             build_attempts, vetoes,
-             build_attempts? vetoes * 100.0 / build_attempts : 0.0);
+             build_attempts, level_vetoes,
+             build_attempts? level_vetoes * 100.0 / build_attempts : 0.0);
 
         dlua.callfn("dgn_clear_data", "");
         you.uniq_map_tags.clear();
@@ -215,7 +209,7 @@ static void build_levels(int niters)
         you.unique_creatures.reset();
         initialise_branch_depths();
         init_level_connectivity();
-        if (!build_dungeon())
+        if (!_build_dungeon())
             break;
     }
 }
@@ -243,13 +237,13 @@ static void _report_available_random_vaults(FILE *outf)
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
 
-    const vector<level_id> places = dungeon_places();
+    const vector<level_id> places = _dungeon_places();
     fprintf(outf, "\n\nRandom vaults available by dungeon level:\n");
 
     for (vector<level_id>::const_iterator i = places.begin();
          i != places.end(); ++i)
     {
-        // The watchdog has already been activated by do_build_level.
+        // The watchdog has already been activated by _do_build_level.
         // Reporting all the vaults could take a while.
         watchdog();
         fprintf(outf, "\n%s -------------\n", i->describe().c_str());
@@ -326,7 +320,7 @@ static void _write_map_stats()
         }
     }
 
-    if (vetoes)
+    if (level_vetoes)
     {
         fprintf(outf, "\n\nMost vetoed levels:\n");
         multimap<int, level_id> sortedvetos;
@@ -447,7 +441,7 @@ void mapstat_generate_stats()
     // We have to run map preludes ourselves.
     run_map_global_preludes();
     run_map_local_preludes();
-    build_levels(SysEnv.map_gen_iters);
+    _build_levels(SysEnv.map_gen_iters);
     _write_map_stats();
 }
 
