@@ -173,7 +173,7 @@ static void _gift_ammo_to_orc(monster* orc, bool initial_gift = false)
  */
 static string _beogh_bless_melee_weapon(monster* mon)
 {
-    item_def* wpn_ptr = mon->weapon();
+    item_def* wpn_ptr = mon->melee_weapon();
     ASSERT(wpn_ptr != NULL);
     item_def& wpn = *wpn_ptr;
 
@@ -255,7 +255,7 @@ static string _beogh_bless_ranged_weapon(monster* mon)
  */
 static string _beogh_bless_weapon(monster* mon)
 {
-    const item_def* wpn_ptr = mon->weapon();
+    const item_def* wpn_ptr = mon->melee_weapon();
     if (wpn_ptr == NULL)
     {
         _gift_weapon_to_orc(mon);
