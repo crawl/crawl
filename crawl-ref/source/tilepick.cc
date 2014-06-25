@@ -5203,7 +5203,7 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_EVOKE_TELEPORT_CONTROL:
         return TILEG_ABILITY_EVOKE_TELEPORT_CONTROL;
     case ABIL_EVOKE_BLINK:
-        return TILEG_ABILITY_EVOKE_BLINK;
+        return TILEG_ABILITY_BLINK;
     case ABIL_EVOKE_TURN_INVISIBLE:
         return TILEG_ABILITY_EVOKE_INVISIBILITY;
     case ABIL_EVOKE_TURN_VISIBLE:
@@ -5211,7 +5211,7 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_EVOKE_FLIGHT:
         return TILEG_ABILITY_EVOKE_FLIGHT;
     case ABIL_EVOKE_JUMP:
-        return TILEG_ABILITY_EVOKE_JUMP;
+        return TILEG_ABILITY_JUMP;
     case ABIL_EVOKE_FOG:
         return TILEG_ABILITY_EVOKE_FOG;
 
@@ -5323,6 +5323,8 @@ tileidx_t tileidx_ability(const ability_type ability)
     case ABIL_NEMELEX_STACK_FIVE:
         return TILEG_ABILITY_NEMELEX_STACK_FIVE;
     // Beogh
+    case ABIL_BEOGH_GIFT_ITEM:
+        return TILEG_ABILITY_BEOGH_GIFT_ITEM;
     case ABIL_BEOGH_SMITING:
         return TILEG_ABILITY_BEOGH_SMITE;
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:

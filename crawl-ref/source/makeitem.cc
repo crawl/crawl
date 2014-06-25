@@ -2828,6 +2828,13 @@ int items(bool allow_uniques,
     // Set brand appearance.
     item_set_appearance(item);
 
+    // Squash plusses on boring equipment.
+    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR)
+        && item.plus > 0 && !get_equip_desc(item) && !is_artefact(item))
+    {
+        item.plus = 0;
+    }
+
     if (dont_place)
     {
         item.pos.reset();
@@ -2931,10 +2938,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return true;
 
-    if (item.is_mundane())
-        return false;
-
-    if (x_chance_in_y(item.plus - 2, 3) || x_chance_in_y(item.plus2 - 2, 3))
+    if (x_chance_in_y(item.plus - 2, 3))
         return true;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
@@ -2957,8 +2961,11 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return false;
 
-    if (x_chance_in_y(item.plus - 2, 3))
+    if (x_chance_in_y(item.plus - 2, 3)
+        || item.plus > 1 && get_armour_slot(item) != EQ_BODY_ARMOUR)
+    {
         return true;
+    }
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
