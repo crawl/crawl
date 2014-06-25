@@ -1062,7 +1062,7 @@ MAP
 ENDMAP
 
 NAME:   tar_grunt_small_loot
-TAGS:   tar_grunt_small_loot allow_dup unrand
+TAGS:   tar_grunt_small_loot allow_dup unrand no_exits
 MONS:   shadow demon w:20 / reaper w:15 / shadow wraith w:10 / soul eater w:5
 NSUBST: x = 1:m / *:x
 MAP
@@ -1076,7 +1076,7 @@ cccxccc
 ENDMAP
 
 NAME:   tar_grunt_small_decor_pillar
-TAGS:   tar_grunt_decor transparent allow_dup unrand
+TAGS:   tar_grunt_decor transparent allow_dup unrand no_exits
 WEIGHT: 60
 {{
   local size = crawl.random2(6) + 1
