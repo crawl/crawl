@@ -526,11 +526,24 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
         {
             var bg = cell.bg;
             var bg_idx = cell.bg.value;
+            var renderer = this;
 
             if (cell.mangrove_water && bg_idx > dngn.DNGN_UNSEEN)
                 this.draw_dngn(dngn.DNGN_SHALLOW_WATER, x, y);
             else if (bg_idx >= dngn.DNGN_FIRST_TRANSPARENT)
+            {
                 this.draw_dngn(cell.flv.f, x, y); // f = floor
+
+                // Draw floor overlays beneath the feature
+                if (cell.ov)
+                {
+                    $.each(cell.ov, function (i, overlay)
+                           {
+                               if (overlay && overlay <= dngn.FLOOR_MAX)
+                                   renderer.draw_dngn(overlay, x, y);
+                           });
+                }
+            }
 
             // Draw blood beneath feature tiles.
             if (bg_idx > dngn.WALL_MAX)
@@ -572,16 +585,19 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums,
             {
                 // Draw blood on top of wall tiles.
                 if (bg_idx <= dngn.WALL_MAX)
-                    this.draw_blood_overlay(x, y, cell, bg_idx >= dngn.FLOOR_MAX);
+                    this.draw_blood_overlay(x, y, cell, bg_idx > dngn.FLOOR_MAX);
 
                 // Draw overlays
                 if (cell.ov)
                 {
-                    var renderer = this;
                     $.each(cell.ov, function (i, overlay)
                            {
-                               if (overlay)
+                               if (overlay &&
+                                   (bg_idx < dngn.DNGN_FIRST_TRANSPARENT ||
+                                    overlay > dngn.FLOOR_MAX))
+                               {
                                    renderer.draw_dngn(overlay, x, y);
+                               }
                            });
                 }
 
