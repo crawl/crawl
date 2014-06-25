@@ -94,7 +94,7 @@ private:
 };
 
 #ifdef DEBUG_DIAGNOSTICS
-void mg_report_random_maps(FILE *outf, const level_id &place);
+void mapstat_report_random_maps(FILE *outf, const level_id &place);
 #endif
 
 #endif

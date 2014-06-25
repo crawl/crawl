@@ -160,7 +160,7 @@ static void _initialize()
     if (crawl_state.map_stat_gen)
     {
         release_cli_signals();
-        generate_map_stats();
+        mapstat_generate_stats();
         end(0, false);
     }
 #endif
