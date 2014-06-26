@@ -6458,7 +6458,7 @@ bool monster::stasis(bool calc_unid, bool items) const
 
 bool monster::check_stasis(bool silent, bool calc_unid) const
 {
-    if (mons_genus(type) == MONS_FORMICID)
+    if (stasis(false, false))
         return true;
 
     if (!stasis())
