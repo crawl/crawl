@@ -284,6 +284,9 @@ static bool _try_recall(mid_t mid)
             {
                 recall_orders(mons);
                 simple_monster_message(mons, " is recalled.");
+                mons->apply_location_effects(mons->pos());
+                // mons may have been killed, shafted, etc,
+                // but they were still recalled!
                 return true;
             }
         }
