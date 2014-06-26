@@ -550,9 +550,9 @@ item_def *monster::melee_weapon() const
     item_def* first_weapon = mslot_item(MSLOT_WEAPON);
     item_def* second_weapon = mslot_item(MSLOT_ALT_WEAPON);
     const bool primary_is_melee = first_weapon
-                                  && !is_range_weapon(*first_weapon);
+                                  && is_melee_weapon(*first_weapon);
     const bool secondary_is_melee = second_weapon
-                                    && !is_range_weapon(*second_weapon);
+                                    && is_melee_weapon(*second_weapon);
     if (primary_is_melee && secondary_is_melee)
         return coinflip() ? first_weapon : second_weapon;
     if (primary_is_melee)
