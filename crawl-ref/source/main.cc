@@ -3046,7 +3046,7 @@ static void _move_player(int move_x, int move_y)
 }
 
 // Swap monster to this location.  Player is swapped elsewhere.
-static bool _swap_places(monster* mons, const coord_def &loc)
+static void _swap_places(monster* mons, const coord_def &loc)
 {
     ASSERT(map_bounds(loc));
     ASSERT(monster_habitable_grid(mons, grd(loc)));
@@ -3057,12 +3057,12 @@ static bool _swap_places(monster* mons, const coord_def &loc)
             && monster_at(loc)->type == MONS_TOADSTOOL)
         {
             monster_swaps_places(mons, loc - mons->pos());
-            return true;
+            return;
         }
         else
         {
             mpr("Something prevents you from swapping places.");
-            return false;
+            return;
         }
     }
 
@@ -3070,11 +3070,14 @@ static bool _swap_places(monster* mons, const coord_def &loc)
 
     mgrd(mons->pos()) = NON_MONSTER;
 
+    const coord_def old_loc = mons->pos();
     mons->moveto(loc);
+    mons->apply_location_effects(old_loc);
 
-    mgrd(mons->pos()) = mons->mindex();
+    if (mons->alive())
+        mgrd(mons->pos()) = mons->mindex();
 
-    return true;
+    return;
 }
 
 static void _move_player(coord_def move)
