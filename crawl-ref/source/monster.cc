@@ -3510,6 +3510,9 @@ bool monster::is_evil(bool check_spells) const
         return true;
     }
 
+    if (testbits(flags, MF_SPECTRALISED))
+        return true;
+
     return false;
 }
 
