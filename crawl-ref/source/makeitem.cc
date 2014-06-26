@@ -2961,8 +2961,12 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return false;
 
+    // body armour with +3 or more can be interesting; any aux armour with any
+    // plus is interesting, except for cloaks, because zot. (they need +2.)
     if (x_chance_in_y(item.plus - 2, 3)
-        || item.plus > 1 && get_armour_slot(item) != EQ_BODY_ARMOUR)
+        || item.plus > 0 && get_armour_slot(item) != EQ_BODY_ARMOUR
+                         && (get_armour_slot(item) != EQ_CLOAK
+                             || item.plus > 1))
     {
         return true;
     }
