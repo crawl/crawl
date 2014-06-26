@@ -120,6 +120,7 @@ enum monster_info_flags
     MB_SAP_MAGIC,
     MB_SHROUD,
     MB_CORROSION,
+    MB_SPECTRALISED,
     NUM_MB_FLAGS
 };
 

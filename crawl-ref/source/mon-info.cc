@@ -676,6 +676,9 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->submerged())
         mb.set(MB_SUBMERGED);
 
+    if (testbits(m->flags, MF_SPECTRALISED))
+        mb.set(MB_SPECTRALISED);
+
     if (mons_is_pghost(type))
     {
         ASSERT(m->ghost.get());
@@ -1601,6 +1604,8 @@ vector<string> monster_info::attributes() const
         v.push_back("shrouded");
     if (is(MB_CORROSION))
         v.push_back("covered in acid");
+    if (is(MB_SPECTRALISED))
+        v.push_back("ghostly");
     return v;
 }
 
