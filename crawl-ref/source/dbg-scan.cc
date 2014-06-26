@@ -740,7 +740,7 @@ void check_map_validity()
 static FILE *stat_outf;
 const static char *stat_out_prefix = "objstat_";
 const static char *stat_out_ext = ".txt";
-#define STAT_PRECISION 3
+#define STAT_PRECISION 2
 
 enum item_base_type {
     ITEM_FOOD,
@@ -1482,6 +1482,7 @@ static void _write_stat(map<string, double> &stats, string field)
     double value = 0;
 
     output.precision(STAT_PRECISION);
+    output.setf(ios_base::fixed);
     if (field == "PileQuant")
         value = stats["Num"] / stats["NumPiles"];
     else if (field == "WandCharges"
