@@ -502,8 +502,14 @@ static string _tso_bless_armour(monster* mon)
     // Pick either a monster's armour or its shield.
     const int armour = mon->inv[MSLOT_ARMOUR];
     const int shield = mon->inv[MSLOT_SHIELD];
+    if (armour == NON_ITEM && shield == NON_ITEM)
+    {
+        dprf("Can't bless the armour of a naked follower!");
+        return "";
+    }
+
     const int slot = shield == NON_ITEM || (coinflip() && armour != NON_ITEM) ?
-    armour : shield;
+                     armour : shield;
 
     item_def& arm(mitm[slot]);
 
