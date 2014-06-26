@@ -406,6 +406,17 @@ void pray()
 
     if (you_worship(GOD_NO_GOD))
     {
+        if (env.level_state & LSTATE_BEOGH && can_convert_to_beogh())
+        {
+            you.turn_is_over = true;
+            // But if we don't convert then god_pitch
+            // makes it not take a turn after all.
+            god_pitch(GOD_BEOGH);
+            if (you_worship(GOD_BEOGH))
+                spare_beogh_convert();
+            return;
+        }
+
         const mon_holy_type holi = you.holiness();
 
         mprf(MSGCH_PRAY,
