@@ -2970,8 +2970,7 @@ static int _armour_plus_threshold(equipment_type armour_type)
         // body armour is very common; squelch most of it
         case EQ_BODY_ARMOUR:
             return 3;
-        // cloaks & shields are fairly common
-        case EQ_CLOAK:
+        // shields are fairly common
         case EQ_SHIELD:
             return 2;
         // aux armour is relatively uncommon
