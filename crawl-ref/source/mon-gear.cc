@@ -2308,16 +2308,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
         item.sub_type  = ARM_ROBE;
         break;
 
-    case MONS_DRACONIAN:
-    case MONS_RED_DRACONIAN:
-    case MONS_WHITE_DRACONIAN:
-    case MONS_GREEN_DRACONIAN:
-    case MONS_PALE_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
-    case MONS_BLACK_DRACONIAN:
-    case MONS_YELLOW_DRACONIAN:
-    case MONS_PURPLE_DRACONIAN:
-    case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:
