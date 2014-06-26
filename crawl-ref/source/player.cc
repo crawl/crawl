@@ -363,6 +363,16 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return false;
     }
 
+    // prompt when swapping into known zot traps
+    string prompt = make_stringf("Do you really want to swap %s into the Zot trap?",
+                                 mons->name(DESC_YOUR).c_str());
+    if (!quiet && find_trap(loc) && find_trap(loc)->type == TRAP_ZOT
+        && env.grid(loc) != DNGN_UNDISCOVERED_TRAP
+        && !yes_or_no(prompt.c_str()))
+    {
+        return false;
+    }
+
     // First try: move monster onto your position.
     bool swap = !monster_at(loc) && monster_habitable_grid(mons, grd(loc));
 
