@@ -4770,7 +4770,6 @@ void torpor_snail_slow(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && !you.stasis()
-        && !you_worship(GOD_CHEIBRIADOS)
         && you.can_see(mons)
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
