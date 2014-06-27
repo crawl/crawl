@@ -3619,32 +3619,6 @@ MAP
 .......
 ENDMAP
 
-NAME:  kilobyte_tornado_obelisk
-TAGS:  no_monster_gen
-DEPTH: Depths, Elf
-ITEM:  acquire any
-MONS:  diamond obelisk
-KPROP: .d1 = no_tele_into
-MAP
-      ccc
-     ccdcc
-   ccc...ccc
-  cc.......cc
- cc.........cc
- c...........c
-cc...........cc
-c.............c
-c......1......c
-c.............c
-cc...........cc
- c...........c
- cc.........cc
-  cc.......cc
-   ccc...ccc
-     c.@.c
-ENDMAP
-
-
 #######################################################################
 #
 # <<5>> Classical minivaults
