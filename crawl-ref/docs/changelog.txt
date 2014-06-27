@@ -1,8 +1,11 @@
 Stone Soup 0.15 (up to 0.15-a0-1526-g60de0e4)
 --------------------------------------------
 * Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
+* Nemelex Xobeh and decks in general have had many changes.
 * Ranged combat has been rewritten from the ground up.
-* Inventory weight limits and item destruction have been removed.
+* Inventory weight limits have been removed.
+* Item destruction is no more, and corrosion has a more severe but
+  temporary effect.
 
 Branches, environment
 ---------------------
@@ -52,14 +55,14 @@ Monsters
 * Monsters will no longer pick up items that the player has seen. Allies won't
   pick up items at all.
 * Monsters no longer fall asleep after long periods of time.
-* Corrosion affects all of your equipment, but only temporarily.
-* The chance of corroding equipment no longer considers item enchantment.
+* Corrosion affects all of your equipment, but only temporarily, and the chance
+  to corrode equipment does not consider item enchantment.
 * New monster: ghost crabs, found in Crypt. They breathe ghostly flames that
   call dangerous specters into existence.
 * New monster: torpor snails, found in Lair and Spider. Their enemies are
   slowed on sight, somewhat like ancient zymes.
 * Enemies are more intelligent about using area-of-attack spells such as
-  Symbol of Torment and Chain Lightning when you are not in sight.
+  Symbol of Torment and Chain Lightning even when you are not in sight.
 * Komodo dragons now bite harder but don't sicken the player.
 * Purple ugly things deal extra damage in lieu of a sickness attack.
 * Deep dwarf death knights are now just death knights.
@@ -77,7 +80,8 @@ Monsters
 * Cherub's hymns can buff any allies, not just those with higher HDs.
 * Killing holy monsters no longer invokes cleansing flame on the perpetrator.
 * Ghouls and necrophages can no longer equip weapons or armour.
-* Boris can use weapons.
+* Each unique now has a special title, shown when you first see them or in the
+  description screen.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
   flaming corpses, grizzly bears, spriggan enchanters, phoenixes, shedu,
   plague shamblers, giant slugs, elephant slugs, giant fireflies, brown oozes,
@@ -116,7 +120,8 @@ Items
   among other changes.
 * Weapon enchantment & slaying bonsues have been merged into a single number,
   giving both +accuracy & +damage. Scrolls of enchant weapon I, II, and III
-  have all been merged into a new "enchant weapon" scroll.
+  have all been merged into a new "enchant weapon" scroll. The scrolls are
+  rarer, but always succeed.
 * Shields have been rebalanced. All non-shield-enchantment sources of SH have
   been halved, and the effectiveness of SH at blocking attacks has been
   doubled, to make the utility of a point of SH roughly equivalent to a point
@@ -158,22 +163,20 @@ Items
   - All types of fruit have been merged together into one gooey, messy item
     type.
   - Cheese, sausages, and ambrosia are no more.
-* Scrolls of enchant weapon are rarer, and always succeed.
 * Identify scrolls now always identify a single item.
 * Jewellery automatically identifies once equipped.
 * Amulets of inaccuracy are always cursed.
 * New rings of stealth and loudness, which positively/negatively adjust
   a player's stealth.
-* The amulet of rage no longer has a tiny chance of extending berserk duration.
-* The Sack of Spiders now places webs directly onto enemies, rather than
-  spreading them randomly around the area.
+* Amulets of rage no longer have a tiny chance of extending berserk duration.
+* Sacks of spiders now place webs directly onto enemies, rather than spreading
+  them randomly around the area.
 * Cleaving hits the full eight squares around a player, when not blocked by
   walls.
 * Gloves of archery no longer penalise melee.
 * (Plain) bows have been renamed to shortbows.
 * Sustain abilities effects no longer stack.
-* The Staff of Air now activates its extra melee damage as often as other
-  elemental staves.
+* Staves of air now activate extra melee damage as often as other elemental staves.
 * Weapons and armour which aren't visibly enchanted no longer have enchantments
   higher than +0.
 * Corpses and skeletons are stationary, and can't be picked up nor apported.
