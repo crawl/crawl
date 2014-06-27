@@ -1391,8 +1391,6 @@ void objstat_record_monster(monster *mons)
 
     int mons_ind = valid_monsters[mons->type];
     corpse_effect_type chunk_effect = mons_corpse_effect(mons->type);
-    bool is_contam = chunk_effect == CE_POISON_CONTAM
-        || chunk_effect == CE_CONTAMINATED;
     bool is_clean = chunk_effect == CE_CLEAN || chunk_effect == CE_POISONOUS;
     level_id lev = level_id::current();
 
@@ -1412,12 +1410,6 @@ void objstat_record_monster(monster *mons)
         {
             _record_monster_stat(lev, mons_ind, "TotalNormNutr",
                                     chunks * CHUNK_BASE_NUTRITION);
-        }
-        else if (is_contam)
-            _record_monster_stat(lev, mons_ind, "TotalNormNutr",
-                                    chunks * CHUNK_BASE_NUTRITION / 2.0);
-        if (is_clean || is_contam)
-        {
             _record_monster_stat(lev, mons_ind, "TotalGourmNutr",
                                     chunks * CHUNK_BASE_NUTRITION);
         }

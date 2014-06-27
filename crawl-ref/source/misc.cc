@@ -852,7 +852,7 @@ bool can_bottle_blood_from_corpse(monster_type mons_class)
     }
 
     int chunk_type = mons_corpse_effect(mons_class);
-    if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
+    if (chunk_type == CE_CLEAN)
         return true;
 
     return false;
@@ -869,10 +869,6 @@ int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type)
     // Max. amount is about one third of the max. amount for chunks.
     int pot_quantity = max_chunks / 3;
     pot_quantity = stepdown_value(pot_quantity, 2, 2, 6, 6);
-
-    // Halve number of potions obtained from contaminated chunk type corpses.
-    if (chunk_type == CE_CONTAMINATED)
-        pot_quantity /= 2;
 
     if (pot_quantity < 1)
         pot_quantity = 1;
