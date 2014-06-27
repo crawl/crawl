@@ -1871,22 +1871,6 @@ string get_item_description(const item_def &item, bool verbose,
                 if (you.species != SP_GHOUL)
                     description << "\n\nEating this meat will cause rotting.";
                 break;
-            case CE_CONTAMINATED:
-                if (player_mutation_level(MUT_SAPROVOROUS) < 3)
-                {
-                    description << "\n\nMeat like this tastes awful and "
-                                   "provides far less nutrition.";
-                }
-                break;
-            case CE_POISON_CONTAM:
-                description << "\n\nThis meat is poisonous";
-                if (player_mutation_level(MUT_SAPROVOROUS) < 3)
-                {
-                    description << " and provides less nutrition even for the "
-                                   "poison-resistant";
-                }
-                description << ".";
-                break;
             default:
                 break;
             }
