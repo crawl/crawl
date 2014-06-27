@@ -3082,10 +3082,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_QAZLAL_UPHEAVAL:
-        fail_check();
-        if (!qazlal_upheaval(coord_def()))
-            return SPRET_ABORT;
-        break;
+        return qazlal_upheaval(coord_def(), false, fail);
 
     case ABIL_QAZLAL_ELEMENTAL_FORCE:
         fail_check();
