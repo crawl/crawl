@@ -2830,7 +2830,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_LUGONU_BANISH:
-        fail_check();
         beam.range = LOS_RADIUS;
 
         if (!spell_direction(spd, beam))
@@ -2842,12 +2841,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             return SPRET_ABORT;
         }
 
-        if (!zapping(ZAP_BANISHMENT, 16 + you.skill(SK_INVOCATIONS, 8), beam,
-                     true))
-        {
-            return SPRET_ABORT;
-        }
-        break;
+        return zapping(ZAP_BANISHMENT, 16 + you.skill(SK_INVOCATIONS, 8), beam,
+                       true, NULL, fail);
 
     case ABIL_LUGONU_CORRUPT:
         fail_check();
