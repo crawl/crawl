@@ -163,10 +163,9 @@ static vector<string> _desc_mindless(const monster_info& mi)
     return descs;
 }
 
-// Returns: 1 -- success, 0 -- failure, -1 -- cancel
-static int _healing_spell(int healed, int max_healed, bool divine_ability,
-                          const coord_def& where, bool not_self,
-                          targ_mode_type mode)
+static spret_type _healing_spell(int healed, int max_healed,
+                                 bool divine_ability, const coord_def& where,
+                                 bool not_self, targ_mode_type mode)
 {
     ASSERT(healed >= 1);
 
@@ -189,19 +188,19 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
     }
 
     if (!spd.isValid)
-        return -1;
+        return SPRET_ABORT;
 
     if (spd.target == you.pos())
     {
         if (not_self)
         {
             mpr("You can only heal others!");
-            return -1;
+            return SPRET_ABORT;
         }
 
         mpr("You are healed.");
         inc_hp(healed);
-        return 1;
+        return SPRET_SUCCESS;
     }
 
     monster* mons = monster_at(spd.target);
@@ -210,7 +209,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
-        return 0;
+        return SPRET_FAIL;
     }
 
     const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
@@ -225,19 +224,19 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
         {
             mprf("The light of Elyvilon fails to reach %s.",
                  mons->name(DESC_THE).c_str());
-            return 0;
+            return SPRET_FAIL;
         }
         else if (can_pacify == -3)
         {
             mprf("The light of Elyvilon almost touches upon %s.",
                  mons->name(DESC_THE).c_str());
-            return 0;
+            return SPRET_FAIL;
         }
         else if (can_pacify == -4)
         {
             mprf("%s is completely unfazed by your meager offer of peace.",
                  mons->name(DESC_THE).c_str());
-            return 0;
+            return SPRET_FAIL;
         }
         else
         {
@@ -248,7 +247,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
             }
             else
                 mpr("You cannot pacify this monster!");
-            return -1;
+            return SPRET_ABORT;
         }
     }
 
@@ -320,15 +319,15 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
     if (!did_something)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return 0;
+        return SPRET_FAIL;
     }
 
-    return 1;
+    return SPRET_SUCCESS;
 }
 
-// Returns: 1 -- success, 0 -- failure, -1 -- cancel
-int cast_healing(int pow, int max_pow, bool divine_ability,
-                 const coord_def& where, bool not_self, targ_mode_type mode)
+spret_type cast_healing(int pow, int max_pow, bool divine_ability,
+                        const coord_def& where, bool not_self,
+                        targ_mode_type mode)
 {
     pow = min(50, pow);
     max_pow = min(50, max_pow);

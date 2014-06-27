@@ -2778,11 +2778,11 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (cast_healing(pow,
                          3 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 6.0),
                          true, self ? you.pos() : coord_def(0, 0), !self,
-                         self ? TARG_NUM_MODES : TARG_INJURED_FRIEND) < 0)
+                         self ? TARG_NUM_MODES : TARG_INJURED_FRIEND)
+                         == SPRET_ABORT)
         {
             return SPRET_ABORT;
         }
-
         break;
     }
 
@@ -2805,7 +2805,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (cast_healing(pow,
                          10 + (int) ceil(you.skill(SK_INVOCATIONS, 1) / 3.0),
                          true, self ? you.pos() : coord_def(0, 0), !self,
-                         self ? TARG_NUM_MODES : TARG_INJURED_FRIEND) < 0)
+                         self ? TARG_NUM_MODES : TARG_INJURED_FRIEND)
+                         == SPRET_ABORT)
         {
             return SPRET_ABORT;
         }
