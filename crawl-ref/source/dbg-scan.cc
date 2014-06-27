@@ -1080,53 +1080,48 @@ item_type::item_type(item_def &item)
         sub_type = item.sub_type;
 }
 
+// This could be done without the macros in C++11, where std::vector has a
+// constructor that takes an initializer list.
+#define INIT_VEC(vec, ...) do                                  \
+    {                                                          \
+        vector<string> &x = (vec);                             \
+        static const char *const ary[] = { __VA_ARGS__ };      \
+        x.insert(x.begin(), ary, ary + ARRAYSZ(ary));          \
+    } while (0)
+
+#define ITEM_FIELDS(name, ...) INIT_VEC(item_fields[ITEM_ ## name], __VA_ARGS__)
+
 static void _init_fields()
 {
-#define SET_FIELDS(x, name, ...)                                 \
-    string name[] = { __VA_ARGS__ };                                \
-    x.insert(x.begin(), name, name + sizeof(name) / sizeof(string))
+    ITEM_FIELDS(SCROLLS,    "Num", "NumPiles", "PileQuant");
+    ITEM_FIELDS(POTIONS,    "Num", "NumPiles", "PileQuant");
+    ITEM_FIELDS(FOOD,       "Num", "NumPiles", "PileQuant", "TotalNormNutr",
+                            "TotalCarnNutr", "TotalHerbNutr");
+    ITEM_FIELDS(GOLD,       "Num", "NumPiles", "PileQuant");
+    ITEM_FIELDS(WANDS,      "Num", "WandCharges");
+    ITEM_FIELDS(WEAPONS,    "OrdNum", "ArteNum", "AllNum", "OrdEnch",
+                            "ArteEnch", "AllEnch", "OrdNumCursed",
+                            "ArteNumCursed", "AllNumCursed", "OrdNumBranded");
+    ITEM_FIELDS(STAVES,     "Num", "NumCursed");
+    ITEM_FIELDS(ARMOUR,     "OrdNum", "ArteNum", "AllNum", "OrdEnch",
+                            "ArteEnch", "AllEnch", "OrdNumCursed",
+                            "ArteNumCursed", "AllNumCursed",
+                            "OrdNumBranded");
+    ITEM_FIELDS(JEWELLERY,  "OrdNum", "ArteNum", "AllNum", "OrdNumCursed",
+                            "ArteNumCursed", "AllNumCursed", "OrdEnch",
+                            "ArteEnch", "AllEnch");
+    ITEM_FIELDS(RODS,       "Num", "RodMana", "RodRecharge", "NumCursed");
+    ITEM_FIELDS(MISSILES,   "Num", "NumBranded", "NumPiles", "PileQuant");
+    ITEM_FIELDS(MISCELLANY, "Num", "MiscPlus");
+    ITEM_FIELDS(DECKS,      "PlainNum", "OrnateNum", "LegendaryNum",
+                            "AllNum", "AllDeckCards");
+    ITEM_FIELDS(BOOKS,      "Num");
+    ITEM_FIELDS(ARTEBOOKS,  "Num");
+    ITEM_FIELDS(MANUALS,    "Num");
 
-    SET_FIELDS(item_fields[ITEM_SCROLLS], scrolls,
-               "Num", "NumPiles", "PileQuant");
-    SET_FIELDS(item_fields[ITEM_POTIONS], potions,
-               "Num", "NumPiles", "PileQuant");
-    SET_FIELDS(item_fields[ITEM_FOOD], food,
-               "Num", "NumPiles", "PileQuant", "TotalNormNutr",
-               "TotalCarnNutr", "TotalHerbNutr");
-    SET_FIELDS(item_fields[ITEM_GOLD], gold,
-               "Num", "NumPiles", "PileQuant");
-    SET_FIELDS(item_fields[ITEM_WANDS], wands,
-               "Num", "WandCharges");
-    SET_FIELDS(item_fields[ITEM_WEAPONS], weapons,
-               "OrdNum", "ArteNum", "AllNum", "OrdEnch",
-               "ArteEnch", "AllEnch", "OrdNumCursed",
-               "ArteNumCursed", "AllNumCursed", "OrdNumBranded");
-    SET_FIELDS(item_fields[ITEM_STAVES], staves,
-               "Num", "NumCursed");
-    SET_FIELDS(item_fields[ITEM_ARMOUR], armour,
-               "OrdNum", "ArteNum", "AllNum", "OrdEnch",
-               "ArteEnch", "AllEnch", "OrdNumCursed",
-               "ArteNumCursed", "AllNumCursed",
-               "OrdNumBranded");
-    SET_FIELDS(item_fields[ITEM_JEWELLERY], jewellery,
-               "OrdNum", "ArteNum", "AllNum", "OrdNumCursed",
-               "ArteNumCursed", "AllNumCursed", "OrdEnch",
-               "ArteEnch", "AllEnch");
-    SET_FIELDS(item_fields[ITEM_RODS], rods,
-               "Num", "RodMana", "RodRecharge", "NumCursed");
-    SET_FIELDS(item_fields[ITEM_MISSILES], missiles,
-               "Num", "NumBranded", "NumPiles", "PileQuant");
-    SET_FIELDS(item_fields[ITEM_MISCELLANY], misc,
-               "Num", "MiscPlus");
-    SET_FIELDS(item_fields[ITEM_DECKS], decks,
-               "PlainNum", "OrnateNum", "LegendaryNum",
-               "AllNum", "AllDeckCards");
-    SET_FIELDS(item_fields[ITEM_BOOKS], books, "Num");
-    SET_FIELDS(item_fields[ITEM_ARTEBOOKS], artebooks, "Num");
-    SET_FIELDS(item_fields[ITEM_MANUALS], manuals, "Num");
-    SET_FIELDS(monster_fields, monsters, "Num", "MonsHD", "MonsHP",
-               "MonsXP", "TotalXP", "MonsNumChunks", "TotalNormNutr",
-               "TotalGourmNutr");
+    INIT_VEC(monster_fields, "Num", "MonsHD", "MonsHP", "MonsXP", "TotalXP",
+                             "MonsNumChunks", "TotalNormNutr",
+                             "TotalGourmNutr");
 }
 
 static void _init_stats()
