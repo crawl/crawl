@@ -115,8 +115,7 @@ const char* random_choose_weighted(int weight, const char* first, ...)
 #define UINT32_MAX ((uint32_t)(-1))
 #endif
 
-// [0, max)
-int random2(int max)
+static int _random2(int max, int rng)
 {
     if (max <= 1)
         return 0;
@@ -125,7 +124,7 @@ int random2(int max)
 
     while (true)
     {
-        uint32_t bits = get_uint32();
+        uint32_t bits = get_uint32(rng);
         uint32_t val  = bits / partn;
 
         if (val < (uint32_t)max)
@@ -133,22 +132,16 @@ int random2(int max)
     }
 }
 
+// [0, max)
+int random2(int max)
+{
+    return _random2(max, 0);
+}
+
 // [0, max), separate RNG state
 int ui_random(int max)
 {
-    if (max <= 1)
-        return 0;
-
-    uint32_t partn = UINT32_MAX / max;
-
-    while (true)
-    {
-        uint32_t bits = get_uint32(1);
-        uint32_t val  = bits / partn;
-
-        if (val < (uint32_t)max)
-            return (int)val;
-    }
+    return _random2(max, 1);
 }
 
 // [0, 1]
