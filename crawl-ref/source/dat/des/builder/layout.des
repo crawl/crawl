@@ -433,24 +433,28 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_3().
 #
-# TODO: Make Elf version and add at weight 10.
+# TODO: Differentiate Elf version more
+#       Improve room generation
+#       Make random_room_point work correctly for new room types
 #
 NAME:   layout_rooms
-DEPTH:  D, Snake, Crypt, Pan
-WEIGHT: 15 (D), 15 (Snake), 10 (Crypt), 10 (Pan)
+DEPTH:  D, Elf, Snake, Crypt, Pan
+WEIGHT: 15 (D), 10 (Elf), 15 (Snake), 10 (Crypt), 10 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
+    local is_elf_branch = you.branch() == "Elf"
+
     function draw_room(room)
         local room_type = 0
-        if you.in_branch("Elf") then
+        if is_elf_branch then
+           room_type = 1
+        else
            if crawl.coinflip() then
-             room_type = 1
+             room_type = 0
            else
              room_type = 2
            end
-        else
-           room_type = crawl.random2(3)
         end
         if room_type == 0 then
             -- rectangular
@@ -515,7 +519,9 @@ TAGS:   overwritable layout allow_dup unrand layout_type_rooms
             x1 = start.x,
             y1 = start.y,
             x2 = finish.x,
-            y2 = finish.y})
+            y2 = finish.y,
+            force_straight = is_elf_branch,
+            allow_diagonals = is_elf_branch})
     end
 
     local gxm, gym = dgn.max_bounds()
