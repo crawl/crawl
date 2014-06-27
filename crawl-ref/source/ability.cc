@@ -2158,7 +2158,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_SPIT_POISON:      // Naga + spit poison mutation
-        fail_check();
         power = you.experience_level
                 + player_mutation_level(MUT_SPIT_POISON) * 5
                 + (you.species == SP_NAGA) * 10;
@@ -2171,6 +2170,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         }
         else
         {
+            fail_check();
             zapping(ZAP_SPIT_POISON, power, beam);
             zin_recite_interrupt();
             you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
@@ -2184,7 +2184,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_BREATHE_STICKY_FLAME:
     {
-        fail_check();
         targetter_splash hitfunc(&you);
         beam.range = 1;
         if (!spell_direction(abild, beam,
@@ -2198,6 +2197,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         if (stop_attack_prompt(hitfunc, "spit at", _sticky_flame_can_hit))
             return SPRET_ABORT;
 
+        fail_check();
         zapping(ZAP_BREATHE_STICKY_FLAME, (you.form == TRAN_DRAGON) ?
                 2 * you.experience_level : you.experience_level,
             beam, false, "You spit a glob of burning liquid.");
@@ -2215,13 +2215,18 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_BREATHE_POWER:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
-        fail_check();
         beam.range = _calc_breath_ability_range(abil.ability);
         if (!spell_direction(abild, beam))
             return SPRET_ABORT;
 
+        // fallthrough to ABIL_BREATHE_LIGHTNING
+
     case ABIL_BREATHE_LIGHTNING: // not targeted
         fail_check();
+
+        // TODO: refactor this to use only one call to zapping(), don't
+        // duplicate its fail_check(), split out breathe_lightning, etc
+
         switch (abil.ability)
         {
         case ABIL_BREATHE_FIRE:
