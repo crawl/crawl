@@ -1052,10 +1052,10 @@ A damaging spell mimicked by the shadow of a Dithmenos worshipper.
 %%%%
 Shatter spell
 
-This spell causes a burst of concussive force around the caster, which will
-damage most creatures, although those composed of stone, metal, crystal or
-otherwise brittle material will particularly suffer. The magic has been known
-to adversely affect walls.
+This spell causes an enormous burst of concussive force around the caster.
+Flying and gelatinous creatures can escape the worst effects, and insubstantial
+creatures are entirely unaffected, but all others will be gravely injured by
+the blast. Walls have also sometimes been known to be adversely affected.
 %%%%
 Shock spell
 
