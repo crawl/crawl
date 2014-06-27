@@ -693,11 +693,11 @@ void handle_behaviour(monster* mon)
             {
                 // The foe is the player.
                 if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-                    && !mon->berserk_or_insane())
+                    && !mon->berserk_or_insane()
+                    && !mon->friendly())
                 {
-                    if (mon->attitude != ATT_FRIENDLY)
-                        // Get to firing range even if we are close.
-                        _set_firing_pos(mon, you.pos());
+                    // Get to firing range even if we are close.
+                    _set_firing_pos(mon, you.pos());
                 }
                 else if (mon->type == MONS_SIREN)
                     find_siren_water_target(mon);
