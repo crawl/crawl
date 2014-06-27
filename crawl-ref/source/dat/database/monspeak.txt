@@ -1257,8 +1257,6 @@ Fire Magic player ghost
 
 @The_monster@ says, "I love the smell of burning flesh."
 
-@The_monster@ chuckles, "I'd hate to see you lose all those scrolls..." @player_only@
-
 @The_monster@ says, "Would you like to be cremated?"
 
 @The_monster@ says, "Don't worry, you'll be warm in a moment."
