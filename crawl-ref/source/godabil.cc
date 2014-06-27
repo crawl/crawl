@@ -4509,7 +4509,7 @@ bool gozag_bribe_branch()
     return false;
 }
 
-bool qazlal_upheaval(coord_def target, bool quiet)
+spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 {
     int pow = you.skill(SK_INVOCATIONS, 6);
     const int max_radius = pow >= 100 ? 2 : 1;
@@ -4538,7 +4538,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
                              "Aiming: <white>Upheaval</white>", true,
                              &tgt))
         {
-            return false;
+            return SPRET_ABORT;
         }
         bolt tempbeam;
         tempbeam.source    = beam.target;
@@ -4551,10 +4551,12 @@ bool qazlal_upheaval(coord_def target, bool quiet)
         tempbeam.is_tracer = true;
         tempbeam.explode(false);
         if (tempbeam.beam_cancelled)
-            return false;
+            return SPRET_ABORT;
     }
     else
         beam.target = target;
+
+    fail_check();
 
     string message = "";
 
@@ -4676,7 +4678,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
     if (wall_count && !quiet)
         mpr("Ka-crash!");
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 void qazlal_elemental_force()
