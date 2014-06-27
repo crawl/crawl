@@ -761,11 +761,9 @@ ENDMAP
 # This replaces dungeon.cc:_plan_5().
 # Previously named "layout_misc".
 #
-# TODO: Wider paths for Zot, then add at weight 20.
-#
 NAME:   layout_misc_corridors
-DEPTH:  Lair, Snake, Crypt
-WEIGHT: 5 (Lair), 20 (Snake), 20 (Crypt)
+DEPTH:  Lair, Snake, Crypt, Zot
+WEIGHT: 20, 5 (Lair)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 TAGS:   no_rotate no_vmirror no_hmirror
@@ -786,8 +784,18 @@ TAGS:   no_rotate no_vmirror no_hmirror
 
     local corridors = crawl.random_range(15, 25)
     local force_straight = false
+    local allow_diagonals = false
+    local max_thickness = 1
     if you.branch() == "Crypt" then
         force_straight = true
+    elseif you.branch() == "Zot" then
+        corridors = crawl.random_range(10, 16)
+        force_straight = true
+        allow_diagonals = crawl.coinflip()
+        max_thickness = 3
+    end
+    if you.at_branch_bottom() then
+        corridors = math.floor(corridors * (1.2 + crawl.random_real() * 0.3))
     end
 
     local area_fraction = 1;
@@ -807,8 +815,11 @@ TAGS:   no_rotate no_vmirror no_hmirror
     while corridors > 0 do
         new_x, new_y = random_coord(gxm, gym)
 
+        local thickness = crawl.random_range(1, max_thickness)
         join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y,
-                        force_straight = force_straight }
+                        force_straight = force_straight,
+                        allow_diagonals = allow_diagonals,
+                        thickness = thickness }
 
         x, y = new_x, new_y
         corridors = corridors - 1
