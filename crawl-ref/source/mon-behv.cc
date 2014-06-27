@@ -151,6 +151,65 @@ static void _set_firing_pos(monster* mon, coord_def target)
     mon->firing_pos = best_pos;
 }
 
+static void _decide_monster_firing_position(monster* mon, actor* owner)
+{
+    // Monster can see foe: continue 'tracking'
+    // by updating target x,y.
+    if (mon->foe == MHITYOU)
+    {
+        const bool ignore_special_firing_AI = mon->friendly()
+                                              || mon->berserk_or_insane();
+
+        // The foe is the player.
+        if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+            && !ignore_special_firing_AI)
+            {
+                // Get to firing range even if we are close.
+                _set_firing_pos(mon, you.pos());
+            }
+        else if (mon->type == MONS_SIREN && !ignore_special_firing_AI)
+            find_siren_water_target(mon);
+        else if (!mon->firing_pos.zero()
+                 && mon->see_cell_no_trans(mon->target))
+        {
+            // If monster is currently getting into firing position and
+            // sees the player and can attack him, clear firing_pos.
+            mon->firing_pos.reset();
+        }
+
+        if (!(mon->firing_pos.zero() && try_pathfind(mon)))
+        {
+            // Whew. If we arrived here, path finding didn't yield anything
+            // (or wasn't even attempted) and we need to set our target
+            // the traditional way.
+
+            mon->target = PLAYER_POS;
+        }
+    }
+    else
+    {
+        // We have a foe but it's not the player.
+        monster* target = &menv[mon->foe];
+        mon->target = target->pos();
+
+        if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+            && !mon->berserk_or_insane()
+            && !(mons_is_avatar(mon->type)
+                 && owner && mon->foe == owner->mindex()))
+        {
+            _set_firing_pos(mon, mon->target);
+        }
+        // Hold position if we've reached our ideal range
+        else if (mon->type == MONS_SPELLFORGED_SERVITOR
+                 && (mon->pos() - target->pos()).abs()
+                 <= dist_range(mon->props["ideal_range"].get_int())
+                 && !one_chance_in(8))
+        {
+            mon->firing_pos = mon->pos();
+        }
+    }
+}
+
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -687,59 +746,7 @@ void handle_behaviour(monster* mon)
                 break;
             }
 
-            // Monster can see foe: continue 'tracking'
-            // by updating target x,y.
-            if (mon->foe == MHITYOU)
-            {
-                // The foe is the player.
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-                    && !mon->berserk_or_insane()
-                    && !mon->friendly())
-                {
-                    // Get to firing range even if we are close.
-                    _set_firing_pos(mon, you.pos());
-                }
-                else if (mon->type == MONS_SIREN)
-                    find_siren_water_target(mon);
-                else if (!mon->firing_pos.zero()
-                    && mon->see_cell_no_trans(mon->target))
-                {
-                    // If monster is currently getting into firing position and
-                    // sees the player and can attack him, clear firing_pos.
-                    mon->firing_pos.reset();
-                }
-
-                if (mon->firing_pos.zero() && try_pathfind(mon))
-                    break;
-
-                // Whew. If we arrived here, path finding didn't yield anything
-                // (or wasn't even attempted) and we need to set our target
-                // the traditional way.
-
-                mon->target = PLAYER_POS;
-            }
-            else
-            {
-                // We have a foe but it's not the player.
-                monster* target = &menv[mon->foe];
-                mon->target = target->pos();
-
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-                    && !mon->berserk_or_insane()
-                    && !(mons_is_avatar(mon->type)
-                         && owner && mon->foe == owner->mindex()))
-                {
-                    _set_firing_pos(mon, mon->target);
-                }
-                // Hold position if we've reached our ideal range
-                else if (mon->type == MONS_SPELLFORGED_SERVITOR
-                         && (mon->pos() - target->pos()).abs()
-                         <= dist_range(mon->props["ideal_range"].get_int())
-                         && !one_chance_in(8))
-                {
-                    mon->firing_pos = mon->pos();
-                }
-            }
+            _decide_monster_firing_position(mon, owner);
 
             break;
 
