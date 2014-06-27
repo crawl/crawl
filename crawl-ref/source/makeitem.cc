@@ -2947,13 +2947,37 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return true;
 
-    if (x_chance_in_y(item.plus - 2, 3))
+    if (item.plus >= 3)
         return true;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
     return false;
+}
+
+/**
+ * Return the number of plusses required for a type of armour to glow.
+ * (From plus alone.)
+ *
+ * @param armour_type   The type of armour being considered.
+ * @return              The armour plus value required to be interesting.
+ */
+static int _armour_plus_threshold(equipment_type armour_type)
+{
+    switch (armour_type)
+    {
+        // body armour is very common; squelch most of it
+        case EQ_BODY_ARMOUR:
+            return 3;
+        // cloaks & shields are fairly common
+        case EQ_CLOAK:
+        case EQ_SHIELD:
+            return 2;
+        // aux armour is relatively uncommon
+        default:
+            return 1;
+    }
 }
 
 static bool _armour_is_visibly_special(const item_def &item)
@@ -2970,15 +2994,8 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return false;
 
-    // body armour with +3 or more can be interesting; any aux armour with any
-    // plus is interesting, except for cloaks, because zot. (they need +2.)
-    if (x_chance_in_y(item.plus - 2, 3)
-        || item.plus > 0 && get_armour_slot(item) != EQ_BODY_ARMOUR
-                         && (get_armour_slot(item) != EQ_CLOAK
-                             || item.plus > 1))
-    {
+    if (item.plus >= _armour_plus_threshold(get_armour_slot(item)))
         return true;
-    }
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
