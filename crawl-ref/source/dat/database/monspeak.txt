@@ -2969,7 +2969,7 @@ w:50
 
 @The_monster@ says, "I saw some tasty-looking corn earlier, but it tried to eat me. I hate that."
 
-%%%
+%%%%
 ######################################################################## GODS #
 Zin Donald
 
