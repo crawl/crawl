@@ -114,7 +114,7 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 static string _zd_mons_description_for_ability(const ability_def &abil);
 static monster_type _monster_for_ability(const ability_def& abil);
-static bool _jump_player(int jump_range);
+static spret_type _jump_player(int jump_range, int exh_red, bool fail);
 
 /**
  * This all needs to be split into data/util/show files
@@ -2096,13 +2096,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     }
 
     case ABIL_JUMP:
-        fail_check();
-        if (!_jump_player(player_mutation_level(MUT_JUMP) + 2))
-            return SPRET_ABORT;
-
-        you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
-                              + random2(30 - you.experience_level));
-        break;
+        return _jump_player(player_mutation_level(MUT_JUMP) + 2,
+                            you.experience_level, fail);
 
     case ABIL_RECHARGING:
         fail_check();
@@ -2401,15 +2396,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             fly_player(you.skill(SK_EVOCATIONS, 2) + 30);
         break;
     case ABIL_EVOKE_JUMP:
-    {
-        fail_check();
-        if (!_jump_player(4))
-            return SPRET_ABORT;
-
-        you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
-                              + random2(30 - you.skill(SK_EVOCATIONS, 1)));
-        break;
-    }
+        return _jump_player(4, you.skill(SK_EVOCATIONS, 1), fail);
     case ABIL_EVOKE_FOG:     // cloak of the Thief
         fail_check();
         mpr("With a swish of your cloak, you release a cloud of fog.");
@@ -3948,7 +3935,17 @@ int scaling_cost::cost(int max) const
     return (value < 0) ? (-value) : ((value * max + 500) / 1000);
 }
 
-bool _jump_player(int jump_range)
+/**
+ * Attempt to let the player perform a jump attack.
+ *
+ * @param jump_range    The max range of the jump, in squares.
+ * @param exh_red       A factor that decreases jump exhaustion duration.
+ * @param fail          Standard ability failure param, for fail_check().
+ * @return              Whether the jump succeeded, failed, or was aborted.
+ * May sometimes return 'failed' when it was actually aborted, thanks to
+ * fight_jump(). TODO: refactor these methods together
+ */
+spret_type _jump_player(int jump_range, int exh_red, bool fail)
 {
     coord_def landing;
     direction_chooser_args args;
@@ -3972,9 +3969,19 @@ bool _jump_player(int jump_range)
     {
         // Check for user cancel.
         canned_msg(MSG_OK);
-        return false;
+        return SPRET_ABORT;
     }
-    return fight_jump(&you, actor_at(jdirect.target), jdirect.target,
-                      tgt.landing_site, tgt.additional_sites,
-                      tgt.jump_is_blocked);
+
+    fail_check();
+
+    if (!fight_jump(&you, actor_at(jdirect.target), jdirect.target,
+                   tgt.landing_site, tgt.additional_sites,
+                   tgt.jump_is_blocked))
+    {
+        return SPRET_FAIL;
+    }
+
+    you.increase_duration(DUR_EXHAUSTED, 3 + random2(10)
+                                         + random2(30 - exh_red));
+    return SPRET_SUCCESS;
 }
