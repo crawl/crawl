@@ -3928,7 +3928,7 @@ int scaling_cost::cost(int max) const
 /**
  * Attempt to let the player perform a jump attack.
  *
- * @param jump_range    The max range of the jump, in squares.
+ * @param jump_range    The max range of the jump, as a radius.
  * @param exh_red       A factor that decreases jump exhaustion duration.
  * @param fail          Standard ability failure param, for fail_check().
  * @return              Whether the jump succeeded, failed, or was aborted.
