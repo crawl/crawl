@@ -2576,14 +2576,12 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_YRED_ENSLAVE_SOUL:
     {
-        fail_check();
         god_acting gdact;
         power = you.skill(SK_INVOCATIONS, 4);
         beam.range = LOS_RADIUS;
 
         if (!spell_direction(spd, beam))
             return SPRET_ABORT;
-
 
         if (beam.target == you.pos())
         {
@@ -2605,10 +2603,9 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             simple_monster_message(mons, "'s soul is too badly injured.");
             return SPRET_ABORT;
         }
+        fail_check();
 
-        if (!zapping(ZAP_ENSLAVE_SOUL, power, beam))
-            return SPRET_ABORT;
-        break;
+        return zapping(ZAP_ENSLAVE_SOUL, power, beam, false, NULL, fail);
     }
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
