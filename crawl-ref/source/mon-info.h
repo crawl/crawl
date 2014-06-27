@@ -121,6 +121,7 @@ enum monster_info_flags
     MB_SHROUD,
     MB_CORROSION,
     MB_SPECTRALISED,
+    MB_SLOW_MOVEMENT,
     NUM_MB_FLAGS
 };
 
