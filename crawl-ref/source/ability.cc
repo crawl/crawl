@@ -1900,9 +1900,18 @@ static bool _sticky_flame_can_hit(const actor *act)
         return false;
 }
 
+/*
+ * Use an ability.
+ *
+ * @param abil The actual ability used.
+ * @param fail If true, the ability is doomed to fail, and either SPRET_FAIL or
+ *             SPRET_ABORT will be returned. Otherwise, the ability will always
+ *             succeed.
+ * @returns Whether the spell succeeded (SPRET_SUCCESS), failed (SPRET_FAIL),
+ *  or was canceled (SPRET_ABORT). Never returns SPRET_NONE.
+ */
 static spret_type _do_ability(const ability_def& abil, bool fail)
 {
-
     int power;
     dist abild;
     bolt beam;
@@ -2458,7 +2467,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
 
     case ABIL_ZIN_IMPRISON:
     {
-        fail_check();
         beam.range = LOS_RADIUS;
         if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE, 0, false))
             return SPRET_ABORT;
@@ -2488,6 +2496,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
             mpr("You cannot imprison a law-abiding creature!");
             return SPRET_ABORT;
         }
+
+        fail_check();
 
         zin_recite_interrupt();
         power = 3 + (roll_dice(5, you.skill(SK_INVOCATIONS, 5) + 12) / 26);
