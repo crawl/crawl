@@ -762,21 +762,42 @@ ENDMAP
 # Previously named "layout_misc".
 #
 # TODO: Wider paths for Zot, then add at weight 20.
-# TODO: Straight paths for Crypt, Zot.
 #
 NAME:   layout_misc_corridors
 DEPTH:  Lair, Snake, Crypt
 WEIGHT: 5 (Lair), 20 (Snake), 20 (Crypt)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_corridors
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     function random_coord(max_x, max_y)
-        return crawl.random2(max_x - 20) + 10,
-               crawl.random2(max_y - 20) + 10
+        local x = crawl.random2(max_x - 16) + 8
+        local y = crawl.random2(max_y - 16) + 8
+        local sanity = 0
+        while (dgn.in_vault(x, y) and sanity < 10) do
+            x = crawl.random2(max_x - 16) + 8
+            y = crawl.random2(max_y - 16) + 8
+            sanity = sanity + 1
+        end
+        return x, y
     end
 
     local gxm, gym = dgn.max_bounds()
+
     local corridors = crawl.random_range(15, 25)
+    local force_straight = false
+    if you.branch() == "Crypt" then
+        force_straight = true
+    end
+
+    local area_fraction = 1;
+    local x_min, x_max, y_min, y_max = primary_vault_dimensions()
+    if x_min ~= nil then
+        local vault_area = (x_max - x_min + 1) * (y_max - y_min + 1)
+        local total_area = (gxm - 2) * (gym - 2)
+        area_fraction = 1 - (vault_area / total_area)
+        corridors = math.ceil(corridors * area_fraction)
+    end
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
@@ -786,13 +807,15 @@ TAGS:   overwritable layout allow_dup unrand layout_type_corridors
     while corridors > 0 do
         new_x, new_y = random_coord(gxm, gym)
 
-        join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y }
+        join_the_dots { x1 = x, y1 = y, x2 = new_x, y2 = new_y,
+                        force_straight = force_straight }
 
         x, y = new_x, new_y
         corridors = corridors - 1
     end
 
-    spotty_map { boxy = true, iterations = 100 }
+    local iterations = math.floor(crawl.random_range(75, 125) * area_fraction)
+    spotty_map { boxy = true, iterations = iterations }
 
     theme.level_material(_G)
 }}
