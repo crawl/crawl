@@ -5474,7 +5474,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             // No KILL_YOU_CONF, or we get "You heal ..."
             if (cast_healing(3 + damage.roll(), 3 + damage.num * damage.size,
-                             false, mon->pos()) > 0)
+                             false, mon->pos()) == SPRET_SUCCESS)
             {
                 obvious_effect = true;
             }
