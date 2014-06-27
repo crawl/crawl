@@ -2141,7 +2141,7 @@ static bool _create_plant(coord_def& target, int hp_adjust = 0)
 
 #define SUNLIGHT_DURATION 80
 
-bool fedhas_sunlight()
+spret_type fedhas_sunlight(bool fail)
 {
     dist spelld;
 
@@ -2158,7 +2158,9 @@ bool fedhas_sunlight()
     direction(spelld, args);
 
     if (!spelld.isValid)
-        return false;
+        return SPRET_ABORT;
+
+    fail_check();
 
     const coord_def base = spelld.target;
 
@@ -2211,7 +2213,7 @@ bool fedhas_sunlight()
              "an invisible shape" : "some invisible shapes");
     }
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 void process_sunlights(bool future)
