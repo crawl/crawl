@@ -1904,9 +1904,8 @@ static bool _sticky_flame_can_hit(const actor *act)
  * Use an ability.
  *
  * @param abil The actual ability used.
- * @param fail If true, the ability is doomed to fail, and either SPRET_FAIL or
- *             SPRET_ABORT will be returned. Otherwise, the ability will always
- *             succeed.
+ * @param fail If true, the ability is doomed to fail, and SPRET_FAIL will
+ * be returned if the ability is not SPRET_ABORTed.
  * @returns Whether the spell succeeded (SPRET_SUCCESS), failed (SPRET_FAIL),
  *  or was canceled (SPRET_ABORT). Never returns SPRET_NONE.
  */
