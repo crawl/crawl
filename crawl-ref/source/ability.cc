@@ -1846,6 +1846,7 @@ bool activate_talent(const talent& tal)
     switch (ability_result)
     {
         case SPRET_SUCCESS:
+            ASSERT(!fail);
             practise(EX_USED_ABIL, abil.ability);
             _pay_ability_costs(abil, zpcost);
             count_action(tal.is_invocation ? CACT_INVOKE : CACT_ABIL, abil.ability);
