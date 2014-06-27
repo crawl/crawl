@@ -2922,13 +2922,7 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_FEDHAS_SUNLIGHT:
-        fail_check();
-        if (!fedhas_sunlight())
-        {
-            canned_msg(MSG_OK);
-            return SPRET_ABORT;
-        }
-        break;
+        return fedhas_sunlight(fail);
 
     case ABIL_FEDHAS_PLANT_RING:
         fail_check();
