@@ -2648,7 +2648,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
-        fail_check();
         beam.range = 8;
 
         if (!spell_direction(spd, beam))
@@ -2662,6 +2661,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         // highest range possible.
         if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, 8))
             return SPRET_ABORT;
+
+        fail_check();
 
         switch (random2(5))
         {
@@ -2681,7 +2682,6 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         break;
 
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
-        fail_check();
         beam.range = 6;
 
         if (!spell_direction(spd, beam))
@@ -2695,6 +2695,8 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         // highest range possible.
         if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, 8))
             return SPRET_ABORT;
+
+        fail_check();
 
         {
             zap_type ztype =
