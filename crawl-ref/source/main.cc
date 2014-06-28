@@ -3166,6 +3166,16 @@ static void _move_player(coord_def move)
             }
         }
 
+        if (you.form == TRAN_TREE)
+        {
+            // Don't choose a random location to try to attack into - allows
+            // abuse, since trying to move (not attack) takes no time, and
+            // shouldn't. Just force confused trees to use ctrl.
+            mpr("You cannot move. (Use ctrl+direction to attack without "
+                "moving)");
+            return;
+        }
+
         if (!one_chance_in(3))
         {
             move.x = random2(3) - 1;
