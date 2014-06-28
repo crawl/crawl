@@ -3162,43 +3162,47 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
     case ABIL_IASHOL_SACRIFICE_NIMBLENESS:
     case ABIL_IASHOL_SACRIFICE_DURABILITY:
     case ABIL_IASHOL_SACRIFICE_HAND:
+        fail_check();
         iashol_do_sacrifice(abil.ability);
         break;
 
     case ABIL_IASHOL_DRAW_OUT_POWER:
+        fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to draw out your power.");
-            return false;
+            return SPRET_ABORT;
         }
         if (you.hp == you.hp_max && you.magic_points == you.max_magic_points)
-            return false;
+            return SPRET_ABORT;
         iashol_draw_out_power();
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
     case ABIL_IASHOL_POWER_LEAP:
+        fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to power leap.");
-            return false;
+            return SPRET_ABORT;
         }
         if (!iashol_power_leap())
         {
             canned_msg(MSG_OK);
-            return false;
+            return SPRET_ABORT;
         }
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
     case ABIL_IASHOL_CATACLYSM:
+        fail_check();
         if (you.duration[DUR_EXHAUSTED])
         {
             mpr("You're too exhausted to unleash your cataclysmic power.");
-            return false;
+            return SPRET_ABORT;
         }
         if (!iashol_cataclysm())
-            return false;
+            return SPRET_ABORT;
         you.increase_duration(DUR_EXHAUSTED, 30 + random2(20));
         break;
 
