@@ -756,9 +756,7 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
         return true;
 
     if (feat_is_stone_stair(feat) || feat_is_branch_stairs(feat))
-    {
         return true;
-    }
 
     if (feat == DNGN_ENTER_SHOP)
         return true;
