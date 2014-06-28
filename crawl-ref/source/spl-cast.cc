@@ -383,7 +383,6 @@ int spell_fail(spell_type spell)
     }
 
     chance2 -= 7 * player_mutation_level(MUT_PLACID_MAGIC);
-    chance2 -= 7 * player_mutation_level(MUT_CONTEMPLATIVE);
     chance2 += 7 * player_mutation_level(MUT_WILD_MAGIC);
     chance2 += 4 * player_mutation_level(MUT_ANTI_WIZARDRY);
     if (you.duration[DUR_HORROR])
