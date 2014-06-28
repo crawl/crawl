@@ -5661,6 +5661,7 @@ bool iashol_power_leap()
 
         if (crawl_state.seen_hups)
         {
+            clear_messages();
             mpr("Cancelling jump due to HUP.");
             return false;
         }
@@ -5671,6 +5672,7 @@ bool iashol_power_leap()
         monster* beholder = you.get_beholder(beam.target);
         if (beholder)
         {
+            clear_messages();
             mprf("You cannot leap away from %s!",
                 beholder->name(DESC_THE, true).c_str());
             continue;
@@ -5679,6 +5681,7 @@ bool iashol_power_leap()
         monster* fearmonger = you.get_fearmonger(beam.target);
         if (fearmonger)
         {
+            clear_messages();
             mprf("You cannot leap closer to %s!",
                 fearmonger->name(DESC_THE, true).c_str());
             continue;
@@ -5687,17 +5690,20 @@ bool iashol_power_leap()
         monster* mons = monster_at(beam.target);
         if (mons && you.can_see(mons))
         {
+            clear_messages();
             mpr("You can't leap on top of the monster!");
             continue;
         }
 
         if (grd(beam.target) == DNGN_OPEN_SEA)
         {
+            clear_messages();
             mpr("You can't leap into the sea!");
             continue;
         }
         else if (grd(beam.target) == DNGN_LAVA_SEA)
         {
+            clear_messages();
             mpr("You can't leap into the sea of lava!");
             continue;
         }
@@ -5712,12 +5718,12 @@ bool iashol_power_leap()
         }
         else if (you.trans_wall_blocking(beam.target))
         {
-            mesclr();
+            clear_messages();
             mpr("There's something in the way!");
         }
         else
         {
-            mesclr();
+            clear_messages();
             mpr("You can only blink to visible locations.");
         }
     }
