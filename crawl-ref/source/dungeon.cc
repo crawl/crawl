@@ -6799,7 +6799,7 @@ void vault_placement::apply_grid()
 {
     if (!size.zero())
     {
-        bool clear = !map.has_tag("can_overwrite");
+        bool clear = !map.has_tag("overwrite_floor_cell");
 
         // NOTE: assumes *no* previous item (I think) or monster (definitely)
         // placement.

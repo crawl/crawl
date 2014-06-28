@@ -420,7 +420,7 @@ static bool _map_safe_vault_place(const map_def &map,
         map.has_tag("water_ok") || player_in_branch(BRANCH_SWAMP);
 
     const bool vault_can_overwrite_other_vaults =
-        map.has_tag("can_overwrite");
+        map.has_tag("overwrite_floor_cell");
 
     const bool vault_can_replace_portals =
         map.has_tag("replace_portal");
@@ -446,9 +446,10 @@ static bool _map_safe_vault_place(const map_def &map,
         }
         else if (grd(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO)
         {
-            // Don't place can_overwrite vaults on anything but floor or on
-            // squares that can't be teleported into, because can_overwrite
-            // is used for things that are expected to be connected.
+            // Don't place overwrite_floor_cell vaults on anything but floor or
+            // on squares that can't be teleported into, because
+            // overwrite_floor_cell is used for things that are expected to be
+            // connected.
             return false;
         }
 

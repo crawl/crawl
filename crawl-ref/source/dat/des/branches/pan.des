@@ -214,7 +214,7 @@ default-depth: Depths
 # The generic entry; this is the one that should place in encompass vaults.
 # Has a higher weight than everything else.
 NAME: pan_entry
-TAGS: allow_dup can_overwrite replace_portal transparent fallback_enter_pan
+TAGS: allow_dup overwrite_floor_cell replace_portal transparent fallback_enter_pan
 WEIGHT: 50
 : pan_entry_feature(_G, 'O', true)
 MAP
