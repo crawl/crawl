@@ -209,7 +209,6 @@ static string _beogh_bless_melee_weapon(monster* mon)
         return "";
     }
 
-    give_monster_proper_name(mon);
     item_set_appearance(wpn);
     return "superior armament";
 }
@@ -393,7 +392,6 @@ static string _beogh_bless_armour(monster* mon)
         return "";
     }
 
-    give_monster_proper_name(mon);
     item_set_appearance(arm);
     return "improved armour";
 }
@@ -616,22 +614,11 @@ static void _beogh_blessing_reinforcements()
 
 static bool _beogh_blessing_priesthood(monster* mon)
 {
-    monster_type priest_type = MONS_PROGRAM_BUG;
+    if (mon->type != MONS_ORC)
+        return false;
 
-    // Possible promotions.
-    if (mon->type == MONS_ORC)
-        priest_type = MONS_ORC_PRIEST;
-
-    if (priest_type != MONS_PROGRAM_BUG)
-    {
-        // Turn an ordinary monster into a priestly monster.
-        mon->upgrade_type(priest_type, true, true);
-        give_monster_proper_name(mon);
-
-        return true;
-    }
-
-    return false;
+    mon->upgrade_type(MONS_ORC_PRIEST, true, true);
+    return true;
 }
 
 /**
@@ -770,6 +757,11 @@ static bool _beogh_bless_follower(monster* follower, bool force)
         blessing = coinflip() ? _beogh_bless_weapon(follower)
                               : _beogh_bless_armour(follower);
     }
+
+    // If they got a good blessing (priesthood or equipment), maybe give them
+    // a name.
+    if (!blessing.empty())
+        give_monster_proper_name(follower);
 
     // ~85% chance of trying to heal.
     if (blessing.empty())
