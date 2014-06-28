@@ -2431,14 +2431,18 @@ int how_mutated(bool innate, bool levels)
                 j += you.mutation[i];
                 if (!innate)
 
+                {
                     j -= you.innate_mutation[i];
+                }
             }
             else
                 j++;
         }
         if (you.species == SP_DEMONSPAWN
             && you.props.exists("num_sacrifice_muts"))
+        {
             j -= you.props["num_sacrifice_muts"].get_int();
+        }
     }
 
     dprf("how_mutated(): innate = %u, levels = %u, j = %d", innate, levels, j);

@@ -214,7 +214,9 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             // No global message for Trog or Iashol
             if ((act == DACT_ALLY_TROG || act == DACT_ALLY_SACRIFICE_LOVE)
                     && local)
+            {
                 simple_monster_message(mon, " turns against you!");
+            }
             break;
 
         case DACT_OLD_ENSLAVED_SOULS_POOF:
