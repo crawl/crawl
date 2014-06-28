@@ -120,6 +120,7 @@ static void _gift_weapon_to_orc(monster* orc, int force_type = NUM_WEAPONS)
     else
         weapon.sub_type = force_type;
     weapon.quantity = 1;
+    set_ident_flags(weapon, ISFLAG_IDENT_MASK);
     give_specific_item(orc, weapon);
 }
 
@@ -161,6 +162,8 @@ void gift_ammo_to_orc(monster* orc, bool initial_gift)
     {
         return; // can't force them to drop the ammo, for some reason?
     }
+
+    set_ident_flags(ammo, ISFLAG_IDENT_MASK);
 
     give_specific_item(orc, ammo);
 }
@@ -323,6 +326,7 @@ static void _gift_armour_to_orc(monster* orc, bool shield = false)
     else
         armour.sub_type = highlevel ? ARM_SCALE_MAIL : ARM_RING_MAIL;
     armour.quantity = 1;
+    set_ident_flags(armour, ISFLAG_IDENT_MASK);
     give_specific_item(orc, armour);
 }
 
