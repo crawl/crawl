@@ -129,7 +129,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     else if (is_good_god(which_god)
              && (brand == SPWPN_DRAINING
                  || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRICISM
+                 || brand == SPWPN_VAMPIRISM
                  || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
@@ -708,7 +708,7 @@ static void _get_randart_properties(const item_def &item,
     else if (aclass == OBJ_JEWELLERY)
         power_level = 1 + random2(3) + random2(2);
     else // OBJ_WEAPON
-        power_level = item.plus / 3 + item.plus2 / 3;
+        power_level = item.plus / 3;
 
     if (power_level < 0)
         power_level = 0;
@@ -748,7 +748,7 @@ static void _get_randart_properties(const item_def &item,
                 SPWPN_FLAMING,
                 SPWPN_FREEZING,
                 SPWPN_ELECTROCUTION,
-                SPWPN_VAMPIRICISM,
+                SPWPN_VAMPIRISM,
                 SPWPN_PAIN,
                 SPWPN_VENOM,
                 -1);
@@ -761,13 +761,12 @@ static void _get_randart_properties(const item_def &item,
                 73, SPWPN_VORPAL,
                 34, SPWPN_FLAMING,
                 34, SPWPN_FREEZING,
-                26, SPWPN_DRAGON_SLAYING,
                 26, SPWPN_VENOM,
                 26, SPWPN_DRAINING,
                 13, SPWPN_HOLY_WRATH,
                 13, SPWPN_ELECTROCUTION,
                 13, SPWPN_SPEED,
-                13, SPWPN_VAMPIRICISM,
+                13, SPWPN_VAMPIRISM,
                 13, SPWPN_PAIN,
                 13, SPWPN_ANTIMAGIC,
                  3, SPWPN_DISTORTION,
@@ -1178,7 +1177,6 @@ void setup_unrandart(item_def &item)
     item.base_type = unrand->base_type;
     item.sub_type  = unrand->sub_type;
     item.plus      = unrand->plus;
-    item.plus2     = unrand->plus2;
     item.colour    = unrand->colour;
 }
 
@@ -2008,10 +2006,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
     _set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
     if (unrand_index == UNRAND_VARIABILITY)
-    {
-        item.plus  = random_range(-4, 16);
-        item.plus2 = random_range(-4, 16);
-    }
+        item.plus = random_range(-4, 16);
     else if (unrand_index == UNRAND_FAERIE)
         _make_faerie_armour(item);
     else if (unrand_index == UNRAND_OCTOPUS_KING_RING)
@@ -2036,8 +2031,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 void unrand_reacts()
 {
     item_def*  weapon     = you.weapon();
-    const int  old_plus   = weapon ? weapon->plus   : 0;
-    const int  old_plus2  = weapon ? weapon->plus2  : 0;
+    const int  old_plus   = weapon ? weapon->plus : 0;
 
     for (int i = 0; i < NUM_EQUIP; i++)
     {
@@ -2050,7 +2044,7 @@ void unrand_reacts()
         }
     }
 
-    if (weapon && (old_plus != weapon->plus || old_plus2 != weapon->plus2))
+    if (weapon && (old_plus != weapon->plus))
         you.wield_change = true;
 }
 

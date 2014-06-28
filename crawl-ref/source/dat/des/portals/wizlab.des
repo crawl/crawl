@@ -1008,7 +1008,7 @@ KMONS:      | = ancient lich / greater mummy
 :           if lrnd == 0 then
 KITEM:      % = any scroll / any scroll q:2 w:3 / any scroll q:3 w:1
 :           kitem("* = " .. dgn.good_scrolls)
-KITEM:      | = scroll of acquirement ident:type / scroll of enchant weapon III q:2 ident:type /\
+KITEM:      | = scroll of acquirement ident:type / scroll of enchant weapon q:3 ident:type /\
                 scroll of blinking q:2 ident:type, scroll of fog q:2 ident:type, \
                 scroll of holy word q:2 ident:type
 :           elseif lrnd == 1 then
@@ -1098,11 +1098,11 @@ ENDMAP
 #
 # The bulk of Cigotuvi's Fleshworks is devoted to cells that house test
 # subjects in various stages of degeneration. Most are sickly humanoids; the
-# others are ugly things, pulsating lumps and abominations.
+# others are ugly things and abominations.
 #
 # The central, circular chamber houses Cigotuvi's flesh golem.
 # The Eastern half of his lab is dominated by a snaking passageway filled with
-# pulsating lumps and the occasional ugly thing.
+# shapeshifters and the occasional ugly thing.
 #
 # The western half of his lab is full of abominations, including the terrible
 # "Cigotuvi's Monster".
@@ -1135,7 +1135,7 @@ MONS:       orc name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_defor
             orc name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        /\
             orc name:febrile dbname:deformed_humanoid n_adj n_noc tile:mons_deformed_orc
 MONS:       ugly thing, very ugly thing
-MONS:       pulsating lump perm_ench:shapeshifter / pulsating lump w:1
+MONS:       shapeshifter / glowing shapeshifter w:1
 MONS:       small abomination
 KMONS:      8 = large abomination
 KMONS:      9 = generate_awake giant eyeball
@@ -1189,7 +1189,7 @@ COLOUR:     W = green
 :           door_verb_close="You squeeze the %s%s shut."
 :           })
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
-:           set_random_mon_list("pulsating lump / large abomination / ugly thing / very ugly thing")
+:           set_random_mon_list("large abomination / ugly thing / very ugly thing")
 epilogue{{
             wizlab_milestone(_G, "Cigotuvi's Fleshworks")
 }}
@@ -1375,7 +1375,6 @@ lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 
 }}
 :           set_feature_name("granite_statue", "gravestone")
-:           set_feature_name("floor", "the ground")
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
@@ -1523,7 +1522,6 @@ MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
 :           set_feature_name("tree", "autumnal tree")
 :           set_feature_name("stone_wall", "crumbled stone wall")
 :           set_feature_name("granite_statue", "strange statue")
-:           set_feature_name("floor", "timeless floor")
 epilogue{{
             wizlab_milestone(_G, "Wucad Mu's Monastery")
 }}
@@ -1630,7 +1628,7 @@ KITEM:   | = cloak good_item w:75 / randart cloak w:95 / cloak unrand:cloak_of_f
              cloak unrand:cloak_of_starlight / cloak unrand:cloak_of_the_thief
 KFEAT:   m = iron_grate
 KFEAT:   ~ = deep_water
-KFEAT:   ^ = known teleport trap
+KFEAT:   ^ = known permanent teleport trap
 KFEAT:   8_ = altar_lugonu
 KFEAT:   OPQRSTUVW&{( = teleporter
 KFEAT:   opqsrtuvw@}) = floor
@@ -1950,7 +1948,6 @@ SUBST:      7 = 4, 8 = 5, df = 6, eg = 3
 :           set_random_mon_list([[lesser demon w:50 / red devil / blue devil / ]]
 :                            .. [[orange demon / ynoxinul / kobold demonologist / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
-:           set_feature_name("floor", "hot floor")
 :           set_feature_name("stone_wall", "black wall")
 :           set_feature_name("rock_wall", "carved rock wall")
 epilogue{{

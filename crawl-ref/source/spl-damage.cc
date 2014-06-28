@@ -34,7 +34,6 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "options.h"
 #include "ouch.h"
 #include "options.h"
@@ -45,6 +44,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "target.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -680,7 +680,7 @@ spret_type cast_los_attack_spell(spell_type spell, int pow, actor* agent,
         mpr(player_msg);
         flash_view(flash_colour, &hitfunc);
         more();
-        mesclr();
+        clear_messages();
         flash_view(0);
     }
     else if (actual)

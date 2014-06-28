@@ -12,7 +12,7 @@
 class circle_def;
 struct ray_def;
 
-#define EPSILON_VALUE 0.00001
+#define EPSILON_VALUE 0.00005
 
 bool double_is_zero(const double x);
 

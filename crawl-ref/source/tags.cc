@@ -3709,7 +3709,8 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_WEAPONS
         && (item.special == SPWPN_RETURNING
             || item.special == SPWPN_REACHING
-            || item.special == SPWPN_ORC_SLAYING))
+            || item.special == SPWPN_ORC_SLAYING
+            || item.special == SPWPN_DRAGON_SLAYING))
     {
         item.special = SPWPN_NORMAL;
     }
@@ -3837,7 +3838,7 @@ void unmarshallItem(reader &th, item_def &item)
     {
         int acc, dam, slay = 0;
 
-        if (is_artefact(item))
+        if (item.props.exists(ARTEFACT_PROPS_KEY))
         {
             acc = artefact_wpn_property(item, ARTP_ACCURACY);
             dam = artefact_wpn_property(item, ARTP_SLAYING);
@@ -3857,6 +3858,31 @@ void unmarshallItem(reader &th, item_def &item)
         }
     }
 
+    if (th.getMinorVersion() < TAG_MINOR_MERGE_EW)
+    {
+        // Combine EW1/EW2/EW3 scrolls into single enchant weapon scroll.
+        if (item.base_type == OBJ_SCROLLS
+            && (item.sub_type == SCR_ENCHANT_WEAPON_II
+                || item.sub_type == SCR_ENCHANT_WEAPON_III))
+        {
+            item.sub_type = SCR_ENCHANT_WEAPON;
+        }
+    }
+
+    if (th.getMinorVersion() < TAG_MINOR_WEAPON_PLUSES)
+    {
+        int acc, dam, slay = 0;
+
+        if (item.base_type == OBJ_WEAPONS)
+        {
+            acc = item.plus;
+            dam = item.plus2;
+            slay = dam < 0 ? dam : max(acc,dam);
+
+            item.plus = slay;
+            item.plus2 = 0;
+        }
+    }
 #endif
 
     if (is_unrandom_artefact(item))

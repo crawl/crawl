@@ -37,7 +37,6 @@
 #include "misc.h"
 #include "mon-death.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
@@ -1114,7 +1113,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_SLOW_HEALING,        MUT_NO_DEVICE_HEAL,         1},
         { MUT_ROBUST,              MUT_FRAIL,                  1},
         { MUT_HIGH_MAGIC,          MUT_LOW_MAGIC,              1},
-        { MUT_WILD_MAGIC,          MUT_CONTEMPLATIVE,          1},
+        { MUT_WILD_MAGIC,          MUT_PLACID_MAGIC,           1},
         { MUT_CARNIVOROUS,         MUT_HERBIVOROUS,            1},
         { MUT_SLOW_METABOLISM,     MUT_FAST_METABOLISM,        1},
         { MUT_REGENERATION,        MUT_SLOW_HEALING,           1},
@@ -2431,6 +2430,7 @@ int how_mutated(bool innate, bool levels)
             {
                 j += you.mutation[i];
                 if (!innate)
+
                     j -= you.innate_mutation[i];
             }
             else

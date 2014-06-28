@@ -9,13 +9,13 @@
 #include "env.h"
 #include "fprop.h"
 #include "items.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "los_def.h"
 #include "losglobal.h"
 #include "mon-behv.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "random.h"
 #include "state.h"
 #include "terrain.h"
@@ -283,8 +283,11 @@ static bool _is_level_exit(const coord_def& pos)
 
     // Teleportation and shaft traps.
     const trap_type tt = get_trap_type(pos);
-    if (tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
+    if (tt == TRAP_TELEPORT || tt == TRAP_TELEPORT_PERMANENT
+        || tt == TRAP_SHAFT)
+    {
         return true;
+    }
 
     return false;
 }
@@ -1036,7 +1039,6 @@ int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
 
     return retval;
 }
-
 void set_random_slime_target(monster* mon)
 {
     // Strictly neutral slimes will go for the nearest item.
@@ -1061,4 +1063,52 @@ void set_random_slime_target(monster* mon)
 end:
     if (mon->target == mon->pos() || mon->target == you.pos())
         set_random_target(mon);
+}
+
+static bool _can_safely_go_through(const monster * mon, const coord_def p)
+{
+    ASSERT(map_bounds(p));
+
+    if (!monster_habitable_grid(mon, grd(p)))
+        return false;
+
+    // Stupid monsters don't pathfind around shallow water
+    // except the clinging ones.
+    if (mon->floundering_at(p)
+        && (mons_intel(mon) >= I_NORMAL || mon->can_cling_to_walls()))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// Checks whether there is a straight path from p1 to p2 that monster can
+// safely passes through.
+// If it exists, such a path may be missed; on the other hand, it
+// is not guaranteed that p2 is visible from p1 according to LOS rules.
+// Not symmetric.
+// FIXME: This is used for monster movement. It should instead be
+//        something like exists_ray(p1, p2, opacity_monmove(mons)),
+//        where opacity_monmove() is fixed to include opacity_immob.
+bool can_go_straight(const monster* mon, const coord_def& p1,
+                     const coord_def& p2)
+{
+    // If no distance, then trivially true
+    if (p1 == p2)
+        return true;
+
+    if (distance2(p1, p2) > los_radius2)
+        return false;
+
+    // XXX: Hack to improve results for now. See FIXME above.
+    ray_def ray;
+    if (!find_ray(p1, p2, ray, opc_immob))
+        return false;
+
+    while (ray.advance() && ray.pos() != p2)
+        if (!_can_safely_go_through(mon, ray.pos()))
+            return false;
+
+    return true;
 }

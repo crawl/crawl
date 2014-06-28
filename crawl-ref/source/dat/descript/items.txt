@@ -1154,33 +1154,19 @@ This scroll places a curse on a wielded weapon.
 %%%%
 scroll of enchant armour
 
-This scroll places an enchantment on a piece of armour. Most armour can only be
-enchanted to +2, except for shields which can be enchanted to +3, and body
-armour and bardings which can be enchanted up to the same value as their base
-AC. Magical artefacts cannot be enchanted at all.
+This scroll places an enchantment on a piece of armour. Body armour and
+bardings can be enchanted up to the same value as their base AC. Bucklers,
+shields and large shields can be enchanted up to +3, +5 or +8 respectively, and
+other armour can be enchanted up to +2. Magical artefacts cannot be enchanted
+at all.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
-scroll of enchant weapon i
+scroll of enchant weapon
 
-This scroll places an enchantment on a weapon chosen by the reader, making it
-more accurate in combat. It becomes increasingly less likely to succeed when
-used on highly enchanted weapons, and can only ever enchant them up to +9.
-Magical artefacts cannot be enchanted at all.
-%%%%
-scroll of enchant weapon ii
-
-This scroll places an enchantment on a weapon chosen by the reader, making it
-inflict greater damage in combat. It becomes increasingly less likely to
-succeed when used on highly enchanted weapons, and can only ever enchant them
-up to +9. Magical artefacts cannot be enchanted at all.
-%%%%
-scroll of enchant weapon iii
-
-This scroll enchants a chosen weapon to be far more effective in combat,
-increasing both accuracy and damage. It becomes increasingly less likely to
-succeed when used on highly enchanted weapons, and can only ever enchant them
-up to +9. Magical artefacts cannot be enchanted at all.
+This scroll places an enchantment on a weapon chosen by the reader, increasing
+both accuracy and damage. Weapons can be enchanted up to +9. Magical artefacts
+cannot be enchanted at all.
 %%%%
 scroll of fear
 

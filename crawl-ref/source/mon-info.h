@@ -1,8 +1,8 @@
 #ifndef MON_INFO_H
 #define MON_INFO_H
 
-#include "mon-stuff.h"
 #include "mon-util.h"
+#include "mon-message.h"
 
 enum monster_info_flags
 {
@@ -120,6 +120,8 @@ enum monster_info_flags
     MB_SAP_MAGIC,
     MB_SHROUD,
     MB_CORROSION,
+    MB_SPECTRALISED,
+    MB_SLOW_MOVEMENT,
     NUM_MB_FLAGS
 };
 

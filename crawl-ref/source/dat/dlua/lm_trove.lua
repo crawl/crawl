@@ -48,7 +48,7 @@ function TroveMarker:new(props)
     item.plus1 = false
   end
   if item.plus2 == nil then
-    item.plus2 = false
+    item.plus2 = false -- #if TAG_MAJOR_VERSION == 34
   end
   if item.artefact_name == nil then
     item.artefact_name = false
@@ -113,7 +113,6 @@ function TroveMarker:debug_portal (marker)
   if item.sub_type == nil then item.sub_type = false end
   if item.ego_type == nil or item.ego_type == "" then item.ego_type = false end
   if item.plus1 == nil then item.plus1 = false end
-  if item.plus2 == nil then item.plus2 = false end
   if item.artefact_name == nil then item.artefact_name = false end
 
   if item.quantity ~= false then
@@ -144,12 +143,6 @@ function TroveMarker:debug_portal (marker)
     crawl.mpr("Wanted plus1: " .. item.plus1)
   else
     crawl.mpr("Unwanted plus1.")
-  end
-
-  if item.plus2 ~= false then
-    crawl.mpr("Wanted plus2: " .. item.plus2)
-  else
-    crawl.mpr("Unwanted plus2.")
   end
 
   if item.artefact_name ~= false then
@@ -244,16 +237,6 @@ function TroveMarker:item_name(do_grammar)
       end
       s = s .. item.plus1
     end
-
-    if item.plus2 ~= false and item.plus2 ~= nil then
-      if item.base_type ~= "armour" then
-        s = s .. ","
-        if item.plus2 > -1 then
-          s = s .. "+"
-        end
-        s = s .. item.plus2
-      end
-    end
   end
 
   local jwith_pluses = {"ring of protection", "ring of evasion",
@@ -262,9 +245,6 @@ function TroveMarker:item_name(do_grammar)
   if item.base_type == "jewellery" and
      util.contains(jwith_pluses, item.sub_type) then
     s = s .. " +" .. item.plus1
-    if item.sub_type == "ring of slaying" then
-      s = s .. ",+" .. item.plus2
-    end
   end
 
   if item.base_type == "potion" or item.base_type == "scroll" then
@@ -337,7 +317,7 @@ function TroveMarker:search_for_item(marker, pname, iter_table, dry_run)
   local item = self.props.toll_item
 
   for it in iter.invent_iterator:new(iter_table) do
-    local iplus1, iplus2 = it.pluses()
+    local iplus1 = it.pluses()
     local this_item = true
     -- For misc items we check plus1 and nothing else.
     if it.base_type == "miscellaneous" then
@@ -359,18 +339,11 @@ function TroveMarker:search_for_item(marker, pname, iter_table, dry_run)
     if it.base_type == "jewellery" then
       if not util.contains(jwith_pluses, it.sub_type) then
          iplus1 = false
-         iplus2 = false
-      elseif it.sub_type ~= "ring of slaying" then
-         iplus2 = false
       end
     end
 
     if iplus1 == false then
       iplus1 = nil
-    end
-
-    if iplus2 == false then
-      iplus2 = nil
     end
 
     if iplus1 == nil then
@@ -380,20 +353,10 @@ function TroveMarker:search_for_item(marker, pname, iter_table, dry_run)
       end
     end
 
-    if iplus2 == nil then
-      if item.plus2 ~= false then
-        if dry_run ~= nil then crawl.mpr("Nil plus2 when we want plus2.") end
-        this_item = false
-      end
-    end
-
     -- And don't do anything if the pluses aren't correct, either.
     -- but accept items that are plus'd higher than spec'd.
     if iplus1 ~= nil and item.plus1 ~= false and iplus1 < item.plus1 then
       if dry_run ~= nil then crawl.mpr("Pluses do not match: " .. item.plus1 .. " versus " .. iplus1) end
-      this_item = false
-    elseif iplus2 ~= nil and item.plus2 ~= false and iplus2 < item.plus2 then
-      if dry_run ~= nil then crawl.mpr("Pluses do not match: " .. item.plus2 .. " versus " .. iplus2) end
       this_item = false
     end
 
@@ -436,31 +399,27 @@ end
 
 function TroveMarker:item_with_lowest_pluses(marker, pname, dry_run, items)
   local titem = items[1]
-  local titem_p1, titem_p2 = titem.pluses()
+  local titem_p1 = titem.pluses()
   --crawl.mpr("Picking " .. titem.name() .. " to start with.")
-  --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
+  --crawl.mpr("This item p1: " .. titem_p1 .. ")
 
   item = self.props.toll_item
 
-  if item.plus2 == false then
-    --crawl.mpr("Not looking at second plus.")
-  end
-
   for _, it in ipairs(items) do
-    local this_p1, this_p2 = it.pluses()
+    local this_p1 = it.pluses()
     --crawl.mpr("Looking at " .. it.name())
-    if this_p1 < titem_p1 and (item.plus2 == false or this_p2 < titem_p2) then
+    if this_p1 < titem_p1 then
       titem = it
-      titem_p1, titem_p2 = titem.pluses()
+      titem_p1 = titem.pluses()
       --crawl.mpr("Picking " .. titem.name() ..
       --          " instead (lesser pluses instad)")
-      --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
-    elseif this_p1 == item.plus1 and this_p2 == item.plus2 then
+      --crawl.mpr("This item p1: " .. titem_p1 .. ")
+    elseif this_p1 == item.plus1 then
       titem = it
-      titem_p1, titem_p2 = titem.pluses()
+      titem_p1 = titem.pluses()
       --crawl.mpr("Picking " .. titem.name() ..
       --          " instead (matches wanted pluses)")
-      --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
+      --crawl.mpr("This item p1: " .. titem_p1 .. ")
     end
   end
   return titem
@@ -529,8 +488,7 @@ function TroveMarker:check_veto(marker, pname)
   -- acceptable item, take the first in the list.
   local titem = nil
   if #acceptable_items == 1 or
-      (self.props.toll_item.plus1 == false and
-        self.props.toll_item.plus2 == false) then
+      (self.props.toll_item.plus1 == false) then
     titem = acceptable_items[1]
   else
     titem = self:item_with_lowest_pluses(marker, pname, false, acceptable_items)
@@ -587,15 +545,12 @@ function TroveMarker:note_payed(toll_item, item_taken, rune_name)
   -- need to use a little of both.
 
   local target_plus1 = self.props.toll_item.plus1
-  local target_plus2 = self.props.toll_item.plus2
-  local real_plus1, real_plus2 = toll_item.pluses()
+  local real_plus1 = toll_item.pluses()
   self.props.toll_item.plus1 = real_plus1
-  self.props.toll_item.plus2 = real_plus2
 
   crawl.take_note(prefix .. self:item_name() .. " " .. toll_desc)
 
   self.props.toll_item.plus1 = target_plus1
-  self.props.toll_item.plus2 = target_plus2
 end
 
 function trove_marker(pars)

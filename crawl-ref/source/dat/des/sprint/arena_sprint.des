@@ -38,8 +38,6 @@
 -- only get about 60 turns to kill the last enemy, and it might spawn in a far
 -- away spot. This is intentional.
 --
--- XXX: TRJ doesn't work.
---
 -- XXX: Zin is overpowered.
 
 function arena_sprint_is_boss_round(round_id)
@@ -231,7 +229,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "lesser demon w:30 / grinder w:3 / w:2 eustachio",
                 "zombie / skeleton / wight w:5 / necrophage / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / killer bee w:2",
-                "ooze / w:5 jelly / w:1 brown ooze",
+                "ooze / w:5 jelly",
                 "giant cockroach / giant mite w:20 / w:5 spider /\
                     w:5 goliath beetle / worm / w:5 brain worm",
                 "giant spore hd:3"
@@ -256,7 +254,7 @@ function arena_sprint_get_monster_set(round, boss)
                     scorpion / w:2 tarantella / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
-                "jelly / w:5 ooze / w:3 brown ooze / giant eyeball / w:2 shining eye",
+                "jelly / w:5 ooze / giant eyeball / w:2 shining eye",
                 "killer bee w:20 / w:5 queen bee",
                 "zombie / skeleton / wight / necrophage /\
                     phantom w:5 / w:1 josephine",
@@ -296,7 +294,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Swamp",
                 "place:Spider",
                 "place:Snake",
-                "jelly / w:5 brown ooze / giant eyeball / w:2 shining eye /\
+                "jelly / giant eyeball / w:2 shining eye /\
                     w:2 golden eye / w:2 eye of draining / w:1 slime creature",
                 "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
                 "w:3 skeletal warrior / wight / necrophage / zombie w:5 /\
@@ -1032,7 +1030,7 @@ KFEAT:  { = {
 KFEAT:  C = scroll shop type:Identification suffix:Station count:17 greed:25 ; scroll of identify q:3
 KFEAT:  D = book shop type:Must-Have suffix:Magic greed:7 count:13 use_all ; \
             book of summonings | book of spatial translocations | book of enchantments |\
-            book of death | book of war chants | book of the sky | book of the warp |\
+            book of death | book of the sky | book of the warp |\
             book of the earth | book of burglary | book of annihilations |\
             grand grimoire | necronomicon | not_cursed lightning rod
 KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
@@ -1040,7 +1038,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
             scroll of recharging q:3 | scroll of recharging q:3 | scroll of recharging q:3 |\
             scroll of silence q:3 | scroll of brand weapon | scroll of vulnerability q:3 |\
-            scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon iii q:6 |\
+            scroll of amnesia q:5 | scroll of remove curse q:15 | scroll of enchant weapon q:8 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
 KFEAT:  FS = distillery shop use_all count:17 greed:10 ; \
              potion of haste q:3 | potion of haste q:4 | potion of haste q:5 |\

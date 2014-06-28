@@ -83,8 +83,8 @@ enum brand_type // item_def.special
     SPWPN_ELECTROCUTION,
 #if TAG_MAJOR_VERSION == 34
     SPWPN_ORC_SLAYING,
-#endif
     SPWPN_DRAGON_SLAYING,
+#endif
     SPWPN_VENOM,
     SPWPN_PROTECTION,
     SPWPN_DRAINING,
@@ -94,7 +94,7 @@ enum brand_type // item_def.special
     SPWPN_FLAME,   // ranged, only
     SPWPN_FROST,   // ranged, only
 #endif
-    SPWPN_VAMPIRICISM,
+    SPWPN_VAMPIRISM,
     SPWPN_PAIN,
     SPWPN_ANTIMAGIC,
     SPWPN_DISTORTION,
@@ -297,7 +297,7 @@ enum scroll_type
     SCR_NOISE,
     SCR_REMOVE_CURSE,
     SCR_SUMMONING,
-    SCR_ENCHANT_WEAPON_I,
+    SCR_ENCHANT_WEAPON,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
     SCR_RANDOM_USELESSNESS,
@@ -308,10 +308,14 @@ enum scroll_type
     SCR_MAGIC_MAPPING,
     SCR_FOG,
     SCR_ACQUIREMENT,
+#if TAG_MAJOR_VERSION == 34
     SCR_ENCHANT_WEAPON_II,
+#endif
     SCR_BRAND_WEAPON,
     SCR_RECHARGING,
+#if TAG_MAJOR_VERSION == 34
     SCR_ENCHANT_WEAPON_III,
+#endif
     SCR_HOLY_WORD,
     SCR_VULNERABILITY,
     SCR_SILENCE,

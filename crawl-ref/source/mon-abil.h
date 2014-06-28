@@ -26,6 +26,7 @@ void move_child_tentacles(monster * kraken);
 void move_solo_tentacle(monster * tentacle);
 
 void ancient_zyme_sicken(monster* mons);
+void torpor_snail_slow(monster* mons);
 void starcursed_merge(monster* mon, bool forced);
 
 bool has_push_space(const coord_def& pos, actor* act,
@@ -38,9 +39,7 @@ void heal_flayed_effect(actor* act, bool quiet = false, bool blood_only = false)
 void end_flayed_effect(monster* ghost);
 
 bool lost_soul_revive(monster* mons);
-bool lost_soul_spectralize(monster* mons);
 
-int spawn_spirit_pack(const actor* target);
 void treant_release_fauna(monster* mons);
 bool apply_grasping_roots(monster* mons);
 void check_grasping_roots(actor* act, bool quiet = false);

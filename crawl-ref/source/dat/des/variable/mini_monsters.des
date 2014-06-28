@@ -1001,7 +1001,7 @@ ENDMAP
 
 NAME:    hangedman_parallel_progression
 TAGS:    patrolling no_monster_gen transparent
-TAGS:    layout_rooms layout_angular layout_rooms
+TAGS:    layout_rooms layout_corridors
 DEPTH:   D:11-
 MONS:    rat, bat, giant newt / giant gecko, worm, ooze
 MONS:    giant cockroach / giant mite w:8, jackal
@@ -1018,7 +1018,7 @@ KMONS:   I = orange rat
 KMONS:   J = unseen horror
 KMONS:   K = alligator
 KMONS:   L = lindwurm
-KMONS:   M = brown ooze / large slime creature
+KMONS:   M = large slime creature
 KMONS:   N = demonic crawler
 KMONS:   O = hell hound
 KMONS:   P = black mamba
@@ -2862,7 +2862,7 @@ TAGS:   uniq_jelly_drop
 DEPTH:  D:8-, Depths
 WEIGHT: 5
 MONS:   jelly generate_awake
-KFEAT:  a = known teleport trap
+KFEAT:  a = known permanent teleport trap
 MAP
 ..............
 ...vvvvvvvv...
@@ -2985,7 +2985,7 @@ ENDMAP
 NAME:   minmay_acid_items
 TAGS:   no_monster_gen no_item_gen no_trap_gen transparent
 DEPTH:  Depths, !Depths:$
-MONS:   ooze / jelly / brown ooze w:20 / death ooze / azure jelly
+MONS:   ooze / jelly w:30 / death ooze / azure jelly
 MONS:   acid blob
 KPROP:  | = no_tele_into
 MAP
@@ -3109,7 +3109,7 @@ KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
               disc of storms w:4 / lightning rod ident:type w:1
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
-KFEAT:   T = teleport trap
+KFEAT:   T = known permanent teleport trap
 MARKER:  T = lua:fog_machine { cloud_type = "rain", pow_max = 2, \
                  delay_min = 10, delay_max = 60, size = 4, walk_dist = 2 }
 SHUFFLE: ab, {( / <<
@@ -3131,8 +3131,7 @@ NAME:    hangedman_jelly_panic
 TAGS:    no_monster_gen no_item_gen
 DEPTH:   D:4-, Depths
 KMONS:   1 = ooze
-KMONS:   2J = jelly
-KMONS:   3 = brown ooze
+KMONS:   23J = jelly
 KMONS:   4K = slime creature
 KMONS:   5L = acid blob w:5 / azure jelly / death ooze
 KFEAT:   JKL = altar_jiyva
@@ -3485,8 +3484,8 @@ DEPTH: D:$, Depths
 KMONS: 8 = 8
 KMONS: 9 = 9
 KITEM: 89 = % / * / w:1 |
-KFEAT: X = known teleport trap
-KFEAT: Z : known teleport trap / w:30 x
+KFEAT: X = known permanent teleport trap
+KFEAT: Z : known permanent teleport trap / w:30 x
 SUBST: Y = 89, x : xcvb
 MAP
 ............
@@ -4552,7 +4551,7 @@ ENDMAP
 NAME:   grunt_tough_drop
 TAGS:   no_monster_gen no_trap_gen
 DEPTH:  D:4-, Depths
-KFEAT:  ^ = known teleport trap
+KFEAT:  ^ = known permanent teleport trap
 KFEAT:  _ = known alarm trap
 KPROP:  8^ = no_rtele_into
 : if you.absdepth() < 9 then
@@ -5860,7 +5859,7 @@ KMONS:   X = deep elf fighter ; cutlass | long sword . robe | leather armour . b
 KMONS:   Y = wight ; falchion | long sword . ring mail | scale mail . shield | nothing
 KITEM:   S = good_item long sword / good_item great sword / good_item demon blade /\
              good_item claymore / good_item bastard sword
-KFEAT:   S = known teleport trap
+KFEAT:   S = known permanent teleport trap
 NSUBST:  k = 4=k / * = .:19 k:1
 SHUFFLE: bm
 SUBST:   b = cccvvb
@@ -6259,8 +6258,8 @@ ENDMAP
 
 NAME: special_room
 TAGS: allow_dup luniq no_item_gen ruin_spider ruin_slime
-TAGS: no_monster_gen layout_rooms layout_angular layout_caves
-TAGS: layout_anastomotic
+TAGS: no_monster_gen layout_rooms layout_corridors layout_passages
+TAGS: layout_narrow_caves layout_open_caves
 CHANCE: 0.5% (Slime), 1% (Geh, Coc, Dis, Tar), 2% (Orc, Spider), 3%
 DEPTH: D:8-, Depths, Orc, Elf, Lair, Snake, Spider, Slime, Crypt, \
        Geh, !Geh:$, Coc, !Coc:$, Dis, !Dis:$, Geh, !Geh:$

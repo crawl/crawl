@@ -13,9 +13,13 @@
 #
 # A twisty turny forest maze.
 #
+# This layout needs a home.  See devwiki for possible ideas.
+#
 NAME:   layout_twisted_forest
-DEPTH:  Forest
-WEIGHT: 100
+DEPTH:  D:1, Forest
+# TAG_MAJOR_VERSION == 34
+# Remove Forest weighting on version bump
+WEIGHT: 0 (D), 100 (Forest)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_forest
 {{

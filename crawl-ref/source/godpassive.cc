@@ -20,7 +20,6 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "mon-stuff.h"
 #include "player.h"
 #include "religion.h"
 #include "shout.h"
@@ -430,7 +429,7 @@ bool god_id_item(item_def& item, bool silent)
         // gives more information than absolutely needed.
         brand_type brand = get_weapon_brand(item);
         if (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-            || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING)
+            || brand == SPWPN_VAMPIRISM || brand == SPWPN_REAPING)
         {
             ided |= ISFLAG_KNOW_TYPE;
         }

@@ -1,11 +1,15 @@
 #ifndef SPL_GODITEM_H
 #define SPL_GODITEM_H
 
-int cast_healing(int pow, int max_pow, bool divine_ability = false,
-                 const coord_def& where = coord_def(0, 0),
-                 bool not_self = false, targ_mode_type mode = TARG_NUM_MODES);
+#include "spl-cast.h"
+
+spret_type cast_healing(int pow, int max_pow, bool divine_ability = false,
+                        const coord_def& where = coord_def(0, 0),
+                        bool not_self = false,
+                        targ_mode_type mode = TARG_NUM_MODES);
 
 void antimagic();
+void debuff_monster(monster* mons);
 
 int detect_traps(int pow);
 int detect_items(int pow);

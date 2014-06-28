@@ -699,11 +699,6 @@ Brimstone Fiend
 A huge and powerful demon wreathed in hellfire, with great scaly wings. One of
 the most fearsome denizens of any of the Hells.
 %%%%
-brown ooze
-
-A viscous liquid being that flows along the floor in search of matter to
-dissolve and consume.
-%%%%
 burning bush
 
 A mass of blackened twigs wreathed in orange flames. The walls and floor
@@ -1773,9 +1768,9 @@ unholy energies, and the raising of corpses into a parody of life.
 %%%%
 necrophage
 
-A vile undead creation of the most unholy necromancy, these creatures are made
-from the decaying corpses of humanoid creatures. They exist to spread disease
-and decay, and gain power from the decaying corpses of other beings.
+A vile undead creation of the most unholy necromancy, this creature is made
+from the decaying corpses of humanoid creatures. It exists to spread disease
+and decay, and gains power from the decaying corpses of other beings.
 %%%%
 neqoxec
 
@@ -1970,13 +1965,6 @@ program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the
 DevTeam.
-%%%%
-pulsating lump
-
-A revolting blob of all kinds of living matter — muscle, gut, nerves, viscera,
-marrow — piled haphazardly into a single writhing mass. This distorted flesh is
-mutagenic on contact, but without any kind of structural arrangement to its
-parts, it lacks the coordination needed to move quickly.
 %%%%
 purple draconian
 
@@ -2496,6 +2484,13 @@ tormentor
 
 A malign devil covered in all manner of claws, spines, and cruel hooks. It is
 able to inflict torturous agony on those foolish enough to gaze upon it.
+%%%%
+torpor snail
+
+A huge gastropod with a lime-green shell. Torpor snails are said to be in some
+way connected with the god Cheibriados; just being near them is enough to slow
+the movements of unwary adventurers, leaving them easy prey for the snails'
+terrifying, ever-gnashing radulae.
 %%%%
 torturous demonspawn
 

@@ -939,8 +939,8 @@ NAME:    hangedman_swamp_muck
 TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 KMONS:   1 = slime creature
-KMONS:   2 = slime creature / brown ooze
-KMONS:   3 = brown ooze
+KMONS:   2 = slime creature / brown ugly thing
+KMONS:   3 = jelly
 KFEAT:   12 = shallow_water
 SHUFFLE: })
 SUBST:   T = w:4 t, M = ~:4 t, } = }:20 >, ) = ):25 <>
@@ -1622,7 +1622,7 @@ SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh/Ii, %*$
 NSUBST: ' = 1:^ / 1:o / *:'
 SUBST: abcde = w, fghi = t, ABCDE = .wW, FGHI = .t, ' = ':100 $$$%%, \
        _ = .._, . = ......W
-KFEAT: ^ = teleport trap
+KFEAT: ^ = permanent teleport trap
 KMONS: o = oklob plant
 CLEAR: _
 MAP

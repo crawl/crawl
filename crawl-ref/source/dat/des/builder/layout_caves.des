@@ -17,10 +17,10 @@
 # functions from weighted selections and draw them overwritten.
 #
 NAME:   layout_layer_cave
-DEPTH:  Depths, !Depths:$, Lair, Snake
-WEIGHT: 15, 20(Lair)
+DEPTH:  D:4-, Lair, Snake
+WEIGHT: 20, 15 (Snake)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
   if is_validating() then return; end
 
@@ -110,10 +110,10 @@ TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 #       * It should be possible to fold most of these effects into layer_cave
 #
 NAME:   layout_cave_shapes
-DEPTH:  Depths, !Depths:$, Lair, Snake
-WEIGHT: 10
+DEPTH:  Lair, Snake, Depths
+WEIGHT: 3 (Lair), 5 (Snake), 10 (Depths)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -226,11 +226,14 @@ TAGS:   overwritable layout allow_dup unrand layout_type_caves
 # produces the same kind of symmetries. It could be an alternate algorithm there but
 # ... it just looks more cave-like.
 #
+# Removed by request from dpeg.  Ugly in console, and the idea
+# is used better in layout_falls_marsh.
+#
 NAME:   layout_waterfall
-DEPTH:  Depths, !Depths:$, Tar
-WEIGHT: 5, 50(Tar)
+DEPTH:  Tar
+WEIGHT: 0
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
 
   -- TODO: For now this looks pretty good; but tweaking the reps and also the worley
@@ -269,6 +272,7 @@ TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 #
 NAME:   layout_falls_marsh
 DEPTH:  Swamp:1-4
+WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
 {{
@@ -312,11 +316,13 @@ TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_swamp
 # Intended as a series of interconnected roughly geometrically-shaped rooms
 # for e.g. Dis/Zot, came out much more organic like a burrow of caves.
 #
+# TODO: Wider the paths, then add to Spider at weight 10.
+#
 NAME:   layout_cave_pods
-DEPTH:  Snake,Lair,Spider
-WEIGHT: 20
+DEPTH:  D:4-, Lair, Snake
+WEIGHT: 5, 15 (Lair)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_ranifrom
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -346,10 +352,10 @@ ENDMAP
 # should really be folded in with randomisation
 #
 NAME:   layout_chambers
-DEPTH:  Snake,Lair,Spider
-WEIGHT: 10
+DEPTH:  Snake, Spider, Pan
+WEIGHT: 15 (Snake), 5 (Spider), 10 (Pan)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_ranifrom
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -378,12 +384,15 @@ ENDMAP
 #       river/forest/pools layout like bigger_room, even
 #       swamp / shoals) and add rooms to them
 #
+# I don't like this TODO.  In my mind, this layout makes a great
+# distinguishing feature for Snake. ~infiniplex
+#
 NAME:   layout_cave_town
-WEIGHT: 8
+DEPTH:  Snake:3-5
+WEIGHT: 5 (Snake:3), 15 (Snake:4), 50 (Snake:5)
 ORIENT: encompass
-DEPTH:  Depths, !Depths:$, Snake, Lair:1-3
-TAGS:   overwritable layout allow_dup unrand no_rotate no_pool_fixup
-TAGS:   no_hmirror no_vmirror chance_d layout_type_city
+TAGS:   overwritable layout allow_dup unrand no_pool_fixup layout_type_city
+TAGS:   no_rotate no_hmirror no_vmirror
 {{
   if is_validating() then return; end
 
@@ -431,13 +440,16 @@ MAP
 ENDMAP
 
 ##############################################################
-# layout_gehenna_lava_paths
+# layout_cocytus_water_paths
 #
-NAME:   layout_gehenna_lava_paths
-DEPTH:  Geh
-WEIGHT: 100
+# Previously named layout_gehenna_lava_paths, had lava instead
+#  of water, and appeared in Gehenna.
+#
+NAME:   layout_cocytus_water_paths
+DEPTH:  Coc
+WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return end
 
@@ -445,10 +457,14 @@ TAGS:   overwritable layout allow_dup unrand layout_type_caves
   extend_map { width = gxm, height = gym, fill = 'x' }
 
   -- Set a scale to produce some nice-sized chunks
-  local scale = util.random_range_real(.5,1.0)
-  local path_break = crawl.random2(101)/500 + 0.2  -- 0.2 .. 0.4
-  local wall_break = crawl.random2(101)/250 + 0.2 + path_break  -- 0.4 .. 1.0
-  local padding = crawl.random_range(5,12)
+  local depth_fraction = you.depth_fraction()
+  local scale      = 0.95 + crawl.random_real() * 0.25 - depth_fraction * 0.35
+  local path_break = 0.15 + crawl.random_real() * 0.05 + depth_fraction * 0.05
+  local wall_break = 0.8  - crawl.random_real() * (0.6 - path_break)
+
+  -- between outmost paths and outmost water
+  local padding = 8 + crawl.random_real() * 6 + depth_fraction * 6
+
   -- Setup a worley function
   local worley1 = procedural.worley_diff { scale = scale/4 }
   if (scale > 1.5 and crawl.coinflip()) then
@@ -463,19 +479,24 @@ TAGS:   overwritable layout allow_dup unrand layout_type_caves
 
   for x = 1,gxm-2,1 do
     for y = 1,gym-2,1 do
-      local val = worley1(x,y) + 1 - procedural.boundary_map(x,1,padding,gxm-2-padding,gxm-2)/2 - procedural.boundary_map(y,1,padding,gym-2-padding,gym-2)/2
+      local val = worley1(x,y) + 1
+                 - procedural.boundary_map(x,1,padding,gxm-2-padding,gxm-2)/2
+                 - procedural.boundary_map(y,1,padding,gym-2-padding,gym-2)/2
       if (val) > wall_break then
         mapgrd[x][y] = "x"
       elseif (val) > path_break then
-        mapgrd[x][y] = "l"
+        mapgrd[x][y] = "w"
       else
         mapgrd[x][y] = "."
       end
     end
   end
 
-  zonify.map_fill_zones(_G, 1, 'l')
-
+  -- we want to fill flight-accessable areas with water and all
+  --  closets with rock
+  zonify.map_fill_zones(_G, 1, 'w')
+  nsubst(". = 1:@ / *:.")
+  fill_disconnected{wanted = '@', fill = 'x'}
 }}
 MAP
 ENDMAP
@@ -483,11 +504,13 @@ ENDMAP
 ##############################################################
 # layout_gehenna_lava_caves
 #
+# TODO: Add round buildings, depth convergence.
+#
 NAME:   layout_gehenna_lava_caves
 DEPTH:  Geh
-WEIGHT: 100
+WEIGHT: 20
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
   if is_validating() then return end
 
@@ -530,9 +553,9 @@ ENDMAP
 #
 NAME:   layout_ice_bergs
 DEPTH:  Coc
-CHANCE: 100%
+WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()

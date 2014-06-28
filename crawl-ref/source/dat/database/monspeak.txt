@@ -1257,8 +1257,6 @@ Fire Magic player ghost
 
 @The_monster@ says, "I love the smell of burning flesh."
 
-@The_monster@ chuckles, "I'd hate to see you lose all those scrolls..." @player_only@
-
 @The_monster@ says, "Would you like to be cremated?"
 
 @The_monster@ says, "Don't worry, you'll be warm in a moment."
@@ -2923,6 +2921,52 @@ w:50
 @The_monster@ says, "I've never heard of a star cursing anything."
 
 @The_monster@ says, "I've never heard of a star spawning anything."
+%%%%
+Zot Donald
+
+w:50
+@_generic_Donald_@
+
+@The_monster@ says, "I saw a draconian who kept changing colours. Some people are so indecisive."
+
+@The_monster@ says, "How come everyone is wearing a cloak down here?"
+
+@The_monster@ says, "I offered a draconian some spare armor, but he said it didn't fit."
+
+@The_monster@ says, "I keep feeling something staring at me. Is it you?"
+
+@The_monster@ says, "How do you make a golem out of electricity?"
+
+@The_monster@ says, "What's an "orb guardian", anyway?"
+
+@The_monster@ says, "Orbs of fire, orbs of destruction, the Orb of Zot... what's with all the orbs?"
+
+@The_monster@ says, "I hate orbs."
+
+@The_monster@ says, "I hate clowns."
+
+@The_monster@ says, "I hate draconians."
+
+@The_monster@ says, "I hate purple."
+
+@The_monster@ says, "Are they setting up a circus down here?"
+
+@The_monster@ says, "This place probably doesn't see many tourists."
+
+@The_monster@ says, "Oh, so that's what those runes are for!"
+
+@The_monster@ says, "Why do the walls change color every floor? Did they keep running out of paint?"
+
+@The_monster@ says, "What's stopping the guards from just stealing the Orb themselves?"
+
+@The_monster@ says, "I hope I don't run into any orbs of ice down here!"
+
+@The_monster@ says, "Did you bring your rings of ice?"
+
+@The_monster@ says, "The Orb of Power is here? Where are the others, then?"
+
+@The_monster@ says, "I saw some tasty-looking corn earlier, but it tried to eat me. I hate that."
+
 %%%%
 ######################################################################## GODS #
 Zin Donald

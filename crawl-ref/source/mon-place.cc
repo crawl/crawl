@@ -18,6 +18,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "dbg-scan.h"
 #include "directn.h"
 #include "dungeon.h"
 #include "fprop.h"
@@ -34,7 +35,7 @@
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-pick.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
@@ -494,7 +495,7 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
     if (mons_is_tentacle_segment(mon_type))
         return true;
 
-    if (trap == TRAP_TELEPORT)
+    if (trap == TRAP_TELEPORT || trap == TRAP_TELEPORT_PERMANENT)
         return false;
 
     if (trap == TRAP_SHAFT)
@@ -1811,6 +1812,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         gozag_set_bribe(mon);
     }
 
+#ifdef DEBUG_DIAGNOSTICS
+    if (crawl_state.obj_stat_gen)
+        objstat_record_monster(mon);
+#endif
     return mon;
 }
 
@@ -2837,6 +2842,42 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
         }
         break;
 
+    case MONS_TORPOR_SNAIL:
+        natural_leader = true; // snails are natural-born leaders. fact.
+
+        // would be nice to support more branches, generically...
+        if (player_in_branch(BRANCH_LAIR))
+        {
+            band = random_choose_weighted(5, BAND_YAKS,
+                                          2, BAND_DEATH_YAKS,
+                                          1, BAND_SHEEP,
+                                          0);
+        }
+        else if (player_in_branch(BRANCH_SPIDER))
+            band = coinflip() ? BAND_REDBACK : BAND_RANDOM_SINGLE;
+
+        switch (band)
+        {
+            case BAND_YAKS:
+                band_size = 2 + random2(4); // 2-5
+                break;
+            case BAND_DEATH_YAKS:
+                band_size = 1 + random2(2); // 1-2
+                break;
+            case BAND_SHEEP:
+                band_size = 5 + random2(4); // 5-8
+                break;
+            case BAND_REDBACK:
+                band_size = 2 + random2(3); // 2-4
+                break;
+            case BAND_RANDOM_SINGLE:
+                band_size = 1;
+                break;
+            default:
+                break;
+        }
+        break;
+
     default: ;
     }
 
@@ -3747,9 +3788,9 @@ conduct_type player_will_anger_monster(monster* mon)
         return DID_HOLY;
     if (you_worship(GOD_ZIN))
     {
-        if (mon->is_unclean())
+        if (mon->how_unclean())
             return DID_UNCLEAN;
-        if (mon->is_chaotic())
+        if (mon->how_chaotic())
             return DID_CHAOS;
     }
     if (you_worship(GOD_TROG) && mon->is_actual_spellcaster())
@@ -3894,6 +3935,7 @@ static void _get_vault_mon_list(vector<mons_spec> &list);
 
 monster_type summon_any_demon(monster_type dct)
 {
+    // Draw random demon types in Pan from the local pools first.
     if (player_in_branch(BRANCH_PANDEMONIUM) && !one_chance_in(40))
     {
         monster_type typ = MONS_0;
@@ -3908,15 +3950,14 @@ monster_type summon_any_demon(monster_type dct)
                                            : env.mons_alloc[i];
             if (invalid_monster_type(cur))
                 continue;
-            const monsterentry *mentry = get_monster_data(cur);
             if (dct == RANDOM_DEMON && mons_class_holiness(cur) != MH_DEMONIC
-                || dct == RANDOM_DEMON_LESSER && mentry->basechar != '5'
+                || dct == RANDOM_DEMON_LESSER && mons_demon_tier(cur) != 5
                 || dct == RANDOM_DEMON_COMMON
-                   && mentry->basechar != '4'
-                   && mentry->basechar != '3'
+                   && mons_demon_tier(cur) != 4
+                   && mons_demon_tier(cur) != 3
                 || dct == RANDOM_DEMON_GREATER
-                   && mentry->basechar != '2'
-                   && mentry->basechar != '1')
+                   && mons_demon_tier(cur) != 2
+                   && mons_demon_tier(cur) != 1)
             {
                 continue;
             }

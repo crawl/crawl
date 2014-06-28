@@ -1,31 +1,41 @@
-Stone Soup 0.15 (up to 0.15-a0-1331-ga052c3c)
+Stone Soup 0.15 (up to 0.15-a0-1526-g60de0e4)
 --------------------------------------------
 * Two new gods: Gozag Ym Sagoz the Greedy and Qazlal Stormbringer.
+* Nemelex Xobeh and decks in general have had many changes.
 * Ranged combat has been rewritten from the ground up.
+* Inventory weight limits have been removed.
+* Item destruction is no more, and corrosion has a more severe but
+  temporary effect.
 
 Branches, environment
 ---------------------
+* The Hall of Blades has been cut.
 * Crypt is now three levels (was five).
 * Some areas of the Tomb layout can now vary.
 * Mechanical traps no longer drop ammo.
+* Most randomly-placed teleport traps now disappear after one use.
 * Troves asking for items require that item to be unequipped.
 * The Abyss no longer sometimes blocks blinking.
+* Mutagenic fog now causes large amounts of glow instead of mutating directly.
 
 Character
 ---------
 * Inventory item weight and player burden states are no more.
+* Cross-training now gives a direct bonus to cross-trained skills, rather than
+  decreasing the XP cost of learning them.
+* Anti-training (for opposite elemental schools) has been removed.
 * Formicids can no longer throw large rocks.
 * Tengu now gain permaflight at XL14 (was 15).
 * All non-undead forms can eat and drink normally.
 * All forms can butcher.
 * Wisp form can read scrolls and cannot blink on demand.
-* Wanderers have tweaked starting kits with generally better items.
 * Teleportitis cannot be controlled.
+* Wanderers have tweaked starting kits with generally better items.
 * Player clinging (seen only in Spider Form and with the boots of the Spider)
   is no more.
 * Kobolds, hill orcs, and ogres are no longer saprovorous.
 * Kobolds no longer have disease resistance.
-* Halflings have rebalanced aptitudes, shifting them towards defense.
+* Halflings have rebalanced stats and aptitudes, shifting them towards defense.
 * Ogres and centaurs no longer have a fast metabolism; halflings no longer
   have a slow metabolism.
 * Centaurs are no longer herbivorous.
@@ -42,29 +52,40 @@ Character
 Monsters
 --------
 * Many enemy glyphs have been adjusted. See 0.14_monster_glyphs.txt.
-* Corrosion affects all of your equipment, but only temporarily.
-* The chance of corroding equipment no longer considers item enchantment.
+* Monsters will no longer pick up items that the player has seen. Allies won't
+  pick up items at all.
+* Monsters no longer fall asleep after long periods of time.
+* Corrosion affects all of your equipment, but only temporarily, and the chance
+  to corrode equipment does not consider item enchantment.
+* New monster: ghost crabs, found in Crypt. They breathe ghostly flames that
+  call dangerous specters into existence.
+* New monster: torpor snails, found in Lair and Spider. Their enemies are
+  slowed on sight, somewhat like ancient zymes.
 * Enemies are more intelligent about using area-of-attack spells such as
-  Symbol of Torment and Chain Lightning when you are not in sight.
+  Symbol of Torment and Chain Lightning even when you are not in sight.
 * Komodo dragons now bite harder but don't sicken the player.
+* Purple ugly things deal extra damage in lieu of a sickness attack.
 * Deep dwarf death knights are now just death knights.
 * Manticores now move as fast as the player, and have an unlimited number of
   spike volleys.
 * Base draconians can become nonbase draconians with experience.
 * Undead and nonliving enemies regenerate as fast as other enemies.
-* Ghouls and necrophages can no longer equip weapons or armour.
-* Item destruction of scrolls and potions has been completely removed.
 * Silver statues and orange crystal statues are immune to disintegration,
   but have less health and AC and have their abilities converted to spells
   such that they spam less; this implies OCS confusion can be resisted.
 * Bog bodies no longer randomly rot.
-* Purple ugly things deal extra damage in lieu of a sickness attack.
-* Boris can use weapons.
-* Cherub's hymns can buff any allies, not just those with higher HDs.
 * Curse skulls are now immobile, again.
+* Lost souls now make enemies into ghosts instead of specters.
+* Spriggan riders now ride wasps.
+* Cherub's hymns can buff any allies, not just those with higher HDs.
+* Killing holy monsters no longer invokes cleansing flame on the perpetrator.
+* Ghouls and necrophages can no longer equip weapons or armour.
+* Each unique now has a special title, shown when you first see them or in the
+  description screen.
 * Removed enemies: vapours, thorn lotuses, giant goldfish, silver stars,
-  flaming corpses, grizzly bears, spriggan enchanters, phoenixes,
-  shedu, plague shamblers, giant slug, elephant slug.
+  flaming corpses, grizzly bears, spriggan enchanters, phoenixes, shedu,
+  plague shamblers, giant slugs, elephant slugs, giant fireflies, brown oozes,
+  pulsating lumps.
 
 Spells
 ------
@@ -73,13 +94,19 @@ Spells
   in the book of Burglary.
 * Casting Ozocubu's Refrigeration now prevents the player from using potions
   for several turns instead of destroying potions.
-* Spider Form now moves at normal speed.
-* Death Channel lasts twice as long.
+* Spider Form now moves at normal speed, and no longer gives clinging.
 * Tukima's Dance now animates weapons held by monsters. The weapons will fight
   against their former owners. It is also now level 3.
 * Confusing Touch now has a short, non-stacking duration which discharges
   entirely when it successfully confuses an enemy. While it's in effect, your
   attacks do no damage. It's been moved to level 2.
+* Sublimation of Blood no longer uses chunks; it now only draws from the
+  caster's HP.
+* Simulacrum now works on a single corpse at the caster's feet, creating
+  several simulacrula from it.
+* Monsters casting Simulacrum now affect all monsters in LOS, producing half as
+  many simulacrula as the player version of the spell.
+* Death Channel lasts twice as long.
 * The Book of War Chants is no more.
 * Removed spells: Fire Brand, Freezing Aura, Lethal Infusion, Poison Weapon,
   Summon Elemental.
@@ -91,69 +118,90 @@ Items
   has more of an impact, attack delay is more predictable, and Throwing
   should be more viable as a ranged option as compared to bows and crossbows,
   among other changes.
+* Weapon enchantment & slaying bonsues have been merged into a single number,
+  giving both +accuracy & +damage. Scrolls of enchant weapon I, II, and III
+  have all been merged into a new "enchant weapon" scroll. The scrolls are
+  rarer, but always succeed.
 * Shields have been rebalanced. All non-shield-enchantment sources of SH have
   been halved, and the effectiveness of SH at blocking attacks has been
   doubled, to make the utility of a point of SH roughly equivalent to a point
   of EV. In effect, this is a small buff. Non-bucklers can now be enchanted
   past +3.
-* The blowgun of the Assassin returns; it has a chance to affect the target
-  more than normal blowguns.
-* New unrand: the +8 orange crystal plate armour {Archmagi, Int+3 Clar
-  SustAb}.
-* New unrand: the +6 Majin-Bo {vamp, Archmagi, MP+6 Int+6}. A quarterstaff
-  that takes HP every time you cast a spell.
-* The dagger of Chilly Death now sometimes flash-freezes enemies, slowing their
-  movement, and the scimitar of Flaming Death now sometimes applies sticky
-  flame to its victims.
-* Maxwell's Patent Armour now gives rF+ rC+ instead of Conservation.
-* The Shield of Resistance, Shield of the Gong, and Large Shield of Ignorance
-  have had their enchantment levels tweaked.
-* Cleaving hits the full eight squares around a player.
-* Jewellery automatically identifies on equipping it.
-* Damage from the electrocution brand has been reduced slightly.
-* Rebranding a distortion weapon no longer causes a distortion effect.
-* Scrolls of brand weapon can no longer affix brands.
-* Blessed weapons can be rebranded.
+* Multiple changes to unrandarts:
+  - The blowgun of the Assassin returns; it has a chance to affect the target
+    more than normal blowguns.
+  - New unrand: the +8 orange crystal plate armour {Archmagi, Int+3 Clar
+    SustAb}.
+  - New unrand: the +6 Majin-Bo {vamp, Archmagi, MP+6 Int+6}. A quarterstaff
+    that takes HP every time you cast a spell.
+  - The dagger of Chilly Death now sometimes flash-freezes enemies, slowing
+    their movement, and the scimitar of Flaming Death now sometimes applies
+    sticky flame to its victims.
+  - Leech is now +8, with -2 to all stats (instead of -1), and -2 to both AC
+    and EV.
+  - Skullcrusher is now +3 with +7 strength.
+  - The Trident of the Octopus King now starts at +8 and gets an additional +
+    for each Ring of the Octopus King worn. If anyone reads this & gets it to
+    +10 or higher in an actual game, send screenshots!
+  - Many other weapon artefacts have had their enchantments tweaked.
+  - Maxwell's Patent Armour now gives rF+ rC+ instead of Conservation.
+  - The Shield of Resistance, Shield of the Gong, and Large Shield of Ignorance
+    have had their enchantment levels adjusted.
+  - Removed unrands: the boots of the Spider.
+* Branding changes:
+  - Scrolls of brand weapon will no longer make temporary brands permanent,
+    but can now randomly apply any brand to an unbranded weapon.
+  - Blessed weapons can be rebranded.
+  - Rebranding a distortion weapon no longer causes a distortion effect.
+  - Branded non-artefact weapons can now be given a temporary re-brand.
+  - Damage from the electrocution brand has been reduced slightly.
+  - The dragonslaying brand is no longer generated. (Wyrmbane still has it.)
+* Food changes:
+  - Honeycombs have been renamed to royal jellies; they don't restore
+    abilities.
+  - Potions of blood cure a point of ghoul rotting.
+  - All types of fruit have been merged together into one gooey, messy item
+    type.
+  - Cheese, sausages, and ambrosia are no more.
+* Identify scrolls now always identify a single item.
+* Jewellery automatically identifies once equipped.
 * Amulets of inaccuracy are always cursed.
 * New rings of stealth and loudness, which positively/negatively adjust
   a player's stealth.
+* Amulets of rage no longer have a tiny chance of extending berserk duration.
+* Sacks of spiders now place webs directly onto enemies, rather than spreading
+  them randomly around the area.
+* Cleaving hits the full eight squares around a player, when not blocked by
+  walls.
 * Gloves of archery no longer penalise melee.
 * (Plain) bows have been renamed to shortbows.
-* Identify scrolls now always identify a single item.
-* Potions of blood cure a point of ghoul rotting.
 * Sustain abilities effects no longer stack.
-* Honeycombs have been renamed to royal jellies (to account for the removal
-  of the latter).
-* All types of fruit have been merged together into one gooey, messy item type.
-* Cheese and sausages are no more.
-* Scrolls of brand weapon can apply any brand to an unbranded weapon.
+* Staves of air now activate extra melee damage as often as other elemental staves.
+* Weapons and armour which aren't visibly enchanted no longer have enchantments
+  higher than +0.
 * Corpses and skeletons are stationary, and can't be picked up nor apported.
-* Removed items: darts, rings of hunger and sustenance, amulet of conservation,
-  cloak of preservation, ambrosia, (old) royal jelly.
-* Removed unrands: the boots of the Spider.
+* Other removed items: darts, rings of hunger and sustenance, amulet of
+  conservation, cloak of preservation.
 
 Cards
 -----
 * New cards.
   - Fortitude, which gives Damage Shaving and a bonus to strength.
   - Storm, which can make shallow water, a tornado, or cause swiftness.
+  - Cloud, which spawns dangerous clouds around the user and on hostiles.
   - Degeneration, which polymorphs nearby monsters into weaker ones.
   - Shaft, which creates a shaft under the player. This is an old effect of the
     Flight card.
   - Illusion, which summons an illusion of the player.
 * Revamped cards.
-  - Flame card now spawns flame clouds around the user and on hostiles rather
-    than dealing damage.
   - Velocity card now hastes the slow and slows hasty rather than simply
     speeding up the player.
   - Potion card has a new list of effects.
 * The Mercenary card can generate base demonspawn instead of spriggan riders.
 * Decks of war now contain the Drowsing and Potion cards.
-* Decks of wonders now contain Mercenary, Battlelust, Helm, and Shadow instead
-  of Experience, Helix, Sage, and Trowel.
 * Decks of dungeon are no more.
 * Removed cards: Experience, Sage, Water, Vitrification, Trowel, Minefield,
-  Shuffle, Warp, Portal, Hammer, Spark, Flight, and Genie.
+  Shuffle, Warp, Portal, Frost, Flame, Spark, Flight, Battlelust, and Genie.
 
 Gods
 ----
@@ -193,6 +241,9 @@ Gods
   - Nemelex now only gifts decks of war and escape.
   - Various cards have been changed, added, or removed. See the Cards section
     for details.
+* Beoghites can now gift items directly to their followers at high piety.
+* Beogh will now improve allies' equipment, and outright gift weapons, armour,
+  and ammo to orcs who lack them.
 * Followers of good gods no longer get a chance to turn holy enemies neutral.
 * Zin's Recite no longer prompts for a book, instead affecting all monsters
   in sight with the strongest effects that would impact them.
@@ -203,6 +254,7 @@ Interface
 ---------
 * Monsters with special melee attacks (e.g. poison, fire) have this noted in
   their descriptions.
+* Ctrl-T now displays the weapons that enemies are carrying, in console.
 * Unique enemies are now announced by their proper titles when first appearing.
 * Ability icons have been reworked.
 * There are status lights for Might, Agility, and Brilliance.

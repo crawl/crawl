@@ -68,7 +68,7 @@ function crypt_loot_plus(e)
   -- provide some unreliable but high quality incentives.
   local drain = "ego:draining good_item ident:type"
   local pain = "ego:pain ident:type"
-  local vamp = "ego:vampiricism ident:type"
+  local vamp = "ego:vampirism ident:type"
   local book = "randbook disc:necromancy numspells:6 spells:"
   local ring = "ring of positive energy randart good_item"
   local amulet = "amulet of warding randart good_item"
@@ -415,7 +415,7 @@ ENDMAP
 # Do not disturb the sanctity of this place, mortal...
 NAME:   grunt_crypt_arrival_guarded_gate
 TAGS:   uniq_crypt_arrival no_item_gen no_monster_gen no_trap_gen \
-        layout_rooms layout_city layout_angular no_hmirror no_rotate extra
+        layout_rooms layout_city layout_corridors no_hmirror no_rotate extra
 ORIENT: south
 DEPTH:  Crypt:1
 WEIGHT: 30
@@ -1132,7 +1132,7 @@ MONS:   w:20 skeletal warrior / w:50 skeleton / nothing
 KMONS:  1 = vampire knight / Jory w:5, vampire knight
 KMONS:  2 = phantasmal warrior
 KMONS:  3 = vampire knight w:15 / \
-            dancing weapon ; long sword ego:vampiricism ident:type
+            dancing weapon ; long sword ego:vampirism ident:type
 KMONS:  4 = vampire mage
 KMONS:  5 = skeletal warrior / phantasmal warrior
 KMONS:  6 = vampire w:15 / jiangshi
@@ -1703,7 +1703,7 @@ MONS:   generate_awake bone dragon / generate_awake curse toe
 MONS:   patrolling vampire ; scimitar | great sword | battleaxe | \
         war axe | broad axe . chain mail w:15 | plate armour w:1
 KMONS:  2 = vampire knight / Jory w:15, vampire knight
-KMONS:  3 = dancing weapon ; long sword ego:vampiricism / vampire knight w:1 / \
+KMONS:  3 = dancing weapon ; long sword ego:vampirism / vampire knight w:1 / \
             vampire ; scimitar | great sword | battleaxe | \
             war axe | broad axe . chain mail w:15 | plate armour w:1
 KMONS:  4 = phantasmal warrior / jiangshi

@@ -17,7 +17,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "mon-behv.h"
-#include "mon-stuff.h"
+#include "mon-message.h"
 #include "monster.h"
 #include "player.h"
 #include "random.h"

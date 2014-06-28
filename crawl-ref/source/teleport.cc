@@ -7,22 +7,27 @@
 
 #include "teleport.h"
 
+#include "act-iter.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "delay.h"
 #include "env.h"
 #include "fprop.h"
+#include "libutil.h"
 #include "los.h"
 #include "losglobal.h"
 #include "monster.h"
-#include "mon-stuff.h"
+#include "mon-behv.h"
+#include "mon-death.h"
+#include "mon-place.h"
 #include "player.h"
 #include "random.h"
 #include "random-weight.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "view.h"
 
 bool player::blink_to(const coord_def& dest, bool quiet)
 {
@@ -112,6 +117,248 @@ bool monster::blink_to(const coord_def& dest, bool quiet, bool jump)
     mons_relocated(this);
 
     return true;
+}
+
+// If the returned value is mon.pos(), then nothing was found.
+static coord_def _random_monster_nearby_habitable_space(const monster& mon)
+{
+    const bool respect_sanctuary = mon.wont_attack();
+
+    coord_def target;
+    int tries;
+
+    for (tries = 0; tries < 150; ++tries)
+    {
+        const coord_def delta(random2(13) - 6, random2(13) - 6);
+
+        // Check that we don't get something too close to the
+        // starting point.
+        if (delta.origin())
+            continue;
+
+        // Blinks by 1 cell are not allowed.
+        if (delta.rdist() == 1)
+            continue;
+
+        // Update target.
+        target = delta + mon.pos();
+
+        // Check that the target is valid and survivable.
+        if (!in_bounds(target))
+            continue;
+
+        if (!monster_habitable_grid(&mon, grd(target)))
+            continue;
+
+        if (respect_sanctuary && is_sanctuary(target))
+            continue;
+
+        if (target == you.pos())
+            continue;
+
+        if (!cell_see_cell(mon.pos(), target, LOS_NO_TRANS))
+            continue;
+
+        // Survived everything, break out (with a good value of target.)
+        break;
+    }
+
+    if (tries == 150)
+        target = mon.pos();
+
+    return target;
+}
+
+bool monster_blink(monster* mons, bool quiet)
+{
+    coord_def near = _random_monster_nearby_habitable_space(*mons);
+    return mons->blink_to(near, quiet);
+}
+
+bool monster_space_valid(const monster* mons, coord_def target,
+                         bool forbid_sanctuary)
+{
+    if (!in_bounds(target))
+        return false;
+
+    // Don't land on top of another monster.
+    if (actor_at(target))
+        return false;
+
+    if (is_sanctuary(target) && forbid_sanctuary)
+        return false;
+
+    // Don't go into no_ctele_into or n_rtele_into cells.
+    if (testbits(env.pgrid(target), FPROP_NO_CTELE_INTO))
+        return false;
+    if (testbits(env.pgrid(target), FPROP_NO_RTELE_INTO))
+        return false;
+
+    return monster_habitable_grid(mons, grd(target));
+}
+
+static bool _monster_random_space(const monster* mons, coord_def& target,
+                                  bool forbid_sanctuary)
+{
+    int tries = 0;
+    while (tries++ < 1000)
+    {
+        target = random_in_bounds();
+        if (monster_space_valid(mons, target, forbid_sanctuary))
+            return true;
+    }
+
+    return false;
+}
+
+void mons_relocated(monster* mons)
+{
+    // If the main body teleports get rid of the tentacles
+    if (mons_is_tentacle_head(mons_base_type(mons)))
+    {
+        int headnum = mons->mindex();
+
+        if (invalid_monster_index(headnum))
+            return;
+
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->is_child_tentacle_of(mons))
+            {
+                for (monster_iterator connect; connect; ++connect)
+                {
+                    if (connect->is_child_tentacle_of(*mi))
+                        monster_die(*connect, KILL_RESET, -1, true, false);
+                }
+                monster_die(*mi, KILL_RESET, -1, true, false);
+            }
+        }
+    }
+    // If a tentacle/segment is relocated just kill the tentacle
+    else if (mons->is_child_monster())
+    {
+        int base_id = mons->mindex();
+
+        monster* tentacle = mons;
+
+        if (mons->is_child_tentacle_segment()
+                && !::invalid_monster_index(base_id)
+                && menv[base_id].is_parent_monster_of(mons))
+        {
+            tentacle = &menv[base_id];
+        }
+
+        for (monster_iterator connect; connect; ++connect)
+        {
+            if (connect->is_child_tentacle_of(tentacle))
+                monster_die(*connect, KILL_RESET, -1, true, false);
+        }
+
+        monster_die(tentacle, KILL_RESET, -1, true, false);
+    }
+    else if (mons->type == MONS_ELDRITCH_TENTACLE
+             || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
+    {
+        int base_id = mons->type == MONS_ELDRITCH_TENTACLE
+                      ? mons->mindex() : mons->number;
+
+        monster_die(&menv[base_id], KILL_RESET, -1, true, false);
+
+        for (monster_iterator mit; mit; ++mit)
+        {
+            if (mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
+                && (int) mit->number == base_id)
+            {
+                monster_die(*mit, KILL_RESET, -1, true, false);
+            }
+        }
+
+    }
+
+    mons->clear_clinging();
+}
+
+void monster_teleport(monster* mons, bool instan, bool silent)
+{
+    bool was_seen = !silent && you.can_see(mons) && !mons_is_lurking(mons);
+
+    if (!instan)
+    {
+        if (mons->del_ench(ENCH_TP))
+        {
+            if (!silent)
+                simple_monster_message(mons, " seems more stable.");
+        }
+        else
+        {
+            if (!silent)
+                simple_monster_message(mons, " looks slightly unstable.");
+
+            mons->add_ench(mon_enchant(ENCH_TP, 0, 0,
+                                       random_range(20, 30)));
+        }
+
+        return;
+    }
+
+    coord_def newpos;
+
+    if (newpos.origin())
+        _monster_random_space(mons, newpos, !mons->wont_attack());
+
+    // XXX: If the above function didn't find a good spot, return now
+    // rather than continue by slotting the monster (presumably)
+    // back into its old location (previous behaviour). This seems
+    // to be much cleaner and safer than relying on what appears to
+    // have been a mistake.
+    if (newpos.origin())
+        return;
+
+    if (!silent)
+        simple_monster_message(mons, " disappears!");
+
+    const coord_def oldplace = mons->pos();
+
+    // Pick the monster up.
+    mgrd(oldplace) = NON_MONSTER;
+
+    // Move it to its new home.
+    mons->moveto(newpos, true);
+
+    // And slot it back into the grid.
+    mgrd(mons->pos()) = mons->mindex();
+
+    const bool now_visible = mons_near(mons);
+    if (!silent && now_visible)
+    {
+        if (was_seen)
+            simple_monster_message(mons, " reappears nearby!");
+        else
+        {
+            // Even if it doesn't interrupt an activity (the player isn't
+            // delayed, the monster isn't hostile) we still want to give
+            // a message.
+            activity_interrupt_data ai(mons, SC_TELEPORT_IN);
+            if (!interrupt_activity(AI_SEE_MONSTER, ai))
+                simple_monster_message(mons, " appears out of thin air!");
+        }
+    }
+
+    if (mons->visible_to(&you) && now_visible)
+        handle_seen_interrupt(mons);
+
+    // Leave a purple cloud.
+    // XXX: If silent is true, this is not an actual teleport, but
+    //      the game moving a monster out of the way.
+    if (!silent && !cell_is_solid(oldplace))
+        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
+
+    mons->check_redraw(oldplace);
+    mons->apply_location_effects(oldplace);
+
+    mons_relocated(mons);
+
+    shake_off_monsters(mons);
 }
 
 // Try to find a "safe" place for moved close or far from the target.

@@ -889,7 +889,7 @@ DEPTH:  Depths, !Depths:$, Crypt:1-4
 ORIENT: southeast
 NSUBST: 3 = 3:. / *:3
 SUBST:  ^ : ^mmm
-KFEAT:  ^ = teleport trap
+KFEAT:  ^ = permanent teleport trap
 KFEAT:  m = iron_grate
 KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup

@@ -47,7 +47,6 @@
 #include "message.h"
 #include "mon-book.h"
 #include "mon-chimera.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "output.h"
 #include "player.h"
@@ -549,11 +548,15 @@ static const char *trap_names[] =
     "dart",
 #endif
     "arrow", "spear",
-    "teleport", "alarm", "blade",
+#if TAG_MAJOR_VERSION > 34
+    "teleport",
+#endif
+    "permanent teleport",
+    "alarm", "blade",
     "bolt", "net", "Zot", "needle",
     "shaft", "passage", "pressure plate", "web",
 #if TAG_MAJOR_VERSION == 34
-    "gas",
+    "gas", "teleport",
 #endif
 };
 
@@ -564,6 +567,25 @@ string trap_name(trap_type trap)
     if (trap >= 0 && trap < NUM_TRAPS)
         return trap_names[trap];
     return "";
+}
+
+string full_trap_name(trap_type trap)
+{
+    string basename = trap_name(trap);
+    switch (trap)
+    {
+    case TRAP_GOLUBRIA:
+        return basename + " of Golubria";
+    case TRAP_PLATE:
+    case TRAP_WEB:
+    case TRAP_SHAFT:
+#if TAG_MAJOR_VERSION == 34
+    case TRAP_GAS:
+#endif
+        return basename;
+    default:
+        return basename + " trap";
+    }
 }
 
 int str_to_trap(const string &s)
@@ -907,10 +929,6 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "harm.";
             }
             break;
-        case SPWPN_DRAGON_SLAYING:
-            description += "This legendary weapon is deadly to all "
-                "dragonkind.";
-            break;
         case SPWPN_VENOM:
             if (is_range_weapon(item))
                 description += "It poisons the ammo it fires.";
@@ -957,7 +975,7 @@ static string _describe_weapon(const item_def &item, bool verbose)
                     "different, random effect.";
             }
             break;
-        case SPWPN_VAMPIRICISM:
+        case SPWPN_VAMPIRISM:
             description += "It inflicts no extra harm, but heals its "
                 "wielder somewhat when it strikes a living foe.";
             break;
@@ -1038,20 +1056,12 @@ static string _describe_weapon(const item_def &item, bool verbose)
 
     if (!is_artefact(item))
     {
-        if (item_ident(item, ISFLAG_KNOW_PLUSES)
-            && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
-        {
+        if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
             description += "\nIt cannot be enchanted further.";
-        }
         else
         {
             description += "\nIt can be maximally enchanted to +";
             _append_value(description, MAX_WPN_ENCHANT, false);
-            if (item.sub_type != WPN_BLOWGUN)
-            {
-                description += ", +";
-                _append_value(description, MAX_WPN_ENCHANT, false);
-            }
             description += ".";
         }
     }
@@ -1861,22 +1871,6 @@ string get_item_description(const item_def &item, bool verbose,
                 if (you.species != SP_GHOUL)
                     description << "\n\nEating this meat will cause rotting.";
                 break;
-            case CE_CONTAMINATED:
-                if (player_mutation_level(MUT_SAPROVOROUS) < 3)
-                {
-                    description << "\n\nMeat like this tastes awful and "
-                                   "provides far less nutrition.";
-                }
-                break;
-            case CE_POISON_CONTAM:
-                description << "\n\nThis meat is poisonous";
-                if (player_mutation_level(MUT_SAPROVOROUS) < 3)
-                {
-                    description << " and provides less nutrition even for the "
-                                   "poison-resistant";
-                }
-                description << ".";
-                break;
             default:
                 break;
             }
@@ -2247,7 +2241,7 @@ static bool _describe_spells(const item_def &item)
     const int c = getchm();
     if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
     {
-        mesclr();
+        clear_messages();
         return false;
     }
 

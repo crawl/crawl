@@ -42,7 +42,6 @@
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "options.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -842,6 +841,13 @@ static void _animate_weapon(int pow, actor* target, bool force_friendly)
     mg.props[TUKIMA_POWER] = pow;
 
     monster *mons = create_monster(mg);
+
+    if (!mons)
+    {
+        mprf("%s twitches for a moment.",
+             _get_item_desc(wpn, target_is_player).c_str());
+        return;
+    }
 
     // Don't haunt yourself if the weapon is friendly
     if (!force_friendly)
@@ -2036,13 +2042,14 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     fail_check();
     canned_msg(MSG_ANIMATE_REMAINS);
 
+    item_def& corpse = mitm[co];
     // How many simulacra can this particular monster give at maximum.
-    int num_sim  = 1 + random2(mons_weight(mitm[co].mon_type) / 150);
+    int num_sim  = 1 + random2(mons_weight(corpse.mon_type) / 150);
     num_sim  = stepdown_value(num_sim, 4, 4, 12, 12);
 
     mgen_data mg(MONS_SIMULACRUM, BEH_FRIENDLY, &you, 0, SPELL_SIMULACRUM,
                  you.pos(), MHITYOU, MG_FORCE_BEH | MG_AUTOFOE, god,
-                 mitm[co].mon_type);
+                 corpse.mon_type);
 
     // Can't create more than the max for the monster.
     int how_many = min(8, 4 + random2(pow) / 20);
@@ -2061,7 +2068,10 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     }
 
     if (count)
-        turn_corpse_into_skeleton(mitm[co]);
+    {
+        if (!turn_corpse_into_skeleton(corpse))
+            butcher_corpse(corpse, MB_FALSE, false);
+    }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 

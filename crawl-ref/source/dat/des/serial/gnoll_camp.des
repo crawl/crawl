@@ -8,7 +8,7 @@
 
 NAME:   serial_gnoll_camp
 DEPTH:  D:5-10
-TAGS:   layout_open layout_caves extra luniq_serial
+TAGS:   layout_open layout_open_caves extra luniq_serial
 CHANCE: 10%
 {{
   local c = 4 + crawl.random2(3)

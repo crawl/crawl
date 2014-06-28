@@ -1066,7 +1066,7 @@ unsigned int item_value(item_def item, bool ident)
                 break;
 
             case SPWPN_SPEED:
-            case SPWPN_VAMPIRICISM:
+            case SPWPN_VAMPIRISM:
                 valued *= 30;
                 break;
 
@@ -1088,7 +1088,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued *= 15;
                 break;
 
-            case SPWPN_DRAGON_SLAYING:
             case SPWPN_EVASION:
             case SPWPN_PROTECTION:
             case SPWPN_VENOM:
@@ -1100,13 +1099,7 @@ unsigned int item_value(item_def item, bool ident)
         }
 
         if (item_ident(item, ISFLAG_KNOW_PLUSES))
-        {
-            // Blowguns have only plus, no plus2
-            if (item.sub_type == WPN_BLOWGUN)
-                valued += 50 * item.plus;
-            else
-                valued += 10 * item.plus + 50 * item.plus2;
-        }
+            valued += 50 * item.plus;
 
         if (is_artefact(item))
         {
@@ -1523,7 +1516,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 520;
                 break;
 
-            case SCR_ENCHANT_WEAPON_III:
             case SCR_BRAND_WEAPON:
                 valued += 200;
                 break;
@@ -1535,6 +1527,7 @@ unsigned int item_value(item_def item, bool ident)
 
             case SCR_BLINKING:
             case SCR_ENCHANT_ARMOUR:
+            case SCR_ENCHANT_WEAPON:
             case SCR_TORMENT:
             case SCR_HOLY_WORD:
             case SCR_SILENCE:
@@ -1542,12 +1535,7 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 75;
                 break;
 
-            case SCR_ENCHANT_WEAPON_II:
-                valued += 55;
-                break;
-
             case SCR_AMNESIA:
-            case SCR_ENCHANT_WEAPON_I:
             case SCR_FEAR:
             case SCR_IMMOLATION:
             case SCR_MAGIC_MAPPING:
@@ -2421,8 +2409,12 @@ bool ShoppingList::items_are_same(const item_def& item_a,
 
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
-    if (crawl_state.map_stat_gen || crawl_state.test)
+    if (crawl_state.map_stat_gen
+        || crawl_state.obj_stat_gen
+        || crawl_state.test)
+    {
         return; // Shopping list is unitialized and uneeded.
+    }
 
     const level_pos src(level_id::current(), _src);
     const level_pos dst(level_id::current(), _dst);

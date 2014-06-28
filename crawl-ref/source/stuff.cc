@@ -1,3 +1,4 @@
+
 /**
  * @file
  * @brief Misc stuff.
@@ -635,7 +636,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
         }
 
         if (clear_after && message)
-            mesclr();
+            clear_messages();
 
         if (tmp == 'N')
             return false;
@@ -747,7 +748,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
         }
 
         if (clear_after)
-            mesclr();
+            clear_messages();
 
         if (tmp == 'N')
             return 0;

@@ -226,8 +226,8 @@ void ghost_demon::init_random_demon()
                || brand == SPWPN_REACHING
                || brand == SPWPN_FLAME
                || brand == SPWPN_FROST
-#endif
                || brand == SPWPN_DRAGON_SLAYING
+#endif
                || brand == SPWPN_PROTECTION
                || brand == SPWPN_EVASION
                );

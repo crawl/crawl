@@ -58,6 +58,7 @@
 #include "mon-death.h"
 #include "mon-util.h"
 #include "mon-pick.h"
+#include "mon-poly.h"
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-pathfind.h"
@@ -365,7 +366,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         you.uniq_map_names = uniq_names;
     }
 
-    if (!crawl_state.map_stat_gen)
+    if (!crawl_state.map_stat_gen && !crawl_state.obj_stat_gen)
     {
         // Failed to build level, bail out.
         if (crawl_state.need_save)
@@ -389,7 +390,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
                                   dungeon_feature_type dest_stairs_type)
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mapgen_report_map_build_start();
+    mapstat_report_map_build_start();
 #endif
 
     dgn_reset_level(enable_random_maps);
@@ -405,7 +406,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     {
         dprf("<white>VETO</white>: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
-        mapgen_report_map_veto();
+        mapstat_report_map_veto();
 #endif
         return false;
     }
@@ -2743,45 +2744,20 @@ static bool _pan_level()
                                        + pandemon_level_names[which_demon]));
     }
 
+    const map_def *vault = NULL;
+
     if (which_demon >= 0)
     {
-        const map_def *vault =
-            random_map_for_tag(pandemon_level_names[which_demon], false,
-                               false, MB_FALSE);
-
-        ASSERT(vault);
-
-        _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
-        return vault->orient != MAP_ENCOMPASS;
+        vault = random_map_for_tag(pandemon_level_names[which_demon], false,
+                                   false, MB_FALSE);
     }
     else
-    {
-        const map_def *vault = random_map_in_depth(level_id::current(),
-                                                   false, MB_FALSE);
-        // vault can be NULL if a dummy vault is selected.
-        if (vault && vault->orient == MAP_ENCOMPASS)
-        {
-            _dgn_ensure_vault_placed(_build_primary_vault(vault), true);
-            return false;
-        }
-        else
-        {
-            const map_def *layout = vault ? _pick_layout(vault)
-                                          : random_map_for_tag("layout", true,
-                                                               true);
+        vault = random_map_in_depth(level_id::current(), false, MB_FALSE);
 
-            {
-                dgn_map_parameters mp(vault && vault->orient == MAP_CENTRE
-                                      ? "central" : "layout");
-                _dgn_ensure_vault_placed(_build_primary_vault(layout), false);
-            }
-
-            dgn_check_connectivity = true;
-            if (vault)
-                _build_secondary_vault(vault);
-            return true;
-        }
-    }
+    // Every Pan level should have a primary vault.
+    ASSERT(vault);
+    _dgn_ensure_vault_placed(_build_primary_vault(vault), false);
+    return vault->orient != MAP_ENCOMPASS;
 }
 
 // Returns true if we want the dungeon builder
@@ -4364,7 +4340,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
-        mapgen_report_map_use(place.map);
+        mapstat_report_map_use(place.map);
 #endif
 
     if (is_layout && place.map.has_tag_prefix("layout_type_"))
@@ -4584,11 +4560,6 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         && props.exists("plus") && !is_unrandom_artefact(item))
     {
         item.plus = props["plus"].get_int();
-    }
-    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_JEWELLERY)
-        && props.exists("plus2") && !is_unrandom_artefact(item))
-    {
-        item.plus2 = props["plus2"].get_int();
     }
     if (props.exists("ident"))
         item.flags |= props["ident"].get_int();
@@ -5507,7 +5478,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
         {
             // Altar god doesn't matter, setting up the whole machinery would
             // be too much work.
-            if (crawl_state.map_stat_gen)
+            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen)
                 return DNGN_ALTAR_XOM;
 
             mprf(MSGCH_ERROR, "Ran out of altars for temple!");
@@ -5975,6 +5946,9 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec, int ch
     bool no_shaft = no_tele || !is_valid_shaft_level();
 
     while (spec_type >= NUM_TRAPS
+#if TAG_MAJOR_VERSION == 34
+           || spec_type == TRAP_DART || spec_type == TRAP_GAS
+#endif
            || no_tele && spec_type == TRAP_TELEPORT
            || no_shaft && spec_type == TRAP_SHAFT)
     {

@@ -22,7 +22,7 @@ menu += inventory:lightgreen:.*equipped.*
 
 # Important game items
 #
-menu += lightmagenta:.*misc.*rune( of Zot)?
+menu += lightmagenta:.*misc.*rune of Zot
 menu += lightmagenta:.*orb.*Zot
 
 # Artefacts

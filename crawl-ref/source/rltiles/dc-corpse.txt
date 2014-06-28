@@ -52,10 +52,6 @@ iguana CORPSE_IGUANA
 basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
 
-## Slugs ('j')
-%back blood_green blood_green1 blood_green2 blood_green3 blood_green4
-elephant_slug CORPSE_ELEPHANT_SLUG
-
 ## Rodents ('r')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 rat CORPSE_RAT
@@ -93,12 +89,14 @@ fire_crab CORPSE_FIRE_CRAB
 apocalypse_crab CORPSE_APOCALYPSE_CRAB
 %sdir mon/animals
 
-## Worms ('w')
+## Worms and gastropods ('w')
 %back blood_green blood_green1 blood_green2 blood_green3 blood_green4
 worm CORPSE_WORM
 ../aquatic/swamp_worm CORPSE_SWAMP_WORM
 brain_worm CORPSE_BRAIN_WORM
 giant_leech CORPSE_GIANT_LEECH
+torpor_snail CORPSE_TORPOR_SNAIL
+elephant_slug CORPSE_ELEPHANT_SLUG
 
 ## Wasps ('y')
 vampire_mosquito CORPSE_VAMPIRE_MOSQUITO

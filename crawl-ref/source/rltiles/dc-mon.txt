@@ -152,6 +152,9 @@ lava_worm MONS_LAVA_WORM
 worm MONS_WORM
 brain_worm MONS_BRAIN_WORM
 giant_leech MONS_GIANT_LEECH
+%rim 0
+torpor_snail MONS_TORPOR_SNAIL
+%rim 1
 
 ## Flying insects ('y')
 vampire_mosquito MONS_VAMPIRE_MOSQUITO
@@ -687,8 +690,6 @@ slime_creature3
 slime_creature4
 slime_creature5
 %rim 1
-pulsating_lump MONS_PULSATING_LUMP
-brown_ooze MONS_BROWN_OOZE
 azure_jelly MONS_AZURE_JELLY
 acid_blob MONS_ACID_BLOB
 death_ooze MONS_DEATH_OOZE
