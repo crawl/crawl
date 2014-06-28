@@ -742,7 +742,7 @@ ENDMAP
 NAME:  lemuel_golem_globe
 DEPTH: Zot
 TAGS:  no_rotate no_exits
-KFEAT: T = teleport trap
+KFEAT: T = permanent teleport trap
 KFEAT: m = iron_grate
 SUBST: 1 = 1.
 MONS:  electric golem
@@ -1096,7 +1096,7 @@ KMONS:   2468 = killer klown
 KMONS:   _ = ghost moth
 KMONS:   90 = moth of wrath / butterfly w:30
 KFEAT:   0 = known zot trap
-KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
+KFEAT:   ^~ = permanent teleport trap w:45 / zot trap w:4 / . w:1
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
 KFEAT:   z = iron_grate
@@ -2301,7 +2301,7 @@ ENDMAP
 NAME:       hall_of_Zot
 PLACE:      Zot:$
 ORIENT:     north
-TAGS:       no_dump layout_halls
+TAGS:       no_dump
 LFLAGS:     no_tele_control
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
@@ -2325,7 +2325,7 @@ SUBST:    F = .
 #monsters
 MONS:     patrolling Orb Guardian, Killer Klown, electric golem, orb of fire
 MONS:     ancient lich, orange crystal statue / silver statue / ice statue
-SUBST:    8=8., 8=8., 5=5.
+SUBST:    8=8..., 5=5.
 SHUFFLE:  234
 SUBST:    ? = .:8 ?
 SUBST:    ? : KLM

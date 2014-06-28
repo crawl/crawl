@@ -68,14 +68,17 @@
 # This replaces dungeon.cc:_plan_1(). It usually creates a
 # room with a large hole in the middle.
 #
-# TODO: Use "layout_type_caves" tag for cave version and
+# This layout should only appear once, and thus does not have the
+# "allow_dup" tag.
+#
+# TODO: Use "layout_type_open_caves" tag for cave version and
 #       "layout_type_open" tag for non-cave version.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  D:4-, Lair:1-7, Pan
-WEIGHT: 10
+DEPTH:  Depths
+WEIGHT: 5
 ORIENT: encompass
-TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
+TAGS:   overwritable layout no_primary_vault unrand layout_type_open
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
@@ -148,14 +151,17 @@ ENDMAP
 # This replaces dungeon.cc:_plan_2(). It creates a large cross
 # of varying width.
 #
-# TODO: Use "layout_type_caves" tag for cave version and
+# Only one of this layout and layout_big_octagon should appear.
+# Therefore both of these layouts have a "uniq_open_layout" tag.
+#
+# TODO: Use "layout_type_open_caves" tag for cave version and
 #       "layout_type_open" tag for non-cave version.
 #
 NAME:   layout_cross
-DEPTH:  D:4-, Lair:1-7
-WEIGHT: 10
+DEPTH:  D:9-, Depths, Pan
+WEIGHT: 2
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_open
+TAGS:   overwritable layout unrand uniq_open_layout layout_type_open
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym, fill = 'L'}
@@ -220,14 +226,18 @@ ENDMAP
 # room with some number of pillars in the middle. The stairs
 # are generally all grouped together.
 #
-# TODO: Use "layout_type_caves" tag for cave version and
+# Only one of this layout and layout_cross should appear.
+# Therefore both of these layouts have a "uniq_open_layout" tag.
+#
+# TODO: Use "layout_type_open_caves" tag for cave version and
 #       "layout_type_open" tag for non-cave version.
 #
 NAME:   layout_big_octagon
-DEPTH:  D:4-, Lair:1-7, Pan
-WEIGHT: 6 (Pan), 10
+DEPTH:  D:9-, Depths, Pan
+WEIGHT: 3
 ORIENT: encompass
-TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_open
+TAGS:   overwritable layout unrand no_primary_vault layout_type_open
+TAGS:   uniq_open_layout
 {{
     function smear()
         local gxm, gym = dgn.max_bounds()
@@ -420,9 +430,11 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_3().
 #
+# TODO: Make Elf version and add at weight 10.
+#
 NAME:   layout_rooms
-DEPTH:  D, Depths, Lair, Snake, Elf, Crypt, Zot, Pan
-WEIGHT: 60 (Pan), 10 (Zot), 10 (Elf), 20
+DEPTH:  D, Snake, Crypt, Pan
+WEIGHT: 15 (D), 15 (Snake), 10 (Crypt), 10 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 {{
@@ -560,61 +572,70 @@ ENDMAP
 # This replaces dungeon.cc:_city_level().
 # Previously named "layout_city".
 #
-# Only available on upper Lair depths otherwise the high
-# ruination makes it basically indistinguishable from a big
-# open room
 NAME:   layout_regular_city
-DEPTH:  Lair:1-2, Snake, Crypt:1-4, Dis:1-6
-WEIGHT: 10
+DEPTH:  Lair, Crypt, !Crypt:$, Dis, !Dis:$
+WEIGHT: 10, 15 (Lair)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
-    local gxm, gym = dgn.max_bounds()
-
-    extend_map{width = gxm, height = gym, fill = 'x'}
-
-    local wall_type
     local rooms = {}
     local i, j
 
-    if you.branch() == "Dis" then
-        wall_type = 'x'
-    elseif crawl.one_chance_in(100) then
-        wall_type = 'b'
-    else
-        wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
-    end
-
+    local wall_type = crawl.random_element { ['x'] = 3, ['c'] = 3, ['v'] = 2 }
     local percent_thickness_2 =   crawl.random_range(0, 8)
                                 * crawl.random_range(0, 8)
     local percent_thickness_3 =   crawl.random_range(0, 7)
                                 * crawl.random_range(0, 7)
-    local percent_inner_box = crawl.random_range(0, 25)
+    local percent_thickness_4 = 0
     local percent_inner_new_wall = crawl.random_range(0, 100)
+    local percent_inner_box   = crawl.random_range(0, 25)
     local percent_inner_split = crawl.random_range(0, 25)
-    if you.branch() == "Dis" then
+    local percent_room_gone = 14 -- was 1/7 chance
+    local max_wall_in = 5
+
+    if you.branch() == "Lair" then
+        wall_type = 'x'
+        percent_thickness_2 = 50 + you.depth_fraction() * 150 -- 100% at Lair:4
+        percent_thickness_3 = 20 + you.depth_fraction() * 80  -- 100% at Lair:8
+        percent_thickness_4 = 10 + you.depth_fraction() * 40
+        percent_inner_new_wall = 0
+        percent_inner_box   = 0
+        percent_inner_split = 0
+        percent_room_gone = 0
+        max_wall_in = you.at_branch_bottom() and 3 or 4
+    elseif you.branch() == "Dis" then
+        wall_type = 'x'
         percent_thickness_2 = 0
         percent_thickness_3 = 0
-        percent_inner_box = percent_inner_box * 1.5
         percent_inner_new_wall = 0
+        percent_inner_box   = percent_inner_box * 1.5
         percent_inner_split = percent_inner_split * 2
     end
 
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'x'} --wall_type}
     fill_area { x1=8, y1=8, x2=gxm-9, y2=gym-9, fill="." }
 
-    for i = 0, 5 do
-        for j = 0, 4 do
+    for i = 0, 4 do
+        for j = 0, 3 do
             local xs = 8 + (i * 13)
             local ys = 8 + (j * 14)
-            local a1 = xs + crawl.random2avg(5, 2);
-            local a2 = ys + crawl.random2avg(5, 2);
-            local b1 = xs + 11 - crawl.random2avg(5, 2);
-            local b2 = ys + 11 - crawl.random2avg(5, 2);
+            local a1 = xs +      crawl.random2avg(max_wall_in, 2)
+            local a2 = ys +      crawl.random2avg(max_wall_in, 2)
+            local b1 = xs + 11 - crawl.random2avg(max_wall_in, 2)
+            local b2 = ys + 11 - crawl.random2avg(max_wall_in, 2)
 
-            if crawl.x_chance_in_y(6, 7)
+            -- move walls in if they would hit the edge of the open area
+            --  -> otherwise edge rooms sometimes don't appear
+            a1 = (a1 >= 9)      and a1 or 9
+            a2 = (a2 >= 9)      and a2 or 9
+            b1 = (b1 <= gxm-10) and b1 or gxm-10
+            b2 = (b2 <= gym-10) and b2 or gym-10
+
+            if not crawl.x_chance_in_y(percent_room_gone, 100)
                 and is_valid_coord {x=a1, y=a2}
-                and is_valid_coord{x=b1, y=b2}
+                and is_valid_coord {x=b1, y=b2}
                 and not find_in_area {x1 = a1 - 1, y1 = a2 - 1,
                                       x2 = b1 + 1, y2 = b2 + 1,
                                       find = "xcvb+", find_vault = true } then
@@ -624,8 +645,11 @@ TAGS:   no_rotate no_vmirror no_hmirror
                 local size_x = b1 - a1
                 local size_y = b2 - a2
                 local thickness = 1
-                if size_x > 6 and size_y > 6
-                   and crawl.x_chance_in_y(percent_thickness_3, 100) then
+                if size_x > 8 and size_y > 8
+                   and crawl.x_chance_in_y(percent_thickness_4, 100) then
+                    thickness = 4
+                elseif size_x > 6 and size_y > 6
+                       and crawl.x_chance_in_y(percent_thickness_3, 100) then
                     thickness = 3
                 elseif size_x > 4 and size_y > 4
                        and crawl.x_chance_in_y(percent_thickness_2, 100) then
@@ -700,6 +724,9 @@ TAGS:   no_rotate no_vmirror no_hmirror
         elseif thickness == 3 then
             outer_door = crawl.random_element { ['+'] = 2, ['.'] = 1 }
             inner_door = crawl.random_element { ['+'] = 1, ['.'] = 2 }
+        elseif thickness == 4 then
+            outer_door = crawl.random_element { ['+'] = 4, ['.'] = 1 }
+            inner_door = crawl.random_element { ['+'] = 1, ['.'] = 1 }
         end
 
         if outer_door == '.' and crawl.coinflip() then
@@ -714,6 +741,13 @@ TAGS:   no_rotate no_vmirror no_hmirror
                         door=outer_door, inner_door=inner_door,
                         veto_gates=true }
     end
+
+    -- remove doors in Lair, increasingly with depth
+    if you.branch() == "Lair" then
+        local keep_weight   = dgn.br_depth(you.branch())
+        local remove_weight = you.depth() * 2
+        subst("+ = .:" .. remove_weight .. " +:" .. keep_weight)
+    end
 }}
 MAP
 ENDMAP
@@ -724,11 +758,14 @@ ENDMAP
 # This replaces dungeon.cc:_plan_5().
 # Previously named "layout_misc".
 #
+# TODO: Wider paths for Zot, then add at weight 20.
+# TODO: Straight paths for Crypt, Zot.
+#
 NAME:   layout_misc_corridors
-DEPTH:  D, Lair, Snake, Elf, Crypt, Zot, Pan
-WEIGHT: 10
+DEPTH:  Lair, Snake, Crypt
+WEIGHT: 5 (Lair), 20 (Snake), 20 (Crypt)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_angular
+TAGS:   overwritable layout allow_dup unrand layout_type_corridors
 {{
     function random_coord(max_x, max_y)
         return crawl.random2(max_x - 20) + 10,
@@ -765,12 +802,13 @@ ENDMAP
 # One (sometimes more) large open caverns with irregular
 # walls.
 #
+# TODO: Take out special case for non-Orc non-Slime.
+#
 NAME:   layout_caves
-DEPTH:  D:9-, Depths, Orc, Slime
-CHANCE: 100% (Orc), 100% (Slime)
+DEPTH:  Orc, Slime
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
     local gxm, gym = dgn.max_bounds()
 
@@ -816,11 +854,13 @@ ENDMAP
 # A long winding cavern of roughly constant width, snaking around all the
 # level.  It forks from time to time, but never for long.
 #
-NAME:   layout_twisted_cavern
-DEPTH:  D:5-
-WEIGHT: 10
+# TODO: Rework and add at weight 5.  Possible ideas on devwiki.
+#
+NAME: layout_twisted_cavern
+DEPTH: D:4-, Depths
+WEIGHT: 0
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
     if is_validating() then return; end
 
@@ -838,8 +878,8 @@ TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 # This replaces dungeon.cc:_roguey_level.
 #
 NAME:   layout_roguey
-DEPTH:  D:2-, Lair, Snake
-WEIGHT: 20
+DEPTH:  D:9-, Lair, Depths
+WEIGHT: 25 (D), 10 (Lair), 10 (Depths)
 ORIENT: encompass
 TAGS:   overwritable layout no_primary_vault allow_dup unrand layout_type_rooms
 {{
@@ -1144,14 +1184,14 @@ ENDMAP
 #
 # Previously named "layout_delve".
 #
-# TODO: Use "layout_type_anastomotic" tag for passage-y version
-#       and "layout_type_caves" tag for more open version.
+# TODO: Use "layout_type_narrow_caves" tag for passage-y version
+#       and "layout_type_open_caves" tag for more open version.
 #
 NAME:   layout_spider_delve
 DEPTH:  Spider
-CHANCE: 100%
+WEIGHT: 25
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
 {{
     if is_validating() then return; end
 
@@ -1200,11 +1240,14 @@ TAGS:   overwritable layout allow_dup unrand layout_type_anastomotic
 # water.  To avoid trapping the player, all random teleports go
 # to the main path.
 #
+# TODO: Serious improvements, less glyph switching
+#
 NAME:   layout_cocytus_delve
 DEPTH:  Coc
-CHANCE: 100%
+WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand layout_type_narrow_caves
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if is_validating() then return; end
 
@@ -1325,11 +1368,14 @@ TAGS:   overwritable layout allow_dup unrand chance_cocytus layout_type_anastomo
 #
 # Previously named "layout_dis".
 #
+# TODO: place around primary vault, then allow on Dis:$.
+#
 NAME:   layout_subdivisions
 DEPTH:  Dis:1-6
-WEIGHT: 20
+WEIGHT: 15
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local subdivide_threshold = 12
 
@@ -1433,11 +1479,18 @@ ENDMAP
 # This layout places many overlapping boxes and then connects
 # the resulting mess into a layout.
 #
+# This layout should only appear once, so it does not have the
+# "allow_dup" tag.
+#
+# TODO: Revise without width-1 corridors.  If then good enough
+#       to use, add with weight 5.
+#
 NAME:   layout_overlapping_boxes
 DEPTH:  Dis:1-6
-WEIGHT: 10
+WEIGHT: 0
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_divisions
+TAGS:   overwritable layout unrand layout_type_divisions
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
@@ -1492,6 +1545,7 @@ DEPTH:  Dis:1-6
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local ROOMS_ACROSS = 4
     local ROOM_SIZE = 11
@@ -1613,15 +1667,19 @@ ENDMAP
 
 ##############################################################
 # Dummy layouts that just call C++ functions that do all the work.
+#
 
 ##############################################################
 # layout_basic
 #
+# TODO: Remove the C++ code that adds layout type "basic".
+#
 NAME:   layout_basic
-DEPTH:  D, Depths, Lair, Snake, Crypt, Zot
-WEIGHT: 50, 10 (D:1), 20 (Geh), 10 (Zot)
+DEPTH:  D, Snake, Crypt, Depths, Zot, Pan
+WEIGHT: 35 (D), 15 (Snake), 10 (Crypt), 20 (Depths), 20 (Zot), 15 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_rooms
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if not is_validating() then layout_basic() end
 }}
@@ -1649,11 +1707,16 @@ ENDMAP
 #
 # This layout places many non-overlapping boxes, some hollow.
 #
+# TODO: Lair should only have rock walls.  It should have sometimes
+#       thicker walls, especially on deeper depths so it can be used
+#       for the whole branch.
+#
 NAME:   layout_chaotic_city
-DEPTH:  D:4-, Lair:1-3, Snake, Crypt:1-4, Dis, Pan
-WEIGHT: 10
+DEPTH:  Lair:1-3, Crypt:1-4, Dis
+WEIGHT: 10, 15 (Crypt)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_city
+TAGS:   no_rotate no_vmirror no_hmirror
 {{
     if not is_validating() then
       layout_chaotic_city((you.branch() == "Dis") and "metal_wall" or nil)
@@ -1667,7 +1730,7 @@ ENDMAP
 #
 NAME:   layout_shoals
 DEPTH:  Shoals
-CHANCE: 100%
+WEIGHT: 10
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_shoals
 {{
@@ -1683,7 +1746,7 @@ ENDMAP
 #
 NAME:   layout_basic_swamp
 DEPTH:  Swamp
-WEIGHT: 25
+WEIGHT: 20
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_swamp
 {{

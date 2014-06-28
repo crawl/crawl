@@ -104,9 +104,13 @@
 #       not overlap properly. Some other render modes would be
 #       good.
 #
+# TODO: This layout is sometimes very slow (several seconds) to
+#       generate.  If this can be fixed, add it in at weights
+#       2 (Lair), 5 (Zot), 10 (Pan)
+#
 NAME:   layout_cellular_growth
-DEPTH:  Dis:1-6, Pan
-WEIGHT: 20 (Dis), 10 (Pan)
+DEPTH:  Lair, Zot, Pan
+WEIGHT: 0
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_passages
 {{
@@ -210,12 +214,12 @@ ENDMAP
 #
 # A bit similar to stronghold but better architecture.
 #
-# TODO: Use "layout_type_angular" tag for width-1 corrdiors and
+# TODO: Use "layout_type_corridors" tag for width-1 corrdiors and
 #       "layout_type_passages" tag for wider corridors.
 #
 NAME:   layout_gridville
-DEPTH:  Depths, Snake, Dis:1-6, Pan
-WEIGHT: 10, 20(Dis)
+DEPTH:  D:4-, Depths, Zot, Dis, Pan
+WEIGHT: 10 (D), 10 (Depths), 5 (Zot), 15 (Dis), 10 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_passages
 {{
@@ -305,9 +309,16 @@ ENDMAP
 #
 # A bit similar to roguey but better architecture.
 #
+# TODO: Move D-specific variations to Depths.  This layout no
+#       longer appears in D.
+# TODO: Remove all "filled" rooms from Lair.  Lair ruination
+#       does strange and terrible things to them.
+# TODO: Only place lava rooms in Depths, Zot, and Pan
+#
 NAME:   layout_gridlike
-DEPTH:  D:10-, Lair, Crypt, Snake, Elf, Pan
-WEIGHT: 20, 50(D), 50(Depths), 10(Elf), 50(Crypt)
+DEPTH:  Elf, Lair, Snake, Crypt, Depths, Zot, Pan
+WEIGHT: 20 (Elf), 10 (Lair), 10 (Snake), 15 (Crypt)
+WEIGHT: 20 (Depths), 20 (Zot), 15 (Pan)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_rooms
 TAGS:   no_rotate no_vmirror no_hmirror

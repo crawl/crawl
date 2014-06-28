@@ -565,6 +565,65 @@ LUAFN(dgn_height)
     PLUARET(number, lines.height());
 }
 
+LUAFN(dgn_primary_vault_dimensions)
+{
+    LINES(ls, 1, lines);
+
+    static const int NO_PRIMARY_VAULT = 99999;
+
+    int x_min =  NO_PRIMARY_VAULT;
+    int x_max = -NO_PRIMARY_VAULT;
+    int y_min =  NO_PRIMARY_VAULT;
+    int y_max = -NO_PRIMARY_VAULT;
+
+    for (int y = 0; y < lines.height(); y++)
+        for (int x = 0; x < lines.width(); x++)
+        {
+            if (env.level_map_mask(coord_def(x,y)) & MMT_VAULT)
+            {
+                if (x < x_min)
+                    x_min = x;
+                if (x > x_max)
+                    x_max = x;
+                if (y < y_min)
+                    y_min = y;
+                if (y > y_max)
+                    y_max = y;
+            }
+        }
+
+    if (x_min != NO_PRIMARY_VAULT)
+    {
+        if (x_max == -NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has x_min %d but no x_max", x_min);
+        if (y_min ==  NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has x_min %d but no y_min", x_min);
+        if (y_max == -NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has x_min %d but no y_max", x_min);
+
+        lua_pushnumber(ls, x_min);
+        lua_pushnumber(ls, x_max);
+        lua_pushnumber(ls, y_min);
+        lua_pushnumber(ls, y_max);
+    }
+    else  // no primary vault found
+    {
+        if (x_max != -NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has x_max %d but no x_min", x_max);
+        if (y_min !=  NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has y_min %d but no x_min", y_min);
+        if (y_max != -NO_PRIMARY_VAULT)
+            return luaL_error(ls, "Primary vault has y_max %d but no x_min", y_max);
+
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
+
+    return 4;
+}
+
 LUAFN(dgn_join_the_dots)
 {
     LINES(ls, 1, lines);
@@ -2097,6 +2156,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "fill_disconnected", &dgn_fill_disconnected },
     { "find_in_area", &dgn_find_in_area },
     { "height", dgn_height },
+    { "primary_vault_dimensions", &dgn_primary_vault_dimensions },
     { "join_the_dots", &dgn_join_the_dots },
     { "make_circle", &dgn_make_circle },
     { "make_diamond", &dgn_make_diamond },

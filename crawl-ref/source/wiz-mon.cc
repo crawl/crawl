@@ -12,6 +12,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "bless.h"
 #include "cio.h"
 #include "colour.h"
 #include "dbg-util.h"
@@ -30,10 +31,11 @@
 #include "mapdef.h"
 #include "message.h"
 #include "mgen_data.h"
+#include "mon-death.h"
 #include "mon-pathfind.h"
+#include "mon-poly.h"
 #include "mon-place.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "output.h"
 #include "religion.h"
@@ -804,11 +806,6 @@ void debug_make_monster_shout(monster* mon)
     mpr("== Done ==");
 }
 
-static bool _force_suitable(const monster* mon)
-{
-    return mon->alive();
-}
-
 void wizard_gain_monster_level(monster* mon)
 {
     // Give monster as much experience as it can hold,
@@ -840,7 +837,7 @@ void wizard_apply_monster_blessing(monster* mon)
     else
         god = GOD_SHINING_ONE;
 
-    if (!bless_follower(mon, god, _force_suitable, true))
+    if (!bless_follower(mon, god, true))
         mprf("%s won't bless this monster for you!", god_name(god).c_str());
 }
 

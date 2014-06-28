@@ -20,6 +20,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "losglobal.h"
 #include "macro.h"
@@ -28,7 +29,6 @@
 #include "mon-movetarget.h"
 #include "mon-pathfind.h"
 #include "mon-speak.h"
-#include "mon-stuff.h"
 #include "ouch.h"
 #include "random.h"
 #include "religion.h"
@@ -149,6 +149,65 @@ static void _set_firing_pos(monster* mon, coord_def target)
     }
 
     mon->firing_pos = best_pos;
+}
+
+static void _decide_monster_firing_position(monster* mon, actor* owner)
+{
+    // Monster can see foe: continue 'tracking'
+    // by updating target x,y.
+    if (mon->foe == MHITYOU)
+    {
+        const bool ignore_special_firing_AI = mon->friendly()
+                                              || mon->berserk_or_insane();
+
+        // The foe is the player.
+        if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+            && !ignore_special_firing_AI)
+            {
+                // Get to firing range even if we are close.
+                _set_firing_pos(mon, you.pos());
+            }
+        else if (mon->type == MONS_SIREN && !ignore_special_firing_AI)
+            find_siren_water_target(mon);
+        else if (!mon->firing_pos.zero()
+                 && mon->see_cell_no_trans(mon->target))
+        {
+            // If monster is currently getting into firing position and
+            // sees the player and can attack him, clear firing_pos.
+            mon->firing_pos.reset();
+        }
+
+        if (!(mon->firing_pos.zero() && try_pathfind(mon)))
+        {
+            // Whew. If we arrived here, path finding didn't yield anything
+            // (or wasn't even attempted) and we need to set our target
+            // the traditional way.
+
+            mon->target = PLAYER_POS;
+        }
+    }
+    else
+    {
+        // We have a foe but it's not the player.
+        monster* target = &menv[mon->foe];
+        mon->target = target->pos();
+
+        if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
+            && !mon->berserk_or_insane()
+            && !(mons_is_avatar(mon->type)
+                 && owner && mon->foe == owner->mindex()))
+        {
+            _set_firing_pos(mon, mon->target);
+        }
+        // Hold position if we've reached our ideal range
+        else if (mon->type == MONS_SPELLFORGED_SERVITOR
+                 && (mon->pos() - target->pos()).abs()
+                 <= dist_range(mon->props["ideal_range"].get_int())
+                 && !one_chance_in(8))
+        {
+            mon->firing_pos = mon->pos();
+        }
+    }
 }
 
 //---------------------------------------------------------------
@@ -687,59 +746,7 @@ void handle_behaviour(monster* mon)
                 break;
             }
 
-            // Monster can see foe: continue 'tracking'
-            // by updating target x,y.
-            if (mon->foe == MHITYOU)
-            {
-                // The foe is the player.
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-                    && !mon->berserk_or_insane())
-                {
-                    if (mon->attitude != ATT_FRIENDLY)
-                        // Get to firing range even if we are close.
-                        _set_firing_pos(mon, you.pos());
-                }
-                else if (mon->type == MONS_SIREN)
-                    find_siren_water_target(mon);
-                else if (!mon->firing_pos.zero()
-                    && mon->see_cell_no_trans(mon->target))
-                {
-                    // If monster is currently getting into firing position and
-                    // sees the player and can attack him, clear firing_pos.
-                    mon->firing_pos.reset();
-                }
-
-                if (mon->firing_pos.zero() && try_pathfind(mon))
-                    break;
-
-                // Whew. If we arrived here, path finding didn't yield anything
-                // (or wasn't even attempted) and we need to set our target
-                // the traditional way.
-
-                mon->target = PLAYER_POS;
-            }
-            else
-            {
-                // We have a foe but it's not the player.
-                monster* target = &menv[mon->foe];
-                mon->target = target->pos();
-
-                if (mons_class_flag(mon->type, M_MAINTAIN_RANGE)
-                    && !mon->berserk_or_insane()
-                    && !(mons_is_avatar(mon->type)
-                         && owner && mon->foe == owner->mindex()))
-                {
-                    _set_firing_pos(mon, mon->target);
-                }
-                // Hold position if we've reached our ideal range
-                else if (mon->type == MONS_SPELLFORGED_SERVITOR
-                         && (mon->pos() - target->pos()).abs()
-                         <= dist_range(mon->props["ideal_range"].get_int())
-                         && !one_chance_in(8))
-                {
-                    mon->firing_pos = mon->pos();
-                }
-            }
+            _decide_monster_firing_position(mon, owner);
 
             break;
 
@@ -1474,6 +1481,36 @@ void make_mons_stop_fleeing(monster* mon)
         behaviour_event(mon, ME_CORNERED);
 }
 
+beh_type attitude_creation_behavior(mon_attitude_type att)
+{
+    switch (att)
+    {
+    case ATT_NEUTRAL:
+        return BEH_NEUTRAL;
+    case ATT_GOOD_NEUTRAL:
+        return BEH_GOOD_NEUTRAL;
+    case ATT_STRICT_NEUTRAL:
+        return BEH_STRICT_NEUTRAL;
+    case ATT_FRIENDLY:
+        return BEH_FRIENDLY;
+    default:
+        return BEH_HOSTILE;
+    }
+}
+
+// If you're invis and throw/zap whatever, alerts menv to your position.
+void alert_nearby_monsters()
+{
+    // Judging from the above comment, this function isn't
+    // intended to wake up monsters, so we're only going to
+    // alert monsters that aren't sleeping.  For cases where an
+    // event should wake up monsters and alert them, I'd suggest
+    // calling noisy() before calling this function. - bwr
+    for (monster_near_iterator mi(you.pos()); mi; ++mi)
+        if (!mi->asleep())
+             behaviour_event(*mi, ME_ALERT, &you);
+}
+
 //Make all monsters lose track of a given target after a few turns
 void shake_off_monsters(const actor* target)
 {
@@ -1542,4 +1579,62 @@ void make_mons_leave_level(monster* mon)
         mon->flags |= MF_HARD_RESET;
         monster_die(mon, KILL_DISMISSED, NON_MONSTER);
     }
+}
+
+// Given an adjacent monster, returns true if the monster can hit it
+// (the monster should not be submerged, be submerged in shallow water
+// if the monster has a polearm, or be submerged in anything if the
+// monster has tentacles).
+bool monster_can_hit_monster(monster* mons, const monster* targ)
+{
+    if (!summon_can_attack(mons, targ))
+        return false;
+
+    if (!targ->submerged() || mons->has_damage_type(DVORP_TENTACLE))
+        return true;
+
+    if (grd(targ->pos()) != DNGN_SHALLOW_WATER)
+        return false;
+
+    const item_def *weapon = mons->weapon();
+    return weapon && weapon_skill(*weapon) == SK_POLEARMS;
+}
+
+// Friendly summons can't attack out of the player's LOS, it's too abusable.
+bool summon_can_attack(const monster* mons)
+{
+    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
+        return true;
+
+    return !mons->friendly() || !mons->is_summoned()
+           || you.see_cell_no_trans(mons->pos());
+}
+
+bool summon_can_attack(const monster* mons, const coord_def &p)
+{
+    if (crawl_state.game_is_arena() || crawl_state.game_is_zotdef())
+        return true;
+
+    // Spectral weapons only attack their target
+    if (mons->type == MONS_SPECTRAL_WEAPON)
+    {
+        // FIXME: find a way to use check_target_spectral_weapon
+        //        without potential info leaks about visibility.
+        if (mons->props.exists(SW_TARGET_MID))
+        {
+            actor *target = actor_by_mid(mons->props[SW_TARGET_MID].get_int());
+            return target && target->pos() == p;
+        }
+        return false;
+    }
+
+    if (!mons->friendly() || !mons->is_summoned())
+        return true;
+
+    return you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
+}
+
+bool summon_can_attack(const monster* mons, const actor* targ)
+{
+    return summon_can_attack(mons, targ->pos());
 }

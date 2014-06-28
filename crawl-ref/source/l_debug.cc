@@ -22,7 +22,7 @@
 #include "message.h"
 #include "mon-act.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "mon-util.h"
 #include "place.h"
 #include "religion.h"

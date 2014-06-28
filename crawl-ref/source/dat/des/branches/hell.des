@@ -221,10 +221,8 @@ xxbbbbGbbbbbGdbbbxx
  xxbG1bbbbbbb1Gbxx
   xbbbbG1b1Gbbbbx
   xxxbbbbb%bbbxxx
-    xxxbdbbbxxx
-    xxxv===vxxx
-    xxxH...Ixxx
-    xx@@@@@@@xx
+    xxxHdbbIxxx
+    xxxv+++vxxx
 ENDMAP
 
 ###############################################################################
@@ -410,7 +408,7 @@ ENDMAP
 NAME:   pf_dread_powers_of_hell
 TAGS:   transparent uniq_hell_entry_geh
 WEIGHT: 2
-KMONS:  i = crimson imp ; wand of flame
+KMONS:  i = crimson imp ; wand of flame ident:type
 TILE:   c = dngn_stone_wall_red
 COLOUR: c = red
 FTILE:  'iO = floor_infernal_blank

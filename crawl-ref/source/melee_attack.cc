@@ -45,9 +45,9 @@
 #include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-poly.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
@@ -1103,7 +1103,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
                 || you.hunger_state < HS_SATIATED && coinflip()
                 || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
         {
-            damage_brand = SPWPN_VAMPIRICISM;
+            damage_brand = SPWPN_VAMPIRISM;
         }
 
         if (player_mutation_level(MUT_ANTIMAGIC_BITE))
@@ -1250,7 +1250,7 @@ bool melee_attack::player_aux_unarmed()
             continue;
 
         to_hit = random2(calc_your_to_hit_unarmed(atk,
-                         damage_brand == SPWPN_VAMPIRICISM));
+                         damage_brand == SPWPN_VAMPIRISM));
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
@@ -1354,7 +1354,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         {
             mprf("%s is splashed with acid.",
                  defender->name(DESC_THE).c_str());
-            splash_monster_with_acid(defender->as_monster(), &you);
+            defender->as_monster()->splash_with_acid(&you);
         }
 
         // TODO: remove this? Unarmed poison attacks?
@@ -1363,7 +1363,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
 
         // Normal vampiric biting attack, not if already got stabbing special.
-        if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
+        if (damage_brand == SPWPN_VAMPIRISM && you.species == SP_VAMPIRE
             && (!stab_attempt || stab_bonus <= 0))
         {
             _player_vampire_draws_blood(defender->as_monster(), damage_done);
@@ -1585,6 +1585,11 @@ void melee_attack::set_attack_verb()
                 attack_verb = "spit";
                 verb_degree = "like the proverbial pig";
             }
+            else if (defender_genus == MONS_CRAB && Options.lang == LANG_GRUNT)
+            {
+                attack_verb = "attack";
+                verb_degree = "'s weak point";
+            }
             else
             {
                 const char* pierce_desc[][2] = {{"spit", "like a pig"},
@@ -1616,8 +1621,11 @@ void melee_attack::set_attack_verb()
         else if (defender_genus == MONS_HOG)
         {
             attack_verb = "carve";
-            verb_degree = "like a proverbial ham";
+            verb_degree = "like the proverbial ham";
         }
+        else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
+                 && Options.lang == LANG_GRUNT)
+            attack_verb = "shave";
         else
         {
             const char* pierce_desc[][2] = {{"open",    "like a pillowcase"},
@@ -1769,19 +1777,12 @@ void melee_attack::set_attack_verb()
                     attack_verb = "punch";
                 else if (damage_to_display < HIT_STRONG)
                     attack_verb = "pummel";
-                // XXX: detect this better
                 else if (defender->is_monster()
-                         && (get_mon_shape(defender->type)
-                               == MON_SHAPE_INSECT
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_INSECT_WINGED
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_CENTIPEDE
-                             || get_mon_shape(defender->type)
-                                == MON_SHAPE_ARACHNID))
+                         && (mons_genus(defender->type) == MONS_WORKER_ANT
+                             || mons_genus(defender->type) == MONS_FORMICID))
                 {
                     attack_verb = "squash";
-                    verb_degree = "like a proverbial bug";
+                    verb_degree = "like the proverbial ant";
                 }
                 else
                 {
@@ -1789,7 +1790,7 @@ void melee_attack::set_attack_verb()
                         {{"pound",     "into fine dust"},
                          {"pummel",    "like a punching bag"},
                          {"pulverise", ""},
-                         {"squash",    "like a bug"}};
+                         {"squash",    "like an ant"}};
                     const int choice = random2(ARRAYSZ(punch_desc));
                     // XXX: could this distinction work better?
                     if (choice == 0
@@ -1878,7 +1879,7 @@ bool melee_attack::player_monattk_hit_effects()
         // No further effects.
     }
     else if (you.species == SP_VAMPIRE
-             && damage_brand == SPWPN_VAMPIRICISM
+             && damage_brand == SPWPN_VAMPIRISM
              && you.weapon()
              && _player_vampire_draws_blood(defender->as_monster(),
                                             damage_done, false, 5))
@@ -2269,9 +2270,6 @@ void melee_attack::apply_staff_damage()
     switch (weapon->sub_type)
     {
     case STAFF_AIR:
-        if (damage_done + attacker->skill_rdiv(SK_AIR_MAGIC) <= random2(20))
-            break;
-
         special_damage =
             resist_adjust_damage(defender,
                                  BEAM_ELECTRICITY,
@@ -2653,7 +2651,7 @@ void melee_attack::announce_hit()
     else
     {
         if (!verb_degree.empty() && verb_degree[0] != ' '
-            && verb_degree[0] != ',')
+            && verb_degree[0] != ',' && verb_degree[0] != '\'')
         {
             verb_degree = " " + verb_degree;
         }
@@ -2747,7 +2745,7 @@ void melee_attack::splash_defender_with_acid(int strength)
         special_damage += roll_dice(2, 4);
         if (defender_visible)
             mprf("%s is splashed with acid.", defender->name(DESC_THE).c_str());
-        splash_monster_with_acid(defender->as_monster(), attacker);
+        defender->as_monster()->splash_with_acid(attacker);
     }
 }
 
@@ -3157,7 +3155,7 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_HOLY:
-        if (defender->undead_or_demonic())
+        if (defender->holy_wrath_susceptible())
             special_damage = attk_damage * 0.75;
 
         if (needs_message && special_damage)
@@ -3546,16 +3544,14 @@ void melee_attack::do_spines()
 
     if (defender->is_player())
     {
-        const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
-        const int evp = body ? -property(*body, PARM_EVASION) : 0;
         const int mut = (you.form == TRAN_PORCUPINE) ? 3
                         : player_mutation_level(MUT_SPINY);
 
-        if (mut && attacker->alive() && one_chance_in(evp / 3 + 1)
-            && x_chance_in_y(2, 13 - (mut * 2)))
+        if (mut && attacker->alive()
+            && x_chance_in_y(2, (13 - (mut * 2)) * 3))
         {
             int dmg = roll_dice(2 + div_rand_round(mut - 1, 2), 5);
-            int hurt = attacker->apply_ac(dmg) - evp / 3;
+            int hurt = attacker->apply_ac(dmg);
 
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
@@ -3581,12 +3577,10 @@ void melee_attack::do_spines()
 
         const int degree = defender->as_monster()->spiny_degree();
 
-        if (attacker->alive() && (x_chance_in_y(2, 5)
-            || random2(div_rand_round(attacker->armour_class(), 2)) < degree))
+        if (attacker->alive() && x_chance_in_y(degree, 15))
         {
-            int dmg = (attacker->is_monster() ? roll_dice(degree, 3)
-                                              : roll_dice(degree, 4));
-            int hurt = attacker->apply_ac(dmg, AC_HALF);
+            int dmg = roll_dice(degree, 4);
+            int hurt = attacker->apply_ac(dmg);
             dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
             if (hurt <= 0)
@@ -4104,11 +4098,8 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         int food_value = 0;
         if (chunk_type == CE_CLEAN)
             food_value = 30 + random2avg(59, 2);
-        else if (chunk_type == CE_CONTAMINATED
-                 || chunk_is_poisonous(chunk_type))
-        {
+        else if (chunk_is_poisonous(chunk_type))
             food_value = 15 + random2avg(29, 2);
-        }
 
         // Bats get rather less nutrition out of it.
         if (you.form == TRAN_BAT)
@@ -4141,6 +4132,6 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Don't drink poisonous or mutagenic blood.
-    return chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
+    return chunk_type == CE_CLEAN
            || (chunk_is_poisonous(chunk_type) && player_res_poison());
 }

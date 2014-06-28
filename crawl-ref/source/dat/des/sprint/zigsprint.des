@@ -92,7 +92,7 @@ function setup_room(e, id)
             scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
             potion of might ident:all w:2 / potion of agility w:2 ident:all /\
             potion of haste q:2 ident:all w:2 / scroll of acquirement w:1 ident:all /\
-            scroll of enchant weapon iii ident:all q:2 w:2 /\
+            scroll of enchant weapon ident:all q:4 w:2 /\
             scroll of enchant armour ident:all q:4 w:2 /\
             scroll of brand weapon ident:all")
 
@@ -203,7 +203,7 @@ function choose_mset_2(e)
   local rnd = crawl.random2(141)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:15 / ooze / brown ooze / slime creature /\
+    e.kmons("1 = jelly w:15 / ooze / slime creature /\
                giant eyeball w:5 / golden eye w:5 / eye of draining w:5 /\
                eye of devastation w:5 / shining eye w:5")
 -- Snake
@@ -298,7 +298,7 @@ function choose_mset_3(e)
   local rnd = crawl.random2(116)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:15 / ooze / brown ooze w:15 / slime creature w:15 /\
+    e.kmons("1 = jelly w:15 / ooze / slime creature w:30 /\
                giant eyeball w:2 / golden eye w:5 / eye of draining w:2 /\
                eye of devastation w:5 / shining eye w:5 / acid blob w:5 /\
                death ooze / azure jelly w:5 / great orb of eyes w:5 /\
@@ -426,7 +426,7 @@ function choose_mset_4(e)
 local rnd = crawl.random2(142)
 -- Slime
   if rnd < 9 then
-    e.kmons("1 = jelly w:5 / brown ooze w:15 / slime creature w:15 /\
+    e.kmons("1 = jelly w:5 / slime creature w:30 /\
                giant eyeball w:2 / golden eye w:4 / eye of draining w:2 /\
                eye of devastation w:5 / shining eye w:4 / acid blob /\
                death ooze / azure jelly / great orb of eyes w:4 /\
@@ -722,29 +722,29 @@ KITEM:    B = plate armour mundane not_cursed ident:all plus:5, \
 KITEM:    C = buckler mundane not_cursed ident:all plus:3, \
               shield mundane not_cursed ident:all plus:3, \
               large shield mundane not_cursed ident:all plus:3
-KITEM:    D = broad axe mundane not_cursed ident:all plus:5 plus2:5, \
-              battleaxe mundane not_cursed ident:all plus:5 plus2:5, \
-              executioner's axe mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    E = demon trident mundane not_cursed ident:all plus:5 plus2:5, \
-              bardiche mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    F = demon whip mundane not_cursed ident:all plus:5 plus2:5, \
-              great mace mundane not_cursed ident:all plus:5 plus2:5, \
-              giant club mundane not_cursed ident:all plus:5 plus2:5, \
-              giant spiked club mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    G = dagger mundane not_cursed ident:all plus:5 plus2:5, \
-              cutlass mundane not_cursed ident:all plus:5 plus2:5, \
-              quick blade mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    H = demon blade mundane not_cursed ident:all plus:5 plus2:5, \
-              bastard sword mundane not_cursed ident:all plus:5 plus2:5, \
-              great sword mundane not_cursed ident:all plus:5 plus2:5, \
-              claymore mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    I = lajatang mundane not_cursed ident:all plus:5 plus2:5
-KITEM:    J = crossbow mundane not_cursed ident:all plus:5 plus2:5, \
+KITEM:    D = broad axe mundane not_cursed ident:all plus:5, \
+              battleaxe mundane not_cursed ident:all plus:5, \
+              executioner's axe mundane not_cursed ident:all plus:5
+KITEM:    E = demon trident mundane not_cursed ident:all plus:5, \
+              bardiche mundane not_cursed ident:all plus:5
+KITEM:    F = demon whip mundane not_cursed ident:all plus:5, \
+              great mace mundane not_cursed ident:all plus:5, \
+              giant club mundane not_cursed ident:all plus:5, \
+              giant spiked club mundane not_cursed ident:all plus:5
+KITEM:    G = dagger mundane not_cursed ident:all plus:5, \
+              cutlass mundane not_cursed ident:all plus:5, \
+              quick blade mundane not_cursed ident:all plus:5
+KITEM:    H = demon blade mundane not_cursed ident:all plus:5, \
+              bastard sword mundane not_cursed ident:all plus:5, \
+              great sword mundane not_cursed ident:all plus:5, \
+              claymore mundane not_cursed ident:all plus:5
+KITEM:    I = lajatang mundane not_cursed ident:all plus:5
+KITEM:    J = crossbow mundane not_cursed ident:all plus:5, \
               bolt q:1000 mundane ident:all, \
-              shortbow mundane not_cursed ident:all plus:5 plus2:5, \
+              shortbow mundane not_cursed ident:all plus:5, \
               arrow q:1000 mundane ident:all, \
-              longbow mundane not_cursed ident:all plus:5 plus2:5, \
-              sling mundane not_cursed ident:all plus:5 plus2:5, \
+              longbow mundane not_cursed ident:all plus:5, \
+              sling mundane not_cursed ident:all plus:5, \
               sling bullet q:1000 mundane ident:all
 KITEM:    K = potion of curing q:9 ident:all, \
               potion of heal wounds q:9 ident:all, \

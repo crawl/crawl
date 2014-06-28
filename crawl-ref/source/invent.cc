@@ -507,10 +507,7 @@ static string _no_selectables_message(int item_selector)
         return "You aren't wearing any piece of uncursed jewellery.";
     case OSEL_BRANDABLE_WEAPON:
         return "You aren't carrying any weapons that can be branded.";
-    case OSEL_ENCHANTABLE_WEAPON_I:
-    case OSEL_ENCHANTABLE_WEAPON_II:
-    case OSEL_ENCHANTABLE_WEAPON_III:
-        // TODO: this message isn't quite right for _I and _II
+    case OSEL_ENCHANTABLE_WEAPON:
         return "You aren't carrying any weapons that can be enchanted.";
     }
 
@@ -1216,9 +1213,7 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OSEL_BRANDABLE_WEAPON:
         return is_brandable_weapon(i, true);
 
-    case OSEL_ENCHANTABLE_WEAPON_I:
-    case OSEL_ENCHANTABLE_WEAPON_II:
-    case OSEL_ENCHANTABLE_WEAPON_III:
+    case OSEL_ENCHANTABLE_WEAPON:
     {
         if (!is_weapon(i))
             return false;
@@ -1233,15 +1228,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         if (!item_ident(i, ISFLAG_KNOW_PLUSES))
             return true;
 
-        // Might this enchant +acc?
-        const bool acc = selector != OSEL_ENCHANTABLE_WEAPON_II
-                         || i.sub_type == WPN_BLOWGUN;
-        const bool dam = selector != OSEL_ENCHANTABLE_WEAPON_I
-                         && i.sub_type != WPN_BLOWGUN;
-
-        if (acc && i.plus < MAX_WPN_ENCHANT)
-            return true;
-        if (dam && i.plus2 < MAX_WPN_ENCHANT)
+        if (i.plus < MAX_WPN_ENCHANT)
             return true;
         return false;
     }
@@ -1437,7 +1424,7 @@ vector<SelItem> prompt_invent_items(
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            mesclr();
+            clear_messages();
         }
 
         if (need_prompt)
@@ -1489,7 +1476,7 @@ vector<SelItem> prompt_invent_items(
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
-                    mesclr();
+                    clear_messages();
                 }
 
                 for (unsigned int i = 0; i < items.size(); ++i)
@@ -1756,7 +1743,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
             return true;
         }
 
-        if (get_weapon_brand(item) == SPWPN_VAMPIRICISM
+        if (get_weapon_brand(item) == SPWPN_VAMPIRISM
             && !you.is_undead && !crawl_state.game_is_zotdef()
             && !you_foodless())
         {
@@ -1915,7 +1902,7 @@ int prompt_invent_item(const char *prompt,
         if (need_redraw && !crawl_state.doing_prev_cmd_again)
         {
             redraw_screen();
-            mesclr();
+            clear_messages();
         }
 
         if (need_prompt)
@@ -1975,7 +1962,7 @@ int prompt_invent_item(const char *prompt,
                 if (!crawl_state.doing_prev_cmd_again)
                 {
                     redraw_screen();
-                    mesclr();
+                    clear_messages();
                 }
             }
         }

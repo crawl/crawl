@@ -207,11 +207,12 @@ KMONS:  C = slime creature
 KITEM:  C = royal jelly q:10 no_mimic
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
+MARKER: + = lua:props_marker({ door_restrict="veto" })
 MAP
  .Wxxxxx
 .Wxxxxxxx
 @.xBBAxxx
- W=BxA=Cx
+ W+BxA+Cx
 @.xBBAxxx
 .Wxxxxxxx
  .Wxxxxxx

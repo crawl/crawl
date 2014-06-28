@@ -52,7 +52,6 @@
 #include "mon-death.h"
 #include "mon-util.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
 #include "player.h"

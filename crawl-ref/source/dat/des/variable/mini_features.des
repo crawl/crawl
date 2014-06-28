@@ -2751,7 +2751,7 @@ ENDMAP
 NAME: baited_tele_trap
 DEPTH: D, Depths, Orc, Elf, Lair, Swamp, Shoals, Snake, Spider, Vaults, Crypt, Zot
 KITEM: ^ = any good_item, any good_item/nothing, any good_item/nothing
-KFEAT: ^ = teleport trap
+KFEAT: ^ = permanent teleport trap
 MAP
 ^
 ENDMAP
@@ -2783,7 +2783,7 @@ ENDMAP
 NAME:  min_item_tele_traps
 TAGS:  extra
 DEPTH: D:2-, Depths
-KFEAT: ! = known teleport trap
+KFEAT: ! = known permanent teleport trap
 MAP
 .....
 .v!v.
@@ -3618,32 +3618,6 @@ MAP
 .tttttt..
 .......
 ENDMAP
-
-NAME:  kilobyte_tornado_obelisk
-TAGS:  no_monster_gen
-DEPTH: Depths, Elf
-ITEM:  acquire any
-MONS:  diamond obelisk
-KPROP: .d1 = no_tele_into
-MAP
-      ccc
-     ccdcc
-   ccc...ccc
-  cc.......cc
- cc.........cc
- c...........c
-cc...........cc
-c.............c
-c......1......c
-c.............c
-cc...........cc
- c...........c
- cc.........cc
-  cc.......cc
-   ccc...ccc
-     c.@.c
-ENDMAP
-
 
 #######################################################################
 #

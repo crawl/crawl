@@ -104,7 +104,7 @@ map_section_type vault_main(vault_placement &place, const map_def *vault,
 {
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
-        mapgen_report_map_try(*vault);
+        mapstat_report_map_try(*vault);
 #endif
 
     // Return value of MAP_NONE forces dungeon.cc to regenerate the
@@ -174,7 +174,7 @@ static bool _resolve_map_lua(map_def &map)
     {
 #ifdef DEBUG_DIAGNOSTICS
         if (crawl_state.map_stat_gen)
-            mapgen_report_error(map, err);
+            mapstat_report_error(map, err);
 #endif
         mprf(MSGCH_ERROR, "Lua error: %s", err.c_str());
         return false;
@@ -1553,15 +1553,13 @@ const map_def *map_by_index(int index)
     return &vdefs[index];
 }
 
-///////////////////////////////////////////////////////////////////////////
-// Debugging code
-
+// Supporting map code for mapstat
 #ifdef DEBUG_DIAGNOSTICS
 
 typedef pair<string, int> weighted_map_name;
 typedef vector<weighted_map_name> weighted_map_names;
 
-static weighted_map_names mg_find_random_vaults(
+static weighted_map_names _find_random_vaults(
     const level_id &place, bool wantmini)
 {
     weighted_map_names wms;
@@ -1604,10 +1602,10 @@ static bool _weighted_map_more_likely(
     return a.second > b.second;
 }
 
-static void _mg_report_random_vaults(
+static void _report_random_vaults(
     FILE *outf, const level_id &place, bool wantmini)
 {
-    weighted_map_names wms = mg_find_random_vaults(place, wantmini);
+    weighted_map_names wms = _find_random_vaults(place, wantmini);
     sort(wms.begin(), wms.end(), _weighted_map_more_likely);
     int weightsum = 0;
     for (int i = 0, size = wms.size(); i < size; ++i)
@@ -1632,12 +1630,12 @@ static void _mg_report_random_vaults(
         fprintf(outf, "%s\n", line.c_str());
 }
 
-void mg_report_random_maps(FILE *outf, const level_id &place)
+void mapstat_report_random_maps(FILE *outf, const level_id &place)
 {
     fprintf(outf, "---------------- Mini\n");
-    _mg_report_random_vaults(outf, place, true);
+    _report_random_vaults(outf, place, true);
     fprintf(outf, "------------- Regular\n");
-    _mg_report_random_vaults(outf, place, false);
+    _report_random_vaults(outf, place, false);
 }
 
-#endif
+#endif //DEBUG_DIAGNOSTICS

@@ -41,7 +41,8 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
-#include "mon-stuff.h"
+#include "mon-death.h"
+#include "mon-poly.h"
 #include "mon-util.h"
 #include "options.h"
 #include "notes.h"
@@ -147,20 +148,24 @@ void seen_monsters_react()
         gozag_check_bribe(*mi);
         slime_convert(*mi);
 
-        // XXX: Hack for triggering Duvessa's going berserk.
-        if (mi->props.exists("duvessa_berserk"))
+        // Trigger Duvessa & Dowan upgrades
+        if (mi->props.exists(ELVEN_ENERGIZE_KEY))
         {
-            mi->props.erase("duvessa_berserk");
-            mi->go_berserk(true);
+            mi->props.erase(ELVEN_ENERGIZE_KEY);
+            elven_twin_energize(*mi);
         }
-
-        // XXX: Hack for triggering Dowan's spell changes.
-        if (mi->props.exists("dowan_upgrade"))
+#if TAG_MAJOR_VERSION == 34
+        else if (mi->props.exists(OLD_DUVESSA_ENERGIZE_KEY))
         {
-            mi->add_ench(ENCH_HASTE);
-            mi->props.erase("dowan_upgrade");
-            simple_monster_message(*mi, " seems to find hidden reserves of power!");
+            mi->props.erase(OLD_DUVESSA_ENERGIZE_KEY);
+            elven_twin_energize(*mi);
         }
+        else if (mi->props.exists(OLD_DOWAN_ENERGIZE_KEY))
+        {
+            mi->props.erase(OLD_DOWAN_ENERGIZE_KEY);
+            elven_twin_energize(*mi);
+        }
+#endif
     }
 }
 
@@ -634,6 +639,7 @@ void fully_map_level()
 // Is the given monster near (in LOS of) the player?
 bool mons_near(const monster* mons)
 {
+    ASSERT(mons);
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return true;
     return you.see_cell(mons->pos());

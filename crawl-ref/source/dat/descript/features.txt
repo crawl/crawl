@@ -416,6 +416,13 @@ Stepping on this portal will send you to another room nearby.
 A teleport trap
 
 This magical trap can displace anyone hapless enough to step on it — or even
+fly above it — to a random place on the same dungeon level. Traps of this kind
+found in the dungeon are worn with age, and will dissipate on use; fresher,
+newly-made traps may survive several passages.
+%%%%
+A permanent teleport trap
+
+This magical trap can displace anyone hapless enough to step on it — or even
 fly above it — to a random place on the same dungeon level.
 %%%%
 A translucent rock wall
@@ -664,11 +671,6 @@ The features of this statue are strange and alien. Is it because the statue is
 worn and tarnished that it has become so unrecognisable? Or is it that the
 subject was something demonic and evil?
 %%%%
-A timeless floor
-
-Though a thousand feet may have trod these floors, they appear timeless and
-indestructible.
-%%%%
 # wizlab: Tukima
 A crystal clear mirror
 
@@ -687,7 +689,7 @@ A black marble wall
 
 The marble glistens and shines. It certainly is beautiful!
 %%%%
-A marble floor
+The marble floor
 
 A marble floor of white and silver, with shades of pink here and there.
 %%%%
@@ -718,7 +720,7 @@ A highly decorated stone wall
 
 This wall is covered with disturbing, horrifying images.
 %%%%
-A rough-hewn floor
+The rough-hewn floor
 
 This floor is rough and uneven in places.
 %%%%
@@ -736,7 +738,7 @@ A thin membrane
 
 This strange membrane is thin enough to see through.
 %%%%
-A pulsating floor
+The pulsating floor
 
 This slick floor seems to pulse to an unknown beat.
 %%%%
@@ -749,10 +751,6 @@ A gravestone
 
 A nameless grave.
 %%%%
-The ground
-
-No life grows here. It is completely dead.
-%%%%
 # wizlab: Golubria
 The dimension's edge
 
@@ -764,7 +762,7 @@ A wall of crystal
 <A wall of green crystal>
 %%%%
 # wizlab: Cloud Mage
-A damp floor
+The damp floor
 
 Perhaps it is the humidity, or the constant flow of clouds, but the floor here
 remains forever damp.
@@ -774,11 +772,6 @@ A wall of white crystal
 This wall is made from low-grade crystal with an opalescent gleam.
 %%%%
 # wizlab: Hellbinder
-A hot floor
-
-This floor is hot to the touch. Deep below it burns a fire hotter than any
-other.
-%%%%
 A black wall
 
 This wall is perhaps made from stone, or solid charcoal, or a substance found

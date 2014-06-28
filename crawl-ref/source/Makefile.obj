@@ -14,6 +14,7 @@ attitude-change.o \
 beam.o \
 behold.o \
 bitary.o \
+bless.o \
 branch.o \
 chardump.o \
 cio.o \
@@ -142,14 +143,15 @@ mon-ench.o \
 mon-gear.o \
 mon-grow.o \
 mon-info.o \
+mon-message.o \
 mon-movetarget.o \
 mon-pathfind.o \
 mon-pick.o \
 mon-place.o \
+mon-poly.o \
 mon-project.o \
 mon-speak.o \
 mon-stealth.o \
-mon-stuff.o \
 mon-transit.o \
 mon-util.o \
 monster.o \

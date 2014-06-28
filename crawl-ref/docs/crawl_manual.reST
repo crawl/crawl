@@ -705,10 +705,9 @@ accuracy, and speed (up to a point). The same goes for Unarmed Combat.
 
 Weapons can be enchanted; when you first wield or otherwise identify them,
 you reveal values which tell you how much more effective they are than an
-unenchanted version. The first number is the enchantment to-hit, which affects
-the weapon's accuracy, and the second is its damage enchantment; weapons which
-are not enchanted are simply '+0'. Some weapons also have special magical
-effects which make them very effective in certain situations.
+unenchanted version. Weapons which are not enchanted are simply '+0'. Some
+weapons also have special magical effects which make them very effective
+against vulnerable enemies.
 
 You can wield weapons with the 'w' command, which is a very quick action. If for
 some reason you want to go bare-handed, type 'w' followed by a hyphen ('-').
@@ -951,8 +950,8 @@ way, including enchantments.
 
 Apart from that, otherwise mundane items can get one special property. These are
 called 'ego items', and examples are: boots of running, a weapon of flaming, a
-helmet of see invisible, and so on. Note that such items can be modified, and
-thus are subject to corrosion and enchanting scrolls.
+helmet of see invisible, and so on. Note that, unlike artefacts, such items can
+be modified by enchanting scrolls.
 
 All ego items are noted with special adjectives but not all items noted in this
 way need have a special property (they often have some positive or negative
@@ -2389,10 +2388,11 @@ Ctrl-A
   Toggle autopickup. Note that encounters with invisible monsters always turns
   autopickup off. You need to switch it on with Ctrl-A afterwards.
 
+Ctrl-V
+  Toggle colouring monsters by their remaining HP. (Console only)
+
 Ctrl-T
-  Toggle your allies' pickup behaviour between three settings: don't pick up
-  anything, only pick up items dropped by allies, pick up anything. This toggle
-  only works for characters who have gained permanent, intelligent allies.
+  Toggle displaying monsters' weapons' glyphs. (Console only)
 
 \`
   Re-do previous command
@@ -3241,9 +3241,6 @@ SInv
 
 Clar
   clarity
-
-Cons
-  conservation
 
 Gourm
   gourmand

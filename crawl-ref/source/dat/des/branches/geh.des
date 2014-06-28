@@ -192,7 +192,7 @@ KMONS:   34 = ice devil / blue devil
 KMONS:   56 = reaper ; scythe ego:freezing ident:type
 KMONS:   7 = alligator snapping turtle skeleton / anaconda simulacrum / \
          golden dragon simulacrum w:5 / iron troll simulacrum w:5 / hydra simulacrum
-KMONS:   0 = skeletal warrior ; sling ego:frost ident:type . sling bullet
+KMONS:   0 = skeletal warrior ; sling ego:freezing ident:type . sling bullet
 SUBST:   l = w, W = .
 :  else
 KMONS:   1 = kraken simulacrum

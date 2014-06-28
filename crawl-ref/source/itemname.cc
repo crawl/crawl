@@ -31,7 +31,6 @@
 #include "libutil.h"
 #include "makeitem.h"
 #include "mon-util.h"
-#include "mon-stuff.h"
 #include "notes.h"
 #include "player.h"
 #include "religion.h"
@@ -386,15 +385,10 @@ static bool _missile_brand_is_postfix(special_missile_type brand)
     return brand != SPMSL_NORMAL && !_missile_brand_is_prefix(brand);
 }
 
-enum mbn_type
+const char* missile_brand_name(const item_def &item, mbn_type t)
 {
-    MBN_TERSE, // terse brand name
-    MBN_NAME,  // brand name for item naming (adj for prefix, noun for postfix)
-    MBN_BRAND, // plain brand name
-};
-
-static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
-{
+    special_missile_type brand;
+    brand = static_cast<special_missile_type>(item.special);
     switch (brand)
     {
     case SPMSL_FLAME:
@@ -453,7 +447,6 @@ const char* weapon_brand_name(const item_def& item, bool terse, int override_bra
     case SPWPN_FREEZING: return terse ? "freeze" : "freezing";
     case SPWPN_HOLY_WRATH: return terse ? "holy" : "holy wrath";
     case SPWPN_ELECTROCUTION: return terse ? "elec" : "electrocution";
-    case SPWPN_DRAGON_SLAYING: return terse ? "slay drac" : "dragon slaying";
     case SPWPN_VENOM: return terse ? "venom" : "venom";
     case SPWPN_PROTECTION: return terse ? "protect" : "protection";
     case SPWPN_DRAINING: return terse ? "drain" : "draining";
@@ -462,7 +455,7 @@ const char* weapon_brand_name(const item_def& item, bool terse, int override_bra
     case SPWPN_DISTORTION: return terse ? "distort" : "distortion";
     case SPWPN_REAPING: return terse ? "reap" : "reaping";
 
-    case SPWPN_VAMPIRICISM:
+    case SPWPN_VAMPIRISM:
         return terse ? "vamp" : ""; // non-terse already handled
 
     case SPWPN_VORPAL:
@@ -494,6 +487,7 @@ const char* weapon_brand_name(const item_def& item, bool terse, int override_bra
 
     // obsolete and buggy brands
 #if TAG_MAJOR_VERSION == 34
+    case SPWPN_DRAGON_SLAYING: return terse ? "obsolete" : "dragon slaying";
     case SPWPN_ORC_SLAYING: return terse ? "obsolete" : "orc slaying";
     case SPWPN_REACHING: return terse ? "obsolete" : "reaching";
     case SPWPN_RETURNING: return terse ? "obsolete" : "returning";
@@ -702,7 +696,7 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_NOISE:              return "noise";
     case SCR_REMOVE_CURSE:       return "remove curse";
     case SCR_SUMMONING:          return "summoning";
-    case SCR_ENCHANT_WEAPON_I:   return "enchant weapon I";
+    case SCR_ENCHANT_WEAPON:     return "enchant weapon";
     case SCR_ENCHANT_ARMOUR:     return "enchant armour";
     case SCR_TORMENT:            return "torment";
     case SCR_RANDOM_USELESSNESS: return "random uselessness";
@@ -714,10 +708,8 @@ static const char* scroll_type_name(int scrolltype)
     case SCR_MAGIC_MAPPING:      return "magic mapping";
     case SCR_FOG:                return "fog";
     case SCR_ACQUIREMENT:        return "acquirement";
-    case SCR_ENCHANT_WEAPON_II:  return "enchant weapon II";
     case SCR_BRAND_WEAPON:       return "brand weapon";
     case SCR_RECHARGING:         return "recharging";
-    case SCR_ENCHANT_WEAPON_III: return "enchant weapon III";
     case SCR_HOLY_WORD:          return "holy word";
     case SCR_VULNERABILITY:      return "vulnerability";
     case SCR_SILENCE:            return "silence";
@@ -1231,8 +1223,8 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
                                             : get_weapon_brand(item);
             // this is specialcased out of weapon_brand_name
             // ("vampiric hand axe", etc)
-            if (checkbrand == SPWPN_VAMPIRICISM)
-                return "vampiricism";
+            if (checkbrand == SPWPN_VAMPIRISM)
+                return "vampirism";
             else if (checkbrand == SPWPN_ANTIMAGIC)
                 return "antimagic";
         }
@@ -1244,8 +1236,7 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
         // HACKHACKHACK
         if (item.props.exists(HELLFIRE_BOLT_KEY))
             return "hellfire";
-        return _missile_brand_name(get_ammo_brand(item),
-            terse ? MBN_TERSE : MBN_BRAND);
+        return missile_brand_name(item, terse ? MBN_TERSE : MBN_BRAND);
     default:
         return "";
     }
@@ -1321,11 +1312,9 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_pluses)
         {
             if (is_unrandom_artefact(*this) && special == UNRAND_WOE)
-                buff << (terse ? "+∞ " : "+∞,+∞ ");
-            else if ((terse && it_plus == item_plus2) || sub_type == WPN_BLOWGUN)
-                buff << make_stringf("%+d ", it_plus);
+                buff << "+∞ ";
             else
-                buff << make_stringf("%+d,%+d ", it_plus, item_plus2);
+                buff << make_stringf("%+d ", it_plus);
         }
 
         if (is_artefact(*this) && !dbname)
@@ -1365,7 +1354,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         if (know_brand && !terse)
         {
             int brand = get_weapon_brand(*this);
-            if (brand == SPWPN_VAMPIRICISM)
+            if (brand == SPWPN_VAMPIRISM)
                 buff << "vampiric ";
             else if (brand == SPWPN_ANTIMAGIC)
                 buff << "antimagic ";
@@ -1400,7 +1389,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             if (props.exists(HELLFIRE_BOLT_KEY))
                 buff << "hellfire ";
             else if (_missile_brand_is_prefix(brand))
-                buff << _missile_brand_name(brand, MBN_NAME) << ' ';
+                buff << missile_brand_name(*this, MBN_NAME) << ' ';
         }
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
@@ -1416,10 +1405,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 if (props.exists(HELLFIRE_BOLT_KEY))
                     buff << " (hellfire)";
                 else
-                    buff << " (" <<  _missile_brand_name(brand, MBN_TERSE) << ")";
+                    buff << " (" <<  missile_brand_name(*this, MBN_TERSE) << ")";
             }
             else if (_missile_brand_is_postfix(brand))
-                buff << " of " << _missile_brand_name(brand, MBN_NAME);
+                buff << " of " << missile_brand_name(*this, MBN_NAME);
         }
 
         break;
@@ -2312,11 +2301,15 @@ void check_item_knowledge(bool unknown_items)
             if (i == OBJ_BOOKS && j > MAX_RARE_BOOK)
                 continue;
 
-            // Only created by Ashenzari.
+            // Curse scrolls are only created by Ashenzari.
             if (i == OBJ_SCROLLS &&
                 (j == SCR_CURSE_WEAPON
                  || j == SCR_CURSE_ARMOUR
-                 || j == SCR_CURSE_JEWELLERY))
+                 || j == SCR_CURSE_JEWELLERY
+#if TAG_MAJOR_VERSION == 34
+                 || j == SCR_ENCHANT_WEAPON_II
+                 || j == SCR_ENCHANT_WEAPON_III))
+#endif
             {
                 continue;
             }
@@ -3280,9 +3273,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return you_worship(GOD_TROG);
         case SCR_CURSE_WEAPON: // for non-Ashenzari, already handled
         case SCR_CURSE_ARMOUR:
-        case SCR_ENCHANT_WEAPON_I:
-        case SCR_ENCHANT_WEAPON_II:
-        case SCR_ENCHANT_WEAPON_III:
+        case SCR_ENCHANT_WEAPON:
         case SCR_ENCHANT_ARMOUR:
         case SCR_BRAND_WEAPON:
             return you.species == SP_FELID;

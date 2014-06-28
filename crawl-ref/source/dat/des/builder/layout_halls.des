@@ -78,14 +78,18 @@
 ##############################################################
 # layout_hall_layers
 #
-# TODO: Correctly assign "layout_type_caves" tag with cave
+# TODO: Correctly assign "layout_type_open_caves" tag with cave
 #       mode and "layout_mode_passages" tag without it.
+# TODO: Needs to make narrower paths (e.g. max 5 width).  When
+#       that works, add to Zot at weight 15.
+# TODO: Elf needs a version that never does caves.  When that
+#       and previous TODO are in, add to Elf with weight 10.
 #
 NAME:   layout_hall_layers
-DEPTH:  Depths, Zot, Lair, Elf
-WEIGHT: 5, 10 (Zot), 20 (Zot:5), 5 (Lair), 10 (Elf)
+DEPTH:  Lair
+WEIGHT: 7
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand central layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand central layout_type_narrow_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -227,10 +231,10 @@ ENDMAP
 # gaps in the walls to connect everything up.
 #
 NAME:   layout_onion
-DEPTH:  Zot, Snake
-WEIGHT: 20
+DEPTH:  Snake, Zot
+WEIGHT: 10 (Snake), 5 (Zot)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand central layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand central layout_type_narrow_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -272,10 +276,10 @@ ENDMAP
 #       way, like particle diffusion.
 #
 NAME:   layout_catacombs
-DEPTH:  Crypt,Tar
-WEIGHT: 50, 50 (Tar)
+DEPTH:  Crypt, Tar
+WEIGHT: 10 (Crypt), 10 (Tar)
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -343,10 +347,10 @@ TAGS:   overwritable layout allow_dup unrand layout_type_caves
 # interference pattern (with option xor)
 #
 NAME:   layout_onion_interference
-DEPTH:  Zot:1-4, Snake
+DEPTH:  Snake, Zot:1-4
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand central layout_type_anastomotic
+TAGS:   overwritable layout allow_dup unrand central layout_type_narrow_caves
 {{
 
   local gxm,gym = dgn.max_bounds()
@@ -409,17 +413,18 @@ validate {{
 # polar transform producing something sometimes like a
 # spiderweb.
 #
-# TODO: Use "layout_type_anastomotic" tag for the less open
-#       (normal) version and the "layout_type_caves" tag
+# TODO: Use "layout_type_narrow_caves" tag for the less open
+#       (normal) version and the "layout_type_open_caves" tag
 #       for the openm version that sometimes appears.  If they
-#       are all mixed up, layout_type_caves is probably
+#       are all mixed up, layout_type_open_caves is probably
 #       better.
+# TODO: less open space on Zot
 #
 NAME:   layout_cathedral_of_symmetry
 DEPTH:  Zot, Tar
-WEIGHT: 20, 50(Tar)
+WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand central layout_type_caves
+TAGS:   overwritable layout allow_dup unrand central layout_type_open_caves
 {{
   if is_validating() then return; end
   local gxm,gym = dgn.max_bounds()
@@ -521,9 +526,12 @@ ENDMAP
 #
 # This is properly called a labyrinth, but that name is already taken
 #
+# TODO: Use Snake variant in Lair, add with weight 3.
+# TODO: Minimum area validation in Snake (can be disconnected).
+#
 NAME:   layout_concentric_octagons
-DEPTH:  Snake, Elf, Depths, Zot
-WEIGHT: 5, 10 (Elf), 20 (Zot)
+DEPTH:  Snake, Zot
+WEIGHT: 5 (Snake), 10 (Zot)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand central layout_type_passages
 TAGS:   no_rotate no_vmirror no_hmirror

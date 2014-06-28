@@ -829,6 +829,8 @@ static void _print_stats_wp(int y)
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix, "stats");
         if (prefcol != -1)
             col = prefcol;
+        else if (you.duration[DUR_CORROSION])
+            col = RED;
         else
             col = LIGHTGREY;
 

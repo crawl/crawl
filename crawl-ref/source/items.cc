@@ -177,7 +177,7 @@ static bool _item_preferred_to_clean(int item)
 {
     // Preferably clean "normal" weapons and ammo
     if (mitm[item].base_type == OBJ_WEAPONS
-        && mitm[item].plus <= 0 && mitm[item].plus2 <= 0
+        && mitm[item].plus <= 0
         && !is_artefact(mitm[item]))
     {
         return true;
@@ -1757,7 +1757,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
 
         if (goldify > 0)
         {
-            int gold_count = max(goldify, goldify * val / 10);
             string msg = get_desc_quantity(goldify, quant_got, "the")
                          + " " + it.name(DESC_PLAIN);
             if (goldify > 1)
@@ -1771,11 +1770,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet)
                 msg += "it.";
 
             mprf(MSGCH_GOD, GOD_GOZAG, "%s", msg.c_str());
-            _got_gold(it, gold_count, quiet);
+            _got_gold(it, goldify, quiet);
             dec_penance(GOD_GOZAG, goldify);
 
             if (dec_mitm_item_quantity(obj, goldify))
-                return gold_count;
+                return goldify;
 
             quant_got -= goldify;
         }
@@ -3862,20 +3861,20 @@ item_info get_item_info(const item_def& item)
 
     switch (item.base_type)
     {
-    case OBJ_WEAPONS:
     case OBJ_MISSILES:
+        if (item_ident(ii, ISFLAG_KNOW_PLUSES))
+            ii.plus2 = item.plus2;
+        // intentional fall-through
+    case OBJ_WEAPONS:
         ii.sub_type = item.sub_type;
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
-        {
             ii.plus = item.plus;
-            ii.plus2 = item.plus2;
-        }
         if (item_type_known(item))
             ii.special = item.special; // brand
         break;
     case OBJ_ARMOUR:
         ii.sub_type = item.sub_type;
-        ii.plus2    = item.plus2;      // sub-subtype (gauntlets, etc)
+        ii.plus2    = item.plus2;      // sub-subtype (helmets, etc)
         if (item_ident(ii, ISFLAG_KNOW_PLUSES))
             ii.plus = item.plus;
         if (item_type_known(item))
@@ -4112,7 +4111,7 @@ object_class_type get_random_item_mimic_type()
 
 object_class_type get_item_mimic_type()
 {
-    mesclr();
+    clear_messages();
     map<char, object_class_type> choices;
     char letter = 'a';
     for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)

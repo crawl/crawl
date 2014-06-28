@@ -56,6 +56,7 @@
 #include "geom2d.h"
 #include "losglobal.h"
 #include "losparam.h"
+#include "mon-poly.h"
 #include "player.h"
 #include "ray.h"
 #include "env.h"

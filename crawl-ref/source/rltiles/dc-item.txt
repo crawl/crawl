@@ -182,9 +182,10 @@ i-flaming BRAND_FLAMING BRAND_WEP_FIRST
 i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
 i-electrocution BRAND_ELECTROCUTION
-# Remove i-orc_slaying when TAG_MAJOR_VERSION > 34
+# Remove _slaying brands when TAG_MAJOR_VERSION > 34
 i-confusion BRAND_ORC_SLAYING
-i-dragon_slaying BRAND_DRAGON_SLAYING
+i-confusion BRAND_DRAGON_SLAYING
+# End removals
 i-venom BRAND_VENOM
 i-protection BRAND_PROTECTION
 i-draining BRAND_DRAINING
@@ -192,7 +193,7 @@ i-speed BRAND_SPEED
 i-vorpal BRAND_VORPAL
 i-flaming BRAND_FLAME
 i-freezing BRAND_FROST
-i-vampiricism BRAND_VAMPIRICISM
+i-vampirism BRAND_VAMPIRISM
 i-pain BRAND_PAIN
 %rim 1
 i-antimagic BRAND_ANTIMAGIC
@@ -589,7 +590,7 @@ chunk_brands/i-rotten FOOD_INEDIBLE
 %sdir item/scroll
 scroll SCROLL UNSEEN_SCROLL
 
-#### These must be in the same order as the enum in item-prop.h!
+#### These must be in the same order as the enum in itemprop-enum.h!
 %sdir item/scroll
 %back scroll-yellow
 i-identify SCR_IDENTIFY SCR_ID_FIRST
@@ -604,7 +605,7 @@ i-remove_curse SCR_REMOVE_CURSE
 %back scroll-brown
 i-unholy_creation SCR_UNHOLY_CREATION
 %back scroll-green
-i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
+i-enchant-weapon SCR_ENCHANT_WEAPON
 i-enchant_armour SCR_ENCHANT_ARMOUR
 %back scroll-red
 i-torment SCR_TORMENT
@@ -623,10 +624,11 @@ i-fog SCR_FOG
 %back scroll-cyan
 i-acquirement SCR_ACQUIREMENT
 %back scroll-green
-i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
+#if TAG_MAJOR_VERSION == 34 # Remove the two i-enchant-weapon
+i-enchant-weapon SCR_ENCHANT_WEAPON_II
 i-brand-weapon SCR_BRAND_WEAPON
 i-recharging SCR_RECHARGING
-i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
+i-enchant-weapon SCR_ENCHANT_WEAPON_III
 %back scroll-red
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY

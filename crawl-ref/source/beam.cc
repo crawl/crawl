@@ -49,7 +49,7 @@
 #include "mon-death.h"
 #include "mon-ench.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
+#include "mon-poly.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "ouch.h"
@@ -861,8 +861,12 @@ void bolt::fire_wall_effect()
         did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1, god_cares());
     ASSERT(agent());
     // Trees do not burn so readily in a wet environment
-    if (player_in_branch(BRANCH_SWAMP))
+    if (player_in_branch(BRANCH_SWAMP)
+        // And you shouldn't get tons of penance from an unid'd wand of fire
+        || (you_worship(GOD_DITHMENOS) && !player_under_penance()))
+    {
         place_cloud(CLOUD_FIRE, pos(), random2(12)+5, agent());
+    }
     else
         place_cloud(CLOUD_FOREST_FIRE, pos(), random2(30)+25, agent());
     obvious_effect = true;
@@ -1542,7 +1546,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
             }
         }
         else if (res <= 0 && doFlavouredEffects)
-            splash_monster_with_acid(mons, pbolt.agent());
+            mons->splash_with_acid(pbolt.agent());
         break;
     }
 
@@ -2151,7 +2155,7 @@ bool curare_actor(actor* source, actor* target, int levels, string name,
 int silver_damages_victim(actor* victim, int damage, string &dmg_msg)
 {
     int ret = 0;
-    if (victim->is_chaotic()
+    if (victim->how_chaotic()
         || victim->is_player() && player_is_shapechanged())
     {
         ret = damage * 3 / 4;
@@ -5477,7 +5481,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         {
             // No KILL_YOU_CONF, or we get "You heal ..."
             if (cast_healing(3 + damage.roll(), 3 + damage.num * damage.size,
-                             false, mon->pos()) > 0)
+                             false, mon->pos()) == SPRET_SUCCESS)
             {
                 obvious_effect = true;
             }
@@ -5728,7 +5732,6 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
                     mon->props["tile_num"].get_short() = random2(256);
                     break;
                 case MONS_WRETCHED_STAR:
-                case MONS_PULSATING_LUMP:
                 case MONS_CHAOS_SPAWN:
                     break;
                 default:

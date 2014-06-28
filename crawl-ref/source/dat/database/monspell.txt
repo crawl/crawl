@@ -226,10 +226,6 @@ Petrifying Cloud cast
 
 @The_monster@ breathes a plume of calcifying dust @at@ @target@.
 %%%%
-Chaos Breath cast
-
-@The_monster@ breathes @beam@ @at@ @target@.
-%%%%
 Frenzy cast
 
 @The_monster@ convulses with anger.
@@ -428,6 +424,14 @@ Bolt of Magma molten gargoyle cast
 angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.
+%%%%
+crab cast targeted
+
+@The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+drake cast targeted
+
+@The_monster@ breathes @beam@ @at@ @target@.
 %%%%
 dragon cast targeted
 

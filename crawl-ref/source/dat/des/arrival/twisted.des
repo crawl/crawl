@@ -178,7 +178,7 @@ SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A=+ , B=@ , C=c , D=c
 SUBST:   = = +
 NSUBST:  M = 2=E / *=M E:2
-KFEAT:   E = teleport trap
+KFEAT:   E = permanent teleport trap
 KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
@@ -438,7 +438,7 @@ SUBST:   t : U....
 KFEAT:   C = altar_jiyva
 SUBST:   D = .
 SUBST:   t : U....
-KMONS:   1 = jelly / ooze / brown ooze w:5 / pulsating lump w:1
+KMONS:   1 = jelly / ooze
 :else
 SUBST:   D = C
 SHUFFLE: VCd

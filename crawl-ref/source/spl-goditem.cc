@@ -30,7 +30,6 @@
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-death.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
 #include "random.h"
@@ -164,10 +163,9 @@ static vector<string> _desc_mindless(const monster_info& mi)
     return descs;
 }
 
-// Returns: 1 -- success, 0 -- failure, -1 -- cancel
-static int _healing_spell(int healed, int max_healed, bool divine_ability,
-                          const coord_def& where, bool not_self,
-                          targ_mode_type mode)
+static spret_type _healing_spell(int healed, int max_healed,
+                                 bool divine_ability, const coord_def& where,
+                                 bool not_self, targ_mode_type mode)
 {
     ASSERT(healed >= 1);
 
@@ -190,19 +188,19 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
     }
 
     if (!spd.isValid)
-        return -1;
+        return SPRET_ABORT;
 
     if (spd.target == you.pos())
     {
         if (not_self)
         {
             mpr("You can only heal others!");
-            return -1;
+            return SPRET_ABORT;
         }
 
         mpr("You are healed.");
         inc_hp(healed);
-        return 1;
+        return SPRET_SUCCESS;
     }
 
     monster* mons = monster_at(spd.target);
@@ -211,7 +209,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
         canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
-        return 0;
+        return SPRET_FAIL;
     }
 
     const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
@@ -226,19 +224,19 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
         {
             mprf("The light of Elyvilon fails to reach %s.",
                  mons->name(DESC_THE).c_str());
-            return 0;
+            return SPRET_FAIL;
         }
         else if (can_pacify == -3)
         {
             mprf("The light of Elyvilon almost touches upon %s.",
                  mons->name(DESC_THE).c_str());
-            return 0;
+            return SPRET_FAIL;
         }
         else if (can_pacify == -4)
         {
             mprf("%s is completely unfazed by your meager offer of peace.",
                  mons->name(DESC_THE).c_str());
-            return 0;
+            return SPRET_FAIL;
         }
         else
         {
@@ -249,7 +247,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
             }
             else
                 mpr("You cannot pacify this monster!");
-            return -1;
+            return SPRET_ABORT;
         }
     }
 
@@ -321,15 +319,15 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
     if (!did_something)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return 0;
+        return SPRET_FAIL;
     }
 
-    return 1;
+    return SPRET_SUCCESS;
 }
 
-// Returns: 1 -- success, 0 -- failure, -1 -- cancel
-int cast_healing(int pow, int max_pow, bool divine_ability,
-                 const coord_def& where, bool not_self, targ_mode_type mode)
+spret_type cast_healing(int pow, int max_pow, bool divine_ability,
+                        const coord_def& where, bool not_self,
+                        targ_mode_type mode)
 {
     pow = min(50, pow);
     max_pow = min(50, max_pow);
@@ -420,6 +418,61 @@ void antimagic()
     }
 
     contaminate_player(-1 * (1000 + random2(4000)));
+}
+
+void debuff_monster(monster* mon)
+{
+    // List of magical enchantments which will be dispelled.
+    const enchant_type lost_enchantments[] =
+    {
+        ENCH_SLOW,
+        ENCH_HASTE,
+        ENCH_SWIFT,
+        ENCH_MIGHT,
+        ENCH_FEAR,
+        ENCH_CONFUSION,
+        ENCH_INVIS,
+        ENCH_CORONA,
+        ENCH_CHARM,
+        ENCH_PARALYSIS,
+        ENCH_PETRIFYING,
+        ENCH_PETRIFIED,
+        ENCH_REGENERATION,
+        ENCH_STICKY_FLAME,
+        ENCH_TP,
+        ENCH_INNER_FLAME,
+        ENCH_OZOCUBUS_ARMOUR
+    };
+
+    bool dispelled = false;
+
+    // Dispel all magical enchantments...
+    for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
+    {
+        if (lost_enchantments[i] == ENCH_INVIS)
+        {
+            // ...except for natural invisibility.
+            if (mons_class_flag(mon->type, M_INVIS))
+                continue;
+        }
+        if (lost_enchantments[i] == ENCH_CONFUSION)
+        {
+            // Don't dispel permaconfusion.
+            if (mons_class_flag(mon->type, M_CONFUSED))
+                continue;
+        }
+        if (lost_enchantments[i] == ENCH_REGENERATION)
+        {
+            // Don't dispel regen if it's from Trog.
+            if (mon->has_ench(ENCH_RAISED_MR))
+                continue;
+        }
+
+        if (mon->del_ench(lost_enchantments[i], true, true))
+            dispelled = true;
+    }
+    if (dispelled)
+        simple_monster_message(mon, "'s magical effects unravel!");
 }
 
 int detect_traps(int pow)

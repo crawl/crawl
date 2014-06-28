@@ -506,7 +506,7 @@ TAGS:    ziggurat_pillar centered generate_awake unrand no_exits
 DEPTH:   Zig:10-
 WEIGHT:  5
 MONS:    lost soul
-KFEAT:   ~ = known teleport trap
+KFEAT:   ~ = known permanent teleport trap
 SUBST:   9 : 00., x : bcvx, X : bcnv
 : if you.depth() > 18 then
 SUBST:   0 : 011

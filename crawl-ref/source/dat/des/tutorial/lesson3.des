@@ -55,7 +55,7 @@ epilogue{{
  crawl.tutorial_hint("HINT_CHOOSE_STAT")
  crawl.tutorial_hint("HINT_YOU_CURSED")
  crawl.tutorial_hint("HINT_REMOVED_CURSE")
- crawl.mesclr(true)
+ crawl.clear_messages(true)
  crawl.tutorial_msg("tutorial3 start")
  tutorial_intro()
 }}
@@ -110,7 +110,7 @@ MARKER:  h = lua:tutorial3.msg("amulet")
 MARKER:  i = lua:tutorial3.msg("scroll_id")
 MARKER:  A = lua:tutorial3.msg("drop")
 epilogue{{
- crawl.mesclr(true)
+ crawl.clear_messages(true)
  crawl.tutorial_msg("tutorial3 command_help")
 }}
 MAP
@@ -158,7 +158,7 @@ KFEAT:   S = general shop use_all ; \
              ring of flight mundane not_cursed | potion of curing | \
              potion of heal wounds | potion of heal wounds q:2 | \
              potion of might | wand of paralysis | ring mail | \
-             buckler ego:none | ring of slaying | scroll of enchant weapon II
+             buckler ego:none | ring of slaying | scroll of enchant weapon
 ITEM:    gold q:40
 ITEM:    gold q:220
 MONS:    gnoll ; flail ego:none | morningstar ego:none | spear ego:none . \
@@ -185,7 +185,7 @@ MARKER:  ] = lua:one_way_stair { dst  = "tutorial_lesson3", \
                                  desc = "exit from the tutorial", \
                                  onclimb = "tutorial3.win" }
 epilogue{{
- crawl.mesclr(true)
+ crawl.clear_messages(true)
  crawl.tutorial_msg("tutorial3 command_help")
 }}
 MAP

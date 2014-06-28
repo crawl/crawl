@@ -9,6 +9,7 @@
 #include "enum.h"
 #include "externs.h"
 #include "player.h"
+#include "mgen_data.h"
 
 #include "religion-enum.h"
 
@@ -98,10 +99,6 @@ bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
 bool is_fellow_slime(const monster* mon);
 bool is_follower(const monster* mon);
-bool bless_follower(monster* follower = NULL,
-                    god_type god = you.religion,
-                    bool (*suitable)(const monster* mon) = is_follower,
-                    bool force = false);
 
 // Vehumet gift interface.
 bool vehumet_is_offering(spell_type spell);
@@ -117,6 +114,12 @@ void religion_turn_end();
 int get_tension(god_type god = you.religion);
 int get_monster_tension(const monster* mons, god_type god = you.religion);
 int get_fuzzied_monster_difficulty(const monster *mons);
+
+typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed);
+
+void delayed_monster(const mgen_data &mg, delayed_callback callback = NULL);
+void delayed_monster_done(string success, string failure,
+                          delayed_callback callback = NULL);
 
 bool do_god_gift(bool forced = false);
 

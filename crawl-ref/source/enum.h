@@ -2194,8 +2194,8 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_YOU_CONF,                     // died while confused as caused by you
     KILL_MISCAST,                      // as a result of a spell miscast
     KILL_MISC,                         // any miscellaneous killing
-    KILL_RESET,                        // ???
-    KILL_DISMISSED,                    // ???
+    KILL_RESET,                        // excised from existence
+    KILL_DISMISSED,                    // like KILL_RESET, but drops inventory
     KILL_BANISHED,                     // monsters what got banished
     KILL_UNSUMMONED,                   // summoned monsters whose timers ran out
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
@@ -2366,6 +2366,8 @@ enum monster_type                      // menv[].type
 #if TAG_MAJOR_VERSION == 34
     MONS_GIANT_SLUG,
     MONS_AGATE_SNAIL,
+#else
+    MONS_TORPOR_SNAIL,
 #endif
     MONS_ELEPHANT_SLUG,
     MONS_GIANT_LEECH,
@@ -2428,15 +2430,17 @@ enum monster_type                      // menv[].type
 
     MONS_OOZE,
     MONS_JELLY,
-    MONS_BROWN_OOZE,
 #if TAG_MAJOR_VERSION == 34
+    MONS_BROWN_OOZE,
     MONS_GIANT_AMOEBA,
 #endif
     MONS_AZURE_JELLY,
     MONS_DEATH_OOZE,
     MONS_ACID_BLOB,
     MONS_SLIME_CREATURE,
+#if TAG_MAJOR_VERSION == 34
     MONS_PULSATING_LUMP,
+#endif
     MONS_GIANT_EYEBALL,
     MONS_EYE_OF_DRAINING,
     MONS_SHINING_EYE,
@@ -3230,6 +3234,7 @@ enum monster_type                      // menv[].type
     MONS_OCTOPODE_CRUSHER,
     MONS_CRAB,
     MONS_GHOST_CRAB,
+    MONS_TORPOR_SNAIL,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -3507,7 +3512,7 @@ enum mutation_type
     MUT_SLOW_REFLEXES,
     MUT_MAGICAL_VULNERABILITY,
     MUT_ANTI_WIZARDRY,
-
+    MUT_PLACID_MAGIC,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION,
@@ -4287,7 +4292,10 @@ enum trap_type
 #endif
     TRAP_ARROW,
     TRAP_SPEAR,
+#if TAG_MAJOR_VERSION > 34
     TRAP_TELEPORT,
+#endif
+    TRAP_TELEPORT_PERMANENT,
     TRAP_ALARM,
     TRAP_BLADE,
     TRAP_BOLT,
@@ -4300,6 +4308,7 @@ enum trap_type
     TRAP_WEB,
 #if TAG_MAJOR_VERSION == 34
     TRAP_GAS,
+    TRAP_TELEPORT,
 #endif
     NUM_TRAPS,
     TRAP_MAX_REGULAR = TRAP_SHAFT,

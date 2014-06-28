@@ -57,7 +57,6 @@
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
-#include "mon-stuff.h"
 #include "ng-setup.h"
 #include "notes.h"
 #include "ouch.h"
@@ -143,7 +142,12 @@ int get_max_corpse_chunks(monster_type mons_class)
     return mons_weight(mons_class) / 150;
 }
 
-void turn_corpse_into_skeleton(item_def &item)
+/** Skeletonise this corpse.
+ *
+ *  @param item the corpse to be turned into a skeleton.
+ *  @returns whether a valid skeleton could be made.
+ */
+bool turn_corpse_into_skeleton(item_def &item)
 {
     ASSERT(item.base_type == OBJ_CORPSES);
     ASSERT(item.sub_type == CORPSE_BODY);
@@ -151,11 +155,12 @@ void turn_corpse_into_skeleton(item_def &item)
     // Some monsters' corpses lack the structure to leave skeletons
     // behind.
     if (!mons_skeleton(item.mon_type))
-        return;
+        return false;
 
     item.sub_type = CORPSE_SKELETON;
     item.special  = FRESHEST_CORPSE; // reset rotting counter
     item.colour   = LIGHTGREY;
+    return true;
 }
 
 static void _maybe_bleed_monster_corpse(const item_def corpse)
@@ -847,7 +852,7 @@ bool can_bottle_blood_from_corpse(monster_type mons_class)
     }
 
     int chunk_type = mons_corpse_effect(mons_class);
-    if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
+    if (chunk_type == CE_CLEAN)
         return true;
 
     return false;
@@ -864,10 +869,6 @@ int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type)
     // Max. amount is about one third of the max. amount for chunks.
     int pot_quantity = max_chunks / 3;
     pot_quantity = stepdown_value(pot_quantity, 2, 2, 6, 6);
-
-    // Halve number of potions obtained from contaminated chunk type corpses.
-    if (chunk_type == CE_CONTAMINATED)
-        pot_quantity /= 2;
 
     if (pot_quantity < 1)
         pot_quantity = 1;
@@ -1208,7 +1209,7 @@ void search_around()
         if (effective > ptrap->skill_rnd)
         {
             ptrap->reveal();
-            mprf("You found %s trap!",
+            mprf("You found %s!",
                  ptrap->name(DESC_A).c_str());
             learned_something_new(HINT_SEEN_TRAP, *ri);
         }

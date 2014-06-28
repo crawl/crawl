@@ -7,9 +7,9 @@
 
 #include "enum.h"
 #include "mon-grow.h"
+#include "mon-message.h"
 #include "mon-util.h"
 #include "mon-place.h"
-#include "mon-stuff.h"
 #include "monster.h"
 #include "random.h"
 

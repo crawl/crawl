@@ -23,6 +23,8 @@
 #  the stairs were to be placed, but only sometimes adding
 #  them.
 #
+# TODO: Move room generation to a library function.
+#
 
 {{
     -- Increasing this makes the caves bigger
@@ -132,11 +134,13 @@
 #  deeper depths.  Starting at depth 19, there is an increasing
 #  chance of lava pools instead of water pools (never mixed).
 #
+# TODO: More rock pools.  Then add to D:4- with weight 10.
+#
 NAME:   layout_cave_pools
-DEPTH:  D:9-, Depths
-WEIGHT: 10
+DEPTH:  Depths
+WEIGHT: 15
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
@@ -181,8 +185,8 @@ ENDMAP
 #  by doors and sometimes just by holes in the wall.
 #
 NAME:   layout_honeycomb
-DEPTH:  Depths, Snake:1-4, Tar
-WEIGHT: 10, 80(Tar)
+DEPTH:  Snake:1-4, Depths, Tar
+WEIGHT: 10 (Snake), 15 (Depths), 10 (Tar)
 ORIENT: encompass
 TAGS:   overwritable layout allow_dup unrand layout_type_divisions
 TAGS:   no_rotate no_vmirror no_hmirror
@@ -258,9 +262,9 @@ ENDMAP
 #
 NAME:   layout_gehenna_pools_basic
 DEPTH:  Geh
-WEIGHT: 100
+WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
@@ -374,9 +378,9 @@ validate {{
 #
 NAME:   layout_gehenna_pools_box
 DEPTH:  Geh
-WEIGHT: 50
+WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()
@@ -445,9 +449,9 @@ validate {{
 #
 NAME:   layout_gehenna_pools_triple
 DEPTH:  Geh
-WEIGHT: 50
+WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand layout_type_caves
+TAGS:   overwritable layout allow_dup unrand layout_type_open_caves
 TAGS:   no_rotate no_vmirror no_hmirror
 {{
     local gxm, gym = dgn.max_bounds()

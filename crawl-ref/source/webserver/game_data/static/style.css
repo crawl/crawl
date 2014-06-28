@@ -207,6 +207,7 @@ body {
 }
 #messages_container {
     display: block;
+    overflow-x: hidden;
     overflow-y: hidden;
 }
 #messages {

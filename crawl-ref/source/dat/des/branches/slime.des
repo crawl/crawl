@@ -80,7 +80,7 @@ TAGS:   slime_entry
 KFEAT:  Z = altar_jiyva
 SUBST:  1 : 111223
 NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
-MONS:   jelly / ooze / brown ooze
+MONS:   jelly / ooze
 MONS:   acid blob / slime creature w:5
 MONS:   azure jelly
 KFEAT:  O = enter_slime_pits
@@ -134,7 +134,7 @@ ENDMAP
 
 NAME:   minmay_slime_entry_pillars
 TAGS:   slime_entry ruin_lair
-MONS:   brown ooze
+MONS:   jelly / slime creature
 KFEAT:  O = enter_slime_pits
 MAP
 ...........
@@ -249,27 +249,6 @@ MAP
   .........
 ENDMAP
 
-NAME: nicolae_slime_entry_wandering_lumps
-TAGS: slime_entry
-SUBST: P = p.., L = l.
-KFEAT: O = enter_slime_pits
-KMONS: p = plant
-KMONS: l = pulsating lump
-KMONS: O = pulsating lump / nothing w:20
-MAP
-    ...
-   .....
-  xxpppxx
- .xPPPPPx.
-..pPl..Pp..
-..pP.O.Pp..
-..pP..LPp..
- .xPPPPPx.
-  xxpppxx
-   .....
-    ...
-ENDMAP
-
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
@@ -299,7 +278,7 @@ NAME:    hangedman_slime_tunnels
 TAGS:    no_monster_gen no_trap_gen transparent
 DEPTH:   Slime:1-5
 WEIGHT:  1
-KMONS:   1 = slime creature w:15 / brown ooze w:15 / nothing w:2
+KMONS:   1 = slime creature w:30 / nothing w:2
 KMONS:   2 = shining eye / giant eyeball / eye of devastation w:5 / \
              great orb of eyes / giant orange brain / random w:1
 KFEAT:   2 = alarm trap / . w:30
@@ -422,8 +401,8 @@ NAME: nicolae_slime_welcoming_committee
 TAGS: no_monster_gen no_item_gen no_trap_gen
 DEPTH: Slime:2-5
 SUBST: X = x., { = {[(
-KMONS: 1 : jelly w:20 / pulsating lump w:20 / ooze / slime creature w:15 / \
-   brown ooze w:15 / acid blob w:5 / death ooze w:5 / azure jelly w:5
+KMONS: 1 : jelly w:20 / ooze / slime creature w:30 / \
+   acid blob w:5 / death ooze w:5 / azure jelly w:5
 MAP
       xxx
    xxxxxxxx

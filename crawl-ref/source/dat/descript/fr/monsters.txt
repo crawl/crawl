@@ -541,11 +541,6 @@ Brimstone Fiend
 Un démon puissant et énorme, baigné de flammes infernales et doté de grandes
 ailes écailleuses. Un des plus effrayants habitants de n'importe quel Enfer.
 %%%%
-brown ooze
-
-Un être liquide et visqueux qui s'écoule sur le sol à la recherche de quelque
-chose à dissoudre.
-%%%%
 burning bush
 
 Une masse de brindilles noircies entourées de flammes oranges. Les murs et le
@@ -1621,14 +1616,6 @@ program bug
 
 Un monstre vorace et incroyablement buggé. Veuillez rapporter son existence aux
 développeurs de Devteam.
-%%%%
-pulsating lump
-
-Un blob répugnant de toute sortes de matières organiques – muscle, tripes,
-nerf, viscère, moelle – empilés aléatoirement en une seule masse contorsionnée.
-Sa chair altérée est mutagène au contact ; mais sans aucune forme d'agencement
-structurel de ses parties, il lui manque la coordination nécessaire pour se
-déplacer rapidement.
 %%%%
 quasit
 

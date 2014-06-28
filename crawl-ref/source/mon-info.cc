@@ -593,7 +593,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (mons_looks_distracted(m))
         mb.set(MB_DISTRACTED);
     if (m->liquefied_ground())
-        mb.set(MB_SLOWED);
+        mb.set(MB_SLOW_MOVEMENT);
     if (m->is_wall_clinging())
         mb.set(MB_CLINGING);
 
@@ -670,11 +670,14 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->is_shapeshifter() && (m->flags & MF_KNOWN_SHIFTER))
         mb.set(MB_SHAPESHIFTER);
 
-    if (m->is_known_chaotic())
+    if (m->known_chaos())
         mb.set(MB_CHAOTIC);
 
     if (m->submerged())
         mb.set(MB_SUBMERGED);
+
+    if (testbits(m->flags, MF_SPECTRALISED))
+        mb.set(MB_SPECTRALISED);
 
     if (mons_is_pghost(type))
     {
@@ -1601,6 +1604,10 @@ vector<string> monster_info::attributes() const
         v.push_back("shrouded");
     if (is(MB_CORROSION))
         v.push_back("covered in acid");
+    if (is(MB_SPECTRALISED))
+        v.push_back("ghostly");
+    if (is(MB_SLOW_MOVEMENT))
+        v.push_back("covering ground slowly");
     return v;
 }
 

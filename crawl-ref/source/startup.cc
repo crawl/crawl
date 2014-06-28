@@ -14,6 +14,7 @@
 #include "ctest.h"
 #include "database.h"
 #include "dbg-maps.h"
+#include "dbg-scan.h"
 #include "defines.h"
 #include "dlua.h"
 #include "dungeon.h"
@@ -118,8 +119,8 @@ static void _initialize()
     // Draw the splash screen before the database gets initialised as that
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
-    if (!crawl_state.map_stat_gen && !crawl_state.test
-        && crawl_state.title_screen)
+    if (!crawl_state.map_stat_gen && !crawl_state.obj_stat_gen
+        && !crawl_state.test && crawl_state.title_screen)
     {
         tiles.draw_title();
         tiles.update_title_msg("Loading databases...");
@@ -160,7 +161,13 @@ static void _initialize()
     if (crawl_state.map_stat_gen)
     {
         release_cli_signals();
-        generate_map_stats();
+        mapstat_generate_stats();
+        end(0, false);
+    }
+    else if (crawl_state.obj_stat_gen)
+    {
+        release_cli_signals();
+        objstat_generate_stats();
         end(0, false);
     }
 #endif
@@ -524,18 +531,27 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     tmp->set_visible(true);
 }
 
+static void _add_newgame_button(MenuScroller* menu, int num_chars)
+{
+    // XXX: duplicates a lot of _construct_save_games_menu code. not ideal.
+#ifdef USE_TILE_LOCAL
+    SaveMenuItem* tmp = new SaveMenuItem();
+#else
+    TextItem* tmp = new TextItem();
+#endif
+    tmp->set_text("New Game");
+    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+    // unique id
+    tmp->set_id(NUM_GAME_TYPE + num_chars);
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+}
+
 static void _construct_save_games_menu(MenuScroller* menu,
                                        const vector<player_save_info>& chars)
 {
-    if (chars.empty())
-    {
-        // no saves
-        return;
-    }
-
-    string text;
-
-    vector<player_save_info>::iterator it;
     for (unsigned int i = 0; i < chars.size(); ++i)
     {
 #ifdef USE_TILE_LOCAL
@@ -552,10 +568,12 @@ static void _construct_save_games_menu(MenuScroller* menu,
 #ifdef USE_TILE_LOCAL
         tmp->set_doll(chars.at(i).doll);
 #endif
-        //tmp->set_description_text("...");
         menu->attach_item(tmp);
         tmp->set_visible(true);
     }
+
+    if (!chars.empty())
+        _add_newgame_button(menu, chars.size());
 }
 
 // Should probably use some find invocation instead.
@@ -599,12 +617,13 @@ again:
     const int max_col    = get_number_of_cols();
 #endif
     const int max_line   = get_number_of_lines();
-    const int help_start = min(GAME_MODES_START_Y + num_to_lines(num_saves + num_modes) + 2,
+    int save_lines = num_saves + (num_saves ? 1 : 0); // add 1 for New Game
+    const int help_start = min(GAME_MODES_START_Y + num_to_lines(save_lines + num_modes) + 2,
                                max_line - NUM_MISC_LINES + 1);
     const int help_end   = help_start + NUM_HELP_LINES + 1;
 
     const int game_mode_bottom = GAME_MODES_START_Y + num_to_lines(num_modes);
-    const int game_save_top = help_start - 2 - num_to_lines(min(2, num_saves));
+    const int game_save_top = help_start - 2 - num_to_lines(min(2, save_lines));
     const int save_games_start_y = min<int>(game_mode_bottom, game_save_top);
 
     clrscr();
@@ -840,7 +859,10 @@ again:
 
                 default:
                     int save_number = type - NUM_GAME_TYPE;
-                    input_string = chars.at(save_number).name;
+                    if (save_number < num_saves)
+                        input_string = chars.at(save_number).name;
+                    else // new game
+                        input_string = "";
                     full_name = true;
                     break;
                 }
@@ -895,10 +917,19 @@ again:
         default:
             // It was a savegame instead
             const int save_number = id - NUM_GAME_TYPE;
-            // Save the savegame character name
-            ng_choice->name = chars.at(save_number).name;
-            ng_choice->type = chars.at(save_number).saved_game_type;
-            ng_choice->filename = chars.at(save_number).filename;
+            if (save_number < num_saves) // actual save
+            {
+                // Save the savegame character name
+                ng_choice->name = chars.at(save_number).name;
+                ng_choice->type = chars.at(save_number).saved_game_type;
+                ng_choice->filename = chars.at(save_number).filename;
+            }
+            else // "new game"
+            {
+                ng_choice->name = "";
+                ng_choice->type = GAME_TYPE_NORMAL;
+                ng_choice->filename = ""; // ?
+            }
             return;
         }
     }
