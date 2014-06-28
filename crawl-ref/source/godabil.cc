@@ -5541,8 +5541,10 @@ void iashol_do_sacrifice(ability_type sacrifice)
             break;
     }
     if (you.props.exists("num_sacrifice_muts"))
+    {
         you.props["num_sacrifice_muts"] = num_sacrifices +
             you.props["num_sacrifice_muts"].get_int();
+    }
     else
         you.props["num_sacrifice_muts"] = num_sacrifices;
 

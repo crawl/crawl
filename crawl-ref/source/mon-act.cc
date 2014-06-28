@@ -2350,7 +2350,9 @@ void handle_monster_move(monster* mons)
                                 if (new_target == NULL
                                     || mons_is_projectile(new_target->type)
                                     || mons_is_firewood(new_target))
+                                {
                                     continue;
+                                }
                                 ASSERT(new_target);
 
                                 if (one_chance_in(++pfound))
