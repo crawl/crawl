@@ -5438,7 +5438,11 @@ void iashol_do_sacrifice(ability_type sacrifice)
                 return;
             }
             else
+            {
                 perma_mutate(MUT_NO_LOVE, 1, "Iashol sacrifice");
+                add_daction(DACT_ALLY_SACRIFICE_LOVE);
+            }
+
             break;
         case ABIL_IASHOL_SACRIFICE_ARCANA:
             piety_gain = 25;

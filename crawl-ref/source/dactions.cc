@@ -70,6 +70,7 @@ static const char *daction_names[] =
     "bribe timeout",
     "remove Gozag shops",
     "apply Gozag bribes",
+    "make all monsters hate you",
 };
 #endif
 
@@ -139,6 +140,9 @@ bool mons_matches_daction(const monster* mon, daction_type act)
     case DACT_SET_BRIBES:
         return !testbits(mon->flags, MF_WAS_IN_VIEW);
 
+    case DACT_ALLY_SACRIFICE_LOVE:
+        return true;
+
     default:
         return false;
     }
@@ -194,6 +198,7 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
         case DACT_ALLY_SLIME:
         case DACT_ALLY_PLANT:
         case DACT_ALLY_TROG:
+        case DACT_ALLY_SACRIFICE_LOVE:
             dprf("going hostile: %s", mon->name(DESC_PLAIN, true).c_str());
             mon->attitude = ATT_HOSTILE;
             mon->del_ench(ENCH_CHARM, true);
@@ -207,8 +212,9 @@ void apply_daction_to_mons(monster* mon, daction_type act, bool local,
             if (act == DACT_ALLY_PLANT || act == DACT_ALLY_SLIME)
                 mon->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
-            // No global message for Trog.
-            if (act == DACT_ALLY_TROG && local)
+            // No global message for Trog or Iashol
+            if ((act == DACT_ALLY_TROG || act == DACT_ALLY_SACRIFICE_LOVE)
+                    && local)
                 simple_monster_message(mon, " turns against you!");
             break;
 
@@ -284,6 +290,7 @@ static void _apply_daction(daction_type act)
     case DACT_KIRKE_HOGS:
     case DACT_BRIBE_TIMEOUT:
     case DACT_SET_BRIBES:
+    case DACT_ALLY_SACRIFICE_LOVE:
         for (monster_iterator mi; mi; ++mi)
         {
             if (mons_matches_daction(*mi, act))
