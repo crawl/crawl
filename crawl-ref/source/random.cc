@@ -21,6 +21,8 @@ static AsgKISS asg_rng[2];
 
 static uint32_t _get_uint32(int generator = 0)
 {
+    ASSERT(generator >= 0);
+    ASSERT(generator < ARRAYSZ(asg_rng));
     return asg_rng[generator].get_uint32();
 }
 

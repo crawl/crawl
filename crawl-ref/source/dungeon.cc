@@ -366,7 +366,7 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
         you.uniq_map_names = uniq_names;
     }
 
-    if (!crawl_state.map_stat_gen)
+    if (!crawl_state.map_stat_gen && !crawl_state.obj_stat_gen)
     {
         // Failed to build level, bail out.
         if (crawl_state.need_save)
@@ -390,7 +390,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
                                   dungeon_feature_type dest_stairs_type)
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mapgen_report_map_build_start();
+    mapstat_report_map_build_start();
 #endif
 
     dgn_reset_level(enable_random_maps);
@@ -406,7 +406,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
     {
         dprf("<white>VETO</white>: %s: %s", level_id::current().describe().c_str(), e.what());
 #ifdef DEBUG_DIAGNOSTICS
-        mapgen_report_map_veto();
+        mapstat_report_map_veto();
 #endif
         return false;
     }
@@ -4340,7 +4340,7 @@ static const vault_placement *_build_vault_impl(const map_def *vault,
 
 #ifdef DEBUG_DIAGNOSTICS
     if (crawl_state.map_stat_gen)
-        mapgen_report_map_use(place.map);
+        mapstat_report_map_use(place.map);
 #endif
 
     if (is_layout && place.map.has_tag_prefix("layout_type_"))
@@ -5478,7 +5478,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
         {
             // Altar god doesn't matter, setting up the whole machinery would
             // be too much work.
-            if (crawl_state.map_stat_gen)
+            if (crawl_state.map_stat_gen || crawl_state.obj_stat_gen)
                 return DNGN_ALTAR_XOM;
 
             mprf(MSGCH_ERROR, "Ran out of altars for temple!");
@@ -6799,7 +6799,7 @@ void vault_placement::apply_grid()
 {
     if (!size.zero())
     {
-        bool clear = !map.has_tag("can_overwrite");
+        bool clear = !map.has_tag("overwrite_floor_cell");
 
         // NOTE: assumes *no* previous item (I think) or monster (definitely)
         // placement.

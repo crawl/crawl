@@ -777,7 +777,9 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 
     // Before the hp check since this should not care about the power of the
     // finishing blow
-    if (mons->holiness() == MH_UNDEAD && !mons_is_zombified(mons)
+    if (!mons_is_zombified(mons)
+        && (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_NATURAL)
+        && !testbits(mons->flags, MF_SPECTRALISED)
         && killer != KILL_RESET
         && killer != KILL_DISMISSED
         && killer != KILL_BANISHED
@@ -2552,16 +2554,6 @@ int monster_die(monster* mons, killer_type killer,
         || mons->silence_radius2())
     {
         invalidate_agrid();
-    }
-
-    // Done before items are dropped so that we can clone them
-    if (mons->holiness() == MH_NATURAL
-        && killer != KILL_RESET
-        && killer != KILL_DISMISSED
-        && killer != KILL_BANISHED
-        && _lost_soul_nearby(mons->pos()))
-    {
-        lost_soul_spectralize(mons);
     }
 
     const coord_def mwhere = mons->pos();

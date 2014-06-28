@@ -8,6 +8,7 @@
 
 #include "enum.h"
 #include "externs.h"
+#include "spl-cast.h"
 
 #define BEOGH_WPN_GIFT_KEY "given beogh weapon"
 #define BEOGH_ARM_GIFT_KEY "given beogh armour"
@@ -58,7 +59,7 @@ bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
 bool fedhas_shoot_through(const bolt& beam, const monster* victim);
 int fedhas_fungal_bloom();
-bool fedhas_sunlight();
+spret_type fedhas_sunlight(bool fail = false);
 void process_sunlights(bool future = false);
 bool prioritise_adjacent(const coord_def& target, vector<coord_def>& candidates);
 bool fedhas_plant_ring_from_fruit();
@@ -103,7 +104,8 @@ void gozag_deduct_bribe(branch_type br, int amount);
 bool gozag_check_bribe_branch(bool quiet = false);
 bool gozag_bribe_branch();
 
-bool qazlal_upheaval(coord_def target, bool quiet = false);
+spret_type qazlal_upheaval(coord_def target, bool quiet = false,
+                           bool fail = false);
 void qazlal_elemental_force();
 bool qazlal_disaster_area();
 

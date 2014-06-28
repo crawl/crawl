@@ -64,7 +64,7 @@ default-depth: Depths, D:21-
 # it also acts as the backup entrance and the entrance for encompass vault
 # placements.
 NAME:   hell_entry
-TAGS:   allow_dup can_overwrite replace_portal transparent fallback_enter_hell
+TAGS:   allow_dup overwrite_floor_cell replace_portal transparent fallback_enter_hell
 WEIGHT: 50
 : hell_entry_feature(_G, 'O')
 MAP

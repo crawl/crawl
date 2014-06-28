@@ -1832,8 +1832,7 @@ static bool _lost_soul_affectable(const monster* mons)
              && mons->type != MONS_LOST_SOUL
              && !mons_is_zombified(mons))
             ||(mons->holiness() == MH_NATURAL
-               && !is_good_god(mons->god)
-               && mons_can_be_zombified(mons)))
+               && !is_good_god(mons->god)))
            && !mons->is_summoned()
            && !mons_class_flag(mons->type, M_NO_EXP_GAIN);
 }
@@ -1934,87 +1933,38 @@ bool lost_soul_revive(monster* mons)
             targetter_los hitfunc(*mi, LOS_SOLID);
             flash_view_delay(GREEN, 200, &hitfunc);
 
-            if (you.can_see(*mi))
+            if (mons->holiness() == MH_UNDEAD)
             {
-                mprf("%s sacrifices itself to reknit %s!",
-                     mi->name(DESC_THE).c_str(),
-                     mons->name(DESC_THE).c_str());
+                if (you.can_see(*mi))
+                {
+                     mprf("%s sacrifices itself to reknit %s!",
+                          mi->name(DESC_THE).c_str(),
+                          mons->name(DESC_THE).c_str());
+                }
+                else if (you.can_see(mons))
+                {
+                    mprf("Necromantic energies suffuse and reknit %s!",
+                         mons->name(DESC_THE).c_str());
+                }
             }
-            else if (you.can_see(mons))
+            else if (you.can_see(*mi))
             {
-                mprf("Necromantic energies suffuse and reknit %s!",
-                     mons->name(DESC_THE).c_str());
+                mprf("The lost soul assumes the form of %s%s!",
+                     mons->name(DESC_THE).c_str(),
+                    (mi->is_summoned() ? " and becomes anchored to this world"
+                                       : ""));
+
+                mons->flags |= MF_SPECTRALISED;
             }
 
             mons->heal(mons->max_hit_points);
             mons->del_ench(ENCH_CONFUSION, true);
             mons->timeout_enchantments(10);
+
+            coord_def newpos = mi->pos();
             monster_die(*mi, KILL_MISC, -1, true);
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool lost_soul_spectralize(monster* mons)
-{
-    if (!_lost_soul_affectable(mons))
-        return false;
-
-    for (monster_near_iterator mi(mons, LOS_NO_TRANS); mi; ++mi)
-    {
-        if (mi->type == MONS_LOST_SOUL && mons_aligned(mons, *mi))
-        {
-            if (!_worthy_sacrifice(*mi, mons))
-                continue;
-
-            targetter_los hitfunc(*mi, LOS_SOLID);
-            flash_view_delay(GREEN, 200, &hitfunc);
-
-            if (you.can_see(*mi))
-            {
-                mprf("The lost soul assumes the form of %s%s!",
-                     mons->name(DESC_THE).c_str(),
-                     (mi->is_summoned() ? " and becomes anchored to this world"
-                                        : ""));
-            }
-
-            define_zombie(*mi, mons->type, MONS_SPECTRAL_THING);
-            mi->flags |= MF_NO_REWARD | MF_SEEN;
-            mi->flags |= mons->flags & (MF_MELEE_MASK | MF_SPELL_MASK);
-            mi->spells = mons->spells;
-            mi->god = mons->god;
-
-            name_zombie(*mi, mons);
-            invalidate_agrid();
-
-            // Duplicate objects, or unequip them if they can't be duplicated.
-            for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-            {
-                const int old_index = mons->inv[i];
-
-                if (old_index == NON_ITEM)
-                    continue;
-
-                const int new_index = get_mitm_slot(0);
-                if (new_index == NON_ITEM)
-                {
-                    mi->unequip(mitm[old_index], i, 0, true);
-                    mi->inv[i] = NON_ITEM;
-                    continue;
-                }
-
-                mi->inv[i]      = new_index;
-                mitm[new_index] = mitm[old_index];
-                mitm[new_index].set_holding_monster(mi->mindex());
-                mitm[new_index].flags |= ISFLAG_SUMMONED;
-
-                // Make holy items plain
-                if (get_weapon_brand(mitm[new_index]) == SPWPN_HOLY_WRATH)
-                    set_item_ego_type(mitm[new_index], OBJ_WEAPONS, SPWPN_NORMAL);
-            }
-
+            if (mons->holiness() == MH_NATURAL)
+                mons->move_to_pos(newpos);
             return true;
         }
     }
@@ -4820,7 +4770,6 @@ void torpor_snail_slow(monster* mons)
 
     if (!is_sanctuary(you.pos())
         && !you.stasis()
-        && !you_worship(GOD_CHEIBRIADOS)
         && you.can_see(mons)
         && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {

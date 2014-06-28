@@ -9,17 +9,20 @@
 ##############################################################################
 
 {{
-function get_altar_count(e)
+function get_altar_count(e, default)
   local params = dgn.map_parameters()
+  local count = "";
   if params ~= nil then
     local tag = unpack(params)
     if tag ~= nil then
       -- temple_altars_ is 14 characters
-      return string.sub(tag, 15)
+      count = string.sub(tag, 15)
     end
   end
-
-  return 0
+  if count == nil or count == "" then
+     count = default
+  end
+  return count
 end
 }}
 
@@ -3277,7 +3280,7 @@ PLACE:    Temple
 WEIGHT:   10
 ORIENT:   encompass
 {{
-local altar_count = is_validating() and 6 or get_altar_count(_G)
+local altar_count = get_altar_count(_G, 6)
 nsubst("O = " .. altar_count .. ":B / *:O")
 }}
 KFEAT:    O = altar_lugonu
@@ -3329,7 +3332,7 @@ WEIGHT:    2
 TAGS:      no_rotate
 ORIENT:    encompass
 {{
-local altar_count = is_validating() and 6 or get_altar_count(_G)
+local altar_count = get_altar_count(_G, 6)
 nsubst("O = " .. altar_count .. ":B / *:O")
 }}
 KFEAT:     O = altar_jiyva
@@ -3362,7 +3365,7 @@ PLACE:     Temple
 WEIGHT:    1
 ORIENT:    encompass
 {{
-local altar_count = is_validating() and 6 or get_altar_count(_G)
+local altar_count = get_altar_count(_G, 6)
 nsubst("O = " .. altar_count .. ":B / *:Z")
 }}
 KFEAT:     Z = altar_jiyva

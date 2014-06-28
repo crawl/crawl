@@ -15,6 +15,7 @@
 #include "artefact.h"
 #include "colour.h"
 #include "coord.h"
+#include "dbg-scan.h"
 #include "decks.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -2725,6 +2726,10 @@ int items(bool allow_uniques,
         {
             make_item_unrandart(mitm[p], force_ego);
             ASSERT(mitm[p].is_valid());
+#ifdef DEBUG_DIAGNOSTICS
+            if (crawl_state.obj_stat_gen)
+                objstat_record_item(mitm[p]);
+#endif
             return p;
         }
         // the base item otherwise
@@ -2864,6 +2869,10 @@ int items(bool allow_uniques,
 
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
+#ifdef DEBUG_DIAGNOSTICS
+    if (crawl_state.obj_stat_gen)
+        objstat_record_item(mitm[p]);
+#endif
     return p;
 }
 
@@ -2938,13 +2947,36 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (visibly_branded || is_artefact(item))
         return true;
 
-    if (x_chance_in_y(item.plus - 2, 3))
+    if (item.plus >= 3)
         return true;
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
     return false;
+}
+
+/**
+ * Return the number of plusses required for a type of armour to glow.
+ * (From plus alone.)
+ *
+ * @param armour_type   The type of armour being considered.
+ * @return              The armour plus value required to be interesting.
+ */
+static int _armour_plus_threshold(equipment_type armour_type)
+{
+    switch (armour_type)
+    {
+        // body armour is very common; squelch most of it
+        case EQ_BODY_ARMOUR:
+            return 3;
+        // shields are fairly common
+        case EQ_SHIELD:
+            return 2;
+        // aux armour is relatively uncommon
+        default:
+            return 1;
+    }
 }
 
 static bool _armour_is_visibly_special(const item_def &item)
@@ -2961,11 +2993,8 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return false;
 
-    if (x_chance_in_y(item.plus - 2, 3)
-        || item.plus > 1 && get_armour_slot(item) != EQ_BODY_ARMOUR)
-    {
+    if (item.plus >= _armour_plus_threshold(get_armour_slot(item)))
         return true;
-    }
 
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;

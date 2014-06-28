@@ -1222,6 +1222,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
         // worth it, unless we have more monsters with misc. items.
         item.base_type = OBJ_MISCELLANY;
         item.sub_type  = MISC_HORN_OF_GERYON;
+        // Don't attempt to give the horn again.
+        give_aux_melee = false;
         break;
 
     case MONS_SALAMANDER:
@@ -2306,16 +2308,6 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
         item.sub_type  = ARM_ROBE;
         break;
 
-    case MONS_DRACONIAN:
-    case MONS_RED_DRACONIAN:
-    case MONS_WHITE_DRACONIAN:
-    case MONS_GREEN_DRACONIAN:
-    case MONS_PALE_DRACONIAN:
-    case MONS_MOTTLED_DRACONIAN:
-    case MONS_BLACK_DRACONIAN:
-    case MONS_YELLOW_DRACONIAN:
-    case MONS_PURPLE_DRACONIAN:
-    case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ANNIHILATOR:

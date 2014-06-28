@@ -537,6 +537,31 @@ item_def *monster::weapon(int which_attack) const
     return weap == NON_ITEM ? NULL : &mitm[weap];
 }
 
+/**
+ * Find a monster's melee weapon, if any.
+ *
+ * Finds melee weapons carried in the primary or aux slot; if the monster has
+ * both (dual-wielding), choose one with a coinflip.
+ *
+ * @return A melee weapon that the monster is holding, or null.
+ */
+item_def *monster::melee_weapon() const
+{
+    item_def* first_weapon = mslot_item(MSLOT_WEAPON);
+    item_def* second_weapon = mslot_item(MSLOT_ALT_WEAPON);
+    const bool primary_is_melee = first_weapon
+                                  && is_melee_weapon(*first_weapon);
+    const bool secondary_is_melee = second_weapon
+                                    && is_melee_weapon(*second_weapon);
+    if (primary_is_melee && secondary_is_melee)
+        return coinflip() ? first_weapon : second_weapon;
+    if (primary_is_melee)
+        return first_weapon;
+    if (secondary_is_melee)
+        return second_weapon;
+    return NULL;
+}
+
 // Give hands required to wield weapon.
 hands_reqd_type monster::hands_reqd(const item_def &item) const
 {
@@ -2112,13 +2137,11 @@ bool monster::pickup_missile(item_def &item, int near, bool force)
             }
         }
 
-        // Darts don't absolutely need a launcher - still allow upgrading.
+        // Allow upgrading throwing weapon brands (XXX: improve this!)
         if (item.sub_type == miss->sub_type
-            && item.sub_type == MI_TOMAHAWK
-            && (item.plus > miss->plus
-                || item.plus == miss->plus
-                   && get_ammo_brand(*miss) == SPMSL_NORMAL
-                   && get_ammo_brand(item) != SPMSL_NORMAL))
+            && (item.sub_type == MI_TOMAHAWK || item.sub_type == MI_JAVELIN)
+            && get_ammo_brand(*miss) == SPMSL_NORMAL
+            && get_ammo_brand(item) != SPMSL_NORMAL)
         {
             if (!drop_item(MSLOT_MISSILE, near))
                 return false;
@@ -3495,6 +3518,9 @@ bool monster::is_evil(bool check_spells) const
     {
         return true;
     }
+
+    if (testbits(flags, MF_SPECTRALISED))
+        return true;
 
     return false;
 }
@@ -6441,7 +6467,7 @@ bool monster::stasis(bool calc_unid, bool items) const
 
 bool monster::check_stasis(bool silent, bool calc_unid) const
 {
-    if (mons_genus(type) == MONS_FORMICID)
+    if (stasis(false, false))
         return true;
 
     if (!stasis())

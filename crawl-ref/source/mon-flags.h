@@ -231,7 +231,7 @@ const uint64_t MF_NAME_DESCRIPTOR    = BIT(27); // mname should be treated with 
 const uint64_t MF_NAME_DEFINITE      = BIT(28); // give this monster the definite "the"
                                      // article, instead of the indefinite "a"
                                      // article.
-//////////////////////////////////// = BIT(29);
+const uint64_t MF_SPECTRALISED       = BIT(29); // living monster revived by a lost soul
 const uint64_t MF_DEMONIC_GUARDIAN   = BIT(30); // is a demonic_guardian
 const uint64_t MF_NAME_SPECIES       = BIT(31); // mname should be used for corpses as well,
 const uint64_t MF_NAME_ZOMBIE        = BIT(32); // mname replaces zombies/skeletons, use

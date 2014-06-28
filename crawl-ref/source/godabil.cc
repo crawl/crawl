@@ -12,6 +12,7 @@
 #include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
+#include "bless.h"
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
@@ -1576,19 +1577,39 @@ bool beogh_gift_item()
     const bool shield = is_shield(gift);
     const bool body_armour = gift.base_type == OBJ_ARMOUR
                              && get_armour_slot(gift) == EQ_BODY_ARMOUR;
+    const bool weapon = gift.base_type == OBJ_WEAPONS;
+    const bool range_weapon = weapon && is_range_weapon(gift);
+    const item_def* mons_weapon = mons->weapon();
 
-    if (!(gift.base_type == OBJ_WEAPONS && mons->could_wield(gift)
+    if (!(weapon && mons->could_wield(gift)
           || body_armour && check_armour_size(gift, mons->body_size())
           || shield
-             && (!mons->weapon()
-                 || mons->hands_reqd(*mons->weapon()) != HANDS_TWO)))
+             && (!mons_weapon
+                 || mons->hands_reqd(*mons_weapon) != HANDS_TWO)))
     {
         mprf("%s can't use that.", monsname);
         return false;
     }
+
+    // if we're giving a ranged weapon to an orc holding a melee weapon in
+    // their hands, or vice versa, put it in their carried slot instead.
+    // this will of course drop anything that's there.
+    const bool use_alt_slot = weapon && mons_weapon
+                              && is_range_weapon(gift) !=
+                                 is_range_weapon(*mons_weapon);
+
     mons->take_item(item_slot, body_armour ? MSLOT_ARMOUR :
                                     shield ? MSLOT_SHIELD :
+                              use_alt_slot ? MSLOT_ALT_WEAPON :
                                              MSLOT_WEAPON);
+    if (use_alt_slot)
+        mons->swap_weapons(true);
+
+    dprf("is_ranged weap: %d", range_weapon);
+    if (range_weapon)
+        gift_ammo_to_orc(mons, true); // give a small initial ammo freebie
+
+
     if (shield)
         mons->props[BEOGH_SH_GIFT_KEY] = true;
     else if (body_armour)
@@ -2124,7 +2145,7 @@ static bool _create_plant(coord_def& target, int hp_adjust = 0)
 
 #define SUNLIGHT_DURATION 80
 
-bool fedhas_sunlight()
+spret_type fedhas_sunlight(bool fail)
 {
     dist spelld;
 
@@ -2141,7 +2162,9 @@ bool fedhas_sunlight()
     direction(spelld, args);
 
     if (!spelld.isValid)
-        return false;
+        return SPRET_ABORT;
+
+    fail_check();
 
     const coord_def base = spelld.target;
 
@@ -2194,7 +2217,7 @@ bool fedhas_sunlight()
              "an invisible shape" : "some invisible shapes");
     }
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 void process_sunlights(bool future)
@@ -4490,7 +4513,7 @@ bool gozag_bribe_branch()
     return false;
 }
 
-bool qazlal_upheaval(coord_def target, bool quiet)
+spret_type qazlal_upheaval(coord_def target, bool quiet, bool fail)
 {
     int pow = you.skill(SK_INVOCATIONS, 6);
     const int max_radius = pow >= 100 ? 2 : 1;
@@ -4519,7 +4542,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
                              "Aiming: <white>Upheaval</white>", true,
                              &tgt))
         {
-            return false;
+            return SPRET_ABORT;
         }
         bolt tempbeam;
         tempbeam.source    = beam.target;
@@ -4532,10 +4555,12 @@ bool qazlal_upheaval(coord_def target, bool quiet)
         tempbeam.is_tracer = true;
         tempbeam.explode(false);
         if (tempbeam.beam_cancelled)
-            return false;
+            return SPRET_ABORT;
     }
     else
         beam.target = target;
+
+    fail_check();
 
     string message = "";
 
@@ -4657,7 +4682,7 @@ bool qazlal_upheaval(coord_def target, bool quiet)
     if (wall_count && !quiet)
         mpr("Ka-crash!");
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 void qazlal_elemental_force()

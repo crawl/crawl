@@ -1621,7 +1621,7 @@ void melee_attack::set_attack_verb()
         else if (defender_genus == MONS_HOG)
         {
             attack_verb = "carve";
-            verb_degree = "like a proverbial ham";
+            verb_degree = "like the proverbial ham";
         }
         else if ((defender_genus == MONS_YAK || defender_genus == MONS_YAKTAUR)
                  && Options.lang == LANG_GRUNT)
@@ -4122,11 +4122,8 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
         int food_value = 0;
         if (chunk_type == CE_CLEAN)
             food_value = 30 + random2avg(59, 2);
-        else if (chunk_type == CE_CONTAMINATED
-                 || chunk_is_poisonous(chunk_type))
-        {
+        else if (chunk_is_poisonous(chunk_type))
             food_value = 15 + random2avg(29, 2);
-        }
 
         // Bats get rather less nutrition out of it.
         if (you.form == TRAN_BAT)
@@ -4159,6 +4156,6 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
     // Don't drink poisonous or mutagenic blood.
-    return chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
+    return chunk_type == CE_CLEAN
            || (chunk_is_poisonous(chunk_type) && player_res_poison());
 }

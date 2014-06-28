@@ -573,7 +573,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                 case 'q':
                 CASE_ESCAPE
                     canned_msg(MSG_OK);
-                    return false;
+                    return success;
 
                 case '?':
                     show_butchering_help();
@@ -1534,15 +1534,6 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     {
     case CE_ROT:
         return 1000;
-    case CE_POISON_CONTAM:
-    case CE_CONTAMINATED:
-        switch (sapro)
-        {
-        default: ratio =  500; break; // including sapro 3 (contam is good)
-        case 1:  ratio =  100; break;
-        case 2:  ratio =   33; break;
-        }
-        break;
     case CE_ROTTEN:
         switch (sapro)
         {
@@ -1556,7 +1547,7 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
     }
 
     // The amulet of the gourmand will permit consumption of
-    // contaminated meat as though it were "clean" meat - level 3
+    // rotted meat as though it were "clean" meat - level 3
     // saprovores get rotting meat effect from clean chunks, since they
     // love rotting meat.
     if (you.gourmand())
@@ -1611,7 +1602,6 @@ static void _eat_chunk(item_def& food)
         break;
 
     case CE_ROTTEN:
-    case CE_CONTAMINATED:
     case CE_CLEAN:
     {
         int contam = _contamination_ratio(chunk_effect);
@@ -1640,7 +1630,6 @@ static void _eat_chunk(item_def& food)
     }
 
     case CE_POISONOUS:
-    case CE_POISON_CONTAM: // _determine_chunk_effect should never return this
     case CE_NOCORPSE:
         mprf(MSGCH_ERROR, "This flesh (%d) tastes buggy!", chunk_effect);
         break;
@@ -1821,14 +1810,6 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                 _heal_from_food(1);
             break;
 
-        case CE_CONTAMINATED:
-            food_value /= 2;
-            if (start_feeding)
-                mpr("Somehow this blood was not very filling!");
-            else if (end_feeding && corpse.special > 150)
-                _heal_from_food(1);
-            break;
-
         case CE_MUTAGEN:
             food_value /= 2;
             if (start_feeding)
@@ -1849,7 +1830,6 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             break;
 
         case CE_POISONOUS:
-        case CE_POISON_CONTAM:
         case CE_NOCORPSE:
             mprf(MSGCH_ERROR, "This blood (%d) tastes buggy!", chunk_type);
             return;
@@ -1901,11 +1881,7 @@ bool is_contaminated(const item_def &food)
         return false;
     }
 
-    const corpse_effect_type chunk_type = mons_corpse_effect(food.mon_type);
-    return chunk_type == CE_CONTAMINATED
-           || (player_res_poison(false) > 0 && chunk_type == CE_POISON_CONTAM)
-           || food_is_rotten(food)
-              && player_mutation_level(MUT_SAPROVOROUS) < 3;
+    return food_is_rotten(food) && player_mutation_level(MUT_SAPROVOROUS) < 3;
 }
 
 // Returns true if a food item (or corpse) will cause rotting.
@@ -2195,7 +2171,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 
 bool chunk_is_poisonous(int chunktype)
 {
-    return chunktype == CE_POISONOUS || chunktype == CE_POISON_CONTAM;
+    return chunktype == CE_POISONOUS;
 }
 
 // See if you can follow along here -- except for the amulet of the gourmand
@@ -2219,35 +2195,13 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
             chunktype = CE_CLEAN;
         break;
 
-    case CE_POISON_CONTAM:
-        if (player_res_poison(false) <= 0)
-        {
-            chunktype = CE_POISONOUS;
-            break;
-        }
-        else
-        {
-            chunktype = CE_CONTAMINATED;
-            break;
-        }
-
     default:
         break;
     }
 
     // Determine effects of rotting on base chunk effect {dlb}:
-    if (rotten_chunk)
-    {
-        switch (chunktype)
-        {
-        case CE_CLEAN:
-        case CE_CONTAMINATED:
-            chunktype = CE_ROTTEN;
-            break;
-        default:
-            break;
-        }
-    }
+    if (rotten_chunk && chunktype == CE_CLEAN)
+        chunktype = CE_ROTTEN;
 
     return chunktype;
 }

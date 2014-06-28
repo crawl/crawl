@@ -942,3 +942,167 @@ mosaic12
 mosaic13
 mosaic14
 mosaic15
+
+%sdir dngn/floor
+## from here on multiple tile definitions are CHANGEABLE, i.e. they may
+## change from turn to turn
+lava00 DNGN_LAVA
+lava01
+lava02
+lava03
+lava04
+lava05
+lava06
+lava07
+lava08
+lava09
+lava10
+lava11
+lava04
+lava05
+lava06
+lava07
+
+## water
+%sdir dngn/water
+%weight 3
+open_sea DNGN_OPEN_SEA
+%weight 1
+open_sea2
+
+%weight 2
+deep_water DNGN_DEEP_WATER
+%weight 1
+deep_water2
+
+%weight 3
+shallow_water DNGN_SHALLOW_WATER
+%weight 1
+shallow_water2
+shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
+shallow_water_disturbance2
+%weight 2
+deep_water_murky DNGN_DEEP_WATER_MURKY
+%weight 1
+deep_water_murky2
+%weight 3
+shallow_water_murky DNGN_SHALLOW_WATER_MURKY
+%weight 1
+shallow_water_murky2
+shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
+shallow_water_murky_disturbance2
+
+grey_dirt_bb SHORE_N
+grey_dirt_bl SHORE_W
+grey_dirt_br SHORE_E
+grey_dirt_bcl SHORE_NW
+grey_dirt_bcr SHORE_NE
+
+shallow_bord_top DNGN_WAVE_N
+shallow_bord_tr DNGN_WAVE_NE
+shallow_bord_rgt DNGN_WAVE_E
+shallow_bord_br DNGN_WAVE_SE
+shallow_bord_btm DNGN_WAVE_S
+shallow_bord_bl DNGN_WAVE_SW
+shallow_bord_lft DNGN_WAVE_W
+shallow_bord_tl DNGN_WAVE_NW
+
+murky_bord_top MURKY_WAVE_N
+murky_bord_tr MURKY_WAVE_NE
+murky_bord_rgt MURKY_WAVE_E
+murky_bord_br MURKY_WAVE_SE
+murky_bord_btm MURKY_WAVE_S
+murky_bord_bl MURKY_WAVE_SW
+murky_bord_lft MURKY_WAVE_W
+murky_bord_tl MURKY_WAVE_NW
+
+%weight 10
+shoals_deep_water0 SHOALS_DEEP_WATER
+shoals_deep_water1
+shoals_deep_water2
+%weight 8
+shoals_deep_water3
+shoals_deep_water4
+shoals_deep_water5
+%weight 3
+shoals_deep_water6
+shoals_deep_water7
+shoals_deep_water8
+%weight 1
+shoals_deep_water9
+shoals_deep_water10
+shoals_deep_water11
+
+%weight 10
+shoals_shallow_water0 SHOALS_SHALLOW_WATER
+shoals_shallow_water1
+shoals_shallow_water2
+%weight 8
+shoals_shallow_water3
+shoals_shallow_water4
+shoals_shallow_water5
+%weight 3
+shoals_shallow_water6
+shoals_shallow_water7
+shoals_shallow_water8
+%weight 1
+shoals_shallow_water9
+shoals_shallow_water10
+shoals_shallow_water11
+shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
+shoals_shallow_water_disturbance2
+shoals_shallow_water_disturbance3
+
+%shrink 0
+## deep water waves
+# corner waves (diagonals)
+deep_water_wave_corner_NE1 WAVE_DEEP_CORNER_NE
+deep_water_wave_corner_NE2
+deep_water_wave_corner_NW1 WAVE_DEEP_CORNER_NW
+deep_water_wave_corner_NW2
+deep_water_wave_corner_SE1 WAVE_DEEP_CORNER_SE
+deep_water_wave_corner_SE2
+deep_water_wave_corner_SW1 WAVE_DEEP_CORNER_SW
+deep_water_wave_corner_SW2
+
+# orthogonal waves
+deep_water_wave_N1 WAVE_DEEP_N
+deep_water_wave_N2
+deep_water_wave_S1 WAVE_DEEP_S
+deep_water_wave_S2
+deep_water_wave_E1 WAVE_DEEP_E
+deep_water_wave_E2
+deep_water_wave_W1 WAVE_DEEP_W
+deep_water_wave_W2
+
+## shallow water waves
+# corner waves (diagonals)
+shallow_water_wave_corner_NE WAVE_CORNER_NE
+shallow_water_wave_corner_NW WAVE_CORNER_NW
+shallow_water_wave_corner_SE WAVE_CORNER_SE
+shallow_water_wave_corner_SW WAVE_CORNER_SW
+
+# orthogonal waves
+shallow_water_wave_N WAVE_N
+shallow_water_wave_S WAVE_S
+shallow_water_wave_E WAVE_E
+shallow_water_wave_W WAVE_W
+
+## ink sheen
+# corner waves (diagonals)
+ink_wave_corner_NE WAVE_INK_CORNER_NE
+ink_wave_corner_NW WAVE_INK_CORNER_NW
+ink_wave_corner_SE WAVE_INK_CORNER_SE
+ink_wave_corner_SW WAVE_INK_CORNER_SW
+
+# orthogonal waves
+ink_wave_N WAVE_INK_N
+ink_wave_S WAVE_INK_S
+ink_wave_E WAVE_INK_E
+ink_wave_W WAVE_INK_W
+
+#full
+ink_full WAVE_INK_FULL
+%shrink 1
+liquefaction1 LIQUEFACTION
+liquefaction2

@@ -34,9 +34,9 @@
 #include "acquire.h"
 #include "act-iter.h"
 #include "areas.h"
+#include "arena.h"
 #include "art-enum.h"
 #include "artefact.h"
-#include "arena.h"
 #include "beam.h"
 #include "branch.h"
 #include "chardump.h"
@@ -61,23 +61,24 @@
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
+#include "evoke.h"
 #include "exercise.h"
-#include "goditem.h"
-#include "map_knowledge.h"
-#include "fprop.h"
 #include "fight.h"
 #include "files.h"
 #include "fineff.h"
 #include "food.h"
+#include "fprop.h"
 #include "godabil.h"
 #include "godcompanions.h"
+#include "godconduct.h"
+#include "goditem.h"
 #include "godpassive.h"
 #include "godprayer.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
-#include "evoke.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -85,13 +86,14 @@
 #include "luaterp.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "map_knowledge.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-act.h"
 #include "mon-abil.h"
+#include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-place.h"
 #include "mon-transit.h"
@@ -99,17 +101,16 @@
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
-#include "ouch.h"
 #include "output.h"
-#include "player.h"
 #include "player-equip.h"
 #include "player-reacts.h"
 #include "player-stats.h"
+#include "player.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
+#include "shout.h"
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
@@ -119,15 +120,14 @@
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
-#include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
+#include "startup.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "startup.h"
 #include "tags.h"
 #include "target.h"
 #include "terrain.h"
@@ -135,9 +135,6 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
-#include "shout.h"
-#include "stash.h"
 #include "uncancel.h"
 #include "version.h"
 #include "view.h"
@@ -534,10 +531,19 @@ static void _show_commandline_options_help()
     puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
 #ifdef DEBUG_DIAGNOSTICS
     puts("");
-    puts("  -test            run all test cases in test/ except test/big/");
-    puts("  -test foo,bar    run only tests \"foo\" and \"bar\"");
-    puts("  -test list       list available tests");
-    puts("  -script <name>   run script matching <name> in ./scripts");
+    puts("  -test               run all test cases in test/ except test/big/");
+    puts("  -test foo,bar       run only tests \"foo\" and \"bar\"");
+    puts("  -test list          list available tests");
+    puts("  -script <name>      run script matching <name> in ./scripts");
+    puts("  -mapstat [<levels>] run map stats on the given range of levels");
+    puts("      Defaults to entire dungeon; level ranges follow des DEPTH "
+         "syntax.");
+    puts("      Examples: Lair:2- and '!Pan,!Abyss'");
+    puts("  -objstat [<levels>] run monster and item stats on the given range "
+         "of levels");
+    puts("      Defaults to entire dungeon; same level syntax as -mapstat.");
+    puts("  -iters <num>        For -mapstat and -objstat, set the number of "
+         "iterations");
 #endif
     puts("");
     puts("Miscellaneous options:");
@@ -3054,7 +3060,7 @@ static void _move_player(int move_x, int move_y)
 }
 
 // Swap monster to this location.  Player is swapped elsewhere.
-static bool _swap_places(monster* mons, const coord_def &loc)
+static void _swap_places(monster* mons, const coord_def &loc)
 {
     ASSERT(map_bounds(loc));
     ASSERT(monster_habitable_grid(mons, grd(loc)));
@@ -3065,12 +3071,12 @@ static bool _swap_places(monster* mons, const coord_def &loc)
             && monster_at(loc)->type == MONS_TOADSTOOL)
         {
             monster_swaps_places(mons, loc - mons->pos());
-            return true;
+            return;
         }
         else
         {
             mpr("Something prevents you from swapping places.");
-            return false;
+            return;
         }
     }
 
@@ -3078,11 +3084,14 @@ static bool _swap_places(monster* mons, const coord_def &loc)
 
     mgrd(mons->pos()) = NON_MONSTER;
 
+    const coord_def old_loc = mons->pos();
     mons->moveto(loc);
+    mons->apply_location_effects(old_loc);
 
-    mgrd(mons->pos()) = mons->mindex();
+    if (mons->alive())
+        mgrd(mons->pos()) = mons->mindex();
 
-    return true;
+    return;
 }
 
 static void _move_player(coord_def move)
@@ -3169,6 +3178,16 @@ static void _move_player(coord_def move)
                 canned_msg(MSG_OK);
                 return;
             }
+        }
+
+        if (you.form == TRAN_TREE)
+        {
+            // Don't choose a random location to try to attack into - allows
+            // abuse, since trying to move (not attack) takes no time, and
+            // shouldn't. Just force confused trees to use ctrl.
+            mpr("You cannot move. (Use ctrl+direction to attack without "
+                "moving)");
+            return;
         }
 
         if (!one_chance_in(3))

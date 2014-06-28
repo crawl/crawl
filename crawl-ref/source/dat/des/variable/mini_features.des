@@ -2627,6 +2627,32 @@ x.....wccccccw......
      ....xtx...
 ENDMAP
 
+NAME: nicolae_two_hexagons
+DEPTH: D:8-, Depths
+TAGS: transparent extra decor
+SHUFFLE: ABCDEF, GHIJK, LMNOPQ, RSTUVW
+SUBST: AGMNOPQSTUVW = ., BCDEFHIJKLR = x
+MAP
+      ......      ......
+    ..........  ..........
+  ......cc..........cc......
+......BBccCC......KKccJJ......
+....BBBBMMCCCC..KKKKSSJJJJ....
+..ccBB..MM..CCccKK..SS..JJcc..
+..ccLL..MM..NNccRR..SS..TTcc..
+..AALLLLMMNNNNDDRRRRSSTTTTII..
+..AA..LLccNN..DD..RRccTT..II..
+..AA..QQccOO..DD..WWccUU..II..
+..AAQQQQPPOOOODDWWWWVVUUUUII..
+..ccQQ..PP..OOccWW..VV..UUcc..
+..ccFF..PP..EEccGG..VV..HHcc..
+....FFFFPPEEEE..GGGGVVHHHH....
+......FFccEE......GGccHH......
+  ......cc..........cc......
+    ..........  ..........
+      ......      ......
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -3618,32 +3644,6 @@ MAP
 .tttttt..
 .......
 ENDMAP
-
-NAME:  kilobyte_tornado_obelisk
-TAGS:  no_monster_gen
-DEPTH: Depths, Elf
-ITEM:  acquire any
-MONS:  diamond obelisk
-KPROP: .d1 = no_tele_into
-MAP
-      ccc
-     ccdcc
-   ccc...ccc
-  cc.......cc
- cc.........cc
- c...........c
-cc...........cc
-c.............c
-c......1......c
-c.............c
-cc...........cc
- c...........c
- cc.........cc
-  cc.......cc
-   ccc...ccc
-     c.@.c
-ENDMAP
-
 
 #######################################################################
 #

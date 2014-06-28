@@ -385,15 +385,10 @@ static bool _missile_brand_is_postfix(special_missile_type brand)
     return brand != SPMSL_NORMAL && !_missile_brand_is_prefix(brand);
 }
 
-enum mbn_type
+const char* missile_brand_name(const item_def &item, mbn_type t)
 {
-    MBN_TERSE, // terse brand name
-    MBN_NAME,  // brand name for item naming (adj for prefix, noun for postfix)
-    MBN_BRAND, // plain brand name
-};
-
-static const char* _missile_brand_name(special_missile_type brand, mbn_type t)
-{
+    special_missile_type brand;
+    brand = static_cast<special_missile_type>(item.special);
     switch (brand)
     {
     case SPMSL_FLAME:
@@ -1241,8 +1236,7 @@ string ego_type_string(const item_def &item, bool terse, int override_brand)
         // HACKHACKHACK
         if (item.props.exists(HELLFIRE_BOLT_KEY))
             return "hellfire";
-        return _missile_brand_name(get_ammo_brand(item),
-            terse ? MBN_TERSE : MBN_BRAND);
+        return missile_brand_name(item, terse ? MBN_TERSE : MBN_BRAND);
     default:
         return "";
     }
@@ -1395,7 +1389,7 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             if (props.exists(HELLFIRE_BOLT_KEY))
                 buff << "hellfire ";
             else if (_missile_brand_is_prefix(brand))
-                buff << _missile_brand_name(brand, MBN_NAME) << ' ';
+                buff << missile_brand_name(*this, MBN_NAME) << ' ';
         }
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
@@ -1411,10 +1405,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 if (props.exists(HELLFIRE_BOLT_KEY))
                     buff << " (hellfire)";
                 else
-                    buff << " (" <<  _missile_brand_name(brand, MBN_TERSE) << ")";
+                    buff << " (" <<  missile_brand_name(*this, MBN_TERSE) << ")";
             }
             else if (_missile_brand_is_postfix(brand))
-                buff << " of " << _missile_brand_name(brand, MBN_NAME);
+                buff << " of " << missile_brand_name(*this, MBN_NAME);
         }
 
         break;

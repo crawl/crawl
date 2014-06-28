@@ -240,6 +240,7 @@ public:
     item_def *mslot_item(mon_inv_type sl) const;
     item_def *weapon(int which_attack = -1) const;
     item_def *launcher();
+    item_def *melee_weapon() const;
     item_def *missiles();
     item_def *shield() const;
 

@@ -1768,9 +1768,9 @@ unholy energies, and the raising of corpses into a parody of life.
 %%%%
 necrophage
 
-A vile undead creation of the most unholy necromancy, these creatures are made
-from the decaying corpses of humanoid creatures. They exist to spread disease
-and decay, and gain power from the decaying corpses of other beings.
+A vile undead creation of the most unholy necromancy, this creature is made
+from the decaying corpses of humanoid creatures. It exists to spread disease
+and decay, and gains power from the decaying corpses of other beings.
 %%%%
 neqoxec
 
