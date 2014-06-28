@@ -513,6 +513,39 @@ BBBcccccccccccc...ccccccccccccIII
              .......
 ENDMAP
 
+NAME: tomb_1_centre_nicolae_necropolis
+TAGS: tomb_1_centre unrand
+SHUFFLE: AaBbQqDd/EeFfGgHh/IiJjKkLl/MmNnOoPp/RrSsUuVv
+SHUFFLE: Aa/Bb/Qq/Dd, Ee/Ff/Gg/Hh, Ii/Jj/Kk/Ll, Mm/Nn/Oo/Pp, Rr/Ss/Uu/Vv
+SUBST: AEIMR = +, a = ), ei = *|, mr = %, bq = 4, dhlpv = 3
+SUBST: BQDFGHJKLNOPSUV = c, fgjknosu = ', ' = ~..112
+MONS: mummy / guardian mummy w:3 / nothing
+MONS: guardian mummy w:233 / ancient champion w:50 / mummy / nothing w:233
+MONS: mummy priest / lich w:1 / nothing w:11
+MONS: greater mummy / ancient lich w:1 / nothing w:11
+MAP
+.................................
+..cccAccc.....2...2.....cccEccc..
+..cc'q'cc...............cc'g'cc..
+..c'''''c...............c'''''c..
+..Db'c'dB..3.........3..Hf'c'hF..
+..c'''''c...............c'''''c..
+..cc'a'cc....cccRccc....cc'e'cc..
+..cccQccc....cc'u'cc....cccGccc..
+.............c'''''c.............
+.....3...4...Vs'c'vS...4...3.....
+.............c'''''c.............
+..cccMccc....cc'r'cc....cccIccc..
+..cc'o'cc....cccUccc....cc'k'cc..
+..c'''''c...............c'''''c..
+..Pn'c'pN..3.........3..Lj'c'kJ..
+..c'''''c...............c'''''c..
+..cc'm'cc...............cc'i'cc..
+..cccOccc.....2...2.....cccKccc..
+.................................
+             .......
+ENDMAP
+
 ####
 
 NAME:    tomb_1_hall_stairs_old
@@ -584,6 +617,49 @@ cccccccccccc''           '''ccccccccccc
 cccccccccccc''           ''cccccccccccc
 ..211'''''''''           '''''''''112..
 ]..11'''''''''           '''''''''11..}
+ENDMAP
+
+NAME: tomb_1_hall_stairs_nicolae_cartouches
+TAGS: tomb_1_hall_stairs unrand
+SHUFFLE: ]}
+SUBST: ' = 3 .:200
+MONS: guardian mummy w:233 / mummy / nothing w:233
+MONS: mummy priest / lich w:5 / nothing, greater mummy
+MAP
+''                                   ''
+''cc''''''cccc           cccc''''''cc''
+''c''''''''ccc           ccc''''''''c''
+'''''cccc'''cc           cc'''cccc'''''
+''''cc'''c'''c           c'''c'''cc''''
+'''cc''''1c'''           '''c1''''cc'''
+''cc]'''211c''           ''c112'''}cc''
+'''cc''''1c'''           '''c1''''cc'''
+''''cc'''c'''c           c'''c'''cc''''
+'''''cccc'''cc           cc'''cccc'''''
+''c''''''''ccc           ccc''''''''c''
+''cc''''''cccc           cccc''''''cc''
+ENDMAP
+
+NAME: tomb_1_hall_stairs_nicolae_galleries
+TAGS: tomb_1_hall_stairs unrand
+SHUFFLE: AaZ/BbY, pq
+SUBST: ADp = ', Y = 2, ad = +, BbEeq = c, ' = 3 .:200
+NSUBST: Z = ] / }
+MONS: guardian mummy w:233 / mummy / nothing w:233
+MONS: mummy priest / nothing, greater mummy
+MAP
+''                                   ''
+''BBBBBBBBBccc           cccBBBBBBBBB''
+''BBBBBBBBBccc           cccBBBBBBBBB''
+AAcccccccbbccc           cccbbcccccccAA
+AAc''qppq'Zccc           cccZ'qppq''cAA
+AAc''''1'''ccc           ccc'''1''''cAA
+AAcq'p''p'qccc           cccq'p''p'qcAA
+AAcp1'qq''pccc           cccp''qq'1pcAA
+AAcp''qq'1pccc           cccp1'qq''pcAA
+AAcq'p''p'qccc           cccq'p''p'qcAA
+AAa'''1''''ccc           ccc''''1'''aAA
+AAaY'qppq''ccc           ccc''qppq'YaAA
 ENDMAP
 
 ###############################################################################

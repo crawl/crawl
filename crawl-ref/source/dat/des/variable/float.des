@@ -6359,3 +6359,37 @@ llllllllll-xxlxxxxll
     llllllllllllllll
         lllllllllll
 ENDMAP
+
+NAME: nicolae_legendary_halls
+DEPTH: Depths, !Depths:$
+TAGS: transparent
+ORIENT: float
+SUBST: + : +..., $ = $$$$%*, % = %%%%$*, * = ****%|, 0 = 0009.., 9 = 998.
+MAP
+       cccc.@@.cccc
+      cc$.c....c.$cc
+     cc%..c....c..*cc
+     c$.0.c.00.c.8.$c
+     c....+....c....c
+  cccccccccccc+c+ccccccc
+ cc$.c....+....c....c.$cc
+cc*..c.9..c....c..9.c..%cc
+c$.8.c..9.c0..0c.9..c.0.$c
+c....+....c....c....c....c
+ccccccccccc....cccc+c+cccc
+.....+..0........0..c.....
+@..0.c......99......c.0..@
+@..0.c......99......c.0..@
+.....c..0........0..+.....
+cccc+c+cccc....ccccccccccc
+c....c....c....c....+....c
+c$.0.c..9.c0..0c.9..c.8.$c
+cc%..c.9..c....c..9.c..*cc
+ cc$.c....c....+....c.$cc
+  ccccccc+c+cccccccccccc
+     c....c....+....c
+     c$.8.c.00.c.0.$c
+     cc*..c....c..%cc
+      cc$.c....c.$cc
+       cccc.@@.cccc
+ENDMAP
