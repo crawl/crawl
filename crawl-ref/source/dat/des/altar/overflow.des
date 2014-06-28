@@ -1535,7 +1535,7 @@ NAME:  nicolae_qazlal_eye_of_the_storm
 TAGS:  temple_overflow_qazlal temple_overflow_1 uniq_altar_qazlal
 TAGS:  no_trap_gen no_item_gen no_monster_gen
 DEPTH: D:2-
-KPROP: ' = no_rtele_into
+KPROP: 'd = no_rtele_into
 KMONS: d = diamond obelisk
 KFEAT: _ = altar_qazlal
 : interest_check(_G)
