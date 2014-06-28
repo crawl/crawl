@@ -762,16 +762,7 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
         return true;
     }
 
-    if (feat_is_fountain(feat))
-        return true;
-
-    if (feat_is_door(feat))
-        return true;
-
     if (feat == DNGN_ENTER_SHOP)
-        return true;
-
-    if (feat_is_statue_or_idol(feat))
         return true;
 
     return false;
