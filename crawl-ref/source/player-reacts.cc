@@ -20,7 +20,6 @@
 #  include <langinfo.h>
 # endif
 #endif
-#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -33,17 +32,9 @@
 #include <signal.h>
 #endif
 
-#include "ability.h"
-#include "abyss.h"
-#include "acquire.h"
 #include "act-iter.h"
 #include "areas.h"
-#include "art-enum.h"
-#include "artefact.h"
-#include "arena.h"
 #include "beam.h"
-#include "branch.h"
-#include "chardump.h"
 #include "cio.h"
 #include "cloud.h"
 #include "clua.h"
@@ -52,7 +43,6 @@
 #include "coord.h"
 #include "coordit.h"
 #include "crash.h"
-#include "dactions.h"
 #include "database.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
@@ -64,7 +54,6 @@
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
-#include "errors.h"
 #include "exercise.h"
 #include "externs.h"
 #include "goditem.h"
@@ -78,7 +67,6 @@
 #include "godcompanions.h"
 #include "godpassive.h"
 #include "godprayer.h"
-#include "hiscores.h"
 #include "initfile.h"
 #include "invent.h"
 #include "item_use.h"
@@ -89,7 +77,6 @@
 #include "libutil.h"
 #include "luaterp.h"
 #include "macro.h"
-#include "makeitem.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "melee_attack.h"
@@ -101,12 +88,10 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
-#include "notes.h"
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
-#include "player-equip.h"
 #include "player-stats.h"
 #include "quiver.h"
 #include "random.h"
@@ -116,7 +101,6 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
-#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
@@ -142,19 +126,12 @@
 #include "hints.h"
 #include "shout.h"
 #include "stash.h"
-#include "uncancel.h"
 #include "version.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
-#include "wiz-dgn.h"
-#include "wiz-fsim.h"
-#include "wiz-item.h"
-#include "wiz-mon.h"
-#include "wiz-you.h"
 #include "xom.h"
-#include "zotdef.h"
 
 #ifdef USE_TILE
 #include "tiledef-dngn.h"
