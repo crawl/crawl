@@ -573,7 +573,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                 case 'q':
                 CASE_ESCAPE
                     canned_msg(MSG_OK);
-                    return false;
+                    return success;
 
                 case '?':
                     show_butchering_help();
