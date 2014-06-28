@@ -2430,10 +2430,7 @@ int how_mutated(bool innate, bool levels)
             {
                 j += you.mutation[i];
                 if (!innate)
-
-                {
                     j -= you.innate_mutation[i];
-                }
             }
             else
                 j++;
