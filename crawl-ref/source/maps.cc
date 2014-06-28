@@ -444,6 +444,13 @@ static bool _map_safe_vault_place(const map_def &map,
                     return false;
             }
         }
+        else if (env.pgrid(cp) & FPROP_NO_TELE_INTO)
+        {
+            // Don't place can_overwrite vaults on squares that can't be
+            // teleported into, because it's used for things that are
+            // expected to be connected.
+            return false;
+        }
 
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
