@@ -74,7 +74,8 @@ static void _mon_check_foe_invalid(monster* mon)
         {
             const monster* foe_mons = foe->as_monster();
             if (foe_mons->alive() && summon_can_attack(mon, foe)
-                && (mon->friendly() != foe_mons->friendly()
+                && (mon->has_ench(ENCH_INSANE)
+                    || mon->friendly() != foe_mons->friendly()
                     || mon->neutral() != foe_mons->neutral()))
             {
                 return;
