@@ -444,11 +444,11 @@ static bool _map_safe_vault_place(const map_def &map,
                     return false;
             }
         }
-        else if (env.pgrid(cp) & FPROP_NO_TELE_INTO)
+        else if (grd(cp) != DNGN_FLOOR || env.pgrid(cp) & FPROP_NO_TELE_INTO)
         {
-            // Don't place can_overwrite vaults on squares that can't be
-            // teleported into, because it's used for things that are
-            // expected to be connected.
+            // Don't place can_overwrite vaults on anything but floor or on
+            // squares that can't be teleported into, because can_overwrite
+            // is used for things that are expected to be connected.
             return false;
         }
 
