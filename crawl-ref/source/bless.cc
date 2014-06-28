@@ -193,7 +193,9 @@ static string _beogh_bless_melee_weapon(monster* mon)
 
     // Enchant and uncurse it. (Lower odds at high weapon enchantment.)
     const bool enchanted = !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT)
-    && enchant_weapon(wpn, true);
+                           && enchant_weapon(wpn, true);
+    if (enchanted)
+        set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
 
     if (!enchanted && wpn.sub_type == old_weapon_type)
     {
@@ -380,7 +382,10 @@ static string _beogh_bless_armour(monster* mon)
     // And enchant or uncurse it. (Lower chance for higher enchantment.)
     int ac_change;
     const bool enchanted = !x_chance_in_y(arm.plus, armour_max_enchant(arm))
-    && enchant_armour(ac_change, true, arm);
+                           && enchant_armour(ac_change, true, arm);
+
+    if (enchanted)
+        set_ident_flags(arm, ISFLAG_KNOW_PLUSES);
 
     if (!enchanted && old_subtype == arm.sub_type)
     {
@@ -488,6 +493,7 @@ static string _tso_bless_weapon(monster* mon)
     }
 
     item_set_appearance(wpn);
+    set_ident_flags(wpn, ISFLAG_KNOW_PLUSES);
     return "superior armament";
 }
 
@@ -521,6 +527,7 @@ static string _tso_bless_armour(monster* mon)
     }
 
     item_set_appearance(arm);
+    set_ident_flags(arm, ISFLAG_KNOW_PLUSES);
     return "improved armour";
 }
 
