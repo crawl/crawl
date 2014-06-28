@@ -2845,6 +2845,11 @@ string map_def::validate_map_def(const depth_ranges &default_depths)
             return err;
     }
 
+    if (has_tag("can_overwrite") && (map.width() != 1 || map.height() != 1))
+    {
+        return "Map tagged 'can_overwrite' must be 1x1";
+    }
+
     // Abyssal vaults have additional size and orientation restrictions.
     if (has_tag("abyss") || has_tag("abyss_rune"))
     {
