@@ -3115,7 +3115,7 @@ NAME:   nicolae_wand_duel
 DEPTH:  D:6-
 WEIGHT: 1
 KITEM:  d = wand of disintegration charges:0 ident:all
-TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen mini_float extra
+TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen extra
 SUBST:  a = a A:4, b = b B:4
 KPROP:  ABd = bloody
 SUBST:  A = a, B = b
