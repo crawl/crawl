@@ -1489,8 +1489,8 @@ static bool _give_nemelex_gift(bool forced = false)
                                         2, MISC_DECK_OF_ESCAPE,
                                         0);
 
-        int thing_created = items(1, OBJ_MISCELLANY, gift_type,
-                                  true, 1, 0, 0, 0, GOD_NEMELEX_XOBEH);
+        int thing_created = items(1, OBJ_MISCELLANY, gift_type, true, 1, 0, 0,
+                                  GOD_NEMELEX_XOBEH);
 
         move_item_to_grid(&thing_created, you.pos(), true);
 
@@ -1939,8 +1939,8 @@ bool do_god_gift(bool forced)
                 }
                 else
                 {
-                    int thing_created = items(1, OBJ_BOOKS, gift, true, 1,
-                                              0, 0, 0, you.religion);
+                    int thing_created = items(1, OBJ_BOOKS, gift, true, 1, 0, 0,
+                                              you.religion);
                     // Replace a Kiku gift by a custom-random book.
                     if (you_worship(GOD_KIKUBAAQUDGHA))
                     {

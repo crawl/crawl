@@ -6221,7 +6221,7 @@ void monster::steal_item_from_player()
         else
         {
             // Else create a new item for this pile of gold.
-            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0, 0);
+            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0);
             if (idx == NON_ITEM)
                 return;
 

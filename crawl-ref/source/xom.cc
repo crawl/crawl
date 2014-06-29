@@ -725,7 +725,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 {
     god_acting gdact(GOD_XOM);
 
-    int thing_created = items(true, base, subtype, true, power, 0, 0, 0, GOD_XOM);
+    int thing_created = items(true, base, subtype, true, power, 0, 0, GOD_XOM);
 
     if (feat_destroys_item(grd(you.pos()), mitm[thing_created],
                            !silenced(you.pos())))

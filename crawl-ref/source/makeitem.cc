@@ -2637,7 +2637,6 @@ int items(bool allow_uniques,
           int force_type,          // desired SUBTYPE - enum varies by OBJ
           bool dont_place,         // don't randomly place item on level
           int item_level,          // level of the item, can differ from global
-          int rune_type,           // type of rune
           uint32_t mapmask,
           int force_ego,           // desired ego/brand
           int agent,               // acquirement agent, if not -1
