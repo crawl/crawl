@@ -985,8 +985,7 @@ bool cast_smiting(int pow, monster* mons)
     if (mons == NULL || mons->submerged())
     {
         canned_msg(MSG_NOTHING_THERE);
-        // Counts as a real cast, due to victory-dancing and
-        // invisible/submerged monsters.
+        // Counts as a real cast, due to invisible/submerged monsters.
         return true;
     }
 
