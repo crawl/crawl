@@ -111,7 +111,7 @@ static void _give_scroll(monster* mon, int level)
         int which_book = (one_chance_in(3) ? BOOK_TRANSFIGURATIONS
                                            : BOOK_EARTH);
 
-        thing_created = items(0, OBJ_BOOKS, which_book, true, level, 0);
+        thing_created = items(0, OBJ_BOOKS, which_book, true, level);
 
         if (thing_created != NON_ITEM && coinflip())
         {
@@ -124,7 +124,7 @@ static void _give_scroll(monster* mon, int level)
     }
     else if (mons_is_unique(mon->type) && one_chance_in(3)
                 && _should_give_unique_item(mon))
-        thing_created = items(0, OBJ_SCROLLS, OBJ_RANDOM, true, level, 0);
+        thing_created = items(0, OBJ_SCROLLS, OBJ_RANDOM, true, level);
 
     if (thing_created == NON_ITEM)
         return;
@@ -151,7 +151,7 @@ static void _give_wand(monster* mon, int level)
 
     while (1)
     {
-        const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
+        const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level);
 
         if (idx == NON_ITEM)
             return;
@@ -182,7 +182,7 @@ static void _give_potion(monster* mon, int level)
     {
         // This handles initialization of stack timer.
         const int thing_created =
-            items(0, OBJ_POTIONS, POT_BLOOD, true, level, 0);
+            items(0, OBJ_POTIONS, POT_BLOOD, true, level);
 
         if (thing_created == NON_ITEM)
             return;
@@ -193,8 +193,8 @@ static void _give_potion(monster* mon, int level)
     else if (mon->type == MONS_GNOLL_SERGEANT && one_chance_in(3))
     {
         const int thing_created =
-            items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS
-                                             : POT_CURING, true, level, 0);
+            items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS : POT_CURING,
+                  true, level);
 
         if (thing_created == NON_ITEM)
             return;
@@ -205,8 +205,8 @@ static void _give_potion(monster* mon, int level)
     else if (mons_is_unique(mon->type) && one_chance_in(3)
                 && _should_give_unique_item(mon))
     {
-        const int thing_created =
-            items(0, OBJ_POTIONS, OBJ_RANDOM, true, level, 0);
+        const int thing_created = items(0, OBJ_POTIONS, OBJ_RANDOM, true,
+                                        level);
 
         if (thing_created == NON_ITEM)
             return;
@@ -1526,8 +1526,8 @@ static void _give_weapon(monster* mon, int level, bool melee_only = false,
     // force_item is set... otherwise we're just going to take the base
     // and subtype and create a new item. - bwr
     const int thing_created =
-        ((force_item) ? get_mitm_slot() : items(0, xitc, xitt, true,
-                                                level, 0, 0, item.special));
+        ((force_item) ? get_mitm_slot() : items(0, xitc, xitt, true, level, 0,
+                                                item.special));
 
     if (thing_created == NON_ITEM)
         return;
@@ -1773,9 +1773,7 @@ static item_def* make_item_for_monster(
     if (bp == NON_ITEM)
         return 0;
 
-    const int thing_created =
-        items(allow_uniques, base, subtype, true, level);
-
+    const int thing_created = items(allow_uniques, base, subtype, true, level);
     if (thing_created == NON_ITEM)
         return 0;
 
@@ -2475,7 +2473,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs, bool merc)
 
 static void _give_gold(monster* mon, int level)
 {
-    const int it = items(0, OBJ_GOLD, 0, true, level, 0);
+    const int it = items(0, OBJ_GOLD, 0, true, level);
     _give_monster_item(mon, it);
 }
 

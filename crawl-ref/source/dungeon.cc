@@ -4000,10 +4000,7 @@ static void _builder_items()
         specif_type = OBJ_GOLD;  // Lots of gold in the orcish mines.
 
     for (i = 0; i < items_wanted; i++)
-    {
-        items(1, specif_type, OBJ_RANDOM, false, items_levels, 250,
-              MMT_NO_ITEM);
-    }
+        items(1, specif_type, OBJ_RANDOM, false, items_levels, MMT_NO_ITEM);
 }
 
 static bool _connect_vault_exit(const coord_def& exit)
@@ -4663,7 +4660,7 @@ int dgn_place_item(const item_spec &spec,
                                      true, where)
              : spec.corpselike() ? _dgn_item_corpse(spec, where)
              : items(spec.allow_uniques, base_type,
-                     spec.sub_type, true, level, 0, 0, spec.ego, -1,
+                     spec.sub_type, true, level, 0, spec.ego, -1,
                      spec.level == ISPEC_MUNDANE));
 
         if (item_made == NON_ITEM || item_made == -1)
@@ -4784,11 +4781,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             else
             {
                 item_made = items(spec.allow_uniques, spec.base_type,
-                                  spec.sub_type, true, item_level,
-                                  0, 0, spec.ego, -1,
-                                  spec.level == ISPEC_MUNDANE);
+                                  spec.sub_type, true, item_level, 0, spec.ego,
+                                  -1, spec.level == ISPEC_MUNDANE);
             }
-
 
             if (!(item_made == NON_ITEM || item_made == -1))
             {
@@ -5196,7 +5191,6 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         object_class_type which_class = OBJ_RANDOM;
         uint8_t which_type = OBJ_RANDOM;
         int which_depth = env.absdepth0;
-        int spec = 250;
 
         if (vgrid == '$')
             which_class = OBJ_GOLD;
@@ -5208,9 +5202,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         else if (vgrid == '*')
             which_depth = 5 + which_depth * 2;
 
-        item_made = items(1, which_class, which_type, true,
-                           which_depth, spec);
-
+        item_made = items(1, which_class, which_type, true, which_depth);
         if (item_made != NON_ITEM)
             mitm[item_made].pos = where;
     }
