@@ -2197,31 +2197,31 @@ static void _generate_potion_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight is 1000
-            stype = random_choose_weighted(235, POT_CURING,
-                                           116, POT_HEAL_WOUNDS,
-                                            66, POT_RESTORE_ABILITIES,
-                                            53, POT_POISON,
-                                            53, POT_MIGHT,
-                                            53, POT_AGILITY,
-                                            53, POT_BRILLIANCE,
-                                            50, POT_HASTE,
-                                            28, POT_INVISIBILITY,
-                                            28, POT_FLIGHT,
-                                            28, POT_RESISTANCE,
-                                            28, POT_MAGIC,
-                                            28, POT_BERSERK_RAGE,
-                                            28, POT_MUTATION,
-                                            28, POT_LIGNIFY,
-                                            27, POT_PARALYSIS,
-                                            27, POT_CONFUSION,
-                                            23, POT_DEGENERATION,
-                                            18, POT_CURE_MUTATION,
-                                            13, POT_STRONG_POISON,
-                                             9, POT_BENEFICIAL_MUTATION,
-                                             6, POT_PORRIDGE,
-                                             1, POT_EXPERIENCE,
-                                             1, POT_DECAY,
+            // total weight is 1090
+            stype = random_choose_weighted(191, POT_CURING,
+                                            95, POT_HEAL_WOUNDS,
+                                            75, POT_RESTORE_ABILITIES,
+                                            66, POT_POISON,
+                                            66, POT_MIGHT,
+                                            66, POT_AGILITY,
+                                            66, POT_BRILLIANCE,
+                                            63, POT_HASTE,
+                                            35, POT_INVISIBILITY,
+                                            35, POT_FLIGHT,
+                                            35, POT_RESISTANCE,
+                                            35, POT_MAGIC,
+                                            35, POT_BERSERK_RAGE,
+                                            35, POT_MUTATION,
+                                            35, POT_LIGNIFY,
+                                            34, POT_PARALYSIS,
+                                            34, POT_CONFUSION,
+                                            25, POT_DEGENERATION,
+                                            23, POT_CURE_MUTATION,
+                                            15, POT_STRONG_POISON,
+                                            12, POT_BENEFICIAL_MUTATION,
+                                            10, POT_PORRIDGE,
+                                             2, POT_EXPERIENCE,
+                                             2, POT_DECAY,
                                              0);
         }
         while (stype == POT_POISON && item_level < 1
@@ -2261,37 +2261,34 @@ static void _generate_scroll_item(item_def& item, int force_type,
         int tries = 500;
         do
         {
-            // total weight:    735  if depth_mod <4
-            //                  846  otherwise
-            //                  -103 in sprint
+            // total weight:    784  if depth_mod < 4
+            //                  913  otherwise
+            //                 -112  in sprint
             item.sub_type = random_choose_weighted(
-                180, SCR_IDENTIFY,
+                200, SCR_IDENTIFY,
                 112, SCR_REMOVE_CURSE,
                  // [Cha] don't generate teleportation scrolls if in sprint
                  80, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_TELEPORTATION),
-                 33, SCR_FEAR,
-                 33, SCR_MAGIC_MAPPING,
-                 33, SCR_FOG,
-                 33, SCR_RANDOM_USELESSNESS,
-                 33, SCR_RECHARGING,
-                 33, SCR_BLINKING,
-                 33, SCR_ENCHANT_ARMOUR,
-                 33, SCR_ENCHANT_WEAPON,
-                 33, SCR_AMNESIA,
+                 40, SCR_ENCHANT_ARMOUR,
+                 40, SCR_ENCHANT_WEAPON,
+                 40, SCR_RECHARGING,
+                 40, SCR_MAGIC_MAPPING,
+                 40, SCR_AMNESIA,
+                 32, SCR_FEAR,
+                 32, SCR_FOG,
+                 32, SCR_RANDOM_USELESSNESS,
+                 32, SCR_BLINKING,
                  // [Cha] don't generate noise scrolls if in sprint
-                 33, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
-
-                 33, SCR_IMMOLATION,
-
+                 32, (crawl_state.game_is_sprint() ? NUM_SCROLLS : SCR_NOISE),
+                 32, SCR_IMMOLATION,
                  // Higher-level scrolls.
                  27, (depth_mod < 4 ? NUM_SCROLLS : SCR_VULNERABILITY),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
-                 14, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
-
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_ACQUIREMENT),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SUMMONING),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_SILENCE),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_BRAND_WEAPON),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_TORMENT),
+                 17, (depth_mod < 4 ? NUM_SCROLLS : SCR_HOLY_WORD),
                  0);
         }
         while (item.sub_type == NUM_SCROLLS
@@ -2677,6 +2674,7 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
+        // Total weight: 1960
         item.base_type = random_choose_weighted(
                                      1, OBJ_RODS,
                                      9, OBJ_STAVES,
@@ -2684,12 +2682,12 @@ int items(bool allow_uniques,
                                     50, OBJ_JEWELLERY,
                                     70, OBJ_WANDS,
                                    140, OBJ_FOOD,
-                                   200, OBJ_ARMOUR,
-                                   200, OBJ_WEAPONS,
-                                   200, OBJ_POTIONS,
+                                   212, OBJ_ARMOUR,
+                                   212, OBJ_WEAPONS,
+                                   176, OBJ_POTIONS,
                                    300, OBJ_MISSILES,
-                                   360, OBJ_SCROLLS,
-                                   400, OBJ_GOLD,
+                                   320, OBJ_SCROLLS,
+                                   440, OBJ_GOLD,
                                      0);
 
         // misc items placement wholly dependent upon current depth {dlb}:
