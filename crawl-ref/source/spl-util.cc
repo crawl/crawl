@@ -1119,7 +1119,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
     case SPELL_SWIFTNESS:
-        if (transient && you.form == TRAN_TREE)
+        if (transient && you.is_stationary())
             return true;
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() <= 6)
