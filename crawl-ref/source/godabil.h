@@ -44,6 +44,7 @@ void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
 bool beogh_water_walk();
+bool beogh_can_gift_items_to(const monster* mons, bool quiet = true);
 bool beogh_gift_item();
 
 bool yred_injury_mirror();
