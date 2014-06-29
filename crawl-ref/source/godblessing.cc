@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#include "bless.h"
+#include "godblessing.h"
 
 #include "artefact.h"   // if_artefact()
 #include "env.h"        // mitm

@@ -14,7 +14,6 @@ attitude-change.o \
 beam.o \
 behold.o \
 bitary.o \
-bless.o \
 branch.o \
 chardump.o \
 cio.o \
@@ -67,6 +66,7 @@ fprop.o \
 geom2d.o \
 ghost.o \
 godabil.o \
+godblessing.o \
 godcompanions.o \
 godconduct.o \
 goditem.o \
