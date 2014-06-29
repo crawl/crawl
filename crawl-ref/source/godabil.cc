@@ -1501,11 +1501,70 @@ bool beogh_water_walk()
  * @param mon the orc in question.
  * @returns whether you have given the monster a Beogh gift before now.
  */
-static bool _given_gift(monster* mon)
+static bool _given_gift(const monster* mon)
 {
     return mon->props.exists(BEOGH_WPN_GIFT_KEY)
             || mon->props.exists(BEOGH_ARM_GIFT_KEY)
             || mon->props.exists(BEOGH_SH_GIFT_KEY);
+}
+
+/**
+ * Checks whether the target square holds a valid target for beogh item-gifts.
+ *
+ * @param pos       The position to check for orcs in.
+ * @param quiet     Whether to print messages if the target is invalid.
+ * @return          Whether the player can give an item to an orc in the target
+ * square.
+ */
+static bool _can_gift_to(const coord_def &pos, bool quiet)
+{
+    if (pos == you.pos())
+    {
+        // I think this should never happen?
+        if (!quiet)
+            mpr("You can't give yourself an item!");
+        return false;
+    }
+
+    const monster* mons = monster_at(pos);
+
+    if (!mons || !mons->visible_to(&you))
+    {
+        if (!quiet)
+            canned_msg(MSG_NOTHING_THERE);
+        return false;
+    }
+
+    if (!is_orcish_follower(mons))
+    {
+        if (!quiet)
+            mpr("That's not an orcish ally!");
+        return false;
+    }
+
+    if (!mons->is_named())
+    {
+        if (!quiet)
+            mpr("That orc has not proved itself worthy of your gift.");
+        return false;
+    }
+
+    const char* monsname = mons->name(DESC_THE, false).c_str();
+
+    if (_given_gift(mons))
+    {
+        if (!quiet)
+            mprf("%s has already been given a gift.", monsname);
+        return false;
+    }
+
+    return true;
+}
+
+// used for the targeter.
+static bool _can_gift_to(const coord_def &pos)
+{
+    return _can_gift_to(pos, true);
 }
 
 /**
@@ -1519,45 +1578,17 @@ bool beogh_gift_item()
     bolt beam;
     dist spd;
 
-    spd.isValid = spell_direction(spd, beam, DIR_TARGET,
-                                  TARG_FRIEND, LOS_RADIUS);
+    targetter_smite tgt(&you, LOS_RADIUS, 0, 0, false, &_can_gift_to);
+    spd.isValid = spell_direction(spd, beam, DIR_TARGET, TARG_FRIEND,
+                                  LOS_RADIUS, false, true, false, NULL,
+                                  "Gift an item:", true, &tgt);
 
-    if (!spd.isValid)
+    if (!spd.isValid || !_can_gift_to(spd.target, false))
         return false;
-
-    if (spd.target == you.pos())
-    {
-       mpr("You can't give yourself an item!");
-       return false;
-    }
 
     monster* mons = monster_at(spd.target);
-
-    if (!mons || !mons->visible_to(&you))
-    {
-        canned_msg(MSG_NOTHING_THERE);
-        return false;
-    }
-
-    if (!is_orcish_follower(mons))
-    {
-        mpr("That's not an orcish ally!");
-        return false;
-    }
-
-    if (!mons->is_named())
-    {
-        mpr("That orc has not proved itself worthy of your gift.");
-        return false;
-    }
-
+    ASSERT(mons);
     const char* monsname = mons->name(DESC_THE, false).c_str();
-
-    if (_given_gift(mons))
-    {
-        mprf("%s has already been given a gift.", monsname);
-        return false;
-    }
 
     int item_slot = prompt_invent_item("Give which item?",
                                        MT_INVLIST, OSEL_ANY, true);
