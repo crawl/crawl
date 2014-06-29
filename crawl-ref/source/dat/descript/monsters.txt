@@ -943,8 +943,7 @@ itself through a certain devilish cast to its features.
 %%%%
 diamond obelisk
 
-This obelisk appears to be indestructible. You'd better find a way around... it
-might even provide one.
+A towering obelisk surrounded by a powerful storm.
 %%%%
 dire elephant
 
@@ -1447,11 +1446,8 @@ claws may be enough to rip hydra heads.
 %%%%
 hyperactive ballistomycete
 
-This ballistomycete is in a state of all-out reproduction. It is constantly
-ravaged by explosions of spores, damaging everything around, and it is
-ultimately going to die to its own spores.
-
-Be sure to keep your distance!
+A ballistomycete in a state of all-out reproduction. It is constantly ravaged
+by explosions of spores, damaging everything nearby.
 %%%%
 ice beast
 
@@ -1486,8 +1482,7 @@ infernal demonspawn
 %%%%
 inept feature mimic
 
-A predator masquerading as an ordinary dungeon feature. This one is less
-dangerous than most mimics, but can still devour the likes of you.
+A predator masquerading as an ordinary dungeon feature.
 %%%%
 inept item mimic
 
@@ -2768,8 +2763,8 @@ somewhat dangerous.
 %%%%
 nasty sensed monster
 
-By the power of Ashenzari, you know there is some creature here, and that you
-should be afraid. Very afraid.
+By the power of Ashenzari, you know there is some creature here, and that it is
+very dangerous.
 %%%%
 friendly sensed monster
 
@@ -3057,9 +3052,7 @@ A glistening silver machine.
 %%%%
 succubus
 
-A female demon who uses her charms to seduce humanoid males. If you wish to
-take advantage of her, however, you will fail: she seems very angry right now
-and has blood more on her mind than fun.
+A female demon who uses her charms to seduce humanoid males.
 %%%%
 water elementalist statue
 
