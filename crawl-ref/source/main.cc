@@ -1424,7 +1424,7 @@ static bool _can_take_stairs(dungeon_feature_type ftype, bool down,
                              bool known_shaft)
 {
     // Immobile
-    if (you.form == TRAN_TREE)
+    if (you.is_stationary())
     {
         canned_msg(MSG_CANNOT_MOVE);
         return false;
@@ -3127,7 +3127,7 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (you.form == TRAN_TREE)
+        if (you.is_stationary())
             dangerous = DNGN_FLOOR; // still warn about allies
 
         if (dangerous != DNGN_FLOOR || bad_mons)
@@ -3163,7 +3163,7 @@ static void _move_player(coord_def move)
             }
         }
 
-        if (you.form == TRAN_TREE)
+        if (you.is_stationary())
         {
             // Don't choose a random location to try to attack into - allows
             // abuse, since trying to move (not attack) takes no time, and
@@ -3249,7 +3249,7 @@ static void _move_player(coord_def move)
         targ_monst = NULL;
     }
 
-    bool targ_pass = you.can_pass_through(targ) && you.form != TRAN_TREE;
+    bool targ_pass = you.can_pass_through(targ) && !you.is_stationary();
 
     if (you.digging)
     {
@@ -3495,7 +3495,7 @@ static void _move_player(coord_def move)
     }
     else if (!targ_pass && !attacking)
     {
-        if (you.form == TRAN_TREE)
+        if (you.is_stationary())
             canned_msg(MSG_CANNOT_MOVE);
         else if (grd(targ) == DNGN_OPEN_SEA)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");
